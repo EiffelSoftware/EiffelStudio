@@ -74,6 +74,12 @@ feature -- Conversion
 			Result := db_spec.c_date_type
 		end
 
+	decimal_type_database: INTEGER
+			-- Decimal type code
+		once
+			Result := db_spec.c_decimal_type
+		end
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

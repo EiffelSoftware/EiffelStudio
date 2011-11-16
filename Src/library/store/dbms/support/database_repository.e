@@ -142,6 +142,14 @@ feature -- Basic operations
 				elseif el_type = Date_type_database then
 					s2 := "DATE_TIME"
 					s3.append("%T%T%Tcreate "+col_name+".make_now%N")
+				elseif is_decimal_used and then el_type = decimal_type_database then
+					if attached decimal_creation_function.item (["10", 0, 2, 1]) as l_dec then
+						s2 := l_dec.generating_type.out
+					else
+						s2 := "ANY"
+					end
+					s3.append("%T%T%T%T-- Rewrite the following code to create your instance of your own decimal type.%N")
+					s3.append("%T%T%Tcreate "+col_name+"%N")
 				else
 					s2 :=  "ANY"
 				end
@@ -302,6 +310,15 @@ feature -- Status setting
 						r_string.append (field_name (i, object))
 						r_string.append (" ")
 						r_string.append (db_spec.sql_name_datetime)
+					elseif is_decimal_used and then is_decimal (l_obj) then
+						r_string.append (field_name (i, object))
+						r_string.append (" ")
+						r_string.append (db_spec.sql_name_decimal)
+						r_string.append (" (")
+						r_string.append (default_decimal_presicion.out)
+						r_string.append (", ")
+						r_string.append (default_decimal_scale.out)
+						r_string.append (")")
 					else
 						raise ("unknown type")
 					end
@@ -418,6 +435,8 @@ feature -- Status report
 								Result := Result and (col_type = Wide_string_type_database)
 							elseif is_date (field (i,object)) then
 								Result := Result and (col_type = Date_type_database)
+							elseif is_decimal_used and then is_decimal (field (i,object)) then
+								Result := Result and (col_type = decimal_type_database)
 							else
 								Result := false
 							end

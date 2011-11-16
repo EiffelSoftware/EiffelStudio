@@ -353,7 +353,9 @@ feature -- Element change
 						end
 
 					-- DOUBLE type
-					elseif l_value_type.item (ind) = Float_type_database then
+					elseif l_value_type.item (ind) = Float_type_database or else
+						(not is_decimal_used and then l_value_type.item (ind) = decimal_type_database)
+					then
 						if f_any = Void then
 							create f_double
 							l_value.put (f_double, ind)
@@ -389,6 +391,14 @@ feature -- Element change
 							check l_date /= Void end -- implied by previous if clause
 							l_date.set_time (time)
 							l_date.set_date (date)
+						else
+							l_value.put (Void, ind)
+						end
+
+					-- DECIMAL type
+					elseif is_decimal_used and then l_value_type.item (ind) = decimal_type_database then
+						if attached l_db_spec.get_decimal (no_descriptor, ind) as l_decimal then
+							l_value.put (decimal_creation_function.item (l_decimal), ind)
 						else
 							l_value.put (Void, ind)
 						end

@@ -56,6 +56,8 @@ typedef struct con_context_ {
 	SQLTCHAR *warn_message;
 	int error_number;
 	short odbc_tranNumber; /* number of transaction opened at present */
+	int default_precision;
+	int default_scale;
 } CON_CONTEXT;
 
 
@@ -768,8 +770,8 @@ void setup_result_space (void *con, int no_desc)
 					break;
 				case SQL_C_NUMERIC:
 					SQLSetDescField (hdesc,i+1,SQL_DESC_TYPE,(SQLPOINTER)SQL_C_NUMERIC,0);
-					SQLSetDescField (hdesc,i+1,SQL_DESC_PRECISION,(SQLPOINTER) 19,0); /* presision of 64bits */
-					SQLSetDescField (hdesc,i+1,SQL_DESC_SCALE,(SQLPOINTER) 8,0); /* presision of 64bits */
+					SQLSetDescField (hdesc,i+1,SQL_DESC_PRECISION,(SQLPOINTER) l_con->default_precision,0); /* presision of 64bits */
+					SQLSetDescField (hdesc,i+1,SQL_DESC_SCALE,(SQLPOINTER) l_con->default_scale,0); /* presision of 64bits */
 					SetDbColLength(dap, i, sizeof (SQL_NUMERIC_STRUCT));
 					break;
 				case SQL_C_GUID:
@@ -1145,6 +1147,7 @@ void odbc_set_parameter(void *con, int no_desc, int seri, int dir, int eifType, 
 	SQLSMALLINT direction = (SQLSMALLINT)dir;
 	SQLLEN len;
 	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	SQL_NUMERIC_STRUCT *l_num;
 
 	l_con->pcbValue[no_desc][seriNumber-1] = len = value_count;
 	l_con->rc = 0;
@@ -1180,6 +1183,10 @@ void odbc_set_parameter(void *con, int no_desc, int seri, int dir, int eifType, 
 		case DATE_TYPE:
 			len = l_con->pcbValue[no_desc][seriNumber-1] = sizeof(TIMESTAMP_STRUCT);
 			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_TIMESTAMP, SQL_TYPE_TIMESTAMP, 23, 3, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
+			break;
+		case DECIMAL_TYPE:
+			l_num = (SQL_NUMERIC_STRUCT *)value;
+			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_NUMERIC, SQL_DECIMAL, l_con->default_precision, l_con->default_scale, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
 			break;
 		default:
 			odbc_error_handler(con, NULL, 204);
@@ -1630,6 +1637,17 @@ void cut_tail_blank(SQLTCHAR *buf) {
 	}
 }
 
+/*****************************************************************/
+/* Set precision and scale when reading from the decimal from ODBC */
+/*****************************************************************/
+/*                                                               */
+void odbc_set_decimal_presicion_and_scale (void *con, int precision, int scale)
+{
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	l_con->default_precision = precision;
+	l_con->default_scale = scale;
+}
+
 int odbc_get_count (void *con, int no_des)
 {
 	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
@@ -1706,6 +1724,7 @@ int odbc_conv_type (int typeCode)
 			return WSTRING_TYPE;
 		case SQL_DECIMAL:
 		case SQL_NUMERIC:	
+			return DECIMAL_TYPE;
 		case SQL_FLOAT:
 		case SQL_DOUBLE:
 			return FLOAT_TYPE;
@@ -2058,6 +2077,29 @@ int odbc_get_date_data (void *con, int no_des, int index)
 		l_con->error_number = -DB_ERROR-5;
 		return 0;
   }
+}
+
+int odbc_get_decimal (void *con, int no_des, int index, void *p)
+{
+	int i = index - 1;
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	ODBCSQLDA   * dbp = l_con->odbc_descriptor[no_des];
+	int data_type;
+
+	data_type = GetDbCType(dbp, i);
+	if (data_type == SQL_C_NUMERIC) {
+		memcpy((char *)p, GetDbColPtr(dbp, i), sizeof (SQL_NUMERIC_STRUCT));
+		return 1;
+	}
+
+	ATSTXTCAT(l_con->error_message, "\nError DECIMAL type in odbc_get_decimal. ");
+	if (l_con->error_number) {
+		return 0;
+	}
+	else {
+		l_con->error_number = -DB_ERROR-5;
+		return 0;
+	}
 }
 
 int odbc_get_year(void *con)

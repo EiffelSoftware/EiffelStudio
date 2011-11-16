@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 				if not is_valid_environment then
 					check_environment_variable
 				end
-				create Result.make_from_string (eiffel_install)
+				create Result.make_from_string (shared_path)
 				Result.set_subdirectory ("tools")
 				Result.set_subdirectory ("ribbon")
 			else

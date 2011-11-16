@@ -21,7 +21,8 @@ CTAGS = ctags
 CFLAGS = $optimize $ccflags $large -I$rt_include -I"../spec/include" -DSQLITE_THREADSAFE=0 -DSQLITE_OMIT_LOAD_EXTENSION=1
 MTCFLAGS = $optimize $mtccflags $large -I$rt_include -I"../spec/include" -DSQLITE_THREADSAFE=1 -DSQLITE_OMIT_LOAD_EXTENSION=1
 SHAREDLINK = $sharedlink
-LDSHAREDFLAGS = -export-dynamic $ldsharedflags
+LDSHAREDFLAGS = $ldsharedflags
+SHAREDLIBS = $sharedlibs
 LN = $ln
 MAKE = $make
 MKDEP = $mkdep \$(DPFLAGS) --
@@ -73,7 +74,7 @@ libesqlite.a: $(OBJECTS)
 
 libesqlite.so: $(OBJECTS)
 	$(RM) $@
-	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(OBJECTS)
+	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(OBJECTS) $(SHAREDLIBS)
 
 mtesqlite.o: esqlite.c
 	$(CC) -c $(MTCFLAGS) $? -o $@
@@ -88,7 +89,7 @@ libmtesqlite.a: $(MT_OBJECTS)
 
 libmtesqlite.so: $(MT_OBJECTS)
 	$(RM) $@
-	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(MT_OBJECTS)
+	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(MT_OBJECTS) $(SHAREDLIBS)
 
 ########################################################################
 # Common rules for all Makefiles -- do not edit

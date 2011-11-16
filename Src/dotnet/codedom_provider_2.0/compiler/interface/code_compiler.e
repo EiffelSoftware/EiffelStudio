@@ -437,7 +437,7 @@ feature {NONE} -- Implementation
 				end
 
 				-- Add base library
-				l_library := l_factory.new_library ("base", create {CONF_FILE_LOCATION}.make ("$ISE_EIFFEL\library\base\base.ecf", l_target), l_target)
+				l_library := l_factory.new_library ("base", "$ISE_LIBRARY/library/base/base.ecf", l_target)
 				create l_option
 				l_option.set_local_namespace ("EiffelSoftware.Library.Base")
 				l_library.set_options (l_option)

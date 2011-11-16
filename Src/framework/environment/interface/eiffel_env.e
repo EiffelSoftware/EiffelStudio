@@ -1709,7 +1709,7 @@ feature {NONE} -- Configuration of layout
 			-- Directory name for lib. e.g. "/usr/lib".
 		once
 			Result := unix_layout_base_path.twin
-			Result.extend ("lib ")
+			Result.extend ("lib")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end

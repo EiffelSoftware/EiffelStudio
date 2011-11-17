@@ -190,8 +190,6 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			l_managed_pointer: MANAGED_POINTER
 			l_para: like para
 			l_decimal_t: detachable like convert_to_decimal
-			l_cstring: C_STRING
-			l_scale: INTEGER
 			l_nat64: NATURAL_64
 			l_pointer: MANAGED_POINTER
 		do
@@ -1371,8 +1369,6 @@ feature {NONE} -- External features
 			l_value_count: INTEGER
 			l_para: like para
 			l_decimal_t: like convert_to_decimal
-			l_cstring: C_STRING
-			l_decimal_precision, l_decimal_scale: INTEGER
 			l_nat64: NATURAL_64
 			l_pointer: MANAGED_POINTER
 		do

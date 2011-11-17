@@ -860,6 +860,12 @@ feature -- External features
 			is_error_updated := False
        	end
 
+	connect_by_connection_string (a_connect_string: STRING)
+			-- Connect to database by connection string
+		do
+			--| To be implemented
+		end
+
 	disconnect
 		do
 			eif_mysql_disconnect (mysql_pointer)

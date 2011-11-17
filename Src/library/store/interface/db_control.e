@@ -38,11 +38,6 @@ feature -- Basic operations
 			not_already_connected: not is_connected
 		do
 			implementation.connect
-			if is_ok then
-				handle.status.set_connect (True)
-			end
-		ensure
-			not is_ok or else is_connected
 		end
 
 	disconnect

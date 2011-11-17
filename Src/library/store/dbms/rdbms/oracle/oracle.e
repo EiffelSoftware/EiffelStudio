@@ -709,6 +709,11 @@ feature -- External features
 			is_error_updated := False
        	end
 
+	connect_by_connection_string (a_connect_string: STRING)
+			-- Connect to database by connection string
+		do
+		end
+
 	disconnect
 		do
 			ora_disconnect

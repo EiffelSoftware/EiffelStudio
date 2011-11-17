@@ -229,6 +229,7 @@ extern void odbc_set_owner(SQLTCHAR *owner);
 extern void odbc_unset_catalog_flag(void *con, int no_desc);
 extern SQLTCHAR *odbc_str_from_str(SQLTCHAR *ptr);
 extern void odbc_connect (void *con, SQLTCHAR *name, SQLTCHAR *passwd, SQLTCHAR *dsn);
+extern void odbc_connect_by_connection_string (void *con, SQLTCHAR *a_string);
 extern void odbc_disconnect (void *con);
 extern void odbc_rollback (void *con);
 extern void odbc_commit (void *con);

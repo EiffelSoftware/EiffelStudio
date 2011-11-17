@@ -73,6 +73,7 @@ void setup_result_space (void *con, int no_desc);
 void free_sqldata (ODBCSQLDA *dap);
 int odbc_first_descriptor_available (void *con);
 rt_private void change_to_low(SQLTCHAR *buf, size_t length);
+void odbc_fetch_connection_info (void *con);
 
 /* Safe allocation and memory reset */\
 #define ODBC_SAFE_CLEAN_ALLOC(p,function,size) \
@@ -1403,7 +1404,6 @@ void odbc_unset_catalog_flag(void *con, int no_desc) {
 /*****************************************************************/
 void odbc_connect (void *con, SQLTCHAR *name, SQLTCHAR *passwd, SQLTCHAR *dsn)
 {
-	SQLSMALLINT indColName;
 	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 
 	odbc_clear_error (con);
@@ -1421,6 +1421,72 @@ void odbc_connect (void *con, SQLTCHAR *name, SQLTCHAR *passwd, SQLTCHAR *dsn)
 		return;
 	}
 
+	odbc_fetch_connection_info (con);
+
+}
+
+/*****************************************************************/
+/*The following are the function related with DATABASE CONTROL   */
+/*****************************************************************/
+
+/*****************************************************************/
+/*                                                               */
+/*                     ROUTINE  DESCRIPTION                      */
+/*                                                               */
+/* NAME: odbc_connect_by_string(a_string)						 */
+/* PARAMETERS:                                                   */
+/*   a_string - connect string.	                                 */
+/*              current connection.                              */
+/* DESCRIPTION:                                                  */
+/*   Connect to an  ODBC  database.                              */
+/*                                                               */
+/*****************************************************************/
+void odbc_connect_by_connection_string (void *con, SQLTCHAR *a_string)
+{
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+
+	odbc_clear_error (con);
+
+	l_con->rc = SQLAllocHandle(SQL_HANDLE_DBC,henv, &l_con->hdbc);
+	if (l_con->rc) {
+		odbc_error_handler(con, NULL,11);
+		return;
+	}
+
+	l_con->rc = SQLDriverConnect( // SQL_NULL_HDBC
+               l_con->hdbc, 
+               NULL, 
+               a_string, 
+               (SQLSMALLINT)sqlstrlen(a_string),
+               NULL,
+               0, 
+               NULL,
+               SQL_DRIVER_NOPROMPT);
+	if (l_con->rc<0) {
+		odbc_error_handler(con, NULL,12);
+		l_con->rc = SQLFreeHandle(SQL_HANDLE_DBC,l_con->hdbc);
+		return;
+	}
+
+	odbc_fetch_connection_info (con);
+
+}
+
+/*****************************************************************/
+/*                                                               */
+/*                     ROUTINE  DESCRIPTION                      */
+/*                                                               */
+/* NAME: odbc_get_connection_info()                              */
+/* DESCRIPTION:                                                  */
+/*   Get connection info after connection						 */
+/*                                                               */
+/*****************************************************************/
+
+void odbc_fetch_connection_info (void *con)
+{
+	SQLSMALLINT indColName;
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+
 	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_PROCEDURES, dbmsName, sizeof(dbmsName), &indColName);
 	SQLTXTCPY(storedProc, dbmsName);
 	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_PROCEDURE_TERM, dbmsName, sizeof(dbmsName), &indColName);
@@ -1431,26 +1497,18 @@ void odbc_connect (void *con, SQLTCHAR *name, SQLTCHAR *passwd, SQLTCHAR *dsn)
 	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_QUOTED_IDENTIFIER_CASE, &odbc_case, sizeof(odbc_case), &indColName);
 	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_INFO_SCHEMA_VIEWS, &odbc_info_schema, sizeof(odbc_info_schema), &indColName);
 
-	if (indColName == 1 && idQuoter[0] == TXTC(' '))
+	if (indColName == 1 && idQuoter[0] == TXTC(' ')) {
 		idQuoter[0] = (SQLTCHAR)0;
-	else
+	} else {
 		idQuoter[indColName] = (SQLTCHAR)0;
-
-	/* l_con->rc = SQLGetInfo(l_con->hdbc, SQL_QUALIFIER_NAME_SEPARATOR, quaNameSep, sizeof(quaNameSep), &indColName);*/
-	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_CATALOG_NAME_SEPARATOR, quaNameSep, sizeof(quaNameSep), &indColName);
-	if (indColName == 1 && quaNameSep[0] == TXTC(' '))
-		quaNameSep[0] = (SQLTCHAR)0;
-	else
-		quaNameSep[indColName] = (SQLTCHAR)0;
-
-/*
-	for (i=0; i< MAX_DESCRIPTOR && l_con->error_number == 0; i++) {
-		l_con->rc = SQLAllocStmt(l_con->hdbc, &(l_con->hstmt[i]));
-		if (l_con->rc) {
-			odbc_error_handler(con, NULL, 101);
-		}
 	}
-*/
+
+	l_con->rc = SQLGetInfo(l_con->hdbc, SQL_CATALOG_NAME_SEPARATOR, quaNameSep, sizeof(quaNameSep), &indColName);
+	if (indColName == 1 && quaNameSep[0] == TXTC(' ')) {
+		quaNameSep[0] = (SQLTCHAR)0;
+	} else {
+		quaNameSep[indColName] = (SQLTCHAR)0;
+	}
 }
 
 /*****************************************************************/
@@ -1468,7 +1526,7 @@ void odbc_disconnect (void *con)
 	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 
 	odbc_clear_error (con);
-	/* l_con->rc = SQLTransact(henv, SQL_NULL_HDBC, SQL_COMMIT); */
+
 	/* Call SQLEndTran on connection level rather than environment level.
 	* Because we don't want to EndTran on other connections in current enviroment */
 	l_con->rc = SQLEndTran(SQL_HANDLE_DBC, l_con->hdbc, SQL_COMMIT);

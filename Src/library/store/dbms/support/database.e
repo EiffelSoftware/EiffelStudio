@@ -286,6 +286,12 @@ feature -- LOGIN and DATABASE_APPL only for password_ok
 		deferred
 		end
 
+	is_connection_string_supported: BOOLEAN
+			-- Support login by connect string?
+		do
+			Result := False
+		end
+
 feature -- For DATABASE_PROC
 
 	support_proc: BOOLEAN
@@ -1044,7 +1050,12 @@ feature -- External features
 		end
 
 	connect (user_name, user_passwd, data_source, application, hostname, roleId: STRING; rolePassWd: detachable STRING; groupId: STRING)
-			-- Connect to an ODBC database
+			-- Connect to database
+		deferred
+		end
+
+	connect_by_connection_string (a_connect_string: STRING)
+			-- Connect to database by connection string
 		deferred
 		end
 

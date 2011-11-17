@@ -15,6 +15,8 @@ inherit
 			{ANY} is_connected
 		end
 
+	DB_EXEC_USE
+
 	HANDLE_SPEC [G]
 
 feature -- Status setting and report
@@ -26,19 +28,41 @@ feature -- Status setting and report
 		local
 			temp1, temp2, temp3, temp4, temp5, temp6, temp8: STRING
 			temp7: detachable STRING
+			l_connect_string: STRING
 			l_login: like handle.login
 		do
 			l_login := handle.login
-			temp1 := l_login.name
-			temp2 := l_login.passwd
-			temp3 := l_login.data_source
-			temp4 := l_login.application
-			temp5 := l_login.hostname
-			temp6 := l_login.roleId
-			temp7 := l_login.rolePassWd
-			temp8 := l_login.groupId
+			if not l_login.is_login_by_connection_string then
+				temp1 := l_login.name
+				temp2 := l_login.passwd
+				temp3 := l_login.data_source
+				temp4 := l_login.application
+				temp5 := l_login.hostname
+				temp6 := l_login.roleId
+				temp7 := l_login.rolePassWd
+				temp8 := l_login.groupId
 
-			db_spec.connect (temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8)
+				db_spec.connect (temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8)
+
+				if is_ok then
+					handle.status.set_connect (True)
+				end
+			else
+				if db_spec.is_connection_string_supported then
+					l_connect_string := l_login.connection_string
+					db_spec.connect_by_connection_string (l_connect_string)
+					if is_ok then
+						handle.status.set_connect (True)
+					end
+				else
+					if is_tracing then
+						fixme ("Unicode support for output tracing.")
+						trace_output.putstring ("Current implementation does not support connection string.")
+						trace_output.new_line
+					end
+					handle.status.set_connect (False)
+				end
+			end
 		end
 
 	disconnect

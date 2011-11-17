@@ -27,7 +27,8 @@ inherit
 			text_not_supported,
 			exec_proc_not_supported,
 			unset_catalog_flag,
-			is_convert_string_type_required
+			is_convert_string_type_required,
+			is_connection_string_supported
 		end
 
 	DISPOSABLE
@@ -399,6 +400,12 @@ feature -- LOGIN and DATABASE_APPL only for password_ok and user_name_ok
 		end
 
 	password_ensure (name, passwd, uname, upasswd: STRING): BOOLEAN
+		do
+			Result := True
+		end
+
+	is_connection_string_supported: BOOLEAN
+			-- Support login by connect string?
 		do
 			Result := True
 		end
@@ -936,6 +943,16 @@ feature -- External
 --			initialize_date_type_values
 		end
 
+	connect_by_connection_string (a_connect_string: STRING)
+			-- Connect to database by connection string
+		local
+			l_string: SQL_STRING
+		do
+			create l_string.make (a_connect_string)
+			odbc_connect_by_connection_string (con_context_pointer, l_string.item)
+			is_error_updated := False
+		end
+
 	disconnect
 		do
 			odbc_disconnect (con_context_pointer)
@@ -1297,6 +1314,11 @@ feature {NONE} -- External features
 		end
 
 	odbc_connect (a_con, user_name, user_passwd, dbName: POINTER)
+		external
+			"C blocking use %"odbc.h%""
+		end
+
+	odbc_connect_by_connection_string (a_con, a_string: POINTER)
 		external
 			"C blocking use %"odbc.h%""
 		end

@@ -627,6 +627,11 @@ feature -- External	features
 			last_error_code := syb_connect (c_temp1.item, c_temp2.item, c_temp3.item, c_temp4.item)
 		end
 
+	connect_by_connection_string (a_connect_string: STRING)
+			-- Connect to database by connection string
+		do
+		end
+
 	disconnect
 		do
 			last_error_code := syb_disconnect

@@ -40,6 +40,7 @@ feature -- Initialization
 			end
 			check l_session_login /= Void end -- implied by previous if clause
 			l_session_login.set (user_name, password)
+			l_session_login.set_is_login_by_connection_string (False)
 		ensure
 			is_logged_to_base: is_logged_to_base
 		end
@@ -55,6 +56,37 @@ feature -- Initialization
 			session_control: DB_CONTROL
 		do
 			login (user_name, password)
+			set_base
+			create session_control.make
+			session_control.connect
+		end
+
+	login_with_connection_string (a_connection_string: STRING)
+			-- Login with `a_connection_string'
+			-- If login with connect string, `user_name', `password' might not be available
+			-- unless they are set manually.
+		local
+			l_session_login: detachable LOGIN [DATABASE]
+		do
+			l_session_login := manager.current_session.session_login
+			if not is_logged_to_base then
+				create {LOGIN [G]} l_session_login.make
+				manager.current_session.set_session_login (l_session_login)
+			end
+			check l_session_login /= Void end -- implied by previous if clause
+			l_session_login.set_connection_string (a_connection_string)
+			l_session_login.set_is_login_by_connection_string (True)
+		ensure
+			is_logged_to_base: is_logged_to_base
+		end
+
+	login_with_connection_string_and_connect (a_connection_string: STRING)
+			-- Login with `a_connection_string'
+			-- and immediately connect to database.
+		local
+			session_control: DB_CONTROL
+		do
+			login_with_connection_string (a_connection_string)
 			set_base
 			create session_control.make
 			session_control.connect

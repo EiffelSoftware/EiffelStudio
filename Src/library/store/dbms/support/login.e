@@ -19,14 +19,16 @@ feature -- Initialization
 
 	make
 		do
-			create name.make (1)
-			create passwd.make (1)
-			create application.make (1)
-			create hostname.make (1)
-			create data_source.make (1)
-			create roleId.make (1)
-			create rolePassWd.make (1)
-			create groupId.make (1)
+			create name.make (0)
+			create passwd.make (0)
+			create application.make (0)
+			create hostname.make (0)
+			create data_source.make (0)
+			create roleId.make (0)
+			create rolePassWd.make (0)
+			create groupId.make (0)
+
+			create connection_string.make (0)
 		end
 
 feature -- Status setting
@@ -96,6 +98,23 @@ feature -- Status setting
 			name_set: groupId.is_equal(ugroupId)
 		end
 
+	set_connection_string (a_str: like connection_string)
+		require
+			a_str_not_void: a_str /= Void
+		do
+			connection_string := a_str
+		ensure
+			connect_string_set: connection_string = a_str
+		end
+
+	set_is_login_by_connection_string (a_b: like is_login_by_connection_string)
+			-- Set `is_login_by_connection_string' with `a_b'.
+		do
+			is_login_by_connection_string := a_b
+		ensure
+			is_login_by_connection_string_set: is_login_by_connection_string = a_b
+		end
+
 feature -- Status report
 
 	name: STRING
@@ -119,8 +138,14 @@ feature -- Status report
 	rolePassWd: detachable STRING
 			-- Role password.
 
-	groupId: STRING;
+	groupId: STRING
 			-- Group Identifier.
+
+	connection_string: STRING
+			-- Connect String
+
+	is_login_by_connection_string: BOOLEAN;
+			-- Login by connection string
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

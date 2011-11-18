@@ -43,19 +43,13 @@ feature -- Access
 
 	class_name: STRING
 			-- Name of generating class which held attribute values
-		local
-			r: detachable STRING
 		do
 			check
 				has_class_entry: has (type_name_key)
 			end
-			if attached {STRING} item (type_name_key) as l_result then
-				r := l_result
+			check attached {STRING} item (type_name_key) as l_result then
+				Result := l_result
 			end
-			check
-				r_attached: r /= Void
-			end
-			Result := r
 		ensure
 			result_exists: Result /= Void
 		end

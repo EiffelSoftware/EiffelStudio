@@ -140,23 +140,22 @@ feature -- Access
 		require
 			is_opened: not is_closed
 		local
-			ent: detachable NATIVE_ARRAY [detachable SYSTEM_STRING]
 			l_name: SYSTEM_STRING
 			l_entry: like lastentry
 		do
 			l_name := name.to_cil
-			ent := {SYSTEM_DIRECTORY}.get_file_system_entries (l_name)
-			check ent_attached: ent /= Void end
-			if search_index >= ent.count then
-				lastentry := Void
-			else
-				create l_entry.make_from_cil (ent.item (search_index))
-					-- Because .NET will return something like `Current_dir\found_entry'
-					-- we need to get rid of `Current_dir\' to be consistent with
-					-- classic EiffelBase.
-				l_entry.remove_head (name.count + 1)
-				lastentry := l_entry
-				search_index := search_index + 1
+			check attached {SYSTEM_DIRECTORY}.get_file_system_entries (l_name) as ent then
+				if search_index >= ent.count then
+					lastentry := Void
+				else
+					create l_entry.make_from_cil (ent.item (search_index))
+						-- Because .NET will return something like `Current_dir\found_entry'
+						-- we need to get rid of `Current_dir\' to be consistent with
+						-- classic EiffelBase.
+					l_entry.remove_head (name.count + 1)
+					lastentry := l_entry
+					search_index := search_index + 1
+				end
 			end
 		end
 
@@ -171,24 +170,23 @@ feature -- Access
 		require
 			string_exists: entry_name /= Void
 		local
-			ent: detachable NATIVE_ARRAY [detachable SYSTEM_STRING]
 			l_name: SYSTEM_STRING
 			en: SYSTEM_STRING
 			i: INTEGER
 			c: INTEGER
 		do
 			l_name := name.to_cil
-			ent := {SYSTEM_DIRECTORY}.get_file_system_entries (l_name)
-			check ent_attached: ent /= Void end
-			en := entry_name.to_cil
-			c := ent.count
-			from
+			check attached {SYSTEM_DIRECTORY}.get_file_system_entries (l_name) as ent then
+				en := entry_name.to_cil
+				c := ent.count
+				from
 
-			until
-				i = c or Result
-			loop
-				Result := attached {SYSTEM_STRING} ent.item (i) as l_string and then l_string.ends_with (en)
-				i := i + 1
+				until
+					i = c or Result
+				loop
+					Result := attached ent.item (i) as l_string and then l_string.ends_with (en)
+					i := i + 1
+				end
 			end
 		end
 
@@ -250,27 +248,27 @@ feature -- Conversion
 	linear_representation: ARRAYED_LIST [STRING]
 			-- The entries, in sequential format.
 		local
-			ent: detachable NATIVE_ARRAY [detachable SYSTEM_STRING]
 			i, c, dc: INTEGER
 			l_string: detachable SYSTEM_STRING
 		do
-			ent := {SYSTEM_DIRECTORY}.get_file_system_entries (name.to_cil)
-			check ent_attached: ent /= Void end
-			c := ent.count
-			dc := name.count
-			if name.item (name.count) = (create {OPERATING_ENVIRONMENT}).directory_separator then
-				dc := dc - 1
-			end
-			create Result.make (c)
-			from
+			check attached {SYSTEM_DIRECTORY}.get_file_system_entries (name.to_cil) as ent then
+				c := ent.count
+				dc := name.count
+				if name.item (name.count) = (create {OPERATING_ENVIRONMENT}).directory_separator then
+					dc := dc - 1
+				end
+				create Result.make (c)
+				from
 
-			until
-				i = c
-			loop
-				l_string := ent.item (i)
-				check l_string_attached: l_string /= Void end
-				Result.extend (create {STRING}.make_from_cil (l_string.remove (0, dc + 1)))
-				i := i + 1
+				until
+					i = c
+				loop
+					l_string := ent.item (i)
+					if l_string /= Void then
+						Result.extend (create {STRING}.make_from_cil (l_string.remove (0, dc + 1)))
+					end
+					i := i + 1
+				end
 			end
 		end
 

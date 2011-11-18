@@ -70,10 +70,12 @@ feature -- Access
 			l_class_type: detachable RT_CLASS_TYPE
 		do
 			l_class_type := {ISE_RUNTIME}.type_of_generic (Current, 1)
-			check l_class_type_attached: l_class_type /= Void end
-			l_class_type := internal.internal_pure_interface_type (l_class_type)
-			check l_class_type_attached: l_class_type /= Void end
-			Result := internal.dynamic_type_from_rt_class_type (l_class_type)
+			check l_class_type /= Void then
+				l_class_type := internal.internal_pure_interface_type (l_class_type)
+				check l_class_type /= Void then
+					Result := internal.dynamic_type_from_rt_class_type (l_class_type)
+				end
+			end
 		ensure
 			type_id_not_negative: Result >= 0
 		end
@@ -92,10 +94,11 @@ feature -- Measurement
 			l_class_type: detachable RT_CLASS_TYPE
 		do
 			l_class_type := {ISE_RUNTIME}.type_of_generic (Current, 1)
-			check l_class_type_attached: l_class_type /= Void end
-			l_class_type := internal.internal_pure_interface_type (l_class_type)
-			if attached {RT_GENERIC_TYPE} l_class_type as l_gen_type then
-				Result := l_gen_type.count
+			check l_class_type /= Void then
+				l_class_type := internal.internal_pure_interface_type (l_class_type)
+				if attached {RT_GENERIC_TYPE} l_class_type as l_gen_type then
+					Result := l_gen_type.count
+				end
 			end
 		end
 
@@ -133,10 +136,12 @@ feature -- Conversion
 			l_type: detachable SYSTEM_TYPE
 		do
 			l_rt_type := {ISE_RUNTIME}.type_of_generic (Current, 1)
-			check l_rt_type_attached: l_rt_type /= Void end
-			l_type := {ISE_RUNTIME}.interface_type (l_rt_type.dotnet_type)
-			check l_type_attached: l_type /= Void end
-			Result := l_type
+			check l_rt_type /= Void then
+				l_type := {ISE_RUNTIME}.interface_type (l_rt_type.dotnet_type)
+				check l_type /= Void then
+					Result := l_type
+				end
+			end
 		end
 
 	adapt alias "[]" (g: detachable G): detachable G

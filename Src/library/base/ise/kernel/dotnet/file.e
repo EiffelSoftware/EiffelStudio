@@ -293,12 +293,11 @@ feature -- Access
 			-- if content is not a stored Eiffel structure.
 		local
 			l_formatter: BINARY_FORMATTER
-			l_result: detachable ANY
 		do
 			create l_formatter.make
-			l_result := l_formatter.deserialize (internal_stream)
-			check l_result_attached: l_result /= Void end
-			Result := l_result
+			check attached l_formatter.deserialize (internal_stream) as l_result then
+				Result := l_result
+			end
 		end
 
 feature -- Measurement
@@ -1072,20 +1071,18 @@ feature -- Element change
 			l_f.open_read
 				-- Append contents of `l_f'.
 			bs := 10000
-			from
-				st := internal_stream
-				ost := l_f.internal_stream
-				check
-					ost_attached: ost /= Void
-					st_attached: st /= Void
+			st := internal_stream
+			ost := l_f.internal_stream
+			check ost /= Void and st /= Void then
+				from
+					create buf.make (bs + 1)
+					rd := ost.read (buf, 0, bs)
+				until
+					rd = 0
+				loop
+					st.write (buf, 0, rd)
+					rd := ost.read (buf, 0, bs)
 				end
-				create buf.make (bs + 1)
-				rd := ost.read (buf, 0, bs)
-			until
-				rd = 0
-			loop
-				st.write (buf, 0, rd)
-				rd := ost.read (buf, 0, bs)
 			end
 				-- Close both files.
 			close

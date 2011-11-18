@@ -73,15 +73,14 @@ feature -- Access
 			l_formatter: BINARY_FORMATTER
 			l_mem: SYSTEM_MEMORY_STREAM
 			l_buf: NATIVE_ARRAY [NATURAL_8]
-			l_result: detachable ANY
 		do
 			create l_buf.make (buffer_size)
 			{MARSHAL}.copy (item, l_buf, 0, buffer_size)
 			create l_mem.make_from_buffer (l_buf)
 			create l_formatter.make
-			l_result := l_formatter.deserialize (l_mem)
-			check l_result_attached: l_result /= Void end
-			Result := l_result
+			check attached l_formatter.deserialize (l_mem) as l_result then
+				Result := l_result
+			end
 			l_mem.close
 		end
 

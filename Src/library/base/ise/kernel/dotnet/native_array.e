@@ -33,10 +33,9 @@ feature -- Access
 		local
 			r: detachable G
 		do
-			check
-				r_attached: r /= Void
+			check attached r as l_result then
+				Result := l_result
 			end
-			Result := r
 		end
 
 feature -- Measurement

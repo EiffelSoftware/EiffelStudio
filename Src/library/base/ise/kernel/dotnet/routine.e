@@ -53,7 +53,6 @@ feature -- Access
 					i := 0
 					nb := l_open_map.count - 1
 					l_internal := internal_operands
-					check l_internal_attached: l_internal /= Void end
 				until
 					i > nb
 				loop
@@ -82,9 +81,7 @@ feature -- Access
 	hash_code: INTEGER
 			-- Hash code value.
 		do
-			if attached rout_disp as l_rout_disp then
-				Result := l_rout_disp.get_hash_code.hash_code
-			end
+			Result := rout_disp.get_hash_code.hash_code
 		end
 
 	precondition (args: like operands): BOOLEAN
@@ -116,7 +113,7 @@ feature -- Status report
 	callable: BOOLEAN
 			-- Can routine be called on current object?
 		do
-			Result := (rout_disp /= Void)
+			Result := True
 		end
 
 	is_equal (other: like Current): BOOLEAN
@@ -137,10 +134,6 @@ feature -- Status report
 			if Result then
 				int_ops := internal_operands
 				other_int_ops := other.internal_operands
-				check
-					int_ops_attached: int_ops /= Void
-					other_int_ops_attached: other_int_ops /= Void
-				end
 				if int_ops.count = other_int_ops.count then
 					from i := int_ops.lower until not Result or else i > other_int_ops.upper loop
 						e := int_ops.item (i)
@@ -226,26 +219,26 @@ feature -- Element change
 		do
 			l_open_map := open_map
 			if l_open_map /= Void then
-				check args_attached: args /= Void end
-				from
-					i := 0
-					nb := l_open_map.count - 1
-					l_internal := internal_operands
-					check l_internal_attached: l_internal /= Void end
-				until
-					i > nb
-				loop
-					l_pos := l_open_map.item (i) - 1
-					if l_pos = 0 then
-						target_object := args.fast_item (i + 1)
-					else
-						if is_inline_agent then
-							l_internal.put (l_pos, args.fast_item (i + 1))
+				check args /= Void then
+					from
+						i := 0
+						nb := l_open_map.count - 1
+						l_internal := internal_operands
+					until
+						i > nb
+					loop
+						l_pos := l_open_map.item (i) - 1
+						if l_pos = 0 then
+							target_object := args.fast_item (i + 1)
 						else
-							l_internal.put (l_pos - 1, args.fast_item (i + 1))
+							if is_inline_agent then
+								l_internal.put (l_pos, args.fast_item (i + 1))
+							else
+								l_internal.put (l_pos - 1, args.fast_item (i + 1))
+							end
 						end
+						i := i + 1
 					end
-					i := i + 1
 				end
 			end
 		ensure
@@ -323,13 +316,13 @@ feature {ROUTINE} -- Implementation
 	frozen target_object: detachable SYSTEM_OBJECT
 			-- Target of call.
 
-	frozen internal_operands: detachable NATIVE_ARRAY [detachable SYSTEM_OBJECT]
+	frozen internal_operands: NATIVE_ARRAY [detachable SYSTEM_OBJECT]
 			-- All open and closed arguments provided at creation time
 
 	frozen open_map: detachable NATIVE_ARRAY [INTEGER]
 			-- Index map for open arguments
 
-	frozen rout_disp: detachable METHOD_BASE
+	frozen rout_disp: METHOD_BASE
 			-- Routine dispatcher
 
 	frozen is_cleanup_needed: BOOLEAN
@@ -350,7 +343,9 @@ feature {ROUTINE} -- Implementation
 			l_target_closed: BOOLEAN
 		do
 			is_inline_agent := a_is_inline_agent
-			rout_disp := {METHOD_BASE}.get_method_from_handle (handle)
+			check attached {METHOD_BASE}.get_method_from_handle (handle) as l_rout then
+				rout_disp := l_rout
+			end
 
 			l_closed_count := closed_args.count
 
@@ -428,29 +423,25 @@ feature {NONE} -- Implementation
 			is_cleanup_needed: is_cleanup_needed
 			has_open_operands: open_map /= Void
 		local
-			l_open_map: like open_map
 			i, nb, l_pos: INTEGER
 			l_internal: like internal_operands
 		do
-			l_open_map := open_map
-			l_internal := internal_operands
-			check
-				open_map_attached: l_open_map /= Void
-				l_internal_attached: l_internal /= Void
-			end
-			from
-				i := 0
-				nb := l_open_map.count - 1
-			until
-				i > nb
-			loop
-				l_pos := l_open_map.item (i) - 1
-				if l_pos = 0 then
-					target_object := Void
-				else
-					l_internal.put (l_pos - 1, Void)
+			check attached open_map as l_open_map then
+				l_internal := internal_operands
+				from
+					i := 0
+					nb := l_open_map.count - 1
+				until
+					i > nb
+				loop
+					l_pos := l_open_map.item (i) - 1
+					if l_pos = 0 then
+						target_object := Void
+					else
+						l_internal.put (l_pos - 1, Void)
+					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 		end
 
@@ -463,20 +454,21 @@ feature {NONE} -- Implementation
 			is_cleanup_needed := False
 			l_open_map := open_map
 			if l_open_map /= Void then
-				check args_attached: args /= Void end
-				from
-					i := 0
-					nb := l_open_map.count - 1
-				until
-					i > nb or is_cleanup_needed
-				loop
-					l_pos := l_open_map.item (i)
-						-- We only need to clean up references so that GC
-						-- can collect them if necessary.
-					if args.is_reference_item (l_pos) then
-						is_cleanup_needed := False
+				check args /= Void then
+					from
+						i := 0
+						nb := l_open_map.count - 1
+					until
+						i > nb or is_cleanup_needed
+					loop
+						l_pos := l_open_map.item (i)
+							-- We only need to clean up references so that GC
+							-- can collect them if necessary.
+						if args.is_reference_item (l_pos) then
+							is_cleanup_needed := False
+						end
+						i := i + 1
 					end
-					i := i + 1
 				end
 			end
 		end
@@ -489,13 +481,10 @@ feature {NONE} -- Implementation
 		local
 			l_internal: INTERNAL
 			l_open_types: like open_types
-			l_open_map: like open_map
 		do
 			l_open_types := open_types
 			if l_open_types = Void then
-				l_open_map := open_map
-				check l_open_map_attached: l_open_map /= Void end
-				create l_open_types.make_filled (0, 1, l_open_map.count)
+				create l_open_types.make_filled (0, 1, open_count)
 				open_types := l_open_types
 			end
 			Result := l_open_types.item (i)

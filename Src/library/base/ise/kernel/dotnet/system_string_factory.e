@@ -17,7 +17,6 @@ feature -- Conversion
 			i, nb: INTEGER
 			l_str: STRING_BUILDER
 			l_dummy: detachable STRING_BUILDER
-			l_string: detachable SYSTEM_STRING
 		do
 			if attached {STRING_8} a_str as l_str8 then
 				create Result.make (l_str8.area.native_array, 0, a_str.count)
@@ -32,9 +31,9 @@ feature -- Conversion
 					l_dummy := l_str.append_character (a_str.code (i).to_character_8)
 					i := i + 1
 				end
-				l_string := l_str.to_string
-				check l_string_attached: l_string /= Void end
-				Result := l_string
+				check attached l_str.to_string as l_string then
+					Result := l_string
+				end
 			end
 		ensure
 			from_string_to_system_string_not_void: Result /= Void

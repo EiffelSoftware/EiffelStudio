@@ -20,6 +20,9 @@ inherit
 			is_equal, copy
 		end
 
+create {NONE}
+	set_rout_disp
+
 feature -- Access
 
 	last_result: detachable RESULT_TYPE
@@ -31,14 +34,11 @@ feature -- Access
 			valid_operands: valid_operands (args)
 			callable: callable
 		local
-			l_rout_disp: like rout_disp
 			l_result_type: detachable RESULT_TYPE
 		do
 			set_operands (args)
 			clear_last_result
-			l_rout_disp := rout_disp
-			check l_rout_disp_attached: l_rout_disp /= Void end
-			l_result_type ?= l_rout_disp.invoke (target_object, internal_operands)
+			l_result_type ?= rout_disp.invoke (target_object, internal_operands)
 			if attached {RESULT_TYPE} l_result_type as l_result then
 				Result := l_result
 			else
@@ -73,12 +73,8 @@ feature -- Basic operations
 
 	apply
 			-- Call function with `operands' as last set.
-		local
-			l_rout_disp: like rout_disp
 		do
-			l_rout_disp := rout_disp
-			check l_rout_disp_attached: l_rout_disp /= Void end
-			last_result ?= l_rout_disp.invoke (target_object, internal_operands)
+			last_result ?= rout_disp.invoke (target_object, internal_operands)
 		end
 
 feature -- Obsolete

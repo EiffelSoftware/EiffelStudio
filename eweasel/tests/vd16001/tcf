@@ -9,8 +9,10 @@
 test_name 	 lace-vd16-basic
 test_description Violate validity constraint VD16 with an identifier in the Option clause in the Ace which is not the same of a class in the corresponding cluster
 
-if DOTNET define DOTNET_OPTION "<file_rule><exclude>ise_runtime.e</exclude><exclude>system_string.e</exclude></file_rule>"
+if DOTNET define DOTNET_OPTION "<file_rule><exclude>ise_runtime.e</exclude></file_rule>"
+if DOTNET define EXCLUDE_SYSTEM_STRING "<exclude>system_string.e</exclude>"
 if not DOTNET define DOTNET_OPTION ""
+if not DOTNET define EXCLUDE_SYSTEM_STRING ""
 
 define		 CLUSTER_OPTION "<class_option class="WEASEL" debug="true"/>"
 copy_sub 	 Ace $TEST Ace

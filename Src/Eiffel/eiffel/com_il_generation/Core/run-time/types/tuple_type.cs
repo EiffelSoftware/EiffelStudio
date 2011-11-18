@@ -44,6 +44,20 @@ namespace EiffelSoftware.Runtime.Types {
 [Serializable]
 public class RT_TUPLE_TYPE: RT_GENERIC_TYPE {
 
+/* 
+feature -- Initialization
+*/
+
+	public RT_TUPLE_TYPE ()
+		// Default creation procedure
+	{
+	}
+
+	public RT_TUPLE_TYPE (RuntimeTypeHandle a_type, RT_TYPE[] an_array): base(a_type, an_array)
+		// Initialize `Current' with type `a_type'.
+	{
+	}
+
 /*
 feature -- Conformance
 */

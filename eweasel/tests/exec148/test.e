@@ -12,9 +12,11 @@ feature {NONE} -- Initialization
 	make is 
 	local
 		dep: DEPENDENT [SUBJECT, SUBJECT]
+		l_func: MY_FUNCTION [SUBJECT, TUPLE [SUBJECT], LINKED_LIST [SUBJECT]]
 	do
 	  create dep
-	  dep.set_func (agent {SUBJECT}.theFunction)
+	  create l_func
+	  dep.set_func (l_func)
 	end
 
 end

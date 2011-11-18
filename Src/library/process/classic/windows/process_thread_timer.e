@@ -12,6 +12,16 @@ inherit
 	PROCESS_TIMER
 
 	THREAD
+		rename
+			sleep as obsolete_sleep
+		end
+
+	EXECUTION_ENVIRONMENT
+		rename
+			launch as execution_environment_launch
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -90,7 +100,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature{NONE} -- Implementation
+feature {NONE} -- Implementation
 
 	should_destroy: BOOLEAN
 			-- Should this timer be destroyed?
@@ -103,7 +113,7 @@ invariant
 	mutex_not_void: mutex /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

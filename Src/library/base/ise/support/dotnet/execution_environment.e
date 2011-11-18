@@ -93,11 +93,9 @@ feature -- Access
 					if attached {DICTIONARY_ENTRY} l_enumerator.current_ as l_entry then
 						l_key ?= l_entry.key
 						l_value ?= l_entry.value
-						check
-							l_key /= Void
-							l_value /= Void
+						if l_key /= Void and l_value /= Void then
+							Result.force (l_value, l_key)
 						end
-						Result.force (l_value, l_key)
 					end
 				end
 			else
@@ -184,7 +182,6 @@ feature {NONE} -- Implementation
 			l_cmd, l_args: detachable STRING
 			l_si: SYSTEM_DLL_PROCESS_START_INFO
 			l_pos: INTEGER
-			last_process: detachable SYSTEM_DLL_PROCESS
 		do
 			if (current_working_directory @ 2) = ':' then -- assume a volume
 				internal_launch_from_local_volume (s, should_wait)
@@ -210,11 +207,11 @@ feature {NONE} -- Implementation
 					l_si.set_use_shell_execute (False)
 					l_si.set_redirect_standard_error (True)
 					l_si.set_redirect_standard_output (True)
-					last_process := {SYSTEM_DLL_PROCESS}.start_process_start_info (l_si)
-					check last_process_attached: last_process /= Void end
-					if should_wait then
-						last_process.wait_for_exit
-						return_code := last_process.exit_code
+					check attached {SYSTEM_DLL_PROCESS}.start_process_start_info (l_si) as last_process then
+						if should_wait then
+							last_process.wait_for_exit
+							return_code := last_process.exit_code
+						end
 					end
 				end
 			end
@@ -232,7 +229,6 @@ feature {NONE} -- Implementation
 			l_comspec: detachable STRING
 			l_si: SYSTEM_DLL_PROCESS_START_INFO
 			l_pos: INTEGER
-			last_process: detachable SYSTEM_DLL_PROCESS
 		do
 			if should_wait then
 				l_comspec := get ("COMSPEC")
@@ -258,11 +254,11 @@ feature {NONE} -- Implementation
 				end
 			end
 			l_si.set_use_shell_execute (False)
-			last_process := {SYSTEM_DLL_PROCESS}.start_process_start_info (l_si)
-			check last_process_attached: last_process /= Void end
-			if should_wait then
-				last_process.wait_for_exit
-				return_code := last_process.exit_code
+			check attached {SYSTEM_DLL_PROCESS}.start_process_start_info (l_si) as last_process then
+				if should_wait then
+					last_process.wait_for_exit
+					return_code := last_process.exit_code
+				end
 			end
 		end
 

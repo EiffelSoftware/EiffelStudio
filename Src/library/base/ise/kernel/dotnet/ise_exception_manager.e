@@ -353,7 +353,7 @@ feature {NONE} -- Implementation, exception chain
 			constructed_exception_chain_not_void: Result /= Void
 		end
 
-	wrapped_exception (a_exception: NATIVE_EXCEPTION): detachable EXCEPTION
+	wrapped_exception (a_exception: NATIVE_EXCEPTION): EXCEPTION
 			-- Wrapped .NET exception
 		require
 			a_exception_not_void: a_exception /= Void
@@ -388,9 +388,7 @@ feature {NONE} -- Implementation, exception chain
 		local
 			l_routine_name, l_class: detachable STRING
 			l_stack_trace: STACK_TRACE
-			l_frame: detachable STACK_FRAME
 			l_frame_count, i: INTEGER
-			l_method: detachable METHOD_BASE
 			l_skipped, l_to_skip: INTEGER
 			l_line_number: INTEGER
 			l_found: BOOLEAN
@@ -404,10 +402,11 @@ feature {NONE} -- Implementation, exception chain
 			until
 				i >= l_frame_count or else l_found
 			loop
-				l_frame := l_stack_trace.get_frame (i)
-				check l_frame_attached: l_frame /= Void end
-				l_method := l_frame.get_method
-				if l_method /= Void and then is_filtered_routine (l_method) then
+				if
+					attached l_stack_trace.get_frame (i) as l_frame and then
+					attached l_frame.get_method as l_method and then
+					is_filtered_routine (l_method)
+				then
 					if l_skipped >= l_to_skip then
 						create l_routine_name.make_from_cil (l_method.name)
 						if l_routine_name.count > 2 and then
@@ -417,8 +416,9 @@ feature {NONE} -- Implementation, exception chain
 							l_routine_name := l_routine_name.substring (3, l_routine_name.count)
 						end
 						l_type := l_method.declaring_type
-						check l_type_not_void: l_type /= Void end
-						create l_class.make_from_cil (l_type.name)
+						check l_type /= Void then
+							create l_class.make_from_cil (l_type.name)
+						end
 						l_line_number := l_frame.get_file_line_number
 						l_found := True
 					else
@@ -440,16 +440,15 @@ feature {NONE} -- Implementation, exception chain
 		local
 			l_attributes: detachable NATIVE_ARRAY [detachable SYSTEM_OBJECT]
 			l_routine_name: STRING
-			l_type: detachable SYSTEM_TYPE
 		do
-			l_type := a_method.declaring_type
-			check l_type_attached: l_type /= Void end
-			l_attributes := l_type.get_custom_attributes ({EIFFEL_NAME_ATTRIBUTE}, False)
-			if l_attributes /= Void and then l_attributes.count = 1 then
-				if attached {EIFFEL_NAME_ATTRIBUTE} l_attributes.item (0) as l_attr then
-					if not filtered_class.has (create {STRING}.make_from_cil(l_attr.name)) then
-						create l_routine_name.make_from_cil (a_method.name)
-						Result := not filtered_routines.has (l_routine_name)
+			if attached a_method.declaring_type as l_type then
+				l_attributes := l_type.get_custom_attributes ({EIFFEL_NAME_ATTRIBUTE}, False)
+				if l_attributes /= Void and then l_attributes.count = 1 then
+					if attached {EIFFEL_NAME_ATTRIBUTE} l_attributes.item (0) as l_attr then
+						if not filtered_class.has (create {STRING}.make_from_cil(l_attr.name)) then
+							create l_routine_name.make_from_cil (a_method.name)
+							Result := not filtered_routines.has (l_routine_name)
+						end
 					end
 				end
 			end
@@ -495,7 +494,6 @@ feature {NONE} -- Internal raise, Implementation of RT_EXCEPTION_MANAGER
 	internal_raise (e_code: INTEGER; msg: SYSTEM_STRING)
 			-- Internal raise exception of code `e_code'
 		local
-			l_exception: detachable EXCEPTION
 			l_inv: detachable INVARIANT_VIOLATION
 			l_saved_assertion, l_assertion_set: BOOLEAN
 			l_assertion_tag: STRING
@@ -505,28 +503,28 @@ feature {NONE} -- Internal raise, Implementation of RT_EXCEPTION_MANAGER
 				l_assertion_set := True
 				l_saved_assertion := {ISE_RUNTIME}.check_assert (False)
 			end
-			l_exception := exception_from_code (e_code)
-			check l_exception_not_void: l_exception /= Void end
-			l_inv ?= l_exception
-			if l_inv /= Void then
-				l_inv.set_is_entry ({ISE_RUNTIME}.invariant_entry)
-			end
-			if msg /= Void then
-				create l_assertion_tag.make_from_cil (msg)
-				l_exception.set_message (l_assertion_tag)
-			else
-				l_assertion_tag := ""
-			end
-			if not l_exception.is_ignored then
-					-- Restore assertion level just before throwing the exception.
+			check attached exception_from_code (e_code) as l_exception then
+				l_inv ?= l_exception
+				if l_inv /= Void then
+					l_inv.set_is_entry ({ISE_RUNTIME}.invariant_entry)
+				end
+				if msg /= Void then
+					create l_assertion_tag.make_from_cil (msg)
+					l_exception.set_message (l_assertion_tag)
+				else
+					l_assertion_tag := ""
+				end
+				if not l_exception.is_ignored then
+						-- Restore assertion level just before throwing the exception.
+					if l_assertion_set then
+						l_saved_assertion := {ISE_RUNTIME}.check_assert (l_saved_assertion)
+					end
+					{ISE_RUNTIME}.raise (l_exception)
+				end
+					-- The exception is ingored. Restore assertion level.
 				if l_assertion_set then
 					l_saved_assertion := {ISE_RUNTIME}.check_assert (l_saved_assertion)
 				end
-				{ISE_RUNTIME}.raise (l_exception)
-			end
-				-- The exception is ingored. Restore assertion level.
-			if l_assertion_set then
-				l_saved_assertion := {ISE_RUNTIME}.check_assert (l_saved_assertion)
 			end
 		end
 

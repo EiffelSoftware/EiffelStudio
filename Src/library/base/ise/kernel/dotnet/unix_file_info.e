@@ -279,7 +279,6 @@ feature -- Element change
 		local
 			f: RAW_FILE
 			fi: FILE_INFO
-			l_name: detachable SYSTEM_STRING
 		do
 			create f.make (f_name)
 			create fi.make (f_name.to_cil)
@@ -315,9 +314,9 @@ feature -- Element change
 				date := f.date
 				access_date := f.access_date
 				change_date := f.change_date
-				l_name := fi.full_name
-				check l_name_attached: l_name /= Void end
-				device := l_name.chars (0).code - ('A').code
+				check attached fi.full_name as l_name then
+					device := l_name.chars (0).code - ('A').code
+				end
 				device_type := device
 				links := 1
 				is_owner := True

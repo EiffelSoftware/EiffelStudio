@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 			max_slice_preference := l_manager.new_integer_preference_value (l_manager, max_slice_string, 50)
 			max_evaluation_duration_preference := l_manager.new_integer_preference_value (l_manager, max_evaluation_duration_preference_string, 5)
 			keep_stepping_info_dotnet_feature_preference := l_manager.new_boolean_preference_value (l_manager, keep_stepping_info_dotnet_feature_string, False)
-			dotnet_debugger_preference := l_manager.new_array_preference_value (l_manager, dotnet_debugger_string, <<"[EiffelStudio Dbg];cordbg;DbgCLR">>)
+			dotnet_debugger_preference := l_manager.new_array_preference_value (l_manager, dotnet_debugger_string, <<"[EiffelStudio Dbg];MDbg;cordbg;DbgCLR">>)
 			dotnet_debugger_preference.set_is_choice (True)
 			close_classic_dbg_daemon_on_end_of_debugging_preference := l_manager.new_boolean_preference_value (l_manager, close_classic_dbg_daemon_on_end_of_debugging_string, True)
 			classic_debugger_timeout_preference := l_manager.new_integer_preference_value (l_manager, classic_debugger_timeout_string, 0)

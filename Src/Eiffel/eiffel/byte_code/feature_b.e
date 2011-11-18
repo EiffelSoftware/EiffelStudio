@@ -442,8 +442,13 @@ feature -- Inlining
 				cl_type ?= type_i -- Cannot fail
 					-- Get information on the routine being inlined.
 				f := system.class_of_id (entry.class_id).feature_of_feature_id (entry.feature_id)
-					-- Ensure the feature is not redeclared into attribute or external routine
-				if f.is_attribute then
+					-- Ensure the feature is not redeclared into attribute or external routine.
+				if f.is_failing then
+						-- Inlining a feature that fails does not make much sense because:
+						-- 1) it does not speed up execution since exception propagation is much slower;
+						-- 2) it would be easier to track exception point if it is not inlined.
+					inline := False
+				elseif f.is_attribute then
 						-- Changed the FEATURE_B into an ATTRIBUTE_B only if attribute is not of
 						-- an attached type in some descendant that declares an explicit body for it.
 						-- This is necessary because if the attribute requires a wrapper, often the wrapper

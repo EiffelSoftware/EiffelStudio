@@ -88,14 +88,6 @@ feature {NONE} -- Basic operations
 				end
 				io.put_string (".%N")
 
-				if a_parser.is_compatibile then
-					io.put_string ("Using 6.3 compatibility mode%N")
-				end
-					-- Set the compatibility mode.
-				(create {CONF_DEFAULT_OPTION_SETTING}).set_is_63_compatible (a_parser.is_compatibile)
-
-				io.new_line
-
 				from l_files.start until l_files.after loop
 					if attached l_files.item as l_file_name then
 						io.put_string ("Processing: ")

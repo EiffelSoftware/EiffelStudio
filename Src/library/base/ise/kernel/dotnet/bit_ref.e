@@ -10,7 +10,11 @@ note
 --| For implementation reasons, additional operations on BIT types can
 --| only be introduced by ISE
 
-class BIT_REF inherit
+class BIT_REF
+
+obsolete "BIT type is not part of the standard. Use NATURAL_8, NATURAL_16, NATURAL_32 or NATURAL_64 and corresponding bit operations instead."
+
+inherit
 
 	ANY
 		redefine

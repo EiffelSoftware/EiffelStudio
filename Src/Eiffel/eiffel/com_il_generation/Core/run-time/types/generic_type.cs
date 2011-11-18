@@ -44,6 +44,22 @@ namespace EiffelSoftware.Runtime.Types {
 [Serializable]
 public class RT_GENERIC_TYPE: RT_CLASS_TYPE {
 
+/* 
+feature -- Initialization
+*/
+
+	public RT_GENERIC_TYPE ()
+		// Default creation procedure
+	{
+	}
+
+	public RT_GENERIC_TYPE (RuntimeTypeHandle a_type, RT_TYPE[] an_array)
+		// Initialize `Current' with type `a_type'.
+	{
+		type = a_type;
+		set_generics (an_array);
+	}
+
 /*
 feature -- Access
 */

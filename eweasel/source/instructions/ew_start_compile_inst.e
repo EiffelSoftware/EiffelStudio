@@ -22,18 +22,7 @@ feature
 		local
 			name, compile_cmd, exec_error: STRING;
 			compilation: EW_EIFFEL_COMPILATION;
-			curr_dir, test_dir: STRING;
 		do
-			-- Work around a bug in Eiffel 4.2 (can't start
-			-- es4 on existing project unless project directory
-			-- is current directory
-
-			curr_dir := current_working_directory;
-			test_dir := test.environment.value (Test_dir_name);
-			-- FIXME: remove if -project_path works
-			-- if test_dir /= Void then
-			-- 	change_working_directory (test_dir);
-			-- end
 			compilation := test.e_compilation;
 			if compilation = Void or else not compilation.suspended then
 				compile_cmd := test.environment.value (Compile_command_name)
@@ -59,7 +48,6 @@ feature
 				failure_explanation := "suspended compilation in progress";
 				execute_ok := False;
 			end
-			change_working_directory (curr_dir);
 		end;
 
 	compilation_options: LIST [STRING]

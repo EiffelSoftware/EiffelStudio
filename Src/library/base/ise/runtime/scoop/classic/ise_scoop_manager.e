@@ -694,6 +694,11 @@ feature -- Command/Query Handling
 				loop
 					if l_dirty_processor_client_list [i] = a_client_processor_id then
 						Result := True
+							-- Reset dirty flag for `a_client_processor_id'.
+						l_dirty_processor_client_list [i] := null_processor_id
+							-- Update dirty flag count for the client processor.
+						i := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 (processor_meta_data [a_client_processor_id].item_address (processor_dirty_flag_count_index))
+							-- Exit loop.
 						i := maximum_dirty_processor_client_count
 					end
 					i := i + 1
@@ -1407,8 +1412,8 @@ feature {NONE} -- Resource Initialization
 	previous_waiting_processor_count: like waiting_processor_count
 		-- Previous number of waiting processors, used for deadlock detection.
 
-	deadlock_detection_limit: NATURAL_16 = 1000
-		-- Number of iterations an idle processor
+	deadlock_detection_limit: INTEGER_32 = 1000
+		-- Number of iterations the system may remain in a constant idle state before raising an exception.
 
 	scoop_command_call_with_exception_check (a_data: like call_data): BOOLEAN
 			-- Apply scoop call represented by `a_data'.
@@ -1590,8 +1595,6 @@ feature {NONE} -- Scoop Processor Meta Data
 			-- Make processor `a_client_processor_id' wait until its semaphore is signalled.
 		local
 			l_waiting_count, l_waiting_semaphore_count: INTEGER
---			l_processor_meta_data: like new_processor_meta_data_entry
---			l_wait_counter: INTEGER
 		do
 			l_waiting_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($waiting_processor_count)
 			if a_supplier_processor_id /= a_client_processor_id then
@@ -1599,19 +1602,6 @@ feature {NONE} -- Scoop Processor Meta Data
 				if l_waiting_semaphore_count = processor_count then
 					raise_scoop_exception (scoop_processor_deadlock_detected_message)
 				end
---				from
---					l_processor_meta_data := processor_meta_data [a_client_processor_id]
---				until
---					{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_processor_meta_data.item_address (processor_semaphore_status_index), 0) = processor_semaphore_status_signalled
---				loop
---					if l_wait_counter < 1000 then
---						l_wait_counter := l_wait_counter + 1
---					else
---				    	processor_cpu_yield
---				    	check_for_gc
---				    end
---				end
---				l_processor_meta_data [processor_semaphore_status_index] := processor_semaphore_status_running
 				semaphore_client_wait (processor_semaphore_list [a_client_processor_id])
 			end
 		end
@@ -1626,10 +1616,57 @@ feature {NONE} -- Scoop Processor Meta Data
 			if a_client_processor_id /= null_processor_id then
 				if a_client_processor_id /= a_supplier_processor_id then
 					l_waiting_semaphore_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($waiting_semaphore_count)
-
---					l_waiting_semaphore_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 ((processor_meta_data [a_client_processor_id]).item_address (processor_semaphore_status_index), processor_semaphore_status_signalled)
-
 					semaphore_supplier_signal (processor_semaphore_list [a_client_processor_id])
+				end
+			end
+		end
+
+	processor_busy_wait (a_client_processor_id, a_supplier_processor_id: like processor_id_type)
+			-- Make processor `a_client_processor_id' wait until its semaphore is signalled.
+		local
+			l_waiting_count, l_waiting_semaphore_count: INTEGER
+			l_processor_meta_data: like new_processor_meta_data_entry
+			l_wait_counter: NATURAL_32
+		do
+			l_waiting_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($waiting_processor_count)
+			if a_supplier_processor_id /= a_client_processor_id then
+				l_waiting_semaphore_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($waiting_semaphore_count)
+				if l_waiting_semaphore_count = processor_count then
+					raise_scoop_exception (scoop_processor_deadlock_detected_message)
+				end
+
+				from
+					l_processor_meta_data := processor_meta_data [a_client_processor_id]
+				until
+					{ATOMIC_MEMORY_OPERATIONS}.compare_and_swap_integer_32 (l_processor_meta_data.item_address (processor_semaphore_status_index), processor_semaphore_status_running, processor_semaphore_status_signalled) = processor_semaphore_status_signalled
+				loop
+					if l_wait_counter > 0 then
+						processor_cpu_yield
+						l_wait_counter := 0
+					else
+				    	from
+				    		l_wait_counter := 1
+				    	until
+				    		l_wait_counter = processor_spin_lock_limit
+				    	loop
+				    		l_wait_counter := l_wait_counter + 1
+				    	end
+				    end
+				end
+			end
+		end
+
+	processor_busy_wake_up (a_client_processor_id, a_supplier_processor_id: like processor_id_type)
+			-- Signal processor `a_client_processor_id' to wake up for `a_supplier_processor_id'
+		local
+			l_waiting_count: INTEGER
+			l_waiting_semaphore_count: INTEGER
+		do
+			l_waiting_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($waiting_processor_count)
+			if a_client_processor_id /= null_processor_id then
+				if a_client_processor_id /= a_supplier_processor_id then
+					l_waiting_semaphore_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($waiting_semaphore_count)
+					l_waiting_semaphore_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 ((processor_meta_data [a_client_processor_id]).item_address (processor_semaphore_status_index), processor_semaphore_status_signalled)
 				end
 			end
 		end
@@ -1886,28 +1923,31 @@ feature {NONE} -- Externals
 
 	frozen processor_yield (a_processor_id: like processor_id_type; a_iteration_number: NATURAL_32)
 			-- Yield processor `a_processor_id' to competing threads for an OS specific set time.
+		local
+			l_temp_val: INTEGER_32
 		do
 			if a_iteration_number < processor_spin_lock_limit then
 					-- Spin lock
+				l_temp_val := l_temp_val + 1
 			elseif a_iteration_number < max_yield_counter then
 				processor_cpu_yield
 			else
+				processor_cpu_yield
 					-- Check for any potential deadlock.
+
+				l_temp_val := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 ($waiting_processor_count, 0)
 				if
-					waiting_processor_count > 0 and then
-					waiting_processor_count = previous_waiting_processor_count and then
-					(waiting_processor_count + idle_processor_count = processor_count)
+					waiting_semaphore_count > 0 and then
+					l_temp_val = previous_waiting_processor_count and then
+					(l_temp_val + idle_processor_count = processor_count)
 				then
-					deadlock_counter := deadlock_counter + 1
+					if {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($deadlock_counter) > (deadlock_detection_limit * processor_count) then
+						raise_scoop_exception (scoop_processor_deadlock_detected_message)
+					end
 				else
-					deadlock_counter := 0
+					l_temp_val := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 ($deadlock_counter, 0)
 				end
 				previous_waiting_processor_count := waiting_processor_count
-				if deadlock_counter > deadlock_detection_limit then
-					raise_scoop_exception (scoop_processor_deadlock_detected_message)
-				else
-					processor_cpu_yield
-				end
 			end
 			check_for_gc
 		end

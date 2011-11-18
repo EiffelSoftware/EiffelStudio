@@ -177,19 +177,39 @@ feature -- Access
 			key: detachable WEL_REGISTRY_KEY_VALUE
 			l_major_version: STRING
 		do
-			create reg
-			p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\.NETFramework",
-				{WEL_REGISTRY_ACCESS_MODE}.Key_read)
-			if p /= default_pointer then
-				l_major_version := version.twin
-				l_major_version.keep_head (4)
-				if attached {STRING} sdk_keys.item (l_major_version) as l_key then
-					key := reg.key_value (p, l_key)
-					if key /= Void then
-						Result := key.string_value
+			l_major_version := version.twin
+			l_major_version.keep_head (4)
+			if old_sdk_keys.has (l_major_version) then
+					-- For version v2.0 and earlier, the path to the SDK path is simple to find.
+				create reg
+				p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\.NETFramework",
+					{WEL_REGISTRY_ACCESS_MODE}.Key_read)
+				if p /= default_pointer then
+					if attached {STRING} old_sdk_keys.item (l_major_version) as l_key then
+						key := reg.key_value (p, l_key)
+						if key /= Void then
+							Result := key.string_value
+						end
+					end
+					reg.close_key (p)
+				end
+			else
+					-- For version v4.0 and later, the path actually depends on what was installed on your machine,
+					-- i.e. Visual Studio vs Windows SDK and the version of the SDK used.
+					-- For the time being we take the first one that is not Void.
+				across sdk_key_paths as l_path
+				until
+					Result /= Void
+				loop
+					create reg
+					p := reg.open_key_with_access (l_path.item, {WEL_REGISTRY_ACCESS_MODE}.key_read)
+					if p /= default_pointer then
+						key := reg.key_value (p, "InstallationFolder")
+						if key /= Void then
+							Result := key.string_value
+						end
 					end
 				end
-				reg.close_key (p)
 			end
 		end
 
@@ -197,12 +217,17 @@ feature -- Access
 			-- Path to bin directory of .NET Framework SDK of version `version'.
 		local
 			l_path: detachable STRING
+			l_major_version: STRING
 		do
 			l_path := Dotnet_framework_sdk_path
 			if l_path /= Void then
-				l_path := dotnet_framework_sdk_path
-				if l_path /= Void then
+				l_major_version := version.twin
+				l_major_version.keep_head (4)
+				if old_sdk_keys.has (l_major_version) then
+						-- In the old SDKs, it was in a subdirectory
 					Result := l_path + "bin\"
+				else
+					Result := l_path
 				end
 			end
 		end
@@ -221,6 +246,12 @@ feature -- Query
 			Result := a_string /= Void and then a_string.is_equal ("DbgCLR")
 		end
 
+	use_mdbg (a_string: STRING): BOOLEAN
+			-- Should current use MDbg.exe?
+		do
+			Result := a_string /= Void and then a_string.is_equal ("MDbg")
+		end
+
 	dotnet_debugger_path (a_debug: STRING): detachable STRING
 			-- The path to the .NET debugger associated with 'a_debug'.
 		require
@@ -228,8 +259,13 @@ feature -- Query
 		local
 			l_path: detachable STRING
 		do
-			if use_cordbg (a_debug) then
-				l_path := Dotnet_framework_sdk_bin_path
+			if use_mdbg (a_debug) then
+				l_path := dotnet_framework_sdk_bin_path
+				if l_path /= Void then
+					Result := l_path + a_debug + ".exe"
+				end
+			elseif use_cordbg (a_debug) then
+				l_path := dotnet_framework_sdk_bin_path
 				if l_path /= Void then
 					Result := l_path + a_debug + ".exe"
 				end
@@ -254,8 +290,8 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	sdk_keys: HASH_TABLE [STRING, STRING]
-			-- List of keys associated to each known version of the .NET runtime.
+	old_sdk_keys: HASH_TABLE [STRING, STRING]
+			-- List of keys associated to each known version of the .NET runtime up to version 2.0
 		once
 			create Result.make (2)
 			Result.put ("sdkInstallRoot", v1_0)
@@ -263,6 +299,33 @@ feature {NONE} -- Implementation
 			Result.put ("sdkInstallRootv2.0", v2_0)
 		ensure
 			sdk_keys_not_void: Result /= Void
+		end
+
+	sdk_key_paths: ARRAYED_LIST [STRING]
+			-- List of keys associated to each known version of the .NET runtime from version 4.0
+		require
+			version_valid: version.count >= 4
+		local
+			l_major, l_minor: INTEGER
+			l_path: STRING
+		do
+			create Result.make (2)
+
+			create l_path.make_from_string ("hkey_local_machine\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.1\WinSDK-NetFx")
+				-- Major version
+			l_path.append_character (version.item (2))
+				-- Minor version
+			l_path.append_character (version.item (4))
+			l_path.append ("Tools")
+			Result.extend (l_path)
+
+			create l_path.make_from_string ("hkey_local_machine\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0A\WinSDK-NetFx")
+				-- Major version
+			l_path.append_character (version.item (2))
+				-- Minor version
+			l_path.append_character (version.item (4))
+			l_path.append ("Tools")
+			Result.extend (l_path)
 		end
 
 	dotnet_runtime_path: detachable STRING
@@ -300,6 +363,9 @@ feature -- Constants
 
 	v2_0: STRING = "v2.0"
 			-- Version number of v2.0 of Microsoft .NET
+
+	v4_0: STRING = "v4.0"
+			-- Version number of v4.0 of Microsoft .NET
 
 feature {NONE} -- Constants
 

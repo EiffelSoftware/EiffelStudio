@@ -2764,10 +2764,10 @@ rt_shared void print_old_generic_names (int32 *gtypes, int count)
 	}
 }
 
-rt_shared void print_generic_names (struct cecil_info *info, int type)
+rt_shared void print_generic_names (struct cecil_info *info, size_t type)
 {
 	int i, j, found = 0;
-	int32 *patterns;
+	uint32 *patterns;
 
 	for (i = 0; i < info->nb_param ; ++i) {
 		if (info->dynamic_types[i] == type) {
@@ -2787,7 +2787,7 @@ rt_shared void print_generic_names (struct cecil_info *info, int type)
 }
 
 rt_shared void print_object_summary (
-		char *prefix, EIF_REFERENCE object, long expanded_offset, EIF_TYPE_INDEX dtype)
+		char *prefix, EIF_REFERENCE object, rt_uint_ptr expanded_offset, EIF_TYPE_INDEX dtype)
 {
 	type_descriptor *conv = type_description (dtype);
 	if (object == NULL)

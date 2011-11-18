@@ -84,13 +84,12 @@ feature -- Duplication
 			-- `twin' calls `copy'; to change copying/twining semantics, redefine `copy'.
 		local
 			l_temp: BOOLEAN
-			l_result: detachable like Current
 		do
 			l_temp := {ISE_RUNTIME}.check_assert (False)
-			l_result ?= {ISE_RUNTIME}.standard_clone (Current)
-			check l_result_attached: l_result /= Void end
-			l_result.copy (Current)
-			Result := l_result
+			check attached {ISE_RUNTIME}.standard_clone (Current) as l_result then
+				l_result.copy (Current)
+				Result := l_result
+			end
 			l_temp := {ISE_RUNTIME}.check_assert (l_temp)
 		end
 
@@ -114,18 +113,17 @@ feature -- Duplication
 		local
 			l_result: detachable like Current
 		do
-			check l_result_not_void: l_result /= Void end
-			Result := l_result
+			check l_result /= Void then
+				Result := l_result
+			end
 		end
 
 	frozen deep_twin: like Current
 			-- New object structure recursively duplicated from Current.
-		local
-			l_result: detachable like Current
 		do
-			l_result ?= {ISE_RUNTIME}.deep_twin (Current)
-			check l_result_attached: l_result /= Void end
-			Result := l_result
+			check attached {ISE_RUNTIME}.deep_twin (Current) as l_result then
+				Result := l_result
+			end
 		end
 
 feature -- Output

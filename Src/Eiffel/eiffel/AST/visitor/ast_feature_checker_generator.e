@@ -8012,7 +8012,6 @@ feature {NONE} -- Implementation
 			if assert_id_set /= Void then
 				context.clear_local_context
 				set_is_inherited (True)
-				inherited_type_a_checker.init_for_checking (a_feature, context.written_class, Void, Void)
 				if context.local_scope = Void then
 						-- Initialize structures to record and access scopes in assertions.
 						-- This is required for result in postcondition, but also to make sure there is no call on void target
@@ -8049,6 +8048,7 @@ feature {NONE} -- Implementation
 						l_old_written_class := context.written_class
 						l_written_class := system.class_of_id (assertion_info.written_in)
 						context.set_written_class (l_written_class)
+						inherited_type_a_checker.init_for_checking (a_feature, l_written_class, Void, Void)
 						if process_preconditions then
 							if assertion_info.has_precondition then
 								set_is_checking_precondition (True)

@@ -1,0 +1,156 @@
+
+test_name 	 internal-search-crash
+test_description Repeated compilations using a config file with many libraries and switching back and forth between all_classes="true" and all_classes="false" crashes the compiler in {SEARCH_TABLE}.internal_search
+
+define		ALL_CLASSES "true"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+
+define		ALL_CLASSES "false"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	ok
+
+define		ALL_CLASSES "true"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+
+define		ALL_CLASSES "false"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	ok
+
+define		ALL_CLASSES "true"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+
+define		ALL_CLASSES "false"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	ok
+
+define		ALL_CLASSES "true"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+
+define		ALL_CLASSES "false"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	ok
+
+define		ALL_CLASSES "true"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+
+define		ALL_CLASSES "false"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	ok
+
+define		ALL_CLASSES "true"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+
+define		ALL_CLASSES "false"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	ok
+
+define		ALL_CLASSES "true"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+
+define		ALL_CLASSES "false"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	ok
+
+define		ALL_CLASSES "true"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+
+define		ALL_CLASSES "false"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	ok
+
+define		ALL_CLASSES "true"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+
+define		ALL_CLASSES "false"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	ok
+
+define		ALL_CLASSES "true"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+
+define		ALL_CLASSES "false"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	ok
+
+define		ALL_CLASSES "true"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+
+define		ALL_CLASSES "false"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	ok
+
+define		ALL_CLASSES "true"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+
+define		ALL_CLASSES "false"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	ok
+
+define		ALL_CLASSES "true"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+
+define		ALL_CLASSES "false"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	ok
+
+define		ALL_CLASSES "true"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+
+define		ALL_CLASSES "false"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	ok
+
+define		ALL_CLASSES "true"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+
+define		ALL_CLASSES "false"
+copy_sub	Ace $TEST Ace
+compile_frozen
+compile_result	ok
+
+test_end
+

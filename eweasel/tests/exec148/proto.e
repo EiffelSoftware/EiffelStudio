@@ -8,7 +8,7 @@ deferred class PROTO [S -> SUBJECT, T]
 	
 feature
 		
-	set_func (aspf: FUNCTION [S, TUPLE[S], T]) is
+	set_func (aspf: MY_FUNCTION [S, TUPLE[S], T]) is
 		do
 			create func
 			print (func.generating_Type)
@@ -23,6 +23,6 @@ feature
 
 feature -- Access
 	
-	func: FUNCTION [S, TUPLE[S], T]
+	func: MY_FUNCTION [S, TUPLE[S], T]
 		
 end -- class PROTO

@@ -314,8 +314,12 @@ feature {NONE} -- Implementation functions
 			clear_all_indicator
 			internal_shared.feedback.clear
 
-			ev_application.key_press_actions.prune_all (internal_key_press_function)
-			ev_application.key_release_actions.prune_all (internal_key_release_function)
+			if attached internal_key_press_function as l_key then
+				ev_application.key_press_actions.prune_all (l_key)
+			end
+			if attached internal_key_release_function as l_key then
+				ev_application.key_release_actions.prune_all (l_key)
+			end
 
 			internal_shared.setter.after_disable_capture
 
@@ -609,10 +613,10 @@ feature {NONE} -- Implementation attributes
 	internal_shared: SD_SHARED
 			-- All singletons
 
-	internal_key_press_function: PROCEDURE [ANY, TUPLE [EV_WIDGET, EV_KEY]]
+	internal_key_press_function: detachable PROCEDURE [ANY, TUPLE [EV_WIDGET, EV_KEY]] note option: stable attribute end
 			-- Golbal key press action
 
-	internal_key_release_function: PROCEDURE [ANY, TUPLE [EV_WIDGET, EV_KEY]]
+	internal_key_release_function: detachable PROCEDURE [ANY, TUPLE [EV_WIDGET, EV_KEY]] note option: stable attribute end
 			-- Golbal key release action
 
 	focus_out_agent: detachable PROCEDURE [SD_DOCKER_MEDIATOR, TUPLE [EV_WIDGET]]
@@ -628,7 +632,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

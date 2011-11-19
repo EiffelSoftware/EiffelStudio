@@ -11,7 +11,12 @@ class
 
 inherit
 	ES_TEST
-		redefine teardown end
+		redefine
+			teardown
+		end
+	
+	DCM_MA_DECIMAL_TEST
+
 create
 	make
 

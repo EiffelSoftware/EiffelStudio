@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-7-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-7-0 http://www.eiffel.com/developers/xml/configuration-1-7-0.xsd" name="espec" uuid="76c3cfc0-a72e-11db-befa-0800200c9a66" library_target="espec">
+	<target name="espec">
+		<description>
+			ESpec: Eiffel Specification Library
+		</description>
+		<option cat_call_detection="false">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf">
+		</library>
+		<library name="time" location="$ISE_LIBRARY/library/time/time-safe.ecf">
+		</library>
+		<cluster name="espec" location="." recursive="true">
+		<option warning="true" cat_call_detection="false" is_attached_by_default="true" void_safety="all" syntax="standard">
+				<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			</option>
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

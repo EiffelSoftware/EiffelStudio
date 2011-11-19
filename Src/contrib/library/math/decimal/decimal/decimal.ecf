@@ -4,7 +4,7 @@
 		<description>
 			Decimal arbitrary precision arithmetic library
 		</description>
-		<option warning="true" cat_call_detection="false" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
+		<option warning="true"  syntax="standard">
 		</option>
 		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf"/>
 		<cluster name="decimal" location="." recursive="true">

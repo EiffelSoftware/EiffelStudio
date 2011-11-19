@@ -109,7 +109,7 @@ feature {ES_TEST} -- Implementation
 			end
 		end
 
-	pass_values(e: BOOLEAN; b: BOOLEAN; n: STRING)
+	pass_values(e: BOOLEAN; b: BOOLEAN; n: like name)
 		do
 			show_err := e
 			browser := b

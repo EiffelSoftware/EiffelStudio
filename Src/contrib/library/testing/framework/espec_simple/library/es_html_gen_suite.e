@@ -87,7 +87,6 @@ feature {NONE} -- Implementation
 		local
 			one_test: ES_TEST
 			counter: INTEGER_32
-			test_name1: STRING
 		do
 			if attached test_classes as t then
 				from
@@ -102,11 +101,9 @@ feature {NONE} -- Implementation
 					output_file.putint (counter)
 					output_file.putstring ("</b></font></td>%N<td bgcolor=%"#008080%" align=%"center%" colspan=%"2%"><font color=%"#FFCC00%">")
 					if attached one_test as one_t then
-							test_name1 := one_t.name
-							if attached test_name1 as tn1 then
-								output_file.putstring (tn1)
-							else
-							end
+						if attached one_t.name as tn1 then
+							output_file.putstring (tn1)
+						end
 						output_file.putstring ("</font></td></tr>")
 						if attached one_test.cases as cases1 then
 							from

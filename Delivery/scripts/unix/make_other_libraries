@@ -30,5 +30,7 @@ cd library
 
 remtrace math
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/contrib/library/math math
+remtrace testing
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/contrib/library/testing testing
 remtrace text
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/contrib/library/text text

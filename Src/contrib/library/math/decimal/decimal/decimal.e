@@ -1537,7 +1537,7 @@ feature -- Basic operations
 			compare_not_void: Result /= Void
 		end
 
-feature {DECIMAL,ES_TEST} -- Log, Root and Power and their helper functions
+feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper functions
 
 --	exp_lower_bound: like Current
 --	-- Rounded down value of a number at its last significant digit.

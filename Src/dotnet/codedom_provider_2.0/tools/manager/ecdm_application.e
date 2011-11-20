@@ -113,16 +113,16 @@ feature {NONE} -- Implementation
 				    "-r,--register=FOLDER!#Register Eiffel Codedom Provider and use FOLDER as default configuration file folder.">>
 		end
  
-	print (some: ANY)
+	print (a_val: ANY)
 			-- Redirect output to dialog since graphical .NET applications cannot open a DOS console.
 		local
 			l_dialog: ECDM_OUTPUT_DIALOG
 			l_text, l_out: STRING
 		do
-			if some /= Void then
+			if a_val /= Void then
 				create l_dialog
 				l_dialog.ok_button.select_actions.extend (agent destroy)
-				l_out := some.out
+				l_out := a_val.out
 				l_out.replace_substring_all ("%N", "%N>")
 				create l_text.make (l_out.count + 1)
 				l_text.append_character ('>')

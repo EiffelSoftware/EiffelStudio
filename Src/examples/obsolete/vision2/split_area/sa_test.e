@@ -17,6 +17,13 @@ create
 
 feature -- Initialization
 
+	make_and_launch
+		do
+			default_create
+			prepare
+			launch
+		end
+
 	prepare
 			-- Pack `first_window'.
 		local

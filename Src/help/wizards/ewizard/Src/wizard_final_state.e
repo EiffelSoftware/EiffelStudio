@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 					wizard_information.project_name, wizard_information.project_location))
 		end
 
-	final_message: STRING
+	final_message: STRING_32
 		do
 		end
 

@@ -33,7 +33,7 @@ feature {NONE} -- Query
 			current_execution_stored_output: attached current_execution as l_exec_out and then
 				l_exec_out.output_file_name /= Void
 		local
-			l_path: detachable EQA_SYSTEM_PATH
+			l_path: EQA_SYSTEM_PATH
 		do
 			check attached current_execution as l_execution and then attached l_execution.output_file_name as l_output then
 				l_path := << l_output >>
@@ -50,7 +50,7 @@ feature {NONE} -- Query
 				l_exec_out.output_file_name /= Void
 			a_output_path_not_empty: not a_output_path.is_empty
 		local
-			l_path: detachable EQA_SYSTEM_PATH
+			l_path: EQA_SYSTEM_PATH
 		do
 			check attached current_execution as l_execution and then attached l_execution.output_file_name as l_output then
 				l_path := << l_output >>

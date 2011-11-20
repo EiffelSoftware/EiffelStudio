@@ -98,7 +98,7 @@ feature -- Command
 			l_event_item: EVENT_LIST_TEST_CASE_ITEM
 			l_data_item: ES_EWEASEL_TEST_CASE_ITEM
 		do
-			manager.add_class_to_cluster (a_new_class_file_name, a_cluster, a_cluster_sub_path, a_class_name)
+			manager.add_class_to_cluster (a_new_class_file_name, a_cluster, a_cluster_sub_path, a_class_name, True)
 
 			create l_class_stone.make (manager.last_added_class)
 			create l_window

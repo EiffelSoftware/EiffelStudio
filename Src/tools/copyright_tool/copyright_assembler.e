@@ -11,6 +11,8 @@ class
 inherit
 	CONSTANTS
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 
@@ -87,9 +89,9 @@ feature -- Basic operations
 				file.close
 				text_mode := file_string.has ('%R')
 				eiffel_parser.reset
-				eiffel_parser.parse_from_string (file_string, Void)
+				eiffel_parser.parse_class_from_string (file_string, Void, Void)
 				if eiffel_parser.error_count > 0 then
-					init_error := true
+					init_error := True
 				else
 					create ast_visitor.make (top_index_insert_strings, copyright)
 					ast_visitor.set_parsed_class (eiffel_parser.root_node)
@@ -107,9 +109,9 @@ feature -- Basic operations
 						text.replace_substring_all ("%N", "%R%N")
 					end
 					eiffel_parser.reset
-					eiffel_parser.parse_from_string (text, Void)
+					eiffel_parser.parse_class_from_string (text, Void, Void)
 					if eiffel_parser.error_count > 0 then
-						parse_failed := true
+						parse_failed := True
 					end
 				end
 			file_assembled_actions.call ([Void])
@@ -127,7 +129,7 @@ feature {NONE} -- Implementation
 			l_str.keep_tail (2)
 			l_str.to_lower
 			if l_str.is_equal (".e") and then file.exists then
-				Result := true
+				Result := True
 			end
 		end
 
@@ -142,7 +144,7 @@ invariant
 		copyright_not_void: copyright /= Void
 		a_file_not_void: file /= Void
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

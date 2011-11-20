@@ -248,9 +248,9 @@ feature {NONE} -- Implementation
 			l_name, l_class_name: STRING
 		do
 			if not l_retried then
-				parser.parse_from_string (a_class_text, Void)
+				parser.parse_class_from_string (a_class_text, Void, Void)
 				if parser.root_node /= Void and then parser.root_node.class_name /= Void then
-					l_class_name := parser.root_node.class_name.name.as_lower
+					l_class_name := parser.root_node.class_name.name_8.as_lower
 					create l_name.make (a_directory.count + l_class_name.count + 2)
 					l_name.append (a_directory)
 					l_name.append (l_class_name)

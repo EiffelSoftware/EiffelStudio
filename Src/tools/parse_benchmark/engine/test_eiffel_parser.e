@@ -58,7 +58,7 @@ feature -- Parsing
 				l_parser := eiffel_parser
 				l_parser.reset
 				l_parser.set_syntax_version (syntax_level)
-				l_parser.parse_from_string (a_source, Void)
+				l_parser.parse_class_from_string (a_source, Void, Void)
 				successful := l_parser.error_count = 0
 			else
 				successful := False
@@ -109,7 +109,7 @@ invariant
 	not_identity_is_empty: not identity.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

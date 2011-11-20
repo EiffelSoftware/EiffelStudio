@@ -49,7 +49,7 @@ feature {NONE} -- Access
 		once
 			create Result.make (5)
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (factory_switch, "Type of factory", False, True, "Type of factory", "One of null, basic, lite, roundtrip or all", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (parser_level_switch, "Type of parser%N(default is transitional)", True, True, "Type of parser", "One of obsolete, transitional or standard", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (parser_level_switch, "Type of parser%N(default is standard)", True, True, "Type of parser", "One of obsolete, transitional, standard, or provisional", False))
 			Result.extend (create {ARGUMENT_FILE_OR_DIRECTORY_SWITCH}.make (location_switch, "Location of a file or directory to test parser with.", True, False, "location", "A file or directory to parse contents of.", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (recursive_switch, "Should location be recursively searched?", True, False))
 			Result.extend (create {ARGUMENT_INTEGER_SWITCH}.make_with_range (error_switch, "Number of times the same file should be parsed to remove fuzzyness%N(default is 5.)", True, False, "count", "Number of parses to perform to retrieve mean parsed time.", False, 1, {NATURAL_8}.max_value))
@@ -62,13 +62,20 @@ feature -- Status Report
 	process_standard_syntax: BOOLEAN
 			-- Indicates standard syntax is to be used
 		once
-			Result := options_values_of_name (parser_level_switch).has ("standard")
+			Result := options_values_of_name (parser_level_switch).has ("standard") or else
+				options_values_of_name (parser_level_switch).is_empty
+		end
+
+	process_provisional_syntax: BOOLEAN
+			-- Indicates transitional syntax is to be used
+		once
+			Result := options_values_of_name (parser_level_switch).has ("provisional")
 		end
 
 	process_transitional_syntax: BOOLEAN
 			-- Indicates transitional syntax is to be used
 		once
-			Result := not process_Standard_syntax or not process_obsolete_syntax
+			Result := options_values_of_name (parser_level_switch).has ("transitional")
 		end
 
 	process_obsolete_syntax: BOOLEAN
@@ -183,7 +190,7 @@ feature {NONE} -- Switch names
 
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -92,11 +92,13 @@ feature {NONE} -- Testing
 			a_parser_attached: a_parser /= Void
 		do
 			if a_arg_parser.process_obsolete_syntax then
-				a_parser.set_syntax_level ({EIFFEL_PARSER}.obsolete_64_syntax)
+				a_parser.set_syntax_level ({EIFFEL_PARSER}.obsolete_syntax)
 			elseif a_arg_parser.process_standard_syntax then
 				a_parser.set_syntax_level ({EIFFEL_PARSER}.ecma_syntax)
-			else
-				a_parser.set_syntax_level ({EIFFEL_PARSER}.transitional_64_syntax)
+			elseif a_arg_parser.process_transitional_syntax then
+				a_parser.set_syntax_level ({EIFFEL_PARSER}.transitional_syntax)
+			elseif a_arg_parser.process_provisional_syntax then
+				a_parser.set_syntax_level ({EIFFEL_PARSER}.provisional_syntax)
 			end
 		end
 
@@ -414,7 +416,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

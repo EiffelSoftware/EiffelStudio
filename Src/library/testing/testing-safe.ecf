@@ -9,6 +9,7 @@
 		</file_rule>
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library">
 		</option>
+		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="diff" location="$ISE_LIBRARY\library\diff\diff-safe.ecf"/>

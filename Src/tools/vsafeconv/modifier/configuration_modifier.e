@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	last_error: detachable STRING
+	last_error: detachable READABLE_STRING_GENERAL
 			-- Last error generated from a conversion process.
 
 feature -- Status report
@@ -48,8 +48,8 @@ feature -- Basic operations
 			a_contents_attached: a_contents /= Void
 			not_a_contents_is_empty: not a_contents.is_empty
 		local
-			l_parser: XM_EIFFEL_PARSER
-			l_resolver: XM_NAMESPACE_RESOLVER
+			l_parser: XML_LITE_PARSER
+			l_resolver: XML_NAMESPACE_RESOLVER
 			l_callbacks: CONF_LOAD_PARSE_CALLBACKS
 			l_system: detachable CONF_SYSTEM
 			l_printer: CONF_PRINT_VISITOR
@@ -162,7 +162,7 @@ invariant
 	not_last_error_is_empty: has_error implies ((attached last_error as l_error) and then not l_error.is_empty)
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,0 +1,11 @@
+
+test_name 	 empty-class-file-crash
+test_description A completely empty class file crashes crashes an assertion-enabled compiler
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	syntax_error TEST 1
+
+test_end

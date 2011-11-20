@@ -1873,6 +1873,8 @@ test	inherited-feature-unadapted			term205 tcf fail termination
 test	generic-constrained-by-self-2		term206  tcf fail termination generic
 test	inherited-static-access-on-generic	term207 tcf fail termination formal generic
 test	agent-in-postcondition			term208 tcf fail termination agents
+-- test	long-string-constants-crash		term209 tcf fail termination
+test	empty-class-file-crash			term210 tcf fail termination
 
 -- Config
 

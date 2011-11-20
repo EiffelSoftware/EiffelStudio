@@ -306,7 +306,6 @@ feature {NONE} -- Implementation
 		require
 			version_valid: version.count >= 4
 		local
-			l_major, l_minor: INTEGER
 			l_path: STRING
 		do
 			create Result.make (2)

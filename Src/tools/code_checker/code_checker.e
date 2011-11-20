@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			parser.set_has_syntax_warning (False)
 --			parser.set_is_note_keyword (True)
 --			parser.set_is_attribute_keyword (True)
-			parser.parse_from_string (s, Void)
+			parser.parse_class_from_string (s, Void, Void)
 			if parser.error_count = 0 then
 				visitor.set_match_list (parser.match_list)
 				cl_as := parser.root_node

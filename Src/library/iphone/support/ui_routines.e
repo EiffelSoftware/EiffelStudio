@@ -18,7 +18,7 @@ feature -- Access
 
 	eiffel_object_from_c (a_obj: POINTER): detachable UI_VIEW
 		require
-			a_obj_not_null: a_obj /= {NS_OBJECT}.null
+			a_obj_not_null: a_obj /= default_pointer
 		local
 			l_id: INTEGER
 		do
@@ -29,7 +29,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

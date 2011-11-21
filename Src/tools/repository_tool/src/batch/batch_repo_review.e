@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			across cat.repositories as c loop
 				if attached {REPOSITORY_SVN} c.item as rsvn then
 					create {REPOSITORY_SVN_DATA} d.make (rsvn.uuid, rsvn)
-					d.get_logs
+					d.fetch_logs
 				end
 			end
 

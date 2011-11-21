@@ -1,6 +1,6 @@
 note
 	description: "[
-		Exports a generated report to a text file.	
+		Exports a generated report to a text file.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ class
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_report: like report; a_report_non_cls: like report_non_cls; a_report_all: like report_all)
@@ -42,7 +42,7 @@ feature -- Access
 	report: EC_REPORT
 			-- Report to export
 
-	last_error: STRING
+	last_error: detachable STRING
 			-- Last error message, if any
 
 	export_successful: BOOLEAN
@@ -65,7 +65,7 @@ feature -- Basic Operations
 		do
 			last_error := Void
 			l_writer := open_writer (a_file_name)
-			if export_successful then
+			if export_successful and l_writer /= Void then
 				process_report (l_writer, report)
 				l_writer.flush
 				l_writer.close
@@ -86,7 +86,7 @@ feature {NONE} -- Processing
 			write_header (a_writer, a_report)
 			l_types := a_report.types
 			from
-				l_types.start	
+				l_types.start
 			until
 				l_types.after
 			loop
@@ -95,15 +95,15 @@ feature {NONE} -- Processing
 			end
 			write_footer (a_writer, a_report)
 		end
-		
+
 	process_type (a_writer: XML_XML_TEXT_WRITER; a_report: EC_REPORT_TYPE)
-			-- 
+			--
 		require
 			a_writer_not_void: a_writer /= Void
 			a_report_not_void: a_report /= Void
 		local
 			l_checked_type: EC_CHECKED_TYPE
-			l_checked_ab_type: EC_CHECKED_ABSTRACT_TYPE
+			l_checked_ab_type: detachable EC_CHECKED_ABSTRACT_TYPE
 			l_show_cls: BOOLEAN
 			l_add: BOOLEAN
 			l_members: LIST [EC_REPORT_MEMBER]
@@ -132,7 +132,7 @@ feature {NONE} -- Processing
 							l_add := not l_checked_ab_type.is_eiffel_compliant_interface
 						end
 					end
-				end				
+				end
 			end
 			if not l_add then
 					-- Check members
@@ -148,7 +148,7 @@ feature {NONE} -- Processing
 						l_add := not l_member.is_compliant or not l_member.is_eiffel_compliant
 					else
 						l_add := not l_member.is_eiffel_compliant
-					end	
+					end
 					l_members.forth
 				end
 				l_members.go_to (l_cursor)
@@ -160,9 +160,9 @@ feature {NONE} -- Processing
 				write_type_end (a_writer, a_report)
 			end
 		end
-		
+
 	process_members (a_writer: XML_XML_TEXT_WRITER; a_report: EC_REPORT_TYPE)
-			-- 
+			--
 		require
 			a_writer_not_void: a_writer /= Void
 			a_report_not_void: a_report /= Void
@@ -178,7 +178,7 @@ feature {NONE} -- Processing
 			if not l_show_all then
 				l_show_cls := report_non_cls
 			end
-			
+
 			create l_sorted_members.make
 			l_sorted_members.append (a_report.members)
 			l_sorted_members.sort
@@ -195,7 +195,7 @@ feature {NONE} -- Processing
 						l_add := not l_checked_member.is_compliant or not l_checked_member.is_eiffel_compliant
 					else
 						l_add := not l_checked_member.is_eiffel_compliant
-					end				
+					end
 				end
 				if l_add then
 					write_member_start (a_writer, l_member)
@@ -204,7 +204,7 @@ feature {NONE} -- Processing
 				l_sorted_members.forth
 			end
 		end
-		
+
 feature {NONE} -- Output
 
 	write_header (a_writer: XML_XML_TEXT_WRITER; a_report: like report)
@@ -218,7 +218,7 @@ feature {NONE} -- Output
 			a_writer.write_start_element (report_elm)
 			a_writer.write_attribute_string (assembly_attr, a_report.assembly.full_name)
 		end
-		
+
 	write_type_start (a_writer: XML_XML_TEXT_WRITER; a_type: EC_REPORT_TYPE)
 			-- Writes start of type `a_type' to `a_writer'.
 		require
@@ -226,16 +226,16 @@ feature {NONE} -- Output
 			a_type_not_void: a_type /= Void
 		local
 			l_type: EC_CHECKED_TYPE
-			l_ab_type: EC_CHECKED_ABSTRACT_TYPE
+			l_ab_type: detachable EC_CHECKED_ABSTRACT_TYPE
 			l_compliant: BOOLEAN
-			l_value: STRING
+			l_value: detachable SYSTEM_STRING
 		do
 			l_type := a_type.type
 			l_ab_type ?= l_type
-			
+
 			a_writer.write_start_element (type_elm)
 			a_writer.write_attribute_string (name_attr, report_formatter.format_type (a_type.type.type, True))
-			
+
 			l_compliant := l_type.is_eiffel_compliant
 			if l_compliant then
 				if l_ab_type /= Void then
@@ -246,10 +246,10 @@ feature {NONE} -- Output
 				end
 			else
 				l_value := l_type.non_eiffel_compliant_reason
-			end	
+			end
 			a_writer.write_attribute_string (eiffel_compliant_attr, l_compliant.out.as_lower)
 			if not l_compliant then
-				a_writer.write_attribute_string (non_eiffel_compliant_reason_attr, l_value)	
+				a_writer.write_attribute_string (non_eiffel_compliant_reason_attr, l_value)
 			end
 
 			l_compliant := l_type.is_compliant
@@ -262,15 +262,15 @@ feature {NONE} -- Output
 				end
 			else
 				l_value := l_type.non_compliant_reason
-			end	
+			end
 			a_writer.write_attribute_string (cls_compliant_attr, l_compliant.out.as_lower)
 			if not l_compliant then
-				a_writer.write_attribute_string (non_cls_compliant_reason_attr, l_value)	
+				a_writer.write_attribute_string (non_cls_compliant_reason_attr, l_value)
 			end
-			
+
 			a_writer.write_attribute_string (marked_attr, l_type.is_marked.out.as_lower)
 		end
-		
+
 	write_type_end (a_writer: XML_XML_TEXT_WRITER; a_type: EC_REPORT_TYPE)
 			-- Writes end of type `a_type' to `a_writer'.
 		require
@@ -279,7 +279,7 @@ feature {NONE} -- Output
 		do
 			a_writer.write_end_element
 		end
-		
+
 	write_member_start (a_writer: XML_XML_TEXT_WRITER; a_member: EC_REPORT_MEMBER)
 			-- Writes start of member `a_type' to `a_writer'.
 		require
@@ -290,25 +290,25 @@ feature {NONE} -- Output
 			l_compliant: BOOLEAN
 		do
 			l_member := a_member.member
-			
+
 			a_writer.write_start_element (member_elm)
 			a_writer.write_attribute_string (name_attr, report_formatter.format_member (a_member.member.member, False))
-					
+
 			l_compliant := l_member.is_eiffel_compliant
 			a_writer.write_attribute_string (eiffel_compliant_attr, l_compliant.out.as_lower)
 			if not l_compliant then
 				a_writer.write_attribute_string (non_eiffel_compliant_reason_attr, l_member.non_eiffel_compliant_reason)
 			end
-			
+
 			l_compliant := l_member.is_compliant
 			a_writer.write_attribute_string (cls_compliant_attr, l_compliant.out.as_lower)
 			if not l_compliant then
 				a_writer.write_attribute_string (non_cls_compliant_reason_attr, l_member.non_compliant_reason)
 			end
-			
+
 			a_writer.write_attribute_string (marked_attr, l_member.is_marked.out.as_lower)
 		end
-		
+
 	write_member_end (a_writer: XML_XML_TEXT_WRITER; a_member: EC_REPORT_MEMBER)
 			-- Writes end of member `a_member' to `a_writer'.
 		require
@@ -317,7 +317,7 @@ feature {NONE} -- Output
 		do
 			a_writer.write_end_element
 		end
-		
+
 	write_footer (a_writer: XML_XML_TEXT_WRITER; a_report: like report)
 			-- Writes footer to `a_writer' for report `a_report'.
 		require
@@ -328,10 +328,10 @@ feature {NONE} -- Output
 			a_writer.write_end_element
 			a_writer.write_end_document
 		end
-		
+
 feature {NONE} -- Implementation
 
-	open_writer (a_file_name: STRING): XML_XML_TEXT_WRITER
+	open_writer (a_file_name: STRING): detachable XML_XML_TEXT_WRITER
 			-- Opens `a_file_name' for exporting `report'
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -351,7 +351,7 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
-		
+
 	string_formatter: EC_STRING_FORMATTER
 			-- STRING formatter
 		once
@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	report_formatter: EC_CHECK_REPORT_FORMATTER
 			-- Report item formatter
 		once
@@ -367,7 +367,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-	
+
 	report_elm: SYSTEM_STRING = "CompliantReport"
 	assembly_attr: SYSTEM_STRING = "Assembly"
 	type_elm: SYSTEM_STRING = "Type"
@@ -378,7 +378,7 @@ feature {NONE} -- Implementation
 	cls_compliant_attr: SYSTEM_STRING = "ClsCompliant"
 	non_cls_compliant_reason_attr: SYSTEM_STRING = "NonClsCompliantReason"
 	marked_attr: SYSTEM_STRING = "MarkedWithAttribute"
-		
+
 invariant
 	report_not_void: report /= Void
 

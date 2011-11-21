@@ -11,10 +11,10 @@ note
 
 class
 	EC_CHECK_WORKER
-	
+
 inherit
 	THREAD
-	
+
 	EC_CHECKED_ENTITY_FACTORY
 		export
 			{NONE} all
@@ -23,7 +23,7 @@ inherit
 			is_equal,
 			copy
 		end
-		
+
 	EC_CHECKED_CACHE
 		export
 			{NONE} all
@@ -32,10 +32,10 @@ inherit
 			is_equal,
 			copy
 		end
-	
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_assembly: like assembly; a_printer: like printer)
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			assembly_set: assembly = a_assembly
 			printer_set: printer = a_printer
 		end
-	
+
 feature -- Access
 
 	should_stop: BOOLEAN
@@ -67,14 +67,14 @@ feature -- Basic Operations
 		ensure
 			should_stop_set: should_stop = True
 		end
-		
+
 feature {NONE} -- Basic Operations
 
 	execute
 			-- Routine executed by new thread.
-		local		
-			l_types: NATIVE_ARRAY [SYSTEM_TYPE]
-			l_type: SYSTEM_TYPE
+		local
+			l_types: detachable NATIVE_ARRAY [detachable SYSTEM_TYPE]
+			l_type: detachable SYSTEM_TYPE
 			l_count: INTEGER
 			l_printer: like printer
 			l_started: BOOLEAN
@@ -82,32 +82,34 @@ feature {NONE} -- Basic Operations
 			l_stop: BOOLEAN
 			i: INTEGER
 		do
+			l_printer := printer
 			if not retried then
 				wipe_out_cache
-				
+
 				should_stop := False
-				l_printer := printer
-				
+
 				l_printer.notify_start
 				l_started := True
 				l_printer.notify_percentage_complete (0)
-				
+
 				l_types := assembly.get_types
-				l_count := l_types.count
-
-				{SYSTEM_ARRAY}.sort (l_types, create {EC_TYPE_SORTER})
-
-				from
-					i := 0
-				until
-					l_stop or i = l_count
-				loop
-					l_type := l_types.item (i)
-					process_type (l_printer, l_type)
-					l_stop := should_stop
-					i := i + 1
-					l_printer.notify_percentage_complete (((i / l_count) * 100).truncated_to_integer.to_natural_8)
-					sleep (1)
+				if l_types /= Void then
+					l_count := l_types.count
+					{SYSTEM_ARRAY}.sort (l_types, create {EC_TYPE_SORTER})
+					from
+						i := 0
+					until
+						l_stop or i = l_count
+					loop
+						l_type := l_types.item (i)
+						if l_type /= Void then
+							process_type (l_printer, l_type)
+							l_stop := should_stop
+						end
+						i := i + 1
+						l_printer.notify_percentage_complete (((i / l_count) * 100).truncated_to_integer.to_natural_8)
+						sleep (1)
+					end
 				end
 				l_printer.notify_end (True)
 			elseif l_started then
@@ -117,7 +119,7 @@ feature {NONE} -- Basic Operations
 			retried := True
 			retry
 		end
-		
+
 feature {NONE} -- Implementation
 
 	process_type (a_printer: like printer; a_type: SYSTEM_TYPE)
@@ -132,11 +134,11 @@ feature {NONE} -- Implementation
 				a_printer.start_type (a_type)
 				l_checked_type := checked_type (a_type) -- This will take cached version
 				a_printer.checked_type (l_checked_type)
-				process_members (a_printer, l_checked_type)				
+				process_members (a_printer, l_checked_type)
 				a_printer.end_type
 			end
 		end
-	
+
 	process_members (a_printer: like printer; a_type: EC_CHECKED_TYPE)
 			-- Process `a_type' members
 		require
@@ -144,73 +146,74 @@ feature {NONE} -- Implementation
 			a_type_not_void: a_type /= Void
 		local
 			l_type: SYSTEM_TYPE
-			l_members: NATIVE_ARRAY [MEMBER_INFO]
-			l_member: MEMBER_INFO
+			l_members: detachable NATIVE_ARRAY [detachable MEMBER_INFO]
+			l_member: detachable MEMBER_INFO
 			l_count: INTEGER
 			i: INTEGER
-			
-			l_method: METHOD_INFO
+
+			l_method: detachable METHOD_INFO
 			l_checked_method: EC_CHECKED_MEMBER_METHOD
-			l_prop: PROPERTY_INFO
+			l_prop: detachable PROPERTY_INFO
 			l_checked_prop: EC_CHECKED_MEMBER_PROPERTY
-			l_ctor: CONSTRUCTOR_INFO
+			l_ctor: detachable CONSTRUCTOR_INFO
 			l_checked_ctor: EC_CHECKED_MEMBER_CONSTRUCTOR
-			l_event: EVENT_INFO
+			l_event: detachable EVENT_INFO
 			l_checked_event: EC_CHECKED_MEMBER_EVENT
-			l_field: FIELD_INFO
+			l_field: detachable FIELD_INFO
 			l_checked_field: EC_CHECKED_MEMBER_FIELD
 		do
 			l_type := a_type.type
 			l_members := l_type.get_members
-			l_count := l_members.count
-			
-			{SYSTEM_ARRAY}.sort (l_members, create {EC_MEMBER_SORTER})
-			
-			from
-			until
-				i = l_count
-			loop
-				l_member := l_members.item (i)
-				l_method ?= l_member
-				if l_method /= Void then
-					a_printer.start_method (l_method)
-					create l_checked_method.make (l_method)
-					a_printer.checked_method (l_checked_method)
-					a_printer.end_method
-				else
-					l_prop ?= l_member
-					if l_prop /= Void then
-						a_printer.start_property (l_prop)
-						create l_checked_prop.make (l_prop)
-						a_printer.checked_property (l_checked_prop)
-						a_printer.end_property
+			if l_members /= Void then
+				l_count := l_members.count
+				{SYSTEM_ARRAY}.sort (l_members, create {EC_MEMBER_SORTER})
+
+				from
+				until
+					i = l_count
+				loop
+					l_member := l_members.item (i)
+					l_method ?= l_member
+					if l_method /= Void then
+						a_printer.start_method (l_method)
+						create l_checked_method.make (l_method)
+						a_printer.checked_method (l_checked_method)
+						a_printer.end_method
 					else
-						l_ctor ?= l_member
-						if l_ctor /= Void then
-							a_printer.start_constructor (l_ctor)
-							create l_checked_ctor.make (l_ctor)
-							a_printer.checked_constructor (l_checked_ctor)
-							a_printer.end_constructor
+						l_prop ?= l_member
+						if l_prop /= Void then
+							a_printer.start_property (l_prop)
+							create l_checked_prop.make (l_prop)
+							a_printer.checked_property (l_checked_prop)
+							a_printer.end_property
 						else
-							l_event ?= l_member
-							if l_event /= Void then
-								a_printer.start_event (l_event)
-								create l_checked_event.make (l_event)
-								a_printer.checked_event (l_checked_event)
-								a_printer.end_event
+							l_ctor ?= l_member
+							if l_ctor /= Void then
+								a_printer.start_constructor (l_ctor)
+								create l_checked_ctor.make (l_ctor)
+								a_printer.checked_constructor (l_checked_ctor)
+								a_printer.end_constructor
 							else
-								l_field ?= l_member
-								if l_field /= Void then
-									a_printer.start_field (l_field)
-									create l_checked_field.make (l_field)
-									a_printer.checked_field (l_checked_field)
-									a_printer.end_field
+								l_event ?= l_member
+								if l_event /= Void then
+									a_printer.start_event (l_event)
+									create l_checked_event.make (l_event)
+									a_printer.checked_event (l_checked_event)
+									a_printer.end_event
+								else
+									l_field ?= l_member
+									if l_field /= Void then
+										a_printer.start_field (l_field)
+										create l_checked_field.make (l_field)
+										a_printer.checked_field (l_checked_field)
+										a_printer.end_field
+									end
 								end
-							end	
-						end			
+							end
+						end
 					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 		end
 
@@ -219,8 +222,8 @@ feature {NONE} -- Implementation
 
 	printer: EC_CHECK_PRINTER
 			-- Printer to write output to
-			
-			
+
+
 invariant
 	printer_not_void: printer /= Void
 

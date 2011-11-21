@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Action Subscriptions
 
-	type_report_added_actions: ACTION_SEQUENCE [TUPLE [EC_REPORT_TYPE]]
+	type_report_added_actions: ACTION_SEQUENCE [TUPLE [detachable EC_REPORT_TYPE]]
 			-- Actions called when a new type report has been added to `report'.
 
 	type_member_report_added_actions: ACTION_SEQUENCE [TUPLE [EC_REPORT_TYPE, EC_REPORT_MEMBER]]
@@ -122,55 +122,55 @@ feature -- Checked
 			-- Called when checker is about to begin checking constructor `a_ctor'
 		local
 			l_member: EC_REPORT_MEMBER
-			l_type: like last_report_type
 		do
-			l_type := last_report_type
-			create l_member.make (a_ctor, l_type)
-			l_type.add_member_report (l_member)
+			check attached last_report_type as l_type then
+				create l_member.make (a_ctor, l_type)
+				l_type.add_member_report (l_member)
+			end
 		end
 
 	checked_method (a_method: EC_CHECKED_MEMBER_METHOD)
 			-- Called when checker is about to begin checking method `a_method'
 		local
 			l_member: EC_REPORT_MEMBER
-			l_type: like last_report_type
 		do
-			l_type := last_report_type
-			create l_member.make (a_method, l_type)
-			l_type.add_member_report (l_member)
+			check attached last_report_type as l_type then
+				create l_member.make (a_method, l_type)
+				l_type.add_member_report (l_member)
+			end
 		end
 
 	checked_property (a_property: EC_CHECKED_MEMBER)
 			-- Called when checker is about to begin checking property `a_property'
 		local
 			l_member: EC_REPORT_MEMBER
-			l_type: like last_report_type
 		do
-			l_type := last_report_type
-			create l_member.make (a_property, l_type)
-			l_type.add_member_report (l_member)
+			check attached last_report_type as l_type then
+				create l_member.make (a_property, l_type)
+				l_type.add_member_report (l_member)
+			end
 		end
 
 	checked_field (a_field: EC_CHECKED_MEMBER_FIELD)
 			-- Called when checker is about to begin checking field `a_field'
 		local
 			l_member: EC_REPORT_MEMBER
-			l_type: like last_report_type
 		do
-			l_type := last_report_type
-			create l_member.make (a_field, l_type)
-			l_type.add_member_report (l_member)
+			check attached last_report_type as l_type then
+				create l_member.make (a_field, l_type)
+				l_type.add_member_report (l_member)
+			end
 		end
 
 	checked_event (a_event: EC_CHECKED_MEMBER)
 			-- Called when checker is about to begin checking event `a_event'
 		local
 			l_member: EC_REPORT_MEMBER
-			l_type: like last_report_type
 		do
-			l_type := last_report_type
-			create l_member.make (a_event, l_type)
-			l_type.add_member_report (l_member)
+			check attached last_report_type as l_type then
+				create l_member.make (a_event, l_type)
+				l_type.add_member_report (l_member)
+			end
 		end
 
 feature -- Endding
@@ -225,7 +225,7 @@ feature -- Percentage
 
 feature {NONE} -- Implementation
 
-	last_report_type: EC_REPORT_TYPE
+	last_report_type: detachable EC_REPORT_TYPE
 			-- Last report type
 
 invariant

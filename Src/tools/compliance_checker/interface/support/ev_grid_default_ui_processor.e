@@ -131,8 +131,10 @@ feature {NONE} -- Implementation
 					l_row.collapse
 				elseif l_row.parent_row /= Void then
 					l_row.disable_select
-					l_row := l_row.parent_row
-					l_row.enable_select
+					if attached l_row.parent_row as l_parent_row then
+						l_row := l_parent_row
+						l_row.enable_select
+					end
 				end
 				l_row.ensure_visible
 			end
@@ -176,9 +178,11 @@ feature {NONE} -- Implementation
 				l_row := a_grid.row (1)
 				if a_grid.is_multiple_row_selection_enabled and ev_application.shift_pressed then
 					l_last_row := last_selected_row
-					select_range (a_grid, 1, l_last_row.index)
-					l_last_row.disable_select
-					l_last_row.enable_select
+					if l_last_row /= Void then
+						select_range (a_grid, 1, l_last_row.index)
+						l_last_row.disable_select
+						l_last_row.enable_select
+					end
 				else
 					deselect_all (a_grid)
 					l_row.enable_select
@@ -202,15 +206,17 @@ feature {NONE} -- Implementation
 			if l_count > 0 then
 				l_row := a_grid.row (a_grid.row_count)
 				if l_row.parent_row /= Void then
-					if not l_row.parent_row_root.is_expanded then
-						l_row := l_row.parent_row_root
+					if attached l_row.parent_row_root as l_parent_row_root and then not l_parent_row_root.is_expanded then
+						l_row := l_parent_row_root
 					end
 				end
 				if a_grid.is_multiple_row_selection_enabled and ev_application.shift_pressed then
 					l_last_row := last_selected_row
-					select_range (a_grid, l_last_row.index, l_count)
-					l_last_row.disable_select
-					l_last_row.enable_select
+					if l_last_row /= Void then
+						select_range (a_grid, l_last_row.index, l_count)
+						l_last_row.disable_select
+						l_last_row.enable_select
+					end
 				else
 					deselect_all (a_grid)
 					l_row.enable_select
@@ -240,7 +246,10 @@ feature {NONE} -- Implementation
 		do
 			l_rows := a_grid.selected_rows
 			if l_rows.count > 0 then
-				i := (last_selected_row.index - (a_grid.visible_row_indexes.count - 1)).max (1)
+				if attached last_selected_row as l_selected_row then
+					i := l_selected_row.index
+				end
+				i := (i - (a_grid.visible_row_indexes.count - 1)).max (1)
 				l_row := l_rows[1]
 				l_row.disable_select
 				l_row := a_grid.row (i)
@@ -262,15 +271,17 @@ feature {NONE} -- Implementation
 		do
 			l_rows := a_grid.selected_rows
 			if l_rows.count > 0 then
-
 				l_row := a_grid.row (a_grid.row_count)
 				if l_row.parent_row /= Void then
-					if not l_row.parent_row_root.is_expanded then
-						l_row := l_row.parent_row_root
+					if attached l_row.parent_row_root as l_parent_row_root and then not l_parent_row_root.is_expanded then
+						l_row := l_parent_row_root
 					end
 				end
 				l_expanded_count := l_row.index
-				i := (last_selected_row.index + (a_grid.visible_row_indexes.count - 1)).min (l_expanded_count)
+				if attached last_selected_row as l_selected_row then
+					i := l_selected_row.index
+				end
+				i := (i + (a_grid.visible_row_indexes.count - 1)).min (l_expanded_count)
 				l_row := l_rows[1]
 				l_row.disable_select
 				l_row := a_grid.row (i)
@@ -346,7 +357,7 @@ feature {NONE} -- Implementation
 			selected_count_is_zero: a_grid.selected_rows.count = 0
 		end
 
-	last_selected_row: EV_GRID_ROW;
+	last_selected_row: detachable EV_GRID_ROW;
 			-- Last selected row
 
 note

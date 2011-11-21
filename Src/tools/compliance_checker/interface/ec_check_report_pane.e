@@ -138,14 +138,19 @@ feature {NONE} -- Initialization
 			chk_show_all.select_actions.extend (agent on_show_all_selected)
 		end
 
+	user_create_interface_objects
+		do
+
+		end
+
 feature -- Access
 
-	owner_window: EC_MAIN_WINDOW assign set_owner_window
+	owner_window: detachable EC_MAIN_WINDOW note option: stable attribute end
 			-- Owner window
 
 feature -- Element change
 
-	set_owner_window (an_owner_window: like owner_window)
+	set_owner_window (an_owner_window: attached like owner_window)
 			-- Set `owner_window' to `an_owner_window'.
 		require
 			owner_window_not_set: owner_window = Void
@@ -169,21 +174,12 @@ feature {NONE} -- Agent Handlers
 			resize_first_column
 		end
 
-	on_perform_layout (a_item: EV_GRID_LABEL_ITEM; a_layout: EV_GRID_LABEL_ITEM_LAYOUT)
-			-- Called when report grid shows a check item in a cell.
-		do
-			if a_item.column.index > 1 then
-				a_layout.set_pixmap_y (((a_item.height - a_item.pixmap.height - a_item.top_border - a_item.bottom_border) // 2) + a_item.top_border)
-				a_layout.set_pixmap_x (((a_item.width - a_item.pixmap.width - a_item.left_border - a_item.right_border) // 2) + a_item.left_border)
-			end
-		end
-
 	on_grid_row_expanded (a_row: EV_GRID_ROW)
 			-- Called when a row in `grid_output' has been expanded'
 		require
 			a_row_not_void: a_row /= Void
 		local
-			l_data: EC_REPORT_TYPE
+			l_data: detachable EC_REPORT_TYPE
 			l_show_all: BOOLEAN
 			l_show_cls: BOOLEAN
 			l_add: BOOLEAN
@@ -232,7 +228,7 @@ feature {NONE} -- Agent Handlers
 			l_sfd: EV_FILE_SAVE_DIALOG
 			l_exporter: EC_REPORT_EXPORTER
 			l_file_name: STRING
-			l_ext: STRING
+			l_ext: detachable STRING
 		do
 			create l_sfd.make_with_title (title_browse_export_file_name)
 			l_sfd.filters.extend ([filter_xml_files, filter_name_xml_files])
@@ -241,7 +237,7 @@ feature {NONE} -- Agent Handlers
 			l_file_name := l_sfd.file_name
 			if l_file_name /= Void and then not l_file_name.is_empty then
 				l_ext ?= l_sfd.filters.i_th (l_sfd.selected_filter_index).item (1)
-				if not l_ext.is_equal ("*.*") then
+				if l_ext /= Void and then not l_ext.is_equal ("*.*") then
 					l_ext.prune_all_leading ('*')
 					if l_file_name.count > l_ext.count then
 						if not l_file_name.substring (l_file_name.count - (l_ext.count - 1), l_file_name.count).is_case_insensitive_equal (l_ext) then
@@ -252,7 +248,9 @@ feature {NONE} -- Agent Handlers
 					end
 				end
 
-				create l_exporter.make (report, report_non_cls_compliant, report_all)
+				check attached report as l_report then
+					create l_exporter.make (l_report, report_non_cls_compliant, report_all)
+				end
 				l_exporter.export_report (l_file_name)
 				if not l_exporter.export_successful then
 					show_error (error_export_failed, [l_exporter.last_error], owner_window)
@@ -265,16 +263,16 @@ feature {NONE} -- Agent Handlers
 		require
 			owner_window_not_void: owner_window /= Void
 		local
-			l_assembly: ASSEMBLY
+			l_assembly: detachable ASSEMBLY
 			l_file_name: STRING
 			l_paths: LIST [STRING]
 			l_cursor: CURSOR
 			l_resolver: like checker_resolver
 			retried: BOOLEAN
 		do
+			l_file_name := project.assembly
 			if not retried then
 				if not is_checking then
-					l_file_name := project.assembly
 					if not l_file_name.is_empty and then (create {RAW_FILE}.make (l_file_name)).exists then
 							-- Add reference paths to resolver for loading assembly
 						create l_resolver.make_with_name ("COMPLIANCE RESOLVER")
@@ -292,11 +290,15 @@ feature {NONE} -- Agent Handlers
 							end
 							l_paths.go_to (l_cursor)
 						end
-						resolve_subscriber.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
+						check attached {APP_DOMAIN}.current_domain as l_domain then
+							resolve_subscriber.subscribe (l_domain, l_resolver)
+						end
 						checker_resolver := l_resolver
 
 						l_assembly := {ASSEMBLY}.load_from (l_file_name)
-						start_checking (l_assembly)
+						if l_assembly /= Void then
+							start_checking (l_assembly)
+						end
 					else
 						if not l_file_name.is_empty then
 							show_error (error_could_not_find_assembly, [l_file_name], owner_window)
@@ -338,8 +340,8 @@ feature {NONE} -- Agent Handlers
 		local
 			l_rows: ARRAYED_LIST [EV_GRID_ROW]
 			l_row: EV_GRID_ROW
-			l_member: EC_REPORT_MEMBER
-			l_type: EC_REPORT_TYPE
+			l_member: detachable EC_REPORT_MEMBER
+			l_type: detachable EC_REPORT_TYPE
 			l_item_string: STRING
 			l_clip: STRING
 			l_subrow_count: INTEGER
@@ -406,10 +408,10 @@ feature {NONE} -- Compliance Checking
 	is_checking: BOOLEAN
 			-- Is project being checked for compliance?
 
-	checker: EC_CHECK_WORKER
+	checker: detachable EC_CHECK_WORKER
 			-- Compliance checker worker thread
 
-	checker_resolver: AR_RESOLVER
+	checker_resolver: detachable AR_RESOLVER
 			-- Assembly checker resolver.
 
 	start_checking (a_assembly: ASSEMBLY)
@@ -453,7 +455,9 @@ feature {NONE} -- Compliance Checking
 			l_builder.percentage_completed_changed_actions.extend (agent on_report_percentage_changed)
 			l_builder.report_completed_actions.extend (agent on_report_completed)
 			create checker.make (a_assembly, l_builder)
-			checker.launch
+			check attached checker as l_checker then
+				l_checker.launch
+			end
 
 		ensure
 			is_checking: is_checking
@@ -496,8 +500,8 @@ feature {NONE} -- Compliance Checking
 			is_checking := False
 
 				-- Stop checker
-			if not checker.should_stop then
-				checker.stop_checking
+			if attached checker as l_checker and then not l_checker.should_stop then
+				l_checker.stop_checking
 			end
 
 			checker := Void
@@ -513,7 +517,9 @@ feature {NONE} -- Compliance Checking
 			a_type_not_void: a_type /= Void
 			sync_actions_attached: sync_actions /= Void
 		do
-			sync_actions.extend (agent on_type_report_added_idle (a_type))
+			if attached sync_actions as l_actions then
+				l_actions.extend (agent on_type_report_added_idle (a_type))
+			end
 		end
 
 	on_type_report_added_idle (a_type: EC_REPORT_TYPE)
@@ -522,15 +528,13 @@ feature {NONE} -- Compliance Checking
 			a_type_not_void: a_type /= Void
 		local
 			l_add: BOOLEAN
-			l_checked_type: EC_CHECKED_TYPE
-			l_checked_ab_type: EC_CHECKED_ABSTRACT_TYPE
+			l_checked_type: detachable EC_CHECKED_TYPE
+			l_checked_ab_type: detachable EC_CHECKED_ABSTRACT_TYPE
 			l_show_cls: BOOLEAN
 			l_members: LIST [EC_REPORT_MEMBER]
 			l_member: EC_CHECKED_MEMBER
 			l_cursor: CURSOR
 		do
-			ev_application.idle_actions.block
-
 			l_checked_type := a_type.type
 			l_show_cls := report_non_cls_compliant
 			if report_all then
@@ -578,8 +582,6 @@ feature {NONE} -- Compliance Checking
 			if l_add then
 				add_type_report_row (a_type)
 			end
-
-			ev_application.idle_actions.resume
 		end
 
 	on_report_percentage_changed (a_percent: NATURAL_8)
@@ -590,7 +592,9 @@ feature {NONE} -- Compliance Checking
 			a_precent_small_enough: a_percent <= 100
 			sync_actions_attached: sync_actions /= Void
 		do
-			sync_actions.extend (agent on_report_percentage_changed_idle (a_percent))
+			if attached sync_actions as l_actions then
+				l_actions.extend (agent on_report_percentage_changed_idle (a_percent))
+			end
 		end
 
 	on_report_percentage_changed_idle (a_percent: NATURAL_8)
@@ -600,9 +604,7 @@ feature {NONE} -- Compliance Checking
 		require
 			a_precent_small_enough: a_percent <= 100
 		do
-			ev_application.idle_actions.block
 			prg_check.set_value (a_percent)
-			ev_application.idle_actions.resume
 		end
 
 	on_report_completed (a_complete: BOOLEAN)
@@ -612,7 +614,9 @@ feature {NONE} -- Compliance Checking
 		require
 			sync_actions_attached: sync_actions /= Void
 		do
-			sync_actions.extend (agent on_report_completed_idle (a_complete))
+			check attached sync_actions as l_actions then
+				l_actions.extend (agent on_report_completed_idle (a_complete))
+			end
 		end
 
 	on_report_completed_idle (a_complete: BOOLEAN)
@@ -621,15 +625,11 @@ feature {NONE} -- Compliance Checking
 			owner_window_not_void: owner_window /= Void
 			grid_output_not_void: grid_output /= Void
 		local
-			l_actions: EV_NOTIFY_ACTION_SEQUENCE
 			l_grid: like grid_output
-			l_exception: NATIVE_EXCEPTION
-			l_reflection_type_load_exception: REFLECTION_TYPE_LOAD_EXCEPTION
-			l_file_not_found_exception: FILE_NOT_FOUND_EXCEPTION
+			l_exception: detachable NATIVE_EXCEPTION
+			l_reflection_type_load_exception: detachable REFLECTION_TYPE_LOAD_EXCEPTION
+			l_file_not_found_exception: detachable FILE_NOT_FOUND_EXCEPTION
 		do
-			l_actions := ev_application.idle_actions
-			l_actions.block
-			l_actions.wipe_out
 			if is_checking then
 				stop_checking
 				l_grid := grid_output
@@ -641,25 +641,34 @@ feature {NONE} -- Compliance Checking
 					end
 				end
 				l_grid.set_focus
-				resolve_subscriber.unsubscribe ({APP_DOMAIN}.current_domain, checker_resolver)
+				check
+					attached {APP_DOMAIN}.current_domain as l_domain and then
+					attached checker_resolver as l_resolver
+				then
+					resolve_subscriber.unsubscribe (l_domain, l_resolver)
+				end
 				checker_resolver := Void
-				sync_actions.dispose
+				if attached sync_actions as l_actions then
+					l_actions.dispose
+				end
 				sync_actions := Void
 			end
 			if not a_complete then
 					-- There was an error
 				l_exception := {ISE_RUNTIME}.last_exception
 				l_reflection_type_load_exception ?= l_exception
-				if l_reflection_type_load_exception /= Void then
-					l_file_not_found_exception ?= l_reflection_type_load_exception.loader_exceptions @ 0
+				if
+					l_reflection_type_load_exception /= Void and then
+					attached l_reflection_type_load_exception.loader_exceptions as l_exceptions
+				then
+					l_file_not_found_exception ?=  l_exceptions @ 0
 				end
 				if l_file_not_found_exception /= Void then
 					show_error (error_could_not_load_assembly, [l_file_not_found_exception.file_name], owner_window)
-				else
+				elseif l_exception /= Void then
 					show_error (error_report_generation_failed, [l_exception.message], owner_window)
 				end
 			end
-			l_actions.resume
 		end
 
 feature {NONE} -- Report Row Building
@@ -673,7 +682,7 @@ feature {NONE} -- Report Row Building
 		local
 			l_grid: like grid_output
 			l_checked_type: EC_CHECKED_TYPE
-			l_checked_abstact_type: EC_CHECKED_ABSTRACT_TYPE
+			l_checked_abstact_type: detachable EC_CHECKED_ABSTRACT_TYPE
 			l_item: EV_GRID_LABEL_ITEM
 			l_row: EV_GRID_ROW
 			i: INTEGER
@@ -699,7 +708,11 @@ feature {NONE} -- Report Row Building
 			l_checked_abstact_type ?= l_checked_type
 
 				-- Name
-			create l_item.make_with_text (({STRING})[l_checked_type.type.full_name])
+			if attached l_checked_type.type.full_name as l_full_name then
+				create l_item.make_with_text (create {STRING_32}.make_from_cil (l_full_name))
+			else
+				create l_item.make_with_text ("Unknown Type")
+			end
 			l_item.set_tooltip (l_item.text)
 			l_row.set_item (1, l_item)
 
@@ -717,7 +730,6 @@ feature {NONE} -- Report Row Building
 				l_item.set_pixmap (icon_cross)
 				l_item.set_tooltip (l_checked_type.non_eiffel_compliant_reason)
 			end
-			l_item.set_layout_procedure (layout_agent)
 			l_row.set_item (2, l_item)
 
 				-- Is CLS-compliant
@@ -734,7 +746,6 @@ feature {NONE} -- Report Row Building
 				l_item.set_pixmap (icon_cross)
 				l_item.set_tooltip (l_checked_type.non_compliant_reason)
 			end
-			l_item.set_layout_procedure (layout_agent)
 			l_row.set_item (3, l_item)
 
 				-- Is marked compliant
@@ -746,8 +757,6 @@ feature {NONE} -- Report Row Building
 				l_item.set_pixmap (icon_cross)
 				l_item.set_tooltip (tooltip_type_is_not_marked)
 			end
-			l_item.set_layout_procedure (layout_agent)
-
 			l_row.set_item (4, l_item)
 			if l_row.index = 1 then
 				l_row.enable_select
@@ -795,7 +804,6 @@ feature {NONE} -- Report Row Building
 				l_item.set_pixmap (icon_cross)
 				l_item.set_tooltip (l_checked_member.non_eiffel_compliant_reason)
 			end
-			l_item.set_layout_procedure (layout_agent)
 			l_row.set_item (2, l_item)
 
 				-- Is CLS-compliant
@@ -807,7 +815,6 @@ feature {NONE} -- Report Row Building
 				l_item.set_pixmap (icon_cross)
 				l_item.set_tooltip (l_checked_member.non_compliant_reason)
 			end
-			l_item.set_layout_procedure (layout_agent)
 			l_row.set_item (3, l_item)
 
 				-- Is marked compliant
@@ -819,7 +826,6 @@ feature {NONE} -- Report Row Building
 				l_item.set_pixmap (icon_cross)
 				l_item.set_tooltip (tooltip_member_is_not_marked)
 			end
-			l_item.set_layout_procedure (layout_agent)
 			l_row.set_item (4, l_item)
 
 			l_grid.unlock_update
@@ -875,7 +881,9 @@ feature {EC_MAIN_WINDOW} -- Clean Up
 			if is_checking then
 				l_checker := checker
 				on_check_selected
-				l_checker.join
+				if l_checker /= Void then
+					l_checker.join
+				end
 			end
 			clear_report
 			prg_check.set_value (0)
@@ -889,7 +897,7 @@ feature {NONE} -- Formatting
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_ab_type: EC_CHECKED_ABSTRACT_TYPE
+			l_ab_type: detachable EC_CHECKED_ABSTRACT_TYPE
 		do
 			create Result.make (256)
 			Result.append ("Type%T")
@@ -1014,7 +1022,7 @@ feature {NONE} -- Implementation
 			l_grid.resize_actions.resume
 		end
 
-	project_assembly: ASSEMBLY
+	project_assembly: detachable ASSEMBLY
 			-- Retrieves assembly from project settings
 		local
 			retried: BOOLEAN
@@ -1027,16 +1035,8 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	old_check_pixmap: EV_PIXMAP
+	old_check_pixmap: detachable EV_PIXMAP
 			-- old `btn_check' pixmap
-
-	layout_agent: PROCEDURE [ANY, TUPLE [EV_GRID_LABEL_ITEM, EV_GRID_LABEL_ITEM_LAYOUT]]
-			--
-		once
-			Result := agent on_perform_layout
-		ensure
-			result_not_void: Result /= Void
-		end
 
 	report_formatter: EC_CHECK_REPORT_FORMATTER
 			-- Report item formatter
@@ -1046,7 +1046,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	report: EC_REPORT
+	report: detachable EC_REPORT
 			-- Report generated
 
 	report_all: BOOLEAN
@@ -1056,15 +1056,14 @@ feature {NONE} -- Implementation
 			-- Should report include all non-CLS-compliant types and members?
 
 
-	sync_actions: EC_REPORT_QUEUED_ACTION_TIMER
+	sync_actions: detachable EC_REPORT_QUEUED_ACTION_TIMER
 			-- Thread-safe action timer.
-
 
 invariant
 	owner_window_not_void: owner_window /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1077,22 +1076,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class EC_CHECK_REPORT_PANE
 

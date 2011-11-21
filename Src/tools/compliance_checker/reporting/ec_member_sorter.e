@@ -8,7 +8,7 @@ note
 
 class
 	EC_MEMBER_SORTER
-	
+
 inherit
 	ICOMPARER
 
@@ -17,13 +17,13 @@ feature -- Comparison
 	compare (x, y: SYSTEM_OBJECT): INTEGER
 			-- Compares `x' and `y'
 		local
-			l_x: MEMBER_INFO
-			l_y: MEMBER_INFO
+			l_x: detachable MEMBER_INFO
+			l_y: detachable MEMBER_INFO
 		do
 			l_x ?= x
 			l_y ?= y
-			if l_x /= Void and l_y /= Void then
-				Result := l_x.name.compare_to (l_y.name)
+			if l_x /= Void and then l_y /= Void and then attached l_x.name as l_x_name then
+				Result := l_x_name.compare_to (l_y.name)
 			end
 		end
 

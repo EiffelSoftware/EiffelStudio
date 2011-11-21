@@ -31,7 +31,7 @@ feature -- Basic Operations
 			a_default_button_is_confirm_or_cancel: a_default_button.is_equal (a_confirm) or a_default_button.is_equal (a_cancel)
 			a_format_args_not_void: a_format_args /= Void
 			a_window_not_void: a_window /= Void
-		local			
+		local
 			l_text: STRING
 			l_dialog: EV_QUESTION_DIALOG
 		do
@@ -46,9 +46,9 @@ feature -- Basic Operations
 			l_dialog.set_default_push_button (l_dialog.button (a_default_button))
 			l_dialog.set_default_cancel_button (l_dialog.button (a_cancel))
 			l_dialog.show_modal_to_window (a_window)
-			Result := l_dialog.selected_button.is_equal (a_confirm)
+			Result := l_dialog.selected_button ~ a_confirm.as_string_32
 		end
-	
+
 	show_information (a_message: STRING; a_format_args: TUPLE; a_window: EV_WINDOW)
 			-- Shows information dialog prompt.
 			-- `a_message' information message.
@@ -77,7 +77,7 @@ feature -- Basic Operations
 			l_dialog.set_default_cancel_button (l_dialog.button (l_ok))
 			l_dialog.show_modal_to_window (a_window)
 		end
-		
+
 	show_error (a_error: STRING; a_format_args: TUPLE; a_window: EV_WINDOW)
 			-- Shows error dialog prompt.
 			-- `a_error' error message.
@@ -106,7 +106,7 @@ feature -- Basic Operations
 			l_dialog.set_default_cancel_button (l_dialog.button (l_ok))
 			l_dialog.show_modal_to_window (a_window)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	formatter: EC_STRING_FORMATTER
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

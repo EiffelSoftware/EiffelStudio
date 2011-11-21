@@ -91,8 +91,8 @@ feature -- Conversion
 						l_match := False
 						if l_digit.is_integer then
 							l_index := l_digit.to_integer
-							if l_index > 0 and l_index <= l_arg_count then
-								Result.append ((a_args @ l_index).out)
+							if l_index > 0 and l_index <= l_arg_count and attached a_args.item (l_index) as l_arg then
+								Result.append (l_arg.out)
 							else
 								raise ("Invalid format index '" + l_index.out + "'")
 							end

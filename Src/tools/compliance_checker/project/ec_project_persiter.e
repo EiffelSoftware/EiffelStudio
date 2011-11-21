@@ -25,7 +25,7 @@ feature -- Basic Operations
 			-- Loads project from `a_path'
 		local
 			l_file: RAW_FILE
-			l_project: like project
+			l_project: detachable like project
 			l_reader: SED_MEDIUM_READER_WRITER
 		do
 			create l_file.make_open_read (a_path)

@@ -585,18 +585,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_string_element (element: XM_ELEMENT; name: STRING; current_value: STRING)
+	add_string_element (element: XM_ELEMENT; name: STRING; current_value: detachable READABLE_STRING_GENERAL)
 			-- Add an element containing a STRING to `element', with name `name' and
 			-- value `current_value' if no constant is specified, of the value of the constant
 			-- in another constant element, if the current setting is represented by a constant.
 		require
 			element_not_void: element /= Void
 			name_not_void: name /= Void
+			valid_valid: current_value = Void implies uses_constant (name)
 		do
 			if uses_constant (name) then
 				add_element_containing_integer_constant (element, name, object.constants.item (type + name).constant.name)
 			else
-				add_element_containing_string (element, name, current_value)
+				check current_value /= Void end
+				add_element_containing_string (element, name, current_value.as_string_8)
 			end
 		end
 

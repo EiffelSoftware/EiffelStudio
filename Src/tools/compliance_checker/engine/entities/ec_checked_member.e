@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 		require
 			a_member_not_void: a_member /= Void
 		do
+			init_reasons
 			member := a_member
 		ensure
 			member_set: member = a_member
@@ -112,7 +113,7 @@ invariant
 	member_not_void: member /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

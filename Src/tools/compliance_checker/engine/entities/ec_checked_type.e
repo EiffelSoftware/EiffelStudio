@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			l_element: detachable EC_CHECKED_TYPE
 			l_elm_type: detachable SYSTEM_TYPE
 		do
+			init_reasons
 			type := a_type
 			if a_type.has_element_type then
 				l_elm_type := a_type.get_element_type
@@ -181,7 +182,7 @@ invariant
 	element_checked_type_not_void: type.has_element_type implies element_checked_type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

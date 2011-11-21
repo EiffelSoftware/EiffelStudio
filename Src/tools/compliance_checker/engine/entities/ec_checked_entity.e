@@ -28,6 +28,15 @@ inherit
 			{NONE} all
 		end
 
+feature {NONE} -- Initialization
+
+	init_reasons
+			-- Void-safety initalization
+		do
+			non_compliant_reason := ""
+			non_eiffel_compliant_reason := ""
+		end
+
 feature -- Access
 
 	is_compliant: like internal_is_compliant
@@ -78,10 +87,10 @@ feature -- Access
 	is_being_checked: BOOLEAN
 		-- Is entity in the process of being checked?
 
-	non_compliant_reason: detachable STRING
+	non_compliant_reason: STRING
 			-- Reason why entity is non-CLS-compliant
 
-	non_eiffel_compliant_reason: detachable STRING
+	non_eiffel_compliant_reason: STRING
 			-- Reason why entity is non-Eiffel-compliant
 
 	has_been_checked: BOOLEAN
@@ -252,7 +261,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

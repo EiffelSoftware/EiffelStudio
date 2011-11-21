@@ -168,7 +168,7 @@ feature {NONE}
 	callback_void_general (a_object: POINTER; a_selector: POINTER; args: POINTER; nargs: INTEGER): BOOLEAN
 		local
 			args_managed: MANAGED_POINTER
-			arg: TUPLE
+			arg: detachable TUPLE
 			type: STRING
 		do
 			debug ("callbacks")

@@ -1,0 +1,10 @@
+
+test_name 	 root-class-none
+test_description A system with root class none and no precompiled library crashes the compiler
+
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	validity_error NONE VD27
+
+test_end

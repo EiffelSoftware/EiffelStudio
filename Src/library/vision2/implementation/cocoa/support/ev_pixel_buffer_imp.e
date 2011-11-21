@@ -71,6 +71,13 @@ feature -- Command
 			end
 		end
 
+	set_with_pointer (a_pointer: POINTER; a_size: INTEGER)
+			-- Load pixel data from `a_pointer'
+			-- `a_size' size in bytes
+		do
+			(create {EXCEPTIONS}).raise ("Not implemented.")
+		end
+
 	save_to_named_file (a_filename: STRING)
 			-- Save pixel data to file `a_filename'.
 			-- NOTE Why there are different implementations to save a pixel_buffer and a pixmap is a mistery to me
@@ -102,6 +109,11 @@ feature -- Command
 			if not l_success then
 				(create {EXCEPTIONS}).raise ("Could not save image file.")
 			end
+		end
+
+	save_to_pointer: detachable MANAGED_POINTER
+			-- Save pixel data to Result managed pointer
+		do
 		end
 
 	sub_pixmap (a_area: EV_RECTANGLE): EV_PIXMAP

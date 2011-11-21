@@ -134,18 +134,24 @@ feature -- Measurement
 			-- Number of pixels per inch along horizontal axis
 		local
 			resolution: NS_VALUE
+			l_size: NS_SIZE
 		do
 			create resolution.share_from_pointer (device_description.object_for_key ({NS_WINDOW}.device_resolution))
-			Result := resolution.size_value.width.rounded
+			create l_size.make
+			{NS_VALUE_API}.size_value (item, l_size.item)
+			Result := l_size.width.rounded
 		end
 
 	vertical_resolution: INTEGER
 			-- Number of pixels per inch along vertical axis
 		local
 			resolution: NS_VALUE
+			l_size: NS_SIZE
 		do
 			create resolution.share_from_pointer (device_description.object_for_key ({NS_WINDOW}.device_resolution))
-			Result := resolution.size_value.height.rounded
+			create l_size.make
+			{NS_VALUE_API}.size_value (item, l_size.item)
+			Result := l_size.height.rounded
 		end
 
 	height: INTEGER

@@ -529,6 +529,8 @@ feature -- Access
 		local
 			l_display: GB_DISPLAY_OBJECT
 			current_object: GB_OBJECT
+			l_tuple: TUPLE [content: detachable ANY]
+			l_any: detachable ANY
 		do
 			from
 				instance_referers.start
@@ -536,13 +538,19 @@ feature -- Access
 				instance_referers.off
 			loop
 				current_object := components.object_handler.deep_object_from_id (instance_referers.item_for_iteration)
-				p.call ([current_object.object])
+				l_tuple ?= p.empty_operands
+				if l_tuple = void then
+					l_tuple := [l_any]
+				end
+				l_tuple.content := current_object.object
+				p.call (l_tuple)
 				l_display ?= current_object.display_object
 				if l_display /= Void then
-					p.call ([l_display.item])
+					l_tuple.content := l_display.item
 				else
-					p.call ([current_object.display_object])
+					l_tuple.content := current_object.display_object
 				end
+				p.call (l_tuple)
 				current_object.update_instances (p)
 				instance_referers.forth
 			end

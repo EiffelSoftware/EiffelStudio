@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Graphics Context for Windows"
 	author: ""
 	date: "$Date$"

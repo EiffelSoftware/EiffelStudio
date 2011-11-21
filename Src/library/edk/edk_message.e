@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class for representing EDK Messages"
 	author: ""
 	date: "$Date$"

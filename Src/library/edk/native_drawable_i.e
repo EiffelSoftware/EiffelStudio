@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Interface for drawable objects"
 	author: ""
 	date: "$Date$"

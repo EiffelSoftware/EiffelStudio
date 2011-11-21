@@ -1,11 +1,11 @@
 # edk.lib - Makefile for Microsoft C
 
 CC = cl
-ISE_EIFFEL = "C:\Program Files\Eiffel Software\EiffelStudio 6.4 GPL"
-ISE_PLATFORM = windows
+#ISE_EIFFEL = "C:\Program Files\Eiffel Software\Eiffel68"
+#ISE_PLATFORM = win64
 
 # Finalized Version
-CFLAGS = -nologo -c -Ox -W4 -I..\include -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELESSUNION -D_UNICODE -DUNICODE
+CFLAGS = -nologo -c -Ox -W4 -I..\include -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include -DNONAMELESSUNION -D_UNICODE -DUNICODE
 
 # Debug Version
 #CFLAGS = -c -Zi -nologo -Od -W4 -I..\include -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include -DNONAMELESSUNION -D_UNICODE -DUNICODE

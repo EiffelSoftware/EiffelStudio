@@ -52,10 +52,10 @@ feature -- Access
 				idle_iteration_count := 1
 					-- Reset idle iteration counter if CPU is not relinquished.
 			end
-			if try_lock then
+			if try_idle_lock then
 				l_locked := True
 				idle_actions.call (Void)
-				unlock
+				idle_unlock
 				l_locked := False
 				if a_relinquish_cpu then
 						-- We only relinquish CPU if requested and a lock for the idle actions has been attained.

@@ -1877,6 +1877,7 @@ test	inherited-static-access-on-generic	term207 tcf fail termination formal gene
 test	agent-in-postcondition			term208 tcf fail termination agents
 test	long-string-constants-crash		term209 tcf fail termination
 test	empty-class-file-crash			term210 tcf fail termination
+test	root-class-none				term211 tcf fail termination
 
 -- Config
 

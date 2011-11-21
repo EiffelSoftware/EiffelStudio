@@ -1,0 +1,33 @@
+
+test_name	change-application-options
+test_description After initial compilation, changes to application-level options should apply to a library that uses application options but does not if the library is not precompiled
+
+define ASSERTION_VALUE	"true"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output1
+
+define ASSERTION_VALUE	"false"
+copy_sub 	Ace $TEST Ace
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output2
+
+test_end
+

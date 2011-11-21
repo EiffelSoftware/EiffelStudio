@@ -998,6 +998,7 @@ test 	qat-spurious-veen		incr417 tcf fail incrementality validity
 test 	qat-precursor-anchored-to-caller incr418 tcf fail incrementality anchored_types
 test	static-type-id-crash-3			incr419 tcf fail incrementality anchored_types
 test	internal-search-crash			incr420 tcf fail incrementality skip
+test	change-application-options		incr421 tcf fail incrementality
 
 
 -- Melting

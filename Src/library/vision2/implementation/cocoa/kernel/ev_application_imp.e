@@ -285,11 +285,6 @@ feature -- Thread Handling.
 			end
 		end
 
-feature {NONE} -- Thread implementation
-
-	idle_action_mutex: detachable MUTEX note option: stable attribute end
-			-- Mutex used to access idle_actions.
-
 feature {NONE} -- Implementation
 
 	dispose

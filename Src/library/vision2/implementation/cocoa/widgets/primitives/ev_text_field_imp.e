@@ -217,6 +217,12 @@ feature -- Basic operation
 		do
 		end
 
+	set_selection (start_pos, end_pos: INTEGER)
+			-- <Precursor>
+		do
+			check not_implemented: False end
+		end
+
 	select_from_start_pos (start_pos, end_pos: INTEGER)
 			-- Hack to select region from change actions
 		do

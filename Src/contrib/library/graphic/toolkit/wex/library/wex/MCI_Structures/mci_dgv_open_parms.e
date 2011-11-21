@@ -28,7 +28,7 @@ feature -- Initialization
 			a_parent_not_void: a_parent /= Void
 			a_parent_exists: a_parent.exists
 			a_device_not_void: a_device /= Void
-			a_device_not_empty: not a_device.empty
+			a_device_not_empty: not a_device.is_empty
 		do
 			if not exists then
 				structure_make
@@ -78,7 +78,7 @@ feature -- Status setting
 			parent_handle_set: parent_handle = a_value
 		end
 
-feature {WEL_STRUCTURE}
+feature -- Measurements
 
 	structure_size: INTEGER
 			-- Size to allocate (in bytes)

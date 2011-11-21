@@ -46,7 +46,7 @@ feature -- Status setting
 			a_display_window_exists: a_display_window.exists
 		do
 			cwex_mci_dgv_window_set_display_window (item,
-				cwel_pointer_to_integer (a_display_window.item))
+				a_display_window.item)
 		end
 
 	set_display_style (a_style: INTEGER)
@@ -69,7 +69,7 @@ feature -- Status setting
 			cwex_mci_dgv_window_set_caption (item, $a)
 		end
 
-feature {WEL_STRUCTURE}
+feature -- Measurements
 
 	structure_size: INTEGER
 			-- Size to allocate (in bytes)
@@ -86,7 +86,7 @@ feature {NONE} -- Externals
 			"sizeof (MCI_DGV_WINDOW_PARMS)"
 		end
 
-	cwex_mci_dgv_window_set_display_window (ptr: POINTER; value: INTEGER)
+	cwex_mci_dgv_window_set_display_window (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <dgv_win.h>]"
 		end
@@ -101,7 +101,7 @@ feature {NONE} -- Externals
 			"C [macro <dgv_win.h>]"
 		end
 
-	cwex_mci_dgv_window_get_display_window (ptr: POINTER): INTEGER
+	cwex_mci_dgv_window_get_display_window (ptr: POINTER): POINTER
 		external
 			"C [macro <dgv_win.h>]"
 		end

@@ -41,7 +41,7 @@ feature
 		end
 
 	load_tool_bar_by_id (tool_bar_id: INTEGER)
-			-- deletes all current buttons and adds button as specified in the resource script 
+			-- deletes all current buttons and adds button as specified in the resource script
 		require
 			exists: exists
 		local
@@ -50,8 +50,8 @@ feature
 			bitmap: WEL_TOOL_BAR_BITMAP
 			index: INTEGER
 			button_index: INTEGER
-		
-		do 
+
+		do
 			create tool_bar_data.make_by_id (tool_bar_id)
 			delete_all_buttons
 
@@ -61,21 +61,21 @@ feature
 			until
 				index >= tool_bar_data.command_id_count
 			loop
-				if tool_bar_data.command_id_at (index) = 0 then 
+				if tool_bar_data.command_id_at (index) = 0 then
 					create button.make_separator
-				else 
+				else
 					create button.make_button (button_index, tool_bar_data.command_id_at (index))
 					button_index := button_index + 1
 				end
 				index := index + 1
 				add_buttons (<<button>>)
-			end 
+			end
 
 			-- TODO: propably bitmap needs to be reset instead of added?
 			create bitmap.make (tool_bar_id)
 			add_bitmaps (bitmap, 1)
-			
-			set_tool_tips		
+
+			set_tool_tips
 		end
 
 	set_flat_style (yes: BOOLEAN)
@@ -92,16 +92,16 @@ feature
 
 	set_tool_tips
 			-- for each button it takes the resource string with the same id (command_id), takes the substring
-			-- that is after the first "%N", but only to an optional following second "%N" and sets it as 
+			-- that is after the first "%N", but only to an optional following second "%N" and sets it as
 			-- tooltip for this button.
 		require
 			exists: exists
 		local
 			index: INTEGER
 			a_tooltip: WEL_TOOLTIP
-			tool_info: WEL_TOOL_INFO			
-		
-		do 
+			tool_info: WEL_TOOL_INFO
+
+		do
 			-- Create a tooltip
 			create a_tooltip.make (Current.parent, -1)
 
@@ -109,7 +109,7 @@ feature
 				index := 0
 			until
 				index >= button_count
-			loop 
+			loop
 				create tool_info.make
 				tool_info.set_window (Current)
 				tool_info.set_flags (Ttf_subclass)
@@ -119,7 +119,7 @@ feature
 				index := index + 1
 			end
 			set_tooltip (a_tooltip)
-			
+
 		end
 
 	get_tool_tip_text_by_id (index: INTEGER): STRING
@@ -132,21 +132,21 @@ feature
 			new_line: INTEGER
 		do
 			a_text := resource_string_id (index)
-			
+
 			if a_text.count >= 1 then
 				new_line := a_text.substring_index ("%N", 1)
-				
+
 				if new_line /= 0 then
-					a_text.tail ( a_text.count - new_line)
-					
+					a_text.keep_tail ( a_text.count - new_line)
+
 					new_line := a_text.substring_index ("%N", 1)
 					if new_line /= 0 then
-						a_text.head ( new_line - 1)
+						a_text.keep_head ( new_line - 1)
 					end
 					Result := a_text
 				end
 			end
-			if Result = Void then 
+			if Result = Void then
 				create Result.make (0)
 			end
 		ensure
@@ -164,29 +164,29 @@ feature
 			new_line: INTEGER
 		do
 			a_text := resource_string_id (index)
-			
+
 			if a_text.count >= 1 then
 				new_line := a_text.substring_index ("%N", 1)
-		
-				
+
+
 				if new_line /= 0 then
-					a_text.tail ( a_text.count - new_line)
+					a_text.keep_tail ( a_text.count - new_line)
 
 					new_line := a_text.substring_index ("%N", 1)
 					if new_line /= 0 then
-						a_text.tail ( a_text.count - new_line)
+						a_text.keep_tail ( a_text.count - new_line)
 					end
 					Result := a_text
 				end
 			end
-			
-			if Result = Void then 
+
+			if Result = Void then
 				create Result.make (0)
 			end
 		ensure
 			result_not_void: Result /= Void
 		end
-				
+
 	delete_all_buttons
 			-- Deletes all buttons
 		require

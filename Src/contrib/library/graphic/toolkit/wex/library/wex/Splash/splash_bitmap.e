@@ -31,20 +31,20 @@ feature -- Basic operations
 			-- Set splashscreen
 		require
 			file_name_not_void: file_name /= Void
-			file_name_meaningfull: not file_name.empty
+			file_name_meaningfull: not file_name.is_empty
 		local
 			a_file: RAW_FILE
 			a_dib: WEL_DIB
 			client_dc: WEL_CLIENT_DC
 			retried: BOOLEAN
 		do
-			if not retried then 
-				create a_file.make_open_read (file_name) 
-				create a_dib.make_by_file (a_file) 
+			if not retried then
+				create a_file.make_open_read (file_name)
+				create a_dib.make_by_file (a_file)
 				create client_dc.make (Current)
 				client_dc.get
 				client_dc.select_palette (a_dib.palette)
-					client_dc.realize_palette 
+					client_dc.realize_palette
 				create splash_bitmap.make_by_dib (client_dc, a_dib, Dib_rgb_colors)
 				splash_palette := a_dib.palette
 				client_dc.release
@@ -100,11 +100,11 @@ feature {NONE} -- Implementation
 	class_background: WEL_NULL_BRUSH
 			-- We paint the entire foreground,
 			-- so windows need not to paint the background.
-		once 
+		once
 			create Result.make
 		end
 
-	class_name: STRING
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "SplashBitmapWindowWEX"

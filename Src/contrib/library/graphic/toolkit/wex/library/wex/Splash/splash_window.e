@@ -112,7 +112,7 @@ feature -- Status report
 		do
 			Result := exists
 		end
-		
+
 feature {NONE} -- Behavior
 
 	on_timer (timer_id: INTEGER)
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 
 	msg: WEL_MSG
 			-- Wel message
-		once 
+		once
 			create Result.make
 		end
 
@@ -145,17 +145,10 @@ feature {NONE} -- Implementation
 	default_ex_style: INTEGER
 			-- Tool window style (not in taskbar)
 		once
-			Result := Ws_ex_toolwindow 
+			Result := Ws_ex_toolwindow
 		end
 
-	Ws_ex_toolwindow: INTEGER
-		external
-			"C [macro <windows.h>]"
-		alias
-			"WS_EX_TOOLWINDOW"
-		end
-
-	class_name: STRING
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "SplashWindowWEX"

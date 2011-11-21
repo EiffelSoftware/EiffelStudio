@@ -44,8 +44,8 @@ feature -- Status report
 			exists: exists
 		local
 			r: WEL_RECT
-		do 
-			create r.make_by_pointer (cwex_mci_dgv_rect_get_rect (item)) 
+		do
+			create r.make_by_pointer (cwex_mci_dgv_rect_get_rect (item))
 
 			--| The `right' member of the retrieved rectangle
 			--| contains the width and the `bottom' member of the
@@ -57,7 +57,7 @@ feature -- Status report
 			result_exists: Result.exists
 		end
 
-feature {WEL_STRUCTURE}
+feature -- Measurements
 
 	structure_size: INTEGER
 			-- Size to allocate (in bytes)

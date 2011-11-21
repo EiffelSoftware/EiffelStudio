@@ -19,13 +19,13 @@ create
 
 feature {NONE} -- Implementation
 
-	class_name: STRING
+	class_name: STRING_32
 		once
 			Result := "ControlWindowNoBackgroundWEX"
 		end
 
 	class_background: WEL_NULL_BRUSH
-		once 
+		once
 			create Result.make
 		end
 

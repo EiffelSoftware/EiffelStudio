@@ -60,7 +60,7 @@ feature -- Status setting
 			position_set: position = pos
 		end
 
-feature {WEL_STRUCTURE}
+feature -- Measurements
 
 	structure_size: INTEGER
 			-- Size to allocate (in bytes)

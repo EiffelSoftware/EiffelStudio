@@ -22,7 +22,7 @@ feature
 		local
 			mi: WEL_MENU_SELECT_MESSAGE
 		do
-			
+
 			main_window ?= argument
 			mi ?= message_information
 
@@ -30,13 +30,13 @@ feature
 				valid_argument: argument /= Void
 				valid_message_information: mi /= Void
 			end
-			
-			main_window.status_window.set_text_part (0, get_status_window_text (mi.item) )				
-			
+
+			main_window.status_window.set_text_part (0, get_status_window_text (mi.item) )
+
 		end
-	
-	
-	
+
+
+
 feature {NONE}
 
 	get_status_window_text (string_id: INTEGER): STRING
@@ -44,13 +44,13 @@ feature {NONE}
 			text: STRING
 		do
 			text := resource_string_id (string_id)
-			if text = Void then 
+			if text = Void then
 				create text.make (0)
 			end
 			if text.count /= 0 then
-				text.head (text.index_of ('%N', 1) - 1)
+				text.keep_head (text.index_of ('%N', 1) - 1)
 			end
-	
+
 			Result := text
 		ensure
 			result_not_void: Result /= Void

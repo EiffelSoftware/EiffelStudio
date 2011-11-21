@@ -14,32 +14,30 @@ feature -- Access
 	version: INTEGER
 		require
 			exists: exists
-		local
-			i:INTEGER
 		do
 			Result := cwex_tool_bar_data_version (item)
-		end	
+		end
 
 	width: INTEGER
 		require
 			exists: exists
 		do
 			Result := cwex_tool_bar_data_width (item)
-		end	
+		end
 
 	height: INTEGER
 		require
 			exists: exists
 		do
 			Result := cwex_tool_bar_data_height (item)
-		end	
+		end
 	command_id_count: INTEGER
 		require
 			exists: exists
 		do
 			Result := cwex_tool_bar_data_item_count (item)
 		end
-	
+
 	command_id_at (index: INTEGER): INTEGER
 		require
 			exists: exists
@@ -52,7 +50,7 @@ feature -- Access
 feature {NONE}
 	load_item (hinstance, a_id: POINTER)
 		do
-			item := cwin_lock_resource (cwin_load_resource (hinstance, 
+			item := cwin_lock_resource (cwin_load_resource (hinstance,
 									cwin_find_resource (hinstance, a_id, cwin_make_int_resource (241))))
 		end
  destroy_item
@@ -65,25 +63,25 @@ feature {NONE}
 				-- SDK LoadIcon
 			external
 				"C [macro <wel.h>] (HMODULE, HRSRC): EIF_POINTER"
-			alias 
+			alias
 				"LoadResource"
 			end;
-	
+
 	cwin_find_resource (hmodule, lpname, lptype: POINTER): POINTER
 				-- SDK LoadIcon
 			external
 				"C [macro <wel.h>] (HMODULE, LPCSTR, LPCSTR): EIF_POINTER"
-			alias 
+			alias
 				"FindResource"
 			end;
 	cwin_lock_resource (hresdata: POINTER): POINTER
 				-- SDK LoadIcon
 			external
 				"C [macro <wel.h>] (HGLOBAL): EIF_POINTER"
-			alias 
+			alias
 				"LockResource"
 			end;
-	
+
 	cwex_tool_bar_data_version (a_item: POINTER): INTEGER
 			external
 				"C"

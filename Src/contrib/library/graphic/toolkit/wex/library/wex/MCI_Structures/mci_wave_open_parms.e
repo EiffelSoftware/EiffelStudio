@@ -26,7 +26,7 @@ feature -- Initialization
 			-- Create object and fill structure.
 		require
 			a_device_not_void: a_device /= Void
-			a_device_not_empty: not a_device.empty
+			a_device_not_empty: not a_device.is_empty
 			a_parent_not_void: a_parent /= Void
 			a_parent_exists: a_parent.exists
 		do
@@ -61,7 +61,7 @@ feature -- Status setting
 			buffer_size_set: buffer_size = size
 		end
 
-feature {WEL_STRUCTURE}
+feature -- Measurements
 
 	structure_size: INTEGER
 			-- Size to allocate (in bytes)

@@ -30,14 +30,14 @@ feature -- Test
 
 	test_repository_info
 		do
-			if attached svn.repository_info ("https://svn.eiffel.com/eiffelstudio/trunk") as info then
+			if attached svn.repository_info ("https://svn.eiffel.com/eiffelstudio/trunk", Void) as info then
 				display_repository_info (info)
 			end
 		end
 
 	test_statuses
 		do
-			if attached svn.statuses ("c:\_dev\trunk\Src\scripts", True, False, False) as lst then
+			if attached svn.statuses ("c:\_dev\trunk\Src\scripts", True, False, False, Void) as lst then
 				from
 					lst.start
 				until
@@ -53,7 +53,7 @@ feature -- Test
 		local
 			rev: like svn.logs.item_for_iteration
 		do
-			if attached svn.logs ("https://svn.eiffel.com/eiffelstudio/trunk", True, 0 , 0, 10) as lst then
+			if attached svn.logs ("https://svn.eiffel.com/eiffelstudio/trunk", True, 0 , 0, 10, Void) as lst then
 				from
 					lst.start
 				until
@@ -74,13 +74,13 @@ feature -- Test
 			l_logs: like svn.logs
 		do
 			l_url := "https://svn.eiffel.com/eiffelstudio/trunk"
-			if attached svn.repository_info (l_url) as repo_info then
+			if attached svn.repository_info (l_url, Void) as repo_info then
 				l_head_rev := repo_info.last_changed_rev
 				l_last_fetched_rev := last_stored_rev
 				if l_last_fetched_rev > 0 then
-					l_logs := svn.logs (l_url, True, l_last_fetched_rev, l_head_rev, 10)
+					l_logs := svn.logs (l_url, True, l_last_fetched_rev, l_head_rev, 10, Void)
 				else
-					l_logs := svn.logs (l_url, True, 0, 0, 100)
+					l_logs := svn.logs (l_url, True, 0, 0, 100, Void)
 				end
 				if l_logs /= Void then
 					from

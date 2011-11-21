@@ -96,24 +96,24 @@ feature {NONE} -- Document
 	on_start
 			-- Forward start.
 		do
-			if on_start_callback /= Void then
-				on_start_callback.call (Void)
+			if attached on_start_callback as cb then
+				cb.call (Void)
 			end
 		end
 
 	on_finish
 			-- Forward finish.
 		do
-			if on_finish_callback /= Void then
-				on_finish_callback.call (Void)
+			if attached on_finish_callback as cb then
+				cb.call (Void)
 			end
 		end
 
 	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN)
 			-- XML declaration.
 		do
-			if on_xml_declaration_callback /= Void then
-				on_xml_declaration_callback.call ([a_version, an_encoding, a_standalone])
+			if attached on_xml_declaration_callback as cb then
+				cb.call ([a_version, an_encoding, a_standalone])
 			end
 		end
 
@@ -122,8 +122,8 @@ feature {NONE} -- Errors
 	on_error (a_message: STRING)
 			-- Event producer detected an error.
 		do
-			if on_error_callback /= Void then
-				on_error_callback.call ([a_message])
+			if attached on_error_callback as cb then
+				cb.call ([a_message])
 			end
 		end
 
@@ -132,16 +132,16 @@ feature {NONE} -- Meta
 	on_processing_instruction (a_name, a_content: STRING)
 			-- Forward PI.
 		do
-			if on_processing_instruction_callback /= Void then
-				on_processing_instruction_callback.call ([a_name, a_content])
+			if attached on_processing_instruction_callback as cb then
+				cb.call ([a_name, a_content])
 			end
 		end
 
 	on_comment (a_content: STRING)
 			-- Forward comment.
 		do
-			if on_comment_callback /= Void then
-				on_comment_callback.call ([a_content])
+			if attached on_comment_callback as cb then
+				cb.call ([a_content])
 			end
 		end
 
@@ -150,32 +150,32 @@ feature {NONE} -- Tag
 	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Start of start tag.
 		do
-			if on_start_tag_callback /= Void then
-				on_start_tag_callback.call ([a_namespace, a_prefix, a_local_part])
+			if attached on_start_tag_callback as cb then
+				cb.call ([a_namespace, a_prefix, a_local_part])
 			end
 		end
 
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Process attribute.
 		do
-			if on_attribute_callback /= Void then
-				on_attribute_callback.call ([a_namespace, a_prefix, a_local_part, a_value])
+			if attached on_attribute_callback as cb then
+				cb.call ([a_namespace, a_prefix, a_local_part, a_value])
 			end
 		end
 
 	on_start_tag_finish
 			-- End of start tag.
 		do
-			if on_start_tag_finish_callback /= Void then
-				on_start_tag_finish_callback.call (Void)
+			if attached on_start_tag_finish_callback as cb then
+				cb.call (Void)
 			end
 		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- End tag.
 		do
-			if on_end_tag_callback /= Void then
-				on_end_tag_callback.call ([a_namespace, a_prefix, a_local_part])
+			if attached on_end_tag_callback as cb then
+				cb.call ([a_namespace, a_prefix, a_local_part])
 			end
 		end
 
@@ -184,8 +184,8 @@ feature {NONE} -- Content
 	on_content (a_content: STRING)
 			-- Forward content.
 		do
-			if on_content_callback /= Void then
-				on_content_callback.call ([a_content])
+			if attached on_content_callback as cb then
+				cb.call ([a_content])
 			end
 		end
 

@@ -16,7 +16,7 @@ feature -- Access
 		local
 			retried: BOOLEAN
 			l_revision: STRING
-			tree: XML_CALLBACKS_TREE
+			tree: XML_CALLBACKS_NULL_FILTER_DOCUMENT
 			docs: XML_DOCUMENT
 			att: detachable XML_ATTRIBUTE
 			elt: XML_ELEMENT

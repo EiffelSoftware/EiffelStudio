@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 			-- Ignored regexp
 
 	path_regexp_ignored (p: STRING): BOOLEAN
-			-- Is path ignored in relation with `regexp_ignores'? 
+			-- Is path ignored in relation with `regexp_ignores'?
 		do
 			if
 				attached regexp_ignores as l_regexp_ignores
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 
 			l_system := a_target.system.name
 			l_target := a_target.name
-			print ("Parsing "+l_target+" from "+l_system+" ("+a_target.system.file_name+")...")
+			print ("Parsing "+l_target+" from "+l_system+"-" + a_target.system.uuid.out + " ("+a_target.system.file_name+")...")
 
 			create l_vis.make_build (l_state, a_target, create {CONF_PARSE_FACTORY})
 			a_target.process (l_vis)
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 				print ("Finalizing")
 				l_args.extend ("-finalize")
 			end
-			print (" "+l_target+" from "+l_system+" ("+a_target.system.file_name+")...")
+			print (" "+l_target+" from "+l_system+"-" + a_target.system.uuid.out + " ("+a_target.system.file_name+")...")
 
 			create l_prc_factory
 			l_prc_launcher := l_prc_factory.process_launcher (eiffel_layout.ec_command_name, l_args, Void)

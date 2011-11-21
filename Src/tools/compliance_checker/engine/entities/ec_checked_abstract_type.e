@@ -29,16 +29,18 @@ feature {NONE} -- Initialization
 			a_type_is_abstract_or_is_interface: a_type.is_abstract or a_type.is_interface
 		do
 			make_type (a_type)
+			non_compliant_interface_reason := ""
+			non_eiffel_compliant_interface_reason := ""
 		ensure
 			type_set: type = a_type
 		end
 
 feature -- Access
 
-	non_compliant_interface_reason: detachable STRING
+	non_compliant_interface_reason: STRING
 			-- Reason why entity is non-CLS-compliant interface
 
-	non_eiffel_compliant_interface_reason: detachable STRING
+	non_eiffel_compliant_interface_reason: STRING
 			-- Reason why entity is non-Eiffel-compliant interface
 
 	has_interface_been_checked: BOOLEAN

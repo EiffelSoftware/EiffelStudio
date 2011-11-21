@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd" name="mci_splash" uuid="D658AF38-884C-439C-B2C7-01A0F2DA7047">
-	<target name="mci_splash">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd" name="wex" uuid="07E81055-A76C-4736-AEEA-A2A67E04E32B" library_target="wex">
+	<target name="wex">
 		<root all_classes="true"/>
 		<option warning="true" is_attached_by_default="false" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true"/>
@@ -9,7 +9,6 @@
 		<external_include location="$(ISE_LIBRARY)\contrib\library\graphic\toolkit\wex\library\Wex\clib"/>
 		<external_object location="winmm.lib"/>
 		<external_object location="$(ISE_LIBRARY)\contrib\library\graphic\toolkit\wex\library\Wex\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\cwex.lib"/>
-		<precompile name="wel_pre" location="$ISE_PRECOMP\wel.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<cluster name="root_cluster" location=".\"/>

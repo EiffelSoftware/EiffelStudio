@@ -1,0 +1,11 @@
+
+test_name 	 long-string-constants-crash
+test_description A class with some long string constants crashes an assertion-enabled compiler
+
+copy_sub	Ace $TEST Ace
+copy_bin	test $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+test_end

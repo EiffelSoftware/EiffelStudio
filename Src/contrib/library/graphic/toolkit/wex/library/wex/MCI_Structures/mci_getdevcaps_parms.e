@@ -56,7 +56,7 @@ feature -- Status setting
 			cwex_mci_devcaps_set_item (item, value)
 		end
 
-feature {WEL_STRUCTURE}
+feature -- Measurements
 
 	structure_size: INTEGER
 			-- Size to allocate (in bytes)

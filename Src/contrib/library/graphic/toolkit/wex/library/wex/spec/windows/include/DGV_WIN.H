@@ -15,8 +15,8 @@
 
 #include <generic.h>
 
-#define cwex_mci_dgv_window_set_display_window(_ptr_, _value_) (((MCI_DGV_WINDOW_PARMS *) _ptr_)->hWnd = (WORD) (_value_))
-#define cwex_mci_dgv_window_set_display_style(_ptr_, _value_) (((MCI_DGV_WINDOW_PARMS *) _ptr_)->nCmdShow = (WORD) (_value_))
+#define cwex_mci_dgv_window_set_display_window(_ptr_, _value_) (((MCI_DGV_WINDOW_PARMS *) _ptr_)->hWnd = (HWND) (_value_))
+#define cwex_mci_dgv_window_set_display_style(_ptr_, _value_) (((MCI_DGV_WINDOW_PARMS *) _ptr_)->nCmdShow = (UINT) (_value_))
 #define cwex_mci_dgv_window_set_caption(_ptr_, _value_) (((MCI_DGV_WINDOW_PARMS *) _ptr_)->lpstrText = (LPSTR) (_value_))
 
 #define cwex_mci_dgv_window_get_display_window(_ptr_) ((((MCI_DGV_WINDOW_PARMS *) _ptr_)->hWnd))

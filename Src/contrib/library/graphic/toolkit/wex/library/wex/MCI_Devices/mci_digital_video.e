@@ -47,7 +47,7 @@ feature -- Basic operations
 			opened: opened
 		local
 			generic_parms: WEX_MCI_GENERIC_PARMS
-		do 
+		do
 			create generic_parms.make (parent)
 			realize_device (generic_parms, Mci_dgv_realize_bkgd)
 		end
@@ -62,7 +62,7 @@ feature -- Basic operations
 			opened: opened
 		local
 			generic_parms: WEX_MCI_GENERIC_PARMS
-		do 
+		do
 			create generic_parms.make (parent)
 			realize_device (generic_parms, Mci_dgv_realize_norm)
 		end
@@ -74,7 +74,7 @@ feature -- Basic operations
 			opened: opened
 		local
 			generic_parms: WEX_MCI_GENERIC_PARMS
-		do 
+		do
 			create generic_parms.make (parent)
 			cue_device (generic_parms, Mci_dgv_cue_output)
 		end
@@ -87,7 +87,7 @@ feature -- Basic operations
 			meaningful_position: a_position <= media_length
 		local
 			seek_parms: WEX_MCI_SEEK_PARMS
-		do 
+		do
 			create seek_parms.make (parent, position)
 			seek_device (seek_parms, Mci_to)
 		end
@@ -97,10 +97,10 @@ feature -- Basic operations
 		require
 			not_opened: not opened
 			file_not_void: file /= Void
-			file_meaningful: not file.empty
+			file_meaningful: not file.is_empty
 		local
 			open_parms: WEX_MCI_DGV_OPEN_PARMS
-		do 
+		do
 			create open_parms.make (parent, device_name)
 			open_parms.set_open_style (Ws_child)
 			open_parms.set_element_name (file)
@@ -119,7 +119,7 @@ feature -- Status setting
 		local
 			window_parms: WEX_MCI_DGV_WINDOW_PARMS
 		do
-			current_window := window 
+			current_window := window
 			create window_parms.make (parent)
 			window_parms.set_display_window (window)
 			window_device (window_parms, Mci_dgv_window_hwnd)
@@ -136,7 +136,7 @@ feature -- Status report
 			opened: opened
 		local
 			dgv_rect_parms: WEX_MCI_DGV_RECT_PARMS
-		do 
+		do
 			create dgv_rect_parms.make (parent)
 			where_device (dgv_rect_parms, Mci_dgv_where_source)
 			Result := dgv_rect_parms.rect
@@ -154,7 +154,7 @@ feature -- Status report
 			opened: opened
 		local
 			dgv_rect_parms: WEX_MCI_DGV_RECT_PARMS
-		do 
+		do
 			create dgv_rect_parms.make (parent)
 			where_device (dgv_rect_parms, Mci_dgv_where_source +
 				Mci_dgv_where_max)
@@ -173,7 +173,7 @@ feature -- Status report
 			opened: opened
 		local
 			dgv_rect_parms: WEX_MCI_DGV_RECT_PARMS
-		do 
+		do
 			create dgv_rect_parms.make (parent)
 			where_device (dgv_rect_parms, Mci_dgv_where_destination)
 			Result := dgv_rect_parms.rect
@@ -191,7 +191,7 @@ feature -- Status report
 			opened: opened
 		local
 			dgv_rect_parms: WEX_MCI_DGV_RECT_PARMS
-		do 
+		do
 			create dgv_rect_parms.make (parent)
 			where_device (dgv_rect_parms, Mci_dgv_where_destination
 				+ Mci_dgv_where_max)
@@ -202,14 +202,14 @@ feature -- Status report
 		end
 
 	window_rectangle: WEL_RECT
-			-- Retrieve the dimensions of the display-window frame. 
+			-- Retrieve the dimensions of the display-window frame.
 			--| The returned rectangle is reformatted to
 			--| a true Windows rectangle.
 		require
 			opened: opened
 		local
 			dgv_rect_parms: WEX_MCI_DGV_RECT_PARMS
-		do 
+		do
 			create dgv_rect_parms.make (parent)
 			where_device (dgv_rect_parms, Mci_dgv_where_window)
 			Result := dgv_rect_parms.rect
@@ -227,7 +227,7 @@ feature -- Status report
 			opened: opened
 		local
 			dgv_rect_parms: WEX_MCI_DGV_RECT_PARMS
-		do 
+		do
 			create dgv_rect_parms.make (parent)
 			where_device (dgv_rect_parms, Mci_dgv_where_window +
 				Mci_dgv_where_max)
@@ -246,7 +246,7 @@ feature -- Status report
 			opened: opened
 		local
 			dgv_rect_parms: WEX_MCI_DGV_RECT_PARMS
-		do 
+		do
 			create dgv_rect_parms.make (parent)
 			where_device (dgv_rect_parms, Mci_dgv_where_frame)
 			Result := dgv_rect_parms.rect
@@ -265,7 +265,7 @@ feature -- Status report
 			opened: opened
 		local
 			dgv_rect_parms: WEX_MCI_DGV_RECT_PARMS
-		do 
+		do
 			create dgv_rect_parms.make (parent)
 			where_device (dgv_rect_parms, Mci_dgv_where_video)
 			Result := dgv_rect_parms.rect

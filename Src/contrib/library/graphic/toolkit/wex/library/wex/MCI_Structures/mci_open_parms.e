@@ -27,7 +27,7 @@ feature -- Initialization
 			a_parent_not_void: a_parent /= Void
 			a_parent_exists: a_parent.exists
 			a_device_not_void: a_device /= Void
-			a_device_not_empty: not a_device.empty
+			a_device_not_empty: not a_device.is_empty
 		do
 			if not exists then
 				structure_make
@@ -54,7 +54,7 @@ feature -- Status setting
 		require
 			exists: exists
 			type_not_void: type /= Void
-			type_not_empty: not type.empty
+			type_not_empty: not type.is_empty
 		local
 			a: ANY
 		do
@@ -67,7 +67,7 @@ feature -- Status setting
 		require
 			exists: exists
 			element_not_void: element /= Void
-			element_not_empty: not element.empty
+			element_not_empty: not element.is_empty
 		local
 			a: ANY
 		do
@@ -80,7 +80,7 @@ feature -- Status setting
 		require
 			exists: exists
 			a_alias_not_void: a_alias /= Void
-			a_alias_not_empty: not a_alias.empty
+			a_alias_not_empty: not a_alias.is_empty
 		local
 			a: ANY
 		do
@@ -88,7 +88,7 @@ feature -- Status setting
 			cwex_mci_open_set_alias (item, $a)
 		end
 
-feature {WEL_STRUCTURE}
+feature -- Measurements
 
 	structure_size: INTEGER
 			-- Size to allocate (in bytes)

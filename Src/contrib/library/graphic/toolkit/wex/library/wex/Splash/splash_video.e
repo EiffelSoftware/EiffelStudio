@@ -32,7 +32,7 @@ feature -- Basic operations
 	set_video (a_file_name: STRING)
 		require
 			a_file_name_not_void: a_file_name /= Void
-			a_file_name_meaningful: not a_file_name.empty
+			a_file_name_meaningful: not a_file_name.is_empty
 		local
 			rect: WEL_RECT
 		do
@@ -76,7 +76,7 @@ feature -- Status report
 
 feature {NONE} -- Behavior
 
-	default_process_message (a_msg, wparam, lparam: INTEGER)
+	default_process_message (a_msg: INTEGER wparam, lparam: POINTER)
 		do
 			if a_msg = Mm_mcinotify then
 				pop_down
@@ -99,7 +99,7 @@ feature {NONE} -- implementation
 		end
 
 	video_window: WEX_CONTROL_WINDOW_NO_BACKGROUND
-		once 
+		once
 			create Result.make(Current, "SplashVideoSubWindowRWC")
 		end
 
@@ -110,7 +110,7 @@ feature {NONE} -- implementation
 			video_device.realize_palette_as_background
 		end
 
-	class_name: STRING
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "SplashVideoWindowRWC"
@@ -118,7 +118,7 @@ feature {NONE} -- implementation
 
 	video_device: WEX_MCI_DIGITAL_VIDEO
 			-- device to play an AVI
-		once 
+		once
 			create Result.make (Current)
 			Result.set_strict (True)
 		end

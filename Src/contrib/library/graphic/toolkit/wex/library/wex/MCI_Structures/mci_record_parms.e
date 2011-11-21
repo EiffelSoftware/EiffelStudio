@@ -81,7 +81,7 @@ feature -- Status setting
 			record_end_position_set: record_end = end_pos
 		end
 
-feature {WEL_STRUCTURE}
+feature -- Measurements
 
 	structure_size: INTEGER
 			-- Size to allocate (in bytes)

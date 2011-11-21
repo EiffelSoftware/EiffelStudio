@@ -43,7 +43,7 @@ feature -- Status setting
 		require
 			exists: exists
 			file_not_void: file /= Void
-			file_meaningful: not file.empty
+			file_meaningful: not file.is_empty
 		local
 			a: ANY
 		do
@@ -51,7 +51,7 @@ feature -- Status setting
 			cwex_mci_save_set_file_name (item, $a)
 		end
 
-feature {WEL_STRUCTURE}
+feature -- Measurements
 
 	structure_size: INTEGER
 			-- Size to allocate (in bytes)

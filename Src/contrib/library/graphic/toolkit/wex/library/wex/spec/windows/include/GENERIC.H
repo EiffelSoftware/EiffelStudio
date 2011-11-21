@@ -13,7 +13,7 @@
 #	include <wex_mci.h>
 #endif
 
-#define cwex_mci_generic_set_callback(_ptr_, _value_) (((MCI_GENERIC_PARMS *) _ptr_)->dwCallback = (DWORD) (_value_))
+#define cwex_mci_generic_set_callback(_ptr_, _value_) (((MCI_GENERIC_PARMS *) _ptr_)->dwCallback = (DWORD_PTR) (_value_))
 
 #define cwex_mci_generic_get_callback(_ptr_) ((((MCI_GENERIC_PARMS *) _ptr_)->dwCallback))
 

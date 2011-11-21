@@ -85,8 +85,8 @@ feature -- Status setting
 		ensure
 			play_to_set: play_to = a_play_to
 		end
-		
-feature {WEL_STRUCTURE}
+
+feature -- Measurements
 
 	structure_size: INTEGER
 			-- Size to allocate (in bytes)

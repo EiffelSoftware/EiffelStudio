@@ -24,7 +24,7 @@ feature -- Access
 			a_meaningful_position: a_position <= media_length
 		local
 			seek_parms: WEX_MCI_SEEK_PARMS
-		do 
+		do
 			create seek_parms.make (parent, a_position)
 			seek_device (seek_parms, Mci_to)
 		end
@@ -34,10 +34,10 @@ feature -- Access
 		require
 			not_opened: not opened
 			a_file_not_void: a_file /= Void
-			a_file_meaningful: not a_file.empty
+			a_file_meaningful: not a_file.is_empty
 		local
 			open_parms: WEX_MCI_OPEN_PARMS
-		do 
+		do
 			create open_parms.make (parent, device_name)
 			open_parms.set_element_name (a_file)
 			open_device (open_parms, Mci_open_element +

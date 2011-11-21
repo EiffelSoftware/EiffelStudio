@@ -29,14 +29,14 @@ feature {NONE} -- Initialization
 			if not exists then
 				structure_make
 			end
-			set_call_back (cwel_pointer_to_integer (a_parent.item))
+			set_call_back (a_parent.item)
 		ensure
 			exists: exists
 		end
 
 feature -- Status report
 
-	call_back: INTEGER
+	call_back: POINTER
 			-- Window used for notifications.
 		require
 			exists: exists
@@ -46,7 +46,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_call_back (a_call_back: INTEGER)
+	set_call_back (a_call_back: POINTER)
 			-- Set window used for notifications.
 		require
 			exists: exists
@@ -56,7 +56,7 @@ feature -- Status setting
 			call_back_set: call_back = a_call_back
 		end
 
-feature {WEL_STRUCTURE}
+feature -- Measurements
 
 	structure_size: INTEGER
 			-- Size to allocate (in bytes)
@@ -73,12 +73,12 @@ feature {NONE} -- Externals
 			"sizeof (MCI_GENERIC_PARMS)"
 		end
 
-	cwex_mci_generic_set_callback (ptr: POINTER; value: INTEGER)
+	cwex_mci_generic_set_callback (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <generic.h>]"
 		end
 
-	cwex_mci_generic_get_callback (ptr: POINTER): INTEGER
+	cwex_mci_generic_get_callback (ptr: POINTER): POINTER
 		external
 			"C [macro <generic.h>]"
 		end

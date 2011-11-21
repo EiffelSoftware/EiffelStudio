@@ -43,7 +43,8 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwex_mci_status_get_result (item)
+				-- FIXME: Should it really be an INTEGER?
+			Result := cwex_mci_status_get_result (item).to_integer_32
 		end
 
 	status_item: INTEGER
@@ -84,7 +85,7 @@ feature -- Status setting
 			track_set: track = value
 		end
 
-feature {WEL_STRUCTURE}
+feature -- Measurements
 
 	structure_size: INTEGER
 			-- Size to allocate (in bytes)
@@ -111,7 +112,7 @@ feature {NONE} -- Externals
 			"C [macro <status.h>]"
 		end
 
-	cwex_mci_status_get_result (ptr: POINTER): INTEGER
+	cwex_mci_status_get_result (ptr: POINTER): POINTER
 		external
 			"C [macro <status.h>]"
 		end

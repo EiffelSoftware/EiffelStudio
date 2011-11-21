@@ -100,7 +100,7 @@ feature -- Basic operations
 			opened: opened
 		local
 			seek_parms: WEX_MCI_SEEK_PARMS
-		do 
+		do
 			create seek_parms.make (parent, 0)
 			seek_device (seek_parms, Mci_seek_to_start)
 		end
@@ -111,7 +111,7 @@ feature -- Basic operations
 			opened: opened
 		local
 			seek_parms: WEX_MCI_SEEK_PARMS
-		do 
+		do
 			create seek_parms.make (parent, 0)
 			seek_device (seek_parms, Mci_seek_to_end)
 		end
@@ -122,7 +122,7 @@ feature -- Basic operations
 			opened: opened
 		local
 			generic_parms: WEX_MCI_GENERIC_PARMS
-		do 
+		do
 			create generic_parms.make (parent)
 			close_device (generic_parms, 0)
 		end
@@ -135,7 +135,7 @@ feature -- Basic operations
 			can_play: can_play
 		local
 			play_parms: WEX_MCI_PLAY_PARMS
-		do 
+		do
 			create play_parms.make (parent, 0, 0)
 			play_device (play_parms, 0)
 		end
@@ -146,7 +146,7 @@ feature -- Basic operations
 			opened: opened
 		local
 			generic_parms: WEX_MCI_GENERIC_PARMS
-		do 
+		do
 			create generic_parms.make (parent)
 			stop_device (generic_parms, 0)
 		end
@@ -157,7 +157,7 @@ feature -- Basic operations
 			opened: opened
 		local
 			generic_parms: WEX_MCI_GENERIC_PARMS
-		do 
+		do
 			create generic_parms.make (parent)
 			pause_device (generic_parms, 0)
 		end
@@ -172,7 +172,7 @@ feature -- Basic operations
 			opened: opened
 		local
 			generic_parms: WEX_MCI_GENERIC_PARMS
-		do 
+		do
 			create generic_parms.make (parent)
 			resume_device (generic_parms, 0)
 		end
@@ -184,7 +184,7 @@ feature -- Basic operations
 			has_audio: has_audio
 		local
 			set_parms: WEX_MCI_SET_PARMS
-		do 
+		do
 			create set_parms.make (parent)
 			set_parms.set_audio_channel (Mci_set_audio_left)
 			set_device (set_parms, Mci_set_audio + Mci_set_off)
@@ -197,7 +197,7 @@ feature -- Basic operations
 			has_audio: has_audio
 		local
 			set_parms: WEX_MCI_SET_PARMS
-		do 
+		do
 			create set_parms.make (parent)
 			set_parms.set_audio_channel (Mci_set_audio_right)
 			set_device (set_parms, Mci_set_audio + Mci_set_off)
@@ -210,7 +210,7 @@ feature -- Basic operations
 			has_audio: has_audio
 		local
 			set_parms: WEX_MCI_SET_PARMS
-		do 
+		do
 			create set_parms.make (parent)
 			set_parms.set_audio_channel (Mci_set_audio_left)
 			set_device (set_parms, Mci_set_audio + Mci_set_on)
@@ -223,7 +223,7 @@ feature -- Basic operations
 			has_audio: has_audio
 		local
 			set_parms: WEX_MCI_SET_PARMS
-		do 
+		do
 			create set_parms.make (parent)
 			set_parms.set_audio_channel (Mci_set_audio_right)
 			set_device (set_parms, Mci_set_audio + Mci_set_on)
@@ -236,7 +236,7 @@ feature -- Basic operations
 			has_audio: has_audio
 		local
 			set_parms: WEX_MCI_SET_PARMS
-		do 
+		do
 			create set_parms.make (parent)
 			set_parms.set_audio_channel (Mci_set_audio_all)
 			set_device (set_parms, Mci_set_audio + Mci_set_off)
@@ -249,21 +249,21 @@ feature -- Basic operations
 			has_audio: has_audio
 		local
 			set_parms: WEX_MCI_SET_PARMS
-		do 
+		do
 			create set_parms.make (parent)
 			set_parms.set_audio_channel (Mci_set_audio_all)
 			set_device (set_parms, Mci_set_audio + Mci_set_on)
-		end		
+		end
 
 feature -- Status report
 
 	opened: BOOLEAN
 			-- Is the device opened?
 
-	device_id: INTEGER
+	device_id: POINTER
 			-- Identifier of opened device
 		do
-			Result := cwel_pointer_to_integer (item)
+			Result := item
 		end
 
 	command_success: BOOLEAN
@@ -277,7 +277,7 @@ feature -- Status report
 		local
 			a: ANY
 			success: BOOLEAN
-		do 
+		do
 			create Result.make (Maximum_error_buffer)
 			Result.fill_blank
 			a := Result.to_c
@@ -287,7 +287,7 @@ feature -- Status report
 				Result := "Unidentified error"
 			end
 			Result.right_adjust
-			Result.head (Result.count - 1)
+			Result.keep_head (Result.count - 1)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -619,7 +619,7 @@ feature -- Status report
 			opened: opened
 		local
 			status_parms: WEX_MCI_STATUS_PARMS
-		do 
+		do
 			create status_parms.make (parent, Mci_status_item +
 				Mci_status_start)
 			status_device (status_parms, Mci_status_position)
@@ -920,8 +920,8 @@ feature {NONE} -- Implementation
 			parms_exists: parms.exists
 		do
 			error := cwin_mci_send_command_result (
-				cwel_pointer_to_integer (item), command,
-				flags + command_flags, parms.to_integer)
+				item, command,
+				to_lparam(flags | command_flags), parms.item).to_integer_32
 		ensure
 			strictness: strict implies raise_error_on_command_failure
 		end
@@ -935,7 +935,7 @@ feature {NONE} -- Implementation
 			a_track_large_enough: a_track >= 0
 		local
 			status_parms: WEX_MCI_STATUS_PARMS
-		do 
+		do
 			create status_parms.make (parent, a_item)
 			status_parms.set_track (a_track)
 			status_device (status_parms, Mci_status_item + Mci_track)
@@ -951,12 +951,12 @@ feature {NONE} -- Implementation
 			opened: opened
 		local
 			devcaps_parms: WEX_MCI_GETDEVCAPS_PARMS
-		do 
+		do
 			create devcaps_parms.make (parent)
 			devcaps_parms.set_devcap_item (a_cap)
 			getdevcaps_device (devcaps_parms, a_item)
 			Result := devcaps_parms.query_result
-		end			
+		end
 
 	query_device_capability (a_item: INTEGER): INTEGER
 			-- Query a device about the capability of `a_item'.
@@ -964,7 +964,7 @@ feature {NONE} -- Implementation
 			opened: opened
 		local
 			devcaps_parms: WEX_MCI_GETDEVCAPS_PARMS
-		do 
+		do
 			create devcaps_parms.make (parent)
 			getdevcaps_device (devcaps_parms, a_item)
 			Result := devcaps_parms.query_result
@@ -976,7 +976,7 @@ feature {NONE} -- Implementation
 			opened: opened
 		local
 			status_parms: WEX_MCI_STATUS_PARMS
-		do 
+		do
 			create status_parms.make (parent, a_item)
 			status_device (status_parms, Mci_status_item)
 			Result := status_parms.query_result
@@ -1018,27 +1018,24 @@ feature {NONE} -- Removal
 			-- must close the MCI device.
 		do
 			if opened then
-				cwin_mci_send_command (cwel_pointer_to_integer (
-					item), Mci_close, Mci_wait, 0)
+				cwin_mci_send_command (item, Mci_close, to_lparam (Mci_wait), to_wparam(0))
 			end
 		end
 
 feature {NONE} -- Externals
 
-	cwin_mci_send_command_result (id, msg, command, wparam: INTEGER): INTEGER
+	cwin_mci_send_command_result (id: POINTER; msg: INTEGER; command, wparam: POINTER): POINTER
 			-- SDK mciSendCommand (with the result)
 		external
-			"C [macro <wex_mci.h>] (MCIDEVICEID, UINT, %
-				%DWORD, DWORD): EIF_INTEGER"
+			"C [macro <wex_mci.h>] (MCIDEVICEID, UINT, DWORD_PTR, DWORD_PTR): EIF_POINTER"
 		alias
 			"mciSendCommand"
 		end
 
-	cwin_mci_send_command (id, msg, command, wparam: INTEGER)
+	cwin_mci_send_command (id: POINTER; msg: INTEGER; command, wparam: POINTER)
 			-- SDK mciSendCommand (without the result)
 		external
-			"C [macro <wex_mci.h>] (MCIDEVICEID, UINT, %
-				%DWORD, DWORD)"
+			"C [macro <wex_mci.h>] (MCIDEVICEID, UINT, DWORD_PTR, DWORD_PTR)"
 		alias
 			"mciSendCommand"
 		end
@@ -1054,7 +1051,7 @@ invariant
 	parent_not_void: parent /= Void
 	parent_exists: parent.exists
 	device_name_not_void: device_name /= Void
-	device_name_not_empty: not device_name.empty
+	device_name_not_empty: not device_name.is_empty
 
 end -- class WEX_MCI_DEVICE
 

@@ -51,10 +51,10 @@ feature -- Basic operations
 		require
 			not_opened: not opened
 			file_not_void: file /= Void
-			file_meaningful: not file.empty
+			file_meaningful: not file.is_empty
 		local
 			open_parms: WEX_MCI_WAVE_OPEN_PARMS
-		do 
+		do
 			create open_parms.make (parent, device_name)
 			open_parms.set_element_name (file)
 			open_device (open_parms, Mci_open_element +
@@ -68,7 +68,7 @@ feature -- Basic operations
 			not_opened: not opened
 		local
 			open_parms: WEX_MCI_WAVE_OPEN_PARMS
-		do 
+		do
 			create open_parms.make (parent, device_name)
 			open_parms.set_element_name ("")
 			open_device (open_parms, Mci_open_element +
@@ -80,10 +80,10 @@ feature -- Basic operations
 		require
 			opened: opened
 			file_name_not_void: file_name /= Void
-			file_name_meaningful: not file_name.empty
+			file_name_meaningful: not file_name.is_empty
 		local
 			save_parms: WEX_MCI_SAVE_PARMS
-		do 
+		do
 			create save_parms.make (parent)
 			save_parms.set_file (file_name)
 			save_device (save_parms, Mci_save_file)
@@ -95,7 +95,7 @@ feature -- Basic operations
 			opened: opened
 		local
 			record_parms: WEX_MCI_RECORD_PARMS
-		do 
+		do
 			create record_parms.make (parent, 0, 0)
 			record_device (record_parms, 0)
 		end
@@ -107,10 +107,10 @@ feature -- Basic operations
 			opened: opened
 		local
 			generic_parms: WEX_MCI_GENERIC_PARMS
-		do 
+		do
 			create generic_parms.make (parent)
 			cue_device (generic_parms, Mci_wave_input)
-		end			
+		end
 
 	cue_play_back
 			-- Cue the device for play back.
@@ -119,7 +119,7 @@ feature -- Basic operations
 			opened: opened
 		local
 			generic_parms: WEX_MCI_GENERIC_PARMS
-		do 
+		do
 			create generic_parms.make (parent)
 			cue_device (generic_parms, Mci_wave_output)
 		end
@@ -132,7 +132,7 @@ feature -- Basic operations
 			a_valid_position: a_position <= media_length
 		local
 			seek_parms: WEX_MCI_SEEK_PARMS
-		do 
+		do
 			create seek_parms.make (parent, a_position)
 			seek_device (seek_parms, Mci_to)
 		end
@@ -167,8 +167,7 @@ feature -- Status report
 		require
 			opened: opened
 		do
-			Result := query_status_item (
-				Mci_wave_status_samplespersec)
+			Result := query_status_item (Mci_wave_status_samplespersec)
 		end
 
 	bytes_per_second: INTEGER
@@ -177,8 +176,7 @@ feature -- Status report
 		require
 			opened: opened
 		do
-			Result := query_status_item (
-				Mci_wave_status_avgbytespersec)
+			Result := query_status_item (Mci_wave_status_avgbytespersec)
 		end
 
 	bits_per_sample: INTEGER
@@ -187,8 +185,7 @@ feature -- Status report
 		require
 			opened: opened
 		do
-			Result := query_status_item (
-				Mci_wave_status_bitspersample)
+			Result := query_status_item (Mci_wave_status_bitspersample)
 		end
 
 	current_block_alignment: INTEGER
@@ -215,8 +212,7 @@ feature -- Status report
 		require
 			opened: opened
 		do
-			Result := cwin_lo_word (query_status_item (
-				Mci_wave_status_level))
+			Result := query_status_item (Mci_wave_status_level) & 0xFFFF
 		end
 
 	left_channel_level: INTEGER
@@ -224,8 +220,7 @@ feature -- Status report
 		require
 			opened: opened
 		do
-			Result := cwin_hi_word (query_status_item (
-				Mci_wave_status_level))
+			Result := (query_status_item (Mci_wave_status_level) & 0xFFFF0000 ) |>> 16
 		end
 
 feature -- Status setting
@@ -236,7 +231,7 @@ feature -- Status setting
                         opened: opened
                 local
                         wave_set_parms: WEX_MCI_WAVE_SET_PARMS
-                do 
+                do
                         create wave_set_parms.make (parent)
                         wave_set_parms.set_input_channel (channel)
                         set_device (wave_set_parms, Mci_wave_input)
@@ -250,7 +245,7 @@ feature -- Status setting
                         opened: opened
                 local
                         wave_set_parms: WEX_MCI_WAVE_SET_PARMS
-                do 
+                do
                         create wave_set_parms.make (parent)
                         wave_set_parms.set_output_device (device)
                         set_device (wave_set_parms, Mci_wave_output)
@@ -263,7 +258,7 @@ feature -- Status setting
                         opened: opened
                 local
                         wave_set_parms: WEX_MCI_WAVE_SET_PARMs
-                do 
+                do
                         create wave_set_parms.make (parent)
                         set_device (wave_set_parms, Mci_wave_set_anyinput)
                 end
@@ -275,7 +270,7 @@ feature -- Status setting
                         opened: opened
                 local
                         wave_set_parms: WEX_MCI_WAVE_SET_PARMS
-                do 
+                do
                         create wave_set_parms.make (parent)
                         set_device (wave_set_parms, Mci_wave_set_anyoutput)
                 end
@@ -290,7 +285,7 @@ feature -- Status setting
                         opened: opened
                 local
                         wave_set_parms: WEX_MCI_WAVE_SET_PARMS
-                do 
+                do
                         create wave_set_parms.make (parent)
                         wave_set_parms.set_bytes_per_second (number_of_bytes)
                         set_device (wave_set_parms, Mci_wave_set_avgbytespersec)
@@ -306,7 +301,7 @@ feature -- Status setting
                         opened: opened
                 local
                         wave_set_parms: WEX_MCI_WAVE_SET_PARMS
-                do 
+                do
                         create wave_set_parms.make (parent)
                         wave_set_parms.set_bits_per_sample (number_of_bits)
                         set_device (wave_set_parms, Mci_wave_set_bitspersample)
@@ -322,7 +317,7 @@ feature -- Status setting
                         opened: opened
                 local
                         wave_set_parms: WEX_MCI_WAVE_SET_PARMS
-                do 
+                do
                         create wave_set_parms.make (parent)
                         wave_set_parms.set_block_alignment (block_alignment)
                         set_device (wave_set_parms, Mci_wave_set_blockalign)
@@ -337,7 +332,7 @@ feature -- Status setting
                         opened: opened
                 local
                         wave_set_parms: WEX_MCI_WAVE_SET_PARMS
-                do 
+                do
                         create wave_set_parms.make (parent)
                         wave_set_parms.set_channels (2)
                         set_device (wave_set_parms, Mci_wave_set_channels)
@@ -352,7 +347,7 @@ feature -- Status setting
                         opened: opened
                 local
                         wave_set_parms: WEX_MCI_WAVE_SET_PARMS
-                do 
+                do
                         create wave_set_parms.make (parent)
                         wave_set_parms.set_channels (1)
                         set_device (wave_set_parms, Mci_wave_set_channels)
@@ -368,7 +363,7 @@ feature -- Status setting
                         opened: opened
                 local
                         wave_set_parms: WEX_MCI_WAVE_SET_PARMS
-                do 
+                do
                         create wave_set_parms.make (parent)
                         wave_set_parms.set_format_tag (format)
                         set_device (wave_set_parms, Mci_wave_set_formattag)
@@ -383,7 +378,7 @@ feature -- Status setting
                         opened: opened
                 local
 			wave_set_parms: WEX_MCI_WAVE_SET_PARMS
-		do 
+		do
                         create wave_set_parms.make (parent)
                         wave_set_parms.set_format_tag (Wave_format_pcm)
                         set_device (wave_set_parms, Mci_wave_set_formattag)
@@ -399,7 +394,7 @@ feature -- Status setting
                         opened: opened
                 local
 			wave_set_parms: WEX_MCI_WAVE_SET_PARMS
-		do 
+		do
                         create wave_set_parms.make (parent)
                         wave_set_parms.set_samples_per_second (
 				number_of_samples)

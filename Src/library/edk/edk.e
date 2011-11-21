@@ -14,8 +14,8 @@ feature -- Initialization
 	make is
 			-- Run application.
 		local
-			display_manager: EDK_DISPLAY_MANAGER
-
+			l_app_server: EDK_APPLICATION_SERVER
+			app: EDK_APPLICATION
 			message: EDK_MESSAGE
 			n: NATURAL
 			l_thread: WORKER_THREAD
@@ -23,9 +23,10 @@ feature -- Initialization
 		do
 			i := [1, "a", Void]
 			i := {NATURAL_8} 1
-			create display_manager
+			create l_app_server
+			app := l_app_server.application_from_namespace ("app")
 
-			display := display_manager.display
+			display := app.display
 
 			from
 				n := 1
@@ -49,7 +50,7 @@ feature -- Initialization
 
 		create_window
 			local
-				l_window: EDK_WINDOW
+				l_window: NATIVE_WINDOW
 				n: NATURAL
 				message: EDK_MESSAGE
 				native_message: EDK_MESSAGE
@@ -58,16 +59,16 @@ feature -- Initialization
 				create message
 				message.set_window (l_window)
 				message.set_id ({EDK_MESSAGE_IDS}.edk_window_map)
-				display.event_manager.put_message_on_queue (message)
+				display.message_manager.put_message_on_queue (message)
 				from
 
 				until
 					False
 				loop
-					display.event_manager.get_message_from_queue (message)
+					display.message_manager.get_message_from_queue (message)
 					print (message.id.to_hex_string + "%N")
-					display.event_manager.process_message_from_queue (message)
-					display.event_manager.wait_for_next_message (100)
+					display.message_manager.process_message_from_queue (message)
+					display.message_manager.wait_for_next_message (100)
 				end
 			end
 

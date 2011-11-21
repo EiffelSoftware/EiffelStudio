@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Routines for rendering graphics to a context"
 	author: ""
 	date: "$Date$"

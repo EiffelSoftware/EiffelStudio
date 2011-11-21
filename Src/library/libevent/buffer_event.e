@@ -9,5 +9,12 @@ class
 inherit
 	EVENT_ANY
 
+feature -- Destroy
+
+	destroy_item
+			-- <Precursor>
+		do
+			-- To be implemented
+		end
 
 end

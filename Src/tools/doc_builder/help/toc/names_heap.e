@@ -15,7 +15,7 @@ class
 	NAMES_HEAP
 
 inherit
-	TO_SPECIAL [STRING]
+	TO_SPECIAL [detachable STRING]
 		rename
 			put as area_put,
 			valid_index as area_valid_index,
@@ -24,20 +24,22 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
+	ANY
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make
 			-- Create new instance of NAMES_HEAP
 		do
 			top_index := 1
-			make_area (Chunk)
+			make_filled_area (Void, Chunk)
 			create lookup_table.make (Chunk)
 		end
-		
+
 feature -- Access
 
 	item (i: INTEGER): STRING
@@ -138,21 +140,21 @@ feature {NONE} -- Implementation: access
 			-- Hash-table indexed by string names
 			-- Values are indexes of Current to access corresponding
 			-- key in an efficient manner.
-			
+
 	top_index: INTEGER
 			-- Number of elements in Current
-	
+
 	Chunk: INTEGER = 500
 			-- Default chunk size.
-			
+
 invariant
 	area_not_void: area /= Void
 	lookup_table_not_void: lookup_table /= Void
 	top_index_positive: top_index >= 0
 	found_item_positive: found_item >= 0
-	
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -165,21 +167,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end -- class NAMES_HEAP

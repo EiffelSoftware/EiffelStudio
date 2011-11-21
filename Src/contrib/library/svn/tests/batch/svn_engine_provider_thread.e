@@ -30,7 +30,7 @@ feature -- Access
 			lst: LIST [SVN_STATUS_INFO]
 		do
 			create internal_svn_engine
-			lst := internal_svn_engine.list_of_nodes_from (th_data.p, th_data.is_verbose_mode, th_data.is_recursive_mode, th_data.is_remote_mode)
+			lst := internal_svn_engine.statuses (th_data.p, th_data.is_verbose_mode, th_data.is_recursive_mode, th_data.is_remote_mode, void)
 			th_mutex.lock
 			th_provider.post_result (th_id, lst)
 			th_mutex.unlock

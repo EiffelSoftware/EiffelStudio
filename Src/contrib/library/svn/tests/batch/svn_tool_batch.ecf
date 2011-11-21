@@ -12,7 +12,7 @@
 		<setting name="multithreaded" value="True"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
-		<library name="esvn" location="..\svn.ecf"/>
+		<library name="esvn" location="..\..\svn.ecf"/>
 		<library name="gobo_argument" location="$ISE_LIBRARY\library\gobo\gobo_argument.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf"/>

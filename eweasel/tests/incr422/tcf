@@ -1,0 +1,18 @@
+
+test_name 	fix-vlec-infinite-recursion
+test_description Fixing a VLEC error in a SCOOP system by removing a separate attribute of an expanded type causes the compiler to go into infinite recursion in degree 5
+
+define		ATTRIBUTE "y: separate TEST"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	validity_error TEST VLEC
+
+define		ATTRIBUTE ""
+copy_sub 	test.e $CLUSTER test.e
+resume_compile
+compile_result 	ok
+
+test_end

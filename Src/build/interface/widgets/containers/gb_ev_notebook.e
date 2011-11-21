@@ -10,7 +10,7 @@ class
 	GB_EV_NOTEBOOK
 
 inherit
-	
+
 	GB_EV_ANY
 		undefine
 			attribute_editor
@@ -18,14 +18,14 @@ inherit
 			ev_type,
 			modify_from_xml_after_build
 		end
-		
+
 	GB_EV_NOTEBOOK_EDITOR_CONSTRUCTOR
-		
+
 	GB_SHARED_DEFERRED_BUILDER
 		undefine
 			default_create
 		end
-		
+
 	DEFAULT_OBJECT_STATE_CHECKER
 		undefine
 			default_create
@@ -51,7 +51,7 @@ feature {GB_XML_STORE} -- Output
 					first.start
 				until
 					first.off
-				loop					
+				loop
 						-- Note that we always add the element for each item text, even if empty
 						-- as the code that updates the constants in GB_EV_NOTEBOOK relies on this fact.
 					add_string_element (item_text_element, item_text_string + first.index.out, first.item_text (first.item))
@@ -64,21 +64,21 @@ feature {GB_XML_STORE} -- Output
 				until
 					first.off
 				loop
-						if first.pixmap_paths.item (first.index) /= Void or uses_constant (Item_pixmap_string + first.index.out)  then
-							add_string_element (item_pixmap_element, Item_pixmap_string + first.index.out, first.pixmap_paths.item (first.index))
-						end
+					if first.pixmap_paths.item (first.index) /= Void or uses_constant (Item_pixmap_string + first.index.out)  then
+						add_string_element (item_pixmap_element, Item_pixmap_string + first.index.out, first.pixmap_paths.item (first.index))
+					end
 					first.forth
 				end
 			end
 		end
-		
+
 	modify_from_xml (element: XM_ELEMENT)
 			-- Update all items in `objects' based on information held in `element'.
 		local
 			element_info: ELEMENT_INFORMATION
 		do
 			full_information := get_unique_full_info (element)
-			
+
 			element_info := full_information @ (Tab_position_string)
 			if element_info /= Void then
 				for_all_objects (agent {EV_NOTEBOOK}.set_tab_position (element_info.data.to_integer))
@@ -86,7 +86,7 @@ feature {GB_XML_STORE} -- Output
 				-- We set up some deferred building now.
 			deferred_builder.defer_building (Current, element)
 		end
-		
+
 	modify_from_xml_after_build (element: XM_ELEMENT)
 			-- Build from XML any information that was
 			-- deferred during the load/build cycle.
@@ -157,10 +157,10 @@ feature {GB_XML_STORE} -- Output
 									create new_pixmap
 									new_pixmap := pixmap_constant.pixmap
 									set_pixmap (new_pixmap, Void, counter)
-								else								
+								else
 									create new_pixmap
 									create a_file_name.make_from_string (element_info.data)
-									create file.make (a_file_name)	
+									create file.make (a_file_name)
 									if file.exists then
 										new_pixmap.set_with_named_file (element_info.data)
 										set_pixmap (new_pixmap, element_info.data, counter)
@@ -177,8 +177,8 @@ feature {GB_XML_STORE} -- Output
 					element.forth
 				end
 			end
-			
-				-- The following code is the old loading for notebook texts, 
+
+				-- The following code is the old loading for notebook texts,
 				-- which is required for backwards compatibility with older
 				-- saved files. The new loading code is above.
 			element_info := full_information @ (Item_text_string)
@@ -196,8 +196,8 @@ feature {GB_XML_STORE} -- Output
 					names.forth
 				end
 			end
-		end	
-		
+		end
+
 feature {GB_CODE_GENERATOR} -- Output
 
 	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO):ARRAYED_LIST [STRING]
@@ -247,7 +247,7 @@ feature {GB_CODE_GENERATOR} -- Output
 					element.forth
 				end
 			end
-			
+
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (item_pixmap_string_new)
 			if element_info /= Void then
@@ -267,7 +267,7 @@ feature {GB_CODE_GENERATOR} -- Output
 						loop
 							if full_information.has (Item_pixmap_string + counter.out) then
 								element_info := full_information @ (Item_pixmap_string + counter.out)
-							
+
 								if element_info.is_constant then
 									a_pixmap_string := element_info.data
 								else

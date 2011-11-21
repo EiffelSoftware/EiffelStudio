@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			l_accelerator: EV_ACCELERATOR
 			l_key: EV_KEY
 			l_consts: EV_KEY_CONSTANTS
-			l_so: SYSTEM_OBJECT
+			l_so: detachable SYSTEM_OBJECT
 			l_version: STRING
 		do
 			set_icon_pixmap (icon_check_compliance)
@@ -82,10 +82,23 @@ feature {NONE} -- Initialization
 			l_so ?= Current
 			create l_version.make (20 + lbl_copyright.text.count)
 			l_version.append ("Build v.")
-			l_version.append (create {STRING}.make_from_cil (l_so.get_type.assembly.get_name.version.to_string))
-			l_version.append_character ('%N')
-			l_version.append (lbl_copyright.text)
-			lbl_copyright.set_text (l_version)
+			check
+				attached l_so and then attached l_so.get_type as l_type and then
+				attached l_type.assembly as l_assembly and then
+				attached l_assembly.get_name as l_assembly_name and then
+				attached l_assembly_name.version as l_ass_version and then
+				attached l_ass_version.to_string as l_string
+			then
+				l_version.append (create {STRING}.make_from_cil (l_string))
+				l_version.append_character ('%N')
+				l_version.append (lbl_copyright.text)
+				lbl_copyright.set_text (l_version)
+			end
+		end
+
+	user_create_interface_objects
+		do
+
 		end
 
 feature {NONE} -- Agent Handlers
@@ -140,8 +153,8 @@ feature {NONE} -- Agent Handlers
 				if query_clean_project then
 					create l_ofd
 					l_ofd.set_title (file_dialog_open_project)
-					if sticky_project_file_name /= Void and not sticky_project_file_name.is_empty then
-						l_ofd.set_file_name (sticky_project_file_name)
+					if attached sticky_project_file_name as l_project_file_name and then not l_project_file_name.is_empty then
+						l_ofd.set_file_name (l_project_file_name)
 					end
 					l_ofd.filters.extend ([filter_project, filter_name_project])
 					l_ofd.show_modal_to_window (Current)
@@ -170,7 +183,7 @@ feature {NONE} -- Agent Handlers
 			retried: BOOLEAN
 		do
 			if not retried then
-				if sticky_project_file_name = Void or else sticky_project_file_name.is_empty then
+				if attached sticky_project_file_name as l_project_file_name and then not l_project_file_name.is_empty then
 					l_ext := project_file_name_extension
 					create l_sfd
 					l_sfd.set_title (file_dialog_save_project)
@@ -190,8 +203,7 @@ feature {NONE} -- Agent Handlers
 						sticky_project_file_name := l_file_name
 					end
 				else
-					save_project (sticky_project_file_name)
-					project.set_is_dirty (False)
+					show_error (error_unable_to_save_project, [], Current)
 				end
 			else
 				show_error (error_unable_to_save_project, [], Current)
@@ -217,12 +229,12 @@ feature {NONE} -- Agent Handlers
 	on_show_help
 			-- Called when user selects help toolbar button
 		local
-			l_process: SYSTEM_DLL_PROCESS
+			l_process: detachable SYSTEM_DLL_PROCESS
 			l_help: like help_file
 			retried: BOOLEAN
 		do
+			l_help := help_file
 			if not retried then
-				l_help := help_file
 				if (create {RAW_FILE}.make (l_help)).exists then
 					l_process := {SYSTEM_DLL_PROCESS}.start_string_string ("hh.exe", help_file)
 						-- Above will throw an exception is hh.exe cannot be found
@@ -301,13 +313,13 @@ feature {NONE} -- Implementation
 				l_warning.set_buttons (<<button_okay, button_cancel>>)
 				l_warning.set_default_cancel_button (l_warning.button (button_cancel))
 				l_warning.show_modal_to_window (Current)
-				Result := l_warning.selected_button.is_equal (button_okay)
+				Result := l_warning.selected_button ~ button_okay
 			else
 				Result := True
 			end
 		end
 
-	sticky_project_file_name: STRING
+	sticky_project_file_name: detachable STRING
 			-- Sticky project file name
 
 	project_file_name_extension: STRING = ".ecmp";

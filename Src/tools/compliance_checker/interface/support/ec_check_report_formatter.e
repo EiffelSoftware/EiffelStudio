@@ -19,44 +19,49 @@ feature -- Formatting
 		require
 			a_member_not_void: a_member /= Void
 		local
-			l_type: SYSTEM_TYPE
-			l_prop: PROPERTY_INFO
-			l_method: METHOD_INFO
-			l_field: FIELD_INFO
-			l_event: EVENT_INFO
-			l_ctor: CONSTRUCTOR_INFO
+			l_type: detachable SYSTEM_TYPE
+			l_prop: detachable PROPERTY_INFO
+			l_method: detachable METHOD_INFO
+			l_field: detachable FIELD_INFO
+			l_event: detachable EVENT_INFO
+			l_ctor: detachable CONSTRUCTOR_INFO
+			l_result: detachable STRING
 		do
 			l_type ?= a_member
 			if l_type /= Void then
-				Result := format_type (l_type, a_show_full_name)
+				l_result := format_type (l_type, a_show_full_name)
 			else
 				l_method ?= a_member
 				if l_method /= Void then
-					Result := format_method (l_method, a_show_full_name)
+					l_result := format_method (l_method, a_show_full_name)
 				else
 					l_prop ?= a_member
 					if l_prop /= Void then
-						Result := format_property (l_prop, a_show_full_name)
+						l_result := format_property (l_prop, a_show_full_name)
 					else
 						l_ctor ?= a_member
 						if l_ctor /= Void then
-							Result := format_constructor (l_ctor, a_show_full_name)
+							l_result := format_constructor (l_ctor, a_show_full_name)
 						else
 							l_event ?= a_member
 							if l_event /= Void then
-								Result := format_event (l_event, a_show_full_name)
+								l_result := format_event (l_event, a_show_full_name)
 							else
 								l_field ?= a_member
 								if l_field /= Void then
-									Result := format_field (l_field, a_show_full_name)
+									l_result := format_field (l_field, a_show_full_name)
 								end
 							end
 						end
 					end
 				end
 			end
-			if Result = Void then
-				Result := a_member.name
+			if l_result = Void then
+				check attached a_member.name as l_name then
+					Result := l_name
+				end
+			else
+				Result := l_result
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -70,9 +75,13 @@ feature -- Formatting
 			a_type_not_void: a_type /= Void
 		do
 			if a_show_full_name then
-				Result := a_type.full_name
+				check attached a_type.full_name as l_full_name then
+					Result := l_full_name
+				end
 			else
-				Result := a_type.name
+				check attached a_type.name as l_name then
+					Result := l_name
+				end
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -87,37 +96,50 @@ feature -- Formatting
 		local
 			l_name: STRING
 			l_type: STRING
-			l_params: NATIVE_ARRAY [PARAMETER_INFO]
+			l_params: detachable NATIVE_ARRAY [detachable PARAMETER_INFO]
 			l_count: INTEGER
 			i: INTEGER
 		do
-			l_name := a_ctor.name
-			create Result.make (40)
+			check attached a_ctor.name as l_ctor_name then
+				l_name := l_ctor_name
+				create Result.make (40)
 
-			if a_show_full_name then
-				Result.append (create {STRING}.make_from_cil (a_ctor.reflected_type.to_string))
-				Result.append_character ('.')
-			end
-
-			Result.append (l_name)
-
-			l_params := a_ctor.get_parameters
-			l_count := l_params.count
-			if l_count > 0 then
-				Result.append (" (")
-				from
-					l_count := l_params.count
-				until
-					i = l_count
-				loop
-					l_type := simple_type_name (l_params.item (i).parameter_type)
-					Result.append (l_type)
-					if i < l_count - 1 then
-						Result.append (", ")
+				if a_show_full_name then
+					check
+						attached a_ctor.reflected_type as l_reflected_type and then
+						attached l_reflected_type.to_string as l_string
+					then
+						Result.append (create {STRING}.make_from_cil (l_string))
+						Result.append_character ('.')
 					end
-					i := i + 1
 				end
-				Result.append_character (')')
+
+				Result.append (l_name)
+
+				l_params := a_ctor.get_parameters
+				if l_params /= Void then
+					l_count := l_params.count
+				end
+				if l_count > 0 and l_params /= Void then
+					from
+						Result.append (" (")
+					until
+						i = l_count
+					loop
+						check
+							attached l_params.item (i) as l_param and then
+							attached l_param.parameter_type as l_parameter_type
+						then
+							l_type := simple_type_name (l_parameter_type)
+							Result.append (l_type)
+							if i < l_count - 1 then
+								Result.append (", ")
+							end
+						end
+						i := i + 1
+					end
+					Result.append_character (')')
+				end
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -131,46 +153,59 @@ feature -- Formatting
 			a_method_not_void: a_method /= Void
 		local
 			l_name: STRING
-			l_type: SYSTEM_TYPE
+			l_type: detachable SYSTEM_TYPE
 			l_type_str: STRING
-			l_params: NATIVE_ARRAY [PARAMETER_INFO]
+			l_params: detachable NATIVE_ARRAY [detachable PARAMETER_INFO]
 			l_count: INTEGER
 			i: INTEGER
 		do
-			l_name := a_method.name
-			create Result.make (40)
+			check attached a_method.name as l_method_name then
+				l_name := l_method_name
+				create Result.make (40)
 
-			if a_show_full_name then
-				Result.append (create {STRING}.make_from_cil (a_method.reflected_type.to_string))
-				Result.append_character ('.')
-			else
-				l_type := a_method.return_type
-				if l_type /= Void then
-					l_type_str := simple_type_name (l_type)
-					Result.append (l_type_str)
-					Result.append_character (' ')
-				end
-			end
-
-			Result.append (l_name)
-
-			l_params := a_method.get_parameters
-			l_count := l_params.count
-			if l_count > 0 then
-				Result.append (" (")
-				from
-					l_count := l_params.count
-				until
-					i = l_count
-				loop
-					l_type_str := simple_type_name (l_params.item (i).parameter_type)
-					Result.append (l_type_str)
-					if i < l_count - 1 then
-						Result.append (", ")
+				if a_show_full_name then
+					check
+						attached a_method.reflected_type as l_reflected_type and then
+						attached l_reflected_type.to_string as l_string
+					then
+						Result.append (create {STRING}.make_from_cil (l_string))
+						Result.append_character ('.')
 					end
-					i := i + 1
+				else
+					l_type := a_method.return_type
+					if l_type /= Void then
+						l_type_str := simple_type_name (l_type)
+						Result.append (l_type_str)
+						Result.append_character (' ')
+					end
 				end
-				Result.append_character (')')
+
+				Result.append (l_name)
+
+				l_params := a_method.get_parameters
+				if l_params /= Void then
+					l_count := l_params.count
+				end
+				if l_count > 0 and l_params /= Void then
+					from
+						Result.append (" (")
+					until
+						i = l_count
+					loop
+						check
+							attached l_params.item (i) as l_param and then
+							attached l_param.parameter_type as l_parameter_type
+						then
+							l_type_str := simple_type_name (l_parameter_type)
+							Result.append (l_type_str)
+							if i < l_count - 1 then
+								Result.append (", ")
+							end
+						end
+						i := i + 1
+					end
+					Result.append_character (')')
+				end
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -186,24 +221,33 @@ feature -- Formatting
 			l_name: STRING
 			l_type: STRING
 		do
-			l_name := a_prop.name
-			if a_show_full_name then
-				l_type := a_prop.reflected_type.to_string
-			else
-				l_type := simple_type_name (a_prop.property_type)
-			end
+			check attached a_prop.name as l_prop_name then
+				l_name := l_prop_name
+				if a_show_full_name then
+					check
+						attached a_prop.reflected_type as l_reflected_type and then
+						attached l_reflected_type.to_string as l_string
+					then
+						l_type := l_string
+					end
+				else
+					check attached a_prop.property_type as l_property_type then
+						l_type := simple_type_name (l_property_type)
+					end
+				end
 
-			create Result.make (l_name.count + l_type.count + 12)
-			if a_show_full_name then
+				create Result.make (l_name.count + l_type.count + 12)
+				if a_show_full_name then
+					Result.append (l_type)
+					Result.append_character ('.')
+				else
+					Result.append ("[property] ")
 				Result.append (l_type)
-				Result.append_character ('.')
-			else
-				Result.append ("[property] ")
-			Result.append (l_type)
-			Result.append_character (' ')
-			end
+				Result.append_character (' ')
+				end
 
-			Result.append (l_name)
+				Result.append (l_name)
+			end
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -218,24 +262,33 @@ feature -- Formatting
 			l_name: STRING
 			l_type: STRING
 		do
-			l_name := a_event.name
-			if a_show_full_name then
-				l_type := a_event.reflected_type.to_string
-			else
-				l_type := simple_type_name (a_event.event_handler_type)
-			end
+			check attached a_event.name as l_event_name then
+				l_name := l_event_name
+				if a_show_full_name then
+					check
+						attached a_event.reflected_type as l_reflected_type and then
+						attached l_reflected_type.to_string as l_string
+					then
+						l_type := l_string
+					end
+				else
+					check attached a_event.event_handler_type as l_event_type then
+						l_type := simple_type_name (l_event_type)
+					end
+				end
 
-			create Result.make (l_name.count + l_type.count + 10)
-			if a_show_full_name then
-				Result.append (l_type)
-				Result.append_character ('.')
-			else
-				Result.append ("[event] ")
-				Result.append (l_type)
+				create Result.make (l_name.count + l_type.count + 10)
+				if a_show_full_name then
+					Result.append (l_type)
+					Result.append_character ('.')
+				else
+					Result.append ("[event] ")
+					Result.append (l_type)
+					Result.append_character (' ')
+				end
 				Result.append_character (' ')
+				Result.append (l_name)
 			end
-			Result.append_character (' ')
-			Result.append (l_name)
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -250,21 +303,30 @@ feature -- Formatting
 			l_name: STRING
 			l_type: STRING
 		do
-			l_name := a_field.name
-			if a_show_full_name then
-				l_type := a_field.reflected_type.to_string
-			else
-				l_type := simple_type_name (a_field.field_type)
-			end
+			check attached a_field.name as l_field_name then
+				l_name := l_field_name
+				if a_show_full_name then
+					check
+						attached a_field.reflected_type as l_reflected_type and then
+						attached l_reflected_type.to_string as l_string
+					then
+						l_type := l_string
+					end
+				else
+					check attached a_field.field_type as l_field_type then
+						l_type := simple_type_name (l_field_type)
+					end
+				end
 
-			create Result.make (l_name.count + l_type.count + 1)
-			Result.append (l_type)
-			if a_show_full_name then
-				Result.append_character ('.')
-			else
-				Result.append_character (' ')
+				create Result.make (l_name.count + l_type.count + 1)
+				Result.append (l_type)
+				if a_show_full_name then
+					Result.append_character ('.')
+				else
+					Result.append_character (' ')
+				end
+				Result.append (l_name)
 			end
-			Result.append (l_name)
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -277,10 +339,9 @@ feature {NONE} -- Implementation
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_type: like a_type
-			l_full_name: SYSTEM_STRING
-			l_name: SYSTEM_STRING
-			l_tail: SYSTEM_STRING
+			l_type: detachable like a_type
+			l_name: detachable SYSTEM_STRING
+			l_tail: detachable SYSTEM_STRING
 			c: CHARACTER
 			i: INTEGER
 		do
@@ -290,8 +351,7 @@ feature {NONE} -- Implementation
 				l_type := a_type
 			end
 
-			l_full_name := a_type.full_name
-			if l_full_name /= Void then
+			check attached a_type.full_name as l_full_name then
 				if a_type.is_array then
 					c := '['
 					i := l_full_name.index_of ('[')
@@ -309,16 +369,16 @@ feature {NONE} -- Implementation
 					l_name := l_full_name
 				end
 
-				Result ?= simple_names.item (l_name)
-			else
-				Result := "???"
-			end
-
-
-			if Result = Void then
-				Result := l_full_name
-			elseif l_tail /= Void then
-				Result := {SYSTEM_STRING}.concat_string_string (Result, l_tail)
+				if attached {SYSTEM_STRING} simple_names.item (l_name) as l_simple_name then
+					Result := l_simple_name
+				else
+					Result := "???"
+				end
+				if l_tail /= Void then
+					check attached {SYSTEM_STRING}.concat_string_string (Result, l_tail) as l_result then
+						Result := l_result
+					end
+				end
 			end
 		ensure
 			result_not_void: Result /= Void

@@ -16,7 +16,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_assembly: like assembly)
@@ -29,12 +29,12 @@ feature {NONE} -- Initialization
 		ensure
 			assembly_set: assembly = a_assembly
 		end
-		
+
 feature -- Access
 
 	assembly: ASSEMBLY
 			-- Assembly report was generated for
-			
+
 	types: DYNAMIC_LIST [EC_REPORT_TYPE]
 			-- List of checked report types.
 		require
@@ -42,7 +42,7 @@ feature -- Access
 		do
 			Result := internal_checked_types
 		end
-		
+
 feature -- Access {EC_REPORT_BASE}
 
 	report: EC_REPORT
@@ -50,16 +50,16 @@ feature -- Access {EC_REPORT_BASE}
 		do
 			Result := Current
 		end
-		
-	parent: EC_REPORT_BASE
+
+	parent: detachable EC_REPORT_BASE
 			-- Parent report entity of current entity.
 		do
 			-- There is no parent!
 		end
-		
+
 feature -- Query
 
-	is_being_built: BOOLEAN 
+	is_being_built: BOOLEAN
 			-- Is report currently being built?
 
 feature {EC_REPORT_BUILDER} -- Status Setting
@@ -71,7 +71,7 @@ feature {EC_REPORT_BUILDER} -- Status Setting
 		ensure
 			is_being_built_set: is_being_built = a_building
 		end
-	
+
 feature {EC_REPORT_BUILDER} -- Basic Operations
 
 	add_type_report (a_report: EC_REPORT_TYPE)
@@ -85,9 +85,9 @@ feature {EC_REPORT_BUILDER} -- Basic Operations
 		ensure
 			types_has_report: types.has (a_report)
 		end
-		
+
 feature {EC_REPORT_BUILDER} -- Removal
-		
+
 	wipe_out
 			-- Clears report
 		do
@@ -95,16 +95,16 @@ feature {EC_REPORT_BUILDER} -- Removal
 		ensure
 			internal_checked_types_is_empty: internal_checked_types.is_empty
 		end
-		
+
 feature {NONE} -- Internal Cached Information
 
 	internal_checked_types: ARRAYED_LIST [EC_REPORT_TYPE]
 			-- Internal mutable list of report types
-		
+
 invariant
 	aassembly_not_void: assembly /= Void
 	internal_checked_types_not_void: internal_checked_types /= Void
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

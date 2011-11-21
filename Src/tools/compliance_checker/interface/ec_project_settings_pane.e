@@ -83,9 +83,14 @@ feature {NONE} -- Initialization
 			show_hide_assembly_error_pixmap
 		end
 
+	user_create_interface_objects
+		do
+
+		end
+
 feature -- Access
 
-	owner_window: EC_MAIN_WINDOW assign set_owner_window
+	owner_window: detachable EC_MAIN_WINDOW
 			-- Owner window
 
 feature -- Element change
@@ -160,7 +165,9 @@ feature {NONE} -- Agent Handlers
 				l_ofd.set_start_directory (l_dir)
 			end
 
-			l_ofd.show_modal_to_window (owner_window)
+			check attached owner_window as l_window then
+				l_ofd.show_modal_to_window (l_window)
+			end
 			l_file_name := l_ofd.file_name
 			if l_file_name /= Void and then not l_file_name.is_empty then
 				sticky_assembly_path := l_ofd.file_path
@@ -169,7 +176,7 @@ feature {NONE} -- Agent Handlers
 			end
 		end
 
-	sticky_assembly_path: STRING
+	sticky_assembly_path: detachable STRING
 			-- Last assembly path directory		
 
 	on_grid_row_selection_changed (a_selected: BOOLEAN; a_row: EV_GRID_ROW)
@@ -200,7 +207,7 @@ feature {NONE} -- Agent Handlers
 			a_key_not_void: a_key /= Void
 		local
 			l_rows: ARRAYED_LIST [EV_GRID_ROW]
-			l_item: EV_GRID_EDITABLE_ITEM
+			l_item: detachable EV_GRID_EDITABLE_ITEM
 		do
 			inspect a_key.code
 
@@ -208,14 +215,13 @@ feature {NONE} -- Agent Handlers
 				l_rows := grid_reference_paths.selected_rows
 				if l_rows.count > 0 then
 					l_item ?= (l_rows[1]).item (1)
-					check
-						l_item_not_void: l_item /= Void
-					end
 					if l_item /= Void then
 						l_item.ensure_visible
 						active_reference_text := l_item.text
 						l_item.activate
-						l_item.text_field.select_all
+						if attached l_item.text_field as l_text_field then
+							l_text_field.select_all
+						end
 					end
 				end
 			when key_delete then
@@ -275,7 +281,9 @@ feature {NONE} -- Agent Handlers
 			if a_button = 1 then
 				active_reference_text := a_item.text
 				a_item.activate
-				a_item.text_field.select_all
+				if attached a_item.text_field as l_text_field then
+					l_text_field.select_all
+				end
 			end
 		end
 
@@ -284,7 +292,7 @@ feature {NONE} -- Agent Handlers
 		require
 			a_item_not_void: a_item /= Void
 			active_reference_text_not_void: active_reference_text /= Void
-			not_active_reference_text_is_empty: not active_reference_text.is_empty
+			not_active_reference_text_is_empty: attached active_reference_text as l_atext and then not l_atext.is_empty
 		local
 			l_text: STRING
 			l_old_text: like active_reference_text
@@ -295,7 +303,7 @@ feature {NONE} -- Agent Handlers
 				a_item.set_text (l_text)
 			end
 			l_old_text := active_reference_text
-			if not l_text.is_equal (l_old_text) then
+			if l_old_text /= Void and then l_text /~ l_old_text then
 				if l_text.is_empty then
 					grid_reference_paths.remove_row (a_item.row.index)
 					project.remove_reference_path (l_old_text)
@@ -349,7 +357,7 @@ feature {NONE} -- Agent Handlers
 			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
 			l_project: like project
 			l_row: EV_GRID_ROW
-			l_item: EV_GRID_EDITABLE_ITEM
+			l_item: detachable EV_GRID_EDITABLE_ITEM
 			i: INTEGER
 		do
 			l_grid := grid_reference_paths
@@ -364,9 +372,6 @@ feature {NONE} -- Agent Handlers
 				loop
 					l_row := l_selected_rows.item
 					l_item ?= l_row.item (1)
-					check
-						l_item_not_void: l_item /= Void
-					end
 					if l_item /= Void then
 						l_project.remove_reference_path (l_item.text)
 					end
@@ -426,7 +431,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	browse_for_reference_path: STRING
+	browse_for_reference_path: detachable STRING
 			-- Browses for a reference path folder
 		local
 			l_dd: EV_DIRECTORY_DIALOG
@@ -434,10 +439,12 @@ feature {NONE} -- Implementation
 		do
 			create l_dd
 			l_dd.set_title ("")
-			if sticky_path /= Void then
-				l_dd.set_start_directory (sticky_path)
+			if attached sticky_path as l_sticky_path then
+				l_dd.set_start_directory (l_sticky_path)
 			end
-			l_dd.show_modal_to_window (owner_window)
+			check attached owner_window as l_window then
+				l_dd.show_modal_to_window (l_window)
+			end
 			l_dir := l_dd.directory
 			if l_dir /= Void and then not l_dir.is_empty then
 				Result := l_dir
@@ -460,10 +467,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	sticky_path: STRING
+	sticky_path: detachable STRING
 			-- Last selected path
 
-	active_reference_text: STRING
+	active_reference_text: detachable STRING
 			-- Text take from activated editable item when first activated
 
 feature {NONE} -- Dialogs
@@ -476,7 +483,11 @@ feature {NONE} -- Dialogs
 			create l_error.make_with_text (error_already_added)
 			l_error.set_buttons (<<button_okay>>)
 			l_error.set_default_cancel_button (l_error.button (button_okay))
-			l_error.show_relative_to_window (owner_window)
+			if attached owner_window as l_window then
+				l_error.show_relative_to_window (l_window)
+			else
+				l_error.show
+			end
 		end
 
 invariant

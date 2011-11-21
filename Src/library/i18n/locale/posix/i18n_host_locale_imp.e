@@ -48,9 +48,11 @@ feature -- Initialization
 			fill (Result)
 			Result.set_id(a_locale_id)
 		ensure then
-			locale_set: locale_name.is_equal(a_locale_id.full_name) or
-						locale_name.is_equal (guess_proper_locale (a_locale_id.full_name)) or
-						locale_name.is_equal ("C")  and a_locale_id.full_name.is_equal ("POSIX")
+			locale_set: not a_locale_id.full_name.is_empty implies (
+							locale_name.is_equal(a_locale_id.full_name) or
+							locale_name.is_equal (guess_proper_locale (a_locale_id.full_name)) or
+							locale_name.is_equal ("C")  and a_locale_id.full_name.is_equal ("POSIX")
+						)
 		end
 
 feature -- Informations
@@ -398,12 +400,17 @@ feature	{NONE} -- currency formatting
 			l_string: STRING_32
 		do
 			create l_string.make_from_string(utf8_pointer_to_string (unix_get_locale_info (Crncystr)))
-			if	l_string.item (1).is_equal ('-') then
-				Result := {I18N_LOCALE_INFO}.Currency_symbol_prefixed
-			elseif l_string.item (1).is_equal ('+') then
-				Result := {I18N_LOCALE_INFO}.Currency_symbol_appended
-			elseif l_string.item (1).is_equal ('.') then
-				Result := {I18N_LOCALE_INFO}.Currency_symbol_radix
+			if not l_string.is_empty then
+				if	l_string.item (1).is_equal ('-') then
+					Result := {I18N_LOCALE_INFO}.Currency_symbol_prefixed
+				elseif l_string.item (1).is_equal ('+') then
+					Result := {I18N_LOCALE_INFO}.Currency_symbol_appended
+				elseif l_string.item (1).is_equal ('.') then
+					Result := {I18N_LOCALE_INFO}.Currency_symbol_radix
+				else
+						-- Return as default value currency_symbol_prefixed
+					Result := {I18N_LOCALE_INFO}.Currency_symbol_prefixed
+				end
 			else
 					-- Return as default value currency_symbol_prefixed
 				Result := {I18N_LOCALE_INFO}.Currency_symbol_prefixed
@@ -607,7 +614,7 @@ feature {NONE} --Implementation
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

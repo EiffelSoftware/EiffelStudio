@@ -138,6 +138,7 @@ feature {NONE} -- Implementation
 								regexp_ignores.extend (rexp)
 							end
 						else
+							l_label := translated_platform_path (l_label)
 							l_actual_path := execution_environment.interpreted_string (l_label)
 							create l_file.make (l_actual_path)
 							if not l_file.exists then
@@ -219,20 +220,32 @@ feature {NONE} -- Implementation
 		local
 			l_loader: CONF_LOAD
 			l_ignored_targets: SEARCH_TABLE [STRING]
+			l_skip_dotnet: BOOLEAN
+			l_target: CONF_TARGET
 		do
 			if attached ignores as l_ignores then
 				l_ignored_targets := l_ignores.item (a_file.string.as_lower)
 			end
-				-- if the file is not listed in the excludes or explicitely lists exlucded targets
+				--| if the file is not listed in the excludes or explicitely lists excluded targets
 			if l_ignored_targets = Void or else not l_ignored_targets.is_empty then
 				create l_loader.make (create {CONF_PARSE_FACTORY})
 				l_loader.retrieve_configuration (a_file)
 				if l_loader.is_error then
 					display_error ("Could not retrieve configuration "+a_file+"!")
 				else
+					l_skip_dotnet := arguments.skip_dotnet
 					across l_loader.last_system.compilable_targets as l_cursor loop
-						if l_ignored_targets = Void or else not l_ignored_targets.has (l_cursor.item.name) then
-							process_target (l_cursor.item, a_dir)
+						l_target := l_cursor.item
+						if l_target.setting_msil_generation and l_skip_dotnet then
+							output_action ("Target", l_target)
+							print ("Skipped")
+							io.new_line
+						elseif l_ignored_targets = Void or else not l_ignored_targets.has (l_target.name) then
+							process_target (l_target, a_dir)
+						else
+							output_action ("Target", l_target)
+							print ("Ignored")
+							io.new_line
 						end
 					end
 				end
@@ -244,18 +257,60 @@ feature {NONE} -- Implementation
 		require
 			a_target_ok: a_target /= Void
 			a_dir_ok: a_dir /= Void and then not a_dir.is_empty
+		local
+			l_is_clean: BOOLEAN
+			b: BOOLEAN
 		do
 			if arguments.is_parse_only then
 				parse (a_target)
 			else
+				l_is_clean := arguments.is_clean
+				b := True
 				if arguments.is_melt then
-					compile ("melt", arguments.is_clean, a_target, a_dir)
+					b := compilation ("melt", l_is_clean, a_target, a_dir) and then b
+					l_is_clean := False --| Clean only once
 				end
 				if arguments.is_freeze then
-					compile ("freeze", False, a_target, a_dir)
+					b := compilation ("freeze", l_is_clean, a_target, a_dir) and then b
+					l_is_clean := False --| Clean only once
 				end
 				if arguments.is_finalize then
-					compile ("finalize", False, a_target, a_dir)
+					b := compilation ("finalize", l_is_clean, a_target, a_dir) and then b
+					l_is_clean := False --| Clean only once
+				end
+				if not b and arguments.has_keep_failed then
+					--| Keep failed
+				elseif b and arguments.has_keep_passed then
+					--| Keep passed
+				elseif arguments.has_keep_all then
+					--| Keep all
+				else
+					clean_after (arguments.compilation_dir = Void, compilation_directory (a_target, arguments.compilation_dir, a_dir), a_target.name)
+				end
+			end
+		end
+
+	clean_after (a_using_ecf_dir: BOOLEAN; a_dir: READABLE_STRING_8; a_target_name: READABLE_STRING_8)
+			-- Clean compilation directory
+		local
+			dn: DIRECTORY_NAME
+			d: DIRECTORY
+		do
+			create dn.make_from_string (a_dir)
+			dn.extend ("EIFGENs")
+			dn.extend (a_target_name)
+			create d.make (dn.string)
+			rmdir (d) --| Safe to delete under EIFGENs
+
+			dn.make_from_string (a_dir)
+			dn.extend ("EIFGENs")
+			d.make (dn.string)
+			if d.exists and then d.is_empty then
+				if a_using_ecf_dir then
+					rmdir (d) --| Safe to delete EIFGENs
+				else
+					d.make (a_dir)
+					safe_rmdir (d) --| Try to delete parent of EIFGENs
 				end
 			end
 		end
@@ -281,14 +336,14 @@ feature {NONE} -- Implementation
 
 			l_system := a_target.system.name
 			l_target := a_target.name
-			print ("Parsing "+l_target+" from "+l_system+"-" + a_target.system.uuid.out + " ("+a_target.system.file_name+")...")
+			output_action ("Parsing", a_target)
 
 			create l_vis.make_build (l_state, a_target, create {CONF_PARSE_FACTORY})
 			a_target.process (l_vis)
 
 			if l_vis.is_error then
 				if arguments.is_log_verbose then
-					create l_file.make_open_write (l_system+"-"+a_target.system.uuid.out+"-"+l_target+"-parse.log")
+					create l_file.make_open_write (logs_filename ("parse", a_target))
 					l_vis.last_errors.do_all (agent (a_error: CONF_ERROR; a_file: PLAIN_TEXT_FILE)
 						do
 							a_file.put_string (a_error.out)
@@ -302,8 +357,9 @@ feature {NONE} -- Implementation
 			io.new_line
 		end
 
-	compile (a_action: STRING; a_clean: BOOLEAN;  a_target: CONF_TARGET; a_dir: STRING)
+	compilation (a_action: STRING; a_clean: BOOLEAN;  a_target: CONF_TARGET; a_dir: STRING): BOOLEAN
 			-- Compile `a_target' located in `a_dir' according to `a_action' clean before compilation if `a_clean'.
+			-- and return True if compilation was Ok, and False if it failed.
 		require
 			a_action_ok: a_action /= Void and then (a_action.is_equal ("melt") or
 						a_action.is_equal ("freeze") or a_action.is_equal ("finalize"))
@@ -315,14 +371,13 @@ feature {NONE} -- Implementation
 			l_prc_launcher: PROCESS
 			l_system, l_target: STRING
 			l_file: STRING
-			l_dir_name: DIRECTORY_NAME
 			l_dir: KL_DIRECTORY
 			l_info_file: RAW_FILE
 			l_info_filename: FILE_NAME
+			l_action: READABLE_STRING_8
 		do
 			l_system := a_target.system.name
 			l_target := a_target.name
-			l_file := l_system+"-"+a_target.system.uuid.out+"-"+l_target+"-"+a_action
 
 			create l_args.make (10)
 			l_args.extend ("-config")
@@ -346,39 +401,39 @@ feature {NONE} -- Implementation
 			end
 
 			l_args.extend ("-project_path")
-			if arguments.eifgen /= Void then
-				create l_dir_name.make_from_string (arguments.eifgen)
-				l_dir_name.extend (l_system)
-				create l_dir.make (l_dir_name)
-				l_dir.recursive_create_directory
+			if attached arguments.compilation_dir as l_compile_dir then
+				create l_dir.make (compilation_directory (a_target, l_compile_dir, a_dir))
+				mkdir (l_dir)
 				create l_info_filename.make_from_string (l_dir.name)
 				l_info_filename.set_file_name ("ecf_location")
 				create l_info_file.make_create_read_write (l_info_filename)
 				l_info_file.put_string (a_target.system.file_name)
 				l_info_file.close
 
-				l_args.extend (l_dir_name)
+				l_args.extend (l_dir.name)
 			else
 					-- We always use the directory of the ECF by default
-				l_args.extend (a_dir)
+				l_args.extend (compilation_directory (a_target, Void, a_dir))
 			end
 
 			if a_action.is_equal ("melt") then
-				print ("Melting")
+				l_action := "Melting"
+				l_args.extend ("-melt")
 			elseif a_action.is_equal ("freeze") then
-				print ("Freezing")
+				l_action := "Freezing"
 				l_args.extend ("-freeze")
 			elseif a_action.is_equal ("finalize") then
-				print ("Finalizing")
+				l_action := "Finalizing"
 				l_args.extend ("-finalize")
 			end
-			print (" "+l_target+" from "+l_system+"-" + a_target.system.uuid.out + " ("+a_target.system.file_name+")...")
+			output_action (l_action, a_target)
 
 			create l_prc_factory
 			l_prc_launcher := l_prc_factory.process_launcher (eiffel_layout.ec_command_name, l_args, Void)
 			if arguments.is_log_verbose then
-				add_data_to_file (l_file + ".log", a_target.system.file_name, a_target.name)
-				l_prc_launcher.redirect_output_to_file (l_file+".log")
+				l_file := logs_filename (a_action, a_target)
+				add_data_to_file (l_file, a_target.system.file_name, a_target.name)
+				l_prc_launcher.redirect_output_to_file (l_file)
 			else
 				l_prc_launcher.redirect_output_to_agent (agent (a_string: STRING)
 					do
@@ -387,14 +442,48 @@ feature {NONE} -- Implementation
 			l_prc_launcher.redirect_error_to_same_as_output
 			l_prc_launcher.set_separate_console (False)
 			l_prc_launcher.launch
+
+			check result_unset: Result = False end
 			if l_prc_launcher.launched then
 				l_prc_launcher.wait_for_exit
 				if l_prc_launcher.exit_code = 0 then
 					print ("Ok")
+					Result := True
 				else
 					print ("Failed")
 				end
-				io.new_line
+			else
+				print ("InternalError")
+			end
+			io.new_line
+		end
+
+	compilation_directory (a_target: CONF_TARGET; a_compilation_dir: detachable READABLE_STRING_8; a_ecf_dir: READABLE_STRING_8): READABLE_STRING_8
+			-- Compilation directory
+		local
+			dn: DIRECTORY_NAME
+		do
+			if a_compilation_dir /= Void then
+				create dn.make_from_string (a_compilation_dir)
+				dn.extend (a_target.system.name + "-" + a_target.system.uuid.out)
+				Result := dn.string
+			else
+					-- We always use the directory of the ECF by default
+				Result := a_ecf_dir.string
+			end
+		end
+
+	logs_filename (a_action: READABLE_STRING_8; a_target: CONF_TARGET): READABLE_STRING_8
+		require
+			is_log_verbose: arguments.is_log_verbose
+		local
+			l_logs_file_name: FILE_NAME
+		do
+			Result := a_target.system.name + "-" + a_target.system.uuid.out + "-" + a_target.name + "-" + a_action + ".log"
+			if attached arguments.logs_dir as l_logs_dir then
+				create l_logs_file_name.make_from_string (l_logs_dir)
+				l_logs_file_name.set_file_name (Result)
+				Result := l_logs_file_name.string
 			end
 		end
 
@@ -436,6 +525,101 @@ feature {NONE} -- Error handling
 		do
 			io.error.put_string (a_message)
 			io.error.new_line
+		end
+
+feature {NONE} -- Output
+
+	output_action (a_action: READABLE_STRING_8; a_target: CONF_TARGET)
+		local
+			l_system: CONF_SYSTEM
+			l_target_name, l_system_name, l_uuid, l_ecf: READABLE_STRING_8
+			t: STRING
+		do
+			l_system := a_target.system
+			l_system_name := l_system.name
+			l_ecf := l_system.file_name
+			l_uuid := l_system.uuid.out
+			l_target_name := a_target.name
+
+			create t.make_from_string (output_action_template)
+			t.replace_substring_all ("#action", a_action)
+			t.replace_substring_all ("#system", l_system_name)
+			t.replace_substring_all ("#target", l_target_name)
+			t.replace_substring_all ("#uuid", l_uuid)
+			t.replace_substring_all ("#ecf", l_ecf)
+
+			print (t)
+		end
+
+	output_action_template: READABLE_STRING_8
+		once
+			if attached arguments.output_action_template as tpl then
+				Result := tpl
+			else
+				--| Default
+				Result := "#action #target from #system (#ecf)..."
+			end
+		end
+
+feature {NONE} -- Directory manipulation
+
+	translated_platform_path (s: READABLE_STRING_8): STRING_8
+			-- Path translated for current platform
+			--| i.e: replace \ or / by current platform directory separator
+		local
+			curr_dir_sep: CHARACTER
+			i,n: INTEGER
+		do
+			curr_dir_sep := operating_environment.directory_separator
+			from
+				i := 1
+				n := s.count
+				create Result.make (n)
+			until
+				i > n
+			loop
+				inspect s[i]
+				when '/' then
+					Result.extend (curr_dir_sep)
+				when '\' then
+					Result.extend (curr_dir_sep)
+				else
+					Result.extend (s[i])
+				end
+				i := i + 1
+			end
+		end
+
+	mkdir (d: DIRECTORY)
+		do
+			if not d.exists then
+				d.recursive_create_dir
+				directories_created_by_application.force (d.name)
+			end
+		end
+
+	directories_created_by_application: ARRAYED_LIST [READABLE_STRING_8]
+		once
+			create Result.make (25)
+			Result.compare_objects
+		end
+
+	rmdir (d: DIRECTORY)
+		do
+			if d.exists then
+				d.recursive_delete
+			end
+		end
+
+	safe_rmdir (d: DIRECTORY)
+		do
+			if d.exists then
+				if directories_created_by_application.has (d.name) then
+					rmdir (d)
+				else
+					check not_created_by_application: False end
+				end
+			end
 		end
 
 note

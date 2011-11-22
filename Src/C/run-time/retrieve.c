@@ -81,9 +81,6 @@ doc:<file name="retrieve.c" header="eif_retrieve.h" version="$Id$" summary="Retr
 
 #ifdef RECOVERABLE_DEBUG
 #define EIF_OBJECT_TYPE(obj)    eif_typename (Dftype (obj))
-#ifdef PRINT_OBJECT
-extern void print_object (EIF_REFERENCE object);
-#endif
 #endif
 
 /*#define DEBUG_GENERAL_STORE */	/**/
@@ -1099,13 +1096,6 @@ rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(char rt_type, int (*char_r
 	}
 	rt_reset_retrieve();
 
-#ifdef PRINT_OBJECT
-	printf ("-- Recovered object:\n");
-	if (retrieved != NULL)
-		print_object (retrieved);
-	else if (retrieved_i != NULL)
-		print_object (eif_access (retrieved_i));
-#endif
 	if (recoverable_tables)
 	{
 			/* Global variables are freed at this point, allowing safe call-back

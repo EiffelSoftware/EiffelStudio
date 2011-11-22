@@ -155,7 +155,7 @@ feature -- Command
 		end
 
 feature {EV_RIBBON_ITEM, EV_RIBBON_TEXTABLE, EV_RIBBON_TOOLTIPABLE, EV_RIBBON_APPLICATION_MENU_RECENT_ITEMS, EV_RIBBON_QUICK_ACCESS_TOOLBAR,
-		EV_RIBBON_IMAGEABLE} -- Commands
+		EV_RIBBON_IMAGEABLE, EV_RIBBON_APPLICATION_MENU_GROUP} -- Commands
 
 	get_command_property (a_command_id: NATURAL_32; a_key: EV_PROPERTY_KEY; a_variant: EV_PROPERTY_VARIANT)
 			-- Retrieves a command property, value, or state.
@@ -175,8 +175,11 @@ feature {EV_RIBBON_ITEM, EV_RIBBON_TEXTABLE, EV_RIBBON_TOOLTIPABLE, EV_RIBBON_AP
 			a_key_not_void: a_key /= Void
 			a_key_exists: a_key.exists
 			a_variant_not_void: a_variant /= Void
+		local
+			l_result: NATURAL_32
 		do
-			c_set_ui_command_property (item, a_command_id, a_key.item, a_variant.item)
+			l_result := c_set_ui_command_property (item, a_command_id, a_key.item, a_variant.item)
+			check l_result = {WEL_COM_HRESULT}.s_ok end
 		end
 
 	invalidate (a_command_id: NATURAL_32; a_flags: INTEGER_32; a_key: EV_PROPERTY_KEY)
@@ -352,7 +355,7 @@ feature {NONE} -- Implementation
 			}"
 		end
 
-	c_set_ui_command_property (a_framework: POINTER; a_command_id: NATURAL_32; a_key, a_variant: POINTER)
+	c_set_ui_command_property (a_framework: POINTER; a_command_id: NATURAL_32; a_key, a_variant: POINTER): NATURAL_32
 			-- Sets a command property, value, or state.
 		require
 			a_framework_exists: a_framework /= default_pointer
@@ -365,6 +368,7 @@ feature {NONE} -- Implementation
 					(UINT32) $a_command_id,
 					(REFPROPERTYKEY) *(PROPERTYKEY *)$a_key,
 					(REFPROPVARIANT) *(PROPVARIANT *)$a_variant);
+				return hr;
 			}"
 		end
 

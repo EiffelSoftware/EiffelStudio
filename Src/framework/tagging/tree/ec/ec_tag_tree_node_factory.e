@@ -21,8 +21,7 @@ feature -- Factory
 			-- <Precursor>
 		local
 			l_formatter: TAG_FORMATTER
-			l_token, l_code, l_name, l_uuid: STRING
-			i: INTEGER
+			l_token, l_name, l_uuid: STRING
 			l_node: detachable like create_node
 		do
 			l_formatter := a_parent.tree.formatter

@@ -1,9 +1,10 @@
-compile_all -l C:\work\70dev -eifgen D:\70dev -ignore trunk.ini -log_verbose -melt -clean
-
 Compile All Tool - Version: 7.0
 Copyright Eiffel Software 2006-2011. All Rights Reserved.
 
 Melting esbuilder from esbuilder-4EEF9ABD-F15C-4C45-9D6F-4FFE128296F7 (C:\work\70dev\build\esbuilder.ecf)...Ok
+Melting framework_example from framework_example-F9E183D7-1FC1-4050-A6D4-7EA63A2E9717 (C:\work\70dev\contrib\library\graphic\toolkit\wex\examples\wex\Framework_example\framework_example.ecf)...Ok
+Melting mci_splash from mci_splash-D658AF38-884C-439C-B2C7-01A0F2DA7047 (C:\work\70dev\contrib\library\graphic\toolkit\wex\examples\wex\MCI_Splash\mci_splash.ecf)...Ok
+Melting wex from wex-07E81055-A76C-4736-AEEA-A2A67E04E32B (C:\work\70dev\contrib\library\graphic\toolkit\wex\library\wex\wex.ecf)...Ok
 Melting decimal from decimal-B7221B98-67DD-4D50-A42C-14257EB75B49 (C:\work\70dev\contrib\library\math\decimal\decimal\decimal-safe.ecf)...Ok
 Melting decimal from decimal-B7221B98-67DD-4D50-A42C-14257EB75B49 (C:\work\70dev\contrib\library\math\decimal\decimal\decimal.ecf)...Ok
 Melting decimal from decimal-6DF8CC51-9737-49BD-ADF4-0F32E53D3E89 (C:\work\70dev\contrib\library\math\decimal\root\decimal.ecf)...Ok
@@ -13,10 +14,10 @@ Melting tests from tests-9FA1C743-D3D3-4ABA-BAB8-27986A422F01 (C:\work\70dev\con
 Melting tests_dotnet from tests-9FA1C743-D3D3-4ABA-BAB8-27986A422F01 (C:\work\70dev\contrib\library\math\eapml\tests\tests-safe.ecf)...Failed
 Melting tests_gcc_32 from tests-9FA1C743-D3D3-4ABA-BAB8-27986A422F01 (C:\work\70dev\contrib\library\math\eapml\tests\tests.ecf)...Ok
 Melting tests_vc_32 from tests-9FA1C743-D3D3-4ABA-BAB8-27986A422F01 (C:\work\70dev\contrib\library\math\eapml\tests\tests.ecf)...Ok
-Melting svn from svn-542546F4-A62F-4E6B-B298-C7EBAE7B82A8 (C:\work\70dev\contrib\library\svn\svn-safe.ecf)...Failed
+Melting svn from svn-542546F4-A62F-4E6B-B298-C7EBAE7B82A8 (C:\work\70dev\contrib\library\svn\svn-safe.ecf)...Ok
 Melting svn from svn-542546F4-A62F-4E6B-B298-C7EBAE7B82A8 (C:\work\70dev\contrib\library\svn\svn.ecf)...Ok
-Melting batch from svn_tool-D1028558-6962-4936-8B1C-F90A9C9CD12D (C:\work\70dev\contrib\library\svn\tests\batch\svn_tool_batch.ecf)...Failed
-Melting test_svn from test_svn-4A9FB811-4F47-4A9B-ACB8-4E1F39AEC875 (C:\work\70dev\contrib\library\svn\tests\simple\test_svn.ecf)...Failed
+Melting batch from svn_tool-D1028558-6962-4936-8B1C-F90A9C9CD12D (C:\work\70dev\contrib\library\svn\tests\batch\svn_tool_batch.ecf)...Ok
+Melting test_svn from test_svn-4A9FB811-4F47-4A9B-ACB8-4E1F39AEC875 (C:\work\70dev\contrib\library\svn\tests\simple\test_svn.ecf)...Ok
 Melting espec from espec-76C3CFC0-A72E-11DB-BEFA-0800200C9A66 (C:\work\70dev\contrib\library\testing\framework\espec_simple\library\espec-safe.ecf)...Ok
 Melting espec from espec-76C3CFC0-A72E-11DB-BEFA-0800200C9A66 (C:\work\70dev\contrib\library\testing\framework\espec_simple\library\espec.ecf)...Ok
 Melting testing-espec from testing-espec-7BCB2DED-8AF7-4239-9F61-C546577456A9 (C:\work\70dev\contrib\library\testing\framework\espec_simple\tests\demo\compile.ecf)...Ok
@@ -30,9 +31,7 @@ Melting json from json-4E21C3BD-7951-4C6E-A673-431E762D7414 (C:\work\70dev\contr
 Melting json from json-4E21C3BD-7951-4C6E-A673-431E762D7414 (C:\work\70dev\contrib\library\text\parser\json\library\json.ecf)...Ok
 Melting json_gobo from json_gobo-437195AB-8B3C-4238-8998-A932A1423449 (C:\work\70dev\contrib\library\text\parser\json\library\json_gobo_extension.ecf)...Ok
 Melting test_suite from test_suite-EA141B17-6A21-4781-8B5F-E9939BAE968A (C:\work\70dev\contrib\library\text\parser\json\test\autotest\test_suite\test_suite-safe.ecf)...Ok
-Melting test_suite_dotnet from test_suite-EA141B17-6A21-4781-8B5F-E9939BAE968A (C:\work\70dev\contrib\library\text\parser\json\test\autotest\test_suite\test_suite-safe.ecf)...Failed
 Melting test_suite from test_suite-EA141B17-6A21-4781-8B5F-E9939BAE968A (C:\work\70dev\contrib\library\text\parser\json\test\autotest\test_suite\test_suite.ecf)...Ok
-Melting test_suite_dotnet from test_suite-EA141B17-6A21-4781-8B5F-E9939BAE968A (C:\work\70dev\contrib\library\text\parser\json\test\autotest\test_suite\test_suite.ecf)...Failed
 Melting ejson_test from ejson_test-9D4BC920-448B-4F84-9F95-5D47686EBC5E (C:\work\70dev\contrib\library\text\parser\json\test\getest\ejson_test.ecf)...Failed
 Melting base from eiffelsoftware.codedom.base-190A6272-E25A-42BE-AD95-D336828D769D (C:\work\70dev\dotnet\codedom_provider_2.0\configuration\base.ecf)...Ok
 Melting cache_browser from eiffelsoftware.codedom.cachebrowser-7748DE6F-CC93-47B4-BE13-1A308A728B0A (C:\work\70dev\dotnet\codedom_provider_2.0\configuration\cache_browser.ecf)...Ok
@@ -439,7 +438,7 @@ Melting auto_test from auto_test_library-197D2624-6547-4BAB-904B-131A4FA4EA32 (C
 Melting command_line_builder from command_line_builder-44612348-A48F-4D96-B4F1-95117FA1DFE5 (C:\work\70dev\framework\base\application\command_line_builder\command_line_builder-safe.ecf)...Ok
 Melting base64 from base64-0A52E0A4-229A-4520-AEDB-84113DB6412B (C:\work\70dev\framework\base64\base64-safe.ecf)...Ok
 Melting base64 from base64-0A52E0A4-229A-4520-AEDB-84113DB6412B (C:\work\70dev\framework\base64\base64.ecf)...Ok
-Melting base64-tests from base-tests-EA018010-87D4-4F45-9E9D-E4EFD09A6BA1 (C:\work\70dev\framework\base64\tests\tests.ecf)...Ok
+Melting base64-tests from base-tests-FDC0395A-D1B6-4290-B800-FCE19F055DC9 (C:\work\70dev\framework\base64\tests\tests.ecf)...Ok
 Melting default from cli_debugger-96A64D12-AB4A-49D8-B843-CF8A31B99026 (C:\work\70dev\framework\cli_debugger\cli_debugger-safe.ecf)...Ok
 Melting default from cli_debugger-96A64D12-AB4A-49D8-B843-CF8A31B99026 (C:\work\70dev\framework\cli_debugger\cli_debugger.ecf)...Ok
 Melting default from cli_writer-BE7B7959-6C6E-4C17-8B5C-E3D5E27D876D (C:\work\70dev\framework\cli_writer\cli_writer-safe.ecf)...Ok
@@ -462,16 +461,16 @@ Melting fast_ini from fast_ini-9CFF8051-C3AB-4213-B0DF-38C280615E7F (C:\work\70d
 Melting fast_ini from fast_ini-9CFF8051-C3AB-4213-B0DF-38C280615E7F (C:\work\70dev\framework\file_formats\fast_ini\fast_ini.ecf)...Ok
 Melting pe_reader from pe_reader-6AF84AC5-5BBE-4BBD-8E19-75B035EA77EB (C:\work\70dev\framework\file_formats\pe\pe.ecf)...Ok
 Melting file_utilities from file_utilities-7937B8F3-E1B7-434A-8C89-C60CC23F6E83 (C:\work\70dev\framework\file_utilities\file_utilities.ecf)...Ok
-Melting gui_testing from capture-5B2F992F-9901-4651-B85E-5F683DFACB0C (C:\work\70dev\framework\gui_testing\gui_testing.ecf)...Failed
+Melting gui_testing from capture-5B2F992F-9901-4651-B85E-5F683DFACB0C (C:\work\70dev\framework\gui_testing\gui_testing.ecf)...Ok
 Melting default from interface_names-5CE89573-7B9D-11DB-9FE1-0800200C9A66 (C:\work\70dev\framework\interface_names\interface_names-safe.ecf)...Ok
 Melting default from interface_names-5CE89573-7B9D-11DB-9FE1-0800200C9A66 (C:\work\70dev\framework\interface_names\interface_names.ecf)...Ok
 Melting parser from parser-EEDEBEBE-5DC8-4B41-B999-CC31DB3B54F6 (C:\work\70dev\framework\parser\parser.ecf)...Ok
 Melting parser_extension from parser_extension-2A2BEBB9-1A08-49BD-8A86-DE4C458B81DB (C:\work\70dev\framework\parser_extension\parser_extension.ecf)...Ok
 Melting patterns from patterns-8D30ADC2-F392-4AC1-94EC-729B9D340478 (C:\work\70dev\framework\patterns\patterns-safe.ecf)...Ok
 Melting patterns from patterns-8D30ADC2-F392-4AC1-94EC-729B9D340478 (C:\work\70dev\framework\patterns\patterns.ecf)...Ok
-Melting patterns-tests from patterns-tests-5C2D2C7D-6D3E-4812-8A56-78AF97C5AF25 (C:\work\70dev\framework\patterns\tests.ecf)...Failed
+Melting patterns-tests from patterns-tests-5C2D2C7D-6D3E-4812-8A56-78AF97C5AF25 (C:\work\70dev\framework\patterns\tests.ecf)...Ok
 Melting peg from peg-D7F3A5EA-2EDF-4560-B735-2DF5768F9A15 (C:\work\70dev\framework\peg\peg.ecf)...Ok
-Melting peg_test from peg_test-45C86F5E-0F80-443F-BB70-701643D0CA45 (C:\work\70dev\framework\peg\test\peg_test-safe.ecf)...Failed
+Melting peg_test from peg_test-45C86F5E-0F80-443F-BB70-701643D0CA45 (C:\work\70dev\framework\peg\test\peg_test-safe.ecf)...Ok
 Melting resources from resources-3FB25553-E40F-4974-A637-80F447D52F36 (C:\work\70dev\framework\resources\resources-safe.ecf)...Ok
 Melting resources from resources-3FB25553-E40F-4974-A637-80F447D52F36 (C:\work\70dev\framework\resources\resources.ecf)...Ok
 Melting services_core from services_core-9E33E7D7-5E40-45F1-AED0-DB9F70AAB0D9 (C:\work\70dev\framework\services\core\service_core.ecf)...Ok
@@ -486,29 +485,29 @@ Melting tagging-ev from tagging-ev-60CD4EFD-E6DA-4CDC-8E2F-C58D937F7F6F (C:\work
 Melting terminal from terminal-4A585495-218C-4639-A04F-F7D58CF3CC3B (C:\work\70dev\framework\terminal\terminal-safe.ecf)...Ok
 Melting terminal from terminal-4A585495-218C-4639-A04F-F7D58CF3CC3B (C:\work\70dev\framework\terminal\terminal.ecf)...Ok
 Melting testing from testing-CA1FED3E-E1FB-41B3-B89E-0A1BF754CC5D (C:\work\70dev\framework\testing\testing.ecf)...Ok
-Melting test-engine-tests from test-engine-tests-DD3DA5DF-AE77-44CD-88D1-177058DDD673 (C:\work\70dev\framework\testing\tests\tests.ecf)...Failed
+Melting test-engine-tests from test-engine-tests-DD3DA5DF-AE77-44CD-88D1-177058DDD673 (C:\work\70dev\framework\testing\tests\tests.ecf)...Ok
 Melting framework_utilities from framework_utilities-DE526F11-9195-4300-9B05-3543AC2CB050 (C:\work\70dev\framework\utilities\utilities-safe.ecf)...Ok
 Melting framework_utilities from framework_utilities-DE526F11-9195-4300-9B05-3543AC2CB050 (C:\work\70dev\framework\utilities\utilities.ecf)...Ok
 Melting framework_vision2 from framework_vision2-438FCC87-E3CF-49F3-8846-0DE554C74231 (C:\work\70dev\framework\vision2\vision2-safe.ecf)...Failed
 Melting framework_vision2 from framework_vision2-438FCC87-E3CF-49F3-8846-0DE554C74231 (C:\work\70dev\framework\vision2\vision2.ecf)...Ok
 Melting thread_utilities from thread_utilities-F43D41FB-327B-4DD2-B847-549C860F3038 (C:\work\70dev\framework\web\xebra\eiffel_projects\library\thread_utilities\thread_utilities.ecf)...Ok
-Melting xebra_ast_elements from xebra_ast_elements-B1A5B570-9A4D-4D37-AD34-2F8C4AB51DDF (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_ast_elements\xebra_ast_elements.ecf)...Failed
-Melting xebra_common from xebra_common-D1C24232-9271-4C7A-BC83-BCA09E89A339 (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_common\xebra_common.ecf)...Failed
+Melting xebra_ast_elements from xebra_ast_elements-B1A5B570-9A4D-4D37-AD34-2F8C4AB51DDF (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_ast_elements\xebra_ast_elements.ecf)...Ok
+Melting xebra_common from xebra_common-D1C24232-9271-4C7A-BC83-BCA09E89A339 (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_common\xebra_common.ecf)...Ok
 Melting xebra_error from xebra_error-8DF40A7C-BC08-4B81-A7CD-63D96346E763 (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_error\xebra_error.ecf)...Ok
-Melting xebra_error_responses from xebra_error_responses-48F2E62B-1FC5-401A-8C03-A11F32411563 (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_error_responses\xebra_error_responses.ecf)...Failed
-Melting xebra_http from xebra_http-EA45E132-F421-4BAD-A146-EFCCD25B03E9 (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_http\xebra_http.ecf)...Failed
+Melting xebra_error_responses from xebra_error_responses-48F2E62B-1FC5-401A-8C03-A11F32411563 (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_error_responses\xebra_error_responses.ecf)...Ok
+Melting xebra_http from xebra_http-EA45E132-F421-4BAD-A146-EFCCD25B03E9 (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_http\xebra_http.ecf)...Ok
 Melting xebra_precompile from xebra_precompile-FA73F6AF-A7E8-472A-98BD-E1043D8159D6 (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_precompile\xebra_precompile.ecf)...Ok
-Melting xebra_taglibrary_base from xebra_taglibrary_base-827C9A96-1867-493B-96AD-F1A1882AC8C7 (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_taglibrary_base\xebra_taglibrary_base.ecf)...Failed
-Melting xebra_taglibrary_form from xebra_taglibrary_form-4F72B475-3DBD-4360-84B4-A5234D7E5CA5 (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_taglibrary_form\xebra_taglibrary_form.ecf)...Failed
-Melting xebra_taglibrary_xrpc from xebra_taglibrary_xrpc-81A1E8A9-70D1-4B90-9768-75C9AF1AEED8 (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_taglibrary_xrpc\xebra_taglibrary_xrpc.ecf)...Failed
-Melting xebra_tags from xebra_tags-BA12B809-23BE-44C5-BFD5-CBD049428DC6 (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_tags\xebra_tags.ecf)...Failed
-Melting xebra_utilities from xebra_utilities-249696D0-DA33-49D9-A389-67E438A9AC4D (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_utilities\xebra_utilities.ecf)...Failed
-Melting xebra_web_application from xebra_web_application-4DA691E3-8905-46B6-B1C6-537F192BD17A (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_web_application\xebra_web_application.ecf)...Failed
-Melting xebra_server from xebra_server-E04194C1-EBE2-4583-AF40-AD1E4B47C0C0 (C:\work\70dev\framework\web\xebra\eiffel_projects\xebra_server\xebra_server.ecf)...Failed
-Melting xebra_translator from xebra_translator-5261943E-A4BF-46FE-9920-DEA8B568943F (C:\work\70dev\framework\web\xebra\eiffel_projects\xebra_translator\xebra_translator.ecf)...Failed
-Melting xebra_deployer from xebra_deployer-DA33C660-20DA-4B32-820E-2F37F08DB248 (C:\work\70dev\framework\web\xebra\tools\installer\win\xebra_deployer\xebra_deployer.ecf)...Failed
+Melting xebra_taglibrary_base from xebra_taglibrary_base-827C9A96-1867-493B-96AD-F1A1882AC8C7 (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_taglibrary_base\xebra_taglibrary_base.ecf)...Ok
+Melting xebra_taglibrary_form from xebra_taglibrary_form-4F72B475-3DBD-4360-84B4-A5234D7E5CA5 (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_taglibrary_form\xebra_taglibrary_form.ecf)...Ok
+Melting xebra_taglibrary_xrpc from xebra_taglibrary_xrpc-81A1E8A9-70D1-4B90-9768-75C9AF1AEED8 (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_taglibrary_xrpc\xebra_taglibrary_xrpc.ecf)...Ok
+Melting xebra_tags from xebra_tags-BA12B809-23BE-44C5-BFD5-CBD049428DC6 (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_tags\xebra_tags.ecf)...Ok
+Melting xebra_utilities from xebra_utilities-249696D0-DA33-49D9-A389-67E438A9AC4D (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_utilities\xebra_utilities.ecf)...Ok
+Melting xebra_web_application from xebra_web_application-4DA691E3-8905-46B6-B1C6-537F192BD17A (C:\work\70dev\framework\web\xebra\eiffel_projects\library\xebra_web_application\xebra_web_application.ecf)...Ok
+Melting xebra_server from xebra_server-E04194C1-EBE2-4583-AF40-AD1E4B47C0C0 (C:\work\70dev\framework\web\xebra\eiffel_projects\xebra_server\xebra_server.ecf)...Ok
+Melting xebra_translator from xebra_translator-5261943E-A4BF-46FE-9920-DEA8B568943F (C:\work\70dev\framework\web\xebra\eiffel_projects\xebra_translator\xebra_translator.ecf)...Ok
+Melting xebra_deployer from xebra_deployer-DA33C660-20DA-4B32-820E-2F37F08DB248 (C:\work\70dev\framework\web\xebra\tools\installer\win\xebra_deployer\xebra_deployer.ecf)...Ok
 Melting demoapplication from demoapplication-3957B925-71E3-473F-9DC5-36391C7E8FDA (C:\work\70dev\framework\web\xebra\www\demoapplication\demoapplication.ecf)...Failed
-Melting examples from examples-A8FFB5E9-06FC-40F0-902A-4D98EAB012B9 (C:\work\70dev\framework\web\xebra\www\examples\examples.ecf)...Failed
+Melting examples from examples-F28DF18E-3163-465B-A803-4395229E6C03 (C:\work\70dev\framework\web\xebra\www\examples\examples.ecf)...Failed
 Melting helloworld from helloworld-D2957A40-9741-4AD3-BBAF-CB20C4B351A3 (C:\work\70dev\framework\web\xebra\www\helloworld\helloworld.ecf)...Failed
 Melting servercontrol from servercontrol-E1B22E35-B61F-4767-BB77-4B591FDED0E6 (C:\work\70dev\framework\web\xebra\www\servercontrol\servercontrol.ecf)...Failed
 Melting support from support-BA0C3F6E-9748-4C21-B095-6ABA21BCAA34 (C:\work\70dev\framework\web\xebra\www\support\support.ecf)...Failed
@@ -527,8 +526,6 @@ Melting xml-rpc from xml-rpc-5B1618D6-1216-4BEF-817F-C83473B9FC0B (C:\work\70dev
 Melting xml-rpc_dotnet from xml-rpc-5B1618D6-1216-4BEF-817F-C83473B9FC0B (C:\work\70dev\framework\xml-rpc\xml-rpc.ecf)...Failed
 Melting application from application-D5EA7D23-843A-42F0-A41C-EAB2F5FDF897 (C:\work\70dev\framework\xml-rpc\examples\application.ecf)...Ok
 Melting xml_utility from xml-FF274042-0759-4A99-9E97-391F7D35AD5B (C:\work\70dev\framework\xml_utility\xml_utility.ecf)...Ok
-Melting framework_example from framework_example-F9E183D7-1FC1-4050-A6D4-7EA63A2E9717 (C:\work\70dev\free_add_ons\wex\examples\wex\Framework_example\framework_example.ecf)...Failed
-Melting mci_splash from mci_splash-D658AF38-884C-439C-B2C7-01A0F2DA7047 (C:\work\70dev\free_add_ons\wex\examples\wex\MCI_Splash\mci_splash.ecf)...Failed
 Melting wizard from wizard-CEF6706D-914F-4ED1-A29F-967465C0EE7B (C:\work\70dev\help\wizards\cocoa_wizard.ecf)...Ok
 Melting wizard from wizard-CEF6706D-914F-4ED1-A29F-797827C0EE7B (C:\work\70dev\help\wizards\dotnet_wizard.ecf)...Ok
 Melting wizard from wizard-06F8A4B3-B168-4767-97D5-D833509C82B3 (C:\work\70dev\help\wizards\precompile_wizard.ecf)...Ok
@@ -545,7 +542,7 @@ Melting base from base-6D7FF712-BBA5-4AC0-AABF-2D9880493A01 (C:\work\70dev\libra
 Melting base_dotnet from base-6D7FF712-BBA5-4AC0-AABF-2D9880493A01 (C:\work\70dev\library\base\base.ecf)...Ok
 Melting base_extension from base_extension-BB1FDCB0-C2AB-4911-8ABD-D20F72139DBF (C:\work\70dev\library\base_extension\base_extension-safe.ecf)...Ok
 Melting base_extension from base_extension-BB1FDCB0-C2AB-4911-8ABD-D20F72139DBF (C:\work\70dev\library\base_extension\base_extension.ecf)...Ok
-Melting base_extension-tests from base_extension-tests-9C10EC3C-3FD1-44FB-8649-9C022CAB5A30 (C:\work\70dev\library\base_extension\tests\tests.ecf)...Ok
+Melting base_extension-tests from base_extension-tests-9AB54AA2-1C87-4273-883B-B984370BCD26 (C:\work\70dev\library\base_extension\tests\tests.ecf)...Ok
 Melting cocoa from cocoa-804E870E-1EED-4F7B-9C7D-4762358A62D7 (C:\work\70dev\library\cocoa\cocoa-safe.ecf)...Ok
 Melting cocoa from cocoa-804E870E-1EED-4F7B-9C7D-4762358A62D7 (C:\work\70dev\library\cocoa\cocoa.ecf)...Ok
 Melting cocoa-tests from cocoa-tests-7BAF21AA-DAA5-4B71-AD29-EF6F1ADAFD82 (C:\work\70dev\library\cocoa\tests\tests.ecf)...Ok
@@ -606,9 +603,9 @@ Melting gexslt from gexslt-7CBA1CBF-28C0-4769-8CC6-08BB687E32C7 (C:\work\70dev\l
 Melting geyacc from geyacc-24C23C51-AEA2-4C8A-B454-901AAF40F0FF (C:\work\70dev\library\gobo\src\geyacc.ecf)...Ok
 Melting gec from gec-A8516DA2-7B93-4728-ABFE-7DAE95CD7F1C (C:\work\70dev\library\gobo\src\ecf_support\gec.ecf)...Ok
 Melting gelint from gelint-94AB60A5-5FAC-4B79-BA7F-7BC327B432CD (C:\work\70dev\library\gobo\src\ecf_support\gelint.ecf)...Ok
-Melting xequality from xequality-E2BBFBB7-A83A-49F0-A4CA-35E4EDC2CD55 (C:\work\70dev\library\gobo\svn\test\gelint\semantics\equality\ise.ecf)...Failed
-Melting xobject_equality from xobject_equality-6D417311-FDEE-4216-A659-4CCA146377E0 (C:\work\70dev\library\gobo\svn\test\gelint\semantics\object_equality\ise.ecf)...Failed
-Melting xace3 from xace3-DBD0BA14-1189-4321-929E-BE81C98468C0 (C:\work\70dev\library\gobo\svn\test\src\gexace\data\ise3.ecf)...Failed
+Melting xequality from xequality-D932039C-2B88-4822-9D6D-6FE6DE226FC0 (C:\work\70dev\library\gobo\svn\test\gelint\semantics\equality\ise.ecf)...Failed
+Melting xobject_equality from xobject_equality-F7992D57-C3EE-4783-90FD-457667D58EAD (C:\work\70dev\library\gobo\svn\test\gelint\semantics\object_equality\ise.ecf)...Failed
+Melting xace3 from xace3-1F294EF5-8422-46FD-857B-557ECED6E757 (C:\work\70dev\library\gobo\svn\test\src\gexace\data\ise3.ecf)...Failed
 Melting gobo_extension from gobo_extension-0DA7FB52-F457-4C7F-A8DD-9285E5EE2631 (C:\work\70dev\library\gobo_extension\gobo_extension.ecf)...Ok
 Melting graph from graph-8F1CADDA-FC27-41B6-8197-09FD0BF1B648 (C:\work\70dev\library\graph\graph-safe.ecf)...Ok
 Melting graph from graph-8F1CADDA-FC27-41B6-8197-09FD0BF1B648 (C:\work\70dev\library\graph\graph.ecf)...Ok
@@ -719,9 +716,13 @@ Melting button_clicker from button_clicker-C24479FC-B205-4285-8ACA-C69827BE45C0 
 Melting bytecode_tool from bytecode_tool-C8B46F4B-D9FD-4B7F-9255-05D705D5AC8D (C:\work\70dev\tools\bytecode_tool\bytecode_tool.ecf)...Ok
 Melting bytecode_tool_dotnet from bytecode_tool-C8B46F4B-D9FD-4B7F-9255-05D705D5AC8D (C:\work\70dev\tools\bytecode_tool\bytecode_tool.ecf)...Ok
 Melting class_structure_editor from class_structure_editor-033E433F-5A38-4F90-9AA8-F8E2A0DE990E (C:\work\70dev\tools\class_structure_editor\class_structure_editor.ecf)...Failed
-Melting graphical_class_structure_editor from class_structure_editor-033E433F-5A38-4F90-9AA8-F8E2A0DE990E (C:\work\70dev\tools\class_structure_editor\class_structure_editor.ecf)...Failed
+Melting graphical_class_structure_editor from class_structure_editor-033E433F-5A38-4F90-9AA8-F8E2A0DE990E (C:\work\70dev\tools\class_structure_editor\class_structure_editor.ecf)...Ok
 Melting code_checker from code_checker-897BC8B6-85AB-4420-B316-6A34D6DFB07C (C:\work\70dev\tools\code_checker\code_checker.ecf)...Ok
 Melting compile_all from compile_all-AC65C561-50E6-4F17-A196-8EFF64A88F9B (C:\work\70dev\tools\compile_all\compile_all.ecf)...Ok
+Melting ecchecker_library from ecchecker-E67360E2-5309-4993-A4EF-8DF437D4428A (C:\work\70dev\tools\compliance_checker\ace\ecchecker-safe.ecf)...Ok
+Melting ecchecker_app from ecchecker-E67360E2-5309-4993-A4EF-8DF437D4428A (C:\work\70dev\tools\compliance_checker\ace\ecchecker-safe.ecf)...Ok
+Melting ecchecker_debug from ecchecker-E67360E2-5309-4993-A4EF-8DF437D4428A (C:\work\70dev\tools\compliance_checker\ace\ecchecker-safe.ecf)...Ok
+Melting ecchecker_release from ecchecker-E67360E2-5309-4993-A4EF-8DF437D4428A (C:\work\70dev\tools\compliance_checker\ace\ecchecker-safe.ecf)...Ok
 Melting ecchecker_app from ecchecker-E67360E2-5309-4993-A4EF-8DF437D4428A (C:\work\70dev\tools\compliance_checker\ace\ecchecker.ecf)...Ok
 Melting ecchecker_debug from ecchecker-E67360E2-5309-4993-A4EF-8DF437D4428A (C:\work\70dev\tools\compliance_checker\ace\ecchecker.ecf)...Ok
 Melting ecchecker_release from ecchecker-E67360E2-5309-4993-A4EF-8DF437D4428A (C:\work\70dev\tools\compliance_checker\ace\ecchecker.ecf)...Ok
@@ -745,7 +746,7 @@ Melting espawn from espawn-54DE756C-427E-4BF1-A915-7BB301D58F26 (C:\work\70dev\t
 Melting native_estudio from estudio-4C9D0872-E7FA-47F2-A7B3-C9F5681D58CD (C:\work\70dev\tools\estudio\config\estudio.ecf)...Ok
 Melting estudio from estudio-4C9D0872-E7FA-47F2-A7B3-C9F5681D58CD (C:\work\70dev\tools\estudio\config\estudio.ecf)...Ok
 Melting eweasel_comparator from eweasel_comparator-98B6F4E7-C920-495B-809F-45DFCE987844 (C:\work\70dev\tools\eweasel_comparator\eweasel_comparator.ecf)...Ok
-Melting eweasel_converter from eweasel_converter-B6764D54-23FB-47D6-A268-70A821DD38D1 (C:\work\70dev\tools\eweasel_converter\eweasel_converter.ecf)...Failed
+Melting eweasel_converter from eweasel_converter-B6764D54-23FB-47D6-A268-70A821DD38D1 (C:\work\70dev\tools\eweasel_converter\eweasel_converter.ecf)...Ok
 Melting eweasel_converter_dotnet from eweasel_converter-B6764D54-23FB-47D6-A268-70A821DD38D1 (C:\work\70dev\tools\eweasel_converter\eweasel_converter.ecf)...Failed
 Melting finish_freezing from finish_freezing-4054F4B6-BAD4-4CA2-8732-682E43F9FC39 (C:\work\70dev\tools\finish_freezing\finish_freezing-safe.ecf)...Ok
 Melting finish_freezing from finish_freezing-4054F4B6-BAD4-4CA2-8732-682E43F9FC39 (C:\work\70dev\tools\finish_freezing\finish_freezing.ecf)...Ok
@@ -757,7 +758,7 @@ Melting pmsn_dotnet from pmsn-481F73D2-2E90-4182-A5E7-60D09A5AC78E (C:\work\70de
 Melting po_generation_tool from po_generation_tool-4EE327BA-5DF8-4A53-8088-0D2E3F33456E (C:\work\70dev\tools\po_generation_tool\po_generation_tool.ecf)...Ok
 Melting quick_finalize from quick_finalize-08842681-2524-4350-9F4D-664684C73764 (C:\work\70dev\tools\quick_finalize\quick_finalize.ecf)...Ok
 Melting reg2wix from reg2wix-D7B7A46D-EABC-436C-A181-55C71E24C593 (C:\work\70dev\tools\reg2wix\reg2wix.ecf)...Ok
-Melting repository_tool_batch from repository_tool-BE42D306-725A-4333-A838-10237BAB8567 (C:\work\70dev\tools\repository_tool\ctr.ecf)...Failed
+Melting repository_tool_batch from repository_tool-BE42D306-725A-4333-A838-10237BAB8567 (C:\work\70dev\tools\repository_tool\ctr.ecf)...Ok
 Melting repository_tool from repository_tool-BE42D306-725A-4333-A838-10237BAB8567 (C:\work\70dev\tools\repository_tool\ctr.ecf)...Ok
 Melting repository_tool_unix from repository_tool-BE42D306-725A-4333-A838-10237BAB8567 (C:\work\70dev\tools\repository_tool\ctr.ecf)...Ok
 Melting repository_tool_test_compilation_unix from repository_tool-BE42D306-725A-4333-A838-10237BAB8567 (C:\work\70dev\tools\repository_tool\ctr.ecf)...Ok

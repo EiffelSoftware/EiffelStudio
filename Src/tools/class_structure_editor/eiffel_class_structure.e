@@ -10,6 +10,8 @@ class
 inherit
 	STRING_HANDLER
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make,
 	make_with_string,
@@ -49,7 +51,7 @@ feature {NONE} -- Initialization
 				-- Enabling `il_parsing' only means accepting more, not accepting less
 				-- which is important to allow for such a syntax converter
 			parser.set_il_parser
-			parser.set_syntax_version (parser.transitional_64_syntax)
+			parser.set_syntax_version (parser.transitional_syntax)
 --			parser.set_is_note_keyword (is_note_keyword)
 --			parser.set_is_attribute_keyword (is_attribute_keyword)
 --			parser.set_is_indexing_keyword (is_indexing_keyword)
@@ -218,7 +220,7 @@ feature -- Basic operations
 			parser.set_has_syntax_warning (False)
 --			parser.set_is_note_keyword (True)
 --			parser.set_is_attribute_keyword (True)
-			parser.parse_from_string (a_string_buffer, Void)
+			parser.parse_class_from_string (a_string_buffer, Void, Void)
 			if parser.error_count = 0 then
 				match_list := parser.match_list
 				visitor.reset

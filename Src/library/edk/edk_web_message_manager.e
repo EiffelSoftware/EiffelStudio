@@ -4,7 +4,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	EDK_WEB_MESSAGE_MANAGER
 
 inherit

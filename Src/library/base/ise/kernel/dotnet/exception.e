@@ -64,6 +64,9 @@ feature -- Access
 
 	message: detachable STRING
 			-- A message in English describing what `except' is
+		do
+			Result := internal_message
+		end
 
 	exception_trace: detachable STRING
 			-- String representation of current exception trace
@@ -139,9 +142,9 @@ feature -- Status settings
 	set_message (a_message: like message)
 			-- Set `message' with `a_message'.
 		do
-			message := a_message
+			internal_message := a_message
 		ensure
-			message_set: equal (message, a_message)
+			message_set: equal (internal_message, a_message)
 		end
 
 feature -- Status report
@@ -262,5 +265,10 @@ feature {EXCEPTION_MANAGER} -- Implementation
 		do
 			Result := exception_message
 		end
+
+feature {NONE} -- Implementation
+
+	frozen internal_message: detachable STRING
+			-- Backend storage for message
 
 end

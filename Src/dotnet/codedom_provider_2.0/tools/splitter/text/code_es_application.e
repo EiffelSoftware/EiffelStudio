@@ -9,6 +9,8 @@ class
 	CODE_ES_APPLICATION
 
 inherit
+	ANY
+
 	EV_THREAD_SEVERITY_CONSTANTS
 		export
 			{NONE} all

@@ -235,7 +235,6 @@ feature {TEST_SUITE_S} -- Events: test suite
 		local
 			l_name: IMMUTABLE_STRING_8
 			l_stats: like test_statistics
-			l_result: TEST_RESULT_I
 		do
 			test_count := test_count - 1
 			l_name := a_test.name
@@ -411,7 +410,7 @@ invariant
 	collect_stats_after_retrieving: test_statistics.count > 0 implies has_retrieved_statistics
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

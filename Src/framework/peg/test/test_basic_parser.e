@@ -25,8 +25,8 @@ feature -- Test routines
 			l_res := l_char.parse_string ("a")
 			assert ("could parse", l_res.success)
 			assert ("left to parse emtpy", l_res.left_to_parse.is_empty)
-			assert ("one item in result list", l_res.internal_result.count = 1)
-			assert ("item is equal 'a'", l_res.internal_result.first.is_equal ("a"))
+			assert ("one item in result list", l_res.parse_result.count = 1)
+			assert ("item is equal 'a'", l_res.parse_result.first.is_equal ("a"))
 		end
 
 end

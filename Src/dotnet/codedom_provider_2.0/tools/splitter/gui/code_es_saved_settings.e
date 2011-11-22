@@ -9,6 +9,8 @@ class
 	CODE_ES_SAVED_SETTINGS
 
 inherit
+	ANY
+
 	CODE_ES_REGISTRY_KEYS
 		export
 			{NONE} all
@@ -31,7 +33,7 @@ feature {NONE} -- Initialization
 		do
 			settings_make (Saved_settings_key)
 		end
-		
+
 feature -- Access
 
 	saved_process_subfolders: BOOLEAN

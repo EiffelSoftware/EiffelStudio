@@ -9,6 +9,8 @@ class
 	CODE_SHARED_CLASS_SEPARATOR
 
 inherit
+	ANY
+
 	CODE_SHARED_GENERATION_CONSTANTS
 		export
 			{NONE} all

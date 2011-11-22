@@ -5,64 +5,61 @@ note
 	author: "Paul Cohen"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class OPTION_SPECIFICATION
-	
+
 inherit
 	COMPARABLE
-	
+
 create
 	{COMMAND_LINE_SYNTAX} make
-   
+
 feature {NONE} -- Initialization
-	
+
 	make (spec: STRING)
 			-- Create a new option specification from the textual
-			-- specification `spec'. 
+			-- specification `spec'.
 		require
 			spec_not_void: spec /= Void
 			spec_not_empty: spec.count > 0
 		do
 			specification := spec.twin
+			invalid_reason := ""
 			create {LINKED_LIST [OPTION_SPECIFICATION]} exclusive_options.make
 			parse
 		end
-      
+
 feature {COMMAND_LINE_PARSER, COMMAND_LINE_SYNTAX, OPTION_SPECIFICATION, PARSED_COMMAND_LINE_ARGUMENT} -- Access
-	
+
 	is_valid: BOOLEAN
 			-- Is this specification valid?
 		do
-			Result := (invalid_reason = Void)
+			Result := invalid_reason.is_empty
 		end
-	
+
 	invalid_reason: STRING
 			-- If invalid, this is the reason
-	
+
 	invalid_position: INTEGER
 			-- If invalid, this is the position in the textual
 			-- specification that it is invalid
-	
+
 	specification: STRING
 			-- The textual form of the specification
-	
-	matches_name (s: STRING): BOOLEAN
+
+	matches_name (s: detachable STRING): BOOLEAN
 			-- Does `s' match either the short_name' or the `long_name'?
-		require
-			s_not_void: s /= Void
 		do
-			if has_short_name then
-				if s.is_equal (short_name) then
-					Result := True
+			if s /= Void then
+				if short_name /= Void then
+					Result := s.is_equal (short_name)
 				end
-			end
-			if not Result and has_long_name then
-				if s.is_equal (long_name) then
-					Result := True
+				if not Result and long_name /= Void then
+					Result := s.is_equal (long_name)
 				end
 			end
 		end
-	
+
 	has_abbreviation (s: STRING): BOOLEAN
 			-- Can the option name be abbreviated with `s'?
 		require
@@ -71,76 +68,80 @@ feature {COMMAND_LINE_PARSER, COMMAND_LINE_SYNTAX, OPTION_SPECIFICATION, PARSED_
 		local
 			i: INTEGER
 		do
-			i := long_name.fuzzy_index (s, 1, s.count)
-			if i = 1 then
-				Result := True
+			check long_name /= Void then
+				i := long_name.fuzzy_index (s, 1, s.count)
+				if i = 1 then
+					Result := True
+				end
 			end
 		end
-		
+
 	name: STRING
 			-- Short name if it exists, otherwise the long name
 		do
-			if has_short_name then
+			if attached short_name then
 				Result:= short_name
 			else
-				Result := long_name
+				check attached long_name then
+					Result := long_name
+				end
 			end
 		end
-	
+
 	has_short_name: BOOLEAN
 			-- Does this option have a short name?
 		do
 			Result := short_name /= Void
 		end
-		
-	short_name: STRING
+
+	short_name: detachable STRING note option: stable attribute end
 			-- The short name
-	
+
 	has_long_name: BOOLEAN
 			-- Does this option have a long name?
 		do
 			Result := long_name /= Void
 		end
-	
-	long_name: STRING
+
+	long_name: detachable STRING note option: stable attribute end
 			-- The long name
-	
+
 	is_required: BOOLEAN
 			-- Is it a required command line option?
-	
+
 	has_optional_argument: BOOLEAN
-			-- Does it take an optional argument(s)? 
-	
+			-- Does it take an optional argument(s)?
+
 	has_required_argument: BOOLEAN
 			-- Does it take a required argument(s)?
-	
+
 	has_argument_name: BOOLEAN
 			-- Does it have an option argument name?
 		do
 			Result := (argument_name /= Void)
 		end
-	
-	argument_name: STRING
+
+	argument_name: detachable STRING
 			-- The name of the option argument
-	
+
 	has_description: BOOLEAN
 			-- Is there a description?
 		do
 			Result := description /= Void
 		end
-	
-	description: STRING
+
+	description: detachable STRING
 			-- Description
-	
+
 	is_mutually_exclusive: BOOLEAN
 			-- Is this an mutually exclusive option?
 		do
 			Result := exclusive_options /= Void
 		end
-	
+
 	is_exclusive_with (od_name: STRING): BOOLEAN
 			-- Is this option exclusive with the option named
-			-- `od_name'? 
+			-- `od_name'?
 		require
 			od_name_not_void: od_name /= Void
 			od_name_not_empty: od_name.count > 0
@@ -154,9 +155,9 @@ feature {COMMAND_LINE_PARSER, COMMAND_LINE_SYNTAX, OPTION_SPECIFICATION, PARSED_
 				exclusive_options.forth
 			end
 		end
-		
+
 feature {MUTUAL_EXCLUSIVITY_SPECIFICATION, OPTION_SPECIFICATION}-- Status setting	
-	
+
 	set_mutually_exclusive_with (os: like current)
 			-- Make this option mutually exclusive with `os'.
 		require
@@ -170,7 +171,7 @@ feature {MUTUAL_EXCLUSIVITY_SPECIFICATION, OPTION_SPECIFICATION}-- Status settin
 			is_exclusive_with_os: is_exclusive_with (os.name)
 			mutual_exclusivity: os.is_exclusive_with (name)
 		end
-	
+
 feature -- Comparison
 
 	is_less alias "<" (other: like Current): BOOLEAN
@@ -192,14 +193,14 @@ feature -- Comparison
 				s2 := ""
 			end
 			Result := (s1 < s2)
-		end	
-	
+		end
+
 feature {NONE} -- Implementation
-	
-	exclusive_options: LIST [like Current] 
+
+	exclusive_options: LIST [like Current]
 			-- List of options with which this option is mutually
-			-- exclusive 
-	
+			-- exclusive
+
 	parse
 			--  Parse the textual `specification'.
 		require
@@ -208,11 +209,11 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			name_and_rules_part: STRING
 			names_part: STRING
-			rules_part: STRING
+			rules_part: detachable STRING
 		do
 			-- Everything precceding the first '#' is regarded as
 			-- the name and rules part and everything coming after
-			-- is regarded description part 
+			-- is regarded description part
 			i := specification.index_of ('#', 1)
 			if i > 0 then
 				name_and_rules_part := specification.substring (1, i - 1)
@@ -220,11 +221,11 @@ feature {NONE} -- Implementation
 			else
 				name_and_rules_part := specification.twin
 			end
-			
+
 			-- Everything preeceding the first '!' or '=',
 			-- whichever comes first, is regarded as the names part
 			-- and everything coming after is regarded as the rules
-			-- part 
+			-- part
 			i := first_occurance_of ("!=", name_and_rules_part, 1)
 			if i > 0 then
 				names_part := name_and_rules_part.substring (1, i - 1)
@@ -232,17 +233,17 @@ feature {NONE} -- Implementation
 			else
 				names_part := name_and_rules_part
 			end
-			
+
 			parse_names_part (names_part)
 			if rules_part /= Void then
 				parse_rules_part (rules_part, i + 1)
 			end
 		end
-	
+
 	parse_names_part (s: STRING)
 			-- Parse the names part `s'.
 		require
-			s_not_void: s /= Void 
+			s_not_void: s /= Void
 			s_not_empty: s.count > 0
 		local
 			i: INTEGER
@@ -263,13 +264,13 @@ feature {NONE} -- Implementation
 				invalid_position := i
 			end
 		end
-	
+
 	parse_name (s: STRING; pos: INTEGER)
 			-- Parse the name `s'. `pos' denotes the starting index
 			-- of the name in the textual specification. It is used
 			-- for error messages.
 		require
-			s_not_void: s /= Void 
+			s_not_void: s /= Void
 			s_not_empty: s.count > 0
 			pos_positive: pos > 0
 		local
@@ -279,8 +280,8 @@ feature {NONE} -- Implementation
 				if s @ 2 = '-' then
 					-- We have a potential long
 					-- name. Lets just check the
-					-- characters 
-					i := index_of_non_alphanumerichyphen_character (s) 
+					-- characters
+					i := index_of_non_alphanumerichyphen_character (s)
 					if i = 0 then
 						if not has_long_name then
 							long_name := s
@@ -293,7 +294,7 @@ feature {NONE} -- Implementation
 						invalid_position := pos + i - 1
 					end
 				else
-					-- We have a potential short name. 
+					-- We have a potential short name.
 					if s.count = 2 and then ((s @ 2).is_alpha or (s @ 2).is_digit) then
 						if not has_short_name then
 							short_name := s
@@ -308,16 +309,16 @@ feature {NONE} -- Implementation
 				end
 			else
 				invalid_reason := "Option name must begin with a '-' character."
-				invalid_position := pos 			
+				invalid_position := pos
 			end
 		end
-	
+
 	old_parse_rules_part (s: STRING; pos: INTEGER)
 			-- Parse the rule `s'. `pos' denotes the starting index
 			-- of the name in the textual specification. It is used
 			-- for error messages.
 		require
-			s_not_void: s /= Void 
+			s_not_void: s /= Void
 			s_not_empty: s.count > 0
 			pos_positive: pos > 0
 		do
@@ -337,19 +338,19 @@ feature {NONE} -- Implementation
 				invalid_reason := "Invalid characters in qualifiers part of option specification."
 				invalid_position := pos
 			end
-		end	
-	
+		end
+
 	parse_rules_part (s: STRING; pos: INTEGER)
 			-- Parse the rule `s'. `pos' denotes the starting index
 			-- of the name in the textual specification. It is used
 			-- for error messages.
 		require
-			s_not_void: s /= Void 
+			s_not_void: s /= Void
 			s_not_empty: s.count > 0
 			pos_positive: pos > 0
 		do
 			if s @ 1 = '!' then
-				is_required := True			
+				is_required := True
 				if s.count > 1 then
 					if s @ 2 = '=' then
 						has_optional_argument := True
@@ -377,13 +378,13 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-		end	
-	
+		end
+
 	parse_argument_name (s: STRING; i, pos: INTEGER)
 			-- Parse the argument name from `s' beginning at
 			-- `i'. `pos' denotes the starting index of the name in
 			-- the textual specification. It is used for error
-			-- messages. 
+			-- messages.
 		require
 			s_not_void: s /= Void
 			s_has_valid_size: s.count >= i
@@ -405,9 +406,9 @@ feature {NONE} -- Implementation
 				argument_name := s.substring (i, s.count)
 			end
 		end
-	
+
 feature {NONE} -- Implementation (Utility)
-	
+
 	first_occurance_of (char_set, s: STRING; start: INTEGER): INTEGER
 			-- The position in `s' where the first occurance of any
 			-- character in `char_set' is found. Scanning begins at
@@ -419,11 +420,11 @@ feature {NONE} -- Implementation (Utility)
 			s_not_void: s /= Void
 			start_is_positive: start >= 1
 		local
-			i, j: INTEGER 
+			i, j: INTEGER
 		do
 			from
 				i := 1
-			until 
+			until
 				i > char_set.count
 			loop
 				j := s.index_of (char_set @ i, 1)
@@ -435,7 +436,7 @@ feature {NONE} -- Implementation (Utility)
 		ensure
 			non_negative_result: Result >= 0
 		end
-	
+
 	index_of_non_alphanumerichyphen_character (s: STRING): INTEGER
 			-- Index of first non-alphanumeric or non-hyphen
 			-- character in `s'. Returns 0 if none found.
@@ -454,5 +455,5 @@ feature {NONE} -- Implementation (Utility)
 				end
 			end
 		end
-	
+
 end -- class OPTION_SPECIFICATION

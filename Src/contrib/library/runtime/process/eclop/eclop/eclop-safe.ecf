@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd" name="eclop" uuid="10CA049B-E6DF-47cb-B434-3A1DDDFB5D85" library_target="eclop">
+	<target name="eclop">
+		<root all_classes="true"/>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" is_void_safe="true">
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="true"/>
+		<cluster name="eclop" location=".\" recursive="true">
+		</cluster>
+	</target>
+</system>

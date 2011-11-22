@@ -5,14 +5,14 @@ note
 	author: "Paul Cohen"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class MUTUAL_EXCLUSIVITY_SPECIFICATION
-	
-create	
+
+create
 	 {COMMAND_LINE_SYNTAX} make
-	
+
 feature {NONE} -- Initialization
-	
+
 	make (spec: STRING; opts: HASH_TABLE [OPTION_SPECIFICATION, STRING])
 			-- Create a new specification from the textual
 			-- specification `spec'. Modify the option
@@ -25,31 +25,32 @@ feature {NONE} -- Initialization
 			specification := spec.twin
 			specification.prune_all (' ')
 			specified_options := opts
+			invalid_reason := ""
 			parse
 		end
-	
+
 feature {COMMAND_LINE_PARSER, COMMAND_LINE_SYNTAX} -- Access
-	
+
 	is_valid: BOOLEAN
 			-- Is this specification valid?
-	
+
 	invalid_reason: STRING
 			-- If invalid, this is the reason
-	
+
 	invalid_position: INTEGER
 			-- If invalid, this is the position in the specification
 			-- that it is invalid
-	
+
 	specification: STRING
 			-- The textual specification
-	
+
 feature {NONE} -- Implementation
-	
+
 	specified_options: HASH_TABLE [OPTION_SPECIFICATION, STRING]
 			-- Table of the options specifications used to validate
 			-- the mutual exclusivity specification hashed by
 			-- option name
-		
+
 	parse
 			--  Parse the textual `specification'.
 		require
@@ -57,7 +58,7 @@ feature {NONE} -- Implementation
 		local
 			opts: LIST [STRING]
 		do
-			if specification @ 1 = '(' then 
+			if specification @ 1 = '(' then
 				if specification @ (specification.count) = ')' then
 				        opts := specification.substring (2, specification.count - 1).split ('|')
 					if opts.count > 1 then
@@ -75,10 +76,10 @@ feature {NONE} -- Implementation
 			else
 				is_valid := False
 				invalid_reason := "Specification must begin with a '(' character"
-				invalid_position := 1				
+				invalid_position := 1
 			end
 		end
-	
+
 	parse_options (opt_names: LIST [STRING])
 			-- Parse the list of option names in `opt_names'.
 		require
@@ -89,10 +90,10 @@ feature {NONE} -- Implementation
 			invalid_syntax_found, unrecognized_name_found, duplicate_name_found: BOOLEAN
 			used_names: LINKED_LIST [STRING]
 		do
-			-- Check that the option names in `opt_names' are among 
+			-- Check that the option names in `opt_names' are among
 			-- those specified by `specified_options' and that
-			-- there are no duplicates among the `opt_names'. 
-			from 
+			-- there are no duplicates among the `opt_names'.
+			from
 				pos := 2
 				invalid_syntax_found := False
 				unrecognized_name_found := False
@@ -103,7 +104,7 @@ feature {NONE} -- Implementation
 			until
 				invalid_syntax_found or else
 				unrecognized_name_found or else
-				duplicate_name_found or else 
+				duplicate_name_found or else
 				opt_names.after
 			loop
 				invalid_syntax_found := not is_valid_option_name_syntax (opt_names.item)
@@ -112,7 +113,7 @@ feature {NONE} -- Implementation
 					if not unrecognized_name_found then
 						duplicate_name_found := used_names.has (opt_names.item)
 						if not duplicate_name_found then
-							used_names.extend (opt_names.item) 
+							used_names.extend (opt_names.item)
 							pos := pos + 1 + opt_names.item.count
 						end
 					end
@@ -135,14 +136,14 @@ feature {NONE} -- Implementation
 				set_mutual_exclusivity (opt_names)
 			end
 		end
-	
+
 	set_mutual_exclusivity (opt_names: LIST [STRING])
 			-- Update each appropriate option specification in
 			-- `specified_options' with inormation on which options
 			-- it is mutually exclusive based on `opt_names'.
 		local
 			i, j: INTEGER
-			os1, os2: OPTION_SPECIFICATION
+			os1, os2: detachable OPTION_SPECIFICATION
 		do
 			from
 				i := 1
@@ -156,13 +157,15 @@ feature {NONE} -- Implementation
 					j > opt_names.count
 				loop
 					os2 := specified_options @ (opt_names @ j)
-					os1.set_mutually_exclusive_with (os2)
+					if os1 /= Void and then os2 /= Void then
+						os1.set_mutually_exclusive_with (os2)
+					end
 					j := j + 1
 				end
 				i := i + 1
 			end
 		end
-	
+
 	is_valid_option_name_syntax (s: STRING): BOOLEAN
 			-- Is `s' a valid option name?
 		require
@@ -185,7 +188,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-	
+
 	is_alpha_numerical_string (s: STRING): BOOLEAN
 			-- Is `s' an alphanumerical string?
 		require
@@ -193,7 +196,7 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 		do
-			from 
+			from
 				Result := True
 				i := 1
 			until
@@ -203,16 +206,16 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-	
+
 	is_alpha_numericalhyphen_string (s: STRING): BOOLEAN
 			-- Does `s' only contain an alphanumerical or '-'
-			-- characters? 
+			-- characters?
 		require
 			s_not_void: s /= Void
 		local
 			i: INTEGER
 		do
-			from 
+			from
 				Result := True
 				i := 1
 			until

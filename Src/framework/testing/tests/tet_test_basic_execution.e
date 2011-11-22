@@ -36,7 +36,7 @@ feature -- Test routines
 			l_count: INTEGER
 			l_executor: TET_EXECUTOR_MOCK [TET_TEST_MOCK]
 		do
-			create l_execution.make (test_suite)
+			create l_execution.make (test_suite, False)
 			l_execution.connection.connect_events (Current)
 
 			from
@@ -123,7 +123,7 @@ feature {NONE}	-- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

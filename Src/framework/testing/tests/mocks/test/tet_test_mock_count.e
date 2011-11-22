@@ -39,7 +39,7 @@ feature -- Status setting
 		do
 			execution_counter := execution_counter + 1
 			if not has_next_step then
-				create {EQA_EMPTY_RESULT} last_result.make ("dummy", "")
+				create {TEST_UNRESOLVED_RESULT} last_result.make ("dummy", "", "", [])
 				execution_counter := 0
 			end
 		end
@@ -59,7 +59,7 @@ feature {TET_EXECUTOR_MOCK} -- Status setting
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

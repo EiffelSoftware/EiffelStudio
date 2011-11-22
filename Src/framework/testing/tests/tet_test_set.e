@@ -254,7 +254,7 @@ feature -- Events
 			end
 		end
 
-	on_test_executed (a_session: TEST_EXECUTION_I; a_test: TEST_I; a_result: EQA_RESULT)
+	on_test_executed (a_session: TEST_EXECUTION_I; a_test: TEST_I; a_result: TEST_RESULT_I)
 		do
 			if attached {TET_TEST_MOCK_COUNT} a_test as l_test then
 				assert ("test_has_result", l_test.has_result)
@@ -320,7 +320,7 @@ feature {NONE} -- Clean up
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

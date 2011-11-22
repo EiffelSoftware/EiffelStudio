@@ -42,7 +42,7 @@ feature -- Access
 	serial_groups: TAG_SEARCH_TABLE
 			-- Set containing serial groups
 
-	last_result: detachable EQA_RESULT
+	last_result: detachable TEST_RESULT_I
 
 feature {NONE} -- Access
 
@@ -86,7 +86,7 @@ feature -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

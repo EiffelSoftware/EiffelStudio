@@ -42,7 +42,7 @@ feature -- Access
 	progress: REAL_32
 			-- <Precursor>
 
-feature {TEST_PROCESSOR_SCHEDULER_I} -- Status report
+feature {NONE} -- Status report
 
 	sleep_time: NATURAL = 0
 			-- <Precursor>

@@ -86,9 +86,6 @@ feature -- Access: output
 			--
 			-- Note: the session does not have to care about clearing the output when launching, since this
 			--       is done by `Current'.
-		local
-			l_output_manager: OUTPUT_MANAGER_S
-			l_output: OUTPUT_I
 		do
 			if a_session = current_output_session then
 				Result := internal_output

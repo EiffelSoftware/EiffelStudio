@@ -299,8 +299,6 @@ feature -- Status setting
 
 	abort_test (a_test: TEST_I)
 			-- <Precursor>
-		local
-			l_queue: like queue_for_test
 		do
 			if is_test_running (a_test) then
 				remove_running_test (a_test, create {TEST_UNRESOLVED_RESULT}.make (e_test_aborted_tag, e_test_aborted_details, e_test_aborted_details, [a_test.name]))
@@ -402,8 +400,6 @@ feature {NONE} -- Element change
 			a_test_usable: a_test.is_interface_usable
 			running: has_next_step
 			test_removed: not has_test (a_test)
-		local
-			l_test_suite: like test_suite
 		do
 			record.add_result (a_test, a_result)
 			append_output (agent print_test_result (?, a_test, a_result), not has_reported_first_result)
@@ -440,10 +436,6 @@ feature {NONE} -- Basic operations
 
 	remove_task (a_force: BOOLEAN)
 			-- <Precursor>
-		local
-			l_abort: BOOLEAN
-			l_executor: TEST_EXECUTOR_I [TEST_I]
-			l_queue: like queue_for_test
 		do
 				-- The only thing we need to do here is clean everything up if it is the last queue being removed
 			if tasks.count = 1 then

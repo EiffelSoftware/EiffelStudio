@@ -4,14 +4,18 @@ OUTDIR= .
 INDIR= .
 CC = $cc
 OUTPUT_CMD = $output_cmd
-CFLAGS = -I"$rt_include" -I.
+CFLAGS = -I"$rt_include" -I..$(DIR)spec$(DIR)windows$(DIR)include -I. -D_UNICODE -DUNICODE
 JCFLAGS = $(CFLAGS) $ccflags $optimize
 JMTCFLAGS = $(CFLAGS) $mtccflags $optimize
-JILCFLAGS = $(CFLAGS) $mtccflags $optimize -DEIF_IL_DLL
+JILCFLAGS = $(CFLAGS) $ccflags $optimize -DEIF_IL_DLL
 LN = copy
 MV = $mv
 RM = $del
-MKDIR_TARGET = $mkdir_target
+MAKE = $make
+MKDIR = $mkdir
+LINK = $link32
+DLL_FLAGS = $dll_flags
+DLL_LIBS = $dll_libs
 OBJECTS = cwex.$obj
 MT_OBJECTS = MTcwex.$obj
 IL_OBJECTS = ILcwex.$obj
@@ -19,24 +23,11 @@ IL_OBJECTS = ILcwex.$obj
 .cpp.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: lib_dir $output_libraries clean
+all:: $output_libraries
+	$(MAKE) clean
 
 standard:: cwex.lib ilcwex.lib
 mtstandard:: mtcwex.lib
-
-..$(DIR)spec:
-	$(MKDIR_TARGET)
-
-..$(DIR)spec$(DIR)$(ISE_C_COMPILER): ..$(DIR)spec
-	$(MKDIR_TARGET)
-
-..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM): ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)
-	$(MKDIR_TARGET)
-
-..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib: ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)
-	$(MKDIR_TARGET)
-
-lib_dir: ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 
 clean:
 	$(RM) *.$obj
@@ -45,14 +36,17 @@ clean:
 
 cwex.lib: $(OBJECTS)
 	$alib_line
+	$(MKDIR) ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
 
 mtcwex.lib: $(MT_OBJECTS)
 	$alib_line
+	$(MKDIR) ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
 
 ilcwex.lib: $(IL_OBJECTS)
 	$alib_line
+	$(MKDIR) ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
 
 

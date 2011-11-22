@@ -131,7 +131,7 @@ feature {NONE} -- Basic operations
 	remove_task (a_force: BOOLEAN)
 		local
 			l_test: G
-			l_result: detachable EQA_RESULT
+			l_result: detachable TEST_RESULT_I
 		do
 			l_test := tasks.item_for_iteration.task
 			Precursor (a_force)
@@ -161,7 +161,7 @@ feature {NONE} -- Access: execution table
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

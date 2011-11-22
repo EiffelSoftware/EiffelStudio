@@ -65,6 +65,8 @@ feature -- Command
 					Result := l_resource.ribbon_for_context_menu (l_context_menu)
 				elseif attached {EV_RIBBON_TAB_GROUP} Current as l_tab_group then
 					Result := l_resource.ribbon_for_contextual_tabs (l_tab_group)
+				elseif attached {EV_RIBBON_APPLICATION_MENU_GROUP} Current as l_app_menu_group then
+					Result := l_resource.ribbon_for_menu_group (l_app_menu_group)
 				else
 					check not_possible: False end
 				end

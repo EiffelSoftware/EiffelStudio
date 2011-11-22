@@ -82,10 +82,6 @@ doc:	</attribute>
 */
 rt_private long object_count;
 #endif
-
-#ifdef PRINT_OBJECT
-extern void print_object (EIF_REFERENCE object);
-#endif
 #endif
 
 #ifdef EIF_WINDOWS
@@ -791,11 +787,6 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 	if (egc_has_old_special_semantic) {
 		l_store_properties |= STORE_OLD_SPECIAL_SEMANTIC;
 	}
-
-#ifdef PRINT_OBJECT
-	printf ("Stored object:\n");
-	print_object (object);
-#endif
 
 	/* Write the kind of store */
 	l_failure = (char_write_func(&c, sizeof(char)) < 0);

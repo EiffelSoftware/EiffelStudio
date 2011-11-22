@@ -9,12 +9,19 @@ class
 	CODE_ES_SPLITTER
 
 inherit
+	ANY
+
 	CODE_SHARED_CLASS_SEPARATOR
 		export
 			{NONE} all
 		end
 
 	OPERATING_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
+	EXCEPTION_MANAGER
 		export
 			{NONE} all
 		end
@@ -163,7 +170,7 @@ feature {NONE} -- Implementation
 			end
 		rescue
 			l_retried := True
-			raise_event (create {CODE_ES_EVENT}.make ("The following exception was raised: " + create {STRING_8}.make_from_cil ({ISE_RUNTIME}.last_exception.to_string),
+			raise_event (create {CODE_ES_EVENT}.make ("The following exception was raised: " + last_exception.out,
 														"Exception Raised",
 														{EV_THREAD_SEVERITY_CONSTANTS}.Error))
 			retry
@@ -178,7 +185,7 @@ feature {NONE} -- Implementation
 			l_file: PLAIN_TEXT_FILE
 			l_content, l_dir: STRING
 			l_index, l_old_index: INTEGER
-			l_res: SYSTEM_OBJECT
+			l_directory: DIRECTORY
 		do
 			if not l_retried then
 				if destination_folder = Void then
@@ -191,8 +198,9 @@ feature {NONE} -- Implementation
 					end
 				else
 					l_dir := destination_folder.twin
-					if not {SYSTEM_DIRECTORY}.exists (l_dir) then
-						l_res := {SYSTEM_DIRECTORY}.create_directory (l_dir)
+					create l_directory.make (l_dir)
+					if not l_directory.exists then
+						l_directory.recursive_create_dir
 					end
 					l_dir.append_character (Directory_separator)
 				end
@@ -230,7 +238,7 @@ feature {NONE} -- Implementation
 			end
 		rescue
 			l_retried := True
-			raise_event (create {CODE_ES_EVENT}.make ("The following exception was raised: " + create {STRING_8}.make_from_cil ({ISE_RUNTIME}.last_exception.to_string),
+			raise_event (create {CODE_ES_EVENT}.make ("The following exception was raised: " + last_exception.out,
 														"Exception Raised",
 														{EV_THREAD_SEVERITY_CONSTANTS}.Error))
 			retry
@@ -277,7 +285,7 @@ feature {NONE} -- Implementation
 			end
 		rescue
 			l_retried := True
-			raise_event (create {CODE_ES_EVENT}.make ("The following exception was raised: " + create {STRING_8}.make_from_cil ({ISE_RUNTIME}.last_exception.to_string),
+			raise_event (create {CODE_ES_EVENT}.make ("The following exception was raised: " + last_exception.out,
 														"Exception Raised",
 														{EV_THREAD_SEVERITY_CONSTANTS}.Error))
 			retry

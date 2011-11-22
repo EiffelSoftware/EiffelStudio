@@ -23,7 +23,7 @@ inherit
 			{NONE} all
 		end
 
-	THREAD_CONTROL
+	EXECUTION_ENVIRONMENT
 		export
 			{NONE} all
 		end
@@ -427,7 +427,7 @@ invariant
 	implementation_not_void: implementation /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	source: "[
 			Eiffel Software

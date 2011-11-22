@@ -18,7 +18,7 @@ inherit
 
 feature -- Status report
 
-	is_valid_site (a_site: detachable ANY): BOOLEAN
+	is_valid_site (a_site: detachable SITE_TEST_OBJECT): BOOLEAN
 			-- <Precursor>
 		do
 			if Precursor (a_site) and then attached {SITE_TEST_VALIDATION_OBJECT} a_site as l_site then
@@ -29,7 +29,7 @@ feature -- Status report
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -19,17 +19,17 @@ feature {NONE} -- Initialization
 			-- Create main window.
 		do
 			make_top ("WEX - Windows Eiffel library eXtension")
-			move_and_resize(0, 0, 370, 385, False) 
-			create popupbitmap.make (Current, "Popup bitmap",      0  ,  0 , 150, 30, 101) 
-			create popdownbitmap.make (Current, "Popdown bitmap",  0  ,  40, 150, 30, 102) 
-			create selbitmap.make (Current, "Select bitmap",       0  ,  80, 150, 30, 103) 
-			create avisplash.make (Current, "Select AVI", 	     0  , 120, 150, 30, 104) 
-			create playwave.make (Current, "Play wave", 			0  , 160, 150, 30, 107) 
-			create playmidi.make (Current, "Play midi", 			0  , 200, 150, 30, 108) 
-			create stopmidi.make (Current, "Stop midi", 			0  , 240, 150, 30, 109) 
-			create playcd.make (Current, "Play cd", 			0  , 280, 150, 30, 110) 
-			create stopcd.make (Current, "stop cd", 			0  , 320, 150, 30, 111) 
-			create bitmap_region_check.make (Current, "Funny region", 160,   0, 150, 30, 105) 
+			move_and_resize(0, 0, 370, 385, False)
+			create popupbitmap.make (Current, "Popup bitmap",      0  ,  0 , 150, 30, 101)
+			create popdownbitmap.make (Current, "Popdown bitmap",  0  ,  40, 150, 30, 102)
+			create selbitmap.make (Current, "Select bitmap",       0  ,  80, 150, 30, 103)
+			create avisplash.make (Current, "Select AVI", 	     0  , 120, 150, 30, 104)
+			create playwave.make (Current, "Play wave", 			0  , 160, 150, 30, 107)
+			create playmidi.make (Current, "Play midi", 			0  , 200, 150, 30, 108)
+			create stopmidi.make (Current, "Stop midi", 			0  , 240, 150, 30, 109)
+			create playcd.make (Current, "Play cd", 			0  , 280, 150, 30, 110)
+			create stopcd.make (Current, "stop cd", 			0  , 320, 150, 30, 111)
+			create bitmap_region_check.make (Current, "Funny region", 160,   0, 150, 30, 105)
 			create video_region_check.make (Current, "Elliptic region",  160, 120, 150, 30, 106)
 		end
 
@@ -41,16 +41,15 @@ feature {NONE} -- Behavior
 			a_region: WEL_REGION
 			sw: INTEGER
 			sh: INTEGER
-			old_p: POINTER
 		do
 			if control_id = 101 then
 				if not splash.popped_up then
 					if bitmap_region_check.checked then
 						sw := splash.width // 2
-						sh := splash.height // 2 
+						sh := splash.height // 2
 						create a_region.make_polygon_alternate (<<sw, 0, splash.width, 0,
 							sw, sh, splash.width, splash.height, 0, splash.height, sw, sh, 0, sh, sw, 0>>)
-					else 
+					else
 						create a_region.make_rect (0, 0, splash.width, splash.height)
 					end
 					splash.set_window_region (a_region, False)
@@ -90,9 +89,9 @@ feature {NONE} -- Behavior
 				if file_dialog.selected then
 					splash_video.set_video(file_dialog.file_name)
 					if splash_video.valid then
-						if video_region_check.checked then 
+						if video_region_check.checked then
 							create a_region.make_elliptic (0, 0, splash_video.width, splash_video.height)
-						else 
+						else
 							create a_region.make_rect (0, 0, splash_video.width, splash_video.height)
 						end
 						splash_video.set_window_region (a_region, False)
@@ -154,7 +153,7 @@ feature {NONE} -- Behavior
 	avisplash,
 	playmidi,
 	stopmidi,
-	playcd, 
+	playcd,
 	stopcd,
 	playwave,
 	popdownbitmap: WEL_PUSH_BUTTON
@@ -163,27 +162,27 @@ feature {NONE} -- Behavior
 	bitmap_region_check: WEL_CHECK_BOX
 
 	splash: WEX_SPLASH_BITMAP_WINDOW
-		once 
+		once
 			create Result.make
 		end
 
 	splash_video: WEX_SPLASH_VIDEO
-		once 
+		once
 			create Result.make
 		end
 
 	file_dialog: WEL_OPEN_FILE_DIALOG
-		once 
+		once
 			create Result.make
 		end
 
-	class_name: STRING
+	class_name: STRING_32
 		once
 			Result := "MainWindowRWC"
 		end
 
 	class_background: WEL_BRUSH
-		once 
+		once
 			create Result.make_by_sys_color (Color_btnface + 1)
 		end
 
@@ -193,17 +192,17 @@ feature {NONE} -- Behavior
 		end
 
 	cd_device: WEX_MCI_CD_AUDIO
-		once 
+		once
 			create Result.make (Current)
 		end
 
 	midi_device: WEX_MCI_SEQUENCER
-		once 
+		once
 			create Result.make (Current)
 		end
 
 	wave_device: WEX_MCI_WAVE_AUDIO
-		once 
+		once
 			create Result.make (Current)
 		end
 

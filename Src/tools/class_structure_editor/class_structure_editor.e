@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 		do
 			initialize
 			class_structure.get_structure (fn)
-			class_structure.display_structure (class_structure.structure)
+			class_structure.display_structure
 		end
 
 	initialize

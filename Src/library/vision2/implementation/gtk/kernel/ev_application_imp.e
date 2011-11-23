@@ -607,7 +607,13 @@ feature {EV_ANY_I} -- Implementation
 							l_gdk_window := {GTK}.gdk_event_any_struct_window (gdk_event)
 							{GTK}.set_gdk_event_any_struct_window (gdk_event, {GTK}.gtk_widget_struct_window (l_gtk_widget_imp.c_object))
 						else
-							l_gtk_widget_imp ?= eif_object_from_gtk_object (l_grab_widget)
+							if l_has_grab_widget then
+								l_gtk_widget_imp ?= eif_object_from_gtk_object (l_grab_widget)
+							else
+									-- Make sure that only top level windows process key events
+								l_gtk_window_imp ?= eif_object_from_gtk_object (l_grab_widget)
+								l_gtk_widget_imp := l_gtk_window_imp
+							end
 						end
 						if l_gtk_widget_imp /= Void then
 							l_gtk_window_imp := l_gtk_widget_imp.top_level_gtk_window_imp

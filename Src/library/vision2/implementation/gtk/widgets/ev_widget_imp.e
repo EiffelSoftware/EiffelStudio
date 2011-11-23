@@ -353,15 +353,11 @@ feature {EV_ANY_I} -- Implementation
 	refresh_now
 			-- Flush any pending redraws due for `Current'.
 		do
-			if {GTK}.gtk_maj_ver > 1 then
-				if {GTK}.gtk_widget_struct_window (c_object) /= default_pointer then
-					{GTK2}.gdk_window_process_updates (
-						{GTK}.gtk_widget_struct_window (c_object),
-						False
-					)
-				end
-			else
-				{GTK}.gdk_flush
+			if {GTK}.gtk_widget_struct_window (c_object) /= default_pointer then
+				{GTK2}.gdk_window_process_updates (
+					{GTK}.gtk_widget_struct_window (c_object),
+					False
+				)
 			end
 		end
 
@@ -468,6 +464,31 @@ feature {NONE} -- Implementation
 			else
 				real_set_background_color (a_c_object, bg)
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	set_box_child_expandable (a_parent_box, a_child: POINTER; flag: BOOLEAN)
+			-- Set whether `child' expands to fill available spare space.
+		local
+			old_expand, fill, pad, pack_type: INTEGER
+		do
+			{GTK}.gtk_box_query_child_packing (
+				a_parent_box,
+				a_child,
+				$old_expand,
+				$fill,
+				$pad,
+				$pack_type
+			)
+			{GTK}.gtk_box_set_child_packing (
+				a_parent_box,
+				a_child,
+				flag,
+				fill.to_boolean,
+				pad,
+				pack_type
+			)
 		end
 
 feature {EV_APPLICATION_IMP} -- Implementation

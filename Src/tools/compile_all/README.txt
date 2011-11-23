@@ -100,10 +100,46 @@ To check if every target in the trunk EIFFEL_SRC folder still compiles, use the 
 === Optimization ===
 Compling using 'ecb' is slightly faster than just using 'ec' , by default 'compile_all' is using 'ec', but you can decide to use 'ecb' by using flag  " -ecb "
 
+=== Specific -interface .. ===
+
+With release 7.0 the output uses  "passed", "failed", (and others), instead of "Ok",
+"Failed" (and others).
+
+However in order to get same output as previous versions of 'compile_all', you
+can use:
+	-interface "template=#action #target from #system (#ecf)..."
+	-interface "text.passed=Ok,text.failed=Failed"
+
+The current possible usage of -interface are:
+	-interface text.{id}={new_id}
+		where {id} can be: 
+			passed, failed, skipped, ignored, error
+			target, Parsing, Melting, Freezing, Finalizing
+		and {new_id} the value of the wanted text
+
+Note: if ever you want to use comma "," in the template, 
+      you can change the non alpha separator by putting the wanted separator char as first character
+      For instance, to use ";" as separator
+      	-interface ";template=#action, #system, #target, (#ecf), "
+	  This way, you can use "," in your value, and here the ";" is used as separator, 
+	  Another example:
+		-interface ";text.passed=OK;text.failed=Failure, try again later"
 === Specific -options .. ===
 This is possible to exclude all dotnet target by using
 	-options dotnet=false
 
-In the future, this "-options" flag will be use for additional purpose such as simulation a specific platform, and so on ...
+The current possible usage of -options are:
+	-options dotnet={true|false}
+	-options "ec={flags}" and -options "ec.{mode}={flags}"
+		where {mode} can be:
+			melt, freeze, finalize
+		where {flags} is flags for the compiler "ec" such as "-full -verbose" 
+		An usage could be:
+			-options "ec.finalize=-keep"
 
+Note: in the same way as "-interface", you can choose another separator
+		-options "|ec.finalize=-keep|ec.freeze=-c_compile"
+
+Note:
+In the future, this "-options" flag will be use for additional purpose such as simulation a specific platform, and so on ...
 

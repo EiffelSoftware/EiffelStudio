@@ -440,7 +440,7 @@ rt_public void initprf(void)
 
 			/* Create H table */
 		if (ht_create(class_table, 10, sizeof(struct feat_table))) {
-			eraise("Hashtable creation failure", EN_FATAL);
+			eraise("Hash table creation failure", EN_FATAL);
 		}
 
 		prof_stack_init();		/* Initialize stack */
@@ -529,7 +529,7 @@ rt_shared void exitprf(void)
 #endif
 		if (!prof_output) {
 				/* Too bad: no file */
-			eraise("Unable to open to output file for profile", EN_FATAL);
+			eraise("Unable to open output file for profile", EN_FATAL);
 		} else {
 			execution_time = execution_time - init_date;
 
@@ -979,7 +979,7 @@ rt_public void update_class_table(struct prof_info *item)
 						/* Create H table internal structures */
 					if(ht_create(f_t->htab, 10, sizeof(struct prof_info))) {
 							/* Something is wrotten */
-						eraise("Hashtable creation failure", EN_FATAL);
+						eraise("Hash table creation failure", EN_FATAL);
 					} else {
 							/* Add feature table to `class_table'. */
 						ht_force(class_table, f_t->dtype, (char *) f_t);

@@ -62,7 +62,7 @@ feature -- Access
 			if an_interval > 0 and then timeout_agent_internal /= Void then
 				timeout_connection_id :=
 					{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_timeout_connect (
-						an_interval.max (20), timeout_agent_internal
+						an_interval.max (10), timeout_agent_internal
 					)
 			end
 		end

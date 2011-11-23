@@ -667,12 +667,25 @@ rt_private void grow_mismatch_table (void)
 	EIF_REFERENCE res;
 
 	mismatches->capacity *= 2;
+
 	res = sprealloc (eif_wean (mismatches->objects), mismatches->capacity);
 	CHECK("res not null", res);
-
+	if (!egc_has_old_special_semantic) {
+			/* When using the new special semantics, the `count' is not updated. Since here
+			 * we are handling a SPECIAL [detachable ANY] we are ok to set the count to the capacity. */
+		RT_SPECIAL_COUNT(res) = mismatches->capacity;
+	}
+	CHECK("Count same as capacity", RT_SPECIAL_COUNT(res) == RT_SPECIAL_CAPACITY(res));
 	mismatches->objects = eif_protect (res);
+
 	res = sprealloc (eif_wean (mismatches->values), mismatches->capacity);
 	CHECK("res not null", res);
+	if (!egc_has_old_special_semantic) {
+			/* When using the new special semantics, the `count' is not updated. Since here
+			 * we are handling a SPECIAL [detachable ANY] we are ok to set the count to the capacity. */
+		RT_SPECIAL_COUNT(res) = mismatches->capacity;
+	}
+	CHECK("Count same as capacity", RT_SPECIAL_COUNT(res) == RT_SPECIAL_CAPACITY(res));
 	mismatches->values = eif_protect (res);
 }
 

@@ -10,17 +10,21 @@ class
 	TEST_TEST
 
 inherit
-	EV_APPLICATION
-
 	EV_KEY_CONSTANTS
-		undefine
-			default_create, copy
-		end
 
 create
 	make_and_launch
 
 feature -- Initialization
+
+	make_and_launch
+		do
+			create application
+			prepare
+			application.launch
+		end
+
+	application: EV_APPLICATION
 
 	prepare
 		local
@@ -28,8 +32,6 @@ feature -- Initialization
 			hb: EV_HORIZONTAL_BOX
 			mb: EV_VERTICAL_BOX
 			cb: EV_HORIZONTAL_BOX
-			rb: EV_RADIO_BUTTON
-			a: EV_ACCELERATOR
 			ob: EV_OPTION_BUTTON
 		do
 			first_window.set_title ("DYNAMIC_LIST test")
@@ -57,16 +59,19 @@ feature -- Initialization
 			cb.extend (create {EV_BUTTON}.make_with_text_and_action (
 				"Button8", agent append_button (cb, "Extra!")))
 			first_window.extend (vb)
-			vb.extend (create {EV_HORIZONTAL_BOX}.make_for_test)
+			vb.extend (create {EV_HORIZONTAL_BOX})
 			first_window.key_press_actions.extend (agent on_key_press)
 			first_window.key_release_actions.extend (agent on_key_release)
 
-		create ob.make_with_text ("Optieeeebuttonnn")
-		ob.menu.extend (create {EV_MENU_ITEM}.make_with_text ("Sod off"))
-		ob.menu.extend (create {EV_MENU_ITEM}.make_with_text ("ya&de&yada"))
-		ob.menu.extend (create {EV_MENU_ITEM}.make_with_text ("Fish && Chips"))
-		vb.extend (ob)
-	end
+			create ob.make_with_text ("Optieeeebuttonnn")
+			ob.menu.extend (create {EV_MENU_ITEM}.make_with_text ("Sod off"))
+			ob.menu.extend (create {EV_MENU_ITEM}.make_with_text ("ya&de&yada"))
+			ob.menu.extend (create {EV_MENU_ITEM}.make_with_text ("Fish && Chips"))
+			vb.extend (ob)
+
+			first_window.close_request_actions.extend (agent first_window.destroy_and_exit_if_last)
+			first_window.show
+		end
 
 	on_key_press (k: EV_KEY)
 		do

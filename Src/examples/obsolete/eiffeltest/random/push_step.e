@@ -15,17 +15,19 @@ class PUSH_STEP inherit
 		end
 
 	STACK_ACCESSOR [INTEGER]
-		rename 
+		rename
 			make as accessor_make
 		export
 			{EVALUATOR} all
 		undefine
 			copy, is_equal
 		end
-		
-create
 
+create
 	make
+
+create {PUSH_STEP}
+	list_make
 
 feature {NONE} -- Initialization
 
@@ -34,6 +36,11 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			accessor_make (Current)
+		end
+
+	new_filled_list (n: INTEGER): like Current
+		do
+			create Result.list_make (n)
 		end
 
 feature -- Access

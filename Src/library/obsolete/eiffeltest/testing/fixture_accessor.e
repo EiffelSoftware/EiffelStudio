@@ -29,8 +29,6 @@ feature {NONE} -- Access
 
 	fixture: ANY
 			-- Fixture accessor
-		require
-			test_has_has_fixture: connected_test.has_fixture
 		do
 			Result ?= connected_test.container.fixture
 			if Result = Void then

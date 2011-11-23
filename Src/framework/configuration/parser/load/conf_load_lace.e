@@ -842,7 +842,7 @@ feature {NONE} -- Implementation of data retrieval
 							elseif l_type.is_make then
 								current_target.add_external_make (factory.new_external_make (l_loc, current_target))
 							else
-								set_error (create {CONF_ERROR_PARSE}.make ("Unkown external: "+l_type.language_name))
+								set_error (create {CONF_ERROR_PARSE}.make ("Unknown external: "+l_type.language_name))
 							end
 						end
 

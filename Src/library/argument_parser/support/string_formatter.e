@@ -40,7 +40,7 @@ feature -- Formatting
 			a_args_attached: a_args /= Void
 			not_a_args_is_empty: not a_args.is_empty
 		do
-			Result := format_unicode (a_str, a_args).as_string_8.as_attached
+			Result := format_unicode (a_str, a_args).as_string_8
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -205,7 +205,7 @@ feature -- Formatting
 			not_a_str_is_empty: not a_str.is_empty
 			a_tab_chars_positive: a_tab_chars > 0
 		do
-			Result := tabbify_unicode (a_str, a_tab_chars).as_string_8.as_attached
+			Result := tabbify_unicode (a_str, a_tab_chars).as_string_8
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -271,7 +271,7 @@ feature {NONE} -- Symbols
 			-- Index close character
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

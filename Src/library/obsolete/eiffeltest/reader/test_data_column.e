@@ -27,7 +27,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	frozen inject (t: TEST_CASE; s: STRING)
+	frozen inject (t: TEST_SIMPLE_CASE; s: STRING)
 			-- Inject data `s' into test case `t'.
 		require
 			test_case_exists: t /= Void
@@ -42,7 +42,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	test_case: TEST_CASE
+	test_case: TEST_SIMPLE_CASE
 			-- Test case to be injected
 			-- (To be redefined.)
 

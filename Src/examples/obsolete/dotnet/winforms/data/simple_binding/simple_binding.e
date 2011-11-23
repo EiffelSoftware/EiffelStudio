@@ -4,11 +4,11 @@ note
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	SIMPLE_BINDING
 
-inherit 
+inherit
 	WINFORMS_FORM
 		rename
 			make as make_form
@@ -46,8 +46,8 @@ feature {NONE} -- Initialization
 			dob_binding.add_parse (
 				(create {WINFORMS_CONVERT_EVENT_HANDLER}.make (Current,
 					$text_box_dob_parse_date)))
-			text_box_dob.data_bindings.add_binding (dob_binding)
-			return := text_box_address.data_bindings.add_string ("Text", cust_list, "")
+			text_box_dob.data_bindings.add_binding_2 (dob_binding)
+			return := text_box_address.data_bindings.add ("Text", cust_list, "")
 
 				-- We want to handle position changing events for the DATA VCR Panel
 				-- Position is managed by the Form's BindingContext so hook the position
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	components: SYSTEM_DLL_SYSTEM_CONTAINER	
+	components: SYSTEM_DLL_SYSTEM_CONTAINER
 			-- System.ComponentModel.Container
 
 	text_box_dob, text_box_position: WINFORMS_TEXT_BOX
@@ -77,7 +77,7 @@ feature -- Access
 			-- System.Windows.Forms.Label
 
 	button_move_first, button_move_prev, button_move_next, button_move_last: WINFORMS_BUTTON
-			-- System.Windows.Forms.Button 
+			-- System.Windows.Forms.Button
 
 	text_box_title, text_box_last_name, text_box_address, text_box_first_name, text_box_id: WINFORMS_TEXT_BOX
 			-- System.Windows.Forms.TextBox
@@ -86,7 +86,7 @@ feature -- Access
 			-- System.Windows.Forms.Label
 
 	panel_vcr_control: WINFORMS_PANEL
-			--System.Windows.Forms.Panel 
+			--System.Windows.Forms.Panel
 
 	cust_list: CUSTOMER_LIST
 			-- Customer list
@@ -151,11 +151,11 @@ feature -- Implementation
 			label_first_name.set_tab_index (5)
 			text_box_first_name.set_location (create {DRAWING_POINT}.make (88, 112))
 			text_box_first_name.set_tab_index (6)
-			text_box_first_name.set_anchor 
+			text_box_first_name.set_anchor
 				({WINFORMS_ANCHOR_STYLES}.Top | {WINFORMS_ANCHOR_STYLES}.left |
 				{WINFORMS_ANCHOR_STYLES}.right)
 			text_box_first_name.set_size (create {DRAWING_SIZE}.make (243, 20))
-			
+
 			label_last_name.set_location (create {DRAWING_POINT}.make (8, 154))
 			label_last_name.set_text ("&Last Name:")
 			label_last_name.set_size (create {DRAWING_SIZE}.make (64, 16))
@@ -273,7 +273,7 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				if components /= Void then
-					components.dispose	
+					components.dispose
 				end
 			end
 			Precursor {WINFORMS_FORM}(a_disposing)
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 		do
 			l_string ?= e.desired_type
 			l_date ?= e.value
-			if l_string /= Void and l_date /= Void then
+			if l_string /= Void then
 				e.set_value (l_date.to_long_date_string)
 			end
 		end
@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 			if not rescued then
 				l_string ?= e.desired_type
 				l_date ?= e.value
-				if l_string /= Void and l_date /= Void then
+				if l_string /= Void then
 					e.set_value ({SYSTEM_DATE_TIME}.parse (l_string))
 				end
 			end

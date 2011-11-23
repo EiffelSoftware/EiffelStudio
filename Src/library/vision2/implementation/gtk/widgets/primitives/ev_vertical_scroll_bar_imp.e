@@ -17,7 +17,6 @@ inherit
 	EV_SCROLL_BAR_IMP
 		redefine
 			interface,
-			old_make,
 			make
 		end
 
@@ -26,17 +25,29 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
-			-- Create the horizontal scroll bar.
-		do
-			assign_interface (an_interface)
-		end
-
 	make
 			-- Create and initialize `Current'.
+		local
+			l_vscroll, l_cell: POINTER
 		do
 			adjustment_internal := {GTK}.gtk_adjustment_new (0, 0, 100 + 10, 1, 10, 10)
-			set_c_object ({GTK}.gtk_vscrollbar_new (adjustment))
+
+			set_c_object ({GTK}.gtk_hbox_new (False, 0))
+
+			l_cell := {GTK}.gtk_event_box_new
+			{GTK}.gtk_widget_show (l_cell)
+
+			l_vscroll := {GTK}.gtk_vscrollbar_new (adjustment_internal)
+			{GTK}.gtk_widget_show (l_vscroll)
+
+			{GTK}.gtk_container_add (c_object, l_cell)
+			{GTK}.gtk_container_add (c_object, l_vscroll)
+
+			set_box_child_expandable (c_object, l_vscroll, False)
+
+				-- Make sure `Current' is large enough to render overlay scrollbars at the same window depth.
+			{GTK2}.gtk_widget_set_minimum_size (c_object, minimum_width.max (3), -1)
+
 			Precursor
 		end
 

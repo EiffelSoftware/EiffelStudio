@@ -17,7 +17,6 @@ inherit
 	EV_SCROLL_BAR_IMP
 		redefine
 			interface,
-			old_make,
 			make
 		end
 
@@ -25,12 +24,6 @@ create
 	make
 
 feature {NONE} -- Initialization
-
-	old_make (an_interface: like interface)
-			-- Create the horizontal scroll bar.
-		do
-			assign_interface (an_interface)
-		end
 
 	make
 			-- Create and initialize `Current'

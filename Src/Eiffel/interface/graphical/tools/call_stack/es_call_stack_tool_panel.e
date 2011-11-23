@@ -1546,8 +1546,13 @@ feature {NONE} -- Stack grid implementation
 				a_row.set_item (Position_column_index, glab)
 
 					--| Dynamic Type
-				create glab.make_with_text (l_class_info)
-				glab.set_tooltip (l_class_info)
+				if l_class_info /= Void then
+					create glab.make_with_text (l_class_info)
+					glab.set_tooltip (l_class_info)
+				else
+					create glab.make_with_text ("Unable to retrieve type")
+					check type_retrieved: False end
+				end
 				a_row.set_item (Dtype_column_index, glab)
 
 					--| Origine Type
@@ -1759,8 +1764,13 @@ feature {NONE} -- Stack grid implementation
 					a_row.set_item (Position_column_index, glab)
 
 						--| Dynamic type
-					create glab.make_with_text (l_class_info)
-					glab.set_tooltip (l_class_info)
+					if l_class_info /= Void then
+						create glab.make_with_text (l_class_info)
+						glab.set_tooltip (l_class_info)
+					else
+						create glab.make_with_text ("Unable to retrieve type")
+						check type_retrieved: False end
+					end
 					a_row.set_item (Dtype_column_index, glab)
 
 						--| Original type

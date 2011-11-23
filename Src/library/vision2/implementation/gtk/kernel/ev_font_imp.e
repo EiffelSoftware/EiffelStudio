@@ -147,16 +147,7 @@ feature -- Element change
 			a_agent: PROCEDURE [EV_FONT_IMP, TUPLE [STRING_32]]
 		do
 			ignore_font_metric_calculation := True
-			a_agent := agent update_preferred_faces
-			preferred_families.add_actions.wipe_out
-			preferred_families.remove_actions.wipe_out
-			preferred_families := a_preferred_families
-			preferred_families.internal_add_actions.extend (a_agent)
-			preferred_families.internal_remove_actions.extend (a_agent)
-			set_family (a_family)
-			set_weight (a_weight)
-			set_shape (a_shape)
-			set_height (a_height)
+			Precursor (a_family, a_weight, a_shape, a_height, a_preferred_families)
 			ignore_font_metric_calculation := False
 			calculate_font_metrics
 		end
@@ -284,13 +275,15 @@ feature -- Status report
 			temp_height: INTEGER
 			l_app_imp: like App_implementation
 		do
-			l_app_imp := App_implementation
-			a_cs := l_app_imp.c_string_from_eiffel_string (a_string)
-			a_pango_layout := l_app_imp.pango_layout
-			{GTK2}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
-			{GTK2}.pango_layout_set_font_description (a_pango_layout, font_description)
-			{GTK2}.pango_layout_get_pixel_size (a_pango_layout, $Result, $temp_height)
-			{GTK2}.pango_layout_set_font_description (a_pango_layout, default_pointer)
+			if a_string.count > 0 then
+				l_app_imp := App_implementation
+				a_cs := l_app_imp.c_string_from_eiffel_string (a_string)
+				a_pango_layout := l_app_imp.pango_layout
+				{GTK2}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
+				{GTK2}.pango_layout_set_font_description (a_pango_layout, font_description)
+				{GTK2}.pango_layout_get_pixel_size (a_pango_layout, $Result, $temp_height)
+				{GTK2}.pango_layout_set_font_description (a_pango_layout, default_pointer)
+			end
 		end
 
 	reusable_pango_rectangle_struct: POINTER

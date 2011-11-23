@@ -592,7 +592,7 @@ feature -- Constants
 		end
 
 	Padding_width: INTEGER = 4
-			-- Padding width used by whold system.
+			-- Padding width used by whole system.
 
 	Feedback_tab_width: INTEGER = 60
 			-- When user dragging, the width of feedback rectangle for tab.
@@ -795,7 +795,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

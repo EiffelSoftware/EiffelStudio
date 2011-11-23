@@ -25,7 +25,7 @@ feature {ANY} -- Access
 	out: STRING
 		-- debugging aid
 		do
-			Result := "Unkown CPE with tag=" + tag_id.out + "%N"
+			Result := "Unknown CPE with tag=" + tag_id.out + "%N"
 		end
 			
 feature {NONE} -- Implementation

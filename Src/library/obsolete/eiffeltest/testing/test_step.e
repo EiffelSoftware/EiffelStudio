@@ -24,8 +24,8 @@ deferred class TEST_STEP inherit
 	ARRAYED_ADAPTER [EVALUATOR]
 		rename
 			make as list_make, index as evaluator, go_i_th as set_evaluator
-		export
-			{NONE} all
+		undefine
+			new_filled_list
 		redefine
 			extend, remove
 		end
@@ -58,7 +58,7 @@ feature -- Status report
 		do
 			Result := True
 		end
-		
+
 feature -- Element change
 
 	extend (v: EVALUATOR)
@@ -89,7 +89,7 @@ feature {NONE} -- Constants
 
 	Name_prefix: STRING = "Evaluator #"
 			-- Name prefix for evaluators
-			
+
 feature {NONE} -- Implementation
 
 	run_without_rescue

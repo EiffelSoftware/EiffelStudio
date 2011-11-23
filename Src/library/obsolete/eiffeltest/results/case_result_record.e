@@ -15,13 +15,11 @@ class CASE_RESULT_RECORD [G -> ASSERTION_RESULT] inherit
 		undefine
 			copy, is_equal
 		end
-	
+
 	ARRAYED_ADAPTER [G]
 		rename
-			make as list_make, count as assertion_count, 
+			make as list_make, count as assertion_count,
 			valid_index as valid_assertion_index
-		export
-			{NONE} all
 		end
 
 	COMPARATOR_FACILITY
@@ -30,8 +28,10 @@ class CASE_RESULT_RECORD [G -> ASSERTION_RESULT] inherit
 		end
 
 create
-
 	make
+
+create {CASE_RESULT_RECORD}
+	list_make
 
 feature {NONE} -- Initialization
 
@@ -45,7 +45,7 @@ feature -- Access
 
 	execution_time: TIME_DURATION
 			-- Execution time of test
-			
+
 	failure_reason (i: INTEGER): STRING
 			-- Failure reason of `i'-th assertion
 		require
@@ -91,7 +91,7 @@ feature -- Status report
 			create {EXCEPTION_COMPARATOR} c.make (Current)
 			Result := comparator.compare_range (c, 1, assertion_count, True)
 		end
-	
+
 	is_assertion_pass (i: INTEGER): BOOLEAN
 			-- Is `i'-th assertion a pass?
 		require
@@ -127,7 +127,7 @@ feature -- Status report
 		do
 			Result := execution_time /= Void
 		end
-		
+
 feature -- Status setting
 
 	set_execution_time (t: like execution_time)
@@ -141,7 +141,7 @@ feature -- Status setting
 invariant
 
 	empty_definition: is_empty = (assertion_count = 0)
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

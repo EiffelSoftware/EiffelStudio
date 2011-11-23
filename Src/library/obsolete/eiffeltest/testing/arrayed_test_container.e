@@ -13,13 +13,13 @@ deferred class ARRAYED_TEST_CONTAINER inherit
 		undefine
 			copy, is_equal
 		end
-	
+
 	ARRAYED_ADAPTER [TESTABLE]
 		rename
 			count as test_count, item as selected_test, i_th as test,
 			valid_index as valid_test_index, go_i_th as select_test
-		export
-			{NONE} all
+		undefine
+			new_filled_list
 		redefine
 			extend, replace, remove
 		end
@@ -30,7 +30,7 @@ feature -- Element change
 			-- At `v' to end.
 		do
 			v.set_number (test_count + 1)
-			if has_standard_output then 
+			if has_standard_output then
 				v.set_standard_output (standard_output)
 			end
 			Precursor (v)
@@ -42,7 +42,7 @@ feature -- Element change
 			-- Replace `i'-th item with `v'.
 		do
 			v.set_number (i)
-			if has_standard_output then 
+			if has_standard_output then
 				v.set_standard_output (standard_output)
 			end
 			Precursor (v, i)
@@ -59,12 +59,12 @@ feature -- Removal
 		do
 			old_idx := index
 			Precursor (i)
-			from 
-				select_test (i) 
+			from
+				select_test (i)
 				selected_test.set_number (0)
 				selected_test.set_standard_output (Void)
-			until 
-				after 
+			until
+				after
 			loop
 				selected_test.set_number (index)
 				forth

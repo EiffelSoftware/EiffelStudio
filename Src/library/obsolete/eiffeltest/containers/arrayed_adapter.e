@@ -12,15 +12,15 @@ class ARRAYED_ADAPTER [G] inherit
 	ARRAYED_LIST [G]
 		rename
 			replace as list_replace, remove as list_remove
-		export
-			{NONE} all
 		redefine
 			extend
 		end
 
 create
-
 	-- Not for instantiation
+
+create {ARRAYED_ADAPTER}
+	make
 
 feature -- Element change
 

@@ -9,7 +9,7 @@ note
 
 class TEST_SUITE inherit
 
-	TESTABLE	
+	TESTABLE
 		undefine
 			copy, is_equal, set_standard_output
 		end
@@ -33,14 +33,14 @@ class TEST_SUITE inherit
 		undefine
 			copy, is_equal
 		end
-	
+
 	EXCEPTIONS
 		export
 			{NONE} all
 		undefine
 			copy, is_equal
 		end
-		
+
 create
 
 	make
@@ -59,7 +59,12 @@ feature {NONE} -- Initialization
 			test_results_exist: test_results /= Void
 			sequential_strategy: equal (selected_strategy, "linear")
 		end
-		
+
+	new_filled_list (n: INTEGER_32): like Current
+		do
+			create Result.make
+		end
+
 feature -- Access
 
 	test_results: TEST_SUITE_RESULT
@@ -80,16 +85,16 @@ feature -- Access
 		ensure
 			non_empty_result: Result /= Void and then not Result.is_empty
 		end
-		
+
 	name: STRING
 			-- Name of test suite
-			
+
 	seed: INTEGER
 			-- Random seed
 		do
 			Result := execution_strategy.seed
 		end
-	 
+
 feature -- Measurement
 
 	run_count: INTEGER
@@ -106,13 +111,13 @@ feature -- Status report
 
 	Produces_result: BOOLEAN = True
 			-- Does test produce result? (Answer: yes)
-	 
+
 	Is_complete_test: BOOLEAN = True
 	 		-- Is test a complete test case? (Answer: yes)
-	
+
 	Is_test_container: BOOLEAN = True
 			-- is test a container? (Answer: yes)
-	 
+
 	has_strategy (s: STRING): BOOLEAN
 			-- Is there a strategy named `s'
 		require
@@ -132,7 +137,7 @@ feature -- Status report
 		require
 			strategy_set: is_strategy_set
 		do
-			Result := execution_strategy.is_context_needed and not 
+			Result := execution_strategy.is_context_needed and not
 				is_context_set
 		end
 
@@ -169,10 +174,10 @@ feature -- Status report
 	insertable (v: TESTABLE): BOOLEAN
 			-- Can `v' be inserted into test suite?
 		do
-			Result := is_empty or else 
+			Result := is_empty or else
 					(v.is_complete_test = contains_complete_tests)
 		ensure then
-			insertable_definition: is_empty or else 
+			insertable_definition: is_empty or else
 					(v.is_complete_test = contains_complete_tests)
 		end
 
@@ -189,7 +194,7 @@ feature -- Status setting
 			execution_strategy.set_suite (Current)
 		ensure
 			strategy_set: is_strategy_set
-			empty_or_ready_or_context_request: 
+			empty_or_ready_or_context_request:
 				(is_empty or is_context_needed) xor is_ready
 			strategy_selected: selected_strategy = s
 			is_suite_set: execution_strategy.is_suite_set
@@ -204,7 +209,7 @@ feature -- Status setting
 		ensure
 			name_set: name = n
 		end
-		
+
 	set_context (c: ANY)
 			-- Set context to `c'.
 		require
@@ -216,7 +221,7 @@ feature -- Status setting
 				raise ("Invalid context")
 			end
 		end
-	
+
 	set_seed (s: INTEGER)
 			-- Set seed to `s'.
 		do
@@ -292,10 +297,10 @@ feature -- Basic operations
 			until
 				stop or (stop_on_failure and failure_stop)
 			loop
-				if selected_test.is_test_enabled then 
-					execution_strategy.execute 
+				if selected_test.is_test_enabled then
+					execution_strategy.execute
 					if selected_test.produces_result then
-						res.put (selected_test.result_record 
+						res.put (selected_test.result_record
 							(selected_test.run_count), index)
 					end
 				end
@@ -305,7 +310,7 @@ feature -- Basic operations
 					stop := True
 				end
 			end
-			if not res.is_empty then 
+			if not res.is_empty then
 				test_results.add_result (res.linear_representation)
 			end
 			tear_down
@@ -320,7 +325,7 @@ feature -- Output
 			f.put_container_results (Current)
 			Precursor (f)
 		end
-	 
+
 feature {NONE} -- Implementation
 
 	execution_strategy: EXECUTION_STRATEGY
@@ -331,7 +336,7 @@ invariant
 	strategy_selected: is_strategy_set
 	non_empty_name: name /= Void and then not name.is_empty
 	test_result_exists: test_results /= Void
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

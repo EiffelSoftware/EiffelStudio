@@ -15,8 +15,10 @@ class SIMPLE_TEST_DRIVER inherit
 		end
 
 create
-
 	make
+
+create {SIMPLE_TEST_DRIVER}
+	driver_make
 
 feature {NONE} -- Initialization
 
@@ -32,6 +34,11 @@ feature {NONE} -- Initialization
 		ensure
 			log_set: log = f
 			standard_output_set: has_standard_output
+		end
+
+	new_filled_list (n: INTEGER_32): like Current
+		do
+			create Result.driver_make (n)
 		end
 
 note

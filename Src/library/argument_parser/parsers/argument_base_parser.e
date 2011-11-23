@@ -99,7 +99,7 @@ feature {NONE} -- Access
 			if l_path /= Void and then not l_path.is_empty then
 				i := l_path.last_index_of (operating_environment.directory_separator, l_path.count)
 				if i > 0 then
-					Result := l_path.substring (i + 1, l_path.count).as_attached
+					Result := l_path.substring (i + 1, l_path.count)
 				else
 					Result := l_path
 				end
@@ -166,7 +166,7 @@ feature {NONE} -- Access
 										if l_arg.item (j + 1) = switch_value_qualifer then
 											create l_next_arg.make (1 + (nb - j))
 											l_next_arg.append_character (l_prefixes[1])
-											l_next_arg.append (l_arg.substring (j, l_arg.count).as_attached)
+											l_next_arg.append (l_arg.substring (j, l_arg.count))
 
 												-- Exit loop
 											j := nb
@@ -927,7 +927,7 @@ feature {NONE} -- Parsing
 											l_last_switch := l_switch
 										end
 									else
-										add_template_error (e_unreconized_switch_error, [ellipse_text (l_arg)])
+										add_template_error (e_unrecognized_switch_error, [ellipse_text (l_arg)])
 									end
 								end
 							else
@@ -1008,7 +1008,7 @@ feature {NONE} -- Validation
 			if not l_switch_groups.is_empty then
 				l_switch_groups := valid_switch_groups
 				if l_switch_groups.is_empty then
-					add_error (e_switch_group_unreconized_error)
+					add_error (e_switch_group_unrecognized_error)
 				end
 			end
 			l_switch_appurtenances := switch_dependencies
@@ -1219,7 +1219,7 @@ feature {NONE} -- Validation
 						l_switches.after or not l_valid
 					loop
 						l_switch := l_switches.item_for_iteration
-						if attached l_switch then
+						if l_switch /= Void then
 							l_valid := l_switch.optional or else has_option (l_switch.id)
 						end
 						l_switches.forth
@@ -1656,7 +1656,7 @@ feature {NONE} -- Usage
 			-- Not used if empty.
 		deferred
 		ensure
-			result_attached: attached Result
+			result_attached: Result /= Void
 		end
 
 	frozen command_option_configurations: ARRAYED_LIST [STRING]
@@ -2142,7 +2142,7 @@ feature {NONE} -- Constants
 feature {NONE} -- Internationalization
 
 	e_invalid_switch_error: STRING = "The switch '{1}' is invalid."
-	e_unreconized_switch_error: STRING = "Unreconized switch '{1}'."
+	e_unrecognized_switch_error: STRING = "Unrecognized switch '{1}'."
 	e_invalid_switch_value: STRING = "'{1}' is an invalid option for switch '{2}'."
 	e_require_switch_value: STRING = "Switch '{1}' requires a paired value '{2}'."
 	e_multiple_switch_error: STRING = "Switch '{1}' can only be used once."
@@ -2150,7 +2150,7 @@ feature {NONE} -- Internationalization
 	e_missing_switch_error: STRING = "Switch '{1}' was not specified."
 	e_non_switched_argument_specified_error: STRING = "Arguments without a switch prefix are not valid arguments."
 	e_multiple_non_switched_argument_specified_error: STRING = "Only one argument without a switch prefix can be passed."
-	e_switch_group_unreconized_error: STRING = "The specified switches are not in a valid configuration."
+	e_switch_group_unrecognized_error: STRING = "The specified switches are not in a valid configuration."
 	e_missing_switch_dependency_error: STRING = "Switch '{1}' require the switch '{2}' be specified also."
 	e_invalid_switch_value_with_reason: STRING = "'{1}' is an invalid option for switch '{2}'.%N{3}"
 	e_invalid_non_switched_value_with_reason: STRING = "'{1}' is an invalid option.%N{2}"
@@ -2210,7 +2210,7 @@ invariant
 	is_successful_means_has_parsed: is_successful implies has_parsed
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

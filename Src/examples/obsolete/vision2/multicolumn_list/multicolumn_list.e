@@ -9,13 +9,19 @@ note
 class
 	MULTICOLUMN_LIST_EXAMPLE
 
-inherit
-	EV_APPLICATION
-
 create
 	make_and_launch
 
 feature -- Initialization
+
+	make_and_launch
+		do
+			create application
+			prepare
+			application.launch
+		end
+
+	application: EV_APPLICATION
 
 	prepare
 			-- Initialize world.
@@ -120,6 +126,8 @@ feature -- Initialization
 
 				-- Add widgets to our window
 			first_window.extend(my_container)
+			first_window.close_request_actions.extend (agent first_window.destroy_and_exit_if_last)
+			first_window.show
 		end
 
 	first_window: EV_TITLED_WINDOW
@@ -141,7 +149,7 @@ feature -- Initialization
 			small_pixmap_button.enable_sensitive
 			large_pixmap_button.enable_sensitive
 			size_pixmap_button.enable_sensitive
-		end	
+		end
 
 	remove_pixmap_button_pushed
 		do
@@ -153,30 +161,30 @@ feature -- Initialization
 			small_pixmap_button.disable_sensitive
 			large_pixmap_button.disable_sensitive
 			size_pixmap_button.disable_sensitive
-		end	
+		end
 
 	large_pixmap_button_pushed
 		do
 			my_mclist.set_pixmaps_size (32, 32)
 			my_tree.set_pixmaps_size (32, 32)
 			size_pixmap_button.set_value (32)
-		end	
+		end
 
 	small_pixmap_button_pushed
 		do
 			my_mclist.set_pixmaps_size (16, 16)
 			my_tree.set_pixmaps_size (16, 16)
 			size_pixmap_button.set_value (16)
-		end	
+		end
 
-	size_pixmap_button_pushed
+	size_pixmap_button_pushed (new_value: INTEGER)
 		local
 			pix_size: INTEGER
 		do
-			pix_size := size_pixmap_button.value
+			pix_size := new_value
 			my_mclist.set_pixmaps_size (pix_size, pix_size)
 			my_tree.set_pixmaps_size (pix_size, pix_size)
-		end	
+		end
 
 feature {NONE} -- Graphical interface
 
@@ -204,7 +212,7 @@ feature {NONE} -- Graphical interface
 	my_mclist: EV_MULTI_COLUMN_LIST
 
 feature -- Process Vision2 events
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

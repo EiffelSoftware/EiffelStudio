@@ -665,25 +665,32 @@ rt_private void grow_mismatch_table (void)
 {
 	RT_GET_CONTEXT
 	EIF_REFERENCE res;
+	rt_uint_ptr l_old_size;
 
 	mismatches->capacity *= 2;
 
+	l_old_size = RT_SPECIAL_VISIBLE_SIZE(eif_access(mismatches->objects));
 	res = sprealloc (eif_wean (mismatches->objects), mismatches->capacity);
 	CHECK("res not null", res);
 	if (!egc_has_old_special_semantic) {
 			/* When using the new special semantics, the `count' is not updated. Since here
 			 * we are handling a SPECIAL [detachable ANY] we are ok to set the count to the capacity. */
 		RT_SPECIAL_COUNT(res) = mismatches->capacity;
+			/* Clear the area that was reallocated. */
+		memset(res + l_old_size , 0, RT_SPECIAL_VISIBLE_SIZE(res) - l_old_size);
 	}
 	CHECK("Count same as capacity", RT_SPECIAL_COUNT(res) == RT_SPECIAL_CAPACITY(res));
 	mismatches->objects = eif_protect (res);
 
+	l_old_size = RT_SPECIAL_VISIBLE_SIZE(eif_access(mismatches->values));
 	res = sprealloc (eif_wean (mismatches->values), mismatches->capacity);
 	CHECK("res not null", res);
 	if (!egc_has_old_special_semantic) {
 			/* When using the new special semantics, the `count' is not updated. Since here
 			 * we are handling a SPECIAL [detachable ANY] we are ok to set the count to the capacity. */
 		RT_SPECIAL_COUNT(res) = mismatches->capacity;
+			/* Clear the area that was reallocated. */
+		memset(res + l_old_size , 0, RT_SPECIAL_VISIBLE_SIZE(res) - l_old_size);
 	}
 	CHECK("Count same as capacity", RT_SPECIAL_COUNT(res) == RT_SPECIAL_CAPACITY(res));
 	mismatches->values = eif_protect (res);

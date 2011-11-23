@@ -1,6 +1,8 @@
 Compile All Tool - Version: 7.0
 Copyright Eiffel Software 2006-2011. All Rights Reserved.
 
+Base location: "c:\work\70dev"
+
 Melting esbuilder from esbuilder-4EEF9ABD-F15C-4C45-9D6F-4FFE128296F7 (build\esbuilder.ecf): passed
 Melting framework_example from framework_example-F9E183D7-1FC1-4050-A6D4-7EA63A2E9717 (contrib\library\graphic\toolkit\wex\examples\wex\Framework_example\framework_example.ecf): passed
 Melting mci_splash from mci_splash-D658AF38-884C-439C-B2C7-01A0F2DA7047 (contrib\library\graphic\toolkit\wex\examples\wex\MCI_Splash\mci_splash.ecf): passed

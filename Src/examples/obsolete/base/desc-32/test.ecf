@@ -8,8 +8,8 @@
 		</option>
 		<precompile name="precompile" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<cluster name="desc" location="$ISE_LIBRARY\library\base\desc\general\"/>
-		<cluster name="desc32" location="$ISE_LIBRARY\library\base\desc\spec\win32\"/>
+		<cluster name="desc" location="$ISE_LIBRARY\library\obsolete\base\desc\general\"/>
+		<cluster name="desc32" location="$ISE_LIBRARY\library\obsolete\base\desc\spec\win32\"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>
 </system>

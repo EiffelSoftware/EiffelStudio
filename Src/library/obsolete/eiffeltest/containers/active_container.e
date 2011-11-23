@@ -22,7 +22,7 @@ feature -- Access
 			non_void_result: Result /= Void
 		end
 
-	i_th (i: INTEGER): G
+	i_th alias "[]" (i: INTEGER): like item assign put_i_th
 			-- `i'-th item
 		require
 			not_empty: not is_empty
@@ -36,7 +36,14 @@ feature -- Access
 			-- Current index
 		deferred
 		end
-	
+
+feature -- Element change
+
+	put_i_th (v: like i_th; i: INTEGER_32)
+			-- Replace `i'-th entry, if in index interval, by `v'.
+		deferred
+		end
+
 feature -- Status setting
 
 	go_i_th (i: INTEGER)

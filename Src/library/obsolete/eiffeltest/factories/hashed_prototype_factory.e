@@ -17,14 +17,14 @@ class HASHED_PROTOTYPE_FACTORY [G] inherit
 	HASH_TABLE [G, STRING]
 		rename
 			make as hash_make, current_keys as available_products,
-			has as has_product, clear_all as wipe_out
-		export
-			{NONE} all
+			has as has_product
 		end
 
 create
-
 	make
+
+create {HASHED_PROTOTYPE_FACTORY}
+	hash_make
 
 feature {NONE} -- Initialization
 
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 		do
 			hash_make (0)
 		end
-		
+
 feature -- Access
 
 	product: G

@@ -7,7 +7,10 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ARGUMENT_CONTEXT inherit
+class ARGUMENT_CONTEXT
+
+inherit
+	ANY
 
 	EXCEPTIONS
 		export
@@ -23,7 +26,7 @@ feature -- Access
 		do
 			Result := actual_context
 		end
-		
+
 feature -- Status report
 
 	is_context_set: BOOLEAN

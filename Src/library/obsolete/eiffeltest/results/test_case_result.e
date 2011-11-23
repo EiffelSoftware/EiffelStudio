@@ -13,28 +13,28 @@ class TEST_CASE_RESULT inherit
 		undefine
 			copy, is_equal
 		end
-	
+
 	ACTIVE_CONTAINER [CASE_RESULT_RECORD [ASSERTION_RESULT]]
 		rename
-			index as run, count as run_count, valid_index as valid_run_index, 
+			index as run, count as run_count, valid_index as valid_run_index,
 			go_i_th as select_run
 		export
 			{NONE} item, extend, replace, remove
 		undefine
 			copy, is_equal
 		end
-		
+
 	ARRAYED_ADAPTER [CASE_RESULT_RECORD [ASSERTION_RESULT]]
 		rename
-			make as list_make, index as run, valid_index as valid_run_index, 
+			make as list_make, index as run, valid_index as valid_run_index,
 			go_i_th as select_run
-		export
-			{NONE} all
 		end
-		
+
 create
-	
 	make
+
+create {TEST_CASE_RESULT}
+	list_make
 
 feature {NONE} -- Initialization
 
@@ -62,7 +62,7 @@ feature -- Access
 			-- Exception info of assertion `n'
 		require
 			valid_assertion_number: valid_assertion_index (n)
-			is_exception: not is_assertion_pass (n) and 
+			is_exception: not is_assertion_pass (n) and
 					is_assertion_exception (n)
 		do
 			Result := i_th (run).exception_info (n)
@@ -77,7 +77,7 @@ feature -- Access
 		do
 			Result := i_th (run).execution_time.fine_seconds_count
 		end
-		
+
 feature -- Measurement
 
 	passed_tests: INTEGER
@@ -88,7 +88,7 @@ feature -- Measurement
 
 	exceptions: INTEGER
 			-- Number of thrown exceptions
-			
+
 	assertions: INTEGER
 			-- Number of recorded assertions in selected run
 		require
@@ -96,7 +96,7 @@ feature -- Measurement
 		do
 			Result := i_th (run).assertion_count
 		end
-		
+
 feature -- Status report
 
 	has_current_result: BOOLEAN
@@ -118,10 +118,10 @@ feature -- Status report
 			i: INTEGER
 		do
 			old_run := run
-			from 
-				i := 1 
-			until 
-				Result or i > run_count 
+			from
+				i := 1
+			until
+				Result or i > run_count
 			loop
 				select_run (i)
 				Result := has_execution_time
@@ -230,7 +230,7 @@ feature -- Element change
 			create a.make_false (reason)
 			current_record.extend (a)
 		ensure
-			not_exception_implies_failed: 
+			not_exception_implies_failed:
 				not current_record.is_exception implies
 				(not current_record.passed and not
 				current_record.is_exception)
@@ -278,11 +278,11 @@ feature -- Element change
 			create current_record.make
 		ensure
 			one_more_run: run_count = old run_count + 1
-			pass_counted: old current_record.passed implies 
+			pass_counted: old current_record.passed implies
 				passed_tests = old passed_tests + 1
-			failed_counted: old not current_record.passed implies 
+			failed_counted: old not current_record.passed implies
 				failed_tests = old failed_tests + 1
-			exceptions_counted: old current_record.is_exception implies 
+			exceptions_counted: old current_record.is_exception implies
 				exceptions = old exceptions + 1
 			exception_means_failed: (exceptions = old exceptions + 1) implies
 				failed_tests = old failed_tests + 1
@@ -290,7 +290,7 @@ feature -- Element change
 		end
 
 feature -- Removal
-	
+
 	clear_results
 			-- Clear test results.
 		do
@@ -317,12 +317,12 @@ feature {NONE} -- Implementation
 
 invariant
 
-	all_tests_passed_definition: 
+	all_tests_passed_definition:
 			all_tests_passed = (has_results and failed_tests = 0)
 	current_record_exists: current_record /= Void
 	valid_run_index: has_results implies valid_run_index (run)
 	result_counting_consistent: run_count = count
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

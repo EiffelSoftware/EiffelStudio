@@ -7,7 +7,10 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class TEST_DATA_COLUMN inherit
+deferred class TEST_DATA_COLUMN
+
+inherit
+	ANY
 
 	EXCEPTIONS
 		export
@@ -36,20 +39,20 @@ feature -- Basic operations
 			end
 			inject_data (s)
 		end
-	 
+
 feature {NONE} -- Implementation
 
 	test_case: TEST_CASE
 			-- Test case to be injected
 			-- (To be redefined.)
-			
+
 	inject_data (s: STRING)
 			-- Inject `s' into `test_case'.
 		require
 			test_case_set: test_case /= Void
 		deferred
 		end
-	 
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -41,8 +41,6 @@ feature -- Initialization
 			a_menu: EV_MENU
 			a_menu_item: EV_MENU_ITEM
 			a_menu_separator: EV_MENU_SEPARATOR
-			a_toolbar_button: EV_TOOL_BAR_BUTTON
-			a_icon: EV_PIXMAP
 		do
 				-- create Menus & menu items
 			create a_menu_bar
@@ -151,7 +149,7 @@ feature -- Process Vision2 events
 			ofd: EV_FILE_OPEN_DIALOG
 		do
 			create ofd
-			ofd.ok_actions.extend (agent effective_load_file (ofd))
+			ofd.open_actions.extend (agent effective_load_file (ofd))
 			ofd.show_modal_to_window (first_window)
 		end
 

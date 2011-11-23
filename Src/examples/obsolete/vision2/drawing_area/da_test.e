@@ -10,24 +10,26 @@ class
 	DA_TEST
 
 inherit
-	EV_APPLICATION
-
 	EV_DRAWABLE_CONSTANTS
-		undefine
-			default_create
-		end
 
 	EV_FONT_CONSTANTS
 		export
 			{NONE} all
-		undefine
-			default_create
 		end
 
 create
 	make_and_launch
 
 feature -- Initialization
+
+	make_and_launch
+		do
+			create application
+			prepare
+			application.launch
+		end
+
+	application: EV_APPLICATION
 
 	prepare
 			-- Initialize world.
@@ -41,7 +43,7 @@ feature -- Initialization
 			create my_pixmap
 			my_pixmap.set_with_named_file ("car.png")
 
-			initialize_drawing_operations			
+			initialize_drawing_operations
 
 			create da_direct
 			da_direct.set_line_width (5)
@@ -59,12 +61,15 @@ feature -- Initialization
 
 			my_container.disable_item_expand(my_separator)
 
-			
+
 				-- Add widgets to our window
 			first_window.extend(my_container)
 
-			idle_actions.extend (agent on_idle_action)
+			application.add_idle_action (agent on_idle_action)
 			da_paint.expose_actions.extend (agent on_paint)
+
+			first_window.show
+			first_window.close_request_actions.extend (agent first_window.destroy_and_exit_if_last)
 		end
 
 	first_window: EV_TITLED_WINDOW
@@ -78,7 +83,7 @@ feature -- Initialization
 feature {NONE} -- Graphical interface
 
 	my_pixmap: EV_PIXMAP
- 
+
 	my_container: EV_HORIZONTAL_BOX
 			-- Container that groups the da.
 
@@ -90,7 +95,7 @@ feature {NONE} -- Graphical interface
 	da_paint: EV_DRAWING_AREA
 
 feature {NONE} -- Implementation
-	
+
 	on_paint(x, y, width, height: INTEGER)
 		do
 			draw (da_paint, Dominant_blue)
@@ -123,14 +128,14 @@ feature {NONE} -- Drawing Operations
 	draw_polyline (da: EV_DRAWING_AREA)
 		local
 			i: INTEGER
-			ev_coord: EV_COORDINATES
-			poly_coord: ARRAY [EV_COORDINATES]
+			ev_coord: EV_COORDINATE
+			poly_coord: ARRAY [EV_COORDINATE]
 			nb_summit: INTEGER
 			poly_closed: BOOLEAN
 			filled: BOOLEAN
 		do
 			nb_summit := get_random_int (10) + 2
-			
+
 			create poly_coord.make (0, nb_summit)
 
 				-- Draw the rectangle on the direct Drawing Area
@@ -160,7 +165,7 @@ feature {NONE} -- Drawing Operations
 			a_font.set_height (get_random_int(40)+8)
 			da.set_font (a_font)
 			da.draw_text (
-				get_random_x(da), 
+				get_random_x(da),
 				get_random_y(da),
 				"Text"
 				)
@@ -178,7 +183,7 @@ feature {NONE} -- Drawing Operations
 			is_segment: BOOLEAN
 		do
 			da.draw_pixmap (
-				get_random_x(da), 
+				get_random_x(da),
 				get_random_y(da),
 				my_pixmap
 				)
@@ -271,10 +276,10 @@ feature {NONE} -- Drawing Operations
 			end
 		end
 
-feature {NONE} -- Random Drawing 
+feature {NONE} -- Random Drawing
 
 	drawing_operations: ARRAY [PROCEDURE[DA_TEST,TUPLE]]
-	
+
 	initialize_drawing_operations
 		do
 			create drawing_operations.make (0, Number_drawing_operations)
@@ -360,7 +365,7 @@ feature {NONE} -- Random Implementation
 feature {NONE} -- Constants
 
 	Number_drawing_operations: INTEGER = 7
-	
+
 	Dominant_red, Dominant_blue, Dominant_green: INTEGER = unique;
 
 note

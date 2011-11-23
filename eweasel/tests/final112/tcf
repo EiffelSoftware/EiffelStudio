@@ -1,0 +1,20 @@
+
+test_name 	finalize-keep-once-strings
+test_description Finalizing a system with once strings in class invariants and keeping assertions crashes an assertion-enabled compiler with a precondition violation
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_final_keep
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+test_end

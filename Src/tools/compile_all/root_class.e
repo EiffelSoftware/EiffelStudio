@@ -57,6 +57,12 @@ feature {NONE} -- Implementation: results
 	internal_error_compilations_count: INTEGER
 			-- Count of internal error compilations
 
+	total_count: INTEGER
+			-- Total number of ECFs under processing. Only accurate at the end.
+		do
+			Result := passed_compilations_count + failed_compilations_count + ignored_compilations_count + internal_error_compilations_count
+		end
+
 	report_internal_error (a_action_mode: READABLE_STRING_8; a_target: CONF_TARGET)
 			-- Report tool internal error
 		do
@@ -147,7 +153,33 @@ feature {NONE} -- Implementation
 			process_directory (loc)
 
 			io.put_new_line
-			io.put_string ("Summary: passed("+ passed_compilations_count.out +") failed("+ failed_compilations_count.out +") ignored("+ ignored_compilations_count.out +")")
+			io.put_string ("Passed: ")
+			io.put_integer (passed_compilations_count)
+			io.put_string (" / ")
+			io.put_integer (total_count)
+			io.put_string ("  (")
+			io.put_integer (((passed_compilations_count / total_count) * 100).truncated_to_integer)
+			io.put_string ("%%)")
+			io.put_new_line
+
+			io.put_string ("Failed: ")
+			io.put_integer (failed_compilations_count)
+			io.put_string (" / ")
+			io.put_integer (total_count)
+			io.put_string ("  (")
+			io.put_integer (((failed_compilations_count / total_count) * 100).truncated_to_integer)
+			io.put_string ("%%)")
+			io.put_new_line
+
+			io.put_string ("Ignored: ")
+			io.put_integer (ignored_compilations_count)
+			io.put_string (" / ")
+			io.put_integer (total_count)
+			io.put_string ("  (")
+			io.put_integer (((ignored_compilations_count / total_count) * 100).truncated_to_integer)
+			io.put_string ("%%)")
+			io.put_new_line
+
 			io.put_new_line
 			if arguments.list_failures then
 				io.put_new_line

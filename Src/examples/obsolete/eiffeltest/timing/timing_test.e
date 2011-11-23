@@ -9,7 +9,7 @@ note
 
 class TIMING_TEST inherit
 
-	TEST_CASE
+	TEST_SIMPLE_CASE
 
 create
 

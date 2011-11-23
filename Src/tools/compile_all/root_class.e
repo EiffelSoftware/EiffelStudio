@@ -31,8 +31,10 @@ feature {NONE} -- Initialization
 			set_eiffel_layout (create {CAT_EIFFEL_ENV})
 			eiffel_layout.check_environment_variable
 
+			initialize_interface_texts
 				-- get arguments
 			create arguments.make
+
 			arguments.execute (agent start)
 		end
 
@@ -40,6 +42,9 @@ feature {NONE} -- Implementation
 
 	arguments: ARGUMENT_PARSER
 			-- Command line arguments.
+
+	base_location: detachable READABLE_STRING_8
+			-- Base location where to look for .ecf files.
 
 	ignores: HASH_TABLE [SEARCH_TABLE [STRING], STRING]
 			-- Ignored files/targets.
@@ -75,6 +80,8 @@ feature {NONE} -- Implementation
 			-- Starts application
 		require
 			arguments_attached: arguments /= Void
+		local
+			loc: READABLE_STRING_8
 		do
 			if arguments.ignore /= Void then
 				load_ignores (arguments.ignore)
@@ -82,7 +89,28 @@ feature {NONE} -- Implementation
 			if arguments.is_ecb then
 				execution_environment.set_variable_value ("EC_NAME", "ecb")
 			end
-			process_directory (arguments.location)
+			set_interface_texts_from_argument (arguments)
+			loc := arguments.location
+
+			set_base_location (loc)
+			io.put_string ("Base location: %"" + loc + "%"")
+			io.put_new_line
+			io.put_new_line
+			process_directory (loc)
+		end
+
+	set_base_location (loc: READABLE_STRING_8)
+		require
+			loc_not_empty: not loc.is_empty
+		local
+			sep: CHARACTER
+		do
+			sep := operating_environment.directory_separator
+			if loc.item (loc.count) /= sep then
+				base_location := loc + sep.out
+			else
+				base_location := loc
+			end
 		end
 
 	load_ignores (a_file: STRING)
@@ -237,14 +265,14 @@ feature {NONE} -- Implementation
 					across l_loader.last_system.compilable_targets as l_cursor loop
 						l_target := l_cursor.item
 						if l_target.setting_msil_generation and l_skip_dotnet then
-							output_action ("Target", l_target)
-							print ("Skipped")
+							output_action (interface_text_target, l_target)
+							output_status_skipped
 							io.new_line
 						elseif l_ignored_targets = Void or else not l_ignored_targets.has (l_target.name) then
 							process_target (l_target, a_dir)
 						else
-							output_action ("Target", l_target)
-							print ("Ignored")
+							output_action (interface_text_target, l_target)
+							output_status_ignored
 							io.new_line
 						end
 					end
@@ -336,7 +364,7 @@ feature {NONE} -- Implementation
 
 			l_system := a_target.system.name
 			l_target := a_target.name
-			output_action ("Parsing", a_target)
+			output_action (interface_text_parsing, a_target)
 
 			create l_vis.make_build (l_state, a_target, create {CONF_PARSE_FACTORY})
 			a_target.process (l_vis)
@@ -350,9 +378,9 @@ feature {NONE} -- Implementation
 						end (?, l_file))
 					l_file.close
 				end
-				print ("Failed")
+				output_status_failed
 			else
-				print ("Ok")
+				output_status_passed
 			end
 			io.new_line
 		end
@@ -417,15 +445,29 @@ feature {NONE} -- Implementation
 			end
 
 			if a_action.is_equal ("melt") then
-				l_action := "Melting"
+				l_action := interface_text_melting
 				l_args.extend ("-melt")
+				l_args.extend (arguments.melt_ec_options)
 			elseif a_action.is_equal ("freeze") then
-				l_action := "Freezing"
+				l_action := interface_text_freezing
 				l_args.extend ("-freeze")
+				l_args.extend (arguments.freeze_ec_options)
 			elseif a_action.is_equal ("finalize") then
-				l_action := "Finalizing"
+				l_action := interface_text_finalizing
 				l_args.extend ("-finalize")
+				l_args.extend (arguments.finalize_ec_options)
 			end
+
+			l_args.extend (arguments.ec_options)
+			debug
+				across
+					l_args as c
+				loop
+					print (c.item + " ")
+				end
+				print ("%N")
+			end
+
 			output_action (l_action, a_target)
 
 			create l_prc_factory
@@ -447,13 +489,13 @@ feature {NONE} -- Implementation
 			if l_prc_launcher.launched then
 				l_prc_launcher.wait_for_exit
 				if l_prc_launcher.exit_code = 0 then
-					print ("Ok")
+					output_status_passed
 					Result := True
 				else
-					print ("Failed")
+					output_status_failed
 				end
 			else
-				print ("InternalError")
+				output_status_internal_error
 			end
 			io.new_line
 		end
@@ -527,7 +569,86 @@ feature {NONE} -- Error handling
 			io.error.new_line
 		end
 
-feature {NONE} -- Output
+feature {NONE} -- Interface text
+
+	interface_output_action_template: READABLE_STRING_8
+
+	interface_text_target: READABLE_STRING_8
+
+	interface_text_error: READABLE_STRING_8
+	interface_text_passed: READABLE_STRING_8
+	interface_text_failed: READABLE_STRING_8
+	interface_text_ignored: READABLE_STRING_8
+	interface_text_skipped: READABLE_STRING_8
+
+	interface_text_parsing: READABLE_STRING_8
+	interface_text_melting: READABLE_STRING_8
+	interface_text_freezing: READABLE_STRING_8
+	interface_text_finalizing: READABLE_STRING_8
+
+	initialize_interface_texts
+			-- Initialize interface_text_* with default values
+		do
+			interface_output_action_template := "#action #system.#target (#ecf): "
+
+			interface_text_target := "Target"
+			interface_text_parsing := "Parsing"
+			interface_text_melting := "Melting"
+			interface_text_freezing := "Freezing"
+			interface_text_finalizing := "Finalizing"
+
+			interface_text_error := "error"
+			interface_text_passed := "passed"
+			interface_text_failed := "failed"
+			interface_text_ignored := "ignored"
+			interface_text_skipped := "skipped"
+		end
+
+	set_interface_texts_from_argument (args: like arguments)
+			-- Initialize interface_text_* with eventual values specified via the arguments
+		do
+			if attached arguments.interface_output_action_template as tpl then
+				interface_output_action_template := tpl
+			end
+
+			interface_text_target := args.interface_text ("Target")
+
+			interface_text_parsing := args.interface_text ("Parsing")
+			interface_text_melting := args.interface_text ("Melting")
+			interface_text_freezing := args.interface_text ("Freezing")
+			interface_text_finalizing := args.interface_text ("Finalizing")
+
+			interface_text_error := args.interface_text ("error")
+			interface_text_passed := args.interface_text ("passed")
+			interface_text_failed := args.interface_text ("failed")
+			interface_text_ignored := args.interface_text ("ignored")
+			interface_text_skipped := args.interface_text ("skipped")
+		end
+
+	output_status_internal_error
+		do
+			io.put_string (interface_text_error)
+		end
+
+	output_status_passed
+		do
+			io.put_string (interface_text_passed)
+		end
+
+	output_status_failed
+		do
+			io.put_string (interface_text_failed)
+		end
+
+	output_status_ignored
+		do
+			io.put_string (interface_text_ignored)
+		end
+
+	output_status_skipped
+		do
+			io.put_string (interface_text_skipped)
+		end
 
 	output_action (a_action: READABLE_STRING_8; a_target: CONF_TARGET)
 		local
@@ -541,24 +662,17 @@ feature {NONE} -- Output
 			l_uuid := l_system.uuid.out
 			l_target_name := a_target.name
 
-			create t.make_from_string (output_action_template)
+			create t.make_from_string (interface_output_action_template)
 			t.replace_substring_all ("#action", a_action)
 			t.replace_substring_all ("#system", l_system_name)
 			t.replace_substring_all ("#target", l_target_name)
 			t.replace_substring_all ("#uuid", l_uuid)
-			t.replace_substring_all ("#ecf", l_ecf)
-
-			print (t)
-		end
-
-	output_action_template: READABLE_STRING_8
-		once
-			if attached arguments.output_action_template as tpl then
-				Result := tpl
-			else
-				--| Default
-				Result := "#action #target from #system (#ecf)..."
+			t.replace_substring_all ("#absolute_ecf", l_ecf)
+			if attached base_location as loc and then l_ecf.starts_with (loc) then
+				t.replace_substring_all ("#ecf", l_ecf.substring (loc.count + 1, l_ecf.count))
 			end
+
+			io.put_string (t)
 		end
 
 feature {NONE} -- Directory manipulation

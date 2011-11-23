@@ -63,7 +63,9 @@ feature {NONE} -- Access
 			Result.extend (create {ARGUMENT_SWITCH}.make (freeze_switch, "Freeze the project?", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (finalize_switch, "Finalize the project?", True, False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (options_switch, "Comma separated option(s)", True, True, "key=value", "dotnet=(true|false)%N...", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (output_template_switch, "Output template to report progress", True, False, "template", "Template using any of: #action, #target, #uuid, #system, #ecf ", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (interface_switch, "Comma separated option(s) to customize the output", True, True,
+						"key=value",
+						"for instance key %"template%": using any of #action, #target, #uuid, #system, #ecf , #absolute_ecf variables %N...", False))
 		end
 
 feature -- Status Report
@@ -87,7 +89,7 @@ feature -- Access
 			if has_option (location_switch) then
 				Result := option_of_name (location_switch).value
 			else
-				Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory.as_attached
+				Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
 			end
 		ensure
 			location_not_void: Result /= Void
@@ -219,12 +221,26 @@ feature -- Access
 			Result := has_option (finalize_switch)
 		end
 
-	output_action_template: detachable READABLE_STRING_8
+feature -- Access: -interface
+
+	interface_output_action_template: detachable READABLE_STRING_8
 		once
-			if has_option (output_template_switch) then
-				Result := option_of_name (output_template_switch).value
+			if attached interface_item ("template") as s then
+				Result := s
 			end
 		end
+
+	interface_text (m: READABLE_STRING_8): READABLE_STRING_8
+			-- Value for -options text.`m'=value
+		do
+			if attached interface_item ("text." + m) as s then
+				Result := s
+			else
+				Result := m
+			end
+		end
+
+feature -- Access: -options		
 
 	skip_dotnet: BOOLEAN
 			-- Skip dotnet target?
@@ -232,56 +248,134 @@ feature -- Access
 			Result := options_has_false ("dotnet")
 		end
 
-	options_has_true (a_name: READABLE_STRING_8): BOOLEAN
+	ec_options: READABLE_STRING_8
+			-- 'ec' compiler option for any action
 		once
+			if attached options_item ("ec") as l_opt then
+				Result := l_opt
+			else
+				create {STRING_8} Result.make_empty
+			end
+		end
+
+	melt_ec_options: READABLE_STRING_8
+			-- 'ec' compiler option when melting
+		once
+			if attached options_item ("ec.melt") as l_opt then
+				Result := l_opt
+			else
+				create {STRING_8} Result.make_empty
+			end
+		end
+
+	freeze_ec_options: READABLE_STRING_8
+			-- 'ec' compiler option when freezing
+		once
+			if attached options_item ("ec.freeze") as l_opt then
+				Result := l_opt
+			else
+				create {STRING_8} Result.make_empty
+			end
+		end
+
+	finalize_ec_options: READABLE_STRING_8
+			-- 'ec' compiler option when finalizing
+		once
+			if attached options_item ("ec.finalize") as l_opt then
+				Result := l_opt
+			else
+				create {STRING_8} Result.make_empty
+			end
+		end
+
+feature {NONE} -- Implementation: -interface	
+
+	interface_item (a_name: READABLE_STRING_8): detachable READABLE_STRING_8
+		do
+			Result := interface_options.item (a_name.as_lower)
+		end
+
+	interface_options: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+		once
+			Result := concatenated_multiple_options (interface_switch, ',')
+		end
+
+feature {NONE} -- Implementation: -options		
+
+	options_has_true (a_name: READABLE_STRING_8): BOOLEAN
+		do
 			if attached options_item (a_name) as v then
 				Result := v.is_case_insensitive_equal ("true")
 			end
 		end
 
 	options_has_false (a_name: READABLE_STRING_8): BOOLEAN
-		once
+		do
 			if attached options_item (a_name) as v then
 				Result := v.is_case_insensitive_equal ("false")
 			end
 		end
 
 	options_item (a_name: READABLE_STRING_8): detachable READABLE_STRING_8
-		once
+		do
 			Result := options.item (a_name.as_lower)
 		end
 
 	options: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+		once
+			Result := concatenated_multiple_options (options_switch, ',')
+		end
+
+feature {NONE} -- Concatenated value for multiple switch		
+
+	concatenated_multiple_options (a_switch: READABLE_STRING_8; a_separator: CHARACTER): HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
 		local
+			sep: CHARACTER
 			s,k,v: STRING
 			p: INTEGER
-		once
+		do
 			if
-				has_option (options_switch) and then
-			 	attached options_of_name (options_switch) as lst and then not lst.is_empty
+				has_option (a_switch) and then
+			 	attached options_of_name (a_switch) as lst and then not lst.is_empty
 			then
 				create Result.make (lst.count)
+				Result.compare_objects
 				across
 					lst as lst_cursor
 				loop
 					if lst_cursor.item.has_value then
-						across
-							lst_cursor.item.value.split(',') as c
-						loop
-							s := c.item
-							s.left_adjust
-							s.right_adjust
-							p := s.index_of ('=', 1)
-							if p > 0 then
-								k := s.substring (1, p - 1)
-								k.right_adjust
-								v := s.substring (p + 1, s.count)
-								v.left_adjust
-								k.to_lower
-								Result.force (v, k)
+						s := lst_cursor.item.value
+						if not s.is_empty then
+								-- If first character is not alpha character, let's take it for separator
+							sep := s.item (1)
+							if sep.is_alpha then
+								sep := a_separator
 							else
-								s.to_lower
-								Result.force ("true", s)
+								s := s.substring (2, s.count)
+							end
+							across
+								s.split (sep) as c
+							loop
+								s := c.item
+								s.left_adjust
+								p := s.index_of ('=', 1)
+								if p > 0 then
+									k := s.substring (1, p - 1)
+									k.right_adjust
+									v := s.substring (p + 1, s.count)
+									if
+										not v.is_empty and then
+										v.item (1) = '"' and then
+										v.item (v.count) = '"'
+									then
+										v := v.substring (2, v.count - 1)
+									end
+									k.to_lower
+									Result.force (v, k)
+								else
+									s.to_lower
+									Result.force ("true", s)
+								end
 							end
 						end
 					end
@@ -309,7 +403,7 @@ feature {NONE} -- Switch names
 	freeze_switch: STRING = "freeze"
 	finalize_switch: STRING = "finalize"
 	options_switch: STRING = "options"
-	output_template_switch: STRING = "output_template"
+	interface_switch: STRING = "interface"
 	;
 
 note

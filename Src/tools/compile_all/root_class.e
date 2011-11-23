@@ -34,8 +34,56 @@ feature {NONE} -- Initialization
 			initialize_interface_texts
 				-- get arguments
 			create arguments.make
-
+			create failed_compilations.make
 			arguments.execute (agent start)
+		end
+
+feature {NONE} -- Implementation: results
+
+	failed_compilations: LINKED_LIST [TUPLE [log: detachable READABLE_STRING_8; ecf: READABLE_STRING_8; system: READABLE_STRING_8; target: READABLE_STRING_8; uuid: READABLE_STRING_8]]
+
+	failed_compilations_count: INTEGER
+			-- Count of failed compilations
+		do
+			Result := failed_compilations.count
+		end
+
+	passed_compilations_count: INTEGER
+			-- Count of passed compilations
+
+	ignored_compilations_count: INTEGER
+			-- Count of ignored compilations
+
+	internal_error_compilations_count: INTEGER
+			-- Count of internal error compilations
+
+	report_internal_error (a_action_mode: READABLE_STRING_8; a_target: CONF_TARGET)
+			-- Report tool internal error
+		do
+			internal_error_compilations_count := internal_error_compilations_count + 1
+		end
+
+	report_passed (a_action_mode: READABLE_STRING_8; a_target: CONF_TARGET)
+			-- Report passed compilation
+		do
+			passed_compilations_count := passed_compilations_count + 1
+		end
+
+	report_failed (a_action_mode: READABLE_STRING_8; a_target: CONF_TARGET)
+			-- Report failed compilation
+		local
+			l_logfn: detachable READABLE_STRING_8
+		do
+			if arguments.is_log_verbose then
+				l_logfn := logs_filename (a_action_mode, a_target)
+			end
+			failed_compilations.extend ([l_logfn, a_target.system.file_name, a_target.system.name, a_target.name, a_target.system.uuid.out])
+		end
+
+	report_ignored (a_ecf: READABLE_STRING_8; a_target: detachable CONF_TARGET)
+			-- Report skipped or ignored compilation
+		do
+			ignored_compilations_count := ignored_compilations_count + 1
 		end
 
 feature {NONE} -- Implementation
@@ -97,9 +145,30 @@ feature {NONE} -- Implementation
 			io.put_new_line
 			io.put_new_line
 			process_directory (loc)
+
+			io.put_new_line
+			io.put_string ("Summary: passed("+ passed_compilations_count.out +") failed("+ failed_compilations_count.out +") ignored("+ ignored_compilations_count.out +")")
+			io.put_new_line
+			if arguments.list_failures then
+				io.put_new_line
+				if failed_compilations_count > 0 then
+					io.put_string (failed_compilations_count.out + " failure(s):")
+					io.put_new_line
+					across
+						failed_compilations as c
+					loop
+						io.put_string (c.item.system + "-" + c.item.uuid + "-" + c.item.target + " (" + c.item.ecf + ")")
+						if attached c.item.log as l_logfn then
+							io.put_string (": " + l_logfn)
+						end
+						io.put_new_line
+					end
+				end
+			end
 		end
 
 	set_base_location (loc: READABLE_STRING_8)
+			-- Set `base_location' to `loc'
 		require
 			loc_not_empty: not loc.is_empty
 		local
@@ -266,12 +335,14 @@ feature {NONE} -- Implementation
 						l_target := l_cursor.item
 						if l_target.setting_msil_generation and l_skip_dotnet then
 							output_action (interface_text_target, l_target)
-							output_status_skipped
+							report_ignored (a_file, l_target)
+							output_status_ignored
 							io.new_line
 						elseif l_ignored_targets = Void or else not l_ignored_targets.has (l_target.name) then
 							process_target (l_target, a_dir)
 						else
 							output_action (interface_text_target, l_target)
+							report_ignored (a_file, Void)
 							output_status_ignored
 							io.new_line
 						end
@@ -378,19 +449,21 @@ feature {NONE} -- Implementation
 						end (?, l_file))
 					l_file.close
 				end
+				report_failed ("parse", a_target)
 				output_status_failed
 			else
+				report_passed (interface_text_parsing, a_target)
 				output_status_passed
 			end
 			io.new_line
 		end
 
-	compilation (a_action: STRING; a_clean: BOOLEAN;  a_target: CONF_TARGET; a_dir: STRING): BOOLEAN
-			-- Compile `a_target' located in `a_dir' according to `a_action' clean before compilation if `a_clean'.
+	compilation (a_action_mode: STRING; a_clean: BOOLEAN;  a_target: CONF_TARGET; a_dir: STRING): BOOLEAN
+			-- Compile `a_target' located in `a_dir' according to `a_action_mode' clean before compilation if `a_clean'.
 			-- and return True if compilation was Ok, and False if it failed.
 		require
-			a_action_ok: a_action /= Void and then (a_action.is_equal ("melt") or
-						a_action.is_equal ("freeze") or a_action.is_equal ("finalize"))
+			a_action_ok: a_action_mode /= Void and then (a_action_mode.same_string ("melt") or
+						a_action_mode.same_string ("freeze") or a_action_mode.same_string ("finalize"))
 			a_target_ok: a_target /= Void
 			a_dir_ok: a_dir /= Void and then not a_dir.is_empty
 		local
@@ -444,15 +517,15 @@ feature {NONE} -- Implementation
 				l_args.extend (compilation_directory (a_target, Void, a_dir))
 			end
 
-			if a_action.is_equal ("melt") then
+			if a_action_mode.is_equal ("melt") then
 				l_action := interface_text_melting
 				l_args.extend ("-melt")
 				l_args.extend (arguments.melt_ec_options)
-			elseif a_action.is_equal ("freeze") then
+			elseif a_action_mode.is_equal ("freeze") then
 				l_action := interface_text_freezing
 				l_args.extend ("-freeze")
 				l_args.extend (arguments.freeze_ec_options)
-			elseif a_action.is_equal ("finalize") then
+			elseif a_action_mode.is_equal ("finalize") then
 				l_action := interface_text_finalizing
 				l_args.extend ("-finalize")
 				l_args.extend (arguments.finalize_ec_options)
@@ -473,7 +546,7 @@ feature {NONE} -- Implementation
 			create l_prc_factory
 			l_prc_launcher := l_prc_factory.process_launcher (eiffel_layout.ec_command_name, l_args, Void)
 			if arguments.is_log_verbose then
-				l_file := logs_filename (a_action, a_target)
+				l_file := logs_filename (a_action_mode, a_target)
 				add_data_to_file (l_file, a_target.system.file_name, a_target.name)
 				l_prc_launcher.redirect_output_to_file (l_file)
 			else
@@ -489,12 +562,15 @@ feature {NONE} -- Implementation
 			if l_prc_launcher.launched then
 				l_prc_launcher.wait_for_exit
 				if l_prc_launcher.exit_code = 0 then
+					report_passed (a_action_mode, a_target)
 					output_status_passed
 					Result := True
 				else
+					report_failed (a_action_mode, a_target)
 					output_status_failed
 				end
 			else
+				report_internal_error (a_action_mode, a_target)
 				output_status_internal_error
 			end
 			io.new_line
@@ -515,13 +591,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	logs_filename (a_action: READABLE_STRING_8; a_target: CONF_TARGET): READABLE_STRING_8
+	logs_filename (a_action_mode: READABLE_STRING_8; a_target: CONF_TARGET): READABLE_STRING_8
 		require
 			is_log_verbose: arguments.is_log_verbose
 		local
 			l_logs_file_name: FILE_NAME
 		do
-			Result := a_target.system.name + "-" + a_target.system.uuid.out + "-" + a_target.name + "-" + a_action + ".log"
+			Result := a_target.system.name + "-" + a_target.system.uuid.out + "-" + a_target.name + "-" + a_action_mode + ".log"
 			if attached arguments.logs_dir as l_logs_dir then
 				create l_logs_file_name.make_from_string (l_logs_dir)
 				l_logs_file_name.set_file_name (Result)
@@ -579,7 +655,6 @@ feature {NONE} -- Interface text
 	interface_text_passed: READABLE_STRING_8
 	interface_text_failed: READABLE_STRING_8
 	interface_text_ignored: READABLE_STRING_8
-	interface_text_skipped: READABLE_STRING_8
 
 	interface_text_parsing: READABLE_STRING_8
 	interface_text_melting: READABLE_STRING_8
@@ -589,7 +664,7 @@ feature {NONE} -- Interface text
 	initialize_interface_texts
 			-- Initialize interface_text_* with default values
 		do
-			interface_output_action_template := "#action #system.#target (#ecf): "
+			interface_output_action_template := "#action #target from #system-#uuid (#ecf): "
 
 			interface_text_target := "Target"
 			interface_text_parsing := "Parsing"
@@ -601,7 +676,6 @@ feature {NONE} -- Interface text
 			interface_text_passed := "passed"
 			interface_text_failed := "failed"
 			interface_text_ignored := "ignored"
-			interface_text_skipped := "skipped"
 		end
 
 	set_interface_texts_from_argument (args: like arguments)
@@ -622,7 +696,6 @@ feature {NONE} -- Interface text
 			interface_text_passed := args.interface_text ("passed")
 			interface_text_failed := args.interface_text ("failed")
 			interface_text_ignored := args.interface_text ("ignored")
-			interface_text_skipped := args.interface_text ("skipped")
 		end
 
 	output_status_internal_error
@@ -645,12 +718,8 @@ feature {NONE} -- Interface text
 			io.put_string (interface_text_ignored)
 		end
 
-	output_status_skipped
-		do
-			io.put_string (interface_text_skipped)
-		end
-
 	output_action (a_action: READABLE_STRING_8; a_target: CONF_TARGET)
+			-- Display in the console the output progress report for compilations
 		local
 			l_system: CONF_SYSTEM
 			l_target_name, l_system_name, l_uuid, l_ecf: READABLE_STRING_8
@@ -668,6 +737,12 @@ feature {NONE} -- Interface text
 			t.replace_substring_all ("#target", l_target_name)
 			t.replace_substring_all ("#uuid", l_uuid)
 			t.replace_substring_all ("#absolute_ecf", l_ecf)
+			if arguments.is_log_verbose then
+				t.replace_substring_all ("#log_filename", logs_filename (a_action, a_target))
+			else
+				t.replace_substring_all ("#log_filename", "")
+			end
+
 			if attached base_location as loc and then l_ecf.starts_with (loc) then
 				t.replace_substring_all ("#ecf", l_ecf.substring (loc.count + 1, l_ecf.count))
 			end
@@ -705,6 +780,7 @@ feature {NONE} -- Directory manipulation
 		end
 
 	mkdir (d: DIRECTORY)
+			-- Create directory `d' recursively
 		do
 			if not d.exists then
 				d.recursive_create_dir
@@ -713,12 +789,14 @@ feature {NONE} -- Directory manipulation
 		end
 
 	directories_created_by_application: ARRAYED_LIST [READABLE_STRING_8]
+			-- List of directories created by this application execution
 		once
 			create Result.make (25)
 			Result.compare_objects
 		end
 
 	rmdir (d: DIRECTORY)
+			-- remove directory `d' if exists
 		do
 			if d.exists then
 				d.recursive_delete
@@ -726,6 +804,8 @@ feature {NONE} -- Directory manipulation
 		end
 
 	safe_rmdir (d: DIRECTORY)
+			-- remove directory only if created by this session
+			-- mainly to avoid removing user folders ...
 		do
 			if d.exists then
 				if directories_created_by_application.has (d.name) then

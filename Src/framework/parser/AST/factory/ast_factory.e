@@ -297,7 +297,7 @@ feature -- Access for Errors
 		require
 			a_type_attached: attached a_type
 		do
-			Result := create {SYNTAX_ERROR}.make (a_line, a_column, a_filename, "Errog VTGC1: Anchored types is are not allowed as a constraint:%N  %"" + a_type.dump + "%"")
+			Result := create {SYNTAX_ERROR}.make (a_line, a_column, a_filename, "Errog VTGC1: Anchored types are not allowed in a constraint:%N  %"" + a_type.dump + "%"")
 		end
 
 	new_vvok1_error (a_line: INTEGER; a_column: INTEGER; a_filename: STRING; a_once_as: FEATURE_AS): ERROR

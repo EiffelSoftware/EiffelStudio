@@ -11,8 +11,6 @@ class
 
 inherit
 	EV_DIALOG
-		export
-			{NONE} all
 		redefine
 			show_modal_to_window
 		end
@@ -98,7 +96,6 @@ feature {NONE} -- Implementation
 			ok_button: EV_BUTTON
 			cancel_button: EV_BUTTON
 			buttons_box: EV_HORIZONTAL_BOX
-			llabel: EV_LABEL
 		do
 				-- Create the dialog
 			default_create

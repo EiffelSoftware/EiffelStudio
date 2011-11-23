@@ -9,13 +9,20 @@ note
 class
 	EV_LIST_EXAMPLE
 
-inherit
-	EV_APPLICATION
 
 create
 	make_and_launch
 
 feature -- Initialization
+
+	make_and_launch
+		do
+			create application
+			prepare
+			application.launch
+		end
+
+	application: EV_APPLICATION
 
 	prepare
 			-- Initialize world.
@@ -68,19 +75,21 @@ feature -- Initialization
 				i > 50
 			loop
 				create an_item.make_with_text ("Item "+i.out)
+				an_item.select_actions.extend (agent report_selected (an_item))
+				an_item.deselect_actions.extend (agent report_selected (an_item))
 				my_list.extend (an_item)
 				i := i + 1
 			end
 
-			my_list.select_actions.extend (agent report_selected)
-			my_list.deselect_actions.extend (agent report_selected)
-
 			my_container.extend (my_list)
+			my_list.set_minimum_width (300)
+			my_container.disable_item_expand (my_list)
 			my_container.extend (my_label)
 
 				-- Add widgets to our window
 			first_window.extend(my_container)
-
+			first_window.close_request_actions.extend (agent first_window.destroy_and_exit_if_last)
+			first_window.show
 		end
 
 	first_window: EV_TITLED_WINDOW
@@ -97,14 +106,14 @@ feature {NONE} -- Graphical interface
 	my_label: EV_LABEL
 
 	my_combo: EV_COMBO_BOX
-	
+
 	my_menu: EV_MENU
- 
+
 	my_container: EV_HORIZONTAL_BOX
 			-- Container that groups the da.
 
 feature {NONE} -- Implementation
-	
+
 	exit_application
 			-- Quit the program
 		do
@@ -138,7 +147,7 @@ feature {NONE} -- Implementation
 			loop
 				label_string.append (selected_items.item.text)
 				label_string.append (", ")
-				if (i \\ 8) = 7 then 
+				if (i \\ 8) = 7 then
 					label_string.append ("%N")
 				end
 				selected_items.forth
@@ -180,13 +189,13 @@ feature {NONE} -- Implementation
 		end
 
 	enable_multiple_selection
-			-- Enable multiple selection 
+			-- Enable multiple selection
 		do
 			my_list.enable_multiple_selection
 		end
 
 	disable_multiple_selection
-			-- Disable multiple selection 
+			-- Disable multiple selection
 		do
 			my_list.disable_multiple_selection
 		end

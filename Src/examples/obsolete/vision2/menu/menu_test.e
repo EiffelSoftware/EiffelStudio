@@ -9,14 +9,19 @@ note
 class
 	MENU_TEST
 
-inherit
-	EV_APPLICATION
-
 create
 	make_and_launch
 
 feature -- Initialization
 
+	make_and_launch
+		do
+			create application
+			prepare
+			application.launch
+		end
+
+	application: EV_APPLICATION
 	bar: EV_MENU_BAR
 	file_menu, edit_menu, help_menu: EV_MENU
 	new_menu, save_menu, i1, i2, i3: EV_MENU
@@ -58,15 +63,11 @@ feature -- Initialization
 
 			create exit_menu.make_with_text ("Exit")
 			file_menu.extend (exit_menu)
-			exit_menu.press_actions.extend (agent on_exit)
-
-			create rgt.make_with_text ("radio group test")
-			file_menu.extend (rgt)
-			rgt.press_actions.extend (agent on_radio_test)
+			exit_menu.select_actions.extend (agent on_exit)
 
 			create rgt.make_with_text ("Insert separator in help-menu")
 			file_menu.extend (rgt)
-			rgt.press_actions.extend (agent annoy)
+			rgt.select_actions.extend (agent annoy)
 
 			create edit_menu.make_with_text ("Edit-a-bit-too-longggg")
 			bar.extend (edit_menu)
@@ -108,12 +109,10 @@ feature -- Initialization
 --			i4.set_pixmap (pix)
 			i3.extend (i4)
 
-			create sd
-			sd.ok_actions.extend (agent on_ok)
-			create si
-			si.set_text ("Dialog inside dialog.")
-
 			io.put_string (test_radio_grouping.out + "%N")
+
+			first_window.close_request_actions.extend (agent first_window.destroy_and_exit_if_last)
+			first_window.show
 		end
 
 	test_radio_grouping: BOOLEAN
@@ -129,41 +128,41 @@ feature -- Initialization
 			create hsa
 			hb.extend (hsa)
 			create rb.make_with_text ("radio1")
-			rb.press_actions.extend (agent on_radio_test (rb))
+			rb.select_actions.extend (agent on_radio_test (rb))
 			hsa.extend (rb)
 			create rb.make_with_text ("radio2")
-			rb.press_actions.extend (agent on_radio_test (rb))
+			rb.select_actions.extend (agent on_radio_test (rb))
 			hsa.extend (rb)
 			create rb.make_with_text ("radio3")
-			rb.press_actions.extend (agent on_radio_test (rb))
+			rb.select_actions.extend (agent on_radio_test (rb))
 			hsa.extend (rb)
 
 			create hsb
 			hb.extend (hsb)
 			create rb.make_with_text ("TV1")
-			rb.press_actions.extend (agent on_radio_test (rb))
+			rb.select_actions.extend (agent on_radio_test (rb))
 			hsb.extend (rb)
 			create rb.make_with_text ("TV2")
-			rb.press_actions.extend (agent on_radio_test (rb))
+			rb.select_actions.extend (agent on_radio_test (rb))
 			hsb.extend (rb)
 			create rb.make_with_text ("TV3")
-			rb.press_actions.extend (agent on_radio_test (rb))
+			rb.select_actions.extend (agent on_radio_test (rb))
 			hsb.extend (rb)
 
 			create hsc
 			hb.extend (hsc)
 			create rb.make_with_text ("a1")
-			rb.press_actions.extend (agent on_radio_test (rb))
+			rb.select_actions.extend (agent on_radio_test (rb))
 			hsc.extend (rb)
 			create rb.make_with_text ("a2")
-			rb.press_actions.extend (agent on_radio_test (rb))
+			rb.select_actions.extend (agent on_radio_test (rb))
 			hsc.extend (rb)
 
 			hsb.merge_radio_button_groups (hsa)
 			hsb.merge_radio_button_groups (hsc)
 			hsb.merge_radio_button_groups (hsc)
 
-			Result := rb.peers.count = 8		
+			Result := rb.peers.count = 8
 		end
 
 	sd: EV_FILE_OPEN_DIALOG
@@ -171,7 +170,9 @@ feature -- Initialization
 
 	on_ok
 		do
-			si.show_modal
+			create si
+			si.set_text ("Dialog inside dialog.")
+			si.show_modal_to_window (first_window)
 		end
 
 	on_exit
@@ -180,7 +181,7 @@ feature -- Initialization
 		do
 			create q
 			q.set_text ("Are you sure you want to quit this nice menu-test program?????")
-			q.show_modal
+			q.show_modal_to_window (first_window)
 			if q.selected_button.is_equal ("Yes") then
 				first_window.destroy
 			end
@@ -194,7 +195,9 @@ feature -- Initialization
 
 	annoy
 		do
-			sd.show_modal
+			create sd
+			sd.open_actions.extend (agent on_ok)
+			sd.show_modal_to_window (first_window)
 		end
 
 	first_window: EV_TITLED_WINDOW

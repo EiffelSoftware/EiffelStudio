@@ -9,13 +9,19 @@ note
 class
 	FAKE_EVENT_EXAMPLE
 
-inherit
-	EV_APPLICATION
-
 create
 	make_and_launch
 
 feature -- Initialization
+
+	make_and_launch
+		do
+			create application
+			prepare
+			application.launch
+		end
+
+	application: EV_APPLICATION
 
 	prepare
 			-- Initialization.
@@ -26,6 +32,8 @@ feature -- Initialization
 			create timer
 			timer.actions.extend (agent on_timer)
 			timer.set_interval (200)
+			first_window.show
+			first_window.close_request_actions.extend (agent first_window.destroy_and_exit_if_last)
 		end
 
 	first_window: EV_TITLED_WINDOW
@@ -74,11 +82,11 @@ feature {NONE} -- Implementation
 		end
 
 	led_state: INTEGER
-		-- Current Led state: 
+		-- Current Led state:
 		--	0 = NumLock activated
 		--	1 = CapsLocl activated
 		--	2 = ScrollLock activated
-	
+
 feature {NONE} -- Constants
 
 	Key_constants: EV_KEY_CONSTANTS

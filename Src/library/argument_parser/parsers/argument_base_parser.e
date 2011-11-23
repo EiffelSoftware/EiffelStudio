@@ -2155,6 +2155,20 @@ feature {NONE} -- Internationalization
 	e_invalid_switch_value_with_reason: STRING = "'{1}' is an invalid option for switch '{2}'.%N{3}"
 	e_invalid_non_switched_value_with_reason: STRING = "'{1}' is an invalid option.%N{2}"
 
+	e_unreconized_switch_error: STRING
+		obsolete
+			"Use e_unrecognized_switch_error which corrects the typo [2011-nob-23]"
+		once
+			Result := e_unrecognized_switch_error
+		end
+
+	e_switch_group_unreconized_error: STRING
+		obsolete
+			"Use e_switch_group_unrecognized_error which corrects the typo [2011-nob-23]"
+		once
+			Result := e_switch_group_unrecognized_error
+		end
+
 feature {NONE} -- Implementation: Query
 
 	internal_option_of_name (a_name: READABLE_STRING_8): detachable ARGUMENT_OPTION

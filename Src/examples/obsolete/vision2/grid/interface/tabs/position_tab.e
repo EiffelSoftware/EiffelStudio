@@ -11,7 +11,7 @@ class
 
 inherit
 	POSITION_TAB_IMP
-	
+
 	GRID_ACCESSOR
 		undefine
 			copy, default_create, is_equal
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 				last_visible_column_label.set_text ("Last Visible Column Void")
 			end
 		end
-		
+
 	display_viewable_width
 			--
 		do
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 				display_last_visible_row
 			end
 		end
-		
+
 	virtual_x_position_changed (a_value: INTEGER)
 			-- Called by `change_actions' of `virtual_x_position'.
 		do
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 				drawable.redraw
 			end
 		end
-		
+
 	drawable_exposed (a_x, a_y, a_width, a_height: INTEGER)
 			-- Called by `expose_actions' of `drawable'.
 		local
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 				top := (drawable.height - (virtual_height / scale).truncated_to_integer) // 2
 				right := drawable.width
 				bottom := (virtual_height / scale).truncated_to_integer
-				
+
 			else
 				scale := virtual_height / drawable.height
 				left := (drawable.width - (virtual_width / scale).truncated_to_integer) // 2
@@ -205,12 +205,12 @@ feature {NONE} -- Implementation
 			drawable.set_foreground_color (stock_colors.red)
 			drawable.draw_rectangle (left + ((grid.virtual_x_position) / scale).truncated_to_integer, (top + (grid.virtual_y_position) / scale).truncated_to_integer, (grid.viewable_width / scale).truncated_to_integer, (grid.viewable_height / scale).truncated_to_integer)
 		end
-		
-	scale: REAL
+
+	scale: REAL_64
 		-- Last computed scaling factor.
-	
+
 	left, right, top, bottom: INTEGER
-		
+
 	pointed_moved_on_drawable (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Called by `pointer_motion_actions' of `drawable'.
 		local
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 				drawable.redraw
 			end
 		end
-	
+
 	drawable_resized (a_x, a_y, a_width, a_height: INTEGER)
 			-- Called by `resize_actions' of `drawable'.
 		do
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 				display_viewable_Y_offset
 			end
 		end
-		
+
 	button_pressed_on_drawable (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Called by `pointer_button_press_actions' of `drawable'.
 		do
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 				moving := True
 			end
 		end
-	
+
 	button_released_on_drawable (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Called by `pointer_button_release_actions' of `drawable'.
 		do
@@ -262,11 +262,11 @@ feature {NONE} -- Implementation
 				moving := False
 			end
 		end
-		
+
 	moving: BOOLEAN
-		
+
 	last_x, last_y: INTEGER
-	
+
 	press_x, press_y: INTEGER;
 
 note

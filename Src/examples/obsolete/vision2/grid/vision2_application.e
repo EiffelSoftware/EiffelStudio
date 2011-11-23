@@ -11,22 +11,20 @@ class
 
 inherit
 	EV_APPLICATION
-	
+
 	GRID_ACCESSOR
-		rename
-			launch as environment_launch
 		undefine
 			default_create, is_equal, copy
 		end
 
 	PROFILING_SETTING
 		undefine
-			default_Create, is_equal, copy
+			default_create, is_equal, copy
 		end
 
 create
 	make_and_launch
-	
+
 feature {NONE} -- Initialization
 
 	make_and_launch

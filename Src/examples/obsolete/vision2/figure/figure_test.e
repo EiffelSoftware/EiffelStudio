@@ -10,22 +10,23 @@ class
 	FIGURE_TEST
 
 inherit
-	EV_APPLICATION
-
 	EV_FONT_CONSTANTS
-		undefine
-			default_create
-		end
 
 	EV_DRAWABLE_CONSTANTS
-		undefine
-			default_create
-		end
 
 create
 	make_and_launch
 
 feature -- Initialization
+
+	make_and_launch
+		do
+			create application
+			prepare
+			application.launch
+		end
+
+	application: EV_APPLICATION
 
 	prepare
 			-- Initialize world.
@@ -82,8 +83,7 @@ feature -- Initialization
 
 			create picture
 			create pixmap
-			create f.make_open_read ("c:\eiffel46\bench\bitmaps\bmp\isepower.bmp")
-			pixmap.set_with_file (f)
+			pixmap.set_with_named_file ("logo.png")
 			picture.set_pixmap (pixmap)
 			picture.point.set_origin (my_world.point)
 			picture.point.set_position (200, 200)
@@ -92,25 +92,27 @@ feature -- Initialization
 			create text
 			text.set_text ("EV_FIGURE_TEXT")
 			text.font.set_height (40)
-			text.font.set_family (Ev_font_family_roman)
+			text.font.set_family ({EV_FONT_CONSTANTS}.family_roman)
 			text.point.set_origin (my_world.point)
 			text.point.set_position (20, 250)
 			my_world.extend (text)
 
 			-- This is where it all comes together:
-			create my_device
-			first_window.extend (my_device)
-			my_device.set_minimum_size (300, 300)
+			create drawing_area
+			first_window.extend (drawing_area)
+			drawing_area.set_minimum_size (300, 300)
 
-			my_device.draw_pixmap (0, 0, pixmap)
+			drawing_area.draw_pixmap (0, 0, pixmap)
 
-			my_device.expose_actions.extend (agent on_repaint)
-			my_device.pointer_motion_actions.extend (agent on_mouse_move)
-			my_device.pointer_button_press_actions.extend (agent on_click)
+			drawing_area.expose_actions.extend (agent on_repaint)
+			drawing_area.pointer_motion_actions.extend (agent on_mouse_move)
+			drawing_area.pointer_button_press_actions.extend (agent on_click)
 
 			-- Bind the world and the device and you're all set.
-			create projector.make (my_world, my_device)
-			projector.device.draw_figure_line (line)
+			create projector.make (my_world, drawing_area)
+
+			first_window.close_request_actions.extend (agent first_window.destroy_and_exit_if_last)
+			first_window.show
 		end
 
 	first_window: EV_TITLED_WINDOW
@@ -166,7 +168,7 @@ feature -- Initialization
 feature -- Access
 
 	my_world: EV_FIGURE_WORLD
-	my_device: EV_DRAWING_AREA
+	drawing_area: EV_DRAWING_AREA
 
 	dot: EV_FIGURE_DOT
 	ellipse: EV_FIGURE_ELLIPSE
@@ -178,14 +180,14 @@ feature -- Access
 	polyline: EV_FIGURE_POLYLINE
 	polygon: EV_FIGURE_POLYGON
 	eql: EV_FIGURE_EQUILATERAL
-	triangle: EV_FIGURE_TRIANGLE
+	triangle: EV_FIGURE_RECTANGLE
 	picture: EV_FIGURE_PICTURE
 
 	controlled_position: EV_RELATIVE_POINT
 			-- By moving this position, we move the rectangle
 			-- and resize the ellipse.
 
-	projector: EV_STANDARD_PROJECTION;
+	projector: EV_DRAWING_AREA_PROJECTOR;
 			-- The "link" between the world and the drawing area.
 
 note

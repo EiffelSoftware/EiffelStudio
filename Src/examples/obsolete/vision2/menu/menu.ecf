@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="hello_world" uuid="9C1BA64D-20EA-40F3-85AD-DAB5BE5B6AEA">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd" name="menu" uuid="D91A8AFF-1492-4F93-B9BD-00A41EED0B48">
 	<target name="classic">
-		<root cluster="root_cluster" class="HELLO_WORLD" feature="make"/>
-		<option warning="true">
+		<root cluster="root_cluster" class="MENU_TEST" feature="make_and_launch"/>
+		<option warning="true" is_attached_by_default="false" syntax="transitional">
 			<assertions precondition="true"/>
 		</option>
 		<precompile name="vision2_pre" location="$ISE_PRECOMP\vision2.ecf"/>

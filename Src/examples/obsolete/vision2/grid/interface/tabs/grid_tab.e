@@ -11,17 +11,17 @@ class
 
 inherit
 	GRID_TAB_IMP
-	
+
 	GRID_ACCESSOR
 		undefine
 			copy, default_create, is_equal
 		end
-		
+
 	PROFILING_SETTING
 		undefine
 			copy, default_create, is_equal
 		end
-	
+
 feature {NONE} -- Initialization
 
 	user_initialization
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 		do
 			grid.set_dynamic_content_function (agent compute_item)
 			add_default_colors_to_combo (set_background_color_combo)
-			
+
 				-- Now load pixmaps for exapnd/collapse nodes.
 			expand1 := grid.expand_node_pixmap
 			collapse1 := grid.collapse_node_pixmap
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			f_name.extend ("icon_bpdisabled.png")
 			create collapse2
 			collapse2.set_with_named_file (f_name)
-			
+
 			create f_name.make_from_string (current_working_directory)
 			f_name.extend ("large_expand.png")
 			create expand3
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			f_name.extend ("large_collapse.png")
 			create collapse3
 			collapse3.set_with_named_file (f_name)
-			
+
 			create list_item.make_with_text ("9x9")
 			list_item.set_pixmap (expand1)
 			subnode_pixmaps_combo.extend (list_item)
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 			select_color_from_combo (foreground_color_combo, grid.foreground_color)
 			select_color_from_combo (separator_color_combo, grid.separator_color)
 		end
-		
+
 	expand1, expand2, expand3, collapse1, collapse2, collapse3: EV_PIXMAP
 		-- Pixmaps used for expand/collapse nodes
 
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			create new_label_item_dialog
 			new_label_item_dialog.show_relative_to_window (main_window)
 		end
-		
+
 	is_vertical_divider_displayed_button_selected
 			-- Called by `select_actions' of `is_vertical_divider_displayed_button'.
 		do
@@ -123,19 +123,19 @@ feature {NONE} -- Implementation
 				is_vertical_divider_solid_button.disable_sensitive
 			end
 		end
-		
+
 	is_vertical_divider_solid_button_selected
 			-- Called by `select_actions' of `is_vertical_divider_solid_button'.
 		do
 			grid.enable_solid_resizing_divider
 		end
-	
+
 	is_vertical_divider_dashed_button_selected
 			-- Called by `select_actions' of `is_vertical_divider_dashed_button'.
 		do
 			grid.disable_solid_resizing_divider
 		end
-		
+
 	is_horizontal_scrolling_per_item_selected
 			-- Called by `select_actions' of `is_horizontal_scrolling_per_item'.
 		do
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 				grid.disable_horizontal_scrolling_per_item
 			end
 		end
-	
+
 	is_vertical_scrolling_per_item_selected
 			-- Called by `select_actions' of `is_vertical_scrolling_per_item'.
 		do
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 				grid.disable_vertical_scrolling_per_item
 			end
 		end
-		
+
 	is_row_height_fixed_selected
 			-- Called by `select_actions' of `is_row_height_fixed'.
 		do
@@ -167,13 +167,13 @@ feature {NONE} -- Implementation
 				fixed_row_height_spin_button.disable_sensitive
 			end
 		end
-	
+
 	fixed_row_height_spin_button_changed (a_value: INTEGER)
 			-- Called by `change_actions' of `fixed_row_height_spin_button'.
 		do
 			grid.set_row_height (a_value)
 		end
-		
+
 	is_partially_dynamic_selected
 			-- Called by `select_actions' of `is_partically_dynamic'.
 		do
@@ -196,13 +196,13 @@ feature {NONE} -- Implementation
 				resize_columns_to_entry.disable_sensitive
 			end
 		end
-	
+
 	resize_columns_to_entry_selected (a_value: INTEGER)
 			-- Called by `change_actions' of `resize_columns_to_entry'.
 		do
 			grid.set_column_count_to (a_value)
 		end
-		
+
 	resize_row_to_button_selected
 			-- Called by `select_actions' of `resize_rows_to_button'.
 		do
@@ -213,13 +213,13 @@ feature {NONE} -- Implementation
 				resize_rows_to_entry.disable_sensitive
 			end
 		end
-	
+
 	resize_rows_to_entry_changed (a_value: INTEGER)
 			-- Called by `change_actions' of `resize_rows_to_entry'.
 		do
 			grid.set_row_count_to (a_value)
 		end
-		
+
 	add_items (an_xcount, a_ycount: INTEGER)
 			--
 		local
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 				l_ycount := l_ycount + 1
 			end
 		end
-		
+
 	reset_grid
 			-- Reset grid from one test to another.
 		do
@@ -275,8 +275,8 @@ feature {NONE} -- Implementation
 				redraw_timer := Void
 			end
 		end
-		
-		
+
+
 	misc_button_selected
 			-- Called by `select_actions' of `misc_button'.
 		local
@@ -339,7 +339,7 @@ feature {NONE} -- Implementation
 			grid.insert_new_row (110)
 			grid.set_item (3, 110, create {EV_GRID_LABEL_ITEM}.make_with_text ("Deep subnode"))
 			grid.row (109).add_subrow (grid.row (110))
-			
+
 			from
 				counter := 111
 			until
@@ -400,10 +400,10 @@ feature {NONE} -- Implementation
 				grid.insert_new_row (counter + 1)
 				grid.set_item (1, counter + 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Subnode"))
 				grid.row (150).add_subrow (grid.row (counter + 1))
-				
+
 				counter := counter + 1
 			end
-			
+
 				-- Now perform a heavy test of the vertical tree lines.
 			from
 				counter := 160
@@ -476,9 +476,9 @@ feature {NONE} -- Implementation
 			current_row := grid.row (38)
 			current_row.clear
 			current_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Show Font Sizes"))
-			
+
 			grid.insert_new_rows_parented (15, current_row.index + 1, current_row)
-			
+
 			from
 				counter := 1
 			until
@@ -553,7 +553,7 @@ feature {NONE} -- Implementation
 				stop_profiling
 			end
 		end
-		
+
 	resize_column (an_x, a_y, a_button: INTEGER; d1, d2, d3: DOUBLE; i1, i2, a_column_index: INTEGER)
 			--
 		do
@@ -563,8 +563,8 @@ feature {NONE} -- Implementation
 				grid.column (a_column_index).resize_to_content
 			end
 		end
-		
-		
+
+
 	build_ball_demo_button_selected
 			-- Called by `select_actions' of `build_ball_demo_button'.
 		local
@@ -636,8 +636,8 @@ feature {NONE} -- Implementation
 			current_row.expand_actions.extend (agent start_ball_animation)
 			current_row.collapse_actions.extend (agent end_ball_animation)
 		end
-		
-	validate_text (a_text: STRING): BOOLEAN
+
+	validate_text (a_text: STRING_32): BOOLEAN
 			--
 		do
 			if a_text.is_integer then
@@ -655,9 +655,9 @@ feature {NONE} -- Implementation
 
 	balls: INTEGER
 
-	ball_x_vel, ball_y_vel: ARRAY [REAL]
+	ball_x_vel, ball_y_vel: ARRAY [REAL_64]
 
-	ball_x, ball_y: ARRAY [REAL]
+	ball_x, ball_y: ARRAY [REAL_64]
 
 	start_ball_animation
 			--
@@ -665,10 +665,10 @@ feature {NONE} -- Implementation
 			counter: INTEGER
 			random: RANDOM
 			l_start_x, l_start_y: INTEGER
-			i, j: REAL
+			i, j: REAL_64
 			random_counter: INTEGER
 			time1, time2: DATE_TIME
-			fine_seconds: REAL
+			fine_seconds: REAL_64
 		do
 			create random.make
 			create redraw_timer.make_with_interval (20)
@@ -728,7 +728,7 @@ feature {NONE} -- Implementation
 			grid_item: EV_GRID_ITEM
 			grid_item_column_index, grid_item_row_index: INTEGER
 			next_item: EV_GRID_DRAWABLE_ITEM
-			l_ball_x, l_ball_y, l_ball_x_vel, l_ball_y_vel: REAL
+			l_ball_x, l_ball_y, l_ball_x_vel, l_ball_y_vel: REAL_64
 			counter: INTEGER
 			previous_row: EV_GRID_ROW
 			previous_column: EV_GRID_COLUMN
@@ -826,8 +826,8 @@ feature {NONE} -- Implementation
 				grid_item.redraw
 			end
 		end
-		
-		
+
+
 	end_ball_animation
 			--
 		do
@@ -838,7 +838,7 @@ feature {NONE} -- Implementation
 				redraw_timer.destroy
 			end
 		end
-		
+
 	ball_animation_timer, ball_redraw_timer: EV_TIMEOUT
 
 	draw_ellipse (drawable: EV_DRAWABLE; an_item: EV_GRID_DRAWABLE_ITEM)
@@ -858,13 +858,13 @@ feature {NONE} -- Implementation
 			drawable.set_foreground_color (grid.foreground_color)
 			drawable.draw_ellipse (0, 0, an_item.width, an_item.height)
 		end
-		
+
 	draw_ellipse_with_balls (drawable: EV_DRAWABLE; an_item: EV_GRID_DRAWABLE_ITEM)
 			--
 		local
 			l_virtual_x, l_virtual_y: INTEGER
 			counter: INTEGER
-			l_ball_x, l_ball_y: REAL
+			l_ball_x, l_ball_y: REAL_64
 		do
 			drawable.set_foreground_color (grid.background_color)
 			drawable.fill_rectangle (0, 0, an_item.width, an_item.height)
@@ -895,7 +895,7 @@ feature {NONE} -- Implementation
 					l_ball_y + ball_width >= l_virtual_y and l_ball_y < l_virtual_y + an_item.height then
 					drawable.set_foreground_color (red)
 					drawable.fill_ellipse (l_ball_x.truncated_to_integer - l_virtual_x, l_ball_y.truncated_to_integer - l_virtual_y, ball_width, ball_width) --draw_point (ball_x - an_item.virtual_x_position, ball_y - an_item.virtual_y_position)
-					drawable.set_foreground_color (grid.foreground_color)					
+					drawable.set_foreground_color (grid.foreground_color)
 					drawable.draw_ellipse (l_ball_x.truncated_to_integer - l_virtual_x, l_ball_y.truncated_to_integer - l_virtual_y, ball_width, ball_width)
 				end
 				counter := counter + 1
@@ -917,7 +917,7 @@ feature {NONE} -- Implementation
 				combo_item.activate
 			end
 		end
-		
+
 
 	animate
 			--
@@ -964,14 +964,14 @@ feature {NONE} -- Implementation
 			layout.set_text_x (x.truncated_to_integer)
 			layout.set_text_y (y.truncated_to_integer + an_item.pixmap.height)
 		end
-		
+
 
 	x, y: REAL
 
 	x_vel, y_vel: REAL
 
 	animating: BOOLEAN
-		
+
 
 	start_animation
 			--
@@ -984,7 +984,7 @@ feature {NONE} -- Implementation
 			y_vel := 8
 			animating := True
 		end
-		
+
 	animation_timer, redraw_timer: EV_TIMEOUT
 
 	motion_on_grid (an_x, a_y: INTEGER; an_item: EV_GRID_ITEM)
@@ -998,7 +998,7 @@ feature {NONE} -- Implementation
 				start_animation
 			end
 		end
-		
+
 	compute_item (an_x, a_y: INTEGER): EV_GRID_ITEM
 			--
 		local
@@ -1015,7 +1015,7 @@ feature {NONE} -- Implementation
 				Result := drawable_item
 			end
 		end
-		
+
 	draw_grid_item (drawable: EV_DRAWABLE; an_item: EV_GRID_ITEM)
 			--
 		local
@@ -1032,7 +1032,7 @@ feature {NONE} -- Implementation
 			drawable.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (((virtual_y + virtual_x).abs // 8) \\ 255, ((virtual_y + virtual_x).abs // 8) \\ 255, ((virtual_y + virtual_x).abs // 8) \\ 255))
 			drawable.fill_ellipse (0, 0, an_item.width, an_item.height)
 		end
-		
+
 	set_selected_row_as_subnode_button_selected
 			-- Called by `select_actions' of `set_selected_row_as_subnode_button'.
 		local
@@ -1061,12 +1061,12 @@ feature {NONE} -- Implementation
 		do
 			grid.set_subrow_indent (a_value)
 		end
-		
+
 	set_background_color_button_selected
 			-- Called by `select_actions' of `set_background_color_button'.
 		do
 		end
-	
+
 	set_background_color_combo_selected
 			-- Called by `select_actions' of `set_background_color_combo'.
 		local
@@ -1090,7 +1090,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	subnode_pixmaps_combo_selected
 			-- Called by `select_actions' of `subnode_pixmaps_combo'.
 		local
@@ -1105,13 +1105,13 @@ feature {NONE} -- Implementation
 				grid.set_node_pixmaps (expand3, collapse3)
 			end
 		end
-		
+
 	expand_all_button_selected
 			-- Called by `select_actions' of `expand_all_button'.
 		local
 			counter: INTEGER
 			current_row: EV_GRID_ROW
-			time1, time2: DATE_TIME	
+			time1, time2: DATE_TIME
 		do
 			create time1.make_now
 			if profile_cell.item then
@@ -1124,7 +1124,7 @@ feature {NONE} -- Implementation
 			loop
 				current_row := grid.row (counter)
 				if current_row.subrow_count > 0 then
-					current_row.expand			
+					current_row.expand
 				end
 				counter := counter + 1
 			end
@@ -1134,7 +1134,7 @@ feature {NONE} -- Implementation
 			create time2.make_now
 			set_status_message (("Expanded all in : " + ((time2.fine_second - time1.fine_second).out)))
 		end
-	
+
 	collapse_all_button_selected
 			-- Called by `select_actions' of `collapse_all_button'.
 		local
@@ -1148,12 +1148,12 @@ feature {NONE} -- Implementation
 			loop
 				current_row := grid.row (counter)
 				if current_row.subrow_count > 0 then
-					current_row.collapse			
+					current_row.collapse
 				end
 				counter := counter + 1
 			end
 		end
-		
+
 	tree_lines_enabled_selected
 			-- Called by `select_actions' of `tree_lines_enabled'.
 		do
@@ -1163,7 +1163,7 @@ feature {NONE} -- Implementation
 				grid.hide_tree_node_connectors
 			end
 		end
-		
+
 	remove_rows (x_pos, y_pos, a_button: INTEGER; an_item: EV_GRID_ITEM)
 			--
 		local
@@ -1172,15 +1172,15 @@ feature {NONE} -- Implementation
 			start_profiling
 			if an_item /= Void then
 				create time1.make_now
-				if an_item.column.index = 1 then				
-					from			
+				if an_item.column.index = 1 then
+					from
 					until
 						grid.row_count = 0
 					loop
 						grid.remove_row (1)
 					end
 				elseif an_item.column.index = 2 then
-					from			
+					from
 					until
 						grid.row_count = 0
 					loop
@@ -1194,9 +1194,9 @@ feature {NONE} -- Implementation
 			end
 			stop_profiling
 		end
-		
+
 	edge_size: INTEGER = 2
-		
+
 	press_resize (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM)
 			--
 		local
@@ -1205,7 +1205,7 @@ feature {NONE} -- Implementation
 		do
 			if an_item /= Void and a_button = 1 then
 				item_y := an_item.virtual_y_position
-				if (a_y >= item_y and (a_y - item_y < edge_size)) then			
+				if (a_y >= item_y and (a_y - item_y < edge_size)) then
 					resizing_row := grid.row (an_item.row.index - 1)
 					relative_row_pos := a_y - item_y + resizing_row.height
 					grid.enable_capture
@@ -1215,7 +1215,7 @@ feature {NONE} -- Implementation
 					grid.enable_capture
 				end
 				item_x := an_item.virtual_x_position
-				if (an_x >= item_x and (an_x - item_x < edge_size)) then			
+				if (an_x >= item_x and (an_x - item_x < edge_size)) then
 					resizing_column := grid.column (an_item.column.index - 1)
 					relative_column_pos := an_x - item_x + resizing_column.width
 					grid.enable_capture
@@ -1226,53 +1226,53 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	sizens_cursor: EV_CURSOR
 			--
 		once
 			Result := (create {EV_STOCK_PIXMAPS}).sizens_cursor
 		end
-		
+
 	sizewe_cursor: EV_CURSOR
 			--
 		once
 			Result := (create {EV_STOCK_PIXMAPS}).sizewe_cursor
 		end
-		
+
 	standard_cursor: EV_CURSOR
 			--
 		once
 			Result := (create {EV_STOCK_PIXMAPS}).standard_cursor
 		end
-		
+
 	Sizenwse_cursor: EV_CURSOR
 			--
 		once
 			Result := (create {EV_STOCK_PIXMAPS}).Sizenwse_cursor
 		end
-		
+
 	Sizenesw_cursor: EV_CURSOR
 			--
 		once
 			Result := (create {EV_STOCK_PIXMAPS}).Sizenesw_cursor
 		end
-		
+
 	resizing_row: EV_GRID_ROW
-	
+
 	resizing_column: EV_GRID_COLUMN
-	
+
 	relative_row_pos: INTEGER
-	
+
 	relative_column_pos: INTEGER
-	
+
 	row_height: INTEGER
-	
+
 	row_width: INTEGER
-	
+
 	cursor_style: INTEGER
-	
+
 	top, left, bottom, right: BOOLEAN
-		
+
 	release_resize (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM)
 			--
 		do
@@ -1283,8 +1283,8 @@ feature {NONE} -- Implementation
 			relative_column_pos := 0
 			row_height := 0
 		end
-		
-	motion_resize (an_x, a_y: INTEGER; an_item: EV_GRID_ITEM)	
+
+	motion_resize (an_x, a_y: INTEGER; an_item: EV_GRID_ITEM)
 			--
 		local
 			item_y, item_x: INTEGER
@@ -1327,27 +1327,27 @@ feature {NONE} -- Implementation
 					grid.set_pointer_style (sizenwse_cursor)
 				elseif left or right then
 					grid.set_pointer_style (sizenesw_cursor)
-				end				
+				end
 			else
 				grid.enable_selection_on_click
 				grid.set_pointer_style (standard_cursor)
 			end
 		end
-		
-	retrieve_pebble (a_grid_item: EV_GRID_ITEM): ANY	
+
+	retrieve_pebble (a_grid_item: EV_GRID_ITEM): ANY
 			--
 		do
 			if a_grid_item /= Void then
 				Result := "Item Picked"
 			end
 		end
-		
+
 	pebble_dropped (a_string: STRING)
 			--
 		do
 			print ("Pebble dropped")
 		end
-		
+
 	pebble_dropped_on_item (a_grid_item: EV_GRID_ITEM; a_string: STRING)
 			--
 		do
@@ -1357,14 +1357,14 @@ feature {NONE} -- Implementation
 				print ("Pebble dropped on grid")
 			end
 		end
-		
+
 	pebble_dropped_directly_on_item (string: STRING)
 			--
 		do
 			print ("Pebble dropped on item 1,1")
 		end
-		
-		
+
+
 	custom_button_selected
 			-- Called by `select_actions' of `custom_button'.
 		local
@@ -1389,13 +1389,13 @@ feature {NONE} -- Implementation
 --			grid.set_row_count_to (20)
 --		grid.set_row_count_to (61)
 --			grid.disable_sensitive
-			
+
 --			add_items (10, 10)
 --			grid.set_foreground_color (light_green)
 --			grid.set_background_color (light_red)
-			
+
 --			grid.set_default_colors
-			
+
 --			add_items (10, 10)
 --			grid.set_item_pebble_function (agent retrieve_pebble)
 --			grid.drop_actions.extend (agent pebble_dropped)
@@ -1409,10 +1409,10 @@ feature {NONE} -- Implementation
 --			grid.pointer_button_press_item_actions.extend (agent press_resize)
 --			grid.pointer_button_release_item_actions.extend (agent release_resize)
 --			grid.pointer_motion_item_actions.extend (agent motion_resize)
-			
-			
-			
-			
+
+
+
+
 --			grid.enable_tree
 --			add_items (10, 10)
 --			grid.insert_new_rows_parented (5, 2, grid.row (1))
@@ -1477,7 +1477,7 @@ feature {NONE} -- Implementation
 --			r := grid.row (grid.row_count)
 --			grid.insert_new_row (r.index + 1)
 --            row := grid.row (r.index + 1)
---			r.add_subrow (row)            
+--			r.add_subrow (row)
 --                -- and then create the item
 --            create grid_label_item
 --            grid_label_item.set_text ("POP")
@@ -1485,8 +1485,8 @@ feature {NONE} -- Implementation
 
 
 --			grid.insert_new_row (r.index + 2)
-			
---			r.add_subrow (row)  
+
+--			r.add_subrow (row)
 --			grid.enable_tree
 --			grid.set_item (8, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Sub Sub row"))
 --			grid.set_item (1, 2, create {EV_GRID_LABEL_ITEM}.make_with_text ("Parent Row"))
@@ -1879,7 +1879,7 @@ feature {NONE} -- Implementation
 --			grid.pointer_button_press_actions.force_extend (agent grid.unlock_update)
 --			grid.set_focused_selection_color (light_blue)
 --			grid.set_non_focused_selection_color (light_green)
-			
+
 --			add_items (1, 200)
 --			grid.set_virtual_position (0, grid.maximum_virtual_y_position)
 --			grid.wipe_out
@@ -1892,7 +1892,7 @@ feature {NONE} -- Implementation
 --			grid.insert_new_row_parented (2, grid.row (1))
 --			grid.pointer_double_press_actions.force_extend (agent expand_first)
 		end
-		
+
 	expand_first
 			--
 		local
@@ -1901,17 +1901,17 @@ feature {NONE} -- Implementation
 			create time1.make_now
 			grid.row (1).expand
 			create time2.make_now
-			set_status_message (("Expanded in : " + ((time2.fine_second - time1.fine_second).out)))	
+			set_status_message (("Expanded in : " + ((time2.fine_second - time1.fine_second).out)))
 		end
-		
-		
+
+
 	resize_first_column
 			--
 		do
 			grid.column (1).resize_to_content
 		end
-		
-		
+
+
 	button_pressed (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM)
 			--
 		do
@@ -1919,19 +1919,19 @@ feature {NONE} -- Implementation
 				grid.set_first_visible_row (an_item.row.index)
 			end
 		end
-		
-		
+
+
 	compute_items (a_column, a_row: INTEGER): EV_GRID_ITEM
 			--
-		local	
+		local
 			label_item: EV_GRID_LABEL_ITEM
 		do
 			create label_item
 			label_item.set_text ("A text" + a_column.out + ", " + a_row.out)
 			Result := label_item
 		end
-		
-		
+
+
 	draw_borders2 (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER)
 			--
 			-- (export status {NONE})
@@ -1959,7 +1959,7 @@ feature {NONE} -- Implementation
 			end
 			drawable.draw_segment (0, current_row_height - 1, current_column_width, current_row_height - 1)
 		end
-		
+
 	invalidate_for_border (header_item: EV_HEADER_ITEM)
 			--
 		local
@@ -1987,8 +1987,8 @@ feature {NONE} -- Implementation
 					end
 				end
 		end
-		
-		
+
+
 	last_width_of_header_during_resize: INTEGER
 		-- The last width of the header item that is currently being
 		-- resized. Used to determine if we must refresh the column to
@@ -2000,7 +2000,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_non_negative: Result >= 0
 		end
-		
+
 	last_width_of_header_during_resize_internal: INTEGER
 		-- Storage for `last_width_of_header_during_resize'.
 
@@ -2022,7 +2022,7 @@ feature {NONE} -- Implementation
 			grid.set_virtual_position (grid.virtual_width - grid.viewable_width, grid.virtual_y_position)
 			timer.destroy
 		end
-		
+
 
 	show_viewable_width
 			--
@@ -2036,7 +2036,7 @@ feature {NONE} -- Implementation
 		do
 			create {EV_GRID_LABEL_ITEM} Result.make_with_text ("1")
 		end
-		
+
 	timer_fired
 			--
 		do
@@ -2044,7 +2044,7 @@ feature {NONE} -- Implementation
 			grid.disable_tree
 			grid.enable_tree
 		end
-		
+
 	timer: EV_TIMEOUT
 
 
@@ -2066,7 +2066,7 @@ feature {NONE} -- Implementation
 				grid.set_item (3, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("3"))
 			end
 		end
-		
+
 
 	display (an_x, a_y: INTEGER): EV_GRID_ITEM
 			--
@@ -2080,7 +2080,7 @@ feature {NONE} -- Implementation
 		once
 			Result := <<"ONE", "TWO", "THREE">>
 		end
-		
+
 	set_titles (a_titles : ARRAY[STRING])
 		local
 			i : INTEGER
@@ -2109,7 +2109,7 @@ feature {NONE} -- Implementation
 	--		grid.remove_row (2)
 			GRID.ROW (1).ensure_non_expandable
 		end
-		
+
 
 	clean_grid
 		do
@@ -2122,7 +2122,7 @@ feature {NONE} -- Implementation
 		ensure
 			grid.row_count = 0
 		end
-		
+
 
 	fill_grid
 		do
@@ -2140,18 +2140,18 @@ feature {NONE} -- Implementation
 		do
 			r.insert_subrow (i)
 			grid.set_item (1, r.index + i, label ((1).out + ":" + (r.index + i).out))
-			grid.set_item (2, r.index + i, label ((2).out + ":" + (r.index + i).out))		
-			grid.set_item (3, r.index + i, label ((3).out + ":" + (r.index + i).out))			
+			grid.set_item (2, r.index + i, label ((2).out + ":" + (r.index + i).out))
+			grid.set_item (3, r.index + i, label ((3).out + ":" + (r.index + i).out))
 		end
 
 	add_row (r: INTEGER)
 		do
 			grid.insert_new_row (r)
 			grid.set_item (1, r, label ((1).out + ":" + r.out))
-			grid.set_item (2, r, label ((2).out + ":" + r.out))		
-			grid.set_item (3, r, label ((3).out + ":" + r.out))			
+			grid.set_item (2, r, label ((2).out + ":" + r.out))
+			grid.set_item (3, r, label ((3).out + ":" + r.out))
 		end
-	
+
 	label (s: STRING): EV_GRID_LABEL_ITEM
 		do
 			create Result.make_with_text (s)
@@ -2166,7 +2166,7 @@ feature {NONE} -- Implementation
 			end
 			label_item_layout.set_text_x (ii)
 		end
-		
+
 	ii: INTEGER
 
 	expand_row2 (a_row: EV_GRID_ROW)
@@ -2186,8 +2186,8 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
-		
+
+
 	add_subrows (a_row: EV_GRID_ROW)
 			--
 		local
@@ -2202,8 +2202,8 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-		
-		
+
+
 	compute_grid_item (g: EV_GRID; c,r: INTEGER): EV_GRID_ITEM
 		local
 			label_item: EV_GRID_LABEL_ITEM
@@ -2214,7 +2214,7 @@ feature {NONE} -- Implementation
 	    	Result := label_item
 	    end
 
-		
+
 	expand_row (a_row: EV_GRID_ROW)
 			--
 		local
@@ -2237,8 +2237,8 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
-		
+
+
 	draw_tree_check_button_selected
 			-- Called by `select_actions' of `draw_tree_check_button'.
 		do
@@ -2257,15 +2257,15 @@ feature {NONE} -- Implementation
 				grid.pointer_button_release_item_actions.wipe_out
 			end
 		end
-		
-	offsets: ARRAY [INTEGER]	
-	
+
+	offsets: ARRAY [INTEGER]
+
 	start_x, start_y: INTEGER
-	
+
 	start_item: EV_GRID_ITEM
-	
+
 	max_set: INTEGER
-		
+
 	draw_tree_item_press (an_x, a_y, button: INTEGER; an_item: EV_GRID_ITEM)
 			--
 		do
@@ -2279,8 +2279,8 @@ feature {NONE} -- Implementation
 				start_item := Void
 			end
 		end
-		
-		
+
+
 	draw_tree_item_release (an_x, a_y, button: INTEGER; an_item: EV_GRID_ITEM)
 			--
 		local
@@ -2306,7 +2306,7 @@ feature {NONE} -- Implementation
 				until
 					counter > max_set
 				loop
-					
+
 					current_indent := offsets.item (counter) - start_x
 					if offsets.item (counter) = 360 then
 						do_nothing
@@ -2315,7 +2315,7 @@ feature {NONE} -- Implementation
 				--	grid.insert_new_row (start_item.row.index + counter)
 				--	new_row := grid.row (start_item.row.index + counter)
 					new_row_index := start_item.row.index + counter
-					
+
 					current_indent := current_indent.max (0)
 					parent_row := Void
 					column_to_check := start_item.column.index
@@ -2327,7 +2327,7 @@ feature {NONE} -- Implementation
 					loop
 						if current_indent > total_column_indent then
 							column_to_check := column_counter
-						end						
+						end
 						total_column_indent := total_column_indent + grid.column (column_counter).width
 						column_counter := column_counter + 1
 					end
@@ -2341,7 +2341,7 @@ feature {NONE} -- Implementation
 						j := j + 1
 					end
 					found := False
-					if parent_row = Void then		
+					if parent_row = Void then
 						from
 							row_counter := new_row_index - 1
 						until
@@ -2351,7 +2351,7 @@ feature {NONE} -- Implementation
 								if (grid.item (column_to_check, row_counter)).horizontal_indent <= offsets.item (counter) - i then--current_indent then
 									--parent_row := grid.row (counter2)
 									found := True
-								end						
+								end
 							end
 							if not found then
 								row_counter := row_counter - 1
@@ -2359,9 +2359,9 @@ feature {NONE} -- Implementation
 						end
 						parent_row := grid.row (row_counter)
 					end
-					
-					
-					
+
+
+
 --					i < row_count and row (i - 1).parent_row_root /= Void and row (i).parent_row_root /= Void implies row (i - 1).parent_row_root /= row (i).parent_row_root
 --					grid.insert_new_row (start_item.row.index + counter)
 					grid.insert_new_row_parented (new_row_index, parent_row)
@@ -2378,8 +2378,8 @@ feature {NONE} -- Implementation
 				draw_tree_check_button.disable_select
 			end
 		end
-		
-		
+
+
 	draw_tree_item_motion (an_x, a_y: INTEGER; an_item: EV_GRID_ITEM)
 			--
 		local
@@ -2395,13 +2395,13 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	red: EV_COLOR
 			--
 		once
 			Result := (create {EV_STOCK_COLORS}).red
 		end
-		
+
 	enable_pick_and_drop_button_selected
 			-- Called by `select_actions' of `enable_pick_and_drop_button'.
 		do
@@ -2409,7 +2409,7 @@ feature {NONE} -- Implementation
 					-- Enable grid item PND
 				grid.set_item_pebble_function (agent item_pebble_function)
 				grid.set_item_veto_pebble_function (agent item_veto_pebble_function)
-				grid.item_drop_actions.extend (agent item_drop_actions)				
+				grid.item_drop_actions.extend (agent item_drop_actions)
 			else
 					-- Disable grid item PND
 				grid.set_item_pebble_function (Void)
@@ -2470,7 +2470,7 @@ feature {NONE} -- Implementation
 			until
 				a_x > 5
 			loop
-				from	
+				from
 					a_y :=1
 				until
 					a_y > 200
@@ -2614,7 +2614,7 @@ feature {NONE} -- Implementation
 			if an_item /= Void then
 				an_item.activate
 			end
-		end		
+		end
 
 	columns_drawn_above_rows_button_selected
 			-- Called by `select_actions' of `columns_drawn_above_rows_button'.
@@ -2636,7 +2636,7 @@ feature {NONE} -- Implementation
 				grid.set_foreground_color (color)
 			end
 		end
-	
+
 	background_color_combo_selected
 			-- Called by `select_actions' of `background_color_combo'.
 		local
@@ -2668,7 +2668,7 @@ feature {NONE} -- Implementation
 				grid.remove_row (grid.row_count)
 			end
 		end
-	
+
 	remove_all_columns_button_selected
 			-- Called by `select_actions' of `remove_all_columns_button'.
 		do
@@ -2689,7 +2689,7 @@ feature {NONE} -- Implementation
 				grid.disable_row_separators
 			end
 		end
-	
+
 	are_column_separators_enabled_button_selected
 			-- Called by `select_actions' of `are_column_separators_enabled_button'.
 		do
@@ -2710,13 +2710,13 @@ feature {NONE} -- Implementation
 				grid.set_separator_color (a_color)
 			end
 		end
-		
+
 	clear_items_button_selected
 			-- Called by `select_actions' of `clear_items_button'.
 		do
 			grid.clear
 		end
-		
+
 	overlay_test_button_selected
 			-- Called by `select_actions' of `overlay_test_button'.
 		do
@@ -2777,7 +2777,7 @@ feature {NONE} -- Implementation
 							a_drawable.fill_rectangle (0, 0, 4, an_item.height)
 						end
 					end
-	
+
 					if an_item.column.index = grid.column_count then
 						a_drawable.fill_rectangle (an_item.width - 4, 0, 4, an_item.height)
 					else
@@ -2794,7 +2794,7 @@ feature {NONE} -- Implementation
 							a_drawable.fill_rectangle (0, 0, an_item.width, 4)
 						end
 					end
-	
+
 					if an_item.row.index = grid.row_count then
 						a_drawable.fill_rectangle (0, an_item.height - 4, an_item.width, 4)
 					else
@@ -2881,7 +2881,7 @@ feature {NONE} -- Implementation
 			texture_style := 2
 			scroll_style := 1
 		end
-		
+
 	fill_texture_combo (window: EV_POPUP_WINDOW; combo: EV_GRID_COMBO_ITEM)
 			-- Fill `combo' with items  for selecting the texture style.
 		require
@@ -2951,7 +2951,7 @@ feature {NONE} -- Implementation
 			end
 			grid.redraw
 		end
-		
+
 	combo_scroll_item_selected (a_combo_box: EV_COMBO_BOX)
 			-- An item has been selected from `a_combo_box' signifying
 			-- the texture scroll style to be applied. Update internal
@@ -2976,7 +2976,7 @@ feature {NONE} -- Implementation
 			end
 			grid.redraw
 		end
-		
+
 	reset_combo_text (s: STRING; combo_item: EV_GRID_COMBO_ITEM)
 			-- Restore text of `combo_item' to `s' + selected item text of `combo_item'.
 		require
@@ -2985,7 +2985,7 @@ feature {NONE} -- Implementation
 		do
 			combo_item.set_text (s + combo_item.combo_box.selected_item.text)
 		end
-		
+
 	draw_texture (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER)
 			-- Draw applied texture for item `grid_item' onto `drawable'.
 		require
@@ -3025,7 +3025,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	internal_draw_texture (drawable: EV_DRAWABLE; texture_x, texture_y, a_width, a_height: INTEGER)
 			-- Draw `marble' texture onto `drawable' offset by `texture_x' and `texture_y' with
 			-- dimensions of `a_width' and `a_height'.
@@ -3059,7 +3059,7 @@ feature {NONE} -- Implementation
 				an_x := an_x + last_x_segment
 			end
 		end
-		
+
 	draw_borders (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER)
 			-- Draw a border around cells 1,1 and 2,1 with a width of `grid_border_width'.
 		require
@@ -3083,10 +3083,10 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	grid_border_width: INTEGER = 1
 		-- Wdith of borders around control items.
-		
+
 	draw_background (drawable: EV_DRAWABLE; a_virtual_x, a_virtual_y, a_width, a_height: INTEGER)
 			-- Draw `marble' texture onto `drawable' offset by `texture_x' and `texture_y' with
 			-- dimensions of `a_width' and `a_height'.
@@ -3115,13 +3115,13 @@ feature {NONE} -- Implementation
 				drawable.fill_rectangle (0, 0, a_width, a_height)
 			end
 		end
-		
+
 	scroll_style: INTEGER
 		-- Scrolling style applied to texture.
 
 	texture_style: INTEGER
 		-- Applied texture style.
-	
+
 	grid_pressed (an_x, a_y, a_button: INTEGER; grid_item: EV_GRID_ITEM)
 			-- Respond to a button press in the grid. If the left button is
 			-- pressed on the combo item, activate that item.
@@ -3132,7 +3132,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	bubbles_pixmap: EV_PIXMAP
 			--
 		once
@@ -3143,7 +3143,7 @@ feature {NONE} -- Implementation
 			Result.draw_pixmap (0, texture_height, marble)
 			Result.draw_pixmap (texture_width, texture_height, marble)
 		end
-		
+
 	wipe_out_grid_button_selected
 			-- Called by `select_actions' of `wipe_out_grid_button'.
 		local
@@ -3164,7 +3164,7 @@ feature {NONE} -- Implementation
 	texture_width: INTEGER = 256
 
 	texture_height: INTEGER = 256
-	
+
 	is_vertical_overdraw_enabled_button_selected
 			-- Called by `select_actions' of `is_virtual_height_bounded_by_viewable_height_button'.
 		do
@@ -3174,7 +3174,7 @@ feature {NONE} -- Implementation
 				grid.disable_vertical_overscroll
 			end
 		end
-	
+
 	is_horizontal_overdraw_enabled_button_selected
 			-- Called by `select_actions' of `is_virtual_width_bounded_by_viewable_width_button'.
 		do
@@ -3184,14 +3184,14 @@ feature {NONE} -- Implementation
 				grid.disable_horizontal_overscroll
 			end
 		end
-		
+
 	wipe_out_button_selected
 			--
 		do
 			grid.wipe_out
 		end
-		
-		
+
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

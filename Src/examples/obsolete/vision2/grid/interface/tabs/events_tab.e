@@ -11,7 +11,7 @@ class
 
 inherit
 	EVENTS_TAB_IMP
-	
+
 	GRID_ACCESSOR
 		undefine
 			copy, default_create, is_equal
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			no_events_button.enable_select
 			no_events_button.select_actions.resume
 		end
-		
+
 feature -- Events
 
 	motion_item_event (an_x, a_y: INTEGER; an_item: EV_GRID_ITEM)
@@ -101,7 +101,7 @@ feature -- Events
 			l_string := "Item.pointer_button_press_actions : " + an_x.out + ", " +a_y.out + " Button : " + a_button.out
 			add_event_item_to_list (l_string)
 		end
-		
+
 	item_enter_event
 			-- Respond to a pointer enter at the item level.
 		local
@@ -110,7 +110,7 @@ feature -- Events
 			l_string := "Item.pointer_enter_actions"
 			add_event_item_to_list (l_string)
 		end
-		
+
 	item_leave_event
 			-- Respond to a pointer leave at the item level.
 		local
@@ -119,7 +119,7 @@ feature -- Events
 			l_string := "Item.pointer_leave_actions"
 			add_event_item_to_list (l_string)
 		end
-		
+
 	double_press_item_event (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM)
 			-- Respond to a pointer double press at the grid level.
 		local
@@ -211,67 +211,67 @@ feature -- Events
 			end
 			add_event_item_to_list (l_string)
 		end
-		
+
 	mouse_wheel_event (a_value: INTEGER)
 			--
 		do
 			add_event_item_to_list ("Mouse_wheel_actions " + a_value.out)
 		end
-		
+
 	key_press_event (a_key: EV_KEY)
 			--
 		do
 			add_event_item_to_list ("Key_press_actions " + a_key.code.out)
 		end
-		
-	key_press_string_event (a_key: STRING)
+
+	key_press_string_event (a_key: STRING_32)
 			--
 		do
 			add_event_item_to_list ("Key_press_string_actions " + a_key.out)
 		end
-		
+
 	key_release_event (a_key: EV_KEY)
 			--
 		do
 			add_event_item_to_list ("Key_release_actions " + a_key.out)
 		end
-		
+
 	focus_in_event
 			--
 		do
 			add_event_item_to_list ("Focus_in_actions")
 		end
-		
+
 	focus_out_event
 			--
 		do
 			add_event_item_to_list ("Focus_out_actions")
 		end
-		
+
 	resize_event (an_x, a_y, a_width, a_height: INTEGER)
 			--
 		do
 			add_event_item_to_list ("Resize_actions " + an_x.out + " " + a_y.out + " " + a_width.out + " " + a_height.out)
 		end
-		
+
 	row_collapsed (a_row: EV_GRID_ROW)
 			--
 		do
 			add_event_item_to_list ("Row " + a_row.index.out + " collapsed.")
 		end
-		
+
 	row_expanded (a_row: EV_GRID_ROW)
 			--
 		do
 			add_event_item_to_list ("Row " + a_row.index.out + " expanded.")
 		end
-		
+
 	item_selected (an_item: EV_GRID_ITEM)
 			--
 		do
 			add_event_item_to_list ("Item at row " + an_item.row.index.out + ", column " + an_item.column.index.out + " selected.")
 		end
-		
+
 	item_deselected (an_item: EV_GRID_ITEM)
 			--
 		do
@@ -283,31 +283,31 @@ feature -- Events
 		do
 			add_event_item_to_list ("Item at row " + an_item.row.index.out + ", column " + an_item.column.index.out + " activated.")
 		end
-		
+
 	item_deactivated (an_item: EV_GRID_ITEM; a_window: EV_POPUP_WINDOW)
 			--
 		do
 			add_event_item_to_list ("Item at row " + an_item.row.index.out + ", column " + an_item.column.index.out + " deactivated.")
-		end		
-	
+		end
+
 	row_selected (a_row: EV_GRID_ROW)
 			--
 		do
 			add_event_item_to_list ("Row " + a_row.index.out + " selected.")
 		end
-		
+
 	row_deselected (a_row: EV_GRID_ROW)
 			--
 		do
 			add_event_item_to_list ("Row " + a_row.index.out + " deselected.")
 		end
-		
+
 	column_selected (a_column: EV_GRID_COLUMN)
 			--
 		do
 			add_event_item_to_list ("Column " + a_column.index.out + " selected.")
 		end
-		
+
 	column_deselected (a_column: EV_GRID_COLUMN)
 			--
 		do
@@ -342,7 +342,7 @@ feature -- Events
 				an_item.enable_select
 			end
 		end
-		
+
 	motion_event_in_item (an_x, a_y: INTEGER; an_item: EV_GRID_ITEM)
 			--
 		local
@@ -355,19 +355,19 @@ feature -- Events
 				textable.set_text (l_string)
 			end
 		end
-		
-		
+
+
 	small_font: EV_FONT
 			--
 		once
 			create Result
 			Result.set_height (6)
 		end
-		
+
 
 feature {NONE} -- Implementation
 
-	
+
 	highlight_items_on_motion_selected
 			-- Called by `select_item_actions' of `highlight_items_on_motion'.
 		do
@@ -379,7 +379,7 @@ feature {NONE} -- Implementation
 				grid.pointer_motion_item_actions.extend (agent motion_highlight_event)
 			end
 		end
-	
+
 	show_events_in_items_selected
 			-- Called by `select_item_actions' of `show_events_in_items'.
 		do
@@ -418,7 +418,7 @@ feature {NONE} -- Implementation
 
 			grid.pointer_double_press_item_actions.extend (agent double_press_item_event)
 			grid.pointer_double_press_actions.force_extend (agent double_press_event)
-			
+
 			grid.pointer_button_release_item_actions.extend (agent release_item_event)
 			grid.pointer_button_release_actions.force_extend (agent release_event)
 
@@ -440,7 +440,7 @@ feature {NONE} -- Implementation
 			grid.column_select_actions.extend (agent column_selected)
 			grid.column_deselect_actions.extend (agent column_deselected)
 			grid.item_activate_actions.extend (agent item_activated)
-			grid.item_deactivate_actions.extend (agent item_deactivated)			
+			grid.item_deactivate_actions.extend (agent item_deactivated)
 		end
 
 	disable_event_tracking
@@ -455,7 +455,7 @@ feature {NONE} -- Implementation
 
 			grid.pointer_double_press_item_actions.wipe_out
 			grid.pointer_double_press_actions.wipe_out
-			
+
 			grid.pointer_button_release_item_actions.wipe_out
 			grid.pointer_button_release_actions.wipe_out
 
@@ -477,7 +477,7 @@ feature {NONE} -- Implementation
 			grid.column_select_actions.wipe_out
 			grid.column_deselect_actions.wipe_out
 			grid.item_activate_actions.wipe_out
-			grid.item_deactivate_actions.wipe_out	
+			grid.item_deactivate_actions.wipe_out
 		end
 
 	enable_event_tracking_item_selected
@@ -530,7 +530,7 @@ feature {NONE} -- Implementation
 				current_row.collapse_actions.extend (agent row_collapsed (current_row))
 				current_row.select_actions.extend (agent row_selected (current_row))
 				current_row.deselect_actions.extend (agent row_deselected (current_row))
-		
+
 				l_y := l_y + 1
 			end
 
@@ -543,7 +543,7 @@ feature {NONE} -- Implementation
 				current_column := grid.column (l_x)
 				current_column.select_actions.extend (agent column_selected (current_column))
 				current_column.deselect_actions.extend (agent column_deselected (current_column))
-		
+
 				l_x := l_x + 1
 			end
 		end
@@ -595,7 +595,7 @@ feature {NONE} -- Implementation
 				current_row.collapse_actions.wipe_out
 				current_row.select_actions.wipe_out
 				current_row.deselect_actions.wipe_out
-		
+
 				l_y := l_y + 1
 			end
 
@@ -608,11 +608,11 @@ feature {NONE} -- Implementation
 				current_column := grid.column (l_x)
 				current_column.select_actions.wipe_out
 				current_column.deselect_actions.wipe_out
-		
+
 				l_x := l_x + 1
 			end
 		end
-		
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

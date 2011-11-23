@@ -8,13 +8,15 @@ note
 
 class
 	GRID_ACCESSOR
-	
+
 inherit
 	REFACTORING_HELPER
 
 	EXECUTION_ENVIRONMENT
 		rename
-			put as execution_environment_put
+			put as execution_environment_put,
+			launch as execution_environment_launch,
+			sleep as execution_environment_sleep
 		end
 
 feature -- Access
@@ -24,26 +26,26 @@ feature -- Access
 		once
 			create Result
 		end
-		
+
 	main_window: MAIN_WINDOW
 			-- Once access to MAIN_WINDOW
 		once
 			create Result
 		end
-		
+
 	profile_cell: CELL [BOOLEAN]
 			--
 		once
-			create Result
+			create Result.put (False)
 		end
-		
+
 	status_bar: EV_LABEL
 			--
 		once
 			create Result
 			Result.align_text_left
 		end
-		
+
 	set_status_message (a_message: STRING)
 			--
 		local
@@ -57,28 +59,28 @@ feature -- Access
 			timer.actions.extend (agent status_bar.remove_text)
 			timer_cell.replace (timer)
 		end
-		
+
 	timer_cell: CELL [EV_TIMEOUT]
 		once
-			create Result
+			create Result.put (Void)
 		end
-		
+
 
 	profile: BOOLEAN
 			--
 		do
 			Result := profile_cell.item
 		end
-		
-	
+
+
 	enable_profile
 			--
 		do
 			profile_cell.put (True)
 		end
-		
+
 	disable_profile
-			-- 
+			--
 		do
 			profile_cell.put (False)
 		end
@@ -258,7 +260,7 @@ feature -- Access
 				until
 					a_combo.off
 				loop
-					l_color ?= a_combo.item.data		
+					l_color ?= a_combo.item.data
 					if l_color /= Void and then l_color.is_equal (a_color) then
 						a_combo.item.enable_select
 						a_combo.go_i_th (a_combo.count)
@@ -274,7 +276,7 @@ feature -- Access
 		once
 			create Result
 		end
-		
+
 
 	light_red: EV_COLOR
 			-- Color light red.

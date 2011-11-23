@@ -27,11 +27,11 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		local
 			list_item: EV_LIST_ITEM
-			font_families: LINEAR [STRING]
+			font_families: LINEAR [STRING_32]
 		do
 			item_finder.set_prompt ("Item Finder : ")
 			item_finder.motion_actions.extend (agent finding_item)
-			
+
 			add_default_pixmaps_to_combo (pixmap_holder)
 			add_default_colors_to_combo (foreground_color_combo)
 			add_default_colors_to_combo (background_color_combo)
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 feature {NONE} -- Implementation
 
 	found_item: EV_GRID_ITEM
-	
+
 	finding_item (an_item: EV_GRID_ITEM)
 			--
 		local
@@ -83,21 +83,21 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-	
+
 	item_x_index_changed (a_value: INTEGER)
 			-- Called by `change_actions' of `item_x_index'.
 		do
 			found_item := grid.item (a_value, item_y_index.value)
 			update_item_data (a_value, item_y_index.value)
 		end
-	
+
 	item_y_index_changed (a_value: INTEGER)
 			-- Called by `change_actions' of `item_y_index'.
 		do
 			found_item := grid.item (item_x_index.value, a_value)
 			update_item_data (item_x_index.value, a_value)
 		end
-		
+
 	update_item_data (an_x, ay: INTEGER)
 			-- Display data for item at grid position `an_x', `a_y'.
 		local
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 						until
 							background_color_combo.off
 						loop
-							l_color ?= background_color_combo.item.data		
+							l_color ?= background_color_combo.item.data
 							if l_color /= Void and then l_color.is_equal (label_item.background_color) then
 								background_color_combo.item.enable_select
 								background_color_combo.go_i_th (background_color_combo.count)
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 						until
 							foreground_color_combo.off
 						loop
-							l_color ?= foreground_color_combo.item.data		
+							l_color ?= foreground_color_combo.item.data
 							if l_color /= Void and then l_color.is_equal (label_item.foreground_color) then
 								foreground_color_combo.item.enable_select
 								foreground_color_combo.go_i_th (foreground_color_combo.count)
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 							font_combo.off or set
 						loop
 							if font_combo.item.text.is_equal ("font_name") then
-								set := True								
+								set := True
 								font_combo.item.enable_select
 							end
 							if not set then
@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 							font_size_combo.off or set
 						loop
 							if font_size_combo.item.text.to_integer = font_height then
-								set := True								
+								set := True
 								font_size_combo.item.enable_select
 							end
 							if not set then
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 				main_box.disable_sensitive
 			end
 		end
-		
+
 	textable_entry_changed
 			-- Called by `change_actions' of `textable_entry'.
 		local
@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 				textable.set_text (textable_entry.text)
 			end
 		end
-		
+
 	is_selected_selected
 			-- Called by `select_actions' of `is_selected'.
 		local
@@ -366,7 +366,7 @@ feature {NONE} -- Implementation
 				label_item.align_text_left
 			end
 		end
-	
+
 	center_alignment_item_selected
 			-- Called by `select_actions' of `center_alignment_item'.
 		local
@@ -390,7 +390,7 @@ feature {NONE} -- Implementation
 				label_item.set_foreground_color (color)
 			end
 		end
-	
+
 	background_color_combo_selected
 			-- Called by `select_actions' of `background_color_combo'.
 		local
@@ -403,7 +403,7 @@ feature {NONE} -- Implementation
 				label_item.set_background_color (color)
 			end
 		end
-	
+
 	right_alignment_item_selected
 			-- Called by `select_actions' of `right_alignment_item'.
 		local
@@ -438,7 +438,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-	
+
 	apply_pixmap_column_selected
 			-- Called by `select_actions' of `apply_pixmap_column_button'.
 		local
@@ -462,7 +462,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-	
+
 	apply_alignment_row_button_selected
 			-- Called by `select_actions' of `apply_alignment_row_button'.
 		local
@@ -490,7 +490,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-	
+
 	apply_alignment_column_button_selected
 			-- Called by `select_actions' of `apply_alignment_column_button'.
 		local
@@ -518,7 +518,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-	
+
 	apply_left_border_row_button_selected
 			-- Called by `select_actions' of `apply_left_border_row_button'.
 		local
@@ -542,7 +542,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-	
+
 	apply_left_border_column_button_selected
 			-- Called by `select_actions' of `apply_left_border_column_button'.
 		local
@@ -566,7 +566,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-	
+
 	apply_spacing_row_button_selected
 			-- Called by `select_actions' of `apply_spacing_row_button'.
 		local
@@ -590,7 +590,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-	
+
 	apply_spacing_column_button_selected
 			-- Called by `select_actions' of `apply_spacing_column_button'.
 		local
@@ -638,7 +638,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-	
+
 	apply_background_column_button_selected
 			-- Called by `select_actions' of `apply_background_column_button'.
 		local
@@ -662,7 +662,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-	
+
 	apply_selection_row_selected_button
 			-- Called by `select_actions' of `apply_selection_row_button'.
 		local
@@ -682,7 +682,7 @@ feature {NONE} -- Implementation
 				label_item ?= grid.item (counter, row)
 				if label_item /= Void then
 					if original_selected then
-						label_item.enable_select	
+						label_item.enable_select
 					else
 						label_item.disable_select
 					end
@@ -690,7 +690,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-	
+
 	apply_selection_column_button_selected
 			-- Called by `select_actions' of `apply_selection_column_button'.
 		local
@@ -710,7 +710,7 @@ feature {NONE} -- Implementation
 				label_item ?= grid.item (column, counter)
 				if label_item /= Void then
 					if original_selected then
-						label_item.enable_select	
+						label_item.enable_select
 					else
 						label_item.disable_select
 					end
@@ -718,7 +718,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-	
+
 	apply_foreground_row_button_selected
 			-- Called by `select_actions' of `apply_foreground_row_button'.
 		local
@@ -742,7 +742,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-	
+
 	apply_foreground_column_button_selected
 			-- Called by `select_actions' of `apply_foreground_column_button'.
 		local
@@ -790,7 +790,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-	
+
 	apply_bottom_border_column_button_selected
 			-- Called by `select_actions' of `apply_bottom_border_column_button'.
 		local
@@ -814,7 +814,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-	
+
 	apply_right_border_row_button_selected
 			-- Called by `select_actions' of `apply_right_border_row_button'.
 		local
@@ -838,7 +838,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-	
+
 	apply_right_border_column_button_selected
 			-- Called by `select_actions' of `apply_right_border_column_button'.
 		local
@@ -862,7 +862,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-	
+
 	apply_top_border_row_button_selected
 			-- Called by `select_actions' of `apply_top_border_row_button'.
 		local
@@ -886,7 +886,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-	
+
 	apply_top_border_column_button_selected
 			-- Called by `select_actions' of `apply_top_border_column_button'.
 		local
@@ -921,7 +921,7 @@ feature {NONE} -- Implementation
 				label_item.set_top_border (a_value)
 			end
 		end
-	
+
 	bottom_border_spin_button_changed (a_value: INTEGER)
 			-- Called by `change_actions' of `bottom_border_spin_button'.
 		local
@@ -932,7 +932,7 @@ feature {NONE} -- Implementation
 				label_item.set_bottom_border (a_value)
 			end
 		end
-	
+
 	right_border_spin_button_changed (a_value: INTEGER)
 			-- Called by `change_actions' of `right_border_spin_button'.
 		local
@@ -954,7 +954,7 @@ feature {NONE} -- Implementation
 				label_item.align_text_top
 			end
 		end
-	
+
 	vertically_center_item_selected
 			-- Called by `select_actions' of `vertically_center_item'.
 		local
@@ -965,7 +965,7 @@ feature {NONE} -- Implementation
 				label_item.align_text_vertically_center
 			end
 		end
-	
+
 	bottom_alignment_item_selected
 			-- Called by `select_actions' of `bottom_alignment_item'.
 		local
@@ -976,7 +976,7 @@ feature {NONE} -- Implementation
 				label_item.align_text_bottom
 			end
 		end
-	
+
 	apply_vertical_alignment_column_button_selected
 			-- Called by `select_actions' of `apply_vertical_selection_column_button'.
 		local
@@ -1004,7 +1004,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-	
+
 	apply_vertical_alignment_row_button_selected
 			-- Called by `select_actions' of `apply_vertical_selection_row_button'.
 		local
@@ -1039,13 +1039,13 @@ feature {NONE} -- Implementation
 			font: EV_FONT
 			label_item: EV_GRID_LABEL_ITEM
 		do
-			if font_combo.index_of (font_combo.selected_item, 1) > 1 and				
+			if font_combo.index_of (font_combo.selected_item, 1) > 1 and
 				font_size_combo.index_of (font_size_combo.selected_item, 1) > 1 then
 
 				label_item ?= found_item
 				if label_item /= Void then
 					if label_item.font /= Void then
-						font := label_item.font.twin					
+						font := label_item.font.twin
 					else
 						create font
 						font.preferred_families.extend (font_combo.selected_item.text)
@@ -1062,7 +1062,7 @@ feature {NONE} -- Implementation
 			font: EV_FONT
 			label_item: EV_GRID_LABEL_ITEM
 		do
-			if font_combo.index_of (font_combo.selected_item, 1) > 1 and				
+			if font_combo.index_of (font_combo.selected_item, 1) > 1 and
 			font_size_combo.index_of (font_size_combo.selected_item, 1) > 1 then
 
 				label_item ?= found_item
@@ -1075,7 +1075,7 @@ feature {NONE} -- Implementation
 						font.set_height_in_points (font_size_combo.selected_item.text.to_integer)
 					end
 					font.preferred_families.extend (font_combo.selected_item.text)
-	
+
 					label_item.set_font (font)
 				end
 			end
@@ -1139,7 +1139,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-	
+
 	apply_full_select_column_button_selected
 			-- Called by `select_actions' of `apply_full_select_column_button'.
 		local
@@ -1165,7 +1165,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-	
+
 	apply_full_select_row_button_selected
 			-- Called by `select_actions' of `apply_full_select_row_button'.
 		local
@@ -1191,7 +1191,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-	
+
 	apply_text_row_button_selected
 			-- Called by `select_actions' of `apply_text_row_button'.
 		local
@@ -1213,7 +1213,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-	
+
 	apply_text_column_button_selected
 			-- Called by `select_actions' of `apply_text_column_button'.
 		local

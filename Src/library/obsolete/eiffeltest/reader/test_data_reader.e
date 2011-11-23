@@ -8,7 +8,7 @@ note
 	revision: "$Revision$"
 
 class 
-	TEST_DATA_READER [G -> TEST_CASE create make end]
+	TEST_DATA_READER [G -> TEST_SIMPLE_CASE create make end]
 
 create
 

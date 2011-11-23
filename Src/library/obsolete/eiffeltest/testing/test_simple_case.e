@@ -8,7 +8,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class TEST_CASE inherit
+deferred class TEST_SIMPLE_CASE inherit
 
 	SINGLE_TEST
 		redefine

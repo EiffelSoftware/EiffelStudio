@@ -9,7 +9,7 @@ note
 
 class VALIDITY_TEST inherit
 
-	TEST_CASE
+	TEST_SIMPLE_CASE
 
 	EXCEPTIONS
 		export
@@ -17,7 +17,6 @@ class VALIDITY_TEST inherit
 		end
 
 create
-
 	make
 
 feature -- Access

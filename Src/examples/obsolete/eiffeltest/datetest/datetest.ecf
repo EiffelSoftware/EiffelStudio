@@ -8,7 +8,7 @@
 		<precompile name="precompile" location="$ISE_PRECOMP\base.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf" readonly="false"/>
-		<cluster name="eiffeltest" location="$ISE_LIBRARY\library\eiffeltest\" recursive="true"/>
+		<library name="eiffeltest" location="$ISE_LIBRARY\library\obsolete\eiffeltest\eiffeltest.ecf"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>
 </system>

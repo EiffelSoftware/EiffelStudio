@@ -53,15 +53,18 @@ feature {NONE} -- Access
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (logdir_switch, "Directory where logs will be stored (if verbose logging is enabled).", True, False, "directory", "A directory where the logs will be stored", False))
 			Result.extend (create {ARGUMENT_FILE_SWITCH}.make (ignore_switch, "Ignore file with files/targets to ignore.", True, False, "ignore.ini", "INI file with the ignores.", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (log_verbose_switch, "Verbose logging of actions?", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (list_failures_switch, "Display a list of failed compilation(s) with associated log filename if available.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (ecb_switch, "Use ecb instead of ec?", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (experiment_switch, "Use experimental library during compilation?", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (compatible_switch, "Use compatible library during compilation?", True, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (clean_switch, "Clean before compilation?", True, False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (keep_switch, "Keep EIFGENs related data after compilation? (by default they are removed)", True, False, "status", "{all | passed | failed}", True))
 			Result.extend (create {ARGUMENT_SWITCH}.make (c_compile_switch, "Compile generated C code?", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (melt_switch, "Melt the project?", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (freeze_switch, "Freeze the project?", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (finalize_switch, "Finalize the project?", True, False))
+
+			Result.extend (create {ARGUMENT_SWITCH}.make (clean_switch, "Clean before compilation?", True, False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (keep_switch, "Keep EIFGENs related data after compilation? (by default they are removed)", True, False, "status", "{all | passed | failed}", True))
+
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (options_switch, "Comma separated option(s)", True, True, "key=value", "dotnet=(true|false)%N...", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (interface_switch, "Comma separated option(s) to customize the output", True, True,
 						"key=value",
@@ -221,9 +224,16 @@ feature -- Access
 			Result := has_option (finalize_switch)
 		end
 
+	list_failures: BOOLEAN
+			-- Finalize the project?
+		once
+			Result := has_option (list_failures_switch)
+		end
+
 feature -- Access: -interface
 
 	interface_output_action_template: detachable READABLE_STRING_8
+			-- Template for output action 
 		once
 			if attached interface_item ("template") as s then
 				Result := s
@@ -329,6 +339,7 @@ feature {NONE} -- Implementation: -options
 feature {NONE} -- Concatenated value for multiple switch		
 
 	concatenated_multiple_options (a_switch: READABLE_STRING_8; a_separator: CHARACTER): HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+			-- Table of options related to multiple option
 		local
 			sep: CHARACTER
 			s,k,v: STRING
@@ -404,6 +415,7 @@ feature {NONE} -- Switch names
 	finalize_switch: STRING = "finalize"
 	options_switch: STRING = "options"
 	interface_switch: STRING = "interface"
+	list_failures_switch: STRING = "list_failures"
 	;
 
 note

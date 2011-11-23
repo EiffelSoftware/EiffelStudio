@@ -75,24 +75,27 @@ feature -- Element change
 			a_height_bigger_than_zero: a_height > 0
 			a_preferred_families_not_void: a_preferred_families /= Void
 		do
-			preferred_families := a_preferred_families
-				-- We must now clear the add actions and remove actions, and re-insert
-				-- agents connecting to `update_preferred_faces'. If this is not performed
-				-- then when copying a font, an update to `preferred_faces' still uses the
-				-- agent of the original list which calls back to the old implementation.
-				-- This causes `preferred_families' then to always update based on the old imp.
-				-- Julian.
-			preferred_families.internal_add_actions.wipe_out
-			preferred_families.internal_remove_actions.wipe_out
-			preferred_families.internal_add_actions.extend (agent update_preferred_faces)
-			preferred_families.internal_remove_actions.extend (agent update_preferred_faces)
-
-
-			update_font_face
-			set_family (a_family)
-			set_weight (a_weight)
-			set_shape (a_shape)
-			set_height (a_height)
+			if preferred_families /= a_preferred_families then
+				preferred_families.internal_add_actions.block
+				preferred_families.internal_remove_actions.block
+				preferred_families.wipe_out
+				preferred_families.append (a_preferred_families)
+				preferred_families.internal_add_actions.resume
+				preferred_families.internal_remove_actions.resume
+				update_font_face
+			end
+			if family /= a_family then
+				set_family (a_family)
+			end
+			if weight /= a_weight then
+				set_weight (a_weight)
+			end
+			if shape /= a_shape then
+				set_shape (a_shape)
+			end
+			if height /= a_height then
+				set_height (a_height)
+			end
 		end
 
 	set_family (a_family: INTEGER)
@@ -252,7 +255,7 @@ feature {EV_FONT, EV_ANY_I} -- Implementation
 				other.weight,
 				other.shape,
 				other.height,
-				other.preferred_families.twin
+				other.preferred_families
 			)
 		end
 

@@ -25,20 +25,17 @@ inherit
 
 	CONF_CLASS
 		rename
-			check_changed as set_date,
 			file_name as base_name,
 			group as cluster
-		export
-			{COMPILER_EXPORTER} set_date
 		undefine
 			is_compiled
 		redefine
+			check_changed_options,
 			class_type,
 			cluster,
 			invalidate,
 			options,
-			rebuild,
-			set_date
+			rebuild
 		end
 
 	CLASS_I
@@ -203,7 +200,9 @@ feature {COMPILER_EXPORTER} -- Setting
 			end
 		end
 
-	set_date
+	check_changed_options
+			-- <Precursor>
+			-- Trigger recompilation if necessary.
 		local
 			new_options: like options
 			c: like compiled_class

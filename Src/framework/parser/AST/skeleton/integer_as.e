@@ -613,12 +613,10 @@ feature {NONE} -- Translation
 				elseif v <= 0x8000 then
 						-- -0x8000..-0x81
 					types := integer_16_mask | integer_32_mask | integer_64_mask
-				elseif v <= (0x40000000).as_natural_64 * 2 then
-					fixme ("Replace above with `v <= {NATURAL_64} 0x80000000' after bootstrap.")
+				elseif v <= {NATURAL_64} 0x80000000 then
 						-- -0x80000000..-0x8001
 					types := integer_32_mask | integer_64_mask
-				elseif v <= (0x40000000).as_natural_64 * (0x40000000).as_natural_64 * 8 then
-					fixme ("Replace above with `v <= {NATURAL_64} 0x8000000000000000' after bootstrap.")
+				elseif v <= {NATURAL_64} 0x8000000000000000 then
 						-- -0x8000000000000000..-0x80000001
 					types := integer_64_mask
 				else
@@ -650,8 +648,7 @@ feature {NONE} -- Translation
 				elseif v <= 0x7FFFFFFF then
 						-- 0x10000..0x7FFFFFFF
 					types := integer_32_mask | integer_64_mask | natural_32_mask | natural_64_mask
-				elseif v <= (0xFFFFFFF).as_natural_64 * 0x10 + 0xF then
-					fixme ("Replace above with `v <= {NATURAL_64} 0xFFFFFFFF' after bootstrap.")
+				elseif v <= {NATURAL_64} 0xFFFFFFFF then
 						-- 0x80000000..0xFFFFFFFF
 					types := integer_64_mask | natural_32_mask | natural_64_mask
 				elseif v <= 0x7FFFFFFFFFFFFFFF then
@@ -660,9 +657,8 @@ feature {NONE} -- Translation
 				else
 						-- 0x8000000000000000..0xFFFFFFFFFFFFFFFF
 					check
-						v <= ((0xFFFFFFF).as_natural_64 * 0x10000000 + 0xFFFFFFF) * 0x100 + 0xFF
+						v <= {NATURAL_64} 0xFFFFFFFFFFFFFFFF
 					end
-					fixme ("Replace above with `v <= {NATURAL_64} 0xFFFFFFFFFFFFFFFF' after bootstrap.")
 					types := natural_64_mask
 				end
 			end
@@ -706,7 +702,7 @@ invariant
 	non_negative_natural: (has_natural (8) or has_natural (16) or has_natural (32) or has_natural (64)) implies not has_minus
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -508,104 +508,113 @@ feature {NONE} -- Implementation
 			l_info_file: RAW_FILE
 			l_info_filename: FILE_NAME
 			l_action: READABLE_STRING_8
+			rescued: BOOLEAN
 		do
-			l_system := a_target.system.name
-			l_target := a_target.name
+			if not rescued then
+				l_system := a_target.system.name
+				l_target := a_target.name
 
-			create l_args.make (10)
-			l_args.extend ("-config")
-			l_args.extend (a_target.system.file_name)
-			l_args.extend ("-target")
-			l_args.extend (a_target.name)
-			l_args.extend ("-batch")
+				create l_args.make (10)
+				l_args.extend ("-config")
+				l_args.extend (a_target.system.file_name)
+				l_args.extend ("-target")
+				l_args.extend (a_target.name)
+				l_args.extend ("-batch")
 
-			if arguments.is_c_compile then
-				l_args.extend ("-c_compile")
-			end
-
-			if a_clean then
-				l_args.extend ("-clean")
-			end
-
-			if arguments.is_experiment then
-				l_args.extend ("-experiment")
-			elseif arguments.is_compatible then
-				l_args.extend ("-compat")
-			end
-
-			l_args.extend ("-project_path")
-			if attached arguments.compilation_dir as l_compile_dir then
-				create l_dir.make (compilation_directory (a_target, l_compile_dir, a_dir))
-				mkdir (l_dir)
-				create l_info_filename.make_from_string (l_dir.name)
-				l_info_filename.set_file_name ("ecf_location")
-				create l_info_file.make_create_read_write (l_info_filename)
-				l_info_file.put_string (a_target.system.file_name)
-				l_info_file.close
-
-				l_args.extend (l_dir.name)
-			else
-					-- We always use the directory of the ECF by default
-				l_args.extend (compilation_directory (a_target, Void, a_dir))
-			end
-
-			if a_action_mode.is_equal ("melt") then
-				l_action := interface_text_melting
-				l_args.extend ("-melt")
-				l_args.extend (arguments.melt_ec_options)
-			elseif a_action_mode.is_equal ("freeze") then
-				l_action := interface_text_freezing
-				l_args.extend ("-freeze")
-				l_args.extend (arguments.freeze_ec_options)
-			elseif a_action_mode.is_equal ("finalize") then
-				l_action := interface_text_finalizing
-				l_args.extend ("-finalize")
-				l_args.extend (arguments.finalize_ec_options)
-			end
-
-			l_args.extend (arguments.ec_options)
-			debug
-				across
-					l_args as c
-				loop
-					print (c.item + " ")
+				if arguments.is_c_compile then
+					l_args.extend ("-c_compile")
 				end
-				print ("%N")
-			end
 
-			output_action (l_action, a_target)
+				if a_clean then
+					l_args.extend ("-clean")
+				end
 
-			create l_prc_factory
-			l_prc_launcher := l_prc_factory.process_launcher (eiffel_layout.ec_command_name, l_args, Void)
-			if arguments.is_log_verbose then
-				l_file := logs_filename (a_action_mode, a_target)
-				add_data_to_file (l_file, a_target.system.file_name, a_target.name)
-				l_prc_launcher.redirect_output_to_file (l_file)
-			else
-				l_prc_launcher.redirect_output_to_agent (agent (a_string: STRING)
-					do
-					end)
-			end
-			l_prc_launcher.redirect_error_to_same_as_output
-			l_prc_launcher.set_separate_console (False)
-			l_prc_launcher.launch
+				if arguments.is_experiment then
+					l_args.extend ("-experiment")
+				elseif arguments.is_compatible then
+					l_args.extend ("-compat")
+				end
 
-			check result_unset: Result = False end
-			if l_prc_launcher.launched then
-				l_prc_launcher.wait_for_exit
-				if l_prc_launcher.exit_code = 0 then
-					report_passed (a_action_mode, a_target)
-					output_status_passed
-					Result := True
+				l_args.extend ("-project_path")
+				if attached arguments.compilation_dir as l_compile_dir then
+					create l_dir.make (compilation_directory (a_target, l_compile_dir, a_dir))
+					mkdir (l_dir)
+					create l_info_filename.make_from_string (l_dir.name)
+					l_info_filename.set_file_name ("ecf_location")
+					create l_info_file.make_create_read_write (l_info_filename)
+					l_info_file.put_string (a_target.system.file_name)
+					l_info_file.close
+
+					l_args.extend (l_dir.name)
 				else
-					report_failed (a_action_mode, a_target)
-					output_status_failed
+						-- We always use the directory of the ECF by default
+					l_args.extend (compilation_directory (a_target, Void, a_dir))
 				end
+
+				if a_action_mode.is_equal ("melt") then
+					l_action := interface_text_melting
+					l_args.extend ("-melt")
+					l_args.extend (arguments.melt_ec_options)
+				elseif a_action_mode.is_equal ("freeze") then
+					l_action := interface_text_freezing
+					l_args.extend ("-freeze")
+					l_args.extend (arguments.freeze_ec_options)
+				elseif a_action_mode.is_equal ("finalize") then
+					l_action := interface_text_finalizing
+					l_args.extend ("-finalize")
+					l_args.extend (arguments.finalize_ec_options)
+				end
+
+				l_args.extend (arguments.ec_options)
+				debug
+					across
+						l_args as c
+					loop
+						print (c.item + " ")
+					end
+					print ("%N")
+				end
+
+				output_action (l_action, a_target)
+
+				create l_prc_factory
+				l_prc_launcher := l_prc_factory.process_launcher (eiffel_layout.ec_command_name, l_args, Void)
+				if arguments.is_log_verbose then
+					l_file := logs_filename (a_action_mode, a_target)
+					add_data_to_file (l_file, a_target.system.file_name, a_target.name)
+					l_prc_launcher.redirect_output_to_file (l_file)
+				else
+					l_prc_launcher.redirect_output_to_agent (agent (a_string: STRING)
+						do
+						end)
+				end
+				l_prc_launcher.redirect_error_to_same_as_output
+				l_prc_launcher.set_separate_console (False)
+				l_prc_launcher.launch
+
+				check result_unset: Result = False end
+				if l_prc_launcher.launched then
+					l_prc_launcher.wait_for_exit
+					if l_prc_launcher.exit_code = 0 then
+						report_passed (a_action_mode, a_target)
+						output_status_passed
+						Result := True
+					else
+						report_failed (a_action_mode, a_target)
+						output_status_failed
+					end
+				else
+					report_internal_error (a_action_mode, a_target)
+					output_status_internal_error
+				end
+				io.new_line
 			else
 				report_internal_error (a_action_mode, a_target)
 				output_status_internal_error
 			end
-			io.new_line
+		rescue
+			rescued := True
+			retry
 		end
 
 	compilation_directory (a_target: CONF_TARGET; a_compilation_dir: detachable READABLE_STRING_8; a_ecf_dir: READABLE_STRING_8): READABLE_STRING_8
@@ -813,11 +822,20 @@ feature {NONE} -- Directory manipulation
 
 	mkdir (d: DIRECTORY)
 			-- Create directory `d' recursively
+		local
+			rescued: BOOLEAN
 		do
-			if not d.exists then
-				d.recursive_create_dir
-				directories_created_by_application.force (d.name)
+			if not rescued then
+				if not d.exists then
+					d.recursive_create_dir
+					directories_created_by_application.force (d.name)
+				end
+			else
+				io.error.put_string ("ERROR: unable to create directory %"" + d.name + "%".%N")
 			end
+		rescue
+			rescued := True
+			retry
 		end
 
 	directories_created_by_application: ARRAYED_LIST [READABLE_STRING_8]
@@ -829,10 +847,21 @@ feature {NONE} -- Directory manipulation
 
 	rmdir (d: DIRECTORY)
 			-- remove directory `d' if exists
+		local
+			rescued: BOOLEAN
 		do
-			if d.exists then
-				d.recursive_delete
+			if not rescued then
+				if d.exists and then d.is_writable then
+					d.recursive_delete
+				else
+					io.error.put_string ("ERROR: unable to remove directory %"" + d.name + "%".%N")
+				end
+			else
+				io.error.put_string ("ERROR: unable to remove directory %"" + d.name + "%".%N")
 			end
+		rescue
+			rescued := True
+			retry
 		end
 
 	safe_rmdir (d: DIRECTORY)

@@ -1108,18 +1108,6 @@ feature -- Skeleton byte code
 			ba.append_integer (workbench_size);
 		end;
 
-	make_offset_byte_code (ba: BYTE_ARRAY; feature_id: INTEGER)
-			-- Generate byte code description of the feature of
-			-- feature `feature_id' in `ba'.
-		require
-			has_feature_id: has_feature_id (feature_id);
-		do
-			search_feature_id (feature_id);
-				-- Generate byte code description of attribute at the current
-				-- description
-			ba.append_integer (workbench_offset);
-		end;
-
 	generate_name_array
 			-- Generate static C array of attributes names in the
 			-- skeleton file.
@@ -1578,7 +1566,7 @@ invariant
 	class_type_not_void: class_type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

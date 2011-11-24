@@ -256,20 +256,16 @@ feature -- Type checking
 				integer_value := integer_64_value
 				natural_value := integer_value.as_natural_64
 			when natural_8_mask then
-				fixme ("Remove explicit conversion from NATURAL_8 to NATURAL_64 after bootstrap.")
-				natural_value := natural_8_value.as_natural_64
+				natural_value := natural_8_value
 				integer_value := natural_value.as_integer_64
 			when natural_16_mask then
-				fixme ("Remove explicit conversion from NATURAL_16 to NATURAL_64 after bootstrap.")
-				natural_value := natural_16_value.as_natural_64
+				natural_value := natural_16_value
 				integer_value := natural_value.as_integer_64
 			when natural_32_mask then
-				fixme ("Remove explicit conversion from NATURAL_32 to NATURAL_64 after bootstrap.")
-				natural_value := natural_32_value.as_natural_64
+				natural_value := natural_32_value
 				integer_value := natural_value.as_integer_64
 			when natural_64_mask then
-				fixme ("Remove explicit conversion from NATURAL_64 to NATURAL_64 after bootstrap.")
-				natural_value := natural_64_value.as_natural_64
+				natural_value := natural_64_value
 				integer_value := natural_value.as_integer_64
 			end
 			if value_type.is_integer then
@@ -280,10 +276,6 @@ feature -- Type checking
 					create {INT_VAL_B} Result.make (integer_value.as_integer_32)
 				end
 			elseif value_type.is_natural then
-
-				check
-					natural_type: value_type.is_natural
-				end
 				natural_a ?= value_type
 				if natural_a.size = 64 then
 					create {NAT64_VAL_B} Result.make (natural_value)
@@ -293,7 +285,7 @@ feature -- Type checking
 			elseif value_type.is_enum then
 				create {INT_VAL_B} Result.make (integer_value.as_integer_32)
 			else
-				check False end
+				check unknown_value_type: False then end
 			end
 		end
 
@@ -527,7 +519,7 @@ invariant
 		(constant_actual_type.is_integer or constant_actual_type.is_natural)
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

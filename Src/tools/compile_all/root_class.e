@@ -581,7 +581,7 @@ feature {NONE} -- Implementation
 				l_prc_launcher := l_prc_factory.process_launcher (eiffel_layout.ec_command_name, l_args, Void)
 				if arguments.is_log_verbose then
 					l_file := logs_filename (a_action_mode, a_target)
-					add_data_to_file (l_file, a_target.system.file_name, a_target.name)
+					add_data_to_file (l_file, a_target.system.file_name, a_target.name, l_args)
 					l_prc_launcher.redirect_output_to_file (l_file)
 				else
 					l_prc_launcher.redirect_output_to_agent (agent (a_string: STRING)
@@ -646,7 +646,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_data_to_file (a_file_name: STRING; a_config, a_target: STRING)
+	ISE_EC_FLAGS_environment_variable_value: detachable READABLE_STRING_8
+		local
+			e: EXECUTION_ENVIRONMENT
+		once
+			create e
+			if attached e.get ("ISE_EC_FLAGS") as v then
+				v.left_adjust
+				if not v.is_empty then
+					Result := v
+				end
+			end
+		end
+
+	add_data_to_file (a_file_name: STRING; a_config, a_target: STRING; ec_args: ITERABLE [READABLE_STRING_8])
 			-- Insert some data in `a_file_name' saying what we are compiling and when.
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -668,6 +681,17 @@ feature {NONE} -- Implementation
 				l_file.put_string ("%" from config %"")
 				l_file.put_string (a_config)
 				l_file.put_string ("%"%N%N")
+				l_file.put_string ("Compiler's arguments: ")
+				across
+					ec_args as c
+				loop
+					l_file.put_string (c.item + " ")
+				end
+				l_file.put_string ("%N")
+				if attached ISE_EC_FLAGS_environment_variable_value as v then
+					l_file.put_string ("ISE_EC_FLAGS: "+ v + "%N")
+				end
+
 				l_file.close
 			end
 		rescue

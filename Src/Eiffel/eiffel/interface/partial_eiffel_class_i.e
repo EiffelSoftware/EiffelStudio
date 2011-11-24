@@ -16,23 +16,22 @@ inherit
 		undefine
 			is_read_only,
 			full_file_name,
-			set_date
+			check_changed
 		redefine
+			class_type,
 			cluster,
-			file_name,
-			class_type
+			file_name
 		end
 
 	CONF_CLASS_PARTIAL
 		rename
-			check_changed as set_date,
 			file_name as base_name,
 			group as cluster
 		undefine
-			invalidate, is_compiled, options, rebuild
+			check_changed_options, invalidate, is_compiled, options, rebuild
 		redefine
-			cluster,
-			class_type
+			class_type,
+			cluster
 		end
 
 create {CONF_FACTORY}

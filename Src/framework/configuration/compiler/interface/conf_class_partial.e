@@ -144,6 +144,7 @@ feature {CONF_ACCESS} -- Update, in compiled only
 				end
 				partial_classes.forth
 			end
+			check_changed_options
 		end
 
 feature {NONE} -- Implementation
@@ -174,7 +175,7 @@ feature {NONE} -- Implementation
 					create l_dir.make (base_location.build_path (path, ""))
 					l_dir.recursive_create_directory
 
-						-- us temporary file to get name of class
+						-- Use temporary file to get name of class.
 					file_name := "tmp.e"
 					create l_file.make_open_write (full_file_name)
 					l_file.put_string (epc_merger.class_text)
@@ -209,7 +210,7 @@ feature {NONE} -- Shared instances
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -233,10 +234,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

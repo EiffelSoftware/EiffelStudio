@@ -53,9 +53,13 @@ feature -- Visit nodes
 	process_library (a_library: CONF_LIBRARY)
 			-- Process `a_library'.
 		do
-			if not is_override_only and then not a_library.is_readonly and then not processed_libraries.has (a_library.library_target.system.uuid) then
+			if
+				not is_override_only and then
+				attached a_library.library_target as t and then
+				not processed_libraries.has (t.system.uuid)
+			then
 				on_process_group (a_library)
-				processed_libraries.force (a_library.library_target.system.uuid)
+				processed_libraries.force (t.system.uuid)
 				a_library.library_target.process (Current)
 			end
 		end
@@ -63,7 +67,7 @@ feature -- Visit nodes
 	process_precompile (a_precompile: CONF_PRECOMPILE)
 			-- Process `a_precompile'.
 		do
-			if not is_override_only and then not a_precompile.is_readonly then
+			if not is_override_only then
 				process_library (a_precompile)
 			end
 		end
@@ -71,7 +75,7 @@ feature -- Visit nodes
 	process_cluster (a_cluster: CONF_CLUSTER)
 			-- Process `a_cluster'.
 		do
-			if not is_override_only and then not a_cluster.is_readonly then
+			if not is_override_only then
 				on_process_group (a_cluster)
 				find_modified (a_cluster)
 			end
@@ -80,12 +84,10 @@ feature -- Visit nodes
 	process_override (an_override: CONF_OVERRIDE)
 			-- Process `an_override'.
 		do
-			if not an_override.is_readonly then
-				on_process_group (an_override)
-					-- check if any classes have been added and force a rebuild if this is the case
-				process_cluster_recursive ("", an_override, an_override.active_file_rule (state))
-				find_modified (an_override)
-			end
+			on_process_group (an_override)
+				-- Check if any classes have been added and force a rebuild if this is the case.
+			process_cluster_recursive ("", an_override, an_override.active_file_rule (state))
+			find_modified (an_override)
 		end
 
 feature -- Status
@@ -155,31 +157,35 @@ feature {NONE} -- Implementation
 			a_group_not_void: a_group /= Void
 		local
 			l_class: CONF_CLASS
-			l_classes: HASH_TABLE [CONF_CLASS, STRING]
+			is_read_only: BOOLEAN
 		do
-			l_classes := a_group.classes
-			if l_classes /= Void then
+			if attached a_group.classes as l_classes then
+				is_read_only := a_group.is_readonly
 				from
 					l_classes.start
 				until
 					is_force_rebuild or l_classes.after
 				loop
 					l_class := l_classes.item_for_iteration
-						-- check for changes
-					l_class.check_changed
+						-- Check for changes.
+					if is_read_only then
+							-- Do not look into source code changes for read-only group.
+						l_class.check_changed_options
+					else
+							-- Take into account any changes to a class.
+						l_class.check_changed
+					end
 					if l_class.is_error or else l_class.is_renamed or l_class.is_removed then
 						l_class.reset_error
 						is_force_rebuild := True
-					else
-						if l_class.is_modified then
-							if l_class.is_compiled then
-									-- Invariant of CONF_CLASS tell us that it cannot be an override class.
-								if not l_class.is_overriden then
-									modified_classes.extend (l_class)
-								end
-							elseif l_class.does_override then
-								l_class.overrides.do_if (agent modified_classes.extend, agent {CONF_CLASS}.is_compiled)
+					elseif l_class.is_modified then
+						if l_class.is_compiled then
+								-- Invariant of CONF_CLASS tell us that it cannot be an override class.
+							if not l_class.is_overriden then
+								modified_classes.extend (l_class)
 							end
+						elseif l_class.does_override then
+							l_class.overrides.do_if (agent modified_classes.extend, agent {CONF_CLASS}.is_compiled)
 						end
 					end
 					l_classes.forth
@@ -198,7 +204,7 @@ invariant
 	process_group_observer_not_void: process_group_observer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

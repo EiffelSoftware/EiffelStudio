@@ -390,8 +390,8 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 		end
 
 	check_changed
-			-- Check if the file was changed.
-			-- And update name if necessary
+			-- Check if the file was changed and if the options were changed.
+			-- Update name if necessary.
 		local
 			l_date: INTEGER
 		do
@@ -405,6 +405,12 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 					-- File was changed, its name cannot be confirmed anymore
 				is_class_name_confirmed := False
 			end
+			check_changed_options
+		end
+
+	check_changed_options
+			-- Check if any options of the class were changed.
+		do
 		end
 
 	set_name (a_name: STRING)
@@ -519,7 +525,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

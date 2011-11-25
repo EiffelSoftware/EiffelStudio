@@ -554,18 +554,26 @@ feature {NONE} -- Implementation
 				if a_action_mode.is_equal ("melt") then
 					l_action := interface_text_melting
 					l_args.extend ("-melt")
-					l_args.extend (arguments.melt_ec_options)
+					if not arguments.melt_ec_options.is_empty then
+						l_args.extend (arguments.melt_ec_options)
+					end
 				elseif a_action_mode.is_equal ("freeze") then
 					l_action := interface_text_freezing
 					l_args.extend ("-freeze")
-					l_args.extend (arguments.freeze_ec_options)
+					if not arguments.freeze_ec_options.is_empty then
+						l_args.extend (arguments.freeze_ec_options)
+					end
 				elseif a_action_mode.is_equal ("finalize") then
 					l_action := interface_text_finalizing
 					l_args.extend ("-finalize")
-					l_args.extend (arguments.finalize_ec_options)
+					if not arguments.finalize_ec_options.is_empty then
+						l_args.extend (arguments.finalize_ec_options)
+					end
 				end
 
-				l_args.extend (arguments.ec_options)
+				if not arguments.ec_options.is_empty then
+					l_args.extend (arguments.ec_options)
+				end
 				debug
 					across
 						l_args as c
@@ -875,10 +883,8 @@ feature {NONE} -- Directory manipulation
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				if d.exists and then d.is_writable then
+				if d.exists then
 					d.recursive_delete
-				else
-					io.error.put_string ("ERROR: unable to remove directory %"" + d.name + "%".%N")
 				end
 			else
 				io.error.put_string ("ERROR: unable to remove directory %"" + d.name + "%".%N")

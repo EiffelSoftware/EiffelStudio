@@ -524,6 +524,7 @@ feature {CLASS_AS} -- Process leafs
 			n: INTEGER
 			l_start_idx: INTEGER
 			inline_comment: BOOLEAN
+			c: CHARACTER
 		do
 				-- The string can hold multiple comments, starting with '--'.
 				-- Remove all '%N' and '%R' characters before and after each comment line.
@@ -580,11 +581,40 @@ feature {CLASS_AS} -- Process leafs
 				end
 
 					-- Advance to the next line of a comment.
-				i := s.substring_index ("--", i)
-				if i = 0 then
-					i := n
+				l_start_idx := s.substring_index ("--", i)
+				if l_start_idx = 0 then
+					l_start_idx := n
 				end
-				l_start_idx := i
+
+					-- Check if the comments are separated with additional new lines.
+				if i < l_start_idx then
+					from
+							-- Record used new-line character.
+							-- If this character is repeated, there are multiple new lines.
+						c := s [i]
+						check
+							new_line: new_line_chars.has (c)
+						end
+							-- Skip recorded new-line character.
+						i := i + 1
+					until
+						i >= l_start_idx
+					loop
+						if s [i] = c then
+								-- There are multiple new lines.
+								-- Collapse them into one empty new line.
+							Result.append_character ('%N')
+							i := l_start_idx
+						else
+							i := i + 1
+						end
+					end
+				end
+
+					-- Prepare to the next line of a comment.
+				check
+					i_set: i >= l_start_idx
+				end
 				inline_comment := False
 			end
 				-- Put new line after the comment end.

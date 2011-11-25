@@ -314,20 +314,23 @@ Class_declaration:
 				end
 				
 				root_node := new_class_description ($4, temp_string_as1,
-					is_deferred, is_expanded, is_separate, is_frozen_class, is_external_class, is_partial_class,
+					is_deferred, is_expanded, is_frozen_class, is_external_class, is_partial_class,
 					$1, $18, $5, $9, $11, $13, $14, $15, $17, suppliers, temp_string_as2, $19)
 				if root_node /= Void then
 					root_node.set_text_positions (
-						formal_generics_end_position,				conforming_inheritance_end_position,	non_conforming_inheritance_end_position,
-						features_end_position)
-						if $6 /= Void then
-							root_node.set_alias_keyword ($6.first)
-						end
-						if $7 /= Void then
-							root_node.set_obsolete_keyword ($7.first)
-						end
-						root_node.set_header_mark (frozen_keyword, expanded_keyword, deferred_keyword, separate_keyword, external_keyword)
-						root_node.set_class_keyword ($3)
+						formal_generics_end_position,
+						conforming_inheritance_end_position,
+						non_conforming_inheritance_end_position,
+						features_end_position
+					)
+					if $6 /= Void then
+						root_node.set_alias_keyword ($6.first)
+					end
+					if $7 /= Void then
+						root_node.set_obsolete_keyword ($7.first)
+					end
+					root_node.set_header_mark (frozen_keyword, expanded_keyword, deferred_keyword, external_keyword)
+					root_node.set_class_keyword ($3)
 				end
 			}
 	;

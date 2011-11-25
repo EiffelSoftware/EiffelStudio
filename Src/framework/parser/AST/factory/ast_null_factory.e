@@ -548,7 +548,7 @@ feature -- Access
 		end
 
 	new_class_as (n: ID_AS; ext_name: STRING_AS;
-			is_d, is_e, is_s, is_fc, is_ex, is_par: BOOLEAN;
+			is_d, is_e, is_fc, is_ex, is_par: BOOLEAN;
 			top_ind, bottom_ind: INDEXING_CLAUSE_AS;
 			g: EIFFEL_LIST [FORMAL_DEC_AS];
 			cp: PARENT_LIST_AS;
@@ -560,8 +560,7 @@ feature -- Access
 			s: SUPPLIERS_AS;
 			o: STRING_AS;
 			ed: KEYWORD_AS): CLASS_AS
-
-			-- New CLASS AST node
+			-- <Precursor>
 		do
 		end
 
@@ -1192,7 +1191,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

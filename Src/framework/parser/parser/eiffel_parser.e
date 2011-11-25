@@ -3496,20 +3496,23 @@ end
 				end
 				
 				root_node := new_class_description (yyvs2.item (yyvsp2), temp_string_as1,
-					is_deferred, is_expanded, is_separate, is_frozen_class, is_external_class, is_partial_class,
+					is_deferred, is_expanded, is_frozen_class, is_external_class, is_partial_class,
 					yyvs109.item (yyvsp109 - 1), yyvs109.item (yyvsp109), yyvs107.item (yyvsp107), yyvs114.item (yyvsp114 - 1), yyvs114.item (yyvsp114), yyvs93.item (yyvsp93), yyvs92.item (yyvsp92), yyvs100.item (yyvsp100), yyvs67.item (yyvsp67), suppliers, temp_string_as2, yyvs12.item (yyvsp12))
 				if root_node /= Void then
 					root_node.set_text_positions (
-						formal_generics_end_position,				conforming_inheritance_end_position,	non_conforming_inheritance_end_position,
-						features_end_position)
-						if yyvs22.item (yyvsp22 - 1) /= Void then
-							root_node.set_alias_keyword (yyvs22.item (yyvsp22 - 1).first)
-						end
-						if yyvs22.item (yyvsp22) /= Void then
-							root_node.set_obsolete_keyword (yyvs22.item (yyvsp22).first)
-						end
-						root_node.set_header_mark (frozen_keyword, expanded_keyword, deferred_keyword, separate_keyword, external_keyword)
-						root_node.set_class_keyword (yyvs12.item (yyvsp12 - 1))
+						formal_generics_end_position,
+						conforming_inheritance_end_position,
+						non_conforming_inheritance_end_position,
+						features_end_position
+					)
+					if yyvs22.item (yyvsp22 - 1) /= Void then
+						root_node.set_alias_keyword (yyvs22.item (yyvsp22 - 1).first)
+					end
+					if yyvs22.item (yyvsp22) /= Void then
+						root_node.set_obsolete_keyword (yyvs22.item (yyvsp22).first)
+					end
+					root_node.set_header_mark (frozen_keyword, expanded_keyword, deferred_keyword, external_keyword)
+					root_node.set_class_keyword (yyvs12.item (yyvsp12 - 1))
 				end
 			
 if yy_parsing_status >= yyContinue then

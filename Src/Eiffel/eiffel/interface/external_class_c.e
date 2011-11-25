@@ -104,7 +104,6 @@ feature -- Initialization
 					create {STRING_AS}.initialize (external_class.dotnet_name, 0, 0, 0, 0),
 					is_deferred,
 					is_expanded,
-					False,	-- is_separate
 					is_frozen,
 					True,	-- is_external
 					False,  -- is_partial

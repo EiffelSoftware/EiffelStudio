@@ -96,7 +96,7 @@ feature -- Access
 		end
 
 	new_class_as (n: ID_AS; ext_name: STRING_AS;
-			is_d, is_e, is_s, is_fc, is_ex, is_par: BOOLEAN;
+			is_d, is_e, is_fc, is_ex, is_par: BOOLEAN;
 			top_ind, bottom_ind: INDEXING_CLAUSE_AS;
 			g: EIFFEL_LIST [FORMAL_DEC_AS];
 			cp: PARENT_LIST_AS;
@@ -108,17 +108,11 @@ feature -- Access
 			s: SUPPLIERS_AS;
 			o: STRING_AS;
 			ed: KEYWORD_AS): CLASS_AS
-
-			-- New CLASS AST node
+			-- <Precursor>
 		do
 			if n /= Void and s /= Void and (co = Void or else not co.is_empty) and ed /= Void then
-				create Result.initialize (n, ext_name, is_d, is_e, is_s, is_fc, is_ex, is_par, top_ind,
+				create Result.initialize (n, ext_name, is_d, is_e, is_fc, is_ex, is_par, top_ind,
 				bottom_ind, g, cp, ncp, c, co, f, inv, s, o, ed)
-
-					-- Check for Concurrent Eiffel which is not yet supported
-				if Result.is_separate then
-					error_handler.insert_error (create {SEPARATE_SYNTAX_ERROR}.init (eiffel_parser))
-				end
 			end
 		end
 

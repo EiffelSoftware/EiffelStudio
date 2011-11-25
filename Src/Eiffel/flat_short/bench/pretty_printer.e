@@ -770,7 +770,6 @@ feature {CLASS_AS} -- Class Declarations
 			safe_process_and_print (l_as.frozen_keyword (match_list), "", " ")
 			safe_process_and_print (l_as.deferred_keyword (match_list), "", " ")
 			safe_process_and_print (l_as.expanded_keyword (match_list), "", " ")
-			safe_process_and_print (l_as.separate_keyword (match_list), "", " ")
 			safe_process_and_print (l_as.external_keyword (match_list), "", " ")
 
 			safe_process_and_print (l_as.class_keyword (match_list), "", "")

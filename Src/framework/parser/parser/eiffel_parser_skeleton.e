@@ -188,12 +188,10 @@ feature -- Initialization
 			is_partial_class := False
 			is_deferred := False
 			is_expanded := False
-			is_separate := False
 			deferred_keyword := Void
 			expanded_keyword := Void
 			external_keyword := Void
 			frozen_keyword := Void
-			separate_keyword := Void
 		end
 
 feature -- Status report
@@ -693,9 +691,6 @@ feature {NONE} -- Implementation
 			-- Boolean mark for class whose definition if spread
 			-- amongst multiple files.
 
-	is_separate: BOOLEAN
-			-- Boolean mark for separate class
-
 	has_convert_mark: BOOLEAN
 			-- Boolean mark for alias names with convert mark
 
@@ -718,7 +713,6 @@ feature {NONE} -- Implementation
 	frozen_keyword,
 	expanded_keyword,
 	deferred_keyword,
-	separate_keyword,
 	external_keyword: KEYWORD_AS
 			-- Keywords that may appear in header mark of a class
 
@@ -899,7 +893,7 @@ feature {NONE} -- Counters
 feature {NONE} -- Actions
 
 	new_class_description (n: ID_AS; n2: STRING_AS;
-		is_d, is_e, is_s, is_fc, is_ex, is_par: BOOLEAN;
+		is_d, is_e, is_fc, is_ex, is_par: BOOLEAN;
 		first_ind, last_ind: INDEXING_CLAUSE_AS; g: EIFFEL_LIST [FORMAL_DEC_AS];
 		a_parent_list_1: PARENT_LIST_AS; a_parent_list_2: PARENT_LIST_AS; c: EIFFEL_LIST [CREATE_AS]; co: CONVERT_FEAT_LIST_AS;
 		f: EIFFEL_LIST [FEATURE_CLAUSE_AS]; inv: INVARIANT_AS;
@@ -928,7 +922,7 @@ feature {NONE} -- Actions
 				l_non_conforming_parents := a_parent_list_2
 			end
 
-			Result := ast_factory.new_class_as (n, ext_name, is_d, is_e, is_s, is_fc, is_ex, is_par, first_ind,
+			Result := ast_factory.new_class_as (n, ext_name, is_d, is_e, is_fc, is_ex, is_par, first_ind,
 				last_ind, g, l_conforming_parents, l_non_conforming_parents, c, co, f, inv, s, o, ed)
 		end
 

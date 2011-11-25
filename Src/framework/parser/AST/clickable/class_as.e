@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 	initialize (n: like class_name;
 			ext_name: STRING_AS;
-			is_d, is_e, is_s, is_fc, is_ex, is_par: BOOLEAN;
+			is_d, is_e, is_fc, is_ex, is_par: BOOLEAN;
 			top_ind: like top_indexes;
 			bottom_ind: like bottom_indexes;
 			g: like generics;
@@ -42,7 +42,6 @@ feature {NONE} -- Initialization
 			s: like suppliers;
 			o: like obsolete_message;
 			ed: like end_keyword)
-
 			-- Create a new CLASS AST node.
 		require
 			n_not_void: n /= Void
@@ -54,7 +53,6 @@ feature {NONE} -- Initialization
 			external_class_name := ext_name
 			is_deferred := is_d
 			is_expanded := is_e
-			is_separate := is_s
 			is_frozen := is_fc
 			is_external := is_ex
 			is_partial := is_par
@@ -88,7 +86,6 @@ feature {NONE} -- Initialization
 			external_class_name_set: external_class_name = ext_name
 			is_deferred_set: is_deferred = is_d
 			is_expanded_set: is_expanded = is_e
-			is_separate_set: is_separate = is_s
 			is_frozen_set: is_frozen = is_fc
 			is_external_set: is_external = is_ex
 			is_partial_set: is_partial = is_par
@@ -130,7 +127,6 @@ feature -- Roundtrip
 	frozen_keyword_index,
 	expanded_keyword_index,
 	deferred_keyword_index,
-	separate_keyword_index,
 	external_keyword_index: INTEGER
 			-- Index of keywords that may appear in header mark
 
@@ -212,19 +208,6 @@ feature -- Roundtrip
 			end
 		end
 
-	separate_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
-			-- Keywords that may appear in header mark
-		require
-			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
-		do
-			i := separate_keyword_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
-			end
-		end
-
 	external_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keywords that may appear in header mark
 		require
@@ -238,7 +221,7 @@ feature -- Roundtrip
 			end
 		end
 
-	set_header_mark (a_frozen_keyword, a_expanded_keyword, a_deferred_keyword, a_separate_keyword, a_external_keyword: KEYWORD_AS)
+	set_header_mark (a_frozen_keyword, a_expanded_keyword, a_deferred_keyword, a_external_keyword: KEYWORD_AS)
 			-- Set header marks of a class.
 		do
 			if a_frozen_keyword /= Void then
@@ -250,9 +233,6 @@ feature -- Roundtrip
 			if a_deferred_keyword /= Void then
 				deferred_keyword_index := a_deferred_keyword.index
 			end
-			if a_separate_keyword /= Void then
-				separate_keyword_index := a_separate_keyword.index
-			end
 			if a_external_keyword /= Void then
 				external_keyword_index := a_external_keyword.index
 			end
@@ -260,7 +240,6 @@ feature -- Roundtrip
 			frozen_keyword_set: a_frozen_keyword /= Void implies frozen_keyword_index = a_frozen_keyword.index
 			expanded_keyword_set: a_expanded_keyword /= Void implies expanded_keyword_index = a_expanded_keyword.index
 			deferred_keyword_set: a_deferred_keyword /= Void implies deferred_keyword_index = a_deferred_keyword.index
-			separate_keyword_set: a_separate_keyword /= Void implies separate_keyword_index = a_separate_keyword.index
 			external_keyword_set: a_external_keyword /= Void implies external_keyword_index = a_external_keyword.index
 		end
 
@@ -306,8 +285,6 @@ feature -- Roundtrip
 				Result := deferred_keyword (a_list)
 			elseif expanded_keyword_index /= 0 then
 				Result := expanded_keyword (a_list)
-			elseif separate_keyword_index /= 0 then
-				Result := separate_keyword (a_list)
 			elseif external_keyword_index /= 0 then
 				Result := external_keyword (a_list)
 			end
@@ -447,9 +424,6 @@ feature -- Attributes
 
 	is_expanded: BOOLEAN
 			-- Is the class expanded ?
-
-	is_separate: BOOLEAN
-			-- Is the class separate ?
 
 	is_frozen: BOOLEAN
 			-- Is class frozen, ie we cannot inherit from it.
@@ -950,8 +924,7 @@ feature -- Comparison
 				equivalent (parents, other.parents) and then
 				equivalent (features, other.features) and then
 				is_deferred = other.is_deferred and then
-				is_expanded = other.is_expanded and then
-				is_separate = other.is_separate
+				is_expanded = other.is_expanded
 		end
 
 feature {ABSTRACT_CLASS_C} -- Update
@@ -993,7 +966,7 @@ invariant
 	date_valid: date >= -1
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

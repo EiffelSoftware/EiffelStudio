@@ -1,8 +1,8 @@
 note
 	description: "[
-							Ast parser factory for testing tool
-							This factory only analyzes indexing related codes.
-																												]"
+		Ast parser factory for testing tool.
+		This factory only analyzes indexing related codes.
+	]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date$"
@@ -14,24 +14,24 @@ class
 inherit
 	AST_NULL_FACTORY
 		redefine
-				new_index_as,
-				new_eiffel_list_atomic_as,
-				new_filled_id_as,
-				new_filled_id_as_with_existing_stub,
-				new_filled_bit_id_as,
-				new_indexing_clause_as,
-				new_class_as
+			new_index_as,
+			new_eiffel_list_atomic_as,
+			new_filled_id_as,
+			new_filled_id_as_with_existing_stub,
+			new_filled_bit_id_as,
+			new_indexing_clause_as,
+			new_class_as
 		end
 
 feature -- Query
 
 	top_indexing: INDEXING_CLAUSE_AS
-				-- Top indexing clause
+			-- Top indexing clause
 
 feature {NONE} -- Visitor
 
 	new_class_as (n: ID_AS; ext_name: STRING_AS;
-			is_d, is_e, is_s, is_fc, is_ex, is_par: BOOLEAN;
+			is_d, is_e, is_fc, is_ex, is_par: BOOLEAN;
 			top_ind, bottom_ind: INDEXING_CLAUSE_AS;
 			g: EIFFEL_LIST [FORMAL_DEC_AS];
 			cp: PARENT_LIST_AS;
@@ -43,7 +43,6 @@ feature {NONE} -- Visitor
 			s: SUPPLIERS_AS;
 			o: STRING_AS;
 			ed: KEYWORD_AS): CLASS_AS
-		
 			-- <Precursor>
 		do
 			top_indexing := top_ind
@@ -102,7 +101,7 @@ feature {NONE} -- Visitor
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -126,11 +125,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -463,6 +463,7 @@ feature {NONE} -- Implementation
 			default_file_name_not_empty: not a_default_file_name.is_empty
 		local
 			parser: XML_LITE_STOPPABLE_PARSER
+			ns: XML_NAMESPACE_RESOLVER
 			l_file: PLAIN_TEXT_FILE
 			l_tree: XML_CALLBACKS_DOCUMENT
 			xml_data: detachable XML_ELEMENT
@@ -471,7 +472,8 @@ feature {NONE} -- Implementation
 		do
 			create parser.make
 			create l_tree.make_null
-			parser.set_callbacks (l_tree)
+			create ns.set_next (l_tree)
+			parser.set_callbacks (ns)
 
 			create l_file.make (a_default_file_name)
 			if l_file.exists and then l_file.is_readable then
@@ -609,7 +611,7 @@ invariant
 	has_preferences_storage: preferences_storage /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

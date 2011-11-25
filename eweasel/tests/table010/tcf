@@ -1,0 +1,16 @@
+
+test_name	valid-iteration-index-failure	
+test_description Calling `table.valid_cursor (table.cursor)' on a newly created empty hash table violates postcondition ` only_if_in_index_set' of {HASH_TABLE}.valid_iteration_index
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output
+execute_result ok
+compare		exec_output output
+
+test_end
+

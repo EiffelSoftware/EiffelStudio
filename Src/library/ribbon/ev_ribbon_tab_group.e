@@ -57,6 +57,7 @@ feature -- Command
 			l_key: EV_PROPERTY_KEY
 			l_valie: EV_PROPERTY_VARIANT
 			l_command_id: NATURAL_32
+			l_result: BOOLEAN
 		do
 			if not command_list.is_empty then
 				l_command_id := command_list.item (command_list.lower)
@@ -65,7 +66,7 @@ feature -- Command
 				l_valie.set_uint32 ({EV_UI_CONTEXT_AVAILABILITY_ENUM}.active)
 
 				if attached ribbon as l_ribbon then
-					l_ribbon.set_command_property (l_command_id, l_key, l_valie)
+					l_result := l_ribbon.set_command_property (l_command_id, l_key, l_valie)
 				end
 			end
 		end
@@ -76,6 +77,7 @@ feature -- Command
 			l_key: EV_PROPERTY_KEY
 			l_valie: EV_PROPERTY_VARIANT
 			l_command_id: NATURAL_32
+			l_result: BOOLEAN
 		do
 			if not command_list.is_empty then
 				l_command_id := command_list.item (command_list.lower)
@@ -84,7 +86,7 @@ feature -- Command
 				l_valie.set_uint32 ({EV_UI_CONTEXT_AVAILABILITY_ENUM}.not_available)
 
 				if attached ribbon as l_ribbon then
-					l_ribbon.set_command_property (l_command_id, l_key, l_valie)
+					l_result := l_ribbon.set_command_property (l_command_id, l_key, l_valie)
 				end
 			end
 		end

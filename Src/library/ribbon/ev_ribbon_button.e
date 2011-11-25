@@ -77,6 +77,7 @@ feature -- Command
 			l_key: EV_PROPERTY_KEY
 			l_value: EV_PROPERTY_VARIANT
 			l_command_id: NATURAL_32
+			l_result: BOOLEAN
 		do
 			l_command_id := command_list.item (command_list.lower)
 			check command_id_valid: l_command_id /= 0 end
@@ -85,8 +86,19 @@ feature -- Command
 				create l_key.make_enabled
 				create l_value.make_empty
 				l_value.set_boolean_value (a_bool)
-				l_ribbon.set_command_property (l_command_id, l_key, l_value)
+				l_result := l_ribbon.set_command_property (l_command_id, l_key, l_value)
 				l_value.destroy
+			end
+
+			if not l_result then
+				if not a_bool then
+					-- Setting value to False failed
+					-- Set it later
+					delay_set_enabled_to_false := True
+				else
+					-- Do not need to set it since it's default value
+					delay_set_enabled_to_false := False
+				end
 			end
 		end
 
@@ -112,6 +124,7 @@ feature {EV_RIBBON} -- Command
 			-- <Precursor>
 		local
 			l_key: EV_PROPERTY_KEY
+			l_value: EV_PROPERTY_VARIANT
 		do
 			Result := Precursor (a_command_id, a_property_key, a_property_current_value, a_property_new_value)
 			if command_list.has (a_command_id) then
@@ -123,6 +136,12 @@ feature {EV_RIBBON} -- Command
 					Result := update_property_for_tooltip (a_command_id, a_property_key, a_property_current_value, a_property_new_value)
 				elseif l_key.is_small_image or l_key.is_large_image then
 					Result := update_property_for_image (a_command_id, a_property_key, a_property_current_value, a_property_new_value)
+				elseif l_key.is_enabled then
+					if delay_set_enabled_to_false then
+						create l_value.share_from_pointer (a_property_new_value)
+						l_value.set_boolean_value (False)
+						delay_set_enabled_to_false := False
+					end
 				end
 			end
 		end
@@ -131,6 +150,10 @@ feature {NONE} -- Implementation
 
 	command_list: ARRAY [NATURAL_32]
 			-- Command ids handled by current
+
+	delay_set_enabled_to_false: BOOLEAN
+			-- Before Application menu's button visible on screen, `set_enabled' will not work
+			-- Setting it when showing the button for first time
 
 ;note
 	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"

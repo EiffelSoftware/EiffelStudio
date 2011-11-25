@@ -164,12 +164,16 @@ feature {EV_RIBBON_ITEM, EV_RIBBON_TEXTABLE, EV_RIBBON_TOOLTIPABLE, EV_RIBBON_AP
 			a_key_not_void: a_key /= Void
 			a_key_exists: a_key.exists
 			a_variant_not_void: a_variant /= Void
+		local
+			l_result: NATURAL_32
 		do
-			c_get_ui_command_property (item, a_command_id, a_key.item, a_variant.item)
+			l_result := c_get_ui_command_property (item, a_command_id, a_key.item, a_variant.item)
+			check l_result = {WEL_COM_HRESULT}.s_ok end
 		end
 
-	set_command_property (a_command_id: NATURAL_32; a_key: EV_PROPERTY_KEY; a_variant: EV_PROPERTY_VARIANT)
+	set_command_property (a_command_id: NATURAL_32; a_key: EV_PROPERTY_KEY; a_variant: EV_PROPERTY_VARIANT): BOOLEAN
 			-- Sets a command property, value, or state.
+			-- Result true means setting success, otherwise failed
 		require
 			exists: exists
 			a_key_not_void: a_key /= Void
@@ -179,7 +183,7 @@ feature {EV_RIBBON_ITEM, EV_RIBBON_TEXTABLE, EV_RIBBON_TOOLTIPABLE, EV_RIBBON_AP
 			l_result: NATURAL_32
 		do
 			l_result := c_set_ui_command_property (item, a_command_id, a_key.item, a_variant.item)
-			check l_result = {WEL_COM_HRESULT}.s_ok end
+			Result := (l_result = {WEL_COM_HRESULT}.s_ok)
 		end
 
 	invalidate (a_command_id: NATURAL_32; a_flags: INTEGER_32; a_key: EV_PROPERTY_KEY)
@@ -337,7 +341,7 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 
 feature {NONE} -- Implementation
 
-	c_get_ui_command_property (a_framework: POINTER; a_command_id: NATURAL_32; a_key, a_variant: POINTER)
+	c_get_ui_command_property (a_framework: POINTER; a_command_id: NATURAL_32; a_key, a_variant: POINTER): NATURAL_32
 			-- Retrieves a command property, value, or state.
 		require
 			a_framework_not_null: a_framework /= default_pointer
@@ -352,6 +356,7 @@ feature {NONE} -- Implementation
 					(UINT32) $a_command_id,
 					(REFPROPERTYKEY) *(PROPERTYKEY *) $a_key,
 					(PROPVARIANT *) $a_variant);
+				return hr;
 			}"
 		end
 

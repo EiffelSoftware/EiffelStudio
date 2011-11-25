@@ -41,6 +41,7 @@ feature -- Command
 			l_key: EV_PROPERTY_KEY
 			l_value: EV_PROPERTY_VARIANT
 			l_command_id: NATURAL_32
+			l_result: BOOLEAN
 		do
 			l_command_id := command_list.item (command_list.lower)
 			check command_id_valid: l_command_id /= 0 end
@@ -49,7 +50,7 @@ feature -- Command
 				create l_key.make_decimal
 				create l_value.make_empty
 				l_value.set_decimal_value (a_value)
-				l_ribbon.set_command_property (l_command_id, l_key, l_value)
+				l_result := l_ribbon.set_command_property (l_command_id, l_key, l_value)
 				l_value.destroy
 			end
 		end

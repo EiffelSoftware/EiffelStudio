@@ -1,7 +1,7 @@
-Compile All Tool - Version: 7.0
+Compile-All Tool - Version: 7.0
 Copyright Eiffel Software 2006-2011. All Rights Reserved.
 
-Base location: "c:\work\70dev"
+Base location: "c:\work\71dev"
 
 Melting esbuilder from esbuilder-4EEF9ABD-F15C-4C45-9D6F-4FFE128296F7 (build\esbuilder.ecf): passed
 Melting framework_example from framework_example-F9E183D7-1FC1-4050-A6D4-7EA63A2E9717 (contrib\library\graphic\toolkit\wex\examples\wex\Framework_example\framework_example.ecf): passed
@@ -16,6 +16,8 @@ Melting tests from tests-9FA1C743-D3D3-4ABA-BAB8-27986A422F01 (contrib\library\m
 Melting tests_dotnet from tests-9FA1C743-D3D3-4ABA-BAB8-27986A422F01 (contrib\library\math\eapml\tests\tests-safe.ecf): failed
 Melting tests_gcc_32 from tests-9FA1C743-D3D3-4ABA-BAB8-27986A422F01 (contrib\library\math\eapml\tests\tests.ecf): passed
 Melting tests_vc_32 from tests-9FA1C743-D3D3-4ABA-BAB8-27986A422F01 (contrib\library\math\eapml\tests\tests.ecf): passed
+Melting eclop from eclop-10CA049B-E6DF-47CB-B434-3A1DDDFB5D85 (contrib\library\runtime\process\eclop\eclop\eclop-safe.ecf): passed
+Melting eclop from eclop-10CA049B-E6DF-47CB-B434-3A1DDDFB5D85 (contrib\library\runtime\process\eclop\eclop\eclop.ecf): passed
 Melting svn from svn-542546F4-A62F-4E6B-B298-C7EBAE7B82A8 (contrib\library\svn\svn-safe.ecf): passed
 Melting svn from svn-542546F4-A62F-4E6B-B298-C7EBAE7B82A8 (contrib\library\svn\svn.ecf): passed
 Melting batch from svn_tool-D1028558-6962-4936-8B1C-F90A9C9CD12D (contrib\library\svn\tests\batch\svn_tool_batch.ecf): passed
@@ -185,6 +187,10 @@ Melting test from test-B2D380BA-4561-4952-8A57-94695C72BFBA (examples\obsolete\b
 Melting simple_binding from simple_binding-7D2D75F2-5F02-4BA0-B44F-BDD120145A43 (examples\obsolete\dotnet\winforms\data\simple_binding\simple_binding.ecf): passed
 Melting editor_example from editor_example-3155EA9B-1B12-4425-9EE8-FDD9AA46ED65 (examples\obsolete\editor\editor_example.ecf): passed
 Melting datetest from datetest-B99F3A99-B419-4CBC-BEA9-DC4EC1348BC7 (examples\obsolete\eiffeltest\datetest\datetest.ecf): passed
+Melting exception_test from exception_test-02E61992-F9E0-47E3-B99C-6D618021AD1E (examples\obsolete\eiffeltest\exceptions\exception_test.ecf): passed
+Melting random_test from random_test-25FB4438-E1D1-446D-8FD6-438549A497F9 (examples\obsolete\eiffeltest\random\random_test.ecf): passed
+Melting seq_test from seq_test-1289FE34-47C1-4AE6-95EB-F79A0599AA1E (examples\obsolete\eiffeltest\teststeps\seq_test.ecf): passed
+Melting timing_test from timing_test-3D1E0CA4-4EEF-4900-8C89-A2685A41B1E6 (examples\obsolete\eiffeltest\timing\timing_test.ecf): passed
 Melting cplx_tst from cplx_tst-96379100-86BE-4076-A2DF-B8F78854BFC6 (examples\obsolete\math\test_a02\cplx_tst.ecf): failed
 Melting memory_analyzer_demo from memory_analyzer_demo-380EC919-FA01-4A6C-B1F3-59234721C3DA (examples\obsolete\memory_analyzer\memory_analyzer_demo.ecf): passed
 Melting chat from chat-622A797C-94FF-4A14-A10B-C5DDCB137EB5 (examples\obsolete\net\advanced\chat\chat.ecf): passed
@@ -211,8 +217,8 @@ Melting classic from fig-3515CC3A-7C6A-4D70-8851-07B5BEA0A26D (examples\obsolete
 Melting dotnet from fig-3515CC3A-7C6A-4D70-8851-07B5BEA0A26D (examples\obsolete\vision2\figure\fig.ecf): passed
 Melting classic from grid_example-7A0260B1-F204-4245-BC4B-1C079C263FFF (examples\obsolete\vision2\grid\grid_example.ecf): passed
 Melting dotnet from grid_example-7A0260B1-F204-4245-BC4B-1C079C263FFF (examples\obsolete\vision2\grid\grid_example.ecf): passed
-Melting classic from fig-D91A8AFF-1492-4F93-B9BD-00A41EED0B48 (examples\obsolete\vision2\menu\fig.ecf): passed
-Melting dotnet from fig-D91A8AFF-1492-4F93-B9BD-00A41EED0B48 (examples\obsolete\vision2\menu\fig.ecf): passed
+Melting classic from menu-D91A8AFF-1492-4F93-B9BD-00A41EED0B48 (examples\obsolete\vision2\menu\menu.ecf): passed
+Melting dotnet from menu-D91A8AFF-1492-4F93-B9BD-00A41EED0B48 (examples\obsolete\vision2\menu\menu.ecf): passed
 Melting classic from mclist_example-C6096013-C6B1-44D9-BB54-2865AF70A06E (examples\obsolete\vision2\multicolumn_list\mclist_example.ecf): passed
 Melting dotnet from mclist_example-C6096013-C6B1-44D9-BB54-2865AF70A06E (examples\obsolete\vision2\multicolumn_list\mclist_example.ecf): passed
 Melting classic from paintbrush-384BDBD6-A805-4771-A6E2-8C6DBA6000C8 (examples\obsolete\vision2\pixmap\paintbrush.ecf): passed
@@ -268,6 +274,10 @@ Melting convert_mysql from convert-DFD8760A-949D-41AE-96A4-E2D09E80BB00 (example
 Melting convert_sybase from convert-DFD8760A-949D-41AE-96A4-E2D09E80BB00 (examples\store\convert\convert.ecf): passed
 Melting convert_oracle from convert-DFD8760A-949D-41AE-96A4-E2D09E80BB00 (examples\store\convert\convert.ecf): passed
 Melting convert_odbc from convert-DFD8760A-949D-41AE-96A4-E2D09E80BB00 (examples\store\convert\convert.ecf): passed
+Melting decimal_mysql from decimal-22E8B7D5-E643-4759-974C-20D291BEC28A (examples\store\decimal\decimal.ecf): passed
+Melting decimal_sybase from decimal-22E8B7D5-E643-4759-974C-20D291BEC28A (examples\store\decimal\decimal.ecf): passed
+Melting decimal_oracle from decimal-22E8B7D5-E643-4759-974C-20D291BEC28A (examples\store\decimal\decimal.ecf): passed
+Melting decimal_odbc from decimal-22E8B7D5-E643-4759-974C-20D291BEC28A (examples\store\decimal\decimal.ecf): passed
 Melting esql_mysql from esql-EFFCDC06-058C-4D61-A59F-195EF996CCB7 (examples\store\esql\esql.ecf): passed
 Melting esql_sybase from esql-EFFCDC06-058C-4D61-A59F-195EF996CCB7 (examples\store\esql\esql.ecf): passed
 Melting esql_oracle from esql-EFFCDC06-058C-4D61-A59F-195EF996CCB7 (examples\store\esql\esql.ecf): passed
@@ -307,6 +317,7 @@ Melting stored_sybase from stored-8EC1889B-2ACD-45C2-8181-B439F4F0C507 (examples
 Melting stored_oracle from stored-8EC1889B-2ACD-45C2-8181-B439F4F0C507 (examples\store\st_proc\stored.ecf): passed
 Melting stored_odbc from stored-8EC1889B-2ACD-45C2-8181-B439F4F0C507 (examples\store\st_proc\stored.ecf): passed
 Melting stored_odbc from stored-EB83DA87-9F58-424F-9AC8-AEF64913EF99 (examples\store\st_proc_1\stored.ecf): passed
+Melting st_proc_numeric_odbc from st_proc_numeric-8EC1889B-2ACD-45C2-8181-B439F4F0C507 (examples\store\st_proc_numeric\st_proc_numeric.ecf): passed
 Melting stored_mysql from stored-37640F4D-BAF8-4265-A189-2A29E650B704 (examples\store\st_proc_unicode\stored.ecf): passed
 Melting stored_sybase from stored-37640F4D-BAF8-4265-A189-2A29E650B704 (examples\store\st_proc_unicode\stored.ecf): passed
 Melting stored_oracle from stored-37640F4D-BAF8-4265-A189-2A29E650B704 (examples\store\st_proc_unicode\stored.ecf): passed
@@ -431,7 +442,7 @@ Melting auto_test from auto_test_library-197D2624-6547-4BAB-904B-131A4FA4EA32 (f
 Melting command_line_builder from command_line_builder-44612348-A48F-4D96-B4F1-95117FA1DFE5 (framework\base\application\command_line_builder\command_line_builder-safe.ecf): passed
 Melting base64 from base64-0A52E0A4-229A-4520-AEDB-84113DB6412B (framework\base64\base64-safe.ecf): passed
 Melting base64 from base64-0A52E0A4-229A-4520-AEDB-84113DB6412B (framework\base64\base64.ecf): passed
-Melting base64-tests from base-tests-FDC0395A-D1B6-4290-B800-FCE19F055DC9 (framework\base64\tests\tests.ecf): passed
+Melting base64-tests from base-tests-49F7502A-74CE-45C7-B3AA-AAC699F129F1 (framework\base64\tests\tests.ecf): passed
 Melting default from cli_debugger-96A64D12-AB4A-49D8-B843-CF8A31B99026 (framework\cli_debugger\cli_debugger-safe.ecf): passed
 Melting default from cli_debugger-96A64D12-AB4A-49D8-B843-CF8A31B99026 (framework\cli_debugger\cli_debugger.ecf): passed
 Melting default from cli_writer-BE7B7959-6C6E-4C17-8B5C-E3D5E27D876D (framework\cli_writer\cli_writer-safe.ecf): passed
@@ -500,7 +511,7 @@ Melting xebra_server from xebra_server-E04194C1-EBE2-4583-AF40-AD1E4B47C0C0 (fra
 Melting xebra_translator from xebra_translator-5261943E-A4BF-46FE-9920-DEA8B568943F (framework\web\xebra\eiffel_projects\xebra_translator\xebra_translator.ecf): passed
 Melting xebra_deployer from xebra_deployer-DA33C660-20DA-4B32-820E-2F37F08DB248 (framework\web\xebra\tools\installer\win\xebra_deployer\xebra_deployer.ecf): passed
 Melting demoapplication from demoapplication-3957B925-71E3-473F-9DC5-36391C7E8FDA (framework\web\xebra\www\demoapplication\demoapplication.ecf): failed
-Melting examples from examples-F28DF18E-3163-465B-A803-4395229E6C03 (framework\web\xebra\www\examples\examples.ecf): failed
+Melting examples from examples-E08DEAC8-1B55-469A-AC4F-7AB6FE6415C5 (framework\web\xebra\www\examples\examples.ecf): failed
 Melting helloworld from helloworld-D2957A40-9741-4AD3-BBAF-CB20C4B351A3 (framework\web\xebra\www\helloworld\helloworld.ecf): failed
 Melting servercontrol from servercontrol-E1B22E35-B61F-4767-BB77-4B591FDED0E6 (framework\web\xebra\www\servercontrol\servercontrol.ecf): failed
 Melting support from support-BA0C3F6E-9748-4C21-B095-6ABA21BCAA34 (framework\web\xebra\www\support\support.ecf): failed
@@ -514,9 +525,9 @@ Melting gobo_xm_parser from test_xml_parser-40FBC226-EDFE-4C19-B0C0-8AD8AF17AD05
 Melting xml_utility from xml_utility-A7868DA5-15A0-4735-B5FF-E7E7AE1D4103 (framework\xml\utility\xml_utility-safe.ecf): passed
 Melting xml_utility from xml_utility-A7868DA5-15A0-4735-B5FF-E7E7AE1D4103 (framework\xml\utility\xml_utility.ecf): passed
 Melting xml-rpc from xml-rpc-5B1618D6-1216-4BEF-817F-C83473B9FC0B (framework\xml-rpc\xml-rpc-safe.ecf): passed
-Melting xml-rpc_dotnet from xml-rpc-5B1618D6-1216-4BEF-817F-C83473B9FC0B (framework\xml-rpc\xml-rpc-safe.ecf): failed
+Melting xml-rpc_dotnet from xml-rpc-5B1618D6-1216-4BEF-817F-C83473B9FC0B (framework\xml-rpc\xml-rpc-safe.ecf): passed
 Melting xml-rpc from xml-rpc-5B1618D6-1216-4BEF-817F-C83473B9FC0B (framework\xml-rpc\xml-rpc.ecf): passed
-Melting xml-rpc_dotnet from xml-rpc-5B1618D6-1216-4BEF-817F-C83473B9FC0B (framework\xml-rpc\xml-rpc.ecf): failed
+Melting xml-rpc_dotnet from xml-rpc-5B1618D6-1216-4BEF-817F-C83473B9FC0B (framework\xml-rpc\xml-rpc.ecf): passed
 Melting application from application-D5EA7D23-843A-42F0-A41C-EAB2F5FDF897 (framework\xml-rpc\examples\application.ecf): passed
 Melting xml_utility from xml-FF274042-0759-4A99-9E97-391F7D35AD5B (framework\xml_utility\xml_utility.ecf): passed
 Melting wizard from wizard-CEF6706D-914F-4ED1-A29F-967465C0EE7B (help\wizards\cocoa_wizard.ecf): passed
@@ -535,7 +546,7 @@ Melting base from base-6D7FF712-BBA5-4AC0-AABF-2D9880493A01 (library\base\base.e
 Melting base_dotnet from base-6D7FF712-BBA5-4AC0-AABF-2D9880493A01 (library\base\base.ecf): passed
 Melting base_extension from base_extension-BB1FDCB0-C2AB-4911-8ABD-D20F72139DBF (library\base_extension\base_extension-safe.ecf): passed
 Melting base_extension from base_extension-BB1FDCB0-C2AB-4911-8ABD-D20F72139DBF (library\base_extension\base_extension.ecf): passed
-Melting base_extension-tests from base_extension-tests-9AB54AA2-1C87-4273-883B-B984370BCD26 (library\base_extension\tests\tests.ecf): passed
+Melting base_extension-tests from base_extension-tests-B919DBF2-0436-455E-89CA-774C5D878D6F (library\base_extension\tests\tests.ecf): passed
 Melting cocoa from cocoa-804E870E-1EED-4F7B-9C7D-4762358A62D7 (library\cocoa\cocoa-safe.ecf): passed
 Melting cocoa from cocoa-804E870E-1EED-4F7B-9C7D-4762358A62D7 (library\cocoa\cocoa.ecf): passed
 Melting cocoa-tests from cocoa-tests-7BAF21AA-DAA5-4B71-AD29-EF6F1ADAFD82 (library\cocoa\tests\tests.ecf): passed
@@ -596,9 +607,9 @@ Melting gexslt from gexslt-7CBA1CBF-28C0-4769-8CC6-08BB687E32C7 (library\gobo\sr
 Melting geyacc from geyacc-24C23C51-AEA2-4C8A-B454-901AAF40F0FF (library\gobo\src\geyacc.ecf): passed
 Melting gec from gec-A8516DA2-7B93-4728-ABFE-7DAE95CD7F1C (library\gobo\src\ecf_support\gec.ecf): passed
 Melting gelint from gelint-94AB60A5-5FAC-4B79-BA7F-7BC327B432CD (library\gobo\src\ecf_support\gelint.ecf): passed
-Melting xequality from xequality-D932039C-2B88-4822-9D6D-6FE6DE226FC0 (library\gobo\svn\test\gelint\semantics\equality\ise.ecf): failed
-Melting xobject_equality from xobject_equality-F7992D57-C3EE-4783-90FD-457667D58EAD (library\gobo\svn\test\gelint\semantics\object_equality\ise.ecf): failed
-Melting xace3 from xace3-1F294EF5-8422-46FD-857B-557ECED6E757 (library\gobo\svn\test\src\gexace\data\ise3.ecf): failed
+Melting xequality from xequality-3B2D1D97-BDD0-450D-9FB7-F8263ACDF05E (library\gobo\svn\test\gelint\semantics\equality\ise.ecf): failed
+Melting xobject_equality from xobject_equality-5D112156-B298-4FD4-B40F-4C03989E55E6 (library\gobo\svn\test\gelint\semantics\object_equality\ise.ecf): failed
+Melting xace3 from xace3-218B3E2C-F2D1-4013-9D68-F1ACBCCDB8C5 (library\gobo\svn\test\src\gexace\data\ise3.ecf): failed
 Melting gobo_extension from gobo_extension-0DA7FB52-F457-4C7F-A8DD-9285E5EE2631 (library\gobo_extension\gobo_extension.ecf): passed
 Melting graph from graph-8F1CADDA-FC27-41B6-8197-09FD0BF1B648 (library\graph\graph-safe.ecf): passed
 Melting graph from graph-8F1CADDA-FC27-41B6-8197-09FD0BF1B648 (library\graph\graph.ecf): passed
@@ -622,6 +633,7 @@ Melting net from net-A806012E-91F3-4D4C-AAAA-E05F6F2BACAA (library\net\net-safe.
 Melting net from net-A806012E-91F3-4D4C-AAAA-E05F6F2BACAA (library\net\net.ecf): passed
 Melting objective_c from objective_c-876E123E-1EED-4F7B-9C7D-4762358A62D7 (library\objc_base\objc_base-safe.ecf): passed
 Melting objective_c from objective_c-876E123E-1EED-4F7B-9C7D-4762358A62D7 (library\objc_base\objc_base.ecf): passed
+Melting eiffeltest from eiffeltest-346E10F0-FC5C-4498-B5EB-7D8231152CE5 (library\obsolete\eiffeltest\eiffeltest.ecf): passed
 Melting net from net-65E3E91A-6C89-45B1-9F59-079A081D32DC (library\obsolete\net\net.ecf): passed
 Melting parse from parse-6E3E2790-880E-4193-ABE6-27D129A0E48D (library\parse\parse-safe.ecf): passed
 Melting parse from parse-6E3E2790-880E-4193-ABE6-27D129A0E48D (library\parse\parse.ecf): passed
@@ -708,7 +720,7 @@ Melting eiffelstudio-tests-eweasel from eiffelstudio-tests-42C6BA80-6C4E-4AEA-8E
 Melting button_clicker from button_clicker-C24479FC-B205-4285-8ACA-C69827BE45C0 (tools\button_clicker\button_clicker.ecf): passed
 Melting bytecode_tool from bytecode_tool-C8B46F4B-D9FD-4B7F-9255-05D705D5AC8D (tools\bytecode_tool\bytecode_tool.ecf): passed
 Melting bytecode_tool_dotnet from bytecode_tool-C8B46F4B-D9FD-4B7F-9255-05D705D5AC8D (tools\bytecode_tool\bytecode_tool.ecf): passed
-Melting class_structure_editor from class_structure_editor-033E433F-5A38-4F90-9AA8-F8E2A0DE990E (tools\class_structure_editor\class_structure_editor.ecf): failed
+Melting class_structure_editor from class_structure_editor-033E433F-5A38-4F90-9AA8-F8E2A0DE990E (tools\class_structure_editor\class_structure_editor.ecf): passed
 Melting graphical_class_structure_editor from class_structure_editor-033E433F-5A38-4F90-9AA8-F8E2A0DE990E (tools\class_structure_editor\class_structure_editor.ecf): passed
 Melting code_checker from code_checker-897BC8B6-85AB-4420-B316-6A34D6DFB07C (tools\code_checker\code_checker.ecf): passed
 Melting compile_all from compile_all-AC65C561-50E6-4F17-A196-8EFF64A88F9B (tools\compile_all\compile_all.ecf): passed
@@ -740,7 +752,7 @@ Melting native_estudio from estudio-4C9D0872-E7FA-47F2-A7B3-C9F5681D58CD (tools\
 Melting estudio from estudio-4C9D0872-E7FA-47F2-A7B3-C9F5681D58CD (tools\estudio\config\estudio.ecf): passed
 Melting eweasel_comparator from eweasel_comparator-98B6F4E7-C920-495B-809F-45DFCE987844 (tools\eweasel_comparator\eweasel_comparator.ecf): passed
 Melting eweasel_converter from eweasel_converter-B6764D54-23FB-47D6-A268-70A821DD38D1 (tools\eweasel_converter\eweasel_converter.ecf): passed
-Melting eweasel_converter_dotnet from eweasel_converter-B6764D54-23FB-47D6-A268-70A821DD38D1 (tools\eweasel_converter\eweasel_converter.ecf): failed
+Melting eweasel_converter_dotnet from eweasel_converter-B6764D54-23FB-47D6-A268-70A821DD38D1 (tools\eweasel_converter\eweasel_converter.ecf): passed
 Melting finish_freezing from finish_freezing-4054F4B6-BAD4-4CA2-8732-682E43F9FC39 (tools\finish_freezing\finish_freezing-safe.ecf): passed
 Melting finish_freezing from finish_freezing-4054F4B6-BAD4-4CA2-8732-682E43F9FC39 (tools\finish_freezing\finish_freezing.ecf): passed
 Melting hallow from hallow-F3C1601B-9912-470D-8D12-D1AD2BDFB63E (tools\hallow\hallow.ecf): passed
@@ -770,6 +782,7 @@ Melting pcre from pcre-AFC853FF-2C60-4657-A024-8BF3FAA066E8 (unstable\library\te
 Melting pcre from pcre-AFC853FF-2C60-4657-A024-8BF3FAA066E8 (unstable\library\text\regexp\pcre\pcre.ecf): passed
 Melting test_pcre from test_pcre-0334B3F4-9E09-433F-8CFD-5E0D4AEA7E15 (unstable\library\text\regexp\pcre\tests\test-safe.ecf): passed
 
-Passed: 729 / 766 (95%)
-Failed: 37 / 766 (5%)
-Ignored: 0 / 766 (0%)
+Passed: 745 / 778  (95%)
+Failed: 33 / 778  (4%)
+Ignored: 0 / 778  (0%)
+

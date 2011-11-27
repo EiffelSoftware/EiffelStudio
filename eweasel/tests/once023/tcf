@@ -1,0 +1,16 @@
+
+test_name 	once-per-object-inherited-twice
+test_description A class with a once-per-object function is inherited twice and the function is renamed in one of the branches.  This crashes an assertion-enabled compiler.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result 	ok
+
+execute_work	NONE exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

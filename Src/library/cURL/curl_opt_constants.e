@@ -17,8 +17,14 @@ class
 
 feature -- Version
 
-	libcurl_version: INTEGER
-			-- Declared as LIBCURL_VERSION
+	libcurl_version: STRING
+			-- String representation of LIBCURL_VERSION
+		do
+			create Result.make_from_c (libcurl_version_pointer)
+		end
+
+	libcurl_version_pointer: POINTER
+			-- String pointer declared as LIBCURL_VERSION
 		external
 			"C inline use <curl/curlver.h>"
 		alias
@@ -65,7 +71,7 @@ feature -- Behavior
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_HEADER;"
-		end		
+		end
 
 	curlopt_noprogress: INTEGER
 			-- Declared as CURLOPT_NOPROGRESS
@@ -527,7 +533,7 @@ feature -- Protocol
 		alias
 			"return CURLOPT_RESUME_FROM_LARGE;"
 		end
-	
+
 	curlopt_customrequest: INTEGER
 			-- Declared as CURLOPT_CUSTOMREQUEST
 		external
@@ -697,7 +703,7 @@ feature -- Connection
 		alias
 			"return CURLOPT_IPRESOLVE;"
 		end
-		
+
 	curl_ipresolve_whatever: INTEGER
 			-- Declared as CURL_IPRESOLVE_WHATEVER
 		external
@@ -940,7 +946,7 @@ feature -- SSL and Security
 			"return CURLOPT_KRBLEVEL;"
 		end
 
-feature -- SSH 
+feature -- SSH
 
 	curlopt_ssh_auth_types: INTEGER
 			-- Declared as CURLOPT_SSH_AUTH_TYPES
@@ -1087,7 +1093,7 @@ feature -- Status report
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

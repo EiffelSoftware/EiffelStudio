@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 			-- Initialize new wrappable label.
 			-- Note: Be sure to call `calculate_size' before the label has been shown!
 		do
+			create text.make_empty
 			default_create
 			align_text_left
 			create text.make_empty
@@ -305,7 +306,6 @@ feature {NONE} -- Line analysis
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: a_line.is_empty = Result.is_empty
-			result_contains_attached_items: not Result.has (Void)
 			result_contains_valid_items: Result.for_all (agent (a_str: STRING_32): BOOLEAN do Result := not a_str.is_empty end)
 		end
 
@@ -317,7 +317,6 @@ feature {NONE} -- Line analysis
 			-- `Result': An array with a matching count to `a_words' containing the pixel lengths of each word in `a_words'.
 		require
 			a_words_attached: a_words /= Void
-			a_words_contains_attached_items: not a_words.has (Void)
 			a_words_contains_valid_items: a_words.for_all (agent (a_str: STRING_32): BOOLEAN do Result := not a_str.is_empty end)
 			a_cache_attached: a_cache /= Void
 		local
@@ -355,10 +354,10 @@ feature {NONE} -- Line analysis
 
 feature {NONE} -- Line rendering
 
-	text_lines: LIST [ARRAYED_LIST [STRING_32]]
+	text_lines: detachable LIST [ARRAYED_LIST [STRING_32]]
 			-- Original lines, split into words
 
-	text_sizes: LIST [ARRAY [INTEGER]]
+	text_sizes: detachable LIST [ARRAY [INTEGER]]
 			-- Sizes of text fragments
 
 	resize_text
@@ -521,7 +520,8 @@ feature {NONE} -- Line rendering
 invariant
 	text_attached: text /= Void
 	text_lines_and_text_sizes_synced: (text_lines = Void) = (text_sizes = Void) and then
-			text_lines /= Void implies text_lines.count = text_sizes.count
+			(attached text_sizes as inv_text_sizes and
+			attached text_lines as inv_text_lines) implies inv_text_lines.count = inv_text_sizes.count
 
 ;note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

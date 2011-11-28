@@ -14,7 +14,8 @@ inherit
 	EV_LABEL
 		redefine
 			initialize,
-			is_in_default_state_for_tabs
+			is_in_default_state_for_tabs,
+			create_interface_objects
 		end
 
 create
@@ -23,12 +24,16 @@ create
 
 feature {NONE} -- Initialization
 
+	create_interface_objects
+		do
+			Precursor
+			create select_actions
+		end
+
 	initialize
 			-- <Precursor>
 		do
 			Precursor
-
-			create select_actions
 			pointer_button_press_actions.extend (agent on_pointer_press)
 			set_foreground_color ((create {EV_STOCK_COLORS}).blue)
 			set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.hyperlink_cursor))

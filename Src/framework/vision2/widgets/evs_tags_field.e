@@ -67,7 +67,7 @@ feature -- Properties
 	provider: detachable TAGS_PROVIDER
 			-- Tags provider.
 
-	original_text: like text
+	original_text: detachable like text
 			-- Original text kept to be able to compute `is_modified'.
 
 	change_actions: ACTION_SEQUENCE [TUPLE]
@@ -78,7 +78,7 @@ feature -- Measurement
 	is_modified: BOOLEAN
 			-- Value modified ?
 		local
-			t,o: like text
+			t,o: detachable like text
 		do
 			t := text
 			if t.is_empty then
@@ -151,7 +151,7 @@ feature -- Change
 			original_text := Void
 		end
 
-	set_pixmap (p: EV_PIXMAP)
+	set_pixmap (p: detachable EV_PIXMAP)
 			-- Set tags's button pixmap
 		do
 			if p /= Void then
@@ -223,15 +223,16 @@ feature -- event
 			b: EV_VERTICAL_BOX
 			g: EV_GRID
 			gci: EV_GRID_CHECKABLE_LABEL_ITEM
-			gpci: EV_GRID_CHECKABLE_LABEL_ITEM
+			gpci: detachable EV_GRID_CHECKABLE_LABEL_ITEM
 			glab: EV_GRID_LABEL_ITEM
 			ltags: like used_tags
 			lptags: LIST [STRING_32]
-			s,cat, lastcat: STRING_32
+			s: STRING_32
+			cat, lastcat: detachable STRING_32
 			i,r: INTEGER
 			w: INTEGER
 			chk_chg_action: PROCEDURE [ANY, TUPLE [EV_GRID_CHECKABLE_LABEL_ITEM]]
-			grp_chk_chg_action: PROCEDURE [ANY, TUPLE [EV_GRID_CHECKABLE_LABEL_ITEM]]
+			grp_chk_chg_action: detachable PROCEDURE [ANY, TUPLE [EV_GRID_CHECKABLE_LABEL_ITEM]]
 			tup: like category_name_tag
 		do
 			create pw.make_with_shadow
@@ -350,7 +351,9 @@ feature -- event
 								r := r + 1
 								g.insert_new_row (r)
 								g.set_item (1, r, gpci)
-								gpci.checked_changed_actions.extend (grp_chk_chg_action)
+								if grp_chk_chg_action /= Void then
+									gpci.checked_changed_actions.extend (grp_chk_chg_action)
+								end
 							else
 								check gpci /= Void end
 							end
@@ -420,7 +423,7 @@ feature -- event
 			g.set_focus
 		end
 
-	category_name_tag (a_tag: STRING_32): TUPLE [category: STRING_32; name: STRING_32]
+	category_name_tag (a_tag: STRING_32): TUPLE [category: detachable STRING_32; name: STRING_32]
 			-- Details from `a_tag'.
 		require
 			is_valid_tag: a_tag /= Void and then not a_tag.is_empty
@@ -509,14 +512,15 @@ feature -- Convertion
 			Result /= Void
 		end
 
-	parent_window (w: EV_WIDGET): EV_WINDOW
+	parent_window (w: EV_WIDGET): detachable EV_WINDOW
 			-- Parent window of `w'.
 		require
 			w /= Void
 		do
-			Result ?= w
-			if Result = Void and then w.parent /= Void then
-				Result := parent_window (w.parent)
+			if attached {EV_WINDOW} w as l_win then
+				Result := l_win
+			elseif attached w.parent as wp then
+				Result := parent_window (wp)
 			end
 		end
 
@@ -579,11 +583,10 @@ feature {NONE} -- Implementation
 			-- Set internal storage of tags from `arr'
 		local
 			t: like text
-			ltgs: ARRAYED_LIST [STRING_32]
+			ltgs: detachable ARRAYED_LIST [STRING_32]
 		do
 			if arr /= Void and then not arr.is_empty then
 				create ltgs.make_from_array (arr)
-				ltgs.prune_all (Void)
 			end
 			if ltgs /= Void and then not ltgs.is_empty then
 				from
@@ -616,7 +619,9 @@ feature {NONE} -- Implementation
 			s := a_text
 			s.left_adjust
 			s.right_adjust
-			if not s.is_empty then
+			if s.is_empty then
+				create Result.make_empty
+			else
 				n := s.occurrences (',') + 1
 				if n = 1 then
 					Result := << s >>
@@ -643,7 +648,6 @@ feature {NONE} -- Implementation
 							n := n - 1
 						end
 					end
-					lst.prune_all (Void)
 					from
 						n := lst.count
 						create sres.make (1, n)

@@ -93,8 +93,8 @@ feature -- Access
 				i > l_count
 			loop
 				l_item := a_index_array.item (i)
-				if l_action_tbl.has (l_item) then
-					l_action_list.extend (l_action_tbl.item (l_item))
+				if l_action_tbl.has (l_item) and then attached l_action_tbl.item (l_item) as l_act then
+					l_action_list.extend (l_act)
 					l_order_list.extend (l_order_tbl.item (l_item))
 				end
 				i := i + 1

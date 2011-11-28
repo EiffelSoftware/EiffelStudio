@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="framework_vision2" uuid="438FCC87-E3CF-49F3-8846-0DE554C74231" library_target="framework_vision2">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd" name="framework_vision2" uuid="438FCC87-E3CF-49F3-8846-0DE554C74231" library_target="framework_vision2">
 	<target name="framework_vision2">
+		<description>Vision2 library Extended</description>
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/.svn$</exclude>
@@ -13,18 +14,19 @@
 			</condition>
 		</file_rule>
 		<file_rule>
-			<exclude>/mswin$</exclude>
 			<exclude>/windows$</exclude>
+			<exclude>/mswin$</exclude>
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>
 		</file_rule>
-		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" >
+		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
 			<assertions precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension-safe.ecf"/>
-		<library name="docking" location="$ISE_LIBRARY\library\docking\docking-safe.ecf" />
+		<library name="docking" location="$ISE_LIBRARY\library\docking\docking-safe.ecf"/>
+		<library name="fmwk_utilities" location="..\utilities\utilities-safe.ecf"/>
 		<library name="interface_names" location="..\interface_names\interface_names-safe.ecf"/>
 		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher-safe.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>
@@ -33,10 +35,54 @@
 				<platform value="windows"/>
 			</condition>
 		</library>
-		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree-safe.ecf"/>
 		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser-safe.ecf"/>
-		<library name="fmwk_utilities" location="..\utilities\utilities-safe.ecf"/>
-
-		<cluster name="fmwk_vision2" location=".\" recursive="true"/>
+		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree-safe.ecf"/>
+		<cluster name="fmwk_vision2" location=".\" recursive="true">
+			<file_rule>
+				<exclude>evs_grid_search_tool_utility.e$</exclude>
+				<exclude>code_completion$</exclude>
+				<exclude>evs_general_tooltip_utility.e$</exclude>
+				<exclude>evs_grid_iterator.e$</exclude>
+				<exclude>evs_bordered.e$</exclude>
+				<exclude>evs_grid_pnd_support.e$</exclude>
+				<exclude>evs_grid_search_tool.e$</exclude>
+				<exclude>evs_grid_utility.e$</exclude>
+				<exclude>evs_grid_row.e$</exclude>
+				<exclude>evs_grid_ordered_iterator.e$</exclude>
+				<exclude>contrib_grid_items/ev_grid_span_label_item.e$</exclude>
+				<exclude>es_label.e$</exclude>
+				<exclude>ev_grid_link_label_item.e$</exclude>
+				<exclude>evs_grid_incremental_search_engine.e$</exclude>
+				<exclude>evs_highlight_link_label.e$</exclude>
+				<exclude>es_grid_listable_item.e$</exclude>
+				<exclude>evs_grid_row_iterator.e$</exclude>
+				<exclude>evs_grid_link_label_item.e$</exclude>
+				<exclude>evs_text_alignable.e$</exclude>
+				<exclude>evs_general_tooltip_window.e$</exclude>
+				<exclude>es_grid_pixmap_component.e$</exclude>
+				<exclude>evs_tooltip_style_imp.e$</exclude>
+				<exclude>evs_theme_drawer_retriever.e$</exclude>
+				<exclude>es_tree.e$</exclude>
+				<exclude>evs_grid_wrapper.e$</exclude>
+				<exclude>evs_utility.e$</exclude>
+				<exclude>evs_widget_tooltip.e$</exclude>
+				<exclude>evs_grid_search_engine.e$</exclude>
+				<exclude>evs_grid_item_helper.e$</exclude>
+				<exclude>evs_general_tooltip.e$</exclude>
+				<exclude>es_grid_item_component.e$</exclude>
+				<exclude>evs_setting_change_actions.e$</exclude>
+				<exclude>evs_searchable_component.e$</exclude>
+				<exclude>evs_grid_column_iterator.e$</exclude>
+				<exclude>evs_tooltip_style.e$</exclude>
+				<exclude>es_grid_xml_viewer.e$</exclude>
+				<exclude>property_grid$</exclude>
+				<exclude>contrib_grid_items/ev_grid_directory_item.e$</exclude>
+				<exclude>evs_grid_layout_manager.e$</exclude>
+				<exclude>evs_general_tooltipable.e$</exclude>
+				<exclude>es_grid_list_item.e$</exclude>
+				<exclude>es_grid_layout_manager.e$</exclude>
+				<exclude>contrib_grid_items/ev_grid_editable_span_label_item.e$</exclude>
+			</file_rule>
+		</cluster>
 	</target>
 </system>

@@ -45,13 +45,17 @@ feature -- Status report
 	is_ok_selected: BOOLEAN
 			-- Is last selected button OK?
 		do
-			Result := selected_button.is_equal (ok)
+			if attached selected_button as but then
+				Result := but.same_string (ok)
+			end
 		end
 
 	is_cancel_selected: BOOLEAN
 			-- Is last selected button Cancel?
 		do
-			Result := selected_button.is_equal (cancel)
+			if attached selected_button as but then
+				Result := but.same_string (cancel)
+			end
 		end
 
 feature -- Constants

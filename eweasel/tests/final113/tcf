@@ -1,0 +1,33 @@
+
+test_name 	finalize-inline-attribute-with-body
+test_description Finalizing a void-safe system with once strings in class invariants and keeping assertions crashes an assertion-enabled compiler with a precondition violation
+
+define		INLINING "false"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+define		INLINING "true"
+copy_sub 	Ace $TEST Ace
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_fi
+execute_result	ok
+compare		exec_output_fi output
+
+test_end

@@ -1054,8 +1054,7 @@ feature {NONE} -- Query
 			att_name := next_attribute_name
 			n := att_name.local_part
 			p := att_name.prefix_part
-			if n.is_empty then
-			else
+			if not n.is_empty then
 				c := current_character
 				set_checkpoint_position --| record potential error position
 				if c.is_space then
@@ -1091,6 +1090,13 @@ feature {NONE} -- Query
 						unset_checkpoint_position
 					end
 					Result := [p, n, v]
+					c := current_character
+					if c.is_space or c = '>' or c = '/' or c = '?' then
+						-- expected character
+					else
+						-- STRICT: foo="val"bar="foobar"  is not valid, we expect a white space
+						report_error ("unexpected character '" + current_character.out + "' after attribute declaration (expecting white space or '>' or '/' or '?' )")
+					end
 				end
 			end
 		ensure

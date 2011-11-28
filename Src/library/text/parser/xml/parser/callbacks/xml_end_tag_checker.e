@@ -69,24 +69,27 @@ feature -- Tag
 			-- End tag.
 		local
 			l_prefixes: like prefixes
+			l_local_parts: like local_parts
 		do
 			l_prefixes := prefixes
-			if l_prefixes.count >= 0 then
+			l_local_parts := local_parts
+			check same_count: l_prefixes.count = l_local_parts.count end
+			if l_prefixes.count > 0 then
 				if
 					not (l_prefixes.item = a_prefix
-						or else (
-									(a_prefix /= Void and attached l_prefixes.item as l_prefix_item) and then
-									a_prefix.same_string_general (l_prefix_item)
-								)
-						)
-					or not a_local_part.same_string_general (local_parts.item)
+					or else (
+							(a_prefix /= Void and attached l_prefixes.item as l_prefix_item) and then
+							a_prefix.same_string_general (l_prefix_item)
+							)
+					)
+					or not a_local_part.same_string_general (l_local_parts.item)
 				then
-					report_end_tag_mismatch_error (l_prefixes.item, local_parts.item)
+					report_end_tag_mismatch_error (l_prefixes.item, l_local_parts.item)
 				end
 				l_prefixes.remove
 				local_parts.remove
 			else
-				report_extra_end_tag_error (l_prefixes.item, local_parts.item)
+				report_extra_end_tag_error (a_prefix, a_local_part)
 			end
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
@@ -133,7 +136,7 @@ feature {NONE} -- Errors
 			-- Error messages
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

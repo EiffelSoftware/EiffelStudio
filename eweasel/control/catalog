@@ -1915,6 +1915,7 @@ test	config-invalid-vd75			config027 tcf fail config incrementality
 test	config-change-library-location		config028 tcf fail config incrementality
 test	config-process-group-crash		config029 tcf fail config incrementality
 test	config-root-class-precursor		config030 tcf fail config
+test	config-extra-trailing-text		config031 tcf fail config
 
 -- Lace
 

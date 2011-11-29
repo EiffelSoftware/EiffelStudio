@@ -235,7 +235,7 @@ feature {NONE} -- Implementation: parse
 					else
 						l_ignore_non_printable_char := False
 						if not is_blank (l_content) then
-							report_unexpected_content (l_content)
+							report_unexpected_content_in_prolog (l_content)
 						end
 						l_content.wipe_out
 					end
@@ -278,7 +278,13 @@ feature {NONE} -- Implementation: parse
 					end
 				end
 			end
-			l_callbacks.on_finish
+			if not parsing_stopped then
+				if not l_content.is_empty then
+					l_callbacks.on_content (l_content.string)
+					l_content.wipe_out
+				end
+				l_callbacks.on_finish
+			end
 		end
 
 	parse_start_tag
@@ -739,6 +745,12 @@ feature {NONE} -- Implementation: parse
 			report_error ("Unexpected content (not well-formed XML)")
 		end
 
+	report_unexpected_content_in_prolog (a_content: STRING)
+			-- Report unexpected content `a_content' in prolog
+		do
+			report_error ("Unexpected content in prolog (not well-formed XML)")
+		end
+
 feature {NONE} -- Doctype
 
 	register_doctype (s: STRING)
@@ -770,7 +782,6 @@ feature {NONE} -- Query
 			if Result = '%U' then
 				Result := last_character
 			end
---			Result := buffer.last_character
 		end
 
 	rewind_character

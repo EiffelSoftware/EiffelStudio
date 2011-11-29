@@ -79,10 +79,10 @@ feature -- Parsing
 					parse_from_file (f)
 					f.close
 				else
-					report_error ("Unable to open the file %"" + a_filename + "%".")
+					report_error ("Unable to open file %"" + a_filename + "%".")
 				end
 			else
-				report_error ("Error when trying to open the file %"" + a_filename + "%".")
+				report_error ("Error when trying to open file %"" + a_filename + "%".")
 				if f /= Void and then not f.is_closed then
 					f.close
 				end
@@ -795,7 +795,7 @@ feature {NONE} -- Query
 				if not buf.end_of_input then
 					Result := internal_read_character (buf)
 				else
-					report_error ("no more character")
+					report_error ("no more characters")
 				end
 			else
 				rewinded_character := '%U'
@@ -1067,7 +1067,7 @@ feature {NONE} -- Query
 				elseif l_was_space then
 					-- no value FIXME: strict?
 					-- we do not allow attribute without value
-					report_error ("Attribute without any value are forbidden")
+					report_error ("Attributes without any value are forbidden")
 					Result := [p, n, ""]
 				else -- not l_was_space
 					report_error ("unexpected character '" + character_output (c) + "' in attribute name")

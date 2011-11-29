@@ -41,19 +41,14 @@
 			<file_rule>
 				<exclude>evs_grid_search_tool_utility.e$</exclude>
 				<exclude>code_completion$</exclude>
-				<exclude>evs_bordered.e$</exclude>
 				<exclude>evs_grid_pnd_support.e$</exclude>
 				<exclude>evs_grid_search_tool.e$</exclude>
 				<exclude>evs_grid_incremental_search_engine.e$</exclude>
-				<exclude>es_grid_listable_item.e$</exclude>
 				<exclude>evs_grid_link_label_item.e$</exclude>
-				<exclude>es_grid_pixmap_component.e$</exclude>
 				<exclude>evs_widget_tooltip.e$</exclude>
 				<exclude>evs_grid_search_engine.e$</exclude>
-				<exclude>es_grid_item_component.e$</exclude>
 				<exclude>evs_searchable_component.e$</exclude>
 				<exclude>property_grid$</exclude>
-				<exclude>es_grid_list_item.e$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

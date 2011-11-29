@@ -11,7 +11,7 @@ deferred class
 
 feature -- Access
 
-	grid_item: EV_GRID_ITEM
+	grid_item: detachable EV_GRID_ITEM
 			-- Grid item attached to Current
 
 	required_width: INTEGER
@@ -28,10 +28,10 @@ feature -- Access
 			result_attached: Result >= 0
 		end
 
-	last_pebble: ANY
+	last_pebble: detachable ANY
 			-- Last pebble returned from `on_pick'
 
-	pebble_at_position (a_x, a_y: INTEGER): ANY
+	pebble_at_position (a_x, a_y: INTEGER): detachable ANY
 			-- Pebble at position (`a_x', `a_y') which is related to Current component
 			-- Void if no pebble is found.
 		deferred
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- General tooltip
 
-	general_tooltip: EVS_GENERAL_TOOLTIP
+	general_tooltip: detachable EVS_GENERAL_TOOLTIP
 			-- General tooltip used to display information
 			-- Use this tooltip if normal tooltip provided cannot satisfy,
 			-- for example, you want to be able to pick and drop from/to tooltip.
@@ -61,8 +61,10 @@ feature -- General tooltip
 	is_owner_destroyed: BOOLEAN
 			-- If owner destroyed
 			-- Attach this to owner's `is_destroyed'.
+		require
+			is_parented: is_parented
 		do
-			Result := grid_item.is_destroyed
+			Result := attached grid_item as gi and then gi.is_destroyed
 		end
 
 	set_general_tooltip (a_tooltip: like general_tooltip)
@@ -70,11 +72,11 @@ feature -- General tooltip
 		require
 			a_tooltip_attached: a_tooltip /= Void
 		do
-			if general_tooltip /= Void then
-				general_tooltip.disable_tooltip
+			if attached general_tooltip as gtt then
+				gtt.disable_tooltip
 			end
 			general_tooltip := a_tooltip
-			general_tooltip.enable_tooltip
+			a_tooltip.enable_tooltip
 		ensure
 			general_tooltip_set: general_tooltip = a_tooltip
 		end
@@ -82,8 +84,8 @@ feature -- General tooltip
 	remove_general_tooltip
 			-- Remove `general_tooltip'.
 		do
-			if general_tooltip /= Void then
-				general_tooltip.disable_tooltip
+			if attached general_tooltip as gtt then
+				gtt.disable_tooltip
 			end
 			general_tooltip := Void
 		ensure
@@ -104,7 +106,7 @@ feature -- Status report
 	is_displayable: BOOLEAN
 			-- Can Current component been displayed
 		do
-			Result := is_parented and then grid_item.is_parented
+			Result := is_parented and then attached grid_item as gi and then gi.is_parented
 		end
 
 feature -- Pointer status
@@ -130,7 +132,7 @@ feature -- Attachment
 		do
 			set_grid_item (a_grid_item)
 		ensure
-			attached_result: is_parented and then grid_item = a_grid_item
+			attached_result: is_parented and then attached grid_item as gi and then gi = a_grid_item
 		end
 
 	detach
@@ -196,11 +198,15 @@ feature -- Actions
 	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer moves.
 			-- Note: `pointer_motion_actions' of associated grid item will be always invoked.
+		local
+			v: like pointer_motion_actions_internal
 		do
-			if pointer_motion_actions_internal = Void then
-				create pointer_motion_actions_internal
+			v := pointer_motion_actions_internal
+			if v = Void then
+				create v
+				pointer_motion_actions_internal := v
 			end
-			Result := pointer_motion_actions_internal
+			Result := v
 		ensure
 			not_void: Result /= Void
 		end
@@ -208,11 +214,15 @@ feature -- Actions
 	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer button is pressed.
 			-- Note: `pointer_button_press_actions' of associated grid item will be always invoked.
+		local
+			v: like pointer_button_press_actions_internal
 		do
-			if pointer_button_press_actions_internal = Void then
-				create pointer_button_press_actions_internal
+			v := pointer_button_press_actions_internal
+			if v = Void then
+				create v
+				pointer_button_press_actions_internal := v
 			end
-			Result := pointer_button_press_actions_internal
+			Result := v
 		ensure
 			not_void: Result /= Void
 		end
@@ -220,11 +230,15 @@ feature -- Actions
 	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer is double clicked.
 			-- Note: `pointer_double_press_actions' of associated grid item will be always invoked.
+		local
+			v: like pointer_double_press_actions_internal
 		do
-			if pointer_double_press_actions_internal = Void then
-				create pointer_double_press_actions_internal
+			v := pointer_double_press_actions_internal
+			if v = Void then
+				create v
+				pointer_double_press_actions_internal := v
 			end
-			Result := pointer_double_press_actions_internal
+			Result := v
 		ensure
 			not_void: Result /= Void
 		end
@@ -232,11 +246,15 @@ feature -- Actions
 	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer button is released.
 			-- Note: `pointer_button_release_actions' of associated grid item will be always invoked.
+		local
+			v: like pointer_button_release_actions_internal
 		do
-			if pointer_button_release_actions_internal = Void then
-				create pointer_button_release_actions_internal
+			v := pointer_button_release_actions_internal
+			if v = Void then
+				create v
+				pointer_button_release_actions_internal := v
 			end
-			Result := pointer_button_release_actions_internal
+			Result := v
 		ensure
 			not_void: Result /= Void
 		end
@@ -245,11 +263,15 @@ feature -- Actions
 			-- Actions to be performed when screen pointer enters widget.
 			-- Note: `pointer_enter_actions' of associated grid item will be invoked as well if
 			--       pointer moves from outside of the grid item.
+		local
+			v: like pointer_enter_actions_internal
 		do
-			if pointer_enter_actions_internal = Void then
-				create pointer_enter_actions_internal
+			v := pointer_enter_actions_internal
+			if v = Void then
+				create v
+				pointer_enter_actions_internal := v
 			end
-			Result := pointer_enter_actions_internal
+			Result := v
 		ensure
 			not_void: Result /= Void
 		end
@@ -258,33 +280,37 @@ feature -- Actions
 			-- Actions to be performed when screen pointer leaves widget.
 			-- Note: `pointer_leave_actions' of associated grid item will be invoked as well if
 			--       pointer moves outside of the grid item.			
+		local
+			v: like pointer_leave_actions_internal
 		do
-			if pointer_leave_actions_internal = Void then
-				create pointer_leave_actions_internal
+			v := pointer_leave_actions_internal
+			if v = Void then
+				create v
+				pointer_leave_actions_internal := v
 			end
-			Result := pointer_leave_actions_internal
+			Result := v
 		ensure
 			not_void: Result /= Void
 		end
 
 feature{NONE} -- Implementation
 
-	pointer_motion_actions_internal: like pointer_motion_actions
+	pointer_motion_actions_internal: detachable like pointer_motion_actions
 			-- Implementation of `pointer_motion_actions'
 
-	pointer_button_press_actions_internal: like pointer_button_press_actions
+	pointer_button_press_actions_internal: detachable like pointer_button_press_actions
 			-- Implementation of `pointer_button_press_actions'
 
-	pointer_double_press_actions_internal: like pointer_double_press_actions
+	pointer_double_press_actions_internal: detachable like pointer_double_press_actions
 			-- Implementation of `pointer_double_press_actions'
 
-	pointer_button_release_actions_internal: like pointer_button_release_actions
+	pointer_button_release_actions_internal: detachable like pointer_button_release_actions
 			-- Implementation of `pointer_button_release_actions'
 
-	pointer_enter_actions_internal: like pointer_enter_actions
+	pointer_enter_actions_internal: detachable like pointer_enter_actions
 			-- Implementation of `pointer_enter_actions'
 
-	pointer_leave_actions_internal: like pointer_leave_actions;
+	pointer_leave_actions_internal: detachable like pointer_leave_actions;
 			-- Implementation of `pointer_leave_actions'
 
 feature{NONE} -- Implementation/Setting

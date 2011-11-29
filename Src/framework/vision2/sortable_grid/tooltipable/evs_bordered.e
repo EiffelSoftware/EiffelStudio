@@ -94,7 +94,7 @@ feature -- Setting
 
 feature -- Access
 
-	border_line_color: EV_COLOR
+	border_line_color: detachable EV_COLOR
 			-- Border line color of tooltip window
 
 	border_line_width: INTEGER
@@ -115,10 +115,10 @@ feature -- Access
 	actual_border_line_color: EV_COLOR
 			-- Actual border line color used to draw border line
 		do
-			if border_line_color = Void then
-				Result := border_line_color_internal
+			if attached border_line_color as col then
+				Result := col
 			else
-				Result := border_line_color
+				Result := border_line_color_internal
 			end
 		ensure
 			result_attached: Result /= Void

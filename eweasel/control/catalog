@@ -2713,6 +2713,7 @@ test	scoop-once-per-object				scoop018 tcf pass scoop execution incrementality o
 test	scoop-top-exception				scoop019 tcf pass scoop
 test	scoop-separate-formal				scoop020 tcf pass scoop formal generic conformance validity
 test	scoop-object-test				scoop021 tcf pass scoop formal generic conformance object_test execution
+test	scoop-undetected-vuer				scoop022 tcf fail scoop validity incrementality
 
 -- Prettify
 test	pretty-smoke-test			pretty001 tcf pass pretty

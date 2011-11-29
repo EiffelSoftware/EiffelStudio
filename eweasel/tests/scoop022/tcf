@@ -1,0 +1,20 @@
+
+test_name	 scoop-undetected-vuer
+test_description After initial compilation, a separate attribute in an expanded class is changed to be non-separate.  The compiler does not detect the VUER error
+
+define		SEPARATE "separate"
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e	$CLUSTER test.e
+copy_raw	test1.e	$CLUSTER test1.e
+copy_sub	test2.e	$CLUSTER test2.e
+
+compile_melted
+compile_result ok
+
+define		SEPARATE ""
+copy_sub	test2.e	$CLUSTER test2.e
+
+compile_melted
+compile_result validity_error TEST VUER
+
+test_end

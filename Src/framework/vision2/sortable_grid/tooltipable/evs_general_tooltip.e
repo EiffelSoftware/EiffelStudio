@@ -136,7 +136,7 @@ feature {EVS_GENERAL_TOOLTIP_WINDOW} -- Status report
 		do
 			l_func := widget_function
 			l_func.call (Void)
-			Result := l_func.last_result
+			Result := l_func.item (Void)
 		end
 
 feature{NONE} -- Implementation

@@ -41,7 +41,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	previous_lines: ARRAYED_LIST [STRING_32];
+	previous_lines: detachable ARRAYED_LIST [STRING_32]
 			-- Previously generated lines for word wrapping.
 
 	refresh_wrapped_text
@@ -50,9 +50,10 @@ feature {NONE} -- Implementation
 		require
 			width_big_enough: width > 0
 		local
+			l_previous_lines: like previous_lines
 			l_counter, l_last_counter: INTEGER
 			l_current_width: INTEGER
-			l_last_string: STRING_32
+			l_last_string: detachable STRING_32
 			l_temp_string: STRING_32
 			l_modified_text: STRING_32
 			l_lines: ARRAYED_LIST [STRING_32]
@@ -61,7 +62,7 @@ feature {NONE} -- Implementation
 			l_maximum_string_width: INTEGER
 			l_lines_changed: BOOLEAN
 			l_all_space_indexes: ARRAYED_LIST [INTEGER]
-			l_font: like font
+			l_font: detachable like font
 		do
 			create l_all_space_indexes.make (20)
 			create l_lines.make (4)
@@ -122,7 +123,9 @@ feature {NONE} -- Implementation
 					l_counter := l_counter + 1
 				end
 
-				l_lines.extend (l_last_string)
+				if l_last_string /= Void then
+					l_lines.extend (l_last_string)
+				end
 			end
 
 				-- to small? => increase width
@@ -132,20 +135,21 @@ feature {NONE} -- Implementation
 					-- Now determine if the contents of the line have actually changed.
 					-- If they have not, then there is no need to set the text again, as it
 					-- causes flicker.
-				if previous_lines = Void or else l_lines.count /= previous_lines.count then
+				l_previous_lines := previous_lines
+				if l_previous_lines = Void or else l_lines.count /= l_previous_lines.count then
 					l_lines_changed := True
-				else
+				elseif l_previous_lines /= Void then
 					from
 						l_lines.start
-						previous_lines.start
+						l_previous_lines.start
 					until
 						l_lines_changed or l_lines.after
 					loop
 						check
-							not_previous_after: not previous_lines.after
+							not_previous_after: not l_previous_lines.after
 						end
-						l_lines_changed := l_lines.item.count /= previous_lines.item.count
-						previous_lines.forth
+						l_lines_changed := l_lines.item.count /= l_previous_lines.item.count
+						l_previous_lines.forth
 						l_lines.forth
 					end
 				end

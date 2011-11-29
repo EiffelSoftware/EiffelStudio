@@ -36,7 +36,6 @@ feature {NONE} -- Initialization
 			-- additional setup tasks.
 		do
 			Precursor
-			internal_font := font.twin.as_attached
 			pointer_enter_actions.force (agent on_pointer_entered)
 			pointer_leave_actions.force (agent on_pointer_left)
 		end
@@ -46,14 +45,22 @@ feature {NONE} -- Access
 	default_font: EV_FONT
 			-- Font used to display labels.
 		do
-			Result := internal_font.twin
+			if attached internal_font as ft then
+				Result := ft.twin
+			else
+				Result := font.twin
+			end
 			Result.set_weight ({EV_FONT_CONSTANTS}.weight_regular)
 		end
 
 	highlight_font: EV_FONT
 			-- Highlight font
 		do
-			Result := internal_font.twin
+			if attached internal_font as ft then
+				Result := ft.twin
+			else
+				Result := default_font.twin
+			end
 			Result.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 		end
 
@@ -72,11 +79,11 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			a_font_not_void: a_font /= Void
 		local
-			l_font: like internal_font
+			ft: like internal_font
 		do
-			l_font := internal_font
+			ft := internal_font
 			set_internal_font (a_font)
-			internal_font := l_font
+			internal_font := ft
 		ensure
 			internal_font_unchanged: internal_font ~ old internal_font
 		end
@@ -86,7 +93,7 @@ feature {NONE} -- Element change
 	set_internal_font (a_font: EV_FONT)
 			-- <Precursor>
 		do
-			internal_font := a_font.as_attached
+			internal_font := a_font
 			Precursor (a_font)
 		ensure then
 			internal_font_set: internal_font = a_font
@@ -133,11 +140,11 @@ feature {NONE} -- Action handlers
 		require
 			not_is_destroyed: not is_destroyed
 		local
-			l_font: attached like internal_font
+			ft: like internal_font
 		do
-			l_font := internal_font
+			ft := internal_font
 			set_font (highlight_font)
-			internal_font := l_font
+			internal_font := ft
 		ensure
 			internal_font_unchanged: internal_font ~ old internal_font
 		end
@@ -147,18 +154,18 @@ feature {NONE} -- Action handlers
 		require
 			not_is_destroyed: not is_destroyed
 		local
-			l_font: attached like internal_font
+			ft: like internal_font
 		do
-			l_font := internal_font
+			ft := internal_font
 			set_font (default_font)
-			internal_font := l_font
+			internal_font := ft
 		ensure
 			internal_font_unchanged: internal_font ~ old internal_font
 		end
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_font: attached EV_FONT
+	internal_font: detachable EV_FONT
 			-- Cached internal font
 
 ;note

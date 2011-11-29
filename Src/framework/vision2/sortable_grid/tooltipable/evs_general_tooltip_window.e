@@ -52,12 +52,16 @@ feature -- Show
 		local
 			l_pos: EV_COORDINATE
 		do
-			set_size (owner.required_tooltip_width, owner.required_tooltip_height)
-			l_pos := tooltip_left_top_position (pointer_x, pointer_y)
-			set_position (l_pos.x, l_pos.y)
-			safe_register_agent (pointer_motion_agent, ev_application.pointer_motion_actions)
+			if attached owner as o then
+				set_size (o.required_tooltip_width, o.required_tooltip_height)
+				l_pos := tooltip_left_top_position (o, pointer_x, pointer_y)
+				set_position (l_pos.x, l_pos.y)
+				safe_register_agent (pointer_motion_agent, ev_application.pointer_motion_actions)
 
-			show
+				show
+			else
+				check has_owner: False end
+			end
 		end
 
 	hide_tooltip
@@ -81,7 +85,7 @@ feature -- Status report
 
 feature -- Owner operation
 
-	attach_owner (a_owner: like owner)
+	attach_owner (a_owner: attached like owner)
 			-- Attach `a_owner' to `owner'.
 		require
 			a_owner_attached: a_owner /= Void
@@ -94,11 +98,12 @@ feature -- Owner operation
 			if not is_empty then
 				wipe_out
 			end
-			extend (owner.tooltip_widget)
+			extend (a_owner.tooltip_widget)
 			timer.set_interval (owner_destroy_checking_internal)
 		ensure
 			owner_attached: has_owner
-			widget_extended: has (owner.tooltip_widget)
+			owner_set: owner = a_owner
+			widget_extended: has (a_owner.tooltip_widget)
 		end
 
 	detach_owner
@@ -106,55 +111,65 @@ feature -- Owner operation
 		require
 			owner_attached: owner /= Void
 		do
-			owner.setup_timer (0, Void)
-			safe_remove_agent (pointer_motion_agent, ev_application.pointer_motion_actions)
-			owner.set_pointer_on_tooltip (False)
-			owner.set_picking_from_tooltip (False)
-			owner.set_is_pointer_on_tooltip (False)
-			owner.set_is_tooltip_pined (False)
+			if attached owner as o then
+				o.setup_timer (0, Void)
+				safe_remove_agent (pointer_motion_agent, ev_application.pointer_motion_actions)
+
+				o.set_pointer_on_tooltip (False)
+				o.set_picking_from_tooltip (False)
+				o.set_is_pointer_on_tooltip (False)
+				o.set_is_tooltip_pined (False)
+			else
+				check has_owner: False end
+				safe_remove_agent (pointer_motion_agent, ev_application.pointer_motion_actions)
+			end
 			timer.set_interval (0)
 			owner := Void
 		ensure
 			owner_detached: not has_owner
 		end
 
-feature{NONE} -- Actions
+feature {NONE} -- Actions
 
 	owner_destroyed_checker
 			-- Action to be performed when `owner' is destroyed.
 		require
 			has_owner: has_owner
 		do
-			if owner.is_owner_destroyed then
+			if attached owner as o and then o.is_owner_destroyed then
 				detach_owner
 				if is_displayed then
 					hide
 				end
 			end
 		ensure
-			current_hidden: owner.is_owner_destroyed implies not is_displayed
+			current_hidden: (attached owner as en_owner and then en_owner.is_owner_destroyed) implies not is_displayed
 		end
 
 	on_pointer_motion (a_widget: EV_WIDGET; x, y: INTEGER)
 			-- Action to be performed when pointer moves
 		do
-			if has_recursive (a_widget) then
-				owner.set_pointer_on_tooltip (True)
-			else
-				owner.set_pointer_on_tooltip (False)
+			if attached owner as o then
+				if has_recursive (a_widget) then
+					o.set_pointer_on_tooltip (True)
+				else
+					o.set_pointer_on_tooltip (False)
+				end
 			end
 		end
 
-feature{NONE} -- Measure
+feature {NONE} -- Measure
 
-	actual_tooltip_window_width: INTEGER
+	actual_tooltip_window_width (a_owner: attached like owner): INTEGER
 			-- Actual width in pixel of tooltip window
+		require
+			a_owner_attached: a_owner /= Void
 		local
 			l_required_width: INTEGER
 			l_max_width: INTEGER
 		do
-			l_required_width := owner.required_tooltip_width
-			l_max_width := owner.max_tooltip_width
+			l_required_width := a_owner.required_tooltip_width
+			l_max_width := a_owner.max_tooltip_width
 			if l_max_width > 0 and l_required_width > l_max_width then
 				Result := l_max_width
 			else
@@ -164,14 +179,17 @@ feature{NONE} -- Measure
 			result_non_negative: Result >= 0
 		end
 
-	actual_tooltip_window_height: INTEGER
+	actual_tooltip_window_height (a_owner: attached like owner): INTEGER
 			-- Actual height in pixel of tooltip window
+		require
+			a_owner_attached: a_owner /= Void
 		local
 			l_required_height,
 			l_max_height: INTEGER
+			o: like owner
 		do
-			l_required_height := owner.required_tooltip_height
-			l_max_height := owner.max_tooltip_height
+			l_required_height := a_owner.required_tooltip_height
+			l_max_height := a_owner.max_tooltip_height
 			if l_max_height > 0 and l_required_height > l_max_height then
 				Result := l_max_height
 			else
@@ -181,29 +199,33 @@ feature{NONE} -- Measure
 			result_non_negative: Result >= 0
 		end
 
-	tooltip_left_top_position (pointer_x, pointer_y: INTEGER): EV_COORDINATE
+	tooltip_left_top_position (a_owner: attached like owner; pointer_x, pointer_y: INTEGER): EV_COORDINATE
 			-- Coordinate of left-top position of current tooltip window
 			-- relative to pointer position (pointer_x, pointer_y)
 			-- Returned value guarantees that whole tooltip is visiable in screen.
+		require
+			a_owner_attached: a_owner /= Void
 		local
 			l_start_x, l_start_y: INTEGER
 			l_end_x, l_end_y: INTEGER
 			l_width, l_height: INTEGER
+			vw: INTEGER
 		do
-			l_width := actual_tooltip_window_width
-			l_height := actual_tooltip_window_height
+			l_width := actual_tooltip_window_width (a_owner)
+			l_height := actual_tooltip_window_height (a_owner)
 			set_width (l_width)
 			set_height (l_height)
 			l_start_x := pointer_x
-			l_start_y := pointer_y + owner.pointer_offset
+			l_start_y := pointer_y + a_owner.pointer_offset
 			l_end_x := l_start_x + l_width - 1
 			l_end_y := l_start_y + l_height - 1
 			if l_end_y > screen.implementation.virtual_height then
-				l_end_y := pointer_y - owner.pointer_offset
+				l_end_y := pointer_y - a_owner.pointer_offset
 				l_start_y := l_end_y - l_height + 1
 			end
-			if l_end_x > screen.implementation.virtual_width then
-				l_end_x := screen.implementation.virtual_width - 2
+			vw := screen.implementation.virtual_width
+			if l_end_x > vw then
+				l_end_x := vw - 2
 				l_start_x := l_end_x - l_width + 1
 			end
 			create Result.make (l_start_x, l_start_y)
@@ -213,7 +235,7 @@ feature{NONE} -- Measure
 
 feature -- Owner
 
-	owner: EVS_GENERAL_TOOLTIPABLE
+	owner: detachable EVS_GENERAL_TOOLTIPABLE
 			-- owner of current tooltip window
 
 feature{NONE} -- Implementation
@@ -226,20 +248,24 @@ feature{NONE} -- Implementation
 
 	timer: EV_TIMEOUT
 			-- Timer used to simulate tooltip delay time
+		local
+			t: like timer_internal
 		do
-			if timer_internal = Void then
-				create timer_internal
-				timer_internal.actions.extend (agent owner_destroyed_checker)
+			t := timer_internal
+			if t = Void then
+				create t
+				t.actions.extend (agent owner_destroyed_checker)
+				timer_internal := t
 			end
-			Result := timer_internal
+			Result := t
 		ensure
 			result_attached: Result /= Void
 		end
 
-	timer_internal: EV_TIMEOUT
+	timer_internal: detachable EV_TIMEOUT
 			-- Internal timer used to simulate tooltip delay time
 
-	pointer_motion_agent_internal: like pointer_motion_agent
+	pointer_motion_agent_internal: detachable like pointer_motion_agent
 			-- Internal `pointer_motion_agent'
 
 	owner_destroy_checking_internal: INTEGER = 100
@@ -247,11 +273,15 @@ feature{NONE} -- Implementation
 
 	pointer_motion_agent: PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER, INTEGER]]
 			-- Wrapper of `on_pointer_motion'
+		local
+			agt: like pointer_motion_agent_internal
 		do
-			if pointer_motion_agent_internal = Void then
-				pointer_motion_agent_internal := agent on_pointer_motion
+			agt := pointer_motion_agent_internal
+			if agt = Void then
+				agt := agent on_pointer_motion
+				pointer_motion_agent_internal := agt
 			end
-			Result := pointer_motion_agent_internal
+			Result := agt
 		ensure
 			result_attached: Result /= Void
 		end

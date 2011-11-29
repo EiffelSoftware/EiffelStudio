@@ -34,13 +34,17 @@ feature -- Status
 	is_dialog_open: BOOLEAN
 			-- Is the extended dialog open?
 
-	start_directory: STRING_GENERAL
+	start_directory: detachable READABLE_STRING_GENERAL
 
 feature -- Change
 
 	set_start_directory (v: like start_directory)
 		do
-			start_directory := v.twin
+			if v /= Void then
+				start_directory := v.as_string_8
+			else
+				start_directory := Void
+			end
 		end
 
 feature {NONE} -- Agents
@@ -49,19 +53,20 @@ feature {NONE} -- Agents
 			-- Show text editor.
 		require
 			parented: is_parented
-			parent_window: parent_window (parent) /= Void
+			parent_window: attached parent as r_p and then parent_window (r_p) /= Void
 			activated: is_activated
 		local
-			l_parent: EV_WINDOW
+			l_parent: detachable EV_WINDOW
 			l_dial: EV_DIRECTORY_DIALOG
-			l_dir: DIRECTORY
+			l_dir: detachable DIRECTORY
 			t: STRING_GENERAL
+			tf: like text_field
 		do
-			l_parent := parent_window (parent)
 			is_dialog_open := True
 			create l_dial
-			if text_field /= Void then
-				t := text_field.text
+			tf := text_field
+			if tf /= Void then
+				t := tf.text
 			else
 				t := text
 			end
@@ -73,8 +78,8 @@ feature {NONE} -- Agents
 					l_dir := Void
 				end
 			end
-			if l_dir = Void and start_directory /= Void then
-				create l_dir.make (start_directory.as_string_8)
+			if l_dir = Void and attached start_directory as s_dir then
+				create l_dir.make (s_dir.as_string_8)
 				if not l_dir.exists then
 					l_dir := Void
 				end
@@ -85,10 +90,17 @@ feature {NONE} -- Agents
 
 			l_dial.ok_actions.extend (agent dialog_ok (l_dial))
 			enter_outter_edition
-			l_dial.show_modal_to_window (l_parent)
+			if attached parent as g then
+				l_parent := parent_window (g)
+			end
+			if l_parent /= Void then
+				l_dial.show_modal_to_window (l_parent)
+			else
+				check has_parent_window: False end
+			end
 			leave_outter_edition
-			if text_field /= Void then
-				text_field.set_focus
+			if tf /= Void then
+				tf.set_focus
 			end
 			is_dialog_open := False
 		end
@@ -96,8 +108,8 @@ feature {NONE} -- Agents
 	dialog_ok (a_dial: EV_DIRECTORY_DIALOG)
 			-- If dialog is closed with ok.
 		do
-			if text_field /= Void then
-				text_field.set_text (a_dial.directory)
+			if attached text_field as tf then
+				tf.set_text (a_dial.directory)
 			else
 				set_text (a_dial.directory)
 			end

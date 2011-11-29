@@ -219,7 +219,11 @@ feature {NONE} -- Implementation
 				if l_font = Void then
 					l_font := internal_default_font
 				end
-				internal_text_height := l_font.string_size (text).height
+				if attached text as l_master_text then
+					internal_text_height := l_font.string_size (l_master_text).height
+				else
+					internal_text_height := l_font.height
+				end
 			end
 		end
 
@@ -241,7 +245,7 @@ feature {NONE} -- Implementation
 		end
 
 	user_cancelled_activation: BOOLEAN
-		-- Did the user cancel the activation using the Esc key?
+			-- Did the user cancel the activation using the Esc key?
 
 	activate_action (popup_window: EV_POPUP_WINDOW)
 			-- `Current' has been requested to be updated via `popup_window'.
@@ -257,8 +261,11 @@ feature {NONE} -- Implementation
 			if attached editable_font as l_font then
 				l_text_field.set_font (l_font)
 			end
-
-			l_text_field.set_text (text)
+			if attached text as l_master_text then
+				l_text_field.set_text (l_master_text)
+			else
+				l_text_field.remove_text
+			end
 
 			if attached editable_background_color as ebgc then
 				l_bg_color := ebgc

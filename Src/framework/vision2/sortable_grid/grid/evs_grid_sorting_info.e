@@ -63,7 +63,7 @@ feature -- Status reporting
 	is_auto_indicator_enabled: BOOLEAN
 			-- Should sort order indicator be set automatically?
 
-feature{EVS_GRID_WRAPPER} -- Setting
+feature {EVS_GRID_WRAPPER} -- Setting
 
 	set_column_index (a_index: INTEGER)
 			-- Set `column_index' with `a_index'.

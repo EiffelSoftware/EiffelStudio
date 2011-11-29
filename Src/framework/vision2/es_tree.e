@@ -53,30 +53,43 @@ feature -- Setting
 			-- `a_expand_recursive' indicates if expanding a node recursively should be enabled.
 			-- `a_collapse' indicates if collapsing a node should be enabled.
 			-- `a_collapse_recursive' indicates if collapsing a node recursively should be enabled.
+		local
+			l_expand_selected_rows_agent: like expand_selected_rows_agent
+			l_expand_selected_rows_recursive_agent: like expand_selected_rows_recursive_agent
+			l_collapse_selected_rows_agent: like collapse_selected_rows_agent
+			l_collapse_selected_rows_recursive_agent: like collapse_selected_rows_recursive_agent
 		do
 			if a_expand then
-				if expand_selected_rows_agent = Void then
-					set_expand_selected_rows_agent (agent expand_selected_item (False))
+				l_expand_selected_rows_agent := expand_selected_rows_agent
+				if l_expand_selected_rows_agent = Void then
+					l_expand_selected_rows_agent := agent expand_selected_item (False)
+					set_expand_selected_rows_agent (l_expand_selected_rows_agent)
 				end
-				default_expand_rows_shortcuts.do_all (agent register_shortcut (?, expand_selected_rows_agent))
+				default_expand_rows_shortcuts.do_all (agent register_shortcut (?, l_expand_selected_rows_agent))
 			end
 			if a_expand_recursive then
-				if expand_selected_rows_recursive_agent = Void then
-					set_expand_selected_rows_recursive_agent (agent expand_selected_item (True))
+				l_expand_selected_rows_recursive_agent := expand_selected_rows_recursive_agent
+				if l_expand_selected_rows_recursive_agent = Void then
+					l_expand_selected_rows_recursive_agent := agent expand_selected_item (True)
+					set_expand_selected_rows_recursive_agent (l_expand_selected_rows_recursive_agent)
 				end
-				default_expand_rows_recursive_shortcuts.do_all (agent register_shortcut (?, expand_selected_rows_recursive_agent))
+				default_expand_rows_recursive_shortcuts.do_all (agent register_shortcut (?, l_expand_selected_rows_recursive_agent))
 			end
 			if a_collapse then
-				if collapse_selected_rows_agent = Void then
-					set_collapse_selected_rows_agent (agent collapse_selected_item (False))
+				l_collapse_selected_rows_agent := collapse_selected_rows_agent
+				if l_collapse_selected_rows_agent = Void then
+					l_collapse_selected_rows_agent := agent collapse_selected_item (False)
+					set_collapse_selected_rows_agent (l_collapse_selected_rows_agent)
 				end
-				default_collapse_rows_shortcuts.do_all (agent register_shortcut (?, collapse_selected_rows_agent))
+				default_collapse_rows_shortcuts.do_all (agent register_shortcut (?, l_collapse_selected_rows_agent))
 			end
 			if a_collapse_recursive then
-				if collapse_selected_rows_recursive_agent = Void then
-					set_collapse_selected_rows_recursive_agent (agent collapse_selected_item (True))
+				l_collapse_selected_rows_recursive_agent := collapse_selected_rows_recursive_agent
+				if l_collapse_selected_rows_recursive_agent = Void then
+					l_collapse_selected_rows_recursive_agent := agent collapse_selected_item (True)
+					set_collapse_selected_rows_recursive_agent (l_collapse_selected_rows_recursive_agent)
 				end
-				default_collapse_rows_recursive_shortcuts.do_all (agent register_shortcut (?, collapse_selected_rows_recursive_agent))
+				default_collapse_rows_recursive_shortcuts.do_all (agent register_shortcut (?, l_collapse_selected_rows_recursive_agent))
 			end
 		end
 
@@ -104,12 +117,12 @@ feature {NONE} -- Actions
 			-- Action to be performed when expanding selected item.
 		do
 			if not a_recursive then
-				if expand_selected_rows_agent /= Void then
-					expand_selected_rows_agent.call (Void)
+				if attached expand_selected_rows_agent as agt then
+					agt.call (Void)
 				end
 			else
-				if expand_selected_rows_recursive_agent /= Void then
-					expand_selected_rows_recursive_agent.call (Void)
+				if attached expand_selected_rows_recursive_agent as agt then
+					agt.call (Void)
 				end
 			end
 		end
@@ -118,12 +131,12 @@ feature {NONE} -- Actions
 			-- Action to be performed when collapsing selected item.
 		do
 			if not a_recursive then
-				if collapse_selected_rows_agent /= Void then
-					collapse_selected_rows_agent.call (Void)
+				if attached collapse_selected_rows_agent as agt then
+					agt.call (Void)
 				end
 			else
-				if collapse_selected_rows_recursive_agent /= Void then
-					collapse_selected_rows_recursive_agent.call (Void)
+				if attached collapse_selected_rows_recursive_agent as agt then
+					agt.call (Void)
 				end
 			end
 		end

@@ -2,7 +2,6 @@ note
 	description: "Helper for grid item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,14 +19,18 @@ feature -- Access
 			l_x: INTEGER
 			l_y: INTEGER
 			l_header_height: INTEGER
-			l_grid: EV_GRID
 		do
-			l_grid := a_grid_item.parent
-			l_x := a_x - (a_grid_item.virtual_x_position - l_grid.virtual_x_position )
-			if l_grid.is_header_displayed then
-				l_header_height := l_grid.header.height
+			if attached a_grid_item.parent as g then
+				if g.is_header_displayed then
+					l_header_height := g.header.height
+				end
+				l_x := a_x - (a_grid_item.virtual_x_position - g.virtual_x_position )
+				l_y := a_y - (a_grid_item.virtual_y_position - g.virtual_y_position ) - l_header_height
+			else
+				check a_grid_item_parented: False end
+				l_x := a_x - a_grid_item.virtual_x_position
+				l_y := a_y - a_grid_item.virtual_y_position - l_header_height
 			end
-			l_y := a_y - (a_grid_item.virtual_y_position - l_grid.virtual_y_position ) - l_header_height
 			create Result.make (l_x, l_y)
 		ensure
 			result_attached: Result /= Void
@@ -41,8 +44,13 @@ feature -- Access
 		local
 			l_parent_pointer_position: EV_COORDINATE
 		do
-			l_parent_pointer_position := a_grid_item.parent.pointer_position
-			Result := relative_position (a_grid_item, l_parent_pointer_position.x, l_parent_pointer_position.y)
+			if attached a_grid_item.parent as g then
+				l_parent_pointer_position := g.pointer_position
+				Result := relative_position (a_grid_item, l_parent_pointer_position.x, l_parent_pointer_position.y)
+			else
+				check a_grid_item_parented: False end
+				Result := relative_position (a_grid_item, 0, 0)
+			end
 		ensure
 			result_attached: Result /= Void
 		end

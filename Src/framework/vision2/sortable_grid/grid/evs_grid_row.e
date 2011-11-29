@@ -19,7 +19,7 @@ feature -- Status report
 
 feature -- Grid row
 
-	grid_row: EV_GRID_ROW
+	grid_row: detachable EV_GRID_ROW
 			-- EV_GRID row associated with current
 
 	set_grid_row (a_row: like grid_row)
@@ -28,10 +28,10 @@ feature -- Grid row
 			a_row_attached: a_row /= Void
 		do
 			grid_row := a_row
-			grid_row.set_data (Current)
+			a_row.set_data (Current)
 		ensure
 			grid_row_set: grid_row = a_row
-			data_set: grid_row.data = Current
+			data_set: a_row.data = Current
 		end
 
 note

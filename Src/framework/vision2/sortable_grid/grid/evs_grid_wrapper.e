@@ -30,7 +30,7 @@ feature{NONE} -- Initialization
 			grid := a_grid
 			last_sorted_column_internal := 0
 			create sorted_columns.make
-			set_grid_item_function (agent grid.item)
+			set_grid_item_function (agent a_grid.item)
 			set_ensure_visible_action (agent default_ensure_visible_action)
 		ensure
 			grid_set: grid = a_grid
@@ -47,8 +47,6 @@ feature -- Setting
 		require
 			a_column_index_valid: is_column_index_valid (a_column_index)
 			a_sort_info_attached: a_sort_info /= Void
-		local
-			l_sort_agent: PROCEDURE [ANY, TUPLE]
 		do
 			a_sort_info.set_column_index (a_column_index)
 			if a_column_index > column_sort_info.upper then
@@ -58,8 +56,9 @@ feature -- Setting
 			if not sort_agent_table.has (a_column_index) then
 				sort_agent_table.force (agent sort (?, ?, ?, ?, ?, ?, ?, ?, a_column_index), a_column_index)
 			end
-			l_sort_agent := sort_agent_table.item (a_column_index)
-			safe_register_agent (l_sort_agent, grid.column (a_column_index).header_item.pointer_button_press_actions)
+			if attached sort_agent_table.item (a_column_index) as l_sort_agent then
+				safe_register_agent (l_sort_agent, grid.column (a_column_index).header_item.pointer_button_press_actions)
+			end
 		ensure
 			sort_info_set: column_sort_info.item (a_sort_info.column_index) = a_sort_info
 		end
@@ -68,18 +67,15 @@ feature -- Setting
 			-- Remove sort information associated with `a_column_index'-th column in `grid'.
 		require
 			a_column_index_valid: is_column_index_valid (a_column_index)
-		local
-			l_sort_agent: PROCEDURE [ANY, TUPLE]
 		do
-			if column_sort_info.item (a_column_index) /= Void then
-				if column_sort_info.item (a_column_index).is_auto_indicator_enabled then
-					grid.column (column_sort_info.item (a_column_index).column_index).header_item.remove_pixmap
+			if attached column_sort_info.item (a_column_index) as l_sort_info then
+				if l_sort_info.is_auto_indicator_enabled then
+					grid.column (l_sort_info.column_index).header_item.remove_pixmap
 				end
 				if a_column_index <= column_sort_info.upper then
 					column_sort_info.put (Void, a_column_index)
 				end
-				l_sort_agent := sort_agent_table.item (a_column_index)
-				if l_sort_agent /= Void then
+				if attached sort_agent_table.item (a_column_index) as l_sort_agent then
 					safe_remove_agent (l_sort_agent, grid.column (a_column_index).header_item.pointer_button_press_actions)
 				end
 			end
@@ -131,7 +127,6 @@ feature -- Setting
 			l_tuple: TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]
 			l_column: INTEGER
 			l_sort_info: like column_sort_info
-			l_sort_info_item: EVS_GRID_SORTING_INFO [G]
 		do
 			l_sort_info := column_sort_info
 			l_columns := sorted_columns
@@ -144,8 +139,7 @@ feature -- Setting
 				l_tuple := a_status.item
 				l_column := l_tuple.a_column_index
 				l_columns.extend (l_column)
-				l_sort_info_item := l_sort_info.item (l_column)
-				if l_sort_info_item /= Void then
+				if attached l_sort_info.item (l_column) as l_sort_info_item then
 					l_sort_info_item.set_current_order (l_tuple.a_sorting_order)
 				end
 				a_status.forth
@@ -241,43 +235,43 @@ feature -- Sort
 		require
 			a_column_index_valid: a_column_index >= 1 and a_column_index <= grid_column_count
 		local
-			l_sort_info: EVS_GRID_SORTING_INFO [G]
+			l_sort_info: detachable EVS_GRID_SORTING_INFO [G]
 			l_current_order: INTEGER
-			l_indicator: EV_PIXMAP
 		do
 				-- We only sort on column where sorting information is set.									
 			if button = {EV_POINTER_CONSTANTS}.left and then is_column_sortable (a_column_index) then
 				update_sorted_columns (is_ctrl_key_pressed, a_column_index)
 				l_sort_info := column_sort_info.item (a_column_index)
-				if is_auto_sort_order_change_enabled then
-					l_sort_info.change_order
-				end
-				if sort_action /= Void then
-					sort_action.call ([sorted_columns, current_comparator])
-						-- Change sort indicator.
-					l_current_order := l_sort_info.current_order
-					if l_sort_info.is_auto_indicator_enabled and then l_sort_info.indicator.has (l_current_order) then
-						l_indicator := l_sort_info.indicator.item (l_current_order)
-						if l_indicator /= Void then
-							grid.column (l_sort_info.column_index).set_pixmap (l_indicator)
-						else
-							grid.column (l_sort_info.column_index).remove_pixmap
-						end
+				if l_sort_info /= Void then
+					if is_auto_sort_order_change_enabled then
+						l_sort_info.change_order
 					end
-					if
-						is_column_index_valid (last_sorted_column_internal) and then
-						last_sorted_column_internal /= a_column_index and then
-						is_column_sortable (a_column_index)
-					then
-						l_sort_info := column_sort_info.item (last_sorted_column_internal)
-						if l_sort_info /= Void then
-							if l_sort_info.is_auto_indicator_enabled then
-								grid.column (last_sorted_column_internal).header_item.remove_pixmap
+					if attached sort_action as l_sort_action then
+						l_sort_action.call ([sorted_columns, current_comparator])
+							-- Change sort indicator.
+						l_current_order := l_sort_info.current_order
+						if l_sort_info.is_auto_indicator_enabled and then l_sort_info.indicator.has (l_current_order) then
+							if attached l_sort_info.indicator.item (l_current_order) as l_indicator then
+								grid.column (l_sort_info.column_index).set_pixmap (l_indicator)
+							else
+								grid.column (l_sort_info.column_index).remove_pixmap
 							end
 						end
+						if
+							is_column_index_valid (last_sorted_column_internal) and then
+							last_sorted_column_internal /= a_column_index and then
+							is_column_sortable (a_column_index)
+						then
+							l_sort_info := column_sort_info.item (last_sorted_column_internal)
+							if l_sort_info /= Void then
+								if l_sort_info.is_auto_indicator_enabled then
+									grid.column (last_sorted_column_internal).header_item.remove_pixmap
+								end
+							end
+						end
+						last_sorted_column_internal := a_column_index
+						post_sort_actions.call ([sorting_order_snapshort])
 					end
-					last_sorted_column_internal := a_column_index
-					post_sort_actions.call ([sorting_order_snapshort])
 				end
 			end
 		ensure
@@ -335,20 +329,23 @@ feature -- Status report
 
 feature -- Access
 
-	column_sort_info: ARRAY [EVS_GRID_SORTING_INFO [G]]
+	column_sort_info: ARRAY [detachable EVS_GRID_SORTING_INFO [G]]
 			-- Sort information of every column in `grid'.
 			-- If `column_sort_info'.`item' (i) is Void, then i-th column in `grid' is not sortable.
 		local
 			l_column_count: INTEGER
+			l_column_sort_info_internal: like column_sort_info_internal
 		do
-			if column_sort_info_internal = Void then
+			l_column_sort_info_internal := column_sort_info_internal
+			if l_column_sort_info_internal = Void then
 				l_column_count := grid.column_count
 				if l_column_count = 0 then
 					l_column_count := 1
 				end
-				create column_sort_info_internal.make (1, l_column_count)
+				create l_column_sort_info_internal.make (1, l_column_count)
+				column_sort_info_internal := l_column_sort_info_internal
 			end
-			Result := column_sort_info_internal
+			Result := l_column_sort_info_internal
 		ensure
 			result_attached: Result /= Void
 		end
@@ -378,29 +375,33 @@ feature -- Access
 	grid: EV_GRID
 			-- Grid for display			
 
-	sort_action: PROCEDURE [ANY, TUPLE [a_sorted_columns: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [G]]]
+	sort_action: detachable PROCEDURE [ANY, TUPLE [a_sorted_columns: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [G]]]
 			-- Action used to sort
 
 	post_sort_actions: ACTION_SEQUENCE [TUPLE [LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]]]
 			-- Actions got called after sorting is finished
 			-- Argument of those actions is a list of columns to be sorted.
+		local
+			l_post_sort_actions_internal: like post_sort_actions_internal
 		do
-			if post_sort_actions_internal = Void then
-				create post_sort_actions_internal
+			l_post_sort_actions_internal := post_sort_actions_internal
+			if l_post_sort_actions_internal = Void then
+				create l_post_sort_actions_internal
+				post_sort_actions_internal := l_post_sort_actions_internal
 			end
-			Result := post_sort_actions_internal
+			Result := l_post_sort_actions_internal
 		ensure
 			result_attached: Result /= Void
 		end
 
-	grid_item_function: FUNCTION [ANY, TUPLE [a_column: INTEGER; a_row: INTEGER], EV_GRID_ITEM]
+	grid_item_function: FUNCTION [ANY, TUPLE [a_column: INTEGER; a_row: INTEGER], detachable EV_GRID_ITEM]
 			-- Function that returns grid item at position (`a_column', `a_row')
 
 	ensure_visible_action: PROCEDURE [ANY, TUPLE [a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN]]
 			-- Action to be performed to ensure that `a_item' is visible.
 			-- `a_selected' is True indicates that `a_item' should be selected by default.
 
-	selection_function: FUNCTION [ANY, TUPLE, STRING_GENERAL]
+	selection_function: detachable FUNCTION [ANY, TUPLE, STRING_GENERAL]
 			-- Function to return selected text in grid' (all selected rows or items should be taken into consideration).
 			-- If Void, `selection' will return an empty string.
 
@@ -408,18 +409,22 @@ feature -- Access
 			-- String representation of all selected rows or items in `grid'.
 			-- If `selection_function' is Void, `default_selection_function' will be used to get selected text.
 			-- In this case, make sure `item_text_function' is set.
+		local
+			st: STRING_GENERAL
 		do
-			if selection_function /= Void then
-				Result := selection_function.item (Void)
+			if attached selection_function as fct then
+				st := fct.item (Void)
 			else
-				Result := default_selection_function
+				st := default_selection_function
 			end
-			if Result = Void then
+			if st = Void then
 				Result := ""
+			else
+				Result := st
 			end
 		end
 
-	select_all_action: PROCEDURE [ANY, TUPLE]
+	select_all_action: detachable PROCEDURE [ANY, TUPLE]
 			-- Action to be performed to select all items in `grid'
 			-- Used in Ctrl+A.
 			-- If Void, `default_select_all_action' will be used.
@@ -573,7 +578,7 @@ feature -- Virtual grid
 			result_attached: Result /= Void
 		end
 
-	grid_item (a_column: INTEGER; a_row: INTEGER): EVS_GRID_SEARCHABLE_ITEM
+	grid_item (a_column: INTEGER; a_row: INTEGER): detachable EVS_GRID_SEARCHABLE_ITEM
 			-- Cell at `a_row' and `a_column' position.
 			-- It may not be actual item in `grid' but your own item.
 		require
@@ -582,18 +587,18 @@ feature -- Virtual grid
 			Result ?= grid_item_function.item ([a_column, a_row])
 		end
 
-	item_text_function: FUNCTION [ANY, TUPLE [a_item: EV_GRID_ITEM], like selection]
+	item_text_function: detachable FUNCTION [ANY, TUPLE [a_item: EV_GRID_ITEM], like selection]
 			-- Function to return text of `a_item'
 
 feature{NONE} -- Implementation
 
-	post_sort_actions_internal: like post_sort_actions
+	post_sort_actions_internal: detachable like post_sort_actions
 			-- Implementation of `post_sort_actions'
 
-	column_sort_info_internal: like column_sort_info
+	column_sort_info_internal: detachable like column_sort_info
 			-- Internal `column_sort_info'
 
-	sort_agent_table_internal: like sort_agent_table
+	sort_agent_table_internal: detachable like sort_agent_table
 			-- Internal `sort_agent_table'
 
 	update_sorted_columns (a_ctrl_pressed: BOOLEAN; a_next_column_to_sort: INTEGER)
@@ -654,7 +659,6 @@ feature{NONE} -- Implementation
 			l_action_list: ARRAYED_LIST [FUNCTION [ANY, TUPLE [G, G, INTEGER], BOOLEAN]]
 			l_order_list: ARRAYED_LIST [INTEGER]
 			l_index_list: ARRAYED_LIST [INTEGER]
-			l_sort_info_item: EVS_GRID_SORTING_INFO [G]
 		do
 			l_sort_info := column_sort_info
 			create l_action_list.make (a_column_index.count)
@@ -665,8 +669,7 @@ feature{NONE} -- Implementation
 			until
 				a_column_index.after
 			loop
-				l_sort_info_item := l_sort_info.item (a_column_index.item)
-				if l_sort_info_item /= Void then
+				if attached l_sort_info.item (a_column_index.item) as l_sort_info_item then
 					l_action_list.extend (l_sort_info_item.comparator)
 					l_order_list.extend (l_sort_info_item.current_order)
 					l_index_list.extend (a_column_index.item)
@@ -687,11 +690,15 @@ feature{NONE} -- Implementation
 
 	sort_agent_table: HASH_TABLE [PROCEDURE [ANY, TUPLE], INTEGER]
 			-- Table to store sort agents, key is column index, value is sort agent for that column
+		local
+			l_sort_agent_table_internal: like sort_agent_table_internal
 		do
-			if sort_agent_table_internal = Void then
-				create sort_agent_table_internal.make (grid.column_count)
+			l_sort_agent_table_internal := sort_agent_table_internal
+			if l_sort_agent_table_internal = Void then
+				create l_sort_agent_table_internal.make (grid.column_count)
+				sort_agent_table_internal := l_sort_agent_table_internal
 			end
-			Result := sort_agent_table_internal
+			Result := l_sort_agent_table_internal
 		ensure
 			result_attached: Result /= Void
 		end
@@ -713,8 +720,8 @@ feature{NONE} -- Implementation
 			until
 				l_columns.after
 			loop
-				if column_sort_info.item (l_columns.item) /= Void then
-					Result.extend ([l_columns.item, column_sort_info.item (l_columns.item).current_order])
+				if attached column_sort_info.item (l_columns.item) as l_item then
+					Result.extend ([l_columns.item, l_item.current_order])
 				end
 				l_columns.forth
 			end
@@ -756,7 +763,6 @@ feature{NONE} -- Implementation
 			l_last_row_index: INTEGER
 			l_is_grid_tree_enabled: BOOLEAN
 			l_item: EV_GRID_ITEM
-			l_text: like selection
 			l_item_text_functon: like item_text_function
 
 			l_sorted_rows: LIST [EV_GRID_ROW]
@@ -766,7 +772,7 @@ feature{NONE} -- Implementation
 		do
 			l_item_text_functon := item_text_function
 			if l_item_text_functon /= Void then
-				create {STRING_32}Result.make (512)
+				create {STRING_32} Result.make (512)
 				l_is_grid_tree_enabled := grid.is_tree_enabled
 				if not grid.is_single_item_selection_enabled then
 					l_sorted_items := topologically_sorted_items (grid.selected_items)
@@ -791,8 +797,7 @@ feature{NONE} -- Implementation
 							end
 							Result.append (tabs (l_item.column.index - l_last_column_index))
 							l_last_column_index := l_item.column.index
-							l_text := l_item_text_functon.item ([l_item])
-							if l_text /= Void then
+							if attached l_item_text_functon.item ([l_item]) as l_text then
 								Result.append (l_text)
 							end
 						end
@@ -816,8 +821,7 @@ feature{NONE} -- Implementation
 							until
 								l_column_index > l_column_count
 							loop
-								l_text := l_item_text_functon.item ([l_row.item (l_column_index)])
-								if l_text /= Void then
+								if attached l_row.item (l_column_index) as l_row_item and then attached l_item_text_functon.item ([l_row_item]) as l_text then
 									Result.append (l_text)
 									Result.append ("%T")
 								else
@@ -830,8 +834,7 @@ feature{NONE} -- Implementation
 						l_sorted_rows.forth
 					end
 				end
-			end
-			if Result = Void then
+			else
 				Result := ""
 			end
 		ensure
@@ -844,7 +847,7 @@ feature{NONE} -- Implementation
 			a_row_attached: a_row /= Void
 			a_row.parent /= Void
 		local
-			l_row: EV_GRID_ROW
+			l_row: detachable EV_GRID_ROW
 		do
 			Result := True
 			from
@@ -955,7 +958,7 @@ feature{NONE} -- Implementation
 			a_row_attached: a_row /= Void
 			a_row_parented: a_row.parent /= Void
 		local
-			l_row: EV_GRID_ROW
+			l_row: detachable EV_GRID_ROW
 		do
 			from
 				l_row := a_row.parent_row
@@ -971,11 +974,8 @@ feature{NONE} -- Implementation
 
 	on_ctrl_c_pressed
 			-- Action to be performed when Ctrl+C is pressed
-		local
-			l_text: like selection
 		do
-			l_text := selection
-			if l_text /= Void and then not l_text.is_empty then
+			if attached selection as l_text and then not l_text.is_empty then
 				ev_application.clipboard.set_text (l_text.twin)
 			end
 		end
@@ -984,8 +984,8 @@ feature{NONE} -- Implementation
 			-- Action to be performed when Ctrl+A is pressed
 		do
 			if grid.is_multiple_row_selection_enabled or grid.is_multiple_item_selection_enabled then
-				if select_all_action /= Void then
-					select_all_action.call (Void)
+				if attached select_all_action as act then
+					act.call (Void)
 				else
 					default_select_all_action
 				end
@@ -1011,16 +1011,20 @@ feature{NONE} -- Implementation
 
 	on_copy_using_key_agent: PROCEDURE [ANY, TUPLE [EV_KEY]]
 			-- Agent of `on_copy_using_key'
+		local
+			l_on_copy_using_key_agent_internal: like on_copy_using_key_agent_internal
 		do
-			if on_copy_using_key_agent_internal = Void then
-				on_copy_using_key_agent_internal := agent on_copy_using_key
+			l_on_copy_using_key_agent_internal := on_copy_using_key_agent_internal
+			if l_on_copy_using_key_agent_internal = Void then
+				l_on_copy_using_key_agent_internal := agent on_copy_using_key
+				on_copy_using_key_agent_internal := l_on_copy_using_key_agent_internal
 			end
-			Result := on_copy_using_key_agent_internal
+			Result := l_on_copy_using_key_agent_internal
 		ensure
 			result_attached: Result /= Void
 		end
 
-	on_copy_using_key_agent_internal: like on_copy_using_key_agent
+	on_copy_using_key_agent_internal: detachable like on_copy_using_key_agent
 			-- Implementation of `on_copy_using_key_agent'
 
 	default_select_all_action

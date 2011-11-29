@@ -41,47 +41,19 @@
 			<file_rule>
 				<exclude>evs_grid_search_tool_utility.e$</exclude>
 				<exclude>code_completion$</exclude>
-				<exclude>evs_general_tooltip_utility.e$</exclude>
-				<exclude>evs_grid_iterator.e$</exclude>
 				<exclude>evs_bordered.e$</exclude>
 				<exclude>evs_grid_pnd_support.e$</exclude>
 				<exclude>evs_grid_search_tool.e$</exclude>
-				<exclude>evs_grid_utility.e$</exclude>
-				<exclude>evs_grid_row.e$</exclude>
-				<exclude>evs_grid_ordered_iterator.e$</exclude>
-				<exclude>contrib_grid_items/ev_grid_span_label_item.e$</exclude>
-				<exclude>es_label.e$</exclude>
-				<exclude>ev_grid_link_label_item.e$</exclude>
 				<exclude>evs_grid_incremental_search_engine.e$</exclude>
-				<exclude>evs_highlight_link_label.e$</exclude>
 				<exclude>es_grid_listable_item.e$</exclude>
-				<exclude>evs_grid_row_iterator.e$</exclude>
 				<exclude>evs_grid_link_label_item.e$</exclude>
-				<exclude>evs_text_alignable.e$</exclude>
-				<exclude>evs_general_tooltip_window.e$</exclude>
 				<exclude>es_grid_pixmap_component.e$</exclude>
-				<exclude>evs_tooltip_style_imp.e$</exclude>
-				<exclude>evs_theme_drawer_retriever.e$</exclude>
-				<exclude>es_tree.e$</exclude>
-				<exclude>evs_grid_wrapper.e$</exclude>
-				<exclude>evs_utility.e$</exclude>
 				<exclude>evs_widget_tooltip.e$</exclude>
 				<exclude>evs_grid_search_engine.e$</exclude>
-				<exclude>evs_grid_item_helper.e$</exclude>
-				<exclude>evs_general_tooltip.e$</exclude>
 				<exclude>es_grid_item_component.e$</exclude>
-				<exclude>evs_setting_change_actions.e$</exclude>
 				<exclude>evs_searchable_component.e$</exclude>
-				<exclude>evs_grid_column_iterator.e$</exclude>
-				<exclude>evs_tooltip_style.e$</exclude>
-				<exclude>es_grid_xml_viewer.e$</exclude>
 				<exclude>property_grid$</exclude>
-				<exclude>contrib_grid_items/ev_grid_directory_item.e$</exclude>
-				<exclude>evs_grid_layout_manager.e$</exclude>
-				<exclude>evs_general_tooltipable.e$</exclude>
 				<exclude>es_grid_list_item.e$</exclude>
-				<exclude>es_grid_layout_manager.e$</exclude>
-				<exclude>contrib_grid_items/ev_grid_editable_span_label_item.e$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

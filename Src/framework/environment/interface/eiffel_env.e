@@ -1059,8 +1059,15 @@ feature -- Directories (top-level user)
 					end
 						-- Now we can freely create our directory structure for `user_files'.
 					create l_dir.make (30)
-					l_dir.append (product_name)
-					l_dir.append (" User Files")
+						-- On Unix platform only, we use a lower case version of the directory
+						-- without space.
+					if not {PLATFORM}.is_windows and then not {PLATFORM}.is_mac then
+						l_dir.append (product_name.as_lower)
+						l_dir.append ("_user_files")
+					else
+						l_dir.append (product_name)
+						l_dir.append (" User Files")
+					end
 					if is_workbench and l_needs_suffix then
 						l_dir.append_character (' ')
 						l_dir.append_character ('(')

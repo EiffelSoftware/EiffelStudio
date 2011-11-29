@@ -2,11 +2,12 @@ note
 	description: "[
 		Test suite containing Eiffel tests which are added to {TEST_SUITE_S}.
 
-		Whenever the project is successfully done compiling every test class is parsed and synchronized
-		with {TEST_SUITE_S}.
+		Whenever the project is successfully done compiling every test class
+		is parsed and synchronized with {TEST_SUITE_S}.
 
-		Note: this is not a descendant of {TEST_SUITE_S}. Instead it contains the necessary structures
-		      for updating Eiffel tests after a compilation.
+		Note: this is not a descendant of {TEST_SUITE_S}.
+			Instead it contains the necessary structures for updating Eiffel
+			tests after a compilation.
 	]"
 	author: ""
 	date: "$Date$"
@@ -50,15 +51,25 @@ feature {NONE} -- Initialization
 			l_project_loaded := project_access.is_initialized
 
 			l_manager := project_access.project.manager
+
+				-- To update tests at each recompilation.
 			l_manager.compile_stop_agents.extend (agent retrieve_tests)
+
 			if
-				not l_project_loaded or else
-				project_access.project.workbench.is_already_compiled or else
-				project_access.project.workbench.is_compiling
+				l_project_loaded and then
+				project_access.project.workbench.is_already_compiled and then
+				not project_access.project.workbench.is_compiling
 			then
-				l_manager.load_agents.extend_kamikaze (agent retrieve_tests)
-			else
+					-- We are retrieving a fully compiled project and nothing is ongoing,
+					-- we can retrieve our tests now.
 				retrieve_tests
+			elseif not l_project_loaded then
+					-- In case project was not yet loaded we ensure retrieval of tests
+					-- when loaded for the first time.
+ 					-- Note that `retrieve_tests' might be called twice in a row for
+					-- a project that we are creating as `load_agents' are called after
+					-- the `compile_stop_agents' the first time we reach a successful compilation.
+				l_manager.load_agents.extend_kamikaze (agent retrieve_tests)
 			end
 		ensure
 			project_helper_set: project_helper = a_project_helper

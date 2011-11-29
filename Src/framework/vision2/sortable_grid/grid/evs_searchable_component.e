@@ -72,39 +72,50 @@ feature -- Access
 			-- Widget of current component
 		local
 			l_main_container: EV_VERTICAL_BOX
+			v: like component_widget_internal
 		do
-			if component_widget_internal = Void then
+			v := component_widget_internal
+			if v = Void then
 				create l_main_container
 				l_main_container.extend (grid_top_container)
 				l_main_container.extend (grid)
 				l_main_container.extend (grid_bottom_container)
 				l_main_container.disable_item_expand (grid_top_container)
 				l_main_container.disable_item_expand (grid_bottom_container)
-				component_widget_internal := l_main_container
+				v := l_main_container
+				component_widget_internal := v
 			end
-			Result := component_widget_internal
+			Result := v
 		ensure
 			result_attached: Result /= Void
 		end
 
 	grid_top_container: EV_VERTICAL_BOX
 			-- Top container for quick search bar
+		local
+			v: like grid_top_container_internal
 		do
-			if grid_top_container_internal = Void then
-				create grid_top_container_internal
+			v := grid_top_container_internal
+			if v = Void then
+				create v
+				grid_top_container_internal := v
 			end
-			Result := grid_top_container_internal
+			Result := v
 		ensure
 			result_attached: Result /= Void
 		end
 
 	grid_bottom_container: EV_VERTICAL_BOX
 			-- Bottom container for quick search bar
+		local
+			v: like grid_bottom_container_internal
 		do
-			if grid_bottom_container_internal = Void then
-				create grid_bottom_container_internal
+			v := grid_bottom_container_internal
+			if v = Void then
+				create v
+				grid_bottom_container_internal := v
 			end
-			Result := grid_bottom_container_internal
+			Result := v
 		ensure
 			result_attached: Result /= Void
 		end
@@ -113,11 +124,15 @@ feature -- Search tool
 
 	registered_search_tool: LINKED_LIST [EVS_GRID_SEARCH_TOOL]
 			-- List of registered search tool
+		local
+			v: like registered_search_tool_internal
 		do
-			if registered_search_tool_internal = Void then
-				create registered_search_tool_internal.make
+			v := registered_search_tool_internal
+			if v = Void then
+				create v.make
+				registered_search_tool_internal := v
 			end
-			Result := registered_search_tool_internal
+			Result := v
 		ensure
 			result_attached: Result /= Void
 		end
@@ -167,16 +182,16 @@ feature -- Search tool
 
 feature{NONE} -- Implementation
 
-	component_widget_internal: like component_widget
+	component_widget_internal: detachable like component_widget
 			-- Internal `component_widget'
 
-	grid_top_container_internal: like grid_top_container
+	grid_top_container_internal: detachable like grid_top_container
 			-- Internal `grid_top_container'
 
-	grid_bottom_container_internal: like grid_bottom_container
+	grid_bottom_container_internal: detachable like grid_bottom_container
 			-- Internal `grid_bottom_container'
 
-	registered_search_tool_internal: like registered_search_tool
+	registered_search_tool_internal: detachable like registered_search_tool
 			-- Internal `registered_search_tool'
 
 invariant

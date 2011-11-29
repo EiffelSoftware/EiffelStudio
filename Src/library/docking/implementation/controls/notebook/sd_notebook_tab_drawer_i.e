@@ -360,19 +360,24 @@ feature {NONE} -- Implementation
 			-- We make a buffer pixmap
 			-- Should call `end_draw' after every thing is done
 		require
-			not_called: buffer_pixmap = Void
 			size_valid: tab.width > 0 and tab.height > 0
 		local
 			l_buffer_pixmap: like buffer_pixmap
 		do
-			create l_buffer_pixmap.make_with_size (tab.width, tab.height)
-			buffer_pixmap := l_buffer_pixmap
+			l_buffer_pixmap := buffer_pixmap
+			if l_buffer_pixmap = Void then
+				create l_buffer_pixmap.make_with_size (tab.width, tab.height)
+				buffer_pixmap := l_buffer_pixmap
+			else
+				if tab.width > l_buffer_pixmap.width or tab.height > l_buffer_pixmap.height then
+					l_buffer_pixmap.reset_for_buffering (tab.width, tab.height)
+				end
+			end
 			if attached tab.font as l_font then
 				l_buffer_pixmap.set_font (l_font)
 			end
-
 			l_buffer_pixmap.set_background_color (internal_shared.default_background_color)
-			l_buffer_pixmap.clear
+			l_buffer_pixmap.clear_rectangle (0, 0, tab.width, tab.height)
 		ensure
 			created: buffer_pixmap /= Void
 		end
@@ -391,10 +396,7 @@ feature {NONE} -- Implementation
 			check l_buffer_pixmap /= Void end -- Implied by precondition `not_void'
 			l_parent := tab.parent
 			check l_parent /= Void end -- Implied by precondition `not_void'
-			l_parent.draw_pixmap (tab.x, 0, l_buffer_pixmap)
-			buffer_pixmap := Void
-		ensure
-			cleared: buffer_pixmap = Void
+			l_parent.draw_sub_pixmap (tab.x, 0, l_buffer_pixmap, create {EV_RECTANGLE}.make (0, 0, tab.width, tab.height))
 		end
 
 	draw_pixmap_text_unselected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER)
@@ -447,7 +449,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

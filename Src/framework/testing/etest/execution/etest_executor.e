@@ -375,9 +375,13 @@ feature {NONE} -- Implementation
 			a_name_attached: a_name /= Void
 		local
 			l_retried: BOOLEAN
+			d: DIRECTORY
 		do
 			if not l_retried then
-				(create {DIRECTORY}.make (a_name)).recursive_create_dir
+				create d.make (a_name)
+				if not d.exists then
+					d.recursive_create_dir
+				end
 			end
 		rescue
 			l_retried := True

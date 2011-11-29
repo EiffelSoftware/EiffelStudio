@@ -46,7 +46,7 @@ feature -- Access
 			good_result: Result = pixmap.height
 		end
 
-	pebble_at_position (a_x, a_y: INTEGER): ANY
+	pebble_at_position (a_x, a_y: INTEGER): detachable ANY
 			-- Pebble at position (`a_x', `a_y') which is related to Current component
 			-- Void if no pebble is found.
 		do

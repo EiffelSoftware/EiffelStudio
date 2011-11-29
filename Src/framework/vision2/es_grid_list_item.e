@@ -12,7 +12,8 @@ class
 inherit
 	EV_GRID_DRAWABLE_ITEM
 		redefine
-			initialize
+			initialize,
+			create_interface_objects
 		end
 
 	ES_GRID_LISTABLE_ITEM
@@ -23,11 +24,16 @@ inherit
 
 feature{NONE} -- Initialization
 
+	create_interface_objects
+		do
+			Precursor {EV_GRID_DRAWABLE_ITEM}
+			initialize_item
+		end
+
 	initialize
 			-- Initialize Current
 		do
 			Precursor
-			initialize_item
 			set_component_padding (default_padding)
 			expose_actions.extend (agent perform_redraw)
 			setting_change_actions.extend (agent safe_redraw)
@@ -41,7 +47,7 @@ feature -- Access
 			Result := Current
 		end
 
-	pebble_at_position: ANY
+	pebble_at_position: detachable ANY
 			-- Pebble at pointer position
 			-- Void if no pebble found at that position
 		local
@@ -63,7 +69,7 @@ feature -- Access
 
 feature -- Actions
 
-	on_pick (a_orignal_pointer_position: EV_COORDINATE): ANY
+	on_pick (a_orignal_pointer_position: EV_COORDINATE): detachable ANY
 			-- Action to be performed when pick starts
 			-- Return value is the picked pebble if any.
 		do
@@ -135,8 +141,15 @@ feature{NONE} -- Implementation/Redraw
 			-- Redraw Current
 		require
 			a_drawable_attached: a_drawable /= Void
+		local
+			l_has_focus: BOOLEAN
 		do
-			display (a_drawable, is_selected, parent.has_focus)
+			if attached parent as p and then p.has_focus then
+				l_has_focus := True
+			else
+				check is_parented: False end
+			end
+			display (a_drawable, is_selected, l_has_focus)
 		end
 
 	safe_redraw
@@ -153,23 +166,24 @@ feature{NONE} -- Implementation/Redraw
 			-- i.e., clean area and draw background and draw borders.
 		require
 			a_drawable_attached: a_drawable /= Void
-		local
-			l_parent: EV_GRID
 		do
-			l_parent := parent
 			if is_selected then
-				if l_parent.has_focus then
-					a_drawable.set_foreground_color (l_parent.focused_selection_color)
-				else
-					a_drawable.set_foreground_color (l_parent.non_focused_selection_color)
+				if attached parent as l_parent then
+					if l_parent.has_focus then
+						a_drawable.set_foreground_color (l_parent.focused_selection_color)
+					else
+						a_drawable.set_foreground_color (l_parent.non_focused_selection_color)
+					end
 				end
 			else
-				if background_color /= Void then
-					a_drawable.set_foreground_color (background_color)
-				elseif row.background_color /= Void then
-					a_drawable.set_foreground_color (row.background_color)
+				if attached background_color as bg then
+					a_drawable.set_foreground_color (bg)
+				elseif attached row.background_color as r_bg then
+					a_drawable.set_foreground_color (r_bg)
 				else
-					a_drawable.set_foreground_color (parent.background_color)
+					if attached parent as l_parent then
+						a_drawable.set_foreground_color (l_parent.background_color)
+					end
 				end
 			end
 			a_drawable.fill_rectangle (a_x, a_y, a_width, a_height)

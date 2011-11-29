@@ -21,7 +21,7 @@ inherit
 
 	ES_GRID_PICKABLE_ITEM
 
-feature{NONE} -- Initialization
+feature {NONE} -- Initialization
 
 	initialize_item
 			-- Initialize item.
@@ -56,18 +56,22 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	general_tooltip: EVS_GENERAL_TOOLTIP
+	general_tooltip: detachable EVS_GENERAL_TOOLTIP
 			-- General tooltip used to display information
 			-- Use this tooltip if normal tooltip provided cannot satisfy,
 			-- for example, you want to be able to pick and drop from/to tooltip.
 
 	veto_general_tooltip_function: FUNCTION [ANY, TUPLE, BOOLEAN]
 			-- Agent to veto `general_tooltip' display
+		local
+			fct: like veto_general_tooltip_function_internal
 		do
-			if veto_general_tooltip_function_internal = Void then
-				veto_general_tooltip_function_internal := agent is_ponter_out_of_component
+			fct := veto_general_tooltip_function_internal
+			if fct = Void then
+				fct := agent is_ponter_out_of_component
+				veto_general_tooltip_function_internal := fct
 			end
-			Result := veto_general_tooltip_function_internal
+			Result := fct
 		ensure
 			result_attached: Result /= Void
 		end
@@ -98,7 +102,7 @@ feature -- Access
 			Result := component_index_at_imp (l_coordinate)
 		end
 
-	pick_component (i: INTEGER): ANY
+	pick_component (i: INTEGER): detachable ANY
 			-- Try pick on the `i'-th component,
 			-- return picked pebble.
 		require
@@ -151,14 +155,14 @@ feature -- Setting
 		require
 			a_tooltip_attached: a_tooltip /= Void
 		do
-			if general_tooltip /= Void then
-				general_tooltip.disable_tooltip
+			if attached general_tooltip as gtt then
+				gtt.disable_tooltip
 			end
 			general_tooltip := a_tooltip
-			if not general_tooltip.veto_tooltip_display_functions.has (veto_general_tooltip_function) then
-				general_tooltip.veto_tooltip_display_functions.extend (veto_general_tooltip_function)
+			if not a_tooltip.veto_tooltip_display_functions.has (veto_general_tooltip_function) then
+				a_tooltip.veto_tooltip_display_functions.extend (veto_general_tooltip_function)
 			end
-			general_tooltip.enable_tooltip
+			a_tooltip.enable_tooltip
 		ensure
 			general_tooltip_set: general_tooltip = a_tooltip
 		end
@@ -166,10 +170,10 @@ feature -- Setting
 	remove_general_tooltip
 			-- Remove `general_tooltip'.
 		do
-			if general_tooltip /= Void then
-				general_tooltip.disable_tooltip
-				if general_tooltip.veto_tooltip_display_functions.has (veto_general_tooltip_function) then
-					general_tooltip.veto_tooltip_display_functions.prune_all (veto_general_tooltip_function)
+			if attached general_tooltip as gtt then
+				gtt.disable_tooltip
+				if gtt.veto_tooltip_display_functions.has (veto_general_tooltip_function) then
+					gtt.veto_tooltip_display_functions.prune_all (veto_general_tooltip_function)
 				end
 			end
 			general_tooltip := Void
@@ -267,16 +271,20 @@ feature{NONE} -- Implementation
 
 	components: ARRAYED_LIST [like component_type]
 			-- List of components attached to Current item
+		local
+			v: like components_internal
 		do
-			if components_internal = Void then
-				create components_internal.make (1)
+			v := components_internal
+			if v = Void then
+				create v.make (1)
+				components_internal := v
 			end
-			Result := components_internal
+			Result := v
 		ensure
 			result_attached: Result /= Void
 		end
 
-	components_internal: like components
+	components_internal: detachable like components
 			-- Implementation of `components'
 
 	required_component_width: INTEGER_32
@@ -326,20 +334,31 @@ feature{NONE} -- Implementation
 
 	component_position: LINKED_LIST [EV_RECTANGLE]
 			-- Position area of `components'
+		local
+			v: like component_position_internal
 		do
-			if component_position_internal = Void then
-				create component_position_internal.make
+			v := component_position_internal
+			if v = Void then
+				create v.make
+				component_position_internal := v
 			end
-			Result := component_position_internal
+			Result := v
 		ensure
 			result_attached: Result /= Void
 		end
 
-	component_position_internal: like component_position
+	component_position_internal: detachable like component_position
 			-- Implementation of `component_position'
 
 	component_type: ES_GRID_ITEM_COMPONENT
 			-- Component anchor type
+		do
+			check do_no_call: False then
+				-- This function is only use for anchor type usage
+			end
+		ensure
+			do_not_use: False
+		end
 
 	set_is_pointer_in_component (b: BOOLEAN)
 			-- Set `is_ponter_in_trailer' with `b'.
@@ -349,7 +368,7 @@ feature{NONE} -- Implementation
 			is_pointer_in_trailer_set: is_pointer_in_component = b
 		end
 
-	veto_general_tooltip_function_internal: like veto_general_tooltip_function
+	veto_general_tooltip_function_internal: detachable like veto_general_tooltip_function
 			-- Implementation of `veto_general_tooltip_function'
 
 	component_index_at_imp (a_relative_position: EV_COORDINATE): INTEGER
@@ -397,8 +416,11 @@ feature{NONE} -- component actions maintaining
 			if not l_grid_item.pointer_leave_actions.has (on_pointer_leave_agent) then
 				l_grid_item.pointer_leave_actions.extend (on_pointer_leave_agent)
 			end
-			if not l_grid_item.pointer_button_release_actions.has (on_pointer_button_releasd_agent) then
-				l_grid_item.pointer_button_release_actions.extend (on_pointer_button_releasd_agent)
+			if
+				attached on_pointer_button_release_agent as agt and then
+				not l_grid_item.pointer_button_release_actions.has (agt)
+			then
+				l_grid_item.pointer_button_release_actions.extend (agt)
 			end
 			set_is_pointer_in_component (False)
 			component_position.wipe_out
@@ -422,8 +444,8 @@ feature{NONE} -- component actions maintaining
 			if l_grid_item.pointer_leave_actions.has (on_pointer_leave_agent) then
 				l_grid_item.pointer_leave_actions.prune_all (on_pointer_leave_agent)
 			end
-			if l_grid_item.pointer_button_release_actions.has (on_pointer_button_releasd_agent) then
-				l_grid_item.pointer_button_release_actions.prune_all (on_pointer_button_releasd_agent)
+			if attached on_pointer_button_release_agent as agt and then l_grid_item.pointer_button_release_actions.has (agt) then
+				l_grid_item.pointer_button_release_actions.prune_all (agt)
 			end
 			set_is_pointer_in_component (False)
 		end
@@ -468,20 +490,17 @@ feature{NONE} -- component actions maintaining
 		require
 			a_component_attached: a_component /= Void
 			a_action_type_valid: is_action_type_valid (a_action_type)
-		local
-			l_button_argument: TUPLE [INTEGER_32, INTEGER_32, INTEGER_32, REAL_64, REAL_64, REAL_64, INTEGER_32, INTEGER_32]
 		do
-			inspect
-				a_action_type
-			when pointer_button_pressed_action_type then
-				l_button_argument ?= a_arguments
-				a_component.pointer_button_press_actions.call (l_button_argument)
-			when pointer_double_press_action_type then
-				l_button_argument ?= a_arguments
-				a_component.pointer_double_press_actions.call (l_button_argument)
-			when pointer_button_release_action_type then
-				l_button_argument ?= a_arguments
-				a_component.pointer_button_release_actions.call (l_button_argument)
+			if attached {TUPLE [INTEGER_32, INTEGER_32, INTEGER_32, REAL_64, REAL_64, REAL_64, INTEGER_32, INTEGER_32]} a_arguments as l_button_argument then
+				inspect
+					a_action_type
+				when pointer_button_pressed_action_type then
+					a_component.pointer_button_press_actions.call (l_button_argument)
+				when pointer_double_press_action_type then
+					a_component.pointer_double_press_actions.call (l_button_argument)
+				when pointer_button_release_action_type then
+					a_component.pointer_button_release_actions.call (l_button_argument)
+				end
 			end
 		end
 
@@ -509,7 +528,7 @@ feature{NONE} -- Actions for components
 	on_pointer_double_press_agent: PROCEDURE [ANY, TUPLE [INTEGER_32, INTEGER_32, INTEGER_32, REAL_64, REAL_64, REAL_64, INTEGER_32, INTEGER_32]]
 			-- Agent of `on_pointer_double_pressed'			
 
-	on_pointer_button_releasd_agent: PROCEDURE [ANY, TUPLE [x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER]]
+	on_pointer_button_release_agent: detachable PROCEDURE [ANY, TUPLE [x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER]]
 			-- Agent of `on_pointer_button_release'
 
 	on_pointer_leave_agent: PROCEDURE [ANY, TUPLE]
@@ -580,11 +599,11 @@ feature{NONE} -- Actions for components
 					l_positions.forth
 					l_components.forth
 				end
-				if not a_leave and then general_tooltip /= Void then
+				if not a_leave and then attached general_tooltip as gtt then
 					if l_pointer_in_component and then not is_pointer_in_component then
-						general_tooltip.force_enter
+						gtt.force_enter
 					elseif not l_pointer_in_component and then l_pointer_in_component then
-						general_tooltip.force_leave
+						gtt.force_leave
 					end
 				end
 			end

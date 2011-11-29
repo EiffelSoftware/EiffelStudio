@@ -58,7 +58,7 @@ feature -- Version
 	major_version: NATURAL_16 = 7
 			-- Major release version.
 
-	minor_version: NATURAL_16 = 0
+	minor_version: NATURAL_16 = 1
 			-- Minor release version.
 
 ;note

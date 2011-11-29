@@ -166,6 +166,7 @@ feature {NONE} -- Initialization
 			set_will_process_leading_leaves (True)
 			last_index := 0
 			last_printed := '%U'
+			new_line_count := 0
 		end
 
 feature -- Access
@@ -184,21 +185,45 @@ feature {NONE} -- Internal access
 	is_expr_iteration: BOOLEAN
 			-- Flag indicating if an `ITERATION_AS' is used in a loop expression.
 
-feature {NONE} -- Implementation
+	new_line_count: INTEGER
+			-- Number of consequitive new line characters.
+
+feature {NONE} -- Output
 
 	print_string (s: STRING)
 			-- Print `s' to the output stream.
+		local
+			i: INTEGER
 		do
 			if not s.is_empty then
 				out_stream.put_string (s)
-				last_printed := s.item (s.count)
+				from
+					i := s.count
+					last_printed := s [i]
+				until
+					i <= 0 or else s [i] /= '%N'
+				loop
+					i := i - 1
+				variant
+					i
+				end
+				if i <= 0 then
+						-- All printer characters are new lines.
+					new_line_count := new_line_count + s.count
+				else
+						-- Only last chacaters are new lines.
+					new_line_count := s.count - i
+				end
 			end
 		end
 
 	print_new_line
 			-- Print a new line to the output stream.
 		do
-			print_string ("%N")
+				-- Collapse multiple new lines into one empty line.
+			if new_line_count <= 1 then
+				print_string ("%N")
+			end
 		end
 
 	print_indent
@@ -269,10 +294,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {NONE} -- List processing
+
 	print_list_inline (l: EIFFEL_LIST [AST_EIFFEL])
 			-- Output `l' with items separated by associated separators and a space.
 		do
-			process_and_print_eiffel_list (l, "", " ", True, False)
+			process_and_print_eiffel_list (l, list_separator_delimiting_space)
 		end
 
 	print_list_indented (l: EIFFEL_LIST [AST_EIFFEL])
@@ -280,7 +307,7 @@ feature {NONE} -- Implementation
 		do
 			if attached l then
 				increase_indent
-				process_and_print_eiffel_list (l, indent, "", False, True)
+				process_and_print_eiffel_list (l, list_separator_new_line)
 				decrease_indent
 			end
 		end
@@ -288,12 +315,30 @@ feature {NONE} -- Implementation
 	print_list_separated (l: EIFFEL_LIST [AST_EIFFEL])
 			-- Output `l' with items starting of new lines with a blank line between items.
 		do
-			process_and_print_eiffel_list (l, "%N" + indent, "", False, True)
+			process_and_print_eiffel_list (l, list_separator_blank_line)
 		end
 
-	process_and_print_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL]; pre, post: STRING; exclude_last, add_new_line: BOOLEAN)
+	list_separator_blank_line: NATURAL_8 = 1
+			-- List separator: blank line before every element.
+
+	list_separator_new_line: NATURAL_8 = 2
+			-- List separator: new line before every element.
+
+	list_separator_leading_space: NATURAL_8 = 3
+			-- List separator: space before every element.
+
+	list_separator_delimiting_space: NATURAL_8 = 4
+			-- List separator: space before every element but the first one.
+
+	process_and_print_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL]; list_separator: NATURAL_8)
 			-- Process an eiffel list while printing `pre' and `post' before and after
 			-- processing of a list element.
+		require
+			valid_list_separator:
+				list_separator = list_separator_blank_line or
+				list_separator = list_separator_new_line or
+				list_separator = list_separator_leading_space or
+				list_separator = list_separator_delimiting_space
 		local
 			i: INTEGER
 			n: INTEGER
@@ -326,17 +371,25 @@ feature {NONE} -- Implementation
 							process_leading_leaves (l_token.index)
 						end
 							-- Leading leaves may include optional delimiters such as semicolons,
-							-- so `post' should be printed after them.
-						if post /= Void and then i > 1 then
-							print_string (post)
-						end
-
-						if add_new_line and last_printed /= '%N' and last_printed /= '%T' then
+							-- so any separators should be printed after them.
+						inspect list_separator
+						when list_separator_blank_line then
 							print_new_line
-						end
-
-						if pre /= Void and last_printed /= '%T' then
-							print_string (pre)
+							print_new_line
+							print_indent
+						when list_separator_new_line then
+							if not new_line_chars.has (last_printed) then
+								print_new_line
+							end
+							print_indent
+						when list_separator_leading_space then
+							if not white_space_chars.has (last_printed) then
+								print_string (" ")
+							end
+						when list_separator_delimiting_space then
+							if i > 1 and then not white_space_chars.has (last_printed) then
+								print_string (" ")
+							end
 						end
 
 						safe_process (a)
@@ -352,10 +405,6 @@ feature {NONE} -- Implementation
 						i := i + 1
 					end
 					process_leading_leaves (l_as.last_token (match_list).index)
-						-- Print `post' for the last item.
-					if post /= Void and then not exclude_last then
-						print_string (post)
-					end
 				end
 			end
 		end
@@ -825,13 +874,13 @@ feature {CLASS_AS} -- Class Declarations
 			print_on_new_line_separated (l_as.internal_non_conforming_parents)
 
 			-- Creators
-			process_and_print_eiffel_list (l_as.creators, "%N", "", False, True)
+			process_and_print_eiffel_list (l_as.creators, list_separator_blank_line)
 
 			-- Convertors
 			print_on_new_line_separated (l_as.convertors)
 
 			-- Features
-			process_and_print_eiffel_list (l_as.features, "%N", "", False, True)
+			process_and_print_eiffel_list (l_as.features, list_separator_blank_line)
 
 			-- Invariant
 			indent := ""
@@ -875,7 +924,7 @@ feature {CLASS_AS} -- Indexing
 		do
 			safe_process (l_as.tag)
 			safe_process (l_as.colon_symbol (match_list))
-			process_and_print_eiffel_list (l_as.index_list, " ", "", True, False)
+			process_and_print_eiffel_list (l_as.index_list, list_separator_leading_space)
 		end
 
 feature {CLASS_AS} -- Inheritance
@@ -908,7 +957,9 @@ feature {CLASS_AS} -- Inheritance
 			-- Process inherit clause `l_as'.
 		do
 			safe_process (l_as.clause_keyword (match_list))
-			process_and_print_eiffel_list (l_as.content, "%T%T%T", "", False, True)
+			increase_indent
+			process_and_print_eiffel_list (l_as.content, list_separator_new_line)
+			decrease_indent
 		end
 
 	process_rename_clause_as (l_as: RENAME_CLAUSE_AS)
@@ -1010,7 +1061,7 @@ feature {CLASS_AS} -- Generics
 			safe_process_and_print (l_as.constrain_symbol (match_list), " ", " ")
 			print_list_inline (l_as.constraints)
 			safe_process_and_print (l_as.create_keyword (match_list), " ", "")
-			process_and_print_eiffel_list (l_as.creation_feature_list, " ", "", True, False)
+			process_and_print_eiffel_list (l_as.creation_feature_list, list_separator_leading_space)
 			safe_process_and_print (l_as.end_keyword (match_list), " ", "")
 		end
 
@@ -1041,12 +1092,7 @@ feature {CLASS_AS} -- Convertors
 			-- Process convertor feature list `l_as'.
 		do
 			safe_process (l_as.convert_keyword (match_list))
-
 			process_leading_leaves (l_as.i_th (1).first_token (match_list).index)
-			if last_printed /= '%N' then
-				print_new_line
-			end
-
 			print_list_indented (l_as)
 		end
 
@@ -1069,6 +1115,7 @@ feature {CLASS_AS} -- Features
 		do
 			safe_process (l_as.feature_keyword)
 			safe_process_and_print (l_as.clients, " ", "")
+			process_trailing_breaks
 			increase_indent
 			print_list_separated (l_as.features)
 			decrease_indent
@@ -1413,7 +1460,7 @@ feature {CLASS_AS} -- Instructions
 			-- Process inspect case `l_as'
 		do
 			print_on_new_line (l_as.when_keyword (match_list))
-			process_and_print_eiffel_list (l_as.interval, " ", "", True, False)
+			process_and_print_eiffel_list (l_as.interval, list_separator_leading_space)
 			safe_process_and_print (l_as.then_keyword (match_list), " ", "")
 
 			increase_indent

@@ -73,7 +73,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	has_tooltip_text_function: FUNCTION [ANY, TUPLE, BOOLEAN]
+	has_tooltip_text_function: detachable FUNCTION [ANY, TUPLE, BOOLEAN]
 			-- Function to indicate if there is text in Current tooltip
 			-- Used by `has_tooltip_text'.
 
@@ -108,8 +108,8 @@ feature -- Status report
 	has_tooltip_text: BOOLEAN
 			-- Does current tooltip has any text?
 		do
-			if has_tooltip_text_function /= Void then
-				Result := has_tooltip_text_function.item (Void)
+			if attached has_tooltip_text_function as f then
+				Result := f.item (Void)
 			else
 				Result := True
 			end

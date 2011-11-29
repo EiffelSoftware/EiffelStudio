@@ -35,11 +35,15 @@ feature -- Access
 			-- So if any function in the list returns False, tooltip display is vetoed.
 			-- This is useful for example when you want tooltip to display only when certain keys
 			-- are pressed.
+		local
+			v: like veto_tooltip_display_functions_internal
 		do
-			if veto_tooltip_display_functions_internal = Void then
-				create veto_tooltip_display_functions_internal.make
+			v := veto_tooltip_display_functions_internal
+			if v = Void then
+				create v.make
+				veto_tooltip_display_functions_internal := v
 			end
-			Result := veto_tooltip_display_functions_internal
+			Result := v
 		ensure
 			result_attached: Result /= Void
 		end
@@ -50,10 +54,10 @@ feature {NONE} -- Access
 			-- Time (in milliseconds) for tooltip to remain displayed when pointer is out of owner
 			-- Default value is 0, meaning tooltip will disappear once pointer leaves owner region.
 
-	tooltip_background_color: EV_COLOR
+	tooltip_background_color: detachable EV_COLOR
 			-- Background color of tooltip window	
 
-	force_tooltip_disappear_function: FUNCTION [ANY, TUPLE, BOOLEAN]
+	force_tooltip_disappear_function: detachable FUNCTION [ANY, TUPLE, BOOLEAN]
 			-- Function used to determine whether or not to hide tooltip when other condition
 			-- are all satisfied.
 			-- This is useful for example when you want tooltip to disappear right away when certain keys
@@ -445,11 +449,15 @@ feature -- Actions
 
 	before_display_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed just before current tooltip is displayed
+		local
+			v: like before_display_actions_internal
 		do
-			if before_display_actions_internal = Void then
-				create before_display_actions_internal
+			v := before_display_actions_internal
+			if v = Void then
+				create v
+				before_display_actions_internal := v
 			end
-			Result := before_display_actions_internal
+			Result := v
 		ensure
 			result_attached: Result /= Void
 		end
@@ -586,9 +594,8 @@ feature {NONE} -- Tooltip show/hide
 			l_hide: BOOLEAN
 		do
 			if not is_tooltip_pined then
-				if not is_picking_from_tooltip and then force_tooltip_disappear_function /= Void then
-					force_tooltip_disappear_function.call (Void)
-					l_hide := force_tooltip_disappear_function.last_result
+				if not is_picking_from_tooltip and then attached force_tooltip_disappear_function as f then
+					l_hide := f.item (Void)
 				end
 				if not l_hide and then not (is_pointer_on_tooltip_enabled and then is_pointer_on_tooltip) and not is_pointer_on_owner then
 					l_hide := True
@@ -647,73 +654,86 @@ feature{NONE} -- Implementation
 
 	timer: EV_TIMEOUT
 			-- Timer used to simulate tooltip delay time
+		local
+			v: like timer_internal
 		do
-			if timer_internal = Void then
-				create timer_internal
+			v := timer_internal
+			if v = Void then
+				create v
+				timer_internal := v
 			end
-			Result := timer_internal
+			Result := v
 		ensure
 			result_attached: Result /= Void
 		end
 
-	timer_internal: EV_TIMEOUT
+	timer_internal: detachable like timer
 			-- Internal timer used to simulate tooltip delay time
 
 	pointer_enter_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent to wrap `on_pointer_enter'
+		local
+			v: like pointer_enter_agent_internal
 		do
-			Result := pointer_enter_agent_internal
-			if Result = Void then
-				Result := agent on_pointer_enter
-				pointer_enter_agent_internal := Result
+			v := pointer_enter_agent_internal
+			if v = Void then
+				v := agent on_pointer_enter
+				pointer_enter_agent_internal := v
 			end
+			Result := v
 		ensure
 			result_attached: Result /= Void
 		end
 
 	pointer_leave_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent to wrap `on_pointer_leave'
+		local
+			v: like pointer_leave_agent_internal
 		do
-			Result := pointer_leave_agent_internal
-			if Result = Void then
-				Result := agent on_pointer_leave
-				pointer_leave_agent_internal := Result
+			v := pointer_leave_agent_internal
+			if v = Void then
+				v := agent on_pointer_leave
+				pointer_leave_agent_internal := v
 			end
+			Result := v
 		ensure
 			result_attached: Result /= Void
 		end
 
 	select_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent to wrap `on_selected'
+		local
+			v: like select_agent_internal
 		do
-			Result := select_agent_internal
-			if Result = Void then
-				Result := agent on_selected
-				select_agent_internal := Result
+			v := select_agent_internal
+			if v = Void then
+				v := agent on_selected
+				select_agent_internal := v
 			end
+			Result := v
 		ensure
 			result_attached: Result /= Void
 		end
 
-	pointer_enter_agent_internal: like pointer_enter_agent
+	pointer_enter_agent_internal: detachable like pointer_enter_agent
 			-- Implementation of once per object  `pointer_enter_agent'
 
-	pointer_leave_agent_internal: like pointer_leave_agent
+	pointer_leave_agent_internal: detachable like pointer_leave_agent
 			-- Implementation of once per object `pointer_leave_agent'
 
-	select_agent_internal: like select_agent
+	select_agent_internal: detachable like select_agent
 			-- Implementation of once per object `select_agent'
 
-	before_display_actions_internal: like before_display_actions
+	before_display_actions_internal: detachable like before_display_actions
 			-- Implementation of `before_display_actions'
 
 	actual_tooltip_background_color: EV_COLOR
 			-- Actual border line color used to draw border line
 		do
-			if tooltip_background_color = Void then
-				Result := tooltip_background_color_internal
+			if attached tooltip_background_color as col then
+				Result := col
 			else
-				Result := tooltip_background_color
+				Result := tooltip_background_color_internal
 			end
 		ensure
 			result_attached: Result /= Void
@@ -733,7 +753,7 @@ feature{NONE} -- Implementation
 	tooltip_status_check_time: INTEGER = 100
 			-- Time interval in milliseconds to check tooltip status		
 
-	veto_tooltip_display_functions_internal: like veto_tooltip_display_functions
+	veto_tooltip_display_functions_internal: detachable like veto_tooltip_display_functions
 			-- Implementation of once per object `veto_tooltip_display_functions'
 
 	is_tooltip_display_vetoed: BOOLEAN

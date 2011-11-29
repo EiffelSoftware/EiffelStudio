@@ -12,7 +12,8 @@ class
 inherit
 	EV_GRID_LABEL_ITEM
 		redefine
-			make_with_text
+			make_with_text,
+			create_interface_objects
 		end
 
 create
@@ -20,6 +21,12 @@ create
 	make_with_text
 
 feature {NONE} -- Initialization
+
+	create_interface_objects
+		do
+			Precursor
+			pointer_style := (create {EV_STOCK_PIXMAPS}).hyperlink_cursor
+		end
 
 	make
 			-- Initialize `Current'.
@@ -43,7 +50,6 @@ feature {NONE} -- Initialization
 					end)
 			pointer_button_press_actions.extend (agent on_pointer_press)
 			pointer_button_release_actions.extend (agent on_pointer_release)
-			pointer_style := (create {EV_STOCK_PIXMAPS}).hyperlink_cursor
 		end
 
 	make_empty
@@ -137,12 +143,18 @@ feature {NONE} -- Implementation
 			parented: has_parent
 			not_hovering: not is_hovering
 		do
-			last_pointer_style := parent.pointer_style
-			parent.set_pointer_style (pointer_style)
+			if attached parent as p then
+				last_pointer_style := p.pointer_style
+				p.set_pointer_style (pointer_style)
+			else
+				check has_parent: False end
+			end
 		ensure
 			hovering: is_hovering
-			last_pointer_set: last_pointer_style = old parent.pointer_style
-			current_pointer_set: parent.pointer_style = pointer_style
+			has_parent: attached parent as en_parent
+			same_parent: en_parent = old parent
+			last_pointer_set: last_pointer_style = old parent_pointer_style
+			current_pointer_set: en_parent.pointer_style = pointer_style
 		end
 
 	reset_pointer
@@ -151,16 +163,27 @@ feature {NONE} -- Implementation
 			not_destroyed: not is_destroyed
 			parented: has_parent
 			hovering: is_hovering
-		local
-			l_pointer: like last_pointer_style
 		do
-			l_pointer := last_pointer_style
-			check l_pointer /= Void end
-			parent.set_pointer_style (l_pointer)
-			last_pointer_style := Void
+			if attached last_pointer_style as l_pointer then
+				if attached parent as p then
+					p.set_pointer_style (l_pointer)
+				else
+					check has_parent: False end
+				end
+				last_pointer_style := Void
+			end
 		ensure
-			current_pointer_reset: parent.pointer_style = old last_pointer_style
+			current_pointer_reset: attached parent as en_parent and then en_parent.pointer_style = old last_pointer_style
 			not_hovering: is_hovering
+		end
+
+feature {NONE} -- Assertion helpers
+
+	parent_pointer_style: detachable like pointer_style
+		do
+			if attached parent as p then
+				Result := p.pointer_style
+			end
 		end
 
 note

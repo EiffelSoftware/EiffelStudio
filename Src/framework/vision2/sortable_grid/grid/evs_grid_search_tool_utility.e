@@ -13,11 +13,15 @@ feature -- Actions
 
 	keyword_not_found_actions: ACTION_SEQUENCE [TUPLE [STRING]]
 			-- Actions to be performed when search for some keyword doesn't find any thing.
+		local
+			v: like keyword_not_found_actions_internal
 		do
-			if keyword_not_found_actions_internal = Void then
-				create keyword_not_found_actions_internal
+			v := keyword_not_found_actions_internal
+			if v = Void then
+				create v
+				keyword_not_found_actions_internal := v
 			end
-			Result := keyword_not_found_actions_internal
+			Result := v
 		ensure
 			result_set: Result /= Void and then Result = keyword_not_found_actions_internal
 		end
@@ -35,7 +39,7 @@ feature -- Message dialog
 
 feature{NONE} -- Implementation
 
-	keyword_not_found_actions_internal: like keyword_not_found_actions
+	keyword_not_found_actions_internal: detachable like keyword_not_found_actions
 			-- Internal item_not_found_actions
 
 invariant

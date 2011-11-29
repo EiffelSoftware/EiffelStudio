@@ -29,22 +29,26 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	last_picked_item: EV_GRID_ITEM
+	last_picked_item: detachable EV_GRID_ITEM
 			-- Last picked item	
 			-- Void if no item is picked.	
 
-	pick_start_actions: ACTION_SEQUENCE [TUPLE [EV_GRID_ITEM, EV_COORDINATE]]
+	pick_start_actions: ACTION_SEQUENCE [TUPLE [detachable EV_GRID_ITEM, EV_COORDINATE]]
 			-- Actions to be performed when pick starts from given grid item.
 			-- Each agent in this should be responsible for certain kind of grid item.
 			-- In an agent, `last_pebble' should be set through `set_last_pebble' if a pebble is confiremed to be returned and
 			-- possible item redraw should be done also.
 			-- For bug#14291
 			-- EV_COORDINATE parameter is original X, Y pointer position (relative to grid top-left) when right click menu just popuped
+		local
+			v: like pick_start_actions_internal
 		do
-			if pick_start_actions_internal = Void then
-				create pick_start_actions_internal
+			v := pick_start_actions_internal
+			if v = Void then
+				create v
+				pick_start_actions_internal := v
 			end
-			Result := pick_start_actions_internal
+			Result := v
 		ensure
 			result_attached: Result /= Void
 		end
@@ -53,11 +57,15 @@ feature -- Access
 			-- Actions to be performed when pick ends from given grid item.
 			-- Each agent in this should be responsible for certain kind of grid item.
 			-- Don't set `last_picked_item' to Void in these agents.
+		local
+			v: like pick_end_actions_internal
 		do
-			if pick_end_actions_internal = Void then
-				create pick_end_actions_internal
+			v := pick_end_actions_internal
+			if v = Void then
+				create v
+				pick_end_actions_internal := v
 			end
-			Result := pick_end_actions_internal
+			Result := v
 		ensure
 			result_attached: Result /= Void
 		end
@@ -70,17 +78,14 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	old_item_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY]
+	old_item_pebble_function: detachable FUNCTION [ANY, TUPLE [detachable EV_GRID_ITEM], detachable ANY]
 			-- Old `item_pebble_function' in `grid' before last `enable_grid_item_pnd_support'
 
-	stone_at_position (a_x, a_y: INTEGER): ANY
+	stone_at_position (a_x, a_y: INTEGER): detachable ANY
 			-- Stone at position (`a_x', `a_y') which is related to the top-left coordinate of `grid'
 			-- Void if no item is found or that item contains no stone.			
-		local
-			l_pickable_item: ES_GRID_PICKABLE_ITEM
 		do
-			l_pickable_item ?= grid_item_at_position (grid, a_x, a_y)
-			if l_pickable_item /= Void then
+			if attached {ES_GRID_PICKABLE_ITEM} grid_item_at_position (grid, a_x, a_y) as l_pickable_item then
 				Result := l_pickable_item.pebble_at_position
 			end
 		end
@@ -107,7 +112,9 @@ feature -- Setting
 		do
 			grid.pick_actions.prune_all (on_pick_start_action)
 			grid.pick_ended_actions.prune_all (on_pick_ended_action)
-			grid.set_item_pebble_function (old_item_pebble_function)
+			if attached old_item_pebble_function as old_f then
+				grid.set_item_pebble_function (old_f)
+			end
 		end
 
 	set_last_picked_item (a_item: like last_picked_item)
@@ -123,23 +130,23 @@ feature{NONE} -- Implementation
 	internal_grid: like grid
 			-- Implementation of `grid'
 
-	pick_start_actions_internal: like pick_start_actions
+	pick_start_actions_internal: detachable like pick_start_actions
 			-- Implementation of `pick_start_actions'
 
-	pick_end_actions_internal: like pick_end_actions
+	pick_end_actions_internal: detachable like pick_end_actions
 			-- Implementation of `pick_end_actions'
 
-	pebble_from_grid_item (a_item: EV_GRID_ITEM): ANY
+	pebble_from_grid_item (a_item: EV_GRID_ITEM): detachable ANY
 			-- Pebble from `a_item'
 		local
 			l_position: EV_COORDINATE
 		do
 			if not ev_application.ctrl_pressed then
 				if a_item /= Void and then a_item.parent = grid then
-					l_position := a_item.parent.pointer_position
+					l_position := grid.pointer_position
 					Result := stone_at_position (l_position.x, l_position.y)
-					if Result = Void and then old_item_pebble_function /= Void then
-						Result := old_item_pebble_function.item ([a_item])
+					if Result = Void and then attached old_item_pebble_function as f then
+						Result := f.item ([a_item])
 					end
 				end
 			end
@@ -152,42 +159,54 @@ feature{NONE} -- Implementation
 
 	on_pick_ended_action: PROCEDURE [ANY, TUPLE [a_item: EV_ABSTRACT_PICK_AND_DROPABLE]]
 			-- Agent object of `on_pick_ended_from_grid_editor_token_item'
+		local
+			v: like on_pick_ended_action_internal
 		do
-			if on_pick_ended_action_internal = Void then
-				on_pick_ended_action_internal := agent on_pick_end
+			v := on_pick_ended_action_internal
+			if v = Void then
+				v := agent on_pick_end
+				on_pick_ended_action_internal := v
 			end
-			Result := on_pick_ended_action_internal
+			Result := v
 		ensure
 			result_attached: Result /= Void
 		end
 
-	on_pick_function: FUNCTION [ANY, TUPLE [a_item: EV_GRID_ITEM], ANY]
+	on_pick_function: FUNCTION [ANY, TUPLE [a_item: EV_GRID_ITEM], detachable ANY]
 			-- Agent object of `on_pick_start_from_grid_editor_token_item'
+		local
+			v: like on_pick_function_internal
 		do
-			if on_pick_function_internal = Void then
-				on_pick_function_internal := agent pebble_from_grid_item
+			v := on_pick_function_internal
+			if v = Void then
+				v := agent pebble_from_grid_item
+				on_pick_function_internal := v
 			end
-			Result := on_pick_function_internal
+			Result := v
 		ensure
 			result_attached: Result /= Void
 		end
 
-	on_pick_ended_action_internal: like on_pick_ended_action
+	on_pick_ended_action_internal: detachable like on_pick_ended_action
 			-- Implementation of `on_pick_ended_action'
 
-	on_pick_function_internal: like on_pick_function
+	on_pick_function_internal: detachable like on_pick_function
 			-- Implementation of `on_pick_function'
 
 	on_pick_start_action: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER]]
 			-- agent of `on_pick_start'
+		local
+			v: like on_pick_start_action_internal
 		do
-			if on_pick_start_action_internal = Void then
-				on_pick_start_action_internal := agent on_pick_start
+			v := on_pick_start_action_internal
+			if v = Void then
+				v := agent on_pick_start
+				on_pick_start_action_internal := v
 			end
-			Result := on_pick_start_action_internal
+			Result := v
 		end
 
-	on_pick_start_action_internal: like on_pick_start_action
+	on_pick_start_action_internal: detachable like on_pick_start_action
 			-- Implementation of `on_pick_start_action'
 
 	on_pick_start (a_x, a_y: INTEGER)
@@ -204,8 +223,8 @@ feature{NONE} -- Implementation
 	on_pick_end (a_area: EV_ABSTRACT_PICK_AND_DROPABLE)
 			-- Action to be performed when pick-and-drop ends
 		do
-			if last_picked_item /= Void then
-				pick_end_actions.call ([last_picked_item])
+			if attached last_picked_item as i then
+				pick_end_actions.call ([i])
 			end
 			set_last_picked_item (Void)
 		ensure

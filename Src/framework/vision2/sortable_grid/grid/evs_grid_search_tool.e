@@ -14,13 +14,14 @@ inherit
 
 feature -- Registration
 
-	attach_tool (a_component: like searchable_component)
+	attach_tool (a_component: attached like searchable_component)
 			-- Attach current to `a_component'.
 		require
+			a_component_attached: a_component /= Void
 			not_attached: not is_tool_attached
 		do
 			searchable_component := a_component
-			searchable_component.register_search_tool (Current)
+			a_component.register_search_tool (Current)
 			internal_attach
 		ensure
 			tool_attached: is_tool_attached
@@ -32,8 +33,10 @@ feature -- Registration
 			tool_attached: is_tool_attached
 		do
 			internal_detach
-			searchable_component.remove_search_tool (Current)
-			searchable_component := Void
+			if attached searchable_component as cpt then
+				cpt.remove_search_tool (Current)
+				searchable_component := Void
+			end
 		ensure
 			not_attached: not is_tool_attached
 		end
@@ -62,7 +65,7 @@ feature -- Display
 
 feature -- Access
 
-	searchable_component: EVS_SEARCHABLE_COMPONENT [ANY]
+	searchable_component: detachable EVS_SEARCHABLE_COMPONENT [ANY]
 			-- Searchable component object to which current is attached
 
 feature -- Status report

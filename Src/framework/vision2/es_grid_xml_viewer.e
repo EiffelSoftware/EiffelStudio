@@ -20,6 +20,7 @@ feature {NONE} -- Initialization
 	make
 		do
 			build_resources
+			create tags_row_index.make
 
 			create widget
 			create grid
@@ -93,7 +94,11 @@ feature -- Loading
 			grid.set_row_count_to (0)
 			if s /= Void and then not s.is_empty then
 				build_xml_parser
-				xml_parser.parse_from_string (s)
+				if attached xml_parser as p then
+					p.parse_from_string (s)
+				else
+					check xml_parser_built: False end
+				end
 			end
 			update_columns
 		end
@@ -108,7 +113,11 @@ feature -- Loading
 			create f.make (fn)
 			if f.exists and then f.is_readable then
 				build_xml_parser
-				xml_parser.parse_from_filename (fn)
+				if attached xml_parser as p then
+					p.parse_from_filename (fn)
+				else
+					check xml_parser_built: False end
+				end
 			end
 			update_columns
 		end
@@ -128,21 +137,24 @@ feature -- Loading
 
 feature {NONE} -- Xml parser implementation
 
-	xml_parser: XML_PARSER
+	xml_parser: detachable XML_PARSER
 			-- XML parser.
 
 	build_xml_parser
 			-- Build `xml_parser'
 		local
 			l_fact: XML_LITE_PARSER_FACTORY
+			p: like xml_parser
 		do
-			if xml_parser = Void then
+			p := xml_parser
+			if p = Void then
 				create l_fact
-				xml_parser := l_fact.new_lite_parser
-				xml_parser.set_callbacks (Current)
+				p := l_fact.new_lite_parser
+				p.set_callbacks (Current)
+				xml_parser := p
 			end
 		ensure
-			xml_parser /= Void
+			xml_parser_built: xml_parser /= Void
 		end
 
 feature {NONE} -- xml callbacks
@@ -156,16 +168,14 @@ feature {NONE} -- xml callbacks
 		end
 
 	on_start
-			-- Called when parsing starts.
 		do
 			current_depth := 0
 			last_depth := 0
-			create tags_row_index.make
+			tags_row_index.wipe_out
 			log ("Start XML parsing")
 		end
 
 	on_finish
-			-- Called when parsing finished.
 		local
 			r: EV_GRID_ROW
 			i: INTEGER
@@ -194,7 +204,6 @@ feature {NONE} -- xml callbacks
 		end
 
 	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN)
-			-- XML declaration.
 		local
 			r: EV_GRID_ROW
 			lab: EV_GRID_LABEL_ITEM
@@ -226,7 +235,6 @@ feature {NONE} -- xml callbacks
 		end
 
 	on_error (a_message: STRING)
-			-- Event producer detected an error.
 		local
 			r: EV_GRID_ROW
 			lab: EV_GRID_LABEL_ITEM
@@ -244,8 +252,6 @@ feature {NONE} -- xml callbacks
 		end
 
 	on_processing_instruction (a_name: STRING; a_content: STRING)
-			-- Processing instruction.
-			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		local
 			s: STRING
 			r: EV_GRID_ROW
@@ -263,9 +269,6 @@ feature {NONE} -- xml callbacks
 		end
 
 	on_comment (a_content: STRING)
-			-- Processing a comment.
-			-- Atomic: single comment produces single event
-			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		local
 			r: EV_GRID_ROW
 			lab: EV_GRID_LABEL_ITEM
@@ -280,8 +283,6 @@ feature {NONE} -- xml callbacks
 		end
 
 	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
-			-- Start of start tag.
-			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		local
 			s: STRING
 			lab: EV_GRID_LABEL_ITEM
@@ -311,8 +312,6 @@ feature {NONE} -- xml callbacks
 		end
 
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
-			-- Start of attribute.
-			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		local
 			s: STRING
 			r: EV_GRID_ROW
@@ -336,8 +335,8 @@ feature {NONE} -- xml callbacks
 			r := next_row
 			create lab.make_with_text (s)
 			lab.set_foreground_color (attribute_color)
-			if attribute_pixmap /= Void then
-				lab.set_pixmap (attribute_pixmap)
+			if attached attribute_pixmap as att_pix then
+				lab.set_pixmap (att_pix)
 			end
 
 			lab.align_text_right
@@ -356,23 +355,21 @@ feature {NONE} -- xml callbacks
 		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
-			-- End tag.
-			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		local
 			r: EV_GRID_ROW
 			lab: EV_GRID_LABEL_ITEM
 		do
 				--| Process Content
-			if last_content /= Void then
+			if attached last_content as l_last_content then
 				current_depth := current_depth + 1
 				r := next_row
 				lab := new_content_label ("Content")
 				r.set_item (1, lab)
 
-				lab := new_value_label (last_content)
+				lab := new_value_label (l_last_content)
 				r.set_item (2, lab)
-				if last_content.index_of ('%N', 1) > 0 then
-					r.set_height (value_font.string_size (last_content).height)
+				if l_last_content.index_of ('%N', 1) > 0 then
+					r.set_height (value_font.string_size (l_last_content).height)
 				end
 				current_depth := current_depth - 1
 
@@ -383,18 +380,14 @@ feature {NONE} -- xml callbacks
 			tags_row_index.remove
 		end
 
-	last_content: STRING
+	last_content: detachable STRING
 
 	on_content (a_content: STRING)
-			-- Text content.
-			-- NOT atomic: two on_content events may follow each other
-			-- without a markup event in between.
-			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		do
-			if last_content = Void then
-				create last_content.make_from_string (a_content)
+			if attached last_content as t then
+				t.append_string (a_content)
 			else
-				last_content.append_string (a_content)
+				create last_content.make_from_string (a_content)
 			end
 		end
 
@@ -439,19 +432,19 @@ feature -- Properties
 			Result.draw_text_top_left ((tw - sw) // 2, 0, a_text)
 		end
 
-	tag_pixmap: EV_PIXMAP
+	tag_pixmap: detachable EV_PIXMAP
 			-- Pixmap for tag
 
-	attribute_pixmap: EV_PIXMAP
+	attribute_pixmap: detachable EV_PIXMAP
 			-- Pixmap for attribute
 
-	content_pixmap: EV_PIXMAP
+	content_pixmap: detachable EV_PIXMAP
 			-- Pixmap for attribute
 
-	error_pixmap: EV_PIXMAP
+	error_pixmap: detachable EV_PIXMAP
 			-- Pixmap for error	
 
-	info_pixmap: EV_PIXMAP
+	info_pixmap: detachable EV_PIXMAP
 			-- Pixmap for information
 
 feature -- Change pixmaps
@@ -539,12 +532,10 @@ feature {NONE} -- Row management
 		do
 			create Result.make_with_text (t)
 			Result.set_foreground_color (tag_color)
-			if tag_pixmap /= Void then
-				Result.set_pixmap (tag_pixmap)
+			if attached tag_pixmap as pix then
+				Result.set_pixmap (pix)
 			end
-			if tag_font /= Void then
-				Result.set_font (tag_font)
-			end
+			Result.set_font (tag_font)
 		end
 
 	new_attribute_label (t: STRING): EV_GRID_LABEL_ITEM
@@ -552,8 +543,8 @@ feature {NONE} -- Row management
 		do
 			create Result.make_with_text (t)
 			Result.set_foreground_color (attribute_color)
-			if attribute_pixmap /= Void then
-				Result.set_pixmap (attribute_pixmap)
+			if attached attribute_pixmap as pix then
+				Result.set_pixmap (pix)
 			end
 		end
 
@@ -562,8 +553,8 @@ feature {NONE} -- Row management
 		do
 			create Result.make_with_text (t)
 			Result.set_foreground_color (info_color)
-			if info_pixmap /= Void then
-				Result.set_pixmap (info_pixmap)
+			if attached info_pixmap as pix then
+				Result.set_pixmap (pix)
 			end
 		end
 
@@ -572,8 +563,8 @@ feature {NONE} -- Row management
 		do
 			create Result.make_with_text (t)
 			Result.set_foreground_color (content_color)
-			if content_pixmap /= Void then
-				Result.set_pixmap (content_pixmap)
+			if attached content_pixmap as pix then
+				Result.set_pixmap (pix)
 			end
 		end
 
@@ -589,8 +580,8 @@ feature {NONE} -- Row management
 		do
 			create Result.make_with_text (t)
 			Result.set_foreground_color (error_color)
-			if error_pixmap /= Void then
-				Result.set_pixmap (error_pixmap)
+			if attached error_pixmap as pix then
+				Result.set_pixmap (pix)
 			end
 		end
 
@@ -614,7 +605,8 @@ feature {NONE} -- Row management
 
 	new_row: EV_GRID_ROW
 		local
-			p, r: EV_GRID_ROW
+			p: detachable EV_GRID_ROW
+			r: EV_GRID_ROW
 		do
 			if grid.row_count = 0 then
 				grid.insert_new_row (1)
@@ -633,7 +625,8 @@ feature {NONE} -- Row management
 	new_parent_row (n: INTEGER): EV_GRID_ROW
 		local
 			i: INTEGER
-			p, r: EV_GRID_ROW
+			p: detachable EV_GRID_ROW
+			r: EV_GRID_ROW
 		do
 			if grid.row_count = 0 then
 				grid.insert_new_row (1)
@@ -728,26 +721,31 @@ feature -- Change color
 feature {NONE} -- Style management
 
 	colorize_row (r: EV_GRID_ROW; is_selected: BOOLEAN)
+		local
+			bg: detachable EV_COLOR
 		do
+			bg := r.background_color
 			if is_selected then
-				if r.background_color = Void or else not r.background_color.is_equal (non_closed_color) then
-					r.set_background_color (selected_row_colors[r.index \\ 2])
+				if bg = Void or else not bg.is_equal (non_closed_color) then
+					r.set_background_color (selected_row_colors [r.index \\ 2])
 				end
 			else
-				if r.background_color = Void or else not r.background_color.is_equal (non_closed_color) then
-					r.set_background_color (row_colors[r.index \\ 2])
+				if bg = Void or else not bg.is_equal (non_closed_color) then
+					r.set_background_color (row_colors [r.index \\ 2])
 				end
 			end
 		end
 
 	build_resources
+		local
+			c: EV_COLOR
 		do
-			create selected_row_colors.make_filled (Void, 2)
-			selected_row_colors.put (create {EV_COLOR}.make_with_8_bit_rgb (240, 255, 240), 0)
+			create c.make_with_8_bit_rgb (240, 255, 240)
+			create selected_row_colors.make_filled (c, 2)
 			selected_row_colors.put (create {EV_COLOR}.make_with_8_bit_rgb (225, 255, 225), 1)
 
-			create row_colors.make_filled (Void, 2)
-			row_colors.put (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255), 0)
+			create c.make_with_8_bit_rgb (255, 255, 255)
+			create row_colors.make_filled (c, 2)
 			row_colors.put (create {EV_COLOR}.make_with_8_bit_rgb (245, 245, 245), 1)
 
 			create non_closed_color.make_with_8_bit_rgb (255, 220, 220)

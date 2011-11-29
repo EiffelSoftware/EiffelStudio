@@ -61,18 +61,24 @@ feature -- Access
 	setting_change_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when setting of current tooltips changes,
 			-- Usually attach redraw features in this to perform a tooltip redraw after setting
+		local
+			act: like setting_change_actions_internal
 		do
-			if setting_change_actions_internal = Void then
-				create setting_change_actions_internal
+			act := setting_change_actions_internal
+			if act /= Void then
+				Result := act
+			else
+				create act
+				setting_change_actions_internal := act
+				Result := act
 			end
-			Result := setting_change_actions_internal
 		ensure
 			result_attached: Result /= Void
 		end
 
 feature{NONE} -- Implementation
 
-	setting_change_actions_internal: like setting_change_actions
+	setting_change_actions_internal: detachable like setting_change_actions
 			-- Internal `setting_change_actions'
 
 	update_lock_internal: INTEGER

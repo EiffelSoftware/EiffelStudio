@@ -132,7 +132,7 @@ feature -- Iteration
 
 feature -- Access
 
-	item: EVS_GRID_SEARCHABLE_ITEM
+	item: detachable EVS_GRID_SEARCHABLE_ITEM
 			-- Item at current position
 		do
 			Result ?= grid_wrapper.grid_item (x_internal, y_internal)

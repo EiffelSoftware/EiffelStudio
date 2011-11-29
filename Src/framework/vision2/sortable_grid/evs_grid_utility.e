@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	grid_item_at_position (a_grid: EV_GRID; a_x, a_y: INTEGER): EV_GRID_ITEM
+	grid_item_at_position (a_grid: EV_GRID; a_x, a_y: INTEGER): detachable EV_GRID_ITEM
 			-- Item at position (`a_x', `a_y') which is related to the top-left coordinate of `a_grid'
 			-- Void if no item is found.
 		require
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Resizeing
 
-	auto_resize_columns (a_grid: EV_GRID; a_size_table: HASH_TABLE [TUPLE [min_width: INTEGER; max_width: INTEGER] ,INTEGER])
+	auto_resize_columns (a_grid: EV_GRID; a_size_table: HASH_TABLE [TUPLE [min_width: INTEGER; max_width: INTEGER], INTEGER])
 			-- Auto resize columns in `a_grid'.
 			-- Keys of `a_size_table' are column indexes indicating those columns to be resized.
 			-- Value of a key indicates the min and max width of that column.
@@ -53,7 +53,7 @@ feature -- Resizeing
 			l_row_count: INTEGER
 			l_required_width: INTEGER
 		do
-			l_row_count := a_Grid.row_count
+			l_row_count := a_grid.row_count
 			if l_row_count > 0 then
 				from
 					a_size_table.start

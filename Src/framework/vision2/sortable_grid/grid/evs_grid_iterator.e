@@ -10,7 +10,7 @@ deferred class
 	EVS_GRID_ITERATOR
 
 inherit
-	BILINEAR [EVS_GRID_SEARCHABLE_ITEM]
+	BILINEAR [detachable EVS_GRID_SEARCHABLE_ITEM]
 		redefine
 			do_all, do_if, there_exists, for_all,
 			search, sequential_search,
@@ -51,7 +51,7 @@ feature -- Iteration
 
 feature -- Access
 
-	item: EVS_GRID_SEARCHABLE_ITEM
+	item: detachable EVS_GRID_SEARCHABLE_ITEM
 			-- Item at current position
 		deferred
 		end

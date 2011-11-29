@@ -67,31 +67,26 @@ feature -- Focus
 
 	has_focus_on_widgets_content (a_widget: EV_WIDGET): BOOLEAN
 			-- Does `a_widget' or its sub-widgets if it is a container has focus?
-		local
-			l_container: EV_CONTAINER
-			l_linear_representation: LINEAR [EV_WIDGET]
 		do
-			l_container ?= a_widget
-			if l_container /= Void then
-				l_linear_representation := l_container.linear_representation
-				if l_linear_representation /= Void and then not l_linear_representation.is_empty then
+			if attached {EV_CONTAINER} a_widget as l_container then
+				if attached l_container.linear_representation as l_linear_representation and then not l_linear_representation.is_empty then
 					from
 						l_linear_representation.start
 					until
 						l_linear_representation.after or Result
 					loop
 						if l_linear_representation.item.has_focus then
-							Result := true
+							Result := True
 						else
 							Result := has_focus_on_widgets_content (l_linear_representation.item)
 						end
 						l_linear_representation.forth
 					end
 				elseif l_container.has_focus then
-					Result := true
+					Result := True
 				end
 			elseif a_widget.has_focus then
-				Result := true
+				Result := True
 			end
 		end
 

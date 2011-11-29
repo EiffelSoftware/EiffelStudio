@@ -170,7 +170,7 @@ feature {EVS_GENERAL_TOOLTIP_WINDOW} -- Element change
 			is_picking_from_tooltip_set: is_picking_from_tooltip = b
 		end
 
-	setup_timer (timeout: INTEGER; a_agent: PROCEDURE [ANY, TUPLE])
+	setup_timer (timeout: INTEGER; a_agent: detachable PROCEDURE [ANY, TUPLE])
 			-- Setup `timer' with `timeout' and `a_agent'.
 			-- Used to start `timer' or stop it (when `timeout' is 0 and `a_agent' is Void)
 		require
@@ -552,7 +552,7 @@ feature {NONE} -- Tooltip show/hide
 				if not is_my_tooltip then
 					l_need_change_owner := True
 						-- We only display tooltip of current if other's tooltip is not pined.					
-					l_show := l_window.has_owner implies (not l_window.owner.is_tooltip_pined)
+					l_show := (l_window.has_owner and attached l_window.owner as o) implies (not o.is_tooltip_pined)
 				elseif not is_my_tooltip_displayed then
 					l_show := True
 				end

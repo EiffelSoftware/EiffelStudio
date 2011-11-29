@@ -65,8 +65,7 @@ feature -- Status
 
 feature -- Layout acces
 
-	layout: TUPLE [id:STRING; subrows: LIST [TUPLE]; value:ANY; is_visible_row: BOOLEAN]
-			--	TUPLE [id=STRING, subrows=LIST [like layout]], value=ANY, visible_row=BOOLEAN]
+	layout: detachable ES_GRID_LAYOUT_ITEM
 			-- ["A"
 			--    {
 			--       ["sub a" Void `value`]
@@ -77,6 +76,11 @@ feature -- Layout acces
 			--		 ]
 			--    }
 			-- ]
+
+	subrows (lay: attached like layout): detachable LIST [detachable ES_GRID_LAYOUT_ITEM]
+		do
+			Result := lay.subrows
+		end
 
 	set_layout (v: like layout)
 		do
@@ -112,8 +116,8 @@ feature -- Change
 				print (":" + name + ": " + generator + ".reset_layout_recorded_values %N")
 			end
 
-			if layout /= Void then
-				reset_recorded_values_from (layout)
+			if attached layout as l_layout then
+				reset_recorded_values_from (l_layout)
 			end
 		end
 
@@ -166,7 +170,7 @@ feature -- Access
 	record
 		local
 			r: INTEGER
-			lst: LIST [TUPLE]
+			lst: like subrows
 			gid: STRING
 		do
 			if enabled then
@@ -185,8 +189,8 @@ feature -- Access
 					end
 
 					from
-						create {ARRAYED_LIST [TUPLE]} lst.make (grid.row_count)
-						layout := [gid, lst, Void, False]
+						create {ARRAYED_LIST [like subrows.item]} lst.make (grid.row_count)
+						create layout.make_with_details (gid, lst, Void, False)
 						r := 1
 					until
 						r > grid.row_count
@@ -208,9 +212,6 @@ feature -- Access
 	restore
 		local
 			s: STRING
-			lst: LIST [TUPLE]
-			lst_curs: like {LIST [TUPLE]}.new_cursor
-			t: like layout
 			r: INTEGER
 			gid: STRING
 		do
@@ -220,7 +221,7 @@ feature -- Access
 					print (debug_output)
 				end
 				pre_restoring_actions.call (Void)
-				if layout /= Void and grid.row_count > 0 and grid.is_tree_enabled then
+				if attached layout as l_layout and grid.row_count > 0 and grid.is_tree_enabled then
 					if restorations_in_progress = 0 then
 						current_processing_id := 1
 					else
@@ -234,24 +235,24 @@ feature -- Access
 						print (":" + name + ": restore : session [" + gid + "] %N")
 					end
 
-					s := layout.id
+					s := l_layout.id
 					if not s.is_equal (gid) then
 						debug ("es_grid_layout")
 							print (":" + name + ": different session -> " + s + " /= " + gid + "%N")
 						end
 						wipe_out
 					else
-						lst := layout.subrows
-						if lst /= Void and then not lst.is_empty then
-							from
-								lst_curs := lst.new_cursor
-								lst_curs.start
-								r := 1
+						if
+							attached l_layout.subrows as lst and then
+							not lst.is_empty
+						then
+							r := 1
+							across
+								 lst as lst_curs
 							until
-								r > grid.row_count or lst_curs.after
+								r > grid.row_count
 							loop
-								t ?= lst_curs.item
-								if t /= Void then
+								if attached {like layout} lst_curs.item as t then
 									process_row_layout_restoring (grid.row (r), t)
 								end
 								lst_curs.forth
@@ -262,8 +263,8 @@ feature -- Access
 --								lst_curs.forth
 --							end
 						end
-						if positioning_enabled and then last_row_set_as_first_visible_row /= Void then
-							ev_application.do_once_on_idle (agent ensure_row_is_first_visible_row (last_row_set_as_first_visible_row))
+						if positioning_enabled and then attached last_row_set_as_first_visible_row as l_row then
+							ev_application.do_once_on_idle (agent ensure_row_is_first_visible_row (l_row))
 							last_row_set_as_first_visible_row := Void
 						end
 					end
@@ -276,7 +277,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	last_row_set_as_first_visible_row: EV_GRID_ROW
+	last_row_set_as_first_visible_row: detachable EV_GRID_ROW
 			-- Last row set as first visible row during layout restoring.
 
 	ensure_row_is_first_visible_row (r: EV_GRID_ROW)
@@ -286,7 +287,7 @@ feature {NONE} -- Implementation
 			end
 			debug ("es_grid_layout")
 				print (":" + name + ": ensure_row_is_first_visible_row  (row.index="+ r.index.out +") %N")
-				if r.index /= grid.first_visible_row.index then
+				if grid.first_visible_row = Void or else attached grid.first_visible_row as fvr and then r.index /= fvr.index then
 					print (":" + name + ": -> ERROR ... %N")
 				end
 			end
@@ -294,8 +295,8 @@ feature {NONE} -- Implementation
 
 	row_is_ready_for_identification (a_row: EV_GRID_ROW): BOOLEAN
 		do
-			if identification_agent /= Void and row_is_ready_for_identification_agent /= Void then
-				Result := row_is_ready_for_identification_agent.item ([a_row])
+			if attached identification_agent /= Void and attached row_is_ready_for_identification_agent as l_row_is_ready_for_identification_agent then
+				Result := l_row_is_ready_for_identification_agent.item ([a_row])
 			else
 				Result := row_is_ready_for_default_identification (a_row)
 			end
@@ -305,8 +306,8 @@ feature {NONE} -- Implementation
 		require
 			value_agent /= Void
 		do
-			if row_is_ready_for_evaluation_agent /= Void then
-				Result := row_is_ready_for_evaluation_agent.item ([a_row])
+			if attached row_is_ready_for_evaluation_agent as l_row_is_ready_for_evaluation_agent then
+				Result := l_row_is_ready_for_evaluation_agent.item ([a_row])
 			else
 				Result := True
 			end
@@ -318,36 +319,30 @@ feature {NONE} -- Implementation
 		end
 
 	global_identification: STRING
-		local
-			s: STRING
 		do
 			Result := name.twin
-			if global_identification_agent /= Void then
-				s := global_identification_agent.item (Void)
-				if s /= Void then
+			if attached global_identification_agent as l_global_identification_agent then
+				if attached l_global_identification_agent.item (Void) as s then
 					Result.append_string ("::")
 					Result.append_string (s)
 				end
 			end
 		end
 
-	row_identification (a_row: EV_GRID_ROW): STRING
+	row_identification (a_row: EV_GRID_ROW): detachable STRING
 		do
-			if identification_agent /= Void then
-				Result := identification_agent.item ([a_row])
+			if attached identification_agent as l_identification_agent then
+				Result := l_identification_agent.item ([a_row])
 			else
 				Result := default_identification (a_row)
 			end
 		end
 
-	default_identification (a_row: EV_GRID_ROW): STRING
+	default_identification (a_row: EV_GRID_ROW): detachable STRING
 		require
 			a_row /= Void
-		local
-			lab: EV_GRID_LABEL_ITEM
 		do
-			lab ?= a_row.item (1)
-			if lab /= Void then
+			if attached {EV_GRID_LABEL_ITEM} a_row.item (1) as lab then
 				Result := lab.text
 			end
 		end
@@ -355,40 +350,30 @@ feature {NONE} -- Implementation
 	reset_recorded_values_from (lay: like layout)
 		require
 			lay /= Void
-		local
-			lst: LIST [like layout]
-			lst_curs: like {LIST [like layout]}.new_cursor
 		do
 			lay.value := Void
-			lst ?= lay.subrows
-			if lst /= Void then
-				lst_curs := lst.new_cursor
-				from
-					lst_curs.start
-				until
-					lst_curs.after
+			if attached lay.subrows as lst then
+				across
+					lst as lst_curs
 				loop
 					reset_recorded_values_from (lst_curs.item)
-					lst_curs.forth
 				end
 			end
 		end
 
-	recorded_row_layout (a_row: EV_GRID_ROW): TUPLE [id:STRING; subrows: LIST [TUPLE]; value:ANY; is_visible_row: BOOLEAN]
+	recorded_row_layout (a_row: EV_GRID_ROW): like layout
 			-- FIXME: compiler is complaining when using 'like layout' for Result type
 		local
 			r: INTEGER
-			lst: LIST [TUPLE]
-			l_id: STRING
-			l_val: ANY
+			lst: like subrows
+			l_val: detachable ANY
 			l_fvr: BOOLEAN
 			lay: like layout
 		do
 			if a_row /= Void then
-				l_id := row_identification (a_row)
-				if l_id /= Void then
-					if value_agent /= Void then
-						l_val := value_agent.item ([a_row, True])
+				if attached row_identification (a_row) as l_id then
+					if attached value_agent as l_value_agent then
+						l_val := l_value_agent.item ([a_row, True])
 					end
 					debug ("es_grid_layout")
 						print (":" + name + ": " + generator + ".recorded_row_layout : "  + a_row.index.out + " %"" + l_id + "%".%N")
@@ -401,7 +386,7 @@ feature {NONE} -- Implementation
 							debug ("es_grid_layout")
 								print (":" + name + ":                     : -> " + a_row.subrow_count.out + " subrows %N")
 							end
-							create {ARRAYED_LIST [TUPLE]} lst.make (a_row.subrow_count)
+							create {ARRAYED_LIST [detachable ES_GRID_LAYOUT_ITEM]} lst.make (a_row.subrow_count)
 							from
 								r := 1
 							until
@@ -423,12 +408,12 @@ feature {NONE} -- Implementation
 					if positioning_enabled and then not l_fvr then
 						l_fvr := grid.is_displayed and then grid.first_visible_row = a_row
 					end
-					Result := [l_id, lst, l_val, l_fvr]
+					create Result.make_with_details (l_id, lst, l_val, l_fvr)
 				end
 			end
 		end
 
-	restore_row_layout_on_idle (a_row: EV_GRID_ROW; lay: like layout; l_curr_pid: INTEGER)
+	restore_row_layout_on_idle (a_row: EV_GRID_ROW; lay: attached like layout; l_curr_pid: INTEGER)
 		do
 			debug ("es_grid_layout")
 				print (":" + name + ": " + generator + ".restore_row_layout_on_idle : " + a_row.index.out + " -> " + string_id_for_lay (lay) + ": BEGIN %N")
@@ -441,7 +426,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	delayed_restore_row_layout (a_row: EV_GRID_ROW; lay: like layout; l_curr_pid: INTEGER)
+	delayed_restore_row_layout (a_row: EV_GRID_ROW; lay: attached like layout; l_curr_pid: INTEGER)
 		do
 			debug ("es_grid_layout")
 				print (":" + name + ": " + generator + ".delayed_restore_row_layout : " + a_row.index.out + " -> " + string_id_for_lay (lay) +"%N")
@@ -461,16 +446,12 @@ feature {NONE} -- Implementation
 			-- (nota: if `on_idle' is False, the value of `l_pid' is ignored)
 		require
 			lay_not_void: lay /= Void
-			lay_not_empty: not lay.is_empty
 			row_is_ready_for_identification: row_is_ready_for_identification (a_row)
 		local
-			lst: LIST [TUPLE]
-			lst_curs: like {LIST [TUPLE]}.new_cursor
-			ts, l_id: STRING
-			tv, l_val: ANY
+			ts: STRING
+			tv, l_val: detachable ANY
 			tfvr: BOOLEAN
 			r: INTEGER
-			t: like layout
 			has_diff: BOOLEAN
 			l_done: BOOLEAN
 		do
@@ -485,8 +466,7 @@ feature {NONE} -- Implementation
 					debug ("es_grid_layout")
 						print (":" + name + ": restore_row_layout -> [" + ts + "] ")
 					end
-					l_id := row_identification (a_row)
-					if l_id /= Void then
+					if attached row_identification (a_row) as l_id then
 						debug ("es_grid_layout")
 							print (" ?id[%"" + l_id + "%"]")
 						end
@@ -504,28 +484,27 @@ feature {NONE} -- Implementation
 										print (" FirstVisibleRow[" + a_row.index.out + "] ")
 									end
 									last_row_set_as_first_visible_row := a_row
-									ensure_row_is_first_visible_row (last_row_set_as_first_visible_row)
+									ensure_row_is_first_visible_row (a_row)
 								end
 							end
 
 								--| Let's check difference
-							if value_agent /= Void then
+							if attached value_agent as l_value_agent then
 								tv := lay.value
 								has_diff := False
-								l_val := value_agent.item ([a_row, False])
+								l_val := l_value_agent.item ([a_row, False])
 								if tv = Void or l_val = Void then
 									has_diff := tv /= Void or l_val /= Void
 								else
 									has_diff := not tv.is_equal (l_val)
 								end
-								if has_diff and then on_difference_callback /= Void then
-									on_difference_callback.call ([a_row, tv])
+								if has_diff and then attached on_difference_callback as l_on_difference_callback then
+									l_on_difference_callback.call ([a_row, tv])
 								end
 							end
 
-							lst := lay.subrows
 							if
-								lst /= Void --| a non Void list, then should be expanded
+								attached lay.subrows as lst --| a non Void list, then should be expanded
 								and then a_row.is_expandable
 								-- and then a_row.subrow_count > 0 then
 							then
@@ -542,39 +521,38 @@ feature {NONE} -- Implementation
 									print ("%N")
 								end
 
-								a_row.parent.refresh_now
-								lst_curs := lst.new_cursor
+								if attached a_row.parent as p then
+									p.refresh_now
+								else
+									check a_row_parented: False end
+								end
 									--| We process in two steps
 									--| first, let's restore the "first visible row's group"
 									--| and then the others
 									--| This will avoid processing too may rows
-								from
-									l_done := False
-									lst_curs.start
-									r := 1
+								l_done := False
+								r := 1
+								across
+									lst as lst_curs
 								until
-									r > a_row.subrow_count or lst_curs.after or l_done
+									r > a_row.subrow_count or l_done
 								loop
-									t ?= lst_curs.item
-									if t /= Void and then t.is_visible_row then
+									if attached {like layout} lst_curs.item as t and then t.is_visible_row then
 										process_row_layout_restoring (a_row.subrow (r), t)
 										l_done := True --| "first visible row's group found"
 									end
-									lst_curs.forth
 									r := r + 1
 								end
 									--| Now let's restore layout for other rows
-								from
-									lst_curs.start
-									r := 1
+								r := 1
+								across
+									lst as lst_curs
 								until
-									r > a_row.subrow_count or lst_curs.after
+									r > a_row.subrow_count
 								loop
-									t ?= lst_curs.item
-									if t /= Void and then not t.is_visible_row then
+									if attached {like layout} lst_curs.item as t and then not t.is_visible_row then
 										process_row_layout_restoring (a_row.subrow (r), t)
 									end
-									lst_curs.forth
 									r := r + 1
 								end
 --								Note: this should be useless, since this is not anymore a Gobo cursor
@@ -596,9 +574,9 @@ feature {NONE} -- Implementation
 				if
 					positioning_enabled
 					and then not on_idle
-					and then last_row_set_as_first_visible_row /= Void
+					and then attached last_row_set_as_first_visible_row as l_last_row_set_as_first_visible_row
 				then
-					ensure_row_is_first_visible_row (last_row_set_as_first_visible_row)
+					ensure_row_is_first_visible_row (l_last_row_set_as_first_visible_row)
 				end
 			end
 			if on_idle then
@@ -613,7 +591,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_row_layout_restoring (a_row: EV_GRID_ROW; lay: like layout)
+	process_row_layout_restoring (a_row: EV_GRID_ROW; lay: attached like layout)
 		require
 			lay /= Void
 		do
@@ -656,32 +634,31 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Debugging
 
-	string_id_for_lay (lay: like layout): STRING
+	string_id_for_lay (lay: attached like layout): STRING
 		do
-			Result := lay.id
-			if Result = Void then
-				Result := ""
+			if attached lay.id as s then
+				Result := s
+			else
+				create Result.make_empty
 			end
 		end
 
 	debug_output: STRING
 		do
-			if layout = Void then
-				Result := ":" + name + ": No layout %N"
+			if attached layout as l_layout then
+				Result := grid_layout_output (l_layout, " : ")
 			else
-				Result := grid_layout_output (layout, " : ")
+				Result := ":" + name + ": No layout %N"
 			end
 		end
 
-	grid_layout_output (a_layout: like layout; off: STRING): STRING
+	grid_layout_output (a_layout: attached like layout; off: STRING): STRING
 		local
-			tu: like layout
 			tu_s: STRING
-			tu_v: ANY
+			tu_v: detachable ANY
 			tu_v_s: STRING
-			tu_lst: LIST [TUPLE]
+			tu_lst: like subrows
 			tu_fvr: BOOLEAN
-			tu_lst_curs: like {LIST [TUPLE]}.new_cursor
 		do
 			Result := ":" + name + ": "
 			tu_s := a_layout.id
@@ -702,17 +679,12 @@ feature {NONE} -- Debugging
 			end
 			Result.append_string ("[" + tu_s.out + "] :: " + tu_v_s + "%N")
 			if tu_lst /= Void then
-				from
-					tu_lst_curs := tu_lst.new_cursor
-					tu_lst_curs.start
-				until
-					tu_lst_curs.after
+				across
+					tu_lst as tu_lst_curs
 				loop
-					tu ?= tu_lst_curs.item
-					if tu /= Void then
+					if attached {like layout} tu_lst_curs.item as tu then
 						Result.append_string (grid_layout_output (tu, off + "  "))
 					end
-					tu_lst_curs.forth
 				end
 			end
 		end
@@ -726,17 +698,17 @@ feature -- Actions
 
 feature {NONE} -- Agent
 
-	row_is_ready_for_identification_agent: FUNCTION [ANY, TUPLE [EV_GRID_ROW], BOOLEAN]
+	row_is_ready_for_identification_agent: detachable FUNCTION [ANY, TUPLE [EV_GRID_ROW], BOOLEAN]
 
-	row_is_ready_for_evaluation_agent: FUNCTION [ANY, TUPLE [EV_GRID_ROW], BOOLEAN]
+	row_is_ready_for_evaluation_agent: detachable FUNCTION [ANY, TUPLE [EV_GRID_ROW], BOOLEAN]
 
-	global_identification_agent: FUNCTION [ANY, TUPLE, STRING]
+	global_identification_agent: detachable FUNCTION [ANY, TUPLE, STRING]
 
-	identification_agent: FUNCTION [ANY, TUPLE [EV_GRID_ROW], STRING]
+	identification_agent: detachable FUNCTION [ANY, TUPLE [EV_GRID_ROW], STRING]
 
-	value_agent: FUNCTION [ANY, TUPLE [EV_GRID_ROW, BOOLEAN], ANY]
+	value_agent: detachable FUNCTION [ANY, TUPLE [EV_GRID_ROW, BOOLEAN], ANY]
 
-	on_difference_callback: PROCEDURE [ANY, TUPLE [EV_GRID_ROW, ANY]];
+	on_difference_callback: detachable PROCEDURE [ANY, TUPLE [EV_GRID_ROW, detachable ANY]];
 			-- row and old value
 
 note

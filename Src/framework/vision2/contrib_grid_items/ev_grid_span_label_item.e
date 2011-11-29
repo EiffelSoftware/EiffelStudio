@@ -15,14 +15,22 @@ inherit
 		end
 
 create
-	make_span, make_master
+	make_span, make_master, make_master_with_text
 
 feature {NONE} -- Initialization
 
 	make_master (a_master_col: INTEGER)
-			-- Make as `master' cell which hold the text data
+			-- Make as `master' cell which holds the text data
 		do
 			is_master := True
+			make_span (a_master_col)
+		end
+
+	make_master_with_text (a_master_col: INTEGER; a_text: STRING_32)
+			-- Make as `master' cell which holds the `text' data
+		do
+			is_master := True
+			set_text (a_text)
 			make_span (a_master_col)
 		end
 
@@ -36,21 +44,21 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING_32
+	text: detachable STRING_32
 			-- Item's spanned text
 
-	font: EV_FONT
+	font: detachable EV_FONT
 			-- Text's font.
 
-	pixmap: EV_PIXMAP
+	pixmap: detachable EV_PIXMAP
 			-- Master pixmap.
 
 	required_width: INTEGER
 			-- Require width when resize_to_content occurs.
 		do
 			Result := Precursor
-			if is_master and pixmap /= Void then
-				Result := Result + pixmap.width + extra_space_after_pixmap
+			if is_master and attached pixmap as pix then
+				Result := Result + pix.width + extra_space_after_pixmap
 			end
 		end
 
@@ -97,8 +105,8 @@ feature -- change
 		do
 			if is_master then
 				pixmap := v
-				if parent /= Void then
-					parent.implementation.redraw_item (implementation)
+				if attached parent as p then
+					p.implementation.redraw_item (implementation)
 				end
 			end
 		end
@@ -111,15 +119,15 @@ feature -- change
 		do
 			if is_master then
 				pixmap := Void
-				if parent /= Void then
-					parent.implementation.redraw_item (implementation)
+				if attached parent as p then
+					p.implementation.redraw_item (implementation)
 				end
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	master_item: like Current
+	master_item: detachable like Current
 			-- Master cell's item
 		require
 			row /= Void
@@ -133,88 +141,106 @@ feature {NONE} -- Implementation
 			-- Redraw span cell
 		local
 			l_text: like text
-			g: EV_GRID
 			c: INTEGER
 			prev_width: INTEGER
 			w: INTEGER
 			m: like master_item
-			bg,fg: EV_COLOR
+			bg,fg: detachable EV_COLOR
+			ft: detachable EV_FONT
 		do
-			g := parent
-			bg := background_color
-			if bg = Void then
-				bg := row.background_color
+			if attached parent as g then
+				bg := background_color
 				if bg = Void then
-					bg := g.background_color
+					bg := row.background_color
+					if bg = Void then
+						bg := g.background_color
+					end
 				end
-			end
-			fg := foreground_color
-			if fg = Void then
-				fg := row.foreground_color
+				fg := foreground_color
 				if fg = Void then
-					fg := g.foreground_color
+					fg := row.foreground_color
+					if fg = Void then
+						fg := g.foreground_color
+					end
 				end
-			end
 
-			a_drawable.set_foreground_color (bg)
-			a_drawable.fill_rectangle (0, 0, width, height)
-			if not g.pre_draw_overlay_actions.is_empty then
-				g.pre_draw_overlay_actions.call ([a_drawable, Current, column.index, row.index])
 				a_drawable.set_foreground_color (bg)
-				a_drawable.fill_rectangle (0, 0, width, height - 1)
-			end
-
-			w := 0
-			if is_master then
-				l_text := text
-				if pixmap /= Void then
-					a_drawable.draw_pixmap (3 + w, 2, pixmap)
-					w := w + pixmap.width + extra_space_after_pixmap
+				a_drawable.fill_rectangle (0, 0, width, height)
+				if not g.pre_draw_overlay_actions.is_empty then
+					g.pre_draw_overlay_actions.call ([a_drawable, Current, column.index, row.index])
+					a_drawable.set_foreground_color (bg)
+					a_drawable.fill_rectangle (0, 0, width, height - 1)
 				end
-				if is_selected then
-					a_drawable.set_foreground_color (create {EV_COLOR})
-					a_drawable.enable_dashed_line_style
-					a_drawable.draw_rectangle (1, 1, width - 2, height - 2)
-					a_drawable.disable_dashed_line_style
-				end
-			else
-				m := master_item
-				l_text := m.text
-			end
 
-			if l_text /= Void then
-				a_drawable.set_foreground_color (fg)
-
+				w := 0
 				if is_master then
-					if font /= Void then
-						a_drawable.set_font (font)
+					l_text := text
+					if attached pixmap as pix  then
+						a_drawable.draw_pixmap (3 + w, 2, pix)
+						w := w + pix.width + extra_space_after_pixmap
+					end
+					if is_selected then
+						a_drawable.set_foreground_color (create {EV_COLOR})
+						a_drawable.enable_dashed_line_style
+						a_drawable.draw_rectangle (1, 1, width - 2, height - 2)
+						a_drawable.disable_dashed_line_style
 					end
 				else
-					if m.font /= Void then
-						a_drawable.set_font (m.font)
+					m := master_item
+					if m /= Void then
+						l_text := m.text
+					else
+						check has_master: False end
 					end
-					check
-						column.index > span_master_column
-					end
-					from
-						c := column.index - 1
-					until
-						c < span_master_column
-					loop
-						check
-							never_count_current_column: c /= column.index
-							spawned_item: row.item(c).conforms_to (Current)
-						end
-						prev_width := prev_width + row.item (c).width
-						c := c - 1
-					end
-
-					if m.pixmap /= Void then
-						prev_width := prev_width - m.pixmap.width - extra_space_after_pixmap
-					end
-					w := w - prev_width
 				end
-				a_drawable.draw_text_top_left (3 + w, 2, l_text)
+
+				if l_text /= Void then
+					a_drawable.set_foreground_color (fg)
+
+					if is_master then
+						ft := font
+						if ft /= Void then
+							a_drawable.set_font (ft)
+						end
+					else
+						if m /= Void then
+							ft := m.font
+						else
+							ft := font
+						end
+						if ft /= Void then
+							a_drawable.set_font (ft)
+						end
+
+						check
+							column.index > span_master_column
+						end
+						from
+							c := column.index - 1
+						until
+							c < span_master_column
+						loop
+							check
+								never_count_current_column: c /= column.index
+								spawned_item: attached row.item(c) as cl and then cl.conforms_to (Current)
+							end
+							if attached row.item (c) as l_c_item then
+								prev_width := prev_width + l_c_item.width
+							else
+								check has_row_item_at_c: False end
+							end
+
+							c := c - 1
+						end
+
+						if m /= Void and then attached m.pixmap as m_pixmap then
+							prev_width := prev_width - m_pixmap.width - extra_space_after_pixmap
+						end
+						w := w - prev_width
+					end
+					a_drawable.draw_text_top_left (3 + w, 2, l_text)
+				end
+
 			end
 		end
 

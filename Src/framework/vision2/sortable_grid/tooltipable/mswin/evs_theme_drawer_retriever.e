@@ -11,7 +11,7 @@ class
 
 inherit
 	EV_ANY_HANDLER
-	
+
 	EV_SHARED_APPLICATION
 		export
 			{NONE}all
@@ -24,12 +24,10 @@ feature -- Theme drawer
 
 	theme_drawer: EV_THEME_DRAWER_IMP
 			-- Theme drawer
-		local
-			l_app_imp: EV_APPLICATION_IMP
 		do
-			l_app_imp ?= ev_application.implementation
-			check l_app_imp /= Void end
-			Result := l_app_imp.theme_drawer
+			check attached {EV_APPLICATION_IMP} ev_application.implementation as l_app_imp then
+				Result := l_app_imp.theme_drawer
+			end
 		ensure
 			result_attached: Result /= Void
 		end

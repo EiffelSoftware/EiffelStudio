@@ -564,8 +564,8 @@ feature {CLASS_AS} -- Process leafs
 			print_string (l_as.text_32 (match_list))
 		end
 
-	format_comment_string (s: STRING): STRING
-			-- Formats the comment string `s' into a printable format.
+	print_comment (s: STRING)
+			-- Print the comment string `s'.
 		require
 			has_comment: s.has_substring ("--")
 		local
@@ -574,6 +574,7 @@ feature {CLASS_AS} -- Process leafs
 			l_start_idx: INTEGER
 			inline_comment: BOOLEAN
 			c: CHARACTER
+			line: STRING
 		do
 				-- The string can hold multiple comments, starting with '--'.
 				-- Remove all '%N' and '%R' characters before and after each comment line.
@@ -584,7 +585,6 @@ feature {CLASS_AS} -- Process leafs
 			inline_comment := True
 			n := s.count
 			l_start_idx := s.substring_index ("--", 1)
-			Result := ""
 
 			from
 				i := 1
@@ -604,12 +604,15 @@ feature {CLASS_AS} -- Process leafs
 				i >= n
 			loop
 				if not inline_comment then
-					Result.append ("%N%T" + indent)
+					print_new_line
+					line := "%T" + indent
 				elseif last_index <= 1 then
 						-- This is the first token in the source, it is not inline.
-					Result.append ("%T" + indent)
+					line := "%T" + indent
 				elseif last_printed /= ' ' then
-					Result.append_character (' ')
+					line := " "
+				else
+					line := ""
 				end
 
 					-- Look for end of line.
@@ -617,17 +620,20 @@ feature {CLASS_AS} -- Process leafs
 				until
 					i > n or new_line_chars.has (s [i])
 				loop
-					Result.append_character (s [i])
+					line.append_character (s [i])
 					i := i + 1
 				end
 
 					-- Remove trailing white spaces.
 				from
 				until
-					Result.is_empty or else not white_space_chars.has (Result [Result.count])
+					line.is_empty or else not white_space_chars.has (line [line.count])
 				loop
-					Result.remove_tail (1)
+					line.remove_tail (1)
 				end
+
+					-- Output a line.
+				print_string (line)
 
 					-- Advance to the next line of a comment.
 				l_start_idx := s.substring_index ("--", i)
@@ -652,7 +658,7 @@ feature {CLASS_AS} -- Process leafs
 						if s [i] = c then
 								-- There are multiple new lines.
 								-- Collapse them into one empty new line.
-							Result.append_character ('%N')
+							print_new_line
 							i := l_start_idx
 						else
 							i := i + 1
@@ -666,8 +672,8 @@ feature {CLASS_AS} -- Process leafs
 				end
 				inline_comment := False
 			end
-				-- Put new line after the comment end.
-			Result.append_character ('%N')
+				-- Put a new line after the comment end.
+			print_new_line
 		end
 
 	process_break_as (l_as: BREAK_AS)
@@ -677,10 +683,9 @@ feature {CLASS_AS} -- Process leafs
 		do
 			process_leading_leaves (l_as.index)
 			last_index := l_as.index
-			create l_text.make_from_string (l_as.text_32 (match_list))
-
+			l_text := l_as.text_32 (match_list)
 			if l_text.has_substring ("--") then
-				print_string (format_comment_string (l_text))
+				print_comment (l_text)
 			end
 		end
 

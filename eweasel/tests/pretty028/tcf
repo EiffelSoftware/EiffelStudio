@@ -1,12 +1,16 @@
-
 test_name 	pretty-comments-between-features	
 test_description Comments between features within one section should have consistent indentation.
 
 copy_sub Ace $TEST Ace
-copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+copy_raw test2.e $CLUSTER test2.e
 
-prettify	test.e prettify_output
+prettify	test1.e prettify_output_1
 compile_result ok
-compare		prettify_output output
+compare		prettify_output_1 output1
+
+prettify	test2.e prettify_output_2
+compile_result ok
+compare		prettify_output_2 output2
 
 test_end

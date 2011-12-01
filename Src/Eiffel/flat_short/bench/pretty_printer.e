@@ -570,40 +570,37 @@ feature {CLASS_AS} -- Process leafs
 		do
 				-- The string can hold multiple comments, starting with '--'.
 				-- Remove all '%N' and '%R' characters before and after each comment line.
-				-- If there is a '%N' before a comment, it is printed on a new line with the
-				-- current indent.
-				--
-				-- Check the preceding characters for newlines characters.
-			inline_comment := True
+
+				-- The first token in the source is not considered inline.
+			inline_comment := last_index > 1
 			n := s.count
-			l_start_idx := s.substring_index ("--", 1)
 
 			from
+				l_start_idx := s.substring_index ("--", 1)
 				i := 1
-			until
-				i >= l_start_idx
-			loop
-				if s [i] = '%N' then
-					inline_comment := False
-					i := l_start_idx
-				end
-				i := i+1
-			end
-
-			from
-				i := l_start_idx
 			until
 				i >= n
 			loop
+					-- Check the preceding characters for newlines characters.
+				from
+				until
+					i >= l_start_idx
+				loop
+					if s [i] = '%N' then
+						print_new_line
+						inline_comment := False
+					end
+					i := i + 1
+				end
 				if not inline_comment then
-					print_new_line
+						-- The comment starts on a new line.
 					line := "%T" + indent
-				elseif last_index <= 1 then
-						-- This is the first token in the source, it is not inline.
-					line := "%T" + indent
-				elseif last_printed /= ' ' then
+				elseif not white_space_chars.has (last_printed) then
+						-- The inline comment should be separated
+						-- from the previous token by a white space.
 					line := " "
 				else
+						-- The inline comment is already separated by a white space.
 					line := ""
 				end
 
@@ -626,6 +623,9 @@ feature {CLASS_AS} -- Process leafs
 
 					-- Output a line.
 				print_string (line)
+
+					-- Output a new line.
+				print_new_line
 
 					-- Advance to the next line of a comment.
 				l_start_idx := s.substring_index ("--", i)
@@ -664,8 +664,6 @@ feature {CLASS_AS} -- Process leafs
 				end
 				inline_comment := False
 			end
-				-- Put a new line after the comment end.
-			print_new_line
 		end
 
 	process_break_as (l_as: BREAK_AS)

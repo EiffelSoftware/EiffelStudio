@@ -1,0 +1,32 @@
+
+test_name 	finalize-inline-across-loop
+test_description Finalizing and inlining a routine that has two loops using "across" syntax causes system execution to produce incorrect output
+
+define		INLINING "false"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+define		INLINING "true"
+copy_sub 	Ace $TEST Ace
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_fi
+execute_result	ok
+compare		exec_output_fi output
+
+test_end

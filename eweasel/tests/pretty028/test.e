@@ -34,6 +34,11 @@ feature -- Routines
 		end--try2
 -- With a trailing comment
 
+	try3
+		do
+		end
+-- With a trailing comment only
+
    	x: INTEGER
 	   -- Value
 

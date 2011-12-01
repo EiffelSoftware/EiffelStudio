@@ -526,11 +526,11 @@ feature {NONE} -- List processing
 		local
 			i: INTEGER
 		do
-			if will_process_leading_leaves and then ind > last_index + 1 then
+			if will_process_leading_leaves then
 				from
 					i := last_index + 1
 				until
-					i = ind
+					i >= ind
 				loop
 					safe_process (match_list.i_th (i))
 					i := i + 1

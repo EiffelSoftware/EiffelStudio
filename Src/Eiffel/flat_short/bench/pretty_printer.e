@@ -525,23 +525,15 @@ feature {NONE} -- List processing
 			-- Process all not-processed leading leaves in `match_list' before index `ind'.
 		local
 			i: INTEGER
-			l_as: LEAF_AS
 		do
-			if will_process_leading_leaves then
-				if ind > last_index + 1 then
-					from
-						i := last_index + 1
-					until
-						i = ind
-					loop
-						l_as := match_list.i_th (i)
-						if attached {BREAK_AS}l_as as break_as then
-							safe_process (break_as)
-						else
-							safe_process_and_print (l_as, "", "")
-						end
-						i := i + 1
-					end
+			if will_process_leading_leaves and then ind > last_index + 1 then
+				from
+					i := last_index + 1
+				until
+					i = ind
+				loop
+					safe_process (match_list.i_th (i))
+					i := i + 1
 				end
 			end
 		end

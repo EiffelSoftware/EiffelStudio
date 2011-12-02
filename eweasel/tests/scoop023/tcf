@@ -1,0 +1,13 @@
+
+test_name	 scoop-expanded-class-constrained-generic
+test_description A SCOOP system that has an attribute of an expanded type, where the expanded type has a constrained generic and a detachable attribute of the formal generic type, crashes the compiler
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e	$CLUSTER test.e
+copy_raw	test1.e	$CLUSTER test1.e
+copy_sub	test2.e	$CLUSTER test2.e
+
+compile_melted
+compile_result ok
+
+test_end

@@ -150,29 +150,18 @@ feature {NONE} -- Basic operations
 			not_launched_yet: not a_generator.has_next_step
 		local
 			l_session, l_global_session: SESSION_I
-			l_value: ANY
-			l_list: LIST [STRING]
 		do
 			l_session := a_manager.retrieve (True)
 			l_global_session := a_manager.retrieve (False)
-			if a_use_temporary then
-				l_value := l_session.value_or_default ({TEST_SESSION_CONSTANTS}.temporary_types, {TEST_SESSION_CONSTANTS}.temporary_types_default)
-			else
-				l_value := l_session.value_or_default ({TEST_SESSION_CONSTANTS}.types, {TEST_SESSION_CONSTANTS}.types_default)
-			end
-			if attached {STRING} l_value as l_types then
-				l_list := l_types.split (',')
-				from
-					l_list.start
-				until
-					l_list.after
-				loop
-					if not l_list.item_for_iteration.is_empty then
-						a_generator.add_class_name (l_list.item_for_iteration)
+			enumerate_types (
+				agent (s: STRING_32; g: TEST_GENERATOR)
+					do
+						g.add_class_name (s)
 					end
-					l_list.forth
-				end
-			end
+				(?, a_generator),
+				a_use_temporary,
+				l_session
+			)
 
 			if
 				attached {NATURAL} l_global_session.value_or_default ({TEST_SESSION_CONSTANTS}.time_out,
@@ -397,6 +386,65 @@ feature {NONE} -- Events
 			--
 			-- `a_error': Error message.
 		do
+		end
+
+feature {NONE} -- Helpers
+
+	enumerate_types (receiver: PROCEDURE [ANY, TUPLE [STRING_32]]; temporary: BOOLEAN; session: SESSION_I)
+			-- Enumerate (`temporary') type names from `session' passing them to `receiver' one by one.
+		local
+			v: ANY
+			comma_level: NATURAL_32
+			i: INTEGER
+			j: INTEGER
+			n: INTEGER
+		do
+				-- Retrieve type list depending on whether temporary variant is used or not.
+			if temporary then
+				v := session.value_or_default ({TEST_SESSION_CONSTANTS}.temporary_types, {TEST_SESSION_CONSTANTS}.temporary_types_default)
+			else
+				v := session.value_or_default ({TEST_SESSION_CONSTANTS}.types, {TEST_SESSION_CONSTANTS}.types_default)
+			end
+			if attached {STRING_8} v as s then
+					-- Convert from {STRING_8} to {STRING_32}.
+				v := s.as_string_32
+			end
+			if attached {STRING_32} v as types then
+					-- Multiple types are delimited with commas,
+					-- but the generic types contain commas inside type name,
+					-- so "A [X, Y], B [P, Q]" should give 2 types.
+				from
+					i := 1
+					n := types.count
+				until
+					i > n
+				loop
+						-- `i' is set at the start of a type name.
+						-- Set `j' at the end of it.
+					from
+						j := i + 1
+					until
+						j > n or else (types [j] = ',' and then comma_level = 0)
+					loop
+						inspect types [j]
+						when '[' then
+								-- Generic parameter list is open.
+							comma_level := comma_level + 1
+						when ']' then
+								-- Generic parameter list is closed.
+							comma_level := comma_level - 1
+						else
+								-- Nothing to do.
+						end
+						j := j + 1
+					end
+					receiver.call ([types.substring (i, j - 1)])
+						-- Advance to the next element.
+					i := j + 1
+				variant
+					is_tail_shrinking: n + 2 - i
+				end
+			end
 		end
 
 feature {NONE} -- Constants

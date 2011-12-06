@@ -177,34 +177,13 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		local
 			l_global_session, l_session: SESSION_I
-			l_list: LIST [STRING]
-			l_value: ANY
 		do
 			initialize_type_field
 
 			l_global_session := a_service.retrieve (False)
 			l_session := a_service.retrieve (True)
 
-			if use_temporary_types then
-				l_value := l_session.value_or_default ({TEST_SESSION_CONSTANTS}.temporary_types,
-					{TEST_SESSION_CONSTANTS}.temporary_types_default)
-			else
-				l_value := l_session.value_or_default ({TEST_SESSION_CONSTANTS}.types,
-					{TEST_SESSION_CONSTANTS}.types_default)
-			end
-			if
-				attached {STRING} l_value as l_types
-			then
-				l_list := l_types.split (',')
-				from
-					l_list.start
-				until
-					l_list.after
-				loop
-					add_type (l_list.item_for_iteration)
-					l_list.forth
-				end
-			end
+			enumerate_types (agent add_type, use_temporary_types, l_session)
 
 			if
 				attached {NATURAL} l_global_session.value_or_default ({TEST_SESSION_CONSTANTS}.time_out,

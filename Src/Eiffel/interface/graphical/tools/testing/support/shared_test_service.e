@@ -421,8 +421,9 @@ feature {NONE} -- Helpers
 				loop
 						-- `i' is set at the start of a type name.
 						-- Set `j' at the end of it.
+						-- The type name indexes are in range `i |..| j - 1'.
 					from
-						j := i + 1
+						j := i
 					until
 						j > n or else (types [j] = ',' and then comma_level = 0)
 					loop
@@ -438,7 +439,17 @@ feature {NONE} -- Helpers
 						end
 						j := j + 1
 					end
-					receiver.call ([types.substring (i, j - 1)])
+					if j > i then
+							-- The type name is not empty.
+						debug ("to_implement")
+								-- Verify type name.
+								-- This includes 2 checks:
+								-- 1) the name is syntactically valid;
+								-- 2) the type is present in the system.
+							(create {REFACTORING_HELPER}).to_implement ("Check that the type name is valid.")
+						end
+						receiver.call ([types.substring (i, j - 1)])
+					end
 						-- Advance to the next element.
 					i := j + 1
 				variant

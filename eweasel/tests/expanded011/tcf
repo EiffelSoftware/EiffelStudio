@@ -1,0 +1,28 @@
+test_name expanded-result-not-gc-tracked
+test_description A routine with an expanded Result performing only one operation on it does not track the Result via the GC which could cause some memory corruption.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	exp.e $CLUSTER exp.e
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work NONE exec_output_w
+execute_result ok
+compare exec_output_w output
+
+compile_final
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output_f
+execute_result ok
+compare exec_output_f output
+
+test_end

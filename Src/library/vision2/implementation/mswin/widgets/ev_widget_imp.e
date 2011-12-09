@@ -1076,15 +1076,23 @@ feature {NONE} -- Implementation
 			-- Wm_mousewheel received.
 		local
 			l_ignore_default_processing: BOOLEAN
+			l_delta: INTEGER
 		do
 			if is_displayed then
 				if application_imp.pick_and_drop_source = Void then
+					l_delta := delta // wheel_delta
+						-- With newer mices, the `delta' might be not a multiple of `wheel_delta'
+						-- or worse, less than `wheel_delta', in which case we still send a +1 or -1
+						-- delta to the action sequence.
+					if l_delta = 0 and delta /= 0 then
+						l_delta := delta.sign
+					end
 					if application_imp.mouse_wheel_actions_internal /= Void then
-						application_imp.mouse_wheel_actions.call ([attached_interface, delta // 120])
+						application_imp.mouse_wheel_actions.call ([attached_interface, l_delta])
 						l_ignore_default_processing := True
 					end
 					if mouse_wheel_actions_internal /= Void then
-						mouse_wheel_actions.call ([delta // 120])
+						mouse_wheel_actions.call ([l_delta])
 						l_ignore_default_processing := True
 					end
 				else
@@ -1099,6 +1107,18 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+	wheel_delta: INTEGER = 120
+			-- Wheel rotation unit. It was set to 120. This is the threshold for action to be taken,
+			-- and one such action (for example, scrolling one increment) should occur for each delta.
+			--
+			-- The delta was set to 120 to allow Microsoft or other vendors to build finer-resolution
+			-- wheels in the future, including perhaps a freely-rotating wheel with no notches.
+			-- The expectation is that such a device would send more messages per rotation, but
+			-- with a smaller value in each message. To support this possibility, you should either
+			-- add the incoming delta values until WHEEL_DELTA is reached (so for a delta-rotation
+			-- you get the same response), or scroll partial lines in response to the more frequent
+			-- messages. You could also choose your scroll granularity and accumulate deltas until it is reached.
 
 feature {NONE} -- Implementation, focus event
 

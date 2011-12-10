@@ -1359,25 +1359,21 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define scoop_task_check_uncontrolled 13
 
 #ifdef WORKBENCH
-#define RTS_TCB(t,c,s,b,a,r) \
-	{                                                                       \
-		EIF_TYPED_VALUE xt,xc,xs,xf,xa,xr;                              \
-		xt.it_i1 = t;                                                   \
-		xt.type = SK_INT8;                                              \
-		xc.it_i4 = c;                                                   \
-		xc.type = SK_INT32;                                             \
-		xs.it_i4 = s;                                                   \
-		xs.type = SK_INT32;                                             \
-		xf.it_n4 = b;                                                   \
-		xf.type = SK_UINT32;                                            \
-		xa.it_p = a;                                                    \
-		xa.type = SK_POINTER;                                           \
-		xr.it_p = r;                                                    \
-		xr.type = SK_POINTER;                                           \
-		(egc_scoop_manager_task_callback)(scp_mnger,xt,xc,xs,xf,xa,xr); \
+#define RTS_TCB(t,c,s,a) \
+	{                                                                 \
+		EIF_TYPED_VALUE xt,xc,xs,xa;                              \
+		xt.it_i1 = t;                                             \
+		xt.type = SK_INT8;                                        \
+		xc.it_i4 = c;                                             \
+		xc.type = SK_INT32;                                       \
+		xs.it_i4 = s;                                             \
+		xs.type = SK_INT32;                                       \
+		xa.it_p = a;                                              \
+		xa.type = SK_POINTER;                                     \
+		(egc_scoop_manager_task_callback)(scp_mnger,xt,xc,xs,xa); \
 	}
 #else
-#define RTS_TCB(t,c,s,f,a,r) (egc_scoop_manager_task_callback)(scp_mnger,t,c,s,f,a,r); 
+#define RTS_TCB(t,c,s,a) (egc_scoop_manager_task_callback)(scp_mnger,t,c,s,a);
 #endif
 #define RTS_PID(o) HEADER(o)->ov_pid
 
@@ -1397,12 +1393,12 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTS_PA(o) - associate a fresh processor with an object o
  */
 #define RTS_PA(o) \
-	{                                                                      \
-		EIF_TYPED_VALUE pid;                                           \
-		pid.it_i4 = 0;                                                 \
-		pid.type = SK_INT32;                                           \
-		RTS_TCB(scoop_task_assign_processor,RTS_PID(o),0,0,&pid,NULL); \
-		RTS_PID(o) = (EIF_SCP_PID) pid.it_i4;                          \
+	{                                                               \
+		EIF_TYPED_VALUE pid;                                    \
+		pid.it_i4 = 0;                                          \
+		pid.type = SK_INT32;                                    \
+		RTS_TCB(scoop_task_assign_processor,RTS_PID(o),0,&pid); \
+		RTS_PID(o) = (EIF_SCP_PID) pid.it_i4;                   \
 	}
 
 /*
@@ -1415,11 +1411,11 @@ RT_LNK void eif_exit_eiffel_code(void);
  * The only valid sequence of calls is
  *      RTS_RC (RTS_RS)* [RTS_RW] RTS_RD
  */
-#define RTS_RC(p) RTS_TCB(scoop_task_signify_start_of_new_chain,RTS_PID(p),0,0,NULL,NULL)
-#define RTS_RD(p) RTS_TCB(scoop_task_signify_end_of_new_chain,RTS_PID(p),RTS_PID(p),0,NULL,NULL)
-#define RTS_RF(p) RTS_TCB(scoop_task_signify_end_of_new_chain,RTS_PID(p),-1,0,NULL,NULL)
-#define RTS_RS(p,s) RTS_TCB(scoop_task_add_supplier_to_request_chain,RTS_PID(p),RTS_PID(s),0,NULL,NULL)
-#define RTS_RW(p) RTS_TCB(scoop_task_wait_for_supplier_processor_locks,RTS_PID(p),0,0,NULL,NULL)
+#define RTS_RC(p) RTS_TCB(scoop_task_signify_start_of_new_chain,RTS_PID(p),0,NULL)
+#define RTS_RD(p) RTS_TCB(scoop_task_signify_end_of_new_chain,RTS_PID(p),RTS_PID(p),NULL)
+#define RTS_RF(p) RTS_TCB(scoop_task_signify_end_of_new_chain,RTS_PID(p),-1,NULL)
+#define RTS_RS(p,s) RTS_TCB(scoop_task_add_supplier_to_request_chain,RTS_PID(p),RTS_PID(s),NULL)
+#define RTS_RW(p) RTS_TCB(scoop_task_wait_for_supplier_processor_locks,RTS_PID(p),0,NULL)
 
 
 /*
@@ -1571,7 +1567,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 		}
 #endif /* WORKBENCH */
 
-#define RTS_WPR RTS_TCB(scoop_task_wait_for_processor_redundancy,0,0,0,NULL,NULL)
+#define RTS_WPR RTS_TCB(scoop_task_wait_for_processor_redundancy,0,0,NULL)
 
 #define RTS_SEMAPHORE_CLIENT_WAIT(semaddr) EIF_ENTER_C; eif_pthread_sem_wait(semaddr); EIF_EXIT_C; RTGC;
 #define RTS_SEMAPHORE_SUPPLIER_SIGNAL(semaddr) eif_pthread_sem_post(semaddr);

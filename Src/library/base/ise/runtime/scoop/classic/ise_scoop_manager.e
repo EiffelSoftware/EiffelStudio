@@ -17,7 +17,7 @@ create {NONE}
 
 feature -- C callback function
 
-	scoop_manager_task_callback (scoop_task: NATURAL_8; client_processor_id, supplier_processor_id: like processor_id_type; body_index: NATURAL_32; a_callback_data, a_reserved: POINTER)
+	scoop_manager_task_callback (scoop_task: NATURAL_8; client_processor_id, supplier_processor_id: like processor_id_type; a_callback_data: POINTER)
 			-- Entry point to ISE_SCOOP_MANAGER from RTS SCOOP macros.
 		do
 			inspect
@@ -25,7 +25,7 @@ feature -- C callback function
 			when check_uncontrolled_call_task_id then
 				set_boolean_return_value (a_callback_data, is_uncontrolled (client_processor_id, supplier_processor_id))
 			when add_call_task_id then
-				log_call_on_processor (client_processor_id, supplier_processor_id, body_index, a_callback_data)
+				log_call_on_processor (client_processor_id, supplier_processor_id, a_callback_data)
 			when signify_start_of_new_chain_task_id then
 				signify_start_of_request_chain (client_processor_id)
 			when signify_end_of_new_chain_task_id then
@@ -712,7 +712,7 @@ feature -- Command/Query Handling
 			end
 		end
 
-	log_call_on_processor (a_client_processor_id, a_supplier_processor_id: like processor_id_type; a_routine: like routine_type; a_call_data: like call_data)
+	log_call_on_processor (a_client_processor_id, a_supplier_processor_id: like processor_id_type; a_call_data: like call_data)
 			-- Log call on `a_suppler_processor_id' for `a_client_processor_id'
 		local
 			l_client_request_chain_meta_data, l_supplier_request_chain_meta_data, l_creation_request_chain_meta_data: detachable like new_request_chain_meta_data_entry
@@ -1564,7 +1564,6 @@ feature {NONE} -- Scoop Processor Meta Data
 	default_processor_attributes: ISE_SCOOP_PROCESSOR_ATTRIBUTES
 			-- Default scoop processor thread attributes.
 
-	routine_type: NATURAL_32 do end
 	call_data: POINTER do end
 	result_type: POINTER do end
 

@@ -55,7 +55,7 @@ rt_public EIF_BOOLEAN eif_is_uncontrolled (EIF_SCP_PID c, EIF_SCP_PID s)
 	EIF_TYPED_VALUE ou; 
 	ou.item.b = EIF_FALSE;
 	ou.type = SK_BOOL;
-	RTS_TCB(scoop_task_check_uncontrolled,c,s,0,&ou,NULL);
+	RTS_TCB(scoop_task_check_uncontrolled,c,s,&ou);
 	return EIF_TEST (ou.item.b);
 }
 
@@ -69,7 +69,7 @@ rt_public void eif_log_call (int s, int f, EIF_SCP_PID p, call_data * a)
 	CHECK("Target attached", t);
 	CBodyId(body_id,Routids(s)[f],Dtype(t));
 	a -> body_index = body_id;
-	RTS_TCB(scoop_task_add_call,p,RTS_PID(t),body_id,a,NULL);
+	RTS_TCB(scoop_task_add_call,p,RTS_PID(t),a);
 }
  
 rt_public void eif_log_callp (int s, int f, EIF_SCP_PID p, call_data * a)
@@ -80,7 +80,7 @@ rt_public void eif_log_callp (int s, int f, EIF_SCP_PID p, call_data * a)
 	CHECK("Target attached", t);
 	body_id = desc_tab[s][Dtype(t)][f].body_index;
 	a -> body_index = body_id;
-	RTS_TCB(scoop_task_add_call,p,RTS_PID(t),body_id,a,NULL);
+	RTS_TCB(scoop_task_add_call,p,RTS_PID(t),a);
 }
  
 rt_public void eif_try_call (call_data * a)
@@ -126,6 +126,8 @@ rt_public void eif_try_call (call_data * a)
 void eif_call_const (call_data * a)
 {
 	/* Constant value is hard-coded in the generated code: nothing to do here. */
+	/* Avoid C compiler error about unreferenced parameter. */
+	(void) a;
 }
 
 #endif /* WORKBENCH */

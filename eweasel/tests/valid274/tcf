@@ -1,0 +1,13 @@
+
+test_name	 duplicate-vfac1
+test_description A nonexistent assigner command in a redefinition of a feature with an assigner command causes the compiler to report two VFAC(1) errors instead of one
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	validity_error TEST2 VFAC(1) ECMA-VDRD(8)
+
+test_end

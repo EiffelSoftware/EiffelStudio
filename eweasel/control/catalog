@@ -1004,6 +1004,7 @@ test	static-type-id-crash-3			incr419 tcf fail incrementality anchored_types
 test	internal-search-crash			incr420 tcf fail incrementality skip
 test	change-application-options		incr421 tcf fail incrementality
 test	fix-vlec-infinite-recursion		incr422	tcf fail incrementality scoop expanded manual
+test	duplicate-vlec-after-resume		incr423	tcf fail incrementality expanded
 
 
 -- Melting

@@ -1,0 +1,19 @@
+
+test_name 	duplicate-vlec-after-resume
+test_description Resuming compilation after a VLEC error causes the compiler to report two VLEC errors
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	validity_error TEST2 VLEC
+
+resume_compile
+compile_result 	validity_error TEST2 VLEC
+
+resume_compile
+compile_result 	validity_error TEST2 VLEC
+
+test_end

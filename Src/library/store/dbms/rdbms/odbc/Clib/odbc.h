@@ -195,6 +195,27 @@ typedef ODBCSQLDA_TYPE(sqda_, ODBCSQLDA, IISQ_MAX_COLS);
 
 #define TXTLEN(x) 	(sqlstrlen((SQLTCHAR *) x))
 
+/*
+ * Specific constants for SQL Server (usually included in sqlncli.h)
+ * If SQL_SS_LENGTH_UNLIMITED is not defined, then none of the others are.
+ */
+#ifndef SQL_SS_LENGTH_UNLIMITED 
+/* SQL_SS_LENGTH_UNLIMITED is used to describe the max length of
+ * VARCHAR(max), VARBINARY(max), NVARCHAR(max), and XML columns
+ */
+#define SQL_SS_LENGTH_UNLIMITED             0
+/* Driver specific SQL data type defines.
+ * Microsoft has -150 thru -199 reserved for Microsoft SQL Server
+ * Native Client driver usage.
+ */
+#define SQL_SS_VARIANT                      (-150)
+#define SQL_SS_UDT                          (-151)
+#define SQL_SS_XML                          (-152)
+#define SQL_SS_TABLE                        (-153)
+#define SQL_SS_TIME2                        (-154)
+#define SQL_SS_TIMESTAMPOFFSET              (-155)
+#endif
+
 extern size_t sqlstrlen(const SQLTCHAR *str);
 
 extern void *c_odbc_make (int m_size);

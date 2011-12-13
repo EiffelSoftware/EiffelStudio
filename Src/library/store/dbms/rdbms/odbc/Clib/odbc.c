@@ -786,6 +786,7 @@ void setup_result_space (void *con, int no_desc)
 				case SQL_LONGVARBINARY:
 				case SQL_LONGVARCHAR:
 				case SQL_WLONGVARCHAR:
+				case SQL_SS_XML:
 					SetDbColLength(dap, i, DB_MAX_STRING_LEN);
 					break;
 			}
@@ -1006,7 +1007,11 @@ int odbc_next_row (void *con, int no_des)
 								/* We remove the null character from the previous call made to SQLGetData
 								 * because when data is truncated SQLGetData it always add the null character.*/
 							old_length -= l_terminator_size;
-							additional_length = l_con->odbc_indicator[no_des][i] - old_length + l_terminator_size;
+							if (l_con->odbc_indicator[no_des][i] == SQL_NO_TOTAL) {
+								additional_length = DB_MAX_STRING_LEN;
+							} else {
+								additional_length = l_con->odbc_indicator[no_des][i] - old_length + l_terminator_size;
+							}
 								/* Reuse old memory if possible */
 							ODBC_SAFE_ALLOC(l_buffer, (char *) realloc (l_buffer, old_length + additional_length));
 							SetDbColPtr(dap, i, l_buffer);
@@ -1774,6 +1779,7 @@ int odbc_conv_type (int typeCode)
 		case SQL_BINARY:
 		case SQL_VARBINARY:
 		case SQL_LONGVARBINARY:
+		case SQL_SS_XML:
 		case SQL_C_GUID:
 			return STRING_TYPE;
 		case SQL_WCHAR:
@@ -2325,6 +2331,7 @@ SQLSMALLINT odbc_c_type(SQLSMALLINT odbc_type) {
 		case SQL_CHAR:
 		case SQL_VARCHAR:
 		case SQL_LONGVARCHAR:
+		case SQL_SS_XML:
 			return SQL_C_CHAR;
 		case SQL_WCHAR:
 		case SQL_WVARCHAR:

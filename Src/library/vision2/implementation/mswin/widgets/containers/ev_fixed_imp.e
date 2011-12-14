@@ -381,13 +381,13 @@ feature {NONE} -- WEL Implementation
 				bk_brush := background_brush
 				check bk_brush /= Void end
 				paint_dc.fill_region (main_region, bk_brush)
-					-- Restore our index in the children.
-				temp_children.go_i_th (original_index)
 
 					-- Clean up GDI objects
 				bk_brush.delete
 			end
 
+				-- Restore our index in the children.
+			temp_children.go_i_th (original_index)
 			main_region.delete
 		end
 

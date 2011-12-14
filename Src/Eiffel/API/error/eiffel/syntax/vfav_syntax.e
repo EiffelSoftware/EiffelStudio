@@ -11,8 +11,6 @@ inherit
 	FEATURE_NAME_ERROR
 		undefine
 			subcode
-		redefine
-			trace
 		end
 
 	SHARED_WORKBENCH
@@ -44,40 +42,8 @@ feature -- Access
 	code: STRING = "VFAV"
 			-- Error code
 
-feature -- Output
-
-	trace (a_text_formatter: TEXT_FORMATTER)
-			-- Debug purpose
-		do
-			initialize_output
-			print_error_message (a_text_formatter)
-			a_text_formatter.add ("Class: ")
-			class_c.append_signature (a_text_formatter, False)
-			a_text_formatter.add_new_line
-			a_text_formatter.add ("Feature name: ")
-			a_text_formatter.add_class_syntax (Current, class_c, encoding_converter.utf8_to_utf32 (feature_name))
-			a_text_formatter.add_new_line
-			build_explain (a_text_formatter)
-			a_text_formatter.add ("File: ")
-			a_text_formatter.add (file_name)
-			a_text_formatter.add_new_line
-			a_text_formatter.add ("Line: ")
-			a_text_formatter.add_int (line)
-			a_text_formatter.add_new_line
-			a_text_formatter.add ("Column: ")
-			a_text_formatter.add_int (column)
-			if has_source_text then
-				display_line (a_text_formatter, previous_line_32)
-				display_syntax_line (a_text_formatter, current_line_32)
-				display_line (a_text_formatter, next_line_32)
-			else
-				a_text_formatter.add (" (source code is not available)")
-				a_text_formatter.add_new_line
-			end
-		end
-
-note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+; note
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

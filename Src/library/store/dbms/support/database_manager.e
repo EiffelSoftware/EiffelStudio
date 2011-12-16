@@ -12,6 +12,7 @@ feature -- Connection
 
 	set_connection_information (user_name, password, data_source: STRING)
 			-- Set information required to connect to the database.
+			-- It overrides the information set by `set_connection_string_information' when login.
 		require
 			not_void: user_name /= Void and password /= Void and data_source /= Void
 		local
@@ -25,6 +26,25 @@ feature -- Connection
 			else
 				has_error := True
 				error_message_32 := unexpected_error (Connection_info_name)
+			end
+		rescue
+			rescued := True
+			retry
+		end
+
+	set_connection_string_information (a_connection_string: STRING_8)
+			-- Set connection string required to connect to the database.
+			-- It overrides the information set by `set_connection_information' when login.
+		require
+			not_void: a_connection_string /= Void
+		local
+			rescued: BOOLEAN
+		do
+			if not rescued then
+				create database_appl.login_with_connection_string (a_connection_string)
+			else
+				has_error := True
+				error_message_32 := unexpected_error (Connection_string_info_name)
 			end
 		rescue
 			rescued := True
@@ -378,6 +398,9 @@ feature {NONE} -- Implementation
 
 	Connection_info_name: STRING = "set_connection_information"
 			-- `set_connection_information' feature name.
+
+	Connection_string_info_name: STRING = "set_connection_string_information"
+			-- `set_connection_string_information' feature name.
 
 	Establish_connection_name: STRING = "establish_connection"
 			-- `establish_connection' feature name.

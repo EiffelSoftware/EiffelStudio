@@ -21,7 +21,9 @@ inherit
 create
 	default_create,
 	login,
-	login_and_connect
+	login_and_connect,
+	login_with_connection_string,
+	login_with_connection_string_and_connect
 
 feature -- Initialization
 

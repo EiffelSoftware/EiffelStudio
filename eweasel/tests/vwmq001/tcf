@@ -1,0 +1,19 @@
+test_name	 validity-vwmq-string-conversion
+test_description Manifest string cannot be converted to arbitrary type.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	foo.e $CLUSTER foo.e
+
+copy_raw 	test1.e $CLUSTER test.e
+compile_melted
+compile_result 	validity_error TEST VWMQ
+
+copy_raw 	test2.e $CLUSTER test.e
+resume_compile
+compile_result 	validity_error TEST VQMC
+
+copy_raw 	test3.e $CLUSTER test.e
+resume_compile
+compile_result 	validity_error TEST VWMQ
+
+test_end

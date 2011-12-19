@@ -2262,6 +2262,8 @@ test	validity-vaol2-basic		vaol201	 tcf pass validity vaol
 
 test	validity-vuex2-in-multibranch	vuex201  tcf pass validity vuex
 
+test	validity-vwmq-string-conversion	vwmq001  tcf pass vaildity vwmq
+
 -- Systematic Lace validity tests
 
 test	lace-vd01-basic			vd01001	 tcf pass validity vd01

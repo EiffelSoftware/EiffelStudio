@@ -358,7 +358,7 @@ feature {AST_FACTORY} -- Error handling
 		end
 
 	report_invalid_type_for_integer_error (a_type: TYPE_AS; an_int: STRING)
-			-- Error when an incorrect type `a_type' is specified for a real constant `a_real'.
+			-- Error when an incorrect type `a_type' is specified for an integer constant `an_int'.
 		require
 			a_type_not_void: a_type /= Void
 			an_int_not_void: an_int /= Void

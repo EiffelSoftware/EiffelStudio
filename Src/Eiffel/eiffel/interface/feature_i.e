@@ -555,10 +555,7 @@ feature -- Comparison
 				else
 					assigner_command := written_class.feature_named (assigner_name)
 				end
-				if assigner_command = Void then
-						-- Assigner command is not found
-					error_handler.insert_error (create {VFAC1}.make (system.current_class, Current))
-				else
+				if attached assigner_command then
 					assigner_command := tbl.feature_of_rout_id (assigner_command.rout_id_set.first)
 					if other.written_in = system.current_class.class_id then
 						other_assigner_command := tbl.item_id (other.assigner_name_id)

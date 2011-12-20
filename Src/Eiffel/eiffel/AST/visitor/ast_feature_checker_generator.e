@@ -2292,29 +2292,53 @@ feature {NONE} -- Implementation
 		local
 			t: like last_type
 			l_is_string_32: BOOLEAN
-			l_value: STRING
+			l_value: detachable STRING
+			class_id: INTEGER
+			s8, s32: detachable CLASS_C
+			t8, t32: detachable TYPE_A
 		do
-				-- Constants are always of an attached type
 			if l_as.type = Void then
 					-- Default to STRING_8, if not specified in the code.
-				t := string_type
-				last_type := t
+				last_type := string_type
 			else
 				check_type (l_as.type)
 			end
-				-- |FIXME: Should report error if the type is not expected.
 			if last_type /= Void then
+					-- Constants are always of an attached type.
 				t := last_type.as_attached_in (context.current_class)
 				last_type := t
-				if is_byte_node_enabled then
-					l_is_string_32 := t.associated_class /= string_type.associated_class
-					if not l_is_string_32 then
+				class_id := t.associated_class.class_id
+				if attached system.string_8_class as c then
+					s8 := c.compiled_class
+				end
+				if attached system.string_32_class as c then
+					s32 := c.compiled_class
+				end
+				if attached s8 and then s8.class_id = class_id then
+						-- Constant is of type "STRING_8".
+					if is_byte_node_enabled then
 							-- For STRING_8 manifest string, we keep the written value for compatibility.
 						l_value := l_as.binary_value
-					else
+					end
+				elseif attached s32 and then s32.class_id = class_id then
+						-- Constant is of type "STRING_32".
+					if is_byte_node_enabled then
 							-- For STRING_32 manifest string, UTF-8 value is kept for later transformation.
 						l_value := l_as.value
+						l_is_string_32 := True
 					end
+				else
+						-- The type is unexpected.
+					if attached s8 then
+						t8 := s8.actual_type
+					end
+					if attached s32 then
+						t32 := s32.actual_type
+					end
+					error_handler.insert_error (create {VWMQ}.make (t, <<t8, t32>>, context, l_as))
+					last_type := Void
+				end
+				if attached l_value then
 					if l_as.is_once_string then
 						once_manifest_string_index := once_manifest_string_index + 1
 						create {ONCE_STRING_B} last_byte_node.make (l_value, l_is_string_32, once_manifest_string_index)

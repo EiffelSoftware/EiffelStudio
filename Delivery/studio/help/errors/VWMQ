@@ -1,0 +1,10 @@
+VWMQ, ECMA-367, 2nd edition, section 8.29.7
+
+    Manifest-Type Qualifier rule
+
+    It is valid for a Manifest_constant to be of the form
+    {T} v (with the optional Manifest_type qualifier
+    present) if and only if the type U of v (as determined
+    by cases 2 to 7 of the definition of the type of a
+    manifest constant) is one of CHARACTER, STRING, INTEGER
+    and REAL, and T is one of the sized variants of U.

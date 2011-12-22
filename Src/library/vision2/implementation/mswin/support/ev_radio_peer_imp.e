@@ -95,10 +95,10 @@ feature {EV_ANY_I} -- Implementation
 			internal_set_radio_group (a_list)
 			l_radio_group := radio_group
 			check l_radio_group /= Void end
-			if l_radio_group.is_empty then
+			l_radio_group.extend (Current)
+			if l_radio_group.count = 1 then
 				enable_select
 			end
-			l_radio_group.extend (Current)
 		ensure
 			assigned: radio_group = a_list
 			in_it: attached radio_group as l_group and then l_group.has (Current)

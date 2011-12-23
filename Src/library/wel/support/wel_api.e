@@ -511,6 +511,57 @@ feature -- Shell
 			"Shell_NotifyIcon((DWORD) $a_message, (PNOTIFYICONDATA) $a_notify_icon_data_ptr)"
 		end
 
+feature -- Printing
+
+	get_default_printer (a_name: POINTER; a_name_length: TYPED_POINTER [INTEGER]; a_error_code: TYPED_POINTER [INTEGER]): BOOLEAN
+			-- The GetDefaultPrinter function retrieves the printer name
+			-- of the default printer for the current user on the local computer.
+		external
+			"C inline use <windows.h>"
+		alias
+			"[
+				EIF_BOOLEAN result = EIF_TEST(GetDefaultPrinter((LPTSTR) $a_name, (LPDWORD) $a_name_length));
+				if (!result && $a_error_code) {
+					*(EIF_INTEGER *) $a_error_code = (EIF_INTEGER) GetLastError();
+				}
+				return result;
+			]"
+		end
+
+	open_printer (a_name: POINTER; a_printer_handle: TYPED_POINTER [POINTER]; a_defaults: POINTER): BOOLEAN
+			-- The OpenPrinter function retrieves a handle to the specified printer or print
+			-- server or other types of handles in the print subsystem.
+		external
+			"C inline use <windows.h>"
+		alias
+			"return EIF_TEST(OpenPrinter((LPTSTR) $a_name, (LPHANDLE) $a_printer_handle, (LPPRINTER_DEFAULTS) $a_defaults));"
+		end
+
+	get_printer (a_printer: POINTER; a_level: INTEGER; a_printer_info: POINTER; a_buf_size: INTEGER;
+				a_printer_info_length: TYPED_POINTER [INTEGER];
+				a_error_code: TYPED_POINTER [INTEGER]): BOOLEAN
+			-- The GetPrinter function retrieves information about a specified printer.
+		external
+			"C inline use <windows.h>"
+		alias
+			"[
+				EIF_BOOLEAN result = EIF_TEST(GetPrinter((HANDLE) $a_printer, (DWORD) $a_level,
+					(LPBYTE) $a_printer_info, (DWORD) $a_buf_size, (LPDWORD) $a_printer_info_length));
+				if (!result && $a_error_code) {
+					*(EIF_INTEGER *) $a_error_code = (EIF_INTEGER) GetLastError();
+				}
+				return result;
+			]"
+		end
+
+	close_printer (a_printer: POINTER): BOOLEAN
+			-- The ClosePrinter function closes the specified printer object.
+		external
+			"C inline use <windows.h>"
+		alias
+			"return EIF_TEST(ClosePrinter((HANDLE) $a_printer));"
+		end
+
 feature -- Character codes
 
 	vk_key_scan (a_char: CHARACTER_32): INTEGER_32

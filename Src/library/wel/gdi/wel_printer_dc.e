@@ -12,7 +12,25 @@ inherit
 	WEL_DC
 
 create
+	make_from_printer,
 	make_by_pointer
+
+feature {NONE} -- Initialization
+
+	make_from_printer (a_printer: WEL_PRINTER)
+			-- Associated DC for `a_printer'.
+		require
+			printer_exists: a_printer.exists
+		local
+			l_winspool_driver, l_printer_name, l_port_name: WEL_STRING
+		do
+			if attached a_printer.printer_info_2 as l_info then
+				create l_winspool_driver.make ("WINSPOOL")
+				l_printer_name := l_info.printer_name
+				l_port_name := l_info.port_name
+				item := cwin_create_dc (l_winspool_driver.item, l_printer_name.item, l_port_name.item, default_pointer)
+			end
+		end
 
 feature -- Basic operations
 
@@ -136,18 +154,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_PRINTER_DC
-
+end

@@ -17,12 +17,17 @@ indexing
 		]"
 */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifndef _GDIPLUS_H
 #define _GDIPLUS_H
 
 #include "wel.h"
 
 typedef void GpBitmap;
+typedef void GpMetafile;
 typedef void GpImage;
 typedef void GpGraphics;
 typedef void GpPen;
@@ -177,6 +182,69 @@ typedef float REAL;
 #define    PixelFormat32bppARGB       (10 | (32 << 8) | PixelFormatAlpha | PixelFormatGDI | PixelFormatCanonical)
 #define    PixelFormat32bppPARGB      (11 | (32 << 8) | PixelFormatAlpha | PixelFormatPAlpha | PixelFormatGDI)
 
+enum MetafileType
+{
+    MetafileTypeInvalid,            // Invalid metafile
+    MetafileTypeWmf,                // Standard WMF
+    MetafileTypeWmfPlaceable,       // Placeable WMF
+    MetafileTypeEmf,                // EMF (not EMF+)
+    MetafileTypeEmfPlusOnly,        // EMF+ without dual, down-level records
+    MetafileTypeEmfPlusDual         // EMF+ with dual, down-level records
+};
+
+typedef struct
+{
+    DWORD   iType;              // Record type EMR_HEADER
+    DWORD   nSize;              // Record size in bytes.  This may be greater
+                                // than the sizeof(ENHMETAHEADER).
+    RECTL   rclBounds;          // Inclusive-inclusive bounds in device units
+    RECTL   rclFrame;           // Inclusive-inclusive Picture Frame .01mm unit
+    DWORD   dSignature;         // Signature.  Must be ENHMETA_SIGNATURE.
+    DWORD   nVersion;           // Version number
+    DWORD   nBytes;             // Size of the metafile in bytes
+    DWORD   nRecords;           // Number of records in the metafile
+    WORD    nHandles;           // Number of handles in the handle table
+                                // Handle index zero is reserved.
+    WORD    sReserved;          // Reserved.  Must be zero.
+    DWORD   nDescription;       // Number of chars in the unicode desc string
+                                // This is 0 if there is no description string
+    DWORD   offDescription;     // Offset to the metafile description record.
+                                // This is 0 if there is no description string
+    DWORD   nPalEntries;        // Number of entries in the metafile palette.
+    SIZEL   szlDevice;          // Size of the reference device in pels
+    SIZEL   szlMillimeters;     // Size of the reference device in millimeters
+} ENHMETAHEADER3;
+
+#ifdef __cplusplus
+}
+
+class MetafileHeader
+{
+public:
+    MetafileType        Type;
+    UINT                Size;               // Size of the metafile (in bytes)
+    UINT                Version;            // EMF+, EMF, or WMF version
+    UINT                EmfPlusFlags;
+    REAL                DpiX;
+    REAL                DpiY;
+    INT                 X;                  // Bounds in device units
+    INT                 Y;
+    INT                 Width;
+    INT                 Height;
+    union
+    {
+        METAHEADER      WmfHeader;
+        ENHMETAHEADER3  EmfHeader;
+    };
+    INT                 EmfPlusHeaderSize;  // size of the EMF+ header in file
+    INT                 LogicalDpiX;        // Logical Dpi of reference Hdc
+    INT                 LogicalDpiY;        // usually valid only for EMF+
+};
+
+extern "C" {
+#endif
+
+
 #endif // !_GDIPLUS_H
 
 #ifndef _GDIPLUSCOLORMATRIX_H
@@ -266,3 +334,8 @@ typedef struct _ImageCodecInfo
     const BYTE* SigMask;
 } ImageCodecInfo;
 #endif
+
+#ifdef __cplusplus
+}
+#endif
+

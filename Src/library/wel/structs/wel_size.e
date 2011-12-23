@@ -17,7 +17,7 @@ inherit
 		end
 
 create
-	make, default_create
+	make, default_create, make_by_pointer
 
 feature {NONE} -- Initialization
 

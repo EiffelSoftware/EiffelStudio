@@ -113,10 +113,37 @@ feature -- Access
 			susbstring_not_void: Result /= Void
 		end
 
+	substring_8 (start_pos, end_pos: INTEGER): STRING_8
+			-- Copy of substring containing all characters at indices
+			-- between `start_pos' and `end_pos'. Truncated to STRING_8.
+		require
+			start_position_big_enough: start_pos >= 1
+			end_position_big_enough: start_pos <= end_pos + 1
+			end_position_not_too_big: end_pos <= (capacity // character_size)
+		local
+			l_count: INTEGER
+		do
+			l_count := end_pos - start_pos + 1
+			create Result.make (l_count)
+			Result.set_count (l_count)
+			read_substring_into (Result, start_pos, end_pos)
+		ensure
+			susbstring_not_void: Result /= Void
+		end
+
 	string: STRING_32
 			-- Eiffel string, ignoring `count'. Reads until a null character is being read.
 		do
-			Result := substring (1, c_strlen (item))
+			Result := substring (1, string_length (item))
+		ensure
+			string_not_void: Result /= Void
+		end
+
+	string_8: STRING_8
+			-- Eiffel string, ignoring `count'. Reads until a null character is being read.
+			-- Truncated to STRING_8.
+		do
+			Result := substring_8 (1, string_length (item))
 		ensure
 			string_not_void: Result /= Void
 		end
@@ -130,7 +157,7 @@ feature -- Access
 		do
 			from
 				j := 1
-				nb := c_strlen (item)
+				nb := string_length (item)
 				l_data := managed_data
 				l_carriage_return_code := ('%R').natural_32_code
 				create Result.make (nb)
@@ -513,15 +540,37 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	buffer_length (ptr: POINTER): INTEGER
-			-- Number of bytes to hold `ptr'.
-		external
-			"C macro signature (wchar_t *): EIF_INTEGER use <tchar.h>"
-		alias
-			"sizeof(TCHAR) * _tcslen"
+	buffer_length (a_ptr: POINTER): INTEGER
+			-- Size in bytes pointed by `a_ptr'.
+		require
+			exists: exists
+		local
+			l_length: NATURAL_64
+		do
+			l_length := c_strlen (a_ptr) * character_size.to_natural_64
+			if l_length <= {INTEGER_32}.max_value.to_natural_64 then
+				Result := l_length.to_integer_32
+			else
+				Result := {INTEGER_32}.max_value
+			end
 		end
 
-	c_strlen (ptr: POINTER): INTEGER
+	string_length (a_ptr: POINTER): INTEGER
+			-- Size in characters pointed by `a_ptr'.
+		require
+			exists: exists
+		local
+			l_length: NATURAL_64
+		do
+			l_length := c_strlen (a_ptr)
+			if l_length <= {INTEGER_32}.max_value.to_natural_64 then
+				Result := l_length.to_integer_32
+			else
+				Result := {INTEGER_32}.max_value
+			end
+		end
+
+	c_strlen (ptr: POINTER): NATURAL_64
 			-- Number of characters in `ptr'.
 		external
 			"C macro signature (wchar_t *): EIF_INTEGER use <tchar.h>"

@@ -61,24 +61,58 @@ feature -- Access
 	item: POINTER
 		-- pointer to the BSTR string
 
-feature -- Basic Oprtations
+	bytes_count: INTEGER
+			-- Length in bytes of Current.
+		require
+			exists: exists
+		do
+			Result := c_bytes_length (item)
+		end
+
+feature -- Basic Operations
 
 	string: STRING
-			-- return a STRING
+			-- Return content of Current stopping at the first NULL character
+			-- truncated to STRING_8.
+		require
+			exists: exists
 		do
 			Result := uni_string.string
 		end
 
+	full_string_8: STRING_8
+			-- Return all characters even null character truncated to STRING_8.
+		require
+			exists: exists
+		do
+			Result := (create {WEL_STRING}.make_by_pointer_and_count (
+				item, bytes_count)).substring_8 (1, bytes_count // character_size)
+		ensure
+			valid_count: Result.count = (bytes_count // character_size)
+		end
+
 	uni_string: UNI_STRING
 			-- returns a UNI_STRING
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer (item)
 		end
 
 	wel_string: WEL_STRING
 			-- returns a WEL_STRING
+		require
+			exists: exists
 		do
 			create Result.make_by_pointer (item)
+		end
+
+feature -- Status Report
+
+	exists: BOOLEAN
+			-- Does current exist?
+		do
+			Result := item /= default_pointer
 		end
 
 feature -- Destruction
@@ -99,6 +133,14 @@ feature {NONE} -- Implementation
 			"SysAllocString"
 		end
 
+	c_bytes_length (astring: POINTER): INTEGER
+			-- Length of BSTR `astring'.
+		external
+			"C signature (BSTR): EIF_INTEGER use %"OleAuto.h%""
+		alias
+			"SysStringByteLen"
+		end
+
 	c_free_bstr (abstr: POINTER)
 			-- frees a BSTR
 		external
@@ -107,6 +149,13 @@ feature {NONE} -- Implementation
 			"SysFreeString"
 		end
 
+	frozen character_size: INTEGER
+			-- Number of bytes occupied by a TCHAR.
+		external
+			"C macro use <tchar.h>"
+		alias
+			"sizeof(OLECHAR)"
+		end
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

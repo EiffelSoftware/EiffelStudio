@@ -2,7 +2,7 @@ class
 	TEST
 
 obsolete
-	{STRING_32} "Bad use of type qualifier in obsolete message of a class."
+	$OC "Bad use of type qualifier in obsolete message of a class."
 
 create
         make
@@ -16,7 +16,7 @@ feature
 
 	foo
 		obsolete
-			{STRING_32} "Bad use of type qualifier in obsolete message of a feature."
+			$OF "Bad use of type qualifier in obsolete message of a feature."
 		do
 		end
 

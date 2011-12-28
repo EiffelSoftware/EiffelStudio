@@ -2,10 +2,20 @@ test_name 	syntax-obsolete-typed-string
 test_description Obsolete message cannot contain a type qualifier.
 
 copy_sub 	Ace $TEST Ace
-copy_raw 	test.e $CLUSTER test.e
+
+define	OC	"{STRING_32}"
+define	OF	""
+copy_sub 	test.e $CLUSTER test.e
 
 compile_melted
-compile_result	syntax_error TEST 5; TEST 19
+compile_result	syntax_error TEST 5
+
+define	OC	""
+define	OF	"{STRING_32}"
+copy_sub 	test.e $CLUSTER test.e
+
+resume_compile
+compile_result	syntax_error TEST 19
 
 test_end
 

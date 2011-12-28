@@ -1,0 +1,11 @@
+test_name 	syntax-obsolete-typed-string
+test_description Obsolete message cannot contain a type qualifier.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	syntax_error TEST 5; TEST 19
+
+test_end
+

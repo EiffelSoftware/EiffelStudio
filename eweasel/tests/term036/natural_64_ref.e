@@ -75,8 +75,8 @@ feature -- Access
 			Result := item.to_character
 		end
 
-	Min_value: NATURAL_64 is {NATURAL_64} 0
-	Max_value: NATURAL_64 is {NATURAL_64} 18446744073709551615
+	Min_value: NATURAL_64 is 0
+	Max_value: NATURAL_64 is 18446744073709551615
 			-- Minimum and Maximum value hold in `item'.
 
 feature -- Comparison
@@ -505,7 +505,7 @@ indexing
 			]"
 
 	status: "[
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2011 University of Southern California and contributors.
 			For ISE customers the original versions are an ISE product
 			covered by the ISE Eiffel license and support agreements.
 			]"
@@ -518,11 +518,10 @@ indexing
 			]"
 
 	source: "[
-			Interactive Software Engineering Inc.
-			ISE Building
-			360 Storke Road, Goleta, CA 93117 USA
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
 			Telephone 805-685-1006, Fax 805-685-6869
-			Electronic mail <info@eiffel.com>
+			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 			]"
 

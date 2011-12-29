@@ -110,7 +110,7 @@ create
 %type <ARRAY_AS>			Manifest_array
 %type <ASSIGN_AS>			Assignment
 %type <ASSIGNER_CALL_AS>	Assigner_call
-%type <ATOMIC_AS>			Index_value Manifest_constant Expression_constant
+%type <ATOMIC_AS>			Index_value Manifest_constant Expression_constant Manifest_value
 %type <BINARY_AS>			Qualified_binary_expression
 %type <BIT_CONST_AS>		Bit_constant
 %type <BODY_AS>				Declaration_body
@@ -941,7 +941,7 @@ Assigner_mark_opt: -- Empty
 			}
 	;
 
-Constant_attribute: Manifest_constant
+Constant_attribute: Manifest_value
 			{
 				setup_binary_manifest_string ($1)
 				$$ := ast_factory.new_constant_as ($1) 
@@ -3169,6 +3169,26 @@ Identifier_as_lower: TE_ID
 			}
 	;
 
+-- Constant value without any type qualifier.
+Manifest_value: Boolean_constant
+			{ $$ := $1 }
+	|	TE_CHAR
+			{ $$ := $1 }
+	|	Signed_integer
+			{ $$ := $1 }
+	|	Nosigned_integer
+			{ $$ := $1 }
+	|	Signed_real
+			{ $$ := $1 }
+	|	Nosigned_real
+			{ $$ := $1 }
+	|	Bit_constant
+			{ $$ := $1 }
+	|	Default_manifest_string
+			{ $$ := $1 }
+	;
+
+-- Constant with optional type qualifier.
 Manifest_constant: Boolean_constant
 			{ $$ := $1 }
 	|	Character_constant

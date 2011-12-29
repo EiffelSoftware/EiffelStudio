@@ -10,10 +10,10 @@ compile_result 	validity_error TEST VWMQ
 
 copy_raw 	test2.e $CLUSTER test.e
 resume_compile
-compile_result 	validity_error TEST VQMC
+compile_result 	syntax_error TEST 16
 
 copy_raw 	test3.e $CLUSTER test.e
 resume_compile
-compile_result 	validity_error TEST VWMQ
+compile_result 	syntax_error TEST 16
 
 test_end

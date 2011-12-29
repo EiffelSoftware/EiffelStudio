@@ -135,10 +135,9 @@ feature -- Characters
 
 feature -- Strings
 
-	str32_1: STRING_32 = {STRING_32}"测试"
-	str32_2: STRING_32 = {STRING_32}"%/27979/%/35797/"
+	str32_1: STRING_32 = "测试"
+	str32_2: STRING_32 = "%/27979/%/35797/"
 	str32_3: STRING_32 =
-		{STRING_32}
 		"[
 			测试
 		]"
@@ -151,10 +150,9 @@ feature -- Strings
 		]"
 
 		-- Conversion
-	str8_4: STRING = {STRING_32}"测试"
-	str8_5: STRING = {STRING_32}"%/27979/%/35797/"
+	str8_4: STRING = "测试"
+	str8_5: STRING = "%/27979/%/35797/"
 	str8_6: STRING =
-		{STRING_32}
 		"[
 			测试
 		]"

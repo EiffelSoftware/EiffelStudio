@@ -374,7 +374,7 @@ feature {NONE} -- Status report
 	index: INTEGER
 			-- Internal counter
 
-	Null_string: STRING_32 = {STRING_32}"NULL"
+	Null_string: STRING_32 = "NULL"
 			-- SQL null value constant
 
 	buffer: STRING_32

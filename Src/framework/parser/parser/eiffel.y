@@ -597,7 +597,7 @@ Class_mark: TE_CLASS
 
 Obsolete: -- Empty
 			-- { $$ := Void }
-	|	TE_OBSOLETE Manifest_string
+	|	TE_OBSOLETE Default_manifest_string
 			{
 				$$ := ast_factory.new_keyword_string_pair ($1, $2)
 			}

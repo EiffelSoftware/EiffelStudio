@@ -136,10 +136,10 @@ feature -- Access: Constants
 	max_count: INTEGER = 0x0000FFFF
 			-- Maximum value for `location_count'
 
-	line_mask: NATURAL_32 = {NATURAL_32} 0x007FFFFF
+	line_mask: NATURAL_32 = 0x007FFFFF
 			-- Mask to get line information
 
-	column_mask: NATURAL_32 = {NATURAL_32} 0xFF800000
+	column_mask: NATURAL_32 = 0xFF800000
 			-- Mask to get column information
 
 	column_shift: INTEGER = 23
@@ -164,7 +164,7 @@ feature {LOCATION_AS} -- Internal position
 			-- Space efficient encoding of `location_count'.
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

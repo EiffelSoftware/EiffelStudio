@@ -56,9 +56,6 @@ feature -- Command
 			l_result: INTEGER_32
 		do
 			item := c_gdip_load_image_from_stream (gdi_plus_handle, a_stream.item, $l_result)
-			if l_result /= {WEL_GDIP_STATUS}.ok then
-				(create {EXCEPTIONS}).raise ("Could not load image from stream.")
-			end
 		end
 
 	load_image_from_raw_file (a_file: RAW_FILE)
@@ -90,6 +87,7 @@ feature -- Command
 			-- Save data to a file.
 		require
 			not_void: a_file_name /= Void
+			exists: exists
 		local
 			l_format: WEL_GDIP_IMAGE_ENCODER
 		do
@@ -102,6 +100,7 @@ feature -- Command
 			-- Save data to a file with `a_parameters' options
 		require
 			not_void: a_file_name /= Void
+			exists: exists
 		local
 			l_format: WEL_GDIP_IMAGE_ENCODER
 		do
@@ -115,6 +114,7 @@ feature -- Command
 		require
 			not_void: a_file_name /= Void
 			not_void: a_format /= Void
+			exists: exists
 		do
 			save_image_to_file_with_encoder_and_parameters (a_file_name, a_format, Void)
 		end
@@ -124,6 +124,7 @@ feature -- Command
 		require
 			not_void: a_file_name /= Void
 			not_void: a_format /= Void
+			exists: exists
 		local
 			l_result: INTEGER
 			l_wel_string: WEL_STRING
@@ -144,6 +145,7 @@ feature -- Command
 			-- Save data to a file.
 		require
 			not_void: a_stream /= Void
+			exists: exists
 		local
 			l_format: WEL_GDIP_IMAGE_ENCODER
 		do
@@ -156,6 +158,7 @@ feature -- Command
 			-- Save data to a stream with `a_parameters' options
 		require
 			not_void: a_stream /= Void
+			exists: exists
 		local
 			l_format: WEL_GDIP_IMAGE_ENCODER
 		do
@@ -169,6 +172,7 @@ feature -- Command
 		require
 			not_void: a_stream /= Void
 			not_void: a_format /= Void
+			exists: exists
 		do
 			save_image_to_stream_with_encoder_and_parameters (a_stream, a_format, Void)
 		end
@@ -178,6 +182,7 @@ feature -- Command
 		require
 			not_void: a_stream /= Void
 			not_void: a_format /= Void
+			exists: exists
 		local
 			l_result: INTEGER
 			l_parameters: POINTER
@@ -218,6 +223,7 @@ feature -- Command
 		require
 			not_void: a_file /= Void
 			valid: a_file.is_open_write
+			exists: exists
 		local
 			l_memory: MANAGED_POINTER
 		do
@@ -231,6 +237,7 @@ feature -- Command
 		require
 			valid: a_rectangle /= Void and then (a_rectangle.width > 0 and a_rectangle.height > 0)
 			valid: (create {WEL_GDIP_PIXEL_FORMAT}).is_valid_format (a_format)
+			exists: exists
 		local
 			l_graphics: WEL_GDIP_GRAPHICS
 			l_src_rect, l_dest_rect: WEL_RECT
@@ -249,6 +256,8 @@ feature -- Query
 
 	width: INTEGER
 			-- Width
+		require
+			exists: exists
 		local
 			l_result_status: INTEGER
 		do
@@ -258,6 +267,8 @@ feature -- Query
 
 	height: INTEGER
 			-- Height
+		require
+			exists: exists
 		local
 			l_result_status: INTEGER
 		do
@@ -267,12 +278,16 @@ feature -- Query
 
 	raw_format: detachable WEL_GUID
 			-- Image format guid.
+		require
+			exists: exists
 		do
 			Result := raw_format_orignal
 		end
 
 	pixel_format: INTEGER
 			-- Pixel format in memory
+		require
+			exists: exists
 		local
 			l_result_status: INTEGER
 		do
@@ -284,6 +299,8 @@ feature -- Query
 
 	get_thumbnail_image (a_width, a_height: INTEGER): WEL_GDIP_IMAGE
 			-- Gets a thumbnail image from this Image object
+		require
+			exists: exists
 		local
 			l_result_pointer: POINTER
 			l_result_status: INTEGER
@@ -361,9 +378,6 @@ feature {WEL_GDIP_IMAGE} -- Implementation
 			destroy_item
 			create l_wel_string.make (a_file_name)
 			item := c_gdip_load_image_from_file (gdi_plus_handle, l_wel_string.item, $l_result)
-			if l_result /= {WEL_GDIP_STATUS}.ok then
-				(create {EXCEPTIONS}).raise ("Could not load image file.")
-			end
 		end
 
 	find_format: WEL_GDIP_IMAGE_ENCODER

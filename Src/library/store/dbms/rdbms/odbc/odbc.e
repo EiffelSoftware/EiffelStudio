@@ -75,7 +75,7 @@ feature -- For DATABASE_CHANGE
 			c_temp: SQL_STRING
 		do
 			create c_temp.make (tmp_strg)
-			Result := odbc_hide_qualifier (c_temp.item)
+			Result := odbc_hide_qualifier (c_temp.item, c_temp.count)
 		end
 
 	pre_immediate (descriptor, i: INTEGER)
@@ -140,7 +140,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 		do
 			create c_temp.make (sql)
 				-- This routine manipulates buffer information but does not allocate memory.
-			l_ptr := odbc_hide_qualifier (c_temp.item)
+			l_ptr := odbc_hide_qualifier (c_temp.item, c_temp.count)
 
 			tmp_str := c_temp.string
 			tmp_str.left_adjust
@@ -149,7 +149,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 					if uhandle.execution_type.immediate_execution then
 						odbc_pre_immediate (con_context_pointer, descriptor, uht.count)
 					else
-						odbc_init_order (con_context_pointer, descriptor, c_temp.item, uht.count)
+						odbc_init_order (con_context_pointer, descriptor, c_temp.item, c_temp.count, uht.count)
 					end
 					is_error_updated := False
 					if uht.count > 0 then
@@ -564,9 +564,9 @@ feature -- For DATABASE_REPOSITORY
 			c_tmp: SQL_STRING
 		do
 			create c_tmp.make (rep_qualifier)
-			odbc_set_qualifier (c_tmp.item)
+			odbc_set_qualifier (c_tmp.item, c_tmp.count)
 			create c_tmp.make (rep_owner)
-			odbc_set_owner (c_tmp.item)
+			odbc_set_owner (c_tmp.item, c_tmp.count)
 			create Result.make (1)
 			Result.append ("SQLColumns (")
 			Result.append (repository_name)
@@ -593,7 +593,10 @@ feature -- External
 		local
 			l_s: SQL_STRING
 		do
-			create l_s.make_by_pointer (odbc_get_error_message (con_context_pointer))
+			create l_s.make_by_pointer_and_count (
+				odbc_get_error_message (con_context_pointer),
+				odbc_get_error_message_count (con_context_pointer) * {SQL_STRING}.character_size
+				)
 			Result := l_s.string
 		end
 
@@ -612,7 +615,10 @@ feature -- External
 		local
 			l_s: SQL_STRING
 		do
-			create l_s.make_by_pointer (odbc_get_warn_message (con_context_pointer))
+			create l_s.make_by_pointer_and_count (
+				odbc_get_warn_message (con_context_pointer),
+				odbc_get_warn_message_count (con_context_pointer) * {SQL_STRING}.character_size
+				)
 			Result := l_s.string
 		end
 
@@ -626,7 +632,7 @@ feature -- External
 			c_temp: SQL_STRING
 		do
 			create c_temp.make (command)
-			odbc_init_order (con_context_pointer, no_descriptor, c_temp.item, 0)
+			odbc_init_order (con_context_pointer, no_descriptor, c_temp.item, c_temp.count, 0)
 			is_error_updated := False
 		end
 
@@ -665,7 +671,7 @@ feature -- External
 			c_temp: SQL_STRING
 		do
 			create c_temp.make (command)
-			odbc_exec_immediate (con_context_pointer, no_descriptor, c_temp.item)
+			odbc_exec_immediate (con_context_pointer, no_descriptor, c_temp.item, c_temp.count)
 			is_error_updated := False
 		end
 
@@ -938,7 +944,7 @@ feature -- External
 			create c_temp1.make (user_name)
 			create c_temp2.make (user_passwd)
 			create c_temp3.make (data_source)
-			odbc_connect (con_context_pointer, c_temp1.item, c_temp2.item, c_temp3.item)
+			odbc_connect (con_context_pointer, c_temp1.item, c_temp1.count, c_temp2.item, c_temp2.count, c_temp3.item, c_temp3.count)
 			is_error_updated := False
 --			initialize_date_type_values
 		end
@@ -949,7 +955,7 @@ feature -- External
 			l_string: SQL_STRING
 		do
 			create l_string.make (a_connect_string)
-			odbc_connect_by_connection_string (con_context_pointer, l_string.item)
+			odbc_connect_by_connection_string (con_context_pointer, l_string.item, l_string.count)
 			is_error_updated := False
 		end
 
@@ -1024,6 +1030,12 @@ feature {NONE} -- External features
 			"C use %"odbc.h%""
 		end
 
+	odbc_get_error_message_count (a_con: POINTER): INTEGER
+			-- C buffer which contains the error_message.
+		external
+			"C use %"odbc.h%""
+		end
+
 	odbc_get_error_code (a_con: POINTER): INTEGER
 			-- C buffer which contains the error code.
 		external
@@ -1035,12 +1047,18 @@ feature {NONE} -- External features
 			"C use %"odbc.h%""
 		end
 
+	odbc_get_warn_message_count (a_con: POINTER): INTEGER
+			-- C buffer which contains the error_message.
+		external
+			"C use %"odbc.h%""
+		end
+
 	odbc_new_descriptor (a_con: POINTER): INTEGER
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_init_order (a_con: POINTER; no_descriptor: INTEGER; command: POINTER; argnum: INTEGER)
+	odbc_init_order (a_con: POINTER; no_descriptor: INTEGER; command: POINTER; char_count: INTEGER; argnum: INTEGER)
 		external
 			"C use %"odbc.h%""
 		end
@@ -1065,7 +1083,7 @@ feature {NONE} -- External features
 			"C use %"odbc.h%""
 		end
 
-	odbc_exec_immediate (a_con: POINTER; no_descriptor: INTEGER; command: POINTER)
+	odbc_exec_immediate (a_con: POINTER; no_descriptor: INTEGER; command: POINTER; char_count: INTEGER)
 		external
 			"C use %"odbc.h%""
 		end
@@ -1313,12 +1331,12 @@ feature {NONE} -- External features
 			"C use %"odbc.h%""
 		end
 
-	odbc_connect (a_con, user_name, user_passwd, dbName: POINTER)
+	odbc_connect (a_con, user_name: POINTER; name_count:INTEGER; user_passwd: POINTER; passwd_count: INTEGER; dbName: POINTER; dbname_count: INTEGER)
 		external
 			"C blocking use %"odbc.h%""
 		end
 
-	odbc_connect_by_connection_string (a_con, a_string: POINTER)
+	odbc_connect_by_connection_string (a_con, a_string: POINTER; str_count: INTEGER)
 		external
 			"C blocking use %"odbc.h%""
 		end
@@ -1338,7 +1356,7 @@ feature {NONE} -- External features
 			"C use %"odbc.h%""
 		end
 
-	odbc_hide_qualifier (command: POINTER): POINTER
+	odbc_hide_qualifier (command: POINTER; char_count: INTEGER): POINTER
 		external
 			"C use %"odbc.h%""
 		end
@@ -1643,16 +1661,6 @@ feature {NONE} -- External features
 			"sizeof(SQL_NUMERIC_STRUCT)"
 		end
 
-	odbc_str_from_str (ptr: POINTER): POINTER
-		external
-			"C use %"odbc.h%""
-		end
-
-	odbc_str_len (val: POINTER): INTEGER
-		external
-		    "C use %"odbc.h%""
-		end
-
 	obj_is_integer (obj: ANY): BOOLEAN
 		require
 			argument_not_null: obj /= Void
@@ -1747,12 +1755,12 @@ feature {NONE} -- External features
 --			Result := test /= Void
 --		end
 
-	odbc_set_qualifier (qlf: POINTER)
+	odbc_set_qualifier (qlf: POINTER; char_count: INTEGER)
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_set_owner (owner: POINTER)
+	odbc_set_owner (owner: POINTER; char_count: INTEGER)
 		external
 			"C use %"odbc.h%""
 		end

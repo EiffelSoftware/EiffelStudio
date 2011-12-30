@@ -124,8 +124,6 @@ extern "C" {
 #define GetDbColPtr(daptr,i) ((((daptr)->sqlvar)[i]).sqldata)
 #define SetDbColPtr(daptr,i,ptr) ((((daptr)->sqlvar)[i]).sqldata = (ptr))
 
-
-
 /*
 **  Description:
 **      The SQLDA is a structure for holding data descriptions, used by
@@ -223,8 +221,8 @@ extern int odbc_new_descriptor (void *con);
 extern int odbc_available_descriptor (void *con);
 extern int odbc_max_descriptor ();
 extern void odbc_pre_immediate(void *con, int no_desc, int argNum);
-extern void odbc_exec_immediate (void *con, int no_desc, SQLTCHAR *order);
-extern void odbc_init_order (void *con, int no_desc, SQLTCHAR *order, int argNum);
+extern void odbc_exec_immediate (void *con, int no_desc, SQLTCHAR *order, int order_count);
+extern void odbc_init_order (void *con, int no_desc, SQLTCHAR *order, int order_count, int argNum);
 extern void odbc_start_order (void *con, int no_desc);
 extern void odbc_terminate_order (void *con, int no_des);
 extern void odbc_close_cursor (void *con, int no_des);
@@ -241,22 +239,21 @@ extern void odbc_set_parameter(void *con, int no_desc, int seri, int dir, int ei
 extern void odbc_set_col_flag(void *con, int no_desc);
 extern void odbc_set_tab_flag(void *con, int no_desc);
 extern void odbc_set_proc_flag(void *con, int no_desc);
-extern SQLTCHAR *odbc_hide_qualifier(SQLTCHAR *buf);
-extern void odbc_unhide_qualifier(SQLTCHAR *buf);
+extern SQLTCHAR *odbc_hide_qualifier(SQLTCHAR *buf, int char_count);
+extern void odbc_unhide_qualifier(SQLTCHAR *buf, int char_count);
 extern SQLTCHAR *odbc_identifier_quoter();
 extern SQLTCHAR *odbc_qualifier_seperator();
-extern void odbc_set_qualifier(SQLTCHAR *qfy);
-extern void odbc_set_owner(SQLTCHAR *owner);
+extern void odbc_set_qualifier(SQLTCHAR *qfy, int len);
+extern void odbc_set_owner(SQLTCHAR *owner, int len);
 extern void odbc_unset_catalog_flag(void *con, int no_desc);
-extern SQLTCHAR *odbc_str_from_str(SQLTCHAR *ptr);
-extern void odbc_connect (void *con, SQLTCHAR *name, SQLTCHAR *passwd, SQLTCHAR *dsn);
-extern void odbc_connect_by_connection_string (void *con, SQLTCHAR *a_string);
+extern void odbc_connect (void *con, SQLTCHAR *name, int name_count, SQLTCHAR *passwd, int passwd_count, SQLTCHAR *dsn, int dsn_count);
+extern void odbc_connect_by_connection_string (void *con, SQLTCHAR *a_string, int str_count);
 extern void odbc_disconnect (void *con);
 extern void odbc_rollback (void *con);
 extern void odbc_commit (void *con);
 extern void odbc_begin (void *con);
 extern int odbc_trancount (void *con);
-extern void cut_tail_blank(SQLTCHAR *buf);
+extern size_t cut_tail_blank(SQLTCHAR *buf, size_t char_count);
 extern int odbc_get_count (void *con, int no_des);
 extern size_t odbc_put_col_name (void *con, int no_des, int index, SQLTCHAR *result);
 extern SQLULEN odbc_get_col_len (void *con, int no_des, int index);
@@ -279,9 +276,10 @@ extern int odbc_get_hour(void *con);
 extern int odbc_get_min(void *con);
 extern int odbc_get_sec(void *con);
 extern int odbc_get_decimal (void *con, int no_des, int index, void *p);
-extern size_t odbc_str_len(SQLTCHAR *val);
 extern int odbc_get_error_code (void *con);
 extern SQLTCHAR * odbc_get_error_message (void *con);
+extern size_t odbc_get_error_message_count (void *con);
+extern size_t odbc_get_warn_message_count (void *con);
 extern SQLTCHAR * odbc_get_warn_message (void *con);
 extern void odbc_clear_error (void *);
 extern SQLSMALLINT odbc_c_type(SQLSMALLINT odbc_type);

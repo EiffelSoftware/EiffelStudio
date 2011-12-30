@@ -2,7 +2,7 @@
 	description: "Thread management routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2011, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -1127,7 +1127,7 @@ rt_private void load_stack_in_gc (struct stack_list *st_list, void *st)
 {
 	int count = st_list->count + 1;
 	st_list->count = count;
-	if (st_list->capacity < st_list->count) {
+	if (st_list->capacity < count) {
 		void **stack;
 		stack = (void **) eif_realloc (st_list->threads.data,
 			count * sizeof(struct stack **));

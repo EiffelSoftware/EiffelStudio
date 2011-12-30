@@ -57,6 +57,7 @@ feature -- Command
 			-- Flushes all pending graphics operations
 		require
 			valid: (create {WEL_GDIP_FLUSH_INTENTION}).is_valid (a_intention)
+			exists: exists
 		local
 			l_result: INTEGER
 		do
@@ -69,6 +70,7 @@ feature -- Command
 		require
 			not_void: a_pen /= Void
 			a_pen_exists: a_pen.exists
+			exists: exists
 		local
 			l_result: INTEGER
 		do
@@ -81,6 +83,7 @@ feature -- Command
 		require
 			not_void: a_pen /= Void
 			a_pen_exists: a_pen.exists
+			exists: exists
 		local
 			l_result: INTEGER
 		do
@@ -93,6 +96,7 @@ feature -- Command
 		require
 			not_void: a_pen /= Void
 			a_pen_exists: a_pen.exists
+			exists: exists
 		local
 			l_result: INTEGER
 		do
@@ -105,6 +109,7 @@ feature -- Command
 		require
 			not_void: a_brush /= Void
 			a_pen_exists: a_brush.exists
+			exists: exists
 		local
 			l_result: INTEGER
 		do
@@ -117,6 +122,7 @@ feature -- Command
 		require
 			not_void: a_image /= Void
 			a_image_exists: a_image.exists
+			exists: exists
 		local
 			l_dest_rect, l_src_rect: WEL_RECT
 		do
@@ -138,6 +144,7 @@ feature -- Command
 			a_dest_rect_exists: a_dest_rect.exists
 			not_void: a_src_rect /= Void
 			a_src_rect_exists: a_src_rect.exists
+			exists: exists
 		do
 			draw_image_with_src_rect_dest_rect_unit_attributes (a_image, a_dest_rect, a_src_rect, {WEL_GDIP_UNIT}.unitpixel, Void)
 		end
@@ -152,6 +159,7 @@ feature -- Command
 			not_void: a_src_rect /= Void
 			a_src_rect_exists: a_src_rect.exists
 			valid: (create {WEL_GDIP_UNIT}).is_valid (a_unit)
+			exists: exists
 		local
 			l_result: INTEGER
 			l_null_pointer: POINTER
@@ -164,14 +172,14 @@ feature -- Command
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	draw_string (a_string: READABLE_STRING_GENERAL; a_length: INTEGER; a_font: WEL_GDIP_FONT; a_x, a_y: REAL)
+	draw_string (a_string: READABLE_STRING_GENERAL; a_font: WEL_GDIP_FONT; a_x, a_y: REAL)
 			-- Draw `a_length' characters of `a_string' with `a_font' at `a_x',`a_y' position.
 		require
 			not_void: a_string /= Void
-			valid: a_length >= 0
 			not_void: a_font /= Void
 			a_font_exists: a_font.exists
 			valid: a_x >= 0 and a_y >= 0
+			exists: exists
 		local
 			l_rect_f: WEL_GDIP_RECT_F
 			l_format: WEL_GDIP_STRING_FORMAT
@@ -186,7 +194,7 @@ feature -- Command
 			l_wel_color_ref := l_system_color.system_color_btntext
 			create l_color.make_from_argb (255, l_wel_color_ref.red, l_wel_color_ref.green, l_wel_color_ref.blue)
 			create l_brush.make_solid (l_color)
-			draw_string_with_length_font_rect_format_brush (a_string, a_length, a_font, l_rect_f, l_format, l_brush)
+			draw_string_with_length_font_rect_format_brush (a_string, a_string.count, a_font, l_rect_f, l_format, l_brush)
 		end
 
 	draw_string_with_length_font_rect_format_brush (a_string: READABLE_STRING_GENERAL; a_length: INTEGER; a_font: WEL_GDIP_FONT; a_rect_f: WEL_GDIP_RECT_F; a_format: WEL_GDIP_STRING_FORMAT; a_brush: WEL_GDIP_BRUSH)
@@ -201,6 +209,7 @@ feature -- Command
 			a_format_exists: a_format.exists
 			a_brush_not_void: a_brush /= Void
 			a_brush_exists: a_brush.exists
+			exists: exists
 		local
 			l_result: INTEGER
 			l_wel_string: WEL_STRING
@@ -229,6 +238,7 @@ feature -- Command
 			a_brush_not_void: a_brush /= Void
 			a_brush_exists: a_brush.exists
 			a_rect_not_void: a_rect /= Void
+			exists: exists
 		local
 			l_result: INTEGER
 	 	do
@@ -239,6 +249,8 @@ feature -- Command
 	 rotate_transform (a_angle: REAL)
 	 		-- Applies the specified rotation to the transformation matrix of this Graphics.
 	 		-- `a_angle': Angle of rotation in degrees.
+	 	require
+			exists: exists
 		local
 			l_result: INTEGER
 	 	do
@@ -248,6 +260,8 @@ feature -- Command
 
 	translate_transform (a_dx, a_dy: REAL)
 			-- Updates Current's world transformation matrix with the product of itself and a translation matrix (`a_dx', `a_dy').
+		require
+			exists: exists
 		local
 			l_result: INTEGER
 		do
@@ -259,6 +273,7 @@ feature -- Command
 			-- Updates Current's world transformation matrix with the product of itself and a scaling matrix (`a_sx', `a_sy').
 		require
 			valid: a_sx > 0 and a_sy > 0
+			exists: exists
 		local
 			l_result: INTEGER
 		do
@@ -270,6 +285,7 @@ feature -- Command
 			-- Clears the entire drawing surface and fills it with `a_color'
 		require
 			not_void: a_color /= Void
+			exists: exists
 		local
 			l_result: INTEGER
 		do
@@ -281,6 +297,7 @@ feature -- Command
 			-- Sets the clipping region of Current to `a_rect'
 		require
 			not_void: a_rect /= Void
+			exists: exists
 		local
 			l_result: INTEGER
 		do
@@ -292,6 +309,7 @@ feature -- Command
 			-- Updates the clipping region of Current to a region that is the combination of itself and the clipping region of `a_graphics'.
 		require
 			not_void: a_src_graphics /= Void and then a_src_graphics.exists
+			exists: exists
 		local
 			l_result: INTEGER
 		do
@@ -306,6 +324,7 @@ feature -- Command
 		require
 			a_path_not_void: a_path /= Void
 			a_path_exists: a_path.exists
+			exists: exists
 		local
 			l_result: INTEGER
 		do
@@ -315,6 +334,8 @@ feature -- Command
 
 	reset_clip
 			-- Resets the clip region of Current to an infinite region.
+		require
+			exists: exists
 		local
 			l_result: INTEGER
 		do
@@ -326,6 +347,8 @@ feature -- Query
 
 	dc: WEL_MEMORY_DC
 			-- Get a gdi DC.
+		require
+			exists: exists
 		local
 			l_pointer: POINTER
 			l_result: INTEGER
@@ -343,6 +366,7 @@ feature -- Query
 		require
 			a_dc_not_void: a_dc /= Void
 			a_dc_exists: a_dc.exists
+			exists: exists
 		local
 			l_result: INTEGER
 		do

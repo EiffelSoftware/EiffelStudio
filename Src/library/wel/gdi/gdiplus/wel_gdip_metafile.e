@@ -29,9 +29,6 @@ feature -- Access
 		do
 			create Result.make
 			c_gdip_get_metafile_header (gdi_plus_handle, item, Result.item, $l_result)
-			if l_result /= {WEL_GDIP_STATUS}.ok then
-				(create {EXCEPTIONS}).raise ("Could not load metafile from stream.")
-			end
 		end
 
 feature -- Command
@@ -42,9 +39,6 @@ feature -- Command
 			l_result: INTEGER_32
 		do
 			item := c_gdip_create_metafile_from_stream (gdi_plus_handle, a_stream.item, $l_result)
-			if l_result /= {WEL_GDIP_STATUS}.ok then
-				(create {EXCEPTIONS}).raise ("Could not load metafile from stream.")
-			end
 		end
 
 feature {NONE} -- Externals
@@ -110,4 +104,14 @@ feature {NONE} -- Externals
 			}
 			]"
 		end
+note
+	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

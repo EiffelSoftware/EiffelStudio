@@ -166,6 +166,7 @@ feature -- Command
 		require
 			a_icon_not_void: a_icon /= Void
 			a_icon_exists: a_icon.exists
+			exists: exists
 		do
 			destroy_item
 			make_from_icon (a_icon)
@@ -207,6 +208,7 @@ feature -- Command
 			not_void: a_rect /= Void
 			is_vaild: (create {WEL_GDIP_IMAGE_LOCK_MODE}).is_valid (a_lock_bitmode_flag)
 			is_valid: (create {WEL_GDIP_PIXEL_FORMAT}).is_valid (a_pixel_format)
+			exists: exists
 		local
 			l_result: INTEGER
 		do
@@ -221,6 +223,7 @@ feature -- Command
 			-- Unlock `a_lock_data' which is from Current datas.
 		require
 			not_void: a_locked_data /= Void
+			exists: exists
 		local
 			l_result: INTEGER
 		do
@@ -230,6 +233,8 @@ feature -- Command
 
 	set_pixel (a_x, a_y, argb_value: NATURAL_32)
 			-- Set ARGB pixel value at `a_x', `a_y' to `argb_value'.
+		require
+			exists: exists
 		local
 			l_result: INTEGER
 		do
@@ -239,6 +244,8 @@ feature -- Command
 
 	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32
 			-- Return ARGB pixel value at `a_x', `a_y'.
+		require
+			exists: exists
 		local
 			l_result: INTEGER
 		do
@@ -249,6 +256,8 @@ feature -- Command
 
 	sub_gdip_bitmap (a_x, a_y, a_width, a_height: NATURAL_32): WEL_GDIP_BITMAP
 			-- Return a new GDI+ bitmap that represents a sub-pixmap of `Current'.
+		require
+			exists: exists
 		local
 			l_result: INTEGER
 			l_bitmap_result: POINTER
@@ -260,6 +269,8 @@ feature -- Command
 
 	new_bitmap: WEL_BITMAP
 			-- Create a 32bits DIB prmulitplied ARGB bitmap from current data.
+		require
+			exists: exists
 		local
 			l_header_info: WEL_BITMAP_INFO_HEADER
 			l_result_pointer: POINTER

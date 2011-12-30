@@ -420,7 +420,7 @@ feature -- Command
 
 				create l_font.make (l_font_family, a_font.height_in_points)
 
-				l_graphics.draw_string (a_text, a_text.count, l_font, a_point.x, a_point.y)
+				l_graphics.draw_string (a_text, l_font, a_point.x, a_point.y)
 
 				l_font.dispose
 				l_font_family.dispose

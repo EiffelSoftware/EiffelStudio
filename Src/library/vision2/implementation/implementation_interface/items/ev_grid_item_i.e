@@ -232,7 +232,7 @@ feature -- Status setting
 			l_row := row
 			l_column := column
 
-			if l_parent_i.is_single_item_selection_enabled then
+			if l_parent_i.is_single_item_selection_enabled and then not l_selected then
 				l_parent_i.remove_selection
 			end
 			enable_select_internal

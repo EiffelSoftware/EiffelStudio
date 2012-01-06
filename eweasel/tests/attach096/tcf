@@ -1,0 +1,10 @@
+test_name 	 missing-vevi-error-with-agent
+test_description If an agent on an unqualified call is created during creation procedure, the compiler may not report uninitialized variable at the point where the agent is created.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VEVI
+
+test_end

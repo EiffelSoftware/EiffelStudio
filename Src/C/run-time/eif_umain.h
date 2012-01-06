@@ -34,6 +34,13 @@
 		]"
 */
 
+#ifndef _eif_umain_h_
+#define _eif_umain_h_
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -44,3 +51,4 @@ extern void umain(int argc, char **argv, char **envp);			/* User's initializatio
 }
 #endif
 
+#endif

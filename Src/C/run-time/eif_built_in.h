@@ -36,6 +36,9 @@
 
 #ifndef _eif_built_in_h
 #define _eif_built_in_h
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include "eif_eiffel.h"
 #include "eif_misc.h"

@@ -34,8 +34,11 @@
 		]"
 */
 
-#ifndef _eif_timer_h_
-#define _eif_timer_h_
+#ifndef _rt_timer_h_
+#define _rt_timer_h_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include "eif_portable.h"
 #include <sys/types.h>

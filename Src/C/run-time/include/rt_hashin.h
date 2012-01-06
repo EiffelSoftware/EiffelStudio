@@ -36,6 +36,9 @@
 
 #ifndef _hashin_h
 #define _hashin_h
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include "eif_portable.h"
 

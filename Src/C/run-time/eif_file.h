@@ -36,6 +36,9 @@
 
 #ifndef _eif_file_h_
 #define _eif_file_h_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include <stdio.h>		/* %%zs moved from file.c */
 #include <limits.h>							/* For PATH_MAX */

@@ -36,6 +36,9 @@
 
 #ifndef _rt_macros_h_
 #define _rt_macros_h_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include "eif_macros.h"
 #include "eif_types.h"

@@ -34,6 +34,12 @@
 		]"
 */
 
+#ifndef _rt_run_idr_h_
+#define _rt_run_idr_h_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
 #include "idrs.h"
 
 #ifdef __cplusplus
@@ -86,3 +92,4 @@ extern int idr_read_line(char *bu, size_t max_size);
 }
 #endif
 
+#endif

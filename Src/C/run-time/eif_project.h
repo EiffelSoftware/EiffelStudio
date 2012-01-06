@@ -39,6 +39,9 @@
 
 #ifndef _EIF_PROJECT_H_
 #define _EIF_PROJECT_H_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include "eif_portable.h"
 #include "eif_struct.h"

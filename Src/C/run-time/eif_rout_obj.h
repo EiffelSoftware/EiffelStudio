@@ -36,6 +36,9 @@
 
 #ifndef _eif_rout_obj
 #define _eif_rout_obj
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #ifdef __cplusplus
 extern "C" {

@@ -36,6 +36,9 @@
 
 #ifndef _eif_out_h_
 #define _eif_out_h_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include "eif_portable.h"
 #include "eif_cecil.h"		/* %%zs added for EIF_OBJECT definition line 26... */

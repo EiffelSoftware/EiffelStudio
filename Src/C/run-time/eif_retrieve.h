@@ -36,6 +36,9 @@
 
 #ifndef _eif_retrieve_h_
 #define _eif_retrieve_h_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include <stdio.h>
 #include "eif_globals.h"

@@ -1,0 +1,18 @@
+test_name	correct-mismatch-memory-corruption
+test_description When there are a lot of mismatches, the internal SPECIAL used to store the data is properly resized but when using the new SPECIAL semantics where count /= capacity, `count' is never updated therefore the GC does not mark new added items after resizing.
+
+copy_sub 	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	company_matrix.e $CLUSTER company_matrix.e
+copy_raw	matrix.e $CLUSTER matrix.e
+copy_raw	research_company.e $CLUSTER research_company.e
+copy_raw	rose_data.e $CLUSTER rose_data.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

@@ -36,6 +36,9 @@
 
 #ifndef _eif_posix_threads_h_
 #define _eif_posix_threads_h_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #ifdef EIF_THREADS
 

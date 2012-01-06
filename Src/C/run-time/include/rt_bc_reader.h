@@ -39,6 +39,9 @@ doc:<file name="rt_bc_reader.h" version="$Id$" summary="Low level routines to re
 
 #ifndef _rt_bc_reader_h_
 #define _rt_bc_reader_h_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include "eif_portable.h"
 #include <string.h>

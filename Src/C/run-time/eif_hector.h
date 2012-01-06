@@ -36,6 +36,9 @@
 
 #ifndef _eif_hector_h_
 #define _eif_hector_h_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include "eif_cecil.h"
 #include "eif_garcol.h"		/* For struct stack */

@@ -36,6 +36,9 @@
 
 #ifndef _except_h
 #define _except_h
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include "eif_globals.h"
 #include "eif_portable.h"

@@ -36,6 +36,9 @@
 
 #ifndef _rt_store_h_
 #define _rt_store_h_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include "eif_store.h"
 

@@ -36,6 +36,9 @@
 
 #ifndef _rt_option_h_
 #define _rt_option_h_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include "eif_option.h"
 #include "rt_threads.h"

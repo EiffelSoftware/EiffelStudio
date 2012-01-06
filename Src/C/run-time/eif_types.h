@@ -40,6 +40,9 @@
 
 #ifndef _eif_types_h_
 #define _eif_types_h_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include "eif_portable.h"
 #include "eif_constants.h"

@@ -36,6 +36,9 @@
 
 #ifndef _portable_h_
 #define _portable_h_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include "eif_config.h"
 

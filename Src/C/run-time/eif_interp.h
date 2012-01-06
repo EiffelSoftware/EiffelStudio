@@ -36,6 +36,9 @@
 
 #ifndef _eif_interp_h_
 #define _eif_interp_h_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include "eif_globals.h"
 #include <stdio.h>		/* %%zs added: for FILE definition line 91 */

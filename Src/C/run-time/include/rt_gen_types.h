@@ -36,6 +36,9 @@
 
 #ifndef _rt_gen_types_h_
 #define _rt_gen_types_h_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include "eif_eiffel.h"
 

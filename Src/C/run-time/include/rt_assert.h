@@ -43,6 +43,9 @@
 
 #ifndef _rt_assert_h_
 #define _rt_assert_h_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include "eif_config.h"
 #include "eif_confmagic.h"

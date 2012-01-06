@@ -36,6 +36,9 @@
 
 #ifndef _rt_constants_h_
 #define _rt_constants_h_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include <signal.h>
 

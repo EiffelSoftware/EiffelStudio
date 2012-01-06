@@ -36,6 +36,9 @@
 
 #ifndef _eif_gen_conf
 #define _eif_gen_conf
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #ifdef __cplusplus
 extern "C" {

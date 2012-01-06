@@ -36,6 +36,9 @@
 
 #ifndef _eif_setup_h_
 #define _eif_setup_h_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include "eif_except.h"		/* Exception vectors definition */
 #include "eif_sig.h"		/* initsig() */

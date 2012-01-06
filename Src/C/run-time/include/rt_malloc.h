@@ -36,6 +36,9 @@
 
 #ifndef _rt_malloc_h_
 #define _rt_malloc_h_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include "eif_malloc.h"
 #include "rt_types.h"

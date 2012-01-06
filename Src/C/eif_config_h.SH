@@ -52,6 +52,9 @@ sed <<!GROK!THIS! >eif_config.h -e 's!^#undef\(.*\)/\*!/\*#define \1 \*/ /\*!' -
 
 #ifndef _config_h_
 #define _config_h_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 /* ABORTSIG:
  *	This symbol holds the signal number (symbol) used by the abort() call. To

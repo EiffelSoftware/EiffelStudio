@@ -42,6 +42,9 @@
 
 #ifndef _confmagic_h_
 #define _confmagic_h_
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 /* Specific setup for VXWORKS port */
 #ifdef VXWORKS

@@ -36,6 +36,9 @@
 
 #ifndef _rt_file_h
 #define _rt_file_h
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #include "eif_file.h"
 

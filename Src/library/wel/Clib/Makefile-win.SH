@@ -17,12 +17,12 @@ LINK = $link32
 DLL_FLAGS = $dll_flags
 DLL_LIBS = $dll_libs
 OBJECTS = disptchr.$obj enumfont.$obj enum_child_windows.$obj estream.$obj msgboxpa.$obj \
-		diskspace.$obj drawstate.$obj dynload.$obj choose_folder.$obj capture.$obj user_validation.$obj
+		drawstate.$obj dynload.$obj choose_folder.$obj capture.$obj user_validation.$obj
 MT_OBJECTS = MTdisptchr.$obj MTenumfont.$obj MTenum_child_windows.$obj MTestream.$obj MTmsgboxpa.$obj \
-		MTdiskspace.$obj MTdrawstate.$obj MTdynload.$obj MTchoose_folder.$obj MTcapture.$obj \
+		MTdrawstate.$obj MTdynload.$obj MTchoose_folder.$obj MTcapture.$obj \
 		MTwel_thr_init.$obj MTuser_validation.$obj
 IL_OBJECTS = ILdisptchr.$obj ILenumfont.$obj ILenum_child_windows.$obj ILestream.$obj ILmsgboxpa.$obj \
-		ILdiskspace.$obj ILdrawstate.$obj ILdynload.$obj ILchoose_folder.$obj ILcapture.$obj ILuser_validation.$obj
+		ILdrawstate.$obj ILdynload.$obj ILchoose_folder.$obj ILcapture.$obj ILuser_validation.$obj
 
 
 .c.$obj:
@@ -76,9 +76,6 @@ MTestream.$obj: estream.c
 MTmsgboxpa.$obj: msgboxpa.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
-MTdiskspace.$obj: diskspace.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
-
 MTdrawstate.$obj: drawstate.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
@@ -115,9 +112,6 @@ ILestream.$obj: estream.c
 	$(CC) $(JILCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 ILmsgboxpa.$obj: msgboxpa.c
-	$(CC) $(JILCFLAGS) $(OUTPUT_CMD)$@ -c $?
-
-ILdiskspace.$obj: diskspace.c
 	$(CC) $(JILCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 ILdrawstate.$obj: drawstate.c

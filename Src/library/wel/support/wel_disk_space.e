@@ -9,15 +9,26 @@ note
 class
 	WEL_DISK_SPACE
 
-inherit
-	WEL_DISK_SPACE_CALLBACK
-
 create
 	default_create
 
+feature -- Update
+
+	query_local_drive (drive_letter: CHARACTER)
+			-- Query the disk space available on the local drice
+			-- designated by the letter `drive_letter'.
+		local
+			ufree_bytes, total_bytes, free_bytes: NATURAL_64
+		do
+			last_query_success := cwin_query_disk_space (drive_letter, $ufree_bytes, $total_bytes, $free_bytes)
+				-- For the time being, we ignore `ufree_bytes' the amount of free bytes available to current user.
+			last_free_space_in_bytes := free_bytes
+			last_total_space_in_bytes := total_bytes
+		end
+
 feature -- Access
 
-	last_free_space: INTEGER
+	last_free_space: NATURAL_64
 			-- Free space available on the last requested drive via the
 			-- query `query_disk_space'. This value is updated by
 			-- the feature `query_disk_space'.
@@ -26,12 +37,12 @@ feature -- Access
 			-- Use `last_free_space_in_bytes' to get an accurate result
 			-- in bytes.
 		require
-			last_query_successful: last_query_success = True
+			last_query_successful: last_query_success
 		do
-			Result := internal_last_free_space
+			Result := last_free_space_in_bytes |>> 20
 		end
 
-	last_total_space: INTEGER
+	last_total_space: NATURAL_64
 			-- Total space available on the last requested drive via the
 			-- query `query_disk_space'. This value is updated by
 			-- the feature `query_disk_space'.
@@ -40,112 +51,98 @@ feature -- Access
 			-- Use `last_total_space_in_bytes' to get an accurate result
 			-- in bytes.
 		require
-			last_query_successful: last_query_success = True
+			last_query_successful: last_query_success
 		do
-			Result := internal_last_total_space
+			Result := last_total_space_in_bytes |>> 20
 		end
 
-	last_free_space_in_bytes: INTEGER
+	last_free_space_in_bytes: NATURAL_64
 			-- Free space available on the last requested drive via the
 			-- query `query_disk_space'. This value is updated by
 			-- the feature `query_disk_space'.
-			--
-			-- This value is only valid if the free disk space
-			-- is less than 2 Gb. Otherwise, it cannot be represented
-			-- by an INTEGER which is a signed 32 bits value.
 		require
-			result_meaningfull: last_free_space < 2047
-			last_query_successful: last_query_success = True
-		do
-			Result := internal_last_free_space_in_bytes
+			last_query_successful: last_query_success
+		attribute
 		end
 
-	last_total_space_in_bytes: INTEGER
+	last_total_space_in_bytes: NATURAL_64
 			-- Total space available on the last requested drive via the
 			-- query `query_disk_space'. This value is updated by
 			-- the feature `query_disk_space'.
-			--
-			-- This value is only valid if the free disk space
-			-- is less than 2 Gb. Otherwise, it cannot be represented
-			-- by an INTEGER which is a signed 32 bits value.
 		require
-			result_meaningfull: last_total_space < 2047
-			last_query_successful: last_query_success = True
-		do
-			Result := internal_last_total_space_in_bytes
+			last_query_successful: last_query_success
+		attribute
 		end
 
 	last_free_space_in_string: STRING
 			-- Compute the string representing the value of the free space
 			-- as computed on the last call to `query_disk_space'.
-			-- Example of possible returned strings: "600 Mb", "30.1 Mb", "1.33 Mb",
-			-- "320 Kb", "52.7 Kb", "75 bytes", "30 Tb", ...
+			-- Example of possible returned strings: "600 MB", "30.1 MB", "1.33 MB",
+			-- "320 KB", "52.7 KB", "75 B", "30 TB", ...
 		require
 			last_query_successful: last_query_success = True
 		do
-			Result := convert_space_into_string (
-							internal_last_free_space, 
-							internal_last_free_space_in_bytes
-							)
+			Result := convert_space_into_string (last_free_space, last_free_space_in_bytes)
 		end
 
 	last_total_space_in_string: STRING
 			-- Compute the string representing the value of the total space
 			-- as computed on the last call to `query_disk_space'.
-			-- Example of possible returned strings: "600 Mb", "30.1 Mb", "1.33 Mb",
-			-- "320 Kb", "52.7 Kb", "75 bytes", "30 Tb", ...
+			-- Example of possible returned strings: "600 MB", "30.1 MB", "1.33 MB",
+			-- "320 KB", "52.7 KB", "75 B", "30 TB", ...
 		require
 			last_query_successful: last_query_success = True
 		do
-			Result := convert_space_into_string (
-							internal_last_total_space, 
-							internal_last_total_space_in_bytes
-							)
+			Result := convert_space_into_string (last_total_space, last_total_space_in_bytes)
 		end
+
+feature -- Status report
+
+	last_query_success: BOOLEAN
+			-- Was the last call to `query_disk_space' successful?
 
 feature {NONE} -- Implementation
 
-	convert_space_into_string (mbyte_value, byte_value: INTEGER): STRING
+	convert_space_into_string (mbyte_value, byte_value: NATURAL_64): STRING
 			-- Convert the value corresponding to `mbyte_value' and
 			-- `byte_value' into a string. `mbyte_value' is the value
 			-- represented in megabytes, and `byte_value' is the sane
 			-- value represented in bytes.
 		do
 			if mbyte_value > 1048576 then
-				-- Result exprimed in TeraBytes
-				Result := format_space_string(mbyte_value, 1048576, "Tb")
+				-- Result exprimed in terabytes
+				Result := format_space_string (mbyte_value, 1048576, "TB")
 
 			elseif mbyte_value > 1024 then
-				-- Result exprimed in GigaBytes
-				Result := format_space_string(mbyte_value, 1024, "Gb")
+				-- Result exprimed in gigabytes
+				Result := format_space_string (mbyte_value, 1024, "GB")
 
 			elseif byte_value > 1048576 then
-				-- Result exprimed in MegaBytes
-				Result := format_space_string(byte_value, 1048576, "Mb")
+				-- Result exprimed in megabytes
+				Result := format_space_string (byte_value, 1048576, "MB")
 
 			elseif byte_value > 1024 then
-				-- Result exprimed in KiloBytes
-				Result := format_space_string(byte_value, 1024, "Kb")
+				-- Result exprimed in kilobytes
+				Result := format_space_string (byte_value, 1024, "KB")
 
 			else
-				-- Result exprimed in Bytes
-				Result := format_space_string(byte_value, 1, "bytes")
+				-- Result exprimed in bytes
+				Result := format_space_string (byte_value, 1, "B")
 			end
 		end
 
-	format_space_string(value: INTEGER; divisor: INTEGER; 
-						extension: STRING): STRING
+	format_space_string(value: NATURAL_64; divisor: NATURAL_64; extension: STRING): STRING
 			-- Format the string corresponding to `value'.
 		require
-			valid_divisor: (divisor = 1) or 
-						   (divisor = 1024) or 
+			valid_divisor: (divisor = 1) or
+						   (divisor = 1024) or
 						   (divisor = 1048576)
-			valid_extension: extension /= Void and then 
+			valid_extension: extension /= Void and then
 							 not extension.is_empty
 		local
-			integer_part: INTEGER
-			fractional_part_first_digit: INTEGER
-			fractional_part_second_digit: INTEGER
+			integer_part: NATURAL_64
+			fractional_part_first_digit: NATURAL_64
+			fractional_part_second_digit: NATURAL_64
 		do
 			create Result.make(8) -- Average maximum size
 			integer_part := value // divisor
@@ -180,58 +177,42 @@ feature {NONE} -- Implementation
 			Result_not_empty: not Result.is_empty
 		end
 
-feature {NONE} -- Internal values
-
-	internal_last_free_space: INTEGER
-			-- Free space available on the last requested drive via the
-			-- query `query_disk_space'. This value is updated by
-			-- the feature `query_disk_space'.
-
-	internal_last_total_space: INTEGER
-			-- Total space available on the last requested drive via the
-			-- query `query_disk_space'. This value is updated by
-			-- the feature `query_disk_space'.
-
-	internal_last_free_space_in_bytes: INTEGER
-			-- Free space available on the last requested drive via the
-			-- query `query_disk_space'. This value is updated by
-			-- the feature `query_disk_space'.
-
-
-	internal_last_total_space_in_bytes: INTEGER
-			-- Total space available on the last requested drive via the
-			-- query `query_disk_space'. This value is updated by
-			-- the feature `query_disk_space'.
-
 feature {NONE} -- Externals
 
-	eif_set_disk_space_attributes_callback(
-		-- Callback function called from the C code.
-			free_space: INTEGER;
-			total_space: INTEGER;
-			free_space_in_bytes: INTEGER;
-			total_space_in_bytes: INTEGER
-			)
-		do
-			internal_last_free_space := free_space
-			internal_last_total_space := total_space
-			internal_last_free_space_in_bytes := free_space_in_bytes
-			internal_last_total_space_in_bytes := total_space_in_bytes
+	cwin_query_disk_space (drive_letter: CHARACTER; ufree_bytes, total_bytes, free_bytes: TYPED_POINTER [NATURAL_64]): BOOLEAN
+		external
+			"C inline use %"wel_disk_space.h%""
+		alias
+			"[
+			{
+				TCHAR szRootPath[4]; /* Path to root directory of requested drive. */
+				ULARGE_INTEGER u, t, f;
+				EIF_BOOLEAN Result;
+
+				szRootPath[0] = (TCHAR) $drive_letter;
+				szRootPath[1] = ':';
+				szRootPath[2] = '\\';
+				szRootPath[3] = (char) 0;
+
+				Result = EIF_TEST(GetDiskFreeSpaceEx (szRootPath, &u, &t, &f));
+				*(EIF_NATURAL_64 *) $ufree_bytes = u.QuadPart;
+				*(EIF_NATURAL_64 *) $total_bytes = t.QuadPart;
+				*(EIF_NATURAL_64 *) $free_bytes = f.QuadPart;
+
+				return Result;
+			}
+			]"
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_DISK_SPACE
-
+end

@@ -18,7 +18,6 @@ inherit
 			default_ex_style,
 			interface,
 			dispose,
-			class_name,
 			destroy
 		end
 
@@ -49,12 +48,6 @@ feature {NONE} -- Intialization
 		end
 
 feature {NONE}  -- Redefine
-
-	class_name: STRING_32
-			-- <Precursor>
-		do
-			Result := "SD_FEEDBACK_INDICATOR_IMP"
-		end
 
 	default_ex_style: INTEGER
 			-- <Precursor>
@@ -383,7 +376,7 @@ feature {NONE} -- Externals
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

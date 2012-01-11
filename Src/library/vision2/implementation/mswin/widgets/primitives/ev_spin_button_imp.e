@@ -122,7 +122,6 @@ inherit
 			on_wm_dropfiles
 		redefine
 			on_wm_vscroll,
-			class_name,
 			on_erase_background,
 			set_focus,
 			default_style,
@@ -807,12 +806,6 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- external feature.
 		do
 			Result := internal_text_field.next_dlgtabitem (hdlg, hctl, previous)
-		end
-
-	class_name: STRING_32
-			-- Window class name to create
-		do
-			Result := generator
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

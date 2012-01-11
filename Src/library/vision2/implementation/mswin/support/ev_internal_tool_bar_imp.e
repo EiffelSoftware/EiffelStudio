@@ -14,7 +14,6 @@ inherit
 			default_style,
 			on_control_id_command,
 			on_erase_background,
-			class_name,
 			on_notify,
 			on_size
 		end
@@ -125,12 +124,6 @@ feature {NONE} -- WEL Implementation
 			toolbar.on_size (size_type, a_width, a_height)
 		end
 
-	class_name: STRING_32
-			-- Window class name to create
-		once
-			Result := generator
-		end
-
 	default_style: INTEGER
 			-- We redefine the default style.
 		do
@@ -148,16 +141,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_INTERNAL_TOOL_BAR_IMP
-
-
-
-
-
-
-
-
-

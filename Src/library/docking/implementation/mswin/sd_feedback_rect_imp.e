@@ -10,7 +10,6 @@ class
 inherit
 	EV_POPUP_WINDOW_IMP
 		redefine
-			class_name,
 			default_ex_style,
 			interface
 		end
@@ -31,12 +30,6 @@ create
 
 feature {NONE}  -- Implementation
 
-	class_name: STRING_32
-			-- <Precursor>
-		do
-			Result := "SD_FEEDBACK_RECT_IMP"
-		end
-
 	default_ex_style: INTEGER
 			-- <Precursor>
 		do
@@ -50,7 +43,7 @@ feature {EV_ANY, EV_ANY_I}  -- Implementation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

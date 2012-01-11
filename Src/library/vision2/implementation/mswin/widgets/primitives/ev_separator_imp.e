@@ -52,7 +52,7 @@ feature -- Initialization
 			disable_tabable_to
 		end
 
-feature {NONE} -- WEL Implementation
+feature -- Access
 
 	background_brush: detachable WEL_BRUSH
 			-- Current window background color used to refresh the window when
@@ -63,6 +63,8 @@ feature {NONE} -- WEL Implementation
 				create Result.make_solid (wel_background_color)
 			end
 		end
+
+feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER
 			-- Default style of `Current'.

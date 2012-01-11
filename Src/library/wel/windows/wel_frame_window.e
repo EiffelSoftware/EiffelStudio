@@ -128,8 +128,8 @@ feature -- Standard window class values
 	class_name: STRING_32
 			-- Window class name used to create the window class.
 			-- Can be redefined to return a user-defined class name.
-		once
-			Result := "WELFrameWindowClass"
+		do
+			Result := generator
 		end
 
 	class_window_procedure: POINTER

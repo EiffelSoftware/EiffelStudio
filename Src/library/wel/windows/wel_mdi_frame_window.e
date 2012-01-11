@@ -14,7 +14,6 @@ inherit
 			make_top as frame_make_top
 		redefine
 			call_default_window_procedure,
-			class_name,
 			class_background
 		end
 
@@ -128,12 +127,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_name: STRING_32
-			-- Window class name to create
-		once
-			Result := "WELMDIFrameWindowClass"
-		end
-
 	class_background: WEL_BRUSH
 			-- Standard application workspace color
 		once
@@ -155,7 +148,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

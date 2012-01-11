@@ -58,7 +58,7 @@ inherit
 			on_sys_key_up,
 			default_process_message
 		redefine
-			class_name, class_style
+			class_style
 		end
 
 feature {NONE} -- Implementation
@@ -68,12 +68,6 @@ feature {NONE} -- Implementation
 			-- Can be redefined to return a user-defined style.
 		once
 			Result := Cs_dblclks
-		end
-
-	class_name: STRING_32
-			-- Window class name to create
-		do
-			Result := generator
 		end
 
 	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER

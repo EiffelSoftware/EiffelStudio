@@ -69,7 +69,6 @@ inherit
 		redefine
 			default_style,
 			default_ex_style,
-			class_name,
 			class_style,
 			on_erase_background,
 			on_window_pos_changing,
@@ -108,12 +107,6 @@ feature {NONE} -- WEL Implementation
 			-- Extended style used by windows at creation.
 		do
 			Result := Ws_ex_controlparent
-		end
-
-	class_name: STRING_32
-			-- Window class name to create.
-		do
-			Result := generator
 		end
 
 	application_imp: EV_APPLICATION_IMP

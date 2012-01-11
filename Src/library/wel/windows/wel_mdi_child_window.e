@@ -13,8 +13,6 @@ inherit
 		rename
 			make_child as make
 		redefine
-			class_name,
-			class_background,
 			internal_window_make,
 			call_default_window_procedure,
 			destroy,
@@ -112,18 +110,6 @@ feature {NONE} -- Implementation
 				 wparam, lparam)
 		end
 
-	class_background: WEL_BRUSH
-			-- Standard window background color
-		once
-			create Result.make_by_sys_color (Color_window + 1)
-		end
-
-	class_name: STRING_32
-			-- Window class name to create
-		once
-			Result := "WELMDIChildWindowClass"
-		end
-
 feature {NONE} -- Externals
 
 	cwin_def_mdi_child_proc (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
@@ -136,14 +122,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

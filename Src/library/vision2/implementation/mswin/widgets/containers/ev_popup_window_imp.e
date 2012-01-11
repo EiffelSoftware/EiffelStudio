@@ -106,10 +106,9 @@ feature {NONE} -- Implementation
 	class_name: STRING_32
 			-- Class name for current type of window.
 		do
+			Result := generator
 			if has_shadow then
-				Result := "EV_POPUP_WINDOW_IMP_with_shadow"
-			else
-				Result := "EV_POPUP_WINDOW_IMP"
+				Result.append ("_with_shadow")
 			end
 		end
 

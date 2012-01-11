@@ -19,8 +19,6 @@ inherit
 			maximal_width,
 			maximal_height,
 			default_style,
-			class_name,
-			class_background,
 			class_requires_icon
 		end
 
@@ -135,18 +133,6 @@ feature {NONE} -- Implementation
 			Result := Ws_child | Ws_visible
 		end
 
-	class_background: WEL_BRUSH
-			-- Standard window background color
-		once
-			create Result.make_by_sys_color (Color_window + 1)
-		end
-
-	class_name: STRING_32
-			-- Window class name to create
-		once
-			Result := "WELControlWindowClass"
-		end
-
 	class_requires_icon: BOOLEAN
 			-- Does `Current' require an icon to be registered?
 			-- If `True' `register_class' assigns a class icon, otherwise
@@ -166,14 +152,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

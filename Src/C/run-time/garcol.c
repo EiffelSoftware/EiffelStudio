@@ -2,7 +2,7 @@
 	description: "Garbage collection routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2011, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -160,7 +160,7 @@ rt_shared struct gacstat rt_g_stat[GST_NBR] = {	/* Run-time statistics */
 #ifdef ISE_GC
 /*
 doc:	<attribute name="loc_stack" return_type="struct stack" export="public">
-doc:		<summary>To protect EIF_REFERENCE in C routines through RT_GC_PROTECT/RT_GC_WEAN macros. Used internally by runtime. Content points to ojbects which may be moved by garbage collector or memory management routines.</summary>
+doc:		<summary>To protect EIF_REFERENCE in C routines through RT_GC_PROTECT/RT_GC_WEAN macros. Used internally by runtime. Content points to objects which may be moved by garbage collector or memory management routines.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
@@ -1529,6 +1529,7 @@ rt_private void internal_marking(MARKER marking, int moving)
 {
 #ifdef EIF_THREADS
 	int i;
+	int n;
 #endif
 
 #ifndef EIF_THREADS
@@ -1583,40 +1584,41 @@ rt_private void internal_marking(MARKER marking, int moving)
 	}
 #endif
 #else /* EIF_THREADS */
-	for (i = 0; i < loc_set_list.count; i++)
-		mark_stack(loc_set_list.threads.sstack[i], marking, moving);
-
-	for (i = 0; i < loc_stack_list.count; i++)
-		mark_stack(loc_stack_list.threads.sstack[i], marking, moving);
-
+		/* Traverse global stacks. */
 	mark_stack(&global_once_set, marking, moving);
-
-	for (i = 0; i < once_set_list.count; i++)
-		mark_simple_stack(once_set_list.threads.sstack[i], marking, moving);
-
-	for (i = 0; i < hec_stack_list.count; i++)
-		mark_simple_stack(hec_stack_list.threads.sstack[i], marking, moving);
 	mark_simple_stack(&eif_hec_saved, marking, moving);
 
-	for (i = 0; i < sep_stack_list.count; i++)
-		mark_simple_stack(sep_stack_list.threads.sstack[i], marking, moving);
-
+		/* Traverse per-thread stacks. */
+	n = loc_set_list.count;
+		/* All stacks are in arrays of the same size. */
+	CHECK ("Same stack count", n == loc_set_list.count);
+	CHECK ("Same stack count", n == loc_stack_list.count);
+	CHECK ("Same stack count", n == once_set_list.count);
+	CHECK ("Same stack count", n == hec_stack_list.count);
+	CHECK ("Same stack count", n == sep_stack_list.count);
+	CHECK ("Same stack count", n == eif_stack_list.count);
+	CHECK ("Same stack count", n == eif_trace_list.count);
 #ifdef WORKBENCH
-	for (i = 0; i < opstack_list.count; i++)
-		mark_op_stack(opstack_list.threads.opstack[i], marking, moving);
-	for (i = 0; i < eif_stack_list.count; i++)
-		mark_ex_stack(eif_stack_list.threads.xstack[i], marking, moving);
-	for (i = 0; i < eif_trace_list.count; i++)
-		mark_ex_stack(eif_trace_list.threads.xstack[i], marking, moving);
-
-#else
-	if (exception_stack_managed) {
-		for (i = 0; i < eif_stack_list.count; i++)
-			mark_ex_stack(eif_stack_list.threads.xstack[i], marking, moving);
-		for (i = 0; i < eif_trace_list.count; i++)
-			mark_ex_stack(eif_trace_list.threads.xstack[i], marking, moving);
-	}
+	CHECK ("Same stack count", n == opstack_list.count);
 #endif
+
+	for (i = 0; i < n; i++) {
+		mark_stack(loc_set_list.threads.sstack[i], marking, moving);
+		mark_stack(loc_stack_list.threads.sstack[i], marking, moving);
+		mark_simple_stack(once_set_list.threads.sstack[i], marking, moving);
+		mark_simple_stack(hec_stack_list.threads.sstack[i], marking, moving);
+		mark_simple_stack(sep_stack_list.threads.sstack[i], marking, moving);
+#ifdef WORKBENCH
+		mark_op_stack(opstack_list.threads.opstack[i], marking, moving);
+		mark_ex_stack(eif_stack_list.threads.xstack[i], marking, moving);
+		mark_ex_stack(eif_trace_list.threads.xstack[i], marking, moving);
+#else
+		if (exception_stack_managed) {
+			mark_ex_stack(eif_stack_list.threads.xstack[i], marking, moving);
+			mark_ex_stack(eif_trace_list.threads.xstack[i], marking, moving);
+		}
+#endif
+	}
 
 #endif /* EIF_THREADS */
 

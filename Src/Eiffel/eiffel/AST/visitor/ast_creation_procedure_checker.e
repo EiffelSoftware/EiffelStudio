@@ -25,6 +25,7 @@ inherit
 			process_elseif_as,
 			process_guard_as,
 			process_if_as,
+			process_inline_agent_creation_as,
 			process_inspect_as,
 			process_like_cur_as,
 			process_loop_as,
@@ -34,7 +35,8 @@ inherit
 			process_precursor_as,
 			process_result_as,
 			process_retry_as,
-			process_routine_as
+			process_routine_as,
+			process_routine_creation_as
 		end
 
 	SHARED_ERROR_HANDLER
@@ -376,6 +378,31 @@ feature {AST_EIFFEL} -- Visitor: access to features
 			end
 		end
 
+feature {AST_EIFFEL} -- Visitor: Agents
+
+	process_routine_creation_as (a: ROUTINE_CREATION_AS)
+			-- <Precursor>
+		do
+				-- Check if "Current" is used implicitly.
+			if not a.has_target then
+					-- The agent implicitly relies on "Current".
+					-- The latter has to be initialized.
+				check_attributes (a.start_location)
+			end
+				-- Target and arguments need to be checked.
+			Precursor (a)
+		end
+
+	process_inline_agent_creation_as (a: INLINE_AGENT_CREATION_AS)
+			-- <Precursor>
+		do
+				-- The agent implicitly relies on "Current".
+				-- The latter has to be initialized.
+			check_attributes (a.start_location)
+				-- Target and arguments need to be checked.
+			Precursor (a)
+		end
+
 feature {AST_EIFFEL} -- Visitor: Result
 
 	process_result_as (a: RESULT_AS)
@@ -654,7 +681,7 @@ feature {NONE} -- Access
 			-- Bodies that are being processed
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

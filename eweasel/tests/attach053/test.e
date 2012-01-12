@@ -19,7 +19,7 @@ feature -- Initialization
 			deta: detachable ANY
 			i: INTEGER
 		do
-			agent_f := agent f
+			agent_f := agent {TEST}.f
 			if attached deta then print ("1%N") end
 			i := 1
 			if attached {INTEGER_32} i then print ("2%N") end

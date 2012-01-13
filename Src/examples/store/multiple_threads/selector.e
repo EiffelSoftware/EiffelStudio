@@ -45,41 +45,30 @@ feature {NONE} -- Login
 
 	perform_login
 		local
-			tmp_string: STRING
-			l_laststring: detachable STRING
-			l_dsn: detachable STRING
+			l_name: detachable STRING
 		do
-			create l_dsn.make_empty
 			if db_spec.database_handle_name.is_case_insensitive_equal ("odbc") then
 				print ("Data Source Name: ")
 				io.readline
-				l_laststring := io.laststring
-				check l_laststring /= Void end -- implied by `readline' postcondition
-				set_data_source(l_laststring.twin)
-				l_dsn := l_laststring.twin
+				set_data_source (io.last_string.string)
 			end
 
 			if db_spec.database_handle_name.is_case_insensitive_equal ("mysql") then
 				print ("Schema Name: ")
 				io.readline
-				l_laststring := io.laststring
-				check l_laststring /= Void end -- implied by `readline' postcondition
-				set_application(l_laststring.twin)
+				set_application (io.last_string)
 			end
 
 				-- Ask for user's name and password
 			print ("Name: ")
 			io.readline
-			l_laststring := io.laststring
-			check l_laststring /= Void end -- implied by `readline' postcondition
-			tmp_string := l_laststring.twin
+			l_name := io.last_string.string
+
 			print ("Password: ")
 			io.readline
 
 				-- Set user's name and password
-			l_laststring := io.laststring
-			check l_laststring /= Void end -- implied by `readline' postcondition
-			login (tmp_string, l_laststring)
+			login (l_name, io.last_string.string)
 		end
 
 note

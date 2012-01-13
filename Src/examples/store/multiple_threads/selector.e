@@ -18,6 +18,8 @@ create
 feature {NONE} -- Init
 
 	make
+			-- Initialization
+			-- Create some threads that run at the same time.
 		local
 			l_thread: DATA_LOAD_AND_SELECT_THREAD
 			i: INTEGER
@@ -44,6 +46,7 @@ feature {NONE} -- Init
 feature {NONE} -- Login
 
 	perform_login
+			-- Perform login
 		local
 			l_name: detachable STRING
 		do

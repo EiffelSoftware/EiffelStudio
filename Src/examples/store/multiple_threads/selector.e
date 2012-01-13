@@ -56,7 +56,7 @@ feature {NONE} -- Login
 			if db_spec.database_handle_name.is_case_insensitive_equal ("mysql") then
 				print ("Schema Name: ")
 				io.readline
-				set_application (io.last_string)
+				set_application (io.last_string.string)
 			end
 
 				-- Ask for user's name and password

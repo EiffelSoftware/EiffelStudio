@@ -46,7 +46,6 @@ feature -- Execution
 	execute
 		local
 			l_repository: like repository
-			l_session: DATABASE_SESSION
 		do
 				-- Setup login for current session.
 			manager.current_session.set_session_login (global_login.twin)
@@ -94,7 +93,6 @@ feature {NONE} -- Implementation
 		require
 			repository_attached: repository /= Void
 		local
-			l_laststring: detachable STRING
 			l_store: DB_STORE
 		do
 				-- Create the table for book-objects.
@@ -119,9 +117,6 @@ feature {NONE} -- Implementation
 
 	make_selection
 			-- Select books from database
-		local
-			author: STRING
-			l_laststring: detachable STRING
 		do
 			thread_print ("Books in storage:%N")
 

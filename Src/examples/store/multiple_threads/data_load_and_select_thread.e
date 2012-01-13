@@ -95,27 +95,26 @@ feature {NONE} -- Implementation
 			repository_attached: repository /= Void
 		local
 			l_laststring: detachable STRING
-			l_repository: like repository
 			l_store: DB_STORE
 		do
 				-- Create the table for book-objects.
 				-- The name of this table has already been set to "DB_BOOK"
-			l_repository := repository
-			check l_repository /= Void end -- implied by precondition `repostory_attached'
-			if not l_repository.exists then
-				l_repository.allocate (book)
+			check attached repository as l_repository then -- implied by precondition `repostory_attached'
+				if not l_repository.exists then
+					l_repository.allocate (book)
+				end
+
+					-- Start a transaction
+				session_control.begin
+
+				l_repository.load
+				create l_store.make
+				l_store.set_repository (l_repository)
+				l_store.put (create_filled_book)
+
+					-- Commit work
+				session_control.commit
 			end
-
-				-- Start a transaction
-			session_control.begin
-
-			l_repository.load
-			create l_store.make
-			l_store.set_repository (l_repository)
-			l_store.put (create_filled_book)
-
-				-- Commit work
-			session_control.commit
 		end
 
 	make_selection

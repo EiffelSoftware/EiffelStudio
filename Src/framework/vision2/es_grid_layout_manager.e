@@ -255,13 +255,8 @@ feature -- Access
 								if attached {like layout} lst_curs.item as t then
 									process_row_layout_restoring (grid.row (r), t)
 								end
-								lst_curs.forth
 								r := r + grid.row (r).subrow_count_recursive + 1
 							end
---							Note: this should be useless, since this is not anymore a Gobo cursor
---							from until lst_curs.after loop
---								lst_curs.forth
---							end
 						end
 						if positioning_enabled and then attached last_row_set_as_first_visible_row as l_row then
 							ev_application.do_once_on_idle (agent ensure_row_is_first_visible_row (l_row))

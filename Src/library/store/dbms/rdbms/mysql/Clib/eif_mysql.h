@@ -39,7 +39,7 @@ extern int eif_mysql_date_data (MYSQL_ROW row_ptr, int ind, char *ar);
 extern void eif_mysql_disconnect(MYSQL *mysql_ptr);
 extern MYSQL_RES *eif_mysql_execute(MYSQL *mysql_ptr, const char *command);
 extern double eif_mysql_float_data(MYSQL_ROW row_ptr, int ind);
-extern void eif_mysql_free_result(MYSQL_RES *result_ptr);
+extern void eif_mysql_free_result(MYSQL *mysql_ptr, MYSQL_RES *result_ptr);
 extern int eif_mysql_get_error_code(MYSQL *mysql_ptr);
 extern char *eif_mysql_get_error_message(MYSQL *mysql_ptr);
 extern char *eif_mysql_get_warn_message(MYSQL *mysql_ptr);

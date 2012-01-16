@@ -188,6 +188,9 @@ MYSQL *eif_mysql_connect(const char *user, const char *pass, const char *host, i
 	res2 = mysql_real_connect(res1, host, user, pass, base, port,
 		(const char *) 0, CLIENT_REMEMBER_OPTIONS | CLIENT_MULTI_RESULTS);
 
+	/* Enable multi statements on server side */
+	mysql_set_server_option (res1, MYSQL_OPTION_MULTI_STATEMENTS_ON);
+
 	/* It is determined, that, in case mysql_real_connect a NULL pointer
 	 * returns, res1 is the actual object through which the errors can
 	 * be obtained.
@@ -279,6 +282,7 @@ MYSQL_RES *eif_mysql_execute(MYSQL *mysql_ptr, const char *command)
 
 	c_len = strlen(command);
 	res = mysql_real_query(mysql_ptr, command, c_len + 1);
+
 	if(res == 0) {
 		result = mysql_store_result(mysql_ptr);
 		if(result == (MYSQL_RES *) 0) {
@@ -317,9 +321,19 @@ double eif_mysql_float_data(MYSQL_ROW row_ptr, int ind)
  * Arguments:	MYSQL_RES *result_ptr:	Pointer to MySQL Result structure
  * Returns:		<none>
  */
-void eif_mysql_free_result(MYSQL_RES *result_ptr)
+void eif_mysql_free_result(MYSQL *mysql_ptr, MYSQL_RES *result_ptr)
 {
+	MYSQL_RES *l_result;
+
 	mysql_free_result(result_ptr);
+	while(mysql_more_results(mysql_ptr))
+	{
+		if(mysql_next_result(mysql_ptr))
+		{
+			l_result = mysql_use_result(mysql_ptr);
+			mysql_free_result(l_result);
+		}
+	}
 }
 
 /*

@@ -207,7 +207,11 @@ command_makefile='make -f'
 concurrent_prefix='c'
 cp='/bin/cp'
 eiflib='finalized'
-ld='ld'
+if [ -n "$LD" ]; then
+	ld='$LD'
+else
+	ld='ld'
+fi
 lintflags=''
 ldflags=""
 ldsharedflags="$ldflags -shared -o"
@@ -232,7 +236,7 @@ shared_suffix='.so'
 shared_rt_suffix='.so'
 sharedlibs='-lnsl -lm'
 mtsharedlibs='-lnsl -lm -lpthread'
-sharedlibversion='.7,0'
+sharedlibversion='.7.1'
 sharedlink='ld'
 suffix='.a'
 wkeiflib='wkbench'

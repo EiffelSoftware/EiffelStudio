@@ -3,7 +3,11 @@
 #
 # ISE Eiffel 4.5
 
-ld='ar'	# bug with CRAYs : ld does not work with option -r
+if [ -n "$LD" ]; then
+	ld='$LD'
+else
+	ld='ar'	# bug with CRAYs : ld does not work with option -r
+fi
 ar='ar'
 lngpad_2='16'
 d_bsdsig='undef'

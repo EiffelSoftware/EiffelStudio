@@ -206,7 +206,11 @@ command_makefile='make -f'
 concurrent_prefix='c'
 cp='/bin/cp'
 eiflib='finalized'
-ld='ld'
+if [ -n "$LD" ]; then
+	ld='$LD'
+else
+	ld='ld'
+fi
 lintflags=''
 ldflags="-multigot -n32 -mips4"
 ldsharedflags="$ldflags -shared -o"

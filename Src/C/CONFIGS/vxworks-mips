@@ -39,7 +39,11 @@ else
 	cpp='$(VXWORKS)/host/parisc-hpux9/bin/cpp'
 fi
 ar='armips'
-ld='ldmips -EL -X -N -warn-common'
+if [ -n "$LD" ]; then
+	ld='$LD'
+else
+	ld='ldmips -EL -X -N -warn-common'
+fi
 
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS

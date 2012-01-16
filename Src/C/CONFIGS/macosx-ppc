@@ -207,7 +207,11 @@ command_makefile='make -f'
 concurrent_prefix='c'
 cp='/bin/cp'
 eiflib='finalized'
-ld='ld'
+if [ -n "$LD" ]; then
+	ld='$LD'
+else
+	ld='ld'
+fi
 lintflags=''
 ldflags=""
 ldsharedflags="$ldflags -dynamiclib -flat_namespace -undefined suppress -o"
@@ -232,7 +236,7 @@ shared_suffix='.dylib'
 shared_rt_suffix='.dylib'
 sharedlibs='-lm'
 mtsharedlibs='-lm -lpthread'
-sharedlibversion='.7,0'
+sharedlibversion='.7.1'
 sharedlink='gcc'
 suffix='.a'
 wkeiflib='wkbench'

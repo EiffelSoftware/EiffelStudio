@@ -41,7 +41,11 @@ else
 	cpp='$(VXWORKS)/host/parisc-hpux9/bin/cpp'
 fi
 ar='arhppa'
-ld='ld'
+if [ -n "$LD" ]; then
+	ld='$LD'
+else
+	ld='ld'
+fi
 
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS

@@ -53,7 +53,7 @@ suffix='.a'
 shared_suffix='.sl'
 shared_rt_suffix='.sl'
 shared_prefix='lib'
-sharedlibversion='.7.0'
+sharedlibversion='.7.1'
 
 lngpad_2='LNGPAD(2)'
 
@@ -61,7 +61,11 @@ ranlib='ranlib'
 eunicefix=':'
 
 d_bsdsig='undef'
-ld='ld'
+if [ -n "$LD" ]; then
+	ld='$LD'
+else
+	ld='ld'
+fi
 ar='ar'
 d_bsd='define'
 d_eunice='undef'

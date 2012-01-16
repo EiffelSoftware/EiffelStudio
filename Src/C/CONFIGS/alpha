@@ -68,7 +68,11 @@ shared_rt_suffix='.so'
 shared_prefix='lib'
 
 command_makefile='make -f'
-ld='ld'
+if [ -n "$LD" ]; then
+	ld='$LD'
+else
+	ld='ld'
+fi
 ar='ar'
 
 start_test='if [ ! -f finished ] ; then'

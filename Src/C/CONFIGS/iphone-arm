@@ -207,7 +207,11 @@ command_makefile='make -f'
 concurrent_prefix='c'
 cp='/bin/cp'
 eiflib='finalized'
-ld='/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/ld'
+if [ -n "$LD" ]; then
+	ld='$LD'
+else
+	ld='/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/ld'
+fi
 ldflags=""
 ldsharedflags="$ldflags -dynamiclib -flat_namespace -undefined suppress -o"
 libs='-lm'
@@ -231,7 +235,7 @@ shared_suffix='.dylib'
 shared_rt_suffix='.dylib'
 sharedlibs='-lm'
 mtsharedlibs='-lm -lpthread'
-sharedlibversion='.7,0'
+sharedlibversion='.7.1'
 sharedlink='gcc'
 suffix='.a'
 wkeiflib='wkbench'

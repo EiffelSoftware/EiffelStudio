@@ -6685,6 +6685,7 @@ if [ -n "\$CPP" ]; then
 else
 	cpp='$cpp'
 fi
+ccldflags=''
 if [ -n "\$CPPFLAGS" ]; then
 	cppflags='\$CPPFLAGS'
 else
@@ -6719,7 +6720,11 @@ command_makefile='make -f'
 concurrent_prefix='c'
 cp='$cp'
 eiflib='finalized'
-ld='ld'
+if [ -n "\$LD" ]; then
+        ld='\$LD'
+else
+        ld='ld'
+fi
 lintflags=''
 ldflags="$ldflags \$binary_format \$platform_arch"
 ldsharedflags="\$ldflags -shared -o"

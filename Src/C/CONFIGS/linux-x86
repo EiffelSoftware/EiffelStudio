@@ -165,9 +165,9 @@ fi
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS
 else
-	ccflags='-pipe -march=i686 -D_GNU_SOURCE'
+	ccflags='-pipe -march=i686 -D_GNU_SOURCE -m32'
 fi
-ccldflags=''
+ccldflags='-m32'
 if [ -n "$CPP" ]; then
 	cpp=$CPP
 else
@@ -206,9 +206,13 @@ command_makefile='make -f'
 concurrent_prefix='c'
 cp='/bin/cp'
 eiflib='finalized'
-ld='ld'
+if [ -n "$LD" ]; then
+	ld='$LD'
+else
+	ld='ld'
+fi
 lintflags=''
-ldflags=""
+ldflags="-m elf_i386"
 ldsharedflags="$ldflags -shared -o"
 libs='-lm'
 ln='/bin/ln'
@@ -231,7 +235,7 @@ shared_suffix='.so'
 shared_rt_suffix='.so'
 sharedlibs='-lm'
 mtsharedlibs='-lm -lpthread'
-sharedlibversion='.7,0'
+sharedlibversion='.7.1'
 sharedlink='ld'
 suffix='.a'
 wkeiflib='wkbench'

@@ -203,7 +203,11 @@ command_makefile='make -f'
 concurrent_prefix='c'
 cp='/usr/bin/cp'
 eiflib='finalized'
-ld='ld'
+if [ -n "$LD" ]; then
+	ld='$LD'
+else
+	ld='ld'
+fi
 lintflags=''
 ldflags=""
 ldsharedflags="$ldflags -shared -o"
@@ -228,7 +232,7 @@ shared_suffix='.so'
 shared_rt_suffix='.so'
 sharedlibs='-lm'
 mtsharedlibs='-lm -lpthread'
-sharedlibversion='.7,0'
+sharedlibversion='.7.1'
 sharedlink='ld'
 prfxlib='lib'
 suffix='.a'

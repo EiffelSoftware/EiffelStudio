@@ -4,7 +4,11 @@
 #
 # ISE EIFFEL 4.5
 
-ld='ar'
+if [ -n "$LD" ]; then
+	ld='$LD'
+else
+	ld='ar'
+fi
 ar='ar'
 lngpad_2='16'
 d_bsdsig='undef'

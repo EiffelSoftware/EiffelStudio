@@ -202,8 +202,9 @@ feature {NONE} -- Agents
 					set_value (l_item.value)
 				end
 				update_text_on_deactivation
-				deactivate
-				destroy_combo_popup
+				if not is_destroyed and then is_parented then
+					deactivate
+				end
 			end
 		end
 
@@ -220,10 +221,14 @@ feature {NONE} -- Agents
 					if l_item /= Void and then is_valid_value (l_item.value) then
 						set_value (l_item.value)
 					end
-					deactivate
+					if not is_destroyed and then is_parented then
+						deactivate
+					end
 				end
 			elseif a_key.code = {EV_KEY_CONSTANTS}.key_escape then
-				deactivate
+				if not is_destroyed and then is_parented then
+					deactivate
+				end
 			end
 		end
 

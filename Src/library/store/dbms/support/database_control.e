@@ -26,24 +26,14 @@ feature -- Status setting and report
 		require
 			not_already_connected: not is_connected
 		local
-			temp1, temp2, temp3, temp4, temp5, temp6, temp8: STRING
-			temp7: detachable STRING
 			l_connect_string: STRING
 			l_login: like handle.login
 		do
 			l_login := handle.login
 			if not l_login.is_login_by_connection_string then
-				temp1 := l_login.name
-				temp2 := l_login.passwd
-				temp3 := l_login.data_source
-				temp4 := l_login.application
-				temp5 := l_login.hostname
-				temp6 := l_login.roleId
-				temp7 := l_login.rolePassWd
-				temp8 := l_login.groupId
-
-				db_spec.connect (temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8)
-
+				db_spec.connect (l_login.name, l_login.passwd, l_login.data_source, l_login.application, l_login.hostname,
+									l_login.role_id, l_login.role_passwd, l_login.group_id
+							)
 				if is_ok then
 					handle.status.set_connect (True)
 				end

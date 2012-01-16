@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			last_descriptor := 0
 		end
 
-feature
+feature -- Constants
 
 	database_handle_name: STRING = "MYSQL"
 
@@ -59,6 +59,7 @@ feature -- For DATABASE_STATUS
 	clear_error
 			-- Reset database error status
 		do
+			--FIXME: this is not clearing any error
 		end
 
 	insert_auto_identity_column: BOOLEAN = True
@@ -834,7 +835,7 @@ feature -- External features
 		end
 
 	connect (user_name, user_passwd, data_source, application, hostname,
-		roleId, rolePassWd, groupId: STRING)
+			a_role_id, a_role_passwd, a_group_id: STRING)
 		local
 			l_base: C_STRING
 			l_colon_position: INTEGER

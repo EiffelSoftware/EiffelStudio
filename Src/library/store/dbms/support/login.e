@@ -24,25 +24,25 @@ feature -- Initialization
 			create application.make (0)
 			create hostname.make (0)
 			create data_source.make (0)
-			create roleId.make (0)
-			create rolePassWd.make (0)
-			create groupId.make (0)
+			create role_id.make (0)
+			create role_passwd.make (0)
+			create group_id.make (0)
 
 			create connection_string.make (0)
 		end
 
 feature -- Status setting
 
-	set (uname, upasswd: STRING)
+	set (a_name, a_passwd: STRING)
 			-- Set user name and password before connection becomes possible.
 		require
-			user_name_ok: db_spec.user_name_ok (uname)
-			password_ok: db_spec.password_ok (upasswd)
+			user_name_ok: db_spec.user_name_ok (a_name)
+			password_ok: db_spec.password_ok (a_passwd)
 		do
-			name := uname.twin
-	      	passwd := upasswd.twin
+			name := a_name.twin
+			passwd := a_passwd.twin
 		ensure
-			password_ensure: db_spec.password_ensure (name, passwd, uname, upasswd)
+			password_ensure: db_spec.password_ensure (name, passwd, a_name, a_passwd)
 		end
 
 	set_application (appname: STRING)
@@ -55,47 +55,47 @@ feature -- Status setting
 			name_set: application.is_equal(appname)
 		end
 
-	set_hostname (uhostname: STRING)
+	set_hostname (a_hostname: STRING)
 		require
-			argument_not_void: uhostname /= Void
+			argument_not_void: a_hostname /= Void
 		do
-			hostname := uhostname.twin
+			hostname := a_hostname.twin
 		ensure
-			name_set: hostname.is_equal(uhostname)
+			name_set: hostname.same_string (a_hostname)
 		end
 
-	set_data_source (udata_source: STRING)
+	set_data_source (a_data_source: STRING)
 			-- Set Data Source of ODBC.
 		require
-			argument_not_void: data_source /= Void
+			argument_not_void: a_data_source /= Void
 		do
-			data_source := udata_source.twin
+			data_source := a_data_source.twin
 		ensure
-			data_source_set: data_source.is_equal(udata_source)
+			data_source_set: data_source.same_string (a_data_source)
 		end
 
-	set_role (uroleId: STRING; urolePassWd: detachable STRING)
+	set_role (a_role_id: STRING; a_role_passwd: detachable STRING)
 			-- Set role identifier of data base.
 		require
-			argument_not_void: uroleId /= Void
+			argument_not_void: a_role_id /= Void
 		do
-			roleId := uroleId.twin
-			if (urolePassWd /= Void) then
-				rolePassWd := urolePassWd.twin
+			role_id := a_role_id.twin
+			if a_role_passwd /= Void then
+				role_passwd := a_role_passwd.twin
 			else
-				rolepasswd := Void
+				role_passwd := Void
 			end
 		ensure
-			name_set: roleId.is_equal(uroleId)
+			name_set: role_id.same_string (a_role_id)
 		end
 
-	set_group (ugroupId: STRING)
+	set_group (a_group_id: STRING)
 		require
-			argument_not_void: ugroupId /= Void
+			argument_not_void: a_group_id /= Void
 		do
-			groupId := ugroupId.twin
+			group_id := a_group_id.twin
 		ensure
-			name_set: groupId.is_equal(ugroupId)
+			name_set: group_id.same_string (a_group_id)
 		end
 
 	set_connection_string (a_str: like connection_string)
@@ -132,13 +132,13 @@ feature -- Status report
 	data_source: STRING
 			-- Data Source.
 
-	roleId: STRING
+	role_id: STRING
 			-- Role identifier .
 
-	rolePassWd: detachable STRING
+	role_passwd: detachable STRING
 			-- Role password.
 
-	groupId: STRING
+	group_id: STRING
 			-- Group Identifier.
 
 	connection_string: STRING
@@ -158,9 +158,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class LOGIN
-
-

@@ -25,7 +25,7 @@ feature -- Status report
 			Result := implementation.data
 		end
 
-	item (index: INTEGER): detachable ANY
+	item alias "[]" (index: INTEGER): detachable ANY
 			-- Retrieved value at `index' position in `data'.
 		require
 			valid_index: valid_index (index)

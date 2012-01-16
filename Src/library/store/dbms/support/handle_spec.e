@@ -16,16 +16,14 @@ feature -- Access
 	db_spec: DATABASE
 			-- Handle to actual database
 		local
-			l_database: detachable G
 			l_session: DATABASE_SESSION
 		do
 			l_session := Manager.current_session
-			if attached l_session.database as l_d then
-				Result := l_d
+			if attached l_session.database as db then
+				Result := db
 			else
-				create l_database
-				l_session.set_database (l_database)
-				Result := l_database
+				create {G} Result
+				l_session.set_database (Result)
 			end
 		ensure
 			not_void: Result /= Void

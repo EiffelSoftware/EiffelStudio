@@ -455,7 +455,7 @@ feature -- External features
 
 	terminate_order (no_descriptor: INTEGER)
 		do
-			eif_mysql_free_result(result_pointers.item (no_descriptor))
+			eif_mysql_free_result (mysql_pointer, result_pointers.item (no_descriptor))
 			result_pointers.put (default_pointer, no_descriptor)
 			descriptors.put (Void, no_descriptor)
 			is_error_updated := False
@@ -1063,7 +1063,7 @@ feature {NONE} -- C Externals
 			"C | %"eif_mysql.h%""
 		end
 
-	eif_mysql_free_result (result_ptr: POINTER)
+	eif_mysql_free_result (mysql_ptr: POINTER; result_ptr: POINTER)
 		external
 			"C | %"eif_mysql.h%""
 		end

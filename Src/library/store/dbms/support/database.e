@@ -1049,7 +1049,7 @@ feature -- External features
 		deferred
 		end
 
-	connect (user_name, user_passwd, data_source, application, hostname, roleId: STRING; rolePassWd: detachable STRING; groupId: STRING)
+	connect (user_name, user_passwd, data_source, application, hostname, role_id: STRING; role_passwd: detachable STRING; group_id: STRING)
 			-- Connect to database
 		deferred
 		end

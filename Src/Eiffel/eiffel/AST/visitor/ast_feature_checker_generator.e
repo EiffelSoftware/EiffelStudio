@@ -3212,9 +3212,9 @@ feature {NONE} -- Implementation
 				-- Check if some arguments are attached because of an inherited precondition.
 				-- Avoid doing it when there are no inherited preconditions.
 			if context.current_class.lace_class.is_void_safe_conformance and then
-				not (current_feature.has_precondition and then current_feature.assert_id_set = Void)
+				not (f.has_precondition and then f.assert_id_set = Void)
 			then
-				create precondition_scope.make (current_feature, context)
+				create precondition_scope.make (f, context)
 			end
 
 				-- Check local variables before checking precondition because local count is used to initialize the structures.
@@ -3255,13 +3255,13 @@ feature {NONE} -- Implementation
 					l_byte_code.set_precondition (l_assertion_byte_code)
 				end
 
-				l_feat_type := current_feature.type
+				l_feat_type := f.type
 				if
 					l_feat_type.is_initialization_required and then
 					not l_as.is_external and then
 					not l_as.is_attribute and then
 					not context.local_initialization.is_result_set and then
-					not current_feature.is_deferred and then
+					not f.is_deferred and then
 					is_void_safe_initialization (context.current_class)
 				then
 						-- Result is not properly initialized.
@@ -10607,7 +10607,7 @@ feature {NONE} -- Separateness
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -11,14 +11,15 @@ inherit
 
 	HANDLE_USE
 
-create -- Creation procedure
-
+create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Create an interface object to format data.
+		require
+			database_set: is_database_set
 		do
 			implementation := handle.database.db_format
 		end

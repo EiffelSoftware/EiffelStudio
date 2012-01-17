@@ -21,8 +21,7 @@ inherit
 			{NONE} all
 		end
 
-create -- Creation procedure
-
+create
 	make
 
 feature -- Status report
@@ -54,13 +53,14 @@ feature -- Status report
 			Result := implementation.conforms (object)
 		end
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (name: STRING)
 			-- Create repository with `name'.
 		require
 			name_exists: name /= Void
 			connected: is_connected
+			database_set: is_database_set
 		do
 			implementation := handle.database.db_repository
 			implementation.change_name (name)

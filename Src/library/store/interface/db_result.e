@@ -15,15 +15,16 @@ inherit
 			copy as hard_copy
 		end
 
-create -- Creation procedure
-
+create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Create an interface object
 			-- to receive query result.
+		require
+			database_set: handle.is_database_set
 		do
 			implementation := handle.database.db_result
 		end

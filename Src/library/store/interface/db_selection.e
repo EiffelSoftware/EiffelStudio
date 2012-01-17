@@ -29,14 +29,15 @@ inherit
 			{NONE} all
 		end
 
-create -- Creation procedure
-
+create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Create an interface object to query active base.
+		require
+			database_set: is_database_set
 		local
 			l_imp: like implementation
 		do

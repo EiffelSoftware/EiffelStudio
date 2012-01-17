@@ -26,8 +26,7 @@ inherit
 
 	DB_CONSTANT
 
-create -- Creation procedure
-
+create
 	make
 
 feature -- Access
@@ -102,6 +101,8 @@ feature {NONE} -- Initialization
 
 	make
 			-- Create an interface object to change active base.
+		require
+			database_set: is_database_set
 		local
 			l_imp: like implementation
 		do

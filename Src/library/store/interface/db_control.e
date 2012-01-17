@@ -26,8 +26,7 @@ inherit
 			{ANY} numeric_null_value, set_numeric_null_value
 		end
 
-create -- Creation procedure
-
+create
 	make
 
 feature -- Basic operations
@@ -114,6 +113,8 @@ feature {NONE} -- Initialization
 
 	make
 			-- Create an interface objet to control the active base.
+		require
+			database_set: is_database_set
 		do
 			implementation := handle.database.db_control
 		end

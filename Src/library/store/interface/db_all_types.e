@@ -11,14 +11,15 @@ class DB_ALL_TYPES inherit
 	HANDLE_USE
 
 create
-
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Create an interface object to register
 			-- all types for active base.
+		require
+			database_set: is_database_set
 		do
 			implementation := handle.database.db_all_types
 			implementation.register_all

@@ -17,9 +17,6 @@ inherit
 		end
 
 	HANDLE_USE
-		export
-			{NONE} all
-		end
 
 feature -- Status report
 
@@ -97,6 +94,8 @@ feature -- Status report
 
 	name: STRING
 			-- Database name
+		require
+			database_set: is_database_set
 		do
 			Result := handle.database.generator
 		end

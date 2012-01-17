@@ -10,7 +10,6 @@ note
 class DB_STATUS
 
 inherit
-
 	HANDLE_USE
 
 create -- Creation procedure
@@ -21,6 +20,8 @@ feature {NONE} -- Initialization
 
 	make
 			-- Create `implementation' handle.
+		require
+			database_set: is_database_set
 		do
 			implementation := handle.database.db_status
 			error_message_stored := empty_string

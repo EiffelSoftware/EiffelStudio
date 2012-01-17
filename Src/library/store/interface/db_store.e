@@ -20,8 +20,7 @@ inherit
 
 	REFACTORING_HELPER
 
-create -- Creation procedure
-
+create
 	make
 
 feature -- Status setting
@@ -87,6 +86,8 @@ feature {NONE} -- Initialization
 
 	make
 			-- Create an interface object to store in active base.
+		require
+			database_set: is_database_set
 		do
 			implementation := handle.database.db_store
 		end

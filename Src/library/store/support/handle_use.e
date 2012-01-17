@@ -11,6 +11,14 @@ class HANDLE_USE
 inherit
 	DATABASE_SESSION_MANAGER_ACCESS
 
+feature -- Qeury
+
+	is_database_set: BOOLEAN
+			-- Is database set?
+		do
+			Result := handle.is_database_set
+		end
+
 feature {NONE} -- Status report
 
 	handle: HANDLE

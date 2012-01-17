@@ -16,17 +16,17 @@ class DB_PROC inherit
 			{ANY} is_connected
 		end
 
-create -- Creation procedure
-
+create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_name: like name)
 			-- Create an interface object to create
 			-- and execute stored procedure.
 		require
 			a_name_not_void: a_name /= Void
+			database_set: is_database_set
 		do
 			implementation := handle.database.db_proc
 			implementation.change_name (a_name)

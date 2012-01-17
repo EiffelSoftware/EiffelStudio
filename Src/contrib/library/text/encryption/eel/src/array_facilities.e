@@ -54,15 +54,15 @@ feature {ARRAY_FACILITIES} -- Big endian NATURAL_32
 			valid_start: source.valid_index (offset)
 			valid_end: source.valid_index (offset + 3)
 		do
-			result := source [offset].to_natural_32 |<< 24
-			result := result | (source [offset + 1].to_natural_32 |<< 16)
-			result := result | (source [offset + 2].to_natural_32 |<< 8)
-			result := result | source [offset + 3].to_natural_32
+			Result := source [offset].to_natural_32 |<< 24
+			Result := Result | (source [offset + 1].to_natural_32 |<< 16)
+			Result := Result | (source [offset + 2].to_natural_32 |<< 8)
+			Result := Result | source [offset + 3].to_natural_32
 		ensure
-			byte_0: source [offset] = (result |>> 24).to_natural_8
-			byte_1: source [offset + 1] = (result |>> 16).to_natural_8
-			byte_2: source [offset + 2] = (result |>> 8).to_natural_8
-			byte_3: source [offset + 3] = result.to_natural_8
+			byte_0: source [offset] = (Result |>> 24).to_natural_8
+			byte_1: source [offset + 1] = (Result |>> 16).to_natural_8
+			byte_2: source [offset + 2] = (Result |>> 8).to_natural_8
+			byte_3: source [offset + 3] = Result.to_natural_8
 		end
 
 	from_natural_32_le (source: NATURAL_32 target: SPECIAL [NATURAL_8] offset: INTEGER_32)
@@ -86,15 +86,15 @@ feature {ARRAY_FACILITIES} -- Big endian NATURAL_32
 			valid_start: source.valid_index (offset)
 			valid_end: source.valid_index (offset + 3)
 		do
-			result := source [offset].to_natural_32
-			result := result | (source [offset + 1].to_natural_32 |<< 8)
-			result := result | (source [offset + 2].to_natural_32 |<< 16)
-			result := result | (source [offset + 3].to_natural_32 |<< 24)
+			Result := source [offset].to_natural_32
+			Result := Result | (source [offset + 1].to_natural_32 |<< 8)
+			Result := Result | (source [offset + 2].to_natural_32 |<< 16)
+			Result := Result | (source [offset + 3].to_natural_32 |<< 24)
 		ensure
-			byte_0: source [offset] = result.to_natural_8
-			byte_1: source [offset + 1] = (result |>> 8).to_natural_8
-			byte_2: source [offset + 2] = (result |>> 16).to_natural_8
-			byte_3: source [offset + 3] = (result |>> 24).to_natural_8
+			byte_0: source [offset] = Result.to_natural_8
+			byte_1: source [offset + 1] = (Result |>> 8).to_natural_8
+			byte_2: source [offset + 2] = (Result |>> 16).to_natural_8
+			byte_3: source [offset + 3] = (Result |>> 24).to_natural_8
 		end
 
 feature {ARRAY_FACILITIES} -- Big endian NATURAL_64
@@ -127,22 +127,22 @@ feature {ARRAY_FACILITIES} -- Big endian NATURAL_64
 			valid_start: source.valid_index (offset)
 			valid_end: source.valid_index (offset + 7)
 		do
-			result := source [offset].to_natural_32 |<< 56
-			result := result | (source [offset + 1].to_natural_32 |<< 48)
-			result := result | (source [offset + 2].to_natural_32 |<< 40)
-			result := result | (source [offset + 3].to_natural_32 |<< 32)
-			result := result | (source [offset + 4].to_natural_32 |<< 24)
-			result := result | (source [offset + 5].to_natural_32 |<< 16)
-			result := result | (source [offset + 6].to_natural_32 |<< 8)
-			result := result | source [offset + 7].to_natural_32
+			Result := source [offset].to_natural_64 |<< 56
+			Result := Result | (source [offset + 1].to_natural_64 |<< 48)
+			Result := Result | (source [offset + 2].to_natural_64 |<< 40)
+			Result := Result | (source [offset + 3].to_natural_64 |<< 32)
+			Result := Result | (source [offset + 4].to_natural_64 |<< 24)
+			Result := Result | (source [offset + 5].to_natural_64 |<< 16)
+			Result := Result | (source [offset + 6].to_natural_64 |<< 8)
+			Result := Result | source [offset + 7].to_natural_64
 		ensure
-			byte_0: source [offset] = (result |>> 56).to_natural_8
-			byte_1: source [offset + 1] = (result |>> 48).to_natural_8
-			byte_2: source [offset + 2] = (result |>> 40).to_natural_8
-			byte_3: source [offset + 3] = (result |>> 32).to_natural_8
-			byte_4: source [offset + 4] = (result |>> 24).to_natural_8
-			byte_5: source [offset + 5] = (result |>> 16).to_natural_8
-			byte_6: source [offset + 6] = (result |>> 8).to_natural_8
-			byte_7: source [offset + 7] = result.to_natural_8
+			byte_0: source [offset] = (Result |>> 56).to_natural_8
+			byte_1: source [offset + 1] = (Result |>> 48).to_natural_8
+			byte_2: source [offset + 2] = (Result |>> 40).to_natural_8
+			byte_3: source [offset + 3] = (Result |>> 32).to_natural_8
+			byte_4: source [offset + 4] = (Result |>> 24).to_natural_8
+			byte_5: source [offset + 5] = (Result |>> 16).to_natural_8
+			byte_6: source [offset + 6] = (Result |>> 8).to_natural_8
+			byte_7: source [offset + 7] = Result.to_natural_8
 		end
 end

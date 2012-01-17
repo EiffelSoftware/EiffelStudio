@@ -261,7 +261,7 @@ feature -- Properties
 	freeze: BOOLEAN
 			-- Has the system to be frozen again ?
 		do
-			Result := (not Lace.compile_all_classes or else il_generation)
+			Result := (not Lace.compile_all_classes or else compilation_modes.is_precompiling or else il_generation)
 					and then (is_freeze_requested or else Compilation_modes.is_freezing)
 		end
 
@@ -6302,7 +6302,7 @@ feature {NONE} -- External features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,0 +1,11 @@
+test_name 	 non-conforming-equality
+test_description Warning about non-conforming types in equality expression has to reported only is particular cases and not in the descendants.
+
+copy_sub Ace $TEST Ace
+copy_raw a.e $CLUSTER a.e
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_warning A VWEQ; A VWEQ; A VWEQ; A VWEQ
+
+test_end

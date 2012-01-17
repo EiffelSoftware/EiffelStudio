@@ -169,6 +169,7 @@ test vmcs-warning2					replication005 tcf pass replication
 test repeated-onces					replication006 tcf pass replication
 test nc-replication-not-apply-vmcs			replication007 tcf pass replication
 test undefinition-after-assertion-replication		replication008 tcf pass replication assertion
+test precompile-with-replication			replication009 tcf pass replication precompilation
 
 -- For testing only
 

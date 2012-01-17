@@ -1,0 +1,13 @@
+test_name	precompile-with-replication
+test_description Precompilation of EiffelBase with replication.
+
+copy_sub 	precomp.ecf $TEST precomp.ecf
+
+config precomp.ecf precomp
+
+compile_precompiled
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+
+test_end

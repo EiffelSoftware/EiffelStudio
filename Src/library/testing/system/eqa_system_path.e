@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			-- `a_items': Items representing relative path.
 		require
 			a_items_attached: a_items /= Void
-			a_items_valid: a_items.linear_representation.for_all (agent is_valid_name)
+			a_items_valid: has_valid_names (a_items.linear_representation)
 		do
 			make_empty
 			a_items.linear_representation.do_all (agent items.force)
@@ -104,6 +104,22 @@ feature -- Query
 			          (create {DIRECTORY_NAME}.make).is_directory_name_valid (a_name)
 		end
 
+	has_valid_names (a_linear: LINEAR [READABLE_STRING_8]): BOOLEAN
+			-- Items of `a_linear' has valid name as specified by `is_valid_name'
+		require
+			a_linear_attached: a_linear /= Void
+		do
+			from
+				Result := True
+				a_linear.start
+			until
+				a_linear.after or not Result
+			loop
+				Result := is_valid_name (a_linear.item)
+				a_linear.forth
+			end
+		end
+
 feature -- Element change
 
 	extend (a_item: READABLE_STRING_8)
@@ -123,7 +139,7 @@ feature {NONE} -- Constants
 	default_names_count: INTEGER = 5
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

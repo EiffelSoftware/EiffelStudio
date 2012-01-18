@@ -67,6 +67,53 @@ feature -- Status report
 			Result := implementation.is_list_shown
 		end
 
+feature -- Access
+
+	list_height_hint: INTEGER
+			-- Suggested height of list in pixels which may or may not be used by the underlying platform.
+			-- By default it is -1 and the actual height is dependent on the underlying platform.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.list_height_hint
+		ensure
+			bridge_ok: Result = implementation.list_height_hint
+		end
+
+	list_width_hint: INTEGER
+			-- Suggested width of list in pixels which may or may not be used by the underlying platform.
+			-- By default it is -1 and the actual width is dependent on the underlying platform.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.list_width_hint
+		ensure
+			bridge_ok: Result = implementation.list_height_hint
+		end
+
+feature -- Settings
+
+	set_list_height_hint (v: like list_height_hint)
+			-- Set `list_height_hint' with `v'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.set_list_height_hint (v)
+		ensure
+			list_height_hint_set: list_height_hint = v
+		end
+
+	set_list_width_hint (v: like list_width_hint)
+			-- Set `list_width_hint' with `v'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.set_list_width_hint (v)
+		ensure
+			list_width_hint_set: list_width_hint = v
+		end
+
+
 feature -- Element change
 
 	set_text (a_text: READABLE_STRING_GENERAL)

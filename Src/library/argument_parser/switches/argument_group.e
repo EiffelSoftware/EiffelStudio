@@ -23,16 +23,7 @@ feature {NONE} -- Initialization
 			-- `a_allow_non_switched': True to allow non switched arguments; False to allow only switch qualified arguments.
 		require
 			a_switches_attached: a_switches /= Void
-			a_switches_contained_unique_items: (attached {SEQUENCE [ARGUMENT_SWITCH]} a_switches as l_seq) implies l_seq.for_all (
-				agent (ia_seq: SEQUENCE [ARGUMENT_SWITCH]; ia_item: ARGUMENT_SWITCH): BOOLEAN
-					do
-						Result := ia_seq.occurrences (ia_item) = 1
-					end  (l_seq, ?))
-			a_switches_contained_unique_items: (attached {ARRAY [ARGUMENT_SWITCH]} a_switches as l_arr) implies l_arr.for_all (
-				agent (ia_arr: ARRAY [ARGUMENT_SWITCH]; ia_item: ARGUMENT_SWITCH): BOOLEAN
-					do
-						Result := ia_arr.occurrences (ia_item) = 1
-					end  (l_arr, ?))
+			switches_contained_unique_items: switches_contained_unique_items (a_switches)
 		local
 			i: INTEGER
 			l_upper: INTEGER
@@ -67,8 +58,8 @@ feature {NONE} -- Initialization
 				end
 			else
 				create l_switches.make (0)
-				check 
-					should_not_occur: False 
+				check
+					should_not_occur: False
 				end
 			end
 			switches := l_switches
@@ -86,16 +77,7 @@ feature {NONE} -- Initialization
 			-- `a_allow_non_switched': True to allow non switched arguments; False to allow only switch qualified arguments.
 		require
 			a_switches_attached: a_switches /= Void
-			a_switches_contained_unique_items: (attached {SEQUENCE [ARGUMENT_SWITCH]} a_switches as l_seq) implies l_seq.for_all (
-				agent (ia_seq: SEQUENCE [ARGUMENT_SWITCH]; ia_item: ARGUMENT_SWITCH): BOOLEAN
-					do
-						Result := ia_seq.occurrences (ia_item) = 1
-					end  (l_seq, ?))
-			a_switches_contained_unique_items: (attached {ARRAY [ARGUMENT_SWITCH]} a_switches as l_arr) implies l_arr.for_all (
-				agent (ia_arr: ARRAY [ARGUMENT_SWITCH]; ia_item: ARGUMENT_SWITCH): BOOLEAN
-					do
-						Result := ia_arr.occurrences (ia_item) = 1
-					end  (l_arr, ?))
+			switches_contained_unique_items: switches_contained_unique_items (a_switches)
 		do
 			make (a_switches, a_allow_non_switched)
 			is_hidden := True
@@ -117,11 +99,28 @@ feature -- Status report
 	is_allowing_non_switched_arguments: BOOLEAN
 			-- Indicates if non-switched arguments can be used in the group.
 
+	switches_contained_unique_items (a_switches: INDEXABLE [ARGUMENT_SWITCH, INTEGER]): BOOLEAN
+			-- `a_switches' contains only unique items?
+		do
+			Result := True
+			if attached {SEQUENCE [ARGUMENT_SWITCH]} a_switches as l_seq then
+				from
+					l_seq.start
+				until
+					l_seq.after or not Result
+				loop
+					Result := l_seq.occurrences (l_seq.item) = 1
+				end
+			elseif attached {ARRAY [ARGUMENT_SWITCH]} a_switches as l_arr then
+				Result := across l_arr as c all l_arr.occurrences (c.item) = 1 end
+			end
+		end
+
 invariant
 	switches_attached: switches /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

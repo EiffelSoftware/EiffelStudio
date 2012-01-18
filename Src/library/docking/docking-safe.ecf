@@ -70,4 +70,7 @@
 	<target name="docking_dotnet" extends="docking">
 		<setting name="msil_generation" value="true"/>
 	</target>
+	<target name="docking_unix" extends="docking">
+		<setting name="platform" value="unix"/>
+	</target>
 </system>

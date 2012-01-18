@@ -14,27 +14,27 @@ feature -- Style
 			-- Automatically scrolls the text in an edit control to the right
 			-- when the user types a character at the end of the line. If
 			-- this style is not set, only text that fits within the
-			-- rectangular boundary is allowed. 
+			-- rectangular boundary is allowed.
 			--
 			-- Declared in Windows as CBS_AUTOHSCROLL
 
 	Cbs_simple: INTEGER = 1
 			-- Displays the list box at all times. The current selection in
-			-- the list box is displayed in the edit control. 
+			-- the list box is displayed in the edit control.
 			--
 			-- Declared in Windows as CBS_SIMPLE
 
 	Cbs_dropdown: INTEGER = 2
 			-- Similar to CBS_SIMPLE, except that the list box is not
 			-- displayed unless the user selects an icon next to the edit
-			-- control. 
+			-- control.
 			--
 			-- Declared in Windows as CBS_DROPDOWN
 
 	Cbs_dropdownlist: INTEGER = 3
 			-- Similar to CBS_DROPDOWN, except that the edit control is
 			-- replaced by a static text item that displays the current
-			-- selection in the list box. 
+			-- selection in the list box.
 			--
 			-- Declared in Windows as CBS_DROPDOWNLIST
 
@@ -44,7 +44,7 @@ feature -- Style
 			-- all the same height. The owner window receives a
 			-- WM_MEASUREITEM message when the combo box is created and a
 			-- WM_DRAWITEM message when a visual aspect of the combo box has
-			-- changed. 
+			-- changed.
 			--
 			-- Declared in Windows as CBS_OWNERDRAWFIXED
 
@@ -54,7 +54,7 @@ feature -- Style
 			-- variable in height. The owner window receives a WM_MEASUREITEM
 			-- message for each item in the combo box when you create the
 			-- combo box and a WM_DRAWITEM message when a visual aspect of
-			-- the combo box has changed. 
+			-- the combo box has changed.
 			--
 			-- Declared in Windows as CBS_OWNERDRAWVARIABLE
 
@@ -66,12 +66,12 @@ feature -- Style
 			-- Windows string in the combo box to OEM characters. This style
 			-- is most useful for combo boxes that contain file names and
 			-- applies only to combo boxes created with the CBS_SIMPLE or
-			-- CBS_DROPDOWN style. 
+			-- CBS_DROPDOWN style.
 			--
 			-- Declared in Windows as CBS_OEMCONVERT
 
 	Cbs_sort: INTEGER = 256
-			-- Automatically sorts strings added to the list box. 
+			-- Automatically sorts strings added to the list box.
 			-- Declared in Windows as CBS_SORT
 
 	Cbs_hasstrings: INTEGER = 512
@@ -79,7 +79,7 @@ feature -- Style
 			-- consisting of strings. The combo box maintains the memory and
 			-- address for the strings so the application can use the
 			-- CB_GETLBTEXT message to retrieve the text for a particular
-			-- item. 
+			-- item.
 			--
 			-- Declared in Windows as CBS_HASSTRINGS
 
@@ -87,11 +87,11 @@ feature -- Style
 			-- Shows a disabled vertical scroll bar in the list box when the
 			-- box does not contain enough items to scroll. Without this
 			-- style, the scroll bar is hidden when the list box does not
-			-- contain enough items. 
+			-- contain enough items.
 			-- Declared in Windows as CBS_DISABLENOSCROLL
 
 	Cbs_lowercase: INTEGER = 16384
-			-- Converts to lowercase all text in both the selection field 
+			-- Converts to lowercase all text in both the selection field
 			-- and the list.
 			--
 			-- Declared in Windows as CBS_LOWERCASE
@@ -100,13 +100,13 @@ feature -- Style
 			-- Specifies that the size of the combo box is exactly the size
 			-- specified by the application when it created the combo box.
 			-- Normally, the system sizes a combo box so that it does not
-			-- display partial items. 
+			-- display partial items.
 			--
 			-- Declared in Windows as CBS_NOINTEGRALHEIGHT
 
 	Cbs_uppercase: INTEGER = 8192
 			-- Converts to uppercase all text in both the selection field and
-			-- the list. 
+			-- the list.
 			--
 			-- Declared in Windows as CBS_UPPERCASE
 
@@ -210,21 +210,47 @@ feature -- Messages
 			-- Declared in Windows as CB_ERRSPACE
 
 	Cb_gettopindex: INTEGER = 347
-			-- An application sends the CB_GETTOPINDEX message to 
-			-- retrieve the zero-based index of the first visible 
-			-- item in the list box portion of a combo box. 
+			-- An application sends the CB_GETTOPINDEX message to
+			-- retrieve the zero-based index of the first visible
+			-- item in the list box portion of a combo box.
 			--
-			-- Initially, the item with index 0 is at the top of 
-			-- the list box, but if the list box contents have 
-			-- been scrolled, another item may be at the top. 
+			-- Initially, the item with index 0 is at the top of
+			-- the list box, but if the list box contents have
+			-- been scrolled, another item may be at the top.
 
 	Cb_settopindex: INTEGER = 348;
-			-- An application sends the CB_SETTOPINDEX message to 
-			-- ensure that a particular item is visible in the 
-			-- list box of a combo box. The system scrolls the 
-			-- list box contents so that either the specified 
-			-- item appears at the top of the list box or the 
+			-- An application sends the CB_SETTOPINDEX message to
+			-- ensure that a particular item is visible in the
+			-- list box of a combo box. The system scrolls the
+			-- list box contents so that either the specified
+			-- item appears at the top of the list box or the
 			-- maximum scroll range has been reached.
+
+	Cb_getdroppedwidth: INTEGER = 0x015f
+			-- An application sends the CB_GETDROPPEDWIDTH message to
+			-- retrieve the minimum allowable width, in pixels, of the
+			-- list box of a combo box with the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
+
+	Cb_setdroppedwidth: INTEGER = 0x0160
+			-- An application sends the CB_SETDROPPEDWIDTH message to set
+			-- the maximum allowable width, in pixels, of the list box of
+			-- a combo box with the CBS_DROPDOWN or CBS_DROPDOWNLIST style. 
+
+	Cb_gethorizontalextent: INTEGER = 0x015d
+			-- An application sends the CB_GETHORIZONTALEXTENT message to
+			-- retrieve from a combo box the width, in pixels, by which
+			-- the list box can be scrolled horizontally (the scrollable width).
+			-- This is applicable only if the list box has a horizontal scroll bar.
+
+	Cb_sethorizontalextent: INTEGER = 0x015e
+			-- An application sends the CB_SETHORIZONTALEXTENT message to
+			-- set the width, in pixels, by which a list box can be scrolled
+			-- horizontally (the scrollable width). If the width of the list
+			-- box is smaller than this value, the horizontal scroll bar
+			-- horizontally scrolls items in the list box. If the width
+			-- of the list box is equal to or greater than this value,
+			-- the horizontal scroll bar is hidden or, if the combo box has
+			-- the CBS_DISABLENOSCROLL style, disabled.
 
 feature -- Extended Messages
 

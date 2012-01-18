@@ -14,7 +14,8 @@ inherit
 			set_selection as text_component_imp_set_selection
 		redefine
 			interface,
-			make
+			make,
+			initialize_hints
 		end
 
 	EV_LIST_ITEM_LIST_IMP
@@ -166,7 +167,7 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	old_make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
@@ -192,7 +193,15 @@ feature -- Initialization
 			create combo.make_with_combo (Current)
 			create text_field.make_with_combo (Current)
 			Precursor {EV_TEXT_COMPONENT_IMP}
+			initialize_hints
  		end
+
+	initialize_hints
+			-- <Precursor>
+		do
+			Precursor
+			internal_list_minimum_width := -1
+		end
 
 feature -- Alignment
 
@@ -847,6 +856,9 @@ feature {NONE} -- Implementation
 			if an_item.index = 0 and count = 1 then
 				select_item (1)
 			end
+				-- Reset our width computation for the dropdown list due to the new item
+				-- being inserted.
+			internal_list_minimum_width := - 1
  		end
 
 	refresh_item (item_imp: EV_LIST_ITEM_IMP)
@@ -974,6 +986,11 @@ feature {NONE} -- WEL Implementation
 	last_edit_change: detachable STRING_32
 			-- The string resulting from the last edit change.
 
+	internal_list_minimum_width: INTEGER
+			-- Minimum width of list in pixels computed internally if `list_width_hint' is set to -1.
+			-- It is recomputed each time an item is added or removed by setting it to -1
+			-- upon those operations.
+
 	on_cbn_selchange
 			-- The selection is about to change.
 		local
@@ -1024,6 +1041,8 @@ feature {NONE} -- WEL Implementation
 				if change_actions_internal /= Void then
 					change_actions_internal.call (Void)
 				end
+					-- Reset our width computation for the dropdown list
+				internal_list_minimum_width := - 1
 			end
 			last_edit_change := text
 		end
@@ -1033,18 +1052,63 @@ feature {NONE} -- WEL Implementation
 		local
 			pt: WEL_POINT
 			l_combo: detachable like combo
+			l_list_height, l_list_width: INTEGER
+			l_font: WEL_FONT
+			l_screen: EV_SCREEN
 		do
+			l_combo := combo
+			check l_combo /= Void end
+
+			l_list_height := list_height_hint
+			if l_list_height = -1 then
+				if count = 0 then
+						-- We cannot set `l_list_height' to the size of the monitor as Windows will
+						-- display a big dropdown list with nothing in it. It only works when there
+						-- is at least one item.
+					l_list_height := l_combo.height
+				else
+						-- By default, we choose the maximum height of the current monitor.
+						-- Note that if the combo is half way between two monitors, the dropdown
+						-- seems to be shown on the monitor that possesses most of the combobox area
+						-- this is why we are using the coordinate of the middle of the combo
+						-- to get the monitor.
+						-- Note that depending on the location of monitors related to the main monitor
+						-- there is a +-1 error on the computation of the middle of the combo box
+						-- and in this gray area, it is possible that we will be showing the wrong height.
+					create l_screen
+					pt := client_to_screen (l_combo.width // 2, l_combo.height // 2)
+					l_list_height := l_screen.implementation.monitor_area_from_position (pt.x, pt.y).height
+				end
+			end
+			l_list_width := list_width_hint
+			if l_list_width = -1 then
+					-- Implementation is free to choose the width.
+					-- On Windows, we compute the minimum width for all items but only if necessary.
+				l_list_width := internal_list_minimum_width
+				if l_list_width = -1 then
+					l_font := wel_font
+					across ev_children as l_item loop
+						if attached l_item.item.pixmap as l_pixmap then
+								-- The 10 value is the hard coded value of the border around the pixmap and the gap between
+								-- the pixmap and the text.
+							l_list_width := l_list_width.max (l_pixmap.width + 10 + l_font.string_width (l_item.item.text))
+						else
+							l_list_width := l_list_width.max (l_font.string_width (l_item.item.text))
+						end
+					end
+						-- Save computed value to avoid expensive recomputation.
+					internal_list_minimum_width := l_list_width
+				end
+					-- We minimize it to the width of the combo
+				l_list_width := l_list_width.max (width)
+			end
 			if drop_down_actions_internal /= Void then
 				drop_down_actions_internal.call (Void)
 			end
-			l_combo := combo
-			check l_combo /= Void end
-			if not ev_children.is_empty then
-				pt := client_to_screen (0,0)
-				l_combo.resize (l_combo.width, screen_height - pt.y)
-			else
-				l_combo.resize (l_combo.width, 50)
-			end
+				-- We resize the height of the list.
+			l_combo.resize (l_combo.width, l_list_height)
+				-- We resize the width of the list.
+			{WEL_API}.send_message (l_combo.item, {WEL_COMBO_BOX_CONSTANTS}.cb_setdroppedwidth, to_wparam(l_list_width), to_lparam (0))
 		end
 
 	on_cbn_closeup

@@ -11,11 +11,6 @@ deferred class
 inherit
 	ANY
 
-	WEL_SYSTEM_METRICS
-		export
-			{NONE} all
-		end
-
 feature -- Access
 
 	widget_imp_at_pointer_position: detachable EV_WIDGET_IMP

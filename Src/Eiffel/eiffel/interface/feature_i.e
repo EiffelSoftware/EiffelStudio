@@ -2907,19 +2907,22 @@ end
 
 feature -- Undefinition
 
-	new_deferred: DEF_PROC_I
-			-- New deferred feature for undefinition
+	new_deferred_anchor: detachable DEF_PROC_I
+			-- Type anchor for `new_deferred'.
+		do
+		ensure
+			used: False -- This feature is used only as an anchor.
+		end
+
+	new_deferred: attached like new_deferred_anchor
+			-- New deferred feature for undefinition.
 		require
 			not is_deferred
 			redefinable
 		local
 			ext: EXTERNAL_I
 		do
-			if is_function then
-				create {DEF_FUNC_I} Result
-			else
-				create Result
-			end
+			create Result
 			Result.set_type (type, assigner_name_id)
 			Result.set_arguments (arguments)
 			Result.set_written_in (written_in)
@@ -2946,13 +2949,7 @@ feature -- Undefinition
 			Result.set_has_convert_mark (has_convert_mark)
 			Result.set_has_rescue_clause (has_rescue_clause)
 			Result.set_is_type_evaluation_delayed (is_type_evaluation_delayed)
-
-			if is_external then
-				ext ?= Current
-				if ext.extension.is_il then
-					Result.set_extension (ext.extension)
-				end
-			end
+			Result.set_has_replicated_ast (has_replicated_ast)
 		ensure
 			Result_exists: Result /= Void
 			Result_is_deferred: Result.is_deferred
@@ -3533,7 +3530,7 @@ invariant
 	valid_inline_agent_nr: is_inline_agent implies inline_agent_nr > 0 or is_fake_inline_agent
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

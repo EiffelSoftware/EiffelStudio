@@ -14,7 +14,7 @@ inherit
 			generate, duplicate, extension,
 			access_for_feature, is_external,
 			set_renamed_name_id, external_name_id,
-			init_arg
+			init_arg, new_deferred
 		end
 
 create
@@ -252,6 +252,17 @@ feature
 			end
 		end
 
+feature -- Undefinition
+
+	new_deferred: attached like new_deferred_anchor
+			-- <Precursor>
+		do
+			Result := Precursor
+			if extension.is_il then
+				Result.set_extension (extension)
+			end
+		end
+
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
 	external_alias_name: STRING
@@ -273,7 +284,7 @@ invariant
 	extension_not_void: extension /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

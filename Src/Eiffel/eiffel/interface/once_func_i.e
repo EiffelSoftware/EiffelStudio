@@ -11,7 +11,7 @@ inherit
 	ONCE_PROC_I
 		redefine
 			assigner_name_id, unselected, replicated, set_type, is_function, type,
-			new_api_feature, transfer_to, transfer_from, selected
+			new_api_feature, transfer_to, transfer_from, selected, new_deferred_anchor
 		end
 
 feature -- Access
@@ -75,6 +75,13 @@ feature -- Access
 			Result := unselect;
 		end;
 
+feature -- Undefinition
+
+	new_deferred_anchor: detachable DEF_FUNC_I
+			-- <Precursor>
+		do
+		end
+
 feature {NONE} -- Implementation
 
 	new_api_feature: E_FUNCTION
@@ -86,7 +93,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

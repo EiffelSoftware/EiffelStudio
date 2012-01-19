@@ -119,6 +119,9 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operation
 				end
 
 					-- Perform parse
+				if a_context_class /= Void then
+					a_parser.set_filename (a_context_class.file_name)
+				end
 				a_parser.parse_from_utf8_string (a_text.as_string_8, a_context_class)
 
 				has_error := error_handler.error_level /= l_level
@@ -179,7 +182,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

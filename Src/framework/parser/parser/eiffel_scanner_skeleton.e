@@ -226,6 +226,16 @@ feature -- Settings
 			syntax_version_set: syntax_version = a_version
 		end
 
+	set_filename (a_filename: like filename)
+			-- Set `filename' with `a_filename'.
+		require
+			a_filename_not_void: a_filename /= Void
+		do
+			filename := a_filename
+		ensure
+			filename_set: filename = a_filename
+		end
+
 feature {NONE} -- Error handling
 
 	report_one_error (a_error: ERROR)
@@ -675,7 +685,7 @@ invariant
 	filename_not_void: filename /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

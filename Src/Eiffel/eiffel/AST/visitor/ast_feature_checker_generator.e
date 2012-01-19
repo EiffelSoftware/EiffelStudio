@@ -4901,10 +4901,15 @@ feature {NONE} -- Implementation
 							l_conforming := True
 						end
 						if not l_conforming then
+								-- Report a warning (when enabled) for the following cases in non-inherited code:
+								-- 	exp1 = exp2
+								-- 	exp = ref
+								-- 	ref = exp
 							if
 								context.current_class.is_warning_enabled (w_vweq) and then
-								(l_left_type.is_none implies l_right_type.is_expanded) and then
-								(l_right_type.is_none implies l_left_type.is_expanded)
+								current_feature.written_in = context.current_class.class_id and then
+								(l_left_type.is_expanded and then not l_right_type.conformance_type.is_formal or else
+								l_right_type.is_expanded and then not l_left_type.conformance_type.is_formal)
 							then
 								create l_vweq
 								context.init_error (l_vweq)

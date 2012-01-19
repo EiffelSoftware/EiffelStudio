@@ -5,9 +5,12 @@ feature
 	b: BOOLEAN
 	i: INTEGER
 
-	f (g: G)
-		local
+	h: detachable like f
+	j: like i
+
+	f (g: G): G
 		do
+			Result := G
 		ensure
 			b = Void -- VWEQ
 			Void = b -- VWEQ
@@ -17,6 +20,16 @@ feature
 			Void = g -- OK
 			g = i -- OK
 			i = g -- OK
+			h = Void -- OK
+			Void = h -- OK
+			h = i -- OK
+			i = h -- OK
+			j = Void -- VWEQ
+			Void = j -- VWEQ
+			b = j -- VWEQ
+			j = b -- VWEQ
+			g = j -- OK
+			j = g -- OK
 		end
 
 end

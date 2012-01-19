@@ -165,13 +165,8 @@ feature -- C code generation
 				left_type := context.real_type (left.type)
 				right_type := context.real_type (right.type)
 
-				if left_type.is_basic and right_type.is_basic then
-						-- From the byte node generation, we know that they must
-						-- be of the same type, otherwise something else than a
-						-- BIN_TILDE_B node is generated.
-					check
-						same_basic_type: left_type.same_as (right_type)
-					end
+					-- For values of the same basic type the equality test is generated.
+				if left_type.is_basic and right_type.is_basic and then left_type.same_as (right_type) then
 					buf := buffer
 					buf.put_character ('(')
 					left.print_register
@@ -179,10 +174,15 @@ feature -- C code generation
 					right.print_register
 					buf.put_character (')')
 				elseif
-					(left_type.is_none and right_type.is_expanded) or
-					(left_type.is_expanded and right_type.is_none)
+					(left_type.is_none and right_type.is_expanded) or else
+					(left_type.is_expanded and right_type.is_none) or else
+					(left_type.is_expanded and then right_type.is_expanded and then
+					left_type.has_associated_class and then right_type.has_associated_class and then
+					left_type.associated_class.class_id /= right_type.associated_class.class_id)
 				then
-						-- Simple type can never be Void
+						-- A value of an expanded type is not Void.
+						-- Two values of different expanded types are not equal.
+						-- In both cases result is known at compile time.
 					generate_boolean_constant
 				else
 					buf := buffer
@@ -226,7 +226,7 @@ feature -- Settings
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

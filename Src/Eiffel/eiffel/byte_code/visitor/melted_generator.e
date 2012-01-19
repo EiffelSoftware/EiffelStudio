@@ -536,18 +536,21 @@ feature {NONE} -- Visitors
 			l_lt := context.real_type (a_node.left.type)
 			l_rt := context.real_type (a_node.right.type)
 
-			if l_lt.is_basic and then l_rt.is_basic then
-					-- From the byte node generation, we know that they must
-					-- be of the same type, otherwise something else than a
-					-- BIN_TILDE_B node is generated.
-				check
-					same_basic_type: l_lt.same_as (l_rt)
-				end
+				-- For values of the same basic type the equality test is generated.
+			if l_lt.is_basic and then l_rt.is_basic and then l_lt.same_as (l_rt) then
 				a_node.left.process (Current)
 				a_node.right.process (Current)
 				ba.append (bc_eq)
-			elseif (l_lt.is_expanded and then l_rt.is_none) or else (l_lt.is_none and then l_rt.is_expanded) then
-					-- An expanded type is neither Void, so we simply evaluate the expressions and
+			elseif
+				(l_lt.is_expanded and then l_rt.is_none) or else
+				(l_lt.is_none and then l_rt.is_expanded) or else
+				(l_lt.is_expanded and then l_rt.is_expanded and then
+				l_lt.has_associated_class and then l_rt.has_associated_class and then
+				l_lt.associated_class.class_id /= l_rt.associated_class.class_id)
+			then
+					-- A value of an expanded type is not Void.
+					-- Two values of different expanded types are not equal.
+					-- In both cases we simply evaluate the expressions and
 					-- then remove them from the stack to insert the expected value.
 				a_node.left.process (Current)
 				a_node.right.process (Current)
@@ -2615,7 +2618,7 @@ feature {NONE} -- SCOOP
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

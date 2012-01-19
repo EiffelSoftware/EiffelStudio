@@ -73,18 +73,27 @@ feature -- Access
 						else
 							l_scanner.set_syntax_version ({EIFFEL_SCANNER}.ecma_syntax)
 						end
+						error_handler.save
+						l_scanner.set_filename (l_class.file_name)
 						l_scanner.scan_utf8_string (l_text)
-						Result := l_scanner.match_list
-						Result.set_class_id (an_id)
-						Result.set_generated (l_class.lace_class.date)
-							-- 02/06/2006 Patrickr
-							-- On a read only project we can't write, so we just store the match list in the cache.
-							-- It would be better to have a more intelligent store mechanism, that would do this.
-						if not system.eiffel_project.is_read_only then
-							put (Result)
+						error_handler.restore
+						if attached l_scanner.match_list as l_list then
+							Result := l_list
+							Result.set_class_id (an_id)
+							Result.set_generated (l_class.lace_class.date)
+								-- 02/06/2006 Patrickr
+								-- On a read only project we can't write, so we just store the match list in the cache.
+								-- It would be better to have a more intelligent store mechanism, that would do this.
+							if not system.eiffel_project.is_read_only then
+								put (Result)
+							else
+								cache.remove_id (an_id)
+								cache.force (Result)
+							end
 						else
-							cache.remove_id (an_id)
-							cache.force (Result)
+								-- Ideally we should not be creating an empty list, but simply returning Void.
+								-- However too many callers are not checking for a Void result.
+							create Result.make (1)
 						end
 					end
 				end
@@ -118,7 +127,7 @@ feature {NONE} -- Implementation
 			-- Size of a HASH_TABLE' block
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

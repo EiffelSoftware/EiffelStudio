@@ -94,9 +94,9 @@ feature {NONE} -- Creation
 						i := i - 1
 					end
 					if f.has_precondition then
-							-- Process current feature assertion
+							-- Process current feature assertion.
 						written_class := f.written_class
-						precursor_feature := body_server.item (written_class.class_id, f.body_index)
+						precursor_feature := f.body
 						check
 							precursor_feature_attached: precursor_feature /= Void
 						end
@@ -286,7 +286,7 @@ feature {NONE} -- Context
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

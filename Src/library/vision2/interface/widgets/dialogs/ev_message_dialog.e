@@ -339,7 +339,7 @@ feature -- Status setting
 
 	set_buttons_and_actions (
 		button_labels: ARRAY [READABLE_STRING_GENERAL]
-		actions: ARRAY [PROCEDURE [ANY, TUPLE]]
+		actions: ARRAY [detachable PROCEDURE [ANY, TUPLE]]
 	)
 			-- Assign new buttons with `button_labels' and `actions' to `buttons'.
 		require
@@ -352,13 +352,10 @@ feature -- Status setting
 		do
 			clean_buttons
 			from i := 1 until i > button_labels.count loop
-				if (actions @ i) = Void then
-					add_button (button_labels @ i)
+				if attached actions [i] as l_action then
+					add_button_with_action (button_labels [i], l_action)
 				else
-					add_button_with_action (
-						button_labels @ i,
-						actions @ i
-					)
+					add_button (button_labels [i])
 				end
 				i := i + 1
 			end

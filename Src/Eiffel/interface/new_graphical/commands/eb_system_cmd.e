@@ -68,10 +68,11 @@ feature -- Basic operations
 		local
 			rescued: BOOLEAN
 			l_debugs: SEARCH_TABLE [STRING]
-			l_sorted_debugs: DS_ARRAYED_LIST [STRING]
+			l_sorted_debugs: ARRAYED_LIST [STRING]
 			l_fact: CONF_COMP_FACTORY
 			l_load: CONF_LOAD
 			l_config: STRING
+			l_sorter: QUICK_SORTER [STRING]
 		do
 			if not rescued then
 				if ev_application.ctrl_pressed then
@@ -105,12 +106,13 @@ feature -- Basic operations
 								until
 									l_debugs.after
 								loop
-									l_sorted_debugs.put_last (l_debugs.item_for_iteration)
+									l_sorted_debugs.extend (l_debugs.item_for_iteration)
 									l_debugs.forth
 								end
-								l_sorted_debugs.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
+								create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
+								l_sorter.sort (l_sorted_debugs)
 							else
-								create l_sorted_debugs.make_default
+								create l_sorted_debugs.make (0)
 							end
 
 								-- only create a new configuration window if the data changed
@@ -154,7 +156,7 @@ feature {NONE} -- Actions
 			a_stone_not_void: a_stone /= Void
 		local
 			l_lib: CONF_LIBRARY
-			l_sorted_debugs: DS_ARRAYED_LIST [STRING]
+			l_sorted_debugs: ARRAYED_LIST [STRING]
 			l_fact: CONF_COMP_FACTORY
 			l_load: CONF_LOAD
 			l_config: STRING
@@ -183,7 +185,7 @@ feature {NONE} -- Actions
 							(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt (l_load.last_warning_messages, Void, Void)
 						end
 
-						create l_sorted_debugs.make_default
+						create l_sorted_debugs.make (5)
 						create configuration_window.make_for_target (l_load.last_system, lace.target_name,
 							l_fact, l_sorted_debugs, pixmaps.configuration_pixmaps, agent (preferences.misc_data).external_editor_cli)
 
@@ -296,7 +298,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

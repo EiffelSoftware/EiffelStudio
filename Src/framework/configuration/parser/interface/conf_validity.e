@@ -51,10 +51,10 @@ feature -- Basic validity queries
 	valid_regexp (a_regexp: STRING): BOOLEAN
 			-- is `a_regexp' a valid regular expression?
 		local
-			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_regexp: REGULAR_EXPRESSION
 		do
 			if a_regexp /= Void then
-				create l_regexp.make
+				create l_regexp
 				l_regexp.compile (a_regexp)
 				Result := l_regexp.is_compiled
 			end
@@ -356,7 +356,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

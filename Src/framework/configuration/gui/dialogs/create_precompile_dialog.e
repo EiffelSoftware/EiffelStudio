@@ -38,26 +38,32 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	lookup_directories: attached DS_ARRAYED_LIST [attached TUPLE [path: attached STRING; depth: INTEGER]]
+	lookup_directories: attached ARRAYED_LIST [attached TUPLE [path: attached STRING; depth: INTEGER]]
 			-- A list of lookup directories
 		local
-			l_file: attached FILE_NAME
+			l_filename: FILE_NAME
+			l_file: RAW_FILE
 		do
-			create Result.make_default
+			create Result.make (10)
 
-			l_file := eiffel_layout.precompiles_config_name
-			if file_system.file_exists (l_file) then
-				add_lookup_directories (l_file, Result)
+			l_filename := eiffel_layout.precompiles_config_name
+			create l_file.make (l_filename)
+			if l_file.exists then
+				add_lookup_directories (l_filename, Result)
 			end
 			if eiffel_layout.is_user_files_supported then
-				if attached {FILE_NAME} eiffel_layout.user_priority_file_name (l_file.string, True) as l_user_file and then file_system.file_exists (l_user_file) then
-					add_lookup_directories (l_user_file, Result)
+				l_filename := eiffel_layout.user_priority_file_name (l_filename.string, True)
+				if l_filename /= Void then
+					l_file.reset (l_filename)
+					if l_file.exists then
+						add_lookup_directories (l_filename, Result)
+					end
 				end
 			end
 
 			if Result.is_empty then
 					-- Extend the default library path
-				Result.force_last ([eiffel_layout.precompilation_path (target.setting_msil_generation), 0])
+				Result.extend ([eiffel_layout.precompilation_path (target.setting_msil_generation), 0])
 			end
 		end
 
@@ -89,7 +95,7 @@ feature {NONE} -- Action handlers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 			include_regexp := compile_list (include)
 		end
 
-	compile_list (a_list: SEARCH_TABLE [STRING]): RX_PCRE_REGULAR_EXPRESSION
+	compile_list (a_list: SEARCH_TABLE [STRING]): REGULAR_EXPRESSION
 			-- Compile `a_list' into a regular expression.
 		local
 			l_regexp_str: STRING
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 				end
 				l_regexp_str.remove_tail (1)
 
-				create Result.make
+				create Result
 				Result.set_caseless ({PLATFORM}.is_windows)
 				Result.compile (l_regexp_str)
 				check
@@ -204,9 +204,9 @@ feature {NONE} -- Implementation
 
 feature {CONF_FILE_RULE} -- Implementation, merging
 
-	exclude_regexp: RX_PCRE_REGULAR_EXPRESSION
+	exclude_regexp: REGULAR_EXPRESSION
 			-- The compiled regexp object for all the strings.
-	include_regexp: RX_PCRE_REGULAR_EXPRESSION
+	include_regexp: REGULAR_EXPRESSION
 			-- The compiled regexp object for all the strings.
 
 feature -- Contracts
@@ -236,7 +236,7 @@ invariant
 	include_patterns_valid: valid_includes
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -122,7 +122,7 @@ feature -- Visit nodes
 			l_version: CONF_VERSION
 			l_settings, l_variables: HASH_TABLE [STRING, STRING]
 			l_a_name, l_a_val: ARRAYED_LIST [STRING]
-			l_sort_lst: ARRAYED_LIST [STRING]
+			l_sorted_list: ARRAYED_LIST [STRING]
 			l_sorter: QUICK_SORTER [STRING]
 		do
 			current_target := a_target
@@ -184,18 +184,18 @@ feature -- Visit nodes
 				l_a_name.force ("value")
 				create l_a_val.make (2)
 				l_settings := a_target.internal_settings
-				create l_sort_lst.make_from_array (l_settings.current_keys)
+				create l_sorted_list.make_from_array (l_settings.current_keys)
 				create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
-				l_sorter.sort (l_sort_lst)
-				l_sort_lst.start
+				l_sorter.sort (l_sorted_list)
+				l_sorted_list.start
 			until
-				l_sort_lst.after
+				l_sorted_list.after
 			loop
 				l_a_val.wipe_out
-				l_a_val.force (l_sort_lst.item_for_iteration)
-				l_a_val.force (l_settings.item (l_sort_lst.item_for_iteration))
+				l_a_val.force (l_sorted_list.item_for_iteration)
+				l_a_val.force (l_settings.item (l_sorted_list.item_for_iteration))
 				append_tag ("setting", Void, l_a_name, l_a_val)
-				l_sort_lst.forth
+				l_sorted_list.forth
 			end
 			if a_target.immediate_setting_concurrency.is_set then
 				if namespace >= namespace_1_7_0 then
@@ -390,19 +390,19 @@ feature {NONE} -- Implementation
 		require
 			a_groups_not_void: a_groups /= Void
 		local
-			l_sort_lst: ARRAYED_LIST [STRING]
+			l_sorted_list: ARRAYED_LIST [STRING]
 			l_sorter: QUICK_SORTER [STRING]
 		do
 			from
-				create l_sort_lst.make_from_array (a_groups.current_keys)
+				create l_sorted_list.make_from_array (a_groups.current_keys)
 				create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
-				l_sorter.sort (l_sort_lst)
-				l_sort_lst.start
+				l_sorter.sort (l_sorted_list)
+				l_sorted_list.start
 			until
-				l_sort_lst.after
+				l_sorted_list.after
 			loop
-				a_groups.item (l_sort_lst.item_for_iteration).process (Current)
-				l_sort_lst.forth
+				a_groups.item (l_sorted_list.item_for_iteration).process (Current)
+				l_sorted_list.forth
 			end
 		end
 
@@ -758,7 +758,7 @@ feature {NONE} -- Implementation
 			l_debugs, l_warnings: HASH_TABLE [BOOLEAN, STRING]
 			l_assertions: CONF_ASSERTIONS
 			l_a_name, l_a_val: ARRAYED_LIST [STRING]
-			l_sort_lst: ARRAYED_LIST [STRING]
+			l_sorted_list: ARRAYED_LIST [STRING]
 			l_sorter: QUICK_SORTER [STRING]
 		do
 			if an_options /= Void and then not an_options.is_empty then
@@ -815,17 +815,17 @@ feature {NONE} -- Implementation
 
 				l_debugs := an_options.debugs
 				if l_debugs /= Void and then not l_debugs.is_empty then
-					create l_sort_lst.make_from_array (l_debugs.current_keys)
+					create l_sorted_list.make_from_array (l_debugs.current_keys)
 					create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
-					l_sorter.sort (l_sort_lst)
+					l_sorter.sort (l_sorted_list)
 					from
-						l_sort_lst.start
+						l_sorted_list.start
 					until
-						l_sort_lst.after
+						l_sorted_list.after
 					loop
-						append_text_indent ("<debug name=%""+escape_xml (l_sort_lst.item_for_iteration)+"%"")
-						append_text (" enabled=%""+l_debugs.item (l_sort_lst.item_for_iteration).out.as_lower+"%"/>%N")
-						l_sort_lst.forth
+						append_text_indent ("<debug name=%""+escape_xml (l_sorted_list.item_for_iteration)+"%"")
+						append_text (" enabled=%""+l_debugs.item (l_sorted_list.item_for_iteration).out.as_lower+"%"/>%N")
+						l_sorted_list.forth
 					end
 				end
 
@@ -863,17 +863,17 @@ feature {NONE} -- Implementation
 
 				l_warnings := an_options.warnings
 				if l_warnings /= Void and then not l_warnings.is_empty then
-					create l_sort_lst.make_from_array (l_warnings.current_keys)
+					create l_sorted_list.make_from_array (l_warnings.current_keys)
 					create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
-					l_sorter.sort (l_sort_lst)
+					l_sorter.sort (l_sorted_list)
 					from
-						l_sort_lst.start
+						l_sorted_list.start
 					until
-						l_sort_lst.after
+						l_sorted_list.after
 					loop
-						append_text_indent ("<warning name=%""+l_sort_lst.item_for_iteration+"%"")
-						append_text (" enabled=%""+l_warnings.item (l_sort_lst.item_for_iteration).out.as_lower+"%"/>%N")
-						l_sort_lst.forth
+						append_text_indent ("<warning name=%""+l_sorted_list.item_for_iteration+"%"")
+						append_text (" enabled=%""+l_warnings.item (l_sorted_list.item_for_iteration).out.as_lower+"%"/>%N")
+						l_sorted_list.forth
 					end
 				end
 

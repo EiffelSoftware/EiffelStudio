@@ -37,7 +37,7 @@ feature -- Access
 	properties: PROPERTY_GRID
 			-- Grid where properties get added.
 
-	debug_clauses: DS_ARRAYED_LIST [STRING]
+	debug_clauses: ARRAYED_LIST [STRING]
 			-- Possible debug clauses.
 
 feature -- Update
@@ -649,7 +649,7 @@ feature {NONE} -- Refresh displayed data.
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

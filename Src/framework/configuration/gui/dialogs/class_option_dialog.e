@@ -225,8 +225,9 @@ feature {NONE} -- Implementation
 	refresh
 			-- Refresh the displayed values.
 		local
-			l_sort: DS_ARRAYED_LIST [STRING]
+			l_sorted_list: ARRAYED_LIST [STRING]
 			l_item: EV_LIST_ITEM
+			l_sorter: QUICK_SORTER [STRING]
 		do
 			class_list.wipe_out
 			properties.reset
@@ -235,28 +236,29 @@ feature {NONE} -- Implementation
 			if value /= Void then
 					-- sort class names alphabetically
 				from
-					create l_sort.make (value.count)
+					create l_sorted_list.make (value.count)
 					value.start
 				until
 					value.after
 				loop
-					l_sort.put_last (value.key_for_iteration)
+					l_sorted_list.extend (value.key_for_iteration)
 					value.forth
 				end
-				l_sort.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
+				create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
+				l_sorter.sort (l_sorted_list)
 
 				from
-					l_sort.start
+					l_sorted_list.start
 				until
-					l_sort.after
+					l_sorted_list.after
 				loop
-					create l_item.make_with_text (l_sort.item_for_iteration)
-					l_item.select_actions.extend (agent show_options (l_sort.item_for_iteration))
+					create l_item.make_with_text (l_sorted_list.item_for_iteration)
+					l_item.select_actions.extend (agent show_options (l_sorted_list.item_for_iteration))
 					class_list.extend (l_item)
-					if current_class /= Void and then current_class.is_equal (l_sort.item_for_iteration) then
+					if current_class /= Void and then current_class.is_equal (l_sorted_list.item_for_iteration) then
 						l_item.enable_select
 					end
-					l_sort.forth
+					l_sorted_list.forth
 				end
 			end
 		end
@@ -275,7 +277,7 @@ invariant
 	elements: is_initialized implies class_list /= Void and new_class /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

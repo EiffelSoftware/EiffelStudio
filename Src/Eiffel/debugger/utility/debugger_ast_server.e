@@ -156,7 +156,7 @@ feature -- Report
 
 			l_id: ID_AS
 			l_name_id: INTEGER
-			l_type_as, l_last_type_as: TYPE_AS
+			l_type_as: TYPE_AS
 			l_cl_type_a: CL_TYPE_A
 			l_solved_type_a: TYPE_A
 			li: LOCAL_INFO
@@ -210,10 +210,8 @@ feature -- Report
 					loop
 						l_loc := l_locals.item
 						l_type_as := l_loc.type
-						if l_type_as /~ l_last_type_as then --| minor optimization
-							l_solved_type_a := l_type_a_generator.evaluate_type (l_type_as, cl)
-							l_solved_type_a := l_type_a_checker.solved (l_solved_type_a, l_type_as)
-						end
+						l_solved_type_a := l_type_a_generator.evaluate_type (l_type_as, cl)
+						l_solved_type_a := l_type_a_checker.solved (l_solved_type_a, l_type_as)
 						l_name_id := l_loc.id
 						create li -- .make (l_name_id)
 						li.set_position (i)

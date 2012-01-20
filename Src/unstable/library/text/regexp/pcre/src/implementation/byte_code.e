@@ -313,7 +313,7 @@ feature {NONE} -- Resizing
 		do
 			if capacity < nb then
 				new_capacity := 2 * nb
-				byte_code := byte_code.aliased_resized_area (new_capacity)
+				byte_code := byte_code.aliased_resized_area_with_default (0, new_capacity)
 				capacity := new_capacity
 			end
 		ensure
@@ -327,7 +327,7 @@ feature {NONE} -- Resizing
 		do
 			if character_sets_capacity < nb then
 				new_capacity := 2 * nb
-				character_sets := character_sets.aliased_resized_area (new_capacity)
+				character_sets := character_sets.aliased_resized_area_with_default (False, new_capacity)
 				character_sets_capacity := new_capacity
 			end
 		ensure

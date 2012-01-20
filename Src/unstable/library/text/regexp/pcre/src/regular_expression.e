@@ -93,7 +93,7 @@ feature -- Compilation
 			Precursor (a_pattern)
 			offset_vector_count := subexpression_count * 2 + 2
 			if offset_vector.count.as_natural_32 < offset_vector_count then
-				offset_vector := offset_vector.aliased_resized_area (offset_vector_count.as_integer_32)
+				offset_vector := offset_vector.aliased_resized_area_with_default (0, offset_vector_count.as_integer_32)
 			end
 		end
 
@@ -430,7 +430,7 @@ feature {NONE} -- Matching
 			brastart_count := offset_vector_count
 			new_count := brastart_lower + brastart_count
 			if brastart_capacity < new_count then
-				brastart_vector := brastart_vector.aliased_resized_area (new_count.as_integer_32)
+				brastart_vector := brastart_vector.aliased_resized_area_with_default (0, new_count.as_integer_32)
 				brastart_capacity := new_count
 			end
 			is_matching_caseless := is_caseless
@@ -493,7 +493,7 @@ feature {NONE} -- Matching
 				eptr_upper := eptr_upper + 1
 				if eptr_capacity.as_integer_32 <= eptr_upper then
 					new_capacity := (2 * (eptr_upper + 1)).as_natural_32
-					eptr_vector := eptr_vector.aliased_resized_area (new_capacity.as_integer_32)
+					eptr_vector := eptr_vector.aliased_resized_area_with_default (0, new_capacity.as_integer_32)
 					eptr_capacity := new_capacity
 				end
 				eptr_vector.put (eptr, eptr_upper.as_integer_32)
@@ -638,7 +638,7 @@ feature {NONE} -- Matching
 						brastart_lower := brastart_lower + brastart_count
 						new_count := brastart_lower + brastart_count
 						if brastart_capacity < new_count then
-							brastart_vector := brastart_vector.aliased_resized_area (new_count.as_integer_32)
+							brastart_vector := brastart_vector.aliased_resized_area_with_default (0, new_count.as_integer_32)
 							brastart_capacity := new_count
 						end
 						j := brastart_lower

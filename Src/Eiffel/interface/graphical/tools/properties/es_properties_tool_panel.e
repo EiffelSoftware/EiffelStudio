@@ -149,6 +149,7 @@ feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 			l_name_prop: STRING_PROPERTY
 			l_extends: BOOLEAN
 			l_debugs: SEARCH_TABLE [STRING]
+			l_sorter: QUICK_SORTER [STRING]
 		do
 				-- sort debugs
 			if workbench.system_defined then
@@ -161,12 +162,13 @@ feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 				until
 					l_debugs.after
 				loop
-					debug_clauses.put_last (l_debugs.item_for_iteration)
+					debug_clauses.extend (l_debugs.item_for_iteration)
 					l_debugs.forth
 				end
-				debug_clauses.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
+				create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
+				l_sorter.sort (debug_clauses)
 			else
-				create debug_clauses.make_default
+				create debug_clauses.make (0)
 			end
 
 			check
@@ -353,7 +355,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

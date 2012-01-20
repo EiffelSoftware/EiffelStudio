@@ -83,10 +83,10 @@ feature {NONE} -- Implementation
 		require
 			a_value_not_void: a_value /= Void
 		local
-			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_regexp: REGULAR_EXPRESSION
 		do
 			if not a_value.is_empty then
-				create l_regexp.make
+				create l_regexp
 				l_regexp.compile ("^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$")
 				l_regexp.match (a_value)
 				if l_regexp.has_matched then
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

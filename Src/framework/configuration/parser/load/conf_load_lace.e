@@ -514,7 +514,7 @@ feature {NONE} -- Implementation of data retrieval
 			l_conf_pre: CONF_PRECOMPILE
 			l_assertions: CONF_ASSERTIONS
 			l_str: STRING
-			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_regexp: REGULAR_EXPRESSION
 			l_rename: LACE_LIST [TWO_NAME_SD]
 			l_loader: CONF_LOAD
 			l_libs: HASH_TABLE [CONF_LIBRARY, STRING]
@@ -692,7 +692,7 @@ feature {NONE} -- Implementation of data retrieval
 								-- there is no format for this, we try to parse it if it is in the format
 								-- w.x.y.z (x, y and z are optional)
 							l_str := l_value.value
-							create l_regexp.make
+							create l_regexp
 							l_regexp.compile ("(\d{1,4})(\.(\d{1,4}))?(\.(\d{1,4}))?(\.(\d{1,4}))?")
 							l_regexp.match (l_str)
 							if l_regexp.has_matched then
@@ -793,11 +793,11 @@ feature {NONE} -- Implementation of data retrieval
 			l_type: LANGUAGE_NAME_SD
 			l_files: LACE_LIST [ID_SD]
 			l_loc: STRING
-			l_ignore: RX_PCRE_REGULAR_EXPRESSION
+			l_ignore: REGULAR_EXPRESSION
 			l_has_ignores: BOOLEAN
 		do
 			if a_externals /= Void then
-				create l_ignore.make
+				create l_ignore
 				if is_library_conversions then
 					if has_wel and has_vision2 then
 						l_ignore.compile (".*library.(vision2|wel)")
@@ -913,10 +913,10 @@ feature {NONE} -- Implementation
 			result_valid: is_valid_config_identifier (Result)
 		end
 
-	invalid_config_regexp: RX_PCRE_REGULAR_EXPRESSION
+	invalid_config_regexp: REGULAR_EXPRESSION_MATCH_AND_REPLACE
 			-- Regular expression that matches all invalid characters in a configuration identifier.
 		once
-			create Result.make
+			create Result
 			Result.compile ("[^\w._-]")
 			Result.optimize
 		end
@@ -927,7 +927,7 @@ invariant
 	extension_name_not_empty: not extension_name.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

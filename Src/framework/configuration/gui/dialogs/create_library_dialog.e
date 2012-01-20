@@ -274,7 +274,7 @@ feature {NONE} -- GUI elements
 	browse_dialog: EV_FILE_OPEN_DIALOG
 			-- Dialog to browse to a library
 		local
-			l_dir: KL_DIRECTORY
+			l_dir: DIRECTORY
 		once
 			create Result
 			create l_dir.make (target.system.directory)
@@ -294,25 +294,25 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	libraries: DS_HASH_SET [STRING]
+	libraries: SEARCH_TABLE [STRING]
 			-- A set of libraries to display in the dialog
 		require
 			is_eiffel_layout_defined: is_eiffel_layout_defined
 		local
 			l_dirs: like lookup_directories
-			l_libraries: DS_HASH_SET [STRING]
-			l_dir: KL_DIRECTORY
+			l_libraries: SEARCH_TABLE [STRING]
+			l_dir: DIRECTORY
 			l_path: STRING
 			l_location: CONF_DIRECTORY_LOCATION
 		do
-			create Result.make_default
 			l_dirs := lookup_directories
+			create Result.make (l_dirs.count)
 			from l_dirs.start until l_dirs.after loop
 				create l_location.make (l_dirs.item_for_iteration.path, target)
 				l_path := l_location.evaluated_path.as_string_8
 				create l_dir.make (l_path)
 				if l_dir.is_readable then
-					create l_libraries.make_default
+					create l_libraries.make (10)
 					add_configs_in_directory (l_dir, l_dirs.item_for_iteration.depth, l_libraries)
 					from l_libraries.start until l_libraries.after loop
 						l_libraries.item_for_iteration.replace_substring (l_dirs.item_for_iteration.path, 1, l_path.count)
@@ -357,31 +357,34 @@ feature {NONE} -- Access
 			result_attached: attached Result
 		end
 
-	lookup_directories: DS_ARRAYED_LIST [TUPLE [path: STRING; depth: INTEGER]]
+	lookup_directories: ARRAYED_LIST [TUPLE [path: STRING; depth: INTEGER]]
 			-- A list of lookup directories
 		require
 			is_eiffel_layout_defined: is_eiffel_layout_defined
 		local
-			l_file: FILE_NAME
+			l_filename: FILE_NAME
+			l_file: RAW_FILE
 		do
-			create Result.make_default
+			create Result.make (10)
 
-			l_file := eiffel_layout.libraries_config_name
-			if file_system.file_exists (l_file) then
-				add_lookup_directories (l_file, Result)
+			l_filename := eiffel_layout.libraries_config_name
+			create l_file.make (l_filename)
+			if l_file.exists then
+				add_lookup_directories (l_filename, Result)
 			end
 			if eiffel_layout.is_user_files_supported then
-				if
-					attached eiffel_layout.user_priority_file_name (l_file.string, True) as l_user_file and then
-					file_system.file_exists (l_user_file)
-				then
-					add_lookup_directories (l_user_file, Result)
+				l_filename := eiffel_layout.user_priority_file_name (l_filename.string, True)
+				if l_filename /= Void then
+					l_file.reset (l_filename)
+					if l_file.exists then
+						add_lookup_directories (l_filename, Result)
+					end
 				end
 			end
 
 			if Result.is_empty then
 					-- Extend the default library path
-				Result.force_last ([eiffel_layout.library_path.string.as_attached, 2])
+				Result.extend ([eiffel_layout.library_path.string.as_attached, 2])
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -505,7 +508,7 @@ feature {NONE} -- Basic operation
 
 	populated_configuration_libraries: detachable like configuration_libraries
 	libraries_table: detachable HASH_TABLE [STRING, STRING]
-	libraries_sorted_keys: detachable DS_ARRAYED_LIST [STRING]
+	libraries_sorted_keys: detachable ARRAYED_LIST [STRING]
 
 	populate_libraries
 			-- Populates the list of libraries in the UI
@@ -517,6 +520,7 @@ feature {NONE} -- Basic operation
 			l_path: STRING
 			l_key: STRING
 			l_style: EV_POINTER_STYLE
+			l_sorter: QUICK_SORTER [STRING]
 		do
 			l_style := pointer_style
 			set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor))
@@ -541,7 +545,8 @@ feature {NONE} -- Basic operation
 
 				-- Sort keys
 			create l_libraries_sorted_keys.make_from_array (l_libraries_table.current_keys)
-			l_libraries_sorted_keys.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
+			create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
+			l_sorter.sort (l_libraries_sorted_keys)
 
 			libraries_table := l_libraries_table
 			libraries_sorted_keys := l_libraries_sorted_keys
@@ -668,7 +673,7 @@ feature {NONE} -- Basic operation
 			end
 		end
 
-	add_configs_in_directory (a_dir: KL_DIRECTORY; a_depth: INTEGER; a_libraries: DS_HASH_SET [STRING])
+	add_configs_in_directory (a_dir: DIRECTORY; a_depth: INTEGER; a_libraries: SEARCH_TABLE [STRING])
 			-- Add config files in `a_path' to `a_libraries'.
 		require
 			a_dir_attached: attached a_dir
@@ -681,55 +686,50 @@ feature {NONE} -- Basic operation
 			l_lib_file: STRING
 			l_file_name: FILE_NAME
 			l_file_string: STRING
+			l_file: RAW_FILE
 		do
-			if attached a_dir.filenames as l_items then
-				from
-					i := l_items.lower
-					l_count := l_items.upper
-				until
-					i > l_count
-				loop
-					l_lib_file := l_items.item (i)
+			if attached a_dir.linear_representation as l_items then
+				across l_items as l_files loop
+					l_lib_file := l_files.item
 					if valid_config_extension (l_lib_file) then
 						create l_file_name.make_from_string (a_dir.name)
 						l_file_name.extend (l_lib_file)
-						if {PLATFORM_CONSTANTS}.is_windows then
-							l_file_string := l_file_name.string.as_lower
-						else
-							l_file_string := l_file_name.string
-						end
-						if not a_libraries.has (l_file_string) then
-							a_libraries.force_last (l_file_string)
+						create l_file.make (l_file_name)
+						if l_file.exists and then l_file.is_plain then
+							if {PLATFORM_CONSTANTS}.is_windows then
+								l_file_string := l_file_name.string.as_lower
+							else
+								l_file_string := l_file_name.string
+							end
+							if not a_libraries.has (l_file_string) then
+								a_libraries.force (l_file_string)
+							end
 						end
 					end
-					i := i + 1
 				end
 
-				if (a_depth = -1 or a_depth > 0) and then attached a_dir.directory_names as l_subdirs then
+				if (a_depth = -1 or a_depth > 0) and then attached a_dir.linear_representation as l_subdirs then
 						-- Perform recursion
-					from
-						i := l_subdirs.lower
-						l_count := l_subdirs.upper
-					until
-						i > l_count
-					loop
-						create l_dir_name.make_from_string (a_dir.name)
-						l_dir_name.extend (l_subdirs.item (i))
-						if file_system.directory_exists (l_dir_name) then
-							add_configs_in_directory (create {KL_DIRECTORY}.make (l_dir_name), (a_depth - 1).max (-1), a_libraries)
+					across l_subdirs as l_dirs loop
+						if l_dirs.item /~ "." and l_dirs.item /~ ".." then
+							create l_dir_name.make_from_string (a_dir.name)
+							l_dir_name.extend (l_dirs.item)
+							create l_file.make (l_dir_name)
+							if l_file.exists and then l_file.is_directory then
+								add_configs_in_directory (create {DIRECTORY}.make (l_dir_name), (a_depth - 1).max (-1), a_libraries)
+							end
 						end
-						i := i + 1
 					end
 				end
 			end
 		end
 
-	add_lookup_directories (a_path: FILE_NAME; a_list: DS_ARRAYED_LIST [TUPLE [path: STRING; depth: INTEGER]])
+	add_lookup_directories (a_path: FILE_NAME; a_list: ARRAYED_LIST [TUPLE [path: STRING; depth: INTEGER]])
 			-- Adds look up directories from a file located at `a_path' into `a_list'
 		require
 			a_path_attached: attached a_path
 			not_a_path_is_empty: not a_path.is_empty
-			a_path_exists: file_system.file_exists (a_path)
+			a_path_exists: (create {RAW_FILE}.make (a_path)).exists
 			a_list_attached: attached a_list
 		local
 			l_file: RAW_FILE
@@ -764,7 +764,7 @@ feature {NONE} -- Basic operation
 						else
 							l_depth := 1
 						end
-						a_list.force_last ([l_location.as_attached, l_depth])
+						a_list.extend ([l_location.as_attached, l_depth])
 					end
 				end
 			end
@@ -776,7 +776,7 @@ feature {NONE} -- Constants
 	location_column: INTEGER = 2
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

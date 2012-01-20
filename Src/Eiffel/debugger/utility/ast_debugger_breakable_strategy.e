@@ -662,7 +662,6 @@ feature {NONE} -- Implementation: Iteration
 			l_inh_feat: detachable FEATURE_I
 			l_assertions: detachable ARRAYED_LIST [DBG_CHAINED_ASSERTIONS]
 			l_assert_id_set: detachable ASSERT_ID_SET
-			l_inh_feat_as: detachable FEATURE_AS
 		do
 			l_assert_id_set := a_feat.assert_id_set
 			if
@@ -681,12 +680,14 @@ feature {NONE} -- Implementation: Iteration
 						l_inh_written_class := l_inh_info.written_class
 						if l_inh_written_class.has_feature_table then
 							l_inh_feat := l_inh_written_class.feature_of_body_index (l_inh_info.body_index)
-							if l_inh_feat /= Void then
-								l_inh_feat_as := l_inh_feat.body
-							end
-							if attached {ROUTINE_AS} l_inh_feat_as.body.content as l_inh_rout_as then
+							if
+								l_inh_feat /= Void and then attached l_inh_feat.body as l_inh_feat_as and then
+								attached {ROUTINE_AS} l_inh_feat_as.body.content as l_inh_rout_as
+							then
 								if l_inh_rout_as.has_assertion then
-									l_assertions.force (create {DBG_CHAINED_ASSERTIONS}.make (l_inh_info.written_in, l_inh_rout_as.precondition, l_inh_rout_as.postcondition))
+									l_assertions.force (create {DBG_CHAINED_ASSERTIONS}.make (
+										l_inh_info.written_in,
+										l_inh_rout_as.precondition, l_inh_rout_as.postcondition))
 								end
 							end
 						end

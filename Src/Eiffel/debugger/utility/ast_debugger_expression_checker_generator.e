@@ -20,6 +20,9 @@ inherit
 			feature_with_name_using,
 			match_list_of_class,
 			is_void_safe_call,
+			is_void_safe_initialization,
+			is_void_safe_conformance,
+			is_void_safe_construct,
 			set_routine_ids
 		end
 
@@ -459,7 +462,28 @@ feature {AST_FEATURE_CHECKER_GENERATOR}
 
 	is_void_safe_call (a_class: CLASS_C): BOOLEAN
 			-- <Precursor>
-			-- Never check void-safety for debugger's expressions
+			-- Never check void-safety for debugger's expressions.
+		do
+			-- Result := False
+		end
+
+	is_void_safe_initialization (a_class: CLASS_C): BOOLEAN
+			-- <Precursor>
+			-- Never check void-safety for debugger's expressions.
+		do
+			-- Result := False
+		end
+
+	is_void_safe_conformance (a_class: CLASS_C): BOOLEAN
+			-- <Precursor>
+			-- Never check void-safety for debugger's expressions.
+		do
+			-- Result := False
+		end
+
+	is_void_safe_construct (a_class: CLASS_C): BOOLEAN
+			-- <Precursor>
+			-- Never check void-safety for debugger's expressions.
 		do
 			-- Result := False
 		end
@@ -617,7 +641,7 @@ feature {INSPECT_CONTROL} -- AST modification
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

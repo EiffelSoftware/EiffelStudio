@@ -10,6 +10,41 @@ class
 
 feature -- Externals
 
+	frozen gtk_im_context_simple_new: POINTER
+		external
+			"C signature (): GtkIMContext* use <ev_gtk.h>"
+		end
+
+	frozen gtk_im_context_reset (a_context: POINTER)
+		external
+			"C signature (GtkIMContext*) use <ev_gtk.h>"
+		end
+
+	frozen gtk_im_context_focus_in (a_context: POINTER)
+		external
+			"C signature (GtkIMContext*) use <ev_gtk.h>"
+		end
+
+	frozen gtk_im_context_focus_out (a_context: POINTER)
+		external
+			"C signature (GtkIMContext*) use <ev_gtk.h>"
+		end
+
+	frozen gtk_im_context_filter_keypress (a_context, a_event_key: POINTER): BOOLEAN
+		external
+			"C signature (GtkIMContext*, GdkEventKey*): EIF_BOOLEAN use <ev_gtk.h>"
+		end
+
+	frozen gtk_im_context_set_client_window (a_context, a_window: POINTER)
+		external
+			"C signature (GtkIMContext*, GdkWindow*) use <ev_gtk.h>"
+		end
+
+	frozen gtk_im_context_get_surrounding (a_context: POINTER; a_text_ptr: TYPED_POINTER [POINTER]; a_cursor_index: TYPED_POINTER [INTEGER]): BOOLEAN
+		external
+			"C signature (GtkIMContext*, gchar**, gint*): EIF_BOOLEAN use <ev_gtk.h>"
+		end
+
 	frozen gdk_keyval_to_unicode (a_keyval: NATURAL_32): NATURAL_32
 		external
 			"C (guint): guint | <ev_gtk.h>"

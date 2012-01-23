@@ -21,7 +21,6 @@ feature {NONE} -- Initialization
 			-- Create a GtkLabel to display the text.
 		do
 			text_label := {GTK}.gtk_label_new (default_pointer)
-			{GTK}.gtk_widget_show (text_label)
 			{GTK}.gtk_misc_set_alignment (text_label, {REAL_32} 0.0, {REAL_32} 0.5)
 			{GTK}.gtk_misc_set_padding (text_label, 2, 0)
 		end
@@ -100,6 +99,13 @@ feature -- Element change
 				a_cs := App_implementation.c_string_from_eiffel_string (a_text)
 				real_text := Void
 				{GTK}.gtk_label_set_text (text_label, a_cs.item)
+			end
+				-- Hide label if there is no text to display so it doesn't interfere with sizing calculations as happens to be the case with pixmap only buttons.
+				-- A `string_length' of 1 means just the null character is available after the conversion.
+			if a_cs.string_length = 1 then
+				{GTK}.gtk_widget_hide (text_label)
+			else
+				{GTK}.gtk_widget_show (text_label)
 			end
 		end
 

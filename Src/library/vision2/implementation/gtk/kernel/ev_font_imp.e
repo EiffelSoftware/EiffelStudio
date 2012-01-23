@@ -143,8 +143,6 @@ feature -- Element change
 		a_preferred_families: like preferred_families)
 			-- Set `a_family', `a_weight', `a_shape' `a_height' and
 			-- `a_preferred_face' at the same time for speed.
-		local
-			a_agent: PROCEDURE [EV_FONT_IMP, TUPLE [STRING_32]]
 		do
 			ignore_font_metric_calculation := True
 			Precursor (a_family, a_weight, a_shape, a_height, a_preferred_families)

@@ -2592,7 +2592,7 @@ feature {NONE} -- Choice Positioning
 		require
 			a_positioned_not_void: a_positioned /= Void
 		local
-			screen: EB_STUDIO_SCREEN
+			screen: EV_SCREEN
 			right_space,
 			list_width: INTEGER
 		do
@@ -2616,7 +2616,7 @@ feature {NONE} -- Choice Positioning
 		require
 			a_positioned_not_void: a_positioned /= Void
 		local
-			screen: EB_STUDIO_SCREEN
+			screen: EV_SCREEN
 			show_below: BOOLEAN
 			l_height: INTEGER
 		do
@@ -2651,7 +2651,7 @@ feature {NONE} -- Choice Positioning
 			upper_space,
 			lower_space,
 			y_pos: INTEGER
-			screen: EB_STUDIO_SCREEN
+			screen: EV_SCREEN
 			show_below: BOOLEAN
 		do
 				-- Get y pos of cursor
@@ -2683,7 +2683,7 @@ feature {NONE} -- Choice Positioning
 		require
 			a_positioned_not_void: a_positioned /= Void
 		local
-			l_screen: EB_STUDIO_SCREEN
+			l_screen: EV_SCREEN
 		do
 			Result := a_positioned.width
 			create l_screen
@@ -2691,7 +2691,7 @@ feature {NONE} -- Choice Positioning
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

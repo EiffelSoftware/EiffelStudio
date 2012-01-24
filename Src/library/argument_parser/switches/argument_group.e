@@ -23,43 +23,16 @@ feature {NONE} -- Initialization
 			-- `a_allow_non_switched': True to allow non switched arguments; False to allow only switch qualified arguments.
 		require
 			a_switches_attached: a_switches /= Void
-			switches_contained_unique_items: switches_contained_unique_items (a_switches)
+			switches_contained_unique_items: across a_switches as c all a_switches.occurrences (c.item) = 1 end
 		local
-			i: INTEGER
-			l_upper: INTEGER
-			l_switch: detachable ARGUMENT_SWITCH
 			l_switches: like switches
-			l_cursor: CURSOR
 		do
-			if attached {LIST [ARGUMENT_SWITCH]} a_switches as l_list then
-				create l_switches.make (0)
-				l_cursor := l_list.cursor
-				from l_list.start until l_list.after loop
-					l_switch := l_list.item_for_iteration
-					if l_switch /= Void then
-						l_switches.extend (l_switch)
-					end
-					l_list.forth
-				end
-				l_list.go_to (l_cursor)
-			elseif attached {ARRAY [ARGUMENT_SWITCH]} a_switches as l_array then
-				create l_switches.make (l_array.count)
-				from
-					i := l_array.lower
-					l_upper := l_array.upper
-				until
-					i > l_upper
-				loop
-					l_switch := l_array[i]
-					if l_switch /= Void then
-						l_switches.extend (l_switch)
-					end
-					i := i + 1
-				end
-			else
-				create l_switches.make (0)
-				check
-					should_not_occur: False
+			create l_switches.make (5) -- Default value is ok, no need to optimize with count of a_switches
+			across
+				a_switches as c
+			loop
+				if attached c.item as l_switch then
+					l_switches.extend (l_switch)
 				end
 			end
 			switches := l_switches
@@ -77,7 +50,7 @@ feature {NONE} -- Initialization
 			-- `a_allow_non_switched': True to allow non switched arguments; False to allow only switch qualified arguments.
 		require
 			a_switches_attached: a_switches /= Void
-			switches_contained_unique_items: switches_contained_unique_items (a_switches)
+			switches_contained_unique_items: across a_switches as c all a_switches.occurrences (c.item) = 1 end
 		do
 			make (a_switches, a_allow_non_switched)
 			is_hidden := True
@@ -98,23 +71,6 @@ feature -- Status report
 
 	is_allowing_non_switched_arguments: BOOLEAN
 			-- Indicates if non-switched arguments can be used in the group.
-
-	switches_contained_unique_items (a_switches: INDEXABLE [ARGUMENT_SWITCH, INTEGER]): BOOLEAN
-			-- `a_switches' contains only unique items?
-		do
-			Result := True
-			if attached {SEQUENCE [ARGUMENT_SWITCH]} a_switches as l_seq then
-				from
-					l_seq.start
-				until
-					l_seq.after or not Result
-				loop
-					Result := l_seq.occurrences (l_seq.item) = 1
-				end
-			elseif attached {ARRAY [ARGUMENT_SWITCH]} a_switches as l_arr then
-				Result := across l_arr as c all l_arr.occurrences (c.item) = 1 end
-			end
-		end
 
 invariant
 	switches_attached: switches /= Void

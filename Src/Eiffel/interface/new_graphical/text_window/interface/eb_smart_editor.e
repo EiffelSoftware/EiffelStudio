@@ -644,7 +644,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 	calculate_completion_list_x_position: INTEGER
 			-- Determine the x position to display the completion list
 		local
-			screen: EB_STUDIO_SCREEN
+			screen: EV_SCREEN
 			tok: EDITOR_TOKEN
 			cursor: like cursor_type
 			right_space,
@@ -688,7 +688,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 			-- Determine the y position to display the completion list
 		local
 			cursor: like cursor_type
-			screen: EB_STUDIO_SCREEN
+			screen: EV_SCREEN
 			preferred_height,
 			upper_space,
 			lower_space: INTEGER
@@ -762,7 +762,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 			upper_space,
 			lower_space,
 			y_pos: INTEGER
-			screen: EB_STUDIO_SCREEN
+			screen: EV_SCREEN
 			cursor: like cursor_type
 			show_below: BOOLEAN
 			tok: EDITOR_TOKEN
@@ -1910,7 +1910,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

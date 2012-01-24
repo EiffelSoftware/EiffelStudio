@@ -311,7 +311,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code completion window.
 	calculate_completion_list_x_position: INTEGER
 			-- Determine the x position to display the completion list
 		local
-			screen: EB_STUDIO_SCREEN
+			screen: EV_SCREEN
 			right_space,
 			list_width: INTEGER
 			l_font: EV_FONT
@@ -339,7 +339,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code completion window.
 	calculate_completion_list_y_position: INTEGER
 			-- Determine the y position to display the completion list
 		local
-			screen: EB_STUDIO_SCREEN
+			screen: EV_SCREEN
 			preferred_height,
 			upper_space,
 			lower_space: INTEGER
@@ -401,7 +401,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code completion window.
 			upper_space,
 			lower_space,
 			y_pos: INTEGER
-			screen: EB_STUDIO_SCREEN
+			screen: EV_SCREEN
 			show_below: BOOLEAN
 		do
 				-- Get y pos of cursor
@@ -722,7 +722,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

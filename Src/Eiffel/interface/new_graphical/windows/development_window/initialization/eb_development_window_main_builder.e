@@ -44,7 +44,7 @@ feature -- Command
 	init_size_and_position
 			-- Initialize window size.
 		local
-			l_screen: EB_STUDIO_SCREEN
+			l_screen: EV_SCREEN
 			l_x, l_y: INTEGER
 			l_data: EB_DEVELOPMENT_WINDOW_DATA
 			l_border_width: INTEGER
@@ -87,7 +87,7 @@ feature -- Command
 	safe_restore
 			-- Ensure that when restoring a window it appears on screen.
 		local
-			l_screen: EB_STUDIO_SCREEN
+			l_screen: EV_SCREEN
 			l_x, l_y: INTEGER
 			l_modified: BOOLEAN
 		do
@@ -1187,7 +1187,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

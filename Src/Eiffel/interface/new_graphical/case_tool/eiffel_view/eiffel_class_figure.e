@@ -384,7 +384,7 @@ feature {NONE} -- Implementation (adding relations)
 		local
 			es_link: ES_INHERITANCE_LINK
 			other_model: ES_CLASS
-			screen: EB_STUDIO_SCREEN
+			screen: EV_SCREEN
 			x_pos, y_pos, screen_w, screen_h: INTEGER
 			cg: CLASS_TEXT_MODIFIER
 			added_code: LIST [TUPLE [STRING, INTEGER]]
@@ -443,7 +443,7 @@ feature {NONE} -- Implementation (adding relations)
 		require
 			client_not_void: client /= Void
 		local
-			screen: EB_STUDIO_SCREEN
+			screen: EV_SCREEN
 			x_pos, y_pos, screen_w, screen_h: INTEGER
 			cg: CLASS_TEXT_MODIFIER
 			added_code: LIST [TUPLE [STRING, INTEGER]]
@@ -674,7 +674,7 @@ feature {NONE} -- Implementation (move)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -353,7 +353,6 @@ feature -- Roundtrip
 		local
 			l_strategy: like Current
 			l_feat: FEATURE_I
-			l_leaf_list: LEAF_AS_LIST
 		do
 			if not expr_type_visiting then
 				if l_as.inl_rout_id > 0 then
@@ -367,7 +366,6 @@ feature -- Roundtrip
 					last_type := expr_type (l_as)
 				else
 					has_error_internal := True
-					l_leaf_list	:= match_list_server.item (current_class.class_id)
 				end
 			else
 				if not has_error_internal then

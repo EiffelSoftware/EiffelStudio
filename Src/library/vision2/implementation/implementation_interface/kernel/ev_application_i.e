@@ -867,6 +867,24 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 	menu_placement_offset: INTEGER = 3
 		-- Offset for both X and Y dimensions to which to move the menu so its placement is directly underneath the mouse pointer.
 
+feature {EV_ANY_I} -- Tab Navigation
+
+	tab_navigation_state: NATURAL_8
+		-- Current tab navigation state.
+
+	set_tab_navigation_state (a_state: like tab_navigation_state)
+			-- Set `tab_navigation_state' to `a_state'.
+		require
+			a_valid_state: a_state >= tab_state_none and then a_state <= tab_state_from_next
+		do
+			tab_navigation_state := a_state
+		end
+
+	tab_state_none: NATURAL_8 = 0
+	tab_state_from_previous: NATURAL_8 = 1
+	tab_state_from_next: NATURAL_8 = 2
+		-- Tab navigation states.
+
 feature {NONE} -- Debug
 
 	trace

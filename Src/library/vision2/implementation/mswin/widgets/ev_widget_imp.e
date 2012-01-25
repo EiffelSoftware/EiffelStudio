@@ -946,7 +946,14 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 							-- Don't do anything if search returns `Current'.
 						window := window_of_item (hwnd)
 						if window /= Void then
+								-- Set, then reset, {EV_APPLICATION_I}.current_tab_navigation_state.
+							if direction then
+								application_implementation.set_tab_navigation_state ({EV_APPLICATION_I}.tab_state_from_previous)
+							else
+								application_implementation.set_tab_navigation_state ({EV_APPLICATION_I}.tab_state_from_next)
+							end
 							window.set_focus
+							application_implementation.set_tab_navigation_state ({EV_APPLICATION_I}.tab_state_none)
 						end
 					end
 				end

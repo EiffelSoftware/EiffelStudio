@@ -146,16 +146,6 @@ feature -- Access
 			Result := 0
 		end
 
-	is_displayed: BOOLEAN
-			-- Is `Current' visible on the screen?
-			-- `True' when parent displayed.
-			-- An item that is_displayed does not necessarily have to be visible on screen at that particular time.
-		do
-			Result := attached parent_i as l_parent_i and then l_parent_i.is_displayed
-				and then attached column_i as l_column_i and then l_column_i.is_show_requested
-				and then attached row_i as l_row_i and then l_row_i.is_show_requested
-		end
-
 	width: INTEGER
 			-- Width of `Current' in pixels.
 		require
@@ -195,6 +185,18 @@ feature -- Access
 	hash_code: INTEGER
 			-- Used to uniquely identify grid item within `parent_i'.
 			-- Should be set to 0 if `Current' is not parented.
+
+feature -- Status Report
+
+	is_displayed: BOOLEAN
+			-- Is `Current' visible on the screen?
+			-- `True' when parent displayed.
+			-- An item that is_displayed does not necessarily have to be visible on screen at that particular time.
+		do
+			Result := attached parent_i as l_parent_i and then l_parent_i.is_displayed
+				and then attached column_i as l_column_i and then l_column_i.is_show_requested
+				and then attached row_i as l_row_i and then l_row_i.is_show_requested
+		end
 
 feature -- Status setting
 

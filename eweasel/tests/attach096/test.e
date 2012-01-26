@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			-- Use unqualified agent call that does not access uninitialized attributes.
 		do
 			bar := "test"
-			execute (agent test_bar) -- No error because test_safe does not use `foo'.
+			execute (agent test_bar) -- VEVI (Should be no error because test_safe does not use `foo'.)
 			foo := "test"
 		end
 
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			-- Use inline agent call that does not access uninitialized attributes.
 		do
 			bar := "test"
-			execute (agent do bar.to_lower end) -- No error because `foo' is not used.
+			execute (agent do bar.to_lower end) -- VEVI (Should be no error because `foo' is not used.)
 			foo := "test"
 		end
 

@@ -1,11 +1,11 @@
 class TEST
 
 create
-       make
+	make
 
 feature {NONE} -- Creation
 
-        make
+	make
 		local
 			a: separate A
 		do

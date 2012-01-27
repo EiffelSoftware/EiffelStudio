@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 	initialize
 			-- Mark `Current' as initialized.
 		do
-			set_text ("")
+			set_text ({STRING_32} "")
 			internal_left_border := -1
 			set_spacing (2)
 			align_text_left

@@ -28,6 +28,7 @@ class
 inherit
 	EV_GRID_LABEL_ITEM
 		redefine
+			is_tab_navigatable,
 			activate_action,
 			deactivate
 		end
@@ -50,6 +51,11 @@ feature -- Element change
 		ensure
 			item_strings_set: item_strings = a_string_array
 		end
+
+feature -- Status report
+
+	is_tab_navigatable: BOOLEAN = True
+		-- <Precursor>
 
 feature -- Access
 

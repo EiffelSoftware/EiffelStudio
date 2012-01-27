@@ -27,6 +27,7 @@ class
 inherit
 	EV_GRID_LABEL_ITEM
 		redefine
+			is_tab_navigatable,
 			activate_action,
 			deactivate
 		end
@@ -45,6 +46,11 @@ feature -- Element change
 		ensure
 			validation_agent_set: validation_agent = a_validation_agent
 		end
+
+feature -- Status Report
+
+	is_tab_navigatable: BOOLEAN = True
+		-- <Precursor>
 
 feature -- Access
 

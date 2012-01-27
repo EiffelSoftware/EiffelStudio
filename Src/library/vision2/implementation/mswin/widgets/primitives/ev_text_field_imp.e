@@ -145,7 +145,7 @@ feature -- Element Change
 
 				-- If `Es_multiline' is specified then we need to make sure that the change actions are fired explicitly
 				-- as Windows does not fire `En_update' and `En_change' actions.
-			if is_multiline then
+			if style & Es_multiline /= 0 then
 					-- Explicitly fire En_change action to emulate single line behavior.
 				{WEL_API}.send_message (default_parent.item, Wm_command, to_wparam (En_change |<< 16) , wel_item)
 			end
@@ -359,12 +359,6 @@ feature {NONE} -- WEL Implementation
 			if attached {EV_SPIN_BUTTON_IMP} wel_parent as l_spin_button then
 				l_spin_button.on_key_down (virtual_key, key_data)
 			end
-		end
-
-	is_multiline: BOOLEAN
-			-- Does `Current' have multiline set?
-		do
-			Result := style & es_multiline /= 0
 		end
 
 	on_en_change

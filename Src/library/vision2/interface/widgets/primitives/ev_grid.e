@@ -1237,6 +1237,28 @@ feature -- Status setting
 			Result := implementation.is_always_selected
 		end
 
+	enable_item_tab_navigation
+			-- Allow keyboard tab navigation to occur within current for items that return True for 'has_default_activation'.
+			-- Tabbing in to the grid from a previous widget will select the first item.
+			-- Shift/Tabbing in to the grid will select the most bottom/right default activable grid item.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_item_tab_navigation
+		ensure
+			tabbed_item_navigation_enabled: is_item_tab_navigation_enabled
+		end
+
+	disable_item_tab_navigation
+			-- Disable tabbed item navigation so that tabbing loses focus from the grid by default.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.disable_item_tab_navigation
+		ensure
+			tabbed_item_navigation_disabled: not is_item_tab_navigation_enabled
+		end
+
 	show_header
 			-- Ensure header displayed.
 		require
@@ -1901,6 +1923,12 @@ feature -- Status report
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_selection_keyboard_handling_enabled
+		end
+
+	is_item_tab_navigation_enabled: BOOLEAN
+			-- Is the tabbing mode for `Current' set so that keyboard tabbing moves to/from 'has_default_activation' grid items?
+		do
+			Result := implementation.is_item_tab_navigation_enabled
 		end
 
 	first_visible_row: detachable EV_GRID_ROW

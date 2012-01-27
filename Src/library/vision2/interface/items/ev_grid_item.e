@@ -175,6 +175,8 @@ feature -- Access
 			result_non_negative: Result >= 0
 		end
 
+feature -- Status report
+
 	is_displayed: BOOLEAN
 			-- Is `Current' visible on the screen?
 			-- An item that is_displayed does not necessarily have to be visible on screen at that particular time.
@@ -184,6 +186,17 @@ feature -- Access
 			Result := implementation.is_displayed
 		ensure
 			bridge_ok: Result = implementation.is_displayed
+		end
+
+	is_tab_navigatable: BOOLEAN
+			-- Is `Current' tab key navigatable?
+			-- Used to determine whether it may be tabbed to if `is_item_tab_navigation_enabled' is True.
+			-- Redefined by descendents.
+		require
+			not_destroyed: not is_destroyed
+		do
+			-- Result := False
+				-- By default items are not tab navigatable.
 		end
 
 feature -- Status setting

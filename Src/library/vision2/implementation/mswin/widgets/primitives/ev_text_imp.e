@@ -38,7 +38,8 @@ inherit
 			select_region,
 			selected_text,
 			ignore_character_code,
-			text_component_imp_set_selection
+			text_component_imp_set_selection,
+			is_multiline
 		end
 
 	WEL_MULTIPLE_LINE_EDIT
@@ -551,6 +552,12 @@ feature {NONE} -- WEL Implementation
 			-- Extended windows style used to create `Current'.
 		do
 			Result := Ws_ex_clientedge
+		end
+
+	is_multiline: BOOLEAN
+			-- <Precursor>
+		do
+			Result := True
 		end
 
 	on_en_change

@@ -24,7 +24,8 @@ inherit
 			wel_background_color,
 			wel_foreground_color,
 			background_color_internal,
-			default_process_message
+			default_process_message,
+			tab_action
 		end
 
 	EV_TEXT_COMPONENT_ACTION_SEQUENCES_IMP
@@ -351,7 +352,29 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_INTERNAL_COMBO_FIELD_IMP} -- Implementatio
 			override_context_menu := False
 		end
 
+feature {EV_DIALOG_IMP_COMMON} -- Implementation
+
+	tab_action (a_direction: BOOLEAN)
+			-- <Precursor>
+		do
+			if application_imp.ctrl_pressed then
+					-- Ignore tab navigation handling if control is pressed.
+				if not is_multiline then
+						-- For single line controls this prevents superflous tabs being inserted during tab navigation.
+					disable_default_processing
+				end
+			else
+				Precursor (a_direction)
+			end
+		end
+
 feature {NONE} -- Implementation
+
+	is_multiline: BOOLEAN
+			-- Is `Current' multi-line control?
+		do
+			Result := False
+		end
 
 	default_process_message (msg: INTEGER; wparam, lparam: POINTER)
 			-- Process `msg' which has not been processed by

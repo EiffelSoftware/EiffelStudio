@@ -139,13 +139,13 @@ feature -- Access
 			column_not_void: Result /= Void
 		end
 
-	item (a_column: INTEGER; a_row: INTEGER;): detachable EV_GRID_ITEM
+	item (a_column: INTEGER; a_row: INTEGER): detachable EV_GRID_ITEM
 			-- Cell at `a_column' and `a_row' position, Void if none.
 		require
 			a_column_positive: a_column > 0
-			a_column_less_than_column_count: a_column <= column_count
+			a_column_not_greater_than_column_count: a_column <= column_count
 			a_row_positive: a_row > 0
-			a_row_less_than_row_count: a_row <= row_count
+			a_row_not_greater_than_row_count: a_row <= row_count
 		local
 			item_i: detachable EV_GRID_ITEM_I
 		do
@@ -568,7 +568,6 @@ feature -- Access
 			-- Assign `default_key_processing_handler' to `a_handler'.
 		do
 			default_key_processing_handler := a_handler
-			drawable.default_key_processing_handler := a_handler
 		end
 
 	has_capture: BOOLEAN
@@ -1328,8 +1327,23 @@ feature -- Status setting
 			is_always_selected := False
 		end
 
+	enable_item_tab_navigation
+			-- Ensure that tab navigation occurs for each navigatable item.
+		do
+			is_item_tab_navigation_enabled := True
+		end
+
+	disable_item_tab_navigation
+			-- Disable tabbed item navigation so that tabbing loses focus from the grid by default.
+		do
+			is_item_tab_navigation_enabled := False
+		end
+
 	is_always_selected: BOOLEAN
 			-- Ensure that the user may not completely remove the selection from `Current'.
+
+	is_item_tab_navigation_enabled: BOOLEAN
+			-- Is item navigation enabled for tabbing between items?
 
 	show_header
 			-- Ensure header displayed.
@@ -4169,20 +4183,12 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 
 			create drawable
 			drawable.set_minimum_size (buffered_drawable_size, buffered_drawable_size)
-
-				-- Make sure that arrow keys do not make the drawing area lose the focus.
-			drawable.default_key_processing_handler :=
-				agent (a_key: EV_KEY): BOOLEAN
-					do
-						Result := not a_key.is_arrow
-					end
 			drawable.enable_tabable_to
 
 			create vertical_scroll_bar
 			vertical_scroll_bar.hide
 			vertical_scroll_bar.set_leap (default_scroll_bar_leap)
 			vertical_scroll_bar.set_step (default_scroll_bar_step)
-
 
 			create horizontal_scroll_bar
 			horizontal_scroll_bar.set_step (default_scroll_bar_step)
@@ -4223,7 +4229,6 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			horizontal_scroll_bar.hide
 			create vertical_box
 
-
 			create header
 				-- Now connect events to `header' which are used to update the "physical size" of
 				-- Current in response to their re-sizing.
@@ -4232,7 +4237,6 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			header_viewport.set_minimum_height (header.height)
 			header.set_minimum_width (maximum_header_width)
 			header_viewport.set_item_size (maximum_header_width, header.height)
-
 
 			create fixed
 			if {PLATFORM}.is_windows then
@@ -4243,7 +4247,6 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			else
 				viewport.extend (drawable)
 			end
-
 
 				-- Now connect all of the events to `drawable' which will be used to propagate events to the `interface'.
 			drawable.pointer_motion_actions.extend (agent pointer_motion_received (?, ?, ?, ?, ?, ?, ?))
@@ -4259,19 +4262,15 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			drawable.focus_out_actions.extend (agent focus_out_received)
 			drawable.mouse_wheel_actions.extend (agent mouse_wheel_received)
 
-
 				-- Events must be connected to all widgets that comprise `Current' in order to propagate the events correctly.
 				-- Note that not all events must be connected, only those that are not dependent on the widget having the
 				-- focus, such as mouse events. For those that rely on the focus, only `drawable' will be able to receive the
 				-- focus so is the only widget to which they must be connected.
 
-
 			initialize_header_events (header)
 			initialize_vertical_scroll_bar_events (vertical_scroll_bar)
 			initialize_horizontal_scroll_bar_events (horizontal_scroll_bar)
 			initialize_scroll_bar_spacer_events (scroll_bar_spacer)
-
-
 
 				-- Now ensure grid can be tabbed to as any other standard widget.
 			drawable.enable_tabable_to
@@ -4295,14 +4294,33 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 
 			set_minimum_size (default_minimum_size, default_minimum_size)
 
-
-
 			create drawer_internal.make_with_grid (Current)
 
 			drawable.expose_actions.force_extend (agent drawer.redraw_area_in_drawable_coordinates_wrapper)
 
 			header.set_grid (Current)
 			extend (horizontal_box)
+
+				-- Handle default key processing.
+			drawable.default_key_processing_handler :=
+				agent (a_key: EV_KEY): BOOLEAN
+					do
+						Result := True
+						if attached default_key_processing_handler as l_handler then
+							Result := l_handler.item ([a_key])
+						end
+						if Result then
+							Result := not a_key.is_arrow and then
+								is_item_tab_navigation_enabled implies (
+									ev_application.ctrl_pressed or
+										-- Ctrl+Tab performs regular tab navigation from within the grid.
+									attached selected_items as l_sel_items and then
+										(l_sel_items.count > 0 implies (next_navigatable_activatable_item (l_sel_items.first, a_key) = l_sel_items.first)))
+											-- If `is_item_tab_navigation_enabled' then we prevent default tab navigation to/from the next widget
+											-- and propagate to the next available item if not at the first (unless shift is pressed) or last (unless shift not pressed).
+						end
+					end
+
 			set_state_flag (interface_is_initialized_flag, False)
 		end
 
@@ -5297,8 +5315,66 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			last_pointed_item := Void
 		end
 
-	find_next_item_in_row (grid_row: EV_GRID_ROW; starting_index: INTEGER; look_right: BOOLEAN): detachable EV_GRID_ITEM
+	find_next_item (a_row_index, a_column_index: INTEGER; look_left, a_is_tab_navigatable: BOOLEAN): detachable EV_GRID_ITEM
+			-- Find the next item horizontally in `grid_row' starting at index `starting_index', if 'look_left' then the the item to the left/up is found, else it looks right/down.
+			-- If `a_is_tab_navigatable' then Result must have 'is_tab_navigatable' set.
+			-- Result is Void if no item is found.
+		require
+			a_row_index_valid: a_row_index > 0 and then a_row_index <= row_count
+			a_column_index_valid: a_column_index > 0 and then a_column_index <= column_count
+		local
+			l_current_row_index, l_current_column_index, l_row_offset, l_column_offset: INTEGER
+			l_first_row_index, l_row_index_boundary, l_column_index_boundary: INTEGER
+			l_dynamic_content_function: like dynamic_content_function
+		do
+			if not look_left then
+				l_row_offset := 1
+				l_first_row_index := 1
+				l_row_index_boundary := column_count + 1
+				l_column_offset := 1
+				l_column_index_boundary := row_count + 1
+			else
+				l_row_offset := -1
+				l_first_row_index := column_count
+				l_row_index_boundary := 0
+				l_column_offset := -1
+				l_column_index_boundary := 0
+			end
+			if is_content_partially_dynamic then
+				l_dynamic_content_function := dynamic_content_function
+			end
+			from
+				l_current_column_index := a_row_index
+				l_current_row_index := a_column_index + l_row_offset
+			until
+				Result /= Void or else l_current_column_index = l_column_index_boundary
+			loop
+				from
+				until
+					Result /= Void or else l_current_row_index = l_row_index_boundary
+				loop
+					Result := item (l_current_row_index, l_current_column_index)
+					if Result = Void and then l_dynamic_content_function /= Void then
+						Result := l_dynamic_content_function.item ([l_current_row_index, l_current_column_index])
+						if Result /= Void then
+							internal_set_item (l_current_row_index, l_current_column_index, Result)
+						end
+					end
+					if a_is_tab_navigatable and then Result /= Void and then not Result.is_tab_navigatable then
+						Result := Void
+					end
+					l_current_row_index := l_current_row_index + l_row_offset
+				end
+					-- Increase column and row values to the next valid index.
+				l_current_column_index := l_current_column_index + l_column_offset
+				l_current_row_index := l_first_row_index
+			end
+
+		end
+
+	find_next_item_in_row (grid_row: EV_GRID_ROW; starting_index: INTEGER; look_right, a_is_tab_navigatable: BOOLEAN): detachable EV_GRID_ITEM
 			-- Find the next item horizontally in `grid_row' starting at index `starting_index', if 'look_right' then the the item to the right is found, else it looks to the left.
+			-- If `a_is_tab_navigatable' then Result must have 'is_tab_navigatable' set.
 			-- Result is Void if no item is found.
 		require
 			grid_row_not_void: grid_row /= Void
@@ -5338,6 +5414,10 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 					if item_internal (item_index, grid_row.index) = Void then
 						internal_set_item (item_index, grid_row.index, Result)
 					end
+				end
+				if a_is_tab_navigatable and then Result /= Void and then not Result.is_tab_navigatable then
+							-- If `is_tab_navigatable' then Result must also be 'is_tab_navigatable'
+					Result := Void
 				end
 				item_index := item_index + item_offset
 			end
@@ -5389,9 +5469,9 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 				end
 				if Result = Void and then look_left_right_if_void then
 					-- There is no item in the column so we first look left, then right
-					Result := find_next_item_in_row (row (item_index), grid_column.index, False)
+					Result := find_next_item_in_row (row (item_index), grid_column.index, False, False)
 					if Result = Void then
-						Result := find_next_item_in_row (row (item_index), grid_column.index, True)
+						Result := find_next_item_in_row (row (item_index), grid_column.index, True, False)
 					end
 				end
 				if Result /= Void and then not is_item_navigatable_to (Result) then
@@ -5430,13 +5510,31 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 		local
 			prev_sel_item, a_sel_item: detachable EV_GRID_ITEM
 			a_sel_row: detachable EV_GRID_ROW
-			items_spanning: ARRAYED_LIST [INTEGER]
+			items_spanning_horz, items_spanning_vert: ARRAYED_LIST [INTEGER]
 			l_index_of_first_item: INTEGER
 			l_previously_expanded, l_expansion_status_changed: BOOLEAN
-			l_make_item_visible: BOOLEAN
+			l_make_item_visible, l_is_navigation_allowed, l_shift_pressed: BOOLEAN
+			l_key_code: INTEGER
 		do
-
 			if not is_destroyed and then is_selection_keyboard_handling_enabled then
+
+				l_key_code := a_key.code
+				l_shift_pressed := ev_application.shift_pressed
+
+				inspect l_key_code
+				when {EV_KEY_CONSTANTS}.key_tab, {EV_KEY_CONSTANTS}.key_home, {EV_KEY_CONSTANTS}.key_end then
+					if is_item_tab_navigation_enabled then
+							--| FIXME IEK: For now only allow custom navigation if tabbed item navigation is enabled.
+						l_is_navigation_allowed := True
+						if attached default_key_processing_handler as l_handler then
+							l_is_navigation_allowed := l_handler.item ([a_key])
+						end
+					end
+				else
+					-- Custom navigation
+				end
+
+
 					-- Handle the selection events
 				if is_row_selection_enabled then
 					if attached last_selected_row as l_last_selected_row and then l_last_selected_row.parent_i /= Void then
@@ -5471,8 +5569,9 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 						-- We always want to find an item above or below for row selection
 				if not l_expansion_status_changed and then attached prev_sel_item then
 					a_sel_row := prev_sel_item.row
+
 					inspect
-						a_key.code
+						l_key_code
 					when {EV_KEY_CONSTANTS}.Key_down then
 						a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, True, is_row_selection_enabled or else ((a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void) and then a_sel_row.index_of_first_item = prev_sel_item.column.index))
 						l_make_item_visible := is_vertical_scroll_bar_show_requested and then vertical_scroll_bar.is_displayed
@@ -5486,7 +5585,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 							if not is_item_navigatable_to (prev_sel_item) then
 								a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, True)
 							else
-								a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, True)
+								a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, True, False)
 								if a_sel_item = Void and then is_tree_enabled then
 										-- We may have a tree item so we should perform tree key handling
 										-- If node is collapsed then we expand it.
@@ -5495,14 +5594,14 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 										if not prev_sel_item.row.is_expanded then
 											prev_sel_item.row.expand
 										else
-											a_sel_item := find_next_item_in_row (prev_sel_item.row.subrow (1), prev_sel_item.column.index - 1, True)
+											a_sel_item := find_next_item_in_row (prev_sel_item.row.subrow (1), prev_sel_item.column.index - 1, True, False)
 										end
 									end
 								end
 							end
 						elseif l_make_item_visible then
-							items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position + width, 0)
-							if not items_spanning.is_empty and then attached (columns @ (items_spanning @ 1)) as l_column_i then
+							items_spanning_horz := drawer.items_spanning_horizontal_span (virtual_x_position + width, 0)
+							if not items_spanning_horz.is_empty and then attached (columns @ (items_spanning_horz @ 1)) as l_column_i then
 								l_column_i.ensure_visible
 							end
 						end
@@ -5511,10 +5610,10 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 							if
 								is_tree_enabled and then
 								is_item_navigatable_to (prev_sel_item) and then
-								find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, False) = Void
+								find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, False, False) = Void
 							then
 								if attached prev_sel_item.row.parent_row as l_parent_row then
-									a_sel_item := find_next_item_in_row (l_parent_row, prev_sel_item.column.index.min (l_parent_row.count) + 1, False)
+									a_sel_item := find_next_item_in_row (l_parent_row, prev_sel_item.column.index.min (l_parent_row.count) + 1, False, False)
 									if a_sel_item /= Void then
 										a_sel_item.ensure_visible
 									end
@@ -5528,7 +5627,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 							if not is_item_navigatable_to (prev_sel_item) then
 								a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, True)
 							else
-								a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, False)
+								a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, False, False)
 								if a_sel_item = Void then
 									if is_tree_enabled then
 											-- We may have a tree item so we should perform tree key handling
@@ -5537,7 +5636,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 											prev_sel_item.row.collapse
 										else
 											if attached prev_sel_item.row.parent_row as l_parent_row then
-												a_sel_item := find_next_item_in_row (l_parent_row, prev_sel_item.column.index.min (l_parent_row.count) + 1, False)
+												a_sel_item := find_next_item_in_row (l_parent_row, prev_sel_item.column.index.min (l_parent_row.count) + 1, False, False)
 												if a_sel_item /= Void then
 													a_sel_item.ensure_visible
 												end
@@ -5551,21 +5650,74 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 						elseif l_make_item_visible then
 								-- If the row has children then
 							if virtual_x_position > 0 then
-								items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position - 1, 0)
-								if not items_spanning.is_empty and then attached (columns @ (items_spanning @ 1)) as l_column_i then
+								items_spanning_vert := drawer.items_spanning_horizontal_span (virtual_x_position - 1, 0)
+								if not items_spanning_vert.is_empty and then attached (columns @ (items_spanning_vert @ 1)) as l_column_i then
 									l_column_i.ensure_visible
 								end
 							end
 						end
+					when {EV_KEY_CONSTANTS}.Key_tab, {EV_KEY_CONSTANTS}.Key_home, {EV_KEY_CONSTANTS}.Key_end then
+						if l_is_navigation_allowed and not application_implementation.ctrl_pressed then
+								-- We need to handle tab, home and end navigation correctly.
+							a_sel_item := find_next_item (prev_sel_item.row.index, prev_sel_item.column.index, (a_key.code = {EV_KEY_CONSTANTS}.key_tab and ev_application.shift_pressed) or a_key.code = {EV_KEY_CONSTANTS}.key_home, True)
+							if a_sel_item = prev_sel_item then
+									-- If the same item is returned then there no selection can take place.
+								a_sel_item := Void
+							end
+							l_make_item_visible := horizontal_scroll_bar.is_displayed or else vertical_scroll_bar.is_displayed
+						end
 					else
 						-- Do nothing
 					end
-				elseif a_key.code = {EV_KEY_CONSTANTS}.Key_down then
+				elseif l_key_code = {EV_KEY_CONSTANTS}.Key_down then
 					l_make_item_visible := vertical_scroll_bar.is_displayed
 					if column_count >= 1 then
 						a_sel_item := find_next_item_in_column (column (1), 0, True, True)
 					end
 				end
+
+					-- General key navigation
+				inspect
+					l_key_code
+				when {EV_KEY_CONSTANTS}.key_page_up then
+					if application_implementation.ctrl_pressed then
+						row (1).ensure_visible
+					else
+						items_spanning_vert := drawer.items_spanning_vertical_span ((virtual_y_position - viewable_height + 1).max (0), 0)
+						if items_spanning_vert.count > 0 then
+							if attached row (items_spanning_vert.first) as l_row then
+								l_row.ensure_visible
+							end
+						end
+					end
+				when {EV_KEY_CONSTANTS}.key_page_down then
+					if application_implementation.ctrl_pressed then
+						row (row_count).ensure_visible
+					else
+						items_spanning_vert := drawer.items_spanning_vertical_span (virtual_y_position + viewable_height + 1, viewable_height)
+						if items_spanning_vert.count > 0 then
+							if attached row (items_spanning_vert.last) as l_row then
+								l_row.ensure_visible
+							end
+						end
+					end
+				when {EV_KEY_CONSTANTS}.key_home then
+					if application_implementation.ctrl_pressed then
+						if attached item (1, 1) as l_item then
+							l_item.ensure_visible
+						end
+					end
+				when {EV_KEY_CONSTANTS}.key_end then
+					if application_implementation.ctrl_pressed then
+						if attached item (column_count, row_count) as l_item then
+							l_item.ensure_visible
+						end
+					end
+
+				else
+
+				end
+
 				if a_sel_item /= Void and then not ev_application.alt_pressed then
 						-- 'Alt' should have no effect on selection handling.
 					if
@@ -5619,6 +5771,24 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 
 	shift_key_start_item: detachable EV_GRID_ITEM
 		-- Item where initial selection began from.
+
+	next_navigatable_activatable_item (a_starting_item: EV_GRID_ITEM; a_key: EV_KEY): EV_GRID_ITEM
+			-- Return the next activatable item from `a_starting_item' for `a_key', if none is available then return `a_starting_item'.
+		local
+			l_look_left: BOOLEAN
+			l_sel_item: detachable EV_GRID_ITEM
+			l_row_index, l_column_index: INTEGER
+		do
+			l_look_left := (a_key.code = {EV_KEY_CONSTANTS}.key_tab and ev_application.shift_pressed) or a_key.code = {EV_KEY_CONSTANTS}.key_home
+			l_row_index := a_starting_item.row.index
+			l_column_index := a_starting_item.column.index
+			l_sel_item := find_next_item (a_starting_item.row.index, a_starting_item.column.index, l_look_left, True)
+			if l_sel_item /= Void then
+				Result := l_sel_item
+			else
+				Result := a_starting_item
+			end
+		end
 
 	handle_newly_selected_item (a_item: detachable EV_GRID_ITEM; a_button: INTEGER; from_key_press: BOOLEAN)
 			-- Handle selection for newly selected `a_item' as a result of pressing
@@ -5829,8 +5999,33 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 
 	focus_in_received
 			-- Called by `focus_in_actions' of `drawable'.
+		local
+			l_item: detachable EV_GRID_ITEM
+			l_row_index, l_column_index: INTEGER
+			l_look_left: BOOLEAN
 		do
 			enable_drawables_have_focus
+			if is_item_tab_navigation_enabled then
+				if application_implementation.tab_navigation_state /= {EV_APPLICATION_I}.tab_state_none then
+					if application_implementation.tab_navigation_state = {EV_APPLICATION_I}.tab_state_from_previous then
+						l_column_index := 1
+						l_row_index := 1
+						l_item := item (l_column_index, l_row_index)
+					else
+						l_column_index := column_count
+						l_row_index := row_count
+						l_look_left := True
+						l_item := item (l_column_index, l_row_index)
+					end
+					if l_item = Void or else not l_item.is_tab_navigatable then
+						l_item := find_next_item (l_row_index, l_column_index, l_look_left, True)
+					end
+					if l_item /= Void then
+						l_item.enable_select
+						l_item.ensure_visible
+					end
+				end
+			end
 			redraw_client_area
 			if focus_in_actions_internal /= Void and then not focus_in_actions_internal.is_empty then
 				focus_in_actions_internal.call (Void)
@@ -5840,6 +6035,11 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 	focus_out_received
 			-- Called by `focus_out_actions' of `drawable'.
 		do
+			if is_item_tab_navigation_enabled then
+				if application_implementation.tab_navigation_state /= {EV_APPLICATION_I}.tab_state_none then
+					remove_selection
+				end
+			end
 			disable_drawables_have_focus
 			redraw_client_area
 			if focus_out_actions_internal /= Void and then not focus_out_actions_internal.is_empty then
@@ -6145,14 +6345,9 @@ feature {NONE} -- Implementation
 	default_row_height: INTEGER
 			-- Default height of a row, based on the height of the default font.
 		once
-			Result := (create {EV_LABEL}).minimum_height + extra_text_spacing
+			Result := (create {EV_FONT}).line_height
 		ensure
 			result_positive: Result > 0
-		end
-
-	extra_text_spacing: INTEGER
-			-- Extra spacing for rows that is added to the height of a row text to make up `default_row_height'.
-		deferred
 		end
 
 	reset_internal_grid_attributes

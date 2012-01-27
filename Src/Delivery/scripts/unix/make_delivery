@@ -78,7 +78,7 @@ fi
 md $INSTALL_DIR
 cd $INSTALL_DIR
 remtrace studio
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Delivery/studio studio 
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/studio studio 
 fullrd studio/spec/windows
 fullrd studio/spec/win64
 fullrd studio/config/windows
@@ -98,9 +98,9 @@ exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/eweasel/control eweasel/control
 fullrf $INSTALL_DIR/eweasel/INSTALL
 
 remtrace esbuilder
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Delivery/esbuilder esbuilder 
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/esbuilder esbuilder 
 remtrace vision2_demo
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Delivery/vision2_demo vision2_demo 
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/vision2_demo vision2_demo 
 remtrace examples
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/examples examples
 cd examples
@@ -138,14 +138,14 @@ remtrace precomp
 safe_md $INSTALL_DIR/compatible/precomp
 safe_md $INSTALL_DIR/compatible/precomp/spec
 cd $INSTALL_DIR/compatible/precomp/spec
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Delivery/precomp/spec/platform platform 
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/precomp/spec/platform platform 
 cd platform
 fullrf *-safe.ecf
 
 safe_md $INSTALL_DIR/precomp
 safe_md $INSTALL_DIR/precomp/spec
 cd $INSTALL_DIR/precomp/spec
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Delivery/precomp/spec/platform platform 
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/precomp/spec/platform platform 
 
 remtrace C_library
 safe_md $INSTALL_DIR/C_library
@@ -154,7 +154,7 @@ exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/C_library/libpng libpng
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/C_library/zlib zlib 
 cd $INSTALL_DIR
 remtrace root
-exprt -N -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Delivery Delivery
+exprt -N -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery Delivery
 move Delivery/* . >> $INSTALL_LOG
 fullrd Delivery >> $INSTALL_LOG
 
@@ -323,7 +323,7 @@ if [ ! "$NO_INSTALL" ]; then
 	copy make_debian_package $EXPORT_DIR
 	copy make_rpm_package $EXPORT_DIR
 	# We checkout to avoid having to include the subversion specific directories
-	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Delivery/scripts/unix/packaging $EXPORT_DIR/packaging
+	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/scripts/unix/packaging $EXPORT_DIR/packaging
 		# Now edit `set_aliases' in $EXPORT_DIR as we are now going for compilation mode.
 	cd $EXPORT_DIR
 	rm -f tmp

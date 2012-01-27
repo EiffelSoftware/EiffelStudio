@@ -69,7 +69,7 @@ md %INSTALL_DIR
 md %STUDIO_DIR
 cdd %STUDIO_DIR
 remtrace studio
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/studio studio
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery/studio studio
 fullrd studio\help\defaults\unix
 fullrd studio\spec\unix
 cdd %STUDIO_DIR\studio\spec
@@ -87,9 +87,9 @@ fullrd po_files
 fullrd script
 cdd %STUDIO_DIR
 remtrace esbuilder
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/esbuilder esbuilder
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery/esbuilder esbuilder
 remtrace vision2 tour
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/vision2_demo vision2_demo
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery/vision2_demo vision2_demo
 remtrace examples
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/examples examples
 cd examples
@@ -131,8 +131,8 @@ safe_md %STUDIO_DIR\compatible
 safe_md %STUDIO_DIR\compatible\precomp
 safe_md %STUDIO_DIR\compatible\precomp\spec
 cd %STUDIO_DIR\compatible\precomp\spec
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/platform %ISE_PLATFORM
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/dotnet %ISE_PLATFORM-dotnet
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery/precomp/spec/platform %ISE_PLATFORM
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery/precomp/spec/dotnet %ISE_PLATFORM-dotnet
 cdd %ISE_PLATFORM
 fullrf *-safe.ecf
 cdd ..\%ISE_PLATFORM-dotnet
@@ -140,11 +140,11 @@ fullrf *-safe.ecf
 safe_md %STUDIO_DIR\precomp
 safe_md %STUDIO_DIR\precomp\spec
 cd %STUDIO_DIR\precomp\spec
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/platform %ISE_PLATFORM
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/precomp/spec/dotnet %ISE_PLATFORM-dotnet
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery/precomp/spec/platform %ISE_PLATFORM
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery/precomp/spec/dotnet %ISE_PLATFORM-dotnet
 cdd %STUDIO_DIR
 remtrace wizards
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery/wizards wizards
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery/wizards wizards
 fullrf %STUDIO_DIR\studio\wizards\new_projects\wizard.dsc
 fullrd %STUDIO_DIR\studio\wizards\new_projects\wizard
 remtrace C_library
@@ -154,7 +154,7 @@ exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/C_library/libpng libpng
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/C_library/zlib zlib
 cdd %STUDIO_DIR
 remtrace root
-exprt -N -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Delivery Delivery
+exprt -N -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery Delivery
 move Delivery\*.* . >>& %INSTALL_LOG
 fullrd Delivery >>& %INSTALL_LOG
 fullrf INSTALL README make_install compile_libraries

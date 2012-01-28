@@ -6,10 +6,10 @@ set SVN_URL=%*
 )
 
 REM Check out bitmaps from Build delivery
-call svn_command.bat co %SVN_URL%/Delivery/esbuilder/bitmaps Delivery\esbuilder\bitmaps
+call svn_command.bat co %SVN_URL%/Src/Delivery/esbuilder/bitmaps Delivery\esbuilder\bitmaps
 
 REM Check out files from vision2_demo
-call svn_command.bat co %SVN_URL%/Delivery/vision2_demo Delivery/vision2_demo
+call svn_command.bat co %SVN_URL%/Src/Delivery/vision2_demo Delivery/vision2_demo
 
 REM Copy template files
 XCOPY /Y /E /I Delivery\vision2_demo\templates .\templates

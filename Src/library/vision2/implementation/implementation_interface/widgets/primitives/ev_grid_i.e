@@ -4079,9 +4079,6 @@ feature {ANY}
 			else
 					-- The headers are not as wide as the visible client area.
 				if horizontal_scroll_bar.is_show_requested then
-					check
-						viewport_x_position_is_zero:  is_horizontal_offset_set_to_zero_when_items_smaller_than_viewable_width implies viewport_x_offset = 0
-					end
 					horizontal_scroll_bar.hide
 					update_scroll_bar_spacer
 				end
@@ -6651,14 +6648,14 @@ invariant
 	tree_node_connector_color_not_void: is_initialized implies tree_node_connector_color /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

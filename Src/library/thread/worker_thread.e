@@ -11,6 +11,7 @@ class
 inherit
 	THREAD
 		rename
+			make as thread_make,
 			execute as execute_procedure
 		end
 
@@ -24,6 +25,7 @@ feature {NONE} -- Initialization
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
 		do
+			thread_make
 			thread_procedure := a_action
 		end
 
@@ -34,7 +36,7 @@ feature {NONE} -- Initialization
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
 		do
-			thread_procedure := a_action
+			make (a_action)
 		end
 
 feature -- Initialization
@@ -50,7 +52,7 @@ feature {NONE} -- Implementation
 			-- Action executed when thread starts its execution.
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

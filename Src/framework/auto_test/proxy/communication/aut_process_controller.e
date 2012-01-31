@@ -15,6 +15,7 @@ inherit
 
 	THREAD
 		rename
+			make as thread_make,
 			sleep as thread_sleep,
 			launch as launch_thread
 		export
@@ -57,6 +58,7 @@ feature {NONE} -- Initialization
 		local
 			l_factory: PROCESS_FACTORY
 		do
+			thread_make
 			create mutex.make
 			create condition_variable.make
 			create l_factory
@@ -179,7 +181,7 @@ feature -- Basic operations
 			process.redirect_output_to_agent (a_output_handler)
 
 			process.launch
-			
+
 			launch_thread
 		ensure
 			launched: is_launched
@@ -237,7 +239,7 @@ invariant
 	timeout_not_negative: timeout >= 0
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -261,10 +263,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

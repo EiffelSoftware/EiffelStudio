@@ -13,6 +13,7 @@ inherit
 
 	THREAD
 		rename
+			make as thread_make,
 			sleep as obsolete_sleep
 		end
 
@@ -35,6 +36,7 @@ feature {NONE} -- Implementation
 			thread_capable: {PLATFORM}.is_thread_capable
 			interval_positive: a_sleep_time > 0
 		do
+			thread_make
 			sleep_time := a_sleep_time
 			create mutex.make
 			has_started := False
@@ -113,7 +115,7 @@ invariant
 	mutex_not_void: mutex /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -20,6 +20,7 @@ deferred class
 inherit
 	THREAD
 		rename
+			make as thread_make,
 			sleep as obsolete_thread_sleep
 		export
 			{ANY} terminated
@@ -87,7 +88,7 @@ invariant
 	mutex_not_null: mutex /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

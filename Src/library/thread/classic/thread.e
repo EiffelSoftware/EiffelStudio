@@ -11,6 +11,14 @@ deferred class
 inherit
 	THREAD_CONTROL
 
+feature {NONE} -- Initialization
+
+	make
+			-- Initialize Current.
+		do
+			create launch_mutex.make
+		end
+
 feature -- Access
 
 	thread_id: POINTER
@@ -45,15 +53,6 @@ feature -- Basic operations
 			thread_capable: {PLATFORM}.is_thread_capable
 			is_launchable: is_launchable
 		do
-				-- Safe creation of `launch_mutex'.
-			if launch_mutex = Void then
-				global_launch_mutex.lock
-				if launch_mutex = Void then
-					create launch_mutex.make
-				end
-				global_launch_mutex.unlock
-			end
-
 			launch_mutex.lock
 			if not is_launchable then
 					-- This happens if multiple threads call `launch' or `launch_with_attributes'
@@ -67,9 +66,7 @@ feature -- Basic operations
 			launch_mutex.unlock
 		rescue
 			is_last_launch_successful_cell.put (False)
-			if launch_mutex /= Void then
-				launch_mutex.unlock
-			end
+			launch_mutex.unlock
 		end
 
 	exit
@@ -105,7 +102,8 @@ feature -- Status report
 	is_launchable: BOOLEAN
 			-- Can we launch a new thread?
 		do
-			Result := thread_id = default_pointer and not terminated
+			Result := launch_mutex.is_set and
+				thread_id = default_pointer and not terminated
 		end
 
 	is_last_launch_successful: BOOLEAN
@@ -142,11 +140,7 @@ feature {NONE} -- Implementation
 
 	frozen thr_main
 			-- Call thread routine.
-		require
-			launch_mutex_attached: launch_mutex /= Void
 		do
-			check launch_mutex_attached: attached launch_mutex then end
-
 				-- This ensures that `thread_id' has been properly initialized.
 			launch_mutex.lock
 			launch_mutex.unlock
@@ -160,25 +154,16 @@ feature {NONE} -- Implementation
 			thread_id := default_pointer
 			launch_mutex.unlock
 		rescue
-			check launch_mutex_attached: attached launch_mutex then end
 			launch_mutex.lock
 			terminated := True
 			thread_id := default_pointer
 			launch_mutex.unlock
 		end
 
-	launch_mutex: detachable MUTEX note option: stable attribute end
+	launch_mutex: MUTEX
 			-- Mutex used to ensure that no two threads call `launch' or `launch_with_attributes'
 			-- on the same object. This ensures the validity of querying `thread_id' from
 			-- the launch routines.
-
-	global_launch_mutex: MUTEX
-			-- Global mutex to lazily initialize `launch_mutex' before a launch.
-		note
-			once_status: global
-		once
-			create Result.make
-		end
 
 	is_last_launch_successful_cell: CELL [BOOLEAN]
 			-- Internal storage for `is_last_launch_successful'.
@@ -227,7 +212,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

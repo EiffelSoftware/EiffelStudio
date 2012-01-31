@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 			thread_capable: {PLATFORM}.is_thread_capable
 			process_launcher_not_null: prc_launcher /= Void
 		do
+			thread_make
 			process_launcher := prc_launcher
 			should_exit_signal:= False
 			sleep_time := initial_sleep_time
@@ -71,7 +72,7 @@ feature -- Run
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

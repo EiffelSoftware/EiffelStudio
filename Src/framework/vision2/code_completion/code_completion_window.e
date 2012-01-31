@@ -1242,8 +1242,13 @@ feature {NONE} -- String matching
 		do
 			if not is_first_show then
 				if rebuild_list_during_matching then
+						-- To prevent flickering due to the potential
+						-- hidding/showing of scrollbars we lock ourselve
+						-- while rebuilding the list.
+					lock_update
 					build_displayed_list (buffered_input)
 					resize_column_to_window_width
+					unlock_update
 				end
 			end
 			ensure_item_selection
@@ -1445,8 +1450,8 @@ invariant
 	choice_list_attached: choice_list /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

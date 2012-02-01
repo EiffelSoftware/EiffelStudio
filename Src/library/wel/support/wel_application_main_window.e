@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 
 	application_main_window_cell: CELL [detachable WEL_COMPOSITE_WINDOW]
 			-- Application's main window cell
-		once ("PROCESS")
+		once
 			create Result.put (Void)
 		ensure
 			result_not_void: Result /= Void
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 
 	application_cell: CELL [detachable WEL_APPLICATION]
 			-- Application cell
-		once ("PROCESS")
+		once
 			create Result.put (Void)
 		ensure
 			result_not_void: Result /= Void
@@ -86,8 +86,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class WEL_APPLICATION_MAIN_WINDOW
-

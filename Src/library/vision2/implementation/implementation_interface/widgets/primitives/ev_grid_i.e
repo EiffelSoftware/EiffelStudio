@@ -974,8 +974,8 @@ feature -- Status setting
 			y_coord := a_screen_y - virtual_y_position + a_item.virtual_y_position + viewable_y_offset
 
 			boundary_x := a_screen_x + width
-			if vertical_scroll_bar.is_displayed then
-				boundary_x := boundary_x - vertical_scroll_bar.width
+			if internal_vertical_scroll_bar.is_displayed then
+				boundary_x := boundary_x - internal_vertical_scroll_bar.width
 			end
 
 			if is_row_height_fixed then
@@ -1708,7 +1708,7 @@ feature -- Status setting
 
 			if virtual_y_changed then
 				if is_vertical_scrolling_per_item then
-					vertical_scroll_bar.change_actions.block
+					internal_vertical_scroll_bar.change_actions.block
 					items := drawer.items_spanning_vertical_span (internal_client_y, viewable_height)
 					if items.count > 0 then
 						row_index := items.first
@@ -1717,26 +1717,26 @@ feature -- Status setting
 						else
 							visible_row_index := row_index - 1
 						end
-						vertical_scroll_bar.set_value (visible_row_index)
+						internal_vertical_scroll_bar.set_value (visible_row_index)
 					else
 							-- There are no rows in `Current', so we set the
 							-- value of `vertical_scroll_bar' to 0.
-						vertical_scroll_bar.set_value (0)
+						internal_vertical_scroll_bar.set_value (0)
 					end
-					vertical_scroll_bar.change_actions.resume
+					internal_vertical_scroll_bar.change_actions.resume
 				else
-					vertical_scroll_bar.change_actions.block
-					vertical_scroll_bar.set_value (virtual_y)
-					vertical_scroll_bar.change_actions.resume
+					internal_vertical_scroll_bar.change_actions.block
+					internal_vertical_scroll_bar.set_value (virtual_y)
+					internal_vertical_scroll_bar.change_actions.resume
 				end
 			end
 			if virtual_x_changed then
 				if is_horizontal_scrolling_per_item then
 					fixme (Once "Implement")
 				else
-					horizontal_scroll_bar.change_actions.block
-					horizontal_scroll_bar.set_value (virtual_x)
-					horizontal_scroll_bar.change_actions.resume
+					internal_horizontal_scroll_bar.change_actions.block
+					internal_horizontal_scroll_bar.set_value (virtual_x)
+					internal_horizontal_scroll_bar.change_actions.resume
 				end
 			end
 			if virtual_x_changed or virtual_y_changed then
@@ -1957,8 +1957,8 @@ feature -- Status setting
 			-- at any time.
 		do
 			is_vertical_scroll_bar_show_requested := False
-			if vertical_scroll_bar.is_show_requested then
-				vertical_scroll_bar.hide
+			if internal_vertical_scroll_bar.is_show_requested then
+				internal_vertical_scroll_bar.hide
 			end
 		ensure
 			not_is_vertical_scroll_bar_show_requested: not is_vertical_scroll_bar_show_requested
@@ -1984,8 +1984,8 @@ feature -- Status setting
 			-- at any time.
 		do
 			is_horizontal_scroll_bar_show_requested := False
-			if horizontal_scroll_bar.is_show_requested then
-				horizontal_scroll_bar.hide
+			if internal_horizontal_scroll_bar.is_show_requested then
+				internal_horizontal_scroll_bar.hide
 			end
 		ensure
 			not_is_horizontal_scroll_bar_show_requested: not is_horizontal_scroll_bar_show_requested
@@ -3687,10 +3687,18 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 		-- Total number of rows that are actually visible in `Current'.
 
 	vertical_scroll_bar: EV_VERTICAL_SCROLL_BAR
-		-- Vertical scroll bar of `Current'.
+			-- Vertical scroll bar of `Current'.
+		do
+			recompute_vertical_scroll_bar
+			Result := internal_vertical_scroll_bar
+		end
 
 	horizontal_scroll_bar: EV_HORIZONTAL_SCROLL_BAR
-		-- Horizontal scroll bar of `Current'.
+			-- Horizontal scroll bar of `Current'.
+		do
+			recompute_horizontal_scroll_bar
+			Result := internal_horizontal_scroll_bar
+		end
 
 	tree_node_spacing: INTEGER = 3
 			-- Spacing value used around the expand/collapse node of a
@@ -3866,20 +3874,20 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 
 			if l_total_row_height > l_client_height then
 					-- The rows are higher than the visible client area.
-				if not vertical_scroll_bar.is_show_requested and is_vertical_scroll_bar_show_requested then
+				if not internal_vertical_scroll_bar.is_show_requested and is_vertical_scroll_bar_show_requested then
 						-- Show `vertical_scroll_bar' if not already shown.
-					vertical_scroll_bar.show
+					internal_vertical_scroll_bar.show
 					update_scroll_bar_spacer
 				end
 					-- Update the range and leap of `vertical_scroll_bar' to reflect the relationship between
 					-- `l_total_row_height' and `l_client_height'. Note that the behavior depends on the state of
 					-- `is_vertical_scrolling_per_item'.
 				if has_vertical_scrolling_per_item_just_changed or is_item_height_changing then
-					previous_scroll_bar_value := vertical_scroll_bar.value
+					previous_scroll_bar_value := internal_vertical_scroll_bar.value
 				end
 				if is_vertical_scrolling_per_item then
 					if is_vertical_overscroll_enabled then
-						vertical_scroll_bar.value_range.resize_exactly (0, visible_row_count - 1)
+						internal_vertical_scroll_bar.value_range.resize_exactly (0, visible_row_count - 1)
 					else
 						-- We must now calculate the index of the row that ensures the final row that is visible in `Current'
 						-- at the bottom of the viewable area.
@@ -3888,45 +3896,45 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 						else
 							row_index := last_first_row_in_per_item_scrolling
 						end
-						vertical_scroll_bar.value_range.resize_exactly (0, row_index - 1)
+						internal_vertical_scroll_bar.value_range.resize_exactly (0, row_index - 1)
 					end
 					average_row_height := (l_total_row_height // visible_row_count)
-					vertical_scroll_bar.set_leap ((l_client_height // average_row_height).max (1))
+					internal_vertical_scroll_bar.set_leap ((l_client_height // average_row_height).max (1))
 					if has_vertical_scrolling_per_item_just_changed then
 							-- If we are just switching from per pixel to per item vertical
 							-- scrolling, we must approximate the previous position of the scroll bar.
-						vertical_scroll_bar.set_value (previous_scroll_bar_value // average_row_height)
+						internal_vertical_scroll_bar.set_value (previous_scroll_bar_value // average_row_height)
 					end
 					if is_item_height_changing then
 							-- The `value' of the scroll bar should not have changed.
 						check
-							scroll_bar_not_moved: vertical_scroll_bar.value = previous_scroll_bar_value
+							scroll_bar_not_moved: internal_vertical_scroll_bar.value = previous_scroll_bar_value
 						end
 							-- We call the change actions explicitly, so that it behaves as if the value had just
 							-- changed, which ensures that the currently scrolled to item is still displayed at the top.
-						vertical_scroll_bar.change_actions.call ([previous_scroll_bar_value])
+						internal_vertical_scroll_bar.change_actions.call ([previous_scroll_bar_value])
 					end
 				else
-					vertical_scroll_bar.value_range.resize_exactly (0, maximum_virtual_y_position)
-					vertical_scroll_bar.set_leap (height)
+					internal_vertical_scroll_bar.value_range.resize_exactly (0, maximum_virtual_y_position)
+					internal_vertical_scroll_bar.set_leap (height)
 					if has_vertical_scrolling_per_item_just_changed then
 							-- If we are just switching from per item to per pixel vertical
 							-- scrolling, we can set the position of the scroll bar exactly to match it's
 							-- previous position.
 						if uses_row_offsets and then attached row_offsets as l_row_offsets then
-							vertical_scroll_bar.set_value ((l_row_offsets @ (previous_scroll_bar_value + 1)).min (vertical_scroll_bar.value_range.upper))
+							internal_vertical_scroll_bar.set_value ((l_row_offsets @ (previous_scroll_bar_value + 1)).min (internal_vertical_scroll_bar.value_range.upper))
 						else
 								-- Must restrict to the maximum permitted value, as the virtual area
 								-- is smaller when per pixel scrolling is set as you cannot scroll past the final item.
-							vertical_scroll_bar.set_value ((previous_scroll_bar_value * row_height).min (vertical_scroll_bar.value_range.upper))
+							internal_vertical_scroll_bar.set_value ((previous_scroll_bar_value * row_height).min (internal_vertical_scroll_bar.value_range.upper))
 						end
 					end
 				end
 			else
 					-- The rows are not as high as the visible client area.
-				if vertical_scroll_bar.is_show_requested then
+				if internal_vertical_scroll_bar.is_show_requested then
 						-- Hide `vertical_scroll_bar' as it is not required.
-					vertical_scroll_bar.hide
+					internal_vertical_scroll_bar.hide
 					update_scroll_bar_spacer
 				end
 			end
@@ -4036,36 +4044,36 @@ feature {ANY}
 
 			if l_total_column_width > l_client_width then
 					-- The headers are wider than the visible client area.
-				if not horizontal_scroll_bar.is_show_requested and is_horizontal_scroll_bar_show_requested then
+				if not internal_horizontal_scroll_bar.is_show_requested and is_horizontal_scroll_bar_show_requested then
 						-- Show `horizontal_scroll_bar' if not already shown.
-					horizontal_scroll_bar.show
+					internal_horizontal_scroll_bar.show
 					update_scroll_bar_spacer
 				end
 					-- Update the range and leap of `horizontal_scroll_bar' to reflect the relationship between
 					-- `l_total_column_width' and `l_client_width'. Note that the behavior depends on the state of
 					-- `is_horizontal_scrolling_per_item'.
 				if has_horizontal_scrolling_per_item_just_changed then
-					previous_scroll_bar_value := horizontal_scroll_bar.value
+					previous_scroll_bar_value := internal_horizontal_scroll_bar.value
 				end
 				if is_horizontal_scrolling_per_item then
 					if is_horizontal_overscroll_enabled then
-						horizontal_scroll_bar.value_range.resize_exactly (0, column_count - 1)
+						internal_horizontal_scroll_bar.value_range.resize_exactly (0, column_count - 1)
 					else
 						-- We must now calculate the index of the row that ensures the final row that is visible in `Current'
 						-- at the bottom of the viewable area.
 						column_index := last_first_column_in_per_item_scrolling
-						horizontal_scroll_bar.value_range.resize_exactly (0, column_index - 1)
+						internal_horizontal_scroll_bar.value_range.resize_exactly (0, column_index - 1)
 					end
 					average_column_width := (l_total_column_width // columns.count)
-					horizontal_scroll_bar.set_leap (l_client_width // average_column_width)
+					internal_horizontal_scroll_bar.set_leap (l_client_width // average_column_width)
 					if has_horizontal_scrolling_per_item_just_changed then
 							-- If we are just switching from per pixel to per item horizontal
 							-- scrolling, we must approximate the previous position of the scroll bar.
-						horizontal_scroll_bar.set_value (previous_scroll_bar_value // average_column_width)
+						internal_horizontal_scroll_bar.set_value (previous_scroll_bar_value // average_column_width)
 					end
 				else
-					horizontal_scroll_bar.value_range.resize_exactly (0, maximum_virtual_x_position)
-					horizontal_scroll_bar.set_leap (width.max (1))
+					internal_horizontal_scroll_bar.value_range.resize_exactly (0, maximum_virtual_x_position)
+					internal_horizontal_scroll_bar.set_leap (width.max (1))
 					if has_horizontal_scrolling_per_item_just_changed then
 							-- If we are just switching from per item to per pixel horizontal
 							-- scrolling, we can set the position of the scroll bar exactly to match it's
@@ -4073,13 +4081,13 @@ feature {ANY}
 
 							-- Must restrict to the maximum permitted value, as the virtual area
 							-- is smaller when per pixel scrolling is set as you cannot scroll past the final item.
-						horizontal_scroll_bar.set_value ((column_offsets @ (previous_scroll_bar_value + 1)).min (horizontal_scroll_bar.value_range.upper))
+						internal_horizontal_scroll_bar.set_value ((column_offsets @ (previous_scroll_bar_value + 1)).min (internal_horizontal_scroll_bar.value_range.upper))
 					end
 				end
 			else
 					-- The headers are not as wide as the visible client area.
-				if horizontal_scroll_bar.is_show_requested then
-					horizontal_scroll_bar.hide
+				if internal_horizontal_scroll_bar.is_show_requested then
+					internal_horizontal_scroll_bar.hide
 					update_scroll_bar_spacer
 				end
 			end
@@ -4182,14 +4190,14 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			drawable.set_minimum_size (buffered_drawable_size, buffered_drawable_size)
 			drawable.enable_tabable_to
 
-			create vertical_scroll_bar
-			vertical_scroll_bar.hide
-			vertical_scroll_bar.set_leap (default_scroll_bar_leap)
-			vertical_scroll_bar.set_step (default_scroll_bar_step)
+			create internal_vertical_scroll_bar
+			internal_vertical_scroll_bar.hide
+			internal_vertical_scroll_bar.set_leap (default_scroll_bar_leap)
+			internal_vertical_scroll_bar.set_step (default_scroll_bar_step)
 
-			create horizontal_scroll_bar
-			horizontal_scroll_bar.set_step (default_scroll_bar_step)
-			horizontal_scroll_bar.set_leap (default_scroll_bar_leap)
+			create internal_horizontal_scroll_bar
+			internal_horizontal_scroll_bar.set_step (default_scroll_bar_step)
+			internal_horizontal_scroll_bar.set_leap (default_scroll_bar_leap)
 
 			create horizontal_box
 			create vertical_box
@@ -4197,7 +4205,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 
 			create l_vertical_box
 			horizontal_box.extend (l_vertical_box)
-			l_vertical_box.extend (vertical_scroll_bar)
+			l_vertical_box.extend (internal_vertical_scroll_bar)
 			horizontal_box.disable_item_expand (l_vertical_box)
 
 			create scroll_bar_spacer
@@ -4221,9 +4229,9 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			static_fixed.extend (viewport)
 			static_fixed.set_item_position (viewport, static_fixed_x_offset, static_fixed_y_offset)
 
-			vertical_box.extend (horizontal_scroll_bar)
-			vertical_box.disable_item_expand (horizontal_scroll_bar)
-			horizontal_scroll_bar.hide
+			vertical_box.extend (internal_horizontal_scroll_bar)
+			vertical_box.disable_item_expand (internal_horizontal_scroll_bar)
+			internal_horizontal_scroll_bar.hide
 			create vertical_box
 
 			create header
@@ -4265,8 +4273,8 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 				-- focus so is the only widget to which they must be connected.
 
 			initialize_header_events (header)
-			initialize_vertical_scroll_bar_events (vertical_scroll_bar)
-			initialize_horizontal_scroll_bar_events (horizontal_scroll_bar)
+			initialize_vertical_scroll_bar_events (internal_vertical_scroll_bar)
+			initialize_horizontal_scroll_bar_events (internal_horizontal_scroll_bar)
 			initialize_scroll_bar_spacer_events (scroll_bar_spacer)
 
 				-- Now ensure grid can be tabbed to as any other standard widget.
@@ -4335,7 +4343,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			a_header.pointer_leave_actions.extend (agent pointer_leave_received)
 		end
 
-	initialize_vertical_scroll_bar_events (a_vertical_scroll_bar: like vertical_scroll_bar)
+	initialize_vertical_scroll_bar_events (a_vertical_scroll_bar: like internal_vertical_scroll_bar)
 			-- Initialize events for `a_vertical_scroll_bar'.
 		do
 			a_vertical_scroll_bar.change_actions.extend (agent vertical_scroll_bar_changed)
@@ -4344,7 +4352,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			a_vertical_scroll_bar.pointer_leave_actions.extend (agent pointer_leave_received)
 		end
 
-	initialize_horizontal_scroll_bar_events (a_horizontal_scroll_bar: like horizontal_scroll_bar)
+	initialize_horizontal_scroll_bar_events (a_horizontal_scroll_bar: like internal_horizontal_scroll_bar)
 			-- Initialize events for `a_horizontal_scroll_bar'.
 		do
 			a_horizontal_scroll_bar.change_actions.extend (agent horizontal_scroll_bar_changed)
@@ -4708,8 +4716,8 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			-- which results in the two scroll bars being positioned correctly in relation
 			-- to each other.
 		do
-			if horizontal_scroll_bar.is_show_requested and vertical_scroll_bar.is_show_requested then
-				scroll_bar_spacer.set_minimum_size (vertical_scroll_bar.width, horizontal_scroll_bar.height)
+			if internal_horizontal_scroll_bar.is_show_requested and internal_vertical_scroll_bar.is_show_requested then
+				scroll_bar_spacer.set_minimum_size (internal_vertical_scroll_bar.width, internal_horizontal_scroll_bar.height)
 			else
 				scroll_bar_spacer.set_minimum_size (0, 0)
 			end
@@ -5259,7 +5267,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			pointed_item: detachable EV_GRID_ITEM
 		do
 			pointed_widget := screen.widget_at_mouse_pointer
-			if pointed_widget /= drawable and then (is_horizontal_scroll_bar_show_requested implies pointed_widget /= horizontal_scroll_bar) and then (is_vertical_scroll_bar_show_requested implies pointed_widget /= vertical_scroll_bar) and then (is_header_displayed implies pointed_widget /= header) then
+			if pointed_widget /= drawable and then (is_horizontal_scroll_bar_show_requested implies pointed_widget /= internal_horizontal_scroll_bar) and then (is_vertical_scroll_bar_show_requested implies pointed_widget /= internal_vertical_scroll_bar) and then (is_header_displayed implies pointed_widget /= header) then
 				if pointer_leave_actions_internal /= Void then
 					pointer_leave_actions.call (Void)
 				end
@@ -5284,7 +5292,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 		do
 			l_last_pointed_item := last_pointed_item
 			pointed_widget := screen.widget_at_mouse_pointer
-			if (is_horizontal_scroll_bar_show_requested implies pointed_widget /= horizontal_scroll_bar) and then (is_vertical_scroll_bar_show_requested implies pointed_widget /= vertical_scroll_bar) and then (is_header_displayed implies pointed_widget /= header) then
+			if (is_horizontal_scroll_bar_show_requested implies pointed_widget /= internal_horizontal_scroll_bar) and then (is_vertical_scroll_bar_show_requested implies pointed_widget /= internal_vertical_scroll_bar) and then (is_header_displayed implies pointed_widget /= header) then
 				if pointer_leave_actions_internal /= Void then
 					pointer_leave_actions.call (Void)
 				end
@@ -5571,12 +5579,12 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 						l_key_code
 					when {EV_KEY_CONSTANTS}.Key_down then
 						a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, True, is_row_selection_enabled or else ((a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void) and then a_sel_row.index_of_first_item = prev_sel_item.column.index))
-						l_make_item_visible := is_vertical_scroll_bar_show_requested and then vertical_scroll_bar.is_displayed
+						l_make_item_visible := is_vertical_scroll_bar_show_requested and then internal_vertical_scroll_bar.is_displayed
 					when {EV_KEY_CONSTANTS}.Key_up then
 						a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, is_row_selection_enabled or else ((a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void) and then a_sel_row.index_of_first_item = prev_sel_item.column.index))
-						l_make_item_visible := is_vertical_scroll_bar_show_requested and then vertical_scroll_bar.is_displayed
+						l_make_item_visible := is_vertical_scroll_bar_show_requested and then internal_vertical_scroll_bar.is_displayed
 					when {EV_KEY_CONSTANTS}.Key_right then
-						l_make_item_visible := is_horizontal_scroll_bar_show_requested and then horizontal_scroll_bar.is_displayed
+						l_make_item_visible := is_horizontal_scroll_bar_show_requested and then internal_horizontal_scroll_bar.is_displayed
 						if not is_row_selection_enabled then
 								-- Key right shouldn't affect row selection
 							if not is_item_navigatable_to (prev_sel_item) then
@@ -5618,7 +5626,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 							end
 						end
 					when {EV_KEY_CONSTANTS}.Key_left then
-						l_make_item_visible := horizontal_scroll_bar.is_displayed
+						l_make_item_visible := internal_horizontal_scroll_bar.is_displayed
 						if not is_row_selection_enabled then
 								-- Key left shouldn't affect row selection
 							if not is_item_navigatable_to (prev_sel_item) then
@@ -5661,13 +5669,13 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 									-- If the same item is returned then there no selection can take place.
 								a_sel_item := Void
 							end
-							l_make_item_visible := horizontal_scroll_bar.is_displayed or else vertical_scroll_bar.is_displayed
+							l_make_item_visible := internal_horizontal_scroll_bar.is_displayed or else internal_vertical_scroll_bar.is_displayed
 						end
 					else
 						-- Do nothing
 					end
 				elseif l_key_code = {EV_KEY_CONSTANTS}.Key_down then
-					l_make_item_visible := vertical_scroll_bar.is_displayed
+					l_make_item_visible := internal_vertical_scroll_bar.is_displayed
 					if column_count >= 1 then
 						a_sel_item := find_next_item_in_column (column (1), 0, True, True)
 					end
@@ -6370,6 +6378,12 @@ feature {NONE} -- Implementation
 	internal_tooltip: detachable like tooltip
 			-- Storage for tooltip.
 
+	internal_vertical_scroll_bar: EV_VERTICAL_SCROLL_BAR
+		-- Storage for `vertical_scroll_bar'.
+
+	internal_horizontal_scroll_bar: EV_HORIZONTAL_SCROLL_BAR
+		-- Storage for `horizontal_scroll_bar'.
+
 feature {EV_GRID_ROW_I, EV_GRID_ITEM_I} -- Implementation
 
 	internal_selected_rows: HASH_TABLE [EV_GRID_ROW, EV_GRID_ROW_I]
@@ -6634,10 +6648,10 @@ invariant
 	drawer_not_void: is_initialized implies drawer /= Void
 	drawable_not_void: is_initialized implies drawable /= Void
 	header_positioned_corrently: is_initialized implies header_viewport.x_offset >= 0 and header_viewport.y_offset = 0
-	internal_client_y_valid_while_vertical_scrollbar_hidden: is_initialized and then is_vertical_scroll_bar_show_requested and then not vertical_scroll_bar.is_show_requested implies internal_client_y = 0
-	internal_client_y_valid_while_vertical_scrollbar_shown: is_initialized and then vertical_scroll_bar.is_show_requested implies internal_client_y >= 0
-	internal_client_x_valid_while_horizontal_scrollbar_hidden: is_initialized and then is_horizontal_scroll_bar_show_requested and then not horizontal_scroll_bar.is_show_requested implies internal_client_x = 0
-	internal_client_x_valid_while_horizontal_scrollbar_shown: is_initialized and then horizontal_scroll_bar.is_show_requested implies internal_client_x >= 0
+	internal_client_y_valid_while_vertical_scrollbar_hidden: is_initialized and then is_vertical_scroll_bar_show_requested and then not internal_vertical_scroll_bar.is_show_requested implies internal_client_y = 0
+	internal_client_y_valid_while_vertical_scrollbar_shown: is_initialized and then internal_vertical_scroll_bar.is_show_requested implies internal_client_y >= 0
+	internal_client_x_valid_while_horizontal_scrollbar_hidden: is_initialized and then is_horizontal_scroll_bar_show_requested and then not internal_horizontal_scroll_bar.is_show_requested implies internal_client_x = 0
+	internal_client_x_valid_while_horizontal_scrollbar_shown: is_initialized and then internal_horizontal_scroll_bar.is_show_requested implies internal_client_x >= 0
 	row_heights_fixed_implies_row_offsets_void: is_initialized and then not uses_row_offsets implies row_offsets = Void
 	row_lists_count_equal: is_initialized implies internal_row_data.count = rows.count
 	displayed_column_count_not_greater_than_column_count: is_initialized implies displayed_column_count <= column_count

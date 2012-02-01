@@ -57,7 +57,7 @@ feature {NONE} -- Access
 invariant
 	api_feature_name_attached: attached api_feature_name
 	not_api_feature_name: not api_feature_name.is_empty
-	message_attached: attached message /= Void
+	message_attached: attached message
 	not_message_is_empty: attached message as l_msg and then
 		not l_msg.is_empty
 

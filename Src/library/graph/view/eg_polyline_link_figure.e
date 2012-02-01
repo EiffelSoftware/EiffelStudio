@@ -444,10 +444,8 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 	update
 			-- Some properties may have changed.
 		local
-			nx, ny, l_x, l_y: INTEGER
+			nx, ny: INTEGER
 			l_model: like model
-			l_point: EV_COORDINATE
-			l_line: EG_POLYLINE_LINK_FIGURE
 		do
 			if attached source as l_source and then attached target as l_target then
 				l_model := model

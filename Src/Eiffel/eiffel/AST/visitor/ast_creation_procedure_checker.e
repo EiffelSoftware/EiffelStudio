@@ -382,25 +382,44 @@ feature {AST_EIFFEL} -- Visitor: Agents
 
 	process_routine_creation_as (a: ROUTINE_CREATION_AS)
 			-- <Precursor>
+		local
+			e: like {ERROR_HANDLER}.error_level
 		do
+				-- Record current error level to avoid reporting errors
+				-- when there are issues with target and arguments.
+			e := error_handler.error_level
+				-- Check target and arguments.
+			Precursor (a)
 				-- Check if "Current" is used implicitly.
-			if not a.has_target then
-					-- The agent implicitly relies on "Current".
+			if
+				error_handler.error_level = e and then
+				not a.has_target and then
+				current_class.lace_class.is_void_safe_construct
+			then
+					-- Strict void safety: the agent implicitly relies on "Current".
 					-- The latter has to be initialized.
 				check_attributes (a.start_location)
 			end
-				-- Target and arguments need to be checked.
-			Precursor (a)
 		end
 
 	process_inline_agent_creation_as (a: INLINE_AGENT_CREATION_AS)
 			-- <Precursor>
+		local
+			e: like {ERROR_HANDLER}.error_level
 		do
-				-- The agent implicitly relies on "Current".
-				-- The latter has to be initialized.
-			check_attributes (a.start_location)
-				-- Target and arguments need to be checked.
+				-- Record current error level to avoid reporting errors
+				-- when there are issues with target and arguments.
+			e := error_handler.error_level
+				-- Check target and arguments.
 			Precursor (a)
+			if
+				error_handler.error_level = e and then
+				current_class.lace_class.is_void_safe_construct
+			then
+					-- Strict void safety: the agent implicitly relies on "Current".
+					-- The latter has to be initialized.
+				check_attributes (a.start_location)
+			end
 		end
 
 feature {AST_EIFFEL} -- Visitor: Result

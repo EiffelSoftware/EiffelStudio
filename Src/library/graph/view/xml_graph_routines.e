@@ -26,7 +26,7 @@ inherit
 			default_create
 		end
 
-create {EG_XML_STORABLE, EG_FIGURE_XML_VISITOR}
+create {EG_XML_STORABLE}
 	make, default_create
 
 feature {NONE} -- Initialization
@@ -53,7 +53,7 @@ feature {NONE} -- Access
 	relative_window: detachable EV_WINDOW
 			-- relative window
 
-feature {EG_XML_STORABLE, EG_FIGURE_XML_VISITOR} -- Access
+feature {EG_XML_STORABLE} -- Access
 
 	number_of_tags (node: like xml_node): INTEGER
 			-- Number of tags in node and all childrens of node.
@@ -77,14 +77,14 @@ feature {EG_XML_STORABLE, EG_FIGURE_XML_VISITOR} -- Access
 			end
 		end
 
-feature {EG_XML_STORABLE, EG_FIGURE_XML_VISITOR} -- Status report
+feature {EG_XML_STORABLE} -- Status report
 
 	valid_tags: INTEGER
 			-- Number of valid tags read.
 
 	valid_tag_read_actions: EV_NOTIFY_ACTION_SEQUENCE
 
-feature {EG_XML_STORABLE, EG_FIGURE_XML_VISITOR} -- Status setting
+feature {EG_XML_STORABLE} -- Status setting
 
 	reset_valid_tags
 			-- Reset `valid_tags'.
@@ -103,7 +103,7 @@ feature {EG_XML_STORABLE, EG_FIGURE_XML_VISITOR} -- Status setting
 			valid_tags_incremented: valid_tags = old valid_tags + 1
 		end
 
-feature {EG_XML_STORABLE, EG_FIGURE_XML_VISITOR} -- Processing
+feature {EG_XML_STORABLE} -- Processing
 
 	xml_integer (elem: like xml_node; a_name: STRING): INTEGER
 			-- Find in sub-elememt of `elem' integer item with tag `a_name'.

@@ -125,8 +125,6 @@ feature -- Access
 
 	sub_nodes_recursive: ARRAYED_LIST [like node_type]
 			-- All nodes in current.
-		local
-			l_sub_clusters: like sub_clusters
 		do
 			create Result.make (20)
 			add_subnodes_to_list (Result, True)

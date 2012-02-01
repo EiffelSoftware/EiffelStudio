@@ -138,7 +138,6 @@ feature -- Query
 			l_handle: like module_handle
 			l_cache: like api_pointer_cache
 			l_api_table: detachable HASH_TABLE [POINTER, READABLE_STRING_8]
-			l_api_name_key: STRING
 			l_cached: BOOLEAN
 		do
 			l_handle := module_handle

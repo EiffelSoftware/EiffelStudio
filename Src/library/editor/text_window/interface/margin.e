@@ -70,10 +70,7 @@ feature -- Access
 	width: INTEGER
 			-- Width in pixels calculated based on which tokens should be displayed
 		local
-			l_no_lines: INTEGER
-			l_max_token: EDITOR_TOKEN_LINE_NUMBER
 --			l_bptok: EDITOR_TOKEN_BREAKPOINT
-			l_spacer: STRING
 		do
 		    Result := 1
 			if line_numbers_visible then
@@ -325,7 +322,6 @@ feature {TEXT_PANEL} -- Display functions
 			-- new size (`a_width', `a_height').
 			--| Note: This feature is called during the creation of the window
 		local
-			fld: INTEGER
 			old_height: INTEGER
 			w,h: INTEGER
 		do

@@ -176,8 +176,6 @@ feature {NONE} -- Implementation
 
 	displayed_selected_value: STRING_32
 			-- Displayed value
-		local
-			s: detachable STRING_32
 		do
 			if attached preference.selected_value as l_selected then
 				if attached value_mapping as v and then attached v.item (l_selected) as l_found_item then

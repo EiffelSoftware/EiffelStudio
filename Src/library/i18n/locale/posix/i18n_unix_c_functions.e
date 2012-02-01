@@ -110,7 +110,7 @@ feature -- Available locales
 			a_locale_not_void: a_locale /= Void
 		local
 			l_str: C_STRING
-			l_ptr, l_null: POINTER
+			l_null: POINTER
 		do
 				-- Check if locale is present
 			create l_str.make (a_locale)

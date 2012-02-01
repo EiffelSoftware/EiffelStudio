@@ -174,7 +174,6 @@ feature -- Status Setting
 			-- Parse the string value `a_value' and set `value'.
 			-- String format: "Alt+Ctrl+Shift+KeyString"		
 		local
-			values: LIST [STRING]
 			l_string: STRING
 			l_value: like value
 			l_cnt: INTEGER

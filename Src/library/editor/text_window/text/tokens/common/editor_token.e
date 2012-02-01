@@ -564,8 +564,6 @@ feature {NONE} -- Userset Implementation, text panel wide attributes
 
 	userset_font_width: INTEGER
 			-- Userset font width
-		local
-			l_userset_data: like userset_data
 		do
 			if attached userset_data as l_data then
 				Result := l_data.font_width

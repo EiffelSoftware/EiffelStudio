@@ -44,7 +44,8 @@ feature -- Miscellaneous
 			-- Compute the width in pixels of the first
 			-- `n' characters of the current string.
 		local
-			i, l_font_width, l_tab_position, l_tab_width: INTEGER
+			i, l_tab_position, l_tab_width: INTEGER
+--			l_font_width: INTEGER
 			l_string: STRING_32
 --			l_is_fixed: BOOLEAN
 		do

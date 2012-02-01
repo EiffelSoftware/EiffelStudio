@@ -168,7 +168,6 @@ feature {NONE} -- Implementation
 			pref_value: detachable STRING
 			l_root_element: XML_ELEMENT
 			t_preference, t_name, t_value: STRING
-			l_retried: BOOLEAN
 		do
 			create parser.make
 			create l_tree.make_null

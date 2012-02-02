@@ -61,8 +61,9 @@ feature -- Access
 	help_text: STRING_32
 			-- Content of the file where the help is.
 		do
-			Result := origin_text
-			if Result = Void or else Result.is_empty then
+			if attached origin_text as l_text and then not l_text.is_empty then
+				Result := l_text
+			else
 				Result := Interface_names.h_No_help_available.twin
 			end
 		end
@@ -100,7 +101,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

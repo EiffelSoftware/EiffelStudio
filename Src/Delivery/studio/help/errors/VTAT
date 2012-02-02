@@ -1,16 +1,14 @@
-VTAT, chapter 12 (Types), page 214
+VTAT
+     It is valid to use an anchored type `AT' of the form
+     `like anchor' in a class `C' if and only if it satisfies
+     the following conditions:
 
-     An anchored type of the form `like anchor' appearing
-     in a class `C' is valid  if  and  only if one of the
-     following holds:
+        1 `anchor' is either `Current' or the final name
+          of a query of `C'.
 
-        1 `anchor' is the final name of  an  attribute  or
-          function  of  `C', whose declared type is a non-
-          Anchored reference type.
+        2 `anchor' is not a cyclic anchor.
 
-        2 The type appears in the text of a routine `r' of
-          `C',  and  `anchor' is a formal argument of `r',
-          whose declared type is a non-Anchored  reference
-          type.
+        3 The deanchored form `UT' of `AT' is valid in
+          `C'.
 
-        3 `anchor' is the reserved word `Current'.
+     The base class and base type of `AT' are those of `UT'.

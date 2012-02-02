@@ -1,7 +1,7 @@
 note
 	description: "Process status listening timer implemented with thread."
-	status: "See notice at end of class."
 	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 		do
 			if attached {PROCESS_IMP} process_launcher as l_prc_imp then
 				from
-					l_sleep_time := sleep_time.to_integer_64 * 1_000_000
+					l_sleep_time := sleep_time.to_integer_64 * one_millisecond_in_nanoseconds
 				until
 					should_destroy
 				loop

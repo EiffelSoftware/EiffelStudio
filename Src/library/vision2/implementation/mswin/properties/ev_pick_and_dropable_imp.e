@@ -189,8 +189,8 @@ feature {EV_ANY_I} -- Implementation
 						end
 						application_imp.create_target_menu (a_x, a_y, a_screen_x, a_screen_y, attached_interface, l_pebble, l_configure_agent, a_menu_only)
 					elseif l_pebble /= Void and then mode_is_pick_and_drop and a_button = 3 then
-							real_start_transport (l_pebble, a_x, a_y, a_button, a_x_tilt,
-								a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+						real_start_transport (l_pebble, a_x, a_y, a_button, a_x_tilt,
+							a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 					elseif l_pebble /= Void and then mode_is_drag_and_drop and a_button = 1 then
 						pebble := l_pebble
 						if not awaiting_movement then
@@ -290,6 +290,11 @@ feature {EV_ANY_I} -- Implementation
 					-- Store the previous cursor of `Current'.
 				pnd_stored_cursor := cursor_pixmap
 				application_imp.set_capture_type ({EV_APPLICATION_IMP}.Capture_heavy)
+
+					-- Refresh the EV_SCREEN object with the latest graphical context
+					-- since `pnd_screen' is a once and needs refreshing if the screen
+					-- has changed since it was created.
+				application_imp.pnd_screen.implementation.refresh_graphics_context
 
 					-- Assign correct pointer for transport.
 				update_pointer_style (pointed_target)
@@ -715,14 +720,14 @@ feature {EV_ANY_I, WEL_WINDOW} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_PICK_AND_DROPABLE_IMP

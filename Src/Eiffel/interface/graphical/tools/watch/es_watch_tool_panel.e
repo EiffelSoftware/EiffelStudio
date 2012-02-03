@@ -911,6 +911,8 @@ feature {NONE} -- Event handling
 		local
 			lst: LIST [EV_GRID_ROW]
 			row: EV_GRID_ROW
+			l_new_exp_row: like new_expression_row
+			n: INTEGER
 		do
 			if update_commands_on_expressions_delayer /= Void then
 				update_commands_on_expressions_delayer.cancel_request
@@ -919,22 +921,25 @@ feature {NONE} -- Event handling
 			if not lst.is_empty then
 				from
 					lst.start
+					l_new_exp_row := new_expression_row
+					n := 0
 				until
-					lst.after
+					lst.after or n > 1
+						--| the following process depend on lst.count = 0, lst.count > 0 or lst.count = 1
+						--| So we can stop, whenever we know we have at least 2 rows...
 				loop
 					row := lst.item_for_iteration
 					if
-						row.parent_row = Void and then
-						row /= new_expression_row
+						row /= l_new_exp_row and then
+						row.parent_row = Void
 					then
-						lst.forth
-					else
-						lst.remove
+						n := n + 1
 					end
+					lst.forth
 				end
 			end
 
-			if lst.count > 0 then
+			if n > 0 then
 				delete_expression_cmd.enable_sensitive
 				toggle_state_of_expression_cmd.enable_sensitive
 				move_up_cmd.enable_sensitive
@@ -946,7 +951,7 @@ feature {NONE} -- Event handling
 				move_down_cmd.disable_sensitive
 			end
 
-			if lst.count = 1 then
+			if n = 1 then
 				edit_expression_cmd.enable_sensitive
 			else
 				edit_expression_cmd.disable_sensitive
@@ -956,7 +961,7 @@ feature {NONE} -- Event handling
 	on_row_selected (row: EV_GRID_ROW)
 			-- An item in the list of expression was selected.
 		do
-			update_commands_on_expressions
+			request_update_commands_on_expressions
 		end
 
 	on_row_deselected (row: EV_GRID_ROW)
@@ -1976,7 +1981,7 @@ invariant
 	not_void_delete_expression_cmd: mini_toolbar /= Void implies delete_expression_cmd /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

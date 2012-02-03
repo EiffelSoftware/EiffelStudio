@@ -3,6 +3,9 @@ class
 
 inherit
 	THREAD
+		rename
+			make as thread_make
+		end
 
 create
 	make
@@ -11,6 +14,7 @@ feature -- Initialization
 
 	make
 		do
+			thread_make
 			create timer_mutex.make
 			create timer_condition.make
 			launch

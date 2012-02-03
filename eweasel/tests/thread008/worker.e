@@ -7,6 +7,9 @@
 class WORKER
 inherit
 	THREAD
+		rename
+			make as thread_make
+		end
 	MEMORY
 create
 	make
@@ -15,6 +18,7 @@ feature
 
 	make (n: INTEGER) is
 		do
+			thread_make
 			count := n
 		end;
 

@@ -2,6 +2,9 @@ class C
 
 inherit
 	THREAD
+		rename
+			make as thread_make
+		end
 
 create
 	make
@@ -15,6 +18,7 @@ feature {NONE} -- Creation
 		require
 			test_sem_not_void: test_sem /= Void
 		do
+			thread_make
 			internal_number := test_number
 			is_delayed := delay
 			create thread_sem.make (0)

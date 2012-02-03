@@ -2,6 +2,9 @@ class TEST
 
 inherit
 	THREAD
+		rename
+			make as thread_make
+		end
 
 create
 	make, make_thread
@@ -20,6 +23,7 @@ feature
 
 	make_thread (v: like level) is
 		do
+			thread_make
 			level := v
 		end
 

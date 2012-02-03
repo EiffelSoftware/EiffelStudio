@@ -2,11 +2,14 @@ class TEST
 
 inherit
 	THREAD
+		rename
+			make as thread_make
+		end
 	ARGUMENTS
 
 create
 	make,
-	default_create
+	thread_make
 
 feature
 	make
@@ -24,7 +27,7 @@ feature
 			until
 				i = nb
 			loop
-				create l_root
+				create l_root.thread_make
 				l_root.launch
 				i := i + 1
 			end

@@ -2,6 +2,9 @@ class TEST
 
 inherit
 	THREAD
+		rename
+			make as thread_make
+		end
 	$THREAD_CONTROL
 
 create
@@ -17,6 +20,7 @@ feature {NONE} -- Creation
 			t1: TEST
 			t2: TEST
 		do
+			thread_make
 			create t1.make1
 			create t2.make2
 			create common_sem.make (0)
@@ -31,12 +35,14 @@ feature {NONE} -- Creation
 	make1 is
 			-- Create object for thread 1.
 		do
+			thread_make
 			internal_number := 1
 		end
 
 	make2 is
 			-- Create object for thread 2.
 		do
+			thread_make
 			internal_number := 2
 		end
 

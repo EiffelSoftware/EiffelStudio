@@ -1,6 +1,9 @@
 class WORKER
 inherit
 	THREAD
+		rename
+			make as thread_make
+		end
 create
 	make
 
@@ -8,6 +11,7 @@ feature {NONE} -- Initialization
 
 	make (a_cond_variable: CONDITION_VARIABLE; a_mutex: MUTEX; a_thread: THREAD; a_data: CELL [BOOLEAN])
 		do
+			thread_make
 			condition_variable := a_cond_variable
 			mutex := a_mutex
 			thread := a_thread

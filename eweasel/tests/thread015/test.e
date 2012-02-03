@@ -2,6 +2,9 @@ class TEST
 
 inherit
 	THREAD
+		rename
+			make as thread_make
+		end
 
 create
 	make
@@ -12,6 +15,7 @@ feature
 		local
 			thread: WORKER_THREAD
 		do
+			thread_make
 			create thread.make (agent execute)
 			thread.launch
 			if join_with_timeout (10) then

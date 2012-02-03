@@ -2,6 +2,9 @@ class TEST
 
 inherit
 	THREAD
+		redefine
+			make
+		end
 	$THREAD_CONTROL
 
 create
@@ -12,6 +15,7 @@ feature {NONE} -- Creation
 	make is
 			-- Run test.
 		do
+			Precursor
 			set_thread_item (1)
 			test_thread_item (1)
 			set_process_item (2)

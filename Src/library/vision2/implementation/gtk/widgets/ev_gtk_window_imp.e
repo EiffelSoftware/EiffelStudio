@@ -318,6 +318,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 			l_accel: detachable EV_ACCELERATOR
 			l_accel_imp: detachable EV_ACCELERATOR_IMP
 			l_unicode_value: NATURAL_32
+			l_is_tab_navigation: BOOLEAN
 		do
 			l_app_imp := app_implementation
 				-- Perform translation on key values from gdk.
@@ -407,15 +408,25 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 				if a_key /= Void then
 					l_disable_default_processing := a_focus_widget.disable_default_processing_on_key (a_key)
 					if not l_disable_default_processing then
+						l_is_tab_navigation := a_key.code = {EV_KEY_CONSTANTS}.key_tab
+						if l_is_tab_navigation then
+							if l_app_imp.shift_pressed then
+								l_app_imp.set_tab_navigation_state ({EV_APPLICATION_I}.tab_state_from_next)
+							else
+								l_app_imp.set_tab_navigation_state ({EV_APPLICATION_I}.tab_state_from_previous)
+							end
+						end
 						l_tab_controlable ?= a_focus_widget
 						if l_tab_controlable /= Void and then not l_tab_controlable.is_tabable_from then
-							l_disable_default_processing := a_key.is_arrow or else a_key.code = {EV_KEY_CONSTANTS}.key_tab
+							l_disable_default_processing := a_key.is_arrow or else l_is_tab_navigation
 						end
 					end
-					if not l_disable_default_processing then
-						{GTK}.gtk_main_do_event (a_key_event)
-					end
 				end
+
+				if not l_disable_default_processing then
+					{GTK}.gtk_main_do_event (a_key_event)
+				end
+
 				if attached l_app_imp.pick_and_drop_source as l_pick_and_drop_source and then a_key_press and then a_key /= Void and then (a_key.code = {EV_KEY_CONSTANTS}.key_escape or a_key.code = {EV_KEY_CONSTANTS}.key_alt) then
 					l_pick_and_drop_source.end_transport (0, 0, 0, 0, 0, 0, 0, 0)
 				else
@@ -448,6 +459,10 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 				end
 					-- Execute the gdk event as normal.
 				{GTK}.gtk_main_do_event (a_key_event)
+			end
+			if l_is_tab_navigation then
+					-- Reset any potential tab navigation state.
+				l_app_imp.set_tab_navigation_state ({EV_APPLICATION_I}.tab_state_none)
 			end
 		end
 
@@ -482,14 +497,14 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

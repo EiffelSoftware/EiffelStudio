@@ -28,14 +28,34 @@ feature -- Test
 
 	test (t: separate TEST)
 		do
-				-- Calls to `f' and `g' should go to the new processor.
+				-- Calls to `g' should go to the processor of `t'.
+			t.g (1)
 			t.f.g (2)
+			(+ t).g (3)
+			(t + 0).g (4)
+			(t [0]).g (5)
+			t.h := 6
+			t.f.h := 7
+			(+ t).h := 8
+			(t + 0).h := 9
+			(t [0]).h := 10
 		end
 
 	f: TEST
 			-- Report test result and return an object of the current processor.
 		do
-			g (1)
+			Result := Current
+		end
+
+	unary_plus alias "+": TEST
+			-- Report test result and return an object of the current processor.
+		do
+			Result := Current
+		end
+
+	binary_plus alias "+" (i: INTEGER): TEST
+			-- Report test result and return an object of the current processor.
+		do
 			Result := Current
 		end
 
@@ -50,9 +70,14 @@ feature -- Test
 			io.put_new_line
 		end
 
+	h: INTEGER assign g
+			-- A feature that has assigner `g'.
+		do
+		end
+
 	x: CELL [STRING]
-			-- A value associated woth the current processor.
-		once ("THREAD")
+			-- A value associated with the current processor.
+		once
 			create Result.put ("Unknown")
 		end
 

@@ -1,4 +1,5 @@
 note
+	description: "Value of a character constant."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -7,8 +8,12 @@ class CHAR_VALUE_I
 inherit
 	VALUE_I
 		redefine
-			generate, is_character, inspect_value,
-			append_signature, string_value
+			append_signature,
+			generate,
+			inspect_value,
+			is_character,
+			set_real_type,
+			string_value
 		end
 
 	CHARACTER_ROUTINES
@@ -47,16 +52,26 @@ feature {NONE} -- Initialization
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := character_value = other.character_value and then
 				is_character_32 = other.is_character_32
 		end
 
-feature
+feature -- Modification
+
+	set_real_type (t: TYPE_A)
+			-- <Precursor>
+		do
+			is_character_32 := t.is_character_32
+		end
+
+feature -- Access
 
 	character_value: CHARACTER_32
 			-- Character constant value
+
+feature -- Status report
 
 	is_character: BOOLEAN = True
 			-- Is the current constant a character one?
@@ -71,18 +86,14 @@ feature
 			-- Is it CHARACTER_32 constant?
 
 	valid_type (t: TYPE_A): BOOLEAN
-			-- Is the current value compatible with `t' ?
-		local
-			c: CHARACTER_A
+			-- Is the current value compatible with `t'?
 		do
-			if t.is_character then
-				c ?= t
-				check
-					attached_c: c /= Void
-				end
+			if attached {CHARACTER_A} t as c then
 				Result := is_character_8 or else c.is_character_32
 			end
 		end
+
+feature -- Code generation
 
 	generate (buffer: GENERATION_BUFFER)
 			-- Generate value in `buffer'.
@@ -150,7 +161,7 @@ invariant
 	consistent_type: is_character_8 xor is_character_32
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

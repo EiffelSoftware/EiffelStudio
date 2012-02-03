@@ -135,13 +135,13 @@ feature -- Status report
 feature -- Settings
 
 	set_real_type (t: TYPE_A)
-			-- Sometime type of constants needs to be changed.
+			-- Adapt constant type to `t'.
+			-- Sometimes type of constants needs to be changed.
 			-- For example by default an integer constant is of type
 			-- INTEGER, but type of constant might be INTEGER_8 and
 			-- therefore current instance should be updated accordingly.
-			-- Same thing with real constant which can be either DOUBLE or
-			-- REAL.
-			-- Same thing with BIT_VALUE_I
+			-- Same thing with real constant which can be either REAL_32 or
+			-- REAL_64, etc.
 		require
 			t_not_void: t /= Void
 			valid_type: valid_type (t)
@@ -249,7 +249,7 @@ feature -- Debugging
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

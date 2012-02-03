@@ -45,7 +45,7 @@ feature
 			from
 				i := 1
 			until
-				i = 10_0000
+				i = 10_000
 			loop
 				l_mem.collect
 				i := i + 1

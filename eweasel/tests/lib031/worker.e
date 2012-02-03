@@ -2,6 +2,10 @@
 class WORKER
 inherit
 	THREAD
+		rename
+			make as thread_make
+		end
+
 create
 	make
 
@@ -9,6 +13,7 @@ feature
 
 	make (n, m: INTEGER c: CHARACTER src_name, dest_name: STRING) is
 		do
+			thread_make
 			iteration_count := n
 			length := m
 			file_character := c

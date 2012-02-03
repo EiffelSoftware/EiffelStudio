@@ -1,11 +1,10 @@
 class WORKER
 inherit
 	THREAD
-feature
+create
+	make
 
-	make is
-		do
-		end;
+feature
 
 	execute is
 		local

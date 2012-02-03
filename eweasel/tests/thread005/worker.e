@@ -12,10 +12,6 @@ create
 
 feature
 
-	make
-		do
-		end;
-
 	execute is
 		do
 		end;

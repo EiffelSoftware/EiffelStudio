@@ -38,7 +38,7 @@ feature -- Initialization
 			until
 				i > n
 			loop
-				create th
+				create th.make
 				th.launch
 				i := i + 1
 			end

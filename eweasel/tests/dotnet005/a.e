@@ -2,6 +2,9 @@ class A
 
 inherit
 	THREAD
+		rename
+			make as thread_make
+		end
 
 create
 	make
@@ -11,6 +14,7 @@ feature {NONE} -- Creation
 	make (test_number: INTEGER) is
 			-- Launch test number `test_number'.
 		do
+			thread_make
 			number := test_number
 			launch
 		end

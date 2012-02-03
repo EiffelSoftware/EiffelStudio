@@ -2,6 +2,9 @@ class TEST
 
 inherit
 	THREAD
+		rename
+			make as thread_make
+		end
 
 create
 	make, make_typed
@@ -11,6 +14,7 @@ feature
 	make is
 		local
 		do
+			thread_make
 			i := 0
 			launch
 			join_all
@@ -28,6 +32,7 @@ feature
 
 	make_typed (v: like i) is
 		do
+			thread_make
 			i := v
 		end
 

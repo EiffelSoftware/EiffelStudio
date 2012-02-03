@@ -10,6 +10,8 @@ class TEST
 inherit
 
 	THREAD
+		rename
+			make as thread_make	
 		redefine
 			copy,
 			is_equal
@@ -25,12 +27,14 @@ feature {NONE} -- Creation
 		local
 			t1, t2: TEST
 		do
+			thread_make
 			create t1.make1
 			create t2.make2
 		end
 
 	make1
 		do
+ 			thread_make
 			launch
 			test_precondition_1
 			join
@@ -46,6 +50,7 @@ feature {NONE} -- Creation
 
 	make2
 		do
+			thread_make
 			launch
 			twin.do_nothing
 			join

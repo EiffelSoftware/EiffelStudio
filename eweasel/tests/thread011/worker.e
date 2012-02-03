@@ -8,6 +8,7 @@ class WORKER
 inherit
 	THREAD
 		rename
+			make as thread_make,
 			sleep as thread_sleep
 		end
 
@@ -23,6 +24,7 @@ feature
 
 	make (n: INTEGER nsecs: INTEGER_64)
 		do
+			thread_make
 			iterations := n
 			nanoseconds := nsecs
 		end;

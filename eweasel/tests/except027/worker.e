@@ -7,11 +7,17 @@
 class WORKER
 inherit
 	THREAD
+		rename
+			make as thread_make
+		end
 	EXCEPTIONS
+create
+	make
 feature
 
 	make (a_depth, a_count: INTEGER a_name: STRING a_wrong_list: LIST [STRING]) is
 		do
+			thread_make
 			depth := a_depth
 			count := a_count
 			name := a_name

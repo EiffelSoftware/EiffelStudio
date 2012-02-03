@@ -25,7 +25,7 @@ feature
 			until
 				k > count
 			loop
-				create worker
+				create worker.make
 				worker.launch
 				join_all
 				mem.update (Total_memory);

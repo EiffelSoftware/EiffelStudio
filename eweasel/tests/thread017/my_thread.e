@@ -2,6 +2,9 @@ class MY_THREAD
 
 inherit
 	THREAD
+		rename
+			make as thread_make
+		end
 
 create
 	make
@@ -10,6 +13,7 @@ feature {NONE} -- Initialization
 
 	make (m: SEMAPHORE)
 		do
+			thread_make
 			sem := m
 		end
 

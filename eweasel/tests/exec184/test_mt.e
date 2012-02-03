@@ -18,6 +18,10 @@ inherit
 		end
 
 	THREAD
+		rename
+			make as thread_make
+		end
+
 	$THREAD_CONTROL
 
 create
@@ -33,6 +37,7 @@ feature {NONE} -- Creation
 			t: TEST
 			i: INTEGER
 		do
+			thread_make	
 				-- Create common structures
 			create mutex.make
 			create succeeded_tests.make_empty
@@ -64,6 +69,7 @@ feature {NONE} -- Creation
 			m /= Void
 			t /= Void
 		do
+			thread_make
 			mutex := m
 			succeeded_tests := t
 			launch

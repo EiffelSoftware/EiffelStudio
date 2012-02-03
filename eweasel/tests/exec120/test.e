@@ -23,7 +23,7 @@ feature
 			until
 				k > count
 			loop
-				create worker
+				create worker.make
 				worker.launch
 				k := k + 1;
 			end

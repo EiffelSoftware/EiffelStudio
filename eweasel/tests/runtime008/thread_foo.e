@@ -4,6 +4,9 @@ class
 inherit
 	THREAD
 
+create
+	make
+
 feature -- Execute
 
 	execute is

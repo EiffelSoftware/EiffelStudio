@@ -27,6 +27,7 @@ feature {NONE} -- Creation
 feature -- Test
 
 	test (t: separate TEST)
+			-- Execute call chains on `t'.
 		do
 				-- Calls to `g' should go to the processor of `t'.
 			t.g (1)
@@ -42,19 +43,25 @@ feature -- Test
 		end
 
 	f: TEST
-			-- Report test result and return an object of the current processor.
+			-- An object of the current processor.
 		do
 			Result := Current
 		end
 
 	unary_plus alias "+": TEST
-			-- Report test result and return an object of the current processor.
+			-- An object of the current processor.
 		do
 			Result := Current
 		end
 
 	binary_plus alias "+" (i: INTEGER): TEST
-			-- Report test result and return an object of the current processor.
+			-- An object of the current processor.
+		do
+			Result := Current
+		end
+
+	bracket alias "[]" (i: INTEGER): TEST
+			-- An object of the current processor.
 		do
 			Result := Current
 		end
@@ -62,7 +69,7 @@ feature -- Test
 	g (i: INTEGER)
 			-- Output a value of `x' for test number `i'.
 		do
-			io.put_string ("TEST ")
+			io.put_string ("Test ")
 			io.put_integer (i)
 			io.put_string (": ")
 			io.put_string (x.item)

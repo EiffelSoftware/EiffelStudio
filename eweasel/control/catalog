@@ -1310,6 +1310,7 @@ test    shared-mutex-hang		thread018	tcf pass multithreaded manual
 test	thread-join-crash			thread019	tcf pass multithreaded
 test	thread-profiling-crash		thread020	tcf pass multithreaded profile
 test	thread-crashes-on-die		thread021	tcf pass multithreaded
+test	thread-hangs-on-fork	thread022	tcf pass multithreaded
 
 -- Execution
 

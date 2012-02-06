@@ -70,6 +70,8 @@ feature -- Initialization
 
 				-- Add our dummy column to the end to match Windows implementation
 			create dummy_item
+				-- Set an empty text to the dummy item so that the minimum height of header takes the default label size in to account.
+			dummy_item.set_text ("  ")
 			dummy_imp ?= dummy_item.implementation
 			check dummy_imp /= Void end
 			{GTK2}.gtk_tree_view_column_set_min_width (dummy_imp.c_object, 0)
@@ -277,14 +279,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_HEADER note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

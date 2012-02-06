@@ -2300,6 +2300,62 @@ feature -- Status report
 			end
 		end
 
+	find_next_item (a_row_index, a_column_index: INTEGER; look_left, a_is_tab_navigatable: BOOLEAN): detachable EV_GRID_ITEM
+			-- Find the next item horizontally in `grid_row' starting at index `starting_index', if 'look_left' then the the item to the left/up is found, else it looks right/down.
+			-- If `a_is_tab_navigatable' then Result must have 'is_tab_navigatable' set.
+			-- Result is Void if no item is found.
+		require
+			a_row_index_valid: a_row_index > 0 and then a_row_index <= row_count
+			a_column_index_valid: a_column_index > 0 and then a_column_index <= column_count
+		local
+			l_current_row_index, l_current_column_index, l_row_offset, l_column_offset: INTEGER
+			l_first_row_index, l_row_index_boundary, l_column_index_boundary: INTEGER
+			l_dynamic_content_function: like dynamic_content_function
+		do
+			if not look_left then
+				l_row_offset := 1
+				l_first_row_index := 1
+				l_row_index_boundary := column_count + 1
+				l_column_offset := 1
+				l_column_index_boundary := row_count + 1
+			else
+				l_row_offset := -1
+				l_first_row_index := column_count
+				l_row_index_boundary := 0
+				l_column_offset := -1
+				l_column_index_boundary := 0
+			end
+			if is_content_partially_dynamic then
+				l_dynamic_content_function := dynamic_content_function
+			end
+			from
+				l_current_column_index := a_row_index
+				l_current_row_index := a_column_index + l_row_offset
+			until
+				Result /= Void or else l_current_column_index = l_column_index_boundary
+			loop
+				from
+				until
+					Result /= Void or else l_current_row_index = l_row_index_boundary
+				loop
+					Result := item (l_current_row_index, l_current_column_index)
+					if Result = Void and then l_dynamic_content_function /= Void then
+						Result := l_dynamic_content_function.item ([l_current_row_index, l_current_column_index])
+						if Result /= Void then
+							internal_set_item (l_current_row_index, l_current_column_index, Result)
+						end
+					end
+					if a_is_tab_navigatable and then Result /= Void and then not Result.is_tab_navigatable then
+						Result := Void
+					end
+					l_current_row_index := l_current_row_index + l_row_offset
+				end
+					-- Increase column and row values to the next valid index.
+				l_current_column_index := l_current_column_index + l_column_offset
+				l_current_row_index := l_first_row_index
+			end
+		end
+
 feature -- Element change
 
 	enable_drawables_have_focus
@@ -5318,63 +5374,6 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 				end
 			end
 			last_pointed_item := Void
-		end
-
-	find_next_item (a_row_index, a_column_index: INTEGER; look_left, a_is_tab_navigatable: BOOLEAN): detachable EV_GRID_ITEM
-			-- Find the next item horizontally in `grid_row' starting at index `starting_index', if 'look_left' then the the item to the left/up is found, else it looks right/down.
-			-- If `a_is_tab_navigatable' then Result must have 'is_tab_navigatable' set.
-			-- Result is Void if no item is found.
-		require
-			a_row_index_valid: a_row_index > 0 and then a_row_index <= row_count
-			a_column_index_valid: a_column_index > 0 and then a_column_index <= column_count
-		local
-			l_current_row_index, l_current_column_index, l_row_offset, l_column_offset: INTEGER
-			l_first_row_index, l_row_index_boundary, l_column_index_boundary: INTEGER
-			l_dynamic_content_function: like dynamic_content_function
-		do
-			if not look_left then
-				l_row_offset := 1
-				l_first_row_index := 1
-				l_row_index_boundary := column_count + 1
-				l_column_offset := 1
-				l_column_index_boundary := row_count + 1
-			else
-				l_row_offset := -1
-				l_first_row_index := column_count
-				l_row_index_boundary := 0
-				l_column_offset := -1
-				l_column_index_boundary := 0
-			end
-			if is_content_partially_dynamic then
-				l_dynamic_content_function := dynamic_content_function
-			end
-			from
-				l_current_column_index := a_row_index
-				l_current_row_index := a_column_index + l_row_offset
-			until
-				Result /= Void or else l_current_column_index = l_column_index_boundary
-			loop
-				from
-				until
-					Result /= Void or else l_current_row_index = l_row_index_boundary
-				loop
-					Result := item (l_current_row_index, l_current_column_index)
-					if Result = Void and then l_dynamic_content_function /= Void then
-						Result := l_dynamic_content_function.item ([l_current_row_index, l_current_column_index])
-						if Result /= Void then
-							internal_set_item (l_current_row_index, l_current_column_index, Result)
-						end
-					end
-					if a_is_tab_navigatable and then Result /= Void and then not Result.is_tab_navigatable then
-						Result := Void
-					end
-					l_current_row_index := l_current_row_index + l_row_offset
-				end
-					-- Increase column and row values to the next valid index.
-				l_current_column_index := l_current_column_index + l_column_offset
-				l_current_row_index := l_first_row_index
-			end
-
 		end
 
 	find_next_item_in_row (grid_row: EV_GRID_ROW; starting_index: INTEGER; look_right, a_is_tab_navigatable: BOOLEAN): detachable EV_GRID_ITEM

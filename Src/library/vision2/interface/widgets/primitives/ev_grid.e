@@ -2051,6 +2051,17 @@ feature -- Status report
 			Result := implementation.depth_in_tree (a_row_index)
 		end
 
+	find_next_item (a_row_index, a_column_index: INTEGER; look_left, a_is_tab_navigatable: BOOLEAN): detachable EV_GRID_ITEM
+			-- Find the next item horizontally in `grid_row' starting at index `starting_index', if 'look_left' then the the item to the left/up is found, else it looks right/down.
+			-- If `a_is_tab_navigatable' then Result must have 'is_tab_navigatable' set.
+			-- Result is Void if no item is found.
+		require
+			a_row_index_valid: a_row_index > 0 and then a_row_index <= row_count
+			a_column_index_valid: a_column_index > 0 and then a_column_index <= column_count
+		do
+			Result := implementation.find_next_item (a_row_index, a_column_index, look_left, a_is_tab_navigatable)
+		end
+
 feature -- Element change
 
 	insert_new_row (i: INTEGER)
@@ -2574,14 +2585,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-		Eiffel Software
-		356 Storke Road, Goleta, CA 93117 USA
-		Telephone 805-685-1006, Fax 805-685-6869
-		Website http://www.eiffel.com
-		Customer support http://support.eiffel.com
-	]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

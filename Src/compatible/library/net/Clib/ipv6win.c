@@ -1,10 +1,5 @@
 #include "ipv6.h"
 
-#ifdef __MINGW32__
-#define s6_words	_s6_words
-#define s6_bytes	_s6_bytes
-#endif
-
 /* Here are some declarations that strangely are not defined when we set for compiling for Win2k and above 
  * even if they don't use any features from those OSes. */
 static void NET_IN6_SET_ADDR_LOOPBACK(PIN6_ADDR a)
@@ -892,7 +887,7 @@ EIF_INTEGER en_socket_stream_accept (EIF_INTEGER fd, EIF_INTEGER fd1, EIF_INTEGE
 }
 
 void en_socket_datagram_bind (EIF_INTEGER *a_fd, EIF_INTEGER *a_fd1, EIF_INTEGER *a_local_port, EIF_POINTER sockaddr) {
-	// For now we reuse the stream socket implementation, but it could be changed in the feature
+		/* For now we reuse the stream socket implementation, but it could be changed in the feature */
 	en_socket_stream_bind (a_fd, a_fd1, a_local_port, sockaddr);
 }
 

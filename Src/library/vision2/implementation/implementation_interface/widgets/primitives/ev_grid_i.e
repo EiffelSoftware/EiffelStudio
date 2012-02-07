@@ -6349,7 +6349,8 @@ feature {NONE} -- Implementation
 	default_row_height: INTEGER
 			-- Default height of a row, based on the height of the default font.
 		once
-			Result := (create {EV_FONT}).line_height
+			Result := (create {EV_FONT}).line_height.max (18)
+				-- Make sure that the default row height is large enough to display a 16 pixel high icon with 2 pixel spacing (18)
 		ensure
 			result_positive: Result > 0
 		end

@@ -249,4 +249,11 @@ rt_public int tcsetpgrp (void)
 
 #endif /* EIF_THREADS */
 
+/* for debugging: return the value of `errno;'					*/
+/* the VMS debugger cannot access it at runtime because it is a macro:		*/
+/*	#define errno  (*CMA$TIS_ERRNO_GET_ADDR())				*/
+/* and the address of CMA$TIS_GET_ERRNO_ADDR is not known to the debugger.	*/
+eifrt_vms_errno (void)
+{   return errno; }
+
 #endif /* __VMS */

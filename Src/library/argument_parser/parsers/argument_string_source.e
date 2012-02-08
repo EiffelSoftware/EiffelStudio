@@ -22,17 +22,9 @@ feature {NONE} -- Initialization
 	make (a_arguments: SEQUENCE [READABLE_STRING_GENERAL])
 			-- Initialize a new argument source from a sequence of strings.
 			--
-			-- `a_arguments': An sequence of string arguments.
+			-- `a_arguments': A sequence of attached string arguments.
 		require
 			a_arguments_attached: a_arguments /= Void
-			a_arguments_contains_attached_items:
-				a_arguments.for_all (agent (ia_item: READABLE_STRING_GENERAL): BOOLEAN
-					local
-						l_item: detachable READABLE_STRING_GENERAL
-					do
-						l_item := ia_item
-						Result := l_item /= Void
-					end)
 		local
 			l_args: ARRAY [STRING]
 			l_arg: detachable READABLE_STRING_GENERAL
@@ -57,17 +49,9 @@ feature {NONE} -- Initialization
 	make_from_array (a_arguments: ARRAY [READABLE_STRING_GENERAL])
 			-- Initialize a new argument source from a array of strings.
 			--
-			-- `a_arguments': An array of string arguments.
+			-- `a_arguments': An array of attached string arguments.
 		require
 			a_arguments_attached: a_arguments /= Void
-			a_arguments_contains_attached_items:
-				a_arguments.for_all (agent (ia_item: READABLE_STRING_GENERAL): BOOLEAN
-					local
-						l_item: detachable READABLE_STRING_GENERAL
-					do
-						l_item := ia_item
-						Result := l_item /= Void
-					end)
 		local
 			l_args: ARRAY [STRING]
 			l_arg: READABLE_STRING_GENERAL
@@ -104,8 +88,8 @@ feature -- Status report
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

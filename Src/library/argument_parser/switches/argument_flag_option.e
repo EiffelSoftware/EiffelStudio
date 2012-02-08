@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			a_value_attached: a_value /= Void
 			a_flags_attached: a_flags /= Void
 			a_flags_contains_printable_items:
-				a_flags.for_all (agent (ia_item: CHARACTER): BOOLEAN do Result := ia_item.is_printable end)
+				across a_flags as c all c.item.is_printable end
 			a_switch_attached: a_switch /= Void
 		do
 			make_with_value (a_value, a_switch)
@@ -82,8 +82,8 @@ invariant
 		flags.for_all (agent (ia_item: CHARACTER): BOOLEAN do Result := ia_item.is_printable end)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

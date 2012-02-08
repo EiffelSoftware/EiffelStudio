@@ -42,18 +42,9 @@ feature {NONE} -- Initialization
 			not_a_arg_desc_is_empty: not a_arg_desc.is_empty
 			not_a_flags_is_empty: not a_flags.is_empty
 			a_flags_contains_attached_items:
-				a_flags.linear_representation.for_all (agent (ia_item: STRING): BOOLEAN
-					local
-						l_item: detachable STRING
-					do
-						l_item := ia_item
-						Result := l_item /= Void and then not l_item.is_empty
-					end)
+				across a_flags as c all not c.item.is_empty end
 			a_flags_contains_printable_items:
-				a_flags.current_keys.for_all (agent (ia_item: CHARACTER): BOOLEAN
-					do
-						Result := ia_item.is_printable
-					end)
+				across a_flags.current_keys as c all c.item.is_printable end
 		do
 			make_value_base (a_id, a_desc, a_optional, a_allow_mutliple, a_arg_name, full_arg_description (a_arg_desc, a_flags), a_val_optional)
 			flag_descriptions := a_flags
@@ -83,18 +74,9 @@ feature {NONE} -- Initialization
 			not_a_arg_name_is_empty: not a_arg_name.is_empty
 			not_a_flags_is_empty: not a_flags.is_empty
 			a_flags_contains_attached_items:
-				a_flags.linear_representation.for_all (agent (ia_item: STRING): BOOLEAN
-					local
-						l_item: detachable STRING
-					do
-						l_item := ia_item
-						Result := l_item /= Void and then not l_item.is_empty
-					end)
+				across a_flags as c all not c.item.is_empty end
 			a_flags_contains_printable_items:
-				a_flags.current_keys.for_all (agent (ia_item: CHARACTER): BOOLEAN
-					do
-						Result := ia_item.is_printable
-					end)
+				across a_flags.current_keys as c all c.item.is_printable end
 		do
 			make (a_id, internal_switch_description, a_optional, a_allow_mutliple, a_arg_name, internal_argument_description, a_val_optional, a_flags, a_cs_flags)
 			is_hidden := True
@@ -170,8 +152,8 @@ feature {ARGUMENT_BASE_PARSER} -- Factory Functions
 				i > l_count
 			loop
 				c := a_value.item (i)
-				check 
-					c_is_printable: c.is_printable 
+				check
+					c_is_printable: c.is_printable
 				end
 				l_flags.extend (c)
 				i := i + 1
@@ -248,8 +230,8 @@ invariant
 				Result := ia_item.is_printable
 			end)
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

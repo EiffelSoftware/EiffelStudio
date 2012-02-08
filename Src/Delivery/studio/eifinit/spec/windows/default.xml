@@ -3,4 +3,5 @@
 	<PREF NAME="general.console_shell_command" DESCRIPTION="Command used to launch a console."><STRING></STRING></PREF>
 	<PREF NAME="general.external_editor_command" DESCRIPTION="Command used to launch  an external editor."><STRING>notepad $target</STRING></PREF>
 	<PREF NAME="general.file_browser_command" DESCRIPTION="Command to open a file in external browser."><STRING>explorer $target</STRING></PREF>
+	<PREF NAME="general.use_postscript" DESCRIPTION="Generate postscript (rather than RTF) when printing."><BOOLEAN>False</BOOLEAN></PREF>
 </EIFFEL_DOCUMENT>

@@ -54,6 +54,8 @@ feature {NONE} -- Initialization
 --			put ("localhost:0", "DISPLAY")
 				-- This line may be uncommented to allow for display redirection to another machine for debugging purposes
 
+			create character_string_buffer.make (4)
+
 			Precursor
 
 			create locale_str.make_from_c ({GTK}.gtk_set_locale)
@@ -106,11 +108,23 @@ feature {NONE} -- Initialization
 				{GTK}.gdk_error_trap_push
 
 				update_screen_meta_data
+
+					-- Initialize default Input Method context for converting keyboard strokes in to Unicode Characters depending on locale keyboard setting.
+				default_input_context := {GTK2}.gtk_im_context_simple_new
+				gtk_marshal.signal_connect (default_input_context, "commit", agent on_char, im_context_commit_translate_agent, True)
 			else
 				-- We are unable to launch the gtk toolkit, probably due to a DISPLAY issue.
 				print ("EiffelVision application could not launch, check DISPLAY environment variable%N")
 				die (0)
 			end
+		end
+
+	on_char (a_gtk_c_string: EV_GTK_C_STRING)
+			-- Update `character_string_buffer' unicode key string.
+		do
+			character_string_buffer.wipe_out
+			character_string_buffer.append (a_gtk_c_string.string)
+			{GTK2}.gtk_im_context_reset (default_input_context)
 		end
 
 	update_screen_meta_data
@@ -181,11 +195,14 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Event loop
 
+
 	 launch
 			-- Display the first window, set up the post_launch_actions,
 			-- and start the event loop.
 		do
 			if gtk_is_launchable then
+				{GTK2}.gtk_im_context_set_client_window (default_input_context, default_gdk_window)
+				{GTK2}.gtk_im_context_focus_in (default_input_context)
 				Precursor
 					-- Unhook marshal object.
 				gtk_marshal.destroy
@@ -610,7 +627,7 @@ feature {EV_ANY_I} -- Implementation
 							if l_has_grab_widget then
 								l_gtk_widget_imp ?= eif_object_from_gtk_object (l_grab_widget)
 							else
-									-- Make sure that only top level windows process key events
+									-- Make sure we only process key events from top level windows.
 								l_gtk_window_imp ?= eif_object_from_gtk_object (l_grab_widget)
 								l_gtk_widget_imp := l_gtk_window_imp
 							end
@@ -1202,6 +1219,27 @@ feature -- Implementation
 			l_stored_display_data.mask := temp_mask
 		end
 
+	im_context_commit_translate_agent: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE]
+			-- Translation agent used input method context commits.
+		once
+			Result :=
+			agent (n: INTEGER; p: POINTER): TUPLE
+				local
+					l_gchar: POINTER
+				do
+					l_gchar := {GTK2}.gtk_value_pointer (p)
+					if l_gchar /= default_pointer then
+						reusable_gtk_c_string.share_from_pointer (l_gchar)
+					else
+						reusable_gtk_c_string.set_with_eiffel_string ("")
+					end
+					Result := [reusable_gtk_c_string]
+				end
+		end
+
+	character_string_buffer: STRING_32
+		-- Character buffer used for storing converted user keyboard character input.
+
 	use_stored_display_data: BOOLEAN
 		-- Should prestored display data values be used when querying for display data.
 
@@ -1235,6 +1273,9 @@ feature -- Implementation
 			-- Is the debugger disabled?
 
 feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
+
+	default_input_context: POINTER
+		-- Default input context for application.
 
 	eif_object_from_gtk_object (a_gtk_object: POINTER): detachable EV_ANY_IMP
 			-- Return the EV_ANY_IMP object from `a_gtk_object' if any.
@@ -1279,6 +1320,8 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 
 	gtk_is_launchable: BOOLEAN
 		-- Is Gtk launchable?
+
+
 
 	default_gtk_window: POINTER
 			-- Pointer to a default GtkWindow.
@@ -1426,14 +1469,14 @@ feature {NONE} -- Externals
 		-- Pointer to the global static mutex
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

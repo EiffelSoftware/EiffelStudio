@@ -94,6 +94,7 @@ feature {NONE} -- Implementation
 			set_size (width, a_height)
 		end
 
+
 	set_size (a_width, a_height: INTEGER)
 			-- Set the horizontal size to `a_width'.
 			-- Set the vertical size to `a_height'.
@@ -302,7 +303,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 			-- Translation routine used for key events
 		local
 			keyval: NATURAL_32
-			a_key_string: detachable STRING_32
+			l_key_string: detachable STRING_32
 			a_key: detachable EV_KEY
 			a_key_press: BOOLEAN
 			l_app_imp: like app_implementation
@@ -317,10 +318,10 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 			l_any: ANY
 			l_accel: detachable EV_ACCELERATOR
 			l_accel_imp: detachable EV_ACCELERATOR_IMP
-			l_unicode_value: NATURAL_32
-			l_is_tab_navigation: BOOLEAN
+			l_key_event_handled, l_is_tab_navigation: BOOLEAN
 		do
 			l_app_imp := app_implementation
+
 				-- Perform translation on key values from gdk.
 			keyval := {GTK}.gdk_event_key_struct_keyval (a_key_event)
 			if keyval > 0 then
@@ -362,34 +363,33 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 					end
 				end
 
+				l_key_string := l_app_imp.character_string_buffer
+				l_key_string.wipe_out
+					-- Propagate key event to input context, this will update the character buffer with any inputted unicode characters.
+				l_key_event_handled := {GTK2}.gtk_im_context_filter_keypress (l_app_imp.default_input_context, a_key_event)
+
 				if not l_accel_called then
-						-- We only fire key_string actions if no accelerators were called.
-					if keyval > 0 then
-						l_unicode_value := {GTK2}.gdk_keyval_to_unicode (keyval)
-						if l_unicode_value > 0 then
-							create a_key_string.make (0)
-							a_key_string.append_character (l_unicode_value.to_character_32)
+						-- We only fire key_string actions if no accelerators were called.					
+					if l_key_string /= Void and then l_key_string.valid_index (1) then
+						l_char := l_key_string @ 1
+						if l_char.is_character_8 and then not l_char.to_character_8.is_printable and then l_char.code <= 127 then
+							l_key_string := Void
+								-- Non displayable characters
 						end
-					end
-					if a_key_string /= Void and then a_key_string.valid_index (1) then
-						l_char := a_key_string @ 1
-						if l_char.is_character_8 then
-							if not l_char.to_character_8.is_printable and then l_char.code <= 127 then
-								a_key_string := Void
-									-- Non displayable characters
-							end
-						end
+					else
+							-- There is no valid key string so we unset the local, ie: A Function Key has been pressed.
+						l_key_string := Void
 					end
 					if a_key /= Void and then a_key.out.count /= 1 and then not a_key.is_numpad then
 						inspect a_key.code
 						when {EV_KEY_CONSTANTS}.key_space then
-							a_key_string := once " "
+							l_key_string := once " "
 						when {EV_KEY_CONSTANTS}.key_enter then
-							a_key_string := once "%N"
+							l_key_string := once "%N"
 						when {EV_KEY_CONSTANTS}.key_tab then
-							a_key_string := once "%T"
+							l_key_string := once "%T"
 						else
-							a_key_string := Void
+							l_key_string := Void
 						end
 					end
 				end
@@ -434,8 +434,8 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 						if a_key /= Void and then l_app_imp.key_press_actions_internal /= Void then
 							l_app_imp.key_press_actions.call ([a_focus_widget.attached_interface, a_key])
 						end
-						if a_key_string /= Void and then l_app_imp.key_press_string_actions_internal /= Void then
-							l_app_imp.key_press_string_actions.call ([a_focus_widget.attached_interface, a_key_string])
+						if l_key_string /= Void and then l_app_imp.key_press_string_actions_internal /= Void then
+							l_app_imp.key_press_string_actions.call ([a_focus_widget.attached_interface, l_key_string])
 						end
 					else
 						if a_key /= Void and then l_app_imp.key_release_actions_internal /= Void then
@@ -445,17 +445,17 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 					if not l_disable_default_processing then
 							-- If `a_focus_widget' is disabling default processing then
 							-- we don't call top level window events.
-						on_key_event (a_key, a_key_string, a_key_press)
+						on_key_event (a_key, l_key_string, a_key_press)
 					end
 					if a_focus_widget /= l_any then
 							-- If the focus widget is `Current' then do not call 'on_key_event' twice.
-						a_focus_widget.on_key_event (a_key, a_key_string, a_key_press)
+						a_focus_widget.on_key_event (a_key, l_key_string, a_key_press)
 					end
 				end
 			else
 				if l_standard_dialog /= Void and then a_key_press then
 						-- Standard dialogs are not widgets and have to be handled separately.
-					l_standard_dialog.on_key_event (a_key, a_key_string, a_key_press)
+					l_standard_dialog.on_key_event (a_key, l_key_string, a_key_press)
 				end
 					-- Execute the gdk event as normal.
 				{GTK}.gtk_main_do_event (a_key_event)

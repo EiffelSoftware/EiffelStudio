@@ -5,6 +5,7 @@
 	<PREF NAME="general.acrobat_reader" DESCRIPTION="Command to read Adobe Acrobat files."><STRING>acroread</STRING></PREF>	
 	<PREF NAME="general.internet_browser" DESCRIPTION="Internet browser."><STRING>firefox $url</STRING></PREF>
 	<PREF NAME="general.file_browser_command" DESCRIPTION="Command to open a file in external browser."><STRING>nautilus $target</STRING></PREF>
+	<PREF NAME="general.use_postscript" DESCRIPTION="Generate postscript (rather than RTF) when printing."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.general.editor_font" DESCRIPTION="All-purpose editor font."><FONT>Monospace-r-regular-9-sans</FONT></PREF>
 	<PREF NAME="editor.general.header_font" DESCRIPTION="Editor header font." HIDDEN="True"><FONT>sans-r-regular-9-sans</FONT></PREF>
 	<PREF NAME="editor.general.keyword_font" DESCRIPTION="Keyword editor font"><FONT>Monospace-r-bold-9-sans</FONT></PREF>

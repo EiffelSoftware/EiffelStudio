@@ -39,7 +39,11 @@ feature -- Value
 
 	dotnet_debugger: STRING = ""
 
-	use_postscript: BOOLEAN = False
+	use_postscript: BOOLEAN
+			-- Use postscript when printing
+		do
+			Result := use_postscript_preference.value
+		end
 
 	use_external_editor: BOOLEAN = False
 
@@ -184,6 +188,7 @@ feature -- Preference
 	locale_id_preference: ARRAY_PREFERENCE
 	pnd_preference: BOOLEAN_PREFERENCE
 	eis_path_preference: STRING_PREFERENCE
+	use_postscript_preference: BOOLEAN_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -201,6 +206,7 @@ feature {NONE} -- Preference Strings
 	locale_id_preference_string: STRING = "general.locale"
 	pnd_preference_string: STRING = "general.pick_and_drop_(pnd)_mode"
 	eis_path_preference_string: STRING = "general.eis_path"
+	use_postscript_preference_string: STRING = "general.use_postscript"
 
 feature {NONE} -- Implementation
 
@@ -246,6 +252,8 @@ feature {NONE} -- Implementation
 			if attached eis_path as l_path and then l_path.is_empty then
 				eis_path_preference.set_value (eiffel_layout.user_projects_path.out + ";" + eiffel_layout.library_path.out)
 			end
+
+			use_postscript_preference := l_manager.new_boolean_preference_value (l_manager, use_postscript_preference_string, False)
 		end
 
 	preferences: PREFERENCES
@@ -370,9 +378,11 @@ invariant
 	locale_id_preference_not_void: locale_id_preference /= Void
 	pnd_preference_not_void: pnd_preference /= Void
 	eis_preference_not_void: eis_path_preference /= Void
+	use_postscript_preference_not_void: use_postscript_preference /= Void
+
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

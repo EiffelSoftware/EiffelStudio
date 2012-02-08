@@ -15,7 +15,7 @@ feature {PROCESS} -- Control
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
 			process_launcher_not_void: process_launcher /= Void
-			timer_destroyed: destroyed
+			timer_destroyed: is_destroyed
 		deferred
 		end
 
@@ -48,7 +48,7 @@ feature -- Setting
 			-- Set process launcher to which this timer is attached with `prc_launcher'.
 		require
 			prc_launcher_not_void: prc_launcher /= Void
-			timer_destroyed: destroyed
+			timer_destroyed: is_destroyed
 		do
 			process_launcher := prc_launcher
 		ensure
@@ -60,8 +60,16 @@ feature -- Status reporting
 	has_started: BOOLEAN
 			-- Has this timer started yet?
 
-	destroyed: BOOLEAN
-		-- Has this timer been destroyed?
+	frozen destroyed: BOOLEAN
+			-- Has this timer been destroyed?
+		obsolete
+			"Use `is_destroyed' instead."
+		do
+			Result := is_destroyed
+		end
+
+	is_destroyed: BOOLEAN
+			-- Has this timer been destroyed?
 		deferred
 		end
 
@@ -80,7 +88,7 @@ invariant
 	sleep_time_positive: sleep_time > 0
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

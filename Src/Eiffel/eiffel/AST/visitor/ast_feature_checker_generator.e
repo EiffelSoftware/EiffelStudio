@@ -3612,7 +3612,7 @@ feature {NONE} -- Implementation
 							-- error message.
 						last_type := Void
 						error_handler.insert_error (create {INTERNAL_ERROR}.make (
-							"In {AST_FEATURE_CHECKER_GENERATOR}.process_converted_as could%N%
+							"In {AST_FEATURE_CHECKER_GENERATOR}.process_converted_expr_as could%N%
 							%not find routine of a given routine ID in an inherited conversion"))
 					end
 				end

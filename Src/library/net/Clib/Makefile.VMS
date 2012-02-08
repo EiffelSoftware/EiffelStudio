@@ -45,14 +45,9 @@ all :: .FORCE_DEPEND
 ########################################################################
 # Start of Jmakefile
 
-#DPFLAGS = /inc=$(TOP)/prefix=all/names=as_is
-#DPFLAGS = /incl=($(TOP),[-.run-time])/prefix=all
-#CINCLUDES = /incl=($(DECC_INCLUDES),EIFFEL_SRC:[C.run-time])
 #DPFLAGS = $(CINCLUDES)$(CDEFINES)
 #CFLAGS = $(DECC_FLAGS)$(DPFLAGS)
-#CFLAGS = $optimize $ccflags $large -I\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/include -I\$(EIFFEL_SRC)/C/run-time/include
-#CFLAGS = $optimize $ccflags $large -I$rt_include
-CINCLUDES = EIFFEL_SRC:[C.run-time.include]
+CINCLUDES = # EIFFEL_SRC:[C.run-time.include]
 # define vms specific symbols for compiling, etc.
 include EIFFEL_SRC:[C]Makeinc.VMS
 

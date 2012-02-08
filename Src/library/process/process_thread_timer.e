@@ -19,7 +19,7 @@ inherit
 
 	EXECUTION_ENVIRONMENT
 		rename
-			launch as execution_environment_launch
+			launch as environment_launch
 		export
 			{NONE} all
 		end
@@ -42,70 +42,44 @@ feature {NONE} -- Implementation
 			has_started := False
 		ensure
 			sleep_time_set: sleep_time = a_sleep_time
-			destroyed_set: destroyed = True
+			destroyed_set: is_destroyed
 		end
 
 feature -- Control
 
 	start
+			-- <Precursor>
 		do
 			mutex.lock
-			should_destroy := False
+			is_destroy_requested := False
 			launch
 			has_started := True
 			mutex.unlock
 		end
 
 	destroy
+			-- <Precursor>
 		do
 			mutex.lock
-			should_destroy := True
+			is_destroy_requested := True
 			mutex.unlock
 		end
 
 	wait (a_timeout: INTEGER): BOOLEAN
-		local
-			l_sleep_time: INTEGER_64
-			l_timeout: BOOLEAN
-			l_start_time: detachable DATE_TIME
-			l_now_time: DATE_TIME
+			-- <Precursor>
 		do
-			if not destroyed then
-				if {PLATFORM}.is_thread_capable then
-					if a_timeout > 0 then
-						create l_start_time.make_now
-					end
-					from
-						l_sleep_time := sleep_time * one_millisecond_in_nanoseconds
-					until
-						destroyed or l_timeout
-					loop
-						if a_timeout > 0 then
-							create l_now_time.make_now
-							check l_start_time /= Void end
-							if l_now_time.relative_duration (l_start_time).fine_seconds_count * 1000 > a_timeout then
-								l_timeout := True
-							end
-						end
-						if not l_timeout then
-							sleep (l_sleep_time)
-						end
-					end
-					Result := not l_timeout
-				elseif a_timeout = 0 then
-						-- We are not in multithreaded mode, simply wait indefinitely
-					if attached {PROCESS_IMP} process_launcher as l_prc_imp then
-						l_prc_imp.check_exit
-					else
-						check launcher_has_valid_type: False end
-					end
-				end
-			else
+			if a_timeout = 0 then
+				join
 				Result := True
+			else
+				Result := join_with_timeout (a_timeout.to_natural_64)
 			end
 		end
 
-	destroyed: BOOLEAN
+feature -- Status report
+
+	is_destroyed: BOOLEAN
+			-- <Precursor>
 		do
 			mutex.lock
 			Result := (not has_started) or (has_started and then terminated)
@@ -115,6 +89,7 @@ feature -- Control
 feature {NONE} -- Implementation
 
 	execute
+			-- Routine executed once current thread starts.
 		local
 			l_sleep_time: INTEGER_64
 		do
@@ -122,21 +97,21 @@ feature {NONE} -- Implementation
 				from
 					l_sleep_time := sleep_time.to_integer_64 * one_millisecond_in_nanoseconds
 				until
-					should_destroy
+					is_destroy_requested
 				loop
 					l_prc_imp.check_exit
-					if not should_destroy then
+					if not is_destroy_requested then
 						sleep (l_sleep_time)
 					end
 				end
 			else
-				check process_launcher_has_valid_type: False end
+				-- No process launcher, there is simply nothing to wait for.
 			end
 		end
 
-feature{NONE} -- Implementation
+feature {NONE} -- Implementation
 
-	should_destroy: BOOLEAN
+	is_destroy_requested: BOOLEAN
 			-- Should this timer be destroyed?
 
 	mutex: MUTEX
@@ -156,8 +131,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
 end

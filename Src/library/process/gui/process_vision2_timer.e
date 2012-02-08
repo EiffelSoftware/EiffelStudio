@@ -29,7 +29,7 @@ feature{NONE} -- Implementation
 			timer.destroy
 		ensure
 			sleep_time_set: sleep_time = interval
-			destroyed_set: destroyed = True
+			destroyed_set: is_destroyed
 		end
 
 feature -- Control
@@ -55,7 +55,7 @@ feature -- Control
 			l_start_time: DATE_TIME
 			l_now_time: DATE_TIME
 		do
-			if not destroyed then
+			if not is_destroyed then
 				prc_imp ?= process_launcher
 				check prc_imp /= Void end
 				destroy
@@ -89,11 +89,13 @@ feature -- Control
 		end
 
 	destroy
+			-- <Precursor>
 		do
 			timer.destroy
 		end
 
-	destroyed: BOOLEAN
+	is_destroyed: BOOLEAN
+			-- <Precursor>
 		do
 			Result := timer.is_destroyed
 		end

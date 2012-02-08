@@ -445,7 +445,7 @@ feature{NONE} -- Implementation
 			else
 				err_thread := Void
 			end
-			check timer.destroyed end
+			check timer.is_destroyed end
 			timer.start
 		end
 
@@ -698,7 +698,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

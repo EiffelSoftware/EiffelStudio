@@ -97,6 +97,16 @@ typedef unsigned long VMS_STS;		/* VMS status (condition) value */
 #define  VMS_SUCCESS(x)	 (     (x) & 1   )
 #define  VMS_FAILURE(x)  ( ! ( (x) & 1 ) )
 
+/* As of VMS V7.3, <socket.h> does not define socklen_t.		*/
+/* This may need a version conditional for this in the future.		*/
+#include <socket.h>
+typedef size_t socklen_t;
+#include <netdb.h>
+/* netdb.h defines "struct addrinfo" as the 32-bit variant,	*/
+/* but the default functions use use the 64-bit struct.		*/
+#if __INITIAL_POINTER_SIZE == 64
+#define addrinfo __addrinfo64 
+#endif
 
 
 /* Macros (and typedefs) for dealing with descriptors and itemlists.	*/
@@ -288,7 +298,6 @@ extern const char eifrt_vms_path_terminators[], eifrt_vms_path_delimiters[];
 extern const char eifrt_vms_valid_filename_chars[];
 
 
-
 /* flags for eifrt_vms_spawn */
 #define EIFRT_VMS_SPAWN_FLAG_ASYNC	    1
 #define EIFRT_VMS_SPAWN_FLAG_NOWAIT	    1
@@ -298,10 +307,7 @@ extern const char eifrt_vms_valid_filename_chars[];
 #define EIFRT_VMS_SPAWN_FLAG_UNTRUSTED	    128
 
 
-
-//#ifdef moose /* this was needed in prior versions of Eiffel compiler */
 #pragma message disable EXTRASEMI  	// disable extraneous semicolon messages (in generated [.E?]epoly*.c modules) 
-//#endif
 
 
 #endif /* EIF_VMS        */

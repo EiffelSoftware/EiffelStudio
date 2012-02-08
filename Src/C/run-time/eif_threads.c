@@ -1558,6 +1558,9 @@ rt_shared pid_t eif_thread_fork(void) {
 
 	if (result == 0) {
 			/* We are now in the child process. */
+			/* First we need to reinitialize all our mutexes as the
+			 * one we have maybe own by the parent process. */
+		eif_thr_init_global_mutexes();
 
 			/* Reinitialize our global lists to let the GC think that there
 			 * is only one running thread. */
@@ -1725,10 +1728,8 @@ rt_public void eif_thr_join (EIF_POINTER tid)
 	 * should be used (ie. `join' <-> eif_thr_wait)
 	 */
 
-	int res;
-
 	if (tid != (EIF_POINTER) 0) {
-		RT_TRACE_KEEP(res, eif_pthread_join((EIF_THR_TYPE) tid));
+		RT_TRACE(eif_pthread_join((EIF_THR_TYPE) tid));
 	} else {
 		eraise ("Trying to join a thread whose ID is NULL", EN_EXT);
 	}
@@ -1819,9 +1820,7 @@ rt_public EIF_BOOLEAN eif_thr_mutex_trylock(EIF_POINTER mutex_pointer) {
 }
 
 rt_public void eif_thr_mutex_destroy(EIF_POINTER mutex_pointer) {
-	EIF_MUTEX_TYPE *a_mutex_pointer = (EIF_MUTEX_TYPE *) mutex_pointer;
-	int res;
-	RT_TRACE_KEEP(res, eif_pthread_mutex_destroy(a_mutex_pointer));
+	RT_TRACE(eif_pthread_mutex_destroy((EIF_MUTEX_TYPE *) mutex_pointer));
 }
 
 
@@ -1879,9 +1878,7 @@ rt_public EIF_BOOLEAN eif_thr_sem_trywait (EIF_POINTER sem)
 
 rt_public void eif_thr_sem_destroy (EIF_POINTER sem)
 {
-	EIF_SEM_TYPE *a_sem_pointer = (EIF_SEM_TYPE *) sem;
-	int res;
-	RT_TRACE_KEEP(res, eif_pthread_sem_destroy(a_sem_pointer));
+	RT_TRACE(eif_pthread_sem_destroy((EIF_SEM_TYPE *) sem));
 }
 
 /*
@@ -1953,9 +1950,7 @@ rt_public EIF_INTEGER eif_thr_cond_wait_with_timeout (EIF_POINTER cond_ptr, EIF_
 
 rt_public void eif_thr_cond_destroy (EIF_POINTER cond_ptr)
 {
-	EIF_COND_TYPE *cond = (EIF_COND_TYPE *) cond_ptr;
-	int res;
-	RT_TRACE_KEEP(res, eif_pthread_cond_destroy(cond));
+	RT_TRACE(eif_pthread_cond_destroy((EIF_COND_TYPE *) cond_ptr));
 }
 
 /*
@@ -2006,9 +2001,7 @@ rt_public void eif_thr_rwl_unlock (EIF_POINTER rwlp_ptr)
 
 rt_public void eif_thr_rwl_destroy (EIF_POINTER rwlp_ptr)
 {
-	EIF_RWL_TYPE *rwlp = (EIF_RWL_TYPE *) rwlp_ptr;
-	int res;
-	RT_TRACE_KEEP(res,eif_pthread_rwlock_destroy(rwlp));
+	RT_TRACE(eif_pthread_rwlock_destroy((EIF_RWL_TYPE *) rwlp_ptr));
 }
 
 

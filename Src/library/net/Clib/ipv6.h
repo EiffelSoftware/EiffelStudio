@@ -1,7 +1,28 @@
+/*
+indexing
+	description: "EiffelNet: library of reusable components for networking."
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+*/
+
+/*	.../library/net/Clib/ipv6.h 
+	interface definitions for ipv6.c 
+	$Id$
+*/
+
+/* library/net/Clib/ipv6.h */
+
 #ifndef IPV6_H
 #define IPV6_H
 
-#include "eif_config.h"
+#include "eif_portable.h"
 
 #ifdef EIF_WINDOWS
 #define FD_SETSIZE 256
@@ -124,17 +145,5 @@ EIF_BOOLEAN en_get_prefer_ipv4();
 EIF_BOOLEAN en_ipv6_available();
 EIF_BOOLEAN en_ipv6_supported();
 
-
-#ifdef EIF_VMS
-typedef size_t socklen_t;
-#if __INITIAL_POINTER_SIZE > 32
-    /* VMS with 64 bit pointers uses different struct addrinfo, etc. */
-#define STRUCT_ADDRINFO struct __addrinfo64
-#endif 
-#endif /* EIF_VMS */
-
-#ifndef STRUCT_ADDRINFO
-#define STRUCT_ADDRINFO  struct addrinfo
-#endif
 
 #endif /* IPV6_H */

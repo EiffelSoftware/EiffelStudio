@@ -3,6 +3,7 @@ test_description Verbatim manifest strings
 
 -- Verbatim strings with braces and "old_verbatim_strings (yes)"
 
+define EMPTY ""
 define INDENT "%T%T%T%T"
 define SPACE " "
 define OPEN "{"

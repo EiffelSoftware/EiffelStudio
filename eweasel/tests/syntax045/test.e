@@ -33,6 +33,47 @@ $(CLOSE)",
 					$(CLOSE)",
 				""
 			)
+				-- Verbatim strings with empty lines only
+			test_equality (
+				"$(OPEN)
+$(EMPTY)
+				$(CLOSE)",
+				""
+			)
+			test_equality (
+				"$(OPEN)
+				$(EMPTY)
+				$(CLOSE)",
+				"$(INDENT)"
+			)
+			test_equality (
+				"$(OPEN)
+$(EMPTY)
+$(EMPTY)
+				$(CLOSE)",
+				"%N"
+			)
+			test_equality (
+				"$(OPEN)
+				$(EMPTY)
+				$(EMPTY)
+				$(CLOSE)",
+				"$(INDENT)%N$(INDENT)"
+			)
+			test_equality (
+				"$(OPEN)
+$(EMPTY)
+				$(EMPTY)
+				$(CLOSE)",
+				"%N$(INDENT)"
+			)
+			test_equality (
+				"$(OPEN)
+				$(EMPTY)
+$(EMPTY)
+				$(CLOSE)",
+				"$(INDENT)%N"
+			)
 				-- Verbatim strings with data
 			test_equality (
 				"$(OPEN)
@@ -73,6 +114,73 @@ $(CLOSE)",
 				 abc
 				$(CLOSE)",
 				"$(INDENT)$(SPACE)ABC%N$(INDENT)$(SPACE)abc"
+			)
+				-- Verbatim strings with data and empty lines
+			test_equality (
+				"$(OPEN)
+$(EMPTY)
+				abc
+				$(CLOSE)",
+				"%N%T%T%T%Tabc"
+			)
+			test_equality (
+				"$(OPEN)
+				$(EMPTY)
+				abc
+				$(CLOSE)",
+				"$(INDENT)%N$(INDENT)abc"
+			)
+			test_equality (
+				"$(OPEN)
+$(EMPTY)
+				abc
+$(EMPTY)
+				$(CLOSE)",
+				"%N$%T%T%T%Tabc%N"
+			)
+			test_equality (
+				"$(OPEN)
+				$(EMPTY)
+				abc
+				$(EMPTY)
+				$(CLOSE)",
+				"$(INDENT)%N$(INDENT)abc%N$(INDENT)"
+			)
+			test_equality (
+				"$(OPEN)
+$(EMPTY)
+				abc
+				$(EMPTY)
+				$(CLOSE)",
+				"%N$(INDENT)abc%N$(INDENT)"
+			)
+			test_equality (
+				"$(OPEN)
+				$(EMPTY)
+				abc
+$(EMPTY)
+				$(CLOSE)",
+				"$(INDENT)%N$(INDENT)abc%N"
+			)
+			test_equality (
+				"$(OPEN)
+$(EMPTY)
+				abc
+$(EMPTY)
+				ABC
+$(EMPTY)
+				$(CLOSE)",
+				"%N$%T%T%T%Tabc%N%N%T%T%T%TABC%N"
+			)
+			test_equality (
+				"$(OPEN)
+				$(EMPTY)
+				abc
+				$(EMPTY)
+				ABC
+				$(EMPTY)
+				$(CLOSE)",
+				"$(INDENT)%N$(INDENT)abc%N$(INDENT)%N$(INDENT)ABC%N$(INDENT)"
 			)
 				-- Verbatim strings with special data
 			test_equality (
@@ -240,7 +348,7 @@ feature {NONE} -- Tests
 		do
 			test_number := test_number + 1
 			io.put_string ("Test " + test_number.out + ": ")
-			if s1 /= Void and then s2 /= Void and then equal (s1, s2) then
+			if s1 ~ s2 then
 				io.put_string ("OK%N")
 			else
 				io.put_string ("FAILED: ")

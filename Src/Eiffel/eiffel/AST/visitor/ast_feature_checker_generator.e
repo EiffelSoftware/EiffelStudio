@@ -1830,43 +1830,6 @@ feature {NONE} -- Implementation
 								process_assigner_command (l_last_type, l_last_constrained, l_feature)
 							end
 
-							if l_needs_byte_node then
-								if l_generated_result_type = Void then
-									l_generated_result_type := l_result_type
-								end
-								if not is_static then
-									if is_precursor then
-										l_cl_type_i ?= a_precursor_type
-										l_access := l_feature.access_for_feature (l_generated_result_type, l_cl_type_i, False)
-											-- Strange situation where Precursor is an external, then we do as if
-											-- it was a static call.
-										l_ext ?= l_access
-										if l_ext /= Void then
-											l_ext.enable_static_call
-										end
-									else
-										if l_is_multiple_constraint_case then
-											check not l_last_constrained.is_formal end
-											l_access := l_feature.access_for_multi_constraint (l_generated_result_type, l_last_constrained, is_qualified)
-										else
-											l_access := l_feature.access (l_generated_result_type, is_qualified)
-										end
-									end
-								else
-									l_access := l_feature.access_for_feature (l_generated_result_type, a_type, is_qualified)
-									if l_is_multiple_constraint_case then
-										check not l_last_constrained.is_formal end
-										l_access.set_multi_constraint_static (l_last_constrained)
-									end
-									l_ext ?= l_access
-									if l_ext /= Void then
-										l_ext.enable_static_call
-									end
-								end
-								l_access.set_parameters (l_parameter_list)
-								last_byte_node := l_access
-							end
-
 								-- Check if cat-call detection only for qualified calls and if enabled for current context class and
 								-- if no error occurred during the normal checking and only for non-inherited feature, since the
 								-- type checking has already been done in the class where it was written.
@@ -1891,9 +1854,6 @@ feature {NONE} -- Implementation
 								last_type := l_result_type.deep_actual_type
 							else
 								last_type := l_result_type
-								if l_access /= Void and then (l_is_in_assignment or else l_is_target_of_creation_instruction) then
-									l_access.set_is_attachment
-								end
 							end
 							last_calls_target_type := l_last_constrained
 							last_access_writable := l_feature.is_attribute
@@ -1915,6 +1875,62 @@ feature {NONE} -- Implementation
 									l_result_type := l_result_type.as_attached_in (context.current_class)
 									last_type := l_result_type
 								end
+							end
+
+								-- Restore previous value of `is_controlled'.
+							is_controlled := l_is_controlled
+							if is_qualified and then attached last_type then
+									-- Adapt separateness and controlled status of the result to target type.
+								adapt_last_type_to_target (a_type, l_is_controlled)
+									-- Verify that if result type of a separate feature call is expanded it has no non-separate reference attributes.
+								if
+									error_level = l_error_level and then
+									a_type.is_separate and then
+									last_type.is_expanded and then
+									not last_type.is_processor_attachable_to (a_type)
+								then
+									error_handler.insert_error (create {VUER}.make (context, last_type, l_feature_name))
+								end
+							end
+
+							if l_needs_byte_node then
+								if l_generated_result_type = Void then
+									l_generated_result_type := last_type
+								end
+								if not is_static then
+									if is_precursor then
+										l_cl_type_i ?= a_precursor_type
+										l_access := l_feature.access_for_feature (l_generated_result_type, l_cl_type_i, False)
+											-- Strange situation where Precursor is an external, then we do as if
+											-- it was a static call.
+										l_ext ?= l_access
+										if l_ext /= Void then
+											l_ext.enable_static_call
+										end
+									else
+										if l_is_multiple_constraint_case then
+											check not l_last_constrained.is_formal end
+											l_access := l_feature.access_for_multi_constraint (l_generated_result_type, l_last_constrained, is_qualified)
+										else
+											l_access := l_feature.access (l_generated_result_type, is_qualified)
+										end
+										if l_is_in_assignment or else l_is_target_of_creation_instruction then
+											l_access.set_is_attachment
+										end
+									end
+								else
+									l_access := l_feature.access_for_feature (l_generated_result_type, a_type, is_qualified)
+									if l_is_multiple_constraint_case then
+										check not l_last_constrained.is_formal end
+										l_access.set_multi_constraint_static (l_last_constrained)
+									end
+									l_ext ?= l_access
+									if l_ext /= Void then
+										l_ext.enable_static_call
+									end
+								end
+								l_access.set_parameters (l_parameter_list)
+								last_byte_node := l_access
 							end
 						else
 								-- `l_feature' was not valid for current, report
@@ -1962,21 +1978,6 @@ feature {NONE} -- Implementation
 						last_access_writable := True
 						last_routine_id_set := Void
 					end
-				end
-			end
-				-- Restore previous value of `is_controlled'.
-			is_controlled := l_is_controlled
-			if is_qualified and then attached last_type then
-					-- Adapt separateness and controlled status of the result to target type.
-				adapt_last_type_to_target (a_type, l_is_controlled)
-					-- Verify that if result type of a separate feature call is expanded it has no non-separate reference attributes.
-				if
-					error_level = l_error_level and then
-					a_type.is_separate and then
-					last_type.is_expanded and then
-					not last_type.is_processor_attachable_to (a_type)
-				then
-					error_handler.insert_error (create {VUER}.make (context, last_type, l_feature_name))
 				end
 			end
 			if attached l_feature and then not l_feature.has_return_value and then l_feature.is_failing then
@@ -3091,10 +3092,12 @@ feature {NONE} -- Implementation
 			l_is_assigner_call := is_assigner_call
 			is_assigner_call := False
 			l_as.target.process (Current)
-			is_assigner_call := l_is_assigner_call
 
 			l_target_type := last_type
 			if l_target_type /= Void then
+					-- Restore assigner call flag for nested call
+				is_assigner_call := l_is_assigner_call
+					-- Make sure separate call is valid.
 				if l_target_type.is_separate then
 					validate_separate_target (l_as.target)
 				end
@@ -4274,8 +4277,19 @@ feature {NONE} -- Implementation
 								process_assigner_command (last_type, l_last_constrained, l_prefix_feature)
 							end
 
+							last_type := l_prefix_feature_type
+							adapt_last_type_to_target (l_target_type, l_is_controlled)
+								-- Verify that if result type of a separate feature call is expanded it has no non-separate reference attributes.
+							if
+								error_level = l_error_level and then
+								l_target_type.is_separate and then
+								last_type.is_expanded and then
+								not last_type.is_processor_attachable_to (l_target_type)
+							then
+								error_handler.insert_error (create {VUER}.make (context, last_type, l_as.operator_location))
+							end
 							if l_needs_byte_node then
-								l_access := l_prefix_feature.access (l_prefix_feature_type, True)
+								l_access := l_prefix_feature.access (last_type, True)
 									-- If we have something like `a.f' where `a' is predefined
 									-- and `f' is a constant then we simply generate a byte
 									-- node that will be the constant only. Otherwise if `a' is
@@ -4293,17 +4307,6 @@ feature {NONE} -- Implementation
 								else
 									last_byte_node := l_access
 								end
-							end
-							last_type := l_prefix_feature_type
-							adapt_last_type_to_target (l_target_type, l_is_controlled)
-								-- Verify that if result type of a separate feature call is expanded it has no non-separate reference attributes.
-							if
-								error_level = l_error_level and then
-								l_target_type.is_separate and then
-								last_type.is_expanded and then
-								not last_type.is_processor_attachable_to (l_target_type)
-							then
-								error_handler.insert_error (create {VUER}.make (context, last_type, l_as.operator_location))
 							end
 						end
 					end
@@ -4668,21 +4671,6 @@ feature {NONE} -- Implementation
 								process_assigner_command (l_target_type, l_left_constrained, last_alias_feature)
 							end
 
-							if l_needs_byte_node then
-								l_binary := byte_anchor.binary_node (l_as)
-								l_binary.set_left (l_left_expr)
-								l_binary.set_right (l_right_expr)
-
-								l_call_access ?= last_alias_feature.access (l_infix_type, True)
-									-- If we have a multi constrained formal we need to set the selected constrained type on which the call is done.
-								if l_is_left_multi_constrained then
-									l_call_access.set_multi_constraint_static (l_left_constrained.conformance_type)
-								end
-								l_binary.init (l_call_access)
-									-- Add type to `parameters' in case we will need it later.
-								l_binary.set_attachment (last_infix_arg_type)
-								last_byte_node := l_binary
-							end
 							last_type := l_infix_type
 							adapt_last_type_to_target (l_target_type, l_is_controlled)
 								-- Verify that if result type of a separate feature call is expanded it has no non-separate reference attributes.
@@ -4693,6 +4681,21 @@ feature {NONE} -- Implementation
 								not last_type.is_processor_attachable_to (l_target_type)
 							then
 								error_handler.insert_error (create {VUER}.make (context, last_type, l_as.operator_location))
+							end
+							if l_needs_byte_node then
+								l_binary := byte_anchor.binary_node (l_as)
+								l_binary.set_left (l_left_expr)
+								l_binary.set_right (l_right_expr)
+
+								l_call_access ?= last_alias_feature.access (last_type, True)
+									-- If we have a multi constrained formal we need to set the selected constrained type on which the call is done.
+								if l_is_left_multi_constrained then
+									l_call_access.set_multi_constraint_static (l_left_constrained.conformance_type)
+								end
+								l_binary.init (l_call_access)
+									-- Add type to `parameters' in case we will need it later.
+								l_binary.set_attachment (last_infix_arg_type)
+								last_byte_node := l_binary
 							end
 						end
 					end
@@ -5508,12 +5511,12 @@ feature {NONE} -- Implementation
 			l_as.target.process (Current)
 			l_is_tuple_access := is_last_access_tuple_access
 			is_last_access_tuple_access := False
-			check
-				assigner_command_computed: not is_assigner_call
-			end
 			target_byte_node := last_byte_node
 			target_type := last_type
 			if target_type /= Void then
+				check
+					assigner_command_computed: not is_assigner_call
+				end
 				target_assigner := last_assigner_command
 				target_query := last_assignment_target
 				if target_assigner = Void and then not l_is_tuple_access then

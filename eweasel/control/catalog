@@ -530,6 +530,7 @@ test	non-conforming-missing-vmss3		valid272 tcf fail validity non-conforming
 test	spurious-vtgc3-with-vmfn		valid273 tcf fail validity
 test	duplicate-vfac1				valid274 tcf fail validity
 test	non-conforming-equality			valid275 tcf pass validity conformance equality warning
+test	missing-assigner-feature		valid276 tcf pass validity fixed
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

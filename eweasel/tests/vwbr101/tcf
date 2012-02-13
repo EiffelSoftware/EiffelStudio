@@ -1,0 +1,10 @@
+test_name 	 bracket-expression-on-current
+test_description Error caused by a missing bracket feature called on Current should not cause assertion violation.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VWBR(1)
+
+test_end

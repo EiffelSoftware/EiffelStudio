@@ -998,14 +998,14 @@ test 	non-conforming-remove-precondition	incr408 tcf fail incrementality non-con
 test 	has-stable-attribute-crash		incr409 tcf fail incrementality stable attached_types
 test 	type-to-create-crash			incr410 tcf fail incrementality attached_types
 test 	rout-entry-crash-3			incr411 tcf fail incrementality
-test 	create-qualified-explicit-crash		incr412 tcf fail incrementality anchored_types
+test 	create-qualified-explicit-crash		incr412 tcf fail incrementality anchored_type
 test 	adding-removing-transient			incr413 tcf pass incrementality transient
 test 	removing-descendant-crash	incr414 tcf pass incrementality
 test 	system-change-crash			incr415 tcf fail incrementality
 test 	recompilation-forces-freeze	incr416 tcf pass incrementality
 test 	qat-spurious-veen		incr417 tcf fail incrementality validity
-test 	qat-precursor-anchored-to-caller incr418 tcf fail incrementality anchored_types
-test	static-type-id-crash-3			incr419 tcf fail incrementality anchored_types
+test 	qat-precursor-anchored-to-caller incr418 tcf fail incrementality anchored_type
+test	static-type-id-crash-3			incr419 tcf fail incrementality anchored_type
 test	internal-search-crash			incr420 tcf fail incrementality skip
 test	change-application-options		incr421 tcf fail incrementality
 test	fix-vlec-infinite-recursion		incr422	tcf fail incrementality scoop expanded manual
@@ -2269,6 +2269,8 @@ test	validity-vaol2-basic		vaol201	 tcf pass validity vaol
 
 test	validity-vuex2-in-multibranch	vuex201  tcf pass validity vuex
 
+test	bracket-expression-on-current	vwbr101  tcf pass validity vwbr anchored_type
+
 test	validity-vwmq-string-conversion	vwmq001  tcf pass vaildity vwmq
 
 -- Systematic Lace validity tests
@@ -2704,8 +2706,8 @@ test	qat-generic-with-rename		anchor061 tcf fail anchored_type
 test	qat-generic-inheritance		anchor062 tcf fail anchored_type
 test	qat-constraints-crash		anchor063 tcf fail anchored_type formal generic
 test	qat-generic-with-rename-inherited anchor064 tcf fail anchored_type formal generic
-test 	qat-generic-func-expanded-actual anchor065 tcf fail finalizing anchored_types
-test 	qat-generic-resolving-to-none 	anchor066 tcf fail finalizing anchored_types
+test 	qat-generic-func-expanded-actual anchor065 tcf fail finalizing anchored_type
+test 	qat-generic-resolving-to-none 	anchor066 tcf fail finalizing anchored_type
 
 -- SCOOP
 test	scoop-access-smoke					scoop001 tcf pass scoop execution

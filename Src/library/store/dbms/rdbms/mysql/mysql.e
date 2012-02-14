@@ -114,9 +114,11 @@ feature -- For DATABASE_FORMAT
 			--          (which does not work)
 		do
 			if object = Void then
-				Result := {STRING_32}"IS NULL"
+				Result := once {STRING_32} "IS NULL"
 			else
-				Result := {STRING_32}"'" + object.as_string_32 + {STRING_32}"'"
+				Result := escaped_sql_string (object)
+				Result.prepend_character ({CHARACTER_32} '%'')
+				Result.append_character ({CHARACTER_32} '%'')
 			end
 		end
 
@@ -906,6 +908,19 @@ feature -- External features
 			Result := mysql_insert_id (mysql_pointer)
 		end
 
+	escaped_sql_string (a_str: READABLE_STRING_GENERAL): STRING_32
+			-- Escaped SQL string from `a_str'.
+		local
+			l_to, l_from: C_STRING
+			l_count: INTEGER
+		do
+			create l_from.make (utf32_to_utf8 (a_str.as_string_32))
+			create l_to.make_empty (l_from.count * 2)
+			l_count := mysql_real_escape_string (mysql_pointer, l_to.item, l_from.item, l_from.count)
+			l_to.set_count (l_count)
+			Result := utf8_to_utf32 (l_to.string)
+		end
+
 feature {NONE} -- Attributes
 
 	descriptors: ARRAY [detachable READABLE_STRING_GENERAL]
@@ -1135,6 +1150,11 @@ feature {NONE} -- C Externals
 		end
 
 	mysql_rollback (mysql_ptr: POINTER): BOOLEAN
+		external
+			"C | %"eif_mysql.h%""
+		end
+
+	mysql_real_escape_string (mysql_ptr: POINTER; a_to: POINTER; a_from: POINTER; a_length: INTEGER): INTEGER
 		external
 			"C | %"eif_mysql.h%""
 		end

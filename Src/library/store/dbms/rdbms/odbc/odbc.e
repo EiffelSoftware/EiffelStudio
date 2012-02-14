@@ -109,17 +109,16 @@ feature -- For DATABASE_FORMAT
 		do
 			if object /= Void and then not object.is_empty then
 				if not is_binary (object) then
-					Result := object.as_string_32.twin
-					Result.replace_substring_all ("\", "\\")
+					create Result.make_from_string (object.as_string_32)
 					Result.replace_substring_all ("'", "''")
-					Result.precede ('%'')
-					Result.extend ('%'')
+					Result.prepend_character ('%'')
+					Result.append_character ('%'')
 				else
 					-- FIXME: fool compiler and bug here
-					Result := {STRING_32} "NULL"
+					Result := once {STRING_32} "NULL"
 				end
 			else
-				Result := {STRING_32} "NULL"
+				Result := once {STRING_32} "NULL"
 			end
 		end
 
@@ -1776,14 +1775,14 @@ feature {NONE} -- External features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

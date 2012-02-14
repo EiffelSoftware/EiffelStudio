@@ -624,6 +624,17 @@ feature -- Connection
 			"return CURLOPT_TIMEOUT"
 		end
 
+	curlopt_connect_timeout: INTEGER
+			-- The number of seconds to wait while trying to connect. Use 0 to wait indefinitely.
+			-- Declared as CURLOPT_CONNECTTIMEOUT
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				return CURLOPT_CONNECTTIMEOUT
+			]"
+		end
+
 	curlopt_timeout_ms: INTEGER
 			-- Declared as CURLOPT_TIMEOUT_MS
 		external
@@ -1093,7 +1104,7 @@ feature -- Status report
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

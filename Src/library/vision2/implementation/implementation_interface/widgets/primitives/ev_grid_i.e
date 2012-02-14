@@ -5926,24 +5926,11 @@ feature -- Implementation
 			l_make_item_visible, l_is_navigation_allowed, l_shift_pressed: BOOLEAN
 			l_key_code: INTEGER
 		do
-			if not is_destroyed and then is_selection_keyboard_handling_enabled then
+			l_is_navigation_allowed := is_selection_keyboard_handling_enabled and then (attached default_key_processing_handler as l_handler implies l_handler.item ([a_key]))
+			if not is_destroyed and then l_is_navigation_allowed then
 
 				l_key_code := a_key.code
 				l_shift_pressed := ev_application.shift_pressed
-
-				inspect l_key_code
-				when {EV_KEY_CONSTANTS}.key_tab, {EV_KEY_CONSTANTS}.key_home, {EV_KEY_CONSTANTS}.key_end then
-					if is_item_tab_navigation_enabled then
-							--| FIXME IEK: For now only allow custom navigation if tabbed item navigation is enabled.
-						l_is_navigation_allowed := True
-						if attached default_key_processing_handler as l_handler then
-							l_is_navigation_allowed := l_handler.item ([a_key])
-						end
-					end
-				else
-					-- Custom navigation
-				end
-
 
 					-- Handle the selection events
 				if is_row_selection_enabled then
@@ -5984,12 +5971,12 @@ feature -- Implementation
 						l_key_code
 					when {EV_KEY_CONSTANTS}.Key_down then
 						a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, True, is_row_selection_enabled or else ((a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void) and then a_sel_row.index_of_first_item = prev_sel_item.column.index))
-						l_make_item_visible := is_vertical_scroll_bar_show_requested and then vertical_scroll_bar.is_displayed
+						l_make_item_visible := is_vertical_scroll_bar_show_requested and then internal_vertical_scroll_bar.is_displayed
 					when {EV_KEY_CONSTANTS}.Key_up then
 						a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, is_row_selection_enabled or else ((a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void) and then a_sel_row.index_of_first_item = prev_sel_item.column.index))
-						l_make_item_visible := is_vertical_scroll_bar_show_requested and then vertical_scroll_bar.is_displayed
+						l_make_item_visible := is_vertical_scroll_bar_show_requested and then internal_vertical_scroll_bar.is_displayed
 					when {EV_KEY_CONSTANTS}.Key_right then
-						l_make_item_visible := is_horizontal_scroll_bar_show_requested and then horizontal_scroll_bar.is_displayed
+						l_make_item_visible := is_horizontal_scroll_bar_show_requested and then internal_horizontal_scroll_bar.is_displayed
 						if not is_row_selection_enabled then
 								-- Key right shouldn't affect row selection
 							if not is_item_navigatable_to (prev_sel_item) then
@@ -6031,7 +6018,7 @@ feature -- Implementation
 							end
 						end
 					when {EV_KEY_CONSTANTS}.Key_left then
-						l_make_item_visible := horizontal_scroll_bar.is_displayed
+						l_make_item_visible := internal_horizontal_scroll_bar.is_displayed
 						if not is_row_selection_enabled then
 								-- Key left shouldn't affect row selection
 							if not is_item_navigatable_to (prev_sel_item) then
@@ -6074,13 +6061,13 @@ feature -- Implementation
 									-- If the same item is returned then there no selection can take place.
 								a_sel_item := Void
 							end
-							l_make_item_visible := horizontal_scroll_bar.is_displayed or else vertical_scroll_bar.is_displayed
+							l_make_item_visible := internal_horizontal_scroll_bar.is_displayed or else internal_vertical_scroll_bar.is_displayed
 						end
 					else
 						-- Do nothing
 					end
 				elseif l_key_code = {EV_KEY_CONSTANTS}.Key_down then
-					l_make_item_visible := vertical_scroll_bar.is_displayed
+					l_make_item_visible := internal_vertical_scroll_bar.is_displayed
 					if column_count >= 1 then
 						a_sel_item := find_next_item_in_column (column (1), 0, True, True)
 					end
@@ -6123,9 +6110,8 @@ feature -- Implementation
 							l_item.ensure_visible
 						end
 					end
-
 				else
-
+					-- Do nothing
 				end
 
 				if a_sel_item /= Void and then not ev_application.alt_pressed then
@@ -6178,7 +6164,6 @@ feature -- Implementation
 				end
 			end
 		end
-
 
 feature {NONE} -- Implementation
 

@@ -76,7 +76,7 @@ feature -- Status report
 		do
 			Result := storage.count = 0
 		ensure
-			correct_result: Result = storage.count = 0
+			correct_result: Result = (storage.count = 0)
 		end
 
 feature -- Measurement

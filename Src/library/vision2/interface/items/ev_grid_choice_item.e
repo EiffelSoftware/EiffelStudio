@@ -428,13 +428,28 @@ feature {NONE} -- Implementation
 		end
 
 	on_key (a_key: EV_KEY)
-			-- Handle key action on `choice_list'
+			-- Handle key action on `choice_list'.
+		local
+			l_propagate_tab_key, l_deactivate: BOOLEAN
 		do
-			if a_key /= Void then
-				if a_key.code = {EV_KEY_CONSTANTS}.key_escape then
-					deactivate
-				elseif a_key.code = {EV_KEY_CONSTANTS}.key_enter then
-					has_user_selected_item := True
+			inspect
+				a_key.code
+			when {EV_KEY_CONSTANTS}.key_enter, {EV_KEY_CONSTANTS}.key_tab then
+				has_user_selected_item := True
+					-- Tab or enter key should propagate to the next item if `is_item_tab_navigation_enabled'.
+				l_propagate_tab_key := attached parent as l_parent and then l_parent.is_item_tab_navigation_enabled
+				l_deactivate := True
+			when {EV_KEY_CONSTANTS}.key_escape then
+				l_deactivate := True
+			else
+				-- Do nothing
+			end
+			if l_deactivate and then attached parent as l_parent then
+				if l_propagate_tab_key then
+					l_parent.propagate_key_press (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_tab))
+				end
+					-- Make sure that `Current' is deactivated if not already done so by the key propagation.
+				if l_parent.activated_item = Current then
 					deactivate
 				end
 			end
@@ -504,13 +519,13 @@ invariant
 	choice_list_parented_during_activation: attached choice_list as l_choice_list implies l_choice_list.parent /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

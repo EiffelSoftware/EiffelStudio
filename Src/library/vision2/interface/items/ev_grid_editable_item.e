@@ -129,11 +129,11 @@ feature {NONE} -- Implementation
 		end
 
 	handle_key (a_key: EV_KEY)
-			-- Handle the Escape key for cancelling activation.
+			-- Handle keys for exiting activation.
 		require
 			a_key_not_void: a_key /= Void
 		local
-			l_deactivate: BOOLEAN
+			l_deactivate, l_propagate_tab_key: BOOLEAN
 		do
 			inspect
 				a_key.code
@@ -141,17 +141,22 @@ feature {NONE} -- Implementation
 					-- User is cancelling the activation.
 				user_cancelled_activation := True
 				l_deactivate := True
-			when {EV_KEY_CONSTANTS}.key_tab then
-					-- Tab key should exit the activation.
+			when {EV_KEY_CONSTANTS}.key_tab, {EV_KEY_CONSTANTS}.key_enter then
+					-- Tab and Enter key should exit the activation.
 				l_deactivate := True
-			when {EV_KEY_CONSTANTS}.key_enter then
-					-- Enter key should exit the activation.
-				l_deactivate := True
+					-- Tab or enter key should propagate to the next item if `is_item_tab_navigation_enabled'.
+				l_propagate_tab_key := attached parent as l_parent and then l_parent.is_item_tab_navigation_enabled
 			else
 				-- Do nothing
 			end
-			if l_deactivate then
-				deactivate
+			if l_deactivate and then attached parent as l_parent then
+				if l_propagate_tab_key then
+					l_parent.propagate_key_press (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_tab))
+				end
+					-- Make sure that `Current' is deactivated if not already done so by the key propagation.
+				if l_parent.activated_item = Current then
+					deactivate
+				end
 			end
 		end
 
@@ -213,14 +218,14 @@ invariant
 	text_field_parented_during_activation: attached text_field as l_field implies l_field.has_parent
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

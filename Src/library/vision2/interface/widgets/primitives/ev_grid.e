@@ -2456,6 +2456,17 @@ feature -- Measurements
 			result_positive: Result >= 1
 		end
 
+feature {EV_GRID_ITEM, EV_GRID_ITEM_I} -- Activation Handling
+
+	propagate_key_press (a_key: EV_KEY)
+			-- Propagate key press for `a_key' to `Current'.
+			-- Useful for handling custom navigation during item activation.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.key_press_received (a_key)
+		end
+
 feature -- Contract support
 
 	are_columns_removable (a_index, n: INTEGER): BOOLEAN

@@ -1620,9 +1620,7 @@ void odbc_free_connection (void *con)
 	number_connection--;
 
 	ODBC_C_FREE(l_con->error_message.string);
-	RESET_STRING(l_con->error_message);
 	ODBC_C_FREE(l_con->warn_message.string);
-	RESET_STRING(l_con->warn_message);
 	ODBC_C_FREE(l_con);
 
 	/* When there is no connection any more, we free the environment handle */

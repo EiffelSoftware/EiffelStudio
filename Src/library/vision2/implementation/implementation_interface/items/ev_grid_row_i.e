@@ -252,9 +252,11 @@ feature -- Access
 		require
 			is_parented: parent /= Void
 		do
-			Result := internal_height
-			if Result = -1 and then attached parent_i as l_parent_i then
-				Result := l_parent_i.row_height
+			if attached parent_i as l_parent_i then
+				Result := internal_height
+				if Result = -1 or else l_parent_i.is_row_height_fixed then
+					Result := l_parent_i.row_height
+				end
 			end
 		ensure
 			result_not_negative: Result >= 0
@@ -653,10 +655,11 @@ feature -- Status setting
 			-- Assign `a_height' to `height'.
 		require
 			is_parented: parent /= Void
+			not_is_row_height_fixed: attached parent as l_parent and then not l_parent.is_row_height_fixed
 			height_valid: a_height >= 0
 		do
 			internal_height := a_height
-			if attached parent_i as l_parent_i and then not l_parent_i.is_row_height_fixed then
+			if attached parent_i as l_parent_i then
 				l_parent_i.set_vertical_computation_required (index)
 				l_parent_i.redraw
 				if is_locked then
@@ -674,62 +677,32 @@ feature -- Status setting
 		local
 			virtual_y: INTEGER
 			l_height: INTEGER
-			extra_height: INTEGER
-			i: INTEGER
-			l_parent_i: like parent_i
 		do
 				-- It is necessary to perform the recomputation immediately
 				-- as this may show the horizontal or vertical scroll bar
 				-- which affects the size of the viewable area in which `Current'
 				-- is to be displayed.
-			l_parent_i := parent_i
-			check l_parent_i /= Void end
-			l_parent_i.recompute_horizontal_scroll_bar
-			l_parent_i.recompute_vertical_scroll_bar
+			if attached parent_i as l_parent_i then
+				l_parent_i.recompute_horizontal_scroll_bar
+				l_parent_i.recompute_vertical_scroll_bar
 
-			virtual_y := virtual_y_position
-			if l_parent_i.is_row_height_fixed then
-				l_height := l_parent_i.row_height
-			else
+				virtual_y := virtual_y_position
 				l_height := height
-			end
-			if virtual_y < l_parent_i.virtual_y_position then
-				l_parent_i.set_virtual_position (l_parent_i.virtual_x_position, virtual_y)
-			elseif virtual_y + l_height > l_parent_i.virtual_y_position + l_parent_i.viewable_height then
-				if l_parent_i.is_vertical_scrolling_per_item then
-						-- In this case, we must ensure that it is always the top item that still matches flush to
-						-- the top of the viewable area of `parent_i'. There are two cases that we must handle.
-					if l_parent_i.is_row_height_fixed then
-						extra_height := l_parent_i.viewable_height \\ l_parent_i.row_height
-					else
-							-- In this case, the only way to determine the extra amount to add in order
-							-- for the top row to be flush with the top of the viewable area, is
-							-- to loop up until we find the first one that intersects the viewable area.
-						from
-							i := index
-							extra_height := l_parent_i.viewable_height
-						until
-							i = 1 or extra_height < 0
-						loop
-							extra_height := extra_height - l_parent_i.row (i).height
-							i := i - 1
-						end
-						extra_height := l_parent_i.row (i + 1).height + extra_height
-					end
-				end
-				if l_height >= l_parent_i.viewable_height then
-						-- In this case, the height of the row is greater than the viewable height
-						-- so we simply set it at the top of the viewable area.
+				if virtual_y < l_parent_i.virtual_y_position or l_height >= l_parent_i.viewable_height  then
+						-- Rows is partially or completely hidden at the top of the grid, or
+						-- the row is too tall to be fully visible in the grid. We simply
+						-- show the top of the row at the top of the grid.
 					l_parent_i.set_virtual_position (l_parent_i.virtual_x_position, virtual_y)
-				else
-					l_parent_i.set_virtual_position (l_parent_i.virtual_x_position, virtual_y + l_height + extra_height - l_parent_i.viewable_height)
+				elseif virtual_y + l_height > l_parent_i.virtual_y_position + l_parent_i.viewable_height then
+						-- Partially visible at the bottom, we just make scroll up by one row so that
+						-- the bottom of the row is at the bottom of the grid.
+					l_parent_i.set_virtual_position (l_parent_i.virtual_x_position, virtual_y + l_height - l_parent_i.viewable_height)
 				end
 			end
 		ensure
 			parent_virtual_x_position_unchanged: attached old parent as l_old_parent and then attached parent as l_parent and then l_old_parent.virtual_x_position = l_parent.virtual_x_position
 			to_implement_assertion ("old_is_visible_implies_vertical_position_not_changed")
-			row_visible_when_heights_fixed_in_parent: l_parent.is_row_height_fixed implies  virtual_y_position >= l_parent.virtual_y_position and virtual_y_position + l_parent.row_height <= l_parent.virtual_y_position + (l_parent.viewable_height).max (l_parent.row_height)
-			row_visible_when_heights_not_fixed_in_parent: not l_parent.is_row_height_fixed implies virtual_y_position >= l_parent.virtual_y_position and virtual_y_position + height <= l_parent.virtual_y_position + (l_parent.viewable_height).max (height)
+			row_visible_in_parent: virtual_y_position >= l_parent.virtual_y_position and virtual_y_position + height <= l_parent.virtual_y_position + (l_parent.viewable_height).max (height)
 		end
 
 	set_background_color (a_color: like background_color)
@@ -1482,7 +1455,7 @@ invariant
 	hash_code_valid: is_initialized implies ((parent = Void and then hash_code = 0) or else (parent /= Void and then hash_code > 0))
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

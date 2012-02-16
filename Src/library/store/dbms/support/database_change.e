@@ -47,6 +47,22 @@ feature -- Access
 	last_parsed_query_32 : detachable STRING_32
 			-- Last parsed query
 
+	affected_row_count: INTEGER
+			-- The number of rows changed, deleted, or inserted by the last statement
+		require
+			is_affected_row_count_supported: is_affected_row_count_supported
+		do
+			Result := internal_affected_row_count
+		end
+
+feature -- Query
+
+	is_affected_row_count_supported: BOOLEAN
+			-- Is `affected_row_count' supported?
+		do
+			Result := db_spec.is_affected_row_count_supported
+		end
+
 feature -- Element change
 
 	modify (sql: READABLE_STRING_GENERAL)
@@ -80,6 +96,7 @@ feature -- Element change
 				end
 			end
 			last_parsed_query_32 := tmp_string
+			internal_affected_row_count := 0
 			if tmp_string /= Void then
 				if immediate_execution then
 						-- Allocate a new descriptor, just for the exec_immediate.
@@ -94,6 +111,9 @@ feature -- Element change
 						end
 					end
 					db_spec.terminate_order (temp_descriptor)
+				end
+				if is_affected_row_count_supported then
+					internal_affected_row_count := db_spec.affected_row_count
 				end
 			end
 			handle.execution_type.unset_immediate
@@ -123,15 +143,21 @@ feature -- Status setting
 			ht_order = list
 		end
 
+feature {NONE} -- Implementation
+
+	internal_affected_row_count: like affected_row_count;
+			-- Internal `affected_row_count'
+
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

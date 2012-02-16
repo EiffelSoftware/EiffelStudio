@@ -15,7 +15,9 @@ inherit
 			normal_parse,
 			parse,
 			convert_string_type,
-			no_args
+			no_args,
+			is_affected_row_count_supported,
+			affected_row_count
 		end
 
 	STRING_HANDLER
@@ -87,7 +89,17 @@ feature -- For DATABASE_CHANGE
 			end
 		end
 
+	affected_row_count: INTEGER
+			-- It returns the number of rows changed, deleted, or inserted by the last statement
+			-- if it was an UPDATE, DELETE, or INSERT. For SELECT statements, number of rows in the result set.
+		do
+			Result := mysql_affected_rows (mysql_pointer)
+		end
+
 	max_descriptor_number: INTEGER = 20
+
+	is_affected_row_count_supported: BOOLEAN = True
+			-- <Precursor>
 
 feature -- For DATABASE_FORMAT
 
@@ -1155,6 +1167,11 @@ feature {NONE} -- C Externals
 		end
 
 	mysql_real_escape_string (mysql_ptr: POINTER; a_to: POINTER; a_from: POINTER; a_length: INTEGER): INTEGER
+		external
+			"C | %"eif_mysql.h%""
+		end
+
+	mysql_affected_rows (mysql_ptr: POINTER): INTEGER
 		external
 			"C | %"eif_mysql.h%""
 		end

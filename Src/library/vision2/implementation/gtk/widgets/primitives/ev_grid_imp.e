@@ -107,18 +107,6 @@ feature -- Element change
 
 feature {EV_GRID_ITEM_I} -- Implementation
 
-	extra_text_spacing: INTEGER
-			-- Extra spacing for rows that is added to the height of a row text to make up `default_row_height'.
-		local
-			l_text_field: EV_TEXT_FIELD
-			l_label: EV_LABEL
-		once
-			create l_text_field
-			l_text_field.implementation.hide_border
-			create l_label
-			Result := l_text_field.minimum_height - l_label.minimum_height
-		end
-
 	string_size (s: READABLE_STRING_GENERAL; f: EV_FONT; tuple: TUPLE [INTEGER, INTEGER])
 			-- `Result' contains width and height required to
 			-- fully display string `s' in font `f'.

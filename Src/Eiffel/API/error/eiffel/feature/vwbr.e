@@ -40,24 +40,16 @@ feature -- Output
 	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation image for current error
 			-- in `a_text_formatter'.
-		local
-			l_type_set: TYPE_SET_A
 		do
 			if target_type.has_associated_class then
 				a_text_formatter.add ("Target class: ")
 				target_type.associated_class.append_name (a_text_formatter)
 			else
-				l_type_set ?= target_type
-				if l_type_set /= Void then
+					-- According to the precondition of `set_target_type' is should be type set.
+				check attached {TYPE_SET_A} target_type as s then
 					a_text_formatter.add ("Target class set: ")
-					l_type_set.append_to (a_text_formatter)
-				else
-					check should_never_happen: false end
-						-- Code is here to fallback in case it happens in a production environment.
-					a_text_formatter.add ("Target: ")
-					target_type.append_to (a_text_formatter)
+					s.append_to (a_text_formatter)
 				end
-
 			end
 			a_text_formatter.add_new_line
 		end
@@ -65,16 +57,18 @@ feature -- Output
 feature {COMPILER_EXPORTER} -- Setting
 
 	set_target_type (t: TYPE_A)
-			-- Assign `t' to `target_class'.
+			-- Assign `t' to `target_type'.
 		require
 			t_not_void: t /= Void
-			t_not_loose: not t.is_loose
+			t_has_associated_class:
+				t.has_associated_class or else
+				(t.is_type_set and then not t.is_loose)
 		do
 			target_type := t
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

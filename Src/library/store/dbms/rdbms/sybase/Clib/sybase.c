@@ -72,7 +72,7 @@ int c_syb_make (int m_size)
   if (dbinit () == FAIL)
     {
       return error_number;
-      //exit(ERREXIT);
+      /* exit(ERREXIT); */
     }
   
   dberrhandle ((EHANDLEFUNC)err_handler);
@@ -627,7 +627,7 @@ int CS_PUBLIC msg_handler(
 	DBINT msgno,
 	int msgstate, int severity,
 	char *msgtext, char *srvname, char *procname,
-	//DBUSMALLINT line)
+	/* DBUSMALLINT line) */
 	int line)
 {
   if (severity > 0)

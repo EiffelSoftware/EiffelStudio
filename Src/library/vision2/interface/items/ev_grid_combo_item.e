@@ -129,6 +129,7 @@ feature {NONE} -- Implementation
 			inspect
 				a_key.code
 			when {EV_KEY_CONSTANTS}.key_enter, {EV_KEY_CONSTANTS}.key_tab then
+				user_cancelled_activation := a_key.code = {EV_KEY_CONSTANTS}.key_tab
 					-- Tab or enter key should propagate to the next item if `is_item_tab_navigation_enabled'.
 				l_propagate_tab_key := attached parent as l_parent and then l_parent.is_item_tab_navigation_enabled
 				l_deactivate := True

@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Query
 
-	query_with_callback_and_cancellation (a_expression: READABLE_STRING_GENERAL; a_callback: PROCEDURE [ANY, TUPLE [SUGGESTION_ITEM]]; a_cancel_request: detachable PREDICATE [ANY, TUPLE])
+	query_with_callback_and_cancellation (a_expression: READABLE_STRING_GENERAL; a_termination: detachable PROCEDURE [ANY, TUPLE]; a_callback: PROCEDURE [ANY, TUPLE [SUGGESTION_ITEM]]; a_cancel_request: detachable PREDICATE [ANY, TUPLE])
 			-- <Precursor>
 		do
 			if a_cancel_request /= Void then
@@ -37,6 +37,9 @@ feature -- Query
 				across data as l_data loop
 					a_callback.call ([create {LABEL_SUGGESTION_ITEM}.make (l_data.item)])
 				end
+			end
+			if a_termination /= Void then
+				a_termination.call (Void)
 			end
 		end
 

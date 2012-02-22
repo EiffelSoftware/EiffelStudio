@@ -519,23 +519,18 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
-	background_brush: WEL_BRUSH
+	background_brush: detachable WEL_BRUSH
 			-- Current window background color used to refresh the window when
 			-- requested by the WM_ERASEBKGND windows message.
-		local
-			back: detachable WEL_COLOR_REF
 		do
-				-- We always use the background color, unless `Current' has been made
-				-- non editable, and the user has not set a background color.
-			if (not is_editable and background_color_imp /= Void) or is_editable then
-				back ?= background_color.implementation
-			else
-				create back.make_system (Color_btnface)
+				-- We always use `background_color', unless `Current' has been made
+				-- non editable, and the user has not set a background color. Otherwise,
+				-- we let Window erase the content itself.
+			if is_editable or background_color_imp /= Void then
+				if attached {EV_COLOR_IMP} background_color.implementation as l_color then
+					create Result.make_solid (l_color)
+				end
 			end
-			check
-				background_color_not_void: back /= Void
-			end
-			create Result.make_solid (back)
 		end
 
 	default_style: INTEGER
@@ -666,14 +661,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_TEXT_IMP

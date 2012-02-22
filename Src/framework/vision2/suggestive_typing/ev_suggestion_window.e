@@ -10,8 +10,10 @@ class
 
 inherit
 	EV_POPUP_WINDOW
+		rename
+			show as show_window
 		redefine
-			create_interface_objects, initialize, show
+			create_interface_objects, initialize
 		end
 
 	EV_SHARED_APPLICATION
@@ -63,8 +65,9 @@ feature {NONE} -- Initialization
 			grid.key_press_string_actions.extend (agent on_char)
 			grid.key_press_actions.extend (agent on_key_down)
 			grid.pointer_double_press_actions.extend (agent mouse_selection)
+			grid.set_default_key_processing_handler (agent is_key_processed)
 			grid.hide_header
-			grid.disable_selection_key_handling
+
 			grid.enable_partial_dynamic_content
 			grid.set_dynamic_content_function (agent associated_grid_item)
 			grid.virtual_position_changed_actions.extend (agent on_scroll)
@@ -94,14 +97,15 @@ feature -- Status Setting
 		do
 				-- Initialize the current suggest list with what has been entered in `field'.
 			build_suggestion_list (field.text, True)
+		end
 
+	show_content
+		do
 				-- Select the entry that match `buffered_input' by default.
 			select_closest_match
-
 			position_suggestion_choice_window
-			Precursor
-			ev_application.do_once_on_idle (agent resize_column_to_window_width)
-			ev_application.do_once_on_idle (agent grid.set_focus)
+			show_window
+			grid.set_focus
 		end
 
 feature -- Query
@@ -113,6 +117,18 @@ feature -- Query
 		end
 
 feature {NONE} -- Events handling
+
+	is_key_processed (a_key: EV_KEY): BOOLEAN
+			-- Is `a_key' handled by Current?
+			-- True if not page up, page down, home and end.
+		do
+			Result := a_key.code /= {EV_KEY_CONSTANTS}.key_page_up and
+				a_key.code /= {EV_KEY_CONSTANTS}.key_page_down and
+				a_key.code /= {EV_KEY_CONSTANTS}.key_home and
+				a_key.code /= {EV_KEY_CONSTANTS}.key_end and
+				a_key.code /= {EV_KEY_CONSTANTS}.key_down and
+				a_key.code /= {EV_KEY_CONSTANTS}.key_up
+			end
 
 	mouse_selection (x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; unused4,unused5:INTEGER)
 			-- process mouse click in the list
@@ -126,7 +142,7 @@ feature {NONE} -- Events handling
 			-- process user input in `grid'	
 		local
 			l_rows: ARRAYED_LIST [EV_GRID_ROW]
-			l_indexes: ARRAYED_LIST [INTEGER_32]
+			l_indexes: ARRAYED_LIST [INTEGER]
 		do
 			inspect
 				ev_key.code
@@ -156,31 +172,31 @@ feature {NONE} -- Events handling
 					end
 				end
 			when {EV_KEY_CONSTANTS}.Key_up then
-				go_to_next_item (False, False)
+				go_to_next_item (False)
 			when {EV_KEY_CONSTANTS}.Key_down then
-				go_to_next_item (True, False)
---			when {EV_KEY_CONSTANTS}.Key_page_up then
---				go_to_next_page (False, True)
---			when {EV_KEY_CONSTANTS}.Key_page_down then
---				go_to_next_page (True, True)
---			when {EV_KEY_CONSTANTS}.key_home then
---				if grid.row_count > 0 then
---					l_indexes := grid.viewable_row_indexes
---					if l_indexes.is_empty then
---						select_row (1)
---					else
---						select_row (l_indexes.first)
---					end
---				end
---			when {EV_KEY_CONSTANTS}.key_end then
---				if grid.row_count > 0 then
---					l_indexes := grid.viewable_row_indexes
---					if l_indexes.is_empty then
---						select_row (grid.row_count)
---					else
---						select_row (l_indexes.last)
---					end
---				end
+				go_to_next_item (True)
+			when {EV_KEY_CONSTANTS}.Key_page_up then
+				go_to_next_page (False)
+			when {EV_KEY_CONSTANTS}.Key_page_down then
+				go_to_next_page (True)
+			when {EV_KEY_CONSTANTS}.key_home then
+				if grid.row_count > 0 then
+					l_indexes := grid.viewable_row_indexes
+					if l_indexes.is_empty then
+						select_row (1)
+					else
+						select_row (l_indexes.first)
+					end
+				end
+			when {EV_KEY_CONSTANTS}.key_end then
+				if grid.row_count > 0 then
+					l_indexes := grid.viewable_row_indexes
+					if l_indexes.is_empty then
+						select_row (grid.row_count)
+					else
+						select_row (l_indexes.last)
+					end
+				end
 			when {EV_KEY_CONSTANTS}.Key_enter then
 				suggest_and_close
 			when {EV_KEY_CONSTANTS}.Key_escape then
@@ -235,10 +251,15 @@ feature {NONE} -- Events handling
 					suggest_and_close
 					field.handle_character (c)
 				else
-					buffered_input.append_character (c)
-					field.handle_character (c)
-					build_suggestion_list (buffered_input, False)
-					select_closest_match
+					if attached settings.character_translator as l_translator then
+						c := l_translator.item ([c])
+					end
+					if c /= '%U' then
+						buffered_input.append_character (c)
+						field.handle_character (c)
+						build_suggestion_list (buffered_input, False)
+						select_closest_match
+					end
 				end
 			end
 		end
@@ -290,95 +311,9 @@ feature {NONE} -- Events handling
 
 feature {NONE} -- Navigation
 
-	page_up
-			-- Page up
-		local
-			l_selected_row: INTEGER
-			i: INTEGER
-			l_viewable_row_count: INTEGER
-			l_count: INTEGER
-			end_loop: BOOLEAN
-			l_last_selectable: INTEGER
-		do
-			if grid.row_count > 0 then
-				if not grid.selected_items.is_empty then
-					lock_update
-					l_selected_row := grid.selected_rows.first.index
-					if not grid.visible_row_indexes.has (l_selected_row) then
-						l_selected_row := grid.visible_row_indexes.first
-					end
-					l_viewable_row_count := viewable_row_count - settings.scrolling_common_line_count
-					l_last_selectable := l_selected_row
-					from
-						i := l_selected_row
-					until
-						i < 1 or end_loop
-					loop
-						if attached grid.row (i).parent_row as l_parent_row implies l_parent_row.is_expanded then
-							l_count := l_count + 1
-							l_last_selectable := i
-						end
-						if l_count > l_viewable_row_count then
-							end_loop := True
-						end
-						i := i - 1
-					end
-					grid.remove_selection
-					grid.row (l_last_selectable).enable_select
-					grid.row (l_last_selectable).ensure_visible
-					unlock_update
-				end
-			end
-		end
-
-	page_down
-			-- Page down
-		local
-			l_selected_row: INTEGER
-			i: INTEGER
-			l_viewable_row_count: INTEGER
-			l_count: INTEGER
-			end_loop: BOOLEAN
-			l_last_selectable: INTEGER
-			l_rows: ARRAYED_LIST [EV_GRID_ROW]
-		do
-			if grid.row_count > 0 then
-				l_rows := grid.selected_rows
-				if not l_rows.is_empty then
-					lock_update
-					l_selected_row := l_rows.first.index
-					if not grid.visible_row_indexes.has (l_selected_row) then
-						l_selected_row := grid.visible_row_indexes.last
-					end
-					l_viewable_row_count := viewable_row_count - settings.scrolling_common_line_count
-					l_last_selectable := l_selected_row
-					from
-						i := l_selected_row
-					until
-						i > grid.row_count or end_loop
-					loop
-						if attached grid.row (i).parent_row as l_parent_row implies l_parent_row.is_expanded then
-							l_count := l_count + 1
-							l_last_selectable := i
-						end
-						if l_count > l_viewable_row_count then
-							end_loop := True
-						end
-						i := i + 1
-					end
-					grid.remove_selection
-					grid.row (l_last_selectable).enable_select
-					grid.row (l_last_selectable).ensure_visible
-					unlock_update
-				end
-			end
-		end
-
-	go_to_next_item (a_is_forward, a_is_by_page: BOOLEAN)
+	go_to_next_item (a_is_forward: BOOLEAN)
 			-- Iterate grid to find the next item for keyboard naviation
 			-- `a_is_forward' control if the search should be forward or backward.
-			-- `a_is_by_page' control is the search should be done on a page by page basis
-			-- or on an item by item basis.
 		local
 			i, ix: INTEGER
 			l_row : EV_GRID_ROW
@@ -419,79 +354,46 @@ feature {NONE} -- Navigation
 			end
 		end
 
-	go_to_next_page (a_is_forward, a_is_by_page: BOOLEAN)
+	go_to_next_page (a_is_forward: BOOLEAN)
 			-- Iterate grid to find the next item for keyboard naviation
 			-- `a_is_forward' control if the search should be forward or backward.
-			-- `a_is_by_page' control is the search should be done on a page by page basis
-			-- or on an item by item basis.
 		local
-			i, ix: INTEGER
-			l_loop_end: BOOLEAN
 			l_grid: like grid
-			l_indexes: ARRAYED_LIST [INTEGER]
 			l_rows: ARRAYED_LIST [EV_GRID_ROW]
-			l_offset: INTEGER
 			l_row, l_target_row: detachable EV_GRID_ROW
+			l_scroll_height, l_new_virtual_y: INTEGER
 		do
 			l_grid := grid
-			l_rows := l_grid.selected_rows
-			l_grid.remove_selection
-			if not l_rows.is_empty then
-				l_target_row := l_rows.first
-				l_target_row.ensure_visible
-
-				l_row := l_grid.last_visible_row
-				if l_row /= Void then
-					if l_target_row = l_row then
-							-- The bottom row is the last selected rows, we can scroll down.
-						l_grid.set_virtual_position (l_grid.virtual_x_position, l_row.virtual_y_position)
-					end
-					l_row.enable_select
-					l_row.ensure_visible
-				end
+			l_grid.lock_update
+			if a_is_forward then
+				l_target_row := last_visible_row (l_grid)
 			else
-				l_target_row := l_grid.first_visible_row
-				if l_target_row /= Void then
-					l_target_row.enable_select
-					l_target_row.ensure_visible
+				l_target_row := first_visible_row (l_grid)
+			end
+			l_rows := l_grid.selected_rows
+			if not l_rows.is_empty then
+				l_grid.remove_selection
+				l_row := l_rows.first
+				if l_row = l_target_row then
+						-- This is the number of rows we want to scroll per `settings'.
+					l_scroll_height := (viewable_row_count - settings.scrolling_common_line_count) * l_grid.row_height
+					if a_is_forward then
+							-- The bottom row is the last selected row, we can scroll down.
+						l_new_virtual_y := l_row.virtual_y_position + l_row.height - l_grid.viewable_height + l_scroll_height
+						l_grid.set_virtual_position (l_grid.virtual_x_position, l_new_virtual_y.min (l_grid.maximum_virtual_y_position))
+						l_target_row := last_visible_row (l_grid)
+					else
+							-- The top row is the first selected row, we can scroll up.
+						l_grid.set_virtual_position (l_grid.virtual_x_position, (l_row.virtual_y_position - l_scroll_height).max (0))
+						l_target_row := first_visible_row (l_grid)
+					end
 				end
 			end
 
-			l_indexes := l_grid.visible_row_indexes
-			if not l_indexes.is_empty then
-				l_target_row := l_grid.row (l_indexes.last)
-				l_target_row.ensure_visible
+			if l_target_row /= Void then
+				l_target_row.enable_select
 			end
-
---			l_rows := l_grid.selected_rows
---			if not l_rows.is_empty then
---				ix := l_rows.first.index
---				l_grid.remove_selection
---				if a_is_forward then
---					l_offset := 1
---				else
---					l_offset := -1
---				end
---				i := ix + l_offset
---				from
---				until
---					l_loop_end
---				loop
---						-- Rotate the search if we are on the last or first item.					
---					if i <= 0 then
---						i := l_grid.row_count
---					elseif i >= l_grid.row_count then
---						i := 1
---					end
---					l_row := l_grid.row (i)
---					if l_row.is_displayed then
---						l_row.enable_select
---						l_row.ensure_visible
---						l_loop_end := True
---					end
---					i := i + l_offset
---				end
---			end
+			l_grid.unlock_update
 		end
 
 	select_row (a_row: INTEGER)
@@ -540,6 +442,7 @@ feature {NONE} -- Completion
 			choice_list_attached: grid /= Void
 		local
 			l_grid: like grid
+			l_post_action: detachable PROCEDURE [ANY, TUPLE]
 		do
 				-- To prevent flickering due to the potential
 				-- hidding/showing of scrollbars we lock ourselve
@@ -549,6 +452,11 @@ feature {NONE} -- Completion
 			l_grid := grid
 			buffered_input := a_name.to_string_32
 
+			if a_is_first then
+					-- The first time we need to show the list of suggestions
+					-- when it has fully been computed.
+				l_post_action := agent show_content
+			end
 				-- If this is the first time we are showing the list or if
 				-- settings dictate that it has to be recomputed, we get the
 				-- results from the associated suggestion provider of `field'.
@@ -556,14 +464,15 @@ feature {NONE} -- Completion
 				l_grid.wipe_out
 				l_grid.set_column_count_to (1)
 				create full_list.make (1)
-				field.suggestion_provider.query_with_callback_and_cancellation (a_name, agent (a_item: SUGGESTION_ITEM)
-					do
-						grid.insert_new_row (grid.row_count + 1)
-						grid.row (grid.row_count).set_data (a_item)
-						if attached full_list as l_list then
-							l_list.extend (a_item)
-						end
-					end, settings.query_cancel_request)
+				field.suggestion_provider.query_with_callback_and_cancellation (a_name, l_post_action,
+					agent (a_item: SUGGESTION_ITEM)
+						do
+							grid.insert_new_row (grid.row_count + 1)
+							grid.row (grid.row_count).set_data (a_item)
+							if attached full_list as l_list then
+								l_list.extend (a_item)
+							end
+						end, settings.query_cancel_request)
 			else
 					-- We are going to remove from the list all items that don't
 					-- match `buffered_input'.
@@ -650,7 +559,7 @@ feature {NONE} -- Completion
 					disable_capture
 				end
 				save_window_position
-		--		hide
+				hide
 				field.terminate_suggestion
 				is_closing := False
 			end
@@ -782,39 +691,6 @@ feature {NONE} -- Completion
 			suggestion_timeout.set_interval (settings.timeout)
 		end
 
-	viewable_row_count: INTEGER
-			-- Number of items that will be scrolled when doing a page up or down operation.
-		local
-			l_grid: like grid
-		do
-			l_grid := grid
-			Result := l_grid.viewable_height // l_grid.row_height
-		end
-
-	grid_row_by_data (a_data: ANY) : INTEGER
-			-- Find a row in a_grid that include a_data
-		local
-			i: INTEGER
-			l_row: EV_GRID_ROW
-			loop_end: BOOLEAN
-			l_grid: like grid
-		do
-			l_grid := grid
-			loop_end := False
-			from
-				i := 1
-			until
-				i > l_grid.row_count or loop_end
-			loop
-				l_row := l_grid.row (i)
-				if l_row.data /= Void and then l_row.data = a_data then
-					Result := i
-					loop_end := True
-				end
-				i := i + 1
-			end
-		end
-
 	associated_grid_item (a_column, a_row: INTEGER): EV_GRID_ITEM
 			-- Item associated to `grid' at position (`a_column', `a_row').
 		local
@@ -824,7 +700,7 @@ feature {NONE} -- Completion
 			if attached {like row_data_type} l_row.data as l_data then
 				Result := settings.to_displayed_item (l_data)
 			else
-				create {EV_GRID_LABEL_ITEM} Result.make_with_text ("no data")
+				create {EV_GRID_LABEL_ITEM} Result.make_with_text ("no associated data")
 			end
 		end
 
@@ -989,7 +865,7 @@ feature {NONE} -- Positionning
 				lower_space := l_monitor.bottom - y_pos - field.height
 
 					-- By default we use the maximum height available.
-				Result := grid.virtual_height
+				Result := grid.visible_row_count * grid.row_height
 
 				if show_below and then Result > lower_space and then Result <= upper_space then
 						-- Not enough room to show below, but is enough room to show above, so we will show above
@@ -1053,6 +929,81 @@ feature {NONE} -- Positionning
 				-- Ensure it is no wider than the current monitor.
 			create l_screen
 			Result := l_screen.width.min (Result)
+		end
+
+feature {NONE} -- Grid helpers
+
+	first_visible_row (a_grid: EV_GRID): detachable EV_GRID_ROW
+			-- Gives the first fully visible row of the gird. Unlike `{EV_GRID}.first_visible_row'
+			-- which returns the first partially visible row of the grid.
+			-- If a row cannot be fully visible (e.g. taller than the grid's viewable_height) it
+			-- returns `{EV_GRID}.first_visible_row'.
+		require
+			a_grid_not_destroyed: not a_grid.is_destroyed
+		local
+			l_indexes: ARRAYED_LIST [INTEGER]
+			l_count: INTEGER
+		do
+			l_indexes := a_grid.visible_row_indexes
+			l_count := l_indexes.count
+			if l_count > 0 then
+				Result := a_grid.row (l_indexes.i_th (1))
+				if
+					l_count > 1 and then
+					Result /= Void and then
+					Result.virtual_y_position < a_grid.virtual_y_position
+				then
+						-- First visible rows is not fully visible, we go for the fully visible one if it exists.
+					if
+						attached a_grid.row (l_indexes.i_th (2)) as l_next_row and then
+						l_next_row.virtual_y_position + l_next_row.height <= a_grid.virtual_y_position + a_grid.viewable_height
+					 then
+							-- Next item is fully visible, we use it as target.
+						Result := l_next_row
+					end
+				end
+			end
+		end
+
+	last_visible_row (a_grid: EV_GRID): detachable EV_GRID_ROW
+			-- Gives the last fully visible row of the gird. Unlike `{EV_GRID}.last_visible_row'
+			-- which returns the last partially visible row of the grid.
+			-- If a row cannot be fully visible (e.g. taller than the grid's viewable_height) it
+			-- returns `{EV_GRID}.last_visible_row'.
+		require
+			a_grid_not_destroyed: not a_grid.is_destroyed
+		local
+			l_indexes: ARRAYED_LIST [INTEGER]
+			l_count: INTEGER
+		do
+			l_indexes := a_grid.visible_row_indexes
+			l_count := l_indexes.count
+			if l_count > 0 then
+				Result := a_grid.row (l_indexes.i_th (l_count))
+				if
+					l_count > 1 and then
+					Result /= Void and then
+					Result.virtual_y_position + Result.height > a_grid.virtual_y_position + a_grid.viewable_height
+				then
+						-- Last visible rows is not fully visible, we go for the fully visible one if it exists.
+					if
+						attached a_grid.row (l_indexes.i_th (l_count - 1)) as l_prev_row and then
+						l_prev_row.virtual_y_position >= a_grid.virtual_y_position
+					 then
+							-- Previous item is fully visible, we use it as target.
+						Result := l_prev_row
+					end
+				end
+			end
+		end
+
+	viewable_row_count: INTEGER
+			-- Number of items that will be scrolled when doing a page up or down operation.
+		local
+			l_grid: like grid
+		do
+			l_grid := grid
+			Result := l_grid.viewable_height // l_grid.row_height
 		end
 
 invariant

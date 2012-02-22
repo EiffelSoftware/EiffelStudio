@@ -59,6 +59,9 @@ feature {NONE} -- Initialization
 				-- No characters are setup by default to trigger suggestion
 			suggestion_activator_characters := Void
 
+				-- No translator of character by default
+			character_translator := Void
+
 			query_cancel_request := Void
 			internal_matcher := Void
 		ensure
@@ -79,6 +82,7 @@ feature {NONE} -- Initialization
 			suggestion_deactivator_characters_set: suggestion_deactivator_characters.has (escape_character) and
 				suggestion_deactivator_characters.has (carriage_return_character) and suggestion_deactivator_characters.has (newline_character)
 			suggestion_activator_characters_not_set: suggestion_activator_characters = Void
+			character_translator: character_translator = Void
 			query_cancel_request_not_set: query_cancel_request = Void
 			matcher_set: matcher = default_matcher
 		end
@@ -91,7 +95,7 @@ feature -- Constants
 	default_mouse_wheel_scroll_size: INTEGER = 3
 			-- Default number of items by which the wheel scroll the grid.
 
-	default_scrolling_common_line_count: INTEGER = 3
+	default_scrolling_common_line_count: INTEGER = 1
 			-- Default number of rows that will be common between two pages
 			-- on a page by page scrolling.
 
@@ -194,6 +198,12 @@ feature -- Character handling
 
 	override_shortcut_trigger: detachable FUNCTION [ANY, TUPLE [key: EV_KEY; ctrl, alt, shift: BOOLEAN], BOOLEAN]
 			-- User controlled definition that can activate suggestion?
+
+	character_translator: detachable FUNCTION [ANY, TUPLE [CHARACTER_32], CHARACTER_32]
+			-- Given a character entered by users while performing completion, returns
+			-- the character really wanted by the underlying tools. This is useful for
+			-- example if you only want upper case to be printed for example.
+			-- If `%U' is returned, then the character is not processed.
 
 feature -- Status report
 
@@ -445,12 +455,20 @@ feature -- Settings: Character handling
 			unwanted_characters_set: unwanted_characters = a_chars
 		end
 
-	set_override_shortcut_trigger  (a_trigger: like override_shortcut_trigger)
+	set_override_shortcut_trigger (a_trigger: like override_shortcut_trigger)
 			-- Set `override_shortcut_trigger' with `a_trigger'.
 		do
 			override_shortcut_trigger := a_trigger
 		ensure
 			override_shortcut_trigger_set: override_shortcut_trigger = a_trigger
+		end
+
+	set_character_translator (a_translator: like character_translator)
+			-- Set `character_translator' with `a_translator'.
+		do
+			character_translator := a_translator
+		ensure
+			character_translator_set: character_translator = a_translator
 		end
 
 feature {NONE} -- Implementation

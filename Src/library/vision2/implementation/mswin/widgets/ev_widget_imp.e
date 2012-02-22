@@ -461,7 +461,7 @@ feature -- Element change
 			-- Make `color' the new `background_color'
 		do
 			if background_color_imp /= color.implementation then
-				background_color_imp ?= color.implementation
+				background_color_imp ?= color.twin.implementation
 				if is_displayed then
 					-- If the widget is not hidden then invalidate.
 					invalidate
@@ -473,7 +473,7 @@ feature -- Element change
 			-- Make `color' the new `foreground_color'
 		do
 			if foreground_color_imp /= color.implementation then
-				foreground_color_imp ?= color.implementation
+				foreground_color_imp ?= color.twin.implementation
 				if is_displayed then
 					-- If the widget is not hidden then invalidate.
 					invalidate
@@ -1626,14 +1626,14 @@ feature -- Feature that should be directly implemented by externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_WIDGET_IMP

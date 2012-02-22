@@ -506,7 +506,7 @@ feature -- Access
 		do
 			if row_count > 0 then
 				perform_vertical_computation
-				Result := total_row_height -- + pixels_displayed_after_final_row
+				Result := total_row_height + pixels_displayed_after_final_row
 			end
 			Result := Result.max (viewable_height)
 		ensure
@@ -4616,7 +4616,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			else
 				l_y_position := a_value
 			end
-			internal_set_virtual_y_position (l_y_position.min (maximum_virtual_y_position))
+			internal_set_virtual_y_position (l_y_position)
 			if virtual_position_changed_actions_internal /= Void then
 				virtual_position_changed_actions_internal.call ([virtual_x_position, virtual_y_position])
 			end

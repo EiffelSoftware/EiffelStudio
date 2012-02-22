@@ -82,8 +82,13 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	choice_list: detachable EV_GRID
-		-- Text field used to edit `Current' on `activate'
-		-- Void when `Current' isn't being activated.
+			-- Text field used to edit `Current' on `activate'
+			-- Void when `Current' isn't being activated.
+
+	initial_position: detachable EV_COORDINATE
+			-- Initial pointer position when `choice_list' is first shown.
+			--| This is to avoid a spurious `on_mouse_move' callback that occurs on Windows
+			--| even if the pointer hasn't moved, because the window underneath the pointer has moved
 
 	set_strings
 			-- Update `choice_list' with `item_strings'.
@@ -368,6 +373,7 @@ feature {NONE} -- Implementation
 				if l_choice_list.is_displayed and then l_choice_list.is_sensitive then
 					l_choice_list.set_focus
 				end
+				initial_position := (create {EV_SCREEN}).pointer_position
 				l_choice_list.focus_out_actions.extend (agent deactivate)
 				l_choice_list.pointer_button_press_item_actions.extend (agent on_mouse_click)
 				l_choice_list.pointer_double_press_item_actions.extend (agent on_mouse_click)
@@ -388,13 +394,23 @@ feature {NONE} -- Implementation
 			l_list: LIST [EV_GRID_ITEM]
 		do
 			if attached choice_list as l_choice_list then
-				l_item := l_choice_list.item_at_virtual_position (l_choice_list.virtual_x_position + a_x,
-					l_choice_list.virtual_y_position + a_y)
-				if l_item /= Void then
-					l_list := l_choice_list.selected_items
-					if not l_list.is_empty and then l_list.first /= l_item then
-						l_choice_list.remove_selection
-						l_item.enable_select
+					-- If `initial_position' of the mouse has been set (it means we just activated items),
+					-- then we will only select an item if the new mouse position is of by one pixel in
+					-- any directions.
+				if
+					not attached initial_position as l_pos or else
+					(l_pos.x /= l_choice_list.screen_x + a_x and then l_pos.y /= l_choice_list.screen_y + a_y)
+				then
+					initial_position := Void
+
+					l_item := l_choice_list.item_at_virtual_position (l_choice_list.virtual_x_position + a_x,
+						l_choice_list.virtual_y_position + a_y)
+					if l_item /= Void then
+						l_list := l_choice_list.selected_items
+						if not l_list.is_empty and then l_list.first /= l_item then
+							l_choice_list.remove_selection
+							l_item.enable_select
+						end
 					end
 				end
 			else
@@ -435,7 +451,7 @@ feature {NONE} -- Implementation
 			inspect
 				a_key.code
 			when {EV_KEY_CONSTANTS}.key_enter, {EV_KEY_CONSTANTS}.key_tab then
-				has_user_selected_item := True
+				has_user_selected_item := a_key.code = {EV_KEY_CONSTANTS}.key_enter
 					-- Tab or enter key should propagate to the next item if `is_item_tab_navigation_enabled'.
 				l_propagate_tab_key := attached parent as l_parent and then l_parent.is_item_tab_navigation_enabled
 				l_deactivate := True

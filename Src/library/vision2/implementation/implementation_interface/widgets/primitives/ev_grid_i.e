@@ -506,7 +506,7 @@ feature -- Access
 		do
 			if row_count > 0 then
 				perform_vertical_computation
-				Result := total_row_height + pixels_displayed_after_final_row
+				Result := total_row_height -- + pixels_displayed_after_final_row
 			end
 			Result := Result.max (viewable_height)
 		ensure
@@ -2301,7 +2301,8 @@ feature -- Status report
 		end
 
 	find_next_item (a_row_index, a_column_index: INTEGER; look_left, a_is_tab_navigatable: BOOLEAN): detachable EV_GRID_ITEM
-			-- Find the next item horizontally in `grid_row' starting at index `starting_index', if 'look_left' then the the item to the left/up is found, else it looks right/down.
+			-- Find the next item horizontally in `grid_row' starting at index `starting_index',
+			-- if `look_left' then the the item to the left/up is found, else it looks right/down.
 			-- If `a_is_tab_navigatable' then Result must have 'is_tab_navigatable' set.
 			-- Result is Void if no item is found.
 		require
@@ -2312,18 +2313,18 @@ feature -- Status report
 			l_first_row_index, l_row_index_boundary, l_column_index_boundary: INTEGER
 			l_dynamic_content_function: like dynamic_content_function
 		do
-			if not look_left then
-				l_row_offset := 1
-				l_first_row_index := 1
-				l_row_index_boundary := column_count + 1
-				l_column_offset := 1
-				l_column_index_boundary := row_count + 1
-			else
+			if look_left then
 				l_row_offset := -1
 				l_first_row_index := column_count
 				l_row_index_boundary := 0
 				l_column_offset := -1
 				l_column_index_boundary := 0
+			else
+				l_row_offset := 1
+				l_first_row_index := 1
+				l_row_index_boundary := column_count + 1
+				l_column_offset := 1
+				l_column_index_boundary := row_count + 1
 			end
 			if is_content_partially_dynamic then
 				l_dynamic_content_function := dynamic_content_function
@@ -4615,7 +4616,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			else
 				l_y_position := a_value
 			end
-			internal_set_virtual_y_position (l_y_position)
+			internal_set_virtual_y_position (l_y_position.min (maximum_virtual_y_position))
 			if virtual_position_changed_actions_internal /= Void then
 				virtual_position_changed_actions_internal.call ([virtual_x_position, virtual_y_position])
 			end
@@ -5723,17 +5724,61 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 
 	key_press_string_received (a_keystring: STRING_32)
 			-- Called by `key_press_string_actions' of `drawable'.
+		local
+			l_prev_sel_item: detachable EV_GRID_ITEM
+			l_index_of_first_item: INTEGER
 		do
-			if key_press_string_actions_internal /= Void and then not key_press_string_actions_internal.is_empty then
-				key_press_string_actions_internal.call ([a_keystring])
+			if not is_destroyed then
+					-- Handle the selection events
+				if is_row_selection_enabled then
+					if attached last_selected_row as l_last_selected_row and then l_last_selected_row.parent_i /= Void then
+						l_index_of_first_item := l_last_selected_row.index_of_first_item
+						if l_index_of_first_item /= 0 then
+							l_prev_sel_item := l_last_selected_row.item (l_index_of_first_item)
+						end
+					end
+				elseif attached last_selected_item as l_last_selected_item and then l_last_selected_item.parent_i /= Void then
+					l_prev_sel_item := l_last_selected_item.interface
+				end
+
+				if key_press_string_actions_internal /= Void and then not key_press_string_actions_internal.is_empty then
+					key_press_string_actions_internal.call ([a_keystring])
+				end
+
+					-- Call key actions on items.
+				if l_prev_sel_item /= Void and then attached l_prev_sel_item.implementation.key_press_string_actions_internal as l_actions then
+					l_actions.call ([a_keystring])
+				end
 			end
 		end
 
 	key_release_received (a_key: EV_KEY)
 			-- Called by `key_release_actions' of `drawable'.
+		local
+			l_prev_sel_item: detachable EV_GRID_ITEM
+			l_index_of_first_item: INTEGER
 		do
-			if key_release_actions_internal /= Void and then not key_release_actions_internal.is_empty then
-				key_release_actions_internal.call ([a_key])
+			if not is_destroyed then
+					-- Handle the selection events
+				if is_row_selection_enabled then
+					if attached last_selected_row as l_last_selected_row and then l_last_selected_row.parent_i /= Void then
+						l_index_of_first_item := l_last_selected_row.index_of_first_item
+						if l_index_of_first_item /= 0 then
+							l_prev_sel_item := l_last_selected_row.item (l_index_of_first_item)
+						end
+					end
+				elseif attached last_selected_item as l_last_selected_item and then l_last_selected_item.parent_i /= Void then
+					l_prev_sel_item := l_last_selected_item.interface
+				end
+
+				if key_release_actions_internal /= Void and then not key_release_actions_internal.is_empty then
+					key_release_actions_internal.call ([a_key])
+				end
+
+					-- Call key actions on items.
+				if l_prev_sel_item /= Void and then attached l_prev_sel_item.implementation.key_release_actions_internal as l_actions then
+					l_actions.call ([a_key])
+				end
 			end
 		end
 
@@ -5918,7 +5963,7 @@ feature -- Implementation
 	key_press_received (a_key: EV_KEY)
 			-- Called by `key_press_actions' of `drawable'.
 		local
-			prev_sel_item, a_sel_item: detachable EV_GRID_ITEM
+			l_prev_sel_item, a_sel_item: detachable EV_GRID_ITEM
 			a_sel_row: detachable EV_GRID_ROW
 			items_spanning_horz, items_spanning_vert: ARRAYED_LIST [INTEGER]
 			l_index_of_first_item: INTEGER
@@ -5926,241 +5971,253 @@ feature -- Implementation
 			l_make_item_visible, l_is_navigation_allowed, l_shift_pressed: BOOLEAN
 			l_key_code: INTEGER
 		do
-			l_is_navigation_allowed := is_selection_keyboard_handling_enabled and then (attached default_key_processing_handler as l_handler implies l_handler.item ([a_key]))
-			if not is_destroyed and then l_is_navigation_allowed then
-
-				l_key_code := a_key.code
-				l_shift_pressed := ev_application.shift_pressed
-
+			if not is_destroyed then
 					-- Handle the selection events
 				if is_row_selection_enabled then
 					if attached last_selected_row as l_last_selected_row and then l_last_selected_row.parent_i /= Void then
 						l_index_of_first_item := l_last_selected_row.index_of_first_item
 						if l_index_of_first_item /= 0 then
-							prev_sel_item := l_last_selected_row.item (l_index_of_first_item)
+							l_prev_sel_item := l_last_selected_row.item (l_index_of_first_item)
 						end
 					end
 				elseif attached last_selected_item as l_last_selected_item and then l_last_selected_item.parent_i /= Void then
-					prev_sel_item := l_last_selected_item.interface
+					l_prev_sel_item := l_last_selected_item.interface
 				end
 
-				if prev_sel_item /= Void then
-					l_previously_expanded := prev_sel_item.row.is_expanded
+				if l_prev_sel_item /= Void then
+					l_previously_expanded := l_prev_sel_item.row.is_expanded
 				end
 
-					-- Call key actions.
-				if key_press_actions_internal /= Void and then not key_press_actions_internal.is_empty then
-					key_press_actions_internal.call ([a_key])
-				end
+				l_is_navigation_allowed := is_selection_keyboard_handling_enabled and then (attached default_key_processing_handler as l_handler implies l_handler.item ([a_key]))
+				if l_is_navigation_allowed then
+					l_key_code := a_key.code
+					l_shift_pressed := ev_application.shift_pressed
 
-					-- Check to see if column navigation should be ignored if selected row expansion status has changed during the key actions.
-				if prev_sel_item /= Void and then not prev_sel_item.is_destroyed and then prev_sel_item.is_parented then
-					if l_previously_expanded then
-						l_expansion_status_changed := not prev_sel_item.row.is_expanded
-					else
-						l_expansion_status_changed := prev_sel_item.row.is_expanded
+
+						-- Call key actions.
+					if key_press_actions_internal /= Void and then not key_press_actions_internal.is_empty then
+						key_press_actions_internal.call ([a_key])
 					end
-				else
-					prev_sel_item := Void
-				end
-						-- We always want to find an item above or below for row selection
-				if not l_expansion_status_changed and then attached prev_sel_item then
-					a_sel_row := prev_sel_item.row
 
-					inspect
-						l_key_code
-					when {EV_KEY_CONSTANTS}.Key_down then
-						a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, True, is_row_selection_enabled or else ((a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void) and then a_sel_row.index_of_first_item = prev_sel_item.column.index))
-						l_make_item_visible := is_vertical_scroll_bar_show_requested and then internal_vertical_scroll_bar.is_displayed
-					when {EV_KEY_CONSTANTS}.Key_up then
-						a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, is_row_selection_enabled or else ((a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void) and then a_sel_row.index_of_first_item = prev_sel_item.column.index))
-						l_make_item_visible := is_vertical_scroll_bar_show_requested and then internal_vertical_scroll_bar.is_displayed
-					when {EV_KEY_CONSTANTS}.Key_right then
-						l_make_item_visible := is_horizontal_scroll_bar_show_requested and then internal_horizontal_scroll_bar.is_displayed
-						if not is_row_selection_enabled then
-								-- Key right shouldn't affect row selection
-							if not is_item_navigatable_to (prev_sel_item) then
-								a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, True)
-							else
-								a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, True, False)
-								if a_sel_item = Void and then is_tree_enabled then
-										-- We may have a tree item so we should perform tree key handling
-										-- If node is collapsed then we expand it.
-									if prev_sel_item.row.subrow_count > 0 then
-											-- We have a subrow(s) so we select the first one if expanded
-										if not prev_sel_item.row.is_expanded then
-											prev_sel_item.row.expand
-										else
-											a_sel_item := find_next_item_in_row (prev_sel_item.row.subrow (1), prev_sel_item.column.index - 1, True, False)
-										end
-									end
-								end
-							end
-						elseif l_make_item_visible then
-							items_spanning_horz := drawer.items_spanning_horizontal_span (virtual_x_position + width, 0)
-							if not items_spanning_horz.is_empty and then attached (columns @ (items_spanning_horz @ 1)) as l_column_i then
-								l_column_i.ensure_visible
-							end
+						-- Call key actions on items.
+					if l_prev_sel_item /= Void and then attached l_prev_sel_item.implementation.key_press_actions_internal as l_actions then
+						l_actions.call ([a_key])
+					end
+
+						-- Check to see if column navigation should be ignored if selected row expansion status has changed during the key actions.
+					if l_prev_sel_item /= Void and then not l_prev_sel_item.is_destroyed and then l_prev_sel_item.is_parented then
+						if l_previously_expanded then
+							l_expansion_status_changed := not l_prev_sel_item.row.is_expanded
+						else
+							l_expansion_status_changed := l_prev_sel_item.row.is_expanded
 						end
-					when {EV_KEY_CONSTANTS}.key_back_space then
-						if not is_row_selection_enabled then
-							if
-								is_tree_enabled and then
-								is_item_navigatable_to (prev_sel_item) and then
-								find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, False, False) = Void
-							then
-								if attached prev_sel_item.row.parent_row as l_parent_row then
-									a_sel_item := find_next_item_in_row (l_parent_row, prev_sel_item.column.index.min (l_parent_row.count) + 1, False, False)
-									if a_sel_item /= Void then
-										a_sel_item.ensure_visible
-									end
-								end
-							end
-						end
-					when {EV_KEY_CONSTANTS}.Key_left then
-						l_make_item_visible := internal_horizontal_scroll_bar.is_displayed
-						if not is_row_selection_enabled then
-								-- Key left shouldn't affect row selection
-							if not is_item_navigatable_to (prev_sel_item) then
-								a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, True)
-							else
-								a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, False, False)
-								if a_sel_item = Void then
-									if is_tree_enabled then
+					else
+						l_prev_sel_item := Void
+					end
+							-- We always want to find an item above or below for row selection
+					if not l_expansion_status_changed and then attached l_prev_sel_item then
+						a_sel_row := l_prev_sel_item.row
+
+						inspect
+							l_key_code
+						when {EV_KEY_CONSTANTS}.Key_down then
+							a_sel_item := find_next_item_in_column (l_prev_sel_item.column, l_prev_sel_item.row.index, True, is_row_selection_enabled or else ((a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void) and then a_sel_row.index_of_first_item = l_prev_sel_item.column.index))
+							l_make_item_visible := is_vertical_scroll_bar_show_requested and then internal_vertical_scroll_bar.is_displayed
+						when {EV_KEY_CONSTANTS}.Key_up then
+							a_sel_item := find_next_item_in_column (l_prev_sel_item.column, l_prev_sel_item.row.index, False, is_row_selection_enabled or else ((a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void) and then a_sel_row.index_of_first_item = l_prev_sel_item.column.index))
+							l_make_item_visible := is_vertical_scroll_bar_show_requested and then internal_vertical_scroll_bar.is_displayed
+						when {EV_KEY_CONSTANTS}.Key_right then
+							l_make_item_visible := is_horizontal_scroll_bar_show_requested and then internal_horizontal_scroll_bar.is_displayed
+							if not is_row_selection_enabled then
+									-- Key right shouldn't affect row selection
+								if not is_item_navigatable_to (l_prev_sel_item) then
+									a_sel_item := find_next_item_in_column (l_prev_sel_item.column, l_prev_sel_item.row.index, False, True)
+								else
+									a_sel_item := find_next_item_in_row (l_prev_sel_item.row, l_prev_sel_item.column.index, True, False)
+									if a_sel_item = Void and then is_tree_enabled then
 											-- We may have a tree item so we should perform tree key handling
-											-- If node is expanded then we collapse it.
-										if prev_sel_item.row.is_expanded then
-											prev_sel_item.row.collapse
-										else
-											if attached prev_sel_item.row.parent_row as l_parent_row then
-												a_sel_item := find_next_item_in_row (l_parent_row, prev_sel_item.column.index.min (l_parent_row.count) + 1, False, False)
-												if a_sel_item /= Void then
-													a_sel_item.ensure_visible
-												end
+											-- If node is collapsed then we expand it.
+										if l_prev_sel_item.row.subrow_count > 0 then
+												-- We have a subrow(s) so we select the first one if expanded
+											if not l_prev_sel_item.row.is_expanded then
+												l_prev_sel_item.row.expand
+											else
+												a_sel_item := find_next_item_in_row (l_prev_sel_item.row.subrow (1), l_prev_sel_item.column.index - 1, True, False)
 											end
 										end
 									end
-								else
-									a_sel_item.ensure_visible
 								end
-							end
-						elseif l_make_item_visible then
-								-- If the row has children then
-							if virtual_x_position > 0 then
-								items_spanning_vert := drawer.items_spanning_horizontal_span (virtual_x_position - 1, 0)
-								if not items_spanning_vert.is_empty and then attached (columns @ (items_spanning_vert @ 1)) as l_column_i then
+							elseif l_make_item_visible then
+								items_spanning_horz := drawer.items_spanning_horizontal_span (virtual_x_position + width, 0)
+								if not items_spanning_horz.is_empty and then attached (columns @ (items_spanning_horz @ 1)) as l_column_i then
 									l_column_i.ensure_visible
 								end
 							end
-						end
-					when {EV_KEY_CONSTANTS}.Key_tab, {EV_KEY_CONSTANTS}.Key_home, {EV_KEY_CONSTANTS}.Key_end then
-						if l_is_navigation_allowed and not application_implementation.ctrl_pressed then
-								-- We need to handle tab, home and end navigation correctly.
-							a_sel_item := find_next_item (prev_sel_item.row.index, prev_sel_item.column.index, (a_key.code = {EV_KEY_CONSTANTS}.key_tab and ev_application.shift_pressed) or a_key.code = {EV_KEY_CONSTANTS}.key_home, True)
-							if a_sel_item = prev_sel_item then
-									-- If the same item is returned then there no selection can take place.
-								a_sel_item := Void
+						when {EV_KEY_CONSTANTS}.key_back_space then
+							if not is_row_selection_enabled then
+								if
+									is_tree_enabled and then
+									is_item_navigatable_to (l_prev_sel_item) and then
+									find_next_item_in_row (l_prev_sel_item.row, l_prev_sel_item.column.index, False, False) = Void
+								then
+									if attached l_prev_sel_item.row.parent_row as l_parent_row then
+										a_sel_item := find_next_item_in_row (l_parent_row, l_prev_sel_item.column.index.min (l_parent_row.count) + 1, False, False)
+										if a_sel_item /= Void then
+											a_sel_item.ensure_visible
+										end
+									end
+								end
 							end
-							l_make_item_visible := internal_horizontal_scroll_bar.is_displayed or else internal_vertical_scroll_bar.is_displayed
+						when {EV_KEY_CONSTANTS}.Key_left then
+							l_make_item_visible := internal_horizontal_scroll_bar.is_displayed
+							if not is_row_selection_enabled then
+									-- Key left shouldn't affect row selection
+								if not is_item_navigatable_to (l_prev_sel_item) then
+									a_sel_item := find_next_item_in_column (l_prev_sel_item.column, l_prev_sel_item.row.index, False, True)
+								else
+									a_sel_item := find_next_item_in_row (l_prev_sel_item.row, l_prev_sel_item.column.index, False, False)
+									if a_sel_item = Void then
+										if is_tree_enabled then
+												-- We may have a tree item so we should perform tree key handling
+												-- If node is expanded then we collapse it.
+											if l_prev_sel_item.row.is_expanded then
+												l_prev_sel_item.row.collapse
+											else
+												if attached l_prev_sel_item.row.parent_row as l_parent_row then
+													a_sel_item := find_next_item_in_row (l_parent_row, l_prev_sel_item.column.index.min (l_parent_row.count) + 1, False, False)
+													if a_sel_item /= Void then
+														a_sel_item.ensure_visible
+													end
+												end
+											end
+										end
+									else
+										a_sel_item.ensure_visible
+									end
+								end
+							elseif l_make_item_visible then
+									-- If the row has children then
+								if virtual_x_position > 0 then
+									items_spanning_vert := drawer.items_spanning_horizontal_span (virtual_x_position - 1, 0)
+									if not items_spanning_vert.is_empty and then attached (columns @ (items_spanning_vert @ 1)) as l_column_i then
+										l_column_i.ensure_visible
+									end
+								end
+							end
+						when {EV_KEY_CONSTANTS}.Key_tab, {EV_KEY_CONSTANTS}.Key_home, {EV_KEY_CONSTANTS}.Key_end then
+							if l_is_navigation_allowed and not application_implementation.ctrl_pressed then
+									-- We need to handle tab, home and end navigation correctly.
+								a_sel_item := find_next_item (l_prev_sel_item.row.index, l_prev_sel_item.column.index, (a_key.code = {EV_KEY_CONSTANTS}.key_tab and ev_application.shift_pressed) or a_key.code = {EV_KEY_CONSTANTS}.key_home, True)
+								if a_sel_item = l_prev_sel_item then
+										-- If the same item is returned then there no selection can take place.
+									a_sel_item := Void
+								end
+								l_make_item_visible := internal_horizontal_scroll_bar.is_displayed or else internal_vertical_scroll_bar.is_displayed
+							end
+						else
+							-- Do nothing
+						end
+					elseif l_key_code = {EV_KEY_CONSTANTS}.Key_down then
+						l_make_item_visible := internal_vertical_scroll_bar.is_displayed
+						if column_count >= 1 then
+							a_sel_item := find_next_item_in_column (column (1), 0, True, True)
+						end
+					end
+
+						-- General key navigation
+					inspect
+						l_key_code
+					when {EV_KEY_CONSTANTS}.key_page_up then
+						if application_implementation.ctrl_pressed then
+							row (1).ensure_visible
+						else
+							items_spanning_vert := drawer.items_spanning_vertical_span ((virtual_y_position - viewable_height + 1).max (0), 0)
+							if items_spanning_vert.count > 0 then
+								if attached row (items_spanning_vert.first) as l_row then
+									l_row.ensure_visible
+								end
+							end
+						end
+					when {EV_KEY_CONSTANTS}.key_page_down then
+						if application_implementation.ctrl_pressed then
+							row (row_count).ensure_visible
+						else
+							items_spanning_vert := drawer.items_spanning_vertical_span (virtual_y_position + viewable_height + 1, viewable_height)
+							if items_spanning_vert.count > 0 then
+								if attached row (items_spanning_vert.last) as l_row then
+									l_row.ensure_visible
+								end
+							end
+						end
+					when {EV_KEY_CONSTANTS}.key_home then
+						if application_implementation.ctrl_pressed then
+							if attached item (1, 1) as l_item then
+								l_item.ensure_visible
+							end
+						end
+					when {EV_KEY_CONSTANTS}.key_end then
+						if application_implementation.ctrl_pressed then
+							if attached item (column_count, row_count) as l_item then
+								l_item.ensure_visible
+							end
 						end
 					else
 						-- Do nothing
 					end
-				elseif l_key_code = {EV_KEY_CONSTANTS}.Key_down then
-					l_make_item_visible := internal_vertical_scroll_bar.is_displayed
-					if column_count >= 1 then
-						a_sel_item := find_next_item_in_column (column (1), 0, True, True)
-					end
-				end
 
-					-- General key navigation
-				inspect
-					l_key_code
-				when {EV_KEY_CONSTANTS}.key_page_up then
-					if application_implementation.ctrl_pressed then
-						row (1).ensure_visible
-					else
-						items_spanning_vert := drawer.items_spanning_vertical_span ((virtual_y_position - viewable_height + 1).max (0), 0)
-						if items_spanning_vert.count > 0 then
-							if attached row (items_spanning_vert.first) as l_row then
-								l_row.ensure_visible
+					if a_sel_item /= Void and then not ev_application.alt_pressed then
+							-- 'Alt' should have no effect on selection handling.
+						if
+							a_sel_item.is_selected and then
+							attached last_selected_item as l_last_selected_item and then
+							not ev_application.shift_pressed and then
+							l_last_selected_item /= a_sel_item.implementation
+						then
+							l_last_selected_item.disable_select
+						end
+						handle_newly_selected_item (a_sel_item, 0, True)
+
+						if a_sel_item /= Void and then a_sel_item /= currently_active_item and then l_make_item_visible then
+								-- We don't want to scroll the grid if an item is being activated.
+							if is_row_selection_enabled then
+								a_sel_item.row.ensure_visible
+							else
+
+									-- We must be careful to only scroll the grid in a single direction if the column
+									-- or row of an item is locked
+								if a_sel_item.row.is_locked and then attached a_sel_item.column.implementation.locked_column as l_locked_column and then attached a_sel_item.row.implementation.locked_row as l_locked_row then
+									if a_sel_item.column.is_locked and then l_locked_column.locked_index > l_locked_row.locked_index then
+										a_sel_item.row.ensure_visible
+									else
+										a_sel_item.column.ensure_visible
+									end
+								elseif a_sel_item.column.is_locked and then attached a_sel_item.column.implementation.locked_column as l_locked_column and then attached a_sel_item.row.implementation.locked_row as l_locked_row then
+									if a_sel_item.row.is_locked and l_locked_row.locked_index > l_locked_column.locked_index then
+										a_sel_item.column.ensure_visible
+									else
+										a_sel_item.row.ensure_visible
+									end
+								else
+										-- Here, the column or row is not locked, so scroll in both directions
+									a_sel_item.ensure_visible
+								end
 							end
 						end
-					end
-				when {EV_KEY_CONSTANTS}.key_page_down then
-					if application_implementation.ctrl_pressed then
-						row (row_count).ensure_visible
-					else
-						items_spanning_vert := drawer.items_spanning_vertical_span (virtual_y_position + viewable_height + 1, viewable_height)
-						if items_spanning_vert.count > 0 then
-							if attached row (items_spanning_vert.last) as l_row then
-								l_row.ensure_visible
-							end
+
+						if is_row_selection_enabled then
+							last_selected_row := a_sel_item.row.implementation
 						end
-					end
-				when {EV_KEY_CONSTANTS}.key_home then
-					if application_implementation.ctrl_pressed then
-						if attached item (1, 1) as l_item then
-							l_item.ensure_visible
-						end
-					end
-				when {EV_KEY_CONSTANTS}.key_end then
-					if application_implementation.ctrl_pressed then
-						if attached item (column_count, row_count) as l_item then
-							l_item.ensure_visible
-						end
+						last_selected_item := a_sel_item.implementation
 					end
 				else
-					-- Do nothing
-				end
-
-				if a_sel_item /= Void and then not ev_application.alt_pressed then
-						-- 'Alt' should have no effect on selection handling.
-					if
-						a_sel_item.is_selected and then
-						attached last_selected_item as l_last_selected_item and then
-						not ev_application.shift_pressed and then
-						l_last_selected_item /= a_sel_item.implementation
-					then
-						l_last_selected_item.disable_select
+					if key_press_actions_internal /= Void and then not key_press_actions_internal.is_empty then
+						key_press_actions_internal.call ([a_key])
 					end
-					handle_newly_selected_item (a_sel_item, 0, True)
-
-					if a_sel_item /= Void and then a_sel_item /= currently_active_item and then l_make_item_visible then
-							-- We don't want to scroll the grid if an item is being activated.
-						if is_row_selection_enabled then
-							a_sel_item.row.ensure_visible
-						else
-
-								-- We must be careful to only scroll the grid in a single direction if the column
-								-- or row of an item is locked
-							if a_sel_item.row.is_locked and then attached a_sel_item.column.implementation.locked_column as l_locked_column and then attached a_sel_item.row.implementation.locked_row as l_locked_row then
-								if a_sel_item.column.is_locked and then l_locked_column.locked_index > l_locked_row.locked_index then
-									a_sel_item.row.ensure_visible
-								else
-									a_sel_item.column.ensure_visible
-								end
-							elseif a_sel_item.column.is_locked and then attached a_sel_item.column.implementation.locked_column as l_locked_column and then attached a_sel_item.row.implementation.locked_row as l_locked_row then
-								if a_sel_item.row.is_locked and l_locked_row.locked_index > l_locked_column.locked_index then
-									a_sel_item.column.ensure_visible
-								else
-									a_sel_item.row.ensure_visible
-								end
-							else
-									-- Here, the column or row is not locked, so scroll in both directions
-								a_sel_item.ensure_visible
-							end
-						end
+						-- Call key actions on items.
+					if l_prev_sel_item /= Void and then attached l_prev_sel_item.implementation.key_press_actions_internal as l_actions then
+						l_actions.call ([a_key])
 					end
 
-					if is_row_selection_enabled then
-						last_selected_row := a_sel_item.row.implementation
-					end
-					last_selected_item := a_sel_item.implementation
-				end
-			else
-				if key_press_actions_internal /= Void and then not key_press_actions_internal.is_empty then
-					key_press_actions_internal.call ([a_key])
 				end
 			end
 		end

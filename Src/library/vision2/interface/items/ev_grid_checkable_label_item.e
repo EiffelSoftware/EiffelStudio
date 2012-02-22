@@ -15,7 +15,7 @@ inherit
 	EV_GRID_LABEL_ITEM
 		redefine
 			implementation, create_implementation, initialize,
-			computed_initial_grid_label_item_layout,
+			computed_initial_grid_label_item_layout, activate, deactivate,
 			is_in_default_state, is_tab_navigatable
 		end
 
@@ -30,6 +30,9 @@ feature {EV_ANY} -- Initialization
 		do
 			Precursor
 			pointer_button_press_actions.extend (agent checkbox_handled)
+			key_press_actions.extend (agent on_key_pressed)
+			key_release_actions.extend (agent on_key_released)
+			deselect_actions.extend (agent disable_key_processing)
 		end
 
 feature -- Access
@@ -111,7 +114,33 @@ feature -- Status setting
 			is_unsensitive: not is_sensitive
 		end
 
+	enable_key_processing
+			-- Enable the processing of Enter, Space possible.
+		do
+			is_key_handled := True
+		end
+
+	disable_key_processing
+			-- Disable the processing of Enter, Space.
+		do
+			is_key_handled := False
+		end
+
 feature -- Actions
+
+	activate
+			-- <Precursor>
+		do
+			Precursor
+			enable_key_processing
+		end
+
+	deactivate
+			-- <Precursor>
+		do
+			disable_key_processing
+			Precursor
+		end
 
 	checked_changed_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_GRID_CHECKABLE_LABEL_ITEM]]
 			-- Actions called when checkbox value changed.
@@ -180,6 +209,27 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+	on_key_pressed (a_key: EV_KEY)
+		do
+			if is_key_handled and then a_key.code = {EV_KEY_CONSTANTS}.key_enter then
+					-- Enter key should propagate to the next item if `is_item_tab_navigation_enabled'.
+				if attached parent as l_parent and then l_parent.is_item_tab_navigation_enabled then
+					l_parent.propagate_key_press (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_tab))
+				end
+			end
+		end
+
+	on_key_released (a_key: EV_KEY)
+			-- If `a_key' is `Space', we will toggle the checkbox.
+		do
+			if is_key_handled and then a_key.code = {EV_KEY_CONSTANTS}.key_space then
+				toggle_is_checked
+			end
+		end
+
+	is_key_handled: BOOLEAN
+			-- Is handling of `Enter' or `Space' performed?
 
 feature {EV_GRID_LABEL_ITEM_I} -- Implementation
 

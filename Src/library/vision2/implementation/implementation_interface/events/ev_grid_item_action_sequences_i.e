@@ -145,6 +145,72 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
+	key_press_actions: EV_KEY_ACTION_SEQUENCE
+			-- Actions to be performed when a keyboard key is pressed.
+		do
+			if key_press_actions_internal = Void then
+				create key_press_actions_internal
+			end
+			Result := key_press_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	key_press_actions_internal: detachable EV_KEY_ACTION_SEQUENCE
+			-- Implementation of once per object `key_press_actions'.
+		note
+			option: stable
+		attribute
+		end
+
+feature -- Event handling
+
+	key_press_string_actions: EV_KEY_STRING_ACTION_SEQUENCE
+			-- Actions to be performed when a keyboard press generates a displayable character.
+		do
+			if key_press_string_actions_internal = Void then
+				create key_press_string_actions_internal
+			end
+			Result := key_press_string_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	key_press_string_actions_internal: detachable EV_KEY_STRING_ACTION_SEQUENCE
+			-- Implementation of once per object `key_press_string_actions'.
+		note
+			option: stable
+		attribute
+		end
+
+feature -- Event handling
+
+	key_release_actions: EV_KEY_ACTION_SEQUENCE
+			-- Actions to be performed when a keyboard key is released.
+		do
+			if key_release_actions_internal = Void then
+				create key_release_actions_internal
+			end
+			Result := key_release_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	key_release_actions_internal: detachable EV_KEY_ACTION_SEQUENCE
+			-- Implementation of once per object `key_release_actions'.
+		note
+			option: stable
+		attribute
+		end
+
+feature -- Event handling
+
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when an item is selected.
 		do
@@ -252,14 +318,14 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

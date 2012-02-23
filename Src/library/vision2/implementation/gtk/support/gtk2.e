@@ -108,7 +108,7 @@ feature -- Externals
 		external
 			"C macro use <ev_gtk.h>"
 		alias
-			"g_main_context_iteration(NULL, False)"
+			"g_main_context_iteration(NULL, FALSE)"
 		end
 
 	frozen dispatch_events

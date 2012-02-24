@@ -952,6 +952,11 @@ feature -- Status setting
 			x_delta: INTEGER
 			l_activate_window: like activate_window
 		do
+				-- Make sure that the grid first has focus before activating an item.
+			if not has_focus then
+				set_focus
+			end
+
 			if attached currently_active_item as l_currently_active_item and then l_currently_active_item.parent = interface then
 					-- If an item is currently active and present in the grid then deactivate it.
 				l_currently_active_item.deactivate
@@ -4377,7 +4382,10 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 									ev_application.ctrl_pressed or
 										-- Ctrl+Tab performs regular tab navigation from within the grid.
 									attached selected_items as l_sel_items and then
-										(l_sel_items.count > 0 implies (next_navigatable_activatable_item (l_sel_items.first, a_key) = l_sel_items.first)))
+										(l_sel_items.count > 0 implies
+												-- If row selection is enabled override default behavior if an item is activated.
+											(is_row_selection_enabled and then currently_active_item = Void) or else
+											(next_navigatable_activatable_item (l_sel_items.first, a_key) = l_sel_items.first)))
 											-- If `is_item_tab_navigation_enabled' then we prevent default tab navigation to/from the next widget
 											-- and propagate to the next available item if not at the first (unless shift is pressed) or last (unless shift not pressed).
 						end
@@ -5790,7 +5798,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			l_look_left: BOOLEAN
 		do
 			enable_drawables_have_focus
-			if is_item_tab_navigation_enabled then
+			if is_item_tab_navigation_enabled and then (row_count > 0 and column_count > 0) and then not is_row_selection_enabled then
 				if application_implementation.tab_navigation_state /= {EV_APPLICATION_I}.tab_state_none then
 					if application_implementation.tab_navigation_state = {EV_APPLICATION_I}.tab_state_from_previous then
 						l_column_index := 1
@@ -5820,7 +5828,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 	focus_out_received
 			-- Called by `focus_out_actions' of `drawable'.
 		do
-			if is_item_tab_navigation_enabled then
+			if is_item_tab_navigation_enabled and then not is_row_selection_enabled and then not is_always_selected then
 				if application_implementation.tab_navigation_state /= {EV_APPLICATION_I}.tab_state_none then
 					remove_selection
 				end
@@ -5968,11 +5976,11 @@ feature -- Implementation
 			items_spanning_horz, items_spanning_vert: ARRAYED_LIST [INTEGER]
 			l_index_of_first_item: INTEGER
 			l_previously_expanded, l_expansion_status_changed: BOOLEAN
-			l_make_item_visible, l_is_navigation_allowed, l_shift_pressed: BOOLEAN
+			l_make_item_visible, l_shift_pressed: BOOLEAN
 			l_key_code: INTEGER
 		do
-			if not is_destroyed then
-					-- Handle the selection events
+			if not is_destroyed and then (row_count > 0 and column_count > 0) then
+					-- Handle the selection events for non empty grids
 				if is_row_selection_enabled then
 					if attached last_selected_row as l_last_selected_row and then l_last_selected_row.parent_i /= Void then
 						l_index_of_first_item := l_last_selected_row.index_of_first_item
@@ -5988,8 +5996,7 @@ feature -- Implementation
 					l_previously_expanded := l_prev_sel_item.row.is_expanded
 				end
 
-				l_is_navigation_allowed := is_selection_keyboard_handling_enabled and then (attached default_key_processing_handler as l_handler implies l_handler.item ([a_key]))
-				if l_is_navigation_allowed then
+				if is_selection_keyboard_handling_enabled and then (attached default_key_processing_handler as l_handler implies l_handler.item ([a_key])) then
 					l_key_code := a_key.code
 					l_shift_pressed := ev_application.shift_pressed
 
@@ -6105,7 +6112,10 @@ feature -- Implementation
 								end
 							end
 						when {EV_KEY_CONSTANTS}.Key_tab, {EV_KEY_CONSTANTS}.Key_home, {EV_KEY_CONSTANTS}.Key_end then
-							if l_is_navigation_allowed and not application_implementation.ctrl_pressed then
+							if
+								not application_implementation.ctrl_pressed and then
+								(column_count > 1 and not is_row_selection_enabled) -- Handle navigation for multi-column grid with item selection.
+							then
 									-- We need to handle tab, home and end navigation correctly.
 								a_sel_item := find_next_item (l_prev_sel_item.row.index, l_prev_sel_item.column.index, (a_key.code = {EV_KEY_CONSTANTS}.key_tab and ev_application.shift_pressed) or a_key.code = {EV_KEY_CONSTANTS}.key_home, True)
 								if a_sel_item = l_prev_sel_item then
@@ -6124,7 +6134,28 @@ feature -- Implementation
 						end
 					end
 
-						-- General key navigation
+						-- Home / End navigation for single column or row selection grids.
+					if column_count = 1 or is_row_selection_enabled then
+							-- Page Up / Down
+						inspect
+							l_key_code
+						when {EV_KEY_CONSTANTS}.key_home then
+							if application_implementation.ctrl_pressed then
+								if attached item (1, 1) as l_item then
+									l_item.ensure_visible
+								end
+							end
+						when {EV_KEY_CONSTANTS}.key_end then
+							if application_implementation.ctrl_pressed then
+								if attached item (column_count, row_count) as l_item then
+									l_item.ensure_visible
+								end
+							end
+						else
+							-- Do nothing
+						end
+					end
+
 					inspect
 						l_key_code
 					when {EV_KEY_CONSTANTS}.key_page_up then
@@ -6147,18 +6178,6 @@ feature -- Implementation
 								if attached row (items_spanning_vert.last) as l_row then
 									l_row.ensure_visible
 								end
-							end
-						end
-					when {EV_KEY_CONSTANTS}.key_home then
-						if application_implementation.ctrl_pressed then
-							if attached item (1, 1) as l_item then
-								l_item.ensure_visible
-							end
-						end
-					when {EV_KEY_CONSTANTS}.key_end then
-						if application_implementation.ctrl_pressed then
-							if attached item (column_count, row_count) as l_item then
-								l_item.ensure_visible
 							end
 						end
 					else

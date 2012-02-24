@@ -259,6 +259,7 @@ feature -- Actions
 			-- Will call `activate_action' of `Current' to setup the in-place editing.
 			-- The default behavior of the activation can be overriden in {EV_GRID}.item_activate_actions,
 			-- this is useful for repositioning the popup window used editing `Current'.
+			-- The parent EV_GRID will first receive the focus before the item is activated if another widget has focus.
 			-- See {EV_GRID_EDITABLE_ITEM}.activate_action for an example of what happens on activation.
 		require
 			not_destroyed: not is_destroyed
@@ -352,14 +353,14 @@ invariant
 		attached parent as l_parent and row.parent_row /= Void implies width = (column.width - horizontal_indent).max (0)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

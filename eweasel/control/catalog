@@ -2733,6 +2733,7 @@ test	scoop-object-test				scoop021 tcf pass scoop formal generic conformance obj
 test	scoop-undetected-vuer				scoop022 tcf fail scoop validity incrementality
 test	scoop-expanded-class-constrained-generic	scoop023 tcf fail scoop termination expanded generic
 test	scoop-multi-dot-call-chain			scoop024 tcf pass scoop execution
+test	scoop-expanded-separate				scoop025 tcf pass scoop expanded execution
 
 -- Prettify
 test	pretty-smoke-test			pretty001 tcf pass pretty

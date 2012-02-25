@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="test">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="test">
 	<target name="test">
 		<root class="TEST" feature="make"/>
-		<option warning="true" full_class_checking="false" is_attached_by_default="true" is_void_safe="true" syntax_level="2">
-			<assertions precondition="true"/>
+		<option warning="true" full_class_checking="true" void_safety="all" is_void_safe="true">
+			<warning name="unused_attribute_body" enabled="$WARNING"/>
 		</option>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
 		$EWEASEL_DOTNET_SETTING

@@ -67,18 +67,22 @@ feature {NONE} -- Initialization
 			grid.pointer_double_press_actions.extend (agent mouse_selection)
 			grid.set_default_key_processing_handler (agent is_key_processed)
 			grid.hide_header
-
-			grid.enable_partial_dynamic_content
-			grid.set_dynamic_content_function (agent associated_grid_item)
-			grid.virtual_position_changed_actions.extend (agent on_scroll)
 			grid.enable_selection_key_handling
 
 			create vbox
+			vbox.set_background_color (create {EV_COLOR}.make_with_rgb (0, 0, 0))
+			vbox.set_border_width (1)
 			vbox.extend (grid)
 			extend (vbox)
 
+				-- Let's make sure that clicking outside of the grid, makes
+				-- the suggestion list disappear.
 			grid.focus_out_actions.extend (agent on_lose_focus)
 			focus_out_actions.extend (agent on_lose_focus)
+
+				-- Each time the window holding the grid is resized, we want to make
+				-- sure that the width of the column is as big as the window at the
+				-- minimum.
 			resize_actions.force_extend (agent resize_column_to_window_width)
 		end
 
@@ -128,7 +132,7 @@ feature {NONE} -- Events handling
 				a_key.code /= {EV_KEY_CONSTANTS}.key_end and
 				a_key.code /= {EV_KEY_CONSTANTS}.key_down and
 				a_key.code /= {EV_KEY_CONSTANTS}.key_up
-			end
+		end
 
 	mouse_selection (x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; unused4,unused5:INTEGER)
 			-- process mouse click in the list
@@ -222,6 +226,7 @@ feature {NONE} -- Events handling
 						-- showing his intent of stopping the suggestion.
 					close
 				end
+				is_list_recomputation_required := settings.is_list_recomputed_when_typing
 				build_suggestion_list (buffered_input, False)
 				select_closest_match
 
@@ -232,6 +237,7 @@ feature {NONE} -- Events handling
 				else
 					field.handle_extended_key (ev_key)
 				end
+				is_list_recomputation_required := settings.is_list_recomputed_when_typing
 				build_suggestion_list (buffered_input, False)
 				select_closest_match
 
@@ -257,6 +263,7 @@ feature {NONE} -- Events handling
 					if c /= '%U' then
 						buffered_input.append_character (c)
 						field.handle_character (c)
+						is_list_recomputation_required := settings.is_list_recomputed_when_typing
 						build_suggestion_list (buffered_input, False)
 						select_closest_match
 					end
@@ -364,7 +371,6 @@ feature {NONE} -- Navigation
 			l_scroll_height, l_new_virtual_y: INTEGER
 		do
 			l_grid := grid
-			l_grid.lock_update
 			if a_is_forward then
 				l_target_row := last_visible_row (l_grid)
 			else
@@ -393,7 +399,6 @@ feature {NONE} -- Navigation
 			if l_target_row /= Void then
 				l_target_row.enable_select
 			end
-			l_grid.unlock_update
 		end
 
 	select_row (a_row: INTEGER)
@@ -466,27 +471,28 @@ feature {NONE} -- Completion
 				create full_list.make (1)
 				field.suggestion_provider.query_with_callback_and_cancellation (a_name, l_post_action,
 					agent (a_item: SUGGESTION_ITEM)
+						local
+							l_row: EV_GRID_ROW
 						do
 							grid.insert_new_row (grid.row_count + 1)
-							grid.row (grid.row_count).set_data (a_item)
+							l_row := grid.row (grid.row_count)
+							l_row.set_data (a_item)
+							l_row.set_item (1, associated_grid_item (grid.row_count))
+
 							if attached full_list as l_list then
 								l_list.extend (a_item)
 							end
 						end, settings.query_cancel_request)
-			else
-					-- We are going to remove from the list all items that don't
-					-- match `buffered_input'.
-
 			end
-
-				-- Let's resize the column width to match the new content.
-			resize_column_to_window_width
+				-- We need to unset `is_list_recomputation_required'
+			is_list_recomputation_required := False
 
 				-- Let's unlock the window to refresh its content with the newly
 				-- build content.
 			unlock_update
 		ensure
 			buffered_input_set: buffered_input.same_string_general (a_name)
+			is_list_recomputation_required_unset: not is_list_recomputation_required
 		end
 
 	select_closest_match
@@ -630,14 +636,6 @@ feature {NONE} -- Completion
 			end
 		end
 
-	on_scroll (x, y: INTEGER)
-			-- Action performed during vertical scrolling of `grid'.
-		do
-				-- Because not all items are visible, we recompute the maximum with
-				-- of the newly shown items and adjust the column width accordingly.
-			ev_application.do_once_on_idle (agent resize_column_to_window_width)
-		end
-
 	buffered_input: STRING_32
 			-- Buffered user input
 
@@ -691,7 +689,7 @@ feature {NONE} -- Completion
 			suggestion_timeout.set_interval (settings.timeout)
 		end
 
-	associated_grid_item (a_column, a_row: INTEGER): EV_GRID_ITEM
+	associated_grid_item (a_row: INTEGER): EV_GRID_ITEM
 			-- Item associated to `grid' at position (`a_column', `a_row').
 		local
 			l_row: EV_GRID_ROW
@@ -709,226 +707,134 @@ feature {NONE} -- Positionning
 	position_suggestion_choice_window
 			-- Reposition the suggestion choice window
 		local
-			l_x, l_y: INTEGER
-			l_width, l_height: INTEGER
 			l_helpers: EVS_HELPERS
-			l_coords: TUPLE [x, y: INTEGER]
+			l_origin: TUPLE [x, y: INTEGER]
+			l_pos: like suggestion_list_coordinates
 		do
-			l_width := calculate_suggestion_list_width
-			l_height := calculate_suggestion_list_height
-			l_x := calculate_suggestion_list_x_position
-			l_y := calculate_suggestion_list_y_position
-
+			l_pos := suggestion_list_coordinates
 			if attached field.parent_window as l_parent_window and then not l_parent_window.is_destroyed and then l_parent_window.is_show_requested then
 					-- Reposition based on screen coords
 				create l_helpers
-				l_coords := l_helpers.suggest_pop_up_widget_location_with_size (l_parent_window, l_x, l_y, l_width, l_height)
-				if l_y >= l_coords.y then
+				l_origin := l_helpers.suggest_pop_up_widget_location_with_size (l_parent_window, l_pos.x, l_pos.y, l_pos.width, l_pos.height)
+				if l_pos.y >= l_origin.y then
 						-- Adjust height to prevent the suggestion list from shift up and over the text.
 						-- This is ok to do because `calculate_suggestion_list_y_position' determines if the
 						-- list should be shown above or below the editor caret. If it's displayed below then
 						-- we adjust the size of the list to remain on-screen.
-					l_height := l_height - (l_y - l_coords.y)
+					l_pos.height := l_pos.height - (l_pos.y - l_origin.y)
 				end
 			end
 
-			set_size (l_width, l_height)
-			set_position (l_x, l_y)
+			set_size (l_pos.width, l_pos.height)
+			set_position (l_pos.x, l_pos.y)
 		end
 
-	calculate_suggestion_list_x_position: INTEGER
-			-- Determine the x position to display the suggestion list
+	suggestion_list_coordinates: TUPLE [x, y, width, height: INTEGER]
+			-- Position of suggestion list
 		local
-			screen: EV_SCREEN
-			right_space,
-			list_width: INTEGER
+			l_right_space: INTEGER
+			l_grid: EV_GRID
 			l_font: EV_FONT
 			l_text_before_cursor: STRING_32
 			l_monitor: EV_RECTANGLE
-		do
-			if settings.is_list_x_position_set then
-					-- Use the `x' coordinate specified by the settings.
-				Result := settings.list_x_position
-			else
-				create screen
-				l_monitor := screen.implementation.working_area_from_position (field.screen_x, field.screen_y)
-
-					-- Get current x position of cursor
-				Result := field.screen_x
-				if settings.is_initial_position_at_caret then
-					l_font := field.font
-					if field.caret_position > 1 then
-						l_text_before_cursor := field.text.substring (1, field.caret_position - 1)
-						Result := Result + l_font.string_width (l_text_before_cursor) + 5
-					end
-				end
-
-					-- Determine how much room there is free on the right of the screen from the cursor position
-				right_space := l_monitor.right - Result
-				list_width := calculate_suggestion_list_width
-
-				if right_space < list_width then
-						-- Shift x pos back so it fits on the screen
-					Result := Result - (list_width - right_space)
-				end
-				Result := Result.max (l_monitor.x)
-			end
-		end
-
-	calculate_suggestion_list_y_position: INTEGER
-			-- Determine the y position to display the suggestion list
-		local
-			screen: EV_SCREEN
-			preferred_height,
-			upper_space,
-			lower_space: INTEGER
-			show_below: BOOLEAN
-			l_monitor: EV_RECTANGLE
-		do
-			if settings.is_list_y_position_set then
-					-- Use the `y' coordinate specified by the settings.
-				Result := settings.list_y_position
-			else
-					-- Get y pos of cursor
-				Result := field.screen_y
-
-				create screen
-				l_monitor := screen.implementation.working_area_from_position (field.screen_x, Result)
-				show_below := True
-
-				if Result < ((l_monitor.height / 3) * 2) then
-						-- Cursor in upper two thirds of screen
-					show_below := True
-				else
-						-- Cursor in lower third of screen
-					show_below := False
-				end
-
-				upper_space := Result
-				lower_space := l_monitor.bottom - Result
-
-				preferred_height := calculate_suggestion_list_height
-
-				if show_below and then preferred_height > lower_space and then preferred_height <= upper_space then
-						-- Not enough room to show below, but is enough room to show above, so we will show above
-					show_below := False
-				elseif not show_below and then preferred_height <= lower_space then
-						-- Even though we are in the bottom 3rd of the screen we can actually show below because
-						-- the saved size fits
-					show_below := True
-				end
-
-				if show_below and then preferred_height > lower_space then
-						-- Not enough room to show below so we must resize
-					preferred_height := lower_space
-				elseif not show_below and then preferred_height >= upper_space then
-						-- Not enough room to show above so we must resize
-					preferred_height := upper_space
-				end
-				if show_below then
-					Result := Result + field.height
-				else
-					Result := Result - preferred_height
-				end
-			end
-		end
-
-	calculate_suggestion_list_height: INTEGER
-			-- Determine the height the suggestion should list should have
-		local
-			upper_space,
-			lower_space,
-			y_pos: INTEGER
-			screen: EV_SCREEN
-			show_below: BOOLEAN
-			l_monitor: EV_RECTANGLE
-		do
-			if settings.is_list_height_set then
-					-- Use the `height' specified by the settings.
-				Result := settings.list_height
-			else
-					-- Get y pos of cursor
-				create screen
-				show_below := True
-				y_pos := field.screen_y
-				l_monitor := screen.implementation.working_area_from_position (field.screen_x, field.screen_y)
-
-				if y_pos < ((l_monitor.height / 3) * 2) then
-						-- Cursor in upper two thirds of screen
-					show_below := True
-				else
-						-- Cursor in lower third of screen
-					show_below := False
-				end
-
-				upper_space := y_pos
-				lower_space := l_monitor.bottom - y_pos - field.height
-
-					-- By default we use the maximum height available.
-				Result := grid.visible_row_count * grid.row_height
-
-				if show_below and then Result > lower_space and then Result <= upper_space then
-						-- Not enough room to show below, but is enough room to show above, so we will show above
-					show_below := False
-				elseif not show_below and then Result <= lower_space then
-						-- Even though we are in the bottom 3rd of the screen we can actually show below because
-						-- the saved size fits
-					show_below := True
-				end
-
-				if show_below and then Result > lower_space then
-						-- Not enough room to show below so we must resize
-					Result := lower_space
-				elseif not show_below and then Result >= upper_space then
-						-- Not enough room to show above so we must resize
-					Result := upper_space
-				end
-			end
-		end
-
-	calculate_suggestion_list_width: INTEGER
-			-- Determine the width the suggestion list should have
-		local
-			l_grid: EV_GRID
-			l_screen: EV_SCREEN
-			l_height: INTEGER
 			l_count_to_calculate: INTEGER
-			i: INTEGER
+			l_upper_space, l_lower_space, i: INTEGER
+			l_is_show_below: BOOLEAN
 		do
-			if settings.is_list_width_set then
-					-- Use the `width' specified by the settings.			
-				Result := settings.list_width
-			else
-				l_grid := grid
-					-- Calculate correct size to fit
-				if not l_grid.is_destroyed and then l_grid.column_count >= 1 and then l_grid.row_count > 0 then
-					Result := l_grid.column (1).required_width_of_item_span (1, l_grid.row_count)
-					if Result = 0 then
-						l_height := calculate_suggestion_list_height
-						l_count_to_calculate := l_height // l_grid.row_height + 1
-						l_count_to_calculate := l_count_to_calculate.min (l_grid.row_count)
-						from
-							i := 1
-						until
-							i > l_count_to_calculate
-						loop
-							if attached l_grid.item (1, i) as l_grid_item then
-								Result := Result.max (l_grid_item.required_width)
-							end
-							i := i + 1
-						end
+				-- We get the monitor on which the underlying field is positioned. We will do our best to
+				-- have the suggestion list appearing on that monitor only.
+			l_monitor := (create {EV_SCREEN}).implementation.working_area_from_position (
+				field.screen_x, field.screen_y)
 
-							-- Make sure border and any potential vertical scrollbar is taken in to account.
-						Result := Result + l_grid.vertical_scroll_bar.width
+			l_grid := grid
+			Result := [0, 0, 0, 0]
+
+				-- Compute the X coordinate of the suggestion list.
+			Result.x := field.screen_x
+			if settings.is_initial_position_at_caret then
+					-- Ensures that our completion list starts where the caret position is
+					-- when requested in `settings'.
+				if field.caret_position > 1 then
+					l_font := field.font
+					l_text_before_cursor := field.text.substring (1, field.caret_position - 1)
+					Result.x := Result.x + l_font.string_width (l_text_before_cursor) + 5
+				end
+			end
+
+				-- Compute the Y coordinate of the suggestion list which can be either below the
+				-- field if there is enough space below, or above otherwise. We will use the estimate
+				-- of the height of the grid for that.
+			Result.y := field.screen_y
+				-- If cursor is in upper two thirds of screen we show below.
+			l_is_show_below := Result.y < ((l_monitor.height / 3) * 2)
+
+				-- `l_upper_space' is the space above the text field.
+				-- `l_lower_space' is the space under the text field.
+			l_upper_space := Result.y
+			l_lower_space := l_monitor.bottom - Result.y - field.height
+
+				-- Estimated height of the suggestion list is the number of rows
+				-- visible present multiplied by the row_height.
+			Result.height := grid.visible_row_count * grid.row_height
+
+			if l_is_show_below and then Result.height > l_lower_space and then Result.height <= l_upper_space then
+					-- Not enough room to show below, but is enough room to show above, so we will show above
+				l_is_show_below := False
+			elseif not l_is_show_below and then Result.height <= l_lower_space then
+					-- Even though we are in the bottom 3rd of the screen we can actually show below because
+					-- the saved size fits
+				l_is_show_below := True
+			end
+
+			if l_is_show_below and then Result.height > l_lower_space then
+					-- Not enough room to show below so we must resize
+				Result.height := l_lower_space
+			elseif not l_is_show_below and then Result.height >= l_upper_space then
+					-- Not enough room to show above so we must resize
+				Result.height := l_upper_space
+			end
+
+				-- Update the Y coordinate of the list.
+			if l_is_show_below then
+				Result.y := Result.y + field.height
+			else
+				Result.y := Result.y - Result.height
+			end
+
+				-- Calculate correct size to fit
+			if not l_grid.is_destroyed and then l_grid.column_count >= 1 and then l_grid.row_count > 0 then
+				Result.width := l_grid.column (1).required_width_of_item_span (1, l_grid.row_count)
+				if Result.width = 0 then
+					l_count_to_calculate := Result.height // l_grid.row_height + 1
+					l_count_to_calculate := l_count_to_calculate.min (l_grid.row_count)
+					from
+						i := 1
+					until
+						i > l_count_to_calculate
+					loop
+						if attached l_grid.item (1, i) as l_grid_item then
+							Result.width := Result.width.max (l_grid_item.required_width)
+						end
+						i := i + 1
 					end
+
+						-- Make sure border and any potential vertical scrollbar is taken in to account.
+					Result.width := Result.width + l_grid.vertical_scroll_bar.width
 				end
 			end
 
 				-- Ensure it is has big as the underlying field.
-			Result := Result.max (field.width)
+			Result.width := Result.width.max (field.width)
 				-- Ensure it is no wider than the current monitor.
-			create l_screen
-			Result := l_screen.width.min (Result)
+			Result.width := l_monitor.width.min (Result.width)
+
+				-- Determine how much room there is free on the right of the screen from the cursor position
+			l_right_space := l_monitor.right - Result.x
+			if l_right_space < Result.width then
+					-- Shift x pos back so it fits on the screen
+				Result.x := Result.x - (Result.width - l_right_space)
+			end
+			Result.x := Result.x.max (l_monitor.x)
 		end
 
 feature {NONE} -- Grid helpers

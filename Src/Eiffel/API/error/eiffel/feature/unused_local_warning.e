@@ -14,11 +14,6 @@ inherit
 			print_single_line_error_message
 		end
 
-	SHARED_NAMES_HEAP
-		export
-			{NONE} all
-		end
-
 create
 	make
 
@@ -28,7 +23,7 @@ feature {NONE} -- Initialization
 			-- New instance of unused local warnings in `a_feat' from `a_class'.
 		require
 			a_class_not_void: a_class /= Void
-			a_feat_not_voiid: a_feat /= Void
+			a_feat_not_void: a_feat /= Void
 		do
 			associated_class := a_class
 			associated_feature := a_feat.enclosing_feature.api_feature (a_feat.written_in)
@@ -98,9 +93,9 @@ feature -- Output
 	trace_primary_context (a_text_formatter: TEXT_FORMATTER)
 			-- Build the primary context string so errors can be navigated to
 		do
-			if 	
+			if
 				a_text_formatter /= Void and then
-				attached associated_class as l_class and then 
+				attached associated_class as l_class and then
 				attached associated_feature as l_feature
 			then
 				print_context_feature (a_text_formatter, l_feature, l_class)
@@ -157,7 +152,7 @@ invariant
 	unused_locals_not_void: unused_locals /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -170,22 +165,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class UNUSED_LOCAL_WARNING

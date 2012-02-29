@@ -52,6 +52,7 @@ feature -- Version types
 feature -- Warnings
 
 	w_unused_local: STRING = "unused_local"
+	w_vwab: STRING = "vwab"
 	w_obsolete_class: STRING = "obsolete_class"
 	w_obsolete_feature: STRING = "obsolete_feature"
 	w_once_in_generic: STRING = "once_in_generic"
@@ -152,7 +153,7 @@ feature -- Extension
 invariant
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

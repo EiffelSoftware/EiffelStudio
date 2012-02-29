@@ -94,20 +94,88 @@ feature {NONE} -- Constants
 			Result := namespace_1_9_0 +" http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd"
 		end
 
-	Latest_namespace: STRING
-			-- Latest configuration namespace
+	namespace_1_10_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-10-0"
+			-- Namespace of the 7.1 release.
+
+	schema_1_10_0: STRING
+			-- Schema of the 7.1 release.
 		once
-			Result := namespace_1_9_0
+			Result := namespace_1_10_0 +" http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd"
+		end
+
+	Latest_namespace: STRING
+			-- Latest configuration namespace.
+		once
+			Result := namespace_1_10_0
 		end
 
 	Latest_schema: STRING
-			-- Latest schema location
+			-- Latest schema location.
 		once
-			Result := schema_1_9_0
+			Result := schema_1_10_0
+		end
+
+feature -- Status report
+
+	is_namespace_known (n: like latest_namespace): BOOLEAN
+			-- Is namespace `n' known?
+		require
+			n_attached: attached n
+		do
+			Result := namespace_order.has (n)
+		ensure
+			consistency: Result = namespace_order.has (n)
+		end
+
+feature -- Comparison
+
+	is_before_or_equal (a, b: like latest_namespace): BOOLEAN
+			-- Is namespace `a' less or equal to `b'?
+			-- (True if `a' is unknown.)
+		require
+			b_attached: attached b
+			b_known: is_namespace_known (b)
+		do
+				-- Namespace strings cannot be compared directly because they are not lexicographically ordered.
+			Result := not attached a or else not namespace_order.has (a) or else namespace_order.item (a) <= namespace_order.item (b)
+		ensure
+			definition: Result = (not attached a or else not namespace_order.has (a) or else namespace_order.item (a) <= namespace_order.item (b))
+		end
+
+	is_after_or_equal (a, b: like latest_namespace): BOOLEAN
+			-- Is namespace `a' greater or equal to `b'?
+			-- (True if `a' is unknown.)
+		require
+			b_attached: attached b
+			b_known: is_namespace_known (b)
+		do
+				-- Namespace strings cannot be compared directly because they are not lexicographically ordered.
+			Result := not attached a or else not namespace_order.has (a) or else namespace_order.item (a) >= namespace_order.item (b)
+		ensure
+			definition: Result = (not attached a or else not namespace_order.has (a) or else namespace_order.item (a) >= namespace_order.item (b))
+		end
+
+feature {NONE} -- Ordering
+
+	namespace_order: HASH_TABLE [NATURAL, STRING]
+			-- Order numbers associated with namespaces.
+		once
+			create Result.make (10)
+			Result.compare_objects
+			Result.extend (1, namespace_1_0_0)
+			Result.extend (2, namespace_1_2_0)
+			Result.extend (3, namespace_1_3_0)
+			Result.extend (4, namespace_1_4_0)
+			Result.extend (5, namespace_1_5_0)
+			Result.extend (6, namespace_1_6_0)
+			Result.extend (7, namespace_1_7_0)
+			Result.extend (8, namespace_1_8_0)
+			Result.extend (9, namespace_1_9_0)
+			Result.extend (10, namespace_1_10_0)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

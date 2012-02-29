@@ -1062,7 +1062,7 @@ feature {NONE} -- Implementation attribute processing
 			elseif l_name = Void then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_debug_no_name)
 			elseif l_enabled /= Void and then not l_enabled.is_boolean then
-				set_parse_error_message (conf_interface_names.e_parse_invalid_value ("enabled"))
+				set_parse_error_message (conf_interface_names.e_parse_invalid_value (at_enabled_string))
 			else
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_debug (l_name))
 			end
@@ -1077,16 +1077,14 @@ feature {NONE} -- Implementation attribute processing
 		do
 			l_name := current_attributes.item (at_name)
 			l_enabled := current_attributes.item (at_enabled)
-			if l_name /= Void and then l_enabled /= Void and then l_enabled.is_boolean then
-				if valid_warning (l_name) then
-					current_option.add_warning (l_name, l_enabled.to_boolean)
-				else
-					set_parse_error_message (conf_interface_names.e_parse_incorrect_warning (l_name))
-				end
-			elseif l_name = Void then
+			if l_name = Void then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_warning_no_name)
-			elseif l_enabled /= Void and then not l_enabled.is_boolean then
-				set_parse_error_message (conf_interface_names.e_parse_invalid_value ("enabled"))
+			elseif l_enabled = Void then
+				set_parse_error_message (conf_interface_names.e_parse_incorrect_warning (l_name))
+			elseif not l_enabled.is_boolean then
+				set_parse_error_message (conf_interface_names.e_parse_invalid_value (at_enabled_string))
+			elseif valid_warning (l_name, current_namespace) then
+				current_option.add_warning (l_name, l_enabled.to_boolean)
 			else
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_warning (l_name))
 			end
@@ -1829,6 +1827,7 @@ feature {NONE} -- Processing of options
 					o := factory.new_option
 				end
 				if
+					namespace ~ namespace_1_10_0 or else
 					namespace ~ namespace_1_9_0
 				then
 						-- Use the defaults of ES 7.0.
@@ -2450,7 +2449,7 @@ feature {NONE} -- Implementation state transitions
 				-- * enabled
 			create l_attr.make (2)
 			l_attr.force (at_name, "name")
-			l_attr.force (at_enabled, "enabled")
+			l_attr.force (at_enabled, at_enabled_string)
 			Result.force (l_attr, t_debug)
 			Result.force (l_attr, t_warning)
 
@@ -2603,10 +2602,11 @@ feature {NONE} -- Namespace checks
 			-- (Includes unknown namespaces.)
 		require
 			n_attached: attached n
+			n_known: is_namespace_known (n)
 		do
-			Result := is_unknown_version or else current_namespace <= n
+			Result := is_before_or_equal (current_namespace, n)
 		ensure
-			definition: Result = (is_unknown_version or else current_namespace <= n)
+			definition: Result = (is_unknown_version or else is_before_or_equal (current_namespace, n))
 		end
 
 	includes_this_or_after (n: like current_namespace): BOOLEAN
@@ -2614,10 +2614,11 @@ feature {NONE} -- Namespace checks
 			-- (Includes unknown namespaces.)
 		require
 			n_attached: attached n
+			n_known: is_namespace_known (n)
 		do
-			Result := is_unknown_version or else current_namespace >= n
+			Result := is_after_or_equal (current_namespace, n)
 		ensure
-			definition: Result = (is_unknown_version or else current_namespace >= n)
+			definition: Result = (is_unknown_version or else is_after_or_equal (current_namespace, n))
 		end
 
 feature {NONE} -- Implementation constants
@@ -2739,6 +2740,9 @@ feature {NONE} -- Implementation constants
 		-- Undefined tag starting number
 	undefined_tag_start: INTEGER = 100000
 
+	at_enabled_string: STRING = "enabled"
+			-- Name of the attribute "enabled".
+
 feature -- Assertions
 
 	has_resolved_namespaces: BOOLEAN = True
@@ -2753,7 +2757,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

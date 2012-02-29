@@ -352,8 +352,9 @@ feature -- Option names and descriptions
 	warning_names: HASH_TABLE [STRING_GENERAL, STRING]
 			-- Warning names.
 		once
-			create Result.make (10)
+			create Result.make (12)
 			Result.force (locale.translation ("Unused Locals"), w_unused_local)
+			Result.force (locale.translation ("Unused attribute body"), w_vwab)
 			Result.force (locale.translation ("Obsolete Classes"), w_obsolete_class)
 			Result.force (locale.translation ("Obsolete Features"), w_obsolete_feature)
 			Result.force (locale.translation ("Old Syntax"), w_syntax)
@@ -369,8 +370,9 @@ feature -- Option names and descriptions
 	warning_descriptions: HASH_TABLE [STRING_GENERAL, STRING]
 			-- Warning descriptions.
 		once
-			create Result.make (10)
+			create Result.make (12)
 			Result.force (locale.translation ("Warn about locals that are not used?"), w_unused_local)
+			Result.force (locale.translation ("Warn about attribute bodies that are never executed?"), w_vwab)
 			Result.force (locale.translation ("Warn about usage of obsolete classes?"), w_obsolete_class)
 			Result.force (locale.translation ("Warn about usage of obsolete features?"), w_obsolete_feature)
 			Result.force (locale.translation ("Warn about usage of old syntax?"), w_syntax)
@@ -857,7 +859,7 @@ feature -- Boolean values
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

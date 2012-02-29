@@ -15,7 +15,7 @@ inherit
 			{ANY} prefix_separator
 		end
 
-	ANY
+	CONF_FILE_CONSTANTS
 
 feature -- Basic validity queries
 
@@ -37,15 +37,29 @@ feature -- Basic validity queries
 			Result := concurrency_names.has (a_concurrency)
 		end
 
-	valid_warning (a_warning: STRING): BOOLEAN
-			-- Is `a_warning' a valid warning?
+	is_warning_known (a_warning: STRING): BOOLEAN
+			-- Is `a_warning' known?
 		require
 			a_warning_not_void: a_warning /= Void
 			a_warning_lower: a_warning.is_equal (a_warning.as_lower)
 		do
-			if not a_warning.is_empty then
-				Result := valid_warnings.has (a_warning)
+			Result := known_warnings.has (a_warning)
+		end
+
+	valid_warning (a_warning: STRING; a_namespace: like namespace_1_0_0): BOOLEAN
+			-- Is `a_warning' a valid warning in `a_namespace'?
+		require
+			a_warning_not_void: a_warning /= Void
+			a_warning_lower: a_warning.is_equal (a_warning.as_lower)
+		local
+			w: like valid_warnings_default
+		do
+			if is_after_or_equal (a_namespace, namespace_1_10_0) then
+				w := valid_warnings_1_10_0
+			else
+				w := valid_warnings_default
 			end
+			Result := w.has (a_warning)
 		end
 
 	valid_regexp (a_regexp: STRING): BOOLEAN
@@ -225,8 +239,14 @@ feature {NONE} -- Onces
 
 feature {NONE} -- Implementation
 
-	valid_warnings: SEARCH_TABLE [STRING]
-			-- The codes of valid warnings.
+	known_warnings: SEARCH_TABLE [STRING]
+			-- The codes of known warnings.
+		once
+			Result := valid_warnings_1_10_0
+		end
+
+	valid_warnings_default: SEARCH_TABLE [STRING]
+			-- The codes of valid warnings in a namespace below `namespace_1_10_0'.
 		once
 			create Result.make (13)
 			Result.force (w_unused_local)
@@ -242,6 +262,15 @@ feature {NONE} -- Implementation
 			Result.force (w_renaming_unknown_class)
 			Result.force (w_option_unknown_class)
 			Result.force (w_classname_filename_mismatch)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	valid_warnings_1_10_0: SEARCH_TABLE [STRING]
+			-- The codes of valid warnings in `namespace_1_10_0' and above.
+		once
+			Result := valid_warnings_default.twin
+			Result.force (w_vwab)
 		ensure
 			Result_not_void: Result /= Void
 		end

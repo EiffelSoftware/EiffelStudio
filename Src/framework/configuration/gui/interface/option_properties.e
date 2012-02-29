@@ -343,11 +343,11 @@ feature {NONE} -- Implementation
 			properties.add_property (l_bool_prop)
 
 			from
-				valid_warnings.start
+				known_warnings.start
 			until
-				valid_warnings.after
+				known_warnings.after
 			loop
-				l_warning := valid_warnings.item_for_iteration
+				l_warning := known_warnings.item_for_iteration
 					-- Search if it is a warning that we show in the UI.
 					-- (we hide the obsolete warnings in the UI).
 				conf_interface_names.warning_names.search (l_warning)
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 						l_bool_prop.enable_readonly
 					end
 				end
-				valid_warnings.forth
+				known_warnings.forth
 			end
 
 			properties.current_section.expand

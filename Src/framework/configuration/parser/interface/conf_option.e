@@ -296,7 +296,7 @@ feature -- Access queries
 	is_warning_enabled (a_warning: STRING): BOOLEAN
 			-- Is `a_warning' enabled?
 		require
-			a_warning_valid: valid_warning (a_warning)
+			a_warning_valid: is_warning_known (a_warning)
 		do
 			Result := is_warning and then (warnings = Void or else (not warnings.has_key (a_warning) or else warnings.found_item))
 		end
@@ -330,7 +330,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 			a_name_lower: a_name.is_equal (a_name.as_lower)
-			valid_warning: valid_warning (a_name)
+			known_warning: is_warning_known (a_name)
 		do
 			if warnings = Void then
 				create warnings.make (1)
@@ -659,7 +659,7 @@ invariant
 	void_safety_attached: void_safety /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

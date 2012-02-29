@@ -3259,16 +3259,26 @@ feature {NONE} -- Implementation
 				end
 
 				l_feat_type := f.type
-				if
-					l_feat_type.is_initialization_required and then
-					not l_as.is_external and then
-					not l_as.is_attribute and then
-					not context.local_initialization.is_result_set and then
-					not f.is_deferred and then
-					is_void_safe_initialization (context.current_class)
+				if l_feat_type.is_initialization_required then
+						-- Verify that result is properly set in internal routine if required.
+					if
+						not l_as.is_external and then
+						not l_as.is_attribute and then
+						not context.local_initialization.is_result_set and then
+						not f.is_deferred and then
+						is_void_safe_initialization (context.current_class)
+					then
+							-- Result is not properly initialized.
+						error_handler.insert_error (create {VEVI}.make_result (context, l_as.end_keyword))
+					end
+				elseif
+					l_as.is_attribute and then
+					not l_as.routine_body.is_empty and then
+					not is_inherited and then
+					context.current_class.is_warning_enabled (w_vwab)
 				then
-						-- Result is not properly initialized.
-					error_handler.insert_error (create {VEVI}.make_result (context, l_as.end_keyword))
+						-- Warn that the attribute has a non-empty body that is never executed.
+					error_handler.insert_warning (create {VWAB}.make (l_as.routine_body.start_location, context))
 				end
 					-- Check postconditions
 				if l_as.postcondition /= Void then

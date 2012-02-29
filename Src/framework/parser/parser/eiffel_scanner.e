@@ -223,6 +223,11 @@ end
 
 				last_symbol_as_value := ast_factory.new_symbol_as (TE_ACCEPT, Current)
 				last_token := TE_ACCEPT
+				if has_syntax_warning and then syntax_version /= obsolete_syntax then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (line, column, filename,
+							once "Assignment attempt symbol %"?=%" is not part of ECMA/ISO Eiffel and will not be supported in the future. Use object test instead."))
+				end
 			
 when 17 then
 	yy_column := yy_column + 1

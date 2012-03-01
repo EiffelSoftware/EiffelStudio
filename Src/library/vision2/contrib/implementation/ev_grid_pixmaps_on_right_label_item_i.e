@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 					l_spacing := l_interface.spacing
 						-- By default we start displaying pixmaps after the end of the
 						-- space allotted for `text'.
-					l_start_x := a_layout.text_x + a_layout.available_text_width + l_spacing
+					l_start_x := a_layout.text_x + a_layout.available_text_width + l_spacing + an_indent
 						-- We calculate the middle of the text.
 					l_start_center_y := a_layout.text_y + internal_text_height // 2
 					i := pixs.lower

@@ -310,6 +310,16 @@ doc:	</attribute>
 #endif
 
 /*
+doc:	<attribute name="egc_is_scoop_capable" return_type="int" export="public">
+doc:		<summary>Is the run-time capable of supporting SCOOP (disabled by default)</summary>
+doc:		<access>Read</access>
+doc:		<thread_safety>Safe set once in initialization.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</attribute>
+*/
+	rt_public int egc_is_scoop_capable = 0;
+
+/*
 doc:	<attribute name="egc_init_scoop_manager" return_type="fnptr" export="public">
 doc:		<summary>Address of Eiffel routine {SCOOP_MANAGER}.init_scoop_manager which is called by generated code to initialize objects beforehand.</summary>
 doc:		<thread_safety>Unsafe, it can only be called once during setup</thread_safety>

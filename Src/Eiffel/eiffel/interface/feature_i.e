@@ -2919,8 +2919,6 @@ feature -- Undefinition
 		require
 			not is_deferred
 			redefinable
-		local
-			ext: EXTERNAL_I
 		do
 			create Result
 			Result.set_type (type, assigner_name_id)

@@ -6860,7 +6860,8 @@ feature {NONE} -- Implementation
 				end
 			end
 
-			if i /= Void then
+			if attached i and then attached iteration_cursor_type then
+					-- Avoid processing iteration exit condition when iteration part has errors.
 					-- Check iteration exit condition assuming the cursor is of ITERATION_CURSOR type.
 				local_info.set_type (iteration_cursor_type)
 				i.exit_condition.process (Current)
@@ -6964,15 +6965,18 @@ feature {NONE} -- Implementation
 			context.leave_realm
 
 			if i /= Void then
-					-- Generate cursor movement assuming the cursor is of ITERATION_CURSOR type.
-				e := error_level
-				local_info.set_type (iteration_cursor_type)
-				i.advance.process (Current)
-				local_info.set_type (local_type)
-				if error_level = e and then l_needs_byte_node then
-					create l_list.make (1)
-					l_list.extend (last_byte_node)
-					l_loop.set_advance_code (l_list)
+					-- Avoid processing iteration advancement when iteration part has errors.
+				if attached iteration_cursor_type then
+						-- Generate cursor movement assuming the cursor is of ITERATION_CURSOR type.
+					e := error_level
+					local_info.set_type (iteration_cursor_type)
+					i.advance.process (Current)
+					local_info.set_type (local_type)
+					if error_level = e and then l_needs_byte_node then
+						create l_list.make (1)
+						l_list.extend (last_byte_node)
+						l_loop.set_advance_code (l_list)
+					end
 				end
 					-- Remove cursor's scope.
 				context.remove_object_test_scopes (iteration_cursor_scope)
@@ -7046,6 +7050,8 @@ feature {NONE} -- Implementation
 			else
 					-- There was an error, so we do not care where to set the type.
 				create local_info
+					-- Skip code generation for next parts.
+				iteration_code := Void
 			end
 			if l_as.invariant_part /= Void then
 					-- Type check the invariant loop
@@ -7076,31 +7082,34 @@ feature {NONE} -- Implementation
 				end
 			end
 
-				-- Type check iteration exit condition assuming the cursor is of ITERATION_CURSOR type.
-			local_info.set_type (iteration_cursor_type)
-			iteration_as.exit_condition.process (Current)
-			local_info.set_type (local_type)
-			if last_type /= Void then
-					-- Check if it is a boolean expression
-				if not last_type.actual_type.is_boolean then
-					create l_vwbe4
-					context.init_error (l_vwbe4)
-					l_vwbe4.set_type (last_type)
-					l_vwbe4.set_location (iteration_as.end_location)
-					error_handler.insert_error (l_vwbe4)
+				-- Avoid processing iteration exit condition when iteration part has errors.
+			if attached iteration_cursor_type then
+					-- Type check iteration exit condition assuming the cursor is of ITERATION_CURSOR type.
+				local_info.set_type (iteration_cursor_type)
+				iteration_as.exit_condition.process (Current)
+				local_info.set_type (local_type)
+				if last_type = Void then
 						-- Skip code generation for next parts.
 					iteration_code := Void
-				elseif iteration_code /= Void then
-					if attached {EXPR_B} last_byte_node as ec then
-						iteration_exit_condition_code := ec
-					else
+				else
+						-- Check if it is a boolean expression
+					if not last_type.actual_type.is_boolean then
+						create l_vwbe4
+						context.init_error (l_vwbe4)
+						l_vwbe4.set_type (last_type)
+						l_vwbe4.set_location (iteration_as.end_location)
+						error_handler.insert_error (l_vwbe4)
 							-- Skip code generation for next parts.
 						iteration_code := Void
+					elseif iteration_code /= Void then
+						if attached {EXPR_B} last_byte_node as ec then
+							iteration_exit_condition_code := ec
+						else
+								-- Skip code generation for next parts.
+							iteration_code := Void
+						end
 					end
 				end
-			else
-					-- Skip code generation for next parts.
-				iteration_code := Void
 			end
 
 				-- Type check the exit test.
@@ -7162,15 +7171,18 @@ feature {NONE} -- Implementation
 			end
 			context.set_scope (s)
 
-				-- Generate cursor movement assuming the cursor is of ITERATION_CURSOR type.
-			local_info.set_type (iteration_cursor_type)
-			iteration_as.advance.process (Current)
-			local_info.set_type (local_type)
-			if attached last_byte_node as advance_part then
-				advance_code := advance_part
-			else
-					-- Skip code generation for next parts.
-				iteration_code := Void
+				-- Avoid processing iteration advancement when iteration part has errors.
+			if attached iteration_cursor_type then
+					-- Generate cursor movement assuming the cursor is of ITERATION_CURSOR type.
+				local_info.set_type (iteration_cursor_type)
+				iteration_as.advance.process (Current)
+				local_info.set_type (local_type)
+				if attached last_byte_node as advance_part then
+					advance_code := advance_part
+				else
+						-- Skip code generation for next parts.
+					iteration_code := Void
+				end
 			end
 
 				-- Remove cursor's scope.
@@ -7252,12 +7264,18 @@ feature {NONE} -- Implementation
 				if not attached context.iterable_class as i then
 						-- Suitable class ITERABLE is not found.
 					error_handler.insert_error (create {LOOP_ITERATION_NO_CLASS_ERROR}.make (context, "ITERABLE [G]", local_id))
+						-- Clear `last_type' to make sure it is not set when there is an error.
+					last_type := Void
 				elseif not attached context.iteration_cursor_class as c then
 						-- Suitable class ITERATION_CURSOR is not found.
 					error_handler.insert_error (create {LOOP_ITERATION_NO_CLASS_ERROR}.make (context, "ITERATION_CURSOR [G]", local_id))
+						-- Clear `last_type' to make sure it is not set when there is an error.
+					last_type := Void
 				elseif not last_type.associated_class.conform_to (i) then
 						-- Iteration expression type does not conform to ITERABLE.
 					error_handler.insert_error (create {VOIT1}.make (context, last_type, i.actual_type, local_id))
+						-- Clear `last_type' to make sure it is not set when there is an error.
+					last_type := Void
 				else
 						-- Save `last_type' for evaluation of `iteration_cursor_type'.
 					iteration_cursor_type := last_type
@@ -7271,10 +7289,14 @@ feature {NONE} -- Implementation
 								-- Type of a cursor does not conform to ITERATION_CURSOR.
 							error_handler.insert_error
 								(create {LOOP_ITERATION_NOT_ITERATION_CURSOR_ERROR}.make (context, last_type, local_id))
+								-- Clear `iteration_cursor_type' to make sure `last_type' is not set when there is an error.
+							iteration_cursor_type := Void
 						elseif not last_type.conform_to (context.current_class, local_type) then
 								-- Type of a cursor is not attached.
 							error_handler.insert_error
 								(create {LOOP_ITERATION_NOT_ATTACHED_ERROR}.make (context, last_type, local_id))
+								-- Clear `iteration_cursor_type' to make sure `last_type' is not set when there is an error.
+							iteration_cursor_type := Void
 						else
 								-- Evaluate a type of a cursor.
 							iteration_cursor_type := c.actual_type.evaluated_type_in_descendant

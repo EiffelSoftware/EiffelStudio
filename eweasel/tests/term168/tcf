@@ -6,6 +6,6 @@ copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e
 
 compile_melted
-compile_result ok
+compile_result validity_error TEST VPIR(3)
 
 test_end

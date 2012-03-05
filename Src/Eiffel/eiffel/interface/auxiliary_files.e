@@ -425,6 +425,7 @@ feature -- Plug and Makefile file
 			l_rcorigin, l_rcoffset: INTEGER
 			cs: CURSOR
 			i: INTEGER
+			l_is_scoop_capable: BOOLEAN
 		do
 				-- Clear buffer for current generation
 			buffer := generation_buffer
@@ -566,6 +567,7 @@ feature -- Plug and Makefile file
 				-- Generate SCOOP Manager declarations if available
 
 			if attached system.ise_scoop_manager_class then
+				l_is_scoop_capable := True
 				scoop_manager_cl := system.ise_scoop_manager_class.compiled_class
 				id := scoop_manager_cl.types.first.type_id
 				feat := scoop_manager_cl.feature_table.item_id (Names_heap.init_scoop_manager_name_id)
@@ -804,6 +806,7 @@ feature -- Plug and Makefile file
 
 				-- Initialize SCOOP Callbacks.
 			buffer.put_string ("#ifdef RTS_SCP_CAPABLE%N")
+			buffer.put_string ("%Tegc_is_scoop_capable = " + l_is_scoop_capable.to_integer.out + ";%N")
 			if init_scoop_manager_name /= Void then
 				buffer.put_string ("%Tegc_init_scoop_manager = (void (*)(EIF_REFERENCE)) ")
 				buffer.put_string (init_scoop_manager_name)
@@ -1371,7 +1374,7 @@ feature -- Plug and Makefile file
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

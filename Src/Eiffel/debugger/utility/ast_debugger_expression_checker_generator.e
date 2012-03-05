@@ -29,6 +29,8 @@ inherit
 	SHARED_INST_CONTEXT
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
 
 	SHARED_BYTE_CONTEXT
@@ -36,6 +38,8 @@ inherit
 			context as byte_context
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
 
 	SHARED_AST_CONTEXT
@@ -43,6 +47,8 @@ inherit
 			Context as Ast_context
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
 
 feature {NONE} -- Settings

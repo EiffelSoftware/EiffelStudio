@@ -102,6 +102,7 @@ extern "C" {
 	RT_LNK void (*egc_init_exception_manager)(EIF_REFERENCE); /* EXCEPTION_MANAGER `init_exception_manager' feature */
 	RT_LNK void (*egc_free_preallocated_trace)(EIF_REFERENCE); /* EXCEPTION_MANAGER `free_preallocated_trace' feature */
 
+	RT_LNK int egc_is_scoop_capable; /* PLATFORM `is_scoop_capable' feature */
 	RT_LNK void (*egc_init_scoop_manager)(EIF_REFERENCE); /* SCOOP_MANAGER `init_scoop_manager' feature */
 #ifdef WORKBENCH
 	RT_LNK void (*egc_scoop_manager_task_callback)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE); /* ISE_SCOOP_MANAGER `scoop_task_manager_callback' feature */

@@ -6000,7 +6000,6 @@ feature -- Implementation
 					l_key_code := a_key.code
 					l_shift_pressed := ev_application.shift_pressed
 
-
 						-- Call key actions.
 					if key_press_actions_internal /= Void and then not key_press_actions_internal.is_empty then
 						key_press_actions_internal.call ([a_key])
@@ -6114,7 +6113,8 @@ feature -- Implementation
 						when {EV_KEY_CONSTANTS}.Key_tab, {EV_KEY_CONSTANTS}.Key_home, {EV_KEY_CONSTANTS}.Key_end then
 							if
 								not application_implementation.ctrl_pressed and then
-								(column_count > 1 and not is_row_selection_enabled) -- Handle navigation for multi-column grid with item selection.
+								(column_count > 1 and not is_row_selection_enabled) and then
+								is_item_tab_navigation_enabled -- Handle navigation for multi-column grid with item tab navigation.
 							then
 									-- We need to handle tab, home and end navigation correctly.
 								a_sel_item := find_next_item (l_prev_sel_item.row.index, l_prev_sel_item.column.index, (a_key.code = {EV_KEY_CONSTANTS}.key_tab and ev_application.shift_pressed) or a_key.code = {EV_KEY_CONSTANTS}.key_home, True)
@@ -6134,23 +6134,15 @@ feature -- Implementation
 						end
 					end
 
-						-- Home / End navigation for single column or row selection grids.
-					if column_count = 1 or is_row_selection_enabled then
+						-- Home / End navigation handling
+					if column_count = 1 or is_row_selection_enabled or application_implementation.ctrl_pressed then
 							-- Page Up / Down
 						inspect
 							l_key_code
 						when {EV_KEY_CONSTANTS}.key_home then
-							if application_implementation.ctrl_pressed then
-								if attached item (1, 1) as l_item then
-									l_item.ensure_visible
-								end
-							end
+							set_virtual_position (0, 0)
 						when {EV_KEY_CONSTANTS}.key_end then
-							if application_implementation.ctrl_pressed then
-								if attached item (column_count, row_count) as l_item then
-									l_item.ensure_visible
-								end
-							end
+							set_virtual_position (maximum_virtual_x_position, maximum_virtual_y_position)
 						else
 							-- Do nothing
 						end
@@ -6160,23 +6152,23 @@ feature -- Implementation
 						l_key_code
 					when {EV_KEY_CONSTANTS}.key_page_up then
 						if application_implementation.ctrl_pressed then
-							row (1).ensure_visible
+							set_virtual_position (virtual_x_position, 0)
 						else
 							items_spanning_vert := drawer.items_spanning_vertical_span ((virtual_y_position - viewable_height + 1).max (0), 0)
 							if items_spanning_vert.count > 0 then
 								if attached row (items_spanning_vert.first) as l_row then
-									l_row.ensure_visible
+									set_virtual_position (virtual_x_position, l_row.virtual_y_position)
 								end
 							end
 						end
 					when {EV_KEY_CONSTANTS}.key_page_down then
 						if application_implementation.ctrl_pressed then
-							row (row_count).ensure_visible
+							set_virtual_position (virtual_x_position, maximum_virtual_y_position)
 						else
 							items_spanning_vert := drawer.items_spanning_vertical_span (virtual_y_position + viewable_height + 1, viewable_height)
 							if items_spanning_vert.count > 0 then
 								if attached row (items_spanning_vert.last) as l_row then
-									l_row.ensure_visible
+									set_virtual_position (virtual_x_position, (l_row.virtual_y_position - viewable_height + l_row.height).max (0))
 								end
 							end
 						end

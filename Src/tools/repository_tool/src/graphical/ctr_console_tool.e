@@ -122,9 +122,19 @@ feature -- Access
 					else
 					end
 					g.set_item (1, g.row_count, lab)
+					lab.set_tooltip (h.item.message)
+					lab.set_font (text_font)
+					if attached lab.font as l_font then
+						g.row (g.row_count).set_height (l_font.string_size (lab.text).height)
+					end
 					h.remove
 				end
 			end
+		end
+
+	text_font: EV_FONT
+		once
+			create Result
 		end
 
 	error_color: EV_COLOR

@@ -13,8 +13,6 @@ inherit
 			focus_widget
 		end
 
-	CTR_SHARED_RESOURCES
-
 	CTR_SHARED_GUI_PREFERENCES
 
 	EV_SHARED_APPLICATION

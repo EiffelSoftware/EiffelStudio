@@ -33,12 +33,14 @@
 			<condition>
 				<platform excluded_value="windows"/>
 				<custom name="eapml_scan_type" excluded_value="vc"/>
+				<custom name="eapml_scan_type" excluded_value="gcc"/>
 			</condition>
 		</cluster>
 		<cluster name="default_bit_scan_vc" location=".\src\bit_scan_vc\" recursive="true">
 			<condition>
 				<platform value="windows"/>
 				<custom name="eapml_scan_type" excluded_value="gcc"/>
+				<custom name="eapml_scan_type" excluded_value="vc"/>
 			</condition>
 		</cluster>
 		<cluster name="eapml" location=".\src\" recursive="true">

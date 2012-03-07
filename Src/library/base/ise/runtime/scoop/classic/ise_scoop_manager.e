@@ -1304,10 +1304,10 @@ feature {NONE} -- Resource Initialization
 									-- Reset yielding.
 								l_wait_counter := 0
 							else
-									-- Processor is either idle
+									-- Processor has caught up with chain and is waiting for more calls if any.
 								if l_executing_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_closed then
 										-- Request chain has been fully closed therefore we can exit if all calls have been applied.
-									if l_executing_node_id_cursor >= l_temp_count and then l_executing_request_chain_node = l_request_chain_node_queue [l_executing_node_id] then
+									if l_executing_request_chain_node = l_request_chain_node_queue [l_executing_node_id] and then l_executing_request_chain_node.count <= l_executing_node_id_cursor then
 										l_loop_exit := True
 										l_request_chain_node_meta_data_queue [l_executing_node_id] := Void
 									end
@@ -2043,7 +2043,7 @@ feature {NONE} -- Debugger Helpers
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -2051,5 +2051,6 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 
 end

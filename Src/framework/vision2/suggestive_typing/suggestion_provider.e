@@ -19,14 +19,14 @@ feature -- Access
 			Result := query_with_cancellation (a_expression, a_termination, Void)
 		end
 
-	query_with_cancellation (a_expression: READABLE_STRING_GENERAL; a_termination: detachable PROCEDURE [ANY, TUPLE]; a_cancel_request: detachable PREDICATE [ANY, TUPLE]): ARRAYED_LIST [SUGGESTION_ITEM]
+	query_with_cancellation (a_expression: READABLE_STRING_GENERAL; a_termination: detachable PROCEDURE [ANY, TUPLE]; a_cancel_request: detachable PREDICATE [ANY, TUPLE]): like query
 			-- Given a query `a_expression', provides a list of possible associated items up to the point where
 			-- `a_cancel_request' returns True.
 			-- When list is fully built, `a_termination' will be called regardless of the cancellation of the query.
 		require
 			is_available: is_available
 		do
-			create Result.make (10)
+			create Result.make (1)
 			query_with_callback_and_cancellation (a_expression, Void, agent (a_list: like query; a_suggestion: SUGGESTION_ITEM)
 				do
 					a_list.extend (a_suggestion)
@@ -45,7 +45,7 @@ feature -- Access
 feature -- Status Report
 
 	is_concurrent: BOOLEAN
-			-- Can current be executed in a different thread/processor?
+			-- Can `Current' be executed in a different thread/processor?
 		deferred
 		end
 

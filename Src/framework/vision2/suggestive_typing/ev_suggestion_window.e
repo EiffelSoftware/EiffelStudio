@@ -28,10 +28,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (l_field: EV_ABSTRACT_SUGGESTION_FIELD)
+	make (a_field: EV_ABSTRACT_SUGGESTION_FIELD)
+			-- Initialize `Current' with `a_field' as `field'.
 		do
-			field := l_field
+			field := a_field
 			default_create
+		ensure
+			field_set: field = a_field
 		end
 
 	create_interface_objects
@@ -39,7 +42,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			create grid
-			create buffered_input.make (10)
+			create buffered_input.make (1)
 			create suggestion_timeout
 		end
 
@@ -52,7 +55,7 @@ feature {NONE} -- Initialization
 			Precursor
 			create l_scrolling.make (grid)
 
-				-- Update mousewheel scrollign settings from `settings'.
+				-- Update mousewheel scrolling settings from `settings'.
 			l_scrolling.set_scrolling_common_line_count (settings.scrolling_common_line_count)
 			l_scrolling.set_mouse_wheel_scroll_size (settings.mouse_wheel_scroll_size)
 			l_scrolling.set_mouse_wheel_scroll_full_page (settings.is_mouse_wheel_in_full_page_mode)
@@ -280,7 +283,8 @@ feature {NONE} -- Events handling
 		end
 
 	on_row_expand (a_row: EV_GRID_ROW)
-			-- On row expand
+			-- On row expand.
+			--| For the time being it is commented until we use this facility.
 		require
 			a_row_not_void: a_row /= Void
 		local
@@ -310,6 +314,7 @@ feature {NONE} -- Events handling
 
 	on_row_collapse (a_row: EV_GRID_ROW)
 			-- On row collapse
+			--| For the time being it is commented until we use this facility.
 		require
 			a_row_not_void: a_row /= Void
 		do
@@ -581,17 +586,6 @@ feature {NONE} -- Completion
 
 	is_closing: BOOLEAN
 			-- Is the window being closed?
-
-	current_meta_keys: ARRAY [BOOLEAN]
-		do
-			Result := <<ev_application.ctrl_pressed, ev_application.alt_pressed, ev_application.shift_pressed>>
-		end
-
-	activate_tooltip
-			-- Activate selected item tooltip in list
-		do
---			grid.selected_items.first. selected_item.pointer_motion_actions.call ([1,1,1.0,1.0,1.0,1,1])
-		end
 
 	remove_characters_entered_since_display
 			-- Remove characters entered so we may put them back

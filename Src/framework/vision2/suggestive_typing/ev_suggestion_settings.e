@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 		local
 			i: INTEGER
 		do
-				-- Default starts computation after 500ms of inactivity.
+				-- Default starts computation after `default_timeout' of inactivity.
 			set_timeout (default_timeout)
 			is_list_recomputed_when_typing := False
 			is_list_filtered_when_typing := True
@@ -89,8 +89,8 @@ feature {NONE} -- Initialization
 
 feature -- Constants
 
-	default_timeout: INTEGER = 1000
-			-- Default timeout for `timeout', 1000ms.
+	default_timeout: INTEGER = 250
+			-- Default timeout for `timeout' in milliseconds, 250ms.
 
 	default_mouse_wheel_scroll_size: INTEGER = 3
 			-- Default number of items by which the wheel scroll the grid.
@@ -121,13 +121,13 @@ feature -- Access
 
 	timeout: INTEGER
 			-- Number of milliseconds to wait after receiving the last keystroke event
-			-- before we start of a request to `suggestion_provider'.
+			-- before starting a request to `suggestion_provider'.
 
 	displayed_item_conversion_agent: detachable FUNCTION [ANY, TUPLE [LABEL_SUGGESTION_ITEM], EV_GRID_ITEM]
 			-- Agent called for converting a SUGGESTION_ITEM into a EV_GRID_ITEM.
 
 	mouse_wheel_scroll_size: INTEGER
-			-- Number of rows to scroll if we are not on a page by page scrolling.
+			-- Number of rows to scroll if not in page by page scrolling mode.
 
 	scrolling_common_line_count: INTEGER
 			-- On a page by page scrolling, number of rows that will be common
@@ -148,16 +148,16 @@ feature -- Access
 		end
 
 	list_width: INTEGER
-			-- Width of list in pixels. If -1, it is automatically computed so that the whole content
-			-- is visible.
+			-- Width of list in pixels.
+			-- If -1, automatically computed to make whole content visible.
 		require
 			is_list_width_set: is_list_width_set
 		attribute
 		end
 
 	list_height: INTEGER
-			-- Height of list in pixels. If -1, it is automatically computed so that it takes as much
-			-- vertical space as needed.
+			-- Height of list in pixels.
+			-- If -1, automatically computed to take as much vertical space as needed.
 		require
 			is_list_height_set: is_list_height_set
 		attribute
@@ -217,7 +217,7 @@ feature -- Status report
 
 	is_single_match_completed: BOOLEAN
 			-- If query only returns one match, should we auto suggest
-			-- the entry without popping the suggestion window
+			-- the entry without popping the suggestion window?
 
 	is_list_x_position_set: BOOLEAN
 			-- Is `list_x_position_set' set by user?
@@ -280,7 +280,7 @@ feature -- Settings
 
 	disable_recomputation_when_typing
 			-- Disallows suggestive typing to reissue a query to the suggestion provider. It will
-			-- instead filter on the existing results
+			-- instead filter on the existing results.
 		do
 			is_list_recomputed_when_typing := False
 		ensure

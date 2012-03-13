@@ -27,24 +27,19 @@ feature {NONE} -- Initialization
 feature -- Command
 
 	progress_function (a_object_id: POINTER; a_download_total, a_download_now, a_upload_total, a_upload_now: REAL_64): INTEGER
-			-- Redefine
 		do
 		end
 
 	write_function (a_data_pointer: POINTER; a_size, a_nmemb: INTEGER; a_object_id: POINTER): INTEGER
-			-- Redefine
 		local
 			l_c_string: C_STRING
-			l_identified: IDENTIFIED
 		do
+				-- Returns the number of bytes actually saved into object identified by `a_object_id'
 			Result := a_size * a_nmemb
 			create l_c_string.make_shared_from_pointer_and_count (a_data_pointer, Result)
 
-			create l_identified
-			if attached {CURL_STRING} l_identified.id_object (a_object_id.to_integer_32) as l_string then
-				l_string.append (l_c_string.string)
-			else
-				check False end
+			check attached {CURL_STRING} (create {IDENTIFIED}).id_object (a_object_id.to_integer_32) as l_string then
+				l_string.append (l_c_string.substring (1, Result))
 			end
 		end
 
@@ -54,7 +49,6 @@ feature -- Command
 		end
 
 	debug_function (a_curl_handle: POINTER; a_curl_infotype: INTEGER; a_char_pointer: POINTER; a_size: INTEGER; a_object_id: POINTER): INTEGER
-			-- Redefine
 		local
 			l_c_string: C_STRING
 		do
@@ -97,11 +91,11 @@ feature {NONE} -- Implementation
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
-			356 Storke Road, Goleta, CA 93117 USA
+			5949 Hollister Ave., Goleta, CA 93117 USA
 			Telephone 805-685-1006, Fax 805-685-6869
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com

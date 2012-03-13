@@ -10,18 +10,18 @@ deferred class
 
 inherit
 	WEL_FRAME_WINDOW
-		redefine	
+		redefine
 			on_wm_close,
 			closeable,
 			class_background,
 			on_size
 		end
-	
+
 	WEL_SIZE_CONSTANTS
-	
+
 	THREAD_CONTROL
 	EXIT_CONTROL
-	
+
 feature {NONE} -- Initialization
 
 	make (a_mutex: like display_mutex)
@@ -46,10 +46,10 @@ feature	-- Deferred
 		deferred
 		end
 
-	fig_demo_cmd: DEMO_CMD
+	fig_demo_cmd: detachable DEMO_CMD
 		deferred
 		end
-	
+
 	title: STRING
 			-- Title of the window.
 		deferred
@@ -57,7 +57,7 @@ feature	-- Deferred
 
 feature -- Access
 
-	client_window: CLIENT_WINDOW
+	client_window: detachable CLIENT_WINDOW
 		-- Shared client window on which thread draws.
 
 	display_mutex: MUTEX
@@ -69,13 +69,17 @@ feature -- Threads
     stop_demo
 			-- Tell the thread to stop.
 		do
-		    fig_demo_cmd.stop
+			if attached fig_demo_cmd as cmd then
+				cmd.stop
+			end
 		end
 
     join_demo
 			-- Wait for the end of the thread
 		do
-		     fig_demo_cmd.join
+			if attached fig_demo_cmd as cmd then
+				cmd.join
+			end
 		end
 
 feature -- Redefined features
@@ -84,9 +88,8 @@ feature -- Redefined features
 			-- Reposition windows in the main window.
 		do
 			if (a_size_type /= Size_minimized) then
-				if client_window /= Void then
-					client_window.move_and_resize (2, 2,
-						a_width - 5, a_height -4, True)
+				if attached client_window as win then
+					win.move_and_resize (2, 2, a_width - 5, a_height -4, True)
 				end
 			end
 		end
@@ -116,14 +119,14 @@ feature -- Redefined features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

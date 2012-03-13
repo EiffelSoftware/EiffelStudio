@@ -1,10 +1,14 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-class 
+class
 	RUNNER
+
 inherit
 	THREAD
+		rename
+			make as thread_make
+		end
 
 create
 	make
@@ -17,6 +21,7 @@ feature {NONE} -- Initialization
 			valid_i: i > 0
 			valid_n: n > 0
 		do
+			thread_make
 			io_mutex := io_m
 			id := i
 			nb_loop := n
@@ -41,7 +46,7 @@ feature {NONE} -- Implementation
 				io_mutex.lock
 				io.print (cpt)
 				io.print ("|")
-				from 
+				from
 					i := 0
 				until
 					i > cpt
@@ -57,14 +62,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

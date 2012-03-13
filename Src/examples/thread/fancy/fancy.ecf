@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="fancy" uuid="08B228C6-96BF-4E66-B590-549E944C283B">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd" name="fancy" uuid="08B228C6-96BF-4E66-B590-549E944C283B">
 	<target name="common" abstract="true">
 		<root cluster="root_cluster" class="APPLICATION" feature="make"/>
-		<option warning="true">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
 			<assertions precondition="true"/>
 		</option>
-		<setting name="multithreaded" value="true"/>
-		<precompile name="wel-mt_pre" location="$ISE_PRECOMP\wel-mt.ecf"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<setting name="concurrency" value="thread"/>
+		<precompile name="wel-mt_pre" location="$ISE_PRECOMP\wel-mt-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>
 	<target name="dotnet" extends="common">

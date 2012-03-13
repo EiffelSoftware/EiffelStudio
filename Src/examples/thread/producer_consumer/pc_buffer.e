@@ -1,4 +1,3 @@
-
 note
     description: ""
 	legal: "See notice at end of class."
@@ -41,14 +40,13 @@ feature
 			-- Initialize customizable parameters
 			-- and internal structures.
 		do
-
 			finished := finish
 			it := i
 			buffer_size := size - 1
 			create monitor.make
 			create notfull.make
 			create notempty.make
-			create data.make (0,buffer_size)
+			create data.make_filled (0, 0, buffer_size)
 		end
 
 	get (id: INTEGER)
@@ -59,17 +57,16 @@ feature
 		local
 			d: INTEGER
 		do
-
-				monitor.lock
-				if num_full = 0 then
-					from
-					until
-						num_full /= 0 or else finished.item
-					loop
-						notempty.wait (monitor)
-					end
+			monitor.lock
+			if num_full = 0 then
+				from
+				until
+					num_full /= 0 or else finished.item
+				loop
+					notempty.wait (monitor)
 				end
-				if not finished.item then
+			end
+			if not finished.item then
 				d := data.item (num_full - 1)
 				data.put (0, num_full  - 1)
 				num_full := num_full - 1
@@ -80,8 +77,8 @@ feature
 				n_op := n_op + 1
 				check_display
 				notfull.signal
-				end
-				monitor.unlock
+			end
+			monitor.unlock
 		end
 
 	put (d: INTEGER; id: INTEGER)
@@ -89,16 +86,16 @@ feature
 			-- `wait' is nested in a loop for the same reason as
 			-- above.
 		do
-				monitor.lock
-				if num_full = buffer_size then
-					from
+			monitor.lock
+			if num_full = buffer_size then
+				from
 				until
-						num_full /= buffer_size or else finished.item
-					loop
-						notfull.wait (monitor)
-					end
+					num_full /= buffer_size or else finished.item
+				loop
+					notfull.wait (monitor)
 				end
-				if not finished.item then
+			end
+			if not finished.item then
 				data.put (d, (num_full + start_idx)  \\ buffer_size)
 				num_full := num_full + 1
 
@@ -110,9 +107,9 @@ feature
 				n_op := n_op + 1
 				check_display
 				notempty.signal
-				end
-				monitor.unlock
 			end
+			monitor.unlock
+		end
 
 	check_display
 			-- Check whether we display the buffer for the
@@ -156,14 +153,14 @@ feature
 			io.put_string ("***********************%N")
 		end
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

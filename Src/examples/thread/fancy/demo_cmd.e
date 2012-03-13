@@ -11,6 +11,9 @@ deferred class
 inherit
 	WEL_STANDARD_COLORS
 	THREAD
+		rename
+			make as thread_make
+		end
 
 feature {NONE} -- Initialization
 
@@ -19,6 +22,7 @@ feature {NONE} -- Initialization
 			a_client_not_void: a_client /= Void
 			a_mutex_not_void: a_mutex /= Void
 		do
+			thread_make
 			client_window := a_client
 			display_mutex := a_mutex
 			create mutex_continue.make
@@ -137,14 +141,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

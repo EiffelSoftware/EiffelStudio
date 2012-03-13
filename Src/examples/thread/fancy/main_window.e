@@ -50,6 +50,8 @@ feature {NONE} -- Initialization
 
 	make
 			-- Create the main window of resource bench.
+		local
+			win_status: like status_window
 		do
 			make_top ("Fancy")
 			resize (400, 300)
@@ -57,16 +59,18 @@ feature {NONE} -- Initialization
 				-- Create the menu bar.
 			set_menu (main_menu)
 
-				-- Create Status.
-			create status_window.make (Current, status_window_id)
-			status_window.set_parts (<<-1>>)
-
 				-- Initialization.
 			initialize
 
+				-- Create Status.
+			create win_status.make (Current, status_window_id)
+			status_window := win_status
+			win_status.set_parts (<<-1>>)
+
+
 				-- Launch clients.
-			oval_area.launch
-			rect_area.launch
+			launch_area (oval_area)
+			launch_area (rect_area)
 			show
 		end
 
@@ -75,11 +79,12 @@ feature {NONE} -- Initialization
 	initialize
 			-- Initialization of the different clients.
 		do
+			create display_mutex.make
+
 				-- Create client_windows for each thread.
 			create client_window_oval.make (Current, "Client Window_Oval")
-			create client_window_rect.make (Current, "Client Window_Rect")
 
-			create display_mutex.make
+			create client_window_rect.make (Current, "Client Window_Rect")
 
 				-- Create threads (without launching them).
 			create oval_area.make_in (client_window_oval, display_mutex)
@@ -88,10 +93,18 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Thread
 
-	oval_area: OVAL_DEMO_CMD
+	launch_area (a_area: detachable DEMO_CMD)
+			-- Launch `a_area'
+		do
+			if a_area /= Void then
+				a_area.launch
+			end
+		end
+
+	oval_area: detachable OVAL_DEMO_CMD
 			-- Commands to draw ovals.
 
-	rect_area: RECTANGLE_DEMO_CMD
+	rect_area: detachable RECTANGLE_DEMO_CMD
 			-- Commands to draw rectangles.
 
 	display_mutex: MUTEX
@@ -102,18 +115,21 @@ feature {NONE} -- Behavior
 
 	on_size (a_size_type, a_width, a_height: INTEGER)
 			-- Reposition windows in the main window.
+		local
+			win_status_height: INTEGER
 		do
-			if (a_size_type /= Size_minimized) then
-				if (status_window /= Void) then
+			if a_size_type /= Size_minimized then
+				if status_window /= Void then
 					status_window.reposition
+					win_status_height := status_window.height
 				end
 				if client_window_oval /= Void then
 					client_window_oval.move_and_resize (2, 2,
-						client_rect.width // 2 - 4, client_rect.height - status_window.height - 4, True)
+						client_rect.width // 2 - 4, client_rect.height - win_status_height - 4, True)
 				end
 				if client_window_rect /= Void then
 					client_window_rect.move_and_resize (2 + client_rect.width // 2, 2,
-						client_rect.width // 2 - 4, client_rect.height - status_window.height - 4, True)
+						client_rect.width // 2 - 4, client_rect.height - win_status_height - 4, True)
 				end
 			end
 		end
@@ -143,11 +159,13 @@ feature {NONE} -- Behavior
 			end
 		end
 
-	on_menu_select (menu_item: INTEGER; flags: INTEGER; a_menu: WEL_MENU)
+	on_menu_select (menu_item: INTEGER; flags: INTEGER; a_menu: detachable WEL_MENU)
 			-- Display a message in the status window corresponding
 			-- to the selected menu_item.
 		do
-			status_window.set_text_part (0, resource_string_id (menu_item))
+			if status_window /= Void then
+				status_window.set_text_part (0, resource_string_id (menu_item))
+			end
 		end
 
 	on_accelerator_command (a_accelerator_id: INTEGER)
@@ -182,14 +200,26 @@ feature {NONE} -- Implementation: access
 			result_not_void: Result /= Void
 		end
 
-	client_window_oval: CLIENT_WINDOW
+	client_window_oval: detachable CLIENT_WINDOW
 			-- Client_Window for thread drawing ovals.
+		note
+			option: stable
+		attribute
+		end
 
-	client_window_rect: CLIENT_WINDOW
+	client_window_rect: detachable CLIENT_WINDOW
 			-- Client_Window for thread drawing rectangles.
+		note
+			option: stable
+		attribute
+		end
 
-	status_window: WEL_STATUS_WINDOW
+	status_window: detachable WEL_STATUS_WINDOW
 			-- Status window of main window.
+		note
+			option: stable
+		attribute
+		end
 
 	class_background: WEL_LIGHT_GRAY_BRUSH
 			-- Standard window background color
@@ -201,6 +231,9 @@ feature {NONE} -- Implementation
 
 	stop_all_threads
 			-- Tell the threads to stop, and wait for their end.
+		local
+			l_oval_area: like oval_area
+			l_rect_area: like rect_area
 		do
 			exit_mutex.lock
 			from
@@ -212,10 +245,22 @@ feature {NONE} -- Implementation
 				demos_list.item.join_demo
 				demos_list.remove
 			end
-			oval_area.stop
-			rect_area.stop
-			oval_area.join
-			rect_area.join
+			l_oval_area := oval_area
+			l_rect_area := rect_area
+
+			if l_oval_area /= Void then
+				l_oval_area.stop
+			end
+			if l_rect_area /= Void then
+				l_rect_area.stop
+			end
+			if l_oval_area /= Void then
+				l_oval_area.join
+			end
+			if l_rect_area /= Void then
+				l_rect_area.join
+			end
+
 			exit_mutex.unlock
 		end
 
@@ -255,14 +300,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

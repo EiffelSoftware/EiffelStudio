@@ -4,18 +4,26 @@ note
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	APPLICATION
 
 inherit
 	WEL_APPLICATION
 		redefine
-			init_application
+			make
 		end
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	make
+		do
+			create_interface_objects
+			Precursor
+		end
 
 feature -- Access
 
@@ -27,7 +35,7 @@ feature -- Access
 
 feature -- Initialization
 
-	init_application
+	create_interface_objects
 			-- Load the common controls dll
 		do
 			create common_controls_dll.make
@@ -36,14 +44,14 @@ feature -- Initialization
 	common_controls_dll: WEL_COMMON_CONTROLS_DLL;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

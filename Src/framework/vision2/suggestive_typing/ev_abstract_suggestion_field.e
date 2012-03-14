@@ -219,7 +219,7 @@ feature -- Text operation
 		end
 
 	move_caret_to (a_pos: INTEGER)
-			-- Move caret at `a_pos'. If `a_pos' is negative, carete is remains at the beginning. If `a_pos' is
+			-- Move caret at `a_pos'. If `a_pos' is negative, caret remains at the beginning. If `a_pos' is
 			-- greater than the maximum possible caret position, it stays at the end.
 		require
 			not_destroyed: not is_destroyed
@@ -367,9 +367,9 @@ feature {EV_SUGGESTION_WINDOW} -- Interact with suggestion window.
  			inspect
  				ev_key.code
  			when {EV_KEY_CONSTANTS}.key_back_space then
-				delete_character_before
+				delete_word_before
 			when {EV_KEY_CONSTANTS}.key_delete then
-				delete_character_after
+				delete_word_after
 			else
 			end
  		end

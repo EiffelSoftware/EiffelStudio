@@ -474,7 +474,7 @@ feature {EV_RIBBON} -- Externals callbacks
 				when {EV_VIEW_VERB}.create_ then
 				when {EV_VIEW_VERB}.size then
 						-- We trigger a resizing of the window content associated manually.
-					if attached {EV_RIBBON_TITLED_WINDOW_IMP} associated_window as l_window and then not l_window.exists then
+					if attached {EV_RIBBON_TITLED_WINDOW_IMP} associated_window as l_window and then l_window.exists then
 						l_window.on_size (0, l_window.width, l_window.height)
 					end
 

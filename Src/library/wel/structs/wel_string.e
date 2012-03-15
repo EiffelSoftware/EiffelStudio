@@ -161,6 +161,7 @@ feature -- Access
 				l_data := managed_data
 				l_carriage_return_code := ('%R').natural_32_code
 				create Result.make (nb)
+				Result.set_count (nb)
 			until
 				i = nb
 			loop
@@ -584,7 +585,7 @@ invariant
 	bytes_count_valid: (bytes_count \\ character_size) = 0
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -97,6 +97,17 @@ feature -- Status report
 			Result := code >= Key_up and then code <= Key_right
 		end
 
+	is_printable: BOOLEAN
+			-- Is `code' a printable key?
+		do
+			Result := is_alpha or is_number or is_numpad or (code = Key_space) or
+				(code >= Key_comma and then code <= Key_dash)
+
+				-- Because `is_numpad' aslo contains `key_num_lock' which is not printable, so we need to
+				-- exclude it.
+			Result := Result and code /= Key_num_lock
+		end
+
 feature -- Standard output
 
 	out: STRING
@@ -109,14 +120,14 @@ invariant
 	code_valid: valid_key_code (code)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

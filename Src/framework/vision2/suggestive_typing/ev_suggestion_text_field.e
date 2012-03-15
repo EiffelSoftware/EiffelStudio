@@ -141,8 +141,7 @@ feature{NONE} -- Implementation
 		local
 			l_text: STRING_32
 			i, nb: INTEGER
-			l_done, l_has_leading_space, l_remove_spaces_only: BOOLEAN
-			l_state: INTEGER
+			l_has_leading_space, l_remove_spaces_only: BOOLEAN
 		do
 			l_text := text
 				-- Translate the `caret_position' as an index in the string

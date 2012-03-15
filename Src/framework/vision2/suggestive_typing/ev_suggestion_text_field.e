@@ -149,15 +149,14 @@ feature{NONE} -- Implementation
 			i := caret_position
 			nb := text_length
   			if not l_text.is_empty and l_text.valid_index (i) then
-					-- If the character at the right of the `caret_position'
-					-- is a space and the character at the left (if any) if also a space
-					-- then we only remove spaces, nothing else.
-				l_remove_spaces_only := l_text.item (i).is_space and then
-					(not l_text.valid_index (i - 1) or else l_text.item (i - 1).is_space)
-
 					-- If the character at the left of the `caret_position' is a space, we
 					-- remove all spaces after removing all non-space characters.
 				l_has_leading_space := not l_text.valid_index (i - 1) or else l_text.item (i - 1).is_space
+
+					-- If the character at the right of the `caret_position'
+					-- is a space and the character at the left (if any) if also a space
+					-- then we only remove spaces, nothing else.
+				l_remove_spaces_only := l_text.item (i).is_space and then l_has_leading_space
 
 					-- First we remove all spaces at the right of the `caret_position'.
 				from until i > nb or else not l_text.item (i).is_space loop

@@ -220,6 +220,8 @@ feature {NONE} -- Implementation
 			counter.change_actions.extend (agent (v: INTEGER)
 				do
 					compilation_counter_pref.set_value (v)
+						-- Update compile button to reflect the current iteration
+					next_button.set_text ("Compile Step #" + compilation_counter_pref.value.out)
 					load_text
 				end)
 			counter.return_actions.extend (agent
@@ -260,7 +262,7 @@ feature {NONE} -- Implementation
 			set_default_width_for_button (reset_button)
 			l_hbox.extend (reset_button)
 			l_hbox.disable_item_expand (reset_button)
-			create next_button.make_with_text_and_action ("Next", agent perform_compilation)
+			create next_button.make_with_text_and_action ("Compile Step #000000", agent perform_compilation)
 			l_hbox.extend (next_button)
 			set_default_width_for_button (next_button)
 			l_hbox.disable_item_expand (next_button)
@@ -303,6 +305,9 @@ feature {NONE} -- Implementation
 			counter.change_actions.block
 			counter.set_value (compilation_counter_pref.value)
 			counter.change_actions.resume
+
+				-- Update compile button to reflect the current iteration
+			next_button.set_text ("Compile Step #" + compilation_counter_pref.value.out)
 
 			load_text
 		end
@@ -537,7 +542,7 @@ invariant
 	compilation_counter_pref_not_void: compilation_counter_pref /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

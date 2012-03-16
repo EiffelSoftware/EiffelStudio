@@ -9,6 +9,9 @@ class
 
 inherit
 	THREAD
+		rename
+			make as thread_make
+		end
 
 	SHARED_SVN_SORTERS
 
@@ -19,6 +22,7 @@ feature -- Access
 
 	make (a_mutex: MUTEX; a_provider: SVN_ENGINE_PROVIDER; a_data: like th_data; a_id: INTEGER)
 		do
+			thread_make
 			th_mutex := a_mutex
 			th_id := a_id
 			th_provider := a_provider

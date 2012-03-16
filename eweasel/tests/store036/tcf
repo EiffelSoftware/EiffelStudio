@@ -3,10 +3,7 @@ test_description When there are a lot of mismatches, the internal SPECIAL used t
 
 copy_sub 	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
-copy_raw	company_matrix.e $CLUSTER company_matrix.e
-copy_raw	matrix.e $CLUSTER matrix.e
-copy_raw	research_company.e $CLUSTER research_company.e
-copy_raw	rose_data.e $CLUSTER rose_data.e
+copy_raw	rose_date.e $CLUSTER rose_date.e
 
 compile_melted
 compile_result	ok

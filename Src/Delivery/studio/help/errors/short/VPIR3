@@ -1,2 +1,2 @@
-Error: Tried to declare an inline agent of either external, once or deferred form
-What to do: write a wrapper feature that calls your external, once and use it as an agent.
+Error: tried to declare an inline agent of a deferred form.
+What to do: use an effective form of an agent.

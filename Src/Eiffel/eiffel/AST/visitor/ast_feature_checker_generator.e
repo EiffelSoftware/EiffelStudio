@@ -339,59 +339,37 @@ feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_routine_as: ROUTINE_AS
-			l_vpir: VPIR3
 			l_written_class: CLASS_C
 			l_error_level: NATURAL_32
 		do
 			break_point_slot_count := 0
-			l_routine_as ?= a_body.content
 			l_error_level := error_level
-			if not a_is_inherited and then a_is_for_inline_agent then
-				if l_routine_as /= Void then
-					if l_routine_as.is_deferred or l_routine_as.is_external or l_routine_as.is_once then
-						create l_vpir
-						l_vpir.set_class (context.current_class)
-						l_vpir.set_feature (context.current_feature)
-						l_vpir.set_location (a_body.start_location)
-						error_handler.insert_error (l_vpir)
-					end
-				else
-					create l_vpir
-					l_vpir.set_class (context.current_class)
-					l_vpir.set_feature (context.current_feature)
-					l_vpir.set_location (a_body.start_location)
-					error_handler.insert_error (l_vpir)
-				end
-			end
 
+			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
+			inherited_type_a_checker.init_for_checking (a_feature, context.written_class, Void, Void)
+			a_feature.record_suppliers (context.supplier_ids)
+			current_feature := a_feature
+			reset
+			is_byte_node_enabled := a_is_byte_node_enabled
+			set_is_inherited (a_is_inherited)
+			l_written_class := context.written_class
+				-- Initialize AST context before calling `check_types'
+				-- This is an optimization for checking types during degree 4 to avoid repetitive type creation.
+			context.initialize (feature_table.associated_class, feature_table.associated_class.actual_type)
+			a_feature.check_types (feature_table)
 			if error_level = l_error_level then
-				type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
-				inherited_type_a_checker.init_for_checking (a_feature, context.written_class, Void, Void)
-				a_feature.record_suppliers (context.supplier_ids)
-				current_feature := a_feature
-				reset
-				is_byte_node_enabled := a_is_byte_node_enabled
-				set_is_inherited (a_is_inherited)
-				l_written_class := context.written_class
-					-- Initialize AST context before calling `check_types'
-					-- This is an optimization for checking types during degree 4 to avoid repetitive type creation.
-				context.initialize (feature_table.associated_class, feature_table.associated_class.actual_type)
-				a_feature.check_types (feature_table)
+				a_feature.check_type_validity (context.current_class)
 				if error_level = l_error_level then
-					a_feature.check_type_validity (context.current_class)
-					if error_level = l_error_level then
-						context.set_written_class (l_written_class)
-						if not is_inherited and then a_is_for_inline_agent then
-							if a_feature.has_arguments then
-								a_feature.check_argument_names (feature_table)
-							end
+					context.set_written_class (l_written_class)
+					if not is_inherited and then a_is_for_inline_agent then
+						if a_feature.has_arguments then
+							a_feature.check_argument_names (feature_table)
 						end
-						if error_level = l_error_level then
-							a_body.process (Current)
-							if not is_inherited and then a_is_for_inline_agent then
-								a_feature.check_local_names (a_body)
-							end
+					end
+					if error_level = l_error_level then
+						a_body.process (Current)
+						if not is_inherited and then a_is_for_inline_agent then
+							a_feature.check_local_names (a_body)
 						end
 					end
 				end
@@ -917,6 +895,8 @@ feature {NONE} -- Roundtrip
 			l_routine: ROUTINE_AS
 			l_id_list: IDENTIFIER_LIST
 			l_error_level: NATURAL_32
+			l_vpir: VPIR3
+			l_unsupported: NOT_SUPPORTED
 		do
 			l_error_level := error_level
 			l_current_class ?= context.current_class
@@ -927,149 +907,165 @@ feature {NONE} -- Roundtrip
 				l_feature :=
 					system.class_of_id (l_as.class_id).eiffel_class_c.inline_agent_of_rout_id (l_as.inl_rout_id)
 				l_feature := l_feature.instantiation_in (context.current_class_type.conformance_type.as_implicitly_detachable)
-			else
-				if is_byte_node_enabled then
-						-- This is the first place, where inline agents are looked at as features.
-						-- They are ignored by degree 2. So a new FEATURE_I has to be created
-					create l_feature_names.make (1)
-					l_feature_names.extend (create {FEAT_NAME_ID_AS}.initialize (create {ID_AS}.initialize ("inline_agent")))
-					create l_feature_as.initialize (l_feature_names, l_as.body, Void, 0, 0)
+			elseif
+				not attached {ROUTINE_AS} l_as.body.content as r or else
+				r.is_external or else
+				r.is_once or else
+				r.is_attribute
+			then
+				create l_unsupported
+				context.init_error (l_unsupported)
+				l_unsupported.set_location (l_as.body.start_location)
+				l_unsupported.set_message ("Inline agent with the body other than a %"do%" form is not supported.")
+				error_handler.insert_error (l_unsupported)
+				reset_types
+			elseif r.is_deferred then
+				create l_vpir
+				l_vpir.set_class (context.current_class)
+				l_vpir.set_feature (context.current_feature)
+				l_vpir.set_location (l_as.body.start_location)
+				error_handler.insert_error (l_vpir)
+				reset_types
+			elseif is_byte_node_enabled then
+					-- This is the first place, where inline agents are looked at as features.
+					-- They are ignored by degree 2. So a new FEATURE_I has to be created
+				create l_feature_names.make (1)
+				l_feature_names.extend (create {FEAT_NAME_ID_AS}.initialize (create {ID_AS}.initialize ("inline_agent")))
+				create l_feature_as.initialize (l_feature_names, l_as.body, Void, 0, 0)
 
-					l_cur_feature := context.current_feature
-					create l_feature_generator
+				l_cur_feature := context.current_feature
+				create l_feature_generator
 
-					if is_replicated then
-							-- Agent needs to be created with respect to its original class.
-						l_written_class ?= l_cur_feature.written_class
-					else
-						l_written_class := l_current_class
-					end
-					l_feature := l_feature_generator.new_feature (l_feature_as, 0, l_written_class)
-
-					l_feature := init_inline_agent_feature (l_feature, Void, l_current_class, l_written_class)
-
-
-
-					if is_byte_node_enabled then
-						create l_feature_name.initialize_from_id (l_feature.feature_name_id)
-						l_loc := l_as.start_location
-						l_feature_name.set_position (l_loc.line, l_loc.column, l_loc.position, 0)
-						l_as.set_feature_name (l_feature_name)
-					end
-					context.put_inline_agent (l_feature, l_as)
+				if is_replicated then
+						-- Agent needs to be created with respect to its original class.
+					l_written_class ?= l_cur_feature.written_class
 				else
-					l_cur_feature := context.current_feature
-					if l_cur_feature.is_invariant then
-						l_enclosing_feature := l_cur_feature
-					else
-						l_enclosing_feature := l_cur_feature.enclosing_feature
-					end
-					l_feature := context.inline_agent (l_as)
-					if l_feature = Void then
-						l_feature := l_current_class.inline_agent_with_nr (l_enclosing_feature.body_index, context.inline_agent_counter.next)
-						context.put_inline_agent (l_feature, l_as)
-					end
+					l_written_class := l_current_class
+				end
+				l_feature := l_feature_generator.new_feature (l_feature_as, 0, l_written_class)
+
+				l_feature := init_inline_agent_feature (l_feature, Void, l_current_class, l_written_class)
+
+				create l_feature_name.initialize_from_id (l_feature.feature_name_id)
+				l_loc := l_as.start_location
+				l_feature_name.set_position (l_loc.line, l_loc.column, l_loc.position, 0)
+				l_as.set_feature_name (l_feature_name)
+
+				context.put_inline_agent (l_feature, l_as)
+			else
+				l_cur_feature := context.current_feature
+				if l_cur_feature.is_invariant then
+					l_enclosing_feature := l_cur_feature
+				else
+					l_enclosing_feature := l_cur_feature.enclosing_feature
+				end
+				l_feature := context.inline_agent (l_as)
+				if l_feature = Void then
+					l_feature := l_current_class.inline_agent_with_nr (l_enclosing_feature.body_index, context.inline_agent_counter.next)
+					context.put_inline_agent (l_feature, l_as)
 				end
 			end
 
-				-- The context is modified, for the processing of the body of the inline agent.
-			l_context := context.save
+			if error_level = l_error_level then
+					-- The context is modified, for the processing of the body of the inline agent.
+				l_context := context.save
 
-			if not is_inherited then
-				create l_used_argument_names.make (1)
-				if l_cur_feature.argument_count > 0  then
-					from
-						l_arg_names := context.current_feature.arguments.argument_names
-						i := l_arg_names.lower
-					until
-						i > l_arg_names.upper
-					loop
-						l_used_argument_names.force (l_arg_names.item (i))
-						i := i + 1
+				if not is_inherited then
+					create l_used_argument_names.make (1)
+					if l_cur_feature.argument_count > 0  then
+						from
+							l_arg_names := context.current_feature.arguments.argument_names
+							i := l_arg_names.lower
+						until
+							i > l_arg_names.upper
+						loop
+							l_used_argument_names.force (l_arg_names.item (i))
+							i := i + 1
+						end
 					end
-				end
 
-				if l_context.used_argument_names /= Void then
-					l_used_argument_names.merge (l_context.used_argument_names)
-				end
-				context.set_used_argument_names (l_used_argument_names)
-
-				create l_used_local_names.make (1)
-				if not l_cur_feature.is_invariant then
-					if l_cur_feature.is_inline_agent then
-						l_routine ?= context.current_inline_agent_body.content
-					else
-						l_routine ?= l_cur_feature.real_body.content
+					if l_context.used_argument_names /= Void then
+						l_used_argument_names.merge (l_context.used_argument_names)
 					end
-					if l_routine /= Void then
-						l_locals := l_routine.locals
-						if l_locals /= Void and not l_locals.is_empty then
-							from
-								l_locals.start
-							until
-								l_locals.after
-							loop
-								l_id_list := l_locals.item.id_list
+					context.set_used_argument_names (l_used_argument_names)
+
+					create l_used_local_names.make (1)
+					if not l_cur_feature.is_invariant then
+						if l_cur_feature.is_inline_agent then
+							l_routine ?= context.current_inline_agent_body.content
+						else
+							l_routine ?= l_cur_feature.real_body.content
+						end
+						if l_routine /= Void then
+							l_locals := l_routine.locals
+							if l_locals /= Void and not l_locals.is_empty then
 								from
-									l_id_list.start
+									l_locals.start
 								until
-									l_id_list.after
+									l_locals.after
 								loop
-									l_used_local_names.force (l_id_list.item.item)
-									l_id_list.forth
+									l_id_list := l_locals.item.id_list
+									from
+										l_id_list.start
+									until
+										l_id_list.after
+									loop
+										l_used_local_names.force (l_id_list.item.item)
+										l_id_list.forth
+									end
+									l_locals.forth
 								end
-								l_locals.forth
 							end
 						end
 					end
-				end
 
-				if l_context.used_local_names /= Void then
-					l_used_local_names.merge (l_context.used_local_names)
-				end
-				context.set_used_local_names (l_used_local_names)
-			end
-
-			context.set_current_feature (l_feature)
-			context.init_attribute_scopes
-			create l_feature_checker
-			l_feature_checker.init (context)
-			context.set_current_inline_agent_body (l_as.body)
-			l_feature_checker.check_body (l_feature, l_as.body, is_byte_node_enabled, is_inherited, is_replicated, True)
-
-			l_new_feature_dep := context.supplier_ids
-			context.restore (l_context)
-			l_context := Void
-
-			if error_level = l_error_level then
-				if not is_inherited then
-					if is_byte_node_enabled then
-						l_body_code ?= l_feature_checker.last_byte_node
-						l_body_code.set_start_line_number (l_as.body.start_location.line)
-							-- When an inline agent X of an enclosing feature f is a client of
-							-- feature g, we make the enclosing feature f a client of g.
-						if inline_agent_byte_codes = Void then
-							create inline_agent_byte_codes.make
-						end
-						inline_agent_byte_codes.extend (l_body_code)
-						if l_feature_checker.inline_agent_byte_codes /= Void then
-							inline_agent_byte_codes.append (l_feature_checker.inline_agent_byte_codes)
-						end
-						init_inline_agent_dep (l_feature, l_new_feature_dep)
+					if l_context.used_local_names /= Void then
+						l_used_local_names.merge (l_context.used_local_names)
 					end
-					l_as.set_inl_class_id (l_feature.access_in)
-					l_as.set_inl_rout_id (l_feature.rout_id_set.first)
+					context.set_used_local_names (l_used_local_names)
 				end
-					-- Now as the features is generated the inline agent creation is
-					-- threaten like a normal routine creation
-				process_routine_creation_as_ext (l_as, l_feature)
-			else
-				if not is_inherited and then is_byte_node_enabled then
-					if l_current_class.has_inline_agents then
-						l_current_class.inline_agent_table.remove (l_feature.feature_name_id)
+
+				context.set_current_feature (l_feature)
+				context.init_attribute_scopes
+				create l_feature_checker
+				l_feature_checker.init (context)
+				context.set_current_inline_agent_body (l_as.body)
+				l_feature_checker.check_body (l_feature, l_as.body, is_byte_node_enabled, is_inherited, is_replicated, True)
+
+				l_new_feature_dep := context.supplier_ids
+				context.restore (l_context)
+				l_context := Void
+
+				if error_level = l_error_level then
+					if not is_inherited then
+						if is_byte_node_enabled then
+							l_body_code ?= l_feature_checker.last_byte_node
+							l_body_code.set_start_line_number (l_as.body.start_location.line)
+								-- When an inline agent X of an enclosing feature f is a client of
+								-- feature g, we make the enclosing feature f a client of g.
+							if inline_agent_byte_codes = Void then
+								create inline_agent_byte_codes.make
+							end
+							inline_agent_byte_codes.extend (l_body_code)
+							if l_feature_checker.inline_agent_byte_codes /= Void then
+								inline_agent_byte_codes.append (l_feature_checker.inline_agent_byte_codes)
+							end
+							init_inline_agent_dep (l_feature, l_new_feature_dep)
+						end
+						l_as.set_inl_class_id (l_feature.access_in)
+						l_as.set_inl_rout_id (l_feature.rout_id_set.first)
 					end
+						-- Now as the features is generated the inline agent creation is
+						-- threaten like a normal routine creation
+					process_routine_creation_as_ext (l_as, l_feature)
+				else
+					if not is_inherited and then is_byte_node_enabled then
+						if l_current_class.has_inline_agents then
+							l_current_class.inline_agent_table.remove (l_feature.feature_name_id)
+						end
+					end
+					reset_types
 				end
-				reset_types
 			end
 		end
 

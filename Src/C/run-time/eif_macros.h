@@ -2,7 +2,7 @@
 	description: "Macros used by C code at run time."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2010, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -1496,7 +1496,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #else /* WORKBENCH */
 #define RTS_CF(f,p,t,a,r) \
 	{                                                         \
-		((call_data*)(a)) -> feature.address = f;         \
+		((call_data*)(a)) -> feature.address = (fnptr) f; \
 		((call_data*)(a)) -> pattern = p;                 \
 		((call_data*)(a)) -> result = &(r);               \
 		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
@@ -1504,7 +1504,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 	}
 #define RTS_CP(f,p,t,a) \
 	{                                                         \
-		((call_data*)(a)) -> feature.address = f;         \
+		((call_data*)(a)) -> feature.address = (fnptr) f; \
 		((call_data*)(a)) -> pattern = p;                 \
 		eif_log_call (RTS_PID(Current), a);               \
 	}

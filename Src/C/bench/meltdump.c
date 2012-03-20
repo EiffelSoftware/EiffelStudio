@@ -142,7 +142,7 @@ int main (int argc, char **argv)
 static  void    prepare_types (void)
 
 {
-	long    count, acount, pers_acount, i, ctype;
+	long    count, acount, i, ctype;
 	short   slen, dtype;
 	char    *dname;
 
@@ -226,7 +226,7 @@ static  void    prepare_types (void)
 		dtype_names [dtype] = dname;
 
 		acount = rlong (); /* Number of attributes. */
-		pers_acount = rlong (); /* Number of persistent attributes. */
+		(void) rlong (); /* Number of persistent attributes. */
 
 		i = acount;
 

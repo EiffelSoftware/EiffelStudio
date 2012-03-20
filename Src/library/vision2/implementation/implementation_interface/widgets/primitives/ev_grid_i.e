@@ -2104,7 +2104,7 @@ feature -- Status report
 			-- item selection permitted via the use of Ctrl and Shift keys?
 
 	first_visible_row: detachable EV_GRID_ROW
-			-- First row visible in `Current' or Void if `row_count' = 0
+			-- First row visible in `Current' or Void if `visible_row_count' = 0
 			-- If `is_vertical_scrolling_per_item', the first visible row may be only partially visible.
 		require
 			is_displayed: is_displayed
@@ -2116,8 +2116,8 @@ feature -- Status report
 				Result := l_row_i.interface
 			end
 		ensure
-			has_rows_implies_result_not_void: row_count > 0 implies result /= Void
-			no_rows_implies_result_void: row_count = 0 implies result = Void
+			has_rows_implies_result_not_void: visible_row_count > 0 implies result /= Void
+			no_rows_implies_result_void: visible_row_count = 0 implies result = Void
 		end
 
 	first_visible_column: detachable EV_GRID_COLUMN
@@ -2138,7 +2138,7 @@ feature -- Status report
 		end
 
 	last_visible_row: detachable EV_GRID_ROW
-			-- Last row visible in `Current' or Void if `row_count' = 0
+			-- Last row visible in `Current' or Void if `visible_row_count' = 0
 			-- The last visible row may be only partially visible.
 		require
 			is_displayed: is_displayed
@@ -2150,8 +2150,8 @@ feature -- Status report
 				Result := l_row_i.interface
 			end
 		ensure
-			has_rows_implies_result_not_void: row_count > 0 implies result /= Void
-			no_rows_implies_result_void: row_count = 0 implies result = Void
+			has_rows_implies_result_not_void: visible_row_count > 0 implies result /= Void
+			no_rows_implies_result_void: visible_row_count = 0 implies result = Void
 		end
 
 	last_visible_column: detachable EV_GRID_COLUMN

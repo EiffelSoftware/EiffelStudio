@@ -9,6 +9,14 @@ class VWAB
 
 inherit
 	FEATURE_ERROR
+		undefine
+			error_string
+		end
+
+	WARNING
+		undefine
+			has_associated_file
+		end
 
 create
 	make

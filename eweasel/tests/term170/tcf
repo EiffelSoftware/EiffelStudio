@@ -6,12 +6,12 @@ copy_raw test.e $CLUSTER test.e
 copy_raw a.e $CLUSTER a.e
 
 compile_melted
-compile_result ok
+compile_result validity_warning A VWAB
 
 cleanup_compile
 copy_sub Ace_rev1 $TEST Ace
 
 compile_melted
-compile_result ok
+compile_result validity_warning A VWAB
 
 test_end

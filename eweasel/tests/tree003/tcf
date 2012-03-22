@@ -5,8 +5,10 @@ test_description Tests of various kinds of trees
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 copy_raw 	my_tree1.e $CLUSTER my_tree1.e
+copy_raw 	my_tree1_cursor.e $CLUSTER my_tree1_cursor.e
 copy_raw 	my_tree2.e $CLUSTER my_tree2.e
 copy_raw 	my_tree3.e $CLUSTER my_tree3.e
+copy_raw 	my_tree3_cursor.e $CLUSTER my_tree3_cursor.e
 copy_raw 	my_tree4.e $CLUSTER my_tree4.e
 copy_raw 	my_tree5.e $CLUSTER my_tree5.e
 

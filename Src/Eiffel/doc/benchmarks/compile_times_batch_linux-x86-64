@@ -1,5 +1,11 @@
 Ubuntu Server 8.04 (2 Intel Xeon Quad Core E5420  @ 2.50GHz with 6MB cache)
 
+7.1
+===
+gcc (Ubuntu/Linaro 4.6.1-9ubuntu3) 4.6.1
+7.1.8.8433 non-RTEA, non-MT, inlining_size = 8, full class checking (exe size = 17445664):
+123.319u 5.632s 2:09.39 99.6%        0+0k 152+848224io 0pf+0w
+
 7.0
 ===
 7.0.8.7345 non-RTEA, non-MT, inlining_size = 8, full class checking (exe size = 17314840):

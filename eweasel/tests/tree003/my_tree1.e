@@ -12,7 +12,7 @@ inherit
 		rename
 			make as tree_make
 		redefine
-			node_is_equal
+			node_is_equal, child_cursor
 		end
 
 create
@@ -31,6 +31,12 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	foo: STRING
+
+	child_cursor: MY_TREE1_CURSOR
+			-- Current cursor position
+		do
+			create Result.make (child, child_after, child_before)
+		end
 
 feature -- Comparison
 

@@ -145,7 +145,6 @@ feature
 	execute_free
 			-- Pop all elements of `queue' and free them
 		local
-			s: STRING
 			p, l_null: POINTER
 			a: ANY
 		do
@@ -155,8 +154,7 @@ feature
 				p = l_null
 			loop
 				a := eif_wean (p)
-				s ?= a
-				if s = Void then
+				if not attached {STRING} a as s then
 					io.put_string ("ERROR%N")
 				end
 				p := queue.pop_protected
@@ -198,8 +196,7 @@ feature
 				yield
 				p := queue.pop_protected
 				if p /= default_pointer then
-					s ?= eif_wean (p)
-					if s = Void or else s.count /= 1 or else not s.generating_type.out.is_equal ("STRING_8") then
+					if not attached {STRING} eif_wean (p) as l_s or else l_s.count /= 1 or else not l_s.generating_type.out.is_equal ("STRING_8") then
 						io.put_string ("ERROR%N")
 					end
 				end

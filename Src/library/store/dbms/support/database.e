@@ -23,6 +23,12 @@ feature -- For DATABASE_STATUS
 		deferred
 		end
 
+	is_warning_updated: BOOLEAN
+			-- Has a database function been called since last update which may have
+			-- warnings?
+		deferred
+		end
+
 	found: BOOLEAN
 			-- Is there any record matching the last
 			-- selection condition used ?

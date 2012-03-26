@@ -10,13 +10,6 @@ class
 
 inherit
 
-	DB_STATUS_USE
-		export
-			{DB_STATUS} error_message, error_code, warning_message, reset
-		redefine
-			error_message_32, error_code, warning_message_32, reset
-		end
-
 	HANDLE_SPEC [G]
 
 feature -- Status report
@@ -46,6 +39,13 @@ feature -- Status report
 			Result := db_spec.no_error_code
 		end
 
+	is_warning_updated: BOOLEAN
+			-- Has an Oracle/ODBC function been called since last update which may have
+			-- updated warning message?
+		do
+			Result := db_spec.is_warning_updated
+		end
+
 	warning_message_32: STRING_32
 			-- Warning message from database server
 		do
@@ -66,14 +66,14 @@ feature -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

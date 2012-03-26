@@ -55,13 +55,19 @@ feature -- For DATABASE_STATUS
 			-- have caused an update to error code, error message, or warning
 			-- message?
 
+	is_warning_updated: BOOLEAN
+			-- Has a database function been called since last update which may have
+			-- warnings?
+
 	found: BOOLEAN
 			-- Is there any record matching the last selection condition used?
 
 	clear_error
 			-- Reset database error status
 		do
-			--FIXME: this is not clearing any error
+				-- Don't need to do anything in database
+			is_error_updated := True
+			is_warning_updated := True
 		end
 
 	insert_auto_identity_column: BOOLEAN = True
@@ -397,15 +403,16 @@ feature -- External features
 	get_warn_message: POINTER
 			-- The warning message as returned by the RDBMS after the last
 			-- action.
-			-- This feature also sets is_error_updated to True
+			-- This feature also sets is_warning_updated to True
 		do
 			Result := eif_mysql_get_warn_message (mysql_pointer)
+			is_warning_updated := True
 		end
 
 	get_warn_message_string: STRING_32
 			-- The warning message as returned by the RDBMS after the last
 			-- action.
-			-- This feature also sets is_error_updated to True
+			-- This feature also sets is_warning_updated to True
 		local
 			l_s: SQL_STRING
 		do
@@ -474,6 +481,7 @@ feature -- External features
 			result_pointers.put (default_pointer, no_descriptor)
 			descriptors.put (Void, no_descriptor)
 			is_error_updated := False
+			is_warning_updated := False
 		end
 
 	close_cursor (no_descriptor: INTEGER)
@@ -873,6 +881,7 @@ feature -- External features
 			create l_base.make (application)
 			mysql_pointer := eif_mysql_connect (l_user.item, l_pass.item, l_host.item, l_port, l_base.item)
 			is_error_updated := False
+			is_warning_updated := False
        	end
 
 	connect_by_connection_string (a_connect_string: STRING)
@@ -889,15 +898,23 @@ feature -- External features
 	commit
 			-- Commit
 		do
-			is_error_updated := mysql_commit (mysql_pointer)
-			is_error_updated := eif_mysql_autocommit (mysql_pointer, True)
+			is_error_updated := not mysql_commit (mysql_pointer)
+			if eif_mysql_autocommit (mysql_pointer, True) then
+				is_error_updated := False
+			end
+				-- We use error message as warning message in C code
+			is_warning_updated := is_error_updated
 		end
 
 	rollback
 			-- Rollback
 		do
-			is_error_updated := mysql_rollback (mysql_pointer)
-			is_error_updated := eif_mysql_autocommit (mysql_pointer, True)
+			is_error_updated := not mysql_rollback (mysql_pointer)
+			if eif_mysql_autocommit (mysql_pointer, True) then
+				is_error_updated := True
+			end
+				-- We use error message as warning message in C code
+			is_warning_updated := is_error_updated
 		end
 
 	trancount: INTEGER
@@ -911,7 +928,8 @@ feature -- External features
  			-- It is not nessary to call begin, if one does not use transaction.
  			-- http://dev.mysql.com/tech-resources/articles/mysql-connector-cpp.html#trx
 		do
-			is_error_updated := eif_mysql_autocommit (mysql_pointer, False)
+			is_error_updated := not eif_mysql_autocommit (mysql_pointer, False)
+			is_warning_updated := is_error_updated
 		end
 
 	last_insert_id: NATURAL_64
@@ -1152,16 +1170,19 @@ feature {NONE} -- C Externals
 		end
 
 	eif_mysql_autocommit (mysql_ptr: POINTER; a_mode: BOOLEAN): BOOLEAN
+			-- Return True, if there was error.
 		external
 			"C | %"eif_mysql.h%""
 		end
 
 	mysql_commit (mysql_ptr: POINTER): BOOLEAN
+			-- Return True, if there was error.
 		external
 			"C | %"eif_mysql.h%""
 		end
 
 	mysql_rollback (mysql_ptr: POINTER): BOOLEAN
+			-- Return True, if there was error.
 		external
 			"C | %"eif_mysql.h%""
 		end

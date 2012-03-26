@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 			implementation := handle.database.db_status
 			error_message_stored := empty_string
 			no_error_code_stored := implementation.no_error_code
+			warning_message_stored := empty_string
 		end
 
 feature -- Status report
@@ -44,6 +45,13 @@ feature -- Status report
 			-- updated error status?
 		do
 			Result := implementation.is_error_updated
+		end
+
+	is_warning_updated: BOOLEAN
+			-- Has an Oracle/ODBC function been called since last update which may have
+			-- updated warnings?
+		do
+			Result := implementation.is_warning_updated
 		end
 
 	error_code: INTEGER
@@ -91,7 +99,11 @@ feature -- Status report
 	warning_message_32: STRING_32
 			-- SQL warning message prompted by database server
 		do
-			Result := implementation.warning_message_32
+			if not handle.status.is_warning_updated then
+				update_warning_status
+			end
+				-- Return a copy of the stored error string for safety.
+			create Result.make_from_string (warning_message_stored)
 		end
 
 feature -- Status setting
@@ -107,12 +119,14 @@ feature -- Status setting
 	reset
 			-- Reset database error status.
 		do
-			implementation.reset
 			error_code_stored := 0
 			error_message_stored := empty_string
+			warning_message_stored := empty_string
+			implementation.reset
 		ensure
 			no_error: error_code_stored = 0
 			no_message_error: error_message_stored.is_empty
+			no_message_warning: warning_message_stored.is_empty
 		end
 
 feature {NONE} -- Implementation
@@ -130,6 +144,9 @@ feature {NONE} -- error status implementation
 	no_error_code_stored: INTEGER
 			-- Default value of `error_code' from database (ie: no error).
 
+	warning_message_stored: STRING_32
+			-- Warning message
+
 	update_error_status
 			-- set `error_message_stored', `error_code_stored', with
 			-- error_status from the database server.
@@ -141,7 +158,15 @@ feature {NONE} -- error status implementation
 				error_message_stored := empty_string
 			end
 		ensure
-			is_error_updated
+			is_error_updated: is_error_updated
+		end
+
+	update_warning_status
+			-- set `warning_message_stored' from the database server.
+		do
+			warning_message_stored := implementation.warning_message_32
+		ensure
+			is_warning_update: is_warning_updated
 		end
 
 feature {NONE} -- Implementation
@@ -154,14 +179,14 @@ invariant
 	has_handle: implementation /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

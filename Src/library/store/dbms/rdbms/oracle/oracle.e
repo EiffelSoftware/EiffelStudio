@@ -26,7 +26,12 @@ feature -- For DATABASE_STATUS
 
 	is_error_updated: BOOLEAN
 			-- Has an Oracle function been called since last update which may have
-			-- updated error code, error message or warning message?
+			-- updated error code, error message?
+
+	is_warning_updated: BOOLEAN = True
+			-- Has an Oracle function been called since last update which may have
+			-- updated warning message?
+			-- No warning message implemented in Oracle C code.
 
 	found: BOOLEAN
 			-- Is there any record matching the last
@@ -1072,14 +1077,14 @@ feature {NONE} -- External features
 	Concat_string: STRING_32 = "'||'";
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

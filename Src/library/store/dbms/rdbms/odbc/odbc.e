@@ -50,6 +50,10 @@ feature -- For DATABASE_STATUS
 			-- Has an ODBC function been called since last update which may have
 			-- updated error code, error message?
 
+	is_warning_updated: BOOLEAN
+			-- Has an ODBC function been called since last update which may have
+			-- updated warning message?
+
 	found: BOOLEAN
 			-- Is there any record matching the last
 			-- selection condition used ?
@@ -82,6 +86,7 @@ feature -- For DATABASE_CHANGE
 		do
 			odbc_pre_immediate (con_context_pointer, descriptor, i)
 			is_error_updated := False
+			is_warning_updated := False
 		end
 
 feature -- For DATABASE_FORMAT
@@ -151,6 +156,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 						odbc_init_order (con_context_pointer, descriptor, c_temp.item, c_temp.count, uht.count)
 					end
 					is_error_updated := False
+					is_warning_updated := False
 					if uht.count > 0 then
 						l_para := para
 						if l_para /= Void then
@@ -260,6 +266,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 				end -- Null value
 				odbc_set_parameter (con_context_pointer, descriptor, i, 1, type,  odbc_get_col_len (con_context_pointer, descriptor, i), 0, l_para.get (i))
 				is_error_updated := False
+				is_warning_updated := False
 				i := i + 1
 			end
 		end
@@ -619,6 +626,7 @@ feature -- External
 				odbc_get_warn_message_count (con_context_pointer) * {SQL_STRING}.character_size
 				)
 			Result := l_s.string
+			is_warning_updated := True
 		end
 
 	new_descriptor: INTEGER
@@ -633,6 +641,7 @@ feature -- External
 			create c_temp.make (command)
 			odbc_init_order (con_context_pointer, no_descriptor, c_temp.item, c_temp.count, 0)
 			is_error_updated := False
+			is_warning_updated := False
 		end
 
 	start_order (no_descriptor: INTEGER)
@@ -640,12 +649,14 @@ feature -- External
 			odbc_set_decimal_presicion_and_scale (con_context_pointer, default_decimal_presicion, default_decimal_scale)
 			odbc_start_order (con_context_pointer, no_descriptor)
 			is_error_updated := False
+			is_warning_updated := False
 		end
 
 	next_row (no_descriptor: INTEGER)
 		do
 			found := odbc_next_row (con_context_pointer, no_descriptor) = 0
 			is_error_updated := False
+			is_warning_updated := False
 		end
 
 	close_cursor (no_descriptor: INTEGER)
@@ -663,6 +674,7 @@ feature -- External
 			end
 			odbc_terminate_order (con_context_pointer, no_descriptor)
 			is_error_updated := False
+			is_warning_updated := False
 		end
 
 	exec_immediate (no_descriptor: INTEGER; command: READABLE_STRING_GENERAL)
@@ -672,6 +684,7 @@ feature -- External
 			create c_temp.make (command)
 			odbc_exec_immediate (con_context_pointer, no_descriptor, c_temp.item, c_temp.count)
 			is_error_updated := False
+			is_warning_updated := False
 		end
 
 	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len: INTEGER): INTEGER
@@ -945,6 +958,7 @@ feature -- External
 			create c_temp3.make (data_source)
 			odbc_connect (con_context_pointer, c_temp1.item, c_temp1.count, c_temp2.item, c_temp2.count, c_temp3.item, c_temp3.count)
 			is_error_updated := False
+			is_warning_updated := False
 --			initialize_date_type_values
 		end
 
@@ -956,12 +970,14 @@ feature -- External
 			create l_string.make (a_connect_string)
 			odbc_connect_by_connection_string (con_context_pointer, l_string.item, l_string.count)
 			is_error_updated := False
+			is_warning_updated := False
 		end
 
 	disconnect
 		do
 			odbc_disconnect (con_context_pointer)
 			is_error_updated := False
+			is_warning_updated := False
 			found := False
 		end
 
@@ -969,12 +985,14 @@ feature -- External
 		do
 			odbc_commit (con_context_pointer)
 			is_error_updated := False
+			is_warning_updated := False
 		end
 
 	rollback
 		do
 			odbc_rollback (con_context_pointer)
 			is_error_updated := False
+			is_warning_updated := False
 		end
 
 	trancount: INTEGER
@@ -1558,6 +1576,7 @@ feature {NONE} -- External features
 					odbc_set_parameter (con_context_pointer, descriptor, i, 1, type, 100, l_value_count, l_para.get (i))
 
 					is_error_updated := False
+					is_warning_updated := False
 					i := i + 1
 					ht_order.forth
 				end

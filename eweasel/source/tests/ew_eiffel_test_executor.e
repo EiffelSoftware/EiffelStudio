@@ -19,6 +19,9 @@ inherit
 			{NONE} all
 		end
 
+create
+	make
+
 feature -- Execution
 
 	execute
@@ -77,13 +80,13 @@ feature -- Properties
 
 	queue: EW_EIFFEL_TEST_QUEUE
 			-- Queue of tests to be executed
-	
+
 	options: EW_TEST_SUITE_OPTIONS
 			-- Options for test suite execution
-	
+
 	test_suite: EW_EIFFEL_TEST_SUITE
 			-- Test suite containing tests to be executed
-	
+
 feature -- Modification
 
 	set_queue (q: EW_EIFFEL_TEST_QUEUE)
@@ -91,13 +94,13 @@ feature -- Modification
 		do
 			queue := q
 		end
-	
+
 	set_options (opts: EW_TEST_SUITE_OPTIONS)
 			-- Set `options' to `opts'
 		do
 			options := opts
 		end
-	
+
 	set_test_suite (s: EW_EIFFEL_TEST_SUITE)
 			-- Set `test_suite' to `s'
 		do

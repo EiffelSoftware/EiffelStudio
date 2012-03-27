@@ -37,7 +37,7 @@ feature -- Execution
 			max_threads := opts.max_threads
 			create queue.make
 			queue.set_results_in_catalog_order (opts.results_in_catalog_order)
-			
+
 			debug ("threaded_eweasel")
 				print_debug_main ("Started adding tests selected by filter to test queue")
 			end
@@ -61,7 +61,7 @@ feature -- Execution
 						debug ("threaded_eweasel")
 							print_debug_main ("Creating thread "	+ num_threads.out)
 						end
-						create executor
+						create executor.make
 						executor.set_queue (queue)
 						executor.set_options (opts)
 						executor.set_test_suite (Current)
@@ -80,7 +80,7 @@ feature -- Execution
 			debug ("threaded_eweasel")
 				print_debug_main ("Broadcasted %"all tests added%" condition")
 			end
-			
+
 			from
 				done := False
 			until

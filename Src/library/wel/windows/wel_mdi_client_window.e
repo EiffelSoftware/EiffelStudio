@@ -70,8 +70,9 @@ feature -- Status report
 			exists: exists
 			has_active_window: has_active_window
 		do
-			Result ?= window_of_item ({WEL_API}.send_message_result (item, Wm_mdigetactive,
-				to_wparam (0), to_lparam (0)))
+			if attached {like active_window} window_of_item ({WEL_API}.send_message_result (item, Wm_mdigetactive, to_wparam (0), to_lparam (0))) as l_mdi_window then
+				Result := l_mdi_window
+			end
 		end
 
 feature -- Basic operations
@@ -141,14 +142,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

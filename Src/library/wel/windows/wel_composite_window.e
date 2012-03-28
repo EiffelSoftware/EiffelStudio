@@ -700,13 +700,10 @@ feature {NONE} -- Implementation
 			-- Wm_notify message
 		local
 			info: WEL_NMHDR
-			control: detachable WEL_CONTROL
 		do
 			create info.make_by_pointer (lparam)
 			on_notify (wparam.to_integer_32, info)
-			control ?= info.window_from
-
-			if control /= Void and then control.exists then
+			if attached {WEL_CONTROL} info.window_from as control and then control.exists then
 				control.increment_level
 				control.process_notification_info (info)
 				if control.has_return_value then
@@ -724,7 +721,6 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		local
-			control: detachable WEL_CONTROL
 			control_id: INTEGER
 			hwnd_control: POINTER
 			notify_code: INTEGER
@@ -736,8 +732,7 @@ feature {NONE} -- Implementation
 				-- Message comes from a control
 				on_wm_control_id_command (control_id)
 				if is_window (hwnd_control) then
-					control ?= window_of_item (hwnd_control)
-					if control /= Void then
+					if attached {WEL_CONTROL} window_of_item (hwnd_control) as control then
 						if exists and then control.exists then
 							on_control_command (control)
 						end
@@ -823,19 +818,17 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		local
-			a_bar: detachable WEL_BAR
 			p: POINTER
 		do
 			p := cwin_get_wm_vscroll_hwnd (wparam, lparam)
 			if p /= default_pointer then
-				-- The message comes from a scroll bar control
-				a_bar ?= window_of_item (p)
-				if a_bar /= Void then
-					check
-						a_bar_exists: a_bar.exists
-					end
+				if
+					attached {WEL_BAR} window_of_item (p) as l_bar and then
+					l_bar.exists
+				then
+					-- The message comes from a scroll bar control
 					on_vertical_scroll_control (cwin_get_wm_vscroll_code (wparam, lparam),
-						cwin_get_wm_vscroll_pos (wparam, lparam), a_bar)
+						cwin_get_wm_vscroll_pos (wparam, lparam), l_bar)
 				end
 			else
 				-- The message comes from a window scroll bar
@@ -849,19 +842,17 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		local
-			a_bar: detachable WEL_BAR
 			p: POINTER
 		do
 			p := cwin_get_wm_hscroll_hwnd (wparam, lparam)
 			if p /= default_pointer then
-				-- The message comes from a scroll bar control
-				a_bar ?= window_of_item (p)
-				if a_bar /= Void then
-					check
-						a_bar_exists: a_bar.exists
-					end
+				if
+					attached {WEL_BAR} window_of_item (p) as l_bar and then
+					l_bar.exists
+				then
+					-- The message comes from a scroll bar control
 					on_horizontal_scroll_control (cwin_get_wm_hscroll_code (wparam, lparam),
-						cwin_get_wm_hscroll_pos (wparam, lparam), a_bar)
+						cwin_get_wm_hscroll_pos (wparam, lparam), l_bar)
 				end
 			else
 				-- The message comes from a window scroll bar
@@ -897,17 +888,17 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		local
-			control: detachable WEL_COLOR_CONTROL
 			hwnd_control: POINTER
 			paint_dc: WEL_PAINT_DC
 		do
 			hwnd_control := cwin_get_wm_command_hwnd (wparam, lparam)
-			if hwnd_control /= default_pointer then
-				control ?= window_of_item (hwnd_control)
-				if control /= Void and then control.exists then
-					create paint_dc.make_by_pointer (Current, wparam)
-					on_color_control (control, paint_dc)
-				end
+			if
+				hwnd_control /= default_pointer and then
+				attached {WEL_COLOR_CONTROL} window_of_item (hwnd_control) as control and then
+				control.exists
+			then
+				create paint_dc.make_by_pointer (Current, wparam)
+				on_color_control (control, paint_dc)
 			end
 		end
 
@@ -948,7 +939,6 @@ feature {NONE} -- Implementation
 			-- Update the system colors.
 		local
 			child_wnd: LIST [WEL_WINDOW]
-			control: detachable WEL_CONTROL
 		do
 				-- Invalidate the colors
 			system_color_scrollbar_cell.put (Void)
@@ -980,8 +970,7 @@ feature {NONE} -- Implementation
 			until
 				child_wnd.after
 			loop
-				control ?= child_wnd.item
-				if control /= Void then
+				if attached {WEL_CONTROL} child_wnd.item as control then
 					{WEL_API}.send_message (child_wnd.item.item, Wm_syscolorchange, {WEL_DATA_TYPE}.to_wparam (0), {WEL_DATA_TYPE}.to_lparam (0))
 				end
 				child_wnd.forth
@@ -1184,14 +1173,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

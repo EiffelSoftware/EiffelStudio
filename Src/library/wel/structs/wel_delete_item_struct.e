@@ -48,7 +48,9 @@ feature -- Access
 	window_item: detachable WEL_CONTROL
 			-- Identifies the control.
 		do
-			Result ?= window_of_item (cwel_deleteitemstruct_get_hwnditem (item))
+			if attached {like window_item} window_of_item (cwel_deleteitemstruct_get_hwnditem (item)) as l_control then
+				Result := l_control
+			end
 		end
 
 	item_id: INTEGER
@@ -111,14 +113,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

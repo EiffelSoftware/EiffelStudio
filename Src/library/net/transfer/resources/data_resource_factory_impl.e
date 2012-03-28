@@ -206,40 +206,36 @@ feature {NONE} -- Implementation (Factory setup)
 
 	create_file_resource: FILE_PROTOCOL
 			-- Create file service.
-		local
-			u: detachable FILE_URL
+		require
+			is_service_supported: is_service_supported
+			is_file_url: attached {FILE_URL} url
 		do
-			u ?= url
-			check
-					-- Because factory has created the right URL type
-				type_correct: u /= Void
+				-- Because factory has created the right URL type
+			check attached {FILE_URL} url as u then
+				create Result.make (u)
 			end
-			create Result.make (u)
 		end
 
 	create_http_url: HTTP_URL
 			-- Create HTTP URL.
 		require
 			is_address_set: is_address_set
-		local
-			l_address: like address
 		do
-			l_address := address
-			check l_address_not_void: l_address /= Void end
-			create Result.make (l_address)
+			check attached address as l_address then
+				create Result.make (l_address)
+			end
 		end
 
 	create_http_resource: HTTP_PROTOCOL
 			-- Create HTTP service.
-		local
-			u: detachable HTTP_URL
+		require
+			is_service_supported: is_service_supported
+			is_http_url: attached {HTTP_URL} url
 		do
-			u ?= url
-			check
-					-- Because factory has created the right URL type
-				type_correct: u /= Void
+				-- Because factory has created the right URL type
+			check attached {HTTP_URL} url as u then
+				create Result.make (u)
 			end
-			create Result.make (u)
 		end
 
 	create_ftp_url: FTP_URL
@@ -256,15 +252,14 @@ feature {NONE} -- Implementation (Factory setup)
 
 	create_ftp_resource: FTP_PROTOCOL
 			-- Create FTP service.
-		local
-			u: detachable FTP_URL
+		require
+			is_service_supported: is_service_supported
+			is_ftp_url: attached {FTP_URL} url
 		do
-			u ?= url
-			check
-					-- Because factory has created the right URL type
-				type_correct: u /= Void
+				-- Because factory has created the right URL type
+			check attached {FTP_URL} url as u then
+				create Result.make (u)
 			end
-			create Result.make (u)
 		end
 
 invariant
@@ -273,14 +268,14 @@ invariant
 							not default_service.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

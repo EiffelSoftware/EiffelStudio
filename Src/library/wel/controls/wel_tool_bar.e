@@ -306,8 +306,9 @@ feature -- Status report
 		require
 			tooltip_exists: tooltip_exists
 		do
-			Result ?= window_of_item ({WEL_API}.send_message_result (item, Tb_gettooltips,
-				to_wparam (0), to_lparam (0)))
+			if attached {like tooltip} window_of_item ({WEL_API}.send_message_result (item, Tb_gettooltips, to_wparam (0), to_lparam (0))) as l_tooltip then
+				Result := l_tooltip
+			end
 		end
 
 	button_hidden (command_id: INTEGER): BOOLEAN
@@ -693,7 +694,7 @@ feature {NONE} -- Inapplicable
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

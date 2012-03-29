@@ -2220,7 +2220,7 @@ end
 					-- No final bracket-double-quote.
 				append_text_to_string (token_buffer)
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
-				if token_buffer.count > 2 and then token_buffer.item (token_buffer.count - 1) = '%R' then
+				if token_buffer.count > 1 and then token_buffer.item (token_buffer.count - 1) = '%R' then
 						-- Remove \r in \r\n.
 					token_buffer.remove (token_buffer.count - 1)
 				end
@@ -2239,7 +2239,7 @@ end
 				if is_verbatim_string_closer then
 					set_start_condition (INITIAL)
 						-- Remove the trailing new-line.
-					if token_buffer.count >= 2 then
+					if token_buffer.count > 1 then
 						check new_line: token_buffer.item (token_buffer.count) = '%N' end
 						if token_buffer.item (token_buffer.count - 1) = '%R' then
 								-- Under Windows a we have \r\n.
@@ -2302,7 +2302,7 @@ end
 
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				append_text_to_string (token_buffer)
-				if token_buffer.count > 2 and then token_buffer.item (token_buffer.count - 1) = '%R' then
+				if token_buffer.count > 1 and then token_buffer.item (token_buffer.count - 1) = '%R' then
 						-- Remove \r in \r\n.
 					token_buffer.remove (token_buffer.count - 1)
 				end
@@ -2332,7 +2332,7 @@ end
 
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				append_text_to_string (token_buffer)
-				if token_buffer.count > 2 and then token_buffer.item (token_buffer.count - 1) = '%R' then
+				if token_buffer.count > 1 and then token_buffer.item (token_buffer.count - 1) = '%R' then
 						-- Remove \r in \r\n.
 					token_buffer.remove (token_buffer.count - 1)
 				end
@@ -3871,7 +3871,7 @@ feature -- User-defined features
 
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -3895,11 +3895,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EIFFEL_SCANNER

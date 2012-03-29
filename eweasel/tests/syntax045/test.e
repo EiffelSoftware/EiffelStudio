@@ -65,14 +65,14 @@ $(EMPTY)
 $(EMPTY)
 				$(EMPTY)
 				$(CLOSE)",
-				"%N$(INDENT)"
+				"%N%T%T%T%T"
 			)
 			test_equality (
 				"$(OPEN)
 				$(EMPTY)
 $(EMPTY)
 				$(CLOSE)",
-				"$(INDENT)%N"
+				"%T%T%T%T%N"
 			)
 				-- Verbatim strings with data
 			test_equality (
@@ -136,7 +136,7 @@ $(EMPTY)
 				abc
 $(EMPTY)
 				$(CLOSE)",
-				"%N$%T%T%T%Tabc%N"
+				"%N%T%T%T%Tabc%N"
 			)
 			test_equality (
 				"$(OPEN)
@@ -152,7 +152,7 @@ $(EMPTY)
 				abc
 				$(EMPTY)
 				$(CLOSE)",
-				"%N$(INDENT)abc%N$(INDENT)"
+				"%N%T%T%T%Tabc%N%T%T%T%T"
 			)
 			test_equality (
 				"$(OPEN)
@@ -160,7 +160,7 @@ $(EMPTY)
 				abc
 $(EMPTY)
 				$(CLOSE)",
-				"$(INDENT)%N$(INDENT)abc%N"
+				"%T%T%T%T%N%T%T%T%Tabc%N"
 			)
 			test_equality (
 				"$(OPEN)
@@ -170,7 +170,7 @@ $(EMPTY)
 				ABC
 $(EMPTY)
 				$(CLOSE)",
-				"%N$%T%T%T%Tabc%N%N%T%T%T%TABC%N"
+				"%N%T%T%T%Tabc%N%N%T%T%T%TABC%N"
 			)
 			test_equality (
 				"$(OPEN)

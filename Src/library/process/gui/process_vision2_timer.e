@@ -35,16 +35,15 @@ feature{NONE} -- Implementation
 feature -- Control
 
 	start
-		local
-			prc_imp: PROCESS_IMP
 		do
-			prc_imp ?= process_launcher
-			check
-				prc_imp /= Void
+			if attached {PROCESS_IMP} process_launcher as prc_imp then
+				create timer.make_with_interval (sleep_time)
+				timer.actions.extend (agent prc_imp.check_exit)
+				has_started := True
+			else
+				check is_a_process_imp: False end
+				has_started := False
 			end
-			create timer.make_with_interval (sleep_time)
-			timer.actions.extend (agent prc_imp.check_exit)
-			has_started := True
 		end
 
 	wait (a_timeout: INTEGER): BOOLEAN
@@ -56,31 +55,33 @@ feature -- Control
 			l_now_time: DATE_TIME
 		do
 			if not is_destroyed then
-				prc_imp ?= process_launcher
-				check prc_imp /= Void end
 				destroy
 				if a_timeout > 0 then
 					create l_start_time.make_now
 				end
-				from
-					l_sleep_time := sleep_time * one_millisecond_in_nanoseconds
-				until
-					prc_imp.has_exited or l_timeout
-				loop
-					prc_imp.check_exit
-					if not prc_imp.has_exited then
-						if a_timeout > 0 then
-							create l_now_time.make_now
-							if l_now_time.relative_duration (l_start_time).fine_seconds_count * 1000 > a_timeout then
-								l_timeout := True
-								start
+				if attached {PROCESS_IMP} process_launcher as prc_imp then
+					from
+						l_sleep_time := sleep_time * one_millisecond_in_nanoseconds
+					until
+						prc_imp.has_exited or l_timeout
+					loop
+						prc_imp.check_exit
+						if not prc_imp.has_exited then
+							if a_timeout > 0 then
+								create l_now_time.make_now
+								if l_now_time.relative_duration (l_start_time).fine_seconds_count * 1000 > a_timeout then
+									l_timeout := True
+									start
+								else
+									sleep (l_sleep_time)
+								end
 							else
 								sleep (l_sleep_time)
 							end
-						else
-							sleep (l_sleep_time)
 						end
 					end
+				else
+					check is_a_process_imp: False end
 				end
 				Result := not l_timeout
 			else
@@ -110,7 +111,7 @@ invariant
 
 note
 	library:   "EiffelProcess: Manipulation of processes with IO redirection."
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	source: "[
 			Eiffel Software

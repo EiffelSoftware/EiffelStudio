@@ -14,6 +14,11 @@ feature {NONE} -- Creation
 			create a_s.make_empty
 			a_s.force ("1", 1)
 			a_s.force ("2", 2)
+			a_s.force ("-5", -2)
+
+			create a_s.make_empty
+			a_s.force ("1", 1)
+			a_s.force ("2", 2)
 			a_s.force ("3", 3)
 			a_s.force ("4", 4)
 			a_s.force ("5", 5)

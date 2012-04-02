@@ -1,12 +1,18 @@
 test_name	correct-mismatch-memory-corruption
 test_description When there are a lot of mismatches, the internal SPECIAL used to store the data is properly resized but when using the new SPECIAL semantics where count /= capacity, `count' is never updated therefore the GC does not mark new added items after resizing.
 
+define_directory EIFGEN $TEST EIFGENs
+define_directory TARGET $EIFGEN test
+define_directory WCODE $TARGET W_code
+
 copy_sub 	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
 copy_raw	rose_date.e $CLUSTER rose_date.e
 
 compile_melted
 compile_result	ok
+
+copy_bin	file.store $WCODE file.store
 
 execute_work	NONE exec_output_m
 execute_result	ok

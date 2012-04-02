@@ -49,10 +49,15 @@ feature -- Access
 			-- Receive activity of server
 		do
 			in.accept;
-			outflow ?= in.accepted;
-			if attached outflow as l_outflow then
-				received ?= l_outflow.retrieved
+			if attached {like outflow} in.accepted as l_outflow then
+				outflow := l_outflow
+				if attached {like received} l_outflow.retrieved as l_retrieved then
+					received := l_retrieved
+				else
+					received := Void
+				end
 			else
+				outflow := Void
 				received := Void
 			end
 		end;

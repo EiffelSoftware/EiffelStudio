@@ -426,11 +426,11 @@ feature -- Queries
 		do
 			obj := tables.obj (tablecode)
 			has_error := False
-			Result ?= database_manager.load_list_with_select (query, obj)
-			if database_manager.has_error then
+			if attached database_manager.load_list_with_select (query, obj) as l_result then
+				Result := l_result
+			end
+			if database_manager.has_error and then attached database_manager.error_message_32 as l_error_message then
 				has_error := True
-				l_error_message := database_manager.error_message_32
-				check l_error_message /= Void end -- implied by `has_error'
 				error_message_32 := selection_failed (query) + l_error_message
 			end
 		end
@@ -962,14 +962,14 @@ feature {NONE} -- Error messages
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class DATABASE_MANAGER

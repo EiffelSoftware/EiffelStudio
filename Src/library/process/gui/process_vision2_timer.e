@@ -49,7 +49,6 @@ feature -- Control
 	wait (a_timeout: INTEGER): BOOLEAN
 		local
 			l_sleep_time: INTEGER_64
-			prc_imp: PROCESS_IMP
 			l_timeout: BOOLEAN
 			l_start_time: DATE_TIME
 			l_now_time: DATE_TIME

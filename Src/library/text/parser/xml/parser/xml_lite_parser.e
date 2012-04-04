@@ -207,7 +207,7 @@ feature {NONE} -- Implementation: parse
 		local
 			c: CHARACTER
 			l_content: STRING
-			l_in_tag: BOOLEAN
+			l_in_prolog: BOOLEAN
 			buf: like buffer
 			l_callbacks: like callbacks
 			l_ignore_non_printable_char: BOOLEAN
@@ -219,6 +219,7 @@ feature {NONE} -- Implementation: parse
 
 			l_callbacks.on_start
 			from
+				l_in_prolog := True
 				create l_content.make_empty
 			until
 				parsing_stopped or buf.end_of_input
@@ -227,17 +228,17 @@ feature {NONE} -- Implementation: parse
 				inspect
 					c
 				when '<' then
-					if l_in_tag then
-						if not l_content.is_empty then
-							l_callbacks.on_content (l_content.string)
-							l_content.wipe_out
-						end
-					else
+					if l_in_prolog then
 						l_ignore_non_printable_char := False
 						if not is_blank (l_content) then
 							report_unexpected_content_in_prolog (l_content)
 						end
 						l_content.wipe_out
+					else
+						if not l_content.is_empty then
+							l_callbacks.on_content (l_content.string)
+							l_content.wipe_out
+						end
 					end
 					c := next_character
 					inspect c
@@ -262,24 +263,27 @@ feature {NONE} -- Implementation: parse
 						end
 					else
 						rewind_character
-						l_in_tag := True
+						l_in_prolog := False
 						parse_start_tag
 					end
 				when '&' then
 					l_content.append_string (next_entity)
 				else
-					--| Ignore non printable character on top of XML document.
+						-- Ignore non printable character on top of XML document.
 					if
-						l_in_tag
-						or else c.is_printable
-						or else not l_ignore_non_printable_char
+						l_in_prolog and then
+						l_ignore_non_printable_char and not c.is_printable
 					then
+						-- Ignore non printable char in prolog
+					else
 						l_content.append_character (c)
 					end
 				end
 			end
 			if not parsing_stopped then
-				if not l_content.is_empty then
+				-- Remaining content when parsing is completed
+				if not l_content.is_empty and then not is_blank (l_content) then
+						-- It is likely to be an error, but for specific usage, let's be flexible
 					l_callbacks.on_content (l_content.string)
 					l_content.wipe_out
 				end
@@ -309,7 +313,7 @@ feature {NONE} -- Implementation: parse
 				l_callbacks.on_start_tag_finish
 			when '/' then
 				c := next_character
---				c := next_non_space_character -- less strict?
+--				c := next_non_space_character -- more flexible?
 				if c = '>' then
 					l_callbacks.on_start_tag_finish
 					l_callbacks.on_end_tag (Void, t.prefix_part, t.local_part)
@@ -334,7 +338,7 @@ feature {NONE} -- Implementation: parse
 							l_callbacks.on_start_tag_finish
 						when '/' then
 							c := next_character
---							c := next_non_space_character -- less strict?							
+--							c := next_non_space_character -- more flexible?							
 							if c = '>' then
 								done := True
 								l_callbacks.on_start_tag_finish
@@ -388,7 +392,7 @@ feature {NONE} -- Implementation: parse
 				inspect
 					c
 				when '?' then
---					c := next_non_space_character
+--					c := next_non_space_character -- more flexible?
 					c := next_character
 					if c = '>' then
 						if l_version /= Void then

@@ -384,6 +384,7 @@ feature -- Plug and Makefile file
 			-- Generate plug with run-time
 		local
 			any_cl, string_cl, string32_cl, array_cl, rout_cl, exception_manager_cl, scoop_manager_cl: CLASS_C
+			scoop_manager_ct: CLASS_TYPE
 			arr_type_id: INTEGER
 			id: INTEGER
 			str_make_feat, set_count_feat: FEATURE_I
@@ -425,6 +426,7 @@ feature -- Plug and Makefile file
 			l_rcorigin, l_rcoffset: INTEGER
 			cs: CURSOR
 			i: INTEGER
+			arg_types: ARRAY [STRING]
 			l_is_scoop_capable: BOOLEAN
 		do
 				-- Clear buffer for current generation
@@ -578,12 +580,33 @@ feature -- Plug and Makefile file
 				buffer.put_string ("();%N")
 
 				feat := scoop_manager_cl.feature_table.item_id (Names_heap.scoop_manager_task_callback_name_id)
+				scoop_manager_ct := scoop_manager_cl.actual_type.associated_class_type (Void)
 				scoop_manager_task_callback_name := Encoder.feature_name (id, feat.body_index).string
-				buffer.put_string ("extern void ")
-				buffer.put_string (scoop_manager_task_callback_name)
-				buffer.put_string ("();%N")
+				i := feat.argument_count
+				if final_mode then
+						-- Allocate space for all arguments and fill with "EIF_REFERENCE"
+						-- so that there is no need to resize array and set type of "Current".
+					create arg_types.make_filled ({C_CONST}.eif_reference, 1, i + 1)
+						-- Compute argument types.
+					if attached feat.arguments as feat_args then
+						from
+						until
+							i <= 0
+						loop
+								-- Record argument type reserving the first element for "Current".
+							arg_types [i + 1] := feat_args.i_th (i).adapted_in (scoop_manager_ct).c_type.c_string
+							i := i - 1
+						end
+					end
+				else
+						-- Fill all argument types with "EIF_TYPED_VALUE"...
+					create arg_types.make_filled ({C_CONST}.eif_typed_value, 1, i + 1)
+						-- ...except for the first one occupied by "Current".
+					arg_types [1] := {C_CONST}.eif_reference
+				end
+				buffer.generate_extern_declaration ("void", scoop_manager_task_callback_name, arg_types)
+				buffer.put_new_line
 			end
-
 
 				-- Make exception manager declaration
 			exception_manager_cl := system.ise_exception_manager_class.compiled_class
@@ -813,12 +836,7 @@ feature -- Plug and Makefile file
 				buffer.put_string (";%N")
 			end
 			if scoop_manager_task_callback_name /= Void then
-				--| FIXME IEK: Function Pointer Signature cast should be C macro so that it only needs to be maintained in one place.
-				if final_mode then
-					buffer.put_string ("%Tegc_scoop_manager_task_callback = (void (*)(EIF_REFERENCE, EIF_NATURAL_8, EIF_INTEGER, EIF_INTEGER, EIF_NATURAL, EIF_POINTER, EIF_POINTER)) ")
-				else
-					buffer.put_string ("%Tegc_scoop_manager_task_callback = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) ")
-				end
+				buffer.put_string ("%Tegc_scoop_manager_task_callback = ")
 				buffer.put_string (scoop_manager_task_callback_name)
 				buffer.put_string (";%N")
 			end

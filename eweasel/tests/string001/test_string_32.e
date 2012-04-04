@@ -1079,6 +1079,30 @@ feature {NONE} -- Implementation
 			s := "a    12345"
 			s.left_adjust
 			check_string_equality ("left_adjust", s, "a    12345")
+
+			s := ""
+			s.left_adjust
+			check_string_equality ("left_adjust", s, "")
+
+			s := " "
+			s.left_adjust
+			check_string_equality ("left_adjust", s, "")
+
+			s := "%T"
+			s.left_adjust
+			check_string_equality ("left_adjust", s, "")
+
+			s := "%N"
+			s.left_adjust
+			check_string_equality ("left_adjust", s, "")
+
+			s := " %T%N"
+			s.left_adjust
+			check_string_equality ("left_adjust", s, "")
+
+			s := "%N%T "
+			s.left_adjust
+			check_string_equality ("left_adjust", s, "")
 		end
 
 	test_left_justify is

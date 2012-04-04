@@ -45,6 +45,7 @@ feature -- Meta
 	on_processing_instruction (a_name: STRING; a_content: STRING)
 			-- Processing instruction.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
+			--| See http://en.wikipedia.org/wiki/Processing_instruction
 		require
 			name_not_void: a_name /= Void
 			content_not_void: a_content /= Void
@@ -153,7 +154,7 @@ feature -- Assertion
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

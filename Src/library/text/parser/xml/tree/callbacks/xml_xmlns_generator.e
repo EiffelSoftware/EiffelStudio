@@ -145,8 +145,20 @@ feature -- Events
 	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Start tag, handle default namespace.
 		do
-			check resolved: a_namespace /= Void end
+			if a_namespace /= Void then
+				on_start_tag_resolved (a_namespace, a_prefix, a_local_part)
+			else
+				if attached associated_parser as p then
+					p.report_error_from_callback ("Unresolved namespace")
+				else
+					check namespace_resolved: False end
+				end
+			end
+		end
 
+	on_start_tag_resolved (a_namespace: STRING; a_prefix: detachable STRING; a_local_part: STRING)
+			-- Start tag, handle default namespace.
+		do
 			context.on_start_element
 			if a_prefix = Void or else a_prefix.is_empty then
 				next.on_start_tag (a_namespace, a_prefix, a_local_part)
@@ -232,7 +244,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

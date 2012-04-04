@@ -17,6 +17,7 @@ inherit
 			on_finish,
 			on_start_tag,
 			on_end_tag,
+			on_content,
 			set_next
 		end
 
@@ -94,12 +95,51 @@ feature -- Tag
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
+feature {NONE} -- Content
+
+	on_content (a_content: STRING)
+			-- Forward content.
+		local
+			s: STRING
+		do
+			if prefixes.is_empty and local_parts.is_empty then
+				s := a_content.string
+				s.left_adjust
+				if not s.is_empty then
+					report_character_data_not_allowed_outside_element (a_content)
+				end
+			end
+			Precursor (a_content)
+		end
+
 feature {NONE} -- Mean version of STACK [PREFIX+NAME]
 
 	prefixes: STACK [STRING]
 	local_parts: STACK [STRING]
 
 feature {NONE} -- Errors
+
+	report_custom_error (a_error_msg: STRING; a_data: detachable STRING)
+			-- Report custom error message `a_error_msg'
+		local
+			s: STRING
+		do
+			if a_data /= Void then
+				create s.make_from_string (a_error_msg)
+				s.append_character (':')
+				s.append_character (' ')
+				s.append_character ('%"')
+				s.append (a_data)
+				s.append_character ('%"')
+			else
+				s := a_error_msg
+			end
+			if attached associated_parser as p then
+				p.report_error_from_callback (s)
+			else
+				on_error (s)
+			end
+		end
 
 	report_error (a_error_msg: STRING; a_prefix: detachable STRING; a_local: STRING)
 			-- Report `a_error_msg' error with details	
@@ -111,12 +151,7 @@ feature {NONE} -- Errors
 				s.prepend_character (':')
 				s.prepend (a_prefix)
 			end
-			s := a_error_msg + ": %"" + s + "%""
-			if attached associated_parser as p then
-				p.report_error_from_callback (s)
-			else
-				on_error (s)
-			end
+			report_custom_error (a_error_msg, s)
 		end
 
 	report_end_tag_mismatch_error (a_prefix: detachable STRING; a_local: STRING)
@@ -131,8 +166,15 @@ feature {NONE} -- Errors
 			report_error (Extra_end_tag_error, a_prefix, a_local)
 		end
 
+	report_character_data_not_allowed_outside_element (a_content: STRING)
+			-- Report `Character_data_not_allowed_outside_element_error' error with details
+		do
+			report_custom_error (Character_data_not_allowed_outside_element_error, a_content)
+		end
+
 	End_tag_mismatch_error: STRING = "End tag does not match start tag"
 	Extra_end_tag_error: STRING = "End tag without start tag"
+	Character_data_not_allowed_outside_element_error: STRING = "Character data is not allowed without wrapping it in a container element"
 			-- Error messages
 
 note

@@ -103,8 +103,6 @@ feature {NONE} -- Access
 			not_current_transition_stack_is_empty: not current_transition_stack.is_empty
 		do
 			Result := current_transition_stack.item
-		ensure
-			result_attached: Result /= Void
 		end
 
 	frozen current_attributes: HASH_TABLE [STRING_32, NATURAL_8]
@@ -413,9 +411,13 @@ feature {NONE} -- Action handlers
 			-- <Precursor>
 		do
 			if not has_error then
-				check not_current_content_stack_is_empty: not current_content_stack.is_empty end
-				if attached current_content_stack.item as l_item then
+				if
+					not current_content_stack.is_empty and then
+					attached current_content_stack.item as l_item
+				then
 					l_item.append (a_content.as_string_32)
+				else
+					xml_parser.report_error_from_callback (e_character_data_not_allowed_outside_element_error)
 				end
 			end
 		end
@@ -831,6 +833,8 @@ feature {NONE} -- Attribute values
 
 feature {NONE} -- Constants: Errors
 
+	e_character_data_not_allowed_outside_element_error: STRING = "Character data is not allowed without wrapping it in a container element"
+
 	e_schema_error: STRING = "Schema error"
 
 invariant
@@ -841,7 +845,7 @@ invariant
 	xml_parser_callbacks_is_current: xml_parser.callbacks = Current
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

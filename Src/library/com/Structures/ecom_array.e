@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 
 			from
 				i := 1
-				create upper_indices.make (1, dimension_count)
+				create upper_indices.make_filled (0, 1, dimension_count)
 			until
 				i > dimension_count
 			loop
@@ -88,6 +88,8 @@ feature {NONE} -- Initialization
 				dimension_count - i + 1
 			end
 
+				--| FIXME: This code is not void safe since we do not know the type of elements
+				--| This routine signature should take a default element instead.
 			array_make (0, a_count - 1)
 		ensure
 			valid_dimension_count: dimension_count >= 0
@@ -130,7 +132,7 @@ feature -- Initialization
 		do
 			from
 				i := 1
-				create an_index.make (1, dimension_count)
+				create an_index.make_filled (0, 1, dimension_count)
 			until
 				i > dimension_count
 			loop
@@ -340,8 +342,8 @@ feature -- Resizing
 			from
 				i := 1
 				a_count := 1
-				create new_upper_indices.make (1, dimension_count)
-				create new_element_counts.make (1, dimension_count)
+				create new_upper_indices.make_filled (0, 1, dimension_count)
+				create new_element_counts.make_filled (0, 1, dimension_count)
 			until
 				i > dimension_count
 			loop
@@ -450,14 +452,14 @@ invariant
 	non_negative_count: count >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

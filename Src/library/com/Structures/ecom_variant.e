@@ -72,7 +72,7 @@ convert
 	make_from_date_array ({ECOM_ARRAY [DATE_TIME]}),
 	make_from_string_array ({ECOM_ARRAY [STRING]}),
 	make_from_decimal_array ({ECOM_ARRAY [ECOM_DECIMAL]})
-	
+
 feature -- Initialization
 
 	make
@@ -315,7 +315,7 @@ feature -- Comparison
 			array_comparison_unchanged: a_array.object_comparison = old a_array.object_comparison
 			other_comparison_unchanged: a_other.object_comparison = old a_other.object_comparison
 		end
-		
+
 feature -- Access
 
 	variable_type: INTEGER
@@ -467,7 +467,7 @@ feature -- Access
 		do
 			Result := ccom_real_reference (item)
 		end
-			
+
 
 	double_value: DOUBLE
 			-- Double value
@@ -570,7 +570,7 @@ feature -- Access
 	string_value: STRING
 			-- BSTR value
 		require
-			is_bstr: variable_type = Vt_bstr 
+			is_bstr: variable_type = Vt_bstr
 		do
 			Result := ccom_bstr (item)
 		end
@@ -1003,251 +1003,94 @@ feature -- Element change
 
 	set (a: ANY)
 			-- Set VARIANT with ANY.
-		local
-			l_char: CHARACTER_REF
-			l_int: INTEGER_REF
-			l_real: REAL_REF
-			l_double: DOUBLE_REF
-			l_boolean: BOOLEAN_REF
-			l_date: DATE_TIME
-			l_date_cell: CELL[DATE_TIME]
-			l_hr: ECOM_HRESULT
-			l_decimal: ECOM_DECIMAL
-			l_currency: ECOM_CURRENCY
-			l_string: STRING
-			l_string_cell: CELL [STRING]
-			l_interface: ECOM_INTERFACE
-			l_interface_cell: CELL [ECOM_INTERFACE]
-			l_array: ECOM_ARRAY [ECOM_VARIANT]
-			l_boolean_array: ECOM_ARRAY [BOOLEAN]
-			l_boolean_array_cell: CELL [ECOM_ARRAY [BOOLEAN]]
-			l_char_array: ECOM_ARRAY [CHARACTER]
-			l_char_array_cell: CELL [ECOM_ARRAY [CHARACTER]]
-			l_currency_array: ECOM_ARRAY [ECOM_CURRENCY]
-			l_currency_array_cell: CELL [ECOM_ARRAY [ECOM_CURRENCY]]
-			l_date_array: ECOM_ARRAY [DATE_TIME]
-			l_date_array_cell: CELL [ECOM_ARRAY [DATE_TIME]]
-			l_decimal_array: ECOM_ARRAY [ECOM_DECIMAL]
-			l_decimal_array_cell: CELL [ECOM_ARRAY [ECOM_DECIMAL]]
-			l_double_array: ECOM_ARRAY [DOUBLE]
-			l_double_array_cell: CELL [ECOM_ARRAY [DOUBLE]]
-			l_error_array: ECOM_ARRAY [ECOM_HRESULT]
-			l_error_array_cell: CELL [ECOM_ARRAY [ECOM_HRESULT]]
-			l_integer_array: ECOM_ARRAY [INTEGER]
-			l_integer_array_cell: CELL [ECOM_ARRAY [INTEGER]]
-			l_real_array: ECOM_ARRAY [REAL]
-			l_real_array_cell: CELL [ECOM_ARRAY [REAL]]
-			l_string_array: ECOM_ARRAY [STRING]
-			l_string_array_cell: CELL [ECOM_ARRAY [STRING]]
-			l_unknown_array: ECOM_ARRAY [ECOM_INTERFACE]
-			l_unknown_array_cell: CELL [ECOM_ARRAY [ECOM_INTERFACE]]
-			l_variant_array: CELL [ECOM_ARRAY [ECOM_VARIANT]]
-			l_variant: ECOM_VARIANT
 		do
 			if a = Void then
 				set_empty
+			elseif attached {CHARACTER_REF} a as l_char then
+				set_character_reference (l_char)
+			elseif attached {INTEGER_REF} a as l_int then
+				set_integer4_reference (l_int)
+			elseif attached {REAL_REF} a as l_real then
+				set_real_reference (l_real)
+			elseif attached {DOUBLE_REF} a as l_double then
+				set_double_reference (l_double)
+			elseif attached {BOOLEAN_REF} a as l_boolean then
+				set_boolean_reference (l_boolean)
+			elseif attached {DATE_TIME} a as l_date then
+				set_date (l_date)
+			elseif attached {CELL[DATE_TIME]} a as l_date_cell then
+				set_date_reference (l_date_cell)
+			elseif attached {ECOM_HRESULT} a as l_hr then
+				set_error (l_hr)
+			elseif attached {ECOM_DECIMAL} a as l_decimal then
+				set_decimal (l_decimal)
+			elseif attached {ECOM_CURRENCY} a as l_currency then
+				set_currency (l_currency)
+			elseif attached {STRING} a as l_string then
+				set_string (l_string)
+			elseif attached {CELL [STRING]} a as l_string_cell then
+				set_string_reference (l_string_cell)
+			elseif attached {ECOM_INTERFACE} a as l_interface then
+				set_iunknown (l_interface)
+			elseif attached {CELL [ECOM_INTERFACE]} a as l_interface_cell then
+				set_iunknown_reference (l_interface_cell)
+			elseif attached {ECOM_ARRAY [ECOM_VARIANT]} a as l_array then
+				set_array (l_array)
+			elseif attached {ECOM_ARRAY [BOOLEAN]} a as l_boolean_array then
+				set_boolean_array (l_boolean_array)
+			elseif attached {CELL [ECOM_ARRAY [BOOLEAN]]} a as l_boolean_array_cell then
+				set_boolean_array_reference (l_boolean_array_cell)
+			elseif attached {ECOM_ARRAY [CHARACTER]} a as l_char_array then
+				set_char_array (l_char_array)
+			elseif attached {CELL [ECOM_ARRAY [CHARACTER]]} a as l_char_array_cell then
+				set_char_array_reference (l_char_array_cell)
+			elseif attached {ECOM_ARRAY [ECOM_CURRENCY]} a as l_currency_array then
+				set_currency_array (l_currency_array)
+			elseif attached {CELL [ECOM_ARRAY [ECOM_CURRENCY]]} a as l_currency_array_cell then
+				set_currency_array_reference (l_currency_array_cell)
+			elseif attached {ECOM_ARRAY [DATE_TIME]} a as l_date_array then
+				set_date_array (l_date_array)
+			elseif attached {CELL [ECOM_ARRAY [DATE_TIME]]} a as l_date_array_cell then
+				set_date_array_reference (l_date_array_cell)
+			elseif attached {ECOM_ARRAY [ECOM_DECIMAL]} a as l_decimal_array then
+				set_decimal_array (l_decimal_array)
+			elseif attached {CELL [ECOM_ARRAY [ECOM_DECIMAL]]} a as l_decimal_array_cell then
+				set_decimal_array_reference (l_decimal_array_cell)
+			elseif attached {ECOM_ARRAY [DOUBLE]} a as l_double_array then
+				set_double_array (l_double_array)
+			elseif attached {CELL [ECOM_ARRAY [DOUBLE]]} a as l_double_array_cell then
+				set_double_array_reference (l_double_array_cell)
+			elseif attached {ECOM_ARRAY [ECOM_HRESULT]} a as l_error_array then
+				set_error_array (l_error_array)
+			elseif attached {CELL [ECOM_ARRAY [ECOM_HRESULT]]} a as l_error_array_cell then
+				set_error_array_reference (l_error_array_cell)
+			elseif attached {ECOM_ARRAY [INTEGER]} a as l_integer_array then
+				set_integer4_array (l_integer_array)
+			elseif attached {CELL [ECOM_ARRAY [INTEGER]]} a as l_integer_array_cell then
+				set_integer4_array_reference (l_integer_array_cell)
+			elseif attached {ECOM_ARRAY [REAL]} a as l_real_array then
+				set_real_array (l_real_array)
+			elseif attached {CELL [ECOM_ARRAY [REAL]]} a as l_real_array_cell then
+				set_real_array_reference (l_real_array_cell)
+			elseif attached {ECOM_ARRAY [STRING]} a as l_string_array then
+				set_string_array (l_string_array)
+			elseif attached {CELL [ECOM_ARRAY [STRING]]} a as l_string_array_cell then
+				set_string_array_reference (l_string_array_cell)
+			elseif attached {ECOM_ARRAY [ECOM_INTERFACE]} a as l_unknown_array then
+				set_iunknown_array (l_unknown_array)
+			elseif attached {CELL [ECOM_ARRAY [ECOM_INTERFACE]]} a as l_unknown_array_cell then
+				set_iunknown_array_reference (l_unknown_array_cell)
+			elseif attached {CELL [ECOM_ARRAY [ECOM_VARIANT]]} a as l_variant_array then
+				set_variant_array_reference (l_variant_array)
+			elseif attached {ECOM_VARIANT} a as l_variant then
+				set_variant (l_variant)
 			else
-				l_char ?= a
-				if l_char /= Void then
-					set_character_reference (l_char)
-				else
-					l_int ?= a
-					if l_int /= Void then
-						set_integer4_reference (l_int)
-					else
-						l_real ?= a
-						if l_real /= Void then
-							set_real_reference (l_real)
-						else
-							l_double ?= a
-							if l_double /= Void then
-								set_double_reference (l_double)
-							else
-								l_boolean ?= a
-								if l_boolean /= Void then
-									set_boolean_reference (l_boolean)
-								else
-									l_date ?= a
-									if l_date /= Void then
-										set_date (l_date)
-									else
-										l_date_cell ?= a
-										if l_date_cell /= Void then
-											set_date_reference (l_date_cell)
-										else
-											l_hr ?= a
-											if l_hr /= Void then
-												set_error (l_hr)
-											else
-												l_decimal ?= a
-												if l_decimal /= Void then
-													set_decimal (l_decimal)
-												else
-													l_currency ?= a
-													if l_currency /= Void then
-														set_currency (l_currency)
-													else
-														l_string ?= a
-														if l_string /= Void then
-															set_string (l_string)
-														else
-															l_string_cell ?= a
-															if l_string_cell /= Void then
-																set_string_reference (l_string_cell)
-															else
-																l_interface ?= a
-																if l_interface /= Void then
-																	set_iunknown (l_interface)
-																else
-																	l_interface_cell ?= a
-																	if l_interface_cell /= Void then
-																		set_iunknown_reference (l_interface_cell)
-																	else
-																		l_array ?= a
-																		if l_array /= Void then
-																			set_array (l_array)
-																		else
-																			l_boolean_array ?= a
-																			if l_boolean_array /= Void then
-																				set_boolean_array (l_boolean_array)
-																			else
-																				l_boolean_array_cell ?= a
-																				if l_boolean_array_cell /= Void then
-																					set_boolean_array_reference (l_boolean_array_cell)
-																				else
-																					l_char_array ?= a
-																					if l_char_array /= Void then
-																						set_char_array (l_char_array)
-																					else
-																						l_char_array_cell ?= a
-																						if l_char_array_cell /= Void then
-																							set_char_array_reference (l_char_array_cell)
-																						else
-																							l_currency_array ?= a
-																							if l_currency_array /= Void then
-																								set_currency_array (l_currency_array)
-																							else
-																								l_currency_array_cell ?= a
-																								if l_currency_array_cell /= Void then
-																									set_currency_array_reference (l_currency_array_cell)
-																								else
-																									l_date_array ?= a
-																									if l_date_array /= Void then
-																										set_date_array (l_date_array)
-																									else
-																										l_date_array_cell ?= a
-																										if l_date_array_cell /= Void then
-																											set_date_array_reference (l_date_array_cell)
-																										else
-																											l_decimal_array ?= a
-																											if l_decimal_array /= Void then
-																												set_decimal_array (l_decimal_array)
-																											else
-																												l_decimal_array_cell ?= a
-																												if l_decimal_array_cell /= Void then
-																													set_decimal_array_reference (l_decimal_array_cell)
-																												else
-																													l_double_array ?= a
-																													if l_double_array /= Void then
-																														set_double_array (l_double_array)
-																													else
-																														l_double_array_cell ?= a
-																														if l_double_array_cell /= Void then
-																															set_double_array_reference (l_double_array_cell)
-																														else
-																															l_error_array ?= a
-																															if l_error_array /= Void then
-																																set_error_array (l_error_array)
-																															else
-																																l_error_array_cell ?= a
-																																if l_error_array_cell /= Void then
-																																	set_error_array_reference (l_error_array_cell)
-																																else
-																																	l_integer_array ?= a
-																																	if l_integer_array /= Void then
-																																		set_integer4_array (l_integer_array)
-																																	else
-																																		l_integer_array_cell ?= a
-																																		if l_integer_array_cell /= Void then
-																																			set_integer4_array_reference (l_integer_array_cell)
-																																		else
-																																			l_real_array ?= a
-																																			if l_real_array /= Void then
-																																				set_real_array (l_real_array)
-																																			else
-																																				l_real_array_cell ?= a
-																																				if l_real_array_cell /= Void then
-																																					set_real_array_reference (l_real_array_cell)
-																																				else
-																																					l_string_array ?= a
-																																					if l_string_array /= Void then
-																																						set_string_array (l_string_array)
-																																					else
-																																						l_string_array_cell ?= a
-																																						if l_string_array_cell /= Void then
-																																							set_string_array_reference (l_string_array_cell)
-																																						else
-																																							l_unknown_array ?= a
-																																							if l_unknown_array /= Void then
-																																								set_iunknown_array (l_unknown_array)
-																																							else
-																																								l_unknown_array_cell ?= a
-																																								if l_unknown_array_cell /= Void then
-																																									set_iunknown_array_reference (l_unknown_array_cell)
-																																								else
-																																									l_variant_array ?= a
-																																									if l_variant_array /= Void then
-																																										set_variant_array_reference (l_variant_array)
-																																									else
-																																										l_variant ?= a				
-																																										if l_variant /= Void then
-																																											set_variant (l_variant)
-																																										else
-																																											check
-																																												invalid_type: False
-																																											end
-																																										end
-																																									end
-																																								end
-																																							end
-																																						end
-																																					end
-																																				end
-																																			end
-																																		end
-																																	end
-																																end
-																															end
-																														end
-																													end
-																												end
-																											end
-																										end
-																									end
-																								end
-																							end
-																						end
-																					end
-																				end
-																			end
-																		end
-																	end
-																end
-															end
-														end
-													end
-												end
-											end
-										end
-									end
-								end
-							end
-						end
-					end
-				end				
+				check
+					valid_type: False
+				end
 			end
 		end
-		
+
 	set_empty
 			-- Set empty VARIANT.
 		do
@@ -1512,14 +1355,10 @@ feature -- Element change
 		require
 			non_void: a_value /= Void
 		local
-			a_stub: ECOM_STUB
 			a_ptr: POINTER
 		do
-			if (a_value.item = default_pointer) then
-				a_stub ?= a_value
-				if a_stub /= Void then
-					a_stub.create_item
-				end
+			if (a_value.item = default_pointer) and then attached {ECOM_STUB} a_value as l_stub then
+				l_stub.create_item
 			end
 			a_ptr := a_value.item
 			ccom_set_iunknown (item, a_ptr)
@@ -1530,18 +1369,14 @@ feature -- Element change
 		require
 			non_void: a_value /= Void
 		local
-			a_stub: ECOM_STUB
 			a_ptr: POINTER
 		do
 			if not (a_value.item = Void) then
-				if (a_value.item.item = default_pointer) then
-					a_stub ?= a_value.item
-					if a_stub /= Void then
-						a_stub.create_item
-					end
+				if (a_value.item.item = default_pointer) and then attached {ECOM_STUB} a_value.item as l_stub then
+					l_stub.create_item
 				end
 				a_ptr := a_value.item.item
-			end	
+			end
 			ccom_set_iunknown_reference (item, a_ptr)
 		end
 
@@ -1550,14 +1385,10 @@ feature -- Element change
 		require
 			non_void: a_value /= Void
 		local
-			a_stub: ECOM_STUB
 			a_ptr: POINTER
 		do
-			if (a_value.item = default_pointer) then
-				a_stub ?= a_value
-				if a_stub /= Void then
-					a_stub.create_item
-				end
+			if (a_value.item = default_pointer) and then attached {ECOM_STUB} a_value as l_stub then
+				l_stub.create_item
 			end
 			a_ptr := a_value.item
 			ccom_set_idispatch (item, a_ptr)
@@ -1568,18 +1399,14 @@ feature -- Element change
 		require
 			non_void: a_value /= Void
 		local
-			a_stub: ECOM_STUB
 			a_ptr: POINTER
 		do
-			if not (a_value.item = Void) then
-				if (a_value.item.item = default_pointer) then
-					a_stub ?= a_value.item
-					if a_stub /= Void then
-						a_stub.create_item
-					end
+			if a_value.item /= Void then
+				if (a_value.item.item = default_pointer) and then attached {ECOM_STUB} a_value.item as l_stub then
+					l_stub.create_item
 				end
 				a_ptr := a_value.item.item
-			end	
+			end
 			ccom_set_idispatch_reference (item, a_ptr)
 		end
 
@@ -1937,7 +1764,7 @@ feature {NONE} -- Implementation
 
 	variant_true: INTEGER = -1
 			-- True value of type VARIANT_BOOL
-	
+
 	variant_false: INTEGER = 0
 			-- False value of type VARIANT_BOOL
 
@@ -1966,14 +1793,14 @@ feature {NONE} -- Removal
 feature {NONE} -- Externals
 
 	c_size_of_variant: INTEGER
-		external 
+		external
 			"C [macro %"E_variant.h%"]"
 		alias
 			"sizeof(VARIANT)"
 		end
 
 	ccom_variant_clear (a_ptr: POINTER)
-		external 
+		external
 			"C [macro %"E_variant.h%"] (VARIANT *)"
 		end
 
@@ -2743,14 +2570,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

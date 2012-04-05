@@ -149,14 +149,9 @@ feature -- Basic Operations
 	is_equal1 (pfont_other: IFONT_INTERFACE)
 			-- No description available.
 			-- `pfont_other' [in].
-		local
-			a_stub: ECOM_STUB
 		do
-			if (pfont_other.item = default_pointer) then
-				a_stub ?= pfont_other
-				if a_stub /= Void then
-					a_stub.create_item
-				end
+			if (pfont_other.item = default_pointer) and then attached {ECOM_STUB} pfont_other as l_stub then
+				l_stub.create_item
 			end
 			ccom_is_equal1 (initializer, pfont_other.item)
 		end
@@ -344,14 +339,14 @@ feature {NONE}  -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

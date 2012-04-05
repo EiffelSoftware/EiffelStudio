@@ -19,14 +19,9 @@ feature  {NONE} -- Initialization
 			-- Make from other Queriable.
 		require
 			non_void_other: other /= Void
-		local
-			a_stub: ECOM_STUB
 		do
-			if (other.item = default_pointer) then
-				a_stub ?= other
-				if a_stub /= Void then
-					a_stub.create_item
-				end
+			if (other.item = default_pointer) and then attached {ECOM_STUB} other as l_stub then
+				l_stub.create_item
 			end
 			make_from_pointer (other.item)
 		ensure
@@ -75,14 +70,14 @@ invariant
 	queriable_invariant: initializer /= default_pointer and then exists
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -124,15 +124,13 @@ feature -- Basic Operations
 			valid_bytes: bytes >= 0
 		local
 			tried: BOOLEAN
-			com_failure: COM_FAILURE
 		do
 			if not tried then
 				ccom_read (initializer, buffer, bytes)
 				end_of_stream := False
 			end
 		rescue
-			com_failure ?= exception_manager.last_exception
-			if com_failure /= Void then
+			if attached {COM_FAILURE} exception_manager.last_exception as com_failure then
 				if com_failure.hresult_code = {ECOM_EXCEPTION_CODES}.E_end_of_stream then
 					end_of_stream := True
 					tried := True
@@ -145,15 +143,13 @@ feature -- Basic Operations
 			-- Read character from stream.
 		local
 			tried: BOOLEAN
-			com_failure: COM_FAILURE
 		do
 			if not tried then
 				last_character := ccom_read_character (initializer)
 				end_of_stream := False
 			end
 		rescue
-			com_failure ?= exception_manager.last_exception
-			if com_failure /= Void then
+			if attached {COM_FAILURE} exception_manager.last_exception as com_failure then
 				if com_failure.hresult_code = {ECOM_EXCEPTION_CODES}.E_end_of_stream then
 					end_of_stream := True
 					tried := True
@@ -166,15 +162,13 @@ feature -- Basic Operations
 			-- Read integer from stream.
 		local
 			tried: BOOLEAN
-			com_failure: COM_FAILURE
 		do
 			if not tried then
 				last_integer := ccom_read_integer (initializer)
 				end_of_stream := False
 			end
 		rescue
-			com_failure ?= exception_manager.last_exception
-			if com_failure /= Void then
+			if attached {COM_FAILURE} exception_manager.last_exception as com_failure then
 				if com_failure.hresult_code = {ECOM_EXCEPTION_CODES}.E_end_of_stream then
 					end_of_stream := True
 					tried := True
@@ -187,15 +181,13 @@ feature -- Basic Operations
 			-- Read real from stream.
 		local
 			tried: BOOLEAN
-			com_failure: COM_FAILURE
 		do
 			if not tried then
 				last_real := ccom_read_real (initializer)
 				end_of_stream := False
 			end
 		rescue
-			com_failure ?= exception_manager.last_exception
-			if com_failure /= Void then
+			if attached {COM_FAILURE} exception_manager.last_exception as com_failure then
 				if com_failure.hresult_code = {ECOM_EXCEPTION_CODES}.E_end_of_stream then
 					end_of_stream := True
 					tried := True
@@ -208,15 +200,13 @@ feature -- Basic Operations
 			-- Read boolean from stream.
 		local
 			tried: BOOLEAN
-			com_failure: COM_FAILURE
 		do
 			if not tried then
 				last_boolean := ccom_read_boolean (initializer)
 				end_of_stream := False
 			end
 		rescue
-			com_failure ?= exception_manager.last_exception
-			if com_failure /= Void then
+			if attached {COM_FAILURE} exception_manager.last_exception as com_failure then
 				if com_failure.hresult_code = {ECOM_EXCEPTION_CODES}.E_end_of_stream then
 					end_of_stream := True
 					tried := True
@@ -229,15 +219,13 @@ feature -- Basic Operations
 			-- Read string from stream.
 		local
 			tried: BOOLEAN
-			com_failure: COM_FAILURE
 		do
 			if not tried then
 				last_string := ccom_read_string (initializer)
 				end_of_stream := False
 			end
 		rescue
-			com_failure ?= exception_manager.last_exception
-			if com_failure /= Void then
+			if attached {COM_FAILURE} exception_manager.last_exception as com_failure then
 				if com_failure.hresult_code = {ECOM_EXCEPTION_CODES}.E_end_of_stream then
 					end_of_stream := True
 					tried := True
@@ -518,14 +506,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

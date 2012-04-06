@@ -115,11 +115,17 @@ feature {NONE} -- Results
 					check l_reference_table /= Void end -- Implied by precondition `set'
 					l_tuple := l_reference_table.references_by_referee (l_next_index).item (l_array.item)
 					if l_tuple /= Void then
-						l_field_name ?= l_tuple.data
+						if attached {STRING} l_tuple.data as l_string then
+							l_field_name := l_string
+						else
+								--|FIXME: 2012/04/06 Shouldn't this be "(unknown)", instead of setting it Void? See review#7644004.
+							l_field_name := Void
+						end
 					else
 						l_field_name := once "(unknown)"
 					end
 				else
+						--|FIXME: 2012/04/06 Shouldn't this be "(unknown)", instead of setting it Void? See review#7644004.
 					l_field_name := Void
 				end
 				if l_field_name = Void then
@@ -216,7 +222,6 @@ feature {NONE} -- Results
 			i, j, l_column_count, l_row_count, l_column_selected_count: INTEGER
 			l_column: EV_GRID_COLUMN
 			l_row: EV_GRID_ROW
-			l_text_item: detachable EV_GRID_LABEL_ITEM
 			l_text: STRING_32
 			l_states: SPECIAL [INTEGER]
 			l_none, l_part, l_full: INTEGER
@@ -279,8 +284,7 @@ feature {NONE} -- Results
 						j > l_column_count
 					loop
 						if l_states.item (j) /= l_none then
-							l_text_item ?= l_row.item (j)
-							if l_text_item /= Void and then l_text_item.is_selected then
+							if attached {EV_GRID_LABEL_ITEM} l_row.item (j) as l_text_item and then l_text_item.is_selected then
 								l_text.append (l_text_item.text)
 								l_text.append ("%T")
 							else
@@ -461,14 +465,14 @@ invariant
 	result_panel_not_void: result_panel /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

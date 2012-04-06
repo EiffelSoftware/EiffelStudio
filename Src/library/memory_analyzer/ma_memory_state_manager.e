@@ -108,12 +108,13 @@ feature {NONE} -- Implementation
 
 	open_states_from_file (a_dialog: EV_FILE_OPEN_DIALOG)
 			-- Open memory analyzer's datas from a file
-		local
-			l_states: detachable like memory_states
 		do
-			l_states ?= memory_states.retrieve_by_name (a_dialog.file_name)
-			check attached l_states end -- FIXME: Implied by ...?
-			memory_states := l_states
+			if attached {like memory_states} memory_states.retrieve_by_name (a_dialog.file_name) as l_states then
+				memory_states := l_states
+			else
+					--|FIXME: 2012/04/06 This should be removed when we handle corrupted files. See review#7644004.
+				check memory_states_not_retrieved: False end
+			end
 		ensure
 			states_not_void: memory_states /= Void
 		end
@@ -124,14 +125,14 @@ invariant
 	memory_states_not_void: memory_states /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

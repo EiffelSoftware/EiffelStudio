@@ -455,9 +455,6 @@ feature {NONE} -- Implementation
 			l_referee: detachable ANY
 			l_field_count: INTEGER
 			i: INTEGER
-			l_special: detachable SPECIAL [ANY]
-			l_tuple: detachable TUPLE
-			l_is_special, l_is_tuple: BOOLEAN
 			l_object_table: like object_table
 			l_name_table: like name_table
 			l_reference_table: like reference_table
@@ -470,9 +467,7 @@ feature {NONE} -- Implementation
 			check attached l_object_table end -- Implied by precondition `set'
 			l_reference_table := reference_table
 			check attached l_reference_table end -- Implied by precondition `set'						
-			l_field_count := l_int.field_count_of_type (a_object_id)
-			l_is_special := l_int.is_special_any_type (a_object_id)
-			l_is_tuple := l_int.is_tuple_type (a_object_id)
+
 			from
 				l_objects_of_type.start
 			until
@@ -491,9 +486,7 @@ feature {NONE} -- Implementation
 				check
 					not l_name_table.conflict
 				end
-				if l_is_special then
-					l_special ?= l_item
-					check attached l_special end -- Implied by design of `a_map'
+				if attached {SPECIAL [detachable ANY]} l_item as l_special then
 					l_field_name := once "(special_field)"
 					from
 						i := l_special.lower
@@ -506,9 +499,7 @@ feature {NONE} -- Implementation
 						end
 						i := i + 1
 					end
-				elseif l_is_tuple then
-					l_tuple ?= l_item
-					check attached l_tuple end -- Implied by design of `a_map'
+				elseif attached {TUPLE} l_item as l_tuple then
 					l_field_name := once "(tuple_field)"
 					from
 						i := l_tuple.lower
@@ -523,6 +514,7 @@ feature {NONE} -- Implementation
 					end
 				else
 					from
+						l_field_count := l_int.field_count_of_type (a_object_id)
 						i := 1
 					until
 						i > l_field_count or l_item = Current
@@ -719,14 +711,14 @@ invariant
 	object_grid_not_void: object_grid /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

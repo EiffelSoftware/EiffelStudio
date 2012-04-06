@@ -119,12 +119,12 @@ feature {NONE} -- Implementation
 
 	handle_check_box_value_changed (a_check_item: MA_GRID_CHECK_BOX_ITEM)
 			-- Handle the check box grid item valuse changed.
-		local
-			l_filter_data: detachable TUPLE [class_name: STRING; selected: BOOLEAN; description: STRING]
 		do
-			l_filter_data ?= a_check_item.data
-			check l_filter_data /= Void end
-			l_filter_data.selected := a_check_item.selected
+			if attached {TUPLE [class_name: STRING; selected: BOOLEAN; description: STRING]} a_check_item.data as l_filter_data then
+				l_filter_data.selected := a_check_item.selected
+			else
+				check not_proper_type: False end
+			end
 		end
 
 	open_clicked
@@ -144,9 +144,12 @@ feature {NONE} -- Implementation
 			l_datas: detachable MA_ARRAYED_LIST_STORABLE [like a_filter_data]
 		do
 			create l_datas.make (1)
-			l_datas ?= l_datas.retrieve_by_name (a_dlg.file_name)
-			check l_datas /= Void end
-			arrayed_list_datas_to_hash_table_datas (l_datas)
+			if attached {MA_ARRAYED_LIST_STORABLE [like a_filter_data]} l_datas.retrieve_by_name (a_dlg.file_name) as l_d then
+				arrayed_list_datas_to_hash_table_datas (l_d)
+			else
+					--|FIXME: 2012/04/06 This should be removed when we handle corrupted files. See review#7644004.
+				check not_retrieved: False end
+			end
 		end
 
 	save_clicked
@@ -177,15 +180,16 @@ feature {NONE} -- Implementation
 	add_new_class_name_clicked
 			-- Called by `select_actions' of `l_ev_tool_bar_button_3'.
 		local
-			l_item: detachable EV_GRID_EDITABLE_ITEM
 			l_last_row: detachable EV_GRID_ROW
 		do
 			add_new_row (Void)
 			l_last_row := grid.last_visible_row
 			check attached l_last_row end -- FIXME: Implied by ...?
-			l_item ?= l_last_row.item (1)
-			check l_item /= Void end
-			l_item.activate
+			if attached {EV_GRID_EDITABLE_ITEM} l_last_row.item (1) as l_item then
+				l_item.activate
+			else
+				check not_editable_item: False end
+			end
 		end
 
 	del_class_clicked (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
@@ -258,18 +262,19 @@ feature {NONE} -- Implementation
 		require
 			a_item_not_void: a_item /= Void
 			a_index_valid: a_index = 1 or a_index = 2 or a_index = 3
-		local
-			l_filter_data: detachable like a_filter_data
-			l_check_box: detachable MA_GRID_CHECK_BOX_ITEM
 		do
-			l_filter_data ?= a_item.data
-			check l_filter_data /= Void end
-			if a_index /= 2 then
-				l_filter_data [a_index] := a_item.text
+			if attached {like a_filter_data} a_item.data as l_filter_data then
+				if a_index /= 2 then
+					l_filter_data [a_index] := a_item.text
+				else
+					if attached {MA_GRID_CHECK_BOX_ITEM} a_item as l_check_box then
+						l_filter_data.selected := l_check_box.is_selected
+					else
+						check not_check_box_item: False end
+					end
+				end
 			else
-				l_check_box ?= a_item
-				check l_check_box /= Void end
-				l_filter_data.selected := l_check_box.is_selected
+				check not_filter_data: False end
 			end
 		end
 
@@ -349,14 +354,14 @@ invariant
 	grid_not_void: grid /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

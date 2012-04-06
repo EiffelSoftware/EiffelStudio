@@ -351,7 +351,6 @@ feature {NONE} -- Graphics Implementation
 		local
 			l_links: ARRAYED_LIST [EG_LINK]
 			l_link: EG_LINK
-			l_ref_link: detachable MA_REFERENCE_LINK
 			l_target_figure: detachable EG_FIGURE
 		do
 			l_links := graph.flat_links
@@ -365,9 +364,11 @@ feature {NONE} -- Graphics Implementation
 				l_link := l_links.item
 				if l_link.source = a_node.model  then
 
-					l_ref_link ?= world.figure_from_model (l_link)
-					check l_ref_link /= Void end
-					l_ref_link.set_color
+					if attached {MA_REFERENCE_LINK} world.figure_from_model (l_link) as l_ref_link then
+						l_ref_link.set_color
+					else
+						check not_ma_refrence_link: False end
+					end
 					l_target_figure := world.figure_from_model (l_link.target)
 					if attached l_target_figure and then not nodes_visited.has (l_target_figure) then
 						nodes_visited.force (Void, l_target_figure)
@@ -386,7 +387,6 @@ feature {NONE} -- Graphics Implementation
 			-- Set the lines' color  which is should be orignal color.
 		local
 			l_links: ARRAYED_LIST [EG_LINK]
-			l_ref_link: detachable MA_REFERENCE_LINK
 		do
 			l_links := graph.flat_links
 			from
@@ -395,9 +395,11 @@ feature {NONE} -- Graphics Implementation
 				l_links.after
 			loop
 				if not links_should_orignal_color.has (l_links.item) then
-					l_ref_link ?= world.figure_from_model (l_links.item)
-					check l_ref_link /= Void end
-					l_ref_link.set_color_back
+					if attached {MA_REFERENCE_LINK} world.figure_from_model (l_links.item) as l_ref_link then
+						l_ref_link.set_color_back
+					else
+						check not_ma_refrence_link: False end
+					end
 				end
 				l_links.forth
 			end
@@ -484,14 +486,14 @@ invariant
 	objects_already_draw_has_no_void_item: True-- No Void items in `objects_already_draw'
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

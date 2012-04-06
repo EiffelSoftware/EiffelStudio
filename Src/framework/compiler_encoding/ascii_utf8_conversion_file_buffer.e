@@ -50,8 +50,9 @@ feature -- Element Change
 			-- Resize buffer if necessary. Set `filled' to True
 			-- if characters have been added to buffer.
 		local
-			nb, nb2, pos, end_pos, i: INTEGER
+			nb, nb2: INTEGER
 			buff: like content
+			is_exhausted: BOOLEAN
 		do
 				-- If the last call to `fill' failed to add
 				-- more characters, this means that the end of
@@ -62,44 +63,36 @@ feature -- Element Change
 					-- and eventually resize `content' if necessary.
 				compact_left
 				buff := content
-				nb := capacity - count
-					-- Read in more data.
-				if interactive then
+					-- Test if there is something to read.
+				if file.end_of_input then
+					filled := False
+					end_of_file := True
+				elseif interactive then
+						-- Read in one character if possible.
 					file.read_character
-					if not file.end_of_input then
-						put_character (file.last_character, buff)
-						filled := True
-					else
+					if file.end_of_input then
 						filled := False
 						end_of_file := True
+					else
+						put_character (file.last_character, buff)
 					end
 				else
-					pos := count + 1
-					end_pos := pos + nb - 1
+						-- Read in more data.
 					from
-						i := pos
+						nb := capacity - count
 					until
-						i > end_pos
+						nb2 >= nb or else is_exhausted
 					loop
 						file.read_character
-						if not file.end_of_input then
-							put_character (file.last_character, buff)
-							i := i + last_number_of_bytes_put
+						if file.end_of_input then
+							is_exhausted := True
+							end_of_file := True
 						else
-							nb2 := i - pos - nb
-							i := end_pos + 1
+							put_character (file.last_character, buff)
+							nb2 := nb2 + last_number_of_bytes_put
 						end
 					end
-					nb2 := nb2 + i - pos
-
-					if nb2 < nb then
-						end_of_file := file.end_of_input
-					end
-					if nb2 > 0 then
-						filled := True
-					else
-						filled := False
-					end
+					filled := nb2 > 0
 				end
 				buff.put (End_of_buffer_character, count + 1)
 				buff.put (End_of_buffer_character, count + 2)
@@ -147,7 +140,7 @@ invariant
 	string_buffer_not_void: string_buffer /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

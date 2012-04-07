@@ -505,7 +505,7 @@ feature {NONE} -- Implementation
 		require
 			element_not_void: xml_elem /= Void
 		local
-			node, sub_node: detachable XML_ELEMENT
+			sub_node: detachable XML_ELEMENT
 			l_attribute: detachable XML_ATTRIBUTE
 			pref_name,
 			pref_description,
@@ -521,8 +521,7 @@ feature {NONE} -- Implementation
 				until
 					xml_elem.after
 				loop
-					node ?= xml_elem.item_for_iteration
-					if node /= Void then
+					if attached {XML_ELEMENT} xml_elem.item_for_iteration as node then
 						if node.name.is_equal (once "PREF") then
 							if attached node.elements as elts and then not elts.is_empty then
 								sub_node := elts.i_th (1)
@@ -611,7 +610,7 @@ invariant
 	has_preferences_storage: preferences_storage /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -620,4 +619,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end -- class PREFERENCES

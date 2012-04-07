@@ -82,11 +82,13 @@ feature {NONE} -- Command
 					l_cnt > nb_values
 				loop
 					l_item := l_pref_value.item (l_cnt)
-					l_displayed_value := Void
-					if l_value_mapping /= Void and then not l_item.is_empty then
-						l_displayed_value ?= l_value_mapping.item (l_item)
-					end
-					if l_displayed_value = Void then
+					if 
+						l_value_mapping /= Void and then 
+						not l_item.is_empty and then
+						attached {STRING_32} l_value_mapping.item (l_item) as s32 
+					then
+						l_displayed_value := s32
+					else
 						l_displayed_value := l_item
 					end
 					if change_item_widget.text.same_string_general (l_displayed_value) then
@@ -195,7 +197,7 @@ feature {NONE} -- Implementation
 			-- Item: strings displayed
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -204,8 +206,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class CHOICE_PREFERENCE_WIDGET

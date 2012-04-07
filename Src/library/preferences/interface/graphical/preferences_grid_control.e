@@ -223,8 +223,9 @@ feature -- Access
 	parent_window_of (w: EV_WIDGET): detachable EV_WINDOW
 			-- Computed parent window of `w'.
 		do
-			Result ?= w
-			if Result = Void and attached w.parent as p then
+			if attached {like parent_window_of} w as l_win then
+				Result := l_win
+			elseif attached w.parent as p then
 				Result := parent_window_of (p)
 			end
 		end
@@ -355,15 +356,13 @@ feature {NONE} -- Events
 			a_pref_not_void: a_pref /= Void
 			a_row_parented: a_row /= Void and then a_row.parent /= Void
 		local
-			l_default_item: detachable EV_GRID_LABEL_ITEM
 			l_selected_row: detachable EV_GRID_ROW
 		do
 			if not grid.selected_rows.is_empty then
 				l_selected_row := grid.selected_rows.first
 			end
 
-			l_default_item ?= a_row.item (3)
-			if l_default_item /= Void then
+			if attached {EV_GRID_LABEL_ITEM} a_row.item (3) as l_default_item then
 					--| In flat mode, we use dynamic computation
 				if a_pref.is_default_value then
 					l_default_item.set_text (p_default_value)
@@ -403,7 +402,6 @@ feature {NONE} -- Events
 		local
 			nb: INTEGER
 			r: INTEGER
-			l_pref: detachable PREFERENCE
 		do
 			nb := grid.row_count
 			if nb > 0 then
@@ -413,8 +411,7 @@ feature {NONE} -- Events
 				until
 					r > nb or Result /= Void
 				loop
-					l_pref ?= grid.row (r).data
-					if l_pref /= Void and then l_pref.name.is_equal (a_pref.name) then
+					if attached {PREFERENCE} grid.row (r).data as l_pref and then l_pref.name.is_equal (a_pref.name) then
 						Result := grid.row (r)
 					end
 					r := r + 1
@@ -503,19 +500,16 @@ feature {NONE} -- Events
 		local
 			l_popup_menu: EV_MENU
 			l_menu_item: EV_MENU_ITEM
-			l_pref: detachable PREFERENCE
 		do
 			if not a_pref.is_default_value and then a_button = 3 then
-					-- Extract `l_pref' from row data.
-				l_pref ?= a_item.row.data
-
+					-- Extract preference from row data.
 					-- Show the menu only if necessary (that is to say, the preference value is different from the default one)
-				if l_pref /= Void and then l_pref = a_pref then
+				if a_item.row.data = a_pref then
 						-- Ensure that before showing the menu, the row gets selected.
 					grid.remove_selection
 					a_item.row.enable_select
 					create l_popup_menu
-					if l_pref.has_default_value then
+					if a_pref.has_default_value then
 							-- The right clicked preference matches the selection in the grid
 						create l_menu_item.make_with_text (l_restore_defaults)
 						l_menu_item.select_actions.extend (agent set_preference_to_default (a_item, a_pref))
@@ -577,7 +571,6 @@ feature {NONE} -- Events
 		require
 			k_attached: k /= Void
 		local
-			l_pref: detachable PREFERENCE
 			l_row: EV_GRID_ROW
 		do
 			inspect
@@ -585,8 +578,7 @@ feature {NONE} -- Events
 			when {EV_KEY_CONSTANTS}.key_enter then
 				if not grid.selected_rows.is_empty then
 					l_row := grid.selected_rows.first
-					l_pref ?= l_row.data
-					if l_pref /= Void then
+					if attached {PREFERENCE} l_row.data then
 						check l_row.count >= col_value_index end
 						if
 							l_row.count >= col_value_index and then
@@ -1119,7 +1111,6 @@ feature {NONE} -- Implementation
 			-- Update the grid columns widths and borders depending on current display type
 		local
 			l_column: EV_GRID_COLUMN
-			l_preference: detachable PREFERENCE
 			w: INTEGER
 			nb: INTEGER
 			cnb, c: INTEGER
@@ -1142,8 +1133,7 @@ feature {NONE} -- Implementation
 				end
 
 				on_resize
-				l_preference ?= grid.row (col_name_index).data
-				if l_preference /= Void then
+				if attached {PREFERENCE} grid.row (col_name_index).data as l_preference then
 					show_preference_description (l_preference)
 				end
 				if grid.is_displayed and grid.is_sensitive then
@@ -1564,8 +1554,9 @@ feature {NONE} -- Filtering
 			l_row: EV_GRID_ROW
 			l_item: detachable EV_GRID_ITEM
 		do
-			l_preference ?= grid.row (r).data
-			if l_preference = Void then
+			if attached {PREFERENCE} grid.row (r).data as p then
+				l_preference := p
+			else
 				if attached matches as l_matches and then l_matches.valid_index (r) then
 					--| grid indexes start at 1
 					--| list start at 1
@@ -1695,7 +1686,7 @@ invariant
 	has_preferences: preferences /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

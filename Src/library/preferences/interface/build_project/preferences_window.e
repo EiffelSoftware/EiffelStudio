@@ -133,16 +133,13 @@ feature {NONE} -- Events
 
 	on_preference_changed (a_pref: PREFERENCE)
 			-- Set the preference value to the newly entered value in the edit item.
-		local
-			l_default_item: detachable EV_GRID_LABEL_ITEM
 		do
 			if not grid.selected_rows.is_empty then
 				if attached {FONT_PREFERENCE} a_pref as l_font_pref then
 					grid.selected_rows.first.set_height (l_font_pref.value.height.max (default_row_height))
 				end
 
-				l_default_item ?= grid.selected_rows.first.item (3)
-				if l_default_item /= Void then
+				if attached  {EV_GRID_LABEL_ITEM} grid.selected_rows.first.item (3) as l_default_item then
 					if a_pref.is_default_value then
 						l_default_item.set_text (p_default_value)
 						l_default_item.set_font (default_font)
@@ -231,14 +228,13 @@ feature {NONE} -- Events
 		local
 			l_popup_menu: EV_MENU
 			l_menu_item: EV_MENU_ITEM
-			l_pref: detachable PREFERENCE
 		do
 			if not a_pref.is_default_value and then a_button = 3 then
-					-- Extract `l_pref' from row data.
-				l_pref ?= a_item.row.data
-
+					-- Extract preference  from row data.
 					-- Show the menu only if necessary (that is to say, the preference value is different from the default one)
-				if l_pref /= Void and then l_pref = a_pref and then l_pref.has_default_value then
+				if
+					a_item.row.data = a_pref and then a_pref.has_default_value
+				then
 						-- Ensure that before showing the menu, the row gets selected.
 					grid.remove_selection
 					a_item.row.enable_select
@@ -559,9 +555,8 @@ feature {NONE} -- Implementation
 					l_column.set_width (l_column.width + column_border_space)
 				end
 				on_window_resize
-				l_preference ?= grid.row (1).data
-				if l_preference /= Void then
-					show_preference_description (l_preference)
+				if attached {PREFERENCE} grid.row (1).data as l_pref then
+					show_preference_description (l_pref)
 				end
 			end
 		end
@@ -570,11 +565,9 @@ feature {NONE} -- Implementation
 			-- Rebuild right list.  This is used to update the values shown for the currently visible preferences
 			-- in case they have been changed external to this window.
 		local
-			grid_default_item,
-			grid_value_label_item: detachable  EV_GRID_LABEL_ITEM
-			grid_value_drawable_item: detachable EV_GRID_DRAWABLE_ITEM
 			l_preference: PREFERENCE
 			curr_row: INTEGER
+			l_grid_item: detachable EV_GRID_ITEM
 		do
 			from
 				visible_preferences.start
@@ -583,29 +576,25 @@ feature {NONE} -- Implementation
 				visible_preferences.after
 			loop
 				l_preference := visible_preferences.item
-				grid_default_item ?= grid.row (curr_row).item (3)
-				if grid_default_item /= Void then
+				if attached {EV_GRID_LABEL_ITEM} grid.row (curr_row).item (3) as l_grid_default_item then
 					if l_preference.is_default_value then
-						grid_default_item.set_text (p_default_value)
-						grid_default_item.set_font (default_font)
+						l_grid_default_item.set_text (p_default_value)
+						l_grid_default_item.set_font (default_font)
 					else
-						grid_default_item.set_text (user_value)
-						grid_default_item.set_font (non_default_font)
+						l_grid_default_item.set_text (user_value)
+						l_grid_default_item.set_font (non_default_font)
 					end
 					if l_preference.is_auto then
-						grid_default_item.set_text (grid_default_item.text + "(" + auto_value + ")")
+						l_grid_default_item.set_text (l_grid_default_item.text + "(" + auto_value + ")")
 					end
 				else
 					check has_grid_default_item: False end
 				end
-				grid_value_label_item ?= grid.row (curr_row).item (4)
-				if grid_value_label_item /= Void then
+				l_grid_item := grid.row (curr_row).item (4)
+				if attached {EV_GRID_LABEL_ITEM} l_grid_item as grid_value_label_item then
 					grid_value_label_item.set_text (l_preference.string_value)
-				else
-					grid_value_drawable_item ?= grid.row (curr_row).item (4)
-					if grid_value_drawable_item /= Void then
-						grid_value_drawable_item.redraw
-					end
+				elseif attached {EV_GRID_DRAWABLE_ITEM} l_grid_item as grid_value_drawable_item then
+					grid_value_drawable_item.redraw
 				end
 				curr_row := curr_row + 1
 
@@ -867,7 +856,7 @@ invariant
 	has_preferences: preferences /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -877,8 +866,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class PREFERENCES_GRID_WINDOW
-

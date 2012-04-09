@@ -9,7 +9,8 @@ class
 inherit
 	YY_FILE_BUFFER
 		redefine
-			fill
+			fill,
+			compact_left
 		end
 
 	SYSTEM_ENCODINGS
@@ -81,7 +82,8 @@ feature -- Element Change
 					from
 						nb := capacity - count
 					until
-						nb2 >= nb or else is_exhausted
+							-- We need to make sure that no less than `Max_bytes_of_iso_8859_1_to_utf8' space is left in the buffer.
+						nb2 >= nb or else is_exhausted or else nb - nb2 < Max_bytes_of_iso_8859_1_to_utf8
 					loop
 						file.read_character
 						if file.end_of_input then
@@ -101,11 +103,40 @@ feature -- Element Change
 			end
 		end
 
+	compact_left is
+			-- <Precursor>
+			-- Resize even if there is still space as a result of filling one UTF-8 character.
+			-- i.e. Previously we left `Max_bytes_of_iso_8859_1_to_utf8' bytes space for one character,
+			-- however less than `Max_bytes_of_iso_8859_1_to_utf8' was actually put, thus there is still tiny space left
+			-- to prevent resizing in `precusor'.
+		local
+			nb: INTEGER
+		do
+			nb := count - index + 1
+			if nb + max_bytes_of_iso_8859_1_to_utf8 > capacity then
+					-- Buffer is full or not enough for a UTF-8 character. Resize it.
+				resize
+			end
+			if index /= 1 then
+					-- Move the 2 EOB characters as well.
+				content.move_left (index, 1, nb + 2)
+				index := 1
+				count := nb
+			end
+		ensure then
+			enough_space: capacity - count >= max_bytes_of_iso_8859_1_to_utf8
+		end
+
+feature {NONE} -- Implementation
+
 	put_character (a_char: CHARACTER; a_buff: like content)
 			-- Put `a_char' into `a_buff'.
 			-- Return the number of bytes put into `a_buff'
 		require
 			a_buff_not_void: a_buff /= Void
+			enough_remaining_space: capacity - count >= max_bytes_of_iso_8859_1_to_utf8
+		local
+			l_conv_count: INTEGER
 		do
 			count := count + 1
 			if a_char.code > 0x7F then
@@ -114,8 +145,12 @@ feature -- Element Change
 				iso_8859_1.convert_to (utf8, string_buffer)
 				if iso_8859_1.last_conversion_successful then
 					a_buff.fill_from_string (iso_8859_1.last_converted_stream, count)
-					count := count + iso_8859_1.last_converted_stream.count - 1
-					last_number_of_bytes_put := iso_8859_1.last_converted_stream.count
+					l_conv_count := iso_8859_1.last_converted_stream.count
+					count := count + l_conv_count - 1
+					last_number_of_bytes_put := l_conv_count
+					check not_larger_than_max:
+						last_number_of_bytes_put <= max_bytes_of_iso_8859_1_to_utf8
+					end
 				else
 						-- FIXME: We should raise a waring at least.
 					a_buff.put (a_char, count)
@@ -131,6 +166,9 @@ feature -- Element Change
 feature -- Query
 
 	last_number_of_bytes_put: INTEGER
+
+	max_bytes_of_iso_8859_1_to_utf8: INTEGER = 2
+			-- Maximum bytes of a UTF-8 character converted from iso_8859_1 character
 
 feature {NONE} -- Buffer
 

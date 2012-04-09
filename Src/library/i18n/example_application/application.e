@@ -247,18 +247,13 @@ feature -- Update features
 
 	update_menu (a_menu: EV_MENU_ITEM)
 			-- update the menu
-		local
-			sub_menu: EV_MENU
-			text: FUNCTION [ANY, TUPLE, STRING_32]
 		do
-			text ?= a_menu.data
-			if text /= Void then
-				a_menu.set_text (text.item([]))
+			if attached {FUNCTION [ANY, TUPLE, STRING_32]} a_menu.data as l_func then
+				a_menu.set_text (l_func.item([]))
 			end
-			sub_menu ?= a_menu
-			if sub_menu /= Void then
-				-- means sub_menu is not just an item but a submenu
-				sub_menu.do_all (agent update_menu (?))
+			if attached {EV_MENU} a_menu as l_menu then
+					-- means l_menu is not just an item but a submenu
+				l_menu.do_all (agent update_menu (?))
 			end
 		end
 
@@ -336,11 +331,11 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
-			356 Storke Road, Goleta, CA 93117 USA
+			5949 Hollister Ave., Goleta, CA 93117 USA
 			Telephone 805-685-1006, Fax 805-685-6869
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com

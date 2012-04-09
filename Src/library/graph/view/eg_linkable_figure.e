@@ -78,7 +78,6 @@ feature -- Status report
 			-- Is a cluster above `Current'?
 		local
 			p, q: detachable EG_CLUSTER_FIGURE
-			c: detachable EG_CLUSTER_FIGURE
 			l_bbox: like size
 			i, nb: INTEGER
 		do
@@ -94,8 +93,7 @@ feature -- Status report
 				until
 					i > nb or Result
 				loop
-					c ?= p.i_th (i)
-					if c /= Void and then q /= c and then c.size.intersects (l_bbox) then
+					if attached {EG_CLUSTER_FIGURE} p.i_th (i) as c and then q /= c and then c.size.intersects (l_bbox) then
 						Result := True
 					end
 					i := i + 1
@@ -398,7 +396,7 @@ invariant
 	links_not_void: links /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

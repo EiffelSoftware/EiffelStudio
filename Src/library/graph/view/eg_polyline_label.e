@@ -437,7 +437,7 @@ feature {NONE} -- Implementation
 		local
 			l_points: like polyline_points
 			i, nb: INTEGER
-			l_item: detachable EV_COORDINATE
+			l_item: EV_COORDINATE
 		do
 			from
 				l_points := polyline_points
@@ -446,8 +446,7 @@ feature {NONE} -- Implementation
 			until
 				i >= nb or else Result /= Void
 			loop
-				l_item ?= l_points.item (i)
-				check l_item /= Void end -- FIXME: Implied by ...?
+				l_item := l_points.item (i)
 				if l_item.x = ax and then l_item.y = ay then
 					Result := l_item
 				end
@@ -487,7 +486,7 @@ feature {EV_MODEL, EV_MODEL_DRAWER} -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

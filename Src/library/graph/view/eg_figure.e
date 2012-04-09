@@ -66,7 +66,9 @@ feature -- Access
 	world: detachable EG_FIGURE_WORLD
 			-- The world `Current' is part of.
 		do
-			Result ?= Precursor {EV_MODEL_MOVE_HANDLE}
+			if attached {like world} Precursor as l_result then
+				Result := l_result
+			end
 		end
 
 	xml_element (node: like xml_element): XML_ELEMENT
@@ -262,7 +264,7 @@ invariant
 	name_label_not_void: name_label /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

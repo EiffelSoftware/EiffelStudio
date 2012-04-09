@@ -41,7 +41,6 @@ feature -- Element change
 	layout
 			-- Arrange the elements in `graph'.
 		local
-			cluster_figure: detachable EG_CLUSTER_FIGURE
 			root: ARRAYED_LIST [EG_LINKABLE_FIGURE]
 		do
 			world.update
@@ -51,8 +50,7 @@ feature -- Element change
 			until
 				root.after
 			loop
-				cluster_figure ?= root.item
-				if cluster_figure /= Void then
+				if attached {EG_CLUSTER_FIGURE} root.item as cluster_figure then
 					if attached cluster_figure.layouter as l_layouter then
 						l_layouter.layout_cluster (cluster_figure, 2)
 					else
@@ -71,8 +69,6 @@ feature -- Element change
 			level_greater_zero: level > 0
 		local
 			figures_in_cluster: ARRAYED_LIST [EG_LINKABLE_FIGURE]
-			cluster_figure: detachable EG_CLUSTER_FIGURE
-			linkable_figure: detachable EG_LINKABLE_FIGURE
 		do
 			from
 				create figures_in_cluster.make (cluster.count)
@@ -80,11 +76,9 @@ feature -- Element change
 			until
 				cluster.after
 			loop
-				linkable_figure ?= cluster.item
-				if linkable_figure /= Void then
+				if attached {EG_LINKABLE_FIGURE} cluster.item as linkable_figure then
 					figures_in_cluster.extend (linkable_figure)
-					cluster_figure ?= linkable_figure
-					if cluster_figure /= Void then
+					if attached {EG_CLUSTER_FIGURE} linkable_figure as cluster_figure then
 						if attached cluster_figure.layouter as l_layouter then
 							l_layouter.layout_cluster (cluster_figure, level + 1)
 						else
@@ -103,7 +97,6 @@ feature -- Element change
 			cluster_not_void: cluster /= Void
 		local
 			figures_in_cluster: ARRAYED_LIST [EG_LINKABLE_FIGURE]
-			linkable_figure: detachable EG_LINKABLE_FIGURE
 		do
 			from
 				create figures_in_cluster.make (cluster.count)
@@ -111,8 +104,7 @@ feature -- Element change
 			until
 				cluster.after
 			loop
-				linkable_figure ?= cluster.item
-				if linkable_figure /= Void then
+				if attached {EG_LINKABLE_FIGURE} cluster.item as linkable_figure then
 					figures_in_cluster.extend (linkable_figure)
 				end
 				cluster.forth
@@ -135,7 +127,7 @@ invariant
 	world_not_void: world /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

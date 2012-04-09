@@ -174,15 +174,11 @@ feature -- Access
 	set_with_xml_element (node: like xml_element)
 			-- Retrive state from `node'.
 		local
-			edges: detachable like xml_element
-			l_item: detachable like xml_element
 			l_cursor: XML_COMPOSITE_CURSOR
 			ax, ay: INTEGER
 			l_x_pos_string, l_y_pos_string: STRING
 			l_xml_routines: like xml_routines
 			l_edges_count: INTEGER
-			l_source: like source
-			l_target: like target
 		do
 			Precursor {EG_LINK_FIGURE} (node)
 			l_x_pos_string := x_pos_string
@@ -190,57 +186,53 @@ feature -- Access
 			l_xml_routines := xml_routines
 
 			reset
-			edges ?= node.item_for_iteration
-			node.forth
-			check edges /= Void end -- FIXME: Implied by ...?
-			l_cursor := edges.new_cursor
-			l_cursor.start
+			if
+				attached {like xml_element} node.item_for_iteration as edges
+				and then attached source as l_source
+				and then attached target as l_target
+			then
+				node.forth
+				l_cursor := edges.new_cursor
+				l_cursor.start
+				line.point_array.item (0).set (l_source.port_x, l_source.port_y)
 
-			l_source := source
-			check l_source /= Void end -- FIXME: Implied by ...?			
-			line.point_array.item (0).set (l_source.port_x, l_source.port_y)
-
-			if is_reflexive then
-				if not l_cursor.after then
-					l_item ?= l_cursor.item
-					check l_item /= Void end -- FIXME: Implied by ...?
-					l_item.start
-					ax := l_xml_routines.xml_integer (l_item, l_x_pos_string)
-					ay := l_xml_routines.xml_integer (l_item, l_y_pos_string)
-					line.point_array.item (1).set (ax, ay)
-
-					l_cursor.forth
-					l_item ?= l_cursor.item
-					check l_item /= Void end -- FIXME: Implied by ...?
-					l_item.start
-					ax := l_xml_routines.xml_integer (l_item, l_x_pos_string)
-					ay := l_xml_routines.xml_integer (l_item, l_y_pos_string)
-					line.point_array.item (2).set (ax, ay)
+				if is_reflexive then
+					if not l_cursor.after then
+						if attached {like xml_element} l_cursor.item as l_item then
+							l_item.start
+							ax := l_xml_routines.xml_integer (l_item, l_x_pos_string)
+							ay := l_xml_routines.xml_integer (l_item, l_y_pos_string)
+							line.point_array.item (1).set (ax, ay)
+						end
+						l_cursor.forth
+						if attached {like xml_element} l_cursor.item as l_item then
+							l_item.start
+							ax := l_xml_routines.xml_integer (l_item, l_x_pos_string)
+							ay := l_xml_routines.xml_integer (l_item, l_y_pos_string)
+							line.point_array.item (2).set (ax, ay)
+						end
+					end
+				else
+					from
+					until
+						l_cursor.after
+					loop
+						if attached {like xml_element} l_cursor.item as l_item then
+							l_item.start
+							l_edges_count := edges_count
+							add_point_between (l_edges_count + 1, l_edges_count + 2)
+							ax := l_xml_routines.xml_integer (l_item, l_x_pos_string)
+							ay := l_xml_routines.xml_integer (l_item, l_y_pos_string)
+							l_edges_count := edges_count
+							set_i_th_point_position (l_edges_count + 1, ax, ay)
+						end
+						l_cursor.forth
+					end
 				end
-			else
-				from
-				until
-					l_cursor.after
-				loop
-					l_item ?= l_cursor.item
-					check l_item /= Void end -- FIXME: Implied by ...?
-					l_item.start
-					l_edges_count := edges_count
-					add_point_between (l_edges_count + 1, l_edges_count + 2)
-					ax := l_xml_routines.xml_integer (l_item, l_x_pos_string)
-					ay := l_xml_routines.xml_integer (l_item, l_y_pos_string)
-					l_edges_count := edges_count
-					set_i_th_point_position (l_edges_count + 1, ax, ay)
-					l_cursor.forth
-				end
+				line.point_array.item (line.point_array.count - 1).set (l_target.port_x, l_target.port_y)
+				set_line_width (l_xml_routines.xml_integer (node, once "LINE_WIDTH"))
+				set_foreground_color (l_xml_routines.xml_color (node, once "LINE_COLOR"))
 			end
-
-			l_target := target
-			check l_target /= Void end -- FIXME: Implied by ...?
-			line.point_array.item (line.point_array.count - 1).set (l_target.port_x, l_target.port_y)
-
-			set_line_width (l_xml_routines.xml_integer (node, once "LINE_WIDTH"))
-			set_foreground_color (l_xml_routines.xml_color (node, once "LINE_COLOR"))
 		end
 
 	xml_node_name: STRING
@@ -682,7 +674,7 @@ invariant
 	line_not_void: line /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

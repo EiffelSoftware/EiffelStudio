@@ -87,18 +87,11 @@ feature -- Status report
 
 	has_linkable (a_linkable: EG_LINKABLE): BOOLEAN
 			-- Is `a_linkable' part of the model?
-		local
-			node: detachable like node_type
-			cluster: detachable EG_CLUSTER
 		do
-			node ?= a_linkable
-			if node /= Void then
-				Result := has_node (node)
-			else
-				cluster ?= a_linkable
-				if cluster /= Void then
-					Result := has_cluster (cluster)
-				end
+			if attached {like node_type} a_linkable as l_node then
+				Result := has_node (l_node)
+			elseif attached {EG_CLUSTER} a_linkable as l_cluster then
+				Result := has_cluster (l_cluster)
 			end
 		end
 
@@ -115,7 +108,6 @@ feature -- Status report
 		do
 			Result := links.is_empty and then nodes.is_empty and then clusters.is_empty
 		end
-
 
 feature -- Element change
 
@@ -247,7 +239,7 @@ feature -- Element change
 				i > l_clusters.count
 			loop
 				l_item := l_clusters.i_th (i)
-				if l_item /= Void and then l_item.cluster = Void then
+				if l_item.cluster = Void then
 					remove_all (l_item)
 				else
 					i := i + 1
@@ -290,12 +282,8 @@ feature {EG_FIGURE_WORLD} -- Implementation
 
 	node_type: EG_NODE
 			-- Type of nodes in `nodes'.
-		local
-			l_result: detachable like node_type
 		do
-			check anchor_type_only: False end
-			check l_result /= Void end -- Satisfy void-safe compiler
-			Result := l_result
+			check do_not_call: False then end
 		end
 
 feature {EG_ITEM} -- Implementation
@@ -305,8 +293,6 @@ feature {EG_ITEM} -- Implementation
 		require
 			a_cluster /= Void
 		local
-			l_cluster: detachable EG_CLUSTER
-			l_node: detachable like node_type
 			l_linkables: ARRAYED_LIST [EG_LINKABLE]
 			i: INTEGER
 		do
@@ -316,15 +302,15 @@ feature {EG_ITEM} -- Implementation
 			until
 				i > l_linkables.count
 			loop
-				l_cluster ?= l_linkables.i_th (i)
-				if l_cluster /= Void then
+				if attached {EG_CLUSTER} l_linkables [i] as l_cluster then
 					remove_all (l_cluster)
-				else
-					l_node ?= l_linkables.i_th (i)
-					check l_node /= Void end -- FIXME: Implied by ...?
+				elseif attached {like node_type} l_linkables [i] as l_node then
 					remove_links (l_node.links)
 					remove_node (l_node)
 					i := i + 1
+				else
+						--| If this is reached then this code needs to handle any new linkable type.
+					check eg_linkable_type_not_handled: False then end
 				end
 			end
 			remove_cluster (a_cluster)
@@ -354,7 +340,7 @@ invariant
 	link_add_actions_not_void: link_add_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

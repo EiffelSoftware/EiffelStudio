@@ -176,9 +176,9 @@ feature {NONE} -- Image data filling.
 		local
 			l_pointer: POINTER
 		do
-			check attached {EV_PIXEL_BUFFER_IMP} implementation as l_imp then
+			if attached {EV_PIXEL_BUFFER_IMP} implementation as l_imp then
 				l_pointer := l_imp.data_ptr
-				if l_pointer /= default_pointer then
+				if not l_pointer.is_default_pointer then
 					build_colors (l_pointer)
 					l_imp.unlock
 				end
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

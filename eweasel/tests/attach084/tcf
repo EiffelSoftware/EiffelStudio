@@ -6,7 +6,7 @@ copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
 
 compile_frozen
-compile_result validity_error TEST VD88
+compile_result validity_error TEST VD88; TEST VEVI
 
 define	BASE_LIBRARY	"base-safe"
 copy_sub	Ace $TEST Ace

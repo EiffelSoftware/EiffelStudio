@@ -1,0 +1,46 @@
+== Usage ==
+
+  USAGE: 
+     ecf_builder [-l <l|libraries> [-l...]] [-c <c|clusters> [-c...]] [-t <t|tests> [-t...]] [-d <d|dir>] [-uuid <uuid>] [-n <n|name>] [-syntax <syntax>] [-library] [-application] [-testing] [-executable_name <executable_name>] [-root_info <root_info>] [-console] [-concurrency <concurrency>] [-thread] [-scoop] [-f] [-v] [-nologo]
+  
+  OPTIONS:
+     Options should be prefixed with: '-' or '/'
+  
+     -l --libraries      : Libraries (Optional)
+                           <l|libraries>: Library to include
+     -c --clusters       : Clusters (Optional)
+                           <c|clusters>: Cluster to include
+     -t --tests          : Tests clusters (Optional)
+                           <t|tests>: Tests cluster to include
+     -d --dir            : Directory (Optional)
+                           <d|dir>: Base directory
+        --uuid           : UUID (Optional)
+                           <uuid>: UUID value
+     -n --name           : Target name (Optional)
+                           <n|name>: Eiffel target name
+        --syntax         : Syntax mode (Optional)
+                           <syntax>: Syntax mode: obsolete, transitional, default=standard, provisional
+        --library        : This is a library configuration file (Optional)
+        --application    : This is an application configuration file (Optional)
+        --testing        : This is an testing configuration file (Optional)
+        --executable_name: Executable name (Optional)
+                           <executable_name>: Executable name (without extension)
+        --root_info      : Root info: cluster.class.feature (Optional)
+                           <root_info>: Root cluster.class.name information (cluster is optional)
+        --console        : Console application mode (Optional)
+        --concurrency    : Concurrency mode (Optional)
+                           <concurrency>: Concurrency mode: default=none, thread, scoop
+        --thread         : Concurrency mode = thread (Optional)
+        --scoop          : Concurrency mode = SCOOP (Optional)
+     -f --force          : Force operation (Optional)
+     -? --help           : Display usage information. (Optional)
+     -v --version        : Displays version information. (Optional)
+        --nologo         : Supresses copyright information. (Optional)
+  
+== Examples ==
+* Create a library using base, and time, and from my cluster "src"
+  ecf_builder --library --libraries base --libraries time --clusters src --name my_new_lib
+
+* Create an application using base, and my_new_lib
+  ecf_builder --application --libraries base --libraries ../my_new_lib.ecf --clusters . --root_info APPLICATION.make --console --executable_name my_new_application
+

@@ -1,6 +1,7 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class 
 	STRUCTURES
 
@@ -56,13 +57,19 @@ feature -- Routines
 				io.putstring ("Do you want to retrieve the last saved demo (y/n)?: ")
 				io.readchar 
 				if io.lastchar = 'y' then
+					io.next_line
 					create chosen_demo
 					saved_demo_file.open_read
-					chosen_demo ?= chosen_demo.retrieved (saved_demo_file)
-					saved_demo_file.close
-					io.next_line
-					chosen_demo.cycle
-					resume_session := true
+					if attached {TOP_DEMO} chosen_demo.retrieved (saved_demo_file) as d then
+						chosen_demo := d
+						saved_demo_file.close
+						chosen_demo.cycle
+						resume_session := true
+					else
+						saved_demo_file.close
+						io.putstring ("Cannot load saved demo. Using the new one.%N")
+						io.put_new_line
+					end
 				else
 					io.next_line
 				end
@@ -162,16 +169,14 @@ feature -- Routines
 		end 
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
 end -- class STRUCTURES
-

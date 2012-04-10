@@ -134,12 +134,12 @@ feature {NONE} -- Implementation
 
 	selected_content: detachable SD_TOOL_BAR_CONTENT
 			-- Selected content
-		local
-	 		l_item: detachable EV_LIST_ITEM
 		do
-			l_item := toolbar_list.selected_item
-			if l_item /= Void then
-				Result ?= l_item.data
+			if
+				attached toolbar_list.selected_item as l_item and then
+				attached {like selected_content} l_item.data as c
+			then
+				Result := c
 			end
 		end
 
@@ -170,13 +170,10 @@ feature {NONE} -- Implementation
 			-- Setup sensitivity every other item.s
 		require
 			a_item_not_void: a_item /= Void
-		local
-			l_item: detachable SD_TOOL_BAR_BUTTON
 		do
-			l_item ?= a_item
-			if l_item /= Void then
+			if attached {SD_TOOL_BAR_BUTTON} a_item as l_button then
 				if next_disable_sensitivity then
-					l_item.disable_sensitive
+					l_button.disable_sensitive
 					next_disable_sensitivity := False
 				else
 					next_disable_sensitivity := True

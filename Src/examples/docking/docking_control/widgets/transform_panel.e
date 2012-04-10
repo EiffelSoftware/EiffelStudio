@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		do
 			docking_manager := a_manager
 			window := a_window
-			
+
 			create_all_widgets
 			create_all_actions
 
@@ -127,7 +127,6 @@ feature {NONE} -- Implementation
 			l_warning_dialog: EV_WARNING_DIALOG
 			l_type: INTEGER
 			l_direction: INTEGER
-			l_selected_content: detachable SD_CONTENT
 			l_is_left: BOOLEAN
 			l_float_x, l_float_y: INTEGER
 		do
@@ -142,10 +141,12 @@ feature {NONE} -- Implementation
 					l_content.set_top (l_direction)
 				elseif relative_radio_button.is_selected then
 					l_direction := selected_direction
-					if attached existing_contents_list.selected_item as l_selected_item then
-						l_selected_content ?= l_selected_item.data
-					end
-					if l_direction /= 0 and then l_selected_content /= Void and then l_selected_content.state_value /= {SD_ENUMERATION}.auto_hide then
+					if
+						l_direction /= 0 and then
+						attached existing_contents_list.selected_item as l_selected_item and then
+						attached {SD_CONTENT} l_selected_item.data as l_selected_content and then
+						l_selected_content.state_value /= {SD_ENUMERATION}.auto_hide
+					then
 						l_content.set_relative (l_selected_content, l_direction)
 					end
 				elseif tab_with_radio_button.is_selected then
@@ -154,10 +155,11 @@ feature {NONE} -- Implementation
 					elseif right_radio_button.is_selected then
 						l_is_left := False
 					end
-					if attached existing_contents_list.selected_item as l_selected_item_2 then
-						l_selected_content ?= l_selected_item_2.data
-					end
-					if l_selected_content /= Void and then l_content.target_content_zone_parent_exist (l_selected_content) then
+					if
+						attached existing_contents_list.selected_item as l_selected_item and then
+						attached {SD_CONTENT} l_selected_item.data as l_selected_content and then
+						l_content.target_content_zone_parent_exist (l_selected_content)
+					then
 						l_content.set_tab_with (l_selected_content, l_is_left)
 					end
 				elseif auto_hide_radio_button.is_selected then
@@ -169,7 +171,11 @@ feature {NONE} -- Implementation
 					l_float_x := screen_x_button.value
 					l_float_y := screen_y_button.value
 					l_content.set_floating (l_float_x, l_float_y)
-				elseif default_editor_radio_button.is_selected and then l_content.manager_has_place_holder and then l_content.type = {SD_ENUMERATION}.editor then
+				elseif
+					default_editor_radio_button.is_selected and then
+					l_content.manager_has_place_holder and then
+					l_content.type = {SD_ENUMERATION}.editor
+				then
 					l_content.set_default_editor_position
 				end
 			else

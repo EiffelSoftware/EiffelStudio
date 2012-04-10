@@ -252,10 +252,10 @@ feature -- C code generation
 
 					-- Function's body
 				buffer.generate_block_open
-				buffer.put_gtcx
 
 					-- If constant is a string, it is the semantic of a once
 				if local_is_once then
+					buffer.put_gtcx
 					buffer.put_new_line
 					if local_byte_context.workbench_mode then
 						buffer.put_string (once "RTOTC (")
@@ -509,7 +509,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -11,16 +11,25 @@ inherit
 	EIFFEL_ERROR
 		redefine
 			build_explain,
+			error_string,
 			print_single_line_error_message,
 			trace
 		end
 
+	WARNING
+		undefine
+			has_associated_file
+		redefine
+			error_string
+		end
+
 create
-	make
+	make_error,
+	make_warning
 
 feature {NONE} -- Creation
 
-	make (c: CLASS_I; location: LOCATION_AS; context: CLASS_C)
+	make_error (c: CLASS_I; location: LOCATION_AS; context: CLASS_C)
 			-- Create an error object for less void-safe class `c' at `location' in class `context'.
 		require
 			c_attached: attached c
@@ -30,6 +39,21 @@ feature {NONE} -- Creation
 			class_c := context
 			set_location (location)
 			provider := c
+		ensure
+			is_error: not is_warning
+		end
+
+	make_warning (c: CLASS_I; location: LOCATION_AS; context: CLASS_C)
+			-- Create a warning object for less void-safe class `c' at `location' in class `context'.
+		require
+			c_attached: attached c
+			location_attached: attached location
+			context_attached: attached context
+		do
+			make_error (c, location, context)
+			is_warning := True
+		ensure
+			is_warning: is_warning
 		end
 
 feature -- Properties
@@ -39,6 +63,19 @@ feature -- Properties
 
 	provider: CLASS_I
 			-- Class on which `class_c' relies
+
+	is_warning: BOOLEAN
+			-- Is it a warning?
+
+	error_string: STRING
+			-- <Precursor>
+		do
+			if is_warning then
+				Result := Precursor {WARNING}
+			else
+				Result := Precursor {EIFFEL_ERROR}
+			end
+		end
 
 feature -- Output
 
@@ -72,7 +109,7 @@ feature {NONE} -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

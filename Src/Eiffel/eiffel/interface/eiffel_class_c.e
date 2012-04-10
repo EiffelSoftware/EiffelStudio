@@ -1963,7 +1963,13 @@ feature -- Supplier checking
 					if not supplier_class.is_void_safety_supported (original_class) then
 							-- Report an error that `supplier_class' is less void-safe
 							-- than the class that replies on it.
-						error_handler.insert_error (create {VD88}.make (supplier_class, class_name, Current))
+						if original_class.is_void_safe_call then
+								-- Report error because client expects complete void safety.
+							error_handler.insert_error (create {VD88}.make_error (supplier_class, class_name, Current))
+						else
+								-- Report warning because client does not require complete void safety.
+							error_handler.insert_warning (create {VD88}.make_warning (supplier_class, class_name, Current))
+						end
 					end
 				end
 				comp_class := supplier_class.compiled_class
@@ -2260,7 +2266,7 @@ invariant
 	inline_agent_table_not_void: inline_agent_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

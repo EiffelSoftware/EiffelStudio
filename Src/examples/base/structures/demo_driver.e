@@ -1,10 +1,10 @@
-note
+﻿note
 
-	date: "$Date$";
-	revision: "$Revision$";
 	description: "Drivers for basic data structure demos"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class 
 	DEMO_DRIVER 
@@ -17,10 +17,10 @@ feature -- Creation
 	make
 			-- Create arrays to store menus. 
 		do
-			create menu_entry.make (1, Max_Number_of_Entries)
-			create menu_help.make (1, Max_Number_of_Entries)
-			create menu_tag.make (1, Max_Number_of_Entries)
-			create menu_flag.make (1, Max_Number_of_Entries)
+			create menu_entry.make_empty
+			create menu_help.make_empty
+			create menu_tag.make_empty
+			create menu_flag.make_filled (False, 1, Max_Number_of_Entries)
 			build_line
 		end
 
@@ -107,9 +107,9 @@ feature -- Routines
 		do
 			menu_size := menu_size + 1 
 			entry.keep_head (Max_Length_of_an_Entry)
-			menu_entry.put (entry, menu_size) 
-			menu_help.put (help, menu_size) 
-			menu_tag.put (get_tag (entry), menu_size) 
+			menu_entry.force (entry, menu_size) 
+			menu_help.force (help, menu_size) 
+			menu_tag.force (get_tag (entry), menu_size) 
 			last_entry := menu_size
 		end
 
@@ -186,9 +186,9 @@ feature -- Routines
 			-- Add help command to menu
 		do
 			menu_size := menu_size + 1 
-			menu_entry.put ("?  Help", menu_size) 
-			menu_help.put ("Sorry, no further help available", menu_size) 
-			menu_tag.put ("?", menu_size) 
+			menu_entry.force ("?  Help", menu_size) 
+			menu_help.force ("Sorry, no further help available", menu_size) 
+			menu_tag.force ("?", menu_size) 
 		end
 
 	get_choice: INTEGER
@@ -346,16 +346,14 @@ feature -- Routines
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
 end -- class DEMO_DRIVER
-

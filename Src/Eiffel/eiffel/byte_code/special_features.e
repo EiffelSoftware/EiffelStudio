@@ -190,6 +190,14 @@ feature -- Byte code special generation
 					-- type and then compare them for equality.
 				basic_type.c_type.make_default_byte_code (ba)
 				ba.append (bc_eq)
+
+			when is_character_8_type then
+					-- Check that the character code value is less than 255.
+				check
+					integer_type: type_of (basic_type) = character_type_id
+				end
+				ba.append_character_32 ({CHARACTER_8}.max_value.to_character_32)
+				ba.append (bc_le)
 			end
 		end
 
@@ -376,6 +384,16 @@ feature -- C special code generation
 			when is_default_pointer_type then
 				buffer.put_character('!')
 				target.print_register
+
+			when is_character_8_type then
+				check
+					integer_type: type_of (basic_type) = character_type_id
+				end
+				buffer.put_character ('(')
+				target.print_register
+				buffer.put_four_character (' ', '<', '=', ' ')
+				buffer.put_hex_natural_32 ({CHARACTER_8}.max_value.to_natural_32)
+				buffer.put_character (')')
 			end
 		end
 
@@ -469,6 +487,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (positive_infinity_type, {PREDEFINED_NAMES}.positive_infinity_name_id)
 			Result.put (do_nothing_type, {PREDEFINED_NAMES}.do_nothing_name_id)
 			Result.put (is_default_pointer_type, {PREDEFINED_NAMES}.is_default_pointer_name_id)
+			Result.put (is_character_8_type, {PREDEFINED_NAMES}.is_character_8_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.copy_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.deep_copy_name_id)
@@ -547,6 +566,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (positive_infinity_type, {PREDEFINED_NAMES}.positive_infinity_name_id)
 			Result.put (do_nothing_type, {PREDEFINED_NAMES}.do_nothing_name_id)
 			Result.put (is_default_pointer_type, {PREDEFINED_NAMES}.is_default_pointer_name_id)
+			Result.put (is_character_8_type, {PREDEFINED_NAMES}.is_character_8_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 		end
 
@@ -617,7 +637,8 @@ feature {NONE} -- Fast access to feature name
 	positive_infinity_type: INTEGER = 62
 	do_nothing_type: INTEGER = 63
 	is_default_pointer_type: INTEGER = 64
-	max_type_id: INTEGER = 64
+	is_character_8_type: INTEGER = 65
+	max_type_id: INTEGER = 65
 
 feature {NONE} -- Byte code generation
 
@@ -1311,7 +1332,7 @@ feature {NONE} -- Type information
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

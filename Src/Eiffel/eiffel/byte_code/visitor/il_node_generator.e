@@ -2754,9 +2754,10 @@ feature {NONE} -- Visitors
 					generate_il_metamorphose (l_source_type, l_target_type, True)
 				end
 
-					-- Generate Test on type
-				il_generator.generate_is_instance_of (l_target_type)
+					-- Save the original value so that it can be used for the second chance type test.
 				il_generator.duplicate_top
+					-- Generate Test on type.
+				il_generator.generate_is_instance_of (l_target_type)
 
 				failure_label := il_generator.create_label
 				success_label := il_generator.create_label
@@ -4883,7 +4884,7 @@ feature {NONE} -- Convenience
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

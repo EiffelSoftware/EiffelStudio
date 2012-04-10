@@ -1,6 +1,7 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class
 	CALCULATOR
 
@@ -87,13 +88,10 @@ feature {NONE} -- Implementation
 
 	next
 			-- Get next state.
-		local
-			current_interface: INTERFACE
 		do
 			current_state.read
-			if associated_operator.has (current_state.next_choice) then
-				current_interface ?= associated_operator.item (current_state.next_choice)
-				current_state := current_interface.associated_command
+			if attached associated_operator.item (current_state.next_choice) as l_current_interface then
+				current_state := l_current_interface.associated_command
 			else
 				current_state := help_state
 			end
@@ -121,16 +119,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
 end -- class CALCULATOR
-

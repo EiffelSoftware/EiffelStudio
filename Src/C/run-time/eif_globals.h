@@ -121,7 +121,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 		/* hector.c */
 	struct stack hec_stack_cx;		/* Indirection table "hector stack" for references passed to C*/
 #endif
-	int16 caller_assertion_level_cx;	/* Assertion level of the caller */
+	EIF_NATURAL_32 caller_assertion_level_cx;	/* Assertion level of the caller */
 
 		/* Polymorphism. */
 	int eif_optimize_return_cx;	/* Should caller optimize return? */

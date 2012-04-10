@@ -1307,7 +1307,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTCI2(x)			chkcinv(MTC x)
 
 #ifndef EIF_THREADS
-	RT_LNK int16 caller_assertion_level;	/*Saves information about the assertion level of the caller*/
+	RT_LNK EIF_NATURAL_32 caller_assertion_level;	/*Saves information about the assertion level of the caller*/
 #endif
 
 
@@ -1322,8 +1322,9 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTME(x,y) Starts monitoring (profile or tracing) for dynamic type 'x' for routine context 'y' (i.e. normal vs external)
  */
 
-#define RTDA		struct eif_opt * EIF_VOLATILE opt; \
-		int16 saved_caller_assertion_level = caller_assertion_level
+#define RTDA \
+		struct eif_opt * EIF_VOLATILE opt; \
+		EIF_NATURAL_32 saved_caller_assertion_level = caller_assertion_level
 #define RTAL		(~in_assertion & opt->assert_level)
 #define RTAC		(~in_assertion & saved_caller_assertion_level)
 #define RTSC		caller_assertion_level = RTAL & CK_SUP_REQUIRE

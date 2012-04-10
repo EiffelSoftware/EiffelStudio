@@ -73,7 +73,7 @@ doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_public int nstcall = 0;
-rt_public int16 caller_assertion_level = 0;
+rt_public EIF_NATURAL_32 caller_assertion_level = 0;
 
 /*
 doc:	<attribute name="eif_optimize_return" return_type="int" export="public">

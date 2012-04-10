@@ -578,7 +578,7 @@ rt_private void interpret(int flag, int where)
 	EIF_TYPE_INDEX volatile type;			/* Often used to hold type values */
 	uint32 sk_type;
 	int volatile saved_assertion;
-	int16 volatile saved_caller_assertion_level = caller_assertion_level;	/* Saves the assertion level of the caller*/
+	EIF_NATURAL_32 volatile saved_caller_assertion_level = caller_assertion_level;	/* Saves the assertion level of the caller*/
 	unsigned char * volatile rescue = NULL;	/* Location of rescue clause */
 	jmp_buf exenv;							/* In case we have to setjmp() */
 	jmp_buf exenvo;							/* For exception during once evaluation */

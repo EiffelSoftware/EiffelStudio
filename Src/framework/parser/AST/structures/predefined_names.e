@@ -227,6 +227,7 @@ feature -- Constants
 	scoop_manager_task_callback_name_id: INTEGER = 214
 	start_name_id: INTEGER = 215
 	is_default_pointer_name_id: INTEGER = 216
+	is_character_8_name_id: INTEGER = 217
 
 feature -- Classification
 
@@ -248,7 +249,7 @@ feature -- Classification
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

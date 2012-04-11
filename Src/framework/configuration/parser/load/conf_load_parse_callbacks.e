@@ -2595,32 +2595,6 @@ feature {NONE} -- Default options
 			result_attached: Result /= Void
 		end
 
-feature {NONE} -- Namespace checks
-
-	includes_this_or_before (n: like current_namespace): BOOLEAN
-			-- Is current namespace less or equal to `n'?
-			-- (Includes unknown namespaces.)
-		require
-			n_attached: attached n
-			n_known: is_namespace_known (n)
-		do
-			Result := is_before_or_equal (current_namespace, n)
-		ensure
-			definition: Result = (is_unknown_version or else is_before_or_equal (current_namespace, n))
-		end
-
-	includes_this_or_after (n: like current_namespace): BOOLEAN
-			-- Is current namespace greater or equal to `n'?
-			-- (Includes unknown namespaces.)
-		require
-			n_attached: attached n
-			n_known: is_namespace_known (n)
-		do
-			Result := is_after_or_equal (current_namespace, n)
-		ensure
-			definition: Result = (is_unknown_version or else is_after_or_equal (current_namespace, n))
-		end
-
 feature {NONE} -- Implementation constants
 
 		-- Tag states

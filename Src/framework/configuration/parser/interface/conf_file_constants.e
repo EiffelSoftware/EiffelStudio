@@ -127,6 +127,33 @@ feature -- Status report
 			consistency: Result = namespace_order.has (n)
 		end
 
+feature -- Normalization
+
+	normalized_namespace (n: like latest_namespace): like latest_namespace
+			-- A namespace constant that matches `n' or
+			-- the original value if there are no matches.
+		require
+			n_attached: attached n
+		do
+			if n.is_equal (namespace_1_0_0) then Result := namespace_1_0_0
+			elseif n.is_equal (namespace_1_2_0) then Result := namespace_1_2_0
+			elseif n.is_equal (namespace_1_3_0) then Result := namespace_1_3_0
+			elseif n.is_equal (namespace_1_4_0) then Result := namespace_1_4_0
+			elseif n.is_equal (namespace_1_5_0) then Result := namespace_1_5_0
+			elseif n.is_equal (namespace_1_6_0) then Result := namespace_1_6_0
+			elseif n.is_equal (namespace_1_7_0) then Result := namespace_1_7_0
+			elseif n.is_equal (namespace_1_8_0) then Result := namespace_1_8_0
+			elseif n.is_equal (namespace_1_9_0) then Result := namespace_1_9_0
+			elseif n.is_equal (namespace_1_10_0) then Result := namespace_1_10_0
+			elseif n.is_equal (latest_namespace) then Result := latest_namespace
+			else
+					-- Unknown namespace.
+				Result := n
+			end
+		ensure
+			normalized_namespace_attached: attached Result
+		end
+
 feature -- Comparison
 
 	is_before_or_equal (a, b: like latest_namespace): BOOLEAN

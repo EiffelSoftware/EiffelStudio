@@ -16,7 +16,10 @@ inherit
 			on_start
 		end
 
-	CONF_FILE_CONSTANTS
+	CONF_NAMESPACE_TESTER
+		rename
+			namespace as current_namespace
+		end
 
 	EXCEPTIONS
 		export
@@ -24,9 +27,6 @@ inherit
 		end
 
 feature -- Status
-
-	is_unknown_version: BOOLEAN
-			-- Is the file of an unknown version?
 
 	is_error: BOOLEAN
 			-- Was there an error during the parsing?
@@ -42,9 +42,6 @@ feature -- Status
 
 	last_warning: ARRAYED_LIST [CONF_ERROR]
 			-- The last warning messages from the parser.
-
-	current_namespace: detachable STRING
-			-- Current namespace
 
 feature -- Callbacks
 
@@ -103,41 +100,15 @@ feature {NONE} -- Implementation
 
 	check_version (a_value: STRING)
 			-- Check that `a_value' is the correct version.
-		local
-			namespace: like current_namespace
 		do
-			namespace := current_namespace
 			if a_value = Void then
 					-- No namespace is specified.
 				set_error (create {CONF_ERROR_VERSION})
-			elseif namespace = Void then
-					-- This is a top-level element, its namespace will be used for processing
-					-- of the complete configuration file.
-				if a_value.is_equal (namespace_1_0_0) then
-						-- 5.7 release
-						-- this is fully compatible with the current version
-						-- so we don't have to do anything special
-					namespace := namespace_1_0_0
-				elseif a_value.is_equal (namespace_1_2_0) then namespace := namespace_1_2_0
-				elseif a_value.is_equal (namespace_1_3_0) then namespace := namespace_1_3_0
-				elseif a_value.is_equal (namespace_1_4_0) then namespace := namespace_1_4_0
-				elseif a_value.is_equal (namespace_1_5_0) then namespace := namespace_1_5_0
-				elseif a_value.is_equal (namespace_1_6_0) then namespace := namespace_1_6_0
-				elseif a_value.is_equal (namespace_1_7_0) then namespace := namespace_1_7_0
-				elseif a_value.is_equal (namespace_1_8_0) then namespace := namespace_1_8_0
-				elseif a_value.is_equal (namespace_1_9_0) then namespace := namespace_1_9_0
-				elseif a_value.is_equal (namespace_1_10_0) then namespace := namespace_1_10_0
-				elseif a_value.is_equal (latest_namespace) then namespace := latest_namespace
-						-- current version
-				else
-						-- unknown version
-						-- we try to be forward compatible to a certain degree
-					is_unknown_version := True
-					namespace := a_value
-				end
-					-- Record the current namespace for future use.
-				current_namespace := namespace
-			elseif namespace /~ a_value then
+			elseif not attached current_namespace as n then
+					-- This is a top-level element, its namespace will be used
+					-- to process the complete configuration file.
+				current_namespace := normalized_namespace (a_value)
+			elseif n /~ a_value then
 					-- Nested element has some different namespace.
 					-- Instead of reporting an error it's possible to skip the elements from a
 					-- different namespace.
@@ -181,7 +152,7 @@ feature {NONE} -- Implementation
 			e: XML_POSITION
 		do
 				-- Do not promote error to warning if this is an XML error.
-			if not is_invalid_xml and then is_unknown_version then
+			if not is_invalid_xml and then not is_namespace_known (current_namespace) then
 				set_parse_warning_message (a_message)
 			else
 				create l_error

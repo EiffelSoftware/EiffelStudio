@@ -22,7 +22,7 @@ inherit
 
 	CONF_VALIDITY
 
-	CONF_FILE_CONSTANTS
+	CONF_NAMESPACE_TESTER
 
 	CONF_ACCESS
 
@@ -50,9 +50,6 @@ feature -- Access
 
 	text: STRING
 			-- The text output.
-
-	namespace: STRING
-			-- Namespace to use.
 
 	schema: STRING
 			-- Schema to use.
@@ -198,7 +195,7 @@ feature -- Visit nodes
 				l_sorted_list.forth
 			end
 			if a_target.immediate_setting_concurrency.is_set then
-				if namespace >= namespace_1_7_0 then
+				if includes_this_or_after (namespace_1_7_0) then
 						-- Use "concurrency" setting.
 					l_a_val.wipe_out
 					l_a_val.force (s_concurrency)
@@ -551,7 +548,7 @@ feature {NONE} -- Implementation
 							append_condition_list (b, agent get_build_name, "build")
 						end
 						if attached l_condition.concurrency as c then
-							if namespace >= namespace_1_8_0 then
+							if includes_this_or_after (namespace_1_8_0) then
 									-- Use "concurrency" condition.
 								append_condition_list (c, agent get_concurrency_name, "concurrency")
 							else
@@ -1142,7 +1139,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

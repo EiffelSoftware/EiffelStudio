@@ -78,11 +78,8 @@ feature -- Command
 		require
 			not_void: a_test_name /= Void
 			not_void: a_test_folder_name /= Void
-		local
-			l_inst: EW_EQA_TEST_INST
 		do
-			l_inst ?= test_catalog_command_table.item (test_63_keyword)
-			if l_inst /= Void then
+			if attached {EW_EQA_TEST_INT} test_catalog_command_table.item (test_63_keyword) as l_inst then
 				if a_arguments /= Void then
 					catalog_file.set_argument (a_test_name + " " + a_test_folder_name + " " + a_arguments)
 				else

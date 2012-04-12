@@ -1,3 +1,24 @@
+/*
+indexing
+	description: "EiffelNet: library of reusable components for networking."
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+*/
+
+/*
+	Eiffel Net C interfacing --- 	.../library/net/Clib/ipv6.c
+	IPV6 specific facilities
+	$Id$
+*/
+
+
 /* library/net/Clib/ipv6.c */
 
 #include "ipv6.h"
@@ -29,43 +50,43 @@ EIF_INTEGER en_addrinfo_af_inet6(){
 	return AF_INET6;
 }
 
-int en_addrinfo_ai_flags (STRUCT_ADDRINFO *s) {
+int en_addrinfo_ai_flags (struct addrinfo *s) {
 	return s->ai_flags;
 }
 
-int en_addrinfo_ai_family (STRUCT_ADDRINFO *s) {
+int en_addrinfo_ai_family (struct addrinfo *s) {
 	return s->ai_family;
 }
 
-int en_addrinfo_ai_socktype (STRUCT_ADDRINFO *s) {
+int en_addrinfo_ai_socktype (struct addrinfo *s) {
 	return s->ai_socktype;
 }
 
-int en_addrinfo_ai_protocol (STRUCT_ADDRINFO *s) {
+int en_addrinfo_ai_protocol (struct addrinfo *s) {
 	return s->ai_protocol;
 }
 
-int en_addrinfo_ai_addrlen (STRUCT_ADDRINFO *s) {
+int en_addrinfo_ai_addrlen (struct addrinfo *s) {
 	return (int) s->ai_addrlen;
 }
 
-char* en_addrinfo_ai_canonname (STRUCT_ADDRINFO *s) {
+char* en_addrinfo_ai_canonname (struct addrinfo *s) {
 	return s->ai_canonname;
 }
 
-void* en_addrinfo_ai_addr (STRUCT_ADDRINFO *s) {
+void* en_addrinfo_ai_addr (struct addrinfo *s) {
 	return s->ai_addr;
 }
 
-void* en_addrinfo_ai_next (STRUCT_ADDRINFO *s) {
+void* en_addrinfo_ai_next (struct addrinfo *s) {
 	return s->ai_next;
 }
 
-void en_free_addrinfo (STRUCT_ADDRINFO *s) {
+void en_free_addrinfo (struct addrinfo *s) {
 	freeaddrinfo(s);
 }
 
-void* en_addrinfo_get_address_pointer (STRUCT_ADDRINFO *s) {
+void* en_addrinfo_get_address_pointer (struct addrinfo *s) {
 	if (s->ai_family == AF_INET) {
 		struct sockaddr_in *him4 = (struct sockaddr_in *) s->ai_addr;
 		return &(him4->sin_addr.s_addr);
@@ -77,7 +98,7 @@ void* en_addrinfo_get_address_pointer (STRUCT_ADDRINFO *s) {
 }
 
 void* en_getaddrinfo(char *hostname) {
-	STRUCT_ADDRINFO *res = 0;
+	struct addrinfo *res = 0;
 	int error;
 
 	EIF_NET_INITIALIZE;
@@ -128,7 +149,7 @@ void en_sockaddr_set_port (SOCKETADDRESS *s, int port) {
 	SET_PORT(s, htons((u_short) port));
 }
 
-unsigned long en_sockaddr_get_ipv6_address_scope  (STRUCT_ADDRINFO *s) {
+unsigned long en_sockaddr_get_ipv6_address_scope  (struct addrinfo *s) {
 	if (s->ai_family == AF_INET6) {
 		struct sockaddr_in6 *him6 = (struct sockaddr_in6*) s->ai_addr;
 		return him6->sin6_scope_id;

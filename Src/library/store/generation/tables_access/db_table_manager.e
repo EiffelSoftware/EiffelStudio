@@ -422,7 +422,6 @@ feature -- Queries
 			is_valid_code: is_valid_code (tablecode)
 		local
 			obj: DB_TABLE
-			l_error_message: detachable STRING_32
 		do
 			obj := tables.obj (tablecode)
 			has_error := False

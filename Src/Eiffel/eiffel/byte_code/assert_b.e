@@ -47,6 +47,15 @@ feature -- Access
 
 	line_number : INTEGER
 
+feature -- Status report
+
+	is_true_expression (a_expr: like expr): BOOLEAN
+			-- Does `a_expr' always evaluate to True?
+			--| Useful to avoid code generation of useless assertion clauses.
+		do
+			Result := attached {BOOL_CONST_B} a_expr as l_bool and then l_bool.value
+		end
+
 feature -- Line number setting
 
 	set_line_number (lnr : INTEGER)
@@ -95,46 +104,66 @@ feature -- Line number setting
 			-- Generate assertion C code.
 		local
 			buf: GENERATION_BUFFER
-			l_expr: like expr
 		do
-			buf := buffer
-
 				-- generate a debugger hook
 			generate_frozen_debugger_hook
 
-				-- Generate the recording of the assertion
-			buf.put_new_line
-			buf.put_string ("RTCT")
-			if context.assertion_type = in_guard then
-				buf.put_character ('0')
-			end
-			buf.put_character ('(')
-			if tag /= Void then
-				buf.put_character ('"')
-				buf.put_string (tag)
-				buf.put_character ('"')
+			if is_true_expression (expr) then
+					-- Nothing to generate, the assertion was statically evaluated to be True
+					-- all the time
 			else
-				buf.put_string ("NULL")
+				buf := buffer
+
+
+					-- Generate the recording of the assertion
+				buf.put_new_line
+				buf.put_string ("RTCT")
+				if context.assertion_type = in_guard then
+					buf.put_character ('0')
+				end
+				buf.put_character ('(')
+				if tag /= Void then
+					buf.put_character ('"')
+					buf.put_string (tag)
+					buf.put_character ('"')
+				else
+					buf.put_string ("NULL")
+				end
+				buf.put_string ({C_CONST}.comma_space)
+				generate_assertion_code (context.assertion_type)
+				buf.put_two_character (')', ';')
+					-- Now evaluate the expression
+				generate_expression (buf)
 			end
-			buf.put_string ({C_CONST}.comma_space)
-			generate_assertion_code (context.assertion_type)
-			buf.put_two_character (')', ';')
-				-- Now evaluate the expression
+		end
+
+	generate_expression (buf: like buffer)
+			-- Generate the expression evaluation.
+		local
+			l_expr: like expr
+		do
 			l_expr := expr
-			l_expr.generate
-			buf.put_new_line
-			buf.put_string ({C_CONST}.if_conditional)
-			buf.put_two_character (' ', '(')
-			l_expr.print_register
-			buf.put_three_character (')', ' ', '{')
-			generate_success (buf)
-			buf.put_new_line
-			buf.put_two_character ('}', ' ')
-			buf.put_string ({C_CONST}.else_conditional)
-			buf.put_two_character (' ', '{')
-			generate_failure (buf)
-			buffer.put_new_line
-			buf.put_character ('}')
+				-- If the code can be statically evaluated to a constant then we
+				-- can simplify the code generation by avoiding the generation of
+				-- the if statement.
+			if attached {BOOL_CONST_B} l_expr as l_bool and then not l_bool.value then
+				generate_failure (buf)
+			else
+				l_expr.generate
+				buf.put_new_line
+				buf.put_string ({C_CONST}.if_conditional)
+				buf.put_two_character (' ', '(')
+				l_expr.print_register
+				buf.put_three_character (')', ' ', '{')
+				generate_success (buf)
+				buf.put_new_line
+				buf.put_two_character ('}', ' ')
+				buf.put_string ({C_CONST}.else_conditional)
+				buf.put_two_character (' ', '{')
+				generate_failure (buf)
+				buf.put_new_line
+				buf.put_character ('}')
+			end
 		end
 
 	generate_success (buf: like buffer)
@@ -232,7 +261,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

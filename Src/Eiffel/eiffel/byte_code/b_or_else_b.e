@@ -40,59 +40,55 @@ feature -- Enlarging
 		do
 			left := left.enlarged
 			right := right.enlarged
-			if context.final_mode then
-				l_bool_val := left.evaluate
-				if l_bool_val.is_boolean then
-					if l_bool_val.boolean_value then
-							-- Expression will always be True.
-							-- case of: True_expression or XXX
-							--       or True_expression or else XXX
-						create {BOOL_CONST_B} Result.make (True)
-					else
-						Result := right
-					end
+			l_bool_val := left.evaluate
+			if l_bool_val.is_boolean then
+				if l_bool_val.boolean_value then
+						-- Expression will always be True.
+						-- case of: True_expression or XXX
+						--       or True_expression or else XXX
+					create {BOOL_CONST_B} Result.make (True)
 				else
-					l_bool_val := right.evaluate
-					if l_bool_val.is_boolean then
-						if l_bool_val.boolean_value then
-								-- case of: XXX or True
-								--       or XXX or else True
-							l_attr ?= left
-							if is_or or left.is_predefined or (l_attr /= Void) then
-									-- No harm by not evaluating XXX if either condition is met:
-									-- 1 - we have a `is_or', therefore compiler is authorized to
-									--     change the evaluation order
-									-- 2 - XXX is predefined (meaning by not evaluating we do not
-									--     change the semantic)
-									-- 3 - XXX is an attribute and therefore behaves as if it was
-									--     a predefined entity
-									-- In this case, we always return a True expression.
-								create {BOOL_CONST_B} Result.make (True)
-							else
-									-- We cannot optimize it away and we need to evaluate XXX.
-								l_is_normal := True
-							end
-						else
-								-- case of: XXX or False_expression
-								--       or XXX or else False_expression
-								-- We always need to return left-hand side.
-							Result := left
-						end
-					else
-						l_is_normal := True
-					end
+					Result := right
 				end
 			else
-				l_is_normal := True
-			end
+				l_bool_val := right.evaluate
+				if l_bool_val.is_boolean then
+					if l_bool_val.boolean_value then
+							-- case of: XXX or True
+							--       or XXX or else True
+						l_attr ?= left
+						if is_or or left.is_predefined or (l_attr /= Void) then
+								-- No harm by not evaluating XXX if either condition is met:
+								-- 1 - we have a `is_or', therefore compiler is authorized to
+								--     change the evaluation order
+								-- 2 - XXX is predefined (meaning by not evaluating we do not
+								--     change the semantic)
+								-- 3 - XXX is an attribute and therefore behaves as if it was
+								--     a predefined entity
+								-- In this case, we always return a True expression.
+							create {BOOL_CONST_B} Result.make (True)
+						else
+								-- We cannot optimize it away and we need to evaluate XXX.
+							l_is_normal := True
+						end
+					else
+							-- case of: XXX or False_expression
+							--       or XXX or else False_expression
+							-- We always need to return left-hand side.
+						Result := left
+					end
+				else
+					l_is_normal := True
+				end
 
-			if l_is_normal then
-					-- Normal code transformation.
-				create l_b_or_else_bl
-				l_b_or_else_bl.init (access.enlarged_on (context.real_type (left.type)))
-				l_b_or_else_bl.set_left (left)
-				l_b_or_else_bl.set_right (right)
-				Result := l_b_or_else_bl
+				if l_is_normal then
+						-- Normal code transformation.
+					create l_b_or_else_bl
+					l_b_or_else_bl.init (access.enlarged_on (context.real_type (left.type)))
+					l_b_or_else_bl.set_left (left)
+					l_b_or_else_bl.set_right (right)
+					Result := l_b_or_else_bl
+				end
 			end
 		end
 
@@ -109,7 +105,7 @@ feature -- Enlarging
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -122,22 +118,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -39,39 +39,32 @@ feature
 		local
 			buf: GENERATION_BUFFER
 		do
-			buf := buffer
-				-- Generate the recording of the assertion
-			buf.put_new_line
-			buf.put_string ("RTIT(")
-			if tag /= Void then
-				buf.put_character ('"')
-				buf.put_string (tag)
-				buf.put_character ('"')
+			if is_true_expression (expr) then
+					-- Nothing to generate, the assertion was statically evaluated to be True
+					-- all the time
 			else
-				buf.put_string ("NULL")
+				buf := buffer
+					-- Generate the recording of the assertion
+				buf.put_new_line
+				buf.put_string ("RTIT(")
+				if tag /= Void then
+					buf.put_character ('"')
+					buf.put_string (tag)
+					buf.put_character ('"')
+				else
+					buf.put_string ("NULL")
+				end
+				buf.put_string ({C_CONST}.comma_space)
+				context.Current_register.print_register
+				buf.put_two_character (')', ';')
+
+					-- Now evaluate the expression
+				generate_expression (buf)
 			end
-			buf.put_string ({C_CONST}.comma_space)
-			context.Current_register.print_register
-			buf.put_two_character (')', ';')
-				-- Now evaluate the expression
-			expr.generate
-			buf.put_new_line
-			buf.put_string ({C_CONST}.if_conditional)
-			buf.put_two_character (' ', '(')
-			expr.print_register
-			buf.put_three_character (')', ' ', '{')
-			generate_success (buf)
-			buf.put_new_line
-			buf.put_two_character ('}', ' ')
-			buf.put_string ({C_CONST}.else_conditional)
-			buf.put_two_character (' ', '{')
-			generate_failure (buf)
-			buf.put_new_line
-			buf.put_character ('}')
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

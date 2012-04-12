@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Equivalent of HASH_TABLE [NATURAL_32, ANY], since this type cannot be written
 		as ANY does not inherit from HASHABLE
@@ -31,13 +31,17 @@ feature -- Lookup
 	index (an_obj: ANY): NATURAL_32
 			-- Index of `an_obj' in Current		
 		local
-			l_obj: detachable SYSTEM_OBJECT
 			l_table: like table
 		do
 			l_table := table
-			l_obj := l_table.item (an_obj)
-			if l_obj /= Void then
-				Result ?= l_obj
+			if attached l_table.item (an_obj) as o then
+				if attached {NATURAL_32} o as i then
+					Result := i
+				else
+					check
+						valid_item_type: False
+					end
+				end
 			else
 				Result := last_index + 1
 				last_index := Result
@@ -74,15 +78,14 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
 
 end

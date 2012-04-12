@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Access to internal object properties.
 			This class may be used as ancestor by classes needing its facilities.
@@ -143,7 +143,12 @@ feature -- Creation
 			if object /= Void then
 				Result := type_of_type (dynamic_type (object))
 			else
-				Result ?= new_instance_of (dynamic_type_from_string ("TYPE [NONE]"))
+				check
+					expected_type:
+						attached {TYPE [detachable ANY]} new_instance_of (dynamic_type_from_string ("TYPE [NONE]")) as t
+				then
+					Result := t
+				end
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -262,7 +267,6 @@ feature -- Status report
 			l_transients: ARRAYED_LIST [BOOLEAN]
 			l_members: like get_members
 			l_is_transient: BOOLEAN
-			l_field_ca: detachable NON_SERIALIZED_ATTRIBUTE
 			k, nb: INTEGER
 			l_attributes: detachable NATIVE_ARRAY [detachable SYSTEM_OBJECT]
 			l_field: FIELD_INFO
@@ -286,8 +290,7 @@ feature -- Status report
 						check
 							valid_number_of_custom_attributes: l_attributes.count = 1
 						end
-						l_field_ca ?= l_attributes.item (0)
-						l_is_transient := l_field_ca /= Void
+						l_is_transient := attached {NON_SERIALIZED_ATTRIBUTE} l_attributes.item (0)
 					else
 						l_is_transient := False
 					end
@@ -575,20 +578,6 @@ feature -- Access
 			not_special: not is_special (object)
 		local
 			l_obj: detachable SYSTEM_OBJECT
-			l_nat8: NATURAL_8
-			l_nat16: NATURAL_16
-			l_nat32: NATURAL_32
-			l_nat64: NATURAL_64
-			l_int8: INTEGER_8
-			l_int16: INTEGER_16
-			l_int32: INTEGER
-			l_int64: INTEGER_64
-			l_char: CHARACTER_8
-			l_wchar: CHARACTER_32
-			l_boolean: BOOLEAN
-			l_real: REAL
-			l_double: DOUBLE
-			l_pointer: POINTER
 			l_dtype: INTEGER
 		do
 			l_dtype := dynamic_type (object)
@@ -596,60 +585,102 @@ feature -- Access
 			inspect
 				field_type_of_type (i, l_dtype)
 			when Pointer_type then
-				l_pointer ?= l_obj
-				Result := l_pointer
+				check
+					expected_type: attached {POINTER} l_obj as p
+				then
+					Result := p
+				end
 
 			when character_8_type then
-				l_char ?= l_obj
-				Result := l_char
+				check
+					expected_type: attached {CHARACTER_8} l_obj as c
+				then
+					Result := c
+				end
 
 			when character_32_type then
-				l_wchar ?= l_obj
-				Result := l_wchar
+				check
+					expected_type: attached {CHARACTER_32} l_obj as c
+				then
+					Result := c
+				end
 
 			when Boolean_type then
-				l_boolean ?= l_obj
-				Result := l_boolean
+				check
+					expected_type: attached {BOOLEAN} l_obj as b
+				then
+					Result := b
+				end
 
 			when natural_8_type then
-				l_nat8 ?= l_obj
-				Result := l_nat8
+				check
+					expected_type: attached {NATURAL_8} l_obj as n
+				then
+					Result := n
+				end
 
 			when natural_16_type then
-				l_nat16 ?= l_obj
-				Result := l_nat16
+				check
+					expected_type: attached {NATURAL_16} l_obj as n
+				then
+					Result := n
+				end
 
 			when natural_32_type then
-				l_nat32 ?= l_obj
-				Result := l_nat32
+				check
+					expected_type: attached {NATURAL_32} l_obj as n
+				then
+					Result := n
+				end
 
 			when natural_64_type then
-				l_nat64 ?= l_obj
-				Result := l_nat64
+				check
+					expected_type: attached {NATURAL_64} l_obj as n
+				then
+					Result := n
+				end
 
 			when Integer_8_type then
-				l_int8 ?= l_obj
-				Result := l_int8
+				check
+					expected_type: attached {INTEGER_8} l_obj as v
+				then
+					Result := v
+				end
 
 			when Integer_16_type then
-				l_int16 ?= l_obj
-				Result := l_int16
+				check
+					expected_type: attached {INTEGER_16} l_obj as v
+				then
+					Result := v
+				end
 
 			when Integer_32_type then
-				l_int32 ?= l_obj
-				Result := l_int32
+				check
+					expected_type: attached {INTEGER_32} l_obj as v
+				then
+					Result := v
+				end
 
 			when Integer_64_type then
-				l_int64 ?= l_obj
-				Result := l_int64
+				check
+					expected_type: attached {INTEGER_64} l_obj as v
+				then
+					Result := v
+				end
 
 			when real_32_type then
-				l_real ?= l_obj
-				Result := l_real
+				check
+					expected_type: attached {REAL_32} l_obj as r
+				then
+					Result := r
+				end
 
 			when real_64_type then
-				l_double ?= l_obj
-				Result := l_double
+				check
+					expected_type: attached {REAL_64} l_obj as r
+				then
+					Result := r
+				end
 
 			else
 					-- A reference, so nothing to be done
@@ -777,7 +808,11 @@ feature -- Access
 							l_abstract_type := Reference_type
 						else
 							if abstract_types.contains (l_type) then
-								l_abstract_type ?= abstract_types.item (l_type)
+								check
+									expected_type: attached {INTEGER} abstract_types.item (l_type) as t
+								then
+									l_abstract_type := t
+								end
 							else
 								l_abstract_type := Expanded_type
 							end
@@ -826,7 +861,9 @@ feature -- Access
 						-- Void which is ok to, it simply means the call to `evaluated_type'
 						-- below will not require a generic type as it should include
 						-- no formals.
-					l_current_rt_gen_type ?= l_current_rt_type
+					if attached {RT_GENERIC_TYPE} l_current_rt_type as t then
+						l_current_rt_gen_type := t
+					end
 					from
 						l_members := get_members (type_id)
 						k := 1
@@ -851,10 +888,9 @@ feature -- Access
 										-- Evaluate given type into context of `l_current_rt_gen_type' to resolve
 										-- formals to actual generic parameters. Of course if `l_current_rt_gen_type'
 										-- is Void, it means that `l_rt_type' does not contain any formals.
-									l_class_type ?= l_rt_type.evaluated_type (l_current_rt_gen_type)
-									if l_class_type /= Void then
+									if attached {RT_CLASS_TYPE} l_rt_type.evaluated_type (l_current_rt_gen_type) as t then
 											-- Get the associated dynamic type.
-										l_class_type := internal_pure_interface_type (l_class_type)
+										l_class_type := internal_pure_interface_type (t)
 										if l_class_type /= Void then
 											l_dtype := dynamic_type_from_rt_class_type (l_class_type)
 										end
@@ -922,7 +958,12 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			character_8_field: field_type (i, object) = character_8_type
 		do
-			Result ?= internal_field (i, object, dynamic_type (object))
+			check
+				from_precondition:
+					attached {CHARACTER_8} internal_field (i, object, dynamic_type (object)) as c
+			then
+				Result := c
+			end
 		end
 
 	character_32_field (i: INTEGER; object: ANY): CHARACTER_32
@@ -933,7 +974,12 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			character_32_field: field_type (i, object) = character_32_type
 		do
-			Result ?= internal_field (i, object, dynamic_type (object))
+			check
+				from_precondition:
+					attached {CHARACTER_32} internal_field (i, object, dynamic_type (object)) as c
+			then
+				Result := c
+			end
 		end
 
 	boolean_field (i: INTEGER; object: ANY): BOOLEAN
@@ -944,7 +990,12 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			boolean_field: field_type (i, object) = Boolean_type
 		do
-			Result ?= internal_field (i, object, dynamic_type (object))
+			check
+				from_precondition:
+					attached {BOOLEAN} internal_field (i, object, dynamic_type (object)) as b
+			then
+				Result := b
+			end
 		end
 
 	natural_8_field (i: INTEGER; object: ANY): NATURAL_8
@@ -955,7 +1006,12 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			natural_8_field: field_type (i, object) = natural_8_type
 		do
-			Result ?= internal_field (i, object, dynamic_type (object))
+			check
+				from_precondition:
+					attached {NATURAL_8} internal_field (i, object, dynamic_type (object)) as n
+			then
+				Result := n
+			end
 		end
 
 	natural_16_field (i: INTEGER; object: ANY): NATURAL_16
@@ -966,7 +1022,12 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			natural_16_field: field_type (i, object) = natural_16_type
 		do
-			Result ?= internal_field (i, object, dynamic_type (object))
+			check
+				from_precondition:
+					attached {NATURAL_16} internal_field (i, object, dynamic_type (object)) as n
+			then
+				Result := n
+			end
 		end
 
 	natural_32_field (i: INTEGER; object: ANY): NATURAL_32
@@ -977,7 +1038,12 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			natural_field: field_type (i, object) = natural_32_type
 		do
-			Result ?= internal_field (i, object, dynamic_type (object))
+			check
+				from_precondition:
+					attached {NATURAL_32} internal_field (i, object, dynamic_type (object)) as n
+			then
+				Result := n
+			end
 		end
 
 	natural_64_field (i: INTEGER; object: ANY): NATURAL_64
@@ -988,7 +1054,12 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			natural_64_field: field_type (i, object) = natural_64_type
 		do
-			Result ?= internal_field (i, object, dynamic_type (object))
+			check
+				from_precondition:
+					attached {NATURAL_64} internal_field (i, object, dynamic_type (object)) as n
+			then
+				Result := n
+			end
 		end
 
 	integer_8_field (i: INTEGER; object: ANY): INTEGER_8
@@ -999,7 +1070,12 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			integer_8_field: field_type (i, object) = Integer_8_type
 		do
-			Result ?= internal_field (i, object, dynamic_type (object))
+			check
+				from_precondition:
+					attached {INTEGER_8} internal_field (i, object, dynamic_type (object)) as v
+			then
+				Result := v
+			end
 		end
 
 	integer_16_field (i: INTEGER; object: ANY): INTEGER_16
@@ -1010,7 +1086,12 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			integer_16_field: field_type (i, object) = Integer_16_type
 		do
-			Result ?= internal_field (i, object, dynamic_type (object))
+			check
+				from_precondition:
+					attached {INTEGER_16} internal_field (i, object, dynamic_type (object)) as v
+			then
+				Result := v
+			end
 		end
 
 	integer_field, integer_32_field (i: INTEGER; object: ANY): INTEGER
@@ -1021,7 +1102,12 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			integer_32_field: field_type (i, object) = Integer_32_type
 		do
-			Result ?= internal_field (i, object, dynamic_type (object))
+			check
+				from_precondition:
+					attached {INTEGER_32} internal_field (i, object, dynamic_type (object)) as v
+			then
+				Result := v
+			end
 		end
 
 	integer_64_field (i: INTEGER; object: ANY): INTEGER_64
@@ -1032,7 +1118,12 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			integer_64_field: field_type (i, object) = Integer_64_type
 		do
-			Result ?= internal_field (i, object, dynamic_type (object))
+			check
+				from_precondition:
+					attached {INTEGER_64} internal_field (i, object, dynamic_type (object)) as v
+			then
+				Result := v
+			end
 		end
 
 	real_32_field, real_field (i: INTEGER; object: ANY): REAL
@@ -1043,7 +1134,12 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			real_32_field: field_type (i, object) = real_32_type
 		do
-			Result ?= internal_field (i, object, dynamic_type (object))
+			check
+				from_precondition:
+					attached {REAL} internal_field (i, object, dynamic_type (object)) as r
+			then
+				Result := r
+			end
 		end
 
 	pointer_field (i: INTEGER; object: ANY): POINTER
@@ -1054,7 +1150,12 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			pointer_field: field_type (i, object) = Pointer_type
 		do
-			Result ?= internal_field (i, object, dynamic_type (object))
+			check
+				from_precondition:
+					attached {POINTER} internal_field (i, object, dynamic_type (object)) as p
+			then
+				Result := p
+			end
 		end
 
 	real_64_field, double_field (i: INTEGER; object: ANY): DOUBLE
@@ -1065,7 +1166,12 @@ feature -- Access
 			index_small_enough: i <= field_count (object)
 			real_64_field: field_type (i, object) = real_64_type
 		do
-			Result ?= internal_field (i, object, dynamic_type (object))
+			check
+				from_precondition:
+					attached {DOUBLE} internal_field (i, object, dynamic_type (object)) as r
+			then
+				Result := r
+			end
 		end
 
 feature -- Version
@@ -1594,16 +1700,13 @@ feature {TYPE, INTERNAL} -- Implementation
 			-- Implementation type of Eiffel type `a_type' if it exists, otherwise `a_type'.
 		require
 			a_type_not_void: a_type /= Void
-		local
-			l_result: detachable SYSTEM_TYPE
 		do
 			load_assemblies
-			l_result ?= interface_to_implementation.item (a_type)
-			if l_result = Void then
+			if attached {SYSTEM_TYPE} interface_to_implementation.item (a_type) as t then
+				Result := t
+			else
 					-- No associated implementation, it must be itself
 				Result := a_type
-			else
-				Result := l_result
 			end
 		ensure
 			interface_type_not_void: Result /= Void
@@ -1619,7 +1722,9 @@ feature {TYPE, INTERNAL} -- Implementation
 			else
 				l_obj := eiffel_type_to_id.item (a_class_type)
 				if l_obj /= Void then
-					Result ?= l_obj
+					if attached {INTEGER} l_obj as i then
+						Result := i
+					end
 				else
 					if a_class_type.is_none then
 						Result := none_type
@@ -2352,8 +2457,8 @@ feature {TYPE, INTERNAL} -- Implementation
 						until
 							i = nb
 						loop
-							Result ?= allm.item (i)
-							if Result /= Void then
+							if attached {FIELD_INFO} allm.item (i) as r then
+								Result := r
 								l_cv_f_name := Result.name
 								if l_cv_f_name /= Void and then not l_cv_f_name.is_equal (private_type_field_name) then
 									i := nb - 1 -- Jump out of loop
@@ -2368,16 +2473,14 @@ feature {TYPE, INTERNAL} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
-
 
 end -- class INTERNAL

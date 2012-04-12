@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Implementation of TUPLE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -86,7 +86,11 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_boolean: is_boolean_item (index)
 		do
-			Result ?= native_array.item (index)
+			check
+				from_precondition: attached {BOOLEAN} native_array.item (index) as b
+			then
+				Result := b
+			end
 		end
 
 	character_8_item, character_item (index: INTEGER): CHARACTER_8
@@ -95,7 +99,11 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_character_8: is_character_8_item (index)
 		do
-			Result ?= native_array.item (index)
+			check
+				from_precondition: attached {CHARACTER_8} native_array.item (index) as c
+			then
+				Result := c
+			end
 		end
 
 	character_32_item (index: INTEGER): CHARACTER_32
@@ -104,7 +112,11 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_character_32: is_character_32_item (index)
 		do
-			Result ?= native_array.item (index)
+			check
+				from_precondition: attached {CHARACTER_32} native_array.item (index) as c
+			then
+				Result := c
+			end
 		end
 
 	real_64_item, double_item (index: INTEGER): DOUBLE
@@ -113,7 +125,11 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_numeric: is_double_item (index)
 		do
-			Result ?= native_array.item (index)
+			check
+				from_precondition: attached {DOUBLE} native_array.item (index) as r
+			then
+				Result := r
+			end
 		end
 
 	natural_8_item (index: INTEGER): NATURAL_8
@@ -122,7 +138,11 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_integer: is_natural_8_item (index)
 		do
-			Result ?= native_array.item (index)
+			check
+				from_precondition: attached {NATURAL_8} native_array.item (index) as n
+			then
+				Result := n
+			end
 		end
 
 	natural_16_item (index: INTEGER): NATURAL_16
@@ -131,7 +151,11 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_integer: is_natural_16_item (index)
 		do
-			Result ?= native_array.item (index)
+			check
+				from_precondition: attached {NATURAL_16} native_array.item (index) as n
+			then
+				Result := n
+			end
 		end
 
 	natural_32_item (index: INTEGER): NATURAL_32
@@ -140,7 +164,11 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_integer: is_natural_32_item (index)
 		do
-			Result ?= native_array.item (index)
+			check
+				from_precondition: attached {NATURAL_32} native_array.item (index) as n
+			then
+				Result := n
+			end
 		end
 
 	natural_64_item (index: INTEGER): NATURAL_64
@@ -149,7 +177,11 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_integer: is_natural_64_item (index)
 		do
-			Result ?= native_array.item (index)
+			check
+				from_precondition: attached {NATURAL_64} native_array.item (index) as n
+			then
+				Result := n
+			end
 		end
 
 	integer_8_item (index: INTEGER): INTEGER_8
@@ -158,7 +190,11 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_integer: is_integer_8_item (index)
 		do
-			Result ?= native_array.item (index)
+			check
+				from_precondition: attached {INTEGER_8} native_array.item (index) as i
+			then
+				Result := i
+			end
 		end
 
 	integer_16_item (index: INTEGER): INTEGER_16
@@ -167,7 +203,11 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_integer: is_integer_16_item (index)
 		do
-			Result ?= native_array.item (index)
+			check
+				from_precondition: attached {INTEGER_16} native_array.item (index) as i
+			then
+				Result := i
+			end
 		end
 
 	integer_item, integer_32_item (index: INTEGER): INTEGER
@@ -176,7 +216,11 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_integer: is_integer_32_item (index)
 		do
-			Result ?= native_array.item (index)
+			check
+				from_precondition: attached {INTEGER_32} native_array.item (index) as i
+			then
+				Result := i
+			end
 		end
 
 	integer_64_item (index: INTEGER): INTEGER_64
@@ -185,7 +229,11 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_integer: is_integer_64_item (index)
 		do
-			Result ?= native_array.item (index)
+			check
+				from_precondition: attached {INTEGER_64} native_array.item (index) as i
+			then
+				Result := i
+			end
 		end
 
 	pointer_item (index: INTEGER): POINTER
@@ -194,7 +242,11 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_pointer: is_pointer_item (index)
 		do
-			Result ?= native_array.item (index)
+			check
+				from_precondition: attached {POINTER} native_array.item (index) as p
+			then
+				Result := p
+			end
 		end
 
 	real_32_item, real_item (index: INTEGER): REAL
@@ -203,7 +255,11 @@ feature -- Access
 			valid_index: valid_index (index)
 			is_real_or_integer: is_real_item (index)
 		do
-			Result ?= native_array.item (index)
+			check
+				from_precondition: attached {REAL} native_array.item (index) as r
+			then
+				Result := r
+			end
 		end
 
 feature -- Comparison
@@ -212,7 +268,8 @@ feature -- Comparison
 			-- Must search operations use `equal' rather than `='
 			-- for comparing references? (Default: no, use `='.)
 		do
-			Result ?= native_array.item (0)
+				-- `Void' means `False', otherwise the stored value.
+			Result := attached {BOOLEAN} native_array.item (0) as b and then b
 		end
 
 	is_equal (other: like Current): BOOLEAN
@@ -293,7 +350,6 @@ feature -- Status report
 		local
 			i, nb: INTEGER
 			l_item: detachable SYSTEM_OBJECT
-			l_key: detachable HASHABLE
 		do
 			from
 				i := 1
@@ -303,8 +359,7 @@ feature -- Status report
 			loop
 				l_item := native_array.item (i)
 				if is_reference_item (i) then
-					l_key ?= l_item
-					if l_key /= Void then
+					if attached {HASHABLE} l_item as l_key then
 						Result := Result + l_key.hash_code * internal_primes.i_th (i)
 					end
 				else
@@ -330,7 +385,7 @@ feature -- Status report
 		require
 			valid_index: valid_index (index)
 		local
-			l_code, l_item_code: like item_code
+			l_code: like item_code
 			l_int: INTERNAL
 		do
 			if v = Void then
@@ -338,8 +393,11 @@ feature -- Status report
 				Result := True
 			else
 				l_code := item_code (index)
-				l_item_code ?= reverse_lookup.item (v.get_type)
-				Result := l_code = l_item_code
+				if attached {like item_code} reverse_lookup.item (v.get_type) as l_item_code then
+					Result := l_code = l_item_code
+				else
+					Result := l_code = 0
+				end
 				if Result and l_code = reference_code then
 						-- Let's check that type of `v' conforms to specified type of
 						-- `index'-th arguments of current TUPLE.
@@ -860,7 +918,6 @@ feature -- Conversion
 			"Will be removed in future releases"
 		local
 			i, cnt: INTEGER
-			a: detachable ANY
 		do
 			from
 				i := 1
@@ -869,8 +926,9 @@ feature -- Conversion
 			until
 				i > cnt
 			loop
-				a ?= native_array.item (i)
-				Result.put (a, i)
+				if attached {ANY} native_array.item (i) as a then
+					Result.put (a, i)
+				end
 				i := i + 1
 			end
 		ensure
@@ -1168,10 +1226,10 @@ feature {NONE} -- Implementation
 				l_item := reverse_lookup.item (
 					 {ISE_RUNTIME}.type_of_generic_parameter (Current, pos))
 			end
-			if l_item /= Void then
-				Result ?= l_item
-			else
+			if l_item = Void then
 				Result := reference_code
+			elseif attached {NATURAL_8} l_item as n then
+				Result := n
 			end
 		end
 
@@ -1226,17 +1284,14 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
 end -- class TUPLE
-

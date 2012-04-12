@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Objects representing delayed calls to a routine,
 		with some operands possibly still open
@@ -72,10 +72,12 @@ feature -- Access
 			end
 		end
 
-	target: detachable ANY
+	frozen target: detachable ANY
 			-- Target of call.
 		do
-			Result ?= target_object
+			if attached {ANY} target_object as r then
+				Result := r
+			end
 		end
 
 	hash_code: INTEGER
@@ -123,7 +125,6 @@ feature -- Status report
 			int_ops, other_int_ops: like internal_operands
 			i: INTEGER
 			e, oe: detachable ANY
-			vt: detachable VALUE_TYPE
 		do
 				--| Do not compare implementation data
 			Result := (rout_disp = other.rout_disp)
@@ -138,10 +139,8 @@ feature -- Status report
 					from i := int_ops.lower until not Result or else i > other_int_ops.upper loop
 						e := int_ops.item (i)
 						oe := other_int_ops.item (i)
-						vt ?= e
-						if vt /= Void then
-							vt ?= oe
-							if vt /= Void then
+						if attached {VALUE_TYPE} e then
+							if attached {VALUE_TYPE} oe then
 								Result := equal (e, oe)
 							else
 								Result := False
@@ -521,17 +520,14 @@ feature -- Obsolete
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
 end -- class ROUTINE
-

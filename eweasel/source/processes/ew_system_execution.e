@@ -1,17 +1,22 @@
 note
 	description: "An Eiffel system execution"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	keywords: "Eiffel test";
-	date: "93/08/30"
+	status: "See notice at end of class."
+	keywords: "Eiffel test"
+	date: "$date: $"
+	revision: "$revision: $"
 
 class EW_SYSTEM_EXECUTION
 
 inherit
 	EW_EWEASEL_PROCESS
 		rename
-			make as process_make
-		end;
+			make as process_make,
+			next_result as next_execution_result,
+			next_result_type as next_execution_result_type
+		redefine
+			next_execution_result_type
+		end
 
 create
 	make
@@ -29,50 +34,51 @@ feature
 			-- Write all output from the new process to
 			-- file `savef'.
 		require
-			program_not_void: prog /= Void;
-			arguments_not_void: args /= Void;
-			directory_not_void: dir /= Void;
-			save_name_not_void: savef /= Void;
+			program_not_void: prog /= Void
+			arguments_not_void: args /= Void
+			directory_not_void: dir /= Void
+			save_name_not_void: savef /= Void
 		local
-			real_args: LINKED_LIST [STRING];
+			real_args: LINKED_LIST [STRING]
 		do
-			create real_args.make;
-			real_args.extend (execute_cmd);
-			real_args.extend (dir);
-			real_args.extend (prog);
-			real_args.finish;
-			real_args.merge_right (args);
-			process_make (Shell_command, real_args, inf, outf, savef);
-		end;
+			create real_args.make
+			if {PLATFORM}.is_windows then
+					-- On Windows we need the /c arguments to the DOS command.
+				real_args.extend ("/c ")
+			end
+			real_args.extend (execute_cmd)
+			real_args.extend (dir)
+			real_args.extend (prog)
+			real_args.finish
+			real_args.merge_right (args)
+			process_make (Shell_command, real_args, inf, outf, savef)
+		end
 
-	next_execution_result: EW_EXECUTION_RESULT
-		local
-			time_to_stop: BOOLEAN;
+	next_execution_result_type: EW_EXECUTION_RESULT
+			-- <Precursor>
 		do
-			create Result;
-			from
-				read_line;
-			until
-				end_of_file or time_to_stop
-			loop
-				savefile.put_string (last_string);
-				savefile.new_line;
-				savefile.flush;
-				Result.update (last_string);
-				if suspended then
-					time_to_stop := True;
-				else
-					read_line;
-				end
-			end;
-			if end_of_file then
-				terminate;
-			end;
-		end;
+			check callable: False then
+			end
+		end
 
 feature {NONE} -- Constant strings
 
-	Shell_command: STRING = "/bin/sh";
+	shell_command: STRING
+			-- Path to shell command on Windows.
+		once
+			if {PLATFORM}.is_windows then
+				Result := (create {EXECUTION_ENVIRONMENT}).get ("COMSPEC")
+				if Result = Void then
+						-- If not defined use the Windows NT/2k/XP command line tool
+						-- which should be in the path of the user.
+					Result := "cmd.exe"
+				end
+			else
+				Result := "/bin/sh"
+			end
+		ensure
+			shell_command_not_void: Result /= Void
+		end
 
 note
 	copyright: "[
@@ -99,6 +105,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
 
 end

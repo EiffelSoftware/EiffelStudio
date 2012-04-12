@@ -10,8 +10,12 @@ class EW_C_COMPILATION
 inherit
 	EW_EWEASEL_PROCESS
 		rename
-			make as process_make
-		end;
+			make as process_make,
+			next_result as next_compile_result,
+			next_result_type as next_compile_result_type
+		redefine
+			next_compile_result_type
+		end
 
 create
 	make
@@ -30,45 +34,35 @@ feature
 			save_name_not_void: save /= Void;
 		local
 			args: LINKED_LIST [STRING];
+			l_cmd: STRING
 		do
-			create args.make;
-			args.extend (freeze_cmd);
+			create args.make
+			if {PLATFORM}.is_windows then
+				args.extend ("-location")
+				l_cmd := freeze_cmd
+			else
+				args.extend (freeze_cmd);
+				l_cmd := shell_command
+			end
 			args.extend (dir);
 			if max_procs > 0 then
 				args.extend ("-nproc");
 				args.extend (max_procs.out);
 			end
-			process_make (Shell_command, args, Void, Void, save);
+			process_make (l_cmd, args, Void, Void, save);
 		end;
 
-	next_compile_result: EW_C_COMPILATION_RESULT
-		local
-			time_to_stop: BOOLEAN;
+	next_compile_result_type: EW_C_COMPILATION_RESULT
+			-- <Precursor>
 		do
-			create Result;
-			from
-				read_line;
-			until
-				end_of_file or time_to_stop
-			loop
-				savefile.put_string (last_string);
-				savefile.new_line;
-				savefile.flush;
-				Result.update (last_string);
-				if suspended then
-					time_to_stop := True;
-				else
-					read_line;
-				end
-			end;
-			if end_of_file then
-				terminate;
-			end;
-		end;
+			check callable: False then
+			end
+		end
 
 feature {NONE} -- Constant strings
 
 	Shell_command: STRING = "/bin/sh";
+			-- Unix way to start finish_freezing as it is a shell script.
 
 note
 	copyright: "[

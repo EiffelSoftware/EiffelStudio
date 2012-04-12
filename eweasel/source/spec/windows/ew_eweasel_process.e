@@ -133,25 +133,26 @@ feature -- Control
 		do
 			close
 			a_boolean := cwin_exit_code_process (process_info.process_handle, $last_process_result)
-			if a_boolean then
+			if a_boolean and then last_process_result = cwin_still_active then
 					-- Process is most likely active, we just wait until it has actually finished.
 				from
 				until
 					last_process_result /= cwin_still_active or not a_boolean
 				loop
-					sleep (1000000)
+						-- Check every seconds.
+					sleep (1_000_000)
 					a_boolean := cwin_exit_code_process (process_info.process_handle, $last_process_result)
 				end
-				l_handle := process_info.thread_handle
-				if l_handle /= default_pointer then
-					process_info.set_thread_handle (default_pointer)
-					cwin_close_handle (l_handle)
-				end
-				l_handle := process_info.process_handle
-				if l_handle /= default_pointer then
-					process_info.set_process_handle (default_pointer)
-					cwin_close_handle (l_handle)
-				end
+			end
+			l_handle := process_info.thread_handle
+			if l_handle /= default_pointer then
+				process_info.set_thread_handle (default_pointer)
+				cwin_close_handle (l_handle)
+			end
+			l_handle := process_info.process_handle
+			if l_handle /= default_pointer then
+				process_info.set_process_handle (default_pointer)
+				cwin_close_handle (l_handle)
 			end
 			suspended := False
 		end
@@ -167,23 +168,53 @@ feature -- Control
 			close
 			if process_info.process_handle /= default_pointer then
 				a_boolean := cwin_exit_code_process (process_info.process_handle, $last_process_result)
-				if a_boolean then
-					if last_process_result = cwin_still_active then
-						terminated := cwin_terminate_process (process_info.process_handle, 0)
-					end
-					l_handle := process_info.thread_handle
-					if l_handle /= default_pointer then
-						process_info.set_thread_handle (default_pointer)
-						cwin_close_handle (l_handle)
-					end
-					l_handle := process_info.process_handle
-					if l_handle /= default_pointer then
-						process_info.set_process_handle (default_pointer)
-						cwin_close_handle (l_handle)
-					end
+				if a_boolean and then last_process_result = cwin_still_active then
+					terminated := cwin_terminate_process (process_info.process_handle, 0)
+				end
+				l_handle := process_info.thread_handle
+				if l_handle /= default_pointer then
+					process_info.set_thread_handle (default_pointer)
+					cwin_close_handle (l_handle)
+				end
+				l_handle := process_info.process_handle
+				if l_handle /= default_pointer then
+					process_info.set_process_handle (default_pointer)
+					cwin_close_handle (l_handle)
 				end
 			end
 			suspended := False
+		end
+
+	next_result_type: EW_PROCESS_RESULT
+			-- For typing purposes of `next_result'
+		do
+			check callable: False then
+			end
+		end
+
+	next_result: like next_result_type
+			-- Process the output of an execution.
+		local
+			time_to_stop: BOOLEAN
+		do
+			create Result
+			from
+				read_chunk
+			until
+				time_to_stop
+			loop
+				savefile.put_string (last_string)
+				savefile.flush
+				Result.update (last_string)
+				if end_of_file or suspended then
+					time_to_stop := True
+				else
+					read_chunk
+				end
+			end
+			if end_of_file then
+				terminate
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -252,22 +283,21 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	read_line
-			-- Read next line from process and make
-			-- available in `last_string'.  Set `end_of_file'
-			-- if no more lines available.
+	read_chunk
+			-- Read a chunk of input from process and make
+			-- available in `last_string'. Set `end_of_file'
+			-- if no more input available.
 		local
 			in_progress: BOOLEAN
 			l_file_handle: EW_WEL_FILE_HANDLE
 		do
 			if not in_progress then
 				create l_file_handle
-				l_file_handle.read_line (std_output)
+				l_file_handle.read_stream (std_output, 4096)
 				if not l_file_handle.last_read_successful then
 					end_of_file := True
-				else
-					last_string := l_file_handle.last_string
 				end
+				last_string := l_file_handle.last_string
 			end
 		rescue
 			if exception = Io_exception then
@@ -278,9 +308,9 @@ feature {NONE} -- Implementation
 		end
 
 	read_character
-			-- Read next line from process and make
-			-- available in `last_string'.  Set `end_of_file'
-			-- if no more lines available.
+			-- Read next character from process and make
+			-- available in `last_string'. Set `end_of_file'
+			-- if no character available.
 		local
 			in_progress: BOOLEAN
 			l_file_handle: EW_WEL_FILE_HANDLE
@@ -301,7 +331,7 @@ feature {NONE} -- Implementation
 		end
 
 	last_string: STRING
-			-- Result of last call to `read_line'
+			-- Result of last call to `read_chunk'
 
 	last_character: CHARACTER
 			-- Result of last call to `read_character'

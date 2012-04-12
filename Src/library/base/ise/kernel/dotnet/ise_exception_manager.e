@@ -1,7 +1,5 @@
-note
-	description: "[
-		Exception manager
-		]"
+﻿note
+	description: "Exception manager."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -33,7 +31,9 @@ feature -- Access
 	last_exception: detachable EXCEPTION
 			-- Last exception
 		do
-			Result ?= {ISE_RUNTIME}.last_exception
+			if attached {like last_exception} {ISE_RUNTIME}.last_exception as e then
+				Result := e
+			end
 		end
 
 feature -- Raise
@@ -357,27 +357,26 @@ feature {NONE} -- Implementation, exception chain
 			-- Wrapped .NET exception
 		require
 			a_exception_not_void: a_exception /= Void
-		local
-			l_exception: detachable EXCEPTION
 		do
-			l_exception ?= a_exception
-			if l_exception = Void then
+			if attached {EXCEPTION} a_exception as e then
+					-- An Eiffel exception.
+				Result := e
+			else
 					-- A pure .NET exception
 				if attached {NULL_REFERENCE_EXCEPTION} a_exception as l_nullref then
 						-- Replace NullReferenceException with VOID_TARGET
-					create {VOID_TARGET} l_exception.make_dotnet_exception (a_exception)
+					create {VOID_TARGET} Result.make_dotnet_exception (a_exception)
 				elseif
-					attached {UNAUTHORIZED_ACCESS_EXCEPTION} a_exception as l_conv_acc or
-					attached {SECURITY_EXCEPTION} a_exception as l_conv_sec or
-					attached {IO_EXCEPTION} a_exception as l_conv_io
+					attached {UNAUTHORIZED_ACCESS_EXCEPTION} a_exception or else
+					attached {SECURITY_EXCEPTION} a_exception or else
+					attached {IO_EXCEPTION} a_exception
 				then
-					create {IO_FAILURE} l_exception.make_dotnet_exception (a_exception)
+					create {IO_FAILURE} Result.make_dotnet_exception (a_exception)
 				else
-					create {OPERATING_SYSTEM_SIGNAL_FAILURE} l_exception.make_dotnet_exception (a_exception)
+					create {OPERATING_SYSTEM_SIGNAL_FAILURE} Result.make_dotnet_exception (a_exception)
 				end
-				l_exception.set_message ("")
+				Result.set_message ("")
 			end
-			Result := l_exception
 		end
 
 	recipient_and_type_name (a_st: STACK_TRACE; a_skip: INTEGER): TUPLE [recipient, type: detachable STRING; line_number: INTEGER]
@@ -494,7 +493,6 @@ feature {NONE} -- Internal raise, Implementation of RT_EXCEPTION_MANAGER
 	internal_raise (e_code: INTEGER; msg: SYSTEM_STRING)
 			-- Internal raise exception of code `e_code'
 		local
-			l_inv: detachable INVARIANT_VIOLATION
 			l_saved_assertion, l_assertion_set: BOOLEAN
 			l_assertion_tag: STRING
 		do
@@ -504,9 +502,8 @@ feature {NONE} -- Internal raise, Implementation of RT_EXCEPTION_MANAGER
 				l_saved_assertion := {ISE_RUNTIME}.check_assert (False)
 			end
 			check attached exception_from_code (e_code) as l_exception then
-				l_inv ?= l_exception
-				if l_inv /= Void then
-					l_inv.set_is_entry ({ISE_RUNTIME}.invariant_entry)
+				if attached {INVARIANT_VIOLATION} l_exception as i then
+					i.set_is_entry ({ISE_RUNTIME}.invariant_entry)
 				end
 				if msg /= Void then
 					create l_assertion_tag.make_from_cil (msg)
@@ -540,33 +537,36 @@ feature {NONE} -- Internal raise, Implementation of RT_EXCEPTION_MANAGER
 			end
 		end
 
-	throw_last_exception (a_exception: NATIVE_EXCEPTION; a_for_once: BOOLEAN)
+	throw_last_exception (a_exception: detachable NATIVE_EXCEPTION; a_for_once: BOOLEAN)
 			-- Rethrow the exception at the end of rescue clause.
+			--| This feature is called by {ISE_RUNTIME}.rethrow, which passes
+			--| `_last_exception' as an argument. In setter of `_last_exception',
+			--| `_last_exception' is always computed by Eiffel code
+			--| `compute_last_exception' which returns EXCEPTION.
 		local
 			l_failure: ROUTINE_FAILURE
-			l_exception: detachable EXCEPTION
 			l_stack_trace: STACK_TRACE
 			l_rs: like recipient_and_type_name
 		do
-			l_exception ?= a_exception
 				-- The exception should be always EXCEPTION.
 			check
-				EXCEPTION_comformance_object: l_exception /= Void
-			end
-			if not a_for_once then
-				create l_failure
-				l_failure.set_throwing_exception (l_exception)
+				ensured_by_run_time: attached {EXCEPTION} a_exception as l_exception
+			then
+				if not a_for_once then
+					create l_failure
+					l_failure.set_throwing_exception (l_exception)
 
-				create l_stack_trace.make
-				l_rs := recipient_and_type_name (l_stack_trace, 0)
-				l_failure.set_routine_name (l_rs.recipient)
-				l_failure.set_class_name (l_rs.type)
-					-- Substitute `last_exception' for the use at the beginning of a `rescue',
-					-- where we setup possible `cause'.
-				{ISE_RUNTIME}.restore_last_exception (l_failure)
-				{ISE_RUNTIME}.raise (l_failure)
-			else
-				{ISE_RUNTIME}.raise (l_exception)
+					create l_stack_trace.make
+					l_rs := recipient_and_type_name (l_stack_trace, 0)
+					l_failure.set_routine_name (l_rs.recipient)
+					l_failure.set_class_name (l_rs.type)
+						-- Substitute `last_exception' for the use at the beginning of a `rescue',
+						-- where we setup possible `cause'.
+					{ISE_RUNTIME}.restore_last_exception (l_failure)
+					{ISE_RUNTIME}.raise (l_failure)
+				else
+					{ISE_RUNTIME}.raise (l_exception)
+				end
 			end
 		end
 
@@ -610,14 +610,14 @@ feature {NONE} -- Exception codes, Implementation of RT_EXCEPTION_MANAGER
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

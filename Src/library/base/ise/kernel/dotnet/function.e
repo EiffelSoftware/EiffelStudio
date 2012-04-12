@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Objects representing delayed calls to a function,
 		with some arguments possibly still open.
@@ -33,15 +33,15 @@ feature -- Access
 		require
 			valid_operands: valid_operands (args)
 			callable: callable
-		local
-			l_result_type: detachable RESULT_TYPE
 		do
 			set_operands (args)
 			clear_last_result
-			l_result_type ?= rout_disp.invoke (target_object, internal_operands)
-			if attached {RESULT_TYPE} l_result_type as l_result then
-				Result := l_result
+				-- If result is attached, it is of type {RESULT_TYPE}.
+			if attached {RESULT_TYPE} rout_disp.invoke (target_object, internal_operands) as r then
+				Result := r
 			else
+					-- Result is `Void'.
+					-- The type {RESULT_TYPE} has to be detachable.
 				check ({RESULT_TYPE}).has_default end
 				Result := ({RESULT_TYPE}).default
 			end
@@ -74,7 +74,11 @@ feature -- Basic operations
 	apply
 			-- Call function with `operands' as last set.
 		do
-			last_result ?= rout_disp.invoke (target_object, internal_operands)
+			if attached {RESULT_TYPE} rout_disp.invoke (target_object, internal_operands) as r then
+				last_result := r
+			else
+				clear_last_result
+			end
 		end
 
 feature -- Obsolete
@@ -102,17 +106,14 @@ feature -- Removal
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
 end -- class FUNCTION
-

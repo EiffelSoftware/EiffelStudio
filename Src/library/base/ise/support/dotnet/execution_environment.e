@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 		"The objects available from the environment at time of execution"
@@ -7,7 +7,6 @@ note
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-
 
 class EXECUTION_ENVIRONMENT
 
@@ -80,9 +79,6 @@ feature -- Access
 	environment_variables: HASH_TABLE [STRING, STRING]
 			-- Table of environment variables associated with current process,
 			-- indexed by variable name
-		local
-			l_key: detachable SYSTEM_STRING
-			l_value: detachable SYSTEM_STRING
 		do
 			if attached {IDICTIONARY} {ENVIRONMENT}.get_environment_variables as l_dic and then attached {IENUMERATOR} l_dic.get_enumerator_2 as l_enumerator then
 				create Result.make (l_dic.count)
@@ -90,12 +86,12 @@ feature -- Access
 				until
 					not l_enumerator.move_next
 				loop
-					if attached {DICTIONARY_ENTRY} l_enumerator.current_ as l_entry then
-						l_key ?= l_entry.key
-						l_value ?= l_entry.value
-						if l_key /= Void and l_value /= Void then
-							Result.force (l_value, l_key)
-						end
+					if
+						attached {DICTIONARY_ENTRY} l_enumerator.current_ as l_entry and then
+						attached {SYSTEM_STRING} l_entry.key as l_key and then
+						attached {SYSTEM_STRING} l_entry.value as l_value
+					then
+						Result.force (l_value, l_key)
 					end
 				end
 			else
@@ -336,19 +332,14 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
 end -- class EXECUTION_ENVIRONMENT
-
-
-

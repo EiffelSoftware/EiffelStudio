@@ -1287,7 +1287,7 @@ test	overflow-special-resizing		runtime012	tcf pass runtime special manual
 test	overflow-special-expanded-resizing		runtime013	tcf pass runtime special expanded manual
 if WINDOWS test	console-in-windows-dll	runtime014	tcf pass runtime windows console input output dll
 test	array-allocation-failure		runtime015	tcf pass runtime special expanded array memory allocation exception
-if not DOTNET test	special-copy-data				runtime016	tcf pass runtime special memory
+if not DOTNET test	special-copy-data	runtime016	tcf pass runtime special memory
 test	weak-reference					runtime017	tcf pass runtime weak_reference
 
 -- Thread
@@ -2546,7 +2546,7 @@ test	object-test-finalization-crash					attach018 tcf pass object_test attached_
 test	object-test-invariant-any-to-expanded			attach019 tcf fail object_test expanded invariant attached_types
 test	detached-type-target-conversion					attach020 tcf fail attached_types system-validity
 test	explicit-attached-formal-conformance			attach021 tcf pass attached_types system-validity conformance
-test	attached-external-check							attach022 tcf pass attached_types external generic anchored_type
+if not DOTNET test	attached-external-check				attach022 tcf pass attached_types external generic anchored_type
 test	attached-wrong-initialization					attach023 tcf pass attached_types
 test	attached-like-feature-formal-crash				attach024 tcf pass attached_types
 test	attached-formal-constraint						attach025 tcf pass attached_types generic

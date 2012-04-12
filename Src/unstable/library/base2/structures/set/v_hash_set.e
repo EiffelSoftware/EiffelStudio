@@ -2,6 +2,9 @@ note
 	description: "[
 			Hash sets with hash function provided by HASHABLE
 			and with reference or object equality as equivalence relation.
+
+			When using reference equality with mutable elements,
+			consider inheriting elements from V_REFERENCE_HASHABLE. 			
 		]"
 	author: "Nadia Polikarpova"
 	model: set, equivalence, hash

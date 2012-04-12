@@ -2,6 +2,9 @@ note
 	description: "[
 			Hash tables with hash function provided by HASHABLE
 			and with reference or object equality as equivalence relation on keys.
+			
+			When using reference equality with mutable keys,
+			consider inheriting keys from V_REFERENCE_HASHABLE. 
 		]"
 	author: "Nadia Polikarpova"
 	model: map, key_equivalence, key_hash

@@ -35,12 +35,10 @@ feature -- Lookup
 		do
 			l_table := table
 			if attached l_table.item (an_obj) as o then
-				if attached {NATURAL_32} o as i then
+				check
+					expected_item_type: attached {NATURAL_32} o as i
+				then
 					Result := i
-				else
-					check
-						valid_item_type: False
-					end
 				end
 			else
 				Result := last_index + 1

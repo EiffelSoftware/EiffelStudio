@@ -6,19 +6,25 @@ note
 
 class EW_EXECUTION_RESULT
 
+inherit
+	EW_PROCESS_RESULT
+		redefine
+			update
+		end
+
 feature -- Properties
 
 	execution_failure: BOOLEAN;
 			-- Did an explicit system execution failure
 			-- occur during execution?
-	
+
 	had_panic: BOOLEAN;
 			-- Did a panic occur during execution?
-	
+
 	illegal_instruction: BOOLEAN;
 			-- Was an illegal instruction executed
 			-- during execution?
-	
+
 	execution_finished: BOOLEAN;
 			-- Did execution finish normally (zero exit status)?
 
@@ -126,7 +132,7 @@ feature {NONE} -- String constants
 	System_failed_string: STRING = "system execution failed.";
 
 	Panic_string: STRING = "panic";
-	
+
 	Illegal_inst_string: STRING = "illegal instruction";
 
 note

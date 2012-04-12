@@ -7,6 +7,11 @@ note
 class EW_EIFFEL_COMPILATION_RESULT
 
 inherit
+	EW_PROCESS_RESULT
+		redefine
+			update
+		end
+
 	EW_STRING_UTILITIES;
 	EW_EIFFEL_COMPILER_CONSTANTS
 
@@ -57,7 +62,7 @@ feature -- Properties
 	is_status_known: BOOLEAN
 			-- Is status of compilation known?
 		do
-			Result := compilation_paused or compilation_aborted 
+			Result := compilation_paused or compilation_aborted
 				or compilation_finished or missing_precompile
 				or execution_failure or had_exception
 				or had_panic or illegal_instruction
@@ -177,7 +182,10 @@ feature -- Update
 					create exception_tag.make(0);
 				end;
 				line.keep_tail(line.count - Exception_prefix.count);
-				exception_tag.copy(line);
+				exception_tag.append (line);
+					-- Remove all newlines characters so that the exception tag appears on a single line.
+				exception_tag.replace_substring_all ("%N", "")
+				exception_tag.replace_substring_all ("%R", "")
 			elseif is_prefix (Exception_occurred_prefix, line) then
 				had_exception := True;
 				if exception_tag = Void then
@@ -185,7 +193,10 @@ feature -- Update
 				end;
 				if exception_tag.count = 0 then
 					line.keep_tail (line.count - Exception_occurred_prefix.count);
-					exception_tag.copy (line);
+					exception_tag.append (line);
+						-- Remove all newlines characters so that the exception tag appears on a single line.
+					exception_tag.replace_substring_all ("%N", "")
+					exception_tag.replace_substring_all ("%R", "")
 				end
 			elseif is_prefix (Failure_prefix, line) then
 				execution_failure := True;

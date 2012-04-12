@@ -9,7 +9,7 @@ class EW_EWEASEL_PROCESS
 
 inherit
 	ANY
-	
+
 	EXCEPTIONS
 		export
 			{NONE} all
@@ -147,6 +147,38 @@ feature -- Control
 			end;
 		end;
 
+	next_result_type: EW_PROCESS_RESULT
+			-- For typing purposes of `next_result'
+		do
+			check callable: False then
+			end
+		end
+
+	next_result: like next_result_type
+			-- Process the output of an execution.
+		local
+			time_to_stop: BOOLEAN
+		do
+			create Result
+			from
+				read_chunk
+			until
+				time_to_stop
+			loop
+				savefile.put_string (last_string)
+				savefile.flush
+				Result.update (last_string)
+				if end_of_file or suspended then
+					time_to_stop := True
+				else
+					read_chunk
+				end
+			end
+			if end_of_file then
+				terminate
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	child_process: EW_UNIX_PROCESS;
@@ -213,17 +245,17 @@ feature {NONE} -- Implementation
 			retry
 		end;
 
-	read_line
-			-- Read next line from process and make
-			-- available in `last_string'.  Set `end_of_file'
-			-- if no more lines available.
+	read_chunk
+			-- Read a chunk of input from process and make
+			-- available in `last_string'. Set `end_of_file'
+			-- if no more input available.
 		require
 			input_file_available: input /= Void;
 		local
 			in_progress: BOOLEAN;
 		do
 			if not in_progress then
-				input.read_line_thread_aware
+				input.read_stream_thread_aware (4096)
 				if input.end_of_file then
 					end_of_file := True;
 				end;
@@ -233,12 +265,39 @@ feature {NONE} -- Implementation
 			if exception = Io_exception then
 				in_progress := True;
 				end_of_file := True;
+				last_string := ""
+				retry;
+			end
+		end;
+
+	read_character
+			-- Read next character from process and make
+			-- available in `last_string'. Set `end_of_file'
+			-- if no character available.
+		local
+			in_progress: BOOLEAN
+		do
+			if not in_progress then
+				input.read_character
+				if input.end_of_file then
+					end_of_file := True
+				end
+				last_character := input.last_character
+			end
+		rescue
+			if exception = Io_exception then
+				in_progress := True;
+				end_of_file := True;
+				last_character := '%U'
 				retry;
 			end
 		end;
 
 	last_string: STRING;
-			-- Result of last call to `read_line'
+			-- Result of last call to `read_chunk'
+
+	last_character: CHARACTER
+			-- Result of last call to `read_character'
 
 	Invalid_file_descriptor: INTEGER = -1;
 			-- File descriptor which is not valid

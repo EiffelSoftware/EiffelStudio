@@ -10,14 +10,16 @@ class EW_EIFFEL_COMPILATION
 inherit
 	EW_EWEASEL_PROCESS
 		rename
-			make as process_make
+			make as process_make,
+			next_result as next_compile_result,
+			next_result_type as next_compile_result_type
 		redefine
-			terminate, read_line, abort
+			terminate, read_chunk, abort,
+			next_compile_result,
+			next_compile_result_type
 		end;
 
 	EW_EIFFEL_COMPILER_CONSTANTS;
-
-	EW_SHARED_OBJECTS
 
 create
 	make
@@ -37,34 +39,23 @@ feature
 			process_make (cmd, args, Void, Void, save);
 		end;
 
-	next_compile_result: EW_EIFFEL_COMPILATION_RESULT
-		local
-			time_to_stop: BOOLEAN;
+	next_compile_result_type: EW_EIFFEL_COMPILATION_RESULT
+			-- <Precursor>
 		do
-			create Result;
-			from
-				read_line;
-			until
-				end_of_file or time_to_stop
-			loop
-				savefile.put_string (last_string);
-				savefile.flush;
-				Result.update (last_string);
-				if suspended then
-					time_to_stop := True;
-				else
-					read_line;
-				end
-			end;
+			check callable: False then
+			end
+		end
+
+	next_compile_result: like next_compile_result_type
+			-- <Precursor>
+		do
+			Result := Precursor
 			if not Result.is_status_known then
-				-- Save raw compiler output so it can
-				-- be displayed
+					-- Save raw compiler output so it can
+					-- be displayed
 				Result.set_raw_compiler_output (savefile_contents)
 			end
-			if end_of_file then
-				terminate;
-			end;
-		end;
+		end
 
 	resume
 			-- Resume compilation
@@ -81,10 +72,15 @@ feature
 		end;
 
 	abort
-			-- Terminate Eiffel compilation
+			-- <Precursor>
 		local
 			e: EW_EIFFEL_COMPILATION_RESULT
 		do
+				-- Because windows does not seem to remove the lock on files owned by a killed
+				-- process immediately after the process is killed, we have to redefine abort
+				-- to cancel the Eiffel compilation before trying to kill it.
+				-- This allows the removal of the test directory for eweasel test#valid012 for
+				-- example.			
 			if suspended then
 				quit
 					-- Discard any pending compile result
@@ -94,7 +90,7 @@ feature
 		end
 
 	terminate
-			-- Terminate Eiffel compilation
+			-- <Precursor>
 		local
 			e: EW_EIFFEL_COMPILATION_RESULT
 		do
@@ -106,13 +102,10 @@ feature
 			Precursor {EW_EWEASEL_PROCESS}
 		end;
 
-
 feature {NONE} -- Implementation
 
-	read_line
-			-- Read next line from `input_file' and make
-			-- available in `last_string'.  Set `end_of_file'
-			-- if no more lines available.
+	read_chunk
+			-- <Precursor>
 		local
 			in_progress, is_suspend_prompt: BOOLEAN;
 			is_resume_prompt, is_missing_precomp: BOOLEAN
@@ -122,7 +115,7 @@ feature {NONE} -- Implementation
 		do
 			if not in_progress then
 				from
-					create line.make (80);
+					create line.make (128);
 					last_char := '%U';
 				until
 					(last_char = '%N') or else end_of_file or else is_suspend_prompt
@@ -131,14 +124,18 @@ feature {NONE} -- Implementation
 					if not end_of_file then
 						last_char := last_character;
 						debug
-							output.append (last_char.out, False);
-							output.flush
+							io.put_character (last_char);
+							io.output.flush;
 						end;
-						line.extend (last_char);
-						count := count + 1;
-						is_resume_prompt := count = Resume_prompt.count and then equal (line, Resume_prompt)
-						is_missing_precomp := count = Missing_precompile_prompt.count and then equal (line, Missing_precompile_prompt)
-						is_suspend_prompt := is_resume_prompt or is_missing_precomp
+							-- We ignore the Windows %R character when reading the output
+							-- of the compiler (remember windows new lines are %R%N).
+						if last_char /= '%R' then
+							line.extend (last_char);
+							count := count + 1;
+							is_resume_prompt := count = Resume_prompt.count and then equal (line, Resume_prompt)
+							is_missing_precomp := count = Missing_precompile_prompt.count and then equal (line, Missing_precompile_prompt)
+							is_suspend_prompt := is_resume_prompt or is_missing_precomp
+						end
 					end
 				end;
 			end;

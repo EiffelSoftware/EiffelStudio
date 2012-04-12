@@ -6,15 +6,21 @@ note
 
 class EW_C_COMPILATION_RESULT
 
+inherit
+	EW_PROCESS_RESULT
+		redefine
+			update
+		end
+
 feature -- Properties
 
 	failure: BOOLEAN;
 			-- Did an error occur while doing C compilations
 			-- and or links?
-	
+
 	compilations_completed: BOOLEAN;
 			-- Did all compilations/links finish successfully?
-	
+
 	summary: STRING
 			-- Summary of `Current'
 		do

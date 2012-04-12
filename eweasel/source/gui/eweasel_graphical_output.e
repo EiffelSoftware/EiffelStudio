@@ -9,7 +9,7 @@ class
 	EWEASEL_GRAPHICAL_OUTPUT
 
 inherit
-	EWEASEL_OUTPUT_CONTROL		
+	EW_EWEASEL_OUTPUT_CONTROL
 		redefine
 			make,
 			interface,
@@ -27,11 +27,11 @@ feature -- Creation
 
 	make (a_interface: EV_RICH_TEXT)
 			-- Create
-		do			
-			interface := a_interface	
+		do
+			interface := a_interface
 			append ("Eweasel output...", False)
-		end		
-		
+		end
+
 feature -- Commands
 
 	clear
@@ -39,23 +39,23 @@ feature -- Commands
 		do
 			interface.set_text (empty_string)
 		end
-		
+
 	flush
 			-- Flush
-		do	
-			(create {EV_ENVIRONMENT}).application.process_events			
-		end		
+		do
+			(create {EV_ENVIRONMENT}).application.process_events
+		end
 
 	append (output: STRING; on_new_line: BOOLEAN)
 			-- Append `output' to current output
 		do
 			output.prune_all ('%R')
+			interface.append_text (output)
 			if on_new_line then
 				interface.append_text (new_line)
 			end
-			interface.append_text (output)
 		end
-		
+
 	append_error (output: STRING; on_new_line: BOOLEAN)
 			-- Append `output' to current output, formatted to indicate error
 		local
@@ -69,7 +69,7 @@ feature -- Commands
 			interface.append_text (output)
 			if on_new_line then
 				interface.append_text (new_line)
-			end			
+			end
 			interface.set_current_format (l_format)
 			interface.disable_edit
 		end
@@ -81,16 +81,16 @@ feature -- Commands
 		end
 
 feature {NONE} -- Implementation
-	
+
 	interface: EV_RICH_TEXT
 			-- Graphical widget
-			
+
 	error_format: EV_CHARACTER_FORMAT
 			-- Error format
 		once
 			create Result
 			Result.set_color (create {EV_COLOR}.make_with_rgb (1.0, 0.0, 0.0))
-		end		
+		end
 
 invariant
 	has_interface: interface /= Void

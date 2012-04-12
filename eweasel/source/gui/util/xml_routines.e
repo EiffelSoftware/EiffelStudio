@@ -9,49 +9,44 @@ class
 	XML_ROUTINES
 
 inherit
-	XM_CALLBACKS_FILTER_FACTORY
+	XML_CALLBACKS_FILTER_FACTORY
 		export
 			{NONE} all
 		end
-	
-	SHARED_OBJECTS
+
+	EW_SHARED_OBJECTS
 
 feature -- Access
 
-	deserialize_text (a_text: STRING): XM_DOCUMENT
+	deserialize_text (a_text: STRING): detachable XML_DOCUMENT
 			-- Retrieve xml document from content of `a_text'.
 			-- If deserialization fails, return Void.
 		require
 			text_void: a_text /= Void
 		local
-			l_parser: XM_EIFFEL_PARSER
-			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
-			l_xm_concatenator: XM_CALLBACKS_FILTER
+			l_parser: XML_LITE_STOPPABLE_PARSER
+			l_tree: XML_CALLBACKS_NULL_FILTER_DOCUMENT
+			l_concatenator: XML_CONTENT_CONCATENATOR
 		do
 			create l_parser.make
-			l_parser.set_string_mode_mixed
-			create l_tree_pipe.make
-			create l_xm_concatenator.make_null
-			l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
+			create l_tree.make_null
+			create l_concatenator.make_null
+			l_parser.set_callbacks (standard_callbacks_pipe (<<l_concatenator, l_tree>>))
 			l_parser.parse_from_string (a_text)
 			if l_parser.is_correct then
-				if not l_tree_pipe.error.has_error then
-					Result := l_tree_pipe.document			
-				end
-			else
-				Result := Void
+				Result := l_tree.document
 			end
 		end
 
-	document_text (a_doc: XM_DOCUMENT): STRING
+	document_text (a_doc: XML_DOCUMENT): STRING
 			-- Full text of `a_doc', including all tags and content.
 		require
 			doc_not_void: a_doc /= Void
 		local
 			retried: BOOLEAN
-			l_formatter: XM_FORMATTER
-			l_output: KL_STRING_OUTPUT_STREAM
-		do				
+			l_formatter: XML_FORMATTER
+			l_output: XML_STRING_OUTPUT_STREAM
+		do
 			if not retried then
 				create l_formatter.make
 				create l_output.make_empty

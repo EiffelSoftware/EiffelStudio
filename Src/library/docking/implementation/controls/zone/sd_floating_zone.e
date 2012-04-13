@@ -50,6 +50,11 @@ inherit
 			set_size
 		end
 
+	EV_SHARED_APPLICATION
+		undefine
+			default_create, copy
+		end
+
 create
 	make
 
@@ -124,27 +129,26 @@ feature -- Command
 	update_title_bar
 			-- Remove/add title bar if `Current' content count changed
 			-- Destroy Current if no zone in
-		local
-			l_title_zone: detachable SD_TITLE_BAR_REMOVEABLE
-			l_env: EV_ENVIRONMENT
 		do
 			if not is_destroyed then
 				if internal_inner_container.readable and then all_zones.count > 0 then
 					count_zone_displayed
 					if zone_display_count = 1 then
-						l_title_zone ?= only_one_zone_displayed
-						check l_title_zone /= Void end
-						--  l_zone should not have stick button.
-						l_title_zone.set_show_stick (False)
+						if attached {SD_TITLE_BAR_REMOVEABLE} only_one_zone_displayed as l_title_zone then
+							--  l_zone should not have stick button.
+							l_title_zone.set_show_stick (False)
 
-						if attached only_one_zone_displayed as l_only_displayed and then l_only_displayed.is_maximized then
-							l_title_zone.set_show_normal_max (True)
-							extend_title_bar
-						else
-							l_title_zone.set_show_normal_max (False)
-							if internal_vertical_box.has (internal_title_bar) then
-								internal_vertical_box.prune_all (internal_title_bar)
+							if attached only_one_zone_displayed as l_only_displayed and then l_only_displayed.is_maximized then
+								l_title_zone.set_show_normal_max (True)
+								extend_title_bar
+							else
+								l_title_zone.set_show_normal_max (False)
+								if internal_vertical_box.has (internal_title_bar) then
+									internal_vertical_box.prune_all (internal_title_bar)
+								end
 							end
+						else
+							check is_title_zone: False end
 						end
 					elseif zone_display_count > 1 then
 						extend_title_bar
@@ -159,12 +163,7 @@ feature -- Command
 
 					-- We don't call `destroy' directly here, because if window destroy and creating very fast,
 					-- Windows will not clear window area after destroy a window.
-					create l_env
-					if attached l_env.application as l_app then
-						l_app.do_once_on_idle (agent destroy)
-					else
-						check False end -- Implied by application is running
-					end
+					ev_application.do_once_on_idle (agent destroy)
 				end
 			end
 		end
@@ -226,13 +225,11 @@ feature -- Query
 
 	state: SD_STATE
 			-- <Precursor>
-		local
-			l_zone: detachable SD_ZONE
 		do
-			if internal_inner_container.readable then
-				l_zone ?= internal_inner_container.item
-			end
-			if l_zone /= Void then
+			if
+				internal_inner_container.readable and then
+				attached {SD_ZONE} internal_inner_container.item as l_zone
+			then
 				Result := content.state
 			else
 				Result := floating_state
@@ -243,12 +240,11 @@ feature -- Query
 			-- Attached `internal_floating_state'
 		require
 			set: is_floating_state_attached
-		local
-			l_result: like internal_floating_state
 		do
-			l_result := internal_floating_state
-			check l_result /= Void end -- Implied by precondition
-			Result := l_result
+			check attached internal_floating_state as s then
+				-- Implied by precondition `is_floating_state_attached'
+				Result := s
+			end
 		ensure
 			not_void: Result /= Void
 		end
@@ -264,18 +260,14 @@ feature -- Query
 
 	content: SD_CONTENT
 			-- <Precursor>
-		local
-			l_zone: detachable SD_ZONE
-			l_result: detachable like content
 		do
-			if internal_inner_container.readable then
-				l_zone ?= internal_inner_container.item
+			check
+				internal_inner_container.readable and then
+				attached {SD_ZONE} internal_inner_container.item as l_zone
+			then
+				-- Implied by preconditon `valid'
+				Result := l_zone.content
 			end
-			if l_zone /= Void then
-				l_result := l_zone.content
-			end
-			check l_result /= Void end -- Implied by precondition `valid'
-			Result := l_result
 		end
 
 	child_zone_count: INTEGER
@@ -289,13 +281,10 @@ feature -- Query
 			-- If more than one zone displayed?
 		require
 			readable: inner_container_readable
-		local
-			l_container: detachable EV_CONTAINER
 		do
 			zone_display_count := 0
 			if internal_inner_container.readable then
-				l_container ?= internal_inner_container.item
-				if l_container /= Void then
+				if attached {EV_CONTAINER} internal_inner_container.item as l_container then
 					only_one_zone_displayed := Void
 					count_zone_display (l_container)
 				end
@@ -424,16 +413,11 @@ feature {NONE} -- Implementation
 		require
 			a_widget_not_void: a_widget /= Void
 			a_zones_not_void: a_zones /= Void
-		local
-			l_zone: detachable SD_ZONE
-			l_split_area: detachable EV_SPLIT_AREA
 		do
-			l_zone ?= a_widget
-			if l_zone /= Void then
+			if attached {SD_ZONE} a_widget as l_zone then
 				a_zones.extend (l_zone)
 			end
-			l_split_area ?= a_widget
-			if l_split_area /= Void then
+			if attached {EV_SPLIT_AREA} a_widget as l_split_area then
 				-- When restoring docking widget layout, this function called from `update_title_bar', widget strucutre maybe NOT full two fork tree structure.
 				if attached l_split_area.first as l_first then
 					all_zones_in_current (l_first, a_zones)
@@ -459,13 +443,8 @@ feature {NONE} -- Implementation
 			-- Count zone which is displayed
 		require
 			a_container_not_void: a_container /= Void
-		local
-			l_zone: detachable SD_ZONE
-			l_split: detachable EV_SPLIT_AREA
-			l_container: detachable EV_CONTAINER
 		do
-			l_zone ?= a_container
-			if l_zone /= Void then
+			if attached {SD_ZONE} a_container as l_zone then
 				if attached {EV_WIDGET} l_zone as lt_widget then
 					if lt_widget.is_displayed then
 						only_one_zone_displayed := l_zone
@@ -474,20 +453,17 @@ feature {NONE} -- Implementation
 				else
 					check not_possible: False end
 				end
-			else
-				l_split ?= a_container
-				check must_zone_or_split: l_split /= Void end
-				l_container ?= l_split.first
-				if l_container /= Void then
-					count_zone_display (l_container)
+			elseif attached {EV_SPLIT_AREA} a_container as l_split then
+				if attached {EV_CONTAINER} l_split.first as l_first then
+					count_zone_display (l_first)
 				end
-				l_container := Void
-				l_container ?= l_split.second
 				-- When `open_inner_container_data', if a SD_CONTENT not is_visible, then SD_DOCKING_STATE.hide will execute,
 				-- At this time, updated title bar will be called, and l_container maybe void. Because it CONSTRUCTING widget layout.
-				if l_container /= Void then
-					count_zone_display (l_container)
+				if attached {EV_CONTAINER} l_split.second as l_second then
+					count_zone_display (l_second)
 				end
+			else
+				check is_zone_or_split: False end
 			end
 		end
 
@@ -495,20 +471,15 @@ feature {NONE} -- Implementation
 			-- Set all zones' title bar in `Current' show normal\max
 		require
 			a_widget_not_void: a_widget /= Void
-		local
-			l_split: detachable EV_SPLIT_AREA
-			l_zone: detachable SD_TITLE_BAR_REMOVEABLE
 		do
-			l_split ?= a_widget
-			l_zone ?= a_widget
-			if l_split /= Void then
+			if attached {EV_SPLIT_AREA} a_widget as l_split then
 				if attached l_split.first as l_first then
 					set_all_title_bar (l_first)
 				end
 				if attached l_split.second as l_second then
 					set_all_title_bar (l_second)
 				end
-			elseif l_zone /= Void then
+			elseif attached {SD_TITLE_BAR_REMOVEABLE} a_widget as l_zone then
 				l_zone.set_show_normal_max (True)
 			end
 		end
@@ -586,7 +557,6 @@ feature {NONE} -- Agents
 			-- Handle close request
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
-			l_multi_zone: detachable SD_MULTI_CONTENT_ZONE
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
 			create l_zones.make (1)
@@ -596,8 +566,7 @@ feature {NONE} -- Agents
 			until
 				l_zones.after
 			loop
-				l_multi_zone ?= l_zones.item
-				if l_multi_zone /= Void then
+				if attached {SD_MULTI_CONTENT_ZONE} l_zones.item as l_multi_zone then
 					l_contents := l_multi_zone.contents.twin
 					from
 						l_contents.start
@@ -654,14 +623,12 @@ feature {NONE} -- Agents
 
 	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Handle resize actions
-		local
-			l_zone: detachable SD_ZONE
 		do
 			if not is_destroyed then
-				if internal_inner_container.readable then
-					l_zone ?= internal_inner_container.item
-				end
-				if l_zone /= Void then
+				if
+					internal_inner_container.readable and
+					attached {SD_ZONE} internal_inner_container.item as l_zone
+				then
 					l_zone.set_last_floating_height (a_height)
 					l_zone.set_last_floating_width (a_width)
 				end
@@ -671,7 +638,7 @@ feature {NONE} -- Agents
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

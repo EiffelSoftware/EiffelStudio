@@ -32,13 +32,17 @@ feature -- Access
 	customizable_item: detachable SD_CUSTOMIZABLE_LIST_ITEM
 			-- Convert `item' into a EB_CUSTOMIZABLE_LIST_ITEM
 		do
-			Result ?= item
+			if attached {like customizable_item} item as r then
+				Result := r
+			end
 		end
 
 	customizable_selected_item: detachable SD_CUSTOMIZABLE_LIST_ITEM
 			-- Convert `selected_item' into a EB_CUSTOMIZABLE_LIST_ITEM
 		do
-			Result ?= selected_item
+			if attached {like customizable_selected_item} selected_item as r then
+				Result := r
+			end
 		end
 
 feature -- Status Report
@@ -50,19 +54,15 @@ feature -- Basic operations
 
 	extend (v: like item)
    			-- Add `v' to end. Do not move cursor
-		local
-			l_customizable_item: like customizable_item
-			l_pix: detachable EV_PIXMAP
 		do
 				-- Set the size of the pixmaps in the list the same
 				-- as the real size of the pixmaps
 			if is_empty then
-				l_customizable_item ?= v
-				if l_customizable_item /= void then
-					l_pix := l_customizable_item.data.pixmap
-					if l_pix /= Void then
-						set_pixmaps_size (l_pix.width, l_pix.height)
-					end
+				if
+					attached {like customizable_item} v as l_customizable_item and then
+					attached l_customizable_item.data.pixmap as l_pix
+				then
+					set_pixmaps_size (l_pix.width, l_pix.height)
 				end
 			end
 
@@ -72,14 +72,14 @@ feature -- Basic operations
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

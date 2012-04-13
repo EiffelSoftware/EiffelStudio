@@ -70,17 +70,10 @@ feature {NONE} -- Initlization
 		require
 			not_void: a_ev_item /= Void
 		local
-			l_tool_bar_toggle_button: detachable EV_TOOL_BAR_TOGGLE_BUTTON
-			l_tool_bar_button: detachable EV_TOOL_BAR_BUTTON
-			l_tool_bar_separator: detachable EV_TOOL_BAR_SEPARATOR
 			l_sd_button: SD_TOOL_BAR_BUTTON
-			l_sd_separator: SD_TOOL_BAR_SEPARATOR
 		do
-			l_tool_bar_toggle_button ?= a_ev_item
-			l_tool_bar_button ?= a_ev_item
-			l_tool_bar_separator ?= a_ev_item
-			if l_tool_bar_button /= Void then
-				if l_tool_bar_toggle_button /= Void  then
+			if attached {EV_TOOL_BAR_BUTTON} a_ev_item as l_tool_bar_button then
+				if attached {EV_TOOL_BAR_TOGGLE_BUTTON} a_ev_item then
 					create {SD_TOOL_BAR_TOGGLE_BUTTON} l_sd_button.make
 				else
 					create l_sd_button.make
@@ -96,9 +89,8 @@ feature {NONE} -- Initlization
 				end
 				Result := l_sd_button
 			else
-				check must_be_separator: l_tool_bar_separator /= Void end
-				create l_sd_separator.make
-				Result := l_sd_separator
+				check must_be_separator: attached {EV_TOOL_BAR_SEPARATOR} a_ev_item end
+				create {SD_TOOL_BAR_SEPARATOR} Result.make
 			end
 			Result.set_name (a_name)
 		ensure
@@ -276,7 +268,6 @@ feature -- Query
 	items_except_sep (a_include_invisible: BOOLEAN): LIST [SD_TOOL_BAR_ITEM]
 			-- `items' except SD_TOOL_BAR_SEPARATOR
 		local
-			l_separator: detachable SD_TOOL_BAR_SEPARATOR
 			l_snap_shot: LIST [SD_TOOL_BAR_ITEM]
 		do
 			if a_include_invisible then
@@ -292,9 +283,7 @@ feature -- Query
 			until
 				l_snap_shot.after
 			loop
-				l_separator := Void
-				l_separator ?= l_snap_shot.item
-				if l_separator /= Void then
+				if attached {SD_TOOL_BAR_SEPARATOR} l_snap_shot.item as l_separator then
 					Result.start
 					Result.prune (l_separator)
 				end
@@ -307,7 +296,6 @@ feature -- Query
 	groups_count (a_include_invisible: BOOLEAN): INTEGER
 			-- Group count, group is buttons before one separater
 		local
-			l_separator: detachable SD_TOOL_BAR_SEPARATOR
 			l_last_is_separator: BOOLEAN -- Maybe two separator together
 			l_items: like items_visible
 		do
@@ -325,20 +313,20 @@ feature -- Query
 				l_items.after
 			loop
 				if l_items.item.is_displayed then
-					l_separator ?= l_items.item
-					if l_separator /= Void and not l_last_is_separator
-						and l_items.index /= l_items.count then -- We ignore last separator
-						Result := Result + 1
-						l_last_is_separator := True
-					elseif l_separator = Void then
+					if attached {SD_TOOL_BAR_SEPARATOR} l_items.item as l_separator then
+						if l_last_is_separator	and l_items.index /= l_items.count then
+							-- We ignore last separator
+							Result := Result + 1
+							l_last_is_separator := True
+						end
+					else
 						l_last_is_separator := False
 					end
 				end
 				l_items.forth
 			end
 			if items.valid_index (l_items.count - 1) then
-				l_separator ?= l_items.i_th (l_items.count - 1)
-				if l_last_is_separator and l_separator /= Void then
+				if l_last_is_separator and attached {SD_TOOL_BAR_SEPARATOR} l_items.i_th (l_items.count - 1) then
 					-- At least two sepators at the end.
 					Result := Result - 1
 				end
@@ -355,7 +343,6 @@ feature -- Query
 		require
 			valid: 0 < a_group_index and a_group_index <= groups_count (False)
 		local
-			l_separator: detachable SD_TOOL_BAR_SEPARATOR
 			l_group_count: INTEGER
 			l_stop: BOOLEAN
 			l_items: like items_visible
@@ -375,16 +362,15 @@ feature -- Query
 			until
 				l_items.after or l_stop
 			loop
-				l_separator ?= l_items.item
-
-				if l_separator /= Void and not l_last_is_separator then
-					l_group_count := l_group_count + 1
-				elseif l_separator = Void and then l_group_count = a_group_index and l_items.item.is_displayed then
-					Result.extend (l_items.item)
-				end
-				if l_separator /= Void then
+				if attached {SD_TOOL_BAR_SEPARATOR} l_items.item as l_separator then
+					if not l_last_is_separator then
+						l_group_count := l_group_count + 1
+					end
 					l_last_is_separator := True
 				else
+					if l_group_count = a_group_index and l_items.item.is_displayed then
+						Result.extend (l_items.item)
+					end
 					l_last_is_separator := False
 				end
 				if l_group_count > a_group_index then
@@ -394,7 +380,7 @@ feature -- Query
 			end
 		ensure
 			not_void: Result /= Void
-			not_contain_separator:
+			not_contain_separator: across Result as c all not attached {SD_TOOL_BAR_SEPARATOR} c.item end
 		end
 
 	show_request_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -427,7 +413,6 @@ feature -- Query
 			-- Item count except SD_TOOL_BAR_SEPARATOR
 		local
 			l_items: like items
-			l_separator: detachable SD_TOOL_BAR_SEPARATOR
 		do
 			from
 				l_items := items
@@ -435,8 +420,7 @@ feature -- Query
 			until
 				l_items.after
 			loop
-				l_separator ?= l_items.item
-				if l_separator = Void then
+				if attached {SD_TOOL_BAR_SEPARATOR} l_items.item as l_separator then
 					if not a_include_invisible then
 						if l_items.item.is_displayed then
 							Result := Result + 1
@@ -451,16 +435,13 @@ feature -- Query
 
 	is_contain_widget_item: BOOLEAN
 			-- If Current contain normal widget items?
-		local
-			l_widget: detachable SD_TOOL_BAR_WIDGET_ITEM
 		do
 			from
 				items.start
 			until
 				items.after or Result
 			loop
-				l_widget ?= items.item
-				Result := (l_widget /= Void)
+				Result := attached {SD_TOOL_BAR_WIDGET_ITEM} items.item
 				items.forth
 			end
 		end
@@ -493,8 +474,6 @@ feature -- Query
 
 	is_menu_bar: BOOLEAN
 			-- If Current is a menu bar which only contain SD_TOOL_BAR_MENU_ITEM
-		local
-			l_menu_item: detachable SD_TOOL_BAR_MENU_ITEM
 		do
 			if not items.is_empty then
 				from
@@ -503,8 +482,7 @@ feature -- Query
 				until
 					items.after or not Result
 				loop
-					l_menu_item ?= items.item
-					if l_menu_item = Void then
+					if not attached {SD_TOOL_BAR_MENU_ITEM} items.item  then
 						Result := False
 					end
 					items.forth
@@ -564,8 +542,6 @@ feature {SD_ACCESS}  -- Internal issues
 			-- Clear widget items' parents and reset state flags
 		local
 			l_items: like items
-			l_widget_item: detachable SD_TOOL_BAR_WIDGET_ITEM
-			l_parent: detachable EV_CONTAINER
 		do
 			l_items := items.twin
 			from
@@ -573,10 +549,8 @@ feature {SD_ACCESS}  -- Internal issues
 			until
 				l_items.after
 			loop
-				l_widget_item ?= l_items.item
-				if l_widget_item /= Void then
-					l_parent := l_widget_item.widget.parent
-					if l_parent /= Void then
+				if attached {SD_TOOL_BAR_WIDGET_ITEM} l_items.item as l_widget_item then
+					if attached {EV_CONTAINER} l_widget_item.widget.parent as l_parent then
 						l_parent.prune (l_widget_item.widget)
 					end
 				end
@@ -627,7 +601,9 @@ feature {SD_ACCESS}  -- Internal issues
 			if not l_items_visible.after then
 				l_items_visible.forth
 				if not l_items_visible.after then
-					Result ?= l_items_visible.item
+					if attached {SD_TOOL_BAR_SEPARATOR} l_items_visible.item as sep then
+						Result := sep
+					end
 				end
 			end
 		end
@@ -650,7 +626,9 @@ feature {SD_ACCESS}  -- Internal issues
 			if not l_items_visible.before then
 				l_items_visible.go_i_th (l_index - 1)
 				if not l_items_visible.before then
-					Result ?= l_items_visible.item
+					if attached {SD_TOOL_BAR_SEPARATOR} l_items_visible.item as sep then
+						Result := sep
+					end
 				end
 			end
 		end
@@ -660,7 +638,6 @@ feature {SD_ACCESS}  -- Internal issues
 		require
 			valid: a_group_index > 0 and a_group_index <= groups_count (False)
 		local
-			l_separator: detachable SD_TOOL_BAR_SEPARATOR
 			l_group_count: INTEGER
 			l_items: like items_visible
 			l_last_is_separator: BOOLEAN
@@ -679,11 +656,10 @@ feature {SD_ACCESS}  -- Internal issues
 			until
 				l_items.after or l_group_count = a_group_index
 			loop
-				l_separator ?= l_items.item
-				if l_separator /= Void and not l_last_is_separator then
-					l_group_count := l_group_count + 1
-				end
-				if l_separator /= Void then
+				if attached {SD_TOOL_BAR_SEPARATOR} l_items.item as l_separator then
+					if not l_last_is_separator then
+						l_group_count := l_group_count + 1
+					end
 					l_last_is_separator := True
 				else
 					l_last_is_separator := False
@@ -784,7 +760,7 @@ invariant
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

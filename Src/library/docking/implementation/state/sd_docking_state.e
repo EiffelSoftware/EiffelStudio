@@ -232,8 +232,8 @@ feature -- Redefine
 
 				if a_multi_dock_area.full then
 					l_old_stuff := a_multi_dock_area.item
-					l_old_spliter ?= l_old_stuff
-					if l_old_spliter /= Void then
+					if attached {EV_SPLIT_AREA} l_old_stuff as spl then
+						l_old_spliter := spl
 						a_multi_dock_area.save_spliter_position (l_old_spliter, generating_type)
 					end
 					a_multi_dock_area.prune (l_old_stuff)
@@ -589,8 +589,8 @@ feature {NONE} -- Implementation
 
 				if attached lt_widget.parent as l_parent then
 					-- Remember target zone parent split position
-					l_target_zone_parent_spliter ?= lt_widget.parent
-					if l_target_zone_parent_spliter /= Void then
+					if attached {EV_SPLIT_AREA} lt_widget.parent as spl then
+						l_target_zone_parent_spliter := spl
 						l_target_zone_parent_split_position := l_target_zone_parent_spliter.split_position
 					end
 					l_parent.prune (lt_widget)
@@ -637,22 +637,18 @@ feature {NONE} -- Implementation
 		require
 			not_void: a_zone /= Void
 		local
-			l_spliter: detachable EV_SPLIT_AREA
 			l_widget: detachable EV_WIDGET
 		do
-			l_widget ?= a_zone
-			if l_widget /= Void then
+			if attached {EV_WIDGET} a_zone as w then
+				l_widget := w
 				from
-					l_spliter ?= l_widget.parent
 				until
-					l_spliter = Void
+					not attached {EV_SPLIT_AREA} l_widget.parent as l_spliter
 				loop
-					if l_spliter /= Void and then not l_spliter.is_displayed then
+					if not l_spliter.is_displayed then
 						l_spliter.show
 					end
-					l_widget := l_widget.parent
-					check l_widget /= Void end -- Implied by loop condition
-					l_spliter ?= l_widget.parent
+					l_widget := l_spliter
 				end
 			else
 				check a_zone_is_widget: False end
@@ -664,7 +660,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

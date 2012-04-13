@@ -46,7 +46,6 @@ feature  -- Redefine
 	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- <Precursor>
 		local
-			l_floating_zone: detachable SD_FLOATING_ZONE
 			l_caller: SD_ZONE
 		do
 			l_caller := internal_mediator.caller
@@ -71,11 +70,12 @@ feature  -- Redefine
 				l_caller.state.dock_at_top_level (internal_docking_manager.query.inner_container_main)
 			end
 
-			l_floating_zone ?= l_caller
-			if not Result and  l_floating_zone = Void then
-				check same_caller: l_caller = l_caller.state.zone end
-				l_caller.state.float (a_screen_x - internal_mediator.offset_x, a_screen_y - internal_mediator.offset_y)
-				Result := True
+			if not Result then
+				if not attached {SD_FLOATING_ZONE} l_caller then
+					check same_caller: l_caller = l_caller.state.zone end
+					l_caller.state.float (a_screen_x - internal_mediator.offset_x, a_screen_y - internal_mediator.offset_y)
+					Result := True
+				end
 			end
 
 			internal_shared.feedback.reset_feedback_clearing

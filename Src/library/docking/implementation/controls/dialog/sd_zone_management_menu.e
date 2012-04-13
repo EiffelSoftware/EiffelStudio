@@ -27,20 +27,22 @@ feature {NONE}  -- Initlization
 			create internal_close
 			internal_close.set_pixmap (internal_shared.icons.close_context_tool_bar)
 			internal_close.set_text (internal_shared.interface_names.menu_close)
-			l_selected_item := internal_notebook.selected_item
-			check l_selected_item /= Void end -- Implied by it's not possible to create current when notebook content is empty
-			internal_close.select_actions.extend (agent on_close (l_selected_item))
 			items.extend (internal_close)
 			create internal_close_others
 			internal_close_others.set_pixmap (internal_shared.icons.close_others)
 			internal_close_others.set_text (internal_shared.interface_names.menu_close_all_but_this)
-			internal_close_others.select_actions.extend (agent on_close_others (l_selected_item))
 			items.extend (internal_close_others)
 			create internal_close_all
 			internal_close_all.set_pixmap (internal_shared.icons.close_all)
 			internal_close_all.set_text (internal_shared.interface_names.menu_close_all)
-			internal_close_all.select_actions.extend (agent on_close_all (l_selected_item))
 			items.extend (internal_close_all)
+
+			l_selected_item := internal_notebook.selected_item
+			if l_selected_item /= Void then
+				internal_close.select_actions.extend (agent on_close (l_selected_item))
+				internal_close_others.select_actions.extend (agent on_close_others (l_selected_item))
+				internal_close_all.select_actions.extend (agent on_close_all (l_selected_item))
+			end
 		ensure
 			set: internal_notebook = a_notebook
 		end
@@ -108,14 +110,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

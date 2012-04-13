@@ -91,7 +91,6 @@ feature -- Command
 			-- Redefine
 		local
 			l_vision_rect: EV_RECTANGLE
-			l_imp: detachable EV_DRAWING_AREA_IMP
 		do
 			if (tab.is_hot or tab.is_selected)and is_top_side_tab then
 
@@ -101,15 +100,15 @@ feature -- Command
 				-- Draw hot state background
 				if tab.is_pointer_in_close_area then
 					if attached tab.parent as l_parent then
-						l_imp ?= l_parent.implementation
+						if attached {EV_DRAWING_AREA_IMP} l_parent.implementation as l_imp then
+							if tab.is_pointer_pressed then
+								tool_bar_drawer.draw_button_background (l_imp.c_object, l_vision_rect, {SD_TOOL_BAR_ITEM_STATE}.pressed)
+							else
+								tool_bar_drawer.draw_button_background (l_imp.c_object, l_vision_rect, {SD_TOOL_BAR_ITEM_STATE}.hot)
+							end
+						end
 					else
 						check False end -- Implied by `tab' is displaying on screen
-					end
-					check not_void: l_imp /= Void end
-					if tab.is_pointer_pressed then
-						tool_bar_drawer.draw_button_background (l_imp.c_object, l_vision_rect, {SD_TOOL_BAR_ITEM_STATE}.pressed)
-					else
-						tool_bar_drawer.draw_button_background (l_imp.c_object, l_vision_rect, {SD_TOOL_BAR_ITEM_STATE}.hot)
 					end
 				end
 
@@ -178,18 +177,14 @@ feature -- Command
 
 	draw_focus_rect (a_rect: EV_RECTANGLE)
 			-- Redefine
-		local
-			l_imp: detachable SD_DRAWING_AREA_IMP
 		do
 			if attached tab.parent as l_parent then
-				l_imp ?= l_parent.implementation
+				if attached {SD_DRAWING_AREA_IMP} l_parent.implementation as l_imp then
+					c_gtk_paint_focus (l_imp.c_object, {GTK}.gtk_rc_get_style (l_imp.c_object), a_rect.x, a_rect.y, a_rect.width, a_rect.height)
+				end
 			else
 				check False end -- Implied by `tab' is displaying on screen
 			end
-
-			check not_void: l_imp /= Void end
-
-			c_gtk_paint_focus (l_imp.c_object, {GTK}.gtk_rc_get_style (l_imp.c_object), a_rect.x, a_rect.y, a_rect.width, a_rect.height)
 		end
 
 	pixmap_y_position: INTEGER
@@ -243,15 +238,13 @@ feature {NONE} -- Implementation
 
 	internal_expose (a_width: INTEGER; a_x: INTEGER; a_is_selected: BOOLEAN)
 			-- Expose implementation
-		local
-			l_imp: detachable SD_DRAWING_AREA_IMP
 		do
 			clear (a_width, a_x)
 			if attached tab.parent as l_parent then
-				l_imp ?= l_parent.implementation
-				check not_void: l_imp /= Void end
-
-				if {GTK}.gtk_widget_struct_window (l_imp.c_object) /= default_pointer then
+				if 
+					attached {SD_DRAWING_AREA_IMP} l_parent.implementation as l_imp and then
+					{GTK}.gtk_widget_struct_window (l_imp.c_object) /= default_pointer 
+				then
 					c_gtk_paint_extension (l_imp.c_object, notebook_style, a_is_selected,
 											 a_x, 0 ,a_width, tab.height, is_top_side_tab)
 					if a_is_selected then
@@ -339,7 +332,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

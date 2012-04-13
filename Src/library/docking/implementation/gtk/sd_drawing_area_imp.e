@@ -49,18 +49,17 @@ feature {NONE} -- Implementation
 
 	update_for_pick_and_drop (a_starting: BOOLEAN)
 			-- <Precursor>
-		local
-			l_app_imp: detachable EV_APPLICATION_IMP
-			l_src: detachable EV_PICK_AND_DROPABLE_IMP
 		do
-			l_app_imp ?= ev_application.implementation
-			check not_void: l_app_imp /= Void end
-			l_src := l_app_imp.pick_and_drop_source
-			-- Sometime l_src maybe void?
-			if l_src /= Void and then attached interface as l_interface then
-				l_interface.update_for_pick_and_drop (a_starting, l_src.pebble)
+			if attached interface as l_interface then
+				if attached {EV_APPLICATION_IMP} ev_application.implementation as l_app_imp then
+					if attached l_app_imp.pick_and_drop_source as l_src then
+						l_interface.update_for_pick_and_drop (a_starting, l_src.pebble)
+					else
+						-- Sometime l_src maybe void ?
+					end
+				end
 			else
-				check False end -- When updaing for pick and drop, interface cannot be void
+				check False end -- When updating for pick and drop, interface cannot be void
 			end
 		end
 

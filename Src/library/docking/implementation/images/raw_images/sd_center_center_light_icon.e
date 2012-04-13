@@ -703,29 +703,27 @@ feature {NONE} -- Image data filling.
 	fill_memory
 			-- Fill image data into memory.
 		local
-			l_imp: detachable EV_PIXEL_BUFFER_IMP
 			l_pointer: POINTER
 		do
-			l_imp ?= implementation
-			check not_void: l_imp /= Void end
-
-			l_pointer := l_imp.data_ptr
-			if l_pointer /= default_pointer then
-				build_colors (l_pointer)
-				l_imp.unlock
+			if attached {EV_PIXEL_BUFFER_IMP} implementation as l_imp then
+				l_pointer := l_imp.data_ptr
+				if not l_pointer.is_default_pointer then
+					build_colors (l_pointer)
+					l_imp.unlock
+				end
 			end
 		end
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

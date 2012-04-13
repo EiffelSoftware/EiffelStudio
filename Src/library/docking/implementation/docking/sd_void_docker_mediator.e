@@ -72,16 +72,14 @@ feature -- Hanlde pointer events
 	on_pointer_motion (a_screen_x, a_screen_y: INTEGER_32)
 			-- <Precursor>
 		local
-			l_floating_zone: detachable SD_FLOATING_ZONE
 			l_orignal_multi_dock_area: SD_MULTI_DOCK_AREA
 			l_x, l_y: INTEGER
 		do
 			screen_x := a_screen_x
 			screen_y := a_screen_y
-			l_floating_zone ?= caller
 			l_x := a_screen_x - offset_x
 			l_y := a_screen_y - offset_y
-			if l_floating_zone /= Void then
+			if attached {SD_FLOATING_ZONE} caller as l_floating_zone then
 				l_floating_zone.set_position (l_x, l_y)
 			else
 				l_orignal_multi_dock_area := docking_manager.query.inner_container (caller)

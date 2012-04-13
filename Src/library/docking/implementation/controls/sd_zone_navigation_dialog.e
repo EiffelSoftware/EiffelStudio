@@ -336,8 +336,6 @@ feature {NONE} -- Initialization
 
 	all_tools_column: ARRAYED_LIST [SD_TOOL_BAR]
 			-- All tools columns
-		local
-			l_tool_bar: detachable SD_TOOL_BAR
 		do
 			create Result.make (1)
 			from
@@ -345,9 +343,11 @@ feature {NONE} -- Initialization
 			until
 				internal_tools_box.after
 			loop
-				l_tool_bar ?= internal_tools_box.item
-				check not_void: l_tool_bar /= Void end
-				Result.extend (l_tool_bar)
+				if attached {SD_TOOL_BAR} internal_tools_box.item as l_tool_bar then
+					Result.extend (l_tool_bar)
+				else
+					check is_tool_bar: False end
+				end
 				internal_tools_box.forth
 			end
 		ensure
@@ -356,8 +356,6 @@ feature {NONE} -- Initialization
 
 	all_files_column: ARRAYED_LIST [SD_TOOL_BAR]
 			-- All file columns
-		local
-			l_tool_bar: detachable SD_TOOL_BAR
 		do
 			create Result.make (1)
 			from
@@ -365,9 +363,11 @@ feature {NONE} -- Initialization
 			until
 				internal_files_box.after
 			loop
-				l_tool_bar ?= internal_files_box.item
-				check not_void: l_tool_bar /= Void end
-				Result.extend (l_tool_bar)
+				if attached {SD_TOOL_BAR} internal_files_box.item as l_tool_bar then
+					Result.extend (l_tool_bar)
+				else
+					check is_tool_bar: False end
+				end
 				internal_files_box.forth
 			end
 		ensure
@@ -417,13 +417,13 @@ feature {NONE} -- Initialization
 
 	maximum_item_width: INTEGER
 			-- Maximum item width
-		local
-			l_a_column: detachable SD_TOOL_BAR
 		do
 			internal_files_box.start
-			l_a_column ?= internal_files_box.item
-			check not_void: l_a_column /= Void end
-			Result := l_a_column.width
+			if attached {SD_TOOL_BAR} internal_files_box.item as l_a_column then
+				Result := l_a_column.width
+			else
+				check is_tool_bar: False end
+			end
 		end
 
 feature -- Command
@@ -524,7 +524,6 @@ feature {NONE} -- Implementation command
 			l_is_selected_label_in_files: BOOLEAN
 			l_maximum_scroll_position: REAL
 			l_all_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_toggle: detachable SD_TOOL_BAR_TOGGLE_BUTTON
 		do
 			from
 				-- Although toggle button will disable other buttons in the same tool bar,
@@ -534,8 +533,7 @@ feature {NONE} -- Implementation command
 			until
 				l_all_items.after
 			loop
-				l_toggle ?= l_all_items.item
-				if l_toggle /= Void then
+				if attached {SD_TOOL_BAR_TOGGLE_BUTTON} l_all_items.item as l_toggle then
 					l_toggle.disable_select
 				end
 				l_all_items.forth
@@ -566,35 +564,29 @@ feature {NONE} -- Implementation command
 			-- Set bottom texts which are informations about a content
 		require
 			not_void: a_item /= Void
-		local
-			l_content: detachable SD_CONTENT
-			l_env: EV_ENVIRONMENT
 		do
-			l_content ?= a_item.data
-			check not_void: l_content /= Void end
-			full_title.set_text (l_content.long_title)
-			if attached l_content.description as l_description then
-				description.set_text (l_description)
-			else
-				description.set_text (internal_shared.interface_names.Zone_navigation_no_description_available)
-			end
-			if attached l_content.detail as l_detail then
-				-- We have to do it in idle actions, otherwise dialog minimum height will not correct
-				create l_env
-				if attached l_env.application as l_app then
-					l_app.do_once_on_idle (agent check_before_set_text (l_detail.as_string_8))
+			if attached {SD_CONTENT}  a_item.data as l_content then
+				full_title.set_text (l_content.long_title)
+				if attached l_content.description as l_description then
+					description.set_text (l_description)
 				else
-					check False end -- Implied by application is running
+					description.set_text (internal_shared.interface_names.Zone_navigation_no_description_available)
+				end
+				if attached l_content.detail as l_detail then
+					-- We have to do it in idle actions, otherwise dialog minimum height will not correct
+					ev_application.do_once_on_idle (agent check_before_set_text (l_detail.as_string_8))
+				else
+					detail.set_text (internal_shared.interface_names.Zone_navigation_no_detail_available)
 				end
 			else
-				detail.set_text (internal_shared.interface_names.Zone_navigation_no_detail_available)
+				check data_is_content: False end
 			end
 		end
 
 	selected_item_index: INTEGER
 			-- Selected item index
 		local
-			l_selected: SD_TOOL_BAR_ITEM
+			l_selected: like selected_label
 			l_all_items: like all_items_in_part
 		do
 			l_selected := selected_label
@@ -608,17 +600,14 @@ feature {NONE} -- Implementation command
 			-- Select `a_label' and destroy Current
 		require
 			not_void: a_label /= Void
-		local
-			l_content: detachable SD_CONTENT
 		do
-			if a_label /= Void then
-				l_content ?= a_label.data
-				check not_void: l_content /= Void end
-			end
-			-- If we call set_focus immediately, destroy will make Current get focus
-			destroy
-			if l_content /= Void then
+			if a_label /= Void and then attached {SD_CONTENT} a_label.data as l_content then
+				-- If we call set_focus immediately, destroy will make Current get focus
+				destroy
 				l_content.set_focus
+			else
+				check a_label_not_attached: a_label = Void end
+				destroy
 			end
 		end
 
@@ -627,11 +616,10 @@ feature {NONE} -- Implementation command
 		require
 			has_label: all_items.count > 0
 		local
-			l_selected_item: SD_TOOL_BAR_ITEM
-			l_current_list, l_side_list: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_selected_item: like selected_label
+			l_current_list, l_side_list: ARRAYED_LIST [SD_TOOL_BAR_RADIO_BUTTON]
 			l_selected_index, l_result_index, l_balance: INTEGER
 			l_selected_item_in_files: BOOLEAN
-			l_result: detachable like find_label_at_right_side
 		do
 			l_selected_item := selected_label
 			l_selected_item_in_files := is_seleted_label_in_files
@@ -646,7 +634,8 @@ feature {NONE} -- Implementation command
 				if l_result_index > l_current_list.count then
 					l_result_index := l_current_list.count
 				end
-				l_result ?= l_current_list.i_th (l_result_index)
+
+				Result := l_current_list.i_th (l_result_index)
 			else
 				-- In the last column, we should go to other part
 				l_result_index := l_selected_index \\ {SD_SHARED}.zone_navigation_column_count
@@ -655,16 +644,11 @@ feature {NONE} -- Implementation command
 					if l_result_index > l_side_list.count then
 						l_result_index := l_side_list.count
 					end
-					l_result ?= l_side_list.i_th (l_result_index)
+					Result := l_side_list.i_th (l_result_index)
 				else
-					l_result ?= l_current_list.i_th (l_result_index)
+					Result := l_current_list.i_th (l_result_index)
 				end
-
 			end
-			check l_result /= Void end -- Implied by all items in lists are {SD_TOOL_BAR_RADIO_BUTTON}
-			Result := l_result
-		ensure
-			not_void: Result /= Void
 		end
 
 	find_label_at_left_side: SD_TOOL_BAR_RADIO_BUTTON
@@ -672,11 +656,10 @@ feature {NONE} -- Implementation command
 		require
 			has_label: all_items.count > 0
 		local
-			l_selected_item: SD_TOOL_BAR_ITEM
-			l_current_list, l_side_list: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_selected_item: like selected_label
+			l_current_list, l_side_list: ARRAYED_LIST [SD_TOOL_BAR_RADIO_BUTTON]
 			l_selected_index, l_result_index, l_balance: INTEGER
 			l_selected_item_in_files: BOOLEAN
-			l_result: detachable like find_label_at_left_side
 		do
 			l_selected_item := selected_label
 			l_selected_item_in_files := is_seleted_label_in_files
@@ -690,7 +673,7 @@ feature {NONE} -- Implementation command
 				if l_result_index > l_current_list.count then
 					l_result_index := l_current_list.count
 				end
-				l_result ?= l_current_list.i_th (l_result_index)
+				Result := l_current_list.i_th (l_result_index)
 			else
 				-- In the first column, we should go to other part
 				l_side_list := all_items_in_part (not l_selected_item_in_files)
@@ -703,7 +686,7 @@ feature {NONE} -- Implementation command
 						l_result_index := l_side_list.count
 					end
 
-					l_result ?= l_side_list.i_th (l_result_index)
+					Result := l_side_list.i_th (l_result_index)
 				else
 					l_balance := l_current_list.count \\ {SD_SHARED}.zone_navigation_column_count
 					l_result_index := l_current_list.count - {SD_SHARED}.zone_navigation_column_count + ({SD_SHARED}.zone_navigation_column_count - l_balance) + l_selected_index
@@ -711,14 +694,10 @@ feature {NONE} -- Implementation command
 						l_result_index := l_current_list.count
 					end
 
-					l_result ?= l_current_list.i_th (l_result_index)
+					Result := l_current_list.i_th (l_result_index)
 				end
 
 			end
-			check l_result /= Void end -- Implied by precondition `has_label'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
 		end
 
 	find_next_label_same_type: SD_TOOL_BAR_RADIO_BUTTON
@@ -726,29 +705,19 @@ feature {NONE} -- Implementation command
 		require
 			has_label: items_count > 0
 		local
-			l_selected_label: SD_TOOL_BAR_RADIO_BUTTON
-			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_result: detachable like find_next_label_same_type
+			l_items: like all_items_in_part
+			i: INTEGER
 		do
-			l_selected_label := selected_label
 			l_items := all_items_in_part (is_seleted_label_in_files)
-
-			from
-				l_items.start
-			until
-				l_items.after
-			loop
-				if l_items.item = l_selected_label then
-					if not l_items.islast then
-						l_result ?= l_items.i_th (l_items.index + 1)
-					else
-						l_result ?= l_items.first
-					end
-				end
-				l_items.forth
+			i := l_items.index_of (selected_label, l_items.lower)
+			check has_selected_label: i /= 0 end
+			if i = l_items.upper then
+				-- l_items is not empty , see precondition `has_label'
+				Result := l_items.first
+			else
+				check valid_index: l_items.valid_index (i) end
+				Result := l_items.i_th (i + 1)
 			end
-			check l_result /= Void end -- Implied by previous loop
-			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
@@ -758,29 +727,19 @@ feature {NONE} -- Implementation command
 		require
 			has_label: items_count > 0
 		local
-			l_selected_label: SD_TOOL_BAR_RADIO_BUTTON
-			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_result: detachable like find_previous_label_same_type
+			l_items: like all_items_in_part
+			i: INTEGER
 		do
-			l_selected_label := selected_label
 			l_items := all_items_in_part (is_seleted_label_in_files)
-
-			from
-				l_items.finish
-			until
-				l_items.before
-			loop
-				if l_items.item = l_selected_label then
-					if not l_items.isfirst then
-						l_result ?= l_items.i_th (l_items.index - 1)
-					else
-						l_result ?= l_items.last
-					end
-				end
-				l_items.back
+			i := l_items.index_of (selected_label, l_items.lower)
+			check has_selected_label: i /= 0 end
+			if i = l_items.lower then
+				-- l_items is not empty , see precondition `has_label'
+				Result := l_items.last
+			else
+				check valid_index: l_items.valid_index (i) end
+				Result := l_items.i_th (i - 1)
 			end
-			check l_result /= Void end -- Implied by previous loop
-			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
@@ -790,36 +749,24 @@ feature {NONE} -- Implementation command
 		require
 			has_label: items_count > 0
 		local
-			l_selected_label: SD_TOOL_BAR_RADIO_BUTTON
-			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_list: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_result: detachable like find_previous_label
+			l_items,
+			l_list: like all_items_in_part
+			i: INTEGER
 		do
-			l_selected_label := selected_label
 			l_items := all_items_in_part (is_seleted_label_in_files)
-
-			from
-				l_items.finish
-			until
-				l_items.before
-			loop
-				if l_items.item = l_selected_label then
-					if not l_items.isfirst then
-						l_result ?= l_items.i_th (l_items.index - 1)
-					else
-						l_list := all_items_in_part (not is_seleted_label_in_files)
-						if not l_list.is_empty then
-							l_result ?= l_list.last
-						else
-							l_result ?= l_items.last
-						end
-
-					end
+			i := l_items.index_of (selected_label, l_items.lower)
+			check has_selected_label: i /= 0 end
+			if i = l_items.lower then
+				l_list := all_items_in_part (not is_seleted_label_in_files)
+				if not l_list.is_empty then
+					Result := l_list.last
+				else
+					Result := l_items.last
 				end
-				l_items.back
+			else
+				check valid_index: l_items.valid_index (i) end
+				Result := l_items.i_th (i - 1)
 			end
-			check l_result /= Void end -- Implied by precondition `has_label'
-			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
@@ -829,41 +776,29 @@ feature {NONE} -- Implementation command
 		require
 			has_label: items_count > 0
 		local
-			l_selected_label: SD_TOOL_BAR_RADIO_BUTTON
-			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_list: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_result: detachable like find_next_label
+			l_items,
+			l_list: like all_items_in_part
+			i: INTEGER
 		do
-			l_selected_label := selected_label
 			l_items := all_items_in_part (is_seleted_label_in_files)
-
-			from
-				l_items.start
-			until
-				l_items.after
-			loop
-				if l_items.item = l_selected_label then
-					if not l_items.islast then
-						l_result ?= l_items.i_th (l_items.index + 1)
-					else
-						l_list := all_items_in_part (not is_seleted_label_in_files)
-						if not l_list.is_empty then
-							l_result ?= l_list.first
-						else
-							l_result ?= l_items.first
-						end
-
-					end
+			i := l_items.index_of (selected_label, l_items.lower)
+			check has_selected_label: i /= 0 end
+			if i = l_items.upper then
+				l_list := all_items_in_part (not is_seleted_label_in_files)
+				if not l_list.is_empty then
+					Result := l_list.first
+				else
+					Result := l_items.first
 				end
-				l_items.forth
+			else
+				check valid_index: l_items.valid_index (i) end
+				Result := l_items.i_th (i + 1)
 			end
-			check l_result /= Void end -- Implied by precondition `has_label'
-			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
 
-	all_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	all_items: ARRAYED_LIST [SD_TOOL_BAR_RADIO_BUTTON]
 			-- All items
 			-- Items order is from top -> bottom, left -> right
 		do
@@ -872,7 +807,7 @@ feature {NONE} -- Implementation command
 			Result.append (all_items_in_part (True))
 		end
 
-	all_items_in_part (a_is_file: BOOLEAN): ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	all_items_in_part (a_is_file: BOOLEAN): ARRAYED_LIST [SD_TOOL_BAR_RADIO_BUTTON]
 			-- All file items if `a_is_file'
 			-- Item order is from top -> bottom, left -> right
 		local
@@ -890,10 +825,17 @@ feature {NONE} -- Implementation command
 			until
 				l_columns.after
 			loop
-				Result.append (l_columns.item.items)
+				across
+					 l_columns.item.items as c
+				loop
+					if attached {SD_TOOL_BAR_RADIO_BUTTON} c.item as but then
+						Result.extend (but)
+					else
+						check only_sd_tool_bar_radio_button: False end
+					end
+				end
 				l_columns.forth
 			end
-
 		ensure
 			not_void: Result /= Void
 		end
@@ -904,7 +846,6 @@ feature {NONE} -- Implementation command
 			has_label: is_sensitive
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_item: detachable SD_TOOL_BAR_RADIO_BUTTON
 			l_all_columns: ARRAYED_LIST [SD_TOOL_BAR]
 			l_result: detachable like selected_label
 		do
@@ -920,11 +861,13 @@ feature {NONE} -- Implementation command
 				until
 					l_items.after or l_result /= Void
 				loop
-					l_item ?= l_items.item
-					check not_void: l_item /= Void end
-					if l_item.is_selected then
-						l_result := l_item
-						is_seleted_label_in_files := True
+					if attached {like selected_label} l_items.item as l_item then
+						if l_item.is_selected then
+							l_result := l_item
+							is_seleted_label_in_files := True
+						end
+					else
+						check is_radio_button: False end
 					end
 					l_items.forth
 				end
@@ -944,11 +887,13 @@ feature {NONE} -- Implementation command
 					until
 						l_items.after or l_result /= Void
 					loop
-						l_item ?= l_items.item
-						check not_void: l_item /= Void end
-						if l_item.is_selected then
-							l_result := l_item
-							is_seleted_label_in_files := False
+						if attached {like selected_label} l_items.item as l_item then
+							if l_item.is_selected then
+								l_result := l_item
+								is_seleted_label_in_files := False
+							end
+						else
+							check is_radio_button: False end
 						end
 						l_items.forth
 					end
@@ -956,8 +901,10 @@ feature {NONE} -- Implementation command
 				end
 			end
 
-			check l_result /= Void end -- Implied by there must be a selected label in all lists
-			Result := l_result
+			check l_result /= Void then
+				-- Implied by there must be a selected label in all lists
+				Result := l_result
+			end
 		ensure
 			not_void: Result /= Void
 		end
@@ -1088,10 +1035,12 @@ feature {NONE} -- Copied from Eiffel Build project GB_TIP_OF_THE_DAY_DIALOG
 
 invariant
 	internal_docking_manager_not_void: internal_docking_manager /= Void
+	all_files_column_are_tool_bar_button: across all_files_column as c_files all across c_files.item.items as c_items all attached {SD_TOOL_BAR_BUTTON} c_items.item end end
+	all_tools_column_are_tool_bar_button: across all_tools_column as c_tools all across c_tools.item.items as c_items all attached {SD_TOOL_BAR_BUTTON} c_items.item end end
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

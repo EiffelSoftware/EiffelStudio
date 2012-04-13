@@ -28,7 +28,6 @@ feature -- Command
 	on_normal_max_window
 			-- Normal or max `Current'
 		local
-			l_split_area: detachable EV_SPLIT_AREA
 			l_main_area: like main_area
 			l_internal_parent: detachable EV_CONTAINER
 		do
@@ -39,8 +38,7 @@ feature -- Command
 				if not is_maximized then
 					main_area_widget := l_main_area.item
 					internal_parent := lt_widget.parent
-					l_split_area ?= internal_parent
-					if l_split_area /= Void then
+					if attached {EV_SPLIT_AREA} internal_parent as l_split_area then
 						internal_parent_split_position := l_split_area.split_position
 					end
 					l_internal_parent := internal_parent
@@ -55,7 +53,7 @@ feature -- Command
 				end
 				docking_manager.command.unlock_update
 			else
-				check not_possible: False end
+				check is_widget: False end
 			end
 		end
 
@@ -68,7 +66,7 @@ feature -- Command
 			if attached {EV_WIDGET} Current as lt_widget then
 				docking_manager.command.lock_update (lt_widget, False)
 			else
-				check not_possible: False end
+				check is_widget: False end
 			end
 
 			if is_maximized then
@@ -88,7 +86,6 @@ feature -- Command
 	recover_to_normal_state
 			-- If Current maximized, then normal Current
 		local
-			l_split_area: detachable EV_SPLIT_AREA
 			l_main_area: like main_area
 			l_main_area_widget: like main_area_widget
 			l_internal_parent: like internal_parent
@@ -114,10 +111,12 @@ feature -- Command
 
 					main_area := Void
 
-					l_split_area ?= internal_parent
 					-- FIXIT: Only have to check if split position in bounds on GTK, mswin is not needed
-					if l_split_area /= Void and then (internal_parent_split_position >= l_split_area.minimum_split_position and
-						 internal_parent_split_position <= l_split_area.maximum_split_position) then
+					if
+						attached {EV_SPLIT_AREA} internal_parent as l_split_area and then
+						(internal_parent_split_position >= l_split_area.minimum_split_position and
+						 internal_parent_split_position <= l_split_area.maximum_split_position)
+					then
 						l_split_area.set_split_position (internal_parent_split_position)
 					end
 					main_area_widget := Void
@@ -126,7 +125,7 @@ feature -- Command
 					docking_manager.command.resize (True)
 					docking_manager.command.unlock_update
 				else
-					check not_possible: False end
+					check is_widget: False end
 				end
 			end
 		end
@@ -241,11 +240,8 @@ feature -- Query
 
 	is_floating_zone: BOOLEAN
 			-- Is current an instance of SD_FLOATING_ZONE?
-		local
-			l_floating_zone: detachable SD_FLOATING_ZONE
 		do
-			l_floating_zone ?= Current
-			Result := l_floating_zone /= Void
+			Result := attached {SD_FLOATING_ZONE} Current
 		end
 
 feature {SD_SAVE_CONFIG_MEDIATOR} -- Save config
@@ -330,12 +326,12 @@ feature {NONE} -- Implementation
 			-- All singletons
 
 invariant
-
+	is_widget: attached {EV_WIDGET} Current
 	internal_shared_not_void: internal_shared /= Void
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

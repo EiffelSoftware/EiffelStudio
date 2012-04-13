@@ -558,7 +558,6 @@ feature {NONE} -- Implementation functions
 			a_stub_not_void: a_stub /= Void
 			has: has (a_stub)
 		local
-			l_separator: detachable SD_AUTO_HIDE_SEPARATOR
 			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
 		do
 
@@ -585,8 +584,7 @@ feature {NONE} -- Implementation functions
 			end
 			if l_tab_group.count = 0 then
 				check a_spacer_or_a_tab_behind: not after end
-				l_separator ?= item
-				if l_separator /= Void then
+				if attached {SD_AUTO_HIDE_SEPARATOR} item as l_separator then
 					remove
 				end
 			end

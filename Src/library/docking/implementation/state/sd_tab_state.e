@@ -56,7 +56,6 @@ feature {NONE} -- Initlization
 			l_target_zone_tab_state: SD_TAB_STATE
 			l_old_split_position: INTEGER
 			l_old_parent_split: BOOLEAN
-			l_split_parent: detachable EV_SPLIT_AREA
 			l_main_area_widget: detachable EV_WIDGET
 			l_target_zone_parent: detachable EV_CONTAINER
 			l_main_area: detachable SD_MULTI_DOCK_AREA
@@ -106,11 +105,17 @@ feature {NONE} -- Initlization
 			-- At the end, add `a_content', so `a_content' is selected on SD_TAB_ZONE
 			tab_zone.extend (a_content)
 
-			if l_old_parent_split  then
-				l_split_parent ?= tab_zone.parent
-				check l_split_parent /= Void end
-				if l_split_parent.full and then l_split_parent.minimum_split_position <= l_old_split_position and l_split_parent.maximum_split_position >= l_old_split_position then
-					l_split_parent.set_split_position (l_old_split_position)
+			if l_old_parent_split then
+				if attached {EV_SPLIT_AREA} tab_zone.parent as l_split_parent then
+					if
+						l_split_parent.full and then
+						l_split_parent.minimum_split_position <= l_old_split_position and
+						l_split_parent.maximum_split_position >= l_old_split_position
+					then
+						l_split_parent.set_split_position (l_old_split_position)
+					end
+				else
+					check parent_of_tab_zone_is_split_area: False  end
 				end
 			end
 
@@ -277,11 +282,11 @@ feature -- Redefine
 					l_contents.after
 				loop
 					l_content := l_contents.item
-					if l_contents.isfirst then
+					if l_tab_zone = Void then
+						check l_contents.isfirst end
 						create l_tab_state.make_for_restore (l_contents.twin, a_container, a_data.direction)
 						l_tab_zone := l_tab_state.zone
 					else
-						check l_tab_zone /= Void end -- Implied by first iteration of this loop
 						create l_tab_state.make_for_restore_internal (l_content, l_tab_zone, a_data.direction)
 					end
 					l_content.change_state (l_tab_state)
@@ -293,12 +298,13 @@ feature -- Redefine
 
 			-- At least found one content?
 			if internal_content /= Void then
-				l_tab_zone ?= content.state.zone
-				-- `l_tab_zone' maybe void (zone is docking zone), because `l_content' can't be found
-				if l_tab_zone /= Void then
-					if l_tab_zone.contents.count >= l_selected_index then
-						l_tab_zone.select_item (l_tab_zone.contents.i_th (l_selected_index), False)
-					end
+				if
+					attached {SD_TAB_ZONE} content.state.zone as l_state_tab_zone and then
+					l_state_tab_zone.contents.count >= l_selected_index
+				then
+					l_state_tab_zone.select_item (l_state_tab_zone.contents.i_th (l_selected_index), False)
+				else
+					-- `content.state.zone' maybe void (zone is docking zone), because `l_content' can't be found					
 				end
 
 				if a_data.is_minimized then
@@ -600,13 +606,10 @@ feature {SD_OPEN_CONFIG_MEDIATOR, SD_STATE} -- Redefine
 			-- <Precursor>
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
-			l_state: detachable SD_TAB_STATE
 		do
 			if is_set_width_after_restore then
 				-- We must query zone from `content' but not query zone directly, because when restore `change_state' called.
-				l_state ?= content.state
-				-- Maybe `l_state' is docking state, because some SD_CONTENT can't be found during `restore'				
-				if l_state /= Void then
+				if attached {SD_TAB_STATE} content.state as l_state then
 					from
 						l_contents := l_state.zone.contents
 						l_contents.start
@@ -616,6 +619,8 @@ feature {SD_OPEN_CONFIG_MEDIATOR, SD_STATE} -- Redefine
 						l_contents.item.state.set_last_floating_width (a_int)
 						l_contents.forth
 					end
+				else
+					-- Could be docking state, because some SD_CONTENT can't be found during `restore'				
 				end
 				is_set_width_after_restore := False
 			end
@@ -629,13 +634,10 @@ feature {SD_OPEN_CONFIG_MEDIATOR, SD_STATE} -- Redefine
 			-- <Precursor>
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
-			l_state: detachable SD_TAB_STATE
 		do
 			if is_set_height_after_restore then
 				-- We must query zone from `content' but not query zone directly, because when restore `change_state' called.
-				l_state ?= content.state
-				-- Maybe `l_state' is docking state, because some SD_CONTENT can't be found during `restore'
-				if l_state /= Void then
+				if attached {SD_TAB_STATE} content.state as l_state then
 					from
 						l_contents := l_state.zone.contents
 						l_contents.start
@@ -645,6 +647,8 @@ feature {SD_OPEN_CONFIG_MEDIATOR, SD_STATE} -- Redefine
 						l_contents.item.state.set_last_floating_height (a_int)
 						l_contents.forth
 					end
+				else
+					-- Could be docking state, because some SD_CONTENT can't be found during `restore'
 				end
 				is_set_height_after_restore := False
 			end
@@ -665,8 +669,10 @@ feature -- Properties redefine
 			l_result: like internal_content
 		do
 			l_result := internal_content
-			check l_result /= Void end -- Implied by precondition
-			Result := l_result
+			check l_result /= Void then
+				-- Implied by precondition
+				Result := l_result
+			end
 		ensure then
 			not_void: not docking_manager.property.is_opening_config implies Result /= Void
 		end
@@ -694,29 +700,21 @@ feature -- Query
 
 	is_dock_at_top (a_multi_dock_area: SD_MULTI_DOCK_AREA): BOOLEAN
 			-- <Precursor>
-		local
-			l_container: detachable EV_SPLIT_AREA
-			l_widget: detachable EV_WIDGET
-			l_docking_zone: detachable SD_DOCKING_ZONE
 		do
-			l_container ?= a_multi_dock_area.item
-			if zone.is_drag_title_bar then
-				l_widget ?= zone
-				check
-					all_zone_is_widget: l_widget /= Void
-				end
-				if l_container /= Void then
-					Result := l_container.has (l_widget)
-				end
-			elseif l_container /= Void then
-				l_docking_zone ?= l_container.first
-				if l_docking_zone /= Void then
-					Result := l_docking_zone.content = internal_content
-				end
-				if not Result then
-					l_docking_zone ?= l_container.second
-					if l_docking_zone /= Void then
-						Result := l_docking_zone.content = internal_content
+			if attached {EV_SPLIT_AREA} a_multi_dock_area.item as l_container then
+				if zone.is_drag_title_bar then
+					if attached {EV_WIDGET} zone as l_widget then
+						Result := l_container.has (l_widget)
+					end
+				else
+					if attached {SD_DOCKING_ZONE} l_container.first as l_first_docking_zone then
+						Result := l_first_docking_zone.content = internal_content
+					end
+					if
+						not Result and then
+						attached {SD_DOCKING_ZONE} l_container.second as l_second_docking_zone
+					then
+						Result := l_second_docking_zone.content = internal_content
 					end
 				end
 			end
@@ -754,7 +752,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

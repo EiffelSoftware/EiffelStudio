@@ -136,7 +136,6 @@ feature -- Command
 			l_minimum_height: INTEGER
 			l_item: like item_type
 			l_items: like internal_items
-			l_separator: detachable SD_TOOL_BAR_SEPARATOR
 			l_item_before: detachable like item_type
 		do
 			from
@@ -149,10 +148,9 @@ feature -- Command
 				l_items.after
 			loop
 				l_item := l_items.item
-				l_separator ?= l_item
 				if l_items.index = l_items.count or l_item.is_wrap then
 					-- Minimum width only make sence in this case.
-					if l_separator /= Void then
+					if attached {SD_TOOL_BAR_SEPARATOR} l_item then
 						-- It's a separator, we should calculate the item before
 						if l_item_before /= Void then
 							l_item := l_item_before
@@ -182,30 +180,25 @@ feature -- Command
 	update_size
 			-- <Precursor>
 		local
-			l_tool_bar_row: detachable SD_TOOL_BAR_ROW
 			l_parent: detachable EV_CONTAINER
-			l_floating_zone: detachable SD_FLOATING_TOOL_BAR_ZONE
 			l_old_size: INTEGER
 		do
-			l_tool_bar_row ?= parent
-			if l_tool_bar_row /= Void then
+			if attached {SD_TOOL_BAR_ROW} parent as l_tool_bar_row then
 				-- After `compute_minimum_size', `l_tool_bar_row' size will changed, we record it here.
 				-- Otherwise it will cause bug#13164.
 				l_old_size := l_tool_bar_row.size
-			end
-			compute_minimum_size
-			if l_tool_bar_row /= Void then
+				compute_minimum_size
 				l_tool_bar_row.set_item_size (Current, minimum_width, minimum_height)
 				l_tool_bar_row.on_resize (l_old_size)
 			else
+				compute_minimum_size
 				-- If Current is in a SD_FLOATING_TOOL_BAR_ZONE which is a 3 level parent.
 				l_parent := parent
 				if l_parent /= Void then
 					l_parent := l_parent.parent
 					if l_parent /= Void then
 						l_parent := l_parent.parent
-						l_floating_zone ?= l_parent
-						if l_floating_zone /= Void then
+						if attached {SD_FLOATING_TOOL_BAR_ZONE} l_parent as l_floating_zone then
 							l_floating_zone.set_size (l_floating_zone.minimum_width, l_floating_zone.minimum_height)
 						end
 					end
@@ -261,7 +254,7 @@ feature -- Command
 
 			Precursor (a_color)
 
-			if l_old_background /= void and then not l_old_background.is_equal (background_color) then
+			if l_old_background /= Void and then not l_old_background.is_equal (background_color) then
 				refresh_now
 			end
 		end
@@ -274,7 +267,6 @@ feature {SD_TOOL_BAR_TITLE_BAR, SD_TITLE_BAR} -- Special setting
 			l_item: like item_type
 			l_items: ARRAYED_LIST [like item_type]
 			l_height: INTEGER
-			l_separator: detachable SD_TOOL_BAR_SEPARATOR
 		do
 			from
 				l_items := items
@@ -283,9 +275,8 @@ feature {SD_TOOL_BAR_TITLE_BAR, SD_TITLE_BAR} -- Special setting
 				l_items.after
 			loop
 				l_item := l_items.item
-				l_separator ?= l_item
 				-- We ignore separator
-				if l_separator = Void then
+				if not attached {SD_TOOL_BAR_SEPARATOR} l_item then
 					if attached l_item.pixmap as l_pixmap then
 						l_height := l_pixmap.height + 2 * padding_width
 					elseif attached l_item.pixel_buffer as l_pixel_buffer then
@@ -379,7 +370,6 @@ feature -- Query
 			-- <Precursor>
 		local
 			l_items: ARRAYED_LIST [like item_type]
-			l_button: detachable SD_TOOL_BAR_BUTTON
 		do
 			from
 				l_items := internal_items
@@ -387,11 +377,8 @@ feature -- Query
 			until
 				l_items.after or Result
 			loop
-				l_button ?= l_items.item
-				if l_button /= Void then
-					if l_button.text /= Void then
-						Result := True
-					end
+				if attached {SD_TOOL_BAR_BUTTON} l_items.item as l_button then
+					Result := l_button.text /= Void
 				end
 
 				l_items.forth
@@ -447,12 +434,9 @@ feature -- Contract support
 
 	is_item_valid (a_item: like item_type): BOOLEAN
 			-- <Precursor>
-		local
-			l_widget_item: detachable SD_TOOL_BAR_WIDGET_ITEM
 		do
 			Result := True
-			l_widget_item ?= a_item
-			if l_widget_item /= Void then
+			if attached {SD_TOOL_BAR_WIDGET_ITEM} a_item as l_widget_item then
 				Result := l_widget_item.widget.parent = Void
 			end
 		end
@@ -484,7 +468,6 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_GENERIC_TOOL_BAR, SD_SIZES
 			l_stop: BOOLEAN
 			l_item: like item_type
 			l_items: like internal_items
-			l_separator: detachable SD_TOOL_BAR_SEPARATOR
 		do
 			from
 				Result := start_x
@@ -501,9 +484,8 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_GENERIC_TOOL_BAR, SD_SIZES
 						Result := Result + l_item.width
 					end
 				else
-					l_separator ?= l_item
 					l_stop := True
-					if l_separator /= Void and then l_separator.is_wrap then
+					if attached {SD_TOOL_BAR_SEPARATOR} l_item as l_separator and then l_separator.is_wrap then
 						Result := start_x
 					end
 				end
@@ -516,7 +498,6 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_GENERIC_TOOL_BAR, SD_SIZES
 		local
 			l_stop: BOOLEAN
 			l_item: like item_type
-			l_separator: detachable SD_TOOL_BAR_SEPARATOR
 			l_items: like internal_items
 		do
 			from
@@ -527,17 +508,16 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_GENERIC_TOOL_BAR, SD_SIZES
 				l_items.after or l_stop
 			loop
 				l_item := l_items.item
-				l_separator ?= l_item
 				if l_item /= a_item then
 					if l_item.is_wrap then
 						Result := Result + l_item.height
 					end
-					if l_separator /= Void and then l_separator.is_wrap then
+					if attached {SD_TOOL_BAR_SEPARATOR} l_item as l_separator and then l_separator.is_wrap then
 						Result := Result + l_separator.width
 					end
 				else
 					l_stop := True
-					if l_separator /= Void and then l_separator.is_wrap then
+					if attached {SD_TOOL_BAR_SEPARATOR} l_item as l_separator and then l_separator.is_wrap then
 						Result := Result + l_item.height
 					end
 				end
@@ -880,10 +860,8 @@ feature {SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ZONE} -- Implementation
 			l_argu: SD_TOOL_BAR_DRAWER_ARGUMENTS
 			l_coordinate: EV_COORDINATE
 			l_rectangle: EV_RECTANGLE
-			l_item: detachable SD_TOOL_BAR_WIDGET_ITEM
 		do
-			l_item ?= a_item
-			if l_item = Void then
+			if not attached {SD_TOOL_BAR_WIDGET_ITEM} a_item then
 				l_rectangle := a_item.rectangle
 				create l_argu.make
 				l_argu.set_item (a_item)
@@ -897,7 +875,7 @@ feature {SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ZONE} -- Implementation
 			end
 		end
 
-	update_for_pick_and_drop (a_starting: BOOLEAN; a_pebble: ANY)
+	update_for_pick_and_drop (a_starting: BOOLEAN; a_pebble: detachable ANY)
 			-- Update items for pick and drop
 		local
 			l_items: like items
@@ -981,7 +959,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

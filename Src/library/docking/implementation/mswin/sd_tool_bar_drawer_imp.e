@@ -50,22 +50,21 @@ feature{NONE} -- Initlization
 	init_theme
 			-- Initialize theme drawer
 		local
-			l_app_imp: detachable EV_APPLICATION_IMP
 			l_tool_bar: EV_TOOL_BAR
-			l_wel_tool_bar: detachable WEL_TOOL_BAR
 		do
-			l_app_imp ?= ev_application.implementation
-			check not_void: l_app_imp /= Void end
-			l_app_imp.update_theme_drawer
-			theme_drawer := l_app_imp.theme_drawer
+			check attached {EV_APPLICATION_IMP} ev_application.implementation as l_app_imp then
+				l_app_imp.update_theme_drawer
+				theme_drawer := l_app_imp.theme_drawer
+			end
 
 			create l_tool_bar
-			l_wel_tool_bar ?= l_tool_bar.implementation
-			check not_void: l_wel_tool_bar /= Void end
 			if theme_data /= default_pointer then
 				theme_drawer.close_theme_data (theme_data)
 			end
-			theme_data := theme_drawer.open_theme_data (l_wel_tool_bar.item, "Toolbar")
+
+			check attached {WEL_TOOL_BAR} l_tool_bar.implementation as l_wel_tool_bar then
+				theme_data := theme_drawer.open_theme_data (l_wel_tool_bar.item, "Toolbar")
+			end
 		end
 
 	base_make_called: BOOLEAN = True
@@ -94,9 +93,7 @@ feature -- Redefine
 	start_draw (a_rectangle: EV_RECTANGLE)
 			-- <Precursor>
 		local
-			l_imp: detachable WEL_WINDOW
 			l_wel_bitmap: WEL_BITMAP
-			l_color_imp: detachable EV_COLOR_IMP
 			l_brush: WEL_BRUSH
 			l_buffered_dc: like internal_buffered_dc
 			l_client_dc: like internal_client_dc
@@ -105,37 +102,37 @@ feature -- Redefine
 			l_tool_bar := tool_bar
 			check l_tool_bar /= Void end -- Implied by precondition `not_void'
 			internal_rectangle := a_rectangle
-			l_imp ?= l_tool_bar.implementation
-			check not_void: l_imp /= Void end
+			check not_void: attached {WEL_WINDOW} l_tool_bar.implementation as l_imp then
 
-			if l_imp.exists then
-				create {WEL_CLIENT_DC} l_client_dc.make (l_imp)
-				internal_client_dc := l_client_dc
-				l_client_dc.get
+				if l_imp.exists then
+					create {WEL_CLIENT_DC} l_client_dc.make (l_imp)
+					internal_client_dc := l_client_dc
+					l_client_dc.get
 
-				create {WEL_MEMORY_DC} l_buffered_dc.make_by_dc (l_client_dc)
-				internal_buffered_dc := l_buffered_dc
+					create {WEL_MEMORY_DC} l_buffered_dc.make_by_dc (l_client_dc)
+					internal_buffered_dc := l_buffered_dc
 
-				create l_wel_bitmap.make_compatible (l_client_dc, l_tool_bar.width, l_tool_bar.height)
-				l_buffered_dc.select_bitmap (l_wel_bitmap)
-				l_wel_bitmap.dispose
+					create l_wel_bitmap.make_compatible (l_client_dc, l_tool_bar.width, l_tool_bar.height)
+					l_buffered_dc.select_bitmap (l_wel_bitmap)
+					l_wel_bitmap.dispose
 
-				l_color_imp ?= l_tool_bar.background_color.implementation
-				check not_void: l_color_imp /= Void end
-				l_buffered_dc.set_background_color (l_color_imp)
+					if attached {EV_COLOR_IMP} l_tool_bar.background_color.implementation as l_color_imp then
+						l_buffered_dc.set_background_color (l_color_imp)
 
-				-- If we draw background like this, when non-32bits color depth, color will broken.
-	--			create l_background_pixmap.make_with_size (l_tool_bar.width, l_tool_bar.height)
-	--			l_background_pixmap.set_background_color (l_tool_bar.background_color)
-	--			l_background_pixmap.clear
-	--			l_background_pixmap_state ?= l_background_pixmap.implementation
-	--			check not_void: l_background_pixmap_state /= Void end
-	--			l_buffered_dc.draw_bitmap (l_background_pixmap_state.get_bitmap, a_rectangle.left, a_rectangle.top, a_rectangle.width, a_rectangle.height)
+						-- If we draw background like this, when non-32bits color depth, color will broken.
+			--			create l_background_pixmap.make_with_size (l_tool_bar.width, l_tool_bar.height)
+			--			l_background_pixmap.set_background_color (l_tool_bar.background_color)
+			--			l_background_pixmap.clear
+			--			if attached {EV_PIXMAP_IMP} l_background_pixmap.implementation as l_background_pixmap_state then
+			--				l_buffered_dc.draw_bitmap (l_background_pixmap_state.get_bitmap, a_rectangle.left, a_rectangle.top, a_rectangle.width, a_rectangle.height)
+			--			end
 
-				-- So we draw background color like this.
-				create l_brush.make_solid (l_color_imp)
-				l_buffered_dc.fill_rect (create {WEL_RECT}.make (a_rectangle.left, a_rectangle.top, a_rectangle.right, a_rectangle.bottom), l_brush)
-				l_brush.delete
+						-- So we draw background color like this.
+						create l_brush.make_solid (l_color_imp)
+						l_buffered_dc.fill_rect (create {WEL_RECT}.make (a_rectangle.left, a_rectangle.top, a_rectangle.right, a_rectangle.bottom), l_brush)
+						l_brush.delete
+					end
+				end
 			end
 
 			is_start_draw_called := True
@@ -179,7 +176,6 @@ feature -- Redefine
 		local
 			l_rect, l_rect_2: WEL_RECT
 			l_vision_rect: EV_RECTANGLE
-			l_popup_button: detachable SD_TOOL_BAR_DUAL_POPUP_BUTTON
 		do
 		 	if attached internal_buffered_dc as l_buffered_dc and then attached {SD_TOOL_BAR_ITEM} a_arguments.item as l_item then
 				l_vision_rect := l_item.rectangle
@@ -188,10 +184,7 @@ feature -- Redefine
 
 				-- See bug#12580, we only draw background for sensitive buttons
 				if l_item.is_sensitive then
-					l_popup_button ?= l_item
-					if l_popup_button = Void then
-						draw_button_background (l_buffered_dc, l_rect, l_item.state, part_constants_by_type (l_item))
-					else
+					if attached {SD_TOOL_BAR_DUAL_POPUP_BUTTON} l_item as l_popup_button then
 						-- Special handling for SD_TOOL_BAR_DUAL_POPUP_BUTTON background
 						if l_popup_button.is_dropdown_area then
 							-- Draw the background as a whole without separator
@@ -205,6 +198,8 @@ feature -- Redefine
 							create l_rect.make (l_vision_rect.left, l_vision_rect.top, l_vision_rect.right - l_popup_button.dropdrown_width - l_popup_button.gap // 2, l_vision_rect.bottom)
 							draw_button_background (l_buffered_dc, l_rect, l_item.state, {WEL_THEME_PART_CONSTANTS}.tp_splitbutton)
 						end
+					else
+						draw_button_background (l_buffered_dc, l_rect, l_item.state, part_constants_by_type (l_item))
 					end
 				end
 
@@ -251,12 +246,11 @@ feature -- Redefine
 
 	on_wm_theme_changed
 			-- <Precursor>
-		local
-			l_app_imp: detachable EV_APPLICATION_IMP
 		do
-			l_app_imp ?= ev_application.implementation
-			check l_app_imp /= Void end -- Implied by basic desing of Vision2
-			l_app_imp.theme_drawer.close_theme_data (theme_data)
+			check attached {EV_APPLICATION_IMP} ev_application.implementation as l_app_imp then
+				-- Implied by basic desing of Vision2
+				l_app_imp.theme_drawer.close_theme_data (theme_data)
+			end
 			debug ("docking")
 				print ("%N SD_TOOL_BAR_DRAWER_IMP on_wm_theme_change")
 			end
@@ -299,12 +293,11 @@ feature {NONE} -- Implementation
 			not_void: a_dc_to_draw /= Void
 			exist: a_dc_to_draw.exists
 			not_void: a_arguments /= Void
-		local
-			l_button: detachable SD_TOOL_BAR_BUTTON
 		do
-			l_button ?= a_arguments.item
-			if l_button /= Void and then
-				((l_button.pixmap /= Void or l_button.pixel_buffer /= Void) and l_button.tool_bar /= Void) then
+			if
+				attached {SD_TOOL_BAR_BUTTON} a_arguments.item as l_button and then
+				((l_button.pixmap /= Void or l_button.pixel_buffer /= Void) and l_button.tool_bar /= Void)
+			then
 				if is_use_gdip (a_arguments) then
 					draw_pixel_buffer (a_dc_to_draw, a_arguments)
 				else
@@ -322,11 +315,8 @@ feature {NONE} -- Implementation
 
 	is_use_gdip (a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS): BOOLEAN
 			-- If using gdi+ to draw icons?
-		local
-			l_button: detachable SD_TOOL_BAR_BUTTON
 		do
-			l_button ?= a_arguments.item
-			if l_button /= Void then
+			if attached {SD_TOOL_BAR_BUTTON} a_arguments.item as l_button then
 				Result := l_button.pixel_buffer /= Void and (create {WEL_GDIP_STARTER}).is_gdi_plus_installed
 			end
 		end
@@ -336,18 +326,14 @@ feature {NONE} -- Implementation
 		require
 			use_gdip: (create {WEL_GDIP_STARTER}).is_gdi_plus_installed
 		local
-			l_dropdown_button: detachable SD_TOOL_BAR_POPUP_BUTTON
 			l_graphics: WEL_GDIP_GRAPHICS
-			l_dropdown_imp: detachable EV_PIXEL_BUFFER_IMP
 			l_dropdown: EV_PIXEL_BUFFER
 			l_left: INTEGER
 			l_coordinate: EV_COORDINATE
 			l_pixmap_coordinate: like pixmap_coordinate
 			l_dest_rect, l_src_rect: WEL_RECT
-			l_gdip_bitmap: detachable WEL_GDIP_BITMAP
 		do
-			l_dropdown_button ?= a_arguments.item
-			if l_dropdown_button /= Void then
+			if attached {SD_TOOL_BAR_POPUP_BUTTON} a_arguments.item as l_dropdown_button then
 				if not l_dropdown_button.is_sensitive then
 					l_pixmap_coordinate := l_dropdown_button.pixmap_position
 					pixmap_coordinate := l_pixmap_coordinate
@@ -355,16 +341,22 @@ feature {NONE} -- Implementation
 					desaturation_pixel_buffer (l_dropdown_button.dropdown_pixel_buffer, a_dc_to_draw)
 				else
 					l_dropdown := l_dropdown_button.dropdown_pixel_buffer
-					l_dropdown_imp ?= l_dropdown.implementation
-					check l_dropdown_imp /= Void end -- Implied by basic design of {EV_PIXEL_BUFFER}
 					l_left := l_dropdown_button.dropdown_left
 					create l_graphics.make_from_dc (a_dc_to_draw)
 					l_coordinate := l_dropdown_button.pixmap_position
 					create l_dest_rect.make (l_left, l_coordinate.y, l_left + l_dropdown.width , l_coordinate.y + l_dropdown.height)
 					create l_src_rect.make (0, 0, l_dropdown.width, l_dropdown.height)
-					l_gdip_bitmap := l_dropdown_imp.gdip_bitmap
-					check l_gdip_bitmap /= Void end -- Implied by precondition `is_use_gdip'						
-					l_graphics.draw_image_with_dest_rect_src_rect (l_gdip_bitmap, l_dest_rect, l_src_rect)
+					if attached {EV_PIXEL_BUFFER_IMP} l_dropdown.implementation as l_dropdown_imp then
+						-- Implied by basic design of {EV_PIXEL_BUFFER}
+
+						if attached l_dropdown_imp.gdip_bitmap as l_gdip_bitmap then
+							-- Implied by precondition `is_use_gdip'
+							-- The code in {SD_FEEDBACK_INDICATOR_IMP}.rgba_dib does not ensure that `gdip_bitmap'
+							-- will be attached.
+							-- FIXME [20120404] Might have to use `pixmap' too when `gdip_bitmap' is not available
+							l_graphics.draw_image_with_dest_rect_src_rect (l_gdip_bitmap, l_dest_rect, l_src_rect)
+						end
+					end
 					l_graphics.dispose
 				end
 			end
@@ -377,16 +369,13 @@ feature {NONE} -- Implementation
 		local
 			l_coordinate: EV_COORDINATE
 			l_pixmap_coordinate: like pixmap_coordinate
-			l_button: detachable SD_TOOL_BAR_BUTTON
 			l_graphics: WEL_GDIP_GRAPHICS
-			l_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
 			l_dest_rect, l_src_rect: WEL_RECT
-			l_gdip_bitmap: detachable WEL_GDIP_BITMAP
-
 		do
-			l_button ?= a_arguments.item
-
-			if l_button /= Void and then (attached l_button.pixel_buffer as l_pixel_buffer and attached l_button.tool_bar as l_tool_bar) then
+			if
+				attached {SD_TOOL_BAR_BUTTON} a_arguments.item as l_button and then
+				(attached l_button.pixel_buffer as l_pixel_buffer and l_button.tool_bar /= Void )
+			then
 				if not l_button.is_sensitive then
 					arguments := a_arguments
 					l_pixmap_coordinate := l_button.pixmap_position
@@ -394,14 +383,20 @@ feature {NONE} -- Implementation
 					desaturation_pixel_buffer (l_pixel_buffer, a_dc_to_draw)
 				else
 					create l_graphics.make_from_dc (a_dc_to_draw)
-					l_buffer_imp ?= l_pixel_buffer.implementation
 					l_coordinate := l_button.pixmap_position
-					check l_buffer_imp /= Void end -- Implied by basic design of {EV_PIXEL_BUFFER}
-					create l_dest_rect.make (l_coordinate.x, l_coordinate.y, l_coordinate.x + l_buffer_imp.width, l_coordinate.y + l_buffer_imp.height)
-					create l_src_rect.make (0, 0, l_buffer_imp.width, l_buffer_imp.height)
-					l_gdip_bitmap := l_buffer_imp.gdip_bitmap
-					check l_gdip_bitmap /= Void end -- Implied by precondition `is_use_gdip'
-					l_graphics.draw_image_with_dest_rect_src_rect (l_gdip_bitmap, l_dest_rect, l_src_rect)
+					if attached {EV_PIXEL_BUFFER_IMP} l_pixel_buffer.implementation as l_buffer_imp then
+						-- Implied by basic design of {EV_PIXEL_BUFFER}
+						create l_dest_rect.make (l_coordinate.x, l_coordinate.y, l_coordinate.x + l_buffer_imp.width, l_coordinate.y + l_buffer_imp.height)
+						create l_src_rect.make (0, 0, l_buffer_imp.width, l_buffer_imp.height)
+
+						if attached l_buffer_imp.gdip_bitmap as l_gdip_bitmap then
+							-- Implied by precondition `is_use_gdip'
+							-- The code in {SD_FEEDBACK_INDICATOR_IMP}.rgba_dib does not ensure that `gdip_bitmap'
+							-- will be attached.
+							-- FIXME [20120404] Might have to use `pixmap' too when `gdip_bitmap' is not available
+							l_graphics.draw_image_with_dest_rect_src_rect (l_gdip_bitmap, l_dest_rect, l_src_rect)
+						end
+					end
 					l_graphics.dispose
 				end
 			end
@@ -410,78 +405,70 @@ feature {NONE} -- Implementation
 	draw_pixmap_real (a_dc_to_draw: WEL_DC; a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS)
 			-- Draw icons when using gdi
 		local
-			l_pixmap_state: detachable EV_PIXMAP_IMP_STATE
 			l_wel_bitmap: WEL_BITMAP
 			l_mask_bitmap: detachable WEL_BITMAP
 			l_coordinate: EV_COORDINATE
-			l_button: detachable SD_TOOL_BAR_BUTTON
-			l_orignal_pixmap: detachable EV_PIXMAP
-			l_grey_pixmap: EV_PIXMAP
+			l_pixmap: EV_PIXMAP
 
-			l_imp: detachable EV_PIXMAP_IMP
 			l_is_src_bitmap_32bits: BOOLEAN
 			l_blend_function: WEL_BLEND_FUNCTION
 			l_result: BOOLEAN
 			l_source_bitmap_dc: WEL_MEMORY_DC
 		do
-			l_button ?= a_arguments.item
-			if l_button /= Void and then (l_button.pixmap /= Void and l_button.tool_bar /= Void) then
+			if
+				attached {SD_TOOL_BAR_BUTTON} a_arguments.item as l_button and then
+				(attached l_button.pixmap as l_button_pixmap and l_button.tool_bar /= Void)
+			then
 				if not l_button.is_sensitive then
-					l_orignal_pixmap := l_button.pixmap
-					check l_orignal_pixmap /= Void end -- Implied by if clause `pixmap /= Void'
-					l_grey_pixmap := l_orignal_pixmap.sub_pixmap (create {EV_RECTANGLE}.make (0, 0, l_orignal_pixmap.width, l_orignal_pixmap.height))
-
-					l_imp ?= l_grey_pixmap.implementation
-					check l_imp /= Void end
+					l_pixmap := l_button_pixmap.sub_pixmap (create {EV_RECTANGLE}.make (0, 0, l_button_pixmap.width, l_button_pixmap.height))
 
 					arguments := a_arguments
 
 					pixmap_coordinate := l_button.pixmap_position
-					desaturation (l_grey_pixmap, 1, a_dc_to_draw)
-
-					l_pixmap_state ?= l_grey_pixmap.implementation
+					desaturation (l_pixmap, 1, a_dc_to_draw)
 				else
-					if attached l_button.pixmap as l_pixmap then
-						l_pixmap_state ?= l_pixmap.implementation
-					else
-						check False end -- Implied by if clause
+					l_pixmap := l_button_pixmap
+				end
+				if l_pixmap = Void then
+					check has_pixmap: False end -- Implied by if clause
+				elseif attached {EV_PIXMAP_IMP_STATE} l_pixmap.implementation as l_pixmap_state then
+
+					l_wel_bitmap := l_pixmap_state.get_bitmap
+
+					if l_pixmap_state.has_mask then
+						l_mask_bitmap := l_pixmap_state.get_mask_bitmap
 					end
-				end
+					l_coordinate := l_button.pixmap_position
 
-				check not_void: l_pixmap_state /= Void end
-				l_wel_bitmap := l_pixmap_state.get_bitmap
+					if l_button.is_sensitive then
+						l_is_src_bitmap_32bits := (l_wel_bitmap.log_bitmap.bits_pixel = 32)
+						if l_is_src_bitmap_32bits and then (l_wel_bitmap.is_made_by_dib or l_wel_bitmap.ppv_bits /= default_pointer) then
+							create l_source_bitmap_dc.make_by_dc (a_dc_to_draw)
+							l_source_bitmap_dc.select_bitmap (l_wel_bitmap)
 
-				if l_pixmap_state.has_mask then
-					l_mask_bitmap := l_pixmap_state.get_mask_bitmap
-				end
-				l_coordinate := l_button.pixmap_position
+							create l_blend_function.make
+							l_result := a_dc_to_draw.alpha_blend (l_coordinate.x, l_coordinate.y, l_wel_bitmap.width, l_wel_bitmap.height, l_source_bitmap_dc, 0, 0, l_wel_bitmap.width, l_wel_bitmap.height, l_blend_function)
+							check
+								successed: l_result = True
+							end
+							check
+								not_shared: not l_blend_function.shared
+							end
+							l_blend_function.dispose
 
-				if l_button.is_sensitive then
-					l_is_src_bitmap_32bits := (l_wel_bitmap.log_bitmap.bits_pixel = 32)
-					if l_is_src_bitmap_32bits and then (l_wel_bitmap.is_made_by_dib or l_wel_bitmap.ppv_bits /= default_pointer) then
-						create l_source_bitmap_dc.make_by_dc (a_dc_to_draw)
-						l_source_bitmap_dc.select_bitmap (l_wel_bitmap)
-
-						create l_blend_function.make
-						l_result := a_dc_to_draw.alpha_blend (l_coordinate.x, l_coordinate.y, l_wel_bitmap.width, l_wel_bitmap.height, l_source_bitmap_dc, 0, 0, l_wel_bitmap.width, l_wel_bitmap.height, l_blend_function)
-						check
-							successed: l_result = True
+							l_source_bitmap_dc.unselect_bitmap
+							l_source_bitmap_dc.delete
+						else
+							theme_drawer.draw_bitmap_on_dc (a_dc_to_draw, l_wel_bitmap, l_mask_bitmap, l_coordinate.x, l_coordinate.y, True)
 						end
-						check
-							not_shared: not l_blend_function.shared
-						end
-						l_blend_function.dispose
-
-						l_source_bitmap_dc.unselect_bitmap
-						l_source_bitmap_dc.delete
-					else
-						theme_drawer.draw_bitmap_on_dc (a_dc_to_draw, l_wel_bitmap, l_mask_bitmap, l_coordinate.x, l_coordinate.y, True)
 					end
-				end
 
-				l_wel_bitmap.decrement_reference
-				if l_mask_bitmap /= Void then
-					l_mask_bitmap.decrement_reference
+					l_wel_bitmap.decrement_reference
+					if l_mask_bitmap /= Void then
+						l_mask_bitmap.decrement_reference
+					end
+				else
+					check has_pixmap_state: False end
 				end
 			end
 		end
@@ -502,19 +489,13 @@ feature {NONE} -- Implementation
 			l_text_rect: WEL_RECT
 			l_text_vision_rect: EV_RECTANGLE
 			l_text_flags: INTEGER
-			l_forground_color: detachable EV_COLOR_IMP
-			l_button: detachable SD_TOOL_BAR_BUTTON
-			l_font_button: detachable SD_TOOL_BAR_FONT_BUTTON
-			l_width_button: detachable SD_TOOL_BAR_WIDTH_BUTTON
-			l_font_imp: detachable EV_FONT_IMP
-			l_text: detachable STRING_32
 		do
-			l_button ?= a_arguments.item
-			l_font_button ?= a_arguments.item
-			l_width_button ?= a_arguments.item
-			if l_button /= Void and then (l_button.text /= Void and l_button.tool_bar /= Void) and then
-				attached internal_buffered_dc as l_buffered_dc then
-				if l_width_button /= Void then
+			if
+				attached {SD_TOOL_BAR_BUTTON} a_arguments.item as l_button and then
+				(attached l_button.text as l_button_text and l_button.tool_bar /= Void) and then
+				attached internal_buffered_dc as l_buffered_dc
+			then
+				if attached {SD_TOOL_BAR_WIDTH_BUTTON} l_button as l_width_button then
 					l_text_flags := {WEL_DT_CONSTANTS}.dt_left | {WEL_DT_CONSTANTS}.dt_vcenter | {WEL_DT_CONSTANTS}.dt_singleline | {WEL_DT_CONSTANTS}.dt_word_ellipsis
 				else
 					l_text_flags := {WEL_DT_CONSTANTS}.dt_left | {WEL_DT_CONSTANTS}.dt_vcenter | {WEL_DT_CONSTANTS}.dt_singleline
@@ -522,23 +503,27 @@ feature {NONE} -- Implementation
 				l_text_vision_rect := l_button.text_rectangle
 				create l_text_rect.make (l_text_vision_rect.x, l_text_vision_rect.y, l_text_vision_rect.right, l_text_vision_rect.bottom)
 
-				if l_font_button /= Void and then attached l_font_button.font as l_font then
-					l_font_imp ?= l_font.implementation
-					check not_void: l_font_imp /= Void end
-					l_buffered_dc.select_font (l_font_imp.wel_font)
+				if
+					attached {SD_TOOL_BAR_FONT_BUTTON} l_button as l_font_button and then
+					attached l_font_button.font as l_font
+				then
+					if attached {EV_FONT_IMP} l_font.implementation as l_font_imp then
+						l_buffered_dc.select_font (l_font_imp.wel_font)
+					else
+						check is_font_imp: False end
+					end
 				else
 					-- We must select font to draw.
 					-- See MSDN "Using Windows XP Visual Styles" section about drawThemeText.
-					l_font_imp ?= internal_shared.tool_bar_font.implementation
-					check not_void: l_font_imp /= Void end
-					l_buffered_dc.select_font (l_font_imp.wel_font)
-
+					if attached {EV_FONT_IMP} internal_shared.tool_bar_font.implementation as l_font_imp then
+						l_buffered_dc.select_font (l_font_imp.wel_font)
+					else
+						check is_font_imp: False end
+					end
 				end
-				l_forground_color ?= (create {EV_STOCK_COLORS}).default_foreground_color.implementation
-				check not_void: l_forground_color /= Void end
-				l_text := l_button.text
-				check l_text /= Void end -- Implied by if clause
-				theme_drawer.draw_text (theme_data, a_dc_to_draw, part_constants_by_type (l_button), to_mswin_state (l_button.state), l_text, l_text_flags, l_button.is_sensitive, l_text_rect, l_forground_color)
+				if attached default_foreground_color_imp as l_foreground_color then
+					theme_drawer.draw_text (theme_data, a_dc_to_draw, part_constants_by_type (l_button), to_mswin_state (l_button.state), l_button_text, l_text_flags, l_button.is_sensitive, l_text_rect, l_foreground_color)
+				end
 			end
 		end
 
@@ -546,16 +531,10 @@ feature {NONE} -- Implementation
 			-- Part constants base on `a_item''s type
 		require
 			not_void: a_item /= Void
-		local
-			l_separator: detachable SD_TOOL_BAR_SEPARATOR
-			l_button: detachable SD_TOOL_BAR_BUTTON
 		do
-			l_separator ?= a_item
-			l_button ?= a_item
-
-			if l_button /= Void then
+			if attached {SD_TOOL_BAR_BUTTON} a_item as l_button then
 				Result := {WEL_THEME_PART_CONSTANTS}.tp_button
-			elseif l_separator /= Void then
+			elseif attached {SD_TOOL_BAR_SEPARATOR} a_item as l_separator then
 				if l_separator.is_wrap then
 					Result := {WEL_THEME_PART_CONSTANTS}.tp_separatorvert
 				else
@@ -575,48 +554,50 @@ feature {NONE} -- Implementation
 			valid: 0 <= a_k  and a_k <= 1
 			not_void: a_pixmap /= Void
 			not_void: a_dc_to_draw /= Void and then a_dc_to_draw.exists
-			not_void: pixmap_coordinate /= Void
+			pixmap_coordinate_not_void: pixmap_coordinate /= Void
 		local
 			l_intensity: REAL
 			l_wel_dc: WEL_MEMORY_DC
-			l_bitmap_imp: detachable EV_PIXMAP_IMP_STATE
 			l_width_count, l_height_count, l_width, l_height: INTEGER
 			l_wel_color,l_new_color: WEL_COLOR_REF
 			l_pixmap_coordinate: like pixmap_coordinate
 		do
-			l_bitmap_imp ?= a_pixmap.implementation
-			check not_void: l_bitmap_imp /= Void end
-			create l_wel_dc.make
-			l_wel_dc.select_bitmap (l_bitmap_imp.get_bitmap)
+			if attached {EV_PIXMAP_IMP_STATE} a_pixmap.implementation as l_bitmap_imp then
+				create l_wel_dc.make
+				l_wel_dc.select_bitmap (l_bitmap_imp.get_bitmap)
 
-			from
-				l_width := a_pixmap.width
-				l_height := a_pixmap.height
-			until
-				l_width_count >= l_width
-			loop
 				from
-					l_height_count := 0
+					l_width := a_pixmap.width
+					l_height := a_pixmap.height
 				until
-					l_height_count >= l_height
+					l_width_count >= l_width
 				loop
-					l_wel_color := l_wel_dc.pixel_color (l_width_count, l_height_count)
-					l_intensity := {REAL_32} 0.3 * l_wel_color.red + {REAL_32} 0.59 * l_wel_color.green + {REAL_32} 0.11 * l_wel_color.blue
-					create l_new_color.make_rgb (
-										(l_intensity * a_k + l_wel_color.red * (1 - a_k)).rounded,
-										(l_intensity * a_k + l_wel_color.green * (1 - a_k)).rounded,
-										(l_intensity * a_k + l_wel_color.blue * (1 - a_k)).rounded)
-					l_wel_dc.set_pixel (l_width_count, l_height_count, l_new_color)
+					from
+						l_height_count := 0
+					until
+						l_height_count >= l_height
+					loop
+						l_wel_color := l_wel_dc.pixel_color (l_width_count, l_height_count)
+						l_intensity := {REAL_32} 0.3 * l_wel_color.red + {REAL_32} 0.59 * l_wel_color.green + {REAL_32} 0.11 * l_wel_color.blue
+						create l_new_color.make_rgb (
+											(l_intensity * a_k + l_wel_color.red * (1 - a_k)).rounded,
+											(l_intensity * a_k + l_wel_color.green * (1 - a_k)).rounded,
+											(l_intensity * a_k + l_wel_color.blue * (1 - a_k)).rounded)
+						l_wel_dc.set_pixel (l_width_count, l_height_count, l_new_color)
 
-					l_height_count := l_height_count + 1
+						l_height_count := l_height_count + 1
+					end
+					l_width_count := l_width_count + 1
 				end
-				l_width_count := l_width_count + 1
-			end
-			l_wel_dc.delete
+				l_wel_dc.delete
 
-			l_pixmap_coordinate := pixmap_coordinate
-			check l_pixmap_coordinate /= Void end -- Implied by precondition `not_void'
-			a_dc_to_draw.draw_bitmap (l_bitmap_imp.get_bitmap, l_pixmap_coordinate.x, l_pixmap_coordinate.y, a_pixmap.width, a_pixmap.height)
+				l_pixmap_coordinate := pixmap_coordinate
+				if l_pixmap_coordinate /= Void then
+					a_dc_to_draw.draw_bitmap (l_bitmap_imp.get_bitmap, l_pixmap_coordinate.x, l_pixmap_coordinate.y, a_pixmap.width, a_pixmap.height)
+				else
+					check pixmap_coordinate_not_void: False end
+				end
+			end
 		end
 
 	desaturation_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_dc_to_draw: WEL_DC)
@@ -624,17 +605,20 @@ feature {NONE} -- Implementation
 		require
 			not_void: a_pixel_buffer /= Void
 			not_void: a_dc_to_draw /= Void and then a_dc_to_draw.exists
-			not_void: pixmap_coordinate /= Void
+			pixmap_coordinate_not_void: pixmap_coordinate /= Void
 		local
-			l_imp: detachable EV_PIXEL_BUFFER_IMP
 			l_pixmap_coordinate: like pixmap_coordinate
 		do
-			l_imp ?= a_pixel_buffer.implementation
-			check not_void: l_imp /= Void end
-			if attached l_imp.gdip_bitmap as l_image then
+			if
+				attached {EV_PIXEL_BUFFER_IMP} a_pixel_buffer.implementation as l_imp and then
+				attached l_imp.gdip_bitmap as l_image
+			then
 				l_pixmap_coordinate := pixmap_coordinate
-				check l_pixmap_coordinate /= Void end -- Implied by precondition `not_void'
-				grayscale_icon_drawer.draw_grayscale_bitmap (l_image, a_dc_to_draw, l_pixmap_coordinate.x, l_pixmap_coordinate.y)
+				if l_pixmap_coordinate /= Void then
+					grayscale_icon_drawer.draw_grayscale_bitmap (l_image, a_dc_to_draw, l_pixmap_coordinate.x, l_pixmap_coordinate.y)
+				else
+					check pixmap_coordinate_not_void: False end
+				end
 			end
 		end
 
@@ -753,7 +737,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

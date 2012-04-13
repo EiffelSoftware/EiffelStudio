@@ -362,16 +362,18 @@ feature {SD_TOOL_BAR} -- Agents
 
 feature{SD_TOOL_BAR} -- Implementation
 
-	update_for_pick_and_drop (a_starting: BOOLEAN; a_pebble: ANY)
+	update_for_pick_and_drop (a_starting: BOOLEAN; a_pebble: detachable ANY)
 			-- Update for pick and drop
 		do
 			if a_starting then
-				if not drop_actions.accepts_pebble (a_pebble) then
+				if a_pebble /= Void and then not drop_actions.accepts_pebble (a_pebble) then
 					internal_sensitive_before := is_sensitive
 					is_sensitive_internal := False
 					if internal_sensitive_before then
 						is_need_redraw := True
 					end
+				else
+					--| a_pebble should be attached, but no need to be strict here.
 				end
 			else
 				if internal_sensitive_before then
@@ -442,7 +444,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

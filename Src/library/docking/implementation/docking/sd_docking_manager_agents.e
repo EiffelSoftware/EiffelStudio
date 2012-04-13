@@ -104,17 +104,22 @@ feature  -- Agents
 					l_zones.after
 				loop
 					if attached {EV_CONTAINER} l_zones.item as lt_container then
-						if not lt_container.is_destroyed and then (is_parent_recursive (lt_container, a_widget) and not ignore_additional_click) and l_zones.item.content /= l_docking_manager.zones.place_holder_content then
+						if
+							not lt_container.is_destroyed and then
+							(is_parent_recursive (lt_container, a_widget) and not ignore_additional_click) and
+							l_zones.item.content /= l_docking_manager.zones.place_holder_content
+						then
 							if l_docking_manager.property.last_focus_content /= l_zones.item.content then
 								l_docking_manager.property.set_last_focus_content (l_zones.item.content)
 								l_zones.item.on_focus_in (Void)
-								if l_zones.item.content.focus_in_actions /= Void then
-									l_zones.item.content.focus_in_actions.call (Void)
-								end
+								l_zones.item.content.focus_in_actions.call (Void)
 							else
 								l_content := l_docking_manager.property.last_focus_content
-								if l_content /= Void then
-									l_auto_hide_zone ?= l_content.state.zone
+								if
+									l_content /= Void and then
+									attached {SD_AUTO_HIDE_ZONE} l_content.state.zone as z
+								then
+									l_auto_hide_zone := z
 								end
 								if l_auto_hide_zone = Void and not ignore_additional_click then
 									l_docking_manager.command.remove_auto_hide_zones (True)
@@ -140,8 +145,6 @@ feature  -- Agents
 			not_destroyed: not is_destroyed
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
-			l_upper_zone: detachable SD_UPPER_ZONE
-			l_tool_bar: detachable EV_TOOL_BAR
 		do
 			l_zones := docking_manager.zones.zones.twin
 			from
@@ -149,16 +152,15 @@ feature  -- Agents
 			until
 				l_zones.after
 			loop
-				l_upper_zone ?= l_zones.item
-				if l_upper_zone /= Void then
+				if attached {SD_UPPER_ZONE} l_zones.item as l_upper_zone then
 					if attached {EV_CONTAINER} l_zones.item as lt_container then
-						if is_parent_recursive (lt_container, a_widget) then
-							l_tool_bar ?= a_widget
-							-- We ignore click on tool bar.
-							if l_tool_bar = Void and then not l_upper_zone.is_ignore_restore_area
-								and then l_upper_zone.is_notebook_set then
-								l_upper_zone.recover_normal_size_from_minimize
-							end
+						if
+							is_parent_recursive (lt_container, a_widget) and then
+							not attached {EV_TOOL_BAR} a_widget and then -- We ignore click on tool bar.
+							not l_upper_zone.is_ignore_restore_area and then
+							l_upper_zone.is_notebook_set
+						then
+							l_upper_zone.recover_normal_size_from_minimize
 						end
 					else
 						check not_possible: False end
@@ -392,7 +394,9 @@ feature  -- Agents
 				-- When set_capture, if pointer moving at area outside captured widget,
 				-- the `a_target' parameter in {EV_APPLICATION}.pnd_motion_actions is void
 				-- on both GTK and Windows platforms
-			l_widget ?= a_target
+			if attached {EV_WIDGET} a_target as w then
+				l_widget := w
+			end
 
 			create l_screen
 			l_position := l_screen.pointer_position
@@ -432,7 +436,6 @@ feature  -- Agents
 		local
 			l_panel: SD_AUTO_HIDE_PANEL
 			l_stubs: ARRAYED_LIST [SD_TAB_STUB]
-			l_state: detachable SD_AUTO_HIDE_STATE
 			l_stub: SD_TAB_STUB
 		do
 			l_panel := docking_manager.query.auto_hide_panel (a_direction)
@@ -455,10 +458,12 @@ feature  -- Agents
 				else
 					pointer_in_tab := False
 				end
-				l_state ?= l_stubs.item.content.state
-				check must_be_auto_hide_state: l_state /= Void end
-				-- a_target not correct?
-				l_state.animation.on_pointer_motion (a_target, a_screen_x, a_screen_y)
+				if attached {SD_AUTO_HIDE_STATE} l_stubs.item.content.state as l_state then
+					-- a_target not correct?
+					l_state.animation.on_pointer_motion (a_target, a_screen_x, a_screen_y)
+				else
+					check must_be_auto_hide_state: False end
+				end
 
 				debug ("docking")
 					print ("%N SD_DOCKING_MANAGER_AGETNS notify_one_auto_hide_panel l_stubs.item screen_x, screen_y, width, height: " + l_stub.screen_x.out + " " + l_stub.screen_y.out + " " + l_stub.width.out + " " + l_stub.height.out)
@@ -473,16 +478,19 @@ feature -- Destory
 	destroy
 			-- Destory all underline objects
 		local
-			l_viewport: EV_VIEWPORT
+			l_main_window: EV_WINDOW
 		do
 			if attached docking_manager as l_docking_manager then
-				l_viewport := l_docking_manager.internal_viewport
-				check not_void: l_viewport /= Void end
-				l_viewport.resize_actions.wipe_out
-				l_docking_manager.main_window.focus_out_actions.prune_all (main_window_focus_out)
-				l_docking_manager.main_window.focus_in_actions.prune_all (main_window_focus_in)
-				l_docking_manager.main_window.focus_out_actions.prune_all (top_level_window_focus_out)
-				l_docking_manager.main_window.focus_in_actions.prune_all (top_level_window_focus_in)
+				if attached l_docking_manager.internal_viewport as l_viewport then
+					l_viewport.resize_actions.wipe_out
+				else
+					check viewport_attached: False end
+				end
+				l_main_window := l_docking_manager.main_window
+				l_main_window.focus_out_actions.prune_all (main_window_focus_out)
+				l_main_window.focus_in_actions.prune_all (main_window_focus_in)
+				l_main_window.focus_out_actions.prune_all (top_level_window_focus_out)
+				l_main_window.focus_in_actions.prune_all (top_level_window_focus_in)
 			end
 
 			ev_application.pnd_motion_actions.prune_all (pnd_motion_actions_handler)
@@ -506,7 +514,6 @@ feature -- Contract support
 		require
 			not_destroyed: not is_destroyed
 		local
-			l_container: detachable EV_CONTAINER
 			l_found: BOOLEAN
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
@@ -518,8 +525,7 @@ feature -- Contract support
 				l_contents.after or l_found
 			loop
 				if l_contents.item /= a_content then
-					l_container ?= l_contents.item.user_widget
-					if l_container /= Void then
+					if attached {EV_CONTAINER} l_contents.item.user_widget as l_container then
 						if l_container.has_recursive (a_content.user_widget) then
 							l_found := True
 						end
@@ -577,12 +583,8 @@ feature {SD_DEBUG_ACCESS} -- For debug
 			-- For debug
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_split_area: detachable EV_SPLIT_AREA
-			l_docking_zone: detachable SD_DOCKING_ZONE
 		do
-			l_docking_zone ?= a_container
-			if l_docking_zone /= Void then
+			if attached {SD_DOCKING_ZONE} a_container as l_docking_zone then
 				io.put_string ("%N " + a_indent.as_string_8 + a_container.generating_type + " " + l_docking_zone.content.unique_title.as_string_8)
 			else
 				if a_container /= Void then
@@ -591,8 +593,7 @@ feature {SD_DEBUG_ACCESS} -- For debug
 					io.put_string ("%N " + a_indent.as_string_8 + "Void")
 				end
 			end
-			l_split_area ?= a_container
-			if l_split_area /= Void then
+			if attached {EV_SPLIT_AREA} a_container as l_split_area then
 				if attached l_split_area.first as l_first then
 					show_inner_container_structure_imp (l_first, a_indent.as_string_8 + " ")
 				end
@@ -653,7 +654,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

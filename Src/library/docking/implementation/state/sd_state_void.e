@@ -210,14 +210,12 @@ feature -- Redefine
 	show
 			-- <Precursor>
 		local
-			l_tab_zone: detachable SD_TAB_ZONE
-			l_docking_zone: detachable SD_DOCKING_ZONE
-			l_auto_hide_state, l_new_state: detachable SD_AUTO_HIDE_STATE
-			l_restired: BOOLEAN
+			l_new_state: detachable SD_AUTO_HIDE_STATE
+			retried: BOOLEAN
 			l_dock_area: detachable SD_MULTI_DOCK_AREA
 			l_zone, l_new_zone: detachable SD_ZONE
 		do
-			if attached relative as l_relative and then (not l_restired and l_relative.is_visible) then
+			if attached relative as l_relative and then (not retried and l_relative.is_visible) then
 				if l_relative.state.is_zone_attached then
 					l_zone := l_relative.state.zone
 					check l_zone /= Void end -- Implied by `is_zone_attached'
@@ -234,15 +232,12 @@ feature -- Redefine
 					docking_manager.command.recover_normal_state
 				end
 
-				l_tab_zone ?= l_relative.state.zone
-				l_docking_zone ?= l_relative.state.zone
-				if l_tab_zone /= Void then
+				if attached {SD_TAB_ZONE} l_relative.state.zone as l_tab_zone then
 					move_to_tab_zone (l_tab_zone, 0)
-				elseif l_docking_zone /= Void then
+				elseif attached {SD_DOCKING_ZONE} l_relative.state.zone as l_docking_zone then
 					move_to_docking_zone (l_docking_zone, False)
 				end
-				l_auto_hide_state ?= l_relative.state
-				if l_auto_hide_state /= Void then
+				if attached {SD_AUTO_HIDE_STATE} l_relative.state as l_auto_hide_state then
 					create l_new_state.make_with_friend (content, l_relative)
 					change_state (l_new_state)
 				end
@@ -252,18 +247,18 @@ feature -- Redefine
 
 			if content /= Void and then content.state.is_zone_attached then
 				l_new_zone := content.state.zone
-				check l_new_zone /= Void end -- Implied by `is_zone_attached'
-				if attached {EV_WIDGET} l_new_zone as lt_widget then
+				if l_new_zone /= Void and then attached {EV_WIDGET} l_new_zone as lt_widget then
+					-- Implied by `is_zone_attached'
 					if lt_widget.is_displayed then
 						call_show_actions
 					end
 				else
-					check not_possible: False end
+					check is_widget_zone_attached: False end
 				end
 			end
 		rescue
-			if not l_restired then
-				l_restired := True
+			if not retried then
+				retried := True
 				retry
 			end
 		end
@@ -329,7 +324,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

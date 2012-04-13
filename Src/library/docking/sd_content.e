@@ -844,15 +844,12 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_DOCKING_MANAGER_ZONES}
 	set_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
 			-- <Precursor>
 			-- If {SD_DOCKING_MANAGER}.contents has Current, `internl_docking_manager' will be set
-		local
-			l_state_void: detachable SD_STATE_VOID
 		do
 			if a_docking_manager = Void and is_docking_manager_attached then
 				internal_clear_docking_manager_property
 			end
 			Precursor {SD_DOCKING_MANAGER_HOLDER} (a_docking_manager)
-			l_state_void ?= state
-			if l_state_void /= Void then
+			if attached {SD_STATE_VOID} state as l_state_void then
 				l_state_void.set_docking_manager (docking_manager)
 			end
 		end

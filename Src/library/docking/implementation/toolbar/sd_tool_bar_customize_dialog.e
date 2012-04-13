@@ -247,7 +247,6 @@ feature {NONE} -- Button actions
 			-- and set `is_text_displayed'
 		local
 			cur: detachable SD_CUSTOMIZABLE_LIST_ITEM
-			cmd: detachable SD_TOOL_BAR_ITEM
 		do
 			final_toolbar.wipe_out
 			from
@@ -258,8 +257,7 @@ feature {NONE} -- Button actions
 					-- Copy the content of current_list to final_toolbar
 				cur := current_list.customizable_item
 				if cur /= Void then
-					cmd ?= cur.data
-					if cmd /= Void then
+					if attached {SD_TOOL_BAR_ITEM} cur.data as cmd then
 						cmd.enable_displayed
 						final_toolbar.extend (cmd)
 					else
@@ -278,8 +276,7 @@ feature {NONE} -- Button actions
 					-- Copy the content of pool_list to final_toolbar
 				cur := pool_list.customizable_item
 				if cur /= Void then
-					cmd ?= cur.data
-					if cmd /= Void then
+					if attached {SD_TOOL_BAR_ITEM} cur.data as cmd then
 						cmd.disable_displayed
 						final_toolbar.extend (cmd)
 					else
@@ -440,7 +437,7 @@ feature {NONE} -- Actions performed by agents like graying buttons
 					l_parent.start
 					l_parent.prune (an_item)
 					pool_list.extend (an_item)
-				elseif (not an_item.custom_parent.is_a_pool_list) then
+				elseif an_item.custom_parent = Void or else attached an_item.custom_parent as l_item_custom_parent and then not l_item_custom_parent.is_a_pool_list then
 					l_parent.start
 					l_parent.prune (an_item)
 				end
@@ -451,13 +448,13 @@ feature {NONE} -- Actions performed by agents like graying buttons
 			-- Move `an_item' to current list.
 		do
 			if attached an_item.parent as l_parent then
-				if (not an_item.is_separator) or else (not an_item.custom_parent.is_a_pool_list) then
+				if an_item.is_separator and attached an_item.custom_parent as l_item_custom_parent and then l_item_custom_parent.is_a_pool_list then
+					current_list.extend (create {SD_CUSTOMIZABLE_LIST_ITEM}.make (Current, create {SD_TOOL_BAR_SEPARATOR}.make))
+					set_up_events (an_item)
+				else
 					l_parent.start
 					l_parent.prune (an_item)
 					current_list.extend (an_item)
-				else
-					current_list.extend (create {SD_CUSTOMIZABLE_LIST_ITEM}.make (Current, create {SD_TOOL_BAR_SEPARATOR}.make))
-					set_up_events (an_item)
 				end
 			end
 		end
@@ -487,21 +484,19 @@ feature {NONE} -- Internal data
 	drop2 (src, dst: SD_CUSTOMIZABLE_LIST_ITEM)
 			-- `src' was dropped onto `dst'.
 			-- Set up events for `src' if it is a newly created separator. (Eww how ugly...)
-		local
-			conv_cust: detachable SD_CUSTOMIZABLE_LIST_ITEM
 		do
 			if
-				(src.is_separator and src.custom_parent /= Void) and then
-				src.custom_parent.is_a_pool_list and then
-				not dst.custom_parent.is_a_pool_list
+				(src.is_separator and attached src.custom_parent as l_src_custom_parent) and then
+				l_src_custom_parent.is_a_pool_list and
+				(attached dst.custom_parent as l_dst_custom_parent and then
+				not l_dst_custom_parent.is_a_pool_list)
 			then
 					-- `dst' must have added a new separator after itself
 				if attached dst.parent as l_parent then
 					l_parent.start
 					l_parent.search (dst)
 					l_parent.forth
-					conv_cust ?= l_parent.item
-					if conv_cust /= Void then
+					if attached {SD_CUSTOMIZABLE_LIST_ITEM} l_parent.item as conv_cust then
 						set_up_events (conv_cust)
 					end
 				else
@@ -547,7 +542,7 @@ feature {NONE} -- Internal data
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

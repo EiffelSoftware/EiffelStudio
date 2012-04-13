@@ -25,8 +25,6 @@ feature -- Initialization
 		require
 			not_void: v /= Void
 			not_void: a_dlg /= Void
-		local
-			l_sep: detachable SD_TOOL_BAR_SEPARATOR
 		do
 			dialog := a_dlg
 			data := v
@@ -36,12 +34,7 @@ feature -- Initialization
 				set_pixmap (l_pixmap)
 			end
 
-			l_sep ?= v
-			if l_sep = Void then
-				is_separator := False
-			else
-				is_separator := True
-			end -- if
+			is_separator := attached {SD_TOOL_BAR_SEPARATOR} v
 			set_pebble (Current)
 			drop_actions.extend (agent add_to_parent_list)
 			drop_actions.set_veto_pebble_function (agent a_dlg.veto_pebble_function)
@@ -57,13 +50,10 @@ feature -- Interactivity
 			-- `from_pool' and `to_pool' determine the behavior of separators
 		local
 			from_pool, to_pool: BOOLEAN
-			l_item_parent, l_parent: detachable EV_ITEM_LIST [EV_ITEM]
 		do
-			from_pool := an_item.custom_parent.is_a_pool_list -- Picking from a pool list?
-			to_pool := custom_parent.is_a_pool_list -- Dropping into a pool list?
-			l_item_parent := an_item.parent
-			l_parent := parent
-			if an_item /= Current and l_item_parent /= Void and l_parent /= Void then
+			from_pool := attached an_item.custom_parent as l_item_custom_parent and then l_item_custom_parent.is_a_pool_list -- Picking from a pool list?
+			to_pool := attached custom_parent as l_custom_parent and then l_custom_parent.is_a_pool_list -- Dropping into a pool list?
+			if an_item /= Current and attached an_item.parent as l_item_parent and attached parent as l_parent then
 				if (not an_item.is_separator) then
 					l_item_parent.start
 					l_item_parent.prune (an_item)
@@ -92,18 +82,14 @@ feature -- Access
 	data: SD_TOOL_BAR_ITEM
 			-- the corresponding button
 
-	custom_parent: SD_CUSTOM_TOOLBAR_LIST
+	custom_parent: detachable SD_CUSTOM_TOOLBAR_LIST
 			-- Convert `parent' into a EB_CUSTOM_TOOLBAR_LIST
 		require
-			not_void: parent /= Void
-		local
-			l_result: detachable like custom_parent
+			parent_attached: parent /= Void
 		do
-			l_result ?= parent
-			check l_result /= Void end
-			Result := l_result
-		ensure
-			not_void: Result /= Void
+			if attached {like custom_parent} parent as l_result then
+				Result := l_result
+			end
 		end
 
 	dialog: SD_TOOL_BAR_CUSTOMIZE_DIALOG
@@ -116,14 +102,14 @@ feature -- Status report
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

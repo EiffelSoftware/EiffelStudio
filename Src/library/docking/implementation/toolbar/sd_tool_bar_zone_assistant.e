@@ -260,23 +260,22 @@ feature -- Command
 				else
 					l_container.extend (l_row)
 				end
-			else
-				l_row ?= l_container.i_th (last_state.container_row_number)
-				check not_void: l_row /= Void end
+			elseif attached {SD_TOOL_BAR_ROW} l_container.i_th (last_state.container_row_number) as r then
+				l_row := r
 				-- Insert current zone to exsiting row
+			else
+				check not_possible: False end
 			end
-			check not_void: l_row /= Void end
 
-			if attached {EV_WIDGET} attached_zone.tool_bar as lt_widget then
+			if l_row /= Void and attached {EV_WIDGET} attached_zone.tool_bar as lt_widget then
 				if attached_zone.row /= Void and then attached lt_widget.parent as l_parent then
 					l_parent.prune (lt_widget)
 				end
-
 				l_row.extend (attached_zone)
 				l_row.set_item_position_relative (lt_widget, last_state.position)
 				attached_zone.docking_manager.command.resize (True)
 			else
-				check not_possible: False end
+				check attached_zone_tool_bar_is_widget: False end
 			end
 		end
 
@@ -645,7 +644,6 @@ feature {NONE} -- Implementation
 			-- When `zone' is_vertical, we should set item before separator not wrap
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_separator: detachable SD_TOOL_BAR_SEPARATOR
 			l_last_item: detachable SD_TOOL_BAR_ITEM
 		do
 			if attached_zone.is_vertical then
@@ -655,8 +653,10 @@ feature {NONE} -- Implementation
 				until
 					l_items.after
 				loop
-					l_separator ?= l_items.item
-					if l_separator /= Void and then l_last_item /= Void then
+					if
+						attached {SD_TOOL_BAR_SEPARATOR} l_items.item and then
+						l_last_item /= Void
+					then
 						l_last_item.set_wrap (False)
 					end
 					l_last_item := l_items.item
@@ -702,7 +702,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

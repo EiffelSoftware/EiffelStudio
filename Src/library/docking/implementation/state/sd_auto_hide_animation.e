@@ -226,7 +226,7 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 			timer_void: pointer_outside and not state.zone.has_focus implies internal_closing_timer = Void
 		end
 
-	on_pointer_motion (a_widget: detachable EV_WIDGET; a_screen_x, a_screen_y: INTEGER)
+	on_pointer_motion (a_unused_widget: detachable EV_WIDGET; a_screen_x, a_screen_y: INTEGER)
 			-- Use timer to detect pointer outside zone and tab stub?
 		local
 			l_rect, l_rect_zone: EV_RECTANGLE
@@ -411,7 +411,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

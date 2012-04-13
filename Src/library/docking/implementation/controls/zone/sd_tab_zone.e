@@ -388,7 +388,6 @@ feature {NONE} -- Agents for docker
 	on_drag_title_bar (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Handle user drag title bar
 		local
-			l_tab_state: detachable SD_TAB_STATE
 			l_mediator: like internal_docker_mediator
 		do
 			if not is_destroyed and then is_displayed then
@@ -402,8 +401,7 @@ feature {NONE} -- Agents for docker
 					enable_capture
 					l_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
 
-					l_tab_state ?= content.state
-					check l_tab_state /= Void end
+					check is_tab: attached {SD_TAB_STATE} content.state end
 				end
 			end
 		ensure
@@ -482,7 +480,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

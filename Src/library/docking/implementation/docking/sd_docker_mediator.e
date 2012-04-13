@@ -180,7 +180,6 @@ feature -- Hanlde pointer events
 			-- Stop tracing mouse positions
 		local
 			changed: BOOLEAN
-			l_floating_zone: detachable SD_FLOATING_ZONE
 		do
 			debug ("docking")
 				print ("%NSD_DOCKER_MEDIATOR end_tracing_pointer a_screen_x, a_screen_y: " + a_screen_x.out + " " + a_screen_y.out)
@@ -198,8 +197,7 @@ feature -- Hanlde pointer events
 				end
 			end
 
-			l_floating_zone ?= caller
-			if not changed and l_floating_zone /= Void then
+			if not changed and attached {SD_FLOATING_ZONE} caller as l_floating_zone then
 				l_floating_zone.set_position (a_screen_x - offset_x, a_screen_y - offset_y)
 				debug ("docking")
 					io.put_string ("%N SD_DOCKER_MEDIATOR not changed and set floating position")
@@ -279,22 +277,22 @@ feature {SD_HOT_ZONE} -- Hot zone infos
 
 	drag_window_width: INTEGER
 			-- Width of dragged window
-		local
-			l_widget: detachable EV_WIDGET
 		do
-			l_widget ?= caller
-			check caller_is_widget: l_widget /= Void end
-			Result := l_widget.width
+			if attached {EV_WIDGET} caller as l_widget then
+				Result := l_widget.width
+			else
+				check caller_is_widget: False end
+			end
 		end
 
 	drag_window_height: INTEGER
 			-- Height of dragged window
-		local
-			l_widget: detachable EV_WIDGET
 		do
-			l_widget ?= caller
-			check caller_is_widget: l_widget /= Void end
-			Result := l_widget.height
+			if attached {EV_WIDGET} caller as l_widget then
+				Result := l_widget.height
+			else
+				check caller_is_widget: False end
+			end
 		end
 
 	offset_x: INTEGER
@@ -453,12 +451,10 @@ feature {NONE} -- Implementation functions
 		require
 			a_list_not_void: a_list /= Void
 		local
-			l_floating_zone: detachable SD_FLOATING_ZONE
 			l_zones_filted: like a_list
 		do
 			l_zones_filted := a_list.twin
-			l_floating_zone ?= caller
-			if l_floating_zone /= Void then
+			if attached {SD_FLOATING_ZONE} caller as l_floating_zone then
 				from
 					a_list.start
 				until
@@ -481,8 +477,6 @@ feature {NONE} -- Implementation functions
 			a_list_not_void: a_list /= Void
 		local
 			l_zone: SD_ZONE
-			l_hot_zone_source: detachable SD_DOCKER_SOURCE
-			l_mutli_zone: detachable SD_TAB_ZONE
 		do
 			from
 				a_list.start
@@ -490,12 +484,13 @@ feature {NONE} -- Implementation functions
 				a_list.after
 			loop
 				l_zone := a_list.item
-				l_hot_zone_source ?= l_zone
 					-- Ingore the classes we don't care
 				if attached {EV_WIDGET} l_zone as lt_widget then
-					if l_hot_zone_source /= Void and lt_widget.is_displayed then
-						l_mutli_zone ?= l_zone
-						if l_mutli_zone /= Void and then not l_mutli_zone.is_drag_title_bar then
+					if
+						attached {SD_DOCKER_SOURCE} l_zone as l_hot_zone_source and
+						lt_widget.is_displayed
+					then
+						if attached {SD_TAB_ZONE} l_zone as l_mutli_zone and then not l_mutli_zone.is_drag_title_bar then
 							add_hot_zone_on_type (l_zone, l_hot_zone_source)
 						elseif l_zone /= caller then
 							add_hot_zone_on_type (l_zone, l_hot_zone_source)
@@ -583,20 +578,19 @@ feature {NONE} -- Implementation functions
 			not_a_widget_is_destroyed: not a_widget.is_destroyed
 		local
 			l_stop_looking: BOOLEAN
-			l_dialog: detachable EV_DIALOG
 		do
-			Result ?= a_widget
-			if a_main and Result /= Void then
-				l_stop_looking := (({EV_TITLED_WINDOW}) #? Result /= Void)
-			else
-				l_stop_looking := Result /= Void
+			if attached {like widget_top_level_window} a_widget as win then
+				Result := win
+				l_stop_looking := not a_main or else attached {EV_TITLED_WINDOW} Result
 			end
 			if not l_stop_looking then
 				if attached a_widget.parent as l_parent then
 					Result := widget_top_level_window (l_parent, a_main)
 				else
-					l_dialog ?= a_widget
-					if l_dialog /= Void and then attached l_dialog.blocking_window as l_dialog_blocking_window then
+					if
+						attached {EV_DIALOG} a_widget as l_dialog and then
+						attached l_dialog.blocking_window as l_dialog_blocking_window
+					then
 						Result := widget_top_level_window (l_dialog_blocking_window, a_main)
 					end
 				end
@@ -632,7 +626,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

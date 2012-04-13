@@ -10,22 +10,33 @@ inherit
 	XML_OUTPUT_STREAM
 
 create
-	make
+	make, make_empty
 
 feature {NONE} -- Initialization
+
+	make_empty
+			-- Create a blank stream.
+		do
+			create string.make_empty
+		end
 
 	make (a_string: STRING)
 			-- Create current stream for file `a_string'
 		require
 			a_string_attached: a_string /= Void
 		do
-			target := a_string
+			string := a_string
+		ensure
+			shared: string = a_string
 		end
 
 feature -- Access
 
 	name: STRING = "string"
 			-- Name of current stream
+
+	string: STRING
+			-- Target for the stream
 
 feature -- Status report
 
@@ -42,25 +53,20 @@ feature -- Output
 
 	put_character (c: CHARACTER)
 		do
-			target.append_character (c)
+			string.append_character (c)
 		end
 
 	put_string (a_string: STRING)
 			-- Write `a_string' to output stream.
 		do
-			target.append (a_string)
+			string.append (a_string)
 		end
 
-feature {NONE} -- Implementation
-
-	target: STRING
-			-- Target for the stream
-
 invariant
-	target_attached: target /= Void
+	string_attached: string /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

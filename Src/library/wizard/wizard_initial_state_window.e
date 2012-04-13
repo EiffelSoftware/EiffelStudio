@@ -81,7 +81,9 @@ feature -- Basic Operations
 			hc: FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
 		do
 			hc := choice_box.help_context
-			Result ?= hc.item (hc.operands)
+			if attached {like current_help_context} hc.item (hc.operands) as l_help_context then
+				Result := l_help_context
+			end
 		end
 
 feature {NONE} -- Widgets
@@ -155,14 +157,14 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class WIZARD_INITIAL_STATE_WINDOW

@@ -1184,13 +1184,11 @@ feature -- Status setting
 			wel_destroy
 			if word_wrapping then
 				internal_window_make (wel_parent, "", default_style, 0, 0, 0, 0, 0, default_pointer)
-				show_vertical_scroll_bar
 			else
-				internal_window_make (wel_parent, "", default_style + Ws_hscroll, 0, 0, 0, 0, 0, default_pointer)
-				show_scroll_bars
+				internal_window_make (wel_parent, "", default_style | Ws_hscroll, 0, 0, 0, 0, 0, default_pointer)
 			end
 
-			set_options (Ecoop_set, Eco_autovscroll + Eco_autohscroll)
+			set_options (Ecoop_set, Eco_autovscroll | Eco_autohscroll)
 			{WEL_API}.send_message (wel_item, Em_settypographyoptions,
 				to_wparam (to_advancedtypography), to_lparam (to_advancedtypography))
 			set_text_limit (2560000)
@@ -1222,6 +1220,14 @@ feature -- Status setting
 			end
 			set_editable (l_is_read_only)
 			safe_restore_caret
+
+			if word_wrapping then
+					-- We only show the vertical scrollbar when word wrapping is enabled.
+				show_vertical_scroll_bar
+			else
+					-- If there is no word wrapping then scrollbars must always be visible.
+				show_scroll_bars
+			end
 		ensure
 			option_set: has_word_wrapping = word_wrapping
 		end
@@ -1711,14 +1717,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_RICH_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_RICH_TEXT_IMP

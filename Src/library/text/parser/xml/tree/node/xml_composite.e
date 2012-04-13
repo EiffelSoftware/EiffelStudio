@@ -192,7 +192,7 @@ feature -- Element change
 			internal_nodes.force (a_node)
 		end
 
-	force_first (a_node: XML_NODE)
+	put_first, force_first (a_node: XML_NODE)
 		do
 			before_addition (a_node)
 			internal_nodes.put_front (a_node)
@@ -339,7 +339,7 @@ invariant
 	elements_attached: internal_nodes /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

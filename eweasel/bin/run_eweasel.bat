@@ -21,6 +21,7 @@ cd /d %ISE_EIFFEL%\precomp\spec\%ISE_PLATFORM%
 rem Performing void-safe precompilation
 cd /d %ISE_EIFFEL%\precomp\spec\%ISE_PLATFORM%
 %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -config base-safe.ecf -precompile -c_compile %2
+%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -config base-scoop-safe.ecf -precompile -c_compile %2
 
 rem Launch EiffelWeasel tests
 cd /d %TMP_PATH%

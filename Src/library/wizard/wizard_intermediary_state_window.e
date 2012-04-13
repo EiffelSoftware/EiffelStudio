@@ -16,7 +16,7 @@ feature {NONE} -- Basic Operations
 
 	display
 			-- Display Current state.
-		do 
+		do
 			build_frame
 			first_window.set_intermediary_state
 			build
@@ -113,7 +113,7 @@ feature {NONE} -- Basic Operations
 			create message
 			message.align_text_left
 			message_box.extend (message)
-			create cell			
+			create cell
 			cell.set_minimum_width (Interior_border_width)
 			message_box.extend (cell)
 			message_box.disable_item_expand (cell)
@@ -144,7 +144,7 @@ feature {NONE} -- Basic Operations
 			interior_box.extend (actions_box)
 			interior_box.disable_item_expand (actions_box)
 			interior_box.extend (create {EV_CELL}) -- Expandable item.
-	
+
 			--------------------------------------------
 			-- Create the main box from the other box.
 			--------------------------------------------
@@ -175,23 +175,25 @@ feature {WIZARD_INTERMEDIARY_STATE_WINDOW} -- Implementation
 			hc: FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
 		do
 			hc := choice_box.help_context
-			Result ?= hc.item (hc.operands)		
-		end		
-		
+			if attached {like current_help_context} hc.item (hc.operands) as l_help_context then
+				Result := l_help_context
+			end
+		end
+
 	choice_box: EV_VERTICAL_BOX
 
-	message_box: EV_HORIZONTAL_BOX;		
+	message_box: EV_HORIZONTAL_BOX;
 			-- Box where is displayed the description of current state (gray background).
-	
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

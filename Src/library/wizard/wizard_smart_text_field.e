@@ -257,8 +257,8 @@ feature {NONE} -- Implementation
 			file_selector: EV_FILE_OPEN_DIALOG
 		do
 			create file_selector
-			file_selector.set_filter (browse_file_filter)
-			file_selector.open_actions.extend(agent file_selected (file_selector))
+			file_selector.filters.extend ([browse_file_filter, browse_file_filter])
+			file_selector.open_actions.extend (agent file_selected (file_selector))
 			file_selector.show_modal_to_window (caller.first_window)
 		end
 
@@ -345,14 +345,14 @@ feature {NONE} -- Implementation
 			-- Action for the browse button.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -63,7 +63,6 @@ feature  -- Command
 	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- <Precursor>
 		local
-			l_floating_zone: detachable SD_FLOATING_ZONE
 			l_caller: SD_ZONE
 			l_left: INTEGER
 		do
@@ -89,20 +88,22 @@ feature  -- Command
 				l_caller.state.dock_at_top_level (internal_docking_manager.query.inner_container_main)
 			end
 
-			l_floating_zone ?= l_caller
 			debug ("docking")
 				print ("%N SD_HOT_ZONE_MAIN apply change Manu. Result: " + Result.out)
 			end
 			if not Result then
 				l_left := a_screen_x - internal_mediator.offset_x
 				l_left := left_position (a_screen_x, l_left, l_caller.state.last_floating_width)
-				if l_floating_zone = Void then
-					l_caller.state.float (l_left, a_screen_y - internal_mediator.offset_y)
-				else
+				if attached {SD_FLOATING_ZONE} l_caller as l_floating_zone then
 					l_floating_zone.set_position (l_left, a_screen_y - internal_mediator.offset_y)
-				end
-				debug ("docking")
-					print ("%N SD_HOT_ZONE_MAIN apply changed l_floating_zone Void?  " + (l_floating_zone = Void).out)
+					debug ("docking")
+						print ("%N SD_HOT_ZONE_MAIN apply changed l_floating_zone Void?  False")
+					end
+				else
+					l_caller.state.float (l_left, a_screen_y - internal_mediator.offset_y)
+					debug ("docking")
+						print ("%N SD_HOT_ZONE_MAIN apply changed l_floating_zone Void?  True")
+					end
 				end
 				Result := True
 			end
@@ -117,7 +118,6 @@ feature  -- Command
 			-- <Precursor>
 		local
 			l_rect: EV_RECTANGLE
-			l_floating_zone: detachable SD_FLOATING_ZONE
 			l_width, l_height: INTEGER
 			l_left: INTEGER
 		do
@@ -131,18 +131,17 @@ feature  -- Command
 			elseif right_rectangle.has_x_y (a_screen_x, a_screen_y) and a_dockable then
 				internal_shared.feedback.draw_transparency_rectangle (l_rect.right - (l_rect.width * internal_shared.default_docking_width_rate).ceiling, l_rect.top, (l_rect.width * internal_shared.default_docking_width_rate).ceiling, l_rect.height)
 			else
-				l_floating_zone ?= internal_mediator.caller
-				if l_floating_zone = Void then
-					l_width := internal_mediator.caller.state.last_floating_width
-					l_height := internal_mediator.caller.state.last_floating_height
-					debug ("docking")
-						print ("%N SD_HOT_ZONE_MAIN update_for_feedback 1 l_width: " + l_width.out)
-					end
-				else
+				if attached {SD_FLOATING_ZONE} internal_mediator.caller as l_floating_zone then
 					l_width := l_floating_zone.width
 					l_height := l_floating_zone.height
 					debug ("docking")
 						print ("%N SD_HOT_ZONE_MAIN update_for_feedback 2 l_width: " + l_width.out)
+					end
+				else
+					l_width := internal_mediator.caller.state.last_floating_width
+					l_height := internal_mediator.caller.state.last_floating_height
+					debug ("docking")
+						print ("%N SD_HOT_ZONE_MAIN update_for_feedback 1 l_width: " + l_width.out)
 					end
 				end
 

@@ -88,13 +88,12 @@ feature -- Query
 	parent_split_position: INTEGER
 			-- If parent is split area, get split position
 		require
-			ready: is_parent_split
-		local
-			l_split_area: detachable EV_SPLIT_AREA
+			parent_is_split_area: is_parent_split
 		do
-			l_split_area ?= parent
-			check l_split_area /= Void end -- Implied by precondition `ready'
-			Result := l_split_area.split_position
+			if attached {EV_SPLIT_AREA} parent as l_split_area then
+				-- Implied by precondition `ready'
+				Result := l_split_area.split_position
+			end
 		end
 
 feature {NONE} -- For redocker
@@ -151,14 +150,14 @@ feature {NONE} -- For redocker
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

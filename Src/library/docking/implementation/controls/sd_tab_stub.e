@@ -296,8 +296,6 @@ feature {SD_AUTO_HIDE_STATE} -- Expose handling
 
 	on_expose (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Handle redraw.
-		local
-			l_imp: detachable EV_DRAWING_AREA_IMP
 		do
 			internal_drawing_area.set_background_color (internal_shared.default_background_color)
 			internal_shared.setter.clear_background_for_theme (internal_drawing_area, create {EV_RECTANGLE}.make (0, 0, internal_drawing_area.width, internal_drawing_area.height))
@@ -309,9 +307,9 @@ feature {SD_AUTO_HIDE_STATE} -- Expose handling
 				if not is_vertical then
 					internal_drawing_area.draw_text_top_left (start_x_text_internal, start_y_text_internal, internal_text)
 				else
-					l_imp ?= internal_drawing_area.implementation
-					check not_void: l_imp /= Void end
-					l_imp.draw_rotated_text (start_x_text_internal, start_y_text_internal, {MATH_CONST}.pi.truncated_to_real * {REAL_32} 1.5, internal_text)
+					if attached {EV_DRAWING_AREA_IMP} internal_drawing_area.implementation as l_imp then
+						l_imp.draw_rotated_text (start_x_text_internal, start_y_text_internal, {MATH_CONST}.pi.truncated_to_real * {REAL_32} 1.5, internal_text)
+					end
 				end
 			end
 
@@ -454,7 +452,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

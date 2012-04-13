@@ -25,17 +25,8 @@ feature -- Docking query
 
 	is_minimized: BOOLEAN
 			-- If Current alreay a container used for minimized zones?
-		local
-			l_spliter: detachable EV_SPLIT_AREA
 		do
-			l_spliter ?= Current
-			if l_spliter /= Void then
-				-- Current is split area used for non-minimized widgets
-				Result := False
-			else
-				-- Current is SD_HORIZONTAL_BOX or SD_VERTICAL_BOX used for minimized widgets
-				Result := True
-			end
+			Result := not attached {EV_SPLIT_AREA} Current
 		end
 
 feature -- Access
@@ -77,15 +68,8 @@ feature -- Access
 
 	is_horizontal: BOOLEAN
 			-- If current is horizontal split area?
-		local
-			l_h_split: detachable SD_HORIZONTAL_SPLIT_AREA
-			l_h_box: detachable SD_HORIZONTAL_BOX
 		do
-			l_h_box ?= Current
-			l_h_split ?= Current
-			if l_h_box /= Void or l_h_split /= Void then
-				Result := True
-			end
+			Result := attached {SD_HORIZONTAL_BOX} Current or attached {SD_HORIZONTAL_SPLIT_AREA} Current
 		end
 
 feature -- Setting
@@ -142,22 +126,19 @@ feature -- Split area resizing
 			-- from outside to inside to avoid generating resize events during resizing
 		require
 			not_void: a_container /= Void
-		local
-			l_first, l_second: detachable SD_MIDDLE_CONTAINER
-			l_ev_split: detachable EV_SPLIT_AREA
 		do
-			l_ev_split ?= a_container
-			if l_ev_split /= Void and then not l_ev_split.is_destroyed and then l_ev_split.full then
+			if
+				attached {EV_SPLIT_AREA} a_container as l_ev_split and then
+				not l_ev_split.is_destroyed and then l_ev_split.full
+			then
 				l_ev_split.set_proportion_with_remembered
 			end
 
-			l_first ?= a_container.first
-			if l_first /= Void then
+			if attached {SD_MIDDLE_CONTAINER} a_container.first as l_first then
 				set_proportion_recursive_imp (l_first)
 			end
 
-			l_second ?= a_container.second
-			if l_second /= Void then
+			if attached {SD_MIDDLE_CONTAINER} a_container.second as l_second then
 				set_proportion_recursive_imp (l_second)
 			end
 		end
@@ -200,14 +181,14 @@ feature -- Split area resizing
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -46,16 +46,15 @@ feature -- Command
 			-- Set feedback area.
 		local
 			l_region: WEL_REGION
-			l_imp: detachable WEL_WINDOW
 			l_result: INTEGER
 		do
 			set_size (a_rect.width, a_rect.height)
 			set_position (a_rect.left, a_rect.top)
 
 			create l_region.make_rect (0, 0, a_rect.width, a_rect.height)
-			l_imp ?= implementation
-			check not_void: l_imp /= Void end
-			set_window_rgn (l_imp.item, l_region.item, $l_result)
+			check attached {WEL_WINDOW} implementation as l_imp then
+				set_window_rgn (l_imp.item, l_region.item, $l_result)
+			end
 			check successed: l_result /= 0 end
 		end
 
@@ -69,7 +68,6 @@ feature -- Command
 			l_temp_region, l_temp_region_2: WEL_REGION
 			l_constants: WEL_RGN_CONSTANTS
 			l_result: INTEGER
-			l_imp: detachable WEL_WINDOW
 			l_left: INTEGER
 		do
 			set_size (a_top_rect.width.max (a_bottom_rect.width), a_top_rect.height + a_bottom_rect.height)
@@ -91,10 +89,12 @@ feature -- Command
 			l_temp_region.delete
 			l_temp_region_2.delete
 
-			l_imp ?= implementation
-			check not_void: l_imp /= Void end
-			set_window_rgn (l_imp.item, l_region.item, $l_result)
-			check success: l_result /= 0 end
+			if attached {WEL_WINDOW} implementation as l_imp then
+				set_window_rgn (l_imp.item, l_region.item, $l_result)
+				check success: l_result /= 0 end
+			else
+				check implementation_is_wel_window: False end
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -112,14 +112,12 @@ feature {NONE} -- Implementation
 	set_transparent (a_alpha: INTEGER)
 			-- Set transparent. a_alpha is a value from 0-255.
 		local
-			l_imp: detachable EV_POPUP_WINDOW_IMP
 			l_result: INTEGER
 		do
-			l_imp ?= implementation
-			check l_imp /= Void end -- Implied by basic design of Vision2
-			l_imp.set_ex_style ({WEL_WS_CONSTANTS}.ws_ex_layered)
-			check l_imp /= Void end
-			cwin_setlayeredwindowattributes (l_imp.wel_item, a_alpha, $l_result)
+			if attached {EV_POPUP_WINDOW_IMP} implementation as l_imp then
+				l_imp.set_ex_style ({WEL_WS_CONSTANTS}.ws_ex_layered)
+				cwin_setlayeredwindowattributes (l_imp.wel_item, a_alpha, $l_result)
+			end
 		end
 
 	cwin_setlayeredwindowattributes (a_wnd: POINTER; a_alpha: INTEGER; a_result: TYPED_POINTER [INTEGER])
@@ -173,7 +171,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

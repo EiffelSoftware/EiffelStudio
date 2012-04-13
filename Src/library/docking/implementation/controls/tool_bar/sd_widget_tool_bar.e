@@ -82,8 +82,6 @@ feature -- Properties
 
 	row_height: INTEGER
 			-- <Precursor>
-		local
-			l_tool_bar: detachable SD_TOOL_BAR
 		do
 			if is_need_calculate_size then
 				set_need_calculate_size (False)
@@ -93,10 +91,9 @@ feature -- Properties
 				until
 					after
 				loop
-					l_tool_bar ?= item
 					-- Ignore SD_TOOL_BAR's height, only take account of other widgets' height such as EV_COMBO_BOX
 					-- Otherwise, when dragging a multi-row floating tool bar, the height is larger and larger after dock it back
-					if l_tool_bar = Void then
+					if not attached {SD_TOOL_BAR} item then
 						Result := Result.max (item.minimum_height)
 					end
 					forth
@@ -111,13 +108,10 @@ feature -- Command
 
 	extend (a_item: SD_TOOL_BAR_ITEM)
 			-- <Precursor>
-		local
-			l_widget_item: detachable SD_TOOL_BAR_WIDGET_ITEM
 		do
 			tool_bar.extend (a_item)
 			a_item.set_tool_bar (Current)
-			l_widget_item ?= a_item
-			if l_widget_item /= Void then
+			if attached {SD_TOOL_BAR_WIDGET_ITEM} a_item as l_widget_item then
 				extend_fixed (l_widget_item.widget)
 				set_item_size (l_widget_item.widget, l_widget_item.widget.minimum_width.max (1), l_widget_item.widget.minimum_height.max (1))
 			end
@@ -126,12 +120,9 @@ feature -- Command
 
 	force (a_item: SD_TOOL_BAR_ITEM; a_index: INTEGER)
 			-- <Precursor>
-		local
-			l_widget_item: detachable SD_TOOL_BAR_WIDGET_ITEM
 		do
 			tool_bar.force (a_item, a_index)
-			l_widget_item ?= a_item
-			if l_widget_item /= Void then
+			if attached {SD_TOOL_BAR_WIDGET_ITEM} a_item as l_widget_item then
 				extend_fixed (l_widget_item.widget)
 				set_item_size (l_widget_item.widget, l_widget_item.widget.minimum_width, l_widget_item.widget.minimum_height)
 			end
@@ -140,18 +131,13 @@ feature -- Command
 
 	prune (a_item: SD_TOOL_BAR_ITEM)
 			-- <Precursor>
-		local
-			l_widget_item: detachable SD_TOOL_BAR_WIDGET_ITEM
-			l_resizable_item: detachable SD_TOOL_BAR_RESIZABLE_ITEM
 		do
 			tool_bar.prune (a_item)
-			l_widget_item ?= a_item
-			if l_widget_item /= Void then
+			if attached {SD_TOOL_BAR_WIDGET_ITEM} a_item as l_widget_item then
 				prune_fixed (l_widget_item.widget)
 			end
 
-			l_resizable_item ?= a_item
-			if l_resizable_item /= Void then
+			if attached {SD_TOOL_BAR_RESIZABLE_ITEM} a_item as l_resizable_item then
 				l_resizable_item.clear
 			end
 			set_need_calculate_size (True)
@@ -204,22 +190,16 @@ feature -- Command
 
 	in_main_window: BOOLEAN
 			-- If docking in main window?
-		local
-			l_tool_bar_row: detachable SD_TOOL_BAR_ROW
 		do
-			l_tool_bar_row ?= parent
-			if l_tool_bar_row /= Void then
+			if attached {SD_TOOL_BAR_ROW} parent as l_tool_bar_row then
 				Result := l_tool_bar_row.docking_manager.query.is_in_main_window (Current)
 			end
 		end
 
 	resize
 			-- Recalculate items sizes in the row
-		local
-			l_tool_bar_row: detachable SD_TOOL_BAR_ROW
 		do
-			l_tool_bar_row ?= parent
-			if l_tool_bar_row /= Void then
+			if attached {SD_TOOL_BAR_ROW} parent as l_tool_bar_row then
 				l_tool_bar_row.on_resize (l_tool_bar_row.size)
 			end
 		end
@@ -227,21 +207,22 @@ feature -- Command
 	resize_for_sizeble_item
 			--	Call `resize' when no hidden items exist
 		local
-			l_tool_bar_row: detachable SD_TOOL_BAR_ROW
 			l_content: detachable SD_TOOL_BAR_CONTENT
 			l_zone: detachable SD_TOOL_BAR_ZONE
 		do
-			l_tool_bar_row ?= parent
-			if l_tool_bar_row /= Void then
+			if attached {SD_TOOL_BAR_ROW} parent as l_tool_bar_row then
 				l_content := l_tool_bar_row.docking_manager.tool_bar_manager.content_of (Current)
-				check not_void: l_content /= Void end
 				if l_content /= Void then
 					if l_tool_bar_row.hidden_items.count > 0 then
 						resize
 					end
 					l_zone := l_content.zone
-					check l_zone /= Void end -- Implied by current docking in SD_TOOL_BAR_ROW implies current is manaaged by docking manager (not using as standalone)
-					l_zone.update_maximum_size
+					if l_zone /= Void then
+						-- Implied by current docking in SD_TOOL_BAR_ROW implies current is manaaged by docking manager (not using as standalone)
+						l_zone.update_maximum_size
+					end
+				else
+					check content_attached: False end
 				end
 			end
 		end
@@ -249,14 +230,11 @@ feature -- Command
 	screen_x_end_row: INTEGER
 			-- Maximum x position
 		local
-			l_tool_bar_row: detachable SD_TOOL_BAR_ROW
 			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_found, l_is_end: BOOLEAN
 			l_next_tool_bar: SD_GENERIC_TOOL_BAR
 		do
-			l_tool_bar_row ?= parent
-			if l_tool_bar_row /= Void then
-
+			if attached {SD_TOOL_BAR_ROW} parent as l_tool_bar_row then
 				from
 					l_zones := l_tool_bar_row.zones
 					l_zones.start
@@ -282,30 +260,25 @@ feature -- Command
 	update_size
 			-- <Precursor>
 		local
-			l_tool_bar_row: detachable SD_TOOL_BAR_ROW
 			l_parent: detachable EV_CONTAINER
-			l_floating_zone: detachable EV_WINDOW
 			l_old_size: INTEGER
 		do
-			l_tool_bar_row ?= parent
-			if l_tool_bar_row /= Void then
+			if attached {SD_TOOL_BAR_ROW} parent as l_tool_bar_row then
 				-- After `compute_minimum_size', `l_tool_bar_row' size will changed, we record it here.
 				-- Otherwise it will cause bug#13164.
 				l_old_size := l_tool_bar_row.size
-			end
-			compute_minimum_size
-			if l_tool_bar_row /= Void then
+				compute_minimum_size
 				l_tool_bar_row.set_item_size (Current, minimum_width, minimum_height)
 				l_tool_bar_row.on_resize (l_old_size)
 			else
+				compute_minimum_size
 				-- If Current is in a SD_FLOATING_TOOL_BAR_ZONE which is a 3 level parent
 				l_parent := parent
 				if l_parent /= Void then
 					l_parent := l_parent.parent
 					if l_parent /= Void then
 						l_parent := l_parent.parent
-						l_floating_zone ?= l_parent
-						if l_floating_zone /= Void then
+						if attached {EV_WINDOW} l_parent as l_floating_zone then
 							l_floating_zone.set_size (l_floating_zone.minimum_width, l_floating_zone.minimum_height)
 						end
 					end
@@ -641,7 +614,6 @@ feature {NONE} -- Implementation
 		local
 			l_items: like items
 			l_rect: EV_RECTANGLE
-			l_widget_item: detachable SD_TOOL_BAR_WIDGET_ITEM
 			l_widget: EV_WIDGET
 		do
 			create l_rect.make (a_x, a_y, a_width, a_height)
@@ -652,8 +624,7 @@ feature {NONE} -- Implementation
 				l_items.after
 			loop
 				if l_items.item.has_rectangle (l_rect) then
-					l_widget_item ?= l_items.item
-					if l_widget_item /= Void then
+					if attached {SD_TOOL_BAR_WIDGET_ITEM} l_items.item as l_widget_item then
 						l_widget := l_widget_item.widget
 						if has_fixed (l_widget) then
 							set_item_width (l_widget, l_widget.minimum_width.max (1))
@@ -667,7 +638,6 @@ feature {NONE} -- Implementation
 	on_tool_bar_expose_actions (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Handle tool bar expose actions
 		local
-			l_item: detachable SD_TOOL_BAR_WIDGET_ITEM
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_item_x, l_item_y: INTEGER
 		do
@@ -677,15 +647,17 @@ feature {NONE} -- Implementation
 			until
 				l_items.after
 			loop
-				l_item ?= l_items.item
-				if l_item /= Void and
+				if
+					attached {SD_TOOL_BAR_WIDGET_ITEM} l_items.item as l_item and then
 					-- There are maybe expose actions have been called delayed, so we should check if has `l_item'.
-					 then (l_item.has_rectangle (create {EV_RECTANGLE}.make (a_x, a_y, a_width, a_height)) and has (l_item)) then
-						l_item_x := item_x (l_item)
-						l_item_y := item_y (l_item)
-						if (l_item_x /= l_item.widget.x_position or else l_item_y /= l_item.widget.y_position) and then has_fixed (l_item.widget) then
-							set_item_position (l_item.widget, l_item_x, l_item_y)
-						end
+					(l_item.has_rectangle (create {EV_RECTANGLE}.make (a_x, a_y, a_width, a_height)) and
+					has (l_item))
+				then
+					l_item_x := item_x (l_item)
+					l_item_y := item_y (l_item)
+					if (l_item_x /= l_item.widget.x_position or else l_item_y /= l_item.widget.y_position) and then has_fixed (l_item.widget) then
+						set_item_position (l_item.widget, l_item_x, l_item_y)
+					end
 				end
 				l_items.forth
 			end
@@ -699,7 +671,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

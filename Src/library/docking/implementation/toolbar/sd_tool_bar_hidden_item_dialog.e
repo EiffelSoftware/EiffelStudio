@@ -92,9 +92,6 @@ feature {NONE}  -- Initlization
 
 	init_hidden_items (a_hidden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM])
 			-- Add hidden items to Current
-		local
-			l_separator: detachable SD_TOOL_BAR_SEPARATOR
-			l_widget_item: detachable SD_TOOL_BAR_WIDGET_ITEM
 		do
 			internal_vertical_box.extend (internal_horizontal_box)
 
@@ -104,11 +101,11 @@ feature {NONE}  -- Initlization
 			until
 				a_hidden_items.after
 			loop
-				l_separator ?= a_hidden_items.item
-				l_widget_item ?= a_hidden_items.item
-				if l_separator = Void then
-					if l_widget_item /= Void and then
-						l_widget_item.widget /= Void and then attached l_widget_item.widget.parent as l_parent then
+				if attached {SD_TOOL_BAR_SEPARATOR} a_hidden_items.item as l_separator then
+					if
+						attached {SD_TOOL_BAR_WIDGET_ITEM} a_hidden_items.item as l_widget_item and then
+						l_widget_item.widget /= Void and then attached l_widget_item.widget.parent as l_parent
+					then
 						l_parent.prune (l_widget_item.widget)
 					end
 					internal_tool_bar.extend (a_hidden_items.item)
@@ -271,14 +268,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -137,24 +137,27 @@ feature {NONE} -- Implementation agents
 			has_selected: has_selected_item
 		local
 			l_items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
-			l_toggle_button: detachable SD_TOOL_BAR_FONT_BUTTON
 			l_result: detachable like current_focus_label
 		do
 			from
 				l_items := internal_tool_bar.items
 				l_items.start
 			until
-				l_items.after or l_result /= Void
+				l_result /= Void
+				or l_items.after --| We could drop this check, since we are sure l_result /= Void
 			loop
-				l_toggle_button ?= l_items.item
-				check not_void: l_toggle_button /= Void end
-				if l_toggle_button.is_selected then
+				if
+					attached {SD_TOOL_BAR_FONT_BUTTON} l_items.item as l_toggle_button and then
+					l_toggle_button.is_selected
+				then
 					l_result := l_toggle_button
 				end
 				l_items.forth
 			end
-			check l_result /= Void end -- Implied by precondition `has_slected'
-			Result := l_result
+			check l_result /= Void then
+				-- Implied by precondition `has_selected'
+				Result := l_result
+			end
 		end
 
 	on_focus_out
@@ -200,7 +203,6 @@ feature {NONE} -- Implementation agents
 			l_search_result: ARRAYED_LIST [INTEGER]
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_passed_first: BOOLEAN
-			l_label: detachable SD_TOOL_BAR_FONT_BUTTON
 			l_text_finder: like text_finder
 		do
 			l_text_finder := text_finder
@@ -229,13 +231,13 @@ feature {NONE} -- Implementation agents
 				until
 					items_and_tabs.after
 				loop
-					l_label ?= items_and_tabs.item.tool_bar_item
-					check not_void: l_label /= Void end
-					if l_search_result.has (items_and_tabs.index) then
-						internal_tool_bar.extend (items_and_tabs.item.tool_bar_item)
-						if not l_passed_first then
-							l_label.enable_select
-							l_passed_first := True
+					check attached {SD_TOOL_BAR_FONT_BUTTON} items_and_tabs.item.tool_bar_item as l_label then
+						if l_search_result.has (items_and_tabs.index) then
+							internal_tool_bar.extend (items_and_tabs.item.tool_bar_item)
+							if not l_passed_first then
+								l_label.enable_select
+								l_passed_first := True
+							end
 						end
 					end
 					items_and_tabs.forth
@@ -244,9 +246,9 @@ feature {NONE} -- Implementation agents
 			disable_select_all_item
 			l_items := internal_tool_bar.items
 			if l_items.count > 0 and l_items.first /= Void then
-				l_label ?= l_items.first
-				check not_void: l_label /= Void end
-				l_label.enable_hot
+				check attached {SD_TOOL_BAR_FONT_BUTTON} l_items.first as l_label then
+					l_label.enable_hot
+				end
 			end
 			update_size
 		end
@@ -255,11 +257,9 @@ feature {NONE} -- Implementation agents
 			-- Focus first item
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_item: detachable SD_TOOL_BAR_FONT_BUTTON
 		do
 			l_items := internal_tool_bar.items
-			l_item ?= l_items.first
-			if l_item /= Void then
+			if attached {SD_TOOL_BAR_FONT_BUTTON} l_items.first as l_item then
 				l_item.enable_select
 			end
 		end
@@ -268,7 +268,6 @@ feature {NONE} -- Implementation agents
 			--	Disable select all items
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_item: detachable SD_TOOL_BAR_FONT_BUTTON
 		do
 			from
 				l_items := internal_tool_bar.items
@@ -276,50 +275,48 @@ feature {NONE} -- Implementation agents
 			until
 				l_items.after
 			loop
-				l_item ?= l_items.item
-				check not_void: l_item /= Void end
-				l_item.disable_select
+				check attached {SD_TOOL_BAR_FONT_BUTTON} l_items.item as l_item then
+					l_item.disable_select
+				end
 				l_items.forth
 			end
 		end
 
-	next_selected_item (a_next: BOOLEAN): SD_TOOL_BAR_FONT_BUTTON
+	next_selected_item (a_next: BOOLEAN): detachable SD_TOOL_BAR_FONT_BUTTON
 			-- Next item base on current selected item
-		require
-			has_selected: has_selected_item
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_item: detachable SD_TOOL_BAR_FONT_BUTTON
-			l_result: detachable like next_selected_item
+			l_item: detachable SD_TOOL_BAR_ITEM
 		do
 			from
 				l_items := internal_tool_bar.items
 				l_items.start
 			until
-				l_items.after or l_result /= Void
+				l_items.after or Result /= Void
 			loop
-				l_item ?= l_items.item
-				check not_void: l_item /= Void end
-
-				if l_item.is_selected then
+				if
+					attached {SD_TOOL_BAR_FONT_BUTTON} l_items.item as l_font_item and then
+					l_font_item.is_selected
+				then
 					if a_next then
 						if not l_items.islast then
-							l_result ?= l_items.i_th (l_items.index + 1)
+							l_item := l_items.i_th (l_items.index + 1)
 						else
-							l_result ?= l_items.first
+							l_item := l_items.first
 						end
 					else
 						if not l_items.isfirst then
-							l_result ?= l_items.i_th (l_items.index - 1)
+							l_item := l_items.i_th (l_items.index - 1)
 						else
-							l_result ?= l_items.last
+							l_item := l_items.last
 						end
+					end
+					if attached {like next_selected_item} l_item as res then
+						Result := res
 					end
 				end
 				l_items.forth
 			end
-			check l_result /= Void end -- Implied by precondition `has_selected'
-			Result := l_result
 		end
 
 	on_tool_bar_key_press (a_key: EV_KEY)
@@ -327,7 +324,7 @@ feature {NONE} -- Implementation agents
 		local
 			l_label: SD_TOOL_BAR_ITEM
 			l_text: STRING
-			l_item: SD_TOOL_BAR_TOGGLE_BUTTON
+			l_item: detachable SD_TOOL_BAR_TOGGLE_BUTTON
 		do
 			inspect
 				a_key.code
@@ -514,7 +511,6 @@ feature {NONE} -- Implementation functions
 			-- Do at least one item has been selected?
 		local
 			l_items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
-			l_toggle_button: detachable SD_TOOL_BAR_FONT_BUTTON
 		do
 			from
 				l_items := internal_tool_bar.items
@@ -522,9 +518,9 @@ feature {NONE} -- Implementation functions
 			until
 				l_items.after or Result
 			loop
-				l_toggle_button ?= l_items.item
-				check not_void: l_toggle_button /= Void end
-				Result := l_toggle_button.is_selected
+				check attached {SD_TOOL_BAR_FONT_BUTTON} l_items.item as l_toggle_button then
+					Result := l_toggle_button.is_selected
+				end
 				l_items.forth
 			end
 		end
@@ -604,17 +600,18 @@ invariant
 	internal_text_box_not_void: internal_text_box /= Void
 	internal_label_box_not_void: internal_tool_bar /= Void
 	items_and_tabs_not_void: items_and_tabs /= Void
+	tool_bar_font_buttons: across internal_tool_bar.items as l_item all attached {SD_TOOL_BAR_FONT_BUTTON} l_item.item end
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

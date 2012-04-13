@@ -147,7 +147,9 @@ feature -- Query
 	docking_zone_of (a_zone: SD_ZONE): detachable SD_DOCKING_ZONE
 			-- Type convertion
 		do
-			Result ?= a_zone
+			if attached {like docking_zone_of} a_zone as z then
+				Result := z
+			end
 		end
 
 	zone_type_valid (a_zone: SD_ZONE): BOOLEAN

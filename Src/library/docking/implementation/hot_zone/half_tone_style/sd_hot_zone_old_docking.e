@@ -130,7 +130,6 @@ feature -- Redefine
 	apply_change  (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- <Precursor>
 		local
-			l_docking_zone: detachable SD_DOCKING_ZONE
 			l_caller: SD_ZONE
 			l_in_hot_area: BOOLEAN
 		do
@@ -151,9 +150,11 @@ feature -- Redefine
 				elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
 					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.right)
 				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
-					l_docking_zone ?= internal_zone
-					check must_be_docking_zone: l_docking_zone /= Void end
-					l_caller.state.move_to_docking_zone (l_docking_zone, False)
+					if attached {SD_DOCKING_ZONE} internal_zone as l_docking_zone then
+						l_caller.state.move_to_docking_zone (l_docking_zone, False)
+					else
+						check must_be_docking_zone: False end
+					end
 				end
 			end
 			internal_shared.feedback.reset_feedback_clearing
@@ -220,14 +221,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

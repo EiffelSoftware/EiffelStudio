@@ -41,12 +41,14 @@ feature -- Open inner container data
 			l_config_data: detachable SD_CONFIG_DATA
 		do
 			Result := open_all_config (a_file)
-			l_config_data := config_data_from_file (a_file)
-			if l_config_data /= Void then
-				internal_open_maximized_tool_data (l_config_data)
-				internal_docking_manager.command.resize (True)
+			if Result then
+				l_config_data := config_data_from_file (a_file)
+				if l_config_data /= Void then
+					internal_open_maximized_tool_data (l_config_data)
+					internal_docking_manager.command.resize (True)
 
-				call_show_actions
+					call_show_actions
+				end
 			end
 		end
 
@@ -176,23 +178,29 @@ feature -- Query
 		require
 			not_void: a_file /= Void
 		local
-			l_file: RAW_FILE
+			l_file: detachable RAW_FILE
 			l_facility: SED_STORABLE_FACILITIES
 			l_reader: SED_MEDIUM_READER_WRITER
+			retried: BOOLEAN
 		do
-			create l_file.make (a_file.as_string_8)
-			if l_file.exists then
-				l_file.open_read
-				create l_reader.make (l_file)
-				l_reader.set_for_reading
-				create l_facility
-				if attached {SD_CONFIG_DATA} l_facility.retrieved (l_reader, True) as l_result then
-					Result := l_result
+			if not retried then
+				create l_file.make (a_file.as_string_8)
+				if l_file.exists then
+					l_file.open_read
+					create l_reader.make (l_file)
+					l_reader.set_for_reading
+					create l_facility
+					if attached {SD_CONFIG_DATA} l_facility.retrieved (l_reader, True) as l_result then
+						Result := l_result
+					end
 				end
 			end
-			if not l_file.is_closed then
+			if l_file /= Void and then not l_file.is_closed then
 				l_file.close
 			end
+		rescue
+			retried := True
+			retry
 		end
 
 	editor_helper: SD_EDITOR_CONFIG_HELPER
@@ -994,7 +1002,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -62,69 +62,73 @@ feature -- Command
 		require
 			set: is_notebook_set
 		local
-			l_parent: detachable SD_MIDDLE_CONTAINER
 			l_parent_parent: detachable EV_CONTAINER
 			l_other: detachable EV_WIDGET
 			l_new_parent: EV_SPLIT_AREA
-			l_box: detachable EV_BOX
 			l_first: BOOLEAN
 			l_notebook: like internal_notebook
 		do
 			docking_manager.command.lock_update (Current, True)
 			if is_minimized then
-				l_parent ?= parent
-				if l_parent /= Void then
-					l_box ?= l_parent
-					-- If l_box is void here (is a split area), that means, SD_MUTLI_DOCK_AREA.update_middle_container have not been call when it should been called before.					
-					if l_box /= Void then
-						if (attached l_parent.first as l_parent_first and attached l_parent.second as l_parent_second) and then
-							(not l_box.is_item_expanded (l_parent_first) and not l_box.is_item_expanded (l_parent_second)) then
+				if attached {SD_MIDDLE_CONTAINER} parent as l_parent then
+					-- If l_parent is not a EV_BOX here (is a split area), that means
+					-- , SD_MUTLI_DOCK_AREA.update_middle_container have not been call when it should been called before.
+					if attached {EV_BOX} l_parent as l_box then
+						if
+							(attached l_parent.first as l_parent_first and attached l_parent.second as l_parent_second) and then
+							(not l_box.is_item_expanded (l_parent_first) and not l_box.is_item_expanded (l_parent_second))
+						then
 							-- We only need to expand ourself
 							l_box.enable_item_expand (Current)
 						else
 							-- Only Current is minimized, we need to change parent
 							l_parent_parent := l_parent.parent
-							check l_parent_parent /= Void end -- Implied by `l_parent' is existing in main development
-							save_parent_split_position (l_parent_parent)
-							if l_parent.first /= Current then
-								l_other := l_parent.first
-								l_first := False
+							if l_parent_parent = Void then
+								check l_parent_parent_attached: False end
 							else
-								l_other := l_parent.second
-								l_first := True
-							end
-							if attached {SD_ZONE} Current as lt_zone and l_other /= Void then
-								docking_manager.query.inner_container (lt_zone).save_spliter_position (l_other, generating_type + ".recover_normal_size_from_minimize")
-							else
-								check not_possible: False end
-							end
-
-							l_parent_parent.prune (l_parent)
-							l_parent.wipe_out
-							l_new_parent := normal_container (l_parent)
-							l_parent_parent.extend (l_new_parent)
-							if l_other /= Void then
-								if l_first then
-									l_new_parent.extend (Current)
-									l_new_parent.extend (l_other)
+								-- Implied by `l_parent' is existing in main development
+								save_parent_split_position (l_parent_parent)
+								if l_parent.first /= Current then
+									l_other := l_parent.first
+									l_first := False
 								else
-									l_new_parent.extend (l_other)
-									l_new_parent.extend (Current)
+									l_other := l_parent.second
+									l_first := True
 								end
-							end
-
-							docking_manager.command.resize (True)
-
-							restore_parent_split_position (l_parent_parent)
-							if l_parent.split_position >= l_new_parent.minimum_split_position and l_parent.split_position <= l_new_parent.maximum_split_position then
-								l_new_parent.set_split_position (l_parent.split_position)
-							end
-
-							if l_other /= Void then
-								if attached {SD_ZONE} Current as lt_zone_2 then
-								docking_manager.query.inner_container (lt_zone_2).restore_spliter_position (l_other, generating_type + ".recover_normal_size_from_minimize")
+								if attached {SD_ZONE} Current as lt_zone and l_other /= Void then
+									docking_manager.query.inner_container (lt_zone).save_spliter_position (l_other, generating_type + ".recover_normal_size_from_minimize")
 								else
 									check not_possible: False end
+								end
+
+								l_parent_parent.prune (l_parent)
+								l_parent.wipe_out
+								l_new_parent := normal_container (l_parent)
+								l_parent_parent.extend (l_new_parent)
+								if l_other /= Void then
+									if l_first then
+										l_new_parent.extend (Current)
+										l_new_parent.extend (l_other)
+									else
+										l_new_parent.extend (l_other)
+										l_new_parent.extend (Current)
+									end
+								end
+
+								docking_manager.command.resize (True)
+
+								restore_parent_split_position (l_parent_parent)
+
+								if l_parent.split_position >= l_new_parent.minimum_split_position and l_parent.split_position <= l_new_parent.maximum_split_position then
+									l_new_parent.set_split_position (l_parent.split_position)
+								end
+
+								if l_other /= Void then
+									if attached {SD_ZONE} Current as lt_zone_2 then
+										docking_manager.query.inner_container (lt_zone_2).restore_spliter_position (l_other, generating_type + ".recover_normal_size_from_minimize")
+									else
+										check not_possible: False end
+									end
 								end
 							end
 						end
@@ -154,7 +158,6 @@ feature -- Command
 			not_void: a_spliter /= Void
 		local
 			l_upper_spliter: detachable EV_SPLIT_AREA
-			l_container: detachable EV_CONTAINER
 			l_expanded: INTEGER
 			l_expand_stack: like expand_stack
 		do
@@ -163,8 +166,10 @@ feature -- Command
 				if l_upper_spliter /= Void then
 					create l_expand_stack.make (5)
 					expand_stack := l_expand_stack
-					l_container ?= l_upper_spliter.first
-					if l_upper_spliter.first = Current or (l_container /= Void and then l_container.has_recursive (Current)) then
+					if
+						l_upper_spliter.first = Current
+						or (attached {EV_CONTAINER} l_upper_spliter.first as l_container and then l_container.has_recursive (Current))
+					then
 						-- Current from first, we expand
 						if l_upper_spliter.split_position + a_size_to_expand <= l_upper_spliter.maximum_split_position then
 							l_upper_spliter.set_split_position (l_upper_spliter.split_position + a_size_to_expand)
@@ -237,7 +242,6 @@ feature -- Command
 		require
 			set: is_notebook_set
 		local
-			l_parent: detachable SD_MIDDLE_CONTAINER
 			l_parent_parent: detachable EV_CONTAINER
 			l_other: detachable EV_WIDGET
 			l_box: detachable SD_MIDDLE_CONTAINER
@@ -245,55 +249,62 @@ feature -- Command
 			l_notebook: like internal_notebook
 		do
 			docking_manager.command.lock_update (Current, True)
-			l_parent ?= parent
-			if l_parent /= Void then
+			if attached {SD_MIDDLE_CONTAINER} parent as l_parent then
 				if not l_parent.is_minimized then
 					l_parent_parent := l_parent.parent
-					check l_parent_parent /= Void end -- Implied by Current is displaying in main window
-					save_parent_split_position (l_parent_parent)
-					l_last_normal_size := l_parent.split_position
-					l_parent_parent.prune (l_parent)
-					if attached {SD_ZONE} Current as lt_zone then
-						if l_parent.first = Current then
-							l_other := l_parent.second
-							check l_other /= Void end -- Implied by docking widget structur is full two fork tree
-							docking_manager.query.inner_container (lt_zone).save_spliter_position (l_other, generating_type + ".minimize")
-							l_parent.wipe_out
-							l_box := minimized_container (l_parent)
-
-							l_parent_parent.extend (l_box)
-							l_box.extend (Current)
-							l_box.extend (l_other)
-							l_box.disable_item_expand (Current)
-						else
-							l_other := l_parent.first
-							check l_other /= Void end -- Implied by docking widget structur is full two fork tree
-							docking_manager.query.inner_container (lt_zone).save_spliter_position (l_other, generating_type + ".minimize")
-							l_parent.wipe_out
-							l_box := minimized_container (l_parent)
-							l_parent_parent.extend (l_box)
-							l_box.extend (l_other)
-							l_box.extend (Current)
-							l_box.disable_item_expand (Current)
-						end
+					if l_parent_parent = Void then
+						check l_parent_parent_attached: False end
 					else
-						check not_possible: False end
-					end
-					check l_box /= Void end -- Implied by previous if clause
-					l_box.set_split_position (l_last_normal_size)
-					restore_parent_split_position (l_parent_parent)
+						-- Implied by Current is displaying in main window
+						save_parent_split_position (l_parent_parent)
+						l_last_normal_size := l_parent.split_position
+						l_parent_parent.prune (l_parent)
+						if attached {SD_ZONE} Current as lt_zone then
+							if l_parent.first = Current then
+								l_other := l_parent.second
+								check l_other /= Void end -- Implied by docking widget structur is full two fork tree
+								docking_manager.query.inner_container (lt_zone).save_spliter_position (l_other, generating_type + ".minimize")
+								l_parent.wipe_out
+								l_box := minimized_container (l_parent)
 
+								l_parent_parent.extend (l_box)
+								l_box.extend (Current)
+								l_box.extend (l_other)
+								l_box.disable_item_expand (Current)
+							else
+								l_other := l_parent.first
+								check l_other /= Void end -- Implied by docking widget structur is full two fork tree
+								docking_manager.query.inner_container (lt_zone).save_spliter_position (l_other, generating_type + ".minimize")
+								l_parent.wipe_out
+								l_box := minimized_container (l_parent)
+								l_parent_parent.extend (l_box)
+								l_box.extend (l_other)
+								l_box.extend (Current)
+								l_box.disable_item_expand (Current)
+							end
+							l_box.set_split_position (l_last_normal_size)
+						else
+							check not_possible: False end
+						end
+						restore_parent_split_position (l_parent_parent)
+					end
 				else
-					l_box ?= l_parent
-					check not_void: l_box /= Void end
-					l_box.disable_item_expand (Current)
+					if attached {EV_BOX} l_parent as b then
+						b.disable_item_expand (Current)
+					else
+						check l_parent_is_box: False end
+					end
 				end
 
 				is_minimized := True
 				show_notebook_contents (False)
 				l_notebook := internal_notebook
-				check l_notebook /= Void end -- Implied by precondition `set'
-				l_notebook.set_show_minimized (is_minimized)
+				if l_notebook /= Void then
+					-- Implied by precondition `set'
+					l_notebook.set_show_minimized (is_minimized)
+				else
+					check internal_notebook_attached: False end
+				end
 				if attached {SD_ZONE} Current as lt_zone_2 then
 					docking_manager.query.inner_container (lt_zone_2).update_middle_container
 				else
@@ -305,7 +316,7 @@ feature -- Command
 			docking_manager.command.resize (True)
 			if l_other /= Void then
 				if attached {SD_ZONE} Current as lt_zone_3 then
-				docking_manager.query.inner_container (lt_zone_3).restore_spliter_position (l_other, generating_type + ".minimize")
+					docking_manager.query.inner_container (lt_zone_3).restore_spliter_position (l_other, generating_type + ".minimize")
 				else
 					check not_possible: False end
 				end
@@ -349,11 +360,8 @@ feature -- Query
 			-- Spliter size
 		require
 			not_void: a_spliter /= Void
-		local
-			l_container: detachable EV_CONTAINER
 		do
-			l_container ?= a_spliter.first
-			if a_spliter.first = Current or (l_container /= Void and then l_container.has_recursive (Current)) then
+			if a_spliter.first = Current or (attached {EV_CONTAINER} a_spliter.first as l_container and then l_container.has_recursive (Current)) then
 				Result := a_zone_size
 			else
 				Result := a_spliter.maximum_split_position - a_zone_size
@@ -369,8 +377,9 @@ feature -- Query
 			l_parent: detachable EV_CONTAINER
 		do
 			l_parent := a_parent.parent
-			Result ?= l_parent
-			if Result = Void and l_parent /= Void then
+			if attached {like spliter_upper} l_parent as sp then
+				Result := sp
+			elseif l_parent /= Void then
 				Result := spliter_upper (l_parent)
 			end
 		end
@@ -441,22 +450,13 @@ feature {NONE} -- Implementation
 			-- Normal container for `a_container' which is fake split area
 		require
 			not_void: a_container /= Void
-		local
-			l_h_box: detachable EV_HORIZONTAL_BOX
-			l_v_box: detachable EV_VERTICAL_BOX
-			l_result: detachable like normal_container
 		do
-			l_h_box ?= a_container
-			l_v_box ?= a_container
-			if l_h_box /= Void then
-				create {SD_HORIZONTAL_SPLIT_AREA} l_result
-			elseif l_v_box /= Void then
-				create {SD_VERTICAL_SPLIT_AREA} l_result
+			if attached {EV_HORIZONTAL_BOX} a_container then
+				create {SD_HORIZONTAL_SPLIT_AREA} Result
 			else
-				check not_possible: False end
+				check is_vertical_box: attached {EV_VERTICAL_BOX} a_container end
+				create {SD_VERTICAL_SPLIT_AREA} Result
 			end
-			check l_result /= Void end -- Implied by previous if clause
-			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
@@ -465,22 +465,13 @@ feature {NONE} -- Implementation
 			-- Create middle container correspond to `a_old_one'
 		require
 			not_void: a_old_one /= Void
-		local
-			l_horizontal_spliter: detachable EV_HORIZONTAL_SPLIT_AREA
-			l_vertical_spliter: detachable EV_VERTICAL_SPLIT_AREA
-			l_result: detachable like minimized_container
 		do
-			l_horizontal_spliter ?= a_old_one
-			l_vertical_spliter ?= a_old_one
-			if l_horizontal_spliter /= Void then
-				create {SD_HORIZONTAL_BOX} l_result.make
-			elseif l_vertical_spliter /= Void then
-				create {SD_VERTICAL_BOX} l_result.make
+			if attached {EV_HORIZONTAL_SPLIT_AREA} a_old_one then
+				create {SD_HORIZONTAL_BOX} Result.make
 			else
-				check not_possible: False end
+				check is_vertical_split_area: attached {EV_VERTICAL_SPLIT_AREA} a_old_one end
+				create {SD_VERTICAL_BOX} Result.make
 			end
-			check l_result /= Void end -- Implied by previous if clause
-			Result := l_result
 		ensure
 			not_void: Result /= Void
 			minimized: Result.is_minimized
@@ -488,11 +479,8 @@ feature {NONE} -- Implementation
 
 	save_parent_split_position (a_container: EV_CONTAINER)
 			-- Save `a_container' split position
-		local
-			l_split: detachable EV_SPLIT_AREA
 		do
-			l_split ?= a_container
-			if l_split /= Void then
+			if attached {EV_SPLIT_AREA} a_container as l_split then
 				last_split_position := l_split.split_position
 			end
 		end
@@ -521,7 +509,7 @@ feature {NONE} -- Implementation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

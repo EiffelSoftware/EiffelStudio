@@ -682,16 +682,15 @@ feature {NONE}  -- Implementation attributes
 			-- Width
 
 	drawing_width: INTEGER
-			-- Width showig on the screen
+			-- Width displayed on the screen
 		require
 			not_destroyed: not is_destroyed
 		local
-			l_box: detachable SD_NOTEBOOK_TAB_AREA
 			l_avail_width: INTEGER
 		do
-			l_box ?= attached_parent.parent
-			check not_void: l_box /= Void end
-			l_avail_width := l_box.width
+			if attached parent as l_parent and then attached l_parent.parent as l_box then
+				l_avail_width := l_box.width
+			end
 			if l_avail_width > 0 then
 				if l_avail_width >= internal_width then
 					Result := internal_width
@@ -745,7 +744,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

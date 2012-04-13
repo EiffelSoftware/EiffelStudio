@@ -42,19 +42,17 @@ feature -- Command
 
 	update_title_bar
 			-- If `Current' parent is a SD_FLOATING_ZONE, update title bar
-		local
-			l_zone_title: detachable SD_TITLE_BAR_REMOVEABLE
-			l_zone: detachable SD_ZONE
 		do
 			if attached parent_floating_zone as l_floating_zone then
 				l_floating_zone.update_title_bar
 			end
 			if readable then
 				set_all_title_bar (item)
-				l_zone_title ?= item
-				l_zone ?= item
-				if (l_zone_title /= Void and l_zone /= Void)
-					and then not l_zone.is_maximized then
+				if
+					(attached {SD_TITLE_BAR_REMOVEABLE} item as l_zone_title and
+					attached {SD_ZONE} item as l_zone) and then
+					not l_zone.is_maximized
+				then
 					l_zone_title.set_show_normal_max (False)
 				end
 			end
@@ -72,12 +70,9 @@ feature -- Command
 
 	remove_empty_split_area
 			-- Remove all empty split area in `inner_container' recursively
-		local
-			l_item: detachable SD_MIDDLE_CONTAINER
 		do
 			if readable then
-				l_item ?= item
-				if l_item /= Void then
+				if attached {SD_MIDDLE_CONTAINER} item as l_item then
 					remove_empty_split_area_imp (l_item)
 				end
 			end
@@ -93,11 +88,9 @@ feature -- Command
 			a_widget_not_void: a_widget /= Void
 			not_empty: a_data_name /= Void and then not a_data_name.is_empty
 		local
-			l_split: detachable SD_MIDDLE_CONTAINER
 			l_data: like spliters_data
 		do
-			l_split ?= a_widget
-			if l_split /= Void then
+			if attached {SD_MIDDLE_CONTAINER} a_widget as l_split then
 				create l_data.make (1)
 				all_spliters_data.put (l_data, a_data_name)
 				save_spliter_position_imp (l_split, l_data)
@@ -114,11 +107,9 @@ feature -- Command
 			not_empty: a_data_name /= Void and then not a_data_name.is_empty
 			data_saved: (attached {SD_MIDDLE_CONTAINER} a_widget as lt_widget) implies has_spliter_data (a_data_name)
 		local
-			l_split: detachable SD_MIDDLE_CONTAINER
 			l_data: detachable like spliters_data
 		do
-			l_split ?= a_widget
-			if l_split /= Void then
+			if attached {SD_MIDDLE_CONTAINER} a_widget as l_split then
 				l_data := all_spliters_data.item (a_data_name)
 				check l_data /= Void end -- Implied by precondition `data_saved'
 				l_data.start
@@ -152,12 +143,10 @@ feature -- Command
 	update_visible
 			-- Update container visible
 		local
-			l_item: detachable SD_MIDDLE_CONTAINER
 			l_is_all_invisible: BOOLEAN
 		do
 			if readable then
-				l_item ?= item
-				if l_item /= Void then
+				if attached {SD_MIDDLE_CONTAINER} item as l_item then
 					l_is_all_invisible := update_visible_imp (l_item)
 				end
 			end
@@ -165,12 +154,9 @@ feature -- Command
 
 	recover_normal_for_only_one
 			-- If there is only one minimized zone, we restore it
-		local
-			l_zone_upper: detachable SD_UPPER_ZONE
 		do
 			if readable then
-				l_zone_upper ?= item
-				if l_zone_upper /= Void then
+				if attached {SD_UPPER_ZONE} item as l_zone_upper then
 					if l_zone_upper.is_minimized then
 						l_zone_upper.on_minimize
 					end
@@ -184,12 +170,8 @@ feature -- Query
 			-- Does `a_zone' in `Current' recursively
 		require
 			a_zone_not_void: a_zone /= Void
-		local
-			l_widget: detachable EV_WIDGET
 		do
-			l_widget ?= a_zone
-			check l_widget /= Void end
-			Result := has_recursive (l_widget)
+			Result := attached {EV_WIDGET} a_zone as l_widget and then has_recursive (l_widget)
 		end
 
 	zones: ARRAYED_LIST [SD_ZONE]
@@ -245,8 +227,9 @@ feature -- Query
 							check not_possible: False end
 						end
 
-						l_last_parent ?= l_zone
-						check l_last_parent_not_void: l_last_parent /= Void end
+						if attached {EV_CONTAINER} l_zone as l_container then
+							l_last_parent := l_container
+						end
 					until
 						l_parent = Void or Result /= Void
 					loop
@@ -383,8 +366,9 @@ feature {NONE} -- Implementation
 				l_zones.after or Result /= Void
 			loop
 				if l_zones.item.content.type = {SD_ENUMERATION}.place_holder then
-					Result ?= l_zones.item
-					check not_void: Result /= Void end
+					if attached {like editor_place_holder} l_zones.item as r then
+						Result := r
+					end
 				end
 				l_zones.forth
 			end
@@ -396,13 +380,8 @@ feature {NONE} -- Implementation
 	 		-- Set all SD_ZONE's title bar in `Current'
 	 	require
 	 		a_widget_not_void: a_widget /= Void
-	 	local
-	 		l_title_bar_removeable: detachable SD_TITLE_BAR_REMOVEABLE
-	 		l_split_area: detachable SD_MIDDLE_CONTAINER
-	 		l_zone: detachable SD_ZONE
 	 	do
-			l_split_area ?= a_widget
-			if l_split_area /= Void then
+			if attached {SD_MIDDLE_CONTAINER} a_widget as l_split_area then
 				if attached l_split_area.first as l_first then
 					set_all_title_bar (l_first)
 				end
@@ -410,8 +389,7 @@ feature {NONE} -- Implementation
 					set_all_title_bar (l_second)
 				end
 			end
-			l_title_bar_removeable ?= a_widget
-			if l_title_bar_removeable /= Void then
+			if attached {SD_TITLE_BAR_REMOVEABLE} a_widget as l_title_bar_removeable then
 				if parent_floating_zone = Void then
 					l_title_bar_removeable.set_show_normal_max (True)
 				end
@@ -423,8 +401,7 @@ feature {NONE} -- Implementation
 				end
 			end
 
-			l_zone ?= a_widget
-			if l_zone /= Void then
+			if attached {SD_ZONE} a_widget as l_zone then
 				if attached docking_manager.property.last_focus_content as l_content and then l_zone.has (l_content) then
 					l_zone.set_focus_color (True)
 				else
@@ -443,42 +420,35 @@ feature {NONE} -- Implementation
 			parent_not_void: a_middle_container.parent /= Void
 		local
 			l_widget: detachable EV_WIDGET
-			l_middle_container: detachable SD_MIDDLE_CONTAINER
-			l_zone: detachable SD_ZONE
 			l_left_all_invisible, l_right_all_invisible: BOOLEAN
-			l_parent: detachable SD_MIDDLE_CONTAINER
 		do
 			-- Update all middle container in first widget
 			l_widget := a_middle_container.first
-			l_middle_container ?= l_widget
-			l_zone ?= l_widget
-			if l_middle_container /= Void and then l_zone = Void then
-				l_left_all_invisible := update_visible_imp (l_middle_container)
-			else
+			if attached {SD_ZONE} l_widget as l_zone then
 				if attached {EV_WIDGET} l_zone as lt_widget then
 					l_left_all_invisible := not lt_widget.is_displayed
-				else
-					check not_possible: False end
 				end
+			elseif attached {SD_MIDDLE_CONTAINER} l_widget as l_middle_container then
+				l_left_all_invisible := update_visible_imp (l_middle_container)
+			else
+				check not_possible: False end
 			end
 
 			-- Update all middle container in second widget
 			l_widget := a_middle_container.second
-			l_middle_container ?= l_widget
-			l_zone ?= l_widget
-			if l_middle_container /= Void and then l_zone = Void then
+
+			if attached {SD_ZONE} l_widget as l_zone then
+				if attached {EV_WIDGET} l_zone as lt_widget then
+					l_right_all_invisible := not lt_widget.is_displayed
+				end
+			elseif attached {SD_MIDDLE_CONTAINER} l_widget as l_middle_container then
 				l_right_all_invisible := update_visible_imp (l_middle_container)
 			else
-				if attached {EV_WIDGET} l_zone as lt_widget_2 then
-					l_right_all_invisible := not lt_widget_2.is_displayed
-				else
-					check not_possible: False end
-				end
+				check not_possible: False end
 			end
 
 			Result := l_left_all_invisible and l_right_all_invisible
 
-			l_parent ?= a_middle_container
 			if Result then
 				-- Current should be a invisible container
 				a_middle_container.hide
@@ -497,28 +467,23 @@ feature {NONE} -- Implementation
 			parent_not_void: a_middle_container.parent /= Void
 		local
 			l_widget: detachable EV_WIDGET
-			l_middle_container: detachable SD_MIDDLE_CONTAINER
-			l_zone: detachable SD_ZONE
-			l_upper_zone_left, l_upper_zone_right: detachable SD_UPPER_ZONE
 			l_left_all_minimized, l_right_all_minimized: BOOLEAN
-			l_parent: detachable SD_MIDDLE_CONTAINER
 			l_is_in_first: BOOLEAN
 			l_new_parent: SD_MIDDLE_CONTAINER
 		do
 			-- Update all middle container in first widget
 			l_widget := a_middle_container.first
-			l_middle_container ?= l_widget
-			l_zone ?= l_widget
-			if l_middle_container /= Void and then l_zone = Void then
+			if
+				attached {SD_MIDDLE_CONTAINER} l_widget as l_middle_container and
+				not attached {SD_ZONE} l_widget
+			then
 				l_left_all_minimized := update_middle_container_imp (l_middle_container)
 			else
-				check not_void: l_zone /= Void end
-				l_upper_zone_left ?= l_zone
-				if l_upper_zone_left /= Void and then l_upper_zone_left.is_displayed then
+				if attached {SD_UPPER_ZONE} l_widget as l_upper_zone_left and then l_upper_zone_left.is_displayed then
 					l_left_all_minimized := l_upper_zone_left.is_minimized
 				else
-					if attached {EV_WIDGET} l_zone as lt_widget then
-						l_left_all_minimized := not lt_widget.is_displayed
+					if l_widget /= Void then
+						l_left_all_minimized := not l_widget.is_displayed
 					else
 						check not_possible: False end
 					end
@@ -527,71 +492,59 @@ feature {NONE} -- Implementation
 
 			-- Update all middle container in second widget
 			l_widget := a_middle_container.second
-			l_middle_container ?= l_widget
-			l_zone ?= l_widget
-			if l_middle_container /= Void and then l_zone = Void then
-				l_right_all_minimized := update_middle_container_imp (l_middle_container)
+			if l_widget = Void then
+				check has_second: False end
 			else
-				check not_void: l_zone /= Void end
-				l_upper_zone_right ?= l_zone
-				if l_upper_zone_right /= Void then
-					if attached {EV_WIDGET} l_upper_zone_right as lt_widget_2 then
-						if lt_widget_2.is_displayed then
+				if
+					attached {SD_MIDDLE_CONTAINER} l_widget as l_middle_container and then
+					not attached {SD_ZONE} l_widget
+				then
+					l_right_all_minimized := update_middle_container_imp (l_middle_container)
+				else
+					if attached {SD_UPPER_ZONE} l_widget as l_upper_zone_right then
+						if l_widget.is_displayed then
 							l_right_all_minimized := l_upper_zone_right.is_minimized
 						end
 					else
-						check not_possible: False end
-					end
-				else
-					if attached {EV_WIDGET} l_zone as lt_widget_3 then
-						l_right_all_minimized := not lt_widget_3.is_displayed
-					else
-						check not_possible: False end
+						l_right_all_minimized := not l_widget.is_displayed
 					end
 				end
-			end
 
-			Result := l_left_all_minimized and l_right_all_minimized
+				Result := l_left_all_minimized and l_right_all_minimized
 
-			l_parent ?= a_middle_container
-			if l_left_all_minimized or l_right_all_minimized then
-				-- Current should be a minimized container
-
-				if l_parent /= Void then
-					l_is_in_first := l_parent.first = a_middle_container
-					if attached l_parent.first as l_first and attached l_parent.second as l_second then
-						if not l_parent.is_minimized then
-							-- If one child is hidden, then the splitter bar is hidden by EV_VERTICAL_SPLIT_AREA/EV_HORIZONTAL_SPLIT_AREA automatically, we don't need to change it.	
-							if l_first.is_displayed and l_second.is_displayed then
-								disable_item_expand (change_parent_to_minimized_container (l_parent), l_left_all_minimized, l_right_all_minimized)
+				if attached {SD_MIDDLE_CONTAINER} a_middle_container as l_parent then
+					if l_left_all_minimized or l_right_all_minimized then
+						-- Current should be a minimized container
+						l_is_in_first := l_parent.first = a_middle_container
+						if attached l_parent.first as l_first and attached l_parent.second as l_second then
+							if not l_parent.is_minimized then
+								-- If one child is hidden, then the splitter bar is hidden by EV_VERTICAL_SPLIT_AREA/EV_HORIZONTAL_SPLIT_AREA automatically, we don't need to change it.	
+								if l_first.is_displayed and l_second.is_displayed then
+									disable_item_expand (change_parent_to_minimized_container (l_parent), l_left_all_minimized, l_right_all_minimized)
+								end
+							else
+								-- When `l_parent' is minimized container already and a child tool container just hidden, we should update splitter bar visible.
+								if l_first.is_displayed and l_second.is_displayed then
+									l_parent.set_splitter_visible (True)
+								else
+									l_parent.set_splitter_visible (False)
+								end
 							end
 						else
-							-- When `l_parent' is minimized container already and a child tool container just hidden, we should update splitter bar visible.
-							if l_first.is_displayed and l_second.is_displayed then
-								l_parent.set_splitter_visible (True)
-							else
-								l_parent.set_splitter_visible (False)
-							end
+							check False end -- Implied by `l_parent.first = a_middle_container' and docking widgets are full-two-fork-tree structure
 						end
 					else
-						check False end -- Implied by `l_parent.first = a_middle_container' and docking widgets are full-two-fork-tree structure
+						-- Current should be a normal spliter area
+						if l_parent.is_minimized and not l_left_all_minimized and not l_right_all_minimized then
+							l_new_parent := change_parent_to_normal_container (l_parent)
+						end
 					end
 				end
-			else
-				-- Current should be a normal spliter area
-				if l_parent /= Void then
-					if l_parent.is_minimized and not l_left_all_minimized and not l_right_all_minimized then
-						l_new_parent := change_parent_to_normal_container (l_parent)
-					end
+
+				if attached {SD_MIDDLE_CONTAINER} l_widget.parent as l_parent then
+					disable_item_expand (l_parent, l_left_all_minimized, l_right_all_minimized)
 				end
 			end
-
-			check not_void: l_widget /= Void end
-			l_parent ?= l_widget.parent
-			if l_parent /= Void then
-				disable_item_expand (l_parent, l_left_all_minimized, l_right_all_minimized)
-			end
-
 		end
 
 	disable_item_expand (a_middle_container: SD_MIDDLE_CONTAINER; a_disable_first, a_disable_second: BOOLEAN)
@@ -600,37 +553,37 @@ feature {NONE} -- Implementation
 			not_void: a_middle_container /= Void
 			full: a_middle_container.count = 2
 		local
-			l_h_box: detachable SD_HORIZONTAL_BOX
-			l_v_box: detachable SD_VERTICAL_BOX
+			l_first,l_second: detachable EV_WIDGET
 		do
-			l_h_box ?= a_middle_container
-			l_v_box ?= a_middle_container
-			if attached a_middle_container.first as l_first then
-				if a_disable_first then
-					if l_h_box /= Void then
+			l_first := a_middle_container.first
+			l_second := a_middle_container.second
+			if attached {SD_HORIZONTAL_BOX} a_middle_container as l_h_box then
+				if l_first /= Void then
+					if a_disable_first then
 						l_h_box.disable_item_expand (l_first)
-					elseif l_v_box /= Void then
-						l_v_box.disable_item_expand (l_first)
-					end
-				else
-					if l_h_box /= Void then
+					else
 						l_h_box.enable_item_expand (l_first)
-					elseif l_v_box /= Void then
+					end
+				end
+				if l_second /= Void then
+					if a_disable_second then
+						l_h_box.disable_item_expand (l_second)
+					else
+						l_h_box.enable_item_expand (l_second)
+					end
+				end
+			elseif attached {SD_VERTICAL_BOX} a_middle_container as l_v_box then
+				if l_first /= Void then
+					if a_disable_first then
+						l_v_box.disable_item_expand (l_first)
+					else
 						l_v_box.enable_item_expand (l_first)
 					end
 				end
-			end
-			if attached a_middle_container.second as l_second then
-				if a_disable_second then
-					if l_h_box /= Void then
-						l_h_box.disable_item_expand (l_second)
-					elseif l_v_box /= Void then
+				if l_second /= Void then
+					if a_disable_second then
 						l_v_box.disable_item_expand (l_second)
-					end
-				else
-					if l_h_box /= Void then
-						l_h_box.enable_item_expand (l_second)
-					elseif l_v_box /= Void then
+					else
 						l_v_box.enable_item_expand (l_second)
 					end
 				end
@@ -643,19 +596,16 @@ feature {NONE} -- Implementation
 			not_void: a_middle_container /= Void
 			minimized: a_middle_container.is_minimized
 		local
-			l_v_box: detachable SD_VERTICAL_BOX
-			l_h_box: detachable SD_HORIZONTAL_BOX
-
 			l_parent: detachable EV_CONTAINER
 			l_first, l_second: detachable EV_WIDGET
-
 			l_parent_middle_container: detachable SD_MIDDLE_CONTAINER
+
 			l_parent_split_position: INTEGER
 			l_split_position: INTEGER
 		do
 			l_parent := a_middle_container.parent
-			l_parent_middle_container ?= l_parent
-			if l_parent_middle_container /= Void then
+			if attached {SD_MIDDLE_CONTAINER} l_parent as p then
+				l_parent_middle_container := p
 				l_parent_split_position := l_parent_middle_container.split_position
 			end
 			l_first := a_middle_container.first
@@ -663,12 +613,10 @@ feature {NONE} -- Implementation
 
 			save_spliter_position (a_middle_container, generating_type + ".change_parent_to_normal_container")
 
-			l_v_box ?= a_middle_container
-			l_h_box ?= a_middle_container
-			if l_v_box /= Void then
+			if attached {SD_VERTICAL_BOX} a_middle_container then
 				create {SD_VERTICAL_SPLIT_AREA} Result
 			else
-				check not_void: l_h_box /= Void end
+				check is_horizontal_box: attached {SD_HORIZONTAL_BOX} a_middle_container end
 				create {SD_HORIZONTAL_SPLIT_AREA} Result
 			end
 
@@ -702,43 +650,43 @@ feature {NONE} -- Implementation
 			not_void: a_middle_container /= Void
 			not_minimized: not a_middle_container.is_minimized
 		local
-			l_v_split: detachable EV_VERTICAL_SPLIT_AREA
-			l_h_split: detachable EV_HORIZONTAL_SPLIT_AREA
-
 			l_parent: detachable EV_CONTAINER
 			l_first, l_second: detachable EV_WIDGET
-
 			l_parent_middle_container: detachable SD_MIDDLE_CONTAINER
+
 			l_parent_split_position: INTEGER
 			l_split_position: INTEGER
 		do
 			l_parent := a_middle_container.parent
-			l_parent_middle_container ?= l_parent
-			if l_parent_middle_container /= Void then
-				l_parent_split_position := l_parent_middle_container.split_position
+			if attached {SD_MIDDLE_CONTAINER} l_parent as p then
+				l_parent_middle_container := p
+				l_parent_split_position := p.split_position
 			end
 			l_first := a_middle_container.first
 			l_second := a_middle_container.second
 
 			save_spliter_position (a_middle_container, generating_type + ".change_parent_to_minimized_container")
 
-			l_v_split ?= a_middle_container
-			l_h_split ?= a_middle_container
-			if l_v_split /= Void then
+			if attached {EV_VERTICAL_SPLIT_AREA} a_middle_container then
 				create {SD_VERTICAL_BOX} Result.make
 			else
-				check not_void: l_h_split /= Void end
+				check is_horizontal_box: attached {EV_HORIZONTAL_SPLIT_AREA} a_middle_container end
 				create {SD_HORIZONTAL_BOX} Result.make
 			end
 			l_split_position := a_middle_container.split_position
-			check l_parent /= Void end -- Implied by current is displaying in main window
-			l_parent.prune (a_middle_container)
-			a_middle_container.wipe_out
-			l_parent.extend (Result)
-			check l_first /= Void end -- Implied by current is displaying in main window
-			check l_second /= Void end -- Implied by current is displaying in main window
-			Result.extend (l_first)
-			Result.extend (l_second)
+			if l_parent /= Void then
+				-- Implied by current is displaying in main window
+				l_parent.prune (a_middle_container)
+				a_middle_container.wipe_out
+				l_parent.extend (Result)
+			end
+			if
+				l_first /= Void and	-- Implied by current is displaying in main window
+				l_second /= Void -- Implied by current is displaying in main window
+			then
+				Result.extend (l_first)
+				Result.extend (l_second)
+			end
 
 			if l_parent_middle_container /= Void then
 				l_parent_middle_container.set_split_position (l_parent_split_position)
@@ -762,31 +710,34 @@ feature {NONE} -- Implementation
 			a_split_area_parent_not_void: a_split_area.parent /= Void
 		local
 			l_widget: detachable EV_WIDGET
-			l_split: detachable SD_MIDDLE_CONTAINER
-			l_zone: detachable SD_ZONE
 		do
 			-- Remove all empty area in first widget
 			l_widget := a_split_area.first
-			l_split ?= l_widget
-			l_zone ?= l_widget
-			-- If is a split area
-			if l_split /= Void and then l_zone = Void then
+
+			if
+				attached {SD_MIDDLE_CONTAINER} l_widget as l_split and then
+				not attached {SD_ZONE} l_widget
+			then
+				-- If is a split area
 				remove_empty_split_area_imp (l_split)
 			end
+
 			-- Remove all empty area in second widget
 			l_widget := a_split_area.second
-			l_split ?= l_widget
-			l_zone ?= l_widget
-			-- If is a split area
-			if l_split /= Void and then l_zone = Void then
+			if
+				attached {SD_MIDDLE_CONTAINER} l_widget as l_split and then
+				not attached {SD_ZONE} l_widget
+			then
+				-- If is a split area
 				remove_empty_split_area_imp (l_split)
 			end
 
 			if a_split_area.is_empty then
 				if attached a_split_area.parent as l_parent then
+					-- Implied by `a_split_area' is displayed in main window
 					l_parent.prune (a_split_area)
 				else
-					check False end -- Implied by `a_split_area' is diaplying in main window
+					check split_area_parent_attached: False end
 				end
 			elseif a_split_area.second = Void then
 				up_spliter_level (a_split_area, True)
@@ -811,43 +762,46 @@ feature {NONE} -- Implementation
 			else
 				l_widget := a_split_area.second
 			end
-
 			l_parent := a_split_area.parent
-			l_temp_spliter ?= l_parent
 
-			if l_temp_spliter /= Void then
-				l_spliter_position := l_temp_spliter.split_position
-				debug ("docking")
-					io.put_string ("%N SD_MULTI_DOCK_AREA l_spliter_position" + l_spliter_position.out)
+			if
+				l_widget /= Void and  -- Implied by dockng widget structure is full-two-fork-tree
+				l_parent /= Void      -- Implied by `a_split_area' is displaying in main window
+			then
+				if attached {SD_MIDDLE_CONTAINER} l_parent as s then
+					l_temp_spliter := s
+					l_spliter_position := l_temp_spliter.split_position
+					debug ("docking")
+						io.put_string ("%N SD_MULTI_DOCK_AREA l_spliter_position" + l_spliter_position.out)
+					end
 				end
-			end
 
-			l_widget_split ?= l_widget
-			if l_widget_split /= Void then
-				save_spliter_position (l_widget_split, generating_type + ".up_spliter_level")
-			end
-			check l_parent /= Void end -- Implied by `a_split_area' is displaying in main window
-			l_parent.prune (a_split_area)
-			check l_widget /= Void end -- Implied by dockng widget structure is full-two-fork-tree
-			a_split_area.prune (l_widget)
-			l_parent.extend (l_widget)
-
-			if l_temp_spliter /= Void and then l_temp_spliter.full then
-				-- There should by only one, because Postorder, so NO recursive needed
-				-- The split area must full, because Postorder recursive
-
-				-- FIXIT: following if clause is used for GTK, on MsWin it's not needed
-				if l_spliter_position < l_temp_spliter.minimum_split_position then
-					l_spliter_position := l_temp_spliter.minimum_split_position
+				if attached {SD_MIDDLE_CONTAINER} l_widget as w then
+					l_widget_split := w
+					save_spliter_position (l_widget_split, generating_type + ".up_spliter_level")
 				end
-				if l_spliter_position > l_temp_spliter.maximum_split_position then
-					l_spliter_position := l_temp_spliter.maximum_split_position
-				end
-				l_temp_spliter.set_split_position (l_spliter_position)
-			end
 
-			if l_widget_split /= Void then
-				restore_spliter_position (l_widget_split, generating_type + ".up_spliter_level")
+				l_parent.prune (a_split_area)
+				a_split_area.prune (l_widget)
+				l_parent.extend (l_widget)
+
+				if l_temp_spliter /= Void and then l_temp_spliter.full then
+					-- There should by only one, because Postorder, so NO recursive needed
+					-- The split area must full, because Postorder recursive
+
+					-- FIXIT: following if clause is used for GTK, on MsWin it's not needed
+					if l_spliter_position < l_temp_spliter.minimum_split_position then
+						l_spliter_position := l_temp_spliter.minimum_split_position
+					end
+					if l_spliter_position > l_temp_spliter.maximum_split_position then
+						l_spliter_position := l_temp_spliter.maximum_split_position
+					end
+					l_temp_spliter.set_split_position (l_spliter_position)
+				end
+
+				if l_widget_split /= Void then
+					restore_spliter_position (l_widget_split, generating_type + ".up_spliter_level")
+				end
 			end
 		ensure
 			a_split_area_child_pruned: a_split_area.count = 0
@@ -883,19 +837,15 @@ feature {NONE} -- Implementation
 			a_spliter_not_void: a_spliter /= Void
 			not_void: a_data /= Void
 		local
-			l_left, l_right: detachable SD_MIDDLE_CONTAINER
-			l_left_zone, l_right_zone: detachable SD_ZONE
 			l_spliter_position: INTEGER
---			l_old_spliter: SD_MIDDLE_CONTAINER -- For check only
 		do
 			if a_spliter.full then
 				l_spliter_position := a_data.item
 				debug ("docking")
 					io.put_string ("%N SD_MULIT_DOCK_AREA spliter position: open " + l_spliter_position.out)
 				end
-				-- Check
---				l_old_spliter ?= spliters.item [1]
---				check l_old_spliter /= Void and then l_old_spliter = a_spliter end
+
+--				check attached {SD_MIDDLE_CONTAINER} spliters.item [1] as l_old_spliter and then l_old_spliter = a_spliter end
 
 				check a_spliter.full end
 
@@ -911,15 +861,17 @@ feature {NONE} -- Implementation
 				a_data.forth
 			end
 
-			l_left ?= a_spliter.first
-			l_left_zone ?= l_left
-			if l_left /= Void and then l_left_zone = Void then
+			if
+				attached {SD_MIDDLE_CONTAINER} a_spliter.first as l_left and then
+				not attached {SD_ZONE} l_left
+			then
 				restore_spliter_position_imp (l_left, a_data)
 			end
 
-			l_right ?= a_spliter.second
-			l_right_zone ?= l_right
-			if l_right /= Void and then l_right_zone = Void then
+			if
+				attached {SD_MIDDLE_CONTAINER} a_spliter.second as l_right and then
+				not attached {SD_ZONE} l_right
+			then
 				restore_spliter_position_imp (l_right, a_data)
 			end
 		end
@@ -943,14 +895,14 @@ feature {NONE} -- Implementation attributes
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

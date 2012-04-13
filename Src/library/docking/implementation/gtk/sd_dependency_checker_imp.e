@@ -13,6 +13,8 @@ inherit
 
 	EV_ANY_HANDLER
 
+	EV_SHARED_APPLICATION
+
 feature -- Command
 
 	check_dependency (a_parent_window: EV_WINDOW)
@@ -22,21 +24,13 @@ feature -- Command
 
 	is_solaris_cde: BOOLEAN
 			-- Redefine
-		local
-			l_env: EV_ENVIRONMENT
-			l_imp: detachable EV_APPLICATION_IMP
 		do
-			create l_env
-			if attached l_env.application as l_app then
-				l_imp ?= l_app.implementation
-				check not_void: l_imp /= Void end
+			if attached {EV_APPLICATION_IMP} ev_application.implementation as l_imp then
 				-- For Solaris CDE, window manager name is `unknown',  it should be `Dtwin' although.
 				-- For Solaris JDS (Gnome), window manager name is `Metacity'
 				-- For Ubuntu Gnome, window manager name is `Metacity'
 				-- For Ubuntu KDE, window manager name is `KWin'
 				Result := l_imp.window_manager_name.is_equal ("unknown")
-			else
-				check False end -- Implied by application is running
 			end
 		end
 

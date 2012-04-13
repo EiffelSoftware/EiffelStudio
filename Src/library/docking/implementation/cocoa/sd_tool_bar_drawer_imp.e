@@ -144,16 +144,15 @@ feature {NONE} -- Implementation
 			-- Draw pixmap
 		local
 			l_coordinate: EV_COORDINATE
-			l_pixmap_imp: EV_PIXMAP_IMP
 		do
 			if attached {SD_TOOL_BAR_BUTTON} a_arguments.item as l_button and then ((l_button.pixmap /= Void or l_button.pixel_buffer /= Void) and l_button.tool_bar /= Void) then
 				l_coordinate := l_button.pixmap_position
 				if attached l_button.pixmap then
 					l_button.pixmap.stretch (20, 20)
 					--a_arguments.tool_bar.draw_pixmap (l_coordinate.x, l_coordinate.y, l_button.pixmap)
-					l_pixmap_imp ?= l_button.pixmap.implementation
-
-					l_button_cell.draw_image (l_pixmap_imp.image, create {NS_RECT}.make_rect (l_coordinate.x, l_coordinate.y, 20, 20), tool_bar_imp.cocoa_view)
+					check attached {EV_PIXMAP_IMP} l_button.pixmap.implementation as l_pixmap_imp then
+						l_button_cell.draw_image (l_pixmap_imp.image, create {NS_RECT}.make_rect (l_coordinate.x, l_coordinate.y, 20, 20), tool_bar_imp.cocoa_view)
+					end
 				end
 			end
 		end
@@ -178,11 +177,9 @@ feature {NONE} -- Implementation
 
 	tool_bar_imp: EV_DRAWING_AREA_IMP
 		local
-			l_tool_bar_imp: EV_DRAWING_AREA_IMP
-		do
-			l_tool_bar_imp ?= tool_bar.implementation
-			check not_void: l_tool_bar_imp /= Void end
-			Result := l_tool_bar_imp
+			check attached {EV_DRAWING_AREA_IMP} tool_bar.implementation as l_tool_bar_imp then
+				Result := l_tool_bar_imp
+			end
 		end
 
 

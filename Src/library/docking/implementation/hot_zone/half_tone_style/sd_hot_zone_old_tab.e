@@ -41,7 +41,6 @@ feature -- Redefine
 	apply_change  (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- <Precursor>
 		local
-			l_tab_zone: detachable SD_TAB_ZONE
 			l_caller: SD_ZONE
 		do
 			l_caller := internal_mediator.caller
@@ -55,9 +54,11 @@ feature -- Redefine
 					debug ("docking")
 						print ("%NSD_HOT_ZONE_TAB apply_change move_to_tab_zone index is " + internal_tab_area.key_for_iteration.out)
 					end
-					l_tab_zone ?= internal_zone
-					check must_be_tab_zone: l_tab_zone /= Void end
-					l_caller.state.move_to_tab_zone (l_tab_zone, internal_tab_area.key_for_iteration)
+					if attached {SD_TAB_ZONE} internal_zone as l_tab_zone then
+						l_caller.state.move_to_tab_zone (l_tab_zone, internal_tab_area.key_for_iteration)
+					else
+						check must_be_tab_zone: False end
+					end
 				end
 				internal_tab_area.forth
 			end
@@ -75,9 +76,11 @@ feature -- Redefine
 					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.right)
 					Result := True
 				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
-					l_tab_zone ?= internal_zone
-					check must_be_tab_zone: l_tab_zone /= Void end
-					l_caller.state.move_to_tab_zone (l_tab_zone, 1)
+					if attached {SD_TAB_ZONE} internal_zone as l_tab_zone then
+						l_caller.state.move_to_tab_zone (l_tab_zone, 1)
+					else
+						check must_be_tab_zone: False end
+					end
 					Result := True
 				end
 			end
@@ -116,27 +119,34 @@ feature -- Redefine
 		local
 			l_tabs: HASH_TABLE [SD_NOTEBOOK_TAB, INTEGER]
 			l_tab_behind_last: EV_RECTANGLE
-			l_tab_zone: detachable SD_TAB_ZONE
 			l_last: detachable EV_RECTANGLE
+			l_tab_area: like internal_tab_area
 		do
 			Precursor {SD_HOT_ZONE_OLD_DOCKING} (a_rect)
-			l_tab_zone ?= internal_zone
-			check tab_hot_zone_only_for_tab_zone: l_tab_zone /= Void end
-			l_tabs := l_tab_zone.tabs_shown
-			from
-				l_tabs.start
-				create internal_tab_area.make (10)
-			until
-				l_tabs.after
-			loop
-				l_last := create {EV_RECTANGLE}.make (l_tabs.item_for_iteration.screen_x, l_tabs.item_for_iteration.screen_y, l_tabs.item_for_iteration.width, l_tabs.item_for_iteration.height)
-				internal_tab_area.extend (l_last, l_tabs.key_for_iteration)
-				l_tabs.forth
-			end
+			if attached {SD_TAB_ZONE} internal_zone as l_tab_zone then
+				l_tabs := l_tab_zone.tabs_shown
+				from
+					l_tabs.start
+					create l_tab_area.make (l_tabs.count + 1)
+					internal_tab_area := l_tab_area
+				until
+					l_tabs.after
+				loop
+					l_last := create {EV_RECTANGLE}.make (l_tabs.item_for_iteration.screen_x, l_tabs.item_for_iteration.screen_y, l_tabs.item_for_iteration.width, l_tabs.item_for_iteration.height)
+					l_tab_area.extend (l_last, l_tabs.key_for_iteration)
+					l_tabs.forth
+				end
 
-			check l_last /= Void end -- Implied by tab zone at least has one tab
-			create l_tab_behind_last.make (l_last.right + 1, l_last.top, internal_shared.feedback_tab_width, l_last.height)
-			internal_tab_area.extend (l_tab_behind_last, internal_tab_area.count + 1)
+				if l_last /= Void then
+					create l_tab_behind_last.make (l_last.right + 1, l_last.top, internal_shared.feedback_tab_width, l_last.height)
+					l_tab_area.extend (l_tab_behind_last, l_tab_area.count + 1)
+				else
+					check tab_zone_has_at_least_one_tab: False end
+				end
+			else
+				create internal_tab_area.make (0)
+				check tab_hot_zone_only_for_tab_zone: False end
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -146,14 +156,14 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

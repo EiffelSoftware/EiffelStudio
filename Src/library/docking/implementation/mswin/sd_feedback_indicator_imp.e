@@ -138,33 +138,32 @@ feature {NONE} -- Implementation
 		require
 			set: attached pixel_buffer
 		local
-			l_imp: detachable EV_PIXEL_BUFFER_IMP
-			l_pixmap: detachable EV_PIXMAP_IMP
 			l_result: detachable like rgba_dib
 			l_pixel_buffer: like pixel_buffer
 		do
 			l_pixel_buffer := pixel_buffer
-			check l_pixel_buffer /= Void end -- Implied by precondition `set'
-			l_imp ?= l_pixel_buffer.implementation
-			check not_void: l_imp /= Void end
+			check
+				l_pixel_buffer /= Void and then -- Implied by precondition `set'
+				attached {EV_PIXEL_BUFFER_IMP} l_pixel_buffer.implementation as l_imp
+			then
+				if attached l_imp.gdip_bitmap as l_gdip_bitmap then
+					l_result := l_gdip_bitmap.new_bitmap
+					should_destroy_bitmap := True
+				elseif attached l_imp.pixmap as l_pixmap then
+					-- User not have GDI+
+					-- It only works in 32 color depth
 
-			if attached l_imp.gdip_bitmap as l_gdip_bitmap then
-				l_result := l_gdip_bitmap.new_bitmap
-				should_destroy_bitmap := True
-			elseif attached l_imp.pixmap as l_pixmap_imp then
-				-- User not have GDI+
-				-- It only works in 32 color depth
+					check attached {EV_PIXMAP_IMP} l_pixmap.implementation as l_pixmap_imp then
+						create l_result.make_by_bitmap (l_pixmap_imp.get_bitmap)
+					end
+					should_destroy_bitmap := False
+				else
+					check False end -- Implied by gdip_bitmap and pixmap cannot be void at same time
+				end
 
-				l_pixmap ?= l_pixmap_imp.implementation
-				check not_void: l_pixmap /= Void end
-				create l_result.make_by_bitmap (l_pixmap.get_bitmap)
-				should_destroy_bitmap := False
-			else
-				check False end -- Implied by gdip_bitmap and pixmap cannot be void at same time
+				check l_result /= Void end -- Implied by previous if clause
+				Result := l_result
 			end
-
-			check l_result /= Void end -- Implied by previous if clause
-			Result := l_result
 		ensure
 			exists: Result /= Void and then Result.exists
 		end

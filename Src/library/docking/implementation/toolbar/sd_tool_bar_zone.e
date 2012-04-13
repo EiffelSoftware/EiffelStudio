@@ -112,10 +112,7 @@ feature -- Command
 		require
 			not_destroyed: not is_destroyed
 		local
-			l_button: detachable SD_TOOL_BAR_BUTTON
-			l_separator: detachable SD_TOOL_BAR_SEPARATOR
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_widget_button: detachable SD_TOOL_BAR_WIDGET_ITEM
 			l_text: like internal_text
 			l_hidden_items: like internal_hidden_widget_items
 		do
@@ -144,31 +141,33 @@ feature -- Command
 			until
 				l_items.after
 			loop
-				l_button ?= l_items.item
 				l_items.item.set_wrap (not a_horizontal)
 				if not a_horizontal and then l_items.index /= l_items.count then
-					l_separator ?= l_items.i_th (l_items.index + 1)
-					if l_separator /= Void then
+					if attached {SD_TOOL_BAR_SEPARATOR} l_items.i_th (l_items.index + 1) as l_separator then
 						l_items.item.set_wrap (False)
 					end
 				end
 
-				if not a_horizontal and l_button /= Void then
-					check l_text /= Void end -- Implied by `l_text' created in previous if clause if not `is_horizontal'
-					-- We may record Void text here
-					l_text.extend (l_button.text)
-					l_button.set_text ("")
-				elseif a_horizontal and l_button /= Void then
-					if attached internal_text as l_internal_text then
-						l_button.set_text (l_internal_text.item)
-						l_internal_text.forth
+				if attached {SD_TOOL_BAR_BUTTON} l_items.item as l_button then
+					if not a_horizontal then
+						check l_text /= Void then -- Implied by `l_text' created in previous if clause if not `is_horizontal'
+							-- We may record Void text here
+							l_text.extend (l_button.text)
+						end
+						l_button.set_text ("")
+					elseif a_horizontal then
+						if attached internal_text as l_internal_text then
+							l_button.set_text (l_internal_text.item)
+							l_internal_text.forth
+						end
 					end
 				end
 
-				l_widget_button ?= l_items.item
-				if not a_horizontal and then l_widget_button /= Void then
-					check l_hidden_items /= Void end -- Implied by the first if clause in this feature
-					l_hidden_items.extend (l_widget_button, l_items.index)
+				if not a_horizontal and then attached {SD_TOOL_BAR_WIDGET_ITEM} l_items.item as l_widget_button then
+					check l_hidden_items /= Void then
+						-- Implied by the first if clause in this feature
+						l_hidden_items.extend (l_widget_button, l_items.index)
+					end
 					tool_bar.prune (l_widget_button)
 				end
 				l_items.forth
@@ -187,11 +186,8 @@ feature -- Command
 			-- Destroy related parent containers
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_row: detachable SD_TOOL_BAR_ROW
 		do
-			l_row := row
-			if l_row /= Void then
+			if attached row as l_row then
 				l_row.prune (Current)
 				if l_row.count = 0 then
 					if attached l_row.parent as l_parent then
@@ -537,7 +533,9 @@ feature -- Query
 			not_destroyed: not is_destroyed
 		do
 			if attached {EV_WIDGET} tool_bar as lt_widget then
-				Result ?= lt_widget.parent
+				if attached {like row} lt_widget.parent as l_row then
+					Result := l_row
+				end
 			else
 				check not_possible: False end
 			end
@@ -628,8 +626,6 @@ feature -- Query
 			-- If button at `a_screen_x', `a_screen_y' has pointer actions?
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_button: detachable SD_TOOL_BAR_BUTTON
 		do
 			if tool_bar.is_item_position_valid (a_screen_x, a_screen_y) then
 				from
@@ -637,8 +633,10 @@ feature -- Query
 				until
 					tool_bar_items.after or Result
 				loop
-					l_button ?= tool_bar_items.item
-					if l_button /= Void and then l_button.rectangle.has_x_y (a_screen_x - tool_bar.screen_x, a_screen_y - tool_bar.screen_y) then
+					if
+						attached {SD_TOOL_BAR_BUTTON} tool_bar_items.item as l_button and then
+						l_button.rectangle.has_x_y (a_screen_x - tool_bar.screen_x, a_screen_y - tool_bar.screen_y)
+					then
 						Result := l_button.pointer_button_press_actions.count > 0
 					end
 					tool_bar_items.forth
@@ -835,11 +833,9 @@ feature {SD_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_HIDDEN_ITEM_DIALOG, SD_FLOATING
 		require
 			not_destroyed: not is_destroyed
 		local
-			l_widget_item: detachable SD_TOOL_BAR_WIDGET_ITEM
 		do
 			if a_item /= Void and then a_item.is_displayed then
-				l_widget_item ?= a_item
-				if l_widget_item /= Void then
+				if attached {SD_TOOL_BAR_WIDGET_ITEM} a_item as l_widget_item then
 					if attached l_widget_item.widget.parent as l_parent then
 						l_parent.prune (l_widget_item.widget)
 					end
@@ -895,7 +891,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

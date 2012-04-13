@@ -97,14 +97,14 @@ feature -- Redefine querys
 
 feature {SD_TOOL_BAR} -- Pick and drop issues.
 
-	update_for_pick_and_drop (a_starting: BOOLEAN; a_pebble: ANY)
+	update_for_pick_and_drop (a_starting: BOOLEAN; a_pebble: detachable ANY)
 			-- Update for pick and drop
 		do
 			-- Separator do nothing.
 		end
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

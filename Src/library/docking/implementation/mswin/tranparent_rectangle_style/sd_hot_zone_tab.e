@@ -123,7 +123,9 @@ feature -- Query
 		require
 			not_void: a_zone /= Void
 		do
-			Result ?= a_zone
+			if attached {like tab_zone_of} a_zone as r then
+				Result := r
+			end
 		end
 
 	zone_type_valid (a_zone: SD_ZONE): BOOLEAN

@@ -103,7 +103,6 @@ feature {NONE} -- Implementation
 	on_normal_max_window
 			-- <Precursor> (Just copy from SD_ZONE version)
 		local
-			l_split_area: detachable EV_SPLIT_AREA
 			l_main_area: SD_MULTI_DOCK_AREA
 			l_parent: detachable EV_CONTAINER
 		do
@@ -114,8 +113,7 @@ feature {NONE} -- Implementation
 				main_area_widget := l_main_area.item
 				l_parent := parent
 				internal_parent := l_parent
-				l_split_area ?= l_parent
-				if l_split_area /= Void then
+				if attached {EV_SPLIT_AREA} l_parent as l_split_area then
 					internal_parent_split_position := l_split_area.split_position
 				end
 				check l_parent /= Void end -- Implied by Current displaying in main window

@@ -23,6 +23,12 @@ inherit
 			copy
 		end
 
+	EV_SHARED_APPLICATION
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	make,
 	make_for_splash
@@ -33,14 +39,12 @@ feature {NONE} -- Initlization
 			-- Creation method.
 		require
 			not_void: a_pixel_buffer /= Void
-		local
-			l_composite_window: detachable WEL_COMPOSITE_WINDOW
 		do
 			default_create
-			l_composite_window ?= a_parent_window.implementation
-			check not_void: l_composite_window /= Void end
-
-			implementation.init_common (a_pixel_buffer, l_composite_window)
+			if attached {WEL_COMPOSITE_WINDOW} a_parent_window.implementation as l_composite_window then
+				-- FIXME [20130404] rewrite that code to hide this and put that in the implementation.init_common code.
+				implementation.init_common (a_pixel_buffer, l_composite_window)
+			end
 		ensure
 			set: pixel_buffer = a_pixel_buffer
 		end
@@ -49,19 +53,10 @@ feature {NONE} -- Initlization
 			-- Creation method for splash screen.
 		require
 			not_void: a_pixel_buffer /= Void
-		local
-			l_env: EV_ENVIRONMENT
-			l_app_imp: detachable EV_APPLICATION_IMP
 		do
 			default_create
-			create l_env
-			if attached l_env.application as l_app then
-				l_app_imp ?= l_app.implementation
-				check not_void: l_app_imp /= Void end
-
+			if attached {EV_APPLICATION_IMP} ev_application.implementation as l_app_imp then
 				implementation.init_common (a_pixel_buffer, l_app_imp.silly_main_window)
-			else
-				check False end -- Implied by application is running
 			end
 		end
 
@@ -122,7 +117,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

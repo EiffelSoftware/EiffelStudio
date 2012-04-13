@@ -111,8 +111,8 @@ feature {SD_TAB_STATE}  -- Implementation functions
 
 			if l_target_zone_parent /= Void then
 				-- Remember target zone parent split position
-				l_target_zone_parent_spliter ?= l_target_zone_parent
-				if l_target_zone_parent_spliter /= Void then
+				if attached {EV_SPLIT_AREA} l_target_zone_parent as p then
+					l_target_zone_parent_spliter := p
 					l_target_zone_parent_split_position := l_target_zone_parent_spliter.split_position
 				end
 				if attached {EV_WIDGET} a_target_zone as lt_widget_3 then
@@ -140,13 +140,20 @@ feature {SD_TAB_STATE}  -- Implementation functions
 			else
 				check not_possible: False end
 			end
-			check l_target_zone_parent /= Void end -- Implied by previous assign codes in this feature
-			l_target_zone_parent.extend (l_new_split_area)
+			if l_target_zone_parent /= Void then
+				-- Implied by previous assign codes in this feature
+				l_target_zone_parent.extend (l_new_split_area)
+			else
+				check has_target_zone_parent: False end
+			end
+
 			l_new_split_area.set_proportion ({REAL_32} 0.5)
 			if l_target_zone_parent_spliter /= Void and then l_target_zone_parent_spliter.full then
-				if l_target_zone_parent_spliter.maximum_split_position >= l_target_zone_parent_split_position and
-					l_target_zone_parent_spliter.minimum_split_position <= l_target_zone_parent_split_position then
-						l_target_zone_parent_spliter.set_split_position (l_target_zone_parent_split_position)
+				if
+					l_target_zone_parent_spliter.maximum_split_position >= l_target_zone_parent_split_position and
+					l_target_zone_parent_spliter.minimum_split_position <= l_target_zone_parent_split_position
+				then
+					l_target_zone_parent_spliter.set_split_position (l_target_zone_parent_split_position)
 				end
 			end
 			internal_docking_manager.query.inner_container (state.tab_zone).remove_empty_split_area
@@ -340,13 +347,9 @@ feature {SD_TAB_STATE}  -- Implementation functions
 		local
 			l_docking_state: SD_DOCKING_STATE
 			l_split_position: INTEGER
-			l_split_area: detachable EV_SPLIT_AREA
-			l_widget: detachable EV_WIDGET
 			l_second_parent: detachable EV_CONTAINER
 			l_last_content: SD_CONTENT
-			l_main_area: detachable SD_MULTI_DOCK_AREA
-			l_main_area_widget: detachable EV_WIDGET
-			l_internal_parent: detachable EV_CONTAINER
+			l_is_split_area: BOOLEAN
 		do
 			-- `a_parent' may be void if calling by `close' from SD_TAB_STATE on Linux
 			if a_parent /= Void and then state.tab_zone.count = 1 then
@@ -354,42 +357,50 @@ feature {SD_TAB_STATE}  -- Implementation functions
 
 				-- When Eiffel Studio is exiting (everything is recycling), we are not sure if `l_last_content''s docking manager attached, we have to check
 				if l_last_content.is_docking_manager_attached then
-					l_split_area ?= state.tab_zone.parent
-					if l_split_area /= Void then
+					if attached {EV_SPLIT_AREA} state.tab_zone.parent as l_split_area then
 						l_split_position := l_split_area.split_position
+						l_is_split_area := True
 					end
 					l_second_parent := state.tab_zone.parent
 					internal_docking_manager.zones.prune_zone (state.tab_zone)
 					if a_parent.full then
 						-- If a tab want to dock at it's own tab area, then a_parent is full, we use l_second_parent (old tab_zone parent) instead
-						check l_second_parent /= Void end -- Implied by tab zone existing in main window
-						create l_docking_state.make_for_tab_zone (l_last_content, l_second_parent, state.direction)
+						check l_second_parent /= Void then
+							-- Implied by tab zone existing in main window
+							create l_docking_state.make_for_tab_zone (l_last_content, l_second_parent, state.direction)
+						end
 					else
 						create l_docking_state.make_for_tab_zone (l_last_content, a_parent, state.direction)
 					end
 
 					if state.zone.is_maximized then
-						l_main_area := state.zone.main_area
-						check l_main_area /= Void end -- Implied by `is_maximized'
-						l_main_area_widget := state.zone.main_area_widget
-						check l_main_area_widget /= Void end -- Implied by `is_maximized'
-						l_internal_parent := state.zone.internal_parent
-						check l_internal_parent /= Void end -- Implied by `state.zone.is_maximized'
-						l_docking_state.set_widget_main_area (l_main_area_widget, l_main_area, l_internal_parent, state.zone.internal_parent_split_position)
+						if
+							attached state.zone.main_area as l_main_area and -- Implied by `is_maximized'
+							attached state.zone.main_area_widget as l_main_area_widget and -- Implied by `is_maximized'
+							attached state.zone.internal_parent as l_internal_parent    -- Implied by `state.zone.is_maximized'
+						then
+							l_docking_state.set_widget_main_area (l_main_area_widget, l_main_area, l_internal_parent, state.zone.internal_parent_split_position)
+						else
+							check is_maximized: False end
+						end
 					end
 
 					state.tab_zone.last_content.change_state (l_docking_state)
 
-					if l_split_area /= Void then
-						l_widget ?= l_docking_state.zone
-						check l_widget /= Void end
-						l_split_area ?= l_widget.parent
-						check l_split_area /= Void end
-						if
-							l_split_area.full and then
-							(l_split_area.minimum_split_position <= l_split_position and l_split_area.maximum_split_position >= l_split_position)
-						then
-							l_split_area.set_split_position (l_split_position)
+					if l_is_split_area then
+						if attached {EV_WIDGET} l_docking_state.zone as l_widget then
+							if attached {EV_SPLIT_AREA} l_widget.parent as l_split_area then
+								if
+									l_split_area.full and then
+									(l_split_area.minimum_split_position <= l_split_position and l_split_area.maximum_split_position >= l_split_position)
+								then
+									l_split_area.set_split_position (l_split_position)
+								end
+							else
+								check parent_is_split: False end
+							end
+						else
+							check zone_is_widget: False end
 						end
 					end
 					state.zone.destroy
@@ -451,7 +462,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

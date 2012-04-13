@@ -205,12 +205,9 @@ feature -- Commands
 
 	minimize
 			-- Minimize if possible
-		local
-			l_zone: detachable SD_UPPER_ZONE
 		do
 			if is_zone_attached then
-				l_zone ?= zone
-				if l_zone /= Void then
+				if attached {SD_UPPER_ZONE} zone as l_zone then
 					l_zone.minimize
 				end
 			end
@@ -218,12 +215,9 @@ feature -- Commands
 
 	set_split_proportion (a_proportion: REAL)
 			-- Set parent splitter proportion to `a_proportion' if is possible
-		local
-			l_parent: detachable EV_SPLIT_AREA
 		do
 			if attached {EV_WIDGET} zone as lt_widget then
-				l_parent ?= lt_widget.parent
-				if l_parent /= Void then
+				if attached {EV_SPLIT_AREA} lt_widget.parent as l_parent then
 					l_parent.set_proportion (a_proportion)
 				end
 			else
@@ -283,18 +277,19 @@ feature -- Properties
 			-- When Current is floating, this is floating zone which Current is in
 			-- Otherwise is Void
 		local
-			l_2_parent: detachable EV_CONTAINER
-			l_3_parent: detachable EV_CONTAINER
+			l_parent: detachable EV_CONTAINER
 		do
 			if attached {EV_WIDGET} zone as lt_widget then
-				if attached lt_widget.parent as l_parent then
-					l_2_parent := l_parent.parent
+				l_parent := lt_widget.parent
+				if l_parent /= Void then
+					l_parent := l_parent.parent
 				end
-				if l_2_parent /= Void then
-					l_3_parent := l_2_parent.parent
+				if
+					l_parent /= Void and then
+					attached {SD_FLOATING_ZONE} l_parent.parent as l_floating_zone
+				then
+					Result := l_floating_zone
 				end
-
-				Result ?= l_3_parent
 			else
 				check not_possible: False end
 			end
@@ -396,15 +391,11 @@ feature  -- States report
 
 	is_dock_at_top (a_multi_dock_area: SD_MULTI_DOCK_AREA): BOOLEAN
 			-- If `zone' dock at top level of `a_multi_dock_area'?
-		local
-			l_container: detachable EV_CONTAINER
-			l_widget: detachable EV_WIDGET
 		do
-			l_container ?= a_multi_dock_area.item
-			l_widget ?= zone
-			check all_zone_is_widget: l_widget /= Void end
-			if l_container /= Void then
-				Result := l_container.has (l_widget)
+			if attached {EV_WIDGET} zone as l_widget then
+				if attached {EV_CONTAINER} a_multi_dock_area.item as l_container then
+					Result := l_container.has (l_widget)
+				end
 			end
 		end
 
@@ -519,11 +510,8 @@ feature {NONE} -- Implementation
 
 	restore_minimize
 			-- Restore minimize state
-		local
-			l_upper_zone: detachable SD_UPPER_ZONE
 		do
-			l_upper_zone ?= content.state.zone
-			if l_upper_zone /= Void then
+			if attached {SD_UPPER_ZONE} content.state.zone as l_upper_zone then
 				l_upper_zone.minimize_for_restore
 			end
 		end
@@ -575,7 +563,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

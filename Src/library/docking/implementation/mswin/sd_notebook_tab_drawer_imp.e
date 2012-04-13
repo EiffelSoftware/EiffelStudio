@@ -101,8 +101,6 @@ feature -- Commands
 		local
 			l_wel_rect: WEL_RECT
 			l_brush: WEL_BRUSH
-
-			l_pixmap_imp: detachable EV_PIXMAP_IMP_DRAWABLE
 			l_bitmap: detachable WEL_BITMAP
 			l_bitmap_dc: WEL_MEMORY_DC
 
@@ -112,26 +110,33 @@ feature -- Commands
 			start_draw
 
 			l_buffer_pixmap := buffer_pixmap
-			check l_buffer_pixmap /= Void end -- Implied by postcondition of `buffer_pixmap'
-			l_pixmap_imp ?= l_buffer_pixmap.implementation
-			check not_void: l_pixmap_imp /= Void end
-			l_bitmap_dc := l_pixmap_imp.dc
-			l_bitmap := l_bitmap_dc.bitmap
-			check l_bitmap /= Void end -- Implied by `dc' get from pixmap
+			if l_buffer_pixmap /= Void then
+				if attached {EV_PIXMAP_IMP_DRAWABLE} l_buffer_pixmap.implementation as l_pixmap_imp then
+					l_bitmap_dc := l_pixmap_imp.dc
+					l_bitmap := l_bitmap_dc.bitmap
+					if l_bitmap /= Void then
+						l_brush := internal_background_brush
+						create l_wel_rect.make (0, 0, a_width, l_buffer_pixmap.height + 1)
 
-			l_brush := internal_background_brush
-			create l_wel_rect.make (0, 0, a_width, l_buffer_pixmap.height + 1)
+						if theme_data /= default_pointer then
+							draw_xp_selected_tab (l_bitmap_dc, l_bitmap, a_tab_info, l_wel_rect, l_brush)
+						else
+							draw_classic_selected_tab (l_bitmap_dc, l_bitmap, a_tab_info, l_wel_rect, l_brush)
+						end
+						l_brush.delete
+						l_wel_rect.dispose
+					else
+						-- Implied by `dc' get from pixmap
+						check dc_has_bitmap: False end
+					end
+				else
+					check has_implementation: False end
+				end
 
-			if theme_data /= default_pointer then
-				draw_xp_selected_tab (l_bitmap_dc, l_bitmap, a_tab_info, l_wel_rect, l_brush)
+				draw_pixmap_text_selected (l_buffer_pixmap, 0, a_width)
 			else
-				draw_classic_selected_tab (l_bitmap_dc, l_bitmap, a_tab_info, l_wel_rect, l_brush)
+				check buffer_pixmap_attached: False end -- Implied by postcondition of `buffer_pixmap'				
 			end
-
-			l_brush.delete
-			l_wel_rect.dispose
-
-			draw_pixmap_text_selected (l_buffer_pixmap, 0, a_width)
 
 			end_draw
 
@@ -151,19 +156,21 @@ feature -- Commands
 			-- <Precursor>
 		local
 			l_rect: WEL_RECT
-			l_wel_window: detachable WEL_WINDOW
 			l_dc: WEL_WINDOW_DC
 		do
-			if attached tab.parent as l_parent then
-				l_wel_window ?= l_parent.implementation
-			end
-			check not_void: l_wel_window /= Void end
-			create l_dc.make (l_wel_window)
-			l_dc.get
+			if
+				attached tab.parent as l_parent and then
+				attached {WEL_WINDOW} l_parent.implementation as l_wel_window
+			then
+				create l_dc.make (l_wel_window)
+				l_dc.get
 
-			create l_rect.make (a_rect.left, a_rect.top, a_rect.right, a_rect.bottom)
-			wel_draw_focus_rect (l_dc, l_rect)
-			l_dc.dispose
+				create l_rect.make (a_rect.left, a_rect.top, a_rect.right, a_rect.bottom)
+				wel_draw_focus_rect (l_dc, l_rect)
+				l_dc.dispose
+			else
+				check parent_is_wel_window: False end
+			end
 		end
 
 feature{NONE} -- Implementation
@@ -356,7 +363,6 @@ feature{NONE} -- Implementation
 	expose_unselected_or_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO; a_hot: BOOLEAN)
 			-- If is `a_hot' then draw hot tab, otherwise draw normal unselect tab
 		local
-			l_pixmap_imp: detachable EV_PIXMAP_IMP_DRAWABLE
 			l_buffer_dc: WEL_MEMORY_DC
 			l_buffer_bitmap: detachable WEL_BITMAP
 
@@ -368,41 +374,47 @@ feature{NONE} -- Implementation
 			start_draw
 
 			l_buffer_pixmap := buffer_pixmap
-			check l_buffer_pixmap /= Void end -- Implied by postcondition of `start_draw'
-			l_pixmap_imp ?= l_buffer_pixmap.implementation
-			check not_void: l_pixmap_imp /= Void end
+			if l_buffer_pixmap /= Void then
+				if attached {EV_PIXMAP_IMP_DRAWABLE} l_buffer_pixmap.implementation as l_pixmap_imp then
+					l_buffer_dc := l_pixmap_imp.dc
 
-			l_buffer_dc := l_pixmap_imp.dc
+					l_brush := internal_background_brush
 
-			l_brush := internal_background_brush
+					create l_wel_rect.make (0, 0, a_width, l_buffer_pixmap.height)
+					l_buffer_bitmap := l_buffer_dc.bitmap
+					if l_buffer_bitmap /= Void then
+						if theme_data /= default_pointer then
+							if a_hot then
+								draw_xp_hot_tab (l_buffer_dc, l_buffer_bitmap, a_tab_info, l_wel_rect, l_brush)
+							else
+								draw_xp_unselected_tab (l_buffer_dc, l_buffer_bitmap, a_tab_info, l_wel_rect, l_brush)
+							end
+						else
+							-- There no hot stat for classic
+							draw_classic_unselected_tab (l_buffer_dc, l_buffer_bitmap, a_tab_info, l_wel_rect, l_brush)
+						end
 
-			create l_wel_rect.make (0, 0, a_width, l_buffer_pixmap.height)
-
-			l_buffer_bitmap := l_buffer_dc.bitmap
-			check l_buffer_bitmap /= Void end -- Implied by dc comes from `l_pixmap_dc'
-			if theme_data /= default_pointer then
-				if a_hot then
-					draw_xp_hot_tab (l_buffer_dc, l_buffer_bitmap, a_tab_info, l_wel_rect, l_brush)
-				else
-					draw_xp_unselected_tab (l_buffer_dc, l_buffer_bitmap, a_tab_info, l_wel_rect, l_brush)
+						if theme_data /= default_pointer and then not is_top_side_tab then
+							-- We need to mirror bitmaps, because Windows XP theme manager only support draw top tabs
+							l_buffer_dc.unselect_bitmap
+							create l_helper
+							l_helper.mirror_image (l_buffer_bitmap)
+							l_buffer_dc.select_bitmap (l_buffer_bitmap)
+						end
+					else
+						check
+							 -- Implied by dc comes from `l_pixmap_dc'
+							 dc_has_bitmap: False
+						end
+					end
+					l_brush.delete
+					l_wel_rect.dispose
 				end
+
+				draw_pixmap_text_unselected (l_buffer_pixmap , 0, a_width)
 			else
-				-- There no hot stat for classic
-				draw_classic_unselected_tab (l_buffer_dc, l_buffer_bitmap, a_tab_info, l_wel_rect, l_brush)
+				check has_buffer_pixmap: False end
 			end
-
-			if theme_data /= default_pointer and then not is_top_side_tab then
-				-- We need to mirror bitmaps, because Windows XP theme manager only support draw top tabs
-				l_buffer_dc.unselect_bitmap
-				create l_helper
-				l_helper.mirror_image (l_buffer_bitmap)
-				l_buffer_dc.select_bitmap (l_buffer_bitmap)
-			end
-
-			l_brush.delete
-			l_wel_rect.dispose
-
-			draw_pixmap_text_unselected (l_buffer_pixmap , 0, a_width)
 
 			end_draw
 		end
@@ -481,27 +493,26 @@ feature{NONE} -- Implementation
 	draw_close_button (a_drawable: EV_DRAWABLE; a_close_pixmap: EV_PIXMAP)
 			-- <Precursor>
 		local
-			l_imp: detachable EV_PIXMAP_IMP_DRAWABLE
 			l_brush: WEL_BRUSH
 			l_rect: WEL_RECT
 			l_vision_rect: EV_RECTANGLE
 		do
 			if (tab.is_hot or tab.is_selected)and is_top_side_tab then
+				if attached {EV_PIXMAP_IMP_DRAWABLE} a_drawable.implementation as l_imp then
+					create l_brush.make_solid (l_imp.dc.background_color)
+					l_vision_rect := close_rectangle
 
-				l_imp ?= a_drawable.implementation
+					create l_rect.make (l_vision_rect.left, l_vision_rect.top, l_vision_rect.right, l_vision_rect.bottom)
 
-				check not_void: l_imp /= Void end
-				create l_brush.make_solid (l_imp.dc.background_color)
-				l_vision_rect := close_rectangle
-
-				create l_rect.make (l_vision_rect.left, l_vision_rect.top, l_vision_rect.right, l_vision_rect.bottom)
-
-				-- Draw hot state background
-				if tab.is_pointer_in_close_area then
-					if tab.is_pointer_pressed then
-						tool_bar_drawer.draw_button_background (l_imp.dc, l_rect, {SD_TOOL_BAR_ITEM_STATE}.pressed, {WEL_THEME_PART_CONSTANTS}.tp_button)
-					else
-						tool_bar_drawer.draw_button_background (l_imp.dc, l_rect, {SD_TOOL_BAR_ITEM_STATE}.hot, {WEL_THEME_PART_CONSTANTS}.tp_button)
+					-- Draw hot state background
+					if tab.is_pointer_in_close_area then
+						if attached tool_bar_drawer_imp as l_tool_bar_drawer_imp then
+							if tab.is_pointer_pressed then
+								l_tool_bar_drawer_imp.draw_button_background (l_imp.dc, l_rect, {SD_TOOL_BAR_ITEM_STATE}.pressed, {WEL_THEME_PART_CONSTANTS}.tp_button)
+							else
+								l_tool_bar_drawer_imp.draw_button_background (l_imp.dc, l_rect, {SD_TOOL_BAR_ITEM_STATE}.hot, {WEL_THEME_PART_CONSTANTS}.tp_button)
+							end
+						end
 					end
 				end
 
@@ -597,14 +608,13 @@ feature {NONE} -- Attributes
 	theme_drawer: EV_THEME_DRAWER_IMP
 			-- Theme drawer
 
-	tool_bar_drawer: SD_TOOL_BAR_DRAWER_IMP
+	tool_bar_drawer_imp: detachable SD_TOOL_BAR_DRAWER_IMP
 			-- Tool bar drawer
-		local
-			l_result: detachable like tool_bar_drawer
 		do
-			l_result ?= internal_shared.tool_bar_drawer.implementation
-			check l_result /= Void end -- Implied by basic design of {SD_TOOL_BAR_DRAWER}
-			Result := l_result
+			if attached {like tool_bar_drawer_imp} internal_shared.tool_bar_drawer.implementation as l_result then
+				-- Implied by basic design of {SD_TOOL_BAR_DRAWER}
+				Result := l_result
+			end
 		end
 
 	theme_data: POINTER
@@ -612,14 +622,14 @@ feature {NONE} -- Attributes
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

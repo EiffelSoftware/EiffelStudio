@@ -274,10 +274,8 @@ feature {SD_NOTEBOOK_TAB_AREA} -- Implementation
 
 feature {SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ITEM} -- Internal issues
 
-	update_for_pick_and_drop (a_starting: BOOLEAN; a_pebble: ANY)
+	update_for_pick_and_drop (a_starting: BOOLEAN; a_pebble: detachable ANY)
 			--  Update for pick and drop
-		require
-			not_void: a_starting implies a_pebble /= Void
 		deferred
 		end
 
@@ -321,7 +319,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

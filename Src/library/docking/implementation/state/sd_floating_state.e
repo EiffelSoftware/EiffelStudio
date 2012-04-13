@@ -101,12 +101,10 @@ feature -- Redefine
 	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER)
 			-- <Precursor>
 		local
-			l_zone: detachable SD_ZONE
 			l_current_item: EV_WIDGET
 		do
 			l_current_item := inner_container.item
-			l_zone ?= l_current_item
-			if l_zone /= Void then
+			if attached {SD_ZONE} l_current_item as l_zone then
 				l_zone.state.change_zone_split_area (a_target_zone, a_direction)
 			else
 				change_zone_split_area_whole_content (a_target_zone, a_direction)
@@ -128,15 +126,18 @@ feature -- Redefine
 			until
 				l_zones.after
 			loop
-				l_tab_zone_source ?= l_zones.item
-				if l_tab_zone_source /= Void then
+				if attached {SD_TAB_ZONE} l_zones.item as l_item_tab_zone then
+					l_tab_zone_source := l_item_tab_zone
 					l_tab_zone_source.set_drag_title_bar (True)
 				end
 
 				if l_tab_zone = Void then
 					l_zones.item.state.move_to_docking_zone (a_target_zone, a_first)
-					l_tab_zone ?= a_target_zone.content.state.zone
-					check l_tab_zone /= Void end
+					if attached {SD_TAB_ZONE} a_target_zone.content.state.zone as z then
+						l_tab_zone := z
+					else
+						check is_tab_zone: False end
+					end
 				else
 					if a_first then
 						l_zones.item.state.move_to_tab_zone (l_tab_zone, 1)
@@ -172,8 +173,8 @@ feature -- Redefine
 			until
 				l_zones.after
 			loop
-				l_tab_zone_source ?= l_zones.item
-				if l_tab_zone_source /= Void then
+				if attached {SD_TAB_ZONE} l_zones.item as z then
+					l_tab_zone_source := z
 					l_tab_zone_source.set_drag_title_bar (True)
 				end
 
@@ -285,58 +286,57 @@ feature {NONE} -- Implementation
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
 				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		local
-			l_container: detachable EV_CONTAINER
-			l_widget: detachable EV_WIDGET
 			l_spliter: EV_SPLIT_AREA
-			l_current_item: detachable EV_SPLIT_AREA
 			l_target_split: detachable EV_SPLIT_AREA
 			l_target_split_position: INTEGER
 		do
-			l_current_item ?= inner_container.item
-			check l_current_item /= Void end
-			inner_container.save_spliter_position (l_current_item, generating_type + ".change_zone_split_area_whole_content")
-			l_widget ?= a_target_zone
-			check l_widget /= Void end
-			l_container ?= l_widget.parent
-			check l_container /= Void end
-
-			l_target_split ?= l_container
-			if l_target_split /= Void then
-				l_target_split_position := l_target_split.split_position
-			end
-			l_container.prune_all (l_widget)
-			inner_container.wipe_out
-
-			if a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
-				l_spliter := create {SD_HORIZONTAL_SPLIT_AREA}
-			else
-				l_spliter := create {SD_VERTICAL_SPLIT_AREA}
-			end
-
-			if a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.top then
-				l_spliter.set_first (l_current_item)
-				l_spliter.set_second (l_widget)
-			else
-				l_spliter.set_first (l_widget)
-				l_spliter.set_second (l_current_item)
-			end
-
-			l_container.extend (l_spliter)
-			if l_target_split /= Void then
-				if l_target_split.minimum_split_position > l_target_split_position  then
-					l_target_split_position := l_target_split.minimum_split_position
-				elseif l_target_split.maximum_split_position  < l_target_split_position then
-					l_target_split_position := l_target_split.maximum_split_position
+			if
+				attached {EV_SPLIT_AREA} inner_container.item as l_current_item and then
+				attached {EV_WIDGET} a_target_zone as l_widget and then
+				attached l_widget.parent as l_container
+			then
+				inner_container.save_spliter_position (l_current_item, generating_type + ".change_zone_split_area_whole_content")
+				if attached {EV_SPLIT_AREA} l_container as spl then
+					l_target_split	:= spl
+					l_target_split_position := l_target_split.split_position
 				end
-				l_target_split.set_split_position (l_target_split_position)
+				l_container.prune_all (l_widget)
+				inner_container.wipe_out
+
+				if a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
+					l_spliter := create {SD_HORIZONTAL_SPLIT_AREA}
+				else
+					l_spliter := create {SD_VERTICAL_SPLIT_AREA}
+				end
+
+				if a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.top then
+					l_spliter.set_first (l_current_item)
+					l_spliter.set_second (l_widget)
+				else
+					l_spliter.set_first (l_widget)
+					l_spliter.set_second (l_current_item)
+				end
+
+				l_container.extend (l_spliter)
+				if l_target_split /= Void then
+					if l_target_split.minimum_split_position > l_target_split_position  then
+						l_target_split_position := l_target_split.minimum_split_position
+					elseif l_target_split.maximum_split_position  < l_target_split_position then
+						l_target_split_position := l_target_split.maximum_split_position
+					end
+					l_target_split.set_split_position (l_target_split_position)
+				end
+				l_spliter.set_proportion ({REAL_32} 0.5)
+				inner_container.restore_spliter_position (l_current_item, generating_type + ".change_zone_split_area_whole_content")
+			else
+				check a_target_zone_is_widget_and_is_parented: False end
+				check inner_container_item_is_split_area: False end
 			end
-			l_spliter.set_proportion ({REAL_32} 0.5)
-			inner_container.restore_spliter_position (l_current_item, generating_type + ".change_zone_split_area_whole_content")
 		end
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

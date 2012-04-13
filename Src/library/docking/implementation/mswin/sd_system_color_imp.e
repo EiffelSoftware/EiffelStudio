@@ -35,11 +35,10 @@ feature {NONE} -- Implementation
 			-- Creation metod
 		local
 			l_err: WEL_ERROR
-			l_app_imp: detachable EV_APPLICATION_IMP
 		do
-			l_app_imp ?= ev_application.implementation
-			check not_void: l_app_imp /= Void end
-			theme_drawer := l_app_imp.theme_drawer
+			check attached {EV_APPLICATION_IMP} ev_application.implementation as l_app_imp then
+				theme_drawer := l_app_imp.theme_drawer
+			end
 
 			create l_err
 			l_err.reset_last_error_code

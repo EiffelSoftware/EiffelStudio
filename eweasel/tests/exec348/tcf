@@ -1,0 +1,38 @@
+test_name 	 environment-setting
+test_description Testing that eweasel itself properly set or unset environment variable.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result 	 ok
+
+execute_work	 NONE exec_output_1
+execute_result	 ok
+compare		 exec_output_1 output
+
+setenv		 EWEASEL_VAL_ENV EWEASEL
+
+execute_work	 NONE exec_output_2
+execute_result	 ok
+compare		 exec_output_2 output_1
+
+unsetenv		 EWEASEL_VAL_ENV
+
+execute_work	 NONE exec_output_3
+execute_result	 ok
+compare		 exec_output_3 output
+
+setenv		 EWEASEL_VAL_ENV EIFFEL_EWEASEL
+
+execute_work	 NONE exec_output_4
+execute_result	 ok
+compare		 exec_output_4 output_2
+
+unsetenv		 EWEASEL_VAL_ENV
+
+execute_work	 NONE exec_output_5
+execute_result	 ok
+compare		 exec_output_5 output
+
+test_end

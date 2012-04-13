@@ -1,5 +1,7 @@
 #!/bin/sh
 
+. $(dirname $0)/set_eweasel_env
+
 # Remove former test directory
 cd $EWEASEL/..
 \rm -rf test_dir/*
@@ -23,7 +25,7 @@ cd $EWEASEL/..
 
 if [ -n "$1" ]; then
 	if [ "$1" != "no" ]; then
-		eweasel-mt -order -max_threads 8 -keep failed -define INCLUDE $EWEASEL/control -define EWEASEL $EWEASEL -define ISE_EIFFEL $ISE_EIFFEL -define ISE_PLATFORM $ISE_PLATFORM -define ISE_LIBRARY $ISE_LIBRARY -define UNIX 1 -define PLATFORM_TYPE unix -init $EWEASEL/control/init -catalog $EWEASEL/control/catalog -output $EWEASEL/../test_dir > $1
+		eweasel-mt $EWEASEL_ARGS -order -keep failed -catalog $EWEASEL/control/catalog > $1
 	else
 		echo Eweasel not launched per user request
 	fi

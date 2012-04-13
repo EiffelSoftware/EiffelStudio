@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# If $EWEASEL is not defined we assume that it is the current directory
+if [ ! "$EWEASEL" ]; then
+	EWEASEL=$(dirname $0)/..; export $EWEASEL
+	echo EWEASEL was not defined. Assuming $EWEASEL
+fi
+# Check for ISE_EIFFEL and ISE_PLATFORM
+if [ ! "$ISE_EIFFEL" ]; then
+	echo ISE_EIFFEL not defined. Cannot continue
+	CANCEL
+fi
+if [ ! "$ISE_PLATFORM" ]; then
+	echo ISE_PLATFORM not defined. Cannot continue
+	CANCEL
+fi
+# If $ISE_LIBRARY is not defined we use $ISE_EIFFEL
+if [ ! "$ISE_LIBRARY" ]; then
+	ISE_LIBRARY=$ISE_EIFFEL ; export ISE_LIBRARY
+fi
+# Pessimistic approach if number of CPUs is not specified we use only 2.
+if [ ! "$EIF_NBCPUS" ]; then
+	EIF_NBCPUS=2; export EIF_NBCPUS
+fi
+# We assume unix by default
+if [ ! "$EWEASEL_PLATFORM" ]; then
+	EWEASEL_PLATFORM=unix
+fi
+# If $EWEASEL_OUTPUT is not defined we assume in parent directory.
+if [ ! "$EWEASEL_OUTPUT" ]; then
+	EWEASEL_OUTPUT=$EWEASEL/../test_dir; export EWEASEL_OUTPUT
+fi
+if [ ! -d $EWEASEL_OUTPUT ]; then
+	mkdir -p $EWEASEL_OUTPUT
+fi
+
+ISE_LANG=en_US; export ISE_LANG
+
+EWEASEL_ARGS="-max_threads $EIF_NBCPUS -define EWEASEL $EWEASEL -define INCLUDE $EWEASEL/control -define ISE_EIFFEL $ISE_EIFFEL -define ISE_PLATFORM $ISE_PLATFORM -define ISE_LIBRARY $ISE_LIBRARY -define $EWEASEL_PLATFORM 1 -define PLATFORM_TYPE $EWEASEL_PLATFORM -init $EWEASEL/control/init -output $EWEASEL_OUTPUT"
+export EWEASEL_ARGS

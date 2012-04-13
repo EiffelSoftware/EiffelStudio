@@ -92,6 +92,22 @@ feature -- Basic operations
 			implementation.flush
 		end
 
+	enable_focus_on_press
+			-- Enable focus on press handling.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_focus_on_press
+		end
+
+	disable_focus_on_press
+			-- Disable default focus handling when mouse button is pressed on drawing area.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.disable_focus_on_press
+		end
+
 feature {EV_ANY} -- Contract support
 
 	is_in_default_state: BOOLEAN
@@ -120,14 +136,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

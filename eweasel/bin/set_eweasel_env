@@ -20,7 +20,17 @@ if [ ! "$ISE_LIBRARY" ]; then
 fi
 # Pessimistic approach if number of CPUs is not specified we use only 2.
 if [ ! "$EIF_NBCPUS" ]; then
-	EIF_NBCPUS=2; export EIF_NBCPUS
+	case `uname` in
+		Darwin) EIF_NBCPUS=`sysctl -n hw.activecpu` ;;
+		Linux)
+			if [ -f /proc/cpuinfo ] ; then
+				EIF_NBCPUS=`grep -c '^processor[[:space:]]*:' /proc/cpuinfo`
+			fi
+			;;
+		SunOS) EIF_NBCPUS=`/usr/sbin/psrinfo | wc -l` ;;
+		IRIX*) EIF_NBCPUS=`hinv | awk '/^[0-9]+ [0-9]+ MHZ/ {print $1}'` ;;
+	esac
+	export EIF_NBCPUS
 fi
 # We assume unix by default
 if [ ! "$EWEASEL_PLATFORM" ]; then

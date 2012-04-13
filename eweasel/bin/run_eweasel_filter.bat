@@ -8,6 +8,6 @@ if "%~1" == "" (
 	exit 1
 )
 
-if not exist %EWEASEL_OUTPUT%\nul mkdir %EWEASEL_OUTPUT%
+if not exist %EWEASEL_OUTPUT% mkdir %EWEASEL_OUTPUT%
 
 %EWEASEL_COMMAND% -keep all -filter "dir %1" -catalog %EWEASEL%\control\catalog

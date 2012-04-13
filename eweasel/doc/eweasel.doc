@@ -439,6 +439,10 @@ setenv <name> <value>
 
 	Set environment variable <name> with <value>.
 
+unsetenv <name>
+
+	Unset environment variable <name>.
+
 copy_bin <source-file> <dest-directory> <dest-file>
 
 	Copy the binary file named <source-file> from the source directory

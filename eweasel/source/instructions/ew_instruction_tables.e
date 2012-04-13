@@ -33,6 +33,7 @@ feature
 			Result.put (create {EW_DEFINE_DIR_INST}, Define_directory_keyword)
 			Result.put (create {EW_DEFINE_FILE_INST}, Define_file_keyword)
 			Result.put (create {EW_SETENV_INST}, Setenv_keyword)
+			Result.put (create {EW_UNSETENV_INST}, Unsetenv_keyword)
 			Result.put (create {EW_COPY_BIN_INST}, Copy_bin_keyword)
 			Result.put (create {EW_COPY_FILE_INST}, copy_file_keyword)
 			Result.put (create {EW_COPY_RAW_INST}, Copy_raw_keyword)

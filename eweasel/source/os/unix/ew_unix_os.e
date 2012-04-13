@@ -16,10 +16,10 @@ inherit
 
 	EXECUTION_ENVIRONMENT
 		export
-			{ANY} return_code 
+			{ANY} return_code
 			{NONE} all
 		end
-		
+
 	EW_UNIX_EXTERNALS
 
 feature -- Path names
@@ -79,8 +79,7 @@ feature -- Process operations
 			process_id_nonnegative: Result >= 0
 		end
 
-	exec_process (prog_file: STRING; args: ARRAY [STRING]
-			close_nonstd_files: BOOLEAN)
+	exec_process (prog_file: STRING; args: ARRAY [STRING]; envs: POINTER; close_nonstd_files: BOOLEAN)
 			-- Overlay the process with a new process,
 			-- which will execute program `prog_file' with
 			-- arguments `args'.  If `close_nonstd_files'
@@ -97,7 +96,7 @@ feature -- Process operations
 		local
 			k, count, lower: INTEGER
 			pname, area: ANY
-			arguments, arg_copy, null_ptr, env_ptr: POINTER
+			arguments, arg_copy, null_ptr: POINTER
 		do
 			count := args.count
 			lower := args.lower
@@ -114,8 +113,7 @@ feature -- Process operations
 				k := k + 1
 			end
 			unix_set_arg_value (arguments, count, null_ptr)
-			env_ptr := default_pointer
-			unix_exec_process ($pname, arguments, env_ptr, close_nonstd_files)
+			unix_exec_process ($pname, arguments, envs, close_nonstd_files)
 		end
 
 	wait_for_process_block (pid: INTEGER): INTEGER

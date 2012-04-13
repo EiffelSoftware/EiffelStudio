@@ -22,7 +22,7 @@ inherit
 
 feature -- Creation
 
-	make (cmd: STRING; args: LIST [STRING]; inf, outf, savef: STRING)
+	make (cmd: STRING; args: LIST [STRING]; env_vars: HASH_TABLE [STRING, STRING]; inf, outf, savef: STRING)
 			-- Start a new process to run command `cmd'
 			-- with arguments `args'.  The new process
 			-- will gets its input from file `inf' and
@@ -72,6 +72,7 @@ feature -- Creation
 			end
 			create child_process.make (cmd);
 			child_process.set_arguments (arg_array);
+			child_process.set_environment_variables (env_vars);
 			child_process.set_close_nonstandard_files (True);
 			if inf = Void then
 				child_process.set_input_piped

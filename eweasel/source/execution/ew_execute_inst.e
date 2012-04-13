@@ -58,6 +58,7 @@ feature
 			prog, exec_dir, infile, outfile, savefile: STRING;
 			execute_cmd, exec_error: STRING;
 			prog_file, input_file: RAW_FILE;
+			env_vars: HASH_TABLE [STRING, STRING]
 			execution: EW_SYSTEM_EXECUTION;
 		do
 			execute_cmd := test.environment.value (Execute_command_name);
@@ -67,6 +68,7 @@ feature
 				test.increment_execution_count;
 				exec_dir := test.environment.value (execution_dir_name);
 				prog := os.executable_full_file_name (exec_dir, test.system_name);
+				env_vars := test.environment.environment_variables
 				if input_file_name /= Void then
 					infile := os.full_file_name (test.environment.value (Source_dir_name), input_file_name);
 				else
@@ -95,7 +97,7 @@ feature
 						end
 					end
 					if execute_ok then
-						create execution.make (prog, arguments, execute_cmd, exec_dir, infile, outfile, savefile);
+						create execution.make (prog, arguments, env_vars, execute_cmd, exec_dir, infile, outfile, savefile);
 						test.set_execution_result (execution.next_execution_result);
 					end
 				else

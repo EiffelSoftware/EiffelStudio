@@ -118,6 +118,10 @@ feature -- Properties
 			-- the name of the program).  If Void or if count
 			-- is zero, then no arguments are passed
 
+	environment_variables: HASH_TABLE [STRING, STRING];
+			-- Environment variables and the values to
+			-- which they should be set in spawned process
+
 	close_nonstandard_files: BOOLEAN;
 			-- Should nonstandard files (files other than
 			-- standard input, standard output and standard
@@ -241,6 +245,16 @@ feature -- Modification
 			arguments := args;
 		ensure
 			arguments_set: arguments = args
+		end
+
+	set_environment_variables (vars: HASH_TABLE [STRING, STRING])
+			-- Set `environment_variables' to `vars'
+		require
+			process_not_executing: not is_executing
+		do
+			environment_variables := vars;
+		ensure
+			environment_variables_set: environment_variables = vars
 		end
 
 	set_close_nonstandard_files (b: BOOLEAN)
@@ -383,7 +397,7 @@ feature -- Execution
 				in_child := True
 				collection_off;
 				setup_child_process_files;
-				exec_process (program_file_name, arguments_for_exec, close_nonstandard_files)
+				exec_process (program_file_name, arguments_for_exec, environment_table_as_pointer, close_nonstandard_files)
 				-- Never returns.  Either exec works
 				-- or an exception is raised
 			else			-- Parent
@@ -584,6 +598,60 @@ feature {NONE} -- Implementation
 			shared_error_pipe := Void
 			err_file := Void
 
+		end
+
+	environment_table_as_pointer: POINTER
+			-- {POINTER} representation of `environment_variable_table'.
+			-- Return `default_pointer' if `environment_variable_table' is Void or empty.
+			--| Note that memory will be leaked if not use for spawning the process.
+		local
+			l_ptr: MANAGED_POINTER
+			l_cstr: C_STRING
+			l_cstr_ptr: POINTER
+			i, nb: INTEGER
+			l_str: STRING
+		do
+			if attached environment_variables as l_tbl and then not l_tbl.is_empty then
+					-- Estimate the number of environment variables that will be stored.
+				from
+					l_tbl.start
+				until
+					l_tbl.after
+				loop
+					if l_tbl.key_for_iteration /= Void and then l_tbl.item_for_iteration /= Void then
+						nb := nb + 1
+					end
+					l_tbl.forth
+				end
+					-- We allocate `Result', then use a MANAGED_POINTER to fill its content.
+				Result := Result.memory_alloc ((nb + 1) * {PLATFORM}.pointer_bytes)
+				create l_ptr.share_from_pointer (Result, (nb + 1) * {PLATFORM}.pointer_bytes)
+				from
+					l_tbl.start
+					i := 0
+				until
+					l_tbl.after
+				loop
+					if
+						attached l_tbl.key_for_iteration as l_key and then
+						attached l_tbl.item_for_iteration as l_value
+					then
+						create l_str.make (l_key.count + l_value.count + 1)
+						l_str.append (l_key)
+						l_str.append_character ('=')
+						l_str.append (l_value)
+							-- We allocate memory ourself so that the C_STRING object does not
+							-- free the memory.
+						l_cstr_ptr := l_cstr_ptr.memory_alloc (l_str.count + 1)
+						create l_cstr.make_shared_from_pointer_and_count (l_cstr_ptr, l_str.count)
+						l_cstr.set_string (l_str)
+						l_ptr.put_pointer (l_cstr_ptr, i * {PLATFORM}.pointer_bytes)
+						i := i + 1
+					end
+					l_tbl.forth
+				end
+				l_ptr.put_pointer (default_pointer, i * {PLATFORM}.pointer_bytes)
+			end
 		end
 
 	setup_child_process_files

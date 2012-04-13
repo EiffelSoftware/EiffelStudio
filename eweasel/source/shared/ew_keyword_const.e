@@ -52,6 +52,7 @@ feature
 	Test_name_keyword: 		STRING = "test_name"
 	Undefine_keyword: 		STRING = "undefine"
 	Unknown_keyword: 		STRING = "unknown";
+	Unsetenv_keyword: 		STRING = "unsetenv"
 
 note
 	copyright: "[

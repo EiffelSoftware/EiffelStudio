@@ -73,14 +73,8 @@ feature
 			-- Execute `Current' as one of the
 			-- instructions of `test'
 		do
-			put (value, variable);
-			if return_code = 0 then
-				test.environment.add_environment_variable (variable);
-				execute_ok := True
-			else
-				execute_ok := False
-				failure_explanation := "call to set environment variable failed";
-			end
+			test.environment.add_environment_variable (variable, value);
+			execute_ok := True
 		end;
 
 	init_ok: BOOLEAN;

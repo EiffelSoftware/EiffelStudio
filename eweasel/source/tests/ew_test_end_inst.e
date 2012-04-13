@@ -42,7 +42,6 @@ feature
 			if c_comp /= Void then
 				c_comp.abort;
 			end
-			test.environment.unset_environment_variables
 		end;
 	
 	init_ok: BOOLEAN;

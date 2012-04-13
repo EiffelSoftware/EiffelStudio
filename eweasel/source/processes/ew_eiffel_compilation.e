@@ -26,7 +26,7 @@ create
 
 feature
 
-	make (cmd: STRING; args: LIST [STRING]; save: STRING)
+	make (cmd: STRING; args: LIST [STRING]; env_vars: HASH_TABLE [STRING, STRING]; save: STRING)
 			-- Start a new Eiffel compilation process to
 			-- run command `cmd' with arguments `args'.
 			-- Write all output from the new process to
@@ -36,7 +36,7 @@ feature
 			arguments_not_void: args /= Void;
 			save_name_not_void: save /= Void;
 		do
-			process_make (cmd, args, Void, Void, save);
+			process_make (cmd, args, env_vars, Void, Void, save);
 		end;
 
 	next_compile_result_type: EW_EIFFEL_COMPILATION_RESULT

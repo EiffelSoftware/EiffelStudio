@@ -39,6 +39,7 @@ feature
 			-- Set `execute_ok' to indicate whether successful.
 		local
 			dir, save, freeze_cmd, exec_error: STRING;
+			env_vars: HASH_TABLE [STRING, STRING]
 			l_max_c_processes: INTEGER
 			compilation: EW_C_COMPILATION;
 		do
@@ -47,6 +48,7 @@ feature
 			if exec_error = Void then
 				test.increment_c_compile_count;
 				dir := test.environment.value (compilation_dir_name); 
+				env_vars := test.environment.environment_variables
 				l_max_c_processes := test.environment.max_c_processes
 				if output_file_name /= Void then
 					save := output_file_name; 
@@ -54,7 +56,7 @@ feature
 					save := test.c_compile_output_name; 
 				end;
 				save := os.full_file_name (test.environment.value (Output_dir_name), save); 
-				create compilation.make (dir, save, freeze_cmd, l_max_c_processes);
+				create compilation.make (dir, save, freeze_cmd, env_vars, l_max_c_processes);
 				test.set_c_compilation (compilation);
 				test.set_c_compilation_result (compilation.next_compile_result);
 				execute_ok := True;

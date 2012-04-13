@@ -32,7 +32,7 @@ inherit
 
 feature -- Creation
 
-	make (cmd: STRING; args: LIST [STRING]; inf, outf, savef: STRING)
+	make (cmd: STRING; args: LIST [STRING]; a_env_vars: HASH_TABLE [STRING, STRING]; inf, outf, savef: STRING)
 			-- Start a new process to run command `cmd'
 			-- with arguments `args'.  The new process
 			-- will gets its input from file `inf' and
@@ -73,6 +73,7 @@ feature -- Creation
 				output.append_new_line
 			end
 
+			set_environment_variables (a_env_vars)
 			create cmd_line.make (1024)
 			cmd_line.append (cmd)
 			cmd_line.append_character (' ')

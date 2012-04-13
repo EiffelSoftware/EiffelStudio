@@ -22,7 +22,7 @@ create
 
 feature
 
-	make (dir, save, freeze_cmd: STRING max_procs: INTEGER)
+	make (dir, save, freeze_cmd: STRING env_vars: HASH_TABLE [STRING, STRING]; max_procs: INTEGER)
 			-- Start a new process to do any necessary
 			-- C compilations (freezing) in directory `dir',
 			-- using at most `max_procs' simultaneous processes
@@ -49,7 +49,7 @@ feature
 				args.extend ("-nproc");
 				args.extend (max_procs.out);
 			end
-			process_make (l_cmd, args, Void, Void, save);
+			process_make (l_cmd, args, env_vars, Void, Void, save);
 		end;
 
 	next_compile_result_type: EW_C_COMPILATION_RESULT

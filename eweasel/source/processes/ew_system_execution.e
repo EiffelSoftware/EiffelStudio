@@ -23,7 +23,7 @@ create
 
 feature
 
-	make (prog: STRING; args: LINKED_LIST [STRING]; execute_cmd, dir, inf, outf, savef: STRING)
+	make (prog: STRING; args: LINKED_LIST [STRING]; env_vars: HASH_TABLE [STRING, STRING]; execute_cmd, dir, inf, outf, savef: STRING)
 			-- Start a new process to execute `prog' with
 			-- arguments `args' using execution command
 			-- `execute_cmd' in directory `dir'.
@@ -51,7 +51,7 @@ feature
 			real_args.extend (prog)
 			real_args.finish
 			real_args.merge_right (args)
-			process_make (Shell_command, real_args, inf, outf, savef)
+			process_make (Shell_command, real_args, env_vars, inf, outf, savef)
 		end
 
 	next_execution_result_type: EW_EXECUTION_RESULT

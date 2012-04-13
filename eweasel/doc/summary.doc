@@ -63,6 +63,7 @@ Test control file instructions:
 	define_directory <name> <path> <subdir1> <subdir2> ...
 	define_file <name> <path> [<subdir1> <subdir2> ...] <filename>
 	setenv <name> <value>
+	unsetenv <name>
 	
 	copy_bin <source-file> <dest-directory> <dest-file>
 	copy_file <absolute-path-source-file> <dest-directory> <dest-file>

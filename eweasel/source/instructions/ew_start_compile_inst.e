@@ -22,7 +22,9 @@ feature
 		local
 			name, compile_cmd, exec_error: STRING;
 			compilation: EW_EIFFEL_COMPILATION;
+			env_vars: HASH_TABLE [STRING, STRING]
 		do
+			env_vars := test.environment.environment_variables
 			compilation := test.e_compilation;
 			if compilation = Void or else not compilation.suspended then
 				compile_cmd := test.environment.value (Compile_command_name)
@@ -36,7 +38,7 @@ feature
 						name := test.e_compile_output_name;
 					end;
 					name := os.full_file_name (test.environment.value (Output_dir_name), name);
-					create compilation.make (compile_cmd, compiler_arguments (test, test.environment), name);
+					create compilation.make (compile_cmd, compiler_arguments (test, test.environment), env_vars, name);
 					test.set_e_compilation (compilation);
 					test.set_e_compilation_result (compilation.next_compile_result);
 					execute_ok := True;

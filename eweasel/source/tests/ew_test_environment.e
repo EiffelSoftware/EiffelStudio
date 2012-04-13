@@ -40,6 +40,10 @@ feature  -- Creation
 		do
 			create table.make (n);
 			create list.make (0);
+				-- We initialize our list of environment variables by using
+				-- the environment variables that were used to start the eweasel
+				-- process
+			environment_variables := starting_environment_variables
 			max_c_processes := -1
 		ensure
 			table_large_enough: table.capacity >= n
@@ -67,30 +71,24 @@ feature  -- Modification
 			table.remove (var);
 		end;
 
-	add_environment_variable (var: STRING)
+	add_environment_variable (var, val: STRING)
 			-- Add `var' to list of operating system environment
-			-- variables that have been defined.
+			-- variables to be defined in spawned processes
 		require
 			variable_not_void: var /= Void;
+			value_not_void: val /= Void;
 		do
-			list.extend (var);
-		end;
+			environment_variables.force (val, var)
+		end
 
-	unset_environment_variables
-			-- Unset all operating system environment
-			-- variables that have been defined (actually,
-			-- set their values to the empty string)
+	remove_environment_variable (var: STRING)
+			-- Remove `var' from list of operating system environment
+			-- variables to be defined in spawned processes
+		require
+			variable_not_void: var /= Void
 		do
-			from
-				list.start
-			until
-				list.after
-			loop
-				put ("", list.item)
-				list.forth
-			end
-			list.wipe_out
-		end;
+			environment_variables.remove (var)
+		end
 
 	set_max_c_processes (n: INTEGER)
 		do
@@ -202,6 +200,10 @@ feature  -- Properties
 	max_c_processes: INTEGER
 			-- Maximum number of processes to use for
 			-- one test for any required C compilations
+
+	environment_variables: HASH_TABLE [STRING, STRING];
+			-- Operating system environment variable values,
+			-- indexed by OS environment variable name
 
 feature  -- Display
 

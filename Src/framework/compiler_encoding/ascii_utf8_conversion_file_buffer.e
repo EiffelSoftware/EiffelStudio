@@ -103,7 +103,7 @@ feature -- Element Change
 			end
 		end
 
-	compact_left is
+	compact_left
 			-- <Precursor>
 			-- Resize even if there is still space as a result of filling one UTF-8 character.
 			-- i.e. Previously we left `Max_bytes_of_iso_8859_1_to_utf8' bytes space for one character,

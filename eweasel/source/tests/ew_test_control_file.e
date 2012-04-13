@@ -69,7 +69,7 @@ feature -- Parsing and execution
 		local
 			test: EW_EIFFEL_EWEASEL_TEST;
 		do
-			parse (env.deep_twin);
+			parse (env);
 			if last_ok then
 				create test.make (instructions);
 				test.execute (env);

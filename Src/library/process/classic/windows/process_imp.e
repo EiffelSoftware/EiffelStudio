@@ -12,20 +12,9 @@ class
 inherit
 	PROCESS
 
-	WEL_PROCESS_LAUNCHER
-		rename
-			hidden as wel_hidden,
-			launch as wel_launch
-		export
-			{NONE}all
-		end
-
 	PROCESS_UTILITY
 		export
 			{NONE}all
-		undefine
-			cwin_close_handle
-
 		end
 
 create
@@ -94,7 +83,7 @@ feature -- Control
 			on_start
 			initialize_child_process
 				-- Launch process.
-			child_process.launch (command_line, working_directory, separate_console, detached_console, is_environment_variable_unicode, environment_table_as_pointer)
+			child_process.launch (command_line, working_directory, separate_console, detached_console)
 			launched := child_process.launched
 			if launched then
 				initialize_after_launch
@@ -379,6 +368,7 @@ feature{NONE} -- Implementation
 			child_process.set_input_direction (input_direction)
 			child_process.set_output_direction (output_direction)
 			child_process.set_error_direction (error_direction)
+			child_process.set_environment_variables (environment_variable_table)
 			if input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
 				l_input_file_name := input_file_name
 				check l_input_file_name /= Void end
@@ -457,10 +447,10 @@ feature{NONE} -- Implementation
 		local
 			l_prc_result: INTEGER
 		do
-			last_termination_successful := cwin_exit_code_process (handle, $l_prc_result)
+			last_termination_successful := {WEL_API}.get_exit_code_process (handle, $l_prc_result)
 			if last_termination_successful then
-				if l_prc_result = cwin_still_active then
-					last_termination_successful := cwin_terminate_process (handle, 0)
+				if l_prc_result = {WEL_API}.still_active then
+					last_termination_successful := {WEL_API}.terminate_process (handle, 0)
 				end
 			end
 		end
@@ -667,36 +657,8 @@ feature{NONE} -- Implementation
 	internal_id: INTEGER
 			-- Internal process id
 
-	environment_table_as_pointer: POINTER
-			-- {POINTER} representation of `environment_variable_table'
-			-- Return `default_pointer' if `environment_variable_table' is Void or empty.
-		local
-			l_str: STRING
-			l_tbl: like environment_variable_table
-		do
-			l_tbl := environment_variable_table
-			if l_tbl /= Void and then not l_tbl.is_empty then
-				create l_str.make (512)
-				from
-					l_tbl.start
-				until
-					l_tbl.after
-				loop
-					if l_tbl.key_for_iteration /= Void and then l_tbl.item_for_iteration /= Void then
-						l_str.append (l_tbl.key_for_iteration)
-						l_str.append_character ('=')
-						l_str.append (l_tbl.item_for_iteration)
-						l_str.append_character ('%U')
-					end
-					l_tbl.forth
-				end
-				l_str.append_character ('%U')
-				Result := (create {C_STRING}.make (l_str)).item
-			else
-				Result := default_pointer
-			end
-		end
-
+invariant
+	
 note
 	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

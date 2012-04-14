@@ -43,14 +43,16 @@ feature -- Access
 						cwin_process32_next (toolhelp_handle, ptr, $entry, $succ)
 					end
 					if entry /= default_pointer then
-						cwin_free_pointer (entry)
+						entry.memory_free
 					end
-					cwin_close_handle (ptr)
+					if {WEL_API}.close_handle (ptr) = 0 then
+						check close_handle_success: False end
+					end
 				end
 			else
 				cwin_nt_get_process_list (ntps_handle, $ptr, $l_count, $l_size, $succ)
-				if succ then
-					create l_list.make_from_pointer (ptr, l_count * l_size)
+				if succ and ptr /= default_pointer then
+					create l_list.share_from_pointer (ptr, l_count * l_size)
 					from
 						i := 0
 					until
@@ -63,7 +65,7 @@ feature -- Access
 						end
 						i := i + 1
 					end
-					cwin_free_pointer (ptr)
+					ptr.memory_free
 				end
 			end
 		ensure
@@ -344,34 +346,14 @@ feature{NONE} -- Implementation
 			"OpenProcess"
 		end
 
-	cwin_free_pointer(ptr: POINTER)
-			-- Free pointer `ptr'.
-		external
-			"C inline"
-		alias
-			"[
-				{
-					free ($ptr);
-				}
-			]"
-		end
-
-	cwin_close_handle (a_handle: POINTER)
-			-- SDK CloseHandle.
-		external
-			"C [macro <winbase.h>] (HANDLE)"
-		alias
-			"CloseHandle"
-		end
-
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

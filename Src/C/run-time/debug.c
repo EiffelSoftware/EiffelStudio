@@ -86,13 +86,6 @@ doc:<file name="debug.c" header="eif_debug.h" version="$Id$" summary="Routines u
 
 #define ITEM_SZ			sizeof(EIF_TYPED_ADDRESS)
 
-#define clocnum exvect->ex_locnum
-#define cargnum exvect->ex_argnum
-#define cresult c_oitem(start + clocnum + cargnum + 1)
-#define cloc(x) c_oitem(start + clocnum - (x))
-#define carg(x) c_oitem(start + clocnum + cargnum + 1 - (x))
-#define ccurrent c_oitem(start + clocnum)
-
 #define CALL_SZ					sizeof(struct dcall)
 #define LIST_CHUNK				eif_stack_chunk			/* Number of items in a list chunk */
 #define BODY_ID_SZ				sizeof(uint32)

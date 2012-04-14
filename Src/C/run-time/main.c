@@ -853,6 +853,12 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 
 #ifdef EIF_WINDOWS
 	set_windows_exception_filter();
+#if defined(_MSC_VER) && _MSC_VER >= 1400 /* version 14.0+ (MSVC 8.0+)  */
+		/* Ensures consistent behavior across all our platforms where we
+		 * get 2-digit exponent up to 99 and then 3-digit exponent for 100 and
+		 * above. */
+   (void) _set_output_format(_TWO_DIGIT_EXPONENT);
+#endif
 #endif
 
 #ifdef BOEHM_GC

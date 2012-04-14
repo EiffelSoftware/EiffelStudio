@@ -79,6 +79,13 @@ extern void safe_dbreak(int why);	/* Program execution stopped. Before calling t
 #define THR_EXITED				2		/* thread exited  */
 #define SCP_PROC_REGISTERED		4		/* SCOOP Processor registered */
 
+#define clocnum exvect->ex_locnum
+#define cargnum exvect->ex_argnum
+#define cresult c_oitem(start + clocnum + cargnum + 1)
+#define cloc(x) c_oitem(start + clocnum - (x))
+#define carg(x) c_oitem(start + clocnum + cargnum + 1 - (x))
+#define ccurrent c_oitem(start + clocnum)
+
 #ifdef __cplusplus
 }
 #endif

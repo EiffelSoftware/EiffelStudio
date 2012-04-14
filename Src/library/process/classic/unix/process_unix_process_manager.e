@@ -271,7 +271,7 @@ feature {PROCESS_IMP} -- Process management
 			end
 		end
 
-	spawn_nowait (is_control_terminal_enabled: BOOLEAN; evnptr: POINTER; a_new_process_group: BOOLEAN)
+	spawn_nowait (is_control_terminal_enabled: BOOLEAN; envs: detachable HASH_TABLE [STRING, STRING]; a_new_process_group: BOOLEAN)
 			-- Spawn a process and return immediately.
 			-- If `is_control_terminal_enabled' is true, attach controlling terminals to spawned process.
 			-- Environment variables for new process is stored in `envptr'. If `envptr' is `default_pointer',
@@ -317,7 +317,7 @@ feature {PROCESS_IMP} -- Process management
                 setup_child_process_files
                 l_arguments := arguments_for_exec
                 check l_arguments /= Void end
-                exec_process (program_file_name, l_arguments, close_nonstandard_files, evnptr)
+                exec_process (program_file_name, l_arguments, close_nonstandard_files, environment_table_as_pointer (envs))
             else --| Parent process
 				restore_debug_state (l_debug_state)
                 setup_parent_process_files
@@ -696,6 +696,60 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
+	environment_table_as_pointer (a_envs: detachable HASH_TABLE [STRING, STRING]): POINTER
+			-- {POINTER} representation of `environment_variable_table'.
+			-- Return `default_pointer' if `environment_variable_table' is Void or empty.
+			--| Not that memory will be leaked if not use for spawning the process.
+		local
+			l_ptr: MANAGED_POINTER
+			l_cstr: C_STRING
+			l_cstr_ptr: POINTER
+			i, nb: INTEGER
+			l_str: STRING
+		do
+			if a_envs /= Void and then not a_envs.is_empty then
+					-- Estimate the number of environment variables that will be stored.
+				from
+					a_envs.start
+				until
+					a_envs.after
+				loop
+					if a_envs.key_for_iteration /= Void and then a_envs.item_for_iteration /= Void then
+						nb := nb + 1
+					end
+					a_envs.forth
+				end
+					-- We allocate `Result', then use a MANAGED_POINTER to fill its content.
+				Result := Result.memory_alloc ((nb + 1) * {PLATFORM}.pointer_bytes)
+				create l_ptr.share_from_pointer (Result, (nb + 1) * {PLATFORM}.pointer_bytes)
+				from
+					a_envs.start
+					i := 0
+				until
+					a_envs.after
+				loop
+					if
+						attached a_envs.key_for_iteration as l_key and then
+						attached a_envs.item_for_iteration as l_value
+					then
+						create l_str.make (l_key.count + l_value.count + 1)
+						l_str.append (l_key)
+						l_str.append_character ('=')
+						l_str.append (l_value)
+							-- We allocate memory ourself so that the C_STRING object does not
+							-- free the memory.
+						l_cstr_ptr := l_cstr_ptr.memory_alloc (l_str.count + 1)
+						create l_cstr.make_shared_from_pointer_and_count (l_cstr_ptr, l_str.count)
+						l_cstr.set_string (l_str)
+						l_ptr.put_pointer (l_cstr_ptr, i * {PLATFORM}.pointer_bytes)
+						i := i + 1
+					end
+					a_envs.forth
+				end
+				l_ptr.put_pointer (default_pointer, i * {PLATFORM}.pointer_bytes)
+			end
+		end
+
 	shared_input_unnamed_pipe: detachable UNIX_UNNAMED_PIPE
 			-- Pipe used to redirect input of process
 
@@ -767,7 +821,7 @@ invariant
 	valid_stderr_descriptor: valid_file_descriptor (Stderr_descriptor)
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

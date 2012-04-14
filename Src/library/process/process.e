@@ -432,12 +432,11 @@ feature -- Status setting
 
 	set_environment_variable_use_unicode (b: BOOLEAN)
 			-- Set `is_environment_variable_unicode' with `b'.
+		obsolete
+			"Do not use as it has no effect."
 		require
 			process_not_running: not is_running
 		do
-			is_environment_variable_unicode := b
-		ensure
-			is_environment_variable_unicode_set: is_environment_variable_unicode = b
 		end
 
 feature -- Actions setting
@@ -635,9 +634,10 @@ feature -- Access
 			-- Valid values are those constants defined in class `PROCESS_REDIRECTION_CONSTANTS'
 
 	environment_variable_table: detachable HASH_TABLE [STRING, STRING]
-			-- Table of environment variables to be passes to new process.
+			-- Table of environment variables to be passed to new process.
 			-- Key is variable name and value is the value of the variable.
-			-- If this table is Void or empty, environment variables of the parent process will be passes to the new process.
+			-- If this table is Void or empty, environment variables of the
+			-- parent process will be passed to the new process.
 
 feature -- Status report
 
@@ -706,6 +706,10 @@ feature -- Status report
 	is_environment_variable_unicode: BOOLEAN
 			-- Does `environment_variable_table' use unicode?
 			-- Only has effect on Windows.
+		obsolete
+			"Do not use since it has no effect."
+		do
+		end
 
 	is_launched_in_new_process_group: BOOLEAN
 			-- Will process be launched in a new process group?
@@ -834,12 +838,6 @@ feature {NONE} -- Implementation
 				(not launched) and
 				(not force_terminated) and
 				(last_termination_successful)
-		end
-
-	environment_table_as_pointer: POINTER
-			-- {POINTER} representation of `environment_variable_table'
-			-- Return `default_pointer' if `environment_variable_table' is Void or empty.
-		deferred
 		end
 
 	is_separator (a_char: CHARACTER): BOOLEAN
@@ -972,7 +970,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

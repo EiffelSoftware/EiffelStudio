@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="process" uuid="228AFC09-21BC-47C8-A0A2-54A69274CD32" library_target="process">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="process" uuid="228AFC09-21BC-47C8-A0A2-54A69274CD32" library_target="process">
 	<target name="process">
 		<description>Process library: Starting/Waiting for process as well as reading/writing to/from standard inputs.
       Copyright (c) 1984-2006, Eiffel Software and others.
@@ -8,7 +8,7 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="transitional" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<external_include location="$(ISE_LIBRARY)\library\process\classic\windows\include">
@@ -60,5 +60,8 @@
 	</target>
 	<target name="process_dotnet" extends="process">
 		<setting name="msil_generation" value="true"/>
+	</target>
+	<target name="process_unix" extends="process">
+		<setting name="platform" value="unix"/>
 	</target>
 </system>

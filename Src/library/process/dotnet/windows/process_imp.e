@@ -220,7 +220,7 @@ feature{PROCESS_TIMER} -- Process status checking
 					if l_threads_exited then
 						if not has_cleaned_up then
 							timer.destroy
-							input_buffer.clear_all
+							input_buffer.wipe_out
 							child_process.close
 							has_cleaned_up := True
 							if force_terminated then
@@ -522,7 +522,7 @@ feature{NONE} -- Implementation
 				in_thread := Void
 			end
 			if output_direction /= {PROCESS_REDIRECTION_CONSTANTS}.no_redirection then
-				create output_buffer.make (0, buffer_size)
+				create output_buffer.make_filled ('%U', 0, buffer_size)
 				if output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
 					l_output_file_name := output_file_name
 					check l_output_file_name_attached: l_output_file_name /= Void end
@@ -535,7 +535,7 @@ feature{NONE} -- Implementation
 				out_thread := Void
 			end
 			if error_direction /= {PROCESS_REDIRECTION_CONSTANTS}.no_redirection then
-				create error_buffer.make (0, buffer_size)
+				create error_buffer.make_filled ('%U', 0, buffer_size)
 				if error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
 					l_error_file_name := error_file_name
 					check l_error_file_name_attached: l_error_file_name /= Void end
@@ -548,7 +548,7 @@ feature{NONE} -- Implementation
 				err_thread := Void
 			end
 
-			check timer.destroyed end
+			check timer.is_destroyed end
 			timer.start
 		end
 
@@ -821,7 +821,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

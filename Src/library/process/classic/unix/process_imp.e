@@ -83,7 +83,7 @@ feature  -- Control
 			if is_launched_in_new_process_group and then is_terminal_control_enabled then
 				attach_terminals (process_id)
 			end
-			child_process.spawn_nowait (is_terminal_control_enabled, environment_table_as_pointer, is_launched_in_new_process_group)
+			child_process.spawn_nowait (is_terminal_control_enabled, environment_variable_table, is_launched_in_new_process_group)
 			internal_id := child_process.process_id
 			launched := (internal_id /= -1)
 			if launched then
@@ -464,60 +464,6 @@ feature {NONE} -- Implementation
 	internal_id: INTEGER
 			-- Internal process id
 
-	environment_table_as_pointer: POINTER
-			-- {POINTER} representation of `environment_variable_table'
-			-- Return `default_pointer' if `environment_variable_table' is Void or empty.
-		local
-			l_tbl: like environment_variable_table
-			l_ptr: MANAGED_POINTER
-			l_ptr2: MANAGED_POINTER
-			l_cnt: INTEGER
-			i: INTEGER
-			l_ptr_bytes: INTEGER
-			l_str: STRING
-			l_key: STRING
-			l_value: STRING
-		do
-			l_tbl := environment_variable_table
-			if l_tbl /= Void and then not l_tbl.is_empty then
-				from
-					l_tbl.start
-				until
-					l_tbl.after
-				loop
-					if l_tbl.key_for_iteration /= Void and then l_tbl.item_for_iteration /= Void then
-						l_cnt := l_cnt + 1
-					end
-					l_tbl.forth
-				end
-				create l_ptr2.make (1)
-				l_ptr_bytes := l_ptr2.pointer_bytes
-				create l_ptr.make ((l_cnt + 1) * l_ptr_bytes)
-				from
-					l_tbl.start
-					i := 0
-				until
-					l_tbl.after
-				loop
-					l_key := l_tbl.key_for_iteration
-					l_value := l_tbl.item_for_iteration
-					if l_key /= Void and then l_value /= Void then
-						create l_str.make (l_key.count + l_value.count + 1)
-						l_str.append (l_key)
-						l_str.append_character ('=')
-						l_str.append (l_value)
-						l_ptr.put_pointer ((create {C_STRING}.make (l_str)).item, i * l_ptr_bytes)
-						i := i + 1
-					end
-					l_tbl.forth
-				end
-				l_ptr.put_pointer (default_pointer, i * l_ptr_bytes)
-				Result := l_ptr.item
-			else
-				Result := default_pointer
-			end
-		end
-
 feature{NONE} -- Error recovery
 
 	is_read_pipe_broken: BOOLEAN
@@ -535,14 +481,14 @@ invariant
 	child_process_not_void: child_process /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

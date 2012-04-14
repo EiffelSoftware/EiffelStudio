@@ -233,18 +233,6 @@ RT_LNK void 		insert_local_var (uint32 type, void *ptr);
 #define PG_OVERFLOW			7		/* A possible stack overflow has been detected */
 #define PG_CATCALL			8		/* A catcall has been detected */
 
-
-/**************/
-/* newdebug.h */
-/**************/
-
-#define clocnum exvect->ex_locnum
-#define cargnum exvect->ex_argnum
-#define cresult c_oitem(start + clocnum + cargnum + 1)
-#define cloc(x) c_oitem(start + clocnum - (x))
-#define carg(x) c_oitem(start + clocnum + cargnum + 1 - (x))
-#define ccurrent c_oitem(start + clocnum)
-
 #ifdef __cplusplus
 }
 #endif

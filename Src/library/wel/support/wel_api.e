@@ -379,6 +379,16 @@ feature -- File Drop Handling
 
 feature -- Processes
 
+	create_process (a_name, a_command_line, a_sec_attributes1, a_sec_attributes2: POINTER;
+					a_herit_handles: BOOLEAN; a_flags: INTEGER; an_environment, a_directory,
+					a_startup_info, a_process_info: POINTER): BOOLEAN
+			-- SDK CreateProcess
+		external
+			"C macro signature (LPCTSTR, LPTSTR, LPSECURITY_ATTRIBUTES, LPSECURITY_ATTRIBUTES, BOOL, DWORD, LPVOID, LPCTSTR, LPSTARTUPINFO, LPPROCESS_INFORMATION) :EIF_BOOLEAN use <winbase.h>"
+		alias
+			"CreateProcess"
+		end
+
 	duplicate_handle (hsourceprocess, hsource, htargetprocess: POINTER; htarget: TYPED_POINTER [POINTER]; access: INTEGER; inherithandle: BOOLEAN; options: INTEGER): INTEGER
 			-- SDK DuplicateHandle
 		external
@@ -398,6 +408,7 @@ feature -- Processes
 
 	close_handle (a_handle: POINTER): INTEGER
 			-- SDK CloseHandle
+			-- If the function fails, the return value is zero.
 		external
 			"C inline use <windows.h>"
 		alias
@@ -418,6 +429,13 @@ feature -- Processes
 			"C blocking inline use <windows.h>"
 		alias
 			"return (EIF_INTEGER) WaitForInputIdle ((HANDLE) $hprocess, (DWORD) $ms);"
+		end
+
+	wait_for_single_object (handle: POINTER; type: INTEGER): INTEGER
+		external
+			"C blocking macro signature (HANDLE, DWORD): EIF_INTEGER use <windows.h>"
+		alias
+			"WaitForSingleObject"
 		end
 
 	msg_wait_for_multiple_objects (n: INTEGER; phandles: POINTER; waitall: BOOLEAN; ms, mask: INTEGER): INTEGER
@@ -448,6 +466,46 @@ feature -- Processes
 					(DWORD) $wakemask,
 					(DWORD) $flags);
 			]"
+		end
+
+	wait_object_0: INTEGER
+			-- SDK WAIT_OBJECT_0 constant
+		external
+			"C macro use <windows.h>"
+		alias
+			"WAIT_OBJECT_0"
+		end
+
+	infinite: INTEGER
+			-- SDK INFINITE constant
+		external
+			"C macro use <winbase.h>"
+		alias
+			"INFINITE"
+		end
+
+	get_exit_code_process (handle: POINTER; ptr: POINTER): BOOLEAN
+			-- SDK GetExitCodeProcess
+		external
+			"C inline use <winbase.h>"
+		alias
+			"return EIF_TEST(GetExitCodeProcess ((HANDLE) $handle, (LPDWORD) $ptr));"
+		end
+
+	terminate_process (handle: POINTER; exit_code: INTEGER): BOOLEAN
+			-- SDK TerminateProcess
+		external
+			"C inline use <winbase.h>"
+		alias
+			"return EIF_TEST(TerminateProcess((HANDLE) $handle, (DWORD) $exit_code));"
+		end
+
+	still_active: INTEGER
+			-- SDK STILL_ACTIVE constant
+		external
+			"C macro use <windows.h>"
+		alias
+			"STILL_ACTIVE"
 		end
 
 feature -- Threads
@@ -611,7 +669,7 @@ feature -- API
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

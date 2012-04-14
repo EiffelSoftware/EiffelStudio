@@ -45,6 +45,14 @@ feature -- Element settings
 			size_set: block_size = a_size
 		end
 
+	set_environment_variables (a_env_vars: like environment_variables)
+			-- Set `environment_variables' with `a_env_vars'
+		do
+			environment_variables := a_env_vars
+		ensure
+			environment_variables_set: environment_variables = a_env_vars
+		end
+
 	run_hidden
 			-- Should process be run hidden?
 		do
@@ -112,15 +120,19 @@ feature -- Basic Operations
 			end
 			l_process_info := process_info
 			check l_process_info /= Void end
-			last_launch_successful := cwin_wait_for_single_object (l_process_info.process_handle,
-				cwin_infinite) = cwin_wait_object_0
+			last_launch_successful := {WEL_API}.wait_for_single_object (l_process_info.process_handle,
+				{WEL_API}.infinite) = {WEL_API}.wait_object_0
 			if last_launch_successful then
-				last_launch_successful := cwin_exit_code_process (l_process_info.process_handle,
+				last_launch_successful := {WEL_API}.get_exit_code_process (l_process_info.process_handle,
 					$last_process_result)
 			end
-			cwin_close_handle (l_process_info.thread_handle)
+			if {WEL_API}.close_handle (l_process_info.thread_handle) = 0 then
+				check close_thread_handle_success: False end
+			end
 			l_process_info.set_thread_handle (default_pointer)
-			cwin_close_handle (l_process_info.process_handle)
+			if {WEL_API}.close_handle (l_process_info.process_handle) = 0 then
+				check close_process_handle_success: False end
+			end
 			l_process_info.set_process_handle (default_pointer)
 			l_output_pipe.close_output
 
@@ -149,13 +161,13 @@ feature -- Basic Operations
 			loop
 				l_process_info := process_info
 				check l_process_info /= Void end
-				a_boolean := cwin_exit_code_process (l_process_info.process_handle, $last_process_result)
+				a_boolean := {WEL_API}.get_exit_code_process (l_process_info.process_handle, $last_process_result)
 				check
 					valid_external_call_2: a_boolean
 				end
-				if last_process_result = cwin_still_active then
-					an_integer := cwin_wait_for_single_object (l_process_info.process_handle, 1)
-					if an_integer = cwin_wait_object_0 then
+				if last_process_result = {WEL_API}.still_active then
+					an_integer := {WEL_API}.wait_for_single_object (l_process_info.process_handle, 1)
+					if an_integer = {WEL_API}.wait_object_0 then
 						finished := True
 					else
 						if a_refresh_handler /= Void then
@@ -178,14 +190,18 @@ feature -- Basic Operations
 			if last_launch_successful then
 				l_process_info := process_info
 				check l_process_info /= Void end
-				l_boolean := cwin_exit_code_process (l_process_info.process_handle, $last_process_result)
+				l_boolean := {WEL_API}.get_exit_code_process (l_process_info.process_handle, $last_process_result)
 				if l_boolean then
-					if last_process_result = cwin_still_active then
-						l_boolean := cwin_terminate_process (l_process_info.process_handle, 0)
+					if last_process_result = {WEL_API}.still_active then
+						l_boolean := {WEL_API}.terminate_process (l_process_info.process_handle, 0)
 					end
-					cwin_close_handle (l_process_info.thread_handle)
+					if {WEL_API}.close_handle (l_process_info.thread_handle) = 0 then
+						check close_thread_handle_success: False end
+					end
 					l_process_info.set_thread_handle (default_pointer)
-					cwin_close_handle (l_process_info.process_handle)
+					if {WEL_API}.close_handle (l_process_info.process_handle) = 0 then
+						check close_process_handle_success: False end
+					end
 					l_process_info.set_process_handle (default_pointer)
 				end
 			end
@@ -202,6 +218,12 @@ feature -- Access
 	hidden: BOOLEAN
 			-- Should process be hidden?
 
+	environment_variables: detachable HASH_TABLE [STRING, STRING]
+			-- Table of environment variables to be passed to new process.
+			-- Key is variable name and value is the value of the variable.
+			-- If this table is Void or empty, environment variables of the
+			-- parent process will be passed to the new process.
+
 feature {NONE} -- Implementation
 
 	spawn_with_flags (a_command_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL; a_flags: INTEGER)
@@ -212,22 +234,56 @@ feature {NONE} -- Implementation
 		local
 			a_wel_string1, a_wel_string2: WEL_STRING
 			l_process_info: like process_info
+			l_envs: detachable C_STRING
+			l_envs_ptr: POINTER
 		do
 			create process_info.make
 			create a_wel_string1.make (a_command_line)
 			l_process_info := process_info
 			check l_process_info /= Void end
+			l_envs := environment_variables_as_c_string
+			if l_envs /= Void then
+				l_envs_ptr := l_envs.item
+			end
 			if a_working_directory /= Void and then not a_working_directory.is_empty then
 				create a_wel_string2.make (a_working_directory)
-				last_launch_successful := cwin_create_process (default_pointer, a_wel_string1.item,
+				last_launch_successful := {WEL_API}.create_process (default_pointer, a_wel_string1.item,
 							default_pointer, default_pointer, True, a_flags,
-							default_pointer, a_wel_string2.item,
+							l_envs_ptr, a_wel_string2.item,
 							startup_info.item, l_process_info.item)
 			else
-				last_launch_successful := cwin_create_process (default_pointer, a_wel_string1.item,
+				last_launch_successful := {WEL_API}.create_process (default_pointer, a_wel_string1.item,
 							default_pointer, default_pointer, True, a_flags,
-							default_pointer, default_pointer,
+							l_envs_ptr, default_pointer,
 							startup_info.item, l_process_info.item)
+			end
+		end
+
+	environment_variables_as_c_string: detachable C_STRING
+			-- {POINTER} representation of `environment_variables'
+			-- Return `default_pointer' if `environment_variables' is Void or empty.
+		local
+			l_str: STRING
+			l_tbl: like environment_variables
+		do
+			l_tbl := environment_variables
+			if l_tbl /= Void and then not l_tbl.is_empty then
+				create l_str.make (512)
+				from
+					l_tbl.start
+				until
+					l_tbl.after
+				loop
+					if l_tbl.key_for_iteration /= Void and then l_tbl.item_for_iteration /= Void then
+						l_str.append (l_tbl.key_for_iteration)
+						l_str.append_character ('=')
+						l_str.append (l_tbl.item_for_iteration)
+						l_str.append_character ('%U')
+					end
+					l_tbl.forth
+				end
+				l_str.append_character ('%U')
+				create {C_STRING} Result.make (l_str)
 			end
 		end
 
@@ -285,81 +341,80 @@ feature {NONE} -- Externals
 
 	cwin_close_handle (a_handle: POINTER)
 			-- SDK CloseHandle
-		external
-			"C [macro <winbase.h>] (HANDLE)"
-		alias
-			"CloseHandle"
+		obsolete
+			"Use {WEL_API}.close_handle instead."
+		do
+			if {WEL_API}.close_handle (a_handle) = 0 then
+				check close_handle_success: False end
+			end
 		end
 
 	cwin_create_process (a_name, a_command_line, a_sec_attributes1, a_sec_attributes2: POINTER;
 							a_herit_handles: BOOLEAN; a_flags: INTEGER; an_environment, a_directory,
 							a_startup_info, a_process_info: POINTER): BOOLEAN
 			-- SDK CreateProcess
-		external
-			"C [macro <winbase.h>] (LPCTSTR, LPTSTR, LPSECURITY_ATTRIBUTES, LPSECURITY_ATTRIBUTES, BOOL, DWORD, LPVOID, LPCTSTR, LPSTARTUPINFO, LPPROCESS_INFORMATION) :EIF_BOOLEAN"
-		alias
-			"CreateProcess"
+		obsolete
+			"Use {WEL_API}.create_process instead."
+		do
+			Result := {WEL_API}.create_process (a_name, a_command_line, a_sec_attributes1, a_sec_attributes2,
+				a_herit_handles, a_flags, an_environment, a_directory, a_startup_info, a_process_info)
 		end
 
 	cwin_wait_for_single_object (handle: POINTER; type: INTEGER): INTEGER
-		external
-			"C blocking macro signature (HANDLE, DWORD): EIF_INTEGER use <windows.h>"
-		alias
-			"WaitForSingleObject"
+		obsolete
+			"Use {WEL_API}.wait_for_single_object instead."
+		do
+			Result := {WEL_API}.wait_for_single_object (handle, type)
 		end
 
 	cwin_exit_code_process (handle: POINTER; ptr: POINTER): BOOLEAN
-		external
-			"C [macro <winbase.h>] (HANDLE, LPDWORD): EIF_BOOLEAN"
-		alias
-			"GetExitCodeProcess"
+		obsolete
+			"Use {WEL_API}.get_exit_code_process instead."
+		do
+			Result := {WEL_API}.get_exit_code_process (handle, ptr)
 		end
 
 	cwin_wait_object_0: INTEGER
 			-- SDK WAIT_OBJECT_0 constant
-		external
-			"C blocking macro use <windows.h>"
-		alias
-			"WAIT_OBJECT_0"
+		obsolete
+			"Use {WEL_API}.wait_object_0 instead."
+		do
+			Result := {WEL_API}.wait_object_0
 		end
 
 	cwin_infinite: INTEGER
 			-- SDK INFINITE constant
-		external
-			"C [macro <winbase.h>]: EIF_INTEGER"
-		alias
-			"INFINITE"
+		obsolete
+			"Use {WEL_API}.infinite instead."
+		do
+			Result := {WEL_API}.infinite
 		end
 
 	cwin_terminate_process (handle: POINTER; exit_code: INTEGER): BOOLEAN
 			-- SDK TerminateProcess
-		external
-			"C [macro <winbase.h>] (HANDLE, DWORD): EIF_BOOLEAN"
-		alias
-			"TerminateProcess"
+		obsolete
+			"Use {WEL_API}.terminate_process instead."
+		do
+			Result := {WEL_API}.terminate_process (handle, exit_code)
 		end
 
 	cwin_still_active: INTEGER
 			-- SDK STILL_ACTIVE constant
-		external
-			"C [macro <windows.h>]: EIF_INTEGER"
-		alias
-			"STILL_ACTIVE"
+		obsolete
+			"Use {WEL_API}.still_active instead."
+		do
+			Result := {WEL_API}.still_active
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class PROCESS_LAUNCHER
-
+end

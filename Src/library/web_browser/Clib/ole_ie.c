@@ -10,8 +10,6 @@ Most codes bases on Jeff Glatt's source codes:
 http://www.codeproject.com/KB/COM/cwebpage.aspx
 */
 
-#define GWL_USERDATA (-21)
-
 #include <windows.h>
 #include <exdisp.h>		// Defines of stuff like IWebBrowser2. This is an include file with Visual C 6 and above
 #include <mshtml.h>		// Defines of stuff like IHTMLDocument2. This is an include file with Visual C 6 and above
@@ -26,8 +24,8 @@ static const SAFEARRAYBOUND ArrayBound = {1, 0};
 
 // Our IOleInPlaceFrame functions that the browser may call
 HRESULT STDMETHODCALLTYPE Frame_QueryInterface(IOleInPlaceFrame FAR* This, REFIID riid, LPVOID FAR* ppvObj);
-HRESULT STDMETHODCALLTYPE Frame_AddRef(IOleInPlaceFrame FAR* This);
-HRESULT STDMETHODCALLTYPE Frame_Release(IOleInPlaceFrame FAR* This);
+ULONG STDMETHODCALLTYPE Frame_AddRef(IOleInPlaceFrame FAR* This);
+ULONG STDMETHODCALLTYPE Frame_Release(IOleInPlaceFrame FAR* This);
 HRESULT STDMETHODCALLTYPE Frame_GetWindow(IOleInPlaceFrame FAR* This, HWND FAR* lphwnd);
 HRESULT STDMETHODCALLTYPE Frame_ContextSensitiveHelp(IOleInPlaceFrame FAR* This, BOOL fEnterMode);
 HRESULT STDMETHODCALLTYPE Frame_GetBorder(IOleInPlaceFrame FAR* This, LPRECT lprectBorder);
@@ -94,8 +92,8 @@ typedef struct {
 
 // Our IOleClientSite functions that the browser may call
 HRESULT STDMETHODCALLTYPE Site_QueryInterface(IOleClientSite FAR* This, REFIID riid, void ** ppvObject);
-HRESULT STDMETHODCALLTYPE Site_AddRef(IOleClientSite FAR* This);
-HRESULT STDMETHODCALLTYPE Site_Release(IOleClientSite FAR* This);
+ULONG STDMETHODCALLTYPE Site_AddRef(IOleClientSite FAR* This);
+ULONG STDMETHODCALLTYPE Site_Release(IOleClientSite FAR* This);
 HRESULT STDMETHODCALLTYPE Site_SaveObject(IOleClientSite FAR* This);
 HRESULT STDMETHODCALLTYPE Site_GetMoniker(IOleClientSite FAR* This, DWORD dwAssign, DWORD dwWhichMoniker, IMoniker ** ppmk);
 HRESULT STDMETHODCALLTYPE Site_GetContainer(IOleClientSite FAR* This, LPOLECONTAINER FAR* ppContainer);
@@ -121,8 +119,8 @@ Site_RequestNewObjectLayout};
 
 // Our IDocHostUIHandler functions that the browser may call
 HRESULT STDMETHODCALLTYPE UI_QueryInterface(IDocHostUIHandler FAR* This, REFIID riid, void ** ppvObject);
-HRESULT STDMETHODCALLTYPE UI_AddRef(IDocHostUIHandler FAR* This);
-HRESULT STDMETHODCALLTYPE UI_Release(IDocHostUIHandler FAR* This);
+ULONG STDMETHODCALLTYPE UI_AddRef(IDocHostUIHandler FAR* This);
+ULONG STDMETHODCALLTYPE UI_Release(IDocHostUIHandler FAR* This);
 HRESULT STDMETHODCALLTYPE UI_ShowContextMenu(IDocHostUIHandler FAR* This, DWORD dwID, POINT __RPC_FAR *ppt, IUnknown __RPC_FAR *pcmdtReserved, IDispatch __RPC_FAR *pdispReserved);
 HRESULT STDMETHODCALLTYPE UI_GetHostInfo(IDocHostUIHandler FAR* This, DOCHOSTUIINFO __RPC_FAR *pInfo);
 HRESULT STDMETHODCALLTYPE UI_ShowUI(IDocHostUIHandler FAR* This, DWORD dwID, IOleInPlaceActiveObject __RPC_FAR *pActiveObject, IOleCommandTarget __RPC_FAR *pCommandTarget, IOleInPlaceFrame __RPC_FAR *pFrame, IOleInPlaceUIWindow __RPC_FAR *pDoc);
@@ -169,8 +167,8 @@ UI_FilterDataObject};
 
 // Our IOleInPlaceSite functions that the browser may call
 HRESULT STDMETHODCALLTYPE InPlace_QueryInterface(IOleInPlaceSite FAR* This, REFIID riid, void ** ppvObject);
-HRESULT STDMETHODCALLTYPE InPlace_AddRef(IOleInPlaceSite FAR* This);
-HRESULT STDMETHODCALLTYPE InPlace_Release(IOleInPlaceSite FAR* This);
+ULONG STDMETHODCALLTYPE InPlace_AddRef(IOleInPlaceSite FAR* This);
+ULONG STDMETHODCALLTYPE InPlace_Release(IOleInPlaceSite FAR* This);
 HRESULT STDMETHODCALLTYPE InPlace_GetWindow(IOleInPlaceSite FAR* This, HWND FAR* lphwnd);
 HRESULT STDMETHODCALLTYPE InPlace_ContextSensitiveHelp(IOleInPlaceSite FAR* This, BOOL fEnterMode);
 HRESULT STDMETHODCALLTYPE InPlace_CanInPlaceActivate(IOleInPlaceSite FAR* This);
@@ -289,12 +287,12 @@ HRESULT STDMETHODCALLTYPE UI_QueryInterface(IDocHostUIHandler FAR* This, REFIID 
 	return(Site_QueryInterface((IOleClientSite *)((char *)This - sizeof(IOleClientSite) - sizeof(_IOleInPlaceSiteEx)), riid, ppvObj));
 }
 
-HRESULT STDMETHODCALLTYPE UI_AddRef(IDocHostUIHandler FAR* This)
+ULONG STDMETHODCALLTYPE UI_AddRef(IDocHostUIHandler FAR* This)
 {
 	return(1);
 }
 
-HRESULT STDMETHODCALLTYPE UI_Release(IDocHostUIHandler FAR* This)
+ULONG STDMETHODCALLTYPE UI_Release(IDocHostUIHandler FAR* This)
 {
 	return(1);
 }
@@ -600,12 +598,12 @@ HRESULT STDMETHODCALLTYPE Site_QueryInterface(IOleClientSite FAR* This, REFIID r
 	return(S_OK);
 }
 
-HRESULT STDMETHODCALLTYPE Site_AddRef(IOleClientSite FAR* This)
+ULONG STDMETHODCALLTYPE Site_AddRef(IOleClientSite FAR* This)
 {
 	return(1);
 }
 
-HRESULT STDMETHODCALLTYPE Site_Release(IOleClientSite FAR* This)
+ULONG STDMETHODCALLTYPE Site_Release(IOleClientSite FAR* This)
 {
 	return(1);
 }
@@ -661,12 +659,12 @@ HRESULT STDMETHODCALLTYPE InPlace_QueryInterface(IOleInPlaceSite FAR* This, REFI
 	return(Site_QueryInterface((IOleClientSite *)((char *)This - sizeof(IOleClientSite)), riid, ppvObj));
 }
 
-HRESULT STDMETHODCALLTYPE InPlace_AddRef(IOleInPlaceSite FAR* This)
+ULONG STDMETHODCALLTYPE InPlace_AddRef(IOleInPlaceSite FAR* This)
 {
 	return(1);
 }
 
-HRESULT STDMETHODCALLTYPE InPlace_Release(IOleInPlaceSite FAR* This)
+ULONG STDMETHODCALLTYPE InPlace_Release(IOleInPlaceSite FAR* This)
 {
 	return(1);
 }
@@ -798,12 +796,12 @@ HRESULT STDMETHODCALLTYPE Frame_QueryInterface(IOleInPlaceFrame FAR* This, REFII
 	NOTIMPLEMENTED;
 }
 
-HRESULT STDMETHODCALLTYPE Frame_AddRef(IOleInPlaceFrame FAR* This)
+ULONG STDMETHODCALLTYPE Frame_AddRef(IOleInPlaceFrame FAR* This)
 {
 	return(1);
 }
 
-HRESULT STDMETHODCALLTYPE Frame_Release(IOleInPlaceFrame FAR* This)
+ULONG STDMETHODCALLTYPE Frame_Release(IOleInPlaceFrame FAR* This)
 {
 	return(1);
 }
@@ -893,9 +891,9 @@ void UnEmbedBrowserObject(HWND hwnd)
 	IOleObject	**browserHandle;
 	IOleObject	*browserObject;
 
-	// Retrieve the browser object's pointer we stored in our window's GWL_USERDATA when
+	// Retrieve the browser object's pointer we stored in our window's GWLP_USERDATA when
 	// we initially attached the browser object to this window.
-	if ((browserHandle = (IOleObject **)GetWindowLong(hwnd, GWL_USERDATA)))
+	if ((browserHandle = (IOleObject **)GetWindowLongPtr(hwnd, GWLP_USERDATA)))
 	{
 		// Unembed the browser object, and release its resources.
 		browserObject = *browserHandle;
@@ -943,9 +941,9 @@ void DoPageAction(HWND hwnd, DWORD action)
 	IWebBrowser2	*webBrowser2;
 	IOleObject		*browserObject;
 
-	// Retrieve the browser object's pointer we stored in our window's GWL_USERDATA when
+	// Retrieve the browser object's pointer we stored in our window's GWLP_USERDATA when
 	// we initially attached the browser object to this window.
-	browserObject = *((IOleObject **)GetWindowLong(hwnd, GWL_USERDATA));
+	browserObject = *((IOleObject **)GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
 	// We want to get the base address (ie, a pointer) to the IWebBrowser2 object embedded within the browser
 	// object, so we can call some of the functions in the former's table.
@@ -1031,9 +1029,9 @@ long DisplayHTMLStr(HWND hwnd, LPCTSTR string)
 	VARIANT			*pVar;
 	BSTR			bstr;
 
-	// Retrieve the browser object's pointer we stored in our window's GWL_USERDATA when
+	// Retrieve the browser object's pointer we stored in our window's GWLP_USERDATA when
 	// we initially attached the browser object to this window.
-	browserObject = *((IOleObject **)GetWindowLong(hwnd, GWL_USERDATA));
+	browserObject = *((IOleObject **)GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
 	// Assume an error.
 	bstr = 0;
@@ -1149,9 +1147,9 @@ long DisplayHTMLPage(HWND hwnd, LPTSTR webPageName)
 	VARIANT			myURL;
 	IOleObject		*browserObject;
 
-	// Retrieve the browser object's pointer we stored in our window's GWL_USERDATA when
+	// Retrieve the browser object's pointer we stored in our window's GWLP_USERDATA when
 	// we initially attached the browser object to this window.
-	browserObject = *((IOleObject **)GetWindowLong(hwnd, GWL_USERDATA));
+	browserObject = *((IOleObject **)GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
 	// We want to get the base address (ie, a pointer) to the IWebBrowser2 object embedded within the browser
 	// object, so we can call some of the functions in the former's table.
@@ -1234,9 +1232,9 @@ void ResizeBrowser(HWND hwnd, DWORD width, DWORD height)
 	IWebBrowser2	*webBrowser2;
 	IOleObject		*browserObject;
 
-	// Retrieve the browser object's pointer we stored in our window's GWL_USERDATA when
+	// Retrieve the browser object's pointer we stored in our window's GWLP_USERDATA when
 	// we initially attached the browser object to this window.
-	browserObject = *((IOleObject **)GetWindowLong(hwnd, GWL_USERDATA));
+	browserObject = *((IOleObject **)GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
 	// We want to get the base address (ie, a pointer) to the IWebBrowser2 object embedded within the browser
 	// object, so we can call some of the functions in the former's table.
@@ -1258,7 +1256,7 @@ void ResizeBrowser(HWND hwnd, DWORD width, DWORD height)
 
 /***************************** EmbedBrowserObject() **************************
  * Puts the browser object inside our host window, and save a pointer to this
- * window's browser object in the window's GWL_USERDATA field.
+ * window's browser object in the window's GWLP_USERDATA field.
  *
  * hwnd =		Handle of our window into which we embed the browser object.
  *
@@ -1270,7 +1268,7 @@ void ResizeBrowser(HWND hwnd, DWORD width, DWORD height)
  * NOTE: No HTML page will be displayed here. We can do that with a subsequent
  * call to either DisplayHTMLPage() or DisplayHTMLStr(). This is merely once-only
  * initialization for using the browser object. In a nutshell, what we do
- * here is get a pointer to the browser object in our window's GWL_USERDATA
+ * here is get a pointer to the browser object in our window's GWLP_USERDATA
  * so we can access that object's functions whenever we want, and we also pass
  * the browser a pointer to our IOleClientSite struct so that the browser can
  * call our functions in our struct's VTable.
@@ -1373,7 +1371,7 @@ long EmbedBrowserObject(HWND hwnd)
 			// call EmbedBrowserObject() for each one, and easily associate the appropriate browser object with
 			// its matching window and its own objects containing per-window data.
 			*((IOleObject **)ptr) = browserObject;
-			SetWindowLong(hwnd, GWL_USERDATA, (LONG)ptr);
+			SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR) ptr);
 
 			// Give the browser a pointer to my IOleClientSite object
 			if (!browserObject->lpVtbl->SetClientSite(browserObject, (IOleClientSite *)_iOleClientSiteEx))
@@ -1461,7 +1459,6 @@ long EmbedBrowserObject(HWND hwnd)
 	GlobalFree(ptr);
 
 	// Can't get the web browser's IClassFactory!
-	printf ("\n CoGetClassObject result is %x", l_result);
 	return(-2);
 }
 

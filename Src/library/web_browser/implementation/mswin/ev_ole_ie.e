@@ -78,7 +78,9 @@ feature -- Command
 			l_c_string: WEL_STRING
 		do
 			create l_c_string.make (a_url)
-			c_display_web_page (hwnd, l_c_string.item)
+			if c_display_web_page (hwnd, l_c_string.item) /= 0 then
+				check not_has_error: False end
+			end
 		end
 
 	do_page_action (a_action: INTEGER)
@@ -105,99 +107,73 @@ feature {NONE} -- Externals
 	c_ole_initialize: INTEGER
 			-- Initialize OLE
 		external
-			"C inline use <ole_ie.c>"
+			"C inline use <ole2.h>"
 		alias
-			"[
-			{
-				return OleInitialize(NULL);
-			}
-			]"
+			"return OleInitialize(NULL);"
 		end
 
 	c_ole_uninitialize
 			-- Uninitialized OLE
 		external
-			"C inline use <ole_ie.c>"
+			"C inline use <ole2.h>"
 		alias
-			"[
-			{
-				OleUninitialize();
-			}
-			]"
+			"OleUninitialize();"
 		end
 
 	c_embed_ie (a_wel_hwnd: POINTER): INTEGER
 			-- Puts the browser object inside our host window, and save a pointer to this
 			-- window's browser object in the window's GWL_USERDATA field
 		external
-			"C inline use <ole_ie.c>"
+			"C inline use %"eif_web_browser.h%""
 		alias
-			"[
-				return EmbedBrowserObject ((HWND) $a_wel_hwnd);
-
-			]"
+			"return (EIF_INTEGER) EmbedBrowserObject ((HWND) $a_wel_hwnd);"
 		end
 
 	c_unembed_ie (a_wel_hwnd: POINTER)
 			-- Called to detach the browser object from our host window, and free its
 			-- resources, right before we destroy our window.
 		external
-			"C inline use <ole_ie.c>"
+			"C inline use %"eif_web_browser.h%""
 		alias
-			"[
-			{
-				UnEmbedBrowserObject ($a_wel_hwnd);
-			}
-			]"
+			"UnEmbedBrowserObject ($a_wel_hwnd);"
 		end
 
-	c_display_web_page (a_wel_hwnd: POINTER; a_url: POINTER)
+	c_display_web_page (a_wel_hwnd: POINTER; a_url: POINTER): INTEGER
 			-- Displays a URL, or HTML file on disk
+			-- If 0 success, otherwise failure.
 		external
-			"C inline use <ole_ie.c>"
+			"C inline use %"eif_web_browser.h%""
 		alias
-			"[
-			{
-				DisplayHTMLPage((HWND) $a_wel_hwnd, (LPTSTR) $a_url);
-			}
-			]"
+			"return (EIF_INTEGER) DisplayHTMLPage((HWND) $a_wel_hwnd, (LPTSTR) $a_url);"
 		end
 
 	c_do_page_action (a_wel_hwnd: POINTER; a_action: INTEGER)
 			-- Implements the functionality of a "Back". "Forward", "Home", "Search",
 			-- "Refresh", or "Stop" button
 		external
-			"C inline use <ole_ie.c>"
+			"C inline use %"eif_web_browser.h%""
 		alias
-			"[
-			{
-				DoPageAction ((HWND) $a_wel_hwnd, (DWORD) $a_action);
-			}
-			]"
+			"DoPageAction ((HWND) $a_wel_hwnd, (DWORD) $a_action);"
 		end
 
 	c_resize_browser (a_wel_hwnd: POINTER; a_width, a_height: INTEGER)
 			-- Resizes the browser object for the specified window to the specified
 			-- width and height.
 		external
-			"C inline use <ole_ie.c>"
+			"C inline use %"eif_web_browser.h%""
 		alias
-			"[
-			{
-				ResizeBrowser ((HWND) $a_wel_hwnd, (DWORD) $a_width, (DWORD) $a_height);
-			}
-			]"
+			"ResizeBrowser ((HWND) $a_wel_hwnd, (DWORD) $a_width, (DWORD) $a_height);"
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

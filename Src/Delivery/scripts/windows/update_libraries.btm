@@ -16,6 +16,9 @@ default_make
 remtrace net
 cdd %1\library\net\Clib
 default_make
+remtrace web_browser
+cdd %1\library\web_browser\clib
+default_make
 remtrace wel
 cdd %1\library\wel\clib
 default_make

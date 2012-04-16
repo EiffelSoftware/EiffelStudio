@@ -115,6 +115,9 @@ iff not defined NO_COMPILE then
 	remtrace vision2
 	cd %1\library\vision2\Clib
 	all_makes
+	remtrace web_browser
+	cd %1\library\web_browser\Clib
+	all_makes
 	remtrace wel
 	cd %1\library\wel\clib
 	all_makes

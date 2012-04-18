@@ -82,7 +82,6 @@ feature {NONE} -- Initialization
 			l_toolbar: SD_TOOL_BAR
 			l_vbox: EV_VERTICAL_BOX
 			l_whole_vbox: EV_VERTICAL_BOX
-			l_button: SD_TOOL_BAR_BUTTON
 		do
 			create l_frame
 			extend (l_frame)
@@ -133,12 +132,6 @@ feature {NONE} -- Initialization
 			sweep_now_button.set_pixel_buffer (pixmaps.icon_pixmaps.information_sweep_now_icon_buffer)
 			sweep_now_button.select_actions.extend (agent panel.on_sweep_now)
 			l_toolbar.extend (sweep_now_button)
-				-- Delete button
-			create l_button.make
-			l_button.set_tooltip (interface_names.t_delete_selected_items)
-			l_button.set_pixel_buffer (pixmaps.icon_pixmaps.general_delete_icon_buffer)
-			l_button.select_actions.extend (agent on_entry_delete)
-			l_toolbar.extend (l_button)
 
 			l_progress_hbox.extend (l_toolbar)
 			l_toolbar.compute_minimum_size
@@ -240,6 +233,8 @@ feature {NONE} -- Initialization
 		local
 			l_vbox: EV_VERTICAL_BOX
 			l_border: ES_BORDERED_WIDGET [like entry_list]
+			l_toolbar: SD_TOOL_BAR
+			l_button: SD_TOOL_BAR_BUTTON
 		do
 			create l_vbox
 			split_area.set_second (l_vbox)
@@ -248,6 +243,29 @@ feature {NONE} -- Initialization
 			create entry_list.make (panel)
 			create l_border.make (entry_list)
 			l_vbox.extend (l_border)
+
+				-- Tool bar
+			create l_toolbar.make
+
+				-- Add button
+			create l_button.make
+			l_button.set_text (interface_names.b_add)
+			l_button.set_tooltip (interface_names.t_Add_eis_entry)
+			l_button.set_pixel_buffer (pixmaps.icon_pixmaps.general_add_icon_buffer)
+			l_button.select_actions.extend (agent on_entry_add)
+			l_toolbar.extend (l_button)
+
+				-- Delete button
+			create l_button.make
+			l_button.set_text (interface_names.b_delete_command)
+			l_button.set_tooltip (interface_names.t_delete_selected_items)
+			l_button.set_pixel_buffer (pixmaps.icon_pixmaps.general_delete_icon_buffer)
+			l_button.select_actions.extend (agent on_entry_delete)
+			l_toolbar.extend (l_button)
+
+			l_vbox.extend (l_toolbar)
+			l_toolbar.compute_minimum_size
+			l_vbox.disable_item_expand (l_toolbar)
 
 			create grid_support.make_with_grid (entry_list)
 			grid_support.enable_grid_item_pnd_support
@@ -348,6 +366,17 @@ feature -- Callbacks
 
 		end
 
+	on_entry_add
+			-- On Add button selected.
+		local
+			l_view: ES_EIS_COMPONENT_VIEW [ANY]
+		do
+			l_view := tree.current_view
+			if l_view /= Void and then l_view.new_entry_possible then
+				l_view.create_new_entry
+			end
+		end
+
 	on_entry_delete
 			-- On delete button selected.
 		local
@@ -364,6 +393,7 @@ feature -- Callbacks
 		local
 			l_enable: BOOLEAN
 		do
+				-- Enable/disable Auto-node button.
 			if attached {EB_CLASSES_TREE_TARGET_ITEM} tree.selected_item then
 				l_enable := True
 			elseif attached {EB_CLASSES_TREE_FOLDER_ITEM} tree.selected_item as l_item then
@@ -376,6 +406,7 @@ feature -- Callbacks
 			else
 				edit_auto_gen_button.disable_sensitive
 			end
+
 		end
 
 	on_edit_eis_auto_node
@@ -443,7 +474,7 @@ invariant
 	panel_not_void: panel /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

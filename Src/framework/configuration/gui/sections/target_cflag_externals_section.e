@@ -1,12 +1,12 @@
-note
-	description: "Objects that ..."
+﻿note
+	description: "Section for external C flag."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TARGET_LIBRARY_EXTERNALS_SECTION
+	TARGET_CFLAG_EXTERNALS_SECTION
 
 inherit
 	TARGET_EXTERNAL_BASE_SECTION
@@ -19,25 +19,26 @@ feature -- Access
 	name: STRING_GENERAL
 			-- Name of the section.
 		once
-			Result := conf_interface_names.external_library_tree
+			Result := conf_interface_names.external_cflag_tree
 		end
 
 	icon: EV_PIXMAP
 			-- Icon of the section.
 		once
-			Result := conf_pixmaps.project_settings_object_file_icon
+			Result := conf_pixmaps.project_settings_cflag_icon
 		end
 
 feature -- Element update
 
 	add_external
+			-- Add a new external.
 		local
-			l_external: CONF_EXTERNAL_LIBRARY
-			l_ext_sec: EXTERNAL_LIBRARY_SECTION
+			l_external: CONF_EXTERNAL_CFLAG
+			l_ext_sec: EXTERNAL_CFLAG_SECTION
 		do
 				-- add it in the configuration
-			l_external := configuration_window.conf_factory.new_external_library ("new", target)
-			target.add_external_library (l_external)
+			l_external := configuration_window.conf_factory.new_external_cflag ("new", target)
+			target.add_external_cflag (l_external)
 
 				-- create and select the section
 			create l_ext_sec.make (l_external, target, configuration_window)
@@ -51,19 +52,19 @@ feature {NONE} -- Section properties
 	add_text: STRING_GENERAL
 			-- Menu entry text to add a new item.
 		do
-			Result := conf_interface_names.external_add_library
+			Result := conf_interface_names.external_add_cflag
 		end
 
 	add_icon: EV_PIXMAP
 			-- Menu entry icon to add a new item.
 		do
-			Result := conf_pixmaps.new_object_icon
+			Result := conf_pixmaps.new_cflag_icon
 		end
 
 	add_button: SD_TOOL_BAR_BUTTON
 			-- Toolbar button to add a new item.
 		do
-			Result := toolbar.add_external_library_button
+			Result := toolbar.add_cflag_button
 		end
 
 note

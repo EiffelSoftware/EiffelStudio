@@ -62,9 +62,11 @@ feature -- Visit nodes
 				a_target.set_description (new_target.description)
 				a_target.set_note_node (new_target.note_node)
 				a_target.set_external_includes (new_target.internal_external_include)
+				a_target.set_external_cflag (new_target.internal_external_cflag)
 				a_target.set_external_objects (new_target.internal_external_object)
 				a_target.set_external_libraries (new_target.internal_external_library)
-				a_target.set_external_ressources (new_target.internal_external_resource)
+				a_target.set_external_resources (new_target.internal_external_resource)
+				a_target.set_external_linker_flag (new_target.internal_external_linker_flag)
 				a_target.set_external_make (new_target.internal_external_make)
 				a_target.set_pre_compile (new_target.internal_pre_compile_action)
 				a_target.set_post_compile (new_target.internal_post_compile_action)
@@ -142,7 +144,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -33,27 +33,37 @@ feature -- Status
 
 	is_include: BOOLEAN
 			-- Is `Current' an include external?
-		once
+		do
+		end
+
+	is_cflag: BOOLEAN
+			-- Is `Current' a C flag external?
+		do
 		end
 
 	is_object: BOOLEAN
 			-- Is `Current' an object external?
-		once
+		do
 		end
 
 	is_library: BOOLEAN
 			-- Is `Current' a library external?
-		once
-		end
-
-	is_make: BOOLEAN
-			-- Is `Current' a make external?
-		once
+		do
 		end
 
 	is_resource: BOOLEAN
 			-- Is `Current' an external ressource?
-		once
+		do
+		end
+
+	is_linker_flag: BOOLEAN
+			-- Is `Current' a linker flag external?
+		do
+		end
+
+	is_make: BOOLEAN
+			-- Is `Current' a make external?
+		do
 		end
 
 feature -- Access, stored in configuration file
@@ -64,9 +74,10 @@ feature -- Access, stored in configuration file
 			l_path: STRING
 		do
 			Result := internal_location.twin
-			l_path := target.library_root.twin
-				-- remove trailing directory separator
+			l_path := target.library_root
+				-- Remove trailing directory separator.
 			if not l_path.is_empty and then l_path.item (l_path.count) = operating_environment.directory_separator then
+				l_path := l_path.twin
 				l_path.remove_tail (1)
 			end
 			Result.replace_substring_all ("$ECF_CONFIG_PATH", l_path)
@@ -111,7 +122,7 @@ invariant
 	target_not_void: target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

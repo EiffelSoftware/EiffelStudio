@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,6 +31,14 @@ feature -- Access
 			end
 		end
 
+	cflag: like internal_cflag
+			-- C flag externals.
+		do
+			if attached internal_cflag as e and then has (e) then
+				Result := e
+			end
+		end
+
 	objects: like internal_objects
 			-- Object externals.
 		do
@@ -47,19 +55,27 @@ feature -- Access
 			end
 		end
 
-	makefiles: like internal_makefiles
-			-- Make externals.
-		do
-			if internal_makefiles /= Void and then has (internal_makefiles) then
-				Result := internal_makefiles
-			end
-		end
-
 	resources: like internal_resources
 			-- Resource externals.
 		do
 			if internal_resources /= Void and then has (internal_resources) then
 				Result := internal_resources
+			end
+		end
+
+	linker_flag: like internal_linker_flag
+			-- Linker flag externals.
+		do
+			if attached internal_linker_flag as e and then has (e) then
+				Result := e
+			end
+		end
+
+	makefiles: like internal_makefiles
+			-- Make externals.
+		do
+			if internal_makefiles /= Void and then has (internal_makefiles) then
+				Result := internal_makefiles
 			end
 		end
 
@@ -88,6 +104,17 @@ feature -- Element update
 			internal_includes.add_external
 		end
 
+	add_cflag
+			-- Add a new C flag external.
+		do
+			if cflag = Void then
+				create internal_cflag.make (target, configuration_window)
+				order_headers
+				extend (internal_cflag)
+			end
+			internal_cflag.add_external
+		end
+
 	add_object
 			-- Add a new object external.
 		do
@@ -110,17 +137,6 @@ feature -- Element update
 			internal_libraries.add_external
 		end
 
-	add_make
-			-- Add a new make external.
-		do
-			if makefiles = Void then
-				create internal_makefiles.make (target, configuration_window)
-				order_headers
-				extend (internal_makefiles)
-			end
-			internal_makefiles.add_external
-		end
-
 	add_resource
 			-- Add a new resource external.
 		do
@@ -130,6 +146,28 @@ feature -- Element update
 				extend (internal_resources)
 			end
 			internal_resources.add_external
+		end
+
+	add_linker_flag
+			-- Add a new linker flag external.
+		do
+			if linker_flag = Void then
+				create internal_linker_flag.make (target, configuration_window)
+				order_headers
+				extend (internal_linker_flag)
+			end
+			internal_linker_flag.add_external
+		end
+
+	add_make
+			-- Add a new make external.
+		do
+			if makefiles = Void then
+				create internal_makefiles.make (target, configuration_window)
+				order_headers
+				extend (internal_makefiles)
+			end
+			internal_makefiles.add_external
 		end
 
 	set_includes (a_externals: ARRAYED_LIST [CONF_EXTERNAL_INCLUDE])
@@ -147,6 +185,19 @@ feature -- Element update
 					create l_external.make (a_externals.item, target, configuration_window)
 					internal_includes.extend (l_external)
 					a_externals.forth
+				end
+				order_headers
+			end
+		end
+
+	set_cflag (e: ARRAYED_LIST [CONF_EXTERNAL_CFLAG])
+			-- Set C flag externals.
+		do
+			if attached e and then not e.is_empty then
+				create internal_cflag.make (target, configuration_window)
+				across e as c loop
+					internal_cflag.extend
+						(create {EXTERNAL_CFLAG_SECTION}.make (c.item, target, configuration_window))
 				end
 				order_headers
 			end
@@ -192,26 +243,6 @@ feature -- Element update
 			end
 		end
 
-	set_makefiles (a_externals: ARRAYED_LIST [CONF_EXTERNAL_MAKE])
-			-- Set make externals.
-		local
-			l_external: EXTERNAL_MAKE_SECTION
-		do
-			if a_externals /= Void and then not a_externals.is_empty then
-				create internal_makefiles.make (target, configuration_window)
-				from
-					a_externals.start
-				until
-					a_externals.after
-				loop
-					create l_external.make (a_externals.item, target, configuration_window)
-					internal_makefiles.extend (l_external)
-					a_externals.forth
-				end
-				order_headers
-			end
-		end
-
 	set_resources (a_externals: ARRAYED_LIST [CONF_EXTERNAL_RESOURCE])
 			-- Set resource externals.
 		local
@@ -232,16 +263,53 @@ feature -- Element update
 			end
 		end
 
+	set_linker_flag (e: ARRAYED_LIST [CONF_EXTERNAL_LINKER_FLAG])
+			-- Set linker flag externals.
+		do
+			if attached e and then not e.is_empty then
+				create internal_linker_flag.make (target, configuration_window)
+				across e as c loop
+					internal_linker_flag.extend
+						(create {EXTERNAL_LINKER_FLAG_SECTION}.make (c.item, target, configuration_window))
+				end
+				order_headers
+			end
+		end
+
+	set_makefiles (a_externals: ARRAYED_LIST [CONF_EXTERNAL_MAKE])
+			-- Set make externals.
+		local
+			l_external: EXTERNAL_MAKE_SECTION
+		do
+			if a_externals /= Void and then not a_externals.is_empty then
+				create internal_makefiles.make (target, configuration_window)
+				from
+					a_externals.start
+				until
+					a_externals.after
+				loop
+					create l_external.make (a_externals.item, target, configuration_window)
+					internal_makefiles.extend (l_external)
+					a_externals.forth
+				end
+				order_headers
+			end
+		end
+
 	context_menu: ARRAYED_LIST [EV_MENU_ITEM]
 			-- Context menu with available actions for `Current'.
 		local
 			l_item: EV_MENU_ITEM
 		do
-			create Result.make (5)
+			create Result.make (7)
 
 			create l_item.make_with_text_and_action (conf_interface_names.external_add_include, agent add_include)
 			Result.extend (l_item)
 			l_item.set_pixmap (conf_pixmaps.new_include_icon)
+
+			create l_item.make_with_text_and_action (conf_interface_names.external_add_cflag, agent add_cflag)
+			Result.extend (l_item)
+			l_item.set_pixmap (conf_pixmaps.new_cflag_icon)
 
 			create l_item.make_with_text_and_action (conf_interface_names.external_add_object, agent add_object)
 			Result.extend (l_item)
@@ -251,13 +319,17 @@ feature -- Element update
 			Result.extend (l_item)
 			l_item.set_pixmap (conf_pixmaps.new_object_icon)
 
-			create l_item.make_with_text_and_action (conf_interface_names.external_add_make, agent add_make)
-			Result.extend (l_item)
-			l_item.set_pixmap (conf_pixmaps.new_makefile_icon)
-
 			create l_item.make_with_text_and_action (conf_interface_names.external_add_resource, agent add_resource)
 			Result.extend (l_item)
 			l_item.set_pixmap (conf_pixmaps.new_resource_icon)
+
+			create l_item.make_with_text_and_action (conf_interface_names.external_add_linker_flag, agent add_linker_flag)
+			Result.extend (l_item)
+			l_item.set_pixmap (conf_pixmaps.new_linker_flag_icon)
+
+			create l_item.make_with_text_and_action (conf_interface_names.external_add_make, agent add_make)
+			Result.extend (l_item)
+			l_item.set_pixmap (conf_pixmaps.new_makefile_icon)
 		end
 
 feature -- Simple operations
@@ -269,6 +341,10 @@ feature -- Simple operations
 			toolbar.add_include_button.select_actions.extend (agent add_include)
 			toolbar.add_include_button.enable_sensitive
 
+			toolbar.add_cflag_button.select_actions.wipe_out
+			toolbar.add_cflag_button.select_actions.extend (agent add_cflag)
+			toolbar.add_cflag_button.enable_sensitive
+
 			toolbar.add_object_button.select_actions.wipe_out
 			toolbar.add_object_button.select_actions.extend (agent add_object)
 			toolbar.add_object_button.enable_sensitive
@@ -277,13 +353,17 @@ feature -- Simple operations
 			toolbar.add_external_library_button.select_actions.extend (agent add_library)
 			toolbar.add_external_library_button.enable_sensitive
 
-			toolbar.add_make_button.select_actions.wipe_out
-			toolbar.add_make_button.select_actions.extend (agent add_make)
-			toolbar.add_make_button.enable_sensitive
-
 			toolbar.add_resource_button.select_actions.wipe_out
 			toolbar.add_resource_button.select_actions.extend (agent add_resource)
 			toolbar.add_resource_button.enable_sensitive
+
+			toolbar.add_linker_flag_button.select_actions.wipe_out
+			toolbar.add_linker_flag_button.select_actions.extend (agent add_linker_flag)
+			toolbar.add_linker_flag_button.enable_sensitive
+
+			toolbar.add_make_button.select_actions.wipe_out
+			toolbar.add_make_button.select_actions.extend (agent add_make)
+			toolbar.add_make_button.enable_sensitive
 		end
 
 feature {NONE} -- Implementation
@@ -291,17 +371,23 @@ feature {NONE} -- Implementation
 	internal_includes: TARGET_INCLUDE_EXTERNALS_SECTION
 			-- Include externals (Could still be present even if it removed from Current)
 
+	internal_cflag: TARGET_CFLAG_EXTERNALS_SECTION
+			-- C flag externals (Could still be present even if it removed from Current)
+
 	internal_objects: TARGET_OBJECT_EXTERNALS_SECTION
 			-- Object externals (Could still be present even if it removed from Current)
 
 	internal_libraries: TARGET_LIBRARY_EXTERNALS_SECTION
 			-- Library externals (Could still be present even if it removed from Current)
 
-	internal_makefiles: TARGET_MAKE_EXTERNALS_SECTION
-			-- Make externals (Could still be present even if it removed from Current)
-
 	internal_resources: TARGET_RESOURCE_EXTERNALS_SECTION
 			-- Resource externals (Could still be present even if it removed from Current)
+
+	internal_linker_flag: TARGET_LINKER_FLAG_EXTERNALS_SECTION
+			-- Linker flag externals (Could still be present even if it removed from Current)
+
+	internal_makefiles: TARGET_MAKE_EXTERNALS_SECTION
+			-- Make externals (Could still be present even if it removed from Current)
 
 	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to execute when the item is selected
@@ -313,87 +399,91 @@ feature {NONE} -- Implementation
 	order_headers
 			-- Order headers in correct order.
 		local
-			l_inc, l_obj, l_lib, l_mak, l_res: BOOLEAN
+			l_inc, l_cfl, l_obj, l_lib, l_res, l_lfl, l_mak: BOOLEAN
 		do
-			if internal_includes /= Void then
-				l_inc := internal_includes.is_expanded
-			end
-			if internal_objects /= Void then
-				l_obj := internal_objects.is_expanded
-			end
-			if internal_libraries /= Void then
-				l_lib := internal_libraries.is_expanded
-			end
-			if internal_makefiles /= Void then
-				l_mak := internal_makefiles.is_expanded
-			end
-			if internal_resources /= Void then
-				l_res := internal_resources.is_expanded
-			end
+			l_inc := attached internal_includes as e and then e.is_expanded
+			l_cfl := attached internal_cflag as e and then e.is_expanded
+			l_obj := attached internal_objects as e and then e.is_expanded
+			l_lib := attached internal_libraries as e and then e.is_expanded
+			l_res := attached internal_resources as e and then e.is_expanded
+			l_lfl := attached internal_linker_flag as e and then e.is_expanded
+			l_mak := attached internal_makefiles as e and then e.is_expanded
 
 			wipe_out
 
-			if internal_includes /= Void and then not internal_includes.is_empty then
-				extend (internal_includes)
+			if attached internal_includes as e and then not e.is_empty then
+				extend (e)
 				if l_inc then
-					internal_includes.expand
+					e.expand
 				end
 			end
-			if internal_objects /= Void and then not internal_objects.is_empty then
-				extend (internal_objects)
+			if attached internal_cflag as e and then not e.is_empty then
+				extend (e)
+				if l_cfl then
+					e.expand
+				end
+			end
+			if attached internal_objects as e and then not e.is_empty then
+				extend (e)
 				if l_obj then
-					internal_objects.expand
+					e.expand
 				end
 			end
-			if internal_libraries /= Void and then not internal_libraries.is_empty then
-				extend (internal_libraries)
+			if attached internal_libraries as e and then not e.is_empty then
+				extend (e)
 				if l_lib then
-					internal_libraries.expand
+					e.expand
 				end
 			end
-			if internal_makefiles /= Void and then not internal_makefiles.is_empty then
-				extend (internal_makefiles)
-				if l_mak then
-					internal_makefiles.expand
-				end
-			end
-			if internal_resources /= Void and then not internal_resources.is_empty then
-				extend (internal_resources)
+			if attached internal_resources as e and then not e.is_empty then
+				extend (e)
 				if l_res then
-					internal_resources.expand
+					e.expand
+				end
+			end
+			if attached internal_linker_flag as e and then not e.is_empty then
+				extend (e)
+				if l_lfl then
+					e.expand
+				end
+			end
+			if attached internal_makefiles as e and then not e.is_empty then
+				extend (e)
+				if l_mak then
+					e.expand
 				end
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
+			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
+			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
-
+			See the GNU General Public License for more details.
+			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

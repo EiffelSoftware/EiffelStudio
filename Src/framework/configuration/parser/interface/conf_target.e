@@ -45,9 +45,11 @@ feature {NONE} -- Initialization
 			internal_file_rule.compare_objects
 
 			create internal_external_include.make (1)
+			create internal_external_cflag.make (1)
 			create internal_external_object.make (1)
 			create internal_external_library.make (1)
 			create internal_external_resource.make (1)
+			create internal_external_linker_flag.make (1)
 			create internal_external_make.make (1)
 			create internal_pre_compile_action.make (1)
 			create internal_post_compile_action.make (1)
@@ -279,6 +281,17 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
+	external_cflag: like internal_external_cflag
+			-- Global external C flags.
+		do
+			Result := internal_external_cflag.twin
+			if attached extends as e then
+				Result.append (e.external_cflag)
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	external_object: like internal_external_object
 			-- Global external object files.
 		do
@@ -296,6 +309,17 @@ feature -- Access queries
 			Result := internal_external_library.twin
 			if extends /= Void then
 				Result.append (extends.external_library)
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	external_linker_flag: like internal_external_linker_flag
+			-- Global external linker flags.
+		do
+			Result := internal_external_linker_flag.twin
+			if attached extends as e then
+				Result.append (e.external_linker_flag)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -1003,6 +1027,16 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			includes_set: internal_external_include =an_includes
 		end
 
+	set_external_cflag (v: like internal_external_cflag)
+			-- Set `internal_external_cflag' to `v'.
+		require
+			v_attached: attached v
+		do
+			internal_external_cflag := v
+		ensure
+			internal_external_cflag_set: internal_external_cflag = v
+		end
+
 	set_external_objects (an_objects: like internal_external_object)
 			-- Set `an_objects'.
 		require
@@ -1023,7 +1057,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			libraries_set: internal_external_library = a_libraries
 		end
 
-	set_external_ressources (a_ressources: like internal_external_resource)
+	set_external_resources (a_ressources: like internal_external_resource)
 			-- Set `a_ressources'.
 		require
 			a_ressources_not_void: a_ressources /= Void
@@ -1031,6 +1065,16 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_external_resource := a_ressources
 		ensure
 			ressources_set: internal_external_resource = a_ressources
+		end
+
+	set_external_linker_flag (v: like internal_external_linker_flag)
+			-- Set `internal_external_linker_flag' to `v'.
+		require
+			v_attached: attached v
+		do
+			internal_external_linker_flag := v
+		ensure
+			internal_external_linker_flag_set: internal_external_linker_flag = v
 		end
 
 	set_external_make (a_makes: like internal_external_make)
@@ -1051,6 +1095,16 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_external_include.extend (an_include)
 		ensure
 			added: internal_external_include.has (an_include)
+		end
+
+	add_external_cflag (a_cflag: CONF_EXTERNAL_CFLAG)
+			-- Add `a_cflag'.
+		require
+			a_cflag_not_void: a_cflag /= Void
+		do
+			internal_external_cflag.extend (a_cflag)
+		ensure
+			added: internal_external_cflag.has (a_cflag)
 		end
 
 	add_external_object (an_object: CONF_EXTERNAL_OBJECT)
@@ -1086,6 +1140,16 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			added: internal_external_resource.has (a_resource)
 		end
 
+	add_external_linker_flag (a_linker_flag: CONF_EXTERNAL_LINKER_FLAG)
+			-- Add `a_linker_flag'.
+		require
+			a_linker_flag_not_void: a_linker_flag /= Void
+		do
+			internal_external_linker_flag.extend (a_linker_flag)
+		ensure
+			added: internal_external_linker_flag.has (a_linker_flag)
+		end
+
 	add_external_make (a_make: CONF_EXTERNAL_MAKE)
 			-- Add `a_make'.
 		require
@@ -1107,6 +1171,19 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_external_include.remove
 		ensure
 			removed: not internal_external_include.has (an_include)
+		end
+
+	remove_external_cflag (v: CONF_EXTERNAL_CFLAG)
+			-- Remove `v' from `internal_external_cflag'.
+		require
+			v_attached: attached v
+			has_v: internal_external_cflag.has (v)
+		do
+			internal_external_cflag.start
+			internal_external_cflag.search (v)
+			internal_external_cflag.remove
+		ensure
+			removed: internal_external_cflag.occurrences (v) = old internal_external_cflag.occurrences (v) - 1
 		end
 
 	remove_external_object (an_object: CONF_EXTERNAL_OBJECT)
@@ -1146,6 +1223,19 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_external_resource.remove
 		ensure
 			removed: not internal_external_resource.has (a_resource)
+		end
+
+	remove_external_linker_flag (v: CONF_EXTERNAL_LINKER_FLAG)
+			-- Remove `v' from `internal_external_linker_flag'.
+		require
+			v_attached: attached v
+			has_v: internal_external_linker_flag.has (v)
+		do
+			internal_external_linker_flag.start
+			internal_external_linker_flag.search (v)
+			internal_external_linker_flag.remove
+		ensure
+			removed: internal_external_linker_flag.occurrences (v) = old internal_external_linker_flag.occurrences (v) - 1
 		end
 
 	remove_external_make (a_make: CONF_EXTERNAL_MAKE)
@@ -1417,6 +1507,9 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 	internal_external_include: ARRAYED_LIST [CONF_EXTERNAL_INCLUDE]
 			-- Global external include files of this target itself.
 
+	internal_external_cflag: ARRAYED_LIST [CONF_EXTERNAL_CFLAG]
+			-- Global external C flags of this target itself.
+
 	internal_external_object: ARRAYED_LIST [CONF_EXTERNAL_OBJECT]
 			-- Global external object files of this target itself.
 
@@ -1425,6 +1518,9 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 
 	internal_external_resource: ARRAYED_LIST [CONF_EXTERNAL_RESOURCE]
 			-- Global external ressource files of this target itself.
+
+	internal_external_linker_flag: ARRAYED_LIST [CONF_EXTERNAL_LINKER_FLAG]
+			-- Global external linker flags of this target itself.
 
 	internal_external_make: ARRAYED_LIST [CONF_EXTERNAL_MAKE]
 			-- Global external make files of this target itself.
@@ -1468,8 +1564,10 @@ invariant
 	internal_assemblies_not_void: internal_assemblies /= Void
 	internal_file_rule_not_void: internal_file_rule /= Void
 	internal_external_include_not_void: internal_external_include /= Void
+	internal_external_cflag_not_void: internal_external_cflag /= Void
 	internal_external_object_not_void: internal_external_object /= Void
 	internal_external_ressource_not_void: internal_external_resource /= Void
+	internal_external_linker_flag_not_void: internal_external_linker_flag /= Void
 	internal_external_make_not_void: internal_external_make /= Void
 	internal_pre_compile_not_void: internal_pre_compile_action /= Void
 	internal_post_compile_not_void: internal_post_compile_action /= Void
@@ -1479,7 +1577,7 @@ invariant
 	internal_setting_concurrency_attached: attached immediate_setting_concurrency
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -215,11 +215,13 @@ feature -- Visit nodes
 				append_tag ("setting", Void, l_a_name, l_a_val)
 			end
 			append_mapping (a_target.internal_mapping)
-			append_externals (a_target.internal_external_include, "include")
-			append_externals (a_target.internal_external_object, "object")
-			append_externals (a_target.internal_external_library, "library")
-			append_externals (a_target.internal_external_resource, "resource")
-			append_externals (a_target.internal_external_make, "make")
+			append_externals (a_target.internal_external_include, "include", "location")
+			append_externals (a_target.internal_external_cflag, "cflag", "value")
+			append_externals (a_target.internal_external_object, "object", "location")
+			append_externals (a_target.internal_external_library, "library", "location")
+			append_externals (a_target.internal_external_resource, "resource", "location")
+			append_externals (a_target.internal_external_linker_flag, "linker_flag", "value")
+			append_externals (a_target.internal_external_make, "make", "location")
 			append_actions (a_target.internal_pre_compile_action, "pre")
 			append_actions (a_target.internal_post_compile_action, "post")
 
@@ -630,11 +632,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_externals (an_externals: ARRAYED_LIST [CONF_EXTERNAL]; a_name: STRING)
+	append_externals (an_externals: ARRAYED_LIST [CONF_EXTERNAL]; a_name: STRING; a_value: STRING)
 			-- Append `an_externals'.
 		require
 			an_externals_not_void: an_externals /= Void
 			a_name_ok: a_name /= Void and then not a_name.is_empty
+			valid_a_value: attached a_value and then not a_value.is_empty
 		local
 			l_ext: CONF_EXTERNAL
 			l_desc: STRING
@@ -646,8 +649,11 @@ feature {NONE} -- Implementation
 					an_externals.after
 				loop
 					l_ext := an_externals.item
-					append_text_indent ("<external_"+a_name)
-					append_text (" location=%""+escape_xml (l_ext.internal_location)+"%">%N")
+					append_text_indent ("<external_")
+					append_text (a_name)
+					append_text (" ")
+					append_text (a_value)
+					append_text ("=%""+escape_xml (l_ext.internal_location)+"%">%N")
 					indent := indent + 1
 					last_count := text.count
 

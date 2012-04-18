@@ -1,70 +1,26 @@
 note
-	description: "Objects that ..."
+	description: "Objects that represent linker options."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TARGET_LIBRARY_EXTERNALS_SECTION
+	CONF_EXTERNAL_LINKER_FLAG
 
 inherit
-	TARGET_EXTERNAL_BASE_SECTION
+	CONF_EXTERNAL
+		redefine
+			is_linker_flag
+		end
 
 create
 	make
 
-feature -- Access
+feature -- Status
 
-	name: STRING_GENERAL
-			-- Name of the section.
-		once
-			Result := conf_interface_names.external_library_tree
-		end
-
-	icon: EV_PIXMAP
-			-- Icon of the section.
-		once
-			Result := conf_pixmaps.project_settings_object_file_icon
-		end
-
-feature -- Element update
-
-	add_external
-		local
-			l_external: CONF_EXTERNAL_LIBRARY
-			l_ext_sec: EXTERNAL_LIBRARY_SECTION
-		do
-				-- add it in the configuration
-			l_external := configuration_window.conf_factory.new_external_library ("new", target)
-			target.add_external_library (l_external)
-
-				-- create and select the section
-			create l_ext_sec.make (l_external, target, configuration_window)
-			extend (l_ext_sec)
-			expand
-			l_ext_sec.enable_select
-		end
-
-feature {NONE} -- Section properties
-
-	add_text: STRING_GENERAL
-			-- Menu entry text to add a new item.
-		do
-			Result := conf_interface_names.external_add_library
-		end
-
-	add_icon: EV_PIXMAP
-			-- Menu entry icon to add a new item.
-		do
-			Result := conf_pixmaps.new_object_icon
-		end
-
-	add_button: SD_TOOL_BAR_BUTTON
-			-- Toolbar button to add a new item.
-		do
-			Result := toolbar.add_external_library_button
-		end
+	is_linker_flag: BOOLEAN = True
+			-- <Precursor>
 
 note
 	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
@@ -97,4 +53,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

@@ -94,50 +94,55 @@ feature {NONE} -- Initialization
 
 			extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 
-			create add_include_button.make
-			add_include_button.set_pixmap (conf_pixmaps.new_include_icon)
-			add_include_button.set_pixel_buffer (conf_pixmaps.new_include_icon_buffer)
-			extend (add_include_button)
-			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_i), True, False, False)
-			l_ac.actions.extend (agent press_button (add_include_button))
-			accelerators.extend (l_ac)
-			add_include_button.set_tooltip (name_with_key (conf_interface_names.external_add_include, l_ac))
-
-			create add_object_button.make
-			add_object_button.set_pixmap (conf_pixmaps.new_object_icon)
-			add_object_button.set_pixel_buffer (conf_pixmaps.new_object_icon_buffer)
-			extend (add_object_button)
-			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_b), True, False, False)
-			l_ac.actions.extend (agent press_button (add_object_button))
-			accelerators.extend (l_ac)
-			add_object_button.set_tooltip (name_with_key (conf_interface_names.external_add_object, l_ac))
-
-			create add_external_library_button.make
-			add_external_library_button.set_pixmap (conf_pixmaps.new_object_icon)
-			add_external_library_button.set_pixel_buffer (conf_pixmaps.new_object_icon_buffer)
-			extend (add_external_library_button)
-			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_e), True, False, False)
-			l_ac.actions.extend (agent press_button (add_external_library_button))
-			accelerators.extend (l_ac)
-			add_external_library_button.set_tooltip (name_with_key (conf_interface_names.external_add_library, l_ac))
-
-			create add_make_button.make
-			add_make_button.set_pixmap (conf_pixmaps.new_makefile_icon)
-			add_make_button.set_pixel_buffer (conf_pixmaps.new_makefile_icon_buffer)
-			extend (add_make_button)
-			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_k), True, False, False)
-			l_ac.actions.extend (agent press_button (add_make_button))
-			accelerators.extend (l_ac)
-			add_make_button.set_tooltip (name_with_key (conf_interface_names.external_add_make, l_ac))
-
-			create add_resource_button.make
-			add_resource_button.set_pixmap (conf_pixmaps.new_resource_icon)
-			add_resource_button.set_pixel_buffer (conf_pixmaps.new_resource_icon_buffer)
-			extend (add_resource_button)
-			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_r), True, False, False)
-			l_ac.actions.extend (agent press_button (add_resource_button))
-			accelerators.extend (l_ac)
-			add_resource_button.set_tooltip (name_with_key (conf_interface_names.external_add_resource, l_ac))
+			make_button (
+				agent (b: SD_TOOL_BAR_BUTTON) do add_include_button := b end,
+				conf_pixmaps.new_include_icon,
+				conf_pixmaps.new_include_icon_buffer,
+				{EV_KEY_CONSTANTS}.key_i,
+				conf_interface_names.external_add_include
+			)
+			make_button (
+				agent (b: SD_TOOL_BAR_BUTTON) do add_cflag_button := b end,
+				conf_pixmaps.new_cflag_icon,
+				conf_pixmaps.new_cflag_icon_buffer,
+				{EV_KEY_CONSTANTS}.key_c,
+				conf_interface_names.external_add_cflag
+			)
+			make_button (
+				agent (b: SD_TOOL_BAR_BUTTON) do add_object_button := b end,
+				conf_pixmaps.new_object_icon,
+				conf_pixmaps.new_object_icon_buffer,
+				{EV_KEY_CONSTANTS}.key_b,
+				conf_interface_names.external_add_object
+			)
+			make_button (
+				agent (b: SD_TOOL_BAR_BUTTON) do add_external_library_button := b end,
+				conf_pixmaps.new_object_icon,
+				conf_pixmaps.new_object_icon_buffer,
+				{EV_KEY_CONSTANTS}.key_e,
+				conf_interface_names.external_add_library
+			)
+			make_button (
+				agent (b: SD_TOOL_BAR_BUTTON) do add_resource_button := b end,
+				conf_pixmaps.new_resource_icon,
+				conf_pixmaps.new_resource_icon_buffer,
+				{EV_KEY_CONSTANTS}.key_r,
+				conf_interface_names.external_add_resource
+			)
+			make_button (
+				agent (b: SD_TOOL_BAR_BUTTON) do add_linker_flag_button := b end,
+				conf_pixmaps.new_linker_flag_icon,
+				conf_pixmaps.new_linker_flag_icon_buffer,
+				{EV_KEY_CONSTANTS}.key_f,
+				conf_interface_names.external_add_linker_flag
+			)
+			make_button (
+				agent (b: SD_TOOL_BAR_BUTTON) do add_make_button := b end,
+				conf_pixmaps.new_makefile_icon,
+				conf_pixmaps.new_makefile_icon_buffer,
+				{EV_KEY_CONSTANTS}.key_k,
+				conf_interface_names.external_add_make
+			)
 
 			extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 
@@ -223,17 +228,23 @@ feature -- Buttons
 	add_include_button: SD_TOOL_BAR_BUTTON
 			-- Button for adding a new include external.
 
+	add_cflag_button: SD_TOOL_BAR_BUTTON
+			-- Button for adding a new C flag external.
+
 	add_object_button: SD_TOOL_BAR_BUTTON
 			-- Button for adding a new object external.
 
 	add_external_library_button: SD_TOOL_BAR_BUTTON
 			-- Button for adding a new library external.
 
-	add_make_button: SD_TOOL_BAR_BUTTON
-			-- Button for adding a new make external.
-
 	add_resource_button: SD_TOOL_BAR_BUTTON
 			-- Button for adding a new resource external.
+
+	add_linker_flag_button: SD_TOOL_BAR_BUTTON
+			-- Button for adding a new linker flag external.
+
+	add_make_button: SD_TOOL_BAR_BUTTON
+			-- Button for adding a new make external.
 
 	add_pre_task_button: SD_TOOL_BAR_BUTTON
 			-- Button for adding a new pre compilation task.
@@ -297,7 +308,39 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN = True;
+	is_in_default_state: BOOLEAN = True
+
+feature {NONE} -- Initialization
+
+	make_button (
+			a_set_button: PROCEDURE [ANY, TUPLE [SD_TOOL_BAR_BUTTON]];
+			an_icon: EV_PIXMAP;
+			an_icon_buffer: EV_PIXEL_BUFFER;
+			a_key_code: INTEGER_32;
+			a_tooltip: STRING_GENERAL
+		)
+			-- Create a new button with the specified properties,
+			-- set it using `a_set_button' and add to the toolbar.
+		require
+			a_set_button_attached: attached a_set_button
+			an_icon_attached: attached an_icon
+			an_icon_buffer_attached: attached an_icon_buffer
+			valid_a_key_code: (create {EV_KEY_CONSTANTS}).valid_key_code (a_key_code)
+			a_tooltip_attached: attached a_tooltip
+		local
+			a: EV_ACCELERATOR
+			b: SD_TOOL_BAR_BUTTON
+		do
+			create b.make
+			a_set_button.call ([b])
+			b.set_pixmap (an_icon)
+			b.set_pixel_buffer (an_icon_buffer)
+			extend (b)
+			create a.make_with_key_combination (create {EV_KEY}.make_with_code (a_key_code), True, False, False)
+			a.actions.extend (agent press_button (b))
+			accelerators.extend (a)
+			b.set_tooltip (name_with_key (a_tooltip, a))
+		end
 
 invariant
 	accelerators_not_void: accelerators /= Void
@@ -309,17 +352,19 @@ invariant
 	add_library_button: add_library_button /= Void
 	add_precompile_button: add_precompile_button /= Void
 	add_include_button: add_include_button /= Void
+	add_cflag_button: add_cflag_button /= Void
 	add_object_button: add_object_button /= Void
 	add_external_library_button: add_external_library_button /= Void
-	add_make_button: add_make_button /= Void
 	add_resource_button: add_resource_button /= Void
+	add_linker_flag_button: add_linker_flag_button /= Void
+	add_make_button: add_make_button /= Void
 	add_pre_task_button: add_pre_task_button /= Void
 	add_post_task_button: add_post_task_button /= Void
 	remove_button: remove_button /= Void
 	edit_library: edit_library /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

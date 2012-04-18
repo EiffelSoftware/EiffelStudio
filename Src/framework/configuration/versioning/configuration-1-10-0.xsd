@@ -51,15 +51,19 @@
 			<xs:element name="option" type="option" minOccurs="0"/>
 			<xs:element name="setting" type="setting" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="mapping" type="mapping" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="external_include" type="external" minOccurs="0"
+			<xs:element name="external_include" type="external_location" minOccurs="0"
 				maxOccurs="unbounded"/>
-			<xs:element name="external_object" type="external" minOccurs="0"
+			<xs:element name="external_cflag" type="external_value" minOccurs="0"
 				maxOccurs="unbounded"/>
-			<xs:element name="external_library" type="external" minOccurs="0"
+			<xs:element name="external_object" type="external_location" minOccurs="0"
 				maxOccurs="unbounded"/>
-			<xs:element name="external_resource" type="external" minOccurs="0"
+			<xs:element name="external_library" type="external_location" minOccurs="0"
 				maxOccurs="unbounded"/>
-			<xs:element name="external_make" type="external" minOccurs="0"
+			<xs:element name="external_resource" type="external_location" minOccurs="0"
+				maxOccurs="unbounded"/>
+			<xs:element name="external_linker_flag" type="external_value" minOccurs="0"
+				maxOccurs="unbounded"/>
+			<xs:element name="external_make" type="external_location" minOccurs="0"
 				maxOccurs="unbounded"/>
 			<xs:element name="pre_compile_action" type="action" minOccurs="0"
 				maxOccurs="unbounded"/>
@@ -349,12 +353,20 @@
 		<xs:attribute name="excluded_value" type="xs:string" use="optional"/>
 	</xs:complexType>
 
-	<xs:complexType name="external">
+	<xs:complexType name="external_location">
 		<xs:sequence>
 			<xs:element name="description" type="xs:string" minOccurs="0"/>
 			<xs:element name="condition" type="condition" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="location" type="location"/>
+	</xs:complexType>
+
+	<xs:complexType name="external_value">
+		<xs:sequence>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="condition" type="condition" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="value" type="xs:string"/>
 	</xs:complexType>
 
 	<xs:complexType name="renaming">

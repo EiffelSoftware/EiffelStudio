@@ -41,7 +41,7 @@ feature {NONE} -- Access
 			-- <Precursor>
 
 feature -- Icons
-	
+
 	frozen expanded_normal_icon: EV_PIXMAP
 			-- Access to 'normal' pixmap.
 		require
@@ -5442,6 +5442,26 @@ feature -- Icons
 			new_include_icon_buffer_attached: Result /= Void
 		end
 
+	frozen new_cflag_icon: EV_PIXMAP
+			-- Access to 'cflag' pixmap.
+		require
+			has_named_icon: has_named_icon (new_cflag_name)
+		once
+			Result := named_icon (new_cflag_name)
+		ensure
+			new_cflag_icon_attached: Result /= Void
+		end
+
+	frozen new_cflag_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'cflag' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (new_cflag_name)
+		once
+			Result := named_icon_buffer (new_cflag_name)
+		ensure
+			new_cflag_icon_buffer_attached: Result /= Void
+		end
+
 	frozen new_object_icon: EV_PIXMAP
 			-- Access to 'object' pixmap.
 		require
@@ -5462,26 +5482,6 @@ feature -- Icons
 			new_object_icon_buffer_attached: Result /= Void
 		end
 
-	frozen new_makefile_icon: EV_PIXMAP
-			-- Access to 'makefile' pixmap.
-		require
-			has_named_icon: has_named_icon (new_makefile_name)
-		once
-			Result := named_icon (new_makefile_name)
-		ensure
-			new_makefile_icon_attached: Result /= Void
-		end
-
-	frozen new_makefile_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'makefile' pixmap pixel buffer.
-		require
-			has_named_icon: has_named_icon (new_makefile_name)
-		once
-			Result := named_icon_buffer (new_makefile_name)
-		ensure
-			new_makefile_icon_buffer_attached: Result /= Void
-		end
-
 	frozen new_resource_icon: EV_PIXMAP
 			-- Access to 'resource' pixmap.
 		require
@@ -5500,6 +5500,46 @@ feature -- Icons
 			Result := named_icon_buffer (new_resource_name)
 		ensure
 			new_resource_icon_buffer_attached: Result /= Void
+		end
+
+	frozen new_linker_flag_icon: EV_PIXMAP
+			-- Access to 'linker flag' pixmap.
+		require
+			has_named_icon: has_named_icon (new_linker_flag_name)
+		once
+			Result := named_icon (new_linker_flag_name)
+		ensure
+			new_linker_flag_icon_attached: Result /= Void
+		end
+
+	frozen new_linker_flag_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'linker flag' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (new_linker_flag_name)
+		once
+			Result := named_icon_buffer (new_linker_flag_name)
+		ensure
+			new_linker_flag_icon_buffer_attached: Result /= Void
+		end
+
+	frozen new_makefile_icon: EV_PIXMAP
+			-- Access to 'makefile' pixmap.
+		require
+			has_named_icon: has_named_icon (new_makefile_name)
+		once
+			Result := named_icon (new_makefile_name)
+		ensure
+			new_makefile_icon_attached: Result /= Void
+		end
+
+	frozen new_makefile_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'makefile' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (new_makefile_name)
+		once
+			Result := named_icon_buffer (new_makefile_name)
+		ensure
+			new_makefile_icon_buffer_attached: Result /= Void
 		end
 
 	frozen new_pre_compilation_task_icon: EV_PIXMAP
@@ -7962,6 +8002,16 @@ feature -- Icons
 			project_settings_include_file_icon_buffer_attached: Result /= Void
 		end
 
+	frozen project_settings_cflag_icon: EV_PIXMAP
+			-- Access to 'cflag' pixmap.
+		require
+			has_named_icon: has_named_icon (project_settings_cflag_name)
+		once
+			Result := named_icon (project_settings_cflag_name)
+		ensure
+			project_settings_cflag_icon_attached: Result /= Void
+		end
+
 	frozen project_settings_object_file_icon: EV_PIXMAP
 			-- Access to 'object file' pixmap.
 		require
@@ -7982,26 +8032,6 @@ feature -- Icons
 			project_settings_object_file_icon_buffer_attached: Result /= Void
 		end
 
-	frozen project_settings_make_file_icon: EV_PIXMAP
-			-- Access to 'make file' pixmap.
-		require
-			has_named_icon: has_named_icon (project_settings_make_file_name)
-		once
-			Result := named_icon (project_settings_make_file_name)
-		ensure
-			project_settings_make_file_icon_attached: Result /= Void
-		end
-
-	frozen project_settings_make_file_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'make file' pixmap pixel buffer.
-		require
-			has_named_icon: has_named_icon (project_settings_make_file_name)
-		once
-			Result := named_icon_buffer (project_settings_make_file_name)
-		ensure
-			project_settings_make_file_icon_buffer_attached: Result /= Void
-		end
-
 	frozen project_settings_resource_file_icon: EV_PIXMAP
 			-- Access to 'resource file' pixmap.
 		require
@@ -8020,6 +8050,36 @@ feature -- Icons
 			Result := named_icon_buffer (project_settings_resource_file_name)
 		ensure
 			project_settings_resource_file_icon_buffer_attached: Result /= Void
+		end
+
+	frozen project_settings_linker_flag_icon: EV_PIXMAP
+			-- Access to 'linker flag' pixmap.
+		require
+			has_named_icon: has_named_icon (project_settings_linker_flag_name)
+		once
+			Result := named_icon (project_settings_linker_flag_name)
+		ensure
+			project_settings_linker_flag_icon_attached: Result /= Void
+		end
+
+	frozen project_settings_make_file_icon: EV_PIXMAP
+			-- Access to 'make file' pixmap.
+		require
+			has_named_icon: has_named_icon (project_settings_make_file_name)
+		once
+			Result := named_icon (project_settings_make_file_name)
+		ensure
+			project_settings_make_file_icon_attached: Result /= Void
+		end
+
+	frozen project_settings_make_file_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'make file' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (project_settings_make_file_name)
+		once
+			Result := named_icon_buffer (project_settings_make_file_name)
+		ensure
+			project_settings_make_file_icon_buffer_attached: Result /= Void
 		end
 
 	frozen project_settings_task_icon: EV_PIXMAP
@@ -8483,7 +8543,7 @@ feature -- Icons
 		end
 
 feature -- Icons: Animations
-	
+
 	frozen compile_animation_anim: ARRAY [EV_PIXMAP]
 			-- Access to 'compile_animation' pixmap animation items.
 		once
@@ -8814,9 +8874,11 @@ feature -- Constants: Icon names
 	new_and_name: STRING = "new and"
 	new_or_name: STRING = "new or"
 	new_include_name: STRING = "new include"
+	new_cflag_name: STRING = "new cflag"
 	new_object_name: STRING = "new object"
-	new_makefile_name: STRING = "new makefile"
 	new_resource_name: STRING = "new resource"
+	new_linker_flag_name: STRING = "new linker flag"
+	new_makefile_name: STRING = "new makefile"
 	new_pre_compilation_task_name: STRING = "new pre compilation task"
 	new_post_compilation_task_name: STRING = "new post compilation task"
 	new_target_name: STRING = "new target"
@@ -8940,9 +9002,11 @@ feature -- Constants: Icon names
 	project_settings_type_mappings_name: STRING = "project settings type mappings"
 	project_settings_edit_library_name: STRING = "project settings edit library"
 	project_settings_include_file_name: STRING = "project settings include file"
+	project_settings_cflag_name: STRING = "project settings cflag"
 	project_settings_object_file_name: STRING = "project settings object file"
-	project_settings_make_file_name: STRING = "project settings make file"
 	project_settings_resource_file_name: STRING = "project settings resource file"
+	project_settings_linker_flag_name: STRING = "project settings linker_flag"
+	project_settings_make_file_name: STRING = "project settings make file"
 	project_settings_task_name: STRING = "project settings task"
 	overlay_locked_name: STRING = "overlay locked"
 	overlay_error_name: STRING = "overlay error"
@@ -9242,9 +9306,11 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 16, {NATURAL_8} 13], new_and_name)
 			a_table.put ([{NATURAL_8} 17, {NATURAL_8} 13], new_or_name)
 			a_table.put ([{NATURAL_8} 18, {NATURAL_8} 13], new_include_name)
+			a_table.put ([{NATURAL_8} 18, {NATURAL_8} 13], new_cflag_name)
 			a_table.put ([{NATURAL_8} 19, {NATURAL_8} 13], new_object_name)
-			a_table.put ([{NATURAL_8} 20, {NATURAL_8} 13], new_makefile_name)
 			a_table.put ([{NATURAL_8} 21, {NATURAL_8} 13], new_resource_name)
+			a_table.put ([{NATURAL_8} 19, {NATURAL_8} 13], new_linker_flag_name)
+			a_table.put ([{NATURAL_8} 20, {NATURAL_8} 13], new_makefile_name)
 			a_table.put ([{NATURAL_8} 22, {NATURAL_8} 13], new_pre_compilation_task_name)
 			a_table.put ([{NATURAL_8} 23, {NATURAL_8} 13], new_post_compilation_task_name)
 			a_table.put ([{NATURAL_8} 24, {NATURAL_8} 13], new_target_name)
@@ -9368,9 +9434,11 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 11, {NATURAL_8} 20], project_settings_type_mappings_name)
 			a_table.put ([{NATURAL_8} 12, {NATURAL_8} 20], project_settings_edit_library_name)
 			a_table.put ([{NATURAL_8} 13, {NATURAL_8} 20], project_settings_include_file_name)
+			a_table.put ([{NATURAL_8} 13, {NATURAL_8} 20], project_settings_cflag_name)
 			a_table.put ([{NATURAL_8} 14, {NATURAL_8} 20], project_settings_object_file_name)
-			a_table.put ([{NATURAL_8} 15, {NATURAL_8} 20], project_settings_make_file_name)
 			a_table.put ([{NATURAL_8} 16, {NATURAL_8} 20], project_settings_resource_file_name)
+			a_table.put ([{NATURAL_8} 14, {NATURAL_8} 20], project_settings_linker_flag_name)
+			a_table.put ([{NATURAL_8} 15, {NATURAL_8} 20], project_settings_make_file_name)
 			a_table.put ([{NATURAL_8} 17, {NATURAL_8} 20], project_settings_task_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 21], overlay_locked_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 21], overlay_error_name)

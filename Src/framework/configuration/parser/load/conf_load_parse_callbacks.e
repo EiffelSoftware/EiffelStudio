@@ -165,15 +165,15 @@ feature -- Callbacks
 					process_setting_attributes
 				when t_option then
 					process_option_attributes (False)
-				when t_external_include then
-					process_external_attributes
-				when t_external_object then
-					process_external_attributes
-				when t_external_library then
-					process_external_attributes
-				when t_external_resource then
-					process_external_attributes
-				when t_external_make then
+				when
+					t_external_include,
+					t_external_cflag,
+					t_external_object,
+					t_external_library,
+					t_external_resource,
+					t_external_linker_flag,
+					t_external_make
+				then
 					process_external_attributes
 				when t_file_rule then
 					process_file_rule_attributes
@@ -344,12 +344,19 @@ feature -- Callbacks
 				when t_option then
 					current_option := Void
 				when t_external_include then
+						-- Check if any conversion from the early version of ECF is required.
+					split_external (agent create_external_cflag)
 					current_external := Void
-				when t_external_object then
+				when t_external_object, t_external_library then
+						-- Check if any conversion from the early version of ECF is required.
+					split_external (agent create_external_linker_flag)
 					current_external := Void
-				when t_external_library then
-					current_external := Void
-				when t_external_resource then
+				when
+					t_external_cflag,
+					t_external_resource,
+					t_external_linker_flag,
+					t_external_make
+				then
 					current_external := Void
 				when t_pre_compile_action then
 					current_action := Void
@@ -393,6 +400,97 @@ feature -- Callbacks
 		do
 			if not is_error then
 				current_content.append (a_content)
+			end
+		end
+
+feature {NONE} -- External attribute processing
+
+	create_external_cflag (v: like {CONF_EXTERNAL}.location)
+			-- Create new C flag external with value `v'
+			-- and assign it to `current_external'.
+		local
+			e: CONF_EXTERNAL_CFLAG
+		do
+			e := factory.new_external_cflag (v, current_target)
+			current_target.add_external_cflag (e)
+			current_external := e
+		end
+
+	create_external_linker_flag (v: like {CONF_EXTERNAL}.location)
+			-- Create new linker flag external with value `v'
+			-- and assign it to `current_external'.
+		local
+			e: CONF_EXTERNAL_LINKER_FLAG
+		do
+			e := factory.new_external_linker_flag (v, current_target)
+			current_target.add_external_linker_flag (e)
+			current_external := e
+		end
+
+feature {NONE} -- Conversion from earlier version
+
+	split_external (c: PROCEDURE [ANY, TUPLE [like {CONF_EXTERNAL}.location]])
+			-- Split `current_external' into several ones if it comes
+			-- from the old ECF and consists of several parts.
+		require
+			c_attached: attached c
+		local
+			i, n: INTEGER
+		do
+			if
+				attached current_external as e and then
+				includes_this_or_before (namespace_1_9_0) and then
+				attached e.internal_location as p and then
+				not p.has ('%"') and then
+				(p.has (' ') or else p.has ('%T'))
+			then
+					-- The early version of ECF did not distinguish between
+					-- include paths and C compiler flags as well as
+					-- object/library paths and linker flags.
+				p.left_adjust
+				p.right_adjust
+				if e.is_include then
+						-- The part before white space in include external
+						-- corresponds to path, the rest - to flags.
+						-- Look for the first white space.
+					from
+						i := 1
+						n := p.count
+					invariant
+						no_spaces:
+							across p.substring (1, i - 1) as t all not t.item.is_space end
+					until
+						i > n or else p [i].is_space
+					loop
+						i := i + 1
+					end
+						-- Update the original external.
+					e.set_location (p.substring (1, i - 1))
+						-- Use the rest of the path as a value of the C flag external.
+					p.remove_head (i)
+					p.left_adjust
+				else
+						-- Remove the original external because
+						-- unlike "include" everything with white space
+						-- in object/library external may be considered
+						-- as flags. Moreover, splitting "-foo bar" into
+						-- two pieces would break the code. Therefore it
+						-- is preserved, but used as linker flags to make
+						-- sure the old semantics is not broken by adding
+						-- quotes around the path.
+					if attached {CONF_EXTERNAL_OBJECT} e as o then
+						current_target.remove_external_object (o)
+					elseif attached {CONF_EXTERNAL_LIBRARY} e as l then
+						current_target.remove_external_library (l)
+					end
+				end
+					-- Create a new external with value `p'.
+				c.call ([p])
+				if attached current_external as s then
+						-- Use description and conditions of the original.
+					s.set_description (e.description)
+					s.set_conditions (e.internal_conditions)
+				end
 			end
 		end
 
@@ -655,7 +753,7 @@ feature {NONE} -- Implementation attribute processing
 		end
 
 	process_external_attributes
-			-- Process attributes of external_(include|object|resource) tags.
+			-- Process attributes of external_(include|object|library|resource|make) tags.
 		require
 			current_target_not_void: current_target /= Void
 		local
@@ -666,7 +764,13 @@ feature {NONE} -- Implementation attribute processing
 			l_res: CONF_EXTERNAL_RESOURCE
 			l_make: CONF_EXTERNAL_MAKE
 		do
+				-- Retrieve external value from the attribute "location".
 			l_location := current_attributes.item (at_location)
+			if l_location = Void then
+					-- C compiler and linker flags are specified
+					-- by the attribute "value" rather than "location".
+				l_location := current_attributes.item (at_value)
+			end
 			if l_location /= Void then
 				inspect
 					current_tag.item
@@ -674,6 +778,8 @@ feature {NONE} -- Implementation attribute processing
 					l_inc := factory.new_external_include (l_location, current_target)
 					current_target.add_external_include (l_inc)
 					current_external := l_inc
+				when t_external_cflag then
+					create_external_cflag (l_location)
 				when t_external_object then
 					l_obj := factory.new_external_object (l_location, current_target)
 					current_target.add_external_object (l_obj)
@@ -686,6 +792,8 @@ feature {NONE} -- Implementation attribute processing
 					l_res := factory.new_external_resource (l_location, current_target)
 					current_target.add_external_resource (l_res)
 					current_external := l_res
+				when t_external_linker_flag then
+					create_external_linker_flag (l_location)
 				when t_external_make then
 					l_make := factory.new_external_make (l_location, current_target)
 					current_target.add_external_make (l_make)
@@ -2096,9 +2204,11 @@ feature {NONE} -- Implementation state transitions
 				-- => option
 				-- => mapping
 				-- => external_include
+				-- => external_cflag
 				-- => external_object
 				-- => external_library
 				-- => external_rssource
+				-- => external_linker_flag
 				-- => external_make
 				-- => pre_compile_action
 				-- => post_compile_action
@@ -2118,9 +2228,11 @@ feature {NONE} -- Implementation state transitions
 			l_trans.force (t_option, "option")
 			l_trans.force (t_mapping, "mapping")
 			l_trans.force (t_external_include, "external_include")
+			l_trans.force (t_external_cflag, "external_cflag")
 			l_trans.force (t_external_object, "external_object")
 			l_trans.force (t_external_library, "external_library")
 			l_trans.force (t_external_resource, "external_resource")
+			l_trans.force (t_external_linker_flag, "external_linker_flag")
 			l_trans.force (t_external_make, "external_make")
 			l_trans.force (t_pre_compile_action, "pre_compile_action")
 			l_trans.force (t_post_compile_action, "post_compile_action")
@@ -2167,16 +2279,18 @@ feature {NONE} -- Implementation state transitions
 			Result.force (l_trans, t_pre_compile_action)
 			Result.force (l_trans, t_post_compile_action)
 
-				-- external_(include|object|resource|make)
+				-- external_(include|cflag|object|library|resource|linker_flag|make)
 				-- => description
 				-- => condition
 			create l_trans.make (2)
 			l_trans.force (t_description, "description")
 			l_trans.force (t_condition, "condition")
 			Result.force (l_trans, t_external_include)
+			Result.force (l_trans, t_external_cflag)
 			Result.force (l_trans, t_external_object)
 			Result.force (l_trans, t_external_library)
 			Result.force (l_trans, t_external_resource)
+			Result.force (l_trans, t_external_linker_flag)
 			Result.force (l_trans, t_external_make)
 
 				-- assembly
@@ -2363,7 +2477,7 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_class, "class")
 			Result.force (l_attr, t_class_option)
 
-				-- external_(include|object|resource|make)
+				-- external_(include|object|library|resource|make)
 				-- * location
 			create l_attr.make (1)
 			l_attr.force (at_location, "location")
@@ -2478,9 +2592,14 @@ feature {NONE} -- Implementation state transitions
 			Result.force (l_attr, t_platform)
 			Result.force (l_attr, t_build)
 
-				-- multithreaded
+				-- dotnet, dynamic_runtime, external_(c|linker_)flag, multithreaded
+				-- * value
 			create l_attr.make (1)
 			l_attr.force (at_value, "value")
+			Result.force (l_attr, t_dotnet)
+			Result.force (l_attr, t_dynamic_runtime)
+			Result.force (l_attr, t_external_cflag)
+			Result.force (l_attr, t_external_linker_flag)
 			Result.force (l_attr, t_multithreaded)
 
 				-- concurrency
@@ -2490,16 +2609,6 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_value, "value")
 			l_attr.force (at_excluded_value, "excluded_value")
 			Result.force (l_attr, t_concurrency)
-
-				-- dotnet
-			create l_attr.make (1)
-			l_attr.force (at_value, "value")
-			Result.force (l_attr, t_dotnet)
-
-				-- dynamic_runtime
-			create l_attr.make (1)
-			l_attr.force (at_value, "value")
-			Result.force (l_attr, t_dynamic_runtime)
 
 				-- version
 			create l_attr.make (3)
@@ -2517,14 +2626,6 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_excluded_value, "excluded_value")
 			l_attr.force (at_name, "name")
 			Result.force (l_attr, t_custom)
-
-				-- renaming
-				-- * old_name
-				-- * new_name
-			create l_attr.make (2)
-			l_attr.force (at_old_name, "old_name")
-			l_attr.force (at_new_name, "new_name")
-			Result.force (l_attr, t_renaming)
 
 				-- uses/overrides
 				-- * group
@@ -2545,13 +2646,14 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_feature_rename, "feature_rename")
 			Result.force (l_attr, t_visible)
 
-				-- mapping
+				-- mapping, renaming
 				-- * old_name
 				-- * new_name
 			create l_attr.make (2)
 			l_attr.force (at_old_name, "old_name")
 			l_attr.force (at_new_name, "new_name")
 			Result.force (l_attr, t_mapping)
+			Result.force (l_attr, t_renaming)
 		end
 
 	tag_with_undefined_attributes: SEARCH_TABLE [INTEGER]
@@ -2609,40 +2711,42 @@ feature {NONE} -- Implementation constants
 	t_option: INTEGER = 8
 	t_setting: INTEGER = 9
 	t_external_include: INTEGER = 10
-	t_external_object: INTEGER = 11
-	t_external_library: INTEGER = 12
-	t_external_resource: INTEGER = 13
-	t_external_make: INTEGER = 14
-	t_pre_compile_action: INTEGER = 15
-	t_post_compile_action: INTEGER = 16
-	t_variable: INTEGER = 17
-	t_precompile: INTEGER = 18
-	t_library: INTEGER = 19
-	t_assembly: INTEGER = 20
-	t_cluster: INTEGER = 21
-	t_override: INTEGER = 22
-	t_exclude: INTEGER = 23
-	t_include: INTEGER = 24
-	t_debug: INTEGER = 25
-	t_assertions: INTEGER = 26
-	t_warning: INTEGER = 27
-	t_condition: INTEGER = 28
-	t_platform: INTEGER = 29
-	t_build: INTEGER = 30
-	t_multithreaded: INTEGER = 31
-	t_dotnet: INTEGER = 32
-	t_dynamic_runtime: INTEGER = 33
-	t_version_condition: INTEGER = 34
-	t_custom: INTEGER = 35
-	t_renaming: INTEGER = 36
-	t_class_option: INTEGER = 37
-	t_uses: INTEGER = 38
-	t_visible: INTEGER = 39
-	t_overrides: INTEGER = 40
-	t_mapping: INTEGER = 41
-	t_note: INTEGER = 42
-	t_test_cluster: INTEGER = 43
-	t_concurrency: INTEGER = 44
+	t_external_cflag: INTEGER = 11
+	t_external_object: INTEGER = 12
+	t_external_library: INTEGER = 13
+	t_external_resource: INTEGER = 14
+	t_external_linker_flag: INTEGER = 15
+	t_external_make: INTEGER = 16
+	t_pre_compile_action: INTEGER = 17
+	t_post_compile_action: INTEGER = 18
+	t_variable: INTEGER = 19
+	t_precompile: INTEGER = 20
+	t_library: INTEGER = 21
+	t_assembly: INTEGER = 22
+	t_cluster: INTEGER = 23
+	t_override: INTEGER = 24
+	t_exclude: INTEGER = 25
+	t_include: INTEGER = 26
+	t_debug: INTEGER = 27
+	t_assertions: INTEGER = 28
+	t_warning: INTEGER = 29
+	t_condition: INTEGER = 30
+	t_platform: INTEGER = 31
+	t_build: INTEGER = 32
+	t_multithreaded: INTEGER = 33
+	t_dotnet: INTEGER = 34
+	t_dynamic_runtime: INTEGER = 35
+	t_version_condition: INTEGER = 36
+	t_custom: INTEGER = 37
+	t_renaming: INTEGER = 38
+	t_class_option: INTEGER = 39
+	t_uses: INTEGER = 40
+	t_visible: INTEGER = 41
+	t_overrides: INTEGER = 42
+	t_mapping: INTEGER = 43
+	t_note: INTEGER = 44
+	t_test_cluster: INTEGER = 45
+	t_concurrency: INTEGER = 46
 
 		-- Attribute states
 	at_abstract: INTEGER = 1000

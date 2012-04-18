@@ -119,6 +119,17 @@ feature
 			Result_not_void: Result /= Void
 		end
 
+	new_external_cflag (a_value: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_CFLAG
+			-- Create a `CONF_EXTERNAL_CFLAG' object.
+		require
+			a_value_not_void: a_value /= Void
+			a_target_not_void: a_target /= Void
+		do
+			create Result.make (a_value, a_target)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	new_external_object (a_location: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_OBJECT
 			-- Create a `CONF_EXTERNAL_OBJECT' object.
 		require
@@ -148,6 +159,17 @@ feature
 			a_target_not_void: a_target /= Void
 		do
 			create Result.make (a_location, a_target)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	new_external_linker_flag (a_value: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_LINKER_FLAG
+			-- Create a `CONF_EXTERNAL_LINKER_FLAG' object.
+		require
+			a_value_not_void: a_value /= Void
+			a_target_not_void: a_target /= Void
+		do
+			create Result.make (a_value, a_target)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -280,7 +302,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -541,10 +541,12 @@ feature {TARGET_SECTION, SYSTEM_SECTION} -- Target creation
 			create l_target_externals.make (a_target, Current)
 			l_target_advanced.extend (l_target_externals)
 			l_target_externals.set_includes (a_target.internal_external_include)
+			l_target_externals.set_cflag (a_target.internal_external_cflag)
 			l_target_externals.set_objects (a_target.internal_external_object)
 			l_target_externals.set_libraries (a_target.internal_external_library)
-			l_target_externals.set_makefiles (a_target.internal_external_make)
 			l_target_externals.set_resources (a_target.internal_external_resource)
+			l_target_externals.set_linker_flag (a_target.internal_external_linker_flag)
+			l_target_externals.set_makefiles (a_target.internal_external_make)
 
 				-- advanced tasks section
 			create l_target_tasks.make (a_target, Current)
@@ -1175,26 +1177,31 @@ feature {NONE} -- Implementation
 		do
 			properties.add_section (conf_interface_names.section_general)
 
-				-- type
+				-- Type.
 			create l_prop.make ("Type")
 			if an_external.is_include then
 				l_prop.set_value (conf_interface_names.external_include)
+			elseif an_external.is_cflag then
+				l_prop.set_value (conf_interface_names.external_cflag)
 			elseif an_external.is_object then
 				l_prop.set_value (conf_interface_names.external_object)
 			elseif an_external.is_library then
 				l_prop.set_value (conf_interface_names.external_library)
-			elseif an_external.is_make then
-				l_prop.set_value (conf_interface_names.external_make)
 			elseif an_external.is_resource then
 				l_prop.set_value (conf_interface_names.external_resource)
+			elseif an_external.is_linker_flag then
+				l_prop.set_value (conf_interface_names.external_linker_flag)
+			elseif an_external.is_make then
+				l_prop.set_value (conf_interface_names.external_make)
 			else
-				check should_not_read: False end
+				check known_external_type: False end
 			end
 			l_prop.enable_readonly
 			properties.add_property (l_prop)
 
-				-- location
+				-- Location/value.
 			if an_external.is_include then
+					-- Value is a directory name.
 				create l_dir_prop.make (conf_interface_names.external_location_name)
 				l_dir_prop.set_description (conf_interface_names.external_location_description)
 				l_dir_prop.enable_text_editing
@@ -1202,7 +1209,16 @@ feature {NONE} -- Implementation
 				l_dir_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?,  agent an_external.set_location))
 				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 				properties.add_property (l_dir_prop)
+			elseif an_external.is_cflag or else an_external.is_linker_flag then
+					-- Value is a string.
+				create l_prop.make (conf_interface_names.external_value_name)
+				l_prop.set_description (conf_interface_names.external_value_description)
+				l_prop.set_value (an_external.location)
+				l_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent an_external.set_location ))
+				l_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
+				properties.add_property (l_prop)
 			else
+					-- Value is a file name.
 				create l_file_prop.make (conf_interface_names.external_location_name)
 				l_file_prop.set_description (conf_interface_names.external_location_description)
 				l_file_prop.enable_text_editing
@@ -1217,7 +1233,7 @@ feature {NONE} -- Implementation
 				properties.add_property (l_file_prop)
 			end
 
-				-- description
+				-- Description.
 			create l_mls_prop.make (conf_interface_names.external_description_name)
 			l_mls_prop.set_description (conf_interface_names.external_description_description)
 			l_mls_prop.enable_text_editing
@@ -1228,7 +1244,7 @@ feature {NONE} -- Implementation
 			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_mls_prop)
 
-				-- condition
+				-- Condition.
 			create l_dial.make_with_dialog (conf_interface_names.external_condition_name, create {CONDITION_DIALOG})
 			l_dial.set_description (conf_interface_names.external_condition_description)
 			l_dial.set_value (an_external.internal_conditions)
@@ -1509,7 +1525,7 @@ invariant
 	selected_target_ok: selected_target /= Void and then not selected_target.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

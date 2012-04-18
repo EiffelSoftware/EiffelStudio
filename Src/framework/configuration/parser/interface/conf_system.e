@@ -313,6 +313,19 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
+	all_external_cflag: ARRAYED_LIST [CONF_EXTERNAL_CFLAG]
+			-- All external C flags including the ones from libraries.
+		require
+			fully_parsed: is_fully_parsed
+		do
+			create Result.make (10)
+			across all_libraries as l loop
+				Result.append (l.item.external_cflag)
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	all_external_object: ARRAYED_LIST [CONF_EXTERNAL_OBJECT]
 			-- All external object files including the ones from libraries.
 		require
@@ -362,6 +375,19 @@ feature -- Access queries
 			loop
 				Result.append (all_libraries.item_for_iteration.external_resource)
 				all_libraries.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	all_external_linker_flag: ARRAYED_LIST [CONF_EXTERNAL_LINKER_FLAG]
+			-- All external linker flags including the ones from libraries.
+		require
+			fully_parsed: is_fully_parsed
+		do
+			create Result.make (10)
+			across all_libraries as l loop
+				Result.append (l.item.external_linker_flag)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -588,7 +614,7 @@ invariant
 	valid_level: valid_level
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

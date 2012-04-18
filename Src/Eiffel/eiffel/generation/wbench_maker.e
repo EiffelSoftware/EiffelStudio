@@ -288,7 +288,7 @@ feature
 							l_first := False
 						end
 						l_path := dir.precompiled_preobj
-						safe_external_path (l_path, True)
+						safe_external_path (l_path)
 						Make_file.put_string (l_path);
 					end;
 					precomp.forth
@@ -297,7 +297,7 @@ feature
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

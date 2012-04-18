@@ -177,28 +177,36 @@ feature -- Target names and descriptions
 
 	external_location_name: STRING_GENERAL do Result := locale.translation ("Location")	end
 	external_location_description: STRING_GENERAL do Result := locale.translation ("Location of the external.")	end
+	external_value_name: STRING_GENERAL do Result := locale.translation ("Value")	end
+	external_value_description: STRING_GENERAL do Result := locale.translation ("Value of the external.")	end
 	external_description_name: STRING_GENERAL do Result := locale.translation ("Description")	end
 	external_description_description: STRING_GENERAL do Result := locale.translation ("Description of the external.")	end
 	external_condition_name: STRING_GENERAL do Result := locale.translation ("Condition")	end
 	external_condition_description: STRING_GENERAL do Result := locale.translation ("Conditions for this external.")	end
 
 	external_include: STRING_GENERAL do Result := locale.translation ("Include")	end
+	external_cflag: STRING_GENERAL do Result := locale.translation ("C flag")	end
 	external_object: STRING_GENERAL do Result := locale.translation ("Object")	end
 	external_library: STRING_GENERAL do Result := locale.translation ("Library")	end
-	external_make: STRING_GENERAL do Result := locale.translation ("Makefile")	end
 	external_resource: STRING_GENERAL do Result := locale.translation ("Resource")	end
+	external_linker_flag: STRING_GENERAL do Result := locale.translation ("Linker flag") end
+	external_make: STRING_GENERAL do Result := locale.translation ("Makefile")	end
 
 	external_include_tree: STRING_GENERAL do Result := locale.translation ("Includes")	end
+	external_cflag_tree: STRING_GENERAL do Result := locale.translation ("C flags")	end
 	external_object_tree: STRING_GENERAL do Result := locale.translation ("Objects")	end
 	external_library_tree: STRING_GENERAL do Result := locale.translation ("Libraries")	end
-	external_make_tree: STRING_GENERAL do Result := locale.translation ("Makefiles")	end
 	external_resource_tree: STRING_GENERAL do Result := locale.translation ("Resources")	end
+	external_linker_flag_tree: STRING_GENERAL do Result := locale.translation ("Linker flags")	end
+	external_make_tree: STRING_GENERAL do Result := locale.translation ("Makefiles")	end
 
 	external_add_include: STRING_GENERAL do Result := locale.translation ("Add Include")	end
+	external_add_cflag: STRING_GENERAL do Result := locale.translation ("Add C flag")	end
 	external_add_object: STRING_GENERAL do Result := locale.translation ("Add Object")	end
 	external_add_library: STRING_GENERAL do Result := locale.translation ("Add Library")	end
-	external_add_make: STRING_GENERAL do Result := locale.translation ("Add Make")	end
 	external_add_resource: STRING_GENERAL do Result := locale.translation ("Add Resource")	end
+	external_add_linker_flag: STRING_GENERAL do Result := locale.translation ("Add linker flag")	end
+	external_add_make: STRING_GENERAL do Result := locale.translation ("Add Make")	end
 
 	task_pre_tree: STRING_GENERAL do Result := locale.translation ("Pre Compilation Tasks")	end
 	task_post_tree: STRING_GENERAL do Result := locale.translation ("Post Compilation Tasks")	end

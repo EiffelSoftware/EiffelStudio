@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Makefile generation control. The generated Makefile.SH is to be run through
 		/bin/sh to get properly instantiated for a given platform. A partial linking
@@ -746,73 +746,28 @@ feature -- Generation, External archives and object files.
 	generate_externals
 			-- Generate declaration fo the external variable
 		local
-			object_file_names: LIST [CONF_EXTERNAL]
-			i, nb: INTEGER
-			l_ext: CONF_EXTERNAL
-			l_added_objects: SEARCH_TABLE [STRING]
-			l_path: STRING
-			l_has_objects: BOOLEAN
-			l_state: CONF_STATE
+			l_has_items: BOOLEAN
+			l_prefix: STRING
 		do
-			create l_added_objects.make (10)
-				-- add the object files
-			object_file_names := universe.conf_system.all_external_object
-			l_state := universe.conf_state
-			if object_file_names /= Void then
-				make_file.put_string ("EXTERNALS = ")
-				l_has_objects := True
-				from
-					i := 1
-					nb := object_file_names.count
-				until
-					i > nb
-				loop
-					l_ext := object_file_names.i_th (i)
-					if l_ext.is_enabled (l_state) then
-						l_path := l_ext.location
-						safe_external_path (l_path, False)
-							-- don't add the same object multiple times
-						if not l_added_objects.has (l_path) then
-							l_added_objects.force (l_path)
-							make_file.put_character (' ')
-							make_file.put_character (Continuation)
-							make_file.put_string ("%N%T")
-							make_file.put_string (l_path)
-						end
-					end
-					i := i + 1
-				end
+				-- Every item is placed on a new line.
+			l_prefix := " " + continuation.out + "%N%T"
+				-- Add the object files.
+			if attached universe.conf_system.all_external_object as e then
+				generate_external_section ("EXTERNALS", e, False, l_prefix, False, True)
+				l_has_items := True
 			end
-
-				-- add the libraries
-			l_added_objects.wipe_out
-			object_file_names := universe.conf_system.all_external_library
-			if object_file_names /= Void then
-				if not l_has_objects then
-					make_file.put_string ("EXTERNALS = ")
-				end
-				from
-					i := 1
-					nb := object_file_names.count
-				until
-					i > nb
-				loop
-					l_ext := object_file_names.i_th (i)
-					if l_ext.is_enabled (l_state) then
-						l_path := l_ext.location
-						safe_external_path (l_path, False)
-							-- don't add the same library multiple times
-						if not l_added_objects.has (l_path) then
-							l_added_objects.force (l_path)
-							make_file.put_character (' ')
-							make_file.put_character (Continuation)
-							make_file.put_string ("%N%T")
-							make_file.put_string (l_path)
-						end
-					end
-					i := i + 1
-				end
-
+				-- Add the libraries.
+			if attached universe.conf_system.all_external_library as e then
+				generate_external_section ("EXTERNALS", e, False, l_prefix, l_has_items, True)
+				l_has_items := True
+			end
+				-- Add the linker flags.
+			if attached universe.conf_system.all_external_linker_flag as e then
+				generate_external_section ("EXTERNALS", e, False, l_prefix, l_has_items, False)
+				l_has_items := True
+			end
+			if l_has_items then
+					-- Add empty line.
 				make_file.put_new_line
 				make_file.put_new_line
 			end
@@ -821,80 +776,80 @@ feature -- Generation, External archives and object files.
 	generate_include_path
 			-- Generate declaration fo the include_paths
 		local
-			include_paths: LIST [CONF_EXTERNAL_INCLUDE]
-			i, nb: INTEGER
-			l_ext: CONF_EXTERNAL_INCLUDE
-			l_path: STRING
-			l_added_includes: SEARCH_TABLE [STRING]
-			l_state: CONF_STATE
+			l_has_items: BOOLEAN
 		do
-			create l_added_includes.make (10)
-			include_paths := universe.conf_system.all_external_include
-			if include_paths /= Void then
-				make_file.put_string ("INCLUDE_PATH = ")
-				from
-					i := 1
-					nb := include_paths.count
-					l_state := universe.conf_state
-				until
-					i > nb
-				loop
-					l_ext := include_paths.i_th (i)
-					if l_ext.is_enabled (l_state) then
-						l_path := l_ext.location
-						safe_external_path (l_path, False)
-							-- all remaining $ are by choice so mask them
-						l_path.replace_substring_all ("$", "\$")
-							-- because its possible that they were already masked, correct double masking
-						l_path.replace_substring_all ("\\$", "\$")
-							-- don't add the same include multiple times
-						if not l_added_includes.has (l_path) then
-							l_added_includes.force (l_path)
-							make_file.put_string ("-I")
-							make_file.put_string (l_path)
-							if i /= nb then
-								make_file.put_character (' ')
-							end
-						end
-					end
-					i := i + 1
-				end
+				-- Add the include paths.
+			if attached universe.conf_system.all_external_include as e then
+				generate_external_section ("INCLUDE_PATH", e, True, " -I", False, True)
+				l_has_items := True
+			end
+				-- Add the C flags.
+			if attached universe.conf_system.all_external_cflag as e then
+				generate_external_section ("INCLUDE_PATH", e, False, " ", l_has_items, False)
+				l_has_items := True
+			end
+			if l_has_items then
+					-- Add new line.
 				make_file.put_new_line
 			end
 		end
 
 	generate_makefile_names
+		do
+				-- Add the makefiles.
+			if attached universe.conf_system.all_external_make as e then
+				generate_external_section ("EXTERNAL_MAKEFILES", e, False, " ", False, True)
+				make_file.put_new_line
+			end
+		end
+
+feature {NONE} -- Generate externals
+
+	generate_external_section (a_name: STRING; a_data: ARRAYED_LIST [CONF_EXTERNAL]; a_is_mask_dollar: BOOLEAN;
+		a_prefix: STRING; a_is_generated, a_is_path: BOOLEAN)
+			-- Generate a section `a_name' with data `a_data' representing paths if `a_is_path',
+			-- masking dollar sign if `a_is_mask_dollar' and prefixing each item with `a_prefix'.
+			-- Prepend data by name if `not a_is_generated'.
+		require
+			a_name_attached: attached a_name
+			a_data_attached: attached a_data
+			a_prefix_attached: attached a_prefix
 		local
-			makefile_names: LIST [CONF_EXTERNAL_MAKE]
-			i, nb: INTEGER
-			l_ext: CONF_EXTERNAL_MAKE
-			l_added_make: SEARCH_TABLE [STRING]
+			l_added_items: SEARCH_TABLE [STRING]
 			l_path: STRING
 			l_state: CONF_STATE
 		do
-			create l_added_make.make (1)
-			makefile_names := universe.conf_system.all_external_make
-			from
-				make_file.put_string ("EXTERNAL_MAKEFILES = ")
-				i := 1
-				nb := makefile_names.count
-				l_state := universe.conf_state
-			until
-				i > nb
-			loop
-				l_ext := makefile_names.i_th (i)
-				if l_ext.is_enabled (l_state) then
-					l_path := l_ext.location
-					safe_external_path (l_path, False)
-					if not l_added_make.has (l_path) then
-						l_added_make.force (l_path)
-						make_file.put_string (" ")
+			if not a_is_generated then
+				make_file.put_string (a_name)
+				make_file.put_string (" = ")
+			end
+			create l_added_items.make (10)
+			l_state := universe.conf_state
+			across a_data as c loop
+				if c.item.is_enabled (l_state) then
+					l_path := c.item.location
+					if a_is_path then
+							-- Protect paths.
+						safe_external_path (l_path)
+					else
+							-- Preserve options.
+						l_path.left_adjust
+						l_path.right_adjust
+					end
+					if a_is_mask_dollar then
+							-- Mask all remaining '$'.
+						l_path.replace_substring_all ("$", "\$")
+							-- Correct double masking if '$' were already masked.
+						l_path.replace_substring_all ("\\$", "\$")
+					end
+						-- Don't add the same items multiple times.
+					if not l_added_items.has (l_path) then
+						l_added_items.force (l_path)
+						make_file.put_string (a_prefix)
 						make_file.put_string (l_path)
 					end
 				end
-				i := i + 1
 			end
-			make_file.put_new_line
 		end
 
 feature -- Generation (Linking rules)
@@ -1379,30 +1334,23 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	safe_external_path (a_path: STRING; a_force_quotation: BOOLEAN)
-			-- If `a_path' has no white spaces or if `a_force_quotation', add the `"' around it.
-			-- If it has some white spaces, we cannot do anything since it would
-			-- break existing code.
+	safe_external_path (a_path: STRING)
+			-- Remove leading and trailing white space and
+			-- add double quotes around `a_path' if necessary.
 		require
 			a_path_not_void: a_path /= Void
 			a_path_not_empty: not a_path.is_empty
 		do
 			a_path.left_adjust
 			a_path.right_adjust
-			if
-				a_force_quotation or else
-				(not a_path.has (' ') and not a_path.has ('%T'))
-			then
-					-- If the path has no white space, then we can safely add the " around it
-					-- so that it will work in case the path is expanded with an environment
-					-- variable containing spaces. Of course we only do it if no " are already
-					-- present.
-				if a_path.item (1) /= '"' then
-					a_path.prepend_character ('"')
-				end
-				if a_path.item (a_path.count) /= '"' then
-					a_path.append_character ('"')
-				end
+				-- Add the double quotes around path so that
+				-- it will work in case the path has white spaces.
+				-- Do it if no double quotes are already present.
+			if a_path.item (1) /= '"' then
+				a_path.prepend_character ('"')
+			end
+			if a_path.item (a_path.count) /= '"' then
+				a_path.append_character ('"')
 			end
 		end
 
@@ -1439,7 +1387,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

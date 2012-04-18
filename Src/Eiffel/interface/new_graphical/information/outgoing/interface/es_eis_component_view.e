@@ -155,6 +155,8 @@ feature -- Operation
 	create_new_entry
 			-- Create new EIS entry based on current component at the last row.
 			-- Default to do nothing.
+		require
+			create_new_entry_possible: new_entry_possible
 		do
 		end
 
@@ -302,6 +304,9 @@ feature -- Query
 			-- Is component editable?
 		do
 		end
+
+	new_entry_possible: BOOLEAN
+			-- Is creating entry possible for current view?	
 
 feature {NONE} -- Initialization
 
@@ -605,9 +610,6 @@ feature {NONE} -- Access
 				end
 			end
 		end
-
-	new_entry_possible: BOOLEAN
-			-- Is new entry possible for current view?		
 
 feature {NONE} -- Recycling
 
@@ -1178,7 +1180,7 @@ invariant
 	eis_grid_not_void: eis_grid /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

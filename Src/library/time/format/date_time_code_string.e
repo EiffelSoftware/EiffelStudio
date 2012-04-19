@@ -243,18 +243,18 @@ feature -- Interface
 				type := l_item.type
 				inspect
 					type
-				when 1 then
+				when {DATE_TIME_CODE}.day_numeric_type_code then
 					Result.append (date.day.out)
-				when 2 then
+				when {DATE_TIME_CODE}.day_numeric_on_2_digits_type_code then
 					int := date.day
 					if int < 10 then
 						Result.append ("0")
 					end
 					Result.append (int.out)
-				when 3 then
+				when {DATE_TIME_CODE}.day_text_type_code then
 					int := date.day_of_the_week
 					Result.append (days.item (int))
-				when 4 then
+				when {DATE_TIME_CODE}.year_on_4_digits_type_code then
 					-- Test if the year has four digits, if not put 0 to fill it
 					l_tmp := date.year.out
 					if l_tmp.count = 4 then
@@ -271,7 +271,7 @@ feature -- Interface
 							Result.append (l_tmp)
 						end
 					end
-				when 5 then
+				when {DATE_TIME_CODE}.year_on_2_digits_type_code then
 						-- Two digit year, we only keep the last two digits
 					l_tmp := date.year.out
 					if l_tmp.count > 2 then
@@ -280,26 +280,26 @@ feature -- Interface
 						Result.append_character ('0')
 					end
 					Result.append (l_tmp)
-				when 6 then
+				when {DATE_TIME_CODE}.month_numeric_type_code then
 					Result.append (date.month.out)
-				when 7 then
+				when {DATE_TIME_CODE}.month_numeric_on_2_digits_type_code then
 					int := date.month
 					if int < 10 then
 						Result.append ("0")
 					end
 					Result.append (int.out)
-				when 8 then
+				when {DATE_TIME_CODE}.month_text_type_code then
 					int := date.month
 					Result.append (months.item (int))
-				when 9 then
+				when {DATE_TIME_CODE}.hour_numeric_type_code then
 					Result.append (time.hour.out)
-				when 10 then
+				when {DATE_TIME_CODE}.hour_numeric_on_2_digits_type_code then
 					int := time.hour
 					if int < 10 then
 						Result.append ("0")
 					end
 					Result.append (int.out)
-				when 11, 24 then
+				when {DATE_TIME_CODE}.hour_12_clock_scale_type_code, {DATE_TIME_CODE}.hour_12_clock_scale_on_2_digits_type_code then
 					int := time.hour
 					if int < 12 then
 						if int = 0 then
@@ -310,28 +310,28 @@ feature -- Interface
 							int := int - 12
 						end
 					end
-					if type = 24 and then int < 10 then
+					if type = {DATE_TIME_CODE}.hour_12_clock_scale_on_2_digits_type_code and then int < 10 then
 							-- Format padded with 0.
 						Result.append ("0")
 					end
 					Result.append (int.out)
-				when 12 then
+				when {DATE_TIME_CODE}.minute_numeric_type_code then
 					Result.append (time.minute.out)
-				when 13 then
+				when {DATE_TIME_CODE}.minute_numeric_on_2_digits_type_code then
 					int := time.minute
 					if int < 10 then
 						Result.append ("0")
 					end
 					Result.append (int.out)
-				when 14 then
+				when {DATE_TIME_CODE}.second_numeric_type_code then
 					Result.append (time.second.out)
-				when 15 then
+				when {DATE_TIME_CODE}.second_numeric_on_2_digits_type_code then
 					int := time.second
 					if int < 10 then
 						Result.append ("0")
 					end
 					Result.append (int.out)
-				when 16 then
+				when {DATE_TIME_CODE}.fractional_second_numeric_type_code then
 					double := time.fractional_second *
 						10 ^ (l_item.count_max)
 					int := double.truncated_to_integer
@@ -340,7 +340,7 @@ feature -- Interface
 						Result.append (create {STRING}.make_filled ('0', l_item.count_max - l_tmp.count))
 					end
 					Result.append (l_tmp)
-				when 23 then
+				when {DATE_TIME_CODE}.meridiem_type_code then
 					int := time.hour
 					if int < 12 then
 						Result.append ("AM")
@@ -536,11 +536,11 @@ feature -- Interface
 				if separators_used then
 					inspect
 						type
-					when 1, 2 then
+					when {DATE_TIME_CODE}.day_numeric_type_code, {DATE_TIME_CODE}.day_numeric_on_2_digits_type_code then
 						has_day := True
-					when 4, 5 then
+					when {DATE_TIME_CODE}.year_on_4_digits_type_code, {DATE_TIME_CODE}.year_on_2_digits_type_code then
 						has_year := True
-					when 6, 7, 8 then
+					when {DATE_TIME_CODE}.month_numeric_type_code, {DATE_TIME_CODE}.month_numeric_on_2_digits_type_code, {DATE_TIME_CODE}.month_text_type_code then
 						has_month := True
 					else
 						-- Wrong format
@@ -548,11 +548,11 @@ feature -- Interface
 				else
 					inspect
 						type
-					when 2 then
+					when {DATE_TIME_CODE}.day_numeric_on_2_digits_type_code then
 						has_day := True
-					when 4, 5 then
+					when {DATE_TIME_CODE}.year_on_4_digits_type_code, {DATE_TIME_CODE}.year_on_2_digits_type_code then
 						has_year := True
-					when 7 then
+					when {DATE_TIME_CODE}.month_numeric_on_2_digits_type_code then
 						has_month := True
 					else
 						-- Wrong format
@@ -572,7 +572,7 @@ feature -- Interface
 		local
 			l_item, code: detachable DATE_TIME_CODE
 			i, type: INTEGER
-			has_hour, has_minute, has_second: BOOLEAN
+			has_hour_12, has_hour_24, has_minute, has_second: BOOLEAN
 		do
 			from
 				i := 1
@@ -585,24 +585,29 @@ feature -- Interface
 				if separators_used then
 					inspect
 						type
-					when 9, 10, 11 then
-						has_hour := True
-					when 12, 13 then
+					when {DATE_TIME_CODE}.hour_numeric_type_code, {DATE_TIME_CODE}.hour_numeric_on_2_digits_type_code then
+						has_hour_24 := True
+					when {DATE_TIME_CODE}.minute_numeric_type_code, {DATE_TIME_CODE}.minute_numeric_on_2_digits_type_code then
 						has_minute := True
-					when 14, 15 then
+					when {DATE_TIME_CODE}.second_numeric_type_code, {DATE_TIME_CODE}.second_numeric_on_2_digits_type_code then
 						has_second := True
+					when {DATE_TIME_CODE}.hour_12_clock_scale_type_code, {DATE_TIME_CODE}.hour_12_clock_scale_on_2_digits_type_code then
+						has_hour_12 := True
 					else
 						-- Wrong format
 					end
 				else
 					inspect
 						type
-					when 10 then
-						has_hour := True
-					when 13 then
+					when {DATE_TIME_CODE}.hour_numeric_on_2_digits_type_code then
+						has_hour_24 := True
+					when {DATE_TIME_CODE}.minute_numeric_on_2_digits_type_code then
 						has_minute := True
-					when 15 then
+					when {DATE_TIME_CODE}.second_numeric_on_2_digits_type_code then
 						has_second := True
+					when {DATE_TIME_CODE}.hour_12_clock_scale_on_2_digits_type_code then
+							-- Two digit hours are valid without separators.
+						has_hour_12 := True
 					else
 						-- Wrong format
 					end
@@ -610,7 +615,9 @@ feature -- Interface
 				i := i + 1
 				l_item := value.item (i)
 			end
-			Result := has_hour and has_minute and has_second
+			Result := (has_hour_24 or has_hour_12) and has_minute and has_second
+				--| Technically `has_hour_12' should be or'd with a 'has_meridiem' so that all time values can be specified
+				--| but changing this may break existing code that rely on this behavior.
 		end
 
 feature {NONE} -- Implementation
@@ -649,14 +656,14 @@ feature {NONE} -- Implementation
 			-- Cached instance of date-time string parser
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

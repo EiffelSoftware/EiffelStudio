@@ -46,7 +46,7 @@ feature -- Change
 				value_min := 1
 				is_text := False
 				is_numeric := True
-				type := 1
+				type := day_numeric_type_code
 			elseif is_day0 (value) then
 				count_max := 2
 				count_min := 2
@@ -55,7 +55,7 @@ feature -- Change
 				value_min := 1
 				is_text := False
 				is_numeric := True
-				type := 2
+				type := day_numeric_on_2_digits_type_code
 			elseif is_day_text (value) then
 				count_max := 3
 				count_min := 3
@@ -64,14 +64,14 @@ feature -- Change
 				value_min := 1
 				is_text := True
 				is_numeric := False
-				type := 3
+				type := day_text_type_code
 			elseif is_year4 (value) then
 				count_max := 4
 				count_min := 4
 				l_name := "year-on-4-digits"
 				is_text := False
 				is_numeric := True
-				type := 4
+				type := year_on_4_digits_type_code
 				value_max := -1
 				value_min := -1
 			elseif is_year2 (value) then
@@ -80,7 +80,7 @@ feature -- Change
 				l_name := "year-on-2-digits"
 				is_text := False
 				is_numeric := True
-				type := 5
+				type := year_on_2_digits_type_code
 				value_max := -1
 				value_min := -1
 			elseif is_month (value) then
@@ -91,7 +91,7 @@ feature -- Change
 				value_min := 1
 				is_text := False
 				is_numeric := True
-				type := 6
+				type := month_numeric_type_code
 			elseif is_month0 (value) then
 				count_max := 2
 				count_min := 2
@@ -100,7 +100,7 @@ feature -- Change
 				value_min := 1
 				is_text := False
 				is_numeric := True
-				type := 7
+				type := month_numeric_on_2_digits_type_code
 			elseif is_month_text (value) then
 				count_max := 3
 				count_min := 3
@@ -109,7 +109,7 @@ feature -- Change
 				value_min := 1
 				is_text := True
 				is_numeric := False
-				type := 8
+				type := month_text_type_code
 			elseif is_hour (value) then
 				count_max := 2
 				count_min := 1
@@ -118,7 +118,7 @@ feature -- Change
 				value_min := 0
 				is_text := False
 				is_numeric := True
-				type := 9
+				type := hour_numeric_type_code
 			elseif is_hour0 (value) then
 				count_max := 2
 				count_min := 2
@@ -127,7 +127,7 @@ feature -- Change
 				value_min := 0
 				is_text := False
 				is_numeric := True
-				type := 10
+				type := hour_numeric_on_2_digits_type_code
 			elseif is_hour12 (value) then
 				count_max := 2
 				count_min := 1
@@ -136,7 +136,7 @@ feature -- Change
 				value_min := 0
 				is_text := False
 				is_numeric := True
-				type := 11
+				type := hour_12_clock_scale_type_code
 			elseif is_minute (value) then
 				count_max := 2
 				count_min := 1
@@ -145,7 +145,7 @@ feature -- Change
 				value_min := 0
 				is_text := False
 				is_numeric := True
-				type := 12
+				type := minute_numeric_type_code
 			elseif is_minute0 (value) then
 				count_max := 2
 				count_min := 2
@@ -154,7 +154,7 @@ feature -- Change
 				value_min := 0
 				is_text := False
 				is_numeric := True
-				type := 13
+				type := minute_numeric_on_2_digits_type_code
 			elseif is_second (value) then
 				count_max := 2
 				count_min := 1
@@ -163,7 +163,7 @@ feature -- Change
 				value_min := 0
 				is_text := False
 				is_numeric := True
-				type := 14
+				type := second_numeric_type_code
 			elseif is_second0 (value) then
 				count_max := 2
 				count_min := 2
@@ -172,14 +172,14 @@ feature -- Change
 				value_min := 0
 				is_text := False
 				is_numeric := True
-				type := 15
+				type := second_numeric_on_2_digits_type_code
 			elseif is_fractional_second (value) then
 				count_max := value.substring (3, value.count).to_integer
 				count_min := 1
 				l_name := "fractional-second-numeric"
 				is_text := False
 				is_numeric := True
-				type := 16
+				type := fractional_second_numeric_type_code
 				value_max := -1
 				value_min := -1
 			elseif is_colon (value) then
@@ -188,49 +188,49 @@ feature -- Change
 				l_name := "colon"
 				is_text := True
 				is_numeric := False
-				type := 17
+				type := colon_type_code
 			elseif is_slash (value) then
 				count_max := 1
 				count_min := 1
 				l_name := "slash"
 				is_text := True
 				is_numeric := False
-				type := 18
+				type := slash_type_code
 			elseif is_minus (value) then
 				count_max := 1
 				count_min := 1
 				l_name := "minus"
 				is_text := True
 				is_numeric := False
-				type := 19
+				type := minus_type_code
 			elseif is_comma (value) then
 				count_max := 1
 				count_min := 1
 				l_name := "comma"
 				is_text := True
 				is_numeric := False
-				type := 20
+				type := comma_type_code
 			elseif is_space (value) then
 				count_max := 1
 				count_min := 1
 				l_name := "space"
 				is_text := True
 				is_numeric := False
-				type := 21
+				type := space_type_code
 			elseif is_dot (value) then
 				count_max := 1
 				count_min := 1
 				l_name := "dot"
 				is_text := True
 				is_numeric := False
-				type := 22
+				type := dot_type_code
 			elseif is_meridiem (value) then
 				count_max := 2
 				count_min := 2
 				l_name := "meridiem"
 				is_text := True
 				is_numeric := False
-				type := 23
+				type := meridiem_type_code
 			else
 				check is_hour12_0: is_hour12_0 (value) end
 				count_max := 2
@@ -240,7 +240,7 @@ feature -- Change
 				value_min := 0
 				is_text := False
 				is_numeric := True
-				type := 24
+				type := hour_12_clock_scale_on_2_digits_type_code
 			end
 			name := l_name
 		ensure
@@ -278,15 +278,43 @@ feature -- Status report
 	is_numeric: BOOLEAN;
 			-- Has the code a numeric value?
 
+feature {FIND_SEPARATOR_FACILITY} -- Implementation
+
+	day_numeric_type_code: NATURAL_8 = 1
+	day_numeric_on_2_digits_type_code: NATURAL_8 = 2
+	day_text_type_code: NATURAL_8 = 3
+	year_on_4_digits_type_code: NATURAL_8 = 4
+	year_on_2_digits_type_code: NATURAL_8 = 5
+	month_numeric_type_code: NATURAL_8 = 6
+	month_numeric_on_2_digits_type_code: NATURAL_8 = 7
+	month_text_type_code: NATURAL_8 = 8
+	hour_numeric_type_code: NATURAL_8 = 9
+	hour_numeric_on_2_digits_type_code: NATURAL_8 = 10
+	hour_12_clock_scale_type_code: NATURAL_8 = 11
+	hour_12_clock_scale_on_2_digits_type_code: NATURAL_8 = 12
+	minute_numeric_type_code: NATURAL_8 = 13
+	minute_numeric_on_2_digits_type_code: NATURAL_8 = 14
+	second_numeric_type_code: NATURAL_8 = 15
+	second_numeric_on_2_digits_type_code: NATURAL_8 = 16
+	fractional_second_numeric_type_code: NATURAL_8 = 17
+	colon_type_code: NATURAL_8 = 18
+	slash_type_code: NATURAL_8 = 19
+	minus_type_code: NATURAL_8 = 20
+	comma_type_code: NATURAL_8 = 21
+	space_type_code: NATURAL_8 = 22
+	dot_type_code: NATURAL_8 = 23
+	meridiem_type_code: NATURAL_8 = 24
+		-- Type code constants
+
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

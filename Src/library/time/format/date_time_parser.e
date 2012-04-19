@@ -233,13 +233,13 @@ feature -- Basic operations
 					type := l_item.type
 					inspect
 						type
-					when 1, 2 then
+					when {DATE_TIME_CODE}.day_numeric_type_code, {DATE_TIME_CODE}.day_numeric_on_2_digits_type_code then
 						day_val := l_substrg.to_integer
-					when 3 then
+					when {DATE_TIME_CODE}.day_text_type_code then
 						day_text_val := l_substrg
-					when 4 then
+					when {DATE_TIME_CODE}.year_on_4_digits_type_code then
 						year_val := l_substrg.to_integer
-					when 5 then
+					when {DATE_TIME_CODE}.year_on_2_digits_type_code then
 						if base_century < 0 then
 							-- A negative value in `base_century' indicates
 							-- that this value has been calculated
@@ -259,9 +259,9 @@ feature -- Basic operations
 							-- `base_century' has been set manually.
 							year_val := l_substrg.to_integer - base_century
 						end
-					when 6, 7 then
+					when {DATE_TIME_CODE}.month_numeric_type_code, {DATE_TIME_CODE}.month_numeric_on_2_digits_type_code then
 						month_val := l_substrg.to_integer
-					when 8 then
+					when {DATE_TIME_CODE}.month_text_type_code then
 						check months_attached: attached months as l_months then
 							from
 								j := 1
@@ -276,9 +276,9 @@ feature -- Basic operations
 								j := j + 1
 							end
 						end
-					when 9, 10 then
+					when {DATE_TIME_CODE}.hour_numeric_type_code, {DATE_TIME_CODE}.hour_numeric_on_2_digits_type_code then
 						hour_val := l_substrg.to_integer
-					when 11 then
+					when {DATE_TIME_CODE}.hour_12_clock_scale_type_code, {DATE_TIME_CODE}.hour_12_clock_scale_on_2_digits_type_code then
 						hour_val := l_substrg.to_integer
 						if l_is_pm_computed then
 							if l_is_pm then
@@ -292,14 +292,14 @@ feature -- Basic operations
 						else
 							l_hour_val_need_computation := True
 						end
-					when 23 then
+					when {DATE_TIME_CODE}.meridiem_type_code then
 						l_is_pm_computed := True
 						l_is_pm := l_substrg.as_upper.is_equal ("PM")
-					when 12, 13 then
+					when {DATE_TIME_CODE}.minute_numeric_type_code, {DATE_TIME_CODE}.minute_numeric_on_2_digits_type_code then
 						minute_val := l_substrg.to_integer
-					when 14, 15 then
+					when {DATE_TIME_CODE}.second_numeric_type_code, {DATE_TIME_CODE}.second_numeric_on_2_digits_type_code then
 						second_val := l_substrg.to_integer
-					when 16 then
+					when {DATE_TIME_CODE}.fractional_second_numeric_type_code then
 						fine_second_val := l_substrg.to_double /
 							(10 ^ (l_substrg.count))
 					end
@@ -368,7 +368,7 @@ invariant
 	valid_value_implies_parsing: is_value_valid implies parsed
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

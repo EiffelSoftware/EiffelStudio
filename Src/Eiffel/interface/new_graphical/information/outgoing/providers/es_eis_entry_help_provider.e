@@ -68,8 +68,14 @@ feature {NONE} -- Variable expansion
 						-- Add `unique_id'.
 					Result.force (id_solution.url_id (l_id), {ES_EIS_TOKENS}.unique_id_var_name)
 
-						-- Add variables defined in the target.
+
 					if l_target /= Void then
+							-- Add `system_path'
+						if attached l_target.system.directory as l_directory then
+							Result.force (l_directory, {ES_EIS_TOKENS}.system_path_var_name)
+						end
+
+							-- Add variables defined in the target.
 						Result.merge (l_target.variables)
 					end
 				end
@@ -80,7 +86,7 @@ feature {NONE} -- Variable expansion
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

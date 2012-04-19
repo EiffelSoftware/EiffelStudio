@@ -18,11 +18,16 @@
 				<platform value="windows"/>
 			</condition>
 		</external_include>
-		<external_include location="$(ISE_LIBRARY)/library/web_browser/spec/include `pkg-config webkit-1.0 --cflags`">
+		<external_include location="$(ISE_LIBRARY)/library/web_browser/spec/include">
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_include>
+		<external_cflag value="`pkg-config webkit-1.0 --cflags`">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_cflag>
 		<external_library location="$(ISE_LIBRARY)\library\web_browser\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\ole_ie.lib">
 			<condition>
 				<platform value="windows"/>

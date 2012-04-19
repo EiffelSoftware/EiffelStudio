@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="carbon_api" uuid="D8DA2332-0232-4B5D-A6D3-6605880F7D99" library_target="carbon_api">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="carbon_api" uuid="D8DA2332-0232-4B5D-A6D3-6605880F7D99" library_target="carbon_api">
 	<target name="carbon_api">
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/\.svn</exclude>
-			<exclude>/EIFGEN.{0,1}$</exclude>
-			<exclude>/tmp$</exclude>
-			<exclude>/temp$</exclude>
-			<exclude>/release$</exclude>
 			<exclude>/obsolete$</exclude>
+			<exclude>/release$</exclude>
+			<exclude>/tmp$</exclude>
+			<exclude>/EIFGEN.{0,1}$</exclude>
+			<exclude>/\.svn</exclude>
+			<exclude>/temp$</exclude>
 		</file_rule>
-		<option warning="true">
+		<option warning="true" is_attached_by_default="false" syntax="transitional">
 		</option>
 		<external_include location="$ISE_LIBRARY/library/vision2/implementation/carbon/wrapper/generated_wrapper/c/include"/>
-		<external_include location="$ISE_LIBRARY/library/vision2/implementation/carbon/wrapper/generated_wrapper/c/include/spec/ise -isysroot /Developer/SDKs/MacOSX10.4u.sdk -mmacosx-version-min=10.4"/>
-		<external_object location="$ISE_LIBRARY/library/vision2/implementation/carbon/wrapper/carbon_c_eiffel_glue_library_ise_gcc.a -framework Carbon"/>
+		<external_include location="$ISE_LIBRARY/library/vision2/implementation/carbon/wrapper/generated_wrapper/c/include/spec/ise"/>
+		<external_cflag value="-isysroot /Developer/SDKs/MacOSX10.4u.sdk -mmacosx-version-min=10.4"/>
+		<external_library location="$ISE_LIBRARY/library/vision2/implementation/carbon/wrapper/carbon_c_eiffel_glue_library_ise_gcc.a"/>
+		<external_linker_flag value="-framework Carbon"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf" readonly="true"/>
 		<cluster name="additional_wrappers" location="manual_wrapper\" recursive="true"/>

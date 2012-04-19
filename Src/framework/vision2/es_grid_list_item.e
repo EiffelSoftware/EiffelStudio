@@ -141,15 +141,12 @@ feature{NONE} -- Implementation/Redraw
 			-- Redraw Current
 		require
 			a_drawable_attached: a_drawable /= Void
-		local
-			l_has_focus: BOOLEAN
 		do
-			if attached parent as p and then p.has_focus then
-				l_has_focus := True
+			if attached parent as p then
+				display (a_drawable, is_selected, p.has_focus)
 			else
 				check is_parented: False end
 			end
-			display (a_drawable, is_selected, l_has_focus)
 		end
 
 	safe_redraw
@@ -193,6 +190,7 @@ feature{NONE} -- Implementation/Redraw
 			-- Display Current in `a_drawable'.
 		require
 			a_drawable_attached: a_drawable /= Void
+			parented: is_parented
 		local
 			x, y: INTEGER
 			l_left_width, l_left_height: INTEGER
@@ -260,8 +258,8 @@ invariant
 	displayed_item_position_attached: component_position /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

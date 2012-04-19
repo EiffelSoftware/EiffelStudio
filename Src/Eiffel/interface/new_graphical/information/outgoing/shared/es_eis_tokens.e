@@ -45,10 +45,12 @@ feature -- Built in variables
 	group_name_var_name: STRING_8 = "group_name"
 	class_name_var_name: STRING_8 = "class_name"
 	feature_name_var_name: STRING_8 = "feature_name"
-	unique_id_var_name: STRING_8 = "unique_id";
+	unique_id_var_name: STRING_8 = "unique_id"
+	system_path_var_name: STRING_8 = "system_path"
+	;
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

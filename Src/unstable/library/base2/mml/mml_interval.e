@@ -89,7 +89,11 @@ feature -- Comparison
 			-- Does this set contain same elements as `other'?
 		do
 			if attached {MML_INTERVAL} other as interval then
-				Result := (is_empty and interval.is_empty) or else (lower = interval.lower and upper = interval.upper)
+				if is_empty then
+					Result := interval.is_empty
+				else
+					Result := not interval.is_empty and then (lower = interval.lower and upper = interval.upper)
+				end
 			else
 				Result := Precursor (other)
 			end
@@ -99,7 +103,7 @@ feature -- Comparison
 			-- Does `other' have all elements of `Current'?
 		do
 			if attached {MML_INTERVAL} other as interval then
-				Result := (is_empty and interval.is_empty) or else (interval.lower <= lower and upper <= interval.upper)
+				Result := is_empty or else (not interval.is_empty and then (interval.lower <= lower and upper <= interval.upper))
 			else
 				Result := Precursor (other)
 			end
@@ -109,7 +113,7 @@ feature -- Comparison
 			-- Do no elements of `other' occur in `Current'?
 		do
 			if attached {MML_INTERVAL} other as interval then
-				Result := (is_empty and interval.is_empty) or else (interval.upper < lower or upper < interval.lower)
+				Result := (is_empty or interval.is_empty) or else (interval.upper < lower or upper < interval.lower)
 			else
 				Result := Precursor (other)
 			end

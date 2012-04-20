@@ -30,10 +30,12 @@ feature {NONE} -- Initialization
 			-- Initialize file from `a_path'.
 			--
 			-- `a_path': File path of a valid mo file
+		local
+			l_list: detachable LIST [STRING_32]
 		do
 			create {RAW_FILE} file.make (a_path.to_string_8)
-			last_translated := [0, Void]
-			last_original := [0, Void]
+			last_translated := [0, l_list]
+			last_original := [0, l_list]
 		ensure then
 			last_translated /= Void
 			last_original /= Void

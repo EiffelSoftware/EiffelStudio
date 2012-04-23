@@ -2124,6 +2124,7 @@ test	file-position-bad-file-pointer	lib035	 tcf fail library file
 test	format-double-crash				lib036	 tcf fail library ieee
 test	ptf-file-read-to-string		lib037	 tcf pass library file
 test	managed-pointer-invariant	lib038	 tcf pass library invariant
+test	file-info-not-duplicated	lib039	 tcf pass library file
 
 
 -- TUPLE tests

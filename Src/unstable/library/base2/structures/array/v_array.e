@@ -104,10 +104,10 @@ feature -- Access
 			Result.copy_range (Current, l, u, Result.lower)
 		ensure
 			map_domain_definition: Result.map.domain |=| {MML_INTERVAL}[[l, u]]
-			map_definition: Result.map.domain.for_all (agent (i: INTEGER; r: V_ARRAY [G]): BOOLEAN
+			map_definition: Result.map.for_all (agent (i: INTEGER; x: G): BOOLEAN
 				do
-					Result := r.map [i] = map [i]
-				end (?, Result))
+					Result := x = map [i]
+				end)
 		end
 
 feature -- Measurement

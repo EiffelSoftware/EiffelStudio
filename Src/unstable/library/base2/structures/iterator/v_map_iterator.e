@@ -57,8 +57,8 @@ invariant
 	keys_in_target: key_sequence.range |=| target.map.domain
 	unique_keys: key_sequence.count = target.map.count
 	value_sequence_domain_definition: value_sequence.count = key_sequence.count
-	value_sequence_definition: value_sequence.domain.for_all (agent (i: INTEGER): BOOLEAN
+	value_sequence_definition: value_sequence.for_all (agent (i: INTEGER; x: V): BOOLEAN
 		do
-			Result := value_sequence [i] = target.map [key_sequence [i]]
+			Result := x = target.map [key_sequence [i]]
 		end)
 end

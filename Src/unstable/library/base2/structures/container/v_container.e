@@ -94,12 +94,8 @@ feature -- Search
 				do
 					Result := p.precondition ([x])
 				end (?, pred))
-		local
-			it: V_ITERATOR [G]
 		do
-			it := new_cursor
-			it.satisfy_forth (pred)
-			Result := not it.after
+			Result := across Current as it some pred.item ([it.item]) end
 		ensure
 			definition: Result = bag.domain.exists (pred)
 		end

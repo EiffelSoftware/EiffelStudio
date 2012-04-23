@@ -56,6 +56,44 @@ feature -- Properties
 			Result := values.for_all (agent meq_value (c, ?))
 		end
 
+	for_all (test: PREDICATE [ANY, TUPLE [K, V]]): BOOLEAN
+			-- Does `test' hold for all indexe-value pairs?
+		require
+			test_exists: test /= Void
+			test_has_one_arg: test.open_count = 2
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+				Result := True
+			until
+				i > keys.count or not Result
+			loop
+				Result := Result and test.item ([keys [i], values [i]])
+				i := i + 1
+			end
+		end
+
+	exists (test: PREDICATE [ANY, TUPLE [K, V]]): BOOLEAN
+			-- Does `test' hold for any indexe-value pair?
+		require
+			test_exists: test /= Void
+			test_has_one_arg: test.open_count = 2
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+				Result := False
+			until
+				i > keys.count or Result
+			loop
+				Result := Result or test.item ([keys [i], values [i]])
+				i := i + 1
+			end
+		end
+
 feature -- Elements
 
 	item alias "[]" (k: K): V
@@ -196,7 +234,7 @@ feature -- Modification
 			end
 		end
 
-	removed (k: K): MML_MAP[K, V]
+	removed (k: K): MML_MAP [K, V]
 			-- Current map without the key `k' and the corresponding value.
 			-- If `k' doesn't exist, current map.
 		local

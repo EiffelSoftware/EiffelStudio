@@ -182,10 +182,10 @@ feature -- Replacement
 			end
 		ensure
 			map_domain_effect: map.domain |=| old map.domain
-			map_effect: map.domain.for_all (agent (i: INTEGER; m: MML_MAP [INTEGER, G]): BOOLEAN
+			map_effect: map.for_all (agent (i: INTEGER; x: G; m: MML_MAP [INTEGER, G]): BOOLEAN
 				do
-					Result := map [i] = m [lower + upper - i]
-				end (?, old map))
+					Result := x = m [lower + upper - i]
+				end (?, ?, old map))
 		end
 
 feature {NONE} -- Implementation

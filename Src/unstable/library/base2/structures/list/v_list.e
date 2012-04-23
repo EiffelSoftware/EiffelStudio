@@ -280,9 +280,9 @@ feature -- Specification
 
 invariant
 	map_domain_definition: map.domain |=| sequence.domain
-	map_definition: map.domain.for_all (agent (i: INTEGER): BOOLEAN
+	map_definition: map.for_all (agent (i: INTEGER; x: G): BOOLEAN
 		do
-			Result := map [i] = sequence [i]
+			Result := x = sequence [i]
 		end)
 
 end

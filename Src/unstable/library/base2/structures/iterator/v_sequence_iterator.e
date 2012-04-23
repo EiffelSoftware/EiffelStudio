@@ -63,8 +63,8 @@ feature -- Specification
 		end
 
 invariant
-	target_index_sequence_definition: target_index_sequence.domain.for_all (agent (i: INTEGER): BOOLEAN
+	target_index_sequence_definition: target_index_sequence.for_all (agent (i: INTEGER; x: INTEGER): BOOLEAN
 		do
-			Result := target_index_sequence [i] = target.lower + i - 1
+			Result := x = target.lower + i - 1
 		end)
 end

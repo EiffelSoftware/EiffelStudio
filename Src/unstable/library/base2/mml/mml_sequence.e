@@ -56,6 +56,24 @@ feature -- Properties
 			Result := array.for_all (agent meq (c, ?))
 		end
 
+	for_all (test: PREDICATE [ANY, TUPLE [INTEGER, G]]): BOOLEAN
+			-- Does `test' hold for all indexe-value pairs?
+		require
+			test_exists: test /= Void
+			test_has_one_arg: test.open_count = 2
+		do
+			Result := across array as it all test.item ([it.index, it.item]) end
+		end
+
+	exists (test: PREDICATE [ANY, TUPLE [INTEGER, G]]): BOOLEAN
+			-- Does `test' hold for any indexe-value pair?
+		require
+			test_exists: test /= Void
+			test_has_one_arg: test.open_count = 2
+		do
+			Result := across array as it some test.item ([it.index, it.item]) end
+		end
+
 feature -- Elements
 
 	item alias "[]" (i: INTEGER): G

@@ -1,0 +1,12 @@
+# AutoTest results for test_store (04/24/2012 18:45)
+TEST_DATA_CORRECTNESS.test_quotes_in_string: pass
+TEST_DATA_CORRECTNESS.test_trailing_blanks: pass
+TEST_EXTENDED_SELECT.test_extended_select: pass
+TEST_LENGTH_OF_COLUMN_NAME.test: unresolved (Evaluator Died)
+	The evaluator process which was executing test TEST_LENGTH_OF_COLUMN_NAME.test terminated unexpectedly with exit code -1073740940. Any output from the
+	evaluator is printed below.
+	
+	No Output Available
+TEST_NESTED_TRANSACTION.test: pass
+TEST_SELECT.test_basic_select: pass
+TEST_TRANSACTION.test: pass

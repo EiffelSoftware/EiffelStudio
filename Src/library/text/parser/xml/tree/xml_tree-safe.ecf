@@ -11,7 +11,7 @@
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="provisional" namespace="EiffelSoftware.Library" is_void_safe="true">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="xml_parser" location="..\parser\xml_parser-safe.ecf" readonly="false"/>
+		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser-safe.ecf" readonly="false"/>
 		<cluster name="xml_tree" location=".\" recursive="true"/>
 	</target>
 </system>

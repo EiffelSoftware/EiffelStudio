@@ -11,36 +11,7 @@ class
 	TEST_LENGTH_OF_COLUMN_NAME
 
 inherit
-	EQA_TEST_SET
-		redefine
-			on_prepare
-		end
-
-	TESTING_HELPER
-		undefine
-			default_create
-		end
-
-	RDB_HANDLE
-		undefine
-			default_create
-		end
-
-	TEST_DATABASE_MANAGER
-		undefine
-			default_create
-		end
-
-feature {NONE} -- Prepare
-
-	on_prepare
-		local
-			l_login: like Manager.current_session.session_login
-		do
-			set_connection_information (user_login, user_password, database_name)
-			l_login := Manager.current_session.session_login
-			l_login.set_application (database_name)	-- For MySQL
-		end
+	TEST_BASIC_DATABASE
 
 feature -- Test routines
 
@@ -59,10 +30,6 @@ feature -- Test routines
 
 feature {NONE} -- Implementation
 
-	base_store: DB_STORE
-
-	repository: detachable DB_REPOSITORY
-
 	filled_book: BOOK3
 			-- Filled book to put into database
 		do
@@ -77,50 +44,39 @@ feature {NONE} -- Implementation
 	authors: HASH_TABLE [BOOLEAN, STRING]
 			-- Authors of the result of execution
 
-feature {NONE}
+	data_objects: HASH_TABLE [ANY, STRING]
+			-- Data objects
+		once
+			create Result.make (1)
+			Result.force (filled_book, Table_name)
+		end
+
+feature {NONE} -- Load data
 
 	load_data
 			-- Create table in database with same structure as 'book'
 		local
-			l_repository: like repository
 			l_book: like filled_book
 		do
-				-- Create the table for book-objects.
-			create l_repository.make (table_name)
-			repository := l_repository
+			prepare_repository (table_name)
 
-			l_repository.load
+			if attached base_stores.item (table_name) as l_db_store then
+					-- Without transaction
+				l_book := filled_book
+				l_book.set_author ("Paul")
+				l_book.set_very_long_boolean (True)
+				l_db_store.put (l_book)
+				book1 := l_book
 
-			if l_repository.exists then
-				reset_data
-				l_repository.load
+				l_book := filled_book
+				l_book.set_author ("Mike")
+				l_book.set_very_long_boolean (False)
+				l_db_store.put (l_book)
+				book2 := l_book
 			end
-
-			l_repository.allocate (filled_book)
-			l_repository.load
-
-			create base_store.make
-			base_store.set_repository (l_repository)
-
-				-- Without transaction
-			l_book := filled_book
-			l_book.set_author ("Paul")
-			l_book.set_very_long_boolean (True)
-			base_store.put (l_book)
-			book1 := l_book
-
-			l_book := filled_book
-			l_book.set_author ("Mike")
-			l_book.set_very_long_boolean (False)
-			base_store.put (l_book)
-			book2 := l_book
 		end
 
-	reset_data
-		do
-			db_change.modify ("DROP TABLE " + Table_name)
-			assert ("Reset data failed: " + db_change.error_message_32, db_change.is_ok)
-		end
+feature {NONE} -- Selection
 
 	make_selection
 			-- Select books

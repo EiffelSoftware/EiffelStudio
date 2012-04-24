@@ -16,7 +16,7 @@ inherit
 feature -- Test routines
 
 	test_basic_select
-			-- Test `"' appears in a string.
+			-- Test select using non extended type.
 		do
 			establish_connection
 

@@ -47,9 +47,11 @@ feature {NONE} -- initialization
 			child_cell.resize (a_width, a_height)
 
 			create temp_window
-			top_level_window_imp ?= temp_window.implementation
-			check
-				top_level_window_imp /= Void
+			if attached {like top_level_window_imp} temp_window.implementation as l_impl then
+				top_level_window_imp :=  l_impl
+			else
+				check has_top_level_window: False end
+				top_level_window_imp := Void
 			end
 		end
 
@@ -72,13 +74,10 @@ feature {NONE} -- Implementation
 			-- Use the constants defined in EV_SIZEABLE_IMP
 		local
 			p_imp: like parent_imp
-			top_imp: like top_level_window_imp
-			t: detachable EV_SIZEABLE_CONTAINER_IMP
 		do
 			if not is_in_min_height and not is_in_min_width then
 				if is_in_notify.item then
-					t ?= child
-					if t /= Void and then t.is_notify_originator then
+					if attached {EV_SIZEABLE_CONTAINER_IMP} child as t and then t.is_notify_originator then
 							-- `notify_change' call has finished its work on descendants,
 							-- we go up to parents.
 						is_in_notify.put (False)
@@ -87,7 +86,6 @@ feature {NONE} -- Implementation
 				if not is_in_notify.item then
 					is_notify_originator := True
 					is_in_notify.put (True)
-					top_imp := top_level_window_imp
 					if attached wel_parent as l_wel_parent and then l_wel_parent.shown then
 						inspect type
 						when Nc_minwidth then
@@ -132,7 +130,6 @@ feature {NONE} -- Implementation
 			mw, mh: INTEGER
 			rw, rh: INTEGER
 			p_imp: like parent_imp
-			top_imp: like top_level_window_imp
 		do
 			mw := child_cell.minimum_width
 			mh := child_cell.minimum_height
@@ -154,7 +151,6 @@ feature {NONE} -- Implementation
 					do_change := True
 				end
 			end
-			top_imp := top_level_window_imp
 			if not do_change and then attached wel_parent as l_wel_parent and then l_wel_parent.shown then
 				rw := child_cell.width
 				rh := child_cell.height
@@ -171,20 +167,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable WEL_EV_CONTAINER note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_EV_CONTAINER_IMP
-
-
-
+end

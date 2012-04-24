@@ -7,6 +7,9 @@ note
 class
 	SPEC_TESTING_SETTINGS
 
+inherit
+	TESTING_SETTINGS
+
 feature -- Storage
 
 	host: STRING
@@ -45,17 +48,11 @@ feature -- Storage
 			end
 		end
 
-feature {NONE} -- Imp
+feature -- Query
 
-	json_configuration: JSON_CONFIGURATION
-			-- Json configuration
-		once
-			if {PLATFORM}.is_windows then
-				create Result.make ("..\..\..\..\..\test.config")
-			else
-				create Result.make ("../../../../../test.config")
-			end
-			Result.load
-		end
+	is_mysql: BOOLEAN = True
+	is_odbc: BOOLEAN = False
+	is_oracle: BOOLEAN = False
+	is_sybase: BOOLEAN = False
 
 end

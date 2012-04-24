@@ -7,13 +7,23 @@ class BOOK2
 inherit
 	ANY
 		redefine
-			out
+			out,
+			is_equal
 		end
 
 create
 	make
 
-feature
+feature {NONE} -- Init
+
+	make
+		do
+			create title.make (80)
+			create author.make_filled ('x', 80)
+			create year.make_now
+		end
+
+feature -- Access
 
 	title: STRING
 
@@ -26,6 +36,25 @@ feature
 	year: DATE_TIME
 
 	double_value: DOUBLE
+
+feature -- Query
+
+	is_equal (other: like Current): BOOLEAN
+			-- Is the same as `other'?
+			do
+				if other = Current then
+					Result := True
+				else
+					Result := title ~ other.title and then
+							author ~ other.author and then
+							quantity = other.quantity and then
+							price = other.price and then
+							year ~ other.year and then
+							double_value = other.double_value
+				end
+		end
+
+feature -- Element Change
 
  	set_title (t: like title)
 			-- Set `title' with `t'
@@ -58,8 +87,9 @@ feature
 		local
 			date: DATE
 		do
-			create date.make(y,1,1)
-			year.set_date(date)
+			create date.make (y,1,1)
+			year.set_date (date)
+			year.set_time (create {TIME}.make (0, 0, 0))
 		end
 
 	set_price (p: like price)
@@ -111,13 +141,7 @@ feature
 			double_value := d.item
 		end
 
-	make
-		do
-			create title.make (80)
-			create author.make_filled ('x', 80)
-			create year.make_now
-		end
-
+feature -- Access
 
 	out: STRING
 			-- Display contents

@@ -48,4 +48,11 @@ feature -- Storage
 			end
 		end
 
+feature -- Query
+
+	is_mysql: BOOLEAN = False
+	is_odbc: BOOLEAN = True
+	is_oracle: BOOLEAN = False
+	is_sybase: BOOLEAN = False
+
 end

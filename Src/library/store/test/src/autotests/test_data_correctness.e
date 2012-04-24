@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "[
 		Eiffel tests that can be executed by testing tool.
 	]"
@@ -154,7 +154,7 @@ feature {NONE} -- Trailing blanks
 
 	trailing_blanks_create_table: STRING = "CREATE TABLE DB_TRAILING_BLANKS_TABLE ([id] [int] IDENTITY(1,1) NOT NULL, [my_image] [image] NULL)"
 
-	trailing_blanks_insert_data: STRING = "INSERT INTO DB_TRAILING_BLANKS_TABLE (my_image) VALUES (CAST('BM¶[1]%U%U%U%U%U%U6' as binary))"
+	trailing_blanks_insert_data: STRING = "INSERT INTO DB_TRAILING_BLANKS_TABLE (my_image) VALUES (CAST('BM�[1]%U%U%U%U%U%U6' as binary))"
 
 end
 

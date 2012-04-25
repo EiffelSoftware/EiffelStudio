@@ -64,25 +64,34 @@ feature {NONE}
 			l_repository: DB_REPOSITORY
 			l_db_store: DB_STORE
 		do
+				-- Drop the table first
+			drop_repository (a_table_name)
+
+				-- Create the table for data object relavant to the table name
 			if attached data_objects.item (a_table_name) as l_data then
-					-- Create the table for book-objects.
 				create l_repository.make (a_table_name)
-				repositories.force (l_repository, a_table_name)
-				l_repository.load
-
-				if l_repository.exists then
-					reset_data (a_table_name)
-					l_repository.load
-				end
-
 				l_repository.allocate (l_data)
 				l_repository.load
+				repositories.force (l_repository, a_table_name)
 
 				create l_db_store.make
 				l_db_store.set_repository (l_repository)
 				base_stores.force (l_db_store, a_table_name)
 			else
 				assert ("No object found for table " + a_table_name, False)
+			end
+		end
+
+	drop_repository (a_table_name: STRING)
+			-- Drop repository
+		local
+			l_repository: DB_REPOSITORY
+		do
+			create l_repository.make (a_table_name)
+			l_repository.load
+
+			if l_repository.exists then
+				reset_data (a_table_name)
 			end
 		end
 

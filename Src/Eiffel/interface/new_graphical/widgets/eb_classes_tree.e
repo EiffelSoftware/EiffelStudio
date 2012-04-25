@@ -387,6 +387,16 @@ feature -- Activation
 			end
 		end
 
+	show_target (a_target: CONF_TARGET)
+			-- Expand all parents of `a_target' and highlight `a_target'.
+		require
+			a_target_not_void: a_target /= Void
+		local
+			a_target_item: EB_CLASSES_TREE_TARGET_ITEM
+		do
+			a_target_item := show_target_in (a_target, Void)
+		end
+
 	path_name_from_tree_node (tree_node: EV_TREE_NODE): STRING
 			-- `Result' is a path name representing `tree_node' in the
 			-- form "base.kernel.COMPARABLE".
@@ -839,6 +849,41 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	show_target_in (a_target: CONF_TARGET; a_parent: detachable EB_CLASSES_TREE_TARGET_ITEM): detachable EB_CLASSES_TREE_TARGET_ITEM
+			-- Find the tree item associated to `a_target' under `a_parent' and highlight `a_target'.
+			-- Expand if found.
+		require
+			a_target_not_void: a_target /= Void
+		do
+			if attached a_parent as l_item then
+				if l_item.data = a_target then
+					l_item.enable_select
+					Result := l_item
+				else
+					across
+						l_item as l_c
+					until attached Result
+					loop
+						if attached {EB_CLASSES_TREE_TARGET_ITEM} l_c.item as l_target_item then
+							Result := show_target_in (a_target, l_target_item)
+						end
+					end
+					if attached Result as l_result then
+						l_item.expand
+					end
+				end
+			else
+				across
+					Current as l_c
+				until attached Result
+				loop
+					if attached {EB_CLASSES_TREE_TARGET_ITEM} l_c.item as l_item then
+						Result := show_target_in (a_target, l_item)
+					end
+				end
+			end
+		end
+
 	window: EB_DEVELOPMENT_WINDOW
 			-- Development window classes should be associated with.
 
@@ -1091,7 +1136,7 @@ invariant
 	expanded_clusters_not_void: expanded_clusters /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

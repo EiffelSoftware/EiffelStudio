@@ -109,8 +109,11 @@ feature -- Status report
 			-- Does current stone represents a delayed application target?		
 			-- Used by metric tool
 
+invariant
+	target_not_void: target /= Void
+
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

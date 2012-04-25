@@ -327,37 +327,16 @@ feature -- Callbacks
 	on_show_editing_item
 			-- On show editing item selected.
 		local
-			l_conv_class: CLASSI_STONE
-			l_conv_cluster: CLUSTER_STONE
 			l_window: EB_DEVELOPMENT_WINDOW
-			retried: BOOLEAN
+			l_targeted: BOOLEAN
 		do
-			if not retried then
-				l_window := panel.develop_window
-				if l_window /= Void then
-					l_conv_class ?= l_window.stone
-					if l_conv_class /= Void then
-						tree.show_class (l_conv_class.class_i)
-						tree.item_selected
-					else
-						l_conv_cluster ?= l_window.stone
-						if l_conv_cluster /= Void then
-							tree.show_subfolder (l_conv_cluster.group, l_conv_cluster.path)
-							tree.item_selected
-						else
-								-- The current stone is neither a class stone nor a cluster stone.
-							prompts.show_warning_prompt (Warning_messages.w_Choose_class_or_cluster, l_window.window, Void)
-						end
-					end
-				end
-			else
-				if l_window /= Void and then l_window.stone /= Void then
-					prompts.show_error_prompt (Warning_messages.w_Could_not_locate (l_window.stone.stone_signature), Void, Void)
+			l_window := panel.develop_window
+			if l_window /= Void then
+				target_stone (l_window.stone)
+				if not last_stone_targeted then
+					prompts.show_warning_prompt (Warning_messages.w_Could_not_locate (l_window.stone.stone_signature), l_window.window, Void)
 				end
 			end
-		rescue
-			retried := True
-			retry
 		end
 
 	on_clean_up_affected_item
@@ -458,6 +437,47 @@ feature -- Progress notification
 			background_sweeping_progress_bar.set_proportion (0)
 			refresh_list
 		end
+
+feature -- Element Change
+
+	target_stone (a_stone: STONE)
+			-- Target `a_stone' in the tool
+		do
+			last_stone_targeted := True
+			if attached {CLASSI_STONE} a_stone as l_conv_class then
+				tree.show_class (l_conv_class.class_i)
+				tree.item_selected
+			elseif attached {CLUSTER_STONE} a_stone as l_conv_cluster then
+				tree.show_subfolder (l_conv_cluster.group, l_conv_cluster.path)
+				tree.item_selected
+			elseif attached {TARGET_STONE} a_stone as l_target_stone then
+				tree.show_target (l_target_stone.target)
+				tree.item_selected
+			else
+				last_stone_targeted := False
+			end
+		end
+
+	add_new_entry_for_stone (a_stone: STONE)
+			-- Try adding new entry for `a_stone'.
+		do
+			if attached {FEATURE_STONE} a_stone as l_feature_stone then
+					-- For a feature, we need to specify the feature when adding an entry
+				if attached {ES_EIS_CLASS_VIEW} tree.current_view as l_view and then l_view.new_entry_possible then
+					if attached l_feature_stone.e_feature as l_f then
+						l_view.create_new_entry_for_feature (l_f)
+					end
+				end
+			else
+					-- For other items we can add a new entry directly.
+				on_entry_add
+			end
+		end
+
+feature -- Query
+
+	last_stone_targeted: BOOLEAN
+			-- Was last stone targeted by `target_stone'?
 
 feature {NONE} -- Implementation
 

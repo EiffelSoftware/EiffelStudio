@@ -141,6 +141,20 @@ feature {ES_INFORMATION_TOOL_COMMANDER_I} -- Basic operations
 			end
 		end
 
+	add_information_to (a_stone: ANY)
+			-- Add information to `a_stone'.
+		do
+			if attached {STONE} a_stone as l_stone then
+				user_widget.target_stone (l_stone)
+				if user_widget.last_stone_targeted then
+					show
+					user_widget.add_new_entry_for_stone (l_stone)
+				else
+					prompts.show_warning_prompt (Warning_messages.w_Could_not_locate (l_stone.stone_signature), develop_window.window, Void)
+				end
+			end
+		end
+
 feature {NONE} -- Basic operations
 
 	perform_auto_background_visiting
@@ -274,7 +288,7 @@ feature {NONE} -- Constants
 			-- Session IDs
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

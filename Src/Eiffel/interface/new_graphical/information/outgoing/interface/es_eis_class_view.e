@@ -59,6 +59,7 @@ feature -- Operation
 			if l_class_modifier.is_modifiable then
 				l_class_modifier.prepare
 				if l_class_modifier.is_ast_available then
+						-- Current code is ready to insert note clause.
 					l_class_modifier.new_empty_class_entry
 					l_class_modifier.commit
 
@@ -66,7 +67,45 @@ feature -- Operation
 						attached l_class_modifier.last_create_entry as lt_entry and then
 						attached id_solution.id_of_class (class_i.config_class) as lt_id
 					then
+							-- Register the new created entry in the storage.
 						storage.register_entry (lt_entry, lt_id, class_i.date)
+
+							-- Refresh entry list to display the new entry which is appended at the end.
+						if extracted_entries = Void then
+							create extracted_entries.make (1)
+						end
+						extracted_entries.force_last (lt_entry)
+						refresh_grid_without_sorting
+					end
+				else
+					prompts.show_error_prompt (interface_names.l_syntax_error, Void, Void)
+				end
+			else
+				prompts.show_error_prompt (interface_names.l_class_is_not_editable, Void, Void)
+			end
+		end
+
+	create_new_entry_for_feature (a_feature: E_FEATURE)
+			-- Create new EIS entry in `class_i' for `a_feature'.
+		local
+			l_feature_modifier: ES_EIS_FEATURE_MODIFIER
+		do
+			create l_feature_modifier.make (a_feature, class_i)
+			if l_feature_modifier.is_modifiable then
+				l_feature_modifier.prepare
+				if l_feature_modifier.is_ast_available then
+						-- Current code is ready to insert note clause.
+					l_feature_modifier.new_empty_feature_entry
+					l_feature_modifier.commit
+
+					if
+						attached l_feature_modifier.last_created_entry as lt_entry and then
+						attached id_solution.id_of_feature (a_feature) as lt_id
+					then
+							-- Register the new created entry in the storage.
+						storage.register_entry (lt_entry, lt_id, class_i.date)
+
+							-- Refresh entry list to display the new entry which is appended at the end.
 						if extracted_entries = Void then
 							create extracted_entries.make (1)
 						end
@@ -885,7 +924,7 @@ feature {NONE} -- Callbacks
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

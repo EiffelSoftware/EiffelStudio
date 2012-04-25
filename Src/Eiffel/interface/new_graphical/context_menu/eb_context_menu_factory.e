@@ -129,7 +129,7 @@ feature -- Class Tree Menu
 					extend_separator (a_menu)
 					l_target_stone ?= l_stone
 					if l_target_stone /= Void then
-						extend_add_to_menu (a_menu, l_stone)
+						extend_standard_compiler_item_menu (a_menu, l_stone)
 					else
 						l_cluster_stone ?= l_stone
 						if l_cluster_stone /= Void then
@@ -573,19 +573,8 @@ feature {NONE} -- Menu section, Granularity 2.
 
 	extend_standard_compiler_item_menu (a_menu: EV_MENU; a_pebble: ANY)
 			-- Extend menu items for standard cluster/class/feature.
-		local
-			l_stonec: CLASSC_STONE
-			l_stonei: CLASSI_STONE
-			l_feature_stone: FEATURE_STONE
-			l_cluster_stone: CLUSTER_STONE
-			l_stone: STONE
 		do
-			l_feature_stone ?= a_pebble
-			l_stonec ?= a_pebble
-			l_stonei ?= a_pebble
-			l_cluster_stone ?= a_pebble
-			l_stone ?= a_pebble
-			if l_feature_stone /= Void then
+			if attached {FEATURE_STONE} a_pebble as l_feature_stone then
 				extend_basic_opening_menus (a_menu, l_feature_stone, True)
 				extend_separator (a_menu)
 				extend_feature_formatter_menus (a_menu, l_feature_stone)
@@ -593,23 +582,27 @@ feature {NONE} -- Menu section, Granularity 2.
 				if attached l_feature_stone.e_feature as l_feat then
 					extend_debug_feature_menus (a_menu, l_feat)
 				end
-				extend_add_to_menu (a_menu, l_stone)
-			elseif l_stonec /= Void then
+				extend_add_to_menu (a_menu, l_feature_stone)
+			elseif attached {CLASSC_STONE} a_pebble as l_stonec then
 				extend_basic_opening_menus (a_menu, l_stonec, True)
 				extend_separator (a_menu)
 				extend_class_formatter_menus (a_menu, l_stonec)
 				extend_class_refactoring_menus (a_menu, l_stonec)
 				extend_debug_class_menus (a_menu, l_stonec.e_class)
-				extend_add_to_menu (a_menu, l_stone)
-			elseif l_stonei /= Void then
+				extend_add_to_menu (a_menu, l_stonec)
+			elseif attached {CLASSI_STONE} a_pebble as l_stonei then
 				extend_basic_opening_menus (a_menu, l_stonei, True)
 				extend_separator (a_menu)
 				extend_class_refactoring_menus (a_menu, l_stonei)
-				extend_add_to_menu (a_menu, l_stone)
-			elseif l_cluster_stone /= Void then
-				extend_basic_opening_menus (a_menu, l_stone, False)
-				extend_add_to_menu (a_menu, l_stone)
+				extend_add_to_menu (a_menu, l_stonei)
+			elseif attached {CLUSTER_STONE} a_pebble as l_cluster_stone then
+				extend_basic_opening_menus (a_menu, l_cluster_stone, False)
+				extend_add_to_menu (a_menu, l_cluster_stone)
+			elseif attached {TARGET_STONE} a_pebble as l_target_stone then
+				extend_add_to_menu (a_menu, l_target_stone)
 			end
+				-- Add Info item
+			extend_add_info (a_menu, a_pebble)
 		end
 
 	extend_basic_diagram_menu (a_menu: EV_MENU)
@@ -1298,6 +1291,20 @@ feature {NONE} -- Menu section, Granularity 1.
 						end
 					end
 				end
+			end
+		end
+
+	extend_add_info (a_menu: EV_MENU; a_pebble: ANY)
+			-- Add Info menu
+		require
+			a_menu_not_void: a_menu /= Void
+		local
+			l_menu_item: EV_MENU_ITEM
+		do
+			if attached last_name as l_last_name and then attached last_type as l_last_type then
+				create l_menu_item.make_with_text (names.m_add_info (l_last_type, l_last_name))
+				l_menu_item.select_actions.extend (agent (dev_window.tools.info_tool).add_information_to (a_pebble))
+				a_menu.extend (l_menu_item)
 			end
 		end
 
@@ -2039,7 +2046,7 @@ invariant
 	dev_window_not_void: dev_window /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

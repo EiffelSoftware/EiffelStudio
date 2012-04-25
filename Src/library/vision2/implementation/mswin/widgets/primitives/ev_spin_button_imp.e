@@ -653,7 +653,6 @@ feature {EV_TEXT_FIELD_IMP} -- Implementation
 		do
 			Precursor {EV_GAUGE_IMP} (virtual_key, key_data)
 			if virtual_key = Vk_return then
-				internal_text_field.set_caret_position (1)
 				translate_text
 				attached_interface.return_actions.call (Void)
 				if last_change_value /= value then
@@ -817,14 +816,14 @@ invariant
 	internal_arrows_control_not_void:  is_initialized implies internal_arrows_control /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_SPIN_BUTTON_IMP

@@ -965,6 +965,14 @@ feature -- Context menu
 
 	m_add_to: STRING_32					do Result := locale.translation("&Add to")	end
 	m_add_subcluster: STRING_32			do Result := locale.translation("Add &subcluster")	end
+
+	m_Add_info (a_type, a_name: STRING_GENERAL): STRING_32
+		require
+			exists: a_type /= Void and a_name /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("Add Info to $1 '$2'"), [a_type, a_name])
+		end
+
 	m_Assembly: STRING_32				do Result := locale.translation ("Assembly") end
 	m_center_diagram: STRING_32			do Result := locale.translation ("Center target in diagram") end
 	m_change_color: STRING_32			do Result := locale.translation ("Change color") end

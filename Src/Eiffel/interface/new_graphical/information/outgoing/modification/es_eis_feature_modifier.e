@@ -18,6 +18,24 @@ create
 
 feature -- Modification: Feature
 
+	new_empty_feature_entry
+			-- New empty EIS entry.
+		require
+			is_interface_usable: is_interface_usable
+			is_prepared: is_prepared
+			is_ast_available: is_ast_available
+			is_modifiable: is_modifiable
+		local
+			l_entry: EIS_ENTRY
+		do
+			create l_entry.make ("Unnamed", Void, Void, Void, id_solution.id_of_feature (context_feature), Void)
+			write_feature_entry (l_entry)
+			last_created_entry := l_entry
+		ensure
+			is_dirty: is_dirty
+			last_create_entry_not_void: last_created_entry /= Void
+		end
+
 	modify_feature_entry (a_old_entry, a_new_entry: EIS_ENTRY)
 			-- Modify `a_old_entry' to `a_new_entry' in the feature.
 		require
@@ -141,6 +159,11 @@ feature -- Modification: Feature
 			is_dirty: is_dirty
 		end
 
+feature -- Access
+
+	last_created_entry: detachable EIS_ENTRY
+			-- Last created eis entry.
+
 feature {NONE} -- Implementation
 
 	last_entry_removed: BOOLEAN
@@ -165,7 +188,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

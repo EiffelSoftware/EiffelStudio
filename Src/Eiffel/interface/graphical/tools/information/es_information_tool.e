@@ -54,6 +54,14 @@ feature -- Basic operations
 			end
 		end
 
+	add_information_to (a_stone: ANY)
+			-- <Precursor>
+		do
+			if is_tool_instantiated then
+				panel.add_information_to (a_stone)
+			end
+		end
+
 feature {NONE} -- Factory
 
 	new_tool: attached ES_INFORMATION_TOOL_PANEL
@@ -67,7 +75,7 @@ feature {NONE} -- Internationalization
 	t_tool_title: STRING = "Info"
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

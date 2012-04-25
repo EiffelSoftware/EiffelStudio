@@ -347,17 +347,19 @@ feature {NONE} -- WEL Implementation
 				disable_default_processing
 			end
 			Precursor {EV_TEXT_COMPONENT_IMP} (virtual_key, key_data)
-			if virtual_key = Vk_return and then is_editable then
-				wel_set_caret_position (0)
-				if return_actions_internal /= Void then
-					return_actions_internal.call (Void)
+				-- Check that the called actions did not destroy the window
+			if not is_destroyed then
+				if virtual_key = Vk_return and then is_editable then
+					if return_actions_internal /= Void then
+						return_actions_internal.call (Void)
+					end
 				end
-			end
-				--| EV_SPIN_BUTTON_IMP is composed of `Current'.
-				--| Therefore if `Current' is parented in an EV_SPIN_BUTTON_IMP,
-				--| we must propagate the key press event.
-			if attached {EV_SPIN_BUTTON_IMP} wel_parent as l_spin_button then
-				l_spin_button.on_key_down (virtual_key, key_data)
+					--| EV_SPIN_BUTTON_IMP is composed of `Current'.
+					--| Therefore if `Current' is parented in an EV_SPIN_BUTTON_IMP,
+					--| we must propagate the key press event.
+				if attached {EV_SPIN_BUTTON_IMP} wel_parent as l_spin_button then
+					l_spin_button.on_key_down (virtual_key, key_data)
+				end
 			end
 		end
 
@@ -421,14 +423,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TEXT_FIELD note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_TEXT_FIELD_IMP

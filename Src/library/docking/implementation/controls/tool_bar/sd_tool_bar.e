@@ -70,7 +70,7 @@ feature {NONE} -- Initlization
 			add_tool_bar (Current)
 
 				-- Prevent mouse press from taking the focus.
-			implementation.disable_focus_on_press
+			disable_focus_on_press
 		end
 
 feature {SD_TOOL_BAR} -- Internal initlization

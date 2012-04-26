@@ -26,7 +26,6 @@ feature {NONE} -- Initlization
 		require
 			a_caller_not_void: a_caller /= Void
 		local
-			l_screen: SD_SCREEN
 			l_factory: SD_HOT_ZONE_FACTORY_FACTORY
 		do
 			debug ("docking")
@@ -41,7 +40,6 @@ feature {NONE} -- Initlization
 
 			create hot_zones
 			caller := a_caller
-			create l_screen
 
 			create cancel_actions
 				-- FIXME: When there is no feedback rectangle (the transparency blue area) on Windows,

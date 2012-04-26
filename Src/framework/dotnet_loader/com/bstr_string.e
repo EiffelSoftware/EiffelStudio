@@ -9,7 +9,10 @@ class
 	BSTR_STRING
 
 inherit
-	DISPOSABLE
+	COM_BSTR_STRING
+		rename
+			string as full_string_8
+		end
 
 create
 	make_from_string,
@@ -19,25 +22,6 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_string (a_string: READABLE_STRING_GENERAL)
-			-- Creates a new isntance of BSTR_STRING from `a_string'
-		require
-			a_string_not_void: a_string /= Void
-		local
-			l_str: WEL_STRING
-		do
-			create l_str.make (a_string)
-			item := c_get_bstr (l_str.item)
-		end
-
-	make_by_wel_string (a_string: WEL_STRING)
-			-- Creates a new instance from a WEL_STRING
-		require
-			a_string_not_void: a_string /= Void
-		do
-			item := c_get_bstr (a_string.item)
-		end
-
 	make_by_uni_string (astring: UNI_STRING)
 			-- creates new instance from a unistring
 		require
@@ -46,27 +30,6 @@ feature {NONE} -- Initialization
 			item := c_get_bstr (astring.item)
 		ensure
 			string_created: item /= default_pointer
-		end
-
-	make_by_pointer (p: POINTER)
-			-- create a BSTR from a pointer
-		require
-			non_void_pointer: p /= default_pointer
-		do
-			item := p
-		end
-
-feature -- Access
-
-	item: POINTER
-		-- pointer to the BSTR string
-
-	bytes_count: INTEGER
-			-- Length in bytes of Current.
-		require
-			exists: exists
-		do
-			Result := c_bytes_length (item)
 		end
 
 feature -- Basic Operations
@@ -80,17 +43,6 @@ feature -- Basic Operations
 			Result := uni_string.string
 		end
 
-	full_string_8: STRING_8
-			-- Return all characters even null character truncated to STRING_8.
-		require
-			exists: exists
-		do
-			Result := (create {WEL_STRING}.make_by_pointer_and_count (
-				item, bytes_count)).substring_8 (1, bytes_count // character_size)
-		ensure
-			valid_count: Result.count = (bytes_count // character_size)
-		end
-
 	uni_string: UNI_STRING
 			-- returns a UNI_STRING
 		require
@@ -99,63 +51,6 @@ feature -- Basic Operations
 			create Result.make_by_pointer (item)
 		end
 
-	wel_string: WEL_STRING
-			-- returns a WEL_STRING
-		require
-			exists: exists
-		do
-			create Result.make_by_pointer (item)
-		end
-
-feature -- Status Report
-
-	exists: BOOLEAN
-			-- Does current exist?
-		do
-			Result := item /= default_pointer
-		end
-
-feature -- Destruction
-
-	dispose
-			-- free up used resources
-		do
-			c_free_bstr (item)
-		end
-
-feature {NONE} -- Implementation
-
-	c_get_bstr (astring: POINTER): POINTER
-			-- returns a BSTR from a UNI_STRING
-		external
-			"C signature (LPWSTR): EIF_POINTER use %"OleAuto.h%""
-		alias
-			"SysAllocString"
-		end
-
-	c_bytes_length (astring: POINTER): INTEGER
-			-- Length of BSTR `astring'.
-		external
-			"C signature (BSTR): EIF_INTEGER use %"OleAuto.h%""
-		alias
-			"SysStringByteLen"
-		end
-
-	c_free_bstr (abstr: POINTER)
-			-- frees a BSTR
-		external
-			"C signature (BSTR) use %"OleAuto.h%""
-		alias
-			"SysFreeString"
-		end
-
-	frozen character_size: INTEGER
-			-- Number of bytes occupied by a TCHAR.
-		external
-			"C macro use <tchar.h>"
-		alias
-			"sizeof(OLECHAR)"
-		end
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

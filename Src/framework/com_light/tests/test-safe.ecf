@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd" name="test_com_light" uuid="5EE18BBF-CB88-4506-B40C-CB9BD900529D">
+	<target name="test_com_light">
+		<root class="TEST" feature="make"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option debug="true" void_safety="all">
+			<debug name="com_object" enabled="true"/>
+		</option>
+		<setting name="executable_name" value="test_com_light"/>
+		<setting name="concurrency" value="thread"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
+		<library name="com_light" location="$EIFFEL_SRC\framework\com_light\com_light-safe.ecf" readonly="false"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf" readonly="false"/>
+		<tests name="autotests" location=".\autotests\"/>
+		<cluster name="test_com_light" location=".\"/>
+	</target>
+</system>

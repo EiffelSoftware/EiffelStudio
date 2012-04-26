@@ -14,6 +14,7 @@
 			</condition>
 		</external_cflag>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
+		<library name="com_light" location="$EIFFEL_SRC\framework\com_light\com_light-safe.ecf" readonly="false"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf"/>
 		<cluster name="dotnet_loader" location=".\" recursive="true">

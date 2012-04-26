@@ -1,3 +1,4 @@
+(no author) = unknown <unknown.author@eiffel.com>
 alexk=Alexander Kogtenkov <alexk@eiffel.com>
 HalW=Hal Webre <halw@eiffel.com>
 jfiat=Jocelyn Fiat <jfiat@eiffel.com>
@@ -5,3 +6,8 @@ king=Ian King <king@eiffel.com>
 larryl=Liu Ming <larryl@eiffel.com>
 manus=Emmanuel Stapf <manus@eiffel.com>
 tedf=Tao Feng <tedf@eiffel.com>
+dhollen=dhollen <dhollen.guest@eiffel.com>
+davids=davids <davids.guest@eiffel.com>
+julian=julian <julian.guest@eiffel.com>
+fivaa=Arno Fiva <arnof@eiffel.com>
+kenga=kenga <kenga.guest@eiffel.com>

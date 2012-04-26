@@ -24,6 +24,7 @@
 			</condition>
 		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="com_light" location="$EIFFEL_SRC\framework\com_light\com_light-safe.ecf"/>
 		<library name="dotnet_loader" location="$EIFFEL_SRC\framework\dotnet_loader\dotnet_loader-safe.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf"/>

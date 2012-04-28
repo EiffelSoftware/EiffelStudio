@@ -37,14 +37,84 @@ feature -- Basic operations
 
 	show_help (a_context_id: READABLE_STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I)
 			-- <precursor>
+		local
+			l_word: COM_OBJECT
+			l_formatted_source: STRING
+			l_bookmark: STRING_32
+			l_succeed: BOOLEAN
+			l_active_doc: COM_OBJECT
 		do
-				-- For the moment, DOC is treated as normal URI
-				-- In the future, we may need to call MS Word API to open the entry.
-			Precursor {ES_EIS_ENTRY_HELP_PROVIDER}(a_context_id, a_section)
+			if attached {HELP_SECTION_EIS_ENTRY} a_section as l_section then
+				if attached l_section.entry as l_entry and then attached l_entry.source as l_source and then not l_source.is_empty then
+					last_entry := l_entry
+						--|FIXME: Unicode is not properly handled
+					l_formatted_source := l_source.as_string_8.twin
+					format_uris (l_formatted_source)
+
+					if {PLATFORM}.is_windows then
+							-- Try to get the running object first.
+						create l_word.make_active_object_with_program_id (word_application_string)
+						if not l_word.is_successful then
+							create l_word.make_with_program_id (word_application_string)
+						end
+						if l_word.is_successful then
+								-- Show Word
+							l_word.call_property_put ("Visible", [True])
+							if l_word.is_successful then
+								l_word.call_method ("Activate", Void)
+							end
+							if l_word.is_successful then
+									-- Try to get the doc if it is alread open
+								l_word.call_property_get ("Documents", [l_formatted_source])
+								if l_word.is_successful then
+									l_active_doc :=	l_word.last_object
+								else
+									l_word.call_property_get ("Documents", Void)
+									if attached l_word.last_object as l_documents then
+											-- Open the file
+										l_documents.call_method ("Open", [l_formatted_source])
+										l_succeed := l_documents.is_successful
+											-- Get and go to bookmark if any.
+										if l_succeed and then attached l_entry.others as l_others then
+											l_others.search (bookmark_string)
+											if l_others.found then
+												l_bookmark := l_others.found_item
+												if attached l_documents.last_object as l_doc then
+													l_active_doc := l_doc
+												end
+											end
+										end
+									end
+								end
+								if attached l_active_doc as l_doc then
+									l_doc.call_property_get ("Bookmarks", Void)
+									if attached l_doc.last_object as l_bookmarks then
+										l_bookmarks.call_method ("Item", [l_bookmark])
+											-- Go to the bookmark
+										if attached l_bookmarks.last_object as l_bookmark_object then
+											l_bookmark_object.call_method ("Select", Void)
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+			if not l_succeed then
+						-- Word is not available or for Unix, go for the default
+						-- Do not support properties like "bookmark"
+				Precursor {ES_EIS_ENTRY_HELP_PROVIDER}(a_context_id, a_section)
+			end
 		end
 
+feature {NONE} -- Constants
+
+	bookmark_string: STRING_32 = "bookmark"
+	word_application_string: STRING_32 = "Word.Application"
+
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

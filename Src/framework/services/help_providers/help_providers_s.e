@@ -46,15 +46,17 @@ feature -- Basic operations
 			a_context_is_help_available: a_context.is_help_available
 		local
 			l_provider: HELP_PROVIDER_I
+			l_provider_uuid: UUID
 		do
-			if is_provider_available (a_context.help_provider) then
-				l_provider := provider (a_context.help_provider)
+			l_provider_uuid := a_context.help_provider
+			if is_provider_available (l_provider_uuid) then
+				l_provider := provider (l_provider_uuid)
 				l_provider.show_help (a_context.help_context_id, a_context.help_context_section)
 			end
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -12,9 +12,17 @@ feature {NONE} -- Access
 
 	help_provider_from_protocol (a_protocol: detachable STRING_32): UUID
 			-- Helper provider from `a_protocol'
+		local
+			l_protocol: STRING_32
 		do
 			if a_protocol /= Void and then not a_protocol.is_empty then
-				if attached providers.item (a_protocol) as lt_uuid then
+					-- Get lower case string
+				if a_protocol.is_valid_as_string_8 then
+					l_protocol := a_protocol.as_lower
+				else
+					l_protocol := a_protocol
+				end
+				if attached providers.item (l_protocol) as lt_uuid then
 					Result := lt_uuid
 				else
 					Result := (create {HELP_PROVIDER_KINDS}).eis_default
@@ -34,14 +42,14 @@ feature {NONE} -- Access
 		once
 			create l_provider
 			create Result.make (2)
-			Result.force (l_provider.pdf, "pdf")
-			Result.force (l_provider.doc, "doc")
+			Result.force (l_provider.pdf, {STRING_32} "pdf")
+			Result.force (l_provider.doc, {STRING_32} "doc")
 		ensure
 			Result_not_void: Result /= Void
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

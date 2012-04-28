@@ -13,7 +13,8 @@ inherit
 
 create
 	make_by_pointer,
-	make_with_program_id
+	make_with_program_id,
+	make_active_object_with_program_id
 
 feature {NONE} -- Initialization
 
@@ -52,46 +53,63 @@ feature {NONE} -- Initialization
 			end
 		end
 
+	make_active_object_with_program_id (a_name: READABLE_STRING_GENERAL)
+			-- Initialize with running object of `a_name'
+			-- Example of program ID: "Word.Application"
+		local
+			l_uname: COM_BSTR_STRING
+			l_clsid: like clsid
+		do
+			(create {COM_EXTERNALS}).initialize_com
+			create l_clsid.make_empty
+			clsid := l_clsid
+			create l_uname.make_from_string (a_name)
+			last_call_success := clsid_from_prog_id (l_uname.item, l_clsid.item)
+
+			if is_successful then
+				last_call_success := com_get_active_object (l_clsid.item, $item)
+				if not is_successful then
+					item := default_pointer
+				end
+			end
+		end
+
 feature -- Method	
 
 	call_method (a_name: STRING; a_args: detachable TUPLE)
 			-- Call OLE method
 		require
+			exists: exists
 			a_args_valid: valid_arguments (a_args)
-		local
-			l_result: like call
 		do
-			l_result := call (dispatch_method, a_name, a_args)
+			call (dispatch_method, a_name, a_args)
 		end
 
 	call_property_get (a_name: STRING; a_args: detachable TUPLE)
 			-- Call OLE property get
 		require
+			exists: exists
 			a_args_valid: valid_arguments (a_args)
-		local
-			l_result: like call
 		do
-			l_result := call (dispatch_propertyget, a_name, a_args)
+			call (dispatch_propertyget, a_name, a_args)
 		end
 
 	call_property_put (a_name: STRING; a_args: detachable TUPLE)
 			-- Call OLE property put
 		require
+			exists: exists
 			a_args_valid: valid_arguments (a_args)
-		local
-			l_result: like call
 		do
-			l_result := call (dispatch_propertyput, a_name, a_args)
+			call (dispatch_propertyput, a_name, a_args)
 		end
 
 	call_property_put_ref (a_name: STRING; a_args: detachable TUPLE)
 			-- Call OLE property put ref
 		require
+			exists: exists
 			a_args_valid: valid_arguments (a_args)
-		local
-			l_result: like call
 		do
-			l_result := call (dispatch_propertyputref, a_name, a_args)
+			call (dispatch_propertyputref, a_name, a_args)
 		end
 
 feature -- Access
@@ -153,7 +171,7 @@ feature {NONE} -- Access
 	last_call_success: INTEGER
 			-- Result of last COM calls. When successful it should be `0'.
 
-feature {COM_LIGHT_OBJECT} -- Access
+feature {NONE} -- Access
 
 	clsid: detachable WEL_GUID
 			-- CLSID related to current
@@ -163,9 +181,10 @@ feature {COM_LIGHT_OBJECT} -- Access
 
 feature {NONE} -- Call
 
-	call (a_ntype: INTEGER; a_name: STRING; a_args: detachable TUPLE): INTEGER
+	call (a_ntype: INTEGER; a_name: STRING; a_args: detachable TUPLE)
 			-- Call OLE method on current object by `a_name'.
 		require
+			exists: exists
 			args_valid: valid_arguments (a_args)
 			valid_ntype: valid_type (a_ntype)
 		local
@@ -200,10 +219,9 @@ feature {NONE} -- Call
 				l_args_pointer := l_managed_pointer.item
 			end
 			create l_v.make
-			Result := cpp_ole_method (a_ntype, l_v.item, item, l_bstr.item, l_args_count, l_args_pointer)
-			last_call_success := Result
+			last_call_success := cpp_ole_method (a_ntype, l_v.item, item, l_bstr.item, l_args_count, l_args_pointer)
 
-			if Result = {COM_EXTERNALS}.com_s_ok then
+			if last_call_success = {COM_EXTERNALS}.com_s_ok then
 				last_variant_result := l_v
 			else
 				last_variant_result := Void
@@ -290,6 +308,20 @@ feature {NONE} -- Externals
 			"C++ inline use <Objbase.h>"
 		alias
 			"CoCreateInstance ((REFCLSID)(*(CLSID *)$a_rclsid), (LPUNKNOWN)$a_unknown, (DWORD)$a_dwclscontext, IID_IDispatch, (LPVOID *)$a_app_pointer)"
+		end
+
+	com_get_active_object (a_rclsid: POINTER; a_app_pointer: TYPED_POINTER [POINTER]): INTEGER_32
+		external
+			"C++ inline use <Objbase.h>"
+		alias
+			"[
+				IUnknown *pUnk = NULL;
+				HRESULT hr = GetActiveObject ((REFCLSID)(*(CLSID *)$a_rclsid), NULL, (IUnknown **)&pUnk);
+				if(!FAILED(hr)) {
+					hr = pUnk->QueryInterface(IID_IDispatch, (LPVOID *)$a_app_pointer);
+				}
+				return hr;
+			]"
 		end
 
 	cpp_ole_method (a_ntype: INTEGER; a_variant_result: POINTER; a_dispatch: POINTER; a_c_str_name: POINTER; arg_count: INTEGER; a_args: POINTER): INTEGER

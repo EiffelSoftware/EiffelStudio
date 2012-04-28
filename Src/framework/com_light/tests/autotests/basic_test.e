@@ -31,6 +31,12 @@ feature -- Test routines
 			l_word_app.call_property_put ("Visible", [True])
 			assert ("Call failed", l_word_app.is_successful)
 
+			create l_word_app.make_active_object_with_program_id ("Word.Application")
+			assert ("Call failed", l_word_app.is_successful)
+
+			l_word_app.call_method ("Activate", Void)
+			assert ("Call failed", l_word_app.is_successful)
+
 			l_word_app.call_property_get ("Documents", Void)
 			if attached l_word_app.last_object as l_documents then
 				l_documents.call_method ("Add", Void)

@@ -3187,14 +3187,10 @@ Test thread-join-crash (thread019): passed
 Test thread-profiling-crash (thread020): passed
 Test thread-crashes-on-die (thread021): failed
 	Description: When a multithreaded application calls die in one of the threads and that the other threads are busy doing some GC collection, the application crashes instead of terminating with an exit code.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/thread021/tcf at line 14
-	Original text:    execute_result failed_silently
-	Substituted text: execute_result failed_silently
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  system_failed had_panic 
-	Expected result:
-		Final status:  silent_failure 
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/thread021/tcf at line 15
+	Original text:    compare exec_output output
+	Substituted text: compare exec_output output
+	Reason: files being compared do not have identical contents
 
 Test thread-hangs-on-fork (thread022): passed
 Test print-double (exec001): passed
@@ -3968,6 +3964,7 @@ Test small-eif-memory-scavenge-2 (exec347): failed
 	Expected result:
 		Final status:  completed 
 
+Test environment-setting (exec348): passed
 Test once-per-object-exec (once001): passed
 Test once-per-object-exec-with-exception (once002): passed
 Test once-per-object-redefinition (once003): passed
@@ -4850,6 +4847,7 @@ Test file-position-bad-file-pointer (lib035): passed
 Test format-double-crash (lib036): passed
 Test ptf-file-read-to-string (lib037): passed
 Test managed-pointer-invariant (lib038): passed
+Test file-info-not-duplicated (lib039): passed
 Test tuple-manipulation (tuple001): passed
 Test named-tuple-validation (tuple002): passed
 Test named-tuple-as-argument (tuple003): passed
@@ -5718,8 +5716,8 @@ Test dotnet-polymorphism (dotnet110): failed
 Test dotnet-special-handling-crash (dotnet112): passed
 Test dotnet-static-access-on-deferred (dotnet115): passed
 
-Passed:  2272 / 2609  (87%)
-Failed:  305 / 2609  (12%)
-Manual:  26 / 2609  (1%)
-Skipped:  6 / 2609  (1%)
+Passed:  2274 / 2611  (88%)
+Failed:  305 / 2611  (12%)
+Manual:  26 / 2611  (1%)
+Skipped:  6 / 2611  (1%)
 

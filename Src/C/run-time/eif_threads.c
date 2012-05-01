@@ -945,6 +945,11 @@ rt_public void eif_thr_exit(void)
 			EIF_ASYNC_SAFE_MUTEX_LOCK(l_children_mutex);
 				/* Find out if there are still some children running. */
 			destroy_mutex = eif_thr_context->n_children == 0;
+			if (!destroy_mutex) {
+					/* We cannot destroy ourself because we still have some running children
+					 * threads, we therefore needs to mark ourself dead. */
+				eif_thr_context->is_alive = 0;
+			}
 			EIF_ASYNC_SAFE_MUTEX_UNLOCK(l_children_mutex);
 		} else {
 			destroy_mutex = 1;
@@ -960,8 +965,6 @@ rt_public void eif_thr_exit(void)
 			eif_thr_context->thread_id = (EIF_THR_TYPE) 0;
 			eif_free (eif_thr_context);		/* Thread context passed by parent */
 			eif_thr_context = NULL;
-		} else {
-			eif_thr_context->is_alive = 0;
 		}
 		EIF_EXIT_C;
 

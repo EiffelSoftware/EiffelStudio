@@ -150,7 +150,7 @@ feature -- Roundtrip/Location
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS
+	first_token (a_list: detachable LEAF_AS_LIST): LEAF_AS
 			-- First token in current AST node
 			--| Note for implementors of this routine as `last_token'.
 			--| Do not rely on `a_list' non-voidness to figure out the
@@ -165,7 +165,7 @@ feature -- Roundtrip/Token
 		deferred
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS
+	last_token (a_list: detachable LEAF_AS_LIST): LEAF_AS
 			-- Last token in current AST node
 			--| Note: see comment on `last_token'.
 		deferred
@@ -456,7 +456,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

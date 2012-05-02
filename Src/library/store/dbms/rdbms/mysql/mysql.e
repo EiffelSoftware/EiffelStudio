@@ -370,6 +370,20 @@ feature -- For DATABASE_REPOSITORY
 			Result.append (")")
 		end
 
+feature -- Multiple Statements
+
+	enable_multiple_statements
+			-- Enable multiple statements if possible
+		do
+			eif_mysql_enable_multi_statements (mysql_pointer)
+		end
+
+	disable_multiple_statements
+			-- Disable multiple statements if possible
+		do
+			eif_mysql_disable_multi_statements (mysql_pointer)
+		end
+
 feature -- External features
 
 	get_error_message: POINTER
@@ -880,9 +894,12 @@ feature -- External features
 			end
 			create l_base.make (application)
 			mysql_pointer := eif_mysql_connect (l_user.item, l_pass.item, l_host.item, l_port, l_base.item)
+				-- Default to Disabled, otherwise procedure creation will probably fail,
+				-- as normally there are more than one statements for procedure creation.
+			disable_multiple_statements
 			is_error_updated := False
 			is_warning_updated := False
-       	end
+		end
 
 	connect_by_connection_string (a_connect_string: STRING)
 			-- Connect to database by connection string
@@ -1171,6 +1188,16 @@ feature {NONE} -- C Externals
 
 	eif_mysql_autocommit (mysql_ptr: POINTER; a_mode: BOOLEAN): BOOLEAN
 			-- Return True, if there was error.
+		external
+			"C | %"eif_mysql.h%""
+		end
+
+	eif_mysql_enable_multi_statements (mysql_ptr: POINTER)
+		external
+			"C | %"eif_mysql.h%""
+		end
+
+	eif_mysql_disable_multi_statements (mysql_ptr: POINTER)
 		external
 			"C | %"eif_mysql.h%""
 		end

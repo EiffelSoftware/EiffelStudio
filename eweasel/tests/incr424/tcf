@@ -1,5 +1,5 @@
 test_name 	inline-agent-removal-crash
-test_description During an incremental compilation with error, a feature containing inline agents is removed and then added back. After that the code generation fails.
+test_description During an incremental compilation with error, a feature containing inline agents is removed and then added back. After that the code checking fails.
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e

@@ -81,6 +81,22 @@ feature -- Command
 			end
 		end
 
+	slist_free_all (a_curl_slist: POINTER)
+			-- Declared as curl_slist_free_all ().
+			-- See: http://curl.haxx.se/libcurl/c/curl_slist_free_all.html
+			-- curl_slist_free_all - free an entire curl_slist list
+			-- This must be called when the data has been used, which typically means after the curl_easy_perform(3) has been called.
+		require
+			exists: a_curl_slist /= default_pointer
+		local
+			l_api: POINTER
+		do
+			l_api := api_loader.api_pointer ("curl_slist_free_all")
+			if l_api /= default_pointer then
+				c_slist_free_all (l_api, a_curl_slist)
+			end
+		end
+
 feature -- Query
 
 	is_dynamic_library_exists: BOOLEAN
@@ -207,6 +223,19 @@ feature {NONE} -- C externals
 											((struct curl_slist *)$a_list_pointer, 
 											(const char *)$a_string);
 			}
+			]"
+		end
+	
+	c_slist_free_all (a_api: POINTER; a_list_pointer: POINTER)
+			-- Declared as void curl_slist_free_all(struct curl_slist * list)
+		require
+			exists: a_api /= default_pointer
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				(FUNCTION_CAST(void *, (struct curl_slist *)) $a_api)
+											((struct curl_slist *)$a_list_pointer);
 			]"
 		end
 

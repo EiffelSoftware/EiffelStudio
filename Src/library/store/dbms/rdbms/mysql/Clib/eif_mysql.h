@@ -51,6 +51,8 @@ extern MYSQL_ROW eif_mysql_next_row(MYSQL_RES *result_ptr);
 extern int eif_mysql_num_fields(MYSQL_RES *result_ptr);
 extern float eif_mysql_real_data(MYSQL_ROW row_ptr, int ind);
 extern my_bool eif_mysql_autocommit(MYSQL *mysql_ptr, my_bool mode);
+extern void eif_mysql_enable_multi_statements (MYSQL *mysql_ptr);
+extern void eif_mysql_disable_multi_statements (MYSQL *mysql_ptr);
 
 #endif /* __eif_mysql_h__ */
 

@@ -188,9 +188,6 @@ MYSQL *eif_mysql_connect(const char *user, const char *pass, const char *host, i
 	res2 = mysql_real_connect(res1, host, user, pass, base, port,
 		(const char *) 0, CLIENT_REMEMBER_OPTIONS | CLIENT_MULTI_RESULTS);
 
-	/* Enable multi statements on server side */
-	mysql_set_server_option (res1, MYSQL_OPTION_MULTI_STATEMENTS_ON);
-
 	/* It is determined, that, in case mysql_real_connect a NULL pointer
 	 * returns, res1 is the actual object through which the errors can
 	 * be obtained.
@@ -201,6 +198,28 @@ MYSQL *eif_mysql_connect(const char *user, const char *pass, const char *host, i
 	 */
 
 	return res1;
+}
+
+/*
+ * Function:	void eif_mysql_enable_multi_statements (MYSQL *mysql_ptr)
+ * Description:	Enable multiple statement support
+ * Arguments:	MYSQL *mysql_ptr:	Pointer to MYSQL structure
+ * Returns:		Nothing
+ */
+void eif_mysql_enable_multi_statements (MYSQL *mysql_ptr)
+{
+	mysql_set_server_option (mysql_ptr, MYSQL_OPTION_MULTI_STATEMENTS_ON);
+}
+
+/*
+ * Function:	void eif_mysql_disable_multi_statements (MYSQL *mysql_ptr)
+ * Description:	Disable multiple statement support
+ * Arguments:	MYSQL *mysql_ptr:	Pointer to MYSQL structure
+ * Returns:		Nothing
+ */
+void eif_mysql_disable_multi_statements (MYSQL *mysql_ptr)
+{
+	mysql_set_server_option (mysql_ptr, MYSQL_OPTION_MULTI_STATEMENTS_OFF);
 }
 
 /*
@@ -328,7 +347,7 @@ void eif_mysql_free_result(MYSQL *mysql_ptr, MYSQL_RES *result_ptr)
 	mysql_free_result(result_ptr);
 	while(mysql_more_results(mysql_ptr))
 	{
-		if(mysql_next_result(mysql_ptr))
+		if(!mysql_next_result(mysql_ptr))
 		{
 			l_result = mysql_use_result(mysql_ptr);
 			mysql_free_result(l_result);

@@ -1,0 +1,30 @@
+test_name 	inline-agent-removal-crash-2
+test_description During an incremental compilation with error, a feature containing inline agents is removed and then added back. After that the code generation fails.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result 	ok
+
+copy_raw 	test1_rev1.e $CLUSTER test1.e
+copy_raw 	test2_rev1.e $CLUSTER test2.e
+
+compile_melted
+compile_result	validity_error TEST2 VEEN
+
+copy_raw 	test1_rev2.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+
+resume_compile
+compile_result 	ok
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result	ok
+
+test_end

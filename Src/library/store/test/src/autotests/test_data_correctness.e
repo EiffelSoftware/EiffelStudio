@@ -18,9 +18,10 @@ feature -- Test routines
 	test_quotes_in_string
 			-- Test `"' appears in a string.
 		do
+			reset_database
 			establish_connection
 
-			if not session_control.is_connected then
+			if attached session_control as l_control and then not l_control.is_connected then
 				assert ("Could not connect to database", False)
 			else
 				quotes_in_string_load_data
@@ -33,9 +34,10 @@ feature -- Test routines
 			-- Test trailing `%U'
 		do
 			if is_odbc then
+				reset_database
 				establish_connection
 
-				if not session_control.is_connected then
+				if attached session_control as l_control and then not l_control.is_connected then
 					assert ("Could not connect to database", False)
 				else
 					trailing_blanks_load_data
@@ -68,7 +70,7 @@ feature {NONE} -- Quotes in string
 			Result.set_year (1980)
 		end
 
-	quotes_in_string_data: BOOK2
+	quotes_in_string_data: detachable BOOK2
 
 	quotes_in_string_load_data
 			-- Create table in database with same structure as 'book'
@@ -106,10 +108,8 @@ feature {NONE} -- Trailing blanks
 
 	trailing_blanks_create_data: IMAGE_DATA
 		do
-			create Result
+			create Result.make
 		end
-
-	trailing_blanks_data: IMAGE_DATA
 
 	trailing_blanks_load_data
 			-- Create table in database with same structure as 'book'

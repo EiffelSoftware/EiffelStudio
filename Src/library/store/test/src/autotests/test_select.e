@@ -18,9 +18,10 @@ feature -- Test routines
 	test_basic_select
 			-- Test select using non extended type.
 		do
+			reset_database
 			establish_connection
 
-			if not session_control.is_connected then
+			if attached session_control as l_control and then not l_control.is_connected then
 				assert ("Could not connect to database", False)
 			else
 				basic_select_load_data
@@ -52,8 +53,6 @@ feature {NONE} -- Basic select
 			Result.set_year (1980)
 		end
 
-	basic_select_data: BOOK2
-
 	basic_select_load_data
 			-- Create table in database with same structure as 'book'
 		local
@@ -64,7 +63,6 @@ feature {NONE} -- Basic select
 			if attached base_stores.item (basic_select_table_name) as l_db_store then
 				l_book := basic_select_create_data
 				l_db_store.put (l_book)
-				basic_select_data := l_book
 			end
 
 				-- Put more data using direct SQL
@@ -136,6 +134,7 @@ feature {NONE} -- Basic select
 		do
 			db_selection.set_map_name ("Bertrand Meyer", "author_name")
 			l_list := load_list_with_select (basic_select_select_data, basic_select_create_data)
+			db_selection.unset_map_name ("author_name")
 			if l_list.count = 2 then
 				assert ("Result is not expected", l_list.i_th (1).title ~ "Eiffel The Language" and then
 													l_list.i_th (1).author ~ "Bertrand Meyer" and then

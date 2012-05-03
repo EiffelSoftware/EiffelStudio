@@ -30,14 +30,30 @@ inherit
 feature {NONE} -- Prepare
 
 	on_prepare
-		local
-			l_login: like Manager.current_session.session_login
+			-- On prepare
 		do
 			create base_stores.make (5)
 			create repositories.make (5)
 			set_connection_information (user_login, user_password, database_name)
-			l_login := Manager.current_session.session_login
-			l_login.set_application (database_name)	-- For MySQL
+			if attached Manager.current_session.session_login as l_login then
+				l_login.set_application (database_name)	-- For MySQL
+			end
+		end
+
+	reset_database
+			-- Reset connection and errors if possible
+		local
+			l_session_control: DB_CONTROL
+		do
+			if is_database_set then
+					-- To handle unset connection and errors in previous failing test,
+					-- since the tests are possibly run in the same thread.
+				create l_session_control.make
+				if l_session_control.is_connected then
+					l_session_control.disconnect
+				end
+				db_change.reset
+			end
 		end
 
 feature {NONE} -- Implementation

@@ -1381,7 +1381,7 @@ Test precompilation-task-failure (valid259): failed
 	Substituted text: compile_result validity_error NONE VD84
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  completed 
+		Final status:  aborted had_exception (thread_capable) 
 	Expected result:
 		Validity error code VD84
 		Final status:  paused 
@@ -2427,7 +2427,18 @@ Test deep-twin-agent-infinite-loop (incr385): manual
 Test conform-to-precondition-violation (incr386): passed
 Test disk-item-io-error-2 (incr387): passed
 Test static-type-id-crash-2 (incr388): passed
-Test remove-occurrence-precondition-violation (incr389): passed
+Test remove-occurrence-precondition-violation (incr389): failed
+	Description: A sequence of changes causes an assertion-enabled compiler to crash with violation of precondition `consistency' of {SUPPLIER_LIST}.remove_occurrence.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/incr389/tcf at line 22
+	Original text:    compile_result validity_error TEST2 VSTA(2)
+	Substituted text: compile_result validity_error TEST2 VSTA(2)
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  aborted had_exception (consistency) 
+	Expected result:
+		Validity error in class TEST2 code VSTA(2)
+		Final status:  paused 
+
 Test constant-suppliers-crash (incr390): failed
 	Description: A sequence of changes crashes the compiler with a call on Void target in {CONSTANT_I}.suppliers.
 	Execution error in file /home/manus/local/eweasel/eweasel/tests/incr390/tcf at line 25
@@ -2452,7 +2463,17 @@ Test add-vsrt4-to-expanded-then-remove (incr394): failed
 	Actual result: failure C_compilation_not_completed
 	Expected result: no_failure C_compilation_completed
 
-Test same-generic-derivation-as-crash (incr395): passed
+Test same-generic-derivation-as-crash (incr395): failed
+	Description: Changing a root class from expanded to non-expanded and recompiling crashes the compiler with violation of precondition `other_derived' of {GEN_TYPE_A}.same_generic_derivation_as
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/incr395/tcf at line 24
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  aborted had_exception (other_derived) 
+	Expected result:
+		Final status:  completed 
+
 Test new-poly-table-crash (incr396): passed
 Test once-per-object-change-expansion (incr397): passed
 Test once-per-object-remove-constraint (incr398): passed
@@ -2506,7 +2527,7 @@ Test once-per-object-to-attribute (incr407): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
+		Final status:  aborted had_exception (result_attached) 
 	Expected result:
 		Final status:  completed 
 
@@ -2517,7 +2538,7 @@ Test non-conforming-remove-precondition (incr408): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
+		Final status:  aborted had_exception (has_class_id) 
 	Expected result:
 		Final status:  completed 
 
@@ -2528,7 +2549,7 @@ Test has-stable-attribute-crash (incr409): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
+		Final status:  aborted had_exception () 
 	Expected result:
 		Final status:  completed 
 
@@ -2539,7 +2560,7 @@ Test type-to-create-crash (incr410): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
+		Final status:  aborted had_exception (has_table) 
 	Expected result:
 		Final status:  completed 
 
@@ -2550,13 +2571,13 @@ Test rout-entry-crash-3 (incr411): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
+		Final status:  aborted had_exception (has_associated_class_type) 
 	Expected result:
 		Final status:  completed 
 
 Test create-qualified-explicit-crash (incr412): failed
 	Description: Changing an attribute to a function after a VEVI error is reported in a system that uses qualified anchored types and then finalizing crashes the compiler in {CREATE_QUALIFIED}.is_explicit.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/incr412/tcf at line 20
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/incr412/tcf at line 17
 	Original text:    compile_result ok
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
@@ -2574,7 +2595,7 @@ Test system-change-crash (incr415): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
+		Final status:  aborted had_exception (has_associated_class_type) 
 	Expected result:
 		Final status:  completed 
 
@@ -2609,7 +2630,7 @@ Test static-type-id-crash-3 (incr419): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
+		Final status:  aborted had_exception (insertion_done) 
 	Expected result:
 		Final status:  completed 
 
@@ -2629,6 +2650,28 @@ Test duplicate-vlec-after-resume (incr423): failed
 	Expected result:
 		Validity error in class TEST2 code VLEC
 		Final status:  paused 
+
+Test inline-agent-removal-crash (incr424): failed
+	Description: During an incremental compilation with error, a feature containing inline agents is removed and then added back. After that the code checking fails.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/incr424/tcf at line 22
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  aborted had_exception (f_attached) 
+	Expected result:
+		Final status:  completed 
+
+Test inline-agent-removal-crash-2 (incr425): failed
+	Description: During an incremental compilation with error, a feature containing inline agents is removed and then added back. After that the code generation fails.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/incr425/tcf at line 25
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  aborted had_exception () 
+	Expected result:
+		Final status:  completed 
 
 Test divide-melt-panic (melt001): passed
 Test bit-melt-metamorphose (melt002): passed
@@ -3027,7 +3070,7 @@ Test finalize-inline-external-redef-constant (final081): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
+		Final status:  aborted had_exception (result_not_void) 
 	Expected result:
 		Final status:  completed 
 
@@ -3071,7 +3114,7 @@ Test finalize-generic-once-per-object (final095): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
+		Final status:  aborted had_exception (l_feat_not_void) 
 	Expected result:
 		Final status:  completed 
 
@@ -3111,7 +3154,17 @@ Test inline-qat-static-external (final111): failed
 	Substituted text: compare exec_output_fi output
 	Reason: files being compared do not have identical contents
 
-Test finalize-keep-once-strings (final112): passed
+Test finalize-keep-once-strings (final112): failed
+	Description: Finalizing a system with once strings in class invariants and keeping assertions crashes an assertion-enabled compiler with a precondition violation
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/final112/tcf at line 11
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  aborted had_exception (consistent_number) 
+	Expected result:
+		Final status:  completed 
+
 Test finalize-inline-attribute-with-body (final113): failed
 	Description: Finalizing a void-safe system with once strings in class invariants and keeping assertions crashes an assertion-enabled compiler with a precondition violation
 	Execution error in file /home/manus/local/eweasel/eweasel/tests/final113/tcf at line 30
@@ -4022,12 +4075,14 @@ Test once-per-object-nonconforming-inheritance (once018): failed
 
 Test once-per-object-redefined-precursor (once019): failed
 	Description: A once-per-object function in class A that calls a once-per-object precursor in class B, where the precursor is a redefinition of a once-per-object function in class C causes generation of invalid C code if A also inherits C.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/once019/tcf at line 22
-	Original text:    c_compile_result ok
-	Substituted text: c_compile_result ok
-	Reason: actual C compilation result does not match expected result
-	Actual result: failure C_compilation_not_completed
-	Expected result: no_failure C_compilation_completed
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/once019/tcf at line 12
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  aborted had_exception (definition) 
+	Expected result:
+		Final status:  completed 
 
 Test once-per-object-nonconforming-2 (once020): failed
 	Description: A once-per-object function inherited via non-conforming inheritance from a generic class crashes the compiler in {BYTE_CONTEXT}.constrained_type_in.
@@ -4062,10 +4117,14 @@ Test once-per-object-array-of-expanded (once022): failed
 
 Test once-per-object-inherited-twice (once023): failed
 	Description: A class with a once-per-object function is inherited twice and the function is renamed in one of the branches.  This crashes an assertion-enabled compiler.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/once023/tcf at line 14
-	Original text:    compare exec_output output
-	Substituted text: compare exec_output output
-	Reason: files being compared do not have identical contents
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/once023/tcf at line 10
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  aborted had_exception (l_ancestor_once_info_attached) 
+	Expected result:
+		Final status:  completed 
 
 Test add-inheritance-cycle (term001): passed
 Test remove-root-creation-proc (term002): passed
@@ -4320,10 +4379,30 @@ Test static-access-on-generic-in-inspect (term188): failed
 
 Test vmfn-reporting-crash (term189): passed
 Test conform-to-type-precondition-violation (term190): passed
-Test generated-id-assertion-violation (term191): passed
+Test generated-id-assertion-violation (term191): failed
+	Description: Compiling a system with a expanded generic class that has a multi-constrained generic crashes an assertion-enabled compiler with an assertion violation in {TYPE_SET_A}.generated_id.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/term191/tcf at line 12
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  aborted had_exception (generated_id_not_implemented) 
+	Expected result:
+		Final status:  completed 
+
 Test skeleton-adapted-in-crash (term192): passed
 Test is-valid-for-class-precondition (term193): passed
-Test is-less-equal-postcondition-violation-2 (term194): passed
+Test is-less-equal-postcondition-violation-2 (term194): failed
+	Description: A set of classes crashes an assertion-enabled compiler with a postcondition violation on {BOOLEAN_DESC}.is_less_equal.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/term194/tcf at line 14
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  aborted had_exception (definition) 
+	Expected result:
+		Final status:  completed 
+
 Test testing-class-removal-crash (term195): passed
 Test across-with-constrained-generic-crash (term196): failed
 	Description: Compiling an "across" loop that iterates over an attribute whose type is a formal generic constrained by LIST [INTEGER] crashes the compiler.
@@ -4343,7 +4422,7 @@ Test shared-library-with-generic-root (term197): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
+		Final status:  aborted had_exception (has_associated_class_type) 
 	Expected result:
 		Final status:  completed 
 
@@ -4354,7 +4433,7 @@ Test iteration-over-inline-agent (term198): failed
 	Substituted text: compile_result validity_error TEST VOIT(1) VOIT(1)
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
+		Final status:  aborted had_exception (f_attached) 
 	Expected result:
 		Validity error in class TEST code VOIT(1)
 		Validity error in class TEST code VOIT(1)
@@ -4367,7 +4446,7 @@ Test expanded-constrained-generic-root-crash (term199): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
+		Final status:  aborted had_exception (context_type_valid) 
 	Expected result:
 		Final status:  completed 
 
@@ -4379,7 +4458,7 @@ Test inherit-generic-with-self-as-formal (term201): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
+		Final status:  aborted had_exception (is_valid_for_class) 
 	Expected result:
 		Final status:  completed 
 
@@ -4394,7 +4473,7 @@ Test generic-constrained-by-self-2 (term206): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
+		Final status:  aborted had_exception (valid_index) 
 	Expected result:
 		Final status:  completed 
 
@@ -4419,7 +4498,7 @@ Test root-class-none (term211): failed
 	Substituted text: compile_result validity_error NONE VD27
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
+		Final status:  aborted had_exception () 
 	Expected result:
 		Validity error code VD27
 		Final status:  paused 
@@ -4535,7 +4614,7 @@ Test config-process-group-crash (config029): failed
 	Substituted text: compile_result validity_error NONE VD00
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
+		Final status:  aborted had_exception (new_group_found) 
 	Expected result:
 		Validity error code VD00
 		Final status:  paused 
@@ -4547,8 +4626,7 @@ Test config-root-class-precursor (config030): failed
 	Substituted text: compile_result validity_error NONE VD00
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Syntax error in class "UNKNOWN" at line 1
-		Final status:  paused 
+		Final status:  aborted had_exception () 
 	Expected result:
 		Validity error code VD00
 		Final status:  paused 
@@ -4568,7 +4646,7 @@ Test visible-export-nonexistent-feat (lace022): failed
 	Substituted text: compile_result validity_warning NONE ????
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  completed 
+		Final status:  completed
 	Expected result:
 		Validity error code ????
 		Final status:  completed 
@@ -5093,6 +5171,7 @@ Test crash-degree-minus-1 (fixed134): passed
 Test roundtrip-test (rdtp001): passed
 Test roundtrip-number-denoted-character (rdtp002): passed
 Test roundtrip-equivalence (rdtp003): passed
+Test parsing-manifest-arrays-tuples (rdtp004): passed
 Test supplier-preconditions (assert001): passed
 Test use-application-options-assertions (assert002): passed
 Test undefined-assertion-merge (assert003): failed
@@ -5176,13 +5255,27 @@ Test multi-constraint-static-access (multicon056): passed
 Test multi-constraint-static-access-2 (multicon057): passed
 Test inherited-unary-with-generic (multicon058): passed
 Test multi-constraint-real-type-in-crash (multicon059): passed
-Test saving-multiconstraint-generic-class-crash (multicon060): passed
+Test saving-multiconstraint-generic-class-crash (multicon060): failed
+	Description: When modifying a generic expanded class that has some multiple constraint, the generated code using it would crash or the C code would not compile. This test also used to show a precondition violation in the compiler.
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/multicon060/tcf at line 11
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  aborted had_exception (generated_id_not_implemented) 
+	Expected result:
+		Final status:  completed 
+
 Test expanded-generic-with-multiconstraint (multicon061): failed
 	Description: The type issued from a generic derivation involving an expanded generic type with a generic constraint generates incorrect code.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/multicon061/tcf at line 14
-	Original text:    compare exec_output1 output
-	Substituted text: compare exec_output1 output
-	Reason: files being compared do not have identical contents
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/multicon061/tcf at line 10
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  aborted had_exception (generated_id_not_implemented) 
+	Expected result:
+		Final status:  completed 
 
 Test expanded-array-attached-reference-array (expanded001): passed
 Test expanded-reverse-assignment (expanded002): passed
@@ -5538,7 +5631,7 @@ Test qat-static-type-id-crash-2 (anchor055): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
+		Final status:  aborted had_exception (has_associated_class_type) 
 	Expected result:
 		Final status:  completed 
 
@@ -5550,7 +5643,7 @@ Test qat-multi-constraint-type (anchor057): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
+		Final status:  aborted had_exception (has_associated_class_type) 
 	Expected result:
 		Final status:  completed 
 
@@ -5567,7 +5660,18 @@ Test qat-using-generic-feature-finalized (anchor059): failed
 		Final status:  completed 
 
 Test qat-in-creation-procedure (anchor060): passed
-Test qat-generic-with-rename (anchor061): passed
+Test qat-generic-with-rename (anchor061): failed
+	Description: A qualified anchored type that references the original name of a renamed feature of a formal generic should be a validity error
+	Execution error in file /home/manus/local/eweasel/eweasel/tests/anchor061/tcf at line 10
+	Original text:    compile_result validity_error TEST2 VEEN
+	Substituted text: compile_result validity_error TEST2 VEEN
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Final status:  aborted had_exception (valid_n) 
+	Expected result:
+		Validity error in class TEST2 code VEEN
+		Final status:  paused 
+
 Test qat-generic-inheritance (anchor062): passed
 Test qat-constraints-crash (anchor063): passed
 Test qat-generic-with-rename-inherited (anchor064): passed
@@ -5638,7 +5742,7 @@ Test scoop-expanded-class-constrained-generic (scoop023): failed
 	Substituted text: compile_result ok
 	Reason: actual compilation result does not match expected result
 	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
+		Final status:  aborted had_exception (has_associated_class_type) 
 	Expected result:
 		Final status:  completed 
 
@@ -5717,8 +5821,8 @@ Test dotnet-polymorphism (dotnet110): failed
 Test dotnet-special-handling-crash (dotnet112): passed
 Test dotnet-static-access-on-deferred (dotnet115): passed
 
-Passed:  2275 / 2612  (88%)
-Failed:  305 / 2612  (12%)
-Manual:  26 / 2612  (1%)
-Skipped:  6 / 2612  (1%)
+Passed:  2269 / 2615  (87%)
+Failed:  314 / 2615  (13%)
+Manual:  26 / 2615  (1%)
+Skipped:  6 / 2615  (1%)
 

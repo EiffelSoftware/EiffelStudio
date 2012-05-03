@@ -4112,7 +4112,6 @@ rt_public void init_emnger (void)
 	 */
 {
 	RT_GET_CONTEXT
-	EIF_INTEGER pf_status = egc_prof_enabled;
 	EIF_BOOLEAN tr_status = eif_is_tracing_enabled();
 	
 		/* No need to create the global instance, when it has already been created by one thread. */

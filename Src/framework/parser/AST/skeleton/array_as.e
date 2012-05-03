@@ -22,16 +22,18 @@ feature {NONE} -- Initialization
 			-- Create a new Manifest ARRAY AST node.
 		require
 			exp_not_void: exp /= Void
-			l_as_not_void: l_as /= Void
 		do
 			expressions := exp
-			internal_larray_symbol := l_as
+			if l_as /= Void then
+				internal_larray_symbol := l_as
+				larray_symbol_index := l_as.index
+			end
 			if r_as /= Void then
 				rarray_symbol_index := r_as.index
 			end
 		ensure
 			expressions_set: expressions = exp
-			larray_symbol_set: internal_larray_symbol = l_as
+			larray_symbol_set: internal_larray_symbol = l_as and (l_as /= Void implies larray_symbol_index = l_as.index)
 			rarray_symbol_set: r_as /= Void implies rarray_symbol_index = r_as.index
 		end
 
@@ -46,19 +48,26 @@ feature -- Visitor
 feature -- Roundtrip
 
 	larray_symbol_index: INTEGER
-			-- Index of symbol "<< associated with this structure
-		do
-			Result := internal_larray_symbol.index
-		end
+			-- Index of symbol "<<" associated with this structure.
 
 	rarray_symbol_index: INTEGER
-			-- Index of symbol ">>" associated with this structure
+			-- Index of symbol ">>" associated with this structure.
 
 	larray_symbol (a_list: detachable LEAF_AS_LIST): SYMBOL_AS
-			-- Symbol ">>" associated with this structure
+			-- Symbol "<<" associated with this structure
 			--| We do not require `a_list' to be attached because we save the token.
+		local
+			i: INTEGER
 		do
+				-- We use the token if available for reporting error message, otherwise
+				-- the list.
 			Result := internal_larray_symbol
+			if Result = Void and a_list /= Void then
+				i := larray_symbol_index
+				if a_list.valid_index (i) and then attached {like larray_symbol} a_list.i_th (i) as l_result then
+					Result := l_result
+				end
+			end
 		end
 
 	rarray_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
@@ -69,8 +78,8 @@ feature -- Roundtrip
 			i: INTEGER
 		do
 			i := rarray_symbol_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
+			if a_list.valid_index (i) and then attached {like rarray_symbol} a_list.i_th (i) as l_result then
+				Result := l_result
 			end
 		end
 
@@ -81,12 +90,15 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS
+	first_token (a_list: detachable LEAF_AS_LIST): LEAF_AS
 		do
-			Result := internal_larray_symbol
+			Result := larray_symbol (a_list)
+			if Result = Void then
+				Result := expressions.first_token (a_list)
+			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS
+	last_token (a_list: detachable LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and rarray_symbol_index /= 0 then
 				Result := rarray_symbol (a_list)
@@ -109,16 +121,15 @@ feature {AST_EIFFEL} -- Output
 
 feature {NONE} -- Implementation
 
-	internal_larray_symbol: SYMBOL_AS
+	internal_larray_symbol: detachable SYMBOL_AS
 			-- Symbol "<<" associated with this structure
 			--| It is an attribute for accurate error messages.
 
 invariant
 	expressions_not_void: expressions /= Void
-	larray_symbol_not_void: internal_larray_symbol /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

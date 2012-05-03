@@ -22,16 +22,18 @@ feature {NONE} -- Initialization
 			-- Create a new Manifest TUPLE AST node.
 		require
 			exp_not_void: exp /= Void
-			l_as_not_void: l_as /= Void
 		do
 			expressions := exp
-			internal_lbracket_symbol := l_as
+			if l_as /= Void then
+				internal_lbracket_symbol := l_as
+				lbracket_symbol_index := l_as.index
+			end
 			if r_as /= Void then
 				rbracket_symbol_index := r_as.index
 			end
 		ensure
 			expressions_set: expressions = exp
-			lbracket_symbol_set: internal_lbracket_symbol = l_as
+			lbracket_symbol_set: internal_lbracket_symbol = l_as and (l_as /= Void implies lbracket_symbol_index = l_as.index)
 			rbracket_symbol_set: r_as /= Void implies rbracket_symbol_index = r_as.index
 		end
 
@@ -42,12 +44,15 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS
+	first_token (a_list: detachable LEAF_AS_LIST): LEAF_AS
 		do
-			Result := internal_lbracket_symbol
+			Result := lbracket_symbol (a_list)
+			if Result = Void then
+				Result := expressions.first_token (a_list)
+			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS
+	last_token (a_list: detachable LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and rbracket_symbol_index /= 0 then
 				Result := rbracket_symbol (a_list)
@@ -68,17 +73,24 @@ feature -- Roundtrip
 
 	lbracket_symbol_index: INTEGER
 			-- Index of symbol "[" associated with this structure
-		do
-			Result := internal_lbracket_symbol.index
-		end
 
 	rbracket_symbol_index: INTEGER
 			-- Index of symbol "]" associated with this structure
 
-	lbracket_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+	lbracket_symbol (a_list: detachable LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol "[" associated with this structure
+		local
+			i: INTEGER
 		do
+				-- We use the token if available for reporting error message, otherwise
+				-- the list.
 			Result := internal_lbracket_symbol
+			if Result = Void and a_list /= Void then
+				i := lbracket_symbol_index
+				if a_list.valid_index (i) and then attached {like lbracket_symbol} a_list.i_th (i) as l_result then
+					Result := l_result
+				end
+			end
 		end
 
 	rbracket_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
@@ -89,8 +101,8 @@ feature -- Roundtrip
 			i: INTEGER
 		do
 			i := rbracket_symbol_index
-			if a_list.valid_index (i) then
-				Result ?= a_list.i_th (i)
+			if a_list.valid_index (i) and then attached {like rbracket_symbol} a_list.i_th (i) as l_result then
+				Result := l_result
 			end
 		end
 
@@ -108,16 +120,15 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output
 
 feature {NONE} -- Implementation
 
-	internal_lbracket_symbol: SYMBOL_AS
+	internal_lbracket_symbol: detachable SYMBOL_AS
 			-- Symbol "[" associated with this structure
 			--| It is an attribute for accurate error messages.
 
 invariant
 	expressions_not_void: expressions /= Void
-	internal_lbracket_symbol_not_void: internal_lbracket_symbol /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

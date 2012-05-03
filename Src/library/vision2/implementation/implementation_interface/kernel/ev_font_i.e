@@ -76,12 +76,7 @@ feature -- Element change
 			a_preferred_families_not_void: a_preferred_families /= Void
 		do
 			if preferred_families /= a_preferred_families then
-				preferred_families.internal_add_actions.block
-				preferred_families.internal_remove_actions.block
-				preferred_families.wipe_out
-				preferred_families.append (a_preferred_families)
-				preferred_families.internal_add_actions.resume
-				preferred_families.internal_remove_actions.resume
+				copy_preferred_families (a_preferred_families)
 				update_font_face
 			end
 			if family /= a_family then
@@ -278,6 +273,24 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
+feature {NONE} -- Implementation
+
+	copy_preferred_families (a_preferred_families: like preferred_families)
+			-- Updated `a_preferred_families' with `preferred_families'.
+		require
+			a_preferred_families_not_preferred_families: a_preferred_families /= preferred_families
+		local
+			l_preferred_families: like preferred_families
+		do
+			l_preferred_families := preferred_families
+			l_preferred_families.internal_add_actions.block
+			l_preferred_families.internal_remove_actions.block
+			l_preferred_families.wipe_out
+			l_preferred_families.append (a_preferred_families)
+			l_preferred_families.internal_add_actions.resume
+			l_preferred_families.internal_remove_actions.resume
+		end
+
 invariant
 	family_valid: is_initialized implies valid_family (family)
 	weight_valid: is_initialized implies valid_weight (weight)
@@ -292,14 +305,14 @@ invariant
 	--vertical_resolution_bigger_than_zero: vertical_resolution > 0
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -17,9 +17,10 @@ feature -- Test routines
 
 	test
 		do
+			reset_database
 			establish_connection
 
-			if not session_control.is_connected then
+			if attached session_control as l_control and then not l_control.is_connected then
 				assert ("Could not connect to database", False)
 			else
 				load_data
@@ -39,10 +40,7 @@ feature {NONE} -- Implementation
 			Result.set_very_long_boolean (True)
 		end
 
-	book1, book2: BOOK3
-
-	authors: HASH_TABLE [BOOLEAN, STRING]
-			-- Authors of the result of execution
+	book1, book2: detachable BOOK3
 
 	data_objects: HASH_TABLE [ANY, STRING]
 			-- Data objects

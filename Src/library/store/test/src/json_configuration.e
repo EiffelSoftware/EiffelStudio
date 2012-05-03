@@ -89,7 +89,7 @@ feature -- Basic operation
 							s.append_string (t)
 						end
 					until
-						t.is_empty or not (f.file_readable or f.readable)
+						t = Void or else t.is_empty or else not (f.file_readable or f.readable)
 					loop
 						f.read_stream (1024)
 						t := f.last_string

@@ -11,16 +11,6 @@ class
 	TEST_NESTED_TRANSACTION
 
 inherit
-	EQA_TEST_SET
-		redefine
-			on_prepare
-		end
-
-	TESTING_HELPER
-		undefine
-			default_create
-		end
-
 	ACTION
 		undefine
 			default_create
@@ -28,44 +18,34 @@ inherit
 			execute
 		end
 
-	RDB_HANDLE
-		undefine
-			default_create
+	TEST_BASIC_DATABASE
+		redefine
+			on_prepare
 		end
 
 feature {NONE} -- Prepare
 
 	on_prepare
 		do
-			perform_login
-
-			set_base
+			Precursor
 			create book.make
-			create session_control.make
-			create base_selection.make
-			create base_update.make
-			create base_store.make
-			create base_change.make
-
 			create authors.make (10)
 		end
 
 feature -- Test routines
 
 	test
-		local
-			l_host: like host
-			l_repository: like repository
 		do
-			session_control.connect
-			if not session_control.is_connected then
+			reset_database
+			establish_connection
+			if attached session_control as l_control and then not l_control.is_connected then
 				assert ("Could not connect to database", False)
 			else
 				load_data
 
 				make_selection
 
-				session_control.disconnect
+				disconnect
 			end
 
 			assert ("Data in database is not correct.", authors.item ("Paul") = False)
@@ -78,20 +58,6 @@ feature -- Test routines
 
 
 feature {NONE} -- Implementation
-
-	base_selection: DB_SELECTION
-
-	base_update: DB_CHANGE
-
-	base_store: DB_STORE
-
-	base_change: DB_CHANGE
-
-	repository: detachable DB_REPOSITORY
-
-	session_control: DB_CONTROL
-
-	data_file: detachable PLAIN_TEXT_FILE
 
 	book: BOOK2
 
@@ -111,73 +77,43 @@ feature {NONE} -- Implementation
 
 feature {NONE}
 
-	perform_login
-		local
-			tmp_string: STRING
-			l_laststring: detachable STRING
-		do
-			if db_spec.database_handle_name.is_case_insensitive_equal ("odbc") then
-				set_data_source (database_name)
-			end
-
-			if db_spec.database_handle_name.is_case_insensitive_equal ("mysql") then
-				set_application (database_name)
-			end
-			login (user_login, user_password)
-		end
-
 	load_data
 			-- Load data in nested transaction
 		local
-			l_repository: like repository
-			l_data_file: like data_file
 			l_book: like filled_book
 		do
-			create l_repository.make (table_name)
-			repository := l_repository
+			prepare_repository (table_name)
 
-			l_repository.load
-			if not l_repository.exists then
-				l_repository.allocate (book)
-				l_repository.load
-			end
+			if attached base_stores.item (table_name) as l_store and then attached session_control as l_control then
+					-- Transaction 1
+				l_control.begin
+				l_book := filled_book
+				l_book.set_author ("Neal")
+				l_store.put (l_book)
+				assert ("An database error ocurred.", db_change.is_ok)
 
-			reset_data
+					-- Transaction 2, Nested
+				l_control.begin
+				l_book := filled_book
+				l_book.set_author ("Lily")
+				l_store.put (l_book)
+				db_change.modify ("SQL to raise Error")
+				assert ("An database error did not ocurr.", not db_change.is_ok)
+				if db_change.is_ok then
+					l_control.commit
+				else
+					l_control.rollback
+					l_control.reset
+				end
 
-			base_store.set_repository (l_repository)
-
-				-- Transaction 1
-			session_control.begin
-			l_book := filled_book
-			l_book.set_author ("Neal")
-			base_store.put (l_book)
-			assert ("An database error ocurred.", base_change.is_ok)
-
-				-- Transaction 2, Nested
-			session_control.begin
-			l_book := filled_book
-			l_book.set_author ("Lily")
-			base_store.put (l_book)
-			base_change.modify ("SQL to raise Error")
-			assert ("An database error did not ocurr.", not base_change.is_ok)
-			if base_change.is_ok then
-				session_control.commit
+				l_book := filled_book
+				l_book.set_author ("Linda")
+				l_store.put (l_book)
+				assert ("An database error ocurred.", db_change.is_ok)
+				l_control.commit
 			else
-				session_control.rollback
-				session_control.reset
+				assert ("DB_STORE or DB_CONTROL is not ready", False)
 			end
-
-			l_book := filled_book
-			l_book.set_author ("Linda")
-			base_store.put (l_book)
-			assert ("An database error ocurred.", base_change.is_ok)
-			session_control.commit
-		end
-
-	reset_data
-		do
-			base_change.modify ("DELETE FROM " + Table_name)
-			assert ("Reset data failed: " + base_change.error_message_32, base_change.is_ok)
 		end
 
 	make_selection
@@ -189,16 +125,16 @@ feature {NONE}
 		do
 				-- Set action to be executed after each 'load_result' iteration step.
 				-- 'init' and 'execute' method of the current class are to be used.
-			base_selection.set_action (Current)
+			db_selection.set_action (Current)
 
 				-- Query database.
 				-- The reference ":author_name" will be changed to the value of
 				-- the Eiffel object referred to by the key "author_name".
-			base_selection.query (Select_data)
+			db_selection.query (Select_data)
 				-- Iterate through resulting data, and display them
-			base_selection.load_result
+			db_selection.load_result
 
-			base_selection.terminate
+			db_selection.terminate
 		end
 
 	execute
@@ -208,12 +144,19 @@ feature {NONE}
 			-- In this example, it converts a tuple in an eiffel object of type 'book' and
 			-- display it using a method of its own class.
 		do
-			base_selection.object_convert (book)
-			base_selection.cursor_to_object
+			db_selection.object_convert (book)
+			db_selection.cursor_to_object
 
 			authors.force (True, book.author)
 		end
 
+	data_objects: HASH_TABLE [ANY, STRING]
+			-- Data objects
+			-- [object, table_name]
+		do
+			create Result.make (0)
+			Result.force (create {BOOK2}.make, table_name)
+		end
 
 feature {NONE} -- Constants
 

@@ -399,9 +399,9 @@ feature -- Sub makefile generation
 		require
 			baskets_not_void: baskets /= Void
 		local
-			new_makefile, old_makefile: INDENT_FILE
+			old_makefile: INDENT_FILE
 			nb, i: INTEGER
-			f_name: FILE_NAME
+			f_name: STRING
 			basket: LINKED_LIST [STRING]
 		do
 			old_makefile := make_file
@@ -413,15 +413,8 @@ feature -- Sub makefile generation
 			loop
 				basket := baskets.item (i)
 				if basket /= Void and then not basket.is_empty then
-					if system.in_final_mode then
-						create f_name.make_from_string (project_location.final_path)
-					else
-						create f_name.make_from_string (project_location.workbench_path)
-					end
-					f_name.extend (packet_name (sub_dir, i))
-					f_name.set_file_name (Makefile_SH)
-					create new_makefile.make (f_name)
-					make_file  := new_makefile
+					f_name := full_file_name (system.in_final_mode, packet_name (sub_dir, i), Makefile_sh, Void)
+					create make_file.make (f_name)
 					make_file.open_write
 						-- Generate main /bin/sh preamble
 					generate_sub_preamble (packet_name (sub_dir, i))
@@ -458,7 +451,7 @@ feature -- Sub makefile generation
 			make_file := old_makefile
 		rescue
 			if f_name /= Void then
-				error_handler.insert_error (create {C_COMPILER_ERROR}.make (messages.w_not_creatable (f_name.string)))
+				error_handler.insert_error (create {C_COMPILER_ERROR}.make (messages.w_not_creatable (f_name)))
 				error_handler.raise_error
 			end
 		end

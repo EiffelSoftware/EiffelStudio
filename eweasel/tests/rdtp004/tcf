@@ -1,0 +1,17 @@
+test_name 	parsing-manifest-arrays-tuples
+test_description Making sure that we are able to parse arrays and tuples properly.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work 	NONE 	exec_output
+execute_result ok
+compare	exec_output output
+
+test_end

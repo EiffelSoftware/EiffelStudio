@@ -188,7 +188,7 @@ feature -- Element change
 			wel_log_font.update_by_font (wel_font)
 		end
 
-	copy_font (font: EV_FONT)
+	copy_font (other: like interface)
 			-- Update `Current' with all attributes of `other'.
 			-- Redefined on Windows as certain properties of fonts
 			-- cannot be specified completely through the interface of
@@ -199,8 +199,9 @@ feature -- Element change
 			font_imp: detachable EV_FONT_IMP
 			log_font: WEL_LOG_FONT
 			new_wel_font: WEL_FONT
+			l_preferred_families: like preferred_families
 		do
-			font_imp ?= font.implementation
+			font_imp ?= other.implementation
 			check font_imp /= Void end
 			log_font := font_imp.wel_font.log_font
 			create new_wel_font.make_indirect (log_font)
@@ -209,6 +210,12 @@ feature -- Element change
 				-- Dispose of `log_font' as it is only required
 				-- temporarily to create the WEL_FONT.
 			log_font.dispose
+
+				-- Make sure that `preferred_families' is copied over correctly.
+			l_preferred_families := other.preferred_families
+			if preferred_families /= l_preferred_families then
+				copy_preferred_families (l_preferred_families)
+			end
 		end
 
 feature -- Status report
@@ -756,14 +763,14 @@ invariant
 	wel_font_exists: wel_font /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

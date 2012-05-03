@@ -219,8 +219,8 @@ feature -- Processing
 								ignored_classes.put (a_class)
 								remove_descendant_classes_from_processing (a_class)
 							end
+							nb := nb + 1
 						end
-						nb := nb + 1
 					end
 					i := i + 1
 				end
@@ -332,11 +332,8 @@ feature -- Element change
 
 	insert_class (a_class: CLASS_C)
 			-- Add `a_class' to be processed.
-		local
-			l_ext: EXTERNAL_CLASS_C
 		do
-			l_ext ?= a_class
-			if l_ext = Void or else not l_ext.is_built then
+			if not attached {EXTERNAL_CLASS_C} a_class as l_ext or else not l_ext.is_built then
 				if a_class.degree_4_needed then
 					if a_class.degree_4_processed then
 						a_class.remove_from_degree_4
@@ -504,12 +501,10 @@ feature {NONE} -- Processing
 			a_class_not_void: a_class /= Void
 		local
 			do_pass2: BOOLEAN
-			external_class: EXTERNAL_CLASS_C
 			retried: BOOLEAN
 		do
 			if not retried then
-				external_class ?= a_class
-				if external_class /= Void then
+				if attached {EXTERNAL_CLASS_C} a_class as external_class then
 					external_class.process_degree_4
 				else
 					if a_class.changed then

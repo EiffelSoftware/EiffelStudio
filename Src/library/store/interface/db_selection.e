@@ -374,7 +374,7 @@ feature -- Basic operations
 				trace_output.new_line
 			end
 		ensure
-			last_query_changed: attached last_query_32 as l_s and then l_s.same_string (s.as_string_32)
+			last_query_changed: attached last_query_32 as l_s and then l_s.same_string_general (s)
 		end
 
 	next

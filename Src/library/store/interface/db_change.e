@@ -80,7 +80,7 @@ feature -- Basic operations
 				trace_output.new_line
 			end
 		ensure
-			last_query_changed: last_query_32 = request
+			last_query_changed: attached last_query_32 as l_s and then l_s.same_string_general (request)
 		end
 
 	execute_query

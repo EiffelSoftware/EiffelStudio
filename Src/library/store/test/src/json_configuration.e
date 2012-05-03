@@ -83,14 +83,17 @@ feature -- Basic operation
 					create s.make (f.count)
 					from
 						f.open_read
-						f.read_stream (1024)
-						t := f.last_string
+						if f.readable or f.file_readable then
+							f.read_stream (1024)
+							t := f.last_string
+							s.append_string (t)
+						end
 					until
-						t.is_empty
+						t.is_empty or not (f.file_readable or f.readable)
 					loop
-						s.append_string (t)
 						f.read_stream (1024)
 						t := f.last_string
+						s.append_string (t)
 					end
 				end
 			end

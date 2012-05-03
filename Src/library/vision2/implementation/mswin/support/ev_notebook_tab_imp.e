@@ -49,8 +49,8 @@ feature -- Initialization
 	pixmap: detachable EV_PIXMAP
 			-- Image displayed on `Current' or Void if none.
 		do
-			if attached notebook_imp as l_notebook_imp then
-				Result := l_notebook_imp.item_pixmap (widget)
+			if attached notebook_imp as l_notebook_imp and then attached widget as l_widget then
+				Result := l_notebook_imp.item_pixmap (l_widget)
 			end
 		end
 
@@ -96,8 +96,8 @@ feature -- Element change
 	wel_set_text (a_text: READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		do
-			if attached notebook_imp as l_notebook_imp then
-				l_notebook_imp.set_item_text (widget, a_text)
+			if attached notebook_imp as l_notebook_imp and then attached widget as l_widget then
+				l_notebook_imp.set_item_text (l_widget, a_text)
 			end
 		end
 
@@ -128,14 +128,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_NOTEBOOK_TAB note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

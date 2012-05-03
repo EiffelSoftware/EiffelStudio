@@ -31,7 +31,7 @@ feature -- Status setting
 	destroy
 			-- Destroy the current item.
 		do
-			if attached parent_imp as l_parent_imp then
+			if attached parent_imp as l_parent_imp and then attached interface then
 				l_parent_imp.prune (interface)
 			end
 			set_is_destroyed (True)
@@ -82,14 +82,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_ITEM note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

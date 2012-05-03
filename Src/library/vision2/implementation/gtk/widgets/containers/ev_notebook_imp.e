@@ -83,7 +83,7 @@ feature -- Access
 			until
 				Result > 0 or else i > count or else mouse_ptr_wid = default_pointer
 			loop
-				a_wid ?= interface_i_th (i).implementation
+				a_wid ?= i_th (i).implementation
 				check a_wid /= Void end
 				tab_label := {GTK}.gtk_notebook_get_tab_label (visual_widget, a_wid.c_object)
 				if mouse_ptr_wid = tab_label or else mouse_ptr_wid = {GTK}.gtk_widget_struct_parent (mouse_ptr_wid) then
@@ -162,22 +162,18 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Access
 
 feature -- Status report
 
-	selected_item: like item
+	selected_item: detachable like item
 			-- Page displayed topmost.
 		local
 			p: POINTER
 			pn: INTEGER
-			imp: detachable EV_WIDGET_IMP
 		do
 			if count > 0 then
 				pn := selected_item_index_internal - 1
-				p := {GTK}.gtk_notebook_get_nth_page (
-					visual_widget,
-					pn
-				)
-				imp ?= eif_object_from_c (p)
-				check imp /= Void end
-				Result ?= imp.interface
+				p := {GTK}.gtk_notebook_get_nth_page (visual_widget, pn)
+				if attached {EV_WIDGET_I} eif_object_from_c (p) as imp then
+					Result := imp.interface
+				end
 			end
 		end
 
@@ -373,14 +369,14 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

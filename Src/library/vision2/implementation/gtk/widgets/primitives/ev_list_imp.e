@@ -273,7 +273,7 @@ feature -- PND
 		do
 			a_row_index := row_index_from_coords (a_x, a_y)
 			if a_row_index > 0 then
-				Result ?= interface_i_th (a_row_index).implementation
+				Result ?= i_th (a_row_index).implementation
 			end
 		end
 
@@ -284,7 +284,7 @@ feature -- PND
 		do
 			a_row_index := row_index_from_coords (a_x, a_y)
 			if a_row_index > 0 then
-				pnd_row_imp ?= interface_i_th (a_row_index).implementation
+				pnd_row_imp ?= i_th (a_row_index).implementation
 				if attached pnd_row_imp as l_pnd_row_imp and then not (l_pnd_row_imp.able_to_transport (a_button) or l_pnd_row_imp.mode_is_configurable_target_menu) then
 					pnd_row_imp := Void
 				end
@@ -407,14 +407,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_LIST_IMP

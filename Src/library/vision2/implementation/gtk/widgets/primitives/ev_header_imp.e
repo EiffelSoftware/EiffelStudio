@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 				until
 					Result > 0 or else off
 				loop
-					a_item_imp ?= interface_item.implementation
+					a_item_imp ?= item.implementation
 					check a_item_imp /= Void end
 					if {GTK2}.gtk_tree_view_column_struct_window (a_item_imp.c_object) = gdkwin then
 						Result := index

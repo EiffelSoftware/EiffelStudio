@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	EV_DYNAMIC_LIST_I [G -> detachable EV_CONTAINABLE]
+	EV_DYNAMIC_LIST_I [G -> EV_CONTAINABLE]
 
 inherit
 	EV_ANY_I
@@ -17,17 +17,17 @@ inherit
 
 feature -- Access
 
-	interface_item: attached G
+	interface_item: G
 			-- Current item but guaranteed attached for calling from interface only
-		local
-			l_item: like item
+		obsolete
+			"Use `item' instead."
+		require
+			readable: index > 0 and then index <= count
 		do
-			l_item := item
-			check l_item /= Void end
-			Result := l_item
+			Result := i_th (index)
 		end
 
-	item: detachable G
+	item: G
 			-- Current item
 		require
 			readable: index > 0 and then index <= count
@@ -40,7 +40,7 @@ feature -- Access
 	index: INTEGER
 			-- Index of current position
 
-	cursor: EV_DYNAMIC_LIST_CURSOR [detachable G]
+	cursor: EV_DYNAMIC_LIST_CURSOR [G]
 			-- Current cursor position.
 		local
 			an_item: detachable like item
@@ -55,17 +55,17 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	interface_i_th (i: INTEGER): attached G
+	interface_i_th (i: INTEGER): G
 			-- Current i_th item but guaranteed attached for calling from interface only
-		local
-			l_item: like i_th
+		obsolete
+			"Use `i_th' instead."
+		require
+			readable: i > 0 and then i <= count
 		do
-			l_item := i_th (i)
-			check l_item /= Void end
-			Result := l_item
+			Result := i_th (i)
 		end
 
-	i_th (i: INTEGER): detachable G
+	i_th (i: INTEGER): G
 			-- Item at `i'-th position.
 		require
 			i_within_bounds: i > 0 and then i <= count
@@ -80,7 +80,7 @@ feature -- Access
 			Result := (index = 0) or (index = count + 1)
 		end
 
-	index_of (v: like item; i: INTEGER): INTEGER
+	index_of (v: detachable like item; i: INTEGER): INTEGER
 			-- Index of i_th item `v', if present.
 			-- As dynamic list descendants are all sets,
 			-- Result will be zero for all values of `i'
@@ -120,11 +120,9 @@ feature -- Access
 				l_index = l_count + 1 or Result /= Void
 			loop
 				l_item := i_th (l_index)
-				check l_item /= Void end
 				if
-					(should_compare_objects and then ((data = Void and then l_item.data = Void) or
-					attached data as l_data and then attached l_item.data as l_item_data and then l_data.same_type (l_item_data) and then l_data.is_equal (l_item_data)))
-					or (not should_compare_objects and data = l_item.data)
+					(should_compare_objects and then data ~ l_item.data) or
+					(not should_compare_objects and data = l_item.data)
 				then
 					Result := l_item
 				end
@@ -132,7 +130,7 @@ feature -- Access
 			end
 		end
 
-	retrieve_items_by_data (data: ANY; should_compare_objects: BOOLEAN): ARRAYED_LIST [attached G]
+	retrieve_items_by_data (data: ANY; should_compare_objects: BOOLEAN): ARRAYED_LIST [G]
 			-- `Result' is all items in `Current' with data
 			-- matching `some_data'. Compare objects if
 			-- `should_compare_objects' otherwise compare references.
@@ -150,9 +148,10 @@ feature -- Access
 			loop
 				l_item := i_th (l_index)
 				check l_item /= Void end
-				if (should_compare_objects and then ((data = Void and then l_item.data = Void) or
-					(attached data as l_data and then attached l_item.data as l_item_data and then l_data.same_type (l_item_data) and then l_data.is_equal (l_item_data))))
-					or (not should_compare_objects and data = l_item.data) then
+				if
+					(should_compare_objects and then data ~ l_item.data) or
+					(not should_compare_objects and data = l_item.data)
+				then
 					Result.extend (l_item)
 				end
 				l_index := l_index + 1
@@ -176,10 +175,8 @@ feature -- Status report
 			Result := attached {like cursor} p as dlc and then (dlc.item = Void or else (attached dlc.item as l_dlc_item and then has (l_dlc_item)))
 		end
 
-	has (v: like item): BOOLEAN
+	has (v: detachable like item): BOOLEAN
 			-- Does structure contain `v'?
-		require
-			v_not_void: v /= Void
 		local
 			i: INTEGER
 		do
@@ -233,7 +230,7 @@ feature -- Cursor movement
 	go_to (p: CURSOR)
 			-- Move cursor to position `p'.
 		local
-			dlc: detachable EV_DYNAMIC_LIST_CURSOR [detachable G]
+			dlc: detachable EV_DYNAMIC_LIST_CURSOR [G]
 		do
 			dlc ?= p
 			check
@@ -476,7 +473,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: attached like item; i: INTEGER)
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		require
 			i_within_bounds: i > 0 and i <= count + 1
@@ -503,14 +500,14 @@ invariant
 		index <= count + 1)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

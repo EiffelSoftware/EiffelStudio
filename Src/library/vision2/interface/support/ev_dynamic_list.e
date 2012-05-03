@@ -8,7 +8,7 @@ note
 	revision: "$Revision: $"
 
 deferred class
-	EV_DYNAMIC_LIST [G -> detachable EV_CONTAINABLE]
+	EV_DYNAMIC_LIST [G -> EV_CONTAINABLE]
 
 inherit
 	EV_CONTAINABLE
@@ -58,10 +58,10 @@ feature -- Access
 	item: G
 			-- Item at current position.
 		do
-			Result := implementation.interface_item
+			Result := implementation.item
 		ensure then
 			not_void: Result /= Void
-			bridge_ok: Result.is_equal (implementation.interface_item)
+			bridge_ok: Result.is_equal (implementation.item)
 		end
 
 	index: INTEGER
@@ -72,7 +72,7 @@ feature -- Access
 			bridge_ok: Result = implementation.index
 		end
 
-	cursor: EV_DYNAMIC_LIST_CURSOR [detachable G]
+	cursor: EV_DYNAMIC_LIST_CURSOR [G]
 			-- Current cursor position.
 		do
 			Result := implementation.cursor
@@ -84,9 +84,9 @@ feature -- Access
 			-- Item at `i'-th position.
 			--| Redefined for performance reasons.
 		do
-			Result := implementation.interface_i_th (i)
+			Result := implementation.i_th (i)
 		ensure then
-			bridge_ok: Result.is_equal (implementation.interface_i_th (i))
+			bridge_ok: Result.is_equal (implementation.i_th (i))
 		end
 
 	index_of (v: like item; i: INTEGER): INTEGER
@@ -235,7 +235,7 @@ feature -- Element change
 			parent_is_current: v.parent = Current
 			item_replaced: v = item
 			not_has_old_item: not has (old item)
-			old_item_parent_void: attached (old item) as l_item and then l_item.parent = Void
+			old_item_parent_void: (old item).parent = Void
 			count_same: count = old count
 			cursor_not_moved: index = old index
 		end
@@ -312,7 +312,7 @@ feature -- Element change
 			parent_is_current: v.parent = Current
 			item_replaced: v = i_th (i)
 			not_has_old_item: not has (old i_th (i))
-			old_item_parent_void: attached (old i_th (i)) as l_item and then l_item.parent = Void
+			old_item_parent_void: (old i_th (i)).parent = Void
 			count_same: count = old count
 			cursor_not_moved: index = old index
 		end
@@ -381,7 +381,7 @@ feature -- Removal
 			implementation.remove
 		ensure then
 			v_removed: not has (old item)
-			parent_void: attached (old item) as l_item and then l_item.parent = Void
+			parent_void: (old item).parent = Void
 			count_decreased: count = old count - 1
 			index_same: index = old index
 		end
@@ -393,7 +393,7 @@ feature -- Removal
 			implementation.remove_left
 		ensure then
 			left_neighbor_removed: not has (old i_th (index - 1))
-			parent_void: attached (old i_th (index -1)) as l_item and then l_item.parent = Void
+			parent_void: (old i_th (index -1)).parent = Void
 			index_decreased: index = old index - 1
 		end
 
@@ -404,7 +404,7 @@ feature -- Removal
 			implementation.remove_right
 		ensure then
 			right_neighbor_removed: not has (old i_th (index + 1))
-			parent_void: attached (old i_th (index + 1)) as l_item and then l_item.parent = Void
+			parent_void: (old i_th (index + 1)).parent = Void
 			index_same: index = old index
 		end
 
@@ -492,12 +492,12 @@ feature {EV_DYNAMIC_LIST} -- Inapplicable
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	implementation: EV_DYNAMIC_LIST_I [detachable G];
+	implementation: EV_DYNAMIC_LIST_I [G];
 			-- Responsible for interaction with native graphics
 			-- toolkit.
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

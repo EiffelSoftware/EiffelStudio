@@ -1833,6 +1833,22 @@ feature -- Status setting
 			Result := implementation.is_horizontal_scroll_bar_show_requested
 		end
 
+	enable_focus_on_press
+			-- Enable focus handling when mouse button is pressed on grid excluding header and scrollbars.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.drawable.enable_focus_on_press
+		end
+
+	disable_focus_on_press
+			-- Disable focus handling when mouse button is pressed on grid excluding header and scrollbars.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.drawable.disable_focus_on_press
+		end
+
 feature -- Status report
 
 	prunable: BOOLEAN = False

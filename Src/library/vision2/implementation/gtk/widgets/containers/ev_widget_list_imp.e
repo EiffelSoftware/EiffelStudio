@@ -27,7 +27,7 @@ inherit
 			make
 		end
 
-	EV_DYNAMIC_LIST_IMP [detachable EV_WIDGET]
+	EV_DYNAMIC_LIST_IMP [EV_WIDGET]
 		redefine
 			interface,
 			make
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: attached like item; i: INTEGER)
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			v_imp: detachable EV_WIDGET_IMP
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 		do
 			a_index := index
 				-- Store the index in case it is changed as a result of an event on the pass back to gtk
-			v_imp ?= interface_i_th (i).implementation
+			v_imp ?= i_th (i).implementation
 			check v_imp /= Void end
 			child_array.go_i_th (i)
 			child_array.remove
@@ -90,14 +90,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_WIDGET_LIST_IMP

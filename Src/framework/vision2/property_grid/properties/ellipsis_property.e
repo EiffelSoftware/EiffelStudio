@@ -16,6 +16,12 @@ inherit
 			update_text_on_deactivation
 		end
 
+	EV_SHARED_APPLICATION
+		undefine
+			default_create,
+			copy
+		end
+
 	EV_UTILITIES
 		undefine
 			default_create,
@@ -93,13 +99,18 @@ feature {NONE} -- Agents
 	initialize_actions
 			-- Setup the actions sequences when the item is shown.
 		do
-			text_field.set_focus
-			text_field.return_actions.extend (agent deactivate)
-			text_field.focus_out_actions.extend (agent focus_lost)
-			button.focus_out_actions.extend (agent focus_lost)
-			user_cancelled_activation := False
-			text_field.key_press_actions.extend (agent handle_key)
-			button.select_actions.append (ellipsis_actions)
+			if
+				attached text_field as l_text_field and then not l_text_field.is_destroyed and then
+				attached button as l_button and then not l_button.is_destroyed
+			then
+				l_text_field.focus_out_actions.extend (agent focus_lost)
+				l_text_field.set_focus
+				user_cancelled_activation := False
+				l_text_field.key_press_actions.extend (agent handle_key)
+				l_text_field.return_actions.extend (agent deactivate)
+				l_button.focus_out_actions.extend (agent focus_lost)
+				l_button.select_actions.append (ellipsis_actions)
+			end
 		end
 
 	focus_lost
@@ -114,7 +125,7 @@ feature {NONE} -- Agents
 					-- before focus in actions which means that no window has the focus
 					-- when focusing from one app window to the other and checking focus state
 					-- in the focus out actions.
-				(create {EV_ENVIRONMENT}).application.do_once_on_idle (agent do
+				ev_application.do_once_on_idle (agent do
 					if not is_destroyed and then is_activated and then not has_focus and then is_parented then
 						deactivate
 					end
@@ -213,4 +224,14 @@ feature {NONE} -- Implementation
 invariant
 	ellipsis_actions_not_void: is_initialized implies ellipsis_actions /= Void
 	active_elements: is_activated implies button /= Void and text_field /= Void
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

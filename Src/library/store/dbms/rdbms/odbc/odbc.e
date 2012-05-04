@@ -179,9 +179,10 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
  				Result := False
 			end
 
-				-- Clean up memory
+				-- Clean up memory manually,
+				-- in order to avoid big memory usage before GC kicks in.
 			c_temp.set_count (0)
-			tmp_str.resize (0)
+			tmp_str.wipe_out
 			tmp_str.adapt_size
 		end
 

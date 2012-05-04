@@ -134,7 +134,7 @@ feature -- Access
 	string: STRING_32
 			-- Eiffel string, ignoring `count'. Reads until a null character is being read.
 		do
-			Result := substring (1, c_strlen (item))
+			Result := substring (1, count)
 		ensure
 			string_not_void: Result /= Void
 		end
@@ -290,7 +290,6 @@ feature -- Element change
 			-- Set `string' with `a_string'.
 		require
 			a_string_not_void: a_string /= Void
-			a_string_is_string_8: a_string.is_valid_as_string_8
 		do
 			set_substring (a_string, 1, a_string.count)
 		end
@@ -345,13 +344,8 @@ feature -- Element change
 			-- `count.min (a_count)' is unchanged.
 		require
 			a_count_non_negative: a_count >= 0
-		local
-			new_size: INTEGER
 		do
-			new_size := (a_count + 1) * character_size
-			if managed_data.count < new_size then
-				managed_data.resize (new_size)
-			end
+			managed_data.resize ((a_count + 1) * character_size)
 			count := a_count
 		ensure
 			count_set: count = a_count
@@ -383,4 +377,14 @@ invariant
 	managed_data_not_void: managed_data /= Void
 	count_not_negative: count >= 0
 
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

@@ -230,6 +230,7 @@ feature -- Commands
 			class_tool.set_stone (a_stone)
 			dependency_tool.set_stone (a_stone)
 			set_stone_to_customized_tools (a_stone)
+			info_tool.set_stone (a_stone)
 
 			stone := a_stone
 		end

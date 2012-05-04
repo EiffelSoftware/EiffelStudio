@@ -9,7 +9,7 @@ frozen class
 	ES_INFORMATION_TOOL
 
 inherit
-	ES_TOOL [ES_INFORMATION_TOOL_PANEL]
+	ES_STONABLE_TOOL [ES_INFORMATION_TOOL_PANEL]
 
 	ES_INFORMATION_TOOL_COMMANDER_I
 		undefine
@@ -60,6 +60,16 @@ feature -- Basic operations
 			if is_tool_instantiated then
 				panel.add_information_to (a_stone)
 			end
+		end
+
+feature -- Status Report
+
+	is_stone_usable_internal (a_stone: attached like stone): BOOLEAN
+			-- <Precursor>
+		do
+			Result := attached {CLASSI_STONE} a_stone or else
+				attached {CLUSTER_STONE} a_stone or else
+				attached {TARGET_STONE} a_stone
 		end
 
 feature {NONE} -- Factory

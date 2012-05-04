@@ -9,7 +9,7 @@ class
 	ES_INFORMATION_TOOL_PANEL
 
 inherit
-	ES_DOCKABLE_TOOL_PANEL [ES_EIS_TOOL_WIDGET]
+	ES_DOCKABLE_STONABLE_TOOL_PANEL [ES_EIS_TOOL_WIDGET]
 		redefine
 			on_after_initialized,
 			internal_recycle,
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 	on_after_initialized
 			-- <Precursor>
 		do
-			Precursor {ES_DOCKABLE_TOOL_PANEL}
+			Precursor {ES_DOCKABLE_STONABLE_TOOL_PANEL}
 
 			if session_manager.is_service_available then
 				session_data.session_connection.connect_events (Current)
@@ -105,7 +105,7 @@ feature {NONE} -- Clean up
 			if attached {PROGRESS_OBSERVER} user_widget as lt_observer then
 				eis_manager.remove_observer (lt_observer)
 			end
-			Precursor {ES_DOCKABLE_TOOL_PANEL}
+			Precursor {ES_DOCKABLE_STONABLE_TOOL_PANEL}
 		end
 
 feature -- Access: Help
@@ -121,7 +121,7 @@ feature {NONE} -- Status report
 	is_visit_requested: BOOLEAN
 			-- Is backgroud visiting requested?
 
-feature {ES_INFORMATION_TOOL_COMMANDER_I} -- Basic operations
+feature {ES_INFORMATION_TOOL_COMMANDER_I, ES_EIS_TOOL_WIDGET} -- Basic operations
 
 	refresh_list
 			-- Refresh the entry list.
@@ -208,10 +208,10 @@ feature {NONE} -- Action handlers
 	on_show
 			-- <Precusor>
 		do
-			Precursor
-        	if is_visit_requested then
+			Precursor {ES_DOCKABLE_STONABLE_TOOL_PANEL}
+			if is_visit_requested then
 				perform_auto_background_visiting
-        	end
+			end
 		end
 
 	on_focus_in
@@ -255,6 +255,14 @@ feature {ES_EIS_TOOL_WIDGET} -- Actions handlers
 			end
 		end
 
+feature {NONE} -- Stone handler
+
+	on_stone_changed (a_old_stone: detachable like stone)
+			-- Assign `a_stone' as new stone.
+		do
+			user_widget.target_stone (stone)
+		end
+
 feature {NONE} -- Factory
 
     create_widget: ES_EIS_TOOL_WIDGET
@@ -279,6 +287,7 @@ feature {NONE} -- Factory
   			l_item.set_pixel_buffer (pixmaps.mini_pixmaps.general_search_icon_buffer)
   			l_item.set_tooltip (interface_names.e_show_class_cluster)
   			l_item.select_actions.extend (agent user_widget.on_show_editing_item)
+  			register_action (l_item.drop_actions, agent user_widget.target_stone)
   			Result.put_last (l_item)
         end
 

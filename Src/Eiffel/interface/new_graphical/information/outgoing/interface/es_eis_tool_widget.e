@@ -115,6 +115,8 @@ feature {NONE} -- Initialization
 			edit_auto_gen_button.set_pixel_buffer (pixmaps.icon_pixmaps.information_edit_auto_node_icon_buffer)
 			edit_auto_gen_button.select_actions.extend (agent on_edit_eis_auto_node)
 			edit_auto_gen_button.disable_sensitive
+			register_action (edit_auto_gen_button.drop_actions, agent on_drop_auto_node)
+			edit_auto_gen_button.drop_actions.set_veto_pebble_function (agent is_stone_editable_for_auto_node)
 			l_toolbar.extend (edit_auto_gen_button)
 
 				-- Separator
@@ -194,6 +196,7 @@ feature {NONE} -- Initialization
 			l_vbox.extend (l_tree)
 			l_tree.set_minimum_width (Layout_constants.dialog_unit_to_pixels (200))
 			l_tree.refresh
+			register_action (l_tree.drop_actions, agent target_stone)
 
 --			create l_hbox
 --			create l_toolbar.make
@@ -254,6 +257,7 @@ feature {NONE} -- Initialization
 			l_button.set_pixel_buffer (pixmaps.icon_pixmaps.general_add_icon_buffer)
 			l_button.select_actions.extend (agent on_entry_add)
 			l_toolbar.extend (l_button)
+			register_action (l_button.drop_actions, agent panel.add_information_to)
 
 				-- Delete button
 			create l_button.make
@@ -272,6 +276,7 @@ feature {NONE} -- Initialization
 			grid_support.enable_ctrl_right_click_to_open_new_window
 			grid_support.synchronize_scroll_behavior_with_editor
 			grid_support.set_context_menu_factory_function (agent context_menu_factory)
+			register_action (entry_list.drop_actions, agent target_stone)
 		end
 
 	context_menu_factory: EB_CONTEXT_MENU_FACTORY
@@ -328,7 +333,6 @@ feature -- Callbacks
 			-- On show editing item selected.
 		local
 			l_window: EB_DEVELOPMENT_WINDOW
-			l_targeted: BOOLEAN
 		do
 			l_window := panel.develop_window
 			if l_window /= Void then
@@ -392,21 +396,37 @@ feature -- Callbacks
 			-- On edit EIS auto node property of a target
 		local
 			l_target: detachable CONF_TARGET
-			l_dialog: ES_EIS_AUTO_ENTRY_DIALOG
 		do
 			if attached {EB_CLASSES_TREE_TARGET_ITEM} tree.selected_item as l_item then
 				l_target := l_item.stone.target
 			elseif attached {EB_CLASSES_TREE_FOLDER_ITEM} tree.selected_item as l_folder_item then
 				if l_folder_item.stone.group.is_library then
-					if attached {CONF_LIBRARY} l_folder_item.stone.group as l_library then
+					if attached {CONF_LIBRARY} l_folder_item.stone.group as l_library and then not l_library.is_readonly then
 						l_target := l_library.library_target
 					end
 				end
 			end
 			if l_target /= Void then
-				create l_dialog.make_with_target (l_target, agent refresh_list)
-				l_dialog.set_is_modal (True)
-				l_dialog.show_on_active_window
+				show_target_auto_node_dialog (l_target)
+			end
+		end
+
+	on_drop_auto_node (a_stone: STONE)
+			-- Dropping a stone on the auto node button
+		local
+			l_target: detachable CONF_TARGET
+		do
+			if attached {TARGET_STONE} a_stone as l_stone then
+				l_target := l_stone.target
+			elseif
+				attached {CLUSTER_STONE} a_stone as l_stone and then
+				attached {CONF_LIBRARY} l_stone.group as l_library and then
+				not l_library.is_readonly
+			then
+				l_target := l_library.library_target
+			end
+			if l_target /= Void then
+				show_target_auto_node_dialog (l_target)
 			end
 		end
 
@@ -480,6 +500,27 @@ feature -- Query
 			-- Was last stone targeted by `target_stone'?
 
 feature {NONE} -- Implementation
+
+	is_stone_editable_for_auto_node (a_stone: STONE): BOOLEAN
+			-- Is `a_stone' editable for auto node entries?
+		do
+			Result := attached {TARGET_STONE} a_stone or else
+				(attached {CLUSTER_STONE} a_stone as l_stone and then
+				attached {CONF_LIBRARY} l_stone.group as l_library and then
+				not l_library.is_readonly)
+		end
+
+	show_target_auto_node_dialog (a_target: CONF_TARGET)
+			-- Show auto node dialog for `a_target'.
+		require
+			a_target_set: a_target /= Void
+		local
+			l_dialog: ES_EIS_AUTO_ENTRY_DIALOG
+		do
+			create l_dialog.make_with_target (a_target, agent refresh_list)
+			l_dialog.set_is_modal (True)
+			l_dialog.show_on_active_window
+		end
 
 	internal_recycle
 			-- <precursor>

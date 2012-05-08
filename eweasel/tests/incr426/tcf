@@ -1,0 +1,28 @@
+test_name 	finalization-with-error-crash
+test_description During an incremental compilation with error, we fix the error but we end up crashing at finalization time.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	proxy_test1.e $CLUSTER proxy_test1.e
+
+compile_melted
+compile_result 	ok
+
+copy_raw 	test1_rev1.e $CLUSTER test1.e
+
+compile_melted
+compile_result	validity_error PROXY_TEST1 VEEN
+
+copy_raw 	test1.e $CLUSTER test1.e
+
+resume_compile
+compile_result 	ok
+
+compile_final
+compile_result	ok
+
+c_compile_final
+c_compile_result	ok
+
+test_end

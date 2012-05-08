@@ -8,7 +8,9 @@ class
 
 create
 	make_by_pointer,
-	make_with_program_id
+	make_with_program_id,
+	make_active_object_with_program_id
+
 
 feature {NONE} -- Initialization
 
@@ -19,6 +21,12 @@ feature {NONE} -- Initialization
 
 	make_with_program_id (a_name: READABLE_STRING_GENERAL)
 			-- Initialization
+			-- Example of program ID: "Word.Application"
+		do
+		end
+
+	make_active_object_with_program_id (a_name: READABLE_STRING_GENERAL)
+			-- Initialize with running object of `a_name'
 			-- Example of program ID: "Word.Application"
 		do
 		end

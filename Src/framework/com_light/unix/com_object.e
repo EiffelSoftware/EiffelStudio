@@ -55,7 +55,7 @@ feature -- Method
 
 feature -- Access
 
-	last_object: detachable COM_LIGHT_OBJECT
+	last_object: detachable COM_OBJECT
 			-- Last object from call result
 		do
 		end

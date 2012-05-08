@@ -35,12 +35,6 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	frozen kind: UUID assign set_kind
-			-- Help provider id, assigned to by the help providers service.
-		attribute
-			create Result
-		end
-
 feature {NONE} -- Access
 
 	context_variables: HASH_TABLE [STRING, READABLE_STRING_8]
@@ -50,18 +44,6 @@ feature {NONE} -- Access
 		deferred
 		ensure
 			result_attached: Result /= Void
-		end
-
-feature {HELP_PROVIDERS_S} -- Element change
-
-	frozen set_kind (a_kind: UUID)
-			-- Set's help provider's kind ID.
-		require
-			a_kind_attached: a_kind /= Void
-		do
-			kind := a_kind
-		ensure
-			kind_set: kind = a_kind
 		end
 
 feature -- Status report
@@ -128,7 +110,7 @@ feature -- Basic operations
 	--kind_attached: kind /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

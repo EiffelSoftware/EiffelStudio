@@ -273,8 +273,14 @@ feature {NONE} -- Handle keystokes
 		do
 			scroll_to_cursor := True
 			if Shifted_key then
-				Precursor (ev_key)
-				scroll_to_cursor := False
+				inspect ev_key.code
+				when Key_v then
+						-- Ctrl-Shift-V (paste)
+					run_if_editable (agent paste)
+				else
+					Precursor (ev_key)
+					scroll_to_cursor := False
+				end
 			else
 					--| The following operation does not use [Shift]
 				inspect
@@ -402,7 +408,7 @@ feature {NONE} -- Handle keystokes
 
 			when Key_insert then
 				if Shifted_key and then is_editable then
-					paste
+					paste_with_indentation
 				else
 					if is_editable then
 							-- Insert key action
@@ -619,6 +625,19 @@ feature -- Edition Operations on text
 				text_displayed.insert_string (a_text)
 				refresh_now
 			end
+		end
+
+	paste_with_indentation
+			-- Paste clipboard at cursor position with proper indentation
+			-- according to the context text and the content of the clipboard.
+			--
+			-- See comment in `{EDITABLE_TEXT}.paste_with_indentation'
+		require
+			text_is_not_empty: number_of_lines /= 0
+			text_is_editable: is_editable
+		do
+			text_displayed.paste_with_indentation (clipboard.text)
+			refresh_now
 		end
 
 	set_selection_case (lower: BOOLEAN)
@@ -1052,14 +1071,14 @@ feature {NONE} -- Private Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

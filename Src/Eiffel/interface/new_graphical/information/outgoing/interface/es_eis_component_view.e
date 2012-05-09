@@ -540,7 +540,7 @@ feature {NONE} -- Item callbacks
 		do
 		end
 
-	on_source_changed (a_item: EV_GRID_EDITABLE_ITEM)
+	on_source_changed (a_value: STRING_32; a_item: EV_GRID_ITEM)
 			-- On source changed
 		do
 		end
@@ -821,21 +821,21 @@ feature {NONE} -- Grid items
 			a_entry_not_void: a_entry /= Void
 		local
 			l_source: STRING_32
-			l_editable_item: ES_EIS_GRID_EDITABLE_ITEM
+			l_file_prop: FILE_PROPERTY
 		do
 			l_source := a_entry.source
 			if l_source = Void then
 				create l_source.make_empty
 			end
 			if a_editable then
-				create l_editable_item.make_with_text (l_source)
-				l_editable_item.pointer_button_press_actions.force_extend (agent activate_item (l_editable_item))
-				l_editable_item.set_text_validation_agent (agent is_source_valid (?, l_editable_item))
-				l_editable_item.deactivate_actions.extend (agent on_source_changed (l_editable_item))
-				l_editable_item.set_key_press_action (agent tab_to_next)
-				Result := l_editable_item
+				create l_file_prop.make (once "")
+				l_file_prop.set_text (l_source)
+				l_file_prop.change_value_actions.extend (agent on_source_changed (?, l_file_prop))
+				l_file_prop.set_text_validation_agent (agent is_source_valid (?, l_file_prop))
+				l_file_prop.key_press_actions.extend (agent tab_to_next)
+				Result := l_file_prop
 			else
-				create {EV_GRID_LABEL_ITEM}Result.make_with_text (l_source)
+				create {EV_GRID_LABEL_ITEM} Result.make_with_text (l_source)
 			end
 		ensure
 			Result_not_void: Result /= Void

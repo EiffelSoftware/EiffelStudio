@@ -690,14 +690,14 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	on_source_changed (a_item: EV_GRID_EDITABLE_ITEM)
+	on_source_changed (a_value: STRING_32; a_item: EV_GRID_ITEM)
 			-- On source changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
 			l_new_entry: EIS_ENTRY
 			l_done: BOOLEAN
 		do
-			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_source then
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_value as lt_source then
 				if lt_entry.source /= Void and then lt_source.is_equal (lt_entry.source) then
 						-- Do nothing when the source is not actually changed
 				else

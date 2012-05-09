@@ -39,6 +39,9 @@ feature -- Element change
 			if choice_list /= Void and then not choice_list.is_destroyed then
 				set_tokens
 			end
+				-- Call setting change actions to trigger recomputation
+				-- to take into account the width of drop down triangle that may appear.
+			try_call_setting_change_actions
 		ensure
 			item_components_set: item_components = a_item_components
 		end
@@ -456,7 +459,7 @@ invariant
 	choice_list_parented_during_activation: choice_list /= Void implies choice_list.parent /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

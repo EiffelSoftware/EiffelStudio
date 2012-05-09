@@ -494,6 +494,12 @@ feature -- Element Change
 			end
 		end
 
+	reset_stone
+			-- Reset current targeted stone
+		do
+			panel.reset_stone
+		end
+
 feature -- Query
 
 	last_stone_targeted: BOOLEAN

@@ -75,6 +75,20 @@ feature {NONE} -- Initialization
 				window.lock_update
 				l_locked := True
 			end
+
+				-- Do not keep the old view when the tree has been rebuild,
+				-- as the old view is most likely invalid.
+				-- This should be done before `item_selected',
+				-- otherwise `old_view' is set as current view.
+			if attached old_view as l_view then
+				l_view.wipe_out
+				l_view.destroy
+				old_view := Void
+			end
+
+				-- Store expanded state of `Current'
+			store_expanded_state
+
 			if eiffel_project.initialized and then universe.target /= Void then
 				wipe_out
 				l_sys := universe.target.system
@@ -95,18 +109,16 @@ feature {NONE} -- Initialization
 
 			-- build_affected_items
 
+				-- Restore original expanded state, stored during last call to
+				-- `store_expanded_state'
+			restore_expanded_state
+				-- Show content of selected item
+			item_selected
+
 			if window /= Void and l_locked then
 					-- Unlock update of window as `Current' has
 					-- been rebuilt.
 				window.unlock_update
-			end
-
-				-- Do not keep the old view when the tree has been rebuild,
-				-- as the old view is most likely invalid.
-			if attached old_view as l_view then
-				l_view.wipe_out
-				l_view.destroy
-				old_view := Void
 			end
 		end
 
@@ -217,6 +229,7 @@ feature {NONE} -- Actions
 							y_abs: INTEGER)
 		do
 			on_component_click (last_pressed_item)
+			eis_tool_widget.reset_stone
 		end
 
 	on_key_released (a_key: EV_KEY)
@@ -224,6 +237,7 @@ feature {NONE} -- Actions
 		do
 			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
 				on_component_click (selected_item)
+				eis_tool_widget.reset_stone
 			end
 		end
 
@@ -350,7 +364,7 @@ invariant
 	only_first_item_is_off_mapping: (tag_header /= Void and not is_recycled) implies managed_tags.count = tag_header.count - 1
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

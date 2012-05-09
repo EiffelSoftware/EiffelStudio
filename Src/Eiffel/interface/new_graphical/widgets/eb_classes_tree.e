@@ -142,7 +142,14 @@ feature {NONE} -- Initialization
 				l_locked := True
 			end
 
+				-- Store expanded state of `Current'
+			store_expanded_state
+
 			build_tree_on_list (Current)
+
+				-- Restore original expanded state, stored during last call to
+				-- `store_expanded_state'
+			restore_expanded_state
 
 			if window /= Void and l_locked then
 					-- Unlock update of window as `Current' has
@@ -160,9 +167,6 @@ feature {NONE} -- Initialization
 		do
 				-- Remove all items, ready for rebuilding.
 			if Eiffel_project.workbench.is_universe_ready then
-				store_expanded_state
-					-- Store expanded state of `Current'
-
 				a_list.wipe_out
 
 				l_target := Universe.target
@@ -207,10 +211,6 @@ feature {NONE} -- Initialization
 				if has_targets then
 					build_target_tree (a_list)
 				end
-
-				restore_expanded_state
-					-- Restore original expanded state, stored during last call to
-					-- `store_expanded_state'				
 			end
 		end
 

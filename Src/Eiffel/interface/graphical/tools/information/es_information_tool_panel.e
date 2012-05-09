@@ -155,6 +155,12 @@ feature {ES_INFORMATION_TOOL_COMMANDER_I, ES_EIS_TOOL_WIDGET} -- Basic operation
 			end
 		end
 
+	reset_stone
+			-- Reset current targeted stone
+		do
+			set_stone (Void)
+		end
+
 feature {NONE} -- Basic operations
 
 	perform_auto_background_visiting

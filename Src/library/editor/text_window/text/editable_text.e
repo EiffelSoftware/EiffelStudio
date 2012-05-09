@@ -734,6 +734,105 @@ feature -- Basic Operations
 			insert_string (local_clipboard)
 		end
 
+	paste_with_indentation (a_text: READABLE_STRING_GENERAL)
+			-- Paste clipboard at cursor position with proper indentation
+			-- according to the context text and the content of the clipboard.
+			--
+			-- Behavior:
+			-- If there are tabs before editor cursor and leading tabs in the pasting text:
+			-- Adjust the number of leading tabs for each line in the pasting text
+			-- by the result of the number of existing tabs before the editor cursor
+			-- substracting the number of leading tabs in the pasting text.
+			--
+			-- Example:
+			-- text in clipboard: "%T%Tfoo%N%T%T%Tgoo"
+			-- Line of the cursor before pasting: "%T%T%T|"	-- Note: `|' is the cursor
+			-- Pasting result: "%T%T%Tfoo%N%T%T%T%Tgoo|"
+		note
+			EIS: "name=Paste with Indentation", "src=$(ISE_WIKI)/Paste_with_Indentation"
+		require
+			text_not_empty: not is_empty
+		local
+			l_cursor_text, l_inserted_text: STRING_32
+			l_cur_pos, l_second_line_pos: INTEGER
+			l_tab_symbol_count: INTEGER
+			l_leading_tabs, l_cursor_tabs: INTEGER
+			l_tab_symbol: like tabulation_symbol
+			i, l_indent_count: INTEGER
+			l_has_non_tab_symbol: BOOLEAN
+			l_same_as_selection: BOOLEAN
+		do
+			if not a_text.is_empty and then attached cursor as l_cursor then
+				l_inserted_text := a_text.as_string_32
+
+				l_tab_symbol := tabulation_symbol
+				l_tab_symbol_count := l_tab_symbol.count
+
+					-- Getting test of the line where the cursor is.
+				if has_selection then
+						-- Take the start position of a selection if any
+					l_cursor_text := selection_start.line.wide_image_from_start_to_cursor (selection_start)
+					l_cur_pos := selection_start.pos_in_text
+					if not is_empty then
+						l_same_as_selection := l_inserted_text.same_string (selected_wide_string)
+					end
+				else
+					l_cursor_text := l_cursor.line.wide_image_from_start_to_cursor (l_cursor)
+					l_cur_pos := l_cursor.pos_in_text
+				end
+					-- Number of leading tabulation symbols before the cursor position (or before the selected text).
+				l_cursor_tabs := number_of_leading_tab_symbols (l_cursor_text, l_tab_symbol)
+					-- Number of leading tabulation symbols in text being pasted.
+				l_leading_tabs := number_of_leading_tab_symbols (l_inserted_text, l_tab_symbol)
+					-- Has non-tab symbols before the cursor position?
+				l_has_non_tab_symbol := l_cursor_tabs /= (l_cursor_text.count // l_tab_symbol_count)
+
+					-- The text before the cursor does not have anything more than tabs,
+					-- and there is leading tab before the cursor, and pasting text is not the same as selection if any.
+				if not l_has_non_tab_symbol and then l_cursor_tabs > 0 and then not l_same_as_selection then
+						-- Remove all leading tabs before the first line of inserted text.
+					l_inserted_text := l_inserted_text.substring (l_inserted_text.count.min (l_leading_tabs * l_tab_symbol_count + 1), l_inserted_text.count)
+				end
+
+				insert_string (l_inserted_text)
+
+				l_second_line_pos := l_inserted_text.index_of ('%N', 1)
+					-- If there are no new lines in the pasted text, there is nothing to do,
+					-- otherwise, we need to adapt the pasted text to either indent or unindent the text depending on
+					-- whether the pasted text or text before the cursor has some leading tabs or not.
+				if
+					l_second_line_pos /= 0 and then
+					l_second_line_pos + 1 < l_inserted_text.count and then
+					not l_cursor_text.is_empty and then -- There is something before the cursor
+					l_leading_tabs > 0 and then	-- There is leading tab in the pasting text
+					not l_has_non_tab_symbol and then -- The text before the cursor does not have anything more than tabs
+					l_cursor_tabs > 0 and then	-- There is leading tab before the cursor
+					not l_same_as_selection
+				then
+						-- Indent/Unindent inserted lines except for the first line.
+					select_region (l_cur_pos + l_second_line_pos + 1, l_cur_pos + l_inserted_text.count)
+
+					l_indent_count := (l_leading_tabs - l_cursor_tabs).abs
+					from
+						i := 1
+					until
+						i > l_indent_count
+					loop
+						if l_leading_tabs < l_cursor_tabs then
+							attached_history.bind_current_item_to_next
+							indent_selection
+						else
+							attached_history.bind_current_item_to_next
+							unindent_selection
+						end
+						i := i + 1
+					end
+
+					disable_selection
+				end
+			end
+		end
+
 feature -- for search only
 
 	replace_for_replace_all (start_pos, end_pos: INTEGER; a_word: READABLE_STRING_GENERAL)
@@ -2037,6 +2136,33 @@ feature {NONE} -- Implementation
 			-- call to `symbol_selection'.
 			-- Used by undo commands for indent and comment.
 
+	number_of_leading_tab_symbols (a_text: STRING_GENERAL; a_tab_symbol: STRING_GENERAL): INTEGER
+			-- Number of leading tab symbols
+			-- Note that a tab symbol can be more than one character.
+		require
+			a_tab_symbol_not_empty: not a_tab_symbol.is_empty
+		local
+			l_text_count, l_tab_symbol_count: INTEGER
+			l_first_line: STRING_32
+			l_stop: BOOLEAN
+			i: INTEGER
+		do
+			l_text_count := a_text.count
+			l_tab_symbol_count := a_tab_symbol.count
+			from
+				i := 1
+			until
+				i > l_text_count or l_stop
+			loop
+				if a_text.substring_index_in_bounds (a_tab_symbol, i, l_text_count.min (i + l_tab_symbol_count - 1)) /= i then
+					l_stop := True
+					i := i - l_tab_symbol_count
+				end
+				i := i + l_tab_symbol_count
+			end
+			Result := (i - 1) // l_tab_symbol_count
+		end
+
 feature {TEXT_CURSOR}
 
 	ignore_cursor_moves: BOOLEAN
@@ -2062,15 +2188,17 @@ invariant
 --	undo_enabled: changed = undo_is_possible
 	history_attached: attached history
 
+	tabulation_symbol_valid: tabulation_symbol.count > 0
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

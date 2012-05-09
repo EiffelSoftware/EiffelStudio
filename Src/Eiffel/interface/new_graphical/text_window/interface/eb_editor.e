@@ -22,7 +22,8 @@ inherit
 			reference_window,
 			internal_recycle,
 			show_warning_message,
-			check_document_modifications_and_reload
+			check_document_modifications_and_reload,
+			paste
 		end
 
 	EB_SHARED_MANAGERS
@@ -424,7 +425,7 @@ feature {NONE} -- Prettify implementation
 			end
 		end
 
-feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Edition Operations on text
+feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_CONTEXT_MENU_FACTORY} -- Edition Operations on text
 
 	comment_selection
 			-- Comment selected lines if possible.
@@ -441,6 +442,18 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} 
 			if is_editable and then not is_empty then
 				text_displayed.uncomment_selection
 				refresh_now
+			end
+		end
+
+	paste
+			-- Paste text from clipboard, taking shift key into account.
+			-- If shift key is held, we paste as it is,
+			-- otherwise we indented paste
+		do
+			if shifted_key then
+				Precursor
+			else
+				paste_with_indentation
 			end
 		end
 
@@ -478,7 +491,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -977,11 +977,20 @@ feature -- Context menu
 	m_center_diagram: STRING_32			do Result := locale.translation ("Center target in diagram") end
 	m_change_color: STRING_32			do Result := locale.translation ("Change color") end
 	m_clone_metric: STRING_32			do Result := locale.translation ("Clone metric") end
+
+	m_copy_uri (a_type, a_name: STRING_GENERAL): STRING_32
+		require
+			exists: a_type /= Void and a_name /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("Copy URI of $1 '$2'"), [a_type, a_name])
+		end
+
 	m_delete: STRING_32					do Result := b_delete_command	end
 	m_displayed: STRING_32				do Result := locale.translation ("Displayed") end
 	m_diagram_with: STRING_32			do Result := locale.translation ("Diagram with") end
 	m_docking_lock: STRING_32			do Result := locale.translation ("Docking Lock") end
 	m_expanded_object_view: STRING_32	do Result := locale.translation ("Expanded object view") end
+	m_info: STRING_32		do Result := locale.translation ("Info") end
 	m_include_all_classes: STRING_32		do Result := locale.translation ("Include all classes") end
 	m_import_metrics_from_file: STRING_32 do Result := locale.translation("Import/Export metrics from file") end
 	m_input_domain: STRING_32			do Result := locale.translation("&Input domain") end

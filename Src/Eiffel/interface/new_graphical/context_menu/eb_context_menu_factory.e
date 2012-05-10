@@ -602,7 +602,7 @@ feature {NONE} -- Menu section, Granularity 2.
 				extend_add_to_menu (a_menu, l_target_stone)
 			end
 				-- Add Info item
-			extend_add_info (a_menu, a_pebble)
+			extend_info_menu (a_menu, a_pebble)
 		end
 
 	extend_basic_diagram_menu (a_menu: EV_MENU)
@@ -1294,17 +1294,37 @@ feature {NONE} -- Menu section, Granularity 1.
 			end
 		end
 
-	extend_add_info (a_menu: EV_MENU; a_pebble: ANY)
-			-- Add Info menu
+	extend_info_menu (a_menu: EV_MENU; a_pebble: ANY)
+			-- Info menu
 		require
 			a_menu_not_void: a_menu /= Void
 		local
+			l_menu: EV_MENU
 			l_menu_item: EV_MENU_ITEM
 		do
 			if attached last_name as l_last_name and then attached last_type as l_last_type then
+				create l_menu.make_with_text (names.m_info)
+				a_menu.extend (l_menu)
+
+					-- Add Info
 				create l_menu_item.make_with_text (names.m_add_info (l_last_type, l_last_name))
 				l_menu_item.select_actions.extend (agent (dev_window.tools.info_tool).add_information_to (a_pebble))
-				a_menu.extend (l_menu_item)
+				l_menu.extend (l_menu_item)
+
+					-- Copy URI
+				create l_menu_item.make_with_text (names.m_copy_uri (l_last_type, l_last_name))
+				l_menu_item.select_actions.extend (
+					agent (a_stone: ANY)
+						local
+							l_generator: ES_INCOMING_URI_GENERATOR
+						do
+							create l_generator
+							if attached l_generator.generate_uri_for_stone (a_stone) as l_uri then
+								ev_application.clipboard.set_text (l_uri)
+							end
+						end (a_pebble)
+				)
+				l_menu.extend (l_menu_item)
 			end
 		end
 

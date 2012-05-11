@@ -181,35 +181,35 @@ feature -- Comparison
 			Result := not ((name = Void) xor (other.name = Void))
 			if Result then
 				if name /= Void then
-					Result := string_32_is_caseless_equal (name, other.name)
+					Result := string_general_is_caseless_equal (name, other.name)
 				end
 				if Result then
 						-- Compare source
 					Result := not ((source = Void) xor (other.source = Void))
 					if Result then
 						if source /= Void then
-							Result := string_32_is_caseless_equal (source, other.source)
+							Result := string_general_is_caseless_equal (source, other.source)
 						end
 						if Result then
 								-- Compare protocol
 							Result := not ((protocol = Void) xor (other.protocol = Void))
 							if Result then
 								if protocol /= Void then
-									Result := string_32_is_caseless_equal (protocol, other.protocol)
+									Result := string_general_is_caseless_equal (protocol, other.protocol)
 								end
 								if Result then
 										-- Compare tags
 									Result := not ((tags = Void) xor (other.tags = Void))
 									if Result then
 										if tags /= Void then
-											Result := string_32_is_caseless_equal (tags_as_string, other.tags_as_string)
+											Result := string_general_is_caseless_equal (tags_as_string, other.tags_as_string)
 										end
 										if Result then
 												-- Compare others
 											Result := not ((others = Void) xor (other.others = Void))
 											if Result then
 												if others /= Void then
-													Result := string_32_is_caseless_equal (others_as_string, other.others_as_string)
+													Result := string_general_is_caseless_equal (others_as_string, other.others_as_string)
 												end
 											end
 										end

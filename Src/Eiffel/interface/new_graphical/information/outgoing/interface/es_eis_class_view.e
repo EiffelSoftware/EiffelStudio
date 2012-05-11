@@ -652,38 +652,41 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	on_protocol_changed (a_item: EV_GRID_EDITABLE_ITEM)
+	on_protocol_changed (a_choice_item: EB_GRID_LISTABLE_CHOICE_ITEM_ITEM; a_item: EB_GRID_LISTABLE_CHOICE_ITEM): BOOLEAN
 			-- On protocol changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
 			l_new_entry: EIS_ENTRY
 			l_done: BOOLEAN
+			l_protocol: like {EIS_ENTRY}.protocol
 		do
-			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_protocol then
-				if lt_entry.protocol /= Void and then lt_protocol.is_equal (lt_entry.protocol) then
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached {READABLE_STRING_GENERAL} a_choice_item.data as lt_protocol then
+				if lt_entry.protocol /= Void and then string_general_is_caseless_equal (lt_entry.protocol, lt_protocol) then
 						-- Do nothing when the protocol is not actually changed
 				else
+					l_protocol := lt_protocol.as_string_32
 					if entry_editable (lt_entry, False) then
 						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.id) as lt_feature then
 							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
-							l_new_entry.set_protocol (lt_protocol)
+							l_new_entry.set_protocol (l_protocol)
 							modify_entry_in_feature (lt_entry, l_new_entry, lt_feature)
 							l_done := True
 						elseif attached {CLASS_I} id_solution.class_of_id (lt_entry.id) as lt_class then
 							if attached lt_entry.twin as lt_new_entry1 then
 								l_new_entry := lt_new_entry1
 							end
-							l_new_entry.set_protocol (lt_protocol)
+							l_new_entry.set_protocol (l_protocol)
 							modify_entry_in_class (lt_entry, l_new_entry, lt_class)
 							l_done := True
 						end
 							-- Modify the protocol in the entry when the modification is done
 						if l_done then
 							storage.deregister_entry (lt_entry, component_id)
-							lt_entry.set_protocol (lt_protocol)
+							lt_entry.set_protocol (l_protocol)
 							storage.register_entry (lt_entry, component_id, class_i.date)
+							Result := True
 						end
 					end
 				end

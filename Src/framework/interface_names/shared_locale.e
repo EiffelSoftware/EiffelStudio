@@ -165,8 +165,8 @@ feature -- String
 
 	string_general_as_lower (a_s: STRING_GENERAL): STRING_GENERAL
 			-- Make all possible char in `a_str' to lower.
-			-- |FIXME: We need real Unicode as lower.
-			-- |For the moment, only ANSII code are concerned.
+			--|FIXME: We need real Unicode as lower.
+			--|For the moment, only ASCII code are concerned.
 		require
 			a_str_not_void: a_s /= Void
 		local
@@ -208,8 +208,8 @@ feature -- String
 
 	string_general_as_upper (a_s: STRING_GENERAL): STRING_GENERAL
 			-- Make all possible char in `a_str' to upper.
-			-- |FIXME: We need real Unicode as upper.
-			-- |For the moment, only ANSII code are concerned.
+			--|FIXME: We need real Unicode as upper.
+			--|For the moment, only ASCII code are concerned.
 		require
 			a_str_not_void: a_s /= Void
 		local
@@ -250,8 +250,8 @@ feature -- String
 
 	string_general_left_adjust (a_str: STRING_GENERAL)
 			-- Make all possible char in `a_str' to upper.
-			-- |FIXME: We need real Unicode as upper.
-			-- |For the moment, only ANSII code are concerned.
+			--|FIXME: We need real Unicode as upper.
+			--|For the moment, only ASCII code are concerned.
 		require
 			a_str_not_void: a_str /= Void
 		local
@@ -276,7 +276,7 @@ feature -- String
 
 	string_general_right_adjust (a_str: STRING_GENERAL)
 			-- Remove leading whitespace.
-			-- |FIXME: Only take ASCII into consideration.
+			--|FIXME: Only take ASCII into consideration.
 		require
 			a_str_not_void: a_str /= Void
 		local
@@ -301,7 +301,7 @@ feature -- String
 
 	is_string_general_lower (a_str: STRING_GENERAL): BOOLEAN
 			-- Is `a_str' in lower case?
-			-- |FIXME: For the moment, only ANSII code are concerned.
+			--|FIXME: For the moment, only ASCII code are concerned.
 		require
 			a_str_not_void: a_str /= Void
 		local
@@ -334,7 +334,7 @@ feature -- String
 
 	is_string_general_upper (a_str: STRING_GENERAL): BOOLEAN
 			-- Is `a_str' in upper case?
-			-- |FIXME: For the moment, only ANSII code are concerned.
+			--|FIXME: For the moment, only ASCII code are concerned.
 		require
 			a_str_not_void: a_str /= Void
 		local
@@ -365,20 +365,22 @@ feature -- String
 			end
 		end
 
-	string_32_is_caseless_equal (a_str_32: STRING_32; a_str_other: STRING_32): BOOLEAN
-			-- Is `a_str_32' in UTF32 case insensitive equal to `a_str_other'?
-			-- |FIXME: For the moment, only ANSII code are concerned.
+	string_general_is_caseless_equal (a_str: READABLE_STRING_GENERAL; a_str_other: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `a_str' case insensitive equal to `a_str_other'?
+			--
+			-- `a_str' and `a_str_other' must be UTF-32 compatible.
+			--|FIXME: For the moment, only ASCII code are concerned.
 		require
-			a_str_32_not_void: a_str_32 /= Void
+			a_str_32_not_void: a_str /= Void
 			a_str_other_not_void: a_str_other /= Void
 		local
 			i, nb: INTEGER_32
-			l_char, l_char_2: CHARACTER_32
+			l_code, l_code_2: NATURAL_32
 		do
-			if a_str_32 = a_str_other then
+			if a_str = a_str_other then
 				Result := True
 			else
-				nb := a_str_32.count
+				nb := a_str.count
 				if nb = a_str_other.count then
 					from
 						Result := True
@@ -386,12 +388,12 @@ feature -- String
 					until
 						i > nb or not Result
 					loop
-						l_char := a_str_32.item (i)
-						l_char_2 := a_str_other.item (i)
-						if l_char.is_character_8 and l_char_2.is_character_8 then
-							Result := l_char.as_lower = l_char_2.as_lower
+						l_code := a_str.code (i)
+						l_code_2 := a_str_other.code (i)
+						if l_code.is_valid_character_8_code and then l_code_2.is_valid_character_8_code then
+							Result := l_code.to_character_8.as_lower = l_code_2.to_character_8.as_lower
 						else
-							Result := l_char = l_char_2
+							Result := l_code = l_code_2
 						end
 						i := i + 1
 					end
@@ -400,7 +402,7 @@ feature -- String
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -18,13 +18,13 @@ inherit
 			delete_selected_entries,
 			entry_editable,
 			component_editable,
-			class_editor_token_for_location,
-			feature_editor_token_for_location,
+			class_editor_token_for_target,
+			feature_editor_token_for_target,
 			on_name_changed,
 			on_protocol_changed,
 			on_source_changed,
 			on_tags_changed,
-			on_others_changed,
+			on_parameters_changed,
 			compute_grid_rows,
 			on_override_changed,
 			override_item_from_eis_entry
@@ -371,29 +371,29 @@ feature {NONE} -- Class modification
 			end
 		end
 
-feature {NONE} -- Location token
+feature {NONE} -- Target token
 
-	class_editor_token_for_location (a_item: CLASS_I; a_editable: BOOLEAN): ES_GRID_LIST_ITEM
+	class_editor_token_for_target (a_item: CLASS_I; a_editable: BOOLEAN): ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		do
 			if a_editable and a_item.is_compiled then
-				Result := class_feature_editor_token_for_location (a_item, a_editable)
+				Result := class_feature_editor_token_for_target (a_item, a_editable)
 			else
 				Result := Precursor {ES_EIS_COMPONENT_VIEW}(a_item, a_editable)
 			end
 		end
 
-	feature_editor_token_for_location (a_item: E_FEATURE; a_name: STRING; a_editable: BOOLEAN): ES_GRID_LIST_ITEM
+	feature_editor_token_for_target (a_item: E_FEATURE; a_name: STRING; a_editable: BOOLEAN): ES_GRID_LIST_ITEM
 			-- Create editor token item for loaction accordingly.
 		do
 			if a_editable and a_item /= Void then
-				Result := class_feature_editor_token_for_location (a_item, a_editable)
+				Result := class_feature_editor_token_for_target (a_item, a_editable)
 			elseif a_name /= Void then
 				Result := Precursor {ES_EIS_COMPONENT_VIEW}(a_item, a_name, a_editable)
 			end
 		end
 
-	class_feature_editor_token_for_location (a_item: ANY; a_editable: BOOLEAN): ES_GRID_LIST_ITEM
+	class_feature_editor_token_for_target (a_item: ANY; a_editable: BOOLEAN): ES_GRID_LIST_ITEM
 			-- Create editor token item for loaction accordingly.
 		local
 			l_editable_item: EB_GRID_LISTABLE_CHOICE_ITEM
@@ -453,7 +453,7 @@ feature {NONE} -- Location token
 				Result := l_editable_item
 				if l_editable_item.item_components /= Void and then l_editable_item.item_components.index_set.count > 1 then
 					l_editable_item.pointer_button_press_actions.force_extend (agent activate_item (l_editable_item))
-					l_editable_item.set_selection_changing_action (agent on_location_changed (?, l_editable_item))
+					l_editable_item.set_selection_changing_action (agent on_target_changed (?, l_editable_item))
 				end
 			else
 				create Result
@@ -800,43 +800,43 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	on_others_changed (a_item: EV_GRID_EDITABLE_ITEM)
-			-- On others changed
+	on_parameters_changed (a_item: EV_GRID_EDITABLE_ITEM)
+			-- On parameters changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
 			l_new_entry: EIS_ENTRY
-			l_others: HASH_TABLE [STRING_32, STRING_32]
+			l_parameters: HASH_TABLE [STRING_32, STRING_32]
 			l_done: BOOLEAN
 		do
-			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_others then
-				l_others := parse_others (lt_others)
-				l_others.compare_objects
-				if lt_entry.others /= Void and then lt_entry.others.is_equal (l_others) then
-						-- Do nothing when the others is not actually changed
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_parameters then
+				l_parameters := parse_parameters (lt_parameters)
+				l_parameters.compare_objects
+				if lt_entry.parameters /= Void and then lt_entry.parameters.is_equal (l_parameters) then
+						-- Do nothing when the parameters is not actually changed
 				else
 					if entry_editable (lt_entry, False) then
 						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.id) as lt_feature then
 							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
-							l_new_entry.set_others (l_others)
+							l_new_entry.set_parameters (l_parameters)
 							modify_entry_in_feature (lt_entry, l_new_entry, lt_feature)
 							l_done := True
 						elseif attached {CLASS_I} id_solution.class_of_id (lt_entry.id) as lt_class then
 							if attached lt_entry.twin as lt_new_entry1 then
 								l_new_entry := lt_new_entry1
 							end
-							l_new_entry.set_others (l_others)
+							l_new_entry.set_parameters (l_parameters)
 							modify_entry_in_class (lt_entry, l_new_entry, lt_class)
 							l_done := True
 						end
-							-- Modify the others in the entry when the modification is done
+							-- Modify the parameters in the entry when the modification is done
 						if l_done then
 							storage.deregister_entry (lt_entry, component_id)
-							if not l_others.is_empty then
-								lt_entry.set_others (l_others)
+							if not l_parameters.is_empty then
+								lt_entry.set_parameters (l_parameters)
 							else
-								lt_entry.set_others (Void)
+								lt_entry.set_parameters (Void)
 							end
 							storage.register_entry (lt_entry, component_id, class_i.date)
 						end
@@ -845,7 +845,7 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	on_location_changed (a_item: EB_GRID_LISTABLE_CHOICE_ITEM_ITEM; a_grid_item: EB_GRID_LISTABLE_CHOICE_ITEM): BOOLEAN
+	on_target_changed (a_item: EB_GRID_LISTABLE_CHOICE_ITEM_ITEM; a_grid_item: EB_GRID_LISTABLE_CHOICE_ITEM): BOOLEAN
 			-- On selection changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		require

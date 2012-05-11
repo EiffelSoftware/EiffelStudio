@@ -66,12 +66,12 @@ feature -- Operation
 					l_comma_needed := True
 				end
 
-				if a_entry.others /= Void and then not a_entry.others.is_empty then
+				if a_entry.parameters /= Void and then not a_entry.parameters.is_empty then
 					if l_comma_needed then
 						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
 						l_output.append_character ({ES_EIS_TOKENS}.space)
 					end
-					l_output.append (others_as_code (a_entry))
+					l_output.append (parameters_as_code (a_entry))
 				end
 			else
 				create last_output_conf.make ({ES_EIS_TOKENS}.eis_string.as_lower)
@@ -87,16 +87,16 @@ feature -- Operation
 				if a_entry.tags /= Void and then not a_entry.tags.is_empty then
 					last_output_conf.add_attribute ({ES_EIS_TOKENS}.tag_string, tags_as_code (a_entry))
 				end
-				if attached {HASH_TABLE [STRING_32, STRING_32]} a_entry.others as lt_others and then not a_entry.others.is_empty then
+				if attached {HASH_TABLE [STRING_32, STRING_32]} a_entry.parameters as lt_parameters and then not a_entry.parameters.is_empty then
 					from
-						lt_others.start
+						lt_parameters.start
 					until
-						lt_others.after
+						lt_parameters.after
 					loop
-						if not lt_others.key_for_iteration.is_empty then
-							last_output_conf.add_attribute (encoding_converter.utf32_to_utf8 (lt_others.key_for_iteration), encoding_converter.utf32_to_utf8 (lt_others.item_for_iteration))
+						if not lt_parameters.key_for_iteration.is_empty then
+							last_output_conf.add_attribute (encoding_converter.utf32_to_utf8 (lt_parameters.key_for_iteration), encoding_converter.utf32_to_utf8 (lt_parameters.item_for_iteration))
 						end
-						lt_others.forth
+						lt_parameters.forth
 					end
 				end
 			end
@@ -162,8 +162,8 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	others_as_code (a_entry: EIS_ENTRY): STRING_32
-			-- Others as string of code.
+	parameters_as_code (a_entry: EIS_ENTRY): STRING_32
+			-- parameters as string of code.
 			-- Quoted
 		require
 			a_entry_not_void: a_entry /= Void
@@ -173,17 +173,17 @@ feature -- Access
 			l_value: STRING_32
 			l_found: BOOLEAN
 		do
-			if attached {HASH_TABLE [STRING_32, STRING_32]} a_entry.others as lt_others then
+			if attached {HASH_TABLE [STRING_32, STRING_32]} a_entry.parameters as lt_parameters then
 				create Result.make (10)
 				from
-					lt_others.start
-					l_count := lt_others.count
+					lt_parameters.start
+					l_count := lt_parameters.count
 				until
-					lt_others.after
+					lt_parameters.after
 				loop
 					i := i + 1
-					create l_attr.make_from_string (lt_others.key_for_iteration)
-					l_value := lt_others.item_for_iteration
+					create l_attr.make_from_string (lt_parameters.key_for_iteration)
+					l_value := lt_parameters.item_for_iteration
 					if not l_value.is_equal ({ES_EIS_TOKENS}.void_string) then
 						l_attr.append ({ES_EIS_TOKENS}.value_assignment)
 						l_attr.append (l_value)
@@ -194,7 +194,7 @@ feature -- Access
 						Result.append_character ({ES_EIS_TOKENS}.attribute_seperator)
 						Result.append_character ({ES_EIS_TOKENS}.space)
 					end
-					lt_others.forth
+					lt_parameters.forth
 				end
 			end
 			if not l_found then

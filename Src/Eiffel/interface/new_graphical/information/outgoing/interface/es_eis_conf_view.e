@@ -332,28 +332,31 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	on_protocol_changed (a_item: EV_GRID_EDITABLE_ITEM)
+	on_protocol_changed (a_choice_item: EB_GRID_LISTABLE_CHOICE_ITEM_ITEM; a_item: EB_GRID_LISTABLE_CHOICE_ITEM): BOOLEAN
 			-- On protocol changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
 			l_new_entry: EIS_ENTRY
+			l_protocol: like {EIS_ENTRY}.protocol
 		do
-			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_protocol then
-				if lt_entry.protocol /= Void and then lt_protocol.is_equal (lt_entry.protocol) then
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached {READABLE_STRING_GENERAL} a_choice_item.data as lt_protocol then
+				if lt_entry.protocol /= Void and then string_general_is_caseless_equal (lt_entry.protocol, lt_protocol) then
 						-- Do nothing when the protocol is not actually changed
 				else
+					l_protocol := lt_protocol.as_string_32
 					if entry_editable (lt_entry, False) then
 						if attached system_of_conf_notable (conf_notable) as lt_system then
 							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
-							l_new_entry.set_protocol (lt_protocol)
+							l_new_entry.set_protocol (l_protocol)
 							modify_entry_in_conf (lt_entry, l_new_entry, conf_notable, lt_system)
 								-- Modify the protocol in the entry when the modification is done
 							if last_entry_modified then
 								storage.deregister_entry (lt_entry, component_id)
-								lt_entry.set_protocol (lt_protocol)
+								lt_entry.set_protocol (l_protocol)
 								storage.register_entry (lt_entry, component_id, lt_system.file_date)
+								Result := True
 							end
 						end
 					end
@@ -534,7 +537,7 @@ invariant
 	conf_notable_is_valid: valid_notable (conf_notable)
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

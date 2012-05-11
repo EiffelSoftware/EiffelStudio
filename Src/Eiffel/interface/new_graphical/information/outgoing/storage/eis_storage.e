@@ -48,7 +48,6 @@ feature -- Retrieve and save
 	retrieve_from_file
 			-- Retrieve storage from file	
 		local
-			l_tuple: TUPLE [tag_server: like tag_server; entry_server: like entry_server]
 			l_file: RAW_FILE
 			l_facility: SED_STORABLE_FACILITIES
 			l_reader: SED_MEDIUM_READER_WRITER
@@ -61,10 +60,10 @@ feature -- Retrieve and save
 					create l_reader.make (l_file)
 					l_reader.set_for_reading
 					create l_facility
-					l_tuple ?= l_facility.retrieved (l_reader, True)
-					if l_tuple /= Void then
+					if attached {like type_to_store} l_facility.retrieved (l_reader, True) as l_tuple then
 						internal_tag_server := l_tuple.tag_server
 						internal_entry_server := l_tuple.entry_server
+						internal_date_server := l_tuple.date_server
 						save_needed := False
 					end
 				end
@@ -83,14 +82,14 @@ feature -- Retrieve and save
 	save_to_file
 			-- Save storage to file when needed.
 		local
-			l_tuple: TUPLE [tag_server: like tag_server; entry_server: like entry_server]
+			l_tuple: like type_to_store
 			l_file: RAW_FILE
 			l_facility: SED_STORABLE_FACILITIES
 			l_writer: SED_MEDIUM_READER_WRITER
 			l_retried: BOOLEAN
 		do
 			if not l_retried and then save_needed then
-				l_tuple := [tag_server, entry_server]
+				l_tuple := [tag_server, entry_server, date_server]
 				create l_file.make_create_read_write (storage_file_name)
 				create l_writer.make (l_file)
 				create l_facility
@@ -300,7 +299,7 @@ feature -- Access
 
 	date_server: HASH_TABLE [INTEGER, STRING]
 			-- Date server
-			-- Save time stamp for each components.
+			-- Save time stamp for each component.
 		do
 			Result := internal_date_server
 		ensure
@@ -310,12 +309,17 @@ feature -- Access
 feature {NONE} -- Access
 
 	storage_file_name: FILE_NAME
-			-- Path of the place to store tags.
+			-- Path to save the storage
 		do
 			create Result.make_from_string (project_location.target_path)
 			Result.set_file_name (eiffel_layout.eis_storage_file)
 		ensure
 			storage_file_name_attached: Result /= Void
+		end
+
+	type_to_store: detachable TUPLE [tag_server: like tag_server; entry_server: like entry_server; date_server: like date_server]
+			-- Type of the object to be stored
+		do
 		end
 
 	save_needed: BOOLEAN
@@ -336,7 +340,7 @@ invariant
 	internal_date_server_attached: internal_date_server /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

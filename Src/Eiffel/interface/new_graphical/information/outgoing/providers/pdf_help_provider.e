@@ -45,10 +45,10 @@ feature -- Basic operations
 				if attached lt_section.entry as lt_entry and then lt_entry.source /= Void and then attached lt_entry.source.as_string_8.twin as lt_src then
 					last_entry := lt_entry
 					format_uris (lt_src)
-					if attached lt_entry.others as lt_others then
-						lt_others.search (pdf_type_string.as_string_32)
-						if lt_others.found then
-							if lt_others.found_item.is_case_insensitive_equal (pdf_type_file_string.as_string_32) then
+					if attached lt_entry.parameters as lt_parameters then
+						lt_parameters.search (pdf_type_string.as_string_32)
+						if lt_parameters.found then
+							if lt_parameters.found_item.is_case_insensitive_equal (pdf_type_file_string.as_string_32) then
 								l_file_type := True
 							end
 						end
@@ -113,23 +113,23 @@ feature -- Basic operations
 			l_result: STRING
 			l_found: BOOLEAN
 		do
-			if attached a_entry.others as lt_others then
+			if attached a_entry.parameters as lt_parameters then
 				create l_result.make (5)
-				lt_others.search (acrobat_page)
-				if lt_others.found then
+				lt_parameters.search (acrobat_page)
+				if lt_parameters.found then
 					l_result.append (acrobat_page)
 					l_result.append (acrobat_attri_sep)
-					l_result.append (lt_others.found_item)
+					l_result.append (lt_parameters.found_item)
 					l_found := True
 				end
-				lt_others.search (acrobat_nameddest)
-				if lt_others.found then
+				lt_parameters.search (acrobat_nameddest)
+				if lt_parameters.found then
 					if l_found then
 						l_result.append (acrobat_sep)
 					end
 					l_result.append (acrobat_nameddest)
 					l_result.append (acrobat_attri_sep)
-					l_result.append (lt_others.found_item)
+					l_result.append (lt_parameters.found_item)
 					l_found := True
 				end
 				if l_found then

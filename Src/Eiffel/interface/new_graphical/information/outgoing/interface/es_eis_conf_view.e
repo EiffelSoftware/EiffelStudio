@@ -22,7 +22,7 @@ inherit
 			on_protocol_changed,
 			on_source_changed,
 			on_tags_changed,
-			on_others_changed
+			on_parameters_changed
 		end
 
 	SHARED_WORKBENCH
@@ -431,33 +431,33 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	on_others_changed (a_item: EV_GRID_EDITABLE_ITEM)
-			-- On others changed
+	on_parameters_changed (a_item: EV_GRID_EDITABLE_ITEM)
+			-- On parameters changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
 			l_new_entry: attached EIS_ENTRY
-			l_others: attached HASH_TABLE [STRING_32, STRING_32]
+			l_parameters: attached HASH_TABLE [STRING_32, STRING_32]
 		do
-			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_others then
-				l_others := parse_others (lt_others)
-				l_others.compare_objects
-				if lt_entry.others /= Void and then lt_entry.others.is_equal (l_others) then
-						-- Do nothing when the others is not actually changed
+			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_parameters then
+				l_parameters := parse_parameters (lt_parameters)
+				l_parameters.compare_objects
+				if lt_entry.parameters /= Void and then lt_entry.parameters.is_equal (l_parameters) then
+						-- Do nothing when the parameters is not actually changed
 				else
 					if entry_editable (lt_entry, False) then
 						if attached system_of_conf_notable (conf_notable) as lt_system then
 							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
-							l_new_entry.set_others (l_others)
+							l_new_entry.set_parameters (l_parameters)
 							modify_entry_in_conf (lt_entry, l_new_entry, conf_notable, lt_system)
-								-- Modify the others in the entry when the modification is done
+								-- Modify the parameters in the entry when the modification is done
 							if last_entry_modified then
 								storage.deregister_entry (lt_entry, component_id)
-								if not l_others.is_empty then
-									lt_entry.set_others (l_others)
+								if not l_parameters.is_empty then
+									lt_entry.set_parameters (l_parameters)
 								else
-									lt_entry.set_others (Void)
+									lt_entry.set_parameters (Void)
 								end
 								storage.register_entry (lt_entry, component_id, lt_system.file_date)
 							end

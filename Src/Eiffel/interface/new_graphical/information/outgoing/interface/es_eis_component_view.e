@@ -186,7 +186,7 @@ feature {NONE} -- Sorting
 			type_u, type_v: NATURAL
 		do
 			inspect cached_column
-			when column_location then
+			when column_target then
 				if attached u.id as lt_id_u then
 					if attached v.id as lt_id_v then
 						type_u := id_solution.most_possible_type_of_id (lt_id_u)
@@ -264,10 +264,10 @@ feature {NONE} -- Sorting
 				if descend_order then
 					Result := not Result
 				end
-			when column_others then
-				if attached u.others_as_string as lt_others_u then
-					if attached v.others_as_string as lt_others_v then
-						Result := lt_others_u < lt_others_v
+			when column_parameters then
+				if attached u.parameters_as_string as lt_parameters_u then
+					if attached v.parameters_as_string as lt_parameters_v then
+						Result := lt_parameters_u < lt_parameters_v
 					else
 						Result := True
 					end
@@ -324,14 +324,14 @@ feature {NONE} -- Initialization
 			l_grid.set_dynamic_content_function (agent on_item_display)
 
 			l_grid.set_column_count_to (numbers_of_column)
-			l_grid.set_auto_resizing_column (column_location, True)
+			l_grid.set_auto_resizing_column (column_target, True)
 			l_grid.set_auto_resizing_column (column_name, True)
 			l_grid.set_auto_resizing_column (column_protocol, True)
-			l_grid.column (column_override).set_width (20)
+			l_grid.set_auto_resizing_column (column_source, True)
 
-			l_column := l_grid.column (column_location)
-			l_column.set_title (interface_names.l_location)
-			register_action (l_column.header_item.pointer_button_press_actions, agent on_grid_header_click (column_location, ?, ?, ?, ?, ?, ?, ?, ?))
+			l_column := l_grid.column (column_target)
+			l_column.set_title (interface_names.l_target)
+			register_action (l_column.header_item.pointer_button_press_actions, agent on_grid_header_click (column_target, ?, ?, ?, ?, ?, ?, ?, ?))
 
 			l_column := l_grid.column (column_name)
 			l_grid.column (column_name).set_title (interface_names.l_name)
@@ -353,9 +353,9 @@ feature {NONE} -- Initialization
 			l_grid.column (column_override).set_title (interface_names.l_override)
 			register_action (l_column.header_item.pointer_button_press_actions, agent on_grid_header_click (column_override, ?, ?, ?, ?, ?, ?, ?, ?))
 
-			l_column := l_grid.column (column_others)
-			l_grid.column (column_others).set_title (interface_names.l_others)
-			register_action (l_column.header_item.pointer_button_press_actions, agent on_grid_header_click (column_others, ?, ?, ?, ?, ?, ?, ?, ?))
+			l_column := l_grid.column (column_parameters)
+			l_grid.column (column_parameters).set_title (interface_names.l_parameters)
+			register_action (l_column.header_item.pointer_button_press_actions, agent on_grid_header_click (column_parameters, ?, ?, ?, ?, ?, ?, ?, ?))
 		end
 
 	setup_grid_from_component
@@ -476,8 +476,8 @@ feature {NONE} -- Events
 				l_editable := entry_editable (l_eis_entry, True)
 
 				inspect a_column
-				when column_location then
-					Result := location_item_from_eis_entry (l_eis_entry, l_editable)
+				when column_target then
+					Result := target_item_from_eis_entry (l_eis_entry, l_editable)
 				when column_name then
 					Result := name_item_from_eis_entry (l_eis_entry, l_editable)
 				when column_protocol then
@@ -490,9 +490,9 @@ feature {NONE} -- Events
 				when column_override then
 						-- Override
 					Result := override_item_from_eis_entry (l_eis_entry, l_editable)
-				when column_others then
-						-- Others
-					Result := others_item_from_eis_entry (l_eis_entry, l_editable)
+				when column_parameters then
+						-- Parameters
+					Result := parameters_item_from_eis_entry (l_eis_entry, l_editable)
 				else
 					check no_more_column: False end
 				end
@@ -555,8 +555,8 @@ feature {NONE} -- Item callbacks
 		do
 		end
 
-	on_others_changed (a_item: EV_GRID_EDITABLE_ITEM)
-			-- On others changed
+	on_parameters_changed (a_item: EV_GRID_EDITABLE_ITEM)
+			-- On parameters changed
 		do
 		end
 
@@ -592,8 +592,8 @@ feature {NONE} -- Access
 				end
 			end
 			if Result = 0 then
-					-- Default to location column
-				Result := column_location
+					-- Default to target column
+				Result := column_target
 			end
 		end
 
@@ -746,8 +746,8 @@ feature {NONE} -- Validation
 			end
 		end
 
-	is_others_valid (a_others: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN
-			-- Can `a_others' be changed in `a_item'?
+	is_parameters_valid (a_parameters: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN
+			-- Can `a_parameters' be changed in `a_item'?
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry then
 				Result := entry_editable (lt_entry, False)
@@ -914,31 +914,31 @@ feature {NONE} -- Grid items
 			Result_not_void: Result /= Void
 		end
 
-	others_item_from_eis_entry (a_entry: EIS_ENTRY; a_editable: BOOLEAN): EV_GRID_ITEM
-			-- Grid item of others from an EIS entry.
+	parameters_item_from_eis_entry (a_entry: EIS_ENTRY; a_editable: BOOLEAN): EV_GRID_ITEM
+			-- Grid item of parameters from an EIS entry.
 		require
 			a_entry_not_void: a_entry /= Void
 		local
-			l_others: STRING_32
+			l_parameters: STRING_32
 			l_editable_item: ES_EIS_GRID_EDITABLE_ITEM
 		do
-			l_others := eis_output.others_as_code (a_entry)
+			l_parameters := eis_output.parameters_as_code (a_entry)
 			if a_editable then
-				create l_editable_item.make_with_text (l_others)
+				create l_editable_item.make_with_text (l_parameters)
 				l_editable_item.pointer_button_press_actions.force_extend (agent activate_item (l_editable_item))
-				l_editable_item.set_text_validation_agent (agent is_others_valid (?, l_editable_item))
-				l_editable_item.deactivate_actions.extend (agent on_others_changed (l_editable_item))
+				l_editable_item.set_text_validation_agent (agent is_parameters_valid (?, l_editable_item))
+				l_editable_item.deactivate_actions.extend (agent on_parameters_changed (l_editable_item))
 				l_editable_item.set_key_press_action (agent tab_to_next)
 				Result := l_editable_item
 			else
-				create {EV_GRID_LABEL_ITEM}Result.make_with_text (l_others)
+				create {EV_GRID_LABEL_ITEM}Result.make_with_text (l_parameters)
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	location_item_from_eis_entry (a_entry: EIS_ENTRY; a_editable: BOOLEAN): EV_GRID_ITEM
-			-- Grid item of location from an EIS entry
+	target_item_from_eis_entry (a_entry: EIS_ENTRY; a_editable: BOOLEAN): EV_GRID_ITEM
+			-- Grid item of target from an EIS entry
 		require
 			a_entry_not_void: a_entry /= Void
 		local
@@ -955,20 +955,20 @@ feature {NONE} -- Grid items
 				l_type := id_solution.most_possible_type_of_id (lt_id)
 				if l_type = id_solution.target_type then
 					l_target := id_solution.target_of_id (lt_id)
-					l_editor_token_item := target_editor_token_for_location (l_target)
+					l_editor_token_item := target_editor_token_for_target (l_target)
 				elseif l_type = id_solution.group_type then
 					l_group := id_solution.group_of_id (lt_id)
-					l_editor_token_item := group_editor_token_for_location (l_group)
+					l_editor_token_item := group_editor_token_for_target (l_group)
 				elseif l_type = id_solution.folder_type then
 						-- Should never get a folder type here.
 					l_folder := id_solution.folder_of_id (lt_id)
-					l_editor_token_item := folder_editor_token_for_location (l_folder)
+					l_editor_token_item := folder_editor_token_for_target (l_folder)
 				elseif l_type = id_solution.class_type then
 					l_class ?= id_solution.class_of_id (lt_id)
-					l_editor_token_item := class_editor_token_for_location (l_class, not a_entry.is_auto)
+					l_editor_token_item := class_editor_token_for_target (l_class, not a_entry.is_auto)
 				elseif l_type = id_solution.feature_type then
 					l_feature := id_solution.feature_of_id (lt_id)
-					l_editor_token_item := feature_editor_token_for_location (l_feature, id_solution.last_feature_name, not a_entry.is_auto)
+					l_editor_token_item := feature_editor_token_for_target (l_feature, id_solution.last_feature_name, not a_entry.is_auto)
 				end
 				if attached {ES_GRID_LIST_ITEM} l_editor_token_item as lt_item then
 					Result := lt_item
@@ -994,9 +994,9 @@ feature {NONE} -- Grid items
 			Result_not_void: Result /= Void
 		end
 
-feature {NONE} -- Location token
+feature {NONE} -- Target token
 
-	target_editor_token_for_location (a_item: CONF_TARGET): ES_GRID_LIST_ITEM
+	target_editor_token_for_target (a_item: CONF_TARGET): ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		local
 			l_editable_item: EB_GRID_LISTABLE_CHOICE_ITEM
@@ -1024,7 +1024,7 @@ feature {NONE} -- Location token
 			Result_not_void: Result /= Void
 		end
 
-	group_editor_token_for_location (a_item: CONF_GROUP): ES_GRID_LIST_ITEM
+	group_editor_token_for_target (a_item: CONF_GROUP): ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		local
 			l_editable_item: EB_GRID_LISTABLE_CHOICE_ITEM
@@ -1052,7 +1052,7 @@ feature {NONE} -- Location token
 			Result_not_void: Result /= Void
 		end
 
-	folder_editor_token_for_location (a_item: EB_FOLDER): ES_GRID_LIST_ITEM
+	folder_editor_token_for_target (a_item: EB_FOLDER): ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		local
 			l_editable_item: EB_GRID_LISTABLE_CHOICE_ITEM
@@ -1080,7 +1080,7 @@ feature {NONE} -- Location token
 			Result_not_void: Result /= Void
 		end
 
-	class_editor_token_for_location (a_item: CLASS_I; a_editable: BOOLEAN): ES_GRID_LIST_ITEM
+	class_editor_token_for_target (a_item: CLASS_I; a_editable: BOOLEAN): ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		local
 			l_editable_item: EB_GRID_LISTABLE_CHOICE_ITEM
@@ -1108,7 +1108,7 @@ feature {NONE} -- Location token
 			Result_not_void: Result /= Void
 		end
 
-	feature_editor_token_for_location (a_item: E_FEATURE; a_name: STRING; a_editable: BOOLEAN): ES_GRID_LIST_ITEM
+	feature_editor_token_for_target (a_item: E_FEATURE; a_name: STRING; a_editable: BOOLEAN): ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		require
 			a_item_void_implies_a_name_not_void: a_item = Void implies a_name /= Void
@@ -1222,13 +1222,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Column constants
 
-	column_location: INTEGER = 1
-	column_name: INTEGER = 2
-	column_protocol: INTEGER = 3
-	column_source: INTEGER = 4
-	column_tags: INTEGER = 5
-	column_override: INTEGER = 6
-	column_others: INTEGER = 7
+	column_target: INTEGER = 1
+	column_source: INTEGER = 2
+	column_parameters: INTEGER = 3
+	column_protocol: INTEGER = 4
+	column_name: INTEGER = 5
+	column_tags: INTEGER = 6
+	column_override: INTEGER = 7
 	numbers_of_column: INTEGER = 7;
 
 invariant

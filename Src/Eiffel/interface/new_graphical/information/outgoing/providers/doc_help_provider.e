@@ -75,10 +75,10 @@ feature -- Basic operations
 										l_documents.call_method ("Open", [l_formatted_source])
 										l_succeed := l_documents.is_successful
 											-- Get and go to bookmark if any.
-										if l_succeed and then attached l_entry.others as l_others then
-											l_others.search (bookmark_string)
-											if l_others.found then
-												l_bookmark := l_others.found_item
+										if l_succeed and then attached l_entry.parameters as l_parameters then
+											l_parameters.search (bookmark_string)
+											if l_parameters.found then
+												l_bookmark := l_parameters.found_item
 												if attached l_documents.last_object as l_doc then
 													l_active_doc := l_doc
 												end

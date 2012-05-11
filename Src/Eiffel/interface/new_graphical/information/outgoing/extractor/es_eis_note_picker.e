@@ -29,7 +29,7 @@ feature {NONE} -- Implementation
 											source: STRING_32;
 											tags: ARRAYED_LIST [STRING_32];
 											id: STRING;
-											others: HASH_TABLE [STRING_32, STRING_32];
+											parameters: HASH_TABLE [STRING_32, STRING_32];
 											override: BOOLEAN])
 			-- Fill `a_eis_tuple' from `a_key' and `a_value'.
 			-- There is still problem of the attached type for tuples.
@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 			a_value_not_void: a_value /= Void
 			a_eis_tuple_not_void: a_eis_tuple /= Void
 			tags_not_void: a_eis_tuple.tags /= Void
-			others_not_void: a_eis_tuple.others /= Void
+			parameters_not_void: a_eis_tuple.parameters /= Void
 		do
 			if a_eis_tuple.name = Void and then a_key.is_case_insensitive_equal ({ES_EIS_TOKENS}.name_string) then
 				a_eis_tuple.name := a_value
@@ -54,8 +54,8 @@ feature {NONE} -- Implementation
 					a_eis_tuple.override := True
 				end
 			else
-					-- Others
-				a_eis_tuple.others.force (a_value, a_key)
+					-- parameters
+				a_eis_tuple.parameters.force (a_value, a_key)
 			end
 		end
 
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 			l_index_list: EIFFEL_LIST [ATOMIC_AS]
 			l_atomic: ATOMIC_AS
 			l_attribute_pair: STRING
-			l_others: HASH_TABLE [STRING_32, STRING_32]
+			l_parameters: HASH_TABLE [STRING_32, STRING_32]
 			l_tags: ARRAYED_LIST [STRING_32]
 
 			l_entry_tuple: TUPLE [
@@ -76,15 +76,15 @@ feature {NONE} -- Implementation
 							source: STRING_32;
 							tags: ARRAYED_LIST [STRING_32];
 							id: STRING;
-							others: HASH_TABLE [STRING_32, STRING_32];
+							parameters: HASH_TABLE [STRING_32, STRING_32];
 							override: BOOLEAN]
 		do
 			if a_index.tag /= Void and then a_index.tag.name_8.is_case_insensitive_equal ({ES_EIS_TOKENS}.eis_string) then
 				l_index_list := a_index.index_list
 				l_entry_tuple := [Void, Void, Void, Void, Void, Void, False]
-				create l_others.make (3)
+				create l_parameters.make (3)
 				create l_tags.make (2)
-				l_entry_tuple.others := l_others
+				l_entry_tuple.parameters := l_parameters
 				l_entry_tuple.tags := l_tags
 				l_entry_tuple.id := a_eis_id
 				from
@@ -115,8 +115,8 @@ feature {NONE} -- Implementation
 							end
 						else
 								-- Don't recognize the attribute
-								-- Put it into others as key, and put in value a `void_string' token.
-							l_entry_tuple.others.force ({ES_EIS_TOKENS}.void_string, l_attribute_pair)
+								-- Put it into parameters as key, and put in value a `void_string' token.
+							l_entry_tuple.parameters.force ({ES_EIS_TOKENS}.void_string, l_attribute_pair)
 						end
 					end
 					l_index_list.forth
@@ -125,10 +125,10 @@ feature {NONE} -- Implementation
 				if l_entry_tuple.tags /= Void and then l_entry_tuple.tags.is_empty then
 					l_entry_tuple.tags := Void
 				end
-				if l_entry_tuple.others /= Void and then l_entry_tuple.others.is_empty then
-					l_entry_tuple.others := Void
+				if l_entry_tuple.parameters /= Void and then l_entry_tuple.parameters.is_empty then
+					l_entry_tuple.parameters := Void
 				end
-				create Result.make (l_entry_tuple.name, l_entry_tuple.protocol, l_entry_tuple.source, l_entry_tuple.tags, l_entry_tuple.id, l_entry_tuple.others)
+				create Result.make (l_entry_tuple.name, l_entry_tuple.protocol, l_entry_tuple.source, l_entry_tuple.tags, l_entry_tuple.id, l_entry_tuple.parameters)
 				Result.set_override (l_entry_tuple.override)
 			end
 		end
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 			l_id_not_void: l_id /= Void
 		local
 			l_attributes: HASH_TABLE [STRING, STRING]
-			l_others: HASH_TABLE [STRING_32, STRING_32]
+			l_parameters: HASH_TABLE [STRING_32, STRING_32]
 			l_tags: ARRAYED_LIST [STRING_32]
 			l_entry_tuple: TUPLE [
 							name: STRING_32;
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 							source: STRING_32;
 							tags: ARRAYED_LIST [STRING_32];
 							id: STRING;
-							others: HASH_TABLE [STRING_32, STRING_32];
+							parameters: HASH_TABLE [STRING_32, STRING_32];
 							override: BOOLEAN]
 
 		do
@@ -159,9 +159,9 @@ feature {NONE} -- Implementation
 				then
 					create l_entry_tuple
 					l_entry_tuple.id := l_id
-					create l_others.make (3)
+					create l_parameters.make (3)
 					create l_tags.make (2)
-					l_entry_tuple.others := l_others
+					l_entry_tuple.parameters := l_parameters
 					l_entry_tuple.tags := l_tags
 					from
 						l_attributes.start
@@ -184,10 +184,10 @@ feature {NONE} -- Implementation
 					if l_entry_tuple.tags /= Void and then l_entry_tuple.tags.is_empty then
 						l_entry_tuple.tags := Void
 					end
-					if l_entry_tuple.others /= Void and then l_entry_tuple.others.is_empty then
-						l_entry_tuple.others := Void
+					if l_entry_tuple.parameters /= Void and then l_entry_tuple.parameters.is_empty then
+						l_entry_tuple.parameters := Void
 					end
-					create Result.make (l_entry_tuple.name, l_entry_tuple.protocol, l_entry_tuple.source, l_entry_tuple.tags, l_entry_tuple.id, l_entry_tuple.others)
+					create Result.make (l_entry_tuple.name, l_entry_tuple.protocol, l_entry_tuple.source, l_entry_tuple.tags, l_entry_tuple.id, l_entry_tuple.parameters)
 				end
 			end
 		end
@@ -218,15 +218,15 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	parse_others (a_others_string: STRING_32): HASH_TABLE [STRING_32, STRING_32]
-			-- Parse `a_others_string' into an array.
-			-- others string should be in the form of
-			-- "other1=value1, other2=value2, other3=value3"
-			-- Or ""other1=value1", other2=value2, "other3=value3""
+	parse_parameters (a_parameters_string: STRING_32): HASH_TABLE [STRING_32, STRING_32]
+			-- Parse `a_parameters_string' into an array.
+			-- parameters string should be in the form of
+			-- "parameter1=value1, parameter2=value2, parameter3=value3"
+			-- Or ""parameter1=value1", parameter2=value2, "parameter3=value3""
 		require
-			a_others_string_not_void: a_others_string /= Void
+			a_parameters_string_not_void: a_parameters_string /= Void
 		do
-			if attached {ARRAYED_LIST [STRING_32]} a_others_string.split ({ES_EIS_TOKENS}.attribute_seperator) as lt_splitted then
+			if attached {ARRAYED_LIST [STRING_32]} a_parameters_string.split ({ES_EIS_TOKENS}.attribute_seperator) as lt_splitted then
 				create Result.make (1)
 				lt_splitted.do_all (
 						agent (aa_string: STRING_32; a_result: HASH_TABLE [STRING_32, STRING_32])
@@ -319,7 +319,7 @@ feature {NONE} -- Implemetation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

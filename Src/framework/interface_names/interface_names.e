@@ -1466,6 +1466,7 @@ feature -- Label texts
 	l_Output_switches: STRING_32			do Result := locale.translation("Output switches")	end
 	l_Outside_ide: STRING_32 			do Result := locale.translation ("Outside EiffelStudio") end
 	l_override: STRING_32				do Result := locale.translation ("Override") end
+	l_parameters: STRING_32				do Result := locale.translation ("Parameters") end
 	l_Parent_cluster: STRING_32			do Result := locale.translation("Parent cluster")	end
 	l_parents: STRING_32					do Result := locale.translation("Parents:")	end
 	l_Path: STRING_32					do Result := locale.translation("Path")	end

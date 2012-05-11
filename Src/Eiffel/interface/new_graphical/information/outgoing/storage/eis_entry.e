@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_protocol: like protocol; a_source: like source; a_tags: like tags a_id: like id; a_others: like others)
+	make (a_name: like name; a_protocol: like protocol; a_source: like source; a_tags: like tags a_id: like id; a_parameters: like parameters)
 			-- Initialization
 		require
 			a_id_not_void: a_id /= Void
@@ -28,14 +28,14 @@ feature {NONE} -- Initialization
 			source := a_source
 			tags := a_tags
 			id := a_id
-			others := a_others
+			parameters := a_parameters
 		ensure
 			name_set: name = a_name
 			protocol_set: protocol = a_protocol
 			source_set: source = a_source
 			tags_set: tags = a_tags
 			id_set: id = a_id
-			others_set: others = a_others
+			parameters_set: parameters = a_parameters
 		end
 
 feature {ES_EIS_COMPONENT_VIEW} -- Element change
@@ -83,12 +83,12 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			id_set: id = a_id
 		end
 
-	set_others (a_others: like others)
-			-- Set `others' with `a_others'
+	set_parameters (a_parameters: like parameters)
+			-- Set `parameters' with `a_parameters'
 		do
-			others := a_others
+			parameters := a_parameters
 		ensure
-			others_set: others = a_others
+			parameters_set: parameters = a_parameters
 		end
 
 feature {ES_EIS_NOTE_PICKER} -- Element change
@@ -118,8 +118,8 @@ feature -- Access
 	id: STRING
 			-- Id of the entry (from EB_SHARED_ID_SOLUTION)
 
-	others: detachable HASH_TABLE [STRING_32, STRING_32]
-			-- Other attributes of the entry
+	parameters: detachable HASH_TABLE [STRING_32, STRING_32]
+			-- Parameters of the entry
 
 	override: BOOLEAN
 			-- Overriding entry over auto entry?
@@ -150,25 +150,25 @@ feature -- Access
 					tags /= Void implies Result /= Void
 		end
 
-	others_as_string: detachable STRING_32
-			-- Others as string
+	parameters_as_string: detachable STRING_32
+			-- Parameters as string
 			-- Simple combination, not for display popose
 		do
-			if attached others as lt_others then
+			if attached parameters as lt_parameters then
 				create Result.make (10)
 				from
-					lt_others.start
+					lt_parameters.start
 				until
-					lt_others.after
+					lt_parameters.after
 				loop
-					Result.append (lt_others.key_for_iteration)
-					Result.append (lt_others.item_for_iteration)
-					lt_others.forth
+					Result.append (lt_parameters.key_for_iteration)
+					Result.append (lt_parameters.item_for_iteration)
+					lt_parameters.forth
 				end
 			end
 		ensure
-			others_not_void_implies_not_void:
-					others /= Void implies Result /= Void
+			parameters_not_void_implies_not_void:
+					parameters /= Void implies Result /= Void
 		end
 
 feature -- Comparison
@@ -205,11 +205,11 @@ feature -- Comparison
 											Result := string_general_is_caseless_equal (tags_as_string, other.tags_as_string)
 										end
 										if Result then
-												-- Compare others
-											Result := not ((others = Void) xor (other.others = Void))
+												-- Compare parameters
+											Result := not ((parameters = Void) xor (other.parameters = Void))
 											if Result then
-												if others /= Void then
-													Result := string_general_is_caseless_equal (others_as_string, other.others_as_string)
+												if parameters /= Void then
+													Result := string_general_is_caseless_equal (parameters_as_string, other.parameters_as_string)
 												end
 											end
 										end
@@ -244,8 +244,8 @@ feature -- Hashable
 				if attached tags_as_string as lt_tags then
 					l_string.append (lt_tags)
 				end
-				if attached others_as_string as lt_others then
-					l_string.append (lt_others)
+				if attached parameters_as_string as lt_parameters then
+					l_string.append (lt_parameters)
 				end
 				Result := l_string.hash_code
 			end
@@ -260,7 +260,7 @@ invariant
 	a_id_not_void: id /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

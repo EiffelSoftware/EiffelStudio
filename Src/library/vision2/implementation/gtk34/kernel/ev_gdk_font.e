@@ -4,7 +4,7 @@ note
 		%matched string that it is loaded from."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
+	date: "$Date: 2012-05-11 14:37:29 -0700 (Fri, 11 May 2012) $"
 	revision: "$Revision$"
 
 class

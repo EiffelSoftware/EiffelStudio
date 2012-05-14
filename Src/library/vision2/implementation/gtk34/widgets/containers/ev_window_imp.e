@@ -108,7 +108,7 @@ feature {NONE} -- Initialization
 			{GTK}.gtk_window_set_default_size (l_c_object, 1, 1)
 			Precursor {EV_CELL_IMP}
 				-- Need to set decorations after window is realized.
-			{GTK}.gdk_window_set_decorations ({GTK}.gtk_widget_struct_window (l_c_object), default_wm_decorations)
+			{GTK}.gdk_window_set_decorations ({GTK}.gtk_widget_get_window (l_c_object), default_wm_decorations)
 			internal_is_border_enabled := True
 			configure_event_pending := True
 			user_can_resize := True
@@ -138,7 +138,7 @@ feature  -- Access
 			p : POINTER
 			a_cs: EV_GTK_C_STRING
 		do
-			p := {GTK}.gtk_window_struct_title (c_object)
+			p := {GTK}.gtk_window_get_title (c_object)
 			if p /= NULL then
 				create a_cs.share_from_pointer (p)
 				Result := a_cs.string
@@ -181,7 +181,7 @@ feature -- Status setting
 			l_x := x_position
 			l_y := y_position
 			l_decor := default_wm_decorations.bit_and ({GTK}.gdk_decor_border_enum.bit_not)
-			{GTK}.gdk_window_set_decorations ({GTK}.gtk_widget_struct_window (c_object), l_decor)
+			{GTK}.gdk_window_set_decorations ({GTK}.gtk_widget_get_window (c_object), l_decor)
 			set_position (l_x, l_y)
 		end
 
@@ -191,7 +191,7 @@ feature -- Status setting
 			l_decor: INTEGER
 		do
 			l_decor := default_wm_decorations.bit_or ({GTK}.gdk_decor_border_enum)
-			{GTK}.gdk_window_set_decorations ({GTK}.gtk_widget_struct_window (c_object), l_decor)
+			{GTK}.gdk_window_set_decorations ({GTK}.gtk_widget_get_window (c_object), l_decor)
 		end
 
 	disable_user_resize_called: BOOLEAN
@@ -603,7 +603,7 @@ feature {EV_MENU_BAR_IMP, EV_ACCELERATOR_IMP, EV_APPLICATION_IMP} -- Implementat
 			internal_has_focus := a_has_focus
 			Precursor {EV_CELL_IMP} (a_has_focus)
 			if a_has_focus then
-				on_set_focus_event ({GTK}.gtk_window_struct_focus_widget (c_object))
+				on_set_focus_event ({GTK}.gtk_window_get_focus (c_object))
 			else
 				on_set_focus_event (default_pointer)
 			end
@@ -636,14 +636,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- Interface object of `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_WINDOW_IMP

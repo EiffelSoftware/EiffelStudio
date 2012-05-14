@@ -26,7 +26,6 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			gdk_region := {GTK}.gdk_region_new
 			set_is_initialized (True)
 		end
 
@@ -43,14 +42,13 @@ feature -- Element Change
 			{GTK2}.set_gdk_rectangle_struct_width (rectangle_struct, a_rectangle.width)
 			{GTK2}.set_gdk_rectangle_struct_height (rectangle_struct, a_rectangle.height)
 			dispose
-			gdk_region := {GTK2}.gdk_region_rectangle (rectangle_struct)
 			rectangle_struct.memory_free
 		end
 
 	offset (a_horizontal_offset, a_vertical_offset: INTEGER)
 			-- Move `Current' a `a_horizontal_offset' horizontally and `a_vertical_offset' vertically.
 		do
-			{GTK}.gdk_region_offset (gdk_region, a_horizontal_offset, a_vertical_offset)
+
 		end
 
 feature -- Access
@@ -65,7 +63,6 @@ feature -- Access
 			check l_result_imp /= Void end
 			l_region_imp ?= a_region.implementation
 			check l_region_imp /= Void end
-			{GTK2}.gdk_region_intersect (l_result_imp.gdk_region, l_region_imp.gdk_region)
 		end
 
 	union (a_region: EV_REGION): EV_REGION
@@ -78,7 +75,6 @@ feature -- Access
 			check l_result_imp /= Void end
 			l_region_imp ?= a_region.implementation
 			check l_region_imp /= Void end
-			{GTK2}.gdk_region_union (l_result_imp.gdk_region, l_region_imp.gdk_region)
 		end
 
 	subtract (a_region: EV_REGION): EV_REGION
@@ -91,7 +87,6 @@ feature -- Access
 			check l_result_imp /= Void end
 			l_region_imp ?= a_region.implementation
 			check l_region_imp /= Void end
-			{GTK2}.gdk_region_subtract (l_result_imp.gdk_region, l_region_imp.gdk_region)
 		end
 
 	exclusive_or (a_region: EV_REGION): EV_REGION
@@ -104,7 +99,6 @@ feature -- Access
 			check l_result_imp /= Void end
 			l_region_imp ?= a_region.implementation
 			check l_region_imp /= Void end
-			{GTK2}.gdk_region_xor (l_result_imp.gdk_region, l_region_imp.gdk_region)
 		end
 
 feature -- Duplication
@@ -117,7 +111,6 @@ feature -- Duplication
 			dispose
 			l_region_imp ?= other.implementation
 			check l_region_imp /= Void end
-			gdk_region := {GTK2}.gdk_region_copy (l_region_imp.gdk_region)
 		end
 
 feature {EV_DRAWABLE_IMP, EV_REGION_IMP} -- Access
@@ -135,7 +128,6 @@ feature {NONE} -- Implementation
 			if other /= Void then
 				l_region_imp ?= other.implementation
 				check l_region_imp /= Void end
-				Result := {GTK}.gdk_region_equal (gdk_region, l_region_imp.gdk_region)
 			end
 		end
 
@@ -151,20 +143,19 @@ feature {NONE} -- Implementation
 			-- Clean up `Current'.
 		do
 			if gdk_region /= default_pointer then
-				{GTK}.gdk_region_destroy (gdk_region)
 				gdk_region := default_pointer
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

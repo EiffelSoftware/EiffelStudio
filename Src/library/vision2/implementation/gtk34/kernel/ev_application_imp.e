@@ -42,10 +42,6 @@ feature {NONE} -- Initialization
 
 	make
 			-- Set up the callback marshal and initialize GTK+.
-		local
-			locale_str: STRING
-			l_colormap: POINTER
-			l_gdk_screen_get_rgba_colormap_symbol: POINTER
 		do
 --			if {EV_GTK_DEPENDENT_EXTERNALS}.g_mem_is_system_malloc then
 --				{EV_GTK_DEPENDENT_EXTERNALS}.g_mem_set_vtable ({EV_GTK_EXTERNALS}.glib_mem_profiler_table)
@@ -54,11 +50,14 @@ feature {NONE} -- Initialization
 --			put ("localhost:0", "DISPLAY")
 				-- This line may be uncommented to allow for display redirection to another machine for debugging purposes
 
+<<<<<<< .mine
+			--put ("broadway", "GDK_BACKEND")
+
+=======
 			create character_string_buffer.make (4)
 
+>>>>>>> .r88715
 			Precursor
-
-			create locale_str.make_from_c ({GTK}.gtk_set_locale)
 
 			gtk_is_launchable := gtk_init_check
 
@@ -76,29 +75,14 @@ feature {NONE} -- Initialization
 				initialize_threading
 					-- Store the value of the debug mode.
 				saved_debug_state := debug_state
-				enable_ev_gtk_log (0)
+				enable_ev_gtk_log (2)
 					-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
 				{GTK}.gdk_set_show_events (False)
 
 				best_available_color_depth := {GTK2}.gdk_visual_get_best_depth.min (24)
 
-
-					-- Try and set widgets with default rgba colormap if available.
-				l_gdk_screen_get_rgba_colormap_symbol := gdk_screen_get_rgba_colormap_symbol
-				if l_gdk_screen_get_rgba_colormap_symbol /= default_pointer then
-				--	l_colormap := gdk_screen_get_rgba_colormap_call (l_gdk_screen_get_rgba_colormap_symbol, {GTK2}.gdk_screen_get_default)
-				end
-
-				if l_colormap = default_pointer then
-					l_colormap := {GTK2}.gdk_screen_get_rgb_colormap ({GTK2}.gdk_screen_get_default)
-				end
-				{GTK}.gtk_widget_set_default_colormap (l_colormap)
-
 				gtk_dependent_initialize
 
-				tooltips := {GTK}.gtk_tooltips_new
-				{GTK2}.object_ref (tooltips)
-				{GTK}.gtk_object_sink (tooltips)
 				set_tooltip_delay (500)
 
 					-- Uncomment for Gtk 2.x only
@@ -132,18 +116,9 @@ feature {NONE} -- Initialization
 		local
 			l_rect: POINTER
 			l_primary_monitor_number: INTEGER
-			l_image: POINTER
 			l_supports_composite_symbol: POINTER
 		do
-
-				-- Check if an GdkImage using the GDK_IMAGE_SHARED flag (first argument '1') may be created, if so then display is local.
-			l_image := {GTK}.gdk_image_new (1, {GTK2}.gdk_screen_get_rgb_visual ({GTK2}.gdk_screen_get_default), 1, 1)
-				-- This may fail if the X Server doesn't support the Shared extension, but if this is the case
-				-- then the display will be slow anyway so the usage of this function will remain the same.
-			is_display_remote := l_image = default_pointer
-			if not is_display_remote then
-				{GTK2}.object_unref (l_image)
-			end
+			is_display_remote := False
 
 				-- Check whether display supports transparency
 			l_supports_composite_symbol := gdk_display_supports_composite_symbol
@@ -178,19 +153,6 @@ feature {NONE} -- Initialization
 			"C inline use <ev_gtk.h>"
 		alias
 			"return (FUNCTION_CAST(gboolean, (GdkDisplay*)) $a_function)((GdkDisplay*) $a_display);"
-		end
-
-	gdk_screen_get_rgba_colormap_symbol: POINTER
-			-- Symbol for `gdk_display_supports_composite'
-		once
-			Result := symbol_from_symbol_name ("gdk_screen_get_rgba_colormap")
-		end
-
-	gdk_screen_get_rgba_colormap_call (a_function: POINTER; a_display: POINTER): POINTER
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"return (FUNCTION_CAST(GdkColormap*, (GdkScreen*)) $a_function)((GdkScreen*) $a_display);"
 		end
 
 feature {NONE} -- Event loop
@@ -262,7 +224,7 @@ feature {EV_ANY_I} -- Implementation
 					if current_window.full then
 						l_window_imp ?= current_window.implementation
 						check l_window_imp /= Void end
-						l_widget_ptr := {GTK}.gtk_window_struct_focus_widget (l_window_imp.c_object)
+						l_widget_ptr := {GTK}.gtk_window_get_focus (l_window_imp.c_object)
 						if l_widget_ptr /= {GTK}.null_pointer then
 							l_widget_imp ?= eif_object_from_gtk_object (l_widget_ptr)
 							if l_widget_imp /= Void then
@@ -384,10 +346,10 @@ feature {EV_ANY_I} -- Implementation
 												l_app_motion_tuple.widget := default_window
 										end
 									end
-									if {GTK}.gtk_object_struct_flags (l_pnd_imp.c_object) & {GTK}.GTK_SENSITIVE_ENUM = {GTK}.GTK_SENSITIVE_ENUM then
-										if {GTK}.gtk_widget_struct_window (l_pnd_imp.visual_widget) /= {GTK}.gdk_event_motion_struct_window (gdk_event) then
+									if {GTK}.gtk_widget_get_state_flags (l_pnd_imp.c_object) & {GTK}.GTK_STATE_FLAG_INSENSITIVE_ENUM = 0 then
+										if {GTK}.gtk_widget_get_window (l_pnd_imp.visual_widget) /= {GTK}.gdk_event_motion_struct_window (gdk_event) then
 												-- If the event we received is not from the associating widget window then we remap its correct x and y values.
-											i := {GTK}.gdk_window_get_origin ({GTK}.gtk_widget_struct_window (l_pnd_imp.visual_widget), $l_widget_x, $l_widget_y)
+											i := {GTK}.gdk_window_get_origin ({GTK}.gtk_widget_get_window (l_pnd_imp.visual_widget), $l_widget_x, $l_widget_y)
 											l_widget_x := l_screen_x - l_widget_x
 											l_widget_y := l_screen_y - l_widget_y
 										end
@@ -622,7 +584,7 @@ feature {EV_ANY_I} -- Implementation
 							l_gtk_widget_imp := l_focused_popup_window
 								-- Change window of `gdk_event' to be that of focused widget.
 							l_gdk_window := {GTK}.gdk_event_any_struct_window (gdk_event)
-							{GTK}.set_gdk_event_any_struct_window (gdk_event, {GTK}.gtk_widget_struct_window (l_gtk_widget_imp.c_object))
+							{GTK}.set_gdk_event_any_struct_window (gdk_event, {GTK}.gtk_widget_get_window (l_gtk_widget_imp.c_object))
 						else
 							if l_has_grab_widget then
 								l_gtk_widget_imp ?= eif_object_from_gtk_object (l_grab_widget)
@@ -791,7 +753,7 @@ feature {NONE} -- Implementation
 	main_module: POINTER
 			-- Module representing `Current' application instance.
 		do
-			if {GTK}.gtk_min_ver >= 6 and then {GTK}.g_module_supported then
+			if {GTK}.g_module_supported then
 				Result := {GTK}.g_module_open (default_pointer, 0)
 			end
 		end
@@ -992,10 +954,10 @@ feature -- Basic operation
 		do
 			from
 				a_context := {GTK}.gdk_event_dnd_struct_context (a_event)
-				src_window := {GTK}.gdk_drag_context_struct_source_window (a_context)
+				src_window := {GTK}.gdk_drag_context_get_source_window (a_context)
 				a_selection := {GTK}.gdk_drag_get_selection (a_context)
 				a_time := {GTK}.gdk_event_dnd_struct_time (a_event)
-				a_target_list := {GTK}.gdk_drag_context_struct_targets (a_context)
+				a_target_list := {GTK}.gdk_drag_context_list_targets (a_context)
 				l_string := "STRING"
 				l_file := "file://"
 			until
@@ -1030,7 +992,7 @@ feature -- Basic operation
 				a_target_list := {GTK}.glist_struct_next (a_target_list)
 			end
 			if l_success and then attached l_file_list then
-				dest_window := {GTK}.gdk_drag_context_struct_dest_window (a_context)
+				dest_window := {GTK}.gdk_drag_context_get_dest_window (a_context)
 				if dest_window /= {GTK}.null_pointer then
 					{GTK}.gdk_window_get_user_data (dest_window, $gtkwid)
 					if gtkwid /= {GTK}.null_pointer then
@@ -1101,7 +1063,7 @@ feature -- Basic operation
 			-- End the application.
 		do
 			if not is_destroyed then
-				{GTK2}.object_unref (tooltips)
+				{GTK2}.g_object_unref (tooltips)
 				set_is_destroyed (True)
 					-- This will exit our main loop
 				destroy_actions.call (Void)
@@ -1119,9 +1081,6 @@ feature -- Status setting
 			-- Set `tooltip_delay' to `a_delay'.
 		do
 			tooltip_delay := a_delay
-			if gtk_is_launchable then
-				{GTK}.gtk_tooltips_set_delay (tooltips, a_delay)
-			end
 		end
 
 feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
@@ -1288,7 +1247,7 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 				Result /= Void or else gtkwid = l_null
 			loop
 				Result := {EV_ANY_IMP}.eif_object_from_c (gtkwid)
-				gtkwid := {GTK}.gtk_widget_struct_parent (gtkwid)
+				gtkwid := {GTK}.gtk_widget_get_parent (gtkwid)
 			end
 			if Result /= Void and then Result.is_destroyed then
 				Result := Void
@@ -1334,7 +1293,7 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 			-- Pointer to a default GdkWindow that may be used to
 			-- access default visual information (color depth).
 		do
-			Result := {GTK}.gtk_widget_struct_window (default_gtk_window)
+			Result := {GTK}.gtk_widget_get_window (default_gtk_window)
 		end
 
 	default_widget: EV_WIDGET
@@ -1361,33 +1320,6 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 			l_result ?= default_window.implementation
 			check l_result /= Void end
 			Result := l_result
-		end
-
-	default_font_height: INTEGER
-			-- Default font height.
-		local
-			temp_style: POINTER
-		do
-			temp_style := {GTK}.gtk_widget_struct_style (default_gtk_window)
-			Result := {GTK}.gdk_font_struct_ascent ({GTK2}.gtk_style_get_font (temp_style))
-		end
-
-	default_font_ascent: INTEGER
-			-- Default font ascent.
-		local
-			temp_style: POINTER
-		do
-			temp_style := {GTK}.gtk_widget_struct_style (default_gtk_window)
-			Result := {GTK}.gdk_font_struct_ascent ({GTK2}.gtk_style_get_font (temp_style))
-		end
-
-	default_font_descent: INTEGER
-			-- Default font descent.
-		local
-			temp_style: POINTER
-		do
-			temp_style := {GTK}.gtk_widget_struct_style (default_gtk_window)
-			Result := {GTK}.gdk_font_struct_descent ({GTK2}.gtk_style_get_font (temp_style))
 		end
 
 	reusable_rectangle_struct: POINTER
@@ -1418,10 +1350,10 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 			create Result.set_with_eiffel_string ("")
 		end
 
-	reusable_color_struct: POINTER
-			-- Persistent GdkColorStruct
+	reusable_rgba_struct: POINTER
+			-- Persistent GdkRGBA struct.
 		once
-			Result := {GTK}.c_gdk_color_struct_allocate
+			Result := {GTK}.c_gdk_rgba_struct_allocate
 		end
 
 feature -- Thread Handling.

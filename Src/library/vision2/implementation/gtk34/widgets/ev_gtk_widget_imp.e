@@ -64,13 +64,13 @@ feature {EV_ANY_I, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retrieval
 		do
 			if is_displayed then
 					i := {GTK}.gdk_window_get_origin (
-						{GTK}.gtk_widget_struct_window (visual_widget),
+						{GTK}.gtk_widget_get_window (visual_widget),
 				    	$a_x, l_null)
 					Result := a_x
 			else
 				a_aux_info := aux_info_struct
 				if a_aux_info /= l_null then
-					Result := {GTK}.gtk_widget_aux_info_struct_x (a_aux_info)
+					Result := {GTK}.gtk_widget_aux_info_struct_halign (a_aux_info)
 				end
 			end
 			Result := Result + app_implementation.screen_virtual_x
@@ -86,13 +86,13 @@ feature {EV_ANY_I, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retrieval
 		do
 			if is_displayed then
 					i := {GTK}.gdk_window_get_origin (
-						{GTK}.gtk_widget_struct_window (visual_widget),
+						{GTK}.gtk_widget_get_window (visual_widget),
 				    	l_null, $a_y)
 					Result := a_y
 			else
 				a_aux_info := aux_info_struct
 				if a_aux_info /= l_null then
-					Result := {GTK}.gtk_widget_aux_info_struct_y (a_aux_info)
+					Result := {GTK}.gtk_widget_aux_info_struct_valign (a_aux_info)
 				end
 			end
 			Result := Result +  + app_implementation.screen_virtual_y
@@ -106,11 +106,15 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			a_aux_info, l_null: POINTER
 			tmp_struct_x: INTEGER
+			l_alloc: POINTER
 		do
-			Result := {GTK}.gtk_allocation_struct_x ({GTK}.gtk_widget_struct_allocation (c_object))
+			l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
+			{GTK}.gtk_widget_get_allocation (c_object, l_alloc)
+			Result := {GTK}.gtk_allocation_struct_y (l_alloc)
+			l_alloc.memory_free
 			a_aux_info := aux_info_struct
 			if a_aux_info /= l_null then
-				tmp_struct_x := {GTK}.gtk_widget_aux_info_struct_x (a_aux_info)
+				tmp_struct_x := {GTK}.gtk_widget_aux_info_struct_halign (a_aux_info)
 				if tmp_struct_x >= 0 then
 					Result := tmp_struct_x
 				end
@@ -124,11 +128,15 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			a_aux_info, l_null: POINTER
 			tmp_struct_y: INTEGER
+			l_alloc: POINTER
 		do
-			Result := {GTK}.gtk_allocation_struct_y ({GTK}.gtk_widget_struct_allocation (c_object))
+			l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
+			{GTK}.gtk_widget_get_allocation (c_object, l_alloc)
+			Result := {GTK}.gtk_allocation_struct_y (l_alloc)
+			l_alloc.memory_free
 			a_aux_info := aux_info_struct
 			if a_aux_info /= l_null then
-				tmp_struct_y := {GTK}.gtk_widget_aux_info_struct_y (a_aux_info)
+				tmp_struct_y := {GTK}.gtk_widget_aux_info_struct_valign (a_aux_info)
 				if tmp_struct_y >= 0 then
 					Result := tmp_struct_y
 				end
@@ -157,13 +165,13 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	minimum_width, real_minimum_width: INTEGER
 			-- Minimum width that the widget may occupy.
 		local
-			gr: POINTER
+			gr, l_null: POINTER
 		do
 			if not is_destroyed then
 				{GTK2}.g_object_get_integer (c_object, width_request_string.item, $Result)
 				if Result = -1 then
 					gr := reusable_requisition_struct.item
-					{GTK}.gtk_widget_size_request (c_object, gr)
+					{GTK}.gtk_widget_get_preferred_size (c_object, gr, l_null)
 					Result := {GTK}.gtk_requisition_struct_width (gr)
 				end
 			end
@@ -178,13 +186,13 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	minimum_height, real_minimum_height: INTEGER
 			-- Minimum width that the widget may occupy.
 		local
-			gr: POINTER
+			gr, l_null: POINTER
 		do
 			if not is_destroyed then
 				{GTK2}.g_object_get_integer (c_object, height_request_string.item, $Result)
 				if Result = -1 then
 					gr := reusable_requisition_struct.item
-					{GTK}.gtk_widget_size_request (c_object, gr)
+					{GTK}.gtk_widget_get_preferred_size (c_object, gr, l_null)
 					Result := {GTK}.gtk_requisition_struct_height (gr)
 				end
 			end
@@ -196,7 +204,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			a_visual_widget: POINTER
 		do
 			a_visual_widget := visual_widget
-			if not {GTK}.gtk_widget_no_window (a_visual_widget) then
+			if not {GTK}.gtk_widget_get_has_window (a_visual_widget) then
 				Result := a_visual_widget
 			else
 				Result := c_object
@@ -228,7 +236,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 					check a_cursor_imp /= Void end
 					a_cursor_ptr := a_cursor_imp.gdk_cursor_from_pointer_style
 				end
-				a_window := {GTK}.gtk_widget_struct_window (c_object)
+				a_window := {GTK}.gtk_widget_get_window (c_object)
 				if a_window /= default_pointer then
 					{GTK}.gdk_window_set_cursor (a_window, a_cursor_ptr)
 				end
@@ -273,7 +281,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			else
 				l_window := {GTK}.gtk_widget_get_toplevel (c_object)
 				l_widget := visual_widget
-				if {GTK}.gtk_object_struct_flags (l_widget) & {GTK}.gtk_can_focus_enum /= {GTK}.gtk_can_focus_enum then
+				if not {GTK}.gtk_widget_get_can_focus (l_widget) then
 					l_widget := default_pointer
 				end
 			end
@@ -291,13 +299,18 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			l_minimum_width: like real_minimum_width
 			l_allocated_width: INTEGER
+			l_alloc: POINTER
 		do
 			l_minimum_width := real_minimum_width
 			if is_show_requested or not {GTK}.gtk_is_window (c_object) then
-				l_allocated_width := {GTK}.gtk_allocation_struct_width ({GTK}.gtk_widget_struct_allocation (c_object))
-				if is_displayed and then {GTK}.gtk_widget_struct_parent (c_object) /= default_pointer and then l_allocated_width < l_minimum_width then
-					{GTK}.gtk_container_check_resize ({GTK}.gtk_widget_struct_parent (c_object))
-					l_allocated_width := {GTK}.gtk_allocation_struct_width ({GTK}.gtk_widget_struct_allocation (c_object))
+				l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
+				{GTK}.gtk_widget_get_allocation (c_object, l_alloc)
+				l_allocated_width := {GTK}.gtk_allocation_struct_width (l_alloc)
+				if is_displayed and then {GTK}.gtk_widget_get_parent (c_object) /= default_pointer and then l_allocated_width < l_minimum_width then
+					{GTK}.gtk_container_check_resize ({GTK}.gtk_widget_get_parent (c_object))
+					{GTK}.gtk_widget_get_allocation (c_object, l_alloc)
+					l_allocated_width := {GTK}.gtk_allocation_struct_width (l_alloc)
+					l_alloc.memory_free
 				end
 			end
 			Result := l_minimum_width.max (l_allocated_width)
@@ -308,14 +321,20 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			l_minimum_height: like real_minimum_height
 			l_allocated_height: INTEGER
+			l_alloc: POINTER
 		do
 			l_minimum_height := real_minimum_height
 			if is_show_requested or not {GTK}.gtk_is_window (c_object) then
-				l_allocated_height := {GTK}.gtk_allocation_struct_height ({GTK}.gtk_widget_struct_allocation (c_object))
-				if is_displayed and then {GTK}.gtk_widget_struct_parent (c_object) /= default_pointer and then l_allocated_height < l_minimum_height then
-					{GTK}.gtk_container_check_resize ({GTK}.gtk_widget_struct_parent (c_object))
-					l_allocated_height := {GTK}.gtk_allocation_struct_height ({GTK}.gtk_widget_struct_allocation (c_object))
+					-- Temporarily allocate a GtkAllocation struct.
+				l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
+				{GTK}.gtk_widget_get_allocation (c_object, l_alloc)
+				l_allocated_height := {GTK}.gtk_allocation_struct_height (l_alloc)
+				if is_displayed and then {GTK}.gtk_widget_get_parent (c_object) /= default_pointer and then l_allocated_height < l_minimum_height then
+					{GTK}.gtk_container_check_resize ({GTK}.gtk_widget_get_parent (c_object))
+					{GTK}.gtk_widget_get_allocation (c_object, l_alloc)
+					l_allocated_height := {GTK}.gtk_allocation_struct_height (l_alloc)
 				end
+				l_alloc.memory_free
 			end
 			Result := l_minimum_height.max (l_allocated_height)
 		end
@@ -323,10 +342,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	aux_info_struct: POINTER
 			-- Pointer to the auxillary information struct used for retrieving when widget is unmapped
 		do
-			Result := {GTK}.gtk_object_get_data (
-				c_object,
-				aux_info_string.item
-			)
+			{GTK2}.g_object_get_pointer (c_object, aux_info_string.item, $Result)
 		end
 
 	show
@@ -341,7 +357,7 @@ feature -- Status report
 			-- Will `Current' be displayed when its parent is?
 			-- See also `is_displayed'.
 		do
-			Result := {GTK}.gtk_object_struct_flags (c_object) & {GTK}.GTK_VISIBLE_ENUM = {GTK}.GTK_VISIBLE_ENUM
+			Result := {GTK}.gtk_widget_get_visible (c_object)
 		end
 
 	is_displayed: BOOLEAN
@@ -349,12 +365,12 @@ feature -- Status report
 		local
 			l_win: detachable EV_WINDOW_IMP
 		do
-			Result := {GTK}.gtk_object_struct_flags (c_object) & {GTK}.GTK_MAPPED_ENUM = {GTK}.GTK_MAPPED_ENUM
+			Result := {GTK3}.gtk_widget_get_mapped (c_object)
 				-- If Current is shown, let's check that it's top parent window is shown too.
 			if Result then
 				l_win := top_level_window_imp
 				if l_win /= Void then
-					Result := {GTK}.gtk_object_struct_flags (l_win.c_object) & {GTK}.GTK_MAPPED_ENUM = {GTK}.GTK_MAPPED_ENUM
+					Result := {GTK3}.gtk_widget_get_mapped (l_win.c_object)
 				end
 			end
 		end
@@ -401,7 +417,7 @@ feature {NONE} -- Implementation
 		do
 			l_window := {GTK}.gtk_widget_get_toplevel (c_object)
 				-- This will return `c_object' if not toplevel window is found in hierarchy.
-			if l_window /= default_pointer and then {GTK2}.gtk_widget_toplevel (l_window) and then (a_toplevel_window_active implies {GTK2}.gtk_window_is_active (l_window)) then
+			if l_window /= default_pointer and then {GTK2}.gtk_widget_is_toplevel (l_window) and then (a_toplevel_window_active implies {GTK2}.gtk_window_is_active (l_window)) then
 				l_widget := {GTK2}.gtk_window_get_focus (l_window)
 				if l_widget /= default_pointer then
 					l_widget_imp ?= app_implementation.eif_object_from_gtk_object (l_widget)
@@ -419,14 +435,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

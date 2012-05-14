@@ -16,74 +16,25 @@ inherit
 			draw_sub_pixel_buffer
 		end
 
-	EV_DRAWABLE_CONSTANTS
-
-	DISPOSABLE
-		undefine
-			copy,
-			default_create
-		end
-
-	PLATFORM
-		undefine
-			copy,
-			default_create
-		end
-
-	MATH_CONST
-
 feature {NONE} -- Initialization
 
 	init_default_values
 			-- Set default values. Call during initialization.
-		local
-			l_mem: INTEGER_16
 		do
-			l_mem := {INTEGER_16} 3 | ({INTEGER_16} 3 |<< integer_8_bits)
-			set_dashes_pattern (gc, $l_mem)
-			line_style := {GTK}.Gdk_line_solid_enum
+			disable_dashed_line_style
 			set_drawing_mode (drawing_mode_copy)
 			set_line_width (1)
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	gc: POINTER
-			-- Pointer to GdkGC struct.
-			-- The graphics context applied to the primitives.
-			-- Line style, width, colors, etc. are defined in here.
-
-	gcvalues: POINTER
-			-- Pointer to GdkGCValues struct.
-			-- Is allocated during creation but has to be updated
-			-- every time it is accessed.
-
 	drawable: POINTER
-			-- Pointer to the GdkWindow of `c_object'.
-		deferred
-		end
-
-	mask: POINTER
-			-- Pointer to the mask used by `Current'
-		deferred
-		end
+			-- Pointer to the current Cairo context for `Current'.
 
 feature {EV_DRAWABLE_IMP} -- Implementation
 
 	line_style: INTEGER
 			-- Dash-style used when drawing lines.
-
-	cap_style: INTEGER
-			-- Style used for drawing end of lines.
-		do
-			Result := {GTK}.gdk_cap_round_enum
-		end
-
-	join_style: INTEGER
-			-- Way in which lines are joined together.				
-		do
-			Result := {GTK}.Gdk_join_bevel_enum
-		end
 
 	gc_clip_area: detachable EV_RECTANGLE
 			-- Clip area currently used by `gc'.
@@ -146,39 +97,9 @@ feature -- Access
 
 	line_width: INTEGER
 			-- Line thickness.
-		do
-			gcvalues := {GTK}.c_gdk_gcvalues_struct_allocate
-			{GTK}.gdk_gc_get_values (gc, gcvalues)
-			Result := {GTK}.gdk_gcvalues_struct_line_width (gcvalues)
-			gcvalues.memory_free
-		end
 
 	drawing_mode: INTEGER
 			-- Logical operation on pixels when drawing.
-		local
-			gdk_drawing_mode: INTEGER
-		do
-			gcvalues := {GTK}.c_gdk_gcvalues_struct_allocate
-			{GTK}.gdk_gc_get_values (gc, gcvalues)
-			gdk_drawing_mode := {GTK}.gdk_gcvalues_struct_function (gcvalues)
-			gcvalues.memory_free
-
-			if gdk_drawing_mode = {GTK}.Gdk_copy_enum then
-				Result := drawing_mode_copy
-			elseif gdk_drawing_mode = {GTK}.Gdk_xor_enum then
-				Result := drawing_mode_xor
-			elseif gdk_drawing_mode = {GTK}.Gdk_invert_enum then
-				Result := drawing_mode_invert
-			elseif gdk_drawing_mode = {GTK}.Gdk_and_enum then
-				Result := drawing_mode_and
-			elseif gdk_drawing_mode = {GTK}.Gdk_or_enum then
-				Result := drawing_mode_or
-			else
-				check
-					drawing_mode_existent: False
-				end
-			end
-		end
 
 	clip_area: detachable EV_RECTANGLE
 			-- Clip area used to clip drawing.
@@ -195,15 +116,6 @@ feature -- Access
 
 	dashed_line_style: BOOLEAN
 			-- Are lines drawn dashed?
-		local
-			style: INTEGER
-		do
-			gcvalues := {GTK}.c_gdk_gcvalues_struct_allocate
-			{GTK}.gdk_gc_get_values (gc, gcvalues)
-			style := {GTK}.gdk_gcvalues_struct_line_style (gcvalues)
-			gcvalues.memory_free
-			Result := style = {GTK}.Gdk_line_on_off_dash_enum
-		end
 
 feature -- Element change
 
@@ -231,7 +143,7 @@ feature -- Element change
 				l_internal_background_color.set_red_with_8_bit (a_color.red_8_bit)
 				l_internal_background_color.set_green_with_8_bit (a_color.green_8_bit)
 				l_internal_background_color.set_blue_with_8_bit (a_color.blue_8_bit)
-				internal_set_color (False, a_color.red_16_bit, a_color.green_16_bit, a_color.blue_16_bit)
+				internal_set_color (False, a_color.red, a_color.green, a_color.blue)
 			end
 		end
 
@@ -249,86 +161,66 @@ feature -- Element change
 				l_internal_foreground_color.set_red_with_8_bit (a_color.red_8_bit)
 				l_internal_foreground_color.set_green_with_8_bit (a_color.green_8_bit)
 				l_internal_foreground_color.set_blue_with_8_bit (a_color.blue_8_bit)
-				internal_set_color (True, a_color.red_16_bit, a_color.green_16_bit, a_color.blue_16_bit)
+				internal_set_color (True, a_color.red, a_color.green, a_color.blue)
 			end
 		end
 
 	set_line_width (a_width: INTEGER)
 			-- Assign `a_width' to `line_width'.
 		do
-			{GTK}.gdk_gc_set_line_attributes (gc, a_width,
-				line_style, cap_style, join_style)
+			if drawable /= default_pointer then
+				{CAIRO}.cairo_set_line_width (drawable, a_width)
+			end
+			line_width := a_width
 		end
 
 	set_drawing_mode (a_mode: INTEGER)
 			-- Set drawing mode to `a_mode'.
 		local
-			l_gc: like gc
+			l_cairo_operator: INTEGER
 		do
-			l_gc := gc
-			inspect
-				a_mode
-			when drawing_mode_copy then
-				{GTK}.gdk_gc_set_function (l_gc, {GTK}.Gdk_copy_enum)
-			when drawing_mode_xor then
-				{GTK}.gdk_gc_set_function (l_gc, {GTK}.Gdk_xor_enum)
-			when drawing_mode_invert then
-				{GTK}.gdk_gc_set_function (l_gc, {GTK}.Gdk_invert_enum)
-			when drawing_mode_and then
-				{GTK}.gdk_gc_set_function (l_gc, {GTK}.Gdk_and_enum)
-			when drawing_mode_or then
-				{GTK}.gdk_gc_set_function (l_gc, {GTK}.Gdk_or_enum)
-			else
-				check
-					drawing_mode_existent: False
+			if drawable /= default_pointer then
+				inspect
+					a_mode
+				when {EV_DRAWABLE_CONSTANTS}.drawing_mode_copy then
+					{CAIRO}.cairo_set_operator (drawable, {CAIRO}.cairo_operator_source)
+				when {EV_DRAWABLE_CONSTANTS}.drawing_mode_xor then
+					-- CAIRO_OPERATOR_XOR
+				when {EV_DRAWABLE_CONSTANTS}.drawing_mode_invert then
+
+				when {EV_DRAWABLE_CONSTANTS}.drawing_mode_and then
+					-- CAIRO_OPERATOR_AND
+				when {EV_DRAWABLE_CONSTANTS}.drawing_mode_or then
+
+				else
+					check
+						drawing_mode_existent: False
+					end
 				end
 			end
+
+				-- Store set drawing mode.
+			drawing_mode := a_mode
 		end
 
 	set_clip_area (an_area: EV_RECTANGLE)
 			-- Set an area to clip to.
-		local
-			rectangle_struct: POINTER
 		do
 			gc_clip_area := an_area.twin
-			rectangle_struct := {GTK}.c_gdk_rectangle_struct_allocate
-			{GTK2}.set_gdk_rectangle_struct_x (rectangle_struct, an_area.x + device_x_offset)
-			{GTK2}.set_gdk_rectangle_struct_y (rectangle_struct, an_area.y + device_y_offset)
-			{GTK2}.set_gdk_rectangle_struct_width (rectangle_struct, an_area.width)
-			{GTK2}.set_gdk_rectangle_struct_height (rectangle_struct, an_area.height)
-			{GTK}.gdk_gc_set_clip_region (gc, default_pointer)
-			{GTK}.gdk_gc_set_clip_rectangle (gc, rectangle_struct)
-			rectangle_struct.memory_free
 		end
 
 	set_clip_region (a_region: EV_REGION)
 			-- Set a region to clip to.
-		local
-			a_region_imp: detachable EV_REGION_IMP
-			rectangle_struct: POINTER
 		do
-			rectangle_struct := {GTK}.c_gdk_rectangle_struct_allocate
-			a_region_imp ?= a_region.implementation
-			check a_region_imp /= Void end
-			{GTK}.gdk_region_get_clipbox (a_region_imp.gdk_region, rectangle_struct)
-				-- Set the gc clip area.
-			create gc_clip_area.make (
-				{GTK}.gdk_rectangle_struct_x (rectangle_struct) + device_x_offset,
-				{GTK}.gdk_rectangle_struct_y (rectangle_struct) + device_y_offset,
-				{GTK}.gdk_rectangle_struct_width (rectangle_struct),
-				{GTK}.gdk_rectangle_struct_height (rectangle_struct)
-			)
-			{GTK}.gdk_gc_set_clip_rectangle (gc, default_pointer)
-			{GTK}.gdk_gc_set_clip_region (gc, a_region_imp.gdk_region)
-			rectangle_struct.memory_free
+			if attached {EV_REGION_IMP} a_region as l_region_imp then
+
+			end
 		end
 
 	remove_clipping
 			-- Do not apply any clipping.
 		do
 			gc_clip_area := Void
-			{GTK}.gdk_gc_set_clip_rectangle (gc, default_pointer)
-			{GTK}.gdk_gc_set_clip_region (gc, default_pointer)
 		end
 
 	set_tile (a_pixmap: EV_PIXMAP)
@@ -343,7 +235,7 @@ feature -- Element change
 			l_tile.copy (a_pixmap)
 			tile_imp ?= l_tile.implementation
 			check tile_imp /= Void end
-			{GTK}.gdk_gc_set_tile (gc, tile_imp.drawable)
+--			{GTK}.gdk_gc_set_tile (gc, tile_imp.drawable)
 		end
 
 	remove_tile
@@ -355,17 +247,17 @@ feature -- Element change
 	enable_dashed_line_style
 			-- Draw lines dashed.
 		do
-			line_style := {GTK}.Gdk_line_on_off_dash_enum
-			{GTK}.gdk_gc_set_line_attributes (gc, line_width,
-				line_style, cap_style, join_style)
+--			line_style := {GTK}.Gdk_line_on_off_dash_enum
+--			{GTK}.gdk_gc_set_line_attributes (gc, line_width,
+--				line_style, cap_style, join_style)
 		end
 
 	disable_dashed_line_style
 			-- Draw lines solid.
 		do
-			line_style := {GTK}.Gdk_line_solid_enum
-			{GTK}.gdk_gc_set_line_attributes (gc, line_width,
-				line_style, cap_style, join_style)
+--			line_style := {GTK}.Gdk_line_solid_enum
+--			{GTK}.gdk_gc_set_line_attributes (gc, line_width,
+--				line_style, cap_style, join_style)
 		end
 
 feature -- Clearing operations
@@ -379,24 +271,20 @@ feature -- Clearing operations
 	clear_rectangle (x, y, a_width, a_height: INTEGER)
 			-- Erase rectangle specified with `background_color'.
 		local
-			tmp_fg_color, tmp_bg_color: detachable EV_COLOR
+			l_bg_color: detachable EV_COLOR
 		do
 			if drawable /= default_pointer then
-				tmp_fg_color := internal_foreground_color
-				if tmp_fg_color = Void then
-					tmp_fg_color := foreground_color
+				{CAIRO}.cairo_save (drawable)
+				l_bg_color := internal_background_color
+				if l_bg_color /= Void then
+					{CAIRO}.cairo_set_source_rgb (drawable, l_bg_color.red, l_bg_color.green, l_bg_color.blue)
+				else
+					{CAIRO}.cairo_set_source_rgb (drawable, 1.0, 1.0, 1.0)
 				end
-				tmp_bg_color := internal_background_color
-				if tmp_bg_color = Void then
-					tmp_bg_color := background_color
-				end
-				internal_set_color (True, tmp_bg_color.red_16_bit, tmp_bg_color.green_16_bit, tmp_bg_color.blue_16_bit)
-				{GTK}.gdk_draw_rectangle (drawable, gc, 1,
-					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					a_width,
-					a_height)
-				internal_set_color (True, tmp_fg_color.red_16_bit, tmp_fg_color.green_16_bit, tmp_fg_color.blue_16_bit)
+				{CAIRO}.cairo_rectangle (drawable, x + device_x_offset, y + device_y_offset, a_width, a_height)
+				{CAIRO}.cairo_fill (drawable)
+
+				{CAIRO}.cairo_restore (drawable)
 				update_if_needed
 			end
 		end
@@ -406,15 +294,7 @@ feature -- Drawing operations
 	draw_point (x, y: INTEGER)
 			-- Draw point at (`x', `y').
 		do
-			if drawable /= default_pointer then
-	 			{GTK}.gdk_draw_point (
-	 				drawable,
-	 				gc,
-	 				(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-	 				(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
-	 			)
-	 			update_if_needed
-			end
+			draw_segment (x, y, x + 1, y + 1)
 		end
 
 	draw_text (x, y: INTEGER; a_text: READABLE_STRING_GENERAL)
@@ -491,8 +371,8 @@ feature -- Drawing operations
 			-- Draw `a_text' at (`x', `y') using `font'.
 		local
 			a_cs: EV_GTK_C_STRING
-			a_pango_layout: POINTER
-			x_orig, y_orig, a_x, a_y: INTEGER
+			a_pango_layout, l_pango_iter: POINTER
+			l_x, l_y: REAL_64
 			a_clip_area: detachable EV_RECTANGLE
 			a_pango_matrix, a_pango_context: POINTER
 			l_app_imp: like App_implementation
@@ -500,81 +380,51 @@ feature -- Drawing operations
 			l_ellipsize_symbol: POINTER
 		do
 			if drawable /= default_pointer then
+
+				{CAIRO}.cairo_save (drawable)
+
 				l_app_imp := App_implementation
 
 					-- Set x_orig and y_orig to be the device translated values which must be used for the rest of the routine.
-				x_orig := x + device_x_offset
-				y_orig := y + device_y_offset
-
-				a_x := x_orig
-				if draw_from_baseline then
-					if internal_font_imp /= Void then
-						a_y := y_orig - internal_font_imp.ascent
-					else
-						a_y := y_orig - l_app_imp.default_font_ascent
-					end
-				else
-					a_y := y_orig
-				end
+				l_x := x + device_x_offset
+				l_y := y + device_y_offset
 
 				a_cs := l_app_imp.c_string_from_eiffel_string (a_text)
-					-- Replace when we have UTF16 support
-				a_pango_layout := l_app_imp.pango_layout
+
+				a_pango_layout := {GTK2}.pango_cairo_create_layout (drawable)
 
 				{GTK2}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
 				if internal_font_imp /= Void then
 					{GTK2}.pango_layout_set_font_description (a_pango_layout, internal_font_imp.font_description)
 				end
 
+				if draw_from_baseline then
+					l_pango_iter := {GTK2}.pango_layout_get_iter (a_pango_layout)
+					l_y := l_y - ({GTK2}.pango_layout_iter_get_baseline (l_pango_iter) / {GTK2}.pango_scale)
+				end
+				l_y := l_y - 0.5
+					-- Cairo adds 0.5 in calculation to account for center pixel coordinates but we want top left.
+				{CAIRO}.cairo_translate (drawable, l_x, l_y)
+
 				if a_width /= -1 then
 						-- We need to perform ellipsizing on text if available, otherwise we clip.
 					l_ellipsize_symbol := pango_layout_set_ellipsize_symbol
-					if l_ellipsize_symbol /= default_pointer then
-						pango_layout_set_ellipsize_call (l_ellipsize_symbol, a_pango_layout, 3)
-						{GTK2}.pango_layout_set_width (a_pango_layout, a_width * {GTK2}.pango_scale)
-					else
-							-- Previous code for gtk 2.4 that set a clip area for text rendering.						
-						a_clip_area := gc_clip_area
-						set_clip_area (create {EV_RECTANGLE}.make (x_orig, y_orig, a_width, 10000))
-						{GTK2}.pango_layout_set_width (a_pango_layout, 10000 * {GTK2}.pango_scale)
-					end
+					pango_layout_set_ellipsize_call (l_ellipsize_symbol, a_pango_layout, 3)
+					{GTK2}.pango_layout_set_width (a_pango_layout, a_width * {GTK2}.pango_scale)
 				end
 
 				if a_angle /= 0 then
-					l_pango_renderer := {GTK2}.gdk_pango_renderer_get_default ({GTK2}.gdk_screen_get_default)
-						-- This is reusable so do not free the renderer.
-						-- Renderer is needed to rotate text without a bounding box
-					{GTK2}.gdk_pango_renderer_set_drawable (l_pango_renderer, drawable)
-					{GTK2}.gdk_pango_renderer_set_gc (l_pango_renderer, gc)
-
-					a_pango_context := {GTK2}.pango_layout_get_context (a_pango_layout)
-
-					{GTK2}.pango_matrix_init ($a_pango_matrix)
-
-					{GTK2}.pango_matrix_translate (
-						a_pango_matrix,
-						x_orig.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-						y_orig.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
-					)
-					{GTK2}.pango_matrix_rotate (a_pango_matrix, a_angle / Pi.truncated_to_real * 180)
-					{GTK2}.pango_matrix_translate (a_pango_matrix, 0, -(y_orig - a_y))
-
-					{GTK2}.pango_context_set_matrix (a_pango_context, a_pango_matrix)
-
-					{GTK2}.pango_renderer_draw_layout (l_pango_renderer, a_pango_layout, 0, 0)
-
-						-- Clean up Pango renderer.
-					{GTK2}.gdk_pango_renderer_set_drawable (l_pango_renderer, default_pointer)
-					{GTK2}.gdk_pango_renderer_set_gc (l_pango_renderer, default_pointer)
-				else
-					{GTK2}.gdk_draw_layout (
-						drawable,
-						gc,
-						a_x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-						a_y.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-						a_pango_layout
-					)
+					-- Handle rotation
 				end
+
+				{GTK2}.pango_cairo_show_layout (drawable, a_pango_layout)
+
+				--{GTK2}.pango_cairo_update_layout (drawable, a_pango_layout)
+				--{GTK2}.pango_cairo_layout_path (drawable, a_pango_layout)
+
+				--{CAIRO}.cairo_stroke_preserve (drawable)
+				--{CAIRO}.cairo_fill (drawable)
+				--{CAIRO}.cairo_stroke (drawable)
 
 					-- Reset all changed values.
 				if a_width /= -1 then
@@ -597,6 +447,8 @@ feature -- Drawing operations
 					{GTK2}.pango_context_set_matrix (a_pango_context, default_pointer)
 					{GTK2}.pango_matrix_free (a_pango_matrix)
 				end
+
+				{CAIRO}.cairo_restore (drawable)
 			end
 		end
 
@@ -617,14 +469,9 @@ feature -- Drawing operations
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
 		do
 			if drawable /= default_pointer then
-				{GTK}.gdk_draw_line (
-					drawable,
-					gc,
-					(x1 + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					(y1 + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					(x2 + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					(y2 + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
-				)
+				{CAIRO}.cairo_move_to (drawable, x1 + device_x_offset, y1 + device_y_offset)
+				{CAIRO}.cairo_line_to (drawable, x2 + device_x_offset, y2 + device_y_offset)
+				{CAIRO}.cairo_stroke (drawable)
 				update_if_needed
 			end
 		end
@@ -634,47 +481,32 @@ feature -- Drawing operations
 			-- size `a_width' and `a_height'.
 			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
 			-- Angles are measured in radians.
-		local
-			a_radians: INTEGER
 		do
-			if drawable /= default_pointer then
-				a_radians := radians_to_gdk_angle
-				{GTK}.gdk_draw_arc (
-					drawable,
-					gc,
-					0,
-					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					a_width,
-					a_height,
-					(a_start_angle * a_radians + 0.5).truncated_to_integer,
-					(an_aperture * a_radians + 0.5).truncated_to_integer
-				)
-				update_if_needed
-			end
+			draw_ellipse_internal (x, y, a_width, a_height, a_start_angle, an_aperture, False, False)
 		end
+
 
 	draw_sub_pixel_buffer (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER; area: EV_RECTANGLE)
 			-- Draw `area' of `a_pixel_buffer' with upper-left corner on (`a_x', `a_y').
 		local
-			a_pixbuf_imp: detachable EV_PIXEL_BUFFER_IMP
-			l_pixels: POINTER
-			l_rowstride: NATURAL
-			l_back_buffer: POINTER
+--			a_pixbuf_imp: detachable EV_PIXEL_BUFFER_IMP
+--			l_pixels: POINTER
+--			l_rowstride: NATURAL
+--			l_back_buffer: POINTER
 		do
-			a_pixbuf_imp ?= a_pixel_buffer.implementation
-			check a_pixbuf_imp /= Void end
-			if supports_pixbuf_alpha then
-				{GTK2}.gdk_draw_pixbuf (drawable, gc, a_pixbuf_imp.gdk_pixbuf, area.x, area.y, a_x + device_x_offset, a_y + device_y_offset, area.width, area.height, 0, 0, 0)
-			else
-					-- We need to retrieve the source pixmap, composite and then reblit to the same area.
-				l_back_buffer := pixbuf_from_drawable_at_position (a_x, a_y, 0, 0, area.width, area.height)
-				{GTK2}.gdk_pixbuf_composite (a_pixbuf_imp.gdk_pixbuf, l_back_buffer, 0, 0, area.width, area.height, 0, 0, 1, 1, 0, 255)
-				l_pixels := {GTK}.gdk_pixbuf_get_pixels (l_back_buffer)
-				l_rowstride := {GTK}.gdk_pixbuf_get_rowstride (l_back_buffer)
-				{GTK}.gdk_draw_rgb_32_image (drawable, gc, a_x + device_x_offset, a_y + device_y_offset, area.width, area.height, 0, l_pixels, l_rowstride.as_integer_32)
-				{GTK2}.object_unref (l_back_buffer)
-			end
+--			a_pixbuf_imp ?= a_pixel_buffer.implementation
+--			check a_pixbuf_imp /= Void end
+--			if supports_pixbuf_alpha then
+--				{GTK2}.gdk_draw_pixbuf (drawable, gc, a_pixbuf_imp.gdk_pixbuf, area.x, area.y, a_x + device_x_offset, a_y + device_y_offset, area.width, area.height, 0, 0, 0)
+--			else
+--					-- We need to retrieve the source pixmap, composite and then reblit to the same area.
+--				l_back_buffer := pixbuf_from_drawable_at_position (a_x, a_y, 0, 0, area.width, area.height)
+--				{GTK2}.gdk_pixbuf_composite (a_pixbuf_imp.gdk_pixbuf, l_back_buffer, 0, 0, area.width, area.height, 0, 0, 1, 1, 0, 255)
+--				l_pixels := {GTK}.gdk_pixbuf_get_pixels (l_back_buffer)
+--				l_rowstride := {GTK}.gdk_pixbuf_get_rowstride (l_back_buffer)
+--				{GTK}.gdk_draw_rgb_32_image (drawable, gc, a_x + device_x_offset, a_y + device_y_offset, area.width, area.height, 0, l_pixels, l_rowstride.as_integer_32)
+--				{GTK2}.g_object_unref (l_back_buffer)
+--			end
 		end
 
 	supports_pixbuf_alpha: BOOLEAN
@@ -691,104 +523,32 @@ feature -- Drawing operations
 		end
 
 	draw_full_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; x_src, y_src, src_width, src_height: INTEGER)
-		local
-			l_source_full, l_source_clip, l_source_intersection: EV_RECTANGLE
-			l_dest_full, l_dest_clip, l_dest_intersection: EV_RECTANGLE
-			pixmap_imp: detachable EV_PIXMAP_IMP
---			l_visible_region, l_visible_rectangle: POINTER
 		do
-			if drawable /= default_pointer then
+			if drawable /= default_pointer and then attached {EV_PIXMAP_IMP} a_pixmap.implementation as l_pixmap_imp then
 
-					-- Get visible region of drawable
-				--| FIXME IEK Optimize for visible regions with corruptable data.
---				l_visible_rectangle := {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
---				l_visible_region := {EV_GTK_EXTERNALS}.gdk_drawable_get_visible_region (drawable)
---				if corruptable_onscreen and l_visible_region /= default_pointer then
---					{EV_GTK_EXTERNALS}.gdk_region_get_clipbox (l_visible_region, l_visible_rectangle)
---					{EV_GTK_EXTERNALS}.gdk_region_destroy (l_visible_region)
---					l_visible_region := default_pointer
---					create l_source_full.make (
---						{EV_GTK_EXTERNALS}.gdk_rectangle_struct_x (l_visible_rectangle),
---						{EV_GTK_EXTERNALS}.gdk_rectangle_struct_y (l_visible_rectangle),
---						{EV_GTK_EXTERNALS}.gdk_rectangle_struct_width (l_visible_rectangle),
---						{EV_GTK_EXTERNALS}.gdk_rectangle_struct_height (l_visible_rectangle)
---					)
---				else
-					create l_source_full.make (0, 0, a_pixmap.width, a_pixmap.height)
---				end
+				{CAIRO}.cairo_save (drawable)
 
---				l_visible_rectangle.memory_free
+				{CAIRO}.cairo_set_source_surface (drawable, l_pixmap_imp.cairo_surface, x - x_src, y - y_src)
 
-				create l_source_clip.make (x_src, y_src, src_width, src_height)
+				{CAIRO}.cairo_rectangle (drawable, x + device_x_offset, y + device_y_offset, src_width, src_height)
+				{CAIRO}.cairo_fill (drawable)
 
-				l_source_intersection := l_source_full.intersection (l_source_clip)
-					-- The source intersection dimensions are used as the initial size of the clip
-					-- The source intersection origin is used as the initial origin of the clip
-
-				if l_source_intersection.width > 0 and then l_source_intersection.height > 0 then
-
-					create l_dest_full.make (0, 0, width, height)
-						-- Account for any source clipping in the destination
-					create l_dest_clip.make (x + l_source_intersection.x - l_source_clip.x, y + l_source_intersection.y - l_source_clip.y, l_source_intersection.width, l_source_intersection.height)
-
-						-- Move the source clip to the intersection position and dimensions
-					l_source_clip.move (l_source_intersection.x, l_source_intersection.y)
-					l_source_clip.resize (l_source_intersection.width, l_source_intersection.height)
-
-					l_dest_intersection := l_dest_full.intersection (l_dest_clip)
-
-					if l_dest_intersection.width > 0 and then l_dest_intersection.height > 0 then
-
-						l_source_clip.resize (l_dest_intersection.width, l_dest_intersection.height)
-
-							-- We need to account for any destination position clipping by updating the source clip accordingly.
-						l_source_clip.set_x (l_source_clip.x + (l_dest_intersection.x - l_dest_clip.x))
-						l_source_clip.set_y (l_source_clip.y + (l_dest_intersection.y - l_dest_clip.y))
-
-							-- The dimensions of the destination intersection are now the new dimensions of the source clip.
-						l_dest_clip.move (l_dest_intersection.x, l_dest_intersection.y)
-						l_dest_clip.resize (l_dest_intersection.width, l_dest_intersection.y)
-
-						pixmap_imp ?= a_pixmap.implementation
-						check pixmap_imp /= Void end
-
-						if pixmap_imp.mask /= default_pointer then
-							{GTK}.gdk_gc_set_clip_mask (gc, pixmap_imp.mask)
-							{GTK}.gdk_gc_set_clip_origin (gc, l_dest_clip.x + device_x_offset - l_source_clip.x, l_dest_clip.y + device_y_offset - l_source_clip.y)
-						end
-						{GTK2}.gdk_draw_drawable (
-							drawable,
-							gc,
-							pixmap_imp.drawable,
-							l_source_clip.x,
-							l_source_clip.y,
-							l_dest_clip.x + device_x_offset,
-							l_dest_clip.y + device_y_offset,
-							l_source_clip.width,
-							l_source_clip.height
-						)
-						update_if_needed
-						if pixmap_imp.mask /= default_pointer then
-							{GTK}.gdk_gc_set_clip_mask (gc, default_pointer)
-							{GTK}.gdk_gc_set_clip_origin (gc, 0, 0)
-						end
-					end
-				end
+				{CAIRO}.cairo_restore (drawable)
 			end
 		end
 
 	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP
 			-- Pixmap region of `Current' represented by rectangle `area'
 		local
-			pix_imp: detachable EV_PIXMAP_IMP
-			a_pix: POINTER
+--			pix_imp: detachable EV_PIXMAP_IMP
+--			a_pix: POINTER
 		do
 			create Result
-			pix_imp ?= Result.implementation
-			check pix_imp /= Void end
-			a_pix := pixbuf_from_drawable_at_position (area.x, area.y, 0, 0, area.width, area.height)
-			pix_imp.set_pixmap_from_pixbuf (a_pix)
-			{GTK2}.object_unref (a_pix)
+--			pix_imp ?= Result.implementation
+--			check pix_imp /= Void end
+--			a_pix := pixbuf_from_drawable_at_position (area.x, area.y, 0, 0, area.width, area.height)
+--			pix_imp.set_pixmap_from_pixbuf (a_pix)
+--			{GTK2}.g_object_unref (a_pix)
 		end
 
 	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE)
@@ -801,41 +561,67 @@ feature -- Drawing operations
 			-- Draw rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height'.
 		do
-			if drawable /= default_pointer then
-				if a_width > 0 and then a_height > 0 then
-						-- If width or height are zero then nothing will be rendered.
-					{GTK}.gdk_draw_rectangle (
-						drawable,
-						gc,
-						0,
-						(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-						(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-						a_width - 1,
-						a_height - 1
-					)
-					update_if_needed
-				end
-			end
+			draw_rectangle_internal (x, y, a_width, a_height, False)
 		end
 
 	draw_ellipse (x, y, a_width, a_height: INTEGER)
 			-- Draw an ellipse bounded by top left (`x', `y') with
 			-- size `a_width' and `a_height'.
 		do
+			draw_ellipse_internal (x, y, a_width, a_height, 0, 2 * {DOUBLE_MATH}.pi, True, False)
+		end
+
+	draw_ellipse_internal (x, y, a_width, a_height: INTEGER; a_start_angle, an_aperture: REAL_64; a_close, a_fill: BOOLEAN)
+			-- Draw an ellipse bounded by top left (`x', `y') with
+			-- size `a_width' and `a_height'.
+			-- Fill ellipse if `a_fill'.
+		local
+			l_xc, l_yc, l_radius, l_y_scale: REAL_64
+			l_close: BOOLEAN
+		do
 			if drawable /= default_pointer then
 				if (a_width > 0 and a_height > 0 ) then
-					{GTK}.gdk_draw_arc (
-						drawable,
-						gc,
-						0,
-						(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-						(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-						(a_width - 1),
-						(a_height - 1),
-						0,
-						whole_circle
-					)
+
+					l_close := a_close and then an_aperture /= (2 * {DOUBLE_MATH}.Pi)
+
+					l_xc := x + (a_width / 2) + device_x_offset
+					l_yc := y + (a_height / 2) + device_y_offset
+
+					l_radius := a_width / 2
+					if a_width /= a_height then
+						l_y_scale := a_height / a_width
+						{CAIRO}.cairo_scale (drawable, 1.0, l_y_scale)
+						l_yc := (l_yc - device_y_offset) / l_y_scale + device_y_offset
+					end
+
+					if l_close then
+						{CAIRO}.cairo_move_to (drawable, l_xc, l_yc)
+					end
+
+
+
+					{CAIRO}.cairo_arc_negative (drawable, l_xc, l_yc, a_height / 2, a_start_angle, - (a_start_angle + an_aperture))
+					if a_fill then
+						{CAIRO}.cairo_save (drawable)
+						if attached internal_foreground_color as l_fg_color then
+							{CAIRO}.cairo_set_source_rgb (drawable, l_fg_color.red.to_double, l_fg_color.green.to_double, l_fg_color.blue.to_double)
+						else
+							{CAIRO}.cairo_set_source_rgb (drawable, 0.0, 0.0, 0.0)
+						end
+						{CAIRO}.cairo_fill (drawable)
+						{CAIRO}.cairo_restore (drawable)
+					end
+
+					if l_close then
+						{CAIRO}.cairo_close_path (drawable)
+					end
+
+					{CAIRO}.cairo_stroke (drawable)
 					update_if_needed
+
+					if a_width /= a_height then
+						{CAIRO}.cairo_scale (drawable, 1.0, 1.0)
+					end
 				end
 			end
 		end
@@ -844,18 +630,32 @@ feature -- Drawing operations
 			-- Draw line segments between subsequent points in
 			-- `points'. If `is_closed' draw line segment between first
 			-- and last point in `points'.
-		local
-			tmp: SPECIAL [INTEGER]
 		do
-			if drawable /= default_pointer then
-				tmp := coord_array_to_gdkpoint_array (points).area
-				if is_closed then
-					{GTK}.gdk_draw_polygon (drawable, gc, 0, $tmp, points.count)
-					update_if_needed
-				else
-					{GTK}.gdk_draw_lines (drawable, gc, $tmp, points.count)
-					update_if_needed
+			draw_polyline_internal (points, is_closed, False)
+		end
+
+	draw_polyline_internal (points: ARRAY [EV_COORDINATE]; is_closed, is_filled: BOOLEAN)
+			-- Draw line segments between subsequent points in
+			-- `points'. If `is_closed' draw line segment between first
+			-- and last point in `points'.
+		local
+			i, l_count: INTEGER
+		do
+			if drawable /= default_pointer and then not points.is_empty then
+				from
+					l_count := points.count
+					{CAIRO}.cairo_move_to (drawable, points [1].x_precise, points [1].y_precise)
+					i := 2
+				until
+					i > l_count
+				loop
+					{CAIRO}.cairo_line_to (drawable, points [i].x_precise, points [i].y_precise)
+					i := i + 1
 				end
+				if is_closed then
+					{CAIRO}.cairo_close_path (drawable)
+				end
+				{CAIRO}.cairo_stroke (drawable)
 			end
 		end
 
@@ -865,72 +665,39 @@ feature -- Drawing operations
 			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
 			-- The arc is then closed by two segments through (`x', `y').
 			-- Angles are measured in radians
-		local
-			left, top, right, bottom: INTEGER
-			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
-			semi_width, semi_height: REAL
-			tang_start, tang_end: REAL
-			x_tmp, y_tmp: REAL
 		do
-			left := x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
-			top := y.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
-			right := left + a_width
-			bottom := top + a_height
-
-			semi_width := (a_width / 2).truncated_to_real
-			semi_height := (a_height / 2).truncated_to_real
-			tang_start := tangent (a_start_angle)
-			tang_end := tangent (a_start_angle + an_aperture)
-
-			x_tmp := semi_height / (sqrt (tang_start * tang_start + (semi_height * semi_height) / (semi_width * semi_width)))
-			y_tmp := semi_height / (sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_start * tang_start)))
-			if sine (a_start_angle) > 0 then
-				y_tmp := -y_tmp
-			end
-			if cosine (a_start_angle) < 0 then
-				x_tmp := -x_tmp
-			end
-			x_start_arc := (x_tmp + left + semi_width).rounded
-			y_start_arc := (y_tmp + top + semi_height).rounded
-
-			x_tmp := semi_height / (sqrt (tang_end * tang_end + (semi_height * semi_height) / (semi_width * semi_width)))
-			y_tmp := semi_height / (sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_end * tang_end)))
-			if sine (a_start_angle + an_aperture) > 0 then
-				y_tmp := -y_tmp
-			end
-			if cosine (a_start_angle + an_aperture) < 0 then
-				x_tmp := -x_tmp
-			end
-			x_end_arc := (x_tmp + left + semi_width).rounded
-			y_end_arc := (y_tmp + top + semi_height).rounded
-
-			draw_arc (x, y, a_width, a_height, a_start_angle, an_aperture)
-			draw_segment (x + (a_width // 2), y + (a_height // 2), x_start_arc, y_start_arc)
-			draw_segment (x + (a_width // 2), y + (a_height // 2), x_end_arc, y_end_arc)
-			update_if_needed
+			draw_ellipse_internal (x, y, a_width, a_height, a_start_angle, an_aperture, True, False)
 		end
 
 feature -- filling operations
 
 	fill_rectangle (x, y, a_width, a_height: INTEGER)
 			-- Draw rectangle with upper-left corner on (`x', `y')
-			-- with size `a_width' and `a_height'. Fill with `background_color'.
+		do
+			draw_rectangle_internal (x, y, a_width, a_height, True)
+		end
+
+	draw_rectangle_internal (x, y, a_width, a_height: INTEGER; a_fill: BOOLEAN)
+			-- Draw rectangle with upper-left corner on (`x', `y')
 		do
 			if drawable /= default_pointer then
-				if tile /= Void then
-					{GTK}.gdk_gc_set_fill (gc, {GTK}.Gdk_tiled_enum)
+				if a_width > 0 and then a_height > 0 then
+						-- If width or height are zero then nothing will be rendered.
+					{CAIRO}.cairo_rectangle (drawable, x + device_x_offset, y + device_y_offset, a_width, a_height)
+					if a_fill then
+						{CAIRO}.cairo_stroke_preserve (drawable)
+						{CAIRO}.cairo_save (drawable)
+						if attached internal_foreground_color as l_fg_color then
+							{CAIRO}.cairo_set_source_rgba (drawable, l_fg_color.red, l_fg_color.green, l_fg_color.blue, 1.0)
+						else
+							{CAIRO}.cairo_set_source_rgba (drawable, 1.0, 1.0, 1.0, 1.0)
+						end
+						{CAIRO}.cairo_fill (drawable)
+						{CAIRO}.cairo_restore (drawable)
+					end
+					{CAIRO}.cairo_stroke (drawable)
+					update_if_needed
 				end
-				{GTK}.gdk_draw_rectangle (
-					drawable,
-					gc,
-					1,
-					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					a_width,
-					a_height
-				)
-				{GTK}.gdk_gc_set_fill (gc, {GTK}.Gdk_solid_enum)
-				update_if_needed
 			end
 		end
 
@@ -939,33 +706,14 @@ feature -- filling operations
 			-- size `a_width' and `a_height'.
 			-- Fill with `background_color'.
 		do
-			if drawable /= default_pointer then
-				if tile /= Void then
-					{GTK}.gdk_gc_set_fill (gc, {GTK}.Gdk_tiled_enum)
-				end
-				{GTK}.gdk_draw_arc (drawable, gc, 1, (x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value), a_width,
-					a_height, 0, whole_circle)
-				update_if_needed
-				{GTK}.gdk_gc_set_fill (gc, {GTK}.Gdk_solid_enum)
-			end
+			draw_ellipse_internal (x, y, a_width, a_height, 0, 2 * {DOUBLE_MATH}.pi, True, True)
 		end
 
 	fill_polygon (points: ARRAY [EV_COORDINATE])
 			-- Draw line segments between subsequent points in `points'.
 			-- Fill all enclosed area's with `background_color'.
-		local
-			tmp: SPECIAL [INTEGER]
 		do
-			if drawable /= default_pointer then
-				tmp := coord_array_to_gdkpoint_array (points).area
-				if tile /= Void then
-					{GTK}.gdk_gc_set_fill (gc, {GTK}.Gdk_tiled_enum)
-				end
-				{GTK}.gdk_draw_polygon (drawable, gc, 1, $tmp, points.count)
-				{GTK}.gdk_gc_set_fill (gc, {GTK}.Gdk_solid_enum)
-				update_if_needed
-			end
+			draw_polyline_internal (points, True, True)
 		end
 
 	fill_pie_slice (x, y, a_width, a_height: INTEGER; a_start_angle, an_aperture: REAL)
@@ -975,24 +723,7 @@ feature -- filling operations
 			-- The arc is then closed by two segments through (`x', `y').
 			-- Angles are measured in radians.
 		do
-			if drawable /= default_pointer then
-				if tile /= Void then
-					{GTK}.gdk_gc_set_fill (gc, {GTK}.Gdk_tiled_enum)
-				end
-				{GTK}.gdk_draw_arc (
-					drawable,
-					gc,
-					1,
-					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					a_width,
-					a_height,
-					(a_start_angle * radians_to_gdk_angle).truncated_to_integer,
-					(an_aperture * radians_to_gdk_angle).truncated_to_integer
-				)
-				{GTK}.gdk_gc_set_fill (gc, {GTK}.Gdk_solid_enum)
-				update_if_needed
-			end
+			draw_ellipse_internal (x, y, a_width, a_height, a_start_angle, an_aperture, True, True)
 		end
 
 feature {NONE} -- Implemention
@@ -1042,35 +773,28 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 			new_pix, new_mask_pix, l_image, l_mask_image, a_pix, a_mask_pix, l_temp_pix: POINTER
 		do
 			new_pix := {GTK}.gdk_pixbuf_new (0, True, 8, a_width, a_height)
-			l_image := {GTK2}.gdk_drawable_copy_to_image (drawable, default_pointer, src_x + device_x_offset, src_y + device_y_offset, dest_x, dest_y, a_width, a_height)
+--			l_image := default_pointer
 
-			a_pix := {GTK2}.gdk_pixbuf_get_from_image (new_pix, l_image, default_pointer, 0, 0, 0, 0, a_width, a_height)
-				-- We do not unref new_pix as it is being reused
+--			if mask /= default_pointer then
+--				new_mask_pix := {GTK}.gdk_pixbuf_new (0, True, 8, a_width, a_height)
+----				l_mask_image := {GTK2}.gdk_drawable_copy_to_image (mask, default_pointer, src_x, src_y, dest_x, dest_y, a_width, a_height)
+----				a_mask_pix := {GTK2}.gdk_pixbuf_get_from_image (new_mask_pix, l_mask_image, default_pointer, 0, 0, 0, 0, a_width, a_height)
+----				{GTK2}.g_object_unref (l_mask_image)
+----				l_mask_image := default_pointer
 
-			{GTK2}.object_unref (l_image)
-			l_image := default_pointer
+----				l_temp_pix := a_mask_pix
+----				a_mask_pix := {GTK2}.gdk_pixbuf_add_alpha (l_temp_pix, True, 255, 255, 255)
+--					-- Draw mask on top of pixbuf.
+--				{GTK2}.gdk_pixbuf_composite (a_mask_pix, a_pix, 0, 0, a_width, a_height, 0, 0, 1, 1, {GTK2}.gdk_interp_bilinear, 255)
+--				draw_mask_on_pixbuf (a_pix, a_mask_pix)
 
-			if mask /= default_pointer then
-				new_mask_pix := {GTK}.gdk_pixbuf_new (0, True, 8, a_width, a_height)
-				l_mask_image := {GTK2}.gdk_drawable_copy_to_image (mask, default_pointer, src_x, src_y, dest_x, dest_y, a_width, a_height)
-				a_mask_pix := {GTK2}.gdk_pixbuf_get_from_image (new_mask_pix, l_mask_image, default_pointer, 0, 0, 0, 0, a_width, a_height)
-				{GTK2}.object_unref (l_mask_image)
-				l_mask_image := default_pointer
+--				 -- Clean up
+--				{GTK2}.g_object_unref (a_mask_pix)
 
-				l_temp_pix := a_mask_pix
-				a_mask_pix := {GTK2}.gdk_pixbuf_add_alpha (l_temp_pix, True, 255, 255, 255)
-				{GTK2}.object_unref (l_temp_pix)
-					-- Draw mask on top of pixbuf.
-				{GTK2}.gdk_pixbuf_composite (a_mask_pix, a_pix, 0, 0, a_width, a_height, 0, 0, 1, 1, {GTK2}.gdk_interp_bilinear, 255)
-				draw_mask_on_pixbuf (a_pix, a_mask_pix)
-
-				 -- Clean up
-				{GTK2}.object_unref (a_mask_pix)
-
-				Result := a_pix
-			else
-				Result := a_pix
-			end
+--				Result := a_pix
+--			else
+--				Result := a_pix
+--			end
 		end
 
 	pixbuf_from_drawable_with_size (a_width, a_height: INTEGER): POINTER
@@ -1080,7 +804,7 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 		do
 			a_pixbuf := pixbuf_from_drawable
 			Result := {GTK2}.gdk_pixbuf_scale_simple (a_pixbuf, a_width, a_height, {GTK2}.gdk_interp_bilinear)
-			{GTK2}.object_unref (a_pixbuf)
+			{GTK2}.g_object_unref (a_pixbuf)
 		end
 
 feature {NONE} -- Implementation
@@ -1091,41 +815,12 @@ feature {NONE} -- Implementation
 	device_y_offset: INTEGER_16
 			-- Number of pixels to offset to y coord to get correct device placement.
 
-	internal_set_color (a_foreground: BOOLEAN; a_red, a_green, a_blue: INTEGER_32)
+	internal_set_color (a_foreground: BOOLEAN; a_red, a_green, a_blue: REAL_64)
 			-- Set `gc' color to (a_red, a_green, a_blue), `a_foreground' sets foreground color, otherwise background is set.
-		local
-			l_color_struct: POINTER
 		do
-			l_color_struct := App_implementation.reusable_color_struct
-			{GTK}.set_gdk_color_struct_red (l_color_struct, a_red)
-			{GTK}.set_gdk_color_struct_green (l_color_struct, a_green)
-			{GTK}.set_gdk_color_struct_blue (l_color_struct, a_blue)
-			if a_foreground then
-				{GTK2}.gdk_gc_set_rgb_fg_color (gc, l_color_struct)
-			else
-				{GTK2}.gdk_gc_set_rgb_bg_color (gc, l_color_struct)
+			if drawable /= default_pointer and then a_foreground then
+				{CAIRO}.cairo_set_source_rgb (drawable, a_red, a_green, a_blue)
 			end
-		end
-
-	fg_color: POINTER
-			-- Default allocated background color.
-		local
-			a_success: BOOLEAN
-		once
-			Result := {GTK}.c_gdk_color_struct_allocate
-			a_success := {GTK}.gdk_colormap_alloc_color ({GTK2}.gdk_screen_get_rgb_colormap ({GTK2}.gdk_screen_get_default), Result, False, True)
-		end
-
-	bg_color: POINTER
-			-- Default allocate foreground color.
-		local
-			a_success: BOOLEAN
-		once
-			Result := {GTK}.c_gdk_color_struct_allocate
-			{GTK}.set_gdk_color_struct_red (Result, 65535)
-			{GTK}.set_gdk_color_struct_green (Result, 65535)
-			{GTK}.set_gdk_color_struct_blue (Result, 65535)
-			a_success := {GTK}.gdk_colormap_alloc_color ({GTK2}.gdk_screen_get_rgb_colormap ({GTK2}.gdk_screen_get_default), Result, False, True)
 		end
 
 	draw_mask_on_pixbuf (a_pixbuf_ptr, a_mask_ptr: POINTER)
@@ -1203,36 +898,19 @@ feature {NONE} -- Implementation
 		attribute
 		end
 
-	gdk_gc_unref (a_gc: POINTER)
-			-- void   gdk_gc_unref		  (GdkGC	    *gc);
-		external
-			"C (GdkGC*) | <ev_gtk.h>"
-		end
-
-	set_dashes_pattern (a_gc, dash_pattern: POINTER)
-			-- Set the dashes pattern for gc `a_gc', `dash_pattern' is a pointer to a two count gint8[]] denoting the pattern.
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"gdk_gc_set_dashes ((GdkGC*) $a_gc, 0, (gint8*) $dash_pattern, 2)"
-		end
-
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_DRAWABLE note option: stable attribute end;
 
-invariant
-	gc_not_void: is_usable implies gc /= default_pointer
-
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_DRAWABLE_IMP

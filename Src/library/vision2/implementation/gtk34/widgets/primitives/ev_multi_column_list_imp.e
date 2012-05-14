@@ -706,7 +706,7 @@ feature -- Element change
 			end
 
 			a_column_ptr := {GTK2}.gtk_tree_view_get_column (tree_view, a_column - 1)
-			a_cell_rend_list := {GTK2}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
+			a_cell_rend_list := {GTK}.gtk_cell_layout_get_cells (a_column_ptr)
 			from
 				i := 0
 				a_gtk_c_str := "xalign"
@@ -730,7 +730,7 @@ feature -- Element change
 			a_vert_sep: INTEGER
 		do
 			a_column_ptr := {GTK2}.gtk_tree_view_get_column (tree_view, 0)
-			a_cell_rend_list := {GTK2}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
+			a_cell_rend_list := {GTK}.gtk_cell_layout_get_cells (a_column_ptr)
 			a_cell_rend := {GTK}.g_list_nth_data (a_cell_rend_list, 0)
 
 				-- Row height setting has to take the vertical spacing of the tree view in to account
@@ -1065,7 +1065,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			a_list_iter := ev_children.i_th (a_row).list_iter
 			check a_list_iter /= Void end
 			{GTK2}.gtk_list_store_set_pixbuf (list_store, a_list_iter.item, 0, a_pixbuf)
-			{GTK2}.object_unref (a_pixbuf)
+			{GTK2}.g_object_unref (a_pixbuf)
 		end
 
 	remove_row_pixmap (a_row: INTEGER)
@@ -1234,14 +1234,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MULTI_COLUMN_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_MULTI_COLUMN_LIST_IMP

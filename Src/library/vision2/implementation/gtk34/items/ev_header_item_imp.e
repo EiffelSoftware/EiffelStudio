@@ -176,14 +176,15 @@ feature -- Status setting
 			-- As size of `text' is dependent on `font' of `parent', `Current'
 			-- must be parented.
 		local
-			a_req_struct: POINTER
+			a_req_struct, l_null: POINTER
 			a_width, a_height: INTEGER
 		do
-			{GTK}.gtk_widget_size_request (box, default_pointer)
-			a_req_struct := {GTK}.gtk_widget_struct_requisition (box)
+			a_req_struct := a_req_struct.memory_alloc ({GTK}.c_gtk_requisition_struct_size)
+			{GTK}.gtk_widget_get_preferred_size (box, a_req_struct, l_null)
 			a_height := {GTK}.gtk_requisition_struct_height (a_req_struct)
 			a_width := {GTK}.gtk_requisition_struct_width (a_req_struct)
 			set_width (a_width)
+			a_req_struct.memory_free
 		end
 
 feature -- PND
@@ -308,11 +309,11 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 			l_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
 			l_parent_imp: like parent_imp
 		do
-			a_button := {GTK2}.gtk_tree_view_column_struct_button (c_object)
+			a_button := {GTK2}.gtk_tree_view_column_get_button (c_object)
 
 			l_parent_imp := parent_imp
 					-- We don't want the button stealing focus.
-			{GTK}.gtk_widget_unset_flags (a_button, {GTK}.gtk_can_focus_enum)
+			{GTK}.gtk_widget_set_can_focus (a_button, False)
 			if n_args > 0 then
 					-- Store screen virtual coordinates used for normalize gdk event screen coordinates to vision2 screen coordinates.
 				l_screen_virtual_x := app_implementation.screen_virtual_x
@@ -392,22 +393,22 @@ feature {EV_HEADER_IMP} -- Implementation
 
 			if par_imp /= Void then
 					-- If this is the first time it is parented then there is no need to set the column widget.
-				if {GTK}.gtk_widget_struct_parent (box) = default_pointer then
+				if {GTK}.gtk_widget_get_parent (box) = default_pointer then
 					{GTK2}.gtk_tree_view_column_set_widget (c_object, box)
 				end
 					-- The button gets recreated everytime it is parented so the events need to be hooked up to the new button.
-				a_button := {GTK2}.gtk_tree_view_column_struct_button (c_object)
+				a_button := {GTK2}.gtk_tree_view_column_get_button (c_object)
 					-- We don't want the button stealing focus.
-				{GTK}.gtk_widget_unset_flags (a_button, {GTK}.gtk_can_focus_enum)
+				{GTK}.gtk_widget_set_can_focus (a_button, False)
 				real_signal_connect (a_button, once "event", agent (App_implementation.gtk_marshal).gdk_event_dispatcher (internal_id, ? , ?), Void)
 				item_event_id := last_signal_connection_id
 			else
 				if item_event_id /= 0 then
-					a_button := {GTK2}.gtk_tree_view_column_struct_button (c_object)
+					a_button := {GTK2}.gtk_tree_view_column_get_button (c_object)
 					{GTK2}.signal_disconnect (a_button, item_event_id)
 					item_event_id := 0
 				end
-				{GTK2}.object_ref (box)
+				box := {GTK2}.g_object_ref (box)
 				{GTK2}.gtk_tree_view_column_set_widget (c_object, {GTK}.gtk_label_new (default_pointer))
 			end
 		end
@@ -448,7 +449,7 @@ feature {NONE} -- Implementation
 	destroy
 			-- Destroy `c_object'.
 		do
-			{GTK2}.object_unref (c_object)
+			{GTK2}.g_object_unref (c_object)
 			c_object := default_pointer
 			set_is_destroyed (True)
 		end
@@ -459,14 +460,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- Interface object of `Current'.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

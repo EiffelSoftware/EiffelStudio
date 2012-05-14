@@ -115,15 +115,6 @@ feature {NONE} -- Implementation
 			l_grab_widget: POINTER
 		do
 			if not has_capture then
-					-- On Solaris, if a menu is selected, then `enable_capture' will not close the menu
-					-- as GTK does on other platforms. Note that `gtk_menu_shell_cancel' will only
-					-- work on GTK 2.4 or above, it is a no-op otherwise.
-				l_grab_widget := {GTK}.gtk_grab_get_current
-				if l_grab_widget /= default_pointer then
-					if {GTK}.gtk_is_menu (l_grab_widget) then
-						{GTK}.gtk_menu_shell_cancel (l_grab_widget)
-					end
-				end
 				if not has_focus then
 					internal_set_focus
 				end
@@ -134,7 +125,6 @@ feature {NONE} -- Implementation
 				if app_implementation.focused_popup_window /= top_level_window_imp then
 					grab_keyboard_and_mouse
 				end
-				app_implementation.disable_debugger
 			end
 		end
 
@@ -149,7 +139,6 @@ feature {NONE} -- Implementation
 				end
 				App_implementation.set_captured_widget (Void)
 			end
-			App_implementation.enable_debugger
 		end
 
 	has_capture: BOOLEAN
@@ -165,7 +154,7 @@ feature {NONE} -- Implementation
 			l_gdk_window: POINTER
 		do
 			App_implementation.disable_debugger
-			l_gdk_window := {GTK}.gtk_widget_struct_window (event_widget)
+			l_gdk_window := {GTK}.gtk_widget_get_window (event_widget)
 			i := {GTK}.gdk_pointer_grab (
 				l_gdk_window,
 				1,
@@ -178,7 +167,7 @@ feature {NONE} -- Implementation
 				null,
 				0
 			)
-			i := {GTK}.gdk_keyboard_grab (l_gdk_window, True, 0)
+--			i := {GTK}.gdk_keyboard_grab (l_gdk_window, True, 0)
 		end
 
 	release_keyboard_and_mouse
@@ -187,7 +176,7 @@ feature {NONE} -- Implementation
 			{GTK}.gdk_pointer_ungrab (
 				0 -- guint32 time
 			)
-			{GTK}.gdk_keyboard_ungrab (0) -- guint32 time
+--			{GTK}.gdk_keyboard_ungrab (0) -- guint32 time
 			app_implementation.enable_debugger
 		end
 
@@ -464,7 +453,7 @@ feature -- Implementation
 				a_wid_imp ?= l_app_imp.gtk_widget_from_gdk_window (gdkwin)
 				if
 					a_wid_imp /= Void and then
-					{GTK}.gtk_object_struct_flags (a_wid_imp.c_object) & {GTK}.GTK_SENSITIVE_ENUM = {GTK}.GTK_SENSITIVE_ENUM and then
+					{GTK}.gtk_widget_is_sensitive (a_wid_imp.c_object) and then
 					not a_wid_imp.is_destroyed
 				then
 					if l_app_imp.pnd_targets.has (a_wid_imp.attached_interface.object_id) then
@@ -474,7 +463,7 @@ feature -- Implementation
 					if a_pnd_deferred_item_parent /= Void then
 							-- We need to explicitly search for PND deferred items
 							-- A server roundtrip is needed to get the coordinates relative to the PND target parent..
-						gdkwin := {GTK}.gdk_window_get_pointer ({GTK}.gtk_widget_struct_window (a_wid_imp.c_object), $a_x, $a_y, default_pointer)
+						gdkwin := {GTK}.gdk_window_get_pointer ({GTK}.gtk_widget_get_window (a_wid_imp.c_object), $a_x, $a_y, default_pointer)
 						a_pnd_item := a_pnd_deferred_item_parent.item_from_coords (a_x, a_y)
 						if a_pnd_item /= Void and then l_app_imp.pnd_targets.has (a_pnd_item.attached_interface.object_id) then
 							Result := a_pnd_item.interface
@@ -497,7 +486,7 @@ feature -- Implementation
 			x, y, s: INTEGER
 			child: POINTER
 		do
-			child := {GTK}.gdk_window_get_pointer ({GTK}.gtk_widget_struct_window (c_object), $x, $y, $s)
+			child := {GTK}.gdk_window_get_pointer ({GTK}.gtk_widget_get_window (c_object), $x, $y, $s)
 			create Result.set (x, y)
 		end
 
@@ -506,14 +495,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PICK_AND_DROPABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_PICK_AND_DROPABLE_IMP

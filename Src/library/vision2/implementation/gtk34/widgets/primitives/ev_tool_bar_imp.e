@@ -113,14 +113,12 @@ feature -- Status setting
 			-- Enable vertical toolbar style.
 		do
 			is_vertical := True
-			{GTK2}.gtk_toolbar_set_orientation (list_widget, 1)
 		end
 
 	disable_vertical
 			-- Disable vertical toolbar style (ie: Horizontal).
 		do
 			is_vertical := False
-			{GTK2}.gtk_toolbar_set_orientation (list_widget, 0)
 		end
 
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation

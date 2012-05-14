@@ -49,7 +49,7 @@ feature -- Access
 		local
 			an_alignment_code: INTEGER
 		do
-			an_alignment_code := {GTK}.gtk_label_struct_jtype (text_label)
+			an_alignment_code := {GTK}.gtk_label_get_justify (text_label)
 			if an_alignment_code = {GTK}.gtk_justify_center_enum then
 				Result := {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center
 			elseif an_alignment_code = {GTK}.gtk_justify_left_enum then
@@ -177,14 +177,14 @@ invariant
 	text_label_not_void: is_usable implies text_label /= default_pointer
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_TEXTABLE_IMP

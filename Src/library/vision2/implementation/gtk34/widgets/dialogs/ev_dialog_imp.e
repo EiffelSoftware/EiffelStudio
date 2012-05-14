@@ -67,7 +67,7 @@ feature -- Status Report
 	is_relative: BOOLEAN
 			-- Is `Current' shown relative to another window?
 		do
-			Result := {GTK}.gtk_window_struct_transient_parent (c_object) /= default_pointer
+			Result := {GTK}.gtk_window_get_transient_for (c_object) /= default_pointer
 				and then is_show_requested
 		end
 
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 			close_fct := close_fct.bit_or ({GTK}.Gdk_func_move_enum)
 		    close_fct := close_fct.bit_or ({GTK}.Gdk_func_resize_enum)
 			{GTK}.gdk_window_set_functions (
-				{GTK}.gtk_widget_struct_window (c_object),
+				{GTK}.gtk_widget_get_window (c_object),
 				close_fct
 			)
 			is_dialog_closeable := new_status
@@ -138,14 +138,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_DIALOG_IMP

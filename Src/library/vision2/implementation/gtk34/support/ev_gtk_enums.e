@@ -40,35 +40,7 @@ feature -- C enums
 		external
 			"C macro use <ev_gtk.h>"
 		alias
-			"GTK_TOPLEVEL"
-		end
-
-	frozen Gtk_no_window_enum: INTEGER
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GTK_NO_WINDOW"
-		end
-
-	frozen Gtk_can_default_enum: INTEGER
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GTK_CAN_DEFAULT"
-		end
-
-	frozen Gtk_has_default_enum: INTEGER
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GTK_HAS_DEFAULT"
-		end
-
-	frozen Gtk_receives_default_enum: INTEGER
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GTK_RECEIVES_DEFAULT"
+			"GTK_WINDOW_TOPLEVEL"
 		end
 
 	frozen Gdk_nothing_enum: INTEGER
@@ -256,14 +228,14 @@ feature -- GdkCursor enums
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

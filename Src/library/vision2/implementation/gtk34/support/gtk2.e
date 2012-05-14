@@ -10,6 +10,530 @@ class
 
 feature -- Externals
 
+--GTK_TYPE_STYLE_CONTEXT
+
+--GTK_STYLE_CONTEXT (o: UNKNOWN)
+
+--GTK_STYLE_CONTEXT_CLASS (c: UNKNOWN)
+
+--GTK_IS_STYLE_CONTEXT (o: UNKNOWN)
+
+--GTK_IS_STYLE_CONTEXT_CLASS (c: UNKNOWN)
+
+--GTK_STYLE_CONTEXT_GET_CLASS (o: UNKNOWN)
+
+--GTK_STYLE_PROPERTY_BACKGROUND_COLOR
+
+--GTK_STYLE_PROPERTY_COLOR
+
+--GTK_STYLE_PROPERTY_FONT
+
+--GTK_STYLE_PROPERTY_PADDING
+
+--GTK_STYLE_PROPERTY_BORDER_WIDTH
+
+--GTK_STYLE_PROPERTY_MARGIN
+
+--GTK_STYLE_PROPERTY_BORDER_RADIUS
+
+--GTK_STYLE_PROPERTY_BORDER_STYLE
+
+--GTK_STYLE_PROPERTY_BORDER_COLOR
+
+--GTK_STYLE_PROPERTY_BACKGROUND_IMAGE
+
+--GTK_STYLE_CLASS_CELL
+
+--GTK_STYLE_CLASS_ENTRY
+
+--GTK_STYLE_CLASS_COMBOBOX_ENTRY
+
+--GTK_STYLE_CLASS_BUTTON
+
+--GTK_STYLE_CLASS_CALENDAR
+
+--GTK_STYLE_CLASS_SLIDER
+
+--GTK_STYLE_CLASS_BACKGROUND
+
+--GTK_STYLE_CLASS_RUBBERBAND
+
+--GTK_STYLE_CLASS_TOOLTIP
+
+--GTK_STYLE_CLASS_MENU
+
+--GTK_STYLE_CLASS_MENUBAR
+
+--GTK_STYLE_CLASS_MENUITEM
+
+--GTK_STYLE_CLASS_TOOLBAR
+
+--GTK_STYLE_CLASS_PRIMARY_TOOLBAR
+
+--GTK_STYLE_CLASS_INLINE_TOOLBAR
+
+--GTK_STYLE_CLASS_RADIO
+
+--GTK_STYLE_CLASS_CHECK
+
+--GTK_STYLE_CLASS_DEFAULT
+
+--GTK_STYLE_CLASS_TROUGH
+
+--GTK_STYLE_CLASS_SCROLLBAR
+
+--GTK_STYLE_CLASS_SCALE
+
+--GTK_STYLE_CLASS_SCALE_HAS_MARKS_ABOVE
+
+--GTK_STYLE_CLASS_SCALE_HAS_MARKS_BELOW
+
+--GTK_STYLE_CLASS_HEADER
+
+--GTK_STYLE_CLASS_ACCELERATOR
+
+--GTK_STYLE_CLASS_RAISED
+
+--GTK_STYLE_CLASS_GRIP
+
+--GTK_STYLE_CLASS_DOCK
+
+--GTK_STYLE_CLASS_PROGRESSBAR
+
+--GTK_STYLE_CLASS_SPINNER
+
+--GTK_STYLE_CLASS_MARK
+
+--GTK_STYLE_CLASS_EXPANDER
+
+--GTK_STYLE_CLASS_SPINBUTTON
+
+--GTK_STYLE_CLASS_NOTEBOOK
+
+--GTK_STYLE_CLASS_VIEW
+
+--GTK_STYLE_CLASS_SIDEBAR
+
+--GTK_STYLE_CLASS_IMAGE
+
+--GTK_STYLE_CLASS_HIGHLIGHT
+
+--GTK_STYLE_CLASS_FRAME
+
+--GTK_STYLE_CLASS_DND
+
+--GTK_STYLE_CLASS_PANE_SEPARATOR
+
+--GTK_STYLE_CLASS_SEPARATOR
+
+--GTK_STYLE_CLASS_INFO
+
+--GTK_STYLE_CLASS_WARNING
+
+--GTK_STYLE_CLASS_QUESTION
+
+--GTK_STYLE_CLASS_ERROR
+
+--GTK_STYLE_CLASS_HORIZONTAL
+
+--GTK_STYLE_CLASS_VERTICAL
+
+--GTK_STYLE_REGION_ROW
+
+--GTK_STYLE_REGION_COLUMN
+
+--GTK_STYLE_REGION_COLUMN_HEADER
+
+--GTK_STYLE_REGION_TAB
+
+	gtk_orientable_set_orientation (a_orientable: POINTER; a_orientation: NATURAL_8)
+		external
+			"C signature (GtkOrientable*, GtkOrientation) use <ev_gtk.h>"
+		end
+
+	gtk_style_context_new: POINTER
+		external
+			"C signature (): GtkStyleContext* use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_add_provider_for_screen (screen: POINTER; provider: POINTER; priority: NATURAL_32)
+		external
+			"C signature (GdkScreen*, GtkStyleProvider*, guint) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_remove_provider_for_screen (screen: POINTER; provider: POINTER)
+		external
+			"C signature (GdkScreen*, GtkStyleProvider*) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_add_provider (context: POINTER; provider: POINTER; priority: NATURAL_32)
+		external
+			"C signature (GtkStyleContext*, GtkStyleProvider*, guint) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_remove_provider (context: POINTER; provider: POINTER)
+		external
+			"C signature (GtkStyleContext*, GtkStyleProvider*) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_save (context: POINTER)
+		external
+			"C signature (GtkStyleContext*) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_restore (context: POINTER)
+		external
+			"C signature (GtkStyleContext*) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_get_property (context: POINTER; property: POINTER; state: INTEGER_8; value: POINTER)
+		external
+			"C signature (GtkStyleContext*, gchar*, GtkStateFlags, GValue*) use <ev_gtk.h>"
+		end
+
+	gtk_style_context_set_state (context: POINTER; flags: INTEGER_8)
+		external
+			"C signature (GtkStyleContext*, GtkStateFlags) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_get_state (context: POINTER): INTEGER_8
+		external
+			"C signature (GtkStyleContext*): GtkStateFlags use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_state_is_running (context: POINTER; state: INTEGER_8; progress: POINTER)
+		external
+			"C signature (GtkStyleContext*, GtkStateType, gdouble*) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_set_path (context: POINTER; path: POINTER)
+		external
+			"C signature (GtkStyleContext*, GtkWidgetPath*) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_get_path (context: POINTER): POINTER
+		external
+			"C signature (GtkStyleContext*): GtkWidgetPath* use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_list_classes (context: POINTER): POINTER
+		external
+			"C signature (GtkStyleContext*): GList* use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_add_class (context: POINTER; class_name: POINTER)
+		external
+			"C signature (GtkStyleContext*, gchar*) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_remove_class (context: POINTER; class_name: POINTER)
+		external
+			"C signature (GtkStyleContext*, gchar*) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_has_class (context: POINTER; class_name: POINTER)
+		external
+			"C signature (GtkStyleContext*, gchar*) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_list_regions (context: POINTER): POINTER
+		external
+<<<<<<< .mine
+			"C signature (GtkStyleContext*): GList* use <ev_gtk.h>"
+=======
+			"C macro use <ev_gtk.h>"
+		alias
+			"g_main_context_iteration(NULL, FALSE)"
+>>>>>>> .r88715
+		end
+
+
+	gtk_style_context_add_region (context: POINTER; region_name: POINTER; flags: INTEGER_8)
+		external
+			"C signature (GtkStyleContext*, gchar*, GtkRegionFlags) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_remove_region (context: POINTER; region_name: POINTER)
+		external
+			"C signature (GtkStyleContext*, gchar*) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_has_region (context: POINTER; region_name: POINTER; flags_return: POINTER)
+		external
+			"C signature (GtkStyleContext*, gchar*, GtkRegionFlags*) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_get_style_property (context: POINTER; property_name: POINTER; value: POINTER)
+		external
+			"C signature (GtkStyleContext*, gchar*, GValue*) use <ev_gtk.h>"
+		end
+
+	gtk_style_context_get_style (context: POINTER)
+		external
+			"C signature (GtkStyleContext*) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_lookup_icon_set (context: POINTER; stock_id: POINTER): POINTER
+		external
+			"C signature (GtkStyleContext*, gchar*): GtkIconSet* use <ev_gtk.h>"
+		end
+
+
+	gtk_icon_set_render_icon_pixbuf (icon_set: POINTER; context: POINTER; size: INTEGER_8): POINTER
+		external
+			"C signature (GtkIconSet*, GtkStyleContext*, GtkIconSize): GdkPixbuf* use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_set_screen (context: POINTER; screen: POINTER)
+		external
+			"C signature (GtkStyleContext*, GdkScreen*) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_get_screen (context: POINTER): POINTER
+		external
+			"C signature (GtkStyleContext*): GdkScreen* use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_set_direction (context: POINTER; direction: INTEGER_8)
+		external
+			"C signature (GtkStyleContext*, GtkTextDirection) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_get_direction (context: POINTER): INTEGER_8
+		external
+			"C signature (GtkStyleContext*): GtkTextDirection use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_set_junction_sides (context: POINTER; sides: INTEGER_8)
+		external
+			"C signature (GtkStyleContext*, GtkJunctionSides) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_get_junction_sides (context: POINTER): INTEGER_8
+		external
+			"C signature (GtkStyleContext*): GtkJunctionSides use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_lookup_color (context: POINTER; color_name: POINTER; color: POINTER)
+		external
+			"C signature (GtkStyleContext*, gchar*, GdkRGBA*) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_notify_state_change (context: POINTER; window: POINTER; region_id: POINTER; state: INTEGER_8; state_value: BOOLEAN)
+		external
+			"C signature (GtkStyleContext*, GdkWindow*, gpointer, GtkStateType, gboolean) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_cancel_animations (context: POINTER; region_id: POINTER)
+		external
+			"C signature (GtkStyleContext*, gpointer) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_scroll_animations (context: POINTER; window: POINTER; dx: INTEGER_32 ; dy: INTEGER_32)
+		external
+			"C signature (GtkStyleContext*, GdkWindow*, gint, gint) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_push_animatable_region (context: POINTER; region_id: POINTER)
+		external
+			"C signature (GtkStyleContext*, gpointer) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_pop_animatable_region (context: POINTER)
+		external
+			"C signature (GtkStyleContext*) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_get_border_color (context: POINTER; state: INTEGER_8; color: TYPED_POINTER [POINTER])
+		external
+			"C signature (GtkStyleContext*, GtkStateFlags, GdkRGBA*) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_get_font (context: POINTER; state: INTEGER_8): POINTER
+		external
+			"C signature (GtkStyleContext*, GtkStateFlags): PangoFontDescription* use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_get_border (context: POINTER; state: INTEGER_8; border: POINTER)
+		external
+			"C signature (GtkStyleContext*, GtkStateFlags, GtkBorder*) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_get_padding (context: POINTER; state: INTEGER_8; padding: POINTER)
+		external
+			"C signature (GtkStyleContext*, GtkStateFlags, GtkBorder*) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_get_margin (context: POINTER; state: INTEGER_8; margin: POINTER)
+		external
+			"C signature (GtkStyleContext*, GtkStateFlags, GtkBorder*) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_invalidate (context: POINTER)
+		external
+			"C signature (GtkStyleContext*) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_reset_widgets (screen: POINTER)
+		external
+			"C signature (GdkScreen*) use <ev_gtk.h>"
+		end
+
+
+	gtk_style_context_set_background (context: POINTER; window: POINTER)
+		external
+			"C signature (GtkStyleContext*, GdkWindow*) use <ev_gtk.h>"
+		end
+
+
+	gtk_render_check (context: POINTER; cr: POINTER; x: REAL_64; y: REAL_64 ; width: REAL_64 ; height: REAL_64 )
+		external
+			"C signature (GtkStyleContext*, cairo_t*, gdouble, gdouble, gdouble, gdouble) use <ev_gtk.h>"
+		end
+
+
+	gtk_render_option (context: POINTER; cr: POINTER; x: REAL_64 ; y: REAL_64 ; width: REAL_64 ; height: REAL_64 )
+		external
+			"C signature (GtkStyleContext*, cairo_t*, gdouble, gdouble, gdouble, gdouble) use <ev_gtk.h>"
+		end
+
+
+	gtk_render_arrow (context: POINTER; cr: POINTER; angle: REAL_64 ; x: REAL_64 ; y: REAL_64 ; size: REAL_64 )
+		external
+			"C signature (GtkStyleContext*, cairo_t*, gdouble, gdouble, gdouble, gdouble) use <ev_gtk.h>"
+		end
+
+
+	gtk_render_background (context: POINTER; cr: POINTER; x: REAL_64 ; y: REAL_64 ; width: REAL_64 ; height: REAL_64 )
+		external
+			"C signature (GtkStyleContext*, cairo_t*, gdouble, gdouble, gdouble, gdouble) use <ev_gtk.h>"
+		end
+
+
+	gtk_render_frame (context: POINTER; cr: POINTER; x: REAL_64 ; y: REAL_64 ; width: REAL_64 ; height: REAL_64 )
+		external
+			"C signature (GtkStyleContext*, cairo_t*, gdouble, gdouble, gdouble, gdouble) use <ev_gtk.h>"
+		end
+
+
+	gtk_render_expander (context: POINTER; cr: POINTER; x: REAL_64 ; y: REAL_64 ; width: REAL_64 ; height: REAL_64 )
+		external
+			"C signature (GtkStyleContext*, cairo_t*, gdouble, gdouble, gdouble, gdouble) use <ev_gtk.h>"
+		end
+
+
+	gtk_render_focus (context: POINTER; cr: POINTER; x: REAL_64 ; y: REAL_64 ; width: REAL_64 ; height: REAL_64 )
+		external
+			"C signature (GtkStyleContext*, cairo_t*, gdouble, gdouble, gdouble, gdouble) use <ev_gtk.h>"
+		end
+
+
+	gtk_render_layout (context: POINTER; cr: POINTER; x: REAL_64; y: REAL_64; layout: POINTER)
+		external
+			"C signature (GtkStyleContext*, cairo_t*, gdouble, gdouble, PangoLayout*) use <ev_gtk.h>"
+		end
+
+
+	gtk_render_line (context: POINTER; cr: POINTER; x0: REAL_64 ; y0: REAL_64 ; x1: REAL_64 ; y1: REAL_64 )
+		external
+			"C signature (GtkStyleContext*, cairo_t*, gdouble, gdouble, gdouble, gdouble) use <ev_gtk.h>"
+		end
+
+
+	gtk_render_slider (context: POINTER; cr: POINTER; x: REAL_64 ; y: REAL_64 ; width: REAL_64 ; height: REAL_64 ; orientation: INTEGER_8)
+		external
+			"C signature (GtkStyleContext*, cairo_t*, gdouble, gdouble, gdouble, gdouble, GtkOrientation) use <ev_gtk.h>"
+		end
+
+
+	gtk_render_frame_gap (context: POINTER; cr: POINTER; x: REAL_64 ; y: REAL_64 ; width: REAL_64 ; height: REAL_64 ; gap_side: INTEGER_8; xy0_gap: REAL_64 ; xy1_gap: REAL_64 )
+		external
+			"C signature (GtkStyleContext*, cairo_t*, gdouble, gdouble, gdouble, gdouble, GtkPositionType, gdouble, gdouble) use <ev_gtk.h>"
+		end
+
+
+	gtk_render_extension (context: POINTER; cr: POINTER; x: REAL_64 ; y: REAL_64 ; width: REAL_64 ; height: REAL_64 ; gap_side: INTEGER_8)
+		external
+			"C signature (GtkStyleContext*, cairo_t*, gdouble, gdouble, gdouble, gdouble, GtkPositionType) use <ev_gtk.h>"
+		end
+
+
+	gtk_render_handle (context: POINTER; cr: POINTER; x: REAL_64 ; y: REAL_64 ; width: REAL_64 ; height: REAL_64 )
+		external
+			"C signature (GtkStyleContext*, cairo_t*, gdouble, gdouble, gdouble, gdouble) use <ev_gtk.h>"
+		end
+
+
+	gtk_render_activity (context: POINTER; cr: POINTER; x: REAL_64 ; y: REAL_64 ; width: REAL_64 ; height: REAL_64 )
+		external
+			"C signature (GtkStyleContext*, cairo_t*, gdouble, gdouble, gdouble, gdouble) use <ev_gtk.h>"
+		end
+
+
+	gtk_render_icon_pixbuf (context: POINTER; source: POINTER; size: INTEGER_8): POINTER
+		external
+			"C signature (GtkStyleContext*, GtkIconSource*, GtkIconSize): GdkPixbuf* use <ev_gtk.h>"
+		end
+
+	frozen gtk_layout_put (a_layout, a_child_widget: POINTER; a_x, a_y: INTEGER)
+		external
+			"C signature (GtkLayout*, GtkWidget*, gint, gint) use <ev_gtk.h>"
+		end
+
+	frozen gtk_layout_move (a_layout, a_child_widget: POINTER; a_x, a_y: INTEGER)
+		external
+			"C signature (GtkLayout*, GtkWidget*, gint, gint) use <ev_gtk.h>"
+		end
+
+	frozen gtk_layout_set_size (a_layout: POINTER; a_x, a_y: INTEGER)
+		external
+			"C signature (GtkLayout*, guint, guint) use <ev_gtk.h>"
+		end
+
+	frozen gtk_layout_get_size (a_layout: POINTER; a_x, a_y: TYPED_POINTER [INTEGER])
+		external
+			"C signature (GtkLayout*, guint*, guint*) use <ev_gtk.h>"
+		end
+
 	frozen gtk_im_context_simple_new: POINTER
 		external
 			"C signature (): GtkIMContext* use <ev_gtk.h>"
@@ -50,35 +574,6 @@ feature -- Externals
 			"C (guint): guint | <ev_gtk.h>"
 		end
 
-	frozen gdk_region_intersect (a_region1, a_region2: POINTER)
-		external
-			"C signature (GdkRegion*, GdkRegion*) use <ev_gtk.h>"
-		end
-
-	frozen gdk_region_union (a_region1, a_region2: POINTER)
-		external
-			"C signature (GdkRegion*, GdkRegion*) use <ev_gtk.h>"
-		end
-
-	frozen gdk_region_subtract (a_region1, a_region2: POINTER)
-		external
-			"C signature (GdkRegion*, GdkRegion*) use <ev_gtk.h>"
-		end
-
-	frozen gdk_region_xor (a_region1, a_region2: POINTER)
-		external
-			"C signature (GdkRegion*, GdkRegion*) use <ev_gtk.h>"
-		end
-
-	frozen gdk_region_copy (a_region: POINTER): POINTER
-		external
-			"C signature (GdkRegion*): GdkRegion* use <ev_gtk.h>"
-		end
-
-	frozen gdk_region_rectangle (a_rect: POINTER): POINTER
-		external
-			"C signature (GdkRectangle*): GdkRegion* use <ev_gtk.h>"
-		end
 
 	frozen gtk_window_set_accept_focus (a_window: POINTER; a_focus: BOOLEAN)
 		external
@@ -88,13 +583,6 @@ feature -- Externals
 	frozen gdk_display_get_default_cursor_size (a_display: POINTER): INTEGER_32
 		external
 			"C signature (GdkDisplay*): EIF_INTEGER use <ev_gtk.h>"
-		end
-
-	frozen gtk_tooltips_struct_tip_label (a_c_struct: POINTER): POINTER
-		external
-			"C [struct <ev_gtk.h>] (GtkTooltips): EIF_POINTER"
-		alias
-			"tip_label"
 		end
 
 	frozen events_pending: BOOLEAN
@@ -108,7 +596,7 @@ feature -- Externals
 		external
 			"C macro use <ev_gtk.h>"
 		alias
-			"g_main_context_iteration(NULL, FALSE)"
+			"g_main_context_iteration(NULL, False)"
 		end
 
 	frozen dispatch_events
@@ -118,21 +606,9 @@ feature -- Externals
 			"g_main_context_dispatch(g_main_context_default())"
 		end
 
-	frozen gtk_widget_toplevel (a_widget: POINTER): BOOLEAN
+	frozen gtk_widget_is_toplevel (a_widget: POINTER): BOOLEAN
 		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GTK_WIDGET_TOPLEVEL"
-		end
-
-	frozen gtk_fixed_set_has_window (a_fixed: POINTER; has_window: BOOLEAN)
-		external
-			"C signature (GtkFixed*, gboolean) use <ev_gtk.h>"
-		end
-
-	frozen gtk_toolbar_set_orientation (a_toolbar: POINTER; a_orientation: INTEGER_32)
-		external
-			"C signature (GtkToolbar*, gint) use <ev_gtk.h>"
+			"C signature (GtkWidget*): gboolean use <ev_gtk.h>"
 		end
 
 	frozen gtk_toolbar_set_style (a_toolbar: POINTER; a_style: INTEGER)
@@ -140,58 +616,12 @@ feature -- Externals
 			"C signature (GtkToolbar*, GtkToolbarStyle) use <ev_gtk.h>"
 		end
 
-	frozen pango_renderer_draw_layout (a_pango_renderer, a_pango_layout: POINTER; a_x, a_y: INTEGER_32)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				#if GTK_MINOR_VERSION >= 6
-					pango_renderer_draw_layout ((PangoRenderer*) $a_pango_renderer, (PangoLayout*) $a_pango_layout, (gint) $a_x, (gint) $a_y);
-				#endif
-			]"
-		end
-
-	frozen gdk_pango_renderer_get_default (a_screen: POINTER): POINTER
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				#if GTK_MINOR_VERSION >= 6
-					return gdk_pango_renderer_get_default ((GdkScreen*) $a_screen);
-				#endif
-			]"
-		end
-
-	frozen gdk_pango_renderer_set_drawable (a_renderer, a_drawable: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				#if GTK_MINOR_VERSION >= 6
-					gdk_pango_renderer_set_drawable ((GdkPangoRenderer*) $a_renderer, (GdkDrawable*) $a_drawable);
-				#endif
-			]"
-		end
-
-	frozen gdk_pango_renderer_set_gc (a_renderer, a_gc: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				#if GTK_MINOR_VERSION >= 6
-					gdk_pango_renderer_set_gc ((GdkPangoRenderer*) $a_renderer, (GdkGC*) $a_gc);
-				#endif
-			]"
-		end
-
 	frozen gtk_label_set_angle (a_label: POINTER; a_angle: REAL_32)
 		external
 			"C inline use <ev_gtk.h>"
 		alias
 			"[
-				#if GTK_MINOR_VERSION >= 6
-					gtk_label_set_angle ((GtkLabel*) $a_label, (double) $a_angle);
-				#endif
+				gtk_label_set_angle ((GtkLabel*) $a_label, (double) $a_angle);
 			]"
 		end
 
@@ -200,9 +630,7 @@ feature -- Externals
 			"C inline use <ev_gtk.h>"
 		alias
 			"[
-				#if GTK_MINOR_VERSION >= 6
-					gtk_label_set_ellipsize ((GtkLabel*) $a_label, (PangoEllipsizeMode) $a_mode);
-				#endif
+				gtk_label_set_ellipsize ((GtkLabel*) $a_label, (PangoEllipsizeMode) $a_mode);
 			]"
 		end
 
@@ -211,10 +639,8 @@ feature -- Externals
 			"C inline use <ev_gtk.h>"
 		alias
 			"[
-				#if GTK_MINOR_VERSION >= 6
-					PangoMatrix matrix = PANGO_MATRIX_INIT;
-					*($a_pango_matrix) = (void*) pango_matrix_copy (&matrix);
-				#endif
+				PangoMatrix matrix = PANGO_MATRIX_INIT;
+				*($a_pango_matrix) = (void*) pango_matrix_copy (&matrix);
 			]"
 		end
 
@@ -223,9 +649,7 @@ feature -- Externals
 			"C inline use <ev_gtk.h>"
 		alias
 			"[
-				#if GTK_MINOR_VERSION >= 6
-					pango_matrix_free ((PangoMatrix*) $a_pango_matrix);
-				#endif
+				pango_matrix_free ((PangoMatrix*) $a_pango_matrix);
 			]"
 		end
 
@@ -234,9 +658,7 @@ feature -- Externals
 			"C inline use <ev_gtk.h>"
 		alias
 			"[
-				#if GTK_MINOR_VERSION >= 6
-					pango_matrix_rotate ((PangoMatrix*) $a_matrix, (double) $a_degrees);
-				#endif
+				pango_matrix_rotate ((PangoMatrix*) $a_matrix, (double) $a_degrees);
 			]"
 		end
 
@@ -245,9 +667,7 @@ feature -- Externals
 			"C inline use <ev_gtk.h>"
 		alias
 			"[
-				#if GTK_MINOR_VERSION >= 6
-					pango_matrix_translate ((PangoMatrix*) $a_matrix, (double) $a_x, (double) $a_y);
-				#endif
+				pango_matrix_translate ((PangoMatrix*) $a_matrix, (double) $a_x, (double) $a_y);
 			]"
 		end
 
@@ -256,9 +676,7 @@ feature -- Externals
 			"C inline use <ev_gtk.h>"
 		alias
 			"[
-				#if GTK_MINOR_VERSION >= 6
-					pango_context_set_matrix ((PangoContext*) $a_context, (PangoMatrix*) $a_matrix);
-				#endif
+				pango_context_set_matrix ((PangoContext*) $a_context, (PangoMatrix*) $a_matrix);
 			]"
 		end
 
@@ -267,9 +685,7 @@ feature -- Externals
 			"C inline use <ev_gtk.h>"
 		alias
 			"[
-				#if GTK_MINOR_VERSION >= 6
-					((PangoMatrix*)$a_c_struct)->xx = (gdouble) $a_x;
-				#endif
+				((PangoMatrix*)$a_c_struct)->xx = (gdouble) $a_x;
 			]"
 		end
 
@@ -278,11 +694,7 @@ feature -- Externals
 			"C inline use <ev_gtk.h>"
 		alias
 			"[
-				#if GTK_MINOR_VERSION >= 10
-					return gdk_screen_get_resolution ((GdkScreen*)$a_screen);
-				#else
-					return 96; // Default Gnome Logical DPI on older systems.
-				#endif
+				return gdk_screen_get_resolution ((GdkScreen*)$a_screen);
 			]"
 		end
 
@@ -291,42 +703,7 @@ feature -- Externals
 			"C inline use <ev_gtk.h>"
 		alias
 			"[
-				#if GTK_MINOR_VERSION >= 20
-					return gdk_screen_get_primary_monitor ((GdkScreen*)$a_screen);
-				#else
-					return 0; // Default Primary Monitor is the first monitor.
-				#endif
-			]"
-		end
-
-	frozen gdk_screen_get_rgb_colormap (a_screen: POINTER): POINTER
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				return gdk_screen_get_rgb_colormap ((GdkScreen*)$a_screen);
-			]"
-		end
-
-	frozen gdk_screen_get_rgb_visual (a_screen: POINTER): POINTER
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				return gdk_screen_get_rgb_visual ((GdkScreen*)$a_screen);
-			]"
-		end
-
-	frozen gdk_screen_get_rgba_colormap (a_screen: POINTER): POINTER
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				#if GTK_MINOR_VERSION >= 8
-					return gdk_screen_get_rgba_colormap ((GdkScreen*)$a_screen);
-				#else
-					return NULL;
-				#endif
+				return gdk_screen_get_primary_monitor ((GdkScreen*)$a_screen);
 			]"
 		end
 
@@ -335,11 +712,7 @@ feature -- Externals
 			"C inline use <ev_gtk.h>"
 		alias
 			"[
-				#if GTK_MINOR_VERSION >= 8
-					return gdk_screen_get_rgba_visual ((GdkScreen*)$a_screen);
-				#else
-					return NULL;
-				#endif
+				return gdk_screen_get_rgba_visual ((GdkScreen*)$a_screen);
 			]"
 		end
 
@@ -348,22 +721,53 @@ feature -- Externals
 			"C inline use <ev_gtk.h>"
 		alias
 			"[
-				#if GTK_MINOR_VERSION >= 10
-					return gdk_screen_is_composited ((GdkScreen*)$a_screen);
-				#else
-					return EIF_FALSE;
-				#endif
+				return gdk_screen_is_composited ((GdkScreen*)$a_screen);
 			]"
 		end
 
-	frozen gdk_draw_drawable (a_drawable: POINTER; a_gc: POINTER; a_src: POINTER; a_xsrc: INTEGER_32; a_ysrc: INTEGER_32; a_xdest: INTEGER_32; a_ydest: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32)
+	frozen pango_layout_get_line_count (a_pango_layout: POINTER): INTEGER
 		external
-			"C (GdkDrawable*, GdkGC*, GdkDrawable*, gint, gint, gint, gint, gint, gint) | <ev_gtk.h>"
+			"C signature (PangoLayout*): int use <ev_gtk.h>"
+		end
+
+	frozen pango_layout_get_line (a_pango_layout: POINTER; a_line: INTEGER): POINTER
+		external
+			"C signature (PangoLayout*, int): PangoLayoutLine* use <ev_gtk.h>"
+		end
+
+	frozen pango_layout_get_line_readonly (a_pango_layout: POINTER; a_line: INTEGER): POINTER
+		external
+			"C signature (PangoLayout*, int): PangoLayoutLine* use <ev_gtk.h>"
 		end
 
 	frozen pango_layout_get_context (a_pango_layout: POINTER): POINTER
 		external
 			"C signature (PangoLayout*): PangoContext* use <ev_gtk.h>"
+		end
+
+	frozen pango_cairo_create_layout (a_cr: POINTER): POINTER
+		external
+			"C signature (cairo_t*): PangoLayout* use <ev_gtk.h>"
+		end
+
+	frozen pango_cairo_update_layout (a_cr, a_layout: POINTER)
+		external
+			"C signature (cairo_t *, PangoLayout*) use <ev_gtk.h>"
+		end
+
+	frozen pango_cairo_show_layout (a_cr, a_layout: POINTER)
+		external
+			"C signature (cairo_t *, PangoLayout*) use <ev_gtk.h>"
+		end
+
+	frozen pango_cairo_show_layout_line (a_cr, a_layout: POINTER)
+		external
+			"C signature (cairo_t *, PangoLayoutLine*) use <ev_gtk.h>"
+		end
+
+	frozen pango_cairo_layout_path (a_cr, a_layout: POINTER)
+		external
+			"C signature (cairo_t *, PangoLayout*) use <ev_gtk.h>"
 		end
 
 	frozen g_mem_set_vtable (mem_vtable: POINTER)
@@ -381,26 +785,6 @@ feature -- Externals
 			"C macro use <ev_gtk.h>"
 		alias
 			"glib_mem_profiler_table"
-		end
-
-	frozen gdk_drawable_copy_to_image (a_drawable, a_image: POINTER; src_x, src_y, dest_x, dest_y, a_width, a_height: INTEGER_32): POINTER
-		external
-			"C signature (GdkDrawable*, GdkImage*, int, int, int, int, int, int): GdkImage* use <ev_gtk.h>"
-		end
-
-	frozen gdk_drawable_get_colormap (a_drawable: POINTER): POINTER
-		external
-			"C signature (GdkDrawable*): GdkColormap* use <ev_gtk.h>"
-		end
-
-	frozen gdk_drawable_get_image (a_drawable: POINTER; a_x, a_y, a_width, a_height: INTEGER_32): POINTER
-		external
-			"C signature (GdkDrawable*, gint, gint, gint, gint): GdkImage* use <ev_gtk.h>"
-		end
-
-	frozen gdk_drawable_get_visible_region (a_drawable: POINTER): POINTER
-		external
-			"C signature (GdkDrawable*): GdkRegion use <ev_gtk.h>"
 		end
 
 	frozen gtk_window_get_focus (a_window: POINTER): POINTER
@@ -461,24 +845,15 @@ feature -- Externals
 			"gtk_container_set_focus_chain ((GtkContainer*) $a_container, (GList*) $a_focus_chain)"
 		end
 
-	frozen gtk_tree_view_column_struct_window (a_c_struct: POINTER): POINTER
+	frozen gtk_tree_view_column_get_button (a_c_struct: POINTER): POINTER
 		external
-			"C [struct <ev_gtk.h>] (GtkTreeViewColumn): GdkWindow*"
-		alias
-			"window"
+			"C signature (GtkTreeViewColumn*): GtkWidget* use <ev_gtk.h>"
 		end
 
-	frozen gtk_tree_view_column_struct_button (a_c_struct: POINTER): POINTER
-		external
-			"C [struct <ev_gtk.h>] (GtkTreeViewColumn): GtkWidget*"
-		alias
-			"button"
-		end
-
-	frozen gdk_drawable_get_size (a_drawable: POINTER; a_width, a_height: TYPED_POINTER [INTEGER_32])
-		external
-			"C signature (GdkDrawable*, gint*, gint*) use <ev_gtk.h>"
-		end
+--	frozen gdk_drawable_get_size (a_drawable: POINTER; a_width, a_height: TYPED_POINTER [INTEGER_32])
+--		external
+	--			"C signature (GdkDrawable*, gint*, gint*) use <ev_gtk.h>"
+--		end
 
 	frozen gtk_combo_box_popdown (a_combo: POINTER)
 		external
@@ -581,16 +956,6 @@ feature -- Externals
 	frozen g_value_unset (a_value: POINTER)
 		external
 			"C signature (GValue*) use <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_set_rgb_fg_color (a_gc: POINTER; a_color: POINTER)
-		external
-			"C (GdkGC*, GdkColor*) | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_set_rgb_bg_color (a_gc: POINTER; a_color: POINTER)
-		external
-			"C (GdkGC*, GdkColor*) | <ev_gtk.h>"
 		end
 
 	frozen gtk_tree_view_column_grow_only_enum: INTEGER_32
@@ -708,6 +1073,11 @@ feature -- Externals
 		end
 
 	frozen gtk_widget_set_double_buffered (a_widget: POINTER; is_buffered: BOOLEAN)
+		external
+			"C signature (GtkWidget*, gboolean) use <ev_gtk.h>"
+		end
+
+	frozen gtk_widget_set_app_paintable (a_widget: POINTER; a_paintable: BOOLEAN)
 		external
 			"C signature (GtkWidget*, gboolean) use <ev_gtk.h>"
 		end
@@ -886,9 +1256,7 @@ feature -- Externals
 			"C inline use <ev_gtk.h>"
 		alias
 			"[
-				#if GTK_MINOR_VERSION >= 12
-					return gdk_display_supports_composite ((GdkDisplay*) $a_display);
-				#endif
+				return gdk_display_supports_composite ((GdkDisplay*) $a_display);
 			]"
 		end
 
@@ -917,11 +1285,6 @@ feature -- Externals
 			"C signature (GdkDisplay*, GdkPixbuf*, gint, gint): GdkCursor* use <ev_gtk.h>"
 		end
 
-	frozen gtk_tool_item_set_tooltip (a_tool_item, a_tooltips, a_tip_text, a_tip_private: POINTER)
-		external
-			"C signature (GtkToolItem*, GtkTooltips*, gchar*, gchar*) use <ev_gtk.h>"
-		end
-
 	frozen gtk_tree_view_get_expander_column (a_tree_view: POINTER): POINTER
 		external
 			"C signature (GtkTreeView*): GtkTreeViewColumn* use <ev_gtk.h>"
@@ -930,11 +1293,6 @@ feature -- Externals
 	frozen gdk_pixbuf_add_alpha (a_pixbuf: POINTER; substitute_color: BOOLEAN; r, g, b: NATURAL_8): POINTER
 		external
 			"C signature (GdkPixbuf*, gboolean, guchar, guchar, guchar): GdkPixbuf* use <ev_gtk.h>"
-		end
-
-	frozen gdk_draw_pixbuf (a_drawable, a_gc, a_pixbuf: POINTER; src_x, src_y, dest_x, dest_y, a_width, a_height, a_dither, x_dither, y_dither: INTEGER_32)
-		external
-			"C signature (GdkDrawable*, GdkGC*, GdkPixbuf*, gint, gint, gint, gint, gint , gint, gint, gint, gint) use <ev_gtk.h>"
 		end
 
 	frozen gtk_tree_path_new_from_string (a_string: POINTER): POINTER
@@ -970,11 +1328,6 @@ feature -- Externals
 	frozen gtk_toggle_tool_button_get_active (a_button: POINTER): BOOLEAN
 		external
 			"C signature (GtkToggleToolButton*): gboolean use <ev_gtk.h>"
-		end
-
-	frozen gtk_toolbar_set_tooltips (a_toolbar: POINTER; a_enable: BOOLEAN)
-		external
-			"C signature (GtkToolbar*, gboolean) use <ev_gtk.h>"
 		end
 
 	frozen gtk_toolbar_new: POINTER
@@ -1233,13 +1586,6 @@ feature -- Externals
 			"C signature (GtkFileChooser*): GtkFileFilter* use <ev_gtk.h>"
 		end
 
-	frozen gtk_combo_box_get_entry (a_combo: POINTER): POINTER
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"GTK_ENTRY (GTK_BIN ( $a_combo )->child)"
-		end
-
 	frozen gtk_combo_box_get_active (a_combo: POINTER): INTEGER_32
 		external
 			"C inline use <ev_gtk.h>"
@@ -1261,7 +1607,7 @@ feature -- Externals
 			"gtk_entry_get_completion ((GtkEntry*) $a_entry)"
 		end
 
-	frozen gtk_combo_box_entry_new: POINTER
+	frozen gtk_combo_box_new_with_entry: POINTER
 		external
 			"C signature (): GtkWidget* use <ev_gtk.h>"
 		end
@@ -1278,11 +1624,11 @@ feature -- Externals
 			"gtk_combo_box_set_model ((GtkComboBox*) $a_combo_box, (GtkTreeModel*) $a_model)"
 		end
 
-	frozen gtk_combo_box_entry_set_text_column (a_combo_box: POINTER; a_column: INTEGER_32)
+	frozen gtk_combo_box_set_entry_text_column (a_combo_box: POINTER; a_column: INTEGER_32)
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"gtk_combo_box_entry_set_text_column ((GtkComboBoxEntry*) $a_combo_box, (gint) $a_column)"
+			"gtk_combo_box_set_entry_text_column ((GtkComboBox*) $a_combo_box, (gint) $a_column)"
 		end
 
 	frozen gtk_cell_layout_pack_start (a_cell_layout, a_cell_renderer: POINTER; a_expand: BOOLEAN)
@@ -1332,13 +1678,6 @@ feature -- Externals
 			"C inline use <ev_gtk.h>"
 		alias
 			"gtk_tree_view_set_rules_hint ((GtkTreeView*) $a_tree_view, (gboolean) $a_hint)"
-		end
-
-	frozen gtk_tree_view_column_get_cell_renderers (a_tree_view_column: POINTER): POINTER
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"gtk_tree_view_column_get_cell_renderers ((GtkTreeViewColumn*) $a_tree_view_column)"
 		end
 
 	frozen gtk_tree_view_column_cell_get_size (a_tree_view_column: POINTER; a_cell_area: POINTER; a_x_offset, a_y_offset, a_width, a_height: TYPED_POINTER [INTEGER_32])
@@ -2055,7 +2394,7 @@ feature -- Externals
 
 	frozen gdk_window_get_update_area (a_window: POINTER): POINTER
 		external
-			"C signature (GdkWindow*): GdkRegion* use <ev_gtk.h>"
+			"C signature (GdkWindow*): cairo_region_t* use <ev_gtk.h>"
 		end
 
 	frozen gdk_window_is_viewable (a_window: POINTER): BOOLEAN
@@ -2155,24 +2494,19 @@ feature -- Externals
 			"C signature (GValueArray*, guint): GValue* use <ev_gtk.h>"
 		end
 
-	frozen gtk_color_selection_dialog_struct_color_selection (a_color_selection_dialog: POINTER): POINTER
+	frozen gtk_color_selection_dialog_get_color_selection (a_color_selection_dialog: POINTER): POINTER
 		external
-			"C struct GtkColorSelectionDialog access colorsel use <ev_gtk.h>"
+			"C signature (GtkColorSelectionDialog*): GtkWidget* use <ev_gtk.h>"
 		end
 
-	frozen gtk_color_selection_get_current_color (a_color_selection, a_color: POINTER)
+	frozen gtk_color_selection_get_current_rgba (a_color_selection, a_color: POINTER)
 		external
-			"C signature (GtkColorSelection*, GdkColor*) use <ev_gtk.h>"
+			"C signature (GtkColorSelection*, GdkRGBA*) use <ev_gtk.h>"
 		end
 
-	frozen gtk_color_selection_set_current_color (a_color_selection, a_color: POINTER)
+	frozen gtk_color_selection_set_current_rgba (a_color_selection, a_color: POINTER)
 		external
-			"C signature (GtkColorSelection*, GdkColor*) use <ev_gtk.h>"
-		end
-
-	frozen gdk_colormap_query_color (a_color_map: POINTER; a_pixel: INTEGER_32; a_color: POINTER)
-		external
-			"C signature (GdkColormap*, gulong, GdkColor*) use <ev_gtk.h>"
+			"C signature (GtkColorSelection*, GdkRGBA*) use <ev_gtk.h>"
 		end
 
 	frozen gdk_pixbuf_scale_simple (a_gdkpixbuf: POINTER; a_width, a_height, a_interp_mode: INTEGER_32): POINTER
@@ -2233,16 +2567,6 @@ feature -- Externals
 	frozen gtk_image_set_from_stock (a_image, a_stock_id: POINTER; a_icon_size: INTEGER_32)
 		external
 			"C signature (GtkImage*, gchar*, GtkIconSize) use <ev_gtk.h>"
-		end
-
-	frozen gtk_widget_modify_text (a_widget: POINTER; a_state_type: INTEGER_32; a_color: POINTER)
-		external
-			"C signature (GtkWidget*, GtkStateType, GdkColor*) use <ev_gtk.h>"
-		end
-
-	frozen gtk_widget_modify_base (a_widget: POINTER; a_state_type: INTEGER_32; a_color: POINTER)
-		external
-			"C signature (GtkWidget*, GtkStateType, GdkColor*) use <ev_gtk.h>"
 		end
 
 	frozen gtk_image_menu_item_new: POINTER
@@ -2350,16 +2674,6 @@ feature -- Externals
 			"C inline use <ev_gtk.h>"
 		alias
 			"gdk_pixbuf_save ((GdkPixbuf*) $a_pixbuf, (char*) $a_file_handle, (char*) $a_filetype, (GError**) $a_error, NULL)"
-		end
-
-	frozen gdk_pixbuf_get_from_drawable (a_pixbuf, a_drawable, a_colormap: POINTER; src_x, src_y, dest_x, dest_y, a_width, a_height: INTEGER_32): POINTER
-		external
-			"C signature (GdkPixbuf*, GdkDrawable*, GdkColormap*, int, int, int, int, int, int): GdkPixbuf use <ev_gtk.h>"
-		end
-
-	frozen gdk_pixbuf_get_from_image (a_pixbuf, a_drawable, a_colormap: POINTER; src_x, src_y, dest_x, dest_y, a_width, a_height: INTEGER_32): POINTER
-		external
-			"C signature (GdkPixbuf*, GdkImage*, GdkColormap*, int, int, int, int, int, int): GdkPixbuf use <ev_gtk.h>"
 		end
 
 	frozen g_locale_to_utf8 (a_string: POINTER; a_length: INTEGER_32; bytes_read, bytes_written: TYPED_POINTER [INTEGER_32]; gerror: TYPED_POINTER [POINTER]; a_result: TYPED_POINTER [POINTER])
@@ -2480,24 +2794,19 @@ feature -- Externals
 			"C signature (PangoLayoutIter*) use <ev_gtk.h>"
 		end
 
-	frozen gdk_draw_layout (a_drawable, a_gc: POINTER; a_x, a_y: INTEGER_32; a_layout: POINTER)
-		external
-			"C signature (GdkDrawable*, GdkGC*, gint, gint, PangoLayout*) use <ev_gtk.h>"
-		end
-
 	frozen gtk_widget_create_pango_layout (a_widget: POINTER; a_text: POINTER): POINTER
 		external
 			"C signature (GtkWidget*, gchar*): PangoLayout* use <ev_gtk.h>"
 		end
 
-	frozen gtk_widget_modify_fg (a_widget: POINTER; a_state_type: INTEGER_32; a_color: POINTER)
+	frozen gtk_widget_override_color (a_widget: POINTER; a_state_flag: INTEGER_32; a_color: POINTER)
 		external
-			"C signature (GtkWidget*, GtkStateType, GdkColor*) use <ev_gtk.h>"
+			"C signature (GtkWidget*, GtkStateFlags, GdkRGBA*) use <ev_gtk.h>"
 		end
 
-	frozen gtk_widget_modify_bg (a_widget: POINTER; a_state_type: INTEGER_32; a_color: POINTER)
+	frozen gtk_widget_override_background_color (a_widget: POINTER; a_state_flag: INTEGER_32; a_color: POINTER)
 		external
-			"C signature (GtkWidget*, GtkStateType, GdkColor*) use <ev_gtk.h>"
+			"C signature (GtkWidget*, GtkStateFlags, GdkRGBA*) use <ev_gtk.h>"
 		end
 
 	frozen gtk_widget_get_modifier_style (a_widget: POINTER): POINTER
@@ -2584,6 +2893,13 @@ feature -- Externals
 			"g_object_set ((gpointer) $a_object, (gchar*) $a_property, (gpointer) $arg1, NULL)"
 		end
 
+	frozen g_object_get_pointer (a_object: POINTER; a_property: POINTER; pointer_arg: TYPED_POINTER [POINTER])
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"g_object_get ((gpointer) $a_object, (gchar*) $a_property, (void**) $pointer_arg, NULL)"
+		end
+
 	frozen g_object_set_string (a_object: POINTER; a_property: POINTER; string_arg: POINTER)
 		external
 			"C inline use <ev_gtk.h>"
@@ -2645,42 +2961,24 @@ feature -- Externals
 			"C signature (GtkEditable*, gint*, gint*): gboolean use <ev_gtk.h>"
 		end
 
-	frozen gtk_style_get_font (a_c_struct: POINTER): POINTER
-		external
-			"C signature (GtkStyle*): EIF_POINTER use <ev_gtk.h>"
-		end
-
-	frozen gtk_menu_bar_set_shadow_type (a_menu_bar: POINTER; a_type: INTEGER_32)
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			" "
-		end
-
 	frozen gtk_editable_get_editable (a_c_struct: POINTER): BOOLEAN
 		external
 			"C signature (GtkEditable*): EIF_BOOLEAN use <ev_gtk.h>"
 		end
 
-	frozen object_destroy (a_c_object: POINTER)
+	frozen gtk_widget_destroy (a_c_object: POINTER)
 		external
-			"C signature (GtkObject*) use <ev_gtk.h>"
-		alias
-			"gtk_object_destroy"
+			"C signature (GtkWidget*) use <ev_gtk.h>"
 		end
 
-	frozen object_ref (a_c_object: POINTER)
+	frozen g_object_ref (a_c_object: POINTER): POINTER
 		external
-			"C signature (gpointer) use <ev_gtk.h>"
-		alias
-			"g_object_ref"
+			"C signature (gpointer): gpointer use <ev_gtk.h>"
 		end
 
-	frozen object_unref (a_c_object: POINTER)
+	frozen g_object_unref (a_c_object: POINTER)
 		external
 			"C signature (gpointer) use <ev_gtk.h>"
-		alias
-			"g_object_unref"
 		end
 
 	frozen gtk_text_view_new: POINTER
@@ -2964,29 +3262,14 @@ feature -- Externals
 			"C signature (GtkTextIter*): GtkTextIter* use <ev_gtk.h>"
 		end
 
-	frozen gtk_image_set_from_pixmap (a_image: POINTER; a_pixmap: POINTER; a_mask: POINTER)
-		external
-			"C signature (GtkImage*, GdkPixmap*, GdkBitmap*) use <ev_gtk.h>"
-		end
-
 	frozen gtk_image_set_from_pixbuf (a_image: POINTER; a_pixbuf: POINTER)
 		external
 			"C signature (GtkImage*, GdkPixbuf*) use <ev_gtk.h>"
 		end
 
-	frozen gtk_image_get_pixmap (a_image: POINTER; a_pixmap: POINTER; a_mask: POINTER)
-		external
-			"C signature (GtkImage*, GdkPixmap**, GdkBitmap**) use <ev_gtk.h>"
-		end
-
 	frozen gtk_image_get_pixbuf (a_image: POINTER): POINTER
 		external
 			"C signature (GtkImage*): GdkPixbuf* use <ev_gtk.h>"
-		end
-
-	frozen gtk_image_new_from_pixmap (a_pixmap: POINTER; a_mask: POINTER): POINTER
-		external
-			"C signature (GdkPixmap*, GdkBitmap*): GtkImage* use <ev_gtk.h>"
 		end
 
 	frozen gtk_image_new_from_pixbuf (a_pixbuf: POINTER): POINTER
@@ -3010,15 +3293,15 @@ feature -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-		Eiffel Software
-		356 Storke Road, Goleta, CA 93117 USA
-		Telephone 805-685-1006, Fax 805-685-6869
-		Website http://www.eiffel.com
-		Customer support http://support.eiffel.com
-	]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end -- class GTK2
 

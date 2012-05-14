@@ -4,7 +4,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "colorizible"
-	date: "$Date$"
+	date: "$Date: 2012-05-11 14:37:29 -0700 (Fri, 11 May 2012) $"
 	revision: "$Revision$"
 
 deferred class
@@ -23,36 +23,32 @@ feature -- Access
 	background_color_internal: EV_COLOR
 			-- Color of face.
 		local
-			color: POINTER
+			l_rgba_color, l_style_context: POINTER
 		do
 			if attached background_color_imp as l_background_color_imp then
 				Result := l_background_color_imp.attached_interface.twin
 			else
-				color := background_color_pointer
-				create Result
-				Result.set_rgb_with_16_bit (
-					{GTK}.gdk_color_struct_red (color),
-					{GTK}.gdk_color_struct_green (color),
-					{GTK}.gdk_color_struct_blue (color)
-				)
+				l_rgba_color := {GTK}.c_gdk_rgba_struct_allocate
+				l_style_context := background_color_style_context
+				{GTK}.gtk_style_context_get_background_color (l_style_context, {GTK}.gtk_state_flag_normal_enum, l_rgba_color)
+				create Result.make_with_rgb ({GTK}.gdk_rgba_struct_red (l_rgba_color).truncated_to_real, {GTK}.gdk_rgba_struct_green (l_rgba_color).truncated_to_real, {GTK}.gdk_rgba_struct_blue (l_rgba_color).truncated_to_real)
+				l_rgba_color.memory_free
 			end
 		end
 
 	foreground_color_internal: EV_COLOR
 			-- Color of foreground features like text.
 		local
-			color: POINTER
+			l_rgba_color, l_style_context: POINTER
 		do
 			if attached foreground_color_imp as l_foreground_color_imp then
 				Result := l_foreground_color_imp.attached_interface.twin
 			else
-				color := foreground_color_pointer
-				create Result
-				Result.set_rgb_with_16_bit (
-					{GTK}.gdk_color_struct_red (color),
-					{GTK}.gdk_color_struct_green (color),
-					{GTK}.gdk_color_struct_blue (color)
-				)
+				l_rgba_color := {GTK}.c_gdk_rgba_struct_allocate
+				l_style_context := foreground_color_style_context
+				{GTK}.gtk_style_context_get_color (l_style_context, {GTK}.gtk_state_flag_normal_enum, l_rgba_color)
+				create Result.make_with_rgb ({GTK}.gdk_rgba_struct_red (l_rgba_color).truncated_to_real, {GTK}.gdk_rgba_struct_green (l_rgba_color).truncated_to_real, {GTK}.gdk_rgba_struct_blue (l_rgba_color).truncated_to_real)
+				l_rgba_color.memory_free
 			end
 		end
 
@@ -86,17 +82,17 @@ feature -- Status setting
 			r, g, b, nr, ng, nb, m, mx: INTEGER
 		do
 			if a_color /= Void then
-				color := {GTK}.c_gdk_color_struct_allocate
+				color := {GTK}.c_gdk_rgba_struct_allocate
 				r := a_color.red_16_bit
 				g := a_color.green_16_bit
 				b := a_color.blue_16_bit
 				m := a_color.Max_16_bit
-				{GTK}.set_gdk_color_struct_red (color, r)
-				{GTK}.set_gdk_color_struct_green (color, g)
-				{GTK}.set_gdk_color_struct_blue (color, b)
+				{GTK}.set_gdk_rgba_struct_red (color, r)
+				{GTK}.set_gdk_rgba_struct_green (color, g)
+				{GTK}.set_gdk_rgba_struct_blue (color, b)
+				{GTK}.set_gdk_rgba_struct_alpha (color, 1.0)
 			end
-			{GTK2}.gtk_widget_modify_bg (a_c_object, {GTK}.gTK_STATE_NORMAL_ENUM, color)
-			{GTK2}.gtk_widget_modify_base (a_c_object, {GTK}.gTK_STATE_NORMAL_ENUM, color)
+			{GTK2}.gtk_widget_override_background_color (a_c_object, {GTK}.gTK_STATE_FLAG_NORMAL_ENUM, color)
 
 
 			if a_color /= Void then
@@ -107,47 +103,42 @@ feature -- Status setting
 				if nr < 0 then nr := 0 end
 				if ng < 0 then ng := 0 end
 				if nb < 0 then nb := 0 end
-				{GTK}.set_gdk_color_struct_red (color, nr)
-				{GTK}.set_gdk_color_struct_green (color, ng)
-				{GTK}.set_gdk_color_struct_blue (color, nb)
+				{GTK}.set_gdk_rgba_struct_red (color, nr)
+				{GTK}.set_gdk_rgba_struct_green (color, ng)
+				{GTK}.set_gdk_rgba_struct_blue (color, nb)
 			end
-			{GTK2}.gtk_widget_modify_bg (a_c_object, {GTK}.gTK_STATE_ACTIVE_ENUM, color)
-			{GTK2}.gtk_widget_modify_base (a_c_object, {GTK}.gTK_STATE_ACTIVE_ENUM, color)
-
+			{GTK2}.gtk_widget_override_background_color (a_c_object, {GTK}.gTK_STATE_FLAG_ACTIVE_ENUM, color)
 
 			if a_color /= Void then
 					--| Set prelight state color.
 				nr := (r * Prelight_scale).rounded.min (m)
 				ng := (g * Prelight_scale).rounded.min (m)
 				nb := (b * Prelight_scale).rounded.min (m)
-				{GTK}.set_gdk_color_struct_red (color, nr)
-				{GTK}.set_gdk_color_struct_green (color, ng)
-				{GTK}.set_gdk_color_struct_blue (color, nb)
+				{GTK}.set_gdk_rgba_struct_red (color, nr)
+				{GTK}.set_gdk_rgba_struct_green (color, ng)
+				{GTK}.set_gdk_rgba_struct_blue (color, nb)
 			end
-			{GTK2}.gtk_widget_modify_bg (a_c_object, {GTK}.gTK_STATE_PRELIGHT_ENUM, color)
-			{GTK2}.gtk_widget_modify_base (a_c_object, {GTK}.gTK_STATE_PRELIGHT_ENUM, color)
+			{GTK2}.gtk_widget_override_background_color (a_c_object, {GTK}.gTK_STATE_FLAG_PRELIGHT_ENUM, color)
 
 
 			if a_color /= Void then
 					--| Set selected state color to reverse.
-				{GTK}.set_gdk_color_struct_red   (color, m - r)
-				{GTK}.set_gdk_color_struct_green (color, m - g)
-				{GTK}.set_gdk_color_struct_blue  (color, m - b//2)
+				{GTK}.set_gdk_rgba_struct_red   (color, m - r)
+				{GTK}.set_gdk_rgba_struct_green (color, m - g)
+				{GTK}.set_gdk_rgba_struct_blue  (color, m - b//2)
 			end
-			{GTK2}.gtk_widget_modify_bg (a_c_object, {GTK}.gTK_STATE_SELECTED_ENUM, color)
-			{GTK2}.gtk_widget_modify_base (a_c_object, {GTK}.gTK_STATE_SELECTED_ENUM, color)
+			{GTK2}.gtk_widget_override_background_color (a_c_object, {GTK}.gTK_STATE_FLAG_SELECTED_ENUM, color)
 
 
 			if a_color /= Void then
 					--| Set the insensitive state color.
 				mx := r.max (g).max (b)
-				{GTK}.set_gdk_color_struct_red   (color, mx + ((r - mx)//4))
-				{GTK}.set_gdk_color_struct_green (color, mx + ((g - mx)//4))
-				{GTK}.set_gdk_color_struct_blue  (color, mx + ((b - mx)//4))
+				{GTK}.set_gdk_rgba_struct_red   (color, mx + ((r - mx)//4))
+				{GTK}.set_gdk_rgba_struct_green (color, mx + ((g - mx)//4))
+				{GTK}.set_gdk_rgba_struct_blue  (color, mx + ((b - mx)//4))
 			end
 
-			{GTK2}.gtk_widget_modify_bg (a_c_object, {GTK}.gTK_STATE_INSENSITIVE_ENUM, color)
-			{GTK2}.gtk_widget_modify_base (a_c_object, {GTK}.gTK_STATE_INSENSITIVE_ENUM, color)
+			{GTK2}.gtk_widget_override_background_color (a_c_object, {GTK}.gTK_STATE_FLAG_INSENSITIVE_ENUM, color)
 
 			if color /= l_null then
 				color.memory_free
@@ -173,23 +164,18 @@ feature -- Status setting
 			l_foreground_color_imp: like foreground_color_imp
 		do
 			if a_color /= Void then
-				color := {GTK}.c_gdk_color_struct_allocate
+				color := {GTK}.c_gdk_rgba_struct_allocate
 				l_foreground_color_imp := foreground_color_imp
 				check l_foreground_color_imp /= Void end
-				{GTK}.set_gdk_color_struct_red (color, l_foreground_color_imp.red_16_bit)
-				{GTK}.set_gdk_color_struct_green (color, l_foreground_color_imp.green_16_bit)
-				{GTK}.set_gdk_color_struct_blue (color, l_foreground_color_imp.blue_16_bit)
+				{GTK}.set_gdk_rgba_struct_red (color, l_foreground_color_imp.red)
+				{GTK}.set_gdk_rgba_struct_green (color, l_foreground_color_imp.green)
+				{GTK}.set_gdk_rgba_struct_blue (color, l_foreground_color_imp.blue)
+				{GTK}.set_gdk_rgba_struct_alpha (color, 1.0)
 			end
 
-			{GTK2}.gtk_widget_modify_fg (a_c_object, {GTK}.GTK_STATE_NORMAL_ENUM, color)
-			{GTK2}.gtk_widget_modify_fg (a_c_object, {GTK}.GTK_STATE_ACTIVE_ENUM, color)
-			{GTK2}.gtk_widget_modify_fg (a_c_object, {GTK}.GTK_STATE_PRELIGHT_ENUM, color)
-			--{EV_GTK_EXTERNALS}.gtk_widget_modify_fg (a_c_object, {EV_GTK_EXTERNALS}.GTK_STATE_SELECTED_ENUM, default_pointer)
-
-			{GTK2}.gtk_widget_modify_text (a_c_object, {GTK}.GTK_STATE_NORMAL_ENUM, color)
-			{GTK2}.gtk_widget_modify_text (a_c_object, {GTK}.GTK_STATE_ACTIVE_ENUM, color)
-			{GTK2}.gtk_widget_modify_text (a_c_object, {GTK}.GTK_STATE_PRELIGHT_ENUM, color)
-			--{EV_GTK_EXTERNALS}.gtk_widget_modify_text (a_c_object, {EV_GTK_EXTERNALS}.GTK_STATE_SELECTED_ENUM, default_pointer)
+			{GTK2}.gtk_widget_override_color (a_c_object, {GTK}.GTK_STATE_FLAG_NORMAL_ENUM, color)
+			{GTK2}.gtk_widget_override_color (a_c_object, {GTK}.GTK_STATE_FLAG_ACTIVE_ENUM, color)
+			{GTK2}.gtk_widget_override_color (a_c_object, {GTK}.GTK_STATE_FLAG_PRELIGHT_ENUM, color)
 
 			if color /= l_null  then
 				color.memory_free
@@ -225,20 +211,16 @@ feature {NONE} -- Implementation
 	foreground_color_imp: detachable EV_COLOR_IMP
 		-- Color used for the foreground of `Current'
 
-	background_color_pointer: POINTER
-			-- Pointer to bg color for `a_widget'.
+	background_color_style_context: POINTER
+			-- Pointer to bg color style context
 		do
-			Result := {GTK}.gtk_style_struct_base (
-				{GTK}.gtk_rc_get_style (visual_widget)
-			)
+			Result := {GTK}.gtk_widget_get_style_context (visual_widget)
 		end
 
-	foreground_color_pointer: POINTER
-			-- Pointer to fg color for `a_widget'.
+	foreground_color_style_context: POINTER
+			-- Pointer to fg color style context
 		do
-			Result := {GTK}.gtk_style_struct_fg (
-				{GTK}.gtk_rc_get_style (visual_widget)
-			)
+			Result := {GTK}.gtk_widget_get_style_context (visual_widget)
 		end
 
 	Prelight_scale: REAL = 1.0909488
@@ -252,14 +234,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_COLORIZABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -30,21 +30,19 @@ feature -- Access
 	is_homogeneous: BOOLEAN
 			-- Are all children restricted to be the same size?
 		do
-			Result := {GTK}.gtk_box_struct_homogeneous (container_widget) /= 0
+			Result := {GTK}.gtk_box_get_homogeneous (container_widget)
 		end
 
 	border_width: INTEGER
 			-- Width of border around container in pixels.
 		do
-			Result := {GTK}.gtk_container_struct_border_width (
-					{GTK}.gtk_box_struct_container (container_widget)
-				)
+			Result := {GTK}.gtk_container_get_border_width (container_widget)
 		end
 
 	padding: INTEGER
 			-- Space between children in pixels.		
 		do
-			Result := {GTK}.gtk_box_struct_spacing (container_widget)
+			Result := {GTK}.gtk_box_get_spacing (container_widget)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Status report
@@ -139,14 +137,14 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

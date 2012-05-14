@@ -131,13 +131,13 @@ feature -- Status setting
 			elseif is_minimized then
 				restore
 			end
-			{GTK}.gdk_window_raise ({GTK}.gtk_widget_struct_window (c_object))
+			{GTK}.gdk_window_raise ({GTK}.gtk_widget_get_window (c_object))
 		end
 
 	lower
 			-- Request that window be displayed below all other windows.
 		do
-			{GTK}.gdk_window_lower ({GTK}.gtk_widget_struct_window (c_object))
+			{GTK}.gdk_window_lower ({GTK}.gtk_widget_get_window (c_object))
 		end
 
 	minimize
@@ -177,7 +177,7 @@ feature -- Element change
 		do
 			a_cs := an_icon_name
 			{GTK}.gdk_window_set_icon_name (
-				{GTK}.gtk_widget_struct_window (c_object), a_cs.item)
+				{GTK}.gtk_widget_get_window (c_object), a_cs.item)
 			icon_name_holder := an_icon_name.as_string_32.twin
 		end
 
@@ -191,7 +191,8 @@ feature -- Element change
 				icon_implementation_exists: pixmap_imp /= Void
 			end
 			icon_pixmap_internal := pixmap_imp.interface
-			{GTK}.gdk_window_set_icon ({GTK}.gtk_widget_struct_window (c_object), NULL, pixmap_imp.drawable, pixmap_imp.mask)
+			--| FIXME IEK Implement with gtk 3 feature.
+--			{GTK}.gdk_window_set_icon ({GTK}.gtk_widget_struct_window (c_object), NULL, pixmap_imp.drawable, pixmap_imp.mask)
 		end
 
 feature {NONE} -- Implementation
@@ -212,14 +213,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TITLED_WINDOW note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_TITLED_WINDOW_IMP

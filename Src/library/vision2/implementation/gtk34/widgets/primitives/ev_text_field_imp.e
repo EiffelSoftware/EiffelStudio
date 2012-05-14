@@ -104,9 +104,11 @@ feature -- Status setting
 			-- Append `a_text' to the end of the text.
 		local
 			a_cs: EV_GTK_C_STRING
+			l_buffer: POINTER
 		do
 			a_cs := a_text
-			{GTK}.gtk_entry_append_text (entry_widget, a_cs.item)
+			l_buffer := {GTK}.gtk_entry_get_buffer (entry_widget)
+			{GTK}.gtk_entry_buffer_insert_text (l_buffer, 1, a_cs.item, a_cs.string_length)
 			on_change_actions
 		end
 
@@ -114,9 +116,13 @@ feature -- Status setting
 			-- Prepend `a_text' to the end of the text.
 		local
 			a_cs: EV_GTK_C_STRING
+			l_buffer: POINTER
+			l_end_pos: NATURAL_32
 		do
 			a_cs := a_text
-			{GTK}.gtk_entry_prepend_text (entry_widget, a_cs.item)
+			l_buffer := {GTK}.gtk_entry_get_buffer (entry_widget)
+			l_end_pos := text_length.as_natural_32
+			{GTK}.gtk_entry_buffer_insert_text (l_buffer, l_end_pos, a_cs.item, a_cs.string_length)
 			on_change_actions
 		end
 
@@ -162,7 +168,7 @@ feature -- Status Report
 			-- Return the maximum number of characters that the
 			-- user may enter.
 		do
-			Result := {GTK}.gtk_entry_struct_text_max_length (entry_widget)
+			Result := {GTK}.gtk_entry_get_max_length (entry_widget)
 		end
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -393,14 +399,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_TEXT_FIELD_IMP

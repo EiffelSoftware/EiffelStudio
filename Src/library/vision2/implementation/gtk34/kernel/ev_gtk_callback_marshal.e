@@ -160,24 +160,15 @@ feature -- Agent functions.
 				end
 		end
 
-	expose_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE]
-			-- Translation agent used for size allocation events
+	draw_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE]
+			-- Translation agent used for draw events
 		once
-			Result :=
-			agent (n: INTEGER; p: POINTER): TUPLE
-				local
-					gdk_expose_event: POINTER
-					l_rect: POINTER
-				do
-					gdk_expose_event := {GTK2}.gtk_value_pointer (p)
-					l_rect := {GTK}.gdk_event_expose_struct_area (gdk_expose_event)
-					Result := dimension_tuple (
-						{GTK}.gdk_rectangle_struct_x (l_rect),
-						{GTK}.gdk_rectangle_struct_y (l_rect),
-						{GTK}.gdk_rectangle_struct_width (l_rect),
-						{GTK}.gdk_rectangle_struct_height (l_rect)
-					)
-				end
+--			Result :=
+--			agent (n: INTEGER; p: POINTER): TUPLE
+--				do
+--					Result := gtk_value_pointer_to_tuple (n, p)
+--				end
+			Result := agent gtk_value_pointer_to_tuple (?, ?)
 		end
 
 feature {EV_ANY_IMP} -- Agent implementation routines
@@ -211,11 +202,9 @@ feature {EV_APPLICATION_IMP} -- Destruction
 			is_destroyed := True
 		end
 
-feature -- Implementation
-
 feature {NONE} -- Implementation
 
-	marshal (action: PROCEDURE [ANY, TUPLE]; n_args: INTEGER; args: POINTER)
+	marshal (action: PROCEDURE [ANY, TUPLE]; n_args: INTEGER; args: POINTER; a_return_value: POINTER)
 			-- Call `action' with GTK+ event data from `args'.
 			-- There are `n_args' GtkArg*s in `args'.
 			-- Called by C function `c_ev_gtk_callback_marshal'.
@@ -235,6 +224,11 @@ feature {NONE} -- Implementation
 					l_integer_pointer_tuple.pointer := args
 				end
 				action.call (l_integer_pointer_tuple)
+
+				if a_return_value /= default_pointer then
+				--	{GTK2}.g_value_set_boolean (a_return_value, True)
+				end
+
 			elseif retry_count = 1 then
 				app_imp ?= (create {EV_ENVIRONMENT}).implementation.application_i
 				check app_imp /= Void end
@@ -296,7 +290,7 @@ feature {EV_GTK_CALLBACK_MARSHAL} -- Externals
 		external
 			"C inline use %"ev_gtk_callback_marshal.h%""
 		alias
-			"c_ev_gtk_callback_marshal_init ((EIF_REFERENCE) $object, (void (*) (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER)) $a_marshal);"
+			"c_ev_gtk_callback_marshal_init ((EIF_REFERENCE) $object, (void (*) (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER, EIF_POINTER)) $a_marshal);"
 		end
 
 	frozen c_ev_gtk_callback_marshal_destroy
@@ -328,38 +322,29 @@ feature {EV_ANY_IMP, EV_GTK_CALLBACK_MARSHAL} -- Externals
 		an_agent: PROCEDURE [ANY, TUPLE]; invoke_after_handler: BOOLEAN): INTEGER
 			-- Connect `an_agent' to 'a_signal_name' on `a_c_object'.
 		external
-			"C (GtkObject*, gchar*, EIF_OBJECT, gboolean): guint | %"ev_gtk_callback_marshal.h%""
+			"C (gpointer, gchar*, EIF_OBJECT, gboolean): guint | %"ev_gtk_callback_marshal.h%""
 		alias
 			"c_ev_gtk_callback_marshal_signal_connect"
-		end
-
-	frozen c_signal_connect_true (a_c_object: POINTER; a_signal_name: POINTER;
-		an_agent: PROCEDURE [ANY, TUPLE]): INTEGER
-			-- Connect `an_agent' to 'a_signal_name' on `a_c_object'.
-		external
-			"C (GtkObject*, gchar*, EIF_OBJECT): guint | %"ev_gtk_callback_marshal.h%""
-		alias
-			"c_ev_gtk_callback_marshal_signal_connect_true"
 		end
 
 feature {EV_APPLICATION_IMP, EV_TIMEOUT_IMP} -- Externals
 
 	frozen c_ev_gtk_callback_marshal_timeout_connect
-		(a_delay: INTEGER; an_agent: PROCEDURE [ANY, TUPLE]): INTEGER
+		(a_delay: INTEGER; an_agent: PROCEDURE [ANY, TUPLE]): NATURAL_32
 			-- Call `an_agent' after `a_delay'.
 		external
 			"C (gint, EIF_OBJECT): EIF_INTEGER | %"ev_gtk_callback_marshal.h%""
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

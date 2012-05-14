@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			set_c_object ({GTK}.gtk_menu_item_new)
 			{GTK}.gtk_widget_show (c_object)
 			{GTK}.gtk_widget_set_sensitive (c_object, False)
-			{GTK}.gtk_widget_set_usize (c_object, -1, 8)
+			{GTK}.gtk_widget_set_size_request (c_object, -1, 8)
 			real_text := ""
 			pixmapable_imp_initialize
 			textable_imp_initialize
@@ -56,8 +56,8 @@ feature {NONE} -- Initialization
 			--| This is just to satisfy pixmapable and textable contracts.
 		do
 			box := {GTK}.gtk_hbox_new (False, 0)
-			{GTK2}.object_ref (box)
-			{GTK}.gtk_object_sink (box)
+			box := {GTK2}.g_object_ref (box)
+			box := {GTK}.g_object_ref_sink (box)
 			{GTK}.gtk_box_pack_start (box, text_label, True, True, 0)
 			{GTK}.gtk_box_pack_start (box, pixmap_box, True, True, 0)
 		end
@@ -83,7 +83,7 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 	dispose
 			-- Unreference unwanted gtk widgets.
 		do
-			{GTK2}.object_unref (box)
+			{GTK2}.g_object_unref (box)
 			Precursor
 		end
 
@@ -129,14 +129,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MENU_SEPARATOR note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_MENU_SEPARATOR_IMP

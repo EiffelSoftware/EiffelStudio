@@ -286,10 +286,11 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
 
-					{GTK}.set_gdk_color_struct_blue (App_implementation.reusable_color_struct, (fcolor |>> 16) * 257)
-					{GTK}.set_gdk_color_struct_green (App_implementation.reusable_color_struct, ((fcolor |<< 16) |>> 24) * 257)
-					{GTK}.set_gdk_color_struct_red (App_implementation.reusable_color_struct, ((fcolor |<< 24) |>> 24) * 257)
-					{GTK2}.g_object_set_pointer (a_text_tag, foreground_gdk_string.item, App_implementation.reusable_color_struct, default_pointer)
+					{GTK}.set_gdk_rgba_struct_blue (App_implementation.reusable_rgba_struct, (fcolor |>> 16) * 257)
+					{GTK}.set_gdk_rgba_struct_green (App_implementation.reusable_rgba_struct, ((fcolor |<< 16) |>> 24) * 257)
+					{GTK}.set_gdk_rgba_struct_red (App_implementation.reusable_rgba_struct, ((fcolor |<< 24) |>> 24) * 257)
+					{GTK}.set_gdk_rgba_struct_alpha (App_implementation.reusable_rgba_struct, 1.0)
+					{GTK2}.g_object_set_pointer (a_text_tag, foreground_rgba_string.item, App_implementation.reusable_rgba_struct, default_pointer)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -301,10 +302,11 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
 
-					{GTK}.set_gdk_color_struct_blue (App_implementation.reusable_color_struct, (bcolor |>> 16) * 257)
-					{GTK}.set_gdk_color_struct_green (App_implementation.reusable_color_struct, ((bcolor |<< 16) |>> 24) * 257)
-					{GTK}.set_gdk_color_struct_red (App_implementation.reusable_color_struct, ((bcolor |<< 24) |>> 24) * 257)
-					{GTK2}.g_object_set_pointer (a_text_tag, background_gdk_string.item, App_implementation.reusable_color_struct, default_pointer)
+					{GTK}.set_gdk_rgba_struct_blue (App_implementation.reusable_rgba_struct, (bcolor |>> 16) * 257)
+					{GTK}.set_gdk_rgba_struct_green (App_implementation.reusable_rgba_struct, ((bcolor |<< 16) |>> 24) * 257)
+					{GTK}.set_gdk_rgba_struct_red (App_implementation.reusable_rgba_struct, ((bcolor |<< 24) |>> 24) * 257)
+					{GTK}.set_gdk_rgba_struct_alpha (App_implementation.reusable_rgba_struct, 1.0)
+					{GTK2}.g_object_set_pointer (a_text_tag, background_rgba_string.item, App_implementation.reusable_rgba_struct, default_pointer)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -402,7 +404,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				end
 			end
 
-			color_struct := App_implementation.reusable_color_struct
+			color_struct := App_implementation.reusable_rgba_struct
 			if applicable_attributes.color then
 				a_red := (fcolor & 0x000000FF) |<< 16
 				a_green := (fcolor & 0x0000FF00)
@@ -411,12 +413,6 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				temp_string.keep_tail (6)
 				propvalue := once "#" +  temp_string
 				{GTK2}.g_object_set_string (Result, foreground_string.item, propvalue.item)
-
-				--feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, (fcolor |>> 16) * 257)
-				--feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, ((fcolor |<< 16) |>> 24) * 257)
-				--feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, ((fcolor |<< 24) |>> 24) * 257)
-				--feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (Result, foreground_gdk_string.item, color_struct, default_pointer)
-
 			end
 
 			if applicable_attributes.background_color then
@@ -482,16 +478,16 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			Result := ("background")
 		end
 
-	foreground_gdk_string: EV_GTK_C_STRING
+	foreground_rgba_string: EV_GTK_C_STRING
 			-- String optimization
 		once
-			Result := ("foreground-gdk")
+			Result := ("foreground-rgba")
 		end
 
-	background_gdk_string: EV_GTK_C_STRING
+	background_rgba_string: EV_GTK_C_STRING
 			-- String optimization
 		once
-			Result := ("background-gdk")
+			Result := ("background-rgba")
 		end
 
 	underline_string: EV_GTK_C_STRING
@@ -579,14 +575,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

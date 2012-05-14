@@ -17,7 +17,7 @@ feature -- Access
 			l_widget: POINTER
 		do
 			l_widget := {GTK}.gtk_entry_new
-			Result := color_from_state (l_widget, base_style, {GTK}.gtk_state_normal_enum)
+			Result := color_from_state (l_widget, base_style, {GTK}.gtk_state_flag_normal_enum)
 			{GTK}.gtk_widget_destroy (l_widget)
 		end
 
@@ -27,7 +27,7 @@ feature -- Access
 			l_widget: POINTER
 		do
 			l_widget := {GTK}.gtk_entry_new
-			Result := color_from_state (l_widget, base_style, {GTK}.gtk_state_insensitive_enum)
+			Result := color_from_state (l_widget, base_style, {GTK}.gtk_state_flag_insensitive_enum)
 			{GTK}.gtk_widget_destroy (l_widget)
 		end
 
@@ -37,7 +37,7 @@ feature -- Access
 			l_widget: POINTER
 		do
 			l_widget := {GTK2}.gtk_dialog_new
-			Result := color_from_state (l_widget, bg_style, {GTK}.gtk_state_normal_enum)
+			Result := color_from_state (l_widget, bg_style, {GTK}.gtk_state_flag_normal_enum)
 			{GTK}.gtk_widget_destroy (l_widget)
 		end
 
@@ -47,41 +47,43 @@ feature -- Access
 			l_widget: POINTER
 		do
 			l_widget := {GTK2}.gtk_dialog_new
-			Result := color_from_state (l_widget, fg_style, {GTK}.gtk_state_normal_enum)
+			Result := color_from_state (l_widget, fg_style, {GTK}.gtk_state_flag_normal_enum)
 			{GTK}.gtk_widget_destroy (l_widget)
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 
 	color_from_state (a_widget: POINTER; style_type, a_state: INTEGER): EV_COLOR
 			-- Return color of either fg or bg representing `a_state'
 		require
-			a_state_valid: a_state >= {GTK}.gtk_state_normal_enum and a_state <= {GTK}.gtk_state_insensitive_enum
+			a_state_valid: a_state >= {GTK}.gtk_state_flag_normal_enum and a_state <= {GTK}.gtk_state_flag_insensitive_enum
 		local
 			a_style: POINTER
-			a_gdk_color: POINTER
-			a_r, a_g, a_b: INTEGER
+			a_gdk_rgba: POINTER
+			a_r, a_g, a_b: REAL_32
 		do
-			a_style := {GTK}.gtk_rc_get_style (a_widget)
-				-- Style is cached so it doesn't need to be unreffed.
+			a_style := {GTK}.gtk_widget_get_style_context (a_widget)
+				-- Style context if owned by gtk and must not be freed.
+
+			a_gdk_rgba := {GTK}.c_gdk_rgba_struct_allocate
+
 			inspect
 				style_type
-			when text_style  then
-				a_gdk_color := {GTK}.gtk_style_struct_text (a_style)
-			when base_style then
-				a_gdk_color := {GTK}.gtk_style_struct_base (a_style)
-			when bg_style then
-				a_gdk_color := {GTK}.gtk_style_struct_bg (a_style)
 			when fg_style then
-				a_gdk_color := {GTK}.gtk_style_struct_fg (a_style)
+				{GTK}.gtk_style_context_get_color (a_style, a_state, a_gdk_rgba)
+			when bg_style then
+				{GTK}.gtk_style_context_get_background_color (a_style, a_state, a_gdk_rgba)
+			when text_style then
+				{GTK}.gtk_style_context_get_color (a_style, a_state, a_gdk_rgba)
+			when base_style then
+				{GTK}.gtk_style_context_get_background_color (a_style, a_state, a_gdk_rgba)
 			end
 
-			a_gdk_color := a_gdk_color + (a_state * {GTK}.c_gdk_color_struct_size)
-			a_r := {GTK}.gdk_color_struct_red (a_gdk_color)
-			a_g := {GTK}.gdk_color_struct_green (a_gdk_color)
-			a_b := {GTK}.gdk_color_struct_blue (a_gdk_color)
-			create Result
-			Result.set_rgb_with_16_bit (a_r, a_g, a_b)
+			a_r := {GTK}.gdk_rgba_struct_red (a_gdk_rgba).truncated_to_real
+			a_g := {GTK}.gdk_rgba_struct_green (a_gdk_rgba).truncated_to_real
+			a_b := {GTK}.gdk_rgba_struct_blue (a_gdk_rgba).truncated_to_real
+			create Result.make_with_rgb (a_r, a_g, a_b)
+			a_gdk_rgba.memory_free
 		end
 
 	text_style: INTEGER = 1
@@ -91,14 +93,14 @@ feature {NONE} -- Implementation
 		-- Different coloring styles used in gtk.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -55,7 +55,7 @@ feature -- Access
 		do
 			interval := an_interval
 			if timeout_connection_id > 0 then
-				{GTK}.gtk_timeout_remove (timeout_connection_id)
+				{GTK}.g_source_remove (timeout_connection_id)
 				timeout_connection_id := 0
 			end
 
@@ -84,7 +84,7 @@ feature {EV_ANY, EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {NONE} -- Implementation
 
-	timeout_connection_id: INTEGER
+	timeout_connection_id: NATURAL_32
 		-- GTK handle on timeout connection.
 
 	timeout_agent_internal: detachable PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE] note option: stable attribute end
@@ -105,20 +105,20 @@ feature {NONE} -- Implementation
 			-- Clean up
 		do
 			if timeout_connection_id > 0 then
-				{GTK}.gtk_timeout_remove (timeout_connection_id)
+				{GTK}.g_source_remove (timeout_connection_id)
 			end
 			Precursor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

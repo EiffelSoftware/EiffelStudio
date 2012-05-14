@@ -136,7 +136,7 @@ feature -- Status setting
 						l.off
 					loop
 						{GTK}.gtk_radio_button_set_group (l.item, radio_group)
-						set_radio_group ({GTK}.gtk_radio_button_group (l.item))
+						set_radio_group ({GTK}.gtk_radio_button_get_group (l.item))
 						{GTK}.gtk_toggle_button_set_active (l.item, False)
 						l.forth
 					end
@@ -164,7 +164,7 @@ feature -- Status setting
 			else
 				if shared_pointer = peer.shared_pointer then
 						-- They share the same radio grouping.
-					a_child_list := {GTK}.gtk_container_children (peer.container_widget)
+					a_child_list := {GTK}.gtk_container_get_children (peer.container_widget)
 					l := glist_to_eiffel (a_child_list)
 							-- Wipe out peers radio grouping
 					if l /= Void then
@@ -192,7 +192,7 @@ feature -- Status setting
 					if a_child_list /= NULL then
 						{GTK}.g_list_free (a_child_list)
 					end
-					a_child_list := {GTK}.gtk_container_children (container_widget)
+					a_child_list := {GTK}.gtk_container_get_children (container_widget)
 					l := glist_to_eiffel (a_child_list)
 					from
 						l.start
@@ -239,7 +239,7 @@ feature -- Status setting
 				else
 					{GTK}.gtk_toggle_button_set_active (r.visual_widget, False)
 				end
-				set_radio_group ({GTK}.gtk_radio_button_group (r.visual_widget))
+				set_radio_group ({GTK}.gtk_radio_button_get_group (r.visual_widget))
 			end
 		end
 
@@ -275,7 +275,7 @@ feature -- Status setting
 
 				if a_item_pointer /= NULL then
 					an_item_imp ?= eif_object_from_c (
-						{GTK}.gtk_widget_struct_parent (a_item_pointer)
+						{GTK}.gtk_widget_get_parent (a_item_pointer)
 					)
 					check an_item_imp_not_void: an_item_imp /= Void end
 					set_radio_group (an_item_imp.radio_group)
@@ -299,9 +299,9 @@ feature -- Status setting
 	internal_set_background_pixmap (a_pixmap: EV_PIXMAP)
 			-- Set the container background pixmap to `pixmap'.
 		local
-			a_style: POINTER
+--			a_style: POINTER
 			pix_imp: detachable EV_PIXMAP_IMP
-			mem_ptr, pix_ptr: POINTER
+--			mem_ptr, pix_ptr: POINTER
 			i: INTEGER
 		do
 			real_set_background_color (c_object, (create {EV_STOCK_COLORS}).gray)
@@ -310,15 +310,15 @@ feature -- Status setting
 			end
 			check pix_imp /= Void end
 
-			a_style := {GTK}.gtk_style_copy ({GTK}.gtk_widget_struct_style (c_object))
-			pix_ptr := {GTK}.gdk_pixmap_ref (pix_imp.drawable)
+--			a_style := {GTK}.gtk_style_copy ({GTK}.gtk_widget_struct_style (c_object))
+--			pix_ptr := {GTK}.gdk_pixmap_ref (pix_imp.drawable)
 			from
 				i := 0
 			until
 				i = 12
 			loop
 				-- We need to ref the pixmap twice for each state to prevent GdkPixmap deletion.
-				pix_ptr := {GTK}.gdk_pixmap_ref (pix_imp.drawable)
+--				pix_ptr := {GTK}.gdk_pixmap_ref (pix_imp.drawable)
 				i := i + 1
 			end
 			from
@@ -327,12 +327,13 @@ feature -- Status setting
 				i = 5
 			loop
 				-- 4 = size of pointer in bytes.
-				mem_ptr := bg_pixmap (a_style) + (i * pointer_bytes)
-				mem_ptr.memory_copy ($pix_ptr, pointer_bytes)
+--				mem_ptr := bg_pixmap (a_style) + (i * pointer_bytes)
+--				mem_ptr.memory_copy ($pix_ptr, pointer_bytes)
+				--| FIXME IEK bg_pixmap deprecated.
 				i := i + 1
 			end
-			{GTK}.gtk_widget_set_style (visual_widget, a_style)
-			{GTK}.gtk_style_unref (a_style)
+--			{GTK}.gtk_widget_set_style (visual_widget, a_style)
+--			{GTK}.gtk_style_unref (a_style)
 		end
 
 	set_background_pixmap (a_pixmap: EV_PIXMAP)
@@ -342,32 +343,33 @@ feature -- Status setting
 			internal_set_background_pixmap (a_pixmap)
 		end
 
-	bg_pixmap (p: POINTER): POINTER
-		external
-			"C [struct <ev_gtk.h>] (GtkStyle): POINTER"
-		alias
-			"&bg_pixmap"
-		end
+--	bg_pixmap (p: POINTER): POINTER
+--		external
+--			"C [struct <ev_gtk.h>] (GtkStyle): POINTER"
+--		alias
+--			"&bg_pixmap"
+--		end
 
 	remove_background_pixmap
 			-- Make background pixmap Void.
 		local
-			a_style, mem_ptr: POINTER
+--			a_style, mem_ptr: POINTER
 			i: INTEGER
 		do
 			real_set_background_color (c_object, Void)
-			a_style := {GTK}.gtk_style_copy ({GTK}.gtk_widget_struct_style (visual_widget))
+--			a_style := {GTK}.gtk_style_copy ({GTK}.gtk_widget_struct_style (visual_widget))
 			from
 				i := 0
 			until
 				i = 5
 			loop
 				-- 4 = size of pointer in bytes.
-				mem_ptr := bg_pixmap (a_style) + (i * 4)
-				mem_ptr.memory_set (0, 4)
+				--| FIXME IEK bg_pixmap deprecated.
+--				mem_ptr := bg_pixmap (a_style) + (i * 4)
+--				mem_ptr.memory_set (0, 4)
 				i := i + 1
 			end
-			{GTK}.gtk_widget_set_style (visual_widget, a_style)
+--			{GTK}.gtk_widget_set_style (visual_widget, a_style)
 			background_pixmap := Void
 		end
 
@@ -497,14 +499,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_CONTAINER_IMP

@@ -2,7 +2,7 @@ note
 	description: "EiffelVision list item list, gtk implementation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
+	date: "$Date: 2012-05-11 14:37:29 -0700 (Fri, 11 May 2012) $"
 	revision: "$Revision$"
 
 deferred class
@@ -315,7 +315,7 @@ feature -- Insertion
 			a_list_iter := a_list_item_imp.list_iter
 			check a_list_iter /= Void end
 			{GTK2}.gtk_list_store_set_pixbuf (list_store, a_list_iter.item, 0, a_pixbuf)
-			{GTK2}.object_unref (a_pixbuf)
+			{GTK2}.g_object_unref (a_pixbuf)
 		end
 
 	remove_row_pixmap (a_row: INTEGER)
@@ -397,14 +397,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

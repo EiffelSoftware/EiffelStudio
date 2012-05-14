@@ -237,7 +237,7 @@ feature -- Implementation
 				a_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizewe_cursor_xpm)
 			else
 				a_image := gdk_pixbuf
-				{GTK2}.object_ref (a_image)
+				a_image := {GTK2}.g_object_ref (a_image)
 			end
 
 			if Result = default_pointer and then predefined_cursor_code /= {EV_POINTER_STYLE_CONSTANTS}.standard_cursor then
@@ -250,7 +250,7 @@ feature -- Implementation
 					attached_interface.x_hotspot,
 					attached_interface.y_hotspot
 				)
-				{GTK2}.object_unref (a_image)
+				{GTK2}.g_object_unref (a_image)
 			end
 		end
 
@@ -266,7 +266,7 @@ feature -- Implementation
 			-- Set gdk_pixbuf to `a_pixbuf'.
 		do
 			if gdk_pixbuf /= default_pointer then
-				{GTK2}.object_unref (gdk_pixbuf)
+				{GTK2}.g_object_unref (gdk_pixbuf)
 			end
 			gdk_pixbuf := a_pixbuf
 		end
@@ -303,14 +303,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

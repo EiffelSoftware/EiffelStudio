@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			text_buffer := {GTK2}.gtk_text_view_get_buffer (text_view)
 			{GTK}.gtk_widget_show (text_view)
 			{GTK}.gtk_container_add (scrolled_window, text_view)
-			{GTK}.gtk_widget_set_usize (text_view, 1, 1)
+			{GTK}.gtk_widget_set_size_request (text_view, 1, 1)
 				-- This is needed so the text doesn't influence the size of the whole widget itself.
 
 			enable_word_wrapping
@@ -655,14 +655,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_TEXT_IMP

@@ -98,7 +98,7 @@ feature {NONE} -- Initialization
 	event_widget: POINTER
 			-- Pointer to the Gtk widget that handles the events
 		do
-			Result := {GTK}.gtk_widget_struct_parent (pixmap_box)
+			Result := {GTK}.gtk_widget_get_parent (pixmap_box)
 		end
 
 feature -- Access
@@ -169,12 +169,7 @@ feature -- Element change
 		do
 			internal_tooltip := a_text.as_string_32.twin
 			a_cs := App_implementation.c_string_from_eiffel_string (a_text)
-			{GTK2}.gtk_tool_item_set_tooltip (
-				visual_widget,
-				app_implementation.tooltips,
-				a_cs.item,
-				NULL
-			)
+			--| FIXME IEK Need implementing
 		end
 
 	set_gray_pixmap (a_gray_pixmap: EV_PIXMAP)
@@ -305,14 +300,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TOOL_BAR_BUTTON note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_TOOL_BAR_BUTTON_IMP

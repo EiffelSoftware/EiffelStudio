@@ -59,19 +59,19 @@ feature -- Access
 	value: INTEGER
 			-- Current value of the gauge.
 		do
-			Result := {GTK}.gtk_adjustment_struct_value (adjustment).rounded
+			Result := {GTK}.gtk_adjustment_get_value (adjustment).rounded
 		end
 
 	step: INTEGER
 			-- Value by which `value' is increased after `step_forward'.
 		do
-			Result := {GTK}.gtk_adjustment_struct_step_increment (adjustment).rounded
+			Result := {GTK}.gtk_adjustment_get_step_increment (adjustment).rounded
 		end
 
 	leap: INTEGER
 			-- Value by which `value' is increased after `leap_forward'.
 		do
-			Result := {GTK}.gtk_adjustment_struct_page_increment (adjustment).rounded
+			Result := {GTK}.gtk_adjustment_get_page_increment (adjustment).rounded
 		end
 
 	page_size: INTEGER
@@ -79,7 +79,7 @@ feature -- Access
 			--| We define it here to add to the internal maximum.
 			--| Value should be zero for ranges but not for scrollbars.
 		do
-			Result := {GTK}.gtk_adjustment_struct_page_size (adjustment).rounded
+			Result := {GTK}.gtk_adjustment_get_page_size (adjustment).rounded
 		end
 
 feature -- Status setting
@@ -124,7 +124,7 @@ feature -- Element change
 			-- Set `step' to `a_step'.
 		do
 			if step /= a_step then
-				{GTK}.set_gtk_adjustment_struct_step_increment (adjustment, a_step)
+				{GTK}.gtk_adjustment_set_step_increment (adjustment, a_step)
 				{GTK}.gtk_adjustment_changed (adjustment)
 			end
 		ensure then
@@ -137,8 +137,8 @@ feature -- Element change
 			-- Set `leap' to `a_leap'.
 		do
 			if leap /= a_leap then
-				{GTK}.set_gtk_adjustment_struct_upper (adjustment, value_range.upper)
-				{GTK}.set_gtk_adjustment_struct_page_increment (adjustment, a_leap)
+				{GTK}.gtk_adjustment_set_upper (adjustment, value_range.upper)
+				{GTK}.gtk_adjustment_set_page_increment (adjustment, a_leap)
 				{GTK}.gtk_adjustment_changed (adjustment)
 			end
 		end
@@ -154,7 +154,7 @@ feature -- Element change
 			elseif temp_value < value_range.lower then
 				temp_value := value_range.lower
 			end
-			{GTK}.set_gtk_adjustment_struct_lower (adjustment, value_range.lower.to_real)
+			{GTK}.gtk_adjustment_set_lower (adjustment, value_range.lower.to_real)
 			internal_set_upper
 			internal_set_value (temp_value)
 			{GTK}.gtk_adjustment_changed (adjustment)
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 	internal_set_upper
 			-- Set the upper value of the adjustment struct
 		do
-			{GTK}.set_gtk_adjustment_struct_upper (
+			{GTK}.gtk_adjustment_set_upper (
 				adjustment,
 				value_range.upper.to_real
 			)
@@ -215,14 +215,14 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

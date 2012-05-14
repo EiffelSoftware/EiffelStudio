@@ -6,7 +6,7 @@ note
 	legal: "See notice at end of class."
 	keywords: "implementation, gtk, any, base"
 	status: "See notice at end of class."
-	date: "$Date$"
+	date: "$Date: 2012-05-11 14:37:29 -0700 (Fri, 11 May 2012) $"
 	revision: "$Revision$"
 
 deferred class
@@ -52,8 +52,8 @@ feature {EV_ANY_I} -- Access
 			end
 
 				-- Remove floating state.
-			{GTK2}.object_ref (l_c_object)
-			{GTK}.gtk_object_sink (l_c_object)
+			l_c_object := {GTK2}.g_object_ref (l_c_object)
+			l_c_object := {GTK}.g_object_ref_sink (l_c_object)
 
 			debug ("EV_GTK_CREATION")
 				print (generator + " created%N")
@@ -73,13 +73,6 @@ feature {EV_ANY_I} -- Access
 			"c_ev_any_imp_get_eif_reference_from_object_id ($a_c_object)"
 		end
 
-	frozen gtk_is_object (a_c_object: POINTER): BOOLEAN
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"GTK_IS_OBJECT ($a_c_object)"
-		end
-
 feature {EV_ANY, EV_ANY_IMP} -- Implementation
 
 	destroy
@@ -92,24 +85,6 @@ feature {EV_ANY, EV_ANY_IMP} -- Implementation
 		end
 
 feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
-
-	signal_connect_true (
-		a_signal_name: EV_GTK_C_STRING;
-		an_agent: PROCEDURE [ANY, TUPLE]
-		)
-			-- Connect `an_agent' to `a_signal_name'.
-		require
-			a_signal_name_not_void: a_signal_name /= Void
-			an_agent_not_void: an_agent /= Void
-		local
-			a_connection_id: INTEGER
-		do
-			a_connection_id := {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect_true (
-				c_object,
-				a_signal_name.item,
-				an_agent
-			)
-		end
 
 	real_signal_connect (
 		a_c_object: like c_object;
@@ -180,9 +155,9 @@ feature {NONE} -- Implementation
 					-- Unref `c_object' so that is may get collected by gtk.
 				if {GTK}.gtk_is_window (l_c_object) then
 						-- Windows need to be explicitly destroyed.
-					{GTK2}.object_destroy (l_c_object)
+					{GTK2}.gtk_widget_destroy (l_c_object)
 				end
-				{GTK2}.object_unref (l_c_object)
+				{GTK2}.g_object_unref (l_c_object)
 			end
 			Precursor {IDENTIFIED}
 
@@ -203,7 +178,7 @@ feature {NONE} -- Implementation
 
 				-- The object has been marked for destruction from its parent so we unref
 				-- so that gtk will reap back the memory.
-			{GTK2}.object_unref (c_object)
+			{GTK2}.g_object_unref (c_object)
 			c_object := l_null
 			set_is_destroyed (True)
 
@@ -228,7 +203,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Access
 			-- Pointer to the widget viewed by user.
 		do
 			if needs_event_box then
-				Result := {GTK}.gtk_bin_struct_child (c_object)
+				Result := {GTK}.gtk_bin_get_child (c_object)
 			else
 				Result := c_object
 			end
@@ -268,14 +243,14 @@ feature -- Measurement
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

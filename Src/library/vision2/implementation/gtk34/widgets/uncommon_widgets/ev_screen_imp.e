@@ -50,10 +50,10 @@ feature {NONE} -- Initialization
 	make
 			-- Set up action sequence connections and create graphics context.
 		do
-			drawable := {GTK2}.gdk_screen_get_root_window ({GTK2}.gdk_screen_get_default)
+			--drawable := {GTK2}.gdk_screen_get_root_window ({GTK2}.gdk_screen_get_default)
 
-			gc := {GTK}.gdk_gc_new (drawable)
-			{GTK}.gdk_gc_set_subwindow (gc, {GTK}.gdk_include_inferiors_enum)
+--			gc := {GTK}.gdk_gc_new (drawable)
+--			{GTK}.gdk_gc_set_subwindow (gc, {GTK}.gdk_include_inferiors_enum)
 			init_default_values
 
 				-- Set offset values to match Win32 implementation.
@@ -123,7 +123,7 @@ feature -- Status report
 					Result /= Void or else gtkwid = default_pointer
 				loop
 					Result ?= {EV_GTK_CALLBACK_MARSHAL}.c_get_eif_reference_from_object_id (gtkwid)
-					gtkwid := {GTK}.gtk_widget_struct_parent (gtkwid)
+					gtkwid := {GTK}.gtk_widget_get_parent (gtkwid)
 				end
 			end
 		end
@@ -165,7 +165,7 @@ feature -- Status report
 		do
 			l_window_imp ?= a_window.implementation
 			check l_window_imp /= Void end
-			l_mon_num := {GTK2}.gdk_screen_get_monitor_at_window ({GTK2}.gdk_screen_get_default, {GTK}.gtk_widget_struct_window (l_window_imp.c_object))
+			l_mon_num := {GTK2}.gdk_screen_get_monitor_at_window ({GTK2}.gdk_screen_get_default, {GTK}.gtk_widget_get_window (l_window_imp.c_object))
 
 			l_rect := {GTK}.c_gdk_rectangle_struct_allocate
 			{GTK2}.gdk_screen_get_monitor_geometry ({GTK2}.gdk_screen_get_default, l_mon_num, l_rect)
@@ -546,26 +546,7 @@ feature {NONE} -- Implementation
 
 	destroy
 		do
-			dispose
 			set_is_destroyed (True)
-		end
-
-	dispose
-			-- Cleanup
-		do
-			if gc /= default_pointer then
-				gdk_gc_unref (gc)
-				gc := default_pointer
-			end
-		end
-
-	drawable: POINTER
-			-- Pointer to the screen (root window)
-
-	mask: POINTER
-			-- Mask of `Current', which is always NULL
-		do
-			-- Not applicable to screen
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
@@ -573,14 +554,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_SCREEN note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_SCREEN_IMP

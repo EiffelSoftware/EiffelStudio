@@ -51,7 +51,6 @@ feature {NONE} -- Initialization
 			-- Connect action sequences to GTK signals.
 		do
 			Precursor {EV_PICK_AND_DROPABLE_IMP}
-			{GTK2}.gtk_widget_set_redraw_on_allocate (c_object, False)
 			set_is_initialized (True)
 		end
 
@@ -353,9 +352,9 @@ feature {EV_ANY_I} -- Implementation
 	refresh_now
 			-- Flush any pending redraws due for `Current'.
 		do
-			if {GTK}.gtk_widget_struct_window (c_object) /= default_pointer then
+			if {GTK}.gtk_widget_get_window (c_object) /= default_pointer then
 				{GTK2}.gdk_window_process_updates (
-					{GTK}.gtk_widget_struct_window (c_object),
+					{GTK}.gtk_widget_get_window (c_object),
 					False
 				)
 			end
@@ -417,7 +416,7 @@ feature {NONE} -- Implementation
 			if {GTK}.gtk_is_container (a_c_object) then
 				from
 					fg := a_color
-					a_child_list := {GTK}.gtk_container_children (a_c_object)
+					a_child_list := {GTK}.gtk_container_get_children (a_c_object)
 					l := a_child_list
 				until
 					l = NULL
@@ -448,7 +447,7 @@ feature {NONE} -- Implementation
 			then
 				from
 					bg := a_color
-					a_child_list := {GTK}.gtk_container_children (a_c_object)
+					a_child_list := {GTK}.gtk_container_get_children (a_c_object)
 					l := a_child_list
 				until
 					l = NULL
@@ -501,14 +500,14 @@ feature {EV_ANY, EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	interface: detachable EV_WIDGET note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_WIDGET_IMP

@@ -2,7 +2,7 @@ note
 	description: "Eiffel Vision viewport. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
+	date: "$Date: 2012-05-11 14:37:29 -0700 (Fri, 11 May 2012) $"
 	revision: "$Revision$"
 
 class
@@ -40,10 +40,9 @@ feature {NONE} -- Initialization
 		do
 			if c_object = default_pointer then
 					-- Only set c_object if not already set by a descendent.
-				viewport := {GTK}.gtk_viewport_new ({GTK}.null_pointer, {GTK}.null_pointer)
+				viewport := {GTK}.gtk_layout_new ({GTK}.null_pointer, {GTK}.null_pointer)
+				{GTK2}.gtk_layout_set_size (viewport, 32768, 32768)
 				set_c_object (viewport)
-				{GTK}.gtk_viewport_set_shadow_type (viewport, {GTK}.GTK_SHADOW_NONE_ENUM)
-				{GTK2}.gtk_widget_set_minimum_size (viewport, 1, 1) -- Hack needed to prevent viewport resize on item resize.
 				container_widget := viewport
 			end
 			Precursor
@@ -105,6 +104,7 @@ feature -- Element change
 			l_y_offset_changed := a_y /= internal_y_offset
 			if l_x_offset_changed or else l_y_offset_changed then
 				block_resize_actions
+
 				if l_x_offset_changed then
 					internal_x_offset := a_x
 					internal_set_value_from_adjustment (horizontal_adjustment, a_x)
@@ -117,9 +117,9 @@ feature -- Element change
 					-- Code below is to ensure that if the widget is visible then
 					-- we only move the window, and not call the `expose_actions' on `item'
 					-- as it is the case when calling `gtk_adjustment_value_changed'.
-				if {GTK}.gtk_viewport_struct_bin_window (viewport) /= l_null then
+				if {GTK}.gtk_layout_get_bin_window (viewport) /= l_null then
 					{GTK}.gdk_window_move (
-						{GTK}.gtk_viewport_struct_bin_window (viewport), -a_x, -a_y)
+						{GTK}.gtk_layout_get_bin_window (viewport), -a_x, -a_y)
 				else
 					if l_x_offset_changed then
 						{GTK}.gtk_adjustment_value_changed (horizontal_adjustment)
@@ -153,7 +153,7 @@ feature -- Element change
 			w_imp ?= l_item.implementation
 			check w_imp /= Void end
 			l_c_object := w_imp.c_object
-			l_parent_box := {GTK}.gtk_widget_struct_parent (l_c_object)
+			l_parent_box := {GTK}.gtk_widget_get_parent (l_c_object)
 
 			l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
 			{GTK}.set_gtk_allocation_struct_x (l_alloc, internal_x_offset)
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 		local
 			l_parent_box: POINTER
 		do
-			l_parent_box := {GTK}.gtk_widget_struct_parent (a_child)
+			l_parent_box := {GTK}.gtk_widget_get_parent (a_child)
 			{GTK}.gtk_container_remove (l_parent_box, a_child)
 			{GTK}.gtk_container_remove (a_container, l_parent_box)
 		end
@@ -213,12 +213,12 @@ feature {NONE} -- Implementation
 
 	horizontal_adjustment: POINTER
 		do
-			Result := {GTK}.gtk_viewport_get_hadjustment (viewport)
+			Result := {GTK}.gtk_scrollable_get_hadjustment (viewport)
 		end
 
 	vertical_adjustment: POINTER
 		do
-			Result := {GTK}.gtk_viewport_get_vadjustment (viewport)
+			Result := {GTK}.gtk_scrollable_get_vadjustment (viewport)
 		end
 
 	internal_set_value_from_adjustment (l_adj: POINTER; a_value: INTEGER)
@@ -226,14 +226,14 @@ feature {NONE} -- Implementation
 		require
 			l_adj_not_null: l_adj /= default_pointer
 		do
-			if {GTK}.gtk_adjustment_struct_lower (l_adj) > a_value then
-				{GTK}.set_gtk_adjustment_struct_lower (l_adj, a_value)
-			elseif {GTK}.gtk_adjustment_struct_upper (l_adj) < a_value then
-				{GTK}.set_gtk_adjustment_struct_upper (l_adj, a_value)
+			if {GTK}.gtk_adjustment_get_lower (l_adj) > a_value then
+				{GTK}.gtk_adjustment_set_lower (l_adj, a_value)
+			elseif {GTK}.gtk_adjustment_get_upper (l_adj) < a_value then
+				{GTK}.gtk_adjustment_set_upper (l_adj, a_value)
 			end
-			{GTK}.set_gtk_adjustment_struct_value (l_adj, a_value)
+			{GTK}.gtk_adjustment_set_value (l_adj, a_value)
 		ensure
-			value_set: {GTK}.gtk_adjustment_struct_value (l_adj) = a_value
+			value_set: {GTK}.gtk_adjustment_get_value (l_adj) = a_value
   		end
 
 	viewport: POINTER
@@ -244,14 +244,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_VIEWPORT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_VIEWPORT_IMP

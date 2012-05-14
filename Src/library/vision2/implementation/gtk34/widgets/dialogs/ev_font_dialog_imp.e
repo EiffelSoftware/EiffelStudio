@@ -43,13 +43,13 @@ feature {NONE} -- Initialization
 					))
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			real_signal_connect (
-				gtk_font_selection_dialog_struct_ok_button (c_object),
+				gtk_font_selection_dialog_get_ok_button (c_object),
 				"clicked",
 				agent (App_implementation.gtk_marshal).font_dialog_on_ok_intermediary (c_object),
 				Void
 			)
 			real_signal_connect (
-				gtk_font_selection_dialog_struct_cancel_button (c_object),
+				gtk_font_selection_dialog_get_cancel_button (c_object),
 				"clicked",
 				agent (App_implementation.gtk_marshal).font_dialog_on_cancel_intermediary (c_object),
 				Void
@@ -151,18 +151,14 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	gtk_font_selection_dialog_struct_ok_button (a_c_struct: POINTER): POINTER
+	gtk_font_selection_dialog_get_ok_button (a_dialog: POINTER): POINTER
 		external
-			"C [struct <ev_gtk.h>] (GtkFontSelectionDialog): EIF_POINTER"
-		alias
-			"ok_button"
+			"C signature (GtkFontSelectionDialog*): EIF_POINTER use <ev_gtk.h>"
 		end
 
-	gtk_font_selection_dialog_struct_cancel_button (a_c_struct: POINTER): POINTER
+	gtk_font_selection_dialog_get_cancel_button (a_dialog: POINTER): POINTER
 		external
-			"C [struct <ev_gtk.h>] (GtkFontSelectionDialog): EIF_POINTER"
-		alias
-			"cancel_button"
+			"C signature (GtkFontSelectionDialog*): EIF_POINTER use <ev_gtk.h>"
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
@@ -170,14 +166,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_FONT_DIALOG note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_FONT_DIALOG_IMP

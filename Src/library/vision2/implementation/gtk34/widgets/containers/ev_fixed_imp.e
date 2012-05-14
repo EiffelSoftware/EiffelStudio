@@ -42,7 +42,6 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			set_c_object ({GTK2}.gtk_fixed_new)
-			{GTK2}.gtk_fixed_set_has_window (container_widget, True)
 			Precursor
 		end
 
@@ -78,7 +77,7 @@ feature -- Status setting
 		do
 			w_imp ?= a_widget.implementation
 			check w_imp /= Void end
-			l_parent_box := {GTK}.gtk_widget_struct_parent (w_imp.c_object)
+			l_parent_box := {GTK}.gtk_widget_get_parent (w_imp.c_object)
 
 			l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
 			{GTK}.set_gtk_allocation_struct_x (l_alloc, a_x)
@@ -99,7 +98,7 @@ feature -- Status setting
 		do
 			w_imp ?= a_widget.implementation
 			check w_imp /= Void end
-			l_parent_box := {GTK}.gtk_widget_struct_parent (w_imp.c_object)
+			l_parent_box := {GTK}.gtk_widget_get_parent (w_imp.c_object)
 
 			if app_implementation.rubber_band_is_drawn then
 					-- This is a hack to prevent drawing corruption during pick and drop.
@@ -107,7 +106,7 @@ feature -- Status setting
 				l_fixed_child := i_th_fixed_child (index_of (a_widget, 1))
 				{GTK}.set_gtk_fixed_child_struct_x (l_fixed_child, a_x)
 				{GTK}.set_gtk_fixed_child_struct_y (l_fixed_child, a_y)
-				l_parent_window := {GTK}.gtk_widget_struct_window (w_imp.c_object)
+				l_parent_window := {GTK}.gtk_widget_get_window (w_imp.c_object)
 				{GTK}.gdk_window_move (l_parent_window, a_x, a_y)
 			end
 			{GTK2}.gtk_fixed_move (container_widget, l_parent_box, a_x, a_y)
@@ -131,7 +130,7 @@ feature {EV_ANY_I} -- Implementation
 		local
 			glist: POINTER
 		do
-			glist := {GTK}.gtk_fixed_struct_children (container_widget)
+			glist := {GTK}.gtk_container_get_children (container_widget)
 			Result := {GTK}.g_list_nth_data (glist, i - 1)
 		end
 
@@ -165,13 +164,14 @@ feature {EV_ANY_I} -- Implementation
 
 			{GTK}.gtk_container_add (a_container, l_parent_box)
 			if a_position < count then
-				glist := {GTK}.gtk_container_children (a_container)
+				glist := {GTK}.gtk_container_get_children (a_container)
 				temp_index := {GTK}.g_list_index (glist, l_parent_box)
-				fixlist := {GTK}.gtk_fixed_struct_children (a_container)
+				fixlist := {GTK}.gtk_container_get_children (a_container)
 				fixitem := {GTK}.g_list_nth_data (fixlist, temp_index)
 				fixlist := {GTK}.g_list_remove (fixlist, fixitem)
 				fixlist := {GTK}.g_list_insert (fixlist, fixitem, a_position)
-				{GTK}.set_gtk_fixed_struct_children (a_container, fixlist)
+				--| FIXME IEK Check if this is needed.
+--				{GTK}.set_gtk_fixed_struct_children (a_container, fixlist)
 				{GTK}.gtk_widget_queue_resize (c_object)
 				{GTK}.g_list_free (glist)
 			end
@@ -183,7 +183,7 @@ feature {EV_ANY_I} -- Implementation
 		local
 			l_parent_box: POINTER
 		do
-			l_parent_box := {GTK}.gtk_widget_struct_parent (a_child)
+			l_parent_box := {GTK}.gtk_widget_get_parent (a_child)
 			{GTK}.gtk_container_remove (l_parent_box, a_child)
 			{GTK}.gtk_container_remove (a_container, l_parent_box)
 		end
@@ -195,14 +195,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_FIXED

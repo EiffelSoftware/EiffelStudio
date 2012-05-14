@@ -52,8 +52,8 @@ inherit
 			on_focus_changed,
 			has_focus,
 			set_focus,
-			background_color_pointer,
-			foreground_color_pointer
+			background_color_style_context,
+			foreground_color_style_context
 		redefine
 			make,
 			needs_event_box,
@@ -137,10 +137,10 @@ feature {NONE} -- Initialization
 
 			a_vbox := {GTK}.gtk_vbox_new (False, 0)
 			set_c_object (a_vbox)
-			container_widget := {GTK2}.gtk_combo_box_entry_new
+			container_widget := {GTK2}.gtk_combo_box_new_with_entry
 			{GTK}.gtk_widget_show (container_widget)
 			{GTK}.gtk_box_pack_start (a_vbox, container_widget, False, False, 0)
-			entry_widget := {GTK2}.gtk_combo_box_get_entry (container_widget)
+			entry_widget := {GTK}.gtk_bin_get_child (container_widget)
 
 				-- Alter focus chain so that button cannot be selected via the keyboard.
 			a_focus_list := {GTK}.g_list_append (default_pointer, entry_widget)
@@ -161,7 +161,7 @@ feature {NONE} -- Initialization
 			{GTK}.gtk_widget_set_name (container_widget, a_cs.item)
 
 				-- The combo box is already initialized with a text cell renderer at position 0, that is why we reorder the pixbuf cell renderer to position 0 and set the text column to 1
-			{GTK2}.gtk_combo_box_entry_set_text_column (container_widget, 1)
+			{GTK2}.gtk_combo_box_set_entry_text_column (container_widget, 1)
 
 			{GTK2}.gtk_cell_layout_clear (container_widget)
 
@@ -303,8 +303,8 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 				toggle_button_set: a_toggle /= default_pointer
 			end
 				-- Set the size of the toggle so that it isn't bigger than the entry size
-			{GTK}.gtk_widget_set_usize (a_toggle, -1, 1)
-			{GTK}.gtk_widget_unset_flags (a_toggle, {GTK}.gtk_can_focus_enum)
+			{GTK}.gtk_widget_set_size_request (a_toggle, -1, 1)
+			{GTK}.gtk_widget_set_can_focus (a_toggle, False)
 
 			real_signal_connect (a_toggle, once "toggled", agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 2), Void)
 			{GTK2}.g_signal_handler_disconnect (container_widget, retrieve_toggle_button_signal_connection_id)
@@ -371,14 +371,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_COMBO_BOX note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_COMBO_BOX_IMP

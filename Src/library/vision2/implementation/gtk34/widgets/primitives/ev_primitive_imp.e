@@ -54,7 +54,7 @@ feature -- Status report
 	is_tabable_to: BOOLEAN
 			-- Is Current able to be tabbed to?
 		do
-			Result := {GTK}.gtk_widget_flags (visual_widget) & {GTK}.GTK_CAN_FOCUS_ENUM = {GTK}.GTK_CAN_FOCUS_ENUM
+			Result := {GTK}.gtk_widget_get_can_focus (visual_widget)
 		end
 
 	is_tabable_from: BOOLEAN
@@ -63,13 +63,13 @@ feature -- Status report
 	enable_tabable_to
 			-- Make `is_tabable_to' `True'.
 		do
-			{GTK}.gtk_widget_set_flags (visual_widget, {GTK}.GTK_CAN_FOCUS_ENUM)
+			{GTK}.gtk_widget_set_can_focus (visual_widget, True)
 		end
 
 	disable_tabable_to
 			-- Make `is_tabable_to' `False'.
 		do
-			{GTK}.gtk_widget_unset_flags (visual_widget, {GTK}.GTK_CAN_FOCUS_ENUM)
+			{GTK}.gtk_widget_set_can_focus (visual_widget, False)
 		end
 
 	enable_tabable_from
@@ -96,14 +96,14 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_PRIMITIVE_IMP

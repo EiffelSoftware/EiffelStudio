@@ -45,7 +45,7 @@ feature -- Access
 	split_position: INTEGER
 			-- Position from the left/top of the splitter from `Current'.
 		do
-			Result := {GTK}.gtk_paned_struct_child1_size (container_widget).max (minimum_split_position).min (maximum_split_position)
+			Result := {GTK}.gtk_paned_get_position (container_widget)
 		end
 
 	set_first (an_item: attached like item)
@@ -83,7 +83,7 @@ feature -- Access
 				item_imp ?= an_item.implementation
 				check item_imp /= Void end
 				item_imp.set_parent_imp (Void)
-				{GTK}.gtk_container_remove ({GTK}.gtk_widget_struct_parent (item_imp.c_object), item_imp.c_object)
+				{GTK}.gtk_container_remove ({GTK}.gtk_widget_get_parent (item_imp.c_object), item_imp.c_object)
 				if an_item = first then
 					first_expandable := False
 					first := Void
@@ -140,13 +140,16 @@ feature {NONE} -- Implementation
 	set_item_resize (an_item: like item; a_resizable: BOOLEAN)
 			-- Set whether `an_item' is `a_resizable' when `Current' resizes.
 		do
-			if an_item = first then
-				first_expandable := a_resizable
-			else
-				second_expandable := a_resizable
+			if attached {EV_WIDGET_IMP} an_item.implementation as l_item_imp then
+				{GTK}.gtk_container_remove ({GTK}.gtk_widget_get_parent (l_item_imp.c_object), l_item_imp.c_object)
+				if an_item = first then
+					first_expandable := a_resizable
+					{GTK}.gtk_paned_pack1 (container_widget, l_item_imp.c_object, a_resizable, False)
+				else
+					second_expandable := a_resizable
+					{GTK}.gtk_paned_pack2 (container_widget, l_item_imp.c_object, a_resizable, False)
+				end
 			end
-			{GTK}.set_gtk_paned_struct_child1_resize (container_widget, first_expandable.to_integer)
-			{GTK}.set_gtk_paned_struct_child2_resize (container_widget, second_expandable.to_integer)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
@@ -154,14 +157,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_SPLIT_AREA note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_SPLIT_AREA_IMP

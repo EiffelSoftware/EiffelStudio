@@ -41,20 +41,16 @@ feature {EV_ANY_IMP} -- Notebook intermediary agent routines
 
 feature -- Expose actions intermediary agent routines
 
-	create_expose_actions_intermediary (a_c_object: POINTER; a_x, a_y, a_width, a_height: INTEGER)
+	create_draw_actions_intermediary (a_c_object: POINTER; a_cairo_context: POINTER)
 			-- Area needs to be redrawn
 		local
-			l_drawing_area_imp: detachable EV_DRAWING_AREA_IMP
-			l_pixmap_imp: detachable EV_PIXMAP_IMP
+			l_any_imp: detachable EV_ANY_IMP
 		do
-			l_drawing_area_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			if l_drawing_area_imp /= Void then
-				l_drawing_area_imp.call_expose_actions (a_x, a_y, a_width, a_height)
-			else
-				l_pixmap_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-				if l_pixmap_imp /= Void then
-					l_pixmap_imp.call_expose_actions (a_x, a_y, a_width, a_height)
-				end
+			l_any_imp := c_get_eif_reference_from_object_id (a_c_object)
+			if attached {EV_DRAWING_AREA_IMP} l_any_imp as l_drawing_area_imp then
+				l_drawing_area_imp.call_draw_actions (a_cairo_context)
+			elseif attached {EV_PIXMAP_IMP} l_any_imp as l_pixmap_imp then
+				l_pixmap_imp.call_draw_actions (a_cairo_context)
 			end
 		end
 
@@ -238,14 +234,14 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -159,6 +159,7 @@ feature -- Status Report
 			font_family_contiguous: BOOLEAN
 			a_change: BOOLEAN
 			exit_loop: BOOLEAN
+			l_color, l_prev_color: POINTER
 		do
 			from
 				font_family_contiguous := True
@@ -202,22 +203,16 @@ feature -- Status Report
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.font_height)
 				end
 
-				if {GTK}.gdk_color_struct_red (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
-					{GTK}.gdk_color_struct_red (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) or else
-					{GTK}.gdk_color_struct_green (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
-					{GTK}.gdk_color_struct_green (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) or else
-					{GTK}.gdk_color_struct_blue (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
-					{GTK}.gdk_color_struct_blue (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) then
-						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.color)
+				{GTK2}.g_object_get_pointer (gtk_text_attributes_struct_text_appearance (a_text_attributes), foreground_rgba_string.item, $l_color)
+				{GTK2}.g_object_get_pointer (gtk_text_attributes_struct_text_appearance (previous_text_attributes), foreground_rgba_string.item, $l_prev_color)
+				if not {GTK}.gdk_rgba_equal (l_color, l_prev_color) then
+					non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.color)
 				end
 
-				if {GTK}.gdk_color_struct_red (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
-					{GTK}.gdk_color_struct_red (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) or else
-					{GTK}.gdk_color_struct_green (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
-					{GTK}.gdk_color_struct_green (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) or else
-					{GTK}.gdk_color_struct_blue (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
-					{GTK}.gdk_color_struct_blue (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) then
-						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.background_color)
+				{GTK2}.g_object_get_pointer (gtk_text_attributes_struct_text_appearance (a_text_attributes), background_rgba_string.item, $l_color)
+				{GTK2}.g_object_get_pointer (gtk_text_attributes_struct_text_appearance (previous_text_attributes), background_rgba_string.item, $l_prev_color)
+				if not {GTK}.gdk_rgba_equal (l_color, l_prev_color) then
+					non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.background_color)
 				end
 
 				if gtk_text_appearance_struct_strikethrough (gtk_text_attributes_struct_text_appearance (a_text_attributes)) /=
@@ -489,7 +484,7 @@ feature -- Status report
 			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
 			a_text_attributes, a_text_appearance: POINTER
 			a_font_description: POINTER
-			a_color: POINTER
+			l_color: POINTER
 			font_size, font_weight, font_style: INTEGER
 			a_family: EV_GTK_C_STRING
 			a_change: BOOLEAN
@@ -528,18 +523,18 @@ feature -- Status report
 
 			l_result.set_font_attributes (a_family.string, {EV_FONT_CONSTANTS}.family_sans, font_size, font_weight, font_style, 0)
 
-			a_color := gtk_text_appearance_struct_fg_color (a_text_appearance)
+			{GTK2}.g_object_get_pointer (a_text_appearance, l_result.foreground_rgba_string.item, $l_color)
 			l_result.set_fcolor (
-				{GTK}.gdk_color_struct_red (a_color) // 256,
-				{GTK}.gdk_color_struct_green (a_color) // 256,
-				{GTK}.gdk_color_struct_blue (a_color) // 256
+				({GTK}.gdk_rgba_struct_red (l_color) * 256).truncated_to_integer,
+				({GTK}.gdk_rgba_struct_green (l_color) * 256).truncated_to_integer,
+				({GTK}.gdk_rgba_struct_blue (l_color) * 256).truncated_to_integer
 			)
 
-			a_color := gtk_text_appearance_struct_bg_color (a_text_appearance)
+			{GTK2}.g_object_get_pointer (a_text_appearance, l_result.background_rgba_string.item, $l_color)
 			l_result.set_bcolor (
-				{GTK}.gdk_color_struct_red (a_color) // 256,
-				{GTK}.gdk_color_struct_green (a_color) // 256,
-				{GTK}.gdk_color_struct_blue (a_color) // 256
+				({GTK}.gdk_rgba_struct_red (l_color) * 256).truncated_to_integer,
+				({GTK}.gdk_rgba_struct_green (l_color) * 256).truncated_to_integer,
+				({GTK}.gdk_rgba_struct_blue (l_color) * 256).truncated_to_integer
 			)
 
 			l_result.set_effects_internal (gtk_text_appearance_struct_underline (a_text_appearance).to_boolean, gtk_text_appearance_struct_strikethrough (a_text_appearance).to_boolean, gtk_text_appearance_struct_rise (a_text_appearance))
@@ -583,7 +578,7 @@ feature -- Status setting
 				buffer_locked_in_format_mode := True
 					-- Temporarily remove text buffer to avoid redraw and event firing
 				append_buffer := text_buffer
-				{GTK2}.object_ref (append_buffer)
+				append_buffer := {GTK2}.g_object_ref (append_buffer)
 				{GTK2}.gtk_text_view_set_buffer (text_view, {GTK2}.gtk_text_buffer_new (default_pointer))
 			end
 			a_format_imp ?= format.implementation
@@ -636,14 +631,14 @@ feature -- Status setting
 				{GTK2}.gtk_text_view_set_buffer (text_view, append_buffer)
 				text_buffer := append_buffer
 				initialize_buffer_events
-				{GTK2}.object_unref (append_buffer)
+				{GTK2}.g_object_unref (append_buffer)
 				append_buffer := NULL
 				buffer_locked_in_format_mode := False
 			elseif buffer_locked_in_append_mode then
 				{GTK2}.gtk_text_view_set_buffer (text_view, append_buffer)
 				text_buffer := append_buffer
 				initialize_buffer_events
-				{GTK2}.object_unref (append_buffer)
+				{GTK2}.g_object_unref (append_buffer)
 				append_buffer := NULL
 				buffer_locked_in_append_mode := False
 			end
@@ -943,26 +938,38 @@ feature {NONE} -- Implementation
 	dispose_append_buffer
 			-- Clean up `append_buffer'.
 		do
-			{GTK2}.object_unref (append_buffer)
+			{GTK2}.g_object_unref (append_buffer)
 			append_buffer := default_pointer
 		end
 
 	append_buffer: POINTER
-		-- Pointer to the GtkTextBuffer used for append buffering.	
+		-- Pointer to the GtkTextBuffer used for append buffering.
+
+	foreground_rgba_string: EV_GTK_C_STRING
+			-- String optimization
+		once
+			Result := ("foreground-rgba")
+		end
+
+	background_rgba_string: EV_GTK_C_STRING
+			-- String optimization
+		once
+			Result := ("background-rgba")
+		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_RICH_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_RICH_TEXT_IMP

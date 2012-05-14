@@ -207,7 +207,7 @@ feature -- Measurement
 			if attached parent_imp as l_parent_imp then
 				l_h_adjust := {GTK}.gtk_scrolled_window_get_hadjustment (l_parent_imp.scrollable_area)
 				if l_h_adjust /= default_pointer then
-					Result := - {GTK}.gtk_adjustment_struct_value (l_h_adjust).rounded
+					Result := - {GTK}.gtk_adjustment_get_value (l_h_adjust).rounded
 				end
 			end
 		end
@@ -221,7 +221,7 @@ feature -- Measurement
 				Result := (index - 1) * l_parent_imp.row_height
 				l_v_adjust := {GTK}.gtk_scrolled_window_get_vadjustment (l_parent_imp.scrollable_area)
 				if l_v_adjust /= default_pointer then
-					Result := Result - {GTK}.gtk_adjustment_struct_value (l_v_adjust).rounded
+					Result := Result - {GTK}.gtk_adjustment_get_value (l_v_adjust).rounded
 				end
 			end
 		end
@@ -370,14 +370,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MULTI_COLUMN_LIST_ROW note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_MULTI_COLUMN_LIST_ROW_IMP

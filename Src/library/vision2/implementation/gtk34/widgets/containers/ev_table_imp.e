@@ -63,20 +63,18 @@ feature -- Status report
 
 	row_spacing: INTEGER
 		do
-			Result := c_gtk_table_row_spacing (container_widget)
+			Result := {GTK}.gtk_table_get_default_row_spacing (container_widget)
 		end
 
 	column_spacing: INTEGER
 		do
-			Result := c_gtk_table_column_spacing (container_widget)
+			Result := {GTK}.gtk_table_get_default_col_spacing (container_widget)
 		end
 
 	border_width: INTEGER
 			-- Width of border around container in pixels.
 		do
-			Result := {GTK}.gtk_container_struct_border_width (
-					{GTK}.gtk_box_struct_container (container_widget)
-				)
+			Result := {GTK}.gtk_container_get_border_width (container_widget)
 		end
 
 feature -- Status settings
@@ -272,37 +270,19 @@ feature {EV_ANY_I, EV_ANY} -- Status Settings
 			put (v, a_column, a_row, column_span, row_span)
 		end
 
-feature {NONE} -- Externals
-
-	c_gtk_table_row_spacing (a_table_struct: POINTER): INTEGER
-			-- Spacing between two rows.
-		external
-			"C [struct <ev_gtk.h>] (GtkTable): EIF_INTEGER"
-		alias
-			"row_spacing"
-		end
-
-	c_gtk_table_column_spacing (a_table_struct: POINTER): INTEGER
-			-- Spacing between two columns.
-		external
-			"C [struct <ev_gtk.h>] (GtkTable): EIF_INTEGER"
-		alias
-			"column_spacing"
-		end
-
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_TABLE_IMP

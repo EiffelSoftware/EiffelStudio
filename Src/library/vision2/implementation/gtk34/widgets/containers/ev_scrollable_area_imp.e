@@ -80,14 +80,14 @@ feature -- Access
 			-- Number of pixels scrolled up or down when user clicks
 			-- an arrow on the horizontal scrollbar.
 		do
-			Result := {GTK}.gtk_adjustment_struct_step_increment (horizontal_adjustment).rounded
+			Result := {GTK}.gtk_adjustment_get_step_increment (horizontal_adjustment).rounded
 		end
 
 	vertical_step: INTEGER
 			-- Number of pixels scrolled left or right when user clicks
 			-- an arrow on the vertical scrollbar.
 		do
-			Result := {GTK}.gtk_adjustment_struct_step_increment (vertical_adjustment).rounded
+			Result := {GTK}.gtk_adjustment_get_step_increment (vertical_adjustment).rounded
 		end
 
 	is_horizontal_scroll_bar_visible: BOOLEAN
@@ -105,13 +105,13 @@ feature -- Access
 	x_offset: INTEGER
 			-- Horizontal position of viewport relative to `item'.
 		do
-			Result := {GTK}.gtk_adjustment_struct_value (horizontal_adjustment).rounded
+			Result := {GTK}.gtk_adjustment_get_value (horizontal_adjustment).rounded
 		end
 
 	y_offset: INTEGER
 			-- Vertical position of viewport relative to `item'.
 		do
-			Result := {GTK}.gtk_adjustment_struct_value (vertical_adjustment).rounded
+			Result := {GTK}.gtk_adjustment_get_value (vertical_adjustment).rounded
 		end
 
 feature -- Element change
@@ -138,7 +138,7 @@ feature -- Element change
 			-- Set `horizontal_step' to `a_step'.
 		do
 			if horizontal_step /= a_step then
-				{GTK}.set_gtk_adjustment_struct_step_increment (horizontal_adjustment, a_step)
+				{GTK}.gtk_adjustment_set_step_increment (horizontal_adjustment, a_step)
 				{GTK}.gtk_adjustment_changed (horizontal_adjustment)
 			end
 		end
@@ -147,7 +147,7 @@ feature -- Element change
 			-- Set `vertical_step' to `a_step'.
 		do
 			if vertical_step /= a_step then
-				{GTK}.set_gtk_adjustment_struct_step_increment (vertical_adjustment, a_step)
+				{GTK}.gtk_adjustment_set_step_increment (vertical_adjustment, a_step)
 				{GTK}.gtk_adjustment_changed (vertical_adjustment)
 			end
 		end
@@ -183,18 +183,24 @@ feature {NONE} -- Implementation
 
 	fixed_width: INTEGER
 			-- Fixed Horizontal size measured in pixels.
+		local
+			l_alloc: POINTER
 		do
-			Result := {GTK}.gtk_allocation_struct_width (
-				{GTK}.gtk_widget_struct_allocation (fixed_widget)
-			).max (0)
+			l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
+			{GTK}.gtk_widget_get_allocation (fixed_widget, l_alloc)
+			Result := {GTK}.gtk_allocation_struct_width (l_alloc).max (0)
+			l_alloc.memory_free
 		end
 
 	fixed_height: INTEGER
 			-- Fixed Vertical size measured in pixels.
+		local
+			l_alloc: POINTER
 		do
-			Result := {GTK}.gtk_allocation_struct_height (
-				{GTK}.gtk_widget_struct_allocation (fixed_widget)
-			).max (0)
+			l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
+			{GTK}.gtk_widget_get_allocation (fixed_widget, l_alloc)
+			Result := {GTK}.gtk_allocation_struct_height (l_alloc).max (0)
+			l_alloc.memory_free
 		end
 
 	scrolled_window: POINTER
@@ -208,14 +214,16 @@ feature {NONE} -- Implementation
 			if attached item as l_item then
 				item_imp ?= l_item.implementation
 				check item_imp /= Void end
-				{GTK}.gtk_widget_set_uposition (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
+				--| FIXME IEK
+				--{GTK}.gtk_widget_set_uposition (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
 			end
 		end
 
 	child_has_resized (item_imp: EV_WIDGET_IMP)
 			-- If child has resized and smaller than parent then set position in center of `Current'.
 		do
-			{GTK}.gtk_widget_set_uposition (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
+			--| FIXME IEK
+			--{GTK}.gtk_widget_set_uposition (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
 		end
 
 	horizontal_adjustment: POINTER
@@ -255,14 +263,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_SCROLLABLE_AREA_IMP

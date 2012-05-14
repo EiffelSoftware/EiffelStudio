@@ -63,7 +63,7 @@ feature -- Initialization
 			a_tree_view := {GTK2}.gtk_tree_view_new
 			set_c_object (a_tree_view)
 				-- We don't want the header to steal focus.
-			{GTK}.gtk_widget_unset_flags (visual_widget, {GTK}.gtk_can_focus_enum)
+			{GTK}.gtk_widget_set_can_focus (visual_widget, False)
 			{GTK2}.gtk_tree_view_set_headers_visible (visual_widget, True)
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 			-- Index of divider currently beneath the mouse pointer, or
 			-- 0 if none.
 		local
-			gdkwin: POINTER
+			gdkwin, l_widget: POINTER
 			a_pointer_x, a_pointer_y: INTEGER
 			a_item_imp: detachable EV_HEADER_ITEM_IMP
 			a_cursor: like cursor
@@ -214,7 +214,8 @@ feature {NONE} -- Implementation
 				loop
 					a_item_imp ?= item.implementation
 					check a_item_imp /= Void end
-					if {GTK2}.gtk_tree_view_column_struct_window (a_item_imp.c_object) = gdkwin then
+					l_widget := {GTK2}.gtk_tree_view_column_get_widget (a_item_imp.c_object)
+					if l_widget /= default_pointer and then {GTK}.gtk_widget_get_window (l_widget) = gdkwin then
 						Result := index
 					end
 					forth
@@ -246,7 +247,7 @@ feature {NONE} -- Implementation
 				if gdkwin /= default_pointer then
 					{GTK}.gdk_window_get_user_data (gdkwin, $l_widget)
 					l_last_column := {GTK2}.gtk_tree_view_get_column (c_object, count)
-					if l_widget = {GTK2}.gtk_tree_view_column_struct_button (l_last_column) then
+					if l_widget = {GTK2}.gtk_tree_view_column_get_button (l_last_column) then
 							-- Fire item press actions with a Void item.
 						if a_type = {GTK}.gdk_button_press_enum and then item_pointer_button_press_actions_internal /= Void then
 							item_pointer_button_press_actions_internal.call ([Void, a_x, a_y, a_button])

@@ -22,7 +22,7 @@ inherit
 			make,
 			old_make,
 			set_foreground_color,
-			foreground_color_pointer,
+			foreground_color_style_context,
 			on_focus_changed,
 			needs_event_box,
 			event_widget
@@ -161,16 +161,14 @@ feature -- Status Setting
 			-- to the default push button.
 		do
 			is_default_push_button := False
-			{GTK}.gtk_widget_unset_flags (visual_widget, {EV_GTK_ENUMS}.gtk_has_default_enum)
-			{GTK}.gtk_widget_queue_draw (visual_widget)
+			{GTK3}.gtk_widget_set_can_default (visual_widget, False)
 		end
 
 	enable_can_default
 			-- Allow the style of the button to be the default push button.
 		do
 			is_default_push_button := True
-			{GTK}.gtk_widget_set_flags (visual_widget, {EV_GTK_ENUMS}.gtk_has_default_enum)
-			{GTK}.gtk_widget_queue_draw (visual_widget)
+			{GTK3}.gtk_widget_set_can_default (visual_widget, True)
 		end
 
 	set_foreground_color (a_color: EV_COLOR)
@@ -205,19 +203,17 @@ feature {NONE} -- implementation
 			end
 		end
 
-	foreground_color_pointer: POINTER
-			-- Pointer to fg color for `Current'.
+	foreground_color_style_context: POINTER
+			-- <Precursor>
 		do
-			Result := {GTK}.gtk_style_struct_text (
-				{GTK}.gtk_rc_get_style (text_label)
-			)
+			Result := {GTK}.gtk_widget_get_style_context (text_label)
 		end
 
 	button_box: POINTER
 			-- GtkHBox in button.
 			-- Holds label and pixmap.
 		do
-			Result := {GTK}.gtk_bin_struct_child (visual_widget)
+			Result := {GTK}.gtk_bin_get_child (visual_widget)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- implementation
@@ -230,14 +226,14 @@ invariant
 	button_box_not_null: is_usable implies button_box /= NULL
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_BUTTON_IMP

@@ -303,7 +303,7 @@ feature -- PND
 			a_vert_sep: INTEGER
 		do
 			a_column_ptr := {GTK2}.gtk_tree_view_get_column (tree_view, 0)
-			a_cell_rend_list := {GTK2}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
+			a_cell_rend_list := {GTK}.gtk_cell_layout_get_cells (a_column_ptr)
 			a_cell_rend := {GTK}.g_list_nth_data (a_cell_rend_list, 0)
 			{GTK2}.gtk_cell_renderer_get_fixed_size (a_cell_rend, null, $Result)
 			a_gtk_c_str := once "vertical-separator"
@@ -403,7 +403,7 @@ feature {NONE} -- Implementation
 	vertical_adjustment_struct: POINTER
 			-- Pointer to vertical adjustment struct use in the scrollbar.
 		do
-			Result := {GTK}.gtk_range_struct_adjustment ({GTK}.gtk_scrolled_window_struct_vscrollbar (scrollable_area))
+			Result := {GTK}.gtk_scrolled_window_get_vadjustment (scrollable_area)
 		end
 
 note

@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 					-- Set the default size so that the
 				{GTK}.gtk_widget_hide (c_object)
 					-- Force an immediate hide so that the event loop is not relied upon to unmap `Current'.
-				{GTK}.gdk_window_hide ({GTK}.gtk_widget_struct_window (c_object))
+				{GTK}.gdk_window_hide ({GTK}.gtk_widget_get_window (c_object))
 
 					-- Reset the size and position to emulate Win32 behavior.
 				{GTK}.gtk_window_set_default_size (c_object, l_width, l_height)
@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 						-- by the modal dialog, when closed the window managed would restore the
 						-- focus to the previously focused window which may or may not be `l_window_imp',
 						-- this leads to odd behavior when closing the modal dialog so we always raise the window.
-					{GTK}.gdk_window_raise ({GTK}.gtk_widget_struct_window (l_window_imp.c_object))
+					{GTK}.gdk_window_raise ({GTK}.gtk_widget_get_window (l_window_imp.c_object))
 				end
 			end
 		end
@@ -395,7 +395,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 				end
 			end
 
-			a_focus_widget ?= l_app_imp.eif_object_from_gtk_object ({GTK}.gtk_window_struct_focus_widget (c_object))
+			a_focus_widget ?= l_app_imp.eif_object_from_gtk_object ({GTK}.gtk_window_get_focus (c_object))
 			l_any := Current
 			if a_focus_widget = Void then
 					-- If the focus widget is not available then set it to the current window.

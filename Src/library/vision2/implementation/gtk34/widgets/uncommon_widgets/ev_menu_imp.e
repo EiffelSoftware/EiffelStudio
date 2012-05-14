@@ -70,7 +70,7 @@ feature -- Basic operations
 			bw: INTEGER
 		do
 			pc := (create {EV_SCREEN}).pointer_position
-			bw := {GTK}.gtk_container_struct_border_width (list_widget)
+			bw := {GTK}.gtk_container_get_border_width (list_widget)
 			show_at (Void, pc.x + bw, pc.y + bw)
 		end
 
@@ -170,14 +170,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_MENU_IMP

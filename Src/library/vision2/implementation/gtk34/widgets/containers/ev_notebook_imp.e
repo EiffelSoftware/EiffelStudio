@@ -86,7 +86,7 @@ feature -- Access
 				a_wid ?= i_th (i).implementation
 				check a_wid /= Void end
 				tab_label := {GTK}.gtk_notebook_get_tab_label (visual_widget, a_wid.c_object)
-				if mouse_ptr_wid = tab_label or else mouse_ptr_wid = {GTK}.gtk_widget_struct_parent (mouse_ptr_wid) then
+				if mouse_ptr_wid = tab_label or else mouse_ptr_wid = {GTK}.gtk_widget_get_parent (mouse_ptr_wid) then
 					Result := i
 				end
 				i := i + 1
@@ -119,14 +119,14 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Access
 			check item_imp /= Void end
 			a_event_box := {GTK}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
 			if a_event_box /= default_pointer then
-				a_hbox := {GTK}.gtk_bin_struct_child (a_event_box)
-				a_list := {GTK}.gtk_container_children (a_hbox)
+				a_hbox := {GTK}.gtk_bin_get_child (a_event_box)
+				a_list := {GTK}.gtk_container_get_children (a_hbox)
 				a_label := {GTK}.g_list_nth_data (a_list, 1)
 				{GTK}.g_list_free (a_list)
 			end
 
 			if a_label /= default_pointer then
-				create a_cs.share_from_pointer ({GTK}.gtk_label_struct_label (
+				create a_cs.share_from_pointer ({GTK}.gtk_label_get_label (
 					a_label
 				))
 				Result := a_cs.string
@@ -146,8 +146,8 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Access
 			check item_imp /= Void end
 			a_event_box := {GTK}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
 			if a_event_box /= default_pointer then
-				a_hbox := {GTK}.gtk_bin_struct_child (a_event_box)
-				a_list := {GTK}.gtk_container_children (a_hbox)
+				a_hbox := {GTK}.gtk_bin_get_child (a_event_box)
+				a_list := {GTK}.gtk_container_get_children (a_hbox)
 				a_image := {GTK}.g_list_nth_data (a_list, 0)
 				{GTK}.g_list_free (a_list)
 				a_pixbuf := {GTK2}.gtk_image_get_pixbuf (a_image)
@@ -190,7 +190,7 @@ feature -- Status report
  		local
  			gtk_pos: INTEGER
  		do
- 			gtk_pos := {GTK}.gtk_notebook_struct_tab_pos (visual_widget)
+ 			gtk_pos := {GTK}.gtk_notebook_get_tab_pos (visual_widget)
  			inspect
  				gtk_pos
  			when 0 then
@@ -232,7 +232,7 @@ feature {EV_NOTEBOOK} -- Status setting
 			check
 				an_item_has_implementation: item_imp /= Void
 			end
-			{GTK}.gtk_notebook_set_page (
+			{GTK}.gtk_notebook_set_current_page (
 				visual_widget,
 				{GTK}.gtk_notebook_page_num (visual_widget, item_imp.c_object)
 			)
@@ -259,7 +259,7 @@ feature -- Element change
 			i := {GTK}.gtk_notebook_get_current_page (visual_widget)
 			remove_i_th (index)
 			insert_i_th (v, index)
-			{GTK}.gtk_notebook_set_page (visual_widget, i)
+			{GTK}.gtk_notebook_set_current_page (visual_widget, i)
 		end
 
 feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change
@@ -301,8 +301,8 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change
 			a_cs := a_text
 			ensure_tab_label (item_imp.c_object)
 			a_event_box := {GTK}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
-			a_hbox := {GTK}.gtk_bin_struct_child (a_event_box)
-			a_list := {GTK}.gtk_container_children (a_hbox)
+			a_hbox := {GTK}.gtk_bin_get_child (a_event_box)
+			a_list := {GTK}.gtk_container_get_children (a_hbox)
 			a_label := {GTK}.g_list_nth_data (a_list, 1)
 			{GTK}.gtk_label_set_text (a_label, a_cs.item)
 			{GTK}.g_list_free (a_list)
@@ -319,9 +319,9 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change
 			check item_imp /= Void end
 			ensure_tab_label (item_imp.c_object)
 			a_event_box := {GTK}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
-			a_hbox := {GTK}.gtk_bin_struct_child (a_event_box)
+			a_hbox := {GTK}.gtk_bin_get_child (a_event_box)
 
-			a_list := {GTK}.gtk_container_children (a_hbox)
+			a_list := {GTK}.gtk_container_get_children (a_hbox)
 			a_image := {GTK}.g_list_nth_data (a_list, 0)
 			{GTK}.g_list_free (a_list)
 

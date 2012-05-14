@@ -7,6 +7,149 @@ class
 
 feature
 
+	gdk_window_create_similar_surface (a_window, a_content: POINTER; a_width, a_height: INTEGER): POINTER
+		external
+			"C signature (GdkWindow*, cairo_content_t, int, int): cairo_surface_t* use <ev_gtk.h>"
+		end
+
+	gdk_cairo_create (a_window: POINTER): POINTER
+		external
+			"C signature (GdkWindow*): cairo_t* use <ev_gtk.h>"
+		end
+
+	gdk_cairo_set_source_rgba (a_context, a_rgba: POINTER)
+		external
+			"C signature (cairo_t*, GdkRGBA*) use <ev_gtk.h>"
+		end
+
+	gdk_cairo_set_source_pixbuf (a_context, a_pixbuf: POINTER; a_pixbuf_x, a_pixbuf_y: REAL_64)
+		external
+			"C signature (cairo_t*, GdkPixbuf*, double, double) use <ev_gtk.h>"
+		end
+
+	gdk_cairo_set_source_window (a_context, a_gdkwindow: POINTER; a_x, a_y: REAL_64)
+		external
+			"C signature (cairo_t*, GdkWindow*, double, double) use <ev_gtk.h>"
+		end
+
+	gtk_layout_new (a_hadjustment, a_vadjustment: POINTER): POINTER
+		external
+			"C signature (GtkAdjustment*, GtkAdjustment*): GtkWidget* use <ev_gtk.h>"
+		end
+
+	gtk_layout_put (a_layout, a_child: POINTER; a_x, a_y: INTEGER)
+		external
+			"C signature (GtkLayout*, GtkWidget*, gint, gint) use <ev_gtk.h>"
+		end
+
+	gtk_layout_move (a_layout, a_child: POINTER; a_x, a_y: INTEGER)
+		external
+			"C signature (GtkLayout*, GtkWidget*, gint, gint) use <ev_gtk.h>"
+		end
+
+	gtk_layout_set_size (a_layout: POINTER; a_x, a_y: NATURAL_32)
+		external
+			"C signature (GtkLayout*, guint, guint) use <ev_gtk.h>"
+		end
+
+	gtk_layout_get_size (a_layout: POINTER; a_x, a_y: TYPED_POINTER [NATURAL_32])
+		external
+			"C signature (GtkLayout*, guint*, guint*) use <ev_gtk.h>"
+		end
+
+	gtk_layout_get_bin_window (a_layout: POINTER): POINTER
+		external
+			"C signature (GtkLayout*): GdkWindow* use <ev_gtk.h>"
+		end
+
+
+--GtkWidget *         gtk_layout_new                      (GtkAdjustment *hadjustment,
+--                                                         GtkAdjustment *vadjustment);
+--
+--
+--
+--void                gtk_layout_put                      (GtkLayout *layout,
+--                                                         GtkWidget *child_widget,
+--                                                         gint x,
+--                                                         gint y);
+--void                gtk_layout_move                     (GtkLayout *layout,
+--                                                         GtkWidget *child_widget,
+--                                                         gint x,
+--                                                         gint y);
+--void                gtk_layout_set_size                 (GtkLayout *layout,
+--                                                         guint width,
+--                                                         guint height);
+--void                gtk_layout_get_size                 (GtkLayout *layout,
+--                                                         guint *width,
+--                                                         guint *height);
+--GtkAdjustment *     gtk_layout_get_hadjustment          (GtkLayout *layout);
+--GtkAdjustment *     gtk_layout_get_vadjustment          (GtkLayout *layout);
+--void                gtk_layout_set_hadjustment          (GtkLayout *layout,
+--                                                         GtkAdjustment *adjustment);
+--void                gtk_layout_set_vadjustment          (GtkLayout *layout,
+--                                                         GtkAdjustment *adjustment);
+--GdkWindow *         gtk_layout_get_bin_window           (GtkLayout *layout);
+
+	frozen gtk_progress_bar_new: POINTER
+		external
+			"C signature (): GtkWidget* use <ev_gtk.h>"
+		end
+
+	frozen gtk_progress_bar_set_fraction (a_bar: POINTER; a_fraction: REAL_64)
+		external
+			"C signature (GtkProgressBar*, gdouble) use <ev_gtk.h>"
+		end
+
+	frozen gtk_table_get_default_row_spacing (a_table_struct: POINTER): INTEGER
+		external
+			"C signature (GtkTable*): guint"
+		end
+
+	frozen gtk_table_get_default_col_spacing (a_table_struct: POINTER): INTEGER
+		external
+			"C signature (GtkTable*): guint"
+		end
+
+	frozen gtk_cell_layout_get_cells (a_gtk_cell_layout: POINTER): POINTER
+		external
+			"C signature (GtkCellLayout*): GList* use <ev_gtk.h>"
+		end
+
+	frozen gtk_entry_get_buffer (a_entry: POINTER): POINTER
+		external
+			"C signature (GtkEntry*): GtkEntryBuffer* use <ev_gtk.h>"
+		end
+
+	frozen gtk_entry_buffer_get_text (a_entry_buffer: POINTER): POINTER
+		external
+			"C signature (GtkEntryBuffer*): gchar* use <ev_gtk.h>"
+		end
+
+	frozen gtk_entry_buffer_set_text (a_entry_buffer: POINTER; a_text: POINTER; a_num_chars: INTEGER)
+		external
+			"C signature (GtkEntryBuffer*, gchar*, gint) use <ev_gtk.h>"
+		end
+
+	frozen gtk_entry_buffer_insert_text (a_entry_buffer: POINTER; a_position: NATURAL_32; a_text: POINTER; a_num_chars: INTEGER)
+		external
+			"C signature (GtkEntryBuffer*, guint, gchar*, gint) use <ev_gtk.h>"
+		end
+
+	frozen gtk_entry_buffer_delete_text (a_entry_buffer: POINTER; a_position: NATURAL_32; a_num_chars: INTEGER)
+		external
+			"C signature (GtkEntryBuffer*, guint, gint) use <ev_gtk.h>"
+		end
+
+	frozen gtk_widget_set_size_request (a_widget: POINTER; a_width, a_height: INTEGER_32)
+		external
+			"C signature (GtkWidget*, gint, gint) use <ev_gtk.h>"
+		end
+
+	frozen g_source_remove (a_source_id: NATURAL_32)
+		external
+			"C signature (guint) use <ev_gtk.h>"
+		end
+
 	frozen null_pointer: POINTER
 		external
 			"C macro use <glib.h>"
@@ -98,6 +241,16 @@ feature
 					return GDK_COLORSPACE_RGB;
 				#endif
 			]"
+		end
+
+	frozen gdk_pixbuf_get_from_window (a_window: POINTER; a_src_x, a_src_y, a_width, a_height: INTEGER): POINTER
+		external
+			"C signature (GdkWindow*, gint, gint, gint, gint): GdkPixbuf* use <ev_gtk.h>"
+		end
+
+	frozen gdk_pixbuf_get_from_surface (a_surface: POINTER; a_src_x, a_src_y, a_width, a_height: INTEGER): POINTER
+		external
+			"C signature (cairo_surface_t*, gint, gint, gint, gint): GdkPixbuf* use <ev_gtk.h>"
 		end
 
 	frozen gdk_pixbuf_get_pixels (a_pixbuf: POINTER): POINTER
@@ -193,9 +346,7 @@ feature
 			"C inline use <ev_gtk.h>"
 		alias
 			"[
-				#if GTK_MAJOR_VERSION > 1 && GTK_MINOR_VERSION > 13
 					return gdk_pixbuf_new_from_stream ((GInputStream *)$a_input_stream, (GCancellable *)$a_cancellable, (GError **)$a_error);
-				#endif
 			]"
 		end
 	frozen gdk_pixbuf_new_from_xpm_data (a_data: POINTER): POINTER
@@ -220,17 +371,6 @@ feature
                                                          (const char *)$a_type,
                                                          (GError **)$a_error,
                                                          NULL);
-			]"
-		end
-
-	frozen gdk_pixbuf_render_pixmap_and_mask (a_pixbuf: POINTER; a_pixmap, a_mask: TYPED_POINTER [POINTER]; alpha_threshold: INTEGER_32)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				#if GTK_MAJOR_VERSION > 1
-					gdk_pixbuf_render_pixmap_and_mask ((GdkPixbuf*) $a_pixbuf, (GdkPixmap**) $a_pixmap, (GdkBitmap**) $a_mask, (int) $alpha_threshold);
-				#endif
 			]"
 		end
 
@@ -312,46 +452,39 @@ feature
 			"gtk_micro_version"
 		end
 
-	frozen gtk_widget_set_flags (a_widget: POINTER; a_flag: INTEGER_32)
-		external
-			"C [macro <ev_gtk.h>]"
-		alias
-			"GTK_WIDGET_SET_FLAGS"
-		end
-
-	frozen gtk_widget_flags (a_widget: POINTER): INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GTK_WIDGET_FLAGS"
-		end
-
-	frozen gtk_widget_unset_flags (a_widget: POINTER; a_flag: INTEGER_32)
-		external
-			"C [macro <ev_gtk.h>]"
-		alias
-			"GTK_WIDGET_UNSET_FLAGS"
-		end
-
 	frozen gtk_widget_is_sensitive (a_widget: POINTER): BOOLEAN
 		external
-			"C [macro <ev_gtk.h>]"
-		alias
-			"GTK_WIDGET_IS_SENSITIVE"
+			"C signature (GtkWidget*): gboolean use <ev_gtk.h>"
 		end
 
-	frozen gtk_widget_no_window (a_wid: POINTER): BOOLEAN
+	frozen gtk_widget_get_sensitive (a_widget: POINTER): BOOLEAN
 		external
-			"C [macro <ev_gtk.h>]"
-		alias
-			"GTK_WIDGET_NO_WINDOW"
+			"C signature (GtkWidget*): gboolean use <ev_gtk.h>"
 		end
 
-	frozen c_gdk_color_struct_size: INTEGER_32
+	frozen gtk_widget_get_visible (a_widget: POINTER): BOOLEAN
 		external
-			"C [macro <ev_gtk.h>]"
-		alias
-			"sizeof(GdkColor)"
+			"C signature (GtkWidget*): gboolean use <ev_gtk.h>"
+		end
+
+	frozen gtk_widget_is_focus (a_widget: POINTER): BOOLEAN
+		external
+			"C signature (GtkWidget*): gboolean use <ev_gtk.h>"
+		end
+
+	frozen gtk_widget_has_focus (a_widget: POINTER): BOOLEAN
+		external
+			"C signature (GtkWidget*): gboolean use <ev_gtk.h>"
+		end
+
+	frozen gtk_widget_get_has_window (a_wid: POINTER): BOOLEAN
+		external
+			"C signature (GtkWidget*): gboolean use <ev_gtk.h>"
+		end
+
+	frozen gtk_widget_set_has_window (a_wid: POINTER; a_value: BOOLEAN)
+		external
+			"C signature (GtkWidget*, gboolean) use <ev_gtk.h>"
 		end
 
 	frozen c_gdk_rectangle_struct_size: INTEGER_32
@@ -452,67 +585,53 @@ feature
 			"GDK_BUTTON_RELEASE"
 		end
 
-	frozen gtk_state_normal_enum: INTEGER_32
+	frozen gtk_state_flag_normal_enum: INTEGER_32
 		external
 			"C macro use <ev_gtk.h>"
 		alias
 			"GTK_STATE_NORMAL"
 		end
 
-	frozen gtk_state_prelight_enum: INTEGER_32
+	frozen gtk_state_flag_prelight_enum: INTEGER_32
 		external
 			"C macro use <ev_gtk.h>"
 		alias
-			"GTK_STATE_PRELIGHT"
+			"GTK_STATE_FLAG_PRELIGHT"
 		end
 
-	frozen gtk_state_selected_enum: INTEGER_32
+	frozen gtk_state_flag_selected_enum: INTEGER_32
 		external
 			"C macro use <ev_gtk.h>"
 		alias
-			"GTK_STATE_SELECTED"
+			"GTK_STATE_FLAG_SELECTED"
 		end
 
-	frozen gtk_state_active_enum: INTEGER_32
+	frozen gtk_state_flag_active_enum: INTEGER_32
 		external
 			"C macro use <ev_gtk.h>"
 		alias
-			"GTK_STATE_ACTIVE"
+			"GTK_STATE_FLAG_ACTIVE"
 		end
 
-	frozen gtk_state_insensitive_enum: INTEGER_32
+	frozen gtk_state_flag_insensitive_enum: INTEGER_32
 		external
 			"C macro use <ev_gtk.h>"
 		alias
-			"GTK_STATE_INSENSITIVE"
+			"GTK_STATE_FLAG_INSENSITIVE"
 		end
 
-	frozen gtk_sensitive_enum: INTEGER_32
+	frozen gtk_state_flag_inconsistent_enum: INTEGER_32
 		external
 			"C macro use <ev_gtk.h>"
 		alias
-			"GTK_SENSITIVE"
+			"GTK_STATE_FLAG_INCONSISTENT"
 		end
 
-	frozen gtk_mapped_enum: INTEGER_32
+	frozen gtk_state_flag_focused_enum: INTEGER_32
 		external
 			"C macro use <ev_gtk.h>"
 		alias
-			"GTK_MAPPED"
-		end
-
-	frozen gdk_invert_enum: INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GDK_INVERT"
-		end
-
-	frozen gdk_include_inferiors_enum: INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GDK_INCLUDE_INFERIORS"
+			"GTK_STATE_FLAG_FOCUSED"
 		end
 
 	frozen gtk_justify_center_enum: INTEGER_32
@@ -697,27 +816,6 @@ feature
 			"GDK_VISIBILITY_NOTIFY_MASK"
 		end
 
-	frozen gtk_has_focus_enum: INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GTK_HAS_FOCUS"
-		end
-
-	frozen gtk_has_grab_enum: INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GTK_HAS_GRAB"
-		end
-
-	frozen gtk_visible_enum: INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GTK_VISIBLE"
-		end
-
 	frozen gtk_window_toplevel_enum: INTEGER_32
 		external
 			"C macro use <ev_gtk.h>"
@@ -809,13 +907,6 @@ feature
 			"GDK_FUNC_ALL"
 		end
 
-	frozen gtk_can_focus_enum: INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GTK_CAN_FOCUS"
-		end
-
 	frozen gtk_policy_automatic_enum: INTEGER_32
 		external
 			"C macro use <ev_gtk.h>"
@@ -863,90 +954,6 @@ feature
 			"C macro use <ev_gtk.h>"
 		alias
 			"GTK_SELECTION_MULTIPLE"
-		end
-
-	frozen gtk_selection_extended_enum: INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GTK_SELECTION_EXTENDED"
-		end
-
-	frozen gdk_copy_enum: INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GDK_COPY"
-		end
-
-	frozen gdk_copy_invert_enum: INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GDK_COPY_INVERT"
-		end
-
-	frozen gdk_xor_enum: INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GDK_XOR"
-		end
-
-	frozen gdk_and_enum: INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GDK_AND"
-		end
-
-	frozen gdk_or_enum: INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GDK_OR"
-		end
-
-	frozen gdk_line_on_off_dash_enum: INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GDK_LINE_ON_OFF_DASH"
-		end
-
-	frozen gdk_line_solid_enum: INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GDK_LINE_SOLID"
-		end
-
-	frozen gdk_tiled_enum: INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GDK_TILED"
-		end
-
-	frozen gdk_solid_enum: INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GDK_SOLID"
-		end
-
-	frozen gdk_cap_round_enum: INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GDK_CAP_ROUND"
-		end
-
-	frozen gdk_join_bevel_enum: INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GDK_JOIN_BEVEL"
 		end
 
 	frozen g_free (a_mem: POINTER)
@@ -1029,11 +1036,6 @@ feature
 			"C () | <ev_gtk.h>"
 		end
 
-	frozen gdk_bitmap_unref (a_pixmap: POINTER)
-		external
-			"C (GdkBitmap*) | <ev_gtk.h>"
-		end
-
 	frozen gdk_atom_intern (a_atom_name: POINTER; a_only_if_exists: INTEGER_32): POINTER
 		external
 			"C (gchar*, gint): GdkAtom | <ev_gtk.h>"
@@ -1042,16 +1044,6 @@ feature
 	frozen gdk_atom_name (a_atom: POINTER): POINTER
 		external
 			"C (GdkAtom): gchar* | <ev_gtk.h>"
-		end
-
-	frozen gdk_colormap_alloc_color (a_colormap: POINTER; a_color: POINTER; a_writeable: BOOLEAN; a_best_match: BOOLEAN): BOOLEAN
-		external
-			"C (GdkColormap*, GdkColor*, gboolean, gboolean): gboolean | <ev_gtk.h>"
-		end
-
-	frozen gdk_colormap_get_visual (a_colormap: POINTER): POINTER
-		external
-			"C (GdkColormap*): GdkVisual* | <ev_gtk.h>"
 		end
 
 	frozen gdk_cursor_new (a_cursor_type: INTEGER_32): POINTER
@@ -1069,114 +1061,24 @@ feature
 			"C (GdkDragContext*): GdkAtom | <ev_gtk.h>"
 		end
 
-	frozen gdk_drag_context_struct_source_window (a_drag_context: POINTER): POINTER
+	frozen gdk_drag_context_get_source_window (a_drag_context: POINTER): POINTER
 		external
-			"C struct GdkDragContext access source_window use <ev_gtk.h>"
+			"C signature (GdkDragContext*): GdkWindow* use <ev_gtk.h>"
 		end
 
-	frozen gdk_drag_context_struct_dest_window (a_drag_context: POINTER): POINTER
+	frozen gdk_drag_context_get_dest_window (a_drag_context: POINTER): POINTER
 		external
-			"C struct GdkDragContext access dest_window use <ev_gtk.h>"
+			"C signature (GdkDragContext*): GdkWindow* use <ev_gtk.h>"
 		end
 
-	frozen gdk_drag_context_struct_targets (a_drag_context: POINTER): POINTER
+	frozen gdk_drag_context_list_targets (a_drag_context: POINTER): POINTER
 		external
-			"C struct GdkDragContext access targets use <ev_gtk.h>"
+			"C signature (GdkDragContext*): GList* use <ev_gtk.h>"
 		end
 
 	frozen gdk_selection_convert (a_requestor, a_selection, a_target: POINTER; a_time: NATURAL_32)
 		external
 			"C signature (GdkWindow*, GdkAtom, GdkAtom, guint32) use <ev_gtk.h>"
-		end
-
-	frozen gdk_draw_arc (a_drawable: POINTER; a_gc: POINTER; a_filled: INTEGER_32; a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32; a_angle1: INTEGER_32; a_angle2: INTEGER_32)
-		external
-			"C (GdkDrawable*, GdkGC*, gint, gint, gint, gint, gint, gint, gint) | <ev_gtk.h>"
-		end
-
-	frozen gdk_draw_gray_image (a_drawable: POINTER; a_gc: POINTER; a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32; a_dith: INTEGER_32; a_buf: POINTER; a_rowstride: INTEGER_32)
-		external
-			"C (GdkDrawable*, GdkGC*, gint, gint, gint, gint, GdkRgbDither, guchar*, gint) | <ev_gtk.h>"
-		end
-
-	frozen gdk_draw_image (a_drawable: POINTER; a_gc: POINTER; a_image: POINTER; a_xsrc: INTEGER_32; a_ysrc: INTEGER_32; a_xdest: INTEGER_32; a_ydest: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32)
-		external
-			"C (GdkDrawable*, GdkGC*, GdkImage*, gint, gint, gint, gint, gint, gint) | <ev_gtk.h>"
-		end
-
-	frozen gdk_draw_indexed_image (a_drawable: POINTER; a_gc: POINTER; a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32; a_dith: INTEGER_32; a_buf: POINTER; a_rowstride: INTEGER_32; a_cmap: POINTER)
-		external
-			"C (GdkDrawable*, GdkGC*, gint, gint, gint, gint, GdkRgbDither, guchar*, gint, GdkRgbCmap*) | <ev_gtk.h>"
-		end
-
-	frozen gdk_draw_line (a_drawable: POINTER; a_gc: POINTER; a_x1: INTEGER_32; a_y1: INTEGER_32; a_x2: INTEGER_32; a_y2: INTEGER_32)
-		external
-			"C (GdkDrawable*, GdkGC*, gint, gint, gint, gint) | <ev_gtk.h>"
-		end
-
-	frozen gdk_draw_lines (a_drawable: POINTER; a_gc: POINTER; a_points: POINTER; a_npoints: INTEGER_32)
-		external
-			"C (GdkDrawable*, GdkGC*, GdkPoint*, gint) | <ev_gtk.h>"
-		end
-
-	frozen gdk_draw_pixmap (a_drawable: POINTER; a_gc: POINTER; a_src: POINTER; a_xsrc: INTEGER_32; a_ysrc: INTEGER_32; a_xdest: INTEGER_32; a_ydest: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32)
-		external
-			"C (GdkDrawable*, GdkGC*, GdkDrawable*, gint, gint, gint, gint, gint, gint) | <ev_gtk.h>"
-		end
-
-	frozen gdk_draw_point (a_drawable: POINTER; a_gc: POINTER; a_x: INTEGER_32; a_y: INTEGER_32)
-		external
-			"C (GdkDrawable*, GdkGC*, gint, gint) | <ev_gtk.h>"
-		end
-
-	frozen gdk_draw_points (a_drawable: POINTER; a_gc: POINTER; a_points: POINTER; a_npoints: INTEGER_32)
-		external
-			"C (GdkDrawable*, GdkGC*, GdkPoint*, gint) | <ev_gtk.h>"
-		end
-
-	frozen gdk_draw_polygon (a_drawable: POINTER; a_gc: POINTER; a_filled: INTEGER_32; a_points: POINTER; a_npoints: INTEGER_32)
-		external
-			"C (GdkDrawable*, GdkGC*, gint, GdkPoint*, gint) | <ev_gtk.h>"
-		end
-
-	frozen gdk_draw_rectangle (a_drawable: POINTER; a_gc: POINTER; a_filled: INTEGER_32; a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32)
-		external
-			"C (GdkDrawable*, GdkGC*, gint, gint, gint, gint, gint) | <ev_gtk.h>"
-		end
-
-	frozen gdk_draw_rgb_32_image (a_drawable: POINTER; a_gc: POINTER; a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32; a_dith: INTEGER_32; a_buf: POINTER; a_rowstride: INTEGER_32)
-		external
-			"C (GdkDrawable*, GdkGC*, gint, gint, gint, gint, GdkRgbDither, guchar*, gint) | <ev_gtk.h>"
-		end
-
-	frozen gdk_draw_rgb_image (a_drawable: POINTER; a_gc: POINTER; a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32; a_dith: INTEGER_32; a_rgb_buf: POINTER; a_rowstride: INTEGER_32)
-		external
-			"C (GdkDrawable*, GdkGC*, gint, gint, gint, gint, GdkRgbDither, guchar*, gint) | <ev_gtk.h>"
-		end
-
-	frozen gdk_draw_rgb_image_dithalign (a_drawable: POINTER; a_gc: POINTER; a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32; a_dith: INTEGER_32; a_rgb_buf: POINTER; a_rowstride: INTEGER_32; a_xdith: INTEGER_32; a_ydith: INTEGER_32)
-		external
-			"C (GdkDrawable*, GdkGC*, gint, gint, gint, gint, GdkRgbDither, guchar*, gint, gint, gint) | <ev_gtk.h>"
-		end
-
-	frozen gdk_draw_segments (a_drawable: POINTER; a_gc: POINTER; a_segs: POINTER; a_nsegs: INTEGER_32)
-		external
-			"C (GdkDrawable*, GdkGC*, GdkSegment*, gint) | <ev_gtk.h>"
-		end
-
-	frozen gdk_draw_string (a_drawable: POINTER; a_font: POINTER; a_gc: POINTER; a_x: INTEGER_32; a_y: INTEGER_32; a_string: POINTER)
-		external
-			"C (GdkDrawable*, GdkFont*, GdkGC*, gint, gint, gchar*) | <ev_gtk.h>"
-		end
-
-	frozen gdk_draw_text (a_drawable: POINTER; a_font: POINTER; a_gc: POINTER; a_x: INTEGER_32; a_y: INTEGER_32; a_text: POINTER; a_text_length: INTEGER_32)
-		external
-			"C (GdkDrawable*, GdkFont*, GdkGC*, gint, gint, gchar*, gint) | <ev_gtk.h>"
-		end
-
-	frozen gdk_draw_text_wc (a_drawable: POINTER; a_font: POINTER; a_gc: POINTER; a_x: INTEGER_32; a_y: INTEGER_32; a_text: POINTER; a_text_length: INTEGER_32)
-		external
-			"C (GdkDrawable*, GdkFont*, GdkGC*, gint, gint, GdkWChar*, gint) | <ev_gtk.h>"
 		end
 
 	frozen gdk_drop_finish (a_context: POINTER; a_success: BOOLEAN; a_time: NATURAL_32)
@@ -1212,141 +1114,6 @@ feature
 	frozen gdk_flush
 		external
 			"C () | <ev_gtk.h>"
-		end
-
-	frozen gdk_font_load (a_font_name: POINTER): POINTER
-		external
-			"C (gchar*): GdkFont* | <ev_gtk.h>"
-		end
-
-	frozen gdk_font_unref (a_font: POINTER)
-		external
-			"C (GdkFont*) | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_get_values (a_gc: POINTER; a_values: POINTER)
-		external
-			"C (GdkGC*, GdkGCValues*) | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_new (a_window: POINTER): POINTER
-		external
-			"C (GdkWindow*): GdkGC* | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_new_with_values (a_window: POINTER; a_values: POINTER; a_values_mask: INTEGER_32): POINTER
-		external
-			"C (GdkWindow*, GdkGCValues*, GdkGCValuesMask): GdkGC* | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_ref (a_gc: POINTER): POINTER
-		external
-			"C (GdkGC*): GdkGC* | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_set_background (a_gc: POINTER; a_color: POINTER)
-		external
-			"C (GdkGC*, GdkColor*) | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_set_clip_mask (a_gc: POINTER; a_mask: POINTER)
-		external
-			"C (GdkGC*, GdkBitmap*) | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_set_clip_origin (a_gc: POINTER; a_x: INTEGER_32; a_y: INTEGER_32)
-		external
-			"C (GdkGC*, gint, gint) | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_set_clip_rectangle (a_gc: POINTER; a_rectangle: POINTER)
-		external
-			"C (GdkGC*, GdkRectangle*) | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_set_clip_region (a_gc: POINTER; a_region: POINTER)
-		external
-			"C (GdkGC*, GdkRegion*) | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_set_dashes (a_gc: POINTER; a_dash_offset: INTEGER_32; a_dash_list: POINTER; a_n: INTEGER_32)
-		external
-			"C (GdkGC*, gint, gint8*, gint) | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_set_exposures (a_gc: POINTER; a_exposures: BOOLEAN)
-		external
-			"C (GdkGC*, gboolean) | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_set_fill (a_gc: POINTER; a_fill: INTEGER_32)
-		external
-			"C (GdkGC*, GdkFill) | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_set_font (a_gc: POINTER; a_font: POINTER)
-		external
-			"C (GdkGC*, GdkFont*) | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_set_foreground (a_gc: POINTER; a_color: POINTER)
-		external
-			"C (GdkGC*, GdkColor*) | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_set_function (a_gc: POINTER; a_function: INTEGER_32)
-		external
-			"C (GdkGC*, GdkFunction) | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_set_line_attributes (a_gc: POINTER; a_line_width: INTEGER_32; a_line_style: INTEGER_32; a_cap_style: INTEGER_32; a_join_style: INTEGER_32)
-		external
-			"C (GdkGC*, gint, GdkLineStyle, GdkCapStyle, GdkJoinStyle) | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_set_stipple (a_gc: POINTER; a_stipple: POINTER)
-		external
-			"C (GdkGC*, GdkPixmap*) | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_set_subwindow (a_gc: POINTER; a_mode: INTEGER_32)
-		external
-			"C (GdkGC*, GdkSubwindowMode) | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_set_tile (a_gc: POINTER; a_tile: POINTER)
-		external
-			"C (GdkGC*, GdkPixmap*) | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_set_ts_origin (a_gc: POINTER; a_x: INTEGER_32; a_y: INTEGER_32)
-		external
-			"C (GdkGC*, gint, gint) | <ev_gtk.h>"
-		end
-
-	frozen gdk_gc_unref (a_gc: POINTER)
-		external
-			"C (GdkGC*) | <ev_gtk.h>"
-		end
-
-	frozen gdk_image_destroy (a_image: POINTER)
-		external
-			"C (GdkImage*) | <ev_gtk.h>"
-		end
-
-	frozen gdk_image_get (a_window: POINTER; a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32): POINTER
-		external
-			"C (GdkWindow*, gint, gint, gint, gint): GdkImage* | <ev_gtk.h>"
-		end
-
-	frozen gdk_image_get_pixel (a_image: POINTER; a_x: INTEGER_32; a_y: INTEGER_32): INTEGER_32
-		external
-			"C (GdkImage*, gint, gint): guint32 | <ev_gtk.h>"
-		end
-
-	frozen gdk_image_new (a_type: INTEGER_32; a_visual: POINTER; a_width: INTEGER_32; a_height: INTEGER_32): POINTER
-		external
-			"C (GdkImageType, GdkVisual*, gint, gint): GdkImage* | <ev_gtk.h>"
 		end
 
 	frozen gdk_keyboard_grab (a_window: POINTER; a_owner_events: BOOLEAN; a_time: INTEGER_32): INTEGER_32
@@ -1389,26 +1156,6 @@ feature
 			"C (guint): guint | <ev_gtk.h>"
 		end
 
-	frozen gdk_pixmap_create_from_xpm_d (a_window: POINTER; a_mask: POINTER; a_transparent_color: POINTER; a_data: POINTER): POINTER
-		external
-			"C (GdkWindow*, GdkBitmap**, GdkColor*, gchar**): GdkPixmap* | <ev_gtk.h>"
-		end
-
-	frozen gdk_pixmap_new (a_window: POINTER; a_width: INTEGER_32; a_height: INTEGER_32; a_depth: INTEGER_32): POINTER
-		external
-			"C (GdkWindow*, gint, gint, gint): GdkPixmap* | <ev_gtk.h>"
-		end
-
-	frozen gdk_pixmap_ref (a_pixmap: POINTER): POINTER
-		external
-			"C (GdkPixmap*): GdkPixmap* | <ev_gtk.h>"
-		end
-
-	frozen gdk_pixmap_unref (a_pixmap: POINTER)
-		external
-			"C (GdkPixmap*) | <ev_gtk.h>"
-		end
-
 	frozen gdk_pointer_grab (a_window: POINTER; a_owner_events: INTEGER_32; a_event_mask: INTEGER_32; a_confine_to: POINTER; a_cursor: POINTER; a_time: INTEGER_32): INTEGER_32
 		external
 			"C (GdkWindow*, gint, GdkEventMask, GdkWindow*, GdkCursor*, guint32): gint | <ev_gtk.h>"
@@ -1417,41 +1164,6 @@ feature
 	frozen gdk_pointer_ungrab (a_time: INTEGER_32)
 		external
 			"C (guint32) | <ev_gtk.h>"
-		end
-
-	frozen gdk_region_destroy (a_region: POINTER)
-		external
-			"C (GdkRegion*) | <ev_gtk.h>"
-		end
-
-	frozen gdk_region_equal (a_region1: POINTER; a_region2: POINTER): BOOLEAN
-		external
-			"C (GdkRegion*, GdkRegion*): gboolean | <ev_gtk.h>"
-		end
-
-	frozen gdk_region_get_clipbox (a_region: POINTER; a_rectangle: POINTER)
-		external
-			"C (GdkRegion*, GdkRectangle*) | <ev_gtk.h>"
-		end
-
-	frozen gdk_region_new: POINTER
-		external
-			"C (): GdkRegion* | <ev_gtk.h>"
-		end
-
-	frozen gdk_region_offset (a_region: POINTER; a_dx: INTEGER_32; a_dy: INTEGER_32)
-		external
-			"C (GdkRegion*, gint, gint) | <ev_gtk.h>"
-		end
-
-	frozen gdk_rgb_get_cmap: POINTER
-		external
-			"C (): GdkColormap* | <ev_gtk.h>"
-		end
-
-	frozen gdk_rgb_get_visual: POINTER
-		external
-			"C (): GdkVisual* | <ev_gtk.h>"
 		end
 
 	frozen gdk_screen_height: INTEGER_32
@@ -1484,12 +1196,7 @@ feature
 			"C (GdkWindow*, gint*, gint*, GdkModifierType*): GdkWindow* | <ev_gtk.h>"
 		end
 
-	frozen gdk_window_get_size (a_window: POINTER; a_width: POINTER; a_height: POINTER)
-		external
-			"C (GdkWindow*, gint*, gint*) | <ev_gtk.h>"
-		end
-
-	frozen gdk_window_get_user_data (a_window: POINTER; a_data: POINTER)
+	frozen gdk_window_get_user_data (a_window: POINTER; a_data: TYPED_POINTER [POINTER])
 		external
 			"C (GdkWindow*, gpointer*) | <ev_gtk.h>"
 		end
@@ -1544,11 +1251,6 @@ feature
 			"C (GdkWindow*, GdkGeometry*, GdkWindowHints) | <ev_gtk.h>"
 		end
 
-	frozen gdk_window_set_icon (a_window: POINTER; a_icon_window: POINTER; a_pixmap: POINTER; a_mask: POINTER)
-		external
-			"C (GdkWindow*, GdkWindow*, GdkPixmap*, GdkBitmap*) | <ev_gtk.h>"
-		end
-
 	frozen gdk_window_set_icon_name (a_window: POINTER; a_name: POINTER)
 		external
 			"C (GdkWindow*, gchar*) | <ev_gtk.h>"
@@ -1576,7 +1278,7 @@ feature
 
 	frozen gtk_adjustment_new (a_value: REAL_32; a_lower: REAL_32; a_upper: REAL_32; a_step_increment: REAL_32; a_page_increment: REAL_32; a_page_size: REAL_32): POINTER
 		external
-			"C (gfloat, gfloat, gfloat, gfloat, gfloat, gfloat): GtkObject* | <ev_gtk.h>"
+			"C (gfloat, gfloat, gfloat, gfloat, gfloat, gfloat): GtkAdjustment* | <ev_gtk.h>"
 		end
 
 	frozen gtk_adjustment_set_value (a_adjustment: POINTER; a_value: REAL_32)
@@ -1654,7 +1356,7 @@ feature
 			"C (GtkCheckMenuItem*, gboolean) | <ev_gtk.h>"
 		end
 
-	frozen gtk_check_menu_item_set_show_toggle (a_menu_item: POINTER; a_always: BOOLEAN)
+	frozen gtk_check_menu_item_set_draw_as_radio (a_menu_item: POINTER; a_always: BOOLEAN)
 		external
 			"C (GtkCheckMenuItem*, gboolean) | <ev_gtk.h>"
 		end
@@ -1674,7 +1376,7 @@ feature
 			"C (GtkContainer*) | <ev_gtk.h>"
 		end
 
-	frozen gtk_container_children (a_container: POINTER): POINTER
+	frozen gtk_container_get_children (a_container: POINTER): POINTER
 		external
 			"C (GtkContainer*): GList* | <ev_gtk.h>"
 		end
@@ -1714,6 +1416,11 @@ feature
 			"C (GtkEditable*): gint | <ev_gtk.h>"
 		end
 
+	frozen gtk_range_get_adjustment (a_editable: POINTER): POINTER
+		external
+			"C (GtkRange*): GtkAdjustment* | <ev_gtk.h>"
+		end
+
 	frozen gtk_editable_insert_text (a_editable: POINTER; a_new_text: POINTER; a_new_text_length: INTEGER_32; a_position: POINTER)
 		external
 			"C (GtkEditable*, gchar*, gint, gint*) | <ev_gtk.h>"
@@ -1734,10 +1441,6 @@ feature
 			"C (GtkEditable*, gint) | <ev_gtk.h>"
 		end
 
-	frozen gtk_entry_append_text (a_entry: POINTER; a_text: POINTER)
-		external
-			"C (GtkEntry*, gchar*) | <ev_gtk.h>"
-		end
 
 	frozen gtk_entry_get_text (a_entry: POINTER): POINTER
 		external
@@ -1747,11 +1450,6 @@ feature
 	frozen gtk_entry_new: POINTER
 		external
 			"C (): GtkWidget* | <ev_gtk.h>"
-		end
-
-	frozen gtk_entry_prepend_text (a_entry: POINTER; a_text: POINTER)
-		external
-			"C (GtkEntry*, gchar*) | <ev_gtk.h>"
 		end
 
 	frozen gtk_entry_set_text (a_entry: POINTER; a_text: POINTER)
@@ -1811,6 +1509,11 @@ feature
 			"C (GtkFrame*, GtkShadowType) | <ev_gtk.h>"
 		end
 
+	frozen gtk_frame_get_shadow_type (a_frame: POINTER): INTEGER_32
+		external
+			"C (GtkFrame*): GtkShadowType) | <ev_gtk.h>"
+		end
+
 	frozen gtk_get_event_widget (a_event: POINTER): POINTER
 		external
 			"C (GdkEvent*): GtkWidget* | <ev_gtk.h>"
@@ -1836,24 +1539,14 @@ feature
 			"C (gboolean, gint): GtkWidget* | <ev_gtk.h>"
 		end
 
-	frozen gtk_hpaned_new: POINTER
+	frozen gtk_paned_new (a_orientation: NATURAL_8): POINTER
 		external
-			"C (): GtkWidget* | <ev_gtk.h>"
+			"C (GtkOrientation): GtkWidget* | <ev_gtk.h>"
 		end
 
-	frozen gtk_hscale_new (a_adjustment: POINTER): POINTER
+	frozen gtk_scrollbar_new (a_orientation: NATURAL_8; a_adjustment: POINTER): POINTER
 		external
-			"C (GtkAdjustment*): GtkWidget* | <ev_gtk.h>"
-		end
-
-	frozen gtk_hscrollbar_new (a_adjustment: POINTER): POINTER
-		external
-			"C (GtkAdjustment*): GtkWidget* | <ev_gtk.h>"
-		end
-
-	frozen gtk_hseparator_new: POINTER
-		external
-			"C (): GtkWidget* | <ev_gtk.h>"
+			"C (GtkOrientation, GtkAdjustment*): GtkWidget* | <ev_gtk.h>"
 		end
 
 	frozen gtk_label_new (a_str: POINTER): POINTER
@@ -1982,7 +1675,7 @@ feature
 			"C (GtkNotebook*, GtkWidget*, gint) | <ev_gtk.h>"
 		end
 
-	frozen gtk_notebook_set_page (a_notebook: POINTER; a_page_num: INTEGER_32)
+	frozen gtk_notebook_set_current_page (a_notebook: POINTER; a_page_num: INTEGER_32)
 		external
 			"C (GtkNotebook*, gint) | <ev_gtk.h>"
 		end
@@ -2007,14 +1700,9 @@ feature
 			"C (GtkNotebook*, GtkPositionType) | <ev_gtk.h>"
 		end
 
-	frozen gtk_object_get_data (a_object: POINTER; a_key: POINTER): POINTER
+	frozen g_object_ref_sink (a_object: POINTER): POINTER
 		external
-			"C (GtkObject*, gchar*): gpointer | <ev_gtk.h>"
-		end
-
-	frozen gtk_object_sink (a_object: POINTER)
-		external
-			"C (GtkObject*) | <ev_gtk.h>"
+			"C (gpointer): gpointer | <ev_gtk.h>"
 		end
 
 	frozen gtk_paned_pack1 (a_paned: POINTER; a_child: POINTER; a_resize: BOOLEAN; a_shrink: BOOLEAN)
@@ -2032,24 +1720,9 @@ feature
 			"C (GtkPaned*, gint) | <ev_gtk.h>"
 		end
 
-	frozen gtk_pixmap_new (a_pixmap: POINTER; a_mask: POINTER): POINTER
+	frozen gtk_paned_get_position (a_paned: POINTER): INTEGER_32
 		external
-			"C (GdkPixmap*, GdkBitmap*): GtkWidget* | <ev_gtk.h>"
-		end
-
-	frozen gtk_progress_bar_new_with_adjustment (a_adjustment: POINTER): POINTER
-		external
-			"C (GtkAdjustment*): GtkWidget* | <ev_gtk.h>"
-		end
-
-	frozen gtk_progress_bar_set_bar_style (a_pbar: POINTER; a_style: INTEGER_32)
-		external
-			"C (GtkProgressBar*, GtkProgressBarStyle) | <ev_gtk.h>"
-		end
-
-	frozen gtk_progress_bar_set_orientation (a_pbar: POINTER; a_orientation: INTEGER_32)
-		external
-			"C (GtkProgressBar*, GtkProgressBarOrientation) | <ev_gtk.h>"
+			"C (GtkPaned*): gint | <ev_gtk.h>"
 		end
 
 	frozen gtk_propagate_event (a_widget: POINTER; a_event: POINTER)
@@ -2057,7 +1730,7 @@ feature
 			"C (GtkWidget*, GdkEvent*) | <ev_gtk.h>"
 		end
 
-	frozen gtk_radio_button_group (a_radio_button: POINTER): POINTER
+	frozen gtk_radio_button_get_group (a_radio_button: POINTER): POINTER
 		external
 			"C (GtkRadioButton*): GSList* | <ev_gtk.h>"
 		end
@@ -2072,7 +1745,7 @@ feature
 			"C (GtkRadioButton*, GSList*) | <ev_gtk.h>"
 		end
 
-	frozen gtk_radio_menu_item_group (a_radio_menu_item: POINTER): POINTER
+	frozen gtk_radio_menu_item_get_group (a_radio_menu_item: POINTER): POINTER
 		external
 			"C (GtkRadioMenuItem*): GSList* | <ev_gtk.h>"
 		end
@@ -2092,9 +1765,24 @@ feature
 			"C (GtkRadioMenuItem*, GSList*) | <ev_gtk.h>"
 		end
 
-	frozen gtk_rc_get_style (a_widget: POINTER): POINTER
+	frozen gtk_widget_get_style_context (a_widget: POINTER): POINTER
 		external
-			"C (GtkWidget*): GtkStyle* | <ev_gtk.h>"
+			"C (GtkWidget*): GtkStyleContext* | <ev_gtk.h>"
+		end
+
+	frozen gtk_style_context_get_color (a_context: POINTER; a_state: INTEGER; a_color: POINTER)
+		external
+			"C signature (GtkStyleContext*, GtkStateFlags, GdkRGBA*) use <ev_gtk.h>"
+		end
+
+	frozen gtk_style_context_get_background_color (a_context: POINTER; a_state: INTEGER; a_color: POINTER)
+		external
+			"C signature (GtkStyleContext*, GtkStateFlags, GdkRGBA*) use <ev_gtk.h>"
+		end
+
+	frozen gtk_style_context_get_border_color (a_context: POINTER; a_state: INTEGER; a_color: POINTER)
+		external
+			"C signature (GtkStyleContext*, GtkStateFlags, GdkRGBA*) use <ev_gtk.h>"
 		end
 
 	frozen gtk_scale_set_digits (a_scale: POINTER; a_digits: INTEGER_32)
@@ -2105,6 +1793,16 @@ feature
 	frozen gtk_scale_set_draw_value (a_scale: POINTER; a_draw_value: BOOLEAN)
 		external
 			"C (GtkScale*, gboolean) | <ev_gtk.h>"
+		end
+
+	frozen gtk_scrollable_get_hadjustment (a_scrollable: POINTER): POINTER
+		external
+			"C (GtkScrollable*): GtkAdjustment* | <ev_gtk.h>"
+		end
+
+	frozen gtk_scrollable_get_vadjustment (a_scrollable: POINTER): POINTER
+		external
+			"C (GtkScrollable*): GtkAdjustment* | <ev_gtk.h>"
 		end
 
 	frozen gtk_scrolled_window_get_hadjustment (a_scrolled_window: POINTER): POINTER
@@ -2127,11 +1825,6 @@ feature
 			"C (GtkScrolledWindow*, GtkPolicyType, GtkPolicyType) | <ev_gtk.h>"
 		end
 
-	frozen gtk_set_locale: POINTER
-		external
-			"C (): gchar* | <ev_gtk.h>"
-		end
-
 	frozen gtk_spin_button_new (a_adjustment: POINTER; a_climb_rate: REAL_32; a_digits: INTEGER_32): POINTER
 		external
 			"C (GtkAdjustment*, gfloat, guint): GtkWidget* | <ev_gtk.h>"
@@ -2140,16 +1833,6 @@ feature
 	frozen gtk_spin_button_update (a_spin_button: POINTER)
 		external
 			"C (GtkSpinButton*) | <ev_gtk.h>"
-		end
-
-	frozen gtk_style_copy (a_style: POINTER): POINTER
-		external
-			"C (GtkStyle*): GtkStyle* | <ev_gtk.h>"
-		end
-
-	frozen gtk_style_unref (a_style: POINTER)
-		external
-			"C (GtkStyle*) | <ev_gtk.h>"
 		end
 
 	frozen gtk_table_attach_defaults (a_table: POINTER; a_widget: POINTER; a_left_attach: INTEGER_32; a_right_attach: INTEGER_32; a_top_attach: INTEGER_32; a_bottom_attach: INTEGER_32)
@@ -2182,16 +1865,6 @@ feature
 			"C (GtkTable*, guint) | <ev_gtk.h>"
 		end
 
-	frozen gtk_timeout_add (a_interval: INTEGER_32; a_function: POINTER; a_data: POINTER): INTEGER_32
-		external
-			"C (guint32, GtkFunction, gpointer): guint | <ev_gtk.h>"
-		end
-
-	frozen gtk_timeout_remove (a_timeout_handler_id: INTEGER_32)
-		external
-			"C (guint) | <ev_gtk.h>"
-		end
-
 	frozen gtk_toggle_button_get_active (a_toggle_button: POINTER): BOOLEAN
 		external
 			"C (GtkToggleButton*): gboolean | <ev_gtk.h>"
@@ -2207,44 +1880,9 @@ feature
 			"C (GtkToggleButton*, gboolean) | <ev_gtk.h>"
 		end
 
-	frozen gtk_tooltips_data_get (a_widget: POINTER): POINTER
-		external
-			"C (GtkWidget*): GtkTooltipsData* | <ev_gtk.h>"
-		end
-
-	frozen gtk_tooltips_force_window (a_tooltips: POINTER)
-		external
-			"C (GtkTooltips*) | <ev_gtk.h>"
-		end
-
-	frozen gtk_tooltips_new: POINTER
-		external
-			"C (): GtkTooltips* | <ev_gtk.h>"
-		end
-
-	frozen gtk_tooltips_set_delay (a_tooltips: POINTER; a_delay: INTEGER_32)
-		external
-			"C (GtkTooltips*, guint) | <ev_gtk.h>"
-		end
-
-	frozen gtk_tooltips_set_tip (a_tooltips: POINTER; a_widget: POINTER; a_tip_text: POINTER; a_tip_private: POINTER)
-		external
-			"C (GtkTooltips*, GtkWidget*, gchar*, gchar*) | <ev_gtk.h>"
-		end
-
 	frozen gtk_vbox_new (a_homogeneous: BOOLEAN; a_spacing: INTEGER_32): POINTER
 		external
 			"C (gboolean, gint): GtkWidget* | <ev_gtk.h>"
-		end
-
-	frozen gtk_viewport_get_hadjustment (a_viewport: POINTER): POINTER
-		external
-			"C (GtkViewport*): GtkAdjustment* | <ev_gtk.h>"
-		end
-
-	frozen gtk_viewport_get_vadjustment (a_viewport: POINTER): POINTER
-		external
-			"C (GtkViewport*): GtkAdjustment* | <ev_gtk.h>"
 		end
 
 	frozen gtk_viewport_new (a_hadjustment: POINTER; a_vadjustment: POINTER): POINTER
@@ -2257,24 +1895,14 @@ feature
 			"C (GtkViewport*, GtkShadowType) | <ev_gtk.h>"
 		end
 
-	frozen gtk_vpaned_new: POINTER
+	frozen gtk_scale_new (a_orientation: NATURAL_8; a_adjustment: POINTER): POINTER
 		external
-			"C (): GtkWidget* | <ev_gtk.h>"
+			"C (GtkOrientation, GtkAdjustment*): GtkWidget* | <ev_gtk.h>"
 		end
 
-	frozen gtk_vscale_new (a_adjustment: POINTER): POINTER
+	frozen gtk_separator_new (a_orientation: NATURAL_8): POINTER
 		external
-			"C (GtkAdjustment*): GtkWidget* | <ev_gtk.h>"
-		end
-
-	frozen gtk_vscrollbar_new (a_adjustment: POINTER): POINTER
-		external
-			"C (GtkAdjustment*): GtkWidget* | <ev_gtk.h>"
-		end
-
-	frozen gtk_vseparator_new: POINTER
-		external
-			"C (): GtkWidget* | <ev_gtk.h>"
+			"C (GtkOrientation): GtkWidget* | <ev_gtk.h>"
 		end
 
 	frozen gtk_widget_add_events (a_widget: POINTER; a_events: INTEGER_32)
@@ -2332,11 +1960,6 @@ feature
 			"C (GtkWidget*) | <ev_gtk.h>"
 		end
 
-	frozen gtk_widget_set_default_colormap (a_colormap: POINTER)
-		external
-			"C (GdkColormap*) | <ev_gtk.h>"
-		end
-
 	frozen gtk_widget_set_name (a_widget: POINTER; a_name: POINTER)
 		external
 			"C (GtkWidget*, gchar*) | <ev_gtk.h>"
@@ -2352,14 +1975,14 @@ feature
 			"C (GtkWidget*, GtkStyle*) | <ev_gtk.h>"
 		end
 
-	frozen gtk_widget_set_uposition (a_widget: POINTER; a_x: INTEGER_32; a_y: INTEGER_32)
+	frozen gtk_widget_set_can_focus (a_widget: POINTER; a_sensitive: BOOLEAN)
 		external
-			"C (GtkWidget*, gint, gint) | <ev_gtk.h>"
+			"C signature (GtkWidget*, gboolean) use <ev_gtk.h>"
 		end
 
-	frozen gtk_widget_set_usize (a_widget: POINTER; a_width: INTEGER_32; a_height: INTEGER_32)
+	frozen gtk_widget_get_can_focus (a_widget: POINTER): BOOLEAN
 		external
-			"C (GtkWidget*, gint, gint) | <ev_gtk.h>"
+			"C signature (GtkWidget*): gboolean use <ev_gtk.h>"
 		end
 
 	frozen gtk_widget_show (a_widget: POINTER)
@@ -2377,9 +2000,9 @@ feature
 			"C (GtkWidget*) | <ev_gtk.h>"
 		end
 
-	frozen gtk_widget_size_request (a_widget: POINTER; a_requisition: POINTER)
+	frozen gtk_widget_get_preferred_size (a_widget: POINTER; a_minimum_size, a_preferred_size: POINTER)
 		external
-			"C (GtkWidget*, GtkRequisition*) | <ev_gtk.h>"
+			"C (GtkWidget*, GtkRequisition*, GtkRequisition*) | <ev_gtk.h>"
 		end
 
 	frozen gtk_window_new (a_type: INTEGER_32): POINTER
@@ -2432,30 +2055,30 @@ feature
 			"C (GtkWindow*, GtkWindow*) | <ev_gtk.h>"
 		end
 
-	frozen gdk_color_struct_blue (a_c_struct: POINTER): INTEGER_32
+	frozen gdk_rgba_struct_blue (a_c_struct: POINTER): REAL_64
 		external
-			"C [struct <ev_gtk.h>] (GdkColor): EIF_INTEGER"
+			"C [struct <ev_gtk.h>] (GdkRGBA): gdouble"
 		alias
 			"blue"
 		end
 
-	frozen gdk_color_struct_green (a_c_struct: POINTER): INTEGER_32
+	frozen gdk_rgba_struct_green (a_c_struct: POINTER): REAL_64
 		external
-			"C [struct <ev_gtk.h>] (GdkColor): EIF_INTEGER"
+			"C [struct <ev_gtk.h>] (GdkRGBA): gdouble"
 		alias
 			"green"
 		end
 
-	frozen gdk_color_struct_pixel (a_c_struct: POINTER): INTEGER_32
+	frozen gdk_rgba_struct_red (a_c_struct: POINTER): REAL_64
 		external
-			"C [struct <ev_gtk.h>] (GdkColor): EIF_INTEGER"
+			"C [struct <ev_gtk.h>] (GdkRGBA): gdouble"
 		alias
-			"pixel"
+			"red"
 		end
 
-	frozen gdk_color_struct_red (a_c_struct: POINTER): INTEGER_32
+	frozen gdk_rgba_struct_alpha (a_c_struct: POINTER): REAL_64
 		external
-			"C [struct <ev_gtk.h>] (GdkColor): EIF_INTEGER"
+			"C [struct <ev_gtk.h>] (GdkRGBA): gdouble"
 		alias
 			"red"
 		end
@@ -2472,6 +2095,16 @@ feature
 			"C [struct <ev_gtk.h>] (GdkEventAny): EIF_INTEGER_8"
 		alias
 			"send_event"
+		end
+
+	frozen gdk_rgba_free (a_rgba_struct: POINTER)
+		external
+			"C signature (GdkRGBA*) use <ev_gtk.h>"
+		end
+
+	frozen gdk_rgba_equal (a_rgba_struct, a_rgba_struct2: POINTER): BOOLEAN
+		external
+			"C signature (GdkRGBA*,GdkRGBA*): gboolean use <ev_gtk.h>"
 		end
 
 	frozen gdk_event_any_struct_window (a_c_struct: POINTER): POINTER
@@ -2708,41 +2341,6 @@ feature
 			"C struct GdkEventDND access time use <ev_gtk.h>"
 		end
 
-	frozen gdk_font_struct_ascent (a_c_struct: POINTER): INTEGER_32
-		external
-			"C [struct <ev_gtk.h>] (GdkFont): EIF_INTEGER"
-		alias
-			"ascent"
-		end
-
-	frozen gdk_font_struct_descent (a_c_struct: POINTER): INTEGER_32
-		external
-			"C [struct <ev_gtk.h>] (GdkFont): EIF_INTEGER"
-		alias
-			"descent"
-		end
-
-	frozen gdk_gcvalues_struct_function (a_c_struct: POINTER): INTEGER_32
-		external
-			"C [struct <ev_gtk.h>] (GdkGCValues): EIF_INTEGER"
-		alias
-			"function"
-		end
-
-	frozen gdk_gcvalues_struct_line_style (a_c_struct: POINTER): INTEGER_32
-		external
-			"C [struct <ev_gtk.h>] (GdkGCValues): EIF_INTEGER"
-		alias
-			"line_style"
-		end
-
-	frozen gdk_gcvalues_struct_line_width (a_c_struct: POINTER): INTEGER_32
-		external
-			"C [struct <ev_gtk.h>] (GdkGCValues): EIF_INTEGER"
-		alias
-			"line_width"
-		end
-
 	frozen gdk_point_struct_x (a_c_struct: POINTER): INTEGER_32
 		external
 			"C [struct <ev_gtk.h>] (GdkPoint): EIF_INTEGER"
@@ -2785,13 +2383,6 @@ feature
 			"y"
 		end
 
-	frozen gdk_visual_struct_type (a_c_struct: POINTER): INTEGER_32
-		external
-			"C [struct <ev_gtk.h>] (GdkVisual): EIF_INTEGER"
-		alias
-			"type"
-		end
-
 	frozen glist_struct_data (a_c_struct: POINTER): POINTER
 		external
 			"C [struct <ev_gtk.h>] (GList): EIF_POINTER"
@@ -2827,46 +2418,34 @@ feature
 			"next"
 		end
 
-	frozen gtk_adjustment_struct_lower (a_c_struct: POINTER): REAL_32
+	frozen gtk_adjustment_get_lower (a_c_struct: POINTER): REAL_32
 		external
-			"C [struct <ev_gtk.h>] (GtkAdjustment): EIF_REAL"
-		alias
-			"lower"
+			"C signature (GtkAdjustment*): gdouble use <ev_gtk.h>"
 		end
 
-	frozen gtk_adjustment_struct_page_increment (a_c_struct: POINTER): REAL_32
+	frozen gtk_adjustment_get_page_increment (a_c_struct: POINTER): REAL_32
 		external
-			"C [struct <ev_gtk.h>] (GtkAdjustment): EIF_REAL"
-		alias
-			"page_increment"
+			"C signature (GtkAdjustment*): gdouble use <ev_gtk.h>"
 		end
 
-	frozen gtk_adjustment_struct_page_size (a_c_struct: POINTER): REAL_32
+	frozen gtk_adjustment_get_page_size (a_c_struct: POINTER): REAL_32
 		external
-			"C [struct <ev_gtk.h>] (GtkAdjustment): EIF_REAL"
-		alias
-			"page_size"
+			"C signature (GtkAdjustment*): gdouble use <ev_gtk.h>"
 		end
 
-	frozen gtk_adjustment_struct_step_increment (a_c_struct: POINTER): REAL_32
+	frozen gtk_adjustment_get_step_increment (a_c_struct: POINTER): REAL_32
 		external
-			"C [struct <ev_gtk.h>] (GtkAdjustment): EIF_REAL"
-		alias
-			"step_increment"
+			"C signature (GtkAdjustment*): gdouble use <ev_gtk.h>"
 		end
 
-	frozen gtk_adjustment_struct_upper (a_c_struct: POINTER): REAL_32
+	frozen gtk_adjustment_get_upper (a_c_struct: POINTER): REAL_32
 		external
-			"C [struct <ev_gtk.h>] (GtkAdjustment): EIF_REAL"
-		alias
-			"upper"
+			"C signature (GtkAdjustment*): gdouble use <ev_gtk.h>"
 		end
 
-	frozen gtk_adjustment_struct_value (a_c_struct: POINTER): REAL_32
+	frozen gtk_adjustment_get_value (a_c_struct: POINTER): REAL_32
 		external
-			"C [struct <ev_gtk.h>] (GtkAdjustment): EIF_REAL"
-		alias
-			"value"
+			"C signature (GtkAdjustment*): gdouble use <ev_gtk.h>"
 		end
 
 	frozen gtk_allocation_struct_height (a_c_struct: POINTER): INTEGER_32
@@ -2925,123 +2504,54 @@ feature
 			"y"
 		end
 
-	frozen gtk_bin_struct_child (a_c_struct: POINTER): POINTER
+	frozen gtk_bin_get_child (a_bin: POINTER): POINTER
 		external
-			"C [struct <ev_gtk.h>] (GtkBin): EIF_POINTER"
-		alias
-			"child"
+			"C signature (GtkBin*): EIF_POINTER use <ev_gtk.h>"
 		end
 
-	frozen gtk_box_struct_container (a_c_struct: POINTER): POINTER
+	frozen gtk_box_get_homogeneous (a_c_struct: POINTER): BOOLEAN
 		external
-			"C [struct <ev_gtk.h>] (GtkBox): EIF_POINTER"
-		alias
-			"&container"
+			"C signature (GtkBox*): gboolean use <ev_gtk.h>"
 		end
 
-	frozen gtk_box_struct_homogeneous (a_c_struct: POINTER): INTEGER_32
+	frozen gtk_box_get_spacing (a_c_struct: POINTER): INTEGER_32
 		external
-			"C [struct <ev_gtk.h>] (GtkBox): EIF_INTEGER"
-		alias
-			"homogeneous"
+			"C signature (GtkBox*): gint use <ev_gtk.h>"
 		end
 
-	frozen gtk_box_struct_spacing (a_c_struct: POINTER): INTEGER_32
+	frozen gtk_check_menu_item_get_active (a_c_struct: POINTER): BOOLEAN
 		external
-			"C [struct <ev_gtk.h>] (GtkBox): EIF_INTEGER"
-		alias
-			"spacing"
+			"C signature (GtkCheckMenuItem*): gboolean use <ev_gtk.h>"
 		end
 
-	frozen gtk_check_menu_item_struct_active (a_c_struct: POINTER): INTEGER_32
+	frozen gtk_container_get_border_width (a_c_struct: POINTER): INTEGER_32
 		external
-			"C [struct <ev_gtk.h>] (GtkCheckMenuItem): EIF_INTEGER"
-		alias
-			"active"
+			"C signature (GtkContainer*): EIF_INTEGER use <ev_gtk.h>"
 		end
 
-	frozen gtk_color_selection_dialog_struct_help_button (a_c_struct: POINTER): POINTER
+	frozen gtk_entry_get_max_length (a_c_struct: POINTER): INTEGER_32
 		external
-			"C [struct <ev_gtk.h>] (GtkColorSelectionDialog): EIF_POINTER"
-		alias
-			"help_button"
+			"C signature (GtkEntry*): EIF_INTEGER use <ev_gtk.h>"
 		end
 
-	frozen gtk_container_struct_border_width (a_c_struct: POINTER): INTEGER_32
+	frozen gtk_label_get_justify (a_c_struct: POINTER): INTEGER_32
 		external
-			"C [struct <ev_gtk.h>] (GtkContainer): EIF_INTEGER"
-		alias
-			"border_width"
+			"C signature (GtkLabel*): EIF_INTEGER use <ev_gtk.h>"
 		end
 
-	frozen gtk_entry_struct_text_max_length (a_c_struct: POINTER): INTEGER_32
+	frozen gtk_label_get_label (a_c_struct: POINTER): POINTER
 		external
-			"C [struct <ev_gtk.h>] (GtkEntry): EIF_INTEGER"
-		alias
-			"text_max_length"
+			"C signature (GtkLabel*): EIF_POINTER use <ev_gtk.h>"
 		end
 
-	frozen gtk_fixed_struct_children (a_c_struct: POINTER): POINTER
+	frozen gtk_notebook_get_tab_pos (a_c_struct: POINTER): INTEGER_32
 		external
-			"C [struct <ev_gtk.h>] (GtkFixed): EIF_POINTER"
-		alias
-			"children"
+			"C signature (GtkNotebook*): EIF_INTEGER use <ev_gtk.h>"
 		end
 
-	frozen gtk_frame_struct_shadow_type (a_c_struct: POINTER): INTEGER_32
+	frozen gtk_widget_get_state_flags (a_gtk_widget: POINTER): INTEGER_32
 		external
-			"C [struct <ev_gtk.h>] (GtkFrame): EIF_INTEGER"
-		alias
-			"shadow_type"
-		end
-
-	frozen gtk_label_struct_jtype (a_c_struct: POINTER): INTEGER_32
-		external
-			"C [struct <ev_gtk.h>] (GtkLabel): EIF_INTEGER"
-		alias
-			"jtype"
-		end
-
-	frozen gtk_label_struct_label (a_c_struct: POINTER): POINTER
-		external
-			"C [struct <ev_gtk.h>] (GtkLabel): EIF_POINTER"
-		alias
-			"label"
-		end
-
-	frozen gtk_notebook_struct_tab_pos (a_c_struct: POINTER): INTEGER_32
-		external
-			"C [struct <ev_gtk.h>] (GtkNotebook): EIF_INTEGER"
-		alias
-			"tab_pos"
-		end
-
-	frozen gtk_object_struct_flags (a_c_struct: POINTER): INTEGER_32
-		external
-			"C [struct <ev_gtk.h>] (GtkObject): EIF_INTEGER"
-		alias
-			"flags"
-		end
-
-	frozen gtk_paned_struct_child1_size (a_c_struct: POINTER): INTEGER_32
-		external
-			"C [struct <ev_gtk.h>] (GtkPaned): EIF_INTEGER"
-		alias
-			"child1_size"
-		end
-
-	frozen gtk_progress_bar_struct_bar_style (a_c_struct: POINTER): INTEGER_32
-		external
-			"C [struct <ev_gtk.h>] (GtkProgressBar): EIF_INTEGER"
-		alias
-			"bar_style"
-		end
-
-	frozen gtk_range_struct_adjustment (a_c_struct: POINTER): POINTER
-		external
-			"C [struct <ev_gtk.h>] (GtkRange): EIF_POINTER"
-		alias
-			"adjustment"
+			"C signature (GtkWidget*): EIF_INTEGER use <ev_gtk.h>"
 		end
 
 	frozen gtk_requisition_struct_height (a_c_struct: POINTER): INTEGER_32
@@ -3056,13 +2566,6 @@ feature
 			"C [struct <ev_gtk.h>] (GtkRequisition): EIF_INTEGER"
 		alias
 			"width"
-		end
-
-	frozen gtk_scrolled_window_struct_vscrollbar (a_c_struct: POINTER): POINTER
-		external
-			"C [struct <ev_gtk.h>] (GtkScrolledWindow): EIF_POINTER"
-		alias
-			"vscrollbar"
 		end
 
 	frozen gtk_style_struct_base (a_c_struct: POINTER): POINTER
@@ -3100,121 +2603,94 @@ feature
 			"text"
 		end
 
-	frozen gtk_tooltips_data_struct_tip_text (a_c_struct: POINTER): POINTER
+	frozen gtk_viewport_get_bin_window (a_c_struct: POINTER): POINTER
 		external
-			"C [struct <ev_gtk.h>] (GtkTooltipsData): EIF_POINTER"
-		alias
-			"tip_text"
+			"C signature (GtkViewport*): EIF_POINTER use <ev_gtk.h>"
 		end
 
-	frozen gtk_tooltips_struct_tip_window (a_c_struct: POINTER): POINTER
-		external
-			"C [struct <ev_gtk.h>] (GtkTooltips): EIF_POINTER"
-		alias
-			"tip_window"
-		end
-
-	frozen gtk_viewport_struct_bin_window (a_c_struct: POINTER): POINTER
-		external
-			"C [struct <ev_gtk.h>] (GtkViewport): EIF_POINTER"
-		alias
-			"bin_window"
-		end
-
-	frozen gtk_widget_aux_info_struct_x (a_c_struct: POINTER): INTEGER_32
+	frozen gtk_widget_aux_info_struct_halign (a_c_struct: POINTER): INTEGER_32
 		external
 			"C [struct <ev_gtk.h>] (GtkWidgetAuxInfo): EIF_INTEGER"
 		alias
-			"x"
+			"halign"
 		end
 
-	frozen gtk_widget_aux_info_struct_y (a_c_struct: POINTER): INTEGER_32
+	frozen gtk_widget_aux_info_struct_valign (a_c_struct: POINTER): INTEGER_32
 		external
 			"C [struct <ev_gtk.h>] (GtkWidgetAuxInfo): EIF_INTEGER"
 		alias
-			"y"
+			"valign"
 		end
 
-	frozen gtk_widget_struct_allocation (a_c_struct: POINTER): POINTER
+	frozen gtk_widget_get_allocation (a_c_struct, a_allocation: POINTER)
 		external
-			"C [struct <ev_gtk.h>] (GtkWidget): EIF_POINTER"
-		alias
-			"&allocation"
+			"C signature (GtkWidget*, GtkAllocation*) use <ev_gtk.h>"
 		end
 
-	frozen gtk_widget_struct_parent (a_c_struct: POINTER): POINTER
+	frozen gtk_widget_get_allocated_width (a_c_struct: POINTER): INTEGER_32
 		external
-			"C [struct <ev_gtk.h>] (GtkWidget): EIF_POINTER"
-		alias
-			"parent"
+			"C signature (GtkWidget*): int use <ev_gtk.h>"
 		end
 
-	frozen gtk_widget_struct_requisition (a_c_struct: POINTER): POINTER
+	frozen gtk_widget_get_allocated_height (a_c_struct: POINTER): INTEGER_32
 		external
-			"C [struct <ev_gtk.h>] (GtkWidget): EIF_POINTER"
-		alias
-			"&requisition"
+			"C signature (GtkWidget*): int use <ev_gtk.h>"
 		end
 
-	frozen gtk_widget_struct_style (a_c_struct: POINTER): POINTER
+	frozen gtk_widget_get_parent (a_c_struct: POINTER): POINTER
 		external
-			"C [struct <ev_gtk.h>] (GtkWidget): EIF_POINTER"
-		alias
-			"style"
+			"C signature (GtkWidget*): EIF_POINTER use <ev_gtk.h>"
 		end
 
-	frozen gtk_widget_struct_window (a_c_struct: POINTER): POINTER
+	frozen gtk_widget_get_style (a_c_struct: POINTER): POINTER
 		external
-			"C [struct <ev_gtk.h>] (GtkWidget): EIF_POINTER"
-		alias
-			"window"
+			"C signature (GtkWidget*): GtkStyle* use <ev_gtk.h>"
 		end
 
-	frozen gtk_window_struct_focus_widget (a_c_struct: POINTER): POINTER
+	frozen gtk_widget_get_window (a_c_struct: POINTER): POINTER
 		external
-			"C [struct <ev_gtk.h>] (GtkWindow): EIF_POINTER"
-		alias
-			"focus_widget"
+			"C signature (GtkWidget*): GdkWindow* use <ev_gtk.h>"
 		end
 
-	frozen gtk_window_struct_title (a_c_struct: POINTER): POINTER
+	frozen gtk_window_get_focus (a_c_struct: POINTER): POINTER
 		external
-			"C [struct <ev_gtk.h>] (GtkWindow): EIF_POINTER"
-		alias
-			"title"
+			"C signature (GtkWindow*): GtkWidget* use <ev_gtk.h>"
 		end
 
-	frozen gtk_window_struct_transient_parent (a_c_struct: POINTER): POINTER
+	frozen gtk_window_get_title (a_c_struct: POINTER): POINTER
 		external
-			"C [struct <ev_gtk.h>] (GtkWindow): EIF_POINTER"
-		alias
-			"transient_parent"
+			"C signature (GtkWindow*): gchar* use <ev_gtk.h>"
 		end
 
-	frozen set_gdk_color_struct_blue (a_c_struct: POINTER; a_blue: INTEGER_32)
+	frozen gtk_window_get_transient_for (a_c_struct: POINTER): POINTER
 		external
-			"C [struct <ev_gtk.h>] (GdkColor, gushort)"
+			"C signature (GtkWindow*): GtkWindow*"
+		end
+
+	frozen set_gdk_rgba_struct_blue (a_c_struct: POINTER; a_blue: REAL_64)
+		external
+			"C [struct <ev_gtk.h>] (GdkRGBA, gdouble)"
 		alias
 			"blue"
 		end
 
-	frozen set_gdk_color_struct_green (a_c_struct: POINTER; a_green: INTEGER_32)
+	frozen set_gdk_rgba_struct_green (a_c_struct: POINTER; a_green: REAL_64)
 		external
-			"C [struct <ev_gtk.h>] (GdkColor, gushort)"
+			"C [struct <ev_gtk.h>] (GdkRGBA, gdouble)"
 		alias
 			"green"
 		end
 
-	frozen set_gdk_color_struct_pixel (a_c_struct: POINTER; a_pixel: INTEGER_32)
+	frozen set_gdk_rgba_struct_alpha (a_c_struct: POINTER; a_alpha: REAL_64)
 		external
-			"C [struct <ev_gtk.h>] (GdkColor, gulong)"
+			"C [struct <ev_gtk.h>] (GdkRGBA, gdouble)"
 		alias
-			"pixel"
+			"alpha"
 		end
 
-	frozen set_gdk_color_struct_red (a_c_struct: POINTER; a_red: INTEGER_32)
+	frozen set_gdk_rgba_struct_red (a_c_struct: POINTER; a_red: REAL_64)
 		external
-			"C [struct <ev_gtk.h>] (GdkColor, gushort)"
+			"C [struct <ev_gtk.h>] (GdkRGBA, gdouble)"
 		alias
 			"red"
 		end
@@ -3296,74 +2772,29 @@ feature
 			"width_inc"
 		end
 
-	frozen set_gtk_adjustment_struct_lower (a_c_struct: POINTER; a_lower: REAL_32)
+	frozen gtk_adjustment_set_lower (a_c_struct: POINTER; a_lower: REAL_32)
 		external
-			"C [struct <ev_gtk.h>] (GtkAdjustment, gfloat)"
-		alias
-			"lower"
+			"C signature (GtkAdjustment*, gdouble) use <ev_gtk.h>"
 		end
 
-	frozen set_gtk_adjustment_struct_page_increment (a_c_struct: POINTER; a_page_increment: REAL_32)
+	frozen gtk_adjustment_set_page_increment (a_c_struct: POINTER; a_page_increment: REAL_32)
 		external
-			"C [struct <ev_gtk.h>] (GtkAdjustment, gfloat)"
-		alias
-			"page_increment"
+			"C signature (GtkAdjustment*, gdouble) use <ev_gtk.h>"
 		end
 
-	frozen set_gtk_adjustment_struct_page_size (a_c_struct: POINTER; a_page_size: REAL_32)
+	frozen gtk_adjustment_set_page_size (a_c_struct: POINTER; a_page_size: REAL_32)
 		external
-			"C [struct <ev_gtk.h>] (GtkAdjustment, gfloat)"
-		alias
-			"page_size"
+			"C signature (GtkAdjustment*, gdouble) use <ev_gtk.h>"
 		end
 
-	frozen set_gtk_adjustment_struct_step_increment (a_c_struct: POINTER; a_step_increment: REAL_32)
+	frozen gtk_adjustment_set_step_increment (a_c_struct: POINTER; a_step_increment: REAL_32)
 		external
-			"C [struct <ev_gtk.h>] (GtkAdjustment, gfloat)"
-		alias
-			"step_increment"
+			"C signature (GtkAdjustment*, gdouble) use <ev_gtk.h>"
 		end
 
-	frozen set_gtk_adjustment_struct_upper (a_c_struct: POINTER; a_upper: REAL_32)
+	frozen gtk_adjustment_set_upper (a_c_struct: POINTER; a_upper: REAL_32)
 		external
-			"C [struct <ev_gtk.h>] (GtkAdjustment, gfloat)"
-		alias
-			"upper"
-		end
-
-	frozen set_gtk_adjustment_struct_value (a_c_struct: POINTER; a_value: REAL_32)
-		external
-			"C [struct <ev_gtk.h>] (GtkAdjustment, gfloat)"
-		alias
-			"value"
-		end
-
-	frozen set_gtk_fixed_struct_children (a_c_struct: POINTER; a_children: POINTER)
-		external
-			"C [struct <ev_gtk.h>] (GtkFixed, GList*)"
-		alias
-			"children"
-		end
-
-	frozen set_gtk_menu_shell_struct_children (a_c_struct: POINTER; a_children: POINTER)
-		external
-			"C [struct <ev_gtk.h>] (GtkMenuShell, GList*)"
-		alias
-			"children"
-		end
-
-	frozen set_gtk_paned_struct_child1_resize (a_c_struct: POINTER; a_child1_resize: INTEGER_32)
-		external
-			"C [struct <ev_gtk.h>] (GtkPaned, guint)"
-		alias
-			"child1_resize"
-		end
-
-	frozen set_gtk_paned_struct_child2_resize (a_c_struct: POINTER; a_child2_resize: INTEGER_32)
-		external
-			"C [struct <ev_gtk.h>] (GtkPaned, guint)"
-		alias
-			"child2_resize"
+			"C signature (GtkAdjustment*, gdouble) use <ev_gtk.h>"
 		end
 
 	frozen c_gdk_rectangle_struct_allocate: POINTER
@@ -3373,18 +2804,11 @@ feature
 			"calloc (sizeof(GdkRectangle), 1)"
 		end
 
-	frozen c_gdk_color_struct_allocate: POINTER
+	frozen c_gdk_rgba_struct_allocate: POINTER
 		external
 			"C [macro <stdlib.h>]"
 		alias
-			"calloc (sizeof(GdkColor), 1)"
-		end
-
-	frozen c_gdk_gcvalues_struct_allocate: POINTER
-		external
-			"C [macro <stdlib.h>]"
-		alias
-			"calloc (sizeof(GdkGCValues), 1)"
+			"calloc (sizeof(GdkRGBA), 1)"
 		end
 
 	frozen c_gdk_geometry_struct_allocate: POINTER
@@ -3395,15 +2819,15 @@ feature
 		end
 
 note
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-		Eiffel Software
-		356 Storke Road, Goleta, CA 93117 USA
-		Telephone 805-685-1006, Fax 805-685-6869
-		Website http://www.eiffel.com
-		Customer support http://support.eiffel.com
-	]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end -- class GTK
 

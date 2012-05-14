@@ -319,1138 +319,1138 @@ feature {EV_ANY_I} -- Externals
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_asciitilde"
+			"GDK_KEY_asciitilde"
 		end
 
 	Key_exclamation_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_exclam"
+			"GDK_KEY_exclam"
 		end
 
 	Key_at_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_at"
+			"GDK_KEY_at"
 		end
 
 	Key_numbersign_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_numbersign"
+			"GDK_KEY_numbersign"
 		end
 
 	Key_dollar_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_dollar"
+			"GDK_KEY_dollar"
 		end
 
 	Key_percent_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_percent"
+			"GDK_KEY_percent"
 		end
 
 	Key_asciicircum_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_asciicircum"
+			"GDK_KEY_asciicircum"
 		end
 
 	Key_ampersand_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_ampersand"
+			"GDK_KEY_ampersand"
 		end
 
 	Key_asterisk_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_asterisk"
+			"GDK_KEY_asterisk"
 		end
 
 	Key_parenleft_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_parenleft"
+			"GDK_KEY_parenleft"
 		end
 
 	Key_parenright_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_parenright"
+			"GDK_KEY_parenright"
 		end
 
 	Key_underscore_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_underscore"
+			"GDK_KEY_underscore"
 		end
 
 	Key_plus_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_plus"
+			"GDK_KEY_plus"
 		end
 
 	Key_colon_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_colon"
+			"GDK_KEY_colon"
 		end
 
 	Key_quotedbl_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_quotedbl"
+			"GDK_KEY_quotedbl"
 		end
 
 	Key_less_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_less"
+			"GDK_KEY_less"
 		end
 
 	Key_greater_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_greater"
+			"GDK_KEY_greater"
 		end
 
 	Key_question_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_question"
+			"GDK_KEY_question"
 		end
 
 	Key_braceleft_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_braceleft"
+			"GDK_KEY_braceleft"
 		end
 
 	Key_braceright_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_braceright"
+			"GDK_KEY_braceright"
 		end
 
 	Key_bar_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_bar"
+			"GDK_KEY_bar"
 		end
 
 	Key_0_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_0"
+			"GDK_KEY_0"
 		end
 
 	frozen Key_1_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_1"
+			"GDK_KEY_1"
 		end
 
 	Key_2_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_2"
+			"GDK_KEY_2"
 		end
 
 	Key_3_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_3"
+			"GDK_KEY_3"
 		end
 
 	Key_4_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_4"
+			"GDK_KEY_4"
 		end
 
 	Key_5_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_5"
+			"GDK_KEY_5"
 		end
 
 	Key_6_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_6"
+			"GDK_KEY_6"
 		end
 
 	Key_7_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_7"
+			"GDK_KEY_7"
 		end
 
 	Key_8_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_8"
+			"GDK_KEY_8"
 		end
 
 	Key_9_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_9"
+			"GDK_KEY_9"
 		end
 
 	Key_numpad_0_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_0"
+			"GDK_KEY_KP_0"
 		end
 
 	Key_numpad_1_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_1"
+			"GDK_KEY_KP_1"
 		end
 
 	Key_numpad_2_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_2"
+			"GDK_KEY_KP_2"
 		end
 
 	Key_numpad_3_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_3"
+			"GDK_KEY_KP_3"
 		end
 
 	Key_numpad_4_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_4"
+			"GDK_KEY_KP_4"
 		end
 
 	Key_numpad_5_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_5"
+			"GDK_KEY_KP_5"
 		end
 
 	Key_numpad_6_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_6"
+			"GDK_KEY_KP_6"
 		end
 
 	Key_numpad_7_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_7"
+			"GDK_KEY_KP_7"
 		end
 
 	Key_numpad_8_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_8"
+			"GDK_KEY_KP_8"
 		end
 
 	Key_numpad_9_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_9"
+			"GDK_KEY_KP_9"
 		end
 
 	Key_numpad_add_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_Add"
+			"GDK_KEY_KP_Add"
 		end
 
 	Key_numpad_divide_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_Divide"
+			"GDK_KEY_KP_Divide"
 		end
 
 	Key_numpad_multiply_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_Multiply"
+			"GDK_KEY_KP_Multiply"
 		end
 
 	Key_num_lock_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Num_Lock"
+			"GDK_KEY_Num_Lock"
 		end
 
 	Key_numpad_subtract_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_Subtract"
+			"GDK_KEY_KP_Subtract"
 		end
 
 	Key_numpad_decimal_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_Decimal"
+			"GDK_KEY_KP_Decimal"
 		end
 
 	Key_f1_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_F1"
+			"GDK_KEY_F1"
 		end
 
 	Key_f2_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_F2"
+			"GDK_KEY_F2"
 		end
 
 	Key_f3_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_F3"
+			"GDK_KEY_F3"
 		end
 
 	Key_f4_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_F4"
+			"GDK_KEY_F4"
 		end
 
 	Key_f5_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_F5"
+			"GDK_KEY_F5"
 		end
 
 	Key_f6_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_F6"
+			"GDK_KEY_F6"
 		end
 
 	Key_f7_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_F7"
+			"GDK_KEY_F7"
 		end
 
 	Key_f8_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_F8"
+			"GDK_KEY_F8"
 		end
 
 	Key_f9_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_F9"
+			"GDK_KEY_F9"
 		end
 
 	Key_f10_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_F10"
+			"GDK_KEY_F10"
 		end
 
 	Key_f11_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_F11"
+			"GDK_KEY_F11"
 		end
 
 	Key_f12_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_F12"
+			"GDK_KEY_F12"
 		end
 
 	Key_space_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_space"
+			"GDK_KEY_space"
 		end
 
 	Key_back_space_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_BackSpace"
+			"GDK_KEY_BackSpace"
 		end
 
 	Key_enter_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Return"
+			"GDK_KEY_Return"
 		end
 
 	Key_kp_enter_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_Enter"
+			"GDK_KEY_KP_Enter"
 		end
 
 	Key_escape_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Escape"
+			"GDK_KEY_Escape"
 		end
 
 	Key_tab_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Tab"
+			"GDK_KEY_Tab"
 		end
 
 	Key_shift_tab_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_ISO_Left_Tab"
+			"GDK_KEY_ISO_Left_Tab"
 		end
 
 	Key_pause_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Pause"
+			"GDK_KEY_Pause"
 		end
 
 	Key_caps_lock_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Caps_Lock"
+			"GDK_KEY_Caps_Lock"
 		end
 
 	Key_scroll_lock_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_F23"
+			"GDK_KEY_F23"
 		end
 
 	Key_comma_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_comma"
+			"GDK_KEY_comma"
 		end
 
 	Key_equal_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_equal"
+			"GDK_KEY_equal"
 		end
 
 	Key_period_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_period"
+			"GDK_KEY_period"
 		end
 
 	Key_semicolon_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_semicolon"
+			"GDK_KEY_semicolon"
 		end
 
 	Key_open_bracket_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_bracketleft"
+			"GDK_KEY_bracketleft"
 		end
 
 	Key_close_bracket_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_bracketright"
+			"GDK_KEY_bracketright"
 		end
 
 	Key_slash_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_slash"
+			"GDK_KEY_slash"
 		end
 
 	Key_backslash_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_backslash"
+			"GDK_KEY_backslash"
 		end
 
 	Key_quote_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_quoteright"
+			"GDK_KEY_quoteright"
 		end
 
 	Key_backquote_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_quoteleft"
+			"GDK_KEY_quoteleft"
 		end
 
 	Key_dash_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_minus"
+			"GDK_KEY_minus"
 		end
 
 	Key_up_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Up"
+			"GDK_KEY_Up"
 		end
 
 	Key_kp_up_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_Up"
+			"GDK_KEY_KP_Up"
 		end
 
 	Key_down_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Down"
+			"GDK_KEY_Down"
 		end
 
 	Key_kp_down_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_Down"
+			"GDK_KEY_KP_Down"
 		end
 
 	Key_left_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Left"
+			"GDK_KEY_Left"
 		end
 
 	Key_kp_left_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_Left"
+			"GDK_KEY_KP_Left"
 		end
 
 	Key_right_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Right"
+			"GDK_KEY_Right"
 		end
 
 	Key_kp_right_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_Right"
+			"GDK_KEY_KP_Right"
 		end
 
 	Key_page_up_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Page_Up"
+			"GDK_KEY_Page_Up"
 		end
 
 	Key_kp_page_up_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_Page_Up"
+			"GDK_KEY_KP_Page_Up"
 		end
 
 	Key_page_down_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Page_Down"
+			"GDK_KEY_Page_Down"
 		end
 
 	Key_kp_page_down_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_Page_Down"
+			"GDK_KEY_KP_Page_Down"
 		end
 
 	Key_home_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Home"
+			"GDK_KEY_Home"
 		end
 
 	Key_kp_home_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_Home"
+			"GDK_KEY_KP_Home"
 		end
 
 	Key_end_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_End"
+			"GDK_KEY_End"
 		end
 
 	Key_kp_end_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_End"
+			"GDK_KEY_KP_End"
 		end
 
 	Key_insert_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Insert"
+			"GDK_KEY_Insert"
 		end
 
 	Key_kp_insert_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_Insert"
+			"GDK_KEY_KP_Insert"
 		end
 
 	Key_delete_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Delete"
+			"GDK_KEY_Delete"
 		end
 
 	Key_kp_delete_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_KP_Delete"
+			"GDK_KEY_KP_Delete"
 		end
 
 	Key_a_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_A"
+			"GDK_KEY_A"
 		end
 
 	Key_b_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_B"
+			"GDK_KEY_B"
 		end
 
 	Key_c_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_C"
+			"GDK_KEY_C"
 		end
 
 	Key_d_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_D"
+			"GDK_KEY_D"
 		end
 
 	Key_e_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_E"
+			"GDK_KEY_E"
 		end
 
 	Key_f_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_F"
+			"GDK_KEY_F"
 		end
 
 	Key_g_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_G"
+			"GDK_KEY_G"
 		end
 
 	Key_h_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_H"
+			"GDK_KEY_H"
 		end
 
 	Key_i_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_I"
+			"GDK_KEY_I"
 		end
 
 	Key_j_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_J"
+			"GDK_KEY_J"
 		end
 
 	Key_k_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_K"
+			"GDK_KEY_K"
 		end
 
 	Key_l_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_L"
+			"GDK_KEY_L"
 		end
 
 	Key_m_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_M"
+			"GDK_KEY_M"
 		end
 
 	Key_n_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_N"
+			"GDK_KEY_N"
 		end
 
 	Key_o_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_O"
+			"GDK_KEY_O"
 		end
 
 	Key_p_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_P"
+			"GDK_KEY_P"
 		end
 
 	Key_q_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Q"
+			"GDK_KEY_Q"
 		end
 
 	Key_r_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_R"
+			"GDK_KEY_R"
 		end
 
 	Key_s_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_S"
+			"GDK_KEY_S"
 		end
 
 	Key_t_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_T"
+			"GDK_KEY_T"
 		end
 
 	Key_u_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_U"
+			"GDK_KEY_U"
 		end
 
 	Key_v_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_V"
+			"GDK_KEY_V"
 		end
 
 	Key_w_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_W"
+			"GDK_KEY_W"
 		end
 
 	Key_x_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_X"
+			"GDK_KEY_X"
 		end
 
 	Key_y_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Y"
+			"GDK_KEY_Y"
 		end
 
 	Key_z_upper_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Z"
+			"GDK_KEY_Z"
 		end
 
 	frozen Key_a_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_a"
+			"GDK_KEY_a"
 		end
 
 	Key_b_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_b"
+			"GDK_KEY_b"
 		end
 
 	Key_c_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_c"
+			"GDK_KEY_c"
 		end
 
 	Key_d_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_d"
+			"GDK_KEY_d"
 		end
 
 	Key_e_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_e"
+			"GDK_KEY_e"
 		end
 
 	Key_f_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_f"
+			"GDK_KEY_f"
 		end
 
 	Key_g_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_g"
+			"GDK_KEY_g"
 		end
 
 	Key_h_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_h"
+			"GDK_KEY_h"
 		end
 
 	Key_i_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_i"
+			"GDK_KEY_i"
 		end
 
 	Key_j_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_j"
+			"GDK_KEY_j"
 		end
 
 	Key_k_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_k"
+			"GDK_KEY_k"
 		end
 
 	Key_l_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_l"
+			"GDK_KEY_l"
 		end
 
 	Key_m_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_m"
+			"GDK_KEY_m"
 		end
 
 	Key_n_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_n"
+			"GDK_KEY_n"
 		end
 
 	Key_o_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_o"
+			"GDK_KEY_o"
 		end
 
 	Key_p_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_p"
+			"GDK_KEY_p"
 		end
 
 	Key_q_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_q"
+			"GDK_KEY_q"
 		end
 
 	Key_r_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_r"
+			"GDK_KEY_r"
 		end
 
 	Key_s_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_s"
+			"GDK_KEY_s"
 		end
 
 	Key_t_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_t"
+			"GDK_KEY_t"
 		end
 
 	Key_u_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_u"
+			"GDK_KEY_u"
 		end
 
 	Key_v_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_v"
+			"GDK_KEY_v"
 		end
 
 	Key_w_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_w"
+			"GDK_KEY_w"
 		end
 
 	Key_x_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_x"
+			"GDK_KEY_x"
 		end
 
 	Key_y_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_y"
+			"GDK_KEY_y"
 		end
 
 	Key_z_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_z"
+			"GDK_KEY_z"
 		end
 
 	Key_shift_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Shift_L"
+			"GDK_KEY_Shift_L"
 		end
 
 	Key_right_shift_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Shift_R"
+			"GDK_KEY_Shift_R"
 		end
 
 	Key_ctrl_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Control_L"
+			"GDK_KEY_Control_L"
 		end
 
 	Key_right_ctrl_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Control_R"
+			"GDK_KEY_Control_R"
 		end
 
 	Key_left_meta_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Meta_L"
+			"GDK_KEY_Meta_L"
 		end
 
 	Key_right_meta_keysym: NATURAL_32
 		external
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
-			"GDK_Meta_R"
+			"GDK_KEY_Meta_R"
 		end
 
 	Key_left_alt_keysym: NATURAL_32
 		external
 			"C macro use <gdk/gdkkeysyms.h>"
 		alias
-			"GDK_Alt_L"
+			"GDK_KEY_Alt_L"
 		end
 
 	Key_right_alt_keysym: NATURAL_32
 		external
 			"C macro use <gdk/gdkkeysyms.h>"
 		alias
-			"GDK_Alt_R"
+			"GDK_KEY_Alt_R"
 		end
 
 	Key_menu_keysym: NATURAL_32
 		external
 			"C macro use <gdk/gdkkeysyms.h>"
 		alias
-			"GDK_Menu"
+			"GDK_KEY_Menu"
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

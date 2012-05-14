@@ -721,7 +721,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			a_vert_sep: INTEGER
 		do
 			a_column_ptr := {GTK2}.gtk_tree_view_get_column (tree_view, 0)
-			a_cell_rend_list := {GTK2}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
+			a_cell_rend_list := {GTK}.gtk_cell_layout_get_cells (a_column_ptr)
 			a_cell_rend := {GTK}.g_list_nth_data (a_cell_rend_list, 0)
 
 			a_gtk_c_str := "vertical-separator"
@@ -774,14 +774,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TREE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_TREE_IMP

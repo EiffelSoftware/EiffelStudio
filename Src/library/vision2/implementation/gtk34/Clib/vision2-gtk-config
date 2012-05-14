@@ -21,7 +21,7 @@ true_val=1
 false_val=0
 
 pkg_config_string="pkg-config"
-gtk_package_string="gtk+-2.0"
+gtk_package_string="gtk+-3.0"
 gmodule_package_string="gmodule-2.0"
 gthread_package_string="gthread-2.0"
 

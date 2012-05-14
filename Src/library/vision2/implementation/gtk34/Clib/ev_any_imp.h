@@ -1,7 +1,7 @@
 /*
 indexing
 	description: "C features of EV_ANY_IMP, see ev_any_imp.e for important notes."
-	date: "$Date: $"
+	date: "$Date: 2012-05-11 14:37:29 -0700 (Fri, 11 May 2012) $"
 	revision: "$Revision: $"
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

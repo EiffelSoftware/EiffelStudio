@@ -1,7 +1,7 @@
 /*
 indexing
 	description: "C features of EV_GTK_CALLBACK_MARSHAL, see ev_callback_marshal.e."
-	date: "$Date: $"
+	date: "$Date: 2012-05-11 14:37:29 -0700 (Fri, 11 May 2012) $"
 	revision: "$Revision: $"
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -21,7 +21,7 @@ indexing
 
 void c_ev_gtk_callback_marshal_init
 	(EIF_REFERENCE, void (*) (
-		EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER)
+		EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER, EIF_POINTER)
 	);
 
 void c_ev_gtk_callback_marshal_destroy ();
@@ -29,18 +29,8 @@ void c_ev_gtk_callback_marshal_destroy ();
 void c_ev_gtk_callback_marshal_set_is_enabled (int);
 
 guint c_ev_gtk_callback_marshal_signal_connect
-	(GtkObject*, const gchar*, EIF_OBJECT, gboolean);
-
-guint c_ev_gtk_callback_marshal_signal_connect_true
-	(GtkObject*, const gchar*, EIF_OBJECT);
-
-int c_ev_gtk_callback_marshal_true_callback (EIF_OBJECT agent);
-
-int c_ev_gtk_callback_marshal_true_event_callback (GtkWidget*, GdkEvent*, EIF_OBJECT);
+	(gpointer, const gchar*, EIF_OBJECT, gboolean);
 
 guint c_ev_gtk_callback_marshal_timeout_connect (gint, EIF_OBJECT);
-
-guint c_ev_gtk_callback_marshal_delete_connect (GtkObject*, EIF_OBJECT);
-
 
 #endif

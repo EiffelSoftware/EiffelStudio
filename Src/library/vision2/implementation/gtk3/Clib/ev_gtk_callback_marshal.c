@@ -21,7 +21,7 @@ indexing
 EIF_OBJECT ev_gtk_callback_marshal_object;
 
 void (*ev_gtk_callback_marshal)
-    (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER, EIF_BOOLEAN*);
+    (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER, EIF_POINTER);
 
 void c_ev_gtk_callback_marshal_init (
     EIF_REFERENCE callback_marshal_object,

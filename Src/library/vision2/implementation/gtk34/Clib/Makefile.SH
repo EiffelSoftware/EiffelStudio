@@ -41,7 +41,7 @@ PLATFORM = $ISE_PLATFORM
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
 
-OBJECTS = gtk_eiffel.o 
+OBJECTS = gtk3_eiffel.o 
 
 VISION_OBJECTS = io_watcher.o ev_any_imp.o ev_c_util.o ev_gtk_callback_marshal.o 
 
@@ -52,7 +52,7 @@ all: $(ALL_OBJECTS)
 	$(MV) $? ../../../spec/$(PLATFORM)/lib
 	$(MAKE) clobber
 
-gtk_eiffel.o: $(VISION_OBJECTS)
+gtk3_eiffel.o: $(VISION_OBJECTS)
 	$(LD) $(LDFLAGS) -r -o $@ $(VISION_OBJECTS)
 
 ########################################################################

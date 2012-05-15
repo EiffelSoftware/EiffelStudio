@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 	redraw
 			-- Redraw the entire area.
 		do
-			redraw_rectangle (0, 0, width, height)
+			{GTK}.gtk_widget_queue_draw (visual_widget)
 		end
 
 	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER)

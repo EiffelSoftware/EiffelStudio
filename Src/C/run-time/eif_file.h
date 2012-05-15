@@ -78,6 +78,17 @@
 extern "C" {
 #endif
 
+/* Let's define the stat structure for our platforms. */
+#ifdef EIF_WINDOWS
+#	ifdef EIF_64_BITS
+#		define rt_stat_buf	struct _stat64
+#	else
+#		define rt_stat_buf	struct _stat64i32
+#	endif
+#else
+#	define rt_stat_buf		struct stat
+#endif
+
 /*
  * Functions declaration.
  */
@@ -117,10 +128,10 @@ RT_LNK EIF_INTEGER file_gw(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER star
 RT_LNK EIF_CHARACTER_8 file_lh(FILE *f);
 RT_LNK void file_chown(char *name, int uid);
 RT_LNK void file_chgrp(char *name, int gid);
-RT_LNK void file_stat(char *path, struct stat *buf);
-RT_LNK int eif_file_stat(char *path, struct stat *buf, int follow);
-RT_LNK EIF_INTEGER file_info(struct stat *buf, int op);
-RT_LNK EIF_BOOLEAN file_eaccess(struct stat *buf, int op);
+RT_LNK void file_stat(char *path, rt_stat_buf *buf);
+RT_LNK int eif_file_stat(char *path, rt_stat_buf *buf, int follow);
+RT_LNK EIF_INTEGER file_info(rt_stat_buf *buf, int op);
+RT_LNK EIF_BOOLEAN file_eaccess(rt_stat_buf *buf, int op);
 RT_LNK EIF_BOOLEAN file_access(char *name, EIF_INTEGER op);
 RT_LNK EIF_BOOLEAN file_exists(char *name);
 RT_LNK EIF_BOOLEAN file_path_exists(char *name);

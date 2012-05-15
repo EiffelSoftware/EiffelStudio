@@ -107,6 +107,20 @@ extern "C" {
 #define F_OK	0
 #endif
 
+/* Let's define the stat function for our platforms. */
+#ifdef EIF_WINDOWS
+#	ifdef EIF_64_BITS
+#		define rt_stat		_stat64
+#		define rt_fstat		_fstat64
+#	else
+#		define rt_stat		_fstat64i32
+#		define rt_fstat		_stat64i32
+#	endif
+#else
+#	define rt_stat			stat
+#	define rt_lstat			lstat
+#	define rt_fstat			fstat
+#endif
 
 #ifdef __cplusplus
 }

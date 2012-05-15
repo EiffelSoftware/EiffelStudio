@@ -235,7 +235,6 @@ feature -- Element change
 			l_tile.copy (a_pixmap)
 			tile_imp ?= l_tile.implementation
 			check tile_imp /= Void end
---			{GTK}.gdk_gc_set_tile (gc, tile_imp.drawable)
 		end
 
 	remove_tile
@@ -419,13 +418,6 @@ feature -- Drawing operations
 
 				{GTK2}.pango_cairo_show_layout (drawable, a_pango_layout)
 
-				--{GTK2}.pango_cairo_update_layout (drawable, a_pango_layout)
-				--{GTK2}.pango_cairo_layout_path (drawable, a_pango_layout)
-
-				--{CAIRO}.cairo_stroke_preserve (drawable)
-				--{CAIRO}.cairo_fill (drawable)
-				--{CAIRO}.cairo_stroke (drawable)
-
 					-- Reset all changed values.
 				if a_width /= -1 then
 					if l_ellipsize_symbol /= default_pointer then
@@ -449,6 +441,8 @@ feature -- Drawing operations
 				end
 
 				{CAIRO}.cairo_restore (drawable)
+
+				update_if_needed
 			end
 		end
 
@@ -534,6 +528,8 @@ feature -- Drawing operations
 				{CAIRO}.cairo_fill (drawable)
 
 				{CAIRO}.cairo_restore (drawable)
+
+				update_if_needed
 			end
 		end
 
@@ -617,11 +613,12 @@ feature -- Drawing operations
 					end
 
 					{CAIRO}.cairo_stroke (drawable)
-					update_if_needed
 
 					if a_width /= a_height then
 						{CAIRO}.cairo_scale (drawable, 1.0, 1.0)
 					end
+
+					update_if_needed
 				end
 			end
 		end
@@ -656,6 +653,7 @@ feature -- Drawing operations
 					{CAIRO}.cairo_close_path (drawable)
 				end
 				{CAIRO}.cairo_stroke (drawable)
+				update_if_needed
 			end
 		end
 

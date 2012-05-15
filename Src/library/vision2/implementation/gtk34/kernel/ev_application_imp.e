@@ -50,13 +50,10 @@ feature {NONE} -- Initialization
 --			put ("localhost:0", "DISPLAY")
 				-- This line may be uncommented to allow for display redirection to another machine for debugging purposes
 
-<<<<<<< .mine
 			--put ("broadway", "GDK_BACKEND")
 
-=======
 			create character_string_buffer.make (4)
 
->>>>>>> .r88715
 			Precursor
 
 			gtk_is_launchable := gtk_init_check

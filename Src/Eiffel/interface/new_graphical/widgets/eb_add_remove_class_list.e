@@ -122,7 +122,7 @@ feature {NONE} -- GUI
 			l_provider.set_group_callback (group_internal)
 			create text_field
 			if has_parent then
-				text_field.set_parent_window ((create {EVS_HELPERS}).widget_top_level_window (parent, False))
+				text_field.set_parent_window ((create {EVS_HELPERS}).widget_top_level_window (parent))
 			end
 			text_field.set_completing_feature (false)
 			text_field.set_completion_possibilities_provider (l_provider)
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

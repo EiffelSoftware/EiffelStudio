@@ -196,7 +196,7 @@ feature {NONE} -- Access
 			if l_result = Void then
 				l_window := dialog.blocking_window
 				if l_window /= Void then
-					l_window := helpers.widget_top_level_window (l_window, True)
+					l_window := helpers.widget_top_level_window (l_window)
 				end
 				if l_window /= Void then
 						-- Attempt to find matching top level window.
@@ -445,7 +445,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

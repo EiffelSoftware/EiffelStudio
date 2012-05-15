@@ -507,7 +507,7 @@ feature {NONE} -- UI widgets
 			l_provider.set_group_callback (agent root_group)
 			create class_under_test
 
-			class_under_test.set_parent_window ((create {EVS_HELPERS}).widget_top_level_window (first_window, False))
+			class_under_test.set_parent_window ((create {EVS_HELPERS}).widget_top_level_window (first_window))
 
 			class_under_test.set_completing_feature (false)
 			class_under_test.set_completion_possibilities_provider (l_provider)
@@ -589,7 +589,7 @@ feature {NONE} -- Query
 			-- <Precursor>
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

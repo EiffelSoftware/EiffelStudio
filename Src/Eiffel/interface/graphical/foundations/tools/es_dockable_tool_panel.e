@@ -107,7 +107,7 @@ feature {NONE} -- Initialization
         			-- We need a widget that is parented to a window so we need to wait until after the
         			-- docking content is attached to the window.
         		do
-		        	if attached {SD_WINDOW} helpers.widget_top_level_window (user_widget, False) as l_window then
+		        	if attached {SD_WINDOW} helpers.widget_top_level_window (user_widget) as l_window then
 		        			-- Only set up for floating windows because the IDE window handles help.
 
 		        			-- Set up help shortcut binding
@@ -1087,7 +1087,7 @@ invariant
     not_is_initialized: is_initializing implies not is_initialized
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

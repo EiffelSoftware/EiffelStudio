@@ -18,78 +18,29 @@ inherit
 			{NONE} all
 		end
 
-feature -- Basic operations
-
-	perform_window_locking_action (a_action: PROCEDURE [ANY, TUPLE]; a_container: EV_CONTAINER)
-			-- Performs an operation locking the user interface.
-			-- Note: If the UI is already locked by another window then locking will be skipped.
-			--
-			-- `a_action': An action to be performed whilst locking any window update.
-			-- `a_container': A container to attempt to locate a parent window for (the parent window will be locked)
-			--                The container can be Void but no locking will occur if it is.
-		require
-			a_action_attached: a_action /= Void
-			not_a_container_is_destroyed: a_container /= Void implies not a_container.is_destroyed
-			a_container_has_parent: a_container /= Void implies a_container.has_parent
-		local
-			l_window: detachable EV_WINDOW
-			l_locked: BOOLEAN
-			retried: BOOLEAN
-		do
-			if not retried then
-				if a_container /= Void then
-					l_window := widget_top_level_window (a_container, False)
-					if l_window /= Void and then not l_window.is_destroyed and then ev_application.locked_window = Void then
-							-- Lock window updates
-						l_window.lock_update
-						l_locked := True
-					end
-				end
-
-				a_action.call ([])
-			end
-
-			if l_locked then
-					-- Unlock window
-				check l_window_attached: l_window /= Void end
-				l_window.unlock_update
-			end
-		ensure
-			ev_application_locked_window_unchanged: ev_application.locked_window = old ev_application.locked_window
-		rescue
-			retried := True
-			retry
-		end
-
 feature -- Query
 
-	widget_top_level_window (a_widget: EV_WIDGET; a_main: BOOLEAN): detachable EV_WINDOW
+	widget_top_level_window (a_widget: EV_WIDGET): detachable EV_WINDOW
 			-- Locates parent window of `a_widget', if the widget has been parented.
 			--
 			-- `a_widget': A widget to locate a top level window for.
-			-- `a_main': True to retrieve the top-most window, which attempts to find the application window.
 		require
 			a_widget_attached: a_widget /= Void
 			not_a_widget_is_destroyed: not a_widget.is_destroyed
 		local
-			l_stop_looking: BOOLEAN
+			l_parent: detachable EV_WIDGET
 		do
-			Result ?= a_widget
-			if a_main and Result /= Void then
-				l_stop_looking := attached {EV_TITLED_WINDOW} Result
-			else
-				l_stop_looking := Result /= Void
-			end
-			if not l_stop_looking then
-				if a_widget.has_parent and then attached a_widget.parent as p then
-					Result := widget_top_level_window (p, a_main)
+				-- Perform a loop rather than recursion that is much slower.
+			from
+				l_parent := a_widget
+			until
+				l_parent = Void or else Result /= Void
+			loop
+				if attached {EV_WINDOW} l_parent as l_window then
+					Result := l_window
 				else
-					if
-						attached {EV_DIALOG} a_widget as l_dialog and then
-						attached l_dialog.blocking_window as w
-					then
-						Result := widget_top_level_window (w, a_main)
-					end
+						-- Go one level up
+					l_parent := l_parent.parent
 				end
 			end
 		end
@@ -102,7 +53,7 @@ feature -- Query
 				attached (create {EV_ENVIRONMENT}).application as l_application and then
 				attached l_application.focused_widget as l_widget
 			then
-				Result := widget_top_level_window (l_widget, False)
+				Result := widget_top_level_window (l_widget)
 			end
 		end
 
@@ -139,12 +90,12 @@ feature -- Screen
 			not_a_window_is_destroyed: not a_window.is_destroyed
 		local
 			l_area: detachable like window_working_area
-			l_screen: SD_SCREEN
+			l_screen: EV_SCREEN
 			l_width: INTEGER
 			l_height: INTEGER
 		do
 			if
-				attached {EV_TITLED_WINDOW} widget_top_level_window (a_window, True) as l_top_window and then
+				attached {EV_TITLED_WINDOW} widget_top_level_window (a_window) as l_top_window and then
 				l_top_window.is_maximized
 			then
 				l_width := l_top_window.client_width + ((l_top_window.width - l_top_window.client_width) / 2).truncated_to_integer
@@ -206,45 +157,6 @@ feature -- Widget
 				i := i + 1
 			end
 		end
-
-	maximum_string_size (a_strings: attached ARRAY [detachable READABLE_STRING_GENERAL]; a_font: detachable EV_FONT): TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]
-			-- Maximum width of a collection of strings
-			--
-			-- `a_strings': An array of string to determine the maximum width for.
-			-- `a_font': The font to use to determine the space requirements.
-			-- `Result': The size in pixels the largest string will require. See {EV_FONT}.string_size for more information.
-		require
-			not_a_string_is_empty: not a_strings.is_empty
-			a_strings_contains_attached_items: not a_strings.has (Void)
-			a_font_attached: a_font /= Void
-		local
-			l_str: detachable READABLE_STRING_GENERAL
-			l_size: like maximum_string_size
-			l_upper, i: INTEGER
-		do
-			from
-				create Result
-				i := a_strings.lower
-				l_upper := a_strings.upper
-			until
-				i > l_upper
-			loop
-				l_str := a_strings [i]
-				if l_str /= Void then
-					if attached {STRING_GENERAL} l_str as l_sg then
-						l_size := a_font.string_size (l_sg)
-					else
-						l_size := a_font.string_size (l_str.as_string_32)
-					end
-					Result.width := Result.width.max (l_size.width)
-					Result.height := Result.height.max (l_size.height)
-					Result.right_offset := Result.right_offset.max (l_size.right_offset)
-					Result.left_offset := Result.left_offset.min (l_size.left_offset)
-				end
-				i := i + 1
-			end
-		end
-
 feature -- Placement
 
 	suggest_pop_up_widget_location_with_size (a_widget: EV_WIDGET; a_screen_x, a_screen_y, a_width, a_height: INTEGER): TUPLE [x, y: INTEGER]
@@ -252,53 +164,34 @@ feature -- Placement
 		require
 			a_widget_attached: a_widget /= Void
 			not_a_widget_is_destroyed: not a_widget.is_destroyed
-			a_widget_has_parent: a_widget.has_parent or attached {EV_WINDOW} a_widget
 			a_width_positive: a_width > 0
 			a_height_positive: a_height > 0
 		local
-			l_current_window: like widget_top_level_window
 			l_top_window: like widget_top_level_window
-			l_area: like window_working_area
-			l_current_area,
 			l_top_area: detachable like window_working_area
 			l_new_x: INTEGER
 			l_new_y: INTEGER
-			l_screen: SD_SCREEN
+			l_screen: EV_SCREEN
 		do
 			create l_screen
-			l_top_window := widget_top_level_window (a_widget, True)
-			l_current_window := widget_top_level_window (a_widget, False)
-			if l_current_window /= Void and l_top_window /= Void then
-				l_current_area := window_working_area (l_current_window)
+			l_top_window := widget_top_level_window (a_widget)
+			if l_top_window /= Void then
 				l_top_area := window_working_area (l_top_window)
 			end
 
-			if l_current_area /= Void and l_top_area /= Void then
-				l_area := l_top_area
-				if l_current_area.x > l_top_area.x then
-						-- Current window area is on the right of the top window
-					if a_screen_x > l_top_area.x + l_top_area.width or a_screen_y > l_top_area.y + l_top_area.height then
-						l_area := l_current_area
-					end
-				else
-						-- Current window area is on the left of the top window
-					if a_screen_x < l_top_area.x or a_screen_y < l_top_area.y then
-						l_area := l_current_area
-					end
-				end
-
+			if l_top_area /= Void then
 					-- Adjust X position
-				if (a_screen_x + a_width) > (l_area.x + l_area.width) then
+				if (a_screen_x + a_width) > (l_top_area.x + l_top_area.width) then
 						-- Out of space, given width
-					l_new_x := 	(l_area.x + l_area.width) - a_width
+					l_new_x := 	(l_top_area.x + l_top_area.width) - a_width
 				else
 					l_new_x := a_screen_x
 				end
 
 					-- Adjust Y position
-				if (a_screen_y + a_height) > (l_area.y + l_area.height) then
+				if (a_screen_y + a_height) > (l_top_area.y + l_top_area.height) then
 						-- Out of space, given height
-					l_new_y := 	(l_area.y + l_area.height) - a_height
+					l_new_y := 	(l_top_area.y + l_top_area.height) - a_height
 				else
 					l_new_y := a_screen_y
 				end
@@ -309,14 +202,15 @@ feature -- Placement
 
 			l_new_x := l_new_x.max (l_screen.virtual_x)
 			l_new_y := l_new_y.max (l_screen.virtual_y)
+
 			Result := [l_new_x, l_new_y]
 		ensure
 			result_attached: Result /= Void
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

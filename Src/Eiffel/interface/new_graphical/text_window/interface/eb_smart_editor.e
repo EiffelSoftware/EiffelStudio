@@ -678,7 +678,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 			Result := Result - 20
 
 			create l_helpers
-			if attached {EV_TITLED_WINDOW} l_helpers.widget_top_level_window (widget, True) as l_window and then l_window.is_maximized then
+			if attached {EV_TITLED_WINDOW} l_helpers.widget_top_level_window (widget) as l_window and then l_window.is_maximized then
 				Result := l_helpers.suggest_pop_up_widget_location_with_size (l_window, Result, 0, list_width, 10).x
 			end
 			Result := Result.max (screen.virtual_left)
@@ -699,7 +699,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 				-- Get y pos of cursor
 			create l_helpers
 
-			if attached {EV_TITLED_WINDOW} l_helpers.widget_top_level_window (widget, True) as l_window and then l_window.is_maximized then
+			if attached {EV_TITLED_WINDOW} l_helpers.widget_top_level_window (widget) as l_window and then l_window.is_maximized then
 				l_height := l_helpers.window_working_area (l_window).height
 			end
 			if l_height = 0 then
@@ -1112,6 +1112,10 @@ feature {NONE} -- Implementation
 			l_displayed: ES_ERROR_DISPLAYER
 			l_error: SYNTAX_ERROR
 		do
+				-- We lock the list because when you double click on a syntax error of an editor
+				-- we don't want to see the UI reflecting the fact we are removing all errors associated
+				-- to that editor and then adding them later (below).
+			event_list.service.lock
 			if event_list.is_service_available then
 					-- Remove any error items associated with the editor
 				event_list.service.prune_event_items (editor_context_cookie)
@@ -1138,6 +1142,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+			event_list.service.unlock
 		end
 
 	complementary_character (c:CHARACTER_32): CHARACTER_32

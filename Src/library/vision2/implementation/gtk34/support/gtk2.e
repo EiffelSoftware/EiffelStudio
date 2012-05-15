@@ -254,13 +254,7 @@ feature -- Externals
 
 	gtk_style_context_list_regions (context: POINTER): POINTER
 		external
-<<<<<<< .mine
 			"C signature (GtkStyleContext*): GList* use <ev_gtk.h>"
-=======
-			"C macro use <ev_gtk.h>"
-		alias
-			"g_main_context_iteration(NULL, FALSE)"
->>>>>>> .r88715
 		end
 
 
@@ -1068,6 +1062,11 @@ feature -- Externals
 		end
 
 	frozen gtk_widget_set_redraw_on_allocate (a_widget: POINTER; redraw_on_allocate: BOOLEAN)
+		external
+			"C signature (GtkWidget*, gboolean) use <ev_gtk.h>"
+		end
+
+	frozen gtk_widget_set_can_default (a_widget: POINTER; a_can_default: BOOLEAN)
 		external
 			"C signature (GtkWidget*, gboolean) use <ev_gtk.h>"
 		end
@@ -2812,6 +2811,11 @@ feature -- Externals
 	frozen gtk_widget_get_modifier_style (a_widget: POINTER): POINTER
 		external
 			"C signature (GtkWidget*): GtkRcStyle* use <ev_gtk.h>"
+		end
+
+	frozen gtk_widget_get_mapped (a_widget: POINTER): BOOLEAN
+		external
+			"C signature (GtkWidget*): gboolean use <ev_gtk.h>"
 		end
 
 	frozen pango_scale: INTEGER_32

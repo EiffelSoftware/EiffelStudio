@@ -51,7 +51,7 @@ while test $# -gt 0; do
 		--object)
 		if [ $needs_object_path = $false_val ]; then
 			needs_object_path=$true_val
-			postfix_path=" $postfix_path $ISE_LIBRARY/library/vision2/spec/$ISE_PLATFORM/lib/gtk_eiffel.o"
+			postfix_path=" $postfix_path $ISE_LIBRARY/library/vision2/spec/$ISE_PLATFORM/lib/gtk3_eiffel.o"
 		fi
 		;;
 		--library)

@@ -86,6 +86,7 @@ feature -- Status setting
 			{GTK}.set_gtk_allocation_struct_height (l_alloc, a_height)
 			{GTK2}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
 			{GTK2}.gtk_widget_size_allocate (l_parent_box, l_alloc)
+			{GTK}.gtk_container_check_resize (container_widget)
 			l_alloc.memory_free
 		end
 

@@ -161,14 +161,14 @@ feature -- Status Setting
 			-- to the default push button.
 		do
 			is_default_push_button := False
-			{GTK3}.gtk_widget_set_can_default (visual_widget, False)
+			{GTK2}.gtk_widget_set_can_default (visual_widget, False)
 		end
 
 	enable_can_default
 			-- Allow the style of the button to be the default push button.
 		do
 			is_default_push_button := True
-			{GTK3}.gtk_widget_set_can_default (visual_widget, True)
+			{GTK2}.gtk_widget_set_can_default (visual_widget, True)
 		end
 
 	set_foreground_color (a_color: EV_COLOR)

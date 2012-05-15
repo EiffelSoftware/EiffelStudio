@@ -54,6 +54,8 @@ inherit
 			set_foreground_color
 		end
 
+	EV_ANY_HANDLER
+
 create
 	make
 

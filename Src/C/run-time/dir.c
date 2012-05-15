@@ -72,7 +72,7 @@ doc:<file name="dir.c" header="eif_dir.h" version="$Id$" summary="Externals for 
 #endif
 
 #include "rt_dir.h"
-#include "rt_file.h" /* %%ss moved from 2 lines above */
+#include "rt_file.h"
 #include "eif_plug.h"
 #include "rt_error.h"
 
@@ -357,16 +357,16 @@ rt_public EIF_BOOLEAN eif_dir_exists(char *name)
 
 #else	/* Unix, Win32, VMS (V7 or later), et. al. */
 
-    /* Test whether file exists or not by checking the return from the stat()
+    /* Test whether file exists or not by checking the return from the `rt_stat'
      * system call, hence letting the kernel run all the tests. Return true
      * if the file exists.
      * Stat is called directly, because failure is allowed here obviously.
      * Test to see if it is really a directory and not a plain text file.
      */
 
-	struct stat buf;            /* Buffer to get file statistics */
+	rt_stat_buf buf;            /* Buffer to get file statistics */
 
-	if (stat(name, &buf) == -1)	/* Attempt to stat file */
+	if (rt_stat (name, &buf) == -1)	/* Attempt to stat file */
 		return (EIF_BOOLEAN) '\0';
 	else
 		return (EIF_BOOLEAN) (S_ISDIR(buf.st_mode) ? '\1' : '\0');
@@ -403,9 +403,9 @@ rt_public EIF_BOOLEAN eif_dir_is_readable(char *name)
 #endif
 
 	int mode;					/* Current mode */
-	struct stat buf;            /* Buffer to get file statistics */
+	rt_stat_buf buf;            /* Buffer to get file statistics */
 
-	stat(name, &buf);			/* Cannot fail (precondition) */
+	rt_stat (name, &buf);			/* Cannot fail (precondition) */
 	mode = buf.st_mode & ST_MODE;
 
 #ifdef HAS_GETEUID
@@ -464,9 +464,9 @@ rt_public EIF_BOOLEAN eif_dir_is_writable(char *name)
 #endif
 
 	int mode;					/* Current mode */
-	struct stat buf;            /* Buffer to get file statistics */
+	rt_stat_buf buf;            /* Buffer to get file statistics */
 
-	stat(name, &buf);			/* Cannot fail (precondition) */
+	rt_stat (name, &buf);			/* Cannot fail (precondition) */
 	mode = buf.st_mode & ST_MODE;
 
 #ifdef HAS_GETEUID
@@ -525,9 +525,9 @@ rt_public EIF_BOOLEAN eif_dir_is_executable(char *name)
 #endif
 
 	int mode;					/* Current mode */
-	struct stat buf;            /* Buffer to get file statistics */
+	rt_stat_buf buf;            /* Buffer to get file statistics */
 
-	stat(name, &buf);			/* Cannot fail (precondition) */
+	rt_stat (name, &buf);			/* Cannot fail (precondition) */
 	mode = buf.st_mode & ST_MODE;
 
 #ifdef HAS_GETEUID
@@ -572,7 +572,7 @@ rt_public void eif_dir_delete(char *name)
 {
 		/* Delete directory `name' */
 
-	struct stat buf;				/* File statistics */
+	rt_stat_buf buf;				/* File statistics */
 	int status;						/* Status from system call */
 
 #ifdef EIF_VMS

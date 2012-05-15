@@ -447,7 +447,7 @@ rt_public void file_flush (FILE *fp)
 
 rt_public  EIF_INTEGER eif_file_size (FILE *fp)
 {
-	struct stat buf;
+	rt_stat_buf buf;
 #ifdef EIF_VMSxxx
 	int current_pos;
 	int fd;
@@ -474,8 +474,9 @@ rt_public  EIF_INTEGER eif_file_size (FILE *fp)
 	}
 #endif
 
-	if (fstat (fileno(fp), &buf) == -1)
+	if (rt_fstat (fileno(fp), &buf) == -1)
 		esys();		/* An error occurred: raise exception */
+		/* FIXME: This code should be upgraded to use 64-bit */
 	return (EIF_INTEGER) buf.st_size;
 }
 
@@ -920,7 +921,7 @@ rt_public void file_chown(char *name, int uid)
 
 	int gid;					/* Current Group ID */
 	int status;					/* System call status */
-	struct stat buf;			/* Buffer to get file statistics */
+	rt_stat_buf buf;			/* Buffer to get file statistics */
 	
 	file_stat(name, &buf);
 	gid = buf.st_gid;					/* Get GID on file */
@@ -936,7 +937,7 @@ rt_public void file_chgrp(char *name, int gid)
 
 	int uid;					/* Current Owner ID */
 	int status;					/* System call status */
-	struct stat buf;			/* Buffer to get file statistics */
+	rt_stat_buf buf;			/* Buffer to get file statistics */
 	
 	file_stat(name, &buf);
 	uid = buf.st_uid;					/* Get UID on file */
@@ -949,31 +950,31 @@ rt_public void file_chgrp(char *name, int gid)
 doc:	<routine name="eif_file_stat" return_type="int" export="public">
 doc:		<summary>Query information about a file. If `follow' is non-zero then it tries to follow the symbolic link, otherwise it doesn't.</>
 doc:		<param name="path" type="char *">Name of the file we need info.</param>
-doc:		<param name="buf" type="struct stat *">Buffer collecting the info about the file.</param>
+doc:		<param name="buf" type="rt_stat_buf *">Buffer collecting the info about the file.</param>
 doc:		<param name="follow" type="int">Should we follow symbolic links?</param>
 doc:		<return>0 if it succeeds, -1 otherwise. Upon failure `errno' is set with the reason code.</return>
 doc:		<thread_safety>Re-entrant</thread_safety>
 doc:	</routine>
 */
-rt_public int eif_file_stat (char *path, struct stat *buf, int follow) {
+rt_public int eif_file_stat (char *path, rt_stat_buf *buf, int follow) {
 	int status;			/* System call status */
 	
 	for (;;) {
 		errno = 0;						/* Reset error condition */
 #ifdef HAS_LSTAT
-		status = lstat(path, buf);
+		status = rt_lstat(path, buf);
 		if ((status == 0) && (follow) && (S_ISLNK(buf->st_mode))) {
 				/* We found a file which is a symbolic link and we are asked to
 				 * follow the link to fetch properties on the link location.
-				 * We call `stat' to make sure the link is valid. It is going to
+				 * We call `rt_stat' to make sure the link is valid. It is going to
 				 * slow down current call by stating twice the info, but this
 				 * case is quite rare and there is a benefit in using `lstat'
-				 * over `stat' the first time as more than 90% of the files
+				 * over `rt_stat' the first time as more than 90% of the files
 				 * we stat are not symlink. */
-			status = stat (path, buf);
+			status = rt_stat (path, buf);
 		}
 #else
-		status = stat(path, buf);		/* Get file statistics */
+		status = rt_stat (path, buf);		/* Get file statistics */
 #endif
 		if ((status == -1) && (errno == EINTR)) {
 				/* Call was interrupted by a signal we re-issue it. */
@@ -988,7 +989,7 @@ rt_public int eif_file_stat (char *path, struct stat *buf, int follow) {
 	return status;
 }
 
-rt_public void file_stat (char *path, struct stat *buf)
+rt_public void file_stat (char *path, rt_stat_buf *buf)
            				/* Path name */
                  		/* Structure to fill in */
 {
@@ -998,7 +999,7 @@ rt_public void file_stat (char *path, struct stat *buf)
 	}
 }
 
-rt_public EIF_INTEGER file_info (struct stat *buf, int op)
+rt_public EIF_INTEGER file_info (rt_stat_buf *buf, int op)
 {
 	/* Perform the field dereferencing from the appropriate stat structure,
 	 * which Eiffel cannot do directly.
@@ -1023,12 +1024,16 @@ rt_public EIF_INTEGER file_info (struct stat *buf, int op)
 	case 5:	/* GID of file */
 		return (EIF_INTEGER) buf->st_gid;
 	case 6:	/* Size of file, in bytes */
+			/* FIXME: This code should be upgraded to use 64-bit */
 		return (EIF_INTEGER) buf->st_size;
 	case 7:	/* Last modification time on file */
+			/* FIXME: This code should be upgraded to use 64-bit */
 		return (EIF_INTEGER) buf->st_mtime;
 	case 8:	/* Last access made on file */
+			/* FIXME: This code should be upgraded to use 64-bit */
 		return (EIF_INTEGER) buf->st_atime;
 	case 9:	/* Last status change */
+			/* FIXME: This code should be upgraded to use 64-bit */
 		return (EIF_INTEGER) buf->st_ctime;
 	case 10: /* Number of links */
 		return (EIF_INTEGER) buf->st_nlink;
@@ -1059,10 +1064,10 @@ rt_public EIF_INTEGER file_info (struct stat *buf, int op)
 	return 0; /* to avoid a warning */
 }
 
-rt_public EIF_BOOLEAN file_eaccess(struct stat *buf, int op)
+rt_public EIF_BOOLEAN file_eaccess(rt_stat_buf *buf, int op)
 {
 	/* Check file permissions using effective UID and effective GID. The
-	 * current permission mode is held in the st_mode field of the stat()
+	 * current permission mode is held in the st_mode field of the `rt_stat_buf'
 	 * buffer structure `buf'.
 	 */
 
@@ -1207,7 +1212,7 @@ rt_public EIF_BOOLEAN file_exists(char *name)
 	 */
 
 	int status;					/* System call status */
-	struct stat buf;			/* Buffer to get file statistics */
+	rt_stat_buf buf;			/* Buffer to get file statistics */
 
 	status = eif_file_stat (name, &buf, 1);
 	
@@ -1216,8 +1221,7 @@ rt_public EIF_BOOLEAN file_exists(char *name)
 			/* If the file is larger than what our file routines can handle
 			 * it does not mean that the file does not exist. It does but we
 			 * cannot handle it.
-			 * This is needed to be able to check existence of file bigger
-			 * than 2GB on Solaris.
+			 * This is needed to be able to check existence of file bigger than 2GB.
 			 */
 		return (errno == EOVERFLOW ? EIF_TRUE : EIF_FALSE);
 	} else {
@@ -1235,7 +1239,7 @@ rt_public EIF_BOOLEAN file_path_exists(char *name)
 	 */
 
 	int status;
-	struct stat buf;			/* Buffer to get file statistics */
+	rt_stat_buf buf;			/* Buffer to get file statistics */
 
 	status = eif_file_stat (name, &buf, 0);
 	
@@ -1244,8 +1248,7 @@ rt_public EIF_BOOLEAN file_path_exists(char *name)
 			/* If the file is larger than what our file routines can handle
 			 * it does not mean that the file does not exist. It does but we
 			 * cannot handle it.
-			 * This is needed to be able to check existence of file bigger
-			 * than 2GB on Solaris.
+			 * This is needed to be able to check existence of file bigger than 2GB.
 			 */
 		return (errno == EOVERFLOW ? EIF_TRUE : EIF_FALSE);
 	} else {
@@ -1397,7 +1400,7 @@ rt_public void file_unlink(char *name)
 {
 	/* Delete file or directory `name' */
 
-	struct stat buf;				/* File statistics */
+	rt_stat_buf buf;				/* File statistics */
 	int status;						/* Status from system call */
 
 		/* No need to follow links since `unlink' does not follow them anyway. */
@@ -1439,7 +1442,7 @@ rt_public void file_utime(char *name, time_t stamp, int how)
 	 */
 
 	struct utimbuf tp;	/* Time array */
-	struct stat buf;	/* File statistics */
+	rt_stat_buf buf;	/* File statistics */
 	int status;			/* System call status */
 
 	if (how < 2) {				/* Need to fetch time from inode */
@@ -1475,7 +1478,7 @@ rt_public void file_perm(char *name, char *who, char *what, int flag)
 	 */
 
 	int fmode;					/* File mode to be altered */
-	struct stat buf;			/* File statistics */
+	rt_stat_buf buf;			/* File statistics */
 
 		/* We need to follow links since `chmod' does follow them to change the permissions. */
 	if (eif_file_stat(name, &buf, 1)) {
@@ -1646,7 +1649,7 @@ rt_public EIF_INTEGER stat_size(void)
 	 * structure.
 	 */
 
-	return (EIF_INTEGER) sizeof(struct stat);
+	return (EIF_INTEGER) sizeof(rt_stat_buf);
 }
 
 rt_public EIF_BOOLEAN file_creatable(char *path, EIF_INTEGER length)
@@ -1657,12 +1660,12 @@ rt_public EIF_BOOLEAN file_creatable(char *path, EIF_INTEGER length)
 	     VMS: **TBS** (on VMS, there can be an unwritable file because a new version is created)
 	 */
 
-	struct stat buf;			/* Buffer to get parent directory statistics */
+	rt_stat_buf buf;			/* Buffer to get parent directory statistics */
 	char *temp = NULL;
 	char *ptr;
 
 #ifdef EIF_VMS
-	/* You can't do a stat() on a directory under VMS
+	/* You can't do a `rt_stat' on a directory under VMS
 	 * Just return true for now, fix this later!
 	 */
 	return (EIF_BOOLEAN) '\1';

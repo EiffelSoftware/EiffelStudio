@@ -365,12 +365,12 @@ feature -- Status report
 		local
 			l_win: detachable EV_WINDOW_IMP
 		do
-			Result := {GTK3}.gtk_widget_get_mapped (c_object)
+			Result := {GTK2}.gtk_widget_get_mapped (c_object)
 				-- If Current is shown, let's check that it's top parent window is shown too.
 			if Result then
 				l_win := top_level_window_imp
 				if l_win /= Void then
-					Result := {GTK3}.gtk_widget_get_mapped (l_win.c_object)
+					Result := {GTK2}.gtk_widget_get_mapped (l_win.c_object)
 				end
 			end
 		end

@@ -80,7 +80,7 @@ feature {NONE} -- User interface initialization
 				do
 					ia_widget.set_completion_possibilities_provider (class_completion_provider)
 					ia_widget.possibilities_provider.set_code_completable (ia_widget)
-					ia_widget.set_parent_window (helpers.widget_top_level_window (ia_widget, False))
+					ia_widget.set_parent_window (helpers.widget_top_level_window (ia_widget))
 				end (l_completion_widget))
 
 			create class_drop_down.make (l_completion_widget, agent is_valid_identifier (?, False), agent {attached STRING_32}.as_upper)
@@ -401,7 +401,7 @@ feature {NONE} -- Internationalization
 	l_feature: STRING = "Feature"
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

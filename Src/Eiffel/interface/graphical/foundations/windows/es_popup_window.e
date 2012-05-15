@@ -335,7 +335,7 @@ feature -- Basic operations
 			a_mouse_x_big_enough: a_mouse_x >= -1
 			a_mouse_y_big_enough: a_mouse_y >= -1
 		local
-			l_screen: SD_SCREEN
+			l_screen: EV_SCREEN
 		do
 			requested_x_position := a_x
 			requested_y_position := a_y
@@ -387,7 +387,7 @@ feature -- Basic operations
 			a_window_is_displayed: a_window.is_displayed
 			a_window_is_detroyed: not a_window.is_destroyed
 		local
-			l_screen: SD_SCREEN
+			l_screen: EV_SCREEN
 		do
 			is_committed_on_closed := False
 
@@ -737,7 +737,7 @@ feature {NONE} -- Action handlers
 				if l_in_window /= has_mouse_pointer then
 					if l_in_window and a_widget /= Void then
 							-- Ensure we are processing this window!
-						l_in_window := helpers.widget_top_level_window (a_widget, False) = popup_window
+						l_in_window := helpers.widget_top_level_window (a_widget) = popup_window
 					end
 
 					if l_in_window then
@@ -809,7 +809,7 @@ invariant
 	border_widget_attached: has_border implies border_widget /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -72,7 +72,6 @@ feature {NONE} -- Initialization
             -- <Precursor>
         local
         	l_sp_info: TUPLE [x, y, width, height: INTEGER]
---        	l_screen: SD_SCREEN
         	l_titled_window: EV_WINDOW_ACTION_SEQUENCES
         do
 			dialog.set_icon_pixmap (icon)
@@ -118,13 +117,12 @@ feature {NONE} -- Initialization
 	       				-- Hook up close action to store session size/position data
 	       			register_action (hide_actions, (agent (a_ia_session: SESSION_I)
 	       				local
-							l_screen: SD_SCREEN
+							l_screen: EV_SCREEN
 	       				do
 	       					if is_size_and_position_remembered then
 	       							-- Only persist data if a cancel button wasn't selected
 		       					if a_ia_session.is_interface_usable then
 		       							-- Store session data
-		       							-- FIXME: should not be max (0) ... but using EB_STUDIO_SCREEN.virtual_left
 									create l_screen
 									a_ia_session.set_value ([dialog.x_position.max (l_screen.virtual_left), dialog.y_position.max (0), dialog.width, dialog.height], dialog_session_id)
 		       					end
@@ -299,7 +297,7 @@ feature {NONE} -- Access
 				if is_modal then
 					l_window := dialog.blocking_window
 					if l_window /= Void then
-						l_window := helpers.widget_top_level_window (l_window, True)
+						l_window := helpers.widget_top_level_window (l_window)
 					end
 				end
 				if l_window /= Void then
@@ -1118,7 +1116,7 @@ invariant
 	button_actions_attached: button_actions /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

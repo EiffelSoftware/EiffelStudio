@@ -72,7 +72,7 @@ feature {NONE} -- Access
 			is_initialized: is_initialized
 			widget_has_parent: widget.has_parent
 		do
-			Result := helpers.widget_top_level_window (widget, False)
+			Result := helpers.widget_top_level_window (widget)
 		ensure
 			not_result_is_destroyed: Result /= Void implies not Result.is_destroyed
 		end
@@ -258,7 +258,7 @@ feature {NONE} -- Factory
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

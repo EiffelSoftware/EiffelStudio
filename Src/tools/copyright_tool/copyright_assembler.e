@@ -13,6 +13,8 @@ inherit
 
 	INTERNAL_COMPILER_STRING_EXPORTER
 
+	SHARED_ERROR_HANDLER
+
 create
 	make
 
@@ -89,7 +91,7 @@ feature -- Basic operations
 				file.close
 				text_mode := file_string.has ('%R')
 				eiffel_parser.reset
-				eiffel_parser.parse_class_from_string (file_string, Void, Void)
+				parse_eiffel_class (eiffel_parser, file_string)
 				if eiffel_parser.error_count > 0 then
 					init_error := True
 				else
@@ -109,7 +111,7 @@ feature -- Basic operations
 						text.replace_substring_all ("%N", "%R%N")
 					end
 					eiffel_parser.reset
-					eiffel_parser.parse_class_from_string (text, Void, Void)
+					parse_eiffel_class (eiffel_parser, text)
 					if eiffel_parser.error_count > 0 then
 						parse_failed := True
 					end
@@ -119,6 +121,36 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
+
+	parse_eiffel_class (a_parser: EIFFEL_PARSER; a_buffer: STRING)
+			-- Using a parser, parse our code using different parser mode, to ensure that we can
+			-- indeed convert any kind of Eiffel classes.
+		require
+			a_parser_not_void: a_parser /= Void
+			a_buffer_not_void: a_buffer /= Void
+		do
+			error_handler.wipe_out
+			a_parser.set_syntax_version ({EIFFEL_PARSER}.Provisional_syntax)
+			a_parser.parse_class_from_string (a_buffer, Void, Void)
+			if error_handler.has_error then
+				error_handler.wipe_out
+					-- There was an error, let's try to see if the code is using a different syntax.
+				a_parser.set_syntax_version ({EIFFEL_PARSER}.obsolete_syntax)
+				a_parser.parse_class_from_string (a_buffer, Void, Void)
+				if error_handler.has_error then
+					error_handler.wipe_out
+						-- There was an error, let's try to see if the code is using a different syntax.
+					a_parser.set_syntax_version ({EIFFEL_PARSER}.Transitional_syntax)
+					a_parser.parse_class_from_string (a_buffer, Void, Void)
+					if error_handler.has_error then
+						error_handler.wipe_out
+						-- There was an error, let's try to see if the code is using a different syntax.
+						a_parser.set_syntax_version ({EIFFEL_PARSER}.Ecma_syntax)
+						a_parser.parse_class_from_string (a_buffer, Void, Void)
+					end
+				end
+			end
+		end
 
 	check_file: BOOLEAN
 			-- Check if the file is valid.
@@ -144,7 +176,7 @@ invariant
 		copyright_not_void: copyright /= Void
 		a_file_not_void: file /= Void
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

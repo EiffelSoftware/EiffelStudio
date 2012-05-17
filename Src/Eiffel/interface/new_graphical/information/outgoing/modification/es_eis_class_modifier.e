@@ -28,7 +28,7 @@ feature -- Modification
 		local
 			l_entry: EIS_ENTRY
 		do
-			create l_entry.make ("Unnamed", Void, Void, Void, id_solution.id_of_class (context_class.config_class), Void)
+			l_entry := entry_factory.create_default_entry (id_solution.id_of_class (context_class.config_class))
 			write_class_entry (l_entry)
 			last_create_entry := l_entry
 		ensure
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

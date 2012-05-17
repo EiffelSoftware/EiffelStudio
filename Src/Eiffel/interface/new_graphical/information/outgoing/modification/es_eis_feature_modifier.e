@@ -28,7 +28,7 @@ feature -- Modification: Feature
 		local
 			l_entry: EIS_ENTRY
 		do
-			create l_entry.make ("Unnamed", Void, Void, Void, id_solution.id_of_feature (context_feature), Void)
+			l_entry := entry_factory.create_default_entry (id_solution.id_of_feature (context_feature))
 			write_feature_entry (l_entry)
 			last_created_entry := l_entry
 		ensure

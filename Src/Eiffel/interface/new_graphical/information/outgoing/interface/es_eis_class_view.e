@@ -159,7 +159,7 @@ feature -- Operation
 						l_selected_rows.forth
 					end
 					if l_removed then
-						refresh_grid_without_sorting
+						rebuild_and_refresh_grid
 						update_tree_item
 					end
 				end

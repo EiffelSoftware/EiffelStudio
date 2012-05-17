@@ -108,6 +108,7 @@ feature -- Operation
 			wipe_out
 			setup_base_grid
 			setup_grid_from_component
+			eis_grid.request_columns_auto_resizing
 		end
 
 	wipe_out
@@ -514,13 +515,12 @@ feature {NONE} -- Events
 				end
 			elseif a_row = eis_grid.row_count and then new_entry_possible then
 					-- New entry item in the last row.
-				if a_column = column_name then
+				if a_column = column_target then
 					create {EV_GRID_LABEL_ITEM}Result.make_with_text ("...")
 				else
 					create {EV_GRID_LABEL_ITEM}Result.make_with_text ("")
 				end
 			end
-			eis_grid.request_columns_auto_resizing
 			if Result = Void then
 				create Result
 			end

@@ -39,6 +39,10 @@ feature -- Access
 
 	space: CHARACTER = ' '
 
+	colon: STRING = ": "
+
+	empty_string: STRING = "%"%""
+
 feature -- Built in variables
 
 	target_name_var_name: STRING_8 = "target_name"

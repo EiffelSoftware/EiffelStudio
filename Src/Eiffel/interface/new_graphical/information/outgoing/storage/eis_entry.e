@@ -177,49 +177,12 @@ feature -- Comparison
 			-- <precursor>
 			-- Do not compare ids.
 		do
-				-- Compare name
-			Result := not ((name = Void) xor (other.name = Void))
-			if Result then
-				if name /= Void then
-					Result := string_general_is_caseless_equal (name, other.name)
-				end
-				if Result then
-						-- Compare source
-					Result := not ((source = Void) xor (other.source = Void))
-					if Result then
-						if source /= Void then
-							Result := string_general_is_caseless_equal (source, other.source)
-						end
-						if Result then
-								-- Compare protocol
-							Result := not ((protocol = Void) xor (other.protocol = Void))
-							if Result then
-								if protocol /= Void then
-									Result := string_general_is_caseless_equal (protocol, other.protocol)
-								end
-								if Result then
-										-- Compare tags
-									Result := not ((tags = Void) xor (other.tags = Void))
-									if Result then
-										if tags /= Void then
-											Result := string_general_is_caseless_equal (tags_as_string, other.tags_as_string)
-										end
-										if Result then
-												-- Compare parameters
-											Result := not ((parameters = Void) xor (other.parameters = Void))
-											if Result then
-												if parameters /= Void then
-													Result := string_general_is_caseless_equal (parameters_as_string, other.parameters_as_string)
-												end
-											end
-										end
-									end
-								end
-							end
-						end
-					end
-				end
-			end
+			Result :=
+				same_string_attribute (name, other.name) and then
+				same_string_attribute (source, other.source) and then
+				same_string_attribute (protocol, other.protocol) and then
+				same_string_attribute (tags_as_string, other.tags_as_string) and then
+				same_string_attribute (parameters_as_string, other.parameters_as_string)
 		end
 
 feature -- Hashable
@@ -249,6 +212,20 @@ feature -- Hashable
 				end
 				Result := l_string.hash_code
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	same_string_attribute (a_str, a_other: detachable READABLE_STRING_GENERAL): BOOLEAN
+			-- Same string attribute of the entry?
+			-- The same as `string_general_is_caseless_equal', except that
+			-- we treat Void the same as an empty string.
+		do
+			Result :=
+				(a_str = Void and a_other = Void) or else
+				(attached a_str as l_str and then l_str.is_empty and then a_other = Void) or else
+				(attached a_other as l_other and then l_other.is_empty and then a_str = Void) or else
+				(attached a_str as l_str and then attached a_other as l_other and then string_general_is_caseless_equal (l_str, l_other))
 		end
 
 feature {NONE} -- Hash code

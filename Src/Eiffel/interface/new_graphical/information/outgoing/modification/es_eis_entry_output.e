@@ -24,28 +24,30 @@ feature -- Operation
 		local
 			l_output: STRING_32
 			l_comma_needed: BOOLEAN
+			l_count: INTEGER
 		do
 			if not is_for_conf then
 				create l_output.make_from_string ({ES_EIS_TOKENS}.eis_string)
-				l_output.append (": ")
-				if a_entry.name /= Void then
-					l_output.append (quoted_string ({ES_EIS_TOKENS}.name_string.as_string_32 + {ES_EIS_TOKENS}.value_assignment + a_entry.name))
+				l_output.append ({ES_EIS_TOKENS}.colon)
+				l_count := l_output.count
+				if attached a_entry.name as l_name and then not l_name.is_empty then
+					l_output.append (quoted_string ({ES_EIS_TOKENS}.name_string.as_string_32 + {ES_EIS_TOKENS}.value_assignment + l_name))
 					l_comma_needed := True
 				end
-				if a_entry.protocol /= Void then
+				if attached a_entry.protocol as l_protocol and then not l_protocol.is_empty then
 					if l_comma_needed then
 						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
 						l_output.append_character ({ES_EIS_TOKENS}.space)
 					end
-					l_output.append (quoted_string ({ES_EIS_TOKENS}.protocol_string.as_string_32 + {ES_EIS_TOKENS}.value_assignment + a_entry.protocol))
+					l_output.append (quoted_string ({ES_EIS_TOKENS}.protocol_string.as_string_32 + {ES_EIS_TOKENS}.value_assignment + l_protocol))
 					l_comma_needed := True
 				end
-				if a_entry.source /= Void then
+				if attached a_entry.source as l_source and then not l_source.is_empty then
 					if l_comma_needed then
 						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
 						l_output.append_character ({ES_EIS_TOKENS}.space)
 					end
-					l_output.append (quoted_string ({ES_EIS_TOKENS}.source_string.as_string_32 + {ES_EIS_TOKENS}.value_assignment + a_entry.source))
+					l_output.append (quoted_string ({ES_EIS_TOKENS}.source_string.as_string_32 + {ES_EIS_TOKENS}.value_assignment + l_source))
 					l_comma_needed := True
 				end
 				if a_entry.tags /= Void and then not a_entry.tags.is_empty then
@@ -73,16 +75,21 @@ feature -- Operation
 					end
 					l_output.append (parameters_as_code (a_entry))
 				end
+
+					-- Nothing has been added, we need to complete the syntax
+				if l_output.count = l_count then
+					l_output.append ({ES_EIS_TOKENS}.empty_string)
+				end
 			else
 				create last_output_conf.make ({ES_EIS_TOKENS}.eis_string.as_lower)
-				if a_entry.name /= Void then
-					last_output_conf.add_attribute ({ES_EIS_TOKENS}.name_string, a_entry.name)
+				if attached a_entry.name as l_name and then not l_name.is_empty then
+					last_output_conf.add_attribute ({ES_EIS_TOKENS}.name_string, l_name)
 				end
-				if a_entry.protocol /= Void then
-					last_output_conf.add_attribute ({ES_EIS_TOKENS}.protocol_string, a_entry.protocol)
+				if attached a_entry.protocol as l_protocol and then not l_protocol.is_empty then
+					last_output_conf.add_attribute ({ES_EIS_TOKENS}.protocol_string, l_protocol)
 				end
-				if a_entry.source /= Void then
-					last_output_conf.add_attribute ({ES_EIS_TOKENS}.source_string, a_entry.source)
+				if attached a_entry.source as l_source and then not l_source.is_empty then
+					last_output_conf.add_attribute ({ES_EIS_TOKENS}.source_string, l_source)
 				end
 				if a_entry.tags /= Void and then not a_entry.tags.is_empty then
 					last_output_conf.add_attribute ({ES_EIS_TOKENS}.tag_string, tags_as_code (a_entry))
@@ -220,7 +227,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

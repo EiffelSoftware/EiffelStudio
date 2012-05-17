@@ -149,6 +149,9 @@ feature -- Element change
 					date_server.put (a_date, a_component_id)
 				end
 
+					-- Inform observers.
+				on_entry_registered (a_entry, a_component_id)
+
 				save_needed := True
 			end
 		end
@@ -191,6 +194,9 @@ feature -- Element change
 				end
 
 					-- No need to syncronize the date server.
+
+					-- Inform observers.
+				on_entry_deregistered (a_entry, a_component_id)
 
 				save_needed := True
 			end

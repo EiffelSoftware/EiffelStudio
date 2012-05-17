@@ -63,6 +63,9 @@ feature -- Access
 		deferred
 		end
 
+	associated_pixmap: EV_PIXMAP
+			-- The pixmap associated to the data represented by the item
+
 feature -- Status Setting
 
 	set_pebble (a_pebble: like pebble)
@@ -179,7 +182,7 @@ feature {NONE} -- Implementation
 			-- `pointer_press_action' handler
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

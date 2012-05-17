@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 			set_accept_cursor (cursors.cur_cluster)
 			set_deny_cursor (cursors.cur_x_cluster)
 			set_pixmap (an_icon)
+			associated_pixmap := an_icon
 			pointer_button_press_actions.extend (agent register_pressed_item)
 		end
 
@@ -50,7 +51,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

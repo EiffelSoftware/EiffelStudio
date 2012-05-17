@@ -8382,6 +8382,26 @@ feature -- Icons
 			information_edit_auto_node_icon_buffer_attached: Result /= Void
 		end
 
+	frozen information_with_info_sign_icon: EV_PIXMAP
+			-- Access to 'with info sign' pixmap.
+		require
+			has_named_icon: has_named_icon (information_with_info_sign_name)
+		once
+			Result := named_icon (information_with_info_sign_name)
+		ensure
+			information_with_info_sign_icon_attached: Result /= Void
+		end
+
+	frozen information_with_info_sign_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'with info sign' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (information_with_info_sign_name)
+		once
+			Result := named_icon_buffer (information_with_info_sign_name)
+		ensure
+			information_with_info_sign_icon_buffer_attached: Result /= Void
+		end
+
 	frozen testing_new_unit_test_icon: EV_PIXMAP
 			-- Access to 'new_unit_test' pixmap.
 		require
@@ -9041,6 +9061,7 @@ feature -- Constants: Icon names
 	information_auto_sweeping_name: STRING = "information auto sweeping"
 	information_sweep_now_name: STRING = "information sweep now"
 	information_edit_auto_node_name: STRING = "information edit auto node"
+	information_with_info_sign_name: STRING = "information with info sign"
 	testing_new_unit_test_name: STRING = "testing new_unit_test"
 	testing_failure_name: STRING = "testing failure"
 	testing_run_last_tests_name: STRING = "testing run_last_tests"
@@ -9473,6 +9494,7 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 5, {NATURAL_8} 24], information_auto_sweeping_name)
 			a_table.put ([{NATURAL_8} 6, {NATURAL_8} 24], information_sweep_now_name)
 			a_table.put ([{NATURAL_8} 7, {NATURAL_8} 24], information_edit_auto_node_name)
+			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 24], information_with_info_sign_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 25], testing_new_unit_test_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 25], testing_failure_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 25], testing_run_last_tests_name)

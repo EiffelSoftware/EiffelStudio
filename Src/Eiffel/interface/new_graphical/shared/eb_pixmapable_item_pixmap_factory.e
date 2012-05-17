@@ -318,6 +318,24 @@ feature -- Query (Pixmap)
 			not_result_is_destroyed: Result /= Void implies not Result.is_destroyed
 		end
 
+	eis_decorated_pixmap (a_pixmap: EV_PIXMAP): EV_PIXMAP
+			-- Pixmap with an EIS sign on it
+		require
+			a_pixmap_not_void: a_pixmap /= Void
+		local
+			l_buffer, l_original_buffer: EV_PIXEL_BUFFER
+		do
+				-- This is a workaround of drawing pixmap via pixel buffer.
+				-- Direct draw on pixmap results in black area at the interseption of the transparent part
+				-- of original pixmap and pixels of the pixmap being drawn with.
+			l_buffer := pixmaps.icon_pixmaps.information_with_info_sign_icon_buffer
+			create l_original_buffer.make_with_pixmap (a_pixmap)
+			l_original_buffer.draw_pixel_buffer_with_x_y (0, 0, l_buffer)
+			Result := l_original_buffer.to_pixmap
+		ensure
+			Result_set: Result /= Void
+		end
+
 feature -- Query (Pixel buffer)
 
 	pixel_buffer_from_class_i (a_class: CLASS_I): EV_PIXEL_BUFFER
@@ -674,7 +692,7 @@ feature {NONE} -- Implementation
 		-- Class icon state flags		
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

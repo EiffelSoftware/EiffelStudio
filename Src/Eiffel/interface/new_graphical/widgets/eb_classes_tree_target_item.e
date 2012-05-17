@@ -35,7 +35,8 @@ feature {NONE} -- Initialization
 			create stone.make (a_target)
 			set_text (a_target.name)
 			set_tooltip (a_target.name)
-			set_pixmap (pixmaps.icon_pixmaps.folder_target_icon)
+			associated_pixmap := pixmaps.icon_pixmaps.folder_target_icon
+			set_pixmap (associated_pixmap)
 			set_pebble (stone)
 			set_accept_cursor (cursors.cur_target)
 			set_deny_cursor (cursors.cur_x_target)
@@ -73,7 +74,7 @@ invariant
 	stone_set: stone /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -308,6 +308,16 @@ feature -- Query
 	new_entry_possible: BOOLEAN
 			-- Is creating entry possible for current view?	
 
+feature -- Element Change
+
+	set_eis_widget (a_widget: like eis_widget)
+			-- Set `eis_widget' with `a_widget'.
+		do
+			eis_widget := a_widget
+		ensure
+			eis_widget_set: eis_widget = a_widget
+		end
+
 feature {NONE} -- Initialization
 
 	setup_base_grid
@@ -611,6 +621,9 @@ feature {NONE} -- Access
 			end
 		end
 
+	eis_widget: detachable ES_EIS_TOOL_WIDGET
+			-- The widget for Info tool
+
 feature {NONE} -- Recycling
 
 	internal_recycle
@@ -701,6 +714,14 @@ feature {NONE} -- Implementation
 						)
 					end
 				end
+			end
+		end
+
+	update_tree_item
+			-- Update tree item
+		do
+			if attached eis_widget as l_w and then attached l_w.tree as l_tree then
+				l_tree.render_information_sign_for_selected_node
 			end
 		end
 

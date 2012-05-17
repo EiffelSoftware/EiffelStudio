@@ -32,7 +32,8 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			set_text (a_name)
-			set_pixmap (pixmaps.icon_pixmaps.information_tag_icon)
+			associated_pixmap := pixmaps.icon_pixmaps.information_tag_icon
+			set_pixmap (associated_pixmap)
 			pointer_button_press_actions.extend (agent register_pressed_item)
 		end
 
@@ -44,7 +45,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

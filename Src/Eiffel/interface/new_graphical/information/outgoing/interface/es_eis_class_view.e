@@ -926,6 +926,18 @@ feature {NONE} -- Callbacks
 						prompts.show_error_prompt (interface_names.l_class_is_not_editable, Void, Void)
 					end
 				end
+				if Result then
+					if lt_entry.override then
+							-- Refresh the list to show/hide auto entries.
+							-- We cannot `rebuild_and_refresh_grid' directly, as it cleans up the grid
+							-- in the call of `deactivate' of {EB_GRID_LISTABLE_CHOICE_ITEM},
+							-- which causes problems.
+						ev_application.do_once_on_idle (agent rebuild_and_refresh_grid)
+					else
+							-- Refresh Override item, as it might be changed when changing from class to feature or vice versa.
+						eis_grid.set_item (column_override, a_grid_item.row.index, on_item_display (column_override, a_grid_item.row.index))
+					end
+				end
 			end
 		end
 

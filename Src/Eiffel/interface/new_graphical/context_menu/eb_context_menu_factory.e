@@ -1308,7 +1308,17 @@ feature {NONE} -- Menu section, Granularity 1.
 
 					-- Add Info
 				create l_menu_item.make_with_text (names.m_add_info (l_last_type, l_last_name))
-				l_menu_item.select_actions.extend (agent (dev_window.tools.info_tool).add_information_to (a_pebble))
+				l_menu_item.select_actions.extend (
+					agent (a_p: ANY)
+						local
+							l_info_tool: like dev_window.tools.info_tool
+						do
+							l_info_tool := dev_window.tools.info_tool
+							if l_info_tool.is_interface_usable then
+								l_info_tool.add_information_to (a_p)
+							end
+						end (a_pebble)
+				)
 				l_menu.extend (l_menu_item)
 
 					-- Copy URI

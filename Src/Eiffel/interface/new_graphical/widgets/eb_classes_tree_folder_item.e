@@ -154,7 +154,8 @@ feature -- Status setting
 				set_accept_cursor (Cursors.cur_Cluster)
 				set_deny_cursor (Cursors.cur_X_Cluster)
 			end
-			set_pixmap (pixmap_from_group_path (l_group, path))
+			associated_pixmap := pixmap_from_group_path (l_group, path)
+			set_pixmap (associated_pixmap)
 			if not (l_group.is_readonly) then
 				drop_actions.set_veto_pebble_function (agent droppable)
 				drop_actions.extend (agent on_class_drop)
@@ -466,6 +467,11 @@ feature {EB_CLASSES_TREE_CLASS_ITEM} -- Interactivity
 				-- This ensures that the tree retains its state as nodes are contracted and
 				-- then expanded.
 			expand_actions.wipe_out
+
+				-- Notify the tree.
+			if attached parent_tree as l_tree then
+				l_tree.on_post_folder_loaded (Current)
+			end
 		end
 
 	cluster_separator: STRING = "/"
@@ -926,7 +932,7 @@ invariant
 	sub_elements_imply_initialized: not path.is_empty implies data.is_initialized
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

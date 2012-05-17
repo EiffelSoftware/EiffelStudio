@@ -79,7 +79,8 @@ feature -- Status setting
 			set_accept_cursor (Cursors.cur_Class)
 			set_deny_cursor (Cursors.cur_X_Class)
 			set_tooltip (name)
-			set_pixmap (pixmap_from_class_i (a_class))
+			associated_pixmap := pixmap_from_class_i (a_class)
+			set_pixmap (associated_pixmap)
 			set_configurable_target_menu_mode
 			set_configurable_target_menu_handler (agent context_menu_handler)
 		end
@@ -220,7 +221,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

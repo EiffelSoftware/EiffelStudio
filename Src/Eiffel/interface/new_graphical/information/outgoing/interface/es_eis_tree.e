@@ -12,6 +12,7 @@ inherit
 	EB_CLASSES_TREE
 		redefine
 			build_tree,
+			on_post_folder_loaded,
 			internal_recycle
 		end
 
@@ -30,6 +31,13 @@ inherit
 		end
 
 	ES_EIS_SHARED
+		undefine
+			default_create,
+			copy,
+			is_equal
+		end
+
+	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 		undefine
 			default_create,
 			copy,
@@ -100,6 +108,7 @@ feature {NONE} -- Initialization
 							Result := aa_target.extends = Void
 						end)
 			end
+
 			create tag_header.make (interface_names.l_all_tags, pixmaps.icon_pixmaps.information_tags_icon)
 			extend (tag_header)
 			--create affected_header.make (interface_names.l_affected_items, pixmaps.icon_pixmaps.information_affected_items_icon)
@@ -120,6 +129,8 @@ feature {NONE} -- Initialization
 					-- been rebuilt.
 				window.unlock_update
 			end
+
+			render_information_signs
 		end
 
 	add_target (a_list: EV_DYNAMIC_LIST [EV_CONTAINABLE]; a_target: CONF_TARGET)
@@ -201,12 +212,27 @@ feature -- Operation
 			if old_view /= Void then
 				old_view.rebuild_and_refresh_grid
 			end
+			render_information_signs
 		end
 
 	item_selected
 			-- Show content of selected item
 		do
 			on_component_click (selected_item)
+		end
+
+	render_information_sign_for_selected_node
+			-- Draw or remove small sign on the icon of selected item
+			-- to show if there is information connected to the node.
+		do
+			render_information_sign_for_node (selected_item)
+		end
+
+	render_information_signs
+			-- Draw or remove small signs on the icons of the tree
+			-- to show if there is information connected to the node.
+		do
+			recursive_render_information_signs (Current)
 		end
 
 feature -- Access
@@ -262,6 +288,7 @@ feature {NONE} -- Actions
 				old_view.destroy
 				old_view := Void
 			end
+			render_information_sign_for_node (a_item)
 		end
 
 feature {NONE} -- Component view factory
@@ -295,6 +322,9 @@ feature {NONE} -- Component view factory
 								create {ES_EIS_CONF_VIEW}Result.make (lt_target1, lt_grid)
 							end
 						end
+					end
+					if attached Result as l_result then
+						l_result.set_eis_widget (eis_tool_widget)
 					end
 				end
 			end
@@ -335,7 +365,82 @@ feature {NONE} -- EIS observer
 			end
 		end
 
+	on_entry_registered (a_entry: EIS_ENTRY; a_component_id: STRING)
+			-- `a_entry' has been registered.
+		do
+			--| Leave empty for furture use
+		end
+
+	on_entry_deregistered (a_entry: EIS_ENTRY; a_component_id: STRING)
+			-- Notify observers that `a_entry' has been deregistered.
+		do
+			--| Leave empty for furture use
+		end
+
 feature {NONE} -- Implemenation
+
+	recursive_render_information_signs (tree_list: EV_TREE_NODE_LIST)
+			-- Recursively draw or remove small signs on the icons of the tree.
+		require
+			tree_list_not_void: tree_list /= Void
+		do
+			from
+				tree_list.start
+			until
+				tree_list.off
+			loop
+				render_information_sign_for_node (tree_list.item)
+				recursive_render_information_signs (tree_list.item)
+				tree_list.forth
+			end
+		end
+
+	render_information_sign_for_node (a_node: EV_TREE_NODE)
+			-- Render information sign for `a_node'.
+		do
+			if attached {EB_CLASSES_TREE_ITEM} a_node as current_node then
+				if tree_node_has_information (current_node) then
+					current_node.set_pixmap (eis_decorated_pixmap (current_node.pixmap))
+				else
+					current_node.set_pixmap (current_node.associated_pixmap)
+				end
+			end
+		end
+
+	tree_node_has_information (a_item: EV_TREE_NODE): BOOLEAN
+			-- Does `a_item' contains EIS information?
+		require
+			a_node_not_void: a_item /= Void
+		local
+			l_class_extracter: ES_EIS_CLASS_EXTRACTOR
+			l_conf_extracter: ES_EIS_CONF_EXTRACTOR
+		do
+			if attached {CLASS_I} a_item.data as lt_class then
+				create l_class_extracter.make (lt_class, True)
+				Result := not l_class_extracter.eis_entries.is_empty
+			elseif attached {CONF_TARGET} a_item.data as lt_target then
+				create l_conf_extracter.make (lt_target, True)
+				Result := not l_conf_extracter.eis_entries.is_empty
+			else
+				if attached {EB_SORTED_CLUSTER} a_item.data as l_sorted_cluster then
+					if attached {CONF_CLUSTER} l_sorted_cluster.actual_group as lt_cluster then
+						create l_conf_extracter.make (lt_cluster, True)
+						Result := not l_conf_extracter.eis_entries.is_empty
+					elseif attached {CONF_LIBRARY} l_sorted_cluster.actual_group as lt_library and then attached {CONF_TARGET} lt_library.library_target as lt_target1 then
+						create l_conf_extracter.make (lt_target1, True)
+						Result := not l_conf_extracter.eis_entries.is_empty
+					end
+				end
+			end
+		end
+
+	on_post_folder_loaded (a_item: EV_TREE_ITEM)
+			-- Called when a folder item has been expanded
+			-- for the first time.
+		do
+			Precursor {EB_CLASSES_TREE}(a_item)
+			recursive_render_information_signs (a_item)
+		end
 
 	internal_recycle
 			-- <precursor>

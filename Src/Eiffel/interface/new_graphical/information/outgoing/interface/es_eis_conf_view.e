@@ -109,6 +109,7 @@ feature -- Operation
 					end
 					extracted_entries.force_last (l_entry)
 					refresh_grid_without_sorting
+					update_tree_item
 				end
 			else
 				prompts.show_error_prompt (interface_names.l_item_selected_is_not_writable, Void, Void)
@@ -153,6 +154,7 @@ feature -- Operation
 					end
 					if l_removed then
 						refresh_grid_without_sorting
+						update_tree_item
 					end
 				end
 			else

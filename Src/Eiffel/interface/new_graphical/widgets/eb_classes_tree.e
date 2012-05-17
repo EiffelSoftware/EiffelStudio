@@ -1094,6 +1094,14 @@ feature {NONE} -- Implementation
 	is_class_selection_only: BOOLEAN
 			-- Is tree only used for the purpose of selecting an existing class from the universe?
 
+feature {EB_CLASSES_TREE_ITEM} -- Implementation
+
+	on_post_folder_loaded (a_item: EV_TREE_ITEM)
+			-- Called when a folder item has been expanded
+			-- for the first time.
+		do
+		end
+
 feature {NONE} -- Factory
 
 	create_folder_item (a_group: EB_SORTED_CLUSTER): EB_CLASSES_TREE_FOLDER_ITEM

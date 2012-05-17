@@ -24,9 +24,24 @@ feature -- Callbacks
 		deferred
 		end
 
+	on_entry_registered (a_entry: EIS_ENTRY; a_component_id: STRING)
+			-- `a_entry' has been registered.
+		require
+			a_entry_not_void: a_entry /= Void
+			a_component_id_not_void: a_component_id /= Void
+		deferred
+		end
+
+	on_entry_deregistered (a_entry: EIS_ENTRY; a_component_id: STRING)
+			-- Notify observers that `a_entry' has been deregistered.
+		require
+			a_entry_not_void: a_entry /= Void
+			a_component_id_not_void: a_component_id /= Void
+		deferred
+		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

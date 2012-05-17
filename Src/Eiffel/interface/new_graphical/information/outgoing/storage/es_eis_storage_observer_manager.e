@@ -13,7 +13,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization
 		do
-			create {attached ARRAYED_LIST [ES_EIS_STORAGE_OBSERVER]}observer_list.make (3)
+			create {attached ARRAYED_LIST [ES_EIS_STORAGE_OBSERVER]} observer_list.make (3)
 		end
 
 feature -- Element change
@@ -37,27 +37,53 @@ feature -- Element change
 feature {NONE} -- Events
 
 	on_tag_extended (a_tag: STRING_32)
-			-- Notify observers that `a_tag' has benn added to the storage
+			-- Notify observers that `a_tag' has been added to the storage
 		require
 			a_tag_not_void: a_tag /= Void
 		do
-			observer_list.do_all (
-					agent (aa_observer: attached ES_EIS_STORAGE_OBSERVER; aa_tag: attached STRING_32)
-						do
-							aa_observer.on_tag_added (aa_tag)
-						end (?, a_tag))
+			across
+				observer_list as l_c
+			loop
+				l_c.item.on_tag_added (a_tag)
+			end
 		end
 
 	on_tag_removed (a_tag: attached STRING_32)
-			-- Notify observers that `a_tag' has benn removed from the storage
+			-- Notify observers that `a_tag' has been removed from the storage
 		require
 			a_tag_not_void: a_tag /= Void
 		do
-			observer_list.do_all (
-					agent (aa_observer: attached ES_EIS_STORAGE_OBSERVER; aa_tag: attached STRING_32)
-						do
-							aa_observer.on_tag_removed (aa_tag)
-						end (?, a_tag))
+			across
+				observer_list as l_c
+			loop
+				l_c.item.on_tag_removed (a_tag)
+			end
+		end
+
+	on_entry_registered (a_entry: EIS_ENTRY; a_component_id: STRING)
+			-- Notify observers that `a_entry' has been registered.
+		require
+			a_entry_not_void: a_entry /= Void
+			a_component_id_not_void: a_component_id /= Void
+		do
+			across
+				observer_list as l_c
+			loop
+				l_c.item.on_entry_registered (a_entry, a_component_id)
+			end
+		end
+
+	on_entry_deregistered (a_entry: EIS_ENTRY; a_component_id: STRING)
+			-- Notify observers that `a_entry' has been deregistered.
+		require
+			a_entry_not_void: a_entry /= Void
+			a_component_id_not_void: a_component_id /= Void
+		do
+			across
+				observer_list as l_c
+			loop
+				l_c.item.on_entry_deregistered (a_entry, a_component_id)
+			end
 		end
 
 feature {NONE} -- Access
@@ -69,7 +95,7 @@ invariant
 	observer_list_not_void: observer_list /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

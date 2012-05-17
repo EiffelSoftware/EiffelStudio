@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 				l_button.tool_bar /= Void and then
 				attached l_button.text as l_text_3
 			then
-				if attached {EV_APPLICATION_IMP} ev_application as l_app_imp then
+				if attached {EV_APPLICATION_IMP} ev_application.implementation as l_app_imp then
 					l_c_string := l_app_imp.c_string_from_eiffel_string (l_text_3)
 					l_pango_layout := l_app_imp.pango_layout
 

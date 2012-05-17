@@ -84,7 +84,7 @@ feature -- Operation
 				if attached {CONF_TARGET} conf_notable as lt_target then
 					l_system := lt_target.system
 					l_date := l_system.file_date
-					create l_entry.make ("Unnamed", Void, Void, Void, component_id, Void)
+					l_entry := entry_factory.create_default_entry (component_id)
 					write_entry (l_entry, lt_target, l_system)
 					l_added := last_entry_modified
 					if not l_added then

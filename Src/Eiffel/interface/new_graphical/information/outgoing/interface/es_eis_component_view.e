@@ -890,7 +890,7 @@ feature {NONE} -- Grid items
 			end
 			if a_editable then
 				create l_file_prop.make (once "")
-				l_file_prop.set_text (l_source)
+				l_file_prop.set_value (l_source)
 				l_file_prop.change_value_actions.extend (agent on_source_changed (?, l_file_prop))
 				l_file_prop.set_text_validation_agent (agent is_source_valid (?, l_file_prop))
 				l_file_prop.key_press_actions.extend (agent tab_to_next)

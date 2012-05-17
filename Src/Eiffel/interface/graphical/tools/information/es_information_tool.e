@@ -40,25 +40,34 @@ feature -- Basic operations
 
 	refresh_list
 			-- <Precursor>
+		local
+			l_panel: like panel
 		do
-			if is_tool_instantiated then
-				panel.refresh_list
+			l_panel := panel
+			if l_panel.is_interface_usable then
+				l_panel.refresh_list
 			end
 		end
 
 	request_eis_visit
 			-- <Precursor>
+		local
+			l_panel: like panel
 		do
-			if is_tool_instantiated then
-				panel.request_eis_visit
+			l_panel := panel
+			if l_panel.is_interface_usable then
+				l_panel.request_eis_visit
 			end
 		end
 
 	add_information_to (a_stone: ANY)
 			-- <Precursor>
+		local
+			l_panel: like panel
 		do
-			if is_tool_instantiated then
-				panel.add_information_to (a_stone)
+			l_panel := panel
+			if l_panel.is_interface_usable then
+				l_panel.add_information_to (a_stone)
 			end
 		end
 

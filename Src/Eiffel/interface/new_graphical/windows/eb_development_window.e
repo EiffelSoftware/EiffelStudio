@@ -696,7 +696,10 @@ feature -- Update
 	update_eis_system
 			-- Update EIS storage and the tool if needed.
 		do
-			if attached {ES_INFORMATION_TOOL_COMMANDER_I} shell_tools.tool ({ES_INFORMATION_TOOL}) as l_info_tool_commander then
+			if
+				attached {ES_INFORMATION_TOOL_COMMANDER_I} shell_tools.tool ({ES_INFORMATION_TOOL}) as l_info_tool_commander and then
+				l_info_tool_commander.is_interface_usable
+			then
 					-- Update Information tool.
 				l_info_tool_commander.refresh_list
 				l_info_tool_commander.request_eis_visit
@@ -2602,7 +2605,7 @@ invariant
 	window_id_positive: window_id > 0
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

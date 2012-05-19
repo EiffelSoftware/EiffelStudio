@@ -146,6 +146,11 @@ feature -- Externals
 
 --GTK_STYLE_REGION_TAB
 
+	gdk_window_get_position (a_window: POINTER; a_x, a_y: TYPED_POINTER [INTEGER])
+		external
+			"C signature (GdkWindow*, gint*, gint*) use <ev_gtk.h>"
+		end
+
 	gtk_orientable_set_orientation (a_orientable: POINTER; a_orientation: NATURAL_8)
 		external
 			"C signature (GtkOrientable*, GtkOrientation) use <ev_gtk.h>"

@@ -199,28 +199,36 @@ feature {NONE} -- Implementation
 			-- Index of divider currently beneath the mouse pointer, or
 			-- 0 if none.
 		local
-			gdkwin, l_widget: POINTER
-			a_pointer_x, a_pointer_y: INTEGER
+			gdkwin, gtkwid: POINTER
+			i, l_count, l_x, l_y, l_button_x, l_pointer_x, l_pointer_y: INTEGER
 			a_item_imp: detachable EV_HEADER_ITEM_IMP
-			a_cursor: like cursor
+			l_cs: EV_GTK_C_STRING
 		do
-			gdkwin := {GTK}.gdk_window_at_pointer ($a_pointer_x, $a_pointer_y)
+			gdkwin := {GTK}.gdk_window_at_pointer ($l_pointer_x, $l_pointer_y)
 			if gdkwin /= default_pointer then
-				from
-					a_cursor := cursor
-					start
-				until
-					Result > 0 or else off
-				loop
-					a_item_imp ?= item.implementation
-					check a_item_imp /= Void end
-					l_widget := {GTK2}.gtk_tree_view_column_get_widget (a_item_imp.c_object)
-					if l_widget /= default_pointer and then {GTK}.gtk_widget_get_window (l_widget) = gdkwin then
-						Result := index
+
+				{GTK2}.gdk_window_get_position (gdkwin, $l_x, $l_y)
+				{GTK}.gdk_window_get_user_data (gdkwin, $gtkwid)
+
+				if gtkwid = c_object then
+					from
+						l_cs := app_implementation.c_string_from_eiffel_string ("x-offset")
+						i := 1
+						l_count := count
+					until
+						i > l_count
+					loop
+						a_item_imp ?= i_th (i).implementation
+						check a_item_imp /= Void end
+						{GTK2}.g_object_get_integer (a_item_imp.c_object, l_cs.item, $l_button_x)
+						if l_button_x < l_x then
+							Result := Result + 1
+						else
+							i := l_count
+						end
+						i := i + 1
 					end
-					forth
 				end
-				go_to (a_cursor)
 			end
 		end
 

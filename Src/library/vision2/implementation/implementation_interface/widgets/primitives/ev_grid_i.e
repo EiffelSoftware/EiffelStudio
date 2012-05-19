@@ -4378,14 +4378,14 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 						end
 						if Result then
 							Result := not a_key.is_arrow and then
-								is_item_tab_navigation_enabled implies (
+								(is_item_tab_navigation_enabled implies (
 									ev_application.ctrl_pressed or
 										-- Ctrl+Tab performs regular tab navigation from within the grid.
 									attached selected_items as l_sel_items and then
 										(l_sel_items.count > 0 implies
 												-- If row selection is enabled override default behavior if an item is activated.
 											(is_row_selection_enabled and then currently_active_item = Void) or else
-											(next_navigatable_activatable_item (l_sel_items.first, a_key) = l_sel_items.first)))
+											(next_navigatable_activatable_item (l_sel_items.first, a_key) = l_sel_items.first))))
 											-- If `is_item_tab_navigation_enabled' then we prevent default tab navigation to/from the next widget
 											-- and propagate to the next available item if not at the first (unless shift is pressed) or last (unless shift not pressed).
 						end

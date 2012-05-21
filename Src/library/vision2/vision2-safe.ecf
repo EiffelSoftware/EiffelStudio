@@ -10,6 +10,8 @@
 			<exclude>/\.svn$</exclude>
 			<exclude>/temp$</exclude>
 		</file_rule>
+
+		
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="transitional" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
@@ -27,21 +29,25 @@
 			<condition>
 				<platform excluded_value="windows"/>
 				<custom name="vision_implementation" excluded_value="cocoa"/>
-				<custom name="gtk34" excluded_value="true"/>
+				<custom name="vision_implementation" excluded_value="gtk34"/>
+			</condition>
+		</external_include>
+		<external_include location="$(ISE_LIBRARY)/library/vision2/implementation/gtk34/Clib">
+			<condition>
+				<custom name="vision_implementation" value="gtk34"/>
 			</condition>
 		</external_include>
 		<external_cflag value="`$ISE_LIBRARY/library/vision2/implementation/gtk/Clib/vision2-gtk-config --include_path`">
 			<condition>
 				<platform excluded_value="windows"/>
 				<custom name="vision_implementation" excluded_value="cocoa"/>
-				<custom name="gtk34" excluded_value="true"/>
+				<custom name="vision_implementation" excluded_value="gtk34"/>
 			</condition>
 		</external_cflag>
 		<external_cflag value="`$ISE_LIBRARY/library/vision2/implementation/gtk34/Clib/vision2-gtk-config --include_path`">
 			<condition>
 				<platform excluded_value="windows"/>
-				<custom name="vision_implementation" excluded_value="cocoa"/>
-				<custom name="gtk34" value="true"/>
+				<custom name="vision_implementation" value="gtk34"/>
 			</condition>
 		</external_cflag>
 		<external_object location="$(ISE_LIBRARY)\library\vision2\spec\$ISE_C_COMPILER\$ISE_PLATFORM\lib\vision2.lib">
@@ -49,7 +55,7 @@
 				<platform value="windows"/>
 				<concurrency value="none"/>
 				<dotnet value="false"/>
-				<custom name="gtk34" excluded_value="true"/>
+
 			</condition>
 		</external_object>
 		<external_object location="$ISE_LIBRARY\library\vision2\spec\$ISE_C_COMPILER\$ISE_PLATFORM\lib\mtvision2.lib">
@@ -87,7 +93,7 @@
 				<platform excluded_value="windows"/>
 				<concurrency value="none"/>
 				<custom name="vision_implementation" excluded_value="cocoa"/>
-				<custom name="gtk34" excluded_value="true"/>
+				<custom name="vision_implementation" excluded_value="gtk34"/>
 			</condition>
 		</external_linker_flag>
 		<external_linker_flag value="`$(ISE_LIBRARY)/library/vision2/implementation/gtk/Clib/vision2-gtk-config --threads --library`">
@@ -95,7 +101,7 @@
 				<platform excluded_value="windows"/>
 				<concurrency excluded_value="none"/>
 				<custom name="vision_implementation" excluded_value="cocoa"/>
-				<custom name="gtk34" excluded_value="true"/>
+				<custom name="vision_implementation" excluded_value="gtk34"/>
 			</condition>
 		</external_linker_flag>
 		<external_linker_flag value="`$(ISE_LIBRARY)/library/vision2/implementation/gtk/Clib/vision2-gtk-config --library`">
@@ -103,7 +109,35 @@
 				<platform excluded_value="windows"/>
 				<concurrency value="none"/>
 				<custom name="vision_implementation" excluded_value="cocoa"/>
-				<custom name="gtk34" excluded_value="true"/>
+				<custom name="vision_implementation" excluded_value="gtk34"/>
+			</condition>
+		</external_linker_flag>
+		<external_linker_flag value="`$(ISE_LIBRARY)/library/vision2/implementation/gtk34/Clib/vision2-gtk-config --threads --object`">
+			<condition>
+				<platform excluded_value="windows"/>
+				<concurrency excluded_value="none"/>
+				<custom name="vision_implementation" value="gtk34"/>
+			</condition>
+		</external_linker_flag>
+		<external_linker_flag value="`$(ISE_LIBRARY)/library/vision2/implementation/gtk34/Clib/vision2-gtk-config --object`">
+			<condition>
+				<platform excluded_value="windows"/>
+				<concurrency value="none"/>
+				<custom name="vision_implementation" value="gtk34"/>
+			</condition>
+		</external_linker_flag>
+		<external_linker_flag value="`$(ISE_LIBRARY)/library/vision2/implementation/gtk34/Clib/vision2-gtk-config --threads --library`">
+			<condition>
+				<platform excluded_value="windows"/>
+				<concurrency excluded_value="none"/>
+				<custom name="vision_implementation" value="gtk34"/>
+			</condition>
+		</external_linker_flag>
+		<external_linker_flag value="`$(ISE_LIBRARY)/library/vision2/implementation/gtk34/Clib/vision2-gtk-config --library`">
+			<condition>
+				<platform excluded_value="windows"/>
+				<concurrency value="none"/>
+				<custom name="vision_implementation" value="gtk34"/>
 			</condition>
 		</external_linker_flag>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
@@ -111,7 +145,7 @@
 			<condition>
 				<platform value="macintosh"/>
 				<custom name="vision_implementation" value="cocoa"/>
-				<custom name="gtk34" excluded_value="true"/>
+				<custom name="vision_implementation" excluded_value="gtk34"/>
 			</condition>
 		</library>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
@@ -129,7 +163,7 @@
 				<exclude>/mswin$</exclude>
 				<condition>
 					<platform excluded_value="windows"/>
-					<custom name="gtk34" excluded_value="true"/>
+					<custom name="vision_implementation" excluded_value="gtk34"/>
 				</condition>
 			</file_rule>
 			<file_rule>
@@ -142,22 +176,21 @@
 		<cluster name="implementation_cocoa" location="implementation\cocoa\" recursive="true">
 			<condition>
 				<platform value="macintosh"/>
-				<custom name="gtk34" excluded_value="true"/>
+				<custom name="vision_implementation" excluded_value="gtk34"/>
 				<custom name="vision_implementation" value="cocoa"/>
 			</condition>
 		</cluster>
 		<cluster name="implementation_gtk34" location="implementation\gtk34\" recursive="true">
 			<condition>
 				<platform excluded_value="windows"/>
-				<custom name="vision_implementation" excluded_value="cocoa"/>
-				<custom name="gtk34" value="true"/>
+				<custom name="vision_implementation" value="gtk34"/>
 			</condition>
 		</cluster>
 		<cluster name="implementation_gtk" location="implementation\gtk\" recursive="true">
 			<condition>
 				<platform excluded_value="windows"/>
 				<custom name="vision_implementation" excluded_value="cocoa"/>
-				<custom name="gtk34" excluded_value="true"/>
+				<custom name="vision_implementation" excluded_value="gtk34"/>
 			</condition>
 		</cluster>
 		<cluster name="implementation_interface" location="implementation\implementation_interface\" recursive="true">

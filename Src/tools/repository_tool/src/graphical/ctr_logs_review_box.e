@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {CTR_LOGS_REVIEW_BOX}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -166,7 +165,7 @@ feature -- Event
 					)
 				vb.extend (but)
 				create evs
-				if attached evs.widget_top_level_window (widget, False) as w then
+				if attached evs.widget_top_level_window (widget) as w then
 					pop.show_relative_to_window (w)
 				else
 					pop.show

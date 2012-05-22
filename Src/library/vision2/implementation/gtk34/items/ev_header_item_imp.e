@@ -34,6 +34,7 @@ inherit
 			interface,
 			needs_event_box,
 			process_gdk_event,
+			process_draw_event,
 			destroy
 		end
 
@@ -298,6 +299,12 @@ feature -- Measurement
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 
+	process_draw_event (a_cairo_context: POINTER)
+			-- <Precursor>
+		do
+			handle_resize
+		end
+
 	process_gdk_event (n_args: INTEGER; args: POINTER)
 			-- Process gtk events using raw marshal data.
 		local
@@ -372,11 +379,6 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 								l_parent_imp.item_pointer_double_press_actions.call ([attached_interface, l_x, {GTK}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {GTK}.gdk_event_button_struct_button (gdk_event)])
 							end
 						end
-					elseif
-						event_type = {EV_GTK_ENUMS}.gdk_expose_enum
-					 then
-								-- Handle any potential resize.
-						handle_resize
 					end
 				end
 			end
@@ -388,6 +390,7 @@ feature {EV_HEADER_IMP} -- Implementation
 			-- Set `parent_imp' to `par_imp'.
 		local
 			a_button: POINTER
+			l_app_imp: EV_APPLICATION_IMP
 		do
 			parent_imp := par_imp
 
@@ -400,12 +403,20 @@ feature {EV_HEADER_IMP} -- Implementation
 				a_button := {GTK2}.gtk_tree_view_column_get_button (c_object)
 					-- We don't want the button stealing focus.
 				{GTK}.gtk_widget_set_can_focus (a_button, False)
-				real_signal_connect (a_button, once "event", agent (App_implementation.gtk_marshal).gdk_event_dispatcher (internal_id, ? , ?), Void)
+
+				l_app_imp := app_implementation
+
+				real_signal_connect (a_button, once "event", agent (l_app_imp.gtk_marshal).gdk_event_dispatcher (internal_id, ? , ?), Void)
 				item_event_id := last_signal_connection_id
+
+					-- Hook up to "draw" signal so that we can check if we need to resize `Current'.
+				l_app_imp.gtk_marshal.signal_connect (a_button, once "draw", agent (l_app_imp.gtk_marshal).create_draw_actions_intermediary (c_object, ?), l_app_imp.gtk_marshal.draw_translate_agent, False)
 			else
 				if item_event_id /= 0 then
 					a_button := {GTK2}.gtk_tree_view_column_get_button (c_object)
 					{GTK2}.signal_disconnect (a_button, item_event_id)
+						-- Disconnect draw signal which is `item_id' + 1.
+					{GTK2}.signal_disconnect (a_button, item_event_id + 1)
 					item_event_id := 0
 				end
 				box := {GTK2}.g_object_ref (box)

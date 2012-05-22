@@ -191,6 +191,12 @@ feature {NONE} -- Implementation
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
+	process_draw_event (a_cairo_context: POINTER)
+			-- A "draw" signal has occurred
+		do
+			-- Redefined by descendents.
+		end
+
 	process_gdk_event (n_args: INTEGER; args: POINTER)
 			-- Process any incoming gdk event.
 		do

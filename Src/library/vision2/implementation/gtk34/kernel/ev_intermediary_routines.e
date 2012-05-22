@@ -39,18 +39,13 @@ feature {EV_ANY_IMP} -- Notebook intermediary agent routines
 			a_notebook_imp.page_switch (a_page.to_integer_32)
 		end
 
-feature -- Expose actions intermediary agent routines
+feature -- Draw signal intermediary.
 
 	create_draw_actions_intermediary (a_c_object: POINTER; a_cairo_context: POINTER)
-			-- Area needs to be redrawn
-		local
-			l_any_imp: detachable EV_ANY_IMP
+			-- "draw" signal has been emitted.
 		do
-			l_any_imp := c_get_eif_reference_from_object_id (a_c_object)
-			if attached {EV_DRAWING_AREA_IMP} l_any_imp as l_drawing_area_imp then
-				l_drawing_area_imp.call_draw_actions (a_cairo_context)
-			elseif attached {EV_PIXMAP_IMP} l_any_imp as l_pixmap_imp then
-				l_pixmap_imp.call_draw_actions (a_cairo_context)
+			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
+				l_any_imp.process_draw_event (a_cairo_context)
 			end
 		end
 

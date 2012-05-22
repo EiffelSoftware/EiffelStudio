@@ -31,7 +31,8 @@ inherit
 			make,
 			internal_set_focus,
 			on_size_allocate,
-			on_widget_mapped
+			on_widget_mapped,
+			process_draw_event
 		end
 
 	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
@@ -155,7 +156,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 	in_expose_actions: BOOLEAN
 		-- Is `Current' in an expose action?
 
-	call_draw_actions (a_cairo_context: POINTER)
+	process_draw_event (a_cairo_context: POINTER)
 			-- Call the expose actions for the drawing area.
 		local
 			l_x, l_y, l_width, l_height, l_red, l_green, l_blue: REAL_64

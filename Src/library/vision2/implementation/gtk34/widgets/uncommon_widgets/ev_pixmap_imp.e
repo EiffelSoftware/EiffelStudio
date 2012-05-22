@@ -39,7 +39,8 @@ inherit
 			width,
 			height,
 			destroy,
-			make
+			make,
+			process_draw_event
 		end
 
 	EV_PIXMAP_ACTION_SEQUENCES_IMP
@@ -282,7 +283,7 @@ feature -- Element change
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	call_draw_actions (a_cairo_context: POINTER)
+	process_draw_event (a_cairo_context: POINTER)
 			-- Call the expose actions for the drawing area.
 		local
 			l_x, l_y, l_width, l_height: INTEGER

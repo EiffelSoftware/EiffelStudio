@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {APPLICATION_ECF}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -18,6 +18,8 @@ inherit
 			process_feature_as
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make,
 	make_with_match_list
@@ -52,13 +54,18 @@ feature -- Process
 
 	print_occurrences: INTEGER
 
-	last_class_name: STRING_32
+	last_class_name: STRING
 
-	last_feature_name: STRING_32
+	last_feature_name: STRING
 
-	text (l_as: AST_EIFFEL): STRING_32
+	text_32 (l_as: AST_EIFFEL): STRING_32
 		do
 			Result := l_as.text_32 (match_list)
+		end
+
+	text (l_as: AST_EIFFEL): STRING_8
+		do
+			Result := l_as.text (match_list)
 		end
 
 	process_class_as (l_as: CLASS_AS)
@@ -82,7 +89,7 @@ feature -- Process
 
 	process_expr_call_as (l_as: EXPR_CALL_AS)
 		local
-			s: STRING
+			s: like text
 		do
 			s := text (l_as.call)
 			if is_print_statement (s) then
@@ -93,7 +100,7 @@ feature -- Process
 
 	process_instr_call_as (l_as: INSTR_CALL_AS)
 		local
-			s: STRING
+			s: like text
 		do
 			s := text (l_as.call)
 			if is_print_statement (s) then
@@ -104,7 +111,7 @@ feature -- Process
 
 	process_access_feat_as (l_as: ACCESS_FEAT_AS)
 		local
-			s: STRING
+			s: like text
 		do
 			s := text (l_as.feature_name)
 			if is_print_statement (s) then
@@ -113,7 +120,7 @@ feature -- Process
 			Precursor (l_as)
 		end
 
-	report (l_as: AST_EIFFEL; s: STRING)
+	report (l_as: AST_EIFFEL; s: like text)
 		do
 			print_occurrences := print_occurrences + 1
 			print ("[" + l_as.start_location.line.out + "] " + last_class_name + "." + last_feature_name + ": ")
@@ -124,7 +131,7 @@ feature -- Process
 			print ("%N")
 		end
 
-	is_print_statement (s: STRING): BOOLEAN
+	is_print_statement (s: READABLE_STRING_8): BOOLEAN
 		local
 			c: CHARACTER
 		do

@@ -27,7 +27,7 @@ feature -- Byte sinks
 				byte_sink (in [index])
 				index := index - 1
 			variant
-				index
+				index + 1
 			end
 		end
 

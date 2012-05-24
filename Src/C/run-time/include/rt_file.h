@@ -113,8 +113,8 @@ extern "C" {
 #		define rt_stat		_stat64
 #		define rt_fstat		_fstat64
 #	else
-#		define rt_stat		_fstat64i32
-#		define rt_fstat		_stat64i32
+#		define rt_stat		_stat64i32
+#		define rt_fstat		_fstat64i32
 #	endif
 #else
 #	define rt_stat			stat

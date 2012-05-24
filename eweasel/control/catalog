@@ -1668,6 +1668,7 @@ test	wrong-attribute-type-in-tuple	exec345 tcf pass execution
 test	ptr-is-default-pointer			exec346 tcf pass execution
 test	small-eif-memory-scavenge-2		exec347	tcf pass execution
 test	environment-setting				exec348	tcf pass execution eweasel
+test	none-and-attachement			exec349	tcf pass execution conformance
 
 -- Once specific
 

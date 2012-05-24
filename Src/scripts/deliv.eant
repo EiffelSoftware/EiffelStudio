@@ -74,7 +74,7 @@
 
 		<!-- source related -->
 		<!-- we support both location for Delivery, under Src, or under Trunk -->
-		<global name="_DELIVERY_DIR" value="${EIFFEL_SRC}${path_separator}..${path_separator}Delivery" unless="${_DELIVERY_DIR}"/>
+		<global name="_DELIVERY_DIR" value="${EIFFEL_SRC}${path_separator}Delivery" unless="${_DELIVERY_DIR}"/>
 		<available resource="${_DELIVERY_DIR}" variable="tmp_delivdir_available"/>
 		<global name="_DELIVERY_DIR" value="${EIFFEL_SRC}${path_separator}Delivery" if="${tmp_delivdir_available}=false"/>
 

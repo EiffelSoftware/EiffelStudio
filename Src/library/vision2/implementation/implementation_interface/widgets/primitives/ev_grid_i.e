@@ -5432,6 +5432,10 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 							-- If `is_tab_navigatable' then Result must also be 'is_tab_navigatable'
 					Result := Void
 				end
+					-- Check to make sure that `Result' is navigatable to, if not then we continue to the next item.
+				if Result /= Void and then not Result.column.is_show_requested then
+					Result := Void
+				end
 				item_index := item_index + item_offset
 			end
 		end
@@ -5488,7 +5492,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 					end
 				end
 				if Result /= Void and then not is_item_navigatable_to (Result) then
-						Result := Void
+					Result := Void
 				end
 				item_index := item_index + item_offset
 			end
@@ -5499,21 +5503,19 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 		local
 			l_parent_row_i: detachable EV_GRID_ROW_I
 		do
-			if a_item.row.height > 0 and then a_item.row.is_show_requested then
-					-- Only visible rows may be navigated to.
-				Result := True
-				if is_tree_enabled then
-					from
-						l_parent_row_i := a_item.row.implementation.parent_row_i
-					until
-						l_parent_row_i = Void or else not Result
-					loop
-						check l_parent_row_i /= Void end
-						if not l_parent_row_i.is_expanded or not l_parent_row_i.is_show_requested then
-							Result := False
-						end
-						l_parent_row_i := l_parent_row_i.parent_row_i
+				-- Only visible rows/columns may be navigated to.
+			Result := a_item.row.height > 0 and then a_item.row.is_show_requested and then a_item.column.is_show_requested
+			if Result and then is_tree_enabled then
+				from
+					l_parent_row_i := a_item.row.implementation.parent_row_i
+				until
+					l_parent_row_i = Void or else not Result
+				loop
+					check l_parent_row_i /= Void end
+					if not l_parent_row_i.is_expanded or not l_parent_row_i.is_show_requested then
+						Result := False
 					end
+					l_parent_row_i := l_parent_row_i.parent_row_i
 				end
 			end
 		end

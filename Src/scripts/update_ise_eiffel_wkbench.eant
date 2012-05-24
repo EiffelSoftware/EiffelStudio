@@ -39,7 +39,7 @@
 		<geant target="create_wkbench" unless="${ise_wkbench_available}=true" />
 
 		<!-- we support both location for Delivery, under Src, or under Trunk -->
-		<set name="delivery_dir" value="${EIFFEL_SRC}${path_separator}..${path_separator}Delivery" unless="${delivery_dir}"/>
+		<set name="delivery_dir" value="${EIFFEL_SRC}${path_separator}Delivery" unless="${delivery_dir}"/>
 		<available resource="${delivery_dir}" variable="tmp_d_available"/>
 		<set name="delivery_dir" value="${EIFFEL_SRC}${path_separator}Delivery" if="${tmp_d_available}=false"/>
 		<unset name="tmp_d_available" />

@@ -2,7 +2,7 @@
 	description: "Computation of dynamic type corresponding to a written type in a C string."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -697,7 +697,7 @@ rt_private EIF_TYPE_INDEX eifcid(struct rt_type *type_entry)
 	if (!value) {
 			/* Type not found or possibly NONE. */
 		if (strcmp(type_entry->type_name, "NONE") == 0) {
-			return NONE_TYPE;
+			return DETACHABLE_NONE_TYPE;
 		} else {
 			return INVALID_DTYPE;
 		}

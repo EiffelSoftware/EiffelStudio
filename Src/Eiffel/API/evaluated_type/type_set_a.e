@@ -1194,7 +1194,7 @@ feature -- Generic conformance
 	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16
 			-- Id of a `like xxx'.
 		do
-			Result := {SHARED_GEN_CONF_LEVEL}.none_type
+			Result := {SHARED_GEN_CONF_LEVEL}.detachable_none_type
 			check
 				generated_id_not_implemented: False
 			end
@@ -1808,7 +1808,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

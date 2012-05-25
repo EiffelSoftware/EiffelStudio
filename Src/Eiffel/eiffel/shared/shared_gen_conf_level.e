@@ -11,7 +11,7 @@ class
 feature -- Generic conformance access
 
 	Terminator_type, invalid_dtype: NATURAL_16 = 0xFFFF
-	None_type: NATURAL_16 = 0xFFFE
+
 	Like_arg_type: NATURAL_16 = 0xFFFD
 	Like_current_type: NATURAL_16 = 0xFFFC
 	Like_pfeature_type: NATURAL_16 = 0xFFFB
@@ -25,6 +25,15 @@ feature -- Generic conformance access
 	attached_type: NATURAL_16 = 0xFF11
 	detachable_type: NATURAL_16 = 0xFF12
 	frozen_type: NATURAL_16 = 0xFF14
+
+	detachable_none_type: NATURAL_16 = 0xFFFE
+		-- Because of storable we cannot change the value of this constant
+		-- to be 0xFF21 (see below) as it will force us to change the C revision
+		-- format of storable.
+		-- However if there is a reason for bumping the C revision format, then
+		-- we should use this value as it will make the runtime slightly more
+--	detachable_none_type: NATURAL_16 = 0xFF21
+	attached_none_type: NATURAL_16 = 0xFF22
 
 	Max_dtype: NATURAL_16 = 0xFF00
 
@@ -54,7 +63,7 @@ feature -- TUPLE code
 			-- Code used to identify special type, used in metainformation only: bit type
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

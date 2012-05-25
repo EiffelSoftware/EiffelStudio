@@ -2,7 +2,7 @@
 	description: "Constants used for generic conformance."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2010, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -54,7 +54,6 @@ extern "C" {
 /*------------------------------------------------------------------*/
 
 #define TERMINATOR				0xFFFF
-#define NONE_TYPE				0xFFFE
 #define LIKE_ARG_TYPE			0xFFFD
 #define LIKE_CURRENT_TYPE		0xFFFC
 #define LIKE_PFEATURE_TYPE		0xFFFB
@@ -69,6 +68,18 @@ extern "C" {
 #define ATTACHED_TYPE			0xFF11
 #define DETACHABLE_TYPE			0xFF12
 #define FROZEN_TYPE				0xFF14
+
+/* Various NONE types. */
+/* Ideally we would like DETACHABLE_NONE_TYPE to be 0xFF21 to have an efficient macro
+ * implementation of RT_IS_NONE_TYPE but this would cause changing the storable format
+ * revision just for that. So instead we decided to keep the old value and wait for
+ * a major format change to do this as well.
+#define DETACHABLE_NONE_TYPE	0xFF21
+#define RT_IS_NONE_TYPE(g)		((g & 0xFFF0) == 0xFF20)
+*/
+#define DETACHABLE_NONE_TYPE	0xFFFE
+#define ATTACHED_NONE_TYPE		0xFF22
+#define RT_IS_NONE_TYPE(g)      (((g) == DETACHABLE_NONE_TYPE) || ((g) == ATTACHED_NONE_TYPE))
 
 /* Maximum valid type value one can have. */
 #define MAX_DTYPE				0xFF00

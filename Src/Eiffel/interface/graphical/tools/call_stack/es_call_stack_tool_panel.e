@@ -917,7 +917,11 @@ feature {NONE} -- Catcall warning access
 					ct := Void
 
 					l_fdtype := rtcc.expected
-					if l_fdtype - 1 = {SHARED_GEN_CONF_LEVEL}.none_type then --| -1: to convert to runtime type id
+						-- We do `l_fdtype - 1' because `rtcc' always contains the runtime type_id's + 1.
+					if
+						l_fdtype - 1 = {SHARED_GEN_CONF_LEVEL}.attached_none_type or
+						l_fdtype - 1 = {SHARED_GEN_CONF_LEVEL}.detachable_none_type
+					then
 						argtypename := "Void"
 					elseif l_fdtype <= l_max_type_id then
 							--| Try with compiler data						
@@ -949,7 +953,11 @@ feature {NONE} -- Catcall warning access
 					Result.append (" but got ")
 					l_fdtype := rtcc.actual
 						--| Try with compiler data
-					if l_fdtype - 1 = {SHARED_GEN_CONF_LEVEL}.none_type then --| -1: to convert to runtime type id
+						-- We do `l_fdtype - 1' because `rtcc' always contains the runtime type_id's + 1.
+					if
+						l_fdtype - 1 = {SHARED_GEN_CONF_LEVEL}.attached_none_type or
+						l_fdtype - 1 = {SHARED_GEN_CONF_LEVEL}.detachable_none_type
+					then
 						argtypename := "Void"
 
 					elseif l_fdtype <= l_max_type_id then
@@ -2232,7 +2240,7 @@ feature {NONE} -- Implementation, cosmetic
 
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

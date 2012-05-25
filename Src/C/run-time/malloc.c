@@ -2,7 +2,7 @@
 	description: "Memory allocation management routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -1068,14 +1068,18 @@ rt_public EIF_REFERENCE eif_type_malloc (EIF_TYPE_INDEX ftype)
 	EIF_REFERENCE result;
 	rt_uint_ptr l_array_index;
 
-	REQUIRE("Valid actual generic type", (ftype <= MAX_DTYPE) || (ftype == NONE_TYPE));
+	REQUIRE("Valid actual generic type", (ftype <= MAX_DTYPE) || (RT_IS_NONE_TYPE(ftype)));
 
-		/* The actual offset in the `rt_type_set' array is increased by '1' so that
-		 * we can store TYPE [NONE] at index `0'. */
-	if (ftype != NONE_TYPE) {
-		l_array_index = ftype + 1;
+		/* The actual offset in the `rt_type_set' array is increased by '2' so that
+		 * we can store TYPE [detachable NONE] and TYPE [attached NONE] at index `0' and `1'. */
+	if (!RT_IS_NONE_TYPE(ftype)) {
+		l_array_index = ftype + 2;
 	} else {
-		l_array_index = 0;
+		if (ftype == DETACHABLE_NONE_TYPE) {
+			l_array_index = 0;
+		} else {
+			l_array_index = 1;
+		}
 	}
 
 		/* Synchronization required to access `rt_type_set'. */

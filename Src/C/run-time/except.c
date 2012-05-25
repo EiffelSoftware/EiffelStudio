@@ -2,7 +2,7 @@
 	description: "Exception handling routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -1083,7 +1083,7 @@ rt_public void eif_check_catcall_at_runtime (EIF_REFERENCE arg, EIF_TYPE_INDEX d
 					System(dtype).cn_generator, a_feature_name, a_pos, eif_typename (expected_dftype));
 			}
 			if (catcall_detection_debugger_enabled) {
-				dcatcall(a_pos, expected_dftype, NONE_TYPE);
+				dcatcall(a_pos, expected_dftype, DETACHABLE_NONE_TYPE);
 			}
 #else
 			print_err_msg(stderr, "Catcall detected in {%s}.%s for arg#%d: expected %s but got Void\n",

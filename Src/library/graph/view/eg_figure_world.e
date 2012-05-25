@@ -836,14 +836,15 @@ feature -- Save/Restore
 			l_clusters: like clusters
 			l_cluster: EG_LINKABLE_FIGURE
 		do
+			sf := xml_routines.xml_double (node, "SCALE_FACTOR")
+			if sf = 0.0 then
+				sf := 1.0
+			end
+			scale (sf / scale_factor)
 			if attached {like xml_element} node.item_for_iteration as l_xml_element then
-				sf := xml_routines.xml_double (node, "SCALE_FACTOR")
-				if sf = 0.0 then
-					sf := 1.0
-				end
-				scale (sf / scale_factor)
 				from
 					l_cursor := l_xml_element.new_cursor
+					node.forth
 					l_cursor.start
 				until
 					l_cursor.after

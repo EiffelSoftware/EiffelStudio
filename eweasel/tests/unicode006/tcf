@@ -1,0 +1,14 @@
+test_name 	invalid-manifest-string-8-with-unicode
+test_description Ensure that non-ascii character do not appear in STRING_8 manifest string
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test_with_bom.e $CLUSTER test.e
+compile_melted
+compile_result validity_error TEST VQMC
+compile_result validity_error TEST VQMC
+
+copy_raw 	test_without_bom.e $CLUSTER test.e
+compile_melted
+compile_result syntax_error TEST 7
+
+test_end

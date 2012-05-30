@@ -89,7 +89,7 @@ feature {NONE} -- Test procedure
 			end
 
 			if is_odbc then
-				execute_query ({STRING_32} "insert into DB_TEST_PROCEDURE_TABLE (title, author, year, int_16, int_32, int_64, real_32_t, real_64_t, numeric_t) values ('面向对象软件构造', 'Bertrand Meyer', {d '1986-06-07'}, 9999, 999999, 9999999999999999, 888.888, 88888888.888888, 1.00)")
+				execute_query ({STRING_32} "insert into " + sql_table_name (table_name) + " (title, author, year, int_16, int_32, int_64, real_32_t, real_64_t, numeric_t) values ('面向对象软件构造', 'Bertrand Meyer', {d '1986-06-07'}, 9999, 999999, 9999999999999999, 888.888, 88888888.888888, 1.00)")
 			end
 
 			if is_oracle then
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 			if is_mysql then
 				Result := "SELECT * from DB_TEST_PROCEDURE_TABLE where title=a_title AND author=a_author AND year=a_year AND int_16=a_int_16 AND int_32=a_int_32 AND int_64=a_int_64 AND real_32_t=a_real_32_t AND real_64_t=a_real_64_t AND numeric_t=a_numeric_t"
 			else
-				Result := "SELECT * from DB_TEST_PROCEDURE_TABLE where title=:a_title AND author=:a_author AND year=:a_year AND int_16=:a_int_16 AND int_32=:a_int_32 AND int_64=:a_int_64 AND real_32_t=:a_real_32_t AND real_64_t=:a_real_64_t AND numeric_t=:a_numeric_t"
+				Result := "SELECT * from " + sql_table_name (table_name) + " where title=:a_title AND author=:a_author AND year=:a_year AND int_16=:a_int_16 AND int_32=:a_int_32 AND int_64=:a_int_64 AND real_32_t=:a_real_32_t AND real_64_t=:a_real_64_t AND numeric_t=:a_numeric_t"
 			end
 		end
 

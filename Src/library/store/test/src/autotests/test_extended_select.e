@@ -68,6 +68,7 @@ feature {NONE} -- Basic select
 			-- Create table in database with same structure as 'book'
 		local
 			l_book: like extended_select_create_data
+			l_table_name: STRING
 		do
 			prepare_repository (extended_select_table_name)
 
@@ -83,8 +84,9 @@ feature {NONE} -- Basic select
 			end
 
 			if is_odbc then
-				execute_query ({STRING_32} "insert into DB_EXTENDED_SELECT (title, author, quantity, price, year, double_value) values ('面向对象软件构造', 'Bertrand Meyer', 4, 200.00, {d '1986-06-07'}, 7898.3423)")
-				execute_query ({STRING_32} "insert into DB_EXTENDED_SELECT (title, author, quantity, price, year, double_value) values ('Object-Oriented Software Construction', 'Bertrand Meyer', 4, 200.00, {d '1986-06-07'}, 7898.3423)")
+				l_table_name := sql_table_name (extended_select_table_name)
+				execute_query ({STRING_32} "insert into " + l_table_name + {STRING_32} " (title, author, quantity, price, year, double_value) values ('面向对象软件构造', 'Bertrand Meyer', 4, 200.00, " + sql_from_datetime (create {DATE_TIME}.make (1986, 6, 7, 0, 0, 0)) + ", 7898.3423)")
+				execute_query ({STRING_32} "insert into " + l_table_name + {STRING_32} " (title, author, quantity, price, year, double_value) values ('Object-Oriented Software Construction', 'Bertrand Meyer', 4, 200.00, " + sql_from_datetime (create {DATE_TIME}.make (1986, 6, 7, 0, 0, 0)) + ", 7898.3423)")
 			end
 
 			if is_oracle then
@@ -127,8 +129,10 @@ feature {NONE} -- Basic select
 			end
 		end
 
-	extended_select_select_data: STRING =
-		"select * from DB_EXTENDED_SELECT where author = :author_name order by quantity"
+	extended_select_select_data: STRING
+		do
+			Result := "select * from " + sql_table_name (extended_select_table_name) + " where author = :author_name order by quantity"
+		end
 
 	extended_select_table_name: STRING = "DB_EXTENDED_SELECT"
 

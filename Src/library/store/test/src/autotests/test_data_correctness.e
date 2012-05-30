@@ -99,8 +99,10 @@ feature {NONE} -- Quotes in string
 			end
 		end
 
-	quotes_in_string_select_data: STRING =
-		"select * from DB_SYMBOLS_TABLE"
+	quotes_in_string_select_data: STRING
+		do
+			Result := "select * from " + sql_table_name (quotes_in_string_table_name)
+		end
 
 	quotes_in_string_table_name: STRING = "DB_SYMBOLS_TABLE"
 

@@ -72,6 +72,7 @@ feature {NONE} -- Basic select
 			l_data: like numeric_types_create_data
 			l_repository: DB_REPOSITORY
 			l_db_store: DB_STORE
+			l_table_name: STRING
 		do
 			drop_repository (numeric_types_table_name)
 
@@ -82,8 +83,9 @@ feature {NONE} -- Basic select
 			end
 
 			if is_odbc then
-				execute_query ("create table DB_NUMERIC_TYPES (int_16 SMALLINT, int_32 INT, int_64 bigint, real_32_t real, real_64_t float, numeric_t decimal(19,10))")
-				execute_query ("insert into DB_NUMERIC_TYPES (int_16, int_32, int_64, real_32_t, real_64_t, numeric_t) values (1, 10000, 100000000, 7898.34, 999999.999999, -999999999.999999)")
+				l_table_name := sql_table_name (numeric_types_table_name)
+				execute_query ("create table " + l_table_name + " (int_16 SMALLINT, int_32 INT, int_64 bigint, real_32_t real, real_64_t float, numeric_t decimal(19,10))")
+				execute_query ("insert into " + l_table_name + " (int_16, int_32, int_64, real_32_t, real_64_t, numeric_t) values (1, 10000, 100000000, 7898.34, 999999.999999, -999999999.999999)")
 			end
 
 			if is_oracle then
@@ -132,9 +134,10 @@ feature {NONE} -- Basic select
 			end
 		end
 
-	numeric_types_select_data: STRING =
---		"select * from DB_NUMERIC_TYPES where int_16 = :int_16, int_32 = :int_32, int_64 = :int_64, real_32_t = :real_32_t, real_64_t = :real_64_t, numeric_t = :numeric_t)"
-		"select * from DB_NUMERIC_TYPES"
+	numeric_types_select_data: STRING
+		do
+			Result := "select * from " + sql_table_name (numeric_types_table_name)
+		end
 
 	numeric_types_table_name: STRING = "DB_NUMERIC_TYPES"
 

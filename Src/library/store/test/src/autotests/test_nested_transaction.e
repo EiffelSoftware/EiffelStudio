@@ -160,8 +160,10 @@ feature {NONE}
 
 feature {NONE} -- Constants
 
-	Select_data: STRING =
-		"select * from DB_BOOK_NESTED_TRANSACTION"
+	Select_data: STRING
+		do
+			Result := "select * from " + sql_table_name (Table_name)
+		end
 
 	Table_name: STRING =
 		"DB_BOOK_NESTED_TRANSACTION"

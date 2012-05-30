@@ -127,8 +127,27 @@ feature {NONE}
 
 	reset_data (a_table_name: STRING)
 		do
-			db_change.modify ("DROP TABLE " + a_table_name)
+			db_change.modify ("DROP TABLE " + sql_table_name (a_table_name))
 			assert ("Reset data failed: " + db_change.error_message_32, db_change.is_ok)
+		end
+
+feature -- Spec helper
+
+	sql_from_datetime (a_dt: DATE_TIME): STRING
+			-- Specific SQL from DATE_TIME
+		do
+			Result := db_spec.date_to_str (a_dt)
+		end
+
+	sql_table_name (a_name: STRING): STRING
+			-- SQL table name quoted if needed
+		local
+			l_sep: STRING
+		do
+			l_sep := db_spec.identifier_quoter
+			create Result.make_from_string (a_name)
+			Result.prepend (l_sep)
+			Result.append (l_sep)
 		end
 
 feature {NONE} -- Decimal callbacks

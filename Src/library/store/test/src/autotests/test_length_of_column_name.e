@@ -92,8 +92,10 @@ feature {NONE} -- Selection
 
 feature {NONE} -- Constants
 
-	Select_data: STRING =
-		"select * from DB_LONG_COLUMN_NAME"
+	Select_data: STRING
+		do
+			Result := "select * from " + sql_table_name (Table_name)
+		end
 
 	Table_name: STRING =
 		"DB_LONG_COLUMN_NAME"

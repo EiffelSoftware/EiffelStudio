@@ -49,6 +49,9 @@ inherit
 	ES_EIS_NOTE_PICKER
 
 	ES_HELP_REQUEST_BINDER
+		export {ANY}
+			show_help
+		end
 
 	EB_RECYCLABLE
 

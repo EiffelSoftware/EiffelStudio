@@ -2196,6 +2196,7 @@ feature -- Title part
 	t_Find: STRING_32							do Result := locale.translation("Find: ")	end
 	t_Find_test_case_classes: STRING_32			do Result := locale.translation("Find test case classes")	end
 	t_finish_freezing_status: STRING_32			do Result := locale.translation("Finish Freezing Status")	end
+	t_go_to_info: STRING_32						do Result := locale.translation ("Go to the selected external information source") end
 	t_Index: STRING_32							do Result := locale.translation("Index")	end
 	t_New_class: STRING_32						do Result := locale.translation("Add New Class")	end
 	t_Existing_class: STRING_32					do Result := locale.translation("Add Existing Class")	end

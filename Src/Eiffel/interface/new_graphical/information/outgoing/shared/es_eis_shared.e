@@ -56,6 +56,14 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
+	eis_variables: ES_EIS_VARIABLES
+			-- Shared EIS variables
+		once
+			create Result
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 note
 	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

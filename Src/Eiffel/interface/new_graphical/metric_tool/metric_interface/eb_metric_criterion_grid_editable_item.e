@@ -26,7 +26,7 @@ inherit
 
 feature -- Access
 
-	text_field: COMPLETABLE_TEXT_FIELD
+	text_field: EB_METRIC_COMPLETABLE_TEXT_FIELD
 		-- Text field used to edit `Current' on `activate'.
 		-- Void when `Current' isn't being activated.
 
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 	activate_action (popup_window: EV_POPUP_WINDOW)
 			-- `Current' has been requested to be updated via `popup_window'.
 		do
-			create text_field
+			create text_field.make
 			text_field.set_completion_possibilities_provider (completion_possibilities_provider)
 			text_field.set_save_list_position_action (agent on_save_auto_complete_window_position)
 			if completion_possibilities_provider /= Void then
@@ -108,7 +108,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 note
-        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2012, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

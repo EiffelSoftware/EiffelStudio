@@ -885,14 +885,14 @@ feature {NONE} -- Grid items
 			a_entry_not_void: a_entry /= Void
 		local
 			l_source: STRING_32
-			l_file_prop: FILE_PROPERTY
+			l_file_prop: ES_EIS_FILE_PROPERTY
 		do
 			l_source := a_entry.source
 			if l_source = Void then
 				create l_source.make_empty
 			end
 			if a_editable then
-				create l_file_prop.make (once "")
+				create l_file_prop.make (once "", variable_provider_from_entry (a_entry))
 				l_file_prop.set_value (l_source)
 				l_file_prop.change_value_actions.extend (agent on_source_changed (?, l_file_prop))
 				l_file_prop.set_text_validation_agent (agent is_source_valid (?, l_file_prop))
@@ -1229,6 +1229,14 @@ feature {NONE} -- Session IDs
 	eis_entry_grid_sorting_order_session_id: STRING_8 = "com.eiffel.eis_tool.entry_grid_sorting_order"
 
 feature {NONE} -- Implementation
+
+	variable_provider_from_entry (a_entry: EIS_ENTRY): COMPLETION_POSSIBILITIES_PROVIDER
+			-- Completion possiblity provider from `a_entry'
+		require
+			a_entry_not_void: a_entry /= Void
+		do
+			create {ES_EIS_VARIABLE_PROVIDER} Result.make_from_entry (a_entry)
+		end
 
 	known_protocols: ARRAYED_LIST [STRING_32]
 			-- Known EIS protocols

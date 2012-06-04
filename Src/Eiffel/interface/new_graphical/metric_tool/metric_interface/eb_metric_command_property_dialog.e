@@ -66,7 +66,7 @@ feature{NONE} -- Initialization
 			create l_browse_btn.make_with_text ("...")
 			create ok_actions
 			create cancel_actions
-			create command_field
+			create command_field.make
 			create l_complete.make (placeholder_list)
 			l_complete.set_code_completable (command_field)
 			command_field.set_completion_possibilities_provider (l_complete)
@@ -240,7 +240,7 @@ feature -- Access
 	cancel_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when "Cancel" button is pressed
 
-	command_field: COMPLETABLE_TEXT_FIELD
+	command_field: EB_METRIC_COMPLETABLE_TEXT_FIELD
 			-- Text field to set command line
 
 	working_directory_field: EV_TEXT_FIELD
@@ -513,6 +513,37 @@ feature{NONE} -- Implementation
 	placeholder_list_internal: like placeholder_list
 			-- Implementation of `placeholder_list'
 
+;note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end
 
 

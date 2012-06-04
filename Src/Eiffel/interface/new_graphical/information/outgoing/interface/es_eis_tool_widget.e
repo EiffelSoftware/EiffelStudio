@@ -267,6 +267,16 @@ feature {NONE} -- Initialization
 			l_button.select_actions.extend (agent on_entry_delete)
 			l_toolbar.extend (l_button)
 
+			l_toolbar.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
+
+				-- Go to button
+			create l_button.make
+			l_button.set_text (interface_names.b_go_to)
+			l_button.set_tooltip (interface_names.t_go_to_info)
+			l_button.set_pixel_buffer (pixmaps.icon_pixmaps.general_information_icon_buffer)
+			l_button.select_actions.extend (agent on_go_to_button_pressed)
+			l_toolbar.extend (l_button)
+
 			l_vbox.extend (l_toolbar)
 			l_toolbar.compute_minimum_size
 			l_vbox.disable_item_expand (l_toolbar)
@@ -430,6 +440,14 @@ feature -- Callbacks
 			end
 		end
 
+	on_go_to_button_pressed
+			-- Go to button pressed
+		do
+			if attached tree.current_view as l_view then
+				l_view.show_help
+			end
+		end
+
 feature -- Progress notification
 
 	on_progress_start
@@ -539,6 +557,7 @@ feature {NONE} -- Implementation
 invariant
 	context_menu_factory_not_void: context_menu_factory /= Void
 	panel_not_void: panel /= Void
+	tree_not_void: tree /= Void
 
 note
 	copyright: "Copyright (c) 1984-2012, Eiffel Software"

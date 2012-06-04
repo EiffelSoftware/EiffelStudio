@@ -43,6 +43,12 @@ feature -- Access
 
 	empty_string: STRING = "%"%""
 
+	variable_start: CHARACTER = '$'
+
+	left_paranthsis: CHARACTER = '('
+
+	right_paranthsis: CHARACTER = ')'
+
 feature -- Built in variables
 
 	target_name_var_name: STRING_8 = "target_name"

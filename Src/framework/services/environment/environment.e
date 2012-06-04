@@ -61,25 +61,17 @@ feature -- Access
 			-- <Precursor>
 		local
 			l_list: ARRAYED_LIST [READABLE_STRING_8]
-			l_keys: ARRAY [READABLE_STRING_8]
-			i, l_upper: INTEGER
 		do
 			if attached internal_variables as l_result then
 				Result := l_result
 			else
-				l_keys := table.current_keys
-				create l_list.make (l_keys.count)
-				from
-					i := 1
-					l_upper := l_keys.upper
-				until
-					i > l_upper
+				create l_list.make (table.count)
+				across
+					table as l_c
 				loop
-					if attached l_list.item_for_iteration as l_item then
-						l_list.extend (l_item)
-					end
-					i := i + 1
+					l_list.extend (l_c.key)
 				end
+
 				Result := l_list
 				internal_variables := Result
 			end
@@ -283,7 +275,7 @@ invariant
 	table_compare_objects: table.object_comparison
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

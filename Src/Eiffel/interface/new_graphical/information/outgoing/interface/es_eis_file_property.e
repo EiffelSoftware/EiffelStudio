@@ -1,69 +1,62 @@
 note
-	description: "Default help provider for EIS entries."
-	status: "See notice at end of class."
-	legal: "See notice at end of class."
+	description: "EIS file property with completable text field"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EIS_DEFAULT_HELP_PROVIDER
+	ES_EIS_FILE_PROPERTY
 
 inherit
-	ES_EIS_ENTRY_HELP_PROVIDER
+	FILE_PROPERTY
+		rename
+			make as make_property
 		redefine
-			show_help,
-			context_variables
+			text_field,
+			activate_action
 		end
 
 create
 	make
 
-feature -- Access
+feature {NONE} -- Initialization
 
-	document_protocol: STRING
-			-- Document protocol used by a URI to navigate to the help accessible from the provider.
-		once
-			create Result.make_empty
-			Result.append ("URI")
-		end
-
-	document_description: STRING_32
-			-- Document short description
-		once
-			create Result.make_empty
-			Result.append ("URI")
-		end
-
-feature -- Basic operation
-
-	show_help (a_context_id: READABLE_STRING_GENERAL; a_section: HELP_CONTEXT_SECTION_I)
-			-- <precursor>
+	make (a_name: like name; a_provider: like variable_provider)
+			-- Initialization
+		require
+			a_name_not_void: a_name /= Void
+			a_provider_not_void: a_provider /= Void
 		do
-			if
-				attached {HELP_SECTION_EIS_ENTRY} a_section as lt_section and then
-				attached lt_section.entry as lt_entry and then
-				lt_entry.source /= Void and then
-				not lt_entry.source.is_empty and then
-				attached lt_entry.source.as_string_8.twin as lt_src	 -- |FIXME: Bad conversion to STRING_8
-			then
-				last_entry := lt_entry
-				format_uris (lt_src)
-				launch_uri (lt_src)
-			end
+			make_property (a_name)
+			variable_provider := a_provider
 		end
+
+feature {NONE} -- Access
+
+	text_field: ES_EIS_COMPLETABLE_TEXT_FIELD
 
 feature {NONE} -- Implementation
 
-	context_variables: HASH_TABLE [STRING_8, READABLE_STRING_8]
-			-- <precursor>
+	activate_action (a_popup_window: EV_POPUP_WINDOW)
+			-- Activate action.
 		do
-			Result := eis_variables.es_built_in_variables.twin
-			Result.merge (Precursor)
+			Precursor (a_popup_window)
+			if is_text_editing and then attached text_field as l_text_field then
+				l_text_field.set_tooltip (names.t_show_variable_suggestion)
+				l_text_field.set_completion_possibilities_provider (variable_provider)
+				l_text_field.set_preferred_width_agent (agent l_text_field.width)
+				variable_provider.set_code_completable (l_text_field)
+			end
 		end
 
-note
+	variable_provider: COMPLETION_POSSIBILITIES_PROVIDER
+			-- Provider
+
+invariant
+	variable_provider_set: variable_provider /= Void
+
+;note
 	copyright: "Copyright (c) 1984-2012, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -92,5 +85,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

@@ -2247,6 +2247,7 @@ feature -- Title part
 		end
 	t_Stop_test_run: STRING_32					do Result := locale.translation("Stop test run")	end
 	t_Show_failures_only: STRING_32				do Result := locale.translation("Show failures only")	end
+	t_show_variable_suggestion: STRING_32		do Result := locale.translation("Type '$' to show available variables")	end
 	t_precompile_progress: STRING_32 			do Result := locale.translation ("Precompilation Progress") end
 	t_Slice_limits: STRING_32					do Result := locale.translation("Choose New Slice Limits for Special Objects")	end
 	t_System: STRING_32							do Result := locale.translation("Project Settings")	end

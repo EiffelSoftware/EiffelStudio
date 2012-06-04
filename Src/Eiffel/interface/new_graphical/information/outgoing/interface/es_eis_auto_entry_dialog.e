@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			create enable_item
 			grid.set_item (2, 1, enable_item)
 
-			create source_item.make_with_text ("...")
+			create source_item.make ("...", completion_provider)
 			source_item.pointer_double_press_actions.force_extend (agent source_item.activate)
 			grid.set_item (2, 2, source_item)
 
@@ -71,11 +71,18 @@ feature -- Access
 feature {NONE} -- Widgets
 
 	grid: ES_GRID
+			-- Grid to list entry
 
 	enable_item: EV_GRID_CHECKABLE_LABEL_ITEM
-	source_item: EV_GRID_EDITABLE_ITEM
+	source_item: ES_EIS_FILE_PROPERTY
 
 feature {NONE} -- Implementation
+
+	completion_provider: ES_EIS_AUTO_ENTRY_VARIABLE_PROVIDER
+			-- The provider of variables
+		do
+			create Result.make (target)
+		end
 
 	modify_auto_entry (a_target: CONF_TARGET; enabled: BOOLEAN; src: STRING_32)
 			-- Modify auto entry in `a_target', add a new one if absent.
@@ -145,10 +152,10 @@ feature {NONE} -- Implementation
 			read_auto_entry := l_entry
 			if l_entry /= Void then
 				enable_item.set_is_checked (l_entry.enabled)
-				source_item.set_text (l_entry.src)
+				source_item.set_value (l_entry.src)
 			else
 				enable_item.set_is_checked (False)
-				source_item.set_text (default_source)
+				source_item.set_value (default_source)
 			end
 		end
 
@@ -198,7 +205,7 @@ feature {NONE} -- Action
 		do
 			l_entry := read_auto_entry
 			l_enabled := enable_item.is_checked
-			l_source_str := source_item.text
+			l_source_str := source_item.value
 			if l_entry /= Void then
 				l_save := True
 			else
@@ -219,8 +226,11 @@ feature {NONE} -- Internationalizations
 	l_enable: STRING = "Enable Auto-Entry"
 	l_source: STRING = "Source"
 
+invariant
+	target_not_void: target /= Void
+
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

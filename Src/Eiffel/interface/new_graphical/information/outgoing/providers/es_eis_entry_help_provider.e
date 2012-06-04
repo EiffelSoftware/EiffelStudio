@@ -29,56 +29,9 @@ feature {NONE} -- Variable expansion
 
 	context_variables: HASH_TABLE [STRING, READABLE_STRING_8]
 			-- A table of context variables, indexed by a variable name
-		local
-			l_type: NATURAL
-			l_target: CONF_TARGET
-			l_group: CONF_GROUP
-			l_folder: EB_FOLDER
-			l_class: CONF_CLASS
-			l_feature: E_FEATURE
 		do
-			if attached last_entry as entry then
-				create Result.make (5)
-				if attached entry.id as l_id then
-					l_target := id_solution.target_of_id (l_id)
-					l_type := id_solution.most_possible_type_of_id (l_id)
-					if l_type = id_solution.feature_type then
-						l_feature := id_solution.feature_of_id (l_id)
-					elseif l_type = id_solution.class_type then
-						l_class := id_solution.class_of_id (l_id)
-					elseif l_type = id_solution.folder_type then
-						l_folder := id_solution.folder_of_id (l_id)
-					elseif l_type = id_solution.group_type then
-						l_group := id_solution.group_of_id (l_id)
-					end
-
-					if attached id_solution.last_target_name as lt_target then
-						Result.force (lt_target, {ES_EIS_TOKENS}.target_name_var_name)
-					end
-					if attached id_solution.last_group_name as lt_group then
-						Result.force (lt_group, {ES_EIS_TOKENS}.group_name_var_name)
-					end
-					if attached id_solution.last_class_name as lt_class then
-						Result.force (lt_class, {ES_EIS_TOKENS}.class_name_var_name)
-					end
-					if attached id_solution.last_feature_name as lt_feature then
-						Result.force (lt_feature, {ES_EIS_TOKENS}.feature_name_var_name)
-					end
-
-						-- Add `unique_id'.
-					Result.force (id_solution.url_id (l_id), {ES_EIS_TOKENS}.unique_id_var_name)
-
-
-					if l_target /= Void then
-							-- Add `system_path'
-						if attached l_target.system.directory as l_directory then
-							Result.force (l_directory, {ES_EIS_TOKENS}.system_path_var_name)
-						end
-
-							-- Add variables defined in the target.
-						Result.merge (l_target.variables)
-					end
-				end
+			if attached last_entry as l_entry then
+				Result := eis_variables.eis_variables_from_entry (l_entry)
 				Result.merge (Precursor)
 			else
 				Result := Precursor

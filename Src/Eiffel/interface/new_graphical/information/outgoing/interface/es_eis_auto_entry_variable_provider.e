@@ -1,69 +1,74 @@
 note
-	description: "Default help provider for EIS entries."
-	status: "See notice at end of class."
-	legal: "See notice at end of class."
+	description: "Variable provider for auto entry completion"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EIS_DEFAULT_HELP_PROVIDER
+	ES_EIS_AUTO_ENTRY_VARIABLE_PROVIDER
 
 inherit
-	ES_EIS_ENTRY_HELP_PROVIDER
+	ES_EIS_VARIABLE_PROVIDER
 		redefine
-			show_help,
-			context_variables
+			completion_possibilities
 		end
 
 create
 	make
 
+feature {NONE} -- Initialization
+
+	make (a_target: like target)
+			-- Initialization
+		require
+			a_target_not_void: a_target /= Void
+		do
+			target := a_target
+		ensure
+			target_set: target = a_target
+		end
+
 feature -- Access
 
-	document_protocol: STRING
-			-- Document protocol used by a URI to navigate to the help accessible from the provider.
-		once
-			create Result.make_empty
-			Result.append ("URI")
-		end
-
-	document_description: STRING_32
-			-- Document short description
-		once
-			create Result.make_empty
-			Result.append ("URI")
-		end
-
-feature -- Basic operation
-
-	show_help (a_context_id: READABLE_STRING_GENERAL; a_section: HELP_CONTEXT_SECTION_I)
-			-- <precursor>
+	completion_possibilities: SORTABLE_ARRAY [like name_type]
+			-- Completions proposals found by `prepare_auto_complete'
+		local
+			l_variables: like eis_variables.all_supported_variables_from_entry
+			i: INTEGER
+			l_string: STRING
+			l_name: like name_type
 		do
-			if
-				attached {HELP_SECTION_EIS_ENTRY} a_section as lt_section and then
-				attached lt_section.entry as lt_entry and then
-				lt_entry.source /= Void and then
-				not lt_entry.source.is_empty and then
-				attached lt_entry.source.as_string_8.twin as lt_src	 -- |FIXME: Bad conversion to STRING_8
-			then
-				last_entry := lt_entry
-				format_uris (lt_src)
-				launch_uri (lt_src)
+			l_variables := eis_variables.all_supported_variables_for_auto_entry (target)
+			create Result.make_filled (Void, 0, l_variables.count - 1)
+			from
+				l_variables.start
+				i := 0
+			until
+				l_variables.after
+			loop
+				create l_string.make (100)
+				l_string.append_character ({ES_EIS_TOKENS}.variable_start)
+				l_string.append_character ({ES_EIS_TOKENS}.left_paranthsis)
+				l_string.append (l_variables.key_for_iteration)
+				l_string.append_character ({ES_EIS_TOKENS}.right_paranthsis)
+				create l_name.make (l_string)
+				Result.put (l_name, i)
+				i := i + 1
+				l_variables.forth
 			end
+			Result.sort
 		end
 
 feature {NONE} -- Implementation
 
-	context_variables: HASH_TABLE [STRING_8, READABLE_STRING_8]
-			-- <precursor>
-		do
-			Result := eis_variables.es_built_in_variables.twin
-			Result.merge (Precursor)
-		end
+	target: CONF_TARGET
+			-- Related target
+
+invariant
+	target_not_void: target /= Void
 
 note
 	copyright: "Copyright (c) 1984-2012, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -92,5 +97,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

@@ -235,23 +235,28 @@ feature {NONE} -- Initialization
 			-- EIS item detail panel.
 		local
 			l_vbox: EV_VERTICAL_BOX
-			l_border: ES_BORDERED_WIDGET [like entry_list]
+			l_border: ES_BORDERED_WIDGET [EV_WIDGET]
 			l_toolbar: SD_TOOL_BAR
 			l_button: SD_TOOL_BAR_BUTTON
 		do
 			create l_vbox
 			split_area.set_second (l_vbox)
+			create list_area_widget
+			l_vbox.extend (list_area_widget)
+			l_vbox.extend (nothing_widget)
 
 				-- Entry list
 			create entry_list.make (panel)
 			create l_border.make (entry_list)
-			l_vbox.extend (l_border)
+			list_area_widget.extend (l_border)
+			display_nothing
 
 				-- Tool bar
 			create l_toolbar.make
 
 				-- Add button
 			create l_button.make
+			add_button := l_button
 			l_button.set_text (interface_names.b_add)
 			l_button.set_tooltip (interface_names.t_Add_eis_entry)
 			l_button.set_pixel_buffer (pixmaps.icon_pixmaps.general_add_icon_buffer)
@@ -261,6 +266,7 @@ feature {NONE} -- Initialization
 
 				-- Delete button
 			create l_button.make
+			delete_button := l_button
 			l_button.set_text (interface_names.b_delete_command)
 			l_button.set_tooltip (interface_names.t_delete_selected_items)
 			l_button.set_pixel_buffer (pixmaps.icon_pixmaps.general_delete_icon_buffer)
@@ -277,9 +283,9 @@ feature {NONE} -- Initialization
 			l_button.select_actions.extend (agent on_go_to_button_pressed)
 			l_toolbar.extend (l_button)
 
-			l_vbox.extend (l_toolbar)
+			list_area_widget.extend (l_toolbar)
 			l_toolbar.compute_minimum_size
-			l_vbox.disable_item_expand (l_toolbar)
+			list_area_widget.disable_item_expand (l_toolbar)
 
 			create grid_support.make_with_grid (entry_list)
 			grid_support.enable_grid_item_pnd_support
@@ -336,6 +342,15 @@ feature -- Access
 
 	background_sweeping_progress_bar: EV_HORIZONTAL_PROGRESS_BAR
 			-- Progress bar to display progress of background sweeping.
+
+	list_area_widget: detachable EV_VERTICAL_BOX
+			-- The widget to display entry list
+
+	add_button: detachable SD_TOOL_BAR_BUTTON
+			-- Add button
+
+	delete_button: detachable SD_TOOL_BAR_BUTTON
+			-- Delete button
 
 feature -- Callbacks
 
@@ -518,6 +533,39 @@ feature -- Element Change
 			panel.reset_stone
 		end
 
+	display_list
+			-- Display entry list in the list area.
+		do
+			if attached list_area_widget as l_list then
+				nothing_widget.hide
+				l_list.show
+			end
+		end
+
+	display_nothing
+			-- Display nothing in the list area.
+		do
+			if attached list_area_widget as l_list then
+				l_list.hide
+				nothing_widget.show
+			end
+		end
+
+	inform_editable (a_editable: BOOLEAN)
+			-- Inform the widget GUI current view displayed is editable or not.
+			-- Change the sensitivity of buttons accordingly.
+		do
+			if attached add_button as l_ab and then attached delete_button as l_db then
+				if a_editable then
+					l_ab.enable_sensitive
+					l_db.enable_sensitive
+				else
+					l_ab.disable_sensitive
+					l_db.disable_sensitive
+				end
+			end
+		end
+
 feature -- Query
 
 	last_stone_targeted: BOOLEAN
@@ -544,6 +592,21 @@ feature {NONE} -- Implementation
 			create l_dialog.make_with_target (a_target, agent refresh_list)
 			l_dialog.set_is_modal (True)
 			l_dialog.show_on_active_window
+		end
+
+	nothing_widget: EV_HORIZONTAL_BOX
+			-- Widget to display nothing.
+		local
+			l_border: ES_BORDERED_WIDGET [EV_WIDGET]
+			l_hbox: EV_HORIZONTAL_BOX
+		once
+			create Result
+			create l_hbox
+			create l_border.make (l_hbox)
+			Result.extend (l_border)
+			l_hbox.extend (create {EV_LABEL}.make_with_text (interface_names.l_no_information_available))
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	internal_recycle

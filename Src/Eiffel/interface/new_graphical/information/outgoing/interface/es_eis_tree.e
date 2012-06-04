@@ -110,6 +110,7 @@ feature {NONE} -- Initialization
 			end
 
 			create tag_header.make (interface_names.l_all_tags, pixmaps.icon_pixmaps.information_tags_icon)
+			tag_header.pointer_button_press_actions.extend (agent on_button_press_action)
 			extend (tag_header)
 			--create affected_header.make (interface_names.l_affected_items, pixmaps.icon_pixmaps.information_affected_items_icon)
 			--extend (affected_header)
@@ -277,16 +278,21 @@ feature {NONE} -- Actions
 					-- If old view is void
 				if old_view = Void or else not l_view.same_view (old_view) then
 					l_view.display
+					eis_tool_widget.inform_editable (l_view.component_editable)
 					if old_view /= Void then
 							-- Call destroy to recycle callbacks from the EIS grid.
 						old_view.destroy
 					end
 					old_view := l_view
 				end
-			elseif old_view /= Void then
-				old_view.wipe_out
-				old_view.destroy
-				old_view := Void
+				eis_tool_widget.display_list
+			else
+				if old_view /= Void then
+					old_view.wipe_out
+					old_view.destroy
+					old_view := Void
+				end
+				eis_tool_widget.display_nothing
 			end
 			render_information_sign_for_node (a_item)
 		end

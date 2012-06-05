@@ -2354,6 +2354,9 @@ feature -- Status report
 					if a_is_tab_navigatable and then Result /= Void and then not Result.is_tab_navigatable then
 						Result := Void
 					end
+					if Result /= Void and then not is_item_navigatable_to (Result) then
+						Result := Void
+					end
 					l_current_row_index := l_current_row_index + l_row_offset
 				end
 					-- Increase column and row values to the next valid index.

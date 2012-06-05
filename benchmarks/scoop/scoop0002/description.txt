@@ -1,0 +1,4 @@
+A simple test.
+n processors are created, after that m calls are made to random processors (one at a time). Calls are synchronized.
+The result is BOOLEAN (expanded type).
+Time of locking and call applying is counted.

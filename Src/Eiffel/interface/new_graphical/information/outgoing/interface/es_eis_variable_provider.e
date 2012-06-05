@@ -32,6 +32,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	code_completable: ES_EIS_COMPLETABLE_TEXT_FIELD
+			-- <Precursor>
+
 	completion_possibilities: SORTABLE_ARRAY [like name_type]
 			-- Completions proposals found by `prepare_auto_complete'
 		local
@@ -70,14 +73,11 @@ feature {NONE} -- Access
 	eis_entry: detachable EIS_ENTRY
 			-- The related EIS entry
 
-	code_completable: ES_EIS_COMPLETABLE_TEXT_FIELD
-			-- <Precursor>
-
 	insertion: STRING_32
 			-- String to be partially completed
 		local
 			l_text: STRING_32
-			l_index, l_wc_index: INTEGER
+			l_index: INTEGER
 			done: BOOLEAN
 		do
 			if attached code_completable as l_completable then

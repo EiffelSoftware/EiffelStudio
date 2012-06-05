@@ -991,7 +991,11 @@ rt_public void eif_thr_exit(void)
 		rt_globals = NULL;
 
 #ifdef ISE_GC
-			/* We cannot use `eif_unsynchronize_gc' because `rt_globals' has been completely freed. */
+			/* We cannot use `eif_unsynchronize_gc' because `rt_globals' has been completely freed so
+			 * we have to do things manually.
+			 * We first signal that we are not collecting anymore and then we unlock `eif_gc_mutex'. */
+		eif_is_gc_collecting = 0;
+
 		RT_TRACE(eif_pthread_cs_unlock(eif_gc_mutex));
 #endif
 

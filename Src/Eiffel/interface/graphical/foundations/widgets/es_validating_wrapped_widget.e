@@ -27,7 +27,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	make (a_text_field: attached like text_field; a_function: attached like entry_error_function)
+	make (a_text_field: like text_field; a_function: attached like entry_error_function)
 			-- Initializes a validation text field.
 			--
 			-- `a_text_field': The text field to wrap.
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Initialization: User interface
 
-	build_widget_interface (a_widget: attached EV_HORIZONTAL_BOX)
+	build_widget_interface (a_widget: EV_HORIZONTAL_BOX)
 			-- <Precursor>
 		do
 			a_widget.set_padding ({ES_UI_CONSTANTS}.label_horizontal_padding)
@@ -87,7 +87,7 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	text: attached STRING_32 assign set_text
+	text: STRING_32 assign set_text
 			-- Actual text
 		require
 			is_interface_usable: is_interface_usable
@@ -110,33 +110,33 @@ feature {NONE} -- Access
 
 feature -- Access: Validataion and formatting
 
-	entry_error_function: detachable FUNCTION [ANY, TUPLE [attached STRING_32], attached TUPLE [is_valid: BOOLEAN; reason: detachable STRING_32]]
+	entry_error_function: detachable FUNCTION [ANY, TUPLE [STRING_32], TUPLE [is_valid: BOOLEAN; reason: detachable STRING_32]]
 			-- Function used to validate the entered text, which upon failing will display an error message.
 
-	entry_validation: detachable PREDICATE [ANY, TUPLE [text: attached STRING_32]] assign set_entry_validation
+	entry_validation: detachable PREDICATE [ANY, TUPLE [text: STRING_32]] assign set_entry_validation
 			-- An optional predicate used to determine if the changed text is valid for the widget.
 			-- Note: This differs from `entry_error_function' because text will be disallowed where
 			--       as the `entry_error_function' will allow text but display an error.
 
-	entry_formatter: detachable FUNCTION [ANY, TUPLE [attached STRING_32], attached STRING_32] assign set_entry_formatter
+	entry_formatter: detachable FUNCTION [ANY, TUPLE [STRING_32], STRING_32] assign set_entry_formatter
 			-- An optional function used to format the entered text.
 
 feature -- User interface elements
 
-	text_field: attached EV_TEXT_FIELD
+	text_field: EV_TEXT_FIELD
 			-- Actual text field.
 
 feature {NONE} -- User interface elements
 
-	validation_pixmap: attached EV_PIXMAP
+	validation_pixmap: EV_PIXMAP
 			-- Validation pixmap to show when not validated.
 
-	original_foreground_color: attached EV_COLOR
+	original_foreground_color: EV_COLOR
 			-- Original text field forground color.
 
 feature -- Element change
 
-	set_text (a_text: attached like text)
+	set_text (a_text: like text)
 			-- Set field text.
 			--
 			-- `a_text': The new text to set.
@@ -201,7 +201,7 @@ feature -- Basic operations
 
 feature -- Actions
 
-	valid_state_changed_actions: attached ACTION_SEQUENCE [TUPLE [is_valid: BOOLEAN]]
+	valid_state_changed_actions: ACTION_SEQUENCE [TUPLE [is_valid: BOOLEAN]]
 			-- Event published when the valid state of Current changes.
 		require
 			is_interface_usable: is_interface_usable
@@ -261,7 +261,7 @@ feature {NONE} -- Action handlers
 			l_old_text: like old_text
 			l_formatter: detachable like entry_formatter
 			l_predicate: detachable like entry_validation
-			l_item: attached TUPLE [is_valid: BOOLEAN; reason: detachable STRING_32]
+			l_item: TUPLE [is_valid: BOOLEAN; reason: detachable STRING_32]
 			l_old_is_valid: like is_valid
 			l_tooltip: STRING_32
 			l_reason: detachable STRING_32
@@ -323,7 +323,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-	create_widget: attached EV_HORIZONTAL_BOX
+	create_widget: EV_HORIZONTAL_BOX
 			-- <Precursor>
 		do
 			create Result
@@ -340,7 +340,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

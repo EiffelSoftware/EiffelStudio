@@ -21,4 +21,10 @@ feature
 		do
 		end
 
+
+	query1 (p: separate PROCESSOR)
+		do
+			p.query
+		end
+
 end

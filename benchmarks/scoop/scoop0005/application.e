@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 	make
 		local
 			a: ARRAY [separate PROCESSOR]
-			i, j: INTEGER
+			i, j, k: INTEGER
 			p: separate PROCESSOR
 			t1, t2: TIME
 			time: DOUBLE
@@ -56,9 +56,11 @@ feature {NONE} -- Initialization
 			loop
 				j := rand.item \\ processors + 1
 				rand.forth
+				k := rand.item \\ processors + 1
+				rand.forth
 
 				create t1.make_now
-				call (a [j])
+				call (a [j], a[k])
 				create t2.make_now
 				time := time + t2.relative_duration (t1).fine_second
 
@@ -69,9 +71,10 @@ feature {NONE} -- Initialization
 
 		end
 
-	call (p1: separate PROCESSOR)
+	call (p1, p2: separate PROCESSOR)
 		do
 			p1.query
+			p2.query
 		end
 
 end

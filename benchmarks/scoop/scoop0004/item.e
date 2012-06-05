@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {PROCESSOR}."
+	description: "Summary description for {ITEM}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	PROCESSOR
+	ITEM
 
 create
 	make
@@ -13,11 +13,6 @@ create
 feature
 
 	make
-		do
-
-		end
-
-	query
 		do
 		end
 

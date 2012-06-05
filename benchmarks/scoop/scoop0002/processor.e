@@ -17,7 +17,7 @@ feature
 
 		end
 
-	query
+	query: BOOLEAN
 		do
 		end
 

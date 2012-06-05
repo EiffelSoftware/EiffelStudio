@@ -17,8 +17,9 @@ feature
 
 		end
 
-	query
+	query: ITEM
 		do
+			create Result.make
 		end
 
 end

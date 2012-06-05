@@ -70,8 +70,10 @@ feature {NONE} -- Initialization
 		end
 
 	call (p1: separate PROCESSOR)
+		local
+			dummy: separate ITEM
 		do
-			p1.query
+			dummy := p1.query
 		end
 
 end

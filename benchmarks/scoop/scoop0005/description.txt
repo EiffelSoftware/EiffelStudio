@@ -1,0 +1,3 @@
+A simple test.
+n processors are created, after that m calls are made to random processors (two at a time). Calls are not synchronized.
+Time of locking and call registration is counted.

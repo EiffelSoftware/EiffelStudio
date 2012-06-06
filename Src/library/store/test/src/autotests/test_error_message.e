@@ -15,8 +15,8 @@ inherit
 
 feature -- Test routines
 
-	test_basic_select
-			-- Test select using non extended type.
+	test_error_message
+			-- Test error message
 		do
 			reset_database
 			establish_connection

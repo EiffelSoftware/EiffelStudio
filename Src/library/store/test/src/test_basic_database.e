@@ -52,6 +52,8 @@ feature {NONE} -- Prepare
 			if attached Manager.current_session.session_login as l_login then
 				l_login.set_application (database_name)	-- For MySQL
 			end
+				-- Default to non extended type, change in descendants if needed.
+			(create {GLOBAL_SETTINGS}).set_use_extended_types (False)
 		end
 
 	reset_database

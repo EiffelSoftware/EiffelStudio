@@ -63,7 +63,7 @@ feature -- Status
 
 	positioning_enabled: BOOLEAN
 
-feature -- Layout acces
+feature -- Layout access
 
 	layout: detachable ES_GRID_LAYOUT_ITEM
 			-- ["A"

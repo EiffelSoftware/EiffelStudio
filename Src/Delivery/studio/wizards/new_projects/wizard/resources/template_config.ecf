@@ -17,8 +17,4 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="${FL_WIZARD_NAME}_dotnet" extends="${FL_WIZARD_NAME}">
-		<setting name="msil_generation" value="true"/>
-		<setting name="dotnet_naming_convention" value="True"/>
-	</target>
 </system>

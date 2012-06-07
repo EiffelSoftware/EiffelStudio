@@ -16,7 +16,4 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="$system_name_dotnet" extends="$system_name">
-		<setting name="msil_generation" value="true"/>
-	</target>
 </system>

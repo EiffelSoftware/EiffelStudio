@@ -17,8 +17,5 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="vision2_project_dotnet" extends="ribbon_project">
-		<setting name="msil_generation" value="true"/>
-	</target>
 </system>
 

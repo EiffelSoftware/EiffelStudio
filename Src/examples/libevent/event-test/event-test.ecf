@@ -15,7 +15,4 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="event-test_dotnet" extends="event-test">
-		<setting name="msil_generation" value="true"/>
-	</target>
 </system>

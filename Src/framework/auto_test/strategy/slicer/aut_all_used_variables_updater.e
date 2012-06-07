@@ -91,16 +91,18 @@ feature{AUT_REQUEST} -- Processing
 
 	process_assign_expression_request (a_request: AUT_ASSIGN_EXPRESSION_REQUEST)
 		local
-			l_rec: TUPLE [type: TYPE_A; name: STRING; a_check: BOOLEAN; a_use_void: BOOLEAN]
+			l_rec: TUPLE [type: detachable TYPE_A; name: detachable STRING; a_check: BOOLEAN; a_use_void: BOOLEAN]
+			l_void_type: detachable TYPE_A
+			l_void_name: detachable STRING
 		do
 			if not variables.has (a_request.receiver) then
-				l_rec := [Void, Void, True, False]
+				l_rec := [l_void_type, l_void_name, True, False]
 				variables.force (l_rec, a_request.receiver.deep_twin)
 			else
 				l_rec := variables.item (a_request.receiver)
 			end
 			if attached {ITP_VARIABLE} a_request.expression as l_var then
-				variables.force ([Void, Void, True, False], l_var.deep_twin)
+				variables.force ([l_void_type, l_void_name, True, False], l_var.deep_twin)
 
 					-- TODO: this is a workaround for variables containing `default_pointer', where the
 					--       interpreter wrongly reports them to be Void
@@ -115,7 +117,8 @@ feature{AUT_REQUEST} -- Processing
 		local
 			norm_response: AUT_NORMAL_RESPONSE
 			l_name: STRING
-			l_rec: TUPLE [type: TYPE_A; name: STRING; a_check: BOOLEAN]
+			l_void_type: detachable TYPE_A
+			l_rec: TUPLE [type: detachable TYPE_A; name: detachable STRING; a_check: BOOLEAN]
 		do
 			-- Do nothing.
 			if variables.has (a_request.variable) then
@@ -130,7 +133,7 @@ feature{AUT_REQUEST} -- Processing
 						--       `process_assign_expression_request'. Currently interpreter returns NONE for objects
 						--       representing a pointer.
 					if not l_name.is_equal ("NONE") or l_rec.name = Void then
-						variables.force ([Void, l_name, False, False], a_request.variable)
+						variables.force ([l_void_type, l_name, False, False], a_request.variable)
 					end
 				end
 			end
@@ -144,6 +147,8 @@ feature{AUT_REQUEST} -- Processing
 		local
 			cs: DS_LINEAR_CURSOR [ITP_EXPRESSION]
 			variable: ITP_VARIABLE
+			l_void_type: detachable TYPE_A
+			l_void_name: detachable STRING
 		do
 			from
 				cs := an_argument_list.new_cursor
@@ -153,7 +158,7 @@ feature{AUT_REQUEST} -- Processing
 			loop
 				variable ?= cs.item
 				if variable /= Void and then not variables.has (variable) then
-					variables.force ([Void, Void, True, False], variable.deep_twin)
+					variables.force ([l_void_type, l_void_name, True, False], variable.deep_twin)
 				end
 				cs.forth
 			end
@@ -165,7 +170,7 @@ invariant
 	no_variable_void: not variables.has (Void)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

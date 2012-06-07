@@ -2367,20 +2367,20 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 		flags = zone->ov_flags;			/* Fetch Eiffel flags */
 
 #ifdef DEBUG
-	if (zone->ov_size & B_FWD) {
-		dprintf(16)("hybrid_mark: 0x%lx fwd to 0x%lx (DT %d, %d bytes)\n",
-			current,
-			zone->ov_fwd,
-			HEADER(zone->ov_fwd)->ov_dftype,
-			zone->ov_size & B_SIZE);
-	} else {
-		dprintf(16)("hybrid_mark: 0x%lx %s%s%s(DT %d, %d bytes)\n",
-			current,
-			zone->ov_flags & EO_MARK ? "marked " : "",
-			zone->ov_flags & EO_OLD ? "old " : "",
-			zone->ov_flags & EO_REM ? "remembered " : "",
-			zone->ov_dftype,
-			zone->ov_size & B_SIZE);
+		if (zone->ov_size & B_FWD) {
+			dprintf(16)("hybrid_mark: 0x%lx fwd to 0x%lx (DT %d, %d bytes)\n",
+				current,
+				zone->ov_fwd,
+				HEADER(zone->ov_fwd)->ov_dftype,
+				zone->ov_size & B_SIZE);
+		} else {
+			dprintf(16)("hybrid_mark: 0x%lx %s%s%s(DT %d, %d bytes)\n",
+				current,
+				zone->ov_flags & EO_MARK ? "marked " : "",
+				zone->ov_flags & EO_OLD ? "old " : "",
+				zone->ov_flags & EO_REM ? "remembered " : "",
+				zone->ov_dftype,
+				zone->ov_size & B_SIZE);
 	}
 	flush;
 #endif
@@ -2427,7 +2427,7 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 				if (prev)					/* Update referencing pointer */
 					*prev = current;
 				goto marked;
-			} else
+			} else {
 				if ((offset & GC_PART) && (current > ps_from.sc_arena && current <= ps_from.sc_end)) {
 					if (ps_to.sc_top + ((size & B_SIZE) + OVERHEAD) <= ps_to.sc_end) {
 							/* Record location of previous `top' which will be used to set the
@@ -2449,6 +2449,7 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 						ps_to.sc_overflowed_size += (uint32) (size & B_SIZE) + OVERHEAD;
 					}
 				}
+			}
 		}
 
 		/* This part of code, until the 'marked' label is executed only when the
@@ -3588,11 +3589,11 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, char **top)
 		CHECK ("EO_STACK not in Generation Scavenge From zone",
 			!((rt_g_data.status & GC_GEN) &&
 			(root > sc_from.sc_arena) &&
-			(root <= sc_from.sc_end)));
+			(root <= sc_from.sc_top)));
 		CHECK ("EO_STACK not in Generation Scavenge TO zone",
 			!((rt_g_data.status & GC_GEN) &&
 			(root > sc_to.sc_arena) &&
-			(root <= sc_to.sc_end)));
+			(root <= sc_to.sc_top)));
 		CHECK ("EO_STACK not in Partial Scavenge From zone.",
 			!((rt_g_data.status & GC_PART) &&
 			(root > ps_from.sc_active_arena) &&
@@ -3600,7 +3601,7 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, char **top)
 		CHECK ("EO_STACK not in Partial Scavenge TO zone.",
 			!((rt_g_data.status & GC_PART) &&
 			(root > ps_to.sc_active_arena) &&
-			(root <= ps_to.sc_end)));
+			(root <= ps_to.sc_top)));
 		return root;
 	}
 
@@ -3633,12 +3634,12 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, char **top)
 			(rt_g_data.status & GC_PART) ||
 				((rt_g_data.status & (GC_GEN | GC_FAST)) &&
 				(root > sc_from.sc_arena) &&
-				(root <= sc_from.sc_end)));
+				(root <= sc_from.sc_top)));
 
 		CHECK ("In Partial Scavenge From zone",
 			(rt_g_data.status & (GC_GEN | GC_FAST)) ||
 				((rt_g_data.status & GC_PART) &&
-				(root > ps_from.sc_arena) &&
+				(root > ps_from.sc_active_arena) &&
 				(root <= ps_from.sc_end)));
 
 		new = container_zone->ov_fwd;			/* Data space of the scavenged object */
@@ -3653,23 +3654,23 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, char **top)
 		(rt_g_data.status & GC_PART) ||
 			((rt_g_data.status & (GC_GEN | GC_FAST)) &&
 			(root > sc_from.sc_arena) &&
-			(root <= sc_from.sc_end)));
+			(root <= sc_from.sc_top)));
 
 	CHECK ("In Partial Scavenge From zone",
 		(rt_g_data.status & (GC_GEN | GC_FAST)) ||
 			((rt_g_data.status & GC_PART) &&
-			(root > ps_from.sc_arena) &&
+			(root > ps_from.sc_active_arena) &&
 			(root <= ps_from.sc_end)));
 
 	CHECK ("Not in Generation Scavenge TO zone",
 		!((rt_g_data.status & GC_GEN) &&
 		(root > sc_to.sc_arena) &&
-		(root <= sc_to.sc_end))
+		(root <= sc_to.sc_top))
 	);
 	CHECK ("Not in Partial Scavenge TO zone.",
 		!((rt_g_data.status & GC_PART) &&
 		(root > ps_to.sc_active_arena) &&
-		(root <= ps_to.sc_end))
+		(root <= ps_to.sc_top))
 	);
 
 	/* If an Eiffel object holds the B_C mark (we know it's an Eiffel object

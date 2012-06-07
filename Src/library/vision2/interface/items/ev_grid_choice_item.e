@@ -375,8 +375,8 @@ feature {NONE} -- Implementation
 				end
 				initial_position := (create {EV_SCREEN}).pointer_position
 				l_choice_list.focus_out_actions.extend (agent deactivate)
-				l_choice_list.pointer_button_press_item_actions.extend (agent on_mouse_click)
-				l_choice_list.pointer_double_press_item_actions.extend (agent on_mouse_click)
+				l_choice_list.pointer_button_press_item_actions.extend (agent on_mouse_press)
+				l_choice_list.pointer_button_release_item_actions.extend (agent on_mouse_release)
 				l_choice_list.pointer_motion_actions.force_extend (agent on_mouse_move)
 				l_choice_list.key_press_actions.extend (agent on_key)
 			else
@@ -411,6 +411,7 @@ feature {NONE} -- Implementation
 							l_choice_list.remove_selection
 							l_item.enable_select
 						end
+						has_user_selected_item := True
 					end
 				end
 			else
@@ -418,8 +419,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_mouse_click (a_x, a_y, a_button: INTEGER; a_item: detachable EV_GRID_ITEM)
-			-- Handle mouse actions.
+	on_mouse_press (a_x, a_y, a_button: INTEGER; a_item: detachable EV_GRID_ITEM)
+			-- Handle mouse press actions.
 		local
 			l_item: detachable EV_GRID_ITEM
 			l_list: LIST [EV_GRID_ITEM]
@@ -435,11 +436,18 @@ feature {NONE} -- Implementation
 							l_item.enable_select
 						end
 						has_user_selected_item := True
-						deactivate
 					end
 				else
 					check choice_list /= Void end
 				end
+			end
+		end
+
+	on_mouse_release (a_x, a_y, a_button: INTEGER; a_item: detachable EV_GRID_ITEM)
+			-- Handle mouse release actions.
+		do
+			if has_user_selected_item then
+				deactivate
 			end
 		end
 
@@ -478,6 +486,12 @@ feature {NONE} -- Implementation
 		do
 			if attached choice_list as l_choice_list and then not l_choice_list.is_destroyed then
 				l_choice_list.focus_out_actions.wipe_out
+
+				l_choice_list.key_press_actions.wipe_out
+				l_choice_list.pointer_button_press_item_actions.wipe_out
+				l_choice_list.pointer_button_release_item_actions.wipe_out
+				l_choice_list.pointer_motion_actions.wipe_out
+
 				if has_user_selected_item and then not l_choice_list.selected_rows.is_empty then
 					l_item ?= l_choice_list.selected_rows.first.item (1)
 					if l_item /= Void then

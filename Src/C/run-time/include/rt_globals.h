@@ -81,6 +81,9 @@ struct tag_rt_thr_context {
 	volatile int is_root;			/* Is Current thread the thread that started all? */
 	EIF_COND_TYPE *children_cond;	/* For `join_all'. */
 	EIF_THR_TYPE thread_id;			/* Thread identifier for associated thread. */
+#if defined(EIF_ASSERTIONS) && defined(EIF_WINDOWS)
+	DWORD win_thread_id;			/* Thread identifier for Windows. */
+#endif
 	EIF_INTEGER_32 logical_id;		/* Logical identifier for associated thread. */
 	EIF_BOOLEAN is_processor;		/* Is thread used as a SCOOP processor? */
 	rt_thr_context *parent_context;	/* Context of parent thread, NULL if root class. */
@@ -105,7 +108,6 @@ typedef struct tag_rt_globals
 #ifdef ISE_GC
 		/* Synchronizations for GC*/
 	int volatile gc_thread_status_cx;
-	int gc_stop_thread_request_cx;		/* Did GC required stopping current thread. */
 	int gc_thread_collection_count_cx;
 	int thread_can_launch_gc_cx;		/* Can we launch additional GC cycle? */
 #endif
@@ -328,7 +330,6 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 #define gc_thread_status	(rt_globals->gc_thread_status_cx)
 #define gc_thread_collection_count	(rt_globals->gc_thread_collection_count_cx)
 #define thread_can_launch_gc	(rt_globals->thread_can_launch_gc_cx)
-#define gc_stop_thread_request	(rt_globals->gc_stop_thread_request_cx)
 #define thread_exiting		(rt_globals->thread_exiting_cx)
 
 	/* except.c */

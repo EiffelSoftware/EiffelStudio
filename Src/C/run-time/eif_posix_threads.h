@@ -221,6 +221,9 @@ rt_public typedef struct {
 #define EIF_MAX_THR_PRIORITY			255L
 
 /* Thread routines */
+#ifdef EIF_WINDOWS
+extern DWORD eif_pthread_id (EIF_THR_TYPE thread_id);
+#endif
 extern int eif_pthread_create (EIF_THR_TYPE *thread_id, EIF_THR_ATTR_TYPE *thread_attr, void (*thread_routine) (void *), void *thread_arg);
 extern int eif_pthread_kill (EIF_THR_TYPE thread_id);
 extern int eif_pthread_exit (EIF_THR_TYPE thread_id);

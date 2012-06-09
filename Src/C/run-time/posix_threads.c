@@ -240,7 +240,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
-rt_private DWORD eif_pthread_id (rt_int_ptr thread_id) {
+rt_shared DWORD eif_pthread_id (EIF_THR_TYPE thread_id) {
 	return GetThreadId((HANDLE) thread_id);
 }
 #endif

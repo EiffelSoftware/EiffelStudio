@@ -148,11 +148,16 @@ extern "C" {
 #define EIF_THREAD_RUNNING		0
 #define EIF_THREAD_GC_REQUESTED	1001
 #define EIF_THREAD_GC_RUNNING	1002
-#define EIF_THREAD_GC_GSZ		1003
-#define EIF_THREAD_GC_SET		1004
 #define EIF_THREAD_BLOCKED 		3
-#define EIF_THREAD_SUSPENDED	4
-#define EIF_THREAD_DYING		5
+
+	/* Various possible values for `eif_is_gc_collecting'. */
+#define EIF_GC_NOT_RUNNING								0
+#define EIF_GC_STARTING									1
+#define EIF_GC_STARTED_WITH_SINGLE_RUNNING_THREAD		2
+#define EIF_GC_STARTED_WITH_MULTIPLE_RUNNING_THREADS	3
+
+	/* Macro to write one line routine calls in multithreaded mode that have no effect in
+	 * single threaded mode. */
 #define GC_THREAD_PROTECT(x)	x
 #else
 #define GC_THREAD_PROTECT(x)

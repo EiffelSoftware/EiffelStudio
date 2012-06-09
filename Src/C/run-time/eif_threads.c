@@ -181,12 +181,12 @@ rt_private EIF_CS_TYPE *eif_thread_launch_mutex = NULL;
 
 /*
 doc:	<attribute name="eif_is_gc_collecting" return_type="int" export="public">
-doc:		<summary>Is GC currently performing a collection?</summary>
+doc:		<summary>Is GC currently performing a collection? Possible values are EIF_GC_NOT_RUNNING, EIF_GC_STARTING, EIF_GC_STARTED_WITH_SINGLE_RUNNING_THREAD and EIF_GC_STARTED_WITH_MULTIPLE_RUNNING_THREADS.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_gc_mutex</synchronization>
 doc:	</attribute>
 */
-rt_public int volatile eif_is_gc_collecting = 0;
+rt_public int volatile eif_is_gc_collecting = EIF_GC_NOT_RUNNING;
 
 /*
 doc:	<attribute name="rt_globals_list" return_type="struct stack_list" export="private">
@@ -994,7 +994,7 @@ rt_public void eif_thr_exit(void)
 			/* We cannot use `eif_unsynchronize_gc' because `rt_globals' has been completely freed so
 			 * we have to do things manually.
 			 * We first signal that we are not collecting anymore and then we unlock `eif_gc_mutex'. */
-		eif_is_gc_collecting = 0;
+		eif_is_gc_collecting = EIF_GC_NOT_RUNNING;
 
 		RT_TRACE(eif_pthread_cs_unlock(eif_gc_mutex));
 #endif
@@ -1217,7 +1217,7 @@ rt_public void eif_synchronize_for_gc (void)
 		 * This is needed when a GC cycle trigger calls to `dispose' routines.
 		 */
 	if (gc_thread_status != EIF_THREAD_GC_RUNNING) {
-		gc_thread_status = EIF_THREAD_SUSPENDED;
+		gc_thread_status = EIF_THREAD_BLOCKED;
 		EIF_GC_MUTEX_LOCK;
 		gc_thread_status = EIF_THREAD_RUNNING;
 		EIF_GC_MUTEX_UNLOCK;
@@ -1310,7 +1310,7 @@ rt_shared void eif_synchronize_gc (rt_global_context_t *rt_globals)
 #ifdef DEBUG
 		printf ("Starting Collection number %d ...", counter);
 #endif
-		eif_is_gc_collecting = 1;
+		eif_is_gc_collecting = EIF_GC_STARTING;
 		gc_thread_collection_count = 1;
 		gc_thread_status = EIF_THREAD_GC_RUNNING;
 
@@ -1376,6 +1376,9 @@ rt_shared void eif_synchronize_gc (rt_global_context_t *rt_globals)
 #ifdef DEBUG
 			printf ("Synchronized...");
 #endif
+			eif_is_gc_collecting = EIF_GC_STARTED_WITH_MULTIPLE_RUNNING_THREADS;
+		} else {
+			eif_is_gc_collecting = EIF_GC_STARTED_WITH_SINGLE_RUNNING_THREAD;
 		}
 	} else {
 			/* A recursive demand was made, we simply increment the blocking counter.
@@ -1406,7 +1409,7 @@ rt_shared void eif_unsynchronize_gc (rt_global_context_t *rt_globals)
 #endif
 			/* Here we have still the lock of `gc_mutex'. So it is safe to update
 			 * `eif_is_gc_collecting'. */
-		eif_is_gc_collecting = 0;
+		eif_is_gc_collecting = EIF_GC_NOT_RUNNING;
 
 			/* Let's mark ourself as a running thread. */
 		gc_thread_status = EIF_THREAD_RUNNING;

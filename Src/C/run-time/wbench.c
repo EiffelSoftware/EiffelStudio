@@ -43,7 +43,7 @@ doc:<file name="wbench.c" header="eif_wbench.h" version="$Id$" summary="Workbenc
 #include "eif_portable.h"
 #include "rt_wbench.h"
 #include "eif_project.h"
-#include "eif_macros.h"
+#include "rt_macros.h"
 #include "rt_malloc.h"
 #include "eif_garcol.h"
 #include "rt_struct.h"
@@ -52,6 +52,7 @@ doc:<file name="wbench.c" header="eif_wbench.h" version="$Id$" summary="Workbenc
 #include "eif_interp.h"
 #include "eif_plug.h"
 #include "rt_gen_conf.h"
+#include "rt_assert.h"
 
 /* The following functions implement the access to object features and 
  * attributes in workbench mode, they are:
@@ -72,6 +73,33 @@ doc:<file name="wbench.c" header="eif_wbench.h" version="$Id$" summary="Workbenc
  * `wdisp (dyn_type)'
  */
 
+#ifdef EIF_ASSERTIONS
+/*
+doc:	<routine name="rt_is_call_allowed" return_type="int" export="private">
+doc:		<summary>Figure out if a call to an Eiffel routine is allowed. Typically it is allowed when no GC synchronization point is happening.</summary>
+doc:		<return>Return 0 if not allowed, Non-zero otherwise</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Uses per thread data.</synchronization>
+doc:	</routine>
+*/
+rt_private int rt_is_call_allowed(void)
+{
+#ifdef EIF_THREADS
+		/* If they are 2 or more running threads, then we need to make
+		 * sure that Eiffel code is not executing on the non GC thread. */
+	if (eif_is_gc_collecting >= EIF_GC_STARTED_WITH_MULTIPLE_RUNNING_THREADS) {
+		RT_GET_CONTEXT
+			/* If we are the thread running the GC cycle, then we are ok. */
+		return (gc_thread_status == EIF_THREAD_GC_RUNNING);
+	} else {
+		return 1;
+	}
+#else
+	return 1;
+#endif
+}
+#endif
+
 rt_public EIF_REFERENCE_FUNCTION wfeat(int static_type, int32 feature_id, int dyn_type)
 {
 	/* Function pointer associated to Eiffel feature of feature id
@@ -82,6 +110,8 @@ rt_public EIF_REFERENCE_FUNCTION wfeat(int static_type, int32 feature_id, int dy
 	EIF_GET_CONTEXT
 	int32 rout_id;
 	BODY_INDEX body_id;
+
+	CHECK("Not called by non-GC thread", rt_is_call_allowed());
 
 	nstcall = 0;								/* No invariant check */
 	rout_id = Routids(static_type)[feature_id]; /* Get the routine id */
@@ -105,6 +135,8 @@ rt_public EIF_REFERENCE_FUNCTION wpfeat(int32 origin, int32 offset, int dyn_type
 	EIF_GET_CONTEXT
 	BODY_INDEX body_id;
 
+	CHECK("Not called by non-GC thread", rt_is_call_allowed());
+
 	nstcall = 0;								/* No invariant check */
 	body_id = desc_tab[origin][dyn_type][offset].body_index;
 
@@ -127,6 +159,8 @@ rt_public EIF_REFERENCE_FUNCTION wfeat_inv(int static_type, int32 feature_id, ch
 	int dyn_type;
 	int32 rout_id;
 	BODY_INDEX body_id;
+
+	CHECK("Not called by non-GC thread", rt_is_call_allowed());
 
 	if (object == NULL)			/* Void reference check */
 			/* Raise an exception for a feature named `name' applied
@@ -159,6 +193,8 @@ rt_public EIF_REFERENCE_FUNCTION wpfeat_inv(int32 origin, int32 offset, char *na
 	int dyn_type;
 	BODY_INDEX body_id;
 
+	CHECK("Not called by non-GC thread", rt_is_call_allowed());
+
 	if (object == NULL)			/* Void reference check */
 			/* Raise an exception for a feature named `name' applied
 			 * to a void reference. */
@@ -189,6 +225,8 @@ rt_public EIF_REFERENCE_FUNCTION wcreat(int static_type, int32 feature_id, int d
 	int32 rout_id;
 	BODY_INDEX body_id;
 
+	CHECK("Not called by non-GC thread", rt_is_call_allowed());
+
 	nstcall = -1; /* Invariant check at the end */
 	rout_id = Routids(static_type)[feature_id]; /* Get the routine id */
 	CBodyId(body_id,rout_id,dyn_type);		/* Get the body index */
@@ -210,6 +248,8 @@ rt_public EIF_REFERENCE_FUNCTION wpcreat(int32 origin, int32 offset, int dyn_typ
 	 */
 	EIF_GET_CONTEXT
 	BODY_INDEX body_id;
+
+	CHECK("Not called by non-GC thread", rt_is_call_allowed());
 
 	nstcall = -1; /* Invariant check at the end */
 	body_id = desc_tab[origin][dyn_type][offset].body_index;
@@ -233,6 +273,8 @@ rt_public void wexp(int static_type, int32 feature_id, int dyn_type, EIF_REFEREN
 	int32 rout_id;
 	BODY_INDEX body_id;
 	unsigned char *OLD_IC;
+
+	CHECK("Not called by non-GC thread", rt_is_call_allowed());
 
 	nstcall = 0;								/* No invariant check */
 	rout_id = Routids(static_type)[feature_id]; /* Get the routine id */
@@ -268,6 +310,8 @@ rt_public void wpexp(int32 origin, int32 offset, int dyn_type, EIF_REFERENCE obj
 	BODY_INDEX body_id;
 	unsigned char *OLD_IC;
 
+	CHECK("Not called by non-GC thread", rt_is_call_allowed());
+
 	nstcall = 0;								/* No invariant check */
 	body_id = desc_tab[origin][dyn_type][offset].body_index;
 
@@ -300,6 +344,8 @@ rt_public long wattr(int static_type, int32 feature_id, int dyn_type)
 	int32 rout_id;
 	long offset;
 
+	CHECK("Not called by non-GC thread", rt_is_call_allowed());
+
 	rout_id = Routids(static_type)[feature_id];
 	CAttrOffs(offset,rout_id,dyn_type);
 	return (offset);
@@ -311,6 +357,8 @@ rt_public long wpattr(int32 origin, int32 offset, int dyn_type)
 	 * `offset' in that class, in an object of dynamic type `dyn_type'.
 	 * Return a long integer.
 	 */
+
+	CHECK("Not called by non-GC thread", rt_is_call_allowed());
 
 	return (desc_tab[origin][dyn_type][offset].offset);
 }
@@ -331,6 +379,8 @@ rt_public long wattr_inv (int static_type, int32 feature_id, char *name, EIF_REF
 	int dyn_type;
 	int32 rout_id;
 	long offset;
+
+	CHECK("Not called by non-GC thread", rt_is_call_allowed());
 
 	if (object == NULL)			/* Void reference check */
 			/* Raise an exception for a feature named `fname' applied
@@ -368,6 +418,8 @@ rt_public long wpattr_inv (int32 origin, int32 offset, char *name, EIF_REFERENCE
 
 	int dyn_type;
 
+	CHECK("Not called by non-GC thread", rt_is_call_allowed());
+
 	if (object == NULL)			/* Void reference check */
 			/* Raise an exception for a feature named `fname' applied
 			 * to a void reference. */
@@ -401,6 +453,8 @@ rt_public EIF_TYPE_INDEX wtype_gen(EIF_TYPE_INDEX static_type, int32 feature_id,
 	EIF_TYPE_INDEX dyn_type;
 	EIF_TYPE_INDEX type, *gen_type;
 
+	CHECK("Not called by non-GC thread", rt_is_call_allowed());
+
 	dyn_type = Dtype(object);
 	rout_id = Routids(static_type)[feature_id];
 	CGENFeatType(type,gen_type,rout_id,dyn_type);
@@ -423,6 +477,8 @@ rt_public EIF_TYPE_INDEX wttype_gen(EIF_TYPE_INDEX static_type, int32 feature_id
 	EIF_TYPE_INDEX dyn_type;
 	EIF_TYPE_INDEX type, *gen_type;
 
+	CHECK("Not called by non-GC thread", rt_is_call_allowed());
+
 	dyn_type = To_dtype(dftype);
 	rout_id = Routids(static_type)[feature_id];
 	CGENFeatType(type,gen_type,rout_id,dyn_type);
@@ -444,6 +500,8 @@ rt_public EIF_TYPE_INDEX wptype_gen(EIF_TYPE_INDEX static_type, int32 origin, in
 	struct desc_info *desc;
 	EIF_TYPE_INDEX dyn_type;
 
+	CHECK("Not called by non-GC thread", rt_is_call_allowed());
+
 	dyn_type = Dtype(object);
 	desc = desc_tab[origin][dyn_type] + offset;
 
@@ -464,6 +522,8 @@ rt_public EIF_TYPE_INDEX wtptype_gen(EIF_TYPE_INDEX static_type, int32 origin, i
 	struct desc_info *desc;
 	EIF_TYPE_INDEX dyn_type;
 
+	CHECK("Not called by non-GC thread", rt_is_call_allowed());
+
 	dyn_type = To_dtype(dftype);
 	desc = desc_tab[origin][dyn_type] + offset;
 
@@ -482,6 +542,8 @@ rt_public EIF_REFERENCE_FUNCTION wdisp(EIF_TYPE_INDEX dyn_type)
 	 */
 	EIF_GET_CONTEXT
 	BODY_INDEX body_id;
+
+	CHECK("GC running", rt_is_call_allowed());
 
 	nstcall = 0;								/* No invariant check */
 	CBodyId(body_id,egc_disp_rout_id,dyn_type);	/* Get the body index */
@@ -503,6 +565,8 @@ rt_public EIF_REFERENCE_FUNCTION wcopy(EIF_TYPE_INDEX dyn_type)
 	EIF_GET_CONTEXT
 	BODY_INDEX body_id;
 
+	CHECK("Not called by non-GC thread", rt_is_call_allowed());
+
 	nstcall = 0;								/* No invariant check */
 	CBodyId(body_id,egc_copy_rout_id,dyn_type);	/* Get the body index */
 
@@ -522,6 +586,8 @@ rt_public EIF_REFERENCE_FUNCTION wis_equal(EIF_TYPE_INDEX dyn_type)
 	 */
 	EIF_GET_CONTEXT
 	BODY_INDEX body_id;
+
+	CHECK("Not called by non-GC thread", rt_is_call_allowed());
 
 	nstcall = 0;								/* No invariant check */
 	CBodyId(body_id,egc_is_equal_rout_id,dyn_type);	/* Get the body index */

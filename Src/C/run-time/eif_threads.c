@@ -363,7 +363,9 @@ rt_shared void eif_thread_cleanup (void)
 	eif_free_gc_stacks ();
 
 #ifdef ISE_GC
-	RT_TRACE(eif_pthread_cs_destroy(eif_gc_mutex));
+		/* Note for the reader. We do not destroy `eif_gc_mutex' because when
+		 * we reach this stage, we are called via `reclaim' which has this mutex
+		 * locked. Therefore trying to destroy it, would simply not work. */
 	RT_TRACE(eif_pthread_cs_destroy(eif_gc_set_mutex));
 	RT_TRACE(eif_pthread_cs_destroy(eif_gc_gsz_mutex));
 	RT_TRACE(eif_pthread_cs_destroy(eif_type_set_mutex));
@@ -438,6 +440,9 @@ rt_public void eif_thr_register(int is_external)
 				eif_thr_context->is_alive = 1;
 				eif_thr_context->is_root = 1;
 				eif_thr_context->thread_id = eif_thr_current_thread();
+#if defined(EIF_ASSERTIONS) && defined(EIF_WINDOWS)
+				eif_thr_context->win_thread_id = eif_pthread_id(eif_thr_context->thread_id);
+#endif
 				eif_thr_context->is_processor = eif_thr_context->is_processor;
 				eif_thr_context->logical_id = eif_thr_context->logical_id; 
 #ifdef WORKBENCH
@@ -475,6 +480,9 @@ rt_public void eif_set_thr_context (void) {
 			eif_thr_context->logical_id = 0;
 			eif_thr_context->is_processor = EIF_FALSE;
 			eif_thr_context->thread_id = eif_thr_current_thread();
+#if defined(EIF_ASSERTIONS) && defined(EIF_WINDOWS)
+			eif_thr_context->win_thread_id = eif_pthread_id(eif_thr_context->thread_id);
+#endif
 		}
 	}
 }
@@ -755,6 +763,9 @@ rt_public void eif_thr_create_with_attr_new (EIF_OBJECT thr_root_obj,
 		routine_ctxt->current = eif_adopt (thr_root_obj);
 		routine_ctxt->routine = init_func;
 		routine_ctxt->thread_id = (EIF_THR_TYPE) 0;
+#if defined(EIF_ASSERTIONS) && defined(EIF_WINDOWS)
+		routine_ctxt->win_thread_id = (DWORD) 0;
+#endif
 		routine_ctxt->logical_id = thr_logical_id;
 		routine_ctxt->is_processor = is_processor;
 		routine_ctxt->parent_context = eif_thr_context;
@@ -784,6 +795,9 @@ rt_public void eif_thr_create_with_attr_new (EIF_OBJECT thr_root_obj,
 
 			/* Actual creation of the thread in the next 3 lines. */
 		RT_TRACE_KEEP(res, eif_pthread_create (&routine_ctxt->thread_id, attr, eif_thr_entry, routine_ctxt));
+#if defined(EIF_ASSERTIONS) && defined(EIF_WINDOWS)
+		routine_ctxt->win_thread_id = eif_pthread_id(routine_ctxt->thread_id);
+#endif
 		last_child = routine_ctxt->thread_id;
 		LAUNCH_MUTEX_UNLOCK;
 		SIGRESUME;
@@ -802,6 +816,16 @@ rt_private void eif_thr_entry (void *arg)
 	 */
 
 	rt_thr_context *routine_ctxt = (rt_thr_context *) arg;
+		/* If we are starting a thread while under a GC synchronization point
+		 * we should wait until this is completed before continuing. 
+		 * We cannot use the async safe locking routine since the runtime
+		 * is not yet initialized in this thread. We can block as
+		 * long as needed since for the GC, this threads does not even exist. */
+	if (eif_is_gc_collecting) {
+		RT_TRACE(eif_pthread_cs_lock(eif_gc_mutex));
+		RT_TRACE(eif_pthread_cs_unlock(eif_gc_mutex));
+	}
+
 		/* To prevent current thread to return too soon after call
 		 * to eif_pthread_create.
 		 * That way `thread' is properly initialized and can be freed
@@ -868,14 +892,8 @@ rt_public void eif_thr_exit(void)
 	RT_GET_CONTEXT
 
 	if (!thread_exiting) {
-#ifdef LMALLOC_CHECK
-			/* Perform call to `eif_thr_is_root' now as later, it would fail
-			 * since the per thread data could be removed if thread is exiting
-			 * following a call to `eif_terminate_all_other_threads'. */
-		EIF_BOOLEAN is_root_thread = eif_thr_is_root();
-#endif
 		int destroy_mutex; /* If non null, we'll destroy the 'join' mutex */
-		int l_has_parent_thread;
+		int l_has_parent_thread, l_is_external_thread;
 		int ret;	/* Return Status of "eifaddr_offset". */
 		EIF_INTEGER offset;	/* Location of `terminated' in `eif_thr_context->current' */
 		EIF_MUTEX_TYPE *l_children_mutex, *l_parent_children_mutex;
@@ -885,6 +903,7 @@ rt_public void eif_thr_exit(void)
 
 		REQUIRE("has_context", eif_thr_context);
 
+		l_is_external_thread = rt_globals->eif_globals->is_external_cx;
 		l_has_parent_thread = (eif_thr_context->current) && (eif_thr_context->parent_context);
 #ifdef WORKBENCH
 		if (l_has_parent_thread) {
@@ -961,10 +980,6 @@ rt_public void eif_thr_exit(void)
 				RT_TRACE(eif_pthread_cond_destroy(eif_thr_context->children_cond));
 				eif_thr_context->children_cond = NULL;
 			}
-				/* Context data if any */
-			eif_thr_context->thread_id = (EIF_THR_TYPE) 0;
-			eif_free (eif_thr_context);		/* Thread context passed by parent */
-			eif_thr_context = NULL;
 		}
 		EIF_EXIT_C;
 
@@ -980,11 +995,19 @@ rt_public void eif_thr_exit(void)
 #endif
 
 #ifdef LMALLOC_CHECK
-		if (is_root_thread)	{	/* Is this the root thread */
+		if (eif_thr_context->is_root)	{	/* Is this the root thread */
 			eif_lm_display ();
 			eif_lm_free ();
 		}
 #endif	/* LMALLOC_CHECK */
+
+		if (destroy_mutex) {
+				/* Now that we are synchronized, we can reset the data that might be used
+				 * within `eif_synchronize_gc'. */
+			eif_thr_context->thread_id = (EIF_THR_TYPE) 0;
+			eif_free (eif_thr_context);		/* Thread context passed by parent */
+			eif_thr_context = NULL;
+		}
 
 			/* Clean per thread data. */
 		eif_free_context (rt_globals);
@@ -1017,8 +1040,8 @@ rt_public void eif_thr_exit(void)
 #endif	/* VXWORKS */
 
 
-			/* Only call the platform specific exit when thread was not created by the Eiffel runtime. */
-		if (l_has_parent_thread) {
+			/* Only call the platform specific exit when thread was created by the Eiffel runtime. */
+		if (!l_is_external_thread) {
 			eif_pthread_exit(l_thread_id);
 		}
 	}
@@ -1178,7 +1201,9 @@ rt_private void remove_data_from_gc (struct stack_list *st_list, void *st)
 
 		/* Remove one element */
 	st_list->count = count - 1;
+		/* Move last elements of the list to location of removed element. */
 	stack [i] = stack [count -1];
+		/* Reset last element to NULL. */
 	stack [count - 1] = NULL;
 }
 
@@ -1221,9 +1246,6 @@ rt_public void eif_synchronize_for_gc (void)
 		EIF_GC_MUTEX_LOCK;
 		gc_thread_status = EIF_THREAD_RUNNING;
 		EIF_GC_MUTEX_UNLOCK;
-		if (gc_stop_thread_request) {
-			eif_thr_exit();
-		}
 	}
 }
 
@@ -1242,9 +1264,6 @@ rt_public void eif_enter_eiffel_code(void)
 	if (gc_thread_status != EIF_THREAD_GC_RUNNING) {
 			/* Check if GC requested a synchronization before resetting our status. */
 		gc_thread_status = EIF_THREAD_RUNNING;
-	}
-	if (gc_stop_thread_request) {
-		eif_thr_exit();
 	}
 }
 
@@ -1425,113 +1444,6 @@ rt_shared void eif_unsynchronize_gc (rt_global_context_t *rt_globals)
 	}
 }
 
-/*
-doc:	<routine name="eif_terminate_all_other_threads" return_type="void" export="shared">
-doc:		<summary>Kill all running threads but Current one. Useful when performing a call to reclaim which cannot be done if we still have some Eiffel threads running.</summary>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Global synchronization.</synchronization>
-doc:	</routine>
-*/
-
-rt_shared void eif_terminate_all_other_threads (void) {
-	RT_GET_CONTEXT
-	rt_global_context_t *thread_globals;
-	rt_thr_context *ctxt;
-	int i, nb;
-	int is_main_thread_blocked = 0;
-	struct stack_list running_thread_list = {0, 0, { NULL }};
-
-		/* Block all running threads. */
-	eif_synchronize_gc (rt_globals);
-	nb = rt_globals_list.count;
-
-		/* We have acquired the lock, now, process all running threads and let them
-		 * know we don't want them to execute anymore code. */
-	for (i = 0; i < nb; i++) {
-		thread_globals = (rt_global_context_t *) rt_globals_list.threads.data[i];
-		if (thread_globals != rt_globals) {
-			thread_globals->gc_stop_thread_request_cx = 1;
-		}
-	}
-
-	eif_unsynchronize_gc (rt_globals);
-
-		/* Now we wait `nb' times (i.e. number of threads minus 1) for the
-		 * thread to actually exit. Most of the time all the other threads
-		 * should have finished. */
-	EIF_ENTER_C;
-	nb = nb - 1;
-	for (i = 0; i < nb; i++) {
-		RT_TRACE(eif_pthread_yield());
-	}
-	EIF_EXIT_C;
-
-		/* Check that there is only one more thread left. If not then we will explicitely
-		 * kill the remaining blocked threads. */
-	eif_synchronize_gc (rt_globals);
-	nb = rt_globals_list.count;
-		
-	while (nb > 1) {
-		for (i = 0; i < nb; i++) {
-			thread_globals = (rt_global_context_t *) rt_globals_list.threads.data[i];
-			if (thread_globals != rt_globals) {	
-					/* Worst case scenario, some threads are still running (see eweasel test#thread012). */
-				if
-					((thread_globals->gc_thread_status_cx == EIF_THREAD_BLOCKED) &&
-					!(thread_globals->thread_exiting_cx))
-				{
-					if (!thread_globals->eif_globals->is_external_cx) {
-						ctxt = thread_globals->eif_thr_context_cx;
-						if (ctxt && !ctxt->is_root) {
-							if (ctxt->is_alive && eif_pthread_is_alive (ctxt->thread_id) != T_OK) {
-									/* Thread was just killed. */
-								load_stack_in_gc (&running_thread_list, thread_globals);
-							} else {
-#ifdef HAS_THREAD_CANCELLATION
-								EIF_THR_CANCEL(ctxt->thread_id);
-#else
-								RT_TRACE(eif_pthread_kill(ctxt->thread_id));
-#endif
-							}
-						} else {
-								/* Main thread is blocked this is bad. */
-							is_main_thread_blocked = 1;
-						}
-					} else {
-							/* Thread has not been created by our runtime or the EiffelThread
-							 * library, we simply record it for removing its data from the runtime. */
-						load_stack_in_gc (&running_thread_list, thread_globals);
-					}
-				}
-			}
-		}
-		nb = running_thread_list.count;
-		if (nb > 0) {
-			for (i = 0; i < nb; i++) {
-				eif_remove_gc_stacks ((rt_global_context_t *) running_thread_list.threads.data[i]);
-			}
-				/* We need to wipe out the content of `running_thread_list' to
-				 * prevent multiple removal of the same data in `rt_globals_list'. */
-			eif_free (running_thread_list.threads.data);
-			memset(&running_thread_list, 0, sizeof(struct stack_list));
-		}
-			/* Let's wait for the termination of non-blocked thread. */
-		eif_unsynchronize_gc (rt_globals);
-		EIF_ENTER_C;
-		RT_TRACE(eif_pthread_yield());
-		EIF_EXIT_C;
-
-			/* Prepare next iteration of loop. */
-		eif_synchronize_gc (rt_globals);
-		nb = rt_globals_list.count;
-		if (is_main_thread_blocked) {
-			nb--;
-		}
-		is_main_thread_blocked = 0;
-	}
-	eif_unsynchronize_gc (rt_globals);
-}
-
 #endif /* ISE_GC */
 
 #if !defined(EIF_WINDOWS) && !defined(VXWORKS)
@@ -1571,6 +1483,10 @@ rt_shared pid_t eif_thread_fork(void) {
 			/* First we need to reinitialize all our mutexes as the
 			 * one we have maybe own by the parent process. */
 		eif_thr_init_global_mutexes();
+
+			/* Because we have recreated all our mutex, we need to lock the `eif_gc_mutex'
+			 * that was locked in the parent thread. */
+		EIF_GC_MUTEX_LOCK;
 
 			/* Reinitialize our global lists to let the GC think that there
 			 * is only one running thread. */
@@ -1718,7 +1634,14 @@ rt_public EIF_BOOLEAN eif_thr_wait_with_timeout (EIF_OBJECT Current, EIF_NATURAL
 		RTGC;
 		while ((*(EIF_BOOLEAN *) (thread_object + offset) == EIF_FALSE) && (res == T_OK)) {
 			EIF_ENTER_C;
-			RT_TRACE_KEEP(res,eif_pthread_cond_wait_with_timeout(eif_thr_context->children_cond, eif_thr_context->children_mutex, a_timeout_ms));
+				/* We do not use `RT_TRACE_KEEP' because we might get T_TIMEDOUT.
+				 * We will trace the error after. */
+			res = eif_pthread_cond_wait_with_timeout(eif_thr_context->children_cond, eif_thr_context->children_mutex, a_timeout_ms);
+#ifdef EIF_ASSERTIONS
+			if ((res != T_OK) && (res != T_TIMEDOUT)) {
+				RT_TRACE(res);
+			}
+#endif
 			EIF_EXIT_C;
 			RTGC;
 		}

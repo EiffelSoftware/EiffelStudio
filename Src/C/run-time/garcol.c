@@ -1282,6 +1282,7 @@ rt_shared void free_oms (EIF_REFERENCE **oms_array)
 }
 #endif
 
+
 rt_public void reclaim(void)
 {
 	/* At the end of the process's lifetime, all the objects need to be
@@ -1292,6 +1293,7 @@ rt_public void reclaim(void)
 	 * are known not to have any dispose routine (cf emalloc).
 	 */
 
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 
 #ifdef ISE_GC
@@ -1317,7 +1319,12 @@ rt_public void reclaim(void)
 #endif
 
 #ifdef ISE_GC
-	GC_THREAD_PROTECT(eif_terminate_all_other_threads());
+		/* Failure occurred or we are exiting normally. In any case, we just synchronize
+		 * our GC to prevent any Eiffel thread to run. We will not unsynchronize the GC
+		 * because after the call to reclaim we are exiting and if we did unsynchronize
+		 * then some Eiffel code would be running on memory that has been freed which would
+		 * cause a crash. */
+	GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
 #endif
 
 #ifdef RECLAIM_DEBUG

@@ -577,9 +577,6 @@ rt_shared void eif_gen_conf_cleanup (void)
 
 	int i, j;
 
-#ifdef EIF_THREADS
-	REQUIRE ("Called by root thread", eif_thr_is_root ());
-#endif	/* EIF_THREADS */
 	REQUIRE ("eif_conf_tab not null", eif_conf_tab);
 	REQUIRE ("eif_derivations not null", eif_derivations);
 	REQUIRE ("eif_cid_map not null", eif_cid_map);

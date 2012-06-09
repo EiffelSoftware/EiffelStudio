@@ -50,8 +50,8 @@ extern "C" {
 /* Initialization and destruction of runtime. */
 #define DYNAMIC_LIB_RT_INITIALIZE(x)\
 	{ \
-		RTGC; \
 		EIF_ENTER_EIFFEL; \
+		RTGC; \
 		{ \
 			RTLD; \
 			RTLI(x); \

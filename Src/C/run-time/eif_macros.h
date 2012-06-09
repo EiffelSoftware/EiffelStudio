@@ -143,15 +143,15 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define EIFFEL_CALL(arg_types, proc_ptr, arg_values) \
 	{ \
 	EIF_ENTER_EIFFEL; \
-	(FUNCTION_CAST(void, arg_types) proc_ptr) arg_values; \
 	RTGC; \
+	(FUNCTION_CAST(void, arg_types) proc_ptr) arg_values; \
 	EIF_EXIT_EIFFEL; \
 	}
 #define EIFFEL_FUNCTION_CALL(r_type, arg_types, target, fn_ptr, arg_values) \
 	{\
 	EIF_ENTER_EIFFEL; \
-	target = (FUNCTION_CAST(r_type, arg_types) fn_ptr) arg_values; \
 	RTGC; \
+	target = (FUNCTION_CAST(r_type, arg_types) fn_ptr) arg_values; \
 	EIF_EXIT_EIFFEL; \
 	}
 #else

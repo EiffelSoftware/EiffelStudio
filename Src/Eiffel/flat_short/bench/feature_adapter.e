@@ -327,9 +327,7 @@ feature {NONE} -- Implementation
 					--| for renaming (sorting within feature clause)
 					--| features such as _infix_ _prefix_
 				--ast.feature_names.first.set_name (feat.feature_name);
-				if not is_short or else
-					not feat.is_obsolete
-				then
+				if not is_short or else not feat.is_obsolete then
 					--| VB 06/13/2000 (Moved up) comments := format_reg.feature_comments (ast)
 					if is_replicated then
 						format_reg.record_replicated_feature (Current);
@@ -384,7 +382,7 @@ feature {FORMAT_REGISTRATION} -- Element chage
 		end;
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

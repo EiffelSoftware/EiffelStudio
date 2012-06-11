@@ -34,7 +34,7 @@
 (sh ./make_for_platform tokyo.ise manus linux-x86-64 22) &
 
 #Let's compile for OpenBSD in background
-(sh ./make_for_platform sushi.inf.ethz.ch manus openbsd-x86 22) &
+#(sh ./make_for_platform sushi.inf.ethz.ch manus openbsd-x86 22) &
 
 #Let's compile for Linux Sparc in background
 #(sh ./make_for_platform calypso.frankengul.org manu linux-sparc 22 "-l 15") &

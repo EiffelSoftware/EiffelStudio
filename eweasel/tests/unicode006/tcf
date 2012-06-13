@@ -1,13 +1,53 @@
 test_name 	invalid-manifest-string-8-with-unicode
-test_description Ensure that non-ascii character do not appear in STRING_8 manifest string
+test_description Ensure that STRING_8 or CHARACTER_8 manifest or constants only contain 0-255 Unicode code point characters (ISO-8859-1)
 
 copy_sub 	Ace $TEST Ace
-copy_raw 	test_with_bom.e $CLUSTER test.e
+
+copy_raw 	test_syntax_error_char_8_constant_without_bom.e $CLUSTER test.e
 compile_melted
-compile_result validity_error TEST VQMC
+compile_result syntax_error TEST 13
+
+copy_raw 	test_syntax_error_char_8_manifest_without_bom.e $CLUSTER test.e
+resume_compile
+compile_result syntax_error TEST 17
+
+copy_raw 	test_syntax_error_char_32_constant_without_bom.e $CLUSTER test.e
+resume_compile
+compile_result syntax_error TEST 13
+
+copy_raw 	test_syntax_error_char_32_manifest_without_bom.e $CLUSTER test.e
+resume_compile
+compile_result syntax_error TEST 17
+
+copy_raw 	test_constant_with_bom.e $CLUSTER test.e
+resume_compile
+compile_result validity_error TEST VQMC VQMC VQMC VQMC
+
+copy_raw 	test_manifest_with_bom.e $CLUSTER test.e
+resume_compile
+compile_result validity_error TEST VWMQ VWMQ VWMQ VWMQ VWMQ VWMQ VWMQ VWMQ VWMQ VJAR VJAR VJAR VJAR VWMQ
 
 copy_raw 	test_without_bom.e $CLUSTER test.e
 resume_compile
-compile_result syntax_error TEST 7
+compile_result 	ok
+execute_work	NONE exec_output
+execute_result ok
+compare		exec_output output
+
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+compile_final_keep
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output2
+execute_result ok
+compare		exec_output2 output
 
 test_end

@@ -1,0 +1,19 @@
+CHARACTER_32 vs ASCII: True
+CHARACTER_8 vs ASCII: True
+CHARACTER_32 vs Extended ASCII: True
+CHARACTER_8 vs Extended ASCII: True
+CHARACTER_8 constant type: CHARACTER_8
+Manifest ASCII char type: CHARACTER_8
+CHARACTER_32 ASCII character type: CHARACTER_32
+CHARACTER_8 ASCII character type: CHARACTER_8
+CHARACTER_32 extended ASCII character type: CHARACTER_32
+CHARACTER_8 extended ASCII character type: CHARACTER_8
+STRING_32 constants test 1: True
+STRING_32 constants test 2: True
+STRING_32 constants test 3: True
+STRING_32 constants test 4: True
+STRING_32 constants test 5: True
+STRING_32 constants test 6: True
+STRING_8 constants test 1: True
+STRING_8 constants test 3: True
+Execution completed

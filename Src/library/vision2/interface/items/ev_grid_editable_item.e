@@ -202,16 +202,14 @@ feature {NONE} -- Implementation
 
 	initialize_actions
 			-- Setup the action sequences when the item is shown.
-		local
-			l_text_field: detachable like text_field
 		do
-			l_text_field := text_field
-			check l_text_field /= Void end
-			l_text_field.focus_out_actions.extend (agent deactivate)
-			l_text_field.set_focus
-			l_text_field.set_caret_position (l_text_field.text.count + 1)
-			user_cancelled_activation := False
-			l_text_field.key_press_actions.extend (agent handle_key)
+			if attached text_field as l_text_field then
+				l_text_field.focus_out_actions.extend (agent deactivate)
+				l_text_field.set_focus
+				l_text_field.set_caret_position (l_text_field.text.count + 1)
+				user_cancelled_activation := False
+				l_text_field.key_press_actions.extend (agent handle_key)
+			end
 		end
 
 invariant

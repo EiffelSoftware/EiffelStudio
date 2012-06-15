@@ -318,7 +318,7 @@ end
 					else
 						l_pro_hdl := icor_debug.last_icor_debug_process_handle
 					end
-					l_success := cwin_terminate_process (l_pro_hdl, 0)
+					l_success := {WEL_API}.terminate_process (l_pro_hdl, 0)
 				end
 					-- FIXME jfiat [2004/07/30] : check if this is not too violent ?
 					-- maybe we could find a smarter way to terminate debugging synchronisation
@@ -2542,7 +2542,7 @@ feature {NONE} -- External
 			-- Value for C externals to have an infinite wait
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

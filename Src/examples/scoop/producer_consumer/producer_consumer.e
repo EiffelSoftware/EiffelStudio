@@ -20,14 +20,12 @@ feature -- Initialization
 		do
 			create buffer.make_with_capacity (buffer_capacity)
 
-			across (1 |..| number_of_producers) as ic
-			loop
+			across (1 |..| number_of_producers) as ic loop
 				create l_producer.make_with_buffer (buffer, ic.item)
 				launch_producer (l_producer)
 			end
 
-			across (1 |..| number_of_consumers) as ic
-			loop
+			across (1 |..| number_of_consumers) as ic loop
 				create l_consumer.make_with_buffer (buffer, ic.item)
 				launch_consumer (l_consumer)
 			end

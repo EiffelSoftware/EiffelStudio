@@ -235,11 +235,12 @@ feature -- Basic operation
 	analyze_ecf (a_fn: READABLE_STRING_GENERAL)
 		local
 			fn: STRING_GENERAL
-			lst: like segments_from_string
+			--lst: like segments_from_string
 		do
 			create {STRING_32} fn.make (a_fn.count)
-			lst := segments_from_string (a_fn)
-			append_segments_to_string (lst, fn)
+			fn := reduced_path (a_fn, 0)
+			--lst := segments_from_string (a_fn)
+			--append_segments_to_string (lst, fn)
 
 			if attached path_details (fn) as d then
 				ecf_table.force (d, fn)

@@ -45,17 +45,17 @@ feature
 			l_feature: FEATURE_AS
 		do
 			if l_as.internal_top_indexes /= Void then
-				processing_top_index_clause := true
-				top_index_modified := true
+				processing_top_index_clause := True
+				top_index_modified := True
 				last_top_insert_ast := l_as.internal_top_indexes.indexing_keyword (match_list)
 			else
 				l_string := build_top_index
 				l_as.first_token (match_list).prepend_text (l_string, match_list)
-				top_index_inserted := true
+				top_index_inserted := True
 			end
 			safe_process (l_as.internal_top_indexes)
 			insert_top_copyright_info
-			processing_top_index_clause := false
+			processing_top_index_clause := False
 
 			if l_as.internal_bottom_indexes = Void then
 					-- Add semicolon if the last feature is an attribute.
@@ -72,11 +72,11 @@ feature
 				end
 				l_string := bottom_index_string + "%N"
 				l_as.end_keyword.prepend_text (l_string, match_list)
-				bottom_index_inserted := true
+				bottom_index_inserted := True
 			else
 				l_string := bottom_index_string
 				l_as.internal_bottom_indexes.replace_text (l_string, match_list)
-				bottom_index_replaced := true
+				bottom_index_replaced := True
 			end
 
 			safe_process (l_as.internal_bottom_indexes)
@@ -87,7 +87,7 @@ feature
 				if l_string.has_substring ("--|--") then
 					l_string.keep_head (l_string.substring_index ("--|--", 1) - 1)
 					last_as.replace_text (l_string, match_list)
-					end_class_comments_removed := true
+					end_class_comments_removed := True
 				end
 			end
 		end
@@ -95,7 +95,6 @@ feature
 	process_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL])
 		local
 			i, l_count: INTEGER
-			l_index_as: INDEX_AS
 		do
 			if processing_top_index_clause then
 				if l_as.count > 0 then
@@ -109,8 +108,7 @@ feature
 						l_as.after
 					loop
 						safe_process (l_as.item)
-						l_index_as ?= l_as.item
-						if l_index_as /= Void then
+						if attached {INDEX_AS} l_as.item as l_index_as then
 							index_clauses.extend (l_index_as)
 						end
 						if i <= l_count then
@@ -175,7 +173,12 @@ feature {NONE} -- Implementation
 			replace_str: STRING
 			l_index_as: INDEX_AS
 		do
-			l_index_as := search_index_as ("description")
+				-- Insert copyright information first after `library' if it exists.
+			l_index_as := search_index_as ("library")
+			if l_index_as = Void then
+					-- Otherwise after `description'.
+				l_index_as := search_index_as ("description")
+			end
 			replace_str := ""
 			if l_index_as /= Void then
 				last_top_insert_ast := l_index_as
@@ -207,13 +210,13 @@ feature {NONE} -- Implementation
 		do
 			from
 				index_clauses.start
-				end_loop := false
+				end_loop := False
 			until
 				index_clauses.after or end_loop
 			loop
 				if index_clauses.item.tag /= Void and then l_key.is_case_insensitive_equal (index_clauses.item.tag.name) then
 					Result := index_clauses.item
-					end_loop := true
+					end_loop := True
 				end
 				index_clauses.forth
 			end
@@ -260,18 +263,15 @@ feature {NONE} -- Implementation
 			-- Is `a_leaf' a semicolon token?
 		require
 			a_leaf_not_void: a_leaf /= Void
-		local
-			l_semicolon: SYMBOL_STUB_AS
 		do
-			l_semicolon ?= a_leaf
-			Result := l_semicolon /= Void and then l_semicolon.is_semicolon
+			Result := attached {SYMBOL_STUB_AS} a_leaf as l_semicolon and then l_semicolon.is_semicolon
 		end
 
 invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

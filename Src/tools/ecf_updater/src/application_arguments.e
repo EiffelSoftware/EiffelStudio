@@ -22,6 +22,10 @@ feature -- Access
 		deferred
 		end
 
+	variable_expansions: detachable LIST [STRING]
+		deferred
+		end
+
 	execution_forced: BOOLEAN
 		deferred
 		end

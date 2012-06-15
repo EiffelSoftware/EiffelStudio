@@ -267,6 +267,10 @@ feature -- Queries without result to load.
 				l_session_control.reset
 				db_change.set_query (a_query)
 				db_change.execute_query
+				if not l_session_control.is_ok then
+					has_error := True
+					error_message_32 := l_session_control.error_message_32
+				end
 			else
 				has_error := True
 				error_message_32 := unexpected_error (Execute_query_name)
@@ -431,9 +435,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class DATABASE_MANAGER
-
-
+end

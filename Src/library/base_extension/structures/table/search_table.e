@@ -15,6 +15,12 @@ inherit
 			copy
 		end
 
+	ITERABLE [H]
+		redefine
+			is_equal,
+			copy
+		end
+
 create
 	make,
 	make_map,
@@ -95,8 +101,10 @@ feature -- Access and queries
 		require
 			valid_key: valid_key (key)
 		do
-			internal_search (key)
-			Result := (control = Found_constant)
+			if count > 0 then
+				internal_search (key)
+				Result := (control = Found_constant)
+			end
 		end
 
 	key_at (n: INTEGER): detachable H
@@ -151,6 +159,12 @@ feature -- Access and queries
 	key_tester: detachable EQUALITY_TESTER [H]
 			-- Tester used for comparing keys.	
 
+	new_cursor: SEARCH_TABLE_ITERATION_CURSOR [H]
+			-- <Precursor>
+		do
+			create Result.make (Current)
+		end
+
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN
@@ -177,6 +191,14 @@ feature -- Comparison
 					i := i + 1
 				end
 			end
+		end
+
+	disjoint (other: like Current): BOOLEAN
+			-- Is `Current' and `other' disjoint on their keys?
+			-- Use `same_keys' for comparison.
+		do
+			Result := is_empty or else other.is_empty or else
+				not across other as o some has (o.item) end
 		end
 
 	same_keys (a_search_key, a_key: H): BOOLEAN
@@ -550,7 +572,7 @@ feature {NONE} -- Status
 	is_map: BOOLEAN
 			-- Is current comparing keys using `='.
 
-feature {SEARCH_TABLE}
+feature {SEARCH_TABLE, SEARCH_TABLE_ITERATION_CURSOR} -- Implementation: Access
 
 	capacity: INTEGER
 			-- Size of the table
@@ -571,23 +593,31 @@ feature -- Iteration
 		end
 
 	forth
-			-- Iteration
+			-- Advance cursor to next occupied position,
+			-- or `off' if no such position remains.
+		require
+			not_off: not off
+		do
+			iteration_position := next_iteration_position (iteration_position)
+		end
+
+	next_iteration_position (a_position: like iteration_position): like iteration_position
+			-- Given an iteration position `a_position', compute the next one
 		local
 			stop: BOOLEAN
-			local_content: like content
-			pos_for_iter, table_size: INTEGER
+			l_content: like content
+			table_size: INTEGER
 		do
 			from
-				local_content := content
-				pos_for_iter := iteration_position
+				l_content := content
+				Result := a_position
 				table_size := capacity - 1
 			until
 				stop
 			loop
-				pos_for_iter := pos_for_iter + 1
-				stop := pos_for_iter > table_size or else valid_key (local_content.item (pos_for_iter))
+				Result := Result + 1
+				stop := Result > table_size or else valid_key (l_content.item (Result))
 			end
-			iteration_position := pos_for_iter
 		end
 
 	after, off: BOOLEAN
@@ -621,14 +651,14 @@ invariant
 	count_big_enough: 0 <= count
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

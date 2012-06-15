@@ -26,6 +26,7 @@ feature -- Access
 	generic_conformance_class_name: STRING = "EiffelSoftware.Runtime.GENERIC_CONFORMANCE"
 	type_info_class_name: STRING = "EiffelSoftware.Runtime.EIFFEL_TYPE_INFO"
 	integer_32_class_name: STRING = "System.Int32"
+	natural_16_class_name: STRING = "System.UInt16"
 	system_object_class_name: STRING = "System.Object"
 	system_type_class_name: STRING = "System.Type"
 	type_handle_class_name: STRING = "System.RuntimeTypeHandle"
@@ -50,7 +51,7 @@ feature -- Access
 			-- Prefix for property getter and setter methods.
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

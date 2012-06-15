@@ -148,7 +148,7 @@ feature -- Status update
 			l_product_names: PRODUCT_NAMES
 			l_op_env: like operating_environment
 			l_dir: DIRECTORY
-			l_dir_name: DIRECTORY_NAME
+			l_ise_library, l_eiffel_library,
 			l_value: detachable STRING_8
 			l_variables: like required_environment_variables
 			l_variable: TUPLE [var: STRING_8; is_directory: BOOLEAN]
@@ -224,21 +224,54 @@ feature -- Status update
 				end
 			end
 
-				-- Make sure to define ISE_LIBRARY if not defined.
-			l_value := get_environment ({EIFFEL_CONSTANTS}.ise_library_env)
-			if l_value = Void or else l_value.is_empty then
-				set_environment (lib_path, {EIFFEL_CONSTANTS}.ise_library_env)
-			else
-					-- To avoid having to edit the value of ISE_LIBRARY when compiling against
-					-- a certain compiler profile, we modify the value of the ISE_LIBRARY environment
-					-- variable.
-				if is_compatible_mode and l_value.substring_index ("compatible", 1) = 0 then
-					create l_dir_name.make_from_string (l_value)
-					l_dir_name.extend ("compatible")
-					set_environment (l_dir_name, {EIFFEL_CONSTANTS}.ise_library_env)
-				end
+				-- Make sure to define ISE_LIBRARY and EIFFEL_LIBRARY if not defined.
+				--  if $ISE_LIBRARY not defined then
+				--      $ISE_LIBRARY=$EIFFEL_LIBRARY
+				--  end
+				--  if $ISE_LIBRARY not defined then
+				--      use ISE_EIFFEL to set ISE_LIBRARY
+				--  else
+				--      make sure ISE_LIBRARY supports compatible
+				--  end
+				--  if $EIFFEL_LIBRARY not defined then
+				--      $EIFFEL_LIBRARY = $ISE_LIBRARY
+				--  end
+				--
+				-- Note: if a value is set, we never change it (apart from "compatible" support))
+
+			l_eiffel_library := get_environment ({EIFFEL_CONSTANTS}.eiffel_library_env)
+			l_ise_library := get_environment ({EIFFEL_CONSTANTS}.ise_library_env)
+
+				-- If ISE_LIBRARY is not defined, use EIFFEL_LIBRARY's value (if any)
+			if l_ise_library = Void or else l_ise_library.is_empty then
+				l_ise_library := l_eiffel_library
 			end
 
+				-- If ISE_LIBRARY is not defined, use the `lib_path'
+			if l_ise_library = Void or else l_ise_library.is_empty then
+				l_ise_library := lib_path
+			else
+					-- To avoid editing value of ISE_LIBRARY when compiling against specific compiler profile
+					-- modify the value of the ISE_LIBRARY environment variable.
+				l_ise_library := path_under_compiler_profile (l_ise_library)
+			end
+			check ise_library_set: l_ise_library /= Void end
+
+				-- If EIFFEL_LIBRARY is not defined, use ISE_LIBRARY
+			if l_eiffel_library = Void or else l_eiffel_library.is_empty then
+				l_eiffel_library := l_ise_library
+			else
+					-- To avoid editing value of EIFFEL_LIBRARY when compiling against specific compiler profile
+					-- modify the value of the EIFFEL_LIBRARY environment variable.
+				l_eiffel_library := path_under_compiler_profile (l_eiffel_library)
+			end
+			check eiffel_library_set: l_eiffel_library /= Void end
+
+				-- Ensure environment variables are set
+			set_environment (l_ise_library, {EIFFEL_CONSTANTS}.ise_library_env)
+			set_environment (l_eiffel_library, {EIFFEL_CONSTANTS}.eiffel_library_env)
+
+				-- Continue checking and initializing the environement
 			if is_valid_environment then
 				create_directories
 				if is_user_files_supported then
@@ -366,6 +399,21 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Helpers
+
+	path_under_compiler_profile (a_path: STRING_8): STRING_8
+			-- To avoid editing value of variable (like ISE_LIBRARY) when compiling against specific compiler profile
+			-- modify the value of the related environment variable.
+		local
+			l_dir_name: DIRECTORY_NAME
+		do
+			if is_compatible_mode and a_path.substring_index ("compatible", 1) = 0 then
+				create l_dir_name.make_from_string (a_path)
+				l_dir_name.extend ("compatible")
+				Result := l_dir_name.string
+			else
+				Result := a_path
+			end
+		end
 
 	environment: ENVIRONMENT_ACCESS
 			-- Shared access to an instance of {ENVIRONMENT_ACCESS}.
@@ -2228,7 +2276,7 @@ feature -- Preferences
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1043,21 +1043,21 @@ invariant
 
 	point_array_exists: point_array /= Void
 	center_exists: center /= Void
-	x_is_center_x: x = center.x
-	y_is_center_y: y = center.y
+	x_is_center_x: is_center_valid implies x = center.x
+	y_is_center_y: is_center_valid implies y = center.y
 	all_points_exist: all_points_exist (point_array)
 	projection_matrix_not_void: projection_matrix /= Void
 	is_transfomable_implies_rotatable_and_scalable: is_transformable implies (is_rotatable and is_scalable)
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_MODEL

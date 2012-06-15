@@ -611,6 +611,9 @@ feature {NONE} -- Path manipulation
 					lst.remove
 				end
 			end
+			if fn.starts_with ("/") then
+				Result.append ("/")
+			end
 			append_segments_to_string (lst, Result)
 		end
 
@@ -620,7 +623,9 @@ feature {NONE} -- Path manipulation
 				lst as curs
 			loop
 				if not s.is_empty then
-					s.append ("/")
+					if not s.ends_with ("/") then
+						s.append ("/")
+					end
 				end
 				s.append (curs.item)
 			end

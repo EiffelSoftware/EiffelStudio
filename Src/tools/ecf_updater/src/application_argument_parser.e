@@ -94,6 +94,25 @@ feature -- Access
 			end
 		end
 
+	variable_expansions: detachable LIST [STRING]
+			-- List of variable expansions
+		once
+			if
+				has_option (variable_expansions_switch) and then
+				attached options_of_name (variable_expansions_switch) as opts and then not opts.is_empty
+			then
+				create {ARRAYED_LIST [STRING]} Result.make (opts.count)
+				across
+					opts as c
+				loop
+					if c.item.has_value then
+						Result.force (c.item.value)
+					end
+				end
+			end
+		end
+
+
 --	use_directory_recursion: BOOLEAN
 --			-- Indicates if directories should be recursively scanned
 --		once
@@ -187,6 +206,7 @@ feature {NONE} -- Switches
 			Result.extend (create {ARGUMENT_SWITCH}.make (eiffel_library_switch, "Use $EIFFEL_LIBRARY for 'base'", True, False))
 
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (replace_switch, "Replace ", True, True, replace_switch, "use FOO=BAR to replace FOO with BAR (case sensitive)", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (variable_expansions_switch, "Expand variable VAR with value", True, True, replace_switch, "use VAR=value to expand VAR environment variable with 'value'", False))
 
 			Result.extend (create {ARGUMENT_SWITCH}.make (verbose_switch, "Verbose output", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (backup_switch, "Backup modified files", True, False))
@@ -206,6 +226,7 @@ feature {NONE} -- Switches
 	eiffel_library_switch: STRING = "eiffel_library"
 	ise_library_switch: STRING = "ise_library"
 	replace_switch: STRING = "r|replace"
+	variable_expansions_switch: STRING = "x|expand-variable-with"
 
 feature {NONE} -- Implementation
 

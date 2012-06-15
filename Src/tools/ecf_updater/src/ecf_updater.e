@@ -1,5 +1,11 @@
 note
-	description: "Objects that ..."
+	description: "[
+				Root class for ecf updater
+				
+				note: we should support unicode path in the future, that's why we tried to use STRING_GENERAL
+				      but in many places we have  .as_string_8
+				      so this is hybrid for now, and now it works only with ASCII path...
+			]"
 	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,6 +38,13 @@ feature {NONE} -- Initialization
 					rep_lst as r
 				loop
 					add_replacement (r.item)
+				end
+			end
+			if attached args.variable_expansions as exp_lst and then not exp_lst.is_empty then
+				across
+					exp_lst as x
+				loop
+					add_variable_expansion (x.item)
 				end
 			end
 
@@ -80,7 +93,13 @@ feature {NONE} -- Initialization
 
 			if confirmed then
 				create dv.make (agent analyze_ecf)
+				if verbose then
+					report_progress ("Scanning %"" + root_directory.as_string_8 + "%" for .ecf files ...")
+				end
 				dv.process_directory (absolute_directory_path (root_directory))
+				if verbose then
+					report_progress ("Found " + ecf_table.count.out + " .ecf files.")
+				end
 
 	-- TESTS
 	--			update_ecf (root_directory + "\library\server\wsf\tests\echo\echo-safe.ecf")
@@ -140,6 +159,42 @@ feature -- Access
 
 	errors: ARRAYED_LIST [READABLE_STRING_GENERAL]
 
+
+feature -- Variable expansions
+
+	variable_expansions: detachable LIST [TUPLE [src,new: READABLE_STRING_GENERAL]]
+			-- Optional variable expansions
+
+	add_variable_expansion	(s: READABLE_STRING_GENERAL)
+		local
+			l_expansions: like variable_expansions
+			p: INTEGER
+		do
+			l_expansions := variable_expansions
+			if l_expansions = Void then
+				create {ARRAYED_LIST [like variable_expansions.item]} l_expansions.make (1)
+				variable_expansions := l_expansions
+			end
+
+			p := s.index_of_code (('=').natural_32_code, 1)
+			if p > 0 then
+				l_expansions.extend ([s.substring (1, p-1), s.substring (p+1, s.count)])
+			else
+				check wrong_syntax: False end
+			end
+		end
+
+	apply_variable_expansions (s: STRING_8)
+		do
+			if attached variable_expansions as l_variable_expansions then
+				across
+					l_variable_expansions as rpl
+				loop
+					s.replace_substring_all ("$" + rpl.item.src.as_string_8, rpl.item.new.as_string_8)
+				end
+			end
+		end
+
 feature -- Substitutions	
 
 	replacements: detachable LIST [TUPLE [src,new: READABLE_STRING_GENERAL]]
@@ -198,7 +253,7 @@ feature -- Basic operation
 			l_new_path: READABLE_STRING_GENERAL
 			p,q: INTEGER
 			l_rn: STRING_32
-			l_ecf: READABLE_STRING_GENERAL
+			l_ecf: STRING_8
 			l_old_content, l_new_content: STRING_32
 		do
 			if attached path_details (fn) as l_info then
@@ -224,10 +279,21 @@ feature -- Basic operation
 						if p > 0 and l_line[p + 4] = '"' then
 							q := l_line.last_index_of ('"', p)
 							if q > 0 then
+								l_ecf := l_line.substring (q + 1, p + 3)
 								if l_line [q + 1] = '$' then
+									if root_base_name /= Void then
+										apply_variable_expansions (l_ecf)
+									end
+
+									-- Should be using absolute path based on variable name
+									-- FIXME: check the first segment related to `l_ecf' exists ...
+								else
+									apply_variable_expansions (l_ecf)
+									l_ecf := l_info.dir.as_string_8 + l_ecf
+								end
+								if l_ecf [1] = '$' then
 --									l_line.replace_substring_all ("\", "/")
 								else
-									l_ecf := l_info.dir.as_string_8 + l_line.substring (q + 1, p + 3)
 									if attached ecf_location (l_ecf) as l_location then
 										l_new_path := relative_path (l_location, fn, l_rn, root_base_name)
 									else
@@ -238,7 +304,7 @@ feature -- Basic operation
 									end
 									if same_path (l_line.substring (q + 1, p + 3), l_new_path) then
 
-									else
+									elseif not l_new_path.is_empty then
 										l_line.replace_substring (l_new_path.as_string_8, q+1, p+3)
 									end
 								end
@@ -296,6 +362,9 @@ feature -- Basic operation
 							diff_enabled and then
 							attached diff (l_old_content, l_new_content) as l_diff
 						then
+							if is_simulation and not verbose then
+								report_progress ("Updated %"" + f.name + "%"")
+							end
 							io.output.put_string (l_diff.as_string_8)
 							io.output.put_new_line
 						end
@@ -330,6 +399,12 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
+	report_warning (m: READABLE_STRING_GENERAL)
+		do
+			io.error.put_string ("[Warning] " + m.as_string_8)
+			io.error.put_new_line
+		end
+
 	report_progress (m: READABLE_STRING_GENERAL)
 		do
 			io.output.put_string (m.as_string_8)
@@ -339,7 +414,7 @@ feature {NONE} -- Implementation
 	report_error (m: READABLE_STRING_GENERAL)
 		do
 			errors.extend (m)
-			io.error.put_string ("Error" + m.as_string_8)
+			io.error.put_string ("[Error] " + m.as_string_8)
 			io.error.put_new_line
 		end
 
@@ -510,7 +585,10 @@ feature {NONE} -- Implementation
 						f.read_line
 					end
 					f.close
-					check has_uuid: l_uuid /= Void end
+					if verbose and l_uuid = Void then
+--						check has_uuid: l_uuid /= Void end
+						report_warning ("No UUID in %"" + fn.as_string_8 + "%"")
+					end
 				end
 				Result := [l_uuid, segments_from_string (l_dir), l_dir, l_subdir + l_file, l_file]
 			end

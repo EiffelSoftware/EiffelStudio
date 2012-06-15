@@ -331,7 +331,8 @@ feature {NONE} -- Events
 			l_system: SYSTEM_I
 			l_error: like validate_type
 		do
-			Result := [True, Void]
+			create Result
+			Result.valid := True
 			if not a_input.is_empty then
 				l_types := a_input.to_string_8
 				l_types.to_upper
@@ -583,7 +584,7 @@ feature {NONE} -- Internationalization
 	e_recursive_generics_not_supported: STRING = "Type $1 can not be used for testing since it contains open recursive generic parameters. Please be more specific."
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

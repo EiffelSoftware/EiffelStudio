@@ -16,7 +16,7 @@ inherit
 			{ANY} first, start, after, forth, item, is_empty, count,
 				remove, cursor, go_to, wipe_out, extend, valid_index,
 				valid_cursor, extendible, prunable, readable, index, off,
-				writable, i_th
+				writable, i_th, twin
 			{TYPE_LIST} all
 		end
 
@@ -271,7 +271,7 @@ feature -- Cleanup
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

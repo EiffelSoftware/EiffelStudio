@@ -635,6 +635,9 @@ feature -- Builtin implementations for Eiffel classes, see Eiffel classes for co
 	public static bool builtin_PLATFORM_is_thread_capable () {
 		return true;
 	}
+	public static bool builtin_PLATFORM_is_scoop_capable () {
+		return false;
+	}
 	public static bool builtin_PLATFORM_is_dotnet () {
 		return true;
 	}

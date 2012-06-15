@@ -42,6 +42,25 @@ feature -- Test routines
 			disconnect
 		end
 
+	test_numeric_types_use_decimal_mode
+			-- Test select using extended type
+		do
+			set_is_decimal_used (True)
+			set_decimal_functions (agent create_decimal, agent is_decimal, agent decimal_factors, agent decimal_output)
+
+			reset_database
+			establish_connection
+
+			if attached session_control as l_control and then not l_control.is_connected then
+				assert ("Could not connect to database", False)
+			else
+				numeric_types_load_data
+				numeric_types_with_decimal_make_selection
+			end
+			disconnect
+			set_is_decimal_used (False)
+		end
+
 feature {NONE} -- Implementation
 
 	data_objects: HASH_TABLE [ANY, STRING]
@@ -64,6 +83,18 @@ feature {NONE} -- Basic select
 			Result.set_real_32_t ({REAL_32} 7898.34)
 			Result.set_real_64_t ({REAL_64} 999999.999999)
 			Result.set_numeric_t ({REAL_64} -999999999.999999)
+		end
+
+	numeric_types_create_data_with_decimal: NUMERIC_INFO_WITH_DECIMAL
+			-- Filled data to put into database
+		do
+			create Result.make
+			Result.set_int_16 ({INTEGER_16} 1)
+			Result.set_int_32 ({INTEGER_32} 10000)
+			Result.set_int_64 ({INTEGER_64} 100000000)
+			Result.set_real_32_t ({REAL_32} 7898.34)
+			Result.set_real_64_t ({REAL_64} 999999.999999)
+			Result.set_numeric_t (create {DECIMAL}.make_from_string ("-999999999.999999"))
 		end
 
 	numeric_types_load_data
@@ -120,6 +151,36 @@ feature {NONE} -- Basic select
 			db_selection.set_map_name (l_data.real_64_t, "real_64_t")
 			db_selection.set_map_name (l_data.numeric_t, "numeric_t")
 			l_list := load_list_with_select (numeric_types_select_data, numeric_types_create_data)
+			db_selection.unset_map_name ("int_16")
+			db_selection.unset_map_name ("int_32")
+			db_selection.unset_map_name ("int_64")
+			db_selection.unset_map_name ("real_32_t")
+			db_selection.unset_map_name ("real_64_t")
+			db_selection.unset_map_name ("numeric_t")
+			if l_list.count = 2 then
+				assert ("Result is not expected", l_list.i_th (1) ~ l_data)
+				assert ("Result is not expected", l_list.i_th (2) ~ l_data)
+			else
+				assert ("Number of results is not expected", False)
+			end
+		end
+
+	numeric_types_with_decimal_make_selection
+			-- Select books
+		local
+			l_list: ARRAYED_LIST [like numeric_types_create_data_with_decimal]
+			l_data: like numeric_types_create_data_with_decimal
+		do
+			l_data := numeric_types_create_data_with_decimal
+				-- Default scale is 4.
+			l_data.set_numeric_t (create {DECIMAL}.make_from_string ("-999999999.9999"))
+			db_selection.set_map_name (l_data.int_16, "int_16")
+			db_selection.set_map_name (l_data.int_32, "int_32")
+			db_selection.set_map_name (l_data.int_64, "int_64")
+			db_selection.set_map_name (l_data.real_32_t, "real_32_t")
+			db_selection.set_map_name (l_data.real_64_t, "real_64_t")
+			db_selection.set_map_name (l_data.numeric_t, "numeric_t")
+			l_list := load_list_with_select (numeric_types_select_data, numeric_types_create_data_with_decimal)
 			db_selection.unset_map_name ("int_16")
 			db_selection.unset_map_name ("int_32")
 			db_selection.unset_map_name ("int_64")

@@ -298,6 +298,7 @@ feature -- Basic operation
 									if attached ecf_location (l_ecf) as l_location then
 										l_new_path := relative_path (l_location, fn, l_rn, root_base_name)
 									else
+										report_warning ("Unknown ecf %""+ l_ecf +"%"")
 										l_new_path := relative_path (l_ecf, fn, l_rn, root_base_name)
 									end
 									debug
@@ -514,17 +515,12 @@ feature {NONE} -- Implementation
 						n := n - 1
 					end
 				end
-
 				create s.make (a_lib_ecf.count)
 				append_segments_to_string (lst, s)
 
 			else
-				create s.make (a_lib_ecf.count)
-				append_segments_to_string (lst, s)
-
-				if bn /= Void then
-					s.replace_substring (bn.as_string_8, 1, rn.count)
-				end
+				s := reduced_path (a_lib_ecf, 0).as_string_8
+				s.replace_substring (bn.as_string_8, 1, rn.count)
 			end
 
 			Result := s

@@ -64,15 +64,36 @@ if [ -z "$ISE_EIFFEL" ]; then
 	fi
 fi
 
-#Check if ISE_LIBRARY is defined, if not we use ISE_EIFFEL.
+# Make sure to define ISE_LIBRARY and EIFFEL_LIBRARY if not defined.
+#  if $ISE_LIBRARY not defined then
+#      ISE_LIBRARY=$EIFFEL_LIBRARY
+#  end
+#  if $ISE_LIBRARY not defined then
+#      use ISE_EIFFEL or ISE_PREFIX to set ISE_LIBRARY
+#  end
+#  if $EIFFEL_LIBRARY not defined then
+#      EIFFEL_LIBRARY = $ISE_LIBRARY
+#  end
+#
+if [ -z "$ISE_LIBRARY" ]; then
+	ISE_LIBRARY=$EIFFEL_LIBRARY
+fi
+
+# Check if EIFFEL_LIBRARY is defined, if not we use ISE_EIFFEL.
 if [ -z "$ISE_LIBRARY" ]; then
 	if [ -n "$ISE_EIFFEL" ]; then
 		ISE_LIBRARY=$ISE_EIFFEL
 	else
 		ISE_LIBRARY=$ISE_PREFIX/lib/eiffelstudio-$ISE_VERSION/
 	fi
-	export ISE_LIBRARY
 fi
+export ISE_LIBRARY
+
+# ensure EIFFEL_LIBRARY is defined
+if [ -z "$EIFFEL_LIBRARY" ]; then
+	EIFFEL_LIBRARY=$ISE_LIBRARY
+fi
+export EIFFEL_LIBRARY
 
 #Use $MAKE as make utility instead of `make'.
 if [ -z "$MAKE" ]; then

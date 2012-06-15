@@ -104,9 +104,15 @@ feature {NONE} -- Removal
 	dispose
 			-- Called by the garbage collector when the mutex is
 			-- collected.
+		local
+			l_null: POINTER
 		do
 			if is_set then
-				destroy
+					-- We can only destroy a mutex that was not locked
+					-- yet, or if locked that we own the lock.
+				if owner = l_null or else owner = current_thread_id then
+					destroy
+				end
 			end
 		end
 

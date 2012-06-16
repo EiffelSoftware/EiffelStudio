@@ -1,8 +1,10 @@
 class SERVER_WORKER_THREAD
 
 inherit
-
 	THREAD
+		rename
+			make as thread_make
+		end
 
 	UTILITY
 
@@ -45,7 +47,7 @@ feature
 
 	socket: NETWORK_DATAGRAM_SOCKET
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_server: SERVER_THREAD; a_frontend: TFTP_FRONTEND; a_packet: TFTP_REQUEST_PACKET)
 		require
@@ -57,6 +59,7 @@ feature -- Initialization
 			temp: STRING
 			a_filename: STRING
 		do
+			thread_make
 			server := a_server
 			frontend := a_frontend
 			remote_address := a_packet.host

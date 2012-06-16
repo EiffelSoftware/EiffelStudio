@@ -45,6 +45,14 @@ feature -- Status report
 			Result := item /= default_pointer
 		end
 
+	is_default_pointer: BOOLEAN
+			-- Is current `default_pointer'?
+		do
+			Result := item = default_pointer
+		ensure
+			definition: Result = (item = default_pointer)
+		end
+
 feature -- Operations
 
 	plus alias "+" (offset: INTEGER): POINTER

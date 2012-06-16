@@ -16,6 +16,9 @@ inherit
 			make as module_make
 		end
 	THREAD
+		rename
+			make as thread_make
+		end
 	XS_SHARED_SERVER_CONFIG
 	XS_SHARED_SERVER_OUTPUTTER
 
@@ -30,6 +33,7 @@ feature -- Initialization
 			a_main_server_attached: a_main_server /= Void
 			a_name_attached: a_name /= Void
 		do
+			thread_make
 			module_make (a_name)
 			main_server := a_main_server
  		ensure

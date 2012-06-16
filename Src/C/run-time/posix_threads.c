@@ -232,16 +232,15 @@ rt_private void *rt_thread_routine (void *thread_arg)
 
 #ifdef EIF_WINDOWS
 /*
-doc:	<routine name="eif_pthread_id" return_type="DWORD" export="private">
-doc:		<summary>The Windows C debugger only provides the thread ID for a thread, but there is no way to invoke GetThreadId in the debugger, but it is ok to call a wrapper to it which is why we have defined this routine on Windows.</summary>
-doc:		<return>Thread ID</return>
-doc:		<param name="thread_id" type="HANDLE">Handle to the thread.</param>
+doc:	<routine name="eif_pthread_current_id" return_type="DWORD" export="private">
+doc:		<summary>The Windows C debugger only provides the thread ID for a thread, but there is no way to invoke GetCurrentThreadId in the debugger, but it is ok to call a wrapper to it which is why we have defined this routine on Windows.</summary>
+doc:		<return>Current thread ID</return>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
-rt_shared DWORD eif_pthread_id (EIF_THR_TYPE thread_id) {
-	return GetThreadId((HANDLE) thread_id);
+rt_shared DWORD eif_pthread_current_id (void) {
+	return GetCurrentThreadId();
 }
 #endif
 

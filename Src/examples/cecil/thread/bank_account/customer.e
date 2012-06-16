@@ -10,12 +10,16 @@ deferred class
 
 inherit
 	THREAD
+		rename
+			make as thread_make
+		end
 	
 
-feature	-- Initialization
+feature	{NONE} -- Initialization
 	
 	make (ptr: POINTER; m: MUTEX; p: BOOLEAN_REF)
 		do
+			thread_make
 			mutex := m
 			c_account := ptr
 			finished := p
@@ -77,9 +81,7 @@ feature {NONE} -- Implementation
 	random: RANDOM
 			-- Initialize a random number
 			-- No synchronization needed as created when holding `mutex'.
-		note
-			once_status: global
-		once
+		once ("PROCESS")
 			create Result.make
 			Result.start
 		ensure

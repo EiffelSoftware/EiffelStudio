@@ -2,7 +2,7 @@
 	description:	"SCOOP support."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 2010, Eiffel Software."
+	copyright:	"Copyright (c) 2010-2012, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -26,11 +26,11 @@
 			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 */
 
@@ -51,6 +51,7 @@ typedef struct call_data {
 #ifdef WORKBENCH
 	BODY_INDEX        body_index;      /* Routine to be called */
 	EIF_TYPED_VALUE * result;          /* Address of a result for queries */
+	EIF_REFERENCE *   result_address;  /* Address of GC-protected address for a reference result. */
 #else
 	union {
 		fnptr             address;         /* Routine to be called */
@@ -92,7 +93,6 @@ rt_public void eif_request_chain_restore (EIF_REFERENCE * t, struct stack * stk)
 
 #define call_data_sync_pid(a_call_data) ((call_data*) a_call_data)->sync_pid
 #define call_data_is_lock_passing(a_call_data) ((call_data*) a_call_data)->is_lock_passing
-
 
 #ifdef __cplusplus
 }

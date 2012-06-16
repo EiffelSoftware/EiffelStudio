@@ -2,8 +2,10 @@ class
 	SERVER_THREAD
 
 inherit
-
 	THREAD
+		rename
+			make as thread_make
+		end
 
 	UTILITY
 
@@ -27,6 +29,7 @@ feature -- Initialization
 		require
 			frontend_non_void: a_frontend /= Void
 		do
+			thread_make
 			create listeners.make (0)
 			frontend := a_frontend
 			port := a_port

@@ -10,6 +10,9 @@ class
 
 inherit
 	THREAD
+		redefine
+			make
+		end
 
 create
 	make
@@ -21,6 +24,7 @@ feature {NONE} -- Initialization
 			filename: FILE_NAME
 			lw_file: LOG_WRITER_FILE
 		do
+			Precursor
 			create log.make
 			create filename.make
 			filename.set_file_name ("thread2.log")

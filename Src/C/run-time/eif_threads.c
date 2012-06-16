@@ -441,7 +441,7 @@ rt_public void eif_thr_register(int is_external)
 				eif_thr_context->is_root = 1;
 				eif_thr_context->thread_id = eif_thr_current_thread();
 #if defined(EIF_ASSERTIONS) && defined(EIF_WINDOWS)
-				eif_thr_context->win_thread_id = eif_pthread_id(eif_thr_context->thread_id);
+				eif_thr_context->win_thread_id = eif_pthread_current_id();
 #endif
 				eif_thr_context->is_processor = eif_thr_context->is_processor;
 				eif_thr_context->logical_id = eif_thr_context->logical_id; 
@@ -481,7 +481,7 @@ rt_public void eif_set_thr_context (void) {
 			eif_thr_context->is_processor = EIF_FALSE;
 			eif_thr_context->thread_id = eif_thr_current_thread();
 #if defined(EIF_ASSERTIONS) && defined(EIF_WINDOWS)
-			eif_thr_context->win_thread_id = eif_pthread_id(eif_thr_context->thread_id);
+			eif_thr_context->win_thread_id = eif_pthread_current_id();
 #endif
 		}
 	}
@@ -795,9 +795,6 @@ rt_public void eif_thr_create_with_attr_new (EIF_OBJECT thr_root_obj,
 
 			/* Actual creation of the thread in the next 3 lines. */
 		RT_TRACE_KEEP(res, eif_pthread_create (&routine_ctxt->thread_id, attr, eif_thr_entry, routine_ctxt));
-#if defined(EIF_ASSERTIONS) && defined(EIF_WINDOWS)
-		routine_ctxt->win_thread_id = eif_pthread_id(routine_ctxt->thread_id);
-#endif
 		last_child = routine_ctxt->thread_id;
 		LAUNCH_MUTEX_UNLOCK;
 		SIGRESUME;

@@ -15,6 +15,9 @@ inherit
 		end
 
 	THREAD
+		redefine
+			make
+		end
 
 create
 	make
@@ -23,6 +26,7 @@ feature {NONE} -- Initialization
 
 	make
 		do
+			Precursor
 			log.write_information ("THREAD1 instantiated")
 		end
 

@@ -8,6 +8,9 @@ class
 
 inherit
 	THREAD
+		rename
+			make as thread_make
+		end
 
 	ACTION
 		rename
@@ -29,6 +32,7 @@ feature {NONE} -- Init
 	make_thread (a_login: like global_login)
 			-- Init with thread
 		do
+			thread_make
 			global_login := a_login
 			set_base
 

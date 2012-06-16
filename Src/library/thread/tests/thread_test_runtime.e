@@ -17,7 +17,7 @@ inherit
 			default_create
 		end
 
-	THREAD
+	THREAD_CONTROL
 		undefine
 			default_create
 		end
@@ -67,19 +67,21 @@ feature -- Test routines
 			l_thread_count, i: NATURAL
 			l_info: MEM_INFO
 			l_m1, l_m2, l_mdiff: INTEGER
+			l_thread: WORKER_THREAD
 		do
 			l_thread_count := 300_000
 
 			l_info := memory_statistics ({MEM_CONST}.total_memory)
 			l_info.update ({MEM_CONST}.total_memory)
 			l_m1 := l_info.used
+			create l_thread.make (agent print ("Hello"))
 
 			from
 				i := 1
 			until
 				i > l_thread_count
 			loop
-				join
+				l_thread.join
 				l_info.update ({MEM_CONST}.total_memory)
 				l_m2 := l_info.used
 				l_mdiff := l_m2 - l_m1

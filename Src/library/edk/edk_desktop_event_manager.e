@@ -13,7 +13,8 @@ inherit
 
 	THREAD
 		rename
-			execute as process_events
+			execute as process_events,
+			make as thread_make
 		end
 
 create {EDK_DISPLAY}
@@ -24,6 +25,7 @@ feature {NONE} -- Initialization
 	make_for_display (a_display: EDK_DISPLAY)
 			-- Make `Current' for use with display `a_display'.
 		do
+			thread_make
 			display := a_display
 			create type_manager
 			create window_list.make (10)

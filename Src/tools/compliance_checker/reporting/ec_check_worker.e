@@ -14,6 +14,9 @@ class
 
 inherit
 	THREAD
+		rename
+			make as thread_make
+		end
 
 	EC_CHECKED_ENTITY_FACTORY
 		export
@@ -44,6 +47,7 @@ feature {NONE} -- Initialization
 			a_assembly_not_void: a_assembly /= Void
 			a_printer_not_void: a_printer /= Void
 		do
+			thread_make
 			assembly := a_assembly
 			printer := a_printer
 		ensure

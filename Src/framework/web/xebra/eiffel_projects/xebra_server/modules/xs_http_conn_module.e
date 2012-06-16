@@ -18,6 +18,9 @@ inherit
 		end
 
 	THREAD
+		rename
+			make as thread_make
+		end
 
 	XS_SHARED_SERVER_CONFIG
 
@@ -39,6 +42,7 @@ feature {NONE} -- Initialization
 			a_main_server_attached: a_main_server /= Void
 			a_name_attached: a_name /= Void
 		do
+			thread_make
 			module_make (a_name)
 			main_server := a_main_server
 	       	create current_request_message.make_empty

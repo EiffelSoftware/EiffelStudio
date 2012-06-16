@@ -12,6 +12,10 @@ deferred class
 
 inherit
 	THREAD
+		redefine
+			make
+		end
+
 	XU_SHARED_OUTPUTTER
 	XC_WEBAPP_INTERFACE
 	XU_STOPWATCH
@@ -22,6 +26,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization of classes.
 		do
+			Precursor
 			create session_manager.make
 			create {HASH_TABLE [XWA_SERVLET, STRING]} stateless_servlets.make (1)
 			create server_socket.make_server_by_port (config.port.value)

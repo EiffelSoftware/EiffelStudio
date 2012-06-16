@@ -10,6 +10,9 @@ class
 
 inherit
 	THREAD
+		rename
+			make as thread_make
+		end
 
 create {THREAD_POOL}
 	make
@@ -20,6 +23,7 @@ feature {NONE} -- Initialization
 			-- `a_thread_pool', the pool in which this thread is managed
 			-- `a_semaphore' is used for execution suspending
 		do
+			thread_make
 			thread_pool := a_thread_pool
 			semaphore := a_semaphore
 		end

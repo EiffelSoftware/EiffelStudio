@@ -11,6 +11,9 @@ class
 
 inherit
 	THREAD
+		rename
+			make as thread_make
+		end
 
 create
 	make,
@@ -20,6 +23,7 @@ feature
 
 	make
 		do
+			thread_make
 			i := 0
 			launch
 			join_all;
@@ -40,6 +44,7 @@ feature
 
 	make_typed (v: like i)
 		do
+			thread_make
 			i := v
 		end
 

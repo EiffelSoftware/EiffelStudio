@@ -11,6 +11,9 @@ class
 
 inherit
 	THREAD
+		rename
+			make as thread_make
+		end
 
 create
 	make
@@ -19,6 +22,7 @@ feature
 
 	make (a_count: like count)
 		do
+			thread_make
 			count := a_count
 		end
 

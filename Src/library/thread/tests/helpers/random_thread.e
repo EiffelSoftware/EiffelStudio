@@ -17,10 +17,6 @@ create
 
 feature
 
-	make
-		do
-		end
-
 	execute
 		local
 			l_random: RANDOM

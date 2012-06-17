@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			server_socket.set_accept_timeout ({XU_CONSTANTS}.Socket_accept_timeout)
 			stop := False
 			add_servlets
-		ensure
+		ensure then
 			server_socket_attached: server_socket /= Void
 			session_manager_attached: session_manager /= Void
 			stateless_servlets_attached: stateless_servlets /= Void

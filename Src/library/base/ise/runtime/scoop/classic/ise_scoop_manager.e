@@ -720,7 +720,7 @@ feature -- Command/Query Handling
 			l_request_chain_node_queue: detachable like new_request_chain_node_queue
 			l_client_request_chain_node_queue_entry, l_request_chain_node_queue_entry: detachable like new_request_chain_node_queue_entry
 			l_unique_pid_count, i, l_last_pid_index, l_logged_calls_original_count, l_logged_calls_current_count: INTEGER_32
-			l_is_synchronous, l_client_is_sibling, l_client_sync_needed, l_exit_loop: BOOLEAN
+			l_is_synchronous, l_client_is_sibling, l_client_sync_needed, l_exit_loop, l_temporary_chain_opened: BOOLEAN
 			l_call_ptr: POINTER
 		do
 			debug ("ISE_SCOOP_MANAGER")
@@ -823,12 +823,21 @@ feature -- Command/Query Handling
 				l_request_chain_node_queue := request_chain_node_queue_list [a_client_processor_id]
 				check l_request_chain_node_queue_attached: attached l_request_chain_node_queue then end
 
-				l_client_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
-				check l_client_request_chain_meta_data_attached: attached l_client_request_chain_meta_data end
-
 				from
 					l_client_request_chain_node_queue_entry := l_request_chain_node_queue [(processor_meta_data [a_client_processor_id])[current_request_node_id_execution_index]]
 					check l_client_request_chain_node_queue_entry_attached: l_client_request_chain_node_queue_entry /= Void then end
+
+					l_client_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
+					if l_client_request_chain_meta_data = default_request_chain_meta_data_entry then
+							-- There are no processors currently in the chain so we create a temporary chain for the logged call.
+							-- This is usually the result of an applied call creating a new processor.
+						signify_start_of_request_chain (a_client_processor_id)
+						assign_supplier_processor_to_request_chain (a_client_processor_id, null_processor_id)
+						wait_for_request_chain_supplier_processor_locks (a_client_processor_id)
+						l_client_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
+						l_client_request_chain_meta_data [Request_chain_status_index.to_integer_32] := Request_chain_status_application.to_integer_32;
+						l_temporary_chain_opened := True
+					end
 
 						-- Wait until the request chain has started.
 					wait_for_request_chain_to_begin (a_client_processor_id, a_supplier_processor_id, l_client_request_chain_meta_data)
@@ -914,6 +923,11 @@ feature -- Command/Query Handling
 						end
 						l_exit_loop := True
 					end
+				end
+
+				if l_temporary_chain_opened then
+						-- Close temporary chain if opened.
+					signify_end_of_request_chain (a_client_processor_id)
 				end
 			else
 					-- Add call to request chain node then wait/sync as needed.

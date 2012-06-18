@@ -298,7 +298,6 @@ feature -- Basic operation
 									if attached ecf_location (l_ecf) as l_location then
 										l_new_path := relative_path (l_location, fn, l_rn, root_base_name)
 									else
-										report_warning ("Unknown ecf %""+ l_ecf +"%"")
 										l_new_path := relative_path (l_ecf, fn, l_rn, root_base_name)
 									end
 									debug
@@ -451,6 +450,9 @@ feature {NONE} -- Implementation
 							loop
 								if i_lst.item.same_string (lst.item) then
 									n := n + 1
+								else
+										-- Exit look
+									lst.start
 								end
 								i_lst.back
 								lst.back
@@ -462,17 +464,11 @@ feature {NONE} -- Implementation
 						end
 					end
 				else
---					l_ecf := reduced_path (a_ecf, 2) -- keep only sub dir and ecf filename		
---					n := 0
---					across
---						ecf_table as c
---					until
---						Result /= Void
---					loop
---						if c.item.subdir_file.same_string (l_ecf) and c.item.uuid ~ l_uuid then
---							Result := c.key
---						end
---					end
+				end
+			end
+			if Result = Void then
+				if not file_system.file_exists (l_ecf) then
+					report_warning ("Unable to find %"" + a_ecf.as_string_8 + "%"")
 				end
 			end
 		end
@@ -526,12 +522,12 @@ feature {NONE} -- Implementation
 			Result := s
 		end
 
-	path_details (fn: READABLE_STRING_GENERAL): detachable TUPLE [uuid: detachable READABLE_STRING_8; segments: like segments_from_string; dir, subdir_file, file: READABLE_STRING_GENERAL]
+	path_details (fn: READABLE_STRING_GENERAL): detachable TUPLE [uuid: detachable READABLE_STRING_8; segments: like segments_from_string; dir, file: READABLE_STRING_GENERAL]
 		local
 			f: RAW_FILE
 			n,p: INTEGER
 			l_uuid: detachable READABLE_STRING_8
-			l_dir, l_subdir: detachable READABLE_STRING_GENERAL
+			l_dir: detachable READABLE_STRING_GENERAL
 			l_file: detachable READABLE_STRING_GENERAL
 			c_slash, c_bslash: NATURAL_32
 			c: NATURAL_32
@@ -541,25 +537,18 @@ feature {NONE} -- Implementation
 			from
 				n := fn.count
 			until
-				n = 0 or l_subdir /= Void
+				n = 0 or l_dir /= Void
 			loop
 				c := fn.code (n)
 				if c = c_slash or c = c_bslash then
-					if l_dir = Void then
-						l_file := fn.substring (n + 1, fn.count)
-						l_dir := fn.substring (1, n)
-					else
-						l_subdir := l_dir.substring (n + 1, l_dir.count)
-					end
+					l_file := fn.substring (n + 1, fn.count)
+					l_dir := fn.substring (1, n)
 				else
 				end
 				n := n - 1
 			end
 			if l_dir = Void then
 				l_dir := ""
-			end
-			if l_subdir = Void then
-				l_subdir := ""
 			end
 			if l_file /= Void then
 				create f.make (fn.as_string_8)
@@ -587,7 +576,7 @@ feature {NONE} -- Implementation
 						report_warning ("No UUID in %"" + fn.as_string_8 + "%"")
 					end
 				end
-				Result := [l_uuid, segments_from_string (l_dir), l_dir, l_subdir + l_file, l_file]
+				Result := [l_uuid, segments_from_string (l_dir), l_dir, l_file]
 			end
 		end
 

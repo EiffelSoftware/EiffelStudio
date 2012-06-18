@@ -18,8 +18,11 @@ feature -- Characters
 	char3: CHARACTER_32 = 'é'
 	char4: CHARACTER_8 = 'é'
 	
-	char5: CHARACTER = 's'
-	char6: CHARACTER = 's'
+	char5: CHARACTER_32 = 's'
+	char6: CHARACTER_8 = 's'
+	
+	char7: CHARACTER_32 = '%/35797/'
+	char8: CHARACTER_8 = '%/35797/'	-- Error
 
 feature -- Strings
 

@@ -21,6 +21,7 @@ feature -- Run time
 
 	test_char
 		do
+				-- Manifest
 			print ("CHARACTER_32 vs ASCII: " + (({CHARACTER_32}'a').code = 97).out + "%N")
 			print ("CHARACTER_8 vs ASCII: " + (({CHARACTER_8}'a').code = 97).out + "%N")
 			print ("CHARACTER_32 vs Extended ASCII: " + (({CHARACTER_32}'é').code = 233).out + "%N")
@@ -31,6 +32,13 @@ feature -- Run time
 			print ("CHARACTER_8 ASCII character type: " + ({CHARACTER_8}'a').generating_type.out + "%N")
 			print ("CHARACTER_32 extended ASCII character type: " + ({CHARACTER_32}'é').generating_type.out + "%N")
 			print ("CHARACTER_8 extended ASCII character type: " + ({CHARACTER_8}'é').generating_type.out + "%N")
+			print ("CHARACTER_32 manifest: " + ('%/35797/').generating_type.out + " " + (('%/35797/').code = 35797).out + "%N")
+			
+				-- Constants
+			print ("CHARACTER_8 constant: " + char_8.generating_type.out + " " + (char_8.code = 97).out + "%N")
+			print ("CHARACTER_8 constant: " + char1_8.generating_type.out + " " + (char1_8.code = 233).out + "%N")
+			print ("CHARACTER_32 constant: " + char2_32.generating_type.out + " " + (char2_32.code = 233).out + "%N")
+			print ("CHARACTER_32 constant: " + char3_32.generating_type.out + " " + (char3_32.code = 35797).out + "%N")
 		end
 
 	test_string_32
@@ -127,9 +135,10 @@ feature -- Comment æµ‹è¯•
 
 feature -- Characters
 
-	char_8: CHARACTER = 's'
+	char_8: CHARACTER = 'a'
 	char1_8: CHARACTER = 'é'
 	char2_32: CHARACTER_32 = 'é'
+	char3_32: CHARACTER_32 = '%/35797/'
 
 feature -- Strings
 

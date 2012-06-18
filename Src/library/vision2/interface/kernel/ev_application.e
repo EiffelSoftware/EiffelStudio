@@ -160,7 +160,7 @@ feature -- Basic operation
 			not_already_launched: not is_launched
 		do
 			is_launched := True
-			implementation.launch
+			internal_launch_application (application_handler)
 		ensure
 			is_launched: is_launched
 		rescue
@@ -330,7 +330,7 @@ feature -- Status setting
 
 feature -- Event handling
 
-	add_idle_action_kamikaze, do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE])
+	add_idle_action_kamikaze, do_once_on_idle (an_action: separate PROCEDURE [ANY, TUPLE])
 			-- Perform `an_action' one time when the application is next idle.
 			-- Thread safe
 		require
@@ -367,7 +367,7 @@ feature {NONE} -- Implementation
 	create_interface_objects
 			-- <Precursor>
 		do
-			
+
 		end
 
 	create_implementation
@@ -380,18 +380,35 @@ feature {NONE} -- Implementation
 			implementation := l_environment.implementation.application_i
 		end
 
+	internal_launch_application (a_handler: separate EV_APPLICATION_HANDLER)
+			-- Call launch on `a_handler'
+		do
+			a_handler.set_application (implementation)
+			implementation.call_post_launch_actions
+			a_handler.launch
+		end
+
+	application_handler: separate EV_APPLICATION_HANDLER
+			-- A global cell where `item' is the single application object for
+			-- the system.
+		require
+			not_destroyed: not is_destroyed
+		once ("PROCESS")
+			create Result
+		end
+
 invariant
 	tooltip_delay_not_negative: tooltip_delay >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

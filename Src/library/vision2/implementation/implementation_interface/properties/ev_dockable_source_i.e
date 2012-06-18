@@ -423,7 +423,7 @@ feature -- Basic operations
 					-- and the rest of this section of code being executed.	
 				tool_bar ?= dockable_target
 				if not (tool_bar /= Void and l_widget_source_being_docked /= Void) then
-					locked_in_here := attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
+					locked_in_here := attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
 					check l_widget_source_being_docked /= Void end
 					if locked_in_here and l_widget_source_being_docked.top_level_window /= Void then
 						check container /= Void end
@@ -573,7 +573,7 @@ feature -- Basic operations
 			source_being_docked := Void
 
 				-- Ensure that the locked window is unlocked, if set in this feature.
-			if locked_in_here and then attached (create {EV_ENVIRONMENT}).application as l_application then
+			if locked_in_here and then attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application then
 				locked_in_here_window := l_application.locked_window
 				if locked_in_here_window /= Void then
 					locked_in_here_window.unlock_update
@@ -1081,14 +1081,14 @@ invariant
 	dock_executing: is_dock_executing implies widget_source_being_docked /= Void or item_source_being_docked /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

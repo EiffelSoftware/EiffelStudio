@@ -21,7 +21,7 @@ create
 
 feature -- Access
 
-	application: detachable EV_APPLICATION
+	application: detachable separate EV_APPLICATION
 			-- Single application object for system.
 		require
 			not_destroyed: not is_destroyed
@@ -115,6 +115,19 @@ feature -- Access
 			Result := implementation.has_printer
 		end
 
+feature -- Object Factory
+
+	new_object_from_type (a_type: TYPE [EV_ANY]): separate EV_ANY
+		do
+			Result := implementation.new_object_from_type (a_type)
+		end
+
+	separate_string_from_string (a_string: READABLE_STRING_GENERAL): separate READABLE_STRING_GENERAL
+			-- Create a new string on the same processor as EV_APPLICATION object.
+		do
+			Result := implementation.separate_string_from_string (a_string)
+		end
+
 feature {EV_ANY, EV_ANY_I, EV_SHARED_TRANSPORT_I, EV_ANY_HANDLER, EV_ABSTRACT_PICK_AND_DROPABLE} -- Implementation
 
 	implementation: EV_ENVIRONMENT_I
@@ -131,18 +144,22 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_ENVIRONMENT_IMP} implementation.make
+			implementation := environment_i
+				-- Reset creation flags so that `implementation' may be reused.
+			implementation.set_state_flag ({EV_ANY_I}.interface_default_create_called_flag, False)
+			implementation.set_state_flag ({EV_ANY_I}.base_make_called_flag, False)
+			implementation.set_state_flag ({EV_ANY_I}.interface_is_initialized_flag, False)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -47,16 +47,16 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_text: READABLE_STRING_GENERAL)
+	set_text (a_text: separate READABLE_STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		require
 			not_destroyed: not is_destroyed
 			a_text_not_void: a_text /= Void
 			no_carriage_returns: not a_text.has_code (('%R').natural_32_code)
 		do
-			implementation.set_text (a_text)
+			implementation.set_text (environment_i.string_from_separate_string (a_text))
 		ensure
-			text_cloned: text.same_string_general (a_text) and then text /= a_text
+			text_cloned: text.same_string_general (environment_i.string_from_separate_string (a_text)) and then text /= a_text
 		end
 
 	remove_text
@@ -86,14 +86,14 @@ invariant
 	text_not_void: is_usable implies text /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

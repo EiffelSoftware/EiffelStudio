@@ -51,8 +51,10 @@ feature -- Event handling
 			Result := idle_actions_internal
 		end
 
-	kamikaze_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+	kamikaze_actions: ARRAYED_LIST [separate PROCEDURE [ANY, TUPLE]]
 			-- Actions to be performed once when the application is otherwise idle.
+			-- Allows for separate agents coming from other processors that may want to be called when the application is idle
+			-- via 'do_once_on_idle'.
 
 feature {EV_ANY_I} -- Implementation
 
@@ -582,14 +584,14 @@ feature {EV_ANY_I}	-- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -191,8 +191,10 @@ feature -- Command
 			-- no more top level windows remain in the system.
 		do
 			destroy
-			if ev_application.windows.is_empty then
-				ev_application.destroy
+			if attached {EV_APPLICATION} ev_application as l_app then
+				if l_app.windows.is_empty then
+					l_app.destroy
+				end
 			end
 		end
 
@@ -290,15 +292,15 @@ feature -- Status setting
 			maximum_height_assigned: maximum_height = a_maximum_height
 		end
 
-	set_title (a_title: READABLE_STRING_GENERAL)
+	set_title (a_title: separate READABLE_STRING_GENERAL)
 			-- Assign `a_title' to `title'.
 		require
 			not_destroyed: not is_destroyed
 			a_title_not_void: a_title /= Void
 		do
-			implementation.set_title (a_title)
+			implementation.set_title (environment_i.string_from_separate_string (a_title))
 		ensure
-			a_title_assigned: title.same_string_general (a_title)
+			a_title_assigned: title.same_string_general (environment_i.string_from_separate_string (a_title))
 			cloned: title /= a_title
 		end
 
@@ -344,12 +346,12 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			no_locked_window:
-				attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
+				attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
 		do
 			implementation.lock_update
 		ensure
 			locked_window_is_current:
-				attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Current
+				attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Current
 		end
 
 	unlock_update
@@ -357,12 +359,12 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			locked_window_is_current:
-				attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Current
+				attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Current
 		do
 			implementation.unlock_update
 		ensure
 			no_locked_window:
-				attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
+				attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
 		end
 
 	show_relative_to_window (a_parent: EV_WINDOW)
@@ -429,14 +431,14 @@ invariant
 	lower_bar_not_void: is_usable implies lower_bar /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

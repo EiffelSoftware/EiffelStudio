@@ -215,13 +215,21 @@ feature {NONE} -- Contract support
 			Result := True
 		end
 
+feature {NONE} -- Implementation
+
+	environment_i: EV_ENVIRONMENT_I
+			-- Once access to Environment Implementation Object
+		once
+			create {EV_ENVIRONMENT_IMP} Result.make
+		end
+
 feature {EV_ANY} -- Contract support
 
 	action_sequence_call_counter: NATURAL_32
 			-- Call counter for `{EV_LITE_ACTION_SEQUENCE}.call', used to determine
 			-- if calls have been made as a result of a routine executing.
 		do
-			Result := (create {EV_ENVIRONMENT}).implementation.application_i.action_sequence_call_counter
+			Result := environment_i.application_i.action_sequence_call_counter
 		end
 
 	is_usable: BOOLEAN
@@ -254,14 +262,14 @@ invariant
 
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_ANY

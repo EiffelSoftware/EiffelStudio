@@ -19,33 +19,20 @@ inherit
 
 feature {EV_ANY, EV_ANY_I, EV_ENVIRONMENT, EV_SHARED_TRANSPORT_I, EV_ANY_HANDLER, EV_ABSTRACT_PICK_AND_DROPABLE} -- Status report
 
-	application: detachable EV_APPLICATION
+	application: detachable separate EV_APPLICATION
 			-- Single application object for system.
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_result: detachable EV_APPLICATION_I
 		do
-			l_result := application_cell.item
-			if attached l_result then
-				Result := l_result.interface
-			end
+			Result := application_internal (environment_handler)
 		end
 
 	application_i: EV_APPLICATION_I
 			-- Single application implementation object for system.
-		local
-			l_result: detachable EV_APPLICATION_I
 		do
-			l_result := application_cell.item
-				-- If EV_APPLICATION_IMP has not been created yet, or was just
-				-- destroyed, we recreate a fresh one.
-			if not attached l_result or else l_result.is_destroyed then
-				application_cell.put (create {EV_APPLICATION_IMP}.make)
-				l_result := application_cell.item
+			check attached {EV_APPLICATION_I} application_i_internal (environment_handler) as l_result then
+				Result := l_result
 			end
-			check l_result /= Void end
-			Result := l_result
 		end
 
 	supported_image_formats: LINEAR [STRING_32]
@@ -89,36 +76,89 @@ feature {EV_ANY, EV_ANY_I, EV_ENVIRONMENT, EV_SHARED_TRANSPORT_I, EV_ANY_HANDLER
 		deferred
 		end
 
+feature {EV_ANY} -- Separate Object Factory
+
+	new_object_from_type (a_type: TYPE [EV_ANY]): separate EV_ANY
+		do
+			Result := new_object_from_type_id_internal (environment_handler, a_type.type_id)
+		end
+
+	separate_string_from_string (a_string: READABLE_STRING_GENERAL): separate READABLE_STRING_GENERAL
+			-- Create a new string on the same processor as EV_APPLICATION object.
+		do
+			Result := separate_string_from_string_internal (environment_handler, a_string)
+		end
+
+	string_from_separate_string (a_string: separate READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
+			-- Return a representation of `a_string' on the same processor as `Current'.
+		local
+			i, l_count: INTEGER
+			l_string: STRING_GENERAL
+			l_code: NATURAL_32
+		do
+			if attached {READABLE_STRING_GENERAL} a_string as l_result then
+					-- String is on the same processor so it may be safely returned.
+				Result := l_result
+			else
+				l_count := a_string.count
+				if a_string.is_string_8 then
+						-- If `a_string' contains CHARACTER_8 values then make `Result' a STRING_8 to save memory.
+					create {STRING_8} l_string.make_filled ('%U', l_count)
+				else
+					create {STRING_32} l_string.make_filled ('%U', l_count)
+				end
+				from
+					i := 1
+				until
+					i > l_count
+				loop
+					l_code := a_string.code (i)
+					l_string.put_code (l_code, i)
+					i := i + 1
+				end
+				Result := l_string
+			end
+		end
+
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_ENVIRONMENT note option: stable attribute end
             -- Provides a common user interface to platform dependent
             -- functionality implemented by `Current'
 
---feature {EV_APPLICATION, EV_ENVIRONMENT} -- Access
+feature {EV_APPLICATION} -- Implementation
 
---	set_application (an_application: EV_APPLICATION)
---			-- Specify `an_application' as the single application object for the
---			-- system. Must be called exactly once from EV_APPLICATION's
---			-- creation procedure.
---		require
---			not_destroyed: not is_destroyed
---			application_not_already_set: application = Void
---		do
---			application_cell.put (an_application)
---		ensure
---			application_assigned: application = an_application
---		end
-
-feature {NONE} -- Implementation
-
-	Application_cell: CELL [detachable EV_APPLICATION_I]
+	environment_handler: separate EV_ENVIRONMENT_HANDLER
 			-- A global cell where `item' is the single application object for
 			-- the system.
 		require
 			not_destroyed: not is_destroyed
 		once ("PROCESS")
-			create Result.put (Void)
+			create {EV_ENVIRONMENT_HANDLER} Result.make
+		end
+
+feature {NONE} -- Implementation
+
+	application_internal (a_environment_handler: like environment_handler): detachable separate EV_APPLICATION
+		do
+			Result := a_environment_handler.application
+		end
+
+	application_i_internal (a_environment_handler: like environment_handler): detachable separate EV_APPLICATION_I
+		do
+			Result := a_environment_handler.application_i
+		end
+
+	new_object_from_type_id_internal (a_environment_handler: like environment_handler; a_type_id: INTEGER): separate EV_ANY
+		do
+			Result := a_environment_handler.new_object_from_type_id (a_type_id)
+		end
+
+	separate_string_from_string_internal (a_environment_handler: like environment_handler; a_string: READABLE_STRING_GENERAL): separate READABLE_STRING_GENERAL
+			-- Create a new string on the same processor as EV_APPLICATION object.
+		do
+			Result := a_environment_handler.string_from_separate_string (a_string)
 		end
 
 feature -- Command
@@ -130,14 +170,14 @@ feature -- Command
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

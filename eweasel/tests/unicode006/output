@@ -8,6 +8,11 @@ CHARACTER_32 ASCII character type: CHARACTER_32
 CHARACTER_8 ASCII character type: CHARACTER_8
 CHARACTER_32 extended ASCII character type: CHARACTER_32
 CHARACTER_8 extended ASCII character type: CHARACTER_8
+CHARACTER_32 manifest: CHARACTER_32 True
+CHARACTER_8 constant: CHARACTER_8 True
+CHARACTER_8 constant: CHARACTER_8 True
+CHARACTER_32 constant: CHARACTER_32 True
+CHARACTER_32 constant: CHARACTER_32 True
 STRING_32 constants test 1: True
 STRING_32 constants test 2: True
 STRING_32 constants test 3: True

@@ -32,6 +32,11 @@ feature -- Run time
 			l_char_8 := {CHARACTER_32}'é'	-- Error
 			l_char_8 := 'é'
 			
+				-- Unicode point numbers
+			l_char_8 := {CHARACTER_8}'%/35797/'		-- Error
+			l_char_8 := {CHARACTER_32}'%/35797/'	-- Error
+			l_char_8 := '%/35797/'	-- Error
+			
 				-- iso-8859-1 no compatible unicode
 			l_char_32 := {CHARACTER_8}'测'	-- Error
 			l_char_32 := {CHARACTER_32}'测'
@@ -46,6 +51,11 @@ feature -- Run time
 			l_char_32 := {CHARACTER_8}'é'
 			l_char_32 := {CHARACTER_32}'é'
 			l_char_32 := 'é'
+			
+				-- Unicode point numbers
+			l_char_32 := {CHARACTER_8}'%/35797/'	-- Error
+			l_char_32 := {CHARACTER_32}'%/35797/'
+			l_char_32 := '%/35797/'
 		end
 
 	test_string_32

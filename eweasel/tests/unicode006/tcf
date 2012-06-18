@@ -21,11 +21,11 @@ compile_result syntax_error TEST 17
 
 copy_raw 	test_constant_with_bom.e $CLUSTER test.e
 resume_compile
-compile_result validity_error TEST VQMC VQMC VQMC VQMC
+compile_result validity_error TEST VQMC VQMC VQMC VQMC VQMC
 
 copy_raw 	test_manifest_with_bom.e $CLUSTER test.e
 resume_compile
-compile_result validity_error TEST VWMQ VWMQ VWMQ VWMQ VWMQ VWMQ VWMQ VWMQ VWMQ VJAR VJAR VJAR VJAR VWMQ
+compile_result validity_error TEST VWMQ VWMQ VWMQ VWMQ VWMQ VWMQ VWMQ VWMQ VWMQ VWMQ VWMQ VWMQ VJAR VJAR VJAR VJAR VJAR VJAR
 
 copy_raw 	test_without_bom.e $CLUSTER test.e
 resume_compile

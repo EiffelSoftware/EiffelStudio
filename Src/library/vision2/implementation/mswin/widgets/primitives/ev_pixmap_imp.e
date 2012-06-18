@@ -1890,7 +1890,7 @@ feature {NONE} -- Color depth implementation
 
 	color_depth_cell: CELL [INTEGER]
 			-- Color depth singleton cell
-		once ("PROCESS")
+		once
 			create Result.put (0)
 		ensure
 			not_void: Result /= Void
@@ -1989,14 +1989,14 @@ invariant
 			l_private_cursor.reference_tracked
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_PIXMAP_IMP

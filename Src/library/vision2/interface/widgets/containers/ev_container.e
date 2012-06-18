@@ -196,21 +196,24 @@ feature -- Status report
 
 feature -- Element change
 
-	extend (v: like item)
+	extend (v: separate like item)
 			-- Ensure that structure includes `v'.
 			-- Do not move cursor.
 		require
 			not_destroyed: not is_destroyed
 			extendible: extendible
 			v_not_void: v /= Void
-			v_parent_void: v.parent = Void
+			v_same_processor_as_current: attached {like item} v as l_v
+			v_parent_void: l_v.parent = Void
 			v_not_current: v /= Current
-			v_not_parent_of_current: not is_parent_recursive (v)
-			v_containable: may_contain (v)
+			v_not_parent_of_current: not is_parent_recursive (l_v)
+			v_containable: may_contain (l_v)
 		do
-			implementation.extend (v)
+			check attached {like item} v as l_v then
+				implementation.extend (l_v)
+			end
 		ensure
-			has_v: has (v)
+			has_v: attached {like item} v as l_v and then has (l_v)
 		end
 
 	put, replace (v: like item)
@@ -418,14 +421,14 @@ invariant
 	items_unique: is_usable implies items_unique
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

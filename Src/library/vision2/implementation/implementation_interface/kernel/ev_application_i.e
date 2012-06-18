@@ -68,18 +68,6 @@ feature -- Initialization
 			set_is_initialized (True)
 		end
 
-	 launch
-			-- Call the `post_launch_actions' and start the event loop.
-		do
-			from
-				call_post_launch_actions
-			until
-				is_destroyed
-			loop
-				process_event_queue (True)
-			end
-		end
-
 feature {EV_ANY_I} -- Implementation
 
 	cpu_relinquishment_time: INTEGER = 20
@@ -92,7 +80,15 @@ feature {EV_ANY_I} -- Implementation
 		-- Number of iterations before forcing Garbage Collector to kick in.
 		-- 30 Seconds = 30 * 1000 / sleep time
 
-	idle_actions_snapshot, kamikaze_idle_actions_snapshot: detachable SPECIAL [PROCEDURE [ANY, TUPLE]]
+	idle_actions_snapshot: detachable SPECIAL [PROCEDURE [ANY, TUPLE]]
+			-- Idle actions snapshot used for temporarily storing a copy of `idle_actions' during its iteration.
+		note
+			option: stable
+		attribute
+		end
+
+	kamikaze_idle_actions_snapshot: detachable SPECIAL [separate PROCEDURE [ANY, TUPLE]]
+			-- Kamikaze Idle actions snapshot used for temporarily storing a copy of `kamikaze_idle_actions' during its iteration.
 		note
 			option: stable
 		attribute
@@ -107,7 +103,8 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 			l_idle_actions_internal: like idle_actions_internal
 			l_idle_is_locked, l_kamikaze_is_locked: BOOLEAN
 			l_retry_count: INTEGER
-			l_idle_actions_snapshot, l_kamikaze_idle_actions_snapshot: detachable SPECIAL [PROCEDURE [ANY, TUPLE]]
+			l_idle_actions_snapshot: detachable SPECIAL [PROCEDURE [ANY, TUPLE]]
+			l_kamikaze_idle_actions_snapshot: detachable SPECIAL [separate PROCEDURE [ANY, TUPLE]]
 			i, l_count: INTEGER
 		do
 			if l_retry_count = 0 then
@@ -195,7 +192,7 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 						until
 							i = l_count or else is_destroyed
 						loop
-							l_kamikaze_idle_actions_snapshot [i].call (Void)
+							call_separate_action (l_kamikaze_idle_actions_snapshot [i])
 							i := i + 1
 						end
 							-- Wipeout snapshot list to signify that that any nested idle calls do not have to clone the snapshot
@@ -248,6 +245,14 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 	idle_actions_executing: BOOLEAN
 		-- Are the idle actions currently being executed?
 		-- We need this flag to prevent recursive calls to idle actions from the GUI thread.
+
+	call_separate_action (a_action: separate PROCEDURE [ANY, TUPLE])
+			-- Execute `call' on 'a_action'.
+		do
+			--| FIXME: Remove use of `apply' when standard allows passing of `Void' to separate targets.
+--			a_action.call (Void)
+			a_action.apply
+		end
 
 feature {NONE} -- Implementation
 
@@ -577,7 +582,7 @@ feature {NONE} -- Thread implementation
 
 feature -- Events
 
-	do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE])
+	do_once_on_idle (an_action: separate PROCEDURE [ANY, TUPLE])
 			-- Perform `an_action' one time only on idle.
 		do
 			kamikaze_lock
@@ -1207,14 +1212,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

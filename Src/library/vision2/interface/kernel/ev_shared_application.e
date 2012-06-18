@@ -11,16 +11,14 @@ class
 
 feature -- Access
 
-	ev_application: EV_APPLICATION
+	ev_application: separate EV_APPLICATION
 			-- Current application if created yet.
 		require
 			application_exists: attached shared_environment.application
-		local
-			l_result: detachable EV_APPLICATION
 		do
-			l_result := shared_environment.application
-			check l_result /= Void end
-			Result := l_result
+			check attached shared_environment.application as l_app then
+				Result := l_app
+			end
 		end
 
 	process_events_and_idle
@@ -28,7 +26,9 @@ feature -- Access
 			"Call ev_application.process_events instead"
 			-- Call `process_events'.
 		do
-			ev_application.process_events
+			check attached {EV_APPLICATION} ev_application as l_application then
+				l_application.process_events
+			end
 				-- Idle actions are called when all events are processed.
 		end
 
@@ -39,14 +39,14 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

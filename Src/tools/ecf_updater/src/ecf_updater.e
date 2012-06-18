@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			create tb.make_with_key_tester (50, create {STRING_EQUALITY_TESTER})
 
 			create errors.make (0)
+			create warnings.make (0)
 			ecf_table := tb
 			root_directory := args.root_directory	--"c:\_dev\EWF\EWF-dev"
 			root_base_name := args.base_name	--"$EIFFEL_LIBRARY"
@@ -124,6 +125,17 @@ feature {NONE} -- Initialization
 					end
 				end
 
+				if not warnings.is_empty then
+					io.error.put_string ("[WARNING] " + warnings.count.out + " warnings occurred.")
+					io.error.put_new_line
+					across
+						warnings as warn
+					loop
+						io.error.put_string (warn.item.as_string_8)
+						io.error.put_new_line
+					end
+				end
+
 				if not errors.is_empty then
 					io.error.put_string ("[ERROR] " + errors.count.out + " errors occurred.")
 					io.error.put_new_line
@@ -158,6 +170,7 @@ feature -- Access
 	verbose: BOOLEAN
 
 	errors: ARRAYED_LIST [READABLE_STRING_GENERAL]
+	warnings: ARRAYED_LIST [READABLE_STRING_GENERAL]
 
 
 feature -- Variable expansions
@@ -402,6 +415,7 @@ feature {NONE} -- Implementation
 
 	report_warning (m: READABLE_STRING_GENERAL)
 		do
+			warnings.extend (m)
 			io.error.put_string ("[Warning] " + m.as_string_8)
 			io.error.put_new_line
 		end
@@ -441,7 +455,7 @@ feature {NONE} -- Implementation
 					loop
 						if c.item.file.same_string (l_info.file) then
 							from
-								n := 0
+								n := 1
 								i_lst := c.item.segments
 								i_lst.finish
 								lst.finish
@@ -460,6 +474,11 @@ feature {NONE} -- Implementation
 							if n > r then
 								r := n
 								Result := c.key
+							elseif n = r then
+								-- Choose the closest
+								if common_segment_count (l_ecf, Result) < common_segment_count (l_ecf, c.key) then
+									Result := c.key
+								end
 							end
 						end
 					end
@@ -601,6 +620,31 @@ feature {NONE} -- Path manipulation
 				Result.append ("/")
 			end
 			append_segments_to_string (lst, Result)
+		end
+
+	common_segment_count (p1, p2: detachable READABLE_STRING_GENERAL): INTEGER
+			-- Number of segments common between p1 and p2 starting from the left.
+		do
+			if
+				(p1 /= Void and then attached segments_from_string (p1) as lst_1) and
+				(p2 /= Void and then attached segments_from_string (p2) as lst_2)
+			then
+				from
+					lst_1.start
+					lst_2.start
+				until
+					lst_1.after or lst_2.after
+				loop
+					if lst_1.item.same_string (lst_2.item) then
+						Result := Result  + 1
+					else
+						lst_1.finish
+						lst_2.finish
+					end
+					lst_1.forth
+					lst_2.forth
+				end
+			end
 		end
 
 	append_segments_to_string (lst: LIST [READABLE_STRING_GENERAL]; s: STRING_GENERAL)

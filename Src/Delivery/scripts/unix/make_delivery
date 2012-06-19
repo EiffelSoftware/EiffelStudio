@@ -239,10 +239,14 @@ if [ ! "$NO_COMPILE" ]; then
 	cd $INIT_DIR
 	set -- compatible/library $GTK_DIR
 	. ./update_libraries
+	cd $INIT_DIR
 
 	remtrace Generate needed executables of the bin directory
-	cd $INIT_DIR
 	. ./make_exes
+	cd $INIT_DIR
+
+	remtrace Include Eiffel Web Framework EWF
+	. ./include_ewf
 	cd $INIT_DIR
 
 	if [ ! "$NO_WIZARDS" ]; then

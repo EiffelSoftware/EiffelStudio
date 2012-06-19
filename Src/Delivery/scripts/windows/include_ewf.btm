@@ -1,0 +1,34 @@
+@echo off
+setlocal
+
+set EWF_BUILD_DIR=%EIFFEL_SRC\_EWF
+fullrd %EWF_BUILD_DIR
+safe_md %EWF_BUILD_DIR
+safe_md %EWF_BUILD_DIR\spec\%ISE_PLATFORM\bin
+
+remtrace Checkout ecf_updater 
+co -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/tools/ecf_updater %EWF_BUILD_DIR\ecf_updater_src
+cdd %EWF_BUILD_DIR\ecf_updater_src
+
+remtrace Finalize ecf_updater
+finalize ecf_updater.ecf ecf_updater
+cleanup_eiffel ecf_updater ecf_updater.exe
+set ECF_UPDATER_PATH=%EWF_BUILD_DIR\spec\%ISE_PLATFORM\bin
+remtrace move ecf_updater.exe to %ECF_UPDATER_PATH
+move ecf_updater.exe %ECF_UPDATER_PATH
+
+remtrace Get Eiffel Web Framework source code
+cdd %EWF_BUILD_DIR
+co https://github.com/EiffelWebFramework/EWF.git/trunk %EWF_BUILD_DIR\source
+
+remtrace Install Eiffel Web Framework in %INSTALL_DIR
+cdd %EWF_BUILD_DIR\source\tools
+call install_ewf.bat %STUDIO_DIR --ise_library --diff --verbose >>& %INSTALL_LOG
+
+cdd %INIT_DIR
+
+rem Cleaning
+rem fullrd %EWF_BUILD_DIR
+rem unset EWF_BUILD_DIR
+endlocal
+

@@ -23,7 +23,7 @@ inherit
 		undefine
 			dispose
 		redefine
-			launch, focused_widget, make
+			call_post_launch_actions, focused_widget, make
 		end
 
 	EV_GTK_DEPENDENT_APPLICATION_IMP
@@ -152,21 +152,16 @@ feature {NONE} -- Initialization
 			"return (FUNCTION_CAST(gboolean, (GdkDisplay*)) $a_function)((GdkDisplay*) $a_display);"
 		end
 
-feature {NONE} -- Event loop
+feature
 
-
-	 launch
-			-- Display the first window, set up the post_launch_actions,
-			-- and start the event loop.
+	 call_post_launch_actions
+			-- <Precursor>
 		do
 			if gtk_is_launchable then
 				{GTK2}.gtk_im_context_set_client_window (default_input_context, default_gdk_window)
 				{GTK2}.gtk_im_context_focus_in (default_input_context)
-				Precursor
-					-- Unhook marshal object.
-				gtk_marshal.destroy
 			end
-			--{EV_GTK_EXTERNALS}.g_mem_profile
+			Precursor
 		end
 
 feature {EV_ANY_I} -- Implementation

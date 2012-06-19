@@ -23,7 +23,7 @@ inherit
 		undefine
 			dispose
 		redefine
-			launch, focused_widget, make
+			call_post_launch_actions, focused_widget, make
 		end
 
 	EV_GTK_DEPENDENT_APPLICATION_IMP
@@ -191,23 +191,6 @@ feature {NONE} -- Initialization
 			"C inline use <ev_gtk.h>"
 		alias
 			"return (FUNCTION_CAST(GdkColormap*, (GdkScreen*)) $a_function)((GdkScreen*) $a_display);"
-		end
-
-feature {NONE} -- Event loop
-
-
-	 launch
-			-- Display the first window, set up the post_launch_actions,
-			-- and start the event loop.
-		do
-			if gtk_is_launchable then
-				{GTK2}.gtk_im_context_set_client_window (default_input_context, default_gdk_window)
-				{GTK2}.gtk_im_context_focus_in (default_input_context)
-				Precursor
-					-- Unhook marshal object.
-				gtk_marshal.destroy
-			end
-			--{EV_GTK_EXTERNALS}.g_mem_profile
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -865,6 +848,16 @@ feature -- Access
 		end
 
 feature -- Basic operation
+
+	call_post_launch_actions
+			-- <Precursor>
+		do
+			if gtk_is_launchable then
+				{GTK2}.gtk_im_context_set_client_window (default_input_context, default_gdk_window)
+				{GTK2}.gtk_im_context_focus_in (default_input_context)
+			end
+			Precursor
+		end
 
 	process_graphical_events
 			-- Process all pending graphical events and redraws.

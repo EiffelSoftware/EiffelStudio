@@ -26,11 +26,11 @@
 			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 */
 
@@ -1350,7 +1350,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 
 #define scoop_task_assign_processor 1
 #define	scoop_task_free_processor 2
-#define scoop_task_start_processor_loop 3
+#define scoop_task_enumerate_live_processors 3
 #define scoop_task_signify_start_of_new_chain 4
 #define scoop_task_signify_end_of_new_chain 5
 #define scoop_task_add_supplier_to_request_chain 6
@@ -1358,9 +1358,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define scoop_task_add_call 8
 #define scoop_task_add_synchronous_call 9
 #define scoop_task_wait_for_processor_redundancy 10
-#define scoop_task_add_processor_reference 11
-#define scoop_task_remove_processor_reference 12
-#define scoop_task_check_uncontrolled 13
+#define scoop_task_check_uncontrolled 11
 
 #ifdef WORKBENCH
 #define RTS_TCB(t,c,s,a) \

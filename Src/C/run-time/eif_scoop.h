@@ -44,6 +44,8 @@
 extern "C" {
 #endif
 
+#define RT_MAX_SCOOP_PROCESSOR_COUNT 1536 /* Maximum number of SCOOP processors, including root. */
+
 /* Separate calls */
 
 typedef struct call_data {
@@ -93,6 +95,15 @@ rt_public void eif_request_chain_restore (EIF_REFERENCE * t, struct stack * stk)
 
 #define call_data_sync_pid(a_call_data) ((call_data*) a_call_data)->sync_pid
 #define call_data_is_lock_passing(a_call_data) ((call_data*) a_call_data)->is_lock_passing
+
+/* Processor properties */
+
+rt_public void eif_set_processor_id (EIF_SCP_PID pid); /* Associate processor of ID `pid' with the current thread. */
+rt_public void eif_unset_processor_id ();              /* Dissociate processor from the current thread. */
+
+/* Garbage collection */
+
+rt_public void eif_mark_live_pid (EIF_SCP_PID pid); /* Mark processor `pid' as live. */
 
 #ifdef __cplusplus
 }

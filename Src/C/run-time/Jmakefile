@@ -41,7 +41,7 @@ WADD = debug.c interp.c update.c wbench.c
 /*
  * Files addedd only for multithreaded archive
  */
-MTADD = scoop.c
+MTADD = scoop.c scoop_gc.c
 
 /*
  * Files for workbench have a 'w' pre-pended if they already exist for

@@ -6,6 +6,6 @@ copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
 
 compile_melted
-compile_result   syntax_error TEST 11
+compile_result validity_error TEST VWMQ
 
 test_end

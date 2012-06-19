@@ -58,7 +58,7 @@ feature -- Access
 			item_imp.set_parent_imp (Current)
 			{GTK}.gtk_paned_pack1 (container_widget, item_imp.c_object, False, False)
 			first := an_item
-			set_item_resize (first, False)
+			set_item_resize (an_item, False)
 		end
 
 	set_second (an_item: attached like item)
@@ -71,7 +71,7 @@ feature -- Access
 			item_imp.set_parent_imp (Current)
 			{GTK}.gtk_paned_pack2 (container_widget, item_imp.c_object, True, False)
 			second := an_item
-			set_item_resize (second, True)
+			set_item_resize (an_item, True)
 		end
 
 	prune (an_item: like item)
@@ -88,14 +88,14 @@ feature -- Access
 					first_expandable := False
 					first := Void
 					set_split_position (0)
-					if second /= Void then
-						set_item_resize (second, True)
+					if attached second as l_second then
+						set_item_resize (l_second, True)
 					end
 				else
 					second := Void
 					second_expandable := True
-					if first /= Void then
-						set_item_resize (first, True)
+					if attached first as l_first then
+						set_item_resize (l_first, True)
 					end
 				end
 			end
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 			{GTK2}.gtk_widget_style_get_integer (container_widget, a_cs.item, $Result)
 		end
 
-	set_item_resize (an_item: like item; a_resizable: BOOLEAN)
+	set_item_resize (an_item: attached like item; a_resizable: BOOLEAN)
 			-- Set whether `an_item' is `a_resizable' when `Current' resizes.
 		do
 			if attached {EV_WIDGET_IMP} an_item.implementation as l_item_imp then

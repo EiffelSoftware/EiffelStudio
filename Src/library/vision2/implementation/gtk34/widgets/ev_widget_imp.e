@@ -468,8 +468,6 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	call_draw_actions (a_cairo_context: POINTER)
 			-- Call the expose actions for the drawing area.
-		local
-			l_x, l_y, l_width, l_height: INTEGER
 		do
 			-- Redefined by descendents.
 		end

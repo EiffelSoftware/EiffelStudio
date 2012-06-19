@@ -112,7 +112,6 @@ feature {NONE} -- Implementation
 			-- Grab all the mouse and keyboard events.
 		local
 			l_interface: detachable EV_WIDGET
-			l_grab_widget: POINTER
 		do
 			if not has_capture then
 				if not has_focus then

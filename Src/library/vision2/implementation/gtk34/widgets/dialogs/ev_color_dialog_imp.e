@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			-- Connect action sequences to button signals.
 		local
 			a_cs: EV_GTK_C_STRING
-			l_ok, l_cancel, l_help: POINTER
+--			l_ok, l_cancel, l_help: POINTER
 		do
 				-- Create the gtk object.
 			a_cs := "Color selection dialog"

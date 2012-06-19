@@ -90,16 +90,12 @@ feature {NONE} -- Implementation
 		end
 
 	process_string_as (a_string: STRING_AS)
-		local
-			l_type: TYPE_A
 		do
-				-- Default to STRING_8 if the type is not specified.
-			if a_string.type = Void then
-				create {STRING_VALUE_I} last_value.make (a_string.binary_value, False, False)
-			else
-				l_type := type_a_generator.evaluate_type (a_string.type, current_class)
-				create {STRING_VALUE_I} last_value.make (a_string.value, True, False)
-			end
+				-- A string constant of the form: a: STRING_8 = "fdsfd"
+				-- does not require any type qualification to the manifest string "fdsfd"
+				-- since the constant type is known to be STRING_8.
+			check type_not_exists: a_string.type = Void end
+			create {STRING_VALUE_I} last_value.make (a_string.value, False)
 		end
 
 	process_verbatim_string_as (a_string: VERBATIM_STRING_AS)
@@ -108,7 +104,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

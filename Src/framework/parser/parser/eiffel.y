@@ -943,7 +943,6 @@ Assigner_mark_opt: -- Empty
 
 Constant_attribute: Manifest_value
 			{
-				setup_binary_manifest_string ($1)
 				$$ := ast_factory.new_constant_as ($1) 
 			}
 	|	TE_UNIQUE
@@ -3220,16 +3219,12 @@ Expression_constant:
 	|	Bit_constant
 			{ $$ := $1 }
 	|	Manifest_string
-			{
-				setup_binary_manifest_string ($1)
-				$$ := $1 
-			}
+			{ $$ := $1 }
 	|	TE_ONCE_STRING Manifest_string
 			{
 				if $2 /= Void then
 					$2.set_is_once_string (True)
 					$2.set_once_string_keyword ($1)
-					setup_binary_manifest_string ($2)
 				end
 				increment_once_manifest_string_counter
 				$$ := $2

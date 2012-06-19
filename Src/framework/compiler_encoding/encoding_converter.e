@@ -331,6 +331,31 @@ feature -- Validate
 			string_32_to_stream_attached: Result /= Void
 		end
 
+	is_code_point_valid_string_8 (a_utf8_str: STRING_8): BOOLEAN
+			-- Is Unicode code point  of `a_utf_8_str' valid for STRING_8?
+		require
+			a_string_not_void: a_utf8_str /= Void
+		local
+			i, nb: INTEGER
+			l_ref: INTEGER_32_REF
+		do
+			from
+				i := 1
+				nb := a_utf8_str.count
+				create l_ref
+				Result := True
+			until
+				i > nb or not Result
+			loop
+				if not read_character_from_utf8 (i, l_ref, a_utf8_str).is_character_8 then
+					Result := False
+				end
+				i := i + l_ref.item
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 feature -- Detection
 
 	encoding_from_string_of_class (a_string: STRING_8; a_class: detachable ANY): detachable ENCODING
@@ -404,7 +429,7 @@ invariant
 	string_buffer_not_void: string_buffer /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

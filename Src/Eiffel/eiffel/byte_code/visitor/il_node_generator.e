@@ -3062,12 +3062,12 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		do
 			if a_node.is_dotnet_string then
-				il_generator.put_system_string (a_node.value)
+				il_generator.put_system_string_32 (a_node.value)
 			else
 				if a_node.is_string_32 then
 					il_generator.put_manifest_string_32 (a_node.value)
 				else
-					il_generator.put_manifest_string (a_node.value)
+					il_generator.put_manifest_string (a_node.value_8)
 				end
 			end
 		end

@@ -1558,7 +1558,7 @@ feature {NONE} -- Implementation
 				create l_char_value.make_character_8 (a_value.item (1))
 				l_value := l_char_value
 			elseif a_external_type.associated_class.original_class = System.system_string_class then
-				create l_string_value.make (a_value, False, True)
+				create l_string_value.make (a_value, True)
 				l_value := l_string_value
 			end
 			a_constant.set_value (l_value)
@@ -1696,7 +1696,7 @@ invariant
 	valid_enclosing_class: is_nested implies enclosing_class /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

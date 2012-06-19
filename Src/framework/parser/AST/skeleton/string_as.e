@@ -39,7 +39,6 @@ feature {NONE} -- Initialization
 			n_non_negative: n >= 0
 		do
 			value := s
-			binary_value := s
 			set_position (l, c, p, n)
 		ensure
 			value_set: value = s
@@ -61,19 +60,22 @@ feature -- Properties
 	value_32: STRING_32
 			-- Real string value in UTF-32
 		do
-			if attached value as l_value then
-				Result := encoding_converter.utf8_to_utf32 (l_value)
-			end
+			Result := encoding_converter.utf8_to_utf32 (value)
+		ensure
+			Result_set: Result /= Void
+		end
+
+	is_code_point_valid_string_8: BOOLEAN
+			-- Is current string able to be represented by STRING_8 in Unicode code point?
+			-- Unicode code point between 0-255.
+		do
+			Result := encoding_converter.is_code_point_valid_string_8 (value)
 		end
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 
 	value: STRING
 			-- Real string value in UTF-8
-
-	binary_value: STRING
-			-- Original written binary value.
-			-- It is the same as `value' for strings rather than attribute constant and expression constant.
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Roundtrip/Text
 
@@ -136,15 +138,6 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Status setting
 			value_set: value = s
 		end
 
-	set_binary_value (s: STRING)
-		require
-			s_attached: s /= Void
-		do
-			binary_value := s
-		ensure
-			binary_value_set: binary_value = s
-		end
-
 feature -- Roundtrip
 
 	once_string_keyword_index: INTEGER
@@ -201,10 +194,9 @@ feature -- Roundtrip/Token
 
 invariant
 	value_not_void: value /= Void
-	binary_value_not_void: binary_value /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

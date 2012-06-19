@@ -180,6 +180,7 @@ MT_FINAL_OBJECTS = \
 	$(INDIR)MTeif_type_id.$obj \
 	$(INDIR)MTrout_obj.$obj \
 	$(INDIR)MTscoop.$obj \
+	$(INDIR)MTscoop_gc.$obj \
 	$(TOP)$(DIR)ipc$(DIR)shared$(DIR)MTshword.$obj \
 	$(TOP)$(DIR)console$(DIR)mtwinconsole.$lib
 
@@ -238,6 +239,7 @@ MT_WORKBENCH_OBJECTS = \
 	$(INDIR)MTweif_type_id.$obj \
 	$(INDIR)MTwrout_obj.$obj \
 	$(INDIR)MTwscoop.$obj \
+	$(INDIR)MTwscoop_gc.$obj \
 	$(TOP)$(DIR)console$(DIR)mtwwinconsole.$lib
 
 MT_WOBJECTS = $(MT_WORKBENCH_OBJECTS) \
@@ -682,6 +684,9 @@ $(INDIR)MTrout_obj.$obj: $(RTSRC)rout_obj.c
 $(INDIR)MTscoop.$obj: $(RTSRC)scoop.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)scoop.c
 
+$(INDIR)MTscoop_gc.$obj: $(RTSRC)scoop_gc.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)scoop_gc.c
+
 $(INDIR)MThash.$obj: $(RTSRC)hash.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)hash.c
 
@@ -822,6 +827,9 @@ $(INDIR)MTwrout_obj.$obj: $(RTSRC)rout_obj.c
 
 $(INDIR)MTwscoop.$obj: $(RTSRC)scoop.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)scoop.c
+
+$(INDIR)MTwscoop_gc.$obj: $(RTSRC)scoop_gc.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)scoop_gc.c
 
 $(INDIR)MTwhash.$obj: $(RTSRC)hash.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)hash.c

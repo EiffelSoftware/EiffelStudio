@@ -12,10 +12,16 @@
 frozen class
 	ISE_SCOOP_MANAGER
 
+inherit
+	MEMORY
+		redefine
+			dispose
+		end
+
 create {NONE}
 	init_scoop_manager
 
-feature -- C callback function
+feature {NONE} -- C callback function
 
 	scoop_manager_task_callback (scoop_task: NATURAL_8; client_processor_id, supplier_processor_id: like processor_id_type; a_callback_data: POINTER)
 			-- Entry point to ISE_SCOOP_MANAGER from RTS SCOOP macros.
@@ -54,31 +60,11 @@ feature -- C callback function
 				set_integer_32_return_value (a_callback_data, assign_free_processor_id)
 			when free_processor_task_id then
 				free_processor_id (client_processor_id)
-			when add_processor_reference_task_id then
-				add_processor_reference (supplier_processor_id)
-			when remove_processor_reference_task_id then
-				remove_processor_reference (supplier_processor_id)
+			when enumerate_live_processors_task_id then
+				enumerate_live_processors
 			else
 				check invalid_task: False end
 			end
-		end
-
-	add_processor_reference (a_processor_id: like processor_id_type)
-			-- Increase reference count for `a_processor_id'.
-			--| FIXME Needs GC implementation for use
-		local
-			l_ref: INTEGER_32
-		do
-			l_ref := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (processor_meta_data [a_processor_id].item_address (processor_reference_count_index))
-		end
-
-	remove_processor_reference (a_processor_id: like processor_id_type)
-			-- Decrease reference count for `a_processor_id'.
-			--| FIXME Needs GC implementation for use
-		local
-			l_ref: INTEGER_32
-		do
-			l_ref := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 (processor_meta_data [a_processor_id].item_address (processor_reference_count_index))
 		end
 
 	maximum_dirty_processor_client_count: INTEGER = 16
@@ -87,6 +73,8 @@ feature -- C callback function
 	flag_processor_dirty (
 			a_logical_processor_id: like processor_id_type;
 			a_executing_request_chain_node_meta_data: like new_request_chain_node_meta_data_queue_entry)
+		require
+			root_processor_id_set: is_root_processor_id_set
 		local
 			l_dirty_flag_count: INTEGER
 			l_dirty_processor_client_list: detachable like new_request_chain_meta_data_entry
@@ -101,6 +89,7 @@ feature -- C callback function
 			l_dirty_processor_client_list := (request_chain_meta_data_stack_list [a_logical_processor_id]) [max_request_chain_depth]
 			if l_dirty_processor_client_list = Void then
 				create l_dirty_processor_client_list.make_filled (null_processor_id, maximum_dirty_processor_client_count)
+				migrate_to_root (l_dirty_processor_client_list)
 					-- Set count to zero.
 				(request_chain_meta_data_stack_list [a_logical_processor_id]) [max_request_chain_depth] := l_dirty_processor_client_list
 			end
@@ -175,7 +164,7 @@ feature -- C callback function
 
 	frozen assign_processor_task_id: NATURAL_8 = 1
 	frozen free_processor_task_id: NATURAL_8 = 2
---	frozen start_processor_loop_task_id: NATURAL_8 = 3
+	frozen enumerate_live_processors_task_id: NATURAL_8 = 3
 	frozen signify_start_of_new_chain_task_id: NATURAL_8 = 4
 	frozen signify_end_of_new_chain_task_id: NATURAL_8 = 5
 	frozen add_supplier_to_request_chain_task_id: NATURAL_8 = 6
@@ -183,9 +172,7 @@ feature -- C callback function
 	frozen add_call_task_id: NATURAL_8 = 8
 	frozen add_synchronous_call_task_id: NATURAL_8 = 9
 	frozen wait_for_processor_redundancy_task_id: NATURAL_8 = 10
-	frozen add_processor_reference_task_id: NATURAL_8 = 11
-	frozen remove_processor_reference_task_id: NATURAL_8 = 12
-	frozen check_uncontrolled_call_task_id: NATURAL_8 = 13
+	frozen check_uncontrolled_call_task_id: NATURAL_8 = 11
 		-- SCOOP Task Constants, similies of those defined in <eif_macros.h>
 		--| FIXME: Use external macros when valid in an inspect statement.
 
@@ -204,16 +191,44 @@ feature -- EIF_TYPED_VALUE externals
 feature -- Processor Initialization
 
 	assign_free_processor_id: like processor_id_type
-			-- Find the next available free SCOOP Processor, reuse or instantiate as needs be.
+			-- Allocate the next available free SCOOP Processor ID, reuse or instantiate as needs be.
+		local
+			i: NATURAL_32
 		do
-				--| FIXME Implement redundant processor traversal to return next available id
-			Result := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($processor_count) - 1
-
+				-- Check if there are too many idle processors to trigger GC.
+				-- Avoid doing it on every call.
+			if idle_processor_count * 5 > processor_count and then processor_count & 0xF = 0xF then
+				full_collect
+			end
+			from
+				i := 10 * max_yield_counter
+			until
+				i = 0
+			loop
+					-- Attempt to get processor ID from a list of free processors.
+				Result := acquire_processor_id
+				if Result >= max_scoop_processors_instantiable then
+						-- There are no free processors.
+						-- Let's see if some processors can be freed.
+					if i \\ max_yield_counter = 0 then
+							-- Run GC.
+						full_collect
+					else
+							-- Wait for other processors.
+						processor_cpu_yield
+					end
+						-- Do next iteration.
+					i := i - 1
+				else
+						-- Exit loop.
+					i := 0
+				end
+			end
 			if Result = max_scoop_processors_instantiable then
-				-- Perform processor cleanup.
-				-- Raise Exception if no free processor could not be found, or block until there is one.
+					-- Raise Exception if no free processor could not be found, or block until there is one.
 				raise_scoop_exception ("Maximum SCOOP Processor Allocation reached")
 			end
+			{ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($processor_count).do_nothing
 
 			initialize_default_processor_meta_data (Result)
 
@@ -225,14 +240,22 @@ feature -- Processor Initialization
 	free_processor_id (a_processor_id: like processor_id_type)
 			-- Free resources of processor id `a_processor_id'.
 		do
-			-- Mark `a_processor_id' as free.
-			-- Called via GC so all threads will be stopped.
+				-- Called via GC so all threads will be stopped.
+				-- Mark `a_processor_id' as free.
+			processor_meta_data [a_processor_id].put (processor_status_redundant, processor_status_index)
 		end
 
 	start_processor_application_loop (a_processor_id: like processor_id_type)
 			-- Start feature application loop for `a_processor_id'.
 		do
 			create_and_initialize_scoop_processor (Current, $scoop_processor_loop, default_processor_attributes.item, a_processor_id)
+		rescue
+				-- Attempt to free some threads.
+			full_collect
+				-- Allow released threads to exit.
+			processor_sleep (processor_sleep_quantum)
+				-- Try again.
+			retry
 		end
 
 	root_processor_creation_routine_exited
@@ -951,6 +974,13 @@ feature -- Command/Query Handling
 				end
 			end
 
+				-- Make sure the supplier is no longer marked as idle, because in the latter case it might be treated as dead.
+			i := {ATOMIC_MEMORY_OPERATIONS}.compare_and_swap_integer_32 (
+				(processor_meta_data [a_supplier_processor_id]).item_address (processor_status_index),
+				processor_status_initialized,
+				processor_status_idle
+			)
+
 				-- If we are a synchronous call and we have a dirty flag set then we should check if `a_supplier_processor_id' is dirty with respect to `a_client_processor_id'.
 			if l_is_synchronous and then {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 ((processor_meta_data [a_client_processor_id]).item_address (processor_dirty_flag_count_index), 0) > 0  then
 				if is_processor_dirty (a_client_processor_id, a_supplier_processor_id) then
@@ -1007,6 +1037,42 @@ feature -- Command/Query Handling
 			end
 		end
 
+feature {NONE} -- Garbage collection
+
+	frozen enumerate_live_processors
+			-- Enumerate live processor IDs.
+		local
+			i: INTEGER
+		do
+			from
+				i := processor_meta_data.count
+			until
+				i = 0
+			loop
+				i := i - 1
+				inspect (processor_meta_data [i]) [processor_status_index]
+				when
+					processor_status_idle,
+					processor_status_redundant
+				then
+						-- The processor is not (currently) used.
+				else
+						-- The processor is used.
+					mark_live_pid (i)
+				end
+			variant
+				i
+			end
+		end
+
+	frozen mark_live_pid (id: INTEGER)
+			-- Mark processor of `id' as live.
+		external
+			"C macro use %"eif_scoop.h%""
+		alias
+			"eif_mark_live_pid"
+		end
+
 feature {NONE} -- Implementation
 
 	frozen call_data_sync_pid (a_call_data: like call_data): INTEGER_16
@@ -1029,6 +1095,10 @@ feature {NONE} -- Resource Initialization
 			l_request_chain_meta_data_stack_list: like request_chain_meta_data_stack_list
 			l_request_chain_meta_data: detachable like new_request_chain_meta_data_entry
 		do
+				-- Set `root_processor_id' to `null_processor_id' until it is initialized.
+			root_processor_id := null_processor_id
+			check not is_root_processor_id_set end
+
 			logical_cpu_count := available_cpus
 
 				-- Initialize exception handling helper object.
@@ -1049,12 +1119,13 @@ feature {NONE} -- Resource Initialization
 			loop
 				l_request_chain_meta_data_stack_list.extend (new_request_chain_meta_data_stack_list_entry)
 				l_processor_meta_data.extend (new_processor_meta_data_entry)
-					--| FIXME: Free semaphore list when application exits
 				i := i + 1
 			end
 			processor_meta_data := l_processor_meta_data
 			request_chain_meta_data_stack_list := l_request_chain_meta_data_stack_list
 
+				-- Build a list of free processors.
+			create_free_processor_list
 
 				-- Create request chain node meta data queue pigeon hole for each potential processor.
 			create request_chain_node_meta_data_queue_list.make_filled (Void, max_scoop_processors_instantiable)
@@ -1077,6 +1148,9 @@ feature {NONE} -- Resource Initialization
 
 				-- Make root processor as initializing.
 			processor_meta_data [root_processor_id].put (processor_status_initializing, processor_status_index)
+
+				-- Update run-time information about root processor.
+			set_processor_id (root_processor_id)
 		end
 
 	initialize_default_processor_meta_data (a_processor_id: like processor_id_type)
@@ -1105,7 +1179,6 @@ feature {NONE} -- Resource Initialization
 
 				-- Initialize processor semaphore with a count of zero for client - supplier processor notification.
 
-				--| FIXME: Destroy processor semaphore when resources are freed.
 			processor_semaphore_list [a_processor_id] := new_semaphore (0)
 
 			(processor_meta_data [a_processor_id]).put (0, current_request_chain_id_index)
@@ -1374,26 +1447,20 @@ feature {NONE} -- Resource Initialization
 						until
 							l_loop_exit
 						loop
-							l_loop_exit := l_request_chain_node_meta_data_queue [l_processor_meta_data [Current_request_node_id_execution_index]] /= Void
-							if not l_loop_exit then
-								if idle_processor_count /= processor_count then
-										-- Make sure that the processor stays in the feature application loop.
-									l_processor_meta_data [processor_status_index] := processor_status_initialized
-								else
-									if l_processor_meta_data [processor_status_index] /= processor_status_redundant then
-										l_wait_counter := 0
-										l_processor_meta_data [processor_status_index] := processor_status_redundant
-									end
-										--| FIXME Update exiting code when GC support is available.
-									if l_wait_counter > Processor_spin_lock_limit then
-										l_loop_exit := True
-									end
+							if l_request_chain_node_meta_data_queue [l_processor_meta_data [Current_request_node_id_execution_index]] /= Void then
+									-- Make sure the processor stays in the feature application loop.
+								l_processor_meta_data [processor_status_index] := processor_status_initialized
+								l_loop_exit := True
+							elseif l_processor_meta_data [processor_status_index] = processor_status_redundant then
+									-- The processor is not used anymore.
+								l_loop_exit := True
+							else
+								if l_processor_meta_data [processor_status_index] /= processor_status_idle then
+										-- Mark processor as idle.
+									l_processor_meta_data [processor_status_index] := processor_status_idle
 								end
 								processor_is_idle (a_logical_processor_id, l_wait_counter)
 								l_wait_counter := l_wait_counter + 1
-							else
-									-- Make sure the the processor stays in the feature application loop.
-								l_processor_meta_data [processor_status_index] := processor_status_initialized
 							end
 						end
 						l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($idle_processor_count)
@@ -1408,13 +1475,14 @@ feature {NONE} -- Resource Initialization
 					check invalid_processor_status: False end
 				end
 			end
+			release_processor_id (a_logical_processor_id)
 		end
 
 	processor_is_idle (a_client_processor_id: like processor_id_type; a_wait_counter: NATURAL_32)
 			-- Processor `a_client_processor_id' is idle.
 		do
 			processor_yield (a_client_processor_id, a_wait_counter)
-			if a_wait_counter > max_yield_counter then
+			if a_wait_counter >= max_yield_counter then
 					-- Fully relinquish processor.
 				processor_sleep (processor_sleep_quantum)
 			end
@@ -1540,6 +1608,8 @@ feature {NONE} -- Resource Initialization
 			end
 		end
 
+feature {NONE} -- Processor ID
+
 	processor_id_type: INTEGER_32
 			-- Type used for unique SCOOP processor id.
 		do
@@ -1550,6 +1620,22 @@ feature {NONE} -- Resource Initialization
 
 	root_processor_id: like processor_id_type
 			-- ID of root processor.
+
+	is_root_processor_id_set: BOOLEAN
+			-- Is `root_processor_id' set?
+		do
+			Result := root_processor_id /= null_processor_id
+		end
+
+	migrate_to_root (o: ANY)
+			-- Migrate object `o' to the processor identified by `root_processor_id'.
+		do
+			if is_root_processor_id_set then
+				set_object_processor_id (root_processor_id, o)
+			end
+		end
+
+feature {NONE} -- Messages
 
 	scoop_dirty_processor_exception_message: STRING = "SCOOP Processor Dirty Exception"
 		-- Exception message when a client processor has logged a call on a supplier processor that raises an exception.
@@ -1581,8 +1667,13 @@ feature {NONE} -- Scoop Processor Meta Data
 	call_data: POINTER do end
 	result_type: POINTER do end
 
-	max_scoop_processors_instantiable: INTEGER_32 = 1536
-		-- Total Number of SCOOP Processors that may be instantiated by Pool including Root.
+	max_scoop_processors_instantiable: INTEGER_32
+			-- Total Number of SCOOP Processors that may be instantiated by Pool including Root.
+		external
+			"C macro use <eif_scoop.h>"
+		alias
+			"RT_MAX_SCOOP_PROCESSOR_COUNT"
+		end
 
 	processor_default_stack_size: INTEGER_32 = 1_048_576
 		-- Size in bytes of stack size of processor.
@@ -1602,6 +1693,14 @@ feature {NONE} -- Scoop Processor Meta Data
 			"C macro use <eif_threads.h>"
 		alias
 			"eif_thr_sem_create"
+		end
+
+	destroy_semaphore (s: POINTER)
+			-- Release semaphore `s'.
+		external
+			"C macro use <eif_threads.h>"
+		alias
+			"eif_thr_sem_destroy"
 		end
 
 	processor_wait (a_client_processor_id, a_supplier_processor_id: like processor_id_type)
@@ -1688,6 +1787,9 @@ feature {NONE} -- Scoop Processor Meta Data
 			-- New Processor Meta Data Value Entry
 		do
 			create Result.make_filled (null_processor_id, processor_meta_data_index_count)
+				-- Creation is performed at the startup time, no need to set processor ID.
+			check not is_root_processor_id_set end
+			Result [processor_status_index] := processor_status_redundant
 		end
 
 	request_chain_meta_data: SPECIAL [like new_request_chain_meta_data_entry]
@@ -1699,6 +1801,8 @@ feature {NONE} -- Scoop Processor Meta Data
 	new_request_chain_meta_data_stack_list_entry: SPECIAL [detachable like new_request_chain_meta_data_entry]
 		do
 			create Result.make_filled (Void, request_chain_meta_data_stack_list_entry_size)
+				-- Creation is performed at the startup time, no need to set processor ID.
+			check not is_root_processor_id_set end
 		end
 
 	request_chain_meta_data_stack_list_entry_size: NATURAL_8 = 16
@@ -1712,6 +1816,7 @@ feature {NONE} -- Scoop Processor Meta Data
 			-- New Request Chain Meta Data
 		do
 			create Result.make_empty (request_chain_meta_data_default_size)
+			migrate_to_root (Result)
 				-- Add meta data header default values.
 			Result.extend (0) -- pid count
 			Result.extend (a_client_processor_id)
@@ -1757,69 +1862,87 @@ feature {NONE} -- Scoop Processor Meta Data
 		do
 			check do_not_call: False end
 			create Result.make_empty (0)
+			migrate_to_root (Result)
 		end
 
+feature {NONE} -- Meta Data: indexes of specific information
+
 	processor_status_index: INTEGER_32 = 0
-		-- Current Status of the Scoop Processor at index 'scoop_logical_index'.
-
-	processor_status_uninitialized: INTEGER_32 = -1
-		-- Only processor object has been allocated at this point.
-
-	processor_status_redundant: INTEGER_32 = 0
-		-- Processor is redundant.
-
-	processor_status_initializing: INTEGER_32 = 1
-		-- Processor is being initialized by executing its creation routine.
-	processor_status_initialized: INTEGER_32 = 2
-		-- Processor is fully initialized and executing.
+			-- Current Status of the Scoop Processor at index 'scoop_logical_index'.
 
 	current_request_node_id_execution_index: INTEGER_32 = 1
 
 	current_request_chain_id_index: INTEGER_32 = 2
-		-- Index to value containing current request chain id.
+			-- Index to value containing current request chain id.
 
 	current_request_chain_id_depth_index: INTEGER_32 = 3
-		-- Index to value containing current depth of request chain id.
-		-- Initial value = -1 to signify that there is no active request chain.
-
-	invalid_request_chain_id: INTEGER_32 = -1
-	default_request_chain_depth_value: INTEGER_32 = -1
+			-- Index to value containing current depth of request chain id.
+			-- Initial value = -1 to signify that there is no active request chain.
 
 	request_chain_id_lock_index: INTEGER_32 = 4
-		-- Index to value containing the lock on the processor for request chain initialization.
+			-- Index to value containing the lock on the processor for request chain initialization.
 
 	current_request_chain_node_id_index: INTEGER_32 = 5
-		-- Index to value containing current request chain node id.
-
-	invalid_request_chain_node_id: INTEGER_32 = -1
+			-- Index to value containing current request chain node id.
 
 	current_request_chain_node_id_lock_index: INTEGER_32 = 6
-		-- Lock index used for accessing current request chain node id.
+			-- Lock index used for accessing current request chain node id.
 
-	processor_reference_count_index: INTEGER_32 = 7
-		-- Current reference count of the processor
+	processor_dirty_flag_count_index: INTEGER_32 = 7
+			-- Number of processors that are dirty with respect to `Current'.
 
-	processor_dirty_flag_count_index: INTEGER_32 = 8
-		-- Number of processors that are dirty with respect to `Current'.
+	processor_dirty_processor_client_list_lock_index: INTEGER_32 = 8
+			-- Lock index used for accessing the dirty processor client list.
 
-	processor_dirty_processor_client_list_lock_index: INTEGER_32 = 9
-		-- Lock index used for accessing the dirty processor client list.
+	processor_wait_condition_counter_index: INTEGER_32 = 9
+			-- Index of the number of times a wait condition has failed.
 
-	processor_wait_condition_counter_index: INTEGER_32 = 10
-		-- Index of the number of times a wait condition has failed.
+	processor_semaphore_status_index: INTEGER_32 = 10
+			-- Index of the quick semaphore for the processor.
 
-	processor_semaphore_status_index: INTEGER_32 = 11
-		-- Index of the quick semaphore for the processor.
+	processor_meta_data_index_count: INTEGER_32 = 11
+			-- Number of items in the SCOOP Processor Meta Data structure.
+
+	next_free_processor_index: INTEGER_32 = 1
+			-- Index of the next free processor index.
+			-- It is used only in the free processor list.
+
+feature {NONE} -- Meta Data: processor status (at index `processor_status_index')
+
+	processor_status_uninitialized: INTEGER_32 = -1
+			-- Only processor object has been allocated at this point.
+
+	processor_status_redundant: INTEGER_32 = 0
+			-- Processor is redundant.
+
+	processor_status_initializing: INTEGER_32 = 1
+			-- Processor is being initialized by executing its creation routine.
+
+	processor_status_initialized: INTEGER_32 = 2
+			-- Processor is fully initialized and executing.
+
+	processor_status_idle: INTEGER_32 = 3
+			-- Processor is idle waiting for any calls to be logged on it.
+
+feature {NONE} -- Meta Data: special values
+
+	invalid_request_chain_id: INTEGER_32 = -1
+			-- Invalid request chain ID (at index `current_request_chain_id_index').
+
+	default_request_chain_depth_value: INTEGER_32 = -1
+			-- Indicator that there is no active request chain (at index `current_request_chain_id_depth_index').
+
+	invalid_request_chain_node_id: INTEGER_32 = -1
+			-- Invalid request chain node ID (at index `current_request_chain_node_id_index').
+
+feature {NONE} -- Meta Data: semaphore status (at index `processor_semaphore_status_index').
 
 	processor_semaphore_status_running: INTEGER = 0
 	processor_semaphore_status_busy_waiting: INTEGER = 1
 	processor_semaphore_status_waiting: INTEGER = 2
 	processor_semaphore_status_signalled: INTEGER = 3
-		-- Various status's for processor semaphores.
 
-	processor_meta_data_index_count: INTEGER_32 = 12
-		-- Number of items in the SCOOP Processor Meta Data structure.
-
+feature {NONE} -- Scoop Processor Meta Data
 
 	request_chain_node_meta_data_queue_list: SPECIAL [detachable like new_request_chain_node_meta_data_queue]
 		-- List of all request chain node meta data queues, indexed by supplier processor id.
@@ -1827,7 +1950,8 @@ feature {NONE} -- Scoop Processor Meta Data
 	new_request_chain_node_meta_data_queue: SPECIAL [detachable like new_request_chain_node_meta_data_queue_entry]
 			-- Return a new processor request chain node meta data queue.
 		do
-			create Result.make_filled (Void, max_request_chain_node_queue_index)
+			create Result.make_filled (Void, max_request_chain_node_queue_index + 1)
+			migrate_to_root (Result)
 		end
 
 	request_chain_node_queue_list: SPECIAL [detachable like new_request_chain_node_queue]
@@ -1836,7 +1960,8 @@ feature {NONE} -- Scoop Processor Meta Data
 	new_request_chain_node_queue: SPECIAL [detachable like new_request_chain_node_queue_entry]
 			-- Return a new processor request chain node queue.
 		do
-			create Result.make_filled (Void, max_request_chain_node_queue_index)
+			create Result.make_filled (Void, max_request_chain_node_queue_index + 1)
+			migrate_to_root (Result)
 		end
 
 	max_request_chain_node_queue_index: INTEGER_32 = 4096
@@ -1846,6 +1971,7 @@ feature {NONE} -- Scoop Processor Meta Data
 			-- New entry for request chain node queue
 		do
 			create Result.make_empty (default_request_chain_node_queue_entry_size)
+			migrate_to_root (Result)
 		end
 
 	default_request_chain_node_queue_entry_size: INTEGER_32 = 5
@@ -1998,13 +2124,177 @@ feature {NONE} -- Externals
 			"eif_thr_join_all"
 		end
 
+	frozen set_processor_id (pid: like processor_id_type)
+			-- Set processor ID to `pid' for the current thread.
+		external
+			"C use %"eif_scoop.h%""
+		alias
+			"eif_set_processor_id"
+		end
+
+	frozen unset_processor_id
+			-- Remove processor association from the current thread.
+		external
+			"C use %"eif_scoop.h%""
+		alias
+			"eif_unset_processor_id"
+		end
+
+	frozen set_object_processor_id (pid: like processor_id_type; o: ANY)
+			-- Set processor ID to `pid' for the object `o'.
+		external
+			"C inline use %"eif_macros.h%""
+		alias
+			"RTS_PID(eif_access($o)) = (EIF_SCP_PID) $pid;"
+		end
+
+feature {NONE} -- List of free processors
+
+	create_free_processor_list
+			-- Initialize data required to keep track of free processors.
+		require
+			mutex_destroyed: mutex.is_default_pointer
+			processor_meta_data_attached: attached processor_meta_data
+			processor_meta_data_filled: across processor_meta_data as c all attached c.item end
+		local
+			i: like free_processor_index
+		do
+				-- Initialize synchronization primitive.
+			create_mutex
+				-- Link processor meta data into a free list.
+			from
+				i := max_scoop_processors_instantiable
+			until
+				i = 0
+			loop
+				i := i - 1
+				processor_meta_data [i].put (i + 1, next_free_processor_index)
+			end
+				-- Record first index in the free list.
+			free_processor_index := 0
+		ensure
+			mutex_created: not mutex.is_default_pointer
+			free_processor_index_set: free_processor_index = 0
+		end
+
+	destroy_free_processor_list
+			-- Release data used to keep track of free processors.
+		require
+			mutex_created: not mutex.is_default_pointer
+		do
+			destroy_mutex
+		ensure
+			mutex_destroyed: mutex.is_default_pointer
+		end
+
+	acquire_processor_id: like processor_id_type
+			-- Attempt to get an ID of a free processor.
+			-- Returned value is less than `max_scoop_processors_instantiable' on success
+			-- and is equal or greater than `max_scoop_processors_instantiable' on failure.
+		do
+			lock_mutex
+			Result := free_processor_index
+			if Result < max_scoop_processors_instantiable then
+					-- The free processor index is valid.
+				check attached processor_meta_data [Result] as d then
+						-- Take a processor from the list.
+						-- Advance `free_processor_index' to the next element in the list.
+					free_processor_index := d [next_free_processor_index]
+						-- Mark that the processor ID is allocated.
+					d.put (processor_status_uninitialized, processor_status_index)
+				end
+			end
+			unlock_mutex
+		end
+
+	release_processor_id (id: like processor_id_type)
+			-- Release previously acquired processor ID.
+		require
+			valid_id: 0 <= id and id < processor_meta_data.count
+			allocated_processor: attached processor_meta_data [id]
+		do
+			lock_mutex
+				-- Notify run-time that the thread is no longer associated with a processor.
+			unset_processor_id
+				-- Free associated semaphore.
+			destroy_semaphore (processor_semaphore_list [id])
+				-- Put processor data to the free list.
+			processor_meta_data [id].put (free_processor_index, next_free_processor_index)
+			free_processor_index := id
+			unlock_mutex
+		end
+
+	free_processor_index: INTEGER
+			-- Index of the first element in a list of free processors.
+
+feature {NONE} -- List of free processors: mutex
+
+	mutex: POINTER
+			-- Mutex to work with list of free processors.
+
+	create_mutex
+			-- Initialize mutex.
+		require
+			mutex_destroyed: mutex.is_default_pointer
+		do
+			mutex := eif_thr_mutex_create
+		ensure
+			mutex_created: not mutex.is_default_pointer
+		end
+
+	lock_mutex
+			-- Lock mutex.
+		require
+			mutex_created: not mutex.is_default_pointer
+		do
+			eif_thr_mutex_lock (mutex)
+		end
+
+	unlock_mutex
+			-- Unlock mutex.
+		require
+			mutex_created: not mutex.is_default_pointer
+		do
+			eif_thr_mutex_unlock (mutex)
+		end
+
+	destroy_mutex
+			-- Destroy mutex.
+		require
+			mutex_created: not mutex.is_default_pointer
+		do
+			eif_thr_mutex_destroy (mutex)
+		ensure
+			mutex_destroyed: mutex.is_default_pointer
+		end
+
+	eif_thr_mutex_create: POINTER
+		external
+			"C use %"eif_threads.h%""
+		end
+
+	eif_thr_mutex_lock (a_mutex_pointer: POINTER)
+		external
+			"C blocking use %"eif_threads.h%""
+		end
+
+	eif_thr_mutex_unlock (a_mutex_pointer: POINTER)
+		external
+			"C use %"eif_threads.h%""
+		end
+
+	eif_thr_mutex_destroy (a_mutex_pointer: POINTER)
+		external
+			"C use %"eif_threads.h%""
+		end
+
 feature {NONE} -- Debugger Helpers
 
 	frozen processor_id_from_object (a_object: ANY): like processor_id_type
 		external
 			"C inline use %"eif_scoop.h%""
 		alias
-			"RTS_PID($a_object)"
+			"RTS_PID(eif_access($a_object))"
 		end
 
 	frozen call_data_result (a_call_data: like call_data): POINTER
@@ -2054,6 +2344,14 @@ feature {NONE} -- Debugger Helpers
 			"C inline use %"eif_scoop.h%""
 		alias
 			"&((call_data*) $a_call_data)->argument [$i_th]"
+		end
+
+feature {NONE} -- Disposal
+
+	dispose
+			-- <Precursor>
+		do
+			destroy_mutex
 		end
 
 note

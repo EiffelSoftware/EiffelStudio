@@ -120,7 +120,7 @@ LSRC = malloc.c garcol.c local.c store.c retrieve.c \
 
 WADD = debug.c interp.c update.c wbench.c
 
-MTADD = scoop.c
+MTADD = scoop.c scoop_gc.c
 
 WOBJ = \
 	$(IDRS_OBJ) \
@@ -609,6 +609,12 @@ MTmain.o: main.c
 MTexcept.o: except.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
+MTscoop.o: scoop.c
+	$(CC) -c $(JMTCFLAGS) $? -o $@
+
+MTscoop_gc.o: scoop_gc.c
+	$(CC) -c $(JMTCFLAGS) $? -o $@
+
 
 MTwmalloc.o: malloc.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
@@ -774,13 +780,12 @@ MTupdate.o: update.c
 MTwbench.o: wbench.c
 	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
-
 MTwscoop.o: scoop.c
 	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
+MTwscoop_gc.o: scoop_gc.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
-MTscoop.o: scoop.c
-	$(CC) -c $(JMTCFLAGS) $? -o $@
 
 
 all:: eif_size.h

@@ -60,6 +60,7 @@ extern void eif_unsynchronize_gc(rt_global_context_t *);
 #ifdef EIF_ASSERTIONS
 extern int eif_is_synchronized (void);
 #endif
+extern struct stack_list rt_globals_list;
 
 /* Killing threads */
 #ifdef ISE_GC

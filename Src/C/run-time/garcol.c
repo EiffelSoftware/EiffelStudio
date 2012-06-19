@@ -2,7 +2,7 @@
 	description: "Garbage collection routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2011, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -26,11 +26,11 @@
 			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 */
 
@@ -79,6 +79,8 @@ doc:<file name="garcol.c" header="eif_garcol.h" version="$Id$" summary="Garbage 
 #include "rt_except.h"
 #include "rt_debug.h"
 #include "rt_main.h"
+
+#include "rt_scoop_gc.h"
 
 #ifdef WORKBENCH
 #include "rt_interp.h"
@@ -1482,6 +1484,11 @@ rt_private void run_collector(void)
 
 	ufill();		/* Eventually refill our urgent memory stock */
 
+#ifdef EIF_THREADS
+		/* Notify SCOOP manager about any unused processors. */
+	report_live_index ();
+#endif
+
 #ifdef DEBUG
 	fdone = 0;		/* Do not trace any further */
 #endif
@@ -1503,6 +1510,12 @@ rt_private void full_mark (EIF_CONTEXT_NOARG)
 		/* Initialize our overflow depth */
 	overflow_stack_depth = 0;
 
+#ifdef EIF_THREADS
+		/* Initialize list of live indexes for threads. */
+		/* This should be done before any marking. */
+	prepare_live_index ();
+#endif
+
 		/* Perform marking */
 	root_obj = MARK_SWITCH(&root_obj);	/* Primary root */
 #ifdef WORKBENCH
@@ -1512,21 +1525,26 @@ rt_private void full_mark (EIF_CONTEXT_NOARG)
 #endif
 	except_mnger = MARK_SWITCH(&except_mnger);	/* EXCEPTION_MANAGER */
 	if (scp_mnger) {
+			/* Mark SCOOP manager. */
 		scp_mnger = MARK_SWITCH(&scp_mnger);	/* ISE_SCOOP_MANAGER */
 	}
+
+		/* Deal with TYPE instances. */
+	mark_array (rt_type_set, (rt_type_set_count > eif_next_gen_id ? eif_next_gen_id : rt_type_set_count), MARK_SWITCH, moving);
+
+		/* Detect live and dead processors without taking once manifest strings into account,
+		 * because they do not add any information about liveness status of the processors. */
+	internal_marking (MARK_SWITCH, moving);
 
 		/* Deal with once manifest strings. */
 #ifndef EIF_THREADS
 	mark_stack(&oms_set, MARK_SWITCH, moving);
 #else
+		/* Mark both live and dead indexes, because it's up to SCOOP manager
+		 * to delete a thread and to reclaim once manifest strings. */
 	for (i = 0; i < oms_set_list.count; i++)
 		mark_stack(oms_set_list.threads.sstack[i], MARK_SWITCH, moving);
 #endif
-
-		/* Deal with TYPE instances. */
-	mark_array (rt_type_set, (rt_type_set_count > eif_next_gen_id ? eif_next_gen_id : rt_type_set_count), MARK_SWITCH, moving);
-
-	internal_marking (MARK_SWITCH, moving);
 }
 
 rt_private void internal_marking(MARKER marking, int moving)
@@ -1535,8 +1553,9 @@ rt_private void internal_marking(MARKER marking, int moving)
 	 */
 {
 #ifdef EIF_THREADS
-	int i;
-	int n;
+	size_t i;
+	size_t j;
+	size_t n;
 #endif
 
 #ifndef EIF_THREADS
@@ -1596,20 +1615,60 @@ rt_private void internal_marking(MARKER marking, int moving)
 	mark_simple_stack(&eif_hec_saved, marking, moving);
 
 		/* Traverse per-thread stacks. */
-	n = loc_set_list.count;
 		/* All stacks are in arrays of the same size. */
-	CHECK ("Same stack count", n == loc_set_list.count);
-	CHECK ("Same stack count", n == loc_stack_list.count);
-	CHECK ("Same stack count", n == once_set_list.count);
-	CHECK ("Same stack count", n == hec_stack_list.count);
-	CHECK ("Same stack count", n == sep_stack_list.count);
-	CHECK ("Same stack count", n == eif_stack_list.count);
-	CHECK ("Same stack count", n == eif_trace_list.count);
+	CHECK ("Same stack count", loc_set_list.count == loc_stack_list.count);
+	CHECK ("Same stack count", loc_set_list.count == once_set_list.count);
+	CHECK ("Same stack count", loc_set_list.count == hec_stack_list.count);
+	CHECK ("Same stack count", loc_set_list.count == sep_stack_list.count);
+	CHECK ("Same stack count", loc_set_list.count == eif_stack_list.count);
+	CHECK ("Same stack count", loc_set_list.count == eif_trace_list.count);
 #ifdef WORKBENCH
-	CHECK ("Same stack count", n == opstack_list.count);
+	CHECK ("Same stack count", loc_set_list.count == opstack_list.count);
 #endif
 
-	for (i = 0; i < n; i++) {
+	if (rt_g_data.status & (GC_PART | GC_GEN)) {
+			/* Full GC: first mark only live processors. */
+		for (j = 0; j < live_index_count; j++) {
+				/* Use only live indexes. */
+			i = live_index [j];
+			CHECK ("Valid index", i < loc_set_list.count);
+			mark_stack(loc_set_list.threads.sstack[i], marking, moving);
+			mark_stack(loc_stack_list.threads.sstack[i], marking, moving);
+			mark_simple_stack(once_set_list.threads.sstack[i], marking, moving);
+			mark_simple_stack(hec_stack_list.threads.sstack[i], marking, moving);
+			mark_simple_stack(sep_stack_list.threads.sstack[i], marking, moving);
+#ifdef WORKBENCH
+			mark_op_stack(opstack_list.threads.opstack[i], marking, moving);
+			mark_ex_stack(eif_stack_list.threads.xstack[i], marking, moving);
+			mark_ex_stack(eif_trace_list.threads.xstack[i], marking, moving);
+#else
+			if (exception_stack_managed) {
+				mark_ex_stack(eif_stack_list.threads.xstack[i], marking, moving);
+				mark_ex_stack(eif_trace_list.threads.xstack[i], marking, moving);
+			}
+#endif
+			update_live_index ();
+		}
+			/* Perform marking for dead indexes.
+			 * This slowdowns GC a bit, because objects, corresponding to dead processors
+			 * are not released immediately, but allows SCOOP manager to proceed normally
+			 * and manage threads in any suitable way, including reuse.
+			 */
+		complement_live_index ();
+	} else {
+			/* Partical GC: duplicate indexes to mark all processors. */
+		j = 0;
+		for (n = loc_set_list.count; j < n; j++) {
+			live_index [j] = j;
+		}
+		j = 0;
+	}
+	for (n = loc_set_list.count; j < n; j++) {
+			/* Use `live_index' to figure out what else has to be marked.
+			 * It includes unmarked indexes when doing full GC and
+			 * all indexes when doing partial GC. */
+		i = live_index [j];
+		CHECK ("Valid index", i < loc_set_list.count);
 		mark_stack(loc_set_list.threads.sstack[i], marking, moving);
 		mark_stack(loc_stack_list.threads.sstack[i], marking, moving);
 		mark_simple_stack(once_set_list.threads.sstack[i], marking, moving);
@@ -2488,6 +2547,9 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 		}
 
 marked: /* Goto label needed to avoid code duplication */
+
+			/* Mark associated SCOOP processor. */
+		RT_MARK_PROCESSOR(current);
 
 		/* Now explore all the references of the current object.
 		 * For each object of type 'type', References(type) gives the number
@@ -3870,6 +3932,12 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 
 		/* Initialize our overflow depth */
 	overflow_stack_depth = 0;
+
+#ifdef EIF_THREADS
+		/* Initialize list of live indexes for threads. */
+		/* This should be done before any marking. */
+	prepare_live_index ();
+#endif
 
 	/* First deal with the root object. If it is not old, then mark it */
 	if (root_obj && !(HEADER(root_obj)->ov_flags & EO_OLD))

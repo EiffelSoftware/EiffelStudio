@@ -59,7 +59,6 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'
 		local
-			gdkpix, gdkmask: POINTER
 			l_app_imp: like app_implementation
 			l_expose_actions: like expose_actions
 		do
@@ -196,7 +195,6 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 			g_error: POINTER
 			filepixbuf: POINTER
-			l_width, l_height: INTEGER
 		do
 			a_cs := file_name
 			filepixbuf := {GTK}.gdk_pixbuf_new_from_file (a_cs.item, $g_error)
@@ -286,7 +284,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 	process_draw_event (a_cairo_context: POINTER)
 			-- Call the expose actions for the drawing area.
 		local
-			l_x, l_y, l_width, l_height: INTEGER
+			l_width, l_height: INTEGER
 		do
 			l_width := {GTK}.gtk_widget_get_allocated_width (c_object)
 			l_height := {GTK}.gtk_widget_get_allocated_height (c_object)

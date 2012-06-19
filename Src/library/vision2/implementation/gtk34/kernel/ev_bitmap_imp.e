@@ -79,7 +79,7 @@ feature -- Access
 	width: INTEGER
 		-- Width in pixels of mask bitmap.
 		local
-			a_y: INTEGER
+--			a_y: INTEGER
 		do
 			if drawable /= default_pointer then
 --				{GTK}.gdk_window_get_size (drawable, $Result, $a_y)
@@ -89,7 +89,7 @@ feature -- Access
 	height: INTEGER
 		-- Width in pixels of mask bitmap.
 		local
-			a_x: INTEGER
+--			a_x: INTEGER
 		do
 			if drawable /= default_pointer then
 --				{GTK}.gdk_window_get_size (drawable, $a_x, $Result)

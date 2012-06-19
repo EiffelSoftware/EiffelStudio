@@ -20,10 +20,8 @@ feature -- Initialization
 
 	tooltip: STRING_32
 			-- Tooltip that has been set.
-		local
-			a_cs: EV_GTK_C_STRING
 		do
-			--a_cs := app_implementation.reusable_gtk_c_string
+				--| FIXME Update to gtk3 implementation
 			Result := ""
 		end
 

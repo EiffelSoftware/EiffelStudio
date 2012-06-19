@@ -98,6 +98,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_ENCODING_CONVERTER
+		export
+			{NONE} all
+		end
+
 feature -- Initialization
 
 	init (a_context: AST_CONTEXT)
@@ -864,7 +869,27 @@ feature {NONE} -- Roundtrip
 	process_typed_char_as (l_as: TYPED_CHAR_AS)
 			-- Process `l_as'.
 		do
-			process_char_as (l_as)
+			check_type (l_as.type)
+			if last_type /= Void then
+				if last_type.is_character then
+					if not last_type.is_character_32 then
+						if not l_as.value.is_character_8 then
+								-- Report error when the type is CHARACTER_8, but the value is not.
+							error_handler.insert_error (create {VWMQ}.make (last_type, <<wide_char_type>>, context, l_as))
+							last_type := Void
+						end
+					else
+						-- Do nothing for CHARACTER_32, since all characters are valid.
+					end
+				else
+						-- The type is unexpected.
+					error_handler.insert_error (create {VWMQ}.make (last_type, <<character_type, wide_char_type>>, context, l_as))
+					last_type := Void
+				end
+				if last_type /= Void and then is_byte_node_enabled then
+					create {CHAR_CONST_B} last_byte_node.make (l_as.value, last_type)
+				end
+			end
 		end
 
 	process_agent_routine_creation_as (l_as: AGENT_ROUTINE_CREATION_AS)
@@ -2271,16 +2296,12 @@ feature {NONE} -- Implementation
 
 	process_char_as (l_as: CHAR_AS)
 		do
-			if l_as.type = Void then
-				if l_as.value.is_character_8 then
-					last_type := character_type
-				else
-					last_type := Wide_char_type
-				end
+			if l_as.value.is_character_8 then
+				last_type := character_type
 			else
-				check_type (l_as.type)
+				last_type := Wide_char_type
 			end
-			if last_type /= Void and is_byte_node_enabled then
+			if is_byte_node_enabled then
 				create {CHAR_CONST_B} last_byte_node.make (l_as.value, last_type)
 			end
 		end
@@ -2312,10 +2333,21 @@ feature {NONE} -- Implementation
 					s32 := c.compiled_class
 				end
 				if attached s8 and then s8.class_id = class_id then
-						-- Constant is of type "STRING_8".
-					if is_byte_node_enabled then
-							-- For STRING_8 manifest string, we keep the written value for compatibility.
-						l_value := l_as.binary_value
+					if l_as.is_code_point_valid_string_8 then
+							-- Constant is of type "STRING_8".
+						if is_byte_node_enabled then
+								-- At code generation we convert UTF-8 into UTF-32.
+								-- ISO-8859-1, the default encoding we take as implicit encoding,
+								-- is compatible with UTF-32.
+							l_value := l_as.value
+						end
+					else
+							-- Invalid Unicode code point for STRING_8
+						if attached s32 then
+							t32 := s32.actual_type
+						end
+						error_handler.insert_error (create {VWMQ}.make (t, <<t32>>, context, l_as))
+						last_type := Void
 					end
 				elseif attached s32 and then s32.class_id = class_id then
 						-- Constant is of type "STRING_32".

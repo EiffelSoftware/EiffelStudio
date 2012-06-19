@@ -1908,18 +1908,18 @@ feature {NONE} -- Visitors
 	process_string_b (a_node: STRING_B)
 			-- Process `a_node'.
 		local
-			l_value: STRING
+			l_value: STRING_8
 			l_value_32: STRING_32
 		do
 			if a_node.is_string_32 then
-				ba.append (Bc_string32)
 				l_value_32 := a_node.value_32
+				ba.append (Bc_string32)
 					-- Bytes to read
 				ba.append_integer (l_value_32.count * 4)
 				ba.append_raw_string_32 (l_value_32)
 			else
+				l_value := a_node.value_8
 				ba.append (Bc_string)
-				l_value := a_node.value
 					-- Bytes to read
 				ba.append_integer (l_value.count)
 				ba.append_raw_string (l_value)

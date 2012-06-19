@@ -51,14 +51,24 @@ feature -- Access
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
 	value: STRING
-			-- Character value
+			-- Character value in UTF-8
 
 	value_32: STRING_32
 			-- Value in UTF-32
 		do
-			if attached value as l_value then
-				Result := encoding_converter.utf8_to_utf32 (l_value)
-			end
+			Result := encoding_converter.utf8_to_utf32 (value)
+		ensure
+			Result_set: Result /= Void
+		end
+
+	value_8: STRING_8
+			-- UTF-32 (0-255) / ISO-8859-1 stored in STRING_8 instance
+		require
+			is_string_8: not is_string_32
+		do
+			Result := value_32.as_string_8
+		ensure
+			Result_set: Result /= Void
 		end
 
 feature -- Properties
@@ -135,9 +145,10 @@ feature {NONE} -- Implementation: types
 
 invariant
 	value_not_void: value /= Void
+	valid_string_8: not is_string_32 implies value_32.is_valid_as_string_8
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

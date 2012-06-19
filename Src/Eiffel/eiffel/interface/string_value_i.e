@@ -37,15 +37,14 @@ create {INTERNAL_COMPILER_STRING_EXPORTER}
 
 feature {NONE} -- Initialization
 
-	make (s: STRING; a_str32: BOOLEAN; is_dotnet: BOOLEAN)
+	make (s: STRING; is_dotnet: BOOLEAN)
 			-- Set `string_value' with `s'.
-			-- Set `is_string_32' with `a_str32'
 			-- Set `is_dotnet_string' with `is_dotnet'.
+			-- `s' is in UTF-8.
 		require
 			s_not_void: s /= Void
 		do
 			string_value := s
-			is_string_32 := a_str32
 			is_dotnet_string := is_dotnet
 		ensure
 			string_value_set: string_value = s
@@ -69,7 +68,25 @@ feature -- Comparison
 feature {INTERNAL_COMPILER_STRING_EXPORTER, STRING_VALUE_I} -- Access
 
 	string_value: STRING
-			-- Integer constant value
+			-- String constant value in UTF-8
+
+	string_value_32: STRING_32
+			-- String constant value in UTF-32
+		do
+			Result := encoding_converter.utf8_to_utf32 (string_value)
+		ensure
+			Result_set: Result /= Void
+		end
+
+	string_value_8: STRING_8
+			-- UTF-32 (0-255) / ISO-8859-1 stored in STRING_8 instance
+		require
+			is_valid_as_string_8: not is_string_32 implies string_value_32.is_valid_as_string_8
+		do
+			Result := string_value_32.as_string_8
+		ensure
+			Result_set: Result /= Void
+		end
 
 feature -- Status Report
 
@@ -84,14 +101,13 @@ feature -- Status Report
 
 	valid_type (t: TYPE_A): BOOLEAN
 			-- Is the current value compatible with `t' ?
-		local
-			class_type: CL_TYPE_A
 		do
-			class_type ?= t
-			Result := class_type /= Void and then
-				(class_type.class_id = System.string_8_id or
-				class_type.class_id = System.string_32_id or
-				class_type.class_id = system_string_id)
+			if attached {CL_TYPE_A} t as l_ctype then
+				Result :=
+					(l_ctype.class_id = System.string_8_id and then encoding_converter.is_code_point_valid_string_8 (string_value)) or
+					l_ctype.class_id = System.string_32_id or
+					l_ctype.class_id = system_string_id
+			end
 		end
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
@@ -105,11 +121,8 @@ feature -- Settings
 
 	set_real_type (t: CL_TYPE_A)
 			-- Extract type and set `is_dotnet_string' accordingly.
-		local
-			l_cl_type: CL_TYPE_A
 		do
-			l_cl_type ?= t
-			if l_cl_type /= Void then
+			if attached {CL_TYPE_A} t as l_cl_type then
 				is_dotnet_string := l_cl_type.class_id = system_string_id
 				is_string_32 := l_cl_type.class_id = string_32_id
 			end
@@ -121,51 +134,52 @@ feature -- Code generation
 			-- Generate value in `buffer'.
 		local
 			buf: GENERATION_BUFFER
-			l_value: like string_value
-			l_value_32: STRING_32
+			l_value: STRING_8
+			l_value_32: like string_value_32
 		do
 				-- RTMS_EX is the macro used to create Eiffel strings from C ones
 				-- RTMS32_EX_H is the macro used to create STRING_32 from C ones
 			buf := buffer
-			l_value := string_value
 			if is_string_32 then
-				buf.put_string ({C_CONST}.rtms32_ex_h)
-			else
-				buf.put_string ({C_CONST}.rtms_ex_h)
-			end
-				-- Convert UTF-8 to UTF-32 and generate UTF-32 bytes directly
-				-- for manifest STRING_32.
-			if is_string_32 then
-				l_value_32 := encoding_converter.utf8_to_utf32 (l_value)
+				l_value_32 := string_value_32
 				l_value := encoding_converter.string_32_to_stream (l_value_32)
-			end
-			buf.put_character ('(')
-			buf.put_string_literal (l_value)
-			buf.put_character(',')
-			if is_string_32 then
+				buf.put_string ({C_CONST}.rtms32_ex_h)
+
+				buf.put_character ('(')
+				buf.put_string_literal (l_value)
+				buf.put_character(',')
+
 				buf.put_integer(l_value_32.count)
-			else
-				buf.put_integer(l_value.count)
-			end
-			buf.put_character(',')
-			if is_string_32 then
+				buf.put_character(',')
+
 				buf.put_integer (l_value_32.hash_code)
+				buf.put_character(')')
 			else
+				l_value := string_value_8
+				buf.put_string ({C_CONST}.rtms_ex_h)
+
+				buf.put_character ('(')
+				buf.put_string_literal (l_value)
+				buf.put_character(',')
+
+				buf.put_integer(l_value.count)
+				buf.put_character(',')
+
 				buf.put_integer (l_value.hash_code)
+				buf.put_character(')')
 			end
-			buf.put_character(')')
 		end
 
 	generate_il
 			-- Generate IL code for string constant value.
 		do
 			if is_dotnet_string then
-				il_generator.put_system_string (string_value)
+				il_generator.put_system_string_32 (string_value)
 			else
 				if is_string_32 then
 					il_generator.put_manifest_string_32 (string_value)
 				else
-					il_generator.put_manifest_string (string_value)
+					il_generator.put_manifest_string (string_value_8)
 				end
 			end
 		end
@@ -177,14 +191,14 @@ feature -- Code generation
 			l_value_32: STRING_32
 		do
 			if is_string_32 then
+				l_value_32 := string_value_32
 				ba.append (Bc_string32)
-				l_value_32 := encoding_converter.utf8_to_utf32 (string_value)
 					-- Bytes to read
 				ba.append_integer (l_value_32.count * 4)
 				ba.append_raw_string_32 (l_value_32)
 			else
+				l_value := string_value_8
 				ba.append (Bc_string)
-				l_value := string_value
 					-- Bytes to read
 				ba.append_integer (l_value.count)
 				ba.append_raw_string (l_value)
@@ -202,7 +216,7 @@ feature -- Code generation
 	append_signature (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add_char ('"')
-			a_text_formatter.add_manifest_string (eiffel_string (string_value))
+			a_text_formatter.add_manifest_string (eiffel_string_32 (string_value_32))
 			a_text_formatter.add_char ('"')
 		end
 
@@ -228,8 +242,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
+invariant
+	string_value_set: string_value /= Void
+
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

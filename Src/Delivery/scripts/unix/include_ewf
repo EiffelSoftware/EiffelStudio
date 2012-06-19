@@ -1,0 +1,44 @@
+#!/bin/sh
+
+# Setup environment
+INIT_DIR=`pwd`
+
+finalize_c_compile ()
+{
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ecb -batch -finalize -c_compile -config $1 -target $2 >> $INSTALL_LOG 2>&1
+if [ ! -f EIFGENs/$2/F_code/Makefile.SH ]; then
+  echo "Couldn't finalize $1"
+  CANCEL
+fi
+if [ -f EIFGENs/$2/F_code/$1 ]; then
+  mv EIFGENs/$2/F_code/$1 .
+fi
+}
+
+
+EWF_BUILD_DIR=`pwd`/_EWF
+safe_md $EWF_BUILD_DIR
+safe_md $EWF_BUILD_DIR/spec/$ISE_PLATFORM/bin
+
+#remtrace Checkout ecf_updater
+co -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/tools/ecf_updater $EWF_BUILD_DIR/ecf_updater_src
+cd $EWF_BUILD_DIR/ecf_updater_src
+
+#remtrace Finalize ecf_updater
+finalize_c_compile ecf_updater.ecf ecf_updater
+clean_project
+ECF_UPDATER_PATH=$EWF_BUILD_DIR/spec/$ISE_PLATFORM/bin
+
+#remtrace move ecf_updater.exe to $ECF_UPDATER_PATH
+move ecf_updater $ECF_UPDATER_PATH
+
+#remtrace Get Eiffel Web Framework source code
+cd $EWF_BUILD_DIR
+co https://github.com/EiffelWebFramework/EWF.git/trunk $EWF_BUILD_DIR/source
+
+#remtrace Install Eiffel Web Framework in %INSTALL_DIR
+cd $EWF_BUILD_DIR/source/tools
+/bin/sh install_ewf.sh $INSTALL_DIR --ise_library --diff --verbose >> $INSTALL_LOG 2>&1
+
+# Cleaning
+#fullrd $EWF_BUILD_DIR

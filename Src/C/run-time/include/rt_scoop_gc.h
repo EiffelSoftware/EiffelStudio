@@ -74,10 +74,10 @@ extern size_t live_index_count; /* Total number of valid items in `live_index' s
 
 #endif /* EIF_THREADS */
 
-rt_shared void prepare_live_index (); /* Initialize live indexes. */
-rt_shared void update_live_index ();  /* Update live indexes by taking into account marked processors. */
-rt_shared void complement_live_index (); /* Add indexes of dead processors at the end of the live index list. */
-rt_shared void report_live_index (); /* Notify SCOOP manager about live indexes. */
+extern void prepare_live_index (void); /* Initialize live indexes. */
+extern void update_live_index (void);  /* Update live indexes by taking into account marked processors. */
+extern void complement_live_index (void); /* Add indexes of dead processors at the end of the live index list. */
+extern void report_live_index (void); /* Notify SCOOP manager about live indexes. */
 
 #ifdef __cplusplus
 }

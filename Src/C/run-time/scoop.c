@@ -267,7 +267,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Not required because changes a single integer value.</synchronization>
 doc:	</routine>
 */
-rt_public void eif_unset_processor_id ()
+rt_public void eif_unset_processor_id (void)
 {
 	RT_GET_CONTEXT
 	eif_synchronize_gc (rt_globals);

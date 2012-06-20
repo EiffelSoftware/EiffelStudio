@@ -8,7 +8,7 @@ iff not defined ISE_PLATFORM then
 endiff
 iff not defined NO_COMPILE then
 	iff not defined EIFFEL_SRC then
-		echo TMP_EIFFEL_SRC not defined. Cannot continue
+		echo EIFFEL_SRC not defined. Cannot continue
 		CANCEL
 	endiff
 	iff not defined FINALIZATION_DIR then

@@ -1483,8 +1483,13 @@ feature {NONE} -- Resource Initialization
 		do
 			processor_yield (a_client_processor_id, a_wait_counter)
 			if a_wait_counter >= max_yield_counter then
-					-- Fully relinquish processor.
-				processor_sleep (processor_sleep_quantum)
+				if a_wait_counter \\ max_yield_counter = 0 and then processor_count = idle_processor_count then
+						-- Check if processors can be GC'ed.
+					full_collect
+				else
+						-- Fully relinquish processor.
+					processor_sleep (processor_sleep_quantum)
+				end
 			end
 		end
 

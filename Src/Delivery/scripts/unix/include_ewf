@@ -22,6 +22,7 @@ fi
 
 
 EWF_BUILD_DIR=`pwd`/_EWF
+fullrd $EWF_BUILD_DIR
 safe_md $EWF_BUILD_DIR
 safe_md $EWF_BUILD_DIR/spec/$ISE_PLATFORM/bin
 
@@ -39,7 +40,7 @@ move ecf_updater $ECF_UPDATER_PATH
 
 remtrace Get Eiffel Web Framework source code
 cd $EWF_BUILD_DIR
-co https://github.com/EiffelWebFramework/EWF.git/trunk $EWF_BUILD_DIR/source
+co https://github.com/EiffelWebFramework/EWF.git/tags/v0.1.0.0 $EWF_BUILD_DIR/source
 
 remtrace Install Eiffel Web Framework into $INSTALL_DIR
 cd $EWF_BUILD_DIR/source/tools

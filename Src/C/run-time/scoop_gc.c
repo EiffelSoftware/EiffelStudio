@@ -116,7 +116,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>To be done while already pocessing the `eif_gc_mutex' lock. (i.e: encapsulated in eif_synchronize_gc and eif_unsynchronize_gc</synchronization>
 doc:	</routine>
 */
-rt_shared void prepare_live_index ()
+rt_shared void prepare_live_index (void)
 {
 	size_t i;
 	size_t count = rt_globals_list.count;
@@ -175,7 +175,7 @@ doc:		<thread_safety>Unsafe</thread_safety>
 doc:		<synchronization>Ensured by the caller using `eif_gc_mutex'.</synchronization>
 doc:	</function>
 */
-rt_shared void update_live_index ()
+rt_shared void update_live_index (void)
 {
 		/* Unmark any processors that were marked before. */
 	size_t i;
@@ -216,7 +216,7 @@ doc:		<thread_safety>Unsafe</thread_safety>
 doc:		<synchronization>Ensured by the caller using `eif_gc_mutex'.</synchronization>
 doc:	</function>
 */
-rt_shared void complement_live_index ()
+rt_shared void complement_live_index (void)
 {
 	size_t i;
 	rt_global_context_t ** t = (rt_global_context_t **) rt_globals_list.threads.data;
@@ -250,7 +250,7 @@ doc:		<thread_safety>Unsafe</thread_safety>
 doc:		<synchronization>Ensured by the caller using `eif_gc_mutex'.</synchronization>
 doc:	</function>
 */
-rt_shared void report_live_index ()
+rt_shared void report_live_index (void)
 {
 	if (scp_mnger) {
 		size_t i;

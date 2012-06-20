@@ -19,7 +19,7 @@ move ecf_updater.exe %ECF_UPDATER_PATH
 
 remtrace Get Eiffel Web Framework source code
 cdd %EWF_BUILD_DIR
-co https://github.com/EiffelWebFramework/EWF.git/trunk %EWF_BUILD_DIR\source
+co https://github.com/EiffelWebFramework/EWF.git/tags/v0.1.0.0 %EWF_BUILD_DIR\source
 
 remtrace Install Eiffel Web Framework in %INSTALL_DIR
 cdd %EWF_BUILD_DIR\source\tools

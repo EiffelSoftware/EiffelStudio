@@ -3,7 +3,7 @@ note
 		"[
 		This class is used to create the epsilon which is used for approximately_equal feature.
 		]"
-	copyright: "Copyright (c) SEL, York University, Toronto and others"
+	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,7 +27,7 @@ feature -- Access
 	epsilon: INTEGER
 
 	set_epsilon (n: INTEGER)
-		--This will set the epsilon to `n'E-27.
+			--This will set the epsilon to `n'E-27.
 		require
 			n_greater_equal_zero: n >= 0
 		do
@@ -39,7 +39,7 @@ feature -- Access
 
 
 note
-	copyright: "Copyright (c) SEL, York University, Toronto and others"
+	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
 	license: "MIT license"
 	details: "[
 			Originally developed by Jonathan Ostroff and Moksh Khurana. 

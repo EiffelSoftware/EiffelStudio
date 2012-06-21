@@ -1,7 +1,8 @@
 note
 	description:
 		"Simple implementation of coefficients using a native array of characters"
-	copyright: "Copyright (c) SEL, York University, Toronto and others"
+	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
+	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -557,7 +558,7 @@ feature {DCM_MA_DECIMAL_COEFFICIENT_IMP} -- Implementation
 	digits: SPECIAL [INTEGER_8]
 			-- Array of digits (with the least significant first)
 
-feature {DCM_MA_DECIMAL} -- Implementation
+feature {DECIMAL} -- Implementation
 
 	set_count (a_count: INTEGER)
 			-- Set `count' to `a_count'.
@@ -571,7 +572,8 @@ invariant
 
 
 note
-	copyright: "Copyright (c) SEL, York University, Toronto and others"
+	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
+	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
 	license: "MIT license"
 	details: "[
 			Originally developed by Paul G. Crismer as part of Gobo. 

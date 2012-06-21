@@ -1,7 +1,8 @@
 note
 	description:
 		"Access to decimal math constants and shared context"
-	copyright: "Copyright (c) SEL, York University, Toronto and others"
+	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
+	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -102,7 +103,8 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) SEL, York University, Toronto and others"
+	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
+	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
 	license: "MIT license"
 	details: "[
 			Originally developed by Paul G. Crismer as part of Gobo. 

@@ -7,7 +7,8 @@ note
 		Index '0' is the least significant digit,index 'count-'1 is the most significant digit.
 		]"
 
-	copyright: "Copyright (c) SEL, York University, Toronto and others"
+	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
+	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -345,7 +346,8 @@ invariant
 
 
 note
-	copyright: "Copyright (c) SEL, York University, Toronto and others"
+	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
+	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
 	license: "MIT license"
 	details: "[
 			Originally developed by Paul G. Crismer as part of Gobo. 

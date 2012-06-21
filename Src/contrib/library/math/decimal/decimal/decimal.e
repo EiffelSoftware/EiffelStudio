@@ -1,7 +1,8 @@
 note
 	description:
 		"DECIMAL numbers. Following the 'General Decimal Arithmetic Specification'."
-	copyright: "Copyright (c) SEL, York University, Toronto and others"
+	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
+	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,51 +15,62 @@ inherit
 		rename
 			plus as binary_plus alias "+",
 			minus as binary_minus alias "-",
-			quotient as numeric_quotient alias "/"
+			quotient as numeric_quotient alias "/",
+			out as out_tuple
 		redefine
-			out,
+			out_tuple,
 			is_equal,
 			copy,
 			default_create
 		end
 
 	HASHABLE
+		rename
+			out as out_tuple
 		undefine
-			out,
+			out_tuple,
 			is_equal,
 			copy,
 			default_create
 		end
 
 	COMPARABLE
+		rename
+			out as out_tuple
 		undefine
-			out,
+			out_tuple,
 			is_equal,
 			copy,
 			default_create
 		end
 
 	DCM_MA_SHARED_DECIMAL_CONTEXT
+		rename
+			out as out_tuple
 		undefine
-			out,
+			out_tuple,
 			is_equal,
 			copy,
 			default_create
 		end
 
 	DCM_MA_SHARED_DECIMAL_CONSTANTS
+		rename
+			out as out_tuple
 		undefine
-			out,
+			out_tuple,
 			is_equal,
 			copy,
 			default_create
 		end
 
 	DCM_MA_DECIMAL_CONTEXT_CONSTANTS
+		rename
+			out as out_tuple
 		export
 			{NONE} all
 		undefine
-			out,
+			out_tuple,
 			is_equal,
 			copy,
 			default_create
@@ -460,7 +472,7 @@ feature {DECIMAL} -- Access
 			definition: Result = (exponent + count - 1)
 		end
 
-feature {DECIMAL, DCM_MA_DECIMAL_PARSER, DCM_MA_DECIMAL_HANDLER} -- Access
+feature {DECIMAL, DCM_MA_DECIMAL_PARSER, DECIMAL_HANDLER} -- Access
 
 	coefficient: DCM_MA_DECIMAL_COEFFICIENT
 			-- Storage for digits
@@ -758,7 +770,7 @@ feature -- Comparison
 
 feature -- Conversion
 
-	out: STRING
+	out_tuple: STRING
 			-- Printable representation
 		do
 			create Result.make (0)
@@ -846,12 +858,19 @@ feature -- Conversion
 		end
 
 	to_scientific_string: STRING
-			-- `Current' as a sting expressed in scientific notation
+			-- `Current' as a string expressed in scientific notation
 		do
 			Result := to_string_general (False)
 		ensure
 			to_string_not_void: Result /= Void
 		end
+
+	out: STRING
+
+		do
+			Result := to_scientific_string
+		end
+
 
 feature -- Duplication
 
@@ -1079,30 +1098,6 @@ feature -- Basic operations
 				end
 				Result := y
 			end
-	end
-
-	get_coeff (ctx: DCM_MA_DECIMAL_CONTEXT): like Current
-		require
-			ctx_not_void: ctx /= Void
-		local
-			index: INTEGER
-			num, ten, c: DECIMAL
-		do
-			from
-				index := coefficient.count - 1
-				create c.make_from_string_ctx ("0", ctx)
-				create ten.make_from_string_ctx ("10", ctx)
-				create num.make_nan
-			until
-				index < 0
-			loop
-				c := c.multiply (ten, ctx)
-				create num.make_from_string_ctx (coefficient.item (index).out, ctx)
-				c := c.add (num, ctx)
-				index := index - 1
-			end
-			c.set_exponent (exponent)
-			Result := c
 		end
 
 	remainder (other: like Current; ctx: DCM_MA_DECIMAL_CONTEXT): like Current
@@ -1704,6 +1699,7 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 					n := numer.divide (denom, ctx_local)
 					n := n.exp_upper_bound
 					n := n.ceiling_wrt_ctx (ctx_local) --Round up
+					default_context.set_digits (56)
 					from
 						create sum.make_from_string_ctx ("1", ctx_local)
 						create i.make_copy (n)
@@ -1720,6 +1716,7 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 							i := i.subtract ("1", ctx_local)
 						end
 					end
+					default_context.set_digits (28)
 					sum := sum.power_wrt_ctx (k, ctx_local)
 					if neg then
 						create Result.make_from_string_ctx ("1", ctx_local)
@@ -1741,183 +1738,6 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 			exp_not_void: Result /= Void
 		end
 
-
---   exp_wrt_ctx (ctx: DCM_MA_DECIMAL_CONTEXT): like Current
--- --        Perform e^`Current' using ctx as context
--- --       Using "Table Driven Implementation of the Exponential Function" by Ping Tak Peter Tang.
-
---        require
---            current_not_void: Current /= Void
---            context_not_void: ctx /= Void
---        local
-
---            lead_array : ARRAY[INTEGER_64]
---            trail_array : ARRAY[INTEGER_64]
---            neg: BOOLEAN
---            J: INTEGER
---            A1, A2, A3, A4, A5, N, Ntemp, negN, N1, N2, Inv_L, part2, temp1, temp2, temp3, two, twom, logtwo, Thirty2, P, R, R1, R2, L1, L2, x, M, S: DECIMAL
---            ctx_local: DCM_MA_DECIMAL_CONTEXT
---            q: DCM_PRECOMPUTED_VALUES
---        do
---           create q.make
---            if is_zero then
---                create Result.make_from_string_ctx ("1", ctx)
---            elseif is_one and sign = 1 then
---                create Result.make_from_string_ctx (q.natural_e, ctx)
---            elseif is_one and sign = -1 then
---                Result := one.divide (q.natural_e, ctx)
---            else
---                create ctx_local.make_default
---                ctx_local.copy (ctx)
---                ctx_local.set_rounding_mode (6)
-
---                if is_negative then
---                    create x.make_copy (current)
---                    x := x.multiply ("-1", ctx_local)
---                    neg := True
---                else
---                    neg := False
---                    create x.make_copy (current)
---                end
---               -- Step 1: Check all special cases.
---                if is_nan then
---                	create Result.make_from_string_ctx ("NaN", ctx_local)
---                elseif is_infinity and sign = -1 then
---                    create Result.make_from_string_ctx ("0", ctx_local)
---                elseif is_infinity and sign = 1 then
---                    create result.make_infinity (1)
---                elseif x.is_greater (q.Threshold_1) then
---                   	create result.make_infinity (1)
---                elseif x.is_less (q.Threshold_2) then
---                	Result := x.add ("1", ctx_local)
---                else
-
---               		-- Step 2: argument reduction.
---                	create two.make_from_string_ctx ("2", ctx_local)
---                	create Thirty2.make_from_string_ctx ("32", ctx_local)
---                	logtwo := two.log10_wrt_ctx (ctx)
---                	Inv_L := Thirty2.divide (logtwo, ctx_Local)
---                	N:= x.multiply(Inv_L, ctx_local)
---                	N := N.round_to_integer (ctx_local)
---                	--Mod Opperation
---                	Ntemp := N.divide (Thirty2, ctx_local)
---					Ntemp := Ntemp.floor_wrt_ctx (ctx)
---                	Ntemp := Ntemp.multiply (Thirty2,ctx_local)
---                	N2 := N.subtract (Ntemp, ctx_local)
---                	N1 := N.subtract (N2, ctx_local)
---                 	-- Finding the value of R1 and R2.
---              	 	create L1.make_from_string_ctx ("4581900536175919000", ctx_local)
---               		create L2.make_from_string_ctx ("4432795332353620000", ctx_local)
---               		temp1 := x.subtract (N1, ctx_local)
---               		temp1 := temp1.multiply (L1, ctx_local)
---               		temp2 := N2.multiply (L1, ctx_local)
---                	if
---                    	N.abs.is_greater_equal ("512")
---                	then
---                    	 R1 := temp1.subtract (temp2, ctx_local)
---                	else
---                    	temp3 := N.multiply (L1, ctx_local)
---                    	R1 := x.subtract (temp3, ctx_local)
---                	end
---                	negN := N.multiply ("-1", ctx_local)
---                	R2 := negN.multiply (L2, ctx_local)
---                	-- Decompose N into M and J.
---                	M := N1.divide (Thirty2, ctx_local)
---                	J:= N2                	-- Step 3: Polynomial computation
---                	R := R1.add (R2, ctx_local)
---				  	create A1.make_from_string_ctx ("4602678819172647000", ctx_local)
---				  	create A2.make_from_string_ctx ("4595172819793645600", ctx_local)
---				  	create A3.make_from_string_ctx ("4586165620538892000", ctx_local)
---				  	create A4.make_from_string_ctx ("4575957481358528500", ctx_local)
---				  	create A5.make_from_string_ctx ("4564047970130172000", ctx_local)
---				  	p := R.add (A1.multiply(R.power (2), ctx_local), ctx_local)
---				  	p := p.add (A2.multiply(R.power (3), ctx_local), ctx_local)
---				  	p := p.add (A3.multiply(R.power (4), ctx_local), ctx_local)
---				  	p := p.add (A4.multiply(R.power (5), ctx_local), ctx_local)
---				  	p := p.add (A5.multiply(R.power (6), ctx_local), ctx_local)
---					--Step 4: Reconstruction Step.
---					--Store Values for Leading numbers in array.
---					-- Hex Values need to be recomputed after this step since the provided values do not
---                	-- produce the correct result.
---				  	create lead_array.make_filled(0, 0, 31)
---				  	lead_array.put(4607182418800017400,0)
---				  	lead_array.put(4607281034790536700,1)
---				  	lead_array.put(4607381810190059500,2)
---				  	lead_array.put(4607484792283487000,3)
---				  	lead_array.put(4607590029391123000,4)
---				  	lead_array.put(4607697570891348500,5)
---				  	lead_array.put(4607807467243791000,6)
---				  	lead_array.put(4607919770012999000,7)
---				  	lead_array.put(4608034531892640000,8)
---				  	lead_array.put(4608151806730217500,9)
---				  	lead_array.put(4608271649552348000,10)
---				  	lead_array.put(4608394116590569500,11)
---				  	lead_array.put(4608519265307732500,12)
---				  	lead_array.put(4608647154424959000,13)
---				  	lead_array.put(4608777843949196300,14)
---				  	lead_array.put(4608911395201373700,15)
---				  	lead_array.put(4609047870845172700,16)
---				  	lead_array.put(4609187334916432000,17)
---				  	lead_array.put(4609329852853190700,18)
---				  	lead_array.put(4609475491526397400,19)
---				  	lead_array.put(4609624319271280600,20)
---				  	lead_array.put(4609776405919417300,21)
---				  	lead_array.put(4609931822831497000,22)
---				  	lead_array.put(4610090642930803700,23)
---				  	lead_array.put(4610252940737434600,24)
---				  	lead_array.put(4610418792403263000,25)
---				  	lead_array.put(4610588275747672600,26)
---				  	lead_array.put(4610761470294069000,27)
---				  	lead_array.put(4610938457307194400,28)
---				  	lead_array.put(4611119319831256000,29)
---				  	lead_array.put(4611304142728892400,30)
---				  	lead_array.put(4611493012720993300,31)
---				  	--Store Values for trailing values in array.
---				  	create trail_array.make_filled (0, 0, 31)
---				  	trail_array.put(0,0)
---				  	trail_array.put(4398360369641583600,1)
---				  	trail_array.put(4390663502895179000,2)
---				  	trail_array.put(4391190969116716500,3)
---				  	trail_array.put(4399293837223536600,4)
---				  	trail_array.put(4396986594175829000,5)
---				  	trail_array.put(4398947427695824400,6)
---				  	trail_array.put(4395678244271009300,7)
---				  	trail_array.put(4392467489609770000,8)
---				  	trail_array.put(4387999348500588500,9)
---				  	trail_array.put(4395824235047678000,10)
---				  	trail_array.put(4397344514665107000,11)
---				  	trail_array.put(4396514486804543000,12)
---				  	trail_array.put(4376919018230634500,13)
---				  	trail_array.put(4396828684267982000,14)
---				  	trail_array.put(4382785031611610000,15)
---				  	trail_array.put(4389075691822542000,16)
---				  	trail_array.put(4398308820736637000,17)
---				  	trail_array.put(4385203477640371000,18)
---				  	trail_array.put(4391725210595732500,19)
---				  	trail_array.put(4394206637558733300,20)
---				  	trail_array.put(4396210498721256000,21)
---				  	trail_array.put(4391040956773724700,22)
---				  	trail_array.put(4394540453141269000,23)
---				  	trail_array.put(4397394791062093000,24)
---				  	trail_array.put(4385286261012081700,25)
---				  	trail_array.put(4394424860648055000,26)
---				  	trail_array.put(4396791426733110300,27)
---				  	trail_array.put(4385546610465757700,28)
---				  	trail_array.put(4395154146089737700,29)
---				  	trail_array.put(4393689762643415000,30)
---				  	trail_array.put(4366754277802680300,31)
---				  	S := lead_array.item(J) + trail_array.item(J)
---                  twom := two.nth_root (Thirty2)
---                  twom := twom.multiply (twom.power (N1), ctx_local)
---                  part2 := p.multiply (S, ctx_local)
---                  part2 := part2.add (trail_array.item(J), ctx_local)
---                  part2 := part2.add (lead_array.item (J), ctx_local)
---                  Result := twom.multiply (part2, ctx_local)
---				end
---		   end
---		   ensure
---			     exp_not_void: Result /= Void
---			end
 
 	nth_root (other: like Current): like Current
 			-- Perform root of `Current' by `other' as root using shared_default_context
@@ -2098,16 +1918,12 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 		require
 			current_not_void: Current /= Void
 			context_not_void: ctx /= Void
-		local
-			cp: DECIMAL
 		do
 			If is_equal (one) then
 				Result := 0
 			elseif is_greater (one) then
 				Result := position_of_decimal_point_positive(ctx)
 			else
---				create cp.make_copy (current)
---				cp.set_exponent (cp.exponent.abs)
 				Result := position_of_decimal_point_negative(ctx)
 			end
 		end
@@ -2121,7 +1937,7 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 			current_not_void: Current /= Void
 			context_not_void: ctx /= Void
 		local
-			i, ten, start_interval, end_interval, x, y: DECIMAL
+			i, ten, start_interval, end_interval, x: DECIMAL
 			terminate: BOOLEAN
 		do
 			from
@@ -2332,6 +2148,227 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 		ensure
 			answer_not_void: Result /= Void
 		end
+
+	sin: like Current
+		--Perform sin on `Current' using shared_decimal_context
+		do
+			Result := sin_wrt_ctx (shared_decimal_context)
+		ensure then
+			division_not_void: Result /= Void
+		end
+
+	sin_wrt_ctx (ctx: DCM_MA_DECIMAL_CONTEXT): like Current
+		--Perform sin on `Current' using ctx as context
+		require
+			current_not_void: Current /= Void
+			ctx_not_void: ctx /= Void
+			greater_than_equal_zero: not ctx.exception_on_trap or else (is_greater_equal ("0"))
+		local
+		 	one80, deg, user, x, taylor, step1, step2, step3, step4, zer: DECIMAL
+		 	q: DCM_PRECOMPUTED_VALUES
+		 do
+		 	create q.make
+			create Result.make_from_string_ctx ("0", ctx)
+			create step1.make_from_string_ctx ("0", ctx)
+			create step2.make_from_string_ctx ("0", ctx)
+			create step3.make_from_string_ctx ("0", ctx)
+     		create one80.make_from_string_ctx ("180", ctx)
+			create user.make_copy (current)
+			create step1.make_from_string_ctx ("0", ctx)
+			deg := user.divide (one80, ctx)
+			deg := deg.multiply (q.pi, ctx)
+			create zer.make_from_string_ctx ("0", ctx)
+			create taylor.make_from_string_ctx ("1", ctx)
+			from
+				create x.make_from_string_ctx ("100", ctx)
+			until
+				x.is_equal (zer)
+			loop
+				step1 := taylor.multiply ("-1", ctx)
+				step1 := step1.multiply (deg, ctx)
+				step1 := step1.multiply (deg, ctx)
+				step2 := x.multiply ("2", ctx)
+				step3 := x.multiply ("2", ctx)
+				step3 := step3.add ("1", ctx)
+				step4 := step2.multiply (step3, ctx)
+				taylor := step1.divide (step4, ctx)
+				taylor := taylor.add ("1", ctx)
+				x := x.subtract ("1", ctx)
+			end
+			taylor := taylor.multiply (deg, ctx)
+			Result := taylor
+		ensure
+			answer_not_void: Result /= Void
+		end
+
+	cos: like Current
+		--Perform cos on `Current' using shared_decimal_context
+		do
+			Result := cos_wrt_ctx (shared_decimal_context)
+		ensure then
+			division_not_void: Result /= Void
+		end
+
+	cos_wrt_ctx (ctx: DCM_MA_DECIMAL_CONTEXT): like Current
+		--Perform cos on `Current' using ctx as context
+		require
+			current_not_void: Current /= Void
+			ctx_not_void: ctx /= Void
+			greater_than_equal_zero: not ctx.exception_on_trap or else (is_greater_equal ("0"))
+		local
+		 	one80, deg, user, x, taylor, step1, step2, step3, step4, zer: DECIMAL
+		 	q: DCM_PRECOMPUTED_VALUES
+		 do
+		 	create q.make
+			create Result.make_from_string_ctx ("0", ctx)
+			create step1.make_from_string_ctx ("0", ctx)
+			create step2.make_from_string_ctx ("0", ctx)
+			create step3.make_from_string_ctx ("0", ctx)
+     		create one80.make_from_string_ctx ("180", ctx)
+			create user.make_copy (current)
+			create step1.make_from_string_ctx ("0", ctx)
+			deg := user.divide (one80, ctx)
+			deg := deg.multiply (q.pi, ctx)
+			create zer.make_from_string_ctx ("0", ctx)
+			create taylor.make_from_string_ctx ("1", ctx)
+			from
+				create x.make_from_string_ctx ("100", ctx)
+			until
+				x.is_equal (zer)
+			loop
+				step1 := taylor.multiply ("-1", ctx)
+				step1 := step1.multiply (deg, ctx)
+				step1 := step1.multiply (deg, ctx)
+				step2 := x.multiply ("2", ctx)
+				step3 := x.multiply ("2", ctx)
+				step3 := step3.subtract ("1", ctx)
+				step4 := step2.multiply (step3, ctx)
+				taylor := step1.divide (step4, ctx)
+				taylor := taylor.add ("1", ctx)
+				x := x.subtract ("1", ctx)
+			end
+			Result := taylor
+		ensure
+			answer_not_void: Result /= Void
+		end
+
+
+	tan: like Current
+		--Perform tan on `Current' using shared_decimal_context
+		do
+			Result := tan_wrt_ctx (shared_decimal_context)
+		ensure then
+			division_not_void: Result /= Void
+		end
+
+	tan_wrt_ctx (ctx: DCM_MA_DECIMAL_CONTEXT): like Current
+		--Perform tan on `Current' using ctx as context
+		require
+			current_not_void: Current /= Void
+			ctx_not_void: ctx /= Void
+			greater_than_equal_zero: not ctx.exception_on_trap or else (is_greater_equal ("0"))
+		local
+		 	user, cosval, sinval, final: DECIMAL
+		 	q: DCM_PRECOMPUTED_VALUES
+		 do
+		 	create Result.make_from_string_ctx ("0", ctx)
+			create final.make_from_string_ctx ("0", ctx)
+     		create user.make_copy (current)
+ 			create sinval.make_copy (user.sin)
+			create cosval.make_copy (user.cos)
+		    final := sinval.divide (cosval, ctx)
+			Result := final
+		ensure
+			answer_not_void: Result /= Void
+		end
+
+	cot: like Current
+		--Perform cot on `Current' using shared_decimal_context
+		do
+			Result := cot_wrt_ctx (shared_decimal_context)
+		ensure then
+			division_not_void: Result /= Void
+		end
+
+	cot_wrt_ctx (ctx: DCM_MA_DECIMAL_CONTEXT): like Current
+		--Perform tan on `Current' using ctx as context
+		require
+			current_not_void: Current /= Void
+			ctx_not_void: ctx /= Void
+			greater_than_equal_zero: not ctx.exception_on_trap or else (is_greater_equal ("0"))
+		local
+		 	user, cosval, sinval, final: DECIMAL
+		 	q: DCM_PRECOMPUTED_VALUES
+		 do
+		 	create Result.make_from_string_ctx ("0", ctx)
+			create final.make_from_string_ctx ("0", ctx)
+     		create user.make_copy (current)
+ 			create sinval.make_copy (user.sin)
+			create cosval.make_copy (user.cos)
+		    final := cosval.divide (sinval, ctx)
+			Result := final
+		ensure
+			answer_not_void: Result /= Void
+		end
+
+	sec: like Current
+		--Perform sec on `Current' using shared_decimal_context
+		do
+			Result := sec_wrt_ctx (shared_decimal_context)
+		ensure then
+			division_not_void: Result /= Void
+		end
+
+	sec_wrt_ctx (ctx: DCM_MA_DECIMAL_CONTEXT): like Current
+		--Perform sec on `Current' using ctx as context
+		require
+			current_not_void: Current /= Void
+			ctx_not_void: ctx /= Void
+			greater_than_equal_zero: not ctx.exception_on_trap or else (is_greater_equal ("0"))
+		local
+		 	user, cosval, one1, final: DECIMAL
+		 	q: DCM_PRECOMPUTED_VALUES
+		 do
+		 	create Result.make_from_string_ctx ("0", ctx)
+			create final.make_from_string_ctx ("0", ctx)
+     		create user.make_copy (current)
+ 			create one1.make_from_string_ctx ("1", ctx)
+			create cosval.make_copy (user.cos)
+		    final := one1.divide (cosval, ctx)
+			Result := final
+		ensure
+			answer_not_void: Result /= Void
+		end
+
+	csc: like Current
+		--Perform csc on `Current' using shared_decimal_context
+		do
+			Result := csc_wrt_ctx (shared_decimal_context)
+		ensure then
+			division_not_void: Result /= Void
+		end
+
+	csc_wrt_ctx (ctx: DCM_MA_DECIMAL_CONTEXT): like Current
+		--Perform csc on `Current' using ctx as context
+		require
+			current_not_void: Current /= Void
+			ctx_not_void: ctx /= Void
+			greater_than_equal_zero: not ctx.exception_on_trap or else (is_greater_equal ("0"))
+		local
+		 	user, one1, sinval, final: DECIMAL
+		 	q: DCM_PRECOMPUTED_VALUES
+		 do
+		 	create Result.make_from_string_ctx ("0", ctx)
+			create final.make_from_string_ctx ("0", ctx)
+     		create user.make_copy (current)
+ 			create sinval.make_copy (user.sin)
+			create one1.make_from_string_ctx ("1", ctx)
+		    final := one1.divide (sinval, ctx)
+			Result := final
+		ensure
+			answer_not_void: Result /= Void
+		end
+
 
 feature {DECIMAL, DCM_MA_DECIMAL_PARSER} -- Element change
 
@@ -3681,6 +3718,16 @@ feature -- rounding
 
 
 		ensure
+--			is_special implies
+--				(Result.to_scientific_string ~ "NaN")
+--			(n > 0 and exponent <= 0 and not is_special) implies
+--				(Result.no_digits_after_point = n)
+--			(n > 0 and exponent > 0 and not is_special) implies
+--				(Result = current)
+--			(n = 0 and exponent <= 0 and not is_special) implies
+--				(Result.is_integer)
+--			(n = 0 and exponent > 0 and not is_special) implies
+--				(Result = current)
 			-- If n > 0 then the current is rounded to specified number of decimal places
 			-- If n = 0 then number is rounded to the nearest integer
 			-- If n < 0 then the number is rounded up to the left of the decimal point.
@@ -3751,7 +3798,8 @@ invariant
 	special_coefficient_is_zero: special_coefficient.is_zero
 
 note
-	copyright: "Copyright (c) SEL, York University, Toronto and others"
+	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
+	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
 	license: "MIT license"
 	details: "[
 			Originally developed by Paul G. Crismer as part of Gobo. 

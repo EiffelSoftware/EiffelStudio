@@ -374,8 +374,6 @@ feature {NONE} -- Action handlers
 			if is_beam_indicator or else is_token_hidden_on_popup_widget_shown then
 				token_image.hide
 			end
-
-			popup_window.set_y_position (popup_window.y_position - editor_token.height)
 		end
 
 	on_popup_widget_hidden
@@ -574,7 +572,7 @@ invariant
 	not_is_beam_indicator: is_token_hidden_on_popup_widget_shown implies not is_beam_indicator
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

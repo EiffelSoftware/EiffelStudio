@@ -1001,7 +1001,7 @@ feature {NONE} -- Implementation
 			process_standard_key_press (virtual_key)
 		end
 
-	on_sys_key_up (virtual_key, ke_data: INTEGER)
+	on_sys_key_up (virtual_key, key_data: INTEGER)
 		do
 			process_standard_key_release (virtual_key)
 		end
@@ -1636,16 +1636,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_WIDGET_IMP
-
-
-
-
-
-
-
-
-
-
-
-
+end

@@ -58,7 +58,7 @@ feature -- B: Queries
 			no_change_in_count: old count = count
 		end
 
-	at, infix "@" ( k : KEY ) : VALUE
+	at alias "@" ( k : KEY ) : VALUE
 			-- The value associated with key 'k'
 		require
 			key_non_void: k /= void

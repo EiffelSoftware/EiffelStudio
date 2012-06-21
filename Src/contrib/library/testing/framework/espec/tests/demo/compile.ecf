@@ -9,8 +9,6 @@
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="espec" location="..\..\library\espec-safe.ecf" readonly="false">
-			<option full_class_checking="true">
-			</option>
 		</library>
 		<cluster name="testing-espec" location=".\" recursive="true">
 			<file_rule>

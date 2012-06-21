@@ -237,8 +237,7 @@ feature {NONE} -- Implementation
 			-- output test result for one passed case
 		require
 			one_case_valid: one_case /= Void
-		local
-			violation: detachable ES_VIOLATION_CASE
+
 		do
 			output_file.putstring ("<td><font color=%"green%"><b>PASSED</b></font></td>%N")
 			output_file.putstring ("<td align=%"center%">")
@@ -250,11 +249,12 @@ feature {NONE} -- Implementation
 			output_file.putstring ("</td>%N")
 			output_file.putstring ("<td>")
 
-			violation ?= one_case
 
-			if violation /= void then
+			if attached {ES_VIOLATION_CASE} one_case as l then
+
 				output_file.putstring ("*")
 			end
+
 
 			check attached one_case as o then
 				output_file.putstring (wrap_html_comments (o.case_name))
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 			one_case_valid: one_case /= Void
 		local
 			tag: STRING_8
-			violation: detachable ES_VIOLATION_CASE
+
 		do
 			output_file.putstring ("<td><font color=%"red%"><b>FAILED</b></font></td>%N")
 			output_file.putstring ("<td align=%"center%">")
@@ -293,11 +293,11 @@ feature {NONE} -- Implementation
 			output_file.putstring ("</td>%N")
 			output_file.putstring ("<td>")
 
-			violation ?= one_case
-
-			if violation /= void then
+			if attached {ES_VIOLATION_CASE} one_case as l then
 				output_file.putstring ("*")
 			end
+
+
 
 			check attached one_case as o then
 				output_file.putstring (wrap_html_comments (o.case_name))

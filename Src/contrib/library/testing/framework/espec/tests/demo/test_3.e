@@ -5,7 +5,7 @@ note
 	revision: "$1.0$"
 
 class
-	TEST_2
+	TEST_3
 	--You may also use this class as the root of the system for small testing
 	--Make sure to uncomment 'run_espec' command if this class is the root
 
@@ -26,10 +26,10 @@ feature
 			add_violation_case_with_tag ("error", agent t5)
 			-- adds a violation test case to this class, the failure should have the tag 'error'
 			-- should fail due to wrong tag
-			add_violation_case_with_tag ("valid_index", agent t6) -- passes since exception is 'valid_index'
-			set_html_name ("NEW_NAME_T2.html")
+			add_violation_case_with_tag ("valid_index", agent t6) -- passes since exception is 'index_small_enough'
+			set_html_name ("TEST3_OUT.html")
 --			show_browser
---			show_errors
+			show_errors
 --			run_espec -- this is required if you make this unit class the root of this system (i.e., no suite)
 		end
 
@@ -39,7 +39,7 @@ feature
 		do
 			comment ("This Boolean Test case passes")
 			--allows us to add comments to the test cases (this is shown in the HTML result file)
-			create a.make (1, 2)
+			create a.make_filled (0, 1, 2)
 			a.put (1, 1)
 			Result := a.item (1) = 1
 			check Result end -- avoid putting operations, e.g., a.item(1) = 2 in the check clause
@@ -56,7 +56,7 @@ feature
 			a: ARRAY[INTEGER]
 		do
 			comment ("This Boolean test case fails with a contract violation")
-			create a.make (1, 2)
+			create a.make_filled (0, 1, 2)
 			a.put (2, 4)
 		end
 
@@ -65,7 +65,7 @@ feature
 			a: ARRAY[INTEGER]
 		do
 			comment ("This violation case should pass")
-			create a.make (1, 2)
+			create a.make_filled (0, 1, 2)
 			a.put (2, 4)
 		end
 
@@ -76,7 +76,7 @@ feature
 			a: ARRAY[INTEGER]
 		do
 			comment ("This violation case should fail")
-			create a.make (1, 2)
+			create a.make_filled (0, 1, 2)
 			a.put (2, 4)
 		end
 
@@ -85,7 +85,7 @@ feature
 			a: ARRAY[INTEGER]
 		do
 			comment ("This violation case should pass")
-			create a.make (1, 2)
+			create a.make_filled (0, 1, 2)
 			a.put (2, 4)
 		end
 

@@ -2900,6 +2900,7 @@ feature -- Removal
 			internal_row_data.wipe_out
 			l_rows.wipe_out
 			columns.wipe_out
+			non_displayed_row_count := 0
 			set_vertical_computation_required (1)
 			set_horizontal_computation_required (1)
 			recompute_vertical_scroll_bar

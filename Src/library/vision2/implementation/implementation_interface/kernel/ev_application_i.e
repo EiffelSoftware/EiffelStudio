@@ -1033,7 +1033,7 @@ feature -- Implementation
 			l_hbox.disable_item_expand (l_ignore)
 			create l_quit.make_with_text ("Quit")
 			l_quit.set_minimum_width (l_ignore.minimum_width)
-			l_quit.select_actions.extend (agent destroy)
+			l_quit.select_actions.extend (agent safe_destroy)
 			l_hbox.extend (l_quit)
 			l_hbox.disable_item_expand (l_quit)
 			l_hbox.set_border_width (5)

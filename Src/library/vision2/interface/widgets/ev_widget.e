@@ -278,6 +278,8 @@ feature -- Status setting
 
 	set_default_key_processing_handler (a_handler: like default_key_processing_handler)
 			-- Assign `default_key_processing_handler' to `a_handler'.
+			--| No postcondition to allow descendants to preserve user defined handler alongside
+			--| with their own internal handler.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -286,12 +288,12 @@ feature -- Status setting
 
 	remove_default_key_processing_handler
 			-- Ensure `default_key_processing_handler' is Void.
+			--| No postcondition to allow descendants to preserve user defined handler alongside
+			--| with their own internal handler.
 		require
 			not_destroyed: not is_destroyed
 		do
 			implementation.remove_default_key_processing_handler
-		ensure
-			default_key_processing_handler_removed: default_key_processing_handler = Void
 		end
 
 feature -- Element change
@@ -401,14 +403,14 @@ invariant
 		is_usable and then attached parent as l_parent implies l_parent.has (Current)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

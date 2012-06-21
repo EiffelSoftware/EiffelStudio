@@ -54,7 +54,7 @@ feature -- Element change
 	set_item_width (a_width: INTEGER)
 			-- Set `a_widget.width' to `a_width'.
 		require
-			a_width_positive: a_width > 0
+			a_width_positive: a_width >= 0
 			a_width_not_smaller_than_minimum_width:
 				a_width >= interface_item.minimum_width
 		do
@@ -64,7 +64,7 @@ feature -- Element change
 	set_item_height (a_height: INTEGER)
 			-- Set `a_widget.height' to `a_height'.
 		require
-			a_height_positive: a_height > 0
+			a_height_positive: a_height >= 0
 			a_height_not_smaller_than_minimum_height:
 				a_height >= interface_item.minimum_height
 		do
@@ -75,8 +75,8 @@ feature -- Element change
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		require
-			a_width_positive: a_width > 0
-			a_height_positive: a_height > 0
+			a_width_positive: a_width >= 0
+			a_height_positive: a_height >= 0
 			a_width_not_smaller_than_minimum_width:
 				a_width >= interface_item.minimum_width
 			a_height_not_smaller_than_minimum_height:
@@ -85,29 +85,14 @@ feature -- Element change
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_VIEWPORT_I
-
-
-
-
-
-
-
-
-
-
-
-

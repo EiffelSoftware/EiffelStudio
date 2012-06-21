@@ -1,7 +1,7 @@
 note
 	description:
 		"All the new features are tested here which run fast without finalizing the system."
-	copyright: "Copyright (c) SEL, York University, Toronto and others"
+	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -92,8 +92,8 @@ feature -- tests
 			create d1.make_from_string ("0.1")
 			create d3.make_from_string ("0.3")
 			d2 := d1 + d1 + d1
-			check d1.to_scientific_string ~ "0.1" end
-			Result := d2.to_scientific_string ~ "0.3"
+			check d1.out ~ "0.1" end
+			Result := d2.out ~ "0.3"
 		end
 
 	t2: BOOLEAN
@@ -104,9 +104,9 @@ feature -- tests
 			create d1.make_from_string ("1")
 			create d2.make_from_string ("3")
 			d3 := d1/d2
-			check d3.to_scientific_string ~ "0.3333333333333333333333333333" end
+			check d3.out ~ "0.3333333333333333333333333333" end
 			d3 := d3 + d3
-			Result := d3.to_scientific_string ~ "0.6666666666666666666666666666"
+			Result := d3.out ~ "0.6666666666666666666666666666"
 		end
 
 	t3: BOOLEAN
@@ -122,7 +122,7 @@ feature -- tests
 			create d1.make_from_string (".1")
 			create d2.make_from_string ("10")
 			d3 := d1*d2
-			Result := d3.to_scientific_string ~ "1.0"
+			Result := d3.out ~ "1.0"
 		end
 
 
@@ -137,7 +137,7 @@ feature -- tests
 			create d2.make_from_string ("1")
 			d2.default_context.reset_flags
 			d3 := d1 + d2
-			Result := d3.to_scientific_string ~ "124.45"
+			Result := d3.out ~ "124.45"
 			check Result end
 			Result := not d2.default_context.is_flagged (2)  -- precise arithmetic
 			check Result end
@@ -147,12 +147,12 @@ feature -- tests
 			d3 := d1 + d2
 			Result := d3.default_context.is_flagged (2) and d3.default_context.is_flagged (6)
 			check Result end
-			Result := d3.to_scientific_string ~ "124.3388888888888888888888889"
+			Result := d3.out ~ "124.3388888888888888888888889"
 			create ctx.make_default
 			create d1.make_from_string_ctx ("1.2345678901234567890123456789", ctx)
 			create d2.make_from_string_ctx ("1", ctx)
 			d3 := d1.add (d2, ctx)
-			Result := d3.to_scientific_string ~ "2.234567890123456789012345679"
+			Result := d3.out ~ "2.234567890123456789012345679"
 			check Result end
 		end
 
@@ -166,7 +166,7 @@ feature -- tests
 			create d1.make_from_string_ctx("1",x)
 			create d2.make_from_string_ctx("0",x)
 			d3 := d1.divide (d2, x)
-			Result := d3.to_scientific_string ~ "Infinity"
+			Result := d3.out ~ "Infinity"
 		end
 
 	t6: BOOLEAN
@@ -179,11 +179,11 @@ feature -- tests
 			d2 := "0"
 			d1.default_context.disable_exception_on_trap
 			d3 := d1 / d2
-			Result := d3.to_scientific_string ~ "Infinity"
+			Result := d3.out ~ "Infinity"
 			check Result end
 			create c.make_default
 			d3 := d1.divide (d2, c)
-			Result := d3.to_scientific_string ~ "Infinity"
+			Result := d3.out ~ "Infinity"
 			check Result end
 		end
 
@@ -194,12 +194,12 @@ feature -- tests
 			comment("t7: test max/min)")
 			d1 := "5.6"
 			d2 := "4.3"
-			Result := d1.max_ctx (d2, d1.default_context).to_scientific_string ~ d1
+			Result := d1.max_ctx (d2, d1.default_context).out ~ d1
 			check Result end
-			Result := d1.min_ctx (d2, d1.default_context).to_scientific_string ~ d2
+			Result := d1.min_ctx (d2, d1.default_context).out ~ d2
 			check Result end
 			d3 := "-7.899"
-			Result := d3.abs.to_scientific_string ~ "7.899"
+			Result := d3.abs.out ~ "7.899"
 			check Result end
 		end
 
@@ -418,7 +418,7 @@ feature -- tests
 		local
 			d1,d2: DECIMAL
 		do
-			comment("t13: test approx_equal")
+			comment("t13: test approximately_equal")
 			d1 := "1.6005"
 			Result := d1.no_digits_after_point = 4
 			check Result end
@@ -461,224 +461,232 @@ feature -- tests
 			comment("t14: test round_to feature")
 			x := "1.556"
 			y := "1.882"
-			Result := (x*y).out ~ "[0,2928392,-6]"
+			Result := (x*y).out_tuple ~ "[0,2928392,-6]"
 			check Result end
-			Result := (x*y).round_to(2).to_scientific_string ~ "2.93"
+			Result := (x*y).round_to(2).out ~ "2.93"
 			check Result end
 			x := "1234567890123456789012345678"
-			Result := x.round_to (2).to_scientific_string ~ "1234567890123456789012345678.00"
+			Result := x.round_to (2).out ~ "1234567890123456789012345678.00"
 			check Result end
 			x := "12345678901234567890123456"
-			Result := x.round_to (2).to_scientific_string ~ "12345678901234567890123456.00"
+			Result := x.round_to (2).out ~ "12345678901234567890123456.00"
 			check Result end
-			Result := x.round_to (3).to_scientific_string ~ "12345678901234567890123456.000"
+			Result := x.round_to (3).out ~ "12345678901234567890123456.000"
 			check Result end
-			Result := x.round_to (1).to_scientific_string ~ "12345678901234567890123456.0"
+			Result := x.round_to (1).out ~ "12345678901234567890123456.0"
 			check Result end
 			x := "123456789012345678901234567890"
-			Result := x.round_to (2).to_scientific_string ~ "123456789012345678901234567900.00"
+			Result := x.round_to (2).out ~ "123456789012345678901234567900.00"
 			check Result end
 			x := "0.527017"
-			Result := x.round_to (1).to_scientific_string ~ "0.5"
+			Result := x.round_to (1).out ~ "0.5"
 			check Result end
-			Result := x.round_to (2).to_scientific_string ~ "0.53"
+			Result := x.round_to (2).out ~ "0.53"
 			check Result end
-			Result := x.round_to (3).to_scientific_string ~ "0.527"
+			Result := x.round_to (3).out ~ "0.527"
 			check Result end
-			Result := x.round_to (4).to_scientific_string ~ "0.5270"
+			Result := x.round_to (4).out ~ "0.5270"
 			check Result end
-			Result := x.round_to (5).to_scientific_string ~ "0.52702"
+			Result := x.round_to (5).out ~ "0.52702"
 			check Result end
-			Result := x.round_to (6).to_scientific_string ~ "0.527017"
+			Result := x.round_to (6).out ~ "0.527017"
 			check Result end
-			Result := x.round_to (7).to_scientific_string ~ "0.5270170"
+			Result := x.round_to (7).out ~ "0.5270170"
 			check Result end
 			x := "0.000756"
-			Result := x.round_to (2).to_scientific_string ~ "0.00"
+			Result := x.round_to (2).out ~ "0.00"
 			check Result end
-			Result := x.round_to (4).to_scientific_string ~ "0.0008"
+			Result := x.round_to (4).out ~ "0.0008"
 			check Result end
 			x := "0.0000000000123456789012345678901"
-			Result := x.round_to (13).to_scientific_string ~ "1.23E-11"
+			Result := x.round_to (13).out ~ "1.23E-11"
 			check Result end
 			x := "1.78"
-			Result := x.round_to (0).to_scientific_string ~ "2"
+			Result := x.round_to (0).out ~ "2"
 			check Result end
 			x := "91.1010"
-			Result := x.round_to (0).to_scientific_string ~ "91"
+			Result := x.round_to (0).out ~ "91"
 			check Result end
 			x := "-1.19177"
-			Result := x.round_to (1).to_scientific_string ~ "-1.2"
+			Result := x.round_to (1).out ~ "-1.2"
 			check Result end
 			x := "-1.19177"
-			Result := x.round_to (2).to_scientific_string ~ "-1.19"
+			Result := x.round_to (2).out ~ "-1.19"
 			check Result end
 			x := "-1.19177"
-			Result := x.round_to (3).to_scientific_string ~ "-1.192"
+			Result := x.round_to (3).out ~ "-1.192"
 			check Result end
 			x := "-1.19177"
-			Result := x.round_to (4).to_scientific_string ~ "-1.1918"
+			Result := x.round_to (4).out ~ "-1.1918"
 			check Result end
 			x := "-1.19177"
-			Result := x.round_to (5).to_scientific_string ~ "-1.19177"
+			Result := x.round_to (5).out ~ "-1.19177"
 			check Result end
 			x := "-1.19177"
-			Result := x.round_to (6).to_scientific_string ~ "-1.191770"
+			Result := x.round_to (6).out ~ "-1.191770"
 			check Result end
 			x := "81.919"
-			Result := x.round_to (-1).to_scientific_string ~ "80"
+			Result := x.round_to (-1).out ~ "80"
 			check Result end
 			x := "478.45"
 			y := x.round_to(0)
-			Result := y.to_scientific_string ~ "478"
+			Result := y.out ~ "478"
 			check Result end
 			x := "478.55"
 			y := x.round_to (0)
-			Result := y.to_scientific_string ~ "479"
+			Result := y.out ~ "479"
 			check Result end
 			x := "718.7171"
 			y := x.round_to (5)
-			Result := y.to_scientific_string ~ "718.71710"
+			Result := y.out ~ "718.71710"
 			check Result end
 			x := "61.717"
 			y := x.round_to (2)
-			Result := y.to_scientific_string ~ "61.72"
+			Result := y.out ~ "61.72"
 			check Result end
 			x := "0.0005819"
 			y := x.round_to (2)
-			Result := y.to_scientific_string ~ "0.00"
+			Result := y.out ~ "0.00"
 			check Result end
 			x := "0.0005819"
 			y := x.round_to (4)
-			Result := y.to_scientific_string ~ "0.0006"
+			Result := y.out ~ "0.0006"
 			check Result end
 			x := "153.76"
 			y := x.round_to (-1)
-			Result := y.to_scientific_string ~ "150"
+			Result := y.out ~ "150"
 			check Result end
 			x := "153.76"
 			y := x.round_to (-2)
-			Result := y.to_scientific_string ~ "200"
+			Result := y.out ~ "200"
 			check Result end
 			x := "153.76"
 			y := x.round_to (-3)
-			Result := y.to_scientific_string ~ "0"
+			Result := y.out ~ "0"
 			check Result end
 			x := "153.76"
 			y := x.round_to (-4)
-			Result := y.to_scientific_string ~ "0"
+			Result := y.out ~ "0"
 			check Result end
 			x := "0.7671"
 			y := x.round_to (1)
-			Result := y.to_scientific_string ~ "0.8"
+			Result := y.out ~ "0.8"
 			check Result end
 			x := "0.7671"
 			y := x.round_to (2)
-			Result := y.to_scientific_string ~ "0.77"
+			Result := y.out ~ "0.77"
 			check Result end
 			x := "0.7671"
 			y := x.round_to (3)
-			Result := y.to_scientific_string ~ "0.767"
+			Result := y.out ~ "0.767"
 			check Result end
 			x := "0.7671"
 			y := x.round_to (4)
-			Result := y.to_scientific_string ~ "0.7671"
+			Result := y.out ~ "0.7671"
 			check Result end
 			x := "0.7671"
 			y := x.round_to (0)
-			Result := y.to_scientific_string ~ "1"
+			Result := y.out ~ "1"
 			check Result end
 			x := "0.7671"
 			y := x.round_to (-1)
-			Result := y.to_scientific_string ~ "0"
+			Result := y.out ~ "0"
 			check Result end
 			x := "0.7671"
 			y := x.round_to (-2)
-			Result := y.to_scientific_string ~ "0"
+			Result := y.out ~ "0"
 			check Result end
 			x := "1856"
 			y := x.round_to (-1)
-			Result := y.to_scientific_string ~ "1860"
+			Result := y.out ~ "1860"
 			check Result end
 			x := "1856"
 			y := x.round_to (-2)
-			Result := y.to_scientific_string ~ "1900"
+			Result := y.out ~ "1900"
 			check Result end
 			x := "1856"
 			y := x.round_to (-3)
-			Result := y.to_scientific_string ~ "2000"
+			Result := y.out ~ "2000"
 			check Result end
 			x := "1856"
 			y := x.round_to (-4)
-			Result := y.to_scientific_string ~ "0"
+			Result := y.out ~ "0"
 			check Result end
 			x := "1856"
 			y := x.round_to (-5)
-			Result := y.to_scientific_string ~ "0"
+			Result := y.out ~ "0"
 			check Result end
 			x := "10.12345678901234567890123456789011"
 			y := x.round_to (-1)
-			Result := y.to_scientific_string ~ "10"
+			Result := y.out ~ "10"
 			check Result end
 			x := "10.12345678901234567890123456789011"
 			y := x.round_to (-2)
-			Result := y.to_scientific_string ~ "0"
+			Result := y.out ~ "0"
 			check Result end
 			x := "10.12345678901234567890123456789011"
 			y := x.round_to (-3)
-			Result := y.to_scientific_string ~ "0"
+			Result := y.out ~ "0"
 			check Result end
 			x := "10.12345678901234567890123456789011"
 			y := x.round_to (-4)
-			Result := y.to_scientific_string ~ "0"
+			Result := y.out ~ "0"
 			check Result end
 			x := "NaN"
 			y := x.round_to (1)
-			Result := y.to_scientific_string ~ "NaN"
+			Result := y.out ~ "NaN"
 			check Result end
 			x := "NaN"
 			y := x.round_to (0)
-			Result := y.to_scientific_string ~ "NaN"
+			Result := y.out ~ "NaN"
 			check Result end
 			x := "NaN"
 			y := x.round_to (-1)
-			Result := y.to_scientific_string ~ "NaN"
+			Result := y.out ~ "NaN"
 			check Result end
 			x := "Infinity"
 			y := x.round_to (1)
-			Result := y.to_scientific_string ~ "NaN"
+			Result := y.out ~ "NaN"
 			check Result end
 			x := "Infinity"
 			y := x.round_to (0)
-			Result := y.to_scientific_string ~ "NaN"
+			Result := y.out ~ "NaN"
 			check Result end
 			x := "Infinity"
 			y := x.round_to (-1)
-			Result := y.to_scientific_string ~ "NaN"
+			Result := y.out ~ "NaN"
 			check Result end
 			x := "-Infinity"
 			y := x.round_to (1)
-			Result := y.to_scientific_string ~ "NaN"
+			Result := y.out ~ "NaN"
 			check Result end
 			x := "-Infinity"
 			y := x.round_to (0)
-			Result := y.to_scientific_string ~ "NaN"
+			Result := y.out ~ "NaN"
 			check Result end
 			x := "-Infinity"
 			y := x.round_to (-1)
-			Result := y.to_scientific_string ~ "NaN"
+			Result := y.out ~ "NaN"
 			check Result end
 			x := "abcd"
 			y := x.round_to (1)
-			Result := y.to_scientific_string ~ "NaN"
+			Result := y.out ~ "NaN"
 			check Result end
 			x := "abcd"
 			y := x.round_to (0)
-			Result := y.to_scientific_string ~ "NaN"
+			Result := y.out ~ "NaN"
 			check Result end
 			x := "abcd"
 			y := x.round_to (-1)
-			Result := y.to_scientific_string ~ "NaN"
+			Result := y.out ~ "NaN"
+			check Result end
+			x := "1.12348182374908172394789772983479812734980172394070192734097991789127349"
+			y := x.round_to (2)
+			Result := y.out ~ "1.12"
+			check Result end
+			x := "1283618726387196237891627386182369812631862389126387162387162839"
+			y := x.round_to (4)
+			Result := y.out ~ "1.28361872638719623789162738600000000E+63"
 			check Result end
 		end
 
@@ -765,48 +773,48 @@ feature -- tests
 			comment("t22: test floor feature")
 			d1 := "1.8"
 			d2 := d1.floor
-			Result := d2.to_scientific_string ~ "1"
+			Result := d2.out ~ "1"
 			check Result end
 			d1 := "-0.718"
 			d2 := d1.floor
-			Result := d2.to_scientific_string ~ "-0"
+			Result := d2.out ~ "-0"
 			check Result end
 			d1 := "-0"
 			d2 := d1.floor
-			Result := d2.to_scientific_string ~ "-0"
+			Result := d2.out ~ "-0"
 			check Result end
 			d1 := "-1829.919"
 			d2 := d1.floor
-			Result := d2.to_scientific_string ~ "-1829"
+			Result := d2.out ~ "-1829"
 			check Result end
 			d1 := "7919"
 			d2 := d1.floor
-			Result := d2.to_scientific_string ~ "7919"
+			Result := d2.out ~ "7919"
 			check Result end
 			create c.make_default
 			create d1.make_from_string_ctx ("81.81901", c)
 			d2 := d1.floor_wrt_ctx (c)
-			Result := d2.to_scientific_string ~ "81"
+			Result := d2.out ~ "81"
 			check Result end
 			d1 := "1.2"
 			d2 := d1.floor
-			Result := d2.to_scientific_string ~ "1"
+			Result := d2.out ~ "1"
 			check Result end
 			d1 := "0.8"
 			d2 := d1.floor
-			Result := d2.to_scientific_string ~ "0"
+			Result := d2.out ~ "0"
 			check Result end
 			d1 := "-1"
 			d2 := d1.floor
-			Result := d2.to_scientific_string ~ "-1"
+			Result := d2.out ~ "-1"
 			check Result end
 			d1 := "-282730.3928"
 			d2 := d1.floor
-			Result := d2.to_scientific_string ~ "-282730"
+			Result := d2.out ~ "-282730"
 			check Result end
 			d1 := "9000"
 			d2 := d1.floor
-			Result := d2.to_scientific_string ~ "9000"
+			Result := d2.out ~ "9000"
 			check Result end
 		end
 
@@ -818,45 +826,45 @@ feature -- tests
 			comment("t23: test ceiling feature")
 			d1 := "1.8"
 			d2 := d1.ceiling
-			Result := d2.to_scientific_string ~ "2"
+			Result := d2.out ~ "2"
 			check Result end
 			d1 := "-0.718"
 			d2 := d1.ceiling
-			Result := d2.to_scientific_string ~ "-1"
+			Result := d2.out ~ "-1"
 			check Result end
 			d1 := "0.1"
 			d2 := d1.ceiling
-			Result := d2.to_scientific_string ~ "1"
+			Result := d2.out ~ "1"
 			check Result end
 			d1 := "-0.1"
 			d2 := d1.ceiling
-			Result := d2.to_scientific_string ~ "-1"
+			Result := d2.out ~ "-1"
 			check Result end
 			create c.make_default
 			c.set_digits (9)
 			create d1.make_from_string_ctx ("7291.81919", c)
 			d2 := d1.ceiling_wrt_ctx (c)
-			Result := d2.to_scientific_string ~ "7292"
+			Result := d2.out ~ "7292"
 			check Result end
 			d1 := "9.2"
 			d2 := d1.ceiling
-			Result := d2.to_scientific_string ~ "10"
+			Result := d2.out ~ "10"
 			check Result end
 			d1 := "0.1"
 			d2 := d1.ceiling
-			Result := d2.to_scientific_string ~ "1"
+			Result := d2.out ~ "1"
 			check Result end
 			d1 := "-0.1"
 			d2 := d1.ceiling
-			Result := d2.to_scientific_string ~ "-1"
+			Result := d2.out ~ "-1"
 			check Result end
 		    d1 := "30284.1"
 			d2 := d1.ceiling
-			Result := d2.to_scientific_string ~ "30285"
+			Result := d2.out ~ "30285"
 			check Result end
 			 d1 := "2.01"
 			d2 := d1.ceiling
-			Result := d2.to_scientific_string ~ "3"
+			Result := d2.out ~ "3"
 			check Result end
 		end
 
@@ -927,7 +935,7 @@ feature -- tests
 		end
 
 note
-	copyright: "Copyright (c) SEL, York University, Toronto and others"
+	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
 	license: "MIT license"
 	details: "[
 			Originally developed by Jonathan Ostroff, and Moksh Khurana. See class DECIMAL.

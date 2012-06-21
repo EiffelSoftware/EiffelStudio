@@ -1,7 +1,7 @@
 note
 	description:
 		"All the new features are tested here which run slow and require finalizing of the system."
-	copyright: "Copyright (c) SEL, York University, Toronto and others"
+	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -402,7 +402,7 @@ feature -- tests
 		end
 
 note
-	copyright: "Copyright (c) SEL, York University, Toronto and others"
+	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
 	license: "MIT license"
 	details: "[
 			Originally developed by Jonathan Ostroff, and Moksh Khurana. See class DECIMAL.

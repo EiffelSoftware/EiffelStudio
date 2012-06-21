@@ -1,11 +1,12 @@
 note
 	description:
 		"User selectable parameters and rules which govern the results of decimal arithmetic operations."
-	copyright: "Copyright (c) SEL, York University, Toronto and others"
+	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
+	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 
 class DCM_MA_DECIMAL_CONTEXT
 
@@ -100,8 +101,8 @@ feature {NONE} -- Initialization
 		do
 			digits := a_digits
 			rounding_mode := a_rounding_mode
-			create traps.make (Signal_division_by_zero, Signal_subnormal)
-			create flags.make (Signal_division_by_zero, Signal_subnormal)
+			create traps.make_filled (False, Signal_division_by_zero, Signal_subnormal)
+			create flags.make_filled (False, Signal_division_by_zero, Signal_subnormal)
 			exponent_limit := Maximum_exponent
 		ensure
 			digits_set: digits = a_digits
@@ -361,7 +362,7 @@ feature -- Duplication
 			traps := other.traps.twin
 		end
 
-feature {DCM_MA_DECIMAL_HANDLER, DCM_MA_DECIMAL_CONTEXT} -- Signals
+feature {DECIMAL_HANDLER, DCM_MA_DECIMAL_CONTEXT} -- Signals
 
 	flags: ARRAY [BOOLEAN]
 			-- Signals flagged
@@ -397,7 +398,8 @@ invariant
 
 
 note
-	copyright: "Copyright (c) SEL, York University, Toronto and others"
+	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
+	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
 	license: "MIT license"
 	details: "[
 			Originally developed by Paul G. Crismer as part of Gobo. 

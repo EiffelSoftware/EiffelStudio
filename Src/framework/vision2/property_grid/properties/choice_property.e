@@ -107,9 +107,11 @@ feature {NONE} -- Agents
 			-- Setup the actions sequences when the item is shown.
 		do
 			Precursor
-			text_field.disable_edit
-			text_field.pointer_button_press_actions.force_extend (agent switch)
-			text_field.key_press_actions.extend (agent on_text_field_key)
+			if attached text_field as l_text_field and then not l_text_field.is_destroyed then
+				text_field.disable_edit
+				text_field.pointer_button_press_actions.force_extend (agent switch)
+				text_field.key_press_actions.extend (agent on_text_field_key)
+			end
 		end
 
 	show_ellipsis
@@ -289,8 +291,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

@@ -20,8 +20,6 @@ inherit
 			make,
 			show_flags,
 			is_top_level,
-			on_wm_activate,
-			on_wm_ncactivate,
 			on_wm_mouseactivate
 		end
 
@@ -76,29 +74,12 @@ feature -- Status Setting
 
 	on_wm_mouseactivate (wparam, lparam: POINTER)
 		do
-			--if not is_disconnected_from_window_manager then
+			if not is_disconnected_from_window_manager then
 				Precursor (wparam, lparam)
-			--else
-			--	disable_default_processing
-			--end
-		end
-
-	on_wm_activate (wparam: INTEGER_32)
-		do
-			--if not is_disconnected_from_window_manager then
-				Precursor (wparam)
-			--else
-			--	disable_default_processing
-			--end
-		end
-
-	on_wm_ncactivate (hwnd, wparam, lparam: POINTER): POINTER
-		do
-			--if not is_disconnected_from_window_manager then
-				Result := Precursor (hwnd, wparam, lparam)
-			--else
-			--	disable_default_processing
-			--end
+			else
+				set_message_return_value (to_lresult ({WEL_MA_CONSTANTS}.ma_noactivate))
+				disable_default_processing
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -157,14 +138,14 @@ feature  -- Implementation
 	interface: detachable EV_POPUP_WINDOW note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

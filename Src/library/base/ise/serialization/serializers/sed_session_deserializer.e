@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 			l_is_collecting: BOOLEAN
 			l_nat32: NATURAL_32
 			l_ref_id: INTEGER
-			l_dtype: INTEGER
+			l_dtype, l_old_dtype: INTEGER
 			i, nb: INTEGER
 			l_obj: ANY
 		do
@@ -275,7 +275,8 @@ feature {NONE} -- Implementation
 						l_mem.collection_off
 					end
 						-- Read dynamic type
-					l_dtype := new_dynamic_type_id (l_deser.read_compressed_natural_32.to_integer_32)
+					l_old_dtype := l_deser.read_compressed_natural_32.to_integer_32
+					l_dtype := new_dynamic_type_id (l_old_dtype)
 					if l_dtype >= 0 then
 							-- Read reference id
 						l_nat32 := deserializer.read_compressed_natural_32

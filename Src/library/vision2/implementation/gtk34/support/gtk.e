@@ -102,12 +102,12 @@ feature
 
 	frozen gtk_table_get_default_row_spacing (a_table_struct: POINTER): INTEGER
 		external
-			"C signature (GtkTable*): guint"
+			"C signature (GtkTable*): guint use <ev_gtk.h>"
 		end
 
 	frozen gtk_table_get_default_col_spacing (a_table_struct: POINTER): INTEGER
 		external
-			"C signature (GtkTable*): guint"
+			"C signature (GtkTable*): guint use <ev_gtk.h>"
 		end
 
 	frozen gtk_cell_layout_get_cells (a_gtk_cell_layout: POINTER): POINTER
@@ -2664,7 +2664,7 @@ feature
 
 	frozen gtk_window_get_transient_for (a_c_struct: POINTER): POINTER
 		external
-			"C signature (GtkWindow*): GtkWindow*"
+			"C signature (GtkWindow*): GtkWindow* use <ev_gtk.h>"
 		end
 
 	frozen set_gdk_rgba_struct_blue (a_c_struct: POINTER; a_blue: REAL_64)

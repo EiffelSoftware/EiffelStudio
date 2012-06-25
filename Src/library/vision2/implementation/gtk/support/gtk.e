@@ -452,35 +452,35 @@ feature
 			"GDK_BUTTON_RELEASE"
 		end
 
-	frozen gtk_state_normal_enum: INTEGER_32
+	frozen gtk_state_normal_enum, gtk_state_flag_normal_enum: INTEGER_32
 		external
 			"C macro use <ev_gtk.h>"
 		alias
 			"GTK_STATE_NORMAL"
 		end
 
-	frozen gtk_state_prelight_enum: INTEGER_32
+	frozen gtk_state_prelight_enum, gtk_state_flag_prelight_enum: INTEGER_32
 		external
 			"C macro use <ev_gtk.h>"
 		alias
 			"GTK_STATE_PRELIGHT"
 		end
 
-	frozen gtk_state_selected_enum: INTEGER_32
+	frozen gtk_state_selected_enum, gtk_state_flag_selected_enum: INTEGER_32
 		external
 			"C macro use <ev_gtk.h>"
 		alias
 			"GTK_STATE_SELECTED"
 		end
 
-	frozen gtk_state_active_enum: INTEGER_32
+	frozen gtk_state_active_enum, gtk_state_flag_active_enum: INTEGER_32
 		external
 			"C macro use <ev_gtk.h>"
 		alias
 			"GTK_STATE_ACTIVE"
 		end
 
-	frozen gtk_state_insensitive_enum: INTEGER_32
+	frozen gtk_state_insensitive_enum, gtk_state_flag_insensitive_enum: INTEGER_32
 		external
 			"C macro use <ev_gtk.h>"
 		alias
@@ -2092,9 +2092,11 @@ feature
 			"C (GtkRadioMenuItem*, GSList*) | <ev_gtk.h>"
 		end
 
-	frozen gtk_rc_get_style (a_widget: POINTER): POINTER
+	frozen gtk_rc_get_style, gtk_widget_get_style_context (a_widget: POINTER): POINTER
 		external
 			"C (GtkWidget*): GtkStyle* | <ev_gtk.h>"
+		alias
+			"gtk_rc_get_style"
 		end
 
 	frozen gtk_scale_set_digits (a_scale: POINTER; a_digits: INTEGER_32)
@@ -3163,7 +3165,7 @@ feature
 			"style"
 		end
 
-	frozen gtk_widget_struct_window (a_c_struct: POINTER): POINTER
+	frozen gtk_widget_struct_window, gtk_widget_get_window (a_c_struct: POINTER): POINTER
 		external
 			"C [struct <ev_gtk.h>] (GtkWidget): EIF_POINTER"
 		alias
@@ -3395,15 +3397,15 @@ feature
 		end
 
 note
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-		Eiffel Software
-		356 Storke Road, Goleta, CA 93117 USA
-		Telephone 805-685-1006, Fax 805-685-6869
-		Website http://www.eiffel.com
-		Customer support http://support.eiffel.com
-	]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end -- class GTK
 

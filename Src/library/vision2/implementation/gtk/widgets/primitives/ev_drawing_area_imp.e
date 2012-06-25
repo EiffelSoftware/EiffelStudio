@@ -286,6 +286,20 @@ feature {NONE} -- Implementation
 			-- Not applicable
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	get_drawable: POINTER
+			-- Retrieve drawable used for rendering docking elements
+		do
+			Result := c_object
+		end
+
+	release_drawable (a_drawable: POINTER)
+			-- Release resources from `a_drawable'
+		do
+			-- No release needed for gtk2
+		end
+
 feature {EV_DRAWABLE_IMP} -- Implementation
 
 	drawable: POINTER
@@ -382,14 +396,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- Interface object of Current.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_DRAWING_AREA_IMP

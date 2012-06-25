@@ -51,7 +51,7 @@ feature -- Access
 			{GTK}.gtk_widget_destroy (l_widget)
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY_HANDLER} -- Implementation
 
 	color_from_state (a_widget: POINTER; style_type, a_state: INTEGER): EV_COLOR
 			-- Return color of either fg or bg representing `a_state'
@@ -91,14 +91,14 @@ feature {NONE} -- Implementation
 		-- Different coloring styles used in gtk.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

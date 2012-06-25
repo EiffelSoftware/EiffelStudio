@@ -151,6 +151,32 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	get_drawable: POINTER
+			-- Drawable used for rendering docking components.
+		local
+			l_window: POINTER
+		do
+			if drawable /= default_pointer then
+				Result := drawable
+			else
+				l_window := {GTK}.gtk_widget_get_window (c_object)
+				if l_window /= default_pointer then
+					Result := {GTK}.gdk_cairo_create (l_window)
+				end
+			end
+		end
+
+	release_drawable (a_drawable: POINTER)
+			-- Release resources of drawable `a_drawable'.
+		do
+			if a_drawable /= drawable and then a_drawable /= default_pointer then
+				redraw
+				{CAIRO}.cairo_destroy (a_drawable)
+			end
+		end
+
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	in_expose_actions: BOOLEAN

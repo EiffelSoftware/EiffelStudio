@@ -176,8 +176,6 @@ feature -- Element change
 
 	set_drawing_mode (a_mode: INTEGER)
 			-- Set drawing mode to `a_mode'.
-		local
-			l_cairo_operator: INTEGER
 		do
 			if drawable /= default_pointer then
 				inspect
@@ -375,7 +373,6 @@ feature -- Drawing operations
 			a_clip_area: detachable EV_RECTANGLE
 			a_pango_matrix, a_pango_context: POINTER
 			l_app_imp: like App_implementation
-			l_pango_renderer: POINTER
 			l_ellipsize_symbol: POINTER
 		do
 			if drawable /= default_pointer then

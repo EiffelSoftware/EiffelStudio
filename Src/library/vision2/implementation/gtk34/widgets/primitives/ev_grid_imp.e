@@ -77,10 +77,10 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'
 		do
 				-- Initialize colors from gtk style.
-			set_focused_selection_color (color_from_state (base_style, {GTK}.gtk_state_flag_selected_enum))
-			set_non_focused_selection_color (color_from_state (base_style, {GTK}.gtk_state_flag_active_enum))
-			set_focused_selection_text_color (color_from_state (text_style, {GTK}.gtk_state_flag_selected_enum))
-			set_non_focused_selection_text_color (color_from_state (text_style, {GTK}.gtk_state_flag_active_enum))
+			set_focused_selection_color (color_from_state ({EV_STOCK_COLORS_IMP}.base_style, {GTK}.gtk_state_flag_selected_enum))
+			set_non_focused_selection_color (color_from_state ({EV_STOCK_COLORS_IMP}.base_style, {GTK}.gtk_state_flag_active_enum))
+			set_focused_selection_text_color (color_from_state ({EV_STOCK_COLORS_IMP}.text_style, {GTK}.gtk_state_flag_selected_enum))
+			set_non_focused_selection_text_color (color_from_state ({EV_STOCK_COLORS_IMP}.text_style, {GTK}.gtk_state_flag_active_enum))
 
 			Precursor {EV_CELL_IMP}
 
@@ -159,12 +159,6 @@ feature {EV_GRID_ITEM_I} -- Implementation
 				Result := l_imp
 			end
 		end
-
-	text_style: INTEGER = 1
-	base_style: INTEGER = 2
-	fg_style: INTEGER = 3
-	bg_style: INTEGER = 4;
-		-- Different coloring styles used in gtk.
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

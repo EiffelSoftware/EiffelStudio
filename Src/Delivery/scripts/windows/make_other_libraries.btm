@@ -6,14 +6,15 @@ cd unstable
 remtrace README.txt
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/unstable/README.txt README.txt
 
-md library
-cd library
+remtrace library
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/unstable/library library
 
-remtrace text
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/unstable/library/text text
-remtrace persistency
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/unstable/library/persistency persistency
-
+iff not defined NO_COMPILE then
+	remtrace SQLite3
+	cdd %1\unstable\library\persistency\database\sqlite3\Clib
+	all_makes
+	fullrf %1\unstable\library\persistency\database\sqlite3\Clib\make.log
+endiff
 
 remtrace Retrieve contrib libraries
 cdd %1
@@ -22,19 +23,8 @@ cd contrib
 
 remtrace README.txt
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/contrib/README.txt README.txt
-md library
-cd library
 
-remtrace math
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/contrib/library/math math
-remtrace testing
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/contrib/library/testing testing
-remtrace text
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/contrib/library/text text
+remtrace library
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/contrib/library library
 
-iff not defined NO_COMPILE then
-	remtrace SQLite3
-	cdd %1\unstable\library\persistency\database\sqlite3\Clib
-	all_makes
-	fullrf %1\unstable\library\persistency\database\sqlite3\Clib\make.log
-endiff
+

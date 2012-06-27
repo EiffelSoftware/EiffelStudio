@@ -8,13 +8,8 @@ cd unstable
 remtrace README.txt
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/unstable/README.txt README.txt
 
-md library
-cd library
-
-remtrace text
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/unstable/library/text text
-remtrace persistency
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/unstable/library/persistency persistency
+remtrace library
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/unstable/library library
 
 
 remtrace Retrieve contrib libraries
@@ -25,12 +20,5 @@ cd contrib
 remtrace README.txt
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/contrib/README.txt README.txt
 
-md library
-cd library
-
-remtrace math
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/contrib/library/math math
-remtrace testing
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/contrib/library/testing testing
-remtrace text
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/contrib/library/text text
+remtrace library
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/contrib/library library

@@ -1,0 +1,11 @@
+
+test_name	config-4kb-config-file
+test_description A valid config file that is exactly 4 KB long (4096 bytes long) causes a spurious VD00 error
+
+copy_bin 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error NONE VD20
+
+test_end

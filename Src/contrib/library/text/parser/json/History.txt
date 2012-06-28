@@ -1,0 +1,26 @@
+﻿History file for EJSON
+======================
+
+team: ""
+date: "2011-07-06"
+revision: "0.3.0"
+
+
++++++++++++++++++++++Important Changes since 0.2.0 version++++++++++++++++++++++++++++++++++++++++++++++
+
+*Updated skip_white_spaces, now check  %U and %T  codes
+
+*Undo changes to is_a_valid_number, because it's doesn't follow the
+JSON spec. Tests : fail13.json, fail29.json and fail30.json are valid
+with this implementation, so we go back to the previous
+implementation.
+
+*Added autotest test suite
+
+*Added getest based test program
+
+*Updated Eiffel configuration file, updated to the new clusters
+
+*Added converters and factory classes 
+
+*Added new top level directories; library, test, build and example

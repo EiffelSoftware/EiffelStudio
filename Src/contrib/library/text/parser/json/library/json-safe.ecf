@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="json" uuid="4E21C3BD-7951-4C6E-A673-431E762D7414" library_target="json">
+	<target name="json">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option trace="false" profile="false" debug="false" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard" namespace="EJSON.Library">
+			<assertions/>
+			<warning name="export_class_missing" enabled="false"/>
+			<warning name="old_verbatim_strings" enabled="false"/>
+			<warning name="syntax" enabled="false"/>
+			<warning name="vjrv" enabled="false"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="true"/>
+		<cluster name="json" location=".\" recursive="true">
+			<file_rule>
+				<exclude>^/gobo$</exclude>
+				<exclude>^/kernel$</exclude>
+				<exclude>^/extras$</exclude>
+			</file_rule>
+			<cluster name="kernel" location=".\kernel\" recursive="true"/>
+			<cluster name="extras" location=".\extras\" recursive="true"/>
+		</cluster>
+	</target>
+</system>

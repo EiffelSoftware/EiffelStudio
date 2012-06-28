@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Quick Start"
+
+	library: "Gobo Eiffel String Library"
+	copyright: "Copyright (c) 2004, Berend de Boer and others"
+	license: "MIT License"
+	date: "$Date: 2007-01-26 10:55:25 -0800 (Fri, 26 Jan 2007) $"
+	revision: "$Revision: 5877 $"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="string/formatter/quick_start">
+
+<chapterinfo>
+	<copyright>
+		<year>2004-2005</year>
+		<holder>Berend de Boer</holder>
+	</copyright>
+	<author>
+		<firstname>Berend</firstname><surname>de Boer</surname>
+	</author>
+	<email>berend@pobox.com</email>
+	<date>7 March 2005</date>
+</chapterinfo>
+
+<title>Quick Start</title>
+
+<para>
+Inheriting from <classname>ST_FORMATTING_ROUTINES</classname> adds the feature
+<featurename>format</featurename> to the current class. 
+<featurename>format</featurename> takes two arguments: a string containing 
+<link linkend="scientific_format">formatting specifications</link> and an array of 
+parameters. This array must be an array of references. For example 
+<classname>ARRAY</classname> [<classname>BOOLEAN</classname>] does
+not work with <ulink url="http://smarteiffel.loria.fr/">SmartEiffel</ulink>.
+Because <classname>BOOLEAN</classname> does not conform to <classname>ANY</classname> is SmartEiffel 2.1, we need to use 
+<classname>ARRAY</classname> [<classname>DS_CELL</classname> [<classname>BOOLEAN</classname>]]
+in that case.
+</para>
+
+<para>
+<featurename>format</featurename> returns a <classname>STRING</classname> where 
+all formatting specifications have been replaced by their corresponding 
+formatted parameters.
+</para>
+
+<para>
+<programlisting>
+class TEST
+
+inherit
+
+    ST_FORMATTING_ROUTINES
+
+create
+
+    make
+
+feature -- Initialization
+
+    make is
+        do
+            print (format ("$s $i", &lt;&lt;"hello", integer_cell (2)>>))
+        end
+
+end
+</programlisting>
+</para>
+
+</chapter>

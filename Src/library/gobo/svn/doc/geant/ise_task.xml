@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"ISE Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "MIT License"
+	date: "$Date: 2007-01-26 10:55:25 -0800 (Fri, 26 Jan 2007) $"
+	revision: "$Revision: 5877 $"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="ise_task">
+<chapterinfo>
+	<copyright>
+		<year>2002-2005</year>
+		<holder>Sven Ehrke</holder>
+	</copyright>
+	<author>
+		<firstname>Sven</firstname><surname>Ehrke</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>7 July 2005</date>
+</chapterinfo>
+
+	<title>ise</title>
+
+	<section id="ise_description">
+		<title>Description</title>
+		<para>
+			Invoke ISE's Eiffel Compiler.
+		</para>
+	</section>
+
+	<section id="ise_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>ace</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of ace file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>empty string</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>system</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>System</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>empty string</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>finalize</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>finalize</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>finish_freezing</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>finish_freezing</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>clean</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>clean</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>valid system name</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>empty string</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>exit_code_variable</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of variable holding the compiler process's return code after it's run
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Intgeger (usually 0 for OK, and any other number for not OK)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>`Void' (no variable is set if attribute is not specified)</para>
+				</listitem>
+			</varlistentry>
+
+		</variablelist>
+	</section>
+
+	<section id="ise_specification">
+		<title>RNG Specification</title>
+
+		<programlisting><![CDATA[
+  <define name="ise">
+    <element name="ise">
+      <ref name="dir_if_unless"/>
+      <choice>
+        <group>
+          <attribute name="system"/>
+          <optional>
+            <attribute name="ace"/>
+          </optional>
+          <optional>
+            <attribute name="finalize"/>
+          </optional>
+          <optional>
+            <attribute name="finish_freezing"/>
+          </optional>
+        </group>
+        <attribute name="clean"/>
+      </choice>
+    </element>
+  </define>
+]]>
+		</programlisting>
+	</section>
+
+	<section id="ise_examples">
+		<title>Examples</title>
+
+		<programlisting><![CDATA[
+  <ise ace="compile_ise.ace" system="${system}" finalize="true" finish_freezing="true"/>
+
+  <ise clean="${system}"/>
+]]>
+		</programlisting>
+	</section>
+
+</chapter>

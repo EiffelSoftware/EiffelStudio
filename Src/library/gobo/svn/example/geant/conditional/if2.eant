@@ -1,0 +1,14 @@
+<project name="if_demo2" default="list">
+
+	<target name="list_for_windows" if="$WINDIR">
+		<exec executable="dir"/>
+	</target>
+
+	<target name="list_for_unix" unless="$WINDIR">
+		<exec executable="ls -l"/>
+	</target>
+
+	<target name="list" depend="list_for_windows,list_for_unix">
+	</target>
+
+</project>

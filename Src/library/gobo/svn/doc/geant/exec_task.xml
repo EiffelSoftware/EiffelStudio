@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Exec Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "MIT License"
+	date: "$Date: 2008-02-10 09:08:16 -0800 (Sun, 10 Feb 2008) $"
+	revision: "$Revision: 6290 $"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="exec_task">
+<chapterinfo>
+	<copyright>
+		<year>2002-2005</year>
+		<holder>Sven Ehrke</holder>
+	</copyright>
+	<author>
+		<firstname>Sven</firstname><surname>Ehrke</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>7 July 2005</date>
+</chapterinfo>
+
+	<title>exec</title>
+
+	<section id="exec_description">
+		<title>Description</title>
+		<para>
+			Execute system command.
+		</para>
+	</section>
+
+	<section id="exec_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>executable</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Commandline to be executed</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid commandline</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>exit_code_variable</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of variable holding the process's return code after it's run
+						Note: This attribute can only be used when no fileset is used as nested argument
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Integer (usually 0 for OK, and any other number for not OK)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>`Void' (no variable is set if attribute is not specified)</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term>accept_errors</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Should executable return codes different from zero be accepted?
+						Note: Use this attribute only if a nested fileset is specified. Usage without one is still supported
+						but obsolete. Use attribute 'exit_code_variable' instead and set it to a dummy value if you are not
+						interested in the return code.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>true|false</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</section>
+
+	<section id="exec_specification">
+		<title>RNG Specification</title>
+
+		<programlisting><![CDATA[
+  <define name="exec">
+    <element name="exec">
+      <ref name="dir_if_unless"/>
+      <attribute name="executable"/>
+      <optional>
+        <attribute name="accept_errors">
+          <!-- runtime evaluation
+          <choice>
+            <value>true</value>
+            <value>false</value>
+          </choice>
+          -->
+        </attribute>
+      </optional>
+      <optional>
+        <ref name="fileset"/>
+      </optional>
+    </element>
+  </define>
+]]>
+		</programlisting>
+	</section>
+
+	<section id="exec_examples">
+		<title>Examples</title>
+
+		<programlisting><![CDATA[
+  <exec executable="compile system.ace"/>
+
+  <exec executable="ls -l"/>
+
+  <exec executable="dir"/>
+
+  <exec executable="copy ${fs.filename} ${fs.mapped_filename}" dir="${GOBO}/library/kernel">
+    <fileset dir="." include="@(*.ge)">
+      <map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e"/>
+    </fileset>
+  </exec>
+]]>
+		</programlisting>
+	</section>
+
+	<section id="exec_with_fileset">
+		<title>Using exec with a fileset</title>
+		<para>
+			It is possible to provide a nested <link linkend="fileset_element">fileset</link>
+			element. For each element the fileset contains the  commandline specified in
+			attribute <emphasis>commandline</emphasis> is executed and thus works like an iteration of loop
+			in a programming language. To use the current item of the iteration the this task provides the
+			built-in variables <emphasis>${fs.filename}</emphasis> and
+			<emphasis>${fs.mapped_filename}</emphasis>.
+		</para>
+		<programlisting><![CDATA[
+  <exec executable="copy ${fs.filename} ${fs.mapped_filename}" dir="${GOBO}/library/kernel">
+    <fileset dir="." include="@(*.ge)">
+      <map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e"/>
+    </fileset>
+  </exec>
+]]>
+		</programlisting>
+
+	<para>
+	Due to its general purpose 'exec', unlike  <link linkend="copy_task">copy</link>
+	cannot determine whether the sourcefile is newer than the target file.
+	If we want to behave 'exec' a bit more intelligent we have to prepare the input in advance.
+	The element  <link linkend="fileset_element">fileset</link> has an attribute <emphasis>force</emphasis>.
+	By default it is set to 'true' so that all selected files are included. The reason for this default value
+	that tasks like <link linkend="copy_task">copy</link> using a
+	<link linkend="fileset_element">fileset</link> usually provide their own <emphasis>force</emphasis>
+	attribute. (Note that it is necessary for some tasks, like <link linkend="copy_task">copy</link>
+	for example, to define their own <emphasis>force</emphasis> attribute since they usually append paths
+	to the filenames delivered by filesets. <link linkend="copy_task">copy</link> for example is doing this
+	with the attribute <emphasis>to_directory</emphasis>).
+	</para>
+
+	<para>
+		By setting <emphasis>force</emphasis> to <emphasis>false</emphasis> the fileset itself determines
+		whether files are 'out of date' or not. This means of course that the fileset must have the complete
+		paths to the files and not only parts of them. In the following example we use the path
+		<emphasis>${GOBO}/example/geant/tmp</emphasis> in the attribute <emphasis>to</emphasis>
+		of the <link linkend="fileset_element">fileset</link>'s <link linkend="fileset_element">map</link>
+		element so that the fileset itself can determine which files to include and which not.
+	</para>
+
+	<programlisting><![CDATA[
+  <exec executable="copy ${fs.filename} ${fs.mapped_filename}" dir="${GOBO}/library/kernel">
+	<fileset dir="." include="@(*.ge)" force="false">
+	  <map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e"/>
+	</fileset>
+  </exec>
+]]>
+	</programlisting>
+
+	<para>
+		Here is another example which uses SmartEiffel's 'short' command on a fileset.
+		The 'exec' command is executed for each entry in the fileset. By default only files which
+		are newer than their corresponding target files are included in the list.
+	</para>
+
+	<programlisting><![CDATA[
+  <exec executable="short -html2 se.ace ${fs.filename} &gt; ${fs.mapped_filename}">
+	<fileset
+	  dir="$GOBO/library/structure/set"
+	  include="@(**/*.e)"
+	  force="false"
+	>
+	  <map type="glob" from="*.e" to="${short_dir}/*.html">
+		<map type="flat"/>
+	  </map>
+	</fileset>
+  </exec>
+]]>
+	</programlisting>
+
+	</section>
+
+	<section id="exec_with_fileset">
+		<title>Using exec with return codes</title>
+		<para>
+			It is possible to catch the return code of a called process and continue
+			the build process. This way it is possible to check the value of the return code
+			and decide for each specific situation if the build process should be terminated or
+			not:
+		</para>
+		<programlisting><![CDATA[
+  <exec executable="..." exit_code_variable="return_code"/>
+  <echo message="return_code: ${return_code}"/>
+  <echo message="run OK" if="${return_code}=0"/>
+  <echo message="run not OK" unless="${return_code}=0"/>
+  <exit code="1" unless="${return_code}=0"/>
+
+]]>
+		</programlisting>
+
+	<para>
+	</para>
+
+	</section>
+
+</chapter>

@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+
+<project name="variables1" default="var">
+
+	<target name="var">
+		<description>set and query a variable</description>
+		<set name="who" value="world"/>
+		<echo message="Hello ${who}"/>
+	</target>
+
+</project>

@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Gepp Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "MIT License"
+	date: "$Date: 2007-01-26 10:55:25 -0800 (Fri, 26 Jan 2007) $"
+	revision: "$Revision: 5877 $"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation"  id="gepp_task">
+<chapterinfo>
+	<copyright>
+		<year>2002-2005</year>
+		<holder>Sven Ehrke</holder>
+	</copyright>
+	<author>
+		<firstname>Sven</firstname><surname>Ehrke</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>7 July 2005</date>
+</chapterinfo>
+
+	<title>gepp</title>
+
+	<section id="gepp_description">
+		<title>Description</title>
+		<para>
+			Execute gepp.
+		</para>
+	</section>
+
+	<section id="gepp_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>input</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>input</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>output</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>output</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>lines</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>lines</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>to_directory</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Path to directory into which output should be generated to</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+		</variablelist>
+	</section>
+
+	<section id="gepp_specification">
+		<title>RNG Specification</title>
+
+		<programlisting><![CDATA[
+  <define name="gepp">
+    <element name="gepp">
+      <ref name="dir_if_unless"/>
+      <interleave>
+        <choice>
+          <group>
+            <attribute name="input"/>
+            <attribute name="output"/>
+          </group>
+          <ref name="fileset"/>
+        </choice>
+        <zeroOrMore>
+          <element name="define">
+            <ref name="if_unless"/>
+            <attribute name="name"/>
+          </element>
+        </zeroOrMore>
+      </interleave>
+      <optional>
+        <attribute name="to_directory"/>
+      </optional>
+      <optional>
+        <attribute name="lines"/>
+      </optional>
+    </element>
+  </define>
+]]>
+	</programlisting>
+
+	</section>
+
+	<section id="gepp_examples">
+		<title>Examples</title>
+	<programlisting><![CDATA[
+  <gepp
+    input="${GOBO}/library/kernel/kl_array_routines.ge"
+	output="kl_array_routines.e"
+	to_directory="path/to/some/directory"
+  />
+    <define name="ISE" if="$ISE"/>
+  </gepp>
+
+]]>
+	</programlisting>
+	</section>
+
+</chapter>

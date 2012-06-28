@@ -26,6 +26,6 @@
 		<library name="gobo_pattern" location="$ISE_LIBRARY\library\gobo\gobo_pattern.ecf"/>
 		<library name="gobo_test" location="$ISE_LIBRARY\library\gobo\gobo_test.ecf"/>
 		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>
-		<cluster name="getest" location="$ISE_LIBRARY\library\gobo\svn\src\getest\"/>
+		<cluster name="getest" location="$ISE_LIBRARY\contrib\library\gobo\src\getest\"/>
 	</target>
 </system>

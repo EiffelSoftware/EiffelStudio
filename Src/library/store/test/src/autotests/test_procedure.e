@@ -89,7 +89,7 @@ feature {NONE} -- Test procedure
 			end
 
 			if is_odbc then
-				execute_query ({STRING_32} "insert into " + sql_table_name (table_name) + " (title, author, year, int_16, int_32, int_64, real_32_t, real_64_t, numeric_t) values ('面向对象软件构造', 'Bertrand Meyer', {d '1986-06-07'}, 9999, 999999, 9999999999999999, 888.888, 88888888.888888, 1.00)")
+				execute_query ({STRING_32} "insert into " + sql_table_name (table_name) + {STRING_32} " (title, author, year, int_16, int_32, int_64, real_32_t, real_64_t, numeric_t) values ('面向对象软件构造', 'Bertrand Meyer', {d '1986-06-07'}, 9999, 999999, 9999999999999999, 888.888, 88888888.888888, 1.00)")
 			end
 
 			if is_oracle then

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="json_gobo" uuid="437195AB-8B3C-4238-8998-A932A1423449" library_target="json_gobo">
+	<target name="json_gobo">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option trace="false" profile="false" debug="false" warning="true" full_class_checking="true" void_safety="none" syntax="standard" namespace="EJSON.Library">
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<library name="json" location="json.ecf" readonly="true"/>
+		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
+		<cluster name="json_gobo" location=".\gobo" recursive="true" />
+	</target>
+</system>

@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Unset Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "MIT License"
+	date: "$Date: 2007-01-26 10:55:25 -0800 (Fri, 26 Jan 2007) $"
+	revision: "$Revision: 5877 $"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="unset_task">
+<chapterinfo>
+	<copyright>
+		<year>2002-2005</year>
+		<holder>Sven Ehrke</holder>
+	</copyright>
+	<author>
+		<firstname>Sven</firstname><surname>Ehrke</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>7 July 2005</date>
+</chapterinfo>
+
+	<title>unset</title>
+
+	<section id="unset_description">
+		<title>Description</title>
+		<para>
+			Remove a variable from the current project.
+		</para>
+	</section>
+
+	<section id="unset_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>name</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of variable to be removed</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Identifier</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+		</variablelist>
+
+	</section>
+
+	<section id="unset_specification">
+		<title>RNG Specification</title>
+
+		<programlisting><![CDATA[
+  <define name="unset">
+    <element name="unset">
+      <ref name="dir_if_unless"/>
+      <attribute name="name"/>
+    </element>
+  </define>
+]]>
+		</programlisting>
+	</section>
+
+	<section id="unset_examples">
+		<title>Examples</title>
+
+		<programlisting><![CDATA[
+  <unset name="directory"/>
+]]>
+		</programlisting>
+	</section>
+
+</chapter>

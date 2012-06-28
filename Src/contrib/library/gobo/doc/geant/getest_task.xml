@@ -1,0 +1,244 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Getest Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002-2005, Sven Ehrke and others"
+	license: "MIT License"
+	date: "$Date: 2007-01-26 10:55:25 -0800 (Fri, 26 Jan 2007) $"
+	revision: "$Revision: 5877 $"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="getest_task">
+<chapterinfo>
+	<copyright>
+		<year>2002-2005</year>
+		<holder>Sven Ehrke</holder>
+	</copyright>
+	<author>
+		<firstname>Sven</firstname><surname>Ehrke</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>16 November 2005</date>
+</chapterinfo>
+
+	<title>getest</title>
+
+	<section id="getest_description">
+		<title>Description</title>
+		<para>
+			Execute getest.
+		</para>
+	</section>
+
+	<section id="getest_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>config</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of configuration file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename pointing to existing file</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>compile</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>compile</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Optional compilation command</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>class</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>
+						Regular expression to determine names
+						of classes wich will be included into test suite. Note that this overrides the
+						corresponding value in the configuration file.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid regular expression</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>feature</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>
+						Regular expression to determine names of features of classes preselected by
+						<emphasis>class</emphasis> to be tested. Note that this overrides the
+						corresponding value in the configuration file.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid regular expression</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>default_test</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>
+						Specify whether the feature <featurename>default_test</featurename>
+						should be included in the generated test cases.
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>generation</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>TBD</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>TBD</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>TBD</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>compilation</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>TBD</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>TBD</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>TBD</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>execution</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>TBD</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>TBD</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>TBD</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>abort</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>TBD</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>verbose</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>verbose</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+
+		</variablelist>
+	</section>
+
+	<section id="getest_specification">
+		<title>RNG Specification</title>
+
+		<programlisting><![CDATA[
+  <define name="getest">
+    <element name="getest">
+      <ref name="dir_if_unless"/>
+      <attribute name="config"/>
+      <optional>
+        <attribute name="compile"/>
+      </optional>
+      <optional>
+        <attribute name="class"/>
+      </optional>
+      <optional>
+        <attribute name="feature"/>
+      </optional>
+      <optional>
+        <attribute name="default_test"/>
+      </optional>
+      <optional>
+        <attribute name="generation"/>
+      </optional>
+      <optional>
+        <attribute name="compilation"/>
+      </optional>
+      <optional>
+        <attribute name="execution"/>
+      </optional>
+      <optional>
+        <attribute name="abort"/>
+      </optional>
+      <optional>
+        <attribute name="verbose"/>
+      </optional>
+      <zeroOrMore>
+        <ref name="define"/>
+      </zeroOrMore>
+    </element>
+  </define>
+]]>
+	</programlisting>
+
+	</section>
+
+	<section id="getest_examples">
+		<title>Examples</title>
+	<programlisting><![CDATA[
+  <getest
+    config="${system_dir}/getest.cfg"
+    compile="geant -b ${system_dir}/build.eant compile${debug_suffix}_${eiffel} &gt; compilation_log.txt 2&gt;&amp;1"
+  >
+    <define name="debug" value="true" if="${debug}"/>
+  </getest>
+
+]]>
+	</programlisting>
+	</section>
+
+</chapter>

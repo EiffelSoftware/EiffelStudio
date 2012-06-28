@@ -1,0 +1,731 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<!--
+	description:
+	
+		"Gobo Eiffel XSLT options"
+
+	library: "Gobo Eiffel XSLT"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date: 2008-07-05 08:48:59 -0700 (Sat, 05 Jul 2008) $"
+	revision: "$Revision: 6447 $"
+-->
+
+  <chapterinfo>
+    <copyright>
+      <year>2004</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>Sunday, September 5th, 2004</date>
+  </chapterinfo>
+  <title>&title;</title>
+  <section>
+    <title>How to invoke &program_name;</title>
+    <para>
+      &program_name_cased; is invoked from the command line. The general form is:
+    <itemizedlist>
+      <listitem><para>&program_name; --help</para></listitem>
+      <listitem><para>&program_name; --version</para></listitem>
+      <listitem><para>&program_name; [--file=|--uri=]stylesheet [--file=|--uri=]source-document (--options)* (string-parameter)*</para></listitem>
+      <listitem><para>&program_name; [--file=|--uri=]stylesheet --template=template-name (--options)* (string-parameter)*</para></listitem>
+      <listitem><para>&program_name; --use-pi [(--pi-options)*] [--file=|--uri=]source-document (--options)* (string-parameter)*</para></listitem>
+    </itemizedlist>
+    </para>
+  </section>
+  <section>
+    <title>Stylesheet and source documents</title>
+    <para>
+      The stylesheet and source documents can be written either as URIs or as names in the local file system.
+      &program_name_cased; will attempt to convert a local file name into a URI, if it detects such a name is not already a URI. 
+    </para>
+    <para>
+      If you want to use a file name that starts with --, or includes = as a character in the name, or might look 
+      to the system like a URI (e.g. if http://foo/bar is a valid file name on your system), then you can
+      force &program_name; to interpret it as a file name by writing it as --file=my/file.name.
+    </para>
+    <para>
+      If you want to ensure that &program_name; treats a name as a URI (necessary if it starts with -- or includes =), then you can write
+      it as --uri=my:strange=uri.
+    </para>
+    <section>
+      <title>Fragment identifiers</title>
+      <para>
+	If the URI for a source document includes a fragment identifier, then &program_name; will parse the document
+	as normal, but will attempt to set the initial context node to be that specified by the fragment (according to the
+	semantics for the particular media type). Note, that in this case, the initial context node will not necessarily match the pattern <xpath>/</xpath>,
+	so the initial template may vary according to the fragment identifier. Note also, that the document root and document element are exactly the same nodes
+	as they would be if no fragment identifier is supplied.
+      </para>
+      <para>
+	&program_name_cased; recognizes the following media types:
+	<itemizedlist>
+	  <listitem><para>application/xhtml+xml</para></listitem>
+	  <listitem><para>application/xslt+xml</para></listitem>
+	  <listitem><para>application/xml</para></listitem>
+	  <listitem><para>application/xml-external-parsed-entity</para></listitem>
+	  <listitem>
+	    <para>
+	      application/*+xml
+	      </para>
+	      <para>
+		This is treated according to the rules for application/xml, if no
+		more specific rule is present.
+	      </para>
+	  </listitem>
+	  <listitem><para>text/xml</para></listitem>
+	  <listitem><para>text/xml-external-parsed-entity</para></listitem>
+	</itemizedlist>
+      </para>
+      <para>
+	If the resolver is unable to supply the media type, then application/xml is assumed,
+	except for stylesheet modules, where application/xslt+xml is assumed (since the latter
+	is defined to have identical fragment identifier semantics to the former, there is
+	no significance to this difference).
+      </para>
+      <para>
+	Only shorthand pointers are supported for stylesheets. In this case, the shorthand pointer
+	must point to an ID attribute (and the DTD must be available), or an xml:id attribute, on
+	the xsl:transform or xsl:stylesheet element.
+      </para>
+    </section>
+  </section>
+  <section>
+    <title>Parameters</title>
+    <para>
+      To set a global parameter on a stylesheet (as defined by a top-level xsl:param declaration),
+      you may set it via an option. However, &program_name; provides a more convenient syntax for the most common usage pattern, 
+      string-valued parameters:
+      <itemizedlist>
+	<listitem><para>name=value</para></listitem>
+	<listitem><para>name='value with embedded blanks'</para></listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      Note that single quotes are only needed to avoid mis-interpretation by the command shell.
+    </para>
+    <para>
+      These string parameters may, in principle, appear anywhere within the command line,
+      although it is conventional to put them at the end.
+    </para>
+    <para>
+      If you wish to pass general XPath expressions to the stylesheet, you have to use the --xpath-param option.
+    </para>
+  </section>
+  <section>
+    <title>Options</title>
+    <para>The following is a list of the options that can be given on the command-line:</para>
+    <section>
+      <title>Stylesheet control</title>
+      <para>The following options control stylesheet execution:
+      <variablelist>
+	<varlistentry>
+	  <term>--use-pi</term>
+	  <listitem>
+	    <para>
+	      Interpret the first file or URI argument as a source document, rather than a stylesheet.
+	      Search for one or more xml-stylesheet processing instructions within that source document, and use them to find
+	      the stylesheet.
+	    </para>
+	    <para>
+	      &program_name_cased; has to parse the source document twice. Once to find the processing instruction, and again, 
+	      after the stylesheet has been compiled (as it may contain xsl:preserve-space or xsl:strip-space commands).
+	      Although the first parse is quick (as the processing instruction must occur in the prolog of the XML document), 
+	      this does mean that a stream that can only be read once may not be used with this option.
+	    </para>
+	    <para>
+	      There are additional options that further control the interpretation of the xml-stylesheet processing
+	      instructions:
+	      <variablelist>
+		<varlistentry>
+		  <term>--medium={medium-name}</term>
+		  <listitem>
+		    <para>
+		      The target medium. This must be a single word, consisting solely of the characters [a-z][A-z][0-9][-].
+		      Only processing instructions that contain this medium name (or the special name "all") within
+		      their media pseudo-attribute will be selected. The default is "screen", both for this parameter and the processing instruction
+		      media pseudo-attribute. Case is significant. The word "all" is not permitted.
+		    </para>
+		  </listitem>
+		</varlistentry>
+		<varlistentry>
+		  <term>--title={preference}</term>
+		  <listitem>
+		    <para>
+		      The preferred style. This may be any text string (leading and trailing double quotes will be removed, so you may
+		      include spaces).
+		      Only processing instructions that have this style name for
+		      their title pseudo-attribute will be selected, along with any persistent stylesheets (those that
+		      do not specify the title pseudo-attribute). If this parameter is omitted, then the first preferred
+		      stylesheet for the medium (that is, one that supplies the title pseudo-attribute and does not supply
+		      the alternate pseudo-attribute with a value of "yes") will also be selected. Case is significant.
+		    </para>
+		  </listitem>
+		</varlistentry>
+	      </variablelist>
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--output=&lt;local-file-name&gt;</term>
+	  <listitem>
+	    <para>
+	      Names the destination for the transformation results. If omitted, the results are written
+	      to the standard output stream.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--mode=[&lt;namespace-uri&gt;#]&lt;local-name&gt;</term>
+	  <listitem>
+	    <para>
+	      Specifies an initial mode. This is a QName. If the name is qualified by a prefix within the
+	      stylesheet, then prefix the local name with the namespace URI followed by #.
+	    </para>
+	    <para>
+	      If this parameter is omitted (the usual situation), then the default mode is used.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--template=[&lt;namespace-uri&gt;#]&lt;local-name&gt;</term>
+	  <listitem>
+	    <para>
+	      Specifies a named template to be invoked. This is a QName. If the name is qualified by a prefix within the
+	      stylesheet, then prefix the local name with the namespace URI followed by #.
+	    </para>
+	    <para>
+	      If this parameter is omitted (the usual situation), then the initial template is the one
+	      that matches the initial context node, normally the document node, of the source document. If this parameter is supplied,
+	      then the source document may be omitted.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--context=&lt;name&gt;=&lt;XPath expression&gt;</term>
+	  <listitem>
+	    <para>
+	      Specifies an XPath expression to be applied to the source document in order to determine the initial context node. This
+	      parameter must be omitted if a source document is not supplied. It is a non-recoverable error is the supplied expression
+	      does not select a single node.
+	    </para>
+	    <para>
+	      If this parameter is omitted (the usual situation), then the initial context node is the document node of the source document.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--param=&lt;name&gt;=&lt;string-value&gt;</term>
+	  <listitem>
+	    <para>
+	      Sets a string-valued global parameter on the stylesheet.
+	      Enclose the value in single quotes if it includes embedded blanks.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--xpath-param=&lt;name&gt;=&lt;XPath expression&gt;</term>
+	  <listitem>
+	    <para>
+	      Sets a global parameter on the stylesheet, passing an XPath expression
+	      as the value.
+	      Enclose the value in single quotes if it includes embedded blanks.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--default-template-warning</term>
+	  <listitem>
+	    <para>
+	      Issues a warning message when a built-in template is invoked.
+	    </para>
+	    <para>
+	      The default-template-warning and suppress-default-action options
+	      are mutually exclusive. If both are selected, one will be arbitrarily ignored.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--suppress-default-action</term>
+	  <listitem>
+	    <para>
+	      Suppresses all invocations of built-in templates.
+	      <warning>
+		Use of this option gives non-compliant behaviour.
+	      </warning>
+	    </para>
+	    <para>
+	      The default-template-warning and suppress-default-action options
+	      are mutually exclusive. If both are selected, one will be arbitrarily ignored.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+      </para>
+    </section>
+    <section>
+      <title>Tracing</title>
+      <para>The following options control stylesheet execution tracing:
+      <variablelist>
+	<varlistentry>
+	  <term>--trace[=&lt;trace-file&gt;]</term>
+	  <listitem>
+	    <para>
+	      Turn on stylesheet tracing.
+	    </para>
+	    <para>
+	      Set the destination for trace output to be "trace-file". If "trace-file"
+	      is omitted, then trace output is sent to the standard output stream.
+	    </para>
+	    <para>
+	      If neither this option nor the <featurename>timed-trace</featurename> 
+	      option is given, then no trace output is produced.
+	    </para>
+	  </listitem>
+	</varlistentry>      
+	<varlistentry>
+	  <term>--timed-trace[=&lt;trace-file&gt;]</term>
+	  <listitem>
+	    <para>
+	      Turn on stylesheet tracing with timings.
+	    </para>
+	    <para>
+	      Set the destination for trace output to be "trace-file". If "trace-file"
+	      is omitted, then trace output is sent to the standard output stream.
+	    </para>
+	  </listitem>
+	</varlistentry>      
+	<varlistentry>
+	  <term>--suppress-xpath-tracing</term>
+	  <listitem>
+	    <para>
+	      Suppress output from the XPath <xpath>fn:trace()</xpath> function.
+	    </para>
+	  </listitem>
+	</varlistentry>      
+      </variablelist>
+      </para>
+    </section>
+    <section>
+      <title>Errors and warnings</title>
+      <para>The following options control issuing of error and warning messages:
+      <variablelist>
+	<varlistentry>
+	  <term>--secure</term>
+	  <listitem>
+	    <para>
+	      Operate in secure mode. Any attempt by an xsl:document instruction
+	      to write to any destination other than the standard output stream
+	      or an in-memory string will result in a fatal error.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--warnings=[&lt;warning-file&gt;]</term>
+	  <listitem>
+	    <para>
+	      Set the destination for warnings to be "warning-file". If "warning-file"
+	      is omitted, then all warning messages are ignored.
+	    </para>
+	    <para>
+	      If this parameter is not given, then warnings are sent to the standard error
+	      stream.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--errors=[&lt;error-file&gt;]</term>
+	  <listitem>
+	    <para>
+	      Set the destination for error messages to be "error-file". If "error-file"
+	      is omitted, then all error messages are ignored.
+	    </para>
+	    <para>
+	      If this parameter is not given, then error messages are sent to the standard error
+	      stream.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--errors-and-warnings=[&lt;error-file&gt;]</term>
+	  <listitem>
+	    <para>
+	      Set the destination for both error and warning messages to be "error-file". If "error-file"
+	      is omitted, then all such messages are ignored.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--no-line-numbers</term>
+	  <listitem>
+	    <para>
+	      By default, diagnostics will include the line number where the
+	      error was detected. This option turns off this facility.
+	    </para>
+	    <para>
+	     The intention is to save memory when processing very large files.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--warning-threshold=&lt;number&gt;</term>
+	  <listitem>
+	    <para>
+	      Do not display any warning messages once more than &lt;number&gt;
+	      warnings have been displayed. The default value is 25.
+	    </para>
+	    <para>
+	      Setting this value to a negative number means that <emphasis>all</emphasis>
+	      warning messages will be displayed. Setting it to zero means that
+	      no warning messages will ever be displayed.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--treat-warnings-as-errors</term>
+	  <listitem>
+	    <para>
+	      Treat warnings as if they were recoverable errors.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--recover-silently</term>
+	  <listitem>
+	    <para>
+	      When a recoverable error occurs, take the appropriate recovery action,
+	      but do not issue any diagnostic message.
+	    </para>
+	    <para>
+	      The default is to take the appropriate recovery action and 
+	      issue a diagnostic message.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--do-not-recover</term>
+	  <listitem>
+	    <para>
+	      Treat all recoverable errors as fatal errors.
+	    </para>
+	    <para>
+	      The default is to take the appropriate recovery action and 
+	      issue a diagnostic message.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--error-threshold=&lt;number&gt;</term>
+	  <listitem>
+	    <para>
+	      Do not display any  messages for recoverable errors once more than &lt;number&gt;
+	      recoverable errors have been displayed. The default value is 25.
+	    </para>
+	    <para>
+	      Setting this value to a negative number means that <emphasis>all</emphasis>
+	      recoverable error messages will be displayed.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+      </para>
+    </section>
+    <section>
+      <title>OASIS Entity Resolution Technical Committee XML catalogs</title>
+      <para>The following options control the use of OASIS ETRC XML catalogs
+      <variablelist>
+	<varlistentry>
+	  <term>--no-catalogs</term>
+	  <listitem>
+	    <para>
+	      Do not use OASIS ERTC XML catalogs for entity resolution or
+	      URI reference resolution.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--no-default-catalog</term>
+	  <listitem>
+	    <para>
+	      Do not use the system default catalog.
+	    </para>
+	    <para>
+	      In this case, only catalogs specified by the environment variable <envar>XM_CATALOG_FILES</envar>,
+	      plus any per-document-catalogs named in <exmlsyntax>oasis-xml-catalog</exmlsyntax>
+	      processing instructions, are searched.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--prefer-system</term>
+	  <listitem>
+	    <para>
+	      Prefer <exmlsyntax>SYSTEM</exmlsyntax> ids to <exmlsyntax>PUBLIC</exmlsyntax> ids when both are given.
+	      The catalog resolver only attempts to match on <exmlsyntax>PUBLIC</exmlsyntax> ids
+	      when there is either no <exmlsyntax>SYSTEM</exmlsyntax> id given, or else the catalog resolver
+	      fails to find a match for the <exmlsyntax>SYSTEM</exmlsyntax> id.
+	    </para>
+	    <para>
+	      In the latter case, when this option is given,
+	      <exmlsyntax>PUBLIC</exmlsyntax> entries are only considered for a match if
+	      they were defined when <exmlsyntax>prefer="system"</exmlsyntax> was in effect.
+	    </para>
+	    <para>
+	      The default is to always consider <exmlsyntax>PUBLIC</exmlsyntax> ids, when no
+	      match is found for the <exmlsyntax>SYSTEM</exmlsyntax> id.
+	    </para>
+	    <para>
+	      If no <exmlsyntax>SYSTEM</exmlsyntax> id is given, then this option has no effect.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--no-catalog-pi</term>
+	  <listitem>
+	    <para>
+	      Ignore any <exmlsyntax>oasis-xml-catalog</exmlsyntax> processing instructions in source
+	      documents and stylesheets.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--catalog-debug-level=&lt;0-10&gt;</term>
+	  <listitem>
+	    <para>
+	      Set the level of debugging messages produced by the catalog resolver.
+	      0 means no messages. 10 Means maximum verbosity.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+      </para>
+    </section>
+    <section>
+      <title>Performance</title>
+      <para>The following options are available for performance tuning:
+      <variablelist>
+	<varlistentry>
+	  <term>--no-gc</term>
+	  <listitem>
+	    <para>
+	      Disables garbage collection. This might improve performance under some circumstances.
+	      Or it might make it worse.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--tiny-tree</term>
+	  <listitem>
+	    <para>
+	      The source document is built using the tiny-tree model, rather than
+	      the standard tree model. This saves on memory, but will often result
+	      in slower execution. But with some tranformations, such as the 
+	      identity transform, it may actually improve execution speed.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--report-document-statistics</term>
+	  <listitem>
+	    <para>
+	      Report statistics about the source document (and for each document read by the <xpath>doc()</xpath> 
+	      and <xslt>document()</xslt> functions). This only applies when the tiny-tree option is selected.
+	    </para>
+	    <para>
+	      This option is useful for choosing values for the nodes, attributes, namespaces and characters options.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--nodes=[estimated-node-count]</term>
+	  <listitem>
+	    <para>
+	      The estimated number of nodes (excluding attributes and namespaces) in the source document (and for each document read by the <xpath>doc()</xpath>  
+	      and <xslt>document()</xslt> functions). This only applies when the tiny-tree option is selected.
+	    </para>
+	    <para>
+	      If omitted, this defaults to 4000.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--attributes=[estimated-attribute-count]</term>
+	  <listitem>
+	    <para>
+	      The estimated number of attributes in the source document (and for each document read by the <xpath>doc()</xpath> 
+	      and <xslt>document()</xslt> functions). This only applies when the tiny-tree option is selected.
+	    </para>
+	    <para>
+	      If omitted, this defaults to 100.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--namespaces=[estimated-namespace-count]</term>
+	  <listitem>
+	    <para>
+	      The estimated number of namespaces in the source document (and for each document read by the <xpath>doc()</xpath> 
+	      and <xslt>document()</xslt> functions). This only applies when the tiny-tree option is selected.
+	    </para>
+	    <para>
+	      If omitted, this defaults to 20.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--characters=[estimated-character-count]</term>
+	  <listitem>
+	    <para>
+	      The estimated number of content characters in the source document (and for each document read by the <xpath>doc()</xpath> 
+	      and <xslt>document()</xslt> functions). This only applies when the tiny-tree option is selected.
+	    </para>
+	    <para>
+	      If omitted, this defaults to 4000.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+      </para>
+    </section>
+    <section>
+      <title>Media types and URI fragment identifiers</title>
+      <para>The following options affect the mapping of URIs onto media-types, for interpretation of fragment identifies:
+      <variablelist>
+	<varlistentry>
+	  <term>--html-text-ok</term>
+	  <listitem>
+	    <para>
+	      By default, &program_name; assumes that a web server is serving up XHTML
+	      documents as media type text/html (to get round the fact that MSIE does not recognize 
+	      application/xhtml+xml). So if it sees a media type of text/html, it pretends that it is actually
+	      application/xhtml+xml. Using this option means it respects the media type as text/html.
+	      The result is that this is a media type that the program chooses not to recognize, so you will
+	      get recoverable error XTRE1160.
+	    </para>
+	    <para>
+	      Without this option, it might be argued that &program_name; is non-compliant. Apart from that, 
+	      it doesn't serve any useful purpose.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+      </para>
+    </section>
+  </section>
+  <section>
+    <title>Extensions</title>
+    <para>The following options control the availability of extensions:
+    <variablelist>
+      <varlistentry>
+	<term>--no-output-extensions</term>
+	<listitem>
+	  <para>
+	    Disables use of <exmlsyntax>QName</exmlsyntax>s for the
+	    value of the <xslt>xsl:output</xslt> <xslt>method</xslt> attribute.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--no-extension-functions</term>
+	<listitem>
+	  <para>
+	    Disables use of extension functions.
+	  </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+    </para>
+  </section>
+  <section>
+    <title>Miscellaneous</title>
+    <variablelist>
+      <varlistentry>
+	<term>--time</term>
+	<listitem>
+	  <para>
+	   Print timing information for each phase on standard error stream.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--suppress-dtd</term>
+	<listitem>
+	  <para>
+	   Prevent the XML parser from reading external DTDs. This applies to the fn:document(), fn:doc() and fn:collection()
+	   functions, as well to the principal source document and all transformation modules.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--force-explaining</term>
+	<listitem>
+	  <para>
+	   Act as if the principal stylesheet module had a gexslt:explain="all" attribute coded.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--digits=[maximum_decimal_digits]</term>
+	<listitem>
+	  <para>
+	   Maximum number of digits permitted in xs:decimal and xs:integer values. Default (and minimum) is 18.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--user</term>
+	<listitem>
+	  <para>
+	   User name for HTTP basic authentication.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--password</term>
+	<listitem>
+	  <para>
+	   Password for HTTP basic authentication.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--no-network-protocols</term>
+	<listitem>
+	  <para>
+	    Disables use of any URI schemes that imply access
+	    to the outside world (e.g. <uri>http</uri>, <uri>ftp</uri>
+	    and <uri>telnet</uri>) that might otherwise be registered.
+	  </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+  <section>
+    <title>Execution phases</title>
+    <variablelist>
+      <varlistentry>
+	<term>--stop-after-compilation</term>
+	<listitem>
+	  <para>
+	    Compile the stylesheet, but do not parse the principal
+	    source document, and do not execute the transformation.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--stop-after-source-document</term>
+	<listitem>
+	  <para>
+	    Compile the stylesheet, and parse the principal
+	    source document, but do not execute the transformation.
+	  </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+&additional_options;

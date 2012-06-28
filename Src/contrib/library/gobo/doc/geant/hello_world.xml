@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Hello World Example"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "MIT License"
+	date: "$Date: 2007-01-26 10:55:25 -0800 (Fri, 26 Jan 2007) $"
+	revision: "$Revision: 5877 $"
+-->
+
+<chapter id="hello_world">
+<chapterinfo>
+	<copyright>
+		<year>2002-2005</year>
+		<holder>Sven Ehrke</holder>
+	</copyright>
+	<author>
+		<firstname>Sven</firstname><surname>Ehrke</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>7 July 2005</date>
+</chapterinfo>
+
+	<title>Hello World</title>
+
+	<para>
+		To find out whether a tool or library is appropriate for my needs
+		I always found it useful to have an easy start which does
+		save my time and thus makes my decision easier. This is why I start
+		with the ubiqituous 'Hello world'. Here is our 'hello_world' build script:
+	</para>
+
+	<programlisting><![CDATA[
+  <?xml version="1.0" ?>
+  <project name="hello" default="hello">
+    <target name="hello">
+      <echo message="Hello world"/>
+    </target>
+  </project>
+]]>
+	</programlisting>
+
+	<para>
+		On the first line you can find the usual XML declaration. The second line
+		contains the <featurename>project</featurename> element which is the root element
+		of an eant XML document. Then there is a <featurename>target</featurename> element
+		containing one <featurename>task</featurename> element, <featurename>echo</featurename>
+		in this case. Save the above code in a file called <emphasis>build.eant</emphasis>
+		and invoke in that directory the command <emphasis>geant</emphasis>.
+		The message <emphasis>Hello world</emphasis> will be output.
+	</para>
+
+
+</chapter>

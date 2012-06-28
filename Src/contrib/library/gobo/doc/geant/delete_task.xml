@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Delete Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "MIT License"
+	date: "$Date: 2008-02-10 09:08:16 -0800 (Sun, 10 Feb 2008) $"
+	revision: "$Revision: 6290 $"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="delete_task">
+<chapterinfo>
+	<copyright>
+		<year>2002-2005</year>
+		<holder>Sven Ehrke</holder>
+	</copyright>
+	<author>
+		<firstname>Sven</firstname><surname>Ehrke</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>7 July 2005</date>
+</chapterinfo>
+
+	<title>delete</title>
+
+	<section id="delete_description">
+		<title>Description</title>
+		<para>
+			Delete either a single file, all files in a specified directory and its sub-directories, or
+			a set of files specified by one or more nested <link linkend="fileset_element">fileset</link>
+			elements.
+		</para>
+	</section>
+
+	<section id="delete_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>file</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>File to be deleted</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid filename</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>directory</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Directory to be deleted</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid directoryname</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</section>
+
+	<section id="delete_specification">
+		<title>RNG Specification</title>
+
+		<programlisting><![CDATA[
+  <define name="delete">
+    <element name="delete">
+      <ref name="dir_if_unless"/>
+      <choice>
+        <attribute name="file"/>
+        <attribute name="directory"/>
+        <ref name="fileset"/>
+      </choice>
+    </element>
+  </define>
+]]>
+		</programlisting>
+	</section>
+
+	<section id="copy_examples">
+		<title>Examples</title>
+
+		<programlisting><![CDATA[
+  <delete file="readme.txt"/>
+
+  <delete directory="tmp"/>
+
+  <delete>
+    <fileset dir="tmp" include="@(**/*.ge)"/>
+  </delete>
+]]>
+		</programlisting>
+
+	</section>
+
+</chapter>

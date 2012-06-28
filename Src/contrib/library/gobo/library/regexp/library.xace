@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<library name="regexp" prefix="rx_">
+	<description>
+		description: "Xace file for the Gobo Eiffel Regexp Library"
+		library: "Gobo Eiffel Regexp Library"
+		copyright: "Copyright (c) 2002, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<cluster name="regexp" location="${GOBO}/library/regexp">
+		<option name="abstract" value="true"/>
+		<cluster name="interface"/>
+		<cluster name="pcre"/>
+		<cluster name="support"/>
+	</cluster>
+</library>

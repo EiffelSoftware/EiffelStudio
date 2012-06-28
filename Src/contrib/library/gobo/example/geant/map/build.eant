@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+
+<project name="map" default="cp">
+
+	<target name="cp">
+		<copy file="build.eant" to_directory="out"/>
+		<copy file="in/ttt/ttt.xml" to_directory="out"/>
+	</target>
+
+	<target name="cp1">
+		<copy file="in/ttt/ttt.xml" to_directory="out/out"/>
+	</target>
+
+	<target name="cp2">
+		<copy to_directory="out">
+			<fileset include="@(in/*.xml)"/>
+		</copy>
+	</target>
+
+	<target name="cp3">
+		<copy to_directory="out">
+			<fileset include="@(in/**/*.xml)"/>
+		</copy>
+	</target>
+
+	<target name="cpm1">
+		<copy to_directory="out">
+			<fileset include="@(in/**/*.xml)">
+				<map/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="cpm2">
+		<copy to_directory="out">
+			<fileset include="@(in/**/*.xml)">
+				<map type="flat"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="cpm3">
+		<copy to_directory="out">
+			<fileset dir="in" include="@(**/*.xml)" filename_directory="in">
+				<map type="glob" from="*.xml" to="*.xml2"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="clean">
+		<delete directory="out"/>
+	</target>
+</project>

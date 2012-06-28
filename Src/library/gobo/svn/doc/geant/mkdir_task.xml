@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Mkdir Tasks"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	license: "MIT License"
+	date: "$Date: 2007-01-26 10:55:25 -0800 (Fri, 26 Jan 2007) $"
+	revision: "$Revision: 5877 $"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="mkdir_task">
+<chapterinfo>
+	<copyright>
+		<year>2002-2005</year>
+		<holder>Sven Ehrke</holder>
+	</copyright>
+	<author>
+		<firstname>Sven</firstname><surname>Ehrke</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>7 July 2005</date>
+</chapterinfo>
+
+	<title>mkdir</title>
+
+	<section id="mkdir_description">
+		<title>Description</title>
+		<para>
+			Create a directory.
+		</para>
+	</section>
+
+	<section id="mkdir_parameters">
+		<title>Parameters</title>
+
+		<variablelist>
+			<varlistentry>
+				<term>directory</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Directory to be created</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Valid directoryname or path</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+	</section>
+
+	<section id="mkdir_specification">
+		<title>RNG Specification</title>
+
+		<programlisting><![CDATA[
+  <define name="mkdir">
+    <element name="mkdir">
+      <ref name="dir_if_unless"/>
+      <attribute name="directory"/>
+    </element>
+  </define>
+]]>
+	</programlisting>
+	</section>
+
+	<section id="mkdir_examples">
+		<title>Examples</title>
+	<programlisting><![CDATA[
+  <mkdir directory="out"/>
+
+  <mkdir directory="some/new/directory"/>
+]]>
+	</programlisting>
+	</section>
+
+</chapter>

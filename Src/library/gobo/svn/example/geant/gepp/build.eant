@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+
+<project name="gepp" default="gepp1">
+
+	<target name="prepare">
+		<set name="gendir_deep" value="spec_deep"/>
+		<set name="gendir_flat" value="spec_flat"/>
+	</target>
+
+	<target name="init" depend="prepare">
+	</target>
+
+	<target name="gepp1" depend="init">
+		<gepp input="${GOBO}/library/kernel/basic/kl_array_routines.ge" output="${gendir_flat}/kl_array_routines.e" lines="false">
+			<define name="ISE" if="$ISE"/>
+		</gepp>
+	</target>
+
+	<target name="gepp1a" depend="init">
+		<gepp
+			input="${GOBO}/library/kernel/basic/kl_array_routines.ge"
+			output="${gendir_flat}/kl_array_routines.e"
+			lines="false"
+			to_directory="ttt"
+		>
+			<define name="ISE" if="$ISE"/>
+		</gepp>
+	</target>
+
+	<target name="gepp2" depend="init">
+		<gepp input="${GOBO}/library/kernel/basic/kl_array_routines.ge" output="${gendir_flat}/ttt/kl_array_routines.e" lines="false">
+			<define name="ISE" if="$ISE"/>
+		</gepp>
+	</target>
+
+	<target name="gepp3" depend="init">
+		<set name="eiffelcomp" value="ise"/>
+		<set name="gendir" value="${gendir_deep}"/>
+		<geant target="gepp_deep"/>
+
+		<set name="gendir" value="${gendir_flat}"/>
+		<geant target="gepp_flat"/>
+	</target>
+
+	<target name="gepp4" depend="init">
+		<set name="gendir" value="${gendir_deep}"/>
+		<set name="eiffelcomp" value="ise"/>
+		<geant target="gepp_deep"/>
+		<set name="eiffelcomp" value="ge"/>
+		<geant target="gepp_deep"/>
+	</target>
+
+	<target name="clean" depend="prepare">
+		<delete directory="${gendir_deep}"/>
+		<delete directory="${gendir_flat}"/>
+		<delete directory="ttt"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="gepp_deep" depend="init">
+		<exit code="1" unless="${gendir}"/>
+		<exit code="1" unless="${eiffelcomp}"/>
+
+		<gepp lines="true" to_directory="${gendir}/${eiffelcomp}">
+			<define name="$ISE" if="$ISE"/>
+			<fileset include="@(**/*.ge)" filename_directory="${GOBO}" dir="${GOBO}">
+				<map type="glob" from="*.ge" to="*.e"/>
+			</fileset>
+		</gepp>
+	</target>
+
+	<target name="gepp_flat" depend="init">
+		<exit code="1" unless="${gendir}"/>
+		<exit code="1" unless="${eiffelcomp}"/>
+
+		<gepp lines="true" to_directory="${gendir}/${eiffelcomp}">
+			<define name="$ISE" if="$ISE"/>
+			<fileset include="@(**/*.ge)" filename_directory="${GOBO}" dir="${GOBO}">
+				<map type="glob" from="*.ge" to="*.e">
+					<map type="flat"/>
+				</map>
+			</fileset>
+		</gepp>
+	</target>
+
+</project>

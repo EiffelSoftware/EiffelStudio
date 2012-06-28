@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+
+<project name="gobo" default="help">
+
+	<description>
+		description: "Eiffel Ant file for Gobo Eiffel"
+		copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant develop"/>
+		<echo message="   geant delivery"/>
+		<echo message="   geant bootstrap1"/>
+		<echo message="   geant bootstrap2"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install" depend="init">
+		<description>
+			Install the Gobo Eiffel package.
+		</description>
+
+		<geant file="build.eant" target="install" dir="library"/>
+		<geant file="build.eant" target="install" dir="src"/>
+		<geant file="build.eant" target="install" dir="example"/>
+		<geant file="build.eant" target="install" dir="test"/>
+		<geant file="build.eant" target="install" dir="doc"/>
+	</target>
+
+	<target name="clean" depend="init">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<geant file="build.eant" target="clean" dir="library"/>
+		<geant file="build.eant" target="clean" dir="src"/>
+		<geant file="build.eant" target="clean" dir="example"/>
+		<geant file="build.eant" target="clean" dir="test"/>
+		<geant file="build.eant" target="clean" dir="doc"/>
+	</target>
+
+	<target name="clobber" depend="init">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<geant file="build.eant" target="clobber" dir="library"/>
+		<geant file="build.eant" target="clobber" dir="src"/>
+		<geant file="build.eant" target="clobber" dir="example"/>
+		<geant file="build.eant" target="clobber" dir="test"/>
+		<geant file="build.eant" target="clobber" dir="doc"/>
+	</target>
+
+	<target name="develop" depend="init">
+		<description>
+			Install developer package.
+			The bootstrap should be run first.
+		</description>
+
+		<geant target="clobber"/>
+		<geant target="install"/>
+		<geant target="clean"/>
+	</target>
+
+	<target name="bootstrap1" depend="init">
+		<description>
+			Bootstrap the Gobo Eiffel package (first pass).
+		</description>
+
+		<geant file="build.eant" target="clobber" dir="library"/>
+		<geant file="build.eant" target="install" dir="library"/>
+		<geant file="build.eant" target="clobber" dir="src/gec"/>
+		<geant file="build.eant" target="install" dir="src/gec"/>
+			<!-- Compile gec twice to get a bootstrap effect -->
+		<geant file="build.eant" target="compile" dir="src/gec" if="${GOBO_EIFFEL}=ge"/>
+		<move file="src/gec/gec${exe}" to_directory="bin" if="${GOBO_EIFFEL}=ge"/>
+		<geant file="build.eant" target="clean" dir="src/gec" if="${GOBO_EIFFEL}=ge"/>
+		<geant file="build.eant" target="compile" dir="src/gec" if="${GOBO_EIFFEL}=ge"/>
+		<move file="src/gec/gec${exe}" to_directory="bin" if="${GOBO_EIFFEL}=ge"/>
+		<geant file="build.eant" target="clean" dir="src/gec" if="${GOBO_EIFFEL}=ge"/>
+			<!-- Compile gec only once with other Eiffel compilers -->
+		<geant file="../src/gec/build.eant" target="compile" dir="bin" unless="${GOBO_EIFFEL}=ge"/>
+		<geant file="../src/gec/build.eant" target="clean" dir="bin" unless="${GOBO_EIFFEL}=ge"/>
+			<!-- Compile geant -->
+		<geant file="build.eant" target="clobber" dir="src/geant"/>
+		<geant file="build.eant" target="install" dir="src/geant"/>
+		<geant file="../src/geant/build.eant" target="compile" fork="false" dir="bin"/>
+		<geant file="../src/geant/build.eant" target="clean" dir="bin"/>
+	</target>
+
+	<target name="bootstrap2" depend="init">
+		<description>
+			Bootstrap the Gobo Eiffel package (second pass).
+		</description>
+
+		<geant file="build.eant" target="clobber" dir="src"/>
+		<geant file="build.eant" target="install" dir="src"/>
+		<geant file="../src/gexace/build.eant" target="compile" dir="bin"/>
+		<geant file="../src/gexace/build.eant" target="clean" dir="bin"/>
+		<geant file="../src/gelex/build.eant" target="compile" dir="bin"/>
+		<geant file="../src/gelex/build.eant" target="clean" dir="bin"/>
+		<geant file="../src/gepp/build.eant" target="compile" dir="bin"/>
+		<geant file="../src/gepp/build.eant" target="clean" dir="bin"/>
+		<geant file="../src/geyacc/build.eant" target="compile" dir="bin"/>
+		<geant file="../src/geyacc/build.eant" target="clean" dir="bin"/>
+		<geant target="clobber"/>
+		<geant file="build.eant" target="install" dir="library"/>
+		<geant file="build.eant" target="install" dir="src"/>
+		<geant file="../src/getest/build.eant" target="compile" dir="bin"/>
+		<geant file="../src/getest/build.eant" target="clean" dir="bin"/>
+		<geant file="../src/gelint/build.eant" target="compile" dir="bin"/>
+		<geant file="../src/gelint/build.eant" target="clean" dir="bin"/>
+		<geant file="../src/gexslt/build.eant" target="compile" dir="bin"/>
+		<geant file="../src/gexslt/build.eant" target="clean" dir="bin"/>
+		<geant file="build.eant" target="install" dir="example"/>
+		<geant file="build.eant" target="install" dir="test"/>
+		<geant file="build.eant" target="install" dir="doc"/>
+		<geant target="clean"/>
+	</target>
+
+	<target name="delivery" depend="init">
+		<description>
+			Build delivery package (third pass of bootstrap).
+		</description>
+
+		<geant file="../src/gec/build.eant" target="clobber" dir="bin"/>
+		<geant file="../src/gexace/build.eant" target="clobber" dir="bin"/>
+		<geant file="../src/gelex/build.eant" target="clobber" dir="bin"/>
+		<geant file="../src/geyacc/build.eant" target="clobber" dir="bin"/>
+		<geant file="../src/gepp/build.eant" target="clobber" dir="bin"/>
+		<geant file="../src/getest/build.eant" target="clobber" dir="bin"/>
+		<geant file="../src/gelint/build.eant" target="clobber" dir="bin"/>
+		<geant file="../src/gexslt/build.eant" target="clobber" dir="bin"/>
+		<copy file="work/bootstrap/gec.h" to_directory="bin"/>
+		<copy to_directory="bin">
+			<fileset include="work/bootstrap/gec*.c">
+				<map type="flat"/>
+			</fileset>
+		</copy>
+		<delete>
+			<directoryset directory="." include="@(**/.svn)"/>
+		</delete>
+		<delete directory="work"/>
+		<delete directory="doc/structure/visio"/>
+		<delete directory="doc/time/visio"/>
+	</target>
+
+<!-- Implementation -->
+
+	<target name="init">
+		<geant target="init_os"/>
+	</target>
+
+	<target name="init_os">
+		<geant target="init_windows"/>
+		<geant target="init_unix"/>
+	</target>
+
+	<target name="init_windows" if="${GOBO_OS}=windows">
+		<!-- No special windows tasks needed for now but target is kept for possible future instructions -->
+	</target>
+
+	<target name="init_unix" unless="${GOBO_OS}=windows">
+		<!-- No special unix tasks needed for now but target is kept for possible future instructions -->
+	</target>
+
+</project>

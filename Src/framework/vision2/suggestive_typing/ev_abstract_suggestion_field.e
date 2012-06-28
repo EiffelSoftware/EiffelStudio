@@ -1,5 +1,17 @@
 note
-	description: "Abstraction for any UI that wants to support some suggestion facility."
+	description: "[
+		Abstraction for any UI that wants to support some suggestion facility.
+		
+		In addition to deferred routines that are required to be implemented, it
+		is recommended to properly hookup `new_default_key_processing_handler' to
+		the vision2 `default_key_processing_handler' by redefining
+		`set_default_key_processing_handler' and `remove_default_key_processing_handler'.
+		This enables a nicer integration to the underlying text field to ignore or handle
+		certain keystroke (e.g. Ctrl+Space for example) without trying to loose the 
+		original behavior of the `default_key_processing_handler' specified in the 
+		underlying text field.
+		An example of such redefinition can be found in EV_SUGGESTION_TEXT_FIELD.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -31,6 +43,12 @@ feature {NONE} -- Initialization
 			-- Creation of attached attributes of Current.
 		do
 			create suggestion_timeout.make_with_interval (0)
+
+				-- Because we are having our own handler and we still want
+				-- to let users provide their own customization, so we define
+				-- variables holding the user provided customization and ours.
+			old_default_key_processing_handler := Void
+			new_default_key_processing_handler := agent is_default_key_processing_enabled
 		end
 
 	initialize_suggestion_field
@@ -39,9 +57,13 @@ feature {NONE} -- Initialization
 				-- Create the window used to show the list of choices.
 			create choices.make (Current)
 
+				-- Hook up the action monitoring the field.
 			key_press_string_actions.extend (agent on_key_string_pressed)
 			key_press_actions.extend (agent on_key_down)
-			set_default_key_processing_handler (agent is_key_handled)
+			focus_out_actions.extend (agent on_lose_focus)
+			mouse_wheel_actions.extend (agent on_mouse_wheel)
+			set_default_key_processing_handler (new_default_key_processing_handler)
+
 				-- Timeout action is connected but created with a timeout of 0 which means it is not activated.
 			suggestion_timeout.actions.extend (agent provide_suggestion)
 		end
@@ -83,6 +105,16 @@ feature -- Configuration
 		deferred
 		end
 
+	focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions to be performed when a focus is lost.
+		deferred
+		end
+
+	mouse_wheel_actions: EV_INTEGER_ACTION_SEQUENCE
+			-- Actions to be performed when mouse wheel is rotated.
+		deferred
+		end
+
 	default_key_processing_handler: detachable PREDICATE [ANY, TUPLE [EV_KEY]] assign set_default_key_processing_handler
 			-- Agent used to determine whether the default key processing should occur for Current.
 			-- If agent returns True then default key processing continues as normal, False prevents
@@ -96,12 +128,6 @@ feature -- Status report
 
 	is_suggesting: BOOLEAN
 			-- Is suggestion currently being processed?
-
-	is_focus_back_needed: BOOLEAN
-			-- Should focus be set back after suggestion is terminated?
-		do
-			Result := not is_destroyed
-		end
 
 	is_destroyed: BOOLEAN
 			-- Is `Current' no longer usable?
@@ -167,20 +193,6 @@ feature -- Element change
 
 feature -- Text operation
 
-	delete_character_before
-			-- Delete one character before the `caret_position'.
-		require
-			not_destroyed: not is_destroyed
-		deferred
-		end
-
-	delete_character_after
-			-- Delete one character after the `caret_position'.
-		require
-			not_destroyed: not is_destroyed
-		deferred
-		end
-
 	delete_word_before
 			-- Delete one word before the `caret_position'.
 		require
@@ -195,43 +207,12 @@ feature -- Text operation
 		deferred
 		end
 
-	remove_text
-			-- Removed `text' from current.
-		require
-			not_destroyed: not is_destroyed
-		deferred
-		end
-
-	set_text (a_text: READABLE_STRING_GENERAL)
-			-- Set `a_text' to `text'.
+	set_displayed_text (a_text: READABLE_STRING_GENERAL)
+			-- Set `a_text' to `displayed_text'.
 		require
 			not_destroyed: not is_destroyed
 			no_carriage_returns: not a_text.has_code (('%R').natural_32_code)
 		deferred
-		end
-
-	insert_character (a_char: CHARACTER_32)
-			-- Insert `a_char' after `caret_position'.
-		require
-			not_destroyed: not is_destroyed
-			no_carriage_returns: a_char /= '%R'
-		deferred
-		end
-
-	move_caret_to (a_pos: INTEGER)
-			-- Move caret at `a_pos'. If `a_pos' is negative, caret remains at the beginning. If `a_pos' is
-			-- greater than the maximum possible caret position, it stays at the end.
-		require
-			not_destroyed: not is_destroyed
-		deferred
-		end
-
-	move_caret_to_start
-			-- Move caret at the beginning.
-		require
-			not_destroyed: not is_destroyed
-		do
-			move_caret_to (0)
 		end
 
 	move_caret_to_end
@@ -241,8 +222,22 @@ feature -- Text operation
 		deferred
 		end
 
-	text: STRING_32
+	searched_text: STRING_32
 			-- Text which is going to be used as basis for suggestion.
+			--| For example, if you have the following partial phone number "(555) 253-4" in `displayed_text'
+			--| then the searched text could be "5552534".
+		require
+			not_destroyed: not is_destroyed
+		do
+			if attached settings.searched_text_agent as l_agent then
+				Result := l_agent.item ([displayed_text])
+			else
+				Result := displayed_text
+			end
+		end
+
+	displayed_text: STRING_32
+			-- Text which is currently displayed.
 		require
 			not_destroyed: not is_destroyed
 		deferred
@@ -252,36 +247,6 @@ feature -- Text operation
 			-- Current position of caret in `text'.
 		require
 			not_destroyed: not is_destroyed
-		deferred
-		end
-
-feature {EV_SUGGESTION_WINDOW} -- Focus operation
-
-	block_focus_in_actions
-			-- Block focus in actions.
-		deferred
-		end
-
-	resume_focus_in_actions
-			-- Resume focus in actions.
-		deferred
-		end
-
-	block_focus_out_actions
-			-- Block focus out actions.
-		deferred
-		end
-
-	resume_focus_out_actions
-			-- Resume focus out actions.
-		deferred
-		end
-
-	set_focus
-			-- Set focus.
-		require
-			not_destroyed: not is_destroyed
-			is_sensitive: is_sensitive
 		deferred
 		end
 
@@ -310,10 +275,6 @@ feature -- Basic operation
 			-- Suggestion has either been accepted or cancelled.
 		do
 			is_suggesting := False
-			if is_focus_back_needed then
-					-- Invalidating cursor forces cursor to be updated.
-				set_focus
-			end
 				-- We are done with the suggestion, we can therefore stop the timer.
 			disable_suggestion_timeout
 		ensure
@@ -322,14 +283,18 @@ feature -- Basic operation
 
 feature {EV_SUGGESTION_WINDOW} -- Interact with suggestion window.
 
-	insert_suggestion (a_text: STRING_32; a_selected_item: like last_suggestion)
-			-- Insert `a_text' in Current if valid, move caret to the end and update `last_suggestion'.
+	insert_suggestion (a_selected_item: attached like last_suggestion)
+			-- Insert associated text of `a_selected_item' in Current if valid,
+			-- move caret to the end and update `last_suggestion' with `a_selected_item'.
 		require
 			not_destroyed: not is_destroyed
+		local
+			l_text: READABLE_STRING_GENERAL
 		do
 			last_suggestion := a_selected_item
-			if not a_text.is_empty and not a_text.has_code (('%R').natural_32_code)then
-				set_text (a_text)
+			l_text := a_selected_item.displayed_text
+			if not l_text.is_empty and not l_text.has_code (('%R').natural_32_code)then
+				set_displayed_text (l_text)
 				move_caret_to_end
 			end
 			refresh
@@ -338,53 +303,31 @@ feature {EV_SUGGESTION_WINDOW} -- Interact with suggestion window.
 			last_suggestion_set: last_suggestion = a_selected_item
 		end
 
-	is_key_handled (a_key: EV_KEY): BOOLEAN
+	is_default_key_processing_enabled (a_key: EV_KEY): BOOLEAN
 			-- Will `a_key' be processed by underlying implementation.
 		do
-				-- By default we let the underlying implementation handles the key
-			Result := True
-				-- If Ctrl is pressed then we handle the key handling via `handle_extended_ctrled_key'.
-			if is_ctrl_pressed then
-				Result := a_key.code /= {EV_KEY_CONSTANTS}.key_back_space and
-					a_key.code /= {EV_KEY_CONSTANTS}.key_delete
+			if
+				is_ctrl_pressed and (a_key.code = {EV_KEY_CONSTANTS}.key_back_space or
+				a_key.code = {EV_KEY_CONSTANTS}.key_delete)
+			then
+					-- Ctrl+Backspace or Ctrl+Delete should not yield any default behavior
+					-- as our implementation will handle the expected behavior `handle_deletion_keys'.
+				Result := False
+			else
+					-- If we press the shortcut for completion, we do not want any characters
+					-- to appear in the underlying control. Ideally we would like to do it only
+					-- when `not is_suggesting' but `is_suggesting' might be set to True in
+					-- `on_key_down' and the handling of the character we do not want to display
+					-- is done in `on_key_string_pressed' where `is_suggesting' is set to True.
+				Result := not is_shortcut_for_suggestion (a_key, is_ctrl_pressed, is_alt_pressed, is_shift_pressed)
+				if Result then
+						-- We use the original `default_key_processing_handler' to  find out.
+					if attached old_default_key_processing_handler as l_handler then
+						Result := l_handler.item ([a_key])
+					end
+				end
 			end
 		end
-
-	handle_character (a_char: CHARACTER_32)
-			-- Insert `a_char' at `caret_position' unless it is excluded by `settings.unwanted_characters'.
-		require
-			not_destroyed: not is_destroyed
-			no_carriage_returns: a_char /= '%R'
-		do
-			if not settings.unwanted_characters.has (a_char) then
-				insert_character (a_char)
-			end
-		end
-
-	handle_extended_ctrled_key (ev_key: EV_KEY)
- 			-- Process the push on Ctrl + an extended key.
- 		do
- 			inspect
- 				ev_key.code
- 			when {EV_KEY_CONSTANTS}.key_back_space then
-				delete_word_before
-			when {EV_KEY_CONSTANTS}.key_delete then
-				delete_word_after
-			else
-			end
- 		end
-
-	handle_extended_key (ev_key: EV_KEY)
- 			-- Process the push on an extended key.
- 		do
-			inspect ev_key.code
-			when {EV_KEY_CONSTANTS}.key_back_space then
-				delete_character_before
-			when {EV_KEY_CONSTANTS}.key_delete then
-				delete_character_after
-			else
-			end
-  		end
 
 	font: EV_FONT
 			-- Font used by current to display text.
@@ -421,7 +364,7 @@ feature {EV_SUGGESTION_WINDOW} -- Interact with suggestion window.
 		deferred
 		end
 
-feature {NONE} -- Trigger suggestion
+feature {NONE} -- Key handling
 
 	on_key_down (a_key: EV_KEY)
 			-- Handle `a_key' and check against `settings.override_shortcut_trigger', if specified,
@@ -438,13 +381,75 @@ feature {NONE} -- Trigger suggestion
 						provide_suggestion
 					end
 				end
-				if a_key.code /= {EV_KEY_CONSTANTS}.key_back_space and a_key.code /= {EV_KEY_CONSTANTS}.key_delete then
+				if a_key.is_printable then
 					reset_suggestion_timeout
 				elseif is_ctrl_pressed then
 						-- If Backspace or Delete is pressed we perform
 						-- whatever the implementation decided. By default it is to
 						-- remove the word before or after `caret_position'.
-					handle_extended_ctrled_key (a_key)
+					handle_deletion_keys (a_key)
+				end
+			elseif choices /= Void and then not choices.is_destroyed and then choices.is_displayed then
+				inspect
+					a_key.code
+				when {EV_KEY_CONSTANTS}.key_left, {EV_KEY_CONSTANTS}.key_right then
+					if settings.has_arrows_key_text_navigation and not choices.is_navigable then
+						if a_key.code = {EV_KEY_CONSTANTS}.key_left then
+							if caret_position = 1 then
+									-- We are at the beginning, so going to the left one more
+									-- time is a user intent to say he does not want to be
+									-- provided with a suggestion.
+								choices.close
+							end
+						else
+							if caret_position >= displayed_text.count + 1 then
+									-- We are at the end, so going to the right one more
+									-- time is a user intent to say he does not want to
+									-- be provided with a suggestion.
+								choices.close
+							end
+						end
+					end
+				when {EV_KEY_CONSTANTS}.Key_up then
+					choices.go_to_next_item (False)
+				when {EV_KEY_CONSTANTS}.Key_down then
+					choices.go_to_next_item (True)
+				when {EV_KEY_CONSTANTS}.Key_page_up then
+					choices.go_to_next_page (False)
+				when {EV_KEY_CONSTANTS}.Key_page_down then
+					choices.go_to_next_page (True)
+				when {EV_KEY_CONSTANTS}.key_home then
+					choices.go_first
+				when {EV_KEY_CONSTANTS}.key_end then
+					choices.go_last
+				when {EV_KEY_CONSTANTS}.Key_enter then
+					choices.suggest_and_close
+				when {EV_KEY_CONSTANTS}.Key_escape then
+					choices.close
+
+				when {EV_KEY_CONSTANTS}.key_back_space, {EV_KEY_CONSTANTS}.key_delete then
+					if is_ctrl_pressed then
+						handle_deletion_keys (a_key)
+					else
+							-- Note that `displayed_text' is the text representation before handling `a_key'.
+						if displayed_text.is_empty then
+								-- List is discarded if all the characters inserted have been
+								-- removed and that the user press one more time the backspace key
+								-- showing his intent of stopping the suggestion.
+							choices.close
+						else
+							ev_application.do_once_on_idle (agent do
+								if choices /= Void and then not choices.is_destroyed and then choices.is_displayed then
+									choices.set_is_list_recomputation_required (settings.is_list_recomputed_when_typing)
+									choices.build_suggestion_list (searched_text, False)
+									choices.select_closest_match
+								end
+							end)
+						end
+					end
+
+				else
+					-- Do nothing
 				end
 			end
 		end
@@ -452,16 +457,52 @@ feature {NONE} -- Trigger suggestion
 	on_key_string_pressed (character_string: STRING_32)
 			-- Process character `character_string', if it is part of
 			-- `settings.suggestion_activator_acharacts' suggestion list is shown.
-		require
-			a_key_attached: character_string /= Void
+		local
+			c: CHARACTER_32
 		do
-			if not is_suggesting and then character_string.count = 1 then
-				reset_suggestion_timeout
-				if attached settings.suggestion_activator_characters as l_chars and then l_chars.has (character_string.item (1)) then
-					provide_suggestion
+			if character_string.count = 1 then
+				if not is_suggesting then
+					if attached settings.suggestion_activator_characters as l_chars and then l_chars.has (character_string.item (1)) then
+						provide_suggestion
+					end
+				elseif choices /= Void and then not choices.is_destroyed and then choices.is_displayed then
+					c := character_string.item (1)
+					if attached settings.character_translator as l_translator then
+						c := l_translator.item ([c])
+					end
+					if c /= '%U' then
+						if attached settings.suggestion_deactivator_characters as l_table and then l_table.has (c) then
+							choices.suggest_and_close
+						else
+							ev_application.do_once_on_idle (agent do
+								if choices /= Void and then not choices.is_destroyed and then choices.is_displayed then
+									choices.set_is_list_recomputation_required (settings.is_list_recomputed_when_typing)
+									choices.build_suggestion_list (searched_text, False)
+									choices.select_closest_match
+								end
+							end)
+						end
+					end
 				end
 			end
 		end
+
+	handle_deletion_keys (a_key: EV_KEY)
+ 			-- Process the push on Ctrl + an extended key.
+ 		require
+			not_destroyed: not is_destroyed
+		do
+ 			inspect
+ 				a_key.code
+ 			when {EV_KEY_CONSTANTS}.key_back_space then
+				delete_word_before
+
+			when {EV_KEY_CONSTANTS}.key_delete then
+				delete_word_after
+
+			else
+			end
+ 		end
 
 	is_shift_pressed: BOOLEAN
 			-- Are any of the Shift keys pressed?
@@ -490,6 +531,29 @@ feature {NONE} -- Trigger suggestion
 			Result := a_ctrl and a_key.code = {EV_KEY_CONSTANTS}.key_space
 		end
 
+feature {NONE} -- Events
+
+	on_lose_focus
+			-- Current just lost focus, we need to close suggestion window if visible.
+		do
+			if
+				is_suggesting and then attached choices as l_choices and then
+				not l_choices.is_destroyed and then l_choices.is_displayed
+			then
+				l_choices.close
+			end
+		end
+
+	on_mouse_wheel (a_offset: INTEGER)
+			-- Handling of wheel
+		do
+			if
+				is_suggesting and then attached choices as l_choices  and then
+				not l_choices.is_destroyed and then l_choices.is_displayed
+			then
+				l_choices.on_mouse_wheel (a_offset)
+			end
+		end
 feature {NONE} -- Implementation
 
 	reset_suggestion_timeout
@@ -525,12 +589,16 @@ feature {NONE} -- Implementation: Access
 			create Result.make
 		end
 
-	saved_caret_position: INTEGER
-			-- Value of `caret_position' before showing the suggestion.
-
 	suggestion_timeout: EV_TIMEOUT
 			-- Timeout for showing suggestion list if not already shown, and if shown, timeout
 			-- to refresh the suggestion list with new input if any.
+
+	new_default_key_processing_handler: attached like default_key_processing_handler
+			-- Handler used whenever Vision2 is using `default_key_processing_handler'.
+
+	old_default_key_processing_handler: like default_key_processing_handler
+			-- Original `default_key_processing_handler' set by user. It is called when `choices' is not shown,
+			-- otherwise we use our own.
 
 invariant
 

@@ -12,10 +12,15 @@ inherit
 	EV_TEXT_FIELD
 		redefine
 			create_interface_objects,
-			initialize
+			initialize,
+			set_default_key_processing_handler,
+			remove_default_key_processing_handler
 		end
 
 	EV_ABSTRACT_SUGGESTION_FIELD
+		rename
+			displayed_text as text,
+			set_displayed_text as set_text
 		redefine
 			create_interface_objects
 		end
@@ -24,7 +29,7 @@ create
 	make,
 	make_with_settings
 
-feature{NONE} -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_provider: like suggestion_provider)
 			-- Initialize current using suggestion provider `a_provider'.
@@ -64,36 +69,38 @@ feature{NONE} -- Initialization
 			initialize_suggestion_field
 		end
 
-feature{NONE} -- Implementation
+feature -- Status setting
 
-	move_caret_to (a_pos: INTEGER)
-			-- <Precursor>
+	set_default_key_processing_handler (a_handler: like default_key_processing_handler)
+			-- Set `default_key_processing_handler' with `new_default_key_processing_handler'.
+			-- Set `old_default_key_processing_handler' with `a_handler' if different from
+			-- `new_default_key_processing_handler'.
 		do
-			set_caret_position (a_pos.max (1).min (text_length + 1))
+			if a_handler /= new_default_key_processing_handler then
+				old_default_key_processing_handler := a_handler
+			end
+			if default_key_processing_handler /= new_default_key_processing_handler then
+				Precursor (new_default_key_processing_handler)
+			end
+		ensure then
+			handler_set: default_key_processing_handler = new_default_key_processing_handler
+			a_handler_preserved: a_handler /= new_default_key_processing_handler implies old_default_key_processing_handler = a_handler
 		end
+
+	remove_default_key_processing_handler
+			-- Ensure `old_default_key_processing_handler' is Void while preserving our own handler.
+		do
+			old_default_key_processing_handler := Void
+		ensure then
+			default_handler_preserved: default_key_processing_handler = new_default_key_processing_handler
+		end
+
+feature {NONE} -- Implementation
 
 	move_caret_to_end
 			-- <Precursor>
 		do
 			set_caret_position (text_length + 1)
-		end
-
-	delete_character_before
-			-- <Precursor>
-		do
-			if text_length > 0 and caret_position > 1 then
-				select_region (caret_position - 1, caret_position - 1)
-				delete_selection
-			end
-		end
-
-	delete_character_after
-			-- <Precursor>
-		do
-			if text_length > 0 and caret_position <= text_length then
-				select_region (caret_position, caret_position)
-				delete_selection
-			end
 		end
 
 	delete_word_before
@@ -182,44 +189,6 @@ feature{NONE} -- Implementation
 				set_selection (caret_position, i)
 				delete_selection
 			end
-		end
-
-	insert_string (a_str: STRING_32)
-			-- Insert `a_str' at cursor position.
-		do
-			insert_text (a_str)
-			set_caret_position (caret_position + a_str.count)
-		end
-
-	insert_character (a_char: CHARACTER_32)
-			-- Insert `a_char' at cursor position.
-		do
-			insert_text (create {STRING_32}.make_filled (a_char, 1))
-			set_caret_position (caret_position + 1)
-		end
-
-	block_focus_in_actions
-			-- Block focus in actions.
-		do
-			focus_in_actions.block
-		end
-
-	resume_focus_in_actions
-			-- Resume focus in actions.
-		do
-			focus_in_actions.resume
-		end
-
-	block_focus_out_actions
-			-- Block focus out actions.
-		do
-			focus_out_actions.block
-		end
-
-	resume_focus_out_actions
-			-- Resume focus out actions.
-		do
-			focus_out_actions.resume
 		end
 
 note

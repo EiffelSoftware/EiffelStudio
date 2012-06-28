@@ -92,6 +92,7 @@ inherit
 			append_character,
 			item,
 			substring,
+			subcopy,
 			append_string,
 			replace_substring,
 			replace_substring_all,
@@ -114,6 +115,7 @@ inherit
 			insert,
 			prepend,
 			prepend_string,
+			prepend_string_general,
 			append_string_general,
 			keep_head,
 			keep_tail,
@@ -183,6 +185,7 @@ inherit
 			append_character,
 			substring_index,
 			substring,
+			subcopy,
 			append_string,
 			replace_substring,
 			replace_substring_all,
@@ -206,6 +209,7 @@ inherit
 			insert,
 			prepend,
 			prepend_string,
+			prepend_string_general,
 			append_string_general,
 			keep_head,
 			keep_tail,
@@ -1800,10 +1804,16 @@ feature -- Element change
 			end
 		end
 
-	append_string_general (s: STRING) is
+	prepend_string_general (s: READABLE_STRING_GENERAL) is
+			-- Append a copy of `s' at front.
+		do
+			prepend (s.as_string_8)
+		end
+
+	append_string_general (s: READABLE_STRING_GENERAL) is
 			-- Append a copy of `s' at end.
 		do
-			append (s)
+			append (s.as_string_8)
 		end
 
 	append_unicode_character (c: UC_CHARACTER) is
@@ -2678,6 +2688,12 @@ feature -- Duplication
 				other.set_count (other_count)
 			end
 		end
+
+	subcopy (other: STRING; start_pos, end_pos, index_pos: INTEGER_32)
+		do
+			Precursor (other, start_pos, end_pos, index_pos)
+		end
+
 
 	cloned_string: like Current is
 			-- New object equal to `Current'

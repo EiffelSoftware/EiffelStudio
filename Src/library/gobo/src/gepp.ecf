@@ -26,7 +26,7 @@
 		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse.ecf"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>
-		<cluster name="gepp" location="$ISE_LIBRARY\library\gobo\svn\src\gepp\"/>
+		<cluster name="gepp" location="$ISE_LIBRARY\contrib\library\gobo\src\gepp\"/>
 		<cluster name="gepp_override" location="$ISE_LIBRARY\library\gobo\override\generated\src\gepp\"/>
 	</target>
 </system>

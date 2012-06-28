@@ -18,8 +18,6 @@ feature {NONE} -- Initialization
 
 	make
 			-- Initialize Current with default settings for performing suggestion.
-		local
-			i: INTEGER
 		do
 				-- Default starts computation after `default_timeout' of inactivity.
 			set_timeout (default_timeout)
@@ -42,19 +40,6 @@ feature {NONE} -- Initialization
 			suggestion_deactivator_characters.put (escape_character, escape_character)
 			suggestion_deactivator_characters.put (carriage_return_character, carriage_return_character)
 			suggestion_deactivator_characters.put (newline_character, newline_character)
-
-				-- By default, we ignore all control characters.
-			create unwanted_characters.make (40)
-			from
-				i := 0
-			until
-				i = 256
-			loop
-				if i.to_character_8.is_control then
-					unwanted_characters.put (i.to_character_32, i.to_character_32)
-				end
-				i := i + 1
-			end
 
 				-- No characters are setup by default to trigger suggestion
 			suggestion_activator_characters := Void
@@ -123,8 +108,8 @@ feature -- Access
 			-- Number of milliseconds to wait after receiving the last keystroke event
 			-- before starting a request to `suggestion_provider'.
 
-	displayed_item_conversion_agent: detachable FUNCTION [ANY, TUPLE [LABEL_SUGGESTION_ITEM], EV_GRID_ITEM]
-			-- Agent called for converting a SUGGESTION_ITEM into a EV_GRID_ITEM.
+	update_row_agent: detachable PROCEDURE [ANY, TUPLE [EV_GRID_ROW, SUGGESTION_ITEM]]
+			-- Agent called for converting SUGGESTION_ITEM into EV_GRID_ITEM in a grid row.
 
 	mouse_wheel_scroll_size: INTEGER
 			-- Number of rows to scroll if not in page by page scrolling mode.
@@ -182,6 +167,11 @@ feature -- Access
 			end
 		end
 
+	searched_text_agent: detachable FUNCTION [ANY, TUPLE [displayed_text: STRING_32], STRING_32]
+			-- Given a `displayed_text' return a string representing what we should be searching for.
+			--| For example, if you have the following partial phone number displayed "(555) 253-4"
+			--| then the searched text could be "5552534".
+
 feature -- Character handling
 
 	suggestion_activator_characters: detachable HASH_TABLE [CHARACTER_32, CHARACTER_32]
@@ -190,11 +180,6 @@ feature -- Character handling
 	suggestion_deactivator_characters: HASH_TABLE [CHARACTER_32, CHARACTER_32]
 			-- List of characters that can be used to stop suggestion.
 			-- By default, only Enter and Escape are set.
-
-	unwanted_characters: HASH_TABLE [CHARACTER_32, CHARACTER_32]
-			-- List of characters that are not desired in input. Those
-			-- characters are not sent to the underlying `{EV_ABSTRACT_SUGGESTION_FIELD}'.
-			-- By default all control characters.
 
 	override_shortcut_trigger: detachable FUNCTION [ANY, TUPLE [key: EV_KEY; ctrl, alt, shift: BOOLEAN], BOOLEAN]
 			-- User controlled definition that can activate suggestion?
@@ -249,12 +234,13 @@ feature -- Status report
 
 feature -- Conversion
 
-	to_displayed_item (a_suggestion: SUGGESTION_ITEM): EV_GRID_ITEM
-			-- Convert `a_suggestion' to a graphical representation.
-			-- Default implementation create an EV_GRID_LABEL_ITEM with the `a_suggestion.text'
-			-- as textual representation.
+	update_row (a_row: EV_GRID_ROW; a_suggestion: SUGGESTION_ITEM)
+			-- Convert `a_suggestion' to a graphical representation in `a_row'.
+			-- If `update_row_agent' is not set, default implementation create
+			-- an EV_GRID_LABEL_ITEM with the `a_suggestion.text' as textual
+			-- representation in the first column of `a_row'.
 		do
-			create {EV_GRID_LABEL_ITEM} Result.make_with_text (a_suggestion.text)
+			a_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (a_suggestion.displayed_text))
 		end
 
 feature -- Settings
@@ -395,14 +381,14 @@ feature -- Settings
 			suggestion_timeout_set: timeout = a_timeout
 		end
 
-	set_displayed_item_conversion (a_conversion: like displayed_item_conversion_agent)
+	set_update_row_agent (a_conversion: like update_row_agent)
 			-- Override the default implementation of `to_displayed_item' to use
 			-- an agent to convert a {SUGGESTION_ITEM} instance to its corresponding
 			-- graphical instance {EV_GRID_ITEM}.
 		do
-			displayed_item_conversion_agent := a_conversion
+			update_row_agent := a_conversion
 		ensure
-			conversion_set: displayed_item_conversion_agent = a_conversion
+			conversion_set: update_row_agent = a_conversion
 		end
 
 	set_save_list_position_action (a_action: like save_list_position_action)
@@ -429,6 +415,14 @@ feature -- Settings
 			matcher_set: matcher = v
 		end
 
+	set_searched_text_agent (v: like searched_text_agent)
+			-- Set `searched_text_agent' with `v'.
+		do
+			searched_text_agent := v
+		ensure
+			searched_text_agent_set: searched_text_agent = v
+		end
+
 feature -- Settings: Character handling
 
 	set_suggestion_activator_characters (a_chars: like suggestion_activator_characters)
@@ -445,14 +439,6 @@ feature -- Settings: Character handling
 			suggestion_deactivator_characters := a_chars
 		ensure
 			suggestion_deactivator_characters_set: suggestion_deactivator_characters = a_chars
-		end
-
-	set_unwanted_characters (a_chars: like unwanted_characters)
-			-- Set `unwanted_characters' with `a_chars'.
-		do
-			unwanted_characters := a_chars
-		ensure
-			unwanted_characters_set: unwanted_characters = a_chars
 		end
 
 	set_override_shortcut_trigger (a_trigger: like override_shortcut_trigger)

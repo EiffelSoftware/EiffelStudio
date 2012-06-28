@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 		do
 			field := a_field
 			default_create
+			disconnect_from_window_manager
 		ensure
 			field_set: field = a_field
 		end
@@ -42,7 +43,6 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			create grid
-			create buffered_input.make (1)
 			create suggestion_timeout
 		end
 
@@ -50,69 +50,81 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		local
 			vbox: EV_VERTICAL_BOX
-			l_scrolling: ES_GRID_SCROLLING_BEHAVIOR
 		do
 			Precursor
-			create l_scrolling.make (grid)
 
-				-- Update mousewheel scrolling settings from `settings'.
-			l_scrolling.set_scrolling_common_line_count (settings.scrolling_common_line_count)
-			l_scrolling.set_mouse_wheel_scroll_size (settings.mouse_wheel_scroll_size)
-			l_scrolling.set_mouse_wheel_scroll_full_page (settings.is_mouse_wheel_in_full_page_mode)
+				-- Prevent grid from grabbing focus.
+			grid.disable_focus_on_press
 
-			grid.default_key_processing_handler := agent (a_key: EV_KEY): BOOLEAN
-				do
-					Result := not a_key.is_arrow and not (a_key.code = {EV_KEY_CONSTANTS}.key_tab)
-				end
+				-- Since grid won't have the focus, we want to have the unfocused
+				-- color for selected items be the same as the focused color.
+			grid.set_non_focused_selection_color (grid.focused_selection_color)
+			grid.set_non_focused_selection_text_color (grid.focused_selection_text_color)
+
+				-- Only one entire row can be selected.
 			grid.enable_single_row_selection
-			grid.key_press_string_actions.extend (agent on_char)
-			grid.key_press_actions.extend (agent on_key_down)
-			grid.pointer_double_press_actions.extend (agent mouse_selection)
-			grid.set_default_key_processing_handler (agent is_key_processed)
-			grid.hide_header
-			grid.enable_selection_key_handling
 
+				-- Handling of keybord/mouse events.
+			grid.pointer_double_press_actions.extend (agent mouse_selection)
+
+				-- Handling of mousewheel
+			grid.mouse_wheel_actions.extend (agent on_mouse_wheel)
+
+				-- Ensures that items are drawn dynamically to speed up rendering.
+			grid.enable_partial_dynamic_content
+			grid.set_dynamic_content_function (agent associated_grid_item)
+
+				-- No need for headers
+			grid.hide_header
+
+				-- Black border around the grid so that it stands out.
 			create vbox
 			vbox.set_background_color (create {EV_COLOR}.make_with_rgb (0, 0, 0))
-			vbox.set_border_width (1)
+			vbox.set_border_width (border_width)
 			vbox.extend (grid)
 			extend (vbox)
 
-				-- Let's make sure that clicking outside of the grid, makes
-				-- the suggestion list disappear.
-			grid.focus_out_actions.extend (agent on_lose_focus)
-			focus_out_actions.extend (agent on_lose_focus)
-
 				-- Each time the window holding the grid is resized, we want to make
-				-- sure that the width of the column is as big as the window at the
+				-- sure that the width of the last column is as big as the window at the
 				-- minimum.
 			resize_actions.force_extend (agent resize_column_to_window_width)
 		end
 
 feature -- Access
 
-	grid: EV_GRID
-			-- Grid displaying result of search.
-
-	full_list: detachable ARRAYED_LIST [like row_data_type]
-			-- List of current suggestion.
+	full_list: ARRAYED_LIST [SUGGESTION_ITEM]
+		obsolete
+			"Do not use"
+		do
+			create Result.make (0)
+		end
 
 feature -- Status Setting
+
+	set_is_list_recomputation_required (v: like is_list_recomputation_required)
+			-- Set `is_list_recomputation_required' with `v'.
+		do
+			is_list_recomputation_required := v
+		ensure
+			is_list_recomputation_required_set: is_list_recomputation_required = v
+		end
+
+feature -- Update
 
 	show
 			-- Show
 		do
 				-- Initialize the current suggest list with what has been entered in `field'.
-			build_suggestion_list (field.text, True)
+			build_suggestion_list (field.searched_text, True)
 		end
 
 	show_content
 		do
-				-- Select the entry that match `buffered_input' by default.
+				-- Select the entry that match what has been entered in `field'.
 			select_closest_match
 			position_suggestion_choice_window
+			resize_column_to_window_width
 			show_window
-			grid.set_focus
 		end
 
 feature -- Query
@@ -123,18 +135,49 @@ feature -- Query
 			create Result
 		end
 
-feature {NONE} -- Events handling
+feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Events handling
 
-	is_key_processed (a_key: EV_KEY): BOOLEAN
-			-- Is `a_key' handled by Current?
-			-- True if not page up, page down, home and end.
+	on_mouse_wheel (a_offset: INTEGER)
+			-- Scroll selected items by `a_offset_position' until we either
+			-- reached the top of the bottom of `grid'.
+		local
+			l_row: detachable EV_GRID_ROW
+			l_offset: INTEGER
 		do
-			Result := a_key.code /= {EV_KEY_CONSTANTS}.key_page_up and
-				a_key.code /= {EV_KEY_CONSTANTS}.key_page_down and
-				a_key.code /= {EV_KEY_CONSTANTS}.key_home and
-				a_key.code /= {EV_KEY_CONSTANTS}.key_end and
-				a_key.code /= {EV_KEY_CONSTANTS}.key_down and
-				a_key.code /= {EV_KEY_CONSTANTS}.key_up
+			if not is_destroyed and then is_displayed then
+					-- Calculate the expected offset that we will use to scroll the grid.
+					-- Note that the selection remains unchanged.
+				if settings.is_mouse_wheel_in_full_page_mode then
+					l_offset := ((viewable_row_count - settings.scrolling_common_line_count) * grid.row_height).max (0) * a_offset
+				else
+					l_offset := grid.row_height * settings.mouse_wheel_scroll_size * a_offset
+				end
+				if l_offset < 0 then
+						-- We are going down, the last visible item should be properly aligned at the bottom.
+					l_row := grid.last_visible_row
+					if l_row /= Void then
+							-- We align the last visible row to the bottom.
+						l_row.ensure_visible
+					end
+						-- Then we scroll
+					l_row := grid.first_visible_row
+					if l_row /= Void then
+						grid.set_virtual_position (grid.virtual_x_position, grid.maximum_virtual_y_position.min (grid.virtual_y_position - l_offset))
+					end
+				elseif l_offset > 0 then
+						-- We are going up, the first visible item should be properly aligned at the bottom.
+					l_row := grid.first_visible_row
+					if l_row /= Void then
+							-- We align the first visible row to the top.
+						l_row.ensure_visible
+					end
+						-- Then we scroll
+					l_row := grid.last_visible_row
+					if l_row /= Void then
+						grid.set_virtual_position (grid.virtual_x_position, (grid.virtual_y_position - l_offset).max (0))
+					end
+				end
+			end
 		end
 
 	mouse_selection (x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; unused4,unused5:INTEGER)
@@ -142,143 +185,6 @@ feature {NONE} -- Events handling
 		do
 			if button = 1 and not grid.selected_items.is_empty then
 				suggest_and_close
-			end
-		end
-
-	on_key_down (ev_key: EV_KEY)
-			-- process user input in `grid'	
-		local
-			l_rows: ARRAYED_LIST [EV_GRID_ROW]
-			l_indexes: ARRAYED_LIST [INTEGER]
-		do
-			inspect
-				ev_key.code
-			when {EV_KEY_CONSTANTS}.key_left, {EV_KEY_CONSTANTS}.key_right then
-				if settings.has_arrows_key_text_navigation then
-					l_rows := grid.selected_rows
-					if l_rows.is_empty or else not l_rows.first.is_expanded then
-						if ev_key.code = {EV_KEY_CONSTANTS}.key_left then
-							if field.caret_position = 0 then
-									-- We are at the beginning, so going to the left one more
-									-- time is a user intent to say he does not want to be
-									-- provided with a suggestion.
-								close
-							else
-								field.move_caret_to (field.caret_position - 1)
-							end
-						else
-							if field.caret_position >= field.text.count + 1 then
-									-- We are at the end, so going to the right one more
-									-- time is a user intent to say he does not want to
-									-- be provided with a suggestion.
-								close
-							else
-								field.move_caret_to (field.caret_position + 1)
-							end
-						end
-					end
-				end
-			when {EV_KEY_CONSTANTS}.Key_up then
-				go_to_next_item (False)
-			when {EV_KEY_CONSTANTS}.Key_down then
-				go_to_next_item (True)
-			when {EV_KEY_CONSTANTS}.Key_page_up then
-				go_to_next_page (False)
-			when {EV_KEY_CONSTANTS}.Key_page_down then
-				go_to_next_page (True)
-			when {EV_KEY_CONSTANTS}.key_home then
-				if grid.row_count > 0 then
-					l_indexes := grid.viewable_row_indexes
-					if l_indexes.is_empty then
-						select_row (1)
-					else
-						select_row (l_indexes.first)
-					end
-				end
-			when {EV_KEY_CONSTANTS}.key_end then
-				if grid.row_count > 0 then
-					l_indexes := grid.viewable_row_indexes
-					if l_indexes.is_empty then
-						select_row (grid.row_count)
-					else
-						select_row (l_indexes.last)
-					end
-				end
-			when {EV_KEY_CONSTANTS}.Key_enter then
-				suggest_and_close
-			when {EV_KEY_CONSTANTS}.Key_escape then
-				close
-
-			when {EV_KEY_CONSTANTS}.key_back_space, {EV_KEY_CONSTANTS}.key_delete then
-				if ev_application.ctrl_pressed then
-					field.handle_extended_ctrled_key (ev_key)
-				else
-					field.handle_extended_key (ev_key)
-				end
-				if not buffered_input.is_empty then
-					if ev_key.code = {EV_KEY_CONSTANTS}.key_back_space then
-						if ev_application.ctrl_pressed then
-							buffered_input.wipe_out
-						else
-							buffered_input := buffered_input.substring (1, buffered_input.count - 1)
-						end
-					end
-				else
-						-- List is discarded if all the characters inserted have been
-						-- removed and that the user press one more time the backspace key
-						-- showing his intent of stopping the suggestion.
-					close
-				end
-				is_list_recomputation_required := settings.is_list_recomputed_when_typing
-				build_suggestion_list (buffered_input, False)
-				select_closest_match
-
-			when {EV_KEY_CONSTANTS}.key_v then
-				if ev_application.ctrl_pressed then
-					field.handle_extended_ctrled_key (ev_key)
-					buffered_input.append (ev_application.clipboard.text)
-				else
-					field.handle_extended_key (ev_key)
-				end
-				is_list_recomputation_required := settings.is_list_recomputed_when_typing
-				build_suggestion_list (buffered_input, False)
-				select_closest_match
-
-			else
-				-- Do nothing
-			end
-		end
-
-	on_char (character_string: STRING_32)
-   			-- Process displayable character key press event.
-   		local
-   			c: CHARACTER_32
-   		do
-			if character_string.count = 1 then
-				c := character_string.item (1)
-				if attached settings.suggestion_deactivator_characters as l_table and then l_table.has (c) then
-					suggest_and_close
-					field.handle_character (c)
-				else
-					if attached settings.character_translator as l_translator then
-						c := l_translator.item ([c])
-					end
-					if c /= '%U' then
-						buffered_input.append_character (c)
-						field.handle_character (c)
-						is_list_recomputation_required := settings.is_list_recomputed_when_typing
-						build_suggestion_list (buffered_input, False)
-						select_closest_match
-					end
-				end
-			end
-		end
-
-	on_lose_focus
-			-- close window
-		do
-			if (not (is_destroyed or else has_focus or else grid.has_focus)) and is_displayed then
-				close
 			end
 		end
 
@@ -321,7 +227,47 @@ feature {NONE} -- Events handling
 			ev_application.do_once_on_idle (agent resize_column_to_window_width)
 		end
 
-feature {NONE} -- Navigation
+feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Navigation
+
+	is_navigable: BOOLEAN
+			-- Can current being traversed using left and right arrow keys?
+			--| This happens when you have tree items in the list.
+		local
+			l_rows: detachable ARRAYED_LIST [EV_GRID_ROW]
+		do
+			l_rows := grid.selected_rows
+			Result := not l_rows.is_empty and l_rows.first.is_expanded
+		end
+
+	go_first
+			-- Scroll grid to the first item.
+		local
+			l_indexes: ARRAYED_LIST [INTEGER]
+		do
+			if grid.row_count > 0 then
+				l_indexes := grid.viewable_row_indexes
+				if l_indexes.is_empty then
+					select_row (1)
+				else
+					select_row (l_indexes.first)
+				end
+			end
+		end
+
+	go_last
+			-- Scroll grid to the last item.
+		local
+			l_indexes: ARRAYED_LIST [INTEGER]
+		do
+			if grid.row_count > 0 then
+				l_indexes := grid.viewable_row_indexes
+				if l_indexes.is_empty then
+					select_row (grid.row_count)
+				else
+					select_row (l_indexes.last)
+				end
+			end
+		end
 
 	go_to_next_item (a_is_forward: BOOLEAN)
 			-- Iterate grid to find the next item for keyboard naviation
@@ -386,8 +332,8 @@ feature {NONE} -- Navigation
 				l_grid.remove_selection
 				l_row := l_rows.first
 				if l_row = l_target_row then
-						-- This is the number of rows we want to scroll per `settings'.
-					l_scroll_height := (viewable_row_count - settings.scrolling_common_line_count) * l_grid.row_height
+						-- This is the number of rows we want to scroll per `settings' with a minimum of `1'.
+					l_scroll_height := ((viewable_row_count - settings.scrolling_common_line_count).max (1)) * l_grid.row_height
 					if a_is_forward then
 							-- The bottom row is the last selected row, we can scroll down.
 						l_new_virtual_y := l_row.virtual_y_position + l_row.height - l_grid.viewable_height + l_scroll_height
@@ -406,41 +352,7 @@ feature {NONE} -- Navigation
 			end
 		end
 
-	select_row (a_row: INTEGER)
-			-- Select row `i'.
-			-- If invisible, select its parent
-		require
-			a_row_is_valid: a_row > 0 and a_row <= grid.row_count
-		local
-			i: INTEGER
-			l_row: detachable EV_GRID_ROW
-			l_grid: like grid
-			l_rows: ARRAYED_LIST [EV_GRID_ROW]
-		do
-			l_grid := grid
-			if l_grid.row_count > 0 then
-					-- Go to bottom
-				l_grid.remove_selection
-
-				i := a_row
-				l_row := l_grid.row (i).parent_row
-				if l_row = Void then
-					l_grid.row (i).enable_select
-				else
-					if not l_row.is_expanded then
-						l_row.enable_select
-					else
-						l_grid.row (i).enable_select
-					end
-				end
-				l_rows := l_grid.selected_rows
-				if not l_rows.is_empty and then l_rows.first.is_displayed then
-					l_rows.first.ensure_visible
-				end
-			end
-		end
-
-feature {NONE} -- Completion
+feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Completion
 
 	build_suggestion_list (a_name: READABLE_STRING_GENERAL; a_is_first: BOOLEAN)
 			-- Build the list based on matches with `name'. If `a_is_first' it is
@@ -449,18 +361,21 @@ feature {NONE} -- Completion
 			-- a new query to the suggestion provider will be issued even if not
 			-- otherwise required.
 		require
-			choice_list_attached: grid /= Void
+			not_destroyed: not is_destroyed
 		local
 			l_grid: like grid
 			l_post_action: detachable PROCEDURE [ANY, TUPLE]
+			l_is_displayed: like is_displayed
 		do
 				-- To prevent flickering due to the potential
 				-- hidding/showing of scrollbars we lock ourselve
 				-- while rebuilding the list.
-			lock_update
+			l_is_displayed := is_displayed
+			if l_is_displayed then
+				lock_update
+			end
 
 			l_grid := grid
-			buffered_input := a_name.to_string_32
 
 			if a_is_first then
 					-- The first time we need to show the list of suggestions
@@ -472,8 +387,8 @@ feature {NONE} -- Completion
 				-- results from the associated suggestion provider of `field'.
 			if a_is_first or else is_list_recomputation_required then
 				l_grid.wipe_out
+					-- Set the minimum number of column.
 				l_grid.set_column_count_to (1)
-				create full_list.make (1)
 				field.suggestion_provider.query_with_callback_and_cancellation (a_name, l_post_action,
 					agent (a_item: SUGGESTION_ITEM)
 						local
@@ -482,11 +397,6 @@ feature {NONE} -- Completion
 							grid.insert_new_row (grid.row_count + 1)
 							l_row := grid.row (grid.row_count)
 							l_row.set_data (a_item)
-							l_row.set_item (1, associated_grid_item (grid.row_count))
-
-							if attached full_list as l_list then
-								l_list.extend (a_item)
-							end
 						end, settings.query_cancel_request)
 			end
 				-- We need to unset `is_list_recomputation_required'
@@ -494,14 +404,15 @@ feature {NONE} -- Completion
 
 				-- Let's unlock the window to refresh its content with the newly
 				-- build content.
-			unlock_update
+			if l_is_displayed then
+				unlock_update
+			end
 		ensure
-			buffered_input_set: buffered_input.same_string_general (a_name)
 			is_list_recomputation_required_unset: not is_list_recomputation_required
 		end
 
 	select_closest_match
-			-- Find the closes match to `buffered_input' in the list we have.
+			-- Find the closes match to text in `field' in the list we have.
 		local
 			l_reg: SUGGESTION_MATCHER
 			i, nb: INTEGER
@@ -509,13 +420,20 @@ feature {NONE} -- Completion
 			l_row: EV_GRID_ROW
 		do
 			l_reg := settings.matcher
-			l_reg.prepare (buffered_input)
+			l_reg.prepare (field.searched_text)
 				-- If regular expression can be computed
 				-- we go ahead otherwise we leave things unchanged.
 			if l_reg.is_ready then
 				from
 					i := 1
 					nb := grid.row_count
+					if nb > 0 and settings.is_list_filtered_when_typing then
+							-- It does not matter if the row is hidden or show, the
+							-- code below will ensure that the rows are properly shown/hidden
+							-- depending on the match.
+						grid.row (1).hide
+						grid.row (1).show
+					end
 				until
 					i > nb
 				loop
@@ -537,6 +455,7 @@ feature {NONE} -- Completion
 					end
 					i := i + 1
 				end
+				resize_column_to_window_width
 			end
 		end
 
@@ -548,15 +467,8 @@ feature {NONE} -- Completion
 		do
 			l_grid := grid
 			l_rows := l_grid.selected_rows
-			if not l_rows.is_empty then
-					-- Delete characters inserted during suggestion so it is later
-					-- replaced by the suggestion text
-				if not buffered_input.is_empty then
-					remove_characters_entered_since_display
-				end
-				if attached {like row_data_type} l_rows.first.data as l_data then
-					field.insert_suggestion (l_data.suggestion_text, l_data)
-				end
+			if not l_rows.is_empty and then attached {like row_data_type} l_rows.first.data as l_data then
+				field.insert_suggestion (l_data)
 			end
 			close
 		end
@@ -564,7 +476,7 @@ feature {NONE} -- Completion
 	close
 			-- Close window without performing the suggestion.
 		do
-			if not is_closing then
+			if not is_destroyed and not is_closing then
 				is_closing := True
 				if has_capture then
 					disable_capture
@@ -587,32 +499,17 @@ feature {NONE} -- Completion
 	is_closing: BOOLEAN
 			-- Is the window being closed?
 
-	remove_characters_entered_since_display
-			-- Remove characters entered so we may put them back
-		require
-			buffered_input_not_void: buffered_input /= Void
-		local
-			l_index: INTEGER
-		do
-			from
-				l_index := 1
-			until
-				l_index > buffered_input.count
-			loop
-				field.delete_character_before
-				l_index := l_index + 1
-			end
-		end
-
 	resize_column_to_window_width
-			-- Resize the column width to the width of the window
+			-- Resize the column width to the width of the grid.
 		local
 			l_grid: like grid
 			l_column: EV_GRID_COLUMN
 			l_min_width: INTEGER
+			i, l_column_count: INTEGER
 		do
 			l_grid := grid
-			if l_grid.column_count > 0 and then l_grid.row_count > 0 then
+			l_column_count := l_grid.column_count
+			if l_column_count > 0 and then l_grid.row_count > 0 then
 					-- Compute the minimum width that the column might have,
 					-- it is bounded to the width of Current.
 				if l_grid.vertical_scroll_bar.is_show_requested then
@@ -622,16 +519,28 @@ feature {NONE} -- Completion
 					l_min_width := l_grid.width
 				end
 
-					-- Let's compute the expected width of current items, it will take
-					-- into account the newly displayed items that were previously hidden.
-				l_column := l_grid.column (1)
+					-- Let's compute the expected width of current items. For the first
+					-- `l_column_count - 1' columns we use their expected width. And for the
+					-- last column we made it as big as the remaining width. We update
+					-- `l_min_width' to take into account the previously computed width.
+				from
+					i := 1
+				until
+					i > l_column_count - 1
+				loop
+					l_column := l_grid.column (l_column_count)
+					l_column.set_width (l_column.required_width_of_item_span (1, l_grid.row_count))
+						-- Update the remaining width
+					l_min_width := l_min_width - l_column.width
+					i := i + 1
+				end
+					-- Last column, we made it as big as the width of the grid if smaller
+					-- otherwise it will be bigger.
+				l_column := l_grid.column (l_column_count)
 				l_column.set_width (l_min_width.max (
 					l_column.required_width_of_item_span (1, l_grid.row_count)))
 			end
 		end
-
-	buffered_input: STRING_32
-			-- Buffered user input
 
 	is_list_recomputation_required: BOOLEAN
 			-- If True, next call to `build_suggestion_list' would query
@@ -683,16 +592,22 @@ feature {NONE} -- Completion
 			suggestion_timeout.set_interval (settings.timeout)
 		end
 
-	associated_grid_item (a_row: INTEGER): EV_GRID_ITEM
+	associated_grid_item (a_column, a_row: INTEGER): EV_GRID_ITEM
 			-- Item associated to `grid' at position (`a_column', `a_row').
 		local
 			l_row: EV_GRID_ROW
+			l_item: detachable EV_GRID_ITEM
 		do
 			l_row := grid.row (a_row)
 			if attached {like row_data_type} l_row.data as l_data then
-				Result := settings.to_displayed_item (l_data)
+				settings.update_row (l_row, l_data)
+				l_item := l_row.item (a_column)
+			end
+			if l_item /= Void then
+				Result := l_item
 			else
-				create {EV_GRID_LABEL_ITEM} Result.make_with_text ("no associated data")
+				create {EV_GRID_LABEL_ITEM} Result.make_with_text ("")
+				Result.set_background_color (create {EV_COLOR}.make_with_rgb (1.0, 0.0, 0.0))
 			end
 		end
 
@@ -731,8 +646,7 @@ feature {NONE} -- Positionning
 			l_font: EV_FONT
 			l_text_before_cursor: STRING_32
 			l_monitor: EV_RECTANGLE
-			l_count_to_calculate: INTEGER
-			l_upper_space, l_lower_space, i: INTEGER
+			l_upper_space, l_lower_space: INTEGER
 			l_is_show_below: BOOLEAN
 		do
 				-- We get the monitor on which the underlying field is positioned. We will do our best to
@@ -750,7 +664,7 @@ feature {NONE} -- Positionning
 					-- when requested in `settings'.
 				if field.caret_position > 1 then
 					l_font := field.font
-					l_text_before_cursor := field.text.substring (1, field.caret_position - 1)
+					l_text_before_cursor := field.displayed_text.substring (1, field.caret_position - 1)
 					Result.x := Result.x + l_font.string_width (l_text_before_cursor) + 5
 				end
 			end
@@ -795,29 +709,7 @@ feature {NONE} -- Positionning
 				Result.y := Result.y - Result.height
 			end
 
-				-- Calculate correct size to fit
-			if not l_grid.is_destroyed and then l_grid.column_count >= 1 and then l_grid.row_count > 0 then
-				Result.width := l_grid.column (1).required_width_of_item_span (1, l_grid.row_count)
-				if Result.width = 0 then
-					l_count_to_calculate := Result.height // l_grid.row_height + 1
-					l_count_to_calculate := l_count_to_calculate.min (l_grid.row_count)
-					from
-						i := 1
-					until
-						i > l_count_to_calculate
-					loop
-						if attached l_grid.item (1, i) as l_grid_item then
-							Result.width := Result.width.max (l_grid_item.required_width)
-						end
-						i := i + 1
-					end
-
-						-- Make sure border and any potential vertical scrollbar is taken in to account.
-					Result.width := Result.width + l_grid.vertical_scroll_bar.width
-				end
-			end
-
-				-- Ensure it is has big as the underlying field.
+				-- Ensure it is at least as big as the underlying field.
 			Result.width := Result.width.max (field.width)
 				-- Ensure it is no wider than the current monitor.
 			Result.width := l_monitor.width.min (Result.width)
@@ -834,7 +726,7 @@ feature {NONE} -- Positionning
 feature {NONE} -- Grid helpers
 
 	first_visible_row (a_grid: EV_GRID): detachable EV_GRID_ROW
-			-- Gives the first fully visible row of the gird. Unlike `{EV_GRID}.first_visible_row'
+			-- Gives the first fully visible row of the grid. Unlike `{EV_GRID}.first_visible_row'
 			-- which returns the first partially visible row of the grid.
 			-- If a row cannot be fully visible (e.g. taller than the grid's viewable_height) it
 			-- returns `{EV_GRID}.first_visible_row'.
@@ -866,7 +758,7 @@ feature {NONE} -- Grid helpers
 		end
 
 	last_visible_row (a_grid: EV_GRID): detachable EV_GRID_ROW
-			-- Gives the last fully visible row of the gird. Unlike `{EV_GRID}.last_visible_row'
+			-- Gives the last fully visible row of the grid. Unlike `{EV_GRID}.last_visible_row'
 			-- which returns the last partially visible row of the grid.
 			-- If a row cannot be fully visible (e.g. taller than the grid's viewable_height) it
 			-- returns `{EV_GRID}.last_visible_row'.
@@ -905,6 +797,48 @@ feature {NONE} -- Grid helpers
 			l_grid := grid
 			Result := l_grid.viewable_height // l_grid.row_height
 		end
+
+	select_row (a_row: INTEGER)
+			-- Select row `i'.
+			-- If invisible, select its parent
+		require
+			a_row_is_valid: a_row > 0 and a_row <= grid.row_count
+		local
+			i: INTEGER
+			l_row: detachable EV_GRID_ROW
+			l_grid: like grid
+			l_rows: ARRAYED_LIST [EV_GRID_ROW]
+		do
+			l_grid := grid
+			if l_grid.row_count > 0 then
+					-- Go to bottom
+				l_grid.remove_selection
+
+				i := a_row
+				l_row := l_grid.row (i).parent_row
+				if l_row = Void then
+					l_grid.row (i).enable_select
+				else
+					if not l_row.is_expanded then
+						l_row.enable_select
+					else
+						l_grid.row (i).enable_select
+					end
+				end
+				l_rows := l_grid.selected_rows
+				if not l_rows.is_empty and then l_rows.first.is_displayed then
+					l_rows.first.ensure_visible
+				end
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	grid: EV_GRID
+			-- Grid displaying result of search.
+
+	border_width: INTEGER = 1
+			-- Number of pixels for the border surrounding the suggestion window.
 
 invariant
 

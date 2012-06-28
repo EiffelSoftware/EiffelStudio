@@ -15,10 +15,8 @@ feature -- Access
 		deferred
 		end
 
-	suggestion_text: IMMUTABLE_STRING_32
-			-- Text used as a result of finishing a suggestion.
-			--| I.e. users may have chose `text' from a list of possible choices
-			--| and once selected it enters something slightly different.
+	displayed_text: IMMUTABLE_STRING_32
+			-- Rendered version of `text' used for display purpose.
 		do
 			Result := text
 		end

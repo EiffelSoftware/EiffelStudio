@@ -21,22 +21,22 @@
 		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="eiffeltime" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
-		<cluster name="argument" location="$ISE_LIBRARY\contrib\library\gobo\library\argument\" recursive="true">
+		<cluster name="argument" location="..\..\..\contrib\library\gobo\library\argument\" recursive="true">
 			<option namespace="Argument">
 			</option>
 		</cluster>
-		<cluster name="kernel" location="$ISE_LIBRARY\contrib\library\gobo\library\kernel\" recursive="true">
+		<cluster name="kernel" location="..\..\..\contrib\library\gobo\library\kernel\" recursive="true">
 			<option namespace="Kernel">
 			</option>
 			<file_rule>
 				<exclude>/unicode/uc_string.e$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="lexical" location="$ISE_LIBRARY\contrib\library\gobo\library\lexical\" recursive="true">
+		<cluster name="lexical" location="..\..\..\contrib\library\gobo\library\lexical\" recursive="true">
 			<option namespace="Lexical">
 			</option>
 		</cluster>
-		<cluster name="math" location="$ISE_LIBRARY\contrib\library\gobo\library\math\" recursive="true">
+		<cluster name="math" location="..\..\..\contrib\library\gobo\library\math\" recursive="true">
 			<option namespace="Math">
 			</option>
 		</cluster>
@@ -46,39 +46,39 @@
 				<exclude>/generated/library/test$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="parse" location="$ISE_LIBRARY\contrib\library\gobo\library\parse\" recursive="true">
+		<cluster name="parse" location="..\..\..\contrib\library\gobo\library\parse\" recursive="true">
 			<option namespace="Parse">
 			</option>
 		</cluster>
-		<cluster name="pattern" location="$ISE_LIBRARY\contrib\library\gobo\library\pattern\" recursive="true">
+		<cluster name="pattern" location="..\..\..\contrib\library\gobo\library\pattern\" recursive="true">
 			<option namespace="Pattern">
 			</option>
 		</cluster>
-		<cluster name="regexp" location="$ISE_LIBRARY\contrib\library\gobo\library\regexp\" recursive="true">
+		<cluster name="regexp" location="..\..\..\contrib\library\gobo\library\regexp\" recursive="true">
 			<option namespace="RegExp">
 			</option>
 		</cluster>
-		<cluster name="string" location="$ISE_LIBRARY\contrib\library\gobo\library\string\" recursive="true">
+		<cluster name="string" location="..\..\..\contrib\library\gobo\library\string\" recursive="true">
 			<option namespace="String">
 			</option>
 		</cluster>
-		<cluster name="structure" location="$ISE_LIBRARY\contrib\library\gobo\library\structure\" recursive="true">
+		<cluster name="structure" location="..\..\..\contrib\library\gobo\library\structure\" recursive="true">
 			<option namespace="Structure">
 			</option>
 		</cluster>
-		<cluster name="time" location="$ISE_LIBRARY\contrib\library\gobo\library\time\" recursive="true">
+		<cluster name="time" location="..\..\..\contrib\library\gobo\library\time\" recursive="true">
 			<option namespace="Time">
 			</option>
 		</cluster>
-		<cluster name="tools" location="$ISE_LIBRARY\contrib\library\gobo\library\tools\" recursive="true">
+		<cluster name="tools" location="..\..\..\contrib\library\gobo\library\tools\" recursive="true">
 			<option namespace="Tools">
 			</option>
 		</cluster>
-		<cluster name="utility" location="$ISE_LIBRARY\contrib\library\gobo\library\utility\" recursive="true">
+		<cluster name="utility" location="..\..\..\contrib\library\gobo\library\utility\" recursive="true">
 			<option namespace="Utility">
 			</option>
 		</cluster>
-		<cluster name="xml" location="$ISE_LIBRARY\contrib\library\gobo\library\xml\" recursive="true">
+		<cluster name="xml" location="..\..\..\contrib\library\gobo\library\xml\" recursive="true">
 			<option namespace="Xml">
 			</option>
 			<file_rule>

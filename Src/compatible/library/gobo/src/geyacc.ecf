@@ -25,6 +25,6 @@
 		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse.ecf"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>
-		<cluster name="geyacc" location="$ISE_LIBRARY\contrib\library\gobo\src\geyacc\"/>
+		<cluster name="geyacc" location="..\..\..\contrib\library\gobo\src\geyacc\"/>
 	</target>
 </system>

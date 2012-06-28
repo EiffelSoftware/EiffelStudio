@@ -1,1 +1,0 @@
-'eraise' in 'eif_except.h' not implemented

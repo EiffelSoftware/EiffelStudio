@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+
+<library name="tools" prefix="et_">
+	<description>
+		description: "Xace file for the Gobo Eiffel Tools Library"
+		library: "Gobo Eiffel Tools Library"
+		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<cluster name="tools" location="${GOBO}/library/tools">
+		<option name="abstract" value="true"/>
+		<cluster name="eiffel" prefix="eiffel_">
+			<option name="abstract" value="true"/>
+			<cluster name="ast">
+				<option name="abstract" value="true"/>
+				<cluster name="agent"/>
+				<cluster name="assertion"/>
+				<cluster name="class"/>
+				<cluster name="constant"/>
+				<cluster name="expression"/>
+				<cluster name="feature"/>
+				<cluster name="group"/>
+				<cluster name="instruction"/>
+				<cluster name="misc"/>
+				<cluster name="name"/>
+				<cluster name="type"/>
+			</cluster>
+			<cluster name="compilation"/>
+			<cluster name="dynamic"/>
+			<cluster name="error"/>
+			<cluster name="generation"/>
+			<cluster name="parser"/>
+			<cluster name="processor"/>
+		</cluster>
+		<cluster name="lace" prefix="lace_">
+			<option name="abstract" value="true"/>
+			<cluster name="ast"/>
+			<cluster name="error"/>
+			<cluster name="parser"/>
+		</cluster>
+		<cluster name="ecf" prefix="ecf_">
+			<option name="abstract" value="true"/>
+			<cluster name="ast"/>
+			<cluster name="error"/>
+			<cluster name="parser"/>
+		</cluster>
+		<cluster name="xace" prefix="xace_">
+			<option name="abstract" value="true"/>
+			<cluster name="ast"/>
+			<cluster name="error"/>
+			<cluster name="generator"/>
+			<cluster name="parser"/>
+			<cluster name="support"/>
+		</cluster>
+	</cluster>
+</library>

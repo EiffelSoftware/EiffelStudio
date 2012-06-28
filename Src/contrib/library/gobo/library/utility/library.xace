@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<library name="utility" prefix="ut_">
+	<description>
+		description: "Xace file for the Gobo Eiffel Utility Library"
+		library: "Gobo Eiffel Utility Library"
+		copyright: "Copyright (c) 2001-2007, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<cluster name="utility" location="${GOBO}/library/utility">
+		<option name="abstract" value="true"/>
+		<cluster name="error"/>
+		<cluster name="formatter"/>
+		<cluster name="config"/>
+		<cluster name="support"/>
+		<cluster name="transcoder"/>
+		<cluster name="uri"/>
+	</cluster>
+</library>

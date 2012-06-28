@@ -1,0 +1,102 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Transformation Result"
+
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date: 2007-01-26 10:55:25 -0800 (Fri, 26 Jan 2007) $"
+	revision: "$Revision: 5877 $"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_transformation_result">
+  <chapterinfo>
+    <copyright>
+      <year>2004</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>Wednesday, October 20th, 2004</date>
+  </chapterinfo>
+  <title>Transformation Result</title>    
+  <para>
+    <classname>XM_XSLT_TRANSFORMATION_RESULT</classname> is a wrapper for the various classes which might receive
+    a result document from a transformation.
+  </para>
+  <section>
+    <title>Creation Procedures</title>
+    <para>
+      The creation procedure <featurename>make_secondary_stream</featurename> is only used for
+      creating secondary streams, that is, those created by an <xslt>xsl:result-document</xslt>. 
+      Accordingly, users of the library will not use it directly.
+    </para>
+    <para>
+      The other creation procedures are for creating the primary result. Since the Eiffel programmer
+      <emphasis>must</emphasis> use one of these when invoking <featurecall><featurename>transform</featurename></featurecall>,
+      it is worth going into them in some detail.
+    </para>
+    <variablelist>
+      <varlistentry>
+	<term><featurename>make (a_stream: XM_OUTPUT; a_system_id:STRING)</featurename></term>
+	<listitem>
+	  <para>
+	    This will be the one you normally want to use. You create <featurename>a_stream</featurename>
+	    using whichever creation procedure of <classname>XM_OUTPUT</classname> you find appropriate, and
+	    you couple a <exmlsyntax>SYSTEM</exmlsyntax> id with it.
+	    <warning>
+		This should be an absolute URI, especially if you use any <xslt>xsl:result-document</xslt>s
+		with relative URIs for their <xslt>href</xslt> attribute, as they will be resolved realative
+		to the one you supply.
+	    </warning>
+	    <warning>
+	      If you use any <xslt>xsl:result-document</xslt>s with relative URIs for their <xslt>href</xslt> 
+	      attribute, then make sure that your URI scheme is one that 
+	      <link linkend="output_resolver">your output resolver</link> can cope with.
+	    </warning>
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><featurename>make_receiver (a_receiver: XM_XPATH_RECEIVER)</featurename></term>
+	<listitem>
+	  <para>
+	    With this creation procedure, you direct the output to an XPath library event stream. This
+	    would be an appropriate choice if you wanted to immediately run another transformation
+	    against the output from the first transformation.
+	  </para>
+	  <para>
+	    I have added an extension attribute to <xslt>xsl:output/xsl:result-document</xslt> so
+	    that you will be able to specify a next transformation to run automatically. But even so,
+	    this option might be useful in some circumstances.
+	  </para>
+	</listitem>
+      </varlistentry>
+     <varlistentry>
+	<term><featurename>make_emitter (an_emitter: XM_XSLT_EMITTER)</featurename></term>
+	<listitem>
+	  <para>
+	    This creation procedure enables you to direct output directly to an emitter
+	    (which is the XSLT library's serialization class). Normally the transformer will create
+	    an emitter for you, based on the attributes specified on <xslt>xsl:output/xsl:result-document</xslt>,
+	    so I don't think this creation procedure is needed, but you might decide otherwise.
+	  </para>
+	  <para>
+	    I'm trying to think of a scenario in which this might be wanted. The only far-fetched idea I've been able to
+	    come up with, is if you have a chain of transformations, and you want to use the output attributes from the 
+	    <xslt>xsl:output</xslt> in the first stylesheet (rather than the last, which is the normal situation). In which
+	    case you could create an emitter based on the initial <xslt>xsl:output</xslt>, and then pass it to this creation
+	    procedure. You would then pass the created transformation result to the last transform in the chain (and use 
+	    <featurename>make_receiver</featurename> for the previous steps in the chain).
+	  </para>
+	</listitem>
+     </varlistentry>
+    </variablelist>    
+  </section>
+</chapter>

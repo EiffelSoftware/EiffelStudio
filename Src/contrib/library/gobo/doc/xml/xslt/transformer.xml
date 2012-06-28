@@ -1,0 +1,88 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Creating a Transformer"
+
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date: 2007-01-26 10:55:25 -0800 (Fri, 26 Jan 2007) $"
+	revision: "$Revision: 5877 $"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_transformer">
+  <chapterinfo>
+    <copyright>
+      <year>2004</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>Sunday, October 31st, 2004</date>
+  </chapterinfo>
+  <title>Creating a Transformer</title>
+  <para>
+    Once the XSLT processor is configured, you then need to create an executable version
+    of your XSLT stylesheet or transform, and an <classname>XM_XSLT_TRANSFORMER</classname> to use it.
+  </para>
+  <para>
+    The first step is to create an an <classname>XM_XSLT_TRANSFORMER_FACTORY</classname>. You simply call <featurename>make</featurename>,
+    passing it the configuration you created in the previous step. By default, this caches compiled stylesheets for you. You can change this behaviour
+    at any time by calling <featurename>set_caching (on_or_off: BOOLEAN)</featurename>.
+  </para>
+  <para>
+    Then you call <featurename>create_new_transformer</featurename>. This takes a <classname>XM_XSLT_SOURCE</classname> as a parameter,
+    so you first have to create one to represent your stylesheet. If you are starting with XML text, then you do this by creating an
+    <link linkend="transformation_source"><classname>XM_XSLT_URI_SOURCE</classname></link>, 
+    passing it the <exmlsyntax>URI</exmlsyntax> of your text file. You must also pass an absolute URI as the base URI for the application. This
+    will be used to resolve the first argument if it is relative, amongst other things.
+  </para>
+  <para>
+    If instead, you wish to transform a source document according to any xml-stylesheet processing instructions contained within it, then
+    you should first call <featurename>associated_stylesheet</featurename> to create the <classname>XM_XSLT_SOURCE</classname>. This takes
+    the <exmlsyntax>URI</exmlsyntax> of the source document as the first argument, the medium for the transformed document as the second
+    argument, and an <classname>XM_XSLT_PI_CHOOSER</classname> as the third argument. This last argument is to allow choosing between
+    alternate stylesheets. See <ulink url="http://www.w3.org/TR/xml-stylesheet/">Associating Style Sheets with XML documents</ulink> for an
+    understanding of what is involved.
+  </para>
+  <para>
+    The transformer factory either sets <featurename>was_error</featurename>, or else the new transformer is made available in
+    <featurename>created_transformer</featurename>.
+  </para>
+  <para>
+    The compiled stylesheets are re-usable (which is why they are cached). To re-use one, simply call  <featurename>create_new_transformer</featurename>
+    again with an <classname>XM_XSLT_SOURCE</classname> that has the same <exmlsyntax>URI</exmlsyntax>.
+  </para>
+  <para>
+    However, you should <emphasis>not</emphasis> attempt to run two transformations at once (not even if they involve different stylesheets).
+  </para>
+  <para>
+    If you reuse a transformer, then before calling <featurecall><featurename>transform</featurename></featurecall> a second time,
+    you may wish to call <featurecall><featurename>clear_document_pool</featurename></featurecall>. This clears all document nodes
+    from memory, and destroys the mapping of URIs to document nodes. The reasons you might want to do this are:
+  <itemizedlist>
+    <listitem>
+      <para>
+	To save memory (and hence garbage collection cycles) by throwing away documents which will not be used again.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+	If you reuse the same URIs to refer to different documents from one transformation to another. This is a doubtful practice,
+	but if you insist on doing it then you <emphasis>must</emphasis> call <featurecall><featurename>clear_document_pool</featurename></featurecall>
+	otherwise you will get incorrect results.
+      </para>
+    </listitem>
+  </itemizedlist>
+  </para>
+  <para>
+    In general, it is better to <emphasis>not </emphasis> call <featurecall><featurename>clear_document_pool</featurename></featurecall>, as you
+    will then get better performance if you reuse a document (for example, by using the <xslt>document()</xslt> function), as the transformer will not have
+    to parse the document afresh.
+  </para>
+</chapter>

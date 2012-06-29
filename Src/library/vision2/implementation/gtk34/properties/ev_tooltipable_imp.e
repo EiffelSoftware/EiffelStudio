@@ -20,9 +20,17 @@ feature -- Initialization
 
 	tooltip: STRING_32
 			-- Tooltip that has been set.
+		local
+			l_text: POINTER
+			l_cs: EV_GTK_C_STRING
 		do
-				--| FIXME Update to gtk3 implementation
-			Result := ""
+			l_text := {GTK2}.gtk_widget_get_tooltip_text (visual_widget)
+			if l_text /= default_pointer then
+				create l_cs.share_from_pointer (l_text)
+				Result := l_cs.string
+			else
+				Result := ""
+			end
 		end
 
 feature -- Element change
@@ -30,10 +38,10 @@ feature -- Element change
 	set_tooltip (a_text: READABLE_STRING_GENERAL)
 			-- Set `tooltip' to `a_text'.
 		local
-			a_cs: EV_GTK_C_STRING
+			l_cs: EV_GTK_C_STRING
 		do
-			a_cs := app_implementation.c_string_from_eiffel_string (a_text)
-			--| FIXME IEK: Implement me
+			l_cs := app_implementation.c_string_from_eiffel_string (a_text)
+			{GTK2}.gtk_widget_set_tooltip_text (visual_widget, l_cs.item)
 		end
 
 feature {NONE} -- Implementation

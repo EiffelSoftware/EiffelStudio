@@ -342,7 +342,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	aux_info_struct: POINTER
 			-- Pointer to the auxillary information struct used for retrieving when widget is unmapped
 		do
-			{GTK2}.g_object_get_pointer (c_object, aux_info_string.item, $Result)
+			--{GTK2}.g_object_get_pointer (c_object, aux_info_string.item, $Result)
 		end
 
 	show

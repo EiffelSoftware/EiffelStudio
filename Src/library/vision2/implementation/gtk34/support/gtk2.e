@@ -1086,6 +1086,16 @@ feature -- Externals
 			"C signature (GtkWidget*, gboolean) use <ev_gtk.h>"
 		end
 
+	frozen gtk_widget_set_tooltip_text (a_widget: POINTER; a_text: POINTER)
+		external
+			"C signature (GtkWidget*, gchar*) use <ev_gtk.h>"
+		end
+
+	frozen gtk_widget_get_tooltip_text (a_widget: POINTER): POINTER
+		external
+			"C signature (GtkWidget*): gchar* use <ev_gtk.h>"
+		end
+
 	frozen gdk_window_invalidate_rect (a_window, a_rectangle: POINTER; invalidate_children: BOOLEAN)
 		external
 			"C signature (GdkWindow*, GdkRectangle*, gboolean) use <ev_gtk.h>"

@@ -56,7 +56,6 @@ feature -- Access
 			item_imp ?= an_item.implementation
 			check item_imp /= Void end
 			item_imp.set_parent_imp (Current)
-			{GTK}.gtk_paned_pack1 (container_widget, item_imp.c_object, False, False)
 			first := an_item
 			set_item_resize (an_item, False)
 		end
@@ -69,7 +68,6 @@ feature -- Access
 			item_imp ?= an_item.implementation
 			check item_imp /= Void end
 			item_imp.set_parent_imp (Current)
-			{GTK}.gtk_paned_pack2 (container_widget, item_imp.c_object, True, False)
 			second := an_item
 			set_item_resize (an_item, True)
 		end
@@ -139,9 +137,14 @@ feature {NONE} -- Implementation
 
 	set_item_resize (an_item: attached like item; a_resizable: BOOLEAN)
 			-- Set whether `an_item' is `a_resizable' when `Current' resizes.
+		local
+			l_parent: POINTER
 		do
 			if attached {EV_WIDGET_IMP} an_item.implementation as l_item_imp then
-				{GTK}.gtk_container_remove ({GTK}.gtk_widget_get_parent (l_item_imp.c_object), l_item_imp.c_object)
+				l_parent := {GTK}.gtk_widget_get_parent (l_item_imp.c_object)
+				if l_parent /= default_pointer then
+					{GTK}.gtk_container_remove (l_parent, l_item_imp.c_object)
+				end
 				if an_item = first then
 					first_expandable := a_resizable
 					{GTK}.gtk_paned_pack1 (container_widget, l_item_imp.c_object, a_resizable, False)

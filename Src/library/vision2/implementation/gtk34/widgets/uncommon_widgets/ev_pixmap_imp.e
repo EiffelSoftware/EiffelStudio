@@ -202,21 +202,7 @@ feature -- Element change
 				-- We could not load the image so raise an exception
 				(create {EXCEPTIONS}).raise ("Could not load image file.")
 			end
-			cairo_surface := {CAIRO}.cairo_image_surface_create (
-				{CAIRO}.CAIRO_FORMAT_ARGB32,
-				{GTK}.gdk_pixbuf_get_width (filepixbuf),
-				{GTK}.gdk_pixbuf_get_height (filepixbuf)
-			)
-			drawable := {CAIRO}.cairo_create (cairo_surface)
-			set_drawing_mode (drawing_mode_copy)
-
-				-- Temporarily set the source to the pixbuf so that we can draw it on to the drawable.
-			{GTK}.gdk_cairo_set_source_pixbuf (drawable, filepixbuf, 0, 0)
-			{CAIRO}.cairo_paint (drawable)
-
-				-- Reset the cairo context back to rgb source of black.
-			{CAIRO}.cairo_set_source_rgb (drawable, 0, 0, 0)
-
+			set_pixmap_from_pixbuf (filepixbuf)
 				-- Unreference pixbuf so that it may be collected.
 			{GTK2}.g_object_unref (filepixbuf)
 		end
@@ -366,32 +352,22 @@ feature -- Duplication
 feature {EV_ANY_I, EV_GTK_DEPENDENT_APPLICATION_IMP} -- Implementation
 
 	set_pixmap_from_pixbuf (a_pixbuf: POINTER)
-			-- Construct `Current' from GdkPixbuf `a_pixbuf'
-		local
-			a_gdkpix, a_gdkmask: POINTER
+			-- Attempt to load pixmap data from a file specified by `file_name'.
 		do
-				-- Alpha threshold value is set to 127 to match the MSWin implementation.
---			{GTK}.gdk_pixbuf_render_pixmap_and_mask (a_pixbuf, $a_gdkpix, $a_gdkmask, 127)
-			set_pixmap (a_gdkpix, a_gdkmask)
-		end
+			cairo_surface := {CAIRO}.cairo_image_surface_create (
+				{CAIRO}.CAIRO_FORMAT_ARGB32,
+				{GTK}.gdk_pixbuf_get_width (a_pixbuf),
+				{GTK}.gdk_pixbuf_get_height (a_pixbuf)
+			)
+			drawable := {CAIRO}.cairo_create (cairo_surface)
+			set_drawing_mode (drawing_mode_copy)
 
-	copy_from_gdk_data (a_src_pix, a_src_mask: POINTER; a_width, a_height: INTEGER)
-			-- Update `Current' to use passed gdk pixmap data.
-		local
---			gdkpix, gdkmask: POINTER
---			pixgc, maskgc: POINTER
-		do
--- 			gdkpix := {GTK}.gdk_pixmap_new (null, a_width, a_height, app_implementation.best_available_color_depth)
---			pixgc := {GTK}.gdk_gc_new (gdkpix)
---			{GTK2}.gdk_draw_drawable (gdkpix, pixgc, a_src_pix, 0, 0, 0, 0, a_width, a_height)
---			{GTK}.gdk_gc_unref (pixgc)
---			if a_src_mask /= NULL then
---				gdkmask := {GTK}.gdk_pixmap_new (NULL, a_width, a_height, Monochrome_color_depth)
---				maskgc := {GTK}.gdk_gc_new (gdkmask)
---				{GTK2}.gdk_draw_drawable (gdkmask, maskgc, a_src_mask, 0, 0, 0, 0, a_width, a_height)
---				{GTK}.gdk_gc_unref (maskgc)
---			end
---			set_pixmap (gdkpix, gdkmask)
+				-- Temporarily set the source to the pixbuf so that we can draw it on to the drawable.
+			{GTK}.gdk_cairo_set_source_pixbuf (drawable, a_pixbuf, 0, 0)
+			{CAIRO}.cairo_paint (drawable)
+
+				-- Reset the cairo context back to rgb source of black.
+			{CAIRO}.cairo_set_source_rgb (drawable, 0, 0, 0)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -412,19 +388,6 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 
 feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_PIXEL_BUFFER_IMP} -- Implementation
 
-	set_pixmap (gdkpix, gdkmask: POINTER)
-			-- Set the GtkPixmap using Gdk pixmap data and mask.
-		do
---			{GTK2}.gtk_image_set_from_pixmap (visual_widget, gdkpix, gdkmask)
---			drawable := gdkpix
---			mask := gdkmask
---			if gdkpix /= NULL then
---				{GTK}.gdk_pixmap_unref (gdkpix)
---			end
---			if gdkmask /= NULL then
---				{GTK}.gdk_pixmap_unref (gdkmask)
---			end
-		end
 
 	set_from_xpm_data (a_xpm_data: POINTER)
 			-- Pixmap symbolizing a piece of information.
@@ -443,14 +406,14 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_PIXEL_BUFFER_IMP} -- Implem
 		require
 			a_stock_id_not_null: a_stock_id /= NULL
 		local
---			stock_pixbuf: POINTER
+			stock_pixbuf: POINTER
 		do
---			stock_pixbuf := {GTK2}.gtk_widget_render_icon (c_object, a_stock_id, {GTK2}.gtk_icon_size_dialog_enum, default_pointer)
---			if stock_pixbuf /= NULL then
---					-- If a stock pixmap can be found then set it, else do nothing.
---				set_pixmap_from_pixbuf (stock_pixbuf)
---				{GTK2}.object_unref (stock_pixbuf)
---			end
+			stock_pixbuf := {GTK2}.gtk_widget_render_icon (c_object, a_stock_id, {GTK2}.gtk_icon_size_dialog_enum, default_pointer)
+			if stock_pixbuf /= NULL then
+					-- If a stock pixmap can be found then set it, else do nothing.
+				set_pixmap_from_pixbuf (stock_pixbuf)
+				{GTK2}.g_object_unref (stock_pixbuf)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -489,7 +452,6 @@ feature {NONE} -- Implementation
 	destroy
 			-- Destroy the pixmap and resources.
 		do
-			set_pixmap (NULL, NULL)
 			Precursor {EV_PRIMITIVE_IMP}
 		end
 

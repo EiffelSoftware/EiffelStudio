@@ -268,7 +268,7 @@ feature -- Change
 			if a_expand_recursive then
 				l_agent := expand_selected_rows_recursive_agent
 				if l_agent = Void then
-					l_agent := agent expand_rows (False)
+					l_agent := agent expand_rows (True)
 					set_expand_selected_rows_recursive_agent (l_agent)
 				end
 				default_expand_rows_recursive_shortcuts.do_all (agent register_shortcut (?, l_agent))
@@ -1258,8 +1258,8 @@ invariant
 	selected_rows_agent_attached: selected_rows_function /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

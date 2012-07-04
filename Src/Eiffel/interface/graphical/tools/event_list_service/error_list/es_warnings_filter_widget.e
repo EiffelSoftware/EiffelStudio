@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "[
 		A widget for the Errors and Warnings tool to filter warnings.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ES_WARNINGS_FILTER_WIDGET
@@ -211,6 +211,7 @@ feature {NONE} -- Access
 			l_result.put_last ([{VIRC}, True])
 			l_result.put_last ([{VJRV}, False])
 			l_result.put_last ([{VWEQ}, True])
+			l_result.put_last ([{VWAB}, True])
 
 			Result := l_result
 		ensure
@@ -373,8 +374,8 @@ invariant
 	grid_warnings_attached: grid_warnings /= Void
 	filter_changed_actions_attached: filter_changed_actions /= Void
 
-;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

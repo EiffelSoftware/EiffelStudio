@@ -34,13 +34,13 @@ feature -- Command
 			-- <Precursor>
 		do
 		end
-		
+
 	is_during_pnd: BOOLEAN
 			-- <Precursor>
 		do
 				Result := False
 		end
-		
+
 	clear_background_for_theme (a_widget: EV_DRAWING_AREA; a_rect: EV_RECTANGLE)
 			-- <Precursor>
 		do
@@ -66,23 +66,27 @@ feature {NONE} -- Externals
 		alias
 			"[
 			{
-				GtkWidget *l_widget;
-				l_widget = GTK_WIDGET ($a_gtk_widget);
-				gdk_window_set_back_pixmap (l_widget->window, NULL, TRUE);
-				gdk_window_clear_area (l_widget->window, $a_x, $a_y, $a_width, $a_height);		
+				#if GTK_MAJOR_VERSION < 3
+					GtkWidget *l_widget;
+					l_widget = GTK_WIDGET ($a_gtk_widget);
+					gdk_window_set_back_pixmap (l_widget->window, NULL, TRUE);
+					gdk_window_clear_area (l_widget->window, $a_x, $a_y, $a_width, $a_height);
+				#else
+				
+				#endif
 			}
 			]"
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end
 

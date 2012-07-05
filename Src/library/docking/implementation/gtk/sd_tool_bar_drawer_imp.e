@@ -82,6 +82,7 @@ feature -- Redefine
 			-- <Precursor>
 		local
 			l_rect: EV_RECTANGLE
+			l_docking_drawable: POINTER
 		do
 			if
 				attached tool_bar as l_tool_bar and then
@@ -93,29 +94,33 @@ feature -- Redefine
 					attached a_arguments.item as l_item -- Implied by precondition
 				then
 					l_rect := l_item.rectangle
-					if attached {SD_TOOL_BAR_BUTTON} l_item as l_button then
+					l_docking_drawable := l_tool_bar_imp.get_drawable
+					if l_docking_drawable /= default_pointer then
+						if attached {SD_TOOL_BAR_BUTTON} l_item as l_button then
 
-						-- Paint button background
-						if l_item.state /= {SD_TOOL_BAR_ITEM_STATE}.normal then
-							c_gtk_paint_box (button_style, l_tool_bar_imp.c_object, to_gtk_state (l_item.state), gtk_shadow_type (l_item.state),
-										l_rect.x, l_rect.y, l_rect.width, l_rect.height, True)
-							if attached {SD_TOOL_BAR_DUAL_POPUP_BUTTON} l_item as l_popup_button and then not l_popup_button.is_dropdown_area then
-								c_gtk_paint_box (button_style, l_tool_bar_imp.c_object, to_gtk_state (l_item.state), gtk_shadow_type (l_item.state),
-										l_rect.x, l_rect.y, l_rect.width - l_popup_button.dropdrown_width, l_rect.height, True)
+							-- Paint button background
+							if l_item.state /= {SD_TOOL_BAR_ITEM_STATE}.normal then
+								c_gtk_paint_box (l_docking_drawable, button_style, to_gtk_state (l_item.state), gtk_shadow_type (l_item.state),
+											l_rect.x, l_rect.y, l_rect.width, l_rect.height, True)
+								if attached {SD_TOOL_BAR_DUAL_POPUP_BUTTON} l_item as l_popup_button and then not l_popup_button.is_dropdown_area then
+									c_gtk_paint_box (l_docking_drawable, button_style, to_gtk_state (l_item.state), gtk_shadow_type (l_item.state),
+											l_rect.x, l_rect.y, l_rect.width - l_popup_button.dropdrown_width, l_rect.height, True)
+								end
+							end
+
+							-- Paint pixmap
+							draw_pixmap (a_arguments, l_docking_drawable)
+
+							-- Paint text
+							draw_text (a_arguments, l_docking_drawable)
+						else
+							if l_item.is_wrap then
+								c_gtk_paint_line (l_docking_drawable, button_style, l_rect.left, l_rect.right, l_rect.top + l_item.width // 2, False)
+							else
+								c_gtk_paint_line (l_docking_drawable, button_style, l_rect.top, l_rect.bottom, l_rect.left + l_item.width // 2, True)
 							end
 						end
-
-						-- Paint pixmap
-						draw_pixmap (a_arguments, l_tool_bar_imp.c_object)
-
-						-- Paint text
-						draw_text (a_arguments, l_tool_bar_imp.c_object)
-					else
-						if l_item.is_wrap then
-							c_gtk_paint_line (l_tool_bar_imp.c_object, l_rect.left, l_rect.right, l_rect.top + l_item.width // 2, False)
-						else
-							c_gtk_paint_line (l_tool_bar_imp.c_object, l_rect.top, l_rect.bottom, l_rect.left + l_item.width // 2, True)
-						end
+						l_tool_bar_imp.release_drawable (l_docking_drawable)
 					end
 				else
 					check valid: False end
@@ -141,14 +146,14 @@ feature -- Redefine
 
 feature {SD_NOTEBOOK_TAB_DRAWER_IMP} -- Command
 
-	draw_button_background (a_gtk_widget: POINTER; a_rect: EV_RECTANGLE; a_state: INTEGER)
+	draw_button_background (a_drawable: POINTER; a_rect: EV_RECTANGLE; a_state: INTEGER)
 			-- Draw button background.
 		require
-			exist: a_gtk_widget /= default_pointer
+			exist: a_drawable /= default_pointer
 			not_void: a_rect /= Void
 			vaild: (create {SD_TOOL_BAR_ITEM_STATE}).is_valid (a_state)
 		do
-			c_gtk_paint_box (button_style, a_gtk_widget, to_gtk_state (a_state), gtk_shadow_type (a_state), a_rect.x, a_rect.y, a_rect.width, a_rect.height, False)
+			c_gtk_paint_box (a_drawable, button_style, to_gtk_state (a_state), gtk_shadow_type (a_state), a_rect.x, a_rect.y, a_rect.width, a_rect.height, False)
 		end
 
 feature {NONE} -- Implementation
@@ -156,9 +161,22 @@ feature {NONE} -- Implementation
 	button_style: POINTER
 			-- Default theme style from resource.
 		do
-			Result := {GTK}.gtk_rc_get_style (style_source)
+			Result := gtk_style_source_from_widget (style_source)
 		ensure
 			not_void: Result /= default_pointer
+		end
+
+	gtk_style_source_from_widget (a_widget: POINTER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION < 3
+					return gtk_rc_get_style ((GtkWidget*) $a_widget);
+				#else
+					return gtk_widget_get_style_context ($a_widget);
+				#endif
+			]"
 		end
 
 	style_source: POINTER
@@ -193,17 +211,17 @@ feature {NONE} -- Implementation
 			inspect
 				a_state
 			when {SD_TOOL_BAR_ITEM_STATE}.checked then
-				Result := {GTK}.gtk_state_active_enum
+				Result := {GTK}.gtk_state_flag_active_enum
 			when {SD_TOOL_BAR_ITEM_STATE}.disabled then
-				Result := {GTK}.gtk_state_insensitive_enum
+				Result := {GTK}.gtk_state_flag_insensitive_enum
 			when {SD_TOOL_BAR_ITEM_STATE}.hot then
-				Result := {GTK}.gtk_state_prelight_enum
+				Result := {GTK}.gtk_state_flag_prelight_enum
 			when {SD_TOOL_BAR_ITEM_STATE}.hot_checked then
-				Result := {GTK}.gtk_state_prelight_enum
+				Result := {GTK}.gtk_state_flag_prelight_enum
 			when {SD_TOOL_BAR_ITEM_STATE}.normal then
-				Result := {GTK}.gtk_state_normal_enum
+				Result := {GTK}.gtk_state_flag_normal_enum
 			when {SD_TOOL_BAR_ITEM_STATE}.pressed then
-				Result := {GTK}.gtk_state_active_enum
+				Result := {GTK}.gtk_state_flag_active_enum
 			end
 		end
 
@@ -245,7 +263,7 @@ feature {NONE} -- Implementation
 						c_gdk_desatuate (l_temp_imp.pixbuf_from_drawable, $l_pixbuf)
 						check exist: l_pixbuf /= default_pointer end
 						l_temp_imp.set_pixmap_from_pixbuf (l_pixbuf)
-						{GTK2}.object_unref (l_pixbuf)
+						{GTK2}.g_object_unref (l_pixbuf)
 					end
 					l_argument_tool_bar.draw_pixmap (l_position.x, l_position.y, l_temp_pixmap)
 				end
@@ -299,9 +317,9 @@ feature {NONE} -- Implementation
 					if l_button.is_sensitive then
 						l_state := to_gtk_state (l_button.state)
 					else
-						l_state := {GTK}.gtk_state_insensitive_enum
+						l_state := {GTK}.gtk_state_flag_insensitive_enum
 					end
-					c_gtk_paint_layout (a_gtk_object, l_state, l_text_rect.left, l_text_rect.top, l_text_rect.width, l_text_rect.height, l_pango_layout)
+					c_gtk_paint_layout (a_gtk_object, button_style, l_state, l_text_rect.left, l_text_rect.top, l_text_rect.width, l_text_rect.height, l_pango_layout)
 				end
 			end
 		end
@@ -311,80 +329,127 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_gtk_paint_line (a_gtk_widget: POINTER; a_start, a_end, a_position: INTEGER; a_vertical: BOOLEAN)
+	c_gtk_paint_line (a_drawable, a_style: POINTER; a_start, a_end, a_position: INTEGER; a_vertical: BOOLEAN)
 			-- Draw vertical separator line.
 		require
-			exist: a_gtk_widget /= default_pointer
+			exist: a_drawable /= default_pointer
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
 			{
-				GtkWidget* l_widget;
-				l_widget = GTK_WIDGET ($a_gtk_widget);
-				if ($a_vertical)
-					gtk_paint_vline (l_widget->style, l_widget->window, GTK_STATE_NORMAL, NULL, l_widget, "toolbar", $a_start, $a_end, $a_position);
-				else
-					gtk_paint_hline (l_widget->style, l_widget->window, GTK_STATE_NORMAL, NULL, l_widget, "toolbar", $a_start, $a_end, $a_position);
+				#if GTK_MAJOR_VERSION < 3
+					GtkWidget* l_widget;
+					l_widget = GTK_WIDGET ($a_drawable);
+					if ($a_vertical)
+						gtk_paint_vline (l_widget->style, l_widget->window, GTK_STATE_NORMAL, NULL, l_widget, "toolbar", $a_start, $a_end, $a_position);
+					else
+						gtk_paint_hline (l_widget->style, l_widget->window, GTK_STATE_NORMAL, NULL, l_widget, "toolbar", $a_start, $a_end, $a_position);
+				#else
+					gdouble l_x0, l_y0, l_x1, l_y1;
+					if ($a_vertical)
+					{
+						l_x0 = (gdouble) $a_start;
+						l_x1 = (gdouble) $a_end;
+						l_y0 = (gdouble) $a_position;
+						l_y1 = l_y0;
+					}
+					else
+					{
+						l_y0 = (gdouble) $a_start;
+						l_y1 = (gdouble) $a_end;
+						l_x0 = (gdouble) $a_position;
+						l_x1 = l_x0;
+					}
+					gtk_render_line ((GtkStyleContext*) $a_style, (cairo_t*) $a_drawable, l_x0, l_y0, l_x1, l_y1);
+				#endif
 			}
 			]"
 		end
 
 
-	c_gtk_paint_box (a_style: POINTER; a_gtk_widget: POINTER; a_gtk_state_type: INTEGER; a_gtk_shadow_type: INTEGER; a_x, a_y, a_width, a_height: INTEGER; a_inset_shadow: BOOLEAN)
+	c_gtk_paint_box (a_drawable, a_style: POINTER; a_gtk_state_type: INTEGER; a_gtk_shadow_type: INTEGER; a_x, a_y, a_width, a_height: INTEGER; a_inset_shadow: BOOLEAN)
 			-- Paint background.
 		require
-			exist: a_gtk_widget /= default_pointer
+			exist: a_drawable /= default_pointer
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
 			{
-				GtkWidget* l_widget;
-				GtkStyle *l_style;
-				
-				l_widget = GTK_WIDGET ($a_gtk_widget);
-					// We need to attach the style to the window
-					// otherwise the color depths may be different.
-				l_style = gtk_style_attach (GTK_STYLE ($a_style), l_widget->window);
-				
-				if ($a_inset_shadow)
-				{
-					// Set thickness value not less than 3, then we can draw inset gradient border in clearlook themes.
-					l_style->xthickness = 3;
-					l_style->ythickness = 3;
-				}else
-				{
-					l_style->xthickness = 1;
-					l_style->ythickness = 1;				
-				}
-				
-				gtk_paint_box (l_style, l_widget->window,
-					$a_gtk_state_type, $a_gtk_shadow_type,
-					NULL, l_widget, "button",				
-					$a_x, $a_y, $a_width, $a_height);
+				#if GTK_MAJOR_VERSION < 3
+					GtkWidget* l_widget;
+					GtkStyle *l_style;
+					
+					l_widget = GTK_WIDGET ($a_drawable);
+						// We need to attach the style to the window
+						// otherwise the color depths may be different.
+					l_style = gtk_style_attach (GTK_STYLE ($a_style), l_widget->window);
+					
+					if ($a_inset_shadow)
+					{
+						// Set thickness value not less than 3, then we can draw inset gradient border in clearlook themes.
+						l_style->xthickness = 3;
+						l_style->ythickness = 3;
+					}else
+					{
+						l_style->xthickness = 1;
+						l_style->ythickness = 1;				
+					}
+					
+					gtk_paint_box (l_style, l_widget->window,
+						$a_gtk_state_type, $a_gtk_shadow_type,
+						NULL, l_widget, "button",				
+						$a_x, $a_y, $a_width, $a_height);
 
-				gtk_style_detach (l_style);
+					gtk_style_detach (l_style);
+				#else
+					GtkStateFlags l_flags;
+					
+						/* Temporary store and restore existing flags in `a_style'. */
+					l_flags = gtk_style_context_get_state ((GtkStyleContext*) $a_style);
+					
+					gtk_style_context_set_state ((GtkStyleContext*) $a_style, (GtkStateFlags) $a_gtk_state_type);
+					
+					gtk_render_frame ((GtkStyleContext*) $a_style, (cairo_t*) $a_drawable, (gdouble) $a_x, (gdouble) $a_y, (gdouble) $a_width, (gdouble) $a_height);
+					gtk_render_background ((GtkStyleContext*) $a_style, (cairo_t*) $a_drawable, (gdouble) $a_x, (gdouble) $a_y, (gdouble) $a_width, (gdouble) $a_height);
+					
+					gtk_style_context_set_state ((GtkStyleContext*) $a_style, l_flags);
+				#endif
 			}
 			]"
 		end
 
-	c_gtk_paint_layout (a_gtk_widget: POINTER; a_gtk_state_type: INTEGER; a_rect_x, a_rect_y, a_rect_width, a_rect_height: INTEGER; a_pango_layout: POINTER)
+	c_gtk_paint_layout (a_drawable, a_style: POINTER; a_gtk_state_type: INTEGER; a_rect_x, a_rect_y, a_rect_width, a_rect_height: INTEGER; a_pango_layout: POINTER)
 			-- Paint texts.
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
 			"[
 			{
-				GtkWidget* l_widget;
-				l_widget = GTK_WIDGET ($a_gtk_widget);
+				#if GTK_MAJOR_VERSION < 3
+					GtkWidget* l_widget;
+					l_widget = GTK_WIDGET ($a_drawable);
 
-				GdkRectangle l_rect = {$a_rect_x, $a_rect_y, $a_rect_width, $a_rect_height};
-				PangoLayout* l_pango_layout = (PangoLayout*) $a_pango_layout;
+					GdkRectangle l_rect = {$a_rect_x, $a_rect_y, $a_rect_width, $a_rect_height};
+					PangoLayout* l_pango_layout = (PangoLayout*) $a_pango_layout;
 
-				gtk_paint_layout (l_widget->style, l_widget->window,
-					$a_gtk_state_type, FALSE, &l_rect, l_widget, "label",
-					$a_rect_x, $a_rect_y, l_pango_layout);
+					gtk_paint_layout (l_widget->style, l_widget->window,
+						$a_gtk_state_type, FALSE, &l_rect, l_widget, "label",
+						$a_rect_x, $a_rect_y, l_pango_layout);
+				#else
+
+					GtkStateFlags l_flags;
+					
+						/* Temporary store and restore existing flags in `a_style'. */
+					l_flags = gtk_style_context_get_state ((GtkStyleContext*) $a_style);
+					
+					gtk_style_context_set_state ((GtkStyleContext*) $a_style, (GtkStateFlags) $a_gtk_state_type);
+
+					gtk_render_layout ((GtkStyleContext*) $a_style, (cairo_t*) $a_drawable, (gdouble) $a_rect_x, (gdouble) $a_rect_y, (PangoLayout*) $a_pango_layout);
+					
+					gtk_style_context_set_state ((GtkStyleContext*) $a_style, l_flags);
+				#endif
 			}
 			]"
 		end
@@ -404,7 +469,7 @@ feature {NONE} -- Externals
 
 				stated = gdk_pixbuf_copy (pixbuf);
 				gdk_pixbuf_saturate_and_pixelate (pixbuf, stated, 0.8, TRUE);
-				
+
 				*((GdkPixbuf **) $a_result) = stated;
 			}
 			]"

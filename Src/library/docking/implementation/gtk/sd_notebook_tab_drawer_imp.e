@@ -91,6 +91,7 @@ feature -- Command
 			-- Redefine
 		local
 			l_vision_rect: EV_RECTANGLE
+			l_drawable: POINTER
 		do
 			if (tab.is_hot or tab.is_selected)and is_top_side_tab then
 
@@ -101,10 +102,14 @@ feature -- Command
 				if tab.is_pointer_in_close_area then
 					if attached tab.parent as l_parent then
 						if attached {EV_DRAWING_AREA_IMP} l_parent.implementation as l_imp then
-							if tab.is_pointer_pressed then
-								tool_bar_drawer.draw_button_background (l_imp.c_object, l_vision_rect, {SD_TOOL_BAR_ITEM_STATE}.pressed)
-							else
-								tool_bar_drawer.draw_button_background (l_imp.c_object, l_vision_rect, {SD_TOOL_BAR_ITEM_STATE}.hot)
+							l_drawable := l_imp.get_drawable
+							if l_drawable /= default_pointer then
+								if tab.is_pointer_pressed then
+									tool_bar_drawer.draw_button_background (l_drawable, l_vision_rect, {SD_TOOL_BAR_ITEM_STATE}.pressed)
+								else
+									tool_bar_drawer.draw_button_background (l_drawable, l_vision_rect, {SD_TOOL_BAR_ITEM_STATE}.hot)
+								end
+								l_imp.release_drawable (l_drawable)
 							end
 						end
 					else
@@ -177,10 +182,14 @@ feature -- Command
 
 	draw_focus_rect (a_rect: EV_RECTANGLE)
 			-- Redefine
+		local
+			l_drawable: POINTER
 		do
 			if attached tab.parent as l_parent then
 				if attached {SD_DRAWING_AREA_IMP} l_parent.implementation as l_imp then
-					c_gtk_paint_focus (l_imp.c_object, {GTK}.gtk_rc_get_style (l_imp.c_object), a_rect.x, a_rect.y, a_rect.width, a_rect.height)
+					l_drawable := l_imp.get_drawable
+					c_gtk_paint_focus (l_drawable, {GTK}.gtk_widget_get_style_context (l_imp.c_object), a_rect.x, a_rect.y, a_rect.width, a_rect.height)
+					l_imp.release_drawable (l_drawable)
 				end
 			else
 				check False end -- Implied by `tab' is displaying on screen
@@ -225,7 +234,7 @@ feature {NONE} -- Implementation
 	notebook_style: POINTER
 			-- Default theme style from resource.
 		do
-			Result := {GTK}.gtk_rc_get_style (style_source)
+			Result := {GTK}.gtk_widget_get_style_context (style_source)
 		ensure
 			not_void: Result /= default_pointer
 		end
@@ -238,27 +247,31 @@ feature {NONE} -- Implementation
 
 	internal_expose (a_width: INTEGER; a_x: INTEGER; a_is_selected: BOOLEAN)
 			-- Expose implementation
+		local
+			l_drawable: POINTER
 		do
 			clear (a_width, a_x)
 			if attached tab.parent as l_parent then
-				if 
+				if
 					attached {SD_DRAWING_AREA_IMP} l_parent.implementation as l_imp and then
-					{GTK}.gtk_widget_struct_window (l_imp.c_object) /= default_pointer 
+					{GTK}.gtk_widget_get_window (l_imp.c_object) /= default_pointer
 				then
-					c_gtk_paint_extension (l_imp.c_object, notebook_style, a_is_selected,
+					l_drawable := l_imp.get_drawable
+					c_gtk_paint_extension (l_drawable, notebook_style, a_is_selected,
 											 a_x, 0 ,a_width, tab.height, is_top_side_tab)
 					if a_is_selected then
 						draw_pixmap_text_selected (l_parent, tab.x, a_width)
 					else
 						draw_pixmap_text_unselected (l_parent, tab.x, a_width)
 					end
+					l_imp.release_drawable (l_drawable)
 				end
 			else
 				check False end -- Implied by `tab' is displaying on screen
 			end
 		end
 
-	c_gtk_paint_extension (a_gtk_widget: POINTER; a_style: POINTER; a_selected: BOOLEAN;
+	c_gtk_paint_extension (a_drawable, a_style: POINTER; a_selected: BOOLEAN;
 									a_x, a_y, a_width, a_height: INTEGER;
 									a_top: BOOLEAN)
 			-- Gtk Draw notebook tabs.
@@ -268,64 +281,95 @@ feature {NONE} -- Implementation
 		alias
 			"[
 			{
-				GtkWidget *l_widget;
-				GtkStyle *l_style;
-				l_widget = GTK_WIDGET ($a_gtk_widget);
-				l_style = gtk_style_attach (GTK_STYLE ($a_style), l_widget->window);
-				
-				GtkStateType l_state_type;
+			
 				GtkPositionType l_gap_side;
-				GdkRectangle l_area = {$a_x, $a_y, $a_width, $a_height};
-				
-				if ($a_selected)
-					l_state_type = GTK_STATE_NORMAL;
-				else 
-					l_state_type = GTK_STATE_ACTIVE;
-				
-				l_gap_side = 0;
 				if ($a_top)
 					l_gap_side = GTK_POS_BOTTOM;
 				else
 					l_gap_side = GTK_POS_TOP;
 				
-				gtk_paint_extension(l_style, l_widget->window,
-					l_state_type, GTK_SHADOW_OUT,
-					&l_area, l_widget, "tab",
-					$a_x, $a_y, $a_width, $a_height,
-					l_gap_side);
+				
+				#if GTK_MAJOR_VERSION < 3
+					GtkWidget *l_widget;
+					GtkStyle *l_style;
+					l_widget = GTK_WIDGET ($a_drawable);
+					l_style = gtk_style_attach (GTK_STYLE ($a_style), l_widget->window);
+					
+					GtkStateType l_state_type;
+					
+					GdkRectangle l_area = {$a_x, $a_y, $a_width, $a_height};
+					
+					if ($a_selected)
+						l_state_type = GTK_STATE_NORMAL;
+					else 
+						l_state_type = GTK_STATE_ACTIVE;
+					
+					
+					gtk_paint_extension(l_style, l_widget->window,
+						l_state_type, GTK_SHADOW_OUT,
+						&l_area, l_widget, "tab",
+						$a_x, $a_y, $a_width, $a_height,
+						l_gap_side);
 
-				gtk_style_detach (l_style);
+					gtk_style_detach (l_style);
+				#else
+					GtkStateFlags l_flags;
+					
+						/* Temporary store and restore existing flags in `a_style'. */
+					l_flags = gtk_style_context_get_state ((GtkStyleContext*) $a_style);
+					
+					if ($a_selected)
+						gtk_style_context_set_state ((GtkStyleContext*) $a_style, GTK_STATE_FLAG_NORMAL);
+					else 
+						gtk_style_context_set_state ((GtkStyleContext*) $a_style, GTK_STATE_FLAG_ACTIVE);
+
+					gtk_render_extension ((GtkStyleContext*) $a_style, (cairo_t*) $a_drawable, (gdouble) $a_x, (gdouble) $a_y, (gdouble) $a_width, (gdouble) $a_height, l_gap_side);
+					
+					gtk_style_context_set_state ((GtkStyleContext*) $a_style, l_flags);
+				#endif
 			}
 			]"
 		end
 
-	c_gtk_paint_focus (a_gtk_widget: POINTER; a_style: POINTER; a_x, a_y, a_width, a_height: INTEGER)
+	c_gtk_paint_focus (a_drawable, a_style: POINTER; a_x, a_y, a_width, a_height: INTEGER)
 			-- Draws a focus indicator around the given rectangle.
 		external
 			"C inline use <gtk/gtk.h>		"
 		alias
 			"[
 			{
-				GtkWidget *l_widget;
-				GtkStyle *l_style;
-				l_widget = GTK_WIDGET ($a_gtk_widget);
-				l_style = gtk_style_attach (GTK_STYLE ($a_style), l_widget->window);
-				
-				GdkRectangle l_area = {$a_x, $a_y, $a_width, $a_height};
-				
-				gtk_paint_focus (	l_style,
-									l_widget->window,
-								 	GTK_STATE_ACTIVE,
-								 	&l_area,
-								 	l_widget,
-								 	"tab",
-								 	$a_x,
-								 	$a_y,
-								 	$a_width,
-								 	$a_height);
+				#if GTK_MAJOR_VERSION < 3
+					GtkWidget *l_widget;
+					GtkStyle *l_style;
+					l_widget = GTK_WIDGET ($a_drawable);
+					l_style = gtk_style_attach (GTK_STYLE ($a_style), l_widget->window);
+					
+					GdkRectangle l_area = {$a_x, $a_y, $a_width, $a_height};
+					
+					gtk_paint_focus (	l_style,
+										l_widget->window,
+									 	GTK_STATE_ACTIVE,
+									 	&l_area,
+									 	l_widget,
+									 	"tab",
+									 	$a_x,
+									 	$a_y,
+									 	$a_width,
+									 	$a_height);
 
-				gtk_style_detach (l_style);
+					gtk_style_detach (l_style);
+				#else
+					GtkStateFlags l_flags;
+					
+						/* Temporary store and restore existing flags in `a_style'. */
+					l_flags = gtk_style_context_get_state ((GtkStyleContext*) $a_style);
+					
+					gtk_style_context_set_state ((GtkStyleContext*) $a_style, GTK_STATE_FLAG_ACTIVE);
 
+					gtk_render_focus ((GtkStyleContext*) $a_style, (cairo_t*) $a_drawable, (gdouble) $a_x, (gdouble) $a_y, (gdouble) $a_width, (gdouble) $a_height);
+					
+					gtk_style_context_set_state ((GtkStyleContext*) $a_style, l_flags);
+				#endif
 			}
 			]"
 		end

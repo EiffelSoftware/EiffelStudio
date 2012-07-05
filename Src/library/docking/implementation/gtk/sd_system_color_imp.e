@@ -11,7 +11,7 @@ class
 inherit
 	SD_SYSTEM_COLOR
 
-	REFACTORING_HELPER
+	EV_ANY_HANDLER
 
 create
 	make
@@ -26,11 +26,8 @@ feature -- Access
 
 	default_background_color: EV_COLOR
 			-- Default background color
-		local
-			l_stock_colors: EV_STOCK_COLORS
 		do
-			create l_stock_colors
-			Result := l_stock_colors.default_background_color
+			Result := stock_colors_imp.default_background_color
 		end
 
 	mdi_back_ground_color: EV_COLOR
@@ -113,123 +110,50 @@ feature {NONE} -- GTK text_aa colors.
 
 	normal_color: EV_COLOR
 			-- State during normal operation.
-		local
-			r, g, b: INTEGER
-			color: POINTER
 		do
-			color := normal_bg_color({GTK}.gtk_style_struct_bg ({GTK}.gtk_rc_get_style (tree_view)))
-			r := {GTK}.gdk_color_struct_red (color)
-			g := {GTK}.gdk_color_struct_green (color)
-			b := {GTK}.gdk_color_struct_blue (color)
-			create Result
-			Result.set_rgb_with_16_bit (r, g, b)
+			Result := stock_colors_imp.color_from_state (tree_view, {EV_STOCK_COLORS_IMP}.bg_style, {GTK}.gtk_state_flag_normal_enum)
 		end
 
 	active_color: EV_COLOR
 			-- State of a currently active widget, such as a depressed button.
-		local
-			r, g, b: INTEGER
-			color: POINTER
 		do
-			color := active_bg_color({GTK}.gtk_style_struct_bg ({GTK}.gtk_rc_get_style (tree_view)))
-			r := {GTK}.gdk_color_struct_red (color)
-			g := {GTK}.gdk_color_struct_green (color)
-			b := {GTK}.gdk_color_struct_blue (color)
-			create Result
-			Result.set_rgb_with_16_bit (r, g, b)
+			Result := stock_colors_imp.color_from_state (tree_view, {EV_STOCK_COLORS_IMP}.bg_style, {GTK}.gtk_state_flag_active_enum)
 		end
 
 	dark_color: EV_COLOR
 			-- Dark color of a widget.
-		local
-			r, g, b: INTEGER
-			color: POINTER
 		do
-			color := normal_bg_color({GTK}.gtk_style_struct_dark ({GTK}.gtk_rc_get_style (tree_view)))
-			r := {GTK}.gdk_color_struct_red (color)
-			g := {GTK}.gdk_color_struct_green (color)
-			b := {GTK}.gdk_color_struct_blue (color)
-			create Result
-			Result.set_rgb_with_16_bit (r, g, b)
+			Result := stock_colors_imp.color_from_state (tree_view, {EV_STOCK_COLORS_IMP}.bg_style, {GTK}.gtk_state_flag_normal_enum)
 		end
 
 	prelight_color: EV_COLOR
 			-- State indicating that the mouse pointer is over the widget and widget will respond to mouse clicks.
-		local
-			r, g, b: INTEGER
-			color: POINTER
 		do
-			color := prelight_bg_color({GTK}.gtk_style_struct_bg ({GTK}.gtk_rc_get_style (tree_view)))
-			r := {GTK}.gdk_color_struct_red (color)
-			g := {GTK}.gdk_color_struct_green (color)
-			b := {GTK}.gdk_color_struct_blue (color)
-			create Result
-			Result.set_rgb_with_16_bit (r, g, b)
+			Result := stock_colors_imp.color_from_state (tree_view, {EV_STOCK_COLORS_IMP}.bg_style, {GTK}.gtk_state_flag_prelight_enum)
 		end
 
 	selected_color: EV_COLOR
 			-- State of a selected item, such the selected row in a list.
-		local
-			r, g, b: INTEGER
-			color: POINTER
 		do
-			color := selected_bg_color({GTK}.gtk_style_struct_bg ({GTK}.gtk_rc_get_style (tree_view)))
-			r := {GTK}.gdk_color_struct_red (color)
-			g := {GTK}.gdk_color_struct_green (color)
-			b := {GTK}.gdk_color_struct_blue (color)
-			create Result
-			Result.set_rgb_with_16_bit (r, g, b)
+			Result := stock_colors_imp.color_from_state (tree_view, {EV_STOCK_COLORS_IMP}.bg_style, {GTK}.gtk_state_flag_selected_enum)
 		end
 
 	insesitive_color: EV_COLOR
 			-- State indicating that the widget is unresponsive to user actions.
-		local
-			r, g, b: INTEGER
-			color: POINTER
 		do
-			color := insesitive_bg_color({GTK}.gtk_style_struct_bg ({GTK}.gtk_rc_get_style (tree_view)))
-			r := {GTK}.gdk_color_struct_red (color)
-			g := {GTK}.gdk_color_struct_green (color)
-			b := {GTK}.gdk_color_struct_blue (color)
-			create Result
-			Result.set_rgb_with_16_bit (r, g, b)
+			Result := stock_colors_imp.color_from_state (tree_view, {EV_STOCK_COLORS_IMP}.bg_style, {GTK}.gtk_state_flag_insensitive_enum)
 		end
 
 feature {NONE} -- Implementation
 
-	frozen normal_bg_color (a_c_array: POINTER): POINTER
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"&(((GdkColor *)$a_c_array)[GTK_STATE_NORMAL])"
-		end
-
-	frozen selected_bg_color (a_c_array: POINTER): POINTER
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"&(((GdkColor *)$a_c_array)[GTK_STATE_SELECTED])"
-		end
-
-	frozen active_bg_color (a_c_array: POINTER): POINTER
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"&(((GdkColor *)$a_c_array)[GTK_STATE_ACTIVE])"
-		end
-
-	frozen prelight_bg_color (a_c_array: POINTER): POINTER
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"&(((GdkColor *)$a_c_array)[GTK_STATE_PRELIGHT])"
-		end
-
-	frozen insesitive_bg_color (a_c_array: POINTER): POINTER
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"&(((GdkColor *)$a_c_array)[GTK_STATE_INSENSITIVE])"
+	stock_colors_imp: EV_STOCK_COLORS_IMP
+		local
+			l_stock_colors: EV_STOCK_COLORS
+		once
+			create l_stock_colors
+			check attached {EV_STOCK_COLORS_IMP} l_stock_colors.implementation as l_result then
+				Result := l_result
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -241,7 +165,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

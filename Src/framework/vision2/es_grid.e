@@ -921,6 +921,60 @@ feature -- Grid helpers
 			end
 		end
 
+	expand_all_rows (rec: BOOLEAN)
+			-- Expand all expandable rows.
+			-- if `rec' is True then do it recursively.
+		require
+			tree_enabled: is_tree_enabled
+		local
+			r: INTEGER
+			l_row: EV_GRID_ROW
+		do
+			from
+				r := 1
+			until
+				r > row_count
+			loop
+				l_row := row (r)
+				if
+					not l_row.is_destroyed and
+					l_row.is_show_requested and -- not hidden
+					l_row.is_expandable and
+					not l_row.is_expanded
+				then
+					expand_row (l_row, rec)
+				end
+				r := r + 1
+			end
+		end
+
+	collapse_all_rows (rec: BOOLEAN)
+			-- Collapse all expandable rows.
+			-- if `rec' is True then do it recursively.
+		require
+			tree_enabled: is_tree_enabled
+		local
+			r: INTEGER
+			l_row: EV_GRID_ROW
+		do
+			from
+				r := 1
+			until
+				r > row_count
+			loop
+				l_row := row (r)
+				if
+					not l_row.is_destroyed and
+					l_row.is_show_requested and -- not hidden
+					l_row.is_expandable and
+					not l_row.is_expanded
+				then
+					collapse_row (l_row, rec)
+				end
+				r := r + 1
+			end
+		end
+
 feature -- Delayed cleaning
 
 	delayed_cleaning_exists: BOOLEAN

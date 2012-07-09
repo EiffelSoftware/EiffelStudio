@@ -320,7 +320,7 @@ feature -- Access
 			end
 		end
 
-	session_data: SESSION_I
+	session_data: detachable SESSION_I
 			-- Access to window session data for the current window
 		require
 			not_is_recycled: not is_recycled
@@ -337,7 +337,7 @@ feature -- Access
 			end
 		ensure
 			result_attached: (create {SERVICE_CONSUMER [SESSION_MANAGER_S]}).is_service_available implies Result /= Void
-			result_is_interface_usable: Result.is_interface_usable
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 			result_consistent: Result = session_data
 		end
 

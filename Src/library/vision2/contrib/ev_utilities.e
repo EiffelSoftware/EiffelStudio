@@ -13,41 +13,31 @@ class
 
 feature -- Access
 
-	parent_window (a_widget: EV_WIDGET): detachable EV_WINDOW
+	parent_window (a_widget: detachable EV_WIDGET): detachable EV_WINDOW
 			-- Returns top level window containing `a_widget', or
 			-- Void if none.
-		require
-			a_widget_not_void: a_widget /= Void
-		local
-			window: detachable EV_WINDOW
 		do
-			window ?= a_widget.parent
-			if window = Void then
-				if attached a_widget.parent as l_widget_parent then
-					Result := parent_window (l_widget_parent)
+			if a_widget /= Void then
+				if attached {EV_WINDOW} a_widget.parent as l_window then
+					Result := l_window
+				else
+					Result := parent_window (a_widget.parent)
 				end
-			else
-				Result := window
 			end
 		ensure
-			shown_implies_result_not_void: a_widget.is_displayed implies Result /= Void
+			shown_implies_result_not_void: (a_widget /= Void and then a_widget.is_displayed) implies Result /= Void
 		end
 
-	parent_dialog (a_widget: EV_WIDGET): detachable EV_DIALOG
+	parent_dialog (a_widget: detachable EV_WIDGET): detachable EV_DIALOG
 			-- `Result' is top level dialog containing `a_widget' or
 			-- `Void' if none.
-		require
-			a_widget_not_void: a_widget /= Void
-		local
-			dialog: detachable EV_DIALOG
 		do
-			dialog ?= a_widget.parent
-			if dialog = Void then
-				if attached a_widget.parent as l_widget_parent then
-					Result := parent_dialog (l_widget_parent)
+			if a_widget /= Void then
+				if attached {EV_DIALOG} a_widget.parent as l_dialog then
+					Result := l_dialog
+				else
+					Result := parent_dialog (a_widget.parent)
 				end
-			else
-				Result := dialog
 			end
 		end
 
@@ -62,11 +52,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_UTILITIES
-
-
-
-
+end

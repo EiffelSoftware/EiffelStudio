@@ -2586,13 +2586,13 @@ feature {NONE} -- Contract support
 
 feature {EV_GRID_I} -- Implementation
 
-	frozen new_row: attached like row_type
+	frozen new_row: like row_type
 			-- Create a new row.
 		do
 			create Result
 		end
 
-	frozen new_column: attached like column_type
+	frozen new_column: like column_type
 			-- Create a new column.
 		do
 			create Result

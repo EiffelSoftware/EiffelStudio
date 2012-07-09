@@ -10,13 +10,23 @@ class
 
 feature
 
-	row_type: detachable EV_GRID_ROW do end
-		-- Type used for row objects.
-		-- May be redefined by EV_GRID descendents.
+	row_type: EV_GRID_ROW
+			-- Type used for row objects.
+			-- May be redefined by EV_GRID descendents.
+		require
+			callable: False
+		do
+			check False then end
+		end
 
-	column_type: detachable EV_GRID_COLUMN do end
-		-- Type use for column objects.
-		-- May be redefined by EV_GRID descendents.
+	column_type: EV_GRID_COLUMN
+			-- Type use for column objects.
+			-- May be redefined by EV_GRID descendents.
+		require
+			callable: False
+		do
+			check False then end
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

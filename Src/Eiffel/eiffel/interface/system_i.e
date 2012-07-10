@@ -1718,6 +1718,8 @@ feature -- Recompilation
 		local
 			d1, d2: DATE_TIME
 			l_il_env: IL_ENVIRONMENT
+			l_needs_code_generation: BOOLEAN
+			l_new_unref_classes_added_to_system, l_old_moved, l_compiled_classes_added, l_compiled_classes_removed, l_missing_classes_added_to_system: BOOLEAN
 		do
 			debug ("timing")
 					-- Enable time accounting to get some precise GC statistics.
@@ -1739,7 +1741,7 @@ feature -- Recompilation
 				-- Recompilation initialization
 			init_recompilation
 
-			if a_generate_code and then Compilation_modes.is_precompiling and then il_generation then
+			if Compilation_modes.is_precompiling and then il_generation then
 					-- For a precompiled library we require a freeze in non-IL
 					-- code generation.
 				is_freeze_requested := True
@@ -1778,15 +1780,33 @@ feature -- Recompilation
 				has_been_changed := True
 				has_compilation_started := True
 
-				recheck_missing_classes
 
+					-- Check if missing classes need to be recompiled back in to the system.
+				l_old_moved := moved
+				moved := False
+				recheck_missing_classes
+				l_missing_classes_added_to_system := moved
+
+					-- Force new unref'd classes are added to the system.
+					-- Record if any unref classes are added to the system.
+				moved := False
+				force_unref_classes_in_to_system
+				l_new_unref_classes_added_to_system := moved
 
 					-- Perform parsing of Eiffel code
 				debug ("timing")
 					print_memory_statistics
 					create d1.make_now
 				end
+					-- Temporarily reset `moved' to see if classes are added/removed by the system in degree 5.
+				moved := False
 				process_degree_5
+				l_compiled_classes_added := moved
+
+					-- Reset `moved' back to its correct value.
+				moved := l_compiled_classes_added or l_new_unref_classes_added_to_system or l_missing_classes_added_to_system or l_old_moved
+
+
 				debug ("timing")
 					create d2.make_now
 					print ("Degree 5 duration: ")
@@ -1823,6 +1843,7 @@ end
 						remove_useless_classes
 					end
 
+
 						-- Let's report VTCT errors for classes not found at degree 5
 						-- It cannot be done at degree 5 (see eweasel test incr233 for why).
 					report_vtct_errors
@@ -1832,10 +1853,31 @@ end
 					process_post_degree_5
 
 						-- Let's get rid of the classes that have been really removed.
-					if a_generate_code then
-						process_removed_classes
-						real_removed_classes.wipe_out
-					end
+						-- This has to be performed at all times even if no explicit code generation takes place
+						-- as classes may be manipulated outside of EiffelStudio in addition to adding a new class
+						-- to the system, the configuration system will record this change permanently meaning
+						-- that it has to be handled immediately otherwise the change is lost to the next compilation.
+					l_old_moved := moved
+					moved := False
+					process_removed_classes
+					l_compiled_classes_removed := moved
+					moved := l_compiled_classes_removed or l_old_moved
+					real_removed_classes.wipe_out
+
+						-- Set whether code generation is needed. This is either explicitly
+						-- via `a_generate_code', or whether the previous compilation was unsuccessful,
+						-- whether a class in the system has moved or a missing class is added to the system.
+
+						-- If the previous compilation was not successful and we have a Degree-4 only compilation then
+						-- we must force code generation as the erroneous code in question may reference the newly
+						-- added class, if this happens and we don't not force code generation then there is a
+						-- mismatch in class ids and a crash occurs in the client code where the error originates.
+						-- See bug#18115.
+
+						-- If classes have changed/moved outside of EiffelStudio, ie: manually via shell or via repository update
+						-- we need to make sure that a code generation always occurs otherwise potential changes in the ecf will be lost
+						-- as the configuration system does not undo changes if an error occurs during a degree-4 only compilation.
+					l_needs_code_generation := not successful or else a_generate_code or else (l_compiled_classes_added or l_compiled_classes_removed or l_missing_classes_added_to_system)
 
 
 	debug ("ACTIVITY")
@@ -1890,15 +1932,23 @@ end
 					then
 						mark_only_used_precompiled_classes
 					end
+
+						-- Remove any classes which have previously been added by {TEST_SYSTEM_I}
+						-- and are not needed for testing.
+						-- We only do this if code generation is needed to avoid side effects
+					if l_needs_code_generation and then test_system.is_testing_enabled then
+							-- We only remove classes from the system during a full compilation otherwise
+							-- the system may become invalid if the compiler servers are manipulated without
+							-- being stored to disk, which is only the case during code generation.
+						test_system.remove_unused_classes
+					end
+
 				end -- if a_system_check
 
-					-- Remove any classes which have previously been added by {TEST_SYSTEM_I}
-					-- and are not needed for testing
-				if test_system.is_testing_enabled then
-					test_system.remove_unused_classes
-				end
 
-				if a_generate_code then
+
+				if l_needs_code_generation then
+
 						-- Byte code production and type checking
 					process_degree_3
 
@@ -1957,7 +2007,7 @@ end
 					end
 
 						-- Finalize a successful compilation
-					finish_compilation (a_generate_code)
+					finish_compilation (l_needs_code_generation)
 					debug ("timing")
 						create d2.make_now
 						print ("Server storing duration: ")
@@ -2027,7 +2077,7 @@ end
 			first_compilation := False
 			il_quick_finalization := False
 
-			if a_generate_code then
+			if l_needs_code_generation then
 				display_catcall_statistics
 			end
 		end
@@ -2055,9 +2105,7 @@ end
 			end
 		end
 
-	process_degree_5
-			-- Process Degree 5.
-			-- Syntax analysis: This may add new classes to system.
+	force_unref_classes_in_to_system
 			-- Unref classes analyzis: This may add new classes to system.
 		local
 			l_class_i: CLASS_I
@@ -2088,7 +2136,12 @@ end
 					l_unref_classes.forth
 				end
 			end
+		end
 
+	process_degree_5
+			-- Process Degree 5.
+			-- Syntax analysis: This may add new classes to system.
+		do
 				-- Launch syntax analyzis of modified/added classes to system.
 			Degree_5.execute
 		end

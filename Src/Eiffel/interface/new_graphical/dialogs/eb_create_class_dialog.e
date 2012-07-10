@@ -620,7 +620,8 @@ feature {NONE} -- Implementation
 						destroy
 						render_class_template (f_name)
 						if not could_not_load_file then
-							manager.add_class_to_cluster (base_name, cluster, path, class_name, True)
+								-- Add new class to cluster, perform a quick compilation only if previous compilation was successful.
+							manager.add_class_to_cluster (base_name, cluster, path, class_name, manager.workbench.successful)
 							class_i := manager.last_added_class
 							if set_stone and class_i /= Void then
 								target.advanced_set_stone (create {CLASSI_STONE}.make (class_i))
@@ -917,7 +918,7 @@ invariant
 	cluster_implies_path: cluster /= Void implies path /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

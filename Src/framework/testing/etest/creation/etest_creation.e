@@ -238,7 +238,14 @@ feature {NONE} -- Basic operations
 						end
 						if l_cluster /= Void and then l_file.exists and then l_file.count > 0 then
 							-- Only perform quick melt when creating a single manual test
-							etest_suite.project_helper.add_class (l_cluster, path, l_filename, l_class_name, attached {ETEST_MANUAL_CREATION} Current)
+							-- and when the previous compilation was successful.
+							etest_suite.project_helper.add_class (
+								l_cluster,
+								path,
+								l_filename,
+								l_class_name,
+								attached {ETEST_MANUAL_CREATION} Current and then etest_suite.project_access.project.successful
+							)
 						else
 							etest_suite.project_access.project.system.system.rebuild_configuration
 						end
@@ -302,7 +309,7 @@ invariant
 	class_name_not_empty: not class_name.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

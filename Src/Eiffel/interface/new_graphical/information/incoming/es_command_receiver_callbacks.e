@@ -268,7 +268,12 @@ feature {NONE} -- EIS implementation
 
 							-- Place to search and open possible project.
 						if attached preferences.misc_data.eis_path as lt_path then
-							project_searcher.search_project (lt_path, l_system_name, l_system_uuid, l_target_name, l_target_uuid)
+								-- Search recent project first.
+							project_searcher.search_projects (recent_projects_manager.recent_projects, l_system_name, l_system_uuid, l_target_name, l_target_uuid)
+							if not project_searcher.project_found then
+									-- Global search in EIS path
+								project_searcher.search_project (lt_path, l_system_name, l_system_uuid, l_target_name, l_target_uuid)
+							end
 							if project_searcher.project_found and then attached project_searcher.found_project as lt_project then
 								discard_start_dialog := True
 									-- Trying to open the project directly, the starting window is not needed anymore.
@@ -295,8 +300,7 @@ feature {NONE} -- EIS implementation
 									-- Leave the user to choose project from the normal starting dialog.
 								end
 							else
-								-- Leave the user to choose project from the normal starting dialog.
-								has_error := True
+									-- Leave the user to choose project from the normal starting dialog.
 								show_error (interface_names.l_resource_not_found (action))
 							end
 						else
@@ -328,32 +332,58 @@ feature {NONE} -- EIS implementation
 				-- Go to the place in current system.
 			l_system := check_system (a_system_name, a_system_uuid)
 
-			if l_system /= Void then
+			if not has_error then
 				l_target := check_target (a_target_name, a_target_uuid)
-				if l_target /= Void then
+
+				if not has_error then
 					if a_group_name /= Void then
-						l_group := check_group (l_target, a_group_name)
+						if l_target /= Void then
+							l_group := check_group (l_target, a_group_name)
+							if l_group = Void then
+								show_error (Interface_names.l_target_does_not_have_group (l_target.name, l_group.name))
+							end
+						else
+								-- If target is not specified, check the group in all possible targets
+							l_group := check_group_with_name (a_group_name)
+							if l_group = Void then
+								show_error (Interface_names.l_group_not_found (a_group_name))
+							end
+						end
 					end
 
 					if a_class_name /= Void then
 						if l_group /= Void then
 							l_class := check_class_from_group (l_group, a_class_name)
+								-- Did not find class in the group.
+							if l_class = Void then
+								show_error (Interface_names.l_group_does_not_have_class (a_class_name, l_group.name))
+							end
 						else
 								-- Still try to get the class or feature directly from universe.
 							l_class := check_class_from_universe (a_class_name)
+							if l_class = Void then
+								show_error (Interface_names.l_class_not_found (a_class_name))
+							end
 						end
 
 						if l_class /= Void then
 							if a_feature_name /= Void then
 								l_feature := check_feature (l_class, a_feature_name)
+								if l_feature = Void then
+									show_error (Interface_names.l_class_does_not_have_feature (l_class.name, a_feature_name))
+								end
 							end
 						else
-							-- Do not think about feature when class is not found.
+								-- Do not think about feature when class is not found.
+							if a_feature_name /= Void then
+								has_error := True
+								show_error (Interface_names.l_no_enough_info_for_feature (a_feature_name))
+							end
 						end
 					end
 
 						-- Check if command can be accepted.
-					if not has_error and then l_system /= Void and then l_target /= Void then
+					if not has_error then
 						if l_feature /= Void then
 							create {FEATURE_STONE}l_stone.make (l_feature)
 							command_accepted := True
@@ -368,11 +398,7 @@ feature {NONE} -- EIS implementation
 							set_stone_when_idle (l_stone)
 						end
 					end
-				else
-					-- Command not accepted.
 				end
-			else
-					-- Command not accepted.
 			end
 		end
 
@@ -385,6 +411,9 @@ feature {NONE} -- EIS implementation
 			if attached {CLASS_I} a_class as lt_class and then lt_class.is_compiled then
 				Result := lt_class.compiled_representation.feature_with_name_32 (a_feature_string.as_lower)
 			end
+			if Result = Void then
+				has_error := True
+			end
 		end
 
 	check_class_from_group (a_group: CONF_GROUP; a_class_string: STRING): CONF_CLASS
@@ -395,6 +424,9 @@ feature {NONE} -- EIS implementation
 		do
 			if a_group.classes /= Void then
 				Result := a_group.classes.item (a_class_string.as_upper)
+			end
+			if Result = Void then
+				has_error := True
 			end
 		end
 
@@ -409,6 +441,9 @@ feature {NONE} -- EIS implementation
 			if not l_list.is_empty and then attached {CLASS_I} l_list.first as lt_class then
 				Result := lt_class.config_class
 			end
+			if Result = Void then
+				has_error := True
+			end
 		end
 
 	check_group (a_target: CONF_TARGET; a_group_string: STRING): CONF_GROUP
@@ -418,6 +453,36 @@ feature {NONE} -- EIS implementation
 			a_group_string_not_void: a_group_string /= Void
 		do
 			Result := a_target.groups.item (a_group_string)
+			if Result = Void then
+				has_error := True
+			end
+		end
+
+	check_group_with_name (a_group_name: STRING): detachable CONF_GROUP
+			-- Try to get group from all possible targets with access
+		require
+			a_group_name_not_void: a_group_name /= Void
+		do
+			if attached universe.conf_system as l_system and then attached l_system.application_target as l_target then
+				if attached l_target.groups.item (a_group_name) as l_group then
+					Result := l_group
+				else
+					if attached l_system.all_libraries as l_libraries then
+						across
+							l_libraries as l_c
+						until
+							Result /= Void
+						loop
+							if attached l_c.item.groups.item (a_group_name) as l_g then
+								Result := l_g
+							end
+						end
+					end
+				end
+			end
+			if Result = Void then
+				has_error := True
+			end
 		end
 
 	check_system (a_system_name, a_system_uuid: detachable STRING): detachable CONF_SYSTEM
@@ -449,7 +514,13 @@ feature {NONE} -- EIS implementation
 								Result := l_current_system
 							end
 						else
-								-- Not current system
+								-- Not current system, try library systems
+							if
+								attached l_current_system.all_libraries as l_libraries and then
+								attached l_libraries.item (create {UUID}.make_from_string (l_uuid_string)) as l_target
+							then
+								Result := l_target.system
+							end
 						end
 					else
 						-- Not Valid UUID
@@ -463,9 +534,6 @@ feature {NONE} -- EIS implementation
 							-- Not current system
 					end
 				end
-			else
-					-- Return current system information
-				Result := l_current_system
 			end
 		end
 
@@ -503,6 +571,10 @@ feature {NONE} -- EIS implementation
 						else
 								-- Not application system
 							l_target := l_current_system.targets.item (l_uuid_string)
+							if l_target = Void and then attached l_current_system.all_libraries as l_libraries then
+									-- Try to find the library target that the system is able to access.
+								l_target := l_libraries.item (create {UUID}.make_from_string (l_uuid_string))
+							end
 							if l_target /= Void then
 								if l_target_name /= Void then
 									if l_target.name.is_case_insensitive_equal (l_target_name) then
@@ -543,9 +615,6 @@ feature {NONE} -- EIS implementation
 							-- Target could still not be found here.
 					end
 				end
-			else
-					-- Return current system target
-				Result := universe.target
 			end
 		end
 
@@ -716,7 +785,7 @@ feature {NONE} -- Access
 	action: detachable STRING;
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

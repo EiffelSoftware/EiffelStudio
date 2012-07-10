@@ -59,6 +59,32 @@ feature -- Searcher
 			end
 		end
 
+	search_projects (a_projects: ARRAYED_LIST [TUPLE [READABLE_STRING_32, READABLE_STRING_32]]; a_system_name, a_system_uuid, a_target_name, a_target_uuid: detachable STRING)
+			-- Search in projects
+		local
+			p: TUPLE [file: READABLE_STRING_32; target: READABLE_STRING_32]
+		do
+			reset
+			if not a_projects.is_empty then
+				system_name := a_system_name
+				system_uuid := a_system_uuid
+				target_name := a_target_name
+				target_uuid := a_target_uuid
+				if search_needed then
+					across
+						a_projects as l_c
+					until
+						project_found
+					loop
+						p := l_c.item
+						if attached p.file as l_file and then not l_file.is_empty then
+							check_file (l_file)
+						end
+					end
+				end
+			end
+		end
+
 feature -- Querry
 
 	project_found: BOOLEAN
@@ -231,7 +257,7 @@ invariant
 	project_found_implies_project_not_void: project_found implies (found_project /= Void)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

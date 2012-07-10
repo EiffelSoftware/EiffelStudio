@@ -1108,6 +1108,13 @@ feature -- Label texts
 	l_class: STRING_32					do Result := locale.translation ("Class") end
 	l_class_address: STRING_32			do Result := locale.translation ("Class address") end
 	l_class_colon: STRING_32				do Result := locale.translation("Class:")	end
+	l_class_does_not_have_feature (a_class, a_feature: STRING_GENERAL): STRING_32
+		require
+			a_class_not_void: a_class /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("Feature $2 does not exist in class $1."), [a_class, a_feature])
+		end
 	l_class_label: STRING_32				do Result := locale.translation ("Class label") end
 	l_class_is_not_writable (a_class: STRING_GENERAL): STRING_32
 		require
@@ -1116,9 +1123,18 @@ feature -- Label texts
 			Result := locale.formatted_string (locale.translation("The class $1 is not writable."), [a_class])
 		end
 	l_class_is_not_editable: STRING_32	do Result := locale.translation ("Class is not editable.%N") end
-	l_class_is_not_in_anymore (a_class_name, a_group_id: STRING): STRING
+	l_class_is_not_in_anymore (a_class_name, a_group_id: STRING_GENERAL): STRING_32
+		require
+			a_class_name_not_void: a_class_name /= Void
+			a_group_id_not_void: a_group_id /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("Class $1 is not in $2 anymore."), [a_class_name, a_group_id])
+		end
+	l_class_not_found (a_class: STRING_GENERAL): STRING_32
+		require
+			a_class_not_void: a_class /= Void
+		do
+			Result := locale.formatted_string (locale.translation("The class $1 is not found."), [a_class])
 		end
 	l_class_name (a_class: STRING_GENERAL): STRING_32
 		require a_class_not_void: a_class /= Void
@@ -1432,6 +1448,12 @@ feature -- Label texts
 	l_no_feature_bra: STRING_32 			do Result := locale.translation ("(no_feature)") end
 	l_no_class_bra: STRING_32 			do Result := locale.translation ("(no_class)") end
 	l_no_cluster_bra: STRING_32 			do Result := locale.translation ("(no_cluster)") end
+	l_no_enough_info_for_feature (a_string: STRING_GENERAL): STRING_32
+		require
+			a_string_not_void: a_string /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("No enough infomation to find feature $1."), [a_string])
+		end
 	l_no_views_are_available: STRING_32 	do Result := locale.translation ("No views are available for this cluster") end
 	l_no_information_available: STRING_32 		do Result := locale.translation ("No information") end
 	l_Not_in_system_no_info: STRING_32	do Result := locale.translation("Class has not been compiled, no information is available")	end
@@ -1520,7 +1542,7 @@ feature -- Label texts
 	l_Replace_with_ellipsis: STRING_32	do Result := locale.translation("Replace with...")	end
 	l_Replace_all: STRING_32				do Result := locale.translation("Replace all")	end
 	l_request_restart: STRING_32			do Result := locale.translation (" (REQUIRES RESTART)") end
-	l_resource_not_found (a_resource: STRING_GENERAL): STRING_32	do Result := locale.formatted_string (locale.translation("The following resource is not found:%N$1"), [a_resource])	end
+	l_resource_not_found (a_resource: STRING_GENERAL): STRING_32	do Result := locale.formatted_string (locale.translation("The following resource is not found. Try opening a project that may contain the resource.%N$1"), [a_resource])	end
 	l_restore_defaults: STRING_32 		do Result := locale.translation ("Restore Defaults") end
 	l_restore_default: STRING_32 		do Result := locale.translation ("Restore Default") end
 	l_restore_preference_string: STRING_32 do Result := locale.translation ("This will reset ALL preferences to their default values%N and all previous settings will be overwritten.  Are you sure?") end
@@ -1607,6 +1629,13 @@ feature -- Label texts
 			a_target_not_void: a_target /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("Target `$1' does not exist or is not compilable.%NChoose one target among:"), [a_target])
+		end
+	l_target_does_not_have_group (a_target, a_group: STRING_GENERAL): STRING_32
+		require
+			a_target_not_void: a_target /= Void
+			a_group_not_void: a_group /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("Group `$2' does not exist in target `$1'."), [a_target, a_group])
 		end
 	l_target_uuid_name_not_match (a_uuid, a_name: STRING_GENERAL): STRING_32
 		do
@@ -2048,6 +2077,18 @@ feature -- Label texts
 
 	l_target_domain_item: STRING_32 do Result := locale.translation ("target item") end
 	l_group_domain_item: STRING_32 do Result := locale.translation ("group item") end
+	l_group_does_not_have_class (a_class, a_group: STRING_GENERAL): STRING_32
+		require
+			a_group_not_void: a_group /= Void
+		do
+			Result := locale.formatted_string (locale.translation("Class $2 does not exist in group $1."), [a_group, a_class])
+		end
+	l_group_not_found (a_group: STRING_GENERAL): STRING_32
+		require
+			a_group_not_void: a_group /= Void
+		do
+			Result := locale.formatted_string (locale.translation("Group $1 was not found."), [a_group])
+		end
 	l_folder_domain_item: STRING_32 do Result := locale.translation ("folder item") end
 	l_class_domain_item: STRING_32 do Result := locale.translation ("class item") end
 	l_feature_domain_item: STRING_32 do Result := locale.translation ("feature item") end

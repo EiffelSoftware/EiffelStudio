@@ -9,6 +9,7 @@ class
 	I18N_CHARACTER_BASED_DICTIONARY
 
 inherit
+
 	I18N_DICTIONARY
 		redefine
 			make
@@ -19,10 +20,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make(a_plural_form:INTEGER)
+	make (a_plural_form: INTEGER)
 			-- create the datastructure
 		do
-			Precursor(a_plural_form)
+			Precursor (a_plural_form)
 			create singular_char_tree
 			create plural_char_tree
 		end
@@ -30,7 +31,7 @@ feature {NONE} -- Initialization
 feature -- Manipulation
 		-- this should be restricted
 
-	extend (a_entry : I18N_DICTIONARY_ENTRY)
+	extend (a_entry: I18N_DICTIONARY_ENTRY)
 			-- add a_entry in the datastructure
 		do
 			if not a_entry.has_plural then
@@ -50,7 +51,7 @@ feature -- Manipulation
 
 feature -- Access
 
-	has (original : READABLE_STRING_GENERAL) : BOOLEAN
+	has (original: READABLE_STRING_GENERAL): BOOLEAN
 			-- is there an entry with original?
 		do
 			Result := singular_char_tree.get_item_with_key (original.as_string_32) /= Void
@@ -68,7 +69,7 @@ feature -- Access
 				if entry.has_plural then
 					l_trans := entry.plural_translations
 					check l_trans /= Void end -- Implied by `entry.has_plural'
-					Result := l_trans.item(reduce (plural_number)) /= Void
+					Result := l_trans.item (reduce (plural_number)) /= Void
 				end
 			end
 		end
@@ -100,11 +101,11 @@ feature -- Access
 			l_entry: detachable I18N_DICTIONARY_ENTRY
 			l_trans: detachable ARRAY [STRING_32]
 		do
-			l_entry := plural_char_tree.get(original_singular.as_string_32)
+			l_entry := plural_char_tree.get (original_singular.as_string_32)
 			check l_entry /= Void end -- Implied from precondition
 			l_trans := l_entry.plural_translations
 			check l_trans /= Void end -- Implied from precondition
-			l_result := l_trans.item(reduce (plural_number))
+			l_result := l_trans.item (reduce (plural_number))
 			check l_result /= Void end -- Implied from precondition
 			Result := l_result
 		end
@@ -112,9 +113,9 @@ feature -- Access
 feature --Information
 
 	count: INTEGER
-		-- number of entries in the dictionary
+			-- number of entries in the dictionary
 
-feature {NONE}  -- Implementation
+feature {NONE} -- Implementation
 
 	singular_char_tree: CHARACTER_TREE [I18N_DICTIONARY_ENTRY]
 			-- tree that contains all entries without plurals
@@ -123,9 +124,9 @@ feature {NONE}  -- Implementation
 			-- tree that contains all entries with plurals
 
 note
-	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	library: "Internationalization library"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

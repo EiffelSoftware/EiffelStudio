@@ -9,6 +9,38 @@ class
 inherit
 	UTF8_READER_WRITER
 
+feature -- Access
+
+	env: EXECUTION_ENVIRONMENT
+			-- Execution environment
+		once
+			create Result
+		end
+
+feature -- Path/Filename
+
+	mo_folder: STRING
+			-- Folder to contain mo files
+		once
+			Result := tests_folder
+			Result.append_character (Operating_environment.Directory_separator)
+			Result.append ("test_files")
+			Result.append_character (Operating_environment.Directory_separator)
+			Result.append ("mo")
+		end
+
+	tests_folder: STRING
+			-- Test folder
+		once
+			Result := Env.get ("ISE_LIBRARY").twin
+			Result.append_character (Operating_environment.Directory_separator)
+			Result.append ("library")
+			Result.append_character (Operating_environment.Directory_separator)
+			Result.append ("i18n")
+			Result.append_character (Operating_environment.Directory_separator)
+			Result.append ("tests")
+		end
+
 feature {NONE} -- Comparison
 
 	has_same_content_as_string (a_path: STRING; a_string: READABLE_STRING_8): BOOLEAN
@@ -134,7 +166,7 @@ feature {NONE} -- Output function
 	cached_output: STRING_32;
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

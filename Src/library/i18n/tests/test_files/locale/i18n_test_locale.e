@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 	result_file_name (a_locale_name: STRING; a_windows: BOOLEAN): STRING
 			-- This is a hack, since no such facility found in the testing framework, for a file name located in the source class directory.
 		do
-			Result := environment.get ("ISE_LIBRARY").twin
+			Result := env.get ("ISE_LIBRARY").twin
 			Result.append_character (Operating_environment.directory_separator)
 			Result.append ("library")
 			Result.append_character (Operating_environment.directory_separator)
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

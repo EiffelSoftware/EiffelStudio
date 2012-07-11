@@ -31,6 +31,8 @@ feature
 				full_collect
 				i := i + 1
 			end
+			io.put_string ("Success")
+			io.put_new_line
 		end
 
 	execute

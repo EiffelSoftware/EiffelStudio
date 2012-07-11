@@ -25,13 +25,13 @@ create
 
 feature {NONE} --Creation
 
-	make(a_plural_form:INTEGER)
+	make (a_plural_form: INTEGER)
 			-- create the datastructure
 		do
-			Precursor(a_plural_form)
+			Precursor (a_plural_form)
 			create array.make (min_index, default_number_of_entries)
-			current_index :=1
-			max_index :=default_number_of_entries
+			current_index := 1
+			max_index := default_number_of_entries
 		end
 
 feature --Insertion
@@ -46,29 +46,29 @@ feature --Insertion
 				array.put (a_entry, current_index)
 			else
 				array.force (a_entry, current_index)
-				max_index :=max_index+1
+				max_index := max_index + 1
 			end
-			current_index :=current_index+1
+			current_index := current_index + 1
 			search_index_and_insert
 		end
 
 feature --Access
 
-	has(original:READABLE_STRING_GENERAL):BOOLEAN
+	has (original: READABLE_STRING_GENERAL): BOOLEAN
 			-- does the dictionary have this entry?
 			-- use binary search algorithm
 			-- require `array'is sorted
 			-- use has_index has a help function
 		local
-			index:INTEGER
+			index: INTEGER
 		do
-			index:=has_index(original.as_string_32)
-			if index /=-1 then
-				Result:=True
+			index := has_index (original.as_string_32)
+			if index /= -1 then
+				Result := True
 			end
 		end
 
-feature--{NONE}	--help functions
+feature --{NONE}	--help functions
 
 	search_index_and_insert
 			-- `array' is sorted except the last  inserted element
@@ -84,10 +84,10 @@ feature--{NONE}	--help functions
 		do
 				-- one element case will do nothing
 			if (last_index > 1) then
-				cur_entry:= array.item (last_index)
+				cur_entry := array.item (last_index)
 				check cur_entry_not_void: cur_entry /= Void end
 				l_entry1 := array.item (1)
-				l_entry2 := array.item (last_index-1)
+				l_entry2 := array.item (last_index - 1)
 				check l_entry_exists: l_entry1 /= Void and then l_entry2 /= Void end -- Implied by `last_index > 1'
 				if cur_entry < l_entry1 then
 					right_index := 1
@@ -99,7 +99,7 @@ feature--{NONE}	--help functions
 						-- with binary search
 					from
 						left := 2
-						right := last_index-2
+						right := last_index - 2
 					until
 						left > right
 					loop
@@ -114,15 +114,15 @@ feature--{NONE}	--help functions
 					end
 					right_index := left
 				end
-					-- put the last inserted elem in the right index	
-				 if right_index /= last_index then
-				 	array.subcopy (array, right_index, last_index-1, right_index+1)
-				 	array.put (cur_entry, right_index)
-				 end
+					-- put the last inserted elem in the right index
+				if right_index /= last_index then
+					array.subcopy (array, right_index, last_index - 1, right_index + 1)
+					array.put (cur_entry, right_index)
+				end
 			end
 		end
 
-	has_index(original:READABLE_STRING_GENERAL):INTEGER
+	has_index (original: READABLE_STRING_GENERAL): INTEGER
 			-- does the dictionary have this entry?
 			-- use binary search algorithm
 			-- require `array' is sorted
@@ -132,7 +132,7 @@ feature--{NONE}	--help functions
 		require
 			original_not_void: original /= Void
 		local
-			left,right,middle: INTEGER
+			left, right, middle: INTEGER
 			m_string: STRING_32
 			found: BOOLEAN
 		do
@@ -147,7 +147,7 @@ feature--{NONE}	--help functions
 			variant
 				right - left + 1
 			until
-				left>right or found
+				left > right or found
 			loop
 				middle := ((left + right).as_natural_32 |>> 1).as_integer_32
 				if attached array.item (middle) as l_m then
@@ -170,20 +170,20 @@ feature--{NONE}	--help functions
 				end
 			end
 			if found = False then
-				Result:=-1
+				Result := -1
 			end
 		end
 
-feature	-- Access
+feature -- Access
 
-	has_plural (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number:INTEGER):BOOLEAN
+	has_plural (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER): BOOLEAN
 			--
 		local
 			entry: detachable I18N_DICTIONARY_ENTRY
 			index: INTEGER
 			l_trans: detachable ARRAY [STRING_32]
 		do
-			index:=has_index(original_singular.as_string_32)
+			index := has_index (original_singular.as_string_32)
 			if index /= -1 then
 				entry := array.item (index)
 				check entry /= Void end -- Implied from `has_index'
@@ -194,7 +194,7 @@ feature	-- Access
 			end
 		end
 
-	singular (original:READABLE_STRING_GENERAL): STRING_32
+	singular (original: READABLE_STRING_GENERAL): STRING_32
 			-- Singular form
 		local
 			entry: detachable I18N_DICTIONARY_ENTRY
@@ -214,7 +214,7 @@ feature	-- Access
 			index: INTEGER
 			l_trans: detachable ARRAY [STRING_32]
 		do
-			index := has_index(original_singular.as_string_32)
+			index := has_index (original_singular.as_string_32)
 			check valid_index: index /= -1 end -- Implied by precondition.
 			entry := array.item (index)
 			check entry_not_void: entry /= Void end -- Implied by precondition of `extend'
@@ -225,37 +225,39 @@ feature	-- Access
 
 feature --Information
 
-	count:INTEGER
+	count: INTEGER
 		do
-			Result := current_index-1
+			Result := current_index - 1
 		end
 
 feature {NONE} -- Implementation
 
 	array: ARRAY [detachable I18N_DICTIONARY_ENTRY]
+
 	min_index: INTEGER = 1
+
 	max_index: INTEGER
-		-- should be updated after it is equal to `default_number_of_entries'
+			-- should be updated after it is equal to `default_number_of_entries'
 
 	last_index: INTEGER
 			--actually last_index is equal to `count'
 		do
-			Result :=current_index-1
+			Result := current_index - 1
 		end
 
 	current_index: INTEGER
-		 -- the index which is to be filled next
+			-- the index which is to be filled next
 
 	default_number_of_entries: INTEGER = 50
 
 invariant
-	count_equal_current_index: count=current_index-1
-	count_equal_last_index: count=last_index
+	count_equal_current_index: count = current_index - 1
+	count_equal_last_index: count = last_index
 
 note
-	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	library: "Internationalization library"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

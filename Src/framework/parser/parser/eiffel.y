@@ -165,8 +165,9 @@ create
 %type <STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias_name
 %type <TAGGED_AS>			Assertion_clause
 %type <TUPLE_AS>			Manifest_tuple
-%type <TYPE_AS>				Type Anchored_type Attached_type Non_class_type Typed Class_or_tuple_type Attached_class_type Attached_class_or_tuple_type Marked_class_or_tuple_type Tuple_type Type_no_id Unmarked_anchored_type Unmarked_class_or_tuple_type Unqualified_anchored_type Constraint_type
-%type <QUALIFIED_ANCHORED_TYPE_AS>	Qualified_anchored_type
+%type <TYPE_AS>				Type Anchored_type Typed Class_or_tuple_type Unmarked_class_type Unmarked_tuple_type Unmarked_anchored_type Unmarked_class_or_tuple_type Unmarked_unqualified_anchored_type Constraint_type
+%type <TYPE_AS>				Obsolete_creation_type Obsolete_type Obsolete_class_or_tuple_type
+%type <QUALIFIED_ANCHORED_TYPE_AS>	Unmarked_qualified_anchored_type
 %type <PAIR [SYMBOL_AS, TYPE_AS]> Type_mark
 %type <CLASS_TYPE_AS>		Parent_class_type
 %type <TYPE_DEC_AS>			Entity_declaration_group
@@ -212,7 +213,7 @@ create
 %type <CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 360
+%expect 348
 
 %%
 
@@ -1590,34 +1591,190 @@ Assertion_clause: Expression ASemi
 
 
 -- Type
-
+-- Note that only `Type' should be used in other constructs. If something else is used, please make
+-- sure to put a note (e.g. 'Class_or_tuple_type' being used in 'Constraint_type'.
 
 Type: Class_or_tuple_type
 			{ $$ := $1 }
-	|	Non_class_type
+	|	Anchored_type
+			{ $$ := $1 }
+	|	Obsolete_type
+			{ $$ := $1 }
+	|	Obsolete_class_or_tuple_type
 			{ $$ := $1 }
 	;
-	
-Attached_type: Attached_class_type
+
+-- This is also used in 'Constraint_type' as constraint only support a subset of possible types.
+Class_or_tuple_type:
+	Unmarked_class_or_tuple_type
 			{ $$ := $1 }
-	|	Tuple_type
+	| TE_DETACHABLE Unmarked_class_or_tuple_type
+			{
+				$$ := $2
+				if not is_ignoring_attachment_marks and then $$ /= Void then
+					$$.set_attachment_mark (extract_keyword ($1), False, True)
+				end
+			}
+	| TE_ATTACHED Unmarked_class_or_tuple_type
+			{
+				$$ := $2
+				if not is_ignoring_attachment_marks and then $$ /= Void then
+					$$.set_attachment_mark (extract_keyword ($1), True, False)
+				end
+			}
+	| TE_SEPARATE Unmarked_class_or_tuple_type
+			{
+				$$ := $2
+				if not is_ignoring_separate_mark and then attached $$ then
+					$$.set_separate_mark ($1)
+				end
+			}
+	| TE_DETACHABLE TE_SEPARATE Unmarked_class_or_tuple_type
+			{
+				$$ := $3
+				if not is_ignoring_attachment_marks and then $$ /= Void then
+					$$.set_attachment_mark (extract_keyword ($1), False, True)
+				end
+				if not is_ignoring_separate_mark and then attached $$ then
+					$$.set_separate_mark ($2)
+				end
+			}
+	| TE_ATTACHED TE_SEPARATE Unmarked_class_or_tuple_type
+			{
+				$$ := $3
+				if not is_ignoring_attachment_marks and then $$ /= Void then
+					$$.set_attachment_mark (extract_keyword ($1), True, False)
+				end
+				if not is_ignoring_separate_mark and then attached $$ then
+					$$.set_separate_mark ($2)
+				end
+			}
+	;
+
+Unmarked_class_or_tuple_type: Unmarked_class_type
 			{ $$ := $1 }
-	|	Non_class_type
+	| Unmarked_tuple_type
 			{ $$ := $1 }
 	;
-	
-Type_no_id: 
-		Class_identifier Generics
+
+Unmarked_class_type: Class_identifier Generics_opt
 			{ $$ := new_class_type ($1, $2) }
-	|	Tuple_type
+	;
+
+-- This is also used in 'Constraint_type' to report a more meaningful error.
+Anchored_type:	Unmarked_anchored_type
 			{ $$ := $1 }
-	|	Non_class_type
+	|	TE_ATTACHED Unmarked_anchored_type
+			{
+				$$ := $2
+				if not is_ignoring_attachment_marks and then $$ /= Void then
+					$$.set_attachment_mark (extract_keyword ($1), True, False)
+				end
+			}
+	|	TE_DETACHABLE Unmarked_anchored_type
+			{
+				$$ := $2
+				if not is_ignoring_attachment_marks and then $$ /= Void then
+					$$.set_attachment_mark (extract_keyword ($1), False, True)
+				end
+			}
+	|	TE_SEPARATE Unmarked_anchored_type
+			{
+				$$ := $2
+				if not is_ignoring_separate_mark and then attached $$ then
+					$$.set_separate_mark ($1)
+				end
+			}
+	|	TE_ATTACHED TE_SEPARATE Unmarked_anchored_type
+			{
+				$$ := $3
+				if not is_ignoring_attachment_marks and then $$ /= Void then
+					$$.set_attachment_mark (extract_keyword ($1), True, False)
+				end
+				if not is_ignoring_separate_mark and then attached $$ then
+					$$.set_separate_mark ($2)
+				end
+			}
+	|	TE_DETACHABLE TE_SEPARATE Unmarked_anchored_type
+			{
+				$$ := $3
+				if not is_ignoring_attachment_marks and then $$ /= Void then
+					$$.set_attachment_mark (extract_keyword ($1), False, True)
+				end
+				if not is_ignoring_separate_mark and then attached $$ then
+					$$.set_separate_mark ($2)
+				end
+			}
+	;
+
+Unmarked_anchored_type:
+		Unmarked_unqualified_anchored_type
 			{ $$ := $1 }
-	|	Marked_class_or_tuple_type
+	|	Unmarked_qualified_anchored_type
 			{ $$ := $1 }
 	;
-	
-Non_class_type: TE_EXPANDED Attached_class_type
+
+
+Unmarked_unqualified_anchored_type:
+		TE_LIKE Identifier_as_lower
+			{ $$ := ast_factory.new_like_id_as ($2, $1) }
+	|	TE_LIKE TE_CURRENT
+			{ $$ := ast_factory.new_like_current_as ($2, $1) }
+	;
+
+Unmarked_qualified_anchored_type:
+		Unmarked_unqualified_anchored_type TE_DOT Identifier_as_lower
+			{ $$ := ast_factory.new_qualified_anchored_type ($1, $2, $3) }
+	|	TE_LIKE Typed TE_DOT Identifier_as_lower
+			{ $$ := ast_factory.new_qualified_anchored_type_with_type ($1, $2, $3, $4) }
+	|	Unmarked_qualified_anchored_type TE_DOT Identifier_as_lower
+			{
+				$$ := $1
+				if attached $$ as q then
+					q.extend ($2, $3)
+				end
+			}
+	;
+
+-- This is also used in the obsolete syntax for 'Creation' and 'Creation_expression'.
+Obsolete_creation_type: Unmarked_class_or_tuple_type
+			{ $$ := $1 }
+	|	Unmarked_anchored_type
+			{ $$ := $1 }
+	|	Obsolete_type
+			{ $$ := $1 }
+	;
+
+-- This is also used in 'Constraint_type' as constraint should also support old syntax.
+Obsolete_class_or_tuple_type:
+	TE_BANG Unmarked_class_or_tuple_type
+			{
+				$$ := $2
+				if not is_ignoring_attachment_marks and then $$ /= Void then
+					$$.set_attachment_mark ($1, True, False)
+				end
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						once "Use the `attached' keyword instead of !."))
+				end
+		}
+	| TE_QUESTION Unmarked_class_or_tuple_type
+			{
+				$$ := $2
+				if not is_ignoring_attachment_marks and then $$ /= Void then
+					$$.set_attachment_mark ($1, False, True)
+				end
+				if has_syntax_warning then
+					report_one_warning (
+						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						once "Use the `detachable' keyword instead of ?."))
+				end
+		}
+	;
+
+-- 'Obsolete_type' represent types that we used to accept but will disallow in the future.
+Obsolete_type: TE_EXPANDED Unmarked_class_type
 			{
 				$$ := $2
 				ast_factory.set_expanded_class_type ($$, True, $1)
@@ -1631,16 +1788,7 @@ Non_class_type: TE_EXPANDED Attached_class_type
 			{ $$ := new_bits ($2, $1) }
 	|	TE_BIT Identifier_as_lower
 			{ $$ := new_bits_symbol ($2, $1) }
-	|	Anchored_type
-			{ $$ := $1 }
-	|	TE_ATTACHED Anchored_type
-			{
-				$$ := $2
-				if not is_ignoring_attachment_marks and then $$ /= Void then
-					$$.set_attachment_mark (extract_keyword ($1), True, False)
-				end
-			}
-	|	TE_BANG Unqualified_anchored_type
+	|	TE_BANG Unmarked_unqualified_anchored_type
 			{
 				$$ := $2
 				if not is_ignoring_attachment_marks and then $$ /= Void then
@@ -1652,14 +1800,7 @@ Non_class_type: TE_EXPANDED Attached_class_type
 						once "Use the `attached' keyword instead of !."))
 				end
 			}
-	|	TE_DETACHABLE Anchored_type
-			{
-				$$ := $2
-				if not is_ignoring_attachment_marks and then $$ /= Void then
-					$$.set_attachment_mark (extract_keyword ($1), False, True)
-				end
-			}
-	|	TE_QUESTION Unqualified_anchored_type
+	|	TE_QUESTION Unmarked_unqualified_anchored_type
 			{
 				$$ := $2
 				if not is_ignoring_attachment_marks and then $$ /= Void then
@@ -1669,75 +1810,6 @@ Non_class_type: TE_EXPANDED Attached_class_type
 					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 						once "Use the `detachable' keyword instead of ?."))
-				end
-			}
-	;
-
-Class_or_tuple_type:
-	Attached_class_or_tuple_type
-			{ $$ := $1 }
-	| Marked_class_or_tuple_type
-			{ $$ := $1 }
-	;
-
-Marked_class_or_tuple_type:
-	TE_DETACHABLE Attached_class_or_tuple_type
-			{
-				$$ := $2
-				if not is_ignoring_attachment_marks and then $$ /= Void then
-					$$.set_attachment_mark (extract_keyword ($1), False, True)
-				end
-		}
-	| TE_ATTACHED Attached_class_or_tuple_type
-			{
-				$$ := $2
-				if not is_ignoring_attachment_marks and then $$ /= Void then
-					$$.set_attachment_mark (extract_keyword ($1), True, False)
-				end
-		}
-	| TE_BANG Attached_class_or_tuple_type
-			{
-				$$ := $2
-				if not is_ignoring_attachment_marks and then $$ /= Void then
-					$$.set_attachment_mark ($1, True, False)
-				end
-				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-						once "Use the `attached' keyword instead of !."))
-				end
-		}
-	| TE_QUESTION Attached_class_or_tuple_type
-			{
-				$$ := $2
-				if not is_ignoring_attachment_marks and then $$ /= Void then
-					$$.set_attachment_mark ($1, False, True)
-				end
-				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-						once "Use the `detachable' keyword instead of ?."))
-				end
-		}
-	;
-
-Attached_class_type: Class_identifier Generics_opt
-			{ $$ := new_class_type ($1, $2) }
-	;
-
-Unmarked_class_or_tuple_type: Attached_class_type
-			{ $$ := $1 }
-	| Tuple_type
-			{ $$ := $1 }
-	;
-
-Attached_class_or_tuple_type: Unmarked_class_or_tuple_type
-			{ $$ := $1 }
-	| TE_SEPARATE Unmarked_class_or_tuple_type
-			{
-				$$ := $2
-				if not is_ignoring_separate_mark and then attached $$ then
-					$$.set_separate_mark ($1)
 				end
 			}
 	;
@@ -1766,46 +1838,6 @@ Generics:	TE_LSQURE Type_list TE_RSQURE
 			}
 	;
 
-Unmarked_anchored_type:
-		Unqualified_anchored_type
-			{ $$ := $1 }
-	|	Qualified_anchored_type
-			{ $$ := $1 }
-	;
-
-Anchored_type:
-		Unmarked_anchored_type
-			{ $$ := $1 }
-	|	TE_SEPARATE Unmarked_anchored_type
-			{
-				$$ := $2
-				if not is_ignoring_separate_mark and then attached $$ then
-					$$.set_separate_mark ($1)
-				end
-			}
-	;
-
-Unqualified_anchored_type:
-		TE_LIKE Identifier_as_lower
-			{ $$ := ast_factory.new_like_id_as ($2, $1) }
-	|	TE_LIKE TE_CURRENT
-			{ $$ := ast_factory.new_like_current_as ($2, $1) }
-	;
-
-Qualified_anchored_type:
-		Unqualified_anchored_type TE_DOT Identifier_as_lower
-			{ $$ := ast_factory.new_qualified_anchored_type ($1, $2, $3) }
-	|	TE_LIKE Typed TE_DOT Identifier_as_lower
-			{ $$ := ast_factory.new_qualified_anchored_type_with_type ($1, $2, $3, $4) }
-	|	Qualified_anchored_type TE_DOT Identifier_as_lower
-			{
-				$$ := $1
-				if attached $$ as q then
-					q.extend ($2, $3)
-				end
-			}
-	;
-
 Type_list: Add_counter Type_list_impl Remove_counter
 		{ $$ := $2 }
 	;
@@ -1827,7 +1859,7 @@ Type_list_impl: Type
 			}
 	;
 
-Tuple_type: Tuple_identifier
+Unmarked_tuple_type: Tuple_identifier
 			{ $$ := ast_factory.new_class_type_as ($1, Void) }
 	|	Tuple_identifier Add_counter Add_counter2 TE_LSQURE TE_RSQURE
 			{
@@ -1877,7 +1909,7 @@ Actual_parameter_list:	Type TE_RSQURE
 					ast_factory.reverse_extend_separator ($$, $2)
 				end
 			}
-	|	Type_no_id TE_COMMA Increment_counter Actual_Parameter_List
+	|	Type TE_COMMA Increment_counter Actual_Parameter_List
 			{
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
@@ -2078,6 +2110,13 @@ Single_constraint:
 
 Constraint_type:
 		Class_or_tuple_type
+			{
+				$$ := $1
+				if attached $1 as t and then t.has_anchor then
+					report_one_error (ast_factory.new_vtgc1_error (token_line ($1), token_column ($1), filename, $1))
+				end
+			}
+	|	Obsolete_class_or_tuple_type
 			{
 				$$ := $1
 				if attached $1 as t and then t.has_anchor then
@@ -2589,14 +2628,16 @@ Agent_call:
 		}
 	;
 	
-Optional_formal_arguments:
+Optional_formal_arguments: -- Empty
+		-- { $$ := Void }
 	|	Formal_arguments
 		{
 			$$ := $1
 		}
 	;
 	
-Type_mark:
+Type_mark: -- Empty
+		 -- { $$ := Void }
 	|	TE_COLON Type
 		{
 			create $$.make ($1, $2)
@@ -2654,7 +2695,7 @@ Delayed_actual: TE_QUESTION
 					$$.set_question_mark_symbol ($1)
 				end
 			}
--- Manu: 01/19/2005: Due to syntax ambiguity we cannot have `Typed' only
+-- Manu: 01/19/2005: Due to syntax ambiguity we cannot have 'Typed' only
 -- as there will be no way to distinguish it from a Manifest type expression.
 -- To preserve this feature in case it is needed by some of our customers
 -- we have invented the new syntax ? Typed.
@@ -2677,7 +2718,7 @@ Creation: TE_BANG TE_BANG Creation_target Creation_call
 						filename, "Use keyword `create' instead."))
 				end
 			}
-	|	TE_BANG Attached_type TE_BANG Creation_target Creation_call
+	|	TE_BANG Obsolete_creation_type TE_BANG Creation_target Creation_call
 			{
 				$$ := ast_factory.new_bang_creation_as ($2, $4, $5, $1, $3)
 				if has_syntax_warning then
@@ -2694,7 +2735,7 @@ Creation: TE_BANG TE_BANG Creation_target Creation_call
 
 Creation_expression: TE_CREATE Typed Creation_call
 			{ $$ := ast_factory.new_create_creation_expr_as ($2, $3, $1) }
-	|	TE_BANG Attached_type TE_BANG Creation_call
+	|	TE_BANG Obsolete_creation_type TE_BANG Creation_call
 			{
 				$$ := ast_factory.new_bang_creation_expr_as ($2, $4, $1, $3)
 				if has_syntax_warning then

@@ -150,8 +150,6 @@ rt_shared void prepare_live_index (void)
 				/* Add it to the live indexes. */
 			live_index [live_index_count] = i;
 			live_index_count++;
-				/* Mark associated PID as live. */
-			RT_MARK_PID (c -> logical_id);
 		}
 	}
 
@@ -181,7 +179,10 @@ rt_shared void update_live_index (void)
 	size_t i;
 	rt_global_context_t ** t = (rt_global_context_t **) rt_globals_list.threads.data;
 	for (i = 0; i < live_index_count; i++) {
-		RT_UNMARK_PID (t [live_index [i]] -> eif_thr_context_cx -> logical_id);
+		rt_thr_context * c = t [live_index [i]] -> eif_thr_context_cx;
+		if (c -> is_processor) {
+			RT_UNMARK_PID (c -> logical_id);
+		}
 	}
 		/* Add indexes of processors that were not marked before. */
 	for (i = 0; i < sizeof (live_pid_map) / PID_MAP_ITEM_SIZE; i++) {

@@ -122,21 +122,6 @@ struct xstack {
 	struct ex_vect *st_bot;		/* Bottom of stack (for eif_trace only) */
 };
 
-/* Structure used while printing the exception trace stack. It is built using
- * some look-ahead inside the stack.
- */
-struct exprint {
-	unsigned char retried;	/* Routine has been retried */
-	unsigned char rescued;	/* Routine entered in a rescue clause */
-	unsigned char code;		/* Exception code */
-	unsigned char last;		/* The very last exception record */
-	unsigned char previous;	/* Previous exception code printed */
-	char *rname;			/* Routine name of enclosing call */
-	char *tag;				/* Exception tag of current exception */
-	char *obj_id;			/* Object's ID */
-	EIF_TYPE_INDEX from;	/* Where the routine comes from */
-};
-
 /* Improved string structure (with number of bytes used and length)
  * for the exception trace string
  */

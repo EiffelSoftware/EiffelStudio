@@ -9,6 +9,7 @@ class
 	I18N_DUMMY_DICTIONARY
 
 inherit
+
 	I18N_DICTIONARY
 
 create
@@ -25,13 +26,13 @@ feature -- Entries
 		do
 		end
 
-	has (original_singular: READABLE_STRING_GENERAL):BOOLEAN
+	has (original_singular: READABLE_STRING_GENERAL): BOOLEAN
 			-- Always False, as we don't have any entries
 		do
 			Result := False -- Let's be very clear on this..
 		end
 
-	has_plural(original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER): BOOLEAN
+	has_plural (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER): BOOLEAN
 			-- Always False, as we don't have any entries
 		do
 			Result := False
@@ -45,16 +46,16 @@ feature -- Retrieval
 			Result := ""
 		end
 
-	plural(original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER): STRING_32
+	plural (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER): STRING_32
 			-- This should never be called because we garantee the precondition is false
 		do
 			Result := ""
 		end
 
 note
-	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	library: "Internationalization library"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

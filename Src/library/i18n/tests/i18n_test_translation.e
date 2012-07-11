@@ -9,6 +9,11 @@ class
 inherit
 	EQA_TEST_SET
 
+	I18N_TEST_UTILITIES
+		undefine
+			default_create
+		end
+
 feature
 
 	test_translation
@@ -26,7 +31,7 @@ feature {NONE}
 			l_locale_id: I18N_LOCALE_ID
 			l_string_32: STRING_32
 		do
-			create l_mnger.make (".")
+			create l_mnger.make (tests_folder)
 			create l_locale_id.make_from_string ("zh_CN")
 			l_locale := l_mnger.locale (l_locale_id)
 
@@ -77,7 +82,7 @@ feature {NONE} -- Results
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

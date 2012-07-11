@@ -50,12 +50,12 @@ DATE TIME FORMATTER TEST
     formatted string: local_date_time: 19 Februari 2009 11:45:30, day: Jumaat
 
 CURRENCY INFO TEST
-    cur dec sep: ','
+    cur dec sep: '.'
     cur gr.sep: ''
-    Grouping: 30
+    Grouping: 030
     cur nr list sep: ';'
     cur num after dec: '0'
-    currency symbol:'R'
+    currency symbol:'RM'
     symbol location: 0
     INT cur dec sep: '.'
     INT cur gr.sep: ','
@@ -66,13 +66,13 @@ CURRENCY INFO TEST
     INT symbol location: 0
 CURRENCY FORMATTER TEST
     Original value: 1324539.2339999999
-    Formatted: R 1324539,
+    Formatted: RM 1324539.
 VALUE INFO TEST
-    value dec separator: ','
+    value dec separator: '.'
     value numb after dec. sep: '2'
-    value gr. sep.: '.'
+    value gr. sep.: ','
     value nr list sep.: ';'
     Grouping: 330
 VALUE FORMATTER TEST
     Original value: 123559.234
-    Formatted: 123.559,23
+    Formatted: 123,559.23

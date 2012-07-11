@@ -47,12 +47,12 @@ DAY/MONTH NAMES TEST
 DATE TIME FORMATTER TEST
     Original string: local_date_time: &c, day: &A
 
-    formatted string: local_date_time: 19. veljača 2009 11:45:30, day: petak
+    formatted string: local_date_time: 19. veljača 2009. 11:45:30, day: petak
 
 CURRENCY INFO TEST
     cur dec sep: ','
     cur gr.sep: ''
-    Grouping: 30
+    Grouping: 030
     cur nr list sep: ';'
     cur num after dec: '2'
     currency symbol:'KM'

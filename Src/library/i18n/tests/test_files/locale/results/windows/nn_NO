@@ -9,7 +9,7 @@ DAY/MONTH NAMES TEST
   to
   fr
   la
-  su
+  sø
     Full day names:
   måndag
   tysdag
@@ -17,7 +17,7 @@ DAY/MONTH NAMES TEST
   torsdag
   fredag
   laurdag
-  sundag
+  søndag
     Abbreviated month names:
   jan
   feb
@@ -52,7 +52,7 @@ DATE TIME FORMATTER TEST
 CURRENCY INFO TEST
     cur dec sep: ','
     cur gr.sep: ''
-    Grouping: 30
+    Grouping: 030
     cur nr list sep: ';'
     cur num after dec: '2'
     currency symbol:'kr'

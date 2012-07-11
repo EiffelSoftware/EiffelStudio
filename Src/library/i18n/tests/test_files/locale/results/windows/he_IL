@@ -3,13 +3,13 @@
 Test of locale: he_IL
 DAY/MONTH NAMES TEST
     Abbreviated day names:
-  ב
-  ג
-  ד
-  ה
-  ו
-  ש
-  א
+  יום ב
+  יום ג
+  יום ד
+  יום ה
+  יום ו
+  שבת
+  יום א
     Full day names:
   יום שני
   יום שלישי
@@ -19,18 +19,18 @@ DAY/MONTH NAMES TEST
   שבת
   יום ראשון
     Abbreviated month names:
-  ינואר
-  פברואר
+  ינו
+  פבר
   מרץ
-  אפריל
+  אפר
   מאי
-  יוני
-  יולי
-  אוגוסט
-  ספטמבר
-  אוקטובר
-  נובמבר
-  דצמבר
+  יונ
+  יול
+  אוג
+  ספט
+  אוק
+  נוב
+  דצמ
     Full month names:
   ינואר
   פברואר
@@ -52,7 +52,7 @@ DATE TIME FORMATTER TEST
 CURRENCY INFO TEST
     cur dec sep: '.'
     cur gr.sep: ''
-    Grouping: 30
+    Grouping: 030
     cur nr list sep: ','
     cur num after dec: '2'
     currency symbol:'₪'

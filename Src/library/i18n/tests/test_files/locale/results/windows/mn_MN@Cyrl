@@ -26,7 +26,7 @@ DAY/MONTH NAMES TEST
   V
   VI
   VII
-  VШ
+  VIII
   IX
   X
   XI
@@ -52,7 +52,7 @@ DATE TIME FORMATTER TEST
 CURRENCY INFO TEST
     cur dec sep: ','
     cur gr.sep: ''
-    Grouping: 30
+    Grouping: 030
     cur nr list sep: ';'
     cur num after dec: '2'
     currency symbol:'₮'

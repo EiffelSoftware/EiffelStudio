@@ -8,7 +8,7 @@ DAY/MONTH NAMES TEST
   mér
   xov
   ven
-  sab
+  sáb
   dom
     Full day names:
   luns
@@ -52,11 +52,11 @@ DATE TIME FORMATTER TEST
 CURRENCY INFO TEST
     cur dec sep: ','
     cur gr.sep: ''
-    Grouping: 30
-    cur nr list sep: ','
+    Grouping: 030
+    cur nr list sep: ';'
     cur num after dec: '2'
     currency symbol:'€'
-    symbol location: 0
+    symbol location: 1
     INT cur dec sep: '.'
     INT cur gr.sep: ','
     INT Grouping: 330
@@ -66,12 +66,12 @@ CURRENCY INFO TEST
     INT symbol location: 0
 CURRENCY FORMATTER TEST
     Original value: 1324539.2339999999
-    Formatted: € 1324539,23
+    Formatted: 1324539,23 €
 VALUE INFO TEST
     value dec separator: ','
     value numb after dec. sep: '2'
     value gr. sep.: '.'
-    value nr list sep.: ','
+    value nr list sep.: ';'
     Grouping: 330
 VALUE FORMATTER TEST
     Original value: 123559.234

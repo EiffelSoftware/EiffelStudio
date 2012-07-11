@@ -3,56 +3,56 @@
 Test of locale: sw_KE
 DAY/MONTH NAMES TEST
     Abbreviated day names:
-  Mon
-  Tue
-  Wed
-  Thu
-  Fri
-  Sat
-  Sun
+  Jumat.
+  Juman.
+  Jumat.
+  Alh.
+  Iju.
+  Jumam.
+  Jumap.
     Full day names:
-  Monday
-  Tuesday
-  Wednesday
-  Thursday
-  Friday
-  Saturday
-  Sunday
+  Jumatatu
+  Jumanne
+  Jumatano
+  Alhamisi
+  Ijumaa
+  Jumamosi
+  Jumapili
     Abbreviated month names:
   Jan
   Feb
-  Mar
+  Mac
   Apr
-  May
+  Mei
   Jun
   Jul
-  Aug
+  Ago
   Sep
-  Oct
+  Okt
   Nov
   Dec
     Full month names:
-  January
-  February
-  March
-  April
-  May
-  June
-  July
-  August
-  September
-  October
-  November
-  December
+  Januari
+  Februari
+  Machi
+  Aprili
+  Mei
+  Juni
+  Julai
+  Agosti
+  Septemba
+  Oktoba
+  Novemba
+  Decemba
 DATE TIME FORMATTER TEST
     Original string: local_date_time: &c, day: &A
 
-    formatted string: local_date_time: Friday, February 19, 2009 11:45:30 am, day: Friday
+    formatted string: local_date_time: Ijumaa, Februari 19, 2009 11:45:30 am, day: Ijumaa
 
 CURRENCY INFO TEST
     cur dec sep: '.'
     cur gr.sep: ''
-    Grouping: 30
+    Grouping: 030
     cur nr list sep: ','
     cur num after dec: '2'
     currency symbol:'S'

@@ -3,13 +3,13 @@
 Test of locale: kn_IN
 DAY/MONTH NAMES TEST
     Abbreviated day names:
-  ಸೋ.
-  ಮಂ.
-  ಬು.
-  ಗು.
-  ಶು.
+  ಸೋಮ.
+  ಮಂಗಳ.
+  ಬುಧ.
+  ಗುರು.
+  ಶುಕ್ರ.
   ಶನಿ.
-  ರ.
+  ಭಾನು.
     Full day names:
   ಸೋಮವಾರ
   ಮಂಗಳವಾರ
@@ -17,42 +17,42 @@ DAY/MONTH NAMES TEST
   ಗುರುವಾರ
   ಶುಕ್ರವಾರ
   ಶನಿವಾರ
-  ರವಿವಾರ
+  ಭಾನುವಾರ
     Abbreviated month names:
-  ಜನವರೀ
-  ಫೆಬ್ರವರೀ
+  ಜನವರಿ
+  ಫೆಬ್ರವರಿ
   ಮಾರ್ಚ್
   ಎಪ್ರಿಲ್
-  ಮೆ
+  ಮೇ
   ಜೂನ್
   ಜುಲೈ
   ಆಗಸ್ಟ್
-  ಸಪ್ಟೆಂಬರ್
+  ಸೆಪ್ಟಂಬರ್
   ಅಕ್ಟೋಬರ್
   ನವೆಂಬರ್
   ಡಿಸೆಂಬರ್
     Full month names:
-  ಜನವರೀ
-  ಫೆಬ್ರವರೀ
+  ಜನವರಿ
+  ಫೆಬ್ರವರಿ
   ಮಾರ್ಚ್
   ಎಪ್ರಿಲ್
-  ಮೆ
+  ಮೇ
   ಜೂನ್
   ಜುಲೈ
   ಆಗಸ್ಟ್
-  ಸಪ್ಟೆಂಬರ್
+  ಸೆಪ್ಟಂಬರ್
   ಅಕ್ಟೋಬರ್
   ನವೆಂಬರ್
   ಡಿಸೆಂಬರ್
 DATE TIME FORMATTER TEST
     Original string: local_date_time: &c, day: &A
 
-    formatted string: local_date_time: 19 ಫೆಬ್ರವರೀ 2009 11:45:30, day: ಶುಕ್ರವಾರ
+    formatted string: local_date_time: 19 ಫೆಬ್ರವರಿ 2009 11:45:30, day: ಶುಕ್ರವಾರ
 
 CURRENCY INFO TEST
     cur dec sep: '.'
     cur gr.sep: ''
-    Grouping: 320
+    Grouping: 0320
     cur nr list sep: ','
     cur num after dec: '2'
     currency symbol:'ರೂ'

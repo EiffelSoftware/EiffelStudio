@@ -1,0 +1,78 @@
+
+
+Test of locale: rw_RW
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  kab.
+  gat.
+  kan.
+  gat.
+  gat.
+  cyu.
+  mbe.
+    Full day names:
+  Ku wa kabiri
+  Ku wa gatatu
+  Ku wa kane
+  Ku wa gatanu
+  Ku wa gatandatu
+  Ku cyumweru
+  Ku wa mbere
+    Abbreviated month names:
+  Mut
+  Gas
+  Wer
+  Mat
+  Gic
+  Kam
+  Nya
+  Kan
+  Nze
+  Ukwa
+  Ugu
+  Uku
+    Full month names:
+  Mutarama
+  Gashyantare
+  Werurwe
+  Mata
+  Gicurasi
+  Kamena
+  Nyakanga
+  Kanama
+  Nzeli
+  Ukwakira
+  Ugushyingo
+  Ukuboza
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: Ku wa gatandatu, Gashyantare 19, 2009 11:45:30 saa moya z.m., day: Ku wa gatandatu
+
+CURRENCY INFO TEST
+    cur dec sep: ','
+    cur gr.sep: ''
+    Grouping: 030
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'RWF'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'RWF'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: RWF 1324539,23
+VALUE INFO TEST
+    value dec separator: ','
+    value numb after dec. sep: '2'
+    value gr. sep.: ' '
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123 559,23

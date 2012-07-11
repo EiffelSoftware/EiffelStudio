@@ -3,21 +3,21 @@
 Test of locale: ar_DZ
 DAY/MONTH NAMES TEST
     Abbreviated day names:
-  الاثنين
+  الإثنين
   الثلاثاء
-  الاربعاء
+  الأربعاء
   الخميس
   الجمعة
   السبت
-  الاحد
+  الأحد
     Full day names:
-  الاثنين
+  الإثنين
   الثلاثاء
-  الاربعاء
+  الأربعاء
   الخميس
   الجمعة
   السبت
-  الاحد
+  الأحد
     Abbreviated month names:
   جانفييه
   فيفرييه
@@ -28,7 +28,7 @@ DAY/MONTH NAMES TEST
   جوييه
   أوت
   سبتمبر
-  اكتوبر
+  أكتوبر
   نوفمبر
   ديسمبر
     Full month names:
@@ -41,7 +41,7 @@ DAY/MONTH NAMES TEST
   جوييه
   أوت
   سبتمبر
-  اكتوبر
+  أكتوبر
   نوفمبر
   ديسمبر
 DATE TIME FORMATTER TEST
@@ -52,7 +52,7 @@ DATE TIME FORMATTER TEST
 CURRENCY INFO TEST
     cur dec sep: '.'
     cur gr.sep: ''
-    Grouping: 30
+    Grouping: 030
     cur nr list sep: ';'
     cur num after dec: '2'
     currency symbol:'د.ج.‏'

@@ -52,21 +52,21 @@ DATE TIME FORMATTER TEST
 CURRENCY INFO TEST
     cur dec sep: ','
     cur gr.sep: ''
-    Grouping: 30
+    Grouping: 030
     cur nr list sep: ';'
-    cur num after dec: '2'
+    cur num after dec: '0'
     currency symbol:'kr.'
     symbol location: 1
     INT cur dec sep: '.'
     INT cur gr.sep: ','
     INT Grouping: 330
     INT cur nr list sep: ';'
-    INT cur num after dec: '2'
+    INT cur num after dec: '0'
     INT currency symbol:'ISK'
     INT symbol location: 0
 CURRENCY FORMATTER TEST
     Original value: 1324539.2339999999
-    Formatted: 1324539,23 kr.
+    Formatted: 1324539, kr.
 VALUE INFO TEST
     value dec separator: ','
     value numb after dec. sep: '2'

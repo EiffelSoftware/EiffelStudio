@@ -3,45 +3,45 @@
 Test of locale: ar_LY
 DAY/MONTH NAMES TEST
     Abbreviated day names:
-  الاثنين
+  الإثنين
   الثلاثاء
-  الاربعاء
+  الأربعاء
   الخميس
   الجمعة
   السبت
-  الاحد
+  الأحد
     Full day names:
-  الاثنين
+  الإثنين
   الثلاثاء
-  الاربعاء
+  الأربعاء
   الخميس
   الجمعة
   السبت
-  الاحد
+  الأحد
     Abbreviated month names:
   يناير
   فبراير
   مارس
-  ابريل
+  أبريل
   مايو
   يونيو
   يوليو
-  اغسطس
+  أغسطس
   سبتمبر
-  اكتوبر
+  أكتوبر
   نوفمبر
   ديسمبر
     Full month names:
   يناير
   فبراير
   مارس
-  ابريل
+  أبريل
   مايو
   يونيو
   يوليو
-  اغسطس
+  أغسطس
   سبتمبر
-  اكتوبر
+  أكتوبر
   نوفمبر
   ديسمبر
 DATE TIME FORMATTER TEST
@@ -52,27 +52,27 @@ DATE TIME FORMATTER TEST
 CURRENCY INFO TEST
     cur dec sep: '.'
     cur gr.sep: ''
-    Grouping: 30
+    Grouping: 030
     cur nr list sep: ';'
-    cur num after dec: '2'
+    cur num after dec: '3'
     currency symbol:'د.ل.‏'
     symbol location: 0
     INT cur dec sep: '.'
     INT cur gr.sep: ','
     INT Grouping: 330
     INT cur nr list sep: ';'
-    INT cur num after dec: '2'
+    INT cur num after dec: '3'
     INT currency symbol:'LYD'
     INT symbol location: 0
 CURRENCY FORMATTER TEST
     Original value: 1324539.2339999999
-    Formatted: د.ل.‏ 1324539.23
+    Formatted: د.ل.‏ 1324539.234
 VALUE INFO TEST
     value dec separator: '.'
-    value numb after dec. sep: '2'
+    value numb after dec. sep: '3'
     value gr. sep.: ','
     value nr list sep.: ';'
     Grouping: 330
 VALUE FORMATTER TEST
     Original value: 123559.234
-    Formatted: 123,559.23
+    Formatted: 123,559.234

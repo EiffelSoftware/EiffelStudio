@@ -346,7 +346,6 @@ rt_private unsigned char ex_tagc[] = {
 };
 
 /* Strings used as separator for Eiffel stack dumps */
-#define RT_RETRIED_MSG "==============================================================================="
 #ifdef EIF_THREADS
 #define RT_THREAD_ENTER_MSG "******************************** Thread exception *****************************"
 #define RT_THREAD_FAILED_MSG "*******************************************************************************"
@@ -460,7 +459,6 @@ rt_public struct ex_vect *new_exset(char *name, EIF_TYPE_INDEX origin, char *obj
 	}
 
 	vector->ex_type = EX_CALL;		/* Signals entry in a new routine */
-	vector->ex_retry = 0;			/* Function not retried (yet!) */
 	vector->ex_rescue = 0;			/* Function not rescued (yet!) */
 	vector->ex_is_invariant = 0;				/* Function not set as _invariant routine (yet!) */
 	vector->ex_jbuf = NULL;		/* As far as we know, no rescue clause */
@@ -567,12 +565,6 @@ rt_public struct ex_vect *exret(struct ex_vect *rout_vect)
 	echlvl--;							/* And decrease exception level */
 		/* Unwind the trace stack, to forget last exception */
 	unwind_trace();						
-
-	rout_vect = extop(&eif_trace);		/* Top of exception trace stack */
-	if (rout_vect) {
-		CHECK("rout_vect fail or res", (rout_vect->ex_type == EN_FAIL) || (rout_vect->ex_type == EN_RES));
-		rout_vect->ex_retry = 1;		/* Function has been retried */
-	}
 
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 
@@ -1016,7 +1008,6 @@ rt_public void exresc(struct ex_vect *rout_vect)
 	memmove (trace, rout_vect, sizeof(struct ex_vect));
 	trace->ex_type = EX_RESC;		/* Physical entry in rescue clause */
 	trace->ex_rescue = 0;			/* Meaningless from now on */
-	trace->ex_retry = 0;			/* So is this */
 
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 }
@@ -2410,7 +2401,6 @@ rt_private void find_call(void)
 
 	/* Reset the exception structure to its default state */
 	eif_except.rescued = 0;				/* Not rescued */
-	eif_except.retried = 0;				/* Nor retried */
 
 	/* Start scanning the stack. Note that the current "top" (i.e. last item)
 	 * is skipped. It should have been processed by the caller to make sure it
@@ -2436,9 +2426,6 @@ rt_private void find_call(void)
 			eif_except.rname = item->ex_rout;	/* Routine name */
 			eif_except.from = item->ex_orig;	/* Where it comes from */
 			eif_except.obj_id = item->ex_id;	/* Object's ID */
-			if (item->ex_retry) {				/* Function has been retried */
-				eif_except.retried = 1;			/* Resumption has been attempted */
-			}
 
 			/* We want to signal an entry in a rescue clause even if it has not
 			 * led to an exception. If the end of the rescue clause is reached,
@@ -2940,27 +2927,9 @@ rt_private void print_top(void (*append_trace)(char *))
 
 #ifdef DEBUG
 	dump_vector("print_top: top of trace is", eif_trace.st_bot);
-	dprintf(1)("print_top: code = %d (previous %d) %s%s%s\n",
-		code, eif_except.previous, eif_except.retried ? "was retried" : "",
-		(eif_except.retried && eif_except.rescued) ? " and " : "",
-		eif_except.rescued ? "was rescued" : "");
+	dprintf(1)("print_top: code = %d (previous %d) %s\n",
+		code, eif_except.previous, eif_except.rescued ? "was rescued" : "");
 #endif
-
-	/* Do not print anything if the retry flag is on and the previous exception
-	 * was not not a routine failure nor a resumption attempt failed. Indeed,
-	 * the exception that led to a retry has already been printed and we do
-	 * not want to see two successive 'retry' lines.
-	 * Similarily, a rescued routine fails, and is not 'rescued' at the end
-	 * of the rescue clause.
-	 */
-	if (
-		eif_except.retried &&			/* Call has been retried */
-		eif_except.previous != 0 &&		/* Something has been already printed */
-		eif_except.previous != EN_FAIL && eif_except.previous != EN_RES
-	) {
-		(void) exnext();		/* Remove the top */
-		return;			/* We already printed the retry line */
-	}
 
 	eif_except.previous = code;		/* Update previous exception code */
 
@@ -3080,9 +3049,7 @@ rt_private void print_top(void (*append_trace)(char *))
 		sprintf(buffer, "Exit\n%s\n", RT_FAILED_MSG);
 		finished = 1;
 	} else if (code == EN_FAIL || code == EN_RES) {
-		if (eif_except.retried) {
-			sprintf(buffer, "Retry\n%s\n", RT_RETRIED_MSG);
-		} else if (eif_except.rescued) {
+		if (eif_except.rescued) {
 			sprintf(buffer, "Rescue\n%s\n", RT_FAILED_MSG);
 		} else {
 			sprintf(buffer, "Fail\n%s\n", RT_FAILED_MSG);
@@ -3106,11 +3073,7 @@ rt_private void print_top(void (*append_trace)(char *))
 #endif
 
 		if (top->ex_type == EN_FAIL || top->ex_type == EN_RES) {
-			if (eif_except.retried) {
-				sprintf(buffer, "Retry\n%s\n", RT_RETRIED_MSG);
-			} else {
-				sprintf(buffer, "Fail\n%s\n", RT_FAILED_MSG);
-			}
+			sprintf(buffer, "Fail\n%s\n", RT_FAILED_MSG);
 		} else {
 			/* We used to print `Pass' here, but once there is an exception raised,
 			 * it appears no reason to do so. We should instead print `Fail' 
@@ -3497,7 +3460,6 @@ rt_private void dump_vector(char *msg, struct ex_vect *vector)
 		return;
 	}
 	printf("\tex_type = %d\n", vector->ex_type);
-	printf("\tex_retry = %d\n", vector->ex_retry);
 	printf("\tex_rescue = %d\n", vector->ex_rescue);
 	printf("\tex_is_invariant = %d\n", vector->ex_is_invariant);
 	printf("\texu_lvl = %d\n", vector->ex_lvl);
@@ -3904,6 +3866,11 @@ rt_private void make_exception (long except_code, int signal_code, int eno, char
 		if (print_history_table) {
 			_trace = stack_trace_string();
 		} else {
+			/* We still need to keep eif_trace in a good status, even though we do not build the trace string.
+			 * The following call build correlative trace elements into eif_trace from eif_stack.
+			 * eweasel test exec096 fails (run-time compiled in assertion mode) without the following call.
+			*/
+			build_trace_to_backtrack_point();
 			_trace = RTMS("");
 		}
 		RT_GC_PROTECT(_trace);

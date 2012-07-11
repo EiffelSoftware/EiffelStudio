@@ -3,13 +3,13 @@
 Test of locale: lv_LV
 DAY/MONTH NAMES TEST
     Abbreviated day names:
-  Pr
-  Ot
-  Tr
-  Ce
-  Pk
-  Se
-  Sv
+  pr
+  ot
+  tr
+  ce
+  pk
+  se
+  sv
     Full day names:
   pirmdiena
   otrdiena
@@ -19,18 +19,18 @@ DAY/MONTH NAMES TEST
   sestdiena
   svētdiena
     Abbreviated month names:
-  Jan
-  Feb
-  Mar
-  Apr
-  Mai
-  Jūn
-  Jūl
-  Aug
-  Sep
-  Okt
-  Nov
-  Dec
+  jan
+  feb
+  mar
+  apr
+  mai
+  jūn
+  jūl
+  aug
+  sep
+  okt
+  nov
+  dec
     Full month names:
   janvāris
   februāris
@@ -52,7 +52,7 @@ DATE TIME FORMATTER TEST
 CURRENCY INFO TEST
     cur dec sep: ','
     cur gr.sep: ''
-    Grouping: 30
+    Grouping: 030
     cur nr list sep: ';'
     cur num after dec: '2'
     currency symbol:'Ls'

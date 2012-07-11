@@ -8,7 +8,7 @@ DAY/MONTH NAMES TEST
   বুধ.
   বৃহস্পতি.
   শুক্র.
-  শফি.
+  শনি.
   রবি.
     Full day names:
   সোমবার
@@ -16,7 +16,7 @@ DAY/MONTH NAMES TEST
   বুধবার
   বৃহস্পতিবার
   শুক্রবার
-  শফিবার
+  শনিবার
   রবিবার
     Abbreviated month names:
   জানু.
@@ -52,7 +52,7 @@ DATE TIME FORMATTER TEST
 CURRENCY INFO TEST
     cur dec sep: '.'
     cur gr.sep: ''
-    Grouping: 320
+    Grouping: 0320
     cur nr list sep: ','
     cur num after dec: '2'
     currency symbol:'টা'

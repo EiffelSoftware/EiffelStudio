@@ -1,0 +1,78 @@
+
+
+Test of locale: am_ET
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  ሰኞ
+  ማክሰ
+  ረቡዕ
+  ሐሙስ
+  ዓርብ
+  ቅዳሜ
+  እሑድ
+    Full day names:
+  ሰኞ
+  ማክሰኞ
+  ረቡዕ
+  ሐሙስ
+  ዓርብ
+  ቅዳሜ
+  እሑድ
+    Abbreviated month names:
+  ጃንዩ
+  ፌብሩ
+  ማርች
+  ኤፕረ
+  ሜይ
+  ጁን
+  ጁላይ
+  ኦገስ
+  ሴፕቴ
+  ኦክተ
+  ኖቬም
+  ዲሴም
+    Full month names:
+  ጃንዩወሪ
+  ፌብሩወሪ
+  ማርች
+  ኤፕረል
+  ሜይ
+  ጁን
+  ጁላይ
+  ኦገስት
+  ሴፕቴምበር
+  ኦክተውበር
+  ኖቬምበር
+  ዲሴምበር
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: ዓርብ ፣ ፌብሩወሪ 19 ቀን 2009 11:45:30 ጡዋት, day: ዓርብ
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: '+'
+    Grouping: 03
+    cur nr list sep: '፣'
+    cur num after dec: '2'
+    currency symbol:'ETB'
+    symbol location: 0
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'ETB'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: ETB 1324539.23
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '1'
+    value gr. sep.: ','
+    value nr list sep.: '፣'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123,559.2

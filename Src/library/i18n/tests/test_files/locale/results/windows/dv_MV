@@ -1,0 +1,78 @@
+
+
+Test of locale: dv_MV
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  ހޯމަ
+  އަންގާރަ
+  ބުދަ
+  ބުރާސްފަތި
+  ހުކުރު
+  ހޮނިހިރު
+  އާދީއްތަ
+    Full day names:
+  ހޯމަ
+  އަންގާރަ
+  ބުދަ
+  ބުރާސްފަތި
+  ހުކުރު
+  ހޮނިހިރު
+  އާދީއްތަ
+    Abbreviated month names:
+  ޖަނަވަރީ
+  ފެބްރުއަރީ
+  މާޗް
+  އޭޕްރިލް
+  މެއި
+  ޖޫން
+  ޖުލައި
+  އޯގަސްޓް
+  ސެޕްޓެމްބަރ
+  އޮކްޓޯބަރ
+  ނޮވެމްބަރ
+  ޑިސެމްބަރ
+    Full month names:
+  ޖަނަވަރީ
+  ފެބްރުއަރީ
+  މާޗް
+  އޭޕްރިލް
+  މެއި
+  ޖޫން
+  ޖުލައި
+  އޯގަސްޓް
+  ސެޕްޓެމްބަރ
+  އޮކްޓޯބަރ
+  ނޮވެމްބަރ
+  ޑިސެމްބަރ
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: ހުކުރު, 2009 ފެބްރުއަރީ 19 11:45:30, day: ހުކުރު
+
+CURRENCY INFO TEST
+    cur dec sep: '.'
+    cur gr.sep: ''
+    Grouping: 030
+    cur nr list sep: '،'
+    cur num after dec: '2'
+    currency symbol:'ރ.'
+    symbol location: 1
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'MVR'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: 1324539.23 ރ.
+VALUE INFO TEST
+    value dec separator: '.'
+    value numb after dec. sep: '2'
+    value gr. sep.: ','
+    value nr list sep.: '،'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123,559.23

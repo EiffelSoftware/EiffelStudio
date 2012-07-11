@@ -4,7 +4,7 @@ Test of locale: uk_UA
 DAY/MONTH NAMES TEST
     Abbreviated day names:
   Пн
-  Вв
+  Вт
   Ср
   Чт
   Пт
@@ -30,7 +30,7 @@ DAY/MONTH NAMES TEST
   Вер
   Жов
   Лис
-  Грг
+  Гру
     Full month names:
   Січень
   Лютий
@@ -52,10 +52,10 @@ DATE TIME FORMATTER TEST
 CURRENCY INFO TEST
     cur dec sep: ','
     cur gr.sep: ''
-    Grouping: 30
+    Grouping: 030
     cur nr list sep: ';'
     cur num after dec: '2'
-    currency symbol:'грн.'
+    currency symbol:'₴'
     symbol location: 1
     INT cur dec sep: '.'
     INT cur gr.sep: ','
@@ -66,7 +66,7 @@ CURRENCY INFO TEST
     INT symbol location: 0
 CURRENCY FORMATTER TEST
     Original value: 1324539.2339999999
-    Formatted: 1324539,23 грн.
+    Formatted: 1324539,23 ₴
 VALUE INFO TEST
     value dec separator: ','
     value numb after dec. sep: '2'

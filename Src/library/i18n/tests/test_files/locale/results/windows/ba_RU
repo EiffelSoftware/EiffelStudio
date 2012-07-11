@@ -1,0 +1,78 @@
+
+
+Test of locale: ba_RU
+DAY/MONTH NAMES TEST
+    Abbreviated day names:
+  Дш
+  Шш
+  Шр
+  Кс
+  Йм
+  Шб
+  Йш
+    Full day names:
+  Дүшәмбе
+  Шишәмбе
+  Шаршамбы
+  Кесаҙна
+  Йома
+  Шәмбе
+  Йәкшәмбе
+    Abbreviated month names:
+  ғин
+  фев
+  мар
+  апр
+  май
+  июн
+  июл
+  авг
+  сен
+  окт
+  ноя
+  дек
+    Full month names:
+  ғинуар
+  февраль
+  март
+  апрель
+  май
+  июнь
+  июль
+  август
+  сентябрь
+  октябрь
+  ноябрь
+  декабрь
+DATE TIME FORMATTER TEST
+    Original string: local_date_time: &c, day: &A
+
+    formatted string: local_date_time: 19 февраль 2009 й 11:45:30, day: Йома
+
+CURRENCY INFO TEST
+    cur dec sep: ','
+    cur gr.sep: ''
+    Grouping: 03
+    cur nr list sep: ';'
+    cur num after dec: '2'
+    currency symbol:'һ.'
+    symbol location: 1
+    INT cur dec sep: '.'
+    INT cur gr.sep: ','
+    INT Grouping: 330
+    INT cur nr list sep: ';'
+    INT cur num after dec: '2'
+    INT currency symbol:'RUB'
+    INT symbol location: 0
+CURRENCY FORMATTER TEST
+    Original value: 1324539.2339999999
+    Formatted: 1324539,23 һ.
+VALUE INFO TEST
+    value dec separator: ','
+    value numb after dec. sep: '2'
+    value gr. sep.: ' '
+    value nr list sep.: ';'
+    Grouping: 330
+VALUE FORMATTER TEST
+    Original value: 123559.234
+    Formatted: 123 559,23

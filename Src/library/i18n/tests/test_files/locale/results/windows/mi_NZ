@@ -3,20 +3,20 @@
 Test of locale: mi_NZ
 DAY/MONTH NAMES TEST
     Abbreviated day names:
-  Ma
+  Hi
   Tū
-  We
-  Tāi
+  Apa
   Pa
-  Hā
+  Me
+  Ho
   Ta
     Full day names:
-  Mane
-  Tūrei
-  Wenerei
-  Tāite
-  Paraire
-  Hātarei
+  Rāhina
+  Rātū
+  Rāapa
+  Rāpare
+  Rāmere
+  Rāhoroi
   Rātapu
     Abbreviated month names:
   Kohi
@@ -25,11 +25,11 @@ DAY/MONTH NAMES TEST
   Pae
   Hara
   Pipi
-  Hōngoi
+  Hōngo
   Here
   Mahu
-  Whi-nu
-  Whi-ra
+  Nuku
+  Rangi
   Haki
     Full month names:
   Kohi-tātea
@@ -38,7 +38,7 @@ DAY/MONTH NAMES TEST
   Paenga-whāwhā
   Haratua
   Pipiri
-  Hōngoingoi
+  Hōngongoi
   Here-turi-kōkā
   Mahuru
   Whiringa-ā-nuku
@@ -47,12 +47,12 @@ DAY/MONTH NAMES TEST
 DATE TIME FORMATTER TEST
     Original string: local_date_time: &c, day: &A
 
-    formatted string: local_date_time: Paraire, 19 Hui-tanguru 2009 11:45:30 a.m., day: Paraire
+    formatted string: local_date_time: Rāmere, 19 Hui-tanguru, 2009 11:45:30 a.m., day: Rāmere
 
 CURRENCY INFO TEST
     cur dec sep: '.'
     cur gr.sep: ''
-    Grouping: 30
+    Grouping: 030
     cur nr list sep: ','
     cur num after dec: '2'
     currency symbol:'$'

@@ -3,13 +3,13 @@
 Test of locale: ml_IN
 DAY/MONTH NAMES TEST
     Abbreviated day names:
-  തിങ്കള്.
+  തിങ്കൾ.
   ചൊവ്വ.
-  ബുധന്.
+  ബുധൻ.
   വ്യാഴം.
-  വെളോളി.
+  വെള്ളി.
   ശനി.
-  ഞായറ്.
+  ഞായർ.
     Full day names:
   തിങ്കളാഴ്ച
   ചൊവ്വാഴ്ച
@@ -52,7 +52,7 @@ DATE TIME FORMATTER TEST
 CURRENCY INFO TEST
     cur dec sep: '.'
     cur gr.sep: ''
-    Grouping: 320
+    Grouping: 0320
     cur nr list sep: ','
     cur num after dec: '2'
     currency symbol:'ക'

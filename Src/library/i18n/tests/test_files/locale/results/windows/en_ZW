@@ -52,7 +52,7 @@ DATE TIME FORMATTER TEST
 CURRENCY INFO TEST
     cur dec sep: '.'
     cur gr.sep: ''
-    Grouping: 30
+    Grouping: 030
     cur nr list sep: ','
     cur num after dec: '2'
     currency symbol:'Z$'
@@ -62,7 +62,7 @@ CURRENCY INFO TEST
     INT Grouping: 330
     INT cur nr list sep: ';'
     INT cur num after dec: '2'
-    INT currency symbol:'ZWD'
+    INT currency symbol:'ZWL'
     INT symbol location: 0
 CURRENCY FORMATTER TEST
     Original value: 1324539.2339999999

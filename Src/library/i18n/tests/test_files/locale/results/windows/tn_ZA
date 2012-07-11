@@ -3,13 +3,13 @@
 Test of locale: tn_ZA
 DAY/MONTH NAMES TEST
     Abbreviated day names:
-  Mon
-  Tue
-  Wed
-  Thu
-  Fri
-  Sat
-  Sun
+  Mos.
+  Lbd.
+  Lbr.
+  Lbn.
+  Lbt.
+  Lmt.
+  Ltp.
     Full day names:
   Mosupologo
   Labobedi
@@ -19,18 +19,18 @@ DAY/MONTH NAMES TEST
   Lamatlhatso
   Latshipi
     Abbreviated month names:
-  Jan
-  Feb
-  Mar
-  Apr
-  May
-  Jun
-  Jul
-  Aug
-  Sep
-  Oct
-  Nov
-  Dec
+  Fer.
+  Tlhak.
+  Mop.
+  Mor.
+  Motsh.
+  Seet.
+  Phukw.
+  Phatw.
+  Lwets.
+  Diph.
+  Ngwan.
+  Sed.
     Full month names:
   Ferikgong
   Tlhakole
@@ -52,7 +52,7 @@ DATE TIME FORMATTER TEST
 CURRENCY INFO TEST
     cur dec sep: '.'
     cur gr.sep: ''
-    Grouping: 30
+    Grouping: 030
     cur nr list sep: ','
     cur num after dec: '2'
     currency symbol:'R'

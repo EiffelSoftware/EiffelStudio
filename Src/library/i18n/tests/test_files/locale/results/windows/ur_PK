@@ -19,26 +19,26 @@ DAY/MONTH NAMES TEST
   هفته
   اتوار
     Abbreviated month names:
-  جنورى
-  فرورى
+  جنوری
+  فروری
   مارچ
-  اپريل
-  مئ
+  اپریل
+  مئی
   جون
-  جولاٸ
+  جولائی
   اگست
   ستمبر
   اکتوبر
   نومبر
   دسمبر
     Full month names:
-  جنورى
-  فرورى
+  جنوری
+  فروری
   مارچ
-  اپريل
-  مئ
+  اپریل
+  مئی
   جون
-  جولاٸ
+  جولائی
   اگست
   ستمبر
   اکتوبر
@@ -47,12 +47,12 @@ DAY/MONTH NAMES TEST
 DATE TIME FORMATTER TEST
     Original string: local_date_time: &c, day: &A
 
-    formatted string: local_date_time: 19 فرورى, 2009 11:45:30 am, day: جمعه
+    formatted string: local_date_time: 19 فروری, 2009 11:45:30 am, day: جمعه
 
 CURRENCY INFO TEST
     cur dec sep: '.'
     cur gr.sep: ''
-    Grouping: 30
+    Grouping: 030
     cur nr list sep: ';'
     cur num after dec: '2'
     currency symbol:'Rs'

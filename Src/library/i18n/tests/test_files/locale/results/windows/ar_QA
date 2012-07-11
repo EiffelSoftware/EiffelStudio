@@ -3,45 +3,45 @@
 Test of locale: ar_QA
 DAY/MONTH NAMES TEST
     Abbreviated day names:
-  الاثنين
+  الإثنين
   الثلاثاء
-  الاربعاء
+  الأربعاء
   الخميس
   الجمعة
   السبت
-  الاحد
+  الأحد
     Full day names:
-  الاثنين
+  الإثنين
   الثلاثاء
-  الاربعاء
+  الأربعاء
   الخميس
   الجمعة
   السبت
-  الاحد
+  الأحد
     Abbreviated month names:
   يناير
   فبراير
   مارس
-  ابريل
+  أبريل
   مايو
   يونيو
   يوليو
-  اغسطس
+  أغسطس
   سبتمبر
-  اكتوبر
+  أكتوبر
   نوفمبر
   ديسمبر
     Full month names:
   يناير
   فبراير
   مارس
-  ابريل
+  أبريل
   مايو
   يونيو
   يوليو
-  اغسطس
+  أغسطس
   سبتمبر
-  اكتوبر
+  أكتوبر
   نوفمبر
   ديسمبر
 DATE TIME FORMATTER TEST
@@ -52,7 +52,7 @@ DATE TIME FORMATTER TEST
 CURRENCY INFO TEST
     cur dec sep: '.'
     cur gr.sep: ''
-    Grouping: 30
+    Grouping: 030
     cur nr list sep: ';'
     cur num after dec: '2'
     currency symbol:'ر.ق.‏'

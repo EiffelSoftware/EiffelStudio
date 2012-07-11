@@ -3,13 +3,13 @@
 Test of locale: zh_CN
 DAY/MONTH NAMES TEST
     Abbreviated day names:
-  星期一
-  星期二
-  星期三
-  星期四
-  星期五
-  星期六
-  星期日
+  周一
+  周二
+  周三
+  周四
+  周五
+  周六
+  周日
     Full day names:
   星期一
   星期二
@@ -52,10 +52,10 @@ DATE TIME FORMATTER TEST
 CURRENCY INFO TEST
     cur dec sep: '.'
     cur gr.sep: ''
-    Grouping: 30
+    Grouping: 030
     cur nr list sep: ','
     cur num after dec: '2'
-    currency symbol:'￥'
+    currency symbol:'¥'
     symbol location: 0
     INT cur dec sep: '.'
     INT cur gr.sep: ','
@@ -66,7 +66,7 @@ CURRENCY INFO TEST
     INT symbol location: 0
 CURRENCY FORMATTER TEST
     Original value: 1324539.2339999999
-    Formatted: ￥ 1324539.23
+    Formatted: ¥ 1324539.23
 VALUE INFO TEST
     value dec separator: '.'
     value numb after dec. sep: '2'

@@ -1438,25 +1438,45 @@ feature {NONE} -- Implementation
 
 	api_loader: DYNAMIC_MODULE
 			-- API dynamic loader
+		require
+			names_not_empty: not library_names.is_empty
+		local
+			l_libs: like library_names
 		once
-			create Result.make ("libwebkitgtk-1.0")
+			l_libs := library_names
+			from
+				l_libs.start
+				create Result.make (l_libs.item)
+			until
+				l_libs.after or else Result.is_interface_usable
+			loop
+				l_libs.forth
+				if not l_libs.after then
+					create Result.make (l_libs.item)
+				end
+			end
 		ensure
 			not_void: Result /= Void
 		end
 
+	library_names: ARRAYED_LIST [STRING]
+			-- Known library names
+		once
+			create Result.make_from_array (<<"libwebkitgtk-1.0", "libwebkit-1.0">>)
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 
 
 
 end -- class EV_WEBKIT_WEB_VIEW
-

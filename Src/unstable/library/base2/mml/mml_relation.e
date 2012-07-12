@@ -43,8 +43,14 @@ feature -- Properties
 		local
 			i: INTEGER
 		do
-			i := lefts.index_satisfying (agent meq_left (x, ?))
-			Result := lefts.has_index (i) and then model_equals (rights [i], y)
+			from
+				i := lefts.index_satisfying (agent meq_left (x, ?))
+			until
+				Result or not lefts.has_index (i)
+			loop
+				Result := model_equals (rights [i], y)
+				i := lefts.index_satisfying_from (agent meq_left (x, ?), i + 1)
+			end
 		end
 
 	is_empty: BOOLEAN

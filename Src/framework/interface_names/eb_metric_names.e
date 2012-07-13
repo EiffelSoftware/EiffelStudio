@@ -56,7 +56,7 @@ feature -- Titles
 	t_discard_remove_prompt: STRING_32 do Result := locale.translation ("always remove selected metric") end
 	t_discard_save_prompt: STRING_32 do Result := locale.translation ("always save modified metric") end
 	t_name_cannot_be_empty: STRING_32 do Result := locale.translation ("Metric name is empty.") end
-	t_metric_with_name_already_exists (a_metric_name: STRING_GENERAL): STRING_32
+	t_metric_with_name_already_exists (a_metric_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_metric_name_not_void: a_metric_name /= Void
 		do
@@ -71,7 +71,7 @@ feature -- Titles
 	t_selected_archive_not_valid: STRING_32 do Result := locale.translation ("Metric archive in specified file is not valid, it must be cleaned") end
 	t_metric: STRING_32 do Result := locale.translation ("metric") end
 	t_metric_name_can_not_be_empty: STRING_32 do Result := locale.translation ("Metric name cannot be empty") end
-	t_remove_metric (a_metric_name: STRING_GENERAL): STRING_32
+	t_remove_metric (a_metric_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_metric_name_not_void: a_metric_name /= Void
 		do
@@ -365,7 +365,7 @@ feature -- Tooltip
 
 feature -- Error/warning message
 
-	wrn_metric_name_exists_in_your_metrics (a_name: STRING_GENERAL): STRING_32
+	wrn_metric_name_exists_in_your_metrics (a_name: READABLE_STRING_GENERAL): STRING_32
 			-- Warning message used when in metric import dialog, when a changed metric name causes name crash in a users metrics
 		require
 			a_name_attached: a_name /= Void
@@ -375,7 +375,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	wrn_referenced_metrics_not_selected (a_metric_names: STRING_GENERAL): STRING_32
+	wrn_referenced_metrics_not_selected (a_metric_names: READABLE_STRING_GENERAL): STRING_32
 			-- Warning message used when in metric import dialog, when a metric is selected while some of its recursively referenced metrics are not selected
 			-- `a_metic_names' is a list of concatenated metric names
 		require
@@ -386,7 +386,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	wrn_referenced_metrics_missing (a_metric_name: STRING_GENERAL): STRING_32
+	wrn_referenced_metrics_missing (a_metric_name: READABLE_STRING_GENERAL): STRING_32
 			-- Warning message used when in metric import dialog, when a metric is selected while some of its recursively referenced metrics are not found	
 		require
 			a_metric_name_attached: a_metric_name /= Void
@@ -396,7 +396,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	wrn_metric_name_crash (a_name: STRING_GENERAL): STRING_32
+	wrn_metric_name_crash (a_name: READABLE_STRING_GENERAL): STRING_32
 			-- Warning message used when in metric import dialog, when a metric has name crash with an existing metric named `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -406,7 +406,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_loading_predefined_metrics (a_real_error: STRING_GENERAL): STRING_32
+	err_loading_predefined_metrics (a_real_error: READABLE_STRING_GENERAL): STRING_32
 			-- Error message when loading predefined metrics
 		require
 			a_real_error_attached: a_real_error /= Void
@@ -416,7 +416,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_loading_userdefined_metrics (a_real_error: STRING_GENERAL): STRING_32
+	err_loading_userdefined_metrics (a_real_error: READABLE_STRING_GENERAL): STRING_32
 			-- Error message when loading user-defined metrics
 		require
 			a_real_error_attached: a_real_error /= Void
@@ -432,7 +432,7 @@ feature -- Error/warning message
 	err_invalid_description_tag: STRING_32 do Result := locale.translation ("Invalid description tag.") end
 			-- Invalid description tag error
 
-	err_file_not_readable (a_file_name: STRING_GENERAL): STRING_32
+	err_file_not_readable (a_file_name: READABLE_STRING_GENERAL): STRING_32
 			-- File not readable error
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -442,7 +442,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_file_not_writable (a_file_name: STRING_GENERAL): STRING_32
+	err_file_not_writable (a_file_name: READABLE_STRING_GENERAL): STRING_32
 			-- File not writable error
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -452,7 +452,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_directory_creation_fail (a_dir_name: STRING_GENERAL): STRING_32
+	err_directory_creation_fail (a_dir_name: READABLE_STRING_GENERAL): STRING_32
 			-- Directory creation fail error
 		require
 			a_dir_name_attached: a_dir_name /= Void
@@ -485,7 +485,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_metric_name_exists_in_import_metric_list (a_new_metric_name, a_old_metric_name: STRING_GENERAL): STRING_32
+	err_metric_name_exists_in_import_metric_list (a_new_metric_name, a_old_metric_name: READABLE_STRING_GENERAL): STRING_32
 			-- Error message used when in metric import dialog, when a changed metric name causes name crash in listed metrics to be imported
 		require
 			a_new_metric_name_attached: a_new_metric_name /= Void
@@ -512,7 +512,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_duplicated_metric_name (a_metric_name: STRING_GENERAL): STRING_32
+	err_duplicated_metric_name (a_metric_name: READABLE_STRING_GENERAL): STRING_32
 			-- Duplicated metric name error
 		require
 			a_metric_name_attached: a_metric_name /= Void
@@ -544,7 +544,7 @@ feature -- Error/warning message
 			Result := locale.translation ("UUID is missing.")
 		end
 
-	err_uuid_invalid (a_invalid_uuid: STRING_GENERAL): STRING_32
+	err_uuid_invalid (a_invalid_uuid: READABLE_STRING_GENERAL): STRING_32
 			-- UUID invalid error
 		require
 			a_invalid_uuid_attached: a_invalid_uuid /= Void
@@ -606,7 +606,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_regular_expression_attr_invalid (a_value: STRING_GENERAL): STRING_32
+	err_regular_expression_attr_invalid (a_value: READABLE_STRING_GENERAL): STRING_32
 			-- Regular expression attribute value invalid error
 		require
 			a_value_attached: a_value /= Void
@@ -632,7 +632,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_unit_name_invalid (a_unit_name: STRING_GENERAL): STRING_32
+	err_unit_name_invalid (a_unit_name: READABLE_STRING_GENERAL): STRING_32
 			-- Unit name invalid error
 		require
 			a_unit_name_attached: a_unit_name /= Void
@@ -642,7 +642,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_negation_attr_invalid (a_value: STRING_GENERAL): STRING_32
+	err_negation_attr_invalid (a_value: READABLE_STRING_GENERAL): STRING_32
 			-- Negation attribute value invalid error
 		require
 			a_value_attached: a_value /= Void
@@ -678,7 +678,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_domain_item_type_invalid (a_type: STRING_GENERAL): STRING_32
+	err_domain_item_type_invalid (a_type: READABLE_STRING_GENERAL): STRING_32
 			-- Domain item type invalid error
 		require
 			a_type_attached: a_type /= Void
@@ -688,7 +688,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_library_target_uuid_invalid (a_uuid: STRING_GENERAL): STRING_32
+	err_library_target_uuid_invalid (a_uuid: READABLE_STRING_GENERAL): STRING_32
 			-- Library target UUID invalid error
 		require
 			a_uuid_attached: a_uuid /= Void
@@ -706,7 +706,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_metric_type_invalid (a_value: STRING_GENERAL): STRING_32
+	err_metric_type_invalid (a_value: READABLE_STRING_GENERAL): STRING_32
 			-- Metric type attribute value invalid error
 		require
 			a_value_attached: a_value /= Void
@@ -724,7 +724,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_archive_time_invalid (a_value: STRING_GENERAL): STRING_32
+	err_archive_time_invalid (a_value: READABLE_STRING_GENERAL): STRING_32
 			-- Archive time attribute value invalid error
 		require
 			a_value_attached: a_value /= Void
@@ -742,7 +742,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_archive_value_invalid (a_value: STRING_GENERAL): STRING_32
+	err_archive_value_invalid (a_value: READABLE_STRING_GENERAL): STRING_32
 			-- Archive value attribute value invalid error
 		require
 			a_value_attached: a_value /= Void
@@ -768,7 +768,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_variable_metric_unit_not_correct (a_wrong_unit, a_right_unit: STRING_GENERAL): STRING_32
+	err_variable_metric_unit_not_correct (a_wrong_unit, a_right_unit: READABLE_STRING_GENERAL): STRING_32
 			-- Variable metric unit not correct error
 		require
 			a_wrong_unit_attached: a_wrong_unit /= Void
@@ -779,7 +779,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_numerator_metric_not_defined (a_numerator: STRING_GENERAL): STRING_32
+	err_numerator_metric_not_defined (a_numerator: READABLE_STRING_GENERAL): STRING_32
 			-- Numerator metric not defined error
 		require
 			a_numerator_attached: a_numerator /= Void
@@ -789,7 +789,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_denominator_metric_not_defined (a_denominator: STRING_GENERAL): STRING_32
+	err_denominator_metric_not_defined (a_denominator: READABLE_STRING_GENERAL): STRING_32
 			-- Numerator metric not defined error
 		require
 			a_denominator_attached: a_denominator /= Void
@@ -799,7 +799,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_basic_metric_unit_not_correct (a_criterion_unit, a_metric_unit: STRING_GENERAL): STRING_32
+	err_basic_metric_unit_not_correct (a_criterion_unit, a_metric_unit: READABLE_STRING_GENERAL): STRING_32
 			-- Basic metric unit not correct error
 		require
 			a_criterion_unit_attached: a_criterion_unit /= Void
@@ -810,7 +810,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_criterion_not_exist (a_criterion_name, a_unit_name: STRING_GENERAL): STRING_32
+	err_criterion_not_exist (a_criterion_name, a_unit_name: READABLE_STRING_GENERAL): STRING_32
 			-- Criterion doesn't exist error
 		require
 			a_criterion_name_attached: a_criterion_name /= Void
@@ -845,7 +845,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_metric_name_invalid (a_invalid_name: STRING_GENERAL): STRING_32
+	err_metric_name_invalid (a_invalid_name: READABLE_STRING_GENERAL): STRING_32
 			-- Metric name invalid error
 		require
 			a_invalid_name_attached: a_invalid_name /= Void
@@ -899,7 +899,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_recursive_metric_definition (a_recursive_name: STRING_GENERAL): STRING_32
+	err_recursive_metric_definition (a_recursive_name: READABLE_STRING_GENERAL): STRING_32
 			-- Recursive metric definition error
 		require
 			a_recursive_name_attached: a_recursive_name /= Void
@@ -909,7 +909,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_metric_loading_error (a_real_error: STRING_GENERAL): STRING_32
+	err_metric_loading_error (a_real_error: READABLE_STRING_GENERAL): STRING_32
 			-- Metric loading error.
 		require
 			a_real_error_attached: a_real_error /= Void
@@ -919,7 +919,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_metric_not_exist (a_type: STRING_GENERAL): STRING_32
+	err_metric_not_exist (a_type: READABLE_STRING_GENERAL): STRING_32
 			-- Metric doesn't exist error
 		require
 			a_type_attached: a_type /= Void
@@ -930,7 +930,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_filter_invalid (a_filter: STRING_GENERAL): STRING_32
+	err_filter_invalid (a_filter: READABLE_STRING_GENERAL): STRING_32
 			-- Filter value invalid error
 		require
 			a_filter_attached: a_filter /= Void
@@ -1007,7 +1007,7 @@ feature -- Error/warning message
 
 	err_operator_missing: STRING_32 do Result := locale.translation ("Operator in value criterion is missing.") end
 
-	err_operator_invalid (a_operator: STRING_GENERAL): STRING_32
+	err_operator_invalid (a_operator: READABLE_STRING_GENERAL): STRING_32
 			-- Operator invalid error
 		require
 			a_operator_attached: a_operator /= Void
@@ -1019,7 +1019,7 @@ feature -- Error/warning message
 
 	err_tester_relation_missing: STRING_32 do Result := locale.translation ("Relation for value tester is missing.") end
 
-	err_tester_relation_invalid (a_relation: STRING_GENERAL): STRING_32
+	err_tester_relation_invalid (a_relation: READABLE_STRING_GENERAL): STRING_32
 			-- Tester relation invalid error
 		require
 			a_relation_attached: a_relation /= Void
@@ -1052,7 +1052,7 @@ feature -- Error/warning message
 	err_domain_missing: STRING_32 do Result := locale.translation ("Domain is missing.") end
 	err_value_tester_missing: STRING_32 do Result := locale.translation ("Value tester is missing.") end
 	err_value_retriever_missing: STRING_32 do Result := locale.translation ("Value retriever is missing.") end
-	err_use_external_delayed_invalid (a_value: STRING_GENERAL; a_attribute_name: STRING_GENERAL): STRING_32
+	err_use_external_delayed_invalid (a_value: STRING_GENERAL; a_attribute_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_value_attached: a_value /= Void
 		do
@@ -1064,35 +1064,35 @@ feature -- Error/warning message
 	err_delayed_domain_item_appear: STRING_32 do Result := locale.translation ("Delayed domain item appears.") end
 	err_input_domain_item_appear: STRING_32 do Result := locale.translation ("Input domain item appears.") end
 
-	err_invalid_matching_strategy (a_invalid_strategy: STRING_GENERAL): STRING_32
+	err_invalid_matching_strategy (a_invalid_strategy: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_invalid_strategy_attached: a_invalid_strategy /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("Matching strategy %"$1%" is invalid."), [a_invalid_strategy])
 		end
 
-	err_archive_file_name_exists (a_file_name: STRING_GENERAL): STRING_32
+	err_archive_file_name_exists (a_file_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_file_name_attached: a_file_name /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("Remote file will be loaded in: $1.%NThis file already exists. Overwrite?"), [a_file_name])
 		end
 
-	err_unable_to_read_from_url (a_url: STRING_GENERAL): STRING_32
+	err_unable_to_read_from_url (a_url: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_url_attached: a_url /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("Unable to read remote file.%NPlease check URL: $1"), [a_url])
 		end
 
-	err_unable_to_load_archive_file (a_file_name: STRING_GENERAL): STRING_32
+	err_unable_to_load_archive_file (a_file_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_file_name_attached: a_file_name /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("Unable to load remote file in: $1%NPlease make sure file does not exits or is writable."), [a_file_name])
 		end
 
-	err_transfer_file (a_reason: STRING_GENERAL): STRING_32
+	err_transfer_file (a_reason: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_reason_attached: a_reason /= Void
 		do
@@ -1110,7 +1110,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_attribute_missing (a_attribute: STRING_GENERAL): STRING_32
+	err_attribute_missing (a_attribute: READABLE_STRING_GENERAL): STRING_32
 			-- `a_attribute' missing error
 		require
 			a_attribute_attached: a_attribute /= Void
@@ -1131,7 +1131,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_too_many_sections (a_section_name: STRING_GENERAL): STRING_32
+	err_too_many_sections (a_section_name: READABLE_STRING_GENERAL): STRING_32
 			-- Too many `a_section_name' sections error
 		require
 			a_section_name_attached: a_section_name /= Void
@@ -1141,7 +1141,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_section_missing (a_section_name: STRING_GENERAL): STRING_32
+	err_section_missing (a_section_name: READABLE_STRING_GENERAL): STRING_32
 			-- `a_section_name' section missing error
 		require
 			a_section_name_attached: a_section_name /= Void
@@ -1153,7 +1153,7 @@ feature -- Error/warning message
 
 	err_external_command_empty: STRING_32 do Result := locale.translation ("External command is not specified.") end
 
-	err_external_command_file_not_specified (a_file_type: STRING_GENERAL): STRING_32
+	err_external_command_file_not_specified (a_file_type: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_file_type_attached: a_file_type /= Void
 		do
@@ -1445,7 +1445,7 @@ feature -- Utilities
 		end
 
 note
-        copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2012, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

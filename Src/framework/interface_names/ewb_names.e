@@ -102,57 +102,57 @@ feature -- Access
 			do Result := locale.translation ("Freezing implies some C compilation and linking.%
 							%%NDo you want to do it now") end
 
-	batch_mode (a_string: STRING_GENERAL): STRING_32
+	batch_mode (a_string: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Batch/Stop mode: saving new configuration format as '$1'."), [a_string])
 		end
 
-	save_new_configuration_as (a_str: STRING_GENERAL): STRING_32
+	save_new_configuration_as (a_str: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Save new configuration format as '$1'?"), [a_str])
 		end
 
-	target_does_not_exist (a_target: STRING_GENERAL): STRING_32
+	target_does_not_exist (a_target: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Target `$1' does not exist or is not a compilable target.%NChoose among the following target(s): "), [a_target])
 		end
 
-	create_new_project_in (a_str: STRING_GENERAL): STRING_32
+	create_new_project_in (a_str: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Create new project in '$1'?"), [a_str])
 		end
 
-	new_enviroment_value_for (a_key: STRING_GENERAL): STRING_32
+	new_enviroment_value_for (a_key: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("New environment value for $1 will be used%Nbecause of the -stop/-batch option.%N"), [a_key])
 		end
 
-	previous_value (a_value: STRING_GENERAL): STRING_32
+	previous_value (a_value: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Previous value: `$1'%N"), [a_value])
 		end
 
-	unknow_menu (a_str: STRING_GENERAL): STRING_32
+	unknow_menu (a_str: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Unknown menu $1.%N"), [a_str])
 		end
 
-	unknow_option (a_str: STRING_GENERAL): STRING_32
+	unknow_option (a_str: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Unknown option $1.%N"), [a_str])
 		end
 
-	ise_batch_version (a_wkname: STRING_GENERAL; a_version_number: STRING_GENERAL): STRING_32
+	ise_batch_version (a_wkname: READABLE_STRING_GENERAL; a_version_number: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("==== ISE $1 - Interactive Batch Version (v$2) ====%N%N"), [a_wkname, a_version_number])
 		end
 
-	cannot_open (a_file: STRING_GENERAL): STRING_32
+	cannot_open (a_file: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Cannot open $1"), [a_file])
 		end
 
-	one_subqueries_is (a_column, a_operator, a_value: STRING_GENERAL; a_active: BOOLEAN): STRING_32
+	one_subqueries_is (a_column, a_operator, a_value: READABLE_STRING_GENERAL; a_active: BOOLEAN): STRING_32
 		do
 			if a_active then
 				Result := locale.formatted_string (locale.translation ("$1 $2 $3 is active"), [a_column, a_operator, a_value])
@@ -184,75 +184,73 @@ feature -- Errors
 	you_must_select_an_ace_file_first: STRING_32				do Result := locale.translation ("You must select an Ace file first%N") end
 	thers_is_no_output_to_save: STRING_32					do Result := locale.translation ("There is no output to save.%N") end
 
-	file_exists (a_file_name: STRING_GENERAL): STRING_32
+	file_exists (a_file_name: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("File %"$1%" exists.%NPlease delete it first.%N"), [a_file_name])
 		end
 
-	class_is_not_in_the_universe (a_class: STRING_GENERAL): STRING_32
+	class_is_not_in_the_universe (a_class: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("$1 is not in the universe%N"), [a_class])
 		end
 
-	class_is_not_a_valid_class_name (a_class: STRING_GENERAL): STRING_32
+	class_is_not_a_valid_class_name (a_class: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("$1 is not a valid class name%N"), [a_class])
 		end
 
-	cluster_does_not_exit (a_cluster_name: STRING_GENERAL): STRING_32
+	cluster_does_not_exit (a_cluster_name: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Cluster $1 does not exist."), [a_cluster_name])
 		end
 
-	class_is_not_in_cluster (a_class: STRING_GENERAL): STRING_32
+	class_is_not_in_cluster (a_class: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("$1 is not in cluster."), [a_class])
 		end
 
-	class_is_not_in_the_system (a_class: STRING_GENERAL): STRING_32
+	class_is_not_in_the_system (a_class: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("$1 is not in the system%N"), [a_class])
 		end
 
-	you_must_now_run (a_script: STRING_GENERAL): STRING_32
+	you_must_now_run (a_script: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("You must now run %"$1%" in:%N%T"), [a_script])
 		end
 
-	error_could_not_write_to (a_file_name: STRING_GENERAL): STRING_32
+	error_could_not_write_to (a_file_name: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Error: could not write to $1%NPlease check permissions and disk space"), [a_file_name])
 		end
 
-	ace_file_cannot_be_read (a_fn: STRING_GENERAL): STRING_32
+	ace_file_cannot_be_read (a_fn: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Ace file `$1' cannot be read%N"), [a_fn])
 		end
 
-	ace_file_does_not_exist (a_fn: STRING_GENERAL): STRING_32
+	ace_file_does_not_exist (a_fn: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Ace file `$1' does not exist%N"), [a_fn])
 		end
 
-	feature_is_not_of_class (a_f, a_class: STRING_GENERAL): STRING_32
+	feature_is_not_of_class (a_f, a_class: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("$1 is not a feature of $2"), [a_f, a_class])
 		end
 
-	file_does_not_exist (a_file: STRING_GENERAL): STRING_32
+	file_does_not_exist (a_file: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("$1: File does not exist!%N%N"), [a_file])
 		end
 
-	there_is_already_project_compiled_in (a_project_name: STRING_GENERAL): STRING_32
+	there_is_already_project_compiled_in (a_project_name: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("There is already a project compiled in %"$1%"%NIt needs to be deleted before a precompilation.%N"), [a_project_name])
 		end
 
-feature {NONE} -- Implementation
-
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

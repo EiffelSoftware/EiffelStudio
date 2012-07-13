@@ -158,8 +158,11 @@ rt_shared void prepare_live_index (void)
 			/* Record live SCOOP processors. */
 		RTS_TCB(scoop_task_enumerate_live_processors,0,0,0);
 
-			/* Update live indexes for processors reported by SCOOP manager. */
-		update_live_index ();
+			/* Update live indexes for processors reported by SCOOP manager.
+			 * This step is postponed if there are already known live threads. */
+		if (!live_index_count) {
+			update_live_index ();
+		}
 	}
 }
 

@@ -50,7 +50,7 @@ feature -- Button texts
 	b_check: STRING_32							do Result := locale.translation ("Check") end
 	b_check_recursively: STRING_32				do Result := locale.translation ("Check recursively") end
 	b_Close: STRING_32							do Result := locale.translation("Close")	end
-	b_Close_tool (a_tool: STRING_GENERAL): STRING_32
+	b_Close_tool (a_tool: READABLE_STRING_GENERAL): STRING_32
 		require a_tool_not_void: a_tool /= Void
 		do	Result := locale.formatted_string (locale.translation ("Close $1"), [a_tool]) end
 	b_cluster_charts: STRING_32					do Result := locale.translation("Cluster charts")	end
@@ -412,7 +412,7 @@ feature -- Accelerator, focus label and menu name
 	m_Copy_full_path: STRING_32			do Result := locale.translation("Copy Full Path")	end
 	m_Copy_row_to_clipboard: STRING_32	do Result := locale.translation("Copy Row To Clipboard")	end
 	f_Copy: STRING_32					do Result := locale.translation("Copy (Ctrl+C)")	end
-	m_copy_of (a_string: STRING_GENERAL): STRING_32
+	m_copy_of (a_string: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation("Copy of $1"), [a_string])
 		end
@@ -574,7 +574,7 @@ feature -- Accelerator, focus label and menu name
 	m_Go_to: STRING_32					do Result := locale.translation("&Go to...")	end
 	m_Guided_tour: STRING_32				do Result := locale.translation("&Guided Tour")	end
 	m_grid_menu: STRING_32				do Result := locale.translation("Grid menu")	end
-	m_grid_name (a_name: STRING_GENERAL): STRING_32
+	m_grid_name (a_name: READABLE_STRING_GENERAL): STRING_32
 		do Result := locale.formatted_string (locale.translation ("Grid %"$1%""), [a_name]) end
 	m_grid_settings: STRING_32			do Result := locale.translation("Grid settings")	end
 	m_Help: STRING_32					do Result := locale.translation("&Help")	end
@@ -616,7 +616,7 @@ feature -- Accelerator, focus label and menu name
 	m_objects_tool_layout_reset: STRING_32	do Result := locale.translation ("Reset To Default") end
 	m_objects_tool_layout_add_all: STRING_32	do Result := locale.translation ("Add All") end
 	m_objects_tool_layout_remove_all: STRING_32	do Result := locale.translation ("Remove All") end
-	f_original_value_is (k, s: STRING_GENERAL): STRING_32
+	f_original_value_is (k, s: READABLE_STRING_GENERAL): STRING_32
 		require
 			k_not_void: k /= Void
 			s_not_void: s /= Void
@@ -680,7 +680,7 @@ feature -- Accelerator, focus label and menu name
 	m_show_creators: STRING_32			do Result := locale.translation("C&reators")	end
 	m_Show_favorites: STRING_32			do Result := locale.translation("&Show Favorites")	end
 	m_Show_formatting_marks: STRING_32	do Result := locale.translation("&Show Formatting Marks")	end
-	f_show_tool (a_tool_name: STRING_GENERAL): STRING_32 do	Result := locale.formatted_string (locale.translation ("Show $1"), [a_tool_name]) end
+	f_show_tool (a_tool_name: READABLE_STRING_GENERAL): STRING_32 do	Result := locale.formatted_string (locale.translation ("Show $1"), [a_tool_name]) end
 	m_Showancestors: STRING_32			do Result := locale.translation("&Ancestors")	end
 	m_Showattributes: STRING_32			do Result := locale.translation("A&ttributes")	end
 	m_Showcallers: STRING_32				do Result := locale.translation("&Callers")	end
@@ -749,7 +749,7 @@ feature -- Accelerator, focus label and menu name
 	l_display: STRING_32 do Result := locale.translation ("Display?") end
 	l_save_file_in_unicode: STRING_32 do Result := locale.translation ("Some Unicode characters in the file(s) could not be saved in original encoding. Do you want to save as Unicode (Marked UTF-8) in order to maintain your data?") end
 	l_select_formatter: STRING_32 do Result := locale.translation ("Please select a formatter.") end
-	t_setup_formatter_tools (a_formatter_name: STRING_GENERAL): STRING_32
+	t_setup_formatter_tools (a_formatter_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_formatter_name_attached: a_formatter_name /= Void
 		do
@@ -761,7 +761,7 @@ feature -- Accelerator, focus label and menu name
 	f_add_tool: STRING_32 do Result := locale.translation ("Add customized tool") end
 	f_remove_tool: STRING_32 do Result := locale.translation ("Remove selected customized tool") end
 	l_no_info_of_element: STRING_32 do Result := locale.translation ("Please select a programming element (target/group/class/feature...).") end
-	l_setup_stone_handler (l_tool_name: STRING_GENERAL): STRING_32
+	l_setup_stone_handler (l_tool_name: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Setup stone handlers for tool %"$1%""), [l_tool_name])
 		end
@@ -803,9 +803,9 @@ feature -- Menu entries
 	m_contract_add_contract: STRING_32 				do Result := locale.translation ("&Add Custom...") end
 	m_contract_add_contract_from_template: STRING_32 do Result := locale.translation ("&Add from Template") end
 
-	m_edit_feature_contracts (a_name: STRING_GENERAL): STRING_32
+	m_edit_feature_contracts (a_name: READABLE_STRING_GENERAL): STRING_32
 		do Result := locale.formatted_string (locale.translation ("Ed&it Contracts for '$1'"), [a_name]) end
-	m_edit_class_contracts (a_name: STRING_GENERAL): STRING_32
+	m_edit_class_contracts (a_name: READABLE_STRING_GENERAL): STRING_32
 		do Result := locale.formatted_string (locale.translation ("Ed&it Invariants for '$1'"), [a_name]) end
 
 feature -- Tool tips
@@ -856,11 +856,11 @@ feature -- Formatter displayer names
 	l_formatter_scope_help: STRING_32 do Result := locale.translation ("Is this formatter of per EiffelStudio scope or per target scope?") end
 	l_formatter_displayed_in_help: STRING_32 do Result := locale.translation ("In which tool(s) will this formatter be displayed") end
 	l_formatter_metric_help: STRING_32 do Result := locale.translation ("From the result of which metric is this formatter generated?") end
-	l_formatter_default_header (l_ellipse: STRING_GENERAL): STRING_32
+	l_formatter_default_header (l_ellipse: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("$1 from $target"), [l_ellipse])
 		end
-	l_formatter_default_temp_header (l_ellipse: STRING_GENERAL): STRING_32
+	l_formatter_default_temp_header (l_ellipse: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Extracting $1 from $target ..."), [l_ellipse])
 		end
@@ -966,7 +966,7 @@ feature -- Context menu
 	m_add_to: STRING_32					do Result := locale.translation("&Add to")	end
 	m_add_subcluster: STRING_32			do Result := locale.translation("Add &subcluster")	end
 
-	m_Add_info (a_type, a_name: STRING_GENERAL): STRING_32
+	m_Add_info (a_type, a_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: a_type /= Void and a_name /= Void
 		do
@@ -978,7 +978,7 @@ feature -- Context menu
 	m_change_color: STRING_32			do Result := locale.translation ("Change color") end
 	m_clone_metric: STRING_32			do Result := locale.translation ("Clone metric") end
 
-	m_copy_uri (a_type, a_name: STRING_GENERAL): STRING_32
+	m_copy_uri (a_type, a_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: a_type /= Void and a_name /= Void
 		do
@@ -1001,49 +1001,49 @@ feature -- Context menu
 	m_open_user_defined_metric: STRING_32	do Result := locale.translation ("Open user defined metrics externally") end
 	m_Pick: STRING_32					do Result := locale.translation("&Pick") end
 
-	m_column_n_index (a_c: STRING_GENERAL): STRING_32
+	m_column_n_index (a_c: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: a_c /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("Column #$1"), [a_c])
 		end
 
-	m_column_n_title (a_c: STRING_GENERAL): STRING_32
+	m_column_n_title (a_c: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: a_c /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("Column %"$1%""), [a_c])
 		end
 
-	m_context_menu_pick (a_type, a_name: STRING_GENERAL): STRING_32
+	m_context_menu_pick (a_type, a_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: a_type /= Void and a_name /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("&Pick $1 '$2'"), [a_type, a_name])
 		end
 
-	m_context_menu_retarget (a_type, a_name: STRING_GENERAL): STRING_32
+	m_context_menu_retarget (a_type, a_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: a_type /= Void and a_name /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("Retarget to $1 '$2'"), [a_type, a_name])
 		end
 
-	m_context_menu_new_tab (a_type, a_name: STRING_GENERAL): STRING_32
+	m_context_menu_new_tab (a_type, a_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: a_type /= Void and a_name /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("New Ta&b $1 '$2'"), [a_type, a_name])
 		end
 
-	m_context_menu_new_window (a_type, a_name: STRING_GENERAL): STRING_32
+	m_context_menu_new_window (a_type, a_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: a_type /= Void and a_name /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("New &Window $1 '$2'"), [a_type, a_name])
 		end
 
-	m_context_menu_external_editor (a_type, a_name: STRING_GENERAL): STRING_32
+	m_context_menu_external_editor (a_type, a_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: a_type /= Void and a_name /= Void
 		do
@@ -1094,7 +1094,7 @@ feature -- Label texts
 	l_Callers: STRING_32					do Result := locale.translation("Callers")	end
 	l_Calling_convention: STRING_32		do Result := locale.translation("Calling convention:")	end
 	l_center_attraction: STRING_32		do Result := locale.translation("Center attraction:")	end
-	l_center_attraction_value (a_value: STRING_GENERAL): STRING_32	do Result := locale.formatted_string (locale.translation("Center attraction ($1%%)"), [a_value])	end
+	l_center_attraction_value (a_value: READABLE_STRING_GENERAL): STRING_32	do Result := locale.formatted_string (locale.translation("Center attraction ($1%%)"), [a_value])	end
 	l_chart: STRING_32		do Result := locale.translation("Chart") end
 	l_relations: STRING_32		do Result := locale.translation("Relations")	end
 	l_text: STRING_32		do Result := locale.translation("Text")	end
@@ -1108,7 +1108,7 @@ feature -- Label texts
 	l_class: STRING_32					do Result := locale.translation ("Class") end
 	l_class_address: STRING_32			do Result := locale.translation ("Class address") end
 	l_class_colon: STRING_32				do Result := locale.translation("Class:")	end
-	l_class_does_not_have_feature (a_class, a_feature: STRING_GENERAL): STRING_32
+	l_class_does_not_have_feature (a_class, a_feature: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_class_not_void: a_class /= Void
 			a_feature_not_void: a_feature /= Void
@@ -1116,27 +1116,27 @@ feature -- Label texts
 			Result := locale.formatted_string (locale.translation ("Feature $2 does not exist in class $1."), [a_class, a_feature])
 		end
 	l_class_label: STRING_32				do Result := locale.translation ("Class label") end
-	l_class_is_not_writable (a_class: STRING_GENERAL): STRING_32
+	l_class_is_not_writable (a_class: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_class_not_void: a_class /= Void
 		do
 			Result := locale.formatted_string (locale.translation("The class $1 is not writable."), [a_class])
 		end
 	l_class_is_not_editable: STRING_32	do Result := locale.translation ("Class is not editable.%N") end
-	l_class_is_not_in_anymore (a_class_name, a_group_id: STRING_GENERAL): STRING_32
+	l_class_is_not_in_anymore (a_class_name, a_group_id: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_class_name_not_void: a_class_name /= Void
 			a_group_id_not_void: a_group_id /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("Class $1 is not in $2 anymore."), [a_class_name, a_group_id])
 		end
-	l_class_not_found (a_class: STRING_GENERAL): STRING_32
+	l_class_not_found (a_class: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_class_not_void: a_class /= Void
 		do
 			Result := locale.formatted_string (locale.translation("The class $1 is not found."), [a_class])
 		end
-	l_class_name (a_class: STRING_GENERAL): STRING_32
+	l_class_name (a_class: READABLE_STRING_GENERAL): STRING_32
 		require a_class_not_void: a_class /= Void
 		do Result := locale.formatted_string (locale.translation("Class name: $1"), [a_class])	end
 	l_class_name_not_valid: STRING_32	do Result := locale.translation("The class name is not valid.")	end
@@ -1144,7 +1144,7 @@ feature -- Label texts
 	l_clean_user_file: STRING_32			do Result := locale.translation("Reset user settings")	end
 	l_Clients: STRING_32					do Result := locale.translation("Clients")	end
 	l_Clients_stiffness: STRING_32		do Result := locale.translation("Client stiffness:")	end
-	l_Clients_stiffness_value (a_value: STRING_GENERAL): STRING_32	do Result := locale.formatted_string (locale.translation ("Client stiffness ($1%%)"), [a_value])	end
+	l_Clients_stiffness_value (a_value: READABLE_STRING_GENERAL): STRING_32	do Result := locale.formatted_string (locale.translation ("Client stiffness ($1%%)"), [a_value])	end
 	l_Clickable: STRING_32				do Result := locale.translation("Clickable view")	end
 	l_cluster: STRING_32					do Result := locale.translation ("Cluster") end
 	l_cluster_colon: STRING_32			do Result := locale.translation("Cluster:")	end
@@ -1178,7 +1178,7 @@ feature -- Label texts
 	l_confirm_always_reload_profile: STRING_32			do Result := locale.translation("always reload")	end
 
 	l_confirm_delete_selected_items: STRING_32			do Result := locale.translation("Are you sure you want to delete selected items forever?")	end
-	l_constructing_diagram_for (a_name: STRING_GENERAL): STRING_32			do Result := locale.formatted_string (locale.translation("Constructing diagram for $1"), [a_name])	end
+	l_constructing_diagram_for (a_name: READABLE_STRING_GENERAL): STRING_32			do Result := locale.formatted_string (locale.translation("Constructing diagram for $1"), [a_name])	end
 	l_Context: STRING_32					do Result := locale.translation("Context")	end
 	l_context_dot: STRING_32				do Result := locale.translation("Context ...") end
 	l_Creation: STRING_32				do Result := locale.translation("Creation procedure:")	end
@@ -1206,7 +1206,7 @@ feature -- Label texts
 					), [l_exe])
 		end
 
-	l_c_compilation_produced_errors (a_dir: STRING_GENERAL): STRING_32
+	l_c_compilation_produced_errors (a_dir: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation (
 						"C-compilation produced errors.%N%
@@ -1224,7 +1224,7 @@ feature -- Label texts
 		do Result := locale.translation("A C Compilation is currently running.%N%
 								%It needs to be terminated before EiffelStudio can exit.%N%N%
 								%Cancel C compilation and exit?%N")	end
-	l_cwd (a_working_directory: STRING_GENERAL): STRING_32
+	l_cwd (a_working_directory: READABLE_STRING_GENERAL): STRING_32
 		do Result := locale.formatted_string (locale.translation ("cwd=%"$1%""), [a_working_directory]) end
 
 	l_external_command_running: STRING_32
@@ -1239,7 +1239,7 @@ feature -- Label texts
 	l_Deferreds: STRING_32				do Result := locale.translation("Deferred features")	end
 	l_Deleting_dialog_default: STRING_32 do Result := locale.translation("Creating new project, please wait...")	end
 	l_Descendants: STRING_32				do Result := locale.translation("Descendants")	end
-	l_descending_class_already_has_feature (a_class: STRING_GENERAL): STRING_32
+	l_descending_class_already_has_feature (a_class: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_class_not_void: a_class /= Void
 		do
@@ -1249,7 +1249,7 @@ feature -- Label texts
 	l_description: STRING_32 			do Result := locale.translation ("Description") end
 	l_Diagram_delete_view_cmd: STRING_32	do Result := locale.translation("Do you really want to delete current view?")	end
 	l_Diagram_reset_view_cmd: STRING_32	do Result := locale.translation("Do you really want to reset current view?")	end
-	l_diagram_statistic (a_nclass, a_ncslink, a_nilink, a_ncluster,a_physics, a_draw, a_draws: STRING_GENERAL): STRING_32
+	l_diagram_statistic (a_nclass, a_ncslink, a_nilink, a_ncluster,a_physics, a_draw, a_draws: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (
 						locale.translation (
@@ -1304,7 +1304,7 @@ feature -- Label texts
 	l_environment: STRING_32				do Result := locale.translation("Environment")	end
 	l_error: STRING_32					do Result := locale.translation("Error")	end
 	l_error_message:  STRING_32			do Result := locale.translation("Error message :")	end
-	l_error_on_expression (a_expression: STRING_GENERAL): STRING_32
+	l_error_on_expression (a_expression: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_expression_not_void: a_expression /= Void
 		do
@@ -1330,10 +1330,10 @@ feature -- Label texts
 	l_Exit_warning: STRING_32			do Result := locale.translation("Some files have not been saved. Do you want to save them before exiting?")	end
 	l_Expanded: STRING_32				do Result := locale.translation("expanded")	end
 	l_Explicit_exception_pending: STRING_32 do Result := locale.translation("Explicit exception pending")	end
-	l_exploring_ancestor_of (a_class: STRING_GENERAL): STRING_32				do Result := locale.formatted_string (locale.translation("Exploring ancestors of $1"), [a_class])	end
-	l_exploring_descendants_of (a_class: STRING_GENERAL): STRING_32				do Result := locale.formatted_string (locale.translation("Exploring descendants of $1"), [a_class])	end
-	l_exploring_clinets_of (a_class: STRING_GENERAL): STRING_32					do Result := locale.formatted_string (locale.translation("Exploring clients of $1"), [a_class])	end
-	l_exploring_suppliers_of (a_class: STRING_GENERAL): STRING_32				do Result := locale.formatted_string (locale.translation("Exploring suppliers of $1"), [a_class])	end
+	l_exploring_ancestor_of (a_class: READABLE_STRING_GENERAL): STRING_32				do Result := locale.formatted_string (locale.translation("Exploring ancestors of $1"), [a_class])	end
+	l_exploring_descendants_of (a_class: READABLE_STRING_GENERAL): STRING_32				do Result := locale.formatted_string (locale.translation("Exploring descendants of $1"), [a_class])	end
+	l_exploring_clinets_of (a_class: READABLE_STRING_GENERAL): STRING_32					do Result := locale.formatted_string (locale.translation("Exploring clients of $1"), [a_class])	end
+	l_exploring_suppliers_of (a_class: READABLE_STRING_GENERAL): STRING_32				do Result := locale.formatted_string (locale.translation("Exploring suppliers of $1"), [a_class])	end
 	l_Exported: STRING_32				do Result := locale.translation("Exported features")	end
 	l_Expression: STRING_32				do Result := locale.translation("Expression")	end
 	l_false: STRING_32					do Result := locale.translation ("False") end
@@ -1379,7 +1379,7 @@ feature -- Label texts
 	l_inheritance_cycle_was_created: STRING_32	do Result := locale.translation("An inheritance cycle was created.%NDo you still want to add this link?")	end
 	l_inheritance_stiffness: STRING_32			do Result := locale.translation("Inheritance stiffness:")	end
 	l_inheritance_stiffness_100: STRING_32		do Result := locale.translation("Inheritance stiffness (100%%)")	end
-	l_inheritance_stiffness_value (a_value: STRING_GENERAL): STRING_32	do Result := locale.formatted_string (locale.translation ("Inheritance stiffness ($1%%)"), [a_value])	end
+	l_inheritance_stiffness_value (a_value: READABLE_STRING_GENERAL): STRING_32	do Result := locale.formatted_string (locale.translation ("Inheritance stiffness ($1%%)"), [a_value])	end
 	l_Implicit_exception_pending: STRING_32 do Result := locale.translation("Implicit exception pending")	end
 	l_Implementers: STRING_32			do Result := locale.translation("Implementers")	end
 	l_Inactive_subqueries: STRING_32		do Result := locale.translation("Inactive subqueries")	end
@@ -1392,7 +1392,7 @@ feature -- Label texts
 	l_indexing_clause_error: STRING_32	do Result := locale.translation("Indexing clause has syntax error")	end
 	l_invariants: STRING_32				do Result := locale.translation("Invariants")	end
 	l_items_without_tag: STRING_32		do Result := locale.translation("Items without tag")	end
-	l_item_is_not_writable (a_item: STRING_GENERAL): STRING_32
+	l_item_is_not_writable (a_item: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_class_not_void: a_item /= Void
 		do
@@ -1404,7 +1404,7 @@ feature -- Label texts
 	l_Library: STRING_32					do Result := locale.translation("library")	end
 	l_line: STRING_32 					do Result := locale.translation ("Line") end
 	l_line_number: STRING_32				do Result := locale.translation ("Line number") end
-	l_line_number_range (a_number: STRING_GENERAL): STRING_32		do Result := locale.formatted_string (locale.translation ("Line number (1 - $1)"), [a_number]) end
+	l_line_number_range (a_number: READABLE_STRING_GENERAL): STRING_32		do Result := locale.formatted_string (locale.translation ("Line number (1 - $1)"), [a_number]) end
 	l_Literal_value: STRING_32			do Result := locale.translation("Literal Value")	end
 	l_Loaded_project: STRING_32			do Result := locale.translation("Loaded project: ")	end
 	l_Loading_diagram: STRING =				"Loading diagram:"
@@ -1423,7 +1423,7 @@ feature -- Label texts
 			Result := locale.formatted_string (locale.plural_translation ("$1 match of $2 total preferences" ,"$1 matches of $2 total preferences", a_count), [a_count, a_total_count])
 		end
 
-	l_count_preferences (a_count: STRING_GENERAL): STRING_32
+	l_count_preferences (a_count: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_count_not_void: a_count /= Void
 		do
@@ -1448,7 +1448,7 @@ feature -- Label texts
 	l_no_feature_bra: STRING_32 			do Result := locale.translation ("(no_feature)") end
 	l_no_class_bra: STRING_32 			do Result := locale.translation ("(no_class)") end
 	l_no_cluster_bra: STRING_32 			do Result := locale.translation ("(no_cluster)") end
-	l_no_enough_info_for_feature (a_string: STRING_GENERAL): STRING_32
+	l_no_enough_info_for_feature (a_string: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_string_not_void: a_string /= Void
 		do
@@ -1542,13 +1542,13 @@ feature -- Label texts
 	l_Replace_with_ellipsis: STRING_32	do Result := locale.translation("Replace with...")	end
 	l_Replace_all: STRING_32				do Result := locale.translation("Replace all")	end
 	l_request_restart: STRING_32			do Result := locale.translation (" (REQUIRES RESTART)") end
-	l_resource_not_found (a_resource: STRING_GENERAL): STRING_32	do Result := locale.formatted_string (locale.translation("The following resource is not found. Try opening a project that may contain the resource.%N$1"), [a_resource])	end
+	l_resource_not_found (a_resource: READABLE_STRING_GENERAL): STRING_32	do Result := locale.formatted_string (locale.translation("The following resource is not found. Try opening a project that may contain the resource.%N$1"), [a_resource])	end
 	l_restore_defaults: STRING_32 		do Result := locale.translation ("Restore Defaults") end
 	l_restore_default: STRING_32 		do Result := locale.translation ("Restore Default") end
 	l_restore_preference_string: STRING_32 do Result := locale.translation ("This will reset ALL preferences to their default values%N and all previous settings will be overwritten.  Are you sure?") end
 	l_Result: STRING_32					do Result := locale.translation("Result")	end
 	l_repulsion: STRING_32				do Result := locale.translation("Repulsion:")	end
-	l_repulsion_value (a_value: STRING_GENERAL): STRING_32	do Result := locale.formatted_string (locale.translation("Repulsion ($1%%)"), [a_value])	end
+	l_repulsion_value (a_value: READABLE_STRING_GENERAL): STRING_32	do Result := locale.formatted_string (locale.translation("Repulsion ($1%%)"), [a_value])	end
 	l_rollback_question: STRING_32		do Result := locale.translation("Rollback?")	end
 	l_Root_class: STRING_32				do Result := locale.translation("Root class name: ")	end
 	l_Root_class_name: STRING_32			do Result := locale.translation("Root class: ")	end
@@ -1593,7 +1593,7 @@ feature -- Label texts
 	l_status: STRING_32					do Result := locale.translation ("Status") end
 	l_tags: STRING_32					do Result := locale.translation ("Tags") end
 	l_Stepped: STRING_32					do Result := locale.translation("Step completed")	end
-	l_stiffness_value (a_value: STRING_GENERAL): STRING_32	do Result := locale.formatted_string (locale.translation("Stiffness ($1%%)"), [a_value])	end
+	l_stiffness_value (a_value: READABLE_STRING_GENERAL): STRING_32	do Result := locale.formatted_string (locale.translation("Stiffness ($1%%)"), [a_value])	end
 	l_Stop_point_reached: STRING_32		do Result := locale.translation("Breakpoint reached")	end
 	l_Sub_cluster: STRING_32				do Result := locale.translation("Subcluster")	end
 	l_Sub_clusters: STRING_32			do Result := locale.translation("Recursive")	end
@@ -1614,7 +1614,7 @@ feature -- Label texts
 	l_System_properties: STRING_32		do Result := locale.translation("System properties")	end
 	l_System_running: STRING_32			do Result := locale.translation("System running")	end
 	l_System_launched: STRING_32			do Result := locale.translation("System launched")	end
-	l_system_uuid_name_not_match (a_uuid, a_name: STRING_GENERAL): STRING_32
+	l_system_uuid_name_not_match (a_uuid, a_name: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("System name and UUID do not match.%NSystem UUID: $1%NSystem name: $2%N"), [a_uuid, a_name])
 		end
@@ -1624,20 +1624,20 @@ feature -- Label texts
 	l_Tab_feature_info: STRING_32 		do Result := locale.translation("Feature")	end
 	l_Tab_diagram: STRING_32 			do Result := locale.translation("Diagram")	end
 	l_target: STRING_32					do Result := locale.translation("Target")	end
-	l_target_does_not_exist (a_target: STRING_GENERAL): STRING_32
+	l_target_does_not_exist (a_target: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_target_not_void: a_target /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("Target `$1' does not exist or is not compilable.%NChoose one target among:"), [a_target])
 		end
-	l_target_does_not_have_group (a_target, a_group: STRING_GENERAL): STRING_32
+	l_target_does_not_have_group (a_target, a_group: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_target_not_void: a_target /= Void
 			a_group_not_void: a_group /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("Group `$2' does not exist in target `$1'."), [a_target, a_group])
 		end
-	l_target_uuid_name_not_match (a_uuid, a_name: STRING_GENERAL): STRING_32
+	l_target_uuid_name_not_match (a_uuid, a_name: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Target name and UUID do not match.%NSystem UUID: $1%NTarget name: $2%N"), [a_uuid, a_name])
 		end
@@ -1645,7 +1645,7 @@ feature -- Label texts
 	l_Text_loaded: STRING_32				do Result := locale.translation("Text finished loading")	end
 	l_Text_saved: STRING_32				do Result := locale.translation("Text was saved")	end
 	l_the_feature_name_is_not_valid: STRING_32 	do Result := locale.translation("The feature name is not valid.")	end
-	l_there_is_already_a_feature_in (a_class: STRING_GENERAL): STRING_32
+	l_there_is_already_a_feature_in (a_class: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_class_not_void: a_class /= Void
 		do
@@ -1665,16 +1665,16 @@ feature -- Label texts
 	l_Top_level: STRING_32				do Result := locale.translation("Top-level")	end
 	l_Type: STRING_32					do Result := locale.translation("Type")	end
 	l_undo_not_possible: STRING_32		do Result := locale.translation("Undo not possible.")	end
-	l_unknown_attribute_name (a_name: STRING_GENERAL): STRING_32
+	l_unknown_attribute_name (a_name: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Unknown attribute name:%N$1"), [a_name])
 		end
-	l_unknown_format (a_format: STRING_GENERAL): STRING_32
+	l_unknown_format (a_format: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Unknown format:%N$1"), [a_format])
 		end
 	l_Unknown_class_name: STRING_32		do Result := locale.translation("Unknown class name")	end
-	l_unknown_protocol_name (a_content: STRING_GENERAL): STRING_32
+	l_unknown_protocol_name (a_content: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Unknown protocol name:%N$1"), [a_content])
 		end
@@ -1725,7 +1725,7 @@ feature -- Label texts
 	l_Windows_only: STRING_32			do Result := locale.translation("(Windows only)")	end
 	l_Workbench_mode: STRING_32 			do Result := locale.translation("Workbench mode")	end
 	l_working_directory: STRING_32 		do Result := locale.translation("Working directory")	end
-	l_Working_formatter (a_command_name, a_object_name: STRING_GENERAL; a_for_class: BOOLEAN): STRING_32
+	l_Working_formatter (a_command_name, a_object_name: READABLE_STRING_GENERAL; a_for_class: BOOLEAN): STRING_32
 		require
 			a_command_name_not_void: a_command_name /= Void
 			a_object_name_not_voi: a_object_name /= Void
@@ -1737,7 +1737,7 @@ feature -- Label texts
 			end
 		end
 
-	l_Header_class (a_command_name, a_class_name: STRING_GENERAL): STRING_32
+	l_Header_class (a_command_name, a_class_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_command_name_not_void: a_command_name /= Void
 			a_class_name_not_void: a_class_name /= Void
@@ -1745,7 +1745,7 @@ feature -- Label texts
 			Result := locale.formatted_string (locale.translation ("$1 of class $2"), [a_command_name, a_class_name])
 		end
 
-	l_Header_feature (a_command_name, a_feat_name, a_class_name: STRING_GENERAL): STRING_32
+	l_Header_feature (a_command_name, a_feat_name, a_class_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_command_name_not_void: a_command_name /= Void
 			a_feat_name_not_void: a_feat_name /= Void
@@ -1754,7 +1754,7 @@ feature -- Label texts
 			Result := locale.formatted_string (locale.translation ("$1 of feature `$2' of class $3"), [a_command_name, a_feat_name, a_class_name])
 		end
 
-	l_Header_dependency (a_command_name, a_object_name: STRING_GENERAL): STRING_32
+	l_Header_dependency (a_command_name, a_object_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_command_name_not_void: a_command_name /= Void
 			a_object_name: a_object_name /= Void
@@ -1762,7 +1762,7 @@ feature -- Label texts
 			Result := locale.formatted_string (locale.translation ("$1 of $2"), [a_command_name, a_object_name])
 		end
 
-	l_temp_header_dependency (a_command_name, a_object_name: STRING_GENERAL): STRING_32
+	l_temp_header_dependency (a_command_name, a_object_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_command_name_not_void: a_command_name /= Void
 			a_object_name: a_object_name /= Void
@@ -1773,7 +1773,7 @@ feature -- Label texts
 	l_test_case_name_colon: STRING_32 		do Result := locale.translation("Test case name:")	end
 	l_history_discarded_string: STRING_32 	do Result := locale.translation ("--- History is empty ---") end
 
-	l_item_is_attached_to (a_title, a_name: STRING_GENERAL): STRING_32
+	l_item_is_attached_to (a_title, a_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_title_not_void: a_title /= Void
 			a_name_not_void: a_name /= Void
@@ -1781,7 +1781,7 @@ feature -- Label texts
 			Result := locale.formatted_string (locale.translation ("Item [$1] is attached to %"$2%""), [a_title, a_name])
 		end
 
-	l_move_to (a_title, a_name: STRING_GENERAL): STRING_32
+	l_move_to (a_title, a_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_title_not_void: a_title /= Void
 			a_name_not_void: a_name /= Void
@@ -1789,14 +1789,14 @@ feature -- Label texts
 			Result := locale.formatted_string (locale.translation ("Move [$1] to %"$2%""), [a_title, a_name])
 		end
 
-	l_from_class (a_class: STRING_GENERAL): STRING_32
+	l_from_class (a_class: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_class_not_void: a_class /= Void
 		do
 			Result := locale.formatted_string (locale.translation (" (from $1)"), [a_class])
 		end
 
-	l_one_from_two (a_one, a_two: STRING_GENERAL): STRING_32
+	l_one_from_two (a_one, a_two: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_one_not_void: a_one /= Void
 			a_two_not_void: a_two /= Void
@@ -1809,35 +1809,35 @@ feature -- Label texts
 			Result := locale.translation ("%N   + feature has a rescue clause")
 		end
 
-	l_module_is (a_module: STRING_GENERAL): STRING_32
+	l_module_is (a_module: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_module_not_void: a_module /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("%N   + Module = $1"), [a_module])
 		end
 
-	l_break_index_is (a_index: STRING_GENERAL): STRING_32
+	l_break_index_is (a_index: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_index_not_void: a_index /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("%N   + break index = $1"), [a_index])
 		end
 
-	l_address_is (a_address: STRING_GENERAL): STRING_32
+	l_address_is (a_address: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_address_not_void: a_address /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("%N   + address     = <$1>"), [a_address])
 		end
 
-	l_context_is (a_context: STRING_GENERAL): STRING_32
+	l_context_is (a_context: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_context_not_void: a_context /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("%NCONTEXT: $1%N"), [a_context])
 		end
 
-	l_not_eiffel_class_file (a_stone_signature, a_file_name: STRING_GENERAL): STRING_32
+	l_not_eiffel_class_file (a_stone_signature, a_file_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_stone_signature_not_void: a_stone_signature /= Void
 			a_file_name_not_void: a_file_name /= Void
@@ -1845,7 +1845,7 @@ feature -- Label texts
 			Result := locale.formatted_string (locale.translation ("$1(not an Eiffel class file)   located in $2"), [a_stone_signature, a_file_name])
 		end
 
-	l_empty_development_window_header (a_system_name, a_target_name: STRING_GENERAL): STRING_32
+	l_empty_development_window_header (a_system_name, a_target_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_system_name_not_void: a_system_name /= Void
 			a_target_name_not_void: a_target_name /= Void
@@ -1853,7 +1853,7 @@ feature -- Label texts
 			Result := locale.formatted_string (locale.translation ("$1 - Empty Development Tool"), [l_system_and_target (a_system_name, a_target_name)])
 		end
 
-	l_classi_header (a_system_name, a_target_name, a_group_name, a_sig, a_file_name: STRING_GENERAL): STRING_32
+	l_classi_header (a_system_name, a_target_name, a_group_name, a_sig, a_file_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_system_name_not_void: a_system_name /= Void
 			a_target_name_not_void: a_target_name /= Void
@@ -1864,7 +1864,7 @@ feature -- Label texts
 			Result := locale.formatted_string (locale.translation ("$1 - [$2] {$3} (not in system, $4)"), [l_system_and_target (a_system_name, a_target_name), a_group_name, a_sig, a_file_name])
 		end
 
-	l_classc_header (a_system_name, a_target_name, a_group_name, a_sig, a_file_name: STRING_GENERAL): STRING_32
+	l_classc_header (a_system_name, a_target_name, a_group_name, a_sig, a_file_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_system_name_not_void: a_system_name /= Void
 			a_target_name_not_void: a_target_name /= Void
@@ -1875,7 +1875,7 @@ feature -- Label texts
 			Result := locale.formatted_string (locale.translation ("$1 - [$2] {$3} ($4)"), [l_system_and_target (a_system_name, a_target_name), a_group_name, a_sig, a_file_name])
 		end
 
-	l_classc_header_precompiled (a_system_name, a_target_name, a_group_name, a_sig: STRING_GENERAL): STRING_32
+	l_classc_header_precompiled (a_system_name, a_target_name, a_group_name, a_sig: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_system_name_not_void: a_system_name /= Void
 			a_target_name_not_void: a_target_name /= Void
@@ -1885,7 +1885,7 @@ feature -- Label texts
 			Result := locale.formatted_string (locale.translation ("$1 - [$2] {$3} (precompiled)"), [l_system_and_target (a_system_name, a_target_name), a_group_name, a_sig])
 		end
 
-	l_feature_header (a_system_name, a_target_name, a_group_name, a_sig, a_file_name: STRING_GENERAL): STRING_32
+	l_feature_header (a_system_name, a_target_name, a_group_name, a_sig, a_file_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_system_name_not_void: a_system_name /= Void
 			a_target_name_not_void: a_target_name /= Void
@@ -1899,7 +1899,7 @@ feature -- Label texts
 			end
 		end
 
-	l_feature_header_precompiled (a_system_name, a_target_name, a_group_name, a_sig: STRING_GENERAL): STRING_32
+	l_feature_header_precompiled (a_system_name, a_target_name, a_group_name, a_sig: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_system_name_not_void: a_system_name /= Void
 			a_target_name_not_void: a_target_name /= Void
@@ -1909,7 +1909,7 @@ feature -- Label texts
 			Result := locale.formatted_string (locale.translation ("$1 - [$2] $3 (precompiled)"), [l_system_and_target (a_system_name, a_target_name), a_group_name, a_sig])
 		end
 
-	l_cluster_header (a_system_name, a_target_name, a_sig, a_file_name: STRING_GENERAL): STRING_32
+	l_cluster_header (a_system_name, a_target_name, a_sig, a_file_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_system_name_not_void: a_system_name /= Void
 			a_target_name_not_void: a_target_name /= Void
@@ -1919,7 +1919,7 @@ feature -- Label texts
 			Result := locale.formatted_string (locale.translation ("$1 - [$2] ($3)"), [l_system_and_target (a_system_name, a_target_name), a_sig, a_file_name])
 		end
 
-	l_system_and_target (a_system_name, a_target_name: STRING_GENERAL): STRING_32
+	l_system_and_target (a_system_name, a_target_name: READABLE_STRING_GENERAL): STRING_32
 			-- System name and target name for the dev window title.
 			-- When they are the same, we only keep one.
 		require
@@ -1938,7 +1938,7 @@ feature -- Label texts
 			Result := locale.formatted_string (locale.plural_translation ("   $1 replaced in $2 class", "   $1 replaced in $2 classes", a_class_num), [a_item_num, a_class_num])
 		end
 
-	l_from (a_str1, a_str2: STRING_GENERAL): STRING_32
+	l_from (a_str1, a_str2: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_str1_not_void: a_str1 /= Void
 			a_str2_not_void: a_str2 /= Void
@@ -1951,7 +1951,7 @@ feature -- Label texts
 	l_compilation_was_not_successful: STRING_32 do Result := locale.translation ("Compilation was not successful.") end
 	l_expression_capital: STRING_32 do Result := locale.translation ("EXPRESSION: ") end
 	l_disabled: STRING_32 do Result := locale.translation ("Disabled") end
-	l_updating (a_class: STRING_GENERAL): STRING_32
+	l_updating (a_class: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_class_not_void: a_class /= Void
 		do
@@ -1962,11 +1962,11 @@ feature -- Label texts
 	l_unevaluated: STRING_32 do Result := locale.translation ("Unevaluated") end
 	l_error_occurred: STRING_32 do Result := locale.translation ("ERROR OCCURRED: %N") end
 	l_error_occurred_click: STRING_32 do Result := locale.translation ("Error occurred (double click to see details)") end
-	l_error_with_line (a_name: STRING_GENERAL; a_line: STRING_GENERAL): STRING_32
+	l_error_with_line (a_name: READABLE_STRING_GENERAL; a_line: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Error with `$1' line $2"), [a_name, a_line])
 		end
-	l_eweasel_executable_not_found (a_full_command: STRING_GENERAL): STRING_32
+	l_eweasel_executable_not_found (a_full_command: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string ("$1 executable not found!", [a_full_command])
 		end
@@ -1988,7 +1988,7 @@ feature -- Label texts
 	l_class_browser_Path: STRING_32 do Result := locale.translation("Path")	end
 	l_class_browser_features: STRING_32 do Result := locale.translation("Feature")	end
 	l_version_from: STRING_32 do Result := locale.translation("Declared in class")	end
-	l_version_in (a_class: STRING_GENERAL): STRING_32 do Result := locale.formatted_string (locale.translation("Version from class $1"), [a_class])	end
+	l_version_in (a_class: READABLE_STRING_GENERAL): STRING_32 do Result := locale.formatted_string (locale.translation("Version from class $1"), [a_class])	end
 	l_branch (a_bra: INTEGER): STRING_32 do Result := locale.formatted_string (locale.translation("Branch #$1"), [a_bra.out]) end
 	l_version_from_message: STRING_32 do Result := locale.translation(" (version from)")	end
 	l_expand_layer: STRING_32 do Result := locale.translation("Expand selected level(s)")	end
@@ -2031,7 +2031,7 @@ feature -- Label texts
 	h_show_ancestor_classes: STRING_32 do Result := locale.translation("Show ancestor classes?") end
 	h_show_descendant_classes: STRING_32 do Result := locale.translation("Show descendant classes?") end
 	l_invalid_item: STRING_32 do Result := locale.translation ("Invalid item") end
-	l_invalid_uuid (a_uuid: STRING_GENERAL): STRING_32
+	l_invalid_uuid (a_uuid: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Invalid UUID: $1"), [a_uuid])
 		end
@@ -2050,7 +2050,7 @@ feature -- Label texts
 	l_supplier_group: STRING_32 do Result := locale.translation("Supplier group")	end
 	h_show_dependency_on_self: STRING_32 do Result := locale.translation("Show dependency on self?")	end
 	l_of: STRING_32 do Result := locale.translation(" of ")	end
-	l_offset_is (a_offset: STRING_GENERAL): STRING_32
+	l_offset_is (a_offset: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_offset_not_void: a_offset /= Void
 		do
@@ -2068,7 +2068,7 @@ feature -- Label texts
 	l_select_element_to_show_info: STRING_32 do Result := locale.translation("Select a target/group/folder/class to show information about it.")	end
 	l_location: STRING_32 do Result := locale.translation("Location")	end
 
-	l_file_exits (s: STRING_GENERAL): STRING_32
+	l_file_exits (s: READABLE_STRING_GENERAL): STRING_32
 		require
 			s_not_void: s /= Void
 		do
@@ -2077,13 +2077,13 @@ feature -- Label texts
 
 	l_target_domain_item: STRING_32 do Result := locale.translation ("target item") end
 	l_group_domain_item: STRING_32 do Result := locale.translation ("group item") end
-	l_group_does_not_have_class (a_class, a_group: STRING_GENERAL): STRING_32
+	l_group_does_not_have_class (a_class, a_group: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_group_not_void: a_group /= Void
 		do
 			Result := locale.formatted_string (locale.translation("Class $2 does not exist in group $1."), [a_group, a_class])
 		end
-	l_group_not_found (a_group: STRING_GENERAL): STRING_32
+	l_group_not_found (a_group: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_group_not_void: a_group /= Void
 		do
@@ -2097,7 +2097,7 @@ feature -- Label texts
 	h_search_for_class_recursively: STRING_32 do Result := locale.translation ("Search folder for classes recursively?") end
 	l_save_layout_name: STRING_32 do Result := locale.translation ("Enter or select a name to save the current layout as.") end
 
-	l_saving_docking_data_error (a_expression: STRING_GENERAL): STRING_32
+	l_saving_docking_data_error (a_expression: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_expression_not_void: a_expression /= Void
 		do
@@ -2107,7 +2107,7 @@ feature -- Label texts
 	l_shortcut_modification_denied: STRING_32 do Result := locale.translation ("Shortcut modification failed. It is either used by a fixed shortcut or reserved by the system.") end
 	l_layout_name: STRING_32 do Result := locale.translation ("Name:") end
 	l_existing_layout_names: STRING_32 do Result := locale.translation ("Existing Layouts:") end
-	l_overwrite_layout (a_name: STRING_GENERAL): STRING_32 do Result := locale.formatted_string (locale.translation ("A layout with the name '$1' already exists. Do you want to overwrite?"), [a_name]) end
+	l_overwrite_layout (a_name: READABLE_STRING_GENERAL): STRING_32 do Result := locale.formatted_string (locale.translation ("A layout with the name '$1' already exists. Do you want to overwrite?"), [a_name]) end
 	l_open_layout_error: STRING_32 do Result := locale.translation ("Open layout error. Opening default layout instead.") end
 	l_open_layout_not_possible: STRING_32 do Result := locale.translation ("It's not possible to open named layout which saved in normal mode during debugging. Please stop debugging first.") end
 	l_open_exception_dialog_tooltip: STRING_32 do Result := locale.translation ("Open exception dialog for more details") end
@@ -2138,7 +2138,7 @@ feature -- Label texts
 	l_contracts: STRING_32 					do Result := locale.translation ("Contracts") end
 	l_code_results: STRING_32 				do Result := locale.translation ("Code Results:") end
 	l_code_declarations_value: STRING_32 	do Result := locale.translation ("'s Value:") end
-	l_code_declarations_conform (a_type: STRING_GENERAL): STRING_32
+	l_code_declarations_conform (a_type: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string ("(must conform to $1)", [a_type])
 		end
@@ -2303,7 +2303,7 @@ feature -- Title part
 	t_Empty_development_window: STRING_32 		do Result := locale.translation("Empty Development Tool")	end
 	t_Autocomplete_window: STRING_32				do Result := locale.translation("Auto-Complete")	end
 	t_Diagram_class_header: STRING_32			do Result := locale.translation("Class Header")	end
-	t_Diagram_set_center_class (a_class_name: STRING_GENERAL): STRING_32
+	t_Diagram_set_center_class (a_class_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_class_name_not_void: a_class_name /= Void
 		do
@@ -2314,14 +2314,14 @@ feature -- Title part
 	t_Diagram_delete_client_link: STRING_32 		do Result := locale.translation("Choose Feature(s) to Delete")	end
 	t_Diagram_history_tool: STRING_32			do Result := locale.translation("History Tool")	end
 
-	t_Diagram_move_class_cmd (a_name: STRING_GENERAL): STRING_32
+	t_Diagram_move_class_cmd (a_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: a_name /= Void
 		do
 			Result := locale.formatted_string(locale.translation("Move Class '$1'"), [a_name])
 		end
 
-	t_Diagram_move_cluster_cmd (a_name: STRING_GENERAL): STRING_32
+	t_Diagram_move_cluster_cmd (a_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: a_name /= Void
 		do
@@ -2330,14 +2330,14 @@ feature -- Title part
 
 	t_Diagram_move_midpoint_cmd: STRING_32		do Result := locale.translation("Move Midpoint")	end
 
-	t_Diagram_add_cs_link_cmd (client_name, supplier_name: STRING_GENERAL): STRING_32
+	t_Diagram_add_cs_link_cmd (client_name, supplier_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: client_name /= Void	and supplier_name /= Void
 		do
 			Result := locale.formatted_string(locale.translation("Add Client-Supplier Relation Between '$1' and '$2'"), [client_name, supplier_name])
 		end
 
-	t_Diagram_add_inh_link_cmd (ancestor_name, descendant_name: STRING_GENERAL; is_non_conforming: BOOLEAN): STRING_32
+	t_Diagram_add_inh_link_cmd (ancestor_name, descendant_name: READABLE_STRING_GENERAL; is_non_conforming: BOOLEAN): STRING_32
 		require
 			exists: ancestor_name /= Void and descendant_name /= Void
 		do
@@ -2349,21 +2349,21 @@ feature -- Title part
 
 		end
 
-	t_Diagram_include_class_cmd (a_name: STRING_GENERAL): STRING_32
+	t_Diagram_include_class_cmd (a_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: a_name /= Void
 		do
 			Result := locale.formatted_string(locale.translation("Include Class '$1'"), [a_name])
 		end
 
-	t_Diagram_include_cluster_cmd (a_name: STRING_GENERAL): STRING_32
+	t_Diagram_include_cluster_cmd (a_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: a_name /= Void
 		do
 			Result := locale.formatted_string(locale.translation("Include Cluster '$1'"), [a_name])
 		end
 
-	t_Diagram_include_library_cmd (a_name: STRING_GENERAL): STRING_32
+	t_Diagram_include_library_cmd (a_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: a_name /= Void
 		do
@@ -2373,28 +2373,28 @@ feature -- Title part
 	t_Diagram_insert_midpoint_cmd: STRING_32	do Result := locale.translation("Insert Midpoint")	end
 	t_Diagram_change_color_cmd: STRING_32		do Result := locale.translation("Change Class Color")	end
 
-	t_Diagram_rename_class_locally_cmd (old_name, new_name: STRING_GENERAL): STRING_32
+	t_Diagram_rename_class_locally_cmd (old_name, new_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: old_name /= Void and new_name /= Void
 		do
 			Result := locale.formatted_string(locale.translation("Rename Class '$1' Locally to '$2'"), [old_name,new_name])
 		end
 
-	t_Diagram_rename_class_globally_cmd (old_name, new_name: STRING_GENERAL): STRING_32
+	t_Diagram_rename_class_globally_cmd (old_name, new_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: old_name /= Void and new_name /= Void
 		do
 			Result := locale.formatted_string(locale.translation("Rename Class '$1' Globally to '$2'"), [old_name, new_name])
 		end
 
-	t_Diagram_delete_client_link_cmd (a_name: STRING_GENERAL): STRING_32
+	t_Diagram_delete_client_link_cmd (a_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: a_name /= Void
 		do
 			Result := locale.formatted_string(locale.translation("Delete Client Link '$1'") , [a_name])
 		end
 
-	t_Diagram_delete_inheritance_link_cmd (an_ancestor, a_descendant: STRING_GENERAL; is_non_conforming: BOOLEAN): STRING_32
+	t_Diagram_delete_inheritance_link_cmd (an_ancestor, a_descendant: READABLE_STRING_GENERAL; is_non_conforming: BOOLEAN): STRING_32
 		require
 			exists: an_ancestor /= Void and a_descendant /= Void
 		do
@@ -2406,7 +2406,7 @@ feature -- Title part
 
 		end
 
-	t_Diagram_erase_cluster_cmd (a_name: STRING_GENERAL): STRING_32
+	t_Diagram_erase_cluster_cmd (a_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: a_name /= Void
 		do
@@ -2415,7 +2415,7 @@ feature -- Title part
 
 	t_Diagram_delete_midpoint_cmd: STRING_32	do Result := locale.translation("Erase Midpoint")	end
 
-	t_Diagram_erase_class_cmd (a_name: STRING_GENERAL): STRING_32
+	t_Diagram_erase_class_cmd (a_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: a_name /= Void
 		do
@@ -2434,14 +2434,14 @@ feature -- Title part
 	t_Diagram_zoom_out_cmd: STRING_32			do Result := locale.translation("Zoom Out")	end
 	t_Diagram_zoom_cmd: STRING_32				do Result := locale.translation("Zoom")	end
 
-	t_Diagram_cluster_expand (a_name: STRING_GENERAL): STRING_32
+	t_Diagram_cluster_expand (a_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: a_name /= Void
 		do
 			Result := locale.formatted_string(locale.translation("Expand cluster '$1'"), [ a_name])
 		end
 
-	t_Diagram_cluster_collapse (a_name: STRING_GENERAL): STRING_32
+	t_Diagram_cluster_collapse (a_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			exists: a_name /= Void
 		do
@@ -2496,7 +2496,7 @@ feature -- Title part
 	t_passed: STRING_32							do Result := locale.translation ("Passed") end
 	t_Refactory_toolbar: STRING_32				do Result := locale.translation ("Refactor Bar") end
 
-	t_dialog_title (a_name: STRING_GENERAL): STRING_32
+	t_dialog_title (a_name: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Edit $1"), [a_name])
 		end
@@ -2723,7 +2723,7 @@ feature -- Description texts
 	e_external_editor_not_defined: STRING_32 do Result := locale.translation("External editor not defined")	end
 	e_external_command_is_running: STRING_32 do Result := locale.translation("An external command is running now. %NPlease wait until it exits.")	end
 	e_external_command_list_full: STRING_32 do Result := locale.translation("Your external command list is full.%NUse Tools->External Command... to delete one.")	end
-	e_working_directory_invalid (a_directory: STRING_GENERAL): STRING_32
+	e_working_directory_invalid (a_directory: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation("Cannot change to directory %"$1%"."), [a_directory])
 		end
@@ -2805,7 +2805,7 @@ feature -- Wizard texts
 	wb_Click_back_and_correct_error: STRING_32 do Result := locale.translation("Click Back if you can correct the problem or Click Abort.")	end
 
 	wt_Runtime_information_record_error: STRING_32 do Result := locale.translation("Runtime Information Record Error")	end
-	wb_Runtime_information_record_error (generation_path: STRING_GENERAL): STRING_32
+	wb_Runtime_information_record_error (generation_path: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation(
 				"The file you have supplied as Runtime Information Record%N%
@@ -2828,7 +2828,7 @@ feature -- Wizard texts
 
 feature -- Translation (unrecommended to use)
 
-	find_translation (a_string: STRING_GENERAL): STRING_32
+	find_translation (a_string: READABLE_STRING_GENERAL): STRING_32
 			-- Find translation to `a_string'.
 			-- unrecommended to use
 		require

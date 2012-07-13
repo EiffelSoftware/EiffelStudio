@@ -1627,26 +1627,30 @@ rt_private void internal_marking(MARKER marking, int moving)
 #endif
 
 	if (rt_g_data.status & (GC_PART | GC_GEN)) {
-			/* Full GC: first mark only live processors. */
-		for (j = 0; j < live_index_count; j++) {
-				/* Use only live indexes. */
-			i = live_index [j];
-			CHECK ("Valid index", i < loc_set_list.count);
-			mark_stack(loc_set_list.threads.sstack[i], marking, moving);
-			mark_stack(loc_stack_list.threads.sstack[i], marking, moving);
-			mark_simple_stack(once_set_list.threads.sstack[i], marking, moving);
-			mark_simple_stack(hec_stack_list.threads.sstack[i], marking, moving);
-			mark_simple_stack(sep_stack_list.threads.sstack[i], marking, moving);
+			/* Full GC: mark only live processors. */
+		for (j = 0; j < live_index_count;) {
+				/* Iterate over known live indexes. */
+			for (n = live_index_count; j < n; j++) {
+					/* Use only live indexes. */
+				i = live_index [j];
+				CHECK ("Valid index", i < loc_set_list.count);
+				mark_stack(loc_set_list.threads.sstack[i], marking, moving);
+				mark_stack(loc_stack_list.threads.sstack[i], marking, moving);
+				mark_simple_stack(once_set_list.threads.sstack[i], marking, moving);
+				mark_simple_stack(hec_stack_list.threads.sstack[i], marking, moving);
+				mark_simple_stack(sep_stack_list.threads.sstack[i], marking, moving);
 #ifdef WORKBENCH
-			mark_op_stack(opstack_list.threads.opstack[i], marking, moving);
-			mark_ex_stack(eif_stack_list.threads.xstack[i], marking, moving);
-			mark_ex_stack(eif_trace_list.threads.xstack[i], marking, moving);
-#else
-			if (exception_stack_managed) {
+				mark_op_stack(opstack_list.threads.opstack[i], marking, moving);
 				mark_ex_stack(eif_stack_list.threads.xstack[i], marking, moving);
 				mark_ex_stack(eif_trace_list.threads.xstack[i], marking, moving);
-			}
+#else
+				if (exception_stack_managed) {
+					mark_ex_stack(eif_stack_list.threads.xstack[i], marking, moving);
+					mark_ex_stack(eif_trace_list.threads.xstack[i], marking, moving);
+				}
 #endif
+			}
+				/* Check if there are new live indexes. */
 			update_live_index ();
 		}
 			/* Perform marking for dead indexes.

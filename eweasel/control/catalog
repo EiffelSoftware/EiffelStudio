@@ -1278,6 +1278,7 @@ test	finalize-keep-once-strings		final112 tcf fail finalizing
 test	finalize-inline-attribute-with-body	final113 tcf fail finalizing inlining
 test	finalize-inline-across-loop		final114 tcf fail finalizing inlining
 test	finalize-inline-none-generic-derivation	final115 tcf fail finalizing
+test	profile-crash-on-override		final116 tcf fail finalizing profile
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

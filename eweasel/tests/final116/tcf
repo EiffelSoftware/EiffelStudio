@@ -1,0 +1,17 @@
+
+test_name 	profile-crash-on-override
+test_description Profiling finalized system with only override enabled crashes
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_fi
+execute_result	ok
+
+test_end

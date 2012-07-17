@@ -22,6 +22,12 @@ feature
 			test
 		end
 
+	test_translation_with_context
+			-- Test translation in context
+		do
+			test_in_context
+		end
+
 feature {NONE}
 
 	test
@@ -46,6 +52,30 @@ feature {NONE}
 				-- Plural translation.
 			l_string_32 := l_locale.formatted_string (l_locale.plural_translation ("$1 feature", "$1 features", 2), [2])
 			assert ("Tranlation result was incorrect.", plural_features ~ l_string_32)
+		end
+
+	test_in_context
+		local
+			l_mnger: I18N_LOCALE_MANAGER
+			l_locale: I18N_LOCALE
+			l_locale_id: I18N_LOCALE_ID
+			l_string_32: STRING_32
+		do
+			create l_mnger.make (tests_folder)
+			create l_locale_id.make_from_string ("zh_CN")
+			l_locale := l_mnger.locale (l_locale_id)
+
+				-- Normal translation.
+			l_string_32 := l_locale.translation_in_context ("Testing", "Used for menu")
+			assert ("Tranlation result was incorrect.", testing_in_context ~ l_string_32)
+
+				-- Singular translation.
+			l_string_32 := l_locale.formatted_string (l_locale.plural_translation_in_context ("$1 feature", "$1 features", "Used for Metric tool", 1), [1])
+			assert ("Tranlation result was incorrect.", singular_feature_in_context ~ l_string_32)
+
+				-- Plural translation.
+			l_string_32 := l_locale.formatted_string (l_locale.plural_translation_in_context ("$1 feature", "$1 features", "Used for Metric tool", 2), [2])
+			assert ("Tranlation result was incorrect.", plural_features_in_context ~ l_string_32)
 		end
 
 feature {NONE} -- Results
@@ -79,6 +109,27 @@ feature {NONE} -- Results
 			Result.append_code ({NATURAL_32} 0x28)
 			Result.append_code ({NATURAL_32} 0x590D)
 			Result.append_code ({NATURAL_32} 0x29)
+		end
+
+	testing_in_context: STRING_32
+			-- UTF32 encoding of Chinese translation of `Testing' in context "Used for menu"
+		once
+			Result := testing.twin
+			Result.append_character ('m')
+		end
+
+	singular_feature_in_context: STRING_32
+			-- UTF32 encoding of Chinese translation of `1 feature' in context "Used for Metric tool"
+		once
+			Result := singular_feature.twin
+			Result.append_character ('m')
+		end
+
+	plural_features_in_context: STRING_32
+			-- UTF32 encoding of Chinese translation of `2 features' in context "Used for Metric tool"
+		once
+			Result := plural_features.twin
+			Result.append_character ('m')
 		end
 
 note

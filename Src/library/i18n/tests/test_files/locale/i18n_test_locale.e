@@ -173,8 +173,12 @@ feature {NONE} -- Implementation
 			if a_compare_out then
 				--save_cache_to_file (generated_result_file_name (l_locale.info.id.name))
 				if not l_locale.info.id.name.is_empty then
-					assert ("Output did not match when testing locale '" + l_locale.info.id.name + "'",
-						has_same_content_as_string (result_file_name (l_locale.info.id.name, {PLATFORM}.is_windows), utf32_to_utf8 (cached_output)))
+					if attached cached_output as l_output then
+						assert ("Output did not match when testing locale '" + l_locale.info.id.name + "'",
+							has_same_content_as_string (result_file_name (l_locale.info.id.name, {PLATFORM}.is_windows), utf32_to_utf8 (l_output)))
+					else
+						assert ("No output", False)
+					end
 				end
 			end
 		end
@@ -182,27 +186,32 @@ feature {NONE} -- Implementation
 	result_file_name (a_locale_name: STRING; a_windows: BOOLEAN): STRING
 			-- This is a hack, since no such facility found in the testing framework, for a file name located in the source class directory.
 		do
-			Result := env.get ("ISE_LIBRARY").twin
-			Result.append_character (Operating_environment.directory_separator)
-			Result.append ("library")
-			Result.append_character (Operating_environment.directory_separator)
-			Result.append ("i18n")
-			Result.append_character (Operating_environment.directory_separator)
-			Result.append ("tests")
-			Result.append_character (Operating_environment.directory_separator)
-			Result.append ("test_files")
-			Result.append_character (Operating_environment.directory_separator)
-			Result.append ("locale")
-			Result.append_character (Operating_environment.directory_separator)
-			Result.append ("results")
-			Result.append_character (Operating_environment.directory_separator)
-			if a_windows then
-				Result.append ("windows")
+			if attached env.get ("ISE_LIBRARY") as l_env then
+				Result := l_env.twin
+				Result.append_character (Operating_environment.directory_separator)
+				Result.append ("library")
+				Result.append_character (Operating_environment.directory_separator)
+				Result.append ("i18n")
+				Result.append_character (Operating_environment.directory_separator)
+				Result.append ("tests")
+				Result.append_character (Operating_environment.directory_separator)
+				Result.append ("test_files")
+				Result.append_character (Operating_environment.directory_separator)
+				Result.append ("locale")
+				Result.append_character (Operating_environment.directory_separator)
+				Result.append ("results")
+				Result.append_character (Operating_environment.directory_separator)
+				if a_windows then
+					Result.append ("windows")
+				else
+					Result.append ("unix")
+				end
+				Result.append_character (Operating_environment.directory_separator)
+				Result.append (a_locale_name)
 			else
-				Result.append ("unix")
+				assert ("ISE_LIBRARY not defined", False)
+				create Result.make_empty
 			end
-			Result.append_character (Operating_environment.directory_separator)
-			Result.append (a_locale_name)
 		end
 
 	test_currency_formatter (a_value: DOUBLE;locale: I18N_LOCALE_INFO)

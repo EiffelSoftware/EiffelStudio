@@ -24,15 +24,13 @@ feature -- Test
 			m: I18N_MO_FILE
 		do
 			create m.make (mo_file_name ("ar.mo"))
-    		mo_file := m
     		m.open
-    		valid_index_test (1)
+    		valid_index_test (1, m)
     		m.close
 
 			create m.make (mo_file_name ("zh_CN.mo"))
-    		mo_file := m
     		m.open
-    		valid_index_test (2)
+    		valid_index_test (2, m)
     		m.close
 		end
 
@@ -42,27 +40,32 @@ feature	{NONE} -- Implementation
 			-- Full name.
 			-- This is a hack, since no such facility found in the testing framework, for a file name located in the source class directory.
 		do
-			Result := env.get ("ISE_LIBRARY").twin
-			Result.append_character (Operating_environment.directory_separator)
-			Result.append ("library")
-			Result.append_character (Operating_environment.directory_separator)
-			Result.append ("i18n")
-			Result.append_character (Operating_environment.directory_separator)
-			Result.append ("tests")
-			Result.append_character (Operating_environment.directory_separator)
-			Result.append ("test_files")
-			Result.append_character (Operating_environment.directory_separator)
-			Result.append ("mo")
-			Result.append_character (Operating_environment.directory_separator)
-			Result.append (a_direct_file_name)
+			if attached env.get ("ISE_LIBRARY") as l_env then
+				Result := l_env.twin
+				Result.append_character (Operating_environment.directory_separator)
+				Result.append ("library")
+				Result.append_character (Operating_environment.directory_separator)
+				Result.append ("i18n")
+				Result.append_character (Operating_environment.directory_separator)
+				Result.append ("tests")
+				Result.append_character (Operating_environment.directory_separator)
+				Result.append ("test_files")
+				Result.append_character (Operating_environment.directory_separator)
+				Result.append ("mo")
+				Result.append_character (Operating_environment.directory_separator)
+				Result.append (a_direct_file_name)
+			else
+				assert ("ISE_LIBRARY not defined", False)
+				create Result.make_empty
+			end
 		end
 
-	valid_index_test (a_file_number: INTEGER)
+	valid_index_test (a_file_number: INTEGER; a_file: I18N_MO_FILE)
 			-- test valid_index feature in class `I18N_MO_FILE'
 		local
 			i:INTEGER
 		do
-			if mo_file.opened then
+			if a_file.opened then
 				from
 					i:=1
 				until
@@ -70,15 +73,15 @@ feature	{NONE} -- Implementation
 				loop
 					if a_file_number = 1 then -- File "ar.mo"
 						if i >= 13 then
-							assert ("Index should not be valid.", not mo_file.valid_index (i))
+							assert ("Index should not be valid.", not a_file.valid_index (i))
 						else
-							assert ("Index should be valid.", mo_file.valid_index (i))
+							assert ("Index should be valid.", a_file.valid_index (i))
 						end
 					elseif a_file_number = 2 then
 						if i >= 24 then
-							assert ("Index should not be valid.", not mo_file.valid_index (i))
+							assert ("Index should not be valid.", not a_file.valid_index (i))
 						else
-							assert ("Index should be valid.", mo_file.valid_index (i))
+							assert ("Index should be valid.", a_file.valid_index (i))
 						end
 					else
 						assert ("No file is testing.", False)
@@ -89,10 +92,6 @@ feature	{NONE} -- Implementation
 				print_line ("NOT OPENED!!")
 			end
 		end
-
-feature	{NONE} -- access
-
-	mo_file: I18N_MO_FILE;
 
 note
 	library:   "Internationalization library"

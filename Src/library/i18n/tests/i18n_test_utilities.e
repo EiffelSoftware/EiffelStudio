@@ -32,13 +32,17 @@ feature -- Path/Filename
 	tests_folder: STRING
 			-- Test folder
 		once
-			Result := Env.get ("ISE_LIBRARY").twin
-			Result.append_character (Operating_environment.Directory_separator)
-			Result.append ("library")
-			Result.append_character (Operating_environment.Directory_separator)
-			Result.append ("i18n")
-			Result.append_character (Operating_environment.Directory_separator)
-			Result.append ("tests")
+			if attached Env.get ("ISE_LIBRARY") as l_v then
+				Result := l_v.twin
+				Result.append_character (Operating_environment.Directory_separator)
+				Result.append ("library")
+				Result.append_character (Operating_environment.Directory_separator)
+				Result.append ("i18n")
+				Result.append_character (Operating_environment.Directory_separator)
+				Result.append ("tests")
+			else
+				create Result.make_empty
+			end
 		end
 
 feature {NONE} -- Comparison
@@ -132,9 +136,11 @@ feature {NONE} -- Output function
 		local
 			l_file: RAW_FILE
 		do
-			create l_file.make_open_write (a_file_name)
-			file_write_string_32 (l_file, cached_output)
-			l_file.close
+			if attached cached_output as l_output then
+				create l_file.make_open_write (a_file_name)
+				file_write_string_32 (l_file, l_output)
+				l_file.close
+			end
 		end
 
 	output_integer (i: INTEGER)
@@ -163,7 +169,8 @@ feature {NONE} -- Output function
 			output_string ("%N")
 		end
 
-	cached_output: STRING_32;
+	cached_output: detachable STRING_32 note option: stable attribute end
+			-- Cached output
 
 note
 	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"

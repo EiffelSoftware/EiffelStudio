@@ -1889,6 +1889,7 @@ feature {NONE} -- Implementation
 	test_replace_substring_all is
 		local
 			s: STRING_8
+			s_orig, s_modif: STRING_8
 		do
 			s := "EiffelSoftware   Entreprise Edition_5.5"
 			s.replace_substring_all ("  ", "_")
@@ -1901,6 +1902,112 @@ feature {NONE} -- Implementation
 			s := "   EiffelSoftware   Entreprise   Edition_5.5   "
 			s.replace_substring_all (" ", "___")
 			check_equality ("replace_substring_all", s, "_________EiffelSoftware_________Entreprise_________Edition_5.5_________")
+
+			s_orig := "[
+	              #ifdef EIF_WINDOWS
+                    /* On NTFS file system, windows store UTC file stamps in 100 of nanoseconds
+                     * starting from January 1st 0. Converted in seconds, this time is greater
+                     * than 232 therefore we substract the EPOCH date January 1st 1970 to get
+                     * a 32 bits representation of the date.
+                     * FIXME: Manu 01/28/2004: On FAT file system, the date is in local time,
+                     * meaning that the code below does not compensate if you change your timezone
+                     * and will return a different date value for the same stamp just because
+                     * you are in different time zone.
+                     */
+
+                     /* WARNING: This is using the Ansi version of the Win32 API. Remember
+                      * that if you are doing any change below.
+                      */
+                static ULARGE_INTEGER epoch_date;
+                static int done = 0;
+
+                WIN32_FIND_DATAA l_find_data;
+                HANDLE l_file_handle;
+                ULARGE_INTEGER l_date;
+
+                l_file_handle = FindFirstFileA(arg1, &l_find_data);
+                if (l_file_handle == INVALID_HANDLE_VALUE) {
+                    *(EIF_INTEGER*) $r = -1;
+                } else {
+                    /* We do not need the file handle anymore, so we close it to
+                     * avoid handle leak. */
+                FindClose (l_file_handle);
+                if (done == 0) {
+                        /* Lazy initialization of epoch_date. */
+                    SYSTEMTIME epoch;
+                    FILETIME epoch_file;
+
+                    done = 1;
+                    memset (&epoch, 0, sizeof(SYSTEMTIME));
+                    epoch.wYear = 1970;
+                    epoch.wMonth = 1;
+                    epoch.wDay = 1;
+                    SystemTimeToFileTime (&epoch, &epoch_file);
+                    memcpy (&epoch_date, &epoch_file, sizeof(ULARGE_INTEGER));
+                }
+                memcpy (&l_date, &(l_find_data.ftLastWriteTime), sizeof(ULARGE_INTEGER));
+                *(EIF_INTEGER*) $r = (EIF_INTEGER) ((l_date.QuadPart -
+                    epoch_date.QuadPart) / RTI64C(10000000));
+                }
+                #else
+                static struct stat info;
+                *(EIF_INTEGER*) $r = (-1 == stat(arg1,&info)) ? (EIF_INTEGER) -1L :(EIF_INTEGER) info.st_mtime;
+                #endif
+	]"
+
+		s_modif := "[
+	              #ifdef EIF_WINDOWS
+                    /* On NTFS file system, windows store UTC file stamps in 100 of nanoseconds
+                     * starting from January 1st 0. Converted in seconds, this time is greater
+                     * than 232 therefore we substract the EPOCH date January 1st 1970 to get
+                     * a 32 bits representation of the date.
+                     * FIXME: Manu 01/28/2004: On FAT file system, the date is in local time,
+                     * meaning that the code below does not compensate if you change your timezone
+                     * and will return a different date value for the same stamp just because
+                     * you are in different time zone.
+                     */
+
+                     /* WARNING: This is using the Ansi version of the Win32 API. Remember
+                      * that if you are doing any change below.
+                      */
+                static ULARGE_INTEGER epoch_date;
+                static int done = 0;
+
+                WIN32_FIND_DATAA l_find_data;
+                HANDLE l_file_handle;
+                ULARGE_INTEGER l_date;
+
+                l_file_handle = FindFirstFileA(arg1, &l_find_data);
+                if (l_file_handle == INVALID_HANDLE_VALUE) {
+                    *(EIF_INTEGER*) arg2 = -1;
+                } else {
+                    /* We do not need the file handle anymore, so we close it to
+                     * avoid handle leak. */
+                FindClose (l_file_handle);
+                if (done == 0) {
+                        /* Lazy initialization of epoch_date. */
+                    SYSTEMTIME epoch;
+                    FILETIME epoch_file;
+
+                    done = 1;
+                    memset (&epoch, 0, sizeof(SYSTEMTIME));
+                    epoch.wYear = 1970;
+                    epoch.wMonth = 1;
+                    epoch.wDay = 1;
+                    SystemTimeToFileTime (&epoch, &epoch_file);
+                    memcpy (&epoch_date, &epoch_file, sizeof(ULARGE_INTEGER));
+                }
+                memcpy (&l_date, &(l_find_data.ftLastWriteTime), sizeof(ULARGE_INTEGER));
+                *(EIF_INTEGER*) arg2 = (EIF_INTEGER) ((l_date.QuadPart -
+                    epoch_date.QuadPart) / RTI64C(10000000));
+                }
+                #else
+                static struct stat info;
+                *(EIF_INTEGER*) arg2 = (-1 == stat(arg1,&info)) ? (EIF_INTEGER) -1L :(EIF_INTEGER) info.st_mtime;
+                #endif
+	]"
+			s_orig.replace_substring_all ("$r", "arg2")
+			check_equality ("replace_substring_all", s_orig, s_modif)
 		end
 
 	test_resizable is

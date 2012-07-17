@@ -578,18 +578,7 @@ Test obsolete-inline-agent (syntax053): failed
 		Syntax error in class TEST at line 10
 		Final status:  paused 
 
-Test invalid-manifest-type-char-constant (syntax054): failed
-	Description: The compiler accepts an invalid manifest type {ARRAY [STRING]} for a character constant 'w'.  It should report a syntax error or a VWMQ validity error.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/syntax054/tcf at line 9
-	Original text:    compile_result syntax_error TEST 11
-	Substituted text: compile_result syntax_error TEST 11
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Final status:  completed 
-	Expected result:
-		Syntax error in class TEST at line 11
-		Final status:  paused 
-
+Test invalid-manifest-type-char-constant (syntax054): passed
 Test note-syntax (syntax055): passed
 Test attached-syntax (syntax056): passed
 Test external-with-invalid-use (syntax057): passed
@@ -1386,18 +1375,7 @@ Test precompilation-task-failure (valid259): failed
 		Validity error code VD84
 		Final status:  paused 
 
-Test manifest_char_type (valid260): failed
-	Description: Demostrate a bad expression ({ARRAY [STRING]} 'w') the compiler accepts.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/valid260/tcf at line 9
-	Original text:    compile_result validity_error NONE DEFFERRED_ERROR_NO
-	Substituted text: compile_result validity_error NONE DEFFERRED_ERROR_NO
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Final status:  completed 
-	Expected result:
-		Validity error code DEFFERRED_ERROR_NO
-		Final status:  paused 
-
+Test manifest_char_type (valid260): passed
 Test inherited-generic-agent-argument (valid261): passed
 Test conversion_without_binary_operator (valid262): failed
 	Description: Conversion of target is done without checking that binary operator actually exists. This should be rejected per ECMA specification
@@ -3186,13 +3164,7 @@ Test main-thread-terminates-before-child (thread017): passed
 Test shared-mutex-hang (thread018): manual
 Test thread-join-crash (thread019): passed
 Test thread-profiling-crash (thread020): passed
-Test thread-crashes-on-die (thread021): failed
-	Description: When a multithreaded application calls die in one of the threads and that the other threads are busy doing some GC collection, the application crashes instead of terminating with an exit code.
-	Execution error in file /home/manus/local/eweasel/eweasel/tests/thread021/tcf at line 15
-	Original text:    compare exec_output output
-	Substituted text: compare exec_output output
-	Reason: files being compared do not have identical contents
-
+Test thread-crashes-on-die (thread021): passed
 Test thread-hangs-on-fork (thread022): passed
 Test print-double (exec001): passed
 Test bit-out-wrong (exec002): passed
@@ -5717,8 +5689,8 @@ Test dotnet-polymorphism (dotnet110): failed
 Test dotnet-special-handling-crash (dotnet112): passed
 Test dotnet-static-access-on-deferred (dotnet115): passed
 
-Passed:  2275 / 2612  (88%)
-Failed:  305 / 2612  (12%)
+Passed:  2278 / 2612  (88%)
+Failed:  302 / 2612  (12%)
 Manual:  26 / 2612  (1%)
 Skipped:  6 / 2612  (1%)
 

@@ -485,6 +485,11 @@ feature -- Externals
 			"C signature (GtkComboBox*) use <ev_gtk.h>"
 		end
 
+	frozen gtk_combo_box_popup (a_combo: POINTER)
+		external
+			"C signature (GtkComboBox*) use <ev_gtk.h>"
+		end
+
 	frozen gtk_entry_set_has_frame (a_entry: POINTER; has_frame: BOOLEAN)
 		external
 			"C signature (GtkEntry*, gboolean) use <ev_gtk.h>"

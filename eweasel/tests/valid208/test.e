@@ -1,5 +1,5 @@
 class
-        ROOT_CLASS
+        TEST
 create
 	make
 feature -- Init

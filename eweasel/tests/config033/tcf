@@ -1,0 +1,11 @@
+
+test_name	config-multiple-system-elements
+test_description Compiler should not accept a config file with more than one <system> element
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error NONE VD00
+
+test_end

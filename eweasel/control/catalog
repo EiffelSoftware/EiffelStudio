@@ -1943,6 +1943,7 @@ test	config-root-class-precursor		config030 tcf fail config
 test	config-extra-trailing-text		config031 tcf fail config
 test	config-4kb-config-file			config032 tcf fail config
 test	config-multiple-system-elements		config033 tcf fail config
+test	config-custom-tags-of-the-same-name			config034 tcf fail config
 
 -- Lace
 

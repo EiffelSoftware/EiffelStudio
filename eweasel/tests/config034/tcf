@@ -1,0 +1,12 @@
+
+test_name	config-custom-tags-of-the-same-name
+test_description custom tag with the same name does not work properly.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER/test_cluster test1.e
+
+compile_melted
+compile_result	validity_error TEST VTCT
+
+test_end

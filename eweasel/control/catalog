@@ -1279,6 +1279,7 @@ test	finalize-inline-attribute-with-body	final113 tcf fail finalizing inlining
 test	finalize-inline-across-loop		final114 tcf fail finalizing inlining
 test	finalize-inline-none-generic-derivation	final115 tcf fail finalizing
 test	profile-crash-on-override		final116 tcf fail finalizing profile
+test	tight-loop-integer-constant-infinite-loop final117 tcf fail finalizing
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

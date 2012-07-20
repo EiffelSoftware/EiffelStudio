@@ -29,7 +29,7 @@ create
 
 feature -- Extension
 
-	register (a_type: TYPE [SERVICE_I]; a_service: SERVICE_I; a_promote: BOOLEAN)
+	register (a_type: TYPE [detachable SERVICE_I]; a_service: SERVICE_I; a_promote: BOOLEAN)
 			-- <Precursor>
 		do
 			if a_promote and then attached {SERVICE_CONTAINER_I} site as l_container then
@@ -39,7 +39,7 @@ feature -- Extension
 			end
 		end
 
-	register_with_activator (a_type: TYPE [SERVICE_I]; a_activator: FUNCTION [ANY, TUPLE, detachable SERVICE_I] a_promote: BOOLEAN)
+	register_with_activator (a_type: TYPE [detachable SERVICE_I]; a_activator: FUNCTION [ANY, TUPLE, detachable SERVICE_I] a_promote: BOOLEAN)
 			-- <Precursor>
 		do
 			if a_promote and then attached {SERVICE_CONTAINER_I} site as l_container then
@@ -51,7 +51,7 @@ feature -- Extension
 
 feature -- Removal
 
-	revoke (a_type: TYPE [SERVICE_I]; a_promote: BOOLEAN)
+	revoke (a_type: TYPE [detachable SERVICE_I]; a_promote: BOOLEAN)
 			-- <Precursor>
 		do
 			if is_service_proffered (a_type, False) then
@@ -63,7 +63,7 @@ feature -- Removal
 
 feature -- Query
 
-	is_service_proffered (a_type: TYPE [SERVICE_I]; a_promote: BOOLEAN): BOOLEAN
+	is_service_proffered (a_type: TYPE [detachable SERVICE_I]; a_promote: BOOLEAN): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor {SERVICE_PROVIDER_CONTAINER} (a_type, a_promote)

@@ -54,7 +54,7 @@ feature -- Access
 			if l_result /= Void then
 				Result := l_result
 			else
-				if attached {G} service_provider.service ({G}) as l_other_service then
+				if attached {G} service_provider.service ({detachable G}) as l_other_service then
 					l_service := l_other_service
 				end
 				check l_service_attached: l_service /= Void end
@@ -85,9 +85,9 @@ feature -- Status report
 	is_service_available: BOOLEAN
 			-- Indicates if the service is available.
 		do
-			Result := internal_service /= Void or else (service_provider.service ({G}) /= Void)
+			Result := internal_service /= Void or else (service_provider.service ({detachable G}) /= Void)
 		ensure
-			has_service: Result implies (internal_service /= Void) or else service_provider.service ({G}) /= Void
+			has_service: Result implies (internal_service /= Void) or else service_provider.service ({detachable G}) /= Void
 		end
 
 feature {NONE} -- Implementation: Internal cache

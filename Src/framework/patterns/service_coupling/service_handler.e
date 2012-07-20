@@ -37,12 +37,12 @@ feature {NONE} -- Access
 	container: SERVICE_CONTAINER_I
 			-- Source container to add and remove services on.
 
-	handled_services: ARRAYED_LIST [TUPLE [service: TYPE [SERVICE_I]; promote: BOOLEAN]]
+	handled_services: ARRAYED_LIST [TUPLE [service: TYPE [detachable SERVICE_I]; promote: BOOLEAN]]
 			-- List of services handled by `Current'
 
 feature -- Status report
 
-	is_service_proffered (a_type: TYPE [SERVICE_I]; a_promote: BOOLEAN): BOOLEAN
+	is_service_proffered (a_type: TYPE [detachable SERVICE_I]; a_promote: BOOLEAN): BOOLEAN
 			-- <Precursor>
 		do
 			Result := container.is_service_proffered (a_type, a_promote)
@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Extension
 
-	register (a_type: TYPE [SERVICE_I]; a_service: SERVICE_I; a_promote: BOOLEAN)
+	register (a_type: TYPE [detachable SERVICE_I]; a_service: SERVICE_I; a_promote: BOOLEAN)
 			-- <Precursor>
 		do
 			container.register (a_type, a_service, a_promote)
@@ -61,7 +61,7 @@ feature -- Extension
 			handled_services_has_a_type: handled_services.has ([a_type, a_promote])
 		end
 
-	register_with_activator (a_type: TYPE [SERVICE_I]; a_activator: FUNCTION [ANY, TUPLE, detachable SERVICE_I] a_promote: BOOLEAN)
+	register_with_activator (a_type: TYPE [detachable SERVICE_I]; a_activator: FUNCTION [ANY, TUPLE, detachable SERVICE_I] a_promote: BOOLEAN)
 			-- <Precursor>
 		do
 			container.register_with_activator (a_type, a_activator, a_promote)
@@ -72,7 +72,7 @@ feature -- Extension
 
 feature -- Removal
 
-	revoke (a_type: TYPE [SERVICE_I]; a_promote: BOOLEAN)
+	revoke (a_type: TYPE [detachable SERVICE_I]; a_promote: BOOLEAN)
 			-- <Precursor>
 		local
 			l_services: like handled_services
@@ -91,7 +91,7 @@ feature -- Removal
 			-- Removes all services that were added using an instance of this handler.
 		local
 			l_services: like handled_services
-			l_service: detachable TUPLE [service: TYPE [SERVICE_I]; promote: BOOLEAN]
+			l_service: detachable TUPLE [service: TYPE [detachable SERVICE_I]; promote: BOOLEAN]
 		do
 			l_services := handled_services
 			from l_services.start until l_services.after loop

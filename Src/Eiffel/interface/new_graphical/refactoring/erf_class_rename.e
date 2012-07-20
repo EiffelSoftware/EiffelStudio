@@ -119,6 +119,11 @@ feature {NONE} -- Implementation
 			if preferences.file_rename then
 				dialog.enable_rename_file
 			end
+			if preferences.is_duplicate_allowed then
+				dialog.enable_duplicate
+			else
+				dialog.disable_duplicate
+			end
 			if preferences.update_comments then
 				dialog.enable_update_comments
 			end
@@ -134,11 +139,14 @@ feature {NONE} -- Implementation
 			preferences.set_update_comments (dialog.comments)
 			preferences.set_update_strings (dialog.strings)
 			preferences.set_all_classes (dialog.all_classes)
+			preferences.set_is_duplicate_allowed (dialog.is_duplicate_allowed)
 
 				-- add the checks
         	checks.wipe_out
 			checks.extend (create {ERF_VALID_CLASS_NAME}.make (preferences.new_class_name))
-			checks.extend (create {ERF_CHK_SAME_CLASS_NAME}.make (class_i.cluster, preferences.new_class_name))
+			if not dialog.is_duplicate_allowed then
+				checks.extend (create {ERF_CHK_SAME_CLASS_NAME}.make (class_i.cluster, preferences.new_class_name))
+			end
         end
 
     apply_to_project
@@ -206,7 +214,7 @@ feature {NONE} -- Implementation
 			-- The class to rename.
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

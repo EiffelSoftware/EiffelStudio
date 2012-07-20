@@ -16,6 +16,12 @@ inherit
 
 feature -- Value
 
+	is_duplicate_allowed: BOOLEAN
+			-- Is it ok to reuse the same name as a feature name of the class where it appears?
+		do
+			Result := is_duplicate_allowed_preference.value
+		end
+
 	new_feature_name: STRING
 			-- The new name of the feature.
 		do
@@ -35,6 +41,14 @@ feature -- Value
 		end
 
 feature -- Change value
+
+	set_is_duplicate_allowed (a_value: BOOLEAN)
+			-- Set `is_duplicate_allowed' to `a_value'
+		do
+			is_duplicate_allowed_preference.set_value (a_value)
+		ensure
+			is_duplicate_allowed_set: is_duplicate_allowed = a_value
+		end
 
 	set_new_feature_name (a_name: STRING)
 			-- Set the new feature name.
@@ -58,12 +72,14 @@ feature -- Change value
 
 feature {NONE} -- Preference
 
+	is_duplicate_allowed_preference: BOOLEAN_PREFERENCE
 	new_feature_name_preference: STRING_PREFERENCE
 	update_comments_preference: BOOLEAN_PREFERENCE
 	update_strings_preference: BOOLEAN_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
+	is_duplicate_allowed_string: STRING = "tools.refactoring.feature_rename.allow_duplicate"
 	new_feature_name_string: STRING = "tools.refactoring.feature_rename.new_feature_name"
 	update_comments_string: STRING = "tools.refactoring.feature_rename.update_comments"
 	update_strings_string: STRING = "tools.refactoring.feature_rename.update_strings"
@@ -78,6 +94,9 @@ feature {NONE} -- Implementation
 		do
 			create l_manager.make (preferences, "refactoring.feature_rename")
 			l_update_agent := agent update
+
+			is_duplicate_allowed_preference := l_manager.new_boolean_preference_value (l_manager, is_duplicate_allowed_string, False)
+			is_duplicate_allowed_preference.change_actions.extend (l_update_agent)
 
 			new_feature_name_preference := l_manager.new_string_preference_value (l_manager, new_feature_name_string, "new_name")
 			new_feature_name_preference.change_actions.extend (l_update_agent)
@@ -95,7 +114,7 @@ invariant
 	update_strings_preference_not_void: update_strings_preference /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -108,22 +127,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -19,13 +19,13 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_choices (a_name: like name; a_choices: ARRAYED_LIST [G])
+	make_with_choices (a_name: like name; a_choices: like item_strings)
 			-- Initialize with some choices.
 		require
 			a_choices_ok: a_choices /= Void and not a_choices.is_empty
 		do
-			make (a_name)
 			item_strings := a_choices
+			make (a_name)
 		ensure
 			item_strings_set: item_strings = a_choices
 		end
@@ -49,12 +49,13 @@ feature -- Status
 	has_combo_focus: BOOLEAN
 			-- Does the combo popup have the focus?
 		do
-			Result := (combo_grid /= Void and then combo_grid.has_focus) or (combo_popup /= Void and then combo_popup.has_focus)
+			Result := (attached combo_grid as l_combo_grid and then l_combo_grid.has_focus) or
+				(attached combo_popup as l_combo_popup and then l_combo_popup.has_focus)
 		end
 
 feature -- Access
 
-	item_strings: LIST [like value]
+	item_strings: LIST [attached like value]
 			-- Possible choices.
 
 feature {NONE} -- Agents
@@ -69,8 +70,8 @@ feature {NONE} -- Agents
 			is_text_editing := True
 			Precursor {ELLIPSIS_PROPERTY}(a_popup_window)
 			is_text_editing := l_te
-			if not is_text_editing then
-				text_field.disable_edit
+			if not is_text_editing and then attached text_field as l_text_field then
+				l_text_field.disable_edit
 			end
 		end
 
@@ -79,27 +80,29 @@ feature {NONE} -- Agents
 		local
 			l_done: BOOLEAN
 			l_item: like value
-			l_converted_data: like value
+			l_converted_data: detachable like value
 		do
-			from
-				item_strings.start
-			until
-				l_done or item_strings.after
-			loop
-				l_converted_data := convert_to_data (text_field.text)
-				if l_converted_data /= Void and then l_converted_data ~ item_strings.item then
-					if item_strings.islast then
-						l_item := item_strings.first
-					else
-						item_strings.forth
-						l_item := item_strings.item
+			if attached text_field as l_text_field then
+				from
+					item_strings.start
+				until
+					l_done or item_strings.after
+				loop
+					l_converted_data := convert_to_data (l_text_field.text)
+					if l_converted_data /= Void and then l_converted_data ~ item_strings.item then
+						if item_strings.islast then
+							l_item := item_strings.first
+						else
+							item_strings.forth
+							l_item := item_strings.item
+						end
+						if is_valid_value (l_item) then
+							set_value (l_item)
+						end
+						l_done := True
 					end
-					if is_valid_value (l_item) then
-						set_value (l_item)
-					end
-					l_done := True
+					item_strings.forth
 				end
-				item_strings.forth
 			end
 		end
 
@@ -108,9 +111,9 @@ feature {NONE} -- Agents
 		do
 			Precursor
 			if attached text_field as l_text_field and then not l_text_field.is_destroyed then
-				text_field.disable_edit
-				text_field.pointer_button_press_actions.force_extend (agent switch)
-				text_field.key_press_actions.extend (agent on_text_field_key)
+				l_text_field.disable_edit
+				l_text_field.pointer_button_press_actions.force_extend (agent switch)
+				l_text_field.key_press_actions.extend (agent on_text_field_key)
 			end
 		end
 
@@ -121,19 +124,23 @@ feature {NONE} -- Agents
 		local
 			l_item: GENERIC_GRID_ITEM [G]
 			l_frame: EV_FRAME
+			l_combo_popup: like combo_popup
+			l_combo_grid: like combo_grid
 		do
-			create combo_popup
-			combo_popup.set_position (popup_window.x_position, popup_window.y_position + popup_window.height)
-			combo_popup.set_width (popup_window.width)
+			create l_combo_popup
+			combo_popup := l_combo_popup
+			l_combo_popup.set_position (popup_window.x_position, popup_window.y_position + popup_window.height)
+			l_combo_popup.set_width (popup_window.width)
 
 			create l_frame
 			l_frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_etched_out)
 
-			create combo_grid
-			combo_grid.hide_header
-			combo_grid.pointer_button_press_item_actions.extend (agent combo_click)
-			combo_grid.key_press_actions.extend (agent on_combo_key)
-			l_frame.extend (combo_grid)
+			create l_combo_grid
+			combo_grid := l_combo_grid
+			l_combo_grid.hide_header
+			l_combo_grid.pointer_button_press_item_actions.extend (agent combo_click)
+			l_combo_grid.key_press_actions.extend (agent on_combo_key)
+			l_frame.extend (l_combo_grid)
 			from
 				item_strings.start
 			until
@@ -141,7 +148,7 @@ feature {NONE} -- Agents
 			loop
 				create l_item.make_with_text (to_displayed_value (item_strings.item))
 				l_item.set_value (item_strings.item)
-				combo_grid.set_item (1, item_strings.index, l_item)
+				l_combo_grid.set_item (1, item_strings.index, l_item)
 				l_item.pointer_enter_actions.force_extend (agent combo_select (l_item))
 				if l_item.text.is_equal (displayed_value) then
 					l_item.enable_select
@@ -149,23 +156,21 @@ feature {NONE} -- Agents
 				item_strings.forth
 			end
 			if item_strings.count < 10 then
-				combo_popup.set_height ((item_strings.count) * (combo_grid.row_height) + 4)
-				combo_grid.column (1).set_width (popup_window.width)
-				combo_grid.hide_horizontal_scroll_bar
+				l_combo_popup.set_height ((item_strings.count) * (l_combo_grid.row_height) + 4)
 			else
-				combo_popup.set_height (10 * (combo_grid.row_height) + 4)
-				combo_grid.column (1).set_width (popup_window.width)
-				combo_grid.hide_horizontal_scroll_bar
+				l_combo_popup.set_height (10 * (l_combo_grid.row_height) + 4)
 			end
-			combo_grid.set_minimum_height (0)
-			combo_grid.set_minimum_width (0)
+			l_combo_grid.column (1).set_width (popup_window.width)
+			l_combo_grid.hide_horizontal_scroll_bar
+			l_combo_grid.set_minimum_height (0)
+			l_combo_grid.set_minimum_width (0)
 
-			combo_popup.focus_out_actions.force (agent combo_focus_lost)
-			combo_grid.focus_out_actions.force (agent combo_focus_lost)
+			l_combo_popup.focus_out_actions.force (agent combo_focus_lost)
+			l_combo_grid.focus_out_actions.force (agent combo_focus_lost)
 
-			combo_popup.extend (l_frame)
-			combo_popup.show_actions.extend (agent do combo_grid.set_focus end)
-			combo_popup.show
+			l_combo_popup.extend (l_frame)
+			l_combo_popup.show_actions.extend (agent l_combo_grid.set_focus)
+			l_combo_popup.show
 		end
 
 	deactivate
@@ -187,19 +192,16 @@ feature {NONE} -- Agents
 	combo_select (an_item: EV_GRID_ITEM)
 			-- Change the selected item in the combo.
 		do
-			if combo_grid /= Void then
-				combo_grid.remove_selection
+			if attached combo_grid as l_combo_grid then
+				l_combo_grid.remove_selection
 				an_item.enable_select
 			end
 		end
 
 	combo_click (x_pos, y_pos, a_button: INTEGER; an_item: EV_GRID_ITEM)
 			-- Choose a different value.
-		local
-			l_item: GENERIC_GRID_ITEM [G]
 		do
-			l_item ?= an_item
-			if l_item /= Void then
+			if attached {GENERIC_GRID_ITEM [G]} an_item as l_item then
 				if is_valid_value (l_item.value) then
 					set_value (l_item.value)
 				end
@@ -214,13 +216,10 @@ feature {NONE} -- Agents
 			-- A key was pressed in `combo_grid'.
 		require
 			a_key_not_void: a_key /= Void
-		local
-			l_item: GENERIC_GRID_ITEM [G]
 		do
-			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
-				if combo_grid.selected_items /= Void and then combo_grid.selected_items.count = 1 then
-					l_item ?= combo_grid.selected_items.first
-					if l_item /= Void and then is_valid_value (l_item.value) then
+			if a_key.code = {EV_KEY_CONSTANTS}.key_enter and attached combo_grid as l_combo_grid then
+				if l_combo_grid.selected_items /= Void and then l_combo_grid.selected_items.count = 1 then
+					if attached {GENERIC_GRID_ITEM [G]} l_combo_grid.selected_items.first as l_item and then is_valid_value (l_item.value) then
 						set_value (l_item.value)
 					end
 					if not is_destroyed and then is_parented then
@@ -269,23 +268,23 @@ feature {NONE} -- Implementation
 			Result.set_mask (l_mask)
 		end
 
-	combo_popup: EV_POPUP_WINDOW
+	combo_popup: detachable EV_POPUP_WINDOW
 			-- Popup window for showing the combo list.
 
-	combo_grid: EV_GRID
+	combo_grid: detachable EV_GRID
 			-- Grid that shows the available choices.
 
 	destroy_combo_popup
 			-- Destroy combo popup.
 		do
-			if combo_grid /= Void then
-				combo_grid.focus_out_actions.wipe_out
-				combo_grid.destroy
+			if attached combo_grid as l_combo_grid then
+				l_combo_grid.focus_out_actions.wipe_out
+				l_combo_grid.destroy
 				combo_grid := Void
 			end
-			if combo_popup /= Void then
-				combo_popup.focus_out_actions.wipe_out
-				combo_popup.destroy
+			if attached combo_popup as l_combo_popup then
+				l_combo_popup.focus_out_actions.wipe_out
+				l_combo_popup.destroy
 				combo_popup := Void
 			end
 		end

@@ -40,15 +40,13 @@ feature {NONE} -- Agents
 			popup_window: popup_window /= Void
 			activated: is_activated
 		local
-			l_parent: EV_WINDOW
 			l_dial: EV_DIRECTORY_DIALOG
 			l_dir: DIRECTORY
 		do
 			update_text_on_deactivation
-			l_parent := parent_window (parent)
 			is_dialog_open := True
 			create l_dial
-			if value /= Void and then not value.is_empty then
+			if attached value as l_value and then not l_value.is_empty then
 				create l_dir.make (location_value)
 				if l_dir.exists then
 					l_dial.set_start_directory (l_dir.name)
@@ -56,7 +54,9 @@ feature {NONE} -- Agents
 			end
 
 			l_dial.ok_actions.extend (agent dialog_ok (l_dial))
-			l_dial.show_modal_to_window (l_parent)
+			check attached parent_window (parent) as l_parent then
+				l_dial.show_modal_to_window (l_parent)
+			end
 			is_dialog_open := False
 		end
 
@@ -69,8 +69,8 @@ feature {NONE} -- Agents
 	location_value: STRING_32
 			-- Location from the value (e.g. resolve variables).
 		do
-			if value /= Void then
-				Result := value
+			if attached value as l_value then
+				Result := l_value
 			else
 				create Result.make_empty
 			end
@@ -87,4 +87,14 @@ feature {NONE} -- Implementation
 			Result.replace_substring_all ("%%N", "%N")
 		end
 
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

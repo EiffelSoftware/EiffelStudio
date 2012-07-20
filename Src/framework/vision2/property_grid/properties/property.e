@@ -72,7 +72,7 @@ feature  -- Access
 	is_readonly: BOOLEAN
 			-- Is the value readonly?
 
-	name_item: EV_GRID_ITEM
+	name_item: detachable EV_GRID_ITEM
 			-- Grid item with the name (if any).
 
 feature  -- Update
@@ -133,8 +133,8 @@ feature  -- Update
 		do
 			is_readonly := True
 			set_foreground_color (gray)
-			if name_item /= Void then
-				name_item.set_foreground_color (gray)
+			if attached name_item as l_name_item then
+				l_name_item.set_foreground_color (gray)
 			end
 		ensure
 			is_readonly: is_readonly
@@ -157,14 +157,14 @@ feature {PROPERTY_GRID, TYPED_PROPERTY} -- Agents
 
 feature {PROPERTY_GRID} -- Update during insert into grid
 
-	set_name_item (an_item: like name_item)
+	set_name_item (an_item: attached like name_item)
 			-- Set `name_item' to `an_item'.
 		require
 			an_item_not_void: an_item /= Void
 		do
 			name_item := an_item
 			if is_readonly then
-				name_item.set_foreground_color (gray)
+				an_item.set_foreground_color (gray)
 			end
 		ensure
 			name_item_set: name_item = an_item
@@ -220,8 +220,8 @@ feature {NONE} -- Contract
 			-- Default state.
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

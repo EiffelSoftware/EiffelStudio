@@ -9,6 +9,7 @@ class
 inherit
 	PROPERTY_DIALOG [STRING_32]
 		redefine
+			create_interface_objects,
 			initialize,
 			on_ok
 		end
@@ -19,11 +20,17 @@ create
 
 feature {NONE} -- Initialization
 
+	create_interface_objects
+			-- <Precursor>
+		do
+			Precursor
+			create text_editor
+		end
+
 	initialize
 			-- Initialize.
 		do
 			Precursor {PROPERTY_DIALOG}
-			create text_editor
 			element_container.extend (text_editor)
 
 			show_actions.extend (agent text_editor.set_focus)
@@ -48,4 +55,14 @@ invariant
 	value_set: is_ok implies value /= Void
 	elements: is_initialized implies text_editor /= Void
 
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

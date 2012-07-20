@@ -41,7 +41,11 @@ feature {NONE} -- Initialization
 		local
 			vbox: EV_VERTICAL_BOX
 		do
+			create sorted_names.make_empty
+			create option_bar_box
 			create choice_list
+			create full_list.make_empty
+			create matches.make_empty
 			choice_list.default_key_processing_handler := agent (a_key: EV_KEY): BOOLEAN
 				do
 					Result := not a_key.is_arrow and not (a_key.code = {EV_KEY_CONSTANTS}.key_tab)
@@ -60,7 +64,6 @@ feature {NONE} -- Initialization
 
 			docking_make
 
-			option_bar_box := build_option_bar
 			create vbox
 			vbox.extend (choice_list)
 			vbox.extend (option_bar_box)
@@ -71,33 +74,27 @@ feature {NONE} -- Initialization
 			resize_actions.force_extend (agent resize_column_to_window_width)
 		end
 
-	build_option_bar: EV_VERTICAL_BOX
-			-- Build option bar.
-		do
-			create Result
-		end
-
 feature -- Initialization
 
-	common_initialization (an_editor: like code_completable;
-						a_name: STRING; a_remainder: INTEGER;
+	common_initialization (an_editor: attached like code_completable;
+						a_name: detachable STRING_32; a_remainder: INTEGER;
 						a_completion_possibilities: like sorted_names;
 						a_complete_word: BOOLEAN)
 			-- Initialize fields common to class and feature choice window.		
 		do
 			code_completable := an_editor
-			before_complete := a_name
 			remainder := a_remainder
 			sorted_names := a_completion_possibilities
 			user_completion := a_complete_word
-			if before_complete /= Void then
-				buffered_input := before_complete.twin
+			if a_name /= Void then
+				before_complete := a_name
+				buffered_input := a_name.twin
 			else
 				create buffered_input.make_empty
 			end
 			build_full_list
 			is_closing := False
-			build_displayed_list (before_complete)
+			build_displayed_list (a_name)
 			is_first_show := True
 
 			if not full_list.is_empty then
@@ -117,7 +114,7 @@ feature -- Initialization
 
 feature -- Access
 
-	code_completable: CODE_COMPLETABLE
+	code_completable: detachable CODE_COMPLETABLE note option: stable attribute end
 			-- associated code completable
 
 	choice_list: EV_GRID
@@ -126,16 +123,10 @@ feature -- Access
 	option_bar_box: EV_VERTICAL_BOX
 			-- Option bar box
 
-	option_bar: EV_TOOL_BAR
-			-- Option tool bar
-
-	filter_button: EV_TOOL_BAR_TOGGLE_BUTTON
-			-- Filter option button.
-
 	sorted_names: SORTABLE_ARRAY [like name_type]
 			-- list of possible names sorted alphabetically
 
-	before_complete: STRING
+	before_complete: detachable STRING note option: stable attribute end
 			-- Insertion string
 
 	remainder: INTEGER
@@ -224,6 +215,8 @@ feature {NONE} -- Events handling
 
 	on_key_released (ev_key: EV_KEY)
 			-- process user input in `choice_list'
+		require
+   			code_completable_set: code_completable /= Void
 		do
 			if ev_key /= Void then
 				inspect
@@ -239,7 +232,7 @@ feature {NONE} -- Events handling
 					else
 						code_completable.handle_extended_key (ev_key)
 					end
-					if not buffered_input.is_empty then
+					if buffered_input /= Void and then not buffered_input.is_empty then
 						if ev_key.code = key_back_space then
 							if ev_application.ctrl_pressed then
 								buffered_input.wipe_out
@@ -254,7 +247,9 @@ feature {NONE} -- Events handling
 				when key_v then
 					if ev_application.ctrl_pressed then
 						code_completable.handle_extended_ctrled_key (ev_key)
-						buffered_input.append (ev_application.clipboard.text)
+						if buffered_input /= Void then
+							buffered_input.append (ev_application.clipboard.text)
+						end
 					else
 						code_completable.handle_extended_key (ev_key)
 					end
@@ -301,6 +296,9 @@ feature {NONE} -- Events handling
 
 	on_char (character_string: STRING_32)
    			-- Process displayable character key press event.
+   		require
+   			buffered_input_not_void: buffered_input /= Void
+   			code_completable_set: code_completable /= Void
    		local
    			c: CHARACTER
 			c_name: like name_type
@@ -335,9 +333,11 @@ feature {NONE} -- Events handling
 		do
 			if choice_list.virtual_height > choice_list.viewable_height then
 				if mouse_wheel_scroll_full_page then
-					l_row := choice_list.row ((choice_list.first_visible_row.index - a * viewable_row_count).max (1).min (choice_list.row_count))
-					choice_list.set_virtual_position (choice_list.virtual_x_position,
-						l_row.virtual_y_position.min (choice_list.maximum_virtual_y_position))
+					if attached choice_list.first_visible_row as l_visible_row then
+						l_row := choice_list.row ((l_visible_row.index - a * viewable_row_count).max (1).min (choice_list.row_count))
+						choice_list.set_virtual_position (choice_list.virtual_x_position,
+							l_row.virtual_y_position.min (choice_list.maximum_virtual_y_position))
+					end
 				else
 					choice_list.set_virtual_position (
 						choice_list.virtual_x_position,
@@ -352,28 +352,24 @@ feature {NONE} -- Events handling
 		require
 			a_row_not_void: a_row /= Void
 		local
-			l_name: like name_type
-			l_children: SORTABLE_ARRAY [like name_type]
 			i, upper: INTEGER
 		do
 			if a_row.subrow_count = 0 then
-				l_name ?= a_row.data
-				check
-					l_name_not_void: l_name /= Void
-					matches_not_void: matches /= Void
-				end
-				l_children := l_name.children
-				from
-					i := l_children.lower
-					upper := l_children.upper
-				until
-					i > upper
-				loop
-					if matches.has (l_children.item (i)) then
-						a_row.insert_subrow (a_row.subrow_count + 1)
-						a_row.subrow (a_row.subrow_count).set_data (l_children.item (i))
+				if attached {like name_type} a_row.data as l_name and attached matches as l_matches then
+					if attached l_name.children as l_children then
+						from
+							i := l_children.lower
+							upper := l_children.upper
+						until
+							i > upper
+						loop
+							if l_matches.has (l_children.item (i)) then
+								a_row.insert_subrow (a_row.subrow_count + 1)
+								a_row.subrow (a_row.subrow_count).set_data (l_children.item (i))
+							end
+							i := i + 1
+						end
 					end
-					i := i + 1
 				end
 			end
 			ev_application.do_once_on_idle (agent resize_column_to_window_width)
@@ -413,7 +409,7 @@ feature {NONE} -- Cursor movement
 					until
 						i < 1 or end_loop
 					loop
-						if choice_list.row (i).parent_row /= Void implies choice_list.row (i).parent_row.is_expanded then
+						if attached choice_list.row (i).parent_row as l_parent_row implies l_parent_row.is_expanded then
 							l_count := l_count + 1
 							l_last_selectable := i
 						end
@@ -456,7 +452,7 @@ feature {NONE} -- Cursor movement
 					until
 						i > choice_list.row_count or end_loop
 					loop
-						if choice_list.row (i).parent_row /= Void implies choice_list.row (i).parent_row.is_expanded then
+						if attached choice_list.row (i).parent_row as l_parent_row implies l_parent_row.is_expanded then
 							l_count := l_count + 1
 							l_last_selectable := i
 						end
@@ -477,7 +473,7 @@ feature {NONE} -- Cursor movement
 			-- Go to last visible item.
 		local
 			i, ix: INTEGER
-			l_row : EV_GRID_ROW
+			l_row : detachable EV_GRID_ROW
 			l_loop_end: BOOLEAN
 			l_list: like choice_list
 			l_rows: ARRAYED_LIST [EV_GRID_ROW]
@@ -521,7 +517,7 @@ feature {NONE} -- Cursor movement
 			-- Go to last visible item.
 		local
 			i, ix: INTEGER
-			l_row : EV_GRID_ROW
+			l_row : detachable EV_GRID_ROW
 			l_loop_end: BOOLEAN
 			l_list: like choice_list
 			l_rows: ARRAYED_LIST [EV_GRID_ROW]
@@ -598,7 +594,7 @@ feature {NONE} -- Cursor movement
 			-- If parented, collapse parent.
 		local
 			ix: INTEGER
-			l_row: EV_GRID_ROW
+			l_row: detachable EV_GRID_ROW
 			l_list: like choice_list
 			l_rows: ARRAYED_LIST [EV_GRID_ROW]
 		do
@@ -632,7 +628,7 @@ feature {NONE} -- Cursor movement
 			a_row_is_valid: a_row > 0 and a_row <= choice_list.row_count
 		local
 			i: INTEGER
-			l_row: EV_GRID_ROW
+			l_row: detachable EV_GRID_ROW
 			l_list: like choice_list
 			l_rows: ARRAYED_LIST [EV_GRID_ROW]
 		do
@@ -660,7 +656,7 @@ feature {NONE} -- Cursor movement
 
 feature {NONE} -- Implementation
 
-	buffered_input: STRING
+	buffered_input: detachable STRING note option: stable attribute end
 			-- Buffered user input
 
 	character_to_append: CHARACTER
@@ -685,14 +681,15 @@ feature {NONE} -- Implementation
 			Result := True
 		end
 
-	build_displayed_list (name: STRING)
+	build_displayed_list (name: detachable STRING)
 			-- Build the list based on matches with `name'
 		require
 			full_list_not_void: full_list /= Void
 			choice_list_attached: choice_list /= Void
 		local
 			l_count: INTEGER
-			match_item, parent_item: like name_type
+			match_item: like name_type
+			parent_item: detachable like name_type
 			row_index: INTEGER
 			l_upper: INTEGER
 			l_tree_view: BOOLEAN
@@ -730,8 +727,8 @@ feature {NONE} -- Implementation
 				match_item := l_matches.item (l_count)
 				if is_applicable_item (match_item) then
 					parent_item := Void
-					if match_item.has_parent then
-						parent_item := match_item.parent
+					if attached match_item.parent as l_match_item_parent then
+						parent_item := l_match_item_parent
 					else
 						if not match_item.has_child then
 							l_row := l_list.row (row_index)
@@ -796,8 +793,8 @@ feature {NONE} -- Implementation
 				i > l_upper
 			loop
 				l_name := a_names.item (i)
-				if l_name.has_parent then
-					l_name := l_name.parent
+				if attached l_name.parent as l_name_parent then
+					l_name := l_name_parent
 				end
 				if not l_parents_inserted.has (l_name) then
 					Result := Result + 1
@@ -891,14 +888,14 @@ feature {NONE} -- Implementation
 			l_upper: INTEGER
 		do
 			Result := 1
-			if a_name.has_child then
+			if a_name.has_child and then attached a_name.children as l_children then
 				from
-					i := a_name.children.lower
-					l_upper := a_name.children.upper
+					i := l_children.lower
+					l_upper := l_children.upper
 				until
 					i > l_upper
 				loop
-					Result := Result + flat_count_of_name (a_name.children.item (i))
+					Result := Result + flat_count_of_name (l_children.item (i))
 					i := i + 1
 				end
 			end
@@ -918,14 +915,14 @@ feature {NONE} -- Implementation
 			l_count := a_start_pos
 			a_list.put (a_name, l_count)
 			l_count := l_count + 1
-			if a_name.has_child then
+			if a_name.has_child and attached a_name.children as l_children then
 				from
-					i := a_name.children.lower
-					l_upper := a_name.children.upper
+					i := l_children.lower
+					l_upper := l_children.upper
 				until
 					i > l_upper
 				loop
-					l_count := collect_names (a_name.children.item (i), a_list, l_count)
+					l_count := collect_names (l_children.item (i), a_list, l_count)
 					i := i + 1
 				end
 			end
@@ -937,7 +934,7 @@ feature {NONE} -- Implementation
 		do
 			if not choice_list.selected_rows.is_empty then
 					-- Delete current token so it is later replaced by the completion text
-				if not buffered_input.is_empty then
+				if buffered_input /= Void and then not buffered_input.is_empty then
 					remove_characters_entered_since_display
 				end
 				complete
@@ -947,9 +944,10 @@ feature {NONE} -- Implementation
 
 	complete
 			-- Complete current name
+		require
+   			code_completable_set: code_completable /= Void
 		local
 			l_name: STRING_GENERAL
-			l_name_item: like name_type
 			l_list: like choice_list
 			l_rows: ARRAYED_LIST [EV_GRID_ROW]
 		do
@@ -960,21 +958,23 @@ feature {NONE} -- Implementation
 				if character_to_append = '(' then
 					character_to_append := '%U'
 				end
-				l_name_item ?= l_rows.first.data
-				check
-					l_name_item_not_void: l_name_item /= Void
-				end
-				if ev_application.alt_pressed then
-					l_name := l_name_item.full_insert_name
+				if attached {like name_type} l_rows.first.data as l_name_item then
+					if ev_application.alt_pressed then
+						l_name := l_name_item.full_insert_name
+					else
+						l_name := l_name_item.insert_name
+					end
+					code_completable.complete_from_window (l_name, character_to_append, remainder)
 				else
-					l_name := l_name_item.insert_name
+					check name_present: False end
 				end
-				code_completable.complete_from_window (l_name, character_to_append, remainder)
 			end
 		end
 
 	exit
 			-- Cancel autocomplete
+		require
+   			code_completable_set: code_completable /= Void
 		do
 			if not is_closing then
 				is_closing := True
@@ -996,6 +996,8 @@ feature {NONE} -- Implementation
 
 	exit_complete_mode
 			-- Exit editor complete mode.
+		require
+			code_completable_not_void: code_completable /= Void
 		do
 			code_completable.exit_complete_mode
 			continue_completion := False
@@ -1003,9 +1005,11 @@ feature {NONE} -- Implementation
 
 	save_window_position
 			-- Save current window position.
+		require
+			code_completable_not_void: code_completable /= Void
 		do
-			if code_completable.save_list_position_action /= Void and is_displayed then
-				code_completable.save_list_position_action.call ([screen_x, screen_y, width, height])
+			if attached code_completable.save_list_position_action as l_action and is_displayed then
+				l_action.call ([screen_x, screen_y, width, height])
 			end
 		end
 
@@ -1027,6 +1031,7 @@ feature {NONE} -- Implementation
 			-- Remove characters entered so we may put them back
 		require
 			buffered_input_not_void: buffered_input /= Void
+			code_completable_not_void: code_completable /= Void
 		local
 			l_index: INTEGER
 		do
@@ -1159,17 +1164,20 @@ feature {NONE} -- Implementation
 		require
 			a_item_not_void: a_item /= Void
 			a_name_not_void: a_name /= Void
-		local
-			l_item: EV_GRID_LABEL_ITEM
 		do
-			l_item ?= a_item
-			check
-				l_item_not_void: l_item /= Void
+			if attached a_name.icon as l_icon and then attached {EV_GRID_LABEL_ITEM} a_item as l_item then
+				l_item.set_pixmap (l_icon)
 			end
-			l_item.set_pixmap (a_name.icon)
 		end
 
 	name_type: NAME_FOR_COMPLETION
+			-- Type for completion.
+		require
+			not_callable: False
+		do
+			check False then
+			end
+		end
 
 	mouse_wheel_scroll_full_page_internal: BOOLEAN = False
 
@@ -1257,6 +1265,8 @@ feature {NONE} -- String matching
 
 	ensure_item_selection
 			-- Ensure item seletion in the list.
+		require
+			buffered_input_not_void: buffered_input /= Void
 		local
 			l_row: EV_GRID_ROW
 			l_name, l_name_for_comparison: like name_type
@@ -1270,13 +1280,9 @@ feature {NONE} -- String matching
 				current_index := 1
 				if l_list.row_count > 0 then
 					l_row := l_list.row (1)
-					l_name ?= l_row.data
-					check
-						--l_name_not_void: l_name /= Void
-					end
-					if l_name /= Void and then l_name.has_child then
+					if attached {like name_type} l_row.data as l_name_data and then l_name_data.has_child then
 						on_row_expand (l_row)
-						if not l_name.begins_with (buffered_input) then
+						if not l_name_data.begins_with (buffered_input) then
 							l_row.expand
 							current_index := 2
 						end
@@ -1299,8 +1305,8 @@ feature {NONE} -- String matching
 					end
 					if current_index >= l_full_list.lower and current_index <= l_full_list.upper then
 						l_name := l_full_list.item (current_index)
-						if l_name.has_parent then
-							l_index := grid_row_by_data (l_name.parent)
+						if attached l_name.parent as l_name_parent then
+							l_index := grid_row_by_data (l_name_parent)
 							check
 								l_index_valid: l_index > 0
 							end
@@ -1319,8 +1325,7 @@ feature {NONE} -- String matching
 				l_list.remove_selection
 					-- It is possible that there are some rows have been filtered (i.e. oboselete features)
 					-- The row count of the list is actually greater than the number of rows we created.
-				l_name ?= l_list.row (current_index).data
-				if l_name /= Void then
+				if attached {like name_type} l_list.row (current_index).data then
 					l_list.row (current_index).enable_select
 				end
 				if is_displayed then
@@ -1333,7 +1338,7 @@ feature {NONE} -- String matching
 			end
 		end
 
-	matches_based_on_name (a_name: STRING): SORTABLE_ARRAY [like name_type]
+	matches_based_on_name (a_name: detachable STRING): SORTABLE_ARRAY [like name_type]
 			-- Array of matches based on `a_name'.
 			-- Always use this function before building lists to get correct matches.
 		require
@@ -1347,9 +1352,9 @@ feature {NONE} -- String matching
 			for_search: like name_type
 			l_index_offset: INTEGER
 		do
-			create for_search.make (a_name)
 			l_full_list := full_list
 			if a_name /= Void and then not a_name.is_empty then
+				create for_search.make (a_name)
 				if for_search.is_binary_searchable then
 					create Result.make (2, 1)
 					from
@@ -1418,7 +1423,7 @@ feature {NONE} -- String matching
 			l_list: like choice_list
 		do
 			l_list := choice_list
-			loop_end := false
+			loop_end := False
 			from
 				i := 1
 			until
@@ -1427,7 +1432,7 @@ feature {NONE} -- String matching
 				l_row := l_list.row (i)
 				if l_row.data /= Void and then l_row.data = a_data then
 					Result := i
-					loop_end := true
+					loop_end := True
 				end
 				i := i + 1
 			end

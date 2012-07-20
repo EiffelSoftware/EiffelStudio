@@ -9,6 +9,7 @@ class
 inherit
 	ES_GRID
 		redefine
+			create_interface_objects,
 			initialize,
 			is_in_default_state,
 			row_type,
@@ -33,12 +34,18 @@ feature {NONE} -- Initialization
 			description_field_set: description_field = a_field
 		end
 
+	create_interface_objects
+			-- <Precurosr>
+		do
+			Precursor
+			create expanded_section_store.make (0)
+			create sections.make (5)
+		end
+
 	initialize
 			-- Create.
 		do
 			Precursor
-
-			create sections.make (5)
 
 			disable_selection_on_click
 
@@ -51,17 +58,9 @@ feature {NONE} -- Initialization
 			pointer_button_press_actions.extend (agent select_name_item)
 		end
 
-feature -- Status
-
-	valid_current_section: BOOLEAN
-			-- Is there a valid current section?
-		do
-			Result := current_section /= Void
-		end
-
 feature -- Access
 
-	section (a_name: STRING): EV_GRID_ROW
+	section (a_name: STRING): detachable EV_GRID_ROW
 			-- Get section with `a_name' if it exists.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -69,8 +68,8 @@ feature -- Access
 			Result := sections.item (a_name)
 		end
 
-	current_section: EV_GRID_ROW
-	current_section_name: STRING_GENERAL
+	current_section: detachable EV_GRID_ROW note option: stable attribute end
+	current_section_name: detachable STRING_GENERAL note option: stable attribute end
 			-- Current section, that will be used for insertion.
 
 feature -- Update
@@ -108,8 +107,8 @@ feature -- Update
 	clear_description
 			-- Clear the description in the `description_field'.
 		do
-			if description_field /= Void and then not description_field.is_destroyed then
-				description_field.set_and_wrap_text ("")
+			if attached description_field as l_field and then not l_field.is_destroyed then
+				l_field.set_and_wrap_text ("")
 			end
 		end
 
@@ -124,7 +123,10 @@ feature -- Update
 			l_item: EV_GRID_SPAN_LABEL_ITEM
 		do
 			sections.search (a_name)
-			if not sections.found then
+			if sections.found and then attached sections.found_item as l_found_item then
+				current_section := l_found_item
+				current_section_name := a_name
+			else
 				insert_new_row (row_count + 1)
 				l_row := row (row_count)
 				create l_item.make_span (name_column)
@@ -152,49 +154,46 @@ feature -- Update
 				l_row.collapse_actions.extend (agent recompute_column_width)
 				l_row.expand_actions.extend (agent update_expanded_status (True, a_name))
 				l_row.expand_actions.extend (agent recompute_column_width)
-			else
-				current_section := sections.found_item
-				current_section_name := a_name
 			end
 		ensure
-			valid_current_section: valid_current_section
+			valid_current_section: current_section /= Void
 		end
 
 	add_property (a_property: PROPERTY)
 			-- Add `a_property'.
 		require
 			not_destroyed: not is_destroyed
-			valid_current_section
+			current_section_not_void: current_section /= Void
 		local
-			l_row: like row_type
 			l_index: INTEGER
 			l_name_item: EV_GRID_LABEL_ITEM
 		do
 			l_index := current_section.subrow_count + 1
 			current_section.insert_subrow (l_index)
-			l_row ?= current_section.subrow (l_index)
-			l_row.set_property (a_property)
-			create l_name_item.make_with_text (a_property.name)
-			l_name_item.set_left_border (3)
-			l_name_item.select_actions.extend (agent show_description (a_property))
-			a_property.select_actions.extend (agent show_description (a_property))
-			if a_property.description /= Void then
-				l_name_item.set_tooltip (a_property.description)
-			end
-			l_name_item.activate_actions.extend (agent activate_property (a_property, ?))
---			l_row.set_item (1, create {EV_GRID_ITEM})
---			l_row.item (1).set_background_color (separator_color)
-			l_row.set_item (name_column, l_name_item)
-			l_row.set_item (value_column, a_property)
-			l_name_item.pointer_button_press_actions.extend (agent a_property.check_right_click)
-			l_name_item.deselect_actions.extend (agent clear_description)
-			a_property.set_name_item (l_name_item)
+			if attached {like row_type} current_section.subrow (l_index) as l_row then
+				l_row.set_property (a_property)
+				create l_name_item.make_with_text (a_property.name)
+				l_name_item.set_left_border (3)
+				l_name_item.select_actions.extend (agent show_description (a_property))
+				a_property.select_actions.extend (agent show_description (a_property))
+				if a_property.description /= Void then
+					l_name_item.set_tooltip (a_property.description)
+				end
+				l_name_item.activate_actions.extend (agent activate_property (a_property, ?))
+	--			l_row.set_item (1, create {EV_GRID_ITEM})
+	--			l_row.item (1).set_background_color (separator_color)
+				l_row.set_item (name_column, l_name_item)
+				l_row.set_item (value_column, a_property)
+				l_name_item.pointer_button_press_actions.extend (agent a_property.check_right_click)
+				l_name_item.deselect_actions.extend (agent clear_description)
+				a_property.set_name_item (l_name_item)
 
-			if expanded_section_store.has_key (current_section_name) then
-				if expanded_section_store.found_item and not current_section.is_expanded then
-					current_section.expand
-				elseif not expanded_section_store.found_item and current_section.is_expanded then
-					current_section.collapse
+				if current_section_name /= Void and then expanded_section_store.has_key (current_section_name) then
+					if expanded_section_store.found_item and not current_section.is_expanded then
+						current_section.expand
+					elseif not expanded_section_store.found_item and current_section.is_expanded then
+						current_section.collapse
+					end
 				end
 			end
 		end
@@ -212,7 +211,7 @@ feature -- Update
 		require
 			a_store_not_void: a_store /= Void
 		local
-			l_section: EV_GRID_ROW
+			l_section: detachable EV_GRID_ROW
 		do
 			expanded_section_store := a_store
 			from
@@ -239,7 +238,6 @@ feature -- Update
 		local
 			l_section: EV_GRID_ROW
 			cnt, i: INTEGER
-			l_prop: PROPERTY
 		do
 			from
 				sections.start
@@ -253,8 +251,7 @@ feature -- Update
 				until
 					i > cnt
 				loop
-					l_prop ?= l_section.subrow (i).item (value_column)
-					if l_prop /= Void then
+					if attached {PROPERTY} l_section.subrow (i).item (value_column) as l_prop then
 						l_prop.enable_readonly
 					end
 					i := i + 1
@@ -354,33 +351,31 @@ feature {NONE} -- Actions
 					end
 				end
 			when {EV_KEY_CONSTANTS}.key_home then
-				if row_count > 0 then
-					l_row := first_visible_row
-					if l_row.count > 0 then
-						from
-							l_selection.start
-						until
-							l_selection.after
-						loop
-							l_selection.item.disable_select
-							l_selection.forth
-						end
-						l_row.item (1).enable_select
+				if attached first_visible_row as l_visible_row and then l_visible_row.count > 0 then
+					from
+						l_selection.start
+					until
+						l_selection.after
+					loop
+						l_selection.item.disable_select
+						l_selection.forth
+					end
+					if attached l_visible_row.item (1) as l_item then
+						l_item.enable_select
 					end
 				end
 			when {EV_KEY_CONSTANTS}.key_end then
-				if row_count > 0 then
-					l_row := last_visible_row
-					if l_row.count > 0 then
-						from
-							l_selection.start
-						until
-							l_selection.after
-						loop
-							l_selection.item.disable_select
-							l_selection.forth
-						end
-						l_row.item (1).enable_select
+				if attached last_visible_row as l_visible_row and then l_visible_row.count > 0 then
+					from
+						l_selection.start
+					until
+						l_selection.after
+					loop
+						l_selection.item.disable_select
+						l_selection.forth
+					end
+					if attached l_visible_row.item (1) as l_item then
+						l_item.enable_select
 					end
 				end
 			else
@@ -390,15 +385,15 @@ feature {NONE} -- Actions
 	select_name_item (x_pos, y_pos, a_button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; x_screen, y_screen: INTEGER)
 			-- Select name item of the current row.
 		local
-			l_row: like row_type
 			l_y: INTEGER
 		do
 			l_y := y_pos + virtual_y_position
 			remove_selection
 			if l_y >= 0 and l_y <= virtual_height then
-				l_row ?= row_at_virtual_position (l_y, False)
-				if l_row /= Void then
-					l_row.item (name_column).enable_select
+				if attached {like row_type} row_at_virtual_position (l_y, False) as l_row then
+					if attached l_row.item (name_column) as l_item then
+						l_item.enable_select
+					end
 				end
 			end
 		end
@@ -408,13 +403,13 @@ feature {NONE} -- Actions
 		require
 			a_property_not_void: a_property /= Void
 		do
-			if description_field /= Void then
+			if attached description_field as l_field and then not l_field.is_destroyed then
 				if a_property.name.is_empty then
-					description_field.set_and_wrap_text (a_property.description)
+					l_field.set_and_wrap_text (a_property.description)
 				elseif a_property.description.is_empty then
-					description_field.set_and_wrap_text (a_property.name)
+					l_field.set_and_wrap_text (a_property.name)
 				else
-					description_field.set_and_wrap_text (a_property.name.as_string_32 + ": " + a_property.description)
+					l_field.set_and_wrap_text (a_property.name.as_string_32 + ": " + a_property.description)
 				end
 			end
 		end
@@ -422,6 +417,10 @@ feature {NONE} -- Actions
 feature -- Type anchors
 
 	row_type: PROPERTY_ROW
+			-- Provide type of `rows'.
+		do
+			check False then end
+		end
 
 feature {NONE} -- Contract support
 
@@ -439,7 +438,7 @@ feature {NONE} -- Implementation
 	sections: HASH_TABLE [EV_GRID_ROW, STRING_GENERAL]
 			-- Property sections.
 
-	description_field: ES_LABEL
+	description_field: detachable ES_LABEL
 			-- Place to put descriptions.
 
 	expanded_section_store: HASH_TABLE [BOOLEAN, STRING_GENERAL]
@@ -458,8 +457,8 @@ invariant
 	expanded_section_store_not_void: expanded_section_store /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -482,10 +481,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

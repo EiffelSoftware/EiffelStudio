@@ -14,23 +14,21 @@ inherit
 		rename
 			make as make_string
 		redefine
-			is_equal, is_less
+			is_equal, is_less,
+			new_string
 		end
 
 create
 	make
-
-create {NAME_FOR_COMPLETION}
-	make_string
 
 feature {NONE} -- Initialization
 
 	make (a_name: like name)
 			-- Initialization
 		do
-			make_from_string (a_name)
 			name := a_name
 			full_name := a_name
+			make_from_string (a_name)
 		end
 
 feature -- Access
@@ -68,7 +66,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	icon: EV_PIXMAP
+	icon: detachable EV_PIXMAP
 			-- Associated icon based on data
 		do
 			Result := icon_internal
@@ -90,8 +88,8 @@ feature -- Access
 			l_item: EV_GRID_LABEL_ITEM
 		do
 			create l_item.make_with_text (out)
-			if icon /= Void then
-				l_item.set_pixmap (icon)
+			if attached icon as l_icon then
+				l_item.set_pixmap (l_icon)
 			end
 			Result := l_item
 		ensure
@@ -105,14 +103,18 @@ feature -- Access
 		local
 			i: INTEGER
 		do
-			create Result.make (children.count)
-			from
-				i := children.lower
-			until
-				i > children.upper
-			loop
-				Result.extend (children.item (i).grid_item)
-				i := i + 1
+			if attached children as l_children then
+				create Result.make (l_children.count)
+				from
+					i := l_children.lower
+				until
+					i > l_children.upper
+				loop
+					Result.extend (l_children.item (i).grid_item)
+					i := i + 1
+				end
+			else
+				create Result.make (0)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -121,7 +123,11 @@ feature -- Access
 	name_matcher: COMPLETION_NAME_MATCHER
 			-- Matcher
 		do
-			Result := name_matcher_internal
+			if attached name_matcher_internal as l_matcher then
+				Result := l_matcher
+			else
+				create Result
+			end
 		end
 
 feature -- Status report
@@ -129,7 +135,7 @@ feature -- Status report
 	has_child: BOOLEAN
 			-- Does current have child?
 		do
-			Result := children /= Void and then not children.is_empty
+			Result := attached children as l_children and then not l_children.is_empty
 		end
 
 	has_parent: BOOLEAN
@@ -158,25 +164,29 @@ feature -- Element change
 		do
 			icon_internal := a_icon
 		ensure
-			icon_internal_not_void: icon_internal /= Void
+			icon_set: icon = a_icon
 		end
 
 	add_child (a_child: like child_type)
 			-- Add `a_child' into `children'.
 		require
 			a_child_not_void: a_child /= Void
+		local
+			l_children: like children
 		do
-			if children = Void then
-				create children.make (1, 10)
+			l_children := children
+			if l_children = Void then
+				create l_children.make (1, 10)
+				children := l_children
 			end
 			children_index := children_index + 1
-			if children_index > children.upper then
-				children.grow (children.capacity + 10)
+			if children_index > l_children.upper then
+				l_children.grow (l_children.capacity + 10)
 			end
-			children.put (a_child, children_index)
+			l_children.put (a_child, children_index)
 			a_child.set_parent (Current)
 		ensure
-			a_child_added: children.has (a_child)
+			a_child_added: attached children as l_children2 and then l_children2.has (a_child)
 		end
 
 	remove_child (a_child: like child_type)
@@ -184,19 +194,23 @@ feature -- Element change
 		require
 			a_child_not_void: a_child /= Void
 		do
-			if children /= Void then
-				children.prune_all (a_child)
+			if attached children as l_children then
+				l_children.prune_all (a_child)
 			end
 		ensure
-			a_child_removed: not children.has (a_child)
+			a_child_removed: attached children as l_children implies not l_children.has (a_child)
 		end
 
 	sort_children
 			-- Sort children
+		local
+			l_children: like children
 		do
-			if children /= Void and children_index > 1 then
-				children := children.subarray (1, children_index)
-				children.sort
+			l_children := children
+			if l_children /= Void and then children_index > 1 then
+				l_children := l_children.subarray (1, children_index)
+				l_children.sort
+				children := l_children
 			else
 				children := Void
 			end
@@ -242,32 +256,26 @@ feature -- Comparison
 			end
 		end
 
-	begins_with (s: STRING_32): BOOLEAN
+	begins_with (s: detachable READABLE_STRING_GENERAL): BOOLEAN
 			-- Does this feature name begins with `s'?
-		require
-			s_not_void: s /= Void
 		do
-			if name_matcher = Void then
-				create name_matcher_internal
+			if s /= Void then
+				Result := name_matcher.prefix_string (s.to_string_32, full_name)
 			end
-			Result := name_matcher.prefix_string (s, full_name)
 		end
 
 	is_binary_searchable: BOOLEAN
 			-- Is current binary searchable?
 		do
-			if name_matcher = Void then
-				create name_matcher_internal
-			end
 			Result := name_matcher.binary_searchable (full_name)
 		end
 
 feature {CODE_COMPLETION_WINDOW} -- Children
 
-	parent: like child_type
+	parent: detachable like child_type
 			-- Parent of current
 
-	children: SORTABLE_ARRAY [like child_type]
+	children: detachable SORTABLE_ARRAY [like child_type]
 			-- Possible children nodes.
 			-- Normally void.
 
@@ -275,6 +283,15 @@ feature {CODE_COMPLETION_WINDOW} -- Children
 			-- Children index
 
 feature {NONE} -- Implementation
+
+	new_string (n: INTEGER): like Current
+			-- New instance of current with space for at least `n' characters.
+		do
+			create Result.make (name)
+		end
+
+	icon_internal: detachable EV_PIXMAP
+			-- Storage for `icon'.
 
 	string_32_to_lower (a_str: detachable STRING_32): attached STRING_32
 			-- Make all possible char in `a_str' to lower.
@@ -300,17 +317,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	icon_internal: EV_PIXMAP;
-			-- Icon
-
-	child_type: NAME_FOR_COMPLETION;
+	child_type: NAME_FOR_COMPLETION
 			-- Child type
+		require
+			callable: False
+		do
+			check False then end
+		end
 
-	name_matcher_internal: like name_matcher;
+	name_matcher_internal: detachable like name_matcher;
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -333,11 +352,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

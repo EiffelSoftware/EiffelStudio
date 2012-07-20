@@ -11,7 +11,6 @@ inherit
 		redefine
 			activate_action,
 			initialize,
-			value,
 			set_value
 		end
 
@@ -27,9 +26,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	value: G
-			-- Data
 
 	displayed_value: STRING_32
 			-- Displayed format of the data.
@@ -49,8 +45,8 @@ feature -- Update
 			Precursor {TYPED_PROPERTY} (a_value)
 			l_val := displayed_value
 			set_text (l_val)
-			if text_field /= Void then
-				text_field.set_text (l_val)
+			if attached text_field as l_text_field then
+				l_text_field.set_text (l_val)
 			end
 			if l_val.is_empty then
 				set_tooltip (description)
@@ -81,14 +77,11 @@ feature {NONE} -- Agents
 
 	update_text_on_deactivation
 			-- Update text on deactivation.
-		local
-			l_data: like value
 		do
 				-- We cannot read from `text_field', which already been destroyed and disconnected.
 				-- Instead, the implementation in `deactivate' already set `text' with correct value.
 			check text_set: text /= Void end
-			l_data := convert_to_data (text)
-			if is_valid_value (l_data) then
+			if attached convert_to_data (text) as l_data and then is_valid_value (l_data) then
 				set_value (l_data)
 			else
 				set_text (displayed_value)
@@ -98,15 +91,17 @@ feature {NONE} -- Agents
 	activate_action (popup_window: EV_POPUP_WINDOW)
 			-- Activate action.
 		local
+			l_text_field: like text_field
 		do
-			create text_field
-			text_field.implementation.hide_border
-			text_field.set_text (text)
-			text_field.set_background_color (implementation.displayed_background_color)
+			create l_text_field
+			text_field := l_text_field
+			l_text_field.implementation.hide_border
+			l_text_field.set_text (text)
+			l_text_field.set_background_color (implementation.displayed_background_color)
 			popup_window.set_background_color (implementation.displayed_background_color)
-			text_field.set_foreground_color (implementation.displayed_foreground_color)
+			l_text_field.set_foreground_color (implementation.displayed_foreground_color)
 
-			popup_window.extend (text_field)
+			popup_window.extend (l_text_field)
 
 			popup_window.show_actions.extend (agent initialize_actions)
 			popup_window.set_x_position (popup_window.x_position + (left_border - 1))
@@ -117,14 +112,14 @@ feature {NONE} -- Agents
 			-- Save `set_text'.
 		do
 			set_text (displayed_value)
-			if text_field /= Void then
-				text_field.set_text (displayed_value)
+			if attached text_field as l_text_field then
+				l_text_field.set_text (displayed_value)
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	display_agent: FUNCTION [ANY, TUPLE [G], STRING_32]
+	display_agent: detachable FUNCTION [ANY, TUPLE [G], STRING_32]
 
 	to_displayed_value (a_value: like value): like displayed_value
 		local
@@ -132,9 +127,9 @@ feature {NONE} -- Implementation
 		do
 			if attached a_value then
 					-- The data is used to compute displayed value.
-				if attached display_agent then
+				if attached display_agent as l_agent then
 						-- There is an agent to get displayed value.
-					r := display_agent.item ([a_value])
+					r := l_agent.item ([a_value])
 				elseif attached {READABLE_STRING_GENERAL} a_value as s then
 						-- Avoid conversion to {STRING_8} by the feature `{READABLE_STRING_GENERAL}.out'.
 					r := s.twin.as_string_32
@@ -155,7 +150,7 @@ feature {NONE} -- Implementation
 			result_attached: attached Result
 		end
 
-	convert_to_data_agent: FUNCTION [ANY, TUPLE [STRING_32], G]
+	convert_to_data_agent: detachable FUNCTION [ANY, TUPLE [STRING_32], G]
 
 	convert_to_data (a_string: like displayed_value): like value
 			-- Convert displayed data into data.
@@ -163,8 +158,8 @@ feature {NONE} -- Implementation
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

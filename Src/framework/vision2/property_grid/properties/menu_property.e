@@ -37,19 +37,19 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	menu: EV_MENU
+	menu: detachable EV_MENU
 			-- Menu to be displayed
 
-	menu_position_function: FUNCTION [ANY, TUPLE [a_menu: like menu; a_property: like Current], EV_RECTANGLE]
+	menu_position_function: detachable FUNCTION [ANY, TUPLE [a_menu: like menu; a_property: like Current], EV_RECTANGLE]
 			-- Function to retrieve position (related to top-left corner of `a_property') at which `menu' will be displayed.
 			-- Argument `a_menu' passed to function is the menu to be displayed.
 			-- Argument `a_property' is Current property
 			-- If this function is Void, `menu' will be displayed at pointer position.
 
-	value_retriever: FUNCTION [ANY, TUPLE [a_menu_item: EV_MENU_ITEM], G]
+	value_retriever: detachable FUNCTION [ANY, TUPLE [a_menu_item: EV_MENU_ITEM], G]
 			-- Function to retrieve value from a selected menu item
 
-	value_converter: FUNCTION [ANY, TUPLE [a_displayed_value: like displayed_value], like value]
+	value_converter: detachable FUNCTION [ANY, TUPLE [a_displayed_value: like displayed_value], like value]
 			-- Function to convert displayed value to value
 
 feature -- Status report
@@ -119,8 +119,8 @@ feature {NONE} -- Implementation
 	convert_to_data (a_string: like displayed_value): like value
 			-- Convert displayed data into data.
 		do
-			if value_converter /= Void then
-				Result := value_converter.item ([a_string])
+			if attached value_converter as l_converter then
+				Result := l_converter.item ([a_string])
 			end
 		end
 
@@ -130,16 +130,16 @@ feature {NONE} -- Implementation
 			l_pos_func: like menu_position_function
 			l_pos: EV_RECTANGLE
 		do
-			if menu /= Void then
+			if attached menu as l_menu then
 				if auto_set_data then
 					attach_agents
 				end
 				l_pos_func := menu_position_function
 				if l_pos_func /= Void and then is_parented then
 					l_pos := l_pos_func.item ([menu, Current])
-					menu.show_at (parent, virtual_x_position + l_pos.x, virtual_y_position + l_pos.y)
+					l_menu.show_at (parent, virtual_x_position + l_pos.x, virtual_y_position + l_pos.y)
 				else
-					menu.show
+					l_menu.show
 				end
 			end
 		end
@@ -177,8 +177,6 @@ feature {NONE} -- Implementation
 			-- Recursive apply `a_proc' to every menu from `a_menu'.
 		require
 			a_proc_attached: a_proc /= Void
-		local
-			l_menu: EV_MENU
 		do
 			if a_menu /= Void then
 				from
@@ -186,8 +184,7 @@ feature {NONE} -- Implementation
 				until
 					a_menu.after
 				loop
-					l_menu ?= a_menu.item
-					if l_menu /= Void then
+					if attached {EV_MENU} a_menu.item as l_menu then
 						recursive_do (l_menu, a_proc)
 					else
 						a_proc.call ([a_menu])
@@ -204,23 +201,35 @@ feature{NONE} -- Actions
 		require
 			a_item_attached: a_item /= Void
 		do
-			if value_retriever /= Void then
-				set_value (value_retriever.item ([a_item]))
+			if attached value_retriever as l_retriever then
+				set_value (l_retriever.item ([a_item]))
 			end
 		end
 
 	on_menu_item_selected_agent: PROCEDURE [ANY, TUPLE [EV_MENU_ITEM]]
 			-- Agent of `on_menu_item_selected'
 		do
-			if on_menu_item_selected_agent_internal = Void then
-				on_menu_item_selected_agent_internal := agent on_menu_item_selected
+			if attached on_menu_item_selected_agent_internal as l_agent then
+				Result := l_agent
+			else
+				Result := agent on_menu_item_selected
+				on_menu_item_selected_agent_internal := Result
 			end
-			Result := on_menu_item_selected_agent_internal
 		ensure
 			result_attached: Result /= Void
 		end
 
-	on_menu_item_selected_agent_internal: like on_menu_item_selected_agent
+	on_menu_item_selected_agent_internal: detachable like on_menu_item_selected_agent
 			-- Implementation of `on_menu_item_selected_agent'
 
+;note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

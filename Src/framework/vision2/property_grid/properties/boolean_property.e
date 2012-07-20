@@ -30,8 +30,8 @@ feature {NONE} -- Implementation
 	convert_to_data (a_string: like displayed_value): like value
 			-- Convert displayed data into data.
 		do
-			if convert_to_data_agent /= Void then
-				Result := convert_to_data_agent.item ([a_string])
+			if attached convert_to_data_agent as l_convert_agent then
+				Result := l_convert_agent.item ([a_string])
 			else
 				if a_string.is_boolean then
 					Result := a_string.to_boolean
@@ -40,8 +40,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

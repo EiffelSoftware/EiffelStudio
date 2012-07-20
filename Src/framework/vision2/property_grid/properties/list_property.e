@@ -22,15 +22,15 @@ feature -- Access
 	displayed_value: STRING_32
 			-- Convert `data' into a text representation.
 		do
-			if value /= Void then
+			if attached value as l_value then
 				create Result.make_empty
 				from
-					value.start
+					l_value.start
 				until
-					value.after
+					l_value.after
 				loop
-					Result.append (value.item.out+";")
-					value.forth
+					Result.append (l_value.item.out+";")
+					l_value.forth
 				end
 				if Result.count > 0 then
 					Result.remove_tail (1)
@@ -42,7 +42,17 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	dialog: LIST_DIALOG
+	dialog: detachable LIST_DIALOG note option: stable attribute end
 			-- Dialog to change values
 
+;note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

@@ -9,6 +9,7 @@ class
 inherit
 	PROPERTY_DIALOG [LIST [STRING_32]]
 		redefine
+			create_interface_objects,
 			initialize,
 			on_ok
 		end
@@ -25,6 +26,22 @@ create
 
 feature {NONE} -- Initialization
 
+	create_interface_objects
+		do
+			Precursor
+			create up_button.make_with_text (up_button_text)
+			create down_button.make_with_text (down_button_text)
+			create add_button.make_with_text (plus_button_text)
+			create remove_button.make_with_text (minus_button_text)
+			create modify_button.make_with_text (change_button_text)
+			create new_item_name
+			if attached value as l_value then
+				create list.make_with_strings (l_value)
+			else
+				create list
+			end
+		end
+
 	initialize
 			-- Initialize.
 		local
@@ -37,21 +54,14 @@ feature {NONE} -- Initialization
 			element_container.extend (hb)
 			create vb
 			hb.extend (vb)
-			if value /= Void then
-				create list.make_with_strings (value)
-			else
-				create list
-			end
 			vb.extend (list)
 			create vb1
 			hb.extend (vb1)
 			hb.disable_item_expand (vb1)
 			create cl
 			vb1.extend (cl)
-			create up_button.make_with_text (up_button_text)
 			vb1.extend (up_button)
 			vb1.disable_item_expand (up_button)
-			create down_button.make_with_text (down_button_text)
 			vb1.extend (down_button)
 			vb1.disable_item_expand (down_button)
 			create cl
@@ -61,17 +71,13 @@ feature {NONE} -- Initialization
 			create hb
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
-			create new_item_name
 			hb.extend (new_item_name)
-			create add_button.make_with_text (plus_button_text)
 			add_button.set_minimum_width (small_button_width)
 			hb.extend (add_button)
 			hb.disable_item_expand (add_button)
-			create remove_button.make_with_text (minus_button_text)
 			remove_button.set_minimum_width (small_button_width)
 			hb.extend (remove_button)
 			hb.disable_item_expand (remove_button)
-			create modify_button.make_with_text (change_button_text)
 			hb.extend (modify_button)
 			hb.disable_item_expand (modify_button)
 
@@ -140,7 +146,7 @@ feature {NONE} -- Agents
 	on_up
 			-- Up was pressed
 		local
-			l_item: EV_LIST_ITEM
+			l_item: detachable EV_LIST_ITEM
 			i: INTEGER
 		do
 			l_item := list.selected_item
@@ -157,7 +163,7 @@ feature {NONE} -- Agents
 	on_down
 			-- Down was pressed.
 		local
-			l_item: EV_LIST_ITEM
+			l_item: detachable EV_LIST_ITEM
 			i: INTEGER
 		do
 			l_item := list.selected_item
@@ -192,8 +198,8 @@ feature {NONE} -- Agents
 	on_remove
 			-- Remove button was pressed.
 		do
-			if list.selected_item /= Void then
-				list.go_i_th (list.index_of (list.selected_item, 1))
+			if attached list.selected_item as l_selected_item then
+				list.go_i_th (list.index_of (l_selected_item, 1))
 				list.remove
 			end
 		end
@@ -210,8 +216,8 @@ feature {NONE} -- Agents
 	on_select
 			-- Select an item in the list.
 		do
-			if list.selected_item /= Void then
-				new_item_name.set_text (list.selected_item.text)
+			if attached list.selected_item as l_selected_item then
+				new_item_name.set_text (l_selected_item.text)
 			end
 		end
 
@@ -221,4 +227,14 @@ invariant
 			down_button /= Void and add_button /= Void and remove_button /= Void and
 			modify_button /= Void
 
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

@@ -11,6 +11,7 @@ inherit
 		export
 			{NONE} data, set_data
 		redefine
+			create_interface_objects,
 			initialize
 		end
 
@@ -40,6 +41,15 @@ create
 
 feature {NONE} -- Initialization
 
+	create_interface_objects
+		do
+			Precursor
+			create data_change_actions.make (1)
+			create ok_button.make_with_text_and_action (names.b_ok, agent on_ok)
+			create cancel_button.make_with_text_and_action (names.b_cancel, agent on_cancel)
+			create element_container
+		end
+
 	initialize
 			-- Initialize.
 		local
@@ -47,11 +57,7 @@ feature {NONE} -- Initialization
 			hb1, hb: EV_HORIZONTAL_BOX
 			cl: EV_CELL
 		do
-			create data_change_actions.make (1)
-
 			Precursor {EV_DIALOG}
-			create ok_button.make_with_text_and_action (names.b_ok, agent on_ok)
-			create cancel_button.make_with_text_and_action (names.b_cancel, agent on_cancel)
 			set_size (dialog_width, dialog_height)
 			create hb1
 			extend (hb1)
@@ -59,7 +65,6 @@ feature {NONE} -- Initialization
 			create vb
 			hb1.extend (vb)
 			append_margin (vb)
-			create element_container
 			vb.extend (element_container)
 			append_small_margin (vb)
 
@@ -89,7 +94,7 @@ feature -- Access
 	is_ok: BOOLEAN
 			-- Did the dialog close with an ok?
 
-	value: G
+	value: detachable G
 			-- Value.
 
 feature -- Update
@@ -151,4 +156,14 @@ invariant
 	elements: is_initialized implies ok_button /= Void and cancel_button /= Void
 	events: is_initialized implies data_change_actions /= Void
 
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

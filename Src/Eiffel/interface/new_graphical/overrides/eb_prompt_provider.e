@@ -8,7 +8,18 @@ note
 	revision: "$revision$"
 
 class
+	EB_PROMPT_PROVIDER
+
+inherit
 	ES_PROMPT_PROVIDER
+		redefine
+			show_error_prompt,
+			show_info_prompt,
+			show_warning_prompt,
+			show_warning_prompt_with_cancel,
+			show_question_prompt,
+			show_question_prompt_with_cancel
+		end
 
 feature -- Factory
 
@@ -18,9 +29,6 @@ feature -- Factory
 			-- `a_message': A message to display to the user
 			-- `a_window': A parent window, or Void if none is available
 			-- `a_ok_action': An option action to perform when the user clicks the 'Ok' button.
-		require
-			a_message_attached: a_message /= Void
-			not_a_message_is_empty: not a_message.is_empty
 		local
 			l_error: ES_ERROR_PROMPT
 		do
@@ -36,9 +44,6 @@ feature -- Factory
 			-- `a_message': A message to display to the user
 			-- `a_window': A parent window, or Void if none is available
 			-- `a_ok_action': An option action to perform when the user clicks the 'Ok' button.
-		require
-			a_message_attached: a_message /= Void
-			not_a_message_is_empty: not a_message.is_empty
 		local
 			l_info: ES_INFORMATION_PROMPT
 		do
@@ -54,9 +59,6 @@ feature -- Factory
 			-- `a_message': A message to display to the user
 			-- `a_window': A parent window, or Void if none is available
 			-- `a_ok_action': An option action to perform when the user clicks the 'Ok' button.
-		require
-			a_message_attached: a_message /= Void
-			not_a_message_is_empty: not a_message.is_empty
 		local
 			l_warning: ES_WARNING_PROMPT
 		do
@@ -73,9 +75,6 @@ feature -- Factory
 			-- `a_window': A parent window, or Void if none is available
 			-- `a_ok_action': An option action to perform when the user clicks the 'Ok' button.
 			-- `a_cancel_action': An option action to perform when the user clicks the 'Cancel' button.
-		require
-			a_message_attached: a_message /= Void
-			not_a_message_is_empty: not a_message.is_empty
 		local
 			l_warning: ES_WARNING_PROMPT
 		do
@@ -93,9 +92,6 @@ feature -- Factory
 			-- `a_window': A parent window, or Void if none is available
 			-- `a_yes_action': An option action to perform when the user clicks the 'Yes' button.
 			-- `a_no_action': An option action to perform when the user clicks the 'No' button.
-		require
-			a_message_attached: a_message /= Void
-			not_a_message_is_empty: not a_message.is_empty
 		local
 			l_question: ES_QUESTION_PROMPT
 		do
@@ -114,9 +110,6 @@ feature -- Factory
 			-- `a_yes_action': An option action to perform when the user clicks the 'Yes' button.
 			-- `a_no_action': An option action to perform when the user clicks the 'No' button.
 			-- `a_cancel_action': An option action to perform when the user clicks the 'Cancel' button.
-		require
-			a_message_attached: a_message /= Void
-			not_a_message_is_empty: not a_message.is_empty
 		local
 			l_question: ES_QUESTION_PROMPT
 		do
@@ -166,7 +159,7 @@ feature {NONE} -- Display
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

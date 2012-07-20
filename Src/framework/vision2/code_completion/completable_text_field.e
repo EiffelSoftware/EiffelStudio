@@ -44,16 +44,16 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	possibilities_provider: COMPLETION_POSSIBILITIES_PROVIDER
+	possibilities_provider: detachable COMPLETION_POSSIBILITIES_PROVIDER
 			-- Possibilities provider
 
-	can_complete_agent: FUNCTION [ANY, TUPLE [CHARACTER_32], BOOLEAN]
+	can_complete_agent: detachable FUNCTION [ANY, TUPLE [CHARACTER_32], BOOLEAN]
 			-- Agent to decide if completion can start
 
-	preferred_width_agent: FUNCTION [ANY, TUPLE, INTEGER]
+	preferred_width_agent: detachable FUNCTION [ANY, TUPLE, INTEGER]
 			-- Preferred width
 
-	preferred_height_agent: FUNCTION [ANY, TUPLE, INTEGER]
+	preferred_height_agent: detachable FUNCTION [ANY, TUPLE, INTEGER]
 			-- Preferred height
 
 feature -- Setting
@@ -103,8 +103,8 @@ feature -- Status report
 			-- <precursor>
 		do
 			Result := True
-			if can_complete_agent /= Void then
-				Result := can_complete_agent.item ([a_char, ev_application.ctrl_pressed, ev_application.alt_pressed, ev_application.shift_pressed])
+			if attached can_complete_agent as l_agent then
+				Result := l_agent.item ([a_char, ev_application.ctrl_pressed, ev_application.alt_pressed, ev_application.shift_pressed])
 			end
 		end
 

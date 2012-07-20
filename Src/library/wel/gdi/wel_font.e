@@ -231,7 +231,6 @@ feature -- Access
 			counter: INTEGER
 			count: INTEGER
 			greatest_a, greatest_c: INTEGER
-			pointer: POINTER
 			current_c: INTEGER
 			screen_dc_pointer: POINTER
 			abc_struct: WEL_ABC_STRUCT
@@ -252,12 +251,10 @@ feature -- Access
 				cur_width := 0
 				cur_height := 0
 			else
-				wel_string.set_string (a_string)
-				pointer := wel_string.item
 				screen_dc := reusable_screen_dc
 				screen_dc.get
 				screen_dc.select_font (Current)
-				count := wel_string.count
+				count := a_string.count
 
 					-- Initialize a text metric structure from `screen_dc' providing information
 					-- regarding selected font.
@@ -464,14 +461,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

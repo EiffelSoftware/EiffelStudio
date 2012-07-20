@@ -22,6 +22,12 @@ feature -- Value
 			Result := file_rename_preference.value
 		end
 
+	is_duplicate_allowed: BOOLEAN
+			-- Is it ok to reuse the same name as a class name of the surrounding universe?
+		do
+			Result := is_duplicate_allowed_preference.value
+		end
+
 	old_class_name: STRING
 			-- The old name of the class.
 		do
@@ -84,6 +90,14 @@ feature -- Change value
 			file_rename_preference.set_value (a_value)
 		end
 
+	set_is_duplicate_allowed (a_value: BOOLEAN)
+			-- Set `is_duplicate_allowed' to `a_value'
+		do
+			is_duplicate_allowed_preference.set_value (a_value)
+		ensure
+			is_duplicate_allowed_set: is_duplicate_allowed = a_value
+		end
+
 	set_update_comments (a_value: BOOLEAN)
 			-- Set the update comments flag.
 		do
@@ -99,6 +113,7 @@ feature -- Change value
 feature {NONE} -- Preference
 
 	file_rename_preference: BOOLEAN_PREFERENCE
+	is_duplicate_allowed_preference: BOOLEAN_PREFERENCE
 	old_class_name_preference: STRING_PREFERENCE
 	new_class_name_preference: STRING_PREFERENCE
 	all_classes_preference: BOOLEAN_PREFERENCE
@@ -108,6 +123,7 @@ feature {NONE} -- Preference
 feature {NONE} -- Preference Strings
 
 	file_rename_string: STRING = "tools.refactoring.class_rename.file_rename"
+	is_duplicate_allowed_string: STRING = "tools.refactoring.class_rename.allow_duplicate"
 	old_class_name_string: STRING = "tools.refactoring.class_rename.old_class_name"
 	new_class_name_string: STRING = "tools.refactoring.class_rename.new_class_name"
 	all_classes_string: STRING = "tools.refactoring.class_rename.all_classes"
@@ -128,6 +144,9 @@ feature {NONE} -- Implementation
 			file_rename_preference := l_manager.new_boolean_preference_value (l_manager, file_rename_string, False)
 			file_rename_preference.change_actions.extend (l_update_agent)
 
+			is_duplicate_allowed_preference := l_manager.new_boolean_preference_value (l_manager, is_duplicate_allowed_string, False)
+			is_duplicate_allowed_preference.change_actions.extend (l_update_agent)
+
 			old_class_name_preference := l_manager.new_string_preference_value (l_manager, old_class_name_string, "OLD_NAME")
 			old_class_name_preference.change_actions.extend (l_update_agent)
 
@@ -146,6 +165,7 @@ feature {NONE} -- Implementation
 
 invariant
 	file_rename_preference_not_void: file_rename_preference /= Void
+	is_duplicate_allowed_preference_not_void: is_duplicate_allowed_preference /= Void
 	old_class_name_preference_not_void: old_class_name_preference /= Void
 	new_class_name_preference_not_void: new_class_name_preference /= Void
 	all_classes_preference_not_void: all_classes_preference /= Void
@@ -153,7 +173,7 @@ invariant
 	update_strings_preference_not_void: update_strings_preference /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -166,22 +186,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

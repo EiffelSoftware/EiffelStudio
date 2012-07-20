@@ -101,6 +101,11 @@ feature {NONE} -- Implementation
         do
 			create dialog
 			dialog.set_name (feature_i.feature_name)
+			if preferences.is_duplicate_allowed then
+				dialog.enable_duplicate
+			else
+				dialog.disable_duplicate
+			end
 			if preferences.update_comments then
 				dialog.enable_update_comments
 			end
@@ -114,11 +119,14 @@ feature {NONE} -- Implementation
 			preferences.set_new_feature_name (dialog.name)
 			preferences.set_update_comments (dialog.comments)
 			preferences.set_update_strings (dialog.strings)
+			preferences.set_is_duplicate_allowed (dialog.is_duplicate_allowed)
 
 				-- add the checks
         	checks.wipe_out
 			checks.extend (create {ERF_VALID_FEATURE_NAME}.make (preferences.new_feature_name))
-			checks.extend (create {ERF_CHK_FEATURE_RENAME}.make (feature_i, preferences.new_feature_name, Current))
+			if not dialog.is_duplicate_allowed then
+				checks.extend (create {ERF_CHK_FEATURE_RENAME}.make (feature_i, preferences.new_feature_name, Current))
+			end
         end
 
     apply_to_class (a_class: CLASS_I)
@@ -179,7 +187,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

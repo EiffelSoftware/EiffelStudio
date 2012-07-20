@@ -677,6 +677,7 @@
 	<PREF NAME="tools.class_browser.odd_row_background_color" DESCRIPTION="Background color of odd rows in class browser."><COLOR>240;240;240</COLOR></PREF>
 	<PREF NAME="tools.class_browser.even_row_background_color" DESCRIPTION="Background color of even rows in class browser."><COLOR>255;255;255</COLOR></PREF>
 
+	<PREF NAME="tools.refactoring.feature_rename.allow_duplicate" DESCRIPTION="Is this ok to reuse an existing feature name of the base class where renaming is applied?" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.refactoring.feature_rename.new_feature_name" DESCRIPTION="Default name for a renamed feature." HIDDEN="True"><STRING>new_name</STRING></PREF>
 	<PREF NAME="tools.refactoring.feature_rename.update_comments" DESCRIPTION="Should occurrences of the feature name in comments be changed?" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.refactoring.feature_rename.update_strings" DESCRIPTION="Should occurrences of the feature name in strings be changed?" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>
@@ -687,6 +688,7 @@
 	<PREF NAME="tools.refactoring.class_rename.all_classes" DESCRIPTION="Should all classes be processed?" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.refactoring.class_rename.update_comments" DESCRIPTION="Should occurrences of the class name in comments be changed?" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.refactoring.class_rename.update_strings" DESCRIPTION="Should occurrences of the class name in strings be changed?" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="tools.refactoring.class_rename.allow_duplicate" DESCRIPTION="Is this ok to reuse an existing class name?" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>
 
 	<PREF NAME="shortcuts.general.focus_on_class_address" DESCRIPTION="Focus on class address input field."><SHORTCUT>F6</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.general.close_focusing_docking_tool_or_editor" DESCRIPTION="Close focusing docking tool or editor."><SHORTCUT Ctrl="True">F4</SHORTCUT></PREF>

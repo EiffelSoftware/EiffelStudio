@@ -650,6 +650,7 @@ feature -- Accelerator, focus label and menu name
 	l_regexp: STRING_32					do Result := locale.translation("Regexp")	end
 	l_replace_comments: STRING_32		do Result := locale.translation("Replace Name in Comments")	end
 	l_replace_strings: STRING_32			do Result := locale.translation("Replace Name in Strings")	end
+	l_allow_duplicate_name: STRING_32	do Result := locale.translation ("Reuse existing name") end
 	m_Recent_project: STRING_32			do Result := locale.translation("&Recent Projects")	end
 	m_Redo: STRING_32					do Result := locale.translation("Re&do%TCtrl+Y")	end
 	f_Redo: STRING_32					do Result := locale.translation("Redo (Ctrl+Y)")	end

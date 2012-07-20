@@ -241,6 +241,32 @@ feature -- Queries
 
 feature -- Queries without result to load.
 
+	begin_transaction
+			-- Start a transaction which will be terminated by a call to `rollback' or `commit'.
+		require
+			session_control_created
+		local
+			rescued: BOOLEAN
+			l_session_control: like session_control
+		do
+			if not rescued then
+				l_session_control := session_control
+				check l_session_control /= Void end -- implied by precondition
+				if l_session_control.is_ok then
+					l_session_control.begin
+				else
+					has_error := True
+					error_message_32 := l_session_control.error_message_32
+				end
+			else
+				has_error := True
+				error_message_32 := unexpected_error (Commit_name)
+			end
+		rescue
+			rescued := True
+			retry
+		end
+
 	execute_query (a_query: READABLE_STRING_GENERAL)
 			-- Execute `a_query' and commit changes.
 		require
@@ -251,8 +277,10 @@ feature -- Queries without result to load.
 		end
 
 	execute_query_without_commit (a_query: READABLE_STRING_GENERAL)
-				-- Execute `a_query' in the database.
-				-- Warning: query executed is not committed.
+			-- Execute `a_query' in the database.
+			-- Warning: query executed is not committed.
+			-- Note: Commit is still performed if `auto-commit' is enabled, use
+			-- `begin_transaction' to disable `auto-commit'.
 		require
 			not_void: a_query /= Void
 			created: session_control_created
@@ -293,6 +321,32 @@ feature -- Queries without result to load.
 				check l_session_control /= Void end -- implied by precondition
 				if l_session_control.is_ok then
 					l_session_control.commit
+				else
+					has_error := True
+					error_message_32 := l_session_control.error_message_32
+				end
+			else
+				has_error := True
+				error_message_32 := unexpected_error (Commit_name)
+			end
+		rescue
+			rescued := True
+			retry
+		end
+
+	rollback
+			-- Rollback updates in the database.
+		require
+			session_control_created
+		local
+			rescued: BOOLEAN
+			l_session_control: like session_control
+		do
+			if not rescued then
+				l_session_control := session_control
+				check l_session_control /= Void end -- implied by precondition
+				if l_session_control.is_ok then
+					l_session_control.rollback
 				else
 					has_error := True
 					error_message_32 := l_session_control.error_message_32
@@ -425,14 +479,14 @@ feature {NONE} -- Implementation
 			-- `insert_with_repository' feature name.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

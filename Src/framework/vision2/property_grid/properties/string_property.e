@@ -27,7 +27,7 @@ feature -- Update
 				validate_value_actions.for_all (agent {FUNCTION [ANY, TUPLE [like value], BOOLEAN]}.item ([a_value]))
 		end
 
-	set_value (a_value: STRING_GENERAL)
+	set_value (a_value: READABLE_STRING_GENERAL)
 			-- Set `value' to `a_value' and propagate the change if the new value is different from the old one.
 		do
 			if a_value /= Void then
@@ -72,4 +72,14 @@ feature {NONE} -- Implementation
 			Result := l_string
 		end
 
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

@@ -146,9 +146,11 @@ feature -- Parser Access
 
 feature -- Typing
 
-	keyword_id_type: TUPLE [keyword: KEYWORD_AS; id: ID_AS; line, column: INTEGER; filename: STRING]
+	keyword_id_type: TUPLE [keyword: KEYWORD_AS; id: ID_AS; line, column: INTEGER; filename: like {ERROR}.file_name]
 			-- Type for `new_keyowrd_id_as'.
 		do
+		ensure
+			is_called: False
 		end
 
 feature -- Access
@@ -292,7 +294,7 @@ feature -- Access
 
 feature -- Access for Errors
 
-	new_vtgc1_error (a_line: INTEGER; a_column: INTEGER; a_filename: STRING; a_type: TYPE_AS): ERROR
+	new_vtgc1_error (a_line: INTEGER; a_column: INTEGER; a_filename: like {ERROR}.file_name; a_type: TYPE_AS): ERROR
 			-- New vtgc1 error.
 		require
 			a_type_attached: attached a_type
@@ -300,7 +302,7 @@ feature -- Access for Errors
 			Result := create {SYNTAX_ERROR}.make (a_line, a_column, a_filename, "Error VTGC1: Anchored types are not allowed in a constraint:%N  %"" + a_type.dump + "%"")
 		end
 
-	new_vvok1_error (a_line: INTEGER; a_column: INTEGER; a_filename: STRING; a_once_as: FEATURE_AS): ERROR
+	new_vvok1_error (a_line: INTEGER; a_column: INTEGER; a_filename: like {ERROR}.file_name; a_once_as: FEATURE_AS): ERROR
 			-- New VVOK1 error.
 		require
 			a_once_as_not_void: a_once_as /= Void
@@ -312,7 +314,7 @@ feature -- Access for Errors
 			Result := create {SYNTAX_ERROR}.make (a_line, a_column, a_filename, "Error VVOK1: Conflict in once's keys of routine %"" + l_identifier + "%"")
 		end
 
-	new_vvok2_error (a_line: INTEGER; a_column: INTEGER; a_filename: STRING; a_once_as: FEATURE_AS): ERROR
+	new_vvok2_error (a_line: INTEGER; a_column: INTEGER; a_filename: like {ERROR}.file_name; a_once_as: FEATURE_AS): ERROR
 			-- New VVOK2 error.
 		require
 			a_once_as_not_void: a_once_as /= Void

@@ -41,11 +41,8 @@ feature {NONE} -- Initialization
 			-- Initialize `line' and `column' from `a_parser'.
 		require
 			a_parser_not_void: a_parser /= Void
-		local
-			a_filename: FILE_NAME
 		do
-			create a_filename.make_from_string (a_parser.filename)
-			make (a_parser.line, a_parser.column, a_filename, a_parser.error_message)
+			make (a_parser.line, a_parser.column, a_parser.filename, a_parser.error_message)
 			set_associated_class (a_parser.current_class)
 		end
 
@@ -54,7 +51,7 @@ feature -- Properties
 	error_message: STRING
 			-- Specify syntax issue message.
 
-	file_name: STRING
+	file_name: like {ERROR}.file_name
 			-- Path to file where syntax issue happened
 
 	code: STRING = "Syntax Error"
@@ -84,7 +81,7 @@ invariant
 	attached_error_message: error_message /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -38,7 +38,7 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	is_service_proffered (a_type: TYPE [SERVICE_I]; a_promote: BOOLEAN): BOOLEAN
+	is_service_proffered (a_type: TYPE [detachable SERVICE_I]; a_promote: BOOLEAN): BOOLEAN
 			-- <Precursor>
 		do
 			Result := services.has (type_hash (a_type))
@@ -46,7 +46,7 @@ feature -- Status report
 
 feature -- Query
 
-	frozen service (a_type: TYPE [SERVICE_I]): detachable SERVICE_I
+	frozen service (a_type: TYPE [detachable SERVICE_I]): detachable SERVICE_I
 			-- <Precursor>
 		local
 			l_obj: like service_internal
@@ -67,7 +67,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	frozen type_hash (a_type: TYPE [SERVICE_I]): HASHABLE
+	frozen type_hash (a_type: TYPE [detachable SERVICE_I]): HASHABLE
 			-- Retrieves a hashable object given a type.
 			-- Note: This is added for compatiblity, given that {TYPE} is not yet {HASHABLE}. When this is
 			--       changed this feature is to be removed and the type used directly.
@@ -84,7 +84,7 @@ feature {NONE} -- Query
 			result_attached: Result /= Void
 		end
 
-	service_internal (a_type: TYPE [SERVICE_I]): detachable ANY
+	service_internal (a_type: TYPE [detachable SERVICE_I]): detachable ANY
 			-- Attempts to retrieve a service or a service concealer ({CONCEALER_I}).
 			--
 			-- `a_type': The service type to query the `services' table with.
@@ -99,10 +99,10 @@ feature {NONE} -- Query
 
 feature -- Extension
 
-	register (a_type: TYPE [SERVICE_I]; a_service: SERVICE_I; a_promote: BOOLEAN)
+	register (a_type: TYPE [detachable SERVICE_I]; a_service: SERVICE_I; a_promote: BOOLEAN)
 			-- <Precursor>
 		do
-			if a_promote and then attached {SERVICE_CONTAINER_S} service_provider.service ({SERVICE_CONTAINER_S}) as l_container then
+			if a_promote and then attached {SERVICE_CONTAINER_S} service_provider.service ({detachable SERVICE_CONTAINER_S}) as l_container then
 				l_container.register (a_type, a_service, False)
 			else
 					-- Not promoted or Current is the top-level provider.
@@ -110,10 +110,10 @@ feature -- Extension
 			end
 		end
 
-	register_with_activator (a_type: TYPE [SERVICE_I]; a_activator: FUNCTION [ANY, TUPLE, detachable SERVICE_I] a_promote: BOOLEAN)
+	register_with_activator (a_type: TYPE [detachable SERVICE_I]; a_activator: FUNCTION [ANY, TUPLE, detachable SERVICE_I] a_promote: BOOLEAN)
 			-- <Precursor>
 		do
-			if a_promote and then attached {SERVICE_CONTAINER_S} service_provider.service ({SERVICE_CONTAINER_S}) as l_container then
+			if a_promote and then attached {SERVICE_CONTAINER_S} service_provider.service ({detachable SERVICE_CONTAINER_S}) as l_container then
 				l_container.register_with_activator (a_type, a_activator, False)
 			else
 					-- Not promoted or Current is the top-level provider.
@@ -123,7 +123,7 @@ feature -- Extension
 
 feature -- Removal
 
-	revoke (a_type: TYPE [SERVICE_I]; a_promote: BOOLEAN)
+	revoke (a_type: TYPE [detachable SERVICE_I]; a_promote: BOOLEAN)
 			-- <Precursor>
 		do
 			if is_service_proffered (a_type, False) then
@@ -157,7 +157,7 @@ invariant
 		not l_service.has (Void)
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

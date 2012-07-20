@@ -29,13 +29,13 @@ feature -- Access
 			create l_provider.make
 			Result := l_provider
 
-			l_provider.register_with_activator ({SERVICE_CONTAINER_S},
+			l_provider.register_with_activator ({detachable SERVICE_CONTAINER_S},
 				agent (ia_container: attached SERVICE_CONTAINER_I): detachable SERVICE_CONTAINER_S
 					do
 						create Result.make (ia_container)
 					end (l_provider))
 
-			l_provider.register_with_activator ({SERVICE_PROVIDER_S},
+			l_provider.register_with_activator ({detachable SERVICE_PROVIDER_S},
 				agent (ia_provider: attached SERVICE_PROVIDER_I): detachable SERVICE_PROVIDER_S
 					do
 						create Result.make (ia_provider)
@@ -45,7 +45,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	file_name: STRING
+	file_name: like {ERROR}.file_name
 			-- Path to file where syntax issue happened
 
 	syntax_message: STRING
@@ -41,7 +41,7 @@ feature -- Properties
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

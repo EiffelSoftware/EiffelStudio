@@ -912,7 +912,7 @@ feature {NONE} -- Actions
 				last_ind, g, l_conforming_parents, l_non_conforming_parents, c, co, f, inv, s, o, ed)
 		end
 
-	extract_keyword (a_keyword_id: TUPLE [keyword: KEYWORD_AS; id: ID_AS; line: INTEGER_32; column: INTEGER_32; filename: STRING_8]): KEYWORD_AS
+	extract_keyword (a_keyword_id: like last_keyword_id_value): KEYWORD_AS
 			-- Extract `keyword' entry if present. Void otherwise.
 		do
 			if a_keyword_id /= Void then
@@ -920,7 +920,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	extract_id (a_keyword_id: TUPLE [keyword: KEYWORD_AS; id: ID_AS; line: INTEGER_32; column: INTEGER_32; filename: STRING_8]): ID_AS
+	extract_id (a_keyword_id: like last_keyword_id_value): ID_AS
 			-- Extract `id' entry if present. Void otherwise.
 		do
 			if a_keyword_id /= Void then

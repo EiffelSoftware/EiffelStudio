@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	filters: ARRAYED_LIST [TUPLE [STRING_GENERAL, STRING_GENERAL]]
+	filters: detachable ARRAYED_LIST [TUPLE [STRING_GENERAL, STRING_GENERAL]] note option: stable attribute end
 			-- File extension filters for dialog.
 
 feature -- Update
@@ -59,18 +59,16 @@ feature {NONE} -- Agents
 			popup_window: popup_window /= Void
 			activated: is_activated
 		local
-			l_parent: EV_WINDOW
 			l_dial: EV_FILE_OPEN_DIALOG
 			l_dir: DIRECTORY
 		do
 			update_text_on_deactivation
-			l_parent := parent_window (parent)
 			is_dialog_open := True
 			create l_dial
 			if filters /= Void then
 				l_dial.filters.append (filters)
 			end
-			if value /= Void and then not value.is_empty then
+			if attached value as l_value and then not l_value.is_empty then
 				create l_dir.make (directory_location_value)
 				if l_dir.exists then
 					l_dial.set_start_directory (l_dir.name)
@@ -78,7 +76,9 @@ feature {NONE} -- Agents
 			end
 
 			l_dial.open_actions.extend (agent dialog_ok (l_dial))
-			l_dial.show_modal_to_window (l_parent)
+			check attached parent_window (parent) as l_parent then
+				l_dial.show_modal_to_window (l_parent)
+			end
 			is_dialog_open := False
 		end
 
@@ -93,10 +93,10 @@ feature {NONE} -- Agents
 		local
 			i: INTEGER
 		do
-			if value /= Void then
-				i := value.last_index_of (operating_environment.directory_separator, value.count)
+			if attached value as l_value then
+				i := l_value.last_index_of (operating_environment.directory_separator, l_value.count)
 				if i > 1 then
-					Result := value.substring (1, i - 1)
+					Result := l_value.substring (1, i - 1)
 				else
 					create Result.make_empty
 				end
@@ -116,4 +116,14 @@ feature {NONE} -- Implementation
 			Result.replace_substring_all ("%%N", "%N")
 		end
 
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

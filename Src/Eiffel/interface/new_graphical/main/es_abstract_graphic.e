@@ -57,6 +57,8 @@ feature {NONE} -- Initialization
 			if l_container.is_service_available and then attached {SERVICE_CONTAINER_S} l_container.service as l_service then
 				service_initializer.add_core_services (l_service)
 			end
+				-- Initialize prompts.
+			set_prompts (create {EB_PROMPT_PROVIDER})
 		end
 
 	compiler_initialization
@@ -359,7 +361,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

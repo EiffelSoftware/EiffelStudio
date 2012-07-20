@@ -12,7 +12,7 @@ class
 
 feature -- Factory
 
-	show_error_prompt (a_message: STRING_32; a_window: EV_WINDOW; a_ok_action: detachable PROCEDURE [ANY, TUPLE])
+	show_error_prompt (a_message: STRING_32; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE [ANY, TUPLE])
 			-- Displays an error prompt to the user with an Ok button only
 			--
 			-- `a_message': A message to display to the user
@@ -30,7 +30,7 @@ feature -- Factory
 			safe_show_dialog (l_error, a_window)
 		end
 
-	show_info_prompt (a_message: STRING_32; a_window: EV_WINDOW; a_ok_action: detachable PROCEDURE [ANY, TUPLE])
+	show_info_prompt (a_message: STRING_32; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE [ANY, TUPLE])
 			-- Displays an information prompt to the user with an Ok button only
 			--
 			-- `a_message': A message to display to the user
@@ -48,7 +48,7 @@ feature -- Factory
 			safe_show_dialog (l_info, a_window)
 		end
 
-	show_warning_prompt (a_message: STRING_32; a_window: EV_WINDOW; a_ok_action: detachable PROCEDURE [ANY, TUPLE])
+	show_warning_prompt (a_message: STRING_32; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE [ANY, TUPLE])
 			-- Displays a warning prompt to the user with an Ok button only.
 			--
 			-- `a_message': A message to display to the user
@@ -66,7 +66,7 @@ feature -- Factory
 			safe_show_dialog (l_warning, a_window)
 		end
 
-	show_warning_prompt_with_cancel (a_message: STRING_32; a_window: EV_WINDOW; a_ok_action: detachable PROCEDURE [ANY, TUPLE]; a_cancel_action: detachable PROCEDURE [ANY, TUPLE])
+	show_warning_prompt_with_cancel (a_message: STRING_32; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE [ANY, TUPLE]; a_cancel_action: detachable PROCEDURE [ANY, TUPLE])
 			-- Displays an warning prompt to the user with Ok & Cancel buttons
 			--
 			-- `a_message': A message to display to the user
@@ -85,7 +85,7 @@ feature -- Factory
 			safe_show_dialog (l_warning, a_window)
 		end
 
-	show_question_prompt (a_message: STRING_32; a_window: EV_WINDOW; a_yes_action: detachable PROCEDURE [ANY, TUPLE]; a_no_action: detachable PROCEDURE [ANY, TUPLE];)
+	show_question_prompt (a_message: STRING_32; a_window: detachable EV_WINDOW; a_yes_action: detachable PROCEDURE [ANY, TUPLE]; a_no_action: detachable PROCEDURE [ANY, TUPLE];)
 			-- Displays a question prompt to the user with an Ok button only.
 			--
 			-- `a_message': A message to display to the user
@@ -104,7 +104,7 @@ feature -- Factory
 			safe_show_dialog (l_confirm, a_window)
 		end
 
-	show_question_prompt_with_cancel (a_message: STRING_32; a_window: EV_WINDOW; a_yes_action: detachable PROCEDURE [ANY, TUPLE]; a_no_action: detachable PROCEDURE [ANY, TUPLE]; a_cancel_action: detachable PROCEDURE [ANY, TUPLE])
+	show_question_prompt_with_cancel (a_message: STRING_32; a_window: detachable EV_WINDOW; a_yes_action: detachable PROCEDURE [ANY, TUPLE]; a_no_action: detachable PROCEDURE [ANY, TUPLE]; a_cancel_action: detachable PROCEDURE [ANY, TUPLE])
 			-- Displays an question prompt to the user with Ok & Cancel buttons
 			--
 			-- `a_message': A message to display to the user
@@ -134,7 +134,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Display
 
-	safe_show_dialog (a_dialog: EV_DIALOG; a_window: EV_WINDOW)
+	safe_show_dialog (a_dialog: EV_DIALOG; a_window: detachable EV_WINDOW)
 			-- Displays a dialog prompt.
 			--
 			-- `a_dialog': Dialog prompt to show
@@ -151,8 +151,8 @@ feature {NONE} -- Display
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -175,11 +175,11 @@ feature {NONE} -- Display
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

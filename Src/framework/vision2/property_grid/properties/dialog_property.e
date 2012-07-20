@@ -50,31 +50,32 @@ feature {NONE} -- Agents
 			parented: is_parented
 			parent_window: parent_window (parent) /= Void
 		local
-			l_parent: EV_WINDOW
-			l_default: G
+			l_dialog: like dialog
+			l_default_value: like value
 		do
 			update_text_on_deactivation
-			l_parent := parent_window (parent)
 			is_dialog_open := True
 			if dialog = Void then
 				create dialog
 			end
 			dialog.set_title (dialog_title (name))
-			if value /= Void then
-				dialog.set_value (value_twin (value))
+			if attached value as l_value then
+				dialog.set_value (l_value.twin)
 			else
-				dialog.set_value (l_default)
+				dialog.set_value (l_default_value)
 			end
-			dialog.show_modal_to_window (l_parent)
-			if dialog.is_ok and then is_valid_value (dialog.value) then
-				set_value (dialog.value)
+			check attached parent_window (parent) as l_parent then
+				dialog.show_modal_to_window (l_parent)
+			end
+			if dialog.is_ok and then attached dialog.value as l_value and then is_valid_value (l_value) then
+				set_value (l_value)
 			end
 			is_dialog_open := False
 		end
 
 feature {NONE} -- Implementation
 
-	dialog: PROPERTY_DIALOG [G]
+	dialog: detachable PROPERTY_DIALOG [G] note option: stable attribute end
 			-- Dialog to show to change the value.
 
 feature {NONE} -- Implementation
@@ -84,10 +85,14 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	value_twin (v: like value): like value
-			-- Twin of `v'.
-		do
-			Result := v.twin
-		end
-
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

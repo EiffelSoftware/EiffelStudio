@@ -27,7 +27,6 @@ inherit
 			code_completable,
 			sorted_names,
 			name_type,
-			build_option_bar,
 			choice_list,
 			on_key_down,
 			on_key_released,
@@ -90,6 +89,7 @@ feature {NONE} -- Initialization
 			-- Create
 		do
 			Precursor {CODE_COMPLETION_WINDOW}
+			build_option_bar
 			choice_list.enable_tree
 			choice_list.set_configurable_target_menu_mode
 			choice_list.set_configurable_target_menu_handler (agent context_menu_handler)
@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 			register_accelerator_preference_change_actions
 		end
 
-	build_option_bar: EV_VERTICAL_BOX
+	build_option_bar
 			-- Build option bar
 		local
 			l_hbox: EV_HORIZONTAL_BOX
@@ -111,8 +111,6 @@ feature {NONE} -- Initialization
 			l_tooltip: STRING
 			l_padding: EV_CELL
 		do
-			create Result
-
 				-- Separator
 			create l_vbox
 			create l_sep
@@ -138,20 +136,20 @@ feature {NONE} -- Initialization
 			l_vbox.extend (l_padding)
 			l_vbox.disable_item_expand (l_padding)
 
-			Result.extend (l_vbox)
-			Result.disable_item_expand (l_vbox)
+			option_bar_box.extend (l_vbox)
+			option_bar_box.disable_item_expand (l_vbox)
 			comment_preview_box := l_vbox
 
 				-- Separator
 			create l_sep
 			l_sep.set_minimum_height (2)
-			Result.extend (l_sep)
+			option_bar_box.extend (l_sep)
 
 			create l_hbox
 			l_hbox.set_padding_width (layout_constants.small_padding_size)
 			l_hbox.set_border_width (1)
-			Result.extend (l_hbox)
-			Result.disable_item_expand (l_hbox)
+			option_bar_box.extend (l_hbox)
+			option_bar_box.disable_item_expand (l_hbox)
 
 				-- "Options" label
 			create l_label.make_with_text (interface_names.l_Options_colon)
@@ -390,6 +388,12 @@ feature -- Access
 			-- list of possible feature names sorted alphabetically
 
 	name_type: EB_NAME_FOR_COMPLETION
+
+	filter_button: EV_TOOL_BAR_TOGGLE_BUTTON
+			-- Filter option button.
+
+	option_bar: EV_TOOL_BAR
+			-- Option tool bar
 
 feature -- Widget
 
@@ -1056,7 +1060,7 @@ feature {NONE} -- Implementation
 			-- Did the last inserted completed feature name contain arguments?
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

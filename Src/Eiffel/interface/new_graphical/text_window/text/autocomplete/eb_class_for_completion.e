@@ -33,7 +33,7 @@ create
 	make
 
 create {EB_CLASS_FOR_COMPLETION}
-	make_string
+	make_old
 
 feature {NONE} -- Initialization
 
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			-- Corresponding class
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

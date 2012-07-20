@@ -14,13 +14,45 @@ feature -- Access
 
 	frozen prompts: ES_PROMPT_PROVIDER
 			-- Shared access to a prompts provider
+		do
+			if attached prompts_cell.item as l_prompts then
+				Result := l_prompts
+			else
+				create Result
+				prompts_cell.put (Result)
+			end
+		end
+
+feature -- Status Report
+
+	is_prompts_set: BOOLEAN
+			-- Has `prompts' been queried or set once?
+		do
+			Result := prompts_cell.item /= Void
+		end
+
+feature -- Element change
+
+	set_prompts (a_prompt_provider: like prompts)
+			-- Set `prompts' with `a_prompt_provider'.
+		require
+			not_set: not is_prompts_set
+		do
+			prompts_cell.put (a_prompt_provider)
+		ensure
+			prompts_set: prompts = a_prompt_provider
+		end
+
+feature {NONE} -- Storage
+
+	prompts_cell: CELL [detachable ES_PROMPT_PROVIDER]
 		once
-			create Result
+			create Result.put (Void)
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -43,11 +75,11 @@ feature -- Access
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

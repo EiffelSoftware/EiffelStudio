@@ -42,13 +42,13 @@ feature -- Access
 			create Result.make
 		end
 
-	parent_window: EV_WINDOW assign set_parent_window
+	parent_window: detachable EV_WINDOW note option: stable attribute end
 			-- Parent window, used to evaluate where the compilation list should be shown.
 
-	possibilities_provider: COMPLETION_POSSIBILITIES_PROVIDER
+	possibilities_provider: detachable COMPLETION_POSSIBILITIES_PROVIDER
 			-- Possibilities provider.
 
-	key_completable : FUNCTION [ANY, TUPLE [EV_KEY, BOOLEAN, BOOLEAN, BOOLEAN], BOOLEAN]
+	key_completable : detachable FUNCTION [ANY, TUPLE [EV_KEY, BOOLEAN, BOOLEAN, BOOLEAN], BOOLEAN]
 			-- EV_KEY can activate text completion?
 
 	key_press_string_actions: EV_KEY_STRING_ACTION_SEQUENCE
@@ -65,7 +65,7 @@ feature -- Access
 			key_press_actions_not_void: Result /= Void
 		end
 
-	save_list_position_action: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]]
+	save_list_position_action: detachable PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]]
 			-- Action to save completion list position.
 			-- [x_position, y_position, width, height]
 
@@ -76,7 +76,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_parent_window (a_window: like parent_window)
+	set_parent_window (a_window: attached like parent_window)
 			-- Set parent window (used for screen location adjustments) to `a_window'.
 		require
 			a_window_attached: a_window /= Void
@@ -133,8 +133,8 @@ feature {NONE} -- Status report
 	auto_complete_is_possible: BOOLEAN
 			-- Is auto complete possible.
 		do
-			if possibilities_provider /= Void then
-				Result := possibilities_provider.completion_possible
+			if attached possibilities_provider as l_provider then
+				Result := l_provider.completion_possible
 			end
 		end
 
@@ -199,7 +199,10 @@ feature {CODE_COMPLETION_WINDOW} -- Autocompletion from window
 		local
 			i: INTEGER
 		do
-			if possibilities_provider.insertion /= Void and then not possibilities_provider.insertion.is_empty then
+			if
+				attached possibilities_provider as l_provider and then
+				attached l_provider.insertion as l_insertion and then not l_insertion.is_empty
+			then
 				if completed.as_string_32.item (1) = ' ' then
 					back_delete_char
 				end
@@ -225,15 +228,19 @@ feature -- Basic operation
 	trigger_completion
 			-- Start timer, let timer to start code completion.
 		do
-			completion_timeout.reset_count
-			completion_timeout.actions.resume
+			if completion_timeout /= Void then
+				completion_timeout.reset_count
+				completion_timeout.actions.resume
+			end
 		end
 
 	block_completion
 			-- Stop timer, block code completion.
 		do
-			completion_timeout.reset_count
-			completion_timeout.actions.block
+			if completion_timeout /= Void then
+				completion_timeout.reset_count
+				completion_timeout.actions.block
+			end
 		end
 
 	complete_code
@@ -242,10 +249,12 @@ feature -- Basic operation
 			retried: BOOLEAN
 		do
 			if not retried then
-				if possibilities_provider /= Void then
-					precompletion_actions.call (Void)
+				if attached possibilities_provider as l_provider then
+					if attached precompletion_actions as l_actions then
+						l_actions.call (Void)
+					end
 					prepare_auto_complete
-					if possibilities_provider.completion_possible then
+					if l_provider.completion_possible then
 						block_focus_out_actions
 						show_completion_list
 					else
@@ -256,8 +265,8 @@ feature -- Basic operation
 			end
 		rescue
 			retried := True
-			if possibilities_provider /= Void then
-				possibilities_provider.reset
+			if attached possibilities_provider as l_provider then
+				l_provider.reset
 			end
 			resume_focus_out_actions
 			block_completion
@@ -364,7 +373,6 @@ feature {CODE_COMPLETION_WINDOW} -- Interact with code complete window.
 			l_height: INTEGER
 			l_count_to_calculate: INTEGER
 			i: INTEGER
-			l_name: NAME_FOR_COMPLETION
 		do
 			l_grid := choices.choice_list
 				-- Calculate correct size to fit
@@ -379,11 +387,13 @@ feature {CODE_COMPLETION_WINDOW} -- Interact with code complete window.
 					until
 						i > l_count_to_calculate
 					loop
-						l_name ?= l_grid.row (i).data
-						check
-							l_name_not_void: l_name /= Void
+						if attached {NAME_FOR_COMPLETION} l_grid.row (i).data as l_name then
+							Result := Result.max (l_name.grid_item.required_width)
+						else
+							check
+								l_has_valid_name: False
+							end
 						end
-						Result := Result.max (l_name.grid_item.required_width)
 						i := i + 1
 					end
 						-- Make sure border and any potential vertical scrollbar is taken in to account.
@@ -435,7 +445,7 @@ feature {NONE} -- Trigger completion
 			a_key_attached: a_key /= Void
 		do
 			if not is_completing then
-				if key_completable.item ([a_key, ctrled_key, alt_key, shifted_key]) then
+				if attached key_completable as l_key_completable and then l_key_completable.item ([a_key, ctrled_key, alt_key, shifted_key]) then
 					complete_code
 				end
 			end
@@ -490,13 +500,20 @@ feature {NONE} -- Implementation
 
 	show_completion_list
 			-- Show completion window.
+		local
+			l_possibilities: detachable SORTABLE_ARRAY [NAME_FOR_COMPLETION]
 		do
+			if attached possibilities_provider as l_provider then
+				l_possibilities := l_provider.completion_possibilities
+			else
+				create l_possibilities.make_empty
+			end
 			choices.common_initialization
 				(
 					Current,
 					name_part_to_be_completed,
 					name_part_to_be_completed_remainder,
-					possibilities_provider.completion_possibilities,
+					l_possibilities,
 					completing_word
 				)
 			if choices.is_displayed then
@@ -513,10 +530,12 @@ feature {NONE} -- Implementation
 	prepare_auto_complete
 			-- Prepare possibilities in provider.
 		do
-			possibilities_provider.prepare_completion
+			if attached possibilities_provider as l_provider then
+				l_provider.prepare_completion
+			end
 		end
 
-	precompletion_actions: EV_NOTIFY_ACTION_SEQUENCE
+	precompletion_actions: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions called before trying to complete
 
 	completion_activator_characters: ARRAYED_LIST [CHARACTER_32]
@@ -528,16 +547,20 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Complete essentials
 
-	name_part_to_be_completed: STRING_32
+	name_part_to_be_completed: detachable STRING_32
 			-- Word, which is being completed.
 		do
-			Result := possibilities_provider.insertion
+			if attached possibilities_provider as l_provider then
+				Result := l_provider.insertion
+			end
 		end
 
 	name_part_to_be_completed_remainder: INTEGER
 			-- Number of characters past the cursor on the token currenly being completed.
 		do
-			Result := possibilities_provider.insertion_remainder
+			if attached possibilities_provider as l_provider then
+				Result := l_provider.insertion_remainder
+			end
 		end
 
 feature -- Timer
@@ -545,12 +568,14 @@ feature -- Timer
 	set_delay (l_time: INTEGER)
 			-- Set timer interval.
 		do
-			completion_timeout.set_interval (l_time)
+			if completion_timeout /= Void then
+				completion_timeout.set_interval (l_time)
+			end
 		end
 
 feature {NONE} -- Timer
 
-	completion_timeout: EV_TIMEOUT
+	completion_timeout: detachable EV_TIMEOUT note option: stable attribute end
 			-- Timeout for showing completion list
 
 	default_timer_interval: INTEGER
@@ -572,8 +597,8 @@ feature {NONE} -- Timer
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

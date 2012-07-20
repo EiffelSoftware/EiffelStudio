@@ -12,7 +12,7 @@ inherit
 			activate_action,
 			initialize_actions,
 			deactivate,
-			initialize,
+			create_interface_objects,
 			update_text_on_deactivation
 		end
 
@@ -30,11 +30,11 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize
+	create_interface_objects
 			-- Initialize.
 		do
-			create ellipsis_actions
 			Precursor
+			create ellipsis_actions
 		end
 
 feature -- Status
@@ -44,7 +44,8 @@ feature -- Status
 		require
 			is_activated
 		do
-			Result := text_field.has_focus or button.has_focus
+			Result := (attached text_field as l_text_field and then l_text_field.has_focus) or
+				(attached button as l_button and then l_button.has_focus)
 		end
 
 	is_activated: BOOLEAN
@@ -55,11 +56,11 @@ feature -- Status
 
 feature -- Access
 
-	button: EV_BUTTON
+	button: detachable EV_BUTTON
 			-- Ellipsis button used to edit `Current' on activate.
 			-- Void when `Current' isn't beeing activated.
 
-	popup_window: EV_POPUP_WINDOW
+	popup_window: detachable EV_POPUP_WINDOW note option: stable attribute end
 			-- Popup window used on activate.
 			-- Void when `Current' isn't beeing activated.
 
@@ -138,34 +139,35 @@ feature {NONE} -- Agents
 			-- Activate action.
 		local
 			l_hb: EV_HORIZONTAL_BOX
+			l_text_field: like text_field
+			l_button: like button
 		do
 			popup_window := a_popup_window
 			popup_window.set_x_position (popup_window.x_position + (left_border - 1))
 			popup_window.set_size (popup_window.width - (left_border - 1) - (right_border - 1), popup_window.height - 1)
 
 			if is_text_editing then
-				create text_field
-				text_field.implementation.hide_border
-				if font /= Void then
-					text_field.set_font (font)
+				create l_text_field
+				text_field := l_text_field
+				l_text_field.implementation.hide_border
+				if attached font as l_font then
+					l_text_field.set_font (l_font)
 				end
 
-				if not is_text_editing then
-					text_field.disable_edit
-				end
-				text_field.set_text (displayed_value)
-				text_field.set_background_color (implementation.displayed_background_color)
+				l_text_field.set_text (displayed_value)
+				l_text_field.set_background_color (implementation.displayed_background_color)
 				popup_window.set_background_color (implementation.displayed_background_color)
-				text_field.set_foreground_color (implementation.displayed_foreground_color)
+				l_text_field.set_foreground_color (implementation.displayed_foreground_color)
 
 				create l_hb
-				l_hb.extend (text_field)
+				l_hb.extend (l_text_field)
 
-				create button
-				button.set_pixmap (ellipsis)
-				l_hb.extend (button)
-				l_hb.disable_item_expand (button)
-				button.set_minimum_height (popup_window.height)
+				create l_button
+				button := l_button
+				l_button.set_pixmap (ellipsis)
+				l_hb.extend (l_button)
+				l_hb.disable_item_expand (l_button)
+				l_button.set_minimum_height (popup_window.height)
 
 				popup_window.extend (l_hb)
 
@@ -184,14 +186,14 @@ feature {NONE} -- Agents
 			-- Cleanup from previous call to `activate'.
 		do
 			Precursor {TEXT_PROPERTY}
-			if button /= Void then
-				button.focus_out_actions.wipe_out
-				button.destroy
+			if attached button as l_button then
+				l_button.focus_out_actions.wipe_out
+				l_button.destroy
 				button := Void
 			end
 			is_activated := False
-			if parent /= Void and then not parent.is_destroyed and then parent.is_displayed then
-				parent.set_focus
+			if attached parent as l_parent and then not l_parent.is_destroyed and then l_parent.is_displayed then
+				l_parent.set_focus
 			end
 		ensure then
 			button_void: button = Void

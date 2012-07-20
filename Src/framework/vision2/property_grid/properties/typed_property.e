@@ -10,18 +10,16 @@ inherit
 	PROPERTY
 		redefine
 			refresh,
-			make,
 			on_use_inherited,
-			on_force_inheritance
+			on_force_inheritance,
+			create_interface_objects
 		end
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name)
-			-- Create.
+	create_interface_objects
 		do
-			Precursor {PROPERTY} (a_name)
-
+			Precursor
 			create validate_value_actions.make (1)
 			create change_value_actions
 			create force_inherit_actions
@@ -30,10 +28,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value: G
+	value: detachable G
 			-- Data stored in `Current'.
 
-	refresh_action: FUNCTION [ANY, TUPLE [], like value]
+	refresh_action: detachable FUNCTION [ANY, TUPLE [], like value]
 			-- Action to call to get data value that is up to date.
 
 feature -- Update
@@ -41,24 +39,24 @@ feature -- Update
 	add_sub_property (a_property: PROPERTY)
 			-- Add `a_property'.
 		local
-			l_row: PROPERTY_ROW
 			l_index: INTEGER
 			l_name_item: EV_GRID_LABEL_ITEM
 		do
 			l_index := row.subrow_count + 1
 			row.insert_subrow (l_index)
-			l_row ?= row.subrow (l_index)
-			l_row.set_property (a_property)
-			create l_name_item.make_with_text (a_property.name)
-			if a_property.description /= Void then
-				l_name_item.set_tooltip (a_property.description)
+			if attached {PROPERTY_ROW} row.subrow (l_index) as l_row then
+				l_row.set_property (a_property)
+				create l_name_item.make_with_text (a_property.name)
+				if a_property.description /= Void then
+					l_name_item.set_tooltip (a_property.description)
+				end
+				l_row.set_item (1, l_name_item)
+				l_row.set_item (2, a_property)
+				l_name_item.pointer_button_press_actions.extend (agent a_property.check_right_click)
 			end
-			l_row.set_item (1, l_name_item)
-			l_row.set_item (2, a_property)
-			l_name_item.pointer_button_press_actions.extend (agent a_property.check_right_click)
 		end
 
-	set_refresh_action (an_action: like refresh_action)
+	set_refresh_action (an_action: attached like refresh_action)
 			-- Set the action to call to get the data value during a refresh.
 		require
 			an_action_not_void: an_action /= Void
@@ -71,9 +69,9 @@ feature -- Update
 	refresh
 			-- Refresh current data.
 		do
-			if refresh_action /= Void then
+			if attached refresh_action as l_action then
 				change_value_actions.block
-				set_value (refresh_action.item (Void))
+				set_value (l_action.item (Void))
 				change_value_actions.resume
 			end
 		end
@@ -137,4 +135,14 @@ invariant
 	change_value_actions_not_void: change_value_actions /= Void
 	force_inherit_actions_not_void: force_inherit_actions /= Void
 
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

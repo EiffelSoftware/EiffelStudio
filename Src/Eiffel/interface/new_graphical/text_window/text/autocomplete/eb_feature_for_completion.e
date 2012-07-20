@@ -39,7 +39,7 @@ create
 	make
 
 create {EB_FEATURE_FOR_COMPLETION}
-	make_string
+	make_old
 
 feature {NONE} -- Initialization
 
@@ -239,9 +239,6 @@ feature -- Comparison
 			if show_disambiguated_name and name_is_ambiguated then
 				Result := Precursor {EB_NAME_FOR_COMPLETION} (s)
 			else
-				if name_matcher = Void then
-					create name_matcher_internal
-				end
 				Result := name_matcher.prefix_string (s, name)
 			end
 		end
@@ -309,7 +306,7 @@ invariant
 	associated_feature_not_void: associated_feature /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

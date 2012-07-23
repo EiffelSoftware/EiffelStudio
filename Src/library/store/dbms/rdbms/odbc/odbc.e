@@ -325,12 +325,15 @@ feature -- DATABASE_DATETIME
 
 	sql_name_datetime: STRING
 		local
-			sep: STRING
+			l_sql_string: SQL_STRING
+			l_string: STRING_32
 		once
-			create sep.make (1)
-			sep.from_c (odbc_driver_name)
-			if sep.substring_index ("Oracle", 1) /= 0 or sep.substring_index ("INGRES", 1) /= 0 then
+			create l_sql_string.make_shared_from_pointer (odbc_driver_name)
+			l_string := l_sql_string.string
+			if l_string.has_substring ("Oracle") or l_string.has_substring ("INGRES") then
 				Result := " date"
+			elseif l_string.has_substring ("PostgreSQL") then
+				Result := " timestamp"
 			else
 				Result := " datetime"
 			end
@@ -423,16 +426,15 @@ feature -- For DATABASE_PROC
 
 	text_not_supported: STRING
 		local
-			driver_name: STRING
+			driver_name: SQL_STRING
 		do
-			create driver_name.make (1)
-			driver_name.from_c (odbc_driver_name)
-			create Result.make (1)
+			create driver_name.make_shared_from_pointer (odbc_driver_name)
+			Result := driver_name.string
 			io.new_line
 			io.put_string ("== Try to Get Text of Stored Procedure through EiffelStore on ODBC ==")
 			io.new_line
 			io.put_string ("Sorry, the ")
-			io.put_string (driver_name)
+			io.put_string (Result)
 			io.put_string (" driver does not support such function at present.")
 			io.new_line
 			io.put_string ("=====================================================================")
@@ -458,15 +460,14 @@ feature -- For DATABASE_PROC
 
 	store_proc_not_supported
 		local
-			driver_name: STRING
+			driver_name: SQL_STRING
 		do
-			create driver_name.make (1)
-			driver_name.from_c (odbc_driver_name)
+			create driver_name.make_shared_from_pointer (odbc_driver_name)
 			io.new_line
 			io.put_string ("===== Try to Create Stored Procedure through EiffelStore on ODBC =====")
 			io.new_line
 			io.put_string ("Sorry, the ")
-			io.put_string (driver_name)
+			io.put_string (driver_name.string)
 			io.put_string (" driver does not support such function at present.")
 			io.new_line
 			io.put_string ("======================================================================")
@@ -485,13 +486,12 @@ feature -- For DATABASE_PROC
 
 	exec_proc_not_supported
 		local
-			driver_name: STRING
+			driver_name: SQL_STRING
 		do
-			create driver_name.make (1)
-			driver_name.from_c (odbc_driver_name)
+			create driver_name.make_shared_from_pointer (odbc_driver_name)
 			io.new_line
 			io.put_string ("Sorry, the ")
-			io.put_string (driver_name)
+			io.put_string (driver_name.string)
 			io.put_string (" driver does not support such function at present.")
 			io.new_line
 		end
@@ -503,15 +503,14 @@ feature -- For DATABASE_PROC
 
 	drop_proc_not_supported
 		local
-			driver_name: STRING
+			driver_name: SQL_STRING
 		do
-			create driver_name.make (1)
-			driver_name.from_c (odbc_driver_name)
+			create driver_name.make_shared_from_pointer (odbc_driver_name)
 			io.new_line
 			io.put_string ("===== Try to Drop Stored Procedure through EiffelStore on ODBC =====")
 			io.new_line
 			io.put_string ("Sorry, the ")
-			io.put_string (driver_name)
+			io.put_string (driver_name.string)
 			io.put_string (" driver does not support such function at present.")
 			io.new_line
 			io.put_string ("====================================================================")
@@ -769,15 +768,21 @@ feature -- External
 		end
 
 	identifier_quoter: STRING_32
+			-- Identifier quoter
+		local
+			l_sql_string: SQL_STRING
 		do
-			create Result.make (1)
-			Result.from_c (odbc_identifier_quoter)
+			create l_sql_string.make_shared_from_pointer (odbc_identifier_quoter)
+			Result := l_sql_string.string
 		end
 
 	qualifier_seperator: STRING_32
+			-- Qualifier separator
+		local
+			l_sql_string: SQL_STRING
 		do
-			create Result.make (1)
-			Result.from_c (odbc_qualifier_seperator)
+			create l_sql_string.make_shared_from_pointer (odbc_qualifier_seperator)
+			Result := l_sql_string.string
 		end
 
 	conv_type (indicator: INTEGER; index: INTEGER): INTEGER

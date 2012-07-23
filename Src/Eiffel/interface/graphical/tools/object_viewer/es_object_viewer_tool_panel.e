@@ -99,12 +99,12 @@ feature {NONE} -- Factory
         	Create Result
         end
 
-	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Retrieves a list of tool bar items to display at the top of the tool.
 		do
 		end
 
-    create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_mini_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
             -- Retrieves a list of tool bar items to display on the window title
 		local
 			cl: EV_CELL
@@ -119,16 +119,16 @@ feature {NONE} -- Factory
 			viewer_selector.drop_actions.set_veto_pebble_function (agent is_stone_valid)
 			create wi.make (viewer_selector)
 			viewer_selector_widget := wi
-			Result.force_last (wi)
+			Result.extend (wi)
 
 			create cl
 			cl.set_minimum_width (3)
 			create wi.make (cl)
-			Result.force_last (wi)
+			Result.extend (wi)
 
 			create viewer_selector_toolbar_cell
 			create wi.make (viewer_selector_toolbar_cell)
-			Result.force_last (wi)
+			Result.extend (wi)
 			update_viewers_selector (Void)
 		end
 
@@ -336,7 +336,7 @@ feature -- Memory management
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

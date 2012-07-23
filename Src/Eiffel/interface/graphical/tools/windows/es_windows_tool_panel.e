@@ -54,23 +54,23 @@ feature {NONE} -- Factory
 			Result := l_manager.window_manager.new_widget
 		end
 
-	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Retrieves a list of tool bar items to display at the top of the tool.
 		do
 			-- No tool bar items
 		end
 
-	create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_mini_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Retrieves a list of tool bar items to display on the window title
 		do
 			create Result.make (2)
-			Result.put_last (develop_window.new_development_window_cmd.new_mini_sd_toolbar_item)
+			Result.extend (develop_window.new_development_window_cmd.new_mini_sd_toolbar_item)
 		ensure then
 			result_attached: Result /= Void
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

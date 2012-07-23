@@ -207,7 +207,7 @@ feature {NONE} -- Factory
         	create Result
         end
 
-	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Retrieves a list of tool bar items to display at the top of the tool.
 		do
 		end
@@ -656,7 +656,7 @@ feature {NONE} -- Constants
 	col_note_index: 	INTEGER = 4
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

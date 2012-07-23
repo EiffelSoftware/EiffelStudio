@@ -1302,7 +1302,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		do
 			create errors_button.make
@@ -1322,15 +1322,15 @@ feature {NONE} -- Factory
 			warnings_button.select_actions.compare_objects
 
 			create Result.make (3)
-			Result.put_last (errors_button)
-			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
-			Result.put_last (warnings_button)
+			Result.extend (errors_button)
+			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
+			Result.extend (warnings_button)
 		ensure then
 			errors_button_attached: errors_button /= Void
 			warnings_button_attached: warnings_button /= Void
 		end
 
-	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_right_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		local
 			l_button: SD_TOOL_BAR_BUTTON
@@ -1339,19 +1339,19 @@ feature {NONE} -- Factory
 
 				-- Navigation buttons
 			l_button := go_to_next_error_command.new_sd_toolbar_item (False)
-			Result.put_last (l_button)
+			Result.extend (l_button)
 
 			l_button := go_to_previous_error_command.new_sd_toolbar_item (False)
-			Result.put_last (l_button)
+			Result.extend (l_button)
 
 			l_button := go_to_next_warning_command.new_sd_toolbar_item (False)
-			Result.put_last (l_button)
+			Result.extend (l_button)
 
 			l_button := go_to_previous_warning_command.new_sd_toolbar_item (False)
-			Result.put_last (l_button)
+			Result.extend (l_button)
 
 --				-- Separator
---			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+--			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 --			create fix_button.make
 --			fix_button.set_pixel_buffer (stock_pixmaps.errors_and_warnings_fix_icon_buffer)
@@ -1359,17 +1359,17 @@ feature {NONE} -- Factory
 --			fix_button.set_tooltip (locale_formatter.translation (tt_fix_errors))
 --			fix_button.set_menu (create {EV_MENU})
 --			register_action (fix_button.select_actions, agent on_select_fix_button)
---			Result.put_last (fix_button)
+--			Result.extend (fix_button)
 
 			create delete_button.make
 			delete_button.set_pixel_buffer (stock_pixmaps.general_delete_icon_buffer)
 			delete_button.set_pixmap (stock_pixmaps.general_delete_icon)
 			delete_button.set_tooltip (locale_formatter.translation (tt_delete_items))
 			register_action (delete_button.select_actions, agent on_select_delete_button)
-			Result.put_last (delete_button)
+			Result.extend (delete_button)
 
 				-- Separator
-			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 				-- Automatic expand error button
 			create expand_errors_button.make
@@ -1377,14 +1377,14 @@ feature {NONE} -- Factory
 			expand_errors_button.set_pixel_buffer (stock_pixmaps.errors_and_warnings_expand_errors_icon_buffer)
 			expand_errors_button.set_tooltip (interface_names.f_toogle_expand_errors)
 			register_action (expand_errors_button.select_actions, agent on_toggle_expand_errors_button)
-			Result.put_last (expand_errors_button)
+			Result.extend (expand_errors_button)
 
 			create error_info_command.make
 			error_info_button := error_info_command.new_sd_toolbar_item (False)
 				-- We need to do something else, like handle grid selection
 			error_info_button.select_actions.wipe_out
 			register_action (error_info_button.select_actions, agent on_select_error_info)
-			Result.put_last (error_info_button)
+			Result.extend (error_info_button)
 
 				-- Filter pop up widget
 			create filter_widget.make
@@ -1397,7 +1397,7 @@ feature {NONE} -- Factory
 			filter_button.set_tooltip (interface_names.f_filter_warnings)
 			filter_button.set_popup_widget (filter_widget)
 
-			Result.put_last (filter_button)
+			Result.extend (filter_button)
 		ensure then
 			filter_button_attached: filter_button /= Void
 		end
@@ -1444,7 +1444,7 @@ invariant
 	item_count_matches_error_and_warning_count: error_count + warning_count = item_count
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -226,7 +226,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-    create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_mini_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
             -- Retrieves a list of tool bar items to display on the window title
 		local
 			cmd: EB_STANDARD_CMD
@@ -238,14 +238,14 @@ feature {NONE} -- Initialization
 			save_call_stack_cmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.general_save_icon_buffer)
 			save_call_stack_cmd.set_tooltip (Interface_names.e_Save_call_stack)
 			save_call_stack_cmd.add_agent (agent save_call_stack)
-			Result.force_last (save_call_stack_cmd.new_mini_sd_toolbar_item)
+			Result.extend (save_call_stack_cmd.new_mini_sd_toolbar_item)
 
 			create cmd.make
 			cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_copy_icon)
 			cmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.general_copy_icon_buffer)
 			cmd.set_tooltip (Interface_names.e_Copy_call_stack_to_clipboard)
 			cmd.add_agent (agent copy_call_stack_to_clipboard)
-			Result.force_last (cmd.new_mini_sd_toolbar_item)
+			Result.extend (cmd.new_mini_sd_toolbar_item)
 			copy_call_stack_cmd := cmd
 
 			create set_stack_depth_cmd.make
@@ -254,13 +254,13 @@ feature {NONE} -- Initialization
 			set_stack_depth_cmd.set_tooltip (Interface_names.e_Set_stack_depth)
 			set_stack_depth_cmd.add_agent (agent open_stack_depth_dialog)
 			set_stack_depth_cmd.enable_sensitive
-			Result.force_last (set_stack_depth_cmd.new_mini_sd_toolbar_item)
+			Result.extend (set_stack_depth_cmd.new_mini_sd_toolbar_item)
 
 			if eb_debugger_manager.toggle_exec_replay_recording_mode_cmd /= Void then
-				Result.force_last (eb_debugger_manager.toggle_exec_replay_recording_mode_cmd.new_mini_sd_toolbar_item)
+				Result.extend (eb_debugger_manager.toggle_exec_replay_recording_mode_cmd.new_mini_sd_toolbar_item)
 			end
 			if eb_debugger_manager.toggle_exec_replay_mode_cmd /= Void then
-				Result.force_last (eb_debugger_manager.toggle_exec_replay_mode_cmd.new_mini_sd_toolbar_item)
+				Result.extend (eb_debugger_manager.toggle_exec_replay_mode_cmd.new_mini_sd_toolbar_item)
 			end
 		end
 
@@ -312,7 +312,7 @@ feature {NONE} -- Factory
 			Create Result
 		end
 
-	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Retrieves a list of tool bar items to display at the top of the tool.
 		do
 		end

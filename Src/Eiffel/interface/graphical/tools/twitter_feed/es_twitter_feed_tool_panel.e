@@ -358,12 +358,12 @@ feature {NONE} -- Factory
 			create Result
 		end
 
-    create_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_tool_bar_items: detachable ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		do
 		end
 
-    create_right_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_right_tool_bar_items: detachable ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		local
 			l_button: SD_TOOL_BAR_BUTTON
@@ -374,7 +374,7 @@ feature {NONE} -- Factory
 			l_button.set_pixel_buffer (stock_pixmaps.general_refresh_icon_buffer)
 			l_button.set_pixmap (stock_pixmaps.general_refresh_icon)
 			l_button.set_tooltip (locale_formatter.translation (tt_refresh_feed))
-			Result.put_last (l_button)
+			Result.extend (l_button)
 			refresh_button := l_button
 		end
 
@@ -401,7 +401,7 @@ invariant
 	refresh_button_attached: (is_interface_usable and is_initialized) implies refresh_button /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -171,7 +171,7 @@ feature {NONE} -- Factory
 			create Result.make (context_menus)
 		end
 
-    create_mini_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_mini_tool_bar_items: detachable ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		local
 			l_button: SD_TOOL_BAR_BUTTON
@@ -181,37 +181,37 @@ feature {NONE} -- Factory
 
 			l_commands := develop_window.commands
 			l_button := l_commands.new_cluster_cmd.new_mini_sd_toolbar_item
-			Result.put_last (l_button)
+			Result.extend (l_button)
 			new_cluster_button := l_button
 
 			l_button := l_commands.new_library_cmd.new_mini_sd_toolbar_item
-			Result.put_last (l_button)
+			Result.extend (l_button)
 			new_library_button := l_button
 
 			if eiffel_layout.default_il_environment.is_dotnet_installed then
 				l_button := l_commands.new_assembly_cmd.new_mini_sd_toolbar_item
-				Result.put_last (l_button)
+				Result.extend (l_button)
 				new_assembly_button := l_button
 			end
 
 			l_button := l_commands.new_class_cmd.new_mini_sd_toolbar_item
-			Result.put_last (l_button)
+			Result.extend (l_button)
 			new_class_button := l_button
 
 			l_button := l_commands.delete_class_cluster_cmd.new_mini_sd_toolbar_item
-			Result.put_last (l_button)
+			Result.extend (l_button)
 			delete_group_button := l_button
 
-			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 				-- `find_stone_button'.
 			l_button := l_commands.find_class_or_cluster_command.new_mini_sd_toolbar_item
 			find_stone_button := l_button
 
-			Result.put_last (l_button)
+			Result.extend (l_button)
 		end
 
-    create_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_tool_bar_items: detachable ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		do
 		end
@@ -222,7 +222,7 @@ feature {NONE} -- Internationalization
 	e_invalid_editor: STRING = "The active editor does not contain a valid class or cluster."
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

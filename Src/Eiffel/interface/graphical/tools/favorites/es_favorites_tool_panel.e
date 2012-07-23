@@ -80,7 +80,7 @@ feature {NONE} -- Factory
 			Result := favorites_manager.widget.as_attached
 		end
 
-    create_mini_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_mini_tool_bar_items: detachable ARRAYED_LIST [SD_TOOL_BAR_ITEM]
     		-- <Precursor>
     	local
     		l_button: SD_TOOL_BAR_BUTTON
@@ -95,16 +95,16 @@ feature {NONE} -- Factory
 			l_button.set_pixmap (stock_mini_pixmaps.general_edit_icon)
 			edit_tool_bar_button := l_button
 
-			Result.put_last (l_button)
+			Result.extend (l_button)
 		end
 
-    create_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_tool_bar_items: detachable ARRAYED_LIST [SD_TOOL_BAR_ITEM]
     		-- <Precursor>
 		do
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

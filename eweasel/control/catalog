@@ -581,6 +581,7 @@ test	svalid-conversion-forget		svalid027 tcf fail system-validity conversion
 test	svalid-generic-rename-with-alias	svalid028 tcf fail system-validity generic rename
 test	svalid-inherited-renamed-prefix		svalid029 tcf fail system-validity rename
 test	svalid-generic-creation			svalid030 tcf fail system-validity generic
+test	svalid-remove-bracket-alias-via-rename	svalid031 tcf fail system-validity bracket_expression
 
 -- Catcall tests
 test	simple-catcall				catcall001 tcf pass catcall

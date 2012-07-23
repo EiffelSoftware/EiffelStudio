@@ -63,9 +63,6 @@ feature -- Initialization
 		require
 			is_environment_valid: is_environment_valid
 		do
-			if is_splashing then
-				display_splasher
-			end
 			do_ec_launching
 		end
 
@@ -579,7 +576,7 @@ feature {NONE} -- File system helpers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

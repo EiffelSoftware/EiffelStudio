@@ -1446,7 +1446,7 @@ feature {NONE} -- External features
 					check l_any /= Void end -- FIXME: bug here?
 					if obj_is_string (l_any) then
 						type := c_string_type
-						if attached {STRING} l_any as l_val_string then
+						if attached {READABLE_STRING_8} l_any as l_val_string then
 							create l_c_string.make (l_val_string)
 							pointers.extend (l_c_string.item)
 							l_value_count := l_c_string.bytes_count
@@ -1456,7 +1456,7 @@ feature {NONE} -- External features
 						end
 					elseif obj_is_string_32 (l_any) then
 						type := c_wstring_type
-						if attached {STRING_32} l_any as l_string_32 then
+						if attached {READABLE_STRING_32} l_any as l_string_32 then
 							create l_sql_string.make (l_string_32)
 							pointers.extend (l_sql_string.item)
 							l_value_count := l_sql_string.bytes_count
@@ -1719,14 +1719,14 @@ feature {NONE} -- External features
 		require
 			argument_not_null: obj /= Void
 		do
-			Result := attached {STRING} obj
+			Result := attached {READABLE_STRING_8} obj
 		end
 
 	obj_is_string_32 (obj: ANY): BOOLEAN
 		require
 			argument_not_null: obj /= Void
 		do
-			Result := attached {STRING_32} obj
+			Result := attached {READABLE_STRING_32} obj
 		end
 
 	obj_is_character (obj: ANY): BOOLEAN

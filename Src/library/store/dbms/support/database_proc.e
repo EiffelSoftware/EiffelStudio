@@ -415,6 +415,10 @@ feature {NONE} -- Implementation
 					s.append (db_spec.sql_name_integer_16)
 				elseif attached {INTEGER_64_REF}l_obj then
 					s.append (db_spec.sql_name_integer_64)
+				elseif attached {IMMUTABLE_STRING_8} l_obj then
+					s.append (l_all_types.db_type (string_8_for_type).sql_name)
+				elseif attached {IMMUTABLE_STRING_32} l_obj then
+					s.append (l_all_types.db_type (string_32_for_type).sql_name)
 				elseif is_decimal_used and then is_decimal_function.item ([l_obj]) then
 					s.append (db_spec.sql_name_decimal)
 					s.append (" (")
@@ -444,6 +448,12 @@ feature {NONE} -- Implementation
 		do
 			s.append (db_spec.no_args)
 		end
+
+	string_8_for_type: STRING_8 = ""
+			-- STRING_8 object for registered type
+
+	string_32_for_type: STRING_32 = ""
+			-- STRING_32 object for registered type
 
 feature {NONE} -- Status report
 
@@ -530,14 +540,14 @@ feature {NONE} -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

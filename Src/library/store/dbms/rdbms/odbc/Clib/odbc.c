@@ -1194,6 +1194,7 @@ void odbc_set_parameter(void *con, int no_desc, int seri, int dir, int eifType, 
 	SQLLEN len;
 	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 	SQL_NUMERIC_STRUCT *l_num;
+	SQLHDESC hdesc = NULL;
 
 	l_con->pcbValue[no_desc][seriNumber-1] = len = value_count;
 	l_con->rc = 0;
@@ -1232,7 +1233,15 @@ void odbc_set_parameter(void *con, int no_desc, int seri, int dir, int eifType, 
 			break;
 		case DECIMAL_TYPE:
 			l_num = (SQL_NUMERIC_STRUCT *)value;
-			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_NUMERIC, SQL_DECIMAL, l_con->default_precision, l_con->default_scale, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
+			l_con->rc = SQLBindParameter(l_con->hstmt[no_desc], seriNumber, direction, SQL_C_NUMERIC, SQL_DECIMAL, l_num->precision, l_num->scale, value, 0, &(l_con->pcbValue[no_desc][seriNumber-1]));
+
+			/* Modify the fields in the implicit application parameter descriptor */ 
+			/* See example in: http://support.microsoft.com/default.aspx?scid=http://support.microsoft.com:80/support/kb/articles/q181/2/54.asp&NoWebContent=1 */
+			SQLGetStmtAttr(l_con->hstmt[no_desc], SQL_ATTR_APP_PARAM_DESC, &hdesc, 0, NULL);
+			SQLSetDescField(hdesc, seriNumber, SQL_DESC_TYPE, (SQLPOINTER) SQL_C_NUMERIC, 0);
+			SQLSetDescField(hdesc, seriNumber, SQL_DESC_PRECISION, (SQLPOINTER) l_num->precision, 0);
+			SQLSetDescField(hdesc, seriNumber, SQL_DESC_SCALE, (SQLPOINTER) l_num->scale, 0);
+			SQLSetDescField(hdesc, seriNumber, SQL_DESC_DATA_PTR, (SQLPOINTER) l_num, 0);
 			break;
 		default:
 			odbc_error_handler(con, NULL, 204);

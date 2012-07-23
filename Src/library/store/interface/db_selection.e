@@ -324,6 +324,10 @@ feature -- Basic operations
 						l_cursor.update_map_table (l_object)
 						update_map_table := False
 					end
+				else
+						-- We need to reset the cursor to avoid reusing last data.
+						-- TEST_PROCEDURE will fail when executing more than one tests in a single thread.
+					l_cursor.reset
 				end
 				l_stop_condition := stop_condition
 				if l_stop_condition /= Void then

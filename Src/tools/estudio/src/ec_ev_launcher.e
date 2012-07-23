@@ -41,7 +41,7 @@ feature {NONE} -- Creation
 	make
 			-- Creation method
 		local
-			l_layout: EC_EIFFEL_LAYOUT
+			l_layout: ESTUDIO_EIFFEL_LAYOUT
 		do
 			create l_layout
 				-- the user can define some variables on the command line so we do the check after we have handled this
@@ -141,7 +141,7 @@ feature {NONE} -- Exception
 			-- Dialog used for showing uncaught exceptions.
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

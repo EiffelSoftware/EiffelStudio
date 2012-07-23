@@ -31,6 +31,9 @@ feature {NONE} -- Initialization
 			l_titem: EV_TOOL_BAR_BUTTON
 			l_toggle_button: EV_TOOL_BAR_TOGGLE_BUTTON
 		do
+			create grid_data.make (0)
+			create last_table.make (0)
+
 			create window.make_with_title ("GC statistics")
 			create l_vbar
 			window.extend (l_vbar)
@@ -166,7 +169,7 @@ feature -- Update
 				else
 					l_delta := l_new_table.item_for_iteration
 				end
-				l_data.force ([l_name, l_count, l_delta, l_new_table.key_for_iteration], i)
+				l_data.extend ([l_name, l_count, l_delta, l_new_table.key_for_iteration])
 				i := i + 1
 				l_new_table.forth
 			end
@@ -180,7 +183,7 @@ feature -- Update
 					l_name := l_int.type_name_of_type (l_old_table.key_for_iteration)
 					l_count := 0
 					l_delta := - l_old_table.item_for_iteration
-					l_data.force ([l_name, l_count, l_delta, l_old_table.key_for_iteration], i)
+					l_data.extend ([l_name, l_count, l_delta, l_old_table.key_for_iteration])
 					i := i + 1
 					l_old_table.forth
 				end
@@ -238,7 +241,7 @@ feature {NONE} -- Access
 	last_table: HASH_TABLE [INTEGER, INTEGER]
 			-- Result of last call to `mem.memory_map_count' in `show_memory_map'.
 
-	grid_data: DS_ARRAYED_LIST [like row_data]
+	grid_data: ARRAYED_LIST [like row_data]
 			-- Data used to fill grid.
 
 	sorted_column: INTEGER
@@ -267,6 +270,8 @@ feature {NONE} -- Access
 			-- Type for the data inserted in `output_grid'
 			-- It is [type_name, number_of_objects, variation_since_last_time, type_id].
 		do
+			check False then
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -427,19 +432,19 @@ feature {NONE} -- Implementation
 			a_parent_row_not_void: a_parent_row /= Void
 		local
 			l_data: SPECIAL [ANY]
-			l_sorted_data: DS_ARRAYED_LIST [TUPLE [obj: ANY; nb: NATURAL_32]]
+			l_sorted_data: detachable ARRAYED_LIST [TUPLE [obj: ANY; nb: NATURAL_32]]
 			l_referers: SPECIAL [ANY]
 			l_item: EV_GRID_LABEL_ITEM
 			l_row_index: INTEGER
 			l_row: EV_GRID_ROW
 			l_any: ANY
-			l_table: SED_OBJECTS_TABLE
+			l_table: detachable SED_OBJECTS_TABLE
 			l_mapping: HASH_TABLE [TUPLE [obj: ANY; nb: NATURAL_32], NATURAL_32]
-			l_entry: TUPLE [obj: ANY; nb: NATURAL_32]
+			l_entry: detachable TUPLE [obj: ANY; nb: NATURAL_32]
 			i, j, nb1, nb2: INTEGER
 			k: NATURAL_32
-			l_sorter: DS_QUICK_SORTER [TUPLE [obj: ANY; nb: NATURAL_32]]
-			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [TUPLE [obj: ANY; nb: NATURAL_32]]
+			l_sorter: QUICK_SORTER [TUPLE [obj: ANY; nb: NATURAL_32]]
+			l_agent_sorter: AGENT_EQUALITY_TESTER [TUPLE [obj: ANY; nb: NATURAL_32]]
 		do
 			if a_parent_row.subrow_count = 0 then
 				l_data := mem.objects_instance_of_type (a_dynamic_type)
@@ -467,12 +472,17 @@ feature {NONE} -- Implementation
 							j > nb2
 						loop
 							if l_referers.item (j) /= l_data then
-								k := l_table.index (l_referers.item (j))
-								l_entry := l_mapping.item (k)
-								if l_entry /= Void then
-									l_entry.nb := l_entry.nb + 1
-								else
-									l_mapping.put ([l_referers.item (j), {NATURAL_32} 1], k)
+								if
+									attached l_referers.item (j) as l_object and then
+									not attached {TUPLE [detachable like Current]} l_object
+								then
+									k := l_table.index (l_object)
+									l_entry := l_mapping.item (k)
+									if l_entry /= Void then
+										l_entry.nb := l_entry.nb + 1
+									else
+										l_mapping.put ([l_object, {NATURAL_32} 1], k)
+									end
 								end
 							end
 							j := j + 1
@@ -492,15 +502,15 @@ feature {NONE} -- Implementation
 					until
 						l_mapping.after
 					loop
-						l_sorted_data.force_last (l_mapping.item_for_iteration)
+						l_sorted_data.extend (l_mapping.item_for_iteration)
 						l_mapping.forth
 					end
 
 					create l_agent_sorter.make (agent sort_on_cloud_entry)
 					create l_sorter.make (l_agent_sorter)
-					l_sorted_data.sort (l_sorter)
+					l_sorter.sort (l_sorted_data)
 				end
-				if l_sorted_data /= Void then
+				if l_sorted_data /= Void and then not l_sorted_data.is_empty then
 					output_grid.insert_new_rows_parented (l_sorted_data.count, a_parent_row.index + 1, a_parent_row)
 					from
 						l_sorted_data.start
@@ -545,7 +555,7 @@ feature {NONE} -- Implementation
 		do
 			if a_parent_row.subrow_count = 0 then
 				l_data := mem.objects_instance_of_type (a_dynamic_type)
-				if l_data /= Void then
+				if l_data /= Void and then l_data.count > 0 then
 					output_grid.insert_new_rows_parented (l_data.count, a_parent_row.index + 1, a_parent_row)
 					from
 						l_row_index := a_parent_row.index
@@ -599,36 +609,38 @@ feature {NONE} -- Implementation
 						j = nb
 					loop
 							-- Compute number of real elements that are going to be inserted.
-						if not (attached {TUPLE [like Current]} l_data.item (j) as l_discardable_data_1) then
+						if not (attached {TUPLE [detachable like Current]} l_data.item (j) as l_discardable_data_1) then
 							l_count := l_count + 1
 						end
 						j := j + 1
 					end
 
-					from
-						create l_int
-						l_row_index := a_parent_row.index
-						i := l_row_index + 1
-						j := 0
-						output_grid.insert_new_rows_parented (l_count, i, a_parent_row)
-					until
-						j = nb
-					loop
-						l_any := l_data.item (j)
-							-- We are not interested in seeing objects of the grid
-						if not (attached {TUPLE [like Current]} l_any as l_discardable_data_2) then
-							create l_item.make_with_text ((i - l_row_index).out + ": " + l_int.type_name (l_any))
-							output_grid.set_item (1, i, l_item)
-							create l_item.make_with_text (($l_any).out)
-							output_grid.set_item (2, i, l_item)
+					if l_count > 0 then
+						from
+							create l_int
+							l_row_index := a_parent_row.index
+							i := l_row_index + 1
+							j := 0
+							output_grid.insert_new_rows_parented (l_count, i, a_parent_row)
+						until
+							j = nb
+						loop
+							l_any := l_data.item (j)
+								-- We are not interested in seeing objects of the grid
+							if not (attached {TUPLE [detachable like Current]} l_any as l_discardable_data_2) then
+								create l_item.make_with_text ((i - l_row_index).out + ": " + l_int.type_name (l_any))
+								output_grid.set_item (1, i, l_item)
+								create l_item.make_with_text (($l_any).out)
+								output_grid.set_item (2, i, l_item)
 
-							l_row := output_grid.row (i)
-							l_row.ensure_expandable
-							l_row.expand_actions.extend (agent on_expand_actions_for_referers (l_any, l_row))
-							l_row.expand_actions.extend (agent collect)
-							i := i + 1
+								l_row := output_grid.row (i)
+								l_row.ensure_expandable
+								l_row.expand_actions.extend (agent on_expand_actions_for_referers (l_any, l_row))
+								l_row.expand_actions.extend (agent collect)
+								i := i + 1
+							end
+							j := j + 1
 						end
-						j := j + 1
 					end
 				end
 			end
@@ -639,8 +651,8 @@ feature {NONE} -- Implementation
 		require
 			grid_data_not_void: grid_data /= Void
 		local
-			l_sorter: DS_QUICK_SORTER [like row_data]
-			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [like row_data]
+			l_sorter: QUICK_SORTER [like row_data]
+			l_agent_sorter: AGENT_EQUALITY_TESTER [like row_data]
 		do
 			inspect
 				sorted_column
@@ -747,3 +759,4 @@ note
 		]"
 
 end
+

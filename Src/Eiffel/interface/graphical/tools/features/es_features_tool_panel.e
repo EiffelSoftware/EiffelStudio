@@ -373,13 +373,13 @@ feature {NONE} -- Factory
 			create Result.make (Current, True)
 		end
 
-    create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
             -- Retrieves a list of tool bar items to display at the top of the tool.
 		do
 			--| No tool bar
 		end
 
-    create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_mini_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
             -- Retrieves a list of tool bar items to display on the window title
 		local
 			l_window: like develop_window
@@ -389,14 +389,14 @@ feature {NONE} -- Factory
 
         	create Result.make (4)
 
-        	Result.put_last (l_window.commands.new_feature_cmd.new_mini_sd_toolbar_item)
+        	Result.extend (l_window.commands.new_feature_cmd.new_mini_sd_toolbar_item)
 
         	create l_button.make
         	l_button.set_pixel_buffer (stock_mini_pixmaps.completion_show_alias_icon_buffer)
         	l_button.set_pixmap (stock_mini_pixmaps.completion_show_alias_icon)
         	l_button.set_tooltip (interface_names.f_show_alias)
         	register_action (l_button.select_actions, agent on_show_alias_toggled)
-        	Result.put_last (l_button)
+        	Result.extend (l_button)
         	show_alias_button := l_button
 
         	create l_button.make
@@ -404,7 +404,7 @@ feature {NONE} -- Factory
         	l_button.set_pixmap (stock_mini_pixmaps.completion_show_assigner_icon)
         	l_button.set_tooltip (interface_names.f_show_assigner)
         	register_action (l_button.select_actions, agent on_show_assigner_toggled)
-        	Result.put_last (l_button)
+        	Result.extend (l_button)
         	show_assigners_button := l_button
 
         	create l_button.make
@@ -412,7 +412,7 @@ feature {NONE} -- Factory
         	l_button.set_pixmap (stock_mini_pixmaps.completion_show_signature_icon)
         	l_button.set_tooltip (interface_names.f_show_signature)
         	register_action (l_button.select_actions, agent on_show_signature_toggled)
-        	Result.put_last (l_button)
+        	Result.extend (l_button)
         	show_signatures_button := l_button
         end
 
@@ -432,7 +432,7 @@ invariant
 		show_signatures_button /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

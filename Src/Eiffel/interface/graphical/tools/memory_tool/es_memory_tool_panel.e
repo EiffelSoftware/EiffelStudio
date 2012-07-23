@@ -157,7 +157,7 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Access
 
-	memory_data: DS_ARRAYED_LIST [like row_data]
+	memory_data: ARRAYED_LIST [like row_data]
 			-- Collection of analysed memory data
 
 	last_map: HASH_TABLE [INTEGER, INTEGER]
@@ -332,7 +332,6 @@ feature {NONE} -- Basic operations
 			memory_map_grid_row_count_is_zero: memory_map_grid.row_count = 0
 		local
 			l_grid: like memory_map_grid
-			l_data_cursor: DS_ARRAYED_LIST_CURSOR [like row_data]
 			l_data: like row_data
 			l_expression: like filter_match_expression
 			l_item: EV_GRID_LABEL_ITEM
@@ -347,13 +346,8 @@ feature {NONE} -- Basic operations
 				l_expression := filter_match_expression
 			end
 
-			l_data_cursor := memory_data.new_cursor
-			from
-				i := 1
-				l_data_cursor.start
-			until
-				l_data_cursor.after
-			loop
+			i := 1
+			across memory_data as l_data_cursor loop
 				l_data := l_data_cursor.item
 
 				create l_item.make_with_text (l_data.name)
@@ -403,7 +397,6 @@ feature {NONE} -- Basic operations
 				l_row.expand_actions.extend (agent execute_with_busy_cursor (agent on_collect))
 
 				i := i + 1
-				l_data_cursor.forth
 			end
 
 			l_grid.unlock_update
@@ -576,7 +569,7 @@ feature {NONE} -- Basic operations
 			a_parent_row_not_void: a_parent_row /= Void
 		local
 			l_data: SPECIAL [ANY]
-			l_sorted_data: DS_ARRAYED_LIST [TUPLE [obj: ANY; nb: NATURAL_32]]
+			l_sorted_data: ARRAYED_LIST [TUPLE [obj: ANY; nb: NATURAL_32]]
 			l_referers: SPECIAL [ANY]
 			l_item: EV_GRID_LABEL_ITEM
 			l_row_index: INTEGER
@@ -587,8 +580,8 @@ feature {NONE} -- Basic operations
 			l_entry: TUPLE [obj: ANY; nb: NATURAL_32]
 			i, j, nb1, nb2: INTEGER
 			k: NATURAL_32
-			l_sorter: DS_QUICK_SORTER [TUPLE [obj: ANY; nb: NATURAL_32]]
-			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [TUPLE [obj: ANY; nb: NATURAL_32]]
+			l_sorter: QUICK_SORTER [TUPLE [obj: ANY; nb: NATURAL_32]]
+			l_agent_sorter: AGENT_EQUALITY_TESTER [TUPLE [obj: ANY; nb: NATURAL_32]]
 		do
 			if a_parent_row.subrow_count = 0 then
 				l_data := memory.objects_instance_of_type (a_dynamic_type)
@@ -642,13 +635,13 @@ feature {NONE} -- Basic operations
 					until
 						l_mapping.after
 					loop
-						l_sorted_data.force_last (l_mapping.item_for_iteration)
+						l_sorted_data.extend (l_mapping.item_for_iteration)
 						l_mapping.forth
 					end
 
 					create l_agent_sorter.make (agent sort_on_cloud_entry)
 					create l_sorter.make (l_agent_sorter)
-					l_sorted_data.sort (l_sorter)
+					l_sorter.sort (l_sorted_data)
 				end
 				if l_sorted_data /= Void and then not l_sorted_data.is_empty then
 					memory_map_grid.insert_new_rows_parented (l_sorted_data.count, a_parent_row.index + 1, a_parent_row)
@@ -793,8 +786,8 @@ feature {NONE} -- Sort handling
 		local
 			l_last_sort_column: INTEGER
 			l_last_sort_order: INTEGER
-			l_sorter: DS_QUICK_SORTER [like row_data]
-			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [like row_data]
+			l_sorter: QUICK_SORTER [like row_data]
+			l_agent_sorter: AGENT_EQUALITY_TESTER [like row_data]
 		do
 			if is_initialized then
 				l_last_sort_column := grid_wrapper.last_sorted_column
@@ -934,7 +927,7 @@ feature {NONE} -- Analysis
 					l_delta := l_count
 				end
 
-				l_data.force_last ([l_name, l_count, l_delta, l_id])
+				l_data.extend ([l_name, l_count, l_delta, l_id])
 				l_map.forth
 			end
 			last_map := l_map
@@ -1405,7 +1398,7 @@ feature {NONE} -- Factory
 			create Result
 		end
 
-	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Retrieves a list of tool bar items to display at the top of the tool.
 		do
 			create Result.make (4)
@@ -1414,15 +1407,15 @@ feature {NONE} -- Factory
 			refresh_button.set_text ("Refresh")
 			refresh_button.set_tooltip ("Refreshes the view to display the current system memory state.")
 			register_action (refresh_button.select_actions, agent on_refresh_memory_map)
-			Result.put_last (refresh_button)
+			Result.extend (refresh_button)
 
-			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 			create collect_button.make
 			collect_button.set_text ("Collect")
 			collect_button.set_tooltip ("Forces a GC collection.")
 			register_action (collect_button.select_actions, agent do execute_with_busy_cursor (agent on_collect) end)
-			Result.put_last (collect_button)
+			Result.extend (collect_button)
 
 			create disable_collection_button.make
 			disable_collection_button.set_text ("Surpress GC")
@@ -1431,12 +1424,12 @@ feature {NONE} -- Factory
 				disable_collection_button.enable_select
 			end
 			register_action (disable_collection_button.select_actions, agent do execute_with_busy_cursor (agent on_toogle_collection) end)
-			Result.put_last (disable_collection_button)
+			Result.extend (disable_collection_button)
 		ensure then
 			result_attached: Result /= Void
 		end
 
-	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_right_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Retrieves a list of tool bar items to display at the top of the tool.
 		local
 			l_label: EV_LABEL
@@ -1461,20 +1454,20 @@ feature {NONE} -- Factory
 
 			create l_widget.make (l_box)
 			l_widget.set_name ("memory filter")
-			Result.put_last (l_widget)
+			Result.extend (l_widget)
 
 			create show_deltas_button.make
 			show_deltas_button.set_text ("Deltas Only")
 			register_action (show_deltas_button.select_actions, agent on_toogle_show_deltas)
-			Result.put_last (show_deltas_button)
+			Result.extend (show_deltas_button)
 
-			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 			create show_memory_usage_button.make
 			show_memory_usage_button.set_text ("Show Stats")
 			show_memory_usage_button.set_tooltip ("Show/hide memory statistical information.")
 			register_action (show_memory_usage_button.select_actions, agent on_toggle_memory_stats)
-			Result.put_last (show_memory_usage_button)
+			Result.extend (show_memory_usage_button)
 
 		ensure then
 			result_attached: Result /= Void
@@ -1515,7 +1508,7 @@ invariant
 	filter_update_timer_attached: is_initialized and not is_recycled implies filter_update_timer /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

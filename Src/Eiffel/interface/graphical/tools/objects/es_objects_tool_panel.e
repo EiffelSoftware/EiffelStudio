@@ -132,7 +132,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_mini_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Retrieves a list of tool bar items to display on the window title
 		local
 			tbb: SD_TOOL_BAR_BUTTON
@@ -145,7 +145,7 @@ feature {NONE} -- Initialization
 			create wi.make (header_box)
 			wi.set_name ("Location")
 			header_box_widget := wi
-			Result.force_last (wi)
+			Result.extend (wi)
 
 			create scmd.make
 			scmd.set_mini_pixmap (pixmaps.mini_pixmaps.toolbar_dropdown_icon)
@@ -154,7 +154,7 @@ feature {NONE} -- Initialization
 			scmd.enable_sensitive
 			tbb := scmd.new_mini_sd_toolbar_item
 			scmd.add_agent (agent open_objects_menu (tbb))
-			Result.force_last (tbb)
+			Result.extend (tbb)
 
 				--| Delete command
 			create remove_debugged_object_cmd.make
@@ -166,19 +166,19 @@ feature {NONE} -- Initialization
 			tbb.drop_actions.extend (agent remove_dropped_debugged_object)
 			tbb.drop_actions.set_veto_pebble_function (agent is_removable_debugged_object)
 			remove_debugged_object_cmd.enable_sensitive
-			Result.force_last (tbb)
+			Result.extend (tbb)
 
 			create slices_cmd.make (Current)
 			slices_cmd.enable_sensitive
-			Result.force_last (slices_cmd.new_mini_sd_toolbar_item)
+			Result.extend (slices_cmd.new_mini_sd_toolbar_item)
 
-			Result.force_last (object_viewer_cmd.new_mini_sd_toolbar_item)
+			Result.extend (object_viewer_cmd.new_mini_sd_toolbar_item)
 
 			create hex_format_cmd.make (agent set_hexadecimal_mode (?))
 			hex_format_cmd.enable_sensitive
-			Result.force_last (hex_format_cmd.new_mini_sd_toolbar_item)
+			Result.extend (hex_format_cmd.new_mini_sd_toolbar_item)
 
-			Result.force_last (debugger_manager.object_storage_management_cmd.new_mini_sd_toolbar_item)
+			Result.extend (debugger_manager.object_storage_management_cmd.new_mini_sd_toolbar_item)
 		end
 
 feature -- Access: Help
@@ -198,7 +198,7 @@ feature {NONE} -- Factory
         	Create Result
         end
 
-	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Retrieves a list of tool bar items to display at the top of the tool.
 		do
 		end
@@ -1535,7 +1535,7 @@ invariant
 	objects_grids_not_void: (is_initialized and is_interface_usable) implies objects_grids /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

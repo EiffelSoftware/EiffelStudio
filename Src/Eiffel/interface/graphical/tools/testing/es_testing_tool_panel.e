@@ -625,7 +625,7 @@ feature {NONE} -- Factory
 			create Result
 		end
 
-	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		local
 			l_menu: EV_MENU
@@ -638,10 +638,10 @@ feature {NONE} -- Factory
 			creation_button.set_pixel_buffer (test_creation_pixel_buffer)
 			creation_button.set_menu_function (agent test_creation_menu)
 			register_action (creation_button.select_actions, agent on_create_manual_test (True))
-			Result.force_last (creation_button)
+			Result.extend (creation_button)
 
 				-- Test generation button	
-			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 				-- Create run button
 			create run_button.make
@@ -678,7 +678,7 @@ feature {NONE} -- Factory
 
 			run_button.set_menu (l_menu)
 
-			Result.force_last (run_button)
+			Result.extend (run_button)
 
 				-- Create debug button
 			create debug_button.make
@@ -703,7 +703,7 @@ feature {NONE} -- Factory
 
 			debug_button.set_menu (l_menu)
 
-			Result.force_last (debug_button)
+			Result.extend (debug_button)
 
 				-- Create stop button
 			create stop_button.make
@@ -711,7 +711,7 @@ feature {NONE} -- Factory
 			stop_button.set_pixel_buffer (stock_pixmaps.debug_stop_icon_buffer)
 			stop_button.set_pixmap (stock_pixmaps.debug_stop_icon)
 			register_action (stop_button.select_actions, agent on_stop)
-			Result.force_last (stop_button)
+			Result.extend (stop_button)
 		end
 
 feature {NONE} -- Internationalization
@@ -751,7 +751,7 @@ feature {NONE} -- Internationalization
 	tt_debug_selected: STRING = "Run selected tests"
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

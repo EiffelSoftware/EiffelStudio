@@ -638,7 +638,7 @@ feature {NONE} -- User interface elements
             -- tool bar additions
         local
             l_cell: like internal_mini_tool_bar_widget
-            l_items: DS_LINEAR [SD_TOOL_BAR_ITEM]
+            l_items: like create_mini_tool_bar_items
             l_help_button: detachable SD_TOOL_BAR_ITEM
             l_multi: BOOLEAN
             l_command: ES_NEW_TOOL_COMMAND
@@ -712,7 +712,8 @@ feature {NONE} -- User interface elements
         local
         	l_padding: EV_CELL
             l_cell: like internal_tool_bar_widget
-            l_items: DS_LINEAR [SD_TOOL_BAR_ITEM]
+            l_items: like create_tool_bar_items
+            l_is_first: BOOLEAN
         do
             l_cell := internal_tool_bar_widget
             if l_cell = Void then
@@ -723,14 +724,22 @@ feature {NONE} -- User interface elements
                 if l_items /= Void then
                     create Result.make (create {SD_TOOL_BAR}.make)
 
-                        -- Add tool bar items
-					from l_items.start until l_items.after loop
+						-- Add tool bar items
+					from
+						l_is_first := True
+						l_items.start
+					until
+						l_items.after
+					loop
 						if attached l_items.item_for_iteration as l_item then
-							if l_items.is_first and then attached {SD_TOOL_BAR_WIDGET_ITEM} l_item as l_widget then
-									-- Need to added initial padding because the widgets look too close to the window's border.
-								create l_padding
-								l_padding.set_minimum_width ({ES_UI_CONSTANTS}.frame_border)
-								Result.extend (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_padding))
+							if l_is_first then
+								if attached {SD_TOOL_BAR_WIDGET_ITEM} l_item as l_widget then
+										-- Need to added initial padding because the widgets look too close to the window's border.
+									create l_padding
+									l_padding.set_minimum_width ({ES_UI_CONSTANTS}.frame_border)
+									Result.extend (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_padding))
+								end
+								l_is_first := False
 							end
 							Result.extend (l_item)
 						end
@@ -768,7 +777,7 @@ feature {NONE} -- User interface elements
             -- Secondary right tool bar
         local
             l_cell: like internal_right_tool_bar_widget
-            l_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+            l_items: like create_right_tool_bar_items
             l_padding: EV_CELL
         do
             l_cell := internal_right_tool_bar_widget
@@ -927,7 +936,7 @@ feature {NONE} -- Factory
             result_attached: Result /= Void
         end
 
-    create_mini_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_mini_tool_bar_items: detachable ARRAYED_LIST [SD_TOOL_BAR_ITEM]
             -- Retrieves a list of tool bar items to display on the window title
         do
         ensure
@@ -935,7 +944,7 @@ feature {NONE} -- Factory
             result_contains_attached_items: Result /= Void implies not Result.has (Void)
         end
 
-    create_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_tool_bar_items: detachable ARRAYED_LIST [SD_TOOL_BAR_ITEM]
             -- Retrieves a list of tool bar items to display at the top of the tool.
         deferred
         ensure
@@ -943,7 +952,7 @@ feature {NONE} -- Factory
             result_contains_attached_items: Result /= Void implies not Result.has (Void)
         end
 
-    create_right_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_right_tool_bar_items: detachable ARRAYED_LIST [SD_TOOL_BAR_ITEM]
             -- Retrieves a list of tool bar items that should be displayed at the top, but right aligned.
             -- Note: Redefine to add a right tool bar.
         do

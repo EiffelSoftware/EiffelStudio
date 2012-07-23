@@ -277,24 +277,24 @@ feature {NONE} -- Factory
 			create Result.make (Current)
 		end
 
-    create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
             -- <Precursor>
 		do
 			--| No tool bar
 		end
 
-    create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_mini_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
             -- <Precursor>
 		local
 			l_item: SD_TOOL_BAR_BUTTON
         do
-  			create Result.make_default
+  			create Result.make (1)
   			create l_item.make
   			l_item.set_pixel_buffer (pixmaps.mini_pixmaps.general_search_icon_buffer)
   			l_item.set_tooltip (interface_names.e_show_class_cluster)
   			l_item.select_actions.extend (agent user_widget.on_show_editing_item)
   			register_action (l_item.drop_actions, agent user_widget.target_stone)
-  			Result.put_last (l_item)
+  			Result.extend (l_item)
         end
 
 feature {NONE} -- Constants

@@ -138,7 +138,7 @@ feature {NONE} -- Initialization
 			filter_bar.hide
 		end
 
-    create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_mini_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
             -- Retrieves a list of tool bar items to display on the window title
 		local
 			dbgm: EB_DEBUGGER_MANAGER
@@ -157,19 +157,19 @@ feature {NONE} -- Initialization
 			scmd.enable_sensitive
 			filter_command := scmd
 
-			Result.force_last (scmd.new_mini_sd_toolbar_item)
+			Result.extend (scmd.new_mini_sd_toolbar_item)
 
 			if dbgm.enable_bkpt /= Void then
 				enable_bkpt_button := dbgm.enable_bkpt.new_mini_sd_toolbar_item
-				Result.force_last (enable_bkpt_button)
+				Result.extend (enable_bkpt_button)
 			end
 			if dbgm.disable_bkpt /= Void then
 				disable_bkpt_button := dbgm.disable_bkpt.new_mini_sd_toolbar_item
-				Result.force_last (disable_bkpt_button)
+				Result.extend (disable_bkpt_button)
 			end
 			if dbgm.clear_bkpt /= Void then
 				clear_bkpt_button := dbgm.clear_bkpt.new_mini_sd_toolbar_item
-				Result.force_last (clear_bkpt_button)
+				Result.extend (clear_bkpt_button)
 			end
         end
 
@@ -234,7 +234,7 @@ feature {NONE} -- Factory
         	Create Result
         end
 
-	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Retrieves a list of tool bar items to display at the top of the tool.
 		do
 		end
@@ -1427,7 +1427,7 @@ feature {NONE} -- Implementation, cosmetic
 			-- Row highlight background color.
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

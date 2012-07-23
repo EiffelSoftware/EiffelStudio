@@ -135,7 +135,7 @@ feature {NONE} -- Redefine
 			end
 		end
 
-	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
@@ -148,24 +148,24 @@ feature {NONE} -- Redefine
 			l_manager := l_shared.manager
 
 			create Result.make (3)
-			Result.force_last (l_manager.all_test_run_results_command.new_sd_toolbar_item (False))
+			Result.extend (l_manager.all_test_run_results_command.new_sd_toolbar_item (False))
 
 			l_show_failure_trace_button := l_manager.see_testing_failure_trace_command.new_sd_toolbar_item (False)
 			l_show_failure_trace_button.select_actions.extend (agent set_is_failure_trace_button_enabled)
 			if is_failure_trace_button_enabled then
 				l_manager.see_testing_failure_trace_command.enable_select
 			end
-			Result.force_last (l_show_failure_trace_button)
+			Result.extend (l_show_failure_trace_button)
 
 			-- FIXIT: This button is not implemented now
---			Result.force_last (l_manager.compare_with_expected_result_command.new_sd_toolbar_item (False))
+--			Result.extend (l_manager.compare_with_expected_result_command.new_sd_toolbar_item (False))
 
-			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 			l_shim ?= develop_window.shell_tools.tool ({ES_EWEASEL_TESTING_TOOL})
 			if l_shim /= Void then
 				l_show_tool_command := develop_window.commands.show_shell_tool_commands.item (l_shim)
-				Result.force_last (l_show_tool_command.new_sd_toolbar_item (False))
+				Result.extend (l_show_tool_command.new_sd_toolbar_item (False))
 			end
 		end
 
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 			-- Used by `test_run_result_grid_manager' ONLY!
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

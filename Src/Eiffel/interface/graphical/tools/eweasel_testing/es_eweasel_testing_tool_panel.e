@@ -313,7 +313,7 @@ feature {NONE} -- UI widgets
 
 feature {NONE} -- Factory
 
-	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		local
 			l_separator: SD_TOOL_BAR_SEPARATOR
@@ -325,35 +325,35 @@ feature {NONE} -- Factory
 
 			create Result.make (8)
 
-			Result.force_last (unit_test_manager.new_manual_test_command.new_sd_toolbar_item (False))
-			Result.force_last (unit_test_manager.del_test_case_command.new_sd_toolbar_item (False))
+			Result.extend (unit_test_manager.new_manual_test_command.new_sd_toolbar_item (False))
+			Result.extend (unit_test_manager.del_test_case_command.new_sd_toolbar_item (False))
 
 			create l_separator.make
-			Result.force_last (l_separator)
+			Result.extend (l_separator)
 
-			Result.force_last (unit_test_manager.next_failed_test_command.new_sd_toolbar_item (False))
-			Result.force_last (unit_test_manager.previous_failed_test_command.new_sd_toolbar_item (False))
+			Result.extend (unit_test_manager.next_failed_test_command.new_sd_toolbar_item (False))
+			Result.extend (unit_test_manager.previous_failed_test_command.new_sd_toolbar_item (False))
 
-			Result.force_last (unit_test_manager.show_failed_tests_only_command.new_sd_toolbar_item (False))
-			Result.force_last (unit_test_manager.update_last_changed_time_command.new_sd_toolbar_item (False))
-			Result.force_last (unit_test_manager.find_test_case_command.new_sd_toolbar_item (False))
+			Result.extend (unit_test_manager.show_failed_tests_only_command.new_sd_toolbar_item (False))
+			Result.extend (unit_test_manager.update_last_changed_time_command.new_sd_toolbar_item (False))
+			Result.extend (unit_test_manager.find_test_case_command.new_sd_toolbar_item (False))
 
 			create l_separator.make
-			Result.force_last (l_separator)
+			Result.extend (l_separator)
 
-			Result.force_last (unit_test_manager.start_test_run_command.new_sd_toolbar_item (False))
-			Result.force_last (unit_test_manager.start_test_run_failed_first_command.new_sd_toolbar_item (False))
+			Result.extend (unit_test_manager.start_test_run_command.new_sd_toolbar_item (False))
+			Result.extend (unit_test_manager.start_test_run_failed_first_command.new_sd_toolbar_item (False))
 
-			Result.force_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 			l_shim ?= develop_window.shell_tools.tool ({ES_EWEASEL_TESTING_RESULT_TOOL})
 			if l_shim /= Void then
 				l_show_tool_command := develop_window.commands.show_shell_tool_commands.item (l_shim)
-				Result.force_last (l_show_tool_command.new_sd_toolbar_item (False))
+				Result.extend (l_show_tool_command.new_sd_toolbar_item (False))
 			end
 		end
 
-	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_right_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		local
 			l_string: STRING_GENERAL
@@ -385,9 +385,9 @@ feature {NONE} -- Factory
 			l_vbox.extend (l_box)
 			l_vbox.disable_item_expand (l_box)
 			l_vbox.extend (create {EV_CELL})
-			Result.put_last (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_vbox))
+			Result.extend (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_vbox))
 
-			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 				-- Errors
 			create l_vbox
@@ -409,9 +409,9 @@ feature {NONE} -- Factory
 			l_vbox.extend (l_box)
 			l_vbox.disable_item_expand (l_box)
 			l_vbox.extend (create {EV_CELL})
-			Result.put_last (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_vbox))
+			Result.extend (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_vbox))
 
-			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 				-- Failures
 			create l_vbox
@@ -433,11 +433,11 @@ feature {NONE} -- Factory
 			l_vbox.extend (l_box)
 			l_vbox.disable_item_expand (l_box)
 			l_vbox.extend (create {EV_CELL})
-			Result.put_last (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_vbox))
+			Result.extend (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_vbox))
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

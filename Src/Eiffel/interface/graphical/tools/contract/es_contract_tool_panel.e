@@ -1384,7 +1384,7 @@ feature {NONE} -- Factory
 			Result := contract_editor.widget
 		end
 
-    create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
             -- <Precursor>
 		local
 			l_button: SD_TOOL_BAR_BUTTON
@@ -1403,8 +1403,8 @@ feature {NONE} -- Factory
 			l_button.set_tooltip (interface_names.t_contract_save_to_class)
 			l_button.disable_sensitive
 			save_modifications_button := l_button
-			Result.put_last (l_button)
-			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+			Result.extend (l_button)
+			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 				-- Add contract button
 			create l_dual_button.make
@@ -1413,7 +1413,7 @@ feature {NONE} -- Factory
 			l_dual_button.set_tooltip (interface_names.t_contract_add_contract)
 			l_dual_button.disable_sensitive
 			add_contract_button := l_dual_button
-			Result.put_last (l_dual_button)
+			Result.extend (l_dual_button)
 
 				-- Create menu for add selection button
 			create l_menu
@@ -1441,7 +1441,7 @@ feature {NONE} -- Factory
 			l_button.set_tooltip (interface_names.t_contract_remove_selected)
 			l_button.disable_sensitive
 			remove_contract_button := l_button
-			Result.put_last (l_button)
+			Result.extend (l_button)
 
 				-- Edit contracts button
 			create l_button.make
@@ -1450,7 +1450,7 @@ feature {NONE} -- Factory
 			l_button.set_tooltip (interface_names.t_contract_edit_selected)
 			l_button.disable_sensitive
 			edit_contract_button := l_button
-			Result.put_last (l_button)
+			Result.extend (l_button)
 
 				-- Move contract up button
 			create l_button.make
@@ -1459,7 +1459,7 @@ feature {NONE} -- Factory
 			l_button.set_tooltip (interface_names.t_contract_move_selected_up)
 			l_button.disable_sensitive
 			move_contract_up_button := l_button
-			Result.put_last (l_button)
+			Result.extend (l_button)
 
 				-- Move contract down button
 			create l_button.make
@@ -1468,9 +1468,9 @@ feature {NONE} -- Factory
 			l_button.set_tooltip (interface_names.t_contract_move_selected_down)
 			l_button.disable_sensitive
 			move_contract_down_button := l_button
-			Result.put_last (l_button)
+			Result.extend (l_button)
 
-			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 				-- Refresh contracts button
 			create l_button.make
@@ -1479,7 +1479,7 @@ feature {NONE} -- Factory
 			l_button.set_tooltip (interface_names.t_contract_refresh)
 			l_button.disable_sensitive
 			refresh_button := l_button
-			Result.put_last (l_button)
+			Result.extend (l_button)
 
 				-- Contract selection button
 			create l_dual_button.make
@@ -1488,7 +1488,7 @@ feature {NONE} -- Factory
 			l_dual_button.set_pixmap (stock_pixmaps.view_contracts_icon)
 			l_dual_button.set_tooltip (interface_names.t_contract_select_mode)
 			contract_mode_button := l_dual_button
-			Result.put_last (l_dual_button)
+			Result.extend (l_dual_button)
 
 				-- Create menu for contract selection button
 			create l_menu
@@ -1507,7 +1507,7 @@ feature {NONE} -- Factory
 			l_dual_button.set_menu (l_menu)
 		end
 
-	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_right_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		local
 			l_button: SD_TOOL_BAR_BUTTON
@@ -1522,9 +1522,9 @@ feature {NONE} -- Factory
 			l_toggle_button.set_tooltip (interface_names.t_contract_show_all_lines)
 			l_toggle_button.disable_sensitive
 			show_all_lines_button := l_toggle_button
-			Result.put_last (l_toggle_button)
+			Result.extend (l_toggle_button)
 
-			Result.put_last (create {SD_TOOL_BAR_SEPARATOR}.make)
+			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 
 				-- Show callers button
 			create l_button.make
@@ -1533,7 +1533,7 @@ feature {NONE} -- Factory
 			l_button.set_tooltip (interface_names.t_contract_show_callers)
 			l_button.disable_sensitive
 			show_callers_button := l_button
-			Result.put_last (l_button)
+			Result.extend (l_button)
 		end
 
 	contract_mode_label (a_mode: like contract_mode): attached STRING_32
@@ -1594,7 +1594,7 @@ invariant
 	contract_editor_attached: (is_initialized and is_interface_usable) implies contract_editor /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -105,7 +105,7 @@ feature {NONE} -- Initialization
 			register_action (content.drop_actions, agent on_element_drop)
 		end
 
-    create_mini_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+    create_mini_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
             -- Retrieves a list of tool bar items to display on the window title
 		local
 			tbb: SD_TOOL_BAR_BUTTON
@@ -120,7 +120,7 @@ feature {NONE} -- Initialization
 			scmd.enable_sensitive
 			tbb := scmd.new_mini_sd_toolbar_item
 			scmd.add_agent (agent open_watch_menu (tbb))
-			Result.force_last (tbb)
+			Result.extend (tbb)
 
 			create toggle_auto_behavior_cmd.make
 			toggle_auto_behavior_cmd.set_pixmap (pixmaps.mini_pixmaps.watch_auto_icon)
@@ -132,7 +132,7 @@ feature {NONE} -- Initialization
 			toggle_auto_behavior_cmd.add_action (agent toggle_auto_expressions)
 			toggle_auto_behavior_cmd.set_is_selected_function (agent auto_expression_enabled)
 			toggle_auto_behavior_cmd.enable_sensitive
-			Result.force_last (toggle_auto_behavior_cmd.new_mini_sd_toolbar_item)
+			Result.extend (toggle_auto_behavior_cmd.new_mini_sd_toolbar_item)
 
 			create create_expression_cmd.make
 			create_expression_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.new_expression_icon)
@@ -140,7 +140,7 @@ feature {NONE} -- Initialization
 			create_expression_cmd.set_tooltip (interface_names.e_new_expression)
 			create_expression_cmd.add_agent (agent define_new_expression)
 			create_expression_cmd.enable_sensitive
-			Result.force_last (create_expression_cmd.new_mini_sd_toolbar_item)
+			Result.extend (create_expression_cmd.new_mini_sd_toolbar_item)
 
 			create edit_expression_cmd.make
 			edit_expression_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_edit_icon)
@@ -148,7 +148,7 @@ feature {NONE} -- Initialization
 			edit_expression_cmd.set_tooltip (interface_names.e_edit_expression)
 			edit_expression_cmd.add_agent (agent edit_expression)
 			tbb := edit_expression_cmd.new_mini_sd_toolbar_item
-			Result.force_last (tbb)
+			Result.extend (tbb)
 
 			create toggle_state_of_expression_cmd.make
 			toggle_state_of_expression_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_toogle_icon)
@@ -156,18 +156,18 @@ feature {NONE} -- Initialization
 			toggle_state_of_expression_cmd.set_tooltip (interface_names.e_toggle_state_of_expressions)
 			toggle_state_of_expression_cmd.add_agent (agent toggle_state_of_selected)
 			tbb := toggle_state_of_expression_cmd.new_mini_sd_toolbar_item
-			Result.force_last (tbb)
+			Result.extend (tbb)
 
 			create slices_cmd.make (Current)
 			slices_cmd.enable_sensitive
-			Result.force_last (slices_cmd.new_mini_sd_toolbar_item)
+			Result.extend (slices_cmd.new_mini_sd_toolbar_item)
 
 			create hex_format_cmd.make (agent set_hexadecimal_mode (?))
 			hex_format_cmd.enable_sensitive
-			Result.force_last (hex_format_cmd.new_mini_sd_toolbar_item)
+			Result.extend (hex_format_cmd.new_mini_sd_toolbar_item)
 
-			Result.force_last (object_viewer_cmd.new_mini_sd_toolbar_item)
-			Result.force_last (debugger_manager.object_storage_management_cmd.new_mini_sd_toolbar_item_for_watch_tool (Current))
+			Result.extend (object_viewer_cmd.new_mini_sd_toolbar_item)
+			Result.extend (debugger_manager.object_storage_management_cmd.new_mini_sd_toolbar_item_for_watch_tool (Current))
 
 			create delete_expression_cmd.make
 			delete_expression_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_delete_icon)
@@ -177,7 +177,7 @@ feature {NONE} -- Initialization
 			tbb := delete_expression_cmd.new_mini_sd_toolbar_item
 			tbb.drop_actions.extend (agent remove_object_line)
 			tbb.drop_actions.set_veto_pebble_function (agent is_removable )
-			Result.force_last (tbb)
+			Result.extend (tbb)
 
 			create move_up_cmd.make
 			move_up_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_up_icon)
@@ -185,7 +185,7 @@ feature {NONE} -- Initialization
 			move_up_cmd.set_tooltip (interface_names.f_move_item_up)
 			move_up_cmd.add_agent (agent move_selected (-1))
 			tbb := move_up_cmd.new_mini_sd_toolbar_item
-			Result.force_last (tbb)
+			Result.extend (tbb)
 
 			create move_down_cmd.make
 			move_down_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_down_icon)
@@ -193,7 +193,7 @@ feature {NONE} -- Initialization
 			move_down_cmd.set_tooltip (interface_names.f_move_item_down)
 			move_down_cmd.add_agent (agent move_selected (+1))
 			tbb := move_down_cmd.new_mini_sd_toolbar_item
-			Result.force_last (tbb)
+			Result.extend (tbb)
 		end
 
 	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)
@@ -219,7 +219,7 @@ feature {NONE} -- Factory
         	Create Result
         end
 
-	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Retrieves a list of tool bar items to display at the top of the tool.
 		do
 		end

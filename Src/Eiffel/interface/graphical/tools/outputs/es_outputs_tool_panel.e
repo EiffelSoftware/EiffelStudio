@@ -908,7 +908,7 @@ feature {NONE} -- Factory
 			create Result
 		end
 
-	create_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		local
 			l_box: EV_HORIZONTAL_BOX
@@ -938,14 +938,14 @@ feature {NONE} -- Factory
 			selection_combo := l_combo
 
 			create l_widget.make (l_box)
-			Result.put_last (l_widget)
+			Result.extend (l_widget)
 
 				-- Save button
 			create l_button.make
 			l_button.set_pixel_buffer (stock_pixmaps.general_save_icon_buffer)
 			l_button.set_pixmap (stock_pixmaps.general_save_icon)
 			l_button.set_tooltip (locale_formatter.translation (tt_save_output))
-			Result.put_last (l_button)
+			Result.extend (l_button)
 			save_button := l_button
 
 				-- Search button
@@ -953,20 +953,20 @@ feature {NONE} -- Factory
 			l_button.set_pixel_buffer (stock_pixmaps.tool_search_icon_buffer)
 			l_button.set_pixmap (stock_pixmaps.tool_search_icon)
 			l_button.set_tooltip (locale_formatter.translation (tt_search_output))
-			Result.put_last (l_button)
+			Result.extend (l_button)
 			search_button := l_button
 
 				-- Tool bar for modified outputs
 			create l_tool_bar.make
 			l_tool_bar.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 			l_tool_bar.hide
-			Result.put_last (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_tool_bar))
+			Result.extend (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_tool_bar))
 			modified_outputs_tool_bar := l_tool_bar
 		ensure then
 			result_attached: Result /= Void
 		end
 
-	create_right_tool_bar_items: DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_right_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		local
 			l_button: SD_TOOL_BAR_BUTTON
@@ -977,7 +977,7 @@ feature {NONE} -- Factory
 			create l_button.make
 			l_button.set_pixel_buffer (stock_pixmaps.general_reset_icon_buffer)
 			l_button.set_pixmap (stock_pixmaps.general_reset_icon)
-			Result.put_last (l_button)
+			Result.extend (l_button)
 			clear_button := l_button
 		ensure then
 			result_attached: Result /= Void
@@ -996,7 +996,7 @@ feature {NONE} -- Internationalization
 	tt_show_modified_output_1: STRING = "Show the modified $1 output"
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

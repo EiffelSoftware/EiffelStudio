@@ -96,7 +96,7 @@ feature {ES_TESTING_RESULTS_TOOL} -- Basic operations
 
 feature {NONE} -- Factory
 
-	create_tool_bar_items: detachable DS_ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_tool_bar_items: detachable ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		do
 		end
@@ -113,7 +113,7 @@ feature {NONE} -- Internationalization
 	t_comparison_title: STRING = "Comparison"
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

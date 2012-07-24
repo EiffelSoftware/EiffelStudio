@@ -126,6 +126,7 @@ feature -- Command
 			destroy_ribbon_com_framwork (item)
 			item := default_pointer
 			com_uninitialize
+			associated_window := Void
 		end
 
 	save_settings_to_file (a_file_name: READABLE_STRING_GENERAL)
@@ -587,7 +588,7 @@ feature {EV_RIBBON} -- Externals callbacks
 			}"
 		end
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

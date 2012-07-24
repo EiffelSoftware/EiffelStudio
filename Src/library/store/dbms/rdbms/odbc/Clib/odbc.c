@@ -850,7 +850,7 @@ void setup_result_space (void *con, int no_desc)
 				/* The underlying API will require an extra character for the null terminating character
 				 * of string data. */
 			if ((GetDbCType(dap, i) == SQL_C_WCHAR) || (GetDbCType(dap, i) == SQL_C_CHAR)) {
-				l_length = l_length + sizeof(TCHAR);
+				l_length = l_length + sizeof(SQLTCHAR);
 			}
 			dataBuf = GetDbColPtr(dap, i);
 			ODBC_SAFE_ALLOC(dataBuf, (char *) realloc(dataBuf, l_length));
@@ -1018,7 +1018,7 @@ int odbc_next_row (void *con, int no_des)
 			l_con->odbc_indicator[no_des][i] = 0;
 				/* String data have an extra character for the null terminating character. */
 			if ((GetDbCType(dap, i) == SQL_C_WCHAR) || (GetDbCType(dap, i) == SQL_C_CHAR)) {
-				l_terminator_size = sizeof(TCHAR);
+				l_terminator_size = sizeof(SQLTCHAR);
 				old_length += l_terminator_size;
 			}
 			if (GetDbCType(dap, i) == SQL_C_NUMERIC){

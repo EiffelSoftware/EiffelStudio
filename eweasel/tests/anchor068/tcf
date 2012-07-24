@@ -1,0 +1,12 @@
+
+test_name 	 qat-with-secret-features
+test_description A qualified anchored type that references a feature that is not exported to the client should not be accepted
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	validity_error TEST VUEX(2) VUEX(2)
+
+test_end

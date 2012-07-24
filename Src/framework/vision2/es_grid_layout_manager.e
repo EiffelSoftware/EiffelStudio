@@ -100,6 +100,14 @@ feature -- Change
 			wipe_out
 		end
 
+	destroy
+		do
+			disable
+			post_recording_actions.wipe_out
+			pre_recording_actions.wipe_out
+			pre_restoring_actions.wipe_out
+		end
+
 	enable_positioning
 		do
 			positioning_enabled := True
@@ -707,8 +715,8 @@ feature {NONE} -- Agent
 			-- row and old value
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

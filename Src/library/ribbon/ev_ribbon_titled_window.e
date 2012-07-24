@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			create l_res
-			l_res.ribbon_window_list.extend (Current)
+			l_res.register_ribbon_window (Current)
 		end
 
 	create_interface_objects
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

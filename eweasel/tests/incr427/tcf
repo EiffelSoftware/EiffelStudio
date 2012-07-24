@@ -1,0 +1,36 @@
+
+test_name	create-generic-remove-generic-inheritance
+test_description Changing an inherited class to nongeneric, adjusting child class accordingly and melting causes system execution to seg fault when grandchild class tries to create something of a formal generic type
+
+define		FORMAL_GENERICS "[G]"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+copy_sub 	test3.e $CLUSTER test3.e
+copy_raw 	test4.e $CLUSTER test4.e
+
+compile_melted
+compile_result 	ok
+
+define		FORMAL_GENERICS ""
+copy_sub 	test1.e $CLUSTER test1.e
+copy_sub 	test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

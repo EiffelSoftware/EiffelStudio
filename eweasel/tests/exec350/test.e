@@ -13,6 +13,7 @@ feature
 
 			create b.make
 			b.f
+			b.g
 	 	end
 
 end

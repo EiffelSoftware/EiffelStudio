@@ -60,7 +60,8 @@ feature {NONE} -- Implementation
 				leave (shop)
 			else
 				print ("Customer-" + id.out + " will come back later.%N")
-				(create {EXECUTION_ENVIRONMENT}).sleep (10000 * 1000000)
+					-- Sleep 10 sec.
+				(create {EXECUTION_ENVIRONMENT}).sleep ({INTEGER_64} 10_000_000_000)
 			end
 		end
 

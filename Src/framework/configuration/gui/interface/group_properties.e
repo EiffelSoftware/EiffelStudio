@@ -184,11 +184,11 @@ feature {NONE} -- Implementation
 
 				-- options
 			if not a_group.is_assembly then
-				add_misc_option_properties (a_group.changeable_internal_options, a_group.options, True)
-				add_dotnet_option_properties (a_group.changeable_internal_options, a_group.options, True, a_group.target.setting_msil_generation)
-				add_assertion_option_properties (a_group.changeable_internal_options, a_group.options, True)
-				add_warning_option_properties (a_group.changeable_internal_options, a_group.options, True)
-				add_debug_option_properties (a_group.changeable_internal_options, a_group.options, True)
+				add_misc_option_properties (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
+				add_dotnet_option_properties (a_group.changeable_internal_options, a_group.options, True, a_group.target.setting_msil_generation, a_group.is_library)
+				add_assertion_option_properties (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
+				add_warning_option_properties (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
+				add_debug_option_properties (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
 			end
 
 			properties.current_section.expand
@@ -599,7 +599,7 @@ feature {NONE} -- Inheritance handling
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

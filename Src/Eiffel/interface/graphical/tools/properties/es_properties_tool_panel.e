@@ -215,11 +215,11 @@ feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 					l_name_prop.set_value (l_cs.file_name)
 					l_name_prop.enable_readonly
 					properties.add_property (l_name_prop)
-					add_misc_option_properties (l_class_options, l_inh_options, True)
-					add_dotnet_option_properties (l_class_options, l_inh_options, True, l_group.target.setting_msil_generation)
-					add_assertion_option_properties (l_class_options, l_inh_options, True)
-					add_warning_option_properties (l_class_options, l_inh_options, True)
-					add_debug_option_properties (l_class_options, l_inh_options, True)
+					add_misc_option_properties (l_class_options, l_inh_options, True, False)
+					add_dotnet_option_properties (l_class_options, l_inh_options, True, l_group.target.setting_msil_generation, False)
+					add_assertion_option_properties (l_class_options, l_inh_options, True, False)
+					add_warning_option_properties (l_class_options, l_inh_options, True, False)
+					add_debug_option_properties (l_class_options, l_inh_options, True, False)
 					properties.set_expanded_section_store (class_section_expanded_status)
 				else
 					check should_not_reach: False end
@@ -252,9 +252,9 @@ feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 				current_system := current_target.system
 				l_extends := current_target.extends /= Void
 				add_general_properties
-				add_assertion_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
-				add_warning_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
-				add_debug_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
+				add_assertion_option_properties (current_target.changeable_internal_options, current_target.options, l_extends, False)
+				add_warning_option_properties (current_target.changeable_internal_options, current_target.options, l_extends, False)
+				add_debug_option_properties (current_target.changeable_internal_options, current_target.options, l_extends, False)
 				add_advanced_properties
 
 				properties.set_expanded_section_store (target_section_expanded_status)

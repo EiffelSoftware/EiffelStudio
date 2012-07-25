@@ -22,6 +22,11 @@ inherit
 
 	PROPERTY_HELPER
 
+	CONF_LOAD_PARSE_CALLBACKS_CONSTANTS
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	conf_factory: CONF_PARSE_FACTORY
@@ -61,7 +66,7 @@ feature {NONE} -- Implementation
 			-- default is to do nothing
 		end
 
-	add_misc_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN)
+	add_misc_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN; a_check_non_client_option: BOOLEAN)
 			-- Add option properties which may come from `an_options' (defined on the node itself) itself or from `an_inherited_options' (final value after inheritance).
 		require
 			an_options_not_void: an_options /= Void
@@ -70,6 +75,7 @@ feature {NONE} -- Implementation
 		local
 			l_bool_prop: BOOLEAN_PROPERTY
 			c: detachable CONF_VALUE_CHOICE
+			l_string_prop: STRING_PROPERTY
 		do
 				-- General section.
 			properties.add_section (conf_interface_names.section_general)
@@ -92,6 +98,9 @@ feature {NONE} -- Implementation
 					l_bool_prop.enable_inherited
 				end
 			end
+			if a_check_non_client_option and then is_non_client_option (at_profile) then
+				l_bool_prop.enable_readonly
+			end
 			properties.add_property (l_bool_prop)
 
 				-- Tracing option
@@ -111,6 +120,9 @@ feature {NONE} -- Implementation
 				else
 					l_bool_prop.enable_inherited
 				end
+			end
+			if a_check_non_client_option and then is_non_client_option (at_trace) then
+				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
 
@@ -132,6 +144,9 @@ feature {NONE} -- Implementation
 					l_bool_prop.enable_inherited
 				end
 			end
+			if a_check_non_client_option and then is_non_client_option (at_full_class_checking) then
+				l_bool_prop.enable_readonly
+			end
 			properties.add_property (l_bool_prop)
 
 				-- Cat call detection
@@ -152,6 +167,9 @@ feature {NONE} -- Implementation
 					l_bool_prop.enable_inherited
 				end
 			end
+			if a_check_non_client_option and then is_non_client_option (at_cat_call_detection) then
+				l_bool_prop.enable_readonly
+			end
 			properties.add_property (l_bool_prop)
 
 				-- Void safety
@@ -170,6 +188,9 @@ feature {NONE} -- Implementation
 				an_options.void_safety,
 				c
 			)
+			if attached last_added_choice_property as l_prop and then a_check_non_client_option and then is_non_client_option (at_void_safety) then
+				l_prop.enable_readonly
+			end
 
 				-- Syntax support
 			if a_inherits then
@@ -188,6 +209,9 @@ feature {NONE} -- Implementation
 				an_options.syntax,
 				c
 			)
+			if attached last_added_choice_property as l_prop and then a_check_non_client_option and then is_non_client_option (at_syntax_level) then
+				l_prop.enable_readonly
+			end
 
 			properties.current_section.expand
 
@@ -212,10 +236,13 @@ feature {NONE} -- Implementation
 					l_bool_prop.enable_inherited
 				end
 			end
+			if a_check_non_client_option and then is_non_client_option (at_is_attached_by_default) then
+				l_bool_prop.enable_readonly
+			end
 			properties.add_property (l_bool_prop)
 		end
 
-	add_assertion_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN)
+	add_assertion_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN; a_check_non_client_option: BOOLEAN)
 			-- Add option properties which may come from `an_options' (defined on the node itself) itself or from `an_inherited_options' (final value after inheritance).
 		require
 			an_options_not_void: an_options /= Void
@@ -237,6 +264,9 @@ feature {NONE} -- Implementation
 			l_require.set_refresh_action (agent l_inh_assertions.is_precondition)
 			l_require.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_require_name, ?))
 			l_require.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
+			if a_check_non_client_option and then is_non_client_option (at_precondition) then
+				l_require.enable_readonly
+			end
 			properties.add_property (l_require)
 
 			l_ensure := new_boolean_property (conf_interface_names.option_ensure_name, l_inh_assertions.is_postcondition)
@@ -244,6 +274,9 @@ feature {NONE} -- Implementation
 			l_ensure.set_refresh_action (agent l_inh_assertions.is_postcondition)
 			l_ensure.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_ensure_name, ?))
 			l_ensure.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
+			if a_check_non_client_option and then is_non_client_option (at_postcondition) then
+				l_ensure.enable_readonly
+			end
 			properties.add_property (l_ensure)
 
 			l_check := new_boolean_property (conf_interface_names.option_check_name, l_inh_assertions.is_check)
@@ -251,6 +284,9 @@ feature {NONE} -- Implementation
 			l_check.set_refresh_action (agent l_inh_assertions.is_check)
 			l_check.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_check_name, ?))
 			l_check.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
+			if a_check_non_client_option and then is_non_client_option (at_check) then
+				l_check.enable_readonly
+			end
 			properties.add_property (l_check)
 
 			l_invariant := new_boolean_property (conf_interface_names.option_invariant_name, l_inh_assertions.is_invariant)
@@ -258,6 +294,9 @@ feature {NONE} -- Implementation
 			l_invariant.set_refresh_action (agent l_inh_assertions.is_invariant)
 			l_invariant.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_invariant_name, ?))
 			l_invariant.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
+			if a_check_non_client_option and then is_non_client_option (at_invariant) then
+				l_invariant.enable_readonly
+			end
 			properties.add_property (l_invariant)
 
 			l_loop := new_boolean_property (conf_interface_names.option_loop_name, l_inh_assertions.is_loop)
@@ -265,6 +304,9 @@ feature {NONE} -- Implementation
 			l_loop.set_refresh_action (agent l_inh_assertions.is_loop)
 			l_loop.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_loop_name, ?))
 			l_loop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
+			if a_check_non_client_option and then is_non_client_option (at_loop) then
+				l_loop.enable_readonly
+			end
 			properties.add_property (l_loop)
 
 			l_sup_require := new_boolean_property (conf_interface_names.option_sup_require_name, l_inh_assertions.is_supplier_precondition)
@@ -272,6 +314,9 @@ feature {NONE} -- Implementation
 			l_sup_require.set_refresh_action (agent l_inh_assertions.is_supplier_precondition)
 			l_sup_require.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_sup_require_name, ?))
 			l_sup_require.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
+			if a_check_non_client_option and then is_non_client_option (at_supplier_precondition) then
+				l_sup_require.enable_readonly
+			end
 			properties.add_property (l_sup_require)
 
 				-- assertion inheritance handling
@@ -312,7 +357,7 @@ feature {NONE} -- Implementation
 			properties.current_section.expand
 		end
 
-	add_warning_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN)
+	add_warning_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN; a_check_non_client_option: BOOLEAN)
 			-- Add debug option properties which may come from `an_options' (defined on the node itself) itself or from `an_inherited_options' (final value after inheritance).
 		require
 			an_options_not_void: an_options /= Void
@@ -339,6 +384,9 @@ feature {NONE} -- Implementation
 				else
 					l_bool_prop.enable_inherited
 				end
+			end
+			if a_check_non_client_option and then is_non_client_option (at_warning) then
+				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
 
@@ -367,7 +415,7 @@ feature {NONE} -- Implementation
 			properties.current_section.expand
 		end
 
-	add_debug_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN)
+	add_debug_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN; a_check_non_client_option: BOOLEAN)
 			-- Add debug option properties which may come from `an_options' (defined on the node itself) itself or from `an_inherited_options' (final value after inheritance).
 		require
 			an_options_not_void: an_options /= Void
@@ -394,6 +442,9 @@ feature {NONE} -- Implementation
 				else
 					l_bool_prop.enable_inherited
 				end
+			end
+			if a_check_non_client_option and then is_non_client_option (at_debug) then
+				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
 
@@ -425,7 +476,7 @@ feature {NONE} -- Implementation
 			properties.current_section.expand
 		end
 
-	add_dotnet_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits, a_il_generation: BOOLEAN)
+	add_dotnet_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits, a_il_generation: BOOLEAN; a_check_non_client_option: BOOLEAN)
 			-- Add .NET option properties which may come from `an_options' (defined on the node itself) itself or from `an_inherited_options' (final value after inheritance).
 		require
 			an_options_not_void: an_options /= Void
@@ -447,6 +498,9 @@ feature {NONE} -- Implementation
 			if not a_il_generation then
 				l_string_prop.enable_readonly
 			end
+			if a_check_non_client_option and then is_non_client_option (at_namespace) then
+				l_string_prop.enable_readonly
+			end
 			properties.add_property (l_string_prop)
 
 			l_bool_prop := new_boolean_property (conf_interface_names.option_msil_application_optimize_name, an_inherited_options.is_msil_application_optimize)
@@ -465,6 +519,9 @@ feature {NONE} -- Implementation
 				else
 					l_bool_prop.enable_inherited
 				end
+			end
+			if a_check_non_client_option and then is_non_client_option (at_msil_application_optimize) then
+				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
 
@@ -542,6 +599,7 @@ feature {NONE} -- Implementation
 			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent l_choice_prop.redraw))
 			properties.add_property (l_choice_prop)
+			last_added_choice_property := l_choice_prop
 		end
 
 	update_assertion (an_option, a_inherited_option: CONF_OPTION; a_name: STRING_GENERAL; a_value: BOOLEAN)
@@ -647,6 +705,9 @@ feature {NONE} -- Refresh displayed data.
 			-- Called if the displayed data should be regenerated from scratch.
 		do
 		end
+
+	last_added_choice_property: detachable STRING_CHOICE_PROPERTY;
+			-- Last added choice property
 
 note
 	copyright: "Copyright (c) 1984-2012, Eiffel Software"

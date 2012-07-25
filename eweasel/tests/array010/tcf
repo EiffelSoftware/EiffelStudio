@@ -1,0 +1,14 @@
+test_name 	 array-binary-search-overflow
+test_description Demonstrate a problem at binary search INTEGER_32 overflows.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

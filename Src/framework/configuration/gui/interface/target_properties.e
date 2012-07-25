@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 
 			properties.current_section.expand
 
-			add_misc_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
+			add_misc_option_properties (current_target.changeable_internal_options, current_target.options, l_extends, False)
 
 				-- Concurrency setting.
 			add_choice_property (
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			properties.add_property (l_bool_prop)
 
 				-- Dotnet options
-			add_dotnet_option_properties (current_target.changeable_internal_options, current_target.options, l_extends, current_target.setting_msil_generation)
+			add_dotnet_option_properties (current_target.changeable_internal_options, current_target.options, l_extends, current_target.setting_msil_generation, False)
 
 		ensure
 			properties_not_void: properties /= Void
@@ -646,7 +646,7 @@ feature {NONE} -- Wrappers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

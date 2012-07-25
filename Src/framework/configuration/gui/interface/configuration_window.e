@@ -677,7 +677,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			initialize_properties
 
 			current_target := a_target
-			add_warning_option_properties (a_target.changeable_internal_options, a_target.options, a_target.extends /= Void)
+			add_warning_option_properties (a_target.changeable_internal_options, a_target.options, a_target.extends /= Void, False)
 
 			unlock_update
 			is_refreshing := False
@@ -700,7 +700,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			initialize_properties
 
 			current_target := a_target
-			add_debug_option_properties (a_target.changeable_internal_options, a_target.options, a_target.extends /= Void)
+			add_debug_option_properties (a_target.changeable_internal_options, a_target.options, a_target.extends /= Void, False)
 
 			unlock_update
 			is_refreshing := False
@@ -723,7 +723,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			initialize_properties
 
 			current_target := a_target
-			add_assertion_option_properties (a_target.changeable_internal_options, a_target.options, a_target.extends /= Void)
+			add_assertion_option_properties (a_target.changeable_internal_options, a_target.options, a_target.extends /= Void, False)
 
 			unlock_update
 			is_refreshing := False

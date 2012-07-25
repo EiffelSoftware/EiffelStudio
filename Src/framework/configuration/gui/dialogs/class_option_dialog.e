@@ -197,11 +197,11 @@ feature {NONE} -- Agents
 			lock_update
 
 			properties.reset
-			add_misc_option_properties (l_opts, l_inh_opts, True)
-			add_dotnet_option_properties (l_opts, l_inh_opts, True, True)
-			add_assertion_option_properties (l_opts, l_inh_opts, True)
-			add_warning_option_properties (l_opts, l_inh_opts, True)
-			add_debug_option_properties (l_opts, l_inh_opts, True)
+			add_misc_option_properties (l_opts, l_inh_opts, True, False)
+			add_dotnet_option_properties (l_opts, l_inh_opts, True, True, False)
+			add_assertion_option_properties (l_opts, l_inh_opts, True, False)
+			add_warning_option_properties (l_opts, l_inh_opts, True, False)
+			add_debug_option_properties (l_opts, l_inh_opts, True, False)
 
 			properties.column (1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 			properties.set_expanded_section_store (class_section_expanded_status)

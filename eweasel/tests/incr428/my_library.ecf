@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="web_browser" uuid="60E0F1EB-8BCD-4EF1-B0EE-0174435F6D7F" library_target="my_library">
+	<target name="my_library">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/EIFGEN.{0,1}$</exclude>
+			<exclude>/\.svn$</exclude>
+			<exclude>/temp$</exclude>
+		</file_rule>
+		<option warning="true" syntax="standard" namespace="EiffelSoftware.Library">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="cURL" location="$ISE_LIBRARY\library\cURL\cURL-safe.ecf"/>
+	</target>
+</system>

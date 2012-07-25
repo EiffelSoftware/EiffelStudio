@@ -1023,6 +1023,7 @@ test 	inline-agent-removal-crash		incr424	tcf fail incrementality agents
 test 	inline-agent-removal-crash-2	incr425	tcf fail incrementality agents
 test 	finalization-with-error-crash	incr426	tcf fail incrementality agents finalizing
 test 	create-generic-remove-generic-inheritance incr427 tcf fail incrementality generic
+test	config-remove-library-indirectly	incr428 tcf fail incrementality
 
 
 -- Melting

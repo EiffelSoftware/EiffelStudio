@@ -2657,11 +2657,15 @@ marked: /* Goto label needed to avoid code duplication */
 		/* Mark all objects under root, updating the references if scavenging */
 
 		if (rt_g_data.status & (GC_PART | GC_GEN))
-			for (object = (EIF_REFERENCE *) current; offset > 1; offset--, object++)
-				*object = hybrid_mark(object);
+			for (object = (EIF_REFERENCE *) current; offset > 1; offset--, object++) {
+				if (*object)
+					*object = hybrid_mark(object);
+			}
 		else
-			for (object = (EIF_REFERENCE *) current; offset > 1; offset--, object++)
-				(void) hybrid_mark(object);
+			for (object = (EIF_REFERENCE *) current; offset > 1; offset--, object++) {
+				if (*object)
+					(void) hybrid_mark(object);
+			}
 
 		if (count >= 1) {
 			prev = object;

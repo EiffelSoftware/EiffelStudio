@@ -1,0 +1,19 @@
+
+test_name	 config-remove-library-indirectly
+test_description Removing a library that includes another library in a system with all_classes="true" and then finalizing causes the C compilation to fail because code is generated for the classes in the indirectly referenced library
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	my_library.ecf $TEST my_library.ecf
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+copy_sub 	Ace_rev2 $TEST Ace
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+test_end

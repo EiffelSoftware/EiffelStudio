@@ -4970,7 +4970,7 @@ rt_public void erembq(EIF_REFERENCE obj)
 
 /*
 doc:	<routine name="eif_tenure_object" return_type="EIF_REFERENCE" export="public">
-doc:		<summary>Given an object, if the object is still in the scavenge zone, promotes it outside of the savenge zone. This is used for `eif_freeze'. If it fails, it raises an out of memory exception.</summary>
+doc:		<summary>Given an object, if the object is still in the scavenge zone, promotes it outside of the scavenge zone. This is used for `eif_freeze'. If it fails, it raises an out of memory exception.</summary>
 doc:		<param name="obj" type="EIF_REFERENCE *">Object to promote.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None.</synchronization>

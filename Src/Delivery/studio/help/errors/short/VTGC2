@@ -5,5 +5,5 @@ What to do:
   In order to achieve that goal you can use a renaming clause.
   For example: G -> {A rename f as g end, B}
 Hint: The renaming for formal generics is analogous to the
-  renaming occuring during inheritance.
+  renaming occurring during inheritance.
 

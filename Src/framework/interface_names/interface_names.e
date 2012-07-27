@@ -310,7 +310,6 @@ feature -- Choice original (No translation)
 feature -- Graphical degree output
 
 	d_Classes_to_go: STRING_32					do Result := locale.translation("Classes to Go:")	end
-	d_Class_name_already_exists: STRING_32		do Result := locale.translation("Class name already exits. Please choose other names.")	end
 	d_Class_under_test_not_valid: STRING_32		do Result := locale.translation("Class under test is not valid. Please enter a valid class name or leave blank.")	end
 	d_Clusters_to_go: STRING_32					do Result := locale.translation("Clusters to Go:")	end
 	d_Compilation_class: STRING_32				do Result := locale.translation("Class:")	end

@@ -1,0 +1,30 @@
+
+test_name	ececil-undefined-symbol-4
+test_description After initial compilation, the root class (which contains a $ reference) is changed to be expanded.  When the system is re-frozen, C compilation fails due to an undefined symbol in ececil.c
+
+define	 	EXPANDED ""
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define	 	EXPANDED "expanded"
+copy_sub 	test.e $CLUSTER test.e
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

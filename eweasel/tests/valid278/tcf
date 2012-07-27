@@ -1,0 +1,14 @@
+
+test_name 	 invalid-static-inspect-constant
+test_description The compiler should detect an inspect constant that is a static access of a constant in a generic class that does not provide the correct number of actual generics or that provides actual generics that do not meet generic constraints
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+copy_raw test2.e $CLUSTER test2.e
+copy_raw test3.e $CLUSTER test3.e
+
+compile_melted
+compile_result	validity_error TEST VTUG(2) VTUG(2) VTUG(2) VTCG 
+
+test_end

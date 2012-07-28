@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Represents the COM object ICorDebug"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -46,7 +46,7 @@ feature {ICOR_EXPORTER} -- Access
  			retry
 		end
 
-	create_process (a_command_line, a_working_directory: STRING; a_env: detachable STRING_GENERAL): POINTER
+	create_process (a_command_line, a_working_directory: READABLE_STRING_GENERAL; a_env: detachable READABLE_STRING_GENERAL): POINTER
 			-- Pointer on the freshly creared ICorDebugProcess
 		require
 			not_empty_command_line: a_command_line /= Void and then not a_command_line.is_empty

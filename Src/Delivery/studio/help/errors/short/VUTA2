@@ -1,2 +1,2 @@
-Error: target of the Object_call is not attached.
+Error: target of the Object_call might be void.
 What to do: ensure target of the call is attached.

@@ -1,2 +1,2 @@
-Type error: source of assignment to stable target is not attached.
+Type error: source of assignment to stable target might be void.
 What to do: make sure that source is attached.

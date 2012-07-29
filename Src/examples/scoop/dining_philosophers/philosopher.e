@@ -1,72 +1,96 @@
-note
-	description: "Objects that implement philosophers."
-	author		: "Volkan Arslan, Yann Mueller, Piotr Nienaltowski."
-	reviewer	: "Benjamin Morandi"
-	date		: "$Date: 18.05.2007$"
-	revision	: "1.0.0"
+ï»¿note
+	description: "Philosoper that thinks and then eats using two assigned forks when they are not used by anybody."
+	legal: "See notice at end of class.";
+	status: "See notice at end of class.";
+	date: "$Date$"
+	revision: "$Revision$"
+
 class
 	PHILOSOPHER
 
 inherit
-	PROCESS
+	REPEATABLE
+		rename
+			repeat as live
+		redefine
+			act
+		end
 
 create
 	make
 
 feature -- Initialization
 
-	make (an_id: INTEGER; a_left_fork, a_right_fork: separate FORK; a_number_of_rounds: INTEGER)
-			-- Creation procedure.
+	make (philosopher: NATURAL; left, right: separate FORK; round_count: NATURAL)
+			-- Initialize with ID of `philosopher', forks `left' and `right', and for `round_count' times to eat.
 		require
-			forks_exist: a_left_fork /= void and then a_right_fork /= void
+			valid_id: philosopher >= 1
+			valid_times_to_eat: round_count >= 1
 		do
-			id := an_id
-			left_fork := a_left_fork
-			right_fork := a_right_fork
-			number_of_rounds := a_number_of_rounds
+			id := philosopher
+			left_fork := left
+			right_fork := right
+			times_to_eat := round_count
+		ensure
+			id_set: id = philosopher
+			left_fork_set: left_fork = left
+			right_fork_set: right_fork = right
+			times_to_eat_set: times_to_eat = round_count
 		end
 
-feature
+feature -- Access
 
-	step
-			-- Perform a philosopher'’stasks.
+	id: NATURAL
+			-- Philosopher's id.
+
+feature -- Status report
+
+	after: BOOLEAN
+			-- <Precursor>
+		do
+			Result := times_to_eat = 0
+		end
+
+feature -- Measurement
+
+	times_to_eat: NATURAL
+			-- How many times does it remain for the philosopher to eat?
+
+feature -- Basic operations
+
+	act
+			-- <Precursor>
 		do
 			think
 			eat (left_fork, right_fork)
 		end
 
-	eat (l, r: separate FORK)
-			-- Eat, having grabbed l and r.
+	forth
+			-- <Precursor>
 		do
-			io.put_string ("Philosopher " + id.out + ": taking forks%N")
-			-- scoop_sleep (400)
-			times_eaten := times_eaten + 1
-			io.put_string ("Philosopher " + id.out + ": eating%N")
-			io.put_string ("Philosopher " + id.out + ": putting forks back%N")
+			times_to_eat := times_to_eat - 1
+		end
+
+	eat (left, right: separate FORK)
+			-- Eat, having acquired `left' and `right' forks.
+		do
+				-- Take forks.
+			left.pick (Current)
+			right.pick (Current)
+				-- Eat.
+			delay (200)
+				-- Put forks back.
+			left.put (Current)
+			right.put (Current)
 		end
 
 	think
-			-- Think.
+			-- Think ... for a short time.
 		do
-			io.put_string ("Philosopher " + id.out + ": thinking%N")
+			delay (400)
 		end
 
-	over: BOOLEAN
-			-- Is execution over?
-		do
-			Result := times_eaten >= number_of_rounds
-		end
-
-feature {NONE} -- Implementation
-
-	id: INTEGER
-			-- Philosopher's id.
-
-	number_of_rounds: INTEGER
-			-- Number of times philosopher should eat.
-
-	times_eaten: INTEGER
-			-- Number of times philosopher has eaten so far.
+feature {NONE} -- Access
 
 	left_fork: separate FORK
 			-- Left fork used for eating.	
@@ -74,9 +98,26 @@ feature {NONE} -- Implementation
 	right_fork: separate FORK
 			-- Right fork used for eating.
 
-invariant
-	left_fork /= void
-	right_fork /= void
-	times_eaten <= number_of_rounds
+feature {NONE} -- Timing
 
-end -- class PHILOSOPHER
+	delay (milliseconds: INTEGER_64)
+			-- Delay execution by `milliseconds'.
+		do
+			(create {EXECUTION_ENVIRONMENT}).sleep (milliseconds * 1_000_000)
+		end
+
+invariant
+	valid_id: id >= 1
+
+note
+	copyright: "Copyright (c) 2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+
+end

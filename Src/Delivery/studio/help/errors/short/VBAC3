@@ -1,2 +1,2 @@
-Error: source type of assigner call where target is a stable query is not attached.
+Error: source type of assigner call where target is a stable query might be void.
 What to do: ensure that source type is attached.

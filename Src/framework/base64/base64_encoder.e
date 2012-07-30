@@ -50,7 +50,6 @@ feature -- Status report
 		require
 			a_data_attached: attached a_data
 		local
-			l_charset: like charset
 			l_count, i: INTEGER
 			c: CHARACTER
 		do
@@ -59,7 +58,6 @@ feature -- Status report
 				if (l_count \\ 4) = 0 then
 						-- Basic checksum passed, now check character codes.
 					Result := True
-					l_charset := charset
 					l_count := l_count
 					from i := 1 until i > l_count or not Result loop
 						c := a_data[i]

@@ -76,6 +76,7 @@ doc:<file name="dir.c" header="eif_dir.h" version="$Id$" summary="Externals for 
 #include "rt_file.h"
 #include "eif_plug.h"
 #include "rt_error.h"
+#include "rt_assert.h"
 
 #include <string.h>
 

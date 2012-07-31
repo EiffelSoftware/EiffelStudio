@@ -49,6 +49,7 @@ doc:<file name="path_name.c" header="eif_path_name.h" version="$Id$" summary="Ex
 #ifdef EIF_WINDOWS
 #include <windows.h>
 #include <shlobj.h>
+#include <wchar.h>
 #endif
 
 #include <stdlib.h>			/* For getenv */
@@ -590,6 +591,52 @@ rt_public EIF_REFERENCE eif_home_directory_name(void)
 		return RTMS("~");
 	}
 #endif
+}
+
+rt_public EIF_REFERENCE eif_home_directory_name_16(void)
+{
+		/* String representation of $HOME */
+#ifndef EIF_WINDOWS
+	REQUIRE("Platform is Windows", EIF_FALSE);
+	return 0;
+#else
+#	if (_WIN32_IE < 0x0500)
+#		ifndef CSIDL_LOCAL_APPDATA
+#			define CSIDL_LOCAL_APPDATA             0x001C      /* non roaming, user\Local Settings\Application Data */
+#		endif
+#		ifndef CSIDL_FLAG_CREATE
+#			define CSIDL_FLAG_CREATE               0x8000      /* new for Win2K, or this in to force creation of folder */
+#		endif
+#		define SHGFP_TYPE_CURRENT				0
+#	endif
+
+
+		/* Not All versions of the C compiler supports `SHGetFolderPath' this is why we do a dynamic call. */
+	wchar_t l_path[MAX_PATH + 1];
+	HRESULT hr = S_FALSE;
+	FARPROC sh_get_folder_path = NULL;
+	HMODULE shell32_module = LoadLibrary ("shell32.dll");
+
+	if (shell32_module) {
+		sh_get_folder_path = GetProcAddress (shell32_module, "SHGetFolderPathW");
+		if (sh_get_folder_path) {
+			hr = (FUNCTION_CAST_TYPE(HRESULT,WINAPI,(HWND, int, HANDLE, DWORD, LPWSTR)) sh_get_folder_path) (
+				NULL, CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE, NULL, SHGFP_TYPE_CURRENT, l_path);
+		}
+		FreeLibrary(shell32_module);
+	}
+
+	if (hr == S_OK) {
+		return RTMS_EX((char *) l_path, wcslen (l_path) * sizeof (wchar_t));
+	} else {
+		wchar_t *l_env_value = _wgetenv (L"APPDATA");
+		if (l_env_value) {
+			return RTMS_EX((char *) l_env_value, wcslen (l_env_value) * sizeof (wchar_t));
+		} else {
+			return NULL;
+		}
+	}
+#endif /* (platform) */
 }
 
 rt_public EIF_REFERENCE eif_root_directory_name(void)

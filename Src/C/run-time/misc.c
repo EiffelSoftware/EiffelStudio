@@ -2,7 +2,7 @@
 	description: "Miscellaneous Eiffel externals."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -26,11 +26,11 @@
 			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 */
 
@@ -249,6 +249,24 @@ rt_public EIF_INTEGER eif_system (char *s)
 	return result;
 }
 
+/*
+doc:	<routine name="eif_system_16" return_type="EIF_INTEGER" export="public">
+doc:		<summary>Execute a command using system shell.</>
+doc:		<param name="s" type="EIF_NATURAL_16 *">Command line in UTF-16 encoding.</param>
+doc:		<return>0 if it succeeds, -1 otherwise. Upon failure `errno' is set with the reason code.</return>
+doc:		<thread_safety>Re-entrant</thread_safety>
+doc:	</routine>
+*/
+rt_public EIF_INTEGER eif_system_16 (EIF_NATURAL_16 *s)
+{
+#ifndef EIF_WINDOWS
+	REQUIRE ("Platform is Windows", EIF_FALSE);
+	return 0;
+#else
+	return (EIF_INTEGER) _wsystem (s);
+#endif
+}
+
 rt_public void eif_system_asynchronous (char *cmd)
 {
 	/* Run a command asynchronously, that is to say in background. The command
@@ -370,6 +388,66 @@ rt_public void eif_system_asynchronous (char *cmd)
 	_exit(0);							/* Child is exiting properly */
 #endif
 #endif /* EIF_VMS */
+#endif /* EIF_WINDOWS */
+	/* NOTREACHED */
+
+}
+
+/*
+doc:	<routine name="eif_system_asynchronous_16" return_type="void" export="public">
+doc:		<summary>Execute a command using system shell.</>
+doc:		<param name="cmd" type="EIF_NATURAL_16 *">Command line in UTF-16 encoding.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</routine>
+*/
+rt_public void eif_system_asynchronous_16 (EIF_NATURAL_16 *cmd)
+{
+	/* Run a command asynchronously, that is to say in background. The command
+	 * is identified by the client via a "job number", which is inserted in
+	 * the request itself.
+	 * The daemon forks a copy of itself which will be in charge of running
+	 * the command and sending the acknowledgment back, tagged with the command
+	 * number.
+	 */
+
+#ifdef EIF_WINDOWS
+	STARTUPINFOW		siStartInfo;
+	PROCESS_INFORMATION	procinfo;
+	wchar_t			*current_dir;
+	EIF_INTEGER result;
+
+	current_dir = (wchar_t *) _wgetcwd(NULL, PATH_MAX);
+
+	memset (&siStartInfo, 0, sizeof siStartInfo);
+	siStartInfo.cb = sizeof(STARTUPINFO);
+	siStartInfo.lpTitle = NULL;
+	siStartInfo.lpReserved = NULL;
+	siStartInfo.lpReserved2 = NULL;
+	siStartInfo.cbReserved2 = 0;
+	siStartInfo.lpDesktop = NULL;
+	siStartInfo.dwFlags = STARTF_FORCEONFEEDBACK;
+
+		/* We do not used DETACHED_PROCESS below because it won't work when
+		 * launching interactive console application such as `cmd.exe'. */
+	result = CreateProcessW (
+		NULL,
+		cmd,
+		NULL,
+		NULL,
+		FALSE,
+		CREATE_NEW_CONSOLE,
+		NULL,
+		current_dir,
+		&siStartInfo,
+		&procinfo);
+	if (result) {
+		CloseHandle (procinfo.hProcess);
+		CloseHandle (procinfo.hThread);
+	}
+	_wchdir(current_dir);
+	free(current_dir);
+#else
+	REQUIRE ("Platform is Windows", EIF_FALSE);
 #endif /* EIF_WINDOWS */
 	/* NOTREACHED */
 

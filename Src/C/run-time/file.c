@@ -2,7 +2,7 @@
 	description: "Externals for class FILE."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -26,11 +26,11 @@
 			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 */
 
@@ -143,6 +143,10 @@ rt_private char *file_freopen(char *name, char *type, FILE *stream);	/* Reopen f
 /*rt_private char *file_binary_freopen(void);*/	/* Reopen file */ /* %%zs undefined */
 rt_private void swallow_nl(FILE *f);		/* Swallow next character if new line */
 
+#ifdef EIF_WINDOWS
+rt_private char *eif_file_fopen_16(EIF_NATURAL_16 *name, char *type);		/* Open file */
+#endif
+
 #ifndef HAS_UTIME
 /* rt_private int utime(void); */ /* %%ss removed and replaced by below */
 rt_private int utime(char *path, struct utimbuf *times);	/* %%ss */
@@ -239,6 +243,30 @@ rt_public EIF_POINTER file_open(char *name, int how)
 #endif
 }
 
+/*
+doc:	<routine name="eif_file_open_16" return_type="EIF_POINTER" export="public">
+doc:		<summary>Open file `name' with the corresponding type 'how'.</summary>
+doc:		<return>Descriptor of the open file or NULL on failure.</return>
+doc:		<param name="name" type="EIF_NATURAL_16 *">Null-terminated path in UTF-16 encoding.</param>
+doc:            <param name="how">See `file_open_mode'.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_POINTER eif_file_open_16(EIF_NATURAL_16 *name, int how)
+{
+#ifdef EIF_WINDOWS
+	if (how < 10) {
+		return (EIF_POINTER) eif_file_fopen_16(name, file_open_mode (how, 't'));
+	} else {
+		return (EIF_POINTER) eif_file_fopen_16(name, file_open_mode (how, 'b'));
+	}
+#else
+	REQUIRE ("Platform is Windows", EIF_FALSE);
+	return 0;
+#endif
+}
+
 rt_public EIF_POINTER file_dopen(int fd, int how)
 {
 	/* Open file `fd' with the corresponding type 'how'. */
@@ -278,6 +306,28 @@ rt_public EIF_POINTER file_binary_open(char *name, int how)
 	return (EIF_POINTER) file_fopen(name, file_open_mode(how,'b'));
 #else
 	return (EIF_POINTER) file_fopen(name, file_open_mode(how,'\0'));
+#endif
+}
+
+/*
+doc:	<routine name="eif_file_binary_open_16" return_type="EIF_POINTER" export="public">
+doc:		<summary>Open file `name' with the corresponding type 'how' in binary mode.</summary>
+doc:		<return>Descriptor of the open file or NULL on failure.</return>
+doc:		<param name="name" type="EIF_NATURAL_16 *">Null-terminated path in UTF-16 encoding.</param>
+doc:            <param name="how">See `file_open_mode'.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_POINTER eif_file_binary_open_16(EIF_NATURAL_16 *name, int how)
+{
+	/* Open file `name' with the corresponding type 'how'. */
+
+#ifdef EIF_WINDOWS
+	return (EIF_POINTER) eif_file_fopen_16(name, file_open_mode(how,'b'));
+#else
+        REQUIRE ("Platform is Windows", EIF_FALSE);
+	return 0;
 #endif
 }
 
@@ -362,6 +412,41 @@ rt_private char *file_fopen(char *name, char *type)
 		esys();				/* Open failed, raise exception */
 	return (char *) fp;
 }
+
+#ifdef EIF_WINDOWS
+/*
+doc:	<routine name="eif_file_fopen_16" return_type="char *" export="private">
+doc:		<summary>Open file using `_wfopen' with the specified type and raise exception on failure.</summary>
+doc:		<return>Descriptor of the open file (FILE *).</return>
+doc:		<param name="name" type="EIF_NATURAL_16 *">Null-terminated path in UTF-16 encoding.</param>
+doc:            <param name="type">Open mode. See `fopen'.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_private char *eif_file_fopen_16(EIF_NATURAL_16 *name, char *type)
+{
+	/* Issue the fopen() call and raise exception if it fails, or return the
+	 * file pointer when sucessful.
+	 */
+
+	FILE *fp;
+	wchar_t mode [5];
+
+	mode [0] = type [0];
+	mode [1] = type [1];
+	mode [2] = type [2];
+	mode [3] = type [3];
+	mode [4] = type [4];
+
+	errno = 0;
+	fp = (FILE *) _wfopen(name, mode);
+	if (!fp) {
+		esys();				/* Open failed, raise exception */
+	}
+	return (char *) fp;
+}
+#endif
 
 rt_private char *file_fdopen(int fd, char *type)
 {
@@ -989,12 +1074,56 @@ rt_public int eif_file_stat (char *path, rt_stat_buf *buf, int follow) {
 	return status;
 }
 
+#ifdef EIF_WINDOWS
+/*
+doc:	<routine name="eif_file_stat_16" return_type="int" export="public">
+doc:		<summary>Query information about a file. If `follow' is non-zero then it tries to follow the symbolic link, otherwise it doesn't.</>
+doc:		<param name="path" type="EIF_NATURAL_16 *">Name of the file we need info in UTF-16 encoding.</param>
+doc:		<param name="buf" type="rt_stat_buf *">Buffer collecting the info about the file.</param>
+doc:		<param name="follow" type="int">Should we follow symbolic links?</param>
+doc:		<return>0 if it succeeds, -1 otherwise. Upon failure `errno' is set with the reason code.</return>
+doc:		<thread_safety>Re-entrant</thread_safety>
+doc:	</routine>
+*/
+rt_public int eif_file_stat_16 (EIF_NATURAL_16 *path, rt_stat_buf *buf, int follow) {
+	int status;			/* System call status */
+	
+	for (;;) {
+		errno = 0;						/* Reset error condition */
+		status = rt_wstat (path, buf);		/* Get file statistics */
+		if ((status == -1) && (errno == EINTR)) {
+				/* Call was interrupted by a signal we re-issue it. */
+			continue;
+		}
+		break;
+	}
+	return status;
+}
+#endif
+
 rt_public void file_stat (char *path, rt_stat_buf *buf)
            				/* Path name */
                  		/* Structure to fill in */
 {
 		/* To preserve compatibility we always follow symbolic links and raise an exception upon failure. */
 	if (eif_file_stat(path, buf, 1) == -1) {
+		esys();
+	}
+}
+
+/*
+doc:	<routine name="rt_file_stat_16" return_type="void" export="private">
+doc:		<summary>Get information about specified file path.</summary>
+doc:		<param name="path" type="wchar_t *">Null-terminated path in UTF-16 encoding.</param>
+doc:            <param name="buf" type="rt_stat_buf *">Buffer to put information.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_file_stat_16 (wchar_t *path, rt_stat_buf *buf)
+{
+		/* To preserve compatibility we always follow symbolic links and raise an exception upon failure. */
+	if (eif_file_stat_16(path, buf, 1) == -1) {
 		esys();
 	}
 }
@@ -1232,6 +1361,33 @@ rt_public EIF_BOOLEAN file_exists(char *name)
 #endif
 }
 
+/*
+doc:	<routine name="eif_file_exists_16" return_type="EIF_BOOLEAN" export="public">
+doc:		<summary>Tell if the given file exists.</summary>
+doc:		<return>TRUE if file exists, FALSE otherwise.</return>
+doc:		<param name="name" type="EIF_NATURAL_16 *">Null-terminated path in UTF-16 encoding.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_BOOLEAN eif_file_exists_16(EIF_NATURAL_16 *name)
+{
+#ifndef EIF_WINDOWS
+	REQUIRE ("Platform is Windows", EIF_FALSE);
+	return 0;
+#else
+	/* Test whether file exists or not. If `name' represents a symbolic link,
+	 * it will check that pointed file does exist.
+	 */
+
+	int status;					/* System call status */
+	rt_stat_buf buf;			/* Buffer to get file statistics */
+
+	status = eif_file_stat_16 (name, &buf, 1);
+	return (status == -1 ? EIF_FALSE : EIF_TRUE);
+#endif
+}
+
 rt_public EIF_BOOLEAN file_path_exists(char *name)
 {
 	/* Test whether file exists or not without following the symbolic link
@@ -1255,6 +1411,32 @@ rt_public EIF_BOOLEAN file_path_exists(char *name)
 		return EIF_TRUE;
 	}
 #else
+	return (status == -1 ? EIF_FALSE : EIF_TRUE);
+#endif
+}
+
+/*
+doc:	<routine name="eif_file_path_exists_16" return_type="EIF_BOOLEAN" export="public">
+doc:		<summary>Tell if the given path exists.</summary>
+doc:		<return>TRUE if path exists, FALSE otherwise.</return>
+doc:		<param name="name" type="EIF_NATURAL_16 *">Null-terminated path in UTF-16 encoding.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_BOOLEAN eif_file_path_exists_16(EIF_NATURAL_16 *name)
+{
+	/* Test whether file exists or not without following the symbolic link
+	 * if `name' represents one.
+	 */
+#ifndef EIF_WINDOWS
+	REQUIRE ("Platform is Windows", EIF_FALSE);
+	return 0;
+#else
+	int status;
+	rt_stat_buf buf;			/* Buffer to get file statistics */
+
+	status = eif_file_stat_16 (name, &buf, 0);
 	return (status == -1 ? EIF_FALSE : EIF_TRUE);
 #endif
 }
@@ -1333,6 +1515,86 @@ rt_public void file_rename(char *from, char *to)
 	EIF_REPEAT_INTERRUPTED_CALL(status, rename(from, to));
 }
 
+/*
+doc:	<routine name="eif_file_rename_16" return_type="void" export="public">
+doc:		<summary>Rename file.</summary>
+doc:		<param name="from" type="EIF_NATURAL_16 *">Null-terminated path in UTF-16 encoding.</param>
+doc:		<param name="to" type="EIF_NATURAL_16 *">Null-terminated path in UTF-16 encoding.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public void eif_file_rename_16(EIF_NATURAL_16 *from, EIF_NATURAL_16 *to)
+{
+	/* Rename file `from' into `to' */
+
+	int status;			/* System call status */
+	
+#if defined EIF_WINDOWS || defined EIF_OS2
+	if (eif_file_exists_16 (to)) {
+			/* To have the same behavior as Unix, we need to remove the destination file if it exists.
+			 * Of course we can do this only if `from' and `to' do not represent the same file.
+			 * To check this, we use `CreateFile' to open both file, and then using the information
+			 * returned by `GetFileInformationByHandle' we can check whether or not they are indeed
+			 * the same. */
+		BY_HANDLE_FILE_INFORMATION l_to_info, l_from_info;
+		HANDLE l_from_file = CreateFileW (from, GENERIC_READ, FILE_SHARE_READ, NULL,
+			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		HANDLE l_to_file = CreateFileW (to, GENERIC_READ, FILE_SHARE_READ, NULL,
+				OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+		if ((l_from_file == INVALID_HANDLE_VALUE) || (l_to_file == INVALID_HANDLE_VALUE)) {
+				/* We do not need the handles anymore, simply close them. Since Microsoft
+				 * API accepts INVALID_HANDLE_VALUE we don't check the validity of arguments. */
+			CloseHandle(l_from_file);
+			CloseHandle(l_to_file);
+
+				/* For some reasons we cannot open the file. This should not happen, maybe the OS has
+				 * removed `from' or `to'. In that case, we simply try to remove destination as we were
+				 * doing in former revision of `file_rename'. */
+			_wremove (to);
+		} else {
+			BOOL success = GetFileInformationByHandle (l_from_file, &l_from_info);
+			if (success) {
+				success = GetFileInformationByHandle (l_to_file, &l_to_info);
+					/* We do not need the handles anymore, simply close them. */
+				CloseHandle(l_from_file);
+				CloseHandle(l_to_file);
+				if (success) {
+						/* Check that `from' and `to' do not represent the same file. */
+					if
+						((l_from_info.dwVolumeSerialNumber != l_to_info.dwVolumeSerialNumber) ||
+						(l_from_info.nFileIndexLow != l_to_info.nFileIndexLow) ||
+						(l_from_info.nFileIndexHigh != l_to_info.nFileIndexHigh))
+					{
+						_wremove (to);
+					} else {
+							/* Files are identical, nothing to be done */
+						return;
+					}
+				} else {
+						/* An error occurred while retrieving the information about `from' and `to'. Like
+						 * for the case where `l_from_file' and `l_to_file' are invalid, we try to remove
+						 * the file. */
+					_wremove (to);
+				}
+			} else {
+					/* We do not need the handles anymore, simply close them. */
+				CloseHandle(l_from_file);
+				CloseHandle(l_to_file);
+					/* An error occurred while retrieving the information about `from' and `to'. Like
+					 * for the case where `l_from_file' and `l_to_file' are invalid, we try to remove
+					 * the file. */
+				_wremove (to);
+			}
+		}
+	}
+	EIF_REPEAT_INTERRUPTED_CALL(status, _wrename(from, to));
+#else
+	REQUIRE ("Platform is Windows", EIF_FALSE);
+#endif	/* (platform) */
+}
+
 rt_public void file_link(char *from, char *to)
 {
 #ifdef HAS_LINK
@@ -1396,6 +1658,26 @@ rt_public void file_mkdir(char *path)
 #endif	/* vms */
 }
 
+/*
+doc:	<routine name="eif_file_mkdir_16" return_type="void" export="public">
+doc:		<summary>Create directory.</summary>
+doc:		<param name="path" type="EIF_NATURAL_16 *">Null-terminated path in UTF-16 encoding.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public void eif_file_mkdir_16(EIF_NATURAL_16 *path)
+{
+	/* Create directory `path' */
+
+#ifdef EIF_WINDOWS
+	int status;			/* System call status */
+	EIF_REPEAT_INTERRUPTED_CALL(status, _wmkdir(path));
+#else
+	REQUIRE ("Platform is Windows", EIF_FALSE);
+#endif	/* (platform) */
+}
+
 rt_public void file_unlink(char *name)
 {
 	/* Delete file or directory `name' */
@@ -1415,6 +1697,40 @@ rt_public void file_unlink(char *name)
 			EIF_REPEAT_INTERRUPTED_CALL(status, unlink(name));
 		}
 	}
+}
+
+/*
+doc:	<routine name="eif_file_unlink_16" return_type="void" export="public">
+doc:		<summary>Remove file.</summary>
+doc:		<param name="path" type="EIF_NATURAL_16 *">Null-terminated path in UTF-16 encoding.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public void eif_file_unlink_16 (EIF_NATURAL_16 *name)
+{
+	/* Delete file or directory `name' */
+
+#ifndef EIF_WINDOWS
+	REQUIRE ("Platform is Windows", EIF_FALSE);
+#else
+
+	rt_stat_buf buf;				/* File statistics */
+	int status;						/* Status from system call */
+
+		/* No need to follow links since `unlink' does not follow them anyway. */
+	status = eif_file_stat_16(name, &buf, 0);
+	if (status == -1 ) {
+		esys();
+	} else {
+		if (S_ISDIR(buf.st_mode)) {		/* Directory */
+				/* Remove directory only if it is empty. */
+			EIF_REPEAT_INTERRUPTED_CALL(status, _wrmdir(name));
+		} else {
+			EIF_REPEAT_INTERRUPTED_CALL(status, _wunlink(name));
+		}
+	}
+#endif
 }
 
 rt_public void file_touch(char *name)
@@ -1728,6 +2044,76 @@ rt_public EIF_BOOLEAN file_creatable(char *path, EIF_INTEGER length)
 	}
 	return (EIF_BOOLEAN) '\0';
 #endif	/* vms */
+}
+
+/*
+doc:	<routine name="eif_file_creatable_16" return_type="EIF_BOOLEAN" export="public">
+doc:		<summary>Check if the file can be created.</summary>
+doc:		<return>TRUE if file can be created, FALSE otherwise.</return>
+doc:		<param name="path" type="EIF_NATURAL_16 *">Null-terminated path in UTF-16 encoding.</param>
+doc:		<param name="length" type="EIF_INTEGER">Number of items in `path'.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_BOOLEAN eif_file_creatable_16(EIF_NATURAL_16 *path, EIF_INTEGER length)
+{
+	/* Check whether the file `path' may be created: we need write permissions
+	 * in the parent directory and there must not be any file bearing that name
+	 * with no write permissions...
+	 */
+
+	rt_stat_buf buf;			/* Buffer to get parent directory statistics */
+	wchar_t *temp = NULL;
+	wchar_t *ptr;
+
+#ifndef EIF_WINDOWS
+	REQUIRE ("Platform is Windows", EIF_FALSE);
+#else
+	temp = (wchar_t *) eif_malloc (sizeof (EIF_NATURAL_16) * (length + 1));
+	if (!temp) {
+		enomem();
+	} else {
+		wcsncpy_s (temp, length + 1, path, length);
+		ptr = wcsrchr (temp, '\\');
+		if (ptr) {
+			*ptr = '\0';
+			if ((ptr == temp) || (*(ptr - 1) == ':')) {
+					/* path is of the form a:\bbb or \bbb, parent is a:\ or \ */
+				wcscat_s (ptr, temp + length - ptr, L"\\");
+			}
+		} else {
+			wcsncpy_s (temp, length + 1, L".", 1);
+		}
+
+			/* Does the parent exist? */
+		if (!eif_file_exists_16(temp)) {
+			eif_free (temp);
+			return (EIF_BOOLEAN) '\0';
+		}
+
+		rt_file_stat_16(temp, &buf);
+		eif_free (temp);
+
+		if (S_ISDIR(buf.st_mode)) {	/* Is parent a directory? */
+			if (file_eaccess(&buf, 1)) {	/* Check for write permissions */
+					/* Check if a non writable file `path' exists */
+				if (eif_file_exists_16(path)) {
+					rt_file_stat_16(path, &buf);
+					if (S_ISDIR(buf.st_mode)) {
+							/* File exists and it is already a directory, thus we cannot create a file. */
+						return (EIF_BOOLEAN) '\0';
+					} else {
+						return (file_eaccess(&buf, 1)); /* Check for write permissions to re create it */
+					}
+				}
+
+				return (EIF_BOOLEAN) '\01';
+			}
+		}
+	}
+#endif	/* platform */
+	return (EIF_BOOLEAN) '\0';
 }
 
 rt_public EIF_INTEGER file_fd(FILE *f)

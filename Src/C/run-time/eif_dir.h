@@ -2,7 +2,7 @@
 	description: "Declaration of public directory functions."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -26,11 +26,11 @@
 			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 */
 
@@ -59,6 +59,15 @@ RT_LNK void eif_dir_delete (char *name);
 RT_LNK void dir_rewind(EIF_POINTER dirp);
 RT_LNK EIF_REFERENCE dir_next(EIF_POINTER dirp);
 RT_LNK void dir_close(EIF_POINTER dirp);
+
+RT_LNK EIF_REFERENCE eif_dir_current_16 (void);
+RT_LNK EIF_POINTER eif_dir_open_16 (EIF_NATURAL_16 *name);
+RT_LNK EIF_INTEGER eif_chdir_16 (EIF_NATURAL_16 * path);
+RT_LNK EIF_BOOLEAN eif_dir_exists_16 (EIF_NATURAL_16 *name);
+RT_LNK EIF_BOOLEAN eif_dir_is_readable_16 (EIF_NATURAL_16 *name);
+RT_LNK EIF_BOOLEAN eif_dir_is_writable_16 (EIF_NATURAL_16 *name);
+RT_LNK EIF_BOOLEAN eif_dir_is_executable_16 (EIF_NATURAL_16 *name);
+RT_LNK void eif_dir_delete_16 (EIF_NATURAL_16 *name);
 
 #ifdef __cplusplus
 }

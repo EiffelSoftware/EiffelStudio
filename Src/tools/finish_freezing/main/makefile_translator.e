@@ -160,11 +160,11 @@ feature -- Execution
 			-- run the make utility on the generated Makefile
 		local
 			command: STRING
-			l_make_flags: STRING
+			l_make_flags: STRING_32
 			eiffel_make: STRING
 			l_process: PROCESS
 			l_success: BOOLEAN
-			l_flags: LIST [STRING]
+			l_flags: LIST [STRING_32]
 			l_file: RAW_FILE
 		do
 				-- the command to execute the make utility on this platform
@@ -205,13 +205,11 @@ feature -- Execution
 			end
 
 				-- Launch emake.
-			create {ARRAYED_LIST [STRING]} l_flags.make (8)
+			create {ARRAYED_LIST [STRING_32]} l_flags.make (8)
 			if processor_count > 0 then
 				l_flags.extend ("-cpu")
 				l_flags.extend (processor_count.out)
 			end
-			l_flags.extend ("-target")
-			l_flags.extend (env.current_working_directory)
 			l_flags.extend ("-make")
 			l_flags.extend (command)
 			if not l_make_flags.is_empty then
@@ -219,7 +217,7 @@ feature -- Execution
 				l_flags.extend (l_make_flags)
 			end
 
-			l_process := process_launcher (eiffel_layout.Emake_command_name, l_flags, Void)
+			l_process := process_launcher (eiffel_layout.Emake_command_name, l_flags, env.current_working_directory)
 			l_process.launch
 			l_success := l_process.launched
 			if l_success then
@@ -1481,7 +1479,7 @@ feature {NONE}	-- substitutions
 
 feature {NONE} -- Implementation
 
-	env: EXECUTION_ENVIRONMENT
+	env: EXECUTION_ENVIRONMENT_32
 			-- Execution environment
 		once
 			 create Result
@@ -1771,7 +1769,7 @@ invariant
 	empty_string_empty: empty_string.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

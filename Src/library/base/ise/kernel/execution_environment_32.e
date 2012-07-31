@@ -243,7 +243,7 @@ feature {NONE} -- Execution
 		alias
 			"[
 				#ifndef EIF_WINDOWS
-					REQUIRE ("Platform is Windows", EIF_FALSE);
+						/* Dummy value to let the C code compile. */
 					return NULL;
 				#else
 					wchar_t * v = _wgetenv ($s);
@@ -262,7 +262,7 @@ feature {NONE} -- Execution
 		alias
 			"[
 				#ifndef EIF_WINDOWS
-					REQUIRE ("Platform is Windows", EIF_FALSE);
+						/* Dummy value to let the C code compile. */
 					return -1;
 				#else
 					return _wputenv ($s);

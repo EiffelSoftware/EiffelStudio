@@ -816,7 +816,7 @@ rt_public void eif_dir_delete_16 (EIF_NATURAL_16 *name)
 		/* Delete directory `name' */
 #ifndef EIF_WINDOWS
 	REQUIRE("Platform is Windows", EIF_FALSE);
-	return 0;
+	return;
 #else
 	rt_stat_buf buf;				/* File statistics */
 	int status;						/* Status from system call */

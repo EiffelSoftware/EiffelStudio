@@ -1,8 +1,7 @@
 note
-description: "Objects that convert a path to double quoted path"
+	description: "Objects that convert a path to double quoted path."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,7 +10,7 @@ class
 
 feature -- Safe path
 
-	safe_path (a_path: STRING): detachable STRING
+	safe_path (a_path: STRING_32): detachable STRING_32
 			-- Double quoted string from `a_path'.
 			-- Use double quote to avoid issue with blank in `a_path'
 		do
@@ -34,7 +33,7 @@ feature -- Safe path
 		end
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

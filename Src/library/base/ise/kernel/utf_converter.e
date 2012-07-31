@@ -158,6 +158,14 @@ feature -- UTF-32 to UTF-16
 			utf_32_substring_to_utf_16_pointer (s, 1, s.count, p)
 		end
 
+	string_32_to_utf_16_0_pointer (s: READABLE_STRING_32; p: MANAGED_POINTER)
+			-- Write UTF-16 sequence corresponding to `s' with terminating zero
+			-- to address `p' and update the size of `p' to the number of written bytes.
+			-- The sequence is not zero-terminated.
+		do
+			utf_32_substring_to_utf_16_0_pointer (s, 1, s.count, p)
+		end
+
 	utf_32_substring_to_utf_16_pointer
 			(s: READABLE_STRING_GENERAL;
 			start_pos, end_pos: like {READABLE_STRING_32}.count;
@@ -206,6 +214,30 @@ feature -- UTF-32 to UTF-16
 			end
 				-- Adjust number of written bytes.
 			p.resize (m)
+		end
+
+	utf_32_substring_to_utf_16_0_pointer
+			(s: READABLE_STRING_GENERAL;
+			start_pos, end_pos: like {READABLE_STRING_32}.count;
+			p: MANAGED_POINTER)
+			-- Write UTF-16 sequence corresponding to the substring of `s'
+			-- starting at index `start_pos' and ending at index `end_pos'
+			-- to address `p' and update the size of `p' to the number of
+			-- written bytes.
+			-- The sequence is zero-terminated.
+		require
+			start_position_big_enough: start_pos >= 1
+			end_position_big_enough: start_pos <= end_pos + 1
+			end_pos_small_enough: end_pos <= s.count
+		local
+			m: like {MANAGED_POINTER}.count
+		do
+				-- Write UTF-16 sequence.
+			utf_32_substring_to_utf_16_pointer (s, start_pos, end_pos, p)
+				-- Add terminating zero at the end.
+			m := p.count
+			p.resize (m + 2)
+			p.put_natural_16 (0, m)
 		end
 
 feature -- UTF-16 to UTF-32

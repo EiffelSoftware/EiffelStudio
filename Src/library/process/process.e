@@ -84,7 +84,7 @@ feature -- IO redirection
 		ensure
 			input_redirectd_to_file:
 				input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file
-			input_file_name_set: input_file_name.same_string_general (a_file_name)
+			input_file_name_set: attached input_file_name as l_file_name and then l_file_name.same_string_general (a_file_name)
 		end
 
 	cancel_input_redirection

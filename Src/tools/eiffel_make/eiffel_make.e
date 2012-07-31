@@ -53,7 +53,7 @@ feature -- Status report
 	has_error: BOOLEAN
 			-- Did we encountered an error?
 
-	target: DIRECTORY_NAME
+	target: DIRECTORY_NAME_32
 			-- Directory were processing will be done.
 
 	number_of_cpu: INTEGER
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 		local
 			l_nb_cpu, l_make, l_make_flags, l_target: STRING
 			l_has_error: BOOLEAN
-			l_dir: DIRECTORY
+			l_dir: DIRECTORY_32
 			l_help: STRING
 			l_index: INTEGER
 		do
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 
 				if not l_has_error then
 					if l_target = Void then
-						create target.make_from_string ((create {EXECUTION_ENVIRONMENT}).current_working_directory)
+						create target.make_from_string ((create {EXECUTION_ENVIRONMENT_32}).current_working_directory)
 					end
 					if l_make = Void then
 						if (create {PLATFORM}).is_windows then
@@ -209,15 +209,15 @@ feature {NONE} -- Implementation
 			make_utility_not_void: make_utility /= Void
 			make_utility_not_empty: not make_utility.is_empty
 		local
-			l_dirs: ARRAYED_LIST [STRING]
-			l_dir_name: STRING
-			l_name: DIRECTORY_NAME
-			l_dir: DIRECTORY
+			l_dirs: ARRAYED_LIST [STRING_32]
+			l_dir_name: STRING_32
+			l_name: like target
+			l_dir: DIRECTORY_32
 			l_worker_thread: WORKER_THREAD
 			i, l_min: INTEGER
-			l_file: RAW_FILE
-			l_sorted_list: DS_ARRAYED_LIST [STRING]
-			l_sorter: DS_QUICK_SORTER [STRING]
+			l_file: RAW_FILE_32
+			l_sorted_list: DS_ARRAYED_LIST [STRING_32]
+			l_sorter: DS_QUICK_SORTER [STRING_32]
 			l_has_e1: BOOLEAN
 		do
 			create l_dir.make (target)
@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compile_directory (a_dir: DIRECTORY_NAME; l_flags: LIST [STRING]): BOOLEAN
+	compile_directory (a_dir: DIRECTORY_NAME_32; l_flags: LIST [STRING]): BOOLEAN
 			-- Compile in `a_dir'.
 		require
 			target_not_void: target /= Void
@@ -339,7 +339,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_directory (a_dir: STRING)
+	insert_directory (a_dir: STRING_32)
 			-- Insert processing of `a_dir' subdirectory of `target' into `actions'
 			-- if it has a `Makefile' and no `finished' file showing that it has not yet
 			-- been processed.
@@ -349,9 +349,9 @@ feature {NONE} -- Implementation
 			make_utility_not_void: make_utility /= Void
 			make_utility_not_empty: not make_utility.is_empty
 		local
-			l_name: DIRECTORY_NAME
-			l_makefile, l_finished: FILE_NAME
-			l_file: RAW_FILE
+			l_name: DIRECTORY_NAME_32
+			l_makefile, l_finished: FILE_NAME_32
+			l_file: RAW_FILE_32
 		do
 			l_name := target.twin
 			l_name.extend (a_dir)
@@ -373,7 +373,6 @@ feature {NONE} -- Implementation
 					actions.extend (agent compile_directory (l_name, make_flags.twin))
 				end
 			end
-
 		end
 
 	compute_number_of_cpu (a_result: TYPED_POINTER [INTEGER])
@@ -403,7 +402,7 @@ invariant
 	make_flags_not_void: make_flags /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

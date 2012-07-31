@@ -18,7 +18,7 @@ create
 
 feature --{NONE} -- Initialization
 
-	make (a_string: STRING)
+	make (a_string: READABLE_STRING_GENERAL)
 			-- Make a C string from `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -79,7 +79,7 @@ feature -- Access
 			l_ansi_code_page: INTEGER
 		do
 			create u_string.make_empty (a_count)
-				-- This is hard coded to compile on all platforms. Originally defined as 
+				-- This is hard coded to compile on all platforms. Originally defined as
 				-- {WEL_CP_CONSTANTS}.Cp_acp.
 			l_ansi_code_page := 0
 			nb := cwel_wide_char_to_multi_byte (l_ansi_code_page, 0, item,
@@ -120,70 +120,25 @@ feature -- Status report
 
 feature -- Element change
 
-	set_string (a_string: STRING)
+	set_string (a_string: READABLE_STRING_GENERAL)
 			-- Set `string' with `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 		local
-			i, nb: INTEGER
-			new_size: INTEGER
-			l_area: SPECIAL [CHARACTER]
-			l_c: CHARACTER
+			u: UTF_CONVERTER
 		do
-			nb := a_string.count - 1
-			count := nb + 1
-
-			new_size := 2 * (nb + 2)
-
-			if managed_data.count < new_size  then
-				managed_data.resize (new_size)
-			end
-
-			from
-				i := 0
-				l_area := a_string.area
-			until
-				i > nb
-			loop
-				l_c := l_area.item (i)
-				managed_data.put_integer_8 (l_c.code.to_integer_8, i * 2)
-				managed_data.put_integer_8 (0, i * 2 + 1)
-				i := i + 1
-			end
-			managed_data.put_integer_16 (0, (nb + 1) * 2)
+				-- Convert `a_string' to UTF-16 with a terminating zero.
+			u.string_32_to_utf_16_0_pointer (a_string.as_string_32, managed_data)
 		end
 
 	set_string_16 (a_string: STRING_32)
 			-- Set `string' with `a_string'.
 			-- Put UTF-16 as .NET requires.
+		obsolete "Use `set_string'."
 		require
 			a_string_not_void: a_string /= Void
-		local
-			i, nb: INTEGER
-			new_size: INTEGER
-			l_area: SPECIAL [CHARACTER_32]
-			l_c: CHARACTER_32
 		do
-			nb := a_string.count - 1
-			count := nb + 1
-
-			new_size := 2 * (nb + 2)
-
-			if managed_data.count < new_size  then
-				managed_data.resize (new_size)
-			end
-
-			from
-				i := 0
-				l_area := a_string.area
-			until
-				i > nb
-			loop
-				l_c := l_area.item (i)
-				managed_data.put_integer_16 (l_c.code.to_integer_16, i * 2)
-				i := i + 1
-			end
-			managed_data.put_integer_16 (0, (nb + 1) * 2)
+			set_string (a_string)
 		end
 
 feature {NONE} -- Implementation
@@ -238,7 +193,7 @@ invariant
 	count_not_negative: count >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

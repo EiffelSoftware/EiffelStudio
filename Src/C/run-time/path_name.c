@@ -62,6 +62,7 @@ doc:<file name="path_name.c" header="eif_path_name.h" version="$Id$" summary="Ex
 #include "eif_plug.h"
 #include "eif_eiffel.h"			/* For Windows and OS2 */
 #include "rt_lmalloc.h"
+#include "rt_assert.h"
 
 #ifdef EIF_VMS
 #include <dvidef>

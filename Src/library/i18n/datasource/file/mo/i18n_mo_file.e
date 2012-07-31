@@ -101,7 +101,7 @@ feature -- Access
 			Result := l_list.count > 1
 		end
 
-	original_singular_string (i:INTEGER): STRING_32
+	original_singular_string (i: INTEGER): STRING_32
 			-- `i'-th original string
 		local
 			l_list: detachable LIST [STRING_32]
@@ -110,9 +110,12 @@ feature -- Access
 			l_list := last_original.list
 			check l_list /= Void end -- Implied from postcondition of `get_translated_entries'
 			Result := l_list.i_th (1)
+				-- Extract original in case of `msgctxt' appears.
+				-- '%/4/' is the seperater used by .mo file.
+			Result := Result.substring ((Result.index_of ('%/4/', 1) + 1).min (Result.count) , Result.count)
 		end
 
-	original_plural_string (i:INTEGER): STRING_32
+	original_plural_string (i: INTEGER): STRING_32
 			-- `i'-th original plural
 		local
 			l_list: detachable LIST [STRING_32]
@@ -120,7 +123,26 @@ feature -- Access
 			get_original_entries (i)
 			l_list := last_original.list
 			check l_list /= Void end -- Implied from postcondition of `get_translated_entries'
-			Result := l_list.i_th(2)
+			Result := l_list.i_th (2)
+		end
+
+	context_string (i: INTEGER): detachable STRING_32
+			-- `i'-th original string
+		local
+			l_list: detachable LIST [STRING_32]
+			l_index: INTEGER
+		do
+			get_original_entries (i)
+			l_list := last_original.list
+			check l_list /= Void end -- Implied from postcondition of `get_translated_entries'
+			Result := l_list.i_th (1)
+				-- Extract context string in case of `msgctxt' appears.
+			l_index := Result.index_of ('%/4/', 1)
+			if l_index > 0 then
+				Result := Result.substring (1, (l_index - 1).max (1))
+			else
+				Result := Void
+			end
 		end
 
 	translated_singular_string (i: INTEGER): STRING_32
@@ -424,7 +446,7 @@ invariant
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

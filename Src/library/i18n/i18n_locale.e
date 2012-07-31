@@ -45,15 +45,8 @@ feature -- Access
 			-- `Result': Translated string, or the original string if no translation is available
 		require
 			original_not_void: original /= Void
-		local
-			l_result: STRING_32
 		do
-			if dictionary.has (original) then
-				l_result := dictionary.singular (original)
-			else
-				l_result := original.as_string_32
-			end
-			Result := l_result
+			Result := translation_in_context (original, Void)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -68,11 +61,49 @@ feature -- Access
 		require
 			original_singular_not_void: original_singular /= Void
 			original_plural_not_void: original_plural /= Void
+		do
+			Result := plural_translation_in_context (original_singular, original_plural, Void, plural_number)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	translation_in_context (original: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): STRING_32
+			-- Translation of `original' in locale
+			--
+			-- `original': String to translate
+			-- `a_context': Context stringg of current message
+			-- `Result': Translated string, or the original string if no translation is available
+		require
+			original_not_void: original /= Void
 		local
 			l_result: STRING_32
 		do
-			if dictionary.has_plural (original_singular, original_plural, plural_number) then
-				l_result := dictionary.plural (original_singular, original_plural, plural_number)
+			if dictionary.has_in_context (original, a_context) then
+				l_result := dictionary.singular_in_context (original, a_context)
+			else
+				l_result := original.as_string_32
+			end
+			Result := l_result
+		ensure
+			result_attached: Result /= Void
+		end
+
+	plural_translation_in_context (original_singular, original_plural: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL; plural_number: INTEGER): STRING_32
+			-- Translation of `original_singular' or `original_plural' in locale depending on `plural_number'
+			--
+			-- `original_singular': String to translate if singular is used
+			-- `original_plural': String to translate if plural is used
+			-- `a_context': Context stringg of current message
+			-- `plural_number': Plural number to use
+			-- `Result': Translation of singular or plural string, or the original string if no translation is available
+		require
+			original_singular_not_void: original_singular /= Void
+			original_plural_not_void: original_plural /= Void
+		local
+			l_result: STRING_32
+		do
+			if dictionary.has_plural_in_context (original_singular, original_plural, plural_number, a_context) then
+				l_result := dictionary.plural_in_context (original_singular, original_plural, plural_number, a_context)
 			else
 				if plural_number = 1 then
 					l_result := original_singular.as_string_32
@@ -138,7 +169,7 @@ invariant
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -49,13 +49,14 @@ feature -- Interface
 					if l_file.entry_has_plurals (i) then
 						original_plural := l_file.original_plural_string (i)
 						translated_plurals := l_file.translated_plural_strings (i)
-						create temp.make_with_plural(original_singular, translated_singular, original_plural)
+						create temp.make_with_plural (original_singular, translated_singular, original_plural)
 						l_pt := temp.plural_translations
 						check l_pt /= Void end -- Implied from invariants in {I18N_DICTIONARY_ENTRY}
-						l_pt.copy(translated_plurals)
+						l_pt.copy (translated_plurals)
 					else
 						create temp.make (original_singular, translated_singular)
 					end
+					temp.set_context (l_file.context_string (i))
 					Result.extend (temp)
 					i := i + 1
 				end
@@ -94,7 +95,7 @@ feature -- File
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

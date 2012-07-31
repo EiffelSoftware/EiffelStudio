@@ -1111,22 +1111,24 @@ rt_public void file_stat (char *path, rt_stat_buf *buf)
 	}
 }
 
+#ifdef EIF_WINDOWS
 /*
 doc:	<routine name="rt_file_stat_16" return_type="void" export="private">
 doc:		<summary>Get information about specified file path.</summary>
-doc:		<param name="path" type="wchar_t *">Null-terminated path in UTF-16 encoding.</param>
-doc:            <param name="buf" type="rt_stat_buf *">Buffer to put information.</param>
+doc:		<param name="path" type="EIF_NATURAL_16 *">Null-terminated path in UTF-16 encoding.</param>
+doc:		<param name="buf" type="rt_stat_buf *">Buffer to put information.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None.</synchronization>
 doc:	</routine>
 */
-rt_shared void rt_file_stat_16 (wchar_t *path, rt_stat_buf *buf)
+rt_shared void rt_file_stat_16 (EIF_NATURAL_16 *path, rt_stat_buf *buf)
 {
 		/* To preserve compatibility we always follow symbolic links and raise an exception upon failure. */
 	if (eif_file_stat_16(path, buf, 1) == -1) {
 		esys();
 	}
 }
+#endif
 
 rt_public EIF_INTEGER file_info (rt_stat_buf *buf, int op)
 {

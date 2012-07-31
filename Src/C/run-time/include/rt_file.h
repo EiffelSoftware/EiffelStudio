@@ -124,7 +124,9 @@ extern "C" {
 #	define rt_fstat			fstat
 #endif
 
+#ifdef EIF_WINDOWS
 extern void rt_file_stat_16(EIF_NATURAL_16 *path, rt_stat_buf *buf);
+#endif
 
 #ifdef __cplusplus
 }

@@ -12,7 +12,7 @@ class
 
 feature -- Factory
 
-	open_file_inheritable (a_filename: STRING): POINTER
+	open_file_inheritable (a_filename: READABLE_STRING_GENERAL): POINTER
 			-- Open a file `a_filename' and made returned handle inheritable by child
 			-- process if any, so that it can be read from by child.
 		require
@@ -33,7 +33,7 @@ feature -- Factory
 				{WEL_FILE_CONSTANTS}.file_attribute_normal, default_pointer)
 		end
 
-	create_file_inheritable (a_filename: STRING; is_append: BOOLEAN): POINTER
+	create_file_inheritable (a_filename: READABLE_STRING_GENERAL; is_append: BOOLEAN): POINTER
 			-- If not `is_append' create a file `a_filename' and overwrite if it exists.
 			-- Otherwise append to existing file.
 		require
@@ -323,13 +323,13 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

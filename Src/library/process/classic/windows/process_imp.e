@@ -1,8 +1,7 @@
 note
-	description: "Process launcher on Win32"
+	description: "Process launcher on Windows."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -23,16 +22,18 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_exec_name: STRING; args: detachable LIST [STRING]; a_working_directory: detachable STRING)
+	make (a_exec_name: like command_line; args: like arguments; a_working_directory: like working_directory)
 		local
-			l_arg: STRING
+			c: STRING_32
 		do
 			create child_process.make
 			create input_buffer.make_empty
 			create input_mutex.make
 
-			create arguments.make
-			create command_line.make_from_string (a_exec_name)
+			arguments := args
+			create c.make_empty
+			command_line := c
+			c.append_string_general (a_exec_name)
 
 			if args /= Void and then not args.is_empty then
 				from
@@ -40,15 +41,14 @@ feature{NONE} -- Initialization
 				until
 					args.after
 				loop
-					l_arg := args.item
-					if l_arg /= Void and then not l_arg.is_empty then
-						command_line.append_character (' ')
+					if attached args.item as l_arg and then not l_arg.is_empty then
+						c.append_character (' ')
 						if separated_words (l_arg).count > 1 then
-							command_line.append_character ('"')
-							command_line.append (l_arg)
-							command_line.append_character ('"')
+							c.append_character ('"')
+							c.append_string_general (l_arg)
+							c.append_character ('"')
 						else
-							command_line.append (l_arg)
+							c.append_string_general (l_arg)
 						end
 					end
 					args.forth
@@ -58,13 +58,13 @@ feature{NONE} -- Initialization
 			initialize_parameter
 		end
 
-	make_with_command_line (cmd_line: STRING; a_working_directory: detachable STRING)
+	make_with_command_line (cmd_line: like command_line; a_working_directory: like working_directory)
 		do
 			create child_process.make
 			create input_buffer.make_empty
 			create input_mutex.make
 
-			create command_line.make_from_string (cmd_line)
+			command_line := cmd_line.twin
 			initialize_working_directory (a_working_directory)
 			initialize_parameter
 		end
@@ -658,7 +658,7 @@ feature{NONE} -- Implementation
 			-- Internal process id
 
 invariant
-	
+
 note
 	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -33,9 +33,9 @@ feature{NONE} -- Implementation
 				--| In the original implementation, `input_file_name', `output_file_name' and `error_file_name'
 				--| were initialized Void. Since nowhere in the process library it is checked if they are Void,
 				--| they are now attached and by default attached (Arno 1/14/2009).
-			create input_file_name.make_empty
-			create output_file_name.make_empty
-			create error_file_name.make_empty
+			input_file_name := ""
+			output_file_name := ""
+			error_file_name := ""
 
 			input_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
 			output_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
@@ -56,7 +56,7 @@ feature{NONE} -- Implementation
 
 feature -- Process operations
 
-	launch (a_cmd: STRING; a_working_directory: detachable STRING; has_separate_console: BOOLEAN; has_detached_console: BOOLEAN)
+	launch (a_cmd: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL; has_separate_console: BOOLEAN; has_detached_console: BOOLEAN)
 			-- Launch a process whose command is `a_cmd' in `a_working_directory'.
 			-- If `has_separate_console' is True, launch process in a separate console.
 			-- If `has_detached_console' is True, launch process without any console.
@@ -130,7 +130,7 @@ feature -- Status setting
 			error_direction_set: error_direction = direction
 		end
 
-	set_input_file_name (a_name: STRING)
+	set_input_file_name (a_name: READABLE_STRING_GENERAL)
 			-- Set `input_file_name' with `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -141,7 +141,7 @@ feature -- Status setting
 			file_name_set: input_file_name.same_string (a_name)
 		end
 
-	set_output_file_name (a_name: STRING)
+	set_output_file_name (a_name: READABLE_STRING_GENERAL)
 			-- Set `output_file_name' with `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -152,7 +152,7 @@ feature -- Status setting
 			file_name_set: output_file_name.same_string (a_name)
 		end
 
-	set_error_file_name (a_name: STRING)
+	set_error_file_name (a_name: READABLE_STRING_GENERAL)
 			-- Set `error_file_name' with `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -241,13 +241,13 @@ feature -- Access
 	is_std_error_open: BOOLEAN
 			-- Is std error open?
 
-	input_file_name: STRING
+	input_file_name: READABLE_STRING_GENERAL
 			-- Name if any of input file
 
-	output_file_name: STRING
+	output_file_name: READABLE_STRING_GENERAL
 			-- Name if any of output file
 
-	error_file_name: STRING
+	error_file_name: READABLE_STRING_GENERAL
 			-- Name if any of error file
 
 feature -- Handle operation

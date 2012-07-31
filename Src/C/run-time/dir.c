@@ -2,7 +2,7 @@
 	description: "Routines for manipulating directories."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -26,11 +26,11 @@
 			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 */
 
@@ -66,6 +66,7 @@ doc:<file name="dir.c" header="eif_dir.h" version="$Id$" summary="Externals for 
 #ifdef EIF_WINDOWS
 #include <io.h>			/* %%ss added for access */
 #include <direct.h>		/* %%ss added for (ch|rm)dir */
+#include <wchar.h>
 #else
 	/* FIXME: write dummy unit */
 #include <unistd.h>
@@ -88,8 +89,10 @@ doc:<file name="dir.c" header="eif_dir.h" version="$Id$" summary="Externals for 
 
 #ifdef EIF_WINDOWS
 typedef struct tagEIF_WIN_DIRENT {
-	char	name [MAX_PATH];
-	HANDLE	handle;
+	
+	char	  name [MAX_PATH];
+	wchar_t * wname;
+	HANDLE    handle;
 } EIF_WIN_DIRENT;
 #endif
 
@@ -109,6 +112,7 @@ rt_public EIF_POINTER dir_open(char *name)
 
 	strcpy (c->name, name);
 	c->handle = NULL;
+	c->wname = NULL;
 	return (EIF_POINTER) c;
 #else
 	DIR *dirp;
@@ -123,12 +127,55 @@ rt_public EIF_POINTER dir_open(char *name)
 #endif
 }
 
+/*
+doc:	<routine name="eif_dir_open_16" return_type="EIF_POINTER" export="public">
+doc:		<summary>Start traversing a directory.</summary>
+doc:		<return>a pointer to a EIF_WIN_DIRENT directory structure.</return>
+doc:		<param name="name" type="EIF_NATURAL_16 *">Null-terminated path in UTF-16 encoding.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_POINTER eif_dir_open_16(EIF_NATURAL_16 *name)
+{
+	/* Open directory `name' for reading. */
+#ifdef EIF_WINDOWS
+	EIF_WIN_DIRENT *c;
+	size_t n;
+
+	c = (EIF_WIN_DIRENT *) eif_malloc (sizeof(EIF_WIN_DIRENT));
+	if (c == (EIF_WIN_DIRENT *) 0) {
+		enomem(MTC_NOARG);
+	}
+	n = wcslen (name);
+	c->wname = (wchar_t *) eif_malloc ((n + 1) * sizeof (wchar_t));
+	if (!c->wname) {
+		eif_free (c);
+		enomem(MTC_NOARG);
+	}
+		/* Take care about terminating zero. */
+	wmemcpy_s (c->wname, n + 1, name, n);
+	c->wname [n] = 0;
+		/* Do not use 1-byte name. */
+	c->name [0] = 0;
+	c->handle = NULL;
+	return (EIF_POINTER) c;
+#else
+	REQUIRE ("Platform is Windows", EIF_FALSE);
+	return 0;
+#endif
+}
+
 rt_public void dir_close(EIF_POINTER d)
 {
 #ifdef EIF_WINDOWS
 	EIF_WIN_DIRENT *dirp = (EIF_WIN_DIRENT *) d;
-	if (dirp->handle != NULL)
+	if (dirp->handle != NULL) {
 		FindClose (dirp->handle);
+	}
+	if (dirp->wname) {
+		eif_free (dirp->wname);
+	}
 	eif_free(dirp);
 #else
 	DIR *dirp = (DIR *) d;
@@ -163,38 +210,64 @@ rt_public EIF_REFERENCE dir_next(EIF_POINTER d)
 	EIF_WIN_DIRENT *dirp = (EIF_WIN_DIRENT *) d;
 	HANDLE h;
 	WIN32_FIND_DATA wfd;
+	WIN32_FIND_DATAW wwfd;
 	BOOL r;
 	char *name;
+	wchar_t * wname;
 
-	if (dirp->handle != NULL)
-		{
-		r = FindNextFile (dirp->handle, &wfd);
-		if (r)
-			return makestr (wfd.cFileName, strlen (wfd.cFileName));
-		else
-			return (char *) 0;
-		}
-	else
-		{
-		name = (char *) eif_malloc (strlen(dirp->name) + 5);
-		if (name == (char *) 0)
-			enomem(MTC_NOARG);
-
-		strcpy (name,dirp->name);
-		if (name[strlen(name)-1] == '\\')
-			strcat (name, "*.*");
-		else
-			strcat (name , "\\*.*");
-		h = FindFirstFile (name, &wfd);
-		eif_free (name);
-		if (h != INVALID_HANDLE_VALUE)
-			{
-			dirp->handle = h;
-			return makestr (wfd.cFileName, strlen (wfd.cFileName));
+	if (dirp->wname) {
+		if (dirp->handle != NULL) {
+			r = FindNextFileW (dirp->handle, &wwfd);
+		} else {
+			r = EIF_FALSE;
+				/* Allocate additional space for "\\*.*": 4 characters + terminating zero */
+			wname = (wchar_t *) eif_malloc ((wcslen(dirp->wname) + 5) * sizeof (wchar_t));
+			if (!wname) {
+				enomem(MTC_NOARG);
 			}
-		else
-			return (char *) 0;
+			wcscpy (wname,dirp->wname);
+			if (wname[wcslen(wname)-1] == '\\') {
+				wcscat (wname, L"*.*");
+			} else {
+				wcscat (wname , L"\\*.*");
+			}
+			h = FindFirstFileW (wname, &wwfd);
+			eif_free (wname);
+			if (h != INVALID_HANDLE_VALUE) {
+				dirp->handle = h;
+				r = EIF_TRUE;
+			}
 		}
+		if (r) {
+			return makestr ((char *) wwfd.cFileName, wcslen (wwfd.cFileName) * sizeof (wchar_t));
+		}
+	} else {
+		if (dirp->handle != NULL) {
+			r = FindNextFileA (dirp->handle, &wfd);
+		} else {
+			r = EIF_FALSE;
+			name = (char *) eif_malloc (strlen(dirp->name) + 5);
+			if (name == (char *) 0) {
+				enomem(MTC_NOARG);
+			}
+			strcpy (name,dirp->name);
+			if (name[strlen(name)-1] == '\\') {
+				strcat (name, "*.*");
+			} else {
+				strcat (name , "\\*.*");
+			}
+			h = FindFirstFileA (name, &wfd);
+			eif_free (name);
+			if (h != INVALID_HANDLE_VALUE) {
+				dirp->handle = h;
+				r = EIF_TRUE;
+			}
+		}
+		if (r) {
+			return makestr (wfd.cFileName, strlen (wfd.cFileName));
+		}
+	}
+	return (char *) 0;
 #else  /* UNIX, VMS */
 	DIR *dirp = (DIR *) d;
 
@@ -241,6 +314,25 @@ rt_public EIF_REFERENCE dir_current(void)
 	return cwd_string;
 }
 
+rt_public EIF_REFERENCE eif_dir_current_16 (void)
+{
+	/* Return the Eiffel string corresponding to the current working
+	 * directory. Note this always returns a new string.
+	 */
+
+#ifndef EIF_WINDOWS
+	REQUIRE("Platform is Windows", EIF_FALSE);
+	return 0;
+#else
+	wchar_t *cwd;
+	EIF_REFERENCE  cwd_string;
+	cwd = _wgetcwd (NULL, PATH_MAX);
+	cwd_string = RTMS_EX((char *) cwd, wcslen (cwd) * sizeof (wchar_t));
+	free (cwd);	/* Not `eif_free', _wgetcwd() calls malloc. */
+	return cwd_string;
+#endif /* (platform) */
+}
+
 rt_public EIF_CHARACTER_8 eif_dir_separator (void)
 {
 #if defined EIF_WINDOWS
@@ -263,6 +355,28 @@ rt_public EIF_INTEGER eif_chdir (char * path)
 	 * Returns the error status
 	 */
 	return chdir (path);
+}
+
+/*
+doc:	<routine name="eif_chdir_16" return_type="EIF_INTEGER" export="public">
+doc:		<summary>Set current directory to a given path.</summary>
+doc:		<return>Zero on success and non-zero otehrwise.</return>
+doc:		<param name="name" type="EIF_NATURAL_16 *">Null-terminated path in UTF-16 encoding.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_INTEGER eif_chdir_16 (EIF_NATURAL_16 * path)
+{
+	/* Set current dir to `path'
+	 * Returns the error status
+	 */
+#ifndef EIF_WINDOWS
+	REQUIRE("Platform is Windows", EIF_FALSE);
+	return 0;
+#else
+	return _wchdir (path);
+#endif /* (platform) */
 }
 
 rt_public EIF_BOOLEAN eif_dir_exists(char *name)
@@ -373,6 +487,36 @@ rt_public EIF_BOOLEAN eif_dir_exists(char *name)
 #endif	/* else (platform) */
 }
 
+/*
+doc:	<routine name="eif_dir_exists_16" return_type="EIF_BOOLEAN" export="public">
+doc:		<summary>Test if the given path represents an existing directory.</summary>
+doc:		<return>TRUE or FALSE indicating that the directory exists or not.</return>
+doc:		<param name="name" type="EIF_NATURAL_16 *">Null-terminated path in UTF-16 encoding.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_BOOLEAN eif_dir_exists_16(EIF_NATURAL_16 *name)
+{
+#ifndef EIF_WINDOWS
+	REQUIRE("Platform is Windows", EIF_FALSE);
+	return 0;
+#else
+
+    /* Test whether file exists or not by checking the return from the `rt_stat'
+     * system call, hence letting the kernel run all the tests. Return true
+     * if the file exists.
+     * Stat is called directly, because failure is allowed here obviously.
+     * Test to see if it is really a directory and not a plain text file.
+     */
+
+	rt_stat_buf buf;            /* Buffer to get file statistics */
+
+		/* Attempt to stat file */
+	return (EIF_BOOLEAN) ((!rt_wstat (name, &buf) && S_ISDIR(buf.st_mode)) ? '\1' : '\0');
+#endif	/* else (platform) */
+}
+
 rt_public EIF_BOOLEAN eif_dir_is_readable(char *name)
 {
 	/* Is directory readable */
@@ -430,6 +574,27 @@ rt_public EIF_BOOLEAN eif_dir_is_readable(char *name)
 #endif
 		return (EIF_BOOLEAN) ((mode & S_IROTH) ? '\01' : '\0');
 #endif	/* not vms */
+}
+
+/*
+doc:	<routine name="eif_dir_is_readable_16" return_type="EIF_BOOLEAN" export="public">
+doc:		<summary>Test if the given path represents a readable directory.</summary>
+doc:		<return>TRUE or FALSE indicating that the directory is readable or not.</return>
+doc:		<param name="name" type="EIF_NATURAL_16 *">Null-terminated path in UTF-16 encoding.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_BOOLEAN eif_dir_is_readable_16(EIF_NATURAL_16 *name)
+{
+	/* Is directory readable */
+
+#ifndef EIF_WINDOWS
+	REQUIRE("Platform is Windows", EIF_FALSE);
+	return 0;
+#else
+	return (EIF_BOOLEAN) (_waccess (name, 04) != -1);
+#endif	/* platform */
 }
 
 rt_public EIF_BOOLEAN eif_dir_is_writable(char *name)
@@ -495,6 +660,27 @@ rt_public EIF_BOOLEAN eif_dir_is_writable(char *name)
 #endif	/* not vms */
 }
 
+/*
+doc:	<routine name="eif_dir_is_writable_16" return_type="EIF_BOOLEAN" export="public">
+doc:		<summary>Test if the given path represents a writable directory.</summary>
+doc:		<return>TRUE or FALSE indicating that the directory is writable or not.</return>
+doc:		<param name="name" type="EIF_NATURAL_16 *">Null-terminated path in UTF-16 encoding.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_BOOLEAN eif_dir_is_writable_16(EIF_NATURAL_16 *name)
+{
+	/* Is directory writable */
+
+#ifndef EIF_WINDOWS
+	REQUIRE("Platform is Windows", EIF_FALSE);
+	return 0;
+#else
+	return (EIF_BOOLEAN) (_waccess (name, 02) != -1);
+#endif	/* platform */
+}
+
 rt_public EIF_BOOLEAN eif_dir_is_executable(char *name)
 {
 	/* Is directory executable */
@@ -556,6 +742,27 @@ rt_public EIF_BOOLEAN eif_dir_is_executable(char *name)
 #endif	/* not vms */
 }
 
+/*
+doc:	<routine name="eif_dir_is_executable_16" return_type="EIF_BOOLEAN" export="public">
+doc:		<summary>Test if the given path represents an executable directory.</summary>
+doc:		<return>TRUE or FALSE indicating that the directory is executable or not.</return>
+doc:		<param name="name" type="EIF_NATURAL_16 *">Null-terminated path in UTF-16 encoding.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_BOOLEAN eif_dir_is_executable_16(EIF_NATURAL_16 *name)
+{
+	/* Is directory executable */
+
+#ifndef EIF_WINDOWS
+	REQUIRE("Platform is Windows", EIF_FALSE);
+	return 0;
+#else
+	return (EIF_BOOLEAN) (_waccess (name, 0) != -1);
+#endif	/* platform */
+}
+
 rt_public EIF_BOOLEAN eif_dir_is_deletable(char *name)
 {
 	/* Is directory deletable */
@@ -592,6 +799,41 @@ rt_public void eif_dir_delete(char *name)
 		break;
 	}
 #endif	/* vms */
+}
+
+
+/*
+doc:	<routine name="eif_dir_delete_16" return_type="void" export="public">
+doc:		<summary>Delete directory.</summary>
+doc:		<param name="name" type="EIF_NATURAL_16 *">Null-terminated path in UTF-16 encoding.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public void eif_dir_delete_16 (EIF_NATURAL_16 *name)
+{
+		/* Delete directory `name' */
+#ifndef EIF_WINDOWS
+	REQUIRE("Platform is Windows", EIF_FALSE);
+	return 0;
+#else
+	rt_stat_buf buf;				/* File statistics */
+	int status;						/* Status from system call */
+
+	rt_file_stat_16(name, &buf);			/* Side effect: ensure file exists */
+
+	for (;;) {
+		errno = 0;					/* Reset error condition */
+		status = _wrmdir(name);		/* Remove only if empty */
+		if (status == -1) {			/* An error occurred */
+			if (errno == EINTR)		/* Interrupted by signal */
+				continue;			/* Re-issue system call */
+			else
+				esys();				/* Raise exception */
+			}
+		break;
+	}
+#endif	/* platform */
 }
 
 

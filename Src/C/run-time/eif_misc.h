@@ -2,7 +2,7 @@
 	description: "Declarations for miscellenaous externals."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -26,11 +26,11 @@
 			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 */
 
@@ -83,7 +83,9 @@ RT_LNK EIF_INTEGER upintdiv(EIF_INTEGER n1, EIF_INTEGER n2);
 
 RT_LNK void eif_sleep(EIF_INTEGER_64);
 RT_LNK EIF_INTEGER eif_system (char *s);
+RT_LNK EIF_INTEGER eif_system_16 (EIF_NATURAL_16 *s);
 RT_LNK void eif_system_asynchronous (char *s);
+RT_LNK void eif_system_asynchronous_16 (EIF_NATURAL_16 *cmd);
 RT_LNK char * eif_getenv(char * k); 
 RT_LNK char * eif_getenv_native(char * k); 
 

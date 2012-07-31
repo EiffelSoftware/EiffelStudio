@@ -2,7 +2,7 @@
 	description: "Declarations for externals of class FILE."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -26,11 +26,11 @@
 			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 */
 
@@ -79,6 +79,7 @@ extern "C" {
 #endif
 
 /* Let's define the stat structure for our platforms. */
+/* The definition is the same for both ANSI and Unicode versions on Windows. */
 #ifdef EIF_WINDOWS
 #	ifdef EIF_64_BITS
 #		define rt_stat_buf	struct _stat64
@@ -152,6 +153,18 @@ RT_LNK EIF_BOOLEAN file_creatable(char *path, EIF_INTEGER length);
 RT_LNK EIF_INTEGER file_fd(FILE *f);
 RT_LNK EIF_REFERENCE file_owner(int uid);
 RT_LNK EIF_REFERENCE file_group(int gid);
+
+RT_LNK EIF_POINTER eif_file_open_16(EIF_NATURAL_16 *name, int how);
+RT_LNK EIF_POINTER eif_file_binary_open_16(EIF_NATURAL_16 *name, int how);
+RT_LNK EIF_BOOLEAN eif_file_exists_16(EIF_NATURAL_16 *name);
+RT_LNK EIF_BOOLEAN eif_file_path_exists_16(EIF_NATURAL_16 *name);
+RT_LNK EIF_BOOLEAN eif_file_creatable_16(EIF_NATURAL_16 *path, EIF_INTEGER length);
+#ifdef EIF_WINDOWS
+RT_LNK int eif_file_stat_16(EIF_NATURAL_16 *path, rt_stat_buf *buf, int follow);
+#endif
+RT_LNK void eif_file_unlink_16(EIF_NATURAL_16 *name);
+RT_LNK void eif_file_mkdir_16(EIF_NATURAL_16 *path);
+RT_LNK void eif_file_rename_16(EIF_NATURAL_16 *from, EIF_NATURAL_16 *to);
 
 #ifdef HAS_GETGROUPS
 /* Does the list of groups the user belongs to include `gid'? */

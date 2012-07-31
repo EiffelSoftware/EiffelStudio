@@ -66,6 +66,7 @@ RT_LNK EIF_REFERENCE eif_current_dir_representation(void);
 RT_LNK EIF_BOOLEAN eif_home_dir_supported(void);
 RT_LNK EIF_BOOLEAN eif_root_dir_supported(void);
 RT_LNK EIF_REFERENCE eif_home_directory_name(void);
+RT_LNK EIF_REFERENCE eif_home_directory_name_16(void);
 RT_LNK EIF_REFERENCE eif_root_directory_name(void);
 
 #ifdef __cplusplus

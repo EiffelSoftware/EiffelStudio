@@ -1,4 +1,4 @@
-note
+﻿note
 	description	: "[
 		Given a directory, call the make utility on all subdirectories if a `Makefile' exists
 		and without a `finished' file (which shows that compilation has already been done),
@@ -216,8 +216,8 @@ feature {NONE} -- Implementation
 			l_worker_thread: WORKER_THREAD
 			i, l_min: INTEGER
 			l_file: RAW_FILE_32
-			l_sorted_list: DS_ARRAYED_LIST [STRING_32]
-			l_sorter: DS_QUICK_SORTER [STRING_32]
+			l_sorted_list: ARRAYED_LIST [STRING_32]
+			l_sorter: QUICK_SORTER [STRING_32]
 			l_has_e1: BOOLEAN
 		do
 			create l_dir.make (target)
@@ -240,11 +240,11 @@ feature {NONE} -- Implementation
 							-- this is necessary on Windows where depending on wether or not
 							-- you had a final directory separator the results are bogus.
 						if l_dir.exists then
-							l_sorted_list.force_last (l_dir_name)
+							l_sorted_list.extend (l_dir_name)
 						else
 							create l_file.make (l_name)
 							if l_file.exists and then l_file.is_directory then
-								l_sorted_list.force_last (l_dir_name)
+								l_sorted_list.extend (l_dir_name)
 							end
 						end
 					end
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 			end
 
 			create l_sorter.make (create {DIRECTORY_SORTER})
-			l_sorted_list.sort (l_sorter)
+			l_sorter.sort (l_sorted_list)
 
 				-- Process additions of found directories.
 			from

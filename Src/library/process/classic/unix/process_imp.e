@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_exec_name: STRING; args: detachable LIST[STRING]; a_working_directory: like working_directory)
+	make (a_exec_name: READABLE_STRING_GENERAL; args: detachable LIST [READABLE_STRING_GENERAL]; a_working_directory: detachable READABLE_STRING_GENERAL)
 		do
 			setup_command (a_exec_name, args, a_working_directory)
 			create_child_process_manager
@@ -47,12 +47,12 @@ feature {NONE} -- Initialization
 			initialize_parameter
 		end
 
-	make_with_command_line (cmd_line: STRING; a_working_directory: like working_directory)
+	make_with_command_line (cmd_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL)
 		local
-			l_exec_name: STRING
-			l_args: detachable LIST [STRING]
+			l_exec_name: STRING_32
+			l_args: detachable like separated_words
 		do
-			l_args := separated_words (cmd_line)
+			l_args := separated_words (cmd_line.as_string_32)
 			if l_args.is_empty then
 				l_exec_name := " "
 				l_args := Void
@@ -330,16 +330,30 @@ feature {NONE}  -- Implementation
 
 	initialize_child_process
 			-- Initialize `child_process'.
+		local
+			u: UTF_CONVERTER
 		do
 			launched := False
 			force_terminated := False
 			create_child_process_manager
-			child_process.set_input_file_name (input_file_name)
-			child_process.set_output_file_name (output_file_name)
+			if attached input_file_name as l_file_name then
+				child_process.set_input_file_name (u.string_32_to_utf_8_string_8 (l_file_name))
+			else
+				child_process.set_input_file_name (Void)
+			end
+			if attached output_file_name as l_file_name then
+				child_process.set_output_file_name (u.string_32_to_utf_8_string_8 (l_file_name))
+			else
+				child_process.set_output_file_name (Void)
+			end
 			if error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_same_as_output then
 				child_process.set_error_same_as_output
 			else
-				child_process.set_error_file_name (error_file_name)
+				if attached error_file_name as l_file_name then
+					child_process.set_output_file_name (u.string_32_to_utf_8_string_8 (l_file_name))
+				else
+					child_process.set_output_file_name (Void)
+				end
 			end
 			set_is_read_pipe_broken (False)
 		end
@@ -396,32 +410,28 @@ feature {NONE}  -- Implementation
 
 feature{NONE} -- Initialization
 
-	setup_command (a_exec_name: STRING; a_args: detachable LIST[STRING]; a_working_directory: like working_directory)
+	setup_command (a_exec_name: READABLE_STRING_GENERAL; a_args: detachable LIST [READABLE_STRING_GENERAL]; a_working_directory: detachable READABLE_STRING_GENERAL)
 			-- Setup command line.
 		require
 			a_exec_name_not_void: a_exec_name /= Void
 			a_exec_name_not_empty: not a_exec_name.is_empty
 		local
-			l_arguments: like arguments
+			l_cmd_line: STRING_32
 		do
-			create command_line.make_from_string (a_exec_name)
-			create executable.make_from_string (a_exec_name)
+			create l_cmd_line.make_from_string (a_exec_name.as_string_32)
+			executable := l_cmd_line
+
 			initialize_working_directory (a_working_directory)
 
+			arguments := a_args
+
 			if a_args /= Void then
-				create l_arguments.make
-				from
-					a_args.start
-				until
-					a_args.after
-				loop
-					command_line.append_character (' ')
-					command_line.append (a_args.item_for_iteration)
-					l_arguments.extend (a_args.item_for_iteration)
-					a_args.forth
+				across a_args as l_args loop
+					l_cmd_line.append_character (' ')
+					l_cmd_line.append_string_general (l_args.item)
 				end
-				arguments := l_arguments
 			end
+			command_line := l_cmd_line
 		ensure
 			command_line_not_void: command_line /= Void
 			command_line_not_empty: not command_line.is_empty
@@ -437,14 +447,27 @@ feature{NONE} -- Initialization
 		require
 			executable_not_void: executable /= Void
 			executable_not_empty: not executable.is_empty
+		local
+			l_args: detachable ARRAYED_LIST [STRING_8]
+			u: UTF_CONVERTER
 		do
-			create child_process.make (executable, arguments, working_directory)
+			if attached arguments as l_arguments then
+				create l_args.make (l_arguments.count)
+				across l_arguments as l_argument loop
+					l_args.extend (u.string_32_to_utf_8_string_8 (l_argument.item.as_string_32))
+				end
+			end
+			if attached working_directory as l_cwd then
+				create child_process.make (u.string_32_to_utf_8_string_8 (executable), l_args, u.string_32_to_utf_8_string_8 (l_cwd))
+			else
+				create child_process.make (u.string_32_to_utf_8_string_8 (executable), l_args, Void)
+			end
 			child_process.set_close_nonstandard_files (True)
 		end
 
 feature {NONE} -- Implementation
 
-	executable: STRING
+	executable: IMMUTABLE_STRING_32
 			-- Program which will be launched
 
 	in_thread: detachable PROCESS_INPUT_LISTENER_THREAD

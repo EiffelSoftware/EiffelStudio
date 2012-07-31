@@ -305,7 +305,7 @@ feature -- Modification
 
 	change_name (new_name: STRING_32)
 			-- Change directory name to `new_name'.
-		require -- from DIRECTORY
+		require
 			new_name_not_void: new_name /= Void
 			directory_exists: exists
 		local
@@ -319,8 +319,8 @@ feature -- Modification
 			else
 				change_name_8 (u.string_32_to_utf_8_string_8 (new_name))
 			end
-		ensure -- from DIRECTORY
-			name_changed: name_8 ~ new_name
+		ensure
+			name_changed: name ~ new_name
 		end
 
 feature -- Removal

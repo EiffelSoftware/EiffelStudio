@@ -346,31 +346,10 @@ feature -- Element change
 			end_position_big_enough: start_pos <= end_pos + 1
 			end_pos_small_enough: end_pos <= a_string.count
 		local
-			i, nb, l_character_size: INTEGER
-			new_size: INTEGER
-			l_managed_data: like managed_data
+			u: UTF_CONVERTER
 		do
-			nb := end_pos - start_pos + 1
-			count := nb
-			l_character_size := character_size
-
-			new_size := (nb + 1) * l_character_size
-
-			l_managed_data := managed_data
-
-			if l_managed_data.count < new_size  then
-				l_managed_data.resize (new_size)
-			end
-
-			from
-				i := 0
-			until
-				i = nb
-			loop
-				l_managed_data.put_natural_16 (a_string.code (i + start_pos).to_natural_16, i * l_character_size)
-				i := i + 1
-			end
-			l_managed_data.put_natural_16 (0, new_size - l_character_size)
+				-- Convert substring to UTF-16 with a terminating zero.
+			u.utf_32_substring_to_utf_16_0_pointer (a_string, start_pos, end_pos, managed_data)
 		end
 
 	set_string_with_newline_conversion (a_string: READABLE_STRING_GENERAL)

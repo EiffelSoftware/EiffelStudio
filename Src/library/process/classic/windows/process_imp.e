@@ -22,7 +22,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_exec_name: detachable READABLE_STRING_GENERAL; args: detachable LIST [READABLE_STRING_GENERAL]; a_working_directory: detachable READABLE_STRING_GENERAL)
+	make (a_exec_name: READABLE_STRING_GENERAL; args: detachable LIST [READABLE_STRING_GENERAL]; a_working_directory: detachable READABLE_STRING_GENERAL)
 		local
 			c: STRING_32
 		do

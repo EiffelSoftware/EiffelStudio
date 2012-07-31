@@ -22,7 +22,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_exec_name: like command_line; args: like arguments; a_working_directory: like working_directory)
+	make (a_exec_name: detachable READABLE_STRING_GENERAL; args: detachable LIST [READABLE_STRING_GENERAL]; a_working_directory: detachable READABLE_STRING_GENERAL)
 		local
 			c: STRING_32
 		do
@@ -43,7 +43,7 @@ feature{NONE} -- Initialization
 				loop
 					if attached args.item as l_arg and then not l_arg.is_empty then
 						c.append_character (' ')
-						if separated_words (l_arg).count > 1 then
+						if separated_words (l_arg.as_string_32).count > 1 then
 							c.append_character ('"')
 							c.append_string_general (l_arg)
 							c.append_character ('"')
@@ -58,13 +58,13 @@ feature{NONE} -- Initialization
 			initialize_parameter
 		end
 
-	make_with_command_line (cmd_line: like command_line; a_working_directory: like working_directory)
+	make_with_command_line (cmd_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL)
 		do
 			create child_process.make
 			create input_buffer.make_empty
 			create input_mutex.make
 
-			command_line := cmd_line.twin
+			create command_line.make_from_string (cmd_line.as_string_32)
 			initialize_working_directory (a_working_directory)
 			initialize_parameter
 		end

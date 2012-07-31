@@ -26,13 +26,13 @@ feature -- Entries
 		do
 		end
 
-	has (original_singular: READABLE_STRING_GENERAL): BOOLEAN
+	has_in_context (original_singular: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): BOOLEAN
 			-- Always False, as we don't have any entries
 		do
 			Result := False -- Let's be very clear on this..
 		end
 
-	has_plural (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER): BOOLEAN
+	has_plural_in_context (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER; a_context: detachable READABLE_STRING_GENERAL): BOOLEAN
 			-- Always False, as we don't have any entries
 		do
 			Result := False
@@ -40,13 +40,13 @@ feature -- Entries
 
 feature -- Retrieval
 
-	singular (original_singular: READABLE_STRING_GENERAL): STRING_32
+	singular_in_context (original_singular: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): STRING_32
 			-- This should never be called because we garantee the precondition is false
 		do
 			Result := ""
 		end
 
-	plural (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER): STRING_32
+	plural_in_context (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER; a_context: detachable READABLE_STRING_GENERAL): STRING_32
 			-- This should never be called because we garantee the precondition is false
 		do
 			Result := ""

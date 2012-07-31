@@ -9,8 +9,14 @@ class
 	I18N_DICTIONARY_ENTRY
 
 inherit
-
 	COMPARABLE
+
+	I18N_DICTIONARY_ID_BUILDER
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
 
 create
 	make,
@@ -50,9 +56,34 @@ feature {NONE} --creation
 			has_plural: has_plural
 		end
 
+feature -- Element Change
+
+	set_context (a_context: like context)
+			-- Set `context' with `a_context'.
+		do
+			context := a_context
+				-- Remove cached identifier to recompute.
+			cached_identifier := Void
+		ensure
+			context_set: context = a_context
+		end
+
 feature -- Query
 
 	has_plural: BOOLEAN
+
+feature -- Access
+
+	identifier: STRING_32
+			-- Identifier of the entry
+		do
+			if attached cached_identifier as l_id then
+				Result := l_id
+			else
+				Result := id_from_original_and_context (original_singular, context)
+				cached_identifier := Result
+			end
+		end
 
 feature -- Contents
 
@@ -64,13 +95,20 @@ feature -- Contents
 
 	plural_translations: detachable ARRAY [STRING_32]
 
+	context: detachable STRING_32
+
 feature -- Order definition
 
 	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
-			Result := original_singular < other.original_singular
+			Result := identifier < other.identifier
 		end
+
+feature {NONE} -- Implementation
+
+	cached_identifier: detachable like identifier
+			-- Cached identifier
 
 invariant
 	no_plural_translations_if_no_plural: not has_plural implies plural_translations = Void

@@ -36,36 +36,39 @@ feature -- Manipulation
 		do
 			if not a_entry.has_plural then
 					-- entry has no plurals
-				singular_char_tree.insert (a_entry, a_entry.original_singular)
+				singular_char_tree.insert (a_entry, a_entry.identifier)
 			else
 					-- entry has plurasl
-				plural_char_tree.insert (a_entry, a_entry.original_singular)
+				plural_char_tree.insert (a_entry, a_entry.identifier)
 			end
 			count := count + 1
 		ensure then
 			item_extended:
-				has (a_entry.original_singular) or else
+				has (a_entry.identifier) or else
 				((attached a_entry.original_plural as l_plural) and then
-				has_plural (a_entry.original_singular, l_plural, 1))
+				has_plural (a_entry.identifier, l_plural, 1))
 		end
 
 feature -- Access
 
-	has (original: READABLE_STRING_GENERAL): BOOLEAN
+	has_in_context (original: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): BOOLEAN
 			-- is there an entry with original?
+		local
+			l_id: like id_from_original_and_context
 		do
-			Result := singular_char_tree.get_item_with_key (original.as_string_32) /= Void
+			l_id := id_from_original_and_context (original, a_context)
+			Result := singular_char_tree.get_item_with_key (l_id) /= Void
 			if not Result then
-				Result := plural_char_tree.get_item_with_key (original.as_string_32) /= Void
+				Result := plural_char_tree.get_item_with_key (l_id) /= Void
 			end
 		end
 
-	has_plural (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER): BOOLEAN
+	has_plural_in_context (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER; a_context: detachable READABLE_STRING_GENERAL): BOOLEAN
 			--
 		local
 			l_trans: detachable ARRAY [STRING_32]
 		do
-			if attached plural_char_tree.get_item_with_key (original_singular.as_string_32) as entry then
+			if attached plural_char_tree.get_item_with_key (id_from_original_and_context (original_singular, a_context)) as entry then
 				if entry.has_plural then
 					l_trans := entry.plural_translations
 					check l_trans /= Void end -- Implied by `entry.has_plural'
@@ -74,14 +77,14 @@ feature -- Access
 			end
 		end
 
-	singular (original: READABLE_STRING_GENERAL): STRING_32
+	singular_in_context (original: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): STRING_32
 			-- get the translation of `original'
 			-- in the singular form
 		local
 			t_entry: detachable I18N_DICTIONARY_ENTRY
 			l_result: detachable STRING_32
 		do
-			t_entry := singular_char_tree.get_item_with_key (original.as_string_32)
+			t_entry := singular_char_tree.get_item_with_key (id_from_original_and_context (original, a_context))
 			if t_entry /= Void then
 				l_result := t_entry.singular_translation
 			else -- because of the precondition it has to be in the plural_char_tree
@@ -93,7 +96,7 @@ feature -- Access
 			Result := l_result
 		end
 
-	plural (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER): STRING_32
+	plural_in_context (original_singular, original_plural: READABLE_STRING_GENERAL; plural_number: INTEGER; a_context: detachable READABLE_STRING_GENERAL): STRING_32
 			-- get the translation of `original_singular'
 			-- in the given plural form
 		local
@@ -101,7 +104,7 @@ feature -- Access
 			l_entry: detachable I18N_DICTIONARY_ENTRY
 			l_trans: detachable ARRAY [STRING_32]
 		do
-			l_entry := plural_char_tree.get (original_singular.as_string_32)
+			l_entry := plural_char_tree.get (id_from_original_and_context (original_singular, a_context))
 			check l_entry /= Void end -- Implied from precondition
 			l_trans := l_entry.plural_translations
 			check l_trans /= Void end -- Implied from precondition

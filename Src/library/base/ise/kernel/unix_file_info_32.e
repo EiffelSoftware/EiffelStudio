@@ -66,7 +66,13 @@ feature {NONE} -- Access
 		external
 			"C inline use %"eif_file.h%""
 		alias
-			"return eif_file_stat_16 ((EIF_NATURAL_16 *) $name, (rt_stat_buf *) $stat_buf, (int) $follow_symlinks);"
+			"[
+				#ifdef EIF_WINDOWS
+					return eif_file_stat_16 ((EIF_NATURAL_16 *) $name, (rt_stat_buf *) $stat_buf, (int) $follow_symlinks);
+				#else
+					return -1;
+				#endif
+			]"
 		end
 
 note

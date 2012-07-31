@@ -1,22 +1,23 @@
-note
+﻿note
 	description: "[
 		File utilities, for retrieving files and folders and formatting paths.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
-class
+expanded class
 	FILE_UTILITIES
 
 inherit
+
 	ANY
 
 	KL_SHARED_FILE_SYSTEM
 		export
 			{NONE} all
-			{ANY} file_system
+			{FILE_UTILITIES} deep_twin, is_deep_equal, standard_is_equal
 		end
 
 feature -- Status report
@@ -62,9 +63,8 @@ feature -- Query
 			not_a_base_path_is_empty: not a_base_path.is_empty
 			not_a_separator_is_empty: a_separator /= Void implies not a_separator.is_empty
 		local
-			l_fs: like file_system
 			l_base_path: STRING
-			l_parent_path: STRING
+			l_parent_path: READABLE_STRING_GENERAL
 			l_base_path_extension: STRING
 			l_indexed_path: STRING
 			l_base_path_count: INTEGER
@@ -78,17 +78,16 @@ feature -- Query
 		do
 			l_index := 1
 
-			l_fs := file_system
 			l_base_path := a_base_path.as_string_8.as_attached
-			l_parent_path := l_fs.dirname (l_base_path)
-			if l_parent_path /= Void and then not l_parent_path.is_empty and then l_fs.directory_exists (l_parent_path) then
+			l_parent_path := file_directory_path (l_base_path)
+			if l_parent_path /= Void and then not l_parent_path.is_empty and then directory_exists (l_parent_path) then
 					-- A file/folder is potentially in the directory.
 
 					-- Fetch the first indexed file, for comparison.
 				l_indexed_path := internal_indexed_path (l_base_path, a_separator, 1)
 				if
-					l_fs.file_exists (l_base_path) or else l_fs.directory_exists (l_base_path) or else
-					l_fs.file_exists (l_indexed_path) or else l_fs.directory_exists (l_indexed_path)
+					file_exists (l_base_path) or else directory_exists (l_base_path) or else
+					file_exists (l_indexed_path) or else directory_exists (l_indexed_path)
 				then
 						-- The initial base file or first indexed file already exists
 					l_base_path_extension := file_extension (l_base_path)
@@ -170,7 +169,7 @@ feature -- Query
 			result_count_is_bigger: Result.count >= a_base_path.count
 		end
 
-	frozen absolute_path (a_path: attached READABLE_STRING_GENERAL; a_compact: BOOLEAN): attached STRING
+	frozen absolute_path (a_path: attached READABLE_STRING_GENERAL; a_compact: BOOLEAN): attached STRING_32
 			-- Creates an absolute compacted path (provided the path could be compacted).
 			--
 			-- `a_path': The source path to convert to an absolute path.
@@ -179,24 +178,24 @@ feature -- Query
 		require
 			a_path_attached: a_path /= Void
 			not_a_path_is_empty: not a_path.is_empty
-			a_path_exists: file_system.file_exists (a_path.as_string_8) or file_system.directory_exists (a_path.as_string_8)
+			a_path_exists: make_raw_file (a_path).exists or make_directory (a_path).exists
 		local
-			l_path: STRING
+			u: UTF_CONVERTER
 		do
-			Result := file_system.absolute_pathname (a_path.as_string_8).as_attached
-			if a_compact then
-				l_path := compact_path (Result)
-				if l_path /= Void then
-					Result := l_path
-				end
+				-- Convert path to UTF-8, compute absolute path name and convert it back to UTF-32.
+			Result := u.utf_8_string_8_to_string_32 (file_system.absolute_pathname
+				(u.string_32_to_utf_8_string_8 (a_path.to_string_32)))
+				-- Perform compaction if required and possible.
+			if a_compact and then attached compact_path (Result) as p then
+				Result := p
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
-			result_exists: file_system.file_exists (Result) or file_system.directory_exists (Result)
-			reuslt_is_absolute: file_system.is_absolute_pathname (Result)
+			result_exists: make_raw_file (Result).exists or make_directory (Result).exists
+			result_is_absolute: file_system.is_absolute_pathname (Result)
 		end
 
-	frozen compact_path (a_path: attached READABLE_STRING_GENERAL): detachable STRING
+	frozen compact_path (a_path: attached READABLE_STRING_32): detachable STRING_32
 			-- Compacts a file path, removing . and ..
 			--
 			-- `a_path': A path to compact.
@@ -205,15 +204,15 @@ feature -- Query
 			a_path_attached: a_path /= Void
 			not_a_path_is_empty: not a_path.is_empty
 		local
-			l_sep: CHARACTER
-			l_parts: LIST [STRING]
-			l_part: STRING
+			l_sep: CHARACTER_32
+			l_parts: LIST [READABLE_STRING_32]
+			l_part: STRING_32
 			l_error: BOOLEAN
 		do
 			l_sep := (create {OPERATING_ENVIRONMENT}).directory_separator
 
 				-- Separate path
-			l_parts := a_path.as_string_8.split (l_sep)
+			l_parts := a_path.split (l_sep)
 			from l_parts.start until l_parts.after or l_error loop
 				l_part := l_parts.item
 				if l_part.is_equal (".") then
@@ -346,7 +345,7 @@ feature -- Basic operations
 			-- `a_exclude': Regulat expression used to exclude files/folders.
 		require
 			not_a_folder_is_empty: not a_folder.is_empty
-			a_folder_exists: file_system.directory_exists (a_folder.as_string_8)
+			a_folder_exists: directory_exists (a_folder)
 			a_levels_is_valid: a_levels >= -1
 			a_include_is_compiled: a_include /= Void implies a_include.is_compiled
 			a_exclude_is_compiled: a_exclude /= Void implies a_exclude.is_compiled
@@ -368,7 +367,7 @@ feature -- Basic operations
 			-- `a_exclude': Regulat expression used to exclude files/folders.
 		require
 			not_a_folder_is_empty: not a_folder.is_empty
-			a_folder_exists: file_system.directory_exists (a_folder.as_string_8)
+			a_folder_exists: directory_exists (a_folder)
 			a_levels_is_valid: a_levels >= -1
 			a_include_is_compiled: a_include /= Void implies a_include.is_compiled
 			a_exclude_is_compiled: a_exclude /= Void implies a_exclude.is_compiled
@@ -392,7 +391,7 @@ feature {NONE} -- Basic operations
 			-- `a_exclude': Regulat expression used to exclude files/folders.
 		require
 			not_a_folder_is_empty: not a_folder.is_empty
-			a_folder_exists: file_system.directory_exists (a_folder.as_string_8)
+			a_folder_exists: directory_exists (a_folder)
 			a_levels_is_valid: a_levels >= -1
 			a_include_is_compiled: a_include /= Void implies a_include.is_compiled
 			a_exclude_is_compiled: a_exclude /= Void implies a_exclude.is_compiled
@@ -459,7 +458,7 @@ feature {NONE} -- Basic operations
 			-- `a_exclude': Regulat expression used to exclude files/folders.
 		require
 			not_a_folder_is_empty: not a_folder.is_empty
-			a_folder_exists: file_system.directory_exists (a_folder.as_string_8)
+			a_folder_exists: directory_exists (a_folder)
 			a_levels_is_valid: a_levels >= -1
 			a_include_is_compiled: a_include /= Void implies a_include.is_compiled
 			a_exclude_is_compiled: a_exclude /= Void implies a_exclude.is_compiled
@@ -523,6 +522,62 @@ feature {NONE} -- Basic operations
 				end (?, a_include, a_exclude))
 		end
 
+feature -- File name operations
+
+	make_directory_name_in (name: READABLE_STRING_GENERAL; location: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
+			-- A directory name for directory `name' in directory `location'.
+		local
+			d: DIRECTORY_NAME
+			d32: DIRECTORY_NAME_32
+		do
+			if attached {READABLE_STRING_32} location as l then
+				create d32.make_from_string (l)
+				d32.extend (name.as_string_32)
+				Result := d32.to_string_32
+			else
+				create d.make_from_string (location.as_string_8)
+				d.extend (name.as_string_8)
+				Result := d
+			end
+		end
+
+	make_file_name_in (name: READABLE_STRING_GENERAL; location: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
+			-- A file name for file `name' in directory `location'.
+		local
+			f: FILE_NAME
+			f32: FILE_NAME_32
+		do
+			if attached {READABLE_STRING_32} location as l then
+				create f32.make_from_string (l)
+				f32.set_file_name (name.as_string_32)
+				Result := f32
+			else
+				create f.make_from_string (location.as_string_8)
+				f.set_file_name (name.as_string_8)
+				Result := f
+			end
+		end
+
+	adapt_unix_to_windows (n: READABLE_STRING_32): STRING_32
+			-- Adapt file name `n' in unix file system to windows file system.
+		local
+			u: UTF_CONVERTER
+		do
+			Result := u.utf_8_string_8_to_string_32
+				(windows_file_system.pathname_from_file_system
+					(u.string_32_to_utf_8_string_8 (n), unix_file_system))
+		end
+
+	adapt_windows_to_current (n: READABLE_STRING_32): STRING_32
+			-- Adapt file name `n' in windows file system to the current file system.
+		local
+			u: UTF_CONVERTER
+		do
+			Result := u.utf_8_string_8_to_string_32
+				(file_system.pathname_from_file_system
+					(u.string_32_to_utf_8_string_8 (n), windows_file_system))
+		end
+
 feature -- Directory operations
 
 	frozen create_directory (a_path: attached READABLE_STRING_GENERAL)
@@ -533,20 +588,33 @@ feature -- Directory operations
 			a_path_attached: a_path /= Void
 			not_a_path_is_empty: not a_path.is_empty
 		local
-			l_path: STRING
-			l_dir: KL_DIRECTORY
+			l_path: STRING_8
+			d: DIRECTORY
+			u: UTF_CONVERTER
+			is_retried: BOOLEAN
 		do
-			l_path := a_path.as_string_8
-			if not file_system.directory_exists (l_path) then
-				if not file_system.is_root_directory (l_path) and then attached {STRING_GENERAL} file_system.dirname (l_path) as l_parent_path then
-						-- Create parent directory
-					create_directory (l_parent_path)
+			if not is_retried then
+				d := make_directory (a_path)
+				if not d.exists then
+					if attached {READABLE_STRING_32} a_path as p then
+						l_path := u.string_32_to_utf_8_string_8 (p)
+						if not file_system.is_root_directory (l_path) and then attached file_system.dirname (l_path) as l_parent_path then
+								-- Create parent directory
+							create_directory (u.utf_8_string_8_to_string_32 (l_parent_path))
+						end
+					else
+						l_path := a_path.as_string_8
+						if not file_system.is_root_directory (l_path) and then attached file_system.dirname (l_path) as l_parent_path then
+								-- Create parent directory
+							create_directory (l_parent_path)
+						end
+					end
+					d.create_dir
 				end
-				create l_dir.make (l_path)
-				l_dir.create_directory
 			end
-		ensure
-			a_path_exists: file_system.directory_exists (a_path.as_string_8)
+		rescue
+			is_retried := True
+			retry
 		end
 
 	frozen create_directory_for_file (a_file_name: attached READABLE_STRING_GENERAL)
@@ -557,13 +625,298 @@ feature -- Directory operations
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		do
-			if attached {STRING_GENERAL} file_system.dirname (a_file_name.as_string_8) as l_path and then not l_path.is_empty then
+			if attached file_directory_path (a_file_name) as l_path and then not l_path.is_empty then
 				create_directory (l_path)
 			end
 		end
 
-;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	make_directory (n: READABLE_STRING_GENERAL): DIRECTORY
+			-- New {DIRECTORY} for directory name `n'.
+		do
+			if attached {READABLE_STRING_32} n as s then
+				create {DIRECTORY_32} Result.make (s)
+			else
+				create Result.make (n.as_string_8)
+			end
+		end
+
+	directory_exists (n: READABLE_STRING_GENERAL): BOOLEAN
+			-- Does directory of name `n' exist?
+		do
+			Result := not n.is_empty and then make_directory (n).exists
+		end
+
+	file_names (n: READABLE_STRING_32): detachable LIST [STRING_32]
+			-- List of file names in directory with name `n'.
+			-- Or void if directory is not readable (does not exist, cannot be accessed, etc.).
+		local
+			d: DIRECTORY_32
+			l: ARRAYED_LIST [STRING_32]
+			is_retried: BOOLEAN
+			f: RAW_FILE_32
+			fn: FILE_NAME_32
+		do
+			if not is_retried then
+				create d.make (n)
+				d.open_read
+				if not d.is_closed then
+					from
+						create f.make (".")
+						create fn.make_from_string (".")
+						create l.make (0)
+						d.readentry
+					until
+						not attached d.lastentry as e
+					loop
+						fn.reset (n)
+						fn.set_file_name (e)
+						f.reset (fn)
+						if  f.exists and then f.is_readable and then f.is_plain then
+							l.extend (e)
+						end
+						d.readentry
+					end
+					Result := l
+				end
+				d.close
+			elseif attached d and then not d.is_closed then
+				d.close
+			end
+		rescue
+			is_retried := True
+			retry
+		end
+
+	directory_names (n: READABLE_STRING_32): detachable LIST [STRING_32]
+			-- List of directory names (excluding current and parent directory) in directory with name `n'.
+			-- Or void if directory is not readable (does not exist, cannot be accessed, etc.).
+		local
+			d: DIRECTORY_32
+			l: ARRAYED_LIST [STRING_32]
+			is_retried: BOOLEAN
+			f: DIRECTORY_32
+			fn: DIRECTORY_NAME_32
+		do
+			if not is_retried then
+				create d.make (n)
+				d.open_read
+				if not d.is_closed then
+					from
+						create fn.make_from_string (".")
+						create l.make (0)
+						d.readentry
+					until
+						not attached d.lastentry as e
+					loop
+						if
+							(e.count = 1 and then e [1] = '.') or else
+							(e.count = 2 and then e [1] ='.' and then e [2] = '.')
+						then
+								-- This is a reference to the current or to the parent directory.
+						else
+							fn.reset (n)
+							fn.extend (e)
+							create f.make (fn)
+							if f.exists and then f.is_readable then
+								l.extend (e)
+							end
+						end
+						d.readentry
+					end
+					Result := l
+				end
+				d.close
+			elseif attached d and then not d.is_closed then
+				d.close
+			end
+		rescue
+			is_retried := True
+			retry
+		end
+
+feature -- File operations
+
+	make_raw_file (n: READABLE_STRING_GENERAL): RAW_FILE
+			-- New {RAW_FILE} for file name `n'.
+		do
+			if attached {READABLE_STRING_32} n as s then
+				create {RAW_FILE_32} Result.make (s)
+			else
+				create Result.make (n.as_string_8)
+			end
+		end
+
+	make_raw_file_in (name: READABLE_STRING_GENERAL; location: READABLE_STRING_GENERAL): RAW_FILE
+			-- New {RAW_FILE} for file `name' in directory `location'.
+		do
+			Result := make_raw_file (make_file_name_in (name, location))
+		end
+
+	make_text_file (n: READABLE_STRING_GENERAL): PLAIN_TEXT_FILE
+			-- New {PLAIN_TEXT_FILE} for file name `n'.
+		do
+			if attached {READABLE_STRING_32} n as s then
+				create {PLAIN_TEXT_FILE_32} Result.make (s)
+			else
+				create Result.make (n.as_string_8)
+			end
+		end
+
+	make_text_file_in (name: READABLE_STRING_GENERAL; location: READABLE_STRING_GENERAL): PLAIN_TEXT_FILE
+			-- New {PLAIN_TEXT_FILE} for file `name' in directory `location'.
+		do
+			Result := make_text_file (make_file_name_in (name, location))
+		end
+
+	make_binary_input_file (n: READABLE_STRING_GENERAL): KL_BINARY_INPUT_FILE
+			-- New {KL_BINARY_INPUT_FILE} for file name `n'.
+		do
+			if attached {READABLE_STRING_32} n as s then
+				create {KL_BINARY_INPUT_FILE_32} Result.make (s)
+			else
+				create Result.make (n.as_string_8)
+			end
+		end
+
+	make_text_output_file (n: READABLE_STRING_GENERAL): KL_TEXT_OUTPUT_FILE
+			-- New {KL_TEXT_OUTPUT_FILE} for file `n'.
+		local
+			p: READABLE_STRING_GENERAL
+		do
+			if attached {READABLE_STRING_32} n as s then
+				create {KL_TEXT_OUTPUT_FILE_32} Result.make (s)
+			else
+				create Result.make (p.as_string_8)
+			end
+		end
+
+	make_text_output_file_in (n, d: READABLE_STRING_GENERAL): KL_TEXT_OUTPUT_FILE
+			-- New {KL_TEXT_OUTPUT_FILE} for file name `n' in directory `d'.
+		do
+			Result := make_text_output_file (make_file_name_in (n, d))
+		end
+
+	copy_file (old_name, new_name: READABLE_STRING_GENERAL)
+			-- Copy file named `old_name' to `new_name'.
+		local
+			f: detachable RAW_FILE
+			t: detachable RAW_FILE
+			is_rescued: BOOLEAN
+		do
+			if is_rescued then
+				if attached f and then f.is_open_read then
+					f.close
+				end
+				if attached t and then t.is_open_write then
+					t.close
+				end
+			else
+				f := make_raw_file (old_name)
+				f.open_read
+				t := make_raw_file (new_name)
+				t.open_write
+				f.copy_to (t)
+				f.close
+				t.close
+			end
+		rescue
+			if not is_rescued then
+				is_rescued := True
+				retry
+			end
+		end
+
+	rename_file (old_name, new_name: READABLE_STRING_GENERAL)
+			-- Rename file named `old_name' to `new_name'.
+		local
+			f: RAW_FILE
+			f32: RAW_FILE_32
+		do
+			if attached {READABLE_STRING_32} old_name or else attached {READABLE_STRING_32} new_name then
+				create f32.make (old_name.as_string_32)
+				f32.change_name (new_name.as_string_32)
+			else
+				create f.make (old_name.as_string_8)
+				f.change_name (new_name.as_string_8)
+			end
+		end
+
+	open_read_raw_file (n: READABLE_STRING_GENERAL): RAW_FILE
+			-- Open {RAW_FILE} of name `n' for reading.
+		do
+			Result := make_raw_file (n)
+			Result.open_read
+		ensure
+			file_open: Result.is_open_read
+		end
+
+	open_write_raw_file (n: READABLE_STRING_GENERAL): RAW_FILE
+			-- Open {RAW_FILE} of name `n' for writing.
+		do
+			Result := make_raw_file (n)
+			Result.open_write
+		ensure
+			file_open: Result.is_open_write
+		end
+
+	open_write_raw_file_in (name: READABLE_STRING_GENERAL; location: READABLE_STRING_GENERAL): RAW_FILE
+			-- Open {RAW_FILE} of name `name' in `location'.
+		do
+			Result := make_raw_file_in (name, location)
+			Result.open_write
+		ensure
+			file_open: Result.is_open_write
+		end
+
+	open_write_text_file (n: READABLE_STRING_GENERAL): PLAIN_TEXT_FILE
+			-- Open {PLAIN_TEXT_FILE} of name `n'.
+		do
+			Result := make_text_file (n)
+			Result.open_write
+		ensure
+			file_open: Result.is_open_write
+		end
+
+	file_name (f: FILE): READABLE_STRING_GENERAL
+			-- Name associated with `f'.
+		do
+			if attached {FILE_32} f as f32 then
+				Result := f32.name
+			else
+				Result := f.name
+			end
+		end
+
+	file_directory_path (n: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
+			-- Directory path of file name `n'.
+		local
+			u: UTF_CONVERTER
+		do
+			if attached {READABLE_STRING_32} n as n32 then
+					-- Convert to UTF-8, calculate path and convert back.
+				Result := u.utf_8_string_8_to_string_32 (file_system.dirname (u.string_32_to_utf_8_string_8 (n32)))
+			else
+				Result := file_system.dirname (n.as_string_8)
+			end
+		end
+
+	file_exists (n: READABLE_STRING_GENERAL): BOOLEAN
+			-- Does file of name `n' exist?
+		local
+			f: RAW_FILE
+			is_retried: BOOLEAN
+		do
+			if not n.is_empty and then not is_retried then
+				f := make_raw_file (n)
+				Result := f.exists and then f.is_plain
+			end
+		rescue
+			is_retried := True
+			retry
+		end
+
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -225,7 +225,7 @@ feature -- Modification
 			u: UTF_CONVERTER
 		do
 			if attached external_name_16 as on then
-				nn := u.utf_8_string_8_to_utf_16_0 (new_name)
+				nn := u.string_32_to_utf_16_0 (new_name)
 				eif_file_rename_16 ($on, $nn)
 				reset (new_name)
 			else

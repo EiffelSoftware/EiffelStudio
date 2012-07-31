@@ -1,0 +1,20 @@
+
+test_name 	 void-safe-convert-to-generic
+test_description A conversion to a formal generic type should be accepted in both non-void safe and void-safe modes
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	ok
+
+cleanup_compile
+
+copy_sub	Ace_rev2 $TEST Ace
+
+compile_melted
+compile_result	ok
+
+test_end

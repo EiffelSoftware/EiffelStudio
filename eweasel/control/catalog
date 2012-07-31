@@ -2652,6 +2652,7 @@ test	indirect-self-init-attribute		attach093 tcf pass attached_types void_safe s
 test	initialization-error-suppression	attach094 tcf pass attached_types void_safe stable attribute generic validity
 test	nested-tuple-undetected-vevi		attach095 tcf fail attached_types void_safe validity
 test	missing-vevi-error-with-agent		attach096 tcf fail attached_types void_safe validity agents
+test	void-safe-convert-to-generic		attach097 tcf fail attached_types void_safe validity convert
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

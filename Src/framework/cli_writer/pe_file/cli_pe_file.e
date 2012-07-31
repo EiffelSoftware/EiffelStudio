@@ -89,7 +89,7 @@ feature -- Status
 	is_32bits: BOOLEAN
 			-- Is current application a 32bit application?
 
-	file_name: STRING
+	file_name: READABLE_STRING_GENERAL
 			-- Name of current PE file on disk.
 
 	has_debug_info: BOOLEAN
@@ -181,7 +181,7 @@ feature -- Settings
 
 	set_debug_information (a_cli_debug_directory: CLI_DEBUG_DIRECTORY;
 			a_debug_info: MANAGED_POINTER)
-		
+
 			-- Set `debug_directory' to `a_cli_debug_directory' and `debug_info'
 			-- to `a_debug_info'.
 		require
@@ -234,7 +234,8 @@ feature -- Saving
 			l_padding, l_signature: MANAGED_POINTER
 			l_strong_name_location, l_size: INTEGER
 			l_uni_string: UNI_STRING
-			l_meta_data_file_name: STRING
+			l_meta_data_file_name: like file_name
+			u: FILE_UTILITIES
 		do
 				-- First compute size of PE file headers and sections.
 			compute_sizes
@@ -243,7 +244,7 @@ feature -- Saving
 			update_rvas
 
 				-- Write to file now.
-			create l_pe_file.make_open_write (file_name)
+			l_pe_file := u.open_write_raw_file (file_name)
 
 				-- First the headers
 			l_pe_file.put_managed_pointer (dos_header, 0, dos_header.count)
@@ -298,7 +299,7 @@ feature -- Saving
 				-- to make an IStream from an Eiffel FILE.
 			l_meta_data_file_name := file_name + ".pe"
 			emitter.save (create {UNI_STRING}.make (l_meta_data_file_name))
-			create l_meta_data_file.make_open_read (l_meta_data_file_name)
+			l_meta_data_file := u.open_read_raw_file (l_meta_data_file_name)
 			check valid_size: l_meta_data_file.count = meta_data_size end
 			l_meta_data_file.copy_to (l_pe_file)
 			l_meta_data_file.close
@@ -326,7 +327,7 @@ feature -- Saving
 			is_valid := False
 
 			if has_strong_name then
-				create l_pe_file.make_open_read (file_name)
+				l_pe_file := u.open_read_raw_file (file_name)
 				create l_padding.make (l_pe_file.count)
 				l_pe_file.read_to_managed_pointer (l_padding, 0, l_padding.count)
 				l_pe_file.close
@@ -336,7 +337,7 @@ feature -- Saving
 				(l_padding.item + l_strong_name_location).memory_copy (l_signature.item,
 					l_signature.count)
 
-				create l_pe_file.make_open_write (file_name)
+				l_pe_file := u.open_write_raw_file (file_name)
 				l_pe_file.put_managed_pointer (l_padding, 0, l_padding.count)
 				l_pe_file.close
 			end
@@ -566,7 +567,7 @@ invariant
 	public_key_not_void: (is_valid and has_strong_name) implies public_key /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -579,22 +580,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class CLI_PE_FILE

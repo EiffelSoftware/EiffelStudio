@@ -112,13 +112,13 @@ feature -- Debug Operation
 											-- Launch cordbg.exe.
 										(create {COMMAND_EXECUTOR}).execute_with_args
 											(l_app_string,
-												safe_path (eiffel_system.application_name (True)) + " " + param.arguments)
+												safe_path (eiffel_system.application_name (True).string) + " " + param.arguments)
 										launch_program := True
 									elseif l_il_env.use_dbgclr (dotnet_debugger) then
 											-- Launch DbgCLR.exe.
 										(create {COMMAND_EXECUTOR}).execute_with_args
 											(l_app_string,
-												safe_path (eiffel_system.application_name (True)))
+												safe_path (eiffel_system.application_name (True).string))
 										launch_program := True
 									end
 								else
@@ -661,7 +661,7 @@ invariant
 	manager_not_void: manager /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

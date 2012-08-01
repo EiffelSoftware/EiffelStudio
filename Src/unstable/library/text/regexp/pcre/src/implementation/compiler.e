@@ -12,8 +12,6 @@ inherit
 			default_create
 		end
 
-inherit {NONE}
-
 	OPTION_ROUTINES
 		export
 			{NONE} all

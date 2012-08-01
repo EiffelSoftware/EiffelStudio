@@ -166,6 +166,7 @@ test non-conforming-reference-attribute-access	noncon021 tcf pass non-conforming
 test non-conforming-constant-access	noncon022 tcf pass non-conforming
 test non-conforming-crash						noncon023 tcf pass non-conforming
 test finalize-with-nonconforming-inheritance			noncon024 tcf fail finalizing non-conforming
+test inline-with-nonconforming-inheritance			noncon025 tcf fail finalizing non-conforming inlining
 
 -- Replication
 test replicate-precursor				replication001 tcf pass replication

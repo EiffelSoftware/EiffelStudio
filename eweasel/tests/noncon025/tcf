@@ -1,0 +1,19 @@
+
+test_name 	inline-with-nonconforming-inheritance
+test_description Finalizing with inlining enabled crashes an assertion-enabled compiler with a check violation if system uses non-conforming inheritance
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test2.e $CLUSTER test2.e
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+test_end

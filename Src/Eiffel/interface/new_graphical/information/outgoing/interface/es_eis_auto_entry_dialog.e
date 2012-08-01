@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 			Result := {ES_DIALOG_BUTTONS}.cancel_button
 		end
 
-	default_source: STRING_32 once Result := "$(ISE_DOC_REF)$(unique_id)" end
+	default_source: STRING_32 = "$(ISE_DOC_REF)/$(unique_id)"
 
 feature {NONE} -- Action
 

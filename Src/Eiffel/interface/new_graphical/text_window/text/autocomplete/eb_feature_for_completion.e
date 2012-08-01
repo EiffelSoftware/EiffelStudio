@@ -233,13 +233,13 @@ feature -- Status report
 		end
 feature -- Comparison
 
-	begins_with (s: STRING_32): BOOLEAN
+	begins_with (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does this feature name begins with `s'?
 		do
 			if show_disambiguated_name and name_is_ambiguated then
 				Result := Precursor {EB_NAME_FOR_COMPLETION} (s)
 			else
-				Result := name_matcher.prefix_string (s, name)
+				Result := name_matcher.prefix_string (s.as_string_32, name)
 			end
 		end
 

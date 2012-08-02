@@ -44,7 +44,9 @@
 extern "C" {
 #endif
 
-#define RT_MAX_SCOOP_PROCESSOR_COUNT 1536 /* Maximum number of SCOOP processors, including root. */
+#define RT_MAX_SCOOP_PROCESSOR_COUNT 1024 /* Maximum number of SCOOP processors, including root. */
+
+#
 
 /* Separate calls */
 

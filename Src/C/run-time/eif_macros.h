@@ -1348,6 +1348,9 @@ RT_LNK void eif_exit_eiffel_code(void);
 #endif
 #endif
 
+
+#define RTS_PROCESSOR_SPIN_LOOP(x) EIF_ENTER_C; {volatile int i; for (i = 0; i < x; i++) {}}; EIF_EXIT_C; RTGC; 
+
 #define scoop_task_assign_processor 1
 #define	scoop_task_free_processor 2
 #define scoop_task_enumerate_live_processors 3

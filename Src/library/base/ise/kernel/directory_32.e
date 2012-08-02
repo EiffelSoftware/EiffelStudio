@@ -24,6 +24,7 @@ inherit
 			{ANY}
 				close,
 				deep_twin,
+				is_equal,
 				is_closed,
 				is_deep_equal,
 				is_empty,

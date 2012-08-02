@@ -28,6 +28,7 @@ inherit
 				is_closed,
 				is_deep_equal,
 				is_directory,
+				is_equal,
 				is_empty,
 				is_executable,
 				is_open_append,

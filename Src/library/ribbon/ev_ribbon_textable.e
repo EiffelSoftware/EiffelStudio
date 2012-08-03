@@ -22,6 +22,9 @@ feature -- Command
 
 	set_text (a_text: STRING_32)
 			-- Set `label_title' with `a_text'
+		require
+			has_ribbon: attached ribbon
+			ribbon_exists attached ribbon as l_ribbon and then l_ribbon.exists
 		local
 			l_key: EV_PROPERTY_KEY
 			l_command_id: NATURAL_32

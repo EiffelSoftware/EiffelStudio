@@ -350,6 +350,7 @@ feature -- Element change
 		do
 				-- Convert substring to UTF-16 with a terminating zero.
 			u.utf_32_substring_to_utf_16_0_pointer (a_string, start_pos, end_pos, managed_data)
+			count := end_pos - start_pos + 1
 		end
 
 	set_string_with_newline_conversion (a_string: READABLE_STRING_GENERAL)

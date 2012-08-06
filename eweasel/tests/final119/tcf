@@ -4,14 +4,16 @@ test_description In finalized mode, "x = center.x" is evaluated from right to le
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
 copy_raw 	center.e $CLUSTER center.e
 
 compile_melted
 compile_result 	ok
 
-execute_work 	NONE 	exec_output
+execute_work 	NONE 	exec_output_m
 execute_result 	ok
-compare		exec_output output
+compare		exec_output_m output
 
 compile_final_keep
 compile_result 	ok
@@ -19,8 +21,8 @@ compile_result 	ok
 c_compile_final
 c_compile_result ok
 
-execute_final	NONE exec_output1
+execute_final	NONE exec_output_f
 execute_result	ok
-compare		exec_output1 output
+compare		exec_output_f output
 
 test_end

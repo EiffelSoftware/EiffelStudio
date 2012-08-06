@@ -1,24 +1,12 @@
-
 class TEST
 create
 	make
 feature
 	make
+		local
+			t: TEST1
 		do
-			create center
-			Current.do_nothing
+			create {TEST2} t.make
 		end
-
-	x: INTEGER
-		do
-			print ("x in TEST%N")
-			center.set_x (1)
-			Result := center.x
-		end
-
-	center: CENTER
-	
-invariant
-	set: x = center.x
 
 end

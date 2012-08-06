@@ -6,7 +6,6 @@ feature
 	x: INTEGER
 		do
 			Result := internal_x
-			print ("x in CENTER%N")
 		end
 		
 	set_x (a_x: like x)

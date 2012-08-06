@@ -587,10 +587,12 @@ rt_public void file_pr(FILE *f, EIF_REAL_32 number)
 {
 	RT_GET_CONTEXT
 		/* Write `number' on `f' */
-	int len, res;
-	len = c_buffero_outr32(number);
-	errno = 0;
-	res = fprintf(f, "%s", buffero);
+	int res;
+	res = c_buffero_outr32(number);
+	if (res >= 0) {
+		errno = 0;
+		res = fprintf(f, "%s", buffero);
+	}
 	if (res < 0) {
 		eise_io("FILE: unable to write REAL_32 value.");
 	}
@@ -660,10 +662,12 @@ rt_public void file_pd(FILE *f, EIF_REAL_64 val)
 {
 	RT_GET_CONTEXT
 	/* Write double `val' onto `f' */
-	int len, res;
-	len = c_buffero_outr64(val);
-	errno = 0;
-	res = fprintf(f, "%s", buffero);
+	int res;
+	res = c_buffero_outr64(val);
+	if (res >= 0) {
+		errno = 0;
+		res = fprintf(f, "%s", buffero);
+	}
 	if (res < 0) {
 		eise_io("FILE: unable to write REAL_64 value.");
 	}
@@ -1529,10 +1533,8 @@ doc:	</routine>
 rt_public void eif_file_rename_16(EIF_NATURAL_16 *from, EIF_NATURAL_16 *to)
 {
 	/* Rename file `from' into `to' */
-
-	int status;			/* System call status */
-	
 #if defined EIF_WINDOWS || defined EIF_OS2
+	int status;			/* System call status */
 	if (eif_file_exists_16 (to)) {
 			/* To have the same behavior as Unix, we need to remove the destination file if it exists.
 			 * Of course we can do this only if `from' and `to' do not represent the same file.
@@ -2065,13 +2067,13 @@ rt_public EIF_BOOLEAN eif_file_creatable_16(EIF_NATURAL_16 *path, EIF_INTEGER le
 	 * with no write permissions...
 	 */
 
+#ifndef EIF_WINDOWS
+	REQUIRE ("Platform is Windows", EIF_FALSE);
+#else
 	rt_stat_buf buf;			/* Buffer to get parent directory statistics */
 	wchar_t *temp = NULL;
 	wchar_t *ptr;
 
-#ifndef EIF_WINDOWS
-	REQUIRE ("Platform is Windows", EIF_FALSE);
-#else
 	temp = (wchar_t *) eif_malloc (sizeof (EIF_NATURAL_16) * (length + 1));
 	if (!temp) {
 		enomem();

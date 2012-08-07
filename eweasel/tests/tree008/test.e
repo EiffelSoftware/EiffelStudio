@@ -21,11 +21,13 @@ feature {NONE} -- Initialization
 			two_way_tree_replace_child
 			two_way_tree_prune_1
 			two_way_tree_prune_2
+			two_way_tree_prune_3
 			two_way_tree_twl_merge_left
 			two_way_tree_twl_merge_right
 			
 			two_way_tree_has_orig
 			two_way_tree_make_orig
+			two_way_tree_merge_tree_before_orig
 			two_way_tree_prune_all_orig
 			two_way_tree_put_child_orig
 			two_way_tree_put_child_right_orig_1
@@ -177,6 +179,21 @@ feature {NONE} -- Initialization
 			tree.put_front (2)
 			tree.prune (tree.last_child)
 		end
+		
+	two_way_tree_prune_3
+			-- When deleting active child,
+			-- sets `child' to its `left_sibling' after calling `bl_put_left',
+			-- which results in `child' being Void without adjusting `before' or `after'.
+		local
+			tree: TWO_WAY_TREE [INTEGER]
+		do
+			create tree.make (1)
+			tree.put_front (3)
+			tree.put_front (2)
+			tree.put_front (1)
+			tree.child_go_i_th (2)
+			tree.prune (tree.child)
+		end
 
 	two_way_tree_twl_merge_left
 			-- `twl_merge_left' merges children, but does not adapt their parent links;
@@ -232,6 +249,19 @@ feature {NONE} -- Initialization
 			tree.make (5)
 		end
 
+	two_way_tree_merge_tree_before_orig
+			-- `merge_tree_before' does not have a precondition `other /= Current',
+			-- but it calls `twl_merge_left' which has this precondition.
+			-- The same problem exists in `merge_tree_after'.
+		local
+			tree: TWO_WAY_TREE [INTEGER]
+		do
+			create tree.make (1)
+			tree.put_front (2)
+			tree.child_start
+			tree.merge_tree_before (tree)
+		end
+		
 	two_way_tree_prune_all_orig
 			-- Wrong postcondition `no_more_occurrences'
 			-- because prune_all only removes children, and not nodes from the whole tree.

@@ -1760,11 +1760,17 @@ rt_private void mark_simple_stack(struct stack *stk, MARKER marker, int move)
 		 */
 
 		if (move) {
-			for (; roots > 0; roots--, object++)
-				*object = mark_expanded(*object, marker);
+			for (; roots > 0; roots--, object++) {
+				if (*object) {
+					*object = mark_expanded(*object, marker);
+				}
+			}
 		} else {
-			for (; roots > 0; roots--, object++)
-				(void) mark_expanded(*object, marker);
+			for (; roots > 0; roots--, object++) {
+				if (*object) {
+					(void) mark_expanded(*object, marker);
+				}
+			}
 		}
 #ifdef DEBUG
 		roots = saved_roots; object = saved_object;
@@ -1964,11 +1970,17 @@ rt_private void mark_stack(struct stack *stk, MARKER marker, int move)
 #endif
 
 		if (move) {
-			for (; roots > 0; roots--, object++)
-				*(EIF_REFERENCE *) *object = mark_expanded(*(EIF_REFERENCE *) *object, marker);
+			for (; roots > 0; roots--, object++) {
+				if (*object) {
+					*(EIF_REFERENCE *) *object = mark_expanded(*(EIF_REFERENCE *) *object, marker);
+				}
+			}
 		} else {
-			for (; roots > 0; roots--, object++)
-				(void) mark_expanded(*(EIF_REFERENCE *) *object, marker);
+			for (; roots > 0; roots--, object++) {
+				if (*object) {
+					(void) mark_expanded(*(EIF_REFERENCE *) *object, marker);
+				}
+			}
 		}
 
 #ifdef DEBUG
@@ -2304,11 +2316,17 @@ rt_private void mark_overflow_stack(MARKER marker, int move)
 			}
 
 			if (move) {
-				for (; roots > 0; roots--, object++)
-					*(EIF_REFERENCE *) *object = mark_expanded(*(EIF_REFERENCE *) *object, marker);
+				for (; roots > 0; roots--, object++) {
+					if (*object) {
+						*(EIF_REFERENCE *) *object = mark_expanded(*(EIF_REFERENCE *) *object, marker);
+					}
+				}
 			} else {
-				for (; roots > 0; roots--, object++)
-					(void) mark_expanded(*(EIF_REFERENCE *) *object, marker);
+				for (; roots > 0; roots--, object++) {
+					if (*object) {
+						(void) mark_expanded(*(EIF_REFERENCE *) *object, marker);
+					}
+				}
 			}
 		}
 
@@ -2619,14 +2637,18 @@ marked: /* Goto label needed to avoid code duplication */
 				if (rt_g_data.status & (GC_PART | GC_GEN)) {	/* Moving objects */
 					object = (EIF_REFERENCE *) (current + OVERHEAD);/* First expanded */
 					for (; offset > 1; offset--) {		/* Loop over array */
-						*object = hybrid_mark(object);
-						object = (EIF_REFERENCE *) ((char *) object + size);
+						if (*object) {
+							*object = hybrid_mark(object);
+							object = (EIF_REFERENCE *) ((char *) object + size);
+						}
 					}
 				} else {								/* Object can't move */
 					object = (EIF_REFERENCE *) (current + OVERHEAD);/* First expanded */
 					for (; offset > 1; offset--) {		/* Loop over array */
-						(void) hybrid_mark(object);
-						object = (EIF_REFERENCE *) ((char *) object + size);
+						if (*object) {
+							(void) hybrid_mark(object);
+							object = (EIF_REFERENCE *) ((char *) object + size);
+						}
 					}
 				}
 				/* Keep iterating if and only if the current object has at
@@ -2656,16 +2678,19 @@ marked: /* Goto label needed to avoid code duplication */
 
 		/* Mark all objects under root, updating the references if scavenging */
 
-		if (rt_g_data.status & (GC_PART | GC_GEN))
+		if (rt_g_data.status & (GC_PART | GC_GEN)) {
 			for (object = (EIF_REFERENCE *) current; offset > 1; offset--, object++) {
-				if (*object)
+				if (*object) {
 					*object = hybrid_mark(object);
+				}
 			}
-		else
+		} else {
 			for (object = (EIF_REFERENCE *) current; offset > 1; offset--, object++) {
-				if (*object)
+				if (*object) {
 					(void) hybrid_mark(object);
+				}
 			}
+		}
 
 		if (count >= 1) {
 			prev = object;
@@ -4151,14 +4176,18 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 				if (gen_scavenge & GS_ON) {					/* Moving objects */
 					object = (EIF_REFERENCE *) (current + OVERHEAD);/* First expanded */
 					for (; offset > 1; offset--) {		/* Loop over array */
-						*object = hybrid_gen_mark(object);
-						object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
+						if (*object) {
+							*object = hybrid_gen_mark(object);
+							object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
+						}
 					}
 				} else {							/* Object can't move */
 					object = (EIF_REFERENCE *) (current + OVERHEAD);/* First expanded */
 					for (; offset > 1; offset--) {		/* Loop over array */
-						(void) hybrid_gen_mark(object);
-						object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
+						if (*object) {
+							(void) hybrid_gen_mark(object);
+							object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
+						}
 					}
 				}
 				/* Keep iterating if and only if the current object has at
@@ -4187,12 +4216,18 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 
 		/* Mark all objects under root, updating the references if scavenging */
 
-		if (gen_scavenge & GS_ON) {
-			for (object = (EIF_REFERENCE *) current; offset > 1; offset--, object++)
-				*object = hybrid_gen_mark(object);
+		if (gen_scavenge & GS_ON) { 
+			for (object = (EIF_REFERENCE *) current; offset > 1; offset--, object++) {
+				if (*object) {
+					*object = hybrid_gen_mark(object);
+				}
+			}
 		} else {
-			for (object = (EIF_REFERENCE *) current; offset > 1; offset--, object++)
-				(void) hybrid_gen_mark(object);
+			for (object = (EIF_REFERENCE *) current; offset > 1; offset--, object++) {
+				if (*object) {
+					(void) hybrid_gen_mark(object);
+				}
+			}
 		}
 
 		if (count >= 1) {

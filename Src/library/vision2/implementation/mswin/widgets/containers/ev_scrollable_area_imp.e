@@ -10,9 +10,8 @@ class
 
 inherit
 	EV_SCROLLABLE_AREA_I
-		undefine
-			set_offset
 		redefine
+			set_offset,
 			interface
 		end
 
@@ -29,6 +28,7 @@ inherit
 			default_ex_style,
 			x_offset,
 			y_offset,
+			set_offset,
 			set_x_offset,
 			set_y_offset,
 			ev_apply_new_size,
@@ -174,8 +174,18 @@ feature -- Access
 
 feature -- Element change
 
+	set_offset (an_x, a_y: INTEGER)
+			-- <Precursor>
+		do
+			if item /= Void then
+				set_horizontal_position (an_x)
+				set_vertical_position (a_y)
+				Precursor {EV_VIEWPORT_IMP} (an_x, a_y)
+			end
+		end
+
 	set_x_offset (an_x: INTEGER)
-			-- Set `x_offset' to `an_x'.
+			-- <Precursor>
 		do
 			if item /= Void then
 				set_horizontal_position (an_x)
@@ -184,7 +194,7 @@ feature -- Element change
 		end
 
 	set_y_offset (a_y: INTEGER)
-			-- Set `y_offset' to `a_y'.
+			-- <Precursor>
 		do
 			if item /= Void then
 				set_vertical_position (a_y)
@@ -403,14 +413,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_VIEWPORT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

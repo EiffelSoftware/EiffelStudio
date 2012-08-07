@@ -33,6 +33,8 @@ test	array-force				array007 tcf pass array
 test	array2-basics			array008 tcf pass array array2
 test	array-force-precondition	array009 tcf pass array
 test	array-binary-search-overflow	array010 tcf fail array
+test	array-force2				array011 tcf fail array
+test	array-operation-violations				array012 tcf fail array
 
 test	list-is-equal			list001 tcf pass list
 test	list-put-extend			list002 tcf pass list
@@ -49,10 +51,13 @@ test	sorted-two-way-list-invariant-violation	list012 tcf pass list
 test	do-all-with-index-arrayed-list	list013 tcf pass list
 test	two-way-list-merge		list014 tcf pass list
 test	chain-move			list015 tcf pass list
+test	linked-list-operations	list016 tcf fail list
+test	two-way-list-merge-right	list017 tcf fail list
 
 test	priority-queue-basics	queue001 tcf pass queue
 test	heap-priority-queue-remove	queue002 tcf pass queue
 test	queue-linear			queue003 tcf pass queue
+test	arrayed_queue_is_equal	queue004 tcf fail queue
 
 test	disjoint-sets			set001  tcf pass set
 test	disjoint-sets-expanded		set001a tcf pass set
@@ -63,11 +68,26 @@ test	prune-tree-set			set003  tcf pass set
 test	linear-subset-move		set004  tcf pass set
 test	void-items-set-crash	set005  tcf pass set
 test	various-set-operations	set006	tcf pass set
+test	various-set-operations2 set007	tcf fail set
+test	linear-subset-operations	set008 tcf fail set
+test	linked-set-operations	set009 tcf fail set
+test	subset-strategy-generic-disjoint	set010 tcf fail set
+test	subset-strategy-hashable	set011	tcf fail set
+test	traversable-subset-is-subset	set012	tcf fail set
+test	two-way-sorted-set-operations	set013	tcf fail set
+test	linear_subset_valid_index		set014	tcf pass set
+test	linked-set-wrong-postcondition		set015	tcf fail set
+test	duplicate-postcondition			set016		tcf fail set
+
 
 test	tree-is-equal			tree001 tcf pass tree
 test	tree-clone			tree002 tcf pass tree
 test	tree-tests			tree003 tcf pass tree
 test	tree-copy			tree004 tcf pass tree
+test	binary-tree-various-operations	tree005 tcf fail tree
+test	two-way-tree-fill	tree006	tcf fail tree
+test	tree-various-operations	tree007 tcf fail tree
+test	two-way-tree-operations	tree008 tcf fail tree
 
 test	string-regression		string001 tcf pass string
 test	insert-default-key		table001 tcf pass table
@@ -81,11 +101,19 @@ test	current_keys_void_safe	table008 tcf pass table
 test	extend-after-removal-failures	table009 tcf pass table
 test	valid-iteration-index-failure	table010 tcf fail table
 test	table-disjoint			table011 tcf fail table
+test	hash-table-is-equal		table012 tcf fail table
 
 test	recursive-delete-with-symlinks	directory001 tcf pass directory
 
 test	basic-iterations		iteration001 tcf pass iteration
 test	iteration-cursor-two-generics	iteration002 tcf pass iteration formal generic
+test	indexable-iteration-cursor		iteration003 tcf pass iteration
+
+test	chain-count				chain001	tcf fail chain
+
+test	integer_interval_size	interval001	tcf fail interval
+
+test	linked-stack-operations	stack001	tcf fail stack
 
 -- EiffelNet test
 test	net-out-of-descriptor	net001 tcf pass net

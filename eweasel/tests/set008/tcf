@@ -1,0 +1,16 @@
+
+test_name linear-subset-operations
+test_description Hashable strategy is chosen based on the dynamic type of the first element of set1, regardless of the types of other elements of set. Issue of moving items.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output1
+execute_result ok
+
+compare exec_output1 output
+
+test_end

@@ -1,0 +1,16 @@
+
+test_name linear_subset_valid_index
+test_description LINEAR_SUBSET.valid_index has an absurd postcondition `0 <= n and n <= count + 1'.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output1
+execute_result ok
+
+compare exec_output1 output
+
+test_end

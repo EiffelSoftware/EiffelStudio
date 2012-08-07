@@ -1,0 +1,46 @@
+Testing PART_SORTED_SET [STRING_8]
+intersect #1: B,C
+intersect #2: B,C
+prune: A
+subtract #1: 
+subtract #2: A,D
+symdif #1: A,D
+symdif #2: A,D
+
+Testing ARRAYED_SET [STRING_8]
+intersect #1: B,C
+intersect #2: B,C
+prune: A
+subtract #1: 
+subtract #2: D,A
+symdif #1: D,A
+symdif #2: D,A
+
+Testing TWO_WAY_SORTED_SET [STRING_8]
+intersect #1: B,C
+intersect #2: B,C
+prune: A
+subtract #1: 
+subtract #2: A,D
+symdif #1: A,D
+symdif #2: A,D
+
+Testing LINKED_SET [STRING_8]
+intersect #1: B,C
+intersect #2: B,C
+prune: A
+subtract #1: 
+subtract #2: D,A
+symdif #1: D,A
+symdif #2: D,A
+
+Testing BINARY_SEARCH_TREE_SET [STRING_8]
+intersect #1: B,C
+intersect #2: B,C
+prune: A
+subtract #1: 
+subtract #2: A,D
+symdif #1: A,D
+symdif #2: A,D
+
+Execution completed

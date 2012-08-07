@@ -78,7 +78,7 @@ test	two-way-sorted-set-operations	set013	tcf fail set
 test	linear_subset_valid_index		set014	tcf pass set
 test	linked-set-wrong-postcondition		set015	tcf fail set
 test	duplicate-postcondition			set016		tcf fail set
-
+test	two-way-sorted-set-prune-all	set017 		tcf fail set
 
 test	tree-is-equal			tree001 tcf pass tree
 test	tree-clone			tree002 tcf pass tree

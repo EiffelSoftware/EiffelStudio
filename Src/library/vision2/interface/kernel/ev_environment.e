@@ -146,9 +146,10 @@ feature {NONE} -- Implementation
 		do
 			implementation := environment_i
 				-- Reset creation flags so that `implementation' may be reused.
+			implementation.set_is_initialized (False)
+			implementation.set_state_flag ({EV_ANY_I}.interface_is_initialized_flag, False)
 			implementation.set_state_flag ({EV_ANY_I}.interface_default_create_called_flag, False)
 			implementation.set_state_flag ({EV_ANY_I}.base_make_called_flag, False)
-			implementation.set_state_flag ({EV_ANY_I}.interface_is_initialized_flag, False)
 		end
 
 note

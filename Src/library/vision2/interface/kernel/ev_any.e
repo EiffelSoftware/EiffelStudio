@@ -254,7 +254,7 @@ invariant
 	is_initialized: is_initialized
 	default_create_called: default_create_called
 	is_coupled:
-		default_create_called implies implementation.interface = Current
+		default_create_called implies (implementation.interface = Current or (attached {EV_ENVIRONMENT} Current and then attached implementation.interface))
 			-- The interface object (descended from this class)
 			-- and the implementation object (from EV_ANY_I)
 			-- must always be coupled.

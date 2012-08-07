@@ -1,0 +1,16 @@
+
+test_name duplicate-postcondition
+test_description Postcondition violation of {ARRAYED_SET}.duplicate.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output1
+execute_result ok
+
+compare exec_output1 output
+
+test_end

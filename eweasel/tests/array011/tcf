@@ -1,0 +1,14 @@
+test_name 	 array-force2
+test_description Array size > 1 after forcing a single element into an enpty array (because upper bound considered to be 0 in an empty array).
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

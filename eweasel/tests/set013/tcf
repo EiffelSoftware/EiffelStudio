@@ -1,0 +1,16 @@
+
+test_name two-way-sorted-set-operations
+test_description Assertion violations of operations on {TWO_WAY_SORTED_SET}, most of operations should be hidden.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output1
+execute_result ok
+
+compare exec_output1 output
+
+test_end

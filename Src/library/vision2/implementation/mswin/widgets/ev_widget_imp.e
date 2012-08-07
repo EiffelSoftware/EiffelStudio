@@ -1340,6 +1340,8 @@ feature -- Deferred features
 
 	wel_set_parent (a_parent: detachable WEL_WINDOW)
 			-- Set the wel parent of `Current'.
+		require
+			exists: exists
 		deferred
 		end
 

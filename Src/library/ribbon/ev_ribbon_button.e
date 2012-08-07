@@ -52,6 +52,9 @@ feature -- Access
 
 	is_enabled: BOOLEAN
 			-- If current has been checked?
+		require
+			has_ribbon: attached ribbon
+			ribbon_exists: attached ribbon as l_ribbon and then l_ribbon.exists
 		local
 			l_key: EV_PROPERTY_KEY
 			l_value: EV_PROPERTY_VARIANT
@@ -73,6 +76,9 @@ feature -- Command
 
 	set_enabled (a_bool: BOOLEAN)
 			-- Set `is_enabled' with `a_bool'
+		require
+			has_ribbon: attached ribbon
+			ribbon_exists: attached ribbon as l_ribbon and then l_ribbon.exists
 		local
 			l_key: EV_PROPERTY_KEY
 			l_value: EV_PROPERTY_VARIANT
@@ -156,7 +162,7 @@ feature {NONE} -- Implementation
 			-- Setting it when showing the button for first time
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

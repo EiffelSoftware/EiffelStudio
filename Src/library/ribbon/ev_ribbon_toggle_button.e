@@ -57,6 +57,9 @@ feature -- Access
 
 	is_selected: BOOLEAN
 			-- If current has been checked?
+		require
+			has_ribbon: attached ribbon
+			ribbon_exists: attached ribbon as l_ribbon and then l_ribbon.exists
 		local
 			l_key: EV_PROPERTY_KEY
 			l_value: EV_PROPERTY_VARIANT
@@ -78,12 +81,18 @@ feature -- Command
 
 	enable_select
 			-- Make `is_selected' true
+		require
+			has_ribbon: attached ribbon
+			ribbon_exists: attached ribbon as l_ribbon and then l_ribbon.exists
 		do
 			set_selected (True)
 		end
 
 	disable_select
 			-- Make `is_selected' false
+		require
+			has_ribbon: attached ribbon
+			ribbon_exists: attached ribbon as l_ribbon and then l_ribbon.exists
 		do
 			set_selected (False)
 		end
@@ -127,6 +136,9 @@ feature {NONE} -- Implementation
 
 	set_selected (a_bool: BOOLEAN)
 			-- Set `is_selected' with `a_bool'
+		require
+			has_ribbon: attached ribbon
+			ribbon_exists: attached ribbon as l_ribbon and then l_ribbon.exists
 		local
 			l_key: EV_PROPERTY_KEY
 			l_value: EV_PROPERTY_VARIANT
@@ -146,7 +158,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

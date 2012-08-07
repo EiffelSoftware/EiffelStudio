@@ -165,61 +165,75 @@ feature {STATIC_ACCESS_AS} -- Visitor
 			class_c: CLASS_C
 			vuex: VUEX
 			obs_warn: OBS_FEAT_WARN
+			l_old_is_inherited: BOOLEAN
 		do
-				-- At this stage `l_as' has already been type checked thus `solved_type' will be non-void.
-			if is_inherited then
-				class_c := type_a_generator.evaluate_type (l_as.class_type, context.written_class).associated_class
-			else
-				class_c := type_a_generator.evaluate_type (l_as.class_type, context.current_class).associated_class
-			end
-			feature_i := class_c.feature_table.item_id (l_as.feature_name.name_id)
-			constant_i ?= feature_i
+				-- Use `AST_FEATURE_CHECKER_GENERATOR' to properly type check the type of the static access
+			l_old_is_inherited := feature_checker.is_inherited
+			feature_checker.set_is_inherited (is_inherited)
+			l_as.class_type.process (feature_checker)
+			feature_checker.set_is_inherited (l_old_is_inherited)
+			if attached feature_checker.last_type as l_last_type then
+				if attached {FORMAL_A} l_last_type.actual_type as l_formal then
+					if l_formal.is_multi_constrained (context.current_class) then
+						error_handler.insert_error (create {NOT_SUPPORTED}.make ("Multiple constraints not supported in static access for when clause"))
+					else
+						class_c := context.current_class.constrained_type (l_formal.position).associated_class
+					end
+				else
+					class_c := l_last_type.associated_class
+				end
 
-			if feature_i = Void then
-				report_veen (l_as.feature_name)
-			elseif
-				not context.is_ignoring_export and then
-				not feature_i.is_exported_for (context.current_class)
-			then
-				create vuex
-				context.init_error (vuex)
-				vuex.set_static_class (class_c)
-				vuex.set_exported_feature (feature_i)
-				vuex.set_location (l_as.feature_name)
-				error_handler.insert_error (vuex)
-			elseif constant_i /= Void and then
-				(type.same_as (constant_i.type) or (not constant_i.type.is_enum and then not type.is_enum and then constant_i.value.valid_type (type)))
-			then
-					-- Record dependencies
-				context.supplier_ids.extend_depend_unit_with_level (class_c.class_id, constant_i, 0)
-					-- Check if this is a unique constant
-				last_unique_constant ?= constant_i
-					-- Calculate byte node
-				last_inspect_value := constant_i.value.inspect_value (type)
-				if
-					feature_i.is_obsolete
-						-- If the obsolete call is in an obsolete class,
-						-- no message is displayed
-					and then not context.current_class.is_obsolete
-						-- The current feature is whether the invariant or
-						-- a non obsolete feature
-					and then not context.current_feature.is_obsolete
-						-- Inherited code is checked in parent class.
-					-- and then not is_inherited
-					and then context.current_class.lace_class.options.is_warning_enabled (w_obsolete_feature)
-				then
-					create obs_warn.make_with_class (context.current_class)
-					obs_warn.set_feature (context.current_feature)
-					obs_warn.set_obsolete_class (class_c)
-					obs_warn.set_obsolete_feature (feature_i)
-					error_handler.insert_warning (obs_warn)
+				if class_c /= Void then
+					feature_i := class_c.feature_table.item_id (l_as.feature_name.name_id)
+					constant_i ?= feature_i
+
+					if feature_i = Void then
+						report_veen (l_as.feature_name)
+					elseif
+						not context.is_ignoring_export and then
+						not feature_i.is_exported_for (context.current_class)
+					then
+						create vuex
+						context.init_error (vuex)
+						vuex.set_static_class (class_c)
+						vuex.set_exported_feature (feature_i)
+						vuex.set_location (l_as.feature_name)
+						error_handler.insert_error (vuex)
+					elseif constant_i /= Void and then
+						(type.same_as (constant_i.type) or (not constant_i.type.is_enum and then not type.is_enum and then constant_i.value.valid_type (type)))
+					then
+							-- Record dependencies
+						context.supplier_ids.extend_depend_unit_with_level (class_c.class_id, constant_i, 0)
+							-- Check if this is a unique constant
+						last_unique_constant ?= constant_i
+							-- Calculate byte node
+						last_inspect_value := constant_i.value.inspect_value (type)
+						if
+							feature_i.is_obsolete
+								-- If the obsolete call is in an obsolete class,
+								-- no message is displayed
+							and then not context.current_class.is_obsolete
+								-- The current feature is whether the invariant or
+								-- a non obsolete feature
+							and then not context.current_feature.is_obsolete
+								-- Inherited code is checked in parent class.
+							-- and then not is_inherited
+							and then context.current_class.lace_class.options.is_warning_enabled (w_obsolete_feature)
+						then
+							create obs_warn.make_with_class (context.current_class)
+							obs_warn.set_feature (context.current_feature)
+							obs_warn.set_obsolete_class (class_c)
+							obs_warn.set_obsolete_feature (feature_i)
+							error_handler.insert_warning (obs_warn)
+						end
+						if not is_inherited then
+							feature_checker.set_routine_ids (constant_i.rout_id_set, l_as)
+							l_as.set_class_id (class_c.class_id)
+						end
+					else
+						report_vomb2 (l_as)
+					end
 				end
-				if not is_inherited then
-					feature_checker.set_routine_ids (constant_i.rout_id_set, l_as)
-					l_as.set_class_id (class_c.class_id)
-				end
-			else
-				report_vomb2 (l_as)
 			end
 		end
 
@@ -373,7 +387,7 @@ invariant
 	intervals_not_void: intervals /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

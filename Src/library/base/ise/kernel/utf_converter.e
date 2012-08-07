@@ -182,30 +182,34 @@ feature -- UTF-32 to UTF-16
 		local
 			i: like {READABLE_STRING_GENERAL}.count
 			c: NATURAL_32
-			m: like {MANAGED_POINTER}.count
+			m, l_count: like {MANAGED_POINTER}.count
 		do
 			from
 				i := end_pos - start_pos + 1
-				if p.count < i  then
-					p.resize (i * 2)
+				l_count := p.count
+				if l_count < (i * 2)  then
+					l_count := i * 2
+					p.resize (l_count)
 				end
 				i := start_pos - 1
 			until
 				i >= end_pos
 			loop
 				i := i + 1
-					-- Make sure there is sufficient room for at least 2 code units of 2 bytes each.
-				if p.count < m + 4 then
-						-- Additionally reserve memory for items after currently written code points
-						-- to avoid reallocation on every iteration.
-					p.resize ((end_pos - i) * 2 + m + 4)
-				end
 				c := s.code (i)
 				if c <= 0xFFFF then
 						-- Codepoint from Basic Multilingual Plane: one 16-bit code unit.
 					p.put_natural_16 (c.to_natural_16, m)
 					m := m + 2
 				else
+						-- Make sure there is sufficient room for at least 2 code units of 2 bytes each.
+					if l_count < m + 4 then
+							-- Additionally reserve memory for items after currently written code points
+							-- to avoid reallocation on every iteration.
+						l_count := (end_pos - i) * 2 + m + 4
+						p.resize (l_count)
+					end
+
 						-- Supplementary Planes: surrogate pair with lead and trail surrogates.
 					p.put_natural_16 ((0xD7C0 + (c |>> 10)).to_natural_16, m)
 					p.put_natural_16 ((0xDC00 + (c & 0x3FF)).to_natural_16, m + 2)
@@ -214,6 +218,8 @@ feature -- UTF-32 to UTF-16
 			end
 				-- Adjust number of written bytes.
 			p.resize (m)
+		ensure
+			p_count_may_increase: p.count >= old p.count
 		end
 
 	utf_32_substring_to_utf_16_0_pointer
@@ -230,14 +236,53 @@ feature -- UTF-32 to UTF-16
 			end_position_big_enough: start_pos <= end_pos + 1
 			end_pos_small_enough: end_pos <= s.count
 		local
-			m: like {MANAGED_POINTER}.count
+			i: like {READABLE_STRING_GENERAL}.count
+			c: NATURAL_32
+			m, l_count: like {MANAGED_POINTER}.count
+			l_resized: BOOLEAN
 		do
 				-- Write UTF-16 sequence.
-			utf_32_substring_to_utf_16_pointer (s, start_pos, end_pos, p)
-				-- Add terminating zero at the end.
-			m := p.count
-			p.resize (m + 2)
+			from
+				i := end_pos - start_pos + 1
+				l_count := p.count
+				if l_count < (i + 1) * 2  then
+					l_count := (i + 1) * 2
+					p.resize (l_count)
+				end
+				i := start_pos - 1
+			until
+				i >= end_pos
+			loop
+				i := i + 1
+				c := s.code (i)
+				if c <= 0xFFFF then
+						-- Codepoint from Basic Multilingual Plane: one 16-bit code unit.
+					p.put_natural_16 (c.to_natural_16, m)
+					m := m + 2
+				else
+						-- Make sure there is sufficient room for at least 2 code units of 2 bytes each.
+					if l_count < m + 4 then
+							-- Additionally reserve memory for items after currently written code points
+							-- to avoid reallocation on every iteration.
+						l_count := (end_pos - i) * 2 + m + 4
+						p.resize (l_count)
+						l_resized := True
+					end
+
+						-- Supplementary Planes: surrogate pair with lead and trail surrogates.
+					p.put_natural_16 ((0xD7C0 + (c |>> 10)).to_natural_16, m)
+					p.put_natural_16 ((0xDC00 + (c & 0x3FF)).to_natural_16, m + 2)
+					m := m + 4
+				end
+			end
+				-- Adjust number of written bytes and add terminating zero at the end.
+			if l_resized then
+					-- We had to add a code unit on 4 bytes. We adjust the size.
+				p.resize (m + 2)
+			end
 			p.put_natural_16 (0, m)
+		ensure
+			p_count_may_increase: p.count >= old p.count
 		end
 
 feature -- UTF-16 to UTF-32

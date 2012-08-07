@@ -4146,6 +4146,14 @@ feature -- Generation
 					if a_class /= Void then
 						types := a_class.types
 						l_class_is_finalized := not a_class.is_precompiled or else a_class.is_in_system
+							-- If an expanded type is in a precompiled library, then there will always
+							-- be a generic derivation for TYPE [my_expanded_class] due to the presence
+							-- of `generating_type: TYPE [detachable like Current' in ANY. Even if the
+							-- expanded class is not really used in the system, we need to compile it in
+							-- so that we can generate the generic derivation of `{TYPE}' that includes it.
+							-- This solves many eweasel tests such as test#time002 when
+							-- UTF_CONVERTER expanded class was added to EiffelBase.
+						l_class_is_finalized := l_class_is_finalized or else a_class.is_expanded
 							-- The following line is a hack so that `types.sort' works.
 						current_class := a_class
 						types.sort
@@ -4647,16 +4655,7 @@ feature -- Generation
 				cl_type := class_types.item (i)
 					-- Classes could be removed
 				if cl_type /= Void then
-					if final_mode then
-						if
-							not cl_type.associated_class.is_precompiled or else
-							cl_type.associated_class.is_in_system
-						then
-							cl_type.generate_skeleton1 (buffer)
-						end
-					else
-						cl_type.generate_skeleton1 (buffer)
-					end
+					cl_type.generate_skeleton1 (buffer)
 					if not final_mode then
 						cltype_array.put (cl_type, cl_type.static_type_id)
 					end
@@ -4754,16 +4753,7 @@ feature -- Generation
 				cl_type := class_types.item (i)
 					-- Classes could be removed
 				if cl_type /= Void then
-					if final_mode then
-						if
-							not cl_type.associated_class.is_precompiled or else
-							cl_type.associated_class.is_in_system
-						then
-							cl_type.generate_attribute_names (buffer)
-						end
-					else
-						cl_type.generate_attribute_names (buffer)
-					end
+					cl_type.generate_attribute_names (buffer)
 				end
 				i := i + 1
 			end
@@ -4807,16 +4797,7 @@ feature -- Generation
 				cl_type := class_types.item (i)
 					-- Classes could be removed
 				if cl_type /= Void then
-					if final_mode then
-						if
-							not cl_type.associated_class.is_precompiled or else
-							cl_type.associated_class.is_in_system
-						then
-							cl_type.generate_expanded_structure_definition (buffer)
-						end
-					else
-						cl_type.generate_expanded_structure_definition (buffer)
-					end
+					cl_type.generate_expanded_structure_definition (buffer)
 				end
 				i := i + 1
 			end

@@ -1813,23 +1813,22 @@ feature {NONE} -- Class initialization
 
 	check_constraint_genericity
 			-- Check validity of constraint genericity
+		local
+			l_constraint_type: TYPE_AS
 		do
 			Inst_context.set_group (cluster)
-			generics.do_all (
-				agent (a_generic_dec: FORMAL_DEC_AS)
-					do
-						a_generic_dec.constraints.do_all (
-							agent (a_constraint: CONSTRAINING_TYPE_AS)
-								local
-									l_constraint_type: TYPE_AS
-								do
-									l_constraint_type := a_constraint.type
-									if l_constraint_type /= Void then
-										type_a_checker.check_constraint_type (Current, l_constraint_type, error_handler)
-									end
-								end)
-					end)
+			across generics as l_formal_generic loop
+				if is_expanded and then l_formal_generic.item.constraints.count > 1 then
+					Error_handler.insert_error (create {NOT_SUPPORTED}.make ("Multiple constraints are not permitted in an expanded generic class"))
+				else
+					across l_formal_generic.item.constraints as l_constraint loop
+						l_constraint_type := l_constraint.item.type
+						type_a_checker.check_constraint_type (Current, l_constraint_type, error_handler)
+					end
+				end
+			end
 		end
+
 
 	check_constraint_renaming
 			-- Check validity of constraint renaming

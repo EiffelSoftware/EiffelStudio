@@ -13,11 +13,14 @@ inherit
 			build_explain
 		end
 
+create
+	make
+
 feature
 
 	message: STRING;
 
-	set_message (i: STRING)
+	make (i: STRING)
 		do
 			message := i
 		end

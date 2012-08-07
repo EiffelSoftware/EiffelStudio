@@ -35,12 +35,14 @@ feature -- Access
 
 	constraint_actual_type: CL_TYPE_A
 			-- Actual double type
+		obsolete
+			"See {CLASS_C}.constraint_actual_type obsolete clause."
 		do
 			if generics = Void then
 				Result := actual_type
 			else
 				if is_typed_pointer then
-					create {TYPED_POINTER_A} Result.make_typed (constraints (1))
+					create {TYPED_POINTER_A} Result.make_typed (single_constraint (1))
 				else
 					Result := Pointer_type
 				end
@@ -141,7 +143,7 @@ feature -- Validity
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

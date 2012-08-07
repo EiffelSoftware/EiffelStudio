@@ -41,7 +41,6 @@ inherit
 			is_none,
 			is_reference,
 			is_separate,
-			is_type_set,
 			internal_is_valid_for_class,
 			meta_type,
 			set_attached_mark,
@@ -167,12 +166,6 @@ feature -- Status report
 			-- Is current actual type NONE?
 		do
 			Result := actual_type.is_none
-		end
-
-	is_type_set: BOOLEAN
-			-- <Precursor>
-		do
-			Result := actual_type.is_type_set
 		end
 
 	same_as (other: TYPE_A): BOOLEAN
@@ -577,7 +570,7 @@ feature {TYPE_A} -- Helpers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

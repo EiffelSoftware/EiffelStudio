@@ -577,7 +577,7 @@ feature -- Access
 						i := i + 1
 							-- There are no anchored types in constraints,
 							-- so there is no need to use `conformance_type'.
-						if attached {FORMAL_A} l_constraints [i].type.to_other_attachment (Current) as g then
+						if attached {FORMAL_A} l_constraints.i_th (i).type.to_other_attachment (Current) as g then
 							if g.direct_conform_to_formal (a_context_class, f) then
 									-- Types conform.
 								Result := True
@@ -603,7 +603,7 @@ feature -- Access
 						-- Take only class types into account since there is no other way
 						-- this formal can conform to other and leaving formal generics in
 						-- the type set can lead to infinite recursion for no need.
-					Result := l_constraints.constraining_types (a_context_class).to_other_attachment (Current).conform_to_type (a_context_class, other)
+					Result := l_constraints.constraining_types (a_context_class).to_other_attachment (Current).conform_to_type (a_context_class, other.to_type_set)
 				end
 			end
 		end
@@ -735,7 +735,7 @@ feature {NONE} -- Status adaptation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

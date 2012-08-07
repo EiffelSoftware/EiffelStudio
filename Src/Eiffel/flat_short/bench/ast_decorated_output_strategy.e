@@ -956,7 +956,7 @@ feature {NONE} -- Implementation
 										if l_feat_result /= Void and then not l_feat_result.is_empty then
 												-- May be Void due to an incomplete compilation.
 											l_feat := l_feat_result.first.feature_item
-											last_type := l_feat_result.first.class_type
+											last_type := l_feat_result.first.class_type.type
 											last_class := last_type.associated_class
 											if l_feat_result.count > 1 then
 												set_error_message ("Multi constraint formal: More than one feature available for feature with routine id: " + l_rout_id_set.first.out)
@@ -2208,7 +2208,7 @@ feature {NONE} -- Implementation
 			l_last_type: TYPE_A
 			l_last_type_set: TYPE_SET_A
 			l_last_class: CLASS_C
-			l_result: LIST[TUPLE[feature_item: E_FEATURE; type: RENAMED_TYPE_A [TYPE_A]]]
+			l_result: LIST[TUPLE[feature_item: E_FEATURE; type: RENAMED_TYPE_A]]
 			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
@@ -3576,7 +3576,7 @@ feature {NONE} -- Implementation
 					l_is_multi_constrained := True
 					l_constrained_type_set := l_formal_dec.constraint_types_if_possible (current_class)
 				else
-					l_constrained_type := l_formal_dec.constraint_type_if_possible (current_class)
+					l_constrained_type := l_formal_dec.constraint_type_if_possible (current_class).type
 				end
 
 				l_text_formatter_decorator.put_space
@@ -4151,7 +4151,6 @@ feature -- Expression visitor
 			end
 		ensure
 			no_error_implies_result_is_not_void: not has_error_internal implies Result /= Void
-			Result_is_not_a_type_set: not has_error_internal implies (not Result.is_type_set)
 		end
 
 	expr_types (a_exprs: EIFFEL_LIST [EXPR_AS]): ARRAY [TYPE_A]
@@ -4195,29 +4194,20 @@ feature {NONE} -- Implementation: helpers
 			-- Append feature.
 			--
 			-- `a_feature_name_id' is the `NAMES_HEAP' ID of the feature name.
-			-- `l_type' is the type where we lookup the feautre
+			-- `l_type' is the type where we lookup the feature
 			--| The code has 2 arguments as it suites the actual code better. (May be changed.)
 		require
 			not_both_void: a_type /= Void or a_type_set /= Void
 		local
 			l_feat: E_FEATURE
 			l_result: TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
-			l_name_id: INTEGER
 		do
 			if a_type_set /= Void then
 				l_result := a_type_set.e_feature_state_by_name_id (a_feature_name.feature_name.name_id)
 				l_feat := l_result.feature_item
 			elseif a_type /= Void then
-				check a_type_not_void: a_type /= Void end
 				if not a_type.is_formal then
-					l_feat := a_type.associated_class.feature_with_name_32 (a_feature_name.visual_name_32)
-						-- Renaming situation
-					if l_feat = Void and then a_type.has_renaming then
-						l_name_id := a_type.renaming.renamed (a_feature_name.feature_name.name_id)
-						if l_name_id /= -1 then
-							l_feat := a_type.associated_class.feature_with_name_id (l_name_id)
-						end
-					end
+					l_feat := a_type.associated_class.feature_with_name_id (a_feature_name.feature_name.name_id)
 				end
 			end
 
@@ -4674,7 +4664,7 @@ feature {NONE} -- Implementation: helpers
 			Result := a_current_class.feature_table.item_id (a_name_id)
 		end
 
-	feature_from_type_set (a_type_set: TYPE_SET_A;	a_id_set: ID_SET): LIST[TUPLE[feature_item: E_FEATURE; class_type: RENAMED_TYPE_A [TYPE_A]]]
+	feature_from_type_set (a_type_set: TYPE_SET_A;	a_id_set: ID_SET): LIST[TUPLE[feature_item: E_FEATURE; class_type: RENAMED_TYPE_A]]
 			-- Feature with `a_id_set' in `a_class_c'
 		require
 			a_type_set_not_void: a_type_set /= Void
@@ -5046,7 +5036,7 @@ invariant
 	object_test_locals_for_current_feature_not_void: object_test_locals_for_current_feature /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

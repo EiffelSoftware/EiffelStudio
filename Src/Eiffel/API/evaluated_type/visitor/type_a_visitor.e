@@ -84,11 +84,6 @@ feature {TYPE_A} -- Visitor
 		deferred
 		end
 
-	process_renamed_type_a (a_type: RENAMED_TYPE_A [TYPE_A])
-			-- Process `a_type'.
-		deferred
-		end
-
 	process_formal_a (a_type: FORMAL_A)
 			-- Process `a_type'.
 		require
@@ -307,7 +302,7 @@ feature {TYPE_A} -- Visitor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

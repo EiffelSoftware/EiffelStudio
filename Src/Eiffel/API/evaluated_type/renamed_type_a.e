@@ -13,19 +13,10 @@ note
 	revision: "$Revision$"
 
 class
-	RENAMED_TYPE_A [G -> TYPE_A]
+	RENAMED_TYPE_A
 
 inherit
 	COMPILER_EXPORTER
-
-	TYPE_A
-		redefine
-			renaming, is_renamed_type, has_renaming, instantiated_in,
-			formal_instantiated_in,
-			instantiation_in, has_associated_class, formal_instantiation_in,
-			to_type_set, conformance_type, actual_type,
-			same_as
-		end
 
 create
 	make
@@ -36,8 +27,6 @@ feature -- Initialization
 			-- Initialize
 		require
 			a_type_not_void: a_type /= Void
-			a_type_is_not_a_type_set: not a_type.is_type_set
-			a_type_is_not_renamed: not a_type.is_renamed_type
 		do
 			type := a_type
 			renaming := a_renaming
@@ -48,18 +37,7 @@ feature -- Initialization
 
 feature -- Access
 
-	hash_code: INTEGER
-		do
-			Result := type.hash_code
-		end
-
-	actual_type, conformance_type: G
-			-- Type to which the renaming `renaming' is applied. Can be used for conformance checks.
-		do
-			Result := type
-		end
-
-	type: G
+	type: TYPE_A
 			-- Type to which the renaming `renaming' is applied.
 
 	renaming: RENAMING_A
@@ -73,102 +51,16 @@ feature -- Access
 			Result := type.associated_class
 		end
 
-	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
-			-- Does Current conform to `other' ?		
-		do
-			Result := type.conform_to (a_context_class, other)
-		end
-
-	--| Martins 1/23/07: instantiation*
-	--| Should we return RENAMED_TYPE_A [TYPE_A]?
-	--| Currently there seems no need for it and it might most likeley introduce bugs.
-
-	formal_instantiated_in (a_class_type: TYPE_A): TYPE_A
-			-- Instantiation of Current in the context of `class_type'
-			-- assuming that Current is written in the associated class
-			-- of `class_type'.
-		do
-			Result := type.formal_instantiated_in (a_class_type)
-		end
-
-	instantiated_in (a_class_type: TYPE_A): TYPE_A
-			-- Instantiation of Current in the context of `class_type'
-			-- assuming that Current is written in the associated class
-			-- of `class_type'.
-		do
-			Result := type.instantiated_in (a_class_type)
-		end
-
-	formal_instantiation_in (a_type: TYPE_A; constraint: TYPE_A; written_id: INTEGER): TYPE_A
-			-- <Precursor>
-		do
-			Result := type.formal_instantiation_in (a_type, constraint, written_id)
-		end
-
-	instantiation_in (a_type: TYPE_A; a_written_id: INTEGER): TYPE_A
-			-- Instantiation of Current in the context of `class_type'
-			-- assuming that Current is written in the class of id `written_id'.
-		do
-			Result := type.instantiation_in (a_type, a_written_id)
-		end
-
-	create_info: CREATE_INFO
-			-- Byte code information for entity type creation
-		do
-			Result := type.create_info
-		end
-
-feature -- Conversion
-
-	to_type_set: TYPE_SET_A
-			-- Create a type set containing one element which is `Current'.
-		do
-			create Result.make (1)
-			Result.extend (Current)
-		end
-
 feature -- Setters
 
-	set_type (a_type: G)
+	set_type (a_type: like type)
 			-- Set `type' to `a_type'
 		require
 			a_type_not_void: a_type /= Void
-			a_type_is_not_a_type_set: not a_type.is_type_set
-			a_type_is_not_renamed: not a_type.is_renamed_type
 		do
 			type := a_type
 		ensure
 			type_set: type = a_type
-		end
-
-	set_renaming (a_renaming: RENAMING_A)
-			-- Set `renaming' to `a_renaming'
-		do
-			renaming := a_renaming
-		ensure
-			renaming_set: renaming = a_renaming
-		end
-
-feature -- Comparison
-
-	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
-		do
-			Result := type.is_equivalent (other.type)
-		end
-
-	same_as (other: TYPE_A): BOOLEAN
-			-- <Precursor>
-		do
-			Result := attached {like Current} other as l_other and then type.same_as (l_other.type)
-		end
-
-feature -- Visitor
-
-	process (v: TYPE_A_VISITOR)
-			-- Process current element.
-		do
-			v.process_renamed_type_a (Current)
 		end
 
 feature -- Status
@@ -186,10 +78,6 @@ feature -- Status
 			Result := renaming /= Void and then not renaming.is_empty
 		end
 
-	is_renamed_type: BOOLEAN = True
-		-- Is current an instance of RENAMED_TYPE_A [TYPE_A]?
-		-- An renamed type has the ability to carry a feature renaming.
-
 feature -- Output
 
 	ext_append_to (a_text_formatter: TEXT_FORMATTER; c: CLASS_C)
@@ -205,28 +93,14 @@ feature -- Output
 				else
 					renaming.append_to (a_text_formatter)
 				end
-
-			end
-
-		end
-
-	dump: STRING
-			-- Dumped trace
-		do
-			Result := type.dump
-			if has_renaming then
-				Result.append (" ")
-				Result.append (renaming.dump)
 			end
 		end
 
 invariant
 	type_not_void: type /= Void
-	type_is_not_a_type_set: not type.is_type_set
-	no_nested_renamed_types: not type.is_renamed_type
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -257,4 +131,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class RENAMED_TYPE_A [TYPE_A]
+end

@@ -135,6 +135,8 @@ feature -- Actual class type
 
 	constraint_actual_type: CL_TYPE_A
 			-- Actual type of the class
+		obsolete
+			"See {CLASS_C}.constraint_actual_type obsolete clause."
 		local
 			i, nb: INTEGER
 			actual_generic: ARRAY [TYPE_A]
@@ -150,7 +152,7 @@ feature -- Actual class type
 				until
 					i > nb
 				loop
-					actual_generic.put (constraints (i), i)
+					actual_generic.put (single_constraint (i), i)
 					i := i + 1
 				end
 			end
@@ -284,7 +286,7 @@ feature {NONE}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

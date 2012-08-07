@@ -18,7 +18,7 @@ inherit
 
 	LINKED_LIST [TUPLE [	feature_i: FEATURE_I;
 							e_feature: E_FEATURE;
-							cl_type: RENAMED_TYPE_A [TYPE_A];
+							cl_type: RENAMED_TYPE_A;
 							formal_position: INTEGER;
 							constraint_position: INTEGER]]
 
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

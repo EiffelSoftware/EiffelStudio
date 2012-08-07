@@ -314,20 +314,13 @@ feature -- IL code generation
 
 feature -- Properties
 
-	has_renaming: BOOLEAN
-			-- Does current type have renamed features?
-			-- This can occur in code like: "G -> A rename a as b end"
-		do
-			Result := false
-		end
-
 	has_associated_class: BOOLEAN
 			-- Does Current have an associated class?
 		do
-			Result := not (is_void or else is_formal or else is_none or else is_type_set)
+			Result := not (is_void or else is_formal or else is_none)
 		ensure
 			Yes_if_is: Result implies not (is_void or else
-								is_formal or else is_none or else is_type_set)
+								is_formal or else is_none)
 		end
 
 	has_associated_class_type (a_context_type: TYPE_A): BOOLEAN
@@ -370,13 +363,6 @@ feature -- Properties
 				-- For the time being, actual generic parameter are considered variant.
 			Result := has_formal_generic
  		end
-
-	is_type_set: BOOLEAN
-			-- Is current type a type_set?
-			-- | example: {A, B}
-		do
-			-- False
-		end
 
 	is_valid_generic_derivation: BOOLEAN
 			-- Is current still a valid type to be used as a generic derivation?
@@ -505,12 +491,6 @@ feature -- Properties
 			-- Is the current actual type an external enum one?
 		do
 			-- Do nothing
-		end
-
-	is_renamed_type: BOOLEAN
-			-- Is current type an instance of `RENAMED_TYPE_A [TYPE_A]'?
-			-- If so there is the possibility that some features of this type are renamed.
-		do
 		end
 
 	is_reference: BOOLEAN
@@ -992,7 +972,7 @@ feature -- Conversion
 			-- Create a type set containing one element which is `Current'.
 		do
 			create Result.make (1)
-			Result.extend (create {RENAMED_TYPE_A [TYPE_A]}.make (Current, Void))
+			Result.extend (create {RENAMED_TYPE_A}.make (Current, Void))
 		ensure
 			to_type_set_not_void: Result /= Void
 		end
@@ -1264,8 +1244,8 @@ feature -- Access
 
 	formal_instantiated_in (a_type: TYPE_A): TYPE_A
 			-- Instantiation of formals, if any, of Current in the context of `a_type'.
-			--| Unlike `instantiated_in' it preserves the anchors while updating 
-			--| the `actual_type'/`conformance_type'. 
+			--| Unlike `instantiated_in' it preserves the anchors while updating
+			--| the `actual_type'/`conformance_type'.
 		require
 			valid: is_valid
 			a_type_valid: a_type /= Void
@@ -1509,7 +1489,7 @@ feature {NONE} -- Implementation
 	delayed_convert_constraint_check (
 			context_class: CLASS_C;
 			gen_type: GEN_TYPE_A
-			a_set_to_check, 	a_constraint_types: TYPE_SET_A;
+			a_set_to_check, a_constraint_types: TYPE_SET_A;
 			i: INTEGER;
 			in_constraint: BOOLEAN)
 
@@ -1537,7 +1517,7 @@ feature {NONE} -- Implementation
 			if context_class.is_valid and a_set_to_check.is_valid then
 				l_to_check := a_set_to_check.first.type
 				if a_set_to_check.count /= 1 or else a_constraint_types.count /= 1 then
-					generate_constraint_error (gen_type, l_to_check, a_constraint_types, i, Void)
+					generate_constraint_error (gen_type, l_to_check.to_type_set, a_constraint_types, i, Void)
 						-- The feature listed in the creation constraint has
 						-- not been declared in the constraint class.
 					create l_vtcg7
@@ -1550,7 +1530,7 @@ feature {NONE} -- Implementation
 					not (l_to_check.convert_to (context_class, l_constraint_type) and
 					l_to_check.is_conformant_to (context_class, l_constraint_type))
 				then
-					generate_constraint_error (gen_type, l_to_check, a_constraint_types, i, Void)
+					generate_constraint_error (gen_type, l_to_check.to_type_set, a_constraint_types, i, Void)
 						-- The feature listed in the creation constraint has
 						-- not been declared in the constraint class.
 					create l_vtcg7
@@ -1563,24 +1543,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_constraint_error (gen_type: GEN_TYPE_A; current_type: TYPE_A; constraint_type: TYPE_A; position: INTEGER; a_unmatched_creation_constraints: LIST[FEATURE_I])
+	generate_constraint_error (gen_type: GEN_TYPE_A; current_type, constraint_type: TYPE_SET_A; position: INTEGER; a_unmatched_creation_constraints: LIST[FEATURE_I])
 			-- Build the error corresponding to the VTCG error
 		local
 			constraint_info: CONSTRAINT_INFO
-			l_current_type_set, l_constraint_type_set: TYPE_SET_A
 		do
-			l_current_type_set := current_type.to_type_set
-			l_constraint_type_set := constraint_type.to_type_set
 			create constraint_info
 			constraint_info.set_type (gen_type)
-			constraint_info.set_actual_type_set (l_current_type_set)
+			constraint_info.set_actual_type_set (current_type)
 			constraint_info.set_formal_number (position)
 				-- This is necessary to instantiate the constraint in the context of `gen_type'
 				-- as the constraint may involve some formal generic parameters that do not exist
 				-- in the context of the class which triggerred the error.
 				-- This fixes eweasel test#valid266.
-			l_constraint_type_set := l_constraint_type_set.instantiated_in (gen_type)
-			constraint_info.set_constraint_types (l_constraint_type_set)
+			constraint_info.set_constraint_types (constraint_type.instantiated_in (gen_type))
 			constraint_info.set_unmatched_creation_constraints (a_unmatched_creation_constraints)
 			constraint_error_list.extend (constraint_info)
 		end
@@ -1591,7 +1567,7 @@ invariant
 	generics_not_void_implies_generics_not_empty_or_tuple: (generics /= Void implies (not generics.is_empty or is_tuple))
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

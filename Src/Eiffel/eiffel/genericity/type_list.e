@@ -16,7 +16,7 @@ inherit
 			{ANY} first, start, after, forth, item, is_empty, count,
 				remove, cursor, go_to, wipe_out, extend, valid_index,
 				valid_cursor, extendible, prunable, readable, index, off,
-				writable, i_th, twin
+				writable, i_th, twin, new_cursor
 			{TYPE_LIST} all
 		end
 
@@ -191,11 +191,14 @@ feature -- Traversals
 
 feature -- Sorting
 
-	sort
+	sort (a_class: CLASS_C)
 			-- Sort current by topological conformance. This is a crucial step
 			-- for finalization where all the computed dynamic types ensure
 			-- that A conforms to B implies type_id_of_A > type_id_of_B. This
 			-- fixes eweasel test#exec272 and test#final039.
+		require
+			a_class_not_void: a_class /= Void
+			valid_class: across Current as l_type all l_type.item.associated_class = a_class end
 		local
 			i, nb: INTEGER
 			l_list: TWO_WAY_LIST [TUPLE [type_a: TYPE_A; class_type: CLASS_TYPE]]
@@ -203,6 +206,7 @@ feature -- Sorting
 			l_done: BOOLEAN
 			l_area: like area
 			l_item: like item
+			l_context_type: CL_TYPE_A
 		do
 			nb := count - 1
 			if nb > 0 then
@@ -210,15 +214,16 @@ feature -- Sorting
 				from
 					l_area := area
 					create l_list.make
+					l_context_type := a_class.constraint_actual_type
 				until
 					i > nb
 				loop
 					l_item := l_area.item (i)
-						-- We instantiate the type in the `constraint_actual_type' so that
+						-- We instantiate the type in the `l_context_type' so that
 						-- all formals if any are replaced by the constraint below, that way
 						-- the conformance test will say that A [INTEGER] will conform to A [ANY]
-						-- for us putting A[G] first in the current type list.
-					l_type_a := l_item.type.instantiated_in (l_item.associated_class.constraint_actual_type)
+						-- and thus putting A[G] first in the current type list.
+					l_type_a := l_item.type.instantiated_in (l_context_type)
 					from
 						l_list.start
 						l_done := l_list.after

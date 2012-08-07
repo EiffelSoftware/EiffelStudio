@@ -604,7 +604,7 @@ feature -- Expanded rules validity
 			-- Pass 2 must be done on all the classes
 			-- (the creators must be up to date)
 		local
-			constraint_types: LIST[RENAMED_TYPE_A [TYPE_A]]
+			l_constraint_types: TYPE_SET_A
 			l_formals: like generic_features
 			l_cursor: CURSOR
 			l_formal_dec: FORMAL_CONSTRAINT_AS
@@ -641,16 +641,16 @@ end
 				loop
 					l_formal_dec ?= generics.item
 					check l_formal_dec_not_void: l_formal_dec /= Void end
-					constraint_types := l_formal_dec.constraint_types (Current)
+					l_constraint_types := l_formal_dec.constraint_types (Current)
 					from
-						constraint_types.start
+						l_constraint_types.start
 					until
-						constraint_types.after
+						l_constraint_types.after
 					loop
-						if constraint_types.item.type.has_generics then
-							System.expanded_checker.check_actual_type (constraint_types.item.type)
+						if l_constraint_types.item.type.has_generics then
+							System.expanded_checker.check_actual_type (l_constraint_types.item.type)
 						end
-						constraint_types.forth
+						l_constraint_types.forth
 					end
 					generics.forth
 				end
@@ -2105,7 +2105,13 @@ feature -- Convenience features
 feature -- Actual class type
 
 	constraint_actual_type: CL_TYPE_A
-			-- Actual type of class where all formals are replaced by their constraint.
+			-- Actual type of class where all formals are replaced by their constraint if possible,
+			-- and if not ANY.
+		obsolete
+			"[
+				Although it is used in 2 places at the time of this writing ({CLASS_TYPE} sorting and {CONVERTIBILITY_CHECKER} conformance),
+				it should not be used otherwise as it does not support multiple constraint.
+			]"
 		local
 			i, count: INTEGER
 			actual_generic: ARRAY [TYPE_A]
@@ -2121,7 +2127,7 @@ feature -- Actual class type
 				until
 					i > count
 				loop
-					actual_generic.put (constraints (i), i)
+					actual_generic.put (single_constraint (i), i)
 					i := i + 1
 				end
 			end
@@ -2235,7 +2241,7 @@ end
 			not_is_multi_constraint: not generics.i_th (i).has_multi_constraints
 		local
 			l_formal_dec: FORMAL_CONSTRAINT_AS
-			l_result: RENAMED_TYPE_A [TYPE_A]
+			l_result: RENAMED_TYPE_A
 		do
 			l_formal_dec ?= generics.i_th (i)
 			check l_formal_dec_not_void: l_formal_dec /= Void end
@@ -2257,6 +2263,29 @@ end
 			l_formal_dec ?= generics.i_th (i)
 			check l_formal_dec_not_void: l_formal_dec /= Void end
 			Result := l_formal_dec.constraint_types (Current)
+		ensure
+			constraint_not_void: Result /= Void
+		end
+
+	single_constraint (i: INTEGER): TYPE_A
+			-- Evaluation of the constraint if it is just one type,
+			-- otherwise ANY.
+			-- This is used only by `constraint_actual_type' for sorting
+			-- TYPE_A's instances in a TYPE_LIST.
+		require
+			generics_exists: is_generic
+			valid_index: generics.valid_index (i)
+		local
+			l_type_set: TYPE_SET_A
+		do
+			l_type_set := constrained_types (i)
+			if l_type_set.count = 1 then
+					-- Simply take the constraint.
+				Result := l_type_set.first.type
+			else
+					-- It is a multiple constraint, we simply assume ANY.
+				Result := any_type
+			end
 		ensure
 			constraint_not_void: Result /= Void
 		end
@@ -2378,12 +2407,9 @@ end
 				until
 					i <= 0
 				loop
-					constrained_types (i).do_all (
-						agent (t: RENAMED_TYPE_A [TYPE_A])
-							do
-								instantiator.dispatch (t.type, Current)
-							end
-					)
+					across constrained_types (i).types as l_renamed_type loop
+						instantiator.dispatch (l_renamed_type.item.type, Current)
+					end
 					i := i - 1
 				end
 			end
@@ -4937,7 +4963,7 @@ invariant
 	-- has_ast: has_ast
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

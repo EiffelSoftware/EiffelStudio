@@ -25,7 +25,7 @@ inherit
 			maximum_interval_value, minimum_interval_value, is_optimized_as_frozen,
 			is_generated_as_single_type, heaviest, instantiation_in, adapted_in,
 			hash_code, internal_generic_derivation, internal_same_generic_derivation_as,
-			is_class_valid, skeleton_adapted_in, good_generics, has_like_current, is_type_set
+			is_class_valid, skeleton_adapted_in, good_generics, has_like_current
 		end
 
 feature -- Visitor
@@ -130,12 +130,6 @@ feature -- Properties
 
 	is_none: BOOLEAN = False
 			-- Is current actual type NONE?
-
-	is_type_set: BOOLEAN
-			-- <Precursor>
-		do
-			Result := conformance_type /= Void and then conformance_type.is_type_set
-		end
 
 	is_basic: BOOLEAN
 			-- Is the current actual type a basic one?
@@ -637,7 +631,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

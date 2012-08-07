@@ -65,16 +65,10 @@ feature {TYPE_A}
 			last_type := a_type
 		end
 
-	process_renamed_type_a (a_type: RENAMED_TYPE_A [TYPE_A])
-			-- Process `a_type'.
-		do
-			last_type := a_type
-		end
-
 	process_formal_a (a_type: FORMAL_A)
 			-- Process `a_type'.
 		do
-			last_type := context.constraints (a_type.position).first.actual_type
+			last_type := context.constraints (a_type.position).first.type
 		end
 
 	process_gen_type_a (a_type: GEN_TYPE_A)
@@ -228,7 +222,7 @@ feature {TYPE_A}
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

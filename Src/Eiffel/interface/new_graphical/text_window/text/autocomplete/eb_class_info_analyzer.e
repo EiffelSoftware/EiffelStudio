@@ -620,8 +620,8 @@ feature {NONE} -- Implementation (`type_from')
 				if type /= Void then
 					if last_target_type /= Void then
 						move_to_next_target (type, last_target_type, written_class)
-					elseif last_constraints /= Void then
-						move_to_next_target (type, last_constraints, written_class)
+--					elseif last_constraints /= Void then
+--						move_to_next_target (type, last_constraints, written_class)
 					else
 						move_to_next_target (type, current_class_c.actual_type, written_class)
 					end
@@ -637,8 +637,8 @@ feature {NONE} -- Implementation (`type_from')
 						end
 						if last_target_type /= Void then
 							move_to_next_target (type, last_target_type, written_class)
-						elseif last_constraints /= Void then
-							move_to_next_target (type, last_constraints, written_class)
+--						elseif last_constraints /= Void then
+--							move_to_next_target (type, last_constraints, written_class)
 						end
 					end
 				end
@@ -697,7 +697,7 @@ feature {NONE} -- Implementation (`type_from')
 					Result := last_target_type
 				else
 						-- multi constraint: several classes provide features
-					Result := last_constraints
+--					Result := last_constraints
 				end
 			end
 		end

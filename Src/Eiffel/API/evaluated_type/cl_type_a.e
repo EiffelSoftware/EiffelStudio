@@ -658,7 +658,6 @@ feature {COMPILER_EXPORTER} -- Conformance
 			-- Does Current conform to `other'?
 		local
 			other_class_type: CL_TYPE_A
-			l_other_type_set: TYPE_SET_A
 		do
 			other_class_type ?= other.conformance_type
 			if other_class_type /= Void then
@@ -690,9 +689,6 @@ feature {COMPILER_EXPORTER} -- Conformance
 						Result := is_processor_attachable_to (other)
 					end
 				end
-			elseif other.is_type_set then
-				l_other_type_set ?= other.actual_type
-				Result := to_type_set.conform_to (a_context_class, l_other_type_set.twin)
 			end
 		end
 
@@ -1030,7 +1026,7 @@ invariant
 		class_declaration_mark = no_mark or class_declaration_mark = expanded_mark
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

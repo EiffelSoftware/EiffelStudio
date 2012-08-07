@@ -538,13 +538,6 @@ feature {TYPE_A} -- Visitors
 			end
 		end
 
-	process_renamed_type_a (a_type: RENAMED_TYPE_A [TYPE_A])
-			-- Process `a_type'.
-		do
-			a_type.type.process (Current)
-			last_type := a_type
-		end
-
 	process_formal_a (a_type: FORMAL_A)
 			-- Process `a_type'.
 		do
@@ -1215,7 +1208,7 @@ invariant
 	is_current_actual_type_correct: attached current_class as c implies attached current_actual_type as t and then t.same_as (current_class.actual_type)
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -53,7 +53,7 @@ feature -- Status
 			-- Assumes that we are past degree 4, so that one can be sure that it works.
 		local
 			l_constraining_type: CONSTRAINING_TYPE_AS
-			l_renamed_type: RENAMED_TYPE_A [TYPE_A]
+			l_renamed_type: RENAMED_TYPE_A
 			l_constraints: like constraints
 			l_constraints_cursor: INTEGER
 			l_constraint_position: INTEGER
@@ -88,7 +88,6 @@ feature -- Status
 		ensure
 			result_not_void: Result /= Void
 			result_not_empty: not Result.is_empty
-			result_does_not_containt_void: Result.for_all (agent (a_any: RENAMED_TYPE_A [TYPE_A]): BOOLEAN do Result := (a_any /= Void) end)
 		end
 
 	constraint_types_if_possible (a_context_class: CLASS_C): TYPE_SET_A
@@ -102,7 +101,7 @@ feature -- Status
 		local
 			l_constraining_type: CONSTRAINING_TYPE_AS
 			l_type: TYPE_A
-			l_renamed_type: RENAMED_TYPE_A [TYPE_A]
+			l_renamed_type: RENAMED_TYPE_A
 			l_constraints: like constraints
 			l_constraints_cursor: INTEGER
 			l_constraint_position: INTEGER
@@ -138,7 +137,7 @@ feature -- Status
 			result_not_void: Result /= Void
 		end
 
-	constraint_type (a_context_class: CLASS_C): RENAMED_TYPE_A [TYPE_A]
+	constraint_type (a_context_class: CLASS_C): RENAMED_TYPE_A
 			-- Actual type of the constraint.
 			--
 			-- `a_context_class' is used to evaluate the type.
@@ -164,7 +163,7 @@ feature -- Status
 			result_not_void: Result /= Void
 		end
 
-	constraint_type_if_possible (a_context_class: CLASS_C): RENAMED_TYPE_A [TYPE_A]
+	constraint_type_if_possible (a_context_class: CLASS_C): RENAMED_TYPE_A
 			-- Actual type of the constraint.
 		require
 			a_context_class_not_void: a_context_class /= Void
@@ -200,7 +199,7 @@ feature -- Status
 			a_context_class_not_void: a_context_class /= Void
 		local
 			class_type: CL_TYPE_A
-			l_constraint_types: LIST[RENAMED_TYPE_A [TYPE_A]]
+			l_constraint_types: TYPE_SET_A
 		do
 			l_constraint_types := constraint_types (a_context_class)
 			Result := True
@@ -220,7 +219,7 @@ feature -- Status
 			end
 		end
 
-	constraint_creation_list (a_context_class: CLASS_C): LINKED_LIST [TUPLE [type_item: RENAMED_TYPE_A [TYPE_A]; feature_item: FEATURE_I]]
+	constraint_creation_list (a_context_class: CLASS_C): LINKED_LIST [TUPLE [type_item: RENAMED_TYPE_A; feature_item: FEATURE_I]]
 			-- Actual creation routines from a constraint clause.
 			--
 			-- `a_context_class' is used to compute a flat version of the formal constraints.
@@ -237,7 +236,7 @@ feature -- Status
 			feature_name: ID_AS
 			feat_table: FEATURE_TABLE
 			l_renaming: RENAMING_A
-			l_constraint_types_item: RENAMED_TYPE_A [TYPE_A]
+			l_constraint_types_item: RENAMED_TYPE_A
 			l_has_more_than_one_version_default_create, l_is_version_of_default_create: BOOLEAN
 		do
 				-- Reset `has_default_create' as the algorithm depends on its initial state as False
@@ -305,7 +304,7 @@ feature -- Status
 
 feature {NONE} -- Access
 
-	Any_constraint_type: RENAMED_TYPE_A [CL_TYPE_A]
+	Any_constraint_type: RENAMED_TYPE_A
 			-- Default constraint actual type
 		local
 			t: CL_TYPE_A
@@ -373,7 +372,7 @@ feature -- Output
 						loop
 							a_text_formatter.add_space
 							eiffel_name := creation_feature_list.item.internal_name.name
-							l_feature := l_type_set.e_feature_state (creation_feature_list.item.internal_name).feature_item
+							l_feature := l_type_set.e_feature_state_by_name_id (creation_feature_list.item.internal_name.name_id).feature_item
 							if l_feature /= Void then
 								a_text_formatter.process_feature_text (eiffel_name, l_feature, false)
 							else
@@ -718,7 +717,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

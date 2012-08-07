@@ -177,7 +177,16 @@ feature -- Initialization/Checking
 														l_vncp.set_location (l_feat.conversion_types.item.start_location)
 														Error_handler.insert_error (l_vncp)
 														has_error := True
+													elseif l_named_type.is_formal then
+															-- A formal never conforms to the types of `a_class' since
+															-- otherwise we would have an infinite number of generic derivations
+														l_convert_from.force (l_name_id, l_named_type)
 													elseif l_named_type.conform_to (a_class, a_class.constraint_actual_type.as_attachment_mark_free) then
+															-- The above check is not ideal. Instead we should use
+															-- `l_named_type.conform_to_actual_type (a_class.actual_type)'
+															-- which would check that if at some point we are checking against one of the formal
+															-- of `a_class.actual_type' then we check that there is no conformance to the formal or to
+															-- some of its constrained types in the case of a multiple constraint.
 														if a_class.is_generic then
 															Error_handler.insert_error (create {VYCP}.make
 																(a_class, l_feat.feature_name, l_named_type, l_type.start_location, 3))
@@ -197,7 +206,14 @@ feature -- Initialization/Checking
 														l_vncp.set_location (l_feat.conversion_types.item.start_location)
 														Error_handler.insert_error (l_vncp)
 														has_error := True
+													elseif l_named_type.is_formal then
+														l_convert_to.force (l_name_id, l_named_type)
 													elseif a_class.constraint_actual_type.as_attachment_mark_free.conform_to (a_class, l_named_type) then
+															-- The above check is not ideal. Instead we should use
+															-- `a_class.actual_type.conform_to_actual_type (l_named_type)'
+															-- which would check that if at some point we are checking against one of the formal
+															-- of `a_class.actual_type' then we check that there is no conformance to the formal or to
+															-- some of its constrained types in the case of a multiple constraint.
 														if a_class.is_generic then
 															Error_handler.insert_error (create {VYCQ}.make
 																(a_class, l_feat.feature_name, l_named_type, l_type.start_location, 3))
@@ -348,8 +364,8 @@ feature -- Initialization/Checking
 							-- the types can still be the same if they conform to each other.
 						if
 							l_type.same_as (l_conversion_type) or else
-							l_type.conform_to (a_context_class, l_conversion_type) and then
-							l_conversion_type.conform_to (a_context_class, l_type)
+							(l_type.conform_to (a_context_class, l_conversion_type) and then
+							l_conversion_type.conform_to (a_context_class, l_type))
 						then
 							l_success := True
 							l_feat_name_id := l_convert_table.item_for_iteration
@@ -401,9 +417,10 @@ feature -- Initialization/Checking
 							end
 								-- In case there is a mismatch in attachment marks,
 								-- the types can still be the same if they conform to each other.
-							if l_type.same_as (l_conversion_type) or else
-								l_type.conform_to (a_context_class, l_conversion_type) and then
-								l_conversion_type.conform_to (a_context_class, l_type)
+							if
+								l_type.same_as (l_conversion_type) or else
+								(l_type.conform_to (a_context_class, l_conversion_type) and then
+								l_conversion_type.conform_to (a_context_class, l_type))
 							then
 								l_success := True
 								l_feat_name_id := l_convert_table.item_for_iteration
@@ -449,7 +466,7 @@ feature -- Initialization/Checking
 				if not a_formal.is_single_constraint_without_renaming (a_context_class) then
 						-- Multi constraint case, use TYPE_SET_A.
 					l_constraints := a_context_class.constraints (a_formal.position)
-					l_convert_ok := l_constraints.conform_to_type (a_context_class, a_target_type)
+					l_convert_ok := l_constraints.conform_to_type (a_context_class, a_target_type.to_type_set)
 				else
 						-- Single constraint, common case.
 					l_constraint := a_context_class.constraint (a_formal.position)
@@ -728,7 +745,7 @@ feature {NONE} -- Implementation: access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

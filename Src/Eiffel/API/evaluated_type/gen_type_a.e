@@ -761,9 +761,10 @@ feature {TYPE_A} -- Helpers
 							-- which can only happen if B [X] is expanded. In that case, we
 							-- cannot store the formal if there is one, we will simply use
 							-- the constraint instead. If the constraint is a multi-constraint
-							-- we put ANY for now.
+							-- we put the first constraint in the list as we use this for sorting
+							-- the CLASS_TYPE for code generation (See eweasel test#multicon060).
 						if associated_class.generics.i_th (i).is_multi_constrained (associated_class.generics) then
-							l_new_generics.put (associated_class.constrained_types (i), i)
+							l_new_generics.put (associated_class.constrained_types (i).first.type, i)
 						else
 							l_new_generics.put (associated_class.constrained_type (i).as_marks_free, i)
 						end
@@ -1596,7 +1597,7 @@ feature -- Primitives
 				else
 						-- We do not conform, insert an error for this type.
 					l_conform := False
-					generate_constraint_error (Current, l_generic_parameter, l_constraint_item, i, Void)
+					generate_constraint_error (Current, l_generic_parameter.to_type_set, l_constraint_item.to_type_set, i, Void)
 				end
 
 				l_constraints.forth
@@ -1712,7 +1713,7 @@ feature -- Primitives
 			is_valid: is_valid
 		local
 			formal_type_dec_as: FORMAL_CONSTRAINT_AS
-			formal_crc_list, crc_list: LINKED_LIST [TUPLE [type_item: RENAMED_TYPE_A [TYPE_A]; feature_item: FEATURE_I]];
+			formal_crc_list, crc_list: LINKED_LIST [TUPLE [type_item: RENAMED_TYPE_A; feature_item: FEATURE_I]];
 			creators_table: HASH_TABLE [EXPORT_I, STRING]
 			matched: BOOLEAN
 			feat_tbl: FEATURE_TABLE
@@ -1835,7 +1836,7 @@ feature -- Primitives
 					end
 						-- We have an error if we have unmatched features.
 					if l_unmatched_features /= Void then
-						generate_constraint_error (Current, to_check, a_constraint_types, i, l_unmatched_features)
+						generate_constraint_error (Current, to_check.to_type_set, a_constraint_types, i, l_unmatched_features)
 					end
 				end
 			else
@@ -1882,7 +1883,7 @@ feature -- Primitives
 				end
 
 				if not matched then
-					generate_constraint_error (Current, formal_type,a_constraint_types, i, l_unmatched_features)
+					generate_constraint_error (Current, formal_type.to_type_set, a_constraint_types, i, l_unmatched_features)
 				end
 			end
 		end
@@ -1937,7 +1938,7 @@ invariant
 	generics_not_void: generics /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

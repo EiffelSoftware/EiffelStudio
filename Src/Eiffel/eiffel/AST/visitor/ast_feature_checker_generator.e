@@ -480,16 +480,8 @@ feature {AST_FEATURE_CHECKER_GENERATOR}
 			Result := a_class.lace_class.is_void_safe_construct
 		end
 
-	is_inherited: BOOLEAN
-			-- Is code being processed inherited?
-
 	is_replicated: BOOLEAN
 			-- Is code being processed to be replicated in the current class?
-
-	set_is_inherited (a_inherited: BOOLEAN)
-		do
-			is_inherited := a_inherited
-		end
 
 	set_is_replicated (a_replicated: BOOLEAN)
 		do
@@ -578,9 +570,6 @@ feature {NONE} -- Implementation: State
 
 	last_tuple_type: TUPLE_TYPE_A
 			-- Type of last computed manifest tuple
-
-	last_type: TYPE_A
-			-- Type of last computed expression. If Void it means an error occurred.
 
 	current_target_type: TYPE_A
 			-- Type of target of expression being processed
@@ -938,10 +927,9 @@ feature {NONE} -- Roundtrip
 				r.is_once or else
 				r.is_attribute
 			then
-				create l_unsupported
+				create l_unsupported.make ("Inline agent with the body other than a %"do%" form is not supported.")
 				context.init_error (l_unsupported)
 				l_unsupported.set_location (l_as.body.start_location)
-				l_unsupported.set_message ("Inline agent with the body other than a %"do%" form is not supported.")
 				error_handler.insert_error (l_unsupported)
 				reset_types
 			elseif r.is_deferred then
@@ -1481,7 +1469,7 @@ feature {NONE} -- Implementation
 								last_type := l_named_tuple.generics.item (l_label_pos)
 								l_is_last_access_tuple_access := True
 								last_feature_name_id := l_feature_name.name_id
-									-- No renaming possible (from RENAMED_TYPE_A [TYPE_A]), they are the same
+									-- No renaming possible (from RENAMED_TYPE_A), they are the same
 								last_original_feature_name_id := last_feature_name_id
 								check
 									last_feature_name_correct: last_feature_name = l_feature_name.name
@@ -2494,8 +2482,8 @@ feature {NONE} -- Implementation
 			l_last_class_id: INTEGER
 			l_formal: FORMAL_A
 			l_feature: FEATURE_I
-			l_result: LIST [TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A [TYPE_A]]]
-			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A [TYPE_A]]
+			l_result: LIST [TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]]
+			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]
 			l_type_a_is_multi_constrained: BOOLEAN
 			l_type_set: TYPE_SET_A
 			l_vtmc4: VTMC4
@@ -3874,9 +3862,8 @@ feature {NONE} -- Implementation
 								l_vzaa1.set_location (l_as.feature_name.start_location)
 								error_handler.insert_error (l_vzaa1)
 							elseif l_feature.is_external then
-								create l_unsupported
+								create l_unsupported.make ("The $ operator is not supported on externals.")
 								context.init_error (l_unsupported)
-								l_unsupported.set_message ("The $ operator is not supported on externals.")
 								l_unsupported.set_location (l_as.feature_name.start_location)
 								error_handler.insert_error (l_unsupported)
 							elseif l_feature.is_attribute then
@@ -3988,9 +3975,8 @@ feature {NONE} -- Implementation
 				if l_target_type.conformance_type.is_formal or l_target_type.conformance_type.is_basic then
 						-- Not supported. May change in the future - M.S.
 						-- Reason: We cannot call a feature with basic call target!
-					create l_unsupported
+					create l_unsupported.make ("Type of target in a agent call may not be a basic type or a formal.")
 					context.init_error (l_unsupported)
-					l_unsupported.set_message ("Type of target in a agent call may not be a basic type or a formal.")
 					if l_as.target /= Void then
 						l_unsupported.set_location (l_as.target.start_location)
 					else
@@ -4036,11 +4022,10 @@ feature {NONE} -- Implementation
 						end
 
 						if l_feature = Void and then not l_is_named_tuple then
-							create l_unsupported
-							context.init_error (l_unsupported)
-							l_unsupported.set_message ("Agent creation on `" + l_feature_name.name + "' is%
+							create l_unsupported.make ("Agent creation on `" + l_feature_name.name + "' is%
 								% not supported because it is either an attribute, a constant or%
 								% an external feature")
+							context.init_error (l_unsupported)
 							l_unsupported.set_location (l_feature_name)
 							error_handler.insert_error (l_unsupported)
 						else
@@ -4118,8 +4103,8 @@ feature {NONE} -- Implementation
 			l_formal: FORMAL_A
 			l_is_multi_constrained: BOOLEAN
 			l_type_set: TYPE_SET_A
-			l_result: LIST [TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A [TYPE_A]]]
-			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A [TYPE_A]]
+			l_result: LIST [TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]]
+			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]
 			l_result_tuple: TUPLE[feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER]
 			l_context_current_class: CLASS_C
 			l_error_level: NATURAL_32
@@ -4464,8 +4449,8 @@ feature {NONE} -- Implementation
 			l_error_level: NATURAL_32
 			l_arg_types: ARRAY [TYPE_A]
 			l_parameters: EIFFEL_LIST [EXPR_AS]
-			l_result: LIST [TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A [TYPE_A]]]
-			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A [TYPE_A]]
+			l_result: LIST [TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]]
+			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]
 			l_type_set: TYPE_SET_A
 			l_vtmc4: VTMC4
 			l_is_controlled: BOOLEAN
@@ -5096,7 +5081,7 @@ feature {NONE} -- Implementation
 						vwbr.set_location (l_as.left_bracket_location)
 						if l_is_multi_constraint then
 							check type_set_not_loose: not l_type_set.is_loose end
-							vwbr.set_target_type (l_type_set)
+							vwbr.set_target_type_set (l_type_set)
 						else
 							vwbr.set_target_type (constrained_target_type)
 						end
@@ -5903,7 +5888,7 @@ feature {NONE} -- Implementation
 			l_formal_dec: FORMAL_CONSTRAINT_AS
 			l_creation_class: CLASS_C
 			l_creation_type: TYPE_A
-			l_renamed_creation_type: RENAMED_TYPE_A [TYPE_A]
+			l_renamed_creation_type: RENAMED_TYPE_A
 			l_is_formal_creation, l_is_default_creation: BOOLEAN
 			l_feature, l_feature_item: FEATURE_I
 			l_orig_call, l_call: ACCESS_INV_AS
@@ -5917,14 +5902,14 @@ feature {NONE} -- Implementation
 			l_actual_creation_type: TYPE_A
 			l_type_set: TYPE_SET_A
 			l_constraint_type, l_last_type: TYPE_A
-			l_deferred_classes: LINKED_LIST[CLASS_C]
+			l_deferred_classes: ARRAYED_LIST [CLASS_C]
 			l_is_multi_constraint_case: BOOLEAN
 			l_is_deferred: BOOLEAN
-			l_constraint_creation_list: LIST [TUPLE [type_item: RENAMED_TYPE_A [TYPE_A]; feature_item: FEATURE_I]]
-			l_ccl_item: TUPLE [type_item: RENAMED_TYPE_A [TYPE_A]; feature_item: FEATURE_I]
+			l_constraint_creation_list: LIST [TUPLE [type_item: RENAMED_TYPE_A; feature_item: FEATURE_I]]
+			l_ccl_item: TUPLE [type_item: RENAMED_TYPE_A; feature_item: FEATURE_I]
 			l_mc_feature_info: MC_FEATURE_INFO
-			l_result: LIST [TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A [TYPE_A]]]
-			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A [TYPE_A]]
+			l_result: LIST [TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]]
+			l_result_item: TUPLE [feature_i: FEATURE_I; cl_type: RENAMED_TYPE_A]
 			l_original_default_create_name_id: INTEGER
 			l_context_current_class: CLASS_C
 			l_error_level: NATURAL_32
@@ -5986,19 +5971,12 @@ feature {NONE} -- Implementation
 			if error_level = l_error_level then
 				if l_is_deferred and then not l_is_formal_creation then
 						-- Associated class cannot be deferred
-					create l_deferred_classes.make
 					if l_is_multi_constraint_case then
 							-- We generate a list of all the deferred classes in the type set
-						l_type_set.do_all (
-							agent (a_deferred_classes: LIST[CLASS_C]; a_type: RENAMED_TYPE_A [TYPE_A])
-								do
-									if a_type.associated_class.is_deferred then
-										a_deferred_classes.extend (a_type.associated_class)
-									end
-								end
-						(l_deferred_classes,?))
+						l_deferred_classes := l_type_set.deferred_classes
 					else
 							-- There's only one class and it is deferred
+						create l_deferred_classes.make (1)
 						l_deferred_classes.extend (l_creation_class)
 					end
 
@@ -6057,7 +6035,7 @@ feature {NONE} -- Implementation
 
 							check
 								found_item_was_the_only_one:
-									(agent (a_constraint_creation_list: LIST [TUPLE [type_item: RENAMED_TYPE_A [TYPE_A]; feature_item: FEATURE_I]]): BOOLEAN
+									(agent (a_constraint_creation_list: LIST [TUPLE [type_item: RENAMED_TYPE_A; feature_item: FEATURE_I]]): BOOLEAN
 											-- Check that there is no more version of default create.
 											--| Otherwise we should never get in here as `l_formal_dec.has_default_create'
 											--| should have returned false and prevented this from happening.
@@ -10248,7 +10226,7 @@ feature {NONE} -- Implementation: Error handling
 			-- If you don't have formals inside your type set you don't need to provide a context class.
 		require
 			is_really_a_problematic_feature: not is_alias implies
-				a_context_class.constraints (a_formal_position).constraining_types (a_context_class).feature_i_state (a_problematic_feature).features_found_count /= 1
+				a_context_class.constraints (a_formal_position).constraining_types (a_context_class).feature_i_state_by_name_id (a_problematic_feature.name_id).features_found_count /= 1
 			is_really_a_problematic_alias_feature: is_alias implies
 				a_context_class.constraints (a_formal_position).constraining_types (a_context_class).feature_i_state_by_alias_name_id (a_problematic_feature.name_id).features_found_count /= 1
 
@@ -10460,7 +10438,7 @@ feature {NONE} -- Implementation: catcall check
 					if l_formal.is_multi_constrained (context.current_class) then
 							-- Type is a multi constrained formal. Get all associated classes of
 							-- constraints.
-						l_target_types.append (l_formal.to_type_set.constraining_types (context.current_class))
+						l_target_types.append (l_formal.to_type_set.constraining_types (context.current_class).renamed_types)
 					else
 							-- Type is formal. Take associated class of constraint
 						l_target_types.extend (l_formal.constrained_type (context.current_class))
@@ -10620,6 +10598,17 @@ feature {NONE} -- Implementation: catcall check
 		end
 
 feature {INSPECT_CONTROL} -- AST modification
+
+	is_inherited: BOOLEAN
+			-- Is code being processed inherited?
+
+	last_type: TYPE_A
+			-- Type of last computed expression. If Void it means an error occurred.
+
+	set_is_inherited (a_inherited: BOOLEAN)
+		do
+			is_inherited := a_inherited
+		end
 
 	set_routine_ids (ids: ID_SET; a: ID_SET_ACCESSOR)
 			-- Set routine IDs `ids' for the given AST node `a'

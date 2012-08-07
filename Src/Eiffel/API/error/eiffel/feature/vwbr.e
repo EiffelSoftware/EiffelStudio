@@ -19,9 +19,11 @@ inherit
 
 feature -- Properties
 
-	target_type: TYPE_A
+	target_type: detachable TYPE_A
 			-- Target type for which bracket expression is applied
-			--| Can be a type set!
+
+	target_type_set: detachable TYPE_SET_A
+			-- Target type set for which bracket expression is applied
 
 	code: STRING = "VWBR"
 			-- Error code
@@ -31,8 +33,7 @@ feature -- Access
 	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
-			Result := is_class_defined and then
-				target_type /= Void
+			Result := is_class_defined and then (target_type /= Void or target_type_set /= Void)
 		end
 
 feature -- Output
@@ -41,15 +42,15 @@ feature -- Output
 			-- Build specific explanation image for current error
 			-- in `a_text_formatter'.
 		do
-			if target_type.has_associated_class then
-				a_text_formatter.add ("Target class: ")
-				target_type.associated_class.append_name (a_text_formatter)
-			else
-					-- According to the precondition of `set_target_type' is should be type set.
-				check attached {TYPE_SET_A} target_type as s then
-					a_text_formatter.add ("Target class set: ")
-					s.append_to (a_text_formatter)
+			if target_type /= Void then
+				if target_type.has_associated_class then
+					a_text_formatter.add ("Target class: ")
+					target_type.associated_class.append_name (a_text_formatter)
 				end
+			end
+			if target_type_set /= Void then
+				a_text_formatter.add ("Target class set: ")
+				target_type_set.append_to (a_text_formatter)
 			end
 			a_text_formatter.add_new_line
 		end
@@ -60,11 +61,18 @@ feature {COMPILER_EXPORTER} -- Setting
 			-- Assign `t' to `target_type'.
 		require
 			t_not_void: t /= Void
-			t_has_associated_class:
-				t.has_associated_class or else
-				(t.is_type_set and then not t.is_loose)
+			t_has_associated_class: t.has_associated_class
 		do
 			target_type := t
+		end
+
+	set_target_type_set (t: like target_type_set)
+			-- Assign `t' to `target_type_set'.
+		require
+			t_not_void: t /= Void
+			t_has_associated_class: not t.is_loose
+		do
+			target_type_set := t
 		end
 
 note

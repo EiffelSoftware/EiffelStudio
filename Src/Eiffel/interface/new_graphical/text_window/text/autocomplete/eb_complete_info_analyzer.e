@@ -286,7 +286,7 @@ feature {NONE} -- Private Status
 	extend_types_has_renaming (a_type_set: TYPE_SET_A): BOOLEAN
 			-- Do renamings exist in `a_type_set'?
 		local
-			l_renamed_type: RENAMED_TYPE_A [TYPE_A]
+			l_renamed_type: RENAMED_TYPE_A
 		do
 			if a_type_set /= Void then
 				from
@@ -619,18 +619,12 @@ feature {NONE} -- Implementation
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_type_set: TYPE_SET_A
 			l_class: CLASS_C
 		do
-			if a_type.is_type_set then
-				l_type_set ?= a_type.actual_type
-				Result := l_type_set.associated_classes
-			else
-				if a_type.has_associated_class then
-					l_class := a_type.associated_class
-				end
-				Result := create_class_list_and_insert (l_class)
+			if a_type.has_associated_class then
+				l_class := a_type.associated_class
 			end
+			Result := create_class_list_and_insert (l_class)
 		ensure
 			create_class_list_and_insert_associated_classes_from_type_not_void: Result /= Void
 			at_least_one_element_in_result: Result.count > 0
@@ -1154,14 +1148,9 @@ feature {NONE} -- Implementation
 	            	current_feature_as := feature_containing (token, a_line)
 	            	type := type_from (token, a_line)
 	            	if type /= Void then
-	            		if type.is_type_set then
-							last_type := type
-							found_class := Void
-	            		else
-	            			last_type := type
-		            		if type.has_associated_class then
-			            		found_class := type.associated_class
-		            		end
+            			last_type := type
+	            		if type.has_associated_class then
+		            		found_class := type.associated_class
 	            		end
 		            else
 		            	found_class := Void
@@ -1588,7 +1577,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

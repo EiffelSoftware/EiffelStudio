@@ -327,19 +327,6 @@ feature {TYPE_A} -- Visitors
 			process_cl_type_a (a_type)
 		end
 
-	process_renamed_type_a (a_type: RENAMED_TYPE_A [TYPE_A])
-			-- Process `a_type'.
-		do
-			a_type.type.append_to (text_formatter)
-			if a_type.has_renaming then
-				if a_type.has_associated_class then
-					a_type.renaming.append_to_with_pebbles (text_formatter, a_type.associated_class)
-				else
-					a_type.renaming.append_to (text_formatter)
-				end
-			end
-		end
-
 	process_tuple_type_a (a_type: TUPLE_TYPE_A)
 			-- Process `a_type'.
 		do
@@ -423,7 +410,7 @@ feature {NONE} -- Generic visitors
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

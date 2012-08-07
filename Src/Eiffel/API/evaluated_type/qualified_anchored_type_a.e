@@ -77,7 +77,7 @@ feature -- Properties
 	class_id: INTEGER
 			-- ID of a class where this type is written
 
-feature {TYPE_A_CHECKER} -- Properties
+feature {TYPE_A_CHECKER, EXPRESSION_CONTEXT} -- Properties
 
 	routine_id: SPECIAL [INTEGER_32]
 			-- Routine IDs of the second part of the type, after the `qualifier'
@@ -246,7 +246,7 @@ feature -- Modification
 			qualifier_set: qualifier = q
 		end
 
-feature {TYPE_A_CHECKER} -- Modification
+feature {TYPE_A_CHECKER, EXPRESSION_CONTEXT} -- Modification
 
 	set_chain (n: like chain; c: CLASS_C)
 			-- Set `chain' to the value relative to class `c'.
@@ -503,7 +503,7 @@ feature {NONE} -- Lookup
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

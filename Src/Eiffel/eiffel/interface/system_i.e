@@ -4156,7 +4156,7 @@ feature -- Generation
 						l_class_is_finalized := l_class_is_finalized or else a_class.is_expanded
 							-- The following line is a hack so that `types.sort' works.
 						current_class := a_class
-						types.sort
+						types.sort (a_class)
 						from
 							types.start
 						until

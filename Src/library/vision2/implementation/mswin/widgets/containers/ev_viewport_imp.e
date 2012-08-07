@@ -61,24 +61,16 @@ feature -- Element change
 
 	set_x_offset (an_x: INTEGER)
 			-- Set `x_offset' to `an_x'.
-		local
-			l_item_imp: like item_imp
 		do
-			if item /= Void then
-				l_item_imp := item_imp
-				check l_item_imp /= Void end
+			if attached item_imp as l_item_imp then
 				l_item_imp.ev_move (- an_x, interface_item.y_position)
 			end
 		end
 
 	set_y_offset (a_y: INTEGER)
 			-- Set `y_offset' to `a_y'.
-		local
-			l_item_imp: like item_imp
 		do
-			if item /= Void then
-				l_item_imp := item_imp
-				check l_item_imp /= Void end
+			if attached item_imp as l_item_imp then
 				l_item_imp.ev_move (interface_item.x_position, - a_y)
 			end
 		end
@@ -86,12 +78,8 @@ feature -- Element change
 	set_offset (an_x, a_y: INTEGER)
 			-- Assign `an_x' to `x_offset'.
 			-- Assign `a_y' to `y_offset'.
-		local
-			l_item_imp: like item_imp
 		do
-			if item /= Void then
-				l_item_imp := item_imp
-				check l_item_imp /= Void end
+			if attached item_imp as l_item_imp then
 				l_item_imp.ev_move (- an_x, - a_y)
 			end
 		end
@@ -244,14 +232,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_VIEWPORT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

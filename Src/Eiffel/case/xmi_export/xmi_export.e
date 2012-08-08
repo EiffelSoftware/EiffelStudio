@@ -401,7 +401,7 @@ feature {NONE} -- Implementation
 			until
 				l_parents.after
 			loop
-				current_parent := l_parents.item.associated_class
+				current_parent := l_parents.item.base_class
 				if is_in_selection (current_parent) then
 					new_xmi_class := xmi_class_by_class_c (c)
 					new_xmi_parent_class := xmi_class_by_class_c (current_parent)
@@ -465,7 +465,7 @@ feature {NONE} -- Implementation
 			feature_type: XMI_CLASS
 		do
 			if a_feature.type.has_associated_class then
-				feature_type := xmi_class_by_class_c (a_feature.type.associated_class)
+				feature_type := xmi_class_by_class_c (a_feature.type.base_class)
 				if feature_type = Void then
 					add_function_type_unknown (a_feature, a_xmi_class)
 				else
@@ -490,7 +490,7 @@ feature {NONE} -- Implementation
 			c: CLASS_C
 		do
 			f_name := feature_name (a_feature)
-			c := a_feature.type.associated_class
+			c := a_feature.type.base_class
 			full_type_name := c.name_in_upper.twin
 			if c.has_ast and c.generics /= Void then
 				full_type_name.append (c.ast.generics_as_string)
@@ -639,9 +639,9 @@ feature {NONE} -- Implementation
 				current_argument_list.after
 			loop
 				if current_argument_list.item.has_associated_class then
-					new_xmi_class := xmi_class_by_class_c (current_argument_list.item.associated_class)
+					new_xmi_class := xmi_class_by_class_c (current_argument_list.item.base_class)
 					if new_xmi_class = Void then
-						create new_xmi_type.make_type (idref_counter, current_argument_list.item.associated_class.name_in_upper.twin)
+						create new_xmi_type.make_type (idref_counter, current_argument_list.item.base_class.name_in_upper.twin)
 						if not xmi_types.has (new_xmi_type) then
 							idref_counter := idref_counter + 1
 							add_type (new_xmi_type)
@@ -709,7 +709,7 @@ feature {NONE} -- Implementation
 			feature_type: XMI_CLASS
 		do
 			if a_feature.type.has_associated_class then
-				feature_type := xmi_class_by_class_c (a_feature.type.associated_class)
+				feature_type := xmi_class_by_class_c (a_feature.type.base_class)
 				if feature_type = Void then
 					add_association_type_unknown (a_feature, a_xmi_class)
 				else
@@ -732,7 +732,7 @@ feature {NONE} -- Implementation
 			c: CLASS_C
 		do
 			f_name := feature_name (a_feature)
-			c := a_feature.type.associated_class
+			c := a_feature.type.base_class
 			full_type_name := c.name_in_upper.twin
 			if c.has_ast and c.generics /= Void then
 				full_type_name.append (c.ast.generics_as_string)
@@ -801,7 +801,7 @@ feature {NONE} -- Implementation
 					-- Is first generic known?
 				l_type := a_feature.type.generics.item (1)
 				if l_type.has_associated_class then
-					feature_type := xmi_class_by_class_c (l_type.associated_class)
+					feature_type := xmi_class_by_class_c (l_type.base_class)
 				end
 				if feature_type = Void then
 					add_generics_association_unknown (a_feature, a_xmi_class)
@@ -865,7 +865,7 @@ feature {NONE} -- Implementation
 			c: CLASS_C
 		do
 			f_name := feature_name (a_feature)
-			c := a_feature.type.associated_class
+			c := a_feature.type.base_class
 				-- Take 1st generic.
 			full_type_name := full_class_name_from_generic_class (a_feature)
 			create new_xmi_type.make_type (idref_counter, full_type_name)
@@ -906,7 +906,7 @@ feature {NONE} -- Implementation
 			feature_type: XMI_CLASS
 		do
 			if a_feature.type.has_associated_class then
-				feature_type := xmi_class_by_class_c (a_feature.type.associated_class)
+				feature_type := xmi_class_by_class_c (a_feature.type.base_class)
 				if feature_type = Void then
 					add_attribute_type_unknown (a_feature, a_xmi_class)
 				else
@@ -931,7 +931,7 @@ feature {NONE} -- Implementation
 			c: CLASS_C
 		do
 			f_name := feature_name (a_feature)
-			c := a_feature.type.associated_class
+			c := a_feature.type.base_class
 			full_type_name := c.name_in_upper.twin
 			if c.has_ast and c.generics /= Void then
 				full_type_name.append (c.ast.generics_as_string)
@@ -1135,7 +1135,7 @@ feature {NONE} -- Implementation
 			l_number: INTEGER
 			l_name: STRING
 		do
-			full_type_name := a_feature.type.associated_class.name_in_upper.twin
+			full_type_name := a_feature.type.base_class.name_in_upper.twin
 			from
 				l_cnt := 1
 				l_number := a_feature.type.generics.count
@@ -1145,7 +1145,7 @@ feature {NONE} -- Implementation
 			loop
 				if l_multiple_generics then
 					if a_feature.type.generics.item (l_cnt).has_associated_class then
-						full_type_name.append ("," + a_feature.type.generics.item (l_cnt).associated_class.name_in_upper)
+						full_type_name.append ("," + a_feature.type.generics.item (l_cnt).base_class.name_in_upper)
 					else
 						if attached {FORMAL_A} a_feature.type.generics.item (l_cnt).actual_type as l_formal then
 								-- This is not proper until AST_TYPE_OUTPUT_STRATEGY is used.
@@ -1155,7 +1155,7 @@ feature {NONE} -- Implementation
 					end
 				else
 					if a_feature.type.generics.item (l_cnt).has_associated_class then
-						full_type_name.append (a_feature.type.generics.item (l_cnt).associated_class.name_in_upper)
+						full_type_name.append (a_feature.type.generics.item (l_cnt).base_class.name_in_upper)
 					else
 						if attached {FORMAL_A} a_feature.type.generics.item (l_cnt).actual_type as l_formal then
 								-- This is not proper until AST_TYPE_OUTPUT_STRATEGY is used.

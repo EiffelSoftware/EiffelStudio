@@ -727,7 +727,7 @@ feature -- Query
 						exc_dv.set_user_meaning ("An exception occurred during the once execution")
 						odv := exc_dv
 					elseif l_once_data.res /= Void then
-						odv := debug_value_from_icdv (l_once_data.res, l_feat.type.associated_class)
+						odv := debug_value_from_icdv (l_once_data.res, l_feat.type.base_class)
 						odv.set_name (l_feat.feature_name)
 					elseif not l_feat.is_function then
 						create proc_dv.make_with_name (l_feat.feature_name)
@@ -801,7 +801,7 @@ feature -- Query
 					exc_dv.set_name (a_feat.feature_name)
 					exc_dv.set_user_meaning ("An exception occurred during the once execution")
 				elseif a_once_data.res /= Void then
-					res_dv := debug_value_from_icdv (a_once_data.res, a_feat.type.associated_class)
+					res_dv := debug_value_from_icdv (a_once_data.res, a_feat.type.base_class)
 					res_dv.set_name (a_feat.feature_name)
 				elseif not a_feat.is_function then
 					create proc_dv.make_with_name (a_feat.feature_name)

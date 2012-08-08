@@ -906,7 +906,7 @@ feature {NONE} -- Implementation
 							last_class := Void
 						else
 							check not last_type.is_formal end
-							last_class := last_type.associated_class
+							last_class := last_type.base_class
 						end
 					end
 					l_rout_id_set := l_as.routine_ids
@@ -957,7 +957,7 @@ feature {NONE} -- Implementation
 												-- May be Void due to an incomplete compilation.
 											l_feat := l_feat_result.first.feature_item
 											last_type := l_feat_result.first.class_type.type
-											last_class := last_type.associated_class
+											last_class := last_type.base_class
 											if l_feat_result.count > 1 then
 												set_error_message ("Multi constraint formal: More than one feature available for feature with routine id: " + l_rout_id_set.first.out)
 											end
@@ -1605,7 +1605,7 @@ feature {NONE} -- Implementation
 						type_output_strategy.process (l_type, l_text_formatter_decorator, current_class, current_feature)
 						l_text_formatter_decorator.process_symbol_text (ti_r_curly)
 						l_text_formatter_decorator.process_symbol_text (ti_dot)
-						l_feat := l_type.associated_class.feature_with_rout_id (l_info.routine_id)
+						l_feat := l_type.base_class.feature_with_rout_id (l_info.routine_id)
 						l_feat.append_name (l_text_formatter_decorator)
 						l_text_formatter_decorator.process_symbol_text (ti_space)
 						l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
@@ -1613,7 +1613,7 @@ feature {NONE} -- Implementation
 						l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
 					end
 				else
-					l_feat := last_type.associated_class.feature_with_rout_id (l_info.routine_id)
+					l_feat := last_type.base_class.feature_with_rout_id (l_info.routine_id)
 					if l_feat /= Void then
 						l_type := l_feat.type
 						if not expr_type_visiting then
@@ -1840,11 +1840,11 @@ feature {NONE} -- Implementation
 						end
 					else
 						l_last_type := l_formal.constrained_type (current_class)
-						l_feat := feature_in_class (l_last_type.associated_class, l_as.routine_ids)
+						l_feat := feature_in_class (l_last_type.base_class, l_as.routine_ids)
 					end
 				else
 					l_last_type := l_expr_type.actual_type
-					l_feat := feature_in_class (l_last_type.associated_class, l_as.routine_ids)
+					l_feat := feature_in_class (l_last_type.base_class, l_as.routine_ids)
 				end
 			end
 			if not has_error_internal then
@@ -1890,7 +1890,7 @@ feature {NONE} -- Implementation
 				check l_feat_is_not_procedure: not l_feat.is_procedure end
 				l_type := l_feat.type.actual_type
 				check l_last_type_not_void: l_last_type /= Void end
-				last_class := l_last_type.associated_class
+				last_class := l_last_type.base_class
 				if l_type.is_loose then
 					last_type := l_type.instantiation_in (l_last_type, last_class.class_id)
 				else
@@ -2008,11 +2008,11 @@ feature {NONE} -- Implementation
 							l_left_type_set_void: l_left_type_set = Void
 							l_left_type_has_associated_class: l_left_type.has_associated_class
 						end
-						l_feat := feature_in_class (l_left_type.associated_class, l_as.routine_ids)
+						l_feat := feature_in_class (l_left_type.base_class, l_as.routine_ids)
 					end
 					check not has_error_internal implies l_left_type /= Void end
 					if not has_error_internal then
-						l_left_class := l_left_type.associated_class
+						l_left_class := l_left_type.base_class
 						last_type := l_left_type
 					end
 				end
@@ -2231,11 +2231,11 @@ feature {NONE} -- Implementation
 						last_class := l_result.first.type.associated_class
 						l_feat := l_result.first.feature_item
 					else
-						last_class := l_formal.constrained_type (current_class).associated_class
+						last_class := l_formal.constrained_type (current_class).base_class
 						l_feat := feature_in_class (last_class, l_as.routine_ids)
 					end
 				else
-					last_class := last_type.associated_class
+					last_class := last_type.base_class
 					l_feat := feature_in_class (last_class, l_as.routine_ids)
 				end
 			end
@@ -3394,7 +3394,7 @@ feature {NONE} -- Implementation
 			check
 				last_type_not_void: last_type /= Void
 			end
-			last_parent := last_type.associated_class
+			last_parent := last_type.base_class
 			check
 				last_parent_not_void: last_parent /= Void
 			end
@@ -4207,7 +4207,7 @@ feature {NONE} -- Implementation: helpers
 				l_feat := l_result.feature_item
 			elseif a_type /= Void then
 				if not a_type.is_formal then
-					l_feat := a_type.associated_class.feature_with_name_id (a_feature_name.feature_name.name_id)
+					l_feat := a_type.base_class.feature_with_name_id (a_feature_name.feature_name.name_id)
 				end
 			end
 
@@ -4747,9 +4747,9 @@ feature {NONE} -- Implementation: helpers
 				end
 				l_formal_dec ?= current_class.generics.i_th (l_formal.position)
 				check l_formal_dec_not_void: l_formal_dec /= Void end
-				Result := l_formal_dec.constraint_type (current_class).type.associated_class
+				Result := l_formal_dec.constraint_type (current_class).type.base_class
 			else
-				Result := l_type.associated_class
+				Result := l_type.base_class
 			end
 		end
 

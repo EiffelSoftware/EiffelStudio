@@ -358,7 +358,7 @@ feature -- Properties
 			a_context_type_valid: a_context_type.is_valid
 			is_valid: is_valid
 			is_valid_context: has_formal_generic implies
-				(a_context_type.has_associated_class and then is_valid_for_class (a_context_type.associated_class))
+				(a_context_type.has_associated_class and then is_valid_for_class (a_context_type.base_class))
 		do
 				-- For the time being, actual generic parameter are considered variant.
 			Result := has_formal_generic
@@ -416,7 +416,7 @@ feature -- Properties
 						-- First type should be the one from a generic derivation.
 					a_type.generic_derivation.same_as (a_type) and then
 						-- Second it should be valid for Current type.
-					(a_type.has_associated_class and then is_valid_for_class (a_type.associated_class))
+					(a_type.has_associated_class and then is_valid_for_class (a_type.base_class))
 			else
 				Result := True
 			end
@@ -521,7 +521,7 @@ feature -- Properties
 		local
 			l_class: CLASS_C
 		do
-			l_class := associated_class
+			l_class := base_class
 			if l_class /= Void then
 				Result := l_class.is_external_class_c
 			end
@@ -766,8 +766,8 @@ feature {CL_TYPE_A} -- Comparison
 
 feature -- Access
 
-	associated_class: CLASS_C
-			-- Class associated to the current type.
+	base_class: CLASS_C
+			-- Base class of current type.
 		deferred
 		ensure
 			definition: (Result /= Void) = has_associated_class
@@ -1159,7 +1159,7 @@ feature -- Access
 	frozen conforms_to_array: BOOLEAN
 			-- Does current conform to ARRAY regardless of the context.
 		do
-			Result := has_associated_class and then associated_class.conform_to (system.array_class.compiled_class)
+			Result := has_associated_class and then base_class.conform_to (system.array_class.compiled_class)
 		end
 
 	is_conformant_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
@@ -1203,7 +1203,7 @@ feature -- Access
 			type_not_void: type /= Void
 			type_has_class: type.has_associated_class
 			has_associated_class: has_associated_class
-			conforming_type: type.associated_class.conform_to (associated_class)
+			conforming_type: type.base_class.conform_to (base_class)
 		do
 		end
 
@@ -1366,7 +1366,7 @@ feature -- Access
 			act_type: TYPE_A
 		do
 			act_type := actual_type
-			Result := act_type.is_expanded and then act_type.associated_class.is_deferred
+			Result := act_type.is_expanded and then act_type.base_class.is_deferred
 		end
 
 	valid_expanded_creation (c: CLASS_C): BOOLEAN
@@ -1380,7 +1380,7 @@ feature -- Access
 			creators: HASH_TABLE [EXPORT_I, STRING]
 		do
 			if is_expanded then
-				a := associated_class
+				a := base_class
 				if a.is_external then
 					Result := True
 				else
@@ -1407,7 +1407,7 @@ feature -- Access
 			il_generation: system.il_generation
 		do
 			Result := True
-			if is_expanded and then not is_external and then associated_class.has_external_ancestor_class then
+			if is_expanded and then not is_external and then base_class.has_external_ancestor_class then
 				Result := False
 			end
 		end
@@ -1432,7 +1432,7 @@ feature -- Access
 		do
 			if not current_class.is_obsolete and (current_feature = Void or else not current_feature.is_obsolete) then
 		   		if actual_type.has_associated_class then
-					ass_class := actual_type.associated_class
+					ass_class := actual_type.base_class
 					if ass_class.is_obsolete and then ass_class.lace_class.options.is_warning_enabled (w_obsolete_class) then
 						create warn.make_with_class (current_class)
 						if current_feature /= Void then

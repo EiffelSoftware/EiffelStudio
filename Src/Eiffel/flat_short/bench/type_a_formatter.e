@@ -75,7 +75,7 @@ feature {TYPE_A} -- Visitors
 	process_cl_type_a (a_type: CL_TYPE_A)
 			-- Process `a_type'.
 		do
-			ctxt.put_classi (a_type.associated_class.lace_class)
+			ctxt.put_classi (a_type.base_class.lace_class)
 		end
 
 	process_formal_a (a_type: FORMAL_A)
@@ -89,7 +89,7 @@ feature {TYPE_A} -- Visitors
 		local
 			i, count: INTEGER
 		do
-			ctxt.put_classi (a_type.associated_class.lace_class)
+			ctxt.put_classi (a_type.base_class.lace_class)
 			count := a_type.generics.count
 
 				-- TUPLE may have zero generic parameters

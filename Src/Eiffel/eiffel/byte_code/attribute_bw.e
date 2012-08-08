@@ -98,7 +98,7 @@ feature -- C code generation
 				buf.put_new_line;
 				buf.indent;
 			end;
-			base_class := typ.associated_class;
+			base_class := typ.base_class;
 			if Compilation_modes.is_precompiling or else base_class.is_precompiled then
 				if is_nested then
 					buf.put_string ("RTVPA(");

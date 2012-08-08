@@ -13,7 +13,7 @@ inherit
 			make as cl_make
 		redefine
 			is_bit, is_class_valid, internal_is_valid_for_class, conform_to,
-			associated_class, dump,
+			base_class, dump,
 			same_as, ext_append_to,
 			is_equivalent, process,
 			generate_cid, generate_cid_array, generate_cid_init,
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			-- Initialize new instance of BITS_A with `c' bits.
 		do
 			bit_count := c
-			cl_make (associated_class.class_id)
+			cl_make (base_class.class_id)
 				-- Set expanded mark explicitly because
 				-- associated class BIT_REF is reference.
 			set_expanded_mark
@@ -61,7 +61,7 @@ feature -- Status Report
 
 	has_associated_class_type (a_context_type: TYPE_A): BOOLEAN
 		do
-			Result := not associated_class.types.is_empty
+			Result := not base_class.types.is_empty
 		end
 
 feature -- Comparison
@@ -80,7 +80,7 @@ feature -- Access
 			Result := attached {BITS_A} other as b and then  bit_count = b.bit_count
 		end
 
-	associated_class: CLASS_C
+	base_class: CLASS_C
 			-- Associated class
 		do
 			if attached System.bit_class as c then
@@ -92,7 +92,7 @@ feature -- Access
 			-- Associated class type
 		do
 				-- Return class type for BIT_REF.
-			Result := associated_class.types.first
+			Result := base_class.types.first
 		end
 
 	bit_count: NATURAL_32

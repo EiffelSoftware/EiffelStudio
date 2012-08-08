@@ -12,7 +12,7 @@ inherit
 		rename
 			make as cl_make
 		redefine
-			is_real_32, is_real_64, associated_class, same_as, is_numeric,
+			is_real_32, is_real_64, base_class, same_as, is_numeric,
 			process, heaviest
 		end
 
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			valid_n: n = 32 or n = 64
 		do
 			size := n.to_integer_8
-			cl_make (associated_class.class_id)
+			cl_make (base_class.class_id)
 		ensure
 			size_set: size = n
 		end
@@ -56,7 +56,7 @@ feature -- Property
 
 feature -- Access
 
-	associated_class: CLASS_C
+	base_class: CLASS_C
 			-- Class REAL
 		do
 			if size = 32 then

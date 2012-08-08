@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 					else
 						if res /= Void then
 							create last_result.make_with_value (res.dump_value)
-							if attached f.type.associated_class as cl then
+							if attached f.type.base_class as cl then
 								last_result.suggest_static_class (cl)
 							end
 						else

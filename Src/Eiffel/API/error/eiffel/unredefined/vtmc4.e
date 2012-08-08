@@ -86,7 +86,7 @@ feature -- Output
 				l_feature := feature_info.item.feature_i
 				a_text_formatter.add_sectioned_feature_name (l_feature.e_feature)
 				a_Text_formatter.add (" written in ")
-				a_text_formatter.add_class (l_class_type.associated_class.original_class)
+				a_text_formatter.add_class (l_class_type.base_class.original_class)
 				a_Text_formatter.add_new_line
 				feature_info.forth
 			end

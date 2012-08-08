@@ -27,7 +27,7 @@ inherit
 			internal_same_generic_derivation_as, generic_derivation, check_labels,
 			duplicate_for_instantiation
 		redefine
-			is_typed_pointer, c_type, associated_class, process,
+			is_typed_pointer, c_type, base_class, process,
 			il_type_name, generic_il_type_name
 		end
 
@@ -37,7 +37,7 @@ inherit
 			description, instantiated_description, description_with_detachable_type,
 			generate_cecil_value, sk_value, element_type, cl_make, is_processor_attachable_to
 		redefine
-			is_typed_pointer, c_type, associated_class, process, reference_type,
+			is_typed_pointer, c_type, base_class, process, reference_type,
 			il_type_name, generic_il_type_name
 		end
 
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 		do
 			create generics.make (1, 1)
 			generics.put (a_type, 1)
-			cl_make (associated_class.class_id)
+			cl_make (base_class.class_id)
 		ensure
 			pointed_type_set: pointed_type = a_type
 		end
@@ -71,7 +71,7 @@ feature -- Property
 	is_typed_pointer: BOOLEAN = True
 			-- Is current type a typed pointer type?
 
-	associated_class: CLASS_C
+	base_class: CLASS_C
 			-- Class POINTER
 		once
 			Result := System.typed_pointer_class.compiled_class

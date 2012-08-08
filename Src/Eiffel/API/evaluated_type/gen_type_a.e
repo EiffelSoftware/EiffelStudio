@@ -238,7 +238,7 @@ feature -- Status Report
 			i, nb: INTEGER
 			l_generics: like generics
 		do
-			if associated_class /= Void then
+			if base_class /= Void then
 				from
 					i := 1
 					l_generics := generics
@@ -491,7 +491,7 @@ feature -- CECIL code generation
 				a_context_type.generic_derivation.same_as (a_context_type)
 			context_type_class_valid: a_context_type /= Void implies
 				(a_context_type.has_associated_class and then
-					is_valid_for_class (a_context_type.associated_class))
+					is_valid_for_class (a_context_type.base_class))
 			has_associated_class_type: has_associated_class_type (a_context_type)
 		local
 			i, nb: INTEGER
@@ -518,7 +518,7 @@ feature -- CECIL code generation
 				a_context_type.generic_derivation.same_as (a_context_type)
 			context_type_class_valid: a_context_type /= Void implies
 				(a_context_type.has_associated_class and then
-					is_valid_for_class (a_context_type.associated_class))
+					is_valid_for_class (a_context_type.base_class))
 			has_associated_class_type: has_associated_class_type (a_context_type)
 		local
 			i, nb: INTEGER
@@ -544,11 +544,11 @@ feature -- IL code generation
 			i, count: INTEGER
 			sep, tmp: STRING
 			l_generics: like generics
-			l_class_c: like associated_class
+			l_class_c: like base_class
 			l_is_precompiled: BOOLEAN
 			l_cl_type: like associated_class_type
 		do
-			l_class_c := associated_class
+			l_class_c := base_class
 			l_is_precompiled := l_class_c.is_precompiled
 			if l_is_precompiled then
 				l_cl_type := associated_class_type (a_context_type)
@@ -609,11 +609,11 @@ feature {TYPE_A} -- Helpers
 
 	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN
 		local
-			l_class: like associated_class
+			l_class: like base_class
 			l_generics: like generics
 			i, nb: INTEGER
 		do
-			l_class := associated_class
+			l_class := base_class
 			l_generics := generics
 			nb := l_generics.count
 			if
@@ -658,7 +658,7 @@ feature {TYPE_A} -- Helpers
 			if n > 4  then
 					-- It's faster to scan registered class types rather than to generate conforming ones.
 				from
-					types := associated_class.types
+					types := base_class.types
 					cursor := types.cursor
 					types.start
 				until
@@ -712,7 +712,7 @@ feature {TYPE_A} -- Helpers
 							-- We replace the generics at position `i' by a FORMAL_A which simply
 							-- states that this is the generic derivation with reference in it.
 						gen_type.generics [i] := create {FORMAL_A}.make (False, False, i)
-						if associated_class.types.has_type (Void, gen_type) then
+						if base_class.types.has_type (Void, gen_type) then
 							processor.call ([gen_type.associated_class_type (Void)])
 						end
 						if i > 1 then
@@ -763,10 +763,10 @@ feature {TYPE_A} -- Helpers
 							-- the constraint instead. If the constraint is a multi-constraint
 							-- we put the first constraint in the list as we use this for sorting
 							-- the CLASS_TYPE for code generation (See eweasel test#multicon060).
-						if associated_class.generics.i_th (i).is_multi_constrained (associated_class.generics) then
-							l_new_generics.put (associated_class.constrained_types (i).first.type, i)
+						if base_class.generics.i_th (i).is_multi_constrained (base_class.generics) then
+							l_new_generics.put (base_class.constrained_types (i).first.type, i)
 						else
-							l_new_generics.put (associated_class.constrained_type (i).as_marks_free, i)
+							l_new_generics.put (base_class.constrained_type (i).as_marks_free, i)
 						end
 					end
 				else
@@ -1450,7 +1450,7 @@ feature -- Primitives
 			base_generics: EIFFEL_LIST [FORMAL_DEC_AS]
 			i, generic_count: INTEGER
 		do
-			base_generics := associated_class.generics
+			base_generics := base_class.generics
 			if base_generics /= Void then
 				generic_count := base_generics.count
 				Result := generic_count = generics.count
@@ -1493,8 +1493,8 @@ feature -- Primitives
 		do
 				-- We could avoid having this check but the precondition does not tell us
 				-- we can.
-			if associated_class /= Void then
-				base_generics := associated_class.generics
+			if base_class /= Void then
+				base_generics := base_class.generics
 				if base_generics /= Void then
 					generic_count := base_generics.count
 					if (generic_count = generics.count) then
@@ -1517,7 +1517,7 @@ feature -- Primitives
 						create {VTUG2} Result
 					end
 					Result.set_type (Current)
-					Result.set_base_class (associated_class)
+					Result.set_base_class (base_class)
 				end
 			end
 		end
@@ -1562,7 +1562,7 @@ feature -- Primitives
 			l_check_creation_readiness: BOOLEAN
 		do
 			l_conform := True
-			l_class := associated_class
+			l_class := base_class
 			l_generic_parameters := generics
 
 			l_generic_parameter := l_generic_parameters.item(i)
@@ -1687,9 +1687,9 @@ feature -- Primitives
 				-- in that case there is nothing to check.
 			if
 				is_valid and then context_class.is_valid and then to_check /= Void and then to_check.is_valid and then
-				associated_class.generics.valid_index (i)
+				base_class.generics.valid_index (i)
 			then
-				l_formal_dec_as ?= associated_class.generics.i_th (i)
+				l_formal_dec_as ?= base_class.generics.i_th (i)
 				check l_formal_dec_as_not_void: l_formal_dec_as /= Void end
 				if l_formal_dec_as.has_creation_constraint then
 					creation_constraint_check (l_formal_dec_as, constraint_type, context_class, to_check, i, formal_type)
@@ -1737,7 +1737,7 @@ feature -- Primitives
 				--            * m >= n
 				--            * for each `make_i' where 1 <= i <= n, there is a `j' (1 <= j <= m)
 				--              where `my_make_k' is a redefined/renamed version of `make_i'.
-			crc_list := formal_dec_as.constraint_creation_list (associated_class)
+			crc_list := formal_dec_as.constraint_creation_list (base_class)
 			if formal_type = Void then
 					-- We're in the case of a class type.
 
@@ -1753,7 +1753,7 @@ feature -- Primitives
 						-- `to_check' may not have an associated class if it represents NONE type, for
 							-- example in PROCEDURE [ANY, NONE], we will check NONE against
 							-- constraint of PROCEDURE which is `TUPLE create default_create end'.						
-						class_c := to_check.associated_class
+						class_c := to_check.base_class
 						creators_table := class_c.creators
 					end
 
@@ -1782,7 +1782,7 @@ feature -- Primitives
 							creators_table.search (other_feature_i.feature_name)
 							if
 								not creators_table.found or else
-								not creators_table.found_item.valid_for (associated_class)
+								not creators_table.found_item.valid_for (base_class)
 							then
 								if l_unmatched_features = Void then
 									create {LINKED_LIST[FEATURE_I]} l_unmatched_features.make

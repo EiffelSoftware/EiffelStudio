@@ -135,7 +135,7 @@ feature -- Changing Priority
 			l_exported_creators: LINKED_LIST [FEATURE_I]
 		do
 			l_any_class := system.any_class.compiled_class
-			class_ := a_type.associated_class
+			class_ := a_type.base_class
 			l_feat_table := class_.feature_table
 			create l_exported_creators.make
 			from
@@ -349,13 +349,13 @@ feature {NONE} -- Implementation
 		do
 			if
 				a_type.has_associated_class and then
-				a_type.associated_class.has_creator_of_name_id (a_feature.feature_name_id)
+				a_type.base_class.has_creator_of_name_id (a_feature.feature_name_id)
 			then
-				Result := a_type.associated_class.creator_of_name_id (a_feature.feature_name_id).is_all
+				Result := a_type.base_class.creator_of_name_id (a_feature.feature_name_id).is_all
 			end
 
 			if a_type.has_associated_class then
-				l_class := a_type.associated_class
+				l_class := a_type.base_class
 
 				if l_class.has_creator_of_name_id (a_feature.feature_name_id) then
 						-- For normal creators.

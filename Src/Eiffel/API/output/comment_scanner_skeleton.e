@@ -368,7 +368,7 @@ feature {NONE} -- Helpers
 		do
 			last_is_alias := False
 			if last_type /= Void then
-				cc := last_type.associated_class
+				cc := last_type.base_class
 			end
 			if cc /= Void then
 				if not name.is_empty and then cc.has_feature_table then

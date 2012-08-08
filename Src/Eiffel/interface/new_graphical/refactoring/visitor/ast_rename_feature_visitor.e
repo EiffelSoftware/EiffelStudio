@@ -133,7 +133,7 @@ feature {NONE} -- Visitor implementation
 				-- we only have to do this stuff if we are a descendant
 			if is_descendant then
 					-- check if the class we inherit from it a descendant of the class where the feature was changed
-				l_class := type_a_generator.evaluate_type (l_as.type, context_class).associated_class
+				l_class := type_a_generator.evaluate_type (l_as.type, context_class).base_class
 				l_id := l_class.class_id
 				if recursive_descendants.has (l_id) then
 						-- with each inherit of a descendant we start with no renaming

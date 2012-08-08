@@ -1688,7 +1688,7 @@ feature -- IL code generation
 				name_id = {PREDEFINED_NAMES}.at_name_id or
 				name_id = {PREDEFINED_NAMES}.Put_name_id
 			special_type_not_void: special_type /= Void
-			special_is_indeed_special: special_type.associated_class.is_special
+			special_is_indeed_special: special_type.base_class.is_special
 			a_context_type_not_void: a_context_type /= Void
 			has_generics: type.generics /= Void
 			good_generic_count: type.generics.count = 1

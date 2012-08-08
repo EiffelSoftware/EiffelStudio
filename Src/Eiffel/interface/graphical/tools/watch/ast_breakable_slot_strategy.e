@@ -602,7 +602,7 @@ feature {NONE} -- Implementation
 							end
 						end
 						if not last_type.is_none then
-							last_class := last_type.associated_class
+							last_class := last_type.base_class
 						else
 							last_class := Void
 						end
@@ -623,7 +623,7 @@ feature {NONE} -- Implementation
 							else
 								l_feat := feature_in_class (current_class, l_rout_id_set)
 								if last_type /= Void then
-									last_class := last_type.associated_class
+									last_class := last_type.base_class
 								else
 									last_class := current_class
 								end
@@ -1105,11 +1105,11 @@ feature {NONE} -- Implementation
 						end
 					else
 						l_last_type := l_formal.constrained_type (current_class)
-						l_feat := feature_in_class (l_last_type.associated_class, l_as.routine_ids)
+						l_feat := feature_in_class (l_last_type.base_class, l_as.routine_ids)
 					end
 				else
 					l_last_type := l_expr_type.actual_type
-					l_feat := feature_in_class (l_last_type.associated_class, l_as.routine_ids)
+					l_feat := feature_in_class (l_last_type.base_class, l_as.routine_ids)
 				end
 			end
 			if not has_error_internal then
@@ -1129,7 +1129,7 @@ feature {NONE} -- Implementation
 				check l_feat_is_not_procedure: not l_feat.is_procedure end
 				l_type := l_feat.type.actual_type
 				check last_type_not_void: last_type /= Void end
-				last_class := l_last_type.associated_class
+				last_class := l_last_type.base_class
 				if l_type.is_loose then
 					last_type := l_type.instantiation_in (l_last_type, last_class.class_id)
 				else
@@ -1226,11 +1226,11 @@ feature {NONE} -- Implementation
 							l_left_type_set_void: l_left_type_set = Void
 							l_left_type_has_associated_class: l_left_type.has_associated_class
 						end
-						l_feat := feature_in_class (l_left_type.associated_class, l_as.routine_ids)
+						l_feat := feature_in_class (l_left_type.base_class, l_as.routine_ids)
 					end
 					check not has_error_internal implies l_left_type /= Void end
 					if not has_error_internal then
-						l_left_class := l_left_type.associated_class
+						l_left_class := l_left_type.base_class
 						last_type := l_left_type
 					end
 				end
@@ -1407,11 +1407,11 @@ feature {NONE} -- Implementation
 						last_class := l_result.first.type.associated_class
 						l_feat := l_result.first.feature_item
 					else
-						last_class := l_formal.constrained_type (current_class).associated_class
+						last_class := l_formal.constrained_type (current_class).base_class
 						l_feat := feature_in_class (last_class, l_as.routine_ids)
 					end
 				else
-					last_class := last_type.associated_class
+					last_class := last_type.base_class
 					l_feat := feature_in_class (last_class, l_as.routine_ids)
 				end
 			end
@@ -1766,7 +1766,7 @@ feature {NONE} -- Implementation
 			check
 				last_type_not_void: last_type /= Void
 			end
-			last_parent := last_type.associated_class
+			last_parent := last_type.base_class
 			check
 				last_parent_not_void: last_parent /= Void
 			end
@@ -2473,7 +2473,7 @@ feature {NONE} -- Implementation: helpers
 				check l_formal_dec_not_void: l_formal_dec /= Void end
 				Result := l_formal_dec.constraint_type (current_class).associated_class
 			else
-				Result := l_type.associated_class
+				Result := l_type.base_class
 			end
 		end
 

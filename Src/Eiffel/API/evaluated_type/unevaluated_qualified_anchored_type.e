@@ -11,7 +11,7 @@ class
 inherit
 	LIKE_TYPE_A
 		redefine
-			associated_class,
+			base_class,
 			conform_to,
 			evaluated_type_in_descendant,
 			has_associated_class,
@@ -73,7 +73,7 @@ feature -- Status report
 
 feature -- Access
 
-	associated_class: CLASS_C
+	base_class: CLASS_C
 			-- Class associated to the current type
 		do
 		end

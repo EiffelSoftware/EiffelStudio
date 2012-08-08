@@ -48,7 +48,7 @@ feature -- Visitor
 				if not is_static_call and then not context.is_written_context then
 						-- Ensure the feature is not redeclared into attribute or internal routine.
 						-- and if redeclared as an external, make sure it is not redeclared differently.
-					f := c.associated_class.feature_of_rout_id (routine_id)
+					f := c.base_class.feature_of_rout_id (routine_id)
 					if equal (f.extension, extension) then
 						f := Void
 					end
@@ -277,7 +277,7 @@ feature -- Status report
 					-- and if redeclared as an external, make sure it is not redeclared differently.
 				c ?= a_type_i
 				if c /= Void then
-					f := c.associated_class.feature_of_rout_id (routine_id)
+					f := c.base_class.feature_of_rout_id (routine_id)
 					if equal (f.extension, extension) then
 						f := Void
 					end

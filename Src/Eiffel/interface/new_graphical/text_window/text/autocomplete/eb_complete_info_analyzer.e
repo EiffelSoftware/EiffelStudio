@@ -622,7 +622,7 @@ feature {NONE} -- Implementation
 			l_class: CLASS_C
 		do
 			if a_type.has_associated_class then
-				l_class := a_type.associated_class
+				l_class := a_type.base_class
 			end
 			Result := create_class_list_and_insert (l_class)
 		ensure
@@ -1150,7 +1150,7 @@ feature {NONE} -- Implementation
 	            	if type /= Void then
             			last_type := type
 	            		if type.has_associated_class then
-		            		found_class := type.associated_class
+		            		found_class := type.base_class
 	            		end
 		            else
 		            	found_class := Void
@@ -1314,7 +1314,7 @@ feature {NONE} -- Implementation
 			loop
 				l_type := a_type.generics.item (i).actual_type
 				if l_type.is_loose then
-					l_type := l_type.instantiation_in (l_type, a_type.associated_class.class_id)
+					l_type := l_type.instantiation_in (l_type, a_type.base_class.class_id)
 				end
 				create l_feat_name.make (a_type.label_name (i).twin, l_type, current_feature_i)
 				insert_in_completion_possibilities (l_feat_name)

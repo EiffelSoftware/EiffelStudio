@@ -60,11 +60,11 @@ feature {COMPILER_EXPORTER} -- Implementation
 			l_feat: FEATURE_I
 		do
 			if attached {REAL_A} a_target_type as l_real and then l_real.size = 32 then
-				l_feat := associated_class.feature_table.item_id ({PREDEFINED_NAMES}.truncated_to_real_name_id)
+				l_feat := base_class.feature_table.item_id ({PREDEFINED_NAMES}.truncated_to_real_name_id)
 					-- We protect ourself in case the `truncated_to_real' routine
 					-- would have been removed from the REAL_64 class.
 				if l_feat /= Void then
-					create {FEATURE_CONVERSION_INFO} l_info.make_to (Current, l_real, associated_class, l_feat)
+					create {FEATURE_CONVERSION_INFO} l_info.make_to (Current, l_real, base_class, l_feat)
 					Result := True
 				end
 				context.set_last_conversion_info (l_info)

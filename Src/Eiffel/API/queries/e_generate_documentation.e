@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			until
 				parents.after
 			loop
-				c := parents.item.associated_class;
+				c := parents.item.base_class;
 				if not processed.has (c) then
 					processed.extend (c)
 				end;

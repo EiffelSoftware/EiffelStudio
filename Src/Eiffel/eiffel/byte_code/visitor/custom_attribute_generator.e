@@ -77,7 +77,7 @@ feature -- Code generation
 
 			cb := a_ca.creation_expr
 			l_type ?= cb.type
-			l_creation_class := l_type.associated_class
+			l_creation_class := l_type.base_class
 			l_tuple_const := a_ca.named_arguments
 
 			param := cb.call.parameters
@@ -429,7 +429,7 @@ feature {BYTE_NODE} -- Visitors
 		do
 			check is_constant_expression: a_node.is_constant_expression end
 			l_cl_type ?= target_type
-			if l_cl_type.associated_class = system.native_array_class.compiled_class then
+			if l_cl_type.base_class = system.native_array_class.compiled_class then
 					-- We insert the value 0xFFFFFFFF to show that it is a Void array.
 				ca_blob.put_integer_32 (0xFFFFFFFF)
 			else
@@ -527,13 +527,13 @@ feature {NONE} -- Implemention
 			else
 				l_element_type := target_type.element_type
 				l_cl_type_i ?= target_type
-				if l_cl_type_i /= Void and then l_cl_type_i.associated_class.is_enum then
+				if l_cl_type_i /= Void and then l_cl_type_i.base_class.is_enum then
 						-- Use underlying integer type.
 					check
 						l_cl_type_i_not_void: l_cl_type_i /= Void
 					end
 					from
-						l_feature_table := l_cl_type_i.associated_class.feature_table
+						l_feature_table := l_cl_type_i.base_class.feature_table
 						l_feature_table.start
 					until
 						l_feature_table.after or else l_underlying_type /= Void
@@ -656,7 +656,7 @@ feature {NONE} -- Implemention
 			create l_type_name.make_from_string (a_cl_type.il_type_name (Void, cil_generator.current_class_type.type))
 			l_type_name.append_character (',')
 			l_type_name.append_character (' ')
-			l_ext_class ?= a_cl_type.associated_class
+			l_ext_class ?= a_cl_type.base_class
 			check l_ext_class_not_void: l_ext_class /= Void end
 			l_type_name.append (l_ext_class.assembly.full_name)
 			ca_blob.put_string (l_type_name)

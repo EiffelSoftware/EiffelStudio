@@ -66,12 +66,12 @@ feature {COMPILER_EXPORTER} -- Implementation
 			if a_target_type.is_integer then
 				l_int ?= a_target_type
 				if is_convertible_to_integer_64 and then l_int.size >= 64 then
-					l_feat := associated_class.feature_table.
+					l_feat := base_class.feature_table.
 						item ("to_integer_" + l_int.size.out)
 						-- We protect ourself in case the `to_integer_xx' routines
 						-- would have been removed from the NATURAL_XX classes
 					if l_feat /= Void then
-						create {FEATURE_CONVERSION_INFO} l_info.make_to (Current, l_int, associated_class, l_feat)
+						create {FEATURE_CONVERSION_INFO} l_info.make_to (Current, l_int, base_class, l_feat)
 						Result := True
 					end
 				end
@@ -79,12 +79,12 @@ feature {COMPILER_EXPORTER} -- Implementation
 			elseif a_target_type.is_natural then
 				l_nat ?= a_target_type
 				if l_nat.size >= 64 then
-					l_feat := associated_class.feature_table.
+					l_feat := base_class.feature_table.
 						item ("to_natural_" + l_nat.size.out)
 						-- We protect ourself in case the `to_natural_xx' routines
 						-- would have been removed from the NATURAL_XX classes
 					if l_feat /= Void then
-						create {FEATURE_CONVERSION_INFO} l_info.make_to (Current, l_nat, associated_class, l_feat)
+						create {FEATURE_CONVERSION_INFO} l_info.make_to (Current, l_nat, base_class, l_feat)
 						Result := True
 					end
 				end

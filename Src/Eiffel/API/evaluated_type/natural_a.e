@@ -13,7 +13,7 @@ inherit
 		rename
 			make as cl_make
 		redefine
-			is_natural, associated_class,
+			is_natural, base_class,
 			same_as, is_numeric, process,
 			minimum_interval_value,
 			maximum_interval_value,
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			valid_n: n = 8 or n = 16 or n = 32 or n = 64
 		do
 			size := n.to_integer_8
-			cl_make (associated_class.class_id)
+			cl_make (base_class.class_id)
 		ensure
 			size_set: size = n
 		end
@@ -60,7 +60,7 @@ feature -- Access
 			Result := attached {NATURAL_A} other as n and then size = n.size
 		end
 
-	associated_class: CLASS_C
+	base_class: CLASS_C
 			-- Class NATURAL
 		do
 			inspect size

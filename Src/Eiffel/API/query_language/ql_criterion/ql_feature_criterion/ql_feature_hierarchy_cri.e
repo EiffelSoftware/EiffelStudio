@@ -126,7 +126,7 @@ feature{NONE} -- Implementation
 			until
 				parents.after
 			loop
-				e_parent := parents.item.associated_class
+				e_parent := parents.item.base_class
 				if not classes.has (e_parent) then
 					record_ancestors (classes, e_parent)
 				end

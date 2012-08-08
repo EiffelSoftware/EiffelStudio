@@ -401,7 +401,7 @@ feature {NONE} -- Type description
 			l_root_class: CLASS_C
 		do
 			if System.root_type /= Void and then not System.root_creation_name.is_empty then
-				l_root_class := System.root_type.associated_class
+				l_root_class := System.root_type.base_class
 				l_feat := l_root_class.feature_table.item (System.root_creation_name)
 				root_class_routine := l_feat.written_class
 			end

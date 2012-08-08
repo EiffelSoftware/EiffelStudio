@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 		do
 			if a_type.has_generics then
 				if a_type.is_expanded then
-					ass_c := a_type.associated_class
+					ass_c := a_type.base_class
 					if not id_set.has (ass_c.class_id) then
 						if ass_c.is_expanded then
 							id_set.put (ass_c.class_id)

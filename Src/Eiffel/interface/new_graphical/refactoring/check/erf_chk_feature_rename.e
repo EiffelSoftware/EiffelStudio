@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 					l_inherit := l_parents.item
 
 						-- we only look at classes that are descendants of the class where the feature gets renamed
-					l_id := type_a_generator.evaluate_class_type (l_inherit.type, a_class).associated_class.class_id
+					l_id := type_a_generator.evaluate_class_type (l_inherit.type, a_class).base_class.class_id
 					if recursive_descendants.has (l_id) then
 							-- at the start of each inherit clause we have the feature (until it is undefined or renamed)
 						is_stop_hierarchy := false

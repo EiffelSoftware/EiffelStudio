@@ -12,7 +12,7 @@ inherit
 	LIKE_TYPE_A
 		redefine
 			actual_type, deep_actual_type, context_free_type,
-			associated_class, associated_class_type, conform_to, conformance_type, convert_to,
+			base_class, associated_class_type, conform_to, conformance_type, convert_to,
 			generics, has_associated_class, has_associated_class_type, formal_instantiated_in,
 			instantiated_in, duplicate, set_separate_mark,
 			is_basic, is_expanded, is_external, is_like_current, is_none, is_reference, is_ephemeral,
@@ -180,10 +180,10 @@ feature -- Access
 			Result := {SHARED_HASH_CODE}.other_code
 		end
 
-	associated_class: CLASS_C
+	base_class: CLASS_C
 			-- Associated class
 		do
-			Result := conformance_type.associated_class
+			Result := conformance_type.base_class
 		end
 
 	associated_class_type (a_context_type: TYPE_A): CLASS_TYPE

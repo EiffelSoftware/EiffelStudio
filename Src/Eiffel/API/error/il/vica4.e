@@ -57,7 +57,7 @@ feature -- Output
 			-- Display error message
 		do
 			a_text_formatter.add ("Type of custom attribute being created: ")
-			a_text_formatter.add_class (creation_type.associated_class.lace_class)
+			a_text_formatter.add_class (creation_type.base_class.lace_class)
 			a_text_formatter.add_new_line
 			a_text_formatter.add ("Named argument appearing more than once: ") 
 			a_text_formatter.add (named_argument)

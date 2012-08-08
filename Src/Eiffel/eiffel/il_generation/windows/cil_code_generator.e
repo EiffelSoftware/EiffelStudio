@@ -1044,7 +1044,7 @@ feature -- Generation Structure
 			then
 					-- Mark now entry point for debug information
 				if has_root_type and is_debug_info_enabled and not system.root_creation_name.is_empty then
-					a_class := system.root_type.associated_class
+					a_class := system.root_type.base_class
 					root_feat := a_class.feature_table.item (system.root_creation_name)
 					l_decl_type := system.root_class_type (system.root_type).type.implemented_type (root_feat.origin_class_id)
 
@@ -1250,7 +1250,7 @@ feature -- Class info
 			l_attributes: BYTE_LIST [BYTE_NODE]
 			l_cur_mod: like current_module
 		do
-			if System.root_type /= Void and then System.root_type.associated_class.original_class.is_compiled then
+			if System.root_type /= Void and then System.root_type.base_class.original_class.is_compiled then
 				l_cur_mod := current_module
 				current_module := main_module
 				current_class_type := System.root_class_type (system.root_type)
@@ -1333,7 +1333,7 @@ feature -- Class info
 						end
 						l_class_type := l_cl_type.associated_class_type (class_type.type)
 						if l_cl_type.is_external then
-							l_ext_class ?= l_cl_type.associated_class
+							l_ext_class ?= l_cl_type.base_class
 						end
 					end
 					if l_class_type.is_basic and then l_class_type.type.generics = Void then
@@ -1779,7 +1779,7 @@ feature {NONE} -- SYSTEM_OBJECT features
 			l_hashable_class_id := hashable_class_id
 			if l_hashable_class_id > 0 then
 				if class_type.associated_class.feature_table.select_table.has (hash_code_rout_id) then
-					class_c := hashable_type.associated_class
+					class_c := hashable_type.base_class
 					feature_i := class_c.feature_table.item_id ({PREDEFINED_NAMES}.hash_code_name_id)
 					debug ("fixme")
 						fixme ("Check that the signature of the feature is as expected.")
@@ -2564,12 +2564,12 @@ feature -- Features info
 							current_module.ise_type_feature_attr_ctor_token, l_name_ca)
 					elseif
 						l_type_a.has_associated_class and then
-						l_type_a.associated_class.lace_class = system.any_class
+						l_type_a.base_class.lace_class = system.any_class
 					then
 							-- Type is ANY, so because we actually generate a field of type SYSTEM_OBJECT
 							-- we generate a special custom attribute that says it is actually ANY, and not
 							-- a field of type SYSTEM_OBJECT
-						define_interface_type (l_type_a.associated_class.types.first, l_meth_token)
+						define_interface_type (l_type_a.base_class.types.first, l_meth_token)
 					end
 				end
 
@@ -3443,7 +3443,7 @@ feature -- IL Generation
 				if not target_type.is_expanded then
 					target_type := target_type.implemented_type (target_feature.access_in)
 				end
-				target_feature := target_type.associated_class.feature_of_rout_id (target_feature.rout_id_set.first)
+				target_feature := target_type.base_class.feature_of_rout_id (target_feature.rout_id_set.first)
 				generate_current
 				generate_argument (1)
 				generate_feature_access (target_type, target_feature.feature_id, 1, False, True)
@@ -3468,7 +3468,7 @@ feature -- IL Generation
 					target_type := target_type.implemented_type (f.origin_class_id)
 				end
 			end
-			target_feature := target_type.associated_class.feature_table.feature_of_rout_id_set (f.rout_id_set)
+			target_feature := target_type.base_class.feature_table.feature_of_rout_id_set (f.rout_id_set)
 			generate_current
 			if f.is_attribute then
 				generate_attribute (True, target_type, target_feature.feature_id)
@@ -4333,7 +4333,7 @@ feature -- Object creation
 				-- Load address of a value type object.
 			generate_load_address (t)
 				-- Call creation procedure (if any).
-			creation_procedure := t.associated_class.creation_feature
+			creation_procedure := t.base_class.creation_feature
 			if creation_procedure /= Void then
 				duplicate_top
 				generate_feature_access (t, creation_procedure.feature_id, 0, False, False)
@@ -4597,12 +4597,12 @@ feature -- Variables access
 					-- Call feature directly.
 				target_type := t
 				target_routine_id := f.rout_id_set.first
-				anchored_features := target_type.associated_class.anchored_features
+				anchored_features := target_type.base_class.anchored_features
 				anchored_features.search (target_routine_id)
 				if anchored_features.found then
 					target_feature_id := anchored_features.found_item.feature_id
 				else
-					target_feature_id := target_type.associated_class.generic_features.item (target_routine_id).feature_id
+					target_feature_id := target_type.base_class.generic_features.item (target_routine_id).feature_id
 				end
 			else
 					-- Call feature using parent type.
@@ -4751,7 +4751,7 @@ feature -- Variables access
 				duplicate_top
 				generate_load_address (l_cl_type)
 				generate_local (l_local_number)
-				l_feat := l_cl_type.associated_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id)
+				l_feat := l_cl_type.base_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id)
 				generate_feature_access (l_cl_type,
 					l_feat.feature_id, l_feat.argument_count, l_feat.has_return_value, False)
 			end
@@ -4939,7 +4939,7 @@ feature -- Addresses
 			l_feat: FEATURE_I
 		do
 			l_cl_type ?= a_type
-			l_table := l_cl_type.associated_class.feature_table
+			l_table := l_cl_type.base_class.feature_table
 				-- Try to get an attribute by name.
 			l_feat := l_table.item_id ({PREDEFINED_NAMES}.item_name_id)
 			if l_feat = Void or else not l_feat.is_attribute then
@@ -5027,7 +5027,7 @@ feature -- Assignments
 				if
 					source_type = Void or else
 					l_source = Void or else l_target = Void or else
-					not l_source.associated_class.simple_conform_to (l_target.associated_class)
+					not l_source.base_class.simple_conform_to (l_target.base_class)
 				then
 					l_native_array ?= l_target_type
 					if l_native_array /= Void then

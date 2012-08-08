@@ -14,7 +14,7 @@ inherit
 			is_equivalent,
 			same_as,
 			has_associated_class,
-			associated_class,
+			base_class,
 			ext_append_to,
 			dump,
 			good_generics,
@@ -59,7 +59,7 @@ feature -- Access
 			Result := (other_type /= Void)
 		end
 
-	associated_class: CLASS_C
+	base_class: CLASS_C
 			-- Associated class to the type (Void)
 		do
 			-- Nothing.

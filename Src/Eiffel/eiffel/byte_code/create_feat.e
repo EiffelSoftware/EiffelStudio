@@ -197,7 +197,7 @@ feature -- C code generation
 			else
 				if
 					Compilation_modes.is_precompiling or
-					context.current_type.associated_class.is_precompiled
+					context.current_type.base_class.is_precompiled
 				then
 					buffer.put_string ("RTWPCT(")
 					buffer.put_static_type_id (context.context_class_type.static_type_id)
@@ -257,7 +257,7 @@ feature -- Byte code generation
 		local
 			rout_info: ROUT_INFO
 		do
-			if context.current_type.associated_class.is_precompiled then
+			if context.current_type.base_class.is_precompiled then
 				ba.append (Bc_pclike)
 				ba.append_short_integer (context.context_class_type.static_type_id - 1)
 				rout_info := System.rout_info_table.item (routine_id)
@@ -340,7 +340,7 @@ feature -- Genericity
 			else
 				if
 					Compilation_modes.is_precompiling or
-					context.current_type.associated_class.is_precompiled
+					context.current_type.base_class.is_precompiled
 				then
 					buffer.put_string ("RTWPCT(")
 					buffer.put_static_type_id (context.context_class_type.static_type_id)
@@ -466,7 +466,7 @@ feature -- Genericity
 				buffer.put_integer (idx_cnt.value)
 				if
 					Compilation_modes.is_precompiling or
-					context.current_type.associated_class.is_precompiled
+					context.current_type.base_class.is_precompiled
 				then
 					buffer.put_string ("] = RTWPCT(")
 					buffer.put_static_type_id (context.context_class_type.static_type_id)
@@ -494,7 +494,7 @@ feature -- Genericity
 		local
 			rout_info: ROUT_INFO
 		do
-			if context.current_type.associated_class.is_precompiled then
+			if context.current_type.base_class.is_precompiled then
 				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.like_pfeature_type)
 				ba.append_short_integer (context.context_class_type.static_type_id-1)
 				rout_info := System.rout_info_table.item (routine_id)

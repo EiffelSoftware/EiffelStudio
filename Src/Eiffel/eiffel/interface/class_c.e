@@ -1519,7 +1519,7 @@ feature -- Parent checking
 				i = nb
 			loop
 				parent_actual_type := l_area.item (i)
-				l_parent_class := parent_actual_type.associated_class
+				l_parent_class := parent_actual_type.base_class
 				l_has_external_parent := l_parent_class.is_external and then not l_parent_class.is_interface and then not l_parent_class.is_basic
 				if l_has_external_parent then
 					has_external_main_parent := True
@@ -2389,7 +2389,7 @@ end
 				i = nb
 			loop
 				parent_type := l_area.item (i)
-				if parent_type.associated_class.is_expanded then
+				if parent_type.base_class.is_expanded then
 						-- Original parent type is expanded so we have to make sure that the expanded version
 						-- of the parent type gets added to the list of available types.
 					l_expanded_parent_type := parent_type.duplicate
@@ -2438,7 +2438,7 @@ end
 			-- Update `types' with `data'.
 		require
 			good_argument: data /= Void
-			consistency: data.associated_class = Current
+			consistency: data.base_class = Current
 			good_context: not data.is_formal
 		local
 			new_class_type: CLASS_TYPE
@@ -2625,7 +2625,7 @@ end
 					-- since in that case there is nothing to propagate.
 				filter := class_filters.item_for_iteration.adapted_in (new_class_type)
 				if not filter.is_formal then
-					filter.associated_class.update_types (filter)
+					filter.base_class.update_types (filter)
 				end
 				class_filters.go_to (class_filters_cursor)
 				class_filters.forth
@@ -2669,7 +2669,7 @@ feature {CLASS_C} -- Incrementality
 					check
 						has_associated_class: filter.has_associated_class
 					end
-					filter.associated_class.update_types (filter)
+					filter.base_class.update_types (filter)
 				end
 				class_filters.go_to (class_filters_cursor)
 				class_filters.forth
@@ -3000,7 +3000,7 @@ feature -- Properties
 				until
 					conforming_parents.after
 				loop
-					Result := Result + conforming_parents.item.associated_class.number_of_ancestors
+					Result := Result + conforming_parents.item.base_class.number_of_ancestors
 					conforming_parents.forth
 				end
 			end
@@ -3011,7 +3011,7 @@ feature -- Properties
 				until
 					non_conforming_parents.after
 				loop
-					Result := Result + non_conforming_parents.item.associated_class.number_of_ancestors
+					Result := Result + non_conforming_parents.item.base_class.number_of_ancestors
 					non_conforming_parents.forth
 				end
 			end
@@ -4167,7 +4167,7 @@ feature -- Genericity
 			until
 				l_parents.after
 			loop
-				l_generic_features := l_parents.item.associated_class.generic_features
+				l_generic_features := l_parents.item.base_class.generic_features
 				if l_generic_features /= Void then
 					from
 						l_generic_features.start

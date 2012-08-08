@@ -79,13 +79,13 @@ feature -- C code generation
 					if
 						l_type = Void or else
 						not l_type.has_associated_class or else
-						l_type.associated_class.assertion_level.is_invariant or else
+						l_type.base_class.assertion_level.is_invariant or else
 						l_type.is_separate
 					then
 							-- Type is not fixed, is separate or class invariant should be checked.
 							-- The latter is done inside the creation procedure.
 						Result.set_call (call.enlarged_on (context.real_type (type)))
-					elseif not l_type.associated_class.feature_of_rout_id (call.routine_id).is_empty then
+					elseif not l_type.base_class.feature_of_rout_id (call.routine_id).is_empty then
 						Result.set_call (call.enlarged_on (context.real_type (type)))
 						Result.call.set_precursor_type (l_type)
 					elseif is_simple_special_creation then

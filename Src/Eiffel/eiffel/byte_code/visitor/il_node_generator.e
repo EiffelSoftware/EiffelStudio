@@ -393,8 +393,8 @@ feature -- Generation
 				source.is_dynamic_clone_required (source_type) and then
 				(source_type.is_external and then
 				target_type.is_external and then
-				source_type.associated_class.is_interface and then
-				target_type.associated_class.is_interface or else
+				source_type.base_class.is_interface and then
+				target_type.base_class.is_interface or else
 				not source_type.is_external and then
 				not source_type.is_generated_as_single_type and then
 				not source_type.is_optimized_as_frozen)
@@ -809,7 +809,7 @@ feature {NONE} -- Visitors
 			a_node.expr.process (Current)
 			if l_is_nested_call then
 				l_type_i := context.real_type (a_node.type)
-				if l_type_i.is_true_expanded and then not l_type_i.associated_class.is_enum then
+				if l_type_i.is_true_expanded and then not l_type_i.base_class.is_enum then
 					generate_il_metamorphose (l_type_i, l_type_i, True)
 				end
 			end
@@ -823,7 +823,7 @@ feature {NONE} -- Visitors
 		do
 			l_target_type := context.context_class_type.type
 			if l_target_type.is_expanded then
-				l_target_feature_id := l_target_type.associated_class.feature_of_rout_id (
+				l_target_feature_id := l_target_type.base_class.feature_of_rout_id (
 					system.class_of_id (a_node.class_id).feature_of_feature_id (a_node.feature_id).rout_id_set.first
 				).feature_id
 			else
@@ -860,7 +860,7 @@ feature {NONE} -- Visitors
 
 				-- Creation of SPECIAL
 			l_special_info := a_node.special_info.updated_info
-			l_special_feat_tbl := l_special_info.type.associated_class.feature_table
+			l_special_feat_tbl := l_special_info.type.base_class.feature_table
 			l_special_info.generate_il
 				-- Call creation procedure `make_empty' or `make' depending on the compilation mode
 			il_generator.duplicate_top
@@ -984,12 +984,12 @@ feature {NONE} -- Visitors
 				l_cl_type ?= a_node.context_type
 				if l_cl_type.is_expanded and then not l_cl_type.is_true_external then
 						-- Access attribute directly.
-					if l_cl_type.associated_class.is_typed_pointer then
+					if l_cl_type.base_class.is_typed_pointer then
 							-- Use non-generic class POINTER because TYPED_POINTER is not generated.
 						l_cl_type := system.pointer_class.compiled_class.actual_type
 					end
 					l_target_type := l_cl_type
-					l_target_attribute_id := l_cl_type.associated_class.feature_of_rout_id (a_node.routine_id).feature_id
+					l_target_attribute_id := l_cl_type.base_class.feature_of_rout_id (a_node.routine_id).feature_id
 				else
 					l_target_type := l_cl_type.implemented_type (a_node.written_in)
 					l_target_attribute_id := a_node.attribute_id
@@ -1374,7 +1374,7 @@ feature {NONE} -- Visitors
 			i, nb: INTEGER
 		do
 			l_bit_type ?= context.real_type (a_node.type)
-			l_bit_class := l_bit_type.associated_class
+			l_bit_class := l_bit_type.base_class
 			l_make_feat := l_bit_class.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id)
 			l_decl_type := l_bit_type.implemented_type (l_make_feat.origin_class_id)
 
@@ -1671,7 +1671,7 @@ feature {NONE} -- Visitors
 				end
 
 				if l_cl_type.is_expanded then
-					if l_cl_type.associated_class.is_typed_pointer then
+					if l_cl_type.base_class.is_typed_pointer then
 							-- Use non-generic class POINTER because TYPED_POINTER is not generated.
 						l_cl_type := system.pointer_class.compiled_class.actual_type
 					end
@@ -1733,7 +1733,7 @@ feature {NONE} -- Visitors
 					elseif l_cl_type.is_expanded and then not l_cl_type.is_true_external and then not l_is_in_creation then
 							-- The feature is generated in the current class.
 						il_generator.generate_feature_access
-							(l_cl_type, l_cl_type.associated_class.feature_of_rout_id (a_node.routine_id).feature_id,
+							(l_cl_type, l_cl_type.base_class.feature_of_rout_id (a_node.routine_id).feature_id,
 							l_count, not context.real_type (a_node.type).is_void, False)
 					else
 							-- Standard call to an external feature.
@@ -1753,7 +1753,7 @@ feature {NONE} -- Visitors
 			end
 			if l_is_nested_call then
 				l_return_type := context.real_type (a_node.type)
-				if l_return_type.is_true_expanded and then not l_return_type.associated_class.is_enum then
+				if l_return_type.is_true_expanded and then not l_return_type.base_class.is_enum then
 					generate_il_metamorphose (l_return_type, l_return_type, True)
 				end
 			end
@@ -1809,7 +1809,7 @@ feature {NONE} -- Visitors
 				l_is_call_on_any := a_node.is_any_feature and l_precursor_type = Void
 					-- Find location of feature.
 				if not l_is_call_on_any and l_cl_type.is_expanded and not l_cl_type.is_true_external then
-					if l_cl_type.associated_class.is_typed_pointer then
+					if l_cl_type.base_class.is_typed_pointer then
 							-- Use non-generic class POINTER because TYPED_POINTER is not generated.
 						l_cl_type := system.pointer_class.compiled_class.actual_type
 					end
@@ -1821,7 +1821,7 @@ feature {NONE} -- Visitors
 					target_type_not_void: l_target_type /= Void
 				end
 
-				l_class_c := l_cl_type.associated_class
+				l_class_c := l_cl_type.base_class
 
 				if l_class_c.is_native_array then
 					check
@@ -2021,7 +2021,7 @@ feature {NONE} -- Visitors
 					end
 				elseif l_is_nested_call then
 					l_return_type := context.real_type (a_node.type)
-					if l_return_type.is_true_expanded and then not l_return_type.associated_class.is_enum then
+					if l_return_type.is_true_expanded and then not l_return_type.base_class.is_enum then
 							-- Pointer to value type is required.
 							generate_il_metamorphose (l_return_type, l_return_type, True)
 					end
@@ -2715,7 +2715,7 @@ feature {NONE} -- Visitors
 			l_target_class_type ?= l_target_type
 			if
 				l_target_class_type /= Void and then
-				l_target_class_type.associated_class.is_typed_pointer and then not
+				l_target_class_type.base_class.is_typed_pointer and then not
 				l_source_type.same_as (l_target_type)
 			then
 					-- Objcet test for TYPED_POINTER fails
@@ -2747,7 +2747,7 @@ feature {NONE} -- Visitors
 			else
 				if l_source_type.is_expanded then
 					l_source_class_type ?= l_source_type
-					if l_source_class_type /= Void and then l_source_class_type.associated_class.is_typed_pointer then
+					if l_source_class_type /= Void and then l_source_class_type.base_class.is_typed_pointer then
 							-- Use non-generic class POINTER because TYPED_POINTER is not generated.
 						l_source_type := system.pointer_class.compiled_class.actual_type
 					end
@@ -2921,7 +2921,7 @@ feature {NONE} -- Visitors
 			l_target_class_type ?= l_target_type
 			if
 				l_target_class_type /= Void and then
-				l_target_class_type.associated_class.is_typed_pointer and then not
+				l_target_class_type.base_class.is_typed_pointer and then not
 				l_source_type.same_as (l_target_type)
 			then
 					-- Reverse reattachment to TYPED_POINTER is NOOP
@@ -2951,7 +2951,7 @@ feature {NONE} -- Visitors
 			else
 				if l_source_type.is_expanded then
 					l_source_class_type ?= l_source_type
-					if l_source_class_type /= Void and then l_source_class_type.associated_class.is_typed_pointer then
+					if l_source_class_type /= Void and then l_source_class_type.base_class.is_typed_pointer then
 							-- Use non-generic class POINTER because TYPED_POINTER is not generated.
 						l_source_type := system.pointer_class.compiled_class.actual_type
 					end
@@ -3026,7 +3026,7 @@ feature {NONE} -- Visitors
 			(create {CREATE_TYPE}.make (l_real_ty)).generate_il
 			il_generator.duplicate_top
 
-			l_set_rout_disp_feat := l_real_ty.associated_class.feature_table.
+			l_set_rout_disp_feat := l_real_ty.base_class.feature_table.
 				item_id ({PREDEFINED_NAMES}.set_rout_disp_name_id)
 			l_decl_type := l_real_ty.implemented_type (l_set_rout_disp_feat.origin_class_id)
 
@@ -3091,7 +3091,7 @@ feature {NONE} -- Visitors
 			l_item_feat, l_put_feat: FEATURE_I
 		do
 			l_real_ty ?= context.real_type (a_node.tuple_type)
-			l_feat_tbl := l_real_ty.associated_class.feature_table
+			l_feat_tbl := l_real_ty.base_class.feature_table
 			if a_node.source /= Void then
 				generate_il_line_info (a_node, True)
 				a_node.source.process (Current)
@@ -3143,7 +3143,7 @@ feature {NONE} -- Visitors
 			l_make_feat, l_put_feat: FEATURE_I
 		do
 			l_real_ty ?= context.real_type (a_node.type)
-			l_feat_tbl := l_real_ty.associated_class.feature_table
+			l_feat_tbl := l_real_ty.base_class.feature_table
 			l_make_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.default_create_name_id)
 			l_decl_type := l_real_ty.implemented_type (l_make_feat.origin_class_id)
 
@@ -3327,7 +3327,7 @@ feature {NONE} -- Implementation
 						-- Simply box the object.
 					il_generator.generate_metamorphose (l_expression_type)
 				else
-					if l_cl_type.associated_class.is_typed_pointer then
+					if l_cl_type.base_class.is_typed_pointer then
 							-- Use POINTER instead of TYPED_POINTER.
 						l_cl_type := system.pointer_class.compiled_class.actual_type
 						l_expression_type := l_cl_type
@@ -4018,7 +4018,7 @@ feature {NONE} -- Implementation: assignments
 				if cl_type.is_expanded then
 						-- Generate direct assignment.
 					il_generator.generate_attribute_assignment (attr.need_target,
-						cl_type, cl_type.associated_class.feature_of_rout_id (attr.routine_id).feature_id)
+						cl_type, cl_type.base_class.feature_of_rout_id (attr.routine_id).feature_id)
 				else
 						-- Generate assignment to the potentially inherited attribute.
 					il_generator.generate_attribute_assignment (attr.need_target,
@@ -4045,10 +4045,10 @@ feature {NONE} -- Implementation: Feature calls
 			is_valid: is_valid
 			a_node_not_void: a_node /= Void
 			a_type_not_void: a_type /= Void
-			a_type_has_associated_class: a_type.associated_class /= Void
+			a_type_has_associated_class: a_type.base_class /= Void
 		do
 			Result := system.class_of_id (a_node.written_in).is_external and then
-				a_node.written_in /= a_type.associated_class.class_id
+				a_node.written_in /= a_type.base_class.class_id
 		end
 
 	generate_il_c_call (a_node: EXTERNAL_B; inv_checked: BOOLEAN)
@@ -4072,7 +4072,7 @@ feature {NONE} -- Implementation: Feature calls
 			end
 
 			if l_cl_type.is_expanded then
-				if l_cl_type.associated_class.is_typed_pointer then
+				if l_cl_type.base_class.is_typed_pointer then
 						-- Use POINTER instead of TYPED_POINTER.
 					l_cl_type := system.pointer_class.compiled_class.actual_type
 				end
@@ -4087,7 +4087,7 @@ feature {NONE} -- Implementation: Feature calls
 				-- magically added feature on basic types.
 			l_basic_type ?= l_cl_type
 			l_invariant_checked := (context.workbench_mode or
-				l_cl_type.associated_class.assertion_level.is_invariant) and then
+				l_cl_type.base_class.assertion_level.is_invariant) and then
 				not a_node.is_first
 
 			if a_node.is_first then
@@ -4139,7 +4139,7 @@ feature {NONE} -- Implementation: Feature calls
 					a_node.static_class_type, a_node.feature_id, l_count, not l_return_type.is_void, False)
 			elseif l_cl_type.is_expanded then
 				il_generator.generate_feature_access (l_cl_type,
-					l_cl_type.associated_class.feature_of_rout_id (a_node.routine_id).feature_id,
+					l_cl_type.base_class.feature_of_rout_id (a_node.routine_id).feature_id,
 					l_count, not l_return_type.is_void, False)
 			else
 				il_generator.generate_feature_access (
@@ -4251,7 +4251,7 @@ feature {NONE} -- Implementation: Feature calls
 
 			if target_type.is_expanded then
 					-- Generate direct call.
-				target_feature_id := target_type.associated_class.feature_of_rout_id (a_node.routine_id).feature_id
+				target_feature_id := target_type.base_class.feature_of_rout_id (a_node.routine_id).feature_id
 			else
 				target_feature_id := a_node.feature_id
 			end

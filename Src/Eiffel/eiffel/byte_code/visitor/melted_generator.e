@@ -237,7 +237,7 @@ feature {NONE} -- Visitors
 			l_special_info.make_byte_code (ba)
 			l_special_type := l_special_info.type
 			check
-				is_special_type: l_special_type /= Void and then l_special_type.associated_class.lace_class = System.special_class
+				is_special_type: l_special_type /= Void and then l_special_type.base_class.lace_class = System.special_class
 			end
 			l_special_class_type ?= l_special_type.associated_class_type (context.context_class_type.type)
 			check
@@ -353,7 +353,7 @@ feature {NONE} -- Visitors
 					if a_node.is_first then
 						ba.append (bc_current)
 					end
-					if l_cl_type.associated_class.is_precompiled then
+					if l_cl_type.base_class.is_precompiled then
 						l_rout_info := system.rout_info_table.item (a_node.routine_id)
 						if a_node.is_first then
 							ba.append (bc_pattribute)
@@ -546,7 +546,7 @@ feature {NONE} -- Visitors
 				(l_lt.is_none and then l_rt.is_expanded) or else
 				(l_lt.is_expanded and then l_rt.is_expanded and then
 				l_lt.has_associated_class and then l_rt.has_associated_class and then
-				l_lt.associated_class.class_id /= l_rt.associated_class.class_id)
+				l_lt.base_class.class_id /= l_rt.base_class.class_id)
 			then
 					-- A value of an expanded type is not Void.
 					-- Two values of different expanded types are not equal.
@@ -703,7 +703,7 @@ feature {NONE} -- Visitors
 					check
 						is_special_call_valid: a_node.is_special_call_valid
 						is_special_type: l_special_type /= Void and then
-							l_special_type.associated_class.lace_class = system.special_class
+							l_special_type.base_class.lace_class = system.special_class
 					end
 					l_class_type ?= l_special_type.associated_class_type (context.context_class_type.type)
 					check
@@ -910,7 +910,7 @@ feature {NONE} -- Visitors
 				end
 				l_cl_type ?= l_type
 				check has_class_type: l_cl_type /= Void end
-				if l_cl_type.associated_class.is_precompiled then
+				if l_cl_type.base_class.is_precompiled then
 					r_id := a_node.routine_id
 					l_rout_info := System.rout_info_table.item (r_id)
 					ba.append (bc_pextern)
@@ -1999,7 +1999,7 @@ feature {NONE} -- Visitors
 				end
 				a_node.expressions.back
 			end
-			if l_real_ty.associated_class.is_precompiled then
+			if l_real_ty.base_class.is_precompiled then
 				ba.append (Bc_ptuple)
 				ba.append_short_integer (l_real_ty.type_id (context.context_class_type.type) - 1)
 				ba.append_short_integer (context.class_type.static_type_id-1)
@@ -2448,7 +2448,7 @@ feature {NONE} -- Implementation
 				else
 						-- Process the feature id of `feature_name' in the
 						-- associated reference type
-					l_associated_class := l_basic_type.reference_type.associated_class
+					l_associated_class := l_basic_type.reference_type.base_class
 					l_feat_tbl := l_associated_class.feature_table
 					if a_node.parameters /= Void then
 						ba.append (Bc_rotate)
@@ -2495,7 +2495,7 @@ feature {NONE} -- Implementation
 						ba.append_short_integer (a_node.parameters.count + 1)
 					end
 				end
-				l_associated_class := l_cl_type.associated_class
+				l_associated_class := l_cl_type.base_class
 				if l_associated_class.is_precompiled then
 					r_id := a_node.routine_id
 					l_rout_info := System.rout_info_table.item (r_id)

@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			a_interpreter_not_void: an_interpreter /= Void
 			a_type_not_void: a_type /= Void
 			a_type_associated_with_class: a_type.has_associated_class
-			creation_procedure_exists: not exported_creators (a_type.associated_class, a_system).is_empty
+			creation_procedure_exists: not exported_creators (a_type.base_class, a_system).is_empty
 			a_feature_table_attached: a_feature_table /= Void
 		do
 			system := a_system
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			a_interpreter_not_void: an_interpreter /= Void
 			a_type_not_void: a_type /= Void
 			a_type_associated_with_class: a_type.has_associated_class
-			creation_procedure_exists: not exported_creators (a_type.associated_class, a_system).is_empty
+			creation_procedure_exists: not exported_creators (a_type.base_class, a_system).is_empty
 			a_feature_table_attached: a_feature_table /= Void
 		do
 			make (a_system, an_interpreter, a_type, a_feature_table)
@@ -205,7 +205,7 @@ feature {NONE} -- Steps
 			class_: CLASS_C
 			l_exported_creators: LINKED_LIST [STRING]
 		do
-			class_ := type.associated_class
+			class_ := type.base_class
 			l_exported_creators := exported_creators (class_, system)
 			count := l_exported_creators.count
 			random.forth
@@ -224,7 +224,7 @@ feature {NONE} -- Steps
 		local
 			class_: CLASS_C
 		do
-			class_ := type.associated_class
+			class_ := type.base_class
 			if string_equality_tester.test (class_.name_in_upper, "BOOLEAN") then
 				choose_boolean_constant
 			elseif string_equality_tester.test (class_.name_in_upper, "CHARACTER_8") then

@@ -114,7 +114,7 @@ feature -- Eiffel source line information
 					--| Note: cf {MELTED_ASSIGNMENT_GENERATOR}.process_attribute_b ...
 					if attached {ATTRIBUTE_B} a_target as attb then
 						if attached {CL_TYPE_A} attb.context_type as l_instant_context_type then
-							l_base_class := l_instant_context_type.associated_class
+							l_base_class := l_instant_context_type.base_class
 							if Compilation_modes.is_precompiling or else l_base_class.is_precompiled then
 								l_precomp := 1
 								l_rout_info := system.rout_info_table.item (attb.routine_id)

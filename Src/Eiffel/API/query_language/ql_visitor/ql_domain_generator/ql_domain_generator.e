@@ -542,7 +542,7 @@ feature{NONE} -- Implementation
 			until
 				parents.after
 			loop
-				a_parent := parents.item.associated_class
+				a_parent := parents.item.base_class
 				if not a_ancestors.has (a_parent) then
 					a_ancestors.extend (a_parent)
 					record_ancestors_of_class (a_parent, a_ancestors)

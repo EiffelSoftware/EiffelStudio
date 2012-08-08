@@ -175,7 +175,7 @@ feature {NONE} -- Evaluation
 					if (attached {EXPR_B} byte_node as expr) and then (attached expr.type as ta) then
 						create final_result.make
 						final_result.failed := True
-						if attached ta.associated_class as cl then
+						if attached ta.base_class as cl then
 							final_result.suggest_static_class (cl)
 						end
 					end
@@ -372,7 +372,7 @@ feature {BYTE_NODE} -- Visitor
 					tmp_target := l_call_value
 					if l_byte_list.count > 0 then
 						from
-							l_class := l_type_i.associated_class
+							l_class := l_type_i.base_class
 							l_put_feat_i := l_class.feature_named ("put")
 							check l_put_feat_i /= Void end
 							create l_arg_as_lst.make
@@ -945,7 +945,7 @@ feature {BYTE_NODE} -- Visitor
 					if a_node.precursor_type /= Void and then a_node.precursor_type.is_standalone then
 						l_cl_type ?= a_node.precursor_type
 						check l_cl_type_not_void_if_true_precursor: l_cl_type /= Void end
-						cl := l_cl_type.associated_class
+						cl := l_cl_type.base_class
 						fi := cl.feature_table.feature_of_rout_id (a_node.routine_id)
 					else
 						fi := feature_i_from_call_access_b_in_context (cl, a_node)
@@ -1315,7 +1315,7 @@ feature {BYTE_NODE} -- Visitor
 				if dv /= Void then
 					create tmp_result.make_with_value (dv.dump_value)
 					cf := t.feat
-					if attached cf.type as cft and then attached cft.associated_class as cl then
+					if attached cf.type as cft and then attached cft.base_class as cl then
 						tmp_result.suggest_static_class (cl)
 					end
 				end
@@ -1432,7 +1432,7 @@ feature {BYTE_NODE} -- Visitor
 					l_byte_list := a_node.expressions
 					if l_byte_list.count > 0 then
 						from
-							l_class := l_type_i.associated_class
+							l_class := l_type_i.base_class
 							l_put_feat_i := l_class.feature_named ("put")
 							check l_put_feat_i /= Void end
 							create l_arg_as_lst.make
@@ -1836,7 +1836,7 @@ feature {NONE} -- Visitor: implementation
 		do
 			l_tmp_target_backup := tmp_target
 			l_type_i := resolved_real_type_in_context (a_type_i)
-			if l_type_i.associated_class.is_special then
+			if l_type_i.base_class.is_special then
 				l_gen_type_i ?= l_type_i
 				if l_gen_type_i /= Void then
 					if l_gen_type_i.generics.valid_index (1) then
@@ -2015,7 +2015,7 @@ feature {NONE} -- Evaluation: implementation
 		do
 			cv_cst_i ?= f
 			if cv_cst_i /= Void then
-				evaluate_value_i (cv_cst_i.value, cv_cst_i.type.associated_class)
+				evaluate_value_i (cv_cst_i.value, cv_cst_i.type.base_class)
 			else
 				dbg_error_handler.notify_error_evaluation_unknown_constant_type_for (f.feature_name)
 			end
@@ -2108,7 +2108,7 @@ feature {NONE} -- Evaluation: implementation
 		require
 			a_type_i_not_void: a_type_i /= Void
 			already_resolved: a_type_i = resolved_real_type_in_context (a_type_i)
-			not_special: not a_type_i.associated_class.is_special
+			not_special: not a_type_i.base_class.is_special
 		local
 			l_cl_type_i: CL_TYPE_A
 		do
@@ -2130,7 +2130,7 @@ feature {NONE} -- Evaluation: implementation
 		require
 			a_type_i_not_void: a_type_i /= Void
 			already_resolved: a_type_i = resolved_real_type_in_context (a_type_i)
-			is_special: a_type_i.associated_class.is_special
+			is_special: a_type_i.base_class.is_special
 		local
 			l_cl_type_i: CL_TYPE_A
 		do

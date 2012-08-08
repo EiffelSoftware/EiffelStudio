@@ -140,15 +140,15 @@ feature -- Output
 				l_target_type ?= target_type
 				l_source_type ?= source_type
 				if l_target_type /= Void and then l_source_type /= Void then
-					l_same_class_name := l_target_type.associated_class.name.is_equal (l_source_type.associated_class.name)
+					l_same_class_name := l_target_type.base_class.name.is_equal (l_source_type.base_class.name)
 				end
 
 				a_text_formatter.add ("Target type: ");
 				target_type.append_to (a_text_formatter);
 				if l_same_class_name then
 					a_text_formatter.add (" (from ")
-					a_text_formatter.add_group (l_target_type.associated_class.lace_class.group,
-						l_target_type.associated_class.lace_class.target.name)
+					a_text_formatter.add_group (l_target_type.base_class.lace_class.group,
+						l_target_type.base_class.lace_class.target.name)
 					a_text_formatter.add (")")
 				end
 				a_text_formatter.add_new_line;
@@ -156,8 +156,8 @@ feature -- Output
 				source_type.append_to (a_text_formatter);
 				if l_same_class_name then
 					a_text_formatter.add (" (from ")
-					a_text_formatter.add_group (l_source_type.associated_class.lace_class.group,
-						l_source_type.associated_class.lace_class.target.name)
+					a_text_formatter.add_group (l_source_type.base_class.lace_class.group,
+						l_source_type.base_class.lace_class.target.name)
 					a_text_formatter.add (")")
 				end
 				a_text_formatter.add_new_line

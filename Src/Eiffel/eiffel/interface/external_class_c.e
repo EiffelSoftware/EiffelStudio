@@ -1142,7 +1142,7 @@ feature {NONE} -- Initialization
 			convert_to_unattached: convert_to = Void
 		local
 			l_feat: FEATURE_I
-			l_type: NAMED_TYPE_A
+			l_type: DEANCHORED_TYPE_A
 		do
 			l_feat := a_feat_tbl.item_id ({NAMES_HEAP}.to_integer_name_id)
 			check
@@ -1155,7 +1155,7 @@ feature {NONE} -- Initialization
 					l_type_is_integer_or_natural: l_type.is_integer or l_type.is_natural
 				end
 				if l_type /= Void then
-					create {HASH_TABLE_EX [INTEGER, NAMED_TYPE_A]} convert_to.make_with_key_tester (1, create {CONVERTIBILITY_CHECKER})
+					create {HASH_TABLE_EX [INTEGER, DEANCHORED_TYPE_A]} convert_to.make_with_key_tester (1, create {CONVERTIBILITY_CHECKER})
 					convert_to.force ({NAMES_HEAP}.to_integer_name_id, l_type)
 				end
 			end

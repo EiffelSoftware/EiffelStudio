@@ -34,7 +34,7 @@ inherit
 			{NONE} all
 		end
 
-	EQUALITY_TESTER [NAMED_TYPE_A]
+	EQUALITY_TESTER [DEANCHORED_TYPE_A]
 		export
 			{NONE} all
 		redefine
@@ -60,8 +60,8 @@ feature -- Initialization/Checking
 		local
 			l_feat: CONVERT_FEAT_AS
 			l_type: TYPE_AS
-			l_named_type: NAMED_TYPE_A
-			l_convert_to, l_convert_from: HASH_TABLE [INTEGER, NAMED_TYPE_A]
+			l_named_type: DEANCHORED_TYPE_A
+			l_convert_to, l_convert_from: HASH_TABLE [INTEGER, DEANCHORED_TYPE_A]
 			l_name_id: INTEGER
 			l_processed: SEARCH_TABLE [INTEGER]
 			l_vtug: VTUG
@@ -321,7 +321,7 @@ feature -- Initialization/Checking
 		local
 			l_success: BOOLEAN
 			l_source_class, l_target_class: CLASS_C
-			l_convert_table: HASH_TABLE [INTEGER, NAMED_TYPE_A]
+			l_convert_table: HASH_TABLE [INTEGER, DEANCHORED_TYPE_A]
 			l_conversion_type: TYPE_A
 			l_type: TYPE_A
 			l_feat_name_id: INTEGER
@@ -501,11 +501,11 @@ feature -- Status report
 
 feature {NONE} -- Implementation: initialization
 
-	new_convert_table: HASH_TABLE [INTEGER, NAMED_TYPE_A]
+	new_convert_table: HASH_TABLE [INTEGER, DEANCHORED_TYPE_A]
 			-- Create new instance used to initialize `convert_to' or `convert_from' of CLASS_C
 			-- where equality on keys is done using `same_as' from NAMED_TYPE_A.
 		do
-			create {HASH_TABLE_EX [INTEGER, NAMED_TYPE_A]} Result.make_with_key_tester (10, Current)
+			create {HASH_TABLE_EX [INTEGER, DEANCHORED_TYPE_A]} Result.make_with_key_tester (10, Current)
 		ensure
 			new_convert_table_not_void: Result /= Void
 		end
@@ -596,7 +596,7 @@ feature {NONE} -- Implementation: checking
 			a_class: CLASS_C;
 			a_feat: FEATURE_I;
 			a_convert_feat: CONVERT_FEAT_AS;
-			a_type: NAMED_TYPE_A)
+			a_type: DEANCHORED_TYPE_A)
 			-- Possible delayed call to `check_conversion_type'.
 		require
 			a_class_not_void: a_class /= Void
@@ -616,7 +616,7 @@ feature {NONE} -- Implementation: checking
 			a_class: CLASS_C;
 			a_feat: FEATURE_I;
 			a_convert_feat: CONVERT_FEAT_AS;
-			a_type: NAMED_TYPE_A)
+			a_type: DEANCHORED_TYPE_A)
 
 			-- Check validity of `a_type' used to convert to or from using `a_convert_feat' routine
 			-- so that it matches routine specified in `a_convert_feat', and that `a_type' does not
@@ -674,8 +674,8 @@ feature {NONE} -- Implementation: status report
 			a_not_void: a /= Void
 			b_not_void: b /= Void
 		local
-			l_convert: HASH_TABLE [INTEGER, NAMED_TYPE_A]
-			l_type: NAMED_TYPE_A
+			l_convert: HASH_TABLE [INTEGER, DEANCHORED_TYPE_A]
+			l_type: DEANCHORED_TYPE_A
 		do
 				-- First check if there are no conversion to `b' from `a'.
 			l_convert := a.convert_to
@@ -732,7 +732,7 @@ feature {NONE} -- Implementation: access
 	has_error: BOOLEAN
 			-- Did we find an error in last checking.
 
-	test (u, v: NAMED_TYPE_A): BOOLEAN
+	test (u, v: DEANCHORED_TYPE_A): BOOLEAN
 			-- Compare two instances `u' and `v' of NAMED_TYPE_A using `same_as'.
 		do
 			if v = Void then

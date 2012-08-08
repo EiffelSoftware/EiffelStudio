@@ -2038,7 +2038,7 @@ feature {NONE} -- Visitors
 				-- to take it into account to create the proper type.
 				-- First boolean is to figure out if there is an action to be taken, the
 				-- second which action.
-			if attached {ATTACHABLE_TYPE_A} l_type_type as l_type then
+			if attached {ANNOTATED_TYPE_A} l_type_type as l_type then
 				if l_type.is_attached then
 					ba.append_boolean (True)
 					ba.append_boolean (True)

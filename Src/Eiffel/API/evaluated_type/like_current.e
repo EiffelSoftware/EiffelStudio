@@ -491,7 +491,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
 		local
-			a: ATTACHABLE_TYPE_A
+			a: ANNOTATED_TYPE_A
 		do
 				-- Special cases for calls on a target which is a manifest integer
 				-- that might be compatible with _8 or _16. The returned
@@ -516,7 +516,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				Result := Result.to_other_attachment (Current)
 			elseif Result.is_attached then
 					-- Remove explicit "attached" mark.
-				if attached {ATTACHABLE_TYPE_A} Result as t then
+				if attached {ANNOTATED_TYPE_A} Result as t then
 					a := t.duplicate
 					a.set_detachable_mark
 					Result := a

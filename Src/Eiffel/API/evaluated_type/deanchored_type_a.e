@@ -6,10 +6,10 @@ note
 	revision: "$Revision$"
 
 deferred class
-	NAMED_TYPE_A
+	DEANCHORED_TYPE_A
 
 inherit
-	ATTACHABLE_TYPE_A
+	ANNOTATED_TYPE_A
 		redefine
 			is_named_type
 		end

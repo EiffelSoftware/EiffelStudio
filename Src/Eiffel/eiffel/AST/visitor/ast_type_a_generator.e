@@ -493,7 +493,7 @@ feature {NONE} -- Visitor implementation
 
 feature {NONE} -- Type marks
 
-	set_class_type_marks (a: TYPE_AS; t: ATTACHABLE_TYPE_A): ATTACHABLE_TYPE_A
+	set_class_type_marks (a: TYPE_AS; t: ANNOTATED_TYPE_A): ANNOTATED_TYPE_A
 			-- Type `t' or its duplicate if `t' may be a result of a once funtion
 			-- with type marks specified in `a'.
 		require

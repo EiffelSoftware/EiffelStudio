@@ -12,6 +12,7 @@ feature {NONE} -- Initialization
 		do
 			hash_table_is_equal
 			hash_table_iteration_item
+			hash_table_valid_iteration_index_orig
 		end
 		
 	hash_table_is_equal
@@ -36,6 +37,17 @@ feature {NONE} -- Initialization
 		do
 			create table.make (10)
 			v := table.iteration_item (1)
+		end
+		
+	hash_table_valid_iteration_index_orig
+			-- Postcondition disallows off position, while implementation allows it.
+			-- FIXED
+		local
+			table: HASH_TABLE [INTEGER, STRING]
+			b: BOOLEAN
+		do
+			create table.make (10)
+			b := table.valid_iteration_index (1)
 		end
 
 end

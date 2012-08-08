@@ -907,7 +907,7 @@ feature -- Attachment properties
 			as_marks_free_attached: attached Result
 		end
 
-	to_other_attachment (other: ATTACHABLE_TYPE_A): like Current
+	to_other_attachment (other: ANNOTATED_TYPE_A): like Current
 			-- Current type to which attachment status of `other' is applied
 		require
 			other_attached: other /= Void
@@ -917,7 +917,7 @@ feature -- Attachment properties
 			result_attached: Result /= Void
 		end
 
-	to_other_immediate_attachment (other: ATTACHABLE_TYPE_A): like Current
+	to_other_immediate_attachment (other: ANNOTATED_TYPE_A): like Current
 			-- Current type to which attachment status of `other' is applied
 			-- without taking into consideration attachment status of an anchor (if any)
 		require
@@ -928,7 +928,7 @@ feature -- Attachment properties
 			result_attached: Result /= Void
 		end
 
-	to_other_separateness (other: ATTACHABLE_TYPE_A): like Current
+	to_other_separateness (other: ANNOTATED_TYPE_A): like Current
 			-- Current type to which separateness status of `other' is applied
 		require
 			other_attached: other /= Void

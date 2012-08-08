@@ -5,7 +5,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ATTACHABLE_TYPE_A
+deferred class ANNOTATED_TYPE_A
 
 inherit
 	TYPE_A
@@ -64,7 +64,7 @@ feature -- Status report
 			Result := attachment_bits & (is_attached_mask | is_implicitly_attached_mask) /= {NATURAL_8} 0
 		end
 
-	is_attachable_to (other: ATTACHABLE_TYPE_A): BOOLEAN
+	is_attachable_to (other: ANNOTATED_TYPE_A): BOOLEAN
 			-- Does type preserve attachment status of other?
 		do
 			Result := other.is_attached implies is_implicitly_attached
@@ -142,7 +142,7 @@ feature -- Modification
 			has_separate_mark := False
 		end
 
-	set_marks_from (other: ATTACHABLE_TYPE_A)
+	set_marks_from (other: ANNOTATED_TYPE_A)
 			-- Set attachment marks as they are set in `other'.
 		require
 			other_attached: attached other
@@ -159,7 +159,7 @@ feature -- Modification
 
 feature -- Comparison
 
-	has_same_marks (other: ATTACHABLE_TYPE_A): BOOLEAN
+	has_same_marks (other: ANNOTATED_TYPE_A): BOOLEAN
 			-- Are type marks of `Current' and `other' the same?
 		require
 			other_attached: other /= Void
@@ -256,11 +256,11 @@ feature -- Duplication
 			result_has_no_separate_mark: not Result.has_separate_mark
 		end
 
-	to_other_attachment (other: ATTACHABLE_TYPE_A): like Current
+	to_other_attachment (other: ANNOTATED_TYPE_A): like Current
 			-- Current type to which attachment status of `other' is applied
 		local
 			c: TYPE_A
-			o: ATTACHABLE_TYPE_A
+			o: ANNOTATED_TYPE_A
 		do
 			Result := Current
 			if other /= Result then
@@ -269,7 +269,7 @@ feature -- Duplication
 				else
 					c := other.actual_type
 				end
-				if c /= Void and then c /= Result and then attached {ATTACHABLE_TYPE_A} c as t then
+				if c /= Void and then c /= Result and then attached {ANNOTATED_TYPE_A} c as t then
 						-- Apply attachment settings of anchor if applicable and current type has none.
 					o := t
 				else
@@ -279,7 +279,7 @@ feature -- Duplication
 			end
 		end
 
-	to_other_immediate_attachment (other: ATTACHABLE_TYPE_A): like Current
+	to_other_immediate_attachment (other: ANNOTATED_TYPE_A): like Current
 			-- Current type to which attachment status of `other' is applied
 			-- without taking into consideration attachment status of an anchor (if any)
 		do
@@ -303,7 +303,7 @@ feature -- Duplication
 			end
 		end
 
-	to_other_separateness (other: ATTACHABLE_TYPE_A): like Current
+	to_other_separateness (other: ANNOTATED_TYPE_A): like Current
 			-- Current type to which attachment status of `other' is applied
 		do
 			Result := Current

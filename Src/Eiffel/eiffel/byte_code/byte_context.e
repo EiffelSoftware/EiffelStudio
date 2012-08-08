@@ -2195,7 +2195,7 @@ feature -- Access
 				buf.put_integer (a_pos)
 				buf.put_two_character (',', ' ')
 				if l_optimized then
-					if attached {ATTACHABLE_TYPE_A} a_type as l_type_1 then
+					if attached {ANNOTATED_TYPE_A} a_type as l_type_1 then
 						if l_type_1.is_attached then
 							buf.put_string ("eif_attached_type(")
 							byte_code.feature_origin (buf)
@@ -2212,7 +2212,7 @@ feature -- Access
 					end
 					buf.put_two_character (')', ';')
 				else
-					if attached {ATTACHABLE_TYPE_A} a_type as l_type_2 then
+					if attached {ANNOTATED_TYPE_A} a_type as l_type_2 then
 						if l_type_2.is_attached then
 							buf.put_string ("eif_attached_type(")
 							l_info.generate_type_id (buf, final_mode, 0)
@@ -2298,7 +2298,7 @@ feature -- Access
 					-- We sometime need to convert a type to either it associated attached/non-attached
 					-- version. First boolean is to figure out if there is an action to be taken, the
 					-- second which action.
-				if attached {ATTACHABLE_TYPE_A} a_type as l_type_1 then
+				if attached {ANNOTATED_TYPE_A} a_type as l_type_1 then
 					if l_type_1.is_attached then
 						ba.append_boolean (True)
 						ba.append_boolean (True)

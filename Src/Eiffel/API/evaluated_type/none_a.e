@@ -9,7 +9,7 @@ class
 	NONE_A
 
 inherit
-	ATTACHABLE_TYPE_A
+	ANNOTATED_TYPE_A
 		redefine
 			is_none, dump, c_type, same_as, is_full_named_type, generated_id,
 			generate_gen_type_il
@@ -117,7 +117,7 @@ feature {COMPILER_EXPORTER}
 		do
 				-- Apply the same conformance rules as for a class type.
 			if
-				attached {ATTACHABLE_TYPE_A} other.conformance_type as other_attachable_type and then
+				attached {ANNOTATED_TYPE_A} other.conformance_type as other_attachable_type and then
 				not other_attachable_type.is_expanded and then
 				(other_attachable_type.is_formal implies other_attachable_type.is_reference)
 			then

@@ -391,7 +391,7 @@ feature {TYPE_A} -- Visitors
 
 feature {NONE} -- Generic visitors
 
-	process_attachable_type_a (t: ATTACHABLE_TYPE_A)
+	process_attachable_type_a (t: ANNOTATED_TYPE_A)
 			-- Output marks leading marks of `t'.
 		require
 			t_attached: attached t

@@ -8,7 +8,7 @@ note
 class FORMAL_A
 
 inherit
-	NAMED_TYPE_A
+	DEANCHORED_TYPE_A
 		rename
 			is_multi_constrained as has_multi_constrained
 		redefine
@@ -492,7 +492,7 @@ feature {COMPILER_EXPORTER} -- Type checking
 			l_is_exp := is_expanded
 			is_reference := True
 			is_expanded := False
-			Precursor {NAMED_TYPE_A} (a_gen_type, a_target_type, a_class, i)
+			Precursor {DEANCHORED_TYPE_A} (a_gen_type, a_target_type, a_class, i)
 			is_reference := l_is_ref
 			is_expanded := l_is_exp
 
@@ -637,7 +637,7 @@ feature -- Access
 			-- Instantiation of Current in the context of `type',
 			-- assuming that Current is written in class of id `written_id'.
 		local
-			t: ATTACHABLE_TYPE_A
+			t: ANNOTATED_TYPE_A
 			l_class: CLASS_C
 			l_type_set: TYPE_SET_A
 		do
@@ -654,7 +654,7 @@ feature -- Access
 					l_type_set := l_class.constrained_types (position)
 					if
 						l_type_set.is_attached and then
-						attached {ATTACHABLE_TYPE_A} Result as a and then not a.has_detachable_mark
+						attached {ANNOTATED_TYPE_A} Result as a and then not a.has_detachable_mark
 					then
 							-- Promote attachment setting of the current contraint unless the formal has explicit detachable mark.
 						t := a.duplicate

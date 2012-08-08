@@ -996,7 +996,7 @@ feature -- Access
 
 feature -- Attachment properties
 
-	to_other_attachment (other: ATTACHABLE_TYPE_A): like Current
+	to_other_attachment (other: ANNOTATED_TYPE_A): like Current
 			-- Current type to which attachment status of `other' is applied
 		local
 			i: INTEGER

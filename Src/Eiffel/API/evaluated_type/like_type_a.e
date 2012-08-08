@@ -9,7 +9,7 @@ deferred class
 	LIKE_TYPE_A
 
 inherit
-	ATTACHABLE_TYPE_A
+	ANNOTATED_TYPE_A
 		undefine
 			same_as
 		redefine

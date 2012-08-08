@@ -363,10 +363,10 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
 feature -- Access: Convertibility
 
-	convert_to: HASH_TABLE [INTEGER, NAMED_TYPE_A]
+	convert_to: HASH_TABLE [INTEGER, DEANCHORED_TYPE_A]
 			-- Set of feature name IDs indexed by type to which they convert to.
 
-	convert_from: HASH_TABLE [INTEGER, NAMED_TYPE_A]
+	convert_from: HASH_TABLE [INTEGER, DEANCHORED_TYPE_A]
 			-- Set of feature name IDs indexed by type to which they convert from.
 
 feature -- Access: CLI implementation

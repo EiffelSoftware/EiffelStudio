@@ -8,7 +8,7 @@ note
 class CL_TYPE_A
 
 inherit
-	NAMED_TYPE_A
+	DEANCHORED_TYPE_A
 		redefine
 			is_expanded, is_reference, valid_generic, is_ephemeral,
 			duplicate, meta_type, same_as, good_generics, error_generics,

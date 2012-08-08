@@ -10058,7 +10058,7 @@ feature {NONE} -- Implementation: type validation
 					Result := a_last_type.actual_type.generics.item (l_formal_type.position)
 				end
 			end
-			if l_formal_type /= Void and then attached {ATTACHABLE_TYPE_A} a_type as l_attachable_type then
+			if l_formal_type /= Void and then attached {ANNOTATED_TYPE_A} a_type as l_attachable_type then
 					-- Preserve attachment status of the original type.
 				Result := Result.to_other_attachment (l_attachable_type)
 			end
@@ -10650,7 +10650,7 @@ feature {NONE} -- Separateness
 		do
 			if
 				t.is_separate and then
-				attached {ATTACHABLE_TYPE_A} t as a and then
+				attached {ANNOTATED_TYPE_A} t as a and then
 				attached last_type as l and then
 				not l.is_separate
 			then

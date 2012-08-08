@@ -165,7 +165,7 @@ feature -- from ENTRY
 			--| one type at runtime.
 		do
 			Result := type.has_generics or else not type.is_explicit or else
-				(attached {ATTACHABLE_TYPE_A} type as l_attached_type and then not type.is_expanded and then l_attached_type.is_attached)
+				(attached {ANNOTATED_TYPE_A} type as l_attached_type and then not type.is_expanded and then l_attached_type.is_attached)
 		end
 
 	generate_cid (buffer: GENERATION_BUFFER; final_mode: BOOLEAN)

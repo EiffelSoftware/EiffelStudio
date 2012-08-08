@@ -11,6 +11,7 @@ feature {NONE} -- Initialization
 			-- Execute test.
 		do
 			hash_table_is_equal
+			hash_table_iteration_item
 		end
 		
 	hash_table_is_equal
@@ -26,6 +27,15 @@ feature {NONE} -- Initialization
 			check not table1.is_equal (table2) end
 		end
 
-
+	hash_table_iteration_item
+			-- Precondition `valid_iteration_index' of `iteration_item' accepts indexes that are off.
+			-- FIXED
+		local
+			table: HASH_TABLE [INTEGER, STRING]
+			v: INTEGER
+		do
+			create table.make (10)
+			v := table.iteration_item (1)
+		end
 
 end

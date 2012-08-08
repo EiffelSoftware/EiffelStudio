@@ -169,7 +169,7 @@ feature -- Code generation
 
 			cl_type ?= a.context_type
 
-			rout_class := cl_type.associated_class.eiffel_class_c
+			rout_class := cl_type.base_class.eiffel_class_c
 			is_predicate := rout_class.class_id = system.predicate_class_id
 			is_function := rout_class.class_id = system.function_class_id or is_predicate
 

@@ -64,13 +64,13 @@ feature -- Output
 			target_type.append_to (a_text_formatter)
 			if
 				attached {CL_TYPE_A} source_type as c and then
-				target_type.associated_class.name.is_equal (c.associated_class.name)
+				target_type.base_class.name.is_equal (c.base_class.name)
 			then
 					-- Provide some details because the class names are the same.
 				s := c
 				a_text_formatter.add (" (from ")
-				a_text_formatter.add_group (target_type.associated_class.lace_class.group,
-					target_type.associated_class.lace_class.target.name)
+				a_text_formatter.add_group (target_type.base_class.lace_class.group,
+					target_type.base_class.lace_class.target.name)
 				a_text_formatter.add (")")
 			end
 			a_text_formatter.add_new_line
@@ -78,8 +78,8 @@ feature -- Output
 			source_type.append_to (a_text_formatter)
 			if s /= Void then
 				a_text_formatter.add (" (from ")
-				a_text_formatter.add_group (s.associated_class.lace_class.group,
-					s.associated_class.lace_class.target.name)
+				a_text_formatter.add_group (s.base_class.lace_class.group,
+					s.base_class.lace_class.target.name)
 				a_text_formatter.add (")")
 			end
 			a_text_formatter.add_new_line

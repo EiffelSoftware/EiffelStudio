@@ -888,7 +888,7 @@ feature {NONE} -- Type information
 				l_typed_pointer ?= t
 				if l_typed_pointer /= Void then
 					Result := pointed_type_id
-				elseif t.associated_class.is_class_any then
+				elseif t.base_class.is_class_any then
 					Result := any_type_id
 				else
 					Result := unknown_type_id

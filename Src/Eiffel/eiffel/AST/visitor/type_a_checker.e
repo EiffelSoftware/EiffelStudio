@@ -534,7 +534,7 @@ feature {TYPE_A} -- Visitors
 				check
 					has_associated_class: a_type.has_associated_class
 				end
-				record_exp_dependance (a_type.associated_class)
+				record_exp_dependance (a_type.base_class)
 			end
 		end
 
@@ -970,7 +970,7 @@ feature {NONE} -- Implementation
 						if
 							attached feature_finder.found_feature as f and then
 							attached feature_finder.found_site as p and then
-							attached p.associated_class as c
+							attached p.base_class as c
 						then
 							saved_class := current_class
 							saved_actual_type := current_actual_type
@@ -1069,7 +1069,7 @@ feature {NONE} -- Implementation
 					if
 						attached feature_finder.found_feature as f and then
 						attached feature_finder.found_site as p and then
-						attached p.associated_class as c
+						attached p.base_class as c
 					then
 						saved_class := current_class
 						saved_actual_type := current_actual_type

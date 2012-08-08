@@ -267,7 +267,7 @@ feature -- Access
 				-- then it cannot be covariantly redefined
 			Result := agent (v: TYPE_A): BOOLEAN
 						do
-							Result := v.is_expanded or (v.has_associated_class implies v.associated_class.is_frozen)
+							Result := v.is_expanded or (v.has_associated_class implies v.base_class.is_frozen)
 						end
 		end
 
@@ -1693,7 +1693,7 @@ feature -- Export checking
 			type_a := type
 			if type_a /= Void then
 				if type_a.has_associated_class then
-					feat_depend.add_supplier (type_a.associated_class)
+					feat_depend.add_supplier (type_a.base_class)
 				end
 				type_a.update_dependance (feat_depend)
 			end
@@ -1705,7 +1705,7 @@ feature -- Export checking
 				loop
 					type_a := arguments.item
 					if type_a.has_associated_class then
-						feat_depend.add_supplier (type_a.associated_class)
+						feat_depend.add_supplier (type_a.base_class)
 					end
 					arguments.forth
 				end

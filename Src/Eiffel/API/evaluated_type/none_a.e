@@ -55,7 +55,7 @@ feature -- Access
 			end
 		end
 
-	associated_class: CLASS_C
+	base_class: CLASS_C
 		do
 			-- No associated class
 		end

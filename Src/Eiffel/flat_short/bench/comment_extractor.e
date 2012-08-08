@@ -251,7 +251,7 @@ feature {NONE} -- Implementation: Query
 			l_parents := a_class.parents
 			if not l_parents.is_empty then
 				from l_parents.start until l_parents.after or Result /= Void or l_matched_parent loop
-					if attached l_parents.item.associated_class as l_parent and then not a_processed.has (l_parent) then
+					if attached l_parents.item.base_class as l_parent and then not a_processed.has (l_parent) then
 							-- The parent class has not get been processed.
 						l_matched_parent := a_parent_name /= Void and then l_parent.name_in_upper.is_equal (a_parent_name)
 						if a_parent_name = Void or l_matched_parent then

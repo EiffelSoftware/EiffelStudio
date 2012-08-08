@@ -99,7 +99,7 @@ feature -- Settings
 		require
 			a_type_not_void: a_type /= Void
 			a_type_associated_with_class: a_type.has_associated_class
-			a_type.associated_class.feature_named_32 (feature_name) /= Void
+			a_type.base_class.feature_named_32 (feature_name) /= Void
 		do
 			target_type := a_type
 		ensure
@@ -119,7 +119,7 @@ invariant
 	feature_name_not_void: feature_name /= Void
 	target_not_void: target /= Void
 	argument_list_not_void: argument_list /= Void
-	class_has_a_feature: target_type /= Void implies target_type.associated_class.feature_named_32 (feature_name) /= Void
+	class_has_a_feature: target_type /= Void implies target_type.base_class.feature_named_32 (feature_name) /= Void
 	no_argument_void: not argument_list.has (Void)
 
 note

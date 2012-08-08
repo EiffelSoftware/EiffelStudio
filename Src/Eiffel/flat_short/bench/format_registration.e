@@ -528,7 +528,7 @@ end
 			until
 				parents.after
 			loop
-				a_parent := parents.item.associated_class;
+				a_parent := parents.item.base_class;
 				if not l_processed.has (a_parent.class_id) then
 					l_processed.put (a_parent.class_id)
 					ancestors.extend (a_parent);

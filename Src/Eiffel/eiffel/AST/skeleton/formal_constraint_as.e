@@ -212,7 +212,7 @@ feature -- Status
 					class_type ?= l_constraint_types.item
 
 					if class_type /= Void then
-						Result := Result and class_type.associated_class.has_feature_table
+						Result := Result and class_type.base_class.has_feature_table
 					end
 					l_constraint_types.forth
 				end
@@ -254,7 +254,7 @@ feature -- Status
 				l_renaming := l_constraint_types_item.renaming
 
 				if class_type /= Void then
-					feat_table := class_type.associated_class.feature_table
+					feat_table := class_type.base_class.feature_table
 					check
 							-- A feature table associated to `class_type' should
 							-- always be in the system
@@ -581,7 +581,7 @@ feature {NONE} -- Implementation
 					type_output_strategy.process (l_type, a_text_formatter, a_context_class, Void)
 					if l_constraining_type.has_at_least_one_renaming then
 						if l_type.has_associated_class then
-							l_constraint_class := l_type.associated_class
+							l_constraint_class := l_type.base_class
 						end
 						a_text_formatter.add_space
 						append_rename_clause (a_text_formatter, l_constraining_type.renaming , l_constraint_class, a_short)

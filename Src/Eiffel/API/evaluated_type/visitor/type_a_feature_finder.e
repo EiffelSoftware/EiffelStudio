@@ -155,7 +155,7 @@ feature -- Search
 			feature_from_class:
 				attached found_feature as f implies
 				attached found_site as s and then
-				(s.associated_class.feature_of_name_id (n) ~ f or else True) -- Feature can be renamed in formal constraints
+				(s.base_class.feature_of_name_id (n) ~ f or else True) -- Feature can be renamed in formal constraints
 		end
 
 	find_by_routine_id (r: INTEGER; t: TYPE_A; c: CLASS_C)
@@ -195,7 +195,7 @@ feature -- Search
 			feature_from_class:
 				attached found_feature as f implies
 				attached found_site as s and then
-				(s.associated_class.feature_of_rout_id (r) ~ f)
+				(s.base_class.feature_of_rout_id (r) ~ f)
 		end
 
 feature {TYPE_A} -- Visitor
@@ -228,7 +228,7 @@ feature {TYPE_A} -- Visitor
 			-- <Precursor>
 		do
 			if
-				attached t.associated_class as c and then
+				attached t.base_class as c and then
 				attached feature_in_class.item ([c]) as f
 			then
 				found_site := t

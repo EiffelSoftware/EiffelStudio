@@ -140,7 +140,7 @@ feature -- Type
 				l_type := l_type.actual_type
 				l_type := constrained_type (a_class, l_type)
 			end
-			Result := l_type.associated_class
+			Result := l_type.base_class
 		ensure
 			result_attached: Result /= Void
 		end

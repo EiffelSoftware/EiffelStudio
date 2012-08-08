@@ -418,7 +418,7 @@ feature -- Execution
 			is_ready: is_ready
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_not_infix_or_prefix: not a_feature.is_prefix and then not a_feature.is_infix
-			class_has_feature: has_feature (variable_table.variable_type (a_target).associated_class, a_feature)
+			class_has_feature: has_feature (variable_table.variable_type (a_target).base_class, a_feature)
 			a_target_not_void: a_target /= Void
 			a_target_defined: variable_table.is_variable_defined (a_target)
 			no_void_target: not variable_table.variable_type (a_target).is_none
@@ -431,7 +431,7 @@ feature -- Execution
 		do
 			log_time_stamp ("exec")
 			l_target_type := variable_table.variable_type (a_target)
-			l_feature := l_target_type.associated_class.feature_of_rout_id (a_feature.rout_id_set.first)
+			l_feature := l_target_type.base_class.feature_of_rout_id (a_feature.rout_id_set.first)
 
 				-- Adjust feature according to the actual type of `a_target'.
 				-- This is needed because of feature renaming. If we don't do this,
@@ -466,7 +466,7 @@ feature -- Execution
 			a_receiver_not_void: a_receiver /= Void
 			a_query_not_void: a_query /= Void
 			a_query_is_not_infix_or_prefix: not a_query.is_prefix and then not a_query.is_infix
-			class_has_query: has_feature (variable_table.variable_type (a_target).associated_class, a_query)
+			class_has_query: has_feature (variable_table.variable_type (a_target).base_class, a_query)
 			a_target_not_void: a_target /= Void
 			a_target_defined: variable_table.is_variable_defined (a_target)
 			no_void_target: not variable_table.variable_type (a_target).is_none

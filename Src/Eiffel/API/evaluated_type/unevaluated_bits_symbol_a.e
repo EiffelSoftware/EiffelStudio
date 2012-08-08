@@ -11,7 +11,7 @@ class
 inherit
 	TYPE_A
 		redefine
-			associated_class, internal_is_valid_for_class, same_as, is_class_valid
+			base_class, internal_is_valid_for_class, same_as, is_class_valid
 		end
 
 	SHARED_NAMES_HEAP
@@ -59,7 +59,7 @@ feature -- Access
 			Result := {SHARED_HASH_CODE}.bit_code
 		end
 
-	associated_class: CLASS_C
+	base_class: CLASS_C
 			-- Associated class
 		do
 			if attached System.bit_class as c then

@@ -177,10 +177,10 @@ feature {STATIC_ACCESS_AS} -- Visitor
 					if l_formal.is_multi_constrained (context.current_class) then
 						error_handler.insert_error (create {NOT_SUPPORTED}.make ("Multiple constraints not supported in static access for when clause"))
 					else
-						class_c := context.current_class.constrained_type (l_formal.position).associated_class
+						class_c := context.current_class.constrained_type (l_formal.position).base_class
 					end
 				else
-					class_c := l_last_type.associated_class
+					class_c := l_last_type.base_class
 				end
 
 				if class_c /= Void then

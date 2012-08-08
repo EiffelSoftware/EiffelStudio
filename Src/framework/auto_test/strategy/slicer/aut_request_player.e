@@ -155,8 +155,8 @@ feature {AUT_REQUEST} -- Processing
 			if
 				l_variable_table.is_variable_defined (a_request.target) and then
 				l_variable_table.are_expressions_valid (a_request.argument_list) and then
-				interpreter.has_feature (l_variable_table.variable_type (a_request.target).associated_class, a_request.feature_to_call) and then
-				not l_variable_table.variable_type (a_request.target).associated_class.name.is_equal (none_type_name)
+				interpreter.has_feature (l_variable_table.variable_type (a_request.target).base_class, a_request.feature_to_call) and then
+				not l_variable_table.variable_type (a_request.target).base_class.name.is_equal (none_type_name)
 			 then
 			 	if a_request.is_feature_query then
 					interpreter.invoke_and_assign_feature (a_request.receiver, a_request.target_type, a_request.feature_to_call, a_request.target, a_request.argument_list)

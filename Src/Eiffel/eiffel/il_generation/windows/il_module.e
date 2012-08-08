@@ -868,9 +868,9 @@ feature {NONE} -- Implementations: signatures
 					l_exp_type /= Void and then
 					il_code_generator.il_module (l_exp_type.associated_class_type (a_context_type.type)) /= Current and then
 					assembly_token (l_exp_type.associated_class_type (a_context_type.type)) = mscorlib_token and then
-					il_code_generator.external_class_mapping.has (l_exp_type.associated_class.external_class_name)
+					il_code_generator.external_class_mapping.has (l_exp_type.base_class.external_class_name)
 				then
-					l_exp_type := il_code_generator.external_class_mapping.item (l_exp_type.associated_class.external_class_name)
+					l_exp_type := il_code_generator.external_class_mapping.item (l_exp_type.base_class.external_class_name)
 				end
 				if l_exp_type /= Void and then (l_exp_type.is_basic and not l_exp_type.is_bit) then
 					a_sig.set_type (l_exp_type.element_type, 0)

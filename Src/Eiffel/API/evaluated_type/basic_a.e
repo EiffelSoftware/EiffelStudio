@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 	make (a_class_id: INTEGER)
 		local
-			l_class: like associated_class
+			l_class: like base_class
 		do
 			class_id := a_class_id
 			l_class := system.class_of_id (a_class_id)
@@ -109,7 +109,7 @@ feature -- IL code generation
 	generic_il_type_name (a_context_type: TYPE_A): STRING
 			-- Associated name to for naming in generic derivation.
 		do
-			Result := associated_class.name.twin
+			Result := base_class.name.twin
 		end
 
 feature -- C code generation

@@ -147,7 +147,7 @@ feature -- Processing
 			until
 				after
 			loop
-				item_for_iteration.associated_class.update_types (item_for_iteration);
+				item_for_iteration.base_class.update_types (item_for_iteration);
 				forth
 			end;
 			derivations.wipe_out;

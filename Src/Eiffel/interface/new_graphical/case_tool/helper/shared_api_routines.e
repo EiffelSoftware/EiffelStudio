@@ -18,7 +18,7 @@ feature -- Access
 		do
 			t := f.type
 			if t /= Void and then t.has_associated_class then
-				Result := t.associated_class
+				Result := t.base_class
 			end
 		end
 
@@ -30,7 +30,7 @@ feature -- Access
 		do
 			t := f.type
 			if t /= Void and then t.has_associated_class then
-				Result := t.associated_class.lace_class
+				Result := t.base_class.lace_class
 			end
 		end
 

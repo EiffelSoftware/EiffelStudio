@@ -317,7 +317,7 @@ feature {NONE} -- Children implementation
 			end
 			if l_att_icd_debug_value /= Void then
 				if f.type.has_associated_class then
-					l_statcl := f.type.associated_class
+					l_statcl := f.type.base_class
 				end
 				Result := debug_value_from_icdv (l_att_icd_debug_value, l_statcl)
 				if Result /= Void then
@@ -402,7 +402,7 @@ feature -- Once request
 						Result := exception_value (a_feat.name_32.as_string_8, "Exception occurred", debug_value_from_icdv (l_once_data.exc, Void))
 					else
 						if l_once_data.res /= Void then
-							Result := debug_value_from_icdv (l_once_data.res, a_feat.type.associated_class)
+							Result := debug_value_from_icdv (l_once_data.res, a_feat.type.base_class)
 							Result.set_name (a_feat.name_32.as_string_8)
 						end
 					end

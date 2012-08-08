@@ -10,7 +10,7 @@ class POINTER_A
 inherit
 	BASIC_A
 		redefine
-			is_pointer, associated_class, same_as,
+			is_pointer, base_class, same_as,
 			default_create, process
 		end
 
@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 	default_create
 			-- Initialize new instance of POINTER_A.
 		do
-			make (associated_class.class_id)
+			make (base_class.class_id)
 		end
 
 feature -- Visitor
@@ -38,7 +38,7 @@ feature -- Property
 	is_pointer: BOOLEAN = True
 			-- Is the current type a pointer type ?
 
-	associated_class: CLASS_C
+	base_class: CLASS_C
 			-- Class POINTER
 		once
 			Result := System.pointer_class.compiled_class

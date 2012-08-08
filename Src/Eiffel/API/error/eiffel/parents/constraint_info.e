@@ -55,7 +55,7 @@ feature -- Output
 			a_text_formatter.add ("Formal #")
 			a_text_formatter.add_int (formal_number)
 			a_text_formatter.add (": ")
-			actual_type_set.ext_append_to (a_text_formatter, type.associated_class )
+			actual_type_set.ext_append_to (a_text_formatter, type.base_class )
 			a_text_formatter.add_new_line
 			if c_type.has_formal then
 				l_gen_type ?= type
@@ -65,7 +65,7 @@ feature -- Output
 			end
 			if not actual_type_set.is_valid or else not actual_type_set.conform_to_type (a_context_class, c_type) then
 				a_text_formatter.add ("Type to which it should conform: ")
-				c_type.ext_append_to (a_text_formatter, type.associated_class)
+				c_type.ext_append_to (a_text_formatter, type.base_class)
 				a_text_formatter.add_new_line
 			end
 

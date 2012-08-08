@@ -118,11 +118,11 @@ feature -- IL code generation
 	il_type_name (a_prefix: STRING; a_context_type: TYPE_A): STRING
 			-- Class name of current type.
 		local
-			l_class_c: like associated_class
+			l_class_c: like base_class
 			l_is_precompiled: BOOLEAN
 			l_cl_type: like associated_class_type
 		do
-			l_class_c := associated_class
+			l_class_c := base_class
 			l_is_precompiled := l_class_c.is_precompiled
 			if l_is_precompiled then
 				l_cl_type := associated_class_type (a_context_type)

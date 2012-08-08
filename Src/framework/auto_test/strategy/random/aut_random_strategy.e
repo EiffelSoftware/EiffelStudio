@@ -110,10 +110,10 @@ feature -- Element change
 			loop
 				l_type := base_type (l_class_name_set.item_for_iteration)
 				if l_type /= Void then
-					if l_type.associated_class.is_generic then
+					if l_type.base_class.is_generic then
 						if not attached {GEN_TYPE_A} l_type as l_gen_type then
-							if attached {GEN_TYPE_A} l_type.associated_class.actual_type as l_gen_type2 then
-								l_type := generic_derivation_of_type (l_gen_type2, l_gen_type2.associated_class)
+							if attached {GEN_TYPE_A} l_type.base_class.actual_type as l_gen_type2 then
+								l_type := generic_derivation_of_type (l_gen_type2, l_gen_type2.base_class)
 							else
 								check
 									dead_end: False
@@ -123,12 +123,12 @@ feature -- Element change
 					end
 					if attached {CL_TYPE_A} l_type as l_class_type then
 							-- Only compiled classes are taken into consideration.
-						if l_class_type.associated_class /= Void then
+						if l_class_type.base_class /= Void then
 							if not interpreter_related_classes.has (l_class_type.name) then
 								types_under_test.force_last (l_class_type)
 								queue.set_static_priority_of_type (l_class_type, 10)
 								if l_class_type.has_associated_class then
-									classes_under_test.force_last (l_class_type.associated_class)
+									classes_under_test.force_last (l_class_type.base_class)
 								end
 							end
 						end

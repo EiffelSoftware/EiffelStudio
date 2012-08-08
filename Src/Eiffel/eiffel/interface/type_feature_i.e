@@ -106,10 +106,10 @@ feature -- Checking
 						Error_handler.insert_error (vtec3)
 					elseif
 						solved_type.is_expanded and then
-						solved_type.associated_class = class_c
+						solved_type.base_class = class_c
 					then
 						create vlec
-						vlec.set_class (solved_type.associated_class)
+						vlec.set_class (solved_type.base_class)
 						vlec.set_client (class_c)
 						Error_handler.insert_error (vlec)
 					end

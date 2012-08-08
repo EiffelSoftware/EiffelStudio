@@ -112,7 +112,7 @@ feature -- Byte code generation
 						-- We perform a non-optimized call on a basic type.
 						-- Process the feature id of `feature_name' in the
 						-- associated reference type
-					Result := a_context_type.reference_type.associated_class.feature_of_name_id (feature_name_id).feature_id
+					Result := a_context_type.reference_type.base_class.feature_of_name_id (feature_name_id).feature_id
 				else
 						-- A generic parameter of current class has been derived
 						-- into an expanded type, so we need to find the `feature_id'
@@ -125,7 +125,7 @@ feature -- Byte code generation
 						-- above case.
 					gen ?= context.current_type
 					if gen /= Void and then a_context_type.is_true_expanded then
-						Result := a_context_type.associated_class.feature_of_rout_id (routine_id).feature_id
+						Result := a_context_type.base_class.feature_of_rout_id (routine_id).feature_id
 					end
 				end
 			end
@@ -136,7 +136,7 @@ feature -- Byte code generation
 					Result := feature_id
 				else
 						-- Code is processed in the context different from the one where it is written
-					Result := a_context_type.associated_class.feature_of_rout_id (routine_id).feature_id
+					Result := a_context_type.base_class.feature_of_rout_id (routine_id).feature_id
 				end
 			end
 		end
@@ -355,7 +355,7 @@ feature -- Byte code generation
 		do
 				-- Compute the actual return type and the type of the function being called.
 			l_target_type := real_type (type)
-			l_return_type := class_type.associated_class.feature_of_rout_id (routine_id).type
+			l_return_type := class_type.base_class.feature_of_rout_id (routine_id).type
 			if
 				not l_target_type.is_void and then l_target_type.is_expanded and then
 				not l_target_type.is_bit and then
@@ -457,7 +457,7 @@ feature {NONE} -- C code generation
 				macro := m.unqualified_call
 			end
 			if compilation_modes.is_precompiling or else
-				cl_type_i.associated_class.is_precompiled
+				cl_type_i.base_class.is_precompiled
 			then
 					-- Call to a precompiled routine.
 				buf.put_string (macro.precompiled)

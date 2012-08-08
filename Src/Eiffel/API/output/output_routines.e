@@ -153,7 +153,7 @@ feature -- Miscellaneous
 			if parents /= Void and then not parents.is_empty then
 				create class_list.make
 				from parents.start until parents.after loop
-					class_list.extend (parents.item.associated_class.original_class)
+					class_list.extend (parents.item.base_class.original_class)
 					parents.forth
 				end
 				text.process_keyword_text ("Ancestors", Void)

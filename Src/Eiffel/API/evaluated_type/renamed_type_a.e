@@ -48,7 +48,7 @@ feature -- Access
 	associated_class: CLASS_C
 			-- Class associated to the current type.		
 		do
-			Result := type.associated_class
+			Result := type.base_class
 		end
 
 feature -- Setters

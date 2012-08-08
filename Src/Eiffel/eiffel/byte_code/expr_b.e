@@ -94,7 +94,7 @@ feature -- Status report
 			cl_type_i ?= source_type
 			if
 				context.original_body_index = context.twin_body_index or else
-				(cl_type_i /= Void and then cl_type_i.associated_class.is_optimized_as_frozen) or else
+				(cl_type_i /= Void and then cl_type_i.base_class.is_optimized_as_frozen) or else
 				source_type.is_none or else
 				is_type_fixed
 			then

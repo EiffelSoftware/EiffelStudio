@@ -12,7 +12,7 @@ inherit
 		rename
 			make as cl_make
 		redefine
-			is_character, is_character_32, associated_class, same_as, process,
+			is_character, is_character_32, base_class, same_as, process,
 			minimum_interval_value,
 			maximum_interval_value
 		end
@@ -27,7 +27,7 @@ feature -- Initialization
 			-- Otherwise a wide character.
 		do
 			is_character_32 := w
-			cl_make (associated_class.class_id)
+			cl_make (base_class.class_id)
 		ensure
 			is_character_32_set: is_character_32 = w
 		end
@@ -56,7 +56,7 @@ feature -- Access
 			Result := attached {CHARACTER_A} other as c and then is_character_32 = c.is_character_32
 		end
 
-	associated_class: CLASS_C
+	base_class: CLASS_C
 			-- Class CHARACTER
 		do
 			if is_character_32 then

@@ -387,7 +387,7 @@ feature -- Status report
 						l_generics := a_type.generics
 						if l_generics /= Void then
 							from
-								l_ancestor_class := a_type.associated_class
+								l_ancestor_class := a_type.base_class
 								l_class := associated_class
 								i := l_generics.lower
 								nb := l_generics.upper
@@ -406,12 +406,12 @@ feature -- Status report
 										l_formal ?= l_type_feat.type
 										l_descendant_type := type.generics.item (l_formal.position)
 										if l_descendant_type.is_expanded then
-											Result := l_descendant_type.associated_class.simple_conform_to (l_type.associated_class)
+											Result := l_descendant_type.base_class.simple_conform_to (l_type.base_class)
 										end
 									else
 											-- The formal generic parameter of `a_type' was instantiated via inheritance.
 											-- Let's check that it is a conforming type to the actual generic parameter of `a_type'.
-										Result := l_type_feat.type.associated_class.simple_conform_to (l_type.associated_class)
+										Result := l_type_feat.type.base_class.simple_conform_to (l_type.base_class)
 									end
 								end
 								i := i + 1

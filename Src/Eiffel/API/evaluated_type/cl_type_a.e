@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 		require
 			valid_class_id: a_class_id > 0
 		local
-			l_class: like associated_class
+			l_class: like base_class
 		do
 			class_id := a_class_id
 			l_class := system.class_of_id (a_class_id)
@@ -95,32 +95,32 @@ feature -- Properties
 
 	has_associated_class, is_class_valid: BOOLEAN
 		do
-			Result := associated_class /= Void
+			Result := base_class /= Void
 		end
 
 	has_associated_class_type (a_context_type: TYPE_A): BOOLEAN
 		do
-			if associated_class /= Void then
-				Result := associated_class.types.has_type (a_context_type, Current)
+			if base_class /= Void then
+				Result := base_class.types.has_type (a_context_type, Current)
 			end
 		end
 
 	is_expanded: BOOLEAN
 			-- Is the type expanded?
 		do
-			Result := has_expanded_mark or else (has_no_mark and then associated_class.is_expanded)
+			Result := has_expanded_mark or else (has_no_mark and then base_class.is_expanded)
 		end
 
 	is_ephemeral: BOOLEAN
 			-- <Precursor>
 		do
-			Result := associated_class.is_ephemeral
+			Result := base_class.is_ephemeral
 		end
 
 	is_reference: BOOLEAN
 			-- Is the type a reference type?
 		do
-			Result := has_reference_mark or else (has_no_mark and then not associated_class.is_expanded)
+			Result := has_reference_mark or else (has_no_mark and then not base_class.is_expanded)
 		end
 
 	is_full_named_type: BOOLEAN
@@ -132,18 +132,18 @@ feature -- Properties
 	is_external: BOOLEAN
 			-- Is current type based on an external calss?
 		local
-			l_base_class: like associated_class
+			l_base_class: like base_class
 		do
-			l_base_class := associated_class
+			l_base_class := base_class
 			Result := is_basic or (not l_base_class.is_basic and l_base_class.is_external)
 		end
 
 	is_enum: BOOLEAN
 			-- Is the current actual type an external enum one?
 		local
-			l_base_class: like associated_class
+			l_base_class: like base_class
 		do
-			l_base_class := associated_class
+			l_base_class := base_class
 			Result := is_expanded and l_base_class.is_external and l_base_class.is_enum
 		end
 
@@ -189,7 +189,7 @@ feature -- Comparison
 			if Precursor (other) then
 					-- If `other' is not separate, the checks done by `Precursor' are sufficient.
 				Result := True
-				if other.is_separate and then is_expanded and then attached associated_class.skeleton as s then
+				if other.is_separate and then is_expanded and then attached base_class.skeleton as s then
 						-- `other' is separate and current type is expanded,
 						-- all attributes of the current type must be runnable in the context of `other' processor.
 					across
@@ -214,7 +214,7 @@ feature -- Access
 	class_id: INTEGER
 			-- Class id of the associated class
 
-	associated_class: CLASS_C
+	base_class: CLASS_C
 			-- Associated class to the type
 		do
 			Result := System.class_of_id (class_id)
@@ -222,7 +222,7 @@ feature -- Access
 
 	associated_class_type (context_type: TYPE_A): CLASS_TYPE
 		do
-			Result := associated_class.types.search_item (context_type, Current)
+			Result := base_class.types.search_item (context_type, Current)
 		end
 
 	deep_actual_type: like Current
@@ -292,17 +292,17 @@ feature -- Access
 			-- Has the base class exactly the same number of generic
 			-- parameters in its formal generic declarations ?
 		do
-			Result := associated_class.generics = Void
+			Result := base_class.generics = Void
 		end
 
 	error_generics: VTUG
 		do
 				-- We could avoid having this check but the precondition does not tell us
 				-- we can.
-			if associated_class /= Void then
+			if base_class /= Void then
 				create {VTUG2} Result
 				Result.set_type (Current)
-				Result.set_base_class (associated_class)
+				Result.set_base_class (base_class)
 			end
 		end
 
@@ -334,7 +334,7 @@ feature -- Output
 				st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_reference_keyword, Void)
 				st.add_space
 			end
-			associated_class.append_name (st)
+			base_class.append_name (st)
 		end
 
 	dump: STRING
@@ -343,7 +343,7 @@ feature -- Output
 			class_name: STRING
 			n: INTEGER
 		do
-			class_name := associated_class.name_in_upper
+			class_name := base_class.name_in_upper
 			n := class_name.count
 			if has_attached_mark or else has_detachable_mark then
 				n := n + 2
@@ -419,12 +419,12 @@ feature -- IL code generation
 	il_type_name (a_prefix: STRING; a_context_type: TYPE_A): STRING
 			-- Class name of current type.
 		local
-			l_class_c: like associated_class
+			l_class_c: like base_class
 			l_cl_type: like associated_class_type
 			l_alias_name: STRING
 			l_dot_pos: INTEGER
 		do
-			l_class_c := associated_class
+			l_class_c := base_class
 			if l_class_c.is_external and not l_class_c.is_basic then
 				Result := l_class_c.external_class_name.twin
 			else
@@ -491,7 +491,7 @@ feature -- IL code generation
 
 	is_optimized_as_frozen: BOOLEAN
 		do
-			Result := associated_class.is_optimized_as_frozen
+			Result := base_class.is_optimized_as_frozen
 		end
 
 	is_generated_as_single_type: BOOLEAN
@@ -501,7 +501,7 @@ feature -- IL code generation
 				-- External classes have only one type.
 				-- Classes that inherits from external classes
 				-- have only one generated type as well as expanded types.
-			Result := is_true_external or associated_class.is_single or is_expanded
+			Result := is_true_external or base_class.is_single or is_expanded
 		end
 
 feature {NONE} -- IL code generation
@@ -518,7 +518,7 @@ feature {NONE} -- IL code generation
 				-- what our casing conversion routines require to perform
 				-- a good job.
 			Result.to_lower
-			Result := il_casing.type_name (associated_class.original_class.actual_namespace, a_prefix, is_separate, Result, System.dotnet_naming_convention)
+			Result := il_casing.type_name (base_class.original_class.actual_namespace, a_prefix, is_separate, Result, System.dotnet_naming_convention)
 		ensure
 			internal_il_type_name_not_void: Result /= Void
 			internal_il_type_name_not_empty: not Result.is_empty
@@ -530,9 +530,9 @@ feature {NONE} -- IL code generation
 			a_base_name_not_void: a_base_name /= Void
 			a_base_name_not_empty: not a_base_name.is_empty
 		local
-			l_base_class: like associated_class
+			l_base_class: like base_class
 		do
-			l_base_class := associated_class
+			l_base_class := base_class
 			if is_expanded and then not l_base_class.is_expanded then
 				create Result.make (6 + a_base_name.count)
 				Result.append ("value_")
@@ -568,9 +568,9 @@ feature {TYPE_A} -- Helpers
 			-- Is Current still valid?
 			-- I.e. its `associated_class' is still in system.
 		local
-			l_class: like associated_class
+			l_class: like base_class
 		do
-			l_class := associated_class
+			l_class := base_class
 				-- Check that current class still exists and that there are no
 				-- generics.
 				--| Ideally we could also check that if Current base class is expanded
@@ -672,7 +672,7 @@ feature {COMPILER_EXPORTER} -- Conformance
 					end
 				else
 					Result :=
-						associated_class.conform_to (other_class_type.associated_class) and then
+						base_class.conform_to (other_class_type.base_class) and then
 						other_class_type.valid_generic (a_context_class, Current)
 					if not Result and then system.il_generation and then system.system_object_class /= Void then
 							-- Any type in .NET conforms to System.Object
@@ -746,7 +746,7 @@ feature {COMPILER_EXPORTER} -- Conformance
 			a_context_class_valid: a_context_class.is_valid
 			a_context_valid_for_current: is_valid_for_class (a_context_class)
 			good_argument: gen_type /= Void
-			valid_type: associated_class.conform_to (gen_type.associated_class)
+			valid_type: base_class.conform_to (gen_type.base_class)
 		local
 			i, count: INTEGER
 			parent_actual_type: TYPE_A
@@ -757,7 +757,7 @@ feature {COMPILER_EXPORTER} -- Conformance
 			from
 				l_is_attached := is_attached
 				l_is_implicitly_attached := is_implicitly_attached
-				l_conforming_parents := associated_class.conforming_parents
+				l_conforming_parents := base_class.conforming_parents
 				i := 1
 				count := l_conforming_parents.count
 			until
@@ -823,9 +823,9 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			-- generic parameter that does not exist in `Current').
 		require
 			good_argument: c /= Void
-			conformance: c.inherits_from (associated_class)
+			conformance: c.inherits_from (base_class)
 		local
-			l_class: like associated_class
+			l_class: like base_class
 			i, nb, l_pos: INTEGER
 			l_type_feat: TYPE_FEATURE_I
 			l_result_generics: like generics
@@ -833,7 +833,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			l_quick_positions: NATURAL_64
 			l_slow_positions: PACKED_BOOLEANS
 		do
-			l_class := associated_class
+			l_class := base_class
 			if l_class = c then
 					-- Same class, nothing to do.
 				Result := Current
@@ -930,14 +930,14 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			parent_class_type: CL_TYPE_A
 		do
 			from
-				parents := associated_class.parents
+				parents := base_class.parents
 				i := 1
 				count := parents.count
 			until
 				i > count or else Result /= Void
 			loop
 				parent := parents [i]
-				if parent.associated_class = c then
+				if parent.base_class = c then
 						-- Class `c' is found
 					Result ?= parent_type (parent)
 				else

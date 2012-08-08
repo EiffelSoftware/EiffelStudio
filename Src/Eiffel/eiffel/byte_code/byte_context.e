@@ -1279,7 +1279,7 @@ feature -- Access
 	associated_class: CLASS_C
 			-- Class associated with current type
 		do
-			Result := current_type.associated_class
+			Result := current_type.base_class
 		end
 
 	constrained_type_in (type: TYPE_A; a_context_type: CL_TYPE_A): TYPE_A
@@ -1302,10 +1302,10 @@ feature -- Access
 				formal_position := formal.position
 				Result := a_context_type.generics.item (formal_position)
 				if attached {FORMAL_A} Result as actual_formal then
-					if actual_formal.is_multi_constrained (a_context_type.associated_class) then
+					if actual_formal.is_multi_constrained (a_context_type.base_class) then
 						create {MULTI_FORMAL_A} Result.make (True, actual_formal.is_expanded, actual_formal.position)
 					else
-						Result := a_context_type.associated_class.constrained_type (formal_position)
+						Result := a_context_type.base_class.constrained_type (formal_position)
 					end
 						-- Preserve attachment and separateness status of the context parameter.
 					Result := Result.to_other_attachment (formal).to_other_separateness (formal)

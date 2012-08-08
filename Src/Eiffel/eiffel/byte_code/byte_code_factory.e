@@ -75,7 +75,7 @@ feature {NONE} -- Implementation: status report
 				Result := l_string_b /= Void
 			elseif
 				System.il_generation and then
-				(a_source_type.associated_class = System.type_class.compiled_class and a_target_type.same_as (System_type_type))
+				(a_source_type.base_class = System.type_class.compiled_class and a_target_type.same_as (System_type_type))
 			then
 				l_type_expr_b ?= a_expr
 				Result := l_type_expr_b /= Void
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation: Byte node
 				Result := l_string_b
 			elseif
 				System.il_generation and then
-				(a_source_type.associated_class = System.type_class.compiled_class and a_target_type.same_as (System_type_type))
+				(a_source_type.base_class = System.type_class.compiled_class and a_target_type.same_as (System_type_type))
 			then
 				l_type_expr_b ?= a_expr
 				check
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation: Byte node
 						-- Simply call `item' from the reference type instead of
 						-- trying to create an instance of the basic type and then
 						-- calling its creation procedure.
-					l_feat := a_source_type.associated_class.
+					l_feat := a_source_type.base_class.
 						feature_table.item_id ({PREDEFINED_NAMES}.item_name_id)
 					check
 						l_feat_not_void: l_feat /= Void
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation: Byte node
 						-- for creating the object, the other to assign it.
 					l_basic_i ?= a_source_type
 					l_ref := l_basic_i.reference_type
-					l_feat := l_ref.associated_class.
+					l_feat := l_ref.base_class.
 						feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id)
 					check
 						l_feat_not_void: l_feat /= Void

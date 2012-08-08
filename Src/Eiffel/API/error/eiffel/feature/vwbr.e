@@ -45,7 +45,7 @@ feature -- Output
 			if target_type /= Void then
 				if target_type.has_associated_class then
 					a_text_formatter.add ("Target class: ")
-					target_type.associated_class.append_name (a_text_formatter)
+					target_type.base_class.append_name (a_text_formatter)
 				end
 			end
 			if target_type_set /= Void then

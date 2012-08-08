@@ -97,7 +97,7 @@ feature -- Visitor
 			else
 				if not context.is_written_context then
 						-- Ensure the feature is not redeclared into attribute.
-					f := c.associated_class.feature_of_rout_id (routine_id)
+					f := c.base_class.feature_of_rout_id (routine_id)
 					debug ("fixme")
 						(create {REFACTORING_HELPER}).fixme ("Correct evaluation of context type of an operator call.")
 					end
@@ -221,7 +221,7 @@ feature -- Access
 					-- Ensure the feature is not redeclared into attribute if inherited.
 				c ?= type_i
 				if c /= Void then
-					f := c.associated_class.feature_of_rout_id (routine_id)
+					f := c.base_class.feature_of_rout_id (routine_id)
 					if not f.is_attribute then
 						f := Void
 					elseif context.final_mode and then system.seed_of_routine_id (routine_id).has_formal then
@@ -289,7 +289,7 @@ feature -- Array optimization
 			dep: DEPEND_UNIT
 		do
 			cl_type ?= context_type -- Cannot fail
-			base_class := cl_type.associated_class
+			base_class := cl_type.base_class
 			f := base_class.feature_table.item_id (feature_name_id)
 			create dep.make (base_class.class_id, f)
 			Result := optimizer.special_features.has (dep)
@@ -303,7 +303,7 @@ feature -- Array optimization
 			dep: DEPEND_UNIT
 		do
 			cl_type ?= context_type -- Cannot fail
-			base_class := cl_type.associated_class
+			base_class := cl_type.base_class
 			f := base_class.feature_table.item_id (feature_name_id)
 debug ("OPTIMIZATION")
 	io.error.put_string ("%N%N%NTESTING is_unsafe for ")
@@ -423,7 +423,7 @@ feature -- Inlining
 							-- descendants which do not conform to each other. To avoid the expensive cost of
 							-- the computation we check first that the context type is deferred. This fixes
 							-- eweasel test#final087.
-						if inline and type_i.associated_class.is_deferred then
+						if inline and type_i.base_class.is_deferred then
 								-- The routine in the deferred class could be deferred and we need to
 								-- ensure that all implementations of Current are forming an inheritance
 								-- line, not a tree as if it is a tree, inlining has to be done from the top
@@ -481,8 +481,8 @@ feature -- Inlining
 						-- by generating the code from the context in which it is defined (see eweasel test#final048
 						-- for an example of the `else' part).
 					if
-						cl_type.associated_class.simple_conform_to (f.written_class) or
-						f.written_class.simple_conform_to (cl_type.associated_class)
+						cl_type.base_class.simple_conform_to (f.written_class) or
+						f.written_class.simple_conform_to (cl_type.base_class)
 					then
 							-- Now try to find a proper descendant type for the candidate for inlining. There is
 							-- two possibility here: The class associated with `entry' is the same as `cl_type'
@@ -520,7 +520,7 @@ feature -- Inlining
 							else
 									-- Find the ancestor type.
 								check
-									ancestor: cl_type.associated_class.inherits_from (f.written_class)
+									ancestor: cl_type.base_class.inherits_from (f.written_class)
 								end
 								written_cl_type := cl_type.find_class_type (f.written_class)
 							end
@@ -561,7 +561,7 @@ feature -- Inlining
 						desc_cl_type := cl_type.find_descendant_type (system.class_of_id (entry.class_id))
 						if
 							desc_cl_type = Void or else
-							not same_for_generics (desc_cl_type.associated_class, cl_type.associated_class)
+							not same_for_generics (desc_cl_type.base_class, cl_type.base_class)
 						then
 								-- Another failures are test#final091 and test#final097 which we test
 								-- by checking' the precondition of `associated_class_type'.
@@ -577,7 +577,7 @@ feature -- Inlining
 								-- Get the CLASS_TYPE where `g' is coming from, that is to say `B [G#1]'.
 							written_class_type := context_class_type.type.implemented_type (f.written_in).associated_class_type (Void)
 								-- The actual type during code generation, i.e. B [X].
-							check cl_type.associated_class.simple_conform_to (f.written_class) end
+							check cl_type.base_class.simple_conform_to (f.written_class) end
 							written_cl_type := cl_type.find_class_type (f.written_class)
 
 								-- Here we are going to do the inlining, but we are going to use written_cl_type
@@ -594,7 +594,7 @@ feature -- Inlining
 						inliner.set_current_feature_inlined
 
 							-- Create inlined byte node.
-						if cl_type.associated_class.is_special then
+						if cl_type.base_class.is_special then
 							create {SPECIAL_INLINED_FEAT_B} inlined_feat_b
 						else
 							create inlined_feat_b

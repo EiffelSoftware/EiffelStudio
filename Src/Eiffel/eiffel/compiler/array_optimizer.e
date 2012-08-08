@@ -367,10 +367,10 @@ feature -- Contexts
 					-- Argument
 				array_type_a ?= bc.arguments.item (id)
 			end
-			f := array_type_a.associated_class.feature_of_rout_id (item_rout_id)
+			f := array_type_a.base_class.feature_of_rout_id (item_rout_id)
 
 			type_a ?= f.type
-			type_a := type_a.instantiation_in (array_type_a, array_type_a.associated_class.class_id)
+			type_a := type_a.instantiation_in (array_type_a, array_type_a.base_class.class_id)
 								--(array_type_a, System.current_class.class_id)
 
 			if type_a.is_formal then

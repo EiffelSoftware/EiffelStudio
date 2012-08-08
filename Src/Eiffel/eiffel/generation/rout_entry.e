@@ -131,7 +131,7 @@ feature -- previously in ROUT_UNIT
 		do
 debug
 io.error.put_string ("arg = ")
-io.error.put_string (class_type.type.associated_class.name)
+io.error.put_string (class_type.type.base_class.name)
 io.error.put_string ("   ")
 io.error.put_string ("cur = ")
 io.error.put_string (access_class.name)

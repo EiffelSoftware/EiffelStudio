@@ -178,7 +178,7 @@ feature -- C code generation
 					(left_type.is_expanded and right_type.is_none) or else
 					(left_type.is_expanded and then right_type.is_expanded and then
 					left_type.has_associated_class and then right_type.has_associated_class and then
-					left_type.associated_class.class_id /= right_type.associated_class.class_id)
+					left_type.base_class.class_id /= right_type.base_class.class_id)
 				then
 						-- A value of an expanded type is not Void.
 						-- Two values of different expanded types are not equal.

@@ -37,7 +37,7 @@ feature	-- Output
 					-- Case when it is an error on the number of actual generic
 					-- parameters not matching the base class specification
 				a_text_formatter.add ("Base class: ")
-				root_type.associated_class.append_signature (a_text_formatter, False)
+				root_type.base_class.append_signature (a_text_formatter, False)
 				a_text_formatter.add_new_line
 			else
 					-- Display errors in the context of class ANY.

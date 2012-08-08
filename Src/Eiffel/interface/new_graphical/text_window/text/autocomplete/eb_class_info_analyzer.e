@@ -540,7 +540,7 @@ feature {NONE} -- Implementation (`type_from')
 								-- Fixme: some problems here, type is possible multi-constaint.
 							last_target_type := type
 							if type.has_associated_class then
-								written_class := type.associated_class
+								written_class := type.base_class
 							end
 						end
 					end
@@ -560,9 +560,9 @@ feature {NONE} -- Implementation (`type_from')
 									check
 										has_associated_class: l_precursor_from.has_associated_class
 									end
-									written_class := l_precursor_from.associated_class
-									if l_precursor_from.associated_class.has_feature_table then
-										feat := l_precursor_from.associated_class.feature_with_name_id (current_feature_as.name.internal_name.name_id)
+									written_class := l_precursor_from.base_class
+									if l_precursor_from.base_class.has_feature_table then
+										feat := l_precursor_from.base_class.feature_with_name_id (current_feature_as.name.internal_name.name_id)
 									end
 								end
 							end
@@ -579,9 +579,9 @@ feature {NONE} -- Implementation (`type_from')
 									check
 										type_as_associated_class: type.has_associated_class
 									end
-									if type.associated_class.has_feature_table then
-										feat := l_precursor_from.associated_class.feature_with_name_id (current_feature_as.name.internal_name.name_id)
-										written_class := l_precursor_from.associated_class
+									if type.base_class.has_feature_table then
+										feat := l_precursor_from.base_class.feature_with_name_id (current_feature_as.name.internal_name.name_id)
+										written_class := l_precursor_from.base_class
 									end
 									l_current_class_c_parents.forth
 								end
@@ -729,7 +729,7 @@ feature {NONE} -- Implementation (`type_from')
 						-- Let's store the class type to which the feature belongs into `last_target_type'.
 					feat := l_feature_state.feature_item
 					last_target_type := l_feature_state.class_type_of_feature
-					written_class := last_target_type.associated_class
+					written_class := last_target_type.base_class
 				else
 						-- We don't provide a list, since the code doesn't compile already.
 					feat := Void
@@ -744,7 +744,7 @@ feature {NONE} -- Implementation (`type_from')
 					Result_has_associated_class: last_target_type.has_associated_class
 				end
 				l_named_tuple_type ?= last_target_type
-				l_processed_class := last_target_type.associated_class
+				l_processed_class := last_target_type.base_class
 				written_class := l_processed_class
 				if l_processed_class /= Void and then l_processed_class.has_feature_table or l_named_tuple_type /= Void then
 					type := Void
@@ -917,9 +917,9 @@ feature {NONE} -- Implementation (`type_from')
 				check
 					has_associated_class: last_target_type.has_associated_class
 				end
-				if last_target_type.associated_class.has_feature_table then
-					l_feature := last_target_type.associated_class.feature_table.alias_item_32 (bracket_str)
-					written_class := last_target_type.associated_class
+				if last_target_type.base_class.has_feature_table then
+					l_feature := last_target_type.base_class.feature_table.alias_item_32 (bracket_str)
+					written_class := last_target_type.base_class
 				end
 			end
 			if l_feature /= Void then
@@ -1458,7 +1458,7 @@ feature {NONE}-- Implementation
 							if type.has_associated_class then
 									-- This case includes the ordinary case and the case were we had
 									-- a single constrained formal without a renaming (constrained_type has been called).
-								l_processed_class := type.associated_class
+								l_processed_class := type.base_class
 								if l_processed_class /= Void and then l_processed_class.has_feature_table then
 									processed_feature := l_processed_class.feature_with_name_32 (name)
 								end
@@ -1576,7 +1576,7 @@ feature {NONE}-- Implementation
 			if name.same_string_general (Equal_sign) or name.same_string_general (Different_sign) then
 				Result := boolean_type
 			else
-				cls_c := a_type.associated_class
+				cls_c := a_type.base_class
 				if cls_c /= Void and then cls_c.has_feature_table then
 					written_class := cls_c
 					feat := cls_c.feature_with_name_32 (infix_feature_name_with_symbol_32 (name))

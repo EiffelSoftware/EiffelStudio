@@ -251,7 +251,7 @@ feature {NONE} -- Basic operations
 					i > l_upper
 				loop
 					if attached {CL_TYPE_A} l_generics[i] as l_sub_type then
-						l_generator.add_class (l_sub_type.associated_class.lace_class)
+						l_generator.add_class (l_sub_type.base_class.lace_class)
 					else
 						l_generator.add (l_generics[i].dump)
 					end

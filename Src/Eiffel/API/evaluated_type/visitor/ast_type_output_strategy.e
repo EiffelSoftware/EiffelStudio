@@ -114,7 +114,7 @@ feature {TYPE_A} -- Visitors
 				text_formatter.process_keyword_text (ti_reference_keyword, Void)
 				text_formatter.add_space
 			end
-			l_class := a_type.associated_class
+			l_class := a_type.base_class
 			if l_class /= Void  then
 				l_class.append_name (text_formatter)
 			else
@@ -305,7 +305,7 @@ feature {TYPE_A} -- Visitors
 				text_formatter.process_symbol_text (ti_r_curly)
 			end
 			from
-				c := a_type.qualifier.associated_class
+				c := a_type.qualifier.base_class
 			until
 				i >= a_type.chain.count
 			loop
@@ -313,7 +313,7 @@ feature {TYPE_A} -- Visitors
 				n := a_type.chain [i]
 				if c /= Void and then attached c.feature_with_name_id (n) as f then
 					f.append_name (text_formatter)
-					c := f.type.associated_class
+					c := f.type.base_class
 				else
 					text_formatter.process_feature_name_text (names_heap.item_32 (n), c)
 				end

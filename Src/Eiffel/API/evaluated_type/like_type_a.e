@@ -236,10 +236,10 @@ feature -- Access
 			Result := actual_type.hash_code
 		end
 
-	associated_class: CLASS_C
+	base_class: CLASS_C
 			-- Associated class
 		do
-			Result := actual_type.associated_class
+			Result := actual_type.base_class
 		end
 
 	associated_class_type (a_context_type: TYPE_A): CLASS_TYPE

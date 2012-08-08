@@ -342,7 +342,7 @@ feature {NONE} -- Implementation
 					dbg_error_handler.notify_error_evaluation (Void)
 				end
 				if not error_occurred then
-					l_adv := debug_value_from_icdv (l_result, f.type.associated_class)
+					l_adv := debug_value_from_icdv (l_result, f.type.base_class)
 					create last_result.make_with_value (l_adv.dump_value)
 				end
 			end
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 				--| Reset error status
 			reset_error
 
-			l_statcl := f.type.associated_class --last_result_static_type :=
+			l_statcl := f.type.base_class --last_result_static_type :=
 			l_class_c := f.written_class
 				--| FIXME: JFIAT: 2004-01-05 : Does not support once evalution on generic
 				--| this is related to dialog and issue to provide derivation selection
@@ -444,7 +444,7 @@ feature {NONE} -- Implementation
 						l_icd_value := Void
 						dbg_error_handler.notify_error_evaluation (Void)
 					else
-						l_adv := debug_value_from_icdv (l_icd_value, a_type_i.associated_class)
+						l_adv := debug_value_from_icdv (l_icd_value, a_type_i.base_class)
 						create last_result.make_with_value (l_adv.dump_value)
 					end
 				end

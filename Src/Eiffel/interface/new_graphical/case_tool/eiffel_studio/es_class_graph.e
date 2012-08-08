@@ -238,7 +238,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 					until
 						l.after
 					loop
-						ci := l.item.associated_class.original_class
+						ci := l.item.base_class.original_class
 						Result := Result + number_of_ancestors (ci, depth - 1) + 1
 						l.forth
 					end
@@ -266,7 +266,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 					until
 						l.after
 					loop
-						ci := l.item.associated_class.original_class
+						ci := l.item.base_class.original_class
 						add_class (ci)
 						explore_ancestors (ci, depth - 1, progress_bar)
 						if progress_bar then

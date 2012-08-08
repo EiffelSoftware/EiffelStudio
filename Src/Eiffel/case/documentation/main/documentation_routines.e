@@ -879,7 +879,7 @@ feature {NONE} -- Implementation
 		do
 			if attached f.type as t then
 				if t.has_associated_class then
-					return_class := t.associated_class
+					return_class := t.base_class
 					if conf /= Void then
 						Result := return_class.conform_to (conf)
 					end

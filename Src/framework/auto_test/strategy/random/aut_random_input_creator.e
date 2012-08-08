@@ -218,7 +218,7 @@ feature {NONE} -- Steps
 		do
 			from
 				l_interp_classes := interpreter_related_classes
-				class_ := a_type.associated_class
+				class_ := a_type.base_class
 				cs := descendants (class_).new_cursor
 				cs.start
 			until

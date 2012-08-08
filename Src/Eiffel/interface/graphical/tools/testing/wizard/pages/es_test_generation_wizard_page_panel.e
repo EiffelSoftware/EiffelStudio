@@ -512,7 +512,7 @@ feature {NONE} -- Basic operations
 				if attached {CLASS_TYPE_AS} a_type_as as l_class_type then
 					l_type_a := type_a_generator.evaluate_optional_unchecked (a_type_as, l_root_class)
 					if l_type_a /= Void and l_class_type.generics = Void then
-						l_class := l_type_a.associated_class
+						l_class := l_type_a.base_class
 						check l_class /= Void end
 						if l_class.is_expanded then
 							Result := e_no_expanded_types

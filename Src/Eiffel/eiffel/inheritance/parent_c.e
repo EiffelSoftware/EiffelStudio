@@ -108,7 +108,7 @@ feature
 	parent: CLASS_C
 			-- Parent class
 		do
-			Result := parent_type.associated_class
+			Result := parent_type.base_class
 		end;
 
 	has_renaming: BOOLEAN

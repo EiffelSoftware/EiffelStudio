@@ -10,7 +10,7 @@ class BOOLEAN_A
 inherit
 	BASIC_A
 		redefine
-			is_boolean, associated_class, same_as,
+			is_boolean, base_class, same_as,
 			default_create, process
 		end
 
@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 	default_create
 			-- Initialize new instance of BOOLEAN_A.
 		do
-			make (associated_class.class_id)
+			make (base_class.class_id)
 		end
 
 feature -- Visitor
@@ -46,7 +46,7 @@ feature -- Access
 			Result := same_type (other)
 		end
 
-	associated_class: CLASS_C
+	base_class: CLASS_C
 			-- Class BOOLEAN
 		once
 			Result := System.boolean_class.compiled_class

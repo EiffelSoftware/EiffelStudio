@@ -337,7 +337,7 @@ feature -- Initialization/Checking
 				-- as otherwise this we would be breaking void-safety.
 			if a_source_type.is_attached or else not a_context_class.lace_class.is_void_safe_call then
 				if a_target_type.has_associated_class then
-					l_target_class := a_target_type.associated_class
+					l_target_class := a_target_type.base_class
 					l_convert_table := l_target_class.convert_from
 				end
 				if l_convert_table /= Void then
@@ -390,7 +390,7 @@ feature -- Initialization/Checking
 				end
 				if not l_success then
 					if a_source_type.has_associated_class then
-						l_source_class := a_source_type.associated_class
+						l_source_class := a_source_type.base_class
 						l_convert_table := l_source_class.convert_to
 					else
 						l_convert_table := Void
@@ -687,7 +687,7 @@ feature {NONE} -- Implementation: status report
 				loop
 					l_type := l_convert.key_for_iteration
 					if l_type.has_associated_class then
-						Result := l_type.associated_class = b
+						Result := l_type.base_class = b
 					end
 					l_convert.forth
 				end
@@ -706,7 +706,7 @@ feature {NONE} -- Implementation: status report
 					loop
 						l_type := l_convert.key_for_iteration
 						if l_type.has_associated_class then
-							Result := l_type.associated_class = a
+							Result := l_type.base_class = a
 						end
 						l_convert.forth
 					end

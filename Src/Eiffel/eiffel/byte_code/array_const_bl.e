@@ -166,7 +166,7 @@ feature {NONE} -- C code generation
 
 			l_special_type := special_info.type
 			check
-				is_special_type: l_special_type /= Void and then l_special_type.associated_class.lace_class = System.special_class
+				is_special_type: l_special_type /= Void and then l_special_type.base_class.lace_class = System.special_class
 			end
 			l_special_class_type ?= l_special_type.associated_class_type (Context.context_class_type.type)
 			check
@@ -323,7 +323,7 @@ feature {NONE} -- C code generation
 			rout_id: INTEGER
 		do
 				-- Get the type of the SPECIAL.
-			rout_id := real_ty.associated_class.feature_table.item_id ({PREDEFINED_NAMES}.to_array_name_id).rout_id_set.first;
+			rout_id := real_ty.base_class.feature_table.item_id ({PREDEFINED_NAMES}.to_array_name_id).rout_id_set.first;
 			rout_table ?= Eiffel_table.poly_table (rout_id);
 
 				-- Generate the signature of the function
@@ -363,7 +363,7 @@ feature {NONE} -- C code generation
 			base_class: CLASS_C
 			buf: GENERATION_BUFFER
 		do
-			base_class := real_ty.associated_class
+			base_class := real_ty.base_class
 			f_table := base_class.feature_table
 			feat_i := f_table.item_id ({PREDEFINED_NAMES}.to_array_name_id)
 			buf := buffer

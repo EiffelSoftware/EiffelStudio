@@ -84,7 +84,7 @@ feature -- Output
 			a_text_formatter.add (".")
 			a_text_formatter.add_new_line
 			a_text_formatter.add ("Type of custom attribute being created ")
-			a_text_formatter.add_class (creation_type.associated_class.lace_class)
+			a_text_formatter.add_class (creation_type.base_class.lace_class)
 			a_text_formatter.add (".")
 			if named_argument_name /= Void then
 				a_text_formatter.add_new_line
@@ -98,7 +98,7 @@ feature -- Output
 					a_text_formatter.add_new_line
 					a_text_formatter.add ("Name of invalid custom attribute named argument ")
 					a_text_formatter.add_feature (
-						named_argument_feature.api_feature (creation_type.associated_class.class_id),
+						named_argument_feature.api_feature (creation_type.base_class.class_id),
 						named_argument_feature.feature_name_32)
 					a_text_formatter.add (".")
 				end

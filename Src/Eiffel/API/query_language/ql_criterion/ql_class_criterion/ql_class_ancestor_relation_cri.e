@@ -154,7 +154,7 @@ feature{NONE} -- Implementation
 				until
 					l_parents.after
 				loop
-					find_classes (l_parents.item.associated_class, False, True)
+					find_classes (l_parents.item.base_class, False, True)
 					l_parents.forth
 				end
 			end
@@ -190,7 +190,7 @@ feature{NONE} -- Implementation
 				until
 					l_parents.after
 				loop
-					l_parent_class := l_parents.item.associated_class
+					l_parent_class := l_parents.item.base_class
 					l_class_id := l_parent_class.class_id
 					l_candidate_class_list.put (l_parent_class, l_class_id)
 					l_list := l_candidate_class_table.item (l_origin_class_id)

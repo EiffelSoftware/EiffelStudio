@@ -580,7 +580,7 @@ feature -- Properties
 					local
 						cl: CLASS_C
 					do
-						cl := a_root.class_type.associated_class
+						cl := a_root.class_type.base_class
 						if cl.original_class.is_compiled and then
 						   cl.is_precompiled then
 							cl.record_precompiled_class_in_system
@@ -2443,7 +2443,7 @@ end
 			root_creators.do_all (
 				agent (a_root: SYSTEM_ROOT)
 					do
-						instantiator.dispatch (a_root.class_type, a_root.class_type.associated_class)
+						instantiator.dispatch (a_root.class_type, a_root.class_type.base_class)
 					end)
 
 				-- Initialize types of non-generic classes which haven't been initialized yet.
@@ -2634,7 +2634,7 @@ end
 					root_creators.after
 				loop
 					l_root := root_creators.item_for_iteration
-					l_root_cl := l_root.class_type.associated_class
+					l_root_cl := l_root.class_type.base_class
 					l_root_dtype := root_class_type (l_root.class_type).type_id - 1
 					l_root_ft := l_root_cl.feature_table.item (l_root.procedure_name)
 					if l_root_ft /= Void then
@@ -3731,7 +3731,7 @@ feature -- Dead code removal
 							check
 								valid_root: a_root.is_class_type_set
 							end
-							l_cl := a_root.class_type.associated_class
+							l_cl := a_root.class_type.base_class
 							l_ft := l_cl.feature_table.item (a_root.procedure_name)
 							remover.record (l_ft, l_cl)
 						end
@@ -5806,7 +5806,7 @@ feature -- Query: Root creators
 				agent (l_root: SYSTEM_ROOT): BOOLEAN
 					do
 						if l_root.is_class_type_set then
-							Result := l_root.class_type.associated_class.original_class.is_compiled
+							Result := l_root.class_type.base_class.original_class.is_compiled
 						end
 					end)
 		end
@@ -6042,7 +6042,7 @@ feature {NONE} -- Element change: Root creators
 						create l_vsrt1
 						l_vsrt1.set_root_type (l_type)
 						error_handler.insert_error (l_vsrt1)
-					elseif l_type.associated_class.is_deferred then
+					elseif l_type.base_class.is_deferred then
 						create l_vsrt3
 						l_vsrt3.set_root_type (l_type)
 						error_handler.insert_error (l_vsrt3)
@@ -6067,7 +6067,7 @@ feature {NONE} -- Element change: Root creators
 								error_handler.insert_error (l_vsrt4)
 							else
 									-- We need to check named tuple labels. This fixes eweasel test#tuple012.
-								l_type.check_labels (l_type.associated_class, Void)
+								l_type.check_labels (l_type.base_class, Void)
 							end
 						end
 
@@ -6076,7 +6076,7 @@ feature {NONE} -- Element change: Root creators
 
 							if not Compilation_modes.is_precompiling and not Lace.compile_all_classes then
 									-- `root_class_c' cannot be used here as `root_type.associated_class' might be changed
-								l_root.class_type.associated_class.check_root_class_creators (l_root.procedure_name, l_root.class_type)
+								l_root.class_type.base_class.check_root_class_creators (l_root.procedure_name, l_root.class_type)
 							end
 						end
 					end

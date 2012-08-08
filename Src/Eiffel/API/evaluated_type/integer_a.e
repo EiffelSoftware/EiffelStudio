@@ -13,7 +13,7 @@ inherit
 		rename
 			make as cl_make
 		redefine
-			is_integer, associated_class,
+			is_integer, base_class,
 			same_as, is_numeric, process,
 			minimum_interval_value,
 			maximum_interval_value,
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			valid_n: n = 8 or n = 16 or n = 32 or n = 64
 		do
 			size := n.to_integer_8
-			cl_make (associated_class.class_id)
+			cl_make (base_class.class_id)
 		ensure
 			size_set: size = n
 		end
@@ -60,7 +60,7 @@ feature -- Access
 			Result := attached {INTEGER_A} other as i and then size = i.size
 		end
 
-	associated_class: CLASS_C
+	base_class: CLASS_C
 			-- Class INTEGER
 		do
 			inspect size

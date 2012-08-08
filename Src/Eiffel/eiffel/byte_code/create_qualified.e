@@ -125,7 +125,7 @@ feature -- Update
 			c := qualifier_creation.updated_info
 			q := context.descendant_type (qualifier)
 			if c /= qualifier_creation or else q /= qualifier and then not qualifier.same_as (q) then
-				a := context.real_type (q).associated_class
+				a := context.real_type (q).base_class
 				create {CREATE_QUALIFIED} Result.make_explicit (q.create_info, q, a.class_id, a.feature_of_rout_id (routine_id))
 			else
 				Result := Current
@@ -238,7 +238,7 @@ feature -- C code generation
 				-- during creation of the anchor, we can use the stored `feature_id'.
 				-- Otherwise, we have to fetch it via the `routine_id'.
 				-- This fixes eweasel test#anchor042 and test#anchor051.
-			if not attached Context.real_type (qualifier).associated_class as l_class or else l_class.class_id = context.current_type.class_id then
+			if not attached Context.real_type (qualifier).base_class as l_class or else l_class.class_id = context.current_type.class_id then
 					-- Code is processed in the context where it is written
 				Result := feature_id
 			else
@@ -280,7 +280,7 @@ feature -- IL code generation
 			qualifier_creation.generate_il
 			c := context.real_type (qualifier).associated_class_type (context.context_class_type.type).type
 				-- Generate call to feature that will give the type we want to create.
-			il_generator.generate_type_feature_call_on_type (c.associated_class.anchored_features.item (routine_id), c)
+			il_generator.generate_type_feature_call_on_type (c.base_class.anchored_features.item (routine_id), c)
 		end
 
 feature -- Byte code generation

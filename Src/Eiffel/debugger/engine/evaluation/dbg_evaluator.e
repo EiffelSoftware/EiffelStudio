@@ -409,7 +409,7 @@ feature -- Concrete evaluation
 							dbg_error_handler.notify_error_exception (Debugger_names.msg_error_once_evaluation_failed (f.feature_name, "no result value !"))
 						else
 							create last_result.make_with_value (res.dump_value)
-							if attached f.type.associated_class as cl then
+							if attached f.type.base_class as cl then
 								last_result.suggest_static_class (cl)
 							end
 						end
@@ -652,7 +652,7 @@ feature -- Concrete evaluation
 		require
 			a_type_i_not_void: a_type_i /= Void
 			a_type_i_compiled: a_type_i.has_associated_class_type (Void)
-			is_special: a_type_i.associated_class.is_special
+			is_special: a_type_i.base_class.is_special
 		deferred
 		end
 

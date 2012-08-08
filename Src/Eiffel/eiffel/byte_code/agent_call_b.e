@@ -56,7 +56,7 @@ feature -- Attributes
 			Result := not is_item
 			if not Result then
 				l_type := context_type
-				if l_type.associated_class.class_id = system.predicate_class_id then
+				if l_type.base_class.class_id = system.predicate_class_id then
 					Result := True
 				else
 					Result := l_type.instantiated_in (context.context_class_type.type).generics.item (3).is_basic
@@ -88,7 +88,7 @@ feature -- Access
 					-- so we generate a normal call to `call' or `item'.
 				if not is_polymorphic then
 					if system.keep_assertions then
-						l_assert := context_type.associated_class.lace_class.assertion_level
+						l_assert := context_type.base_class.lace_class.assertion_level
 						if (not l_assert.is_precondition and not l_assert.is_invariant) and is_result_optimizable then
 							create {AGENT_CALL_BL} Result.init (Current)
 						end

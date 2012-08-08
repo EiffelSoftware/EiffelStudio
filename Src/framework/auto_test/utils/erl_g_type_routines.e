@@ -121,12 +121,12 @@ feature -- Access
 			a_system_not_void: a_system /= Void
 		do
 			if a_type.has_associated_class then
-				Result := exported_creators (a_type.associated_class, a_system).count
+				Result := exported_creators (a_type.base_class, a_system).count
 			end
 		ensure
 			good_result:
 				(not a_type.has_associated_class implies Result = 0) and then
-				(a_type.has_associated_class implies Result = exported_creators (a_type.associated_class, a_system).count)
+				(a_type.has_associated_class implies Result = exported_creators (a_type.base_class, a_system).count)
 		end
 
 feature {NONE} -- Parsing class types

@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 			l_rout_info: ROUT_INFO
 		do
 			l_instant_context_type ?= a_node.context_type
-			l_base_class := l_instant_context_type.associated_class
+			l_base_class := l_instant_context_type.base_class
 			if l_base_class.is_precompiled then
 				l_rout_info := system.rout_info_table.item (a_node.routine_id)
 				ba.append_integer (l_rout_info.origin)

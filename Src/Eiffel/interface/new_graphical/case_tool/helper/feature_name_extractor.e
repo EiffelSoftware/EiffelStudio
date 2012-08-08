@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 		do
 			formal ?= a_type
 			if formal = Void then
-				Result := a_type.associated_class.name_in_upper.twin
+				Result := a_type.base_class.name_in_upper.twin
 			else
 				Result := formal.dump
 			end

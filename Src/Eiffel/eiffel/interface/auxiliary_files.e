@@ -1109,7 +1109,7 @@ feature -- Plug and Makefile file
 				check
 					type_set: l_root.is_class_type_set
 				end
-				l_root_cl := l_root.class_type.associated_class
+				l_root_cl := l_root.class_type.base_class
 				if not compilation_modes.is_precompiling and then not l_root.procedure_name.is_empty then
 					l_root_ft := l_root_cl.feature_table.item (l_root.procedure_name)
 					l_rout_info := system.rout_info_table.item (l_root_ft.rout_id_set.first)

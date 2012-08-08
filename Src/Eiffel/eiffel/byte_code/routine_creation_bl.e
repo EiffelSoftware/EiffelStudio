@@ -244,7 +244,7 @@ feature
 			else
 				check
 					system.address_table.has_agent (
-						class_type.associated_class.class_id, feature_id, is_target_closed, omap)
+						class_type.base_class.class_id, feature_id, is_target_closed, omap)
 				end
 				table_name := system.address_table.calc_function_name (
 					True, feature_id, class_type.static_type_id (context.current_type), l_omap, oargs_encapsulated)

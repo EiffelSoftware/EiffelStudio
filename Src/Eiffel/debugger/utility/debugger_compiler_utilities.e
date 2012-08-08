@@ -216,7 +216,7 @@ feature -- Type adaptation
 --			l_last_type_set: TYPE_SET_A
 		do
 			if t.has_associated_class then
-				Result := t.associated_class
+				Result := t.base_class
 			else
 				l_type := t.actual_type
 				if l_type.is_formal then
@@ -237,7 +237,7 @@ feature -- Type adaptation
 					end
 				end
 				if l_type /= Void and then not l_type.is_none then
-					Result := l_type.associated_class
+					Result := l_type.base_class
 				else
 					Result := Void
 				end
@@ -254,7 +254,7 @@ feature -- Type adaptation
 			if a_type_i /= Void then
 				l_type_a := a_type_i
 				if l_type_a.has_associated_class then
-					Result := l_type_a.associated_class
+					Result := l_type_a.base_class
 				end
 			end
 		end
@@ -270,7 +270,7 @@ feature -- Type adaptation
 			type_a_checker.init_for_checking (a_rout_i, a_class, Void, Void)
 			l_type_a := type_a_checker.solved (a_type_a, Void)
 			if l_type_a /= Void and then l_type_a.has_associated_class then
-				Result := l_type_a.associated_class
+				Result := l_type_a.base_class
 			end
 		end
 

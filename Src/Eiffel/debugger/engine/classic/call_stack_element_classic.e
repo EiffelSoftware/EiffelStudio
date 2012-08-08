@@ -405,7 +405,7 @@ feature {NONE} -- Implementation
 
 									value.set_name (arg_names.item)
 									if arg_types.item.has_associated_class then
-										value.set_static_class (arg_types.item.associated_class)
+										value.set_static_class (arg_types.item.base_class)
 									end
 
 									args_list.replace (value)
@@ -481,7 +481,7 @@ feature {NONE} -- Implementation
 							l_upper := l_upper - 1
 							private_result.set_name (once "Result")
 							if rout.type.has_associated_class then
-								private_result.set_static_class (rout.type.associated_class)
+								private_result.set_static_class (rout.type.base_class)
 							end
 						end
 

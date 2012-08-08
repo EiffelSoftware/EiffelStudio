@@ -730,7 +730,7 @@ feature {NONE} -- Implementation
 
 			if l /= Void then
 				from l.start until l.after loop
-					cl := l.item.associated_class.original_class
+					cl := l.item.base_class.original_class
 					if cl /= Void then
 						es_classes := possible_linkable_node (a_class)
 						from

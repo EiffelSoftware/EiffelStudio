@@ -133,7 +133,7 @@ feature
 			end
 			if is_initialization_required then
 					-- Call a wrapper that performs the required initialization.
-				create {FEATURE_B} Result.make (context_type.associated_class.feature_of_rout_id (routine_id), type, Void)
+				create {FEATURE_B} Result.make (context_type.base_class.feature_of_rout_id (routine_id), type, Void)
 				if has_multi_constraint_static then
 					Result.set_multi_constraint_static (multi_constraint_static)
 				end
@@ -180,7 +180,7 @@ feature -- Byte code generation
 			cl_type: CL_TYPE_A
 		do
 			cl_type ?= context_type
-			if cl_type /= Void and then cl_type.associated_class.is_precompiled then
+			if cl_type /= Void and then cl_type.base_class.is_precompiled then
 				Result := {BYTE_CONST}.bc_passign
 			else
 				Result := {BYTE_CONST}.bc_assign
@@ -193,7 +193,7 @@ feature -- Byte code generation
 			cl_type: CL_TYPE_A
 		do
 			cl_type ?= context_type
-			if cl_type /= Void and then cl_type.associated_class.is_precompiled then
+			if cl_type /= Void and then cl_type.base_class.is_precompiled then
 				Result := {BYTE_CONST}.bc_pexp_assign
 			else
 				Result := {BYTE_CONST}.bc_exp_assign
@@ -206,7 +206,7 @@ feature -- Byte code generation
 			cl_type: CL_TYPE_A
 		do
 			cl_type ?= context_type
-			if cl_type /= Void and then cl_type.associated_class.is_precompiled then
+			if cl_type /= Void and then cl_type.base_class.is_precompiled then
 				Result := {BYTE_CONST}.bc_preverse
 			else
 				Result := {BYTE_CONST}.bc_reverse

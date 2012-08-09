@@ -29,7 +29,7 @@ feature -- Access
 	column: INTEGER
 			-- Column number involved in error
 
-	file_name: STRING
+	file_name: detachable STRING
 			-- Path to file involved in error.
 			-- Could be Void if not a file specific error.
 		require

@@ -2558,7 +2558,7 @@ feature {NONE} -- Implementation
 					loop
 						l_result_item := l_result.item
 						l_feature := l_result_item.feature_i
-						l_last_class_id := l_result_item.cl_type.associated_class.class_id
+						l_last_class_id := l_result_item.cl_type.base_class.class_id
 						l_last_constrained := l_result_item.cl_type.type
 							-- Restore last_type
 						last_calls_target_type :=  l_last_constrained

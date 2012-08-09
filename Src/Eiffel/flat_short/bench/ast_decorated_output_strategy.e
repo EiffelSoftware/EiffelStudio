@@ -920,7 +920,7 @@ feature {NONE} -- Implementation
 										-- FIXME: We still can have more than feature.
 										-- See wiki topic multi constraints and flat view for more information.
 									l_feat := l_feat_result.first.feature_item
-									last_class := l_feat_result.first.class_type.associated_class
+									last_class := l_feat_result.first.class_type.base_class
 									if l_feat_result.count > 1 then
 										set_error_message ("Multi constraint formal: More than one feature available for feature with routine id: " + l_rout_id_set.first.out)
 									end
@@ -2228,7 +2228,7 @@ feature {NONE} -- Implementation
 						l_last_type_set := l_formal.constrained_types (current_class)
 							-- Here we get back the feature and the renamed type where the feature is from (it means that it includes a possible renaming)
 						l_result := l_last_type_set.e_feature_list_by_rout_id (l_as.routine_ids.first)
-						last_class := l_result.first.type.associated_class
+						last_class := l_result.first.type.base_class
 						l_feat := l_result.first.feature_item
 					else
 						last_class := l_formal.constrained_type (current_class).base_class

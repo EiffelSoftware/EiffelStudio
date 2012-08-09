@@ -426,7 +426,7 @@ feature {NONE} -- Implementation
 				available_wizards.after
 			loop
 					-- We have extracted names from .des files for internationalization.
-				create list_item.make_with_text (interface_names.find_translation (available_wizards.item.name))
+				create list_item.make_with_text (try_to_translate_wizard (available_wizards.item.name))
 				list_item.set_pixmap (pixmaps.icon_pixmaps.new_eiffel_project_icon)
 				list_item.pointer_double_press_actions.extend (agent on_double_click)
 				wizards_list.set_item (1, i, list_item)
@@ -500,7 +500,7 @@ feature {NONE} -- Implementation
 				loop
 						-- Items in wizard list are translated, thus the check has
 						-- to be done on the translated name
-					l_translated_name := interface_names.find_translation (available_wizards.item.name)
+					l_translated_name := try_to_translate_wizard (available_wizards.item.name)
 					if (l_translated_name.is_equal (selected_item.text)) then
 						Result := available_wizards.item
 					end
@@ -624,6 +624,16 @@ feature {NONE} -- Implementation
 			retry
 		end
 
+	try_to_translate_wizard (a_name: READABLE_STRING_GENERAL): STRING_32
+			-- Try to find translation in wizard context.
+		require
+			a_name_set: a_name /= Void
+		do
+			Result := interface_names.locale.translation_in_context (a_name, "wizard")
+		ensure
+			Result_set: Result /= Void
+		end
+
 feature {NONE} -- Private attributes
 
 	controls_disabled: BOOLEAN
@@ -654,7 +664,7 @@ feature {NONE} -- Private attributes
 			-- Widget for opening a project using a config file.
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -61,10 +61,6 @@ feature -- Roundtrip
 
 	internal_keys: detachable KEY_LIST_AS
 			-- Internal once keys, in which "(" and ")" are stored
-		note
-			option: stable
-		attribute
-		end
 
 feature -- Properties
 
@@ -199,7 +195,7 @@ feature -- Status report
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS
+	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
 			if a_list /= Void then
 				Result := once_keyword (a_list)
@@ -210,7 +206,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS
+	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
 			if attached compound as c then
 				Result := compound.last_token (a_list)
@@ -238,7 +234,7 @@ feature {NONE} -- Constants
 	once_key_object: STRING = "OBJECT"
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -44,7 +44,7 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: detachable LEAF_AS_LIST): LEAF_AS
+	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
 			Result := lbracket_symbol (a_list)
 			if Result = Void then
@@ -52,7 +52,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: detachable LEAF_AS_LIST): LEAF_AS
+	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
 			if a_list /= Void and rbracket_symbol_index /= 0 then
 				Result := rbracket_symbol (a_list)

@@ -32,7 +32,6 @@ feature{NONE} -- Initialization
 
 			arguments := args
 			create c.make_empty
-			command_line := c
 			c.append_string_general (a_exec_name)
 
 			if args /= Void and then not args.is_empty then
@@ -54,6 +53,7 @@ feature{NONE} -- Initialization
 					args.forth
 				end
 			end
+			command_line := c
 			initialize_working_directory (a_working_directory)
 			initialize_parameter
 		end

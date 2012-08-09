@@ -77,7 +77,7 @@ feature -- Properties
 	class_id: INTEGER
 			-- ID of a class where this type is written
 
-feature {TYPE_A_CHECKER, EXPRESSION_CONTEXT} -- Properties
+feature {TYPE_A_CHECKER} -- Properties
 
 	routine_id: SPECIAL [INTEGER_32]
 			-- Routine IDs of the second part of the type, after the `qualifier'

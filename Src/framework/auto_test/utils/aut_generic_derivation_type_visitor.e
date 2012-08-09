@@ -161,12 +161,6 @@ feature {TYPE_A}
 			last_type := a_type
 		end
 
-	process_open_type_a (a_type: OPEN_TYPE_A)
-			-- Process `a_type'.
-		do
-			last_type := a_type
-		end
-
 	process_pointer_a (a_type: POINTER_A)
 			-- Process `a_type'.
 		do

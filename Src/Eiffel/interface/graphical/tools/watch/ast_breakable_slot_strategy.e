@@ -939,9 +939,9 @@ feature {NONE} -- Implementation
 						reset_last_class_and_type
 						l_as.target.process (Current)
 					else
-						if not expr_type_visiting then
-						else
-							create {OPEN_TYPE_A} last_type
+						if expr_type_visiting then
+							fixme ("Currently we only handle ? for targets, current code does not handle ? for arguments")
+							last_type := current_class.actual_type
 						end
 					end
 				end
@@ -2585,7 +2585,6 @@ feature {NONE} -- Implementation: helpers
 			l_result_type: GEN_TYPE_A
 			l_actual_target_type: TYPE_A
 			l_feat: E_FEATURE
-			l_open: OPEN_TYPE_A
 		do
 			l_feat := feature_in_class (system.class_of_id (l_as.class_id), l_as.routine_ids)
 			if not has_error_internal then
@@ -2606,11 +2605,6 @@ feature {NONE} -- Implementation: helpers
 				else
 					l_as.target.process (Current)
 					l_target_type := last_type
-					l_open ?= l_target_type
-					if l_open /= Void then
-							-- Target is actually an open operand.
-						l_target_type := current_class.actual_type
-					end
 				end
 
 				l_actual_target_type := l_target_type.actual_type

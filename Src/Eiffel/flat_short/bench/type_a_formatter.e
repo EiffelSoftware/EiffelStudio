@@ -178,12 +178,6 @@ feature {TYPE_A} -- Visitors
 			ctxt.process_string_text (a_type.dump, Void)
 		end
 
-	process_open_type_a (a_type: OPEN_TYPE_A)
-			-- Process `a_type'.
-		do
-			ctxt.process_string_text ("?", Void)
-		end
-
 	process_pointer_a (a_type: POINTER_A)
 			-- Process `a_type'.
 		do

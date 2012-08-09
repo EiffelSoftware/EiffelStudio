@@ -50,7 +50,6 @@ feature -- Status report
 			if
 				not t.is_like_argument and then
 				not t.is_void and then
-				not attached {OPEN_TYPE_A} t and then
 				not attached {UNEVALUATED_BITS_SYMBOL_A} t and then
 				not attached {UNEVALUATED_LIKE_TYPE} t and then
 				not attached {UNEVALUATED_QUALIFIED_ANCHORED_TYPE} t
@@ -350,12 +349,6 @@ feature {TYPE_A} -- Visitor
 	process_none_a (t: NONE_A)
 			-- <Precursor>
 		do
-		end
-
-	process_open_type_a (t: OPEN_TYPE_A)
-			-- <Precursor>
-		do
-			check valid_t: False end
 		end
 
 	process_pointer_a (t: POINTER_A)

@@ -1509,7 +1509,8 @@ feature {NONE} -- Implementation
 						if not expr_type_visiting then
 							l_text_formatter_decorator.process_symbol_text (ti_question)
 						else
-							create {OPEN_TYPE_A} last_type
+							fixme ("Currently we only handle ? for targets, current code does not handle ? for arguments")
+							last_type := current_class.actual_type
 						end
 					end
 				end
@@ -1677,7 +1678,6 @@ feature {NONE} -- Implementation
 
 	process_address_result_as (l_as: ADDRESS_RESULT_AS)
 		local
-			l_type: TYPE_A
 			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			if not expr_type_visiting then
@@ -1687,8 +1687,9 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.set_without_tabs
 				l_text_formatter_decorator.process_keyword_text (ti_result, Void)
 			end
-			l_type ?= current_feature.type
-			create {TYPED_POINTER_A} last_type.make_typed (l_type)
+			if attached current_feature.type as l_type then
+				create {TYPED_POINTER_A} last_type.make_typed (l_type)
+			end
 		end
 
 	process_address_current_as (l_as: ADDRESS_CURRENT_AS)
@@ -4831,7 +4832,6 @@ feature {NONE} -- Implementation: helpers
 			l_result_type: GEN_TYPE_A
 			l_actual_target_type: TYPE_A
 			l_feat: E_FEATURE
-			l_open: OPEN_TYPE_A
 		do
 			l_feat := feature_in_class (system.class_of_id (l_as.class_id), l_as.routine_ids)
 			if not has_error_internal then
@@ -4852,11 +4852,6 @@ feature {NONE} -- Implementation: helpers
 				else
 					l_as.target.process (Current)
 					l_target_type := last_type
-					l_open ?= l_target_type
-					if l_open /= Void then
-							-- Target is actually an open operand.
-						l_target_type := current_class.actual_type
-					end
 				end
 
 				l_actual_target_type := l_target_type.actual_type

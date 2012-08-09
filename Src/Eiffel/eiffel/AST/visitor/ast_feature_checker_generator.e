@@ -573,7 +573,8 @@ feature {NONE} -- Implementation: State
 
 	current_target_type: TYPE_A
 			-- Type of target of expression being processed
-			-- Only useful for type checking of manifest array.
+			-- Only useful for type checking of manifest array or evaluating the type of `?' when
+			-- used in agent.
 
 	old_expressions: LINKED_LIST [UN_OLD_B]
 			-- List of old expressions found during feature type checking
@@ -1215,7 +1216,6 @@ feature {NONE} -- Implementation
 			l_arg_types: like last_expressions_type
 			l_formal_arg_type, l_like_arg_type: TYPE_A
 			l_like_argument: LIKE_ARGUMENT
-			l_cl_type_a: CL_TYPE_A
 			l_feature: FEATURE_I
 			l_seed: FEATURE_I
 			i, l_actual_count, l_formal_count: INTEGER
@@ -1236,7 +1236,6 @@ feature {NONE} -- Implementation
 			l_vkcn3: VKCN3
 			l_obs_warn: OBS_FEAT_WARN
 			l_vape: VAPE
-			l_open_type: OPEN_TYPE_A
 			l_is_in_creation_expression, l_is_target_of_creation_instruction: BOOLEAN
 			l_feature_name: ID_AS
 			l_parameters: EIFFEL_LIST [EXPR_AS]
@@ -1505,12 +1504,6 @@ feature {NONE} -- Implementation
 									i := i + 1
 								end
 								l_actual_count := l_formal_count
-								current_target_type := Void
-								process_expressions_list (l_parameters)
-								l_arg_types := last_expressions_type
-								if l_needs_byte_node then
-									l_arg_nodes ?= last_byte_node
-								end
 								l_parameters.start
 							end
 							if l_actual_count /= l_formal_count then
@@ -1547,14 +1540,8 @@ feature {NONE} -- Implementation
 										l_formal_arg_type := l_feature.arguments.i_th (i)
 
 										reset_for_unqualified_call_checking
-										if l_formal_arg_type.is_like_argument then
-												-- To bad we are not able to evaluate with a target context a manifest array
-												-- passed as argument where formal is an anchor type.
-											current_target_type := Void
-										else
-											current_target_type :=
-												l_formal_arg_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id).actual_type
-										end
+										current_target_type :=
+											l_formal_arg_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id).actual_type
 										l_parameters.i_th (i).process (Current)
 										if last_type /= Void and l_arg_types /= Void then
 											l_arg_types.put (last_type, i)
@@ -1634,20 +1621,10 @@ feature {NONE} -- Implementation
 											-- Actual type of feature argument
 										l_formal_arg_type := l_formal_arg_type.formal_instantiation_in (l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type
 
-											-- Conformance: take care of constrained genericity
-											-- We must generate an error when `l_formal_arg_type' becomes
-											-- an OPEN_TYPE_A, for example "~equal (?, b)" will
-											-- check that the type of `b' conforms to type of `?'
-											-- since `equal' is defined as `equal (a: ANY; b: like a)'.
-											-- However `conform_to' does not work when parameter
-											-- is an OPEN_TYPE_A type. Since this checks can only
-											-- happens in type checking of an agent, we can do it
-											-- at only one place, ie here.
-										l_open_type ?= l_formal_arg_type
 										l_warning_count := error_handler.warning_list.count
-										if l_open_type /= Void or else not l_arg_type.conform_to (l_context_current_class, l_formal_arg_type) then
+										if not l_arg_type.conform_to (l_context_current_class, l_formal_arg_type) then
 											if
-												l_open_type = Void and (not is_inherited and then
+												(not is_inherited and then
 												l_arg_type.convert_to (l_context_current_class, l_formal_arg_type.deep_actual_type))
 											then
 												l_conv_info := context.last_conversion_info
@@ -1740,13 +1717,6 @@ feature {NONE} -- Implementation
 							if l_arg_types /= Void then
 								l_pure_result_type := l_result_type
 								l_result_type := l_result_type.actual_argument_type (l_arg_types)
-								l_open_type ?= l_result_type
-								if l_open_type /= Void then
-										-- It means that the result type is a like argument. In that case,
-										-- we take the static signature of the feature to evaluate `l_result_type'.
-										-- This fix eweasel test#term141.
-									l_result_type := l_pure_result_type.actual_argument_type (l_feature.arguments.to_array)
-								end
 								if l_pure_result_type.is_like_argument and then is_byte_node_enabled then
 										-- Ensure the expandedness status of the result type matches
 										-- the expandedness status of the argument it is anchored to (if any).
@@ -1756,8 +1726,7 @@ feature {NONE} -- Implementation
 									end
 									i := l_like_argument.position
 									if l_feature.arguments.i_th (i).actual_type.is_reference and then l_result_type.is_expanded then
-										l_cl_type_a ?= l_result_type
-										if l_cl_type_a /= Void then
+										if attached {CL_TYPE_A} l_result_type as l_cl_type_a then
 											l_generated_result_type := l_cl_type_a.reference_type
 										end
 									end
@@ -3460,7 +3429,11 @@ feature {NONE} -- Implementation
 					end
 				end
 			else
-				create {OPEN_TYPE_A} last_type
+					-- Case of a question mark in either `agent ?.something' or `agent f (?, a)'.
+					-- We rely on `current_target_type' to provide us the right type for ?,
+					-- i.e. the current type in `agent ?.something', or the type of the formal argument
+					-- of `f' in the current context.
+				last_type := current_target_type
 				if is_byte_node_enabled then
 					create {OPERAND_B} last_byte_node
 				end
@@ -3934,11 +3907,11 @@ feature {NONE} -- Implementation
 			l_needs_byte_node: BOOLEAN
 			l_feature_name: ID_AS
 			l_access: ACCESS_B
-			l_open: OPEN_TYPE_A
 			l_named_tuple: NAMED_TUPLE_TYPE_A
 			l_label_pos: INTEGER
 			l_is_named_tuple: BOOLEAN
 			l_error_level: NATURAL_32
+			l_old_current_target_type: like current_target_type
 		do
 			l_needs_byte_node := is_byte_node_enabled
 			l_error_level := error_level
@@ -3953,19 +3926,14 @@ feature {NONE} -- Implementation
 					create {CURRENT_B} l_target_node
 				end
 			else
+				l_old_current_target_type := current_target_type
+				current_target_type := context.current_class_type
 				l_as.target.process (Current)
+				current_target_type := l_old_current_target_type
 				l_target_type := last_type
-				if l_target_type /= Void then
-					l_open ?= l_target_type
-					if l_open /= Void then
-							-- Target is the open operand, but we artificially make its type
-							-- to be the current type.
-						l_target_type := context.current_class_type
-					end
-					if l_needs_byte_node then
-						l_target_node := last_byte_node
-					end
-				end
+				if l_target_type /= Void and then l_needs_byte_node then
+  					l_target_node := last_byte_node
+  				end
 			end
 
 				-- If `l_target_type' is Void, it simply means we had an error earlier, so no need to continue.
@@ -8863,7 +8831,6 @@ feature {NONE} -- Implementation: overloading
 			l_done: BOOLEAN
 			l_formal_arg_type: TYPE_A
 			l_arg_type: TYPE_A
-			l_open_type: OPEN_TYPE_A
 		do
 			create {ARRAYED_LIST [FEATURE_I]} Result.make (a_features.count)
 			if a_arg_types /= Void then
@@ -8912,17 +8879,7 @@ feature {NONE} -- Implementation: overloading
 					loop
 						l_formal_arg_type := feature_arg_type (l_feature, i, a_type, a_arg_types, last_id)
 						l_arg_type := a_arg_types.item (i)
-							-- We must generate an error when `l_formal_arg_type' becomes
-							-- an OPEN_TYPE_A, for example "~equal (?, b)" will
-							-- check that the type of `b' conforms to type of `?'
-							-- since `equal' is defined as `equal (a: ANY; b: like a)'.
-							-- However `conform_to' does not work when parameter
-							-- is an OPEN_TYPE_A type. Since this checks can only
-							-- happens in type checking of an agent, we can do it
-							-- at only one place, ie here.
-						l_open_type ?= l_formal_arg_type
 						if
-							l_open_type /= Void or else
 							not (l_arg_type.conform_to (context.current_class, l_formal_arg_type) or
 							l_arg_type.convert_to (context.current_class, l_formal_arg_type.deep_actual_type))
 						then
@@ -9968,7 +9925,7 @@ feature {NONE} -- Implementation: type validation
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_type: TYPE_A
+			l_type: detachable TYPE_A
 			l_error_level: NATURAL
 		do
 			l_error_level := error_level
@@ -10284,7 +10241,6 @@ feature {NONE} -- Implementation: catcall check
 			i: INTEGER
 			l_formal_arg_type: TYPE_A
 			l_arg_type: TYPE_A
-			l_open_type: OPEN_TYPE_A
 			l_desc_class_id: INTEGER
 			l_like_arg_type: TYPE_A
 		do
@@ -10354,13 +10310,12 @@ feature {NONE} -- Implementation: catcall check
 							-- Actual type of feature argument
 						l_formal_arg_type := l_formal_arg_type.instantiation_in (l_descendant_type, l_desc_class_id).actual_type
 
-						l_open_type ?= l_formal_arg_type
 							-- Check if actual parameter conforms to the possible type of the descendant feature if conformance
 							-- was involved in the original call, otherwise nothing to be done.
 							-- We have a workaround for conversion, but it is not perfect.
-						if l_open_type /= Void or else not l_arg_type.conform_to (context.current_class, l_formal_arg_type) then
+						if not l_arg_type.conform_to (context.current_class, l_formal_arg_type) then
 							if
-								not (l_open_type = Void and
+								not (
 								l_arg_type.convert_to (context.current_class, a_feature.arguments.i_th (i).actual_type) and then
 								a_feature.arguments.i_th (i).actual_type.conform_to (context.current_class, l_formal_arg_type))
 							then

@@ -60,9 +60,10 @@ feature -- Status
 
 feature -- Undefinition
 
-	new_deferred_anchor: detachable DEF_FUNC_I
+	new_deferred_anchor: DEF_FUNC_I
 			-- <Precursor>
 		do
+			check False then end
 		end
 
 feature -- Element change

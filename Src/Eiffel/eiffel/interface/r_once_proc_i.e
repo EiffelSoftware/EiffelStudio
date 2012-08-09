@@ -85,12 +85,13 @@ feature
 
 feature -- Undefinition
 
-	new_deferred_anchor: detachable R_DEF_PROC_I
+	new_deferred_anchor: R_DEF_PROC_I
 			-- <Precursor>
 		do
+			check False then end
 		end
 
-	new_deferred: attached like new_deferred_anchor
+	new_deferred: like new_deferred_anchor
 			-- <Precursor>
 		do
 			Result := Precursor

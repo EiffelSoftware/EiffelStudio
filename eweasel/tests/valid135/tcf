@@ -14,6 +14,6 @@ copy_raw 	test.e $CLUSTER test.e
 copy_raw 	cc.e $CLUSTER cc.e
 copy_raw 	dd.e $CLUSTER dd.e
 compile_melted
-compile_result 	validity_error CC VCFG(3)
+compile_result 	validity_error CC VTGC(1)
 
 test_end

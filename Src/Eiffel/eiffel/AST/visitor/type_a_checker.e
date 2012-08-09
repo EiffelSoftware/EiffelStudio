@@ -296,9 +296,7 @@ feature -- Special checking
 			l_temp, l_cl_generics: EIFFEL_LIST [FORMAL_DEC_AS]
 			l_class_i: CLASS_I
 			l_cluster: CONF_GROUP
-			l_vcfg3: VCFG3
 			l_vtct: VTCT
-			l_vtug: VTUG
 			l_has_error: BOOLEAN
 			l_error_level: NATURAL
 			l_t1, l_t2: TYPE_AS
@@ -312,15 +310,10 @@ feature -- Special checking
 		do
 			l_class_type ?= a_type
 			l_type_a := type_a_generator.evaluate_type (a_type, a_context_class)
+				-- Type was previously checked in `{CLASS_C}.check_types_in_constraint'
+			check not l_type_a.has_like and l_type_a.is_class_valid end
 				-- Check if there is no anchor (has_like) and no bit symbol (is_class_valid) in the constraint type.
-			if l_type_a.has_like or not l_type_a.is_class_valid then
-				create l_vcfg3
-				l_vcfg3.set_class (a_context_class)
-				l_vcfg3.set_formal_name ("Constraint genericity")
-				l_vcfg3.set_location (a_type.start_location)
-				a_error_handler.insert_error (l_vcfg3)
-				-- If `l_class_type' is Void, we stop because we have a formal generic, which is always valid.
-			elseif l_class_type /= Void then
+			if l_class_type /= Void then
 				l_cluster := a_context_class.group
 				l_class_i := universe.class_named (l_class_type.class_name.name, l_cluster)
 				if l_class_i = Void then
@@ -336,26 +329,7 @@ feature -- Special checking
 					l_cl_generics := l_associated_class.generics
 						-- The generic parameters to check (INTEGER in the example above).
 					l_class_type_generics := l_class_type.generics
-						-- TUPLEs can have any number of generics
-					if not l_is_tuple_type then
-						if l_class_type_generics /= Void then
-							if (l_cl_generics = Void) then
-								create {VTUG1} l_vtug
-							elseif (l_cl_generics.count /= l_class_type_generics.count) then
-								create {VTUG2} l_vtug
-							end
-						elseif l_cl_generics /= Void then
-							create {VTUG2} l_vtug
-						end
-					end
-
-					if l_vtug /= Void then
-						l_vtug.set_class (a_context_class)
-						l_vtug.set_type (l_type_a)
-						l_vtug.set_base_class (l_associated_class)
-						l_vtug.set_location (l_class_type.class_name)
-						a_error_handler.insert_error (l_vtug)
-					elseif l_class_type_generics /= Void then
+					if l_class_type_generics /= Void then
 						if not l_is_tuple_type then
 							from
 								l_temp := l_cl_generics

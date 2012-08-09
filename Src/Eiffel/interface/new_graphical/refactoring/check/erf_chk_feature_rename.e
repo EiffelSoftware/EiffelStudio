@@ -162,8 +162,8 @@ feature {NONE} -- Implementation
 					l_inherit := l_parents.item
 
 						-- we only look at classes that are descendants of the class where the feature gets renamed
-					l_id := type_a_generator.evaluate_class_type (l_inherit.type, a_class).base_class.class_id
-					if recursive_descendants.has (l_id) then
+					l_id := type_a_generator.evaluate_type (l_inherit.type, a_class).base_class.class_id
+					if l_id /= Void and then recursive_descendants.has (l_id) then
 							-- at the start of each inherit clause we have the feature (until it is undefined or renamed)
 						is_stop_hierarchy := false
 
@@ -257,7 +257,7 @@ invariant
 	type_a_generator_not_void: type_a_generator /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

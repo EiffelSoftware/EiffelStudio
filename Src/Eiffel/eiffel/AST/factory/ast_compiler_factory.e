@@ -373,7 +373,7 @@ feature {NONE} -- Validation
 			l_class_c ?= a_psr.current_class
 			if for_integer then
 				if a_type /= Void and l_class_c /= Void then
-					l_type := type_a_generator.evaluate_type_if_possible (a_type, l_class_c)
+					l_type := type_a_generator.evaluate_type (a_type, l_class_c)
 				end
 				if l_type /= Void then
 					if not l_type.is_valid or (not l_type.is_integer and not l_type.is_natural) then

@@ -1,4 +1,3 @@
-Error: A constraint cannot be expressed by an anchored type (like).
-What to do: You have written something like
-   EXAMPLE[G -> like name_of_feature] which is not allowed.
-   Replace the constraint to solve the error.
+Error: class has invalid constraint for formal generic parameter.
+What to do: make sure that all types appearing in the constraint are
+  either class names or names of other formal generic parameters.

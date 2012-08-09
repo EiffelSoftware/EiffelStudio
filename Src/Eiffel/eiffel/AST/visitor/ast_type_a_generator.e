@@ -43,86 +43,22 @@ inherit
 
 feature -- Status report
 
-	evaluate_type_if_possible (a_type: TYPE_AS; a_context_class: CLASS_C): TYPE_A
-			-- Given a TYPE_AS node, try to find its equivalent CL_TYPE_A node.
-		require
-			a_type_not_void: a_type /= Void
-			a_context_class_not_void: a_context_class /= Void
-		local
-			old_current_class: like current_class
-			old_result_status: like result_status
-			old_last_type: like last_type
-		do
-			old_current_class := current_class
-			old_result_status := result_status
-			old_last_type := last_type
-			result_status := result_optional_checked
-			current_class := a_context_class
-			a_type.process (Current)
-			Result := last_type
-			current_class := old_current_class
-			result_status := old_result_status
-			last_type := old_last_type
-		end
-
-	evaluate_optional_unchecked (a_type: TYPE_AS; a_context_class: CLASS_C): TYPE_A
-			-- Same as `evaluate_type_if_possible' but does not check
-			-- whether result is valid for the corresponding class declaration.
-		require
-			a_type_not_void: a_type /= Void
-			a_context_class_not_void: a_context_class /= Void
-		local
-			old_current_class: like current_class
-			old_result_status: like result_status
-			old_last_type: like last_type
-		do
-			old_current_class := current_class
-			old_result_status := result_status
-			old_last_type := last_type
-			result_status := result_optional_unchecked
-			current_class := a_context_class
-			a_type.process (Current)
-			Result := last_type
-			current_class := old_current_class
-			result_status := old_result_status
-			last_type := old_last_type
-		end
-
-	evaluate_type (a_type: TYPE_AS; a_context_class: CLASS_C): TYPE_A
+	evaluate_type (a_type: TYPE_AS; a_context_class: CLASS_C): detachable TYPE_A
 			-- Given a TYPE_AS node, find its equivalent TYPE_A node.
 		require
 			a_type_not_void: a_type /= Void
 			a_context_class_not_void: a_context_class /= Void
-			a_type_is_in_universe: True -- All class identifiers of `a_type' are in the universe.
 		local
 			old_current_class: like current_class
-			old_result_status: like result_status
 			old_last_type: like last_type
 		do
 			old_current_class := current_class
-			old_result_status := result_status
 			old_last_type := last_type
-			result_status := result_mandatory
 			current_class := a_context_class
 			a_type.process (Current)
 			Result := last_type
 			current_class := old_current_class
-			result_status := old_result_status
 			last_type := old_last_type
-		ensure
-			evaluate_type_not_void: Result /= Void
-		end
-
-	evaluate_class_type (a_class_type: CLASS_TYPE_AS; a_context_class: CLASS_C): CL_TYPE_A
-			-- Given a CLASS_TYPE_AS node, find its equivalent CL_TYPE_A node.
-		require
-			a_class_type_not_void: a_class_type /= Void
-			a_context_class_not_void: a_context_class /= Void
-			a_type_is_in_universe: True -- All class identifiers of `a_class_type' are in the universe.
-		do
-			Result ?= evaluate_type (a_class_type, a_context_class)
-		ensure
-			evaluate_type_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation: Access
@@ -132,19 +68,6 @@ feature {NONE} -- Implementation: Access
 
 	current_class: CLASS_C
 			-- Current class where current type is resolved
-
-	result_status: INTEGER
-			-- Status of result.
-			-- See `result_mandatory', `result_optional_unchecked', `result_optional_checked'.
-
-	result_mandatory: INTEGER = 0
-			-- Result is expected.
-
-	result_optional_unchecked: INTEGER = 1
-			-- Result is optional and not checked if it is valid for a class.
-
-	result_optional_checked: INTEGER = 2
-			-- Result is optional and checked if it is valid for a class.
 
 feature {NONE} -- Visitor implementation
 
@@ -186,20 +109,17 @@ feature {NONE} -- Visitor implementation
 		local
 			t: UNEVALUATED_QUALIFIED_ANCHORED_TYPE
 			n: SPECIAL [INTEGER_32]
+			i: INTEGER
 		do
 			l_as.qualifier.process (Current)
 			if attached last_type as q then
 					-- Qualifier type is processed without an error.
 					-- Make an array of names in the chain.
 				create n.make_filled (0, l_as.chain.count)
-				l_as.chain.do_all_with_index (
-					agent (f: ID_AS; s: SPECIAL [INTEGER_32]; i: INTEGER)
-						do
-								-- Items in SPECIAL start at index 0.
-							s [i - 1] := f.name_id
-						end
-					(?, n, ?)
-				)
+				across l_as.chain as l_chain loop
+					n [i] := l_chain.item.name_id
+					i := i + 1
+				end
 				create t.make (q, n)
 				if l_as.has_attached_mark then
 					t.set_attached_mark
@@ -394,19 +314,12 @@ feature {NONE} -- Visitor implementation
 					l_type := l_class_c.partial_actual_type (Void, l_as.is_expanded, l_as.has_separate_mark)
 				end
 				if l_has_error then
-					check failure_enabled: result_status /= result_mandatory end
 					last_type := Void
 				else
 					check attached l_type end
 					last_type := set_class_type_marks (l_as, l_type)
-					if result_status = result_optional_checked and then not last_type.is_valid_for_class (current_class) then
-							-- Do not return type that is invalid apriori.
-							-- It's validity will be checked again later.
-						last_type := Void
-					end
 				end
 			else
-				check failure_enabled: result_status /= result_mandatory end
 				last_type := Void
 			end
 		end
@@ -459,14 +372,12 @@ feature {NONE} -- Visitor implementation
 					g := g + 1
 				end
 				if l_has_error then
-					check failure_enabled: result_status /= result_mandatory end
 					last_type := Void
 				else
 					check attached l_type end
 					last_type := set_class_type_marks (l_as, l_type)
 				end
 			else
-				check failure_enabled: result_status /= result_mandatory end
 				last_type := Void
 			end
 		end
@@ -537,7 +448,7 @@ feature {NONE} -- Type marks
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

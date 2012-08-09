@@ -11,7 +11,3 @@ VCFG, chapter 4 (Classes), page 52
         2 `G'    is     different     from    any    other
           Formal_generic_name   appearing   in   the  same
           Formal_generics_part.
-
-        3 The  only  types  involved in the Constraint, if
-          any,  are  classes  or formal generic parameters
-          other than `G'.

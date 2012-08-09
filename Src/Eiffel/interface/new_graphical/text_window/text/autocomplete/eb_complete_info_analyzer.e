@@ -747,7 +747,7 @@ feature {NONE} -- Implementation
 							create Result.make (5)
 							if l_body.type /= Void then
 								create l_name.make_from_string ("Result")
-								l_type := type_a_generator.evaluate_optional_unchecked (l_body.type, l_class)
+								l_type := type_a_generator.evaluate_type (l_body.type, l_class)
 								Result.force (l_type, l_name)
 							end
 
@@ -774,7 +774,7 @@ feature {NONE} -- Implementation
 													id_list.after
 												loop
 													if attached l_names_heap.item_32 (id_list.item) as s then
-														l_type := type_a_generator.evaluate_optional_unchecked (tda.type, l_class)
+														l_type := type_a_generator.evaluate_type (tda.type, l_class)
 														Result.force (l_type, s)
 													end
 													id_list.forth
@@ -794,7 +794,7 @@ feature {NONE} -- Implementation
 									l_obj_test_locals.after
 								loop
 									if attached l_names_heap.item_32 (l_obj_test_locals.item.name.name_id) as s2 then
-										l_type := type_a_generator.evaluate_optional_unchecked (l_obj_test_locals.item.type, l_class)
+										l_type := type_a_generator.evaluate_type (l_obj_test_locals.item.type, l_class)
 										Result.force (l_type, s2)
 									end
 									l_obj_test_locals.forth

@@ -1207,6 +1207,13 @@ feature
 		do
 		end
 
+	check_types_in_constraints
+			-- Check validity of constraint genericity
+		require
+			generics_exists: is_generic
+		do
+		end
+
 	check_constraint_genericity
 			-- Check validity of constraint genericity
 		require

@@ -46,51 +46,20 @@ create
 
 feature -- Status
 
-	constraint_types (a_context_class: CLASS_C): TYPE_SET_A
+constraint_types (a_context_class: CLASS_C): TYPE_SET_A
 			-- Actual type of the constraint.
 		require
 			a_context_class_not_void: a_context_class /= Void
 			-- Assumes that we are past degree 4, so that one can be sure that it works.
-		local
-			l_constraining_type: CONSTRAINING_TYPE_AS
-			l_renamed_type: RENAMED_TYPE_A
-			l_constraints: like constraints
-			l_constraints_cursor: INTEGER
-			l_constraint_position: INTEGER
-			l_renaming_cache: ARRAY [RENAMING_A]
 		do
-			if not has_constraint then
-					-- Default constraint to ANY
-					-- Do a twin because it's an eiffel base list and this could lead to troubles.
-				Result := Constraint_types_containing_any.twin
-			else
-				l_constraints := constraints
-				create Result.make (l_constraints.count)
-				from
-					l_constraints_cursor := l_constraints.index
-					l_constraint_position := 1
-					l_renaming_cache := a_context_class.constraint_renaming (Current)
-					l_constraints.start
-				until
-					l_constraints.after
-				loop
-					l_constraining_type := l_constraints.item
-					create l_renamed_type.make (
-						type_a_generator.evaluate_type_if_possible (l_constraining_type.type,
-							a_context_class), l_renaming_cache.item (l_constraint_position))
-					Result.extend (l_renamed_type)
-
-					l_constraint_position := l_constraint_position + 1
-					l_constraints.forth
-				end
-				l_constraints.go_i_th (l_constraints_cursor)
-			end
+			Result := constraint_types_if_possible (a_context_class)
 		ensure
 			result_not_void: Result /= Void
 			result_not_empty: not Result.is_empty
+			result_does_not_containt_void: across Result as l_item all l_item.item /= Void end
 		end
 
-	constraint_types_if_possible (a_context_class: CLASS_C): TYPE_SET_A
+	constraint_types_if_possible (a_context_class: CLASS_C): detachable TYPE_SET_A
 			-- Fault tolerant actual type of the constraint.
 			--
 			-- `a_context_class' is the context class.
@@ -123,9 +92,11 @@ feature -- Status
 					l_constraints.after
 				loop
 					l_constraining_type := l_constraints.item
-					l_type := type_a_generator.evaluate_type_if_possible (l_constraining_type.type, a_context_class)
-					if l_type /= Void then
-						create l_renamed_type.make (l_type, l_renaming_cache.item (l_constraint_position))
+					if
+						attached {ANNOTATED_TYPE_A} type_a_generator.evaluate_type (l_constraining_type.type,
+							a_context_class) as l_deanchored_type
+					then
+						create l_renamed_type.make (l_deanchored_type, l_renaming_cache.item (l_constraint_position))
 						Result.extend (l_renamed_type)
 					end
 					l_constraint_position := l_constraint_position + 1
@@ -146,18 +117,13 @@ feature -- Status
 			a_context_class_not_void: a_context_class /= Void
 			not_has_multi_constraints: not has_multi_constraints
 			-- Assume that we are past degree 4, so that one can be sure that it works.
-		local
-			l_constraint: like constraint
-			l_type: TYPE_A
 		do
-			l_constraint := constraint
-			if l_constraint = Void then
-					-- Default constraint to ANY
-				Result := Any_constraint_type
+			if attached constraint_type_if_possible (a_context_class) as l_result then
+				Result := l_result
 			else
-				l_type := type_a_generator.evaluate_type_if_possible (l_constraint.type, a_context_class)
-				check l_type_not_void: l_type /= Void end
-				create Result.make (l_type, a_context_class.constraint_renaming (Current).item (1))
+					-- This should not happen.
+				check has_constraint: False end
+				Result := any_constraint_type
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -170,7 +136,6 @@ feature -- Status
 			not_has_multi_constraints: not has_multi_constraints
 		local
 			l_constraint: like constraint
-			l_type: TYPE_A
 		do
 			l_constraint := constraint
 			if l_constraint = Void then
@@ -178,11 +143,10 @@ feature -- Status
 				Result := Any_constraint_type
 			else
 					-- No need to check validity of `Result' after converting
-					-- TYPE_AS into TYPE_A because at this stage it should be
+					-- TYPE_AS into ANNOTATED_TYPE_A because at this stage it should be
 					-- a valid class.				
-				l_type := type_a_generator.evaluate_type_if_possible (l_constraint.type, a_context_class)
-				if l_type /= Void then
-					create Result.make (l_type, a_context_class.constraint_renaming (Current).item (1))
+				if attached {ANNOTATED_TYPE_A} type_a_generator.evaluate_type (l_constraint.type, a_context_class) as l_deanchored_type then
+				 	create Result.make (l_deanchored_type, a_context_class.constraint_renaming (Current).item (1))
 				end
 			end
 		end
@@ -575,7 +539,7 @@ feature {NONE} -- Implementation
 				l_constraints.after
 			loop
 				l_constraining_type := l_constraints.item
-				l_type := type_a_generator.evaluate_type_if_possible (l_constraining_type.type, a_context_class)
+				l_type := type_a_generator.evaluate_type (l_constraining_type.type, a_context_class)
 				if l_type /= Void then
 						-- Type was found: Process the type
 					type_output_strategy.process (l_type, a_text_formatter, a_context_class, Void)

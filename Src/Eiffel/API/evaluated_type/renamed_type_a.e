@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Access
 
-	associated_class: CLASS_C
+	base_class: CLASS_C
 			-- Class associated to the current type.		
 		do
 			Result := type.base_class
@@ -89,7 +89,7 @@ feature -- Output
 			type.ext_append_to (a_text_formatter, c)
 			if has_renaming then
 				if has_associated_class then
-					renaming.append_to_with_pebbles (a_text_formatter, associated_class)
+					renaming.append_to_with_pebbles (a_text_formatter, base_class)
 				else
 					renaming.append_to (a_text_formatter)
 				end

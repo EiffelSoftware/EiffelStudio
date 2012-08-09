@@ -615,7 +615,7 @@ feature {NONE} -- Implementation
 								l_feat_result := feature_from_type_set (l_last_type_set, l_rout_id_set)
 								if l_feat_result.count >= 1 then
 									l_feat := l_feat_result.first.feature_item
-									last_class := l_feat_result.first.class_type.associated_class
+									last_class := l_feat_result.first.class_type.base_class
 								else
 									l_feat := Void
 									last_class := Void
@@ -1404,7 +1404,7 @@ feature {NONE} -- Implementation
 						l_last_type_set := l_formal.constrained_types (current_class)
 							-- Here we get back the feature and the renamed type where the feature is from (it means that it includes a possible renaming)
 						l_result := l_last_type_set.e_feature_list_by_rout_id(l_as.routine_ids.first)
-						last_class := l_result.first.type.associated_class
+						last_class := l_result.first.type.base_class
 						l_feat := l_result.first.feature_item
 					else
 						last_class := l_formal.constrained_type (current_class).base_class
@@ -2471,7 +2471,7 @@ feature {NONE} -- Implementation: helpers
 				end
 				l_formal_dec ?= current_class.generics.i_th (l_formal.position)
 				check l_formal_dec_not_void: l_formal_dec /= Void end
-				Result := l_formal_dec.constraint_type (current_class).associated_class
+				Result := l_formal_dec.constraint_type (current_class).base_class
 			else
 				Result := l_type.base_class
 			end

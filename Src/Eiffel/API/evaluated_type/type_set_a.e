@@ -79,7 +79,7 @@ feature -- Access
 			create Result.make (types.count)
 			across types as l_renamed_type loop
 				if
-					attached l_renamed_type.item.associated_class as l_class and then
+					attached l_renamed_type.item.base_class as l_class and then
 					l_class.is_deferred
 				then
 					Result.extend (l_class)
@@ -149,8 +149,8 @@ feature -- Access
 				-- Example for comments: rename f as g end
 				-- `l_name_id' is the name id of `g'
 				l_item := item
-				if l_item.has_associated_class and then l_item.associated_class.has_feature_table then
-					l_feature_table := l_item.associated_class.feature_table
+				if l_item.has_associated_class and then l_item.base_class.has_feature_table then
+					l_feature_table := l_item.base_class.feature_table
 					if l_renaming /= Void then
 						l_feature_table.search_id_under_renaming (a_name_id, l_renaming)
 					else
@@ -226,7 +226,7 @@ feature -- Access
 				l_item := item
 					-- implied by precondition: not_loose
 				check has_associated_class: l_item.has_associated_class end
-				l_class := l_item.associated_class
+				l_class := l_item.base_class
 				l_feat := l_class.feature_of_rout_id (a_routine_id)
 				if l_feat /= Void then
 					Result.extend ([l_feat, l_item])
@@ -266,7 +266,7 @@ feature -- Access
 				l_item := item
 				if l_item.has_associated_class then
 					l_renaming := l_item.renaming
-					l_class_c := l_item.associated_class
+					l_class_c := l_item.base_class
 					if l_renaming = Void then
 						l_feature :=  l_class_c.feature_table.item_alias_id (an_alias_name_id)
 					else
@@ -368,7 +368,7 @@ feature -- Access
 				-- Example for comments: rename f as g end
 				-- `l_name_id' is the name id of `g'
 				if l_item.has_associated_class then
-					l_class_c := l_item.associated_class
+					l_class_c := l_item.base_class
 					if l_class_c.has_feature_table then
 						l_feature_table := l_class_c.feature_table
 						if l_renaming /= Void then
@@ -437,7 +437,7 @@ feature -- Access
 				l_item := item
 					-- implied by precondition: not_loose
 				check has_associated_class: l_item.has_associated_class end
-				l_class := l_item.associated_class
+				l_class := l_item.base_class
 				l_feat := l_class.feature_with_rout_id (a_routine_id)
 				if l_feat /= Void then
 					Result.extend ([l_feat, l_item])
@@ -454,7 +454,7 @@ feature -- Access
 			create Result.make (types.count)
 			across types as l_renamed_type loop
 				if l_renamed_type.item.has_associated_class then
-					Result.extend (l_renamed_type.item.associated_class)
+					Result.extend (l_renamed_type.item.base_class)
 				end
 			end
 		end
@@ -501,7 +501,7 @@ feature -- Access for Error handling
 						l_class: CLASS_C
 					do
 						if a_ext_type.has_associated_class then
-							l_class := a_ext_type.associated_class
+							l_class := a_ext_type.base_class
 							if l_class.has_feature_table then
 								if a_ext_type.has_renaming then
 									l_renamed_id := a_ext_type.renaming.renamed (g_name_id)
@@ -541,7 +541,7 @@ feature -- Access for Error handling
 						l_feature: FEATURE_I
 					do
 						if a_ext_type.has_associated_class then
-							l_class := a_ext_type.associated_class
+							l_class := a_ext_type.base_class
 							if l_class.has_feature_table then
 								if a_ext_type.has_renaming then
 									l_renamed_id := a_ext_type.renaming.renamed (g_name_id)
@@ -586,7 +586,7 @@ feature -- Access for Error handling
 					do
 							-- If somehow possible try to find the feature.
 						if l_ext_type.has_associated_class then
-							l_class := l_ext_type.associated_class
+							l_class := l_ext_type.base_class
 							if l_class.has_feature_table then
 								Result := [	l_class.feature_with_rout_id (g_routine_id),
 											l_class.feature_of_rout_id (g_routine_id)]
@@ -840,7 +840,7 @@ feature -- Status
 	has_deferred: BOOLEAN
 			-- Does the current set contain a deferred class?
 		do
-			Result := across types as l_renamed_type some l_renamed_type.item.has_associated_class and then l_renamed_type.item.associated_class.is_deferred end
+			Result := across types as l_renamed_type some l_renamed_type.item.has_associated_class and then l_renamed_type.item.base_class.is_deferred end
 		end
 
 	is_attached: BOOLEAN

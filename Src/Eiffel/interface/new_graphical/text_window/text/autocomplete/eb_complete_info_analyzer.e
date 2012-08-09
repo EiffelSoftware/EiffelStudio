@@ -1536,7 +1536,7 @@ feature {NONE} -- Implementation
 					-- If we find more than one feature we do not want to display it.
 				l_type_set.after or l_stop
 			loop
-				if a_extended_class.class_id = l_type_set.item.associated_class.class_id then
+				if a_extended_class.class_id = l_type_set.item.base_class.class_id then
 						-- Ok, so we have three cases:
 						-- * The feature was not found. It has to be renamed in that case, otherwise we have internal errors.
 						-- * The feature was found and it has _not_ been renamed at all.

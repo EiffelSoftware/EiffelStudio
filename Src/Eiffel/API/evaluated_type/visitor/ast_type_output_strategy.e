@@ -275,12 +275,6 @@ feature {TYPE_A} -- Visitors
 			text_formatter.add (ti_none_class)
 		end
 
-	process_open_type_a (a_type: OPEN_TYPE_A)
-			-- Process `a_type'.
-		do
-			text_formatter.add (ti_open_arg)
-		end
-
 	process_pointer_a (a_type: POINTER_A)
 			-- Process `a_type'.
 		do

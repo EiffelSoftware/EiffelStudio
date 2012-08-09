@@ -368,9 +368,6 @@ feature -- Feature signature items
 	ti_Generic_index: STRING = "Generic #"
 			-- Index in formal generic parameter list.
 
-	ti_Open_arg: STRING = "Open argument"
-			-- Index in open arguments parameter list.
-
 feature -- Standard classes
 
 	ti_None_class: STRING = "NONE"
@@ -380,7 +377,7 @@ feature -- Standard classes
 			-- `BIT' class.
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

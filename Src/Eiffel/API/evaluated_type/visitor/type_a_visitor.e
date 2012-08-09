@@ -211,15 +211,6 @@ feature {TYPE_A} -- Visitor
 		deferred
 		end
 
-	process_open_type_a (a_type: OPEN_TYPE_A)
-			-- Process `a_type'.
-		require
-			is_valid: is_valid
-			a_type_not_void: a_type /= Void
-			a_type_valid: is_type_valid (a_type)
-		deferred
-		end
-
 	process_pointer_a (a_type: POINTER_A)
 			-- Process `a_type'.
 		require

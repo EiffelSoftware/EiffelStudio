@@ -34,12 +34,13 @@ feature
 
 feature -- Undefinition
 
-	new_deferred_anchor: detachable RD2_DEF_FUNC_I
+	new_deferred_anchor: RD2_DEF_FUNC_I
 			-- <Precursor>
 		do
+			check False then end
 		end
 
-	new_deferred: attached like new_deferred_anchor
+	new_deferred: like new_deferred_anchor
 			-- <Precursor>
 		do
 			Result := Precursor

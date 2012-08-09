@@ -2907,14 +2907,16 @@ end
 
 feature -- Undefinition
 
-	new_deferred_anchor: detachable DEF_PROC_I
+	new_deferred_anchor: DEF_PROC_I
 			-- Type anchor for `new_deferred'.
 		do
+			check False then
+			end
 		ensure
 			used: False -- This feature is used only as an anchor.
 		end
 
-	new_deferred: attached like new_deferred_anchor
+	new_deferred: like new_deferred_anchor
 			-- New deferred feature for undefinition.
 		require
 			not is_deferred

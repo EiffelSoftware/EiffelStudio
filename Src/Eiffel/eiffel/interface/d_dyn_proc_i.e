@@ -82,9 +82,10 @@ feature
 
 feature -- Undefinition
 
-	new_deferred_anchor: detachable D_DEF_PROC_I
+	new_deferred_anchor: D_DEF_PROC_I
 			-- <Precursor>
 		do
+			check False then end
 		end
 
 	new_deferred: like new_deferred_anchor

@@ -254,7 +254,7 @@ feature
 
 feature -- Undefinition
 
-	new_deferred: attached like new_deferred_anchor
+	new_deferred: like new_deferred_anchor
 			-- <Precursor>
 		do
 			Result := Precursor

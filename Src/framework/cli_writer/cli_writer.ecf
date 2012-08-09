@@ -18,7 +18,7 @@
 				<platform value="windows"/>
 			</condition>
 		</external_cflag>
-		<external_object location="$(EIFFEL_SRC)\framework\cli_writer\spec\msc\$(ISE_PLATFORM)\lib\cli_writer.lib">
+		<external_object location="$(EIFFEL_SRC)\framework\cli_writer\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\cli_writer.lib">
 			<condition>
 				<platform value="windows"/>
 			</condition>

@@ -293,7 +293,7 @@ feature {NONE} -- Implementation
 	try_to_translate (a_string: STRING_GENERAL): STRING_32
 			-- Try to translate `a_string'.
 		do
-			Result := names.find_translation (a_string)
+			Result := locale.translation_in_context (a_string, "preference")
 		end
 
 	on_shortcut_modification_denied (a_shortcut_pref: SHORTCUT_PREFERENCE)
@@ -332,7 +332,7 @@ feature {NONE} -- Widget initialization
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -65,6 +65,7 @@ foreach $dsc_file (@pm_files){
 			$extracted = $1;
 			print "#. $o_line\n";
 			print "#: $file_name:$count\n";
+			print "msgctxt \"wizard\"\n";
 			print "msgid \"$extracted\"\n";
 			print "msgstr \"\"\n\n";
 		}
@@ -84,6 +85,7 @@ sub extract {
 			$extracted = &escape_xml ($1);
 			print "#. $o_line\n";
 			print "#: $file_name:$count\n";
+			print "msgctxt \"preference\"\n";
 			print "msgid \"$extracted\"\n";
 			print "msgstr \"\"\n\n";
 		}
@@ -98,6 +100,7 @@ sub extract {
 				$words = &upper_case (&make_words ($parent));
 				print "#. $o_line\n";
 				print "#: $file_name:$count\n";
+				print "msgctxt \"preference\"\n";
 				print "msgid \"$words\"\n";
 				print "msgstr \"\"\n\n";
 			}

@@ -28,21 +28,21 @@ feature -- Visitor
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS
+	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 			-- First token in current AST node
 		do
 			if a_list = Void then
-				Result := Precursor{EIFFEL_LIST} (a_list)
+				Result := Precursor {EIFFEL_LIST} (a_list)
 			else
 				Result := indexing_keyword (a_list)
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS
+	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 			-- Last token in current AST node
 		do
 			if a_list = Void then
-				Result := Precursor{EIFFEL_LIST} (a_list)
+				Result := Precursor {EIFFEL_LIST} (a_list)
 			else
 				Result := end_keyword (a_list)
 				if Result = Void then
@@ -550,7 +550,7 @@ feature -- Roundtrip
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

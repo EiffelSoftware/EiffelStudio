@@ -163,7 +163,7 @@ feature -- AST used during code generation
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): detachable LEAF_AS
+	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
 			if a_list /= Void then
 				Result := across_keyword (a_list)
@@ -173,7 +173,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): detachable LEAF_AS
+	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
 			Result := identifier.last_token (a_list)
 		end

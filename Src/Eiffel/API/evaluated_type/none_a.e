@@ -9,7 +9,7 @@ class
 	NONE_A
 
 inherit
-	ANNOTATED_TYPE_A
+	DEANCHORED_TYPE_A
 		redefine
 			is_none, dump, c_type, same_as, is_full_named_type, generated_id,
 			generate_gen_type_il

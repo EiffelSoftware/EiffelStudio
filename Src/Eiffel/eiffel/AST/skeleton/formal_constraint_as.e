@@ -93,7 +93,7 @@ constraint_types (a_context_class: CLASS_C): TYPE_SET_A
 				loop
 					l_constraining_type := l_constraints.item
 					if
-						attached {ANNOTATED_TYPE_A} type_a_generator.evaluate_type (l_constraining_type.type,
+						attached {DEANCHORED_TYPE_A} type_a_generator.evaluate_type (l_constraining_type.type,
 							a_context_class) as l_deanchored_type
 					then
 						create l_renamed_type.make (l_deanchored_type, l_renaming_cache.item (l_constraint_position))
@@ -143,9 +143,9 @@ constraint_types (a_context_class: CLASS_C): TYPE_SET_A
 				Result := Any_constraint_type
 			else
 					-- No need to check validity of `Result' after converting
-					-- TYPE_AS into ANNOTATED_TYPE_A because at this stage it should be
+					-- TYPE_AS into DEANCHORED_TYPE_A because at this stage it should be
 					-- a valid class.				
-				if attached {ANNOTATED_TYPE_A} type_a_generator.evaluate_type (l_constraint.type, a_context_class) as l_deanchored_type then
+				if attached {DEANCHORED_TYPE_A} type_a_generator.evaluate_type (l_constraint.type, a_context_class) as l_deanchored_type then
 				 	create Result.make (l_deanchored_type, a_context_class.constraint_renaming (Current).item (1))
 				end
 			end

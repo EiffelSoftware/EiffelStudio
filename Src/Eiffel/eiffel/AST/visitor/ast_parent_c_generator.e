@@ -91,54 +91,59 @@ feature {NONE} -- Implementation
 			else
 				create {PARENT_C} last_parent_c
 			end
-			last_parent_c.set_parent_type (type_a_generator.evaluate_class_type (l_as.type, current_class))
-			l_exports := l_as.exports
-			if l_exports /= Void then
-				from
-					create last_export_adaptation.make (l_exports.count)
-					last_parent_c.set_exports (last_export_adaptation)
-					l_exports.start
-				until
-					l_exports.after
-				loop
-					process_export_item_as (l_exports.item)
-					l_exports.forth
-				end
-			end
-			if l_as.renaming /= Void then
-				from
-					create l_renaming_c.make (l_as.renaming.count)
-					last_parent_c.set_renaming (l_renaming_c)
-					l_as.renaming.start
-				until
-					l_as.renaming.after
-				loop
-					l_rename_pair := l_as.renaming.item
-					l_old_name := l_rename_pair.old_name
-					old_name_id := l_old_name.internal_name.name_id
-					if l_renaming_c.has (old_name_id) then
-						create l_vhrc2
-						l_vhrc2.set_class (current_class)
-						l_vhrc2.set_parent (last_parent_c.parent)
-						l_vhrc2.set_feature_name (l_old_name.internal_name.name)
-						l_vhrc2.set_location (l_old_name.start_location)
-						Error_handler.insert_error (l_vhrc2)
-					else
-						l_new_name := l_rename_pair.new_name
-						l_renaming_c.put (create {RENAMING}.make (l_new_name.internal_name.name_id, l_new_name.internal_alias_name_id, l_new_name.has_convert_mark), old_name_id)
+			if attached {CL_TYPE_A} type_a_generator.evaluate_type (l_as.type, current_class) as l_parent_type then
+				last_parent_c.set_parent_type (l_parent_type)
+				l_exports := l_as.exports
+				if l_exports /= Void then
+					from
+						create last_export_adaptation.make (l_exports.count)
+						last_parent_c.set_exports (last_export_adaptation)
+						l_exports.start
+					until
+						l_exports.after
+					loop
+						process_export_item_as (l_exports.item)
+						l_exports.forth
 					end
-
-					l_as.renaming.forth
 				end
-			end
-			if l_as.redefining /= Void then
-				last_parent_c.set_redefining (search_table (l_as, l_as.redefining, Redef))
-			end
-			if l_as.undefining /= Void then
-				last_parent_c.set_undefining (search_table (l_as, l_as.undefining, Undef))
-			end
-			if l_as.selecting /= Void then
-				last_parent_c.set_selecting (search_table (l_as, l_as.selecting, Selec))
+				if l_as.renaming /= Void then
+					from
+						create l_renaming_c.make (l_as.renaming.count)
+						last_parent_c.set_renaming (l_renaming_c)
+						l_as.renaming.start
+					until
+						l_as.renaming.after
+					loop
+						l_rename_pair := l_as.renaming.item
+						l_old_name := l_rename_pair.old_name
+						old_name_id := l_old_name.internal_name.name_id
+						if l_renaming_c.has (old_name_id) then
+							create l_vhrc2
+							l_vhrc2.set_class (current_class)
+							l_vhrc2.set_parent (last_parent_c.parent)
+							l_vhrc2.set_feature_name (l_old_name.internal_name.name)
+							l_vhrc2.set_location (l_old_name.start_location)
+							Error_handler.insert_error (l_vhrc2)
+						else
+							l_new_name := l_rename_pair.new_name
+							l_renaming_c.put (create {RENAMING}.make (l_new_name.internal_name.name_id, l_new_name.internal_alias_name_id, l_new_name.has_convert_mark), old_name_id)
+						end
+
+						l_as.renaming.forth
+					end
+				end
+				if l_as.redefining /= Void then
+					last_parent_c.set_redefining (search_table (l_as, l_as.redefining, Redef))
+				end
+				if l_as.undefining /= Void then
+					last_parent_c.set_undefining (search_table (l_as, l_as.undefining, Undef))
+				end
+				if l_as.selecting /= Void then
+					last_parent_c.set_selecting (search_table (l_as, l_as.selecting, Selec))
+				end
+			else
+					-- This should never occur: a CLASS_TYPE_AS being translated into something else than a CL_TYPE_A.
+				Error_handler.insert_error (create {INTERNAL_ERROR}.make ("Parent AST did not yield CL_TYPE_A"))
 			end
 		end
 
@@ -243,7 +248,7 @@ feature {NONE} -- Implementation
 	Selec: INTEGER = 3;
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

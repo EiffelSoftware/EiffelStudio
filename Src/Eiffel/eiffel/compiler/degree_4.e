@@ -122,20 +122,51 @@ feature -- Processing
 				-- as they might change if they go again through degree 4.
 			l_system.reset_routine_ids
 
-				-- Check that the constraint class is a valid class.
-				-- I.e. we cannot have [G -> like t] or others.
 			reset_constraint_error_list
 
-			from i := 1 until nb = count loop
+				-- Check that the constraint class is a valid class.
+				-- I.e. we cannot have [G -> like t] or a constraint
+				-- with the wrong number of actual generic parameters.
+			from
+				nb := 0
+				i := 1
+			until
+				nb = count
+			loop
+				a_class := classes.item (i)
+				if a_class /= Void and then a_class.degree_4_needed then
+					if not a_class.degree_4_processed then
+						if a_class.changed and then a_class.generics /= Void then
+							l_system.set_current_class (a_class)
+							a_class.check_types_in_constraints
+						end
+					end
+					nb := nb + 1
+				end
+				i := i + 1
+			end
+
+				-- Cannot continue if there is an error in the
+				-- constraint genericity clause of a class.
+			if l_error_handler.has_error then
+				l_error_handler.raise_error
+			end
+
+				-- Now check that for each constraint, they are themselves ok,
+				-- e.g. class A [G -> LIST [INTEGER]], we need to ensure that `INTEGER'
+				-- conforms to the constraints of the corresponding formal in LIST.
+			from
+				nb := 0
+				i := 1
+			until
+				nb = count
+			loop
 				a_class := classes.item (i)
 				if a_class /= Void and then a_class.degree_4_needed then
 					if not a_class.degree_4_processed then
 						if a_class.changed and then a_class.generics /= Void then
 							l_system.set_current_class (a_class)
 							a_class.check_constraint_genericity
-							if constraint_error_list /= Void and then constraint_error_list.count > 0 then
-								insert_class (a_class)
-							end
 						end
 					end
 					nb := nb + 1
@@ -987,7 +1018,7 @@ invariant
 	delayed_classes_attached: attached delayed_classes
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

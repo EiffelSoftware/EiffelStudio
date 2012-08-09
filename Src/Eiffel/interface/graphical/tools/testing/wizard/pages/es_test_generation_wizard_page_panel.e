@@ -510,7 +510,7 @@ feature {NONE} -- Basic operations
 				attached l_root_class.feature_named_32 (a_root.procedure_name) as l_root_feature
 			then
 				if attached {CLASS_TYPE_AS} a_type_as as l_class_type then
-					l_type_a := type_a_generator.evaluate_optional_unchecked (a_type_as, l_root_class)
+					l_type_a := type_a_generator.evaluate_type (a_type_as, l_root_class)
 					if l_type_a /= Void and l_class_type.generics = Void then
 						l_class := l_type_a.base_class
 						check l_class /= Void end

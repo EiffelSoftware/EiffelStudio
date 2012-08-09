@@ -28,6 +28,9 @@ feature -- Properties
 
 	base_class: CLASS_C;
 
+	is_in_class_constraint: BOOLEAN
+			-- Did the invalid type appeared in a constraint of a generic class?
+
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 
 	entity_name: STRING;
@@ -54,7 +57,11 @@ feature -- Output
 				a_text_formatter.add ("In feature: ");
 				e_feature.append_name (a_text_formatter);
 			elseif is_class_defined then
-				a_text_formatter.add ("In inheritance clause");
+				if is_in_class_constraint then
+					a_text_formatter.add ("In generic constraint");
+				else
+					a_text_formatter.add ("In inheritance clause");
+				end
 			else
 				a_text_formatter.add ("In Eiffel Configuration File")
 			end;
@@ -116,8 +123,16 @@ feature {COMPILER_EXPORTER}
 			entity_name := i;
 		end;
 
+	set_is_in_class_constraint (v: like is_in_class_constraint)
+			-- Assign `v' to `is_in_class_constraint'.
+		do
+			is_in_class_constraint := v
+		ensure
+			is_in_class_constraint_set: is_in_class_constraint = v
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

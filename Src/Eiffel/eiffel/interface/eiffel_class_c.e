@@ -21,7 +21,7 @@ inherit
 			pass4, melt, update_execution_table, has_features_to_melt,
 			melt_all, check_generics, check_generic_parameters,
 			check_creation_constraint_genericity,
-			check_constraint_genericity,
+			check_constraint_genericity, check_types_in_constraints,
 			check_constraint_renaming,
 			feature_of_feature_id,
 			feature_of_rout_id,
@@ -1808,6 +1808,36 @@ feature {NONE} -- Class initialization
 					generic_dec.check_constraint_creation (Current)
 				end
 				i := i + 1
+			end
+		end
+
+	check_types_in_constraints
+			-- Check simple validity of constraints: not anchors, generics with proper number
+			-- of actual generics. No validity check.
+		local
+			l_type: TYPE_A
+			l_vtgc1: VTGC1
+			l_vtug: VTUG
+			l_constraint_type: TYPE_AS
+		do
+			Inst_context.set_group (cluster)
+			across generics as l_formal_generic loop
+				across l_formal_generic.item.constraints as l_constraint loop
+					l_constraint_type := l_constraint.item.type
+					l_type := type_a_generator.evaluate_type (l_constraint_type, Current)
+					if l_type.has_like or not l_type.is_class_valid then
+						create l_vtgc1
+						l_vtgc1.set_class (Current)
+						l_vtgc1.set_location (l_constraint_type.start_location)
+						error_handler.insert_error (l_vtgc1)
+					elseif not l_type.good_generics then
+						l_vtug := l_type.error_generics
+						l_vtug.set_class (Current)
+						l_vtug.set_location (l_constraint_type.start_location)
+						l_vtug.set_is_in_class_constraint (True)
+						error_handler.insert_error (l_vtug)
+					end
+				end
 			end
 		end
 

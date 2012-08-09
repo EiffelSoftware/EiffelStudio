@@ -4783,7 +4783,7 @@ feature {NONE} -- Implementation: helpers
 			l_type: TYPE_A
 		do
 				-- Convert TYPE_AS into TYPE_A in the context of `source_class'.
-			l_type := type_a_generator.evaluate_optional_unchecked (a_type, source_class)
+			l_type := type_a_generator.evaluate_type (a_type, source_class)
 
 				-- An error occurs when a class was renamed.
 			if not has_error_internal and l_type = Void then

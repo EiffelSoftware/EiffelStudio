@@ -521,9 +521,9 @@ feature {NONE} -- Implementation
 			l_error_level := error_level
 			if is_inherited then
 					-- Convert TYPE_AS into TYPE_A.
-				l_type := type_a_generator.evaluate_optional_unchecked (a_type, context.written_class)
+				l_type := type_a_generator.evaluate_type (a_type, context.written_class)
 			else
-				l_type := type_a_generator.evaluate_optional_unchecked (a_type, context.current_class)
+				l_type := type_a_generator.evaluate_type (a_type, context.current_class)
 			end
 
 			if l_type = Void then
@@ -538,7 +538,7 @@ feature {NONE} -- Implementation
 					if l_classes.count = 1 then
 						l_cl := l_classes.first
 						if l_cl.is_compiled then
-							l_type := type_a_generator.evaluate_optional_unchecked (l_class_type, l_cl.compiled_class)
+							l_type := type_a_generator.evaluate_type (l_class_type, l_cl.compiled_class)
 						end
 					elseif l_classes.count > 1 then
 						create l_vd29

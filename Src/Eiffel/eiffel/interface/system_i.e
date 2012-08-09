@@ -6007,7 +6007,6 @@ feature {NONE} -- Element change: Root creators
 	compute_root_type
 			-- Computes the root type
 		local
-			l_type: TYPE_A
 			l_root: SYSTEM_ROOT
 			l_vsrt1: VSRT1
 			l_vsrt2: VSRT2
@@ -6031,8 +6030,8 @@ feature {NONE} -- Element change: Root creators
 					l_vd20.set_class_name (l_root.root_class.name.as_upper)
 					Error_handler.insert_error (l_vd20)
 				else
-					l_type := type_a_generator.evaluate_optional_unchecked (l_root.class_type_as, l_root.root_class.compiled_class)
-					if l_type = Void then
+					if not attached {CL_TYPE_A} type_a_generator.evaluate_type (l_root.class_type_as, l_root.root_class.compiled_class) as l_type then
+							-- Throw an error: type is not valid.					
 							-- Throw an error: type is not valid.
 						create l_vsrt2
 						l_vsrt2.set_root_type_as (l_root.class_type_as)

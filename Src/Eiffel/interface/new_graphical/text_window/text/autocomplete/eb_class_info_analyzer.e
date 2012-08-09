@@ -1528,7 +1528,7 @@ feature {NONE}-- Implementation
 					create l_wrapper
 					l_wrapper.parse_32 (type_parser, l_type_text, True, current_class_c)
 					if not l_wrapper.has_error and attached {TYPE_AS} l_wrapper.ast_node as l_node then
-						Result := type_a_generator.evaluate_optional_unchecked (l_node, current_class_c)
+						Result := type_a_generator.evaluate_type (l_node, current_class_c)
 						if attached {UNEVALUATED_LIKE_TYPE} Result and not Result.is_valid then
 								-- The type is not valid, recheck.
 							Result := Void
@@ -1745,7 +1745,7 @@ feature {NONE}-- Implementation
 		do
 			l_feat := a_feature
 			type_a_checker.init_for_checking (l_feat, a_current_class, Void, Void)
-			Result := type_a_generator.evaluate_optional_unchecked (a_type, a_current_class)
+			Result := type_a_generator.evaluate_type (a_type, a_current_class)
 			if Result /= Void then
 				Result := type_a_checker.solved (Result, a_type)
 			end
@@ -2226,7 +2226,7 @@ invariant
 	current_token_in_current_line: (current_line = Void and current_token = Void) or else (current_line /= Void and then current_line.has_token (current_token))
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -20,7 +20,7 @@ feature {NONE} -- Creation
 		local
 			array: ARRAY [INTEGER]
 		do
-			create array.make (1, 10)
+			create array.make_filled (0, 1, 10)
 			array.force (1, -10)
 		end
 		
@@ -42,7 +42,7 @@ feature {NONE} -- Creation
 		local
 			array: ARRAY [INTEGER]
 		do
-			create array.make (1, 3)
+			create array.make_filled (0, 1, 3)
 			array [1] := 1
 			array [2] := 2
 			array [3] := 3

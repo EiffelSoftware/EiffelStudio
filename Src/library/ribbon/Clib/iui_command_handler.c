@@ -76,10 +76,10 @@ HRESULT STDMETHODCALLTYPE UpdateProperty(IUICommandHandler *This, UINT nCmdID, R
 /* 	Eiffel function for Ribbon UICommandHandler update property
 		Eiffel function call need first parameter as EIF_REFERENCE. */
 
-	if (eiffel_command_handler_object) {
+	if (eiffel_dispatcher) {
 		return (EIF_NATURAL_32) ((eiffel_update_property_function) (
 #ifndef EIF_IL_DLL
-			(EIF_REFERENCE) eif_access (eiffel_command_handler_object),
+			(EIF_REFERENCE) eif_access (eiffel_dispatcher),
 #endif
 			(EIF_POINTER) This,
 			(EIF_NATURAL_32) nCmdID,
@@ -96,10 +96,10 @@ HRESULT STDMETHODCALLTYPE Execute(IUICommandHandler *This, UINT nCmdID, UI_EXECU
 
 	/* 	Eiffel function for Ribbon UICommandHandler execute
 		Eiffel function call need first parameter as EIF_REFERENCE. */	
-	if (eiffel_command_handler_object) {
+	if (eiffel_dispatcher) {
 		return (EIF_NATURAL_32) ((eiffel_execute_function) (
 #ifndef EIF_IL_DLL
-			(EIF_REFERENCE) eif_access (eiffel_command_handler_object),
+			(EIF_REFERENCE) eif_access (eiffel_dispatcher),
 #endif
 			(EIF_POINTER) This,
 			(EIF_NATURAL_32) nCmdID,

@@ -21,7 +21,6 @@ IUIApplicationVtbl myRibbon_Vtbl = {QueryInterface,
 
 LONG OutstandingObjects = 0;
 IUIFramework *g_pFramework = NULL;  // Reference to the Ribbon framework.
-IUIApplication	*pApplication = NULL;
 IUIFramework *last_pFramework = NULL;  // Reference to the Ribbon framework when calling "OnCreateUICommand"
 IUICommandHandler	*pCommandHandler = NULL;
 IUIImageFromBitmap *g_image_from_bitmap = NULL;
@@ -56,10 +55,10 @@ ULONG STDMETHODCALLTYPE Release(IUIApplication *This)
 
 HRESULT STDMETHODCALLTYPE OnViewChanged(IUIApplication *This, UINT32 viewId, UI_VIEWTYPE typeID, IUnknown *view, UI_VIEWVERB verb, INT32 uReasonCode)
 { 
-	if (eiffel_ribbon_object) {
+	if (eiffel_dispatcher) {
 		return (EIF_NATURAL_32) ((eiffel_on_view_changed_function) (
 #ifndef EIF_IL_DLL
-			(EIF_REFERENCE) eif_access (eiffel_ribbon_object),
+			(EIF_REFERENCE) eif_access (eiffel_dispatcher),
 #endif
 			(EIF_POINTER) This,
 			(EIF_NATURAL_32) viewId,
@@ -74,10 +73,10 @@ HRESULT STDMETHODCALLTYPE OnViewChanged(IUIApplication *This, UINT32 viewId, UI_
 
 HRESULT STDMETHODCALLTYPE OnCreateUICommand(IUIApplication *This, UINT32 commandId, UI_COMMANDTYPE typeID, IUICommandHandler **commandHandler)
 { 
-	if (eiffel_ribbon_object) {
+	if (eiffel_dispatcher) {
 		return (EIF_NATURAL_32) ((eiffel_on_create_ui_command_function) (
 #ifndef EIF_IL_DLL
-			(EIF_REFERENCE) eif_access (eiffel_ribbon_object),
+			(EIF_REFERENCE) eif_access (eiffel_dispatcher),
 #endif
 			(EIF_POINTER) This,
 			(EIF_NATURAL_32) commandId,
@@ -113,6 +112,7 @@ BOOL CreateIUIImageFromBitmap (HBITMAP bitmap, IUIImage **image)
 EIF_POINTER InitializeFramework(HWND hWnd, EIF_POINTER a_ribbon_resource_handle)
 {
 	HRESULT hr;
+	IUIApplication	*pApplication = NULL;
 
 	hr = CoCreateInstance(&CLSID_UIRibbonFramework, NULL, CLSCTX_INPROC_SERVER, &IID_IUIFRAMEWORK, (VOID **)&g_pFramework);
 	if (SUCCEEDED(hr)) {
@@ -153,11 +153,6 @@ EIF_POINTER InitializeFramework(HWND hWnd, EIF_POINTER a_ribbon_resource_handle)
 		}
 	}
 	return NULL;
-}
-
-IUIApplication *GetUIApplication()
-{
-	return pApplication;
 }
 
 HRESULT QueryInterfaceIUICollectionWithPropVariant (PROPVARIANT * a_prop_variant)

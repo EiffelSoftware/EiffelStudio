@@ -12,27 +12,22 @@ feature -- Factory methods
 
 	command_handler_singleton: EV_COMMAND_HANDLER
 			-- Command handler singleton
-		local
-			l_result: detachable EV_COMMAND_HANDLER
-		do
-			l_result := global_command_handler_cell.item
-			if l_result = void then
-				create l_result.make
-				global_command_handler_cell.put (l_result)
-			end
-			Result := l_result
+		once
+			create Result.make
 		end
 
-feature {NONE} -- Implementation
-
-	global_command_handler_cell: CELL [detachable EV_COMMAND_HANDLER]
-			-- Singleton cell for command handler
+	dispatcher: EV_RIBBON_DISPACHER
 		once
-			create Result.put (void)
+			create Result.make
+		end
+
+	ribbon_resource: EV_RIBBON_RESOURCES
+		once
+			create Result
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

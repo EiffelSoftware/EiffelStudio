@@ -188,7 +188,7 @@ feature{NONE} -- Initialization
 	initialize
 			-- Initialize
 		local
-			l_sep_list: ARRAYED_LIST [STRING]
+			l_sep_list: ARRAYED_LIST [detachable STRING]
 			l_head_list: ARRAYED_LIST [STRING]
 			i: INTEGER
 			l_modifier: ERT_BASIC_EIFFEL_LIST_MODIFIER
@@ -224,19 +224,24 @@ feature{NONE} -- Initialization
 				i > 5
 			loop
 				if inherit_clause.i_th (i) = Void then
-					l_empty_modifier := create{ERT_EMPTY_EIFFEL_LIST_MODIFIER}.make (attached_ast (i), False, match_list)
+					l_empty_modifier := create {ERT_EMPTY_EIFFEL_LIST_MODIFIER}.make (attached_ast (i), False, match_list)
 					l_empty_modifier.set_header_text (l_head_list.i_th (i))
 					if is_footer_needed then
 						l_empty_modifier.set_footer_text ("%N%T%T")
 					end
 					l_modifier := l_empty_modifier
 				elseif inherit_clause.i_th (i).content = Void or else inherit_clause.i_th (i).content.is_empty then
-					l_inherit_clause_name := inherit_clause.i_th (i).clause_keyword (match_list)
-					l_empty_modifier := create{ERT_EMPTY_EIFFEL_LIST_MODIFIER}.make (l_inherit_clause_name, False, match_list)
+					if attached inherit_clause.i_th (i).clause_keyword (match_list) as l_clause_keyword then
+						l_inherit_clause_name := l_clause_keyword
+					else
+							-- This should not happen.
+						l_inherit_clause_name := attached_ast (i)
+					end
+					l_empty_modifier := create {ERT_EMPTY_EIFFEL_LIST_MODIFIER}.make (l_inherit_clause_name, False, match_list)
 					l_empty_modifier.set_header_ast (l_inherit_clause_name)
 					l_modifier := l_empty_modifier
 				else
-					l_modifier := create{ERT_EIFFEL_LIST_MODIFIER}.make (inherit_clause.i_th (i).content, match_list)
+					l_modifier := create {ERT_EIFFEL_LIST_MODIFIER}.make (inherit_clause.i_th (i).content, match_list)
 				end
 				l_modifier.set_arguments (l_sep_list.i_th (i), "%T%T%T", "%N")
 				inherit_clause_modifier.extend (l_modifier)
@@ -283,7 +288,7 @@ feature{NONE} -- Implementation
 		require
 			a_clause_valid: valid_clause (a_clause)
 		local
-			l_leaf: LEAF_AS
+			l_leaf: detachable LEAF_AS
 		do
 			if inherit_clause.i_th (a_clause) = Void then
 				Result := False
@@ -304,23 +309,26 @@ feature{NONE} -- Implementation
 			-- It is used when an inherit clause is present while the one before it is missing.
 		local
 			i: INTEGER
+			l_result: detachable AST_EIFFEL
 		do
 			is_footer_needed := False
 			from
 				i := a_clause - 1
-				Result :=  Void
+				l_result :=  Void
 			until
-				i < 1 or (Result /= Void)
+				i < 1 or (l_result /= Void)
 			loop
-				Result := inherit_clause.i_th (i)
-				if Result /= Void and then inherit_clause_has_comment (i) then
-					Result := match_list.i_th (inherit_clause.i_th (i).last_token (match_list).index + 1)
+				l_result := inherit_clause.i_th (i)
+				if l_result /= Void and then inherit_clause_has_comment (i) then
+					l_result := match_list.i_th (inherit_clause.i_th (i).last_token (match_list).index + 1)
 					is_footer_needed := True
 				end
 				i := i - 1
 			end
-			if Result = Void then
+			if l_result = Void then
 				Result := parent_ast.type
+			else
+				Result := l_result
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -329,7 +337,7 @@ feature{NONE} -- Implementation
 	is_footer_needed: BOOLEAN
 			-- Is a footer needed to separate two inherit clauses?
 
-	next_inherit_clause_start_token (a_clause: INTEGER): LEAF_AS
+	next_inherit_clause_start_token (a_clause: INTEGER): detachable LEAF_AS
 			-- Start token of the next inherit clause of `a_clause'.
 		require
 			a_clause_valid: valid_clause (a_clause)

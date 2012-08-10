@@ -57,7 +57,7 @@ feature -- Roundtrip
 	sign_symbol_index: INTEGER
 			-- Index of symbol "+" or "-" associated with this structure
 
-	sign_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+	sign_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Symbol "+" or "-" associated with this structure
 		require
 			a_list_not_void: a_list /= Void

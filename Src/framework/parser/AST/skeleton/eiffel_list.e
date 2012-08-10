@@ -50,7 +50,7 @@ feature -- Roundtrip
 		attribute
 		end
 
-	separator_list_i_th (i: INTEGER; a_list: LEAF_AS_LIST): LEAF_AS
+	separator_list_i_th (i: INTEGER; a_list: LEAF_AS_LIST): detachable LEAF_AS
 			-- Terminals at position `i' in `separator_list' using `a_list'.
 		require
 			valid_index: separator_list.valid_index (i)
@@ -60,7 +60,7 @@ feature -- Roundtrip
 		do
 			n := separator_list.i_th (i)
 			if a_list.valid_index (n) then
-				Result ?= a_list.i_th (n)
+				Result := a_list.i_th (n)
 			end
 		end
 

@@ -161,7 +161,7 @@ feature -- Access
 			create Result.make (t, f, o, is_qualified, a_as, d_as)
 		end
 
-	new_inline_agent_creation_as (a_b: BODY_AS; a_o: DELAYED_ACTUAL_LIST_AS; a_as: KEYWORD_AS): INLINE_AGENT_CREATION_AS
+	new_inline_agent_creation_as (a_b: detachable BODY_AS; a_o: DELAYED_ACTUAL_LIST_AS; a_as: KEYWORD_AS): INLINE_AGENT_CREATION_AS
 			-- New INLINE_AGENT_CREATION AST node.
 		do
 			if a_b /= Void then
@@ -169,7 +169,7 @@ feature -- Access
 			end
 		end
 
-	new_create_creation_as (tp: TYPE_AS; tg: ACCESS_AS; c: ACCESS_INV_AS; k_as: KEYWORD_AS): CREATE_CREATION_AS
+	new_create_creation_as (tp: TYPE_AS; tg: detachable ACCESS_AS; c: ACCESS_INV_AS; k_as: KEYWORD_AS): CREATE_CREATION_AS
 			-- New CREATE_CREATION AST node.
 		do
 			if tg /= Void then
@@ -183,7 +183,7 @@ feature -- Access
 			create Result.make (tp, tg, c, l_as, r_as)
 		end
 
-	new_create_creation_expr_as (t: TYPE_AS; c: ACCESS_INV_AS; k_as: KEYWORD_AS): CREATE_CREATION_EXPR_AS
+	new_create_creation_expr_as (t: detachable TYPE_AS; c: ACCESS_INV_AS; k_as: KEYWORD_AS): CREATE_CREATION_EXPR_AS
 			-- New creation expression AST node
 		do
 			if t /= Void then
@@ -191,7 +191,7 @@ feature -- Access
 			end
 		end
 
-	new_bang_creation_expr_as (t: TYPE_AS; c: ACCESS_INV_AS; l_as, r_as: SYMBOL_AS): BANG_CREATION_EXPR_AS
+	new_bang_creation_expr_as (t: detachable TYPE_AS; c: ACCESS_INV_AS; l_as, r_as: SYMBOL_AS): BANG_CREATION_EXPR_AS
 			-- New creation expression AST node
 		do
 			if t /= Void then
@@ -223,7 +223,7 @@ feature -- Access
 			create Result.make (k_as, t_as, l_as)
 		end
 
-	new_constraining_type (a_type_as: TYPE_AS; a_renameing_clause_as: RENAME_CLAUSE_AS; a_comma_as: KEYWORD_AS): CONSTRAINING_TYPE_AS
+	new_constraining_type (a_type_as: detachable TYPE_AS; a_renameing_clause_as: RENAME_CLAUSE_AS; a_comma_as: KEYWORD_AS): CONSTRAINING_TYPE_AS
 			-- New constraining type structure.
 		do
 			if a_type_as /= Void then
@@ -277,7 +277,7 @@ feature -- Access
 			create Result.make (u, e)
 		end
 
-	new_typed_char_as (t_as: TYPE_AS; a_char: CHAR_AS): TYPED_CHAR_AS
+	new_typed_char_as (t_as: detachable TYPE_AS; a_char: detachable CHAR_AS): TYPED_CHAR_AS
 			-- New TYPED_CHAR AST node.
 		do
 			if t_as /= Void and then a_char /= Void then
@@ -359,7 +359,7 @@ feature -- Value AST creation
 			end
 		end
 
-	new_integer_value (a_psr: EIFFEL_SCANNER_SKELETON; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): INTEGER_AS
+	new_integer_value (a_psr: EIFFEL_SCANNER_SKELETON; sign_symbol: CHARACTER; a_type: detachable TYPE_AS; buffer: STRING; s_as: detachable SYMBOL_AS): INTEGER_AS
 			-- New integer value.
 		require
 			buffer_not_void: buffer /= Void
@@ -424,7 +424,7 @@ feature -- Value AST creation
 
 feature {NONE} -- Validation
 
-	validate_integer_real_type (a_psr: EIFFEL_SCANNER_SKELETON; a_type: TYPE_AS; buffer: STRING; for_integer: BOOLEAN)
+	validate_integer_real_type (a_psr: EIFFEL_SCANNER_SKELETON; a_type: detachable TYPE_AS; buffer: STRING; for_integer: BOOLEAN)
 			-- New integer value.
 		require
 			buffer_not_void: buffer /= Void
@@ -583,7 +583,7 @@ feature -- Roundtrip: leaf_as
 
 feature -- Access
 
-	new_access_assert_as (f: ID_AS; p: PARAMETER_LIST_AS): ACCESS_ASSERT_AS
+	new_access_assert_as (f: detachable ID_AS; p: PARAMETER_LIST_AS): ACCESS_ASSERT_AS
 			-- New ACCESS_ASSERT AST node
 		do
 			if f /= Void then
@@ -591,7 +591,7 @@ feature -- Access
 			end
 		end
 
-	new_access_feat_as (f: ID_AS; p: PARAMETER_LIST_AS): ACCESS_FEAT_AS
+	new_access_feat_as (f: detachable ID_AS; p: PARAMETER_LIST_AS): ACCESS_FEAT_AS
 			-- New ACCESS_FEAT AST node
 		do
 			if f /= Void then
@@ -599,7 +599,7 @@ feature -- Access
 			end
 		end
 
-	new_access_id_as (f: ID_AS; p: PARAMETER_LIST_AS): ACCESS_ID_AS
+	new_access_id_as (f: detachable ID_AS; p: PARAMETER_LIST_AS): ACCESS_ID_AS
 			-- New ACCESS_ID AST node
 		do
 			if f /= Void then
@@ -607,7 +607,7 @@ feature -- Access
 			end
 		end
 
-	new_access_inv_as (f: ID_AS; p: PARAMETER_LIST_AS; k_as: SYMBOL_AS): ACCESS_INV_AS
+	new_access_inv_as (f: detachable ID_AS; p: PARAMETER_LIST_AS; k_as: SYMBOL_AS): ACCESS_INV_AS
 			-- New ACCESS_INV AST node
 		do
 			if f /= Void then
@@ -615,7 +615,7 @@ feature -- Access
 			end
 		end
 
-	new_address_as (f: FEATURE_NAME; a_as: SYMBOL_AS): ADDRESS_AS
+	new_address_as (f: detachable FEATURE_NAME; a_as: SYMBOL_AS): ADDRESS_AS
 			-- New ADDRESS AST node
 		do
 			if f /= Void then
@@ -623,7 +623,7 @@ feature -- Access
 			end
 		end
 
-	new_address_current_as (other: CURRENT_AS; a_as: SYMBOL_AS): ADDRESS_CURRENT_AS
+	new_address_current_as (other: detachable CURRENT_AS; a_as: SYMBOL_AS): ADDRESS_CURRENT_AS
 			-- New ADDRESS_CURRENT AST node
 		do
 			if other /= Void then
@@ -631,7 +631,7 @@ feature -- Access
 			end
 		end
 
-	new_address_result_as (other: RESULT_AS; a_as: SYMBOL_AS): ADDRESS_RESULT_AS
+	new_address_result_as (other: detachable RESULT_AS; a_as: SYMBOL_AS): ADDRESS_RESULT_AS
 			-- New ADDRESS_RESULT AST node
 		do
 			if other /= Void then
@@ -645,7 +645,7 @@ feature -- Access
 			create Result.initialize (a_as)
 		end
 
-	new_array_as (exp: EIFFEL_LIST [EXPR_AS]; l_as: SYMBOL_AS; r_as: detachable SYMBOL_AS): ARRAY_AS
+	new_array_as (exp: detachable EIFFEL_LIST [EXPR_AS]; l_as: SYMBOL_AS; r_as: detachable SYMBOL_AS): ARRAY_AS
 			-- New Manifest ARRAY AST node
 		do
 			if exp /= Void then
@@ -968,12 +968,9 @@ feature -- Access
 
 	set_expanded_class_type (a_type: TYPE_AS; is_expanded: BOOLEAN; s_as: KEYWORD_AS)
 			-- Set expanded status of `a_type' if it is an instance of CLASS_TYPE_AS.
-		local
-			l_class_type: CLASS_TYPE_AS
 		do
 			if is_expanded then
-				l_class_type ?= a_type
-				if l_class_type /= Void then
+				if attached {CLASS_TYPE_AS} a_type as l_class_type then
 					l_class_type.set_is_expanded (True, s_as)
 				end
 			end
@@ -1399,7 +1396,7 @@ feature -- Access
 			end
 		end
 
-	new_formal_as (n: ID_AS; is_ref, is_exp: BOOLEAN; r_as: KEYWORD_AS): FORMAL_AS
+	new_formal_as (n: detachable ID_AS; is_ref, is_exp: BOOLEAN; r_as: detachable KEYWORD_AS): FORMAL_AS
 			-- New FORMAL AST node
 		do
 			if n /= Void then
@@ -1514,7 +1511,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_as (t: TYPE_AS; s: BOOLEAN; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS
+	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: detachable STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -1523,7 +1520,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS
+	new_integer_hexa_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -1532,7 +1529,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_octal_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS
+	new_integer_octal_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -1541,7 +1538,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_binary_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS
+	new_integer_binary_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			if v /= Void then

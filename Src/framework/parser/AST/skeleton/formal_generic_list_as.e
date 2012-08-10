@@ -54,7 +54,9 @@ feature -- Transformation
 					l_constraints.item.type.process (l_formal_generics_pass2)
 					if l_formal_generics_pass2.has_node_changed then
 						l_formal_generics_pass2.consume_node
-						l_constraints.item.set_type (l_formal_generics_pass2.last_consumed_node)
+						if attached l_formal_generics_pass2.last_consumed_node as l_node then
+							l_constraints.item.set_type (l_node)
+						end
 					end
 					l_constraints.forth
 				end
@@ -87,7 +89,7 @@ feature -- Roundtrip
 	lsqure_symbol_index, rsqure_symbol_index: INTEGER
 			-- Symbol "[" and "]" associated with Current AST node
 
-	lsqure_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+	lsqure_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Symbol "[" associated with Current AST node
 		require
 			a_list_not_void: a_list /= Void
@@ -100,7 +102,7 @@ feature -- Roundtrip
 			end
 		end
 
-	rsqure_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+	rsqure_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Symbol "]" associated with Current AST node
 		require
 			a_list_not_void: a_list /= Void

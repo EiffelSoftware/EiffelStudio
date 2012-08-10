@@ -55,8 +55,8 @@ feature -- Operation
 	apply
 			-- Apply current modifier.
 		do
-			if has_text_changed then
-				item_ast.replace_text (text, match_list)
+			if attached text as l_text then
+				item_ast.replace_text (l_text, match_list)
 			end
 			if is_separator_needed then
 				if not already_has_separator then
@@ -108,7 +108,7 @@ feature
 	item_ast: AST_EIFFEL
 			-- Item AST node
 
-	separator_ast: AST_EIFFEL
+	separator_ast: detachable AST_EIFFEL
 			-- Separator AST node, if any
 
 invariant

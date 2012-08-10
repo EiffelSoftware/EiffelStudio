@@ -68,7 +68,7 @@ feature -- Roundtrip
 	end_keyword_index: INTEGER
 			-- Keyword "end" associated with this structure
 
-	constrain_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+	constrain_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Symbol "->" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -81,7 +81,7 @@ feature -- Roundtrip
 			end
 		end
 
-	create_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	create_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "create" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -94,7 +94,7 @@ feature -- Roundtrip
 			end
 		end
 
-	end_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	end_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "end" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -201,7 +201,6 @@ feature -- Status
 			l_constraints: like constraints
 			l_count: INTEGER
 			l_constraining_type: CONSTRAINING_TYPE_AS
-			l_formal: FORMAL_AS
 			l_recursion_break: SEARCH_TABLE [INTEGER]
 		do
 			l_constraints := constraints
@@ -217,14 +216,13 @@ feature -- Status
 					l_constraining_type := l_constraints.first
 					if l_constraining_type.renaming = Void then
 							-- If we don't have a renaming check whether it is a formal
-						l_formal ?= l_constraining_type.type
-						if l_formal = Void then
-								-- One constraint which is not a formal and has no renaming
-							Result := True
-						else
+						if attached {FORMAL_AS} l_constraining_type.type as l_formal then
 							create l_recursion_break.make (3)
 							l_recursion_break.force (position)
 							Result := a_generics[l_formal.position].recursive_is_single_constraint_without_renaming (a_generics, l_recursion_break)
+						else
+								-- One constraint which is not a formal and has no renaming
+							Result := True
 						end
 					end
 				end
@@ -245,7 +243,6 @@ feature -- Status
 			a_generics_not_void: a_generics /= Void
 			a_generics_valid: position <= a_generics.count
 		local
-			l_formal: FORMAL_AS
 			l_recursion_break: SEARCH_TABLE [INTEGER]
 			l_count: INTEGER
 			l_constraints: like constraints
@@ -256,8 +253,7 @@ feature -- Status
 
 				if l_count = 1 then
 						-- Maybe our constraint is a formal which itself has multi constraints?
-					l_formal ?= l_constraints.first.type
-					if l_formal /= Void and then l_formal.position /= position then
+					if attached {FORMAL_AS} l_constraints.first.type as l_formal and then l_formal.position /= position then
 						create l_recursion_break.make (3)
 						l_recursion_break.force (position)
 						Result := a_generics[l_formal.position].recursive_is_multi_constraint (a_generics, l_recursion_break)
@@ -323,7 +319,6 @@ feature {FORMAL_DEC_AS} -- Status implementation
 			l_constraints: like constraints
 			l_count: INTEGER
 			l_constraining_type: CONSTRAINING_TYPE_AS
-			l_formal: FORMAL_AS
 		do
 			if a_recursion_break.has (position) then
 					-- This is the case when sombebody writes a pure loop: MULTI [G -> H, H -> G]
@@ -339,14 +334,13 @@ feature {FORMAL_DEC_AS} -- Status implementation
 						l_constraining_type := l_constraints.first
 						if l_constraining_type.renaming = Void then
 								-- If we don't have a renaming check whether it is a formal
-							l_formal ?= l_constraining_type.type
-							if l_formal = Void then
-									-- One constraint which is not a formal and has no renaming
-								Result := True
-							else
+							if attached {FORMAL_AS} l_constraining_type.type as l_formal then
 									-- We insert the current position into the recursion break.
 								a_recursion_break.force (position)
 								Result := a_generics [l_formal.position].recursive_is_single_constraint_without_renaming (a_generics, a_recursion_break)
+							else
+									-- One constraint which is not a formal and has no renaming
+								Result := True
 							end
 						end
 					end
@@ -364,7 +358,6 @@ feature {FORMAL_DEC_AS} -- Status implementation
 			a_recursion_break_not_void: a_recursion_break /= Void
 		local
 			l_constraints: like constraints
-			l_next_formal: FORMAL_AS
 			l_count: INTEGER
 		do
 			if not a_recursion_break.has (position) then
@@ -372,8 +365,7 @@ feature {FORMAL_DEC_AS} -- Status implementation
 				l_count := l_constraints.count
 				if l_count = 1 then
 						-- Maybe our constraint is a formal which itself has multi constraints?
-					l_next_formal ?= l_constraints.first.type
-					if l_next_formal /= Void then
+					if attached {FORMAL_AS} l_constraints.first.type as l_next_formal then
 						a_recursion_break.force (position)
 						Result := a_generics[l_next_formal.position].recursive_is_multi_constraint (a_generics, a_recursion_break)
 					end

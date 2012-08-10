@@ -53,7 +53,7 @@ feature -- Roundtrip
 	rarray_symbol_index: INTEGER
 			-- Index of symbol ">>" associated with this structure.
 
-	larray_symbol (a_list: detachable LEAF_AS_LIST): SYMBOL_AS
+	larray_symbol (a_list: detachable LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Symbol "<<" associated with this structure
 			--| We do not require `a_list' to be attached because we save the token.
 		local
@@ -70,7 +70,7 @@ feature -- Roundtrip
 			end
 		end
 
-	rarray_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+	rarray_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Symbol ">>" associated with this structure
 		require
 			a_list_not_void: a_list /= Void

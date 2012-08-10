@@ -70,11 +70,11 @@ feature -- Applicability
 		do
 			l_modifier_list := merge_modifier_list
 			compute_modification (l_modifier_list)
-			if header_text /= Void and then header_ast /= Void then
-				header_ast.replace_text (header_text, match_list)
+			if attached header_text as l_header_text and then attached header_ast as l_header_ast then
+				header_ast.replace_text (l_header_text, match_list)
 			end
-			if footer_text /= Void and then footer_ast /= Void then
-				footer_ast.replace_text (footer_text, match_list)
+			if attached footer_text as l_footer_text and then attached footer_ast as l_footer_ast then
+				footer_ast.replace_text (l_footer_text, match_list)
 			end
 			l_modifier_list.do_all (agent {ERT_LIST_ITEM_MODIFIER}.apply)
 			applied := True
@@ -208,10 +208,10 @@ feature{NONE} -- Implementation
 
 			if header_text /= Void and header_ast = Void then
 				if is_prepended then
-				    create {ERT_PREPENDED_ITEM_MODIFIER}l_modifier.make (attached_ast, header_text, i, counter, match_list)
+				    create {ERT_PREPENDED_ITEM_MODIFIER} l_modifier.make (attached_ast, header_text, i, counter, match_list)
 					a_modifier_list.extend (l_modifier)
 				else
-					create {ERT_APPENDED_ITEM_MODIFIER}l_modifier.make (attached_ast, header_text, i, counter, match_list)
+					create {ERT_APPENDED_ITEM_MODIFIER} l_modifier.make (attached_ast, header_text, i, counter, match_list)
 					a_modifier_list.put_front (l_modifier)
 				end
 				l_modifier.set_is_separator_needed (False)
@@ -220,10 +220,10 @@ feature{NONE} -- Implementation
 
 			if footer_text /= Void and footer_ast = Void then
 				if is_prepended then
-				    create {ERT_PREPENDED_ITEM_MODIFIER}l_modifier.make (attached_ast, footer_text, i, counter, match_list)
+				    create {ERT_PREPENDED_ITEM_MODIFIER} l_modifier.make (attached_ast, footer_text, i, counter, match_list)
 					a_modifier_list.put_front (l_modifier)
 				else
-					create {ERT_APPENDED_ITEM_MODIFIER}l_modifier.make (attached_ast, footer_text, i, counter, match_list)
+					create {ERT_APPENDED_ITEM_MODIFIER} l_modifier.make (attached_ast, footer_text, i, counter, match_list)
 					a_modifier_list.extend (l_modifier)
 				end
 				l_modifier.set_is_separator_needed (False)

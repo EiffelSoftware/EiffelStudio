@@ -84,7 +84,7 @@ feature -- Roundtrip
 	convert_keyword_index: INTEGER
 		-- Index of keyword "convert" associated with this structure.
 
-	alias_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	alias_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 		-- Keyword "alias" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
@@ -97,7 +97,7 @@ feature -- Roundtrip
 			end
 		end
 
-	convert_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	convert_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 		-- Keyword "convert" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void

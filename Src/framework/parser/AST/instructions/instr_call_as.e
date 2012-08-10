@@ -68,11 +68,8 @@ feature {INTERNAL_AS} -- Status report
 	starts_with_parenthesis: BOOLEAN
 			-- Is the first format item a "(".
 			-- See: AST_FORMATTER_VISITOR.format_compound.
-		local
-			nested: NESTED_EXPR_AS
 		do
-			nested ?= call
-			Result := nested /= Void
+			Result := attached {NESTED_EXPR_AS} call
 		end
 
 invariant

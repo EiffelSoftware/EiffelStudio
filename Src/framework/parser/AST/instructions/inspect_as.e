@@ -54,7 +54,7 @@ feature -- Roundtrip
 	inspect_keyword_index, else_keyword_index: INTEGER
 			-- Index of keyword "inspect" and "else" associated with this structure
 
-	inspect_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	inspect_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "inspect" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -67,7 +67,7 @@ feature -- Roundtrip
 			end
 		end
 
-	else_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	else_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "else" associated with this structure
 		require
 			a_list_not_void: a_list /= Void

@@ -42,7 +42,7 @@ feature -- Roundtrip
 	require_keyword_index: INTEGER
 			-- Index of keyword "require" accosiated with this structure.
 
-	require_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	require_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "require" accosiated with this structure.
 		require
 			a_list_not_void: a_list /= Void

@@ -62,7 +62,7 @@ feature -- Roundtrip
 	none_id_as_index: INTEGER
 			-- 'NONE' ID_AS used for specifying non-conforming inheritance.
 
-	inherit_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	inherit_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "inherit" associated with current AST node.
 		require
 			a_list_not_void: a_list /= Void
@@ -75,7 +75,7 @@ feature -- Roundtrip
 			end
 		end
 
-	lcurly_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+	lcurly_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Symbol '{' associated with current AST node if non-conforming inheritance is specified.
 		require
 			a_list_not_void: a_list /= Void
@@ -88,7 +88,7 @@ feature -- Roundtrip
 			end
 		end
 
-	rcurly_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+	rcurly_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Symbol '}' associated with current AST node if non-conforming inheritance is specified.
 		require
 			a_list_not_void: a_list /= Void
@@ -101,20 +101,18 @@ feature -- Roundtrip
 			end
 		end
 
-	none_id_as (a_list: LEAF_AS_LIST): ID_AS
+	none_id_as (a_list: LEAF_AS_LIST): detachable ID_AS
 			-- 'NONE' ID_AS used for specifying non-conforming inheritance.
 		require
 			a_list_not_void: a_list /= Void
 		local
 			i: INTEGER
-			l_leaf: LEAF_STUB_AS
 		do
 			i := none_id_as_index
 			if a_list.valid_index (i) then
-				l_leaf ?= a_list.i_th (i)
 					-- It is not an ID_AS, because the roundtrip parser does not store ID_AS
 					-- but LEAF_STUB_AS, so we reconstruct the associated ID_AS from the LEAF_STUB_AS.
-				if l_leaf /= Void then
+				if attached {LEAF_STUB_AS} a_list.i_th (i) as l_leaf then
 					create Result.initialize (l_leaf.literal_text (a_list))
 					Result.set_position (l_leaf.line, l_leaf.column, l_leaf.position, l_leaf.location_count)
 					Result.set_index (l_leaf.index)

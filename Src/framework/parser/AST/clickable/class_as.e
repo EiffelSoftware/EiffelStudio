@@ -130,7 +130,7 @@ feature -- Roundtrip
 	external_keyword_index: INTEGER
 			-- Index of keywords that may appear in header mark
 
-	alias_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	alias_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- keyword "alias" associated with this class
 		require
 			a_list_not_void: a_list /= Void
@@ -143,7 +143,7 @@ feature -- Roundtrip
 			end
 		end
 
-	class_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	class_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- keyword "class" associated with this class
 		require
 			a_list_not_void: a_list /= Void
@@ -156,7 +156,7 @@ feature -- Roundtrip
 			end
 		end
 
-	obsolete_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	obsolete_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- keyword "obsolete" associated with this class	
 		require
 			a_list_not_void: a_list /= Void
@@ -169,7 +169,7 @@ feature -- Roundtrip
 			end
 		end
 
-	frozen_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	frozen_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keywords that may appear in header mark
 		require
 			a_list_not_void: a_list /= Void
@@ -182,7 +182,7 @@ feature -- Roundtrip
 			end
 		end
 
-	expanded_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	expanded_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keywords that may appear in header mark
 		require
 			a_list_not_void: a_list /= Void
@@ -195,7 +195,7 @@ feature -- Roundtrip
 			end
 		end
 
-	deferred_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	deferred_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keywords that may appear in header mark
 		require
 			a_list_not_void: a_list /= Void
@@ -208,7 +208,7 @@ feature -- Roundtrip
 			end
 		end
 
-	external_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	external_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keywords that may appear in header mark
 		require
 			a_list_not_void: a_list /= Void
@@ -273,7 +273,7 @@ feature -- Roundtrip
 			obsolete_keyword_set: k_as /= Void implies obsolete_keyword_index = k_as.index
 		end
 
-	first_header_mark (a_list: LEAF_AS_LIST): KEYWORD_AS
+	first_header_mark (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- First header mark keyword,
 			-- Void if no one appears.
 		require
@@ -298,19 +298,19 @@ feature -- Roundtrip
 
 feature -- Roundtrip
 
-	internal_bottom_indexes: INDEXING_CLAUSE_AS
+	internal_bottom_indexes: detachable INDEXING_CLAUSE_AS
 			-- Internal indexing clause at bottom of class.
 
-	internal_top_indexes: INDEXING_CLAUSE_AS
+	internal_top_indexes: detachable INDEXING_CLAUSE_AS
 			-- Internal indexing clause at top of class.
 
-	internal_conforming_parents: PARENT_LIST_AS
+	internal_conforming_parents: detachable PARENT_LIST_AS
 			-- Internal conforming inheritance clause
 
-	internal_non_conforming_parents: PARENT_LIST_AS
+	internal_non_conforming_parents: detachable PARENT_LIST_AS
 			-- Internal non-conforming inheritance clause
 
-	internal_generics: EIFFEL_LIST [FORMAL_DEC_AS]
+	internal_generics: detachable EIFFEL_LIST [FORMAL_DEC_AS]
 			-- Internal formal generic parameter list
 
 	internal_invariant: like invariant_part
@@ -328,7 +328,7 @@ feature -- Attributes
 			-- Obsolete message clause
 			-- (Void if was not present)
 
-	top_indexes: INDEXING_CLAUSE_AS
+	top_indexes: detachable INDEXING_CLAUSE_AS
 			-- Indexing clause at top of class.
 		do
 			if internal_top_indexes = Void or else internal_top_indexes.is_empty then
@@ -338,7 +338,7 @@ feature -- Attributes
 			end
 		end
 
-	bottom_indexes: INDEXING_CLAUSE_AS
+	bottom_indexes: detachable INDEXING_CLAUSE_AS
 			-- Indexing clause at bottom of class.
 		do
 			if internal_bottom_indexes = Void or else internal_bottom_indexes.is_empty then
@@ -348,7 +348,7 @@ feature -- Attributes
 			end
 		end
 
-	parents: PARENT_LIST_AS
+	parents: detachable PARENT_LIST_AS
 			-- Parents from both conforming and non-conforming inheritance clauses.
 		local
 			l_conforming_parents, l_non_conforming_parents: like non_conforming_parents
@@ -369,7 +369,7 @@ feature -- Attributes
 			end
 		end
 
-	conforming_parents: PARENT_LIST_AS
+	conforming_parents: detachable PARENT_LIST_AS
 			-- Parents from conforming inheritance clause.
 		do
 			Result := internal_conforming_parents
@@ -379,7 +379,7 @@ feature -- Attributes
 			end
 		end
 
-	non_conforming_parents: PARENT_LIST_AS
+	non_conforming_parents: detachable PARENT_LIST_AS
 			-- Parents from non-conforming inheritance clause.
 		do
 			Result := internal_non_conforming_parents
@@ -389,7 +389,7 @@ feature -- Attributes
 			end
 		end
 
-	generics: EIFFEL_LIST [FORMAL_DEC_AS]
+	generics: detachable EIFFEL_LIST [FORMAL_DEC_AS]
 			-- Formal generic parameter list
 		do
 			if internal_generics = Void or else internal_generics.is_empty then
@@ -413,7 +413,7 @@ feature -- Attributes
 			-- Even though this information is compilation specific it needs to be
 			-- here so that the AST's of the replicated features get stored to disk.
 
-	invariant_part: INVARIANT_AS
+	invariant_part: detachable INVARIANT_AS
 			-- Class invariant
 
 	suppliers: SUPPLIERS_AS
@@ -496,7 +496,7 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		local
-			l_break: BREAK_AS
+			l_break: detachable BREAK_AS
 		do
 			if a_list = Void then
 				if top_indexes /= Void then
@@ -527,7 +527,7 @@ feature -- Roundtrip/Token
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		local
-			l_break: BREAK_AS
+			l_break: detachable BREAK_AS
 		do
 			if a_list = Void then
 				Result := end_keyword.last_token (a_list)
@@ -718,7 +718,7 @@ feature -- Access
 			end
 		end
 
-	custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
+	custom_attributes: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Custom attributse of current class if any.
 		do
 			if top_indexes /= Void then
@@ -726,7 +726,7 @@ feature -- Access
 			end
 		end
 
-	class_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
+	class_custom_attributes: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Custom attributes of current class if any.
 		do
 			if top_indexes /= Void then
@@ -734,7 +734,7 @@ feature -- Access
 			end
 		end
 
-	interface_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
+	interface_custom_attributes: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Custom attributes of current class if any.
 		do
 			if top_indexes /= Void then
@@ -742,7 +742,7 @@ feature -- Access
 			end
 		end
 
-	assembly_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
+	assembly_custom_attributes: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Custom attributes of current class if any.
 		do
 			if top_indexes /= Void then

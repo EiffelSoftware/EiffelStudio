@@ -288,7 +288,7 @@ feature -- Unescape
 
 feature {NONE} -- Implementation
 
-	char32_to_string_32 (char: CHARACTER_32; a_result: STRING_32; for_string: BOOLEAN): STRING_32
+	char32_to_string_32 (char: CHARACTER_32; a_result: detachable STRING_32; for_string: BOOLEAN): STRING_32
 			-- "Readable" representation of `char' using
 			-- special character convention when necessary;
 			-- Syntactically correct when quoted
@@ -297,9 +297,10 @@ feature {NONE} -- Implementation
 		local
 			code: NATURAL_32
 		do
-			Result := a_result
-			if Result = Void then
+			if a_result = Void then
 				create Result.make_empty
+			else
+				Result := a_result
 			end
 
 			inspect char
@@ -357,7 +358,7 @@ feature {NONE} -- Implementation
 			Result_different: Result /= char32_to_string_32 (char, Void, for_string)
 		end
 
-	char_to_string (char: CHARACTER; a_result: STRING; for_string: BOOLEAN): STRING
+	char_to_string (char: CHARACTER; a_result: detachable STRING; for_string: BOOLEAN): STRING
 			-- "Readable" representation of `char' using
 			-- special character convention when necessary;
 			-- Syntactically correct when quoted
@@ -366,9 +367,10 @@ feature {NONE} -- Implementation
 		local
 			code: INTEGER
 		do
-			Result := a_result
-			if Result = Void then
+			if a_result = Void then
 				create Result.make_empty
+			else
+				Result := a_result
 			end
 
 			inspect char

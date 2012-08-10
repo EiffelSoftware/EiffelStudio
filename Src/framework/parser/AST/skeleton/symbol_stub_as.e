@@ -39,11 +39,9 @@ feature -- Visitor
 
 feature -- Text
 
-	literal_text (a_list: LEAF_AS_LIST): STRING
+	literal_text (a_list: detachable LEAF_AS_LIST): STRING
 			-- Literal text of this token
 			-- All symbols are ascii compatible.
-		require else
-			True
 		do
 			inspect
 				code
@@ -85,7 +83,7 @@ feature -- Text
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

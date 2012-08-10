@@ -231,10 +231,10 @@ feature {ERROR_VISITOR} -- Compute surrounding text around error
 
 feature {NONE} -- Compute surrounding text around error
 
-	previous_line, current_line, next_line: STRING
+	previous_line, current_line, next_line: detachable STRING
 			-- Surrounding lines where error occurs.
 
-	context_line: STRING
+	context_line: detachable STRING
 			-- Like current line but evaluates the surrounding context line if it hasn't
 			-- been determined.
 		local

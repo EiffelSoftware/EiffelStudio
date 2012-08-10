@@ -289,7 +289,7 @@ feature -- Output
 
 feature {ID_LIST} -- Implementation: access
 
-	area: SPECIAL [INTEGER]
+	area: detachable SPECIAL [INTEGER]
 			-- Hold additional IDs.
 
 feature {NONE} -- Implementation

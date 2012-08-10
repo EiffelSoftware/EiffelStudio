@@ -77,7 +77,7 @@ feature -- Roundtrip
 	rbracket_symbol_index: INTEGER
 			-- Index of symbol "]" associated with this structure
 
-	lbracket_symbol (a_list: detachable LEAF_AS_LIST): SYMBOL_AS
+	lbracket_symbol (a_list: detachable LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Symbol "[" associated with this structure
 		local
 			i: INTEGER
@@ -93,7 +93,7 @@ feature -- Roundtrip
 			end
 		end
 
-	rbracket_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+	rbracket_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Symbol "]" associated with this structure
 		require
 			a_list_not_void: a_list /= Void

@@ -52,7 +52,7 @@ feature -- Roundtrip
 	when_keyword_index, then_keyword_index: INTEGER
 			-- Index of keyword "when" and "then" associated with this structure
 
-	when_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	when_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "when" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -65,7 +65,7 @@ feature -- Roundtrip
 			end
 		end
 
-	then_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	then_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "then" ssociated with this structure
 		require
 			a_list_not_void: a_list /= Void

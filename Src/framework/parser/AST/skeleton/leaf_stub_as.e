@@ -37,10 +37,8 @@ feature{NONE} -- Implementation
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Text
 
-	literal_text (a_list: LEAF_AS_LIST): STRING
+	literal_text (a_list: detachable LEAF_AS_LIST): STRING
 			-- Literal text of current AST node
-		require else
-			True
 		do
 			Result := internal_text
 		end
@@ -49,7 +47,7 @@ feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
 		do
-			Result := literal_text (Void).is_equal (other.literal_text (Void))
+			Result := literal_text (Void) ~ other.literal_text (Void)
 		end
 
 	process (v: AST_VISITOR)
@@ -68,10 +66,9 @@ feature{NONE} -- Implementation
 			-- Literal text in code
 
 invariant
-	literal_text_not_void: literal_text (Void) /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

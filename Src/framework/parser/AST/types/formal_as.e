@@ -51,7 +51,7 @@ feature -- Roundtrip
 	reference_or_expanded_keyword_index: INTEGER
 			-- Index of keyword "reference" or "expanded" associated with this structure
 
-	reference_or_expanded_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	reference_or_expanded_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "reference" or "expanded" associated with this structure
 		require
 			a_list_not_void: a_list /= Void

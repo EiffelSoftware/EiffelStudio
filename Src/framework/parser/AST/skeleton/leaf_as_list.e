@@ -51,10 +51,9 @@ feature {NONE} -- Initialization
 			a_trunk_number_positive: a_trunk_number > 0
 		do
 			create trunks.make (a_trunk_number)
-			create current_trunk.make_filled (Void, trunk_size)
+			create current_trunk.make_empty (trunk_size)
 			trunks.extend (current_trunk)
 			count := 0
-			in_trunk_count := 0
 			modifier_applied := True
 		end
 
@@ -66,13 +65,11 @@ feature -- Element change
 			a_leaf_not_void: a_leaf /= Void
 			a_leaf_index_positive: a_leaf.index > 0
 		do
-			if in_trunk_count = trunk_size then
-				create current_trunk.make_filled (Void, trunk_size)
+			if current_trunk.count = trunk_size then
+				create current_trunk.make_empty (trunk_size)
 				trunks.extend (current_trunk)
-				in_trunk_count := 0
 			end
-			current_trunk.put (a_leaf, in_trunk_count)
-			in_trunk_count := in_trunk_count + 1
+			current_trunk.extend (a_leaf)
 			count := count + 1
 		end
 
@@ -102,7 +99,7 @@ feature -- Access
 		require
 			list_not_empty: count > 0
 		do
-			Result := current_trunk.item (in_trunk_count - 1)
+			Result := current_trunk.item (current_trunk.upper)
 		end
 
 	is_empty: BOOLEAN
@@ -142,9 +139,6 @@ feature -- Status reporting
 		do
 			Result := trunks.count
 		end
-
-	in_trunk_count: INTEGER
-			-- Count in `current_trunk'
 
 feature{NONE} -- Implementation
 
@@ -442,7 +436,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Text
 			until
 				i > a_region.end_index
 			loop
-				Result.append (i_th (i).literal_text (Void))
+				Result.append_string (i_th (i).literal_text (Void))
 				i := i + 1
 			end
 		end
@@ -461,7 +455,9 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Text
 			until
 				i > a_region.end_index
 			loop
-				Result := Result + i_th (i).literal_text (Void).count
+				if attached i_th (i).literal_text (Void) as l_string then
+					Result := Result + l_string.count
+				end
 				i := i + 1
 			end
 		end
@@ -554,7 +550,6 @@ feature -- Text/Separator
 		local
 			i: INTEGER
 			l_cnt: INTEGER
-			l_break: BREAK_AS
 		do
 			from
 				i := a_region.start_index
@@ -563,8 +558,7 @@ feature -- Text/Separator
 			until
 				i > l_cnt or Result
 			loop
-				l_break ?= i_th (i)
-				if l_break /= Void then
+				if attached {BREAK_AS} i_th (i) as l_break then
 					Result := l_break.has_comment
 				end
 				i := i + 1
@@ -657,7 +651,6 @@ feature -- Comment extraction
 		local
 			i: INTEGER
 			n: INTEGER
-			l_break: BREAK_AS
 			l_cmt_list: EIFFEL_COMMENTS
 		do
 			create Result.make
@@ -667,8 +660,7 @@ feature -- Comment extraction
 			until
 				i > n
 			loop
-				l_break ?= i_th (i)
-				if l_break /= Void then
+				if attached {BREAK_AS} i_th (i) as l_break then
 					l_cmt_list := l_break.extract_comment
 					if not l_cmt_list.is_empty then
 						Result.finish
@@ -811,10 +803,10 @@ feature{NONE} -- Implementation
 			if not l_prepended.is_empty then
 				Result.append (l_prepended)
 			end
-			if token_text_table.has (a_index) then
-				Result.append (token_text_table.item (a_index))
+			if attached token_text_table.item (a_index) as l_found_item then
+				Result.append (l_found_item)
 			else
-				Result.append (i_th (a_index).literal_text (Void))
+				Result.append_string (i_th (a_index).literal_text (Void))
 			end
 			l_appended := appended_token_text (a_index)
 			if not l_appended.is_empty then
@@ -907,7 +899,7 @@ invariant
 	trunks_not_empty: not trunks.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

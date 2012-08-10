@@ -24,7 +24,7 @@ inherit
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Initialization
 
-	initialize (a_text: STRING; a_owner: INTEGER; a_index: INTEGER; a_marker: INTEGER; a_list: like match_list)
+	initialize (a_text: detachable STRING; a_owner: INTEGER; a_index: INTEGER; a_marker: INTEGER; a_list: like match_list)
 			-- Initialize
 		require
 			a_list_not_void: a_list /= Void
@@ -107,7 +107,7 @@ feature -- Status reporting
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Status reporting
 
-	text: STRING
+	text: detachable STRING
 			-- Text of current item
 
 feature{NONE} -- Implementation

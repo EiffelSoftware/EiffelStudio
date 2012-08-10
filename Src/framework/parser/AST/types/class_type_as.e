@@ -48,7 +48,7 @@ feature -- Attributes
 	class_name: ID_AS
 			-- Class type name
 
-	generics: TYPE_LIST_AS
+	generics: detachable TYPE_LIST_AS
 			-- Possible generical parameters
 		do
 		end
@@ -64,7 +64,7 @@ feature -- Roundtrip
 	expanded_keyword_index: INTEGER
 			-- Index of keyword "expanded" associated with this structure.
 
-	expanded_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	expanded_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "expanded" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void

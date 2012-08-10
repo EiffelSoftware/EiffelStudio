@@ -82,7 +82,7 @@ feature -- Roundtrip
 	local_keyword_index: INTEGER
 			-- Index of keyword "local" associated with current AST node
 
-	local_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	local_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "local" associated with current AST node
 		require
 			a_list_not_void: a_list /= Void

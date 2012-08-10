@@ -65,7 +65,7 @@ feature -- Roundtrip
 	assign_keyword_index: INTEGER
 			-- Index of keyword "assign" associated with this structure
 
-	colon_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+	colon_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Symbol colon associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -78,7 +78,7 @@ feature -- Roundtrip
 			end
 		end
 
-	is_keyword (a_list: LEAF_AS_LIST): LEAF_AS
+	is_keyword (a_list: LEAF_AS_LIST): detachable LEAF_AS
 			-- Keyword "is" or equal sign associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -91,7 +91,7 @@ feature -- Roundtrip
 			end
 		end
 
-	assign_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	assign_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "assign" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -106,7 +106,7 @@ feature -- Roundtrip
 
 feature -- Attributes
 
-	arguments: EIFFEL_LIST [TYPE_DEC_AS]
+	arguments: detachable EIFFEL_LIST [TYPE_DEC_AS]
 			-- List (of list) of arguments
 		local
 			l_internal_arguments: like internal_arguments
@@ -129,13 +129,13 @@ feature -- Attributes
 	content: CONTENT_AS
 			-- Content of the body: constant or regular body
 
-	as_routine: ROUTINE_AS
+	as_routine: detachable ROUTINE_AS
 			-- See `content' as an instance of ROUTINE_AS.
 		do
 			Result ?= content
 		end
 
-	as_constant: CONSTANT_AS
+	as_constant: detachable CONSTANT_AS
 			-- See `content' as an instance of CONSTANT_AS.
 		do
 			Result ?= content
@@ -325,7 +325,7 @@ feature -- New feature description
 			--|table, for all possible combinations of the values (CONSTANT_AS,
 			--|ROUTINE_AS, Void) of content and other.content)
 		local
-			r1, r2: ROUTINE_AS
+			r1, r2: detachable ROUTINE_AS
 		do
 			r1 ?= content;
 			r2 ?= other.content

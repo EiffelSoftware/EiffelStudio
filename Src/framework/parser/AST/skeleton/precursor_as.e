@@ -65,7 +65,7 @@ feature -- Attributes
 	parent_base_class: CLASS_TYPE_AS
 			-- Optional name of the parent
 
-	parameters: EIFFEL_LIST [EXPR_AS]
+	parameters: detachable EIFFEL_LIST [EXPR_AS]
 			-- List of parameters
 		local
 			l_internal_paran: like internal_parameters

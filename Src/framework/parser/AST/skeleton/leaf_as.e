@@ -37,12 +37,12 @@ feature -- Roundtrip
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Roundtrip
 
-	literal_text (a_list: LEAF_AS_LIST): STRING
+	literal_text (a_list: detachable LEAF_AS_LIST): detachable STRING
 			-- Literal text of current AST node
-		require
-			a_list_not_void: a_list /= Void
 		do
-			Result := a_list.i_th (index).literal_text (Void)
+			if a_list /= Void then
+				Result := a_list.i_th (index).literal_text (Void)
+			end
 		end
 
 feature -- Roundtrip
@@ -61,7 +61,7 @@ feature -- Roundtrip
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

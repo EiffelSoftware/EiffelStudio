@@ -143,7 +143,7 @@ feature -- Roundtrip
 	once_string_keyword_index: INTEGER
 			-- Once string keyword.
 
-	once_string_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	once_string_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Once string keyword
 		require
 			a_list_not_void: a_list /= Void

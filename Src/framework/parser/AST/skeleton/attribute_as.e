@@ -48,7 +48,7 @@ feature -- Roundtrip
 	attribute_keyword_index: INTEGER
 			-- Index of keyword "do" associated with this structure
 
-	attribute_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	attribute_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "do" associated with this structure
 		require
 			a_list_not_void: a_list /= Void

@@ -45,7 +45,7 @@ feature -- Roundtrip
 	bit_keyword_index: INTEGER
 		-- Integer of keyword "bit" associated with this structure		
 
-	bit_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	bit_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 		-- Keyword "bit" associated with this structure		
 		require
 			a_list_not_void: a_list /= Void

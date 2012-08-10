@@ -128,21 +128,16 @@ feature -- Roundtrip/Comment
 		require
 			a_list_not_void: a_list /= Void
 		local
-			l_routine: ROUTINE_AS
 			l_start_index, l_end_index: INTEGER
 			l_retried: BOOLEAN
 			l_region: ERT_TOKEN_REGION
-			l_first_token: LEAF_AS
-			l_routine_first_token: LEAF_AS
+			l_routine_first_token: detachable LEAF_AS
 		do
 			if not l_retried then
 				if is_constant or is_attribute then
 					l_region := token_region (a_list)
-				else
-					l_routine ?= body.content
-					check l_routine /= Void end
-					l_first_token := first_token (a_list)
-					if l_first_token /= Void then
+				elseif attached {ROUTINE_AS} body.content as l_routine then
+					if attached {LEAF_AS} first_token (a_list) as l_first_token then
 						l_routine_first_token := l_routine.first_token (a_list)
 						if l_routine_first_token /= Void then
 							l_start_index := l_first_token.index.max (1)
@@ -224,11 +219,8 @@ feature -- Property
 
 	is_constant: BOOLEAN
 			-- Does Current AST represent a constant?
-		local
-			l_constant: CONSTANT_AS
 		do
-			l_constant ?= body.content
-			Result := l_constant /= Void
+			Result := attached {CONSTANT_AS} body.content
 		end
 
 feature {COMPILER_EXPORTER} -- Setting
@@ -353,7 +345,7 @@ feature -- Access
 			Result := body.index_of_instruction (i)
 		end
 
-	custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
+	custom_attributes: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Custom attributes of current class if any.
 		do
 			if attached indexes as ids then
@@ -361,7 +353,7 @@ feature -- Access
 			end
 		end
 
-	class_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
+	class_custom_attributes: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Class custom attributes of current class if any.
 		do
 			if attached indexes as ids then
@@ -369,7 +361,7 @@ feature -- Access
 			end
 		end
 
-	interface_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
+	interface_custom_attributes: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Interface custom attributes of current class if any.
 		do
 			if attached indexes as ids then
@@ -377,7 +369,7 @@ feature -- Access
 			end
 		end
 
-	property_name: STRING
+	property_name: detachable STRING
 			-- Name of the associated property (if any).
 		do
 			if attached indexes as ids then
@@ -385,7 +377,7 @@ feature -- Access
 			end
 		end
 
-	property_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
+	property_custom_attributes: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Custom attributes of a property (if any).
 		do
 			if attached indexes as ids then

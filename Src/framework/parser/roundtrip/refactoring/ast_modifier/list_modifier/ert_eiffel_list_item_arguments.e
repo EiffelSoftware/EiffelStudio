@@ -49,7 +49,7 @@ feature -- Setting
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
 
-	set_separator (a_separator: STRING)
+	set_separator (a_separator: detachable STRING)
 			-- Set `separator' with `a_separator'.
 			-- If `a_separator' is Void or empty, separators will not be processed.
 		do
@@ -87,7 +87,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
 			trailing_text_set: (a_text = Void implies trailing_text.is_empty) and (a_text /= Void implies trailing_text.is_equal (a_text))
 		end
 
-	set_arguments (a_separator, a_leading_text, a_trailing_text: STRING)
+	set_arguments (a_separator: detachable STRING; a_leading_text, a_trailing_text: STRING)
 			-- Setup arguments.
 		do
 			set_separator (a_separator)

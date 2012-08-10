@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Attributes
 
-	assertions: EIFFEL_LIST [TAGGED_AS]
+	assertions: detachable EIFFEL_LIST [TAGGED_AS]
 			-- Assertion list (only complete assertions are included)
 			-- e.g. "tag:expr", "expr"
 
@@ -51,18 +51,20 @@ feature -- Access
 		local
 			cur: INTEGER
 		do
-			cur := assertions.index
+			if attached assertions as l_assertions then
+				cur := l_assertions.index
 
-			from
-				assertions.start
-			until
-				assertions.after or else Result
-			loop
-				Result := assertions.item.is_equiv (a)
-				assertions.forth
+				from
+					l_assertions.start
+				until
+					l_assertions.after or else Result
+				loop
+					Result := l_assertions.item.is_equiv (a)
+					l_assertions.forth
+				end
+
+				l_assertions.go_i_th (cur)
 			end
-
-			assertions.go_i_th (cur)
 		end
 
 feature {ASSERT_LIST_AS} -- Replication

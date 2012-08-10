@@ -45,7 +45,7 @@ feature -- Roundtrip
 	else_keyword_index: INTEGER
 			-- Index of keyword "else" associated with this structure
 
-	else_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	else_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "else" associated with this structure
 		require
 			a_list_not_void: a_list /= Void

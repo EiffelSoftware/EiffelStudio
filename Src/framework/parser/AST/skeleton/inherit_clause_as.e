@@ -55,15 +55,8 @@ feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
-		local
-			l_content: detachable like content
 		do
-			l_content := meaningful_content
-			if l_content = Void then
-				Result := other.meaningful_content = Void
-			else
-				Result := l_content.is_equivalent (other.meaningful_content)
-			end
+			Result := equivalent (meaningful_content, other.meaningful_content)
 		end
 
 feature -- Roundtrip
@@ -71,7 +64,7 @@ feature -- Roundtrip
 	clause_keyword_index: INTEGER
 			-- Index of keyword "rename", "export", "undefine", "redefine" or "select" associated with current AST node
 
-	clause_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	clause_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "rename", "export", "undefine", "redefine" or "select" associated with current AST node
 		require
 			a_list_not_void: a_list /= Void

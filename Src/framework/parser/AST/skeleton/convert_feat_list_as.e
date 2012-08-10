@@ -42,7 +42,7 @@ feature -- Roundtrip
 	convert_keyword_index: INTEGER
 			-- Index of keyword "convert" associated with current AST node
 
-	convert_keyword (a_list: LEAF_AS_LIST): SYMBOL_AS
+	convert_keyword (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Keyword "convert" associated with current AST node
 		require
 			a_list_not_void: a_list /= Void

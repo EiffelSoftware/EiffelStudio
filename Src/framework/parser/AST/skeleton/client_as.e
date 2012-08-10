@@ -62,11 +62,10 @@ feature -- Roundtrip
 			--|into the list automatically. Because it is not in source code, we must
 			--|deal with it specially.
 		local
-			l_none_id: NONE_ID_AS
+			l_none_id: detachable NONE_ID_AS
 		do
 			if clients.count = 1 then
-				l_none_id ?= clients.first
-				Result := l_none_id /= Void
+				Result := attached {NONE_ID_AS} clients.first
 			end
 		end
 

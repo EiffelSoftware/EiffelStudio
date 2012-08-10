@@ -53,7 +53,7 @@ feature -- Roundtrip
 	elseif_keyword_index, then_keyword_index: INTEGER
 			-- Index of keyword "elseif" and "then" assoicated with this structure
 
-	elseif_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	elseif_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "elseif" assoicated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -66,7 +66,7 @@ feature -- Roundtrip
 			end
 		end
 
-	then_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	then_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "then" assoicated with this structure
 		require
 			a_list_not_void: a_list /= Void

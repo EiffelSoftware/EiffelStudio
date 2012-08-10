@@ -71,7 +71,7 @@ feature
 	closing_bracket_as_index: INTEGER
 			-- Location of `]' if present.
 
-	opening_bracket_as (a_list: LEAF_AS_LIST): SYMBOL_AS
+	opening_bracket_as (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Location of `[' if present.
 		require
 			a_list_not_void: a_list /= Void
@@ -84,7 +84,7 @@ feature
 			end
 		end
 
-	closing_bracket_as (a_list: LEAF_AS_LIST): SYMBOL_AS
+	closing_bracket_as (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Location of `]' if present.
 		require
 			a_list_not_void: a_list /= Void

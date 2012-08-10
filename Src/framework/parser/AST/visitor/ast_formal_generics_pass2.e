@@ -73,12 +73,12 @@ feature -- Access
 			last_consumed_node_set: last_consumed_node /= Void and then last_consumed_node = old new_node
 		end
 
-	last_consumed_node: TYPE_AS
+	last_consumed_node: detachable TYPE_AS
 			-- Last consumed node.
 
 feature {NONE} -- Implementation: Access
 
-	new_node: TYPE_AS
+	new_node: detachable TYPE_AS
 			-- This is the new node which was produced to replace the node which was last visited.
 			--| Usually we found the need to change the object type.
 
@@ -105,7 +105,7 @@ feature {NONE} -- Visitor implementation
 		local
 			l_class_name: ID_AS
 			l_formal_type, l_new_formal: FORMAL_AS
-			l_generics: TYPE_LIST_AS
+			l_generics: detachable TYPE_LIST_AS
 		do
 			check not_has_node_changed: not has_node_changed end
 			l_class_name := l_as.class_name
@@ -152,7 +152,9 @@ feature {NONE} -- Visitor implementation
 						-- If we changed the object, we need to replace the references.
 					if has_node_changed then
 						consume_node
-						l_generics.replace (last_consumed_node)
+						if attached last_consumed_node as l_node then
+							l_generics.replace (l_node)
+						end
 						check is_replaced: l_generics.item = last_consumed_node end
 					end
 					l_generics.forth
@@ -180,7 +182,9 @@ feature {NONE} -- Visitor implementation
 					-- If we changed the object, we need to replace the references.
 				if has_node_changed then
 					consume_node
-					l_generics.item.set_type (last_consumed_node)
+					if attached last_consumed_node as l_node then
+						l_generics.item.set_type (l_node)
+					end
 				end
 				l_generics.forth
 			end
@@ -214,8 +218,8 @@ feature {NONE} -- Types which should not occur
 	process_type_dec_as (l_as: TYPE_DEC_AS)
 		do
 			l_as.type.process (Current)
-			if has_node_changed then
-				l_as.set_type (new_node)
+			if attached new_node as l_new_node then
+				l_as.set_type (l_new_node)
 			end
 		end
 

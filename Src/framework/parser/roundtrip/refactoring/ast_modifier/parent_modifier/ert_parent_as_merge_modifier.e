@@ -200,8 +200,8 @@ feature{NONE} -- Modification computation
 							a_clause = {ERT_PARENT_AS_MODIFIER}.select_clause
 		local
 			l_index: INTEGER
-			l_dest_list: EIFFEL_LIST [FEATURE_NAME]
-			l_sour_list: EIFFEL_LIST [FEATURE_NAME]
+			l_dest_list: detachable EIFFEL_LIST [FEATURE_NAME]
+			l_sour_list: detachable EIFFEL_LIST [FEATURE_NAME]
 			l_name_list: LINKED_LIST [STRING]
 			l_name: STRING
 		do
@@ -256,8 +256,8 @@ feature{NONE} -- Modification computation
 					l_dest_list.after
 				loop
 					l_name := l_dest_list.item.internal_name.name.as_lower
-					if final_names.has (l_name) then
-						l_name := final_names.item (l_name)
+					if attached final_names.item (l_name) as l_found_name then
+						l_name := l_found_name
 						last_computed_modifier.replace (a_clause, l_dest_list.index, l_name)
 						l_name_list.extend (l_name)
 					end
@@ -316,7 +316,7 @@ feature{NONE} -- Modification computation
 			l_dest_feature_set: ERT_EXPORT_FEATURE_SET
 			l_merged_items: LIST [ERT_EXPORT_ITEM_LIST]
 			l_str: STRING
-			l_name, l_final_name: STRING
+			l_name: STRING
 		do
 			create l_dest_feature_set.make (destination.internal_exports.content, final_names, destination_match_list)
 			create l_sour_feature_set.make (source.internal_exports.content, final_names, source_match_list)
@@ -349,11 +349,10 @@ feature{NONE} -- Modification computation
 					l_merged_items.item.feature_name_list.after
 				loop
 					l_name := l_merged_items.item.feature_name_list.item
-					l_final_name := final_names.item (l_name)
-					if l_final_name = Void then
-						l_str.append (l_name)
-					else
+					if attached final_names.item (l_name) as l_final_name then
 						l_str.append (l_final_name)
+					else
+						l_str.append (l_name)
 					end
 
 					if l_merged_items.item.feature_name_list.index < l_merged_items.item.feature_name_list.count then

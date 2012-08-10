@@ -98,22 +98,11 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 feature -- Conveniences
 
 	is_less alias "<" (other: FEATURE_NAME): BOOLEAN
-		local
-			infix_feature: INFIX_PREFIX_AS
-			normal_feature: FEAT_NAME_ID_AS
 		do
-			normal_feature ?= other
-			infix_feature ?= other
-
-			check
-				Void_normal_feature: normal_feature = Void implies infix_feature /= Void
-				Void_infix_feature: infix_feature = Void implies normal_feature /= Void
-			end
-
-			if infix_feature = Void then
+			if attached {INFIX_PREFIX_AS} other as l_infix_feature then
+				Result := visual_name < l_infix_feature.visual_name
+			elseif attached {FEAT_NAME_ID_AS} other then
 				Result := False
-			else
-				Result := visual_name < infix_feature.visual_name
 			end
 		end
 

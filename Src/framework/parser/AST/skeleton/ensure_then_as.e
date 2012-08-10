@@ -37,7 +37,7 @@ feature -- Roundtrip
 	then_keyword_index: INTEGER
 			-- Index of keyword "then" associated with this structure
 
-	then_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	then_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "then" associated with this structure
 		require
 			a_list_not_void: a_list /= Void

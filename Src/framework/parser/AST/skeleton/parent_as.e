@@ -56,7 +56,7 @@ feature -- Attributes
 	type: CLASS_TYPE_AS
 			-- Parent type
 
-	renaming: EIFFEL_LIST [RENAME_AS]
+	renaming: detachable EIFFEL_LIST [RENAME_AS]
 			-- Rename clause
 		local
 			l_internal_renaming: like internal_renaming
@@ -72,7 +72,7 @@ feature -- Attributes
 						 (internal_renaming /= Void implies Result = internal_renaming.meaningful_content)
 		end
 
-	exports: EIFFEL_LIST [EXPORT_ITEM_AS]
+	exports: detachable EIFFEL_LIST [EXPORT_ITEM_AS]
 			-- Exports for parent
 		local
 			l_internal_exports: like internal_exports
@@ -86,10 +86,10 @@ feature -- Attributes
 		ensure
 			good_result: (internal_exports = Void implies Result = Void) and
 						 (internal_exports /= Void implies ((internal_exports.meaningful_content = Void implies Result = Void) and
-						 								   (internal_exports.meaningful_content /= Void implies (Result /= Void and then Result.is_equal (internal_exports.meaningful_content))))
+						 								   (internal_exports.meaningful_content /= Void implies (Result /= Void and then Result ~ internal_exports.meaningful_content)))
 )		end
 
-	undefining: EIFFEL_LIST [FEATURE_NAME]
+	undefining: detachable EIFFEL_LIST [FEATURE_NAME]
 			-- Undefine clause
 		local
 			l_internal_undefining: like internal_undefining
@@ -105,7 +105,7 @@ feature -- Attributes
 						 (internal_undefining /= Void implies Result = internal_undefining.meaningful_content)
 		end
 
-	redefining: EIFFEL_LIST [FEATURE_NAME]
+	redefining: detachable EIFFEL_LIST [FEATURE_NAME]
 			-- Redefining clause
 		local
 			l_internal_redefining: like internal_redefining
@@ -121,7 +121,7 @@ feature -- Attributes
 						 (internal_redefining /= Void implies Result = internal_redefining.meaningful_content)
 		end
 
-	selecting: EIFFEL_LIST [FEATURE_NAME]
+	selecting: detachable EIFFEL_LIST [FEATURE_NAME]
 			-- Select clause
 		local
 			l_internal_selecting: like internal_selecting
@@ -141,7 +141,7 @@ feature -- Attributes
 			-- End of clause if any of the `rename', `export', `redefine', `undefine'
 			-- and `select' is present
 
-	end_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	end_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- End of clause if any of the `rename', `export', `redefine', `undefine'
 			-- and `select' is present
 		require

@@ -49,7 +49,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
-	new_names (a_original_name: STRING): LIST [STRING]
+	new_names (a_original_name: STRING): detachable LIST [STRING]
 			-- Computes list of new names of `a_original_name' if any or Void
 			--
 			-- `a_original_name': Old name of a feature for which the list of new names will be computed.
@@ -78,7 +78,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 			result_not_void_implies_not_empty: Result /= Void implies not Result.is_empty
 		end
 
-	original_names (a_new_name: STRING): LIST [STRING]
+	original_names (a_new_name: STRING): detachable LIST [STRING]
 			-- Computes list of original names for `a_new_name' if any or Void
 			--
 			-- `a_new_name': New name for which a list of old/original names will be computed.

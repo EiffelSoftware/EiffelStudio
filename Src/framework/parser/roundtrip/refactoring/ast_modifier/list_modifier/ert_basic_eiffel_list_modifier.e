@@ -30,7 +30,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Header/footer
 			footer_text := a_text
 		end
 
-	header_text: STRING
+	header_text: detachable STRING
 			-- Header text
 			-- For example, in the following code
 			--
@@ -41,7 +41,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Header/footer
 			-- "indexing" is header text.
 			-- And there is no footer text here.
 
-	footer_text: STRING
+	footer_text: detachable STRING
 			-- Footer text		
 			-- For example, in the following code
 			--
@@ -68,10 +68,10 @@ feature -- Header/footer
 			footer_ast_set: footer_ast = ast
 		end
 
-	header_ast: AST_EIFFEL
+	header_ast: detachable AST_EIFFEL
 			-- AST node of header of `eiffel_list'.
 
-	footer_ast: AST_EIFFEL
+	footer_ast: detachable AST_EIFFEL
 			-- AST node of footer of `eiffel_list'.
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Item modification

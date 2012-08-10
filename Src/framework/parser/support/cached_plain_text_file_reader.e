@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		do
 			file_name := a_file_name
+			last_string := ""
 		ensure
 			a_file_name_set: file_name ~ a_file_name
 		end
@@ -40,7 +41,7 @@ feature -- Access
 	file_name: STRING
 			-- Full path to the file.
 
-	last_string: detachable STRING
+	last_string: STRING
 			-- Last read string from `read_line'.
 
 feature -- Status report
@@ -181,11 +182,11 @@ feature -- Basic operations
 		do
 			last_read_position := 0
 			last_read_line := 0
-			last_string := Void
+			last_string.wipe_out
 		ensure
 			last_read_position_reset: last_read_position = 0
 			last_read_line_reset: last_read_line = 0
-			last_string_detached: last_string = Void
+			last_string_detached: last_string.is_empty
 		end
 
 feature {NONE} -- Measurement

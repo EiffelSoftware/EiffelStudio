@@ -27,9 +27,7 @@ feature{NONE} -- Implementation
 		local
 			l_index: INTEGER
 			l_index2: INTEGER
-			l_all: ALL_AS
-			l_feature_list: FEATURE_LIST_AS
-			l_new_name: STRING
+			l_new_name: detachable STRING
 			l_old_name: STRING
 		do
 			l_index := export_clause.index
@@ -40,12 +38,9 @@ feature{NONE} -- Implementation
 				export_clause.after
 			loop
 				if export_clause.item.features /= Void then
-					l_all ?= export_clause.item.features
-					if l_all /= Void then
+					if attached {ALL_AS} export_clause.item.features as l_all then
 						features.extend (create{ERT_EXPORT_FEATURE}.make (l_all.all_keyword (a_list).text (a_list), client_set (export_clause.item)))
-					else
-						l_feature_list ?= export_clause.item.features
-						check l_feature_list /= Void end
+					elseif attached {FEATURE_LIST_AS} export_clause.item.features as l_feature_list then
 						l_index2 := l_feature_list.features.index
 						from
 							l_feature_list.features.start
@@ -165,7 +160,7 @@ feature -- Implementation
 			a_export_itme_not_void: a_export_item /= Void
 		local
 			l_index: INTEGER
-			l_none_id: NONE_ID_AS
+			l_none_id: detachable NONE_ID_AS
 		do
 			l_index := a_export_item.clients.clients.index
 			create Result.make

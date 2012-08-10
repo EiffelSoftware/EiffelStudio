@@ -62,7 +62,7 @@ feature -- Roundtrip
 	operator_index: INTEGER
 			-- Index of binary operation AST node.
 
-	operator (a_list: LEAF_AS_LIST): LEAF_AS
+	operator (a_list: LEAF_AS_LIST): detachable LEAF_AS
 			-- Binary operation AST node.
 		require
 			a_list_not_void: a_list /= Void

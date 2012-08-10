@@ -57,18 +57,18 @@ feature -- Modification apply
 				end
 				i := i + 1
 			end
-			if header_text /= Void then
-				if header_ast /= Void then
-					header_ast.replace_text (header_text, match_list)
+			if attached header_text as l_header_text then
+				if attached header_ast as l_header_ast then
+					l_header_ast.replace_text (l_header_text, match_list)
 				else
-					eiffel_list.prepend_text (header_text, match_list)
+					eiffel_list.prepend_text (l_header_text, match_list)
 				end
 			end
-			if footer_text /= Void then
-				if footer_ast /= Void then
-					footer_ast.replace_text (footer_text, match_list)
+			if attached footer_text as l_footer_text then
+				if attached footer_ast as l_footer_ast then
+					l_footer_ast.replace_text (l_footer_text, match_list)
 				else
-					eiffel_list.append_text (footer_text, match_list)
+					eiffel_list.append_text (l_footer_text, match_list)
 				end
 			end
 			applied := True
@@ -118,8 +118,8 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Modifier register
 			l_modifier: ERT_APPENDED_ITEM_MODIFIER
 			l_attached_ast: AST_EIFFEL
 		do
-			if original_item_list.i_th (i).separator_ast /= Void then
-				l_attached_ast := original_item_list.i_th (i).separator_ast
+			if attached original_item_list.i_th (i).separator_ast as l_separator_ast then
+				l_attached_ast := l_separator_ast
 			else
 				l_attached_ast := original_item_list.i_th (i).item_ast
 			end
@@ -208,7 +208,7 @@ feature{NONE} -- Initialization
 			l_cnt: INTEGER
 			l_modifier: ERT_EXISTING_ITEM_MODIFIER
 			l_item_ast: AST_EIFFEL
-			l_separator_ast: AST_EIFFEL
+			l_separator_ast: detachable AST_EIFFEL
 			l_has_separator: BOOLEAN
 		do
 			l_cnt := eiffel_list_count

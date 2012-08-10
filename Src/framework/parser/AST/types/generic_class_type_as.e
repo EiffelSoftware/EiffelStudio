@@ -53,7 +53,7 @@ feature -- Visitor
 
 feature -- Access
 
-	generics: TYPE_LIST_AS
+	generics: detachable TYPE_LIST_AS
 			-- Possible generical parameters
 		do
 			Result := internal_generics

@@ -48,7 +48,7 @@ feature -- Roundtrip
 	check_keyword_index: INTEGER
 			-- Index of keyword "check" associated with this structure
 
-	check_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	check_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "check" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -63,7 +63,7 @@ feature -- Roundtrip
 
 feature -- Attributes
 
-	check_list: EIFFEL_LIST [TAGGED_AS]
+	check_list: detachable EIFFEL_LIST [TAGGED_AS]
 			-- List of tagged boolean expression
 			-- (only complete assertions are included)
 			-- e.g. "tag:expr", "expr"

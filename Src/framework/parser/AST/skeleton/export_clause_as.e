@@ -24,12 +24,12 @@ create
 
 feature -- Content
 
-	meaningful_content: like content
+	meaningful_content: detachable like content
 			-- Meaningful `content'.
 			-- Returns a list of EXPORT_ITEM_AS objects whose `features' are not Void.
 			-- If no item in `content' satisfy this criterion, return Void.
 		local
-			l_content: like content
+			l_content: detachable like content
 		do
 			if not is_meaningful_content_calculated then
 				l_content := content
@@ -118,7 +118,7 @@ feature -- Status reporting
 
 feature{NONE} -- Implementation
 
-	internal_meaningful_content: like content
+	internal_meaningful_content: detachable like content
 			-- Internally cached `meaningful_content'.
 
 	is_meaningful_content_calculated: BOOLEAN;

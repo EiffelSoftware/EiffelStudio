@@ -27,6 +27,16 @@ class
 
 inherit
 	AST_VISITOR
+		redefine
+			is_valid
+		end
+
+feature -- Status report
+
+	is_valid: BOOLEAN
+		do
+			Result := parsed_class /= Void and then internal_match_list /= Void
+		end
 
 feature -- AST process
 
@@ -34,8 +44,7 @@ feature -- AST process
 			-- Process `a_node'.
 			-- Note: `a_node' must be included in `parsed_class'.
 		require
-			parsed_not_void: parsed_class /= Void
-			match_list_not_void: match_list /= Void
+			is_valid: is_valid
 		do
 			start_index := match_list.item_by_start_position (a_node.complete_start_position (match_list)).index
 			end_index := match_list.item_by_end_position (a_node.complete_end_position (match_list)).index
@@ -46,7 +55,7 @@ feature -- AST process
 
 feature -- Access
 
-	parsed_class: CLASS_AS
+	parsed_class: detachable CLASS_AS
 			-- Roundtrip-parsed class
 			-- All iteration will be conducted within the scope of this class.
 
@@ -59,6 +68,13 @@ feature -- Access
 
 	match_list: LEAF_AS_LIST
 			-- List of tokens
+		require
+			is_valid: is_valid
+		do
+			check attached internal_match_list as l_list then
+				Result := l_list
+			end
+		end
 
 	will_process_leading_leaves: BOOLEAN
 			-- Will leading ast nodes (BREAK_AS or SYMBOL_AS:optional semicolon) be processed?	
@@ -72,7 +88,7 @@ feature -- Settings
 			-- Reset current
 		do
 			parsed_class := Void
-			match_list := Void
+			internal_match_list := Void
 		end
 
 	setup (a_class: CLASS_AS; a_list: LEAF_AS_LIST; will_process_leading, will_process_trailing: BOOLEAN)
@@ -104,10 +120,10 @@ feature -- Settings
 		require
 			a_list_not_void: a_list /= Void
 		do
-			match_list := a_list
-			end_index := match_list.count
+			internal_match_list := a_list
+			end_index := internal_match_list.count
 		ensure
-			match_list_set: match_list = a_list
+			match_list_set: internal_match_list = a_list
 		end
 
 	set_will_process_leading_leaves (b: BOOLEAN)
@@ -379,8 +395,6 @@ feature
 		end
 
 	process_body_as (l_as: BODY_AS)
-		local
-			c_as: CONSTANT_AS
 		do
 			safe_process (l_as.internal_arguments)
 			safe_process (l_as.colon_symbol (match_list))
@@ -389,9 +403,8 @@ feature
 			safe_process (l_as.assigner)
 			safe_process (l_as.is_keyword (match_list))
 
-			c_as ?= l_as.content
-			if c_as /= Void then
-				l_as.content.process (Current)
+			if attached {CONSTANT_AS} l_as.content as c_as then
+				c_as.process (Current)
 				safe_process (l_as.indexing_clause)
 			else
 				safe_process (l_as.indexing_clause)
@@ -917,7 +930,7 @@ feature
 
 	process_loop_as (l_as: LOOP_AS)
 		local
-			l_until: KEYWORD_AS
+			l_until: detachable KEYWORD_AS
 			l_variant_processing_after: BOOLEAN
 		do
 			safe_process (l_as.iteration)
@@ -928,11 +941,11 @@ feature
 				-- Special code to handle the old or new ordering of the `variant'
 				-- clause in a loop.
 			l_until := l_as.until_keyword (match_list)
-			if l_as.variant_part /= Void and l_until /= Void then
-				if l_as.variant_part.start_position > l_until.start_position then
+			if attached l_as.variant_part as l_variant_part and l_until /= Void then
+				if l_variant_part.start_position > l_until.start_position then
 					l_variant_processing_after := True
 				else
-					safe_process (l_as.variant_part)
+					l_variant_part.process (Current)
 				end
 			else
 				safe_process (l_as.variant_part)
@@ -1003,8 +1016,6 @@ feature
 		end
 
 	process_class_as (l_as: CLASS_AS)
-		local
-			s: STRING_AS
 		do
 			safe_process (l_as.internal_top_indexes)
 			safe_process (l_as.frozen_keyword (match_list))
@@ -1015,8 +1026,7 @@ feature
 			safe_process (l_as.class_name)
 			safe_process (l_as.internal_generics)
 			safe_process (l_as.alias_keyword (match_list))
-			s ?= l_as.external_class_name
-			safe_process (s)
+			safe_process (l_as.external_class_name)
 			safe_process (l_as.obsolete_keyword (match_list))
 			safe_process (l_as.obsolete_message)
 			safe_process (l_as.internal_conforming_parents)
@@ -1375,7 +1385,6 @@ feature
 			match_list_not_void: match_list /= Void
 			leading_leaves_not_processed: not will_process_leading_leaves
 		local
-			l_break: BREAK_AS
 			l_start_index, l_end_index, l_last_index: INTEGER
 			l_index: INTEGER
 		do
@@ -1390,8 +1399,7 @@ feature
 			until
 				l_index > end_index
 			loop
-				l_break ?= match_list.i_th (l_index)
-				if l_break /= Void then
+				if attached {BREAK_AS} match_list.i_th (l_index) as l_break then
 					l_break.process (Current)
 				end
 				l_index := l_index + 1
@@ -1487,8 +1495,13 @@ feature{NONE} -- Implementation
 			end
 		end
 
+	internal_match_list: detachable like match_list
+			-- Storage for `match_list'.
+
+invariant
+
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -47,7 +47,7 @@ feature -- Roundtrip
 	end_keyword_index: INTEGER
 			-- Keyword "end" associated with this structure
 
-	end_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	end_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "end" associated with this structure
 		require
 			a_list_not_void: a_list /= Void

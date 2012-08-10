@@ -26,7 +26,7 @@ feature -- Properties
 			Result := access_name
 		end
 
-	parameters: EIFFEL_LIST [EXPR_AS]
+	parameters: detachable EIFFEL_LIST [EXPR_AS]
 			-- List of parameters if any
 		deferred
 		end

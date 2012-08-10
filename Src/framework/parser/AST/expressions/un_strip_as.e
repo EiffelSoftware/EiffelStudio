@@ -90,7 +90,7 @@ feature -- Roundtrip
 	lparan_symbol_index, rparan_symbol_index: INTEGER
 			-- Index of symbol "(" and ")" associated with this structure
 
-	strip_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	strip_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "strip"
 		require
 			a_list_not_void: a_list /= Void
@@ -103,7 +103,7 @@ feature -- Roundtrip
 			end
 		end
 
-	lparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+	lparan_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Symbol "(" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -116,7 +116,7 @@ feature -- Roundtrip
 			end
 		end
 
-	rparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+	rparan_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Symbol ")" associated with this structure
 		require
 			a_list_not_void: a_list /= Void

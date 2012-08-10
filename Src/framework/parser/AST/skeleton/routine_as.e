@@ -77,7 +77,7 @@ feature -- Roundtrip
 	obsolete_keyword_index, rescue_keyword_index: INTEGER
 			-- Index of keyword "obsolete" and "rescue" associated with this class
 
-	obsolete_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	obsolete_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "obsolete" associated with this class
 		require
 			a_list_not_void: a_list /= Void
@@ -90,7 +90,7 @@ feature -- Roundtrip
 			end
 		end
 
-	rescue_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	rescue_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "rescue" associated with this class
 		require
 			a_list_not_void: a_list /= Void
@@ -117,7 +117,7 @@ feature -- Attributes
 	precondition: REQUIRE_AS
 			-- Precondition list
 
-	locals: EIFFEL_LIST [TYPE_DEC_AS]
+	locals: detachable EIFFEL_LIST [TYPE_DEC_AS]
 			-- Local declarations
 		do
 			if

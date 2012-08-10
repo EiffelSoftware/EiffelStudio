@@ -40,7 +40,7 @@ feature -- Applicability
 
 	can_apply: BOOLEAN
 		local
-			l_source_parents, l_destination_parents: PARENT_LIST_AS
+			l_source_parents, l_destination_parents: detachable PARENT_LIST_AS
 		do
 			l_source_parents := source.parents
 			l_destination_parents := destination.parents
@@ -61,7 +61,7 @@ feature -- Applicability
 
 	apply
 		local
-			l_source_parents, l_destination_parents: PARENT_LIST_AS
+			l_source_parents, l_destination_parents: detachable PARENT_LIST_AS
 		do
 			l_source_parents := source.parents
 			l_destination_parents := destination.parents
@@ -100,60 +100,59 @@ feature{NONE} -- Implementation
 			l_appended_parents: STRING
 			l_modifier: ERT_EIFFEL_LIST_MODIFIER
 			l_processed: ARRAY [BOOLEAN]
-			l_source_parents, l_destination_parents: PARENT_LIST_AS
 		do
-			l_source_parents := source.parents
-			l_destination_parents := destination.parents
-			create last_computed_modifier.make
-			create l_appended_parents.make (256)
-			create l_processed.make (1, l_destination_parents.count)
-			dest_index := 1
-			dest_count := l_destination_parents.count
-			dest_ori_index := l_destination_parents.index
-			l_index := l_source_parents.index
-			from
-				l_source_parents.start
-			until
-				l_source_parents.after
-			loop
+			check attached source.parents as l_source_parents and then attached destination.parents as l_destination_parents then
+				create last_computed_modifier.make
+				create l_appended_parents.make (256)
+				create l_processed.make (1, l_destination_parents.count)
+				dest_index := 1
+				dest_count := l_destination_parents.count
+				dest_ori_index := l_destination_parents.index
+				l_index := l_source_parents.index
 				from
-					i := 1
-					done := False
+					l_source_parents.start
 				until
-					i > dest_count or done
+					l_source_parents.after
 				loop
-					if not l_processed.item (i) then
-						check
-							same_type: l_source_parents.item.type.same_type (l_destination_parents.i_th (i).type)
+					from
+						i := 1
+						done := False
+					until
+						i > dest_count or done
+					loop
+						if not l_processed.item (i) then
+							check
+								same_type: l_source_parents.item.type.same_type (l_destination_parents.i_th (i).type)
+							end
+							if l_source_parents.item.type.is_equivalent (l_destination_parents.i_th (i).type) then
+								last_computed_modifier.extend (
+									create {ERT_PARENT_AS_MERGE_MODIFIER}.make
+										(l_destination_parents.i_th (i), destination_match_list,
+										 l_source_parents.item, source_match_list))
+								done := True
+								l_processed.put (True, i)
+							end
 						end
-						if l_source_parents.item.type.is_equivalent (l_destination_parents.i_th (i).type) then
-							last_computed_modifier.extend (
-								create {ERT_PARENT_AS_MERGE_MODIFIER}.make
-									(l_destination_parents.i_th (i), destination_match_list,
-									 l_source_parents.item, source_match_list))
-							done := True
-							l_processed.put (True, i)
-						end
+						i := i + 1
 					end
-					i := i + 1
+					if not done then
+						l_appended_parents.append ("%N%N%T")
+						l_appended_parents.append (l_source_parents.item.text (source_match_list))
+					else
+						l_appended_parents.wipe_out
+					end
+					l_source_parents.forth
+					if not l_appended_parents.is_empty then
+						create l_modifier.make (l_destination_parents, destination_match_list)
+						l_modifier.set_arguments ("", "", "")
+						l_modifier.append (l_appended_parents.twin)
+						l_appended_parents.wipe_out
+						last_computed_modifier.extend (l_modifier)
+					end
 				end
-				if not done then
-					l_appended_parents.append ("%N%N%T")
-					l_appended_parents.append (l_source_parents.item.text (source_match_list))
-				else
-					l_appended_parents.wipe_out
-				end
-				l_source_parents.forth
-				if not l_appended_parents.is_empty then
-					create l_modifier.make (l_destination_parents, destination_match_list)
-					l_modifier.set_arguments ("", "", "")
-					l_modifier.append (l_appended_parents.twin)
-					l_appended_parents.wipe_out
-					last_computed_modifier.extend (l_modifier)
-				end
+				l_source_parents.go_i_th (l_index)
+				l_destination_parents.go_i_th (dest_ori_index)
 			end
-			l_source_parents.go_i_th (l_index)
-			l_destination_parents.go_i_th (dest_ori_index)
 		ensure
 			modification_computed: last_computed_modifier /= Void
 		end

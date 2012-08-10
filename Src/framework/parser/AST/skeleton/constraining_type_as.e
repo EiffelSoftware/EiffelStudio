@@ -73,7 +73,7 @@ feature -- Roundtrip
 	end_keyword_index: INTEGER
 			-- Index of keyword for end of rename list
 
-	end_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	end_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword for end of rename list
 		require
 			a_list_not_void: a_list /= Void

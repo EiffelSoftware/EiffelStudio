@@ -87,7 +87,7 @@ feature -- Roundtrip
 	lcurly_symbol_index: INTEGER
 			-- Index in a match list for tokens.
 
-	lcurly_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+	lcurly_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Left curly symbol(s) associated with this structure if any.
 		require
 			a_list_not_void: a_list /= Void
@@ -103,7 +103,7 @@ feature -- Roundtrip
 	attached_keyword_index, as_keyword_index: INTEGER
 			-- Index of keyword "attached" and "as" associated with this structure.
 
-	attached_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	attached_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "attached" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
@@ -116,7 +116,7 @@ feature -- Roundtrip
 			end
 		end
 
-	as_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	as_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "as" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void

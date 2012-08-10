@@ -17,7 +17,7 @@ create {INTERNAL_COMPILER_STRING_EXPORTER}
 
 feature {NONE} -- Initialization
 
-	make (ast: like attached_ast; a_text: STRING; a_owner: INTEGER; a_index: INTEGER; a_list: like match_list)
+	make (ast: like attached_ast; a_text: detachable STRING; a_owner: INTEGER; a_index: INTEGER; a_list: like match_list)
 			-- Initialize instance.
 		require
 			ast_not_void: ast /= Void
@@ -44,7 +44,7 @@ feature -- Operation
 			l_text: STRING
 		do
 			create l_text.make (text.count + trailing_text.count + leading_text.count + separator.count)
-			l_text.append (text)
+			l_text.append_string (text)
 			if is_separator_needed then
 				l_text.append (separator)
 			end

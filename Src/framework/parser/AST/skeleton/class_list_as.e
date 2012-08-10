@@ -51,7 +51,7 @@ feature -- Roundtrip
 	lcurly_symbol_index, rcurly_symbol_index: INTEGER
 			-- Index in a match list for tokens.
 
-	lcurly_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+	lcurly_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Left curly symbol(s) associated with this structure if any.
 		require
 			a_list_not_void: a_list /= Void
@@ -64,7 +64,7 @@ feature -- Roundtrip
 			end
 		end
 
-	rcurly_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+	rcurly_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Right curly symbol(s) associated with this structure
 			-- Maybe none, or maybe only left curly appears.
 		require

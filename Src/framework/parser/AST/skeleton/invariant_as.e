@@ -60,7 +60,7 @@ feature -- Roundtrip
 	invariant_keyword_index: INTEGER
 			-- Index of keyword "invariant" associated with this structure
 
-	invariant_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	invariant_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "invariant" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -75,7 +75,7 @@ feature -- Roundtrip
 
 feature -- Attribute
 
-	assertion_list: EIFFEL_LIST [TAGGED_AS]
+	assertion_list: detachable EIFFEL_LIST [TAGGED_AS]
 			-- Assertion list
 
 	once_manifest_string_count: INTEGER

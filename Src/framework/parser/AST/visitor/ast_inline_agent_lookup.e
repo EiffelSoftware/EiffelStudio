@@ -16,20 +16,17 @@ inherit
 
 feature
 
-	lookup_inline_agent_of_feature (a_body: FEATURE_AS; a_inline_agent_nr: INTEGER): BODY_AS
+	lookup_inline_agent_of_feature (a_body: FEATURE_AS; a_inline_agent_nr: INTEGER): detachable BODY_AS
 			-- Looks up the ast body of inline-agent with number `a_inline_agent_nr' in the ast body `a_body'
 		require
 			valid_inline_agent_nr: a_inline_agent_nr > 0
 			valid_body: a_body /= Void
-		local
-			l_routine: ROUTINE_AS
 		do
 			found_inline_agent := Void
 			distance_from_target := a_inline_agent_nr
 
 			if a_body.body /= Void then
-				l_routine ?= a_body.body.content
-				if l_routine /= Void then
+				if attached {ROUTINE_AS} a_body.body.content as l_routine then
 					l_routine.process (Current)
 				end
 			end
@@ -37,13 +34,13 @@ feature
 			Result := found_inline_agent
 		end
 
-	lookup_inline_agent_of_invariant (invariant_as: INVARIANT_AS; a_inline_agent_nr: INTEGER): BODY_AS
+	lookup_inline_agent_of_invariant (invariant_as: INVARIANT_AS; a_inline_agent_nr: INTEGER): detachable BODY_AS
 			-- Looks up the ast body of inline-agent with number `a_inline_agent_nr' in the ast body of invariant `invariant_as'
 		require
 			valid_inline_agent_nr: a_inline_agent_nr > 0
 			valid_invariant: invariant_as /= Void
 		local
-			l_assert_list: EIFFEL_LIST [TAGGED_AS]
+			l_assert_list: detachable EIFFEL_LIST [TAGGED_AS]
 		do
 			found_inline_agent := Void
 			distance_from_target := a_inline_agent_nr
@@ -93,7 +90,7 @@ feature
 feature {NONE}
 
 	distance_from_target: INTEGER
-	found_inline_agent: BODY_AS;
+	found_inline_agent: detachable BODY_AS;
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

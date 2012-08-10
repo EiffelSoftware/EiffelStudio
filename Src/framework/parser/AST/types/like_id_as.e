@@ -51,7 +51,7 @@ feature -- Roundtrip
 	like_keyword_index: INTEGER
 			-- Index of keyword "like" associated with this structure		
 
-	like_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	like_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "like" associated with this structure		
 		require
 			a_list_not_void: a_list /= Void

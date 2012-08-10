@@ -55,7 +55,7 @@ feature -- Attributes
 	feature_name: ID_AS
 			-- Name of the feature called
 
-	parameters: EIFFEL_LIST [EXPR_AS]
+	parameters: detachable EIFFEL_LIST [EXPR_AS]
 			-- List of parameters
 		local
 			l_internal_paran: like internal_parameters
@@ -135,7 +135,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER}
 
 feature -- Roundtrip
 
-	internal_parameters: PARAMETER_LIST_AS
+	internal_parameters: detachable PARAMETER_LIST_AS
 			-- Internal list of parameters, in which "(" and ")" are stored
 
 feature -- Roundtrip/Token

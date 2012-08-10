@@ -52,7 +52,7 @@ feature -- Roundtrip
 	dot_symbol_index: INTEGER
 			-- Index of symbol "." associated with this structure
 
-	agent_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	agent_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "agent" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -65,7 +65,7 @@ feature -- Roundtrip
 			end
 		end
 
-	dot_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+	dot_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Symbol "." associated with this structure
 		require
 			a_list_not_void: a_list /= Void

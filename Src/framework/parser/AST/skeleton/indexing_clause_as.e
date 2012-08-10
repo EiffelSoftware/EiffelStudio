@@ -57,10 +57,10 @@ feature -- Roundtrip/Token
 
 feature -- Access
 
-	custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
+	custom_attributes: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Expression representing custom attributes.
 		local
-			l_list: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
+			l_list: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 		do
 			Result := internal_custom_attributes (Metadata_header)
 			if Result /= Void then
@@ -73,10 +73,10 @@ feature -- Access
 			end
 		end
 
-	class_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
+	class_custom_attributes: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Expression representing custom attributes.
 		local
-			l_list: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
+			l_list: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 		do
 			Result := internal_custom_attributes (Class_metadata_header)
 			if Result /= Void then
@@ -89,10 +89,10 @@ feature -- Access
 			end
 		end
 
-	interface_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
+	interface_custom_attributes: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Expression representing custom attributes.
 		local
-			l_list: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
+			l_list: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 		do
 			Result := internal_custom_attributes (Interface_metadata_header)
 			if Result /= Void then
@@ -105,10 +105,10 @@ feature -- Access
 			end
 		end
 
-	assembly_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
+	assembly_custom_attributes: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Expression representing custom attributes for an assembly
 		local
-			l_list: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
+			l_list: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 		do
 			Result := internal_custom_attributes (Assembly_metadata_header)
 			if Result /= Void then
@@ -121,7 +121,7 @@ feature -- Access
 			end
 		end
 
-	property_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
+	property_custom_attributes: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Expression representing custom attributes for a property
 		do
 			Result := internal_custom_attributes (Property_metadata_header)
@@ -150,19 +150,18 @@ feature -- Access
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
-	description: STRING
+	description: detachable STRING
 			-- Description.
 		do
 			Result := string_value (Description_header)
 		end
 
-	assembly_name: ARRAY [STRING]
+	assembly_name: detachable ARRAY [STRING]
 			-- Assembly name (for external classes only)
 			-- Name, Version, Culture and Public key in that order
 		local
-			i: INDEX_AS
+			i: detachable INDEX_AS
 			list: EIFFEL_LIST [ATOMIC_AS]
-			a_string: STRING_AS
 		do
 			i := index_as_of_tag_name (Assembly_header)
 
@@ -174,16 +173,15 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 				until
 					list.after
 				loop
-					a_string ?= list.item
-					if a_string /= Void then
-						Result.put (a_string.value, list.index)
+					if attached {STRING_AS} list.item as l_string then
+						Result.put (l_string.value, list.index)
 					end
 					list.forth
 				end
 			end
 		end
 
-	external_name: STRING
+	external_name: detachable STRING
 			-- Name of entity holding current indexing clause as seen from
 			-- external world.
 		do
@@ -193,25 +191,19 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 	property_name: STRING
 			-- Expression representing custom attributes for a property
 		local
-			i: INDEX_AS
-			s: STRING_AS
-			id: ID_AS
+			i: detachable INDEX_AS
 			list: EIFFEL_LIST [ATOMIC_AS]
 		do
 			i := index_as_of_tag_name (property_name_header)
 			if i /= Void then
 				list := i.index_list
 				if not list.is_empty then
-					s ?= list.first
-					if s /= Void then
+					if attached {STRING_AS} list.first as s then
 							-- Explicit property name
 						Result := s.value
-					else
-						id ?= list.first
-						if id /= Void and then id.name.as_lower.is_equal ("auto") then
-								-- Implicit property name
-							Result := ""
-						end
+					elseif attached {ID_AS} list.first as id and then id.name.as_lower.is_equal ("auto") then
+							-- Implicit property name
+						Result := ""
 					end
 				end
 			end
@@ -220,10 +212,8 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 	dotnet_constructors: ARRAYED_LIST [STRING]
 			-- Dotnet constructors indexing clause value
 		local
-			l_index: INDEX_AS
+			l_index: detachable INDEX_AS
 			l_list: EIFFEL_LIST [ATOMIC_AS]
-			l_string: STRING_AS
-			l_id: ID_AS
 		do
 			l_index := index_as_of_tag_name (Dotnet_constructors_header)
 			if l_index /= Void then
@@ -235,14 +225,10 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 					until
 						l_list.after
 					loop
-						l_string ?= l_list.item
-						if l_string /= Void then
+						if attached {STRING_AS} l_list.item as l_string then
 							Result.extend (l_string.value)
-						else
-							l_id ?= l_list.item
-							if l_id /= Void then
-								Result.extend (l_id.name)
-							end
+						elseif attached {ID_AS} l_list.item as l_id then
+							Result.extend (l_id.name)
 						end
 						l_list.forth
 					end
@@ -255,8 +241,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 			-- Is current once construct used to be a global once in
 			-- multithreaded context?
 		local
-			i: INDEX_AS
-			s: STRING_AS
+			i: detachable INDEX_AS
 			list: EIFFEL_LIST [ATOMIC_AS]
 		do
 			i := index_as_of_tag_name (Enum_type_header)
@@ -269,8 +254,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 					until
 						list.after or Result /= Void
 					loop
-						s ?= list.item
-						if s /= Void then
+						if attached {STRING_AS} list.item as s then
 							Result := s.value
 						end
 						list.forth
@@ -407,11 +391,10 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Implementation
 
-	internal_custom_attributes (tag: STRING): EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
+	internal_custom_attributes (tag: STRING): detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Expression representing custom attributes.
 		local
-			i: INDEX_AS
-			ca: CUSTOM_ATTRIBUTE_AS
+			i: detachable INDEX_AS
 			list: EIFFEL_LIST [ATOMIC_AS]
 		do
 			i := index_as_of_tag_name (tag)
@@ -428,8 +411,7 @@ feature {NONE} -- Implementation
 					until
 						list.after
 					loop
-						ca ?= list.item
-						if ca /= Void then
+						if attached {CUSTOM_ATTRIBUTE_AS} list.item as ca then
 							Result.extend (ca)
 						end
 						list.forth
@@ -445,9 +427,8 @@ feature {NONE} -- Implementation
 			tag_attached: tag /= Void
 			not_tag_is_empty: not tag.is_empty
 		local
-			i: INDEX_AS
+			i: detachable INDEX_AS
 			list: EIFFEL_LIST [ATOMIC_AS]
-			s: STRING_AS
 		do
 			i := index_as_of_tag_name (tag)
 
@@ -459,13 +440,14 @@ feature {NONE} -- Implementation
 				until
 					list.after
 				loop
-					s ?= list.item
-					if s /= Void then
+					if attached {STRING_AS} list.item as s then
 						Result.append (s.value)
-					end
-					list.forth
-					if not list.after and s /= Void then
-						Result.append (", ")
+						list.forth
+						if not list.after and s /= Void then
+							Result.append (", ")
+						end
+					else
+						list.forth
 					end
 				end
 			end
@@ -474,7 +456,7 @@ feature {NONE} -- Implementation
 	has_tag_value (a_tag, a_value: READABLE_STRING_8): BOOLEAN
 			-- Does current have an indexing clause tag `a_tag' with value `a_value' as either identifier or string.
 		local
-			i: INDEX_AS
+			i: detachable INDEX_AS
 			list: EIFFEL_LIST [ATOMIC_AS]
 		do
 			i := index_as_of_tag_name (a_tag)
@@ -503,7 +485,7 @@ feature -- Roundtrip
 	end_keyword_index: INTEGER
 			-- Index of keyword "end" associated with current AST node
 
-	indexing_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	indexing_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "indexing" associated with current AST node
 		require
 			a_list_not_void: a_list /= Void
@@ -516,7 +498,7 @@ feature -- Roundtrip
 			end
 		end
 
-	end_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	end_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "end" associated with current AST node
 		require
 			a_list_not_void: a_list /= Void

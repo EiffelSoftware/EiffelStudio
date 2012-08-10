@@ -64,21 +64,11 @@ feature -- Comparison
 		end
 
 	is_less alias "<" (other: FEATURE_NAME): BOOLEAN
-		local
-			normal_feature: FEAT_NAME_ID_AS
-			infix_feature: INFIX_PREFIX_AS
 		do
-			normal_feature ?= other
-			infix_feature ?= other
-			check
-				Void_normal_feature: normal_feature = Void implies infix_feature /= Void
-				Void_infix_feature: infix_feature = Void implies normal_feature /= Void
-			end
-
-			if infix_feature /= Void then
+			if attached {FEAT_NAME_ID_AS} other as l_normal_feature then
+				Result := feature_name.name < l_normal_feature.feature_name.name
+			elseif attached {INFIX_PREFIX_AS} other then
 				Result := True
-			else
-				Result := feature_name.name < normal_feature.feature_name.name
 			end
 		end
 

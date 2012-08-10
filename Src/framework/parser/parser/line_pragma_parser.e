@@ -18,7 +18,7 @@ feature -- Access
 	line_number: INTEGER
 			-- Line pragma virtual line number of last pragma parsed with `parse'
 
-	document: STRING
+	document: detachable STRING
 			-- Line pragma path to document of last pragma parsed with `parse'
 
 	is_default: BOOLEAN

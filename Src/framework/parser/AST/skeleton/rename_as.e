@@ -49,7 +49,7 @@ feature -- Roundtrip
 	as_keyword_index: INTEGER
 			-- Index of keyword "as" associated with this structure.
 
-	as_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	as_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "as" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void

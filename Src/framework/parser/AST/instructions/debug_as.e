@@ -46,7 +46,7 @@ feature -- Roundtrip
 	debug_keyword_index: INTEGER
 			-- Index of keyword "debug" associated with this structure
 
-	debug_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	debug_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "debug" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -64,7 +64,7 @@ feature -- Attributes
 	compound: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Compound to debug
 
-	keys: EIFFEL_LIST [STRING_AS]
+	keys: detachable EIFFEL_LIST [STRING_AS]
 			-- Debug keys
 		local
 			l_internal_keys: like internal_keys

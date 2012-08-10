@@ -51,7 +51,7 @@ feature -- Roundtrip
 	lparan_symbol_index, rparan_symbol_index: INTEGER
 			-- Symbol "(" and ")" associated with Current AST node
 
-	lparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+	lparan_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Symbol "(" associated with Current AST node
 		require
 			a_list_not_void: a_list /= Void
@@ -64,7 +64,7 @@ feature -- Roundtrip
 			end
 		end
 
-	rparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
+	rparan_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
 			-- Symbol ")" associated with Current AST node
 		require
 			a_list_not_void: a_list /= Void
@@ -99,13 +99,13 @@ feature -- Roundtrip
 
 feature -- Attributes
 
-	target: OPERAND_AS
+	target: detachable OPERAND_AS
 			-- Target operand used when the feature will be called.
 
-	feature_name: ID_AS
+	feature_name: detachable ID_AS
 			-- Feature name.
 
-	operands : EIFFEL_LIST [OPERAND_AS]
+	operands : detachable EIFFEL_LIST [OPERAND_AS]
 			-- List of operands used by the feature when called.
 		local
 			l_internal_operands: like internal_operands

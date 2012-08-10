@@ -41,7 +41,7 @@ feature -- Roundtrip
 	create_creation_keyword_index: INTEGER
 			-- Index of keyword "create" or "creation" associated with this structure
 
-	create_creation_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	create_creation_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "create" or "creation" associated with this structure
 		require
 			a_list_not_void: a_list /= Void

@@ -34,7 +34,7 @@ feature -- Roundtrip
 	ensure_keyword_index: INTEGER
 			-- Index of keyword `ensure' associated with this structure.
 
-	ensure_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
+	ensure_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword `ensure' associated with this structure.
 		require
 			a_list_not_void: a_list /= Void

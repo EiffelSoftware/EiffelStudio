@@ -12,6 +12,13 @@ deferred class
 inherit
 	EV_ANY_HANDLER
 
+	EV_SHARED_RESOURCES
+		export
+			{NONE} all
+		end
+
+	DISPOSABLE
+
 feature {NONE} -- Initialization
 
 	init_with_window (a_window: EV_WINDOW)
@@ -25,12 +32,13 @@ feature {NONE} -- Initialization
 		do
 			if attached {EV_WINDOW_IMP} a_window.implementation as l_imp then
 				com_initialize
-				set_object_and_function_address
-
+					-- Make sure the dispatcher is created
+				dispatcher.do_nothing
 				create_ribbon_com_framework_from_dll (l_imp.wel_item, a_ribbon_dll_name)
-
-				ui_application := get_ui_application
 				associated_window := l_imp
+
+					-- All command observers have been added, now harvest them from EV_COMMAND_HANDLER into current object
+				fetch_ui_objects
 			end
 		end
 
@@ -217,6 +225,14 @@ feature -- Status Report
 			Result := item /= default_pointer
 		end
 
+	dispose
+			-- <Precursor>
+		do
+			if exists then
+				destroy
+			end
+		end
+
 feature {EV_COMMAND_HANDLER, EV_RIBBON} -- Status Report
 
 	item: POINTER
@@ -228,10 +244,22 @@ feature {EV_COMMAND_HANDLER, EV_RIBBON} -- Status Report
 	command_handler: POINTER
 			-- Command handler C object
 
+	observers: detachable ARRAYED_LIST [EV_COMMAND_HANDLER_OBSERVER]
+			-- Command handler observers
+
 feature {NONE} -- Access
 
 	associated_window: detachable EV_WINDOW_IMP
 			-- Window associated with Current ribbon.
+
+feature {NONE} -- Implementation
+
+	fetch_ui_objects
+			-- Fetch ui objects from EV_COMMAND_HANDLER
+		do
+			observers := command_handler_singleton.observers
+			command_handler_singleton.recreate_observers
+		end
 
 feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 
@@ -332,14 +360,6 @@ feature {EV_RIBBON_TITLED_WINDOW_IMP} -- Externals
 			}"
 		end
 
-	get_ui_application: POINTER
-			-- Get Ribbon IUIApplication C object
-		external
-			"C inline use <common.h>"
-		alias
-			"return GetUIApplication ();"
-		end
-
 feature {NONE} -- Implementation
 
 	c_get_ui_command_property (a_framework: POINTER; a_command_id: NATURAL_32; a_key, a_variant: POINTER): NATURAL_32
@@ -428,64 +448,44 @@ feature {NONE} -- Implementation
 			"return UI_MAKEAPPMODE((INT32) $a_mode);"
 		end
 
-feature {EV_RIBBON} -- Externals callbacks
+feature {EV_RIBBON_DISPACHER} -- Externals callbacks
 
-	on_create_ui_command (a_iui_application: POINTER; a_command_id: NATURAL_32; a_ui_command_type: INTEGER; a_iui_command_handler: POINTER): NATURAL_32
+	on_create_ui_command (a_iui_application: POINTER; a_command_id: NATURAL_32; a_ui_command_type: INTEGER; a_iui_command_handler: POINTER)
 			-- Called for each Command specified in the Windows Ribbon framework markup to bind the Command to an IUICommandHandler.
 		local
 			l_pointer: POINTER
-			l_res: EV_RIBBON_RESOURCES
-			l_list: ARRAYED_LIST [EV_RIBBON]
 		do
 			if ui_application = default_pointer then
-				-- Set `ui_application' for first time
 				ui_application := a_iui_application
 			end
 			if ui_application = a_iui_application then
 				if command_handler = default_pointer then
 					l_pointer := c_create_ui_command_handler (a_iui_command_handler)
 					command_handler := l_pointer
-				else
-					c_set_command_handler (command_handler, a_iui_command_handler)
 				end
-			else
-				-- Delegate it to other EV_RIBBON instances
-				create l_res
-				l_list := l_res.ribbon_list
-				from
-					l_list.start
-				until
-					l_list.after
-				loop
-					if l_list.item /= Current and then l_list.item.ui_application = a_iui_application then
-						Result := l_list.item.on_create_ui_command (a_iui_application, a_command_id, a_ui_command_type, a_iui_command_handler)
-					end
-					l_list.forth
-				end
+				c_set_command_handler (command_handler, a_iui_command_handler)
 			end
-			Result := {WEL_COM_HRESULT}.s_ok;--HRESULT S_OK, must return S_OK, otherwise IUICommandHandler.updateProperty and execute will not be called
 		end
 
 	on_view_changed (a_iui_application: POINTER; a_view_id: NATURAL_32; a_type_id: INTEGER; a_view: POINTER; a_verb, a_reason_code: INTEGER): NATURAL_32
 			-- Called when the state of a View changes.
 		do
-			Result := {WEL_COM_HRESULT}.e_not_impl
-			if a_type_id = {EV_VIEW_TYPE}.ribbon then
-				inspect a_verb
-				when {EV_VIEW_VERB}.create_ then
-				when {EV_VIEW_VERB}.size then
-						-- We trigger a resizing of the window content associated manually.
-					if attached {EV_RIBBON_TITLED_WINDOW_IMP} associated_window as l_window and then l_window.exists then
-						l_window.on_size (0, l_window.width, l_window.height)
+			if ui_application = a_iui_application then
+				Result := {WEL_COM_HRESULT}.e_not_impl
+				if a_type_id = {EV_VIEW_TYPE}.ribbon then
+					inspect a_verb
+					when {EV_VIEW_VERB}.create_ then
+					when {EV_VIEW_VERB}.size then
+							-- We trigger a resizing of the window content associated manually.
+						if attached {EV_RIBBON_TITLED_WINDOW_IMP} associated_window as l_window and then l_window.exists then
+							l_window.on_size (0, l_window.width, l_window.height)
+						end
+					when {EV_VIEW_VERB}.destroy then
+					else
 					end
 
-				when {EV_VIEW_VERB}.destroy then
-
-				else
-
+					Result := {WEL_COM_HRESULT}.s_ok
 				end
-
-				Result := {WEL_COM_HRESULT}.s_ok
 			end
 		end
 
@@ -502,39 +502,6 @@ feature {EV_RIBBON} -- Externals callbacks
 				hr = pCommandHandler->QueryInterface(IID_IUICommandHandler, (void **)l_command_handler);
 			}
 			]"
-		end
-
-	set_object_and_function_address
-			-- Set object and function addresses
-			-- This set callbacks in C codes, so `execute' and `update_property' can be called in C codes.
-		do
-			c_set_ribbon_object ($Current)
-			c_set_on_create_ui_command_address ($on_create_ui_command)
-			c_set_on_view_changed_address ($on_view_changed)
-		end
-
-	c_set_ribbon_object (a_object: POINTER)
-			-- Set Current object address.
-		external
-			"C signature (EIF_REFERENCE) use %"eiffel_ribbon.h%""
-		end
-
-	c_release_ribbon_object
-			-- Release Current pointer in C
-		external
-			"C use %"eiffel_ribbon.h%""
-		end
-
-	c_set_on_create_ui_command_address (a_address: POINTER)
-			-- Set on_create_ui_command function address
-		external
-			"C use %"eiffel_ribbon.h%""
-		end
-
-	c_set_on_view_changed_address (a_address: POINTER)
-			-- Set on_create_ui_command function address
-		external
-			"C use %"eiffel_ribbon.h%""
 		end
 
 	c_create_ui_command_handler (a_iui_command_handler: POINTER): POINTER

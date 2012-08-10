@@ -12,6 +12,7 @@
 			<exclude>/temp$</exclude>
 			<exclude>/release$</exclude>
 			<exclude>/obsolete$</exclude>
+			<exclude>/test$</exclude>
 		</file_rule>
 		<option warning="true" namespace="EiffelSoftware.Library.Ribbon">
 		</option>

@@ -29,7 +29,7 @@ extern "C" {
 
 typedef EIF_NATURAL_32 (* EIF_RIBBON_UPDATE_PROPERTY_PROC) (
 #ifndef EIF_IL_DLL
-	EIF_REFERENCE,  /* EIFFEL_RIBBON Eiffel object */
+	EIF_REFERENCE,  /* EV_RIBBON_DISPATCHER Eiffel object */
 #endif
 	EIF_POINTER,
 	EIF_NATURAL_32, /* UINT nCmdID */
@@ -40,7 +40,7 @@ typedef EIF_NATURAL_32 (* EIF_RIBBON_UPDATE_PROPERTY_PROC) (
 	
 typedef EIF_INTEGER (* EIF_RIBBON_EXECUTE_PROC) (
 #ifndef EIF_IL_DLL
-	EIF_REFERENCE,  /* EIFFEL_RIBBON Eiffel object */
+	EIF_REFERENCE,  /* EV_RIBBON_DISPATCHER Eiffel object */
 #endif
 	EIF_POINTER,
 	EIF_NATURAL_32, /* UINT nCmdID */
@@ -52,7 +52,7 @@ typedef EIF_INTEGER (* EIF_RIBBON_EXECUTE_PROC) (
 
 typedef EIF_NATURAL_32 (* EIF_RIBBON_ON_CREATE_UI_COMMAND_PROC) (
 #ifndef EIF_IL_DLL
-	EIF_REFERENCE,  /* EIFFEL_RIBBON Eiffel object */
+	EIF_REFERENCE,  /* EV_RIBBON_DISPATCHER Eiffel object */
 #endif
 	EIF_POINTER, 	/* IUIApplication*	*/
 	EIF_NATURAL_32, /* UINT nCmdID	*/
@@ -62,7 +62,7 @@ typedef EIF_NATURAL_32 (* EIF_RIBBON_ON_CREATE_UI_COMMAND_PROC) (
 
 typedef EIF_NATURAL_32 (* EIF_RIBBON_ON_VIEW_CHANGED_PROC) (
 #ifndef EIF_IL_DLL
-	EIF_REFERENCE,  /* EIFFEL_RIBBON Eiffel object */
+	EIF_REFERENCE,  /* EV_RIBBON_DISPATCHER Eiffel object */
 #endif
 	EIF_POINTER, 	/* IUIApplication*	*/
 	EIF_NATURAL_32, /* UINT viewId	*/
@@ -72,29 +72,26 @@ typedef EIF_NATURAL_32 (* EIF_RIBBON_ON_VIEW_CHANGED_PROC) (
 	EIF_INTEGER		/* INT32 reasonCode */
 	);
 
-extern void c_set_command_handler_object(EIF_REFERENCE a_address);
-extern void c_release_command_handler_object(void);
+extern void c_set_eiffel_dispatcher(EIF_REFERENCE a_address);
+extern void c_release_eiffel_dispatcher(void);
 extern void c_set_execute_address (EIF_RIBBON_EXECUTE_PROC a_address);
 extern void c_set_update_property_address(EIF_RIBBON_UPDATE_PROPERTY_PROC a_address);
 
-extern void c_set_ribbon_object(EIF_REFERENCE a_address);
 extern void c_release_ribbon_object(void);
 extern void c_set_on_create_ui_command_address(EIF_POINTER a_address);
 extern void c_set_on_view_changed_address(EIF_POINTER a_address);
 
-extern EIF_OBJECT eiffel_command_handler_object;
-	/* Address of Eiffel object EV_COMMAND_HANDLER */
+extern EIF_OBJECT eiffel_dispatcher;
+	/* Address of Eiffel object EV_RIBBON_DISPATCHER */
 extern EIF_RIBBON_EXECUTE_PROC eiffel_execute_function;
-	/* Address of Eiffel EV_COMMAND_HANDLER.execute */
+	/* Address of Eiffel EV_RIBBON_DISPATCHER.execute */
 extern EIF_RIBBON_UPDATE_PROPERTY_PROC eiffel_update_property_function;
-	/* Address of Eiffel EV_COMMAND_HANDLER.update_property */ 
+	/* Address of Eiffel EV_RIBBON_DISPATCHER.update_property */ 
 
-extern EIF_OBJECT eiffel_ribbon_object;
-	/* Address of Eiffel object EV_RIBBON */
 extern EIF_RIBBON_ON_CREATE_UI_COMMAND_PROC eiffel_on_create_ui_command_function;
-	/* Address of Eiffel EV_RIBBON.on_create_ui_command */
+	/* Address of Eiffel EV_RIBBON_DISPATCHER.on_create_ui_command */
 extern EIF_RIBBON_ON_VIEW_CHANGED_PROC eiffel_on_view_changed_function;
-	/* Address of Eiffel EV_RIBBON.on_view_changed */
+	/* Address of Eiffel EV_RIBBON_DISPATCHER.on_view_changed */
 
 
 #ifdef __cplusplus

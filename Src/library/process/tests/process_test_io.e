@@ -49,7 +49,7 @@ feature -- Test routines
 	test_stdout_to_file
 			-- Test {PROCESS} output redirection to a file.
 		note
-			testing: "covers/{PROCESS}.redirect_output_to_file"
+			testing: "covers/{PROCESS}.redirect_output_to_file"--, "execution/serial"
 		local
 			l_args: ARRAYED_LIST [STRING]
 			l_process: like current_process
@@ -60,12 +60,16 @@ feature -- Test routines
 			create_echo_process (l_args)
 			l_process := current_process
 			check l_process /= Void end
-			l_file := create_temporary_file
+			l_file := create_temporary_file ("stdout")
 			l_process.redirect_output_to_file (l_file.name)
 			print (l_file.name)
 			l_process.launch
 			check_successful_exit
 			compare_file_content (l_file, l_args.first)
+			if not l_file.is_closed then
+				l_file.close
+			end
+			l_file.delete
 		end
 
 	test_stderr_to_file
@@ -83,12 +87,16 @@ feature -- Test routines
 			create_echo_process (l_args)
 			l_process := current_process
 			check l_process /= Void end
-			l_file := create_temporary_file
+			l_file := create_temporary_file ("stderr")
 			l_process.redirect_error_to_file (l_file.name)
 			print (l_file.name)
 			l_process.launch
 			check_successful_exit
 			compare_file_content (l_file, l_args.i_th (2))
+			if not l_file.is_closed then
+				l_file.close
+			end
+			l_file.delete
 		end
 
 	test_stdin_from_file
@@ -105,7 +113,7 @@ feature -- Test routines
 			create_echo_process (l_args)
 			l_process := current_process
 			check l_process /= Void end
-			l_file := create_temporary_file
+			l_file := create_temporary_file ("stdin")
 			l_file.open_write
 			l_file.put_string ("ARGUMENT1%N")
 			l_file.put_string ("ARGUMENT2%N")
@@ -116,6 +124,10 @@ feature -- Test routines
 			compare_output ("ARGUMENT1%N", False)
 			compare_output ("ARGUMENT2%N", False)
 			check_successful_exit
+			if not l_file.is_closed then
+				l_file.close
+			end
+			l_file.delete
 		end
 
 	test_stdin_from_stream
@@ -144,12 +156,46 @@ feature -- Test routines
 
 feature {NONE} -- Implementation
 
-	create_temporary_file: PLAIN_TEXT_FILE
+	create_temporary_file (a_extension: detachable STRING_8): PLAIN_TEXT_FILE
 			-- Create file with temporary name.
+			-- With concurrent execution, noting ensures that {FILE_NAME}.make_temporary_name is unique
+			-- So using `a_extension' may help
+		local
+			fn: FILE_NAME
+			s: like {FILE_NAME}.string
+			f: detachable like create_temporary_file
+			i: INTEGER
 		do
-			create Result.make (create {FILE_NAME}.make_temporary_name)
-			assert ("not_temoporary_file_exists", not Result.exists)
-			assert ("temoporary_creatable", Result.is_creatable)
+				-- With concurrent execution, noting ensures that {FILE_NAME}.make_temporary_name is unique
+				-- So let's try to find
+			from
+			until
+				f /= Void or i > 1000
+			loop
+				create fn.make_temporary_name
+				s := fn.string
+				if i > 0 then
+					s.append_character ('-')
+					s.append_integer (i)
+					create fn.make_from_string (s)
+				end
+				if a_extension /= Void then
+					fn.add_extension (a_extension)
+				end
+				s := fn.string
+				create f.make (fn.string)
+				if f.exists then
+					i := i + 1
+					f := Void
+				end
+			end
+			if f = Void then
+				Result := create_temporary_file (Void)
+			else
+				Result := f
+				assert ("not_temporary_file_exists", not Result.exists)
+				assert ("temporary_creatable", Result.is_creatable)
+			end
 		ensure
 			not_result_exists: not Result.exists
 			result_creatable: Result.is_creatable
@@ -171,14 +217,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end
 

@@ -40,7 +40,7 @@ feature -- Test routines
 			l_process.set_on_fail_launch_handler (agent l_fail_cell.put (True))
 			l_process.launch
 			wait_for_exit
-			assert ("exit_code_1", l_process.exit_code = 1)
+			assert ("exit_code_1", not l_process.launched and l_fail_cell.item)
 		end
 
 	test_handlers
@@ -95,7 +95,7 @@ feature -- Test routines
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

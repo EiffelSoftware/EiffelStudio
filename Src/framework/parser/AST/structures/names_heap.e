@@ -29,8 +29,8 @@ feature {NONE} -- Initialization
 	make
 			-- Create new instance of NAMES_HEAP
 		do
-			top_index := 1
-			create area.make_filled (Void, Chunk)
+			create area.make_empty (Chunk)
+			area.extend ("")
 			create lookup_table.make (Chunk)
 			initialize_constants
 		end
@@ -63,12 +63,14 @@ feature -- Access
 			valid_result: Result >= 0
 		end
 
-	item_32 (i: INTEGER): STRING_32
+	item_32 (i: INTEGER): detachable STRING_32
 			-- Access `i'-th element in UTF-32.
 		require
 			valid_index: valid_index (i)
 		do
-			Result := encoding_converter.utf8_to_utf32 (item (i))
+			if i > 0 then
+				Result := encoding_converter.utf8_to_utf32 (area.item (i))
+			end
 		ensure
 			Result_not_void: i > 0 implies Result /= Void
 			Result_void: i = 0 implies Result = Void
@@ -80,12 +82,14 @@ feature -- Access
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
-	item (i: INTEGER): STRING
+	item (i: INTEGER): detachable STRING
 			-- Access `i'-th element.
 		require
 			valid_index: valid_index (i)
 		do
-			Result := area.item (i)
+			if i > 0 then
+				Result := area.item (i)
+			end
 		ensure
 			Result_not_void: i > 0 implies Result /= Void
 			Result_void: i = 0 implies Result = Void
@@ -97,13 +101,13 @@ feature -- Status report
 	has (i: INTEGER): BOOLEAN
 			-- Is there an entry for ID `i'?
 		do
-			Result := valid_index (i) and then area.item (i) /= Void
+			Result := i > 0 and i < area.count
 		end
 
 	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' within bounds?
 		do
-			Result := i >= 0 and then i < top_index
+			Result := i >= 0 and i < area.count
 		end
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Element change
@@ -118,23 +122,27 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Element change
 			s_valid_type: s.same_type (string_type)
 		local
 			l_lookup_table: like lookup_table
-			l_top_index: INTEGER
+			l_count: INTEGER
+			l_new_entry: STRING
+			l_area: like area
 		do
 			l_lookup_table := lookup_table
 			l_lookup_table.search (s)
 			if l_lookup_table.found then
 				found_item := l_lookup_table.found_item
 			else
-				l_top_index := top_index
-				found_item := l_top_index
-				if area.count <= l_top_index then
-					area := area.aliased_resized_area_with_default (Void, l_top_index + (l_top_index // 2).max (Chunk))
+				l_area := area
+				l_count := l_area.count
+				found_item := l_count
+				if l_count >= l_area.capacity then
+					l_area := l_area.aliased_resized_area (l_count + (l_count // 2).max (Chunk))
+					area := l_area
 				end
 					-- Duplicate string as the heap cannot work if `s' is externally
 					-- modified.
-				area.put (create {STRING}.make_from_string (s), l_top_index)
-				l_lookup_table.put (l_top_index, area [l_top_index])
-				top_index := l_top_index + 1
+				create l_new_entry.make_from_string (s)
+				l_area.extend (l_new_entry)
+				l_lookup_table.put (l_count, l_new_entry)
 			end
 		ensure
 			elemented_inserted: equal (item (found_item), s)
@@ -172,9 +180,6 @@ feature {NONE} -- Implementation: access
 			-- Hash-table indexed by string names
 			-- Values are indexes of Current to access corresponding
 			-- key in an efficient manner.
-
-	top_index: INTEGER
-			-- Number of elements in Current
 
 	Chunk: INTEGER = 5000
 			-- Default chunk size.
@@ -404,7 +409,6 @@ feature {NONE} -- Implementation: access
 invariant
 	area_not_void: area /= Void
 	lookup_table_not_void: lookup_table /= Void
-	top_index_positive: top_index >= 0
 	found_item_positive: found_item >= 0
 
 note

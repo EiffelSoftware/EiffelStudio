@@ -53,7 +53,6 @@ feature {NONE} -- Status setting
 			-- `a_arg_list': List of arguments to pass to process, can be Void.
 		require
 			a_executable_not_empty: not a_executable.is_empty
-			args_attached_implies_valid: attached {LIST [STRING]} a_arg_list as l_args implies not l_args.has (Void)
 		local
 			l_factory: PROCESS_FACTORY
 			l_process: like current_process
@@ -71,10 +70,19 @@ feature {NONE} -- Status setting
 
 	create_echo_process (a_arg_list: detachable LIST [STRING])
 			-- Initialize `current_process' to launch `echo_executable'.
-		require
-			args_attached_implies_valid: attached {LIST [STRING]} a_arg_list as l_args implies not l_args.has (Void)
+		local
+			l_args: detachable ARRAYED_LIST [STRING]
 		do
-			create_process (echo_executable, a_arg_list)
+			if a_arg_list /= Void then
+				create l_args.make (a_arg_list.count + 1)
+				l_args.extend ("--nologo")
+				across
+					a_arg_list as c
+				loop
+					l_args.force (c.item)
+				end
+			end
+			create_process (echo_executable, l_args)
 		ensure
 			current_process_attached: current_process /= Void
 			current_process_new: current_process /= old current_process
@@ -160,11 +168,20 @@ feature {NONE} -- Basic functionality
 		local
 			l_output: like last_process_output
 			l_received: READABLE_STRING_8
+			s: STRING_8
 		do
 			l_output := last_process_output
 			check l_output /= Void end
-			l_output.receive (a_expected.count, a_from_errors)
-			l_received := l_output.last_received
+			if {PLATFORM}.is_windows then
+				l_output.receive (a_expected.count + a_expected.occurrences ('%N'), a_from_errors)
+				l_received := l_output.last_received
+				s := l_received.twin
+				s.prune_all ('%R')
+				l_received := s
+			else
+				l_output.receive (a_expected.count, a_from_errors)
+				l_received := l_output.last_received
+			end
 			if l_received.count < a_expected.count then
 				if l_output.has_timed_out then
 					assert ("process_responsive", False)
@@ -265,7 +282,7 @@ feature {NONE} -- Constants
 			-- Time in milliseconds we wait for process to send new output
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -15,6 +15,8 @@ feature -- Test routines
 
 	create_with_size
 			-- Set the text and reads it again.
+		note
+			testing: "execution/isolated"
 		local
 			pixmap: EV_PIXMAP
 		do
@@ -25,6 +27,15 @@ feature -- Test routines
 
 	clear
 			-- Set the text and reads it again.
+		note
+			testing: "execution/isolated"
+		do
+			run_test (agent test_clear)
+		end
+
+feature {NONE} -- Actual Test
+
+	test_clear
 		local
 			pixmap: EV_PIXMAP
 			window: EV_WINDOW
@@ -35,12 +46,8 @@ feature -- Test routines
 
 			create window
 			window.extend (pixmap)
+			window.set_size (100, 100)
 			window.show
-
-			from until False loop
-				application.process_graphical_events
-				application.process_events
-			end
 		end
 
 feature -- Helpers
@@ -50,4 +57,14 @@ feature -- Helpers
     		create Result.make_with_rgb ({REAL_32}1.0, {REAL_32}0.0, {REAL_32}0.0)
     	end
 
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

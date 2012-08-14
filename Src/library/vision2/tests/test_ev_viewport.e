@@ -13,9 +13,18 @@ inherit
 
 feature -- Test routines
 
-	viewport_item_size
+	test_viewport_item_size
 			-- Checks if the an item in a viewport is resized to the correct size:
 			-- By default an item inside a viewport should expand to take on the size of the viewport
+		note
+			testing: "execution/isolated"
+		do
+			run_test (agent viewport_item_size)
+		end
+
+feature {NONE} -- Actual Test
+
+	viewport_item_size
 		local
 			viewport: EV_VIEWPORT
 			button: EV_BUTTON
@@ -33,4 +42,14 @@ feature -- Test routines
 			assert ("height_correct ", button.height = viewport.height)
 		end
 
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

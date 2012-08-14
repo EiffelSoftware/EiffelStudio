@@ -12,6 +12,24 @@ inherit
 
 feature -- Test routines
 
+	test_basic_timer
+			-- Registers an EV_TIMOUT with a one second interval and checks its actions are called.
+		note
+			testing: "execution/isolated"
+		do
+			run_test (agent basic_timer)
+		end
+
+	test_repeated_timer
+			-- Registers an EV_TIMOUT and checks if it is called repeatedly (and more or less on timely)
+		note
+			testing: "execution/isolated"
+		do
+			run_test (agent repeated_timer)
+		end
+
+feature {NONE} -- Actual Test
+
 	basic_timer
 			-- Registers an EV_TIMOUT with a one second interval and checks its actions are called.
 		local
@@ -61,4 +79,14 @@ feature -- Test routines
 			assert ("Timeout actions called " + counter.item.out + " instead of 5 times!", counter.item = 5)
 		end
 
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

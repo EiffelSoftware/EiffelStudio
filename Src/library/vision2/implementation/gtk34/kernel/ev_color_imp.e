@@ -97,10 +97,26 @@ feature -- Conversion
 	set_rgb_with_24_bit (a_24_bit_rgb: INTEGER)
 			-- Set intensities from `a_24_bit_rgb' value
 			-- with red in the most significant bits and blue in the least.
+		local
+			l_int: INTEGER
 		do
-			set_red_with_16_bit ((a_24_bit_rgb // 0x10000) * 0x101)
-			set_green_with_16_bit (((a_24_bit_rgb // 0x100) \\ 0xFF00) * 0x101)
-			set_blue_with_16_bit ((a_24_bit_rgb \\ 0xFFFF00) * 0x101)
+			l_int := a_24_bit_rgb // 0x10000
+			set_red_with_16_bit (l_int * 0x101)
+
+			if l_int /= 0 then
+				l_int := a_24_bit_rgb // 0x100 \\ (l_int * 0x100)
+			else
+				l_int := a_24_bit_rgb // 0x100
+			end
+			set_green_with_16_bit (l_int * 0x101)
+
+			l_int := a_24_bit_rgb // 0x100 * 0x100
+			if l_int /= 0 then
+				l_int := a_24_bit_rgb \\ l_int
+			else
+				l_int := a_24_bit_rgb
+			end
+			set_blue_with_16_bit (l_int * 0x101)
 		end
 
 	red_8_bit: INTEGER

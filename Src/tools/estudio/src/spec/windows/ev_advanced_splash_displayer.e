@@ -11,8 +11,6 @@ class
 inherit
 	EV_ADVANCED_SPLASH_DISPLAYER_I
 
-	EIFFEL_LAYOUT
-
 create
 	make
 
@@ -33,7 +31,7 @@ feature -- Command
 		do
 			create l_pixel_buffer
 			l_pixel_buffer.set_with_named_file (image_file_name)
-			print_year (l_pixel_buffer, "2011")
+			print_year (l_pixel_buffer, eiffel_layout.copyright_year)
 			create layered_window.make_for_splash (l_pixel_buffer)
 
 			create l_screen
@@ -99,7 +97,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

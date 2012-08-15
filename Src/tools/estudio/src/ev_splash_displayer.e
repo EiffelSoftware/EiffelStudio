@@ -60,7 +60,7 @@ feature -- Access
 			if splash_pixmap_filename /= Void and then (create {RAW_FILE}.make (splash_pixmap_filename)).exists then
 				create Result
 				Result.set_with_named_file (splash_pixmap_filename)
-				print_year (Result, "2011")
+				print_year (Result, eiffel_layout.copyright_year)
 			else
 				create f.default_create
 				f.set_weight ({EV_FONT_CONSTANTS}.weight_black)
@@ -155,7 +155,6 @@ feature -- Access
 		local
 			l_font: EV_FONT
 			l_font_contants: EV_FONT_CONSTANTS
-			l_coordinate: EV_COORDINATE
 		do
 			create l_font_contants
 			create l_font.make_with_values (l_font_contants.family_roman, l_font_contants.weight_regular, l_font_contants.shape_regular, 9)
@@ -254,7 +253,7 @@ feature {NONE} -- Properties
 	verbose_panel: EV_LABEL;
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

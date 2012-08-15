@@ -71,7 +71,7 @@ feature -- Generation
 		do
 			l_string := text.as_string_8
 			l_string_low := l_string.as_lower
-			if l_string_low.has_substring (name_of_translate) or else l_string_low.has_substring (name_of_translate_plural) or else l_string_low.has_substring (name_of_feature_clause.as_lower) then
+			if l_string_low.has_substring (name_of_translation) or else l_string_low.has_substring (name_of_plural_translation) or else l_string_low.has_substring (name_of_feature_clause.as_lower) then
 				eiffel_parser.reset
 				eiffel_parser.set_syntax_version (eiffel_parser.ecma_syntax)
 				eiffel_parser.parse_class_from_string (l_string, Void, Void)
@@ -100,9 +100,11 @@ feature -- Generation
 					l_iterator.set_po_file (file)
 					l_iterator.set_source_file_name (source_file_name)
 					l_iterator.set_source_text (l_string)
-					l_iterator.set_translate_feature (name_of_translate)
+					l_iterator.set_translation_feature (name_of_translation)
 					l_iterator.set_feature_clause_name (name_of_feature_clause)
-					l_iterator.set_translate_plural_feature (name_of_translate_plural)
+					l_iterator.set_plural_translation_feature (name_of_plural_translation)
+					l_iterator.set_translation_in_context_feature (name_of_translation_in_context)
+					l_iterator.set_plural_translation_in_context_feature (name_of_plural_translation_in_context)
 					l_iterator.process_class_as (eiffel_parser.root_node)
 				end
 			end
@@ -119,13 +121,21 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	name_of_translate: STRING = "translation"
+	name_of_translation: STRING = "translation"
 			-- Name of translate feature
 			-- Arguments from this feature are taken as translateable messages.
 
-	name_of_translate_plural: STRING = "plural_translation"
+	name_of_plural_translation: STRING = "plural_translation"
 			-- Name of translate feature for plurals
 			-- Arguments from this feature are taken as translateable plural messages.
+
+	name_of_translation_in_context: STRING = "translation_in_context"
+			-- Name of translation in context feature
+			-- Arguments from this feature are taken as translateable messages.
+
+	name_of_plural_translation_in_context: STRING = "plural_translation_in_context"
+			-- Name of plural translation in context feature
+			-- Arguments from this feature are taken as translateable messages.
 
 	name_of_feature_clause: STRING = "Internationalization"
 
@@ -134,7 +144,7 @@ invariant
 	file_not_void: file /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

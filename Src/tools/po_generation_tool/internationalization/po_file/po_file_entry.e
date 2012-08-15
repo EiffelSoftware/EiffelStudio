@@ -13,7 +13,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (a_msgid: STRING_GENERAL)
+	make (a_msgid: READABLE_STRING_GENERAL)
 			-- Initialize entry with `a_msgid' as message ID.
 			--
 			-- `a_msgid': Message ID for new entry
@@ -26,9 +26,22 @@ feature {NONE} -- Initialization
 			msgid_set: a_msgid.as_string_32.is_equal(msgid)
 		end
 
+feature -- Element Change
+
+	set_msgctxt (a_msgctxt: READABLE_STRING_GENERAL)
+			-- Set message context of entry to `a_msgctxt'.
+		do
+			if attached a_msgctxt as l_msgc then
+				create msgctxt_lines.make
+				msgctxt_lines.append (break_line (l_msgc.as_string_32))
+			end
+		ensure
+			a_msgctxt_set: attached a_msgctxt as l_m and then msgctxt.is_equal (a_msgctxt.as_string_32)
+		end
+
 feature {NONE} -- Element change
 
-	set_msgid (a_msgid: STRING_GENERAL)
+	set_msgid (a_msgid: READABLE_STRING_GENERAL)
 			-- Set message ID of entry to `a_msgid'.
 		require
 			a_msgid_not_void: a_msgid /= Void
@@ -41,7 +54,7 @@ feature {NONE} -- Element change
 
 feature	-- Element change
 
-	add_user_comment (a_comment: STRING_GENERAL)
+	add_user_comment (a_comment: READABLE_STRING_GENERAL)
 			-- Add a user comment line (this will be wrapped onto several comment lines if it is too long)
 			-- these comments are intended to be used for communication between translators
 			--
@@ -66,7 +79,7 @@ feature	-- Element change
 			user_comments.append (lines)
 		end
 
-	add_reference_comment (a_comment: STRING_GENERAL)
+	add_reference_comment (a_comment: READABLE_STRING_GENERAL)
 			-- Add a reference comment line (this will be not be wrapped)
 			-- This should give the location of the string
 			--  ideally in FILENAME:linenumber form
@@ -84,7 +97,7 @@ feature	-- Element change
 			reference_comments.extend (temporary)
 		end
 
-	add_automatic_comment (a_comment: STRING_GENERAL)
+	add_automatic_comment (a_comment: READABLE_STRING_GENERAL)
 			-- Add a automatic comment line (this will be not be wrapped)
 			-- These comment lines will be preserved if this po file is used
 			-- as a template.
@@ -109,7 +122,26 @@ feature	-- Element change
 			fuzzy_set: new = fuzzy
 		end
 
+	set_source_name (a_source_name: like source_name)
+			-- Set `a_source_name' to `source_name'.
+		do
+			source_name := a_source_name
+		ensure
+			source_name_set: source_name = a_source_name
+		end
+
 feature -- Access
+
+	entry_id: STRING_32
+			-- ID of the entry
+			-- Note that same `msgid' could have different translation in given context.
+		local
+			l_gen: PO_FILE_ENTRY_ID_GEN
+		do
+			Result := l_gen.generate_id_from_msgid_and_msgctxt (msgid, msgctxt)
+		ensure
+			entry_id_not_void: Result /= Void
+		end
 
 	msgid: STRING_32
 			-- Message ID of entry
@@ -119,9 +151,20 @@ feature -- Access
 			msgid_not_void: Result /= Void
 		end
 
+	msgctxt: detachable STRING_32
+			-- Message context of entry
+		do
+			if attached msgctxt_lines as l_line then
+				Result := unbreak_line (l_line)
+			end
+		end
+
 	fuzzy: BOOLEAN
 			-- Is the translation fuzzy?
 			-- If true, the translation is marked as unsure.
+
+	source_name: STRING_32
+			-- Source name where the entry was found.
 
 feature	-- Output
 
@@ -139,8 +182,12 @@ feature	-- Output
  			if fuzzy then
  				Result.append ("#, fuzzy%N")
  			end
+				-- now the msgctxt
+			if attached msgctxt_lines as l_lines then
+				Result.append_string (prepare_string("msgctxt", l_lines))
+			end
 				-- now the msgid
-			Result.append_string(prepare_string("msgid", msgid_lines))
+			Result.append_string (prepare_string("msgid", msgid_lines))
 		ensure
 			string_exists: Result /= Void
 		end
@@ -272,20 +319,23 @@ feature {NONE} -- Implementation (formatting)
 
 feature  {NONE} -- Implementation (datastructures)
 
-	user_comments: LINKED_LIST[STRING_32]
+	user_comments: LINKED_LIST [STRING_32]
 			-- List of user comments
 			-- User comments start with "# "
 
-	automatic_comments: LINKED_LIST[STRING_32]
+	automatic_comments: LINKED_LIST [STRING_32]
 			-- List of automatic comments
 			-- Automatic comments start with "#. "
 
-	reference_comments: LINKED_LIST[STRING_32]
+	reference_comments: LINKED_LIST [STRING_32]
 			-- List of reference comments
 			-- Reference comments start with "#: "
 
-	msgid_lines: LINKED_LIST[STRING_32]
+	msgid_lines: LINKED_LIST [STRING_32]
 			-- List of message ID lines
+
+	msgctxt_lines: LINKED_LIST [STRING_32]
+			-- List of msgctxt lines
 
 	initialize_datastructures
 			-- Initialize various lists.
@@ -302,7 +352,7 @@ feature  {NONE} -- Implementation (datastructures)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

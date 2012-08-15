@@ -33,11 +33,17 @@ feature -- Access
 	po_file: PO_FILE
 		-- Po file to generate entries in.
 
-	translate_feature : STRING
+	translation_feature: STRING
 		-- Name of translate feature in i18n
 
-	translate_plural_feature: STRING
+	plural_translation_feature: STRING
 		-- Name of plural_translate feature in i18n
+
+	translation_in_context_feature: STRING
+		-- Name of translation in context feature in context in i18n
+
+	plural_translation_in_context_feature: STRING
+		-- Name of plural translation in context feature in i18n
 
 	feature_clause_name: STRING
 		-- Feature clause name to extract translations from
@@ -50,24 +56,44 @@ feature -- Access
 
 feature -- Element change
 
-	set_translate_feature (a: like translate_feature)
+	set_translation_feature (a: like translation_feature)
 			-- Set translator function name to `a'.
 		require
 			a_not_void: a /= Void
 		do
-			translate_feature := a
+			translation_feature := a
 		ensure
-			a_set: a.is_equal (translate_feature)
+			a_set: a.is_equal (translation_feature)
 		end
 
-	set_translate_plural_feature (a: like translate_plural_feature)
+	set_plural_translation_feature (a: like plural_translation_feature)
 			-- Set plural translator function name to `a'.
 		require
 			a_not_void: a /= Void
 		do
-			translate_plural_feature := a
+			plural_translation_feature := a
 		ensure
-			a_set: a.is_equal (translate_plural_feature)
+			a_set: a.is_equal (plural_translation_feature)
+		end
+
+	set_translation_in_context_feature (a: like translation_in_context_feature)
+			-- Set translator function name to `a'.
+		require
+			a_not_void: a /= Void
+		do
+			translation_in_context_feature := a
+		ensure
+			a_set: a.is_equal (translation_in_context_feature)
+		end
+
+	set_plural_translation_in_context_feature (a: like plural_translation_in_context_feature)
+			-- Set plural translator function name to `a'.
+		require
+			a_not_void: a /= Void
+		do
+			plural_translation_in_context_feature := a
+		ensure
+			a_set: a.is_equal (plural_translation_in_context_feature)
 		end
 
 	set_feature_clause_name (a: like feature_clause_name)
@@ -123,23 +149,35 @@ feature {NONE} -- Implementation
 			-- `node': AST node of a feature call which is analyzed
 		local
 			l_feature_name: STRING
-			param1: STRING_AS
-			param2: STRING_AS
 		do
+			last_analysis_found_entry := False
 			l_feature_name := node.access_name
-			if l_feature_name /= Void and then l_feature_name.is_case_insensitive_equal (translate_feature) then
+			if l_feature_name /= Void and then l_feature_name.is_case_insensitive_equal (translation_feature) then
 				if node.parameters /= Void then
-					param1 ?= node.parameters.first
-					if param1 /= Void then
-						add_singular_entry (param1)
+					if attached {STRING_AS} node.parameters.first as l_singular then
+						add_singular_entry (l_singular, Void)
+						last_analysis_found_entry := True
 					end
 				end
-			elseif l_feature_name /= Void and then l_feature_name.is_case_insensitive_equal (translate_plural_feature) then
+			elseif l_feature_name /= Void and then l_feature_name.is_case_insensitive_equal (plural_translation_feature) then
 				if node.parameters /= Void then
-					param1 ?= node.parameters.first
-					param2 ?= node.parameters.i_th (node.parameters.index_set.lower+1) --should be 2d item :)
-					if param1 /= Void and then param2 /= Void then
-						add_plural_entry (param1, param2)
+					if attached {STRING_AS} node.parameters.first as l_singular and then attached {STRING_AS} node.parameters.i_th (node.parameters.index_set.lower+1) as l_plural then
+						add_plural_entry (l_singular, l_plural, Void)
+						last_analysis_found_entry := True
+					end
+				end
+			elseif l_feature_name /= Void and then l_feature_name.is_case_insensitive_equal (translation_in_context_feature) then
+				if node.parameters /= Void then
+					if attached {STRING_AS} node.parameters.first as l_singular and then attached {STRING_AS} node.parameters.i_th (node.parameters.index_set.lower+1) as l_context then
+						add_singular_entry (l_singular, l_context)
+						last_analysis_found_entry := True
+					end
+				end
+			elseif l_feature_name /= Void and then l_feature_name.is_case_insensitive_equal (plural_translation_in_context_feature) then
+				if node.parameters /= Void then
+					if attached {STRING_AS} node.parameters.first as l_singular and then attached {STRING_AS} node.parameters.i_th (node.parameters.index_set.lower+1) as l_plural and then attached {STRING_AS} node.parameters.i_th (node.parameters.index_set.lower+2) as l_context then
+						add_plural_entry (l_singular, l_plural, l_context)
+						last_analysis_found_entry := True
 					end
 				end
 			end
@@ -195,21 +233,39 @@ feature {NONE} -- Implementation
 		local
 			l_feature_name: STRING
 		do
+			last_analysis_found_entry := False
 				-- Case: agent translation ("Name")) and agent target.translation ("Name"))
 			if attached node.feature_name as l_f then
 				l_feature_name := l_f.name
 				if attached node.operands as l_operands then
-					if l_feature_name.is_case_insensitive_equal (translate_feature) then
-						if l_operands.count = 1 and then attached {STRING_AS} l_operands.first.expression as l_param then
-							add_singular_entry (l_param)
+					if l_feature_name.is_case_insensitive_equal (translation_feature) then
+						if l_operands.count = 1 and then attached {STRING_AS} l_operands.first.expression as l_singular then
+							add_singular_entry (l_singular, Void)
+							last_analysis_found_entry := True
 						end
-					elseif l_feature_name.is_case_insensitive_equal (translate_plural_feature) then
+					elseif l_feature_name.is_case_insensitive_equal (plural_translation_feature) then
 						if
 							l_operands.count = 3 and then
-							attached {STRING_AS} l_operands.i_th (1).expression as l_param1 and then
-							attached {STRING_AS} l_operands.i_th (2).expression as l_param2
+							attached {STRING_AS} l_operands.i_th (1).expression as l_singular and then
+							attached {STRING_AS} l_operands.i_th (2).expression as l_plural
 						then
-							add_plural_entry (l_param1, l_param2)
+							add_plural_entry (l_singular, l_plural, Void)
+							last_analysis_found_entry := True
+						end
+					elseif l_feature_name.is_case_insensitive_equal (translation_in_context_feature) then
+						if l_operands.count = 2 and then attached {STRING_AS} l_operands.first.expression as l_singular and then attached {STRING_AS} l_operands.i_th (2) as l_context then
+							add_singular_entry (l_singular, l_context)
+							last_analysis_found_entry := True
+						end
+					elseif l_feature_name.is_case_insensitive_equal (plural_translation_in_context_feature) then
+						if
+							l_operands.count = 4 and then
+							attached {STRING_AS} l_operands.i_th (1).expression as l_singular and then
+							attached {STRING_AS} l_operands.i_th (2).expression as l_plural and then
+							attached {STRING_AS} l_operands.i_th (3).expression as l_context
+						then
+							add_plural_entry (l_singular, l_plural, l_context)
+							last_analysis_found_entry := True
 						end
 					end
 				end
@@ -220,25 +276,49 @@ feature {NONE} -- Implementation
 			-- Process `l_as'.
 			--
 			-- `l_as': AST node representing an access on an identifier
+		local
+			l_old_extracting: like is_extracting_strings
 		do
-			analyse_call(l_as)
+			l_old_extracting := is_extracting_strings
+				-- Disable further extracting when we found any entry.
+			analyse_call (l_as)
+			if last_analysis_found_entry then
+				is_extracting_strings := False
+			end
 			Precursor (l_as)
+			is_extracting_strings := l_old_extracting
 		end
 
 	process_access_feat_as (l_as: ACCESS_FEAT_AS)
 			-- Process `l_as'.
 			--
 			-- `l_as': AST node representing an access on a feature
+		local
+			l_old_extracting: like is_extracting_strings
 		do
-			analyse_call(l_as)
+			l_old_extracting := is_extracting_strings
+				-- Disable further extracting when we found any entry.
+			analyse_call (l_as)
+			if last_analysis_found_entry then
+				is_extracting_strings := False
+			end
 			Precursor (l_as)
+			is_extracting_strings := l_old_extracting
 		end
 
 	process_agent_routine_creation_as (l_as: AGENT_ROUTINE_CREATION_AS)
 			-- Process `l_as'.
+		local
+			l_old_extracting: like is_extracting_strings
 		do
+			l_old_extracting := is_extracting_strings
+				-- Disable further extracting when we found any entry.
 			analyse_agent_routine_creation (l_as)
+			if last_analysis_found_entry then
+				is_extracting_strings := False
+			end
 			Precursor (l_as)
+			is_extracting_strings := l_old_extracting
 		end
 
 	process_feature_clause_as (l_as: FEATURE_CLAUSE_AS)
@@ -255,7 +335,7 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 		do
 			if is_extracting_strings then
-				add_singular_entry (l_as)
+				add_singular_entry (l_as, Void)
 			end
 			Precursor (l_as)
 		end
@@ -337,40 +417,78 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_singular_entry (l_as: STRING_AS)
+	add_singular_entry (l_as: STRING_AS; a_context: detachable STRING_AS)
 			-- Add singular entry into the po file, if possible
 		require
 			l_as_not_void: attached l_as
 		local
 			singular_entry: PO_FILE_ENTRY_SINGULAR
-			temp: STRING -- utf8
+			l_msgid, l_msgctxt: STRING -- utf8
 		do
-			temp := l_as.value
-			handle_special_chars (temp)
-			if (not po_file.has_entry (temp)) then
-				create singular_entry.make (temp)
+			l_msgid := l_as.value
+			handle_special_chars (l_msgid)
+			if attached a_context as l_ctxt and then not l_ctxt.value.is_empty then
+				l_msgctxt := l_ctxt.value
+				handle_special_chars (l_msgctxt)
+			end
+			if (not po_file.has_entry (l_msgid, l_msgctxt)) then
+				create singular_entry.make (l_msgid)
+				singular_entry.set_msgctxt (l_msgctxt)
 				append_comments (l_as, singular_entry)
+				if attached source_file_name as l_name then
+					singular_entry.set_source_name (l_name)
+				end
 				po_file.add_entry (singular_entry)
+			else
+				if attached l_msgctxt as l_c then
+					io.put_string ("WARNING: Replicate found: %"" + l_msgid + "%" in context %"" + l_c + "%"%N")
+				else
+					io.put_string ("WARNING: Same message found: %"" + l_msgid + "%"%N")
+				end
+				if attached po_file.entry (l_msgid, l_msgctxt) as l_entry then
+					if attached l_entry.source_name as l_name then
+						print ("%TExising entry: " + l_name + "%N")
+					end
+				end
 			end
 		end
 
-	add_plural_entry (l_as_1, l_as_2: STRING_AS)
+	add_plural_entry (l_as_1, l_as_2: STRING_AS; a_context: detachable STRING_AS)
 			-- Add single entry into the po file, if possible
 		require
 			l_as_not_void: attached l_as_1 and attached l_as_2
 		local
 			plural_entry: PO_FILE_ENTRY_PLURAL
-			temp: STRING -- utf8
+			l_msgid, l_msgctxt: STRING -- utf8
 		do
-			temp := l_as_1.value
-			handle_special_chars (temp)
-			if (not po_file.has_entry(temp)) then
-				create plural_entry.make (temp)
-				temp := l_as_2.value
-				handle_special_chars (temp)
-				plural_entry.set_msgid_plural (temp)
+			l_msgid := l_as_1.value
+			handle_special_chars (l_msgid)
+			if attached a_context as l_ctxt and then not l_ctxt.value.is_empty then
+				l_msgctxt := l_ctxt.value
+				handle_special_chars (l_msgctxt)
+			end
+			if (not po_file.has_entry (l_msgid, l_msgctxt)) then
+				create plural_entry.make (l_msgid)
+				plural_entry.set_msgctxt (l_msgctxt)
+				l_msgid := l_as_2.value
+				handle_special_chars (l_msgid)
+				plural_entry.set_msgid_plural (l_msgid)
 				append_comments (l_as_1, plural_entry)
+				if attached source_file_name as l_name then
+					plural_entry.set_source_name (l_name)
+				end
 				po_file.add_entry (plural_entry)
+			else
+				if attached l_msgctxt as l_c then
+					io.put_string ("WARNING: Same message found: %"" + l_msgid + "%" in context %"" + l_c + "%"%N")
+				else
+					io.put_string ("WARNING: Same message found: %"" + l_msgid + "%"%N")
+				end
+				if attached po_file.entry (l_msgid, l_msgctxt) as l_entry then
+					if attached l_entry.source_name as l_name then
+						print ("%TExising entry: " + l_name + "%N")
+					end
+				end
 			end
 		end
 
@@ -387,8 +505,11 @@ feature {NONE} -- Implementation
 			a_s.replace_substring_all ("%T", "\t")
 		end
 
+	last_analysis_found_entry: BOOLEAN;
+			-- Did last analysis find an entry?
+
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

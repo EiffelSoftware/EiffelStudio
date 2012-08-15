@@ -48,16 +48,18 @@ feature -- Access
 	headers: PO_FILE_HEADERS
 			-- Headers of po file
 
-	entry (msgid: STRING_GENERAL): PO_FILE_ENTRY
+	entry (msgid: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): PO_FILE_ENTRY
 			-- File entry for `msgid'
 			--
 			-- `msgid': Message ID which identifies entry
 			-- `Result': File entry for `msgid'
 		require
 			key_not_void: msgid /= Void
-			entry_exists: has_entry (msgid.to_string_32)
+			entry_exists: has_entry (msgid, a_context)
+		local
+			l_gen: PO_FILE_ENTRY_ID_GEN
 		do
-			Result := entries.item (msgid.to_string_32)
+			Result := entries.item (l_gen.generate_id_from_msgid_and_msgctxt (msgid, a_context))
 		ensure
 			valid_result: Result /= Void
 		end
@@ -72,24 +74,26 @@ feature -- Element change
 			-- `new': File entry to add to .po file
 		require
 			new_not_void: new /= Void
-			entry_not_already_present: not has_entry (new.msgid)
+			entry_not_already_present: not has_entry (new.msgid, new.msgctxt)
 		do
-			entries.put (new, new.msgid)
+			entries.put (new, new.entry_id)
 		ensure
-			entry_added: has_entry (new.msgid)
+			entry_added: has_entry (new.msgid, new.msgctxt)
 		end
 
-	has_entry (msgid: STRING_GENERAL):BOOLEAN
-			-- Is an entry with message id `msgid' already in the .po file?
+	has_entry (a_msgid: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): BOOLEAN
+			-- Is an entry with message id `a_msgid' and `a_context' already in the .po file?
 			--
 			-- Note: msgid is a unique key for entries
 			--
 			-- `msgid': Message ID which identifies entry
 			-- `Result': True if entry with message ID `msgid' exists, False otherwise
 		require
-			msgid_not_void: msgid /= Void
+			msgid_not_void: a_msgid /= Void
+		local
+			l_gen: PO_FILE_ENTRY_ID_GEN
 		do
-			Result := entries.has (msgid.to_string_32)
+			Result := entries.has (l_gen.generate_id_from_msgid_and_msgctxt (a_msgid, a_context))
 		end
 
 feature -- Output
@@ -105,7 +109,7 @@ feature -- Output
 			until
 				entries.after
 			loop
-				Result.append_string(entries.item_for_iteration.to_string)
+				Result.append_string (entries.item_for_iteration.to_string)
 				entries.forth
 			end
 		ensure
@@ -118,7 +122,7 @@ feature {NONE} --Implementation
 			-- Map of file entries identified by their message ID
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

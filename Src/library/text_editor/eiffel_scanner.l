@@ -1,5 +1,5 @@
 %{
-indexing
+note
 
 	description:
 
@@ -10,7 +10,7 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-	note: "there are still some problems with this scanner %
+	fixme: "there are still some problems with this scanner %
 			%to be resolved. (especially with manifest strings). - Andreas Leitner"
 
 class EIFFEL_SCANNER

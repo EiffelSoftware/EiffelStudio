@@ -69,7 +69,6 @@ constraint_types (a_context_class: CLASS_C): TYPE_SET_A
 			a_context_class_not_void: a_context_class /= Void
 		local
 			l_constraining_type: CONSTRAINING_TYPE_AS
-			l_type: TYPE_A
 			l_renamed_type: RENAMED_TYPE_A
 			l_constraints: like constraints
 			l_constraints_cursor: INTEGER

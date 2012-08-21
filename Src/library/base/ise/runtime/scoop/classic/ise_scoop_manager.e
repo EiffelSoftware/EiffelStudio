@@ -201,7 +201,7 @@ feature -- Processor Initialization
 				full_collect
 			end
 			from
-				i := 10 * max_yield_counter
+				i := 10 * processor_spin_lock_limit
 			until
 				i = 0
 			loop
@@ -210,7 +210,7 @@ feature -- Processor Initialization
 				if Result >= max_scoop_processors_instantiable then
 						-- There are no free processors.
 						-- Let's see if some processors can be freed.
-					if i \\ max_yield_counter = 0 then
+					if i \\ processor_spin_lock_limit = 0 then
 							-- Run GC.
 						full_collect
 					else
@@ -228,7 +228,7 @@ feature -- Processor Initialization
 					-- Raise Exception if no free processor could not be found, or block until there is one.
 				raise_scoop_exception ("Maximum SCOOP Processor Allocation reached")
 			end
-			{ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($processor_count).do_nothing
+			i := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($processor_count).as_natural_32
 
 			initialize_default_processor_meta_data (Result)
 
@@ -298,22 +298,6 @@ feature -- Request Chain Handling
 			end
 		end
 
-	increase_request_chain_depth (a_client_processor_id: like processor_id_type)
-			-- Increase request chain depth for `a_client_processor_id'
-		local
-			l_request_chain_depth: like default_request_chain_depth_value
-		do
-			l_request_chain_depth := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (processor_meta_data [a_client_processor_id].item_address (current_request_chain_id_depth_index));
-		end
-
-	decrease_request_chain_depth (a_client_processor_id: like processor_id_type)
-			-- Decrease request chain depth for `a_client_processor_id'.
-		local
-			l_request_chain_depth: like default_request_chain_depth_value
-		do
-			l_request_chain_depth := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 (processor_meta_data [a_client_processor_id].item_address (current_request_chain_id_depth_index));
-		end
-
 	signify_end_of_request_chain (a_client_processor_id: like processor_id_type)
 			-- Signal the end of a request chain for `a_client_processor_id'.
 		local
@@ -327,12 +311,21 @@ feature -- Request Chain Handling
 				-- Retrieve existing meta data chain and close it		
 			l_request_chain_meta_data := (request_chain_meta_data_stack_list [a_client_processor_id]) [l_request_chain_depth + 1]
 			(request_chain_meta_data_stack_list [a_client_processor_id]) [l_request_chain_depth + 1] := Void
-			check l_previous_chain_meta_data_entry_attached: attached l_request_chain_meta_data then end
+			if l_request_chain_meta_data = Void then
+				--| FIXME: Replace when check False then is optimized in the compiler.
+				check l_previous_chain_meta_data_entry_attached: False end
+				create l_request_chain_meta_data.make_empty (0)
+			end
+
 			l_request_chain_meta_data [request_chain_status_index] := request_chain_status_closed;
 
 			if l_request_chain_depth > default_request_chain_depth_value then
 				l_request_chain_meta_data := (request_chain_meta_data_stack_list [a_client_processor_id]) [l_request_chain_depth]
-				check l_request_chain_meta_data_attached: l_request_chain_meta_data /= Void then end
+				if l_request_chain_meta_data = Void then
+					--| FIXME: Replace when check False then is optimized in the compiler.
+					check l_request_chain_meta_data_attached: False end
+					create l_request_chain_meta_data.make_empty (0)
+				end
 				request_chain_meta_data [a_client_processor_id] := l_request_chain_meta_data
 			else
 					-- We are fully closing off the chain so we set the request chain to the default value.
@@ -595,7 +588,7 @@ feature -- Request Chain Handling
 				if l_request_chain_node_id = max_request_chain_node_queue_index then
 						-- We are at the maximum amount of allocations so we wait for the processor to reset its request chain node counter.
 					from
-						-- We can wait until the processor's application counter has caught up to the logging counter so that everything may be reset.
+							-- We can wait until the processor's application counter has caught up to the logging counter so that everything may be reset.
 					until
 						l_request_chain_node_id < max_request_chain_node_queue_index
 					loop
@@ -607,7 +600,8 @@ feature -- Request Chain Handling
 
 					-- Extend value to request chain node meta data.
 				l_request_chain_meta_data.put (l_request_chain_node_id, i + l_pid_count + l_previous_pid_count)
-				l_request_chain_node_id := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (processor_meta_data [l_pid].item_address (current_request_chain_node_id_index))
+				l_request_chain_node_id := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (processor_meta_data [l_pid].item_address (current_request_chain_node_id_index)) - 1
+
 				i := i + 1
 			end
 
@@ -657,12 +651,22 @@ feature -- Request Chain Handling
 					-- Set meta data for the request node of `l_pid'
 					-- This is used for both `head' and `tail' request chain nodes.
 				l_request_chain_node_meta_data_queue := request_chain_node_meta_data_queue_list [l_pid]
-				check l_request_chain_node_meta_data_queue_attached: attached l_request_chain_node_meta_data_queue then end
+				if l_request_chain_node_meta_data_queue = Void then
+					--| FIXME: Replace when check False then is optimized in the compiler.
+					check l_request_chain_node_meta_data_queue_attached: False end
+					create l_request_chain_node_meta_data_queue.make_empty (0)
+				end
+
 				l_request_chain_node_meta_data_queue [l_request_chain_node_id] := l_request_chain_meta_data
 
 					-- Set request chain node queue entry for `l_pid' for future logging.
 				l_request_chain_node_queue := request_chain_node_queue_list [l_pid]
-				check l_request_chain_node_queue_attached: attached l_request_chain_node_queue then end
+				if l_request_chain_node_queue = Void then
+					--| FIXME: Replace when check False then is optimized in the compiler.
+					check l_request_chain_node_queue_attached: attached l_request_chain_node_queue then end
+					create l_request_chain_node_queue.make_empty (0)
+				end
+
 				l_request_chain_node_queue_entry := l_request_chain_node_queue [l_request_chain_node_id]
 				if not attached l_request_chain_node_queue_entry then
 					l_request_chain_node_queue_entry := new_request_chain_node_queue_entry
@@ -742,9 +746,9 @@ feature -- Command/Query Handling
 			l_request_chain_node_id: like invalid_request_chain_node_id
 			l_request_chain_node_queue: detachable like new_request_chain_node_queue
 			l_client_request_chain_node_queue_entry, l_request_chain_node_queue_entry: detachable like new_request_chain_node_queue_entry
-			l_unique_pid_count, i, l_last_pid_index, l_logged_calls_original_count, l_logged_calls_current_count: INTEGER_32
+			l_unique_pid_count, i, l_last_pid_index, l_logged_calls_original_count, l_logged_calls_current_count, l_request_chain_depth, l_pid: INTEGER_32
 			l_is_synchronous, l_client_is_sibling, l_client_sync_needed, l_exit_loop, l_temporary_chain_opened: BOOLEAN
-			l_call_ptr: POINTER
+			l_call_ptr, l_null_ptr: POINTER
 		do
 			debug ("ISE_SCOOP_MANAGER")
 				print ("log_call_on_processor for pid " + a_client_processor_id.out + " on pid " + a_supplier_processor_id.out + "%N")
@@ -752,7 +756,11 @@ feature -- Command/Query Handling
 
 				-- Retrieve request chain node list so the call can be logged
 			l_request_chain_node_queue := request_chain_node_queue_list [a_supplier_processor_id]
-			check l_request_chain_node_queue_attached: attached l_request_chain_node_queue then end
+			if l_request_chain_node_queue = Void then
+					--| FIXME Replace when check False then end code generation for attachment is more efficient.
+				check l_request_chain_node_queue_attached: False end
+				create l_request_chain_node_queue.make_empty (0)
+			end
 
 			l_is_synchronous := call_data_sync_pid (a_call_data) /= null_processor_id
 
@@ -782,9 +790,10 @@ feature -- Command/Query Handling
 				until
 					i > l_last_pid_index
 				loop
-					if l_client_request_chain_meta_data [i] = a_supplier_processor_id then
+					l_pid := l_client_request_chain_meta_data [i]
+					if l_pid = a_supplier_processor_id then
 						l_request_chain_node_id := l_client_request_chain_meta_data [i + l_unique_pid_count]
-					elseif l_client_request_chain_meta_data [i] = a_client_processor_id then
+					elseif l_pid = a_client_processor_id then
 						l_client_is_sibling := True
 					end
 					i := i + 1
@@ -809,10 +818,9 @@ feature -- Command/Query Handling
 			l_logged_calls_original_count := l_request_chain_node_queue_entry.count
 			if l_logged_calls_original_count = l_request_chain_node_queue_entry.capacity then
 					-- Resize node structure if there is not enough room for the new entry.
-
 				if
-					l_client_request_chain_meta_data /= Void and then
-					{ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_client_request_chain_meta_data.item_address (request_chain_status_index), 0) = request_chain_status_open
+					l_client_request_chain_meta_data /= Void
+					and then {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_client_request_chain_meta_data.item_address (request_chain_status_index), 0) = request_chain_status_open
 				then
 						-- We can reuse the data structure if the chain is still open.
 					l_request_chain_node_queue_entry := l_request_chain_node_queue_entry.aliased_resized_area ((l_logged_calls_original_count * 4) // 3)
@@ -823,7 +831,6 @@ feature -- Command/Query Handling
 					-- Readd in case we have a new structure.
 			end
 
-
 			if (processor_meta_data [a_supplier_processor_id]) [processor_status_index] = processor_status_uninitialized then
 					-- We have an uninitialized processor so we must be logging the creation routine.
 
@@ -832,24 +839,61 @@ feature -- Command/Query Handling
 				wait_for_request_chain_supplier_processor_locks (a_supplier_processor_id)
 
 				l_creation_request_chain_meta_data := request_chain_meta_data [a_supplier_processor_id]
-				check l_creation_request_chain_meta_data_attached: l_creation_request_chain_meta_data /= Void end
 
 					-- Set `a_client_processor_id' as the initiator of the new processor creation request chain.
 				l_creation_request_chain_meta_data [request_chain_client_pid_index] := a_client_processor_id;
 
 					-- Mark processor as initializing to signify that the creation routine is being logged and executing.
 				(processor_meta_data [a_supplier_processor_id]) [processor_status_index] := processor_status_initializing
+			elseif
+				l_logged_calls_original_count = 0
+			then
+					-- Wake up supplier processors if currently idle and this is the first logged call.
+					-- We also make sure the supplier is no longer marked as idle, because in the latter case it might be treated as dead.
+				if l_client_request_chain_meta_data /= Void then
+						-- Call is specific to `a_client_processor_id' so we need to retrieve the request chain node for `a_supplier_processor_id' from here.
+					l_unique_pid_count := l_client_request_chain_meta_data [request_chain_pid_count_index]
+						-- Search through remaining pid's to find the associating request chain node id.
+					from
+						i := request_chain_meta_data_header_size
+						l_last_pid_index := request_chain_meta_data_header_size + l_unique_pid_count - 1
+					until
+						i > l_last_pid_index
+					loop
+						l_pid := l_client_request_chain_meta_data [i]
+						if
+							{ATOMIC_MEMORY_OPERATIONS}.compare_and_swap_integer_32 (
+								(processor_meta_data [l_pid]).item_address (processor_status_index),
+								processor_status_initialized,
+								processor_status_idle
+							) = processor_status_idle
+						then
+								-- If supplier processor is currently idle then we wake it up.
+							lock_mutex (processor_synchronization_list [l_pid].mutex)
+							condition_variable_signal (processor_synchronization_list [l_pid].condition_variable)
+							unlock_mutex (processor_synchronization_list [l_pid].mutex)
+						end
+						i := i + 1
+					end
+				end
+
 			end
 
 			if call_data_is_lock_passing (a_call_data) then
 					-- Retrieve the node queue list for the client processor.
 				l_request_chain_node_queue := request_chain_node_queue_list [a_client_processor_id]
-				check l_request_chain_node_queue_attached: attached l_request_chain_node_queue then end
+				if l_request_chain_node_queue = Void then
+					create l_request_chain_node_queue.make_empty (0)
+					check l_request_chain_node_queue_attached: False end
+				end
 
 				from
 					l_client_request_chain_node_queue_entry := l_request_chain_node_queue [(processor_meta_data [a_client_processor_id])[current_request_node_id_execution_index]]
-					check l_client_request_chain_node_queue_entry_attached: l_client_request_chain_node_queue_entry /= Void then end
-
+					if l_client_request_chain_node_queue_entry = Void then
+						--| FIXME: Replace when check False then is optimized in the compiler.
+						create l_client_request_chain_node_queue_entry.make_empty (0)
+						check l_client_request_chain_node_queue_entry_attached: False end
+					end
 					l_client_request_chain_meta_data := request_chain_meta_data [a_client_processor_id]
 					if l_client_request_chain_meta_data = default_request_chain_meta_data_entry then
 							-- There are no processors currently in the chain so we create a temporary chain for the logged call.
@@ -869,7 +913,8 @@ feature -- Command/Query Handling
 						-- Temporarily pass the locks of the client processor to the supplier processor.
 					l_supplier_request_chain_meta_data := request_chain_meta_data [a_supplier_processor_id]
 
-					increase_request_chain_depth (a_supplier_processor_id)
+						-- Increase request chain depth
+					l_request_chain_depth := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (processor_meta_data [a_supplier_processor_id].item_address (Current_request_chain_id_depth_index))
 					update_request_chain_meta_data (a_supplier_processor_id, l_client_request_chain_meta_data)
 
 						-- Store current logged call count to see if any feature application requests are made by the call.
@@ -891,7 +936,12 @@ feature -- Command/Query Handling
 				loop
 						-- We need to set the queue entry each time in case it has resized.
 					l_client_request_chain_node_queue_entry := l_request_chain_node_queue [(processor_meta_data [a_client_processor_id])[current_request_node_id_execution_index]]
-					check l_client_request_chain_node_queue_entry_attached: l_client_request_chain_node_queue_entry /= Void then end
+					if l_client_request_chain_node_queue_entry = Void then
+						--| FIXME: Replace when check False then is optimized in the compiler.
+						create l_client_request_chain_node_queue_entry.make_empty (0)
+						check l_client_request_chain_node_queue_entry_attached: False end
+					end
+
 					l_logged_calls_current_count := l_client_request_chain_node_queue_entry.count
 					if
 						l_logged_calls_current_count > l_logged_calls_original_count
@@ -903,11 +953,11 @@ feature -- Command/Query Handling
 						from
 							i := l_logged_calls_original_count
 						until
-							l_call_ptr /= null_pointer
+							l_call_ptr /= l_null_ptr
 						loop
 							l_call_ptr := l_client_request_chain_node_queue_entry [i]
-							if l_call_ptr /= null_pointer then
-								l_client_request_chain_node_queue_entry [i] := null_pointer
+							if l_call_ptr /= l_null_ptr then
+								l_client_request_chain_node_queue_entry [i] := l_null_ptr
 							end
 							i := i + 1
 						end
@@ -927,11 +977,12 @@ feature -- Command/Query Handling
 							processor_wait (a_client_processor_id, a_supplier_processor_id)
 						end
 						scoop_command_call_cleanup (l_call_ptr)
-						l_call_ptr := null_pointer
+						l_call_ptr := l_null_ptr
 					else
 							-- Reset supplier processors request chain meta data to previous state.
 						update_request_chain_meta_data (a_supplier_processor_id, default_request_chain_meta_data_entry)
-						decrease_request_chain_depth (a_supplier_processor_id)
+							-- Decrement request chain depth
+						l_request_chain_depth := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 (processor_meta_data [a_supplier_processor_id].item_address (Current_request_chain_id_depth_index))
 						request_chain_meta_data [a_supplier_processor_id] := l_supplier_request_chain_meta_data
 
 						if l_creation_request_chain_meta_data /= Void then
@@ -973,14 +1024,6 @@ feature -- Command/Query Handling
 					processor_wake_up (a_supplier_processor_id, a_client_processor_id)
 				end
 			end
-
-				-- Make sure the supplier is no longer marked as idle, because in the latter case it might be treated as dead.
-			i := {ATOMIC_MEMORY_OPERATIONS}.compare_and_swap_integer_32 (
-				(processor_meta_data [a_supplier_processor_id]).item_address (processor_status_index),
-				processor_status_initialized,
-				processor_status_idle
-			)
-
 				-- If we are a synchronous call and we have a dirty flag set then we should check if `a_supplier_processor_id' is dirty with respect to `a_client_processor_id'.
 			if l_is_synchronous and then {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 ((processor_meta_data [a_client_processor_id]).item_address (processor_dirty_flag_count_index), 0) > 0  then
 				if is_processor_dirty (a_client_processor_id, a_supplier_processor_id) then
@@ -1133,8 +1176,8 @@ feature {NONE} -- Resource Initialization
 				-- Create request chain node queue pigeon for each potential processor.
 			create request_chain_node_queue_list.make_filled (Void, max_scoop_processors_instantiable)
 
-				-- Create processor semaphore list for use during processor meta data creation.
-			create processor_semaphore_list.make_filled (default_pointer, max_scoop_processors_instantiable)
+				-- Create processor synchronization primitive storage for mutex and condition variable.
+			create processor_synchronization_list.make_filled ([default_pointer, default_pointer], max_scoop_processors_instantiable)
 
 				-- Set up root processor and initial chain meta data.
 			root_processor_id := assign_free_processor_id
@@ -1143,7 +1186,6 @@ feature {NONE} -- Resource Initialization
 			assign_supplier_processor_to_request_chain (root_processor_id, null_processor_id)
 			wait_for_request_chain_supplier_processor_locks (root_processor_id)
 			l_request_chain_meta_data := request_chain_meta_data [root_processor_id]
-			check l_request_chain_meta_data_attached: attached l_request_chain_meta_data end
 			l_request_chain_meta_data [request_chain_status_index] := request_chain_status_application
 
 				-- Make root processor as initializing.
@@ -1158,6 +1200,7 @@ feature {NONE} -- Resource Initialization
 		local
 			l_request_chain_node_meta_data_queue: detachable like new_request_chain_node_meta_data_queue
 			l_request_chain_node_queue: detachable like new_request_chain_node_queue
+			l_mutex, l_condition_variable: POINTER
 		do
 				-- Initialize request chain node meta data queue
 			l_request_chain_node_meta_data_queue := request_chain_node_meta_data_queue_list [a_processor_id]
@@ -1177,14 +1220,20 @@ feature {NONE} -- Resource Initialization
 				l_request_chain_node_queue.fill_with_default (0, Max_request_chain_node_queue_index)
 			end
 
-				-- Initialize processor semaphore with a count of zero for client - supplier processor notification.
+				-- Initialize processor synchronization primitives
+			l_mutex := new_mutex
+			l_condition_variable := new_condition_variable
+			processor_synchronization_list [a_processor_id] := [l_mutex, l_condition_variable]
 
-			processor_semaphore_list [a_processor_id] := new_semaphore (0)
+				-- Make sure that the processor primitives are correctly accessible.
+			check mutex_set: processor_synchronization_list [a_processor_id].mutex = l_mutex end
+			check condition_variable_set: processor_synchronization_list [a_processor_id].condition_variable = l_condition_variable end
 
 			(processor_meta_data [a_processor_id]).put (0, current_request_chain_id_index)
 			(processor_meta_data [a_processor_id]).put (0, current_request_chain_node_id_index)
 			(processor_meta_data [a_processor_id]).put (0, processor_dirty_flag_count_index)
 			(processor_meta_data [a_processor_id]).put (0, processor_wait_condition_counter_index)
+			(processor_meta_data [a_processor_id]).put (processor_semaphore_status_running, processor_semaphore_status_index)
 
 				-- Reset execution index to `0'
 			(processor_meta_data [a_processor_id]).put (0, current_request_node_id_execution_index)
@@ -1193,7 +1242,6 @@ feature {NONE} -- Resource Initialization
 	scoop_processor_loop (a_logical_processor_id: like processor_id_type)
 			-- Entry point for all scoop processors, each unique identified by `a_logical_processor_id'.
 		local
-			l_loop_exit: BOOLEAN
 			l_processor_meta_data: like new_processor_meta_data_entry
 			l_executing_node_id: like invalid_request_chain_node_id
 			l_executing_node_id_cursor: INTEGER_32
@@ -1201,30 +1249,35 @@ feature {NONE} -- Resource Initialization
 			l_executing_request_chain_node: detachable like new_request_chain_node_queue_entry
 			l_request_chain_node_meta_data_queue: detachable like new_request_chain_node_meta_data_queue
 			l_executing_request_chain_node_meta_data: detachable like new_request_chain_node_meta_data_queue_entry
-			l_exception_caught: BOOLEAN
-			l_orig_sync_count, l_temp_count: INTEGER
+			l_orig_sync_count, l_temp_count, l_wait_return: INTEGER
 			l_wait_counter: NATURAL_32
-			l_call_ptr: POINTER
+			l_call_ptr, l_null_ptr: POINTER
 			l_is_head: BOOLEAN
-			l_pid, l_client_pid: like processor_id_type
+			l_client_pid: like processor_id_type
 		do
 			-- SCOOP Processor has been launched
 			-- We are guaranteed that at least a creation routine has been logged.
 
 			from
 				l_processor_meta_data := processor_meta_data [a_logical_processor_id]
+
 				l_request_chain_node_queue := request_chain_node_queue_list [a_logical_processor_id]
-				check l_request_chain_node_queue_attached: attached l_request_chain_node_queue then end
+				if l_request_chain_node_queue = Void then
+						--| FIXME Replace when check False then end code generation for attachment is more efficient.
+					check l_request_chain_node_queue_attached: False end
+					create l_request_chain_node_queue.make_empty (0)
+				end
+
 				l_request_chain_node_meta_data_queue := request_chain_node_meta_data_queue_list [a_logical_processor_id]
-				check l_request_chain_node_meta_data_queue_attached: attached l_request_chain_node_meta_data_queue then end
+				if l_request_chain_node_meta_data_queue = Void then
+						--| FIXME Replace when check False then end code generation for attachment is more efficient.
+					check l_request_chain_node_meta_data_queue_attached: False end
+					create l_request_chain_node_meta_data_queue.make_empty (0)
+				end
 			until
 				l_processor_meta_data [processor_status_index] = processor_status_redundant
 					-- Loop until the processor is marked as surplus to requirements.
 			loop
-					--| This is needed so that any pending gc cycles are correctly handled
-					--| as this is a tight loop without any call to RTGC
-				check_for_gc
-
 				if l_processor_meta_data [processor_status_index] >= processor_status_initializing then
 						-- SCOOP processor is initializing/initialized so we can check current index
 
@@ -1237,89 +1290,25 @@ feature {NONE} -- Resource Initialization
 							-- We only allow feature application to occur when the chain is correctly set.
 					then
 							-- We are in a valid feature application position as the request chain has been initialized.
-						from
-								-- Set whether the current processor is the head of the request chain.
-							l_is_head := a_logical_processor_id = l_executing_request_chain_node_meta_data [request_chain_meta_data_head_pid_index]
+							-- Set whether the current processor is the head of the request chain.
+						l_is_head := a_logical_processor_id = l_executing_request_chain_node_meta_data [request_chain_meta_data_head_pid_index]
 
-								-- Store the client processor id for synchronization.
-							l_client_pid := l_executing_request_chain_node_meta_data [request_chain_client_pid_index]
+							-- Store the client processor id for synchronization.
+						l_client_pid := l_executing_request_chain_node_meta_data [request_chain_client_pid_index]
 
-							if l_is_head then
-								l_orig_sync_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
-									-- We only need synchronization if there are tail nodes involved.
-								if l_orig_sync_count > 1 then
-										-- Flag `a_logical_processor_id' as waiting.
-									processor_wait (a_logical_processor_id, a_logical_processor_id)
-
-										-- We are a head node, set sync count to minus original sync count
-									from
-										l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), -l_orig_sync_count)
-										l_wait_counter := 0
-									until
-										l_temp_count = -1
-									loop
-										processor_yield (a_logical_processor_id, l_wait_counter)
-										l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
-										l_wait_counter := l_wait_counter + 1
-									end
-
-										-- Flag processor as woken up.
-									processor_wake_up (a_logical_processor_id, a_logical_processor_id)
-
-										-- Set to zero, increment by 1 (atomic swap with 1 as shortcut)
-										-- Wait until sync counter is original value, this signifies that all tail nodes are now executing
-									from
-										l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index))
-										l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index))
-										l_wait_counter := 0
-									until
-										l_temp_count = l_orig_sync_count
-									loop
-										processor_yield (a_logical_processor_id, l_wait_counter)
-										l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
-										l_wait_counter := l_wait_counter + 1
-									end
-								end
-									-- Tail nodes are all synchronized and executing so head node can continue.	
-
-									-- Signify that the chains are now being applied (if not already closed)
-									-- This is used by the client to make sure that all chains have been started before attempting any wait calls.
-								l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.compare_and_swap_integer_32 (
-									l_executing_request_chain_node_meta_data.item_address (request_chain_status_index), request_chain_status_application, request_chain_status_open
-								)
-
-								if l_temp_count = request_chain_status_open then
-										-- The client processor is not currently waiting for this chain.
-								else
-									if l_temp_count = request_chain_status_application then
-											-- The client processor is waiting to be synced.
-										processor_wake_up (l_client_pid, a_logical_processor_id)
-									else
-									--	check request_chain_status_closed: l_temp_count = request_chain_status_closed end
-									end
-								end
-							else
-									-- We are a tail node, we wait for head node to set pid count to negative value. (as we are a tail node then there must be at least two processors involved)
-
+						if l_is_head then
+							l_orig_sync_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
+								-- We only need synchronization if there are tail nodes involved.
+							if l_orig_sync_count > 1 then
 									-- Flag `a_logical_processor_id' as waiting.
 								processor_wait (a_logical_processor_id, a_logical_processor_id)
 
+									-- We are a head node, set sync count to minus original sync count
 								from
-									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
+									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), -l_orig_sync_count)
 									l_wait_counter := 0
 								until
-									l_temp_count < -1
-								loop
-									processor_yield (a_logical_processor_id, l_wait_counter)
-									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
-									l_wait_counter := l_wait_counter + 1
-								end
-								l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index))
-
-								from
-									l_wait_counter := 0
-								until
-									l_temp_count >= 1
+									l_temp_count = -1
 								loop
 									processor_yield (a_logical_processor_id, l_wait_counter)
 									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
@@ -1329,102 +1318,96 @@ feature {NONE} -- Resource Initialization
 									-- Flag processor as woken up.
 								processor_wake_up (a_logical_processor_id, a_logical_processor_id)
 
-								l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index))
-							end
-
-							l_executing_node_id_cursor := 0
-							l_wait_counter := 0
-							l_loop_exit := False
-							l_exception_caught := False
-							l_executing_request_chain_node := l_request_chain_node_queue [l_executing_node_id]
-							check l_executing_request_chain_node_attached: attached l_executing_request_chain_node then end
-						until
-							l_loop_exit
-						loop
-							l_temp_count := l_executing_request_chain_node.count
-							if l_exception_caught then
-									-- If an exception has occurred then we must not continue applying calls and exit immediately.
-								l_loop_exit := True
-								l_request_chain_node_meta_data_queue [l_executing_node_id] := Void
-							elseif l_executing_node_id_cursor < l_temp_count then
-								l_call_ptr := l_executing_request_chain_node [l_executing_node_id_cursor]
-								if l_call_ptr /= null_pointer then
-									l_exception_caught := scoop_command_call_with_exception_check (l_call_ptr)
-									if l_exception_caught then
-										-- An exception was raised during application of `l_call_ptr'.
-										-- We need to flag `a_logical_processor_id' dirty with respect to the client of the chain.
-
-											-- We have caught an assertion violation so we flag the processor as dirty
-										flag_processor_dirty (a_logical_processor_id, l_executing_request_chain_node_meta_data)
-									end
-									l_executing_node_id_cursor := l_executing_node_id_cursor + 1
-									if l_executing_node_id_cursor = l_temp_count then
-
-											-- Client may have increased capacity of request chain node so we make sure that we have the correct object.
-										l_executing_request_chain_node := l_request_chain_node_queue [l_executing_node_id]
-										check l_executing_request_chain_node_attached: attached l_executing_request_chain_node then end
-
-											-- Check for a query if we are at the last index.
-										l_pid := call_data_sync_pid (l_call_ptr)
-										if l_pid /= null_processor_id then
-												-- Reset call data in structure before releasing client processor.
-											l_executing_request_chain_node [l_executing_node_id_cursor - 1] := null_pointer
-												-- Wake up client processor.							
-											processor_wake_up (l_pid, a_logical_processor_id)
-
-												-- Clean up call data.
-											scoop_command_call_cleanup (l_call_ptr)
-
-												-- Reset yielding.
-											l_wait_counter := 0
-										end
-									end
+									-- Set to zero, increment by 1 (atomic swap with 1 as shortcut)
+									-- Wait until sync counter is original value, this signifies that all tail nodes are now executing
+								from
+									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index))
+									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index))
+									l_wait_counter := 0
+								until
+									l_temp_count = l_orig_sync_count
+								loop
+									processor_yield (a_logical_processor_id, l_wait_counter)
+									l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
+									l_wait_counter := l_wait_counter + 1
 								end
-							elseif
-								l_is_head and then l_executing_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_waiting
-							then
-									-- The chain status is set to waiting and we are the head pid so we must be a creation routine
-									-- Signal client processor to wake up and wait until signalled to continue.
-								processor_wake_up (l_client_pid, a_logical_processor_id)
-								processor_wait (a_logical_processor_id, l_client_pid)
+							end
+								-- Tail nodes are all synchronized and executing so head node can continue.	
 
-									-- Reset yielding.
-								l_wait_counter := 0
+								-- Signify that the chains are now being applied (if not already closed)
+								-- This is used by the client to make sure that all chains have been started before attempting any wait calls.
+							l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.compare_and_swap_integer_32 (
+								l_executing_request_chain_node_meta_data.item_address (request_chain_status_index), request_chain_status_application, request_chain_status_open
+							)
+
+							if l_temp_count = request_chain_status_open then
+									-- The client processor is not currently waiting for this chain.
 							else
-									-- Processor has caught up with chain and is waiting for more calls if any.
-								if l_executing_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_closed then
-										-- Request chain has been fully closed therefore we can exit if all calls have been applied.
-									if l_executing_request_chain_node = l_request_chain_node_queue [l_executing_node_id] and then l_executing_request_chain_node.count <= l_executing_node_id_cursor then
-										l_loop_exit := True
-										l_request_chain_node_meta_data_queue [l_executing_node_id] := Void
-									end
+								if l_temp_count = request_chain_status_application then
+										-- The client processor is waiting to be synced.
+									processor_wake_up (l_client_pid, a_logical_processor_id)
 								else
-										-- We are in an idle state, waiting for the request chain to close or to have more calls logged so we yield to another thread.
-									if l_executing_request_chain_node = l_request_chain_node_queue [l_executing_node_id] then
-										processor_yield (a_logical_processor_id, l_wait_counter)
-										l_wait_counter := l_wait_counter + 1
-									end
+								--	check request_chain_status_closed: l_temp_count = request_chain_status_closed end
 								end
-									-- Update request chain node in case client has resized it during logging.
-								l_executing_request_chain_node := l_request_chain_node_queue [l_executing_node_id]
-								check l_executing_request_chain_node_attached: attached l_executing_request_chain_node then end
 							end
+						else
+								-- We are a tail node, we wait for head node to set pid count to negative value. (as we are a tail node then there must be at least two processors involved)
+
+								-- Flag `a_logical_processor_id' as waiting.
+							processor_wait (a_logical_processor_id, a_logical_processor_id)
+
+							from
+								l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
+								l_wait_counter := 0
+							until
+								l_temp_count < -1
+							loop
+								processor_yield (a_logical_processor_id, l_wait_counter)
+								l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
+								l_wait_counter := l_wait_counter + 1
+							end
+							l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index))
+
+							from
+								l_wait_counter := 0
+							until
+								l_temp_count >= 1
+							loop
+								processor_yield (a_logical_processor_id, l_wait_counter)
+								l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index), 0)
+								l_wait_counter := l_wait_counter + 1
+							end
+
+								-- Flag processor as woken up.
+							processor_wake_up (a_logical_processor_id, a_logical_processor_id)
+
+							l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 (l_executing_request_chain_node_meta_data.item_address (request_chain_sync_counter_index))
 						end
 
-							-- Clean up call data, this can only be performed when the chain is closed or the client is waiting as logging calls may resize the request chain node queue
-							-- structure while it is being manipulated, which would break the post-condition of resize.				
+							-- Apply the currently executing chain.
+						scoop_application_loop (a_logical_processor_id, l_client_pid, l_is_head, l_executing_request_chain_node_meta_data, l_request_chain_node_queue, l_executing_node_id)
+
+							-- Remove the meta data from the queue
+						l_request_chain_node_meta_data_queue [l_executing_node_id] := Void
+
+						-- Clean up call data, this can only be performed when the chain is closed or the client is waiting as logging calls may resize the request chain node queue
+						-- structure while it is being manipulated, which would break the post-condition of resize.				
 						from
 							l_executing_request_chain_node := l_request_chain_node_queue [l_executing_node_id]
-							check l_executing_request_chain_node_attached: attached l_executing_request_chain_node then end
+							if l_executing_request_chain_node = Void then
+									--| FIXME Replace when check False then end code generation for attachment is more efficient.
+								check l_executing_request_chain_node_attached: False end
+								create l_executing_request_chain_node.make_empty (0)
+							end
 							l_executing_node_id_cursor := l_executing_request_chain_node.count
 						until
 							l_executing_node_id_cursor = 0
 						loop
 							l_executing_node_id_cursor := l_executing_node_id_cursor - 1
 							l_call_ptr := l_executing_request_chain_node [l_executing_node_id_cursor]
-							if l_call_ptr /= null_pointer then
+							if l_call_ptr /= l_null_ptr then
 								scoop_command_call_cleanup (l_call_ptr)
-								l_executing_request_chain_node [l_executing_node_id_cursor] := null_pointer
+								l_executing_request_chain_node [l_executing_node_id_cursor] := l_null_ptr
 							end
 						end
 
@@ -1438,39 +1421,49 @@ feature {NONE} -- Resource Initialization
 						else
 							l_processor_meta_data [current_request_node_id_execution_index] := l_executing_node_id
 						end
+
+							-- Reset wait counter
+						l_wait_counter := 0
 					else
-							-- There are no request chains to be applied so processor is idle until more are added.
-						from
-							l_wait_counter := 0
-							l_loop_exit := False
-							l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($idle_processor_count)
-						until
-							l_loop_exit
-						loop
-							if l_request_chain_node_meta_data_queue [l_processor_meta_data [Current_request_node_id_execution_index]] /= Void then
-									-- Make sure the processor stays in the feature application loop.
-								l_processor_meta_data [processor_status_index] := processor_status_initialized
-								l_loop_exit := True
-							elseif l_processor_meta_data [processor_status_index] = processor_status_redundant then
-									-- The processor is not used anymore.
-								l_loop_exit := True
-							else
-								if l_processor_meta_data [processor_status_index] /= processor_status_idle then
-										-- Mark processor as idle.
-									l_processor_meta_data [processor_status_index] := processor_status_idle
+						if
+							l_processor_meta_data [current_request_chain_node_id_index] = l_processor_meta_data [current_request_node_id_execution_index]
+						then
+								-- Perform a spin loop to wait for any potential processors to log calls.
+							processor_yield (a_logical_processor_id, l_wait_counter)
+							if l_wait_counter > processor_spin_lock_limit and then l_processor_meta_data [current_request_chain_node_id_index] = l_processor_meta_data [current_request_node_id_execution_index] then
+									-- There are no request chains to be applied so processor is idle until more are added.
+								l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($idle_processor_count)
+								lock_mutex (processor_synchronization_list [a_logical_processor_id].mutex)
+								l_processor_meta_data [processor_status_index] := processor_status_idle
+
+									-- Wait on condition variable until awoken from client processor or a timeout occurs.
+								l_wait_return := condition_variable_wait_with_timeout (processor_synchronization_list [a_logical_processor_id].condition_variable, processor_synchronization_list [a_logical_processor_id].mutex, idle_processor_timeout)
+								unlock_mutex (processor_synchronization_list [a_logical_processor_id].mutex)
+								if l_wait_return /= 1 then
+										-- Waiting timeout occurred.
+									if l_processor_meta_data [processor_status_index] = processor_status_idle then
+										if processor_count = idle_processor_count then
+											full_collect
+										end
+										if l_processor_meta_data [processor_status_index] = processor_status_idle then
+												-- Check for potential deadlock if timeout has occurred and processor is still idle.
+											check_for_deadlock
+										end
+									end
+								else
+										-- Processor has been woken up by another processor so it must be initialized.
+									l_processor_meta_data [processor_status_index] := processor_status_initialized
 								end
-								processor_is_idle (a_logical_processor_id, l_wait_counter)
-								l_wait_counter := l_wait_counter + 1
+								l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($idle_processor_count)
 							end
-						end
-						l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($idle_processor_count)
-						if l_processor_meta_data [processor_status_index] = processor_status_redundant then
-							l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($processor_count)
+							l_wait_counter := l_wait_counter + 1
+						else
+							processor_spin_loop (10)
 						end
 					end
 				elseif l_processor_meta_data [processor_status_index] = processor_status_uninitialized then
 						-- Processor is uninitialized so we yield control to OS for the time being.
-					processor_yield (a_logical_processor_id, 0)
+					processor_yield (a_logical_processor_id, processor_spin_lock_limit)
 				else
 					check invalid_processor_status: False end
 				end
@@ -1478,19 +1471,82 @@ feature {NONE} -- Resource Initialization
 			release_processor_id (a_logical_processor_id)
 		end
 
-	processor_is_idle (a_client_processor_id: like processor_id_type; a_wait_counter: NATURAL_32)
-			-- Processor `a_client_processor_id' is idle.
+	scoop_application_loop (a_logical_processor_id, a_client_processor_id: like processor_id_type; a_is_head: BOOLEAN; a_request_chain_node_meta_data: like new_request_chain_node_meta_data_entry; a_request_chain_node_queue: like new_request_chain_node_queue; a_executing_node_id: like invalid_request_chain_node_id)
+			-- Process the currently executing request chain for `a_logical_processor_id'.
+		local
+			l_temp_count: INTEGER
+			l_loop_exit: BOOLEAN
+			l_call_ptr, l_null_ptr: POINTER
+			l_executing_node_id_cursor: INTEGER
+			l_pid: like processor_id_type
+			l_executing_request_chain_node: detachable like new_request_chain_node_queue_entry
 		do
-			processor_yield (a_client_processor_id, a_wait_counter)
-			if a_wait_counter >= max_yield_counter then
-				if a_wait_counter \\ max_yield_counter = 0 and then processor_count = idle_processor_count then
-						-- Check if processors can be GC'ed.
-					full_collect
+			from
+
+			until
+				l_loop_exit
+			loop
+				l_executing_request_chain_node := a_request_chain_node_queue [a_executing_node_id]
+					-- Update request chain node in case client has resized it during logging.
+				if l_executing_request_chain_node = Void then
+						--| FIXME Replace when check False then end code generation for attachment is more efficient.
+					check l_executing_request_chain_node_attached: False end
+					create l_executing_request_chain_node.make_empty (0)
+				end
+				l_temp_count := l_executing_request_chain_node.count
+				if l_executing_node_id_cursor < l_temp_count then
+					l_call_ptr := l_executing_request_chain_node [l_executing_node_id_cursor]
+					if l_call_ptr /= l_null_ptr then
+						scoop_command_call (l_call_ptr)
+						l_executing_node_id_cursor := l_executing_node_id_cursor + 1
+						if l_executing_node_id_cursor = l_temp_count then
+								-- Check for a query if we are at the last index.
+							l_pid := call_data_sync_pid (l_call_ptr)
+							if l_pid /= null_processor_id then
+									-- Reset call data in structure before releasing client processor.
+								l_executing_request_chain_node [l_executing_node_id_cursor - 1] := l_null_ptr
+									-- Wake up client processor.							
+								processor_wake_up (l_pid, a_logical_processor_id)
+
+									-- Clean up call data.
+								scoop_command_call_cleanup (l_call_ptr)
+							end
+						end
+					end
+				elseif
+					a_is_head and then a_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_waiting
+				then
+						-- The chain status is set to waiting and we are the head pid so we must be a creation routine
+						-- Signal client processor to wake up and wait until signalled to continue.
+					processor_wake_up (a_client_processor_id, a_logical_processor_id)
+					processor_wait (a_logical_processor_id, a_client_processor_id)
 				else
-						-- Fully relinquish processor.
-					processor_sleep (processor_sleep_quantum)
+						-- Processor has caught up with chain and is waiting for more calls if any.
+					if a_request_chain_node_meta_data [request_chain_status_index] = request_chain_status_closed then
+							-- Request chain has been fully closed therefore we can exit if all calls have been applied.
+						if l_executing_request_chain_node = a_request_chain_node_queue [a_executing_node_id] and then l_executing_request_chain_node.count <= l_executing_node_id_cursor then
+							l_loop_exit := True
+						end
+					else
+							-- We are in an idle state, waiting for the request chain to close or to have more calls logged so we temporarily spin loop.
+						processor_spin_loop (10)
+					end
 				end
 			end
+		rescue
+			-- An exception was raised during application of `l_call_ptr'.
+			-- We need to flag `a_logical_processor_id' dirty with respect to the client of the chain.
+
+			flag_processor_dirty (a_logical_processor_id, a_request_chain_node_meta_data)
+
+				-- Make sure that we wake up the client processor if call is synchronous.
+			if call_data_sync_pid (l_call_ptr) /= null_processor_id then
+				processor_wake_up (l_pid, a_logical_processor_id)
+			end
+
+				-- Make sure that the application loop is not reentered.
+			l_loop_exit := True
+			retry
 		end
 
 	deadlock_counter: NATURAL_16
@@ -1501,19 +1557,6 @@ feature {NONE} -- Resource Initialization
 
 	deadlock_detection_limit: INTEGER_32 = 1000
 		-- Number of iterations the system may remain in a constant idle state before raising an exception.
-
-	scoop_command_call_with_exception_check (a_data: like call_data): BOOLEAN
-			-- Apply scoop call represented by `a_data'.
-			-- Return `True' if an exception was raised.
-		do
-			if not Result then
-				scoop_command_call (a_data)
-			end
-		rescue
-				-- Return True to signify that an exception was caught.
-			Result := True
-			retry
-		end
 
 	scoop_command_call (a_data: like call_data)
 			-- Make scoop call from call data `a_data'.
@@ -1529,13 +1572,6 @@ feature {NONE} -- Resource Initialization
 			"C macro use %"eif_scoop.h%""
 		alias
 			"eif_free_call"
-		end
-
-	null_pointer: POINTER
-		external
-			"C macro use %"eif_scoop.h%""
-		alias
-			"NULL"
 		end
 
 	request_processor_resource (a_resource_index: INTEGER_32; a_resource_processor, a_requesting_processor: like processor_id_type; a_block_until_request_granted, a_high_priority: BOOLEAN): NATURAL_8
@@ -1657,9 +1693,6 @@ feature {NONE} -- Atomic Access
 	waiting_processor_count: INTEGER_32
 		-- Number of processors that are currently block waiting for other processors.
 
-	waiting_semaphore_count: INTEGER_32
-		-- Number of processors that are waiting for their semaphore to be signalled.
-
 	idle_processor_count: INTEGER_32
 		-- Number of processors that are at the end of their queue.
 		-- If equal to processor_count then the system may exit,
@@ -1689,101 +1722,47 @@ feature {NONE} -- Scoop Processor Meta Data
 	processor_meta_data: SPECIAL [like new_processor_meta_data_entry]
 			-- Holder of Processor Meta Data (indexed by logical processor ID)
 
-	processor_semaphore_list: SPECIAL [POINTER]
-			-- Holder of Processor Synchronous Call Semaphores
-
-	new_semaphore (a_sem_count: NATURAL_8): POINTER
-			-- Return a new semaphore with an initial count of `a_sem_count'.
-		external
-			"C macro use <eif_threads.h>"
-		alias
-			"eif_thr_sem_create"
-		end
-
-	destroy_semaphore (s: POINTER)
-			-- Release semaphore `s'.
-		external
-			"C macro use <eif_threads.h>"
-		alias
-			"eif_thr_sem_destroy"
-		end
-
 	processor_wait (a_client_processor_id, a_supplier_processor_id: like processor_id_type)
-			-- Make processor `a_client_processor_id' wait until its semaphore is signalled.
+			-- Make processor `a_client_processor_id' wait until its condition variable is signalled.
 		local
-			l_waiting_count, l_waiting_semaphore_count: INTEGER
+			l_waiting_count, l_wait_return: INTEGER
+			l_processor_meta_data: like new_processor_meta_data_entry
+			l_mutex: POINTER
 		do
 			l_waiting_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($waiting_processor_count)
 			if a_supplier_processor_id /= a_client_processor_id then
-				l_waiting_semaphore_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($waiting_semaphore_count)
-				if l_waiting_semaphore_count = processor_count then
-					raise_scoop_exception (scoop_processor_deadlock_detected_message)
+				from
+					l_processor_meta_data := processor_meta_data [a_client_processor_id]
+					l_mutex := processor_synchronization_list [a_client_processor_id].mutex
+					lock_mutex (l_mutex)
+					l_wait_return := 1
+				until
+					{ATOMIC_MEMORY_OPERATIONS}.compare_and_swap_integer_32 (l_processor_meta_data.item_address (processor_semaphore_status_index), processor_semaphore_status_running, processor_semaphore_status_signalled) = processor_semaphore_status_signalled
+				loop
+					if l_wait_return /= 1 then
+						-- Time out occurred so we check for potential deadlock.
+						check_for_deadlock
+					end
+					l_wait_return := condition_variable_wait_with_timeout (processor_synchronization_list [a_client_processor_id].condition_variable, processor_synchronization_list [a_client_processor_id].mutex, waiting_processor_timeout)
 				end
-				semaphore_client_wait (processor_semaphore_list [a_client_processor_id])
+				unlock_mutex (l_mutex)
 			end
 		end
 
 	processor_wake_up (a_client_processor_id, a_supplier_processor_id: like processor_id_type)
-			-- Signal processor `a_client_processor_id' to wake up for `a_supplier_processor_id'
+			-- Signal processor `a_client_processor_id' to wake up for `a_supplier_processor_id'.
 		local
-			l_waiting_count: INTEGER
-			l_waiting_semaphore_count: INTEGER
+			l_return: INTEGER
+			l_mutex: POINTER
 		do
-			l_waiting_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($waiting_processor_count)
+			l_return := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($waiting_processor_count)
 			if a_client_processor_id /= null_processor_id then
 				if a_client_processor_id /= a_supplier_processor_id then
-					l_waiting_semaphore_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($waiting_semaphore_count)
-					semaphore_supplier_signal (processor_semaphore_list [a_client_processor_id])
-				end
-			end
-		end
-
-	processor_busy_wait (a_client_processor_id, a_supplier_processor_id: like processor_id_type)
-			-- Make processor `a_client_processor_id' wait until its semaphore is signalled.
-		local
-			l_waiting_count, l_waiting_semaphore_count: INTEGER
-			l_processor_meta_data: like new_processor_meta_data_entry
-			l_wait_counter: NATURAL_32
-		do
-			l_waiting_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($waiting_processor_count)
-			if a_supplier_processor_id /= a_client_processor_id then
-				l_waiting_semaphore_count := {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($waiting_semaphore_count)
-				if l_waiting_semaphore_count = processor_count then
-					raise_scoop_exception (scoop_processor_deadlock_detected_message)
-				end
-
-				from
-					l_processor_meta_data := processor_meta_data [a_client_processor_id]
-				until
-					{ATOMIC_MEMORY_OPERATIONS}.compare_and_swap_integer_32 (l_processor_meta_data.item_address (processor_semaphore_status_index), processor_semaphore_status_running, processor_semaphore_status_signalled) = processor_semaphore_status_signalled
-				loop
-					if l_wait_counter > 0 then
-						processor_cpu_yield
-						l_wait_counter := 0
-					else
-				    	from
-				    		l_wait_counter := 1
-				    	until
-				    		l_wait_counter = processor_spin_lock_limit
-				    	loop
-				    		l_wait_counter := l_wait_counter + 1
-				    	end
-				    end
-				end
-			end
-		end
-
-	processor_busy_wake_up (a_client_processor_id, a_supplier_processor_id: like processor_id_type)
-			-- Signal processor `a_client_processor_id' to wake up for `a_supplier_processor_id'
-		local
-			l_waiting_count: INTEGER
-			l_waiting_semaphore_count: INTEGER
-		do
-			l_waiting_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($waiting_processor_count)
-			if a_client_processor_id /= null_processor_id then
-				if a_client_processor_id /= a_supplier_processor_id then
-					l_waiting_semaphore_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($waiting_semaphore_count)
-					l_waiting_semaphore_count := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 ((processor_meta_data [a_client_processor_id]).item_address (processor_semaphore_status_index), processor_semaphore_status_signalled)
+					l_mutex := processor_synchronization_list [a_client_processor_id].mutex
+					lock_mutex (l_mutex)
+					l_return := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 ((processor_meta_data [a_client_processor_id]).item_address (Processor_semaphore_status_index), Processor_semaphore_status_signalled)
+					condition_variable_signal (processor_synchronization_list [a_client_processor_id].condition_variable)
+					unlock_mutex (l_mutex)
 				end
 			end
 		end
@@ -1943,9 +1922,8 @@ feature {NONE} -- Meta Data: special values
 feature {NONE} -- Meta Data: semaphore status (at index `processor_semaphore_status_index').
 
 	processor_semaphore_status_running: INTEGER = 0
-	processor_semaphore_status_busy_waiting: INTEGER = 1
-	processor_semaphore_status_waiting: INTEGER = 2
-	processor_semaphore_status_signalled: INTEGER = 3
+	processor_semaphore_status_waiting: INTEGER = 1
+	processor_semaphore_status_signalled: INTEGER = 2
 
 feature {NONE} -- Scoop Processor Meta Data
 
@@ -1969,7 +1947,7 @@ feature {NONE} -- Scoop Processor Meta Data
 			migrate_to_root (Result)
 		end
 
-	max_request_chain_node_queue_index: INTEGER_32 = 4096
+	max_request_chain_node_queue_index: INTEGER_32 = 1024
 		-- Maximum index of a processors request chain node queue.
 
 	new_request_chain_node_queue_entry: SPECIAL [POINTER]
@@ -1979,29 +1957,13 @@ feature {NONE} -- Scoop Processor Meta Data
 			migrate_to_root (Result)
 		end
 
-	default_request_chain_node_queue_entry_size: INTEGER_32 = 5
+	default_request_chain_node_queue_entry_size: INTEGER_32 = 8
 		-- Default size of request chain node queue.
 
 	logical_cpu_count: NATURAL_32
 		-- Number of processors available on the system.
 
 feature {NONE} -- Externals
-
-	semaphore_client_wait (a_sem_address: POINTER)
-			-- Wait for semaphore `a_sem_address'.
-		external
-			"C macro use %"eif_scoop.h%""
-		alias
-			"RTS_SEMAPHORE_CLIENT_WAIT"
-		end
-
-	semaphore_supplier_signal (a_sem_address: POINTER)
-			-- Signal semaphore `a_sem_address'.
-		external
-			"C macro use %"eif_scoop.h%""
-		alias
-			"RTS_SEMAPHORE_SUPPLIER_SIGNAL"
-		end
 
 	frozen available_cpus: NATURAL_8
 			--| FIXME: Not Currently used: Implemented for future pooling optimizations
@@ -2062,48 +2024,53 @@ feature {NONE} -- Externals
 			"eif_sleep"
 		end
 
-	one_second_expressed_in_nanoseconds: INTEGER_64 = 1_000_000_000
-		-- Value of one second expressed in nanoseconds.
-
 	frozen processor_yield (a_processor_id: like processor_id_type; a_iteration_number: NATURAL_32)
 			-- Yield processor `a_processor_id' to competing threads for an OS specific set time.
-		local
-			l_temp_val: INTEGER_32
 		do
-			if a_iteration_number < processor_spin_lock_limit then
+			if a_iteration_number = 0 then
 					-- Spin lock
-				l_temp_val := l_temp_val + 1
-			elseif a_iteration_number < max_yield_counter then
-				processor_cpu_yield
+				processor_spin_loop (processor_spin_lock_limit.as_integer_32)
 			else
 				processor_cpu_yield
 					-- Check for any potential deadlock.
-
-				l_temp_val := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 ($waiting_processor_count, 0)
-				if
-					waiting_semaphore_count > 0 and then
-					l_temp_val = previous_waiting_processor_count and then
-					(l_temp_val + idle_processor_count = processor_count)
-				then
-					if {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($deadlock_counter) > (deadlock_detection_limit * processor_count) then
-						raise_scoop_exception (scoop_processor_deadlock_detected_message)
-					end
-				else
-					l_temp_val := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 ($deadlock_counter, 0)
+				if a_iteration_number \\ Max_yield_counter = 0 then
+					check_for_deadlock
 				end
-				previous_waiting_processor_count := waiting_processor_count
 			end
-			check_for_gc
 		end
 
-	processor_spin_lock_limit: NATURAL_32 = 100
-		-- Number of iterations to spin lock until yielding.
+	check_for_deadlock
+			-- Check for any potential deadlocks.
+		local
+			l_temp_val: INTEGER_32
+		do
+			l_temp_val := {ATOMIC_MEMORY_OPERATIONS}.add_integer_32 ($waiting_processor_count, 0)
+			if
+				l_temp_val > 0 and then
+				l_temp_val = previous_waiting_processor_count and then
+				(l_temp_val + idle_processor_count = processor_count)
+			then
+				if {ATOMIC_MEMORY_OPERATIONS}.increment_integer_32 ($deadlock_counter) > deadlock_detection_limit then
+					raise_scoop_exception (scoop_processor_deadlock_detected_message)
+				end
+			else
+				l_temp_val := {ATOMIC_MEMORY_OPERATIONS}.swap_integer_32 ($deadlock_counter, 0)
+			end
+			previous_waiting_processor_count := l_temp_val
+		end
+
+	waiting_processor_timeout: NATURAL_16 = 20
+	idle_processor_timeout: NATURAL_16 = 2000
+		-- Value in ms of which to wait on a condition variable for waiting and idle processors.
+
+	processor_spin_lock_limit: NATURAL_32 = 200
+		-- Number of iterations to spin lock.
 
 	max_yield_counter: NATURAL_32 = 10_000
 		-- Maximum value of the yield counter.
 
-	processor_sleep_quantum: NATURAL_32 = 15_000_000
-		-- Number of nanoseconds an idle processor should temporarily sleep for (15 ms)
+	processor_sleep_quantum: NATURAL_32 = 10_000_000
+		-- Number of nanoseconds an idle processor should temporarily sleep for (10 ms)
 
 	frozen processor_cpu_yield
 			-- Yield processor to other threads in the processor that are on the same cpu.
@@ -2111,6 +2078,14 @@ feature {NONE} -- Externals
 			"C macro use %"eif_scoop.h%""
 		alias
 			"RTS_PROCESSOR_CPU_YIELD"
+		end
+
+	frozen processor_spin_loop (a_value: INTEGER)
+			-- Spin loop processor for `a_value' times.
+		external
+			"C macro use %"eif_scoop.h%""
+		alias
+			"RTS_PROCESSOR_SPIN_LOOP"
 		end
 
 	frozen native_thread_id: POINTER
@@ -2158,14 +2133,14 @@ feature {NONE} -- List of free processors
 	create_free_processor_list
 			-- Initialize data required to keep track of free processors.
 		require
-			mutex_destroyed: mutex.is_default_pointer
+			mutex_destroyed: processor_id_mutex.is_default_pointer
 			processor_meta_data_attached: attached processor_meta_data
 			processor_meta_data_filled: across processor_meta_data as c all attached c.item end
 		local
 			i: like free_processor_index
 		do
 				-- Initialize synchronization primitive.
-			create_mutex
+			processor_id_mutex := new_mutex
 				-- Link processor meta data into a free list.
 			from
 				i := max_scoop_processors_instantiable
@@ -2178,18 +2153,18 @@ feature {NONE} -- List of free processors
 				-- Record first index in the free list.
 			free_processor_index := 0
 		ensure
-			mutex_created: not mutex.is_default_pointer
+			mutex_created: not processor_id_mutex.is_default_pointer
 			free_processor_index_set: free_processor_index = 0
 		end
 
 	destroy_free_processor_list
 			-- Release data used to keep track of free processors.
 		require
-			mutex_created: not mutex.is_default_pointer
+			mutex_created: not processor_id_mutex.is_default_pointer
 		do
-			destroy_mutex
+			destroy_mutex (processor_id_mutex)
 		ensure
-			mutex_destroyed: mutex.is_default_pointer
+			mutex_destroyed: processor_id_mutex.is_default_pointer
 		end
 
 	acquire_processor_id: like processor_id_type
@@ -2197,19 +2172,21 @@ feature {NONE} -- List of free processors
 			-- Returned value is less than `max_scoop_processors_instantiable' on success
 			-- and is equal or greater than `max_scoop_processors_instantiable' on failure.
 		do
-			lock_mutex
+			lock_mutex (processor_id_mutex)
 			Result := free_processor_index
 			if Result < max_scoop_processors_instantiable then
 					-- The free processor index is valid.
-				check attached processor_meta_data [Result] as d then
+				if attached processor_meta_data [Result] as d then
 						-- Take a processor from the list.
 						-- Advance `free_processor_index' to the next element in the list.
 					free_processor_index := d [next_free_processor_index]
 						-- Mark that the processor ID is allocated.
 					d.put (processor_status_uninitialized, processor_status_index)
+				else
+					check processor_meta_data_attached: False end
 				end
 			end
-			unlock_mutex
+			unlock_mutex (processor_id_mutex)
 		end
 
 	release_processor_id (id: like processor_id_type)
@@ -2217,16 +2194,21 @@ feature {NONE} -- List of free processors
 		require
 			valid_id: 0 <= id and id < processor_meta_data.count
 			allocated_processor: attached processor_meta_data [id]
+		local
+			l_temp_count: INTEGER_32
 		do
-			lock_mutex
+			lock_mutex (processor_id_mutex)
 				-- Notify run-time that the thread is no longer associated with a processor.
 			unset_processor_id
-				-- Free associated semaphore.
-			destroy_semaphore (processor_semaphore_list [id])
+				-- Free associated synchronization primitives.
+			destroy_mutex (processor_synchronization_list [id].mutex)
+			destroy_condition_variable (processor_synchronization_list [id].condition_variable)
+
 				-- Put processor data to the free list.
 			processor_meta_data [id].put (free_processor_index, next_free_processor_index)
 			free_processor_index := id
-			unlock_mutex
+			l_temp_count := {ATOMIC_MEMORY_OPERATIONS}.decrement_integer_32 ($processor_count)
+			unlock_mutex (processor_id_mutex)
 		end
 
 	free_processor_index: INTEGER
@@ -2234,63 +2216,91 @@ feature {NONE} -- List of free processors
 
 feature {NONE} -- List of free processors: mutex
 
-	mutex: POINTER
+	processor_id_mutex: POINTER
 			-- Mutex to work with list of free processors.
 
-	create_mutex
-			-- Initialize mutex.
-		require
-			mutex_destroyed: mutex.is_default_pointer
-		do
-			mutex := eif_thr_mutex_create
-		ensure
-			mutex_created: not mutex.is_default_pointer
+	processor_synchronization_list: SPECIAL [TUPLE [mutex: POINTER; condition_variable: POINTER]]
+		-- List for holding mutex and condition variable for individual processors.
+
+feature {NONE} -- Synchronization externals
+
+	new_semaphore (a_sem_count: NATURAL_8): POINTER
+			-- Return a new semaphore with an initial count of `a_sem_count'.
+		external
+			"C macro use <eif_threads.h>"
+		alias
+			"eif_thr_sem_create"
 		end
 
-	lock_mutex
-			-- Lock mutex.
-		require
-			mutex_created: not mutex.is_default_pointer
-		do
-			eif_thr_mutex_lock (mutex)
+	destroy_semaphore (s: POINTER)
+			-- Release semaphore `s'.
+		external
+			"C macro use <eif_threads.h>"
+		alias
+			"eif_thr_sem_destroy"
 		end
 
-	unlock_mutex
-			-- Unlock mutex.
-		require
-			mutex_created: not mutex.is_default_pointer
-		do
-			eif_thr_mutex_unlock (mutex)
-		end
-
-	destroy_mutex
-			-- Destroy mutex.
-		require
-			mutex_created: not mutex.is_default_pointer
-		do
-			eif_thr_mutex_destroy (mutex)
-		ensure
-			mutex_destroyed: mutex.is_default_pointer
-		end
-
-	eif_thr_mutex_create: POINTER
+	new_mutex: POINTER
 		external
 			"C use %"eif_threads.h%""
+		alias
+			"eif_thr_mutex_create"
 		end
 
-	eif_thr_mutex_lock (a_mutex_pointer: POINTER)
+	lock_mutex (a_mutex_pointer: POINTER)
 		external
 			"C blocking use %"eif_threads.h%""
+		alias
+			"eif_thr_mutex_lock"
 		end
 
-	eif_thr_mutex_unlock (a_mutex_pointer: POINTER)
+	unlock_mutex (a_mutex_pointer: POINTER)
 		external
 			"C use %"eif_threads.h%""
+		alias
+			"eif_thr_mutex_unlock"
 		end
 
-	eif_thr_mutex_destroy (a_mutex_pointer: POINTER)
+	destroy_mutex (a_mutex_pointer: POINTER)
 		external
 			"C use %"eif_threads.h%""
+		alias
+			"eif_thr_mutex_destroy"
+		end
+
+	new_condition_variable: POINTER
+		external
+			"C use %"eif_threads.h%""
+		alias
+			"eif_thr_cond_create"
+		end
+
+	condition_variable_signal (a_cond_ptr: POINTER)
+		external
+			"C use %"eif_threads.h%""
+		alias
+			"eif_thr_cond_signal"
+		end
+
+	condition_variable_wait (a_cond_ptr: POINTER; a_mutex_ptr: POINTER)
+		external
+			"C blocking use %"eif_threads.h%""
+		alias
+			"eif_thr_cond_wait"
+		end
+
+	condition_variable_wait_with_timeout (a_cond_ptr: POINTER; a_mutex_ptr: POINTER; a_timeout: INTEGER): INTEGER
+		external
+			"C blocking use %"eif_threads.h%""
+		alias
+			"eif_thr_cond_wait_with_timeout"
+		end
+
+	destroy_condition_variable (a_mutex_ptr: POINTER)
+		external
+			"C use %"eif_threads.h%""
+		alias
+			"eif_thr_cond_destroy"
 		end
 
 feature {NONE} -- Debugger Helpers
@@ -2356,7 +2366,7 @@ feature {NONE} -- Disposal
 	dispose
 			-- <Precursor>
 		do
-			destroy_mutex
+			destroy_mutex (processor_id_mutex)
 		end
 
 note

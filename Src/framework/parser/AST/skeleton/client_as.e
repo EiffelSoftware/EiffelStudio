@@ -61,8 +61,6 @@ feature -- Roundtrip
 			--|If a client list is in form of {}, a NONE_ID_AS object will be inserted
 			--|into the list automatically. Because it is not in source code, we must
 			--|deal with it specially.
-		local
-			l_none_id: detachable NONE_ID_AS
 		do
 			if clients.count = 1 then
 				Result := attached {NONE_ID_AS} clients.first

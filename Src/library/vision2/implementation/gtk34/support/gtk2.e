@@ -513,6 +513,11 @@ feature -- Externals
 			"C signature (GtkStyleContext*, GtkIconSource*, GtkIconSize): GdkPixbuf* use <ev_gtk.h>"
 		end
 
+	gtk_container_child_get_property (container: POINTER; child: POINTER; property_name: POINTER; value: POINTER)
+		external
+			"C signature (GtkContainer*, GtkWidget*, gchar*, GValue*) use <ev_gtk.h>"
+		end
+
 	frozen gtk_layout_put (a_layout, a_child_widget: POINTER; a_x, a_y: INTEGER)
 		external
 			"C signature (GtkLayout*, GtkWidget*, gint, gint) use <ev_gtk.h>"
@@ -853,6 +858,11 @@ feature -- Externals
 --		external
 	--			"C signature (GdkDrawable*, gint*, gint*) use <ev_gtk.h>"
 --		end
+
+	frozen gtk_combo_box_popup (a_combo: POINTER)
+		external
+			"C signature (GtkComboBox*) use <ev_gtk.h>"
+		end
 
 	frozen gtk_combo_box_popdown (a_combo: POINTER)
 		external
@@ -2174,6 +2184,13 @@ feature -- Externals
 			"C inline use <ev_gtk.h>"
 		alias
 			"g_value_set_int ((GValue*) $a_value, (gint) $a_int)"
+		end
+
+	frozen g_value_get_int (a_value: POINTER): INTEGER_32
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"g_value_get_int ((GValue*) $a_value)"
 		end
 
 	frozen g_value_set_boolean (a_value: POINTER; a_boolean: BOOLEAN)

@@ -23,6 +23,31 @@ feature -- Test routines
 			create main.default_create
 		end
 
+	test_pixel_color_relative_to
+		note
+			testing: "execution/isolated"
+		do
+			run_test (agent pixel_color_relative_to)
+		end
+
+feature {NONE} -- Real test
+
+	pixel_color_relative_to
+		note
+			testing: "execution/isolated"
+		local
+			main: EV_SCREEN
+			window: EV_TITLED_WINDOW
+			l_color: EV_COLOR
+		do
+			create window
+			window.set_size (100, 100)
+			window.show
+
+			create main
+			l_color := main.pixel_color_relative_to (window, 10, 10)
+		end
+
 note
 	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

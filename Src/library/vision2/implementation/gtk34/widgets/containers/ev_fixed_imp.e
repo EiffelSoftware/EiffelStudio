@@ -41,7 +41,8 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			set_c_object ({GTK2}.gtk_fixed_new)
+			set_c_object ({GTK}.gtk_layout_new ({GTK}.null_pointer, {GTK}.null_pointer))
+			{GTK2}.gtk_layout_set_size (container_widget, 32768, 32768)
 			Precursor
 		end
 
@@ -49,22 +50,8 @@ feature -- Status setting
 
 	extend_with_position_and_size (a_widget: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER)
 			-- Add `a_widget' to `Current' with a position of `a_x', a_y' and a dimension of `a_width' and `a_height'.
-		local
-			l_widget_imp: detachable EV_WIDGET_IMP
-			l_parent_box: POINTER
 		do
-			l_widget_imp ?= a_widget.implementation
-			check l_widget_imp /= Void end
-			l_parent_box := {GTK}.gtk_event_box_new
-			{GTK2}.gtk_event_box_set_visible_window (l_parent_box, False)
-			{GTK}.gtk_container_add (l_parent_box, l_widget_imp.c_object)
-			{GTK}.gtk_container_add (list_widget, l_parent_box)
-			child_array.go_i_th (count + 1)
-			child_array.put_left (a_widget)
-			on_new_item (l_widget_imp)
-			if index = count then
-				index := index + 1
-			end
+			extend (a_widget)
 			set_item_position_and_size (a_widget, a_x, a_y, a_width, a_height)
 		end
 
@@ -79,6 +66,8 @@ feature -- Status setting
 			check w_imp /= Void end
 			l_parent_box := {GTK}.gtk_widget_get_parent (w_imp.c_object)
 
+			{GTK2}.gtk_layout_move (container_widget, l_parent_box, a_x, a_y)
+
 			l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
 			{GTK}.set_gtk_allocation_struct_x (l_alloc, a_x)
 			{GTK}.set_gtk_allocation_struct_y (l_alloc, a_y)
@@ -86,31 +75,25 @@ feature -- Status setting
 			{GTK}.set_gtk_allocation_struct_height (l_alloc, a_height)
 			{GTK2}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
 			{GTK2}.gtk_widget_size_allocate (l_parent_box, l_alloc)
-			{GTK}.gtk_container_check_resize (container_widget)
+
 			l_alloc.memory_free
+
+			if (a_x + a_width > minimum_width) then
+				set_minimum_width (a_x + a_width)
+			end
+
+			if (a_y + a_height > minimum_height) then
+				set_minimum_height (a_y + a_height)
+			end
+
+			{GTK}.gtk_container_check_resize (l_parent_box)
 		end
 
 	set_item_position (a_widget: EV_WIDGET; a_x, a_y: INTEGER)
 			-- Set `a_widget.x_position' to `a_x'.
 			-- Set `a_widget.y_position' to `a_y'.
-		local
-			w_imp: detachable EV_WIDGET_IMP
-			l_parent_box, l_parent_window, l_fixed_child: POINTER
 		do
-			w_imp ?= a_widget.implementation
-			check w_imp /= Void end
-			l_parent_box := {GTK}.gtk_widget_get_parent (w_imp.c_object)
-
-			if app_implementation.rubber_band_is_drawn then
-					-- This is a hack to prevent drawing corruption during pick and drop.
-				app_implementation.erase_rubber_band
-				l_fixed_child := i_th_fixed_child (index_of (a_widget, 1))
-				{GTK}.set_gtk_fixed_child_struct_x (l_fixed_child, a_x)
-				{GTK}.set_gtk_fixed_child_struct_y (l_fixed_child, a_y)
-				l_parent_window := {GTK}.gtk_widget_get_window (w_imp.c_object)
-				{GTK}.gdk_window_move (l_parent_window, a_x, a_y)
-			end
-			{GTK2}.gtk_fixed_move (container_widget, l_parent_box, a_x, a_y)
+			set_item_position_and_size (a_widget, a_x, a_y, a_widget.width, a_widget.height)
 		end
 
 	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER)
@@ -137,14 +120,32 @@ feature {EV_ANY_I} -- Implementation
 
 	x_position_of_child (a_widget_imp: EV_WIDGET_IMP): INTEGER
 			-- X position of `a_widget_imp' within `Current'.
+		local
+			l_x: EV_GTK_C_STRING
+			l_item, l_gvalue: POINTER
 		do
-			Result := {GTK}.gtk_fixed_child_struct_x (i_th_fixed_child (index_of (a_widget_imp.interface, 1)))
+			l_x := "x"
+			l_item := i_th_fixed_child (index_of (a_widget_imp.interface, 1))
+			l_gvalue := {GTK2}.c_g_value_struct_allocate
+			{GTK2}.g_value_init_int (l_gvalue)
+			{GTK2}.gtk_container_child_get_property (container_widget, l_item, l_x.item, l_gvalue)
+			Result := {GTK2}.g_value_get_int (l_gvalue)
+			l_gvalue.memory_free
 		end
 
 	y_position_of_child (a_widget_imp: EV_WIDGET_IMP): INTEGER
 			-- Y position of `a_widget_imp' within `Current'.
+		local
+			l_y: EV_GTK_C_STRING
+			l_item, l_gvalue: POINTER
 		do
-			Result := {GTK}.gtk_fixed_child_struct_y (i_th_fixed_child (index_of (a_widget_imp.interface, 1)))
+			l_y := "y"
+			l_item := i_th_fixed_child (index_of (a_widget_imp.interface, 1))
+			l_gvalue := {GTK2}.c_g_value_struct_allocate
+			{GTK2}.g_value_init_int (l_gvalue)
+			{GTK2}.gtk_container_child_get_property (container_widget, l_item, l_y.item, l_gvalue)
+			Result := {GTK2}.g_value_get_int (l_gvalue)
+			l_gvalue.memory_free
 		end
 
 	gtk_insert_i_th (a_container, a_child: POINTER; a_position: INTEGER)
@@ -207,3 +208,4 @@ note
 		]"
 
 end -- class EV_FIXED
+

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -10,7 +10,7 @@ indexing
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,7 +39,7 @@ create
 
 feature -- Validity checking
 
-	check_signatures_validity (a_class: ET_CLASS) is
+	check_signatures_validity (a_class: ET_CLASS)
 			-- Check whether the base classes of the anchors of qualified anchored types
 			-- appearing in the types of all signatures of `a_class' have their
 			-- features already successfully flattened.
@@ -48,28 +48,45 @@ feature -- Validity checking
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 		local
-			l_queries: ET_QUERY_LIST
-			l_query: ET_QUERY
-			l_procedures: ET_PROCEDURE_LIST
-			l_procedure: ET_PROCEDURE
-			args: ET_FORMAL_ARGUMENT_LIST
-			i, nb: INTEGER
-			j, nb2: INTEGER
 			old_class: ET_CLASS
-			l_type, l_previous_type: ET_TYPE
 		do
 			has_fatal_error := False
 			old_class := current_class
 			current_class := a_class
-			l_queries := current_class.queries
-			nb := l_queries.count
+			check_feature_signatures_validity (current_class.queries)
+			if not has_fatal_error then
+				check_feature_signatures_validity (current_class.procedures)
+			end
+			current_class := old_class
+		end
+
+feature {NONE} -- Type validity
+
+	check_feature_signatures_validity (a_features: ET_FEATURE_LIST)
+			-- Check whether the base classes of the anchors of qualified anchored types
+			-- appearing in the types of all signatures of `a_features' have their
+			-- features already successfully flattened.
+			-- Set `has_fatal_error' to True otherwise.
+		require
+			a_features_not_void: a_features /= Void
+		local
+			args: ET_FORMAL_ARGUMENT_LIST
+			i, nb: INTEGER
+			j, nb2: INTEGER
+			l_type, l_previous_type: ET_TYPE
+			l_feature: ET_FEATURE
+		do
+			nb := a_features.count
 			from i := 1 until i > nb loop
-				l_query := l_queries.item (i)
-				l_query.type.process (Current)
+				l_feature := a_features.item (i)
+				l_type := l_feature.type
+				if l_type /= Void then
+					l_type.process (Current)
+				end
 				if has_fatal_error then
 					i := nb + 1 -- Jump out of the loop.
 				else
-					args := l_query.arguments
+					args := l_feature.arguments
 					if args /= Void then
 						nb2 := args.count
 						from j := 1 until j > nb2 loop
@@ -90,38 +107,9 @@ feature -- Validity checking
 				end
 				i := i + 1
 			end
-			if not has_fatal_error then
-				l_procedures := current_class.procedures
-				nb := l_procedures.count
-				from i := 1 until i > nb loop
-					l_procedure := l_procedures.item (i)
-					args := l_procedure.arguments
-					if args /= Void then
-						nb2 := args.count
-						from j := 1 until j > nb2 loop
-							l_type := args.formal_argument (j).type
-							if l_type /= l_previous_type then
-								l_type.process (Current)
-								if has_fatal_error then
-										-- Jump out of the loops.
-									j := nb2 + 1
-									i := nb + 1
-								end
-								l_previous_type := l_type
-							end
-							j := j + 1
-						end
-						l_previous_type := Void
-					end
-					i := i + 1
-				end
-			end
-			current_class := old_class
 		end
 
-feature {NONE} -- Type validity
-
-	check_qualified_like_identifier_validity (a_type: ET_QUALIFIED_LIKE_IDENTIFIER) is
+	check_qualified_like_identifier_validity (a_type: ET_QUALIFIED_LIKE_IDENTIFIER)
 			-- Check whether the base classes of the anchors of qualified anchored types
 			-- appearing in `a_type' have their features already successfully flattened.
 			-- Set `has_fatal_error' to True otherwise.
@@ -130,20 +118,20 @@ feature {NONE} -- Type validity
 			-- no_cycle: no cycle in anchored types involved.
 		local
 			l_target_type: ET_TYPE
-			l_class: ET_CLASS
+			l_class: ET_NAMED_CLASS
 		do
 			l_target_type := a_type.target_type
 				-- The target type may also be made up of qualified anchored types.
 			l_target_type.process (Current)
 			if not has_fatal_error then
-				l_class := l_target_type.base_class (current_class)
+				l_class := l_target_type.named_base_class (current_class)
 				if not l_class.features_flattened or else l_class.has_flattening_error then
 					set_fatal_error
 				end
 			end
 		end
 
-	check_actual_parameters_validity (a_parameters: ET_ACTUAL_PARAMETER_LIST) is
+	check_actual_parameters_validity (a_parameters: ET_ACTUAL_PARAMETER_LIST)
 			-- Check whether the base classes of the anchors of qualified anchored types
 			-- appearing in `a_parameters' have their features already successfully flattened.
 			-- Set `has_fatal_error' to True otherwise.
@@ -165,13 +153,13 @@ feature {NONE} -- Type validity
 
 feature {ET_AST_NODE} -- Type processing
 
-	process_class (a_type: ET_CLASS) is
+	process_class (a_type: ET_CLASS)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_class_type (a_type: ET_CLASS_TYPE) is
+	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		local
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
@@ -182,25 +170,25 @@ feature {ET_AST_NODE} -- Type processing
 			end
 		end
 
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
+	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
 		do
 			check_qualified_like_identifier_validity (a_type)
 		end
 
-	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE)
 			-- Process `a_type'.
 		do
 			check_qualified_like_identifier_validity (a_type)
 		end
 
-	process_tuple_type (a_type: ET_TUPLE_TYPE) is
+	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
 		local
 			a_parameters: ET_ACTUAL_PARAMETER_LIST

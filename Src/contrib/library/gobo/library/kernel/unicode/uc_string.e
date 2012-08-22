@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -16,7 +16,7 @@ indexing
 		Use UC_UTF*_STRING to specify the encoding explicitly.
 	]"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -92,7 +92,6 @@ inherit
 			append_character,
 			item,
 			substring,
-			subcopy,
 			append_string,
 			replace_substring,
 			replace_substring_all,
@@ -111,11 +110,11 @@ inherit
 			insert_character,
 			string,
 			same_string,
+			same_string_general,
 			insert_string,
 			insert,
 			prepend,
 			prepend_string,
-			prepend_string_general,
 			append_string_general,
 			keep_head,
 			keep_tail,
@@ -185,7 +184,6 @@ inherit
 			append_character,
 			substring_index,
 			substring,
-			subcopy,
 			append_string,
 			replace_substring,
 			replace_substring_all,
@@ -205,11 +203,11 @@ inherit
 			insert_character,
 			string,
 			same_string,
+			same_string_general,
 			insert_string,
 			insert,
 			prepend,
 			prepend_string,
-			prepend_string_general,
 			append_string_general,
 			keep_head,
 			keep_tail,
@@ -250,7 +248,6 @@ inherit
 	KI_TEXT_OUTPUT_STREAM
 		rename
 			put_character as append_character,
-			put_string as append,
 			put_substring as append_substring,
 			append as append_stream,
 			True_constant as stream_true_constant,
@@ -344,7 +341,7 @@ create
 
 feature -- Initialization
 
-	make (suggested_capacity: INTEGER) is
+	make (suggested_capacity: INTEGER)
 			-- Create empty string, or remove all characters from
 			-- existing string.
 			-- (Extended from ELKS 2001 STRING)
@@ -366,7 +363,7 @@ feature -- Initialization
 			byte_capacity_set: byte_capacity >= suggested_capacity
 		end
 
-	make_from_string (a_string: STRING) is
+	make_from_string (a_string: STRING)
 			-- Initialize from the character sequence of `a_string'.
 			-- (ELKS 2001 STRING)
 		do
@@ -377,19 +374,19 @@ feature -- Initialization
 
 feature {NONE} -- Initialization
 
-	make_empty is
+	make_empty
 			-- Create empty string.
 			-- (ELKS 2001 STRING)
 		do
 			make (0)
 		end
 
-	make_from_string_general (a_string: STRING_GENERAL) is
+	make_from_string_general (a_string: STRING_GENERAL)
 			-- Initialize from the character sequence of `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 		local
-			l_uc_string: ?UC_STRING
+			l_uc_string: detachable UC_STRING
 		do
 				-- Note that we do nothing if `a_string' is `Current'.
 				-- This is what the following tries to determine. In
@@ -416,7 +413,7 @@ feature {NONE} -- Initialization
 			same_unicode: same_unicode_string (a_string)
 		end
 
-	make_from_substring (a_string: STRING; start_index, end_index: INTEGER) is
+	make_from_substring (a_string: STRING; start_index, end_index: INTEGER)
 			-- Initialize from the character sequence of `a_string'
 			-- between `start_index' and `end_index' inclusive.
 		require
@@ -430,7 +427,7 @@ feature {NONE} -- Initialization
 			initialized: same_unicode_string (a_string.substring (start_index, end_index))
 		end
 
-	make_from_substring_general (a_string: STRING_GENERAL; start_index, end_index: INTEGER) is
+	make_from_substring_general (a_string: STRING_GENERAL; start_index, end_index: INTEGER)
 			-- Initialize from the character sequence of `a_string'
 			-- between `start_index' and `end_index' inclusive.
 		require
@@ -441,7 +438,7 @@ feature {NONE} -- Initialization
 		local
 			nb: INTEGER
 			str: STRING_GENERAL
-			l_uc_string: ?UC_STRING
+			l_uc_string: detachable UC_STRING
 		do
 				-- Note that we do nothing if `a_string' is `Current'.
 				-- This is what the following tries to determine. In
@@ -481,7 +478,7 @@ feature {NONE} -- Initialization
 			initialized: same_unicode_string (a_string.substring (start_index, end_index))
 		end
 
-	make_filled_unicode (c: UC_CHARACTER; n: INTEGER) is
+	make_filled_unicode (c: UC_CHARACTER; n: INTEGER)
 			-- Create string of length `n' filled with unicode character `c'.
 		require
 			c_not_void: c /= Void
@@ -493,7 +490,7 @@ feature {NONE} -- Initialization
 			filled: unicode_occurrences (c) = count
 		end
 
-	make_filled_code (a_code: INTEGER; n: INTEGER) is
+	make_filled_code (a_code: INTEGER; n: INTEGER)
 			-- Create string of length `n' filled with unicode
 			-- character of code `a_code'.
 		require
@@ -521,7 +518,7 @@ feature {NONE} -- Initialization
 			filled: code_occurrences (a_code) = count
 		end
 
-	make_filled (c: CHARACTER; n: INTEGER) is
+	make_filled (c: CHARACTER; n: INTEGER)
 			-- Create string of length `n' filled with character `c'.
 			-- (ELKS 2001 STRING)
 		local
@@ -556,7 +553,7 @@ feature {NONE} -- Initialization
 			filled_code: code_occurrences (c.code) = count
 		end
 
-	make_from_utf8 (s: STRING) is
+	make_from_utf8 (s: STRING)
 			-- Initialize from the bytes sequence of `s' corresponding
 			-- to the UTF-8 representation of a string.
 		require
@@ -568,7 +565,7 @@ feature {NONE} -- Initialization
 			append_utf8 (s)
 		end
 
-	make_from_utf16 (s: STRING) is
+	make_from_utf16 (s: STRING)
 			-- Initialize from the bytes sequence of `s' corresponding
 			-- to the UTF-16 representation of a string.
 		require
@@ -580,7 +577,7 @@ feature {NONE} -- Initialization
 			append_utf16 (s)
 		end
 
-	make_from_utf16le (s: STRING) is
+	make_from_utf16le (s: STRING)
 			-- Initialize from the bytes sequence of `s' corresponding
 			-- to the UTF-16LE representation of a string.
 		require
@@ -592,7 +589,7 @@ feature {NONE} -- Initialization
 			append_utf16le (s)
 		end
 
-	make_from_utf16be (s: STRING) is
+	make_from_utf16be (s: STRING)
 			-- Initialize from the bytes sequence of `s' corresponding
 			-- to the UTF-16BE representation of a string.
 		require
@@ -606,7 +603,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	unicode_item (i: INTEGER): UC_CHARACTER is
+	unicode_item (i: INTEGER): UC_CHARACTER
 			-- Unicode character at index `i';
 			-- Return a new object at each call
 		require
@@ -618,7 +615,7 @@ feature -- Access
 			code_set: Result.code = item_code (i)
 		end
 
-	item_code (i: INTEGER): INTEGER is
+	item_code (i: INTEGER): INTEGER
 			-- Code of character at index `i'
 		local
 			k: INTEGER
@@ -634,7 +631,7 @@ feature -- Access
 			valid_item_code: unicode.valid_code (Result)
 		end
 
-	item (i: INTEGER): CHARACTER is
+	item (i: INTEGER): CHARACTER
 			-- Character at index `i';
 			-- '%U' if the unicode character at index
 			-- `i' cannot fit into a CHARACTER
@@ -655,7 +652,7 @@ feature -- Access
 			overflow: item_code (i) > Platform.Maximum_character_code implies Result = '%U'
 		end
 
-	at alias "@" (i: INTEGER): CHARACTER is
+	at alias "@" (i: INTEGER): CHARACTER
 			-- Character at index `i'
 			-- (ELKS 2001 STRING)
 		do
@@ -664,7 +661,7 @@ feature -- Access
 			definition: Result = item (i)
 		end
 
-	substring (start_index, end_index: INTEGER): like Current is
+	substring (start_index, end_index: INTEGER): like Current
 			-- New object containing all characters
 			-- from `start_index' to `end_index' inclusive
 			-- (ELKS 2001 STRING)
@@ -678,7 +675,7 @@ feature -- Access
 			first_unicode_item: Result.count > 0 implies Result.item_code (1) = item_code (start_index)
 		end
 
-	unicode_substring_index (other: STRING_GENERAL; start_index: INTEGER): INTEGER is
+	unicode_substring_index (other: READABLE_STRING_GENERAL; start_index: INTEGER): INTEGER
 			-- Index of first occurrence of `other' at or after `start_index';
 			-- 0 if none
 		require
@@ -687,7 +684,7 @@ feature -- Access
 		local
 			i, j, nb: INTEGER
 			a_code, a_code2: INTEGER
-			other_unicode: ?UC_STRING
+			other_unicode: detachable UC_STRING
 			k, z, end_index: INTEGER
 			found: BOOLEAN
 			other_count: INTEGER
@@ -851,7 +848,7 @@ feature -- Access
 			none_before: Result > start_index implies not substring (start_index, Result + other.count - 2).has_unicode_substring (other)
 		end
 
-	substring_index (other: STRING; start_index: INTEGER): INTEGER is
+	substring_index (other: STRING; start_index: INTEGER): INTEGER
 			-- Index of first occurrence of `other' at or after `start_index';
 			-- 0 if none. `other' and `Current' are considered with their
 			-- characters which do not fit in a CHARACTER replaced by a '%U'
@@ -859,7 +856,7 @@ feature -- Access
 		local
 			i, j, nb: INTEGER
 			a_code, a_code2: INTEGER
-			other_unicode: ?UC_STRING
+			other_unicode: detachable UC_STRING
 			k, z, end_index: INTEGER
 			found: BOOLEAN
 			other_count: INTEGER
@@ -1030,7 +1027,7 @@ feature -- Access
 			end
 		end
 
-	string: STRING is
+	string: STRING
 			-- New STRING having the same character sequence as `Current'
 			-- where characters which do not fit in a CHARACTER are
 			-- replaced by a '%U'
@@ -1068,7 +1065,7 @@ feature -- Access
 			end
 		end
 
-	plus alias "+" (other: STRING): like Current is
+	plus alias "+" (other: READABLE_STRING_8): like Current
 			-- New object which is a clone of `Current' extended
 			-- by the characters of `other'
 			-- (ELKS 2001 STRING)
@@ -1080,7 +1077,7 @@ feature -- Access
 			final_unicode: Result.substring (count + 1, count + other.count).same_unicode_string (other)
 		end
 
-	prefixed_string (other: STRING): like Current is
+	prefixed_string (other: STRING): like Current
 			-- New object which is a clone of `Current' preceded
 			-- by the characters of `other'
 		require
@@ -1096,7 +1093,7 @@ feature -- Access
 			final: Result.substring (other.count + 1, Result.count).is_equal (Current)
 		end
 
-	index_of_unicode (c: UC_CHARACTER; start_index: INTEGER): INTEGER is
+	index_of_unicode (c: UC_CHARACTER; start_index: INTEGER): INTEGER
 			-- Index of first occurrence of `c' at or after `start_index';
 			-- 0 if none
 		require
@@ -1111,7 +1108,7 @@ feature -- Access
 			none_before: substring (start_index, count).has_unicode (c) implies not substring (start_index, Result - 1).has_unicode (c)
 		end
 
-	index_of_item_code (a_code: INTEGER; start_index: INTEGER): INTEGER is
+	index_of_item_code (a_code: INTEGER; start_index: INTEGER): INTEGER
 			-- Index of first occurrence of unicode character with
 			-- code `a_code' at or after `start_index'; 0 if none
 		require
@@ -1163,7 +1160,7 @@ feature -- Access
 			none_before: substring (start_index, count).has_item_code (a_code) implies not substring (start_index, Result - 1).has_item_code (a_code)
 		end
 
-	index_of (c: CHARACTER; start_index: INTEGER): INTEGER is
+	index_of (c: CHARACTER; start_index: INTEGER): INTEGER
 			-- Index of first occurrence of character `c'
 			-- at or after `start_index'; 0 if none
 			-- (ELKS 2001 STRING)
@@ -1212,7 +1209,7 @@ feature -- Access
 			end
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 			-- (ELKS 2001 STRING)
 		local
@@ -1247,7 +1244,7 @@ feature -- Access
 			end
 		end
 
-	new_empty_string (suggested_capacity: INTEGER): like Current is
+	new_empty_string (suggested_capacity: INTEGER): like Current
 			-- New empty string with same dynamic type as `Current'
 		require
 			non_negative_suggested_capacity: suggested_capacity >= 0
@@ -1263,7 +1260,7 @@ feature -- Access
 
 feature -- Measurement
 
-	unicode_occurrences (c: UC_CHARACTER): INTEGER is
+	unicode_occurrences (c: UC_CHARACTER): INTEGER
 			-- Number of times `c' appears in the string
 		require
 			c_not_void: c /= Void
@@ -1277,7 +1274,7 @@ feature -- Measurement
 				Result = 1 + substring (2, count).unicode_occurrences (c)
 		end
 
-	code_occurrences (a_code: INTEGER): INTEGER is
+	code_occurrences (a_code: INTEGER): INTEGER
 			-- Number of times unicode character of code
 			-- `a_code' appears in the string
 		require
@@ -1322,7 +1319,7 @@ feature -- Measurement
 				Result = 1 + substring (2, count).code_occurrences (a_code)
 		end
 
-	occurrences (c: CHARACTER): INTEGER is
+	occurrences (c: CHARACTER): INTEGER
 			-- Number of times character `c' appears in the string
 			-- (ELKS 2001 STRING)
 		local
@@ -1368,7 +1365,7 @@ feature -- Measurement
 	byte_count: INTEGER
 			-- Number of bytes in internal storage
 
-	byte_capacity: INTEGER is
+	byte_capacity: INTEGER
 			-- Maximum number of bytes that can be put in
 			-- internal storage
 		do
@@ -1377,7 +1374,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	has_unicode (c: UC_CHARACTER): BOOLEAN is
+	has_unicode (c: UC_CHARACTER): BOOLEAN
 			-- Does `Current' contain `c'?
 		require
 			c_not_void: c /= Void
@@ -1389,7 +1386,7 @@ feature -- Status report
 			recurse: (count > 0 and then item_code (1) /= c.code) implies (Result = substring (2, count).has_unicode (c))
 		end
 
-	has_item_code (a_code: INTEGER): BOOLEAN is
+	has_item_code (a_code: INTEGER): BOOLEAN
 			-- Does `Current' contain the unicode character of code `a_code'?
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -1401,14 +1398,14 @@ feature -- Status report
 			recurse: (count > 0 and then item_code (1) /= a_code) implies (Result = substring (2, count).has_item_code (a_code))
 		end
 
-	has (c: CHARACTER): BOOLEAN is
+	has (c: CHARACTER): BOOLEAN
 			-- Does `Current' contain character `c'?
 			-- (ELKS 2001 STRING)
 		do
 			Result := (index_of (c, 1) /= 0)
 		end
 
-	has_unicode_substring (other: STRING_GENERAL): BOOLEAN is
+	has_unicode_substring (other: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does `Current' contain `other'?
 		require
 			other_not_void: other /= Void
@@ -1426,7 +1423,7 @@ feature -- Status report
 --			has_substring: Result implies has_substring (other)
 		end
 
-	has_substring (other: STRING): BOOLEAN is
+	has_substring (other: STRING): BOOLEAN
 			-- Does `Current' contain `other'?
 			-- `other' and `Current' are considered with their characters
 			-- which do not fit in a CHARACTER replaced by a '%U'.
@@ -1439,14 +1436,14 @@ feature -- Status report
 			end
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is string empty?
 			-- (ELKS 2001 STRING)
 		do
 			Result := (count = 0)
 		end
 
-	is_ascii: BOOLEAN is
+	is_ascii: BOOLEAN
 			-- Does string contain only ASCII characters?
 		do
 			Result := (count = byte_count)
@@ -1457,7 +1454,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered equal
 			-- to current object?
 			-- (Extended from ELKS 2001 STRING)
@@ -1490,7 +1487,7 @@ feature -- Comparison
 				substring (2, count).is_equal (other.substring (2, count)))))
 		end
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is string lexicographically lower than `other'?
 			-- (Extended from ELKS 2001 STRING, inherited from COMPARABLE)
 		do
@@ -1501,7 +1498,7 @@ feature -- Comparison
 				item_code (1) = other.item_code (1) and substring (2, count) < other.substring (2, other.count)))
 		end
 
-	same_string (other: STRING): BOOLEAN is
+	same_string (other: READABLE_STRING_8): BOOLEAN
 			-- Do `Current' and `other' have the same character sequence?
 			-- `Current' is considered with its characters which do not
 			-- fit in a CHARACTER replaced by a '%U'.
@@ -1514,7 +1511,43 @@ feature -- Comparison
 			end
 		end
 
-	same_unicode_string (other: STRING_GENERAL): BOOLEAN is
+	same_string_general (other: READABLE_STRING_GENERAL): BOOLEAN
+			-- Do `Current' and `other' have the same character sequence?
+			-- `Current' is considered with its characters which do not
+			-- fit in a CHARACTER replaced by a '%U'.
+			-- (Extended from ELKS 2001 STRING)
+		local
+			i, l_count: INTEGER
+			l_c, l_other_c: NATURAL_32
+		do
+			if other = Current then
+				Result := True
+			elseif other.count = count then
+				l_count := count
+				from
+					Result := True
+					i := 1
+				until
+					i > l_count
+				loop
+					l_c := code (i)
+					if l_c > platform.maximum_character_code.to_natural_32 then
+						l_c := 0
+					end
+					l_other_c := other.code (i)
+					if l_other_c > platform.maximum_character_code.to_natural_32 then
+						l_other_c := 0
+					end
+					if l_c /= l_other_c then
+						Result := False
+						i := l_count
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	same_unicode_string (other: READABLE_STRING_GENERAL): BOOLEAN
 			-- Do `Current' and `other' have the same unicode character sequence?
 		require
 			other_not_void: other /= Void
@@ -1532,7 +1565,7 @@ feature -- Comparison
 --			same_string: Result implies same_string (other)
 		end
 
-	three_way_comparison (other: like Current): INTEGER is
+	three_way_comparison (other: like Current): INTEGER
 			-- If current object equal to `other', 0;
 			-- if smaller, -1; if greater, 1
 			-- (ELKS 2001 STRING, inherited from COMPARABLE)
@@ -1588,7 +1621,7 @@ feature -- Comparison
 			end
 		end
 
-	three_way_unicode_comparison (other: STRING): INTEGER is
+	three_way_unicode_comparison (other: STRING): INTEGER
 			-- If current object equal to `other', 0;
 			-- if smaller, -1; if greater, 1
 			-- Note: there is a bug in the specification of the
@@ -1607,7 +1640,6 @@ feature -- Comparison
 		require
 			other_not_void: other /= Void
 		local
-			uc_string: ?UC_STRING
 			i, nb, nb1, nb2: INTEGER
 			b1, b2: CHARACTER
 			c1, c2: INTEGER
@@ -1615,11 +1647,7 @@ feature -- Comparison
 		do
 			if other = Current then
 				Result := 0
-			elseif ANY_.same_types (Current, other) then
-				uc_string ?= other
-				check
-					is_uc_string: uc_string /= Void
-				end
+			elseif ANY_.same_types (Current, other) and then attached {UC_STRING} other as uc_string then
 				nb1 := byte_count
 				nb2 := uc_string.byte_count
 				if nb1 < nb2 then
@@ -1700,7 +1728,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	put_unicode (c: UC_CHARACTER; i: INTEGER) is
+	put_unicode (c: UC_CHARACTER; i: INTEGER)
 			-- Replace unicode character at index `i' by `c'.
 		require
 			valid_index: valid_index (i)
@@ -1714,7 +1742,7 @@ feature -- Element change
 			stable_after_i: substring (i + 1, count).is_equal (old substring (i + 1, count))
 		end
 
-	put_item_code (a_code: INTEGER; i: INTEGER) is
+	put_item_code (a_code: INTEGER; i: INTEGER)
 			-- Replace unicode character at index `i'
 			-- by unicode character of code `a_code'.
 		require
@@ -1755,7 +1783,7 @@ feature -- Element change
 			stable_after_i: substring (i + 1, count).is_equal (old substring (i + 1, count))
 		end
 
-	put (c: CHARACTER; i: INTEGER) is
+	put (c: CHARACTER; i: INTEGER)
 			-- Replace unicode character at index `i' by character `c'.
 			-- (ELKS 2001 STRING)
 		local
@@ -1790,13 +1818,13 @@ feature -- Element change
 			unicode_replaced: item_code (i) = c.code
 		end
 
-	prepend (s: STRING) is
+	prepend (s: READABLE_STRING_8)
 			-- Prepend a copy of `s' at front.
 		do
 			insert_string (s, 1)
 		end
 
-	prepend_string (s: ?STRING) is
+	prepend_string (s: detachable STRING)
 			-- Prepend a copy of `s', if not void, at front.
 		do
 			if s /= Void then
@@ -1804,19 +1832,17 @@ feature -- Element change
 			end
 		end
 
-	prepend_string_general (s: READABLE_STRING_GENERAL) is
-			-- Append a copy of `s' at front.
-		do
-			prepend (s.as_string_8)
-		end
-
-	append_string_general (s: READABLE_STRING_GENERAL) is
+	append_string_general (s: READABLE_STRING_GENERAL)
 			-- Append a copy of `s' at end.
 		do
-			append (s.as_string_8)
+			if attached {STRING} s as ls then
+				append (ls)
+			else
+				precursor (s)
+			end
 		end
 
-	append_unicode_character (c: UC_CHARACTER) is
+	append_unicode_character (c: UC_CHARACTER)
 			-- Append unicode character `c' at end.
 		require
 			c_not_void: c /= Void
@@ -1828,7 +1854,7 @@ feature -- Element change
 			stable_before: substring (1, count - 1).is_equal (old cloned_string)
 		end
 
-	append_item_code (a_code: INTEGER) is
+	append_item_code (a_code: INTEGER)
 			-- Append unicode character of code `a_code' at end.
 		require
 			valid_item_code: unicode.valid_code (a_code)
@@ -1851,7 +1877,7 @@ feature -- Element change
 			stable_before: substring (1, count - 1).is_equal (old cloned_string)
 		end
 
-	append_character (c: CHARACTER) is
+	append_character (c: CHARACTER)
 			-- Append character `c' at end.
 			-- (ELKS 2001 STRING)
 		local
@@ -1887,7 +1913,7 @@ feature -- Element change
 			unicode_appended: item_code (count) = c.code
 		end
 
-	append_string (s: ?STRING) is
+	append_string (s: detachable READABLE_STRING_8)
 			-- Append a copy of `s' at end.
 		do
 			if s /= Void then
@@ -1895,7 +1921,14 @@ feature -- Element change
 			end
 		end
 
-	append (a_string: STRING) is
+
+	put_string (a_string: STRING)
+			-- Write `a_string' to output stream.
+		do
+			append (a_string)
+		end
+
+	append (a_string: READABLE_STRING_8)
 			-- Append a copy of `a_string' at end.
 			-- (ELKS 2001 STRING)
 		local
@@ -1904,14 +1937,14 @@ feature -- Element change
 			old_a_string_count: INTEGER
 			new_byte_count: INTEGER
 			new_count: INTEGER
-			a_utf8_string: ?UC_UTF8_STRING
-			a_uc_string: ?UC_STRING
+			a_utf8_string: detachable UC_UTF8_STRING
+			a_uc_string: detachable UC_STRING
 			b: BOOLEAN
 		do
 			if ANY_.same_types (a_string, dummy_string) then
 					-- Check if string does not contain non-ascii characters.
 					-- Unfortunately, this is a slow but necessary call.
-				nb := utf8.substring_byte_count (a_string, 1, a_string.count)
+				nb := utf8.substring_byte_count (a_string.as_string_8, 1, a_string.count)
 				if nb = a_string.count then
 						-- If not, we may use the native `append_string'.
 						-- Hopefully this one has a fast move.
@@ -1974,7 +2007,7 @@ feature -- Element change
 			end
 		end
 
-	append_substring (a_string: STRING; s, e: INTEGER) is
+	append_substring (a_string: STRING; s, e: INTEGER)
 			-- Append substring of `a_string' between indexes
 			-- `s' and `e' at end of current string.
 		local
@@ -2004,7 +2037,7 @@ feature -- Element change
 			appended: is_equal (old cloned_string + old a_string.substring (s, e))
 		end
 
-	append_utf8 (s: STRING) is
+	append_utf8 (s: STRING)
 			-- Append UTF-8 encoded string `s' at end of current string.
 		require
 			s_not_void: s /= Void
@@ -2049,7 +2082,7 @@ feature -- Element change
 			set_count (count + a_count)
 		end
 
-	append_utf16 (s: STRING) is
+	append_utf16 (s: STRING)
 			-- Append UTF-16 encoded string `s' at end of current string.
 		require
 			s_not_void: s /= Void
@@ -2112,7 +2145,7 @@ feature -- Element change
 			end
 		end
 
-	append_utf16be (s: STRING) is
+	append_utf16be (s: STRING)
 			-- Append UTF-16BE encoded string `s' at end of current string.
 		require
 			s_not_void: s /= Void
@@ -2152,7 +2185,7 @@ feature -- Element change
 			end
 		end
 
-	append_utf16le (s: STRING) is
+	append_utf16le (s: STRING)
 			-- Append UTF-16LE encoded string `s' at end of current string.
 		require
 			s_not_void: s /= Void
@@ -2192,7 +2225,7 @@ feature -- Element change
 			end
 		end
 
-	fill_with_unicode (c: UC_CHARACTER) is
+	fill_with_unicode (c: UC_CHARACTER)
 			-- Replace every character with unicode character `c'.
 		require
 			c_not_void: c /= Void
@@ -2203,7 +2236,7 @@ feature -- Element change
 			filled: unicode_occurrences (c) = count
 		end
 
-	fill_with_code (a_code: INTEGER) is
+	fill_with_code (a_code: INTEGER)
 			-- Replace every character with unicode character of code `a_code'.
 		require
 			valid_code: unicode.valid_code (a_code)
@@ -2231,7 +2264,7 @@ feature -- Element change
 			filled: code_occurrences (a_code) = count
 		end
 
-	fill_with (c: CHARACTER) is
+	fill_with (c: CHARACTER)
 			-- Replace every character with character `c'.
 			-- (ELKS 2001 STRING)
 		local
@@ -2268,7 +2301,7 @@ feature -- Element change
 			all_code: code_occurrences (c.code) = count
 		end
 
-	insert_unicode_character (c: UC_CHARACTER; i: INTEGER) is
+	insert_unicode_character (c: UC_CHARACTER; i: INTEGER)
 			-- Insert unicode character `c' at index `i', shifting
 			-- characters between ranks `i' and `count' rightwards.
 		require
@@ -2283,7 +2316,7 @@ feature -- Element change
 			stable_after_i: substring (i + 1, count).is_equal (old substring (i, count))
 		end
 
-	insert_code (a_code: INTEGER; i: INTEGER) is
+	insert_code (a_code: INTEGER; i: INTEGER)
 			-- Insert unicode character of code `a_code'
 			-- at index `i', shifting characters between
 			-- ranks `i' and `count' rightwards.
@@ -2318,7 +2351,7 @@ feature -- Element change
 			stable_after_i: substring (i + 1, count).is_equal (old substring (i, count))
 		end
 
-	insert_character (c: CHARACTER; i: INTEGER) is
+	insert_character (c: CHARACTER; i: INTEGER)
 			-- Insert character `c' at index `i', shifting
 			-- characters between ranks `i' and `count' rightwards.
 			-- (ELKS 2001 STRING)
@@ -2347,7 +2380,7 @@ feature -- Element change
 			code_inserted: item_code (i) = c.code
 		end
 
-	insert (s: STRING; i: INTEGER) is
+	insert (s: STRING; i: INTEGER)
 			-- Add `s' to left of position `i' in current string.
 		obsolete
 			"ELKS 2001: use `insert_string' instead"
@@ -2355,7 +2388,7 @@ feature -- Element change
 			insert_string (s, i)
 		end
 
-	insert_string (a_string: STRING; i: INTEGER) is
+	insert_string (a_string: READABLE_STRING_8; i: INTEGER)
 			-- Insert `a_string' at index `i', shifting characters between ranks
 			-- `i' and `count' rightwards.
 			-- (ELKS 2001 STRING)
@@ -2395,7 +2428,7 @@ feature -- Element change
 			end
 		end
 
-	replace_substring (a_string: STRING; start_index, end_index: INTEGER) is
+	replace_substring (a_string: STRING; start_index, end_index: INTEGER)
 			-- Replace the substring from `start_index' to `end_index',
 			-- inclusive, with `a_string'.
 			-- (ELKS 2001 STRING)
@@ -2403,7 +2436,7 @@ feature -- Element change
 			replace_substring_by_string (a_string, start_index, end_index)
 		end
 
-	replace_substring_by_string (a_string: STRING; start_index, end_index: INTEGER) is
+	replace_substring_by_string (a_string: STRING; start_index, end_index: INTEGER)
 			-- Replace the substring from `start_index' to `end_index',
 			-- inclusive, with `a_string'.
 		require
@@ -2463,7 +2496,7 @@ feature -- Element change
 
 -- TODO: ISE 6.2 version because there is a flat Degree 3 error when using version from 6.4
 -- with the signature of `replace_substring' of the current class.
-	replace_substring_all (original, new: like Current) is
+	replace_substring_all (original, new: like Current)
 			-- Replace every occurrence of `original' with `new'.
 		local
 			l_first_pos, l_next_pos: INTEGER
@@ -2552,7 +2585,7 @@ feature -- Element change
 
 feature -- Removal
 
-	keep_head (n: INTEGER) is
+	keep_head (n: INTEGER)
 			-- Remove all the characters except for the first `n';
 			-- if `n' > `count', do nothing.
 			-- (ELKS 2001 STRING)
@@ -2570,7 +2603,7 @@ feature -- Removal
 			end
 		end
 
-	keep_tail (n: INTEGER) is
+	keep_tail (n: INTEGER)
 			-- Remove all the characters except for the last `n';
 			-- if `n' > `count', do nothing.
 			-- (ELKS 2001 STRING)
@@ -2591,7 +2624,7 @@ feature -- Removal
 			end
 		end
 
-	remove_head (n: INTEGER) is
+	remove_head (n: INTEGER)
 			-- Remove the first `n' characters;
 			-- if `n' > `count', remove all.
 			-- (ELKS 2001 STRING)
@@ -2603,7 +2636,7 @@ feature -- Removal
 			end
 		end
 
-	remove_tail (n: INTEGER) is
+	remove_tail (n: INTEGER)
 			-- Remove the last `n' characters;
 			-- if `n' > `count', remove all.
 			-- (ELKS 2001 STRING)
@@ -2615,7 +2648,7 @@ feature -- Removal
 			end
 		end
 
-	remove (i: INTEGER) is
+	remove (i: INTEGER)
 			-- Remove `i'-th character, shifting characters between
 			-- ranks i + 1 and `count' leftwards.
 			-- (ELKS 2001 STRING)
@@ -2633,7 +2666,7 @@ feature -- Removal
 			set_count (count - 1)
 		end
 
-	remove_substring (start_index, end_index: INTEGER) is
+	remove_substring (start_index, end_index: INTEGER)
 			-- Remove all characters from `start_index'
 			-- to `end_index' inclusive.
 			-- (ELKS 2001 STRING)
@@ -2663,7 +2696,7 @@ feature -- Removal
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all characters.
 			-- (ELKS 2001 STRING)
 		do
@@ -2673,7 +2706,7 @@ feature -- Removal
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Reinitialize by copying the characters of `other'.
 			-- (This is also used by clone.)
 			-- (ELKS 2001 STRING)
@@ -2689,13 +2722,7 @@ feature -- Duplication
 			end
 		end
 
-	subcopy (other: STRING; start_pos, end_pos, index_pos: INTEGER_32)
-		do
-			Precursor (other, start_pos, end_pos, index_pos)
-		end
-
-
-	cloned_string: like Current is
+	cloned_string: like Current
 			-- New object equal to `Current'
 		do
 			Result := twin
@@ -2706,7 +2733,7 @@ feature -- Duplication
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- New STRING containing terse printable representation
 			-- of current object; Non-ascii characters are represented
 			-- with the %/code/ convention.
@@ -2760,7 +2787,7 @@ feature -- Output
 			end
 		end
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
 		do
 			Result := out
@@ -2768,7 +2795,7 @@ feature -- Output
 
 feature -- Conversion
 
-	as_lower: like Current is
+	as_lower: like Current
 			-- New object with all letters in lower case
 			-- (Extended from ELKS 2001 STRING)
 		do
@@ -2779,7 +2806,7 @@ feature -- Conversion
 			unicode_recurse: count > 1 implies Result.substring (2, count).is_equal (substring (2, count).as_lower)
 		end
 
-	as_upper: like Current is
+	as_upper: like Current
 			-- New object with all letters in upper case
 			-- (Extended from ELKS 2001 STRING)
 		do
@@ -2790,7 +2817,7 @@ feature -- Conversion
 			unicode_recurse: count > 1 implies Result.substring (2, count).is_equal (substring (2, count).as_upper)
 		end
 
-	to_lower is
+	to_lower
 			-- Convert all letters to lower case.
 			-- (ELKS 2001 STRING)
 		local
@@ -2828,7 +2855,7 @@ feature -- Conversion
 			end
 		end
 
-	to_upper is
+	to_upper
 			-- Convert all letters to upper case.
 			-- (ELKS 2001 STRING)
 		local
@@ -2866,7 +2893,7 @@ feature -- Conversion
 			end
 		end
 
-	to_utf8: STRING is
+	to_utf8: STRING
 			-- New STRING made up of bytes corresponding to
 			-- the UTF-8 representation of current string
 		local
@@ -2888,7 +2915,7 @@ feature -- Conversion
 			valid_utf8: utf8.valid_utf8 (Result)
 		end
 
-	to_utf16_be: STRING is
+	to_utf16_be: STRING
 			-- New STRING made up of bytes corresponding to
 			-- the UTF-16BE representation of current string
 		local
@@ -2927,7 +2954,7 @@ feature -- Conversion
 			valid_utf16: utf16.valid_utf16 (Result)
 		end
 
-	to_utf16_le: STRING is
+	to_utf16_le: STRING
 			-- New STRING made up of bytes corresponding to
 			-- the UTF-16LE representation of current string
 		local
@@ -2966,7 +2993,7 @@ feature -- Conversion
 			valid_utf16: utf16.valid_utf16 (utf16.bom_le + Result)
 		end
 
-	to_utf32_be: STRING is
+	to_utf32_be: STRING
 			-- New STRING made up of bytes corresponding to
 			-- the UTF-32BE representation of current string
 		local
@@ -2998,7 +3025,7 @@ feature -- Conversion
 			valid_utf32: utf32.valid_utf32 (Result)
 		end
 
-	to_utf32_le: STRING is
+	to_utf32_le: STRING
 			-- New STRING made up of bytes corresponding to
 			-- the UTF-32LE representation of current string
 		local
@@ -3030,7 +3057,7 @@ feature -- Conversion
 			valid_utf32: utf32.valid_utf32 (utf32.bom_le + Result)
 		end
 
-	as_string: STRING is
+	as_string: STRING
 			-- STRING version of current string;
 			-- Return the UTF8 representation if it is encoded
 			-- with UTF8, the UTF16 representation if it is
@@ -3044,26 +3071,26 @@ feature -- Conversion
 
 feature -- Output stream
 
-	name: STRING is "UC_STRING"
+	name: STRING = "UC_STRING"
 			-- Name of output stream
 
-	eol: STRING is "%N"
+	eol: STRING = "%N"
 			-- Line separator
 
-	is_open_write: BOOLEAN is
+	is_open_write: BOOLEAN
 			-- Can characters be written to output stream?
 		do
 			Result := True
 		end
 
-	flush is
+	flush
 			-- Do nothing (operation does not apply to string).
 		do
 		end
 
 feature -- Traversal
 
-	item_code_at_byte_index (i: INTEGER): INTEGER is
+	item_code_at_byte_index (i: INTEGER): INTEGER
 			-- Code of character at byte index `i'
 		require
 			i_large_enough: i >= 1
@@ -3090,7 +3117,7 @@ feature -- Traversal
 			valid_item_code: unicode.valid_code (Result)
 		end
 
-	character_item_at_byte_index (i: INTEGER): CHARACTER is
+	character_item_at_byte_index (i: INTEGER): CHARACTER
 			-- Character at byte_index `i';
 			-- '%U' is the unicode character at byte index
 			-- `i' cannot fit into a CHARACTER
@@ -3130,7 +3157,7 @@ feature -- Traversal
 			overflow: item_code_at_byte_index (i) > Platform.Maximum_character_code implies Result = '%U'
 		end
 
-	next_byte_index (i: INTEGER): INTEGER is
+	next_byte_index (i: INTEGER): INTEGER
 			-- Byte index of unicode character after character
 			-- at byte index `i'; Return 'byte_count + 1' if
 			-- character at byte index `i' is the last character
@@ -3146,7 +3173,7 @@ feature -- Traversal
 			next_byte_index_small_enough: Result <= byte_count + 1
 		end
 
-	shifted_byte_index (i: INTEGER; n: INTEGER): INTEGER is
+	shifted_byte_index (i: INTEGER; n: INTEGER): INTEGER
 			-- Byte index of unicode character `n' positions after
 			-- character at byte index `i'; Return 'byte_count + 1'
 			-- if no such character in the string
@@ -3177,7 +3204,7 @@ feature -- Traversal
 			next_byte_index_small_enough: Result <= byte_count + 1
 		end
 
-	byte_index (i: INTEGER): INTEGER is
+	byte_index (i: INTEGER): INTEGER
 			-- Byte index of character at index `i'
 		require
 			valid_index: valid_index (i)
@@ -3215,7 +3242,7 @@ feature -- Traversal
 			is_encoded_first_byte: is_encoded_first_byte (Result)
 		end
 
-	is_encoded_first_byte (i: INTEGER): BOOLEAN is
+	is_encoded_first_byte (i: INTEGER): BOOLEAN
 			-- Is byte at index `i' the first byte of an encoded unicode character?
 		require
 			i_large_enough: i >= 1
@@ -3234,7 +3261,7 @@ feature {UC_STRING} -- Byte index cache
 			-- Last `byte_index' Result
 			-- (Cache for 'i := i + 1' iterations and similar)
 
-	reset_byte_index_cache is
+	reset_byte_index_cache
 			-- Reset byte index (after write operation for example).
 		do
 			last_byte_index_input := 1
@@ -3243,7 +3270,7 @@ feature {UC_STRING} -- Byte index cache
 
 feature -- Implementation
 
-	current_string: STRING is
+	current_string: STRING
 			-- Current string
 		do
 			Result := Current
@@ -3251,7 +3278,7 @@ feature -- Implementation
 
 feature {UC_STRING_HANDLER} -- Implementation
 
-	byte_item (i: INTEGER): CHARACTER is
+	byte_item (i: INTEGER): CHARACTER
 			-- Byte at index `i'
 		require
 			i_large_enough: i >= 1
@@ -3265,7 +3292,7 @@ feature {UC_STRING_HANDLER} -- Implementation
 			set_count (old_count)
 		end
 
-	put_byte (c: CHARACTER; i: INTEGER) is
+	put_byte (c: CHARACTER; i: INTEGER)
 			-- Replace byte at index `i' by `c'.
 		require
 			i_large_enough: i >= 1
@@ -3279,7 +3306,7 @@ feature {UC_STRING_HANDLER} -- Implementation
 			set_count (old_count)
 		end
 
-	resize_byte_storage (n: INTEGER) is
+	resize_byte_storage (n: INTEGER)
 			-- Resize space for `n' bytes.
 			-- Do not lose previously stored bytes.
 		require
@@ -3298,7 +3325,7 @@ feature {UC_STRING_HANDLER} -- Implementation
 			byte_capacity_set: byte_capacity = n
 		end
 
-	move_bytes_right (i, offset: INTEGER) is
+	move_bytes_right (i, offset: INTEGER)
 			-- Move bytes at and after position `i'
 			-- by `offset' positions to the right.
 		require
@@ -3329,7 +3356,7 @@ feature {UC_STRING_HANDLER} -- Implementation
 			byte_count_set: byte_count = old byte_count + offset
 		end
 
-	move_bytes_left (i, offset: INTEGER) is
+	move_bytes_left (i, offset: INTEGER)
 			-- Move bytes at and after position `i'
 			-- by `offset' positions to the left.
 		require
@@ -3360,7 +3387,7 @@ feature {UC_STRING_HANDLER} -- Implementation
 			byte_count_set: byte_count = old byte_count - offset
 		end
 
-	set_byte_count (nb: INTEGER) is
+	set_byte_count (nb: INTEGER)
 			-- Set `byte_count' to `nb'.
 		require
 			nb_large_enough: nb >= 0
@@ -3374,7 +3401,7 @@ feature {UC_STRING_HANDLER} -- Implementation
 			byte_count_set: byte_count = nb
 		end
 
-	set_count (nb: INTEGER) is
+	set_count (nb: INTEGER)
 			-- Set `count' to `nb'.
 		require
 			nb_positive: nb >= 0
@@ -3389,7 +3416,7 @@ feature {UC_STRING_HANDLER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	put_code_at_byte_index (a_code: INTEGER; b: INTEGER; i: INTEGER) is
+	put_code_at_byte_index (a_code: INTEGER; b: INTEGER; i: INTEGER)
 			-- Put unicode character of code `a_code'
 			-- at byte index `i'. `b' is the number of
 			-- bytes necessary to encode this character.
@@ -3440,7 +3467,7 @@ feature {NONE} -- Implementation
 			put_byte (a_byte, i)
 		end
 
-	put_character_at_byte_index (c: CHARACTER; b: INTEGER; i: INTEGER) is
+	put_character_at_byte_index (c: CHARACTER; b: INTEGER; i: INTEGER)
 			-- Put character `c' at byte index `i'.
 			-- `b' is the number of bytes necessary to encode `c'.
 		require
@@ -3469,7 +3496,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	put_substring_at_byte_index (a_string: STRING_GENERAL; start_index, end_index, b: INTEGER; i: INTEGER) is
+	put_substring_at_byte_index (a_string: STRING_GENERAL; start_index, end_index, b: INTEGER; i: INTEGER)
 			-- Put characters of `a_string' between `start_index'
 			-- and `end_index' at byte index `i'. `b' is the number
 			-- of bytes necessary to encode these characters.
@@ -3486,19 +3513,12 @@ feature {NONE} -- Implementation
 			k, z: INTEGER
 			c: CHARACTER
 			a_code: INTEGER
-			a_utf8_string: ?UC_UTF8_STRING
-			a_uc_string: ?UC_STRING
-			l_string_8: ?STRING
 		do
 			check
 				valid_utf8: b = utf8.substring_byte_count (a_string, start_index, end_index)
 			end
 			if b > 0 then
-				if ANY_.same_types (a_string, dummy_string) then
-					l_string_8 ?= a_string
-					check
-						is_string_8: l_string_8 /= Void
-					end
+				if attached {STRING_8} a_string as l_string_8 and then ANY_.same_types (a_string, dummy_string) then
 					nb := end_index - start_index + 1
 					if nb = b then
 						k := i
@@ -3525,11 +3545,7 @@ feature {NONE} -- Implementation
 							j := j + 1
 						end
 					end
-				elseif ANY_.same_types (a_string, Current) then
-					a_uc_string ?= a_string
-					check
-						is_uc_string: a_uc_string /= Void
-					end
+				elseif ANY_.same_types (a_string, Current) and attached {UC_STRING} a_string as a_uc_string then
 					k := i
 					j := a_uc_string.byte_index (start_index)
 					nb := j + b - 1
@@ -3541,59 +3557,53 @@ feature {NONE} -- Implementation
 						k := k + 1
 						j := j + 1
 					end
+				elseif attached {UC_UTF8_STRING} a_string as a_utf8_string then
+					k := i
+					j := a_utf8_string.byte_index (start_index)
+					nb := j + b - 1
+					from
+					until
+						j > nb
+					loop
+						put_byte (a_utf8_string.byte_item (j), k)
+						k := k + 1
+						j := j + 1
+					end
+				elseif attached {UC_STRING} a_string as a_uc_string then
+					k := i
+					j := a_uc_string.byte_index (start_index)
+					nb := j + b - 1
+					from
+					until
+						j > nb
+					loop
+						a_code := a_uc_string.item_code_at_byte_index (j)
+						z := utf8.code_byte_count (a_code)
+						put_code_at_byte_index (a_code, z, k)
+						k := k + z
+						j := a_uc_string.next_byte_index (j)
+					end
 				else
-					a_utf8_string ?= a_string
-					if a_utf8_string /= Void then
-						k := i
-						j := a_utf8_string.byte_index (start_index)
-						nb := j + b - 1
-						from
-						until
-							j > nb
-						loop
-							put_byte (a_utf8_string.byte_item (j), k)
-							k := k + 1
-							j := j + 1
-						end
-					else
-						a_uc_string ?= a_string
-						if a_uc_string /= Void then
-							k := i
-							j := a_uc_string.byte_index (start_index)
-							nb := j + b - 1
-							from
-							until
-								j > nb
-							loop
-								a_code := a_uc_string.item_code_at_byte_index (j)
-								z := utf8.code_byte_count (a_code)
-								put_code_at_byte_index (a_code, z, k)
-								k := k + z
-								j := a_uc_string.next_byte_index (j)
-							end
-						else
-							k := i
-							from
-								j := start_index
-							until
-								j > end_index
-							loop
-								a_code := a_string.code (j).to_integer_32
-								z := utf8.code_byte_count (a_code)
-								put_code_at_byte_index (a_code, z, k)
-								k := k + z
-								j := j + 1
-							end
-						end
+					k := i
+					from
+						j := start_index
+					until
+						j > end_index
+					loop
+						a_code := a_string.code (j).to_integer_32
+						z := utf8.code_byte_count (a_code)
+						put_code_at_byte_index (a_code, z, k)
+						k := k + z
+						j := j + 1
 					end
 				end
 			end
 		end
 
-	dummy_string: STRING is ""
+	dummy_string: STRING = ""
 			-- Dummy string
 
-	dummy_uc_string: UC_STRING is
+	dummy_uc_string: UC_STRING
 			-- Dummy Unicode string
 		once
 			create Result.make_empty
@@ -3603,7 +3613,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Inapplicable
 
-	old_wipe_out is
+	old_wipe_out
 			-- Remove all characters.
 			-- (ELKS 2001 STRING)
 		do
@@ -3613,7 +3623,7 @@ feature {NONE} -- Inapplicable
 			wipe_out
 		end
 
-	old_clear_all is
+	old_clear_all
 			-- Remove all characters.
 		do
 			wipe_out
@@ -3621,7 +3631,7 @@ feature {NONE} -- Inapplicable
 
 feature {UC_STRING} -- Inapplicable
 
-	old_left_adjust is
+	old_left_adjust
 			-- Remove leading whitespace.
 		local
 			i, nb: INTEGER
@@ -3643,7 +3653,7 @@ feature {UC_STRING} -- Inapplicable
 			remove_head (i - 1)
 		end
 
-	old_right_adjust is
+	old_right_adjust
 			-- Remove trailing whitespace.
 		local
 			i, nb: INTEGER
@@ -3665,32 +3675,32 @@ feature {UC_STRING} -- Inapplicable
 			keep_head (nb)
 		end
 
-	code (i: INTEGER): NATURAL_32 is
+	code (i: INTEGER): NATURAL_32
 			-- Code at position `i'
 		do
 			Result := item_code (i).as_natural_32
 		end
 
-	index_of_code (c: like code; start_index: INTEGER): INTEGER is
+	index_of_code (c: like code; start_index: INTEGER): INTEGER
 			-- Position of first occurrence of `c' at or after `start_index';
 			-- 0 if none.
 		do
 			Result := index_of_item_code (c.as_integer_32, start_index)
 		end
 
-	put_code (v: like code; i: INTEGER) is
+	put_code (v: like code; i: INTEGER)
 			-- Put code `v' at position `i'.
 		do
 			put_item_code (v.as_integer_32, i)
 		end
 
-	append_code (c: like code) is
+	append_code (c: like code)
 			-- Append `c' at end.
 		do
 			append_item_code (c.as_integer_32)
 		end
 
-	has_code (c: like code): BOOLEAN is
+	has_code (c: like code): BOOLEAN
 			-- Does string include `c'?
 		do
 			Result := has_item_code (c.as_integer_32)

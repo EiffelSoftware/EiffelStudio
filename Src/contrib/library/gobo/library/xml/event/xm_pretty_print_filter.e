@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -37,7 +37,7 @@ create
 
 feature -- Meta
 
-	on_processing_instruction (a_name: STRING; a_content: STRING) is
+	on_processing_instruction (a_name: STRING; a_content: STRING)
 			-- Print processing instruction.
 		do
 			output_constant (Pi_start)
@@ -45,70 +45,134 @@ feature -- Meta
 			output_constant (Space_s)
 			output (a_content)
 			output_constant (Pi_end)
+
+			last_call_was_start_tag_finish := False
 			Precursor (a_name, a_content)
 		end
 
-	on_comment (a_content: STRING) is
+	on_comment (a_content: STRING)
 			-- Print comment.
 		do
 			output_constant (Comment_start)
 			output (a_content)
 			output_constant (Comment_end)
+
+			last_call_was_start_tag_finish := False
 			Precursor (a_content)
 		end
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Print start of start tag.
 		do
+			flush_pending_tag_end
+
 			output_constant (Stag_start)
 			output_name (a_prefix, a_local_part)
+
+			last_call_was_start_tag_finish := False
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Print attribute.
 		do
+			flush_pending_tag_end
+
 			output_constant (Space_s)
 			output_name (a_prefix, a_local_part)
 			output_constant (Eq_s)
 			output_constant (Quot_s)
 			output_quote_escaped (a_value)
 			output_constant (Quot_s)
+
+			last_call_was_start_tag_finish := False
 			Precursor (a_namespace, a_prefix, a_local_part, a_value)
 		end
 
-	on_start_tag_finish is
+	on_start_tag_finish
 			-- Print end of start tag.
 		do
-			output_constant (Stag_end)
+			if empty_element_tags_enabled then
+				is_tag_end_pending := True
+			else
+				output_constant (stag_end)
+			end
+			last_call_was_start_tag_finish := True
+
 			Precursor
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Print end tag.
 		do
-			output_constant (Etag_start)
-			output_name (a_prefix, a_local_part)
-			output_constant (Etag_end)
+			if last_call_was_start_tag_finish and empty_element_tags_enabled then
+				output_constant (emptytag_end)
+				is_tag_end_pending := False
+			else
+				output_constant (Etag_start)
+				output_name (a_prefix, a_local_part)
+				output_constant (Etag_end)
+			end
+
+			last_call_was_start_tag_finish := False
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
 feature -- Content
 
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- Text content.
 			-- NOT atomic: successive content may be different.
 			-- Default: forward event to 'next'.
 		do
+			flush_pending_tag_end
+
 			output_escaped (a_content)
+
+			last_call_was_start_tag_finish := False
 			Precursor (a_content)
+		end
+
+feature -- Settings
+
+	empty_element_tags_enabled: BOOLEAN
+			-- Do we use empty element tags
+			-- i.e. <tag/> instead of <tag><tag/>
+
+	enable_empty_element_tags
+			-- Use empty element tags
+		do
+			empty_element_tags_enabled := True
+		end
+
+	disable_empty_element_tags
+			-- Do not use empty element tags
+		do
+			empty_element_tags_enabled := False
+		end
+
+feature {NONE} -- Implementation
+
+	last_call_was_start_tag_finish: BOOLEAN
+			-- Was the last `on_*' feature called `on_start_tag_finished' ?
+
+	is_tag_end_pending: BOOLEAN
+			-- Do we have a pending ">" or "/>" to be written ?
+
+	flush_pending_tag_end
+			-- Output the pending tag end, if any
+		do
+			if is_tag_end_pending then
+				output_constant (stag_end)
+				is_tag_end_pending := False
+			end
 		end
 
 feature {NONE} -- Escaped
 
-	is_escaped (a_char: INTEGER): BOOLEAN is
+	is_escaped (a_char: INTEGER): BOOLEAN
 			-- Is this an escapable character?
 		do
 			Result := a_char = Lt_char.code
@@ -117,7 +181,7 @@ feature {NONE} -- Escaped
 				or a_char >= 128
 		end
 
-	escaped_char (a_char: INTEGER): STRING is
+	escaped_char (a_char: INTEGER): STRING
 			-- Escape char.
 		require
 			is_escaped: is_escaped (a_char)
@@ -136,7 +200,7 @@ feature {NONE} -- Escaped
 
 feature {NONE} -- Output
 
-	output_constant (a_string: STRING) is
+	output_constant (a_string: STRING)
 			-- Output constant string.
 		require
 			a_string_not_void: a_string /= Void
@@ -144,7 +208,7 @@ feature {NONE} -- Output
 			output (a_string)
 		end
 
-	output_quote_escaped (a_string: STRING) is
+	output_quote_escaped (a_string: STRING)
 			-- Like output escaped with quote also escaped for
 			-- attribute values.
 		require
@@ -180,7 +244,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	output_escaped (a_string: STRING) is
+	output_escaped (a_string: STRING)
 			-- Escape and output content string.
 		require
 			a_string_not_void: a_string /= Void
@@ -217,7 +281,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	output_name (a_prefix: STRING; a_local_part: STRING) is
+	output_name (a_prefix: STRING; a_local_part: STRING)
 			-- Output prefix:name.
 		require
 			a_local_part_not_void: a_local_part /= Void

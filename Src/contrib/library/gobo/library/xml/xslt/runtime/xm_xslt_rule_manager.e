@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant.
 		do
 			create mode_for_default_mode.make
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	mode_fingerprints: DS_LINKED_LIST [INTEGER] is
+	mode_fingerprints: DS_LINKED_LIST [INTEGER]
 			-- Fingerprints of non-default modes
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_MODE, INTEGER]
@@ -56,7 +56,7 @@ feature -- Access
 			correct_count: Result.count = mode_map.count
 		end
 
-	mode (a_mode_name_code: INTEGER): XM_XSLT_MODE is
+	mode (a_mode_name_code: INTEGER): XM_XSLT_MODE
 			-- Mode corresponding to `a_mode_name_code:'
 		require
 			mode_registered: is_mode_registered (a_mode_name_code)
@@ -78,7 +78,7 @@ feature -- Access
 	last_found_template: XM_XSLT_RULE
 			-- Last template found by `find_template_rule' or `find_imported_template_rule' or `find_next_match_handler'
 
-	find_template_rule (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	find_template_rule (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Template rule registered for a particular node in a specific mode.
 		require
 			node_not_void: a_node /= Void
@@ -100,7 +100,7 @@ feature -- Access
 			end
 		end
 
-	find_imported_template_rule (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_minimum_precedence, a_maximum_precedence: INTEGER;  a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	find_imported_template_rule (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_minimum_precedence, a_maximum_precedence: INTEGER;  a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Template rule registered for a particular node in a specific mode, within a given precedence range.
 			-- (Used to support xsl:apply-imports.)
 		require
@@ -123,7 +123,7 @@ feature -- Access
 			end
 		end
 
-	find_next_match_handler (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_current_template: XM_XSLT_RULE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	find_next_match_handler (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_current_template: XM_XSLT_RULE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Next template rule registered for a particular node in a specific mode, following `a_current_template'
 		require
 			node_not_void: a_node /= Void
@@ -148,11 +148,11 @@ feature -- Access
 		end
 
 feature -- Status report
-	
-	is_mode_registered (a_mode_name_code: INTEGER): BOOLEAN is
+
+	is_mode_registered (a_mode_name_code: INTEGER): BOOLEAN
 			-- Is a mode registered for `a_mode_name_code'?
 		local
-			a_node_key: INTEGER		
+			a_node_key: INTEGER
 		do
 			if a_mode_name_code = Default_mode then
 				Result := True
@@ -166,7 +166,7 @@ feature -- Status report
 
 feature -- Element change
 
-	register_mode (a_mode_name_code: INTEGER) is
+	register_mode (a_mode_name_code: INTEGER)
 			-- Register a mode for `a_mode_name_code'.
 		require
 			mode_not_registered: not is_mode_registered (a_mode_name_code)
@@ -202,7 +202,7 @@ feature -- Element change
 			mode_registered: is_mode_registered (a_mode_name_code)
 		end
 
-	set_handler_with_default_priority (a_pattern: XM_XSLT_PATTERN; a_handler: XM_XSLT_RULE_VALUE; a_mode: XM_XSLT_MODE; a_precedence: INTEGER) is
+	set_handler_with_default_priority (a_pattern: XM_XSLT_PATTERN; a_handler: XM_XSLT_RULE_VALUE; a_mode: XM_XSLT_MODE; a_precedence: INTEGER)
 			-- Set handler for `a_pattern' using it's default priority.
 		require
 			pattern_not_void: a_pattern /= Void
@@ -222,8 +222,8 @@ feature -- Element change
 				set_handler (a_pattern, a_handler, a_mode, a_precedence, a_pattern.default_priority)
 			end
 		end
-				
-	set_handler (a_pattern: XM_XSLT_PATTERN; a_handler: XM_XSLT_RULE_VALUE; a_mode: XM_XSLT_MODE; a_precedence: INTEGER; a_priority: MA_DECIMAL) is
+
+	set_handler (a_pattern: XM_XSLT_PATTERN; a_handler: XM_XSLT_RULE_VALUE; a_mode: XM_XSLT_MODE; a_precedence: INTEGER; a_priority: MA_DECIMAL)
 			-- Set handler for `a_pattern'.
 		require
 			pattern_not_void: a_pattern /= Void
@@ -264,7 +264,7 @@ feature -- Element change
 			end
 		end
 
-	rank_all_rules is
+	rank_all_rules
 			-- Set `priority_rank' for every rule in every mode.
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_MODE, INTEGER]
@@ -283,7 +283,7 @@ feature -- Element change
 			end
 		end
 
-	rank_mode (a_mode: XM_XSLT_MODE) is
+	rank_mode (a_mode: XM_XSLT_MODE)
 			-- Set `priority_rank' for every rule in `a_mode'.
 		require
 			mode_not_void: a_mode /= Void
@@ -294,8 +294,6 @@ feature -- Element change
 		do
 			from
 				l_index := a_mode.rule_dictionary.lower
-			variant
-				a_mode.rule_dictionary.count + 1 - l_index
 			until
 				l_index > a_mode.rule_dictionary.upper
 			loop
@@ -318,10 +316,12 @@ feature -- Element change
 					l_rule := l_rule.next_rule
 				end
 				l_index := l_index + 1
+			variant
+				a_mode.rule_dictionary.count + 1 - l_index
 			end
 		end
 
-	rank_priority (a_priority: MA_DECIMAL) is
+	rank_priority (a_priority: MA_DECIMAL)
 			-- Rank `a_priority' by inserting it into `priority_ranks' maintaining an ascending order.
 		require
 			priority_not_void: a_priority /= Void
@@ -332,8 +332,6 @@ feature -- Element change
 		do
 			from
 				a_cursor := priority_ranks.new_cursor; a_cursor.start
-			variant
-				priority_ranks.count + 1 - a_cursor.index
 			until
 				found or else a_cursor.after
 			loop
@@ -345,6 +343,8 @@ feature -- Element change
 					a_cursor.put_left (a_priority)
 				end
 				a_cursor.forth
+			variant
+				priority_ranks.count + 1 - a_cursor.index
 			end
 			if not found then
 				priority_ranks.put_last (a_priority)
@@ -375,4 +375,4 @@ invariant
 	priority_ranks_not_void: priority_ranks /= Void
 
 end
-	
+

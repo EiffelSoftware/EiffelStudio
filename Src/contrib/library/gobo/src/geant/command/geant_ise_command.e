@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Compilation commands for ISE Eiffel"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@ create
 
 feature -- Status report
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Can command be executed?
 		do
 			Result := is_compilable xor is_cleanable
@@ -32,7 +32,7 @@ feature -- Status report
 			exit_code_variable_name_void_or_not_empty: Result implies (exit_code_variable_name = Void or else exit_code_variable_name.count > 0)
 		end
 
-	is_compilable: BOOLEAN is
+	is_compilable: BOOLEAN
 			-- Can system be compiled?
 		do
 			Result := system_name /= Void and then system_name.count > 0
@@ -41,7 +41,7 @@ feature -- Status report
 			system_name_not_empty: Result implies system_name.count > 0
 		end
 
-	is_cleanable: BOOLEAN is
+	is_cleanable: BOOLEAN
 			-- Can system be cleaned?
 		do
 			Result := clean /= Void and then clean.count > 0
@@ -58,6 +58,9 @@ feature -- Access
 	system_name: STRING
 			-- System name
 
+	compatible_mode: BOOLEAN
+			-- Compatible mode
+			
 	finalize_mode: BOOLEAN
 			-- Finalize mode
 
@@ -72,7 +75,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_ace_filename (a_filename: like ace_filename) is
+	set_ace_filename (a_filename: like ace_filename)
 			-- Set `ace_filename' to `a_filename'.
 		do
 			ace_filename := a_filename
@@ -80,7 +83,7 @@ feature -- Setting
 			ace_filename_set: ace_filename = a_filename
 		end
 
-	set_system_name (a_name: like system_name) is
+	set_system_name (a_name: like system_name)
 			-- Set `system_name' to `a_name'.
 		do
 			system_name := a_name
@@ -88,7 +91,15 @@ feature -- Setting
 			system_name_set: system_name = a_name
 		end
 
-	set_finalize_mode (b: BOOLEAN) is
+	set_compatible_mode (b: BOOLEAN)
+			-- Set  `compatible_mode' to `b'.
+		do
+			compatible_mode := b
+		ensure
+			compatible_mode_set: compatible_mode = b
+		end
+		
+	set_finalize_mode (b: BOOLEAN)
 			-- Set  `finalize_mode' to `b'.
 		do
 			finalize_mode := b
@@ -96,7 +107,7 @@ feature -- Setting
 			finalize_mode_set: finalize_mode = b
 		end
 
-	set_finish_freezing (b: BOOLEAN) is
+	set_finish_freezing (b: BOOLEAN)
 			-- Set `finish_freezing' to `b'.
 		do
 			finish_freezing := b
@@ -104,7 +115,7 @@ feature -- Setting
 			finish_freezing_set: finish_freezing = b
 		end
 
-	set_clean (a_clean: like clean) is
+	set_clean (a_clean: like clean)
 			-- Set `clean' to `a_clean'.
 		do
 			clean := a_clean
@@ -112,7 +123,7 @@ feature -- Setting
 			clean_set: clean = a_clean
 		end
 
-	set_exit_code_variable_name (a_exit_code_variable_name: like exit_code_variable_name) is
+	set_exit_code_variable_name (a_exit_code_variable_name: like exit_code_variable_name)
 			-- Set `exit_code_variable_name' to `a_exit_code_variable_name'.
 		require
 			a_exit_code_variable_name_not_void: a_exit_code_variable_name /= Void
@@ -125,7 +136,7 @@ feature -- Setting
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command.
 		do
 			exit_code := 0
@@ -137,7 +148,7 @@ feature -- Execution
 			end
 		end
 
-	execute_compile is
+	execute_compile
 			-- Compile system.
 		require
 			is_compilable: is_compilable
@@ -148,11 +159,14 @@ feature -- Execution
 			a_filename: STRING
 		do
 			create cmd.make (128)
-			cmd.append_string ("ecb -batch")
+			cmd.append_string ("ec -batch")
 			if ace_filename /= Void and then ace_filename.count > 0 then
 				cmd.append_string (" -config ")
 				a_filename := file_system.pathname_from_file_system (ace_filename, unix_file_system)
 				cmd := STRING_.appended_string (cmd, a_filename)
+			end
+			if compatible_mode then
+				cmd.append_string (" -compat")
 			end
 			if finalize_mode then
 				cmd.append_string (" -finalize")
@@ -225,7 +239,7 @@ feature -- Execution
 			end
 		end
 
-	execute_clean is
+	execute_clean
 			-- Clean system.
 		require
 			is_cleanable: is_cleanable
@@ -240,6 +254,13 @@ feature -- Execution
 				end
 			end
 			a_name := clean + ".rc"
+			if file_system.file_exists (a_name) then
+				project.trace (<<"  [ise] delete ", a_name>>)
+				if not project.options.no_exec then
+					file_system.delete_file (a_name)
+				end
+			end
+			a_name := clean + ".res"
 			if file_system.file_exists (a_name) then
 				project.trace (<<"  [ise] delete ", a_name>>)
 				if not project.options.no_exec then

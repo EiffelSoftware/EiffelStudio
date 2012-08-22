@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"ECF variables"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create new ECF variables.
 		local
 			l_hash_function: KL_AGENT_HASH_FUNCTION [STRING]
@@ -42,21 +42,21 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value (a_variable: STRING): STRING is
+	value (a_variable: STRING): STRING
 			-- Value of variable `a_variable';
-			-- Void if variable is defined in `primary_variables' nor in `secondary_variables'
+			-- Void if variable is not defined in `primary_variables' nor in `secondary_variables'
 		do
 			primary_variables.search (a_variable)
 			if primary_variables.found then
 				Result := primary_variables.found_item
-			else
+			elseif secondary_variables /= Void then
 				Result := secondary_variables.value (a_variable)
 			end
 		end
 
-	primary_value (a_variable: STRING): STRING is
+	primary_value (a_variable: STRING): STRING
 			-- Value of variable `a_variable';
-			-- Void if variable is defined in `primary_variables'
+			-- Void if variable is not defined in `primary_variables'
 		require
 			a_variable_not_void: a_variable /= Void
 		do
@@ -75,7 +75,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_primary_value (a_variable, a_value: STRING) is
+	set_primary_value (a_variable, a_value: STRING)
 			-- Set variable `a_variable' to `a_value'.
 		require
 			a_variable_not_void: a_variable /= Void
@@ -86,11 +86,11 @@ feature -- Setting
 			primary_value_set: primary_value (a_variable) = a_value
 		end
 
-	set_secondary_variables (a_variables: like secondary_variables) is
+	set_secondary_variables (a_variables: like secondary_variables)
 			-- Set `secondary_variables' to `a_variables'.
 		require
 			a_variables_not_void: a_variables /= Void
---			no_cycle: `a_variable', or recursively its secondary variables, does not already have `Current' as secondary variables
+--			no_cycle: `a_variables', or recursively its secondary variables, does not already have `Current' as secondary variables
 		do
 			secondary_variables := a_variables
 		ensure
@@ -103,6 +103,6 @@ invariant
 	no_void_primary_variable: not primary_variables.has_void
 	no_void_primary_value: not primary_variables.has_void_item
 	secondary_variables_not_void: secondary_variables /= Void
---	no_cycle: `secondary_variable', or recursively its secondary variables, does not already have `Current' as secondary variables
+--	no_cycle: `secondary_variables', or recursively its secondary variables, does not already have `Current' as secondary variables
 
 end

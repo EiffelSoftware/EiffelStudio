@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -35,13 +35,13 @@ create
 
 feature {NONE} -- Implementation
 
-	make is
+	make
 		do
 		end
 
 feature -- Access
 
-	expanded_name: STRING is "element"
+	expanded_name: STRING = "element"
 			-- Expanded name of implemented scheme;
 
 	value: XM_XPATH_VALUE
@@ -57,7 +57,7 @@ feature -- Status report
 
 feature -- Element change
 
-	evaluate (a_resource: XM_XPATH_DOCUMENT; a_namespace_context: XM_XPOINTER_NAMESPACE_CONTEXT; some_data: STRING) is
+	evaluate (a_resource: XM_XPATH_DOCUMENT; a_namespace_context: XM_XPOINTER_NAMESPACE_CONTEXT; some_data: STRING)
 			-- Evaluate `some_data' against `a_resource' within `a_namespace_context'.
 		local
 			an_index, a_counter, a_child_number: INTEGER
@@ -71,8 +71,6 @@ feature -- Element change
 			if not is_error then
 				from
 					an_index := 1
-				variant
-					components.count + 1 - an_index
 				until
 					is_error or else an_index > components.count
 				loop
@@ -107,6 +105,8 @@ feature -- Element change
 						end
 					end
 					an_index := an_index + 1
+				variant
+					components.count + 1 - an_index
 				end
 				if an_element /= Void then
 					were_resources_found := True
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 	components: DS_LIST [STRING]
 			-- Components of scheme data
 
-	parse (some_data: STRING) is
+	parse (some_data: STRING)
 			-- Parse scheme data.
 		require
 			scheme_data_not_void: some_data /= Void
@@ -148,8 +148,6 @@ feature {NONE} -- Implementation
 			else
 				from
 					an_index := 1
-				variant
-					components.count + 1 - an_index
 				until
 					is_error or else an_index > components.count
 				loop
@@ -161,6 +159,8 @@ feature {NONE} -- Implementation
 						end
 					end
 					an_index := an_index + 1
+				variant
+					components.count + 1 - an_index
 				end
 			end
 		ensure
@@ -168,4 +168,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+

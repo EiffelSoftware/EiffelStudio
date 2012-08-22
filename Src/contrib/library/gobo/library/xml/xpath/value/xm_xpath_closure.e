@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -13,13 +13,13 @@ indexing
 class XM_XPATH_CLOSURE
 
 inherit
-	
+
 	XM_XPATH_SEQUENCE_VALUE
 		redefine
 			evaluate_item, display, item_type, is_convertible_to_item, as_item, generate_events,
 			is_closure, as_closure, reduce
 		end
-	
+
 create {XM_XPATH_EXPRESSION_FACTORY}
 
 	make
@@ -46,7 +46,7 @@ create {XM_XPATH_EXPRESSION_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make (an_expression: XM_XPATH_COMPUTED_EXPRESSION; a_context: XM_XPATH_CONTEXT) is
+	make (an_expression: XM_XPATH_COMPUTED_EXPRESSION; a_context: XM_XPATH_CONTEXT)
 			-- Establish invariant.
 		require
 			valid_expression: an_expression /= Void and then not (an_expression.depends_upon_position or else an_expression.depends_upon_last)
@@ -96,19 +96,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_closure: BOOLEAN is
+	is_closure: BOOLEAN
 			-- Is `Current' a closure?
 		do
 			Result := True
 		end
 
-	as_closure: XM_XPATH_CLOSURE is
+	as_closure: XM_XPATH_CLOSURE
 			-- `Current' seen as a closure
 		do
 			Result := Current
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			Result := base_expression.item_type
@@ -120,7 +120,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `other' the same expression?
 		do
 			Result := other = Current
@@ -128,13 +128,13 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN is
+	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN
 			-- Can `Current' be converted to an `XM_XPATH_ITEM'?
 		do
 			Result := True
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		do
 			std.error.put_string (indentation (a_level))
@@ -145,7 +145,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	reduce is
+	reduce
 			-- Reduce a value to its simplest form.
 		local
 			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
@@ -163,7 +163,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			create_iterator (a_context)
@@ -175,7 +175,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- An iterator over the values of a sequence
 		do
 			if input_iterator = Void then
@@ -193,7 +193,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence
 		do
 			if input_iterator = Void then
@@ -212,7 +212,7 @@ feature -- Evaluation
 
 		end
 
-	generate_events (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT)
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_context: XM_XPATH_CONTEXT
@@ -222,10 +222,10 @@ feature -- Evaluation
 			l_context.set_temporary_destination (True)
 			base_expression.generate_events (l_context)
 		end
-	
+
 feature  -- Conversion
 
-	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM
 			-- Convert to an item
 		local
 			l_result: DS_CELL [XM_XPATH_ITEM]
@@ -234,7 +234,7 @@ feature  -- Conversion
 			evaluate_item (l_result, a_context)
 			Result := l_result.item
 		end
-	
+
 feature {XM_XPATH_CLOSURE} -- Local
 
 	base_expression: XM_XPATH_COMPUTED_EXPRESSION
@@ -244,23 +244,23 @@ feature {XM_XPATH_CLOSURE} -- Local
 			-- Context created when the closure was created
 
 	input_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			-- Underlying iterator 
+			-- Underlying iterator
 
 	depth: INTEGER
 			-- Nesting depth
 
 feature {NONE} -- Implementation
 
-	Maximum_closure_nesting_depth: INTEGER is 10
+	Maximum_closure_nesting_depth: INTEGER = 10
 			-- Maximum depth for nesting closures
 
-	native_implementations: INTEGER is
+	native_implementations: INTEGER
 			-- Natively-supported evaluation routines
 		do
 			Result := INTEGER_.bit_or (Supports_iterator, Supports_process)
 		end
 
-	save_local_variables (a_context: XM_XPATH_CONTEXT) is			
+	save_local_variables (a_context: XM_XPATH_CONTEXT)
 			-- Make a copy of all local variables.
 		require
 			context_not_void: a_context /= Void
@@ -272,13 +272,13 @@ feature {NONE} -- Implementation
 			slots_used: DS_ARRAYED_LIST [INTEGER]
 			a_slot_number: INTEGER
 		do
-			
+
 			-- If the value of any local variable is a closure whose depth
 			--   exceeds a certain threshold, we evaluate the closure eagerly to avoid
 			--   creating deeply nested lists of closures, which consume memory unnecessarily.
 			-- We only copy the local variables if the expression has dependencies on local variables.
 			-- What's more, we only copy those variables that the expression actually depends on.
-	
+
 			if base_expression.depends_upon_local_variables then
 				a_local_variable_frame := a_context.local_variable_frame
 				if a_local_variable_frame.variables.count > 0 then
@@ -286,8 +286,6 @@ feature {NONE} -- Implementation
 					from
 						create a_saved_local_variable_frame.make_fixed_size (a_local_variable_frame.variables.count)
 						an_index := 1
-					variant
-						slots_used.count + 1 - an_index
 					until
 						is_error or else an_index > slots_used.count
 					loop
@@ -304,7 +302,7 @@ feature {NONE} -- Implementation
 									if a_value.is_error then
 										set_last_error (a_value.error_value)
 									else
-										
+
 									end
 								else
 									if a_depth + 1 > depth then
@@ -315,6 +313,8 @@ feature {NONE} -- Implementation
 							a_saved_local_variable_frame.set_variable (a_value, a_slot_number)
 						end
 						an_index := an_index + 1
+					variant
+						slots_used.count + 1 - an_index
 					end
 					saved_xpath_context.set_stack_frame (a_saved_local_variable_frame)
 				end

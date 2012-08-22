@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Error: Token associated with two different literal strings"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; a_token: STRING; string1, string2: STRING) is
+	make (filename: STRING; line: INTEGER; a_token: STRING; string1, string2: STRING)
 			-- Create a new error reporting that the token `a_token'
 			-- has been associated with two different literal strings.
 		require
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			string1_not_void: string1 /= Void
 			string2_not_void: string2 /= Void
 		do
-			create parameters.make (1, 5)
+			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (filename, 1)
 			parameters.put (line.out, 2)
 			parameters.put (a_token, 3)
@@ -41,10 +41,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: token $3 associated with two literal strings $4 and $5"
+	default_template: STRING = "%"$1%", line $2: token $3 associated with two literal strings $4 and $5"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0023"
+	code: STRING = "PR0023"
 			-- Error code
 
 invariant

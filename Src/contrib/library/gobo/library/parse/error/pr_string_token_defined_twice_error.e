@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Error: Literal string token defined twice"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; a_string: STRING; token1, token2: STRING) is
+	make (filename: STRING; line: INTEGER; a_string: STRING; token1, token2: STRING)
 			-- Create a new error reporting that the literal
 			-- `a_string' has been defined twice.
 		require
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			token1_not_void: token1 /= Void
 			token2_not_void: token2 /= Void
 		do
-			create parameters.make (1, 5)
+			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (filename, 1)
 			parameters.put (line.out, 2)
 			parameters.put (a_string, 3)
@@ -41,10 +41,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: literal string $3 defined twice with $4 and $5"
+	default_template: STRING = "%"$1%", line $2: literal string $3 defined twice with $4 and $5"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0022"
+	code: STRING = "PR0022"
 			-- Error code
 
 invariant

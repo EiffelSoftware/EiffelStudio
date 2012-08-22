@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel compilation"
-		copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -32,11 +32,12 @@
 			Install ${system} directory.
 		</description>
 
-		<geant target="xace">
+		<available resource="${system_dir}/system.xace" variable="xace_available"/>
+		<geant target="xace" if="${xace_available}=true">
 			<argument name="a_compiler" value="ge"/>
 			<argument name="a_output" value=""/>
 		</geant>
-		<geant target="xace">
+		<geant target="xace" if="${xace_available}=true">
 			<argument name="a_compiler" value="ise"/>
 			<argument name="a_output" value=""/>
 		</geant>
@@ -60,8 +61,11 @@
 			Compile in debug mode if ${debug} is defined.
 		</description>
 
+		<available resource="${system_dir}/system.ecf" variable="ecf_available"/>
+		<set name="ace_filename" value="compile_ge.xace"/>
+		<set name="ace_filename" value="${system_dir}/system.ecf" if="${ecf_available}=true"/>
 		<set name="eiffel" value="ge"/>
-		<geant target="xace">
+		<geant target="xace" unless="${ecf_available}=true">
 			<argument name="a_compiler" value="ge"/>
 			<argument name="a_output" value="compile_ge.xace"/>
 		</geant>
@@ -71,7 +75,7 @@
 		<set name="split" value="true"/>
 		<set name="split" value="false" if="${no_split}"/>
 		<set name="gelint_option" value="false" unless="${gelint_option}"/>
-		<gec ace="compile_ge.xace" finalize="${finalize}" gelint="${gelint_option}" c_compile="false" catcall="error" split="${split}"/>
+		<gec ace="${ace_filename}" finalize="${finalize}" gelint="${gelint_option}" c_compile="false" catcall="error" split="${split}"/>
 		<exec executable=".\${system}.bat" if="${GOBO_OS}=windows"/>
 		<exec executable="./${system}.sh" unless="${GOBO_OS}=windows"/>
 	</target>
@@ -82,8 +86,11 @@
 			Compile in debug mode if ${debug} is defined.
 		</description>
 
+		<available resource="${system_dir}/system.ecf" variable="ecf_available"/>
+		<set name="ace_filename" value="compile_ise.ecf"/>
+		<set name="ace_filename" value="${system_dir}/system.ecf" if="${ecf_available}=true"/>
 		<set name="eiffel" value="ise"/>
-		<geant target="xace">
+		<geant target="xace" unless="${ecf_available}=true">
 			<argument name="a_compiler" value="ise"/>
 			<argument name="a_output" value="compile_ise.ecf"/>
 		</geant>
@@ -95,7 +102,9 @@
 		</delete>
 		<set name="finalize" value="true"/>
 		<set name="finalize" value="false" if="${debug}"/>
-		<ise ace="compile_ise.ecf" system="${system}" finalize="${finalize}" finish_freezing="true"/>
+		<set name="compatible" value="false"/>
+		<set name="compatible" value="true" if="${GOBO_COMPATIBLE}"/>
+		<ise ace="${ace_filename}" system="${system}" finalize="${finalize}" compatible="${compatible}" finish_freezing="true"/>
 		<set name="codedir" value="W_code" if="${finalize}=false"/>
 		<set name="codedir" value="F_code" if="${finalize}=true"/>
 		<available resource="EIFGENs/${system}/${codedir}/${system}${exe}" variable="file_available"/>
@@ -163,6 +172,7 @@
 		</delete>
 		<delete file="${system}.pdb"/>
 		<delete file="${system}.ilk"/>
+		<delete file="${system}.suo"/>
 		<geant target="other_clean"/>
 	</target>
 
@@ -201,6 +211,7 @@
 			Pass $GOBO_CC value to 'gexace' if defined.
 			Pass $GOBO_XML_EXPAT option to 'gexace' if defined.
 			Pass $GOBO_DOTNET option to 'gexace' if defined.
+			Pass $GOBO_COMPATIBLE option to 'gexace' if defined.
 			Pass $BOEHM_GC option to 'gexace' if defined.
 			To be redefined in descendant if additional options are
 			necessary.
@@ -215,6 +226,7 @@
 			<define name="GOBO_CC" value="${GOBO_CC}" if="${GOBO_CC}"/>
 			<define name="GOBO_XML_EXPAT" value="true" if="${GOBO_XML_EXPAT}"/>
 			<define name="GOBO_DOTNET" value="true" if="${GOBO_DOTNET}"/>
+			<define name="GOBO_COMPATIBLE" value="true" if="${GOBO_COMPATIBLE}"/>
 			<define name="BOEHM_GC" value="${BOEHM_GC}" if="${BOEHM_GC}"/>
 		</gexace>
 	</target>

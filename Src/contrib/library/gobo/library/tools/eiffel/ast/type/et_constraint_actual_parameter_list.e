@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -8,7 +8,7 @@ indexing
 		%names of classes or of formal generic parameters."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create an empty actual generic parameter list.
 		do
 			left_bracket := tokens.left_bracket_symbol
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			precursor
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create an empty actual generic parameter list with capacity `nb'.
 		do
 			left_bracket := tokens.left_bracket_symbol
@@ -55,7 +55,7 @@ feature -- Access
 	right_bracket: ET_SYMBOL
 			-- Right bracket
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_left_bracket (l: like left_bracket) is
+	set_left_bracket (l: like left_bracket)
 			-- Set `left_bracket' to `l'.
 		require
 			l_not_void: l /= Void
@@ -77,7 +77,7 @@ feature -- Setting
 			left_bracket_set: left_bracket = l
 		end
 
-	set_right_bracket (r: like right_bracket) is
+	set_right_bracket (r: like right_bracket)
 			-- Set `right_bracket' to `r'.
 		require
 			r_not_void: r /= Void
@@ -90,22 +90,23 @@ feature -- Setting
 feature -- Conversion
 
 	resolved_syntactical_constraint (a_formals: ET_FORMAL_PARAMETER_LIST;
-		a_parser: ET_EIFFEL_PARSER_SKELETON): ET_ACTUAL_PARAMETER_LIST is
-			-- Version of current types, appearing in the constraint of
-			-- one of the formal generic parameters in `a_formals', where
-			-- class names and formal generic parameter names have been
+		a_class: ET_CLASS; a_parser: ET_EIFFEL_PARSER_SKELETON): ET_ACTUAL_PARAMETER_LIST
+			-- Version of current types, appearing in the constraint of one
+			-- of the formal generic parameters in `a_formals' of `a_class',
+			-- where class names and formal generic parameter names have been
 			-- resolved (i.e. replaced by the corresponding Class_type,
 			-- Tuple_type and Formal_parameter_type)
 		require
 			a_formals_not_void: a_formals /= Void
 			a_parser_not_void: a_parser /= Void
+			a_class_not_void: a_class /= Void
 		do
-			Result := a_parser.resolved_constraint_actual_parameter_list (Current, a_formals)
+			Result := a_parser.resolved_constraint_actual_parameter_list (Current, a_formals, a_class)
 		end
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM]
 			-- Fixed array routines
 		once
 			create Result

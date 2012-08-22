@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Warning: Rule declared twice"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,14 +22,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; a_rule: STRING) is
+	make (filename: STRING; line: INTEGER; a_rule: STRING)
 			-- Create a new error reporting that `a_rule'
 			-- has been declared twice.
 		require
 			filename_not_void: filename /= Void
 			a_rule_not_void: a_rule /= Void
 		do
-			create parameters.make (1, 3)
+			create parameters.make_filled (empty_string, 1, 3)
 			parameters.put (filename, 1)
 			parameters.put (line.out, 2)
 			parameters.put (a_rule, 3)
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "Warning, %"$1%", line $2: rule $3 declared twice"
+	default_template: STRING = "Warning, %"$1%", line $2: rule $3 declared twice"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0012"
+	code: STRING = "PR0012"
 			-- Error code
 
 invariant

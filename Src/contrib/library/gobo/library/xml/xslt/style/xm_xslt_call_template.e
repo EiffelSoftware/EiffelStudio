@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -26,7 +26,7 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature -- Status setting
 
-	mark_tail_calls is
+	mark_tail_calls
 			-- Mark tail-recursive calls on templates and functions.
 		do
 			use_tail_recursion := True
@@ -34,7 +34,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -46,8 +46,6 @@ feature -- Element change
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index				
 				until
 					a_cursor.after or any_compile_errors
 				loop
@@ -61,6 +59,8 @@ feature -- Element change
 						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if not any_compile_errors then
@@ -84,7 +84,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
@@ -95,7 +95,7 @@ feature -- Element change
 			validated := True
 		end
 
-	post_validate is
+	post_validate
 			-- Hook to allow additional validation of a parent element
 			--  immediately after its children have been validated.
 		local
@@ -182,7 +182,7 @@ feature -- Element change
 			post_validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
 			a_call: XM_XSLT_COMPILED_CALL
@@ -195,7 +195,7 @@ feature -- Element change
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 
-	returned_item_type: XM_XPATH_ITEM_TYPE is
+	returned_item_type: XM_XPATH_ITEM_TYPE
 			-- Type of item returned by this instruction
 		do
 			if template = Void then
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 	called_template_fingerprint: INTEGER
 			-- Fingerprint of named template to call
 
-	find_template is
+	find_template
 			-- Find `template' from `called_template_fingerprint'.
 		require
 			attributes_prepared: attributes_prepared
@@ -238,8 +238,6 @@ feature {NONE} -- Implementation
 			from
 				l_cursor := l_element_list.new_cursor
 				l_cursor.finish
-			variant
-				l_cursor.index
 			until
 				l_cursor.before
 			loop
@@ -259,6 +257,8 @@ feature {NONE} -- Implementation
 				else
 					l_cursor.back
 				end
+			variant
+				l_cursor.index
 			end
 			if template = Void and not any_compile_errors then
 				report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat ("No template exists named ", called_template_name),

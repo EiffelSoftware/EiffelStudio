@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			name := "substring-after"; namespace_uri := Xpath_standard_functions_uri
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			Result := type_factory.string_type
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 			if argument_number < 3 then
@@ -71,7 +71,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_collator: ST_COLLATOR
@@ -109,7 +109,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
@@ -117,7 +117,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	substring_after (s1, s2: STRING; a_collator: ST_COLLATOR): STRING is
+	substring_after (s1, s2: STRING; a_collator: ST_COLLATOR): STRING
 			-- Substring of s1 after first occurrence of s2 according to the rules of `a_collator'?
 		require
 			first_string_not_void: s1 /= Void
@@ -130,8 +130,6 @@ feature {NONE} -- Implementation
 		do
 			from
 				an_index := 1
-			variant
-				s1.count - s2.count + 1 - an_index
 			until
 				found or else an_index > s1.count - s2.count
 			loop
@@ -145,9 +143,11 @@ feature {NONE} -- Implementation
 					end
 				end
 				an_index := an_index + 1
+			variant
+				s1.count - s2.count + 1 - an_index
 			end
 			if not found then Result := "" end
 		end
-	
+
 end
-	
+

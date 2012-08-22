@@ -1,5 +1,5 @@
 %{
-indexing
+note
 
 	description:
 
@@ -8,8 +8,8 @@ indexing
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2002-2009, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2009-03-16 17:01:31 -0700 (Mon, 16 Mar 2009) $"
-	revision: "$Revision: 6621 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ET_EIFFEL_PREPARSER
 
@@ -22,10 +22,20 @@ create
 	make
 %}
 
+UTF8_BOM (\xEF\xBB\xBF)
+
 %x MS MSN MSN1 VS1 VS2 VS3 LAVS1 LAVS2 LAVS3
 %option nodefault line outfile="et_eiffel_preparser.e"
 
 %%
+
+----------/** BOM **/-----------------------------------------------------------
+
+{UTF8_BOM}	{
+				-- Ignore byte order mark (BOM).
+				-- See http://en.wikipedia.org/wiki/Byte_order_mark
+			}
+
 
 ----------/** Separators, Comments, Symbols **/----------------------------------------------------
 

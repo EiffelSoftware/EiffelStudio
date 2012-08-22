@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -41,7 +41,7 @@ feature -- Status report
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -53,8 +53,6 @@ feature -- Element change
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index				
 				until
 					a_cursor.after or any_compile_errors
 				loop
@@ -72,6 +70,8 @@ feature -- Element change
 						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if a_name_attribute = Void then
@@ -90,7 +90,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -139,19 +139,17 @@ feature -- Element change
 							end
 						end
 					end
-					
+
 					if not any_compile_errors then
 						if used_character_maps /= Void then
-							
+
 							-- Identify any character maps to which `Current' refers.
-							
+
 							create a_splitter.make
 							character_maps := a_splitter.split (used_character_maps)
 							create character_maps_used.make (character_maps.count)
 							from
 								a_cursor := character_maps.new_cursor; a_cursor.start
-							variant
-								character_maps.count + 1 - a_cursor.index
 							until
 								a_cursor.after
 							loop
@@ -184,7 +182,7 @@ feature -- Element change
 											a_message := STRING_.appended_string (a_message, "has been defined.")
 											create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1590", Static_error)
 											report_compile_error (an_error)
-											
+
 											a_cursor.go_after
 										else
 											character_maps_used.put_last (another_character_map)
@@ -192,14 +190,14 @@ feature -- Element change
 										end
 									end
 								end
+							variant
+								character_maps.count + 1 - a_cursor.index
 							end
-							
+
 							-- Check for circularity.
 
 							from
 								another_cursor := character_maps_used.new_cursor; another_cursor.start
-							variant
-								character_maps_used.count + 1 - another_cursor.index
 							until
 								another_cursor.after
 							loop
@@ -209,6 +207,8 @@ feature -- Element change
 								else
 									another_cursor.forth
 								end
+							variant
+								character_maps_used.count + 1 - another_cursor.index
 							end
 						end
 					end
@@ -217,13 +217,13 @@ feature -- Element change
 			end
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		do
 			last_generated_expression := Void
 		end
 
-	assemble (a_map: DS_HASH_TABLE [STRING, INTEGER]) is
+	assemble (a_map: DS_HASH_TABLE [STRING, INTEGER])
 			-- Assemble all the mappings defined by `Current' into `a_map'.
 		require
 			map_not_void: a_map /= Void
@@ -235,13 +235,13 @@ feature -- Element change
 			if character_maps_used /= Void then
 				from
 					a_cursor := character_maps_used.new_cursor; a_cursor.start
-				variant
-					character_maps_used.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
 					a_cursor.item.assemble (a_map)
 					a_cursor.forth
+				variant
+					character_maps_used.count + 1 - a_cursor.index
 				end
 			end
 			from
@@ -262,13 +262,13 @@ feature -- Element change
 
 feature -- Conversion
 
-	is_character_map: BOOLEAN is
+	is_character_map: BOOLEAN
 			-- Is `Current' an xsl:character-map?
 		do
 			Result := True
 		end
 
-	as_character_map: XM_XSLT_CHARACTER_MAP is
+	as_character_map: XM_XSLT_CHARACTER_MAP
 			-- `Current' seen as an xsl:character-map
 		do
 			Result := Current
@@ -276,7 +276,7 @@ feature -- Conversion
 
 feature {XM_XSLT_CHARACTER_MAP} -- Implementation
 
-	check_circularity (origin: like Current) is
+	check_circularity (origin: like Current)
 			-- Check for any cirular references to `Current'.
 		require
 			other_character_map_not_void: origin /= Void
@@ -291,8 +291,6 @@ feature {XM_XSLT_CHARACTER_MAP} -- Implementation
 				if validated and character_maps_used /= Void then
 					from
 						a_cursor := character_maps_used.new_cursor; a_cursor.start
-					variant
-						character_maps_used.count + 1 - a_cursor.index
 					until
 						a_cursor.after
 					loop
@@ -302,11 +300,13 @@ feature {XM_XSLT_CHARACTER_MAP} -- Implementation
 						else
 							a_cursor.forth
 						end
+					variant
+						character_maps_used.count + 1 - a_cursor.index
 					end
 				else
-					
+
 					-- The circularity will be detected when the last character-map in the cycle gets validated
-					
+
 				end
 			end
 		end

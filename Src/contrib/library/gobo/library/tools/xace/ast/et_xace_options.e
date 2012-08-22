@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Xace option clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2008, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2010, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new option clause.
 		do
 			declared_fst_expansion_factor := -1
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_abstract_declared: BOOLEAN is
+	is_abstract_declared: BOOLEAN
 			-- Has 'abstract' option been declared?
 		do
 			Result := declared_abstract /= Void and then not declared_abstract.is_undefined
@@ -44,7 +44,7 @@ feature -- Status report
 			definition: Result = (declared_abstract /= Void and then not declared_abstract.is_undefined)
 		end
 
-	is_address_expression_declared: BOOLEAN is
+	is_address_expression_declared: BOOLEAN
 			-- Has 'address_expression' option been declared?
 		do
 			Result := declared_address_expression /= Void and then not declared_address_expression.is_undefined
@@ -52,7 +52,7 @@ feature -- Status report
 			definition: Result = (declared_address_expression /= Void and then not declared_address_expression.is_undefined)
 		end
 
-	is_arguments_declared: BOOLEAN is
+	is_arguments_declared: BOOLEAN
 			-- Has 'arguments' option been declared?
 		do
 			Result := declared_arguments /= Void and then not declared_arguments.is_empty
@@ -60,7 +60,7 @@ feature -- Status report
 			definition: Result = (declared_arguments /= Void and then not declared_arguments.is_empty)
 		end
 
-	is_array_optimization_declared: BOOLEAN is
+	is_array_optimization_declared: BOOLEAN
 			-- Has 'array_optimization' option been declared?
 		do
 			Result := declared_array_optimization /= Void and then not declared_array_optimization.is_undefined
@@ -68,7 +68,7 @@ feature -- Status report
 			definition: Result = (declared_array_optimization /= Void and then not declared_array_optimization.is_undefined)
 		end
 
-	is_assembly_declared: BOOLEAN is
+	is_assembly_declared: BOOLEAN
 			-- Has 'assembly' option been declared?
 		do
 			Result := declared_assembly /= Void
@@ -76,7 +76,7 @@ feature -- Status report
 			definition: Result = (declared_assembly /= Void)
 		end
 
-	is_assertion_declared: BOOLEAN is
+	is_assertion_declared: BOOLEAN
 			-- Has 'assertion' option been declared?
 		do
 			Result := declared_assertion /= Void and then not declared_assertion.is_empty
@@ -84,7 +84,15 @@ feature -- Status report
 			definition: Result = (declared_assertion /= Void and then not declared_assertion.is_empty)
 		end
 
-	is_automatic_backup_declared: BOOLEAN is
+	is_attached_by_default_declared: BOOLEAN
+			-- Has 'assertion' option been declared?
+		do
+			Result := declared_attached_by_default /= Void and then not declared_attached_by_default.is_undefined
+		ensure
+			definition: Result = (declared_attached_by_default /= Void and then not declared_attached_by_default.is_undefined)
+		end
+
+	is_automatic_backup_declared: BOOLEAN
 			-- Has 'automatic_backup' option been declared?
 		do
 			Result := declared_automatic_backup /= Void and then not declared_automatic_backup.is_undefined
@@ -92,7 +100,7 @@ feature -- Status report
 			definition: Result = (declared_automatic_backup /= Void and then not declared_automatic_backup.is_undefined)
 		end
 
-	is_callback_declared: BOOLEAN is
+	is_callback_declared: BOOLEAN
 			-- Has 'callback' option been declared?
 		do
 			Result := declared_callback /= Void
@@ -100,7 +108,7 @@ feature -- Status report
 			definition: Result = (declared_callback /= Void)
 		end
 
-	is_case_insensitive_declared: BOOLEAN is
+	is_case_insensitive_declared: BOOLEAN
 			-- Has 'case_insensitive' option been declared?
 		do
 			Result := declared_case_insensitive /= Void and then not declared_case_insensitive.is_undefined
@@ -108,7 +116,7 @@ feature -- Status report
 			definition: Result = (declared_case_insensitive /= Void and then not declared_case_insensitive.is_undefined)
 		end
 
-	is_check_generic_creation_constraint_declared: BOOLEAN is
+	is_check_generic_creation_constraint_declared: BOOLEAN
 			-- Has 'check_generic_creation_constraint' option been declared?
 		do
 			Result := declared_check_generic_creation_constraint /= Void and then not declared_check_generic_creation_constraint.is_undefined
@@ -116,7 +124,7 @@ feature -- Status report
 			definition: Result = (declared_check_generic_creation_constraint /= Void and then not declared_check_generic_creation_constraint.is_undefined)
 		end
 
-	is_check_vape_declared: BOOLEAN is
+	is_check_vape_declared: BOOLEAN
 			-- Has 'check_vape' option been declared?
 		do
 			Result := declared_check_vape /= Void and then not declared_check_vape.is_undefined
@@ -124,7 +132,7 @@ feature -- Status report
 			definition: Result = (declared_check_vape /= Void and then not declared_check_vape.is_undefined)
 		end
 
-	is_clean_declared: BOOLEAN is
+	is_clean_declared: BOOLEAN
 			-- Has 'clean' option been declared?
 		do
 			Result := declared_clean /= Void and then not declared_clean.is_undefined
@@ -132,7 +140,7 @@ feature -- Status report
 			definition: Result = (declared_clean /= Void and then not declared_clean.is_undefined)
 		end
 
-	is_cls_compliant_declared: BOOLEAN is
+	is_cls_compliant_declared: BOOLEAN
 			-- Has 'cls_compliant' option been declared?
 		do
 			Result := declared_cls_compliant /= Void and then not declared_cls_compliant.is_undefined
@@ -140,7 +148,7 @@ feature -- Status report
 			definition: Result = (declared_cls_compliant /= Void and then not declared_cls_compliant.is_undefined)
 		end
 
-	is_component_declared: BOOLEAN is
+	is_component_declared: BOOLEAN
 			-- Has 'component' option been declared?
 		do
 			Result := declared_component /= Void
@@ -148,7 +156,7 @@ feature -- Status report
 			definition: Result = (declared_component /= Void)
 		end
 
-	is_console_application_declared: BOOLEAN is
+	is_console_application_declared: BOOLEAN
 			-- Has 'console_application' option been declared?
 		do
 			Result := declared_console_application /= Void and then not declared_console_application.is_undefined
@@ -156,7 +164,7 @@ feature -- Status report
 			definition: Result = (declared_console_application /= Void and then not declared_console_application.is_undefined)
 		end
 
-	is_create_keyword_extension_declared: BOOLEAN is
+	is_create_keyword_extension_declared: BOOLEAN
 			-- Has 'create_keyword_extension' option been declared?
 		do
 			Result := declared_create_keyword_extension /= Void and then not declared_create_keyword_extension.is_undefined
@@ -164,7 +172,7 @@ feature -- Status report
 			definition: Result = (declared_create_keyword_extension /= Void and then not declared_create_keyword_extension.is_undefined)
 		end
 
-	is_culture_declared: BOOLEAN is
+	is_culture_declared: BOOLEAN
 			-- Has 'culture' option been declared?
 		do
 			Result := declared_culture /= Void
@@ -172,7 +180,7 @@ feature -- Status report
 			definition: Result = (declared_culture /= Void)
 		end
 
-	is_c_compiler_options_declared: BOOLEAN is
+	is_c_compiler_options_declared: BOOLEAN
 			-- Has 'c_compiler_options' option been declared?
 		do
 			Result := declared_c_compiler_options /= Void and then not declared_c_compiler_options.is_empty
@@ -180,7 +188,7 @@ feature -- Status report
 			definition: Result = (declared_c_compiler_options /= Void and then not declared_c_compiler_options.is_empty)
 		end
 
-	is_dead_code_removal_declared: BOOLEAN is
+	is_dead_code_removal_declared: BOOLEAN
 			-- Has 'dead_code_removal' option been declared?
 		do
 			Result := declared_dead_code_removal /= Void and then not declared_dead_code_removal.is_empty
@@ -188,7 +196,7 @@ feature -- Status report
 			definition: Result = (declared_dead_code_removal /= Void and then not declared_dead_code_removal.is_empty)
 		end
 
-	is_debug_option_declared: BOOLEAN is
+	is_debug_option_declared: BOOLEAN
 			-- Has 'debug' option been declared?
 		do
 			Result := declared_debug_option /= Void and then not declared_debug_option.is_undefined
@@ -196,7 +204,7 @@ feature -- Status report
 			definition: Result = (declared_debug_option /= Void and then not declared_debug_option.is_undefined)
 		end
 
-	is_debug_tag_declared: BOOLEAN is
+	is_debug_tag_declared: BOOLEAN
 			-- Has 'debug_tag' option been declared?
 		do
 			Result := declared_debug_tag /= Void and then not declared_debug_tag.is_empty
@@ -204,7 +212,7 @@ feature -- Status report
 			definition: Result = (declared_debug_tag /= Void and then not declared_debug_tag.is_empty)
 		end
 
-	is_debugger_declared: BOOLEAN is
+	is_debugger_declared: BOOLEAN
 			-- Has 'debugger' option been declared?
 		do
 			Result := declared_debugger /= Void and then not declared_debugger.is_undefined
@@ -212,7 +220,7 @@ feature -- Status report
 			definition: Result = (declared_debugger /= Void and then not declared_debugger.is_undefined)
 		end
 
-	is_document_declared: BOOLEAN is
+	is_document_declared: BOOLEAN
 			-- Has 'document' option been declared?
 		do
 			Result := declared_document /= Void
@@ -220,7 +228,7 @@ feature -- Status report
 			definition: Result = (declared_document /= Void)
 		end
 
-	is_dotnet_naming_convention_declared: BOOLEAN is
+	is_dotnet_naming_convention_declared: BOOLEAN
 			-- Has 'dotnet_naming_convention' option been declared?
 		do
 			Result := declared_dotnet_naming_convention /= Void and then not declared_dotnet_naming_convention.is_undefined
@@ -228,7 +236,7 @@ feature -- Status report
 			definition: Result = (declared_dotnet_naming_convention /= Void and then not declared_dotnet_naming_convention.is_undefined)
 		end
 
-	is_dynamic_runtime_declared: BOOLEAN is
+	is_dynamic_runtime_declared: BOOLEAN
 			-- Has 'dynamic_runtime' option been declared?
 		do
 			Result := declared_dynamic_runtime /= Void and then not declared_dynamic_runtime.is_undefined
@@ -236,7 +244,7 @@ feature -- Status report
 			definition: Result = (declared_dynamic_runtime /= Void and then not declared_dynamic_runtime.is_undefined)
 		end
 
-	is_ecf_library_declared: BOOLEAN is
+	is_ecf_library_declared: BOOLEAN
 			-- Has 'ecf_library' option been declared?
 		do
 			Result := declared_ecf_library /= Void
@@ -244,7 +252,7 @@ feature -- Status report
 			definition: Result = (declared_ecf_library /= Void)
 		end
 
-	is_enforce_unique_class_names_declared: BOOLEAN is
+	is_enforce_unique_class_names_declared: BOOLEAN
 			-- Has 'enforce_unique_class_names' option been declared?
 		do
 			Result := declared_enforce_unique_class_names /= Void and then not declared_enforce_unique_class_names.is_undefined
@@ -252,7 +260,7 @@ feature -- Status report
 			definition: Result = (declared_enforce_unique_class_names /= Void and then not declared_enforce_unique_class_names.is_undefined)
 		end
 
-	is_exception_trace_declared: BOOLEAN is
+	is_exception_trace_declared: BOOLEAN
 			-- Has 'exception_trace' option been declared?
 		do
 			Result := declared_exception_trace /= Void and then not declared_exception_trace.is_undefined
@@ -260,7 +268,7 @@ feature -- Status report
 			definition: Result = (declared_exception_trace /= Void and then not declared_exception_trace.is_undefined)
 		end
 
-	is_exclude_declared: BOOLEAN is
+	is_exclude_declared: BOOLEAN
 			-- Has 'exclude' option been declared?
 		do
 			Result := declared_exclude /= Void and then not declared_exclude.is_empty
@@ -268,7 +276,7 @@ feature -- Status report
 			definition: Result = (declared_exclude /= Void and then not declared_exclude.is_empty)
 		end
 
-	is_export_option_declared: BOOLEAN is
+	is_export_option_declared: BOOLEAN
 			-- Has 'export' option been declared?
 		do
 			Result := declared_export_option /= Void
@@ -276,7 +284,7 @@ feature -- Status report
 			definition: Result = (declared_export_option /= Void)
 		end
 
-	is_external_runtime_declared: BOOLEAN is
+	is_external_runtime_declared: BOOLEAN
 			-- Has 'external_runtime' option been declared?
 		do
 			Result := declared_external_runtime /= Void
@@ -284,7 +292,7 @@ feature -- Status report
 			definition: Result = (declared_external_runtime /= Void)
 		end
 
-	is_finalize_option_declared: BOOLEAN is
+	is_finalize_option_declared: BOOLEAN
 			-- Has 'finalize' option been declared?
 		do
 			Result := declared_finalize_option /= Void and then not declared_finalize_option.is_undefined
@@ -292,7 +300,7 @@ feature -- Status report
 			definition: Result = (declared_finalize_option /= Void and then not declared_finalize_option.is_undefined)
 		end
 
-	is_flat_fst_optimization_declared: BOOLEAN is
+	is_flat_fst_optimization_declared: BOOLEAN
 			-- Has 'flat_fst_optimization' option been declared?
 		do
 			Result := declared_flat_fst_optimization /= Void and then not declared_flat_fst_optimization.is_undefined
@@ -300,7 +308,7 @@ feature -- Status report
 			definition: Result = (declared_flat_fst_optimization /= Void and then not declared_flat_fst_optimization.is_undefined)
 		end
 
-	is_force_32bits_declared: BOOLEAN is
+	is_force_32bits_declared: BOOLEAN
 			-- Has 'force_32bits' option been declared?
 		do
 			Result := declared_force_32bits /= Void and then not declared_force_32bits.is_undefined
@@ -308,7 +316,7 @@ feature -- Status report
 			definition: Result = (declared_force_32bits /= Void and then not declared_force_32bits.is_undefined)
 		end
 
-	is_fst_expansion_factor_declared: BOOLEAN is
+	is_fst_expansion_factor_declared: BOOLEAN
 			-- Has 'fst_expansion_factor' option been declared?
 		do
 			Result := declared_fst_expansion_factor >= 0
@@ -316,7 +324,7 @@ feature -- Status report
 			definition: Result = (declared_fst_expansion_factor >= 0)
 		end
 
-	is_fst_optimization_declared: BOOLEAN is
+	is_fst_optimization_declared: BOOLEAN
 			-- Has 'fst_optimization' option been declared?
 		do
 			Result := declared_fst_optimization /= Void and then not declared_fst_optimization.is_undefined
@@ -324,7 +332,7 @@ feature -- Status report
 			definition: Result = (declared_fst_optimization /= Void and then not declared_fst_optimization.is_undefined)
 		end
 
-	is_full_class_checking_declared: BOOLEAN is
+	is_full_class_checking_declared: BOOLEAN
 			-- Has 'full_class_checking' option been declared?
 		do
 			Result := declared_full_class_checking /= Void and then not declared_full_class_checking.is_undefined
@@ -332,7 +340,7 @@ feature -- Status report
 			definition: Result = (declared_full_class_checking /= Void and then not declared_full_class_checking.is_undefined)
 		end
 
-	is_garbage_collector_declared: BOOLEAN is
+	is_garbage_collector_declared: BOOLEAN
 			-- Has 'garbage_collector' option been declared?
 		do
 			Result := declared_garbage_collector /= Void
@@ -340,7 +348,7 @@ feature -- Status report
 			definition: Result = (declared_garbage_collector /= Void)
 		end
 
-	is_gc_info_declared: BOOLEAN is
+	is_gc_info_declared: BOOLEAN
 			-- Has 'gc_info' option been declared?
 		do
 			Result := declared_gc_info /= Void and then not declared_gc_info.is_undefined
@@ -348,7 +356,7 @@ feature -- Status report
 			definition: Result = (declared_gc_info /= Void and then not declared_gc_info.is_undefined)
 		end
 
-	is_heap_size_declared: BOOLEAN is
+	is_heap_size_declared: BOOLEAN
 			-- Has 'heap_size' option been declared?
 		do
 			Result := declared_heap_size >= 0
@@ -356,7 +364,7 @@ feature -- Status report
 			definition: Result = (declared_heap_size >= 0)
 		end
 
-	is_header_declared: BOOLEAN is
+	is_header_declared: BOOLEAN
 			-- Has 'header' option been declared?
 		do
 			Result := declared_header /= Void and then not declared_header.is_empty
@@ -364,7 +372,7 @@ feature -- Status report
 			definition: Result = (declared_header /= Void and then not declared_header.is_empty)
 		end
 
-	is_high_memory_compiler_declared: BOOLEAN is
+	is_high_memory_compiler_declared: BOOLEAN
 			-- Has 'high_memory_compiler' option been declared?
 		do
 			Result := declared_high_memory_compiler /= Void and then not declared_high_memory_compiler.is_undefined
@@ -372,7 +380,7 @@ feature -- Status report
 			definition: Result = (declared_high_memory_compiler /= Void and then not declared_high_memory_compiler.is_undefined)
 		end
 
-	is_il_verifiable_declared: BOOLEAN is
+	is_il_verifiable_declared: BOOLEAN
 			-- Has 'il_verifiable' option been declared?
 		do
 			Result := declared_il_verifiable /= Void and then not declared_il_verifiable.is_undefined
@@ -380,7 +388,7 @@ feature -- Status report
 			definition: Result = (declared_il_verifiable /= Void and then not declared_il_verifiable.is_undefined)
 		end
 
-	is_include_declared: BOOLEAN is
+	is_include_declared: BOOLEAN
 			-- Has 'include' option been declared?
 		do
 			Result := declared_include /= Void and then not declared_include.is_empty
@@ -388,7 +396,7 @@ feature -- Status report
 			definition: Result = (declared_include /= Void and then not declared_include.is_empty)
 		end
 
-	is_inlining_declared: BOOLEAN is
+	is_inlining_declared: BOOLEAN
 			-- Has 'inlining' option been declared?
 		do
 			Result := declared_inlining /= Void and then not declared_inlining.is_empty
@@ -396,7 +404,7 @@ feature -- Status report
 			definition: Result = (declared_inlining /= Void and then not declared_inlining.is_empty)
 		end
 
-	is_inlining_size_declared: BOOLEAN is
+	is_inlining_size_declared: BOOLEAN
 			-- Has 'inlining_size' option been declared?
 		do
 			Result := declared_inlining_size >= 0
@@ -404,7 +412,7 @@ feature -- Status report
 			definition: Result = (declared_inlining_size >= 0)
 		end
 
-	is_jumps_optimization_declared: BOOLEAN is
+	is_jumps_optimization_declared: BOOLEAN
 			-- Has 'jumps_optimization' option been declared?
 		do
 			Result := declared_jumps_optimization /= Void and then not declared_jumps_optimization.is_undefined
@@ -412,7 +420,7 @@ feature -- Status report
 			definition: Result = (declared_jumps_optimization /= Void and then not declared_jumps_optimization.is_undefined)
 		end
 
-	is_layout_declared: BOOLEAN is
+	is_layout_declared: BOOLEAN
 			-- Has 'layout' option been declared?
 		do
 			Result := declared_layout /= Void and then not declared_layout.is_empty
@@ -420,7 +428,7 @@ feature -- Status report
 			definition: Result = (declared_layout /= Void and then not declared_layout.is_empty)
 		end
 
-	is_layout_optimization_declared: BOOLEAN is
+	is_layout_optimization_declared: BOOLEAN
 			-- Has 'layout_optimization' option been declared?
 		do
 			Result := declared_layout_optimization /= Void and then not declared_layout_optimization.is_undefined
@@ -428,7 +436,7 @@ feature -- Status report
 			definition: Result = (declared_layout_optimization /= Void and then not declared_layout_optimization.is_undefined)
 		end
 
-	is_leaves_optimization_declared: BOOLEAN is
+	is_leaves_optimization_declared: BOOLEAN
 			-- Has 'leaves_optimization' option been declared?
 		do
 			Result := declared_leaves_optimization /= Void and then not declared_leaves_optimization.is_undefined
@@ -436,7 +444,7 @@ feature -- Status report
 			definition: Result = (declared_leaves_optimization /= Void and then not declared_leaves_optimization.is_undefined)
 		end
 
-	is_line_generation_declared: BOOLEAN is
+	is_line_generation_declared: BOOLEAN
 			-- Has 'line_generation' option been declared?
 		do
 			Result := declared_line_generation /= Void and then not declared_line_generation.is_undefined
@@ -444,7 +452,7 @@ feature -- Status report
 			definition: Result = (declared_line_generation /= Void and then not declared_line_generation.is_undefined)
 		end
 
-	is_link_declared: BOOLEAN is
+	is_link_declared: BOOLEAN
 			-- Has 'link' option been declared?
 		do
 			Result := declared_link /= Void and then not declared_link.is_empty
@@ -452,7 +460,7 @@ feature -- Status report
 			definition: Result = (declared_link /= Void and then not declared_link.is_empty)
 		end
 
-	is_linker_declared: BOOLEAN is
+	is_linker_declared: BOOLEAN
 			-- Has 'linker' option been declared?
 		do
 			Result := declared_linker /= Void
@@ -460,7 +468,7 @@ feature -- Status report
 			definition: Result = (declared_linker /= Void)
 		end
 
-	is_linux_fpu_double_precision_declared: BOOLEAN is
+	is_linux_fpu_double_precision_declared: BOOLEAN
 			-- Has 'linux_fpu_double_precision' option been declared?
 		do
 			Result := declared_linux_fpu_double_precision /= Void and then not declared_linux_fpu_double_precision.is_undefined
@@ -468,7 +476,7 @@ feature -- Status report
 			definition: Result = (declared_linux_fpu_double_precision /= Void and then not declared_linux_fpu_double_precision.is_undefined)
 		end
 
-	is_manifest_string_trace_declared: BOOLEAN is
+	is_manifest_string_trace_declared: BOOLEAN
 			-- Has 'manifest_string_trace' option been declared?
 		do
 			Result := declared_manifest_string_trace /= Void and then not declared_manifest_string_trace.is_undefined
@@ -476,7 +484,7 @@ feature -- Status report
 			definition: Result = (declared_manifest_string_trace /= Void and then not declared_manifest_string_trace.is_undefined)
 		end
 
-	is_map_declared: BOOLEAN is
+	is_map_declared: BOOLEAN
 			-- Has 'map' option been declared?
 		do
 			Result := declared_map /= Void and then not declared_map.is_undefined
@@ -484,7 +492,7 @@ feature -- Status report
 			definition: Result = (declared_map /= Void and then not declared_map.is_undefined)
 		end
 
-	is_metadata_cache_path_declared: BOOLEAN is
+	is_metadata_cache_path_declared: BOOLEAN
 			-- Has 'metadata_cache_path' option been declared?
 		do
 			Result := declared_metadata_cache_path /= Void
@@ -492,7 +500,7 @@ feature -- Status report
 			definition: Result = (declared_metadata_cache_path /= Void)
 		end
 
-	is_msil_assembly_compatibility_declared: BOOLEAN is
+	is_msil_assembly_compatibility_declared: BOOLEAN
 			-- Has 'msil_assembly_compatibility' option been declared?
 		do
 			Result := declared_msil_assembly_compatibility /= Void
@@ -500,7 +508,7 @@ feature -- Status report
 			definition: Result = (declared_msil_assembly_compatibility /= Void)
 		end
 
-	is_msil_classes_per_module_declared: BOOLEAN is
+	is_msil_classes_per_module_declared: BOOLEAN
 			-- Has 'msil_classes_per_module' option been declared?
 		do
 			Result := declared_msil_classes_per_module > 0
@@ -508,7 +516,7 @@ feature -- Status report
 			definition: Result = (declared_msil_classes_per_module > 0)
 		end
 
-	is_msil_clr_version_declared: BOOLEAN is
+	is_msil_clr_version_declared: BOOLEAN
 			-- Has 'msil_clr_version' option been declared?
 		do
 			Result := declared_msil_clr_version /= Void
@@ -516,7 +524,7 @@ feature -- Status report
 			definition: Result = (declared_msil_clr_version /= Void)
 		end
 
-	is_msil_culture_declared: BOOLEAN is
+	is_msil_culture_declared: BOOLEAN
 			-- Has 'msil_culture' option been declared?
 		do
 			Result := declared_msil_culture /= Void
@@ -524,7 +532,7 @@ feature -- Status report
 			definition: Result = (declared_msil_culture /= Void)
 		end
 
-	is_msil_generation_declared: BOOLEAN is
+	is_msil_generation_declared: BOOLEAN
 			-- Has 'msil_generation' option been declared?
 		do
 			Result := declared_msil_generation /= Void and then not declared_msil_generation.is_undefined
@@ -532,7 +540,7 @@ feature -- Status report
 			definition: Result = (declared_msil_generation /= Void and then not declared_msil_generation.is_undefined)
 		end
 
-	is_msil_generation_version_declared: BOOLEAN is
+	is_msil_generation_version_declared: BOOLEAN
 			-- Has 'msil_generation_version' option been declared?
 		do
 			Result := declared_msil_generation_version /= Void
@@ -540,7 +548,7 @@ feature -- Status report
 			definition: Result = (declared_msil_generation_version /= Void)
 		end
 
-	is_msil_key_file_name_declared: BOOLEAN is
+	is_msil_key_file_name_declared: BOOLEAN
 			-- Has 'msil_key_file_name' option been declared?
 		do
 			Result := declared_msil_key_file_name /= Void
@@ -548,7 +556,7 @@ feature -- Status report
 			definition: Result = (declared_msil_key_file_name /= Void)
 		end
 
-	is_msil_use_optimized_precompile_declared: BOOLEAN is
+	is_msil_use_optimized_precompile_declared: BOOLEAN
 			-- Has 'msil_use_optimized_precompile' option been declared?
 		do
 			Result := declared_msil_use_optimized_precompile /= Void and then not declared_msil_use_optimized_precompile.is_undefined
@@ -556,7 +564,7 @@ feature -- Status report
 			definition: Result = (declared_msil_use_optimized_precompile /= Void and then not declared_msil_use_optimized_precompile.is_undefined)
 		end
 
-	is_multithreaded_declared: BOOLEAN is
+	is_multithreaded_declared: BOOLEAN
 			-- Has 'multithreaded' option been declared?
 		do
 			Result := declared_multithreaded /= Void and then not declared_multithreaded.is_undefined
@@ -564,7 +572,7 @@ feature -- Status report
 			definition: Result = (declared_multithreaded /= Void and then not declared_multithreaded.is_undefined)
 		end
 
-	is_namespace_declared: BOOLEAN is
+	is_namespace_declared: BOOLEAN
 			-- Has 'namespace' option been declared?
 		do
 			Result := declared_namespace /= Void
@@ -572,7 +580,7 @@ feature -- Status report
 			definition: Result = (declared_namespace /= Void)
 		end
 
-	is_no_default_lib_declared: BOOLEAN is
+	is_no_default_lib_declared: BOOLEAN
 			-- Has 'no_default_lib' option been declared?
 		do
 			Result := declared_no_default_lib /= Void and then not declared_no_default_lib.is_undefined
@@ -580,7 +588,7 @@ feature -- Status report
 			definition: Result = (declared_no_default_lib /= Void and then not declared_no_default_lib.is_undefined)
 		end
 
-	is_old_verbatim_strings_declared: BOOLEAN is
+	is_old_verbatim_strings_declared: BOOLEAN
 			-- Has 'old_verbatim_strings' option been declared?
 		do
 			Result := declared_old_verbatim_strings /= Void and then not declared_old_verbatim_strings.is_undefined
@@ -588,7 +596,7 @@ feature -- Status report
 			definition: Result = (declared_old_verbatim_strings /= Void and then not declared_old_verbatim_strings.is_undefined)
 		end
 
-	is_override_cluster_declared: BOOLEAN is
+	is_override_cluster_declared: BOOLEAN
 			-- Has 'override_cluster' option been declared?
 		do
 			Result := declared_override_cluster /= Void and then not declared_override_cluster.is_empty
@@ -596,7 +604,7 @@ feature -- Status report
 			definition: Result = (declared_override_cluster /= Void and then not declared_override_cluster.is_empty)
 		end
 
-	is_portable_code_generation_declared: BOOLEAN is
+	is_portable_code_generation_declared: BOOLEAN
 			-- Has 'portable_code_generation' option been declared?
 		do
 			Result := declared_portable_code_generation /= Void and then not declared_portable_code_generation.is_undefined
@@ -604,7 +612,7 @@ feature -- Status report
 			definition: Result = (declared_portable_code_generation /= Void and then not declared_portable_code_generation.is_undefined)
 		end
 
-	is_precompiled_declared: BOOLEAN is
+	is_precompiled_declared: BOOLEAN
 			-- Has 'precompiled' option been declared?
 		do
 			Result := declared_precompiled /= Void
@@ -612,7 +620,7 @@ feature -- Status report
 			definition: Result = (declared_precompiled /= Void)
 		end
 
-	is_prefix_option_declared: BOOLEAN is
+	is_prefix_option_declared: BOOLEAN
 			-- Has 'prefix' option been declared?
 		do
 			Result := declared_prefix_option /= Void
@@ -620,7 +628,7 @@ feature -- Status report
 			definition: Result = (declared_prefix_option /= Void)
 		end
 
-	is_profile_declared: BOOLEAN is
+	is_profile_declared: BOOLEAN
 			-- Has 'profile' option been declared?
 		do
 			Result := declared_profile /= Void and then not declared_profile.is_undefined
@@ -628,7 +636,7 @@ feature -- Status report
 			definition: Result = (declared_profile /= Void and then not declared_profile.is_undefined)
 		end
 
-	is_public_key_token_declared: BOOLEAN is
+	is_public_key_token_declared: BOOLEAN
 			-- Has 'public_key_token' option been declared?
 		do
 			Result := declared_public_key_token /= Void
@@ -636,7 +644,7 @@ feature -- Status report
 			definition: Result = (declared_public_key_token /= Void)
 		end
 
-	is_reloads_optimization_declared: BOOLEAN is
+	is_reloads_optimization_declared: BOOLEAN
 			-- Has 'reloads_optimization' option been declared?
 		do
 			Result := declared_reloads_optimization /= Void and then not declared_reloads_optimization.is_undefined
@@ -644,7 +652,7 @@ feature -- Status report
 			definition: Result = (declared_reloads_optimization /= Void and then not declared_reloads_optimization.is_undefined)
 		end
 
-	is_read_only_declared: BOOLEAN is
+	is_read_only_declared: BOOLEAN
 			-- Has 'read_only' option been declared?
 		do
 			Result := declared_read_only /= Void and then not declared_read_only.is_undefined
@@ -652,7 +660,7 @@ feature -- Status report
 			definition: Result = (declared_read_only /= Void and then not declared_read_only.is_undefined)
 		end
 
-	is_recursive_declared: BOOLEAN is
+	is_recursive_declared: BOOLEAN
 			-- Has 'recursive' option been declared?
 		do
 			Result := declared_recursive /= Void and then not declared_recursive.is_undefined
@@ -660,7 +668,7 @@ feature -- Status report
 			definition: Result = (declared_recursive /= Void and then not declared_recursive.is_undefined)
 		end
 
-	is_shared_library_definition_declared: BOOLEAN is
+	is_shared_library_definition_declared: BOOLEAN
 			-- Has 'shared_library_definition' option been declared?
 		do
 			Result := declared_shared_library_definition /= Void
@@ -668,7 +676,7 @@ feature -- Status report
 			definition: Result = (declared_shared_library_definition /= Void)
 		end
 
-	is_split_declared: BOOLEAN is
+	is_split_declared: BOOLEAN
 			-- Has 'split' option been declared?
 		do
 			Result := declared_split /= Void and then not declared_split.is_undefined
@@ -676,7 +684,7 @@ feature -- Status report
 			definition: Result = (declared_split /= Void and then not declared_split.is_undefined)
 		end
 
-	is_stack_size_declared: BOOLEAN is
+	is_stack_size_declared: BOOLEAN
 			-- Has 'stack_size' option been declared?
 		do
 			Result := declared_stack_size >= 0
@@ -684,7 +692,7 @@ feature -- Status report
 			definition: Result = (declared_stack_size >= 0)
 		end
 
-	is_storable_declared: BOOLEAN is
+	is_storable_declared: BOOLEAN
 			-- Has 'storable' option been declared?
 		do
 			Result := declared_storable /= Void and then not declared_storable.is_undefined
@@ -692,7 +700,7 @@ feature -- Status report
 			definition: Result = (declared_storable /= Void and then not declared_storable.is_undefined)
 		end
 
-	is_storable_filename_declared: BOOLEAN is
+	is_storable_filename_declared: BOOLEAN
 			-- Has 'storable_filename' option been declared?
 		do
 			Result := declared_storable_filename /= Void
@@ -700,7 +708,7 @@ feature -- Status report
 			definition: Result = (declared_storable_filename /= Void)
 		end
 
-	is_strip_option_declared: BOOLEAN is
+	is_strip_option_declared: BOOLEAN
 			-- Has 'strip' option been declared?
 		do
 			Result := declared_strip_option /= Void and then not declared_strip_option.is_undefined
@@ -708,7 +716,15 @@ feature -- Status report
 			definition: Result = (declared_strip_option /= Void and then not declared_strip_option.is_undefined)
 		end
 
-	is_target_declared: BOOLEAN is
+	is_syntax_declared: BOOLEAN
+			-- Has 'syntax' option been declared?
+		do
+			Result := declared_syntax /= Void
+		ensure
+			definition: Result = (declared_syntax /= Void)
+		end
+
+	is_target_declared: BOOLEAN
 			-- Has 'target' option been declared?
 		do
 			Result := declared_target /= Void
@@ -716,7 +732,7 @@ feature -- Status report
 			definition: Result = (declared_target /= Void)
 		end
 
-	is_trace_declared: BOOLEAN is
+	is_trace_declared: BOOLEAN
 			-- Has 'trace' option been declared?
 		do
 			Result := declared_trace /= Void and then not declared_trace.is_undefined
@@ -724,7 +740,7 @@ feature -- Status report
 			definition: Result = (declared_trace /= Void and then not declared_trace.is_undefined)
 		end
 
-	is_use_cluster_name_as_namespace_declared: BOOLEAN is
+	is_use_cluster_name_as_namespace_declared: BOOLEAN
 			-- Has 'use_cluster_name_as_namespace' option been declared?
 		do
 			Result := declared_use_cluster_name_as_namespace /= Void and then not declared_use_cluster_name_as_namespace.is_undefined
@@ -732,7 +748,7 @@ feature -- Status report
 			definition: Result = (declared_use_cluster_name_as_namespace /= Void and then not declared_use_cluster_name_as_namespace.is_undefined)
 		end
 
-	is_use_full_cluster_name_as_namespace_declared: BOOLEAN is
+	is_use_full_cluster_name_as_namespace_declared: BOOLEAN
 			-- Has 'use_full_cluster_name_as_namespace' option been declared?
 		do
 			Result := declared_use_full_cluster_name_as_namespace /= Void and then not declared_use_full_cluster_name_as_namespace.is_undefined
@@ -740,7 +756,7 @@ feature -- Status report
 			definition: Result = (declared_use_full_cluster_name_as_namespace /= Void and then not declared_use_full_cluster_name_as_namespace.is_undefined)
 		end
 
-	is_verbose_declared: BOOLEAN is
+	is_verbose_declared: BOOLEAN
 			-- Has 'verbose' option been declared?
 		do
 			Result := declared_verbose /= Void and then not declared_verbose.is_undefined
@@ -748,7 +764,7 @@ feature -- Status report
 			definition: Result = (declared_verbose /= Void and then not declared_verbose.is_undefined)
 		end
 
-	is_version_declared: BOOLEAN is
+	is_version_declared: BOOLEAN
 			-- Has 'version' option been declared?
 		do
 			Result := declared_version /= Void
@@ -756,7 +772,7 @@ feature -- Status report
 			definition: Result = (declared_version /= Void)
 		end
 
-	is_visible_filename_declared: BOOLEAN is
+	is_visible_filename_declared: BOOLEAN
 			-- Has 'visible_filename' option been declared?
 		do
 			Result := declared_visible_filename /= Void
@@ -764,7 +780,15 @@ feature -- Status report
 			definition: Result = (declared_visible_filename /= Void)
 		end
 
-	is_warning_declared: BOOLEAN is
+	is_void_safety_declared: BOOLEAN
+			-- Has 'void_safety' option been declared?
+		do
+			Result := declared_void_safety /= Void
+		ensure
+			definition: Result = (declared_void_safety /= Void)
+		end
+
+	is_warning_declared: BOOLEAN
 			-- Has 'warning' option been declared?
 		do
 			Result := declared_warning /= Void
@@ -772,7 +796,7 @@ feature -- Status report
 			definition: Result = (declared_warning /= Void)
 		end
 
-	is_wedit_declared: BOOLEAN is
+	is_wedit_declared: BOOLEAN
 			-- Has 'wedit' option been declared?
 		do
 			Result := declared_wedit /= Void and then not declared_wedit.is_undefined
@@ -782,7 +806,7 @@ feature -- Status report
 
 feature -- Option values
 
-	abstract: BOOLEAN is
+	abstract: BOOLEAN
 			-- 'abstract' option
 		do
 			if is_abstract_declared then
@@ -792,7 +816,7 @@ feature -- Option values
 			end
 		end
 
-	address_expression: BOOLEAN is
+	address_expression: BOOLEAN
 			-- 'address_expression' option
 		do
 			if is_address_expression_declared then
@@ -802,7 +826,7 @@ feature -- Option values
 			end
 		end
 
-	array_optimization: BOOLEAN is
+	array_optimization: BOOLEAN
 			-- Is 'array_optimization' option enabled?
 		do
 			if is_array_optimization_declared then
@@ -812,7 +836,7 @@ feature -- Option values
 			end
 		end
 
-	arguments: DS_HASH_SET [STRING] is
+	arguments: DS_HASH_SET [STRING]
 			-- 'arguments' option
 		do
 			if is_arguments_declared then
@@ -825,7 +849,7 @@ feature -- Option values
 			no_void_argument: not Result.has_void
 		end
 
-	assembly: STRING is
+	assembly: STRING
 			-- Is 'assembly' option enabled?
 		do
 			if is_assembly_declared then
@@ -835,7 +859,7 @@ feature -- Option values
 			end
 		end
 
-	assertion: DS_HASH_SET [STRING] is
+	assertion: DS_HASH_SET [STRING]
 			-- 'assertion' option
 		do
 			if is_assertion_declared then
@@ -848,7 +872,16 @@ feature -- Option values
 			-- valid_value: forall v in Result, valid_assertion.has (v)
 		end
 
-	automatic_backup: BOOLEAN is
+	attached_by_default: BOOLEAN
+			-- 'attached_by_default' option
+		do
+			if is_attached_by_default_declared then
+				Result := declared_attached_by_default.is_true
+			else
+				Result := default_attached_by_default
+			end
+		end
+	automatic_backup: BOOLEAN
 			-- Is 'automatic_backup' option enabled?
 		do
 			if is_automatic_backup_declared then
@@ -858,7 +891,7 @@ feature -- Option values
 			end
 		end
 
-	callback: STRING is
+	callback: STRING
 			-- 'callback' option
 		do
 			if is_callback_declared then
@@ -870,7 +903,7 @@ feature -- Option values
 			valid_callback: Result /= Void implies valid_callback.has (Result)
 		end
 
-	case_insensitive: BOOLEAN is
+	case_insensitive: BOOLEAN
 			-- 'case_insensitive' option
 		do
 			if is_case_insensitive_declared then
@@ -880,7 +913,7 @@ feature -- Option values
 			end
 		end
 
-	check_generic_creation_constraint: BOOLEAN is
+	check_generic_creation_constraint: BOOLEAN
 			-- 'check_generic_creation_constraint' option
 		do
 			if is_check_generic_creation_constraint_declared then
@@ -890,7 +923,7 @@ feature -- Option values
 			end
 		end
 
-	check_vape: BOOLEAN is
+	check_vape: BOOLEAN
 			-- 'check_vape' option
 		do
 			if is_check_vape_declared then
@@ -900,7 +933,7 @@ feature -- Option values
 			end
 		end
 
-	clean: BOOLEAN is
+	clean: BOOLEAN
 			-- 'clean' option
 		do
 			if is_clean_declared then
@@ -910,7 +943,7 @@ feature -- Option values
 			end
 		end
 
-	cls_compliant: BOOLEAN is
+	cls_compliant: BOOLEAN
 			-- 'cls_compliant' option
 		do
 			if is_cls_compliant_declared then
@@ -920,7 +953,7 @@ feature -- Option values
 			end
 		end
 
-	component: STRING is
+	component: STRING
 			-- 'component' option
 		do
 			if is_component_declared then
@@ -930,7 +963,7 @@ feature -- Option values
 			end
 		end
 
-	console_application: BOOLEAN is
+	console_application: BOOLEAN
 			-- 'console_application' option
 		do
 			if is_console_application_declared then
@@ -940,7 +973,7 @@ feature -- Option values
 			end
 		end
 
-	create_keyword_extension: BOOLEAN is
+	create_keyword_extension: BOOLEAN
 			-- 'create_keyword_extension' option
 		do
 			if is_create_keyword_extension_declared then
@@ -950,7 +983,7 @@ feature -- Option values
 			end
 		end
 
-	culture: STRING is
+	culture: STRING
 			-- 'culture' option
 		do
 			if is_culture_declared then
@@ -960,7 +993,7 @@ feature -- Option values
 			end
 		end
 
-	c_compiler_options: DS_HASH_SET [STRING] is
+	c_compiler_options: DS_HASH_SET [STRING]
 			-- 'c_compiler_options' option
 		do
 			if is_c_compiler_options_declared then
@@ -973,7 +1006,7 @@ feature -- Option values
 			no_void_c_compiler_option: not Result.has_void
 		end
 
-	dead_code_removal: DS_HASH_SET [STRING] is
+	dead_code_removal: DS_HASH_SET [STRING]
 			-- 'dead_code_removal' option
 		do
 			if is_dead_code_removal_declared then
@@ -986,7 +1019,7 @@ feature -- Option values
 			-- valid_value: forall v in Result, valid_dead_code_removal.has (v)
 		end
 
-	debug_option: BOOLEAN is
+	debug_option: BOOLEAN
 			-- 'debug' option
 		do
 			if is_debug_option_declared then
@@ -996,7 +1029,7 @@ feature -- Option values
 			end
 		end
 
-	debug_tag: DS_HASH_SET [STRING] is
+	debug_tag: DS_HASH_SET [STRING]
 			-- 'debug_tag' option
 		do
 			if is_debug_tag_declared then
@@ -1009,7 +1042,7 @@ feature -- Option values
 			no_void_debug_tag: not Result.has_void
 		end
 
-	debugger: BOOLEAN is
+	debugger: BOOLEAN
 			-- 'debugger' option
 		do
 			if is_debugger_declared then
@@ -1019,7 +1052,7 @@ feature -- Option values
 			end
 		end
 
-	document: STRING is
+	document: STRING
 			-- 'document' option
 		do
 			if is_document_declared then
@@ -1029,7 +1062,7 @@ feature -- Option values
 			end
 		end
 
-	dotnet_naming_convention: BOOLEAN is
+	dotnet_naming_convention: BOOLEAN
 			-- 'dotnet_naming_convention' option
 		do
 			if is_dotnet_naming_convention_declared then
@@ -1039,7 +1072,7 @@ feature -- Option values
 			end
 		end
 
-	dynamic_runtime: BOOLEAN is
+	dynamic_runtime: BOOLEAN
 			-- 'dynamic_runtime' option
 		do
 			if is_dynamic_runtime_declared then
@@ -1049,7 +1082,7 @@ feature -- Option values
 			end
 		end
 
-	ecf_library: STRING is
+	ecf_library: STRING
 			-- 'ecf_library' option
 		do
 			if is_ecf_library_declared then
@@ -1059,7 +1092,7 @@ feature -- Option values
 			end
 		end
 
-	enforce_unique_class_names: BOOLEAN is
+	enforce_unique_class_names: BOOLEAN
 			-- 'enforce_unique_class_names' option
 		do
 			if is_enforce_unique_class_names_declared then
@@ -1069,7 +1102,7 @@ feature -- Option values
 			end
 		end
 
-	exception_trace: BOOLEAN is
+	exception_trace: BOOLEAN
 			-- 'exception_trace' option
 		do
 			if is_exception_trace_declared then
@@ -1079,7 +1112,7 @@ feature -- Option values
 			end
 		end
 
-	exclude: DS_HASH_SET [STRING] is
+	exclude: DS_HASH_SET [STRING]
 			-- 'exclude' option
 		do
 			if is_exclude_declared then
@@ -1092,7 +1125,7 @@ feature -- Option values
 			no_void_exclude: not Result.has_void
 		end
 
-	export_option: STRING is
+	export_option: STRING
 			-- 'export' option
 		do
 			if is_export_option_declared then
@@ -1102,7 +1135,7 @@ feature -- Option values
 			end
 		end
 
-	external_runtime: STRING is
+	external_runtime: STRING
 			-- 'external_runtime' option
 		do
 			if is_external_runtime_declared then
@@ -1112,7 +1145,7 @@ feature -- Option values
 			end
 		end
 
-	finalize_option: BOOLEAN is
+	finalize_option: BOOLEAN
 			-- 'finalize' option
 		do
 			if is_finalize_option_declared then
@@ -1122,7 +1155,7 @@ feature -- Option values
 			end
 		end
 
-	flat_fst_optimization: BOOLEAN is
+	flat_fst_optimization: BOOLEAN
 			-- 'flat_fst_optimization' option
 		do
 			if is_flat_fst_optimization_declared then
@@ -1132,7 +1165,7 @@ feature -- Option values
 			end
 		end
 
-	force_32bits: BOOLEAN is
+	force_32bits: BOOLEAN
 			-- 'force_32bits' option
 		do
 			if is_force_32bits_declared then
@@ -1142,7 +1175,7 @@ feature -- Option values
 			end
 		end
 
-	fst_expansion_factor: INTEGER is
+	fst_expansion_factor: INTEGER
 			-- 'fst_expansion_factor' option
 		do
 			if is_fst_expansion_factor_declared then
@@ -1154,7 +1187,7 @@ feature -- Option values
 			fst_expansion_factor_positive: Result >= 0
 		end
 
-	fst_optimization: BOOLEAN is
+	fst_optimization: BOOLEAN
 			-- 'fst_optimization' option
 		do
 			if is_fst_optimization_declared then
@@ -1164,7 +1197,7 @@ feature -- Option values
 			end
 		end
 
-	full_class_checking: BOOLEAN is
+	full_class_checking: BOOLEAN
 			-- 'full_class_checking' option
 		do
 			if is_full_class_checking_declared then
@@ -1174,7 +1207,7 @@ feature -- Option values
 			end
 		end
 
-	garbage_collector: STRING is
+	garbage_collector: STRING
 			-- 'garbage_collector' option
 		do
 			if is_garbage_collector_declared then
@@ -1186,7 +1219,7 @@ feature -- Option values
 			valid_garbage_collector: valid_garbage_collector.has (Result)
 		end
 
-	gc_info: BOOLEAN is
+	gc_info: BOOLEAN
 			-- 'gc_info' option
 		do
 			if is_gc_info_declared then
@@ -1196,7 +1229,7 @@ feature -- Option values
 			end
 		end
 
-	heap_size: INTEGER is
+	heap_size: INTEGER
 			-- 'heap_size' option
 		do
 			if is_heap_size_declared then
@@ -1206,7 +1239,7 @@ feature -- Option values
 			end
 		end
 
-	header: DS_HASH_SET [STRING] is
+	header: DS_HASH_SET [STRING]
 			-- 'header' option
 		do
 			if is_header_declared then
@@ -1219,7 +1252,7 @@ feature -- Option values
 			no_void_header: not Result.has_void
 		end
 
-	high_memory_compiler: BOOLEAN is
+	high_memory_compiler: BOOLEAN
 			-- 'high_memory_compiler' option
 		do
 			if is_high_memory_compiler_declared then
@@ -1229,7 +1262,7 @@ feature -- Option values
 			end
 		end
 
-	il_verifiable: BOOLEAN is
+	il_verifiable: BOOLEAN
 			-- 'il_verifiable' option
 		do
 			if is_il_verifiable_declared then
@@ -1239,7 +1272,7 @@ feature -- Option values
 			end
 		end
 
-	include: DS_HASH_SET [STRING] is
+	include: DS_HASH_SET [STRING]
 			-- 'include' option
 		do
 			if is_include_declared then
@@ -1252,7 +1285,7 @@ feature -- Option values
 			no_void_include: not Result.has_void
 		end
 
-	inlining: DS_HASH_SET [STRING] is
+	inlining: DS_HASH_SET [STRING]
 			-- 'inlining' option
 		do
 			if is_inlining_declared then
@@ -1265,7 +1298,7 @@ feature -- Option values
 			-- valid_value: forall v in Result, valid_inlining.has (v)
 		end
 
-	inlining_size: INTEGER is
+	inlining_size: INTEGER
 			-- 'inlining_size' option
 		do
 			if is_inlining_size_declared then
@@ -1277,7 +1310,7 @@ feature -- Option values
 			inlining_size_positive: Result >= 0
 		end
 
-	jumps_optimization: BOOLEAN is
+	jumps_optimization: BOOLEAN
 			-- 'jumps_optimization' option
 		do
 			if is_jumps_optimization_declared then
@@ -1287,7 +1320,7 @@ feature -- Option values
 			end
 		end
 
-	layout: STRING is
+	layout: STRING
 			-- 'layout' option
 		do
 			if is_layout_declared then
@@ -1300,7 +1333,7 @@ feature -- Option values
 			valid_layout: valid_layout.has (Result)
 		end
 
-	layout_optimization: BOOLEAN is
+	layout_optimization: BOOLEAN
 			-- 'layout_optimization' option
 		do
 			if is_layout_optimization_declared then
@@ -1310,7 +1343,7 @@ feature -- Option values
 			end
 		end
 
-	leaves_optimization: BOOLEAN is
+	leaves_optimization: BOOLEAN
 			-- 'leaves_optimization' option
 		do
 			if is_leaves_optimization_declared then
@@ -1320,7 +1353,7 @@ feature -- Option values
 			end
 		end
 
-	line_generation: BOOLEAN is
+	line_generation: BOOLEAN
 			-- 'line_generation' option
 		do
 			if is_line_generation_declared then
@@ -1330,7 +1363,7 @@ feature -- Option values
 			end
 		end
 
-	link: DS_ARRAYED_LIST [STRING] is
+	link: DS_ARRAYED_LIST [STRING]
 			-- 'link' option
 		do
 			if is_link_declared then
@@ -1343,7 +1376,7 @@ feature -- Option values
 			no_void_link: not Result.has_void
 		end
 
-	linker: STRING is
+	linker: STRING
 			-- 'linker' option
 		do
 			if is_linker_declared then
@@ -1355,7 +1388,7 @@ feature -- Option values
 			valid_linker: valid_linker.has (Result)
 		end
 
-	linux_fpu_double_precision: BOOLEAN is
+	linux_fpu_double_precision: BOOLEAN
 			-- 'linux_fpu_double_precision' option
 		do
 			if is_linux_fpu_double_precision_declared then
@@ -1365,7 +1398,7 @@ feature -- Option values
 			end
 		end
 
-	manifest_string_trace: BOOLEAN is
+	manifest_string_trace: BOOLEAN
 			-- 'manifest_string_trace' option
 		do
 			if is_manifest_string_trace_declared then
@@ -1375,7 +1408,7 @@ feature -- Option values
 			end
 		end
 
-	map: BOOLEAN is
+	map: BOOLEAN
 			-- 'map' option
 		do
 			if is_map_declared then
@@ -1385,7 +1418,7 @@ feature -- Option values
 			end
 		end
 
-	metadata_cache_path: STRING is
+	metadata_cache_path: STRING
 			-- 'metadata_cache_path' option
 		do
 			if is_metadata_cache_path_declared then
@@ -1395,7 +1428,7 @@ feature -- Option values
 			end
 		end
 
-	msil_assembly_compatibility: STRING is
+	msil_assembly_compatibility: STRING
 			-- 'msil_assembly_compatibility' option
 		do
 			if is_msil_assembly_compatibility_declared then
@@ -1405,7 +1438,7 @@ feature -- Option values
 			end
 		end
 
-	msil_classes_per_module: INTEGER is
+	msil_classes_per_module: INTEGER
 			-- 'msil_classes_per_module' option
 		do
 			if is_msil_classes_per_module_declared then
@@ -1417,7 +1450,7 @@ feature -- Option values
 			msil_classes_per_module_positive: Result > 0
 		end
 
-	msil_clr_version: STRING is
+	msil_clr_version: STRING
 			-- 'msil_clr_version' option
 		do
 			if is_msil_clr_version_declared then
@@ -1427,7 +1460,7 @@ feature -- Option values
 			end
 		end
 
-	msil_culture: STRING is
+	msil_culture: STRING
 			-- 'msil_culture' option
 		do
 			if is_msil_culture_declared then
@@ -1437,7 +1470,7 @@ feature -- Option values
 			end
 		end
 
-	msil_generation: BOOLEAN is
+	msil_generation: BOOLEAN
 			-- 'msil_generation' option
 		do
 			if is_msil_generation_declared then
@@ -1447,7 +1480,7 @@ feature -- Option values
 			end
 		end
 
-	msil_generation_version: STRING is
+	msil_generation_version: STRING
 			-- 'msil_generation_version' option
 		do
 			if is_msil_generation_version_declared then
@@ -1457,7 +1490,7 @@ feature -- Option values
 			end
 		end
 
-	msil_key_file_name: STRING is
+	msil_key_file_name: STRING
 			-- 'msil_key_file_name' option
 		do
 			if is_msil_key_file_name_declared then
@@ -1467,7 +1500,7 @@ feature -- Option values
 			end
 		end
 
-	msil_use_optimized_precompile: BOOLEAN is
+	msil_use_optimized_precompile: BOOLEAN
 			-- 'msil_use_optimized_precompile' option
 		do
 			if is_msil_use_optimized_precompile_declared then
@@ -1477,7 +1510,7 @@ feature -- Option values
 			end
 		end
 
-	multithreaded: BOOLEAN is
+	multithreaded: BOOLEAN
 			-- 'multithreaded' option
 		do
 			if is_multithreaded_declared then
@@ -1487,7 +1520,7 @@ feature -- Option values
 			end
 		end
 
-	namespace: STRING is
+	namespace: STRING
 			-- 'namespace' option
 		do
 			if is_namespace_declared then
@@ -1497,7 +1530,7 @@ feature -- Option values
 			end
 		end
 
-	no_default_lib: BOOLEAN is
+	no_default_lib: BOOLEAN
 			-- 'no_default_lib' option
 		do
 			if is_no_default_lib_declared then
@@ -1507,7 +1540,7 @@ feature -- Option values
 			end
 		end
 
-	old_verbatim_strings: BOOLEAN is
+	old_verbatim_strings: BOOLEAN
 			-- 'old_verbatim_strings' option
 		do
 			if is_old_verbatim_strings_declared then
@@ -1517,7 +1550,7 @@ feature -- Option values
 			end
 		end
 
-	override_cluster: DS_HASH_SET [STRING] is
+	override_cluster: DS_HASH_SET [STRING]
 			-- 'override_cluster' option
 		do
 			if is_override_cluster_declared then
@@ -1530,7 +1563,7 @@ feature -- Option values
 			no_void_override_cluster: not Result.has_void
 		end
 
-	portable_code_generation: BOOLEAN is
+	portable_code_generation: BOOLEAN
 			-- 'portable_code_generation' option
 		do
 			if is_portable_code_generation_declared then
@@ -1540,7 +1573,7 @@ feature -- Option values
 			end
 		end
 
-	precompiled: STRING is
+	precompiled: STRING
 			-- 'precompiled' option
 		do
 			if is_precompiled_declared then
@@ -1550,7 +1583,7 @@ feature -- Option values
 			end
 		end
 
-	prefix_option: STRING is
+	prefix_option: STRING
 			-- 'prefix' option
 		do
 			if is_prefix_option_declared then
@@ -1560,7 +1593,7 @@ feature -- Option values
 			end
 		end
 
-	profile: BOOLEAN is
+	profile: BOOLEAN
 			-- 'profile' option
 		do
 			if is_profile_declared then
@@ -1570,7 +1603,7 @@ feature -- Option values
 			end
 		end
 
-	public_key_token: STRING is
+	public_key_token: STRING
 			-- 'public_key_token' option
 		do
 			if is_public_key_token_declared then
@@ -1580,7 +1613,7 @@ feature -- Option values
 			end
 		end
 
-	read_only: BOOLEAN is
+	read_only: BOOLEAN
 			-- 'read_only' option
 		do
 			if is_read_only_declared then
@@ -1590,7 +1623,7 @@ feature -- Option values
 			end
 		end
 
-	recursive: BOOLEAN is
+	recursive: BOOLEAN
 			-- 'recursive' option
 		do
 			if is_recursive_declared then
@@ -1600,7 +1633,7 @@ feature -- Option values
 			end
 		end
 
-	reloads_optimization: BOOLEAN is
+	reloads_optimization: BOOLEAN
 			-- 'reloads_optimization' option
 		do
 			if is_reloads_optimization_declared then
@@ -1610,7 +1643,7 @@ feature -- Option values
 			end
 		end
 
-	shared_library_definition: STRING is
+	shared_library_definition: STRING
 			-- 'shared_library_definition' option
 		do
 			if is_shared_library_definition_declared then
@@ -1620,7 +1653,7 @@ feature -- Option values
 			end
 		end
 
-	split: BOOLEAN is
+	split: BOOLEAN
 			-- 'split' option
 		do
 			if is_split_declared then
@@ -1630,7 +1663,7 @@ feature -- Option values
 			end
 		end
 
-	stack_size: INTEGER is
+	stack_size: INTEGER
 			-- 'stack_size' option
 		do
 			if is_stack_size_declared then
@@ -1640,7 +1673,7 @@ feature -- Option values
 			end
 		end
 
-	storable: BOOLEAN is
+	storable: BOOLEAN
 			-- 'storable' option
 		do
 			if is_storable_declared then
@@ -1650,7 +1683,7 @@ feature -- Option values
 			end
 		end
 
-	storable_filename: STRING is
+	storable_filename: STRING
 			-- 'storable_filename' option
 		do
 			if is_storable_filename_declared then
@@ -1660,7 +1693,7 @@ feature -- Option values
 			end
 		end
 
-	strip_option: BOOLEAN is
+	strip_option: BOOLEAN
 			-- 'strip' option
 		do
 			if is_strip_option_declared then
@@ -1670,7 +1703,19 @@ feature -- Option values
 			end
 		end
 
-	target: STRING is
+	syntax: STRING
+			-- 'syntax' option
+		do
+			if is_syntax_declared then
+				Result := declared_syntax
+			else
+				Result := default_syntax
+			end
+		ensure
+			valid_syntax: valid_syntax.has (Result)
+		end
+
+	target: STRING
 			-- 'target' option
 		do
 			if is_target_declared then
@@ -1682,7 +1727,7 @@ feature -- Option values
 			valid_target: valid_target.has (Result)
 		end
 
-	trace: BOOLEAN is
+	trace: BOOLEAN
 			-- 'trace' option
 		do
 			if is_trace_declared then
@@ -1692,7 +1737,7 @@ feature -- Option values
 			end
 		end
 
-	use_cluster_name_as_namespace: BOOLEAN is
+	use_cluster_name_as_namespace: BOOLEAN
 			-- 'use_cluster_name_as_namespace' option
 		do
 			if is_use_cluster_name_as_namespace_declared then
@@ -1702,7 +1747,7 @@ feature -- Option values
 			end
 		end
 
-	use_full_cluster_name_as_namespace: BOOLEAN is
+	use_full_cluster_name_as_namespace: BOOLEAN
 			-- 'use_full_cluster_name_as_namespace' option
 		do
 			if is_use_full_cluster_name_as_namespace_declared then
@@ -1712,7 +1757,7 @@ feature -- Option values
 			end
 		end
 
-	verbose: BOOLEAN is
+	verbose: BOOLEAN
 			-- 'verbose' option
 		do
 			if is_verbose_declared then
@@ -1722,7 +1767,7 @@ feature -- Option values
 			end
 		end
 
-	version: STRING is
+	version: STRING
 			-- 'version' option
 		do
 			if is_version_declared then
@@ -1732,7 +1777,7 @@ feature -- Option values
 			end
 		end
 
-	visible_filename: STRING is
+	visible_filename: STRING
 			-- 'visible_filename' option
 		do
 			if is_visible_filename_declared then
@@ -1742,7 +1787,17 @@ feature -- Option values
 			end
 		end
 
-	warning: STRING is
+	void_safety: STRING
+			-- 'void_safety' option
+		do
+			if is_void_safety_declared then
+				Result := declared_void_safety
+			else
+				Result := default_void_safety
+			end
+		end
+
+	warning: STRING
 			-- 'warning' option
 		do
 			if is_warning_declared then
@@ -1754,7 +1809,7 @@ feature -- Option values
 			valid_warning: valid_warning.has (Result)
 		end
 
-	wedit: BOOLEAN is
+	wedit: BOOLEAN
 			-- 'wedit' option
 		do
 			if is_wedit_declared then
@@ -1766,7 +1821,7 @@ feature -- Option values
 
 feature -- Modification
 
-	set_abstract (b: BOOLEAN) is
+	set_abstract (b: BOOLEAN)
 			-- Set `abstract' to `b'.
 		do
 			if declared_abstract = Void then
@@ -1782,7 +1837,7 @@ feature -- Modification
 			abstract_set: abstract = b
 		end
 
-	set_address_expression (b: BOOLEAN) is
+	set_address_expression (b: BOOLEAN)
 			-- Set `address_expression' to `b'.
 		do
 			if declared_address_expression = Void then
@@ -1798,7 +1853,7 @@ feature -- Modification
 			address_expression_set: address_expression = b
 		end
 
-	set_arguments (a_value: STRING) is
+	set_arguments (a_value: STRING)
 			-- Set `arguments' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -1813,7 +1868,7 @@ feature -- Modification
 			arguments_set: arguments.has (a_value)
 		end
 
-	set_array_optimization (b: BOOLEAN) is
+	set_array_optimization (b: BOOLEAN)
 			-- Set `array_optimization' to `b'.
 		do
 			if declared_array_optimization = Void then
@@ -1829,7 +1884,7 @@ feature -- Modification
 			array_optimization_set: array_optimization = b
 		end
 
-	set_assembly (a_value: STRING) is
+	set_assembly (a_value: STRING)
 			-- Set `assembly' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -1840,7 +1895,7 @@ feature -- Modification
 			assembly_set: assembly = a_value
 		end
 
-	set_assertion (a_value: STRING) is
+	set_assertion (a_value: STRING)
 			-- Set `assertion' to `a_value'.
 		require
 			a_value_valid: valid_assertion.has (a_value)
@@ -1855,7 +1910,23 @@ feature -- Modification
 			assertion_set: assertion.has (a_value)
 		end
 
-	set_automatic_backup (b: BOOLEAN) is
+	set_attached_by_default (b: BOOLEAN)
+			-- Set `attached_by_default' to `b'.
+		do
+			if declared_attached_by_default = Void then
+				create declared_attached_by_default.make_undefined
+			end
+			if b then
+				declared_attached_by_default.set_true
+			else
+				declared_attached_by_default.set_false
+			end
+		ensure
+			abstract_declared: is_abstract_declared
+			abstract_set: abstract = b
+		end
+
+	set_automatic_backup (b: BOOLEAN)
 			-- Set `automatic_backup' to `b'.
 		do
 			if declared_automatic_backup = Void then
@@ -1871,7 +1942,7 @@ feature -- Modification
 			automatic_backup_set: automatic_backup = b
 		end
 
-	set_callback (a_value: STRING) is
+	set_callback (a_value: STRING)
 			-- Set `callback' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -1883,7 +1954,7 @@ feature -- Modification
 			callback_set: callback = a_value
 		end
 
-	set_case_insensitive (b: BOOLEAN) is
+	set_case_insensitive (b: BOOLEAN)
 			-- Set `case_insensitive' to `b'.
 		do
 			if declared_case_insensitive = Void then
@@ -1899,7 +1970,7 @@ feature -- Modification
 			case_insensitive_set: case_insensitive = b
 		end
 
-	set_check_generic_creation_constraint (b: BOOLEAN) is
+	set_check_generic_creation_constraint (b: BOOLEAN)
 			-- Set `check_generic_creation_constraint' to `b'.
 		do
 			if declared_check_generic_creation_constraint = Void then
@@ -1915,7 +1986,7 @@ feature -- Modification
 			check_generic_creation_constraint_set: check_generic_creation_constraint = b
 		end
 
-	set_check_vape (b: BOOLEAN) is
+	set_check_vape (b: BOOLEAN)
 			-- Set `check_vape' to `b'.
 		do
 			if declared_check_vape = Void then
@@ -1931,7 +2002,7 @@ feature -- Modification
 			check_vape_set: check_vape = b
 		end
 
-	set_clean (b: BOOLEAN) is
+	set_clean (b: BOOLEAN)
 			-- Set `clean' to `b'.
 		do
 			if declared_clean = Void then
@@ -1947,7 +2018,7 @@ feature -- Modification
 			clean_set: clean = b
 		end
 
-	set_cls_compliant (b: BOOLEAN) is
+	set_cls_compliant (b: BOOLEAN)
 			-- Set `cls_compliant' to `b'.
 		do
 			if declared_cls_compliant = Void then
@@ -1963,7 +2034,7 @@ feature -- Modification
 			cls_compliant_set: cls_compliant = b
 		end
 
-	set_component (a_value: STRING) is
+	set_component (a_value: STRING)
 			-- Set `component' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -1974,7 +2045,7 @@ feature -- Modification
 			component_set: component = a_value
 		end
 
-	set_console_application (b: BOOLEAN) is
+	set_console_application (b: BOOLEAN)
 			-- Set `console_application' to `b'.
 		do
 			if declared_console_application = Void then
@@ -1990,7 +2061,7 @@ feature -- Modification
 			console_application_set: console_application = b
 		end
 
-	set_create_keyword_extension (b: BOOLEAN) is
+	set_create_keyword_extension (b: BOOLEAN)
 			-- Set `create_keyword_extension' to `b'.
 		do
 			if declared_create_keyword_extension = Void then
@@ -2006,7 +2077,7 @@ feature -- Modification
 			create_keyword_extension_set: create_keyword_extension = b
 		end
 
-	set_culture (a_value: STRING) is
+	set_culture (a_value: STRING)
 			-- Set `culture' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2017,7 +2088,7 @@ feature -- Modification
 			culture_set: culture = a_value
 		end
 
-	set_c_compiler_options (a_value: STRING) is
+	set_c_compiler_options (a_value: STRING)
 			-- Set `c_compiler_options' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2032,7 +2103,7 @@ feature -- Modification
 			c_compiler_options_set: c_compiler_options.has (a_value)
 		end
 
-	set_dead_code_removal (a_value: STRING) is
+	set_dead_code_removal (a_value: STRING)
 			-- Set `dead_code_removal' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2048,7 +2119,7 @@ feature -- Modification
 			dead_code_removal_set: dead_code_removal.has (a_value)
 		end
 
-	set_debug_option (b: BOOLEAN) is
+	set_debug_option (b: BOOLEAN)
 			-- Set `debug_option' to `b'.
 		do
 			if declared_debug_option = Void then
@@ -2064,7 +2135,7 @@ feature -- Modification
 			debug_option_set: debug_option = b
 		end
 
-	set_debug_tag (a_value: STRING) is
+	set_debug_tag (a_value: STRING)
 			-- Set `debug_tag' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2079,7 +2150,7 @@ feature -- Modification
 			debug_tag_set: debug_tag.has (a_value)
 		end
 
-	set_debugger (b: BOOLEAN) is
+	set_debugger (b: BOOLEAN)
 			-- Set `debugger' to `b'.
 		do
 			if declared_debugger = Void then
@@ -2095,7 +2166,7 @@ feature -- Modification
 			debugger_set: debugger = b
 		end
 
-	set_document (a_value: STRING) is
+	set_document (a_value: STRING)
 			-- Set `document' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2106,7 +2177,7 @@ feature -- Modification
 			document_set: document = a_value
 		end
 
-	set_dotnet_naming_convention (b: BOOLEAN) is
+	set_dotnet_naming_convention (b: BOOLEAN)
 			-- Set `dotnet_naming_convention' to `b'.
 		do
 			if declared_dotnet_naming_convention = Void then
@@ -2122,7 +2193,7 @@ feature -- Modification
 			dotnet_naming_convention_set: dotnet_naming_convention = b
 		end
 
-	set_dynamic_runtime (b: BOOLEAN) is
+	set_dynamic_runtime (b: BOOLEAN)
 			-- Set `dynamic_runtime' to `b'.
 		do
 			if declared_dynamic_runtime = Void then
@@ -2138,7 +2209,7 @@ feature -- Modification
 			dynamic_runtime_set: dynamic_runtime = b
 		end
 
-	set_ecf_library (a_value: STRING) is
+	set_ecf_library (a_value: STRING)
 			-- Set `ecf_library' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2149,7 +2220,7 @@ feature -- Modification
 			ecf_library_set: ecf_library = a_value
 		end
 
-	set_enforce_unique_class_names (b: BOOLEAN) is
+	set_enforce_unique_class_names (b: BOOLEAN)
 			-- Set `enforce_unique_class_names' to `b'.
 		do
 			if declared_enforce_unique_class_names = Void then
@@ -2165,7 +2236,7 @@ feature -- Modification
 			enforce_unique_class_names_set: enforce_unique_class_names = b
 		end
 
-	set_exception_trace (b: BOOLEAN) is
+	set_exception_trace (b: BOOLEAN)
 			-- Set `exception_trace' to `b'.
 		do
 			if declared_exception_trace = Void then
@@ -2181,7 +2252,7 @@ feature -- Modification
 			exception_trace_set: exception_trace = b
 		end
 
-	set_exclude (a_value: STRING) is
+	set_exclude (a_value: STRING)
 			-- Set `exclude' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2196,7 +2267,7 @@ feature -- Modification
 			exclude_set: exclude.has (a_value)
 		end
 
-	set_export_option (a_value: STRING) is
+	set_export_option (a_value: STRING)
 			-- Set `export_option' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2207,7 +2278,7 @@ feature -- Modification
 			export_option_set: export_option = a_value
 		end
 
-	set_external_runtime (a_value: STRING) is
+	set_external_runtime (a_value: STRING)
 			-- Set `external_runtime' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2218,7 +2289,7 @@ feature -- Modification
 			external_runtime_set: external_runtime = a_value
 		end
 
-	set_finalize_option (b: BOOLEAN) is
+	set_finalize_option (b: BOOLEAN)
 			-- Set `finalize_option' to `b'.
 		do
 			if declared_finalize_option = Void then
@@ -2234,7 +2305,7 @@ feature -- Modification
 			finalize_option_set: finalize_option = b
 		end
 
-	set_flat_fst_optimization (b: BOOLEAN) is
+	set_flat_fst_optimization (b: BOOLEAN)
 			-- Set `flat_fst_optimization' to `b'.
 		do
 			if declared_flat_fst_optimization = Void then
@@ -2250,7 +2321,7 @@ feature -- Modification
 			flat_fst_optimization_set: flat_fst_optimization = b
 		end
 
-	set_force_32bits (b: BOOLEAN) is
+	set_force_32bits (b: BOOLEAN)
 			-- Set `force_32bits' to `b'.
 		do
 			if declared_force_32bits = Void then
@@ -2266,7 +2337,7 @@ feature -- Modification
 			force_32bits_set: force_32bits = b
 		end
 
-	set_fst_expansion_factor (v: INTEGER) is
+	set_fst_expansion_factor (v: INTEGER)
 			-- Set `fst_expansion_factor' to `v'.
 		require
 			v_positive: v >= 0
@@ -2277,7 +2348,7 @@ feature -- Modification
 			fst_expansion_factor_set: fst_expansion_factor = v
 		end
 
-	set_fst_optimization (b: BOOLEAN) is
+	set_fst_optimization (b: BOOLEAN)
 			-- Set `fst_optimization' to `b'.
 		do
 			if declared_fst_optimization = Void then
@@ -2293,7 +2364,7 @@ feature -- Modification
 			fst_optimization_set: fst_optimization = b
 		end
 
-	set_full_class_checking (b: BOOLEAN) is
+	set_full_class_checking (b: BOOLEAN)
 			-- Set `full_class_checking' to `b'.
 		do
 			if declared_full_class_checking = Void then
@@ -2309,7 +2380,7 @@ feature -- Modification
 			full_class_checking_set: full_class_checking = b
 		end
 
-	set_garbage_collector (a_value: STRING) is
+	set_garbage_collector (a_value: STRING)
 			-- Set `garbage_collector' to `a_value'.
 		require
 			a_value_valid: valid_garbage_collector.has (a_value)
@@ -2320,7 +2391,7 @@ feature -- Modification
 			garbage_collector_set: garbage_collector = a_value
 		end
 
-	set_gc_info (b: BOOLEAN) is
+	set_gc_info (b: BOOLEAN)
 			-- Set `gc_info' to `b'.
 		do
 			if declared_gc_info = Void then
@@ -2336,7 +2407,7 @@ feature -- Modification
 			gc_info_set: gc_info = b
 		end
 
-	set_heap_size (v: INTEGER) is
+	set_heap_size (v: INTEGER)
 			-- Set `heap_size' to `v'.
 		require
 			v_positive: v >= 0
@@ -2347,7 +2418,7 @@ feature -- Modification
 			heap_size_set: heap_size = v
 		end
 
-	set_header (a_value: STRING) is
+	set_header (a_value: STRING)
 			-- Set `header' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2362,7 +2433,7 @@ feature -- Modification
 			header_set: header.has (a_value)
 		end
 
-	set_high_memory_compiler (b: BOOLEAN) is
+	set_high_memory_compiler (b: BOOLEAN)
 			-- Set `high_memory_compiler' to `b'.
 		do
 			if declared_high_memory_compiler = Void then
@@ -2378,7 +2449,7 @@ feature -- Modification
 			high_memory_compiler_set: high_memory_compiler = b
 		end
 
-	set_il_verifiable (b: BOOLEAN) is
+	set_il_verifiable (b: BOOLEAN)
 			-- Set `il_verifiable' to `b'.
 		do
 			if declared_il_verifiable = Void then
@@ -2394,7 +2465,7 @@ feature -- Modification
 			il_verifiable_set: il_verifiable = b
 		end
 
-	set_include (a_value: STRING) is
+	set_include (a_value: STRING)
 			-- Set `include' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2409,7 +2480,7 @@ feature -- Modification
 			include_set: include.has (a_value)
 		end
 
-	set_inlining (a_value: STRING) is
+	set_inlining (a_value: STRING)
 			-- Set `inlining' to `a_value'.
 		require
 			a_value_valid: valid_inlining.has (a_value)
@@ -2424,7 +2495,7 @@ feature -- Modification
 			inlining_set: inlining.has (a_value)
 		end
 
-	set_inlining_size (v: INTEGER) is
+	set_inlining_size (v: INTEGER)
 			-- Set `inlining_size' to `v'.
 		require
 			v_positive: v >= 0
@@ -2435,7 +2506,7 @@ feature -- Modification
 			inlining_size_set: inlining_size = v
 		end
 
-	set_jumps_optimization (b: BOOLEAN) is
+	set_jumps_optimization (b: BOOLEAN)
 			-- Set `jumps_optimization' to `b'.
 		do
 			if declared_jumps_optimization = Void then
@@ -2451,7 +2522,7 @@ feature -- Modification
 			jumps_optimization_set: jumps_optimization = b
 		end
 
-	set_layout (a_value: STRING) is
+	set_layout (a_value: STRING)
 			-- Set `layout' to `a_value'.
 		require
 			a_value_valid: valid_layout.has (a_value)
@@ -2462,7 +2533,7 @@ feature -- Modification
 			layout_set: layout = a_value
 		end
 
-	set_layout_optimization (b: BOOLEAN) is
+	set_layout_optimization (b: BOOLEAN)
 			-- Set `layout_optimization' to `b'.
 		do
 			if declared_layout_optimization = Void then
@@ -2478,7 +2549,7 @@ feature -- Modification
 			layout_optimization_set: layout_optimization = b
 		end
 
-	set_leaves_optimization (b: BOOLEAN) is
+	set_leaves_optimization (b: BOOLEAN)
 			-- Set `leaves_optimization' to `b'.
 		do
 			if declared_leaves_optimization = Void then
@@ -2494,7 +2565,7 @@ feature -- Modification
 			leaves_optimization_set: leaves_optimization = b
 		end
 
-	set_line_generation (b: BOOLEAN) is
+	set_line_generation (b: BOOLEAN)
 			-- Set `line_generation' to `b'.
 		do
 			if declared_line_generation = Void then
@@ -2510,7 +2581,7 @@ feature -- Modification
 			line_generation_set: line_generation = b
 		end
 
-	set_link (a_value: STRING) is
+	set_link (a_value: STRING)
 			-- Set `link' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2525,7 +2596,7 @@ feature -- Modification
 			link_set: link.has (a_value)
 		end
 
-	set_linker (a_value: STRING) is
+	set_linker (a_value: STRING)
 			-- Set `linker' to `a_value'.
 		require
 			a_value_valid: valid_linker.has (a_value)
@@ -2536,7 +2607,7 @@ feature -- Modification
 			linker_set: linker = a_value
 		end
 
-	set_linux_fpu_double_precision (b: BOOLEAN) is
+	set_linux_fpu_double_precision (b: BOOLEAN)
 			-- Set `linux_fpu_double_precision' to `b'.
 		do
 			if declared_linux_fpu_double_precision = Void then
@@ -2552,7 +2623,7 @@ feature -- Modification
 			linux_fpu_double_precision_set: linux_fpu_double_precision = b
 		end
 
-	set_manifest_string_trace (b: BOOLEAN) is
+	set_manifest_string_trace (b: BOOLEAN)
 			-- Set `manifest_string_trace' to `b'.
 		do
 			if declared_manifest_string_trace = Void then
@@ -2568,7 +2639,7 @@ feature -- Modification
 			manifest_string_trace_set: manifest_string_trace = b
 		end
 
-	set_map (b: BOOLEAN) is
+	set_map (b: BOOLEAN)
 			-- Set `map' to `b'.
 		do
 			if declared_map = Void then
@@ -2584,7 +2655,7 @@ feature -- Modification
 			map_set: map = b
 		end
 
-	set_metadata_cache_path (a_value: STRING) is
+	set_metadata_cache_path (a_value: STRING)
 			-- Set `metadata_cache_path' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2595,7 +2666,7 @@ feature -- Modification
 			metadata_cache_path_set: metadata_cache_path = a_value
 		end
 
-	set_msil_assembly_compatibility (a_value: STRING) is
+	set_msil_assembly_compatibility (a_value: STRING)
 			-- Set `msil_assembly_compatibility' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2606,7 +2677,7 @@ feature -- Modification
 			msil_assembly_compatibility_set: msil_assembly_compatibility = a_value
 		end
 
-	set_msil_classes_per_module (v: INTEGER) is
+	set_msil_classes_per_module (v: INTEGER)
 			-- Set `msil_classes_per_module' to `v'.
 		require
 			v_positive: v > 0
@@ -2617,7 +2688,7 @@ feature -- Modification
 			msil_classes_per_module_set: msil_classes_per_module = v
 		end
 
-	set_msil_clr_version (a_value: STRING) is
+	set_msil_clr_version (a_value: STRING)
 			-- Set `msil_clr_version' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2628,7 +2699,7 @@ feature -- Modification
 			msil_clr_version_set: msil_clr_version = a_value
 		end
 
-	set_msil_culture (a_value: STRING) is
+	set_msil_culture (a_value: STRING)
 			-- Set `msil_culture' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2639,7 +2710,7 @@ feature -- Modification
 			msil_culture_set: msil_culture = a_value
 		end
 
-	set_msil_generation (b: BOOLEAN) is
+	set_msil_generation (b: BOOLEAN)
 			-- Set `msil_generation' to `b'.
 		do
 			if declared_msil_generation = Void then
@@ -2655,7 +2726,7 @@ feature -- Modification
 			msil_generation_set: msil_generation = b
 		end
 
-	set_msil_generation_version (a_value: STRING) is
+	set_msil_generation_version (a_value: STRING)
 			-- Set `msil_generation_version' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2666,7 +2737,7 @@ feature -- Modification
 			msil_generation_version_set: msil_generation_version = a_value
 		end
 
-	set_msil_key_file_name (a_value: STRING) is
+	set_msil_key_file_name (a_value: STRING)
 			-- Set `msil_key_file_name' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2677,7 +2748,7 @@ feature -- Modification
 			msil_key_file_name_set: msil_key_file_name = a_value
 		end
 
-	set_msil_use_optimized_precompile (b: BOOLEAN) is
+	set_msil_use_optimized_precompile (b: BOOLEAN)
 			-- Set `msil_use_optimized_precompile' to `b'.
 		do
 			if declared_msil_use_optimized_precompile = Void then
@@ -2693,7 +2764,7 @@ feature -- Modification
 			msil_use_optimized_precompile_set: msil_use_optimized_precompile = b
 		end
 
-	set_multithreaded (b: BOOLEAN) is
+	set_multithreaded (b: BOOLEAN)
 			-- Set `multithreaded' to `b'.
 		do
 			if declared_multithreaded = Void then
@@ -2709,7 +2780,7 @@ feature -- Modification
 			multithreaded_set: multithreaded = b
 		end
 
-	set_namespace (a_value: STRING) is
+	set_namespace (a_value: STRING)
 			-- Set `namespace' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2720,7 +2791,7 @@ feature -- Modification
 			namespace_set: namespace = a_value
 		end
 
-	set_no_default_lib (b: BOOLEAN) is
+	set_no_default_lib (b: BOOLEAN)
 			-- Set `no_default_lib' to `b'.
 		do
 			if declared_no_default_lib = Void then
@@ -2736,7 +2807,7 @@ feature -- Modification
 			no_default_lib_set: no_default_lib = b
 		end
 
-	set_old_verbatim_strings (b: BOOLEAN) is
+	set_old_verbatim_strings (b: BOOLEAN)
 			-- Set `old_verbatim_strings' to `b'.
 		do
 			if declared_old_verbatim_strings = Void then
@@ -2752,7 +2823,7 @@ feature -- Modification
 			old_verbatim_strings_set: old_verbatim_strings = b
 		end
 
-	set_override_cluster (a_value: STRING) is
+	set_override_cluster (a_value: STRING)
 			-- Set `override_cluster' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2768,7 +2839,7 @@ feature -- Modification
 
 		end
 
-	set_portable_code_generation (b: BOOLEAN) is
+	set_portable_code_generation (b: BOOLEAN)
 			-- Set `portable_code_generation' to `b'.
 		do
 			if declared_portable_code_generation = Void then
@@ -2784,7 +2855,7 @@ feature -- Modification
 			portable_code_generation_set: portable_code_generation = b
 		end
 
-	set_precompiled (a_value: STRING) is
+	set_precompiled (a_value: STRING)
 			-- Set `precompiled' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2795,7 +2866,7 @@ feature -- Modification
 			precompiled_set: precompiled = a_value
 		end
 
-	set_prefix_option (a_value: STRING) is
+	set_prefix_option (a_value: STRING)
 			-- Set `prefix_option' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2806,7 +2877,7 @@ feature -- Modification
 			prefix_option_set: prefix_option = a_value
 		end
 
-	set_profile (b: BOOLEAN) is
+	set_profile (b: BOOLEAN)
 			-- Set `profile' to `b'.
 		do
 			if declared_profile = Void then
@@ -2822,7 +2893,7 @@ feature -- Modification
 			profile_set: profile = b
 		end
 
-	set_public_key_token (a_value: STRING) is
+	set_public_key_token (a_value: STRING)
 			-- Set `public_key_token' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2833,7 +2904,7 @@ feature -- Modification
 			public_key_token_set: public_key_token = a_value
 		end
 
-	set_read_only (b: BOOLEAN) is
+	set_read_only (b: BOOLEAN)
 			-- Set `read_only' to `b'.
 		do
 			if declared_read_only = Void then
@@ -2849,7 +2920,7 @@ feature -- Modification
 			read_only_set: read_only = b
 		end
 
-	set_recursive (b: BOOLEAN) is
+	set_recursive (b: BOOLEAN)
 			-- Set `recursive' to `b'.
 		do
 			if declared_recursive = Void then
@@ -2865,7 +2936,7 @@ feature -- Modification
 			recursive_set: recursive = b
 		end
 
-	set_reloads_optimization (b: BOOLEAN) is
+	set_reloads_optimization (b: BOOLEAN)
 			-- Set `reloads_optimization' to `b'.
 		do
 			if declared_reloads_optimization = Void then
@@ -2881,7 +2952,7 @@ feature -- Modification
 			reloads_optimization_set: reloads_optimization = b
 		end
 
-	set_shared_library_definition (a_value: STRING) is
+	set_shared_library_definition (a_value: STRING)
 			-- Set `shared_library_definition' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2892,7 +2963,7 @@ feature -- Modification
 			shared_library_definition_set: shared_library_definition = a_value
 		end
 
-	set_split (b: BOOLEAN) is
+	set_split (b: BOOLEAN)
 			-- Set `split' to `b'.
 		do
 			if declared_split = Void then
@@ -2908,7 +2979,7 @@ feature -- Modification
 			split_set: split = b
 		end
 
-	set_stack_size (v: INTEGER) is
+	set_stack_size (v: INTEGER)
 			-- Set `stack_size' to `v'.
 		require
 			v_positive: v >= 0
@@ -2919,7 +2990,7 @@ feature -- Modification
 			stack_size_set: stack_size = v
 		end
 
-	set_storable (b: BOOLEAN) is
+	set_storable (b: BOOLEAN)
 			-- Set `storable' to `b'.
 		do
 			if declared_storable = Void then
@@ -2935,7 +3006,7 @@ feature -- Modification
 			storable_set: storable = b
 		end
 
-	set_storable_filename (a_value: STRING) is
+	set_storable_filename (a_value: STRING)
 			-- Set `storable_filename' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -2946,7 +3017,7 @@ feature -- Modification
 			storable_filename_set: storable_filename = a_value
 		end
 
-	set_strip_option (b: BOOLEAN) is
+	set_strip_option (b: BOOLEAN)
 			-- Set `strip_option' to `b'.
 		do
 			if declared_strip_option = Void then
@@ -2962,7 +3033,18 @@ feature -- Modification
 			strip_option_set: strip_option = b
 		end
 
-	set_target (a_value: STRING) is
+	set_syntax (a_value: STRING)
+			-- Set `syntax' to `a_value'.
+		require
+			a_value_valid: valid_syntax.has (a_value)
+		do
+			declared_syntax := a_value
+		ensure
+			syntax_declared: is_syntax_declared
+			syntax_set: target = a_value
+		end
+
+	set_target (a_value: STRING)
 			-- Set `target' to `a_value'.
 		require
 			a_value_valid: valid_target.has (a_value)
@@ -2973,7 +3055,7 @@ feature -- Modification
 			target_set: target = a_value
 		end
 
-	set_trace (b: BOOLEAN) is
+	set_trace (b: BOOLEAN)
 			-- Set `trace' to `b'.
 		do
 			if declared_trace = Void then
@@ -2989,7 +3071,7 @@ feature -- Modification
 			trace_set: trace = b
 		end
 
-	set_use_cluster_name_as_namespace (b: BOOLEAN) is
+	set_use_cluster_name_as_namespace (b: BOOLEAN)
 			-- Set `use_cluster_name_as_namespace' to `b'.
 		do
 			if declared_use_cluster_name_as_namespace = Void then
@@ -3005,7 +3087,7 @@ feature -- Modification
 			use_cluster_name_as_namespace_set: use_cluster_name_as_namespace = b
 		end
 
-	set_use_full_cluster_name_as_namespace (b: BOOLEAN) is
+	set_use_full_cluster_name_as_namespace (b: BOOLEAN)
 			-- Set `use_full_cluster_name_as_namespace' to `b'.
 		do
 			if declared_use_full_cluster_name_as_namespace = Void then
@@ -3021,7 +3103,7 @@ feature -- Modification
 			use_full_cluster_name_as_namespace_set: use_full_cluster_name_as_namespace = b
 		end
 
-	set_verbose (b: BOOLEAN) is
+	set_verbose (b: BOOLEAN)
 			-- Set `verbose' to `b'.
 		do
 			if declared_verbose = Void then
@@ -3037,7 +3119,7 @@ feature -- Modification
 			verbose_set: verbose = b
 		end
 
-	set_version (a_value: STRING) is
+	set_version (a_value: STRING)
 			-- Set `version' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -3048,7 +3130,7 @@ feature -- Modification
 			version_set: version = a_value
 		end
 
-	set_visible_filename (a_value: STRING) is
+	set_visible_filename (a_value: STRING)
 			-- Set `visible_filename' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -3059,7 +3141,19 @@ feature -- Modification
 			visible_filename_set: visible_filename = a_value
 		end
 
-	set_warning (a_value: STRING) is
+	set_void_safety (a_value: STRING)
+			-- Set `void_safety' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+			a_value_valid: valid_void_safety.has (a_value)
+		do
+			declared_void_safety := a_value
+		ensure
+			void_safety_declared: is_void_safety_declared
+			void_safety_set: void_safety = a_value
+		end
+
+	set_warning (a_value: STRING)
 			-- Set `warning' to `a_value'.
 		require
 			a_value_valid: valid_warning.has (a_value)
@@ -3070,7 +3164,7 @@ feature -- Modification
 			warning_set: warning = a_value
 		end
 
-	set_wedit (b: BOOLEAN) is
+	set_wedit (b: BOOLEAN)
 			-- Set `wedit' to `b'.
 		do
 			if declared_wedit = Void then
@@ -3088,7 +3182,7 @@ feature -- Modification
 
 feature -- Status setting
 
-	unset_abstract is
+	unset_abstract
 			-- Unset `abstract'.
 		do
 			declared_abstract := Void
@@ -3096,7 +3190,7 @@ feature -- Status setting
 			abstract_not_declared: not is_abstract_declared
 		end
 
-	unset_address_expression is
+	unset_address_expression
 			-- Unset `address_expression'.
 		do
 			declared_address_expression := Void
@@ -3104,7 +3198,7 @@ feature -- Status setting
 			address_expression_not_declared: not is_address_expression_declared
 		end
 
-	unset_arguments is
+	unset_arguments
 			-- Unset `arguments'.
 		do
 			declared_arguments := Void
@@ -3112,7 +3206,7 @@ feature -- Status setting
 			arguments_not_declared: not is_arguments_declared
 		end
 
-	unset_array_optimization is
+	unset_array_optimization
 			-- Unset `array_optimization'.
 		do
 			declared_array_optimization := Void
@@ -3120,7 +3214,7 @@ feature -- Status setting
 			array_optimization_not_declared: not is_array_optimization_declared
 		end
 
-	unset_assembly is
+	unset_assembly
 			-- Unset `assembly'.
 		do
 			declared_assembly := Void
@@ -3128,7 +3222,7 @@ feature -- Status setting
 			assembly_not_declared: not is_assembly_declared
 		end
 
-	unset_assertion is
+	unset_assertion
 			-- Unset `assertion'.
 		do
 			declared_assertion := Void
@@ -3136,7 +3230,15 @@ feature -- Status setting
 			assertion_not_declared: not is_assertion_declared
 		end
 
-	unset_automatic_backup is
+	unset_attached_by_default
+			-- Unset 'attached_by_default'
+		do
+			declared_attached_by_default := Void
+		ensure
+			attached_by_default_not_declared: not is_attached_by_default_declared
+		end
+		
+	unset_automatic_backup
 			-- Unset `automatic_backup'.
 		do
 			declared_automatic_backup := Void
@@ -3144,7 +3246,7 @@ feature -- Status setting
 			automatic_backup_not_declared: not is_automatic_backup_declared
 		end
 
-	unset_callback is
+	unset_callback
 			-- Unset `callback'.
 		do
 			declared_callback := Void
@@ -3152,7 +3254,7 @@ feature -- Status setting
 			callback_not_declared: not is_callback_declared
 		end
 
-	unset_case_insensitive is
+	unset_case_insensitive
 			-- Unset `case_insensitive'.
 		do
 			declared_case_insensitive := Void
@@ -3160,7 +3262,7 @@ feature -- Status setting
 			case_insensitive_not_declared: not is_case_insensitive_declared
 		end
 
-	unset_check_generic_creation_constraint is
+	unset_check_generic_creation_constraint
 			-- Unset `check_generic_creation_constraint'.
 		do
 			declared_check_generic_creation_constraint := Void
@@ -3168,7 +3270,7 @@ feature -- Status setting
 			check_generic_creation_constraint_not_declared: not is_check_generic_creation_constraint_declared
 		end
 
-	unset_check_vape is
+	unset_check_vape
 			-- Unset `check_vape'.
 		do
 			declared_check_vape := Void
@@ -3176,7 +3278,7 @@ feature -- Status setting
 			check_vape_not_declared: not is_check_vape_declared
 		end
 
-	unset_clean is
+	unset_clean
 			-- Unset `clean'.
 		do
 			declared_clean := Void
@@ -3184,7 +3286,7 @@ feature -- Status setting
 			clean_not_declared: not is_clean_declared
 		end
 
-	unset_cls_compliant is
+	unset_cls_compliant
 			-- Unset `cls_compliant'.
 		do
 			declared_cls_compliant := Void
@@ -3192,7 +3294,7 @@ feature -- Status setting
 			cls_compliant_not_declared: not is_cls_compliant_declared
 		end
 
-	unset_component is
+	unset_component
 			-- Unset `component'.
 		do
 			declared_component := Void
@@ -3200,7 +3302,7 @@ feature -- Status setting
 			component_not_declared: not is_component_declared
 		end
 
-	unset_console_application is
+	unset_console_application
 			-- Unset `console_application'.
 		do
 			declared_console_application := Void
@@ -3208,7 +3310,7 @@ feature -- Status setting
 			console_application_not_declared: not is_console_application_declared
 		end
 
-	unset_create_keyword_extension is
+	unset_create_keyword_extension
 			-- Unset `create_keyword_extension'.
 		do
 			declared_create_keyword_extension := Void
@@ -3216,7 +3318,7 @@ feature -- Status setting
 			create_keyword_extension_not_declared: not is_create_keyword_extension_declared
 		end
 
-	unset_culture is
+	unset_culture
 			-- Unset `culture'.
 		do
 			declared_culture := Void
@@ -3224,7 +3326,7 @@ feature -- Status setting
 			culture_not_declared: not is_culture_declared
 		end
 
-	unset_c_compiler_options is
+	unset_c_compiler_options
 			-- Unset `c_compiler_options'.
 		do
 			declared_c_compiler_options := Void
@@ -3232,7 +3334,7 @@ feature -- Status setting
 			c_compiler_options_not_declared: not is_c_compiler_options_declared
 		end
 
-	unset_dead_code_removal is
+	unset_dead_code_removal
 			-- Unset `dead_code_removal'.
 		do
 			declared_dead_code_removal := Void
@@ -3240,7 +3342,7 @@ feature -- Status setting
 			dead_code_removal_not_declared: not is_dead_code_removal_declared
 		end
 
-	unset_debug_option is
+	unset_debug_option
 			-- Unset `debug_option'.
 		do
 			declared_debug_option := Void
@@ -3248,7 +3350,7 @@ feature -- Status setting
 			debug_option_not_declared: not is_debug_option_declared
 		end
 
-	unset_debug_tag is
+	unset_debug_tag
 			-- Unset `debug_tag'.
 		do
 			declared_debug_tag := Void
@@ -3256,7 +3358,7 @@ feature -- Status setting
 			debug_tag_not_declared: not is_debug_tag_declared
 		end
 
-	unset_debugger is
+	unset_debugger
 			-- Unset `debugger'.
 		do
 			declared_debugger := Void
@@ -3264,7 +3366,7 @@ feature -- Status setting
 			debugger_not_declared: not is_debugger_declared
 		end
 
-	unset_document is
+	unset_document
 			-- Unset `document'.
 		do
 			declared_document := Void
@@ -3272,7 +3374,7 @@ feature -- Status setting
 			document_not_declared: not is_document_declared
 		end
 
-	unset_dotnet_naming_convention is
+	unset_dotnet_naming_convention
 			-- Unset `dotnet_naming_convention'.
 		do
 			declared_dotnet_naming_convention := Void
@@ -3280,7 +3382,7 @@ feature -- Status setting
 			dotnet_naming_convention_not_declared: not is_dotnet_naming_convention_declared
 		end
 
-	unset_dynamic_runtime is
+	unset_dynamic_runtime
 			-- Unset `dynamic_runtime'.
 		do
 			declared_dynamic_runtime := Void
@@ -3288,7 +3390,7 @@ feature -- Status setting
 			dynamic_runtime_not_declared: not is_dynamic_runtime_declared
 		end
 
-	unset_ecf_library is
+	unset_ecf_library
 			-- Unset `ecf_library'.
 		do
 			declared_ecf_library := Void
@@ -3296,7 +3398,7 @@ feature -- Status setting
 			ecf_library_not_declared: not is_ecf_library_declared
 		end
 
-	unset_enforce_unique_class_names is
+	unset_enforce_unique_class_names
 			-- Unset `enforce_unique_class_names'.
 		do
 			declared_enforce_unique_class_names := Void
@@ -3304,7 +3406,7 @@ feature -- Status setting
 			enforce_unique_class_names_not_declared: not is_enforce_unique_class_names_declared
 		end
 
-	unset_exception_trace is
+	unset_exception_trace
 			-- Unset `exception_trace'.
 		do
 			declared_exception_trace := Void
@@ -3312,7 +3414,7 @@ feature -- Status setting
 			exception_trace_not_declared: not is_exception_trace_declared
 		end
 
-	unset_exclude is
+	unset_exclude
 			-- Unset `exclude'.
 		do
 			declared_exclude := Void
@@ -3320,7 +3422,7 @@ feature -- Status setting
 			exclude_not_declared: not is_exclude_declared
 		end
 
-	unset_export_option is
+	unset_export_option
 			-- Unset `export_option'.
 		do
 			declared_export_option := Void
@@ -3328,7 +3430,7 @@ feature -- Status setting
 			export_option_not_declared: not is_export_option_declared
 		end
 
-	unset_external_runtime is
+	unset_external_runtime
 			-- Unset `external_runtime'.
 		do
 			declared_external_runtime := Void
@@ -3336,7 +3438,7 @@ feature -- Status setting
 			external_runtime_not_declared: not is_external_runtime_declared
 		end
 
-	unset_finalize_option is
+	unset_finalize_option
 			-- Unset `finalize_option'.
 		do
 			declared_finalize_option := Void
@@ -3344,7 +3446,7 @@ feature -- Status setting
 			finalize_option_not_declared: not is_finalize_option_declared
 		end
 
-	unset_flat_fst_optimization is
+	unset_flat_fst_optimization
 			-- Unset `flat_fst_optimization'.
 		do
 			declared_flat_fst_optimization := Void
@@ -3352,7 +3454,7 @@ feature -- Status setting
 			flat_fst_optimization_not_declared: not is_flat_fst_optimization_declared
 		end
 
-	unset_force_32bits is
+	unset_force_32bits
 			-- Unset `force_32bits'.
 		do
 			declared_force_32bits := Void
@@ -3360,7 +3462,7 @@ feature -- Status setting
 			force_32bits_not_declared: not is_force_32bits_declared
 		end
 
-	unset_fst_expansion_factor is
+	unset_fst_expansion_factor
 			-- Unset `fst_expansion_factor'.
 		do
 			declared_fst_expansion_factor := -1
@@ -3368,7 +3470,7 @@ feature -- Status setting
 			fst_expansion_factor_not_declared: not is_fst_expansion_factor_declared
 		end
 
-	unset_fst_optimization is
+	unset_fst_optimization
 			-- Unset `fst_optimization'.
 		do
 			declared_fst_optimization := Void
@@ -3376,7 +3478,7 @@ feature -- Status setting
 			fst_optimization_not_declared: not is_fst_optimization_declared
 		end
 
-	unset_full_class_checking is
+	unset_full_class_checking
 			-- Unset `full_class_checking'.
 		do
 			declared_full_class_checking := Void
@@ -3384,7 +3486,7 @@ feature -- Status setting
 			full_class_checking_not_declared: not is_full_class_checking_declared
 		end
 
-	unset_garbage_collector is
+	unset_garbage_collector
 			-- Unset `garbage_collector'.
 		do
 			declared_garbage_collector := Void
@@ -3392,7 +3494,7 @@ feature -- Status setting
 			garbage_collector_not_declared: not is_garbage_collector_declared
 		end
 
-	unset_gc_info is
+	unset_gc_info
 			-- Unset `gc_info'.
 		do
 			declared_gc_info := Void
@@ -3400,7 +3502,7 @@ feature -- Status setting
 			gc_info_not_declared: not is_gc_info_declared
 		end
 
-	unset_heap_size is
+	unset_heap_size
 			-- Unset `heap_size'.
 		do
 			declared_heap_size := -1
@@ -3408,7 +3510,7 @@ feature -- Status setting
 			heap_size_not_declared: not is_heap_size_declared
 		end
 
-	unset_header is
+	unset_header
 			-- Unset `header'.
 		do
 			declared_header := Void
@@ -3416,7 +3518,7 @@ feature -- Status setting
 			header_not_declared: not is_header_declared
 		end
 
-	unset_high_memory_compiler is
+	unset_high_memory_compiler
 			-- Unset `high_memory_compiler'.
 		do
 			declared_high_memory_compiler := Void
@@ -3424,7 +3526,7 @@ feature -- Status setting
 			high_memory_compiler_not_declared: not is_high_memory_compiler_declared
 		end
 
-	unset_il_verifiable is
+	unset_il_verifiable
 			-- Unset `il_verifiable'.
 		do
 			declared_il_verifiable := Void
@@ -3432,7 +3534,7 @@ feature -- Status setting
 			il_verifiable_not_declared: not is_il_verifiable_declared
 		end
 
-	unset_include is
+	unset_include
 			-- Unset `include'.
 		do
 			declared_include := Void
@@ -3440,7 +3542,7 @@ feature -- Status setting
 			include_not_declared: not is_include_declared
 		end
 
-	unset_inlining is
+	unset_inlining
 			-- Unset `inlining'.
 		do
 			declared_inlining := Void
@@ -3448,7 +3550,7 @@ feature -- Status setting
 			inlining_not_declared: not is_inlining_declared
 		end
 
-	unset_inlining_size is
+	unset_inlining_size
 			-- Unset `inlining_size'.
 		do
 			declared_inlining_size := -1
@@ -3456,7 +3558,7 @@ feature -- Status setting
 			inlining_size_not_declared: not is_inlining_size_declared
 		end
 
-	unset_jumps_optimization is
+	unset_jumps_optimization
 			-- Unset `jumps_optimization'.
 		do
 			declared_jumps_optimization := Void
@@ -3464,7 +3566,7 @@ feature -- Status setting
 			jumps_optimization_not_declared: not is_jumps_optimization_declared
 		end
 
-	unset_layout is
+	unset_layout
 			-- Unset `layout'.
 		do
 			declared_layout := Void
@@ -3472,7 +3574,7 @@ feature -- Status setting
 			layout_not_declared: not is_layout_declared
 		end
 
-	unset_layout_optimization is
+	unset_layout_optimization
 			-- Unset `layout_optimization'.
 		do
 			declared_layout_optimization := Void
@@ -3480,7 +3582,7 @@ feature -- Status setting
 			layout_optimization_not_declared: not is_layout_optimization_declared
 		end
 
-	unset_leaves_optimization is
+	unset_leaves_optimization
 			-- Unset `leaves_optimization'.
 		do
 			declared_leaves_optimization := Void
@@ -3488,7 +3590,7 @@ feature -- Status setting
 			leaves_optimization_not_declared: not is_leaves_optimization_declared
 		end
 
-	unset_line_generation is
+	unset_line_generation
 			-- Unset `line_generation'.
 		do
 			declared_line_generation := Void
@@ -3496,7 +3598,7 @@ feature -- Status setting
 			line_generation_not_declared: not is_line_generation_declared
 		end
 
-	unset_link is
+	unset_link
 			-- Unset `link'.
 		do
 			declared_link := Void
@@ -3504,7 +3606,7 @@ feature -- Status setting
 			link_not_declared: not is_link_declared
 		end
 
-	unset_linker is
+	unset_linker
 			-- Unset `linker'.
 		do
 			declared_linker := Void
@@ -3512,7 +3614,7 @@ feature -- Status setting
 			linker_not_declared: not is_linker_declared
 		end
 
-	unset_linux_fpu_double_precision is
+	unset_linux_fpu_double_precision
 			-- Unset `linux_fpu_double_precision'.
 		do
 			declared_linux_fpu_double_precision := Void
@@ -3520,7 +3622,7 @@ feature -- Status setting
 			linux_fpu_double_precision_not_declared: not is_linux_fpu_double_precision_declared
 		end
 
-	unset_manifest_string_trace is
+	unset_manifest_string_trace
 			-- Unset `manifest_string_trace'.
 		do
 			declared_manifest_string_trace := Void
@@ -3528,7 +3630,7 @@ feature -- Status setting
 			manifest_string_trace_not_declared: not is_manifest_string_trace_declared
 		end
 
-	unset_map is
+	unset_map
 			-- Unset `map'.
 		do
 			declared_map := Void
@@ -3536,7 +3638,7 @@ feature -- Status setting
 			map_not_declared: not is_map_declared
 		end
 
-	unset_metadata_cache_path is
+	unset_metadata_cache_path
 			-- Unset `metadata_cache_path'.
 		do
 			declared_metadata_cache_path := Void
@@ -3544,7 +3646,7 @@ feature -- Status setting
 			metadata_cache_path_not_declared: not is_metadata_cache_path_declared
 		end
 
-	unset_msil_assembly_compatibility is
+	unset_msil_assembly_compatibility
 			-- Unset `msil_assembly_compatibility'.
 		do
 			declared_msil_assembly_compatibility := Void
@@ -3552,7 +3654,7 @@ feature -- Status setting
 			msil_assembly_compatibility_not_declared: not is_msil_assembly_compatibility_declared
 		end
 
-	unset_msil_classes_per_module is
+	unset_msil_classes_per_module
 			-- Unset `msil_classes_per_module'.
 		do
 			declared_msil_classes_per_module := -1
@@ -3560,7 +3662,7 @@ feature -- Status setting
 			msil_classes_per_module_not_declared: not is_msil_classes_per_module_declared
 		end
 
-	unset_msil_clr_version is
+	unset_msil_clr_version
 			-- Unset `msil_clr_version'.
 		do
 			declared_msil_clr_version := Void
@@ -3568,7 +3670,7 @@ feature -- Status setting
 			msil_clr_version_not_declared: not is_msil_clr_version_declared
 		end
 
-	unset_msil_culture is
+	unset_msil_culture
 			-- Unset `msil_culture'.
 		do
 			declared_msil_culture := Void
@@ -3576,7 +3678,7 @@ feature -- Status setting
 			msil_culture_not_declared: not is_msil_culture_declared
 		end
 
-	unset_msil_generation is
+	unset_msil_generation
 			-- Unset `msil_generation'.
 		do
 			declared_msil_generation := Void
@@ -3584,7 +3686,7 @@ feature -- Status setting
 			msil_generation_not_declared: not is_msil_generation_declared
 		end
 
-	unset_msil_generation_version is
+	unset_msil_generation_version
 			-- Unset `msil_generation_version'.
 		do
 			declared_msil_generation_version := Void
@@ -3592,7 +3694,7 @@ feature -- Status setting
 			msil_generation_version_not_declared: not is_msil_generation_version_declared
 		end
 
-	unset_msil_key_file_name is
+	unset_msil_key_file_name
 			-- Unset `msil_key_file_name'.
 		do
 			declared_msil_key_file_name := Void
@@ -3600,7 +3702,7 @@ feature -- Status setting
 			msil_key_file_name_not_declared: not is_msil_key_file_name_declared
 		end
 
-	unset_msil_use_optimized_precompile is
+	unset_msil_use_optimized_precompile
 			-- Unset `msil_use_optimized_precompile'.
 		do
 			declared_msil_use_optimized_precompile := Void
@@ -3608,7 +3710,7 @@ feature -- Status setting
 			msil_use_optimized_precompile_not_declared: not is_msil_use_optimized_precompile_declared
 		end
 
-	unset_multithreaded is
+	unset_multithreaded
 			-- Unset `multithreaded'.
 		do
 			declared_multithreaded := Void
@@ -3616,7 +3718,7 @@ feature -- Status setting
 			multithreaded_not_declared: not is_multithreaded_declared
 		end
 
-	unset_namespace is
+	unset_namespace
 			-- Unset `namespace'.
 		do
 			declared_namespace := Void
@@ -3624,7 +3726,7 @@ feature -- Status setting
 			namespace_not_declared: not is_namespace_declared
 		end
 
-	unset_no_default_lib is
+	unset_no_default_lib
 			-- Unset `no_default_lib'.
 		do
 			declared_no_default_lib := Void
@@ -3632,7 +3734,7 @@ feature -- Status setting
 			no_default_lib_not_declared: not is_no_default_lib_declared
 		end
 
-	unset_old_verbatim_strings is
+	unset_old_verbatim_strings
 			-- Unset `old_verbatim_strings'.
 		do
 			declared_old_verbatim_strings := Void
@@ -3640,7 +3742,7 @@ feature -- Status setting
 			old_verbatim_strings_not_declared: not is_old_verbatim_strings_declared
 		end
 
-	unset_override_cluster is
+	unset_override_cluster
 			-- Unset `override_cluster'.
 		do
 			declared_override_cluster := Void
@@ -3648,7 +3750,7 @@ feature -- Status setting
 			override_cluster_not_declared: not is_override_cluster_declared
 		end
 
-	unset_portable_code_generation is
+	unset_portable_code_generation
 			-- Unset `portable_code_generation'.
 		do
 			declared_portable_code_generation := Void
@@ -3656,7 +3758,7 @@ feature -- Status setting
 			portable_code_generation_not_declared: not is_portable_code_generation_declared
 		end
 
-	unset_precompiled is
+	unset_precompiled
 			-- Unset `precompiled'.
 		do
 			declared_precompiled := Void
@@ -3664,7 +3766,7 @@ feature -- Status setting
 			precompiled_not_declared: not is_precompiled_declared
 		end
 
-	unset_prefix_option is
+	unset_prefix_option
 			-- Unset `prefix_option'.
 		do
 			declared_prefix_option := Void
@@ -3672,7 +3774,7 @@ feature -- Status setting
 			prefix_option_not_declared: not is_prefix_option_declared
 		end
 
-	unset_profile is
+	unset_profile
 			-- Unset `profile'.
 		do
 			declared_profile := Void
@@ -3680,7 +3782,7 @@ feature -- Status setting
 			profile_not_declared: not is_profile_declared
 		end
 
-	unset_public_key_token is
+	unset_public_key_token
 			-- Unset `public_key_token'.
 		do
 			declared_public_key_token := Void
@@ -3688,7 +3790,7 @@ feature -- Status setting
 			public_key_token_not_declared: not is_public_key_token_declared
 		end
 
-	unset_read_only is
+	unset_read_only
 			-- Unset `read_only'.
 		do
 			declared_read_only := Void
@@ -3696,7 +3798,7 @@ feature -- Status setting
 			read_only_not_declared: not is_read_only_declared
 		end
 
-	unset_recursive is
+	unset_recursive
 			-- Unset `recursive'.
 		do
 			declared_recursive := Void
@@ -3704,7 +3806,7 @@ feature -- Status setting
 			recursive_not_declared: not is_recursive_declared
 		end
 
-	unset_reloads_optimization is
+	unset_reloads_optimization
 			-- Unset `reloads_optimization'.
 		do
 			declared_reloads_optimization := Void
@@ -3712,7 +3814,7 @@ feature -- Status setting
 			reloads_optimization_not_declared: not is_reloads_optimization_declared
 		end
 
-	unset_shared_library_definition is
+	unset_shared_library_definition
 			-- Unset `shared_library_definition'.
 		do
 			declared_shared_library_definition := Void
@@ -3720,7 +3822,7 @@ feature -- Status setting
 			shared_library_definition_not_declared: not is_shared_library_definition_declared
 		end
 
-	unset_split is
+	unset_split
 			-- Unset `split'.
 		do
 			declared_split := Void
@@ -3728,7 +3830,7 @@ feature -- Status setting
 			split_not_declared: not is_split_declared
 		end
 
-	unset_stack_size is
+	unset_stack_size
 			-- Unset `stack_size'.
 		do
 			declared_stack_size := -1
@@ -3736,7 +3838,7 @@ feature -- Status setting
 			stack_size_not_declared: not is_stack_size_declared
 		end
 
-	unset_storable is
+	unset_storable
 			-- Unset `storable'.
 		do
 			declared_storable := Void
@@ -3744,7 +3846,7 @@ feature -- Status setting
 			storable_not_declared: not is_storable_declared
 		end
 
-	unset_storable_filename is
+	unset_storable_filename
 			-- Unset `storable_filename'.
 		do
 			declared_storable_filename := Void
@@ -3752,7 +3854,7 @@ feature -- Status setting
 			storable_filename_not_declared: not is_storable_filename_declared
 		end
 
-	unset_strip_option is
+	unset_strip_option
 			-- Unset `strip_option'.
 		do
 			declared_strip_option := Void
@@ -3760,7 +3862,15 @@ feature -- Status setting
 			strip_option_not_declared: not is_strip_option_declared
 		end
 
-	unset_target is
+	unset_syntax
+			-- Unset `syntax'.
+		do
+			declared_syntax := Void
+		ensure
+			syntax_not_declared: not is_syntax_declared
+		end
+
+	unset_target
 			-- Unset `target'.
 		do
 			declared_target := Void
@@ -3768,7 +3878,7 @@ feature -- Status setting
 			target_not_declared: not is_target_declared
 		end
 
-	unset_trace is
+	unset_trace
 			-- Unset `trace'.
 		do
 			declared_trace := Void
@@ -3776,7 +3886,7 @@ feature -- Status setting
 			trace_not_declared: not is_trace_declared
 		end
 
-	unset_use_cluster_name_as_namespace is
+	unset_use_cluster_name_as_namespace
 			-- Unset `use_cluster_name_as_namespace'.
 		do
 			declared_use_cluster_name_as_namespace := Void
@@ -3784,7 +3894,7 @@ feature -- Status setting
 			use_cluster_name_as_namespace_not_declared: not is_use_cluster_name_as_namespace_declared
 		end
 
-	unset_use_full_cluster_name_as_namespace is
+	unset_use_full_cluster_name_as_namespace
 			-- Unset `use_full_cluster_name_as_namespace'.
 		do
 			declared_use_full_cluster_name_as_namespace := Void
@@ -3792,7 +3902,7 @@ feature -- Status setting
 			use_full_cluster_name_as_namespace_not_declared: not is_use_full_cluster_name_as_namespace_declared
 		end
 
-	unset_verbose is
+	unset_verbose
 			-- Unset `verbose'.
 		do
 			declared_verbose := Void
@@ -3800,7 +3910,7 @@ feature -- Status setting
 			verbose_not_declared: not is_verbose_declared
 		end
 
-	unset_version is
+	unset_version
 			-- Unset `version'.
 		do
 			declared_version := Void
@@ -3808,7 +3918,7 @@ feature -- Status setting
 			version_not_declared: not is_version_declared
 		end
 
-	unset_visible_filename is
+	unset_visible_filename
 			-- Unset `visible_filename'.
 		do
 			declared_visible_filename := Void
@@ -3816,7 +3926,14 @@ feature -- Status setting
 			visible_filename_not_declared: not is_visible_filename_declared
 		end
 
-	unset_warning is
+	unset_void_safety
+			-- Unset 'void_safety'
+		do
+			declared_void_safety := Void
+		ensure
+			void_safety_not_declared: not is_void_safety_declared
+		end
+	unset_warning
 			-- Unset `warning'.
 		do
 			declared_warning := Void
@@ -3824,7 +3941,7 @@ feature -- Status setting
 			warning_not_declared: not is_warning_declared
 		end
 
-	unset_wedit is
+	unset_wedit
 			-- Unset `wedit'.
 		do
 			declared_wedit := Void
@@ -3834,7 +3951,7 @@ feature -- Status setting
 
 feature -- Valid values
 
-	valid_assertion: DS_HASH_SET [STRING] is
+	valid_assertion: DS_HASH_SET [STRING]
 			-- Valid values for 'assertion' option
 		once
 			create Result.make (10)
@@ -3856,7 +3973,7 @@ feature -- Valid values
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
-	valid_callback: DS_HASH_SET [STRING] is
+	valid_callback: DS_HASH_SET [STRING]
 			-- Valid values for 'callback' option
 		once
 			create Result.make (1)
@@ -3869,7 +3986,7 @@ feature -- Valid values
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
-	valid_dead_code_removal: DS_HASH_SET [STRING] is
+	valid_dead_code_removal: DS_HASH_SET [STRING]
 			-- Valid values for 'dead_code_removal' option
 		once
 			create Result.make (5)
@@ -3886,7 +4003,7 @@ feature -- Valid values
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
-	valid_garbage_collector: DS_HASH_SET [STRING] is
+	valid_garbage_collector: DS_HASH_SET [STRING]
 			-- Valid values for 'garbage_collector' option
 		once
 			create Result.make (3)
@@ -3901,7 +4018,7 @@ feature -- Valid values
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
-	valid_inlining: DS_HASH_SET [STRING] is
+	valid_inlining: DS_HASH_SET [STRING]
 			-- Valid values for 'inlining' option
 		once
 			create Result.make (5)
@@ -3918,7 +4035,7 @@ feature -- Valid values
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
-	valid_layout: DS_HASH_SET [STRING] is
+	valid_layout: DS_HASH_SET [STRING]
 			-- Valid values for 'layout' option
 		once
 			create Result.make (2)
@@ -3932,7 +4049,7 @@ feature -- Valid values
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
-	valid_linker: DS_HASH_SET [STRING] is
+	valid_linker: DS_HASH_SET [STRING]
 			-- Valid values for 'linker' option
 		once
 			create Result.make (2)
@@ -3946,7 +4063,22 @@ feature -- Valid values
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
-	valid_target: DS_HASH_SET [STRING] is
+	valid_syntax: DS_HASH_SET [STRING]
+			-- Valid values for 'syntax' option
+		once
+			create Result.make (3)
+			Result.set_equality_tester (string_equality_tester)
+			Result.put_last (options.obsolete_value)
+			Result.put_last (options.transitional_value)
+			Result.put_last (options.standard_value)
+		ensure
+			valid_syntax_not_void: Result /= Void
+			valid_syntax_not_empty: not Result.is_empty
+			no_void_value: not Result.has_void
+			-- all_lower: forall v in Result, v.is_lower
+		end
+
+	valid_target: DS_HASH_SET [STRING]
 			-- Valid values for 'target' option
 		once
 			create Result.make (4)
@@ -3962,7 +4094,7 @@ feature -- Valid values
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
-	valid_unicode: DS_HASH_SET [STRING] is
+	valid_unicode: DS_HASH_SET [STRING]
 			-- Valid values for 'unicode' option
 		once
 			create Result.make (2)
@@ -3976,7 +4108,22 @@ feature -- Valid values
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
-	valid_warning: DS_HASH_SET [STRING] is
+	valid_void_safety: DS_HASH_SET [STRING]
+			-- Valid values for 'void_safety' option
+		once
+			create Result.make (3)
+			Result.set_equality_tester (string_equality_tester)
+			Result.put_last (options.none_value)
+			Result.put_last (options.on_demand_value)
+			Result.put_last (options.complete_value)
+		ensure
+			valid_target_not_void: Result /= Void
+			valid_target_not_empty: not Result.is_empty
+			no_void_value: not Result.has_void
+			-- all_lower: forall v in Result, v.is_lower
+		end
+
+	valid_warning: DS_HASH_SET [STRING]
 			-- Valid values for 'warning' option
 		once
 			create Result.make (4)
@@ -4011,6 +4158,9 @@ feature -- Declared values
 
 	declared_assertion: DS_HASH_SET [STRING]
 			-- Declared values for 'assertion' option
+
+	declared_attached_by_default: UT_TRISTATE
+			-- Declared value for 'attached_by_default' option
 
 	declared_automatic_backup: UT_TRISTATE
 			-- Declared value for 'automatic_backup' option
@@ -4246,6 +4396,9 @@ feature -- Declared values
 	declared_strip_option: UT_TRISTATE
 			-- Declared value for 'strip' option
 
+	declared_syntax: STRING
+			-- Declared value for 'syntax' option
+
 	declared_target: STRING
 			-- Declared value for 'target' option
 
@@ -4267,6 +4420,9 @@ feature -- Declared values
 	declared_visible_filename: STRING
 			-- Declared value for 'visible_filename' option
 
+	declared_void_safety: STRING
+			-- Declared value for 'void_safety' option
+
 	declared_warning: STRING
 			-- Declared value for 'warning' option
 
@@ -4275,13 +4431,13 @@ feature -- Declared values
 
 feature -- Default values
 
-	default_abstract: BOOLEAN is False
+	default_abstract: BOOLEAN = False
 			-- Default value for 'abstract' option
 
-	default_address_expression: BOOLEAN is False
+	default_address_expression: BOOLEAN = False
 			-- Default value for 'address_expression' option
 
-	default_arguments: DS_HASH_SET [STRING] is
+	default_arguments: DS_HASH_SET [STRING]
 			-- Default value for 'arguments' option
 		once
 			create Result.make (0)
@@ -4291,16 +4447,16 @@ feature -- Default values
 			no_void_argument: not Result.has_void
 		end
 
-	default_array_optimization: BOOLEAN is False
+	default_array_optimization: BOOLEAN = False
 			-- Default value for 'array_optimization' option
 
-	default_assembly: STRING is
+	default_assembly: STRING
 			-- Default value for 'assembly' option
 		once
 			Result := Void
 		end
 
-	default_assertion: DS_HASH_SET [STRING] is
+	default_assertion: DS_HASH_SET [STRING]
 			-- Default value for 'assertion' option
 		once
 			create Result.make (1)
@@ -4311,10 +4467,13 @@ feature -- Default values
 			-- valid_value: forall v in Result, valid_assertion.has (v)
 		end
 
-	default_automatic_backup: BOOLEAN is False
+	default_attached_by_default: BOOLEAN = False
+			-- Default value for 'attached_by_default' option
+
+	default_automatic_backup: BOOLEAN = False
 			-- Default value for 'automatic_backup' option
 
-	default_callback: STRING is
+	default_callback: STRING
 			-- Default value for 'callback' option
 		once
 			Result := Void
@@ -4322,40 +4481,40 @@ feature -- Default values
 			valid_default_callback: Result /= Void implies valid_callback.has (Result)
 		end
 
-	default_case_insensitive: BOOLEAN is True
+	default_case_insensitive: BOOLEAN = True
 			-- Default value for 'case_insensitive' option
 
-	default_check_generic_creation_constraint: BOOLEAN is True
+	default_check_generic_creation_constraint: BOOLEAN = True
 			-- Default value for 'check_generic_creation_constraint' option
 
-	default_check_vape: BOOLEAN is True
+	default_check_vape: BOOLEAN = True
 			-- Default value for 'check_vape' option
 
-	default_clean: BOOLEAN is False
+	default_clean: BOOLEAN = False
 			-- Default value for 'clean' option
 
-	default_cls_compliant: BOOLEAN is True
+	default_cls_compliant: BOOLEAN = True
 			-- Default value for 'cls_compliant' option
 
-	default_component: STRING is
+	default_component: STRING
 			-- Default value for 'component' option
 		once
 			Result := Void
 		end
 
-	default_console_application: BOOLEAN is True
+	default_console_application: BOOLEAN = True
 			-- Default value for 'console_application' option
 
-	default_create_keyword_extension: BOOLEAN is True
+	default_create_keyword_extension: BOOLEAN = True
 			-- Default value for 'create_keyword_extension' option
 
-	default_culture: STRING is
+	default_culture: STRING
 			-- Default value for 'culture' option
 		once
 			Result := "neutral"
 		end
 
-	default_c_compiler_options: DS_HASH_SET [STRING] is
+	default_c_compiler_options: DS_HASH_SET [STRING]
 			-- Default value for 'c_compiler_options' option
 		once
 			create Result.make (0)
@@ -4365,7 +4524,7 @@ feature -- Default values
 			no_void_c_compiler_option: not Result.has_void
 		end
 
-	default_dead_code_removal: DS_HASH_SET [STRING] is
+	default_dead_code_removal: DS_HASH_SET [STRING]
 			-- Default value for 'dead_code_removal' option
 		once
 			create Result.make (1)
@@ -4376,10 +4535,10 @@ feature -- Default values
 			-- valid_value: forall v in Result, valid_dead_code_removal.has (v)
 		end
 
-	default_debug_option: BOOLEAN is False
+	default_debug_option: BOOLEAN = False
 			-- Default value for 'debug' option
 
-	default_debug_tag: DS_HASH_SET [STRING] is
+	default_debug_tag: DS_HASH_SET [STRING]
 			-- Default value for 'debug_tag' option
 		once
 			create Result.make (0)
@@ -4389,34 +4548,34 @@ feature -- Default values
 			no_void_debug_tag: not Result.has_void
 		end
 
-	default_debugger: BOOLEAN is False
+	default_debugger: BOOLEAN = False
 			-- Default value for 'debugger' option
 
-	default_document: STRING is
+	default_document: STRING
 			-- Default value for 'document' option
 		once
 			Result := Void
 		end
 
-	default_dotnet_naming_convention: BOOLEAN is False
+	default_dotnet_naming_convention: BOOLEAN = False
 			-- Default value for 'dotnet_naming_convention' option
 
-	default_dynamic_runtime: BOOLEAN is False
+	default_dynamic_runtime: BOOLEAN = False
 			-- Default value for 'dynamic_runtime' option
 
-	default_ecf_library: STRING is
+	default_ecf_library: STRING
 			-- Default value for 'ecf_library' option
 		once
 			Result := Void
 		end
 
-	default_enforce_unique_class_names: BOOLEAN is False
+	default_enforce_unique_class_names: BOOLEAN = False
 			-- Default value for 'enforce_unique_class_names' option
 
-	default_exception_trace: BOOLEAN is False
+	default_exception_trace: BOOLEAN = False
 			-- Default value for 'exception_trace' option
 
-	default_exclude: DS_HASH_SET [STRING] is
+	default_exclude: DS_HASH_SET [STRING]
 			-- Default value for 'exclude' option
 		once
 			create Result.make (0)
@@ -4426,37 +4585,37 @@ feature -- Default values
 			no_void_exclude: not Result.has_void
 		end
 
-	default_export_option: STRING is
+	default_export_option: STRING
 			-- Default value for 'export' option
 		once
 			Result := Void
 		end
 
-	default_external_runtime: STRING is
+	default_external_runtime: STRING
 			-- Default value for 'external_runtime' option
 		once
 			Result := Void
 		end
 
-	default_finalize_option: BOOLEAN is False
+	default_finalize_option: BOOLEAN = False
 			-- Default value for 'finalize' option
 
-	default_flat_fst_optimization: BOOLEAN is False
+	default_flat_fst_optimization: BOOLEAN = False
 			-- Default value for 'flat_fst_optimization' option
 
-	default_force_32bits: BOOLEAN is False
+	default_force_32bits: BOOLEAN = False
 			-- Default value for 'force_32bits' option
 
-	default_fst_expansion_factor: INTEGER is 2
+	default_fst_expansion_factor: INTEGER = 2
 			-- Default value for 'fst_expansion_factor' option
 
-	default_fst_optimization: BOOLEAN is False
+	default_fst_optimization: BOOLEAN = False
 			-- Default value for 'fst_optimization' option
 
-	default_full_class_checking: BOOLEAN is False
+	default_full_class_checking: BOOLEAN = False
 			-- Default value for 'full_class_checking' option
 
-	default_garbage_collector: STRING is
+	default_garbage_collector: STRING
 			-- Default value for 'garbage_collector' option
 		once
 			Result := options.internal_value
@@ -4464,13 +4623,13 @@ feature -- Default values
 			valid_default_garbage_collector: valid_garbage_collector.has (Result)
 		end
 
-	default_gc_info: BOOLEAN is False
+	default_gc_info: BOOLEAN = False
 			-- Default value for 'gc_info' option
 
-	default_heap_size: INTEGER is -1
+	default_heap_size: INTEGER = -1
 			-- Default value for 'heap_size' option
 
-	default_header: DS_HASH_SET [STRING] is
+	default_header: DS_HASH_SET [STRING]
 			-- Default value for 'header' option
 		once
 			create Result.make (0)
@@ -4480,13 +4639,13 @@ feature -- Default values
 			no_void_header: not Result.has_void
 		end
 
-	default_high_memory_compiler: BOOLEAN is False
+	default_high_memory_compiler: BOOLEAN = False
 			-- Default value for 'high_memory_compiler' option
 
-	default_il_verifiable: BOOLEAN is True
+	default_il_verifiable: BOOLEAN = True
 			-- Default value for 'il_verifiable' option
 
-	default_include: DS_HASH_SET [STRING] is
+	default_include: DS_HASH_SET [STRING]
 			-- Default value for 'include' option
 		once
 			create Result.make (0)
@@ -4496,7 +4655,7 @@ feature -- Default values
 			no_void_include: not Result.has_void
 		end
 
-	default_inlining: DS_HASH_SET [STRING] is
+	default_inlining: DS_HASH_SET [STRING]
 			-- Default value for 'inlining' option
 		once
 			create Result.make (1)
@@ -4507,13 +4666,13 @@ feature -- Default values
 			-- valid_value: forall v in Result, valid_inlining.has (v)
 		end
 
-	default_inlining_size: INTEGER is 0
+	default_inlining_size: INTEGER = 0
 			-- Default value for 'inlining_size' option
 
-	default_jumps_optimization: BOOLEAN is False
+	default_jumps_optimization: BOOLEAN = False
 			-- Default value for 'jumps_optimization' option
 
-	default_layout: STRING is
+	default_layout: STRING
 			-- Default value for 'layout' option
 		once
 			Result := options.auto_value
@@ -4521,16 +4680,16 @@ feature -- Default values
 			valid_default_layout: valid_layout.has (Result)
 		end
 
-	default_layout_optimization: BOOLEAN is False
+	default_layout_optimization: BOOLEAN = False
 			-- Default value for 'layout_optimization' option
 
-	default_leaves_optimization: BOOLEAN is False
+	default_leaves_optimization: BOOLEAN = False
 			-- Default value for 'leaves_optimization' option
 
-	default_line_generation: BOOLEAN is False
+	default_line_generation: BOOLEAN = False
 			-- Default value for 'line_generation' option
 
-	default_link: DS_ARRAYED_LIST [STRING] is
+	default_link: DS_ARRAYED_LIST [STRING]
 			-- Default value for 'link' option
 		once
 			create Result.make (0)
@@ -4540,7 +4699,7 @@ feature -- Default values
 			no_void_link: not Result.has_void
 		end
 
-	default_linker: STRING is
+	default_linker: STRING
 			-- Default value for 'linker' option
 		once
 			Result := options.default_value
@@ -4548,76 +4707,76 @@ feature -- Default values
 			valid_default_linker: valid_linker.has (Result)
 		end
 
-	default_linux_fpu_double_precision: BOOLEAN is False
+	default_linux_fpu_double_precision: BOOLEAN = False
 			-- Default value for 'linux_fpu_double_precision' option
 
-	default_manifest_string_trace: BOOLEAN is False
+	default_manifest_string_trace: BOOLEAN = False
 			-- Default value for 'manifest_string_trace' option
 
-	default_map: BOOLEAN is False
+	default_map: BOOLEAN = False
 			-- Default value for 'map' option
 
-	default_metadata_cache_path: STRING is
+	default_metadata_cache_path: STRING
 			-- Default value for 'metadata_cache_path' option
 		once
 			Result := Void
 		end
 
-	default_msil_assembly_compatibility: STRING is
+	default_msil_assembly_compatibility: STRING
 			-- Default value for 'msil_assembly_compatibility' option
 		once
 			Result := Void
 		end
 
-	default_msil_classes_per_module: INTEGER is 5
+	default_msil_classes_per_module: INTEGER = 5
 			-- Default value for 'msil_classes_per_module' option
 
-	default_msil_clr_version: STRING is
+	default_msil_clr_version: STRING
 			-- Default value for 'msil_clr_version' option
 		once
 			Result := Void
 		end
 
-	default_msil_culture: STRING is
+	default_msil_culture: STRING
 			-- Default value for 'msil_culture' option
 		once
 			Result := Void
 		end
 
-	default_msil_generation: BOOLEAN is False
+	default_msil_generation: BOOLEAN = False
 			-- Default value for 'msil_generation' option
 
-	default_msil_generation_version: STRING is
+	default_msil_generation_version: STRING
 			-- Default value for 'msil_generation_version' option
 		once
 			Result := Void
 		end
 
-	default_msil_key_file_name: STRING is
+	default_msil_key_file_name: STRING
 			-- Default value for 'msil_key_file_name' option
 		once
 			Result := Void
 		end
 
-	default_msil_use_optimized_precompile: BOOLEAN is False
+	default_msil_use_optimized_precompile: BOOLEAN = False
 			-- Default value for 'msil_use_optimized_precompile' option
 
-	default_multithreaded: BOOLEAN is False
+	default_multithreaded: BOOLEAN = False
 			-- Default value for 'multithreaded' option
 
-	default_namespace: STRING is
+	default_namespace: STRING
 			-- Default value for 'namespace' option
 		once
 			Result := Void
 		end
 
-	default_no_default_lib: BOOLEAN is False
+	default_no_default_lib: BOOLEAN = False
 			-- Default value for 'no_default_lib' option
 
-	default_old_verbatim_strings: BOOLEAN is False
+	default_old_verbatim_strings: BOOLEAN = False
 			-- Default value for 'old_verbatim_strings' option
 
-	default_override_cluster: DS_HASH_SET [STRING] is
+	default_override_cluster: DS_HASH_SET [STRING]
 			-- Default value for 'override_cluster' option
 		once
 			create Result.make (0)
@@ -4627,64 +4786,72 @@ feature -- Default values
 			no_void_override_cluster: not Result.has_void
 		end
 
-	default_portable_code_generation: BOOLEAN is False
+	default_portable_code_generation: BOOLEAN = False
 			-- Default value for 'portable_code_generation' option
 
-	default_precompiled: STRING is
+	default_precompiled: STRING
 			-- Default value for 'precompiled' option
 		once
 			Result := Void
 		end
 
-	default_prefix_option: STRING is
+	default_prefix_option: STRING
 			-- Default value for 'prefix' option
 		once
 			Result := Void
 		end
 
-	default_profile: BOOLEAN is False
+	default_profile: BOOLEAN = False
 			-- Default value for 'profile' option
 
-	default_public_key_token: STRING is
+	default_public_key_token: STRING
 			-- Default value for 'public_key_token' option
 		once
 			Result := "b77a5c561934e089"
 		end
 
-	default_read_only: BOOLEAN is False
+	default_read_only: BOOLEAN = False
 			-- Default value for 'read_only' option
 
-	default_recursive: BOOLEAN is False
+	default_recursive: BOOLEAN = False
 			-- Default value for 'recursive' option
 
-	default_reloads_optimization: BOOLEAN is False
+	default_reloads_optimization: BOOLEAN = False
 			-- Default value for 'reloads_optimization' option
 
-	default_shared_library_definition: STRING is
+	default_shared_library_definition: STRING
 			-- Default value for 'shared_library_definition' option
 		once
 			Result := Void
 		end
 
-	default_split: BOOLEAN is False
+	default_split: BOOLEAN = False
 			-- Default value for 'split' option
 
-	default_stack_size: INTEGER is -1
+	default_stack_size: INTEGER = -1
 			-- Default value for 'stack_size' option
 
-	default_storable: BOOLEAN is False
+	default_storable: BOOLEAN = False
 			-- Default value for 'storable' option
 
-	default_storable_filename: STRING is
+	default_storable_filename: STRING
 			-- Default value for 'storable_filename' option
 		once
 			Result := Void
 		end
 
-	default_strip_option: BOOLEAN is True
+	default_strip_option: BOOLEAN = True
 			-- Default value for 'strip' option
 
-	default_target: STRING is
+	default_syntax: STRING
+			-- Default value for 'syntax' option
+		once
+			Result := options.transitional_value
+		ensure
+			valid_default_syntax: valid_syntax.has (Result)
+		end
+
+	default_target: STRING
 			-- Default value for 'target' option
 		once
 			Result := options.exe_value
@@ -4692,22 +4859,22 @@ feature -- Default values
 			valid_default_target: valid_target.has (Result)
 		end
 
-	default_target_architecture: STRING is
+	default_target_architecture: STRING
 			-- Default value for 'target_architecture' option
 		once
 			Result := Void
 		end
 
-	default_target_os: STRING is
+	default_target_os: STRING
 			-- Default value for 'target_os' option
 		once
 			Result := Void
 		end
 
-	default_trace: BOOLEAN is False
+	default_trace: BOOLEAN = False
 			-- Default value for 'trace' option
 
-	default_unicode: STRING is
+	default_unicode: STRING
 			-- Default value for 'unicode' option
 		once
 			Result := options.none_value
@@ -4715,28 +4882,34 @@ feature -- Default values
 			valid_default_unicode: valid_unicode.has (Result)
 		end
 
-	default_use_cluster_name_as_namespace: BOOLEAN is False
+	default_use_cluster_name_as_namespace: BOOLEAN = False
 			-- Default value for 'use_cluster_name_as_namespace' option
 
-	default_use_full_cluster_name_as_namespace: BOOLEAN is False
+	default_use_full_cluster_name_as_namespace: BOOLEAN = False
 			-- Default value for 'use_full_cluster_name_as_namespace' option
 
-	default_verbose: BOOLEAN is False
+	default_verbose: BOOLEAN = False
 			-- Default value for 'verbose' option
 
-	default_version: STRING is
+	default_version: STRING
 			-- Default value for 'version' option
 		once
 			Result := "1.0.5000.0"
 		end
 
-	default_visible_filename: STRING is
+	default_visible_filename: STRING
 			-- Default value for 'visible_filename' option
 		once
 			Result := Void
 		end
 
-	default_warning: STRING is
+	default_void_safety : STRING
+			-- Default value for 'void_safety' option
+		once
+			Result := options.none_value
+		end
+
+	default_warning: STRING
 			-- Default value for 'warning' option
 		once
 			Result := options.default_value
@@ -4744,7 +4917,7 @@ feature -- Default values
 			valid_default_warning: valid_warning.has (Result)
 		end
 
-	default_wedit: BOOLEAN is False
+	default_wedit: BOOLEAN = False
 			-- Default value for 'wedit' option
 
 end

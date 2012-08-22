@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel feature adaptation resolvers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new feature adaptation resolver for given classes.
 		do
 			precursor {ET_CLASS_SUBPROCESSOR}
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- Feature adaptation resolving
 
-	resolve_feature_adaptations (a_class: ET_CLASS; a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]) is
+	resolve_feature_adaptations (a_class: ET_CLASS; a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME])
 			-- Resolve the feature adaptations of the inheritance clause
 			-- of `a_class' and put resulting features in `a_features'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -76,14 +76,6 @@ feature -- Feature adaptation resolving
 			current_class := a_class
 			add_current_features (a_features)
 			a_parents := current_class.parents
-			if a_parents = Void or else a_parents.is_empty then
-				if current_class = current_system.any_class then
-						-- "ANY" has no implicit parents.
-					a_parents := Void
-				else
-					a_parents := current_system.any_parents
-				end
-			end
 			if a_parents /= Void then
 				nb := a_parents.count
 				from i := 1 until i > nb loop
@@ -104,7 +96,7 @@ feature -- Feature adaptation resolving
 
 feature {NONE} -- Feature recording
 
-	add_current_features (a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]) is
+	add_current_features (a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME])
 			-- Add to `a_features' features declared in `current_class'.
 		require
 			a_features_not_void: a_features /= Void
@@ -177,7 +169,7 @@ feature {NONE} -- Feature recording
 			no_void_feature: not a_features.has_void_item
 		end
 
-	add_inherited_features (a_parent: ET_PARENT; a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]) is
+	add_inherited_features (a_parent: ET_PARENT; a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME])
 			-- Add to `a_features' features inherited from `a_parent'.
 			-- Also process the Feature_adaptation clause of `a_parent'.
 			-- `a_parent' is one of the parents, explicit or implicit
@@ -527,7 +519,7 @@ feature {NONE} -- Feature adaptation
 			-- to make it work when in 'alias_transition_mode'. But all
 			-- objects are feature names anyway.
 
-	fill_rename_table (a_parent: ET_PARENT) is
+	fill_rename_table (a_parent: ET_PARENT)
 			-- Fill `rename_table' with rename pairs of `a_parent'
 			-- indexed by their old_name.
 		require
@@ -565,7 +557,7 @@ feature {NONE} -- Feature adaptation
 			end
 		end
 
-	fill_export_table (a_parent: ET_PARENT) is
+	fill_export_table (a_parent: ET_PARENT)
 			-- Fill `export_table' with export feature names of `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -620,7 +612,7 @@ feature {NONE} -- Feature adaptation
 			end
 		end
 
-	fill_undefine_table (a_parent: ET_PARENT) is
+	fill_undefine_table (a_parent: ET_PARENT)
 			-- Fill `undefine_table' with undefined names of `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -650,7 +642,7 @@ feature {NONE} -- Feature adaptation
 			end
 		end
 
-	fill_redefine_table (a_parent: ET_PARENT) is
+	fill_redefine_table (a_parent: ET_PARENT)
 			-- Fill `redefine_table' with redefined names of `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -680,7 +672,7 @@ feature {NONE} -- Feature adaptation
 			end
 		end
 
-	fill_select_table (a_parent: ET_PARENT) is
+	fill_select_table (a_parent: ET_PARENT)
 			-- Fill `select_table' with selected names of `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -722,7 +714,7 @@ feature {NONE} -- Replication
 	replicable_features: DS_HASH_TABLE [ET_REPLICABLE_FEATURE, INTEGER]
 			-- Table of potentially replicable features, indexed by seed
 
-	process_replication (a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]) is
+	process_replication (a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME])
 			-- Take care of selected features and replication
 			-- in `a_features'.
 		require
@@ -771,7 +763,7 @@ feature {NONE} -- Replication
 			replicable_features.wipe_out
 		end
 
-	record_replicable_feature (a_feature: ET_ADAPTED_FEATURE; a_seed: INTEGER) is
+	record_replicable_feature (a_feature: ET_ADAPTED_FEATURE; a_seed: INTEGER)
 			-- Record `a_feature' with seed `a_seed' in `replicable_features'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -797,7 +789,7 @@ feature {NONE} -- Replication
 			end
 		end
 
-	process_replicated_feature (a_feature: ET_REPLICATED_FEATURE; a_seed: INTEGER) is
+	process_replicated_feature (a_feature: ET_REPLICATED_FEATURE; a_seed: INTEGER)
 			-- Process replicated feature `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -866,7 +858,7 @@ feature {NONE} -- Replication
 
 feature {NONE} -- Implementation
 
-	new_parent_feature (a_feature: ET_FEATURE; a_parent: ET_PARENT): ET_PARENT_FEATURE is
+	new_parent_feature (a_feature: ET_FEATURE; a_parent: ET_PARENT): ET_PARENT_FEATURE
 			-- New parent feature
 		require
 			a_feature_not_void: a_feature /= Void
@@ -885,7 +877,7 @@ feature {NONE} -- Implementation
 			parent_feature_not_void: Result /= Void
 		end
 
-	new_inherited_feature (a_parent_feature: ET_PARENT_FEATURE): ET_INHERITED_FEATURE is
+	new_inherited_feature (a_parent_feature: ET_PARENT_FEATURE): ET_INHERITED_FEATURE
 			-- New inherited feature
 		require
 			a_parent_feature_not_void: a_parent_feature /= Void
@@ -903,7 +895,7 @@ feature {NONE} -- Implementation
 			inherited_feature_not_void: Result /= Void
 		end
 
-	new_redeclared_feature (a_feature: ET_FEATURE; a_parent_feature: ET_PARENT_FEATURE): ET_REDECLARED_FEATURE is
+	new_redeclared_feature (a_feature: ET_FEATURE; a_parent_feature: ET_PARENT_FEATURE): ET_REDECLARED_FEATURE
 			-- New redeclared feature.
 		require
 			a_feature_not_void: a_feature /= Void

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -27,7 +27,7 @@ inherit
 
 feature -- Status report
 
-	valid_non_surrogate_code (a_code: INTEGER): BOOLEAN is
+	valid_non_surrogate_code (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a valid non-surrogate unicode?
 			-- Include all non-characters.
 		do
@@ -35,13 +35,13 @@ feature -- Status report
 				or (a_code > maximum_unicode_surrogate_code and a_code <= maximum_unicode_character_code)
 		end
 
-	is_bmp_code (a_code: INTEGER): BOOLEAN is
+	is_bmp_code (a_code: INTEGER): BOOLEAN
 			-- Does `a_code' lie within the BMP?
 		do
 			Result := a_code >= minimum_unicode_character_code and a_code <= maximum_bmp_character_code
 		end
 
-	valid_ascii_code (a_code: INTEGER): BOOLEAN is
+	valid_ascii_code (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' a valid ASCII code?
 		do
 			Result := (a_code >= minimum_ascii_character_code and a_code <= maximum_ascii_character_code)
@@ -49,12 +49,12 @@ feature -- Status report
 			definition: Result = (a_code >= minimum_ascii_character_code and a_code <= maximum_ascii_character_code)
 		end
 
-	is_ascii_string (a_string: STRING): BOOLEAN is
+	is_ascii_string (a_string: STRING): BOOLEAN
 			-- Does `a_string' contain only ASCII characters?
 		require
 			a_string_not_void: a_string /= Void
 		local
-			a_unicode: ?UC_STRING
+			a_unicode: detachable UC_STRING
 			i, nb: INTEGER
 		do
 			a_unicode ?= a_string
@@ -79,7 +79,7 @@ feature -- Status report
 			end
 		end
 
-	code_to_string (a_code: INTEGER): STRING is
+	code_to_string (a_code: INTEGER): STRING
 			-- Return a string with `a_code' as its single character.
 			-- (If the character code is bigger than the maximum for
 			-- CHARACTER, the dynamic type of the result will be UC_STRING

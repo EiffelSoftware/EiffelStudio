@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Error: Same variable name used to pass values for tokens of two different types"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; a_last_value_name: STRING; a_type1, a_type2: PR_TYPE) is
+	make (filename: STRING; line: INTEGER; a_last_value_name: STRING; a_type1, a_type2: PR_TYPE)
 			-- Create a new error reporting that `a_last_value_name' is the name of the variable
 			-- used to pass values for tokens both of type `a_type1' and `a_type2'.
 		require
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			a_type1_not_void: a_type1 /= Void
 			a_type2_not_void: a_type2 /= Void
 		do
-			create parameters.make (1, 5)
+			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (filename, 1)
 			parameters.put (line.out, 2)
 			parameters.put (a_last_value_name, 3)
@@ -41,10 +41,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: '$3' is the name of the variable used to pass values for tokens both of type '$4' and '$5'"
+	default_template: STRING = "%"$1%", line $2: '$3' is the name of the variable used to pass values for tokens both of type '$4' and '$5'"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0031"
+	code: STRING = "PR0031"
 			-- Error code
 
 invariant

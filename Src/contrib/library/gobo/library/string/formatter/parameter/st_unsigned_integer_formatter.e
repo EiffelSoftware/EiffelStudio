@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -22,10 +22,10 @@ inherit
 
 feature -- Status report
 
-	valid_parameter (a_parameter: ANY): BOOLEAN is
+	valid_parameter (a_parameter: ANY): BOOLEAN
 			-- Is `a_parameter' a valid parameter for current formatter?
 		local
-			a_cell: ?DS_CELL [INTEGER]
+			a_cell: detachable DS_CELL [INTEGER]
 		do
 			a_cell ?= a_parameter
 			Result := a_cell /= Void and then a_cell.item >= 0
@@ -33,7 +33,7 @@ feature -- Status report
 
 feature -- Formatting
 
-	integer_format_to (a_parameter: INTEGER; a_stream: KI_CHARACTER_OUTPUT_STREAM) is
+	integer_format_to (a_parameter: INTEGER; a_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Format `a_parameter' to `a_stream'.
 		do
 			plus_sign_enabled := False

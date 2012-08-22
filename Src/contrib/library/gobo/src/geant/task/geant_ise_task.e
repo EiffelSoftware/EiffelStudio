@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Compilation tasks for ISE Eiffel"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT)
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
@@ -55,6 +55,10 @@ feature {NONE} -- Initialization
 					command.set_clean (a_value)
 				end
 			end
+				-- compatible:
+			if has_attribute (Compatible_attribute_name) then
+				command.set_compatible_mode (boolean_value (Compatible_attribute_name))
+			end
 				-- finalize:
 			if has_attribute (Finalize_attribute_name) then
 				command.set_finalize_mode (boolean_value (Finalize_attribute_name))
@@ -72,7 +76,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	build_command (a_project: GEANT_PROJECT) is
+	build_command (a_project: GEANT_PROJECT)
 			-- Create instance of `command'
 		do
 			create command.make (a_project)
@@ -85,7 +89,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Ace_attribute_name: STRING is
+	Ace_attribute_name: STRING
 			-- Name of xml attribute for "ace"
 		once
 			Result := "ace"
@@ -94,7 +98,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	System_attribute_name: STRING is
+	System_attribute_name: STRING
 			-- Name of xml attribute for "system"
 		once
 			Result := "system"
@@ -103,7 +107,16 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Finalize_attribute_name: STRING is
+	Compatible_attribute_name: STRING
+			-- Name of xml attribute for "compatible"
+		once
+			Result := "compatible"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+		
+	Finalize_attribute_name: STRING
 			-- Name of xml attribute for "finalize"
 		once
 			Result := "finalize"
@@ -112,7 +125,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Finish_freezing_attribute_name: STRING is
+	Finish_freezing_attribute_name: STRING
 			-- Name of xml attribute for "finish_freezing"
 		once
 			Result := "finish_freezing"
@@ -121,7 +134,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Clean_attribute_name: STRING is
+	Clean_attribute_name: STRING
 			-- Name of xml attribute for "clean"
 		once
 			Result := "clean"
@@ -130,7 +143,7 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Exit_code_variable_attribute_name: STRING is
+	Exit_code_variable_attribute_name: STRING
 			-- Name of xml attribute exit_code_variable.
 		once
 			Result := "exit_code_variable"

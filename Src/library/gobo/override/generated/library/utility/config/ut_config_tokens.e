@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Parser token codes"
 	generator: "geyacc version 3.9"
@@ -16,7 +16,7 @@ feature -- Last values
 
 feature -- Access
 
-	token_name (a_token: INTEGER): STRING is
+	token_name (a_token: INTEGER): STRING
 			-- Name of token `a_token'
 		do
 			inspect a_token
@@ -59,19 +59,19 @@ feature -- Access
 
 feature -- Token codes
 
-	P_IFDEF: INTEGER is 258
-	P_IFNDEF: INTEGER is 259
-	P_INCLUDE: INTEGER is 260
-	P_DEFINE: INTEGER is 261
-	P_UNDEF: INTEGER is 262
-	P_ELSE: INTEGER is 263
-	P_ENDIF: INTEGER is 264
-	P_EOL: INTEGER is 265
-	P_COLON: INTEGER is 266
-	P_NAME: INTEGER is 267
-	P_STRING: INTEGER is 268
-	P_VALUE: INTEGER is 269
-	P_OR: INTEGER is 270
-	P_AND: INTEGER is 271
+	P_IFDEF: INTEGER = 258
+	P_IFNDEF: INTEGER = 259
+	P_INCLUDE: INTEGER = 260
+	P_DEFINE: INTEGER = 261
+	P_UNDEF: INTEGER = 262
+	P_ELSE: INTEGER = 263
+	P_ENDIF: INTEGER = 264
+	P_EOL: INTEGER = 265
+	P_COLON: INTEGER = 266
+	P_NAME: INTEGER = 267
+	P_STRING: INTEGER = 268
+	P_VALUE: INTEGER = 269
+	P_OR: INTEGER = 270
+	P_AND: INTEGER = 271
 
 end

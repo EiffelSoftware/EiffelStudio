@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -27,7 +27,7 @@ inherit
 
 feature -- Status report
 
-	valid_start_condition (sc: INTEGER): BOOLEAN is
+	valid_start_condition (sc: INTEGER): BOOLEAN
 			-- Is `sc' a valid start condition?
 		do
 			Result := (INITIAL <= sc and sc <= S_EMPTY_LINE)
@@ -35,7 +35,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	yy_build_tables is
+	yy_build_tables
 			-- Build scanner tables.
 		do
 			yy_nxt := yy_nxt_template
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 			yy_accept := yy_accept_template
 		end
 
-	yy_execute_action (yy_act: INTEGER) is
+	yy_execute_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		do
 if yy_act <= 14 then
@@ -344,7 +344,7 @@ end
 			yy_set_beginning_of_line
 		end
 
-	yy_execute_eof_action (yy_sc: INTEGER) is
+	yy_execute_eof_action (yy_sc: INTEGER)
 			-- Execute EOF semantic action.
 		do
 			inspect yy_sc
@@ -382,7 +382,7 @@ end
 
 feature {NONE} -- Table templates
 
-	yy_nxt_template: SPECIAL [INTEGER] is
+	yy_nxt_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,   16,   17,   18,   16,   19,   16,   20,   21,   16,
@@ -412,7 +412,7 @@ feature {NONE} -- Table templates
 			   88, yy_Dummy>>)
 		end
 
-	yy_chk_template: SPECIAL [INTEGER] is
+	yy_chk_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -442,7 +442,7 @@ feature {NONE} -- Table templates
 			   88, yy_Dummy>>)
 		end
 
-	yy_base_template: SPECIAL [INTEGER] is
+	yy_base_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    0,    0,   19,    0,    0,    0,  197,  196,   37,
@@ -457,7 +457,7 @@ feature {NONE} -- Table templates
 			  107,  116,  124,  133,  137,  146,  155,  164,  173,  182, yy_Dummy>>)
 		end
 
-	yy_def_template: SPECIAL [INTEGER] is
+	yy_def_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,   89,   88,   88,    3,   89,   89,   90,   90,   89,
@@ -472,7 +472,7 @@ feature {NONE} -- Table templates
 			   88,   88,   88,   88,   88,   88,   88,   88,   88,   88, yy_Dummy>>)
 		end
 
-	yy_ec_template: SPECIAL [INTEGER] is
+	yy_ec_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
@@ -505,14 +505,14 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    1,    1,    1, yy_Dummy>>)
 		end
 
-	yy_meta_template: SPECIAL [INTEGER] is
+	yy_meta_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    2,    3,    4,    5,    1,    6,    7,    1,
 			    7,    7,    7,    7,    7,    7,    7,    8,    9,    1, yy_Dummy>>)
 		end
 
-	yy_accept_template: SPECIAL [INTEGER] is
+	yy_accept_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    0,    0,    0,    0,    0,    0,   14,   14,    0,
@@ -528,51 +528,51 @@ feature {NONE} -- Table templates
 
 feature {NONE} -- Constants
 
-	yyJam_base: INTEGER is 201
+	yyJam_base: INTEGER = 201
 			-- Position in `yy_nxt'/`yy_chk' tables
 			-- where default jam table starts
 
-	yyJam_state: INTEGER is 88
+	yyJam_state: INTEGER = 88
 			-- State id corresponding to jam state
 
-	yyTemplate_mark: INTEGER is 89
+	yyTemplate_mark: INTEGER = 89
 			-- Mark between normal states and templates
 
-	yyNull_equiv_class: INTEGER is 1
+	yyNull_equiv_class: INTEGER = 1
 			-- Equivalence code for NULL character
 
-	yyReject_used: BOOLEAN is false
+	yyReject_used: BOOLEAN = false
 			-- Is `reject' called?
 
-	yyVariable_trail_context: BOOLEAN is false
+	yyVariable_trail_context: BOOLEAN = false
 			-- Is there a regular expression with
 			-- both leading and trailing parts having
 			-- variable length?
 
-	yyReject_or_variable_trail_context: BOOLEAN is false
+	yyReject_or_variable_trail_context: BOOLEAN = false
 			-- Is `reject' called or is there a
 			-- regular expression with both leading
 			-- and trailing parts having variable length?
 
-	yyNb_rules: INTEGER is 28
+	yyNb_rules: INTEGER = 28
 			-- Number of rules
 
-	yyEnd_of_buffer: INTEGER is 29
+	yyEnd_of_buffer: INTEGER = 29
 			-- End of buffer rule code
 
-	yyLine_used: BOOLEAN is false
+	yyLine_used: BOOLEAN = false
 			-- Are line and column numbers used?
 
-	yyPosition_used: BOOLEAN is false
+	yyPosition_used: BOOLEAN = false
 			-- Is `position' used?
 
-	INITIAL: INTEGER is 0
-	S_PREPROC: INTEGER is 1
-	S_READLINE: INTEGER is 2
-	S_SKIP_EOL: INTEGER is 3
-	S_NAME: INTEGER is 4
-	S_VALUE: INTEGER is 5
-	S_EMPTY_LINE: INTEGER is 6
+	INITIAL: INTEGER = 0
+	S_PREPROC: INTEGER = 1
+	S_READLINE: INTEGER = 2
+	S_SKIP_EOL: INTEGER = 3
+	S_NAME: INTEGER = 4
+	S_VALUE: INTEGER = 5
+	S_EMPTY_LINE: INTEGER = 6
 			-- Start condition codes
 
 feature -- User-defined features
@@ -581,7 +581,7 @@ feature -- User-defined features
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new scanner.
 		do
 			make_with_buffer (Empty_buffer)
@@ -590,7 +590,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset scanner before scanning next input.
 		do
 			reset_compressed_scanner_skeleton
@@ -602,7 +602,7 @@ feature -- Access
 	line_nb: INTEGER
 			-- Current line number
 
-	include_stack: DS_STACK [YY_BUFFER] is
+	include_stack: DS_STACK [YY_BUFFER]
 			-- Input buffers not completely parsed yet
 		deferred
 		ensure
@@ -610,7 +610,7 @@ feature -- Access
 			no_void_buffer: not Result.has_void
 		end
 
-	line_nb_stack: DS_STACK [INTEGER] is
+	line_nb_stack: DS_STACK [INTEGER]
 			-- Line numbers in the corresponding input buffers in `include_stack'
 		deferred
 		ensure
@@ -620,18 +620,18 @@ feature -- Access
 
 feature -- Status report
 
-	ignored: BOOLEAN is
+	ignored: BOOLEAN
 			-- Is current line ignored?
 		deferred
 		end
 
 feature -- Element change
 
-	wrap: BOOLEAN is
+	wrap: BOOLEAN
 			-- Should current scanner terminate when end of file is reached?
 			-- True unless an include file was being processed.
 		local
-			old_buffer: ?YY_FILE_BUFFER
+			old_buffer: detachable YY_FILE_BUFFER
 			a_file: KI_CHARACTER_INPUT_STREAM
 		do
 			if not include_stack.is_empty then
@@ -654,7 +654,7 @@ feature -- Element change
 
 feature -- Output
 
-	output (a_text: like text) is
+	output (a_text: like text)
 			-- Silently ignore `a_text'.
 		do
 		end

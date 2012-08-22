@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Data structures that can hold zero or more items"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,7 +32,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_default is
+	make_default
 			-- Create an empty container.
 		deferred
 		ensure
@@ -41,14 +41,14 @@ feature {NONE} -- Initialization
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in container
 		deferred
 		end
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is container empty?
 		do
 			Result := count = 0
@@ -56,7 +56,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is current container equal to `other'?
 		deferred
 		ensure then
@@ -65,7 +65,7 @@ feature -- Comparison
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Remove all items from container.
 		deferred
 		ensure
@@ -74,7 +74,7 @@ feature -- Removal
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [G]]) is
+	do_all (an_action: PROCEDURE [ANY, TUPLE [G]])
 			-- Apply `an_action' to every item.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
 		require
@@ -82,7 +82,7 @@ feature -- Iteration
 		deferred
 		end
 
-	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test'.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
 		require
@@ -91,7 +91,30 @@ feature -- Iteration
 		deferred
 		end
 
-	there_exists (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	do_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+			-- Apply `an_action' to every item.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+			--
+			-- The iteration will be interrupted if `a_condition' starts returning True.
+		require
+			an_action_not_void: an_action /= Void
+			a_condition_not_void: a_condition /= Void
+		deferred
+		end
+
+	do_if_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+			-- Apply `an_action' to every item that satisfies `a_test'.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+			--
+			-- The iteration will be interrupted if `a_condition' starts returning True.
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+			a_condition_not_void: a_condition /= Void
+		deferred
+		end
+
+	there_exists (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one item?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		require
@@ -99,7 +122,7 @@ feature -- Iteration
 		deferred
 		end
 
-	for_all (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	for_all (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all items?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		require

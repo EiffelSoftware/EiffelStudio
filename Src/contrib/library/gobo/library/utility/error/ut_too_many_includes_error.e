@@ -1,10 +1,10 @@
-indexing
+note
 
 	description:
 
 		"Error: Too many nested include files"
 
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,19 +21,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (max: INTEGER) is
+	make (max: INTEGER)
 			-- Create a new error.
 		do
-			create parameters.make (1, 1)
+			create parameters.make_filled (empty_string, 1, 1)
 			parameters.put (max.out, 1)
 		end
 
 feature -- Access
 
-	default_template: STRING is "$0: too many (i.e. $1) nested include files"
+	default_template: STRING = "$0: too many (i.e. $1) nested include files"
 			-- Default template used to built the error message
 
-	code: STRING is "UT0010"
+	code: STRING = "UT0010"
 			-- Error code
 
 invariant

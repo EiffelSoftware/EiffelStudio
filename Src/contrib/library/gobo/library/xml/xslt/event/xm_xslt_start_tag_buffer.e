@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_receiver: like base_receiver) is
+	make (a_receiver: like base_receiver)
 			-- Initialize `Current'.
 		require
 			a_receiver_not_void: a_receiver /= Void
@@ -49,13 +49,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	attribute_value (a_fingerprint: INTEGER): STRING is
+	attribute_value (a_fingerprint: INTEGER): STRING
 			-- Value of attribute identified by `a_fingerprint'
 		do
 			Result := buffered_attributes.attribute_value (a_fingerprint)
 		end
 
-	uri_for_defaulted_prefix (a_prefix: STRING; a_use_default_namespace: BOOLEAN): STRING is
+	uri_for_defaulted_prefix (a_prefix: STRING; a_use_default_namespace: BOOLEAN): STRING
 			-- Namespace URI corresponding to a given prefix
 		local
 			l_uri_code, l_prefix_code: INTEGER
@@ -80,11 +80,11 @@ feature -- Access
 			end
 		end
 
-	fingerprint (a_qname: STRING; a_use_default_namespace: BOOLEAN): INTEGER is
+	fingerprint (a_qname: STRING; a_use_default_namespace: BOOLEAN): INTEGER
 			-- Fingerprint of `a_qname'
 		local
 			l_parser: XM_XPATH_QNAME_PARSER
-			l_uri: STRING			
+			l_uri: STRING
 		do
 			create l_parser.make (a_qname)
 			l_uri := uri_for_defaulted_prefix (l_parser.optional_prefix, a_use_default_namespace)
@@ -97,8 +97,8 @@ feature -- Access
 
 feature -- Events
 
-	
-	close is
+
+	close
 			-- Notify end of event stream.
 		do
 			if base_receiver.is_document_started then
@@ -108,7 +108,7 @@ feature -- Events
 			is_open := False
 		end
 
-	start_document is
+	start_document
 			-- New document
 		do
 			is_document_started := True
@@ -121,8 +121,8 @@ feature -- Events
 			accepting_attributes := False
 		end
 
-	
-	end_document is
+
+	end_document
 			-- Notify the end of the document
 		do
 			is_document_started := False
@@ -132,7 +132,7 @@ feature -- Events
 			end
 		end
 
-	start_element (a_name_code: INTEGER; a_type_code: INTEGER; a_properties: INTEGER) is
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; a_properties: INTEGER)
 			-- Notify the start of an element
 		do
 			mark_as_written
@@ -155,7 +155,7 @@ feature -- Events
 			attribute_count := 0
 		end
 
-	end_element is
+	end_element
 			-- Notify the end of an element.
 		do
 			mark_as_written
@@ -164,8 +164,8 @@ feature -- Events
 			namespaces_stack_size := namespaces_stack_size - namespace_count_stack.item (nesting_depth)
 		end
 
-	
-	notify_namespace (a_namespace_code: INTEGER; a_properties: INTEGER) is
+
+	notify_namespace (a_namespace_code: INTEGER; a_properties: INTEGER)
 			-- Notify a namespace.
 		local
 			l_duplicates_found: BOOLEAN
@@ -178,20 +178,20 @@ feature -- Events
 			end
 			from
 				l_limit := namespace_count_stack.item (nesting_depth - 1)
-			variant
-				namespaces_stack_size - l_index
 			until
 				l_duplicates_found or l_index >= l_limit
 			loop
 				l_duplicates_found :=  namespaces_stack.item (namespaces_stack_size - l_index) = a_namespace_code
 				l_index := l_index + 1
+			variant
+				namespaces_stack_size - l_index
 			end
 			if not l_duplicates_found then
 				add_to_stack (a_namespace_code)
 			end
 		end
 
-	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER) is
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER)
 			-- Notify an attribute.
 		do
 			mark_as_written
@@ -208,7 +208,7 @@ feature -- Events
 			-- attributes might be duplicated - checking for this comes later in the pipeline
 		end
 
-	start_content is
+	start_content
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 			-- But first, start the pending element, then notify all pending namespaces and attributes.
 		local
@@ -223,13 +223,13 @@ feature -- Events
 			invariant
 				stack_large_enough: namespaces_stack_size - namespace_count_stack.item (nesting_depth - 1) >= 0
 				strictly_positive_index: l_index > 0
-			variant
-				namespaces_stack_size - l_index + 1
 			until
 				l_index > namespaces_stack_size
 			loop
 				base_receiver.notify_namespace (namespaces_stack.item (l_index), 0)
 				l_index := l_index + 1
+			variant
+				namespaces_stack_size - l_index + 1
 			end
 			from
 				l_cursor := buffered_attributes.name_code_cursor
@@ -241,7 +241,7 @@ feature -- Events
 				if l_value /= Void then
 					base_receiver.notify_attribute (l_cursor.item,
 						buffered_attributes.attribute_type_code (l_cursor.index),
-						l_value, 
+						l_value,
 						INTEGER_.bit_or (buffered_attributes.attribute_properties (l_cursor.index), Namespace_ok))
 				end
 				l_cursor.forth
@@ -283,25 +283,25 @@ feature {NONE} -- Implementation
 			--	Namespaces to be declared at all levels
 
 feature {NONE} -- Contract support
-	
-	total_namespaces_stacked: INTEGER is
+
+	total_namespaces_stacked: INTEGER
 			--	Total number of namespace declarations pending at all levels
 		local
 			l_index: INTEGER
 		do
 			from
 				l_index := 1
-			variant
-				nesting_depth - l_index
 			until
 				l_index > nesting_depth - 1
 			loop
 				Result := Result + namespace_count_stack.item (l_index)
 				l_index := l_index + 1
+			variant
+				nesting_depth - l_index
 			end
 		end
 
-	add_to_stack (a_namespace_code: INTEGER) is
+	add_to_stack (a_namespace_code: INTEGER)
 			-- Add `a_namespace_code' to saved namespaces.
 		do
 			namespaces_stack_size := namespaces_stack_size + 1
@@ -313,7 +313,7 @@ feature {NONE} -- Contract support
 			one_more_stacked_at_level: namespace_count_stack.item (nesting_depth - 1) = old namespace_count_stack.item (nesting_depth - 1) + 1
 		end
 
-	uri_code_for_prefix_code (a_prefix_code: INTEGER): INTEGER is
+	uri_code_for_prefix_code (a_prefix_code: INTEGER): INTEGER
 			-- URI code for `a_prefix_code' found by searching in-scope namespaces
 		local
 			l_index, l_code: INTEGER
@@ -341,7 +341,7 @@ feature {NONE} -- Contract support
 	last_checked_namecode: INTEGER
 			-- Possibly different name code as a result of `check_proposed_prefix'
 
-	check_proposed_prefix (a_name_code: INTEGER; a_sequence_number: INTEGER) is
+	check_proposed_prefix (a_name_code: INTEGER; a_sequence_number: INTEGER)
 			-- Check that the prefix for an element or attribute is acceptable,
 			--  allocating a substitute prefix if not.
 			-- The prefix is acceptable unless a namespace declaration has been
@@ -373,7 +373,7 @@ feature {NONE} -- Contract support
 			end
 		end
 
-	substituted_prefix (a_namespace_code: INTEGER; a_sequence_number: INTEGER): STRING is
+	substituted_prefix (a_namespace_code: INTEGER; a_sequence_number: INTEGER): STRING
 			-- Substituted prefix for `a_name_code'
 		require
 			valid_namespace_code: shared_name_pool.is_valid_namespace_code (a_namespace_code)

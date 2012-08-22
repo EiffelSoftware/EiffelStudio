@@ -8,8 +8,8 @@
 	tool: "Gobo Eiffel Compiler"
 	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2007-07-19 04:53:29 -0700 (Thu, 19 Jul 2007) $"
-	revision: "$Revision: 6005 $"
+	date: "$Date$"
+	revision: "$Revision$"
 -->
 
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec/platforms">
@@ -154,11 +154,11 @@ And using computers from SourceForge's
 <section><title>Testing gec on a new platform</title>
 <para>
 This section explains what to do in order to test <projectname>gec</projectname>
-on a new platform or with a new C compiler using the code from SVN.
+on a new platform or with a new C compiler using the code from the Git repository.
 </para>
 <para>
 First you need to check-out the code from the
-<ulink url="https://sourceforge.net/svn/?group_id=24591">Gobo SVN
+<ulink url="https://sourceforge.net/scm/?type=git&amp;group_id=24591">Gobo Git
 repository</ulink>. Then you should set the environment variable $GOBO
 to the directory where you checked out the code, and add
 <filename class="directory">$GOBO/bin</filename> to your $PATH.

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -27,14 +27,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new compound.
 		do
 			keyword := tokens.do_keyword
 			precursor
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create a new compound with capacity `nb'.
 		do
 			keyword := tokens.do_keyword
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset instructions as they were when they were last parsed.
 		local
 			i, nb: INTEGER
@@ -55,12 +55,30 @@ feature -- Initialization
 			end
 		end
 
+feature -- Status report
+
+	has_non_null_instruction: BOOLEAN
+			-- Does current compound contain at least one non-null instruction?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if not attached {ET_NULL_INSTRUCTION} storage.item (i) then
+					Result := True
+						-- Jump out of the loop.
+					i := nb + 1
+				end
+				i := i + 1
+			end
+		end
+
 feature -- Access
 
 	keyword: ET_KEYWORD
 			-- Keyword preceding the list of instructions
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -70,13 +88,13 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if is_empty then
@@ -86,7 +104,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if is_empty then
@@ -98,7 +116,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_keyword (a_keyword: like keyword) is
+	set_keyword (a_keyword: like keyword)
 			-- Set `keyword' to `a_keyword'.
 		require
 			a_keyword_not_void: a_keyword /= Void
@@ -110,7 +128,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_compound (Current)
@@ -118,7 +136,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_INSTRUCTION] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_INSTRUCTION]
 			-- Fixed array routines
 		once
 			create Result

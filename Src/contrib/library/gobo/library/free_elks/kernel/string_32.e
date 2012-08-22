@@ -24,7 +24,8 @@ inherit
 	STRING_GENERAL
 		rename
 			append as append_string_general,
-			same_string as same_string_general
+			same_string as same_string_general,
+			plus as plus_string_general
 		undefine
 			copy, is_equal, out
 		redefine
@@ -70,9 +71,9 @@ create
 	make_from_cil
 
 convert
-	to_cil: {SYSTEM_STRING, detachable SYSTEM_STRING},
-	make_from_cil ({SYSTEM_STRING, attached SYSTEM_STRING, detachable SYSTEM_STRING}),
-	as_string_8: {READABLE_STRING_8, detachable READABLE_STRING_8, STRING_8, detachable STRING_8}
+	to_cil: {SYSTEM_STRING},
+	make_from_cil ({SYSTEM_STRING}),
+	as_string_8: {READABLE_STRING_8, STRING_8}
 
 feature -- Initialization
 
@@ -681,6 +682,14 @@ feature -- Element change
 			Result.append (s)
 		end
 
+	plus_string_general (s: READABLE_STRING_GENERAL): like Current
+			-- <Precursor>
+		do
+			Result := new_string (count + s.count)
+			Result.append (Current)
+			Result.append_string_general (s)
+		end
+
 	append_string (s: detachable READABLE_STRING_32)
 			-- Append a copy of `s', if not void, at end.
 		do
@@ -1216,6 +1225,7 @@ feature -- Removal
 				l_count := count
 				area.overlapping_move (start_index + nb_removed - 1, start_index - 1, l_count - end_index)
 				count := l_count - nb_removed
+				internal_hash_code := 0
 			end
 		ensure
 			removed: elks_checking implies Current ~ (old substring (1, start_index - 1) + old substring (end_index + 1, count))

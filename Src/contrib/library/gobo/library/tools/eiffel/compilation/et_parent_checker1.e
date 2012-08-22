@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel parent validity first pass checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,7 +38,7 @@ create
 
 feature -- Validity checking
 
-	check_parents_validity (a_class: ET_CLASS) is
+	check_parents_validity (a_class: ET_CLASS)
 			-- Check validity of parents of `a_class'. Do not check
 			-- whether the actual generic parameters of the types held in
 			-- the parents conform to their corresponding formal parameters'
@@ -56,7 +56,7 @@ feature -- Validity checking
 			has_fatal_error := False
 			old_class := current_class
 			current_class := a_class
-			a_parents := current_class.parents
+			a_parents := current_class.parent_clause
 			if a_parents /= Void then
 				nb := a_parents.count
 				from i := 1 until i > nb loop
@@ -71,7 +71,7 @@ feature -- Validity checking
 
 feature {NONE} -- Parent validity
 
-	check_bit_feature_validity (a_type: ET_BIT_FEATURE; a_parent: ET_PARENT) is
+	check_bit_feature_validity (a_type: ET_BIT_FEATURE; a_parent: ET_PARENT)
 			-- Check validity of `a_type' when it appears in the parent
 			-- clause `a_parent' in `current_class'. Do not check whether
 			-- the actual generic parameters of `a_type' conform to their
@@ -87,7 +87,7 @@ feature {NONE} -- Parent validity
 			error_handler.report_vhpr3a_error (current_class, a_type)
 		end
 
-	check_bit_n_validity (a_type: ET_BIT_N; a_parent: ET_PARENT) is
+	check_bit_n_validity (a_type: ET_BIT_N; a_parent: ET_PARENT)
 			-- Check validity of `a_type' when it appears in the parent
 			-- clause `a_parent' in `current_class'. Do not check whether
 			-- the actual generic parameters of `a_type' conform to their
@@ -108,7 +108,7 @@ feature {NONE} -- Parent validity
 			end
 		end
 
-	check_class_type_validity (a_type: ET_CLASS_TYPE; a_parent: ET_PARENT) is
+	check_class_type_validity (a_type: ET_CLASS_TYPE; a_parent: ET_PARENT)
 			-- Check validity of `a_type' when it appears in the parent
 			-- clause `a_parent' in `current_class'. Do not check whether
 			-- the actual generic parameters of `a_type' conform to their
@@ -162,26 +162,26 @@ feature {NONE} -- Parent validity
 					nb := an_actuals.count
 					from i := 1 until i > nb loop
 						an_actual := an_actuals.type (i)
+						an_actual.process (Current)
 						a_formal := a_formals.formal_parameter (i)
 						if a_formal.is_expanded then
 							if not an_actual.is_type_expanded (current_class) then
-								error_handler.report_gvtcg5b_error (current_class, a_type, an_actual, a_formal)
+								error_handler.report_gvtcg5b_error (current_class, current_class, a_type, an_actual, a_formal)
 								set_fatal_error
 							end
 						elseif a_formal.is_reference then
 							if not an_actual.is_type_reference (current_class) then
-								error_handler.report_gvtcg5a_error (current_class, a_type, an_actual, a_formal)
+								error_handler.report_gvtcg5a_error (current_class, current_class, a_type, an_actual, a_formal)
 								set_fatal_error
 							end
 						end
-						an_actual.process (Current)
 						i := i + 1
 					end
 				end
 			end
 		end
 
-	check_like_type_validity (a_type: ET_LIKE_TYPE; a_parent: ET_PARENT) is
+	check_like_type_validity (a_type: ET_LIKE_TYPE; a_parent: ET_PARENT)
 			-- Check validity of `a_type' when it appears in the parent
 			-- clause `a_parent' in `current_class'. Do not check whether
 			-- the actual generic parameters of `a_type' conform to their
@@ -197,7 +197,7 @@ feature {NONE} -- Parent validity
 			error_handler.report_vhpr3c_error (current_class, a_type)
 		end
 
-	check_tuple_type_validity (a_type: ET_TUPLE_TYPE; a_parent: ET_PARENT) is
+	check_tuple_type_validity (a_type: ET_TUPLE_TYPE; a_parent: ET_PARENT)
 			-- Check validity of `a_type' when it appears in the parent
 			-- clause `a_parent' in `current_class'. Do not check whether
 			-- the actual generic parameters of `a_type' conform to their
@@ -230,7 +230,7 @@ feature {NONE} -- Parent validity
 
 feature {ET_AST_NODE} -- Type dispatcher
 
-	process_bit_feature (a_type: ET_BIT_FEATURE) is
+	process_bit_feature (a_type: ET_BIT_FEATURE)
 			-- Process `a_type'.
 		do
 			if current_parent /= Void then
@@ -238,7 +238,7 @@ feature {ET_AST_NODE} -- Type dispatcher
 			end
 		end
 
-	process_bit_n (a_type: ET_BIT_N) is
+	process_bit_n (a_type: ET_BIT_N)
 			-- Process `a_type'.
 		do
 			if current_parent /= Void then
@@ -246,13 +246,13 @@ feature {ET_AST_NODE} -- Type dispatcher
 			end
 		end
 
-	process_class (a_class: ET_CLASS) is
+	process_class (a_class: ET_CLASS)
 			-- Process `a_class'.
 		do
 			process_class_type (a_class)
 		end
 
-	process_class_type (a_type: ET_CLASS_TYPE) is
+	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			if current_parent /= Void then
@@ -260,25 +260,25 @@ feature {ET_AST_NODE} -- Type dispatcher
 			end
 		end
 
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
+	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_like_current (a_type: ET_LIKE_CURRENT) is
+	process_like_current (a_type: ET_LIKE_CURRENT)
 			-- Process `a_type'.
 		do
 			process_like_type (a_type)
 		end
 
-	process_like_feature (a_type: ET_LIKE_FEATURE) is
+	process_like_feature (a_type: ET_LIKE_FEATURE)
 			-- Process `a_type'.
 		do
 			process_like_type (a_type)
 		end
 
-	process_like_type (a_type: ET_LIKE_TYPE) is
+	process_like_type (a_type: ET_LIKE_TYPE)
 			-- Process `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -288,19 +288,19 @@ feature {ET_AST_NODE} -- Type dispatcher
 			end
 		end
 
-	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
 		do
 			process_like_type (a_type)
 		end
 
-	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE)
 			-- Process `a_type'.
 		do
 			process_like_type (a_type)
 		end
 
-	process_tuple_type (a_type: ET_TUPLE_TYPE) is
+	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
 		do
 			if current_parent /= Void then

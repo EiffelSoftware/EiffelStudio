@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -26,10 +26,10 @@ create {XM_XSLT_NODE_FACTORY}
 	make_style_element
 
 feature {NONE} -- Initialization
-	
+
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
 		do
 			is_instruction := True
@@ -42,7 +42,7 @@ feature -- Access
 	is_inherit_namespaces: BOOLEAN
 		-- Do we inherit namespaces?
 
-	trace_property (an_expanded_name: STRING): STRING is
+	trace_property (an_expanded_name: STRING): STRING
 			-- Value of trace-property
 		do
 			if STRING_.same_string (an_expanded_name, Gexslt_name_pseudo_attribute) then
@@ -51,8 +51,8 @@ feature -- Access
 				Result := Precursor (an_expanded_name)
 			end
 		end
-	
-	construct_type: INTEGER is
+
+	construct_type: INTEGER
 			-- Type of construct being traced
 		do
 			Result := Literal_result_element
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Status report
 
-	may_contain_sequence_constructor: BOOLEAN is
+	may_contain_sequence_constructor: BOOLEAN
 			-- Is `Current' allowed to contain a sequence constructor?
 		do
 			Result := True
@@ -68,7 +68,7 @@ feature -- Status report
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			an_index, a_name_code, a_uri_code, a_fingerprint: INTEGER
@@ -82,8 +82,6 @@ feature -- Element change
 			if number_of_attributes > 0 then
 				from
 					an_index := 1
-				variant
-					number_of_attributes + 1 - an_index
 				until
 					any_compile_errors or else an_index > number_of_attributes
 				loop
@@ -103,7 +101,7 @@ feature -- Element change
 						elseif a_fingerprint = Xslt_inherit_namespaces_type_code then
 							an_inherit_namespaces_attribute := attribute_value_by_index (an_index)
 							STRING_.left_adjust (an_inherit_namespaces_attribute)
-							STRING_.right_adjust (an_inherit_namespaces_attribute)		
+							STRING_.right_adjust (an_inherit_namespaces_attribute)
 							if STRING_.same_string (an_inherit_namespaces_attribute, "no") then
 								is_inherit_namespaces := False
 							elseif STRING_.same_string (an_inherit_namespaces_attribute, "yes") then
@@ -123,12 +121,14 @@ feature -- Element change
 						attribute_clean_flags.put_last (is_attribute_checked_clean (last_generated_expression))
 					end
 					an_index := an_index + 1
+				variant
+					number_of_attributes + 1 - an_index
 				end
 			end
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			l_element_uri_code: INTEGER
@@ -140,15 +140,15 @@ feature -- Element change
 				validate_top_level_element (l_element_uri_code)
 			else
 				l_stylesheet := principal_stylesheet
-				
+
 				-- Build the list of output namespace nodes
-				
+
 				if should_namespaces_be_omitted (l_element_uri_code) then
 					create namespace_codes.make (0)
 				else
 					namespace_codes := namespace_codes_in_scope
 				end
-				apply_namespace_aliases (l_element_uri_code, l_stylesheet)				
+				apply_namespace_aliases (l_element_uri_code, l_stylesheet)
 				validate_special_attributes
 				establish_attribute_names (l_stylesheet)
 				remove_excluded_namespaces (l_stylesheet)
@@ -157,7 +157,7 @@ feature -- Element change
 			validated := True
 		end
 
-		validate_children is
+		validate_children
 			-- Validate the children of this node, recursively.
 		do
 			if not is_top_level then
@@ -165,7 +165,7 @@ feature -- Element change
 			end
 		end
 
-	compile (a_executable: XM_XSLT_EXECUTABLE) is
+	compile (a_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
 			l_fixed_element: XM_XSLT_FIXED_ELEMENT
@@ -190,8 +190,6 @@ feature -- Element change
 					from
 						l_cursor := attribute_name_codes.new_cursor
 						l_cursor.finish
-					variant
-						l_cursor.index
 					until
 						l_cursor.before
 					loop
@@ -210,6 +208,8 @@ feature -- Element change
 							create {XM_XSLT_BLOCK} l_content.make (a_executable, l_fixed_attribute, l_content, principal_stylesheet.module_number (system_id), line_number)
 						end
 						l_cursor.back
+					variant
+						l_cursor.index
 					end
 				end
 				if not used_attribute_sets.is_empty then
@@ -229,7 +229,7 @@ feature -- Element change
 			end
 		end
 
-	constructed_stylesheet (a_compiler: XM_XSLT_STYLESHEET_COMPILER): XM_XPATH_TREE_DOCUMENT is
+	constructed_stylesheet (a_compiler: XM_XSLT_STYLESHEET_COMPILER): XM_XPATH_TREE_DOCUMENT
 			-- Simlified stylesheet constructed around `Current'
 		require
 			stylesheet_compiler_not_void: a_compiler /= Void
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 
 	attribute_values:  DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Values for non-XSLT attributes
-	
+
 	attribute_clean_flags: DS_ARRAYED_LIST [BOOLEAN]
 			-- Flags for non-XSLT attributes indicating whether they are clean for XML output
 
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 	validation: INTEGER
 			-- Validation level
 
-	grafted_stylesheet (a_compiler: XM_XSLT_STYLESHEET_COMPILER; a_version: STRING): XM_XPATH_TREE_DOCUMENT is
+	grafted_stylesheet (a_compiler: XM_XSLT_STYLESHEET_COMPILER; a_version: STRING): XM_XPATH_TREE_DOCUMENT
 			-- Simlified stylesheet constructed around `Current'
 		require
 			stylesheet_compiler_not_void: a_compiler /= Void
@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 			l_builder.close
 			if l_builder.has_error then
 				a_compiler.report_error (l_builder.last_error)
-			else	
+			else
 				Result := l_builder.tree_document
 			end
 		ensure
@@ -327,7 +327,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_attribute_checked_clean (an_expression: XM_XPATH_EXPRESSION): BOOLEAN is
+	is_attribute_checked_clean (an_expression: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Is `an_expression' guarenteed free of special characters?
 		require
 			expression_not_void: an_expression /= Void
@@ -346,8 +346,6 @@ feature {NONE} -- Implementation
 				Result := True
 				from
 					an_index := 1
-				variant
-					a_string.count + 1 - an_index
 				until
 					Result = False or else an_index > a_string.count
 				loop
@@ -360,11 +358,13 @@ feature {NONE} -- Implementation
 						Result := False
 					end
 					an_index := an_index + 1
+				variant
+					a_string.count + 1 - an_index
 				end
 			end
 		end
 
-	validate_top_level_element (an_element_uri_code: INTEGER) is
+	validate_top_level_element (an_element_uri_code: INTEGER)
 			-- Validate a top-level LRE.
 		require
 			top_level_element: is_top_level
@@ -381,7 +381,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	should_namespaces_be_omitted (an_element_uri_code: INTEGER): BOOLEAN is
+	should_namespaces_be_omitted (an_element_uri_code: INTEGER): BOOLEAN
 			-- Should namespaces be omitted on output?
 		require
 			not_top_level: not is_top_level
@@ -409,8 +409,6 @@ feature {NONE} -- Implementation
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -420,11 +418,13 @@ feature {NONE} -- Implementation
 					else
 						a_cursor.forth
 					end
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 		end
 
-	apply_namespace_aliases (an_element_uri_code: INTEGER; a_stylesheet: XM_XSLT_STYLESHEET) is
+	apply_namespace_aliases (an_element_uri_code: INTEGER; a_stylesheet: XM_XSLT_STYLESHEET)
 			-- Apply any aliases required to create the list of output namespaces.
 		require
 			not_top_level: not is_top_level
@@ -440,8 +440,6 @@ feature {NONE} -- Implementation
 				from
 					a_cursor := namespace_codes.new_cursor
 					a_cursor.start
-				variant
-					namespace_codes.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -451,10 +449,12 @@ feature {NONE} -- Implementation
 						a_cursor.replace (a_namespace_alias_code)
 					end
 					a_cursor.forth
+				variant
+					namespace_codes.count + 1 - a_cursor.index
 				end
-				
+
 				-- Determine if there is an alias for the namespace of the element name.
-				
+
 				a_namespace_alias_code := a_stylesheet.namespace_alias (an_element_uri_code)
 				if a_namespace_alias_code /= -1 then
 					a_uri_code := uri_code_from_namespace_code (a_namespace_alias_code)
@@ -471,7 +471,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	validate_special_attributes is
+	validate_special_attributes
 			-- Validate special attributes.
 		local
 			a_use_attribute_sets_attribute, a_type_attribute, a_validation_attribute: STRING
@@ -500,7 +500,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	establish_attribute_names (a_stylesheet: XM_XSLT_STYLESHEET) is
+	establish_attribute_names (a_stylesheet: XM_XSLT_STYLESHEET)
 			-- Establish the names to be used for all the output attributes.
 			-- Also type-check the AVT expressions
 		require
@@ -515,8 +515,6 @@ feature {NONE} -- Implementation
 			from
 				l_cursor := attribute_name_codes.new_cursor
 				l_cursor.start
-			variant
-				attribute_name_codes.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -548,13 +546,15 @@ feature {NONE} -- Implementation
 					attribute_values.replace (l_replacement.item, l_cursor.index)
 				end
 				l_cursor.forth
+			variant
+				attribute_name_codes.count + 1 - l_cursor.index
 			end
 		end
 
 	excluded_namespace_count: INTEGER
 			-- Number of namespaces excluded
 
-	remove_excluded_namespaces (a_stylesheet: XM_XSLT_STYLESHEET) is
+	remove_excluded_namespaces (a_stylesheet: XM_XSLT_STYLESHEET)
 			-- Remove any namespace that is on the exclude-result-prefixes list,
 			--  unless it is the namespace of the element or an attribute.
 		require
@@ -567,8 +567,6 @@ feature {NONE} -- Implementation
 			from
 				l_cursor := namespace_codes.new_cursor
 				l_cursor.start
-			variant
-				namespace_codes.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -582,6 +580,8 @@ feature {NONE} -- Implementation
 					excluded_namespace_count := excluded_namespace_count + 1
 				end
 				l_cursor.forth
+			variant
+				namespace_codes.count + 1 - l_cursor.index
 			end
 		end
 

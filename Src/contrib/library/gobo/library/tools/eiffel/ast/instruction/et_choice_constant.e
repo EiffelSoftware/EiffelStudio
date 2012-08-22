@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -23,13 +23,13 @@ inherit
 
 feature -- Access
 
-	lower: ET_CHOICE_CONSTANT is
+	lower: ET_CHOICE_CONSTANT
 			-- Lower bound
 		do
 			Result := Current
 		end
 
-	upper: ET_CHOICE_CONSTANT is
+	upper: ET_CHOICE_CONSTANT
 			-- Upper bound
 		do
 			Result := Current

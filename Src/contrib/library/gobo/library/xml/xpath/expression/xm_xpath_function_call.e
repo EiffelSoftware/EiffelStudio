@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -24,7 +24,7 @@ feature -- Access
 	arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Actual parameters
 
-	supplied_argument_count: INTEGER is
+	supplied_argument_count: INTEGER
 			-- Number of actual arguments supplied in the function call
 		do
 			Result := arguments.count
@@ -32,13 +32,13 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			Result := arguments
 		end
 
-	name: STRING is
+	name: STRING
 			-- Function name
 		deferred
 		ensure
@@ -48,20 +48,20 @@ feature -- Access
 	fingerprint: INTEGER
 			-- Fingerprint of `name' in `namespace_uri'
 
-	namespace_uri: STRING is
+	namespace_uri: STRING
 			-- Namespace uri for `name'
 		deferred
 		ensure
 			Namespace_uri_not_void: Result /= Void
 		end
 
-	is_function_call: BOOLEAN is
+	is_function_call: BOOLEAN
 			-- Is `Current' an XPath function call?
 		do
 			Result := True
 		end
 
-	as_function_call: XM_XPATH_FUNCTION_CALL is
+	as_function_call: XM_XPATH_FUNCTION_CALL
 			-- `Current' seen as an XPath function call
 		do
 			Result := Current
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -85,19 +85,19 @@ feature -- Status report
 			a_cursor := arguments.new_cursor
 			from
 				a_cursor.start
-			variant
-				arguments.count + 1 - a_cursor.index				
 			until
 				a_cursor.after
 			loop
 				a_cursor.item.display (a_level + 1)
 				a_cursor.forth
+			variant
+				arguments.count + 1 - a_cursor.index
 			end
 		end
 
 feature -- Status setting
 
-	set_arguments (args: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
+	set_arguments (args: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION])
 			-- Set all arguments.
 		require
 			arguments_not_void: args /= Void
@@ -105,35 +105,35 @@ feature -- Status setting
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
 			arguments := args
-			arguments.set_equality_tester (expression_tester)											
+			arguments.set_equality_tester (expression_tester)
 			from
 				a_cursor := arguments.new_cursor; a_cursor.start
-			variant
-				arguments.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
 				adopt_child_expression (a_cursor.item)
 				a_cursor.forth
+			variant
+				arguments.count + 1 - a_cursor.index
 			end
 			compute_static_properties
 		ensure
 			arguments_set: arguments = args
 			static_properties_computed: are_static_properties_computed
 		end
-	
+
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		do
 			simplify_arguments (a_replacement)
 			if a_replacement.item = Void then
 				a_replacement.put (Current)
-			end			
+			end
 		end
 
-	simplify_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Simplify `arguments'
 		require
 			no_previous_error: not is_error
@@ -148,8 +148,6 @@ feature -- Optimization
 				l_cursor := arguments.new_cursor
 				l_cursor.start
 				create l_replacement.make (Void)
-			variant
-				arguments.count + 1 - l_cursor.index
 			until
 				a_replacement.item /= Void or l_cursor.after
 			loop
@@ -163,10 +161,12 @@ feature -- Optimization
 				end
 				l_cursor.forth
 				l_replacement.put (Void)
+			variant
+				arguments.count + 1 - l_cursor.index
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_fixed_values: BOOLEAN
@@ -178,8 +178,6 @@ feature -- Optimization
 				l_cursor := arguments.new_cursor
 				l_cursor.start
 				create l_replacement.make (Void)
-			variant
-				arguments.count + 1 - l_cursor.index
 			until
 				a_replacement.item /= Void or l_cursor.after
 			loop
@@ -200,8 +198,10 @@ feature -- Optimization
 				end
 				l_cursor.forth
 				l_replacement.put (Void)
+			variant
+				arguments.count + 1 - l_cursor.index
 			end
-			
+
 			if a_replacement.item = Void then
 				check_arguments (a_replacement, a_context)
 			end
@@ -211,10 +211,10 @@ feature -- Optimization
 				else
 					a_replacement.put (Current)
 				end
-			end			
+			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_fixed_values: BOOLEAN
@@ -226,8 +226,6 @@ feature -- Optimization
 				l_cursor := arguments.new_cursor
 				l_cursor.start
 				create l_replacement.make (Void)
-			variant
-				arguments.count + 1 - l_cursor.index
 			until
 				a_replacement.item /= Void or l_cursor.after
 			loop
@@ -244,8 +242,10 @@ feature -- Optimization
 				end
 				l_cursor.forth
 				l_replacement.put (Void)
+			variant
+				arguments.count + 1 - l_cursor.index
 			end
-	
+
 			if a_replacement.item = Void then
 				check_arguments (a_replacement, a_context)
 			end
@@ -255,10 +255,10 @@ feature -- Optimization
 				else
 					a_replacement.put (Current)
 				end
-			end		
+			end
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
 			l_promotion: XM_XPATH_EXPRESSION
@@ -274,8 +274,6 @@ feature -- Optimization
 				from
 					l_cursor.start
 					create l_replacement.make (Void)
-				variant
-					arguments.count + 1 - l_cursor.index
 				until
 					l_cursor.after
 				loop
@@ -287,16 +285,18 @@ feature -- Optimization
 					end
 					l_replacement.put (Void)
 					l_cursor.forth
+				variant
+					arguments.count + 1 - l_cursor.index
 				end
 				a_replacement.put (Current)
 			else
 				a_replacement.put (Current)
 			end
-		end	
+		end
 
 feature -- Evaluation
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 			-- Functions that do not allow pre-evaluation,
 			--  or that need access to context information,
@@ -317,10 +317,10 @@ feature -- Evaluation
 		ensure
 			replaced: a_replacement.item /= Void
 		end
-	
+
 feature {XM_XPATH_FUNCTION_CALL} -- Local
-	
-	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		require
 			no_error: not is_error
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 	augmented_argument_count: INTEGER
 			-- Number of secretly added arguments
 
-	check_argument_count (a_minimum_count, a_maximum_count: INTEGER) is
+	check_argument_count (a_minimum_count, a_maximum_count: INTEGER)
 			-- Check number of arguments
 		require
 			positive_minimum_count: a_minimum_count >= 0
@@ -375,7 +375,7 @@ feature {NONE} -- Implementation
 			Correct_number_or_error: True
 		end
 
-	plural_arguments_text (a_count: INTEGER): STRING is
+	plural_arguments_text (a_count: INTEGER): STRING
 			-- Singular of plural arguments text
 		require
 			positive_count: a_count >= 0

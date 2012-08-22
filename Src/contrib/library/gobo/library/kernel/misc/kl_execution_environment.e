@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -12,7 +12,7 @@ indexing
 
 	pattern: "Singleton"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +28,7 @@ inherit
 
 feature -- Access
 
-	variable_value (a_variable: STRING): ?STRING is
+	variable_value (a_variable: STRING): detachable STRING
 			-- Value of environment variable `a_variable',
 			-- Void if `a_variable' has not been set;
 			-- Note: If `a_variable' is a UC_STRING or descendant, then
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_variable_value (a_variable, a_value: STRING) is
+	set_variable_value (a_variable, a_value: STRING)
 			-- Set environment variable `a_variable' to `a_value'.
 			-- (This setting may fail on certain platforms.)
 			-- Note: If `a_variable' or `a_value' are UC_STRING or
@@ -58,9 +58,20 @@ feature -- Setting
 			-- variable_set: equal (variable_value (a_variable), STRING_.as_string (a_value))
 		end
 
+feature -- Basic operations
+
+	sleep (a_nanoseconds: INTEGER_64)
+			-- Suspend thread execution for interval specified in
+			-- `a_nanoseconds' (1 nanosecond = 10^(-9) second).
+		require
+			a_nanoseconds_not_negative: a_nanoseconds >= 0
+		do
+			environment_impl.sleep (a_nanoseconds)
+		end
+
 feature {NONE} -- Implementation
 
-	environment_impl: EXECUTION_ENVIRONMENT is
+	environment_impl: EXECUTION_ENVIRONMENT
 			-- Execution environment impl
 		once
 			create Result

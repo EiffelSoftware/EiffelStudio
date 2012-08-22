@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -18,10 +18,10 @@ inherit
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Textual representation
 		once
 			Result := "STRING"
 		end
-	
+
 end

@@ -1,14 +1,14 @@
 %{
-indexing
+note
 
 	description:
 
 		"Scanners for Eiffel parsers"
 
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2007-01-26 10:55:25 -0800 (Fri, 26 Jan 2007) $"
-	revision: "$Revision: 5877 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EIFFEL_SCANNER
 
@@ -137,6 +137,7 @@ create
 [lL][oO][cC][aA][lL]					last_token := E_LOCAL
 [lL][oO][oO][pP]						last_token := E_LOOP
 [nN][oO][tT]							last_token := E_NOT
+[nN][oO][tT][eE]						last_token := E_NOTE
 [oO][bB][sS][oO][lL][eE][tT][eE]		last_token := E_OBSOLETE
 [oO][lL][dD]							last_token := E_OLD
 [oO][nN][cC][eE]						last_token := E_ONCE
@@ -401,7 +402,7 @@ feature {NONE} -- Local variables
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new Eiffel scanner.
 		do
 			make_with_buffer (Empty_buffer)
@@ -412,7 +413,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset scanner before scanning next input.
 		do
 			reset_compressed_scanner_skeleton
@@ -439,7 +440,7 @@ feature -- Status report
 
 feature {NONE} -- Processing
 
-	process_operator (op: INTEGER): INTEGER is
+	process_operator (op: INTEGER): INTEGER
 			-- Process current token as operator `op' or as
 			-- an Eiffel string depending on the context
 		require
@@ -456,7 +457,7 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Constants
 
-	Init_buffer_size: INTEGER is 256
+	Init_buffer_size: INTEGER = 256
 				-- Initial size for `eif_buffer'
 
 invariant

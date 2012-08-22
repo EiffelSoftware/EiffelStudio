@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel implementation checkers for features and invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new implementation checker for given classes.
 		local
 			l_feature_checker: ET_FEATURE_CHECKER
@@ -43,14 +43,14 @@ feature {NONE} -- Initialization
 			make_with_feature_checker (l_feature_checker)
 		end
 
-	make_with_feature_checker (a_feature_checker: like feature_checker) is
+	make_with_feature_checker (a_feature_checker: like feature_checker)
 			-- Create a new implementation checker for given classes
 			-- using `a_feature_checker' to check the feature implementation
 			-- and their assertions.
 		require
 			a_feature_checker_not_void: a_feature_checker /= Void
 		local
-			l_suppliers: DS_HASH_SET [ET_CLASS]
+			l_suppliers: DS_HASH_SET [ET_NAMED_CLASS]
 		do
 			make_class_processor
 			feature_checker := a_feature_checker
@@ -83,7 +83,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_flat_mode (b: BOOLEAN) is
+	set_flat_mode (b: BOOLEAN)
 			-- Set `flat_mode' to `b'.
 		do
 			flat_mode := b
@@ -91,7 +91,7 @@ feature -- Status setting
 			flat_mode_set: flat_mode = b
 		end
 
-	set_flat_dbc_mode (b: BOOLEAN) is
+	set_flat_dbc_mode (b: BOOLEAN)
 			-- Set `flat_dbc_mode' to `b'.
 		do
 			flat_dbc_mode := b
@@ -99,7 +99,7 @@ feature -- Status setting
 			flat_dbc_mode_set: flat_dbc_mode = b
 		end
 
-	set_short_mode (b: BOOLEAN) is
+	set_short_mode (b: BOOLEAN)
 			-- Set `short_mode' to `b'.
 		do
 			short_mode := b
@@ -107,7 +107,7 @@ feature -- Status setting
 			short_mode_set: short_mode = b
 		end
 
-	set_suppliers_enabled (b: BOOLEAN) is
+	set_suppliers_enabled (b: BOOLEAN)
 			-- Set `suppliersproviders_enabled' to `b'.
 		do
 			suppliers_enabled := b
@@ -117,7 +117,7 @@ feature -- Status setting
 
 feature -- Processing
 
-	process_class (a_class: ET_CLASS) is
+	process_class (a_class: ET_CLASS)
 			-- Check interface of `a_class' is not already done.
 			-- Then check the implementation of the immediate and redeclared features
 			-- of `a_class' and its invariants after having done so for its parent
@@ -144,6 +144,7 @@ feature -- Processing
 				a_processor.process_class (a_class)
 			elseif a_class.is_unknown then
 				set_fatal_error (a_class)
+				error_handler.report_giaaa_error
 			elseif not a_class.is_preparsed then
 				set_fatal_error (a_class)
 			else
@@ -159,7 +160,7 @@ feature -- Processing
 
 feature -- Error handling
 
-	set_fatal_error (a_class: ET_CLASS) is
+	set_fatal_error (a_class: ET_CLASS)
 			-- Report a fatal error to `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -173,7 +174,7 @@ feature -- Error handling
 
 feature {NONE} -- Processing
 
-	internal_process_class (a_class: ET_CLASS) is
+	internal_process_class (a_class: ET_CLASS)
 			-- Check interface of `a_class' is not already done.
 			-- Then check the implementation of the immediate and redeclared features
 			-- of `a_class' and its invariants after having done so for its parent
@@ -191,7 +192,7 @@ feature {NONE} -- Processing
 			a_parents: ET_PARENT_LIST
 			a_parent_class: ET_CLASS
 			a_error_in_parent: BOOLEAN
-			l_suppliers, l_suppliers2: DS_HASH_SET [ET_CLASS]
+			l_suppliers, l_suppliers2: DS_HASH_SET [ET_NAMED_CLASS]
 			i, nb: INTEGER
 		do
 			old_class := current_class
@@ -203,14 +204,6 @@ feature {NONE} -- Processing
 					current_class.set_implementation_checked
 						-- Process parents first.
 					a_parents := current_class.parents
-					if a_parents = Void or else a_parents.is_empty then
-						if current_class = current_system.any_class then
-								-- "ANY" has no implicit parents.
-							a_parents := Void
-						else
-							a_parents := current_system.any_parents
-						end
-					end
 					if a_parents /= Void then
 						nb := a_parents.count
 						from i := 1 until i > nb loop
@@ -260,7 +253,7 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Feature validity
 
-	check_features_validity (an_error_in_parent: BOOLEAN) is
+	check_features_validity (an_error_in_parent: BOOLEAN)
 			-- Check validity of immediate and redeclared features
 			-- of `current_class' and check validity of inherited features
 			-- of `current_class' if in flat mode (unless `an_error_in_parent' is True).
@@ -270,6 +263,8 @@ feature {NONE} -- Feature validity
 			l_procedures: ET_PROCEDURE_LIST
 			l_procedure: ET_PROCEDURE
 			old_supplier_handler: ET_SUPPLIER_HANDLER
+			l_preconditions: ET_PRECONDITIONS
+			l_postconditions: ET_POSTCONDITIONS
 			i, nb: INTEGER
 		do
 			if suppliers_enabled then
@@ -280,8 +275,15 @@ feature {NONE} -- Feature validity
 			nb := l_queries.declared_count
 			from i := 1 until i > nb loop
 				l_query := l_queries.item (i)
-				l_query.reset_implementation_checked
-				l_query.reset_assertions_checked
+				l_query.reset_validity_checked
+				l_preconditions := l_query.preconditions
+				if l_preconditions /= Void then
+					l_preconditions.reset_validity_checked
+				end
+				l_postconditions := l_query.postconditions
+				if l_postconditions /= Void then
+					l_postconditions.reset_validity_checked
+				end
 				check_query_validity (l_query, an_error_in_parent)
 				i := i + 1
 			end
@@ -298,8 +300,15 @@ feature {NONE} -- Feature validity
 			nb := l_procedures.declared_count
 			from i := 1 until i > nb loop
 				l_procedure := l_procedures.item (i)
-				l_procedure.reset_implementation_checked
-				l_procedure.reset_assertions_checked
+				l_procedure.reset_validity_checked
+				l_preconditions := l_procedure.preconditions
+				if l_preconditions /= Void then
+					l_preconditions.reset_validity_checked
+				end
+				l_postconditions := l_procedure.postconditions
+				if l_postconditions /= Void then
+					l_postconditions.reset_validity_checked
+				end
 				check_procedure_validity (l_procedure, an_error_in_parent)
 				i := i + 1
 			end
@@ -317,7 +326,7 @@ feature {NONE} -- Feature validity
 			end
 		end
 
-	check_query_validity (a_query: ET_QUERY; an_error_in_parent: BOOLEAN) is
+	check_query_validity (a_query: ET_QUERY; an_error_in_parent: BOOLEAN)
 			-- Check validity of `a_query' and, if in flat mode (unless
 			-- `an_error_in_parent' is True), recusively of the queries
 			-- associated with its precursor expressions if any.
@@ -327,12 +336,12 @@ feature {NONE} -- Feature validity
 			if flat_mode and not an_error_in_parent then
 				feature_checker.set_precursor_queries (precursor_queries)
 			end
+			check_assertions_validity (a_query, a_query, an_error_in_parent)
 			feature_checker.check_feature_validity (a_query, current_class)
 			feature_checker.set_precursor_queries (Void)
 			if feature_checker.has_fatal_error then
 				set_fatal_error (current_class)
 			end
-			check_assertions_validity (a_query, a_query, an_error_in_parent)
 			if flat_mode and not an_error_in_parent then
 				from precursor_queries.start until precursor_queries.after loop
 					check_precursor_query_validity (precursor_queries.item_for_iteration, an_error_in_parent)
@@ -342,7 +351,7 @@ feature {NONE} -- Feature validity
 			end
 		end
 
-	check_procedure_validity (a_procedure: ET_PROCEDURE; an_error_in_parent: BOOLEAN) is
+	check_procedure_validity (a_procedure: ET_PROCEDURE; an_error_in_parent: BOOLEAN)
 			-- Check validity of `a_procedure' and, if in flat mode (unless
 			-- `an_error_in_parent' is True), recusively of the procedures
 			-- associated with its precursor instructions if any.
@@ -352,12 +361,12 @@ feature {NONE} -- Feature validity
 			if flat_mode and not an_error_in_parent then
 				feature_checker.set_precursor_procedures (precursor_procedures)
 			end
+			check_assertions_validity (a_procedure, a_procedure, an_error_in_parent)
 			feature_checker.check_feature_validity (a_procedure, current_class)
 			feature_checker.set_precursor_procedures (Void)
 			if feature_checker.has_fatal_error then
 				set_fatal_error (current_class)
 			end
-			check_assertions_validity (a_procedure, a_procedure, an_error_in_parent)
 			if flat_mode and not an_error_in_parent then
 				from precursor_procedures.start until precursor_procedures.after loop
 					check_precursor_procedure_validity (precursor_procedures.item_for_iteration, an_error_in_parent)
@@ -372,7 +381,7 @@ feature {NONE} -- Feature validity
 
 feature {NONE} -- Precursor validity
 
-	check_precursor_query_validity (a_query: ET_QUERY; an_error_in_parent: BOOLEAN) is
+	check_precursor_query_validity (a_query: ET_QUERY; an_error_in_parent: BOOLEAN)
 			-- Check validity of `a_query' when associated with a precursor
 			-- expression appearing in a query of `current_class'.
 		require
@@ -391,7 +400,7 @@ feature {NONE} -- Precursor validity
 				-- the precursor expression appeared.
 		end
 
-	check_precursor_procedure_validity (a_procedure: ET_PROCEDURE; an_error_in_parent: BOOLEAN) is
+	check_precursor_procedure_validity (a_procedure: ET_PROCEDURE; an_error_in_parent: BOOLEAN)
 			-- Check validity of `a_procedure' when associated with a precursor
 			-- instruction appearing in a procedure of `current_class'.
 		require
@@ -420,7 +429,7 @@ feature {NONE} -- Precursor validity
 
 feature {NONE} -- Assertion validity
 
-	check_assertions_validity (a_feature_impl, a_feature: ET_FEATURE; an_error_in_parent: BOOLEAN) is
+	check_assertions_validity (a_feature_impl, a_feature: ET_FEATURE; an_error_in_parent: BOOLEAN)
 			-- Check validity of pre- and postconditions of `a_feature_impl' in `current_class'.
 			-- `a_feature' is the version of `a_feature_impl' in `current_class' (useful
 			-- when processing inherited assertions).
@@ -431,7 +440,6 @@ feature {NONE} -- Assertion validity
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
 			a_class_impl: ET_CLASS
-			had_error: BOOLEAN
 			l_first_precursor: ET_FEATURE
 			l_other_precursors: ET_FEATURE_LIST
 			i, nb: INTEGER
@@ -441,7 +449,6 @@ feature {NONE} -- Assertion validity
 			if a_preconditions /= Void then
 				feature_checker.check_preconditions_validity (a_preconditions, a_feature_impl, a_feature, current_class)
 				if feature_checker.has_fatal_error then
-					had_error := True
 					set_fatal_error (current_class)
 				end
 			end
@@ -449,14 +456,7 @@ feature {NONE} -- Assertion validity
 			if a_postconditions /= Void then
 				feature_checker.check_postconditions_validity (a_postconditions, a_feature_impl, a_feature, current_class)
 				if feature_checker.has_fatal_error then
-					had_error := True
 					set_fatal_error (current_class)
-				end
-			end
-			if current_class = a_class_impl then
-				a_feature.set_assertions_checked
-				if had_error then
-					a_feature.set_assertions_error
 				end
 			end
 			if (flat_dbc_mode or flat_mode) and not an_error_in_parent then
@@ -475,7 +475,7 @@ feature {NONE} -- Assertion validity
 			end
 		end
 
-	check_invariants_validity (an_error_in_parent: BOOLEAN) is
+	check_invariants_validity (an_error_in_parent: BOOLEAN)
 			-- Check validity of invariants of `current_class',
 			-- and of its proper ancestors in flat mode (unless `an_error_in_parent' is True).
 		local
@@ -491,7 +491,7 @@ feature {NONE} -- Assertion validity
 			end
 			an_invariants := current_class.invariants
 			if an_invariants /= Void then
-				an_invariants.reset_assertions_checked
+				an_invariants.reset_validity_checked
 				feature_checker.check_invariants_validity (an_invariants, current_class)
 				if feature_checker.has_fatal_error then
 					set_fatal_error (current_class)
@@ -522,7 +522,7 @@ feature {NONE} -- Suppliers
 	supplier_builder: ET_SUPPLIER_BUILDER
 			-- Supplier builder
 
-	no_suppliers: DS_HASH_SET [ET_CLASS]
+	no_suppliers: DS_HASH_SET [ET_NAMED_CLASS]
 			-- Empty set of supplier classes
 
 invariant

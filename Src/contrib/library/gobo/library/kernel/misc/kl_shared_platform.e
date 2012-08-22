@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -19,7 +19,7 @@ inherit
 
 feature -- Access
 
-	Platform: KL_PLATFORM is
+	Platform: KL_PLATFORM
 			-- Platform-dependent properties
 		once
 			create Result

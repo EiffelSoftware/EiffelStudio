@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Error: All start conditions already have EOF rules"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,23 +22,23 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER) is
+	make (filename: STRING; line: INTEGER)
 			-- Create a new error reporting that all
 			-- start conditions already have EOF rules.
 		require
 			filename_not_void: filename /= Void
 		do
-			create parameters.make (1, 2)
+			create parameters.make_filled (empty_string, 1, 2)
 			parameters.put (filename, 1)
 			parameters.put (line.out, 2)
 		end
 
 feature -- Access
 
-	default_template: STRING is "Warning, %"$1%", line $2: all start conditions already have <<EOF>> rules"
+	default_template: STRING = "Warning, %"$1%", line $2: all start conditions already have <<EOF>> rules"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0002"
+	code: STRING = "LX0002"
 			-- Error code
 
 invariant

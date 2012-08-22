@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -21,7 +21,7 @@ inherit
 
 feature -- Status report
 
-	is_all_whitespace (chars: STRING): BOOLEAN is
+	is_all_whitespace (chars: STRING): BOOLEAN
 			-- Does `chars' consist only of XML white-space characters?
 		require
 			chars_not_void: chars /= Void
@@ -31,8 +31,6 @@ feature -- Status report
 			from
 				counter := 1
 				Result := True
-			variant
-				chars.count + 1 - counter
 			until
 				Result = False or else counter > chars.count
 			loop
@@ -40,10 +38,12 @@ feature -- Status report
 					Result := False
 				end
 				counter := counter + 1
+			variant
+				chars.count + 1 - counter
 			end
 		end
 
-	is_alphanumeric (a_character_code: INTEGER): BOOLEAN is
+	is_alphanumeric (a_character_code: INTEGER): BOOLEAN
 			-- Does `a_character_code' represent an alphanumeric character?
 		require
 			positive_character_code: a_character_code > 0
@@ -53,11 +53,11 @@ feature -- Status report
 							 or else unicode_character_class.is_number (a_character_code))
 		end
 
-	is_xml_space (a_code: INTEGER): BOOLEAN is
+	is_xml_space (a_code: INTEGER): BOOLEAN
 			-- Does `a_code' represent an XML space?
 		do
 			Result := a_code = 32 or a_code = 9 or a_code = 10 or a_code = 13
 		end
 
 end
-	
+

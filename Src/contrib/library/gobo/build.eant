@@ -29,6 +29,7 @@
 		<geant file="build.eant" target="install" dir="library"/>
 		<geant file="build.eant" target="install" dir="src"/>
 		<geant file="build.eant" target="install" dir="example"/>
+		<geant file="build.eant" target="install" dir="test"/>
 		<geant file="build.eant" target="install" dir="doc"/>
 	</target>
 
@@ -40,6 +41,7 @@
 		<geant file="build.eant" target="clean" dir="library"/>
 		<geant file="build.eant" target="clean" dir="src"/>
 		<geant file="build.eant" target="clean" dir="example"/>
+		<geant file="build.eant" target="clean" dir="test"/>
 		<geant file="build.eant" target="clean" dir="doc"/>
 	</target>
 
@@ -51,6 +53,7 @@
 		<geant file="build.eant" target="clobber" dir="library"/>
 		<geant file="build.eant" target="clobber" dir="src"/>
 		<geant file="build.eant" target="clobber" dir="example"/>
+		<geant file="build.eant" target="clobber" dir="test"/>
 		<geant file="build.eant" target="clobber" dir="doc"/>
 	</target>
 
@@ -116,6 +119,7 @@
 		<geant file="../src/gexslt/build.eant" target="compile" dir="bin"/>
 		<geant file="../src/gexslt/build.eant" target="clean" dir="bin"/>
 		<geant file="build.eant" target="install" dir="example"/>
+		<geant file="build.eant" target="install" dir="test"/>
 		<geant file="build.eant" target="install" dir="doc"/>
 		<geant target="clean"/>
 	</target>
@@ -133,9 +137,17 @@
 		<geant file="../src/getest/build.eant" target="clobber" dir="bin"/>
 		<geant file="../src/gelint/build.eant" target="clobber" dir="bin"/>
 		<geant file="../src/gexslt/build.eant" target="clobber" dir="bin"/>
+		<copy file="work/bootstrap/gec.h" to_directory="bin"/>
+		<copy to_directory="bin">
+			<fileset include="work/bootstrap/gec*.c">
+				<map type="flat"/>
+			</fileset>
+		</copy>
 		<delete>
 			<directoryset directory="." include="@(**/.svn)"/>
+			<directoryset directory="." include="@(**/.git)"/>
 		</delete>
+		<delete directory="work"/>
 		<delete directory="doc/structure/visio"/>
 		<delete directory="doc/time/visio"/>
 	</target>

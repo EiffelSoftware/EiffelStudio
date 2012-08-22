@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Routines implemented in .NET"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,6 +24,7 @@ inherit
 
 	ET_DOTNET_FEATURE
 		undefine
+			is_routine,
 			obsolete_message,
 			arguments,
 			preconditions,
@@ -40,7 +41,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_deferred (b: BOOLEAN) is
+	set_deferred (b: BOOLEAN)
 			-- Set `is_deferred' to `b'.
 		do
 			is_deferred := b

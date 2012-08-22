@@ -7,8 +7,8 @@
 
 	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
 	license: "MIT License"
-	date: "$Date: 2007-11-06 02:20:13 -0800 (Tue, 06 Nov 2007) $"
-	revision: "$Revision: 6180 $"
+	date: "$Date$"
+	revision: "$Revision$"
 -->
 
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="argument/index">

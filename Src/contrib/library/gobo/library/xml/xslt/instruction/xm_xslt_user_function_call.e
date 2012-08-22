@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Compile-time references to xsl:functions"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_fingerprint: INTEGER; some_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
+	make (a_fingerprint: INTEGER; some_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION])
 			-- Establish invariant.
 		require
 			strictly_positive_fingerprint: a_fingerprint > 0
@@ -55,7 +55,7 @@ feature -- Access
 	function: XM_XSLT_COMPILED_USER_FUNCTION
 			-- Compiled function
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			if static_type = Void then
@@ -77,13 +77,13 @@ feature -- Status report
 	is_type_error: BOOLEAN
 			-- Has a type error been detected on an argument?
 
-	is_user_function_call: BOOLEAN is
+	is_user_function_call: BOOLEAN
 			-- Is `Current' a user function call?
 		do
 			Result := True
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -98,23 +98,23 @@ feature -- Status report
 			a_cursor := arguments.new_cursor
 			from
 				a_cursor.start
-			variant
-				arguments.count + 1 - a_cursor.index				
 			until
 				a_cursor.after
 			loop
 				a_cursor.item.display (a_level + 1)
 				a_cursor.forth
+			variant
+				arguments.count + 1 - a_cursor.index
 			end
 		end
 
-	compute_intrinsic_dependencies is
+	compute_intrinsic_dependencies
 			-- Determine the intrinsic dependencies of an expression.
 		do
 			set_intrinsically_depends_upon_user_functions
 		end
 
-	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE is
+	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE
 			-- Does `Current' contains recursive tail calls of stylesheet functions?
 			-- `Undecided' means it contains a tail call to another function.
 		do
@@ -128,8 +128,8 @@ feature -- Status report
 		end
 
 feature -- Status setting
-	
-	mark_tail_function_calls is
+
+	mark_tail_function_calls
 			-- Mark tail-recursive calls on stylesheet functions.
 		do
 			is_tail_callable := True
@@ -137,7 +137,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			Precursor (a_replacement, a_context, a_context_item_type)
@@ -151,7 +151,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			Precursor (a_replacement, a_context, a_context_item_type)
@@ -159,10 +159,10 @@ feature -- Optimization
 				compute_argument_evaluation_modes
 			end
 		end
-	
+
 feature -- Evaluation
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		local
 			l_execution_context: XM_XSLT_EVALUATION_CONTEXT
@@ -188,7 +188,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence.
 		local
 			l_execution_context: XM_XSLT_EVALUATION_CONTEXT
@@ -210,7 +210,7 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -242,13 +242,13 @@ feature -- Evaluation
 			end
 		end
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			a_replacement.put (Current)
 		end
 
-	generate_events (a_context: XM_XPATH_CONTEXT) is
+	generate_events (a_context: XM_XPATH_CONTEXT)
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_actual_arguments: ARRAY [XM_XPATH_VALUE]
@@ -261,7 +261,7 @@ feature -- Evaluation
 				-- as this is an XSLT function
 			end
 			create l_return_value.make (Void)
-			create l_actual_arguments.make (1, arguments.count)
+			create l_actual_arguments.make_filled (Void, 1, arguments.count)
 			evaluate_arguments (l_return_value, l_actual_arguments, l_context)
 			if l_return_value.item /= Void then
 				a_context.report_fatal_error (l_return_value.item.error_value)
@@ -276,7 +276,7 @@ feature -- Evaluation
 			end
 		end
 
-	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE
 			-- Eager evaluation via `generate_events'
 		local
 			l_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
@@ -296,7 +296,7 @@ feature -- Evaluation
 
 feature -- Element change
 
-	set_static_type (a_static_type: like static_type) is
+	set_static_type (a_static_type: like static_type)
 			-- Set static type.
 		require
 			static_type_not_void: a_static_type /= Void
@@ -307,7 +307,7 @@ feature -- Element change
 			static_type_set: static_type = a_static_type
 		end
 
-	set_function (a_source_function: XM_XSLT_FUNCTION; a_compiled_function: XM_XSLT_COMPILED_USER_FUNCTION; a_context: XM_XPATH_STATIC_CONTEXT) is
+	set_function (a_source_function: XM_XSLT_FUNCTION; a_compiled_function: XM_XSLT_COMPILED_USER_FUNCTION; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Create reference to callable function, validate consistency and compute `argument_evaluation_modes'.
 		require
 			source_function_not_void: a_source_function /= Void
@@ -322,8 +322,6 @@ feature -- Element change
 			some_required_types := a_source_function.argument_types
 			from
 				an_argument_count := a_source_function.arity; an_index := 1
-			variant
-				an_argument_count + 1 - an_index
 			until
 				is_type_error or else an_index > an_argument_count
 			loop
@@ -337,6 +335,8 @@ feature -- Element change
 					 arguments.replace (a_type_checker.checked_expression, an_index)
 				end
 				an_index := an_index + 1
+			variant
+				an_argument_count + 1 - an_index
 			end
 			if not is_type_error and argument_evaluation_modes = Void then
 				compute_argument_evaluation_modes
@@ -347,7 +347,7 @@ feature -- Element change
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
-	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		do
 			-- These checks are in set_function, at the time when the function
@@ -356,7 +356,7 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	native_implementations: INTEGER is
+	native_implementations: INTEGER
 			-- Natively-supported evaluation routines
 		do
 			if cardinality_allows_many then
@@ -366,19 +366,19 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			end
 		end
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			if static_type = Void then
 
 				-- actual type is not known yet, so we return an approximation
-				
+
 				set_cardinality_zero_or_more
 			else
 				set_cardinality (static_type.cardinality)
 			end
 		end
-	
+
 feature {NONE} -- Implementation
 
 	static_type: XM_XPATH_SEQUENCE_TYPE
@@ -387,7 +387,7 @@ feature {NONE} -- Implementation
 	argument_evaluation_modes: DS_ARRAYED_LIST [INTEGER]
 			-- Methods by which each argument is evaluated
 
-	compute_argument_evaluation_modes is
+	compute_argument_evaluation_modes
 			-- Create and populate `argument_evaluation_modes'.
 		require
 			fixed_up: function /= Void
@@ -418,20 +418,20 @@ feature {NONE} -- Implementation
 			argument_evaluation_modes_not_void: argument_evaluation_modes /= Void
 			correct_count: argument_evaluation_modes.count = arguments.count
 		end
-			
-	name: STRING is
+
+	name: STRING
 			-- Local name of function
 		do
 			Result := shared_name_pool.local_name_from_name_code (fingerprint)
 		end
 
-	namespace_uri: STRING is
+	namespace_uri: STRING
 			-- Namespace uri for `name'
 		do
 			Result := shared_name_pool.namespace_uri_from_name_code (fingerprint)
 		end
 
-	expanded_name: STRING is
+	expanded_name: STRING
 			-- Expanded name of function
 		do
 			if namespace_uri.is_empty then
@@ -441,7 +441,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	call (a_return_value: DS_CELL [XM_XPATH_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	call (a_return_value: DS_CELL [XM_XPATH_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Call the function.
 			-- Result returned as `a_return_value.item'.
 		require
@@ -453,7 +453,7 @@ feature {NONE} -- Implementation
 			l_actual_arguments: ARRAY [XM_XPATH_VALUE]
 			l_clean_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			create l_actual_arguments.make (1, arguments.count)
+			create l_actual_arguments.make_filled (Void, 1, arguments.count)
 			evaluate_arguments (a_return_value, l_actual_arguments, a_context)
 			if a_return_value.item /= Void then
 				-- error - do nothing
@@ -470,7 +470,7 @@ feature {NONE} -- Implementation
 			called_value_not_void: a_return_value.item /= Void -- but may be an error value
 		end
 
-	evaluate_arguments (a_return_value: DS_CELL [XM_XPATH_VALUE]; a_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	evaluate_arguments (a_return_value: DS_CELL [XM_XPATH_VALUE]; a_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Evaluate `a_arguments'.
 		require
 			a_return_value_not_void: a_return_value /= Void
@@ -487,7 +487,7 @@ feature {NONE} -- Implementation
 			arguments.do_if_with_index (agent evaluate_argument (a_return_value, a_actual_arguments, a_context, ?, ?), agent is_no_error (a_return_value, ?, ?))
 		end
 
-	is_no_error (a_return_value: DS_CELL [XM_XPATH_VALUE]; a_expression: XM_XPATH_EXPRESSION; a_index: INTEGER): BOOLEAN is
+	is_no_error (a_return_value: DS_CELL [XM_XPATH_VALUE]; a_expression: XM_XPATH_EXPRESSION; a_index: INTEGER): BOOLEAN
 			-- Is `a_return_value' empty?
 			-- Iterator passes unwated arguments `a_expression' and `a_index'.
 		require
@@ -499,7 +499,7 @@ feature {NONE} -- Implementation
 		end
 
 	evaluate_argument (a_return_value: DS_CELL [XM_XPATH_VALUE]; a_actual_arguments: ARRAY [XM_XPATH_VALUE];
-		a_context: XM_XSLT_EVALUATION_CONTEXT; a_argument: XM_XPATH_EXPRESSION; a_index: INTEGER) is
+		a_context: XM_XSLT_EVALUATION_CONTEXT; a_argument: XM_XPATH_EXPRESSION; a_index: INTEGER)
 			-- Evaluate `a_argument'.
 		require
 			return_value_is_void: a_return_value.item = Void
@@ -514,13 +514,13 @@ feature {NONE} -- Implementation
 		local
 			l_reference_count: INTEGER
 		do
-			l_reference_count := function.parameter_definitions.item (a_index).reference_count 
+			l_reference_count := function.parameter_definitions.item (a_index).reference_count
 			a_argument.evaluate (a_return_value, argument_evaluation_modes.item (a_index),
 				l_reference_count, a_context)
 			if a_return_value.item = Void then
 				a_actual_arguments.put (create {XM_XPATH_EMPTY_SEQUENCE}.make, a_index)
 			elseif not a_return_value.item.is_error then
-				if l_reference_count > 1 and a_return_value.item.is_closure 
+				if l_reference_count > 1 and a_return_value.item.is_closure
 					and not a_return_value.item.is_memo_closure then
 					-- this shouldn't happen, but just in case:
 					a_return_value.item.reduce
@@ -538,4 +538,4 @@ invariant
 	arguments_not_void: initialized implies arguments /= Void
 
 end
-	
+

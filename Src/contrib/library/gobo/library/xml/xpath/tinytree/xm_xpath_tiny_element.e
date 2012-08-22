@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TINY_FOREST; a_node_number: INTEGER) is
+	make (a_document: XM_XPATH_TINY_FOREST; a_node_number: INTEGER)
 		require
 			valid_document: a_document /= Void
 			valid_node_number: a_node_number > 0 and a_node_number <= a_document.last_node_added
@@ -52,25 +52,25 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_tiny_element: BOOLEAN is
+	is_tiny_element: BOOLEAN
 			-- Is `Current' an element?
 		do
 			Result := True
 		end
 
-	as_tiny_element: XM_XPATH_TINY_ELEMENT is
+	as_tiny_element: XM_XPATH_TINY_ELEMENT
 			-- `Current' seen as an element
 		do
 			Result := Current
 		end
 
-	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING is
+	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING
 			-- Value of named attribute
 		do
 			Result := attribute_value (shared_name_pool.fingerprint (a_uri, a_local_name))
 		end
 
-	attribute_value (a_fingerprint: INTEGER): STRING is
+	attribute_value (a_fingerprint: INTEGER): STRING
 			-- Value of attribute identified by `a_fingerprint'
 		local
 			an_alpha_value, a_name_code: INTEGER
@@ -82,8 +82,6 @@ feature -- Access
 			else
 				from
 					finished := False
-				variant
-					tree.number_of_attributes	+ 1 - an_alpha_value
 				until
 					finished or else an_alpha_value > tree.number_of_attributes
 						or else tree.attribute_parent (an_alpha_value) /= node_number
@@ -94,11 +92,13 @@ feature -- Access
 						finished := True
 					end
 					an_alpha_value := an_alpha_value + 1
+				variant
+					tree.number_of_attributes	+ 1 - an_alpha_value
 				end
 			end
 		end
 
-	uri_code_for_prefix_code (a_prefix_code: INTEGER): INTEGER is
+	uri_code_for_prefix_code (a_prefix_code: INTEGER): INTEGER
 			-- URI code for `a_prefix_code'
 		local
 			a_namespace_node, a_namespace_code: INTEGER
@@ -122,16 +122,16 @@ feature -- Access
 					end
 				end
 			end
-			
+
 			-- If we have got so far, without finding `a_prefix_code',
 			--  then we must look at the parent element
 
 			if Result = -1 then
 				a_composite := parent
 				if not a_composite.is_element then
-					
+
 					-- Document node
-					
+
 					if a_prefix_code = 0 then
 						Result := Default_uri_code
 					end
@@ -141,7 +141,7 @@ feature -- Access
 			end
 		end
 
-	declared_namespaces: DS_ARRAYED_LIST [INTEGER] is
+	declared_namespaces: DS_ARRAYED_LIST [INTEGER]
 			-- Codes for namespaces declared on `Current'
 		local
 			a_namespace_code, a_namespace_node: INTEGER
@@ -152,12 +152,12 @@ feature -- Access
 				from  until a_namespace_node > tree.number_of_namespaces or else tree.namespace_parent (a_namespace_node) /= node_number loop
 					a_namespace_code := tree.namespace_code_for_node (a_namespace_node)
 					Result.force_last (a_namespace_code)
-					a_namespace_node := a_namespace_node + 1	
+					a_namespace_node := a_namespace_node + 1
 				end
 			end
 		end
 
-	namespace_codes_in_scope: DS_ARRAYED_LIST [INTEGER] is
+	namespace_codes_in_scope: DS_ARRAYED_LIST [INTEGER]
 			-- Namespace codes in scope for `Current'
 		do
 			create Result.make_default
@@ -167,7 +167,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_attributes: BOOLEAN is
+	has_attributes: BOOLEAN
 			-- Does `Current' have any attributes?
 		do
 			Result := tree.alpha_value (node_number) > 0
@@ -175,7 +175,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_name_code (a_name_code: INTEGER) is
+	set_name_code (a_name_code: INTEGER)
 			-- Set `name_code'.
 			-- Needed (indirectly, through `XM_XPATH_TINY_ELEMENT') by `XM_XSLT_STRIPPER'.
 		do
@@ -185,8 +185,8 @@ feature -- Status setting
 		end
 
 feature -- Element change
-	
-	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN) is
+
+	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN)
 			-- Output all namespace nodes associated with this element.
 		local
 			a_namespace_node: INTEGER
@@ -203,10 +203,10 @@ feature -- Element change
 						a_namespace_node := a_namespace_node + 1
 					end
 				end
-				
+
 				-- Now add the namespaces defined on the ancestor nodes.
 				-- We rely on the receiver to eliminate multiple declarations of the same prefix.
-				
+
 				if include_ancestors then
 					a_node := parent
 					if a_node /= Void and then a_node.is_element then
@@ -215,10 +215,10 @@ feature -- Element change
 				end
 			end
 		end
-	
+
 feature -- Duplication
 
-	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN)
 			-- Copy `Current' to `a_receiver'.
 		local
 			a_level, a_node_level, a_start_level, a_next_node, a_start_index, a_node_count: INTEGER
@@ -228,24 +228,22 @@ feature -- Duplication
 			from
 				a_level := -1; first := True; a_next_node := node_number;
 				a_start_level := tree.depth_of (node_number)
-				
+
 				-- in case the target is another tree in the same forest:
-				a_node_count := tree.number_of_nodes 
-			variant
-				a_node_count + 1 - a_next_node
+				a_node_count := tree.number_of_nodes
 			until
 				finished
 			loop
 				a_node_level := tree.depth_of (a_next_node)
 				if close_pending then a_level := a_level + 1 end
 				from
-				variant
-					1 + a_level
 				until
 					a_level <= a_node_level
 				loop
 					a_receiver.end_element
 					a_level := a_level - 1
+				variant
+					1 + a_level
 				end
 				a_level := a_node_level
 
@@ -274,22 +272,24 @@ feature -- Duplication
 				end
 				a_next_node := a_next_node + 1
 				finished := a_next_node > a_node_count or else tree.depth_of (a_next_node) <= a_start_level
+			variant
+				a_node_count + 1 - a_next_node
 			end
 			if close_pending then a_level := a_level + 1 end
 			from
-			variant
-				a_level
 			until
 				a_level = a_start_level
 			loop
 				a_receiver.end_element
 				a_level := a_level - 1
+			variant
+				a_level
 			end
 		end
-	
+
 feature {XM_XPATH_NODE} -- Restricted
 
-	is_possible_child: BOOLEAN is
+	is_possible_child: BOOLEAN
 			-- Can this node be a child of a document or element node?
 		do
 			Result := True
@@ -297,7 +297,7 @@ feature {XM_XPATH_NODE} -- Restricted
 
 feature {NONE} -- Implementation
 
-	copy_element (first: BOOLEAN; a_next_node: INTEGER; a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+	copy_element (first: BOOLEAN; a_next_node: INTEGER; a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN)
 			-- Copy child element to `a_receiver'.
 		require
 			receiver_not_void: a_receiver /= Void
@@ -345,7 +345,7 @@ feature {NONE} -- Implementation
 						a_type_code := tree.attribute_annotation (an_attribute)
 					else
 						a_type_code := -1
-					end	
+					end
 					a_receiver.notify_attribute (tree.attribute_name_code (an_attribute), a_type_code, tree.attribute_value (an_attribute), 0)
 					an_attribute := an_attribute + 1
 				end
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 			a_receiver.start_content
 		end
 
-	accumulate_namespace_codes (a_node_number: INTEGER; a_buffer: DS_ARRAYED_LIST [INTEGER]) is
+	accumulate_namespace_codes (a_node_number: INTEGER; a_buffer: DS_ARRAYED_LIST [INTEGER])
 			-- Accumulate namespace codes for `a_node_number' into a`_buffer'.
 		require
 			buffer_not_void: a_buffer /= Void
@@ -378,9 +378,9 @@ feature {NONE} -- Implementation
 							a_namespace_node > tree.number_of_namespaces or else tree.namespace_parent (a_namespace_node) /= another_node_number
 						loop
 							a_namespace_code := tree.namespace_code_for_node (a_namespace_node)
-							
+
 							-- See if the prefix has already been declared; if so, this declaration is ignored
-							
+
 							a_prefix_code := prefix_code_from_namespace_code (a_namespace_code);	duplicated := False
 							from
 								a_cursor := a_buffer.new_cursor; a_cursor.start

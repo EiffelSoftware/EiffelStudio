@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel lists of features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset features at index 1 to `declared_count' as they were just after they were last parsed.
 		local
 			i, nb: INTEGER
@@ -36,7 +36,7 @@ feature -- Initialization
 			end
 		end
 
-	reset_after_features_flattened is
+	reset_after_features_flattened
 			-- Reset features at index 1 to `declared_count' as they were just after they were last flattened.
 		local
 			i, nb: INTEGER
@@ -50,9 +50,23 @@ feature -- Initialization
 			end
 		end
 
+	reset_after_interface_checked
+			-- Reset features at index 1 to `declared_count' as they were just after their interface was last checked.
+		local
+			i, nb: INTEGER
+		do
+				-- The code below takes advantage of the fact that the features
+				-- are stored in `storage' from 'count - 1' to '0'.
+			nb := count - declared_count
+			from i := count - 1 until i < nb loop
+				storage.item (i).reset_after_interface_checked
+				i := i - 1
+			end
+		end
+
 feature -- Access
 
-	named_feature (a_name: ET_CALL_NAME): like item is
+	named_feature (a_name: ET_CALL_NAME): like item
 			-- Feature named `a_name';
 			-- Void if no such feature
 		require
@@ -102,7 +116,55 @@ feature -- Access
 			end
 		end
 
-	seeded_feature (a_seed: INTEGER): like item is
+	named_declared_feature (a_name: ET_CALL_NAME): like item
+			-- Feature named `a_name' declared in the underlying class;
+			-- Void if no such feature
+		require
+			a_name_not_void: a_name /= Void
+		local
+			i, nb: INTEGER
+			a_feature: like item
+			an_id: ET_IDENTIFIER
+			a_hash_code: INTEGER
+			an_alias_name: ET_ALIAS_NAME
+		do
+				-- This assignment attempt is to avoid too many polymorphic
+				-- calls to `same_feature_name'.
+			an_id ?= a_name
+			if an_id /= Void then
+				a_hash_code := an_id.hash_code
+				nb := count - 1
+				i := count - declared_count
+				from until i > nb loop
+					a_feature := storage.item (i)
+					if a_hash_code = a_feature.hash_code then
+						if an_id.same_feature_name (a_feature.name) then
+							Result := a_feature
+							i := nb + 1 -- Jump out of the loop.
+						else
+							i := i + 1
+						end
+					else
+						i := i + 1
+					end
+				end
+			else
+				nb := count - 1
+				i := count - declared_count
+				from until i > nb loop
+					a_feature := storage.item (i)
+					an_alias_name := a_feature.alias_name
+					if an_alias_name /= Void and then an_alias_name.same_call_name (a_name) then
+						Result := a_feature
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	seeded_feature (a_seed: INTEGER): like item
 			-- Feature with seed `a_seed';
 			-- Void if no such feature
 		local
@@ -177,7 +239,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_declared_feature (a_feature: ET_FEATURE): BOOLEAN is
+	has_declared_feature (a_feature: ET_FEATURE): BOOLEAN
 			-- Is `a_feature' part of the declared features?
 		require
 			a_feature_not_void: a_feature /= Void
@@ -196,8 +258,8 @@ feature -- Status report
 			end
 		end
 
-	has_inherited_feature (a_feature: ET_FEATURE): BOOLEAN is
-			-- Is `a_feature' part of the (non_redeclared) inherited features?
+	has_inherited_feature (a_feature: ET_FEATURE): BOOLEAN
+			-- Is `a_feature' part of the (non-redeclared) inherited features?
 		require
 			a_feature_not_void: a_feature /= Void
 		local
@@ -226,7 +288,7 @@ feature -- Measurement
 
 feature -- Setting
 
-	set_declared_count (a_count: INTEGER) is
+	set_declared_count (a_count: INTEGER)
 			-- Set `declared_count' to `a_count'.
 		require
 			a_count_large_enough: a_count >= 0
@@ -239,7 +301,7 @@ feature -- Setting
 
 feature -- Basic operations
 
-	add_overloaded_features (a_name: ET_CALL_NAME; a_list: DS_ARRAYED_LIST [like item]) is
+	add_overloaded_features (a_name: ET_CALL_NAME; a_list: DS_ARRAYED_LIST [like item])
 			-- Add to `a_list' features whose name or overloaded name is `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -292,7 +354,7 @@ feature -- Basic operations
 
 feature -- Iteration
 
-	do_declared (an_action: PROCEDURE [ANY, TUPLE [like item]]) is
+	do_declared (an_action: PROCEDURE [ANY, TUPLE [like item]])
 			-- Apply `an_action' to every feature declared in the
 			-- corresponding class, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -312,7 +374,39 @@ feature -- Iteration
 			end
 		end
 
-	do_declared_if (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]) is
+	do_declared_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+			-- Apply `an_action' to every feature declared in the
+			-- corresponding class, from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+		local
+			i, nb: INTEGER
+		do
+			if a_stop_request = Void then
+				do_declared (an_action)
+			elseif not a_stop_request.item ([]) then
+				from
+					i := count - 1
+					nb := count - declared_count
+				until
+					i < nb
+				loop
+					if a_stop_request.item ([]) then
+						i := nb - 1
+					else
+						an_action.call ([storage.item (i)])
+						i := i - 1
+					end
+				end
+			end
+		end
+
+	do_declared_if (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN])
 			-- Apply `an_action' to every feature declared in the corresponding
 			-- class that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
@@ -337,7 +431,44 @@ feature -- Iteration
 			end
 		end
 
-	do_inherited (an_action: PROCEDURE [ANY, TUPLE [like item]]) is
+	do_declared_if_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+			-- Apply `an_action' to every feature declared in the corresponding
+			-- class that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			i, nb: INTEGER
+			l_item: like item
+		do
+			if a_stop_request = Void then
+				do_declared_if (an_action, a_test)
+			elseif not a_stop_request.item ([]) then
+				from
+					i := count - 1
+					nb := count - declared_count
+				until
+					i < nb
+				loop
+					if a_stop_request.item ([]) then
+						i := nb - 1
+					else
+						l_item := storage.item (i)
+						if a_test.item ([l_item]) then
+							an_action.call ([l_item])
+						end
+						i := i - 1
+					end
+				end
+			end
+		end
+
+	do_inherited (an_action: PROCEDURE [ANY, TUPLE [like item]])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in the corresponding class, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -357,7 +488,39 @@ feature -- Iteration
 			end
 		end
 
-	do_inherited_if (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]) is
+	do_inherited_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+			-- Apply `an_action' to every feature inherited without being explicitly
+			-- redeclared in the corresponding class, from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+		local
+			i, nb: INTEGER
+		do
+			if a_stop_request = Void then
+				do_inherited (an_action)
+			elseif not a_stop_request.item ([]) then
+				from
+					i := count - declared_count - 1
+					nb := 0
+				until
+					i < nb
+				loop
+					if a_stop_request.item ([]) then
+						i := nb - 1
+					else
+						an_action.call ([storage.item (i)])
+						i := i - 1
+					end
+				end
+			end
+		end
+
+	do_inherited_if (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in the corresponding class that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -382,7 +545,44 @@ feature -- Iteration
 			end
 		end
 
-	features_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]) is
+	do_inherited_if_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+			-- Apply `an_action' to every feature inherited without being explicitly
+			-- redeclared in the corresponding class that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			i, nb: INTEGER
+			l_item: like item
+		do
+			if a_stop_request = Void then
+				do_inherited_if (an_action, a_test)
+			elseif not a_stop_request.item ([]) then
+				from
+					i := count - declared_count - 1
+					nb := 0
+				until
+					i < nb
+				loop
+					if a_stop_request.item ([]) then
+						i := nb - 1
+					else
+						l_item := storage.item (i)
+						if a_test.item ([l_item]) then
+							an_action.call ([l_item])
+						end
+						i := i - 1
+					end
+				end
+			end
+		end
+
+	features_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]])
 			-- Apply `an_action' to every feature, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -400,7 +600,37 @@ feature -- Iteration
 			end
 		end
 
-	features_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]) is
+	features_do_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+			-- Apply `an_action' to every feature, from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+		local
+			i: INTEGER
+		do
+			if a_stop_request = Void then
+				features_do_all (an_action)
+			elseif not a_stop_request.item ([]) then
+				from
+					i := count - 1
+				until
+					i < 0
+				loop
+					if a_stop_request.item ([]) then
+						i := -1
+					else
+						an_action.call ([storage.item (i)])
+						i := i - 1
+					end
+				end
+			end
+		end
+
+	features_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN])
 			-- Apply `an_action' to every feature that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
 		require
@@ -423,7 +653,42 @@ feature -- Iteration
 			end
 		end
 
-	features_do_declared (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]) is
+	features_do_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+			-- Apply `an_action' to every feature that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			i: INTEGER
+			l_item: ET_FEATURE
+		do
+			if a_stop_request = Void then
+				features_do_if (an_action, a_test)
+			elseif not a_stop_request.item ([]) then
+				from
+					i := count - 1
+				until
+					i < 0
+				loop
+					if a_stop_request.item ([]) then
+						i := -1
+					else
+						l_item := storage.item (i)
+						if a_test.item ([l_item]) then
+							an_action.call ([l_item])
+						end
+						i := i - 1
+					end
+				end
+			end
+		end
+
+	features_do_declared (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]])
 			-- Apply `an_action' to every feature declared in the
 			-- corresponding class, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -443,7 +708,39 @@ feature -- Iteration
 			end
 		end
 
-	features_do_declared_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]) is
+	features_do_declared_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+			-- Apply `an_action' to every feature declared in the
+			-- corresponding class, from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+		local
+			i, nb: INTEGER
+		do
+			if a_stop_request = Void then
+				features_do_declared (an_action)
+			elseif not a_stop_request.item ([]) then
+				from
+					i := count - 1
+					nb := count - declared_count
+				until
+					i < nb
+				loop
+					if a_stop_request.item ([]) then
+						i := nb - 1
+					else
+						an_action.call ([storage.item (i)])
+						i := i - 1
+					end
+				end
+			end
+		end
+
+	features_do_declared_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN])
 			-- Apply `an_action' to every feature declared in the corresponding
 			-- class that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
@@ -468,7 +765,44 @@ feature -- Iteration
 			end
 		end
 
-	features_do_inherited (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]) is
+	features_do_declared_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+			-- Apply `an_action' to every feature declared in the corresponding
+			-- class that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			i, nb: INTEGER
+			l_item: ET_FEATURE
+		do
+			if a_stop_request = Void then
+				features_do_declared_if (an_action, a_test)
+			elseif not a_stop_request.item ([]) then
+				from
+					i := count - 1
+					nb := count - declared_count
+				until
+					i < nb
+				loop
+					if a_stop_request.item ([]) then
+						i := nb - 1
+					else
+						l_item := storage.item (i)
+						if a_test.item ([l_item]) then
+							an_action.call ([l_item])
+						end
+						i := i - 1
+					end
+				end
+			end
+		end
+
+	features_do_inherited (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in the corresponding class, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -488,7 +822,39 @@ feature -- Iteration
 			end
 		end
 
-	features_do_inherited_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]) is
+	features_do_inherited_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+			-- Apply `an_action' to every feature inherited without being explicitly
+			-- redeclared in the corresponding class, from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+		local
+			i, nb: INTEGER
+		do
+			if a_stop_request = Void then
+				features_do_inherited (an_action)
+			elseif not a_stop_request.item ([]) then
+				from
+					i := count - declared_count - 1
+					nb := 0
+				until
+					i < nb
+				loop
+					if a_stop_request.item ([]) then
+						i := nb - 1
+					else
+						an_action.call ([storage.item (i)])
+						i := i - 1
+					end
+				end
+			end
+		end
+
+	features_do_inherited_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in the corresponding class that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
@@ -513,9 +879,46 @@ feature -- Iteration
 			end
 		end
 
+	features_do_inherited_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+			-- Apply `an_action' to every feature inherited without being explicitly
+			-- redeclared in the corresponding class that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			i, nb: INTEGER
+			l_item: like item
+		do
+			if a_stop_request = Void then
+				features_do_inherited_if (an_action, a_test)
+			elseif not a_stop_request.item ([]) then
+				from
+					i := count - declared_count - 1
+					nb := 0
+				until
+					i < nb
+				loop
+					if a_stop_request.item ([]) then
+						i := nb - 1
+					else
+						l_item := storage.item (i)
+						if a_test.item ([l_item]) then
+							an_action.call ([l_item])
+						end
+						i := i - 1
+					end
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_FEATURE] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_FEATURE]
 			-- Fixed array routines
 		once
 			create Result

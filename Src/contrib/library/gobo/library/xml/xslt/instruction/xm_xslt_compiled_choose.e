@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Objects that represent an xsl:choose or an xsl:if,"
 
@@ -11,7 +11,7 @@ indexing
 class XM_XSLT_COMPILED_CHOOSE
 
 inherit
-	
+
 	XM_XSLT_INSTRUCTION
 		redefine
 			item_type, creates_new_nodes, sub_expressions, evaluate_item, create_iterator,
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_executable: XM_XSLT_EXECUTABLE; a_conditions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; a_actions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
+	make (a_executable: XM_XSLT_EXECUTABLE; a_conditions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; a_actions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION])
 			-- Establish invariant.
 		require
 			executable_not_void: a_executable /= Void
@@ -62,8 +62,8 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
-	item_type: XM_XPATH_ITEM_TYPE is
+
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -81,10 +81,10 @@ feature -- Access
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
-			end			
+			end
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			create Result.make (conditions.count + actions.count)
@@ -92,10 +92,10 @@ feature -- Access
 			Result.extend_last (conditions)
 			Result.extend_last (actions)
 		end
-	
+
 feature -- Status report
 
-	creates_new_nodes: BOOLEAN is
+	creates_new_nodes: BOOLEAN
 			-- Can `Current' create new nodes?
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -107,10 +107,10 @@ feature -- Status report
 			loop
 				Result := not a_cursor.item.non_creating
 				a_cursor.forth
-			end	
+			end
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -118,8 +118,6 @@ feature -- Status report
 		do
 			from
 				a_cursor := conditions.new_cursor; a_cursor.start
-			variant
-				conditions.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -133,10 +131,12 @@ feature -- Status report
 				std.error.put_string (indentation (a_level)); std.error.put_string ("then"); std.error.put_new_line
 				actions.item (a_cursor.index).display (a_level + 1)
 				a_cursor.forth
+			variant
+				conditions.count + 1 - a_cursor.index
 			end
 		end
 
-	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE is
+	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE
 			-- Does `Current' contains recursive tail calls of stylesheet functions?
 			-- `Undecided' means it contains a tail call to another function.
 		local
@@ -165,7 +165,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	mark_tail_function_calls is
+	mark_tail_function_calls
 			-- Mark tail-recursive calls on stylesheet functions.
 		do
 			actions.do_all (agent {XM_XPATH_EXPRESSION}.mark_tail_function_calls)
@@ -173,7 +173,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -216,7 +216,7 @@ feature -- Optimization
 			same_condition_count: conditions.count = old conditions.count
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -254,12 +254,12 @@ feature -- Optimization
 				end
 				l_replacement.put (Void)
 				l_cursor.forth
-			end	
+			end
 		ensure then
 			same_condition_count: conditions.count = old conditions.count
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -287,7 +287,7 @@ feature -- Optimization
 						l_boolean := l_expression.last_boolean_value.value
 						l_index := l_cursor.index
 						if l_boolean then
-							-- if condition is always true, remove all the subsequent conditions and actions		
+							-- if condition is always true, remove all the subsequent conditions and actions
 							if l_index = 1 then
 								set_replacement (a_replacement, actions.item (1))
 							else
@@ -326,7 +326,7 @@ feature -- Optimization
 					end
 					l_replacement.put (Void)
 					l_cursor.forth
-				end	
+				end
 			end
 			if conditions.is_empty then
 				conditions.put_last (create {XM_XPATH_BOOLEAN_VALUE}.make (True))
@@ -339,7 +339,7 @@ feature -- Optimization
 			end
 		end
 
-	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -395,12 +395,12 @@ feature -- Optimization
 				end
 			end
 		ensure then
-			same_condition_count: conditions.count = old conditions.count			
+			same_condition_count: conditions.count = old conditions.count
 		end
 
 feature -- Evaluation
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterate over the values of a sequence
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -415,8 +415,6 @@ feature -- Evaluation
 			end
 			from
 				l_cursor := conditions.new_cursor; l_cursor.start
-			variant
-				conditions.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -438,11 +436,13 @@ feature -- Evaluation
 				else
 					l_cursor.forth
 				end
+			variant
+				conditions.count + 1 - l_cursor.index
 			end
 			if last_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -457,8 +457,6 @@ feature -- Evaluation
 			end
 			from
 				l_cursor := conditions.new_cursor; l_cursor.start
-			variant
-				conditions.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -476,10 +474,12 @@ feature -- Evaluation
 				else
 					l_cursor.forth
 				end
+			variant
+				conditions.count + 1 - l_cursor.index
 			end
 		end
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -490,8 +490,6 @@ feature -- Evaluation
 		do
 			from
 				l_cursor := conditions.new_cursor; l_cursor.start
-			variant
-				conditions.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -516,18 +514,20 @@ feature -- Evaluation
 					l_cursor.forth
 				end
 				a_tail.put (l_tail_call)
+			variant
+				conditions.count + 1 - l_cursor.index
 			end
 		end
 
 feature {NONE} -- Implementation
-	
+
 	conditions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Conditions
 
 	actions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Actions
 
-	native_implementations: INTEGER is
+	native_implementations: INTEGER
 			-- Natively-supported evaluation routines
 		do
 				Result := Supports_process + Supports_evaluate + Supports_iterator
@@ -538,6 +538,6 @@ invariant
 	conditions: initialized implies conditions /= Void
 	conditions: initialized implies not conditions.is_empty
 	actions: initialized implies actions /= Void and then actions.count = conditions.count
-	
+
 end
-	
+

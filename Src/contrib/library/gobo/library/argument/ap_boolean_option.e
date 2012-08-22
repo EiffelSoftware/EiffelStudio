@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Perform the common initialization steps.
 		do
 			Precursor
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Constants
 
-	false_strings: DS_LIST [STRING] is
+	false_strings: DS_LIST [STRING]
 			-- Values that describe `false'
 		once
 			create {DS_ARRAYED_LIST [STRING]} Result.make (5)
@@ -54,7 +54,7 @@ feature -- Constants
 			no_void_false_string: not Result.has_void
 		end
 
-	true_strings: DS_LIST [STRING] is
+	true_strings: DS_LIST [STRING]
 			-- Values that describe `true'
 		once
 			create {DS_ARRAYED_LIST [STRING]} Result.make (5)
@@ -71,13 +71,13 @@ feature -- Constants
 
 feature -- Access
 
-	is_false: BOOLEAN is
+	is_false: BOOLEAN
 			-- Was the option set to False?
 		do
 			Result := not is_true
 		end
 
-	is_true: BOOLEAN is
+	is_true: BOOLEAN
 			-- Was the option set to True?
 		do
 			Result := was_found and then parameter
@@ -88,7 +88,7 @@ feature -- Access
 
 feature -- Status report
 
-	needs_parameter: BOOLEAN is
+	needs_parameter: BOOLEAN
 			-- Does this option need a parameter?
 		do
 			Result := True
@@ -96,23 +96,23 @@ feature -- Status report
 
 feature {AP_PARSER} -- Parser Interface
 
-	reset is
+	reset
 			-- Reset the option to a clean state before parsing.
 		do
 			create {DS_LINKED_LIST [BOOLEAN]} parameters.make
 		end
 
-	record_occurrence (a_parser: AP_PARSER) is
+	record_occurrence (a_parser: AP_PARSER)
 			-- This option was found during parsing by `a_parser'.
 		local
 			error: AP_ERROR
-			l_last_option_parameter: ?STRING
+			l_last_option_parameter: detachable STRING
 		do
 			l_last_option_parameter := a_parser.last_option_parameter
-			check 
+			check
 					-- Implied by inherited precondition `parameter_if_needed' and Current's value of `needs_parameter'
-				parameter_needed: l_last_option_parameter /= Void 
-			end 
+				parameter_needed: l_last_option_parameter /= Void
+			end
 			if true_strings.has (l_last_option_parameter) then
 				parameters.force_last (True)
 			elseif false_strings.has (l_last_option_parameter) then

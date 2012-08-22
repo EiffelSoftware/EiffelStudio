@@ -18,7 +18,7 @@ inherit
 feature -- Status report
 
 	is_immutable: BOOLEAN = True
-			-- Can the character sequence of `Current' be changed?
+			-- <Precursor>
 
 invariant
 	immutable: is_immutable

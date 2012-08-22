@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel current entities"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,7 @@ inherit
 		rename
 			make_current as make
 		undefine
-			is_current
+			is_current, is_false
 		redefine
 			process
 		end
@@ -36,15 +36,15 @@ create
 
 feature -- Status report
 
-	is_current: BOOLEAN is True
+	is_current: BOOLEAN = True
 			-- Is current expression the 'Current' entity (possibly parenthesized)?
 
-	is_never_void: BOOLEAN is True
+	is_never_void: BOOLEAN = True
 			-- Can current expression never be void?
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_current (Current)

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Implementation
 
-	yy_build_parser_tables is
+	yy_build_parser_tables
 			-- Build parser tables.
 		do
 			yytranslate := yytranslate_template
@@ -50,12 +50,12 @@ feature {NONE} -- Implementation
 			yycheck := yycheck_template
 		end
 
-	yy_create_value_stacks is
+	yy_create_value_stacks
 			-- Create value stacks.
 		do
 		end
 
-	yy_init_value_stacks is
+	yy_init_value_stacks
 			-- Initialize value stacks.
 		do
 			yyvsp1 := -1
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 			yyvsp5 := -1
 		end
 
-	yy_clear_value_stacks is
+	yy_clear_value_stacks
 			-- Clear objects in semantic value stacks so that
 			-- they can be collected by the garbage collector.
 		local
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	yy_push_last_value (yychar1: INTEGER) is
+	yy_push_last_value (yychar1: INTEGER)
 			-- Push semantic value associated with token `last_token'
 			-- (with internal id `yychar1') on top of corresponding
 			-- value stack.
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 						yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 					end
 				end
-				yyvs1.put (last_any_value, yyvsp1)
+				yyspecial_routines1.force (yyvs1, last_any_value, yyvsp1)
 			when 2 then
 				yyvsp2 := yyvsp2 + 1
 				if yyvsp2 >= yyvsc2 then
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 						yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 					end
 				end
-				yyvs2.put (last_integer_value, yyvsp2)
+				yyspecial_routines2.force (yyvs2, last_integer_value, yyvsp2)
 			when 3 then
 				yyvsp3 := yyvsp3 + 1
 				if yyvsp3 >= yyvsc3 then
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 						yyvs3 := yyspecial_routines3.resize (yyvs3, yyvsc3)
 					end
 				end
-				yyvs3.put (last_lx_symbol_class_value, yyvsp3)
+				yyspecial_routines3.force (yyvs3, last_lx_symbol_class_value, yyvsp3)
 			when 4 then
 				yyvsp4 := yyvsp4 + 1
 				if yyvsp4 >= yyvsc4 then
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 						yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 					end
 				end
-				yyvs4.put (last_string_value, yyvsp4)
+				yyspecial_routines4.force (yyvs4, last_string_value, yyvsp4)
 			else
 				debug ("GEYACC")
 					std.error.put_string ("Error in parser: not a token type: ")
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	yy_push_error_value is
+	yy_push_error_value
 			-- Push semantic value associated with token 'error'
 			-- on top of corresponding value stack.
 		local
@@ -207,10 +207,10 @@ feature {NONE} -- Implementation
 					yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 				end
 			end
-			yyvs1.put (yyval1, yyvsp1)
+			yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 		end
 
-	yy_pop_last_value (yystate: INTEGER) is
+	yy_pop_last_value (yystate: INTEGER)
 			-- Pop semantic value from stack when in state `yystate'.
 		local
 			yy_type_id: INTEGER
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Semantic actions
 
-	yy_do_action (yy_act: INTEGER) is
+	yy_do_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		local
 			yyval1: ANY
@@ -261,7 +261,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 2 then
 --|#line 58 "lx_regexp_parser.y"
@@ -295,7 +295,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 3 then
 --|#line 69 "lx_regexp_parser.y"
@@ -308,7 +308,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp5 := yyvsp5 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 4 then
 --|#line 73 "lx_regexp_parser.y"
@@ -338,7 +338,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 5 then
 --|#line 77 "lx_regexp_parser.y"
@@ -350,7 +350,7 @@ end
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 when 6 then
 --|#line 83 "lx_regexp_parser.y"
@@ -365,7 +365,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp5 := yyvsp5 -1
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 7 then
 --|#line 89 "lx_regexp_parser.y"
@@ -383,7 +383,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 8 then
 --|#line 98 "lx_regexp_parser.y"
@@ -400,7 +400,7 @@ end
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 9 then
 --|#line 107 "lx_regexp_parser.y"
@@ -416,7 +416,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp5 := yyvsp5 -1
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 10 then
 --|#line 114 "lx_regexp_parser.y"
@@ -433,7 +433,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp5 := yyvsp5 -1
 	yyvsp1 := yyvsp1 -1
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 11 then
 --|#line 123 "lx_regexp_parser.y"
@@ -448,7 +448,7 @@ end
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 12 then
 --|#line 130 "lx_regexp_parser.y"
@@ -470,7 +470,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp5 := yyvsp5 -2
 	yyvsp1 := yyvsp1 -1
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 13 then
 --|#line 130 "lx_regexp_parser.y"
@@ -501,7 +501,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 14 then
 --|#line 150 "lx_regexp_parser.y"
@@ -520,7 +520,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 15 then
 --|#line 162 "lx_regexp_parser.y"
@@ -538,7 +538,7 @@ end
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 16 then
 --|#line 172 "lx_regexp_parser.y"
@@ -559,7 +559,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp5 := yyvsp5 -1
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 17 then
 --|#line 186 "lx_regexp_parser.y"
@@ -574,7 +574,7 @@ end
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 18 then
 --|#line 195 "lx_regexp_parser.y"
@@ -605,7 +605,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 19 then
 --|#line 200 "lx_regexp_parser.y"
@@ -620,7 +620,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 20 then
 --|#line 206 "lx_regexp_parser.y"
@@ -635,7 +635,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 21 then
 --|#line 212 "lx_regexp_parser.y"
@@ -650,7 +650,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 22 then
 --|#line 218 "lx_regexp_parser.y"
@@ -665,7 +665,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 6
 	yyvsp1 := yyvsp1 -3
 	yyvsp2 := yyvsp2 -2
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 23 then
 --|#line 223 "lx_regexp_parser.y"
@@ -680,7 +680,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 5
 	yyvsp1 := yyvsp1 -3
 	yyvsp2 := yyvsp2 -1
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 24 then
 --|#line 228 "lx_regexp_parser.y"
@@ -695,7 +695,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp1 := yyvsp1 -2
 	yyvsp2 := yyvsp2 -1
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 25 then
 --|#line 233 "lx_regexp_parser.y"
@@ -726,7 +726,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 26 then
 --|#line 238 "lx_regexp_parser.y"
@@ -757,7 +757,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 27 then
 --|#line 243 "lx_regexp_parser.y"
@@ -788,7 +788,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 28 then
 --|#line 248 "lx_regexp_parser.y"
@@ -801,7 +801,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 29 then
 --|#line 252 "lx_regexp_parser.y"
@@ -817,7 +817,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 30 then
 --|#line 261 "lx_regexp_parser.y"
@@ -832,7 +832,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp4 := yyvsp4 -1
 	yyvsp1 := yyvsp1 -1
-	yyvs3.put (yyval3, yyvsp3)
+	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 31 then
 --|#line 266 "lx_regexp_parser.y"
@@ -848,7 +848,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp4 := yyvsp4 -1
 	yyvsp1 := yyvsp1 -2
-	yyvs3.put (yyval3, yyvsp3)
+	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 32 then
 --|#line 274 "lx_regexp_parser.y"
@@ -878,7 +878,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs3 := yyspecial_routines3.resize (yyvs3, yyvsc3)
 		end
 	end
-	yyvs3.put (yyval3, yyvsp3)
+	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 33 then
 --|#line 278 "lx_regexp_parser.y"
@@ -891,7 +891,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp2 := yyvsp2 -1
-	yyvs3.put (yyval3, yyvsp3)
+	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 34 then
 --|#line 282 "lx_regexp_parser.y"
@@ -923,7 +923,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs3 := yyspecial_routines3.resize (yyvs3, yyvsc3)
 		end
 	end
-	yyvs3.put (yyval3, yyvsp3)
+	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 35 then
 --|#line 287 "lx_regexp_parser.y"
@@ -937,7 +937,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp2 := yyvsp2 -2
 	yyvsp1 := yyvsp1 -1
-	yyvs3.put (yyval3, yyvsp3)
+	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 when 36 then
 --|#line 293 "lx_regexp_parser.y"
@@ -967,7 +967,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 when 37 then
 --|#line 298 "lx_regexp_parser.y"
@@ -981,7 +981,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp2 := yyvsp2 -1
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 			else
 				debug ("GEYACC")
@@ -993,7 +993,7 @@ end
 			end
 		end
 
-	yy_do_error_action (yy_act: INTEGER) is
+	yy_do_error_action (yy_act: INTEGER)
 			-- Execute error action.
 		do
 			inspect yy_act
@@ -1008,7 +1008,7 @@ end
 
 feature {NONE} -- Table templates
 
-	yytranslate_template: SPECIAL [INTEGER] is
+	yytranslate_template: SPECIAL [INTEGER]
 			-- Template for `yytranslate'
 		once
 			Result := yyfixed_array (<<
@@ -1043,7 +1043,7 @@ feature {NONE} -- Table templates
 			    5, yyDummy>>)
 		end
 
-	yyr1_template: SPECIAL [INTEGER] is
+	yyr1_template: SPECIAL [INTEGER]
 			-- Template for `yyr1'
 		once
 			Result := yyfixed_array (<<
@@ -1053,7 +1053,7 @@ feature {NONE} -- Table templates
 			   31,   31,   30,   30,   30,   30,   29,   29, yyDummy>>)
 		end
 
-	yytypes1_template: SPECIAL [INTEGER] is
+	yytypes1_template: SPECIAL [INTEGER]
 			-- Template for `yytypes1'
 		once
 			Result := yyfixed_array (<<
@@ -1065,7 +1065,7 @@ feature {NONE} -- Table templates
 			    2,    1,    2,    1,    1,    1,    1, yyDummy>>)
 		end
 
-	yytypes2_template: SPECIAL [INTEGER] is
+	yytypes2_template: SPECIAL [INTEGER]
 			-- Template for `yytypes2'
 		once
 			Result := yyfixed_array (<<
@@ -1074,7 +1074,7 @@ feature {NONE} -- Table templates
 			    1,    1,    1, yyDummy>>)
 		end
 
-	yydefact_template: SPECIAL [INTEGER] is
+	yydefact_template: SPECIAL [INTEGER]
 			-- Template for `yydefact'
 		once
 			Result := yyfixed_array (<<
@@ -1086,7 +1086,7 @@ feature {NONE} -- Table templates
 			   35,   23,    0,   22,    0,    0,    0, yyDummy>>)
 		end
 
-	yydefgoto_template: SPECIAL [INTEGER] is
+	yydefgoto_template: SPECIAL [INTEGER]
 			-- Template for `yydefgoto'
 		once
 			Result := yyfixed_array (<<
@@ -1094,7 +1094,7 @@ feature {NONE} -- Table templates
 			    1,   17,   41, yyDummy>>)
 		end
 
-	yypact_template: SPECIAL [INTEGER] is
+	yypact_template: SPECIAL [INTEGER]
 			-- Template for `yypact'
 		once
 			Result := yyfixed_array (<<
@@ -1106,7 +1106,7 @@ feature {NONE} -- Table templates
 			 -32768, -32768,   30, -32768,   15,    8, -32768, yyDummy>>)
 		end
 
-	yypgoto_template: SPECIAL [INTEGER] is
+	yypgoto_template: SPECIAL [INTEGER]
 			-- Template for `yypgoto'
 		once
 			Result := yyfixed_array (<<
@@ -1114,7 +1114,7 @@ feature {NONE} -- Table templates
 			 -32768, -32768, -32768, yyDummy>>)
 		end
 
-	yytable_template: SPECIAL [INTEGER] is
+	yytable_template: SPECIAL [INTEGER]
 			-- Template for `yytable'
 		once
 			Result := yyfixed_array (<<
@@ -1126,7 +1126,7 @@ feature {NONE} -- Table templates
 			   22,   28,   37,   20, yyDummy>>)
 		end
 
-	yycheck_template: SPECIAL [INTEGER] is
+	yycheck_template: SPECIAL [INTEGER]
 			-- Template for `yycheck'
 		once
 			Result := yyfixed_array (<<
@@ -1202,23 +1202,23 @@ feature {NONE} -- Semantic value stacks
 
 feature {NONE} -- Constants
 
-	yyFinal: INTEGER is 56
+	yyFinal: INTEGER = 56
 			-- Termination state id
 
-	yyFlag: INTEGER is -32768
+	yyFlag: INTEGER = -32768
 			-- Most negative INTEGER
 
-	yyNtbase: INTEGER is 23
+	yyNtbase: INTEGER = 23
 			-- Number of tokens
 
-	yyLast: INTEGER is 53
+	yyLast: INTEGER = 53
 			-- Upper bound of `yytable' and `yycheck'
 
-	yyMax_token: INTEGER is 260
+	yyMax_token: INTEGER = 260
 			-- Maximum token id
 			-- (upper bound of `yytranslate'.)
 
-	yyNsyms: INTEGER is 36
+	yyNsyms: INTEGER = 36
 			-- Number of symbols
 			-- (terminal and nonterminal)
 

@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"ECF Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,14 +17,16 @@ inherit
 	ET_CLUSTER
 		redefine
 			parent, subclusters,
-			full_name,
-			full_lower_name,
 			full_pathname, full_unix_pathname,
 			is_valid_eiffel_filename,
-			is_valid_directory_name
+			is_valid_directory_name,
+			universe
 		end
 
 	ET_ECF_CONDITIONED
+
+	UT_SHARED_ECF_VERSIONS
+		export {NONE} all end
 
 create
 
@@ -32,18 +34,24 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_pathname: like pathname; a_universe: ET_UNIVERSE) is
+	make (a_name: like name; a_pathname: like pathname; a_universe: ET_ECF_INTERNAL_UNIVERSE)
 			-- Create a new cluster.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
 			a_universe_not_void: a_universe /= Void
+		local
+			l_ecf_version: UT_VERSION
 		do
 			name := a_name
 			pathname := a_pathname
 			is_relative := (a_pathname = Void)
 			universe := a_universe
 			set_scm_mapping_constraint_enabled (True)
+			l_ecf_version := universe.ecf_version
+			if l_ecf_version /= Void and then l_ecf_version <= ecf_1_4_0 then
+				set_use_obsolete_syntax (True)
+			end
 		ensure
 			name_set: name = a_name
 			pathname_set: pathname = a_pathname
@@ -58,54 +66,10 @@ feature -- Access
 	name: STRING
 			-- Name
 
-	full_name (a_separator: CHARACTER): STRING is
-			-- Full name (use `a_separator' as separator
-			-- between parents' names)
-		local
-			l_library: ET_ECF_LIBRARY
-			l_library_name: STRING
-			l_cluster_name: STRING
-		do
-			Result := precursor (a_separator)
-			if parent = Void then
-				l_library ?= universe
-				if l_library /= Void then
-					l_cluster_name := Result
-					l_library_name := l_library.name
-					Result := STRING_.new_empty_string (l_library_name, l_library_name.count + l_cluster_name.count + 1)
-					Result.append_string (l_library_name)
-					Result.append_character (a_separator)
-					Result := STRING_.appended_string (Result, l_cluster_name)
-				end
-			end
-		end
-
-	full_lower_name (a_separator: CHARACTER): STRING is
-			-- Full lower_name (use `a_separator' as separator
-			-- between parents' names)
-		local
-			l_library: ET_ECF_LIBRARY
-			l_library_name: STRING
-			l_cluster_name: STRING
-		do
-			Result := precursor (a_separator)
-			if parent = Void then
-				l_library ?= universe
-				if l_library /= Void then
-					l_cluster_name := Result
-					l_library_name := l_library.name.as_lower
-					Result := STRING_.new_empty_string (l_library_name, l_library_name.count + l_cluster_name.count + 1)
-					Result.append_string (l_library_name)
-					Result.append_character (a_separator)
-					Result := STRING_.appended_string (Result, l_cluster_name)
-				end
-			end
-		end
-
 	pathname: STRING
 			-- Directory pathname (may be Void)
 
-	full_pathname: STRING is
+	full_pathname: STRING
 			-- Full directory pathname
 		local
 			a_pathname: STRING
@@ -173,7 +137,7 @@ feature -- Access
 			end
 		end
 
-	full_unix_pathname: STRING is
+	full_unix_pathname: STRING
 			-- Full Unix directory pathname
 		do
 			Result := unix_file_system.pathname_from_file_system (full_pathname, file_system)
@@ -189,9 +153,12 @@ feature -- Access
 			-- some others from parent clusters or targets may be
 			-- included in `file_rules'.
 
+	universe: ET_ECF_INTERNAL_UNIVERSE
+			-- Surrounding universe
+
 feature -- Status report
 
-	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN is
+	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN
 			-- Is `a_filename' an Eiffel filename which has
 			-- not been excluded?
 		do
@@ -200,7 +167,7 @@ feature -- Status report
 			end
 		end
 
-	is_valid_directory_name (a_dirname: STRING): BOOLEAN is
+	is_valid_directory_name (a_dirname: STRING): BOOLEAN
 			-- Is `a_dirname' a directory name other than "." and
 			-- ".." and which has not been excluded?
 		do
@@ -224,7 +191,7 @@ feature -- Nested
 
 feature -- Setting
 
-	set_file_rules (a_file_rules: like file_rules) is
+	set_file_rules (a_file_rules: like file_rules)
 			-- Set `file_rules' to `a_file_rules'.
 		do
 			file_rules := a_file_rules
@@ -232,7 +199,7 @@ feature -- Setting
 			file_rules_set: file_rules = a_file_rules
 		end
 
-	set_ecf_file_rules (a_file_rules: like ecf_file_rules) is
+	set_ecf_file_rules (a_file_rules: like ecf_file_rules)
 			-- Set `ecf_file_rules' to `a_file_rules'.
 		do
 			ecf_file_rules := a_file_rules
@@ -240,7 +207,7 @@ feature -- Setting
 			ecf_file_rules_set: ecf_file_rules = a_file_rules
 		end
 
-	set_ecf_subclusters (a_subclusters: like ecf_subclusters) is
+	set_ecf_subclusters (a_subclusters: like ecf_subclusters)
 			-- Set `ecf_subclusters' to `a_subclusters'.
 		do
 			if ecf_subclusters /= Void then
@@ -256,7 +223,7 @@ feature -- Setting
 
 feature -- Element change
 
-	fill_subclusters (a_state: ET_ECF_STATE) is
+	fill_subclusters (a_state: ET_ECF_STATE)
 			-- Make sure that clusters in `ecf_subclusters' whose conditions
 			-- satisfy `a_state' are included in `subclusters'.
 			-- Process recursively the clusters in `subclusters'.
@@ -279,7 +246,7 @@ feature -- Element change
 			end
 		end
 
-	fill_file_rules (a_target: ET_ECF_TARGET; a_state: ET_ECF_STATE) is
+	fill_file_rules (a_target: ET_ECF_TARGET; a_state: ET_ECF_STATE)
 			-- Make sure that file rules in `a_target', in `parent' if any,
 			-- and in `ecf_file_rules' whose conditions satisfy `a_state'
 			-- are included in `file_rules'.
@@ -310,7 +277,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	new_recursive_cluster (a_name: STRING): like Current is
+	new_recursive_cluster (a_name: STRING): like Current
 			-- New recursive cluster
 		do
 			create Result.make (a_name, Void, universe)
@@ -320,6 +287,7 @@ feature {NONE} -- Implementation
 			Result.set_implicit (True)
 			Result.set_override (is_override)
 			Result.set_read_only (is_read_only)
+			Result.set_use_obsolete_syntax (use_obsolete_syntax)
 		end
 
 end

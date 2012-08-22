@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Error: Start symbol is a token instead of a nonterminal symbol"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; a_name: STRING) is
+	make (filename: STRING; line: INTEGER; a_name: STRING)
 			-- Create a new error reporting that the start
 			-- symbol `a_name' is a token instead of a
 			-- nonterminal symbol.
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			filename_not_void: filename /= Void
 			a_name_not_void: a_name /= Void
 		do
-			create parameters.make (1, 3)
+			create parameters.make_filled (empty_string, 1, 3)
 			parameters.put (filename, 1)
 			parameters.put (line.out, 2)
 			parameters.put (a_name, 3)
@@ -38,10 +38,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: start symbol $3 is a token"
+	default_template: STRING = "%"$1%", line $2: start symbol $3 is a token"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0002"
+	code: STRING = "PR0002"
 			-- Error code
 
 invariant

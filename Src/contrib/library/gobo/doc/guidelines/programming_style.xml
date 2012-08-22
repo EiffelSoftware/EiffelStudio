@@ -7,8 +7,8 @@
 
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2007-05-30 08:47:11 -0700 (Wed, 30 May 2007) $"
-	revision: "$Revision: 5981 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 -->
 
@@ -59,16 +59,16 @@ is a good way to avoid such possible confusion.
 
 </section>
 
-<section id="indexing_clause"><title>Indexing Clause</title>
+<section id="note_clause"><title>Note Clause</title>
 
 <para>
-Each class should have an indexing clause at the top of the file which looks like 
+Each class should have a note clause at the top of the file which looks like 
 that:
 </para>
 
 <para>
 <programlisting>
-indexing
+note
 <text>
 _   </text>description:
 <text>
@@ -78,8 +78,8 @@ _   </text>library:    "Gobo Eiffel Lexical Library"
 <text>_   </text>author:     "Eric Bezault &lt;ericb@gobosoft.com&gt;"
 <text>_   </text>copyright:  "Copyright (c) 2000, Eric Bezault and others"
 <text>_   </text>license:    "MIT License"
-<text>_   </text>date:       "$Date: 2007-05-30 08:47:11 -0700 (Wed, 30 May 2007) $"
-<text>_   </text>revision:   "$Revision: 5981 $"
+<text>_   </text>date:       "$Date$"
+<text>_   </text>revision:   "$Revision$"
 </programlisting>
 </para>
 
@@ -89,7 +89,7 @@ Replace <quote>Lexical</quote> in the <quote>library</quote> field by the name
 of your library. Replace <quote>Eric Bezault</quote> by your name in the 
 <quote>author</quote> and <quote>copyright</quote> fields and put your e-mail 
 address in the <quote>author</quote> field. The fields <quote>date</quote> and 
-<quote>revision</quote> are automatically expanded by <link linkend="svn">SVN</link>.
+<quote>revision</quote> are automatically expanded by <link linkend="git">Git</link>.
 </para>
 
 </section>
@@ -109,7 +109,7 @@ _   </text><featurename>title</featurename>: <classname>STRING</classname>
 <text>
 </text>feature <comment>Setting</comment>
 <text>
-_   </text><featurename>set_title</featurename> (<argument>a_title</argument>: like <featurename>title</featurename>) is
+_   </text><featurename>set_title</featurename> (<argument>a_title</argument>: like <featurename>title</featurename>)
 <text>_   _   _   </text><comment>Set <featurename>title</featurename> to <argument>a_title</argument>.</comment>
 <text>_   _   </text>require
 <text>_   _   _   </text>a_title_not_void: <argument>a_title</argument> /= Void
@@ -150,7 +150,7 @@ they are used are:
 <itemizedlist>
 	<listitem><para>to separate formal arguments of routines:
 		<informalexample><programlisting>
-<featurename>f</featurename> (<argument>a_foo</argument>: <classname>FOO</classname>; <argument>a_bar</argument>: <classname>BAR</classname>) is</programlisting></informalexample>
+<featurename>f</featurename> (<argument>a_foo</argument>: <classname>FOO</classname>; <argument>a_bar</argument>: <classname>BAR</classname>)</programlisting></informalexample>
 	</para></listitem>
 	
 	<listitem><para>to separate several instructions on the same line, 

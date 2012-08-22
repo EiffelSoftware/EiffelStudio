@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel deferred-procedures"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like extended_name; args: like arguments; a_class: like implementation_class) is
+	make (a_name: like extended_name; args: like arguments; a_class: like implementation_class)
 			-- Create a new deferred procedure.
 		do
 			precursor (a_name, args, a_class)
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Duplication
 
-	new_synonym (a_name: like extended_name): like Current is
+	new_synonym (a_name: like extended_name): like Current
 			-- Synonym feature
 		do
 			create Result.make (a_name, arguments, implementation_class)
@@ -53,12 +53,13 @@ feature -- Duplication
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
+			Result.set_across_components (across_components)
 			Result.set_synonym (Current)
 		end
 
 feature -- Conversion
 
-	renamed_feature (a_name: like extended_name): like Current is
+	renamed_feature (a_name: like extended_name): like Current
 			-- Renamed version of current feature
 		do
 			create Result.make (a_name, arguments, implementation_class)
@@ -78,13 +79,14 @@ feature -- Conversion
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
+			Result.set_across_components (across_components)
 			Result.set_first_seed (first_seed)
 			Result.set_other_seeds (other_seeds)
 		end
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_deferred_procedure (Current)

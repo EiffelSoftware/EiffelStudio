@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -14,7 +14,7 @@ class ET_SHARED_ALIAS_NAME_TESTER
 
 feature -- Access
 
-	alias_name_tester: ET_ALIAS_NAME_TESTER is
+	alias_name_tester: ET_ALIAS_NAME_TESTER
 			-- Alias name equality tester
 		once
 			create Result

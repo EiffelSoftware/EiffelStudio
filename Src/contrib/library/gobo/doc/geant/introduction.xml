@@ -8,8 +8,8 @@
 	library: "Gobo Eiffel Ant"
 	copyright: "Copyright (c) 2002-2003, Sven Ehrke and others"
 	license: "MIT License"
-	date: "$Date: 2007-01-26 10:55:25 -0800 (Fri, 26 Jan 2007) $"
-	revision: "$Revision: 5877 $"
+	date: "$Date$"
+	revision: "$Revision$"
 -->
 
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="geant_introduction">
@@ -78,8 +78,8 @@
 		author:      "John Doe [john@doe.net]"
 		copyright:   "Copyright (c) 2004, John Doe and others"
 		license:     "MIT License"
-		date:        "$Date: 2007-01-26 10:55:25 -0800 (Fri, 26 Jan 2007) $"
-		revision:    "$Revision: 5877 $"
+		date:        "$Date$"
+		revision:    "$Revision$"
 	</description>
 
 	<target name="init_system">

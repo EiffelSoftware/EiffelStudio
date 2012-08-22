@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Tiny-tree Document collections"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
-		
+
 	KL_IMPORTED_ARRAY_ROUTINES
 		export {NONE} all end
 
@@ -27,7 +27,7 @@ inherit
 
 	XM_UNICODE_CHARACTERS_1_1
 		export {NONE} all end
-		
+
 	XM_XPATH_SHARED_SERIAL_NUMBER_GENERATOR
 		export {NONE} all end
 
@@ -38,9 +38,9 @@ create
 	make, make_with_defaults
 
 feature {NONE} -- Initialization
-	
+
 	make (an_estimated_node_count, an_estimated_attribute_count: INTEGER;
-			an_estimated_namespace_count, an_estimated_character_count: INTEGER) is
+			an_estimated_namespace_count, an_estimated_character_count: INTEGER)
 			-- Establish invariant.
 		require
 			positive_node_count: an_estimated_node_count >= 0
@@ -69,46 +69,46 @@ feature {NONE} -- Initialization
 				estimated_character_count := Default_character_count
 			else
 				estimated_character_count := an_estimated_character_count
-			end				
-			create node_kinds.make (1, estimated_node_count)
-			create depth.make (1, estimated_node_count)
-			create next_sibling_indices.make (1, estimated_node_count)
-			create alpha.make (1, estimated_node_count)
-			create beta.make (1, estimated_node_count)
-			create name_codes.make (1, estimated_node_count)
+			end
+			create node_kinds.make_filled (0, 1, estimated_node_count)
+			create depth.make_filled (0, 1, estimated_node_count)
+			create next_sibling_indices.make_filled (0, 1, estimated_node_count)
+			create alpha.make_filled (0, 1, estimated_node_count)
+			create beta.make_filled (0, 1, estimated_node_count)
+			create name_codes.make_filled (0, 1, estimated_node_count)
 
-			create attribute_parents.make (1, estimated_attribute_count)
-			create attribute_codes.make (1, estimated_attribute_count)
-			create attribute_values.make (1, estimated_attribute_count)
+			create attribute_parents.make_filled (0, 1, estimated_attribute_count)
+			create attribute_codes.make_filled (0, 1, estimated_attribute_count)
+			create attribute_values.make_filled (Void, 1, estimated_attribute_count)
 
-			create namespace_parents.make (1, estimated_namespace_count)
-			create namespace_codes.make (1, estimated_namespace_count)
+			create namespace_parents.make_filled (0, 1, estimated_namespace_count)
+			create namespace_codes.make_filled (0, 1, estimated_namespace_count)
 
 			-- This is a problem - we don't know in advance if it will be ascii or not
 
 			create character_buffer.make (estimated_character_count)
 
-			create root_indices.make (1, 5)
+			create root_indices.make_filled (0, 1, 5)
 		end
 
-	make_with_defaults is
+	make_with_defaults
 			-- Create with default structure sizes
 		do
 			make (Default_node_count, Default_attribute_count, Default_namespace_count, Default_character_count)
 		end
-		
+
 feature -- Access
 
-	Default_node_count: INTEGER is 4000
+	Default_node_count: INTEGER = 4000
 			-- Default number of nodes (other than attributes and namespaces)
 
-	Default_attribute_count: INTEGER is 100
+	Default_attribute_count: INTEGER = 100
 			-- Default number of attributes
 
-	Default_namespace_count: INTEGER is 20
+	Default_namespace_count: INTEGER = 20
 			-- Default number of namespaces
 
-	Default_character_count: INTEGER is 4000
+	Default_character_count: INTEGER = 4000
 			-- Default number of characters
 
 	character_buffer: STRING
@@ -116,7 +116,7 @@ feature -- Access
 
 	comment_buffer: STRING
 			-- Buffer for comments, created when needed
-	
+
 	number_of_nodes: INTEGER
 			-- Number of nodes excluding attributes and namespaces
 
@@ -139,7 +139,7 @@ feature -- Access
 			-- This works, as all node sequence numbers within a document
 			--  are in a contiguous range within `Current'
 
-	element_annotation (a_node_number: INTEGER): INTEGER is
+	element_annotation (a_node_number: INTEGER): INTEGER
 			-- Type annotation of `a_node_number'
 		require
 			node_number_is_valid: is_node_number_valid (a_node_number)
@@ -153,7 +153,7 @@ feature -- Access
 			end
 		end
 
-	retrieve_node (a_node_number: INTEGER): XM_XPATH_TINY_NODE is
+	retrieve_node (a_node_number: INTEGER): XM_XPATH_TINY_NODE
 			-- Build and retrieve flyweight node for  `a_node_number'
 		require
 			node_number_is_valid: is_node_number_valid (a_node_number)
@@ -178,7 +178,7 @@ feature -- Access
 			Node_not_void: Result /= Void
 		end
 
-	depth_of (a_node_number: INTEGER): INTEGER is
+	depth_of (a_node_number: INTEGER): INTEGER
 			-- Depth of node within tree
 		require
 			node_number_is_valid: is_node_number_valid (a_node_number)
@@ -188,7 +188,7 @@ feature -- Access
 			strictly_positive_depth: Result > 0
 		end
 
-	alpha_value (a_node_number: INTEGER): INTEGER is
+	alpha_value (a_node_number: INTEGER): INTEGER
 			-- Alpha value for the node
 		require
 			node_number_is_valid: is_node_number_valid (a_node_number)
@@ -196,7 +196,7 @@ feature -- Access
 			Result := alpha.item (a_node_number)
 		end
 
-	beta_value (a_node_number: INTEGER): INTEGER is
+	beta_value (a_node_number: INTEGER): INTEGER
 			-- Beta value for the node
 		require
 			node_number_is_valid: is_node_number_valid (a_node_number) or else is_namespace_number_valid (a_node_number)
@@ -204,7 +204,7 @@ feature -- Access
 			Result := beta.item (a_node_number)
 		end
 
-	prior_node (a_node_number: INTEGER): INTEGER is
+	prior_node (a_node_number: INTEGER): INTEGER
 			-- Previous-sibling for `a_node_number'
 		require
 			node_number_is_valid: is_node_number_valid (a_node_number)
@@ -212,7 +212,7 @@ feature -- Access
 			Result := prior_nodes_index.item (a_node_number)
 		end
 
-	namespace_parent (an_index: INTEGER): INTEGER is
+	namespace_parent (an_index: INTEGER): INTEGER
 			-- Index of parent element
 		require
 			index_is_valid: is_namespace_number_valid (an_index)
@@ -220,7 +220,7 @@ feature -- Access
 			Result := namespace_parents.item (an_index)
 		end
 
-	attribute_parent (an_index: INTEGER): INTEGER is
+	attribute_parent (an_index: INTEGER): INTEGER
 			-- Index of parent element
 		require
 			index_is_valid: is_attribute_number_valid (an_index)
@@ -228,7 +228,7 @@ feature -- Access
 			Result := attribute_parents.item (an_index)
 		end
 
-	attribute_name_code  (an_index: INTEGER): INTEGER is
+	attribute_name_code  (an_index: INTEGER): INTEGER
 			-- Attribute name code for `an_index'
 		require
 			index_is_valid: is_attribute_number_valid (an_index)
@@ -236,15 +236,15 @@ feature -- Access
 			Result := attribute_codes.item (an_index)
 		end
 
-	retrieve_node_kind (a_node_number: INTEGER): INTEGER is
+	retrieve_node_kind (a_node_number: INTEGER): INTEGER
 			-- Node kind for the node
 		require
 			node_number_is_valid: is_node_number_valid (a_node_number)
 		do
 			Result := node_kinds.item (a_node_number)
 		end
-	
-	attribute_value (an_attribute_number: INTEGER): STRING is
+
+	attribute_value (an_attribute_number: INTEGER): STRING
 			-- Value of `an_attribute_number'
 		require
 			attribute_number_is_valid: is_attribute_number_valid (an_attribute_number)
@@ -252,7 +252,7 @@ feature -- Access
 			Result := attribute_values.item (an_attribute_number)
 		end
 
-	retrieve_next_sibling (a_node_number: INTEGER): INTEGER is
+	retrieve_next_sibling (a_node_number: INTEGER): INTEGER
 			-- Next sibling of  `a_node_number'
 		require
 			node_number_is_valid: is_node_number_valid (a_node_number)
@@ -260,7 +260,7 @@ feature -- Access
 			Result := next_sibling_indices.item (a_node_number)
 		end
 
-	retrieve_name_code (a_node_number: INTEGER): INTEGER is
+	retrieve_name_code (a_node_number: INTEGER): INTEGER
 			-- Name code of `a_node_number'
 		require
 			node_number_is_valid: is_node_number_valid (a_node_number)
@@ -268,7 +268,7 @@ feature -- Access
 			Result := name_codes.item (a_node_number)
 		end
 
-	retrieve_attribute_node (an_attribute_number: INTEGER): XM_XPATH_TINY_ATTRIBUTE is
+	retrieve_attribute_node (an_attribute_number: INTEGER): XM_XPATH_TINY_ATTRIBUTE
 			-- Build a flyweight attribute node for `an_attribute_number'
 		require
 			attribute_number_is_valid: is_attribute_number_valid (an_attribute_number)
@@ -278,7 +278,7 @@ feature -- Access
 			attribute_node_not_void: Result /= Void
 		end
 
-	attribute_annotation (an_attribute_number: INTEGER): INTEGER is
+	attribute_annotation (an_attribute_number: INTEGER): INTEGER
 			-- Type annotation of `an_attribute_number'
 		require
 			attribute_number_is_valid: is_attribute_number_valid (an_attribute_number)
@@ -290,7 +290,7 @@ feature -- Access
 			end
 		end
 
-	system_id_for_node (a_node_number: INTEGER): STRING is
+	system_id_for_node (a_node_number: INTEGER): STRING
 			-- SYSTEM ID of element or processing-instruction referenced by `a_node_number';
 			-- Not necessarily same as base URI.
 		require
@@ -305,7 +305,7 @@ feature -- Access
 			system_id_not_void: Result /= Void
 		end
 
-	line_number_for_node (a_node_number: INTEGER): INTEGER is
+	line_number_for_node (a_node_number: INTEGER): INTEGER
 			-- Line number of node referenced by `a_node_number'
 		require
 			valid_node_number: is_node_number_valid (a_node_number)
@@ -316,8 +316,8 @@ feature -- Access
 				Result := 0
 			end
 		end
-		
-	root_node (a_node_number: INTEGER): INTEGER is
+
+	root_node (a_node_number: INTEGER): INTEGER
 			-- Root node for `a_node_number'
 		require
 			valid_node_number: is_node_number_valid (a_node_number)
@@ -326,8 +326,6 @@ feature -- Access
 		do
 			from
 				an_index := root_index
-			variant
-				an_index
 			until
 				Result > 0 or else an_index = 0
 			loop
@@ -336,10 +334,12 @@ feature -- Access
 					Result := a_root
 				end
 				an_index := an_index - 1
+			variant
+				an_index
 			end
 		end
 
-	parent_node_number (a_node_number: INTEGER): INTEGER is
+	parent_node_number (a_node_number: INTEGER): INTEGER
 			-- Node number of parent of `a_node_number'.
 		require
 			valid_node_number: is_node_number_valid (a_node_number)
@@ -353,7 +353,7 @@ feature -- Access
 				from
 					Result := retrieve_next_sibling (a_node_number)
 				until
-					Result < a_node_number 
+					Result < a_node_number
 				loop
 					Result := retrieve_next_sibling (Result)
 				end
@@ -362,7 +362,7 @@ feature -- Access
 			minus_one_or_valid_node: Result /= -1 implies is_node_number_valid (Result)
 		end
 
-	unparsed_entity_system_id (an_entity_name: STRING): STRING is
+	unparsed_entity_system_id (an_entity_name: STRING): STRING
 			-- System identifier of an unparsed external entity
 		local
 			an_entity_table_entry: DS_ARRAYED_LIST [STRING]
@@ -381,7 +381,7 @@ feature -- Access
 			end
 		end
 
-	unparsed_entity_public_id (an_entity_name: STRING): STRING is
+	unparsed_entity_public_id (an_entity_name: STRING): STRING
 			-- Public identifier of an unparsed external entity
 		local
 			an_entity_table_entry: DS_ARRAYED_LIST [STRING]
@@ -414,31 +414,31 @@ feature -- Status report
 	estimated_character_count: INTEGER
 			-- An estimate of how many characters there are in the document contents
 
-	is_node_number_valid (a_node_number: INTEGER): BOOLEAN is
+	is_node_number_valid (a_node_number: INTEGER): BOOLEAN
 			-- Does `a_node_number' represent a valid node?
 		do
 			Result := a_node_number > 0 and then a_node_number <= last_node_added
 		end
 
-	is_attribute_number_valid (an_attribute_number: INTEGER): BOOLEAN is
+	is_attribute_number_valid (an_attribute_number: INTEGER): BOOLEAN
 			-- Does `an_attribute_number' represent a valid attribute?
 		do
 			Result := an_attribute_number > 0 and then an_attribute_number <= number_of_attributes
 		end
 
-	is_namespace_number_valid (an_namespace_number: INTEGER): BOOLEAN is
+	is_namespace_number_valid (an_namespace_number: INTEGER): BOOLEAN
 			-- Does `an_namespace_number' represent a valid namespace?
 		do
 			Result := an_namespace_number > 0 and then an_namespace_number <= number_of_namespaces
 		end
 
-	is_line_numbering: BOOLEAN is
+	is_line_numbering: BOOLEAN
 			-- is line numbering turned on?
 		do
 			Result := line_number_map /= Void
 		end
 
-	diagnostic_dump is
+	diagnostic_dump
 			-- Produce diagnostic print of main tree arrays
 		local
 			an_index, a_limit: INTEGER
@@ -447,8 +447,6 @@ feature -- Status report
 			from
 				an_index := 1
 				a_limit := number_of_nodes
-			variant
-				a_limit - an_index + 1
 			until
 				an_index > a_limit
 			loop
@@ -461,14 +459,14 @@ feature -- Status report
 				std.error.put_string (left_padded_string_out (name_codes.item (an_index).out, 8, ' '))
 				std.error.put_new_line
 				an_index := an_index + 1
+			variant
+				a_limit - an_index + 1
 			end
 
 			std.error.put_string ("    attr  parent    name    value%N")
 			from
 				an_index := 1
 				a_limit := number_of_attributes
-			variant
-				a_limit - an_index + 1
 			until
 				an_index > a_limit
 			loop
@@ -479,14 +477,14 @@ feature -- Status report
 				std.error.put_string (attribute_value (an_index))
 				std.error.put_new_line
 				an_index := an_index + 1
+			variant
+				a_limit - an_index + 1
 			end
-			
+
 			std.error.put_string ("      ns  parent  prefix     uri%N")
 			from
 				an_index := 1
 				a_limit := number_of_namespaces
-			variant
-				a_limit - an_index + 1
 			until
 				an_index > a_limit
 			loop
@@ -497,10 +495,12 @@ feature -- Status report
 				std.error.put_string (shared_name_pool.uri_from_namespace_code (namespace_codes.item (an_index)))
 				std.error.put_new_line
 				an_index := an_index + 1
-			end				
+			variant
+				a_limit - an_index + 1
+			end
 		end
 
-	print_sizes is
+	print_sizes
 			-- Print sizes of arrays used.
 		do
 			std.error.put_string ("Nodes      Attributes Namespaces Characters%N")
@@ -514,34 +514,32 @@ feature -- Status report
 
 feature -- Status setting
 
-	ensure_prior_index is
+	ensure_prior_index
 			-- On demand, ensure existence of index for quick access to preceding-sibling nodes
 		do
 			if prior_nodes_index = Void then make_prior_index end
 		ensure
 			prior_index_built: prior_nodes_index /= Void
 		end
-	
-	make_prior_index is
+
+	make_prior_index
 			-- On demand, make an index for quick access to preceding-sibling nodes
 		local
 			a_prior_index, a_next_node: INTEGER
 		do
-			create prior_nodes_index.make (1, last_node_added)
+			create prior_nodes_index.make_filled (0, 1, last_node_added)
 			from
 				a_prior_index := 1
-			variant
-				last_node_added - a_prior_index + 1
 			until
 				a_prior_index > last_node_added
-			loop	
+			loop
 				prior_nodes_index.put (-1, a_prior_index)
 				a_prior_index := a_prior_index + 1
+			variant
+				last_node_added - a_prior_index + 1
 			end
 			from
 				a_prior_index := 1
-			variant
-				last_node_added - a_prior_index + 1
 			until
 				a_prior_index > last_node_added
 			loop
@@ -550,12 +548,14 @@ feature -- Status setting
 					prior_nodes_index.put (a_prior_index, a_next_node)
 				end
 				a_prior_index := a_prior_index + 1
+			variant
+				last_node_added - a_prior_index + 1
 			end
 		ensure
 			a_prior_index_built: prior_nodes_index /= Void
 		end
-	
-	set_line_numbering is
+
+	set_line_numbering
 			-- Turn on line numbering
 		require
 			no_line_numbering: not is_line_numbering
@@ -566,7 +566,7 @@ feature -- Status setting
 			line_number_map_not_void: line_number_map /= Void
 		end
 
-	set_name_code_for_node (a_name_code, a_node_number: INTEGER) is
+	set_name_code_for_node (a_name_code, a_node_number: INTEGER)
 			-- Set `name_code' for `a_node_number.
 			-- Needed (indirectly, through `XM_XPATH_TINY_ELEMENT') by `XM_XSLT_STRIPPER'.
 		require
@@ -579,8 +579,8 @@ feature -- Status setting
 		end
 
 feature -- Element change
-	
-	set_line_number_for_node (a_node_number: INTEGER; a_line_number: INTEGER) is
+
+	set_line_number_for_node (a_node_number: INTEGER; a_line_number: INTEGER)
 			-- Set the line number for `a_node_number'.
 		require
 			valid_node_number: (a_node_number = 1 and last_node_added = 0) or else is_node_number_valid (a_node_number)
@@ -591,7 +591,7 @@ feature -- Element change
 			end
 		end
 
-	add_document_node (a_document_node: XM_XPATH_TINY_DOCUMENT) is
+	add_document_node (a_document_node: XM_XPATH_TINY_DOCUMENT)
 			-- Add `a_document_node' to `Current'.
 		require
 			document_node_not_void: a_document_node /= Void
@@ -601,7 +601,7 @@ feature -- Element change
 			a_document_node.set_document_number (document_number) -- all documents in `Current' have the same document number
 		end
 
-	add_node (a_new_node_type: INTEGER; a_depth_value: INTEGER; an_alpha_value: INTEGER;  a_beta_value: INTEGER; a_new_name_code: INTEGER) is
+	add_node (a_new_node_type: INTEGER; a_depth_value: INTEGER; an_alpha_value: INTEGER;  a_beta_value: INTEGER; a_new_name_code: INTEGER)
 			-- Add a node to the document
 		require
 			valid_node_type: a_new_node_type = Document_node or a_new_node_type = Element_node or
@@ -630,7 +630,7 @@ feature -- Element change
 			depth.put (a_depth_value, number_of_nodes)
 			if an_alpha_value /= 0 then alpha.put (an_alpha_value, number_of_nodes) end
 			if a_beta_value /= 0 then beta.put (a_beta_value, number_of_nodes) end
-			name_codes.put (a_new_name_code, number_of_nodes) 
+			name_codes.put (a_new_name_code, number_of_nodes)
 			set_next_sibling (-1, number_of_nodes) -- safety precaution
 			last_node_added := number_of_nodes
 			if a_depth_value = 1 then
@@ -644,8 +644,8 @@ feature -- Element change
 			correct_name_codes: name_codes.item (number_of_nodes) = a_new_name_code
 			no_next_sibling: next_sibling_indices.item (number_of_nodes) = -1
 		end
-	
-	set_next_sibling (a_next_node: INTEGER; which_node: INTEGER) is
+
+	set_next_sibling (a_next_node: INTEGER; which_node: INTEGER)
 			-- Set the next sibling of a node
 		require
 			valid_current_node: which_node > 0
@@ -659,7 +659,7 @@ feature -- Element change
 			next_sibling_set: next_sibling_indices.item (which_node) = a_next_node
 		end
 
-	add_attribute (a_document: XM_XPATH_TINY_DOCUMENT; a_parent: INTEGER; a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING) is
+	add_attribute (a_document: XM_XPATH_TINY_DOCUMENT; a_parent: INTEGER; a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING)
 			-- Add an attribute
 		local
 			a_new_size, an_index, another_type_code: INTEGER
@@ -682,15 +682,15 @@ feature -- Element change
 			--end
 			if another_type_code /= Untyped_atomic_type_code then
 				if attribute_type_codes = Void then
-					create attribute_type_codes.make (1, number_of_attributes)
+					create attribute_type_codes.make_filled (0, 1, number_of_attributes)
 					from
 						an_index := 1
-					variant
-						number_of_attributes + 1 - an_index 
 					until
 						an_index = number_of_attributes
 					loop
 						attribute_type_codes.put (Untyped_atomic_type_code, an_index)
+					variant
+						number_of_attributes + 1 - an_index
 					end
 				end
 			end
@@ -701,7 +701,7 @@ feature -- Element change
 				end
 				attribute_type_codes.put (another_type_code, number_of_attributes)
 			end
-			
+
 			if alpha.item (a_parent) = 0 then alpha.put (number_of_attributes, a_parent) end
 
 			if a_document /= Void then
@@ -711,7 +711,7 @@ feature -- Element change
 					-- might come from a non-validating parser. Before adding it to the index, we
 					-- check that it really is an ID.
 					-- TODO: sub-types of ID??
-					
+
 					an_id := STRING_.cloned_string (a_value)
 					STRING_.left_adjust (an_id)
 					STRING_.right_adjust (an_id)
@@ -722,7 +722,7 @@ feature -- Element change
 						end
 					a_document.register_id (a_node.as_tiny_element, an_id)
 					end
-				elseif a_type_code = Idref_type_code or else a_type_code = Idrefs_type_code then 
+				elseif a_type_code = Idref_type_code or else a_type_code = Idrefs_type_code then
 					create a_splitter.make
 					some_idrefs := a_splitter.split (a_value)
 					from
@@ -737,7 +737,7 @@ feature -- Element change
 			end
 		end
 
-	add_namespace (a_parent: INTEGER; a_namespace_code: INTEGER) is
+	add_namespace (a_parent: INTEGER; a_namespace_code: INTEGER)
 			-- Add a namespace declaration
 		do
 			number_of_namespaces := number_of_namespaces + 1
@@ -751,7 +751,7 @@ feature -- Element change
 			end
 		end
 
-	append_characters (characters: STRING) is
+	append_characters (characters: STRING)
 			-- Add `characters' to the document's content
 		require
 			characters_not_void: characters /= Void
@@ -759,7 +759,7 @@ feature -- Element change
 			character_buffer := STRING_.appended_string (character_buffer, characters)
 		end
 
-	next_comment_start: INTEGER is
+	next_comment_start: INTEGER
 			-- Start index of next comment to be stored
 		do
 			if comment_buffer = Void then
@@ -773,7 +773,7 @@ feature -- Element change
 			non_void_definition: comment_buffer /= Void implies Result = comment_buffer.count + 1
 		end
 
-	store_comment (a_comment_string: STRING) is
+	store_comment (a_comment_string: STRING)
 			-- Store comment or processing instruction test
 		require
 			data_not_void: a_comment_string /= Void
@@ -787,7 +787,7 @@ feature -- Element change
 			comment_buffer_created: comment_buffer /= Void
 		end
 
-	increase_beta_value (an_increment, a_node_number: INTEGER) is
+	increase_beta_value (an_increment, a_node_number: INTEGER)
 			-- Increase `beta_value' of `a_node_number' by `an_increment'.
 		require
 			node_number_in_range: is_node_number_valid (a_node_number)
@@ -795,7 +795,7 @@ feature -- Element change
 			beta.put (beta.item (a_node_number) + an_increment, a_node_number)
 		end
 
-	condense is
+	condense
 			-- Conditionally release unused memory.
 		local
 			some_node_kinds, some_name_codes, some_next_siblings, an_alpha, a_beta, a_depth: ARRAY [INTEGER]
@@ -808,31 +808,31 @@ feature -- Element change
 
 			if root_index < 2 then
 				if number_of_nodes * 3 < node_kinds.count or else node_kinds.count - number_of_nodes > 20000 then
-					create some_node_kinds.make (1, number_of_nodes); copy_integer_array (node_kinds, some_node_kinds); node_kinds := some_node_kinds; some_node_kinds := Void
-					create some_name_codes.make (1, number_of_nodes); copy_integer_array (name_codes, some_name_codes); name_codes := some_name_codes; some_name_codes := Void
-					create some_next_siblings.make (1, number_of_nodes); copy_integer_array (next_sibling_indices, some_next_siblings); next_sibling_indices := some_next_siblings; some_next_siblings := Void
-					create an_alpha.make (1, number_of_nodes); copy_integer_array (alpha, an_alpha); alpha := an_alpha; an_alpha := Void
-					create a_beta.make (1, number_of_nodes); copy_integer_array (beta, a_beta); beta := a_beta; a_beta := Void
-					create a_depth.make (1, number_of_nodes); copy_integer_array (depth, a_depth); depth := a_depth; a_depth := Void
+					create some_node_kinds.make_filled (0, 1, number_of_nodes); copy_integer_array (node_kinds, some_node_kinds); node_kinds := some_node_kinds; some_node_kinds := Void
+					create some_name_codes.make_filled (0, 1, number_of_nodes); copy_integer_array (name_codes, some_name_codes); name_codes := some_name_codes; some_name_codes := Void
+					create some_next_siblings.make_filled (0, 1, number_of_nodes); copy_integer_array (next_sibling_indices, some_next_siblings); next_sibling_indices := some_next_siblings; some_next_siblings := Void
+					create an_alpha.make_filled (0, 1, number_of_nodes); copy_integer_array (alpha, an_alpha); alpha := an_alpha; an_alpha := Void
+					create a_beta.make_filled (0, 1, number_of_nodes); copy_integer_array (beta, a_beta); beta := a_beta; a_beta := Void
+					create a_depth.make_filled (0, 1, number_of_nodes); copy_integer_array (depth, a_depth); depth := a_depth; a_depth := Void
 					-- TODO: type codes when schema-aware
 				end
 				if number_of_attributes * 3 < attribute_parents.count or else attribute_parents.count - number_of_attributes > 1000 then
-					create some_attribute_parents.make (1, number_of_attributes); copy_integer_array (attribute_parents, some_attribute_parents); attribute_parents := some_attribute_parents; some_attribute_parents := Void
-					create some_attribute_codes.make (1, number_of_attributes); copy_integer_array (attribute_codes, some_attribute_codes); attribute_codes := some_attribute_codes; some_attribute_codes := Void
-					create some_attribute_values.make (1, number_of_attributes); copy_string_array (attribute_values, some_attribute_values); attribute_values := some_attribute_values; some_attribute_values := Void
+					create some_attribute_parents.make_filled (0, 1, number_of_attributes); copy_integer_array (attribute_parents, some_attribute_parents); attribute_parents := some_attribute_parents; some_attribute_parents := Void
+					create some_attribute_codes.make_filled (0, 1, number_of_attributes); copy_integer_array (attribute_codes, some_attribute_codes); attribute_codes := some_attribute_codes; some_attribute_codes := Void
+					create some_attribute_values.make_filled (Void, 1, number_of_attributes); copy_string_array (attribute_values, some_attribute_values); attribute_values := some_attribute_values; some_attribute_values := Void
 					if attribute_type_codes /= Void then
-						create some_attribute_type_codes.make (1, number_of_attributes); copy_integer_array (attribute_type_codes, some_attribute_type_codes); attribute_type_codes := some_attribute_type_codes; some_attribute_type_codes := Void
+						create some_attribute_type_codes.make_filled (0, 1, number_of_attributes); copy_integer_array (attribute_type_codes, some_attribute_type_codes); attribute_type_codes := some_attribute_type_codes; some_attribute_type_codes := Void
 					end
 				end
 				if number_of_namespaces * 3 < namespace_parents.count then
-					create some_namespace_parents.make (1, number_of_namespaces); copy_integer_array (namespace_parents, some_namespace_parents); namespace_parents := some_namespace_parents; some_namespace_parents := Void
-					create some_namespace_codes.make (1, number_of_namespaces); copy_integer_array (namespace_codes, some_namespace_codes); namespace_codes := some_namespace_codes; some_namespace_codes := Void					
+					create some_namespace_parents.make_filled (0, 1, number_of_namespaces); copy_integer_array (namespace_parents, some_namespace_parents); namespace_parents := some_namespace_parents; some_namespace_parents := Void
+					create some_namespace_codes.make_filled (0, 1, number_of_namespaces); copy_integer_array (namespace_codes, some_namespace_codes); namespace_codes := some_namespace_codes; some_namespace_codes := Void
 				end
 				character_buffer := character_buffer.substring (1, character_buffer.count)
-			end	
+			end
 		end
 
-	set_element_annotation (which_node: INTEGER; a_new_type: INTEGER) is
+	set_element_annotation (which_node: INTEGER; a_new_type: INTEGER)
 			-- Set the element type
 		require
 			valid_current_node: which_node > 0
@@ -840,7 +840,7 @@ feature -- Element change
 			-- Not needed for a basic XSLT processor
 		end
 
-	set_system_id_for_node (a_node_number: INTEGER; a_system_id: STRING) is
+	set_system_id_for_node (a_node_number: INTEGER; a_system_id: STRING)
 			-- Set the SYSTEM ID for `a_node_number'.
 			-- Not necessarily same as base URI
 		require
@@ -850,7 +850,7 @@ feature -- Element change
 			system_id_map.set_system_id (a_node_number, a_system_id)
 		end
 
-	set_unparsed_entity (a_name, a_system_id, a_public_id: STRING) is
+	set_unparsed_entity (a_name, a_system_id, a_public_id: STRING)
 			-- Save SYSTEM and PUBLIC ids for `a_name'.
 		require
 			entity_name_not_void: a_name /= Void
@@ -872,7 +872,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	namespace_code_for_node (a_namespace_number: INTEGER): INTEGER is
+	namespace_code_for_node (a_namespace_number: INTEGER): INTEGER
 			-- Namespace code for `a_namespace_number'
 		require
 			node_number_in_range: is_namespace_number_valid (a_namespace_number)
@@ -880,7 +880,7 @@ feature -- Conversion
 			Result := namespace_codes.item (a_namespace_number)
 		end
 
-	name_code_for_node (a_node_number: INTEGER): INTEGER is
+	name_code_for_node (a_node_number: INTEGER): INTEGER
 			-- Fetch the name code for `a_node_number'
 		require
 			node_number_in_range: is_node_number_valid (a_node_number)
@@ -888,7 +888,7 @@ feature -- Conversion
 			Result := name_codes.item (a_node_number)
 		end
 
-	attribute_code_for_node (a_node_number: INTEGER): INTEGER is
+	attribute_code_for_node (a_node_number: INTEGER): INTEGER
 			-- Fetch the name code for attribute `a_node_number'
 		require
 			attribute_number_in_range: is_attribute_number_valid (a_node_number)
@@ -912,7 +912,7 @@ feature {NONE} -- Implementation
 
 	system_id_map: XM_XPATH_SYSTEM_ID_MAP
 			-- Maps element or processing-instruction sequence numbers to system-ids
-			
+
 	line_number_map: XM_XPATH_LINE_NUMBER_MAP
 			-- Maps sequence numbers to line numbers
 
@@ -921,7 +921,7 @@ feature {NONE} -- Implementation
 
 	node_kinds: ARRAY [INTEGER]
 			-- Kind of node, e.g. Element, Text, Comment
-	
+
 	depth: ARRAY [INTEGER]
 			-- Depth of node in hierarchy (document root is level 1, so = the number of ancestors + 1).
 
@@ -962,7 +962,7 @@ feature {NONE} -- Implementation
 	attribute_type_codes: ARRAY [INTEGER]
 			-- Type annotations;
 			-- Only created if at least one attribute actually has a type
-	
+
 	prior_nodes_index: ARRAY [INTEGER]
 			-- Index of preceding-siblings
 			-- Constructed only when required
@@ -971,12 +971,12 @@ feature {NONE} -- Implementation
 
 	namespace_parents: ARRAY [INTEGER]
 			-- Index of the parent node
-		
+
 	namespace_codes: ARRAY [INTEGER]
 			-- Name of the node, as an index into the name pool;
 			--  top half is prefix code, bottom half is URI code
 
-	copy_integer_array (a_source, a_target: ARRAY [INTEGER]) is
+	copy_integer_array (a_source, a_target: ARRAY [INTEGER])
 			-- Copy contents of `a_source' to `a_target'.
 		require
 			source_not_void: a_source /= Void
@@ -995,7 +995,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	copy_string_array (a_source, a_target: ARRAY [STRING]) is
+	copy_string_array (a_source, a_target: ARRAY [STRING])
 			-- Copy contents of `a_source' to `a_target'.
 		require
 			source_not_void: a_source /= Void
@@ -1035,4 +1035,4 @@ invariant
 	namespace_count: number_of_namespaces >= 0 and then number_of_namespaces < 32768
 
 end
-	
+

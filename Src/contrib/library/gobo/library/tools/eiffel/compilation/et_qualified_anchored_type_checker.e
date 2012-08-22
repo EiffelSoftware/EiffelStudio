@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel qualified anchored type checkers when they appear in signatures"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new qualified anchored type checker.
 		do
 			precursor {ET_CLASS_SUBPROCESSOR}
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Validity checking
 
-	check_signatures_validity (a_class: ET_CLASS) is
+	check_signatures_validity (a_class: ET_CLASS)
 			-- Check validity of qualified anchored types involved in
 			-- the types of all signatures of `a_class'.
 			-- Resolve identifiers in qualified anchored types (such as in
@@ -124,7 +124,7 @@ feature -- Validity checking
 
 feature {NONE} -- Type validity
 
-	check_like_feature_validity (a_type: ET_LIKE_FEATURE) is
+	check_like_feature_validity (a_type: ET_LIKE_FEATURE)
 			-- Check validity of `a_type' when it appears in a qualified anchored type.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -151,10 +151,9 @@ feature {NONE} -- Type validity
 							args := l_feature.arguments
 							l_index := a_type.index
 							if args /= Void and then l_index <= args.count then
-								if args.item (l_index).type.has_identifier_anchored_type then
+								if args.item (l_index).type.depends_on_qualified_anchored_type (current_class) then
 										-- Error: the type of the anchor appearing in a qualified
-										-- anchored type should not contain anchored types
-										-- (other than 'like Current').
+										-- anchored type should not depend on a qualified anchored type.
 										-- This is a way to avoid cycles in qualified anchored types.
 									set_fatal_error
 									error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
@@ -175,10 +174,9 @@ feature {NONE} -- Type validity
 					else
 						l_query := current_class.seeded_query (l_seed)
 						if l_query /= Void then
-							if  l_query.type.has_identifier_anchored_type then
+							if  l_query.type.depends_on_qualified_anchored_type (current_class) then
 									-- Error: the type of the anchor appearing in a qualified
-									-- anchored type should not contain anchored types
-									-- (other than 'like Current').
+									-- anchored type should not depend on a qualified anchored type.
 									-- This is a way to avoid cycles in qualified anchored types.
 								set_fatal_error
 								error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
@@ -197,7 +195,7 @@ feature {NONE} -- Type validity
 			end
 		end
 
-	check_qualified_like_identifier_validity (a_type: ET_QUALIFIED_LIKE_IDENTIFIER) is
+	check_qualified_like_identifier_validity (a_type: ET_QUALIFIED_LIKE_IDENTIFIER)
 			-- Check validity of qualified anchored types involved in `a_type'.
 			-- Resolve 'identifier' in 'like a.identifier' and 'like {A}.identifier' if not already done.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -244,10 +242,9 @@ feature {NONE} -- Type validity
 									-- will check the validity of its signature again.
 								a_type.resolve_identifier_type (l_query.first_seed)
 -- TODO: check that `l_query' is exported to `current_class'.
-								if  l_query.type.has_identifier_anchored_type then
+								if  l_query.type.depends_on_qualified_anchored_type (l_class) then
 										-- Error: the type of the anchor appearing in a qualified
-										-- anchored type should not contain anchored types
-										-- (other than 'like Current').
+										-- anchored type should not depend on a qualified anchored type.
 										-- This is a way to avoid cycles in qualified anchored types.
 									set_fatal_error
 									error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
@@ -269,10 +266,9 @@ feature {NONE} -- Type validity
 								-- of feature whose signature contains `a_type', we
 								-- will check the validity of its signature again.
 -- TODO: check that `l_query' is exported to `current_class'.
-							if  l_query.type.has_identifier_anchored_type then
+							if  l_query.type.depends_on_qualified_anchored_type (l_class) then
 									-- Error: the type of the anchor appearing in a qualified
-									-- anchored type should not contain anchored types
-									-- (other than 'like Current').
+									-- anchored type should not depend on a qualified anchored type.
 									-- This is a way to avoid cycles in qualified anchored types.
 								set_fatal_error
 								error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
@@ -288,7 +284,7 @@ feature {NONE} -- Type validity
 			in_qualified_anchored_type := old_in_qualified_anchored_type
 		end
 
-	check_actual_parameters_validity (a_parameters: ET_ACTUAL_PARAMETER_LIST) is
+	check_actual_parameters_validity (a_parameters: ET_ACTUAL_PARAMETER_LIST)
 			-- Check validity of qualified anchored types involved in `a_parameters'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -310,13 +306,13 @@ feature {NONE} -- Type validity
 
 feature {ET_AST_NODE} -- Type processing
 
-	process_class (a_type: ET_CLASS) is
+	process_class (a_type: ET_CLASS)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_class_type (a_type: ET_CLASS_TYPE) is
+	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		local
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
@@ -327,31 +323,31 @@ feature {ET_AST_NODE} -- Type processing
 			end
 		end
 
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
+	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_like_feature (a_type: ET_LIKE_FEATURE) is
+	process_like_feature (a_type: ET_LIKE_FEATURE)
 			-- Process `a_type'.
 		do
 			check_like_feature_validity (a_type)
 		end
 
-	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
 		do
 			check_qualified_like_identifier_validity (a_type)
 		end
 
-	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE)
 			-- Process `a_type'.
 		do
 			check_qualified_like_identifier_validity (a_type)
 		end
 
-	process_tuple_type (a_type: ET_TUPLE_TYPE) is
+	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
 		local
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
@@ -373,6 +369,5 @@ feature {NONE} -- Access
 invariant
 
 	current_class_impl_not_void: current_class_impl /= Void
-	current_class_impl_preparsed: current_class_impl.is_preparsed
 
 end

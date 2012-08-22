@@ -1,5 +1,5 @@
 %{
-indexing
+note
 
 	description:
 
@@ -8,8 +8,8 @@ indexing
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2008-04-22 09:12:58 -0700 (Tue, 22 Apr 2008) $"
-	revision: "$Revision: 6373 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ET_LACE_SCANNER
 

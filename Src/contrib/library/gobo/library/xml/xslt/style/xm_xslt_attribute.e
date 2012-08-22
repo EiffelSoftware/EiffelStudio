@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -25,7 +25,7 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature -- Access
 
-	select_and_content_error: STRING is
+	select_and_content_error: STRING
 			-- Error code when both select expression and content are mutually exclusive
 		do
 			Result := "XTSE0840"
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -47,8 +47,6 @@ feature -- Element change
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index				
 				until
 					a_cursor.after or any_compile_errors
 				loop
@@ -67,9 +65,11 @@ feature -- Element change
 					elseif STRING_.same_string (an_expanded_name, Type_attribute) then
 						a_type_attribute := attribute_value_by_index (a_cursor.index)
 					else
-						check_unknown_attribute (a_name_code) 		
+						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if a_name_attribute = Void then
@@ -85,9 +85,9 @@ feature -- Element change
 							create an_error.make_from_string ("Attribute name is not a valid QName",
 																		 Xpath_errors_uri, "XTDE0850", Static_error)
 							report_compile_error (an_error)
-							
+
 							-- Prevent a duplicate error message.
-							
+
 							create {XM_XPATH_STRING_VALUE} attribute_name.make ("gexslt-error-attribute")
 						end
 					end
@@ -124,7 +124,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			l_attribute_set: XM_XSLT_ATTRIBUTE_SET
@@ -154,8 +154,8 @@ feature -- Element change
 			end
 			Precursor
 		end
-			
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
 			a_name_code: INTEGER
@@ -165,9 +165,9 @@ feature -- Element change
 			l_error: XM_XPATH_ERROR_VALUE
 		do
 			last_generated_expression := Void
-			
+
 			-- Deal specially with the case where the attribute name is known statically.
-			
+
 			if attribute_name.is_string_value then
 				set_qname_parts (attribute_name.as_string_value)
 				if not any_compile_errors and then namespace_uri /= Void then
@@ -205,12 +205,12 @@ feature -- Element change
 					end
 				end
 			end
-			
+
 			if last_generated_expression = Void then
-				
+
 				-- If the namespace URI must be deduced at run-time from the attribute name prefix,
 				--  we need to save the namespace context of the instruction.
-				
+
 				if namespace = Void then
 					a_namespace_context := namespace_context
 				end
@@ -224,7 +224,7 @@ feature -- Element change
 feature {NONE} -- Implementation
 
 	validation_action: INTEGER
-	
+
 	attribute_name: XM_XPATH_EXPRESSION
 			-- Value of name attribute
 
@@ -236,8 +236,8 @@ feature {NONE} -- Implementation
 
 	qname_prefix, namespace_uri, local_name, qname: STRING
 			-- Used for communicating with `compile'
-	
-	prepare_attributes_2 (a_validation_attribute, a_type_attribute: STRING) is
+
+	prepare_attributes_2 (a_validation_attribute, a_type_attribute: STRING)
 			-- Continue prparing attributes.
 		local
 			an_error: XM_XPATH_ERROR_VALUE
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_qname_parts (a_string_value: XM_XPATH_STRING_VALUE) is
+	set_qname_parts (a_string_value: XM_XPATH_STRING_VALUE)
 			-- Analyze and set qname parts.
 		require
 			string_value_not_void: a_string_value /= Void
@@ -314,7 +314,7 @@ feature {NONE} -- Implementation
 			namespace_uri: not any_compile_errors and then namespace = Void implies namespace_uri /= Void
 		end
 
-	compile_fixed_attribute (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER) is
+	compile_fixed_attribute (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER)
 			-- Compile to a fixed attribute.
 		require
 			executable_not_void: an_executable /= Void
@@ -326,7 +326,7 @@ feature {NONE} -- Implementation
 			last_generated_expression := a_fixed_attribute
 		end
 
-	choose_arbitrary_qname_prefix is
+	choose_arbitrary_qname_prefix
 			-- Choose an arbitrary XML prefix.
 		require
 			namespace_uri_not_void: namespace_uri /= Void

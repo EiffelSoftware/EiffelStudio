@@ -1,5 +1,5 @@
 %{
-indexing
+note
 
 	description:
 
@@ -7,8 +7,8 @@ indexing
 
 	copyright: "Copyright (c) 2007, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2009-05-02 08:23:17 -0700 (Sat, 02 May 2009) $"
-	revision: "$Revision: 6630 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class UT_CONFIG_SCANNER
 
@@ -164,7 +164,7 @@ NAME				[a-z0-9_.-]+
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new scanner.
 		do
 			make_with_buffer (Empty_buffer)
@@ -173,7 +173,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset scanner before scanning next input.
 		do
 			reset_compressed_scanner_skeleton
@@ -185,7 +185,7 @@ feature -- Access
 	line_nb: INTEGER
 			-- Current line number
 
-	include_stack: DS_STACK [YY_BUFFER] is
+	include_stack: DS_STACK [YY_BUFFER]
 			-- Input buffers not completely parsed yet
 		deferred
 		ensure
@@ -193,7 +193,7 @@ feature -- Access
 			no_void_buffer: not Result.has_void
 		end
 
-	line_nb_stack: DS_STACK [INTEGER] is
+	line_nb_stack: DS_STACK [INTEGER]
 			-- Line numbers in the corresponding input buffers in `include_stack'
 		deferred
 		ensure
@@ -203,18 +203,18 @@ feature -- Access
 
 feature -- Status report
 
-	ignored: BOOLEAN is
+	ignored: BOOLEAN
 			-- Is current line ignored?
 		deferred
 		end
 
 feature -- Element change
 
-	wrap: BOOLEAN is
+	wrap: BOOLEAN
 			-- Should current scanner terminate when end of file is reached?
 			-- True unless an include file was being processed.
 		local
-			old_buffer: ?YY_FILE_BUFFER
+			old_buffer: detachable YY_FILE_BUFFER
 			a_file: KI_CHARACTER_INPUT_STREAM
 		do
 			if not include_stack.is_empty then
@@ -237,7 +237,7 @@ feature -- Element change
 
 feature -- Output
 
-	output (a_text: like text) is
+	output (a_text: like text)
 			-- Silently ignore `a_text'.
 		do
 		end

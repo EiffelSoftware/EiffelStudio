@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -6,7 +6,7 @@ indexing
 		%modified through integer access"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,19 +27,21 @@ inherit
 			put_last,
 			force_last,
 			extend_last,
-			append_last
+			append_last,
+			do_until,
+			do_if_until
 		end
 
 feature -- Access
 
-	at alias "@", item (i: INTEGER): G is
+	at alias "@", item (i: INTEGER): G
 			-- Item at index `i'
 		require
 			valid_index: 1 <= i and i <= count
 		deferred
 		end
 
-	first: G is
+	first: G
 			-- First item in container
 		require
 			not_empty: not is_empty
@@ -48,7 +50,7 @@ feature -- Access
 			definition: Result = item (1)
 		end
 
-	last: G is
+	last: G
 			-- Last item in container
 		require
 			not_empty: not is_empty
@@ -59,7 +61,7 @@ feature -- Access
 
 feature -- Element change
 
-	put_first (v: G) is
+	put_first (v: G)
 			-- Add `v' to beginning of container.
 		require
 			extendible: extendible (1)
@@ -69,7 +71,7 @@ feature -- Element change
 			inserted: first = v
 		end
 
-	put_last (v: G) is
+	put_last (v: G)
 			-- Add `v' to end of container.
 		deferred
 		ensure then
@@ -77,7 +79,7 @@ feature -- Element change
 			inserted: last = v
 		end
 
-	put (v: G; i: INTEGER) is
+	put (v: G; i: INTEGER)
 			-- Add `v' at `i'-th position.
 		require
 			extendible: extendible (1)
@@ -88,7 +90,7 @@ feature -- Element change
 			inserted: item (i) = v
 		end
 
-	force_first (v: G) is
+	force_first (v: G)
 			-- Add `v' to beginning of container.
 		deferred
 		ensure
@@ -96,7 +98,7 @@ feature -- Element change
 			inserted: first = v
 		end
 
-	force_last (v: G) is
+	force_last (v: G)
 			-- Add `v' to end of container.
 		deferred
 		ensure then
@@ -104,7 +106,7 @@ feature -- Element change
 			inserted: last = v
 		end
 
-	force (v: G; i: INTEGER) is
+	force (v: G; i: INTEGER)
 			-- Add `v' at `i'-th position.
 		require
 			valid_index: 1 <= i and i <= (count + 1)
@@ -114,7 +116,7 @@ feature -- Element change
 			inserted: item (i) = v
 		end
 
-	replace (v: G; i: INTEGER) is
+	replace (v: G; i: INTEGER)
 			-- Replace item at `i'-th position by `v'.
 		require
 			valid_index: 1 <= i and i <= count
@@ -124,7 +126,7 @@ feature -- Element change
 			replaced: item (i) = v
 		end
 
-	swap (i, j: INTEGER) is
+	swap (i, j: INTEGER)
 			-- Exchange items at indexes `i' and `j'.
 		require
 			valid_i: 1 <= i and i <= count
@@ -141,7 +143,7 @@ feature -- Element change
 			new_j: item (j) = old item (i)
 		end
 
-	extend_first (other: DS_LINEAR [G]) is
+	extend_first (other: DS_LINEAR [G])
 			-- Add items of `other' to beginning of container.
 			-- Keep items of `other' in the same order.
 		require
@@ -153,7 +155,7 @@ feature -- Element change
 			same_order: (not other.is_empty) implies (first = other.first)
 		end
 
-	extend_last (other: DS_LINEAR [G]) is
+	extend_last (other: DS_LINEAR [G])
 			-- Add items of `other' to end of container.
 			-- Keep items of `other' in the same order.
 		deferred
@@ -162,7 +164,7 @@ feature -- Element change
 			same_order: (not other.is_empty) implies (item (old count + 1) = other.first)
 		end
 
-	extend (other: DS_LINEAR [G]; i: INTEGER) is
+	extend (other: DS_LINEAR [G]; i: INTEGER)
 			-- Add items of `other' at `i'-th position.
 			-- Keep items of `other' in the same order.
 		require
@@ -175,7 +177,7 @@ feature -- Element change
 			same_order: (not other.is_empty) implies (item (i) = other.first)
 		end
 
-	append_first (other: DS_LINEAR [G]) is
+	append_first (other: DS_LINEAR [G])
 			-- Add items of `other' to beginning of container.
 			-- Keep items of `other' in the same order.
 		require
@@ -186,7 +188,7 @@ feature -- Element change
 			same_order: (not other.is_empty) implies (first = other.first)
 		end
 
-	append_last (other: DS_LINEAR [G]) is
+	append_last (other: DS_LINEAR [G])
 			-- Add items of `other' to end of container.
 			-- Keep items of `other' in the same order.
 		deferred
@@ -195,7 +197,7 @@ feature -- Element change
 			same_order: (not other.is_empty) implies (item (old count + 1) = other.first)
 		end
 
-	append (other: DS_LINEAR [G]; i: INTEGER) is
+	append (other: DS_LINEAR [G]; i: INTEGER)
 			-- Add items of `other' at `i'-th position.
 			-- Keep items of `other' in the same order.
 		require
@@ -209,7 +211,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_first is
+	remove_first
 			-- Remove first item from container.
 		require
 			not_empty: not is_empty
@@ -218,7 +220,7 @@ feature -- Removal
 			one_less: count = old count - 1
 		end
 
-	remove_last is
+	remove_last
 			-- Remove last item from container.
 		require
 			not_empty: not is_empty
@@ -227,7 +229,7 @@ feature -- Removal
 			one_less: count = old count - 1
 		end
 
-	remove (i: INTEGER) is
+	remove (i: INTEGER)
 			-- Remove item at `i'-th position.
 		require
 			not_empty: not is_empty
@@ -237,7 +239,7 @@ feature -- Removal
 			one_less: count = old count - 1
 		end
 
-	prune_first (n: INTEGER) is
+	prune_first (n: INTEGER)
 			-- Remove `n' first items from container.
 		require
 			valid_n: 0 <= n and n <= count
@@ -246,7 +248,7 @@ feature -- Removal
 			new_count: count = old count - n
 		end
 
-	prune_last (n: INTEGER) is
+	prune_last (n: INTEGER)
 			-- Remove `n' last items from container.
 		require
 			valid_n: 0 <= n and n <= count
@@ -255,7 +257,7 @@ feature -- Removal
 			new_count: count = old count - n
 		end
 
-	prune (n: INTEGER; i: INTEGER) is
+	prune (n: INTEGER; i: INTEGER)
 			-- Remove `n' items at and after `i'-th position.
 		require
 			valid_index: 1 <= i and i <= count
@@ -265,7 +267,7 @@ feature -- Removal
 			new_count: count = old count - n
 		end
 
-	keep_first (n: INTEGER) is
+	keep_first (n: INTEGER)
 			-- Keep `n' first items in container.
 		require
 			valid_n: 0 <= n and n <= count
@@ -274,7 +276,7 @@ feature -- Removal
 			new_count: count = n
 		end
 
-	keep_last (n: INTEGER) is
+	keep_last (n: INTEGER)
 			-- Keep `n' last items in container.
 		require
 			valid_n: 0 <= n and n <= count
@@ -285,7 +287,7 @@ feature -- Removal
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [G]]) is
+	do_all (an_action: PROCEDURE [ANY, TUPLE [G]])
 			-- Apply `an_action' to every item, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
 		local
@@ -301,7 +303,7 @@ feature -- Iteration
 			end
 		end
 
-	do_all_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]]) is
+	do_all_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]])
 			-- Apply `an_action' to every item, from first to last.
 			-- `an_action' receives the item and its index.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
@@ -318,7 +320,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
 		local
@@ -338,7 +340,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]]; a_test: FUNCTION [ANY, TUPLE [G, INTEGER], BOOLEAN]) is
+	do_if_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]]; a_test: FUNCTION [ANY, TUPLE [G, INTEGER], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- `an_action' and `a_test' receive the item and its index.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
@@ -359,7 +361,67 @@ feature -- Iteration
 			end
 		end
 
-	there_exists (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	do_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+			-- Apply `an_action' to every item, from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+			--
+			-- The iteration will be interrupted if `a_condition' starts returning True.
+		local
+			i: INTEGER
+			l_item: G
+		do
+			from
+				i := 1
+			invariant
+				i_large_enough: i >= 1
+				i_small_enough: i <= count + 1
+			until
+				i > count
+			loop
+				l_item := item (i)
+				if a_condition.item ([l_item]) then
+						-- Stop.
+					i := count + 1
+				else
+					an_action.call ([l_item])
+					i := i + 1
+				end
+			variant
+				index: count - i + 1
+			end
+		end
+
+	do_if_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+			--
+			-- The iteration will be interrupted if `a_condition' starts returning True.
+		local
+			i: INTEGER
+			l_item: G
+		do
+			from
+				i := 1
+			invariant
+				i_large_enough: i >= 1
+				i_small_enough: i <= count + 1
+			until
+				i > count
+			loop
+				l_item := item (i)
+				if a_condition.item ([l_item]) then
+						-- Stop.
+					i := count
+				elseif a_test.item ([l_item]) then
+					an_action.call ([l_item])
+				end
+				i := i + 1
+			variant
+				index: count - i + 1
+			end
+		end
+
+	there_exists (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one item?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local
@@ -380,7 +442,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	for_all (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all items?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local

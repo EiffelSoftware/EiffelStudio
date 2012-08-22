@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Stack frames for local variables"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_slot_manager: like slot_manager; some_variables: like variables) is
+	make (a_slot_manager: like slot_manager; some_variables: like variables)
 			-- Assemble stack frame.
 		require
 			slot_manager_not_void: a_slot_manager /= Void
@@ -31,21 +31,21 @@ feature {NONE} -- Initialization
 			variables_set: variables = some_variables
 		end
 
-	make_empty is
+	make_empty
 			-- Create empty stack frame.
 		do
 			create slot_manager.make
-			create variables.make (1, 0)
+			create variables.make_filled (Void, 1, 0)
 		end
 
-	make_fixed_size (a_variable_count: INTEGER) is
+	make_fixed_size (a_variable_count: INTEGER)
 			-- Create empty stack frame.
 		require
 			strictly_positive_variable_count: a_variable_count > 0
 		do
 			create slot_manager.make
 			slot_manager.set_number_of_variables (a_variable_count)
-			create variables.make (1, a_variable_count)
+			create variables.make_filled (Void, 1, a_variable_count)
 		end
 
 feature -- Access
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_variable (a_value: XM_XPATH_VALUE;  a_slot_number: INTEGER) is
+	set_variable (a_value: XM_XPATH_VALUE;  a_slot_number: INTEGER)
 			-- Set a variable's value.
 		require
 			valid_local_variable: a_slot_number > 0
@@ -66,7 +66,7 @@ feature -- Element change
 			variables.force (a_value, a_slot_number)
 		end
 
-	set_variables (a_variables: like variables) is
+	set_variables (a_variables: like variables)
 			-- Set `variables' to `a_variables'.
 		require
 			a_variables_not_void: a_variables /= Void
@@ -76,7 +76,7 @@ feature -- Element change
 			variables_set: variables = a_variables
 		end
 
-	set_slot_manager (a_slot_manager: XM_XPATH_SLOT_MANAGER; a_parameter_count: INTEGER) is
+	set_slot_manager (a_slot_manager: XM_XPATH_SLOT_MANAGER; a_parameter_count: INTEGER)
 			-- Set `slot_manager' to `a_slot_manager' and re-allocate `variables' if necessary.
 		require
 			a_slot_manager_not_void: a_slot_manager /= Void
@@ -88,7 +88,7 @@ feature -- Element change
 		do
 			slot_manager := a_slot_manager
 			if variables.count /= a_slot_manager.number_of_variables then
-				create l_variables.make (1, a_slot_manager.number_of_variables)
+				create l_variables.make_filled (Void, 1, a_slot_manager.number_of_variables)
 				from
 					i := 1
 				until
@@ -119,4 +119,4 @@ invariant
 	variables_not_void: variables /= Void
 
 end
-	
+

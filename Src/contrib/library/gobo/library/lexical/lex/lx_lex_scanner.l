@@ -1,5 +1,5 @@
 %{
-indexing
+note
 
 	description:
 
@@ -8,8 +8,8 @@ indexing
 	library: "Gobo Eiffel Lexical Library"
 	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2007-03-30 15:05:10 -0700 (Fri, 30 Mar 2007) $"
-	revision: "$Revision: 5933 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class LX_LEX_SCANNER
 

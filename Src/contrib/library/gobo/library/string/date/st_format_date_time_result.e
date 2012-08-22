@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 	"[
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: STRING) is
+	make (a_value: STRING)
 			-- Initialize `Current' with formatted value.
 		require
 			a_value_not_void: a_value /= Void
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			value_set: value = a_value
 		end
 
-	make_error (a_message, a_code: STRING) is
+	make_error (a_message, a_code: STRING)
 			-- Initialize `Current' with error.
 		require
 			a_code_not_void: a_code /= Void
@@ -48,13 +48,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value: ?STRING
+	value: detachable STRING
 			-- Formatted value
 
-	message: ?STRING
+	message: detachable STRING
 			-- Error message
 
-	code: ?STRING
+	code: detachable STRING
 			-- XSLT error code
 
 feature -- Status report

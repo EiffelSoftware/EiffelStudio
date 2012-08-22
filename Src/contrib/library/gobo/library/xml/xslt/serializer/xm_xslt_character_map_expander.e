@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_receiver: like base_receiver; a_character_map_list: DS_ARRAYED_LIST [DS_HASH_TABLE [STRING, INTEGER]]; a_use_null_characters: BOOLEAN) is
+	make (a_receiver: like base_receiver; a_character_map_list: DS_ARRAYED_LIST [DS_HASH_TABLE [STRING, INTEGER]]; a_use_null_characters: BOOLEAN)
 			-- Establish invariant.
 		require
 			a_receiver_not_void: a_receiver /= Void
@@ -48,11 +48,9 @@ feature {NONE} -- Initialization
 				create character_map.make_with_equality_testers (10, string_equality_tester, Void)
 
 				-- Now merge all character maps - later definitions override earlier ones
-				
+
 				from
 					l_cursor := a_character_map_list.new_cursor; l_cursor.start
-				variant
-					a_character_map_list.count + 1 - l_cursor.index
 				until
 					l_cursor.after
 				loop
@@ -70,6 +68,8 @@ feature {NONE} -- Initialization
 						end
 					end
 					l_cursor.forth
+				variant
+					a_character_map_list.count + 1 - l_cursor.index
 				end
 			end
 		ensure
@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 
 feature -- Events
 
-	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER) is
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER)
 			-- Notify an attribute.
 		local
 			l_value: STRING
@@ -96,7 +96,7 @@ feature -- Events
 			end
 		end
 
-	notify_characters (a_chars: STRING; a_properties: INTEGER) is
+	notify_characters (a_chars: STRING; a_properties: INTEGER)
 			-- Notify character data.
 		local
 			l_value: STRING
@@ -106,7 +106,7 @@ feature -- Events
 				if l_value = a_chars then
 					Precursor (a_chars, a_properties)
 				else
-					Precursor (l_value, INTEGER_.bit_and (INTEGER_.bit_or (a_properties, Use_null_markers), INTEGER_.bit_not (No_special_characters))) 
+					Precursor (l_value, INTEGER_.bit_and (INTEGER_.bit_or (a_properties, Use_null_markers), INTEGER_.bit_not (No_special_characters)))
 				end
 			else
 				Precursor (a_chars, a_properties)
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 	are_null_characters_used: BOOLEAN
 			-- Should we surround expanded characters with ASCII NUL markers?
 
-	mapped_string (a_unmapped_string: STRING): STRING is
+	mapped_string (a_unmapped_string: STRING): STRING
 			-- Expanded version of `a_unmapped_string'
 		require
 			input_string_not_void: a_unmapped_string /= Void
@@ -132,8 +132,6 @@ feature {NONE} -- Implementation
 			create Result.make (a_unmapped_string.count)  -- it might be larger, but never smaller
 			from
 				l_index := 1
-			variant
-				a_unmapped_string.count + 1 - l_index
 			until
 				l_index > a_unmapped_string.count
 			loop
@@ -164,6 +162,8 @@ feature {NONE} -- Implementation
 					Result := STRING_.appended_string (Result, a_unmapped_string.substring (l_index, l_index))
 				end
 				l_index := l_index + 1
+			variant
+				a_unmapped_string.count + 1 - l_index
 			end
 			if not l_any_substitutions_made then
 

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -6,7 +6,7 @@ indexing
 		%the name of a formal generic parameter)"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,8 @@ inherit
 
 	ET_TYPE
 		redefine
-			is_named_type
+			is_named_type,
+			type_with_type_mark
 		end
 
 feature -- Access
@@ -25,7 +26,7 @@ feature -- Access
 	name: ET_CLASS_NAME
 			-- Name of type
 
-	upper_name: STRING is
+	upper_name: STRING
 			-- Upper-name of type
 			-- (May return the same object as `name.name' if already in upper case,
 			-- otherwise return a new object at each call.)
@@ -37,21 +38,28 @@ feature -- Access
 			definition: Result.is_equal (name.name.as_upper)
 		end
 
-	lower_name: STRING is
+	lower_name: STRING
 			-- Lower-name of type
 			-- (May return the same object as `name.name' if already in lower case,
 			-- otherwise return a new object at each call.)
 		do
 			Result := name.lower_name
 		ensure
-			upper_name_not_void: Result /= Void
-			upper_name_not_empty: Result.count > 0
+			lower_name_not_void: Result /= Void
+			lower_name_not_empty: Result.count > 0
 			definition: Result.is_equal (name.name.as_lower)
+		end
+
+	type_with_type_mark (a_type_mark: ET_TYPE_MARK): ET_NAMED_TYPE
+			-- Current type whose type mark status is
+			-- overridden by `a_type_mark', if not Void
+		do
+			Result := Current
 		end
 
 feature -- Status report
 
-	is_named_type: BOOLEAN is
+	is_named_type: BOOLEAN
 			-- Is current type only made up of named types?
 		do
 			Result := True

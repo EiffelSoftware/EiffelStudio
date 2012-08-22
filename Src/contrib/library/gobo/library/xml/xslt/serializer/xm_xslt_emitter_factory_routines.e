@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -23,7 +23,7 @@ feature {NONE} -- Implementation
 
 	character_map_expander (a_receiver: XM_XPATH_RECEIVER; a_properties: XM_XSLT_OUTPUT_PROPERTIES;
 									a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER];
-									a_null_characters_used: BOOLEAN): XM_XSLT_CHARACTER_MAP_EXPANDER is
+									a_null_characters_used: BOOLEAN): XM_XSLT_CHARACTER_MAP_EXPANDER
 			-- Character mapping filter
 		require
 			a_receiver_not_void: a_receiver /= Void
@@ -40,8 +40,6 @@ feature {NONE} -- Implementation
 			create l_character_map_list.make (l_character_maps.count)
 			from
 				l_cursor := l_character_maps.new_cursor; l_cursor.start
-			variant
-				l_character_maps.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -60,6 +58,8 @@ feature {NONE} -- Implementation
 				end
 				l_character_map_list.put_last (l_character_map)
 				l_cursor.forth
+			variant
+				l_character_maps.count + 1 - l_cursor.index
 			end
 			create Result.make (a_receiver, l_character_map_list, a_null_characters_used)
 		ensure

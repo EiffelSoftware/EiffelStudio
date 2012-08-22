@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -29,7 +29,7 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -40,8 +40,6 @@ feature -- Element change
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				until
 					a_cursor.after or any_compile_errors
 				loop
@@ -55,6 +53,8 @@ feature -- Element change
 						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if elements = Void then
@@ -63,7 +63,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		do
 			check_empty
@@ -71,7 +71,7 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (a_executable: XM_XSLT_EXECUTABLE) is
+	compile (a_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to a excutable instruction.
 		local
 			is_preserving: BOOLEAN
@@ -91,14 +91,14 @@ feature -- Element change
 			an_element_list := a_splitter.split (elements)
 			from
 				a_cursor := an_element_list.new_cursor; a_cursor.start
-			variant
-				an_element_list.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
 				a_token := a_cursor.item
 				compile_stripper_rules (a_executable, a_token, is_preserving, stripper_rules)
 				a_cursor.forth
+			variant
+				an_element_list.count + 1 - a_cursor.index
 			end
 			last_generated_expression := Void
 		end
@@ -108,19 +108,19 @@ feature {NONE} -- Implementation
 	elements: STRING
 			-- Names tests of elements to be stripped/preserved
 
-	minus_one_half: MA_DECIMAL is
+	minus_one_half: MA_DECIMAL
 			-- -0.5
 		once
 			create Result.make_from_string ("-0.5")
 		end
 
-	minus_one_quarter: MA_DECIMAL is
+	minus_one_quarter: MA_DECIMAL
 			-- -0.25
 		once
 			create Result.make_from_string ("-0.25")
 		end
 
-	compile_stripper_rules (a_executable: XM_XSLT_EXECUTABLE; a_token: STRING; is_preserving: BOOLEAN; stripper_rules: XM_XSLT_MODE) is
+	compile_stripper_rules (a_executable: XM_XSLT_EXECUTABLE; a_token: STRING; is_preserving: BOOLEAN; stripper_rules: XM_XSLT_MODE)
 			-- Compile a stripper rule for `a_token'.
 		require
 		a_executable_not_void: a_executable /= Void

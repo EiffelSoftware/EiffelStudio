@@ -6,8 +6,8 @@
 	library: "Gobo Eiffel XPointer Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date: 2007-07-26 14:09:30 -0700 (Thu, 26 Jul 2007) $"
-	revision: "$Revision: 6025 $"
+	date: "$Date$"
+	revision: "$Revision$"
 -->
 
 <chapterinfo>

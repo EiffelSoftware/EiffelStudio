@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Perform the common initialization steps.
 		do
 			Precursor
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Status report
 
-	needs_parameter: BOOLEAN is
+	needs_parameter: BOOLEAN
 			-- Does this option need a parameter ?
 		do
 			Result := True
@@ -49,23 +49,23 @@ feature -- Status report
 
 feature {AP_PARSER} -- Parser Interface
 
-	reset is
+	reset
 			-- Reset the option to a clean state before parsing.
 		do
 			create {DS_LINKED_LIST [INTEGER]} parameters.make
 		end
 
-	record_occurrence (a_parser: AP_PARSER) is
+	record_occurrence (a_parser: AP_PARSER)
 			-- Record the occurrence of the option with `a_parameter'.
 		local
 			error: AP_ERROR
-			l_last_option_parameter: ?STRING
+			l_last_option_parameter: detachable STRING
 		do
 			l_last_option_parameter := a_parser.last_option_parameter
-			check 
+			check
 					-- Implied by inherited precondition `parameter_if_needed' and Current's value of `needs_parameter'
-				parameter_needed: l_last_option_parameter /= Void 
-			end 
+				parameter_needed: l_last_option_parameter /= Void
+			end
 			if l_last_option_parameter.is_integer then
 				parameters.force_last (l_last_option_parameter.to_integer)
 			else

@@ -8,8 +8,8 @@
 	library: "Gobo Eiffel XSLT"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date: 2008-01-19 12:12:03 -0800 (Sat, 19 Jan 2008) $"
-	revision: "$Revision: 6268 $"
+	date: "$Date$"
+	revision: "$Revision$"
 -->
 
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gexslt_extensions">

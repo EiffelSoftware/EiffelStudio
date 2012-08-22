@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel functions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,7 @@ inherit
 
 	ET_QUERY
 		undefine
+			is_routine,
 			arguments,
 			preconditions,
 			postconditions,
@@ -25,8 +26,7 @@ inherit
 		redefine
 			is_function,
 			is_prefixable, is_infixable,
-			is_bracketable, undefined_feature,
-			resolve_inherited_signature
+			is_bracketable, undefined_feature
 		end
 
 	ET_ROUTINE
@@ -38,7 +38,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_name: like extended_name; args: like arguments; a_type: like declared_type; a_class: like implementation_class) is
+	make (a_name: like extended_name; args: like arguments; a_type: like declared_type; a_class: like implementation_class)
 			-- Create a new function.
 		require
 			a_name_not_void: a_name /= Void
@@ -63,24 +63,24 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_function: BOOLEAN is True
+	is_function: BOOLEAN = True
 			-- Is feature a function?
 
-	is_infixable: BOOLEAN is
+	is_infixable: BOOLEAN
 			-- Can current feature have a name of
 			-- the form 'infix ...'?
 		do
 			Result := arguments /= Void and then arguments.count = 1
 		end
 
-	is_prefixable: BOOLEAN is
+	is_prefixable: BOOLEAN
 			-- Can current feature have a name of
 			-- the form 'prefix ...'?
 		do
 			Result := arguments = Void or else arguments.count = 0
 		end
 
-	is_bracketable: BOOLEAN is
+	is_bracketable: BOOLEAN
 			-- Can current feature have a name of
 			-- the form 'alias "[]"'?
 		do
@@ -89,19 +89,37 @@ feature -- Status report
 
 feature -- Access
 
-	header_break: ET_BREAK is
+	header_break: ET_BREAK
 			-- Break which appears where the header comment is expected
+		local
+			l_break: ET_BREAK
 		do
 			if is_keyword /= Void then
-				Result := is_keyword.break
-			else
+				l_break := is_keyword.break
+				if l_break /= Void and then l_break.has_comment then
+					Result := l_break
+				end
+			end
+			if Result = Void then
+				l_break := declared_type.break
+				if l_break /= Void and then l_break.has_comment then
+					Result := l_break
+				end
+			end
+			if Result = Void and assigner /= Void then
+				l_break := assigner.break
+				if l_break /= Void and then l_break.has_comment then
+					Result := l_break
+				end
+			end
+			if Result = Void then
 				Result := declared_type.break
 			end
 		end
 
 feature -- Conversion
 
-	undefined_feature (a_name: like extended_name): ET_DEFERRED_FUNCTION is
+	undefined_feature (a_name: like extended_name): ET_DEFERRED_FUNCTION
 			-- Undefined version of current feature
 		do
 			create Result.make (a_name, arguments, declared_type, implementation_class)
@@ -118,28 +136,9 @@ feature -- Conversion
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
+			Result.set_across_components (across_components)
 			Result.set_first_seed (first_seed)
 			Result.set_other_seeds (other_seeds)
-		end
-
-feature -- Type processing
-
-	resolve_inherited_signature (a_parent: ET_PARENT) is
-			-- Resolve arguments and type inherited from `a_parent'.
-			-- Resolve any formal generic parameters of declared types
-			-- with the corresponding actual parameters in `a_parent',
-			-- and duplicate identifier anchored types (and clear their
-			-- base types).
-		local
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
-		do
-			a_parameters := a_parent.actual_parameters
-			if a_parameters /= Void then
-				declared_type := declared_type.resolved_formal_parameters (a_parameters)
-				if arguments /= Void then
-					arguments := arguments.resolved_formal_parameters (a_parameters)
-				end
-			end
 		end
 
 end

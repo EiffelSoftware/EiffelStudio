@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Error: Library mounted several times with different prefixes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_mount1, a_mount2: ET_XACE_MOUNTED_LIBRARY) is
+	make (a_mount1, a_mount2: ET_XACE_MOUNTED_LIBRARY)
 			-- Create a new error reporting that a library has been
 			-- mounted several times with different prefixes.
 		require
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		local
 			a_prefix: STRING
 		do
-			create parameters.make (1, 5)
+			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (a_mount1.pathname, 1)
 			a_prefix := a_mount1.library_prefix
 			if a_prefix = Void then
@@ -49,10 +49,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "Library '$1' mounted with incompatible prefixes '$2' and '$3' in $4 and $5"
+	default_template: STRING = "Library '$1' mounted with incompatible prefixes '$2' and '$3' in $4 and $5"
 			-- Default template used to built the error message
 
-	code: STRING is "XA0011"
+	code: STRING = "XA0011"
 			-- Error code
 
 end

@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -70,7 +70,7 @@ feature -- Access
 			-- Index of expression in enclosing feature;
 			-- Used to get dynamic information about this expression.
 
-	actual_argument (i: INTEGER): ET_EXPRESSION is
+	actual_argument (i: INTEGER): ET_EXPRESSION
 			-- Actual argument at index `i'
 		do
 			Result := Current
@@ -78,7 +78,7 @@ feature -- Access
 			definition: Result = Current
 		end
 
-	expression_item: ET_EXPRESSION is
+	expression_item: ET_EXPRESSION
 			-- Current expression
 		do
 			Result := Current
@@ -86,21 +86,35 @@ feature -- Access
 			definition: Result = Current
 		end
 
+	unparenthesized_expression: ET_EXPRESSION
+			-- Version of current expression without any surrounding parentheses
+		do
+			Result := Current
+		ensure
+			unparenthezized_expression_not_void: Result /= Void
+		end
+
 feature -- Status report
 
-	is_never_void: BOOLEAN is
+	is_never_void: BOOLEAN
 			-- Can current expression never be void?
 		do
 			-- Result := False
 		end
 
-	is_current: BOOLEAN is
+	is_current: BOOLEAN
 			-- Is current expression the 'Current' entity (possibly parenthesized)?
 		do
 			-- Result := False
 		end
 
-	is_prefix_expression: BOOLEAN is
+	is_false: BOOLEAN
+			-- Is current expression the 'False' entity (possibly parenthesized)?
+		do
+			-- Result := False
+		end
+
+	is_prefix_expression: BOOLEAN
 			-- Is current expression a prefix expression?
 		do
 			-- Result := False
@@ -108,21 +122,22 @@ feature -- Status report
 
 feature -- Measurement
 
-	actual_argument_count: INTEGER is 1
+	actual_argument_count: INTEGER = 1
 			-- Number of actual arguments
 
 feature -- Type conversion
 
-	manifest_constant_convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_FEATURE is
+	manifest_constant_convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CONVERT_FEATURE
 			-- Implicit feature to convert `Current' of type `a_source_type' to `a_target_type'.
 			-- This is only possible when `Current' is a manifest constant with no explicit
-			-- type case and the value of the constant can be represented in `a_target_type'.
-			-- Void if no such feature or when not possible.	
+			-- type cast and the value of the constant can be represented in `a_target_type'.
+			-- Void if no such feature or when not possible.
 		require
 			a_source_type_not_void: a_source_type /= Void
 			a_source_context_valid: a_source_type.is_valid_context
 			a_target_type_not_void: a_target_type /= Void
 			a_target_context_valid: a_target_type.is_valid_context
+			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := Void

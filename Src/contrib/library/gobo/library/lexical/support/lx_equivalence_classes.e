@@ -1,16 +1,23 @@
-indexing
+note
 
 	description:
 
 		"Equivalence classes of integer symbols"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class LX_EQUIVALENCE_CLASSES
+
+inherit
+
+	ANY
+
+	KL_IMPORTED_ARRAY_ROUTINES
+		export {NONE} all end
 
 create
 
@@ -18,24 +25,25 @@ create
 
 feature {NONE} -- Initialization
 
-	make (min, max: INTEGER) is
+	make (min, max: INTEGER)
 			-- Make structure to allow creation of a
 			-- set of equivalence classes for symbols
 			-- within bounds `min'..`max'.
 		require
 			valid_bounds: min <= max
 		local
-			cell: DS_BILINKABLE [INTEGER]
+			l_cell: DS_BILINKABLE [INTEGER]
 			i: INTEGER
 		do
-			create storage.make (min, max)
+			create l_cell.make (min)
+			create storage.make_filled (l_cell, min, max)
 			from
-				i := min
+				i := min + 1
 			until
 				i > max
 			loop
-				create cell.make (i)
-				storage.put (cell, i)
+				create l_cell.make (i)
+				storage.put (l_cell, i)
 				i := i + 1
 			end
 			initialize
@@ -47,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	initialize is
+	initialize
 			-- Prepare structure to allow creation of a
 			-- set of equivalence classes for symbols
 			-- within bounds `lower'..`upper'.
@@ -76,7 +84,7 @@ feature -- Initialization
 
 feature -- Access
 
-	equivalence_class (symbol: INTEGER): INTEGER is
+	equivalence_class (symbol: INTEGER): INTEGER
 			-- Equivalence class number for `symbol'
 		require
 			valid_symbol: valid_symbol (symbol)
@@ -85,7 +93,7 @@ feature -- Access
 			Result := storage.item (symbol).item
 		end
 
-	previous_symbol (symbol: INTEGER): INTEGER is
+	previous_symbol (symbol: INTEGER): INTEGER
 			-- Previous symbol with same equivalence
 			-- class as `symbol'
 		require
@@ -99,19 +107,19 @@ feature -- Access
 	count: INTEGER
 			-- Number of equivalence classes
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Maximum number of equivalence classes
 		do
 			Result := storage.count
 		end
 
-	lower: INTEGER is
+	lower: INTEGER
 			-- Smallest allowed symbol
 		do
 			Result := storage.lower
 		end
 
-	upper: INTEGER is
+	upper: INTEGER
 			-- Largest allowed symbol
 		do
 			Result := storage.upper
@@ -119,7 +127,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_representative (symbol: INTEGER): BOOLEAN is
+	is_representative (symbol: INTEGER): BOOLEAN
 			-- Is `symbol' the representative
 			-- of its equivalence class?
 		require
@@ -128,13 +136,13 @@ feature -- Status report
 			Result := storage.item (symbol).left = Void
 		end
 
-	valid_symbol (a_symbol: INTEGER): BOOLEAN is
+	valid_symbol (a_symbol: INTEGER): BOOLEAN
 			-- Is `a_symbol' a valid symbol?
 		do
 			Result := storage.valid_index (a_symbol)
 		end
 
-	valid_symbol_class (symbol_class: LX_SYMBOL_CLASS): BOOLEAN is
+	valid_symbol_class (symbol_class: LX_SYMBOL_CLASS): BOOLEAN
 			-- Are symbols in `symbol_class' valid?
 		require
 			symbol_class_not_void: symbol_class /= Void
@@ -143,7 +151,7 @@ feature -- Status report
 			Result := symbol_class.is_empty or else (lower <= symbol_class.first and upper >= symbol_class.last)
 		end
 
-	built: BOOLEAN is
+	built: BOOLEAN
 			-- Have the equivalence classes been numbered?
 		do
 			Result := count /= 0
@@ -151,7 +159,7 @@ feature -- Status report
 
 feature -- Element change
 
-	build is
+	build
 			-- Build equivalence class numbers.
 		local
 			i, j, nb: INTEGER
@@ -183,7 +191,7 @@ feature -- Element change
 			built: built
 		end
 
-	put (symbol: INTEGER) is
+	put (symbol: INTEGER)
 			-- Create equivalence class for single `symbol'.
 		require
 			not_built: not built
@@ -207,7 +215,7 @@ feature -- Element change
 			end
 		end
 
-	add (symbol_class: LX_SYMBOL_CLASS) is
+	add (symbol_class: LX_SYMBOL_CLASS)
 			-- Update equivalence classes based on `symbol_class'.
 		require
 			not_built: not built
@@ -226,7 +234,7 @@ feature -- Element change
 				-- symbol class is negated. The same results will
 				-- be obtained in either case.
 			nb := symbol_class.count
-			create flags.make (lower, upper)
+			create flags.make_filled (False, lower, upper)
 			from
 				k := 1
 			until
@@ -301,14 +309,14 @@ feature -- Element change
 
 feature -- Conversion
 
-	to_table: ARRAY [INTEGER] is
+	to_table: ARRAY [INTEGER]
 			-- Array of equivalence classes, indexed by symbols
 		require
 			built: built
 		local
 			i, nb: INTEGER
 		do
-			create Result.make (lower, upper)
+			create Result.make_filled (0, lower, upper)
 			nb := upper
 			from
 				i := lower
@@ -325,7 +333,7 @@ feature -- Conversion
 --			forall i in `lower' .. `upper', Result.item (i) = equivalence_class (i)
 		end
 
-	to_array (l, u: INTEGER): ARRAY [INTEGER] is
+	to_array (l, u: INTEGER): ARRAY [INTEGER]
 			-- Slice of array equivalence classes, indexed by symbols;
 			-- Entries out of bounds `lower'..`upper' are set to 0
 		require
@@ -334,7 +342,7 @@ feature -- Conversion
 		local
 			i, nb: INTEGER
 		do
-			create Result.make (l, u)
+			create Result.make_filled (0, l, u)
 			nb := upper.min (u)
 			from
 				i := lower.max (l)
@@ -360,6 +368,7 @@ feature {NONE} -- Implementation
 invariant
 
 	storage_not_void: storage /= Void
+	no_void_cell: not ANY_ARRAY_.has_void (storage)
 	valid_bounds: lower <= upper
 	positive_count: count >= 0
 	built_definition: built = (count /= 0)

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Elements whose name is known at compile time"
@@ -28,7 +28,7 @@ create
 feature {NONE} -- Initialization
 
 	make (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER; a_namespace_code_list: DS_ARRAYED_LIST [INTEGER]; some_attribute_sets: DS_ARRAYED_LIST [INTEGER];
-			a_schema_type: XM_XPATH_SCHEMA_TYPE; a_validation_action: INTEGER; inherit_namespaces: BOOLEAN; a_content: XM_XPATH_EXPRESSION) is
+			a_schema_type: XM_XPATH_SCHEMA_TYPE; a_validation_action: INTEGER; inherit_namespaces: BOOLEAN; a_content: XM_XPATH_EXPRESSION)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -60,8 +60,8 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
-	item_type: XM_XPATH_ITEM_TYPE is
+
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 		do
 			if internal_item_type /= Void then
@@ -75,19 +75,19 @@ feature -- Access
 			end
 		end
 
-	instruction_name: STRING is
+	instruction_name: STRING
 			-- Name of instruction, for diagnostics
 		do
 			Result := shared_name_pool.display_name_from_name_code (fixed_name_code)
 		end
 
-	name_code (a_context: XM_XSLT_EVALUATION_CONTEXT): INTEGER is
+	name_code (a_context: XM_XSLT_EVALUATION_CONTEXT): INTEGER
 			-- Name code
 		do
 			Result := fixed_name_code
 		end
 
-	new_base_uri (a_context: XM_XPATH_CONTEXT): STRING is
+	new_base_uri (a_context: XM_XPATH_CONTEXT): STRING
 			-- Re-calculated base URI
 		do
 			Result := base_uri
@@ -95,10 +95,10 @@ feature -- Access
 				Result := ""
 			end
 		end
-		
+
 feature -- Status report
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
@@ -109,23 +109,23 @@ feature -- Status report
 			a_string := STRING_.appended_string (indentation (a_level + 1), "fixed name ")
 			a_string := STRING_.appended_string (a_string, shared_name_pool.display_name_from_name_code (fixed_name_code))
 			std.error.put_string (a_string)
-			std.error.put_new_line			
+			std.error.put_new_line
 			a_string := STRING_.appended_string (indentation (a_level + 1), "content ")
 			std.error.put_string (a_string)
-			std.error.put_new_line			
+			std.error.put_new_line
 			content.display (a_level + 2)
 		end
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-free optimizations.
 		local
 			l_name_test: XM_XPATH_NAME_TEST
 			l_original_text: STRING
 			l_content_test: XM_XPATH_CONTENT_TYPE_TEST
 		do
-			
+
 			-- The following code will need modifying for a schema-aware processor:
 
 			l_original_text := STRING_.concat ("element(", shared_name_pool.display_name_from_name_code (fixed_name_code))
@@ -133,13 +133,13 @@ feature -- Optimization
 			create l_name_test.make (Element_node, fixed_name_code, l_original_text)
 			create l_content_test.make (Element_node, type_factory.untyped_type)
 			create {XM_XPATH_COMBINED_NODE_TEST} internal_item_type.make (l_name_test, Intersect_token, l_content_test)
-			
+
 			Precursor (a_replacement)
 		end
 
 feature {XM_XSLT_ELEMENT_CONSTRUCTOR} -- Local
 
-	output_namespace_nodes (a_context: XM_XSLT_EVALUATION_CONTEXT; a_receiver: XM_XPATH_RECEIVER) is
+	output_namespace_nodes (a_context: XM_XSLT_EVALUATION_CONTEXT; a_receiver: XM_XPATH_RECEIVER)
 			-- Output namespace nodes for the new element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -147,8 +147,6 @@ feature {XM_XSLT_ELEMENT_CONSTRUCTOR} -- Local
 			if namespace_code_list.count > 0 then
 				from
 					a_cursor := namespace_code_list.new_cursor; a_cursor.start
-				variant
-					namespace_code_list.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -158,19 +156,21 @@ feature {XM_XSLT_ELEMENT_CONSTRUCTOR} -- Local
 					else
 						a_cursor.remove
 					end
+				variant
+					namespace_code_list.count + 1 - a_cursor.index
 				end
 			end
 		end
-	
+
 feature {NONE} -- Implementation
-	
+
 	fixed_name_code: INTEGER
 			-- Name code
 
 	namespace_code_list: DS_ARRAYED_LIST [INTEGER]
 			-- Namespace codes
 
-	internal_item_type: XM_XPATH_ITEM_TYPE 
+	internal_item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 
 invariant
@@ -179,4 +179,4 @@ invariant
 	valid_name_code: shared_name_pool.is_valid_name_code (fixed_name_code)
 
 end
-	
+

@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Error: Eiffel compilation error"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,19 +22,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new error reporting that an Eiffel
 			-- compilation error occurred.
 		do
-			create parameters.make (1, 0)
+			create parameters.make_filled (empty_string, 1, 0)
 		end
 
 feature -- Access
 
-	default_template: STRING is "Eiffel compilation error"
+	default_template: STRING = "Eiffel compilation error"
 			-- Default template used to built the error message
 
-	code: STRING is "TS0002"
+	code: STRING = "TS0002"
 			-- Error code
 
 invariant

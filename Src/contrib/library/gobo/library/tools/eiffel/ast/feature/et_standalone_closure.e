@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel standalone closures, e.g. features or invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,18 +23,20 @@ inherit
 			implementation_feature
 		end
 
+	HASHABLE
+
 	KL_IMPORTED_ANY_ROUTINES
 		export {NONE} all end
 
 feature -- Status report
 
-	is_feature: BOOLEAN is
+	is_feature: BOOLEAN
 			-- Is `Current' a feature?
 		do
 			-- Result := False
 		end
 
-	is_invariants: BOOLEAN is
+	is_invariants: BOOLEAN
 			-- Is `Current' class invariants?
 		do
 			-- Result := False
@@ -42,7 +44,7 @@ feature -- Status report
 
 feature -- Access
 
-	first_precursor: ET_STANDALONE_CLOSURE is
+	first_precursor: ET_STANDALONE_CLOSURE
 			-- First precursor;
 			-- Void if the feature has no precursor.
 			-- Useful to build the flat preconditions and
@@ -50,7 +52,7 @@ feature -- Access
 		deferred
 		end
 
-	implementation_class: ET_CLASS is
+	implementation_class: ET_CLASS
 			-- Class where implementation of current feature
 			-- has been provided;
 			-- Useful for interpreting feature calls and type
@@ -63,7 +65,7 @@ feature -- Access
 			implementation_class_not_void: Result /= Void
 		end
 
-	implementation_feature: ET_STANDALONE_CLOSURE is
+	implementation_feature: ET_STANDALONE_CLOSURE
 			-- Current feature in `implementation_class',
 			-- Useful for interpreting feature calls and type
 			-- anchors (that might be renamed in descendant classes)
@@ -75,84 +77,52 @@ feature -- Access
 
 feature -- Export status
 
-	clients: ET_CLIENT_LIST is
+	clients: ET_CLIENT_LIST
 			-- Clients to which feature is exported
 		deferred
 		ensure
 			clients_not_void: Result /= Void
 		end
 
-feature -- Implementation checking status
+feature -- Validity checking status
 
-	implementation_checked: BOOLEAN
-			-- Has the implementation of current feature been checked?
-			-- (Check everything except assertions.)
+	validity_checked: BOOLEAN
+			-- Has the validity of current closure been checked?
+			-- (Check everything except preconditions and postconditions.)
 
-	has_implementation_error: BOOLEAN
-			-- Has a fatal error occurred during implementation checking?
-			-- (Check everything except assertions.)
+	has_validity_error: BOOLEAN
+			-- Has a fatal error occurred during validity checking?
+			-- (Check everything except preconditions and postconditions.)
 
-	assertions_checked: BOOLEAN
-			-- Has the implementation of assertions of current feature been checked?
-
-	has_assertions_error: BOOLEAN
-			-- Has a fatal error occurred during assertions implementation checking?
-
-	set_implementation_checked is
-			-- Set `implementation_checked' to True.
+	set_validity_checked
+			-- Set `validity_checked' to True.
 		do
-			implementation_checked := True
+			validity_checked := True
 		ensure
-			implementation_checked: implementation_checked
+			validity_checked: validity_checked
 		end
 
-	set_implementation_error is
-			-- Set `has_implementation_error' to True.
+	set_validity_error
+			-- Set `has_validity_error' to True.
 		do
-			has_implementation_error := True
+			has_validity_error := True
 		ensure
-			has_implementation_error: has_implementation_error
+			has_validity_error: has_validity_error
 		end
 
-	reset_implementation_checked is
-			-- Set `implementation_checked' to False.
+	reset_validity_checked
+			-- Set `validity_checked' to False.
 		do
-			has_implementation_error := False
-			implementation_checked := False
+			has_validity_error := False
+			validity_checked := False
 		ensure
-			implementation_not_checked: not implementation_checked
-			no_implementation_error: not has_implementation_error
-		end
-
-	set_assertions_checked is
-			-- Set `assertions_checked' to True.
-		do
-			assertions_checked := True
-		ensure
-			assertions_checked: assertions_checked
-		end
-
-	set_assertions_error is
-			-- Set `has_assertions_error' to True.
-		do
-			has_assertions_error := True
-		ensure
-			has_assertions_error: has_assertions_error
-		end
-
-	reset_assertions_checked is
-			-- Set `assertions_checked' to False.
-		do
-			has_assertions_error := False
-			assertions_checked := False
-		ensure
-			assertions_not_checked: not assertions_checked
-			no_assertions_error: not has_assertions_error
+			validity_not_checked: not validity_checked
+			no_validity_error: not has_validity_error
 		end
 
 feature -- Conversion
 
-	as_feature: ET_FEATURE is
+	as_feature: ET_FEATURE
 			-- `Current' viewed as a feature
 		require
 			is_feature: is_feature
@@ -162,7 +132,7 @@ feature -- Conversion
 			definition: ANY_.same_objects (Result, Current)
 		end
 
-	as_invariants: ET_INVARIANTS is
+	as_invariants: ET_INVARIANTS
 			-- `Current' viewed as class invariants
 		require
 			is_invariants: is_invariants

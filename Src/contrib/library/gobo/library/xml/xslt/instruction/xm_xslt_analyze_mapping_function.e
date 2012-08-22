@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Objects that map sequences of matching and non-matching strings to the results of xsl:matching-substring and xsl:non-matching-substring children of xsl:analyze-string"
 
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base: XM_XSLT_REGEXP_ITERATOR; a_context: XM_XSLT_EVALUATION_CONTEXT; a_matching, a_non_matching: XM_XPATH_EXPRESSION) is
+	make (a_base: XM_XSLT_REGEXP_ITERATOR; a_context: XM_XSLT_EVALUATION_CONTEXT; a_matching, a_non_matching: XM_XPATH_EXPRESSION)
 			-- Initialize `Current'.
 		require
 			a_base_not_void: a_base /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Evaluation
 
-	map (a_context: XM_XPATH_CONTEXT) is
+	map (a_context: XM_XPATH_CONTEXT)
 			-- Map `a_context.context_item' to a sequence
 		do
 			if base_iterator.is_matching and matching_block /= Void then

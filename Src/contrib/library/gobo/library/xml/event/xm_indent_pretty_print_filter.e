@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -33,7 +33,7 @@ feature -- Indent
 	indent: STRING
 			-- Indentation string.
 
-	set_indent (an_indent: STRING) is
+	set_indent (an_indent: STRING)
 			-- Set indent string.
 		require
 			an_indent_not_void: an_indent /= Void
@@ -41,12 +41,12 @@ feature -- Indent
 			indent := an_indent
 		end
 
-	Default_indent: STRING is " "
+	Default_indent: STRING = " "
 			-- Default indent.
 
 feature -- Events
 
-	on_start is
+	on_start
 			-- Start of document.
 		do
 			if indent = Void then
@@ -65,10 +65,12 @@ feature -- Events
 			indent_not_void: indent /= Void
 		end
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Start of start tag.
 		do
 			check space_preserved_not_void: space_preserved /= Void end
+
+			flush_pending_tag_end
 
 			if not has_content then
 				if is_root then
@@ -87,7 +89,7 @@ feature -- Events
 			space_preserved.force (space_preserved.item)
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
+	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
 			-- Handle xml:space.
 		do
 			check space_preserved_not_void: space_preserved /= Void end
@@ -100,23 +102,27 @@ feature -- Events
 			Precursor (a_namespace, a_prefix, a_local_part, a_value)
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- End tag.
 		do
 			depth := depth - 1
 
-			if not has_content then
-				output_indent_new_line
-				output_indent
+			if last_call_was_start_tag_finish and empty_element_tags_enabled then
+				Precursor (a_namespace, a_prefix, a_local_part)
+			else
+				if not has_content then
+					output_indent_new_line
+					output_indent
+				end
+
+				Precursor (a_namespace, a_prefix, a_local_part)
 			end
+
 			has_content := False
-
-			Precursor (a_namespace, a_prefix, a_local_part)
-
 			space_preserved.remove
 		end
 
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- Test if we had a content event.
 		do
 			has_content := True
@@ -133,7 +139,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Space preserve
 
-	has_xml_space (a_prefix: STRING; a_local_part: STRING): BOOLEAN is
+	has_xml_space (a_prefix: STRING; a_local_part: STRING): BOOLEAN
 			-- Is this attribute xml:space?
 		do
 			Result := has_prefix (a_prefix)
@@ -144,7 +150,7 @@ feature {NONE} -- Space preserve
 	space_preserved: DS_ARRAYED_STACK [BOOLEAN]
 			-- Space preserved value.
 
-	Default_space_preserve: BOOLEAN is
+	Default_space_preserve: BOOLEAN
 			-- Initial space preserve value.
 			-- May be redefined.
 			-- Default: False.
@@ -156,7 +162,7 @@ feature {NONE} -- Indent
 	depth: INTEGER
 			-- Depth.
 
-	output_indent is
+	output_indent
 			-- Append indent before element.
 		require
 			space_preserve_not_void: space_preserved /= Void
@@ -177,7 +183,7 @@ feature {NONE} -- Indent
 			end
 		end
 
-	output_indent_new_line is
+	output_indent_new_line
 			-- Append indent after element.
 		require
 			space_preserve_not_void: space_preserved /= Void

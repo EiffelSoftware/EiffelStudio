@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Warning: Token id used twice"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; token1, token2: STRING; token_id: INTEGER) is
+	make (filename: STRING; token1, token2: STRING; token_id: INTEGER)
 			-- Create a new error reporting that `token1' and
 			-- `token2' have been assigned the same token id.
 		require
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			token1_not_void: token1 /= Void
 			token2_not_void: token2 /= Void
 		do
-			create parameters.make (1, 4)
+			create parameters.make_filled (empty_string, 1, 4)
 			parameters.put (filename, 1)
 			parameters.put (token1, 2)
 			parameters.put (token2, 3)
@@ -39,10 +39,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "Warning, %"$1%": tokens $2 and $3 both assigned number $4"
+	default_template: STRING = "Warning, %"$1%": tokens $2 and $3 both assigned number $4"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0013"
+	code: STRING = "PR0013"
 			-- Error code
 
 invariant

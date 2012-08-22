@@ -8,8 +8,8 @@
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2007, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date: 2008-01-03 03:23:14 -0800 (Thu, 03 Jan 2008) $"
-	revision: "$Revision: 6244 $"
+	date: "$Date$"
+	revision: "$Revision$"
 -->
 
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="string/unicode/case">

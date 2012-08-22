@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"ECF Eiffel system parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,6 +23,21 @@ create
 
 	make, make_standard, make_with_factory
 
+feature -- Status report
+
+	finalize_mode: BOOLEAN
+			-- Is system to be compiled in finalize mode?
+
+feature -- Status setting
+
+	set_finalize_mode (b: BOOLEAN)
+			-- Set `finalize_mode' to `b'.
+		do
+			finalize_mode := b
+		ensure
+			finalize_mode_set: finalize_mode = b
+		end
+
 feature -- Access
 
 	last_system: ET_ECF_SYSTEM
@@ -30,17 +45,18 @@ feature -- Access
 
 feature -- Parsing
 
-	parse_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Parse ECF file `a_file'.
 		do
 			last_system := Void
 			precursor (a_file)
 			parsed_libraries.wipe_out
+			parsed_dotnet_assemblies.wipe_out
 		end
 
 feature {NONE} -- Element change
 
-	build_system_config (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_filename: STRING) is
+	build_system_config (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_filename: STRING)
 			-- Build system config from `an_element'.
 		local
 			l_system: ET_ECF_SYSTEM
@@ -60,6 +76,7 @@ feature {NONE} -- Element change
 			end
 			if l_target /= Void then
 				create l_state.make (l_target, ise_version)
+				l_state.set_finalize_mode (finalize_mode)
 				l_target.update_state (l_state)
 				l_system.select_target (l_target, l_state)
 				parse_libraries (l_system, l_state)
@@ -67,7 +84,10 @@ feature {NONE} -- Element change
 					parse_libraries (parsed_libraries.item_for_iteration, l_state)
 					parsed_libraries.forth
 				end
+				l_system.libraries.do_adapted (agent {ET_ADAPTED_LIBRARY}.propagate_read_only)
 				l_target.fill_root (l_system)
+				l_target.fill_settings (l_system)
+				l_target.fill_options (l_system)
 				last_system := l_system
 			end
 		end

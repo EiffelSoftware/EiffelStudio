@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Simple implementation of coefficients using a native array of characters"
 
 	library: "Gobo Eiffel Decimal Arithmetic Library"
-	copyright: "Copyright (c) 2004, Paul G. Crismer and others"
+	copyright: "Copyright (c) 2004-2012, Paul G. Crismer and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,15 +36,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_capacity: INTEGER) is
+	make (a_capacity: INTEGER)
 			-- Make with `a_capacity'.
 		do
-			digits := SPECIAL_DIGITS_.make (a_capacity)
+			digits := SPECIAL_DIGITS_.make_filled (0, a_capacity)
 			capacity := a_capacity
 			set_count (0)
 		end
 
-	make_copy (other: like Current) is
+	make_copy (other: like Current)
 			-- Make a copy of `other'.
 		do
 			make (other.capacity)
@@ -53,13 +53,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item (index: INTEGER): INTEGER is
+	item (index: INTEGER): INTEGER
 			-- Item at `index'
 		do
 			Result := digits.item (index)
 		end
 
-	msd_index: INTEGER is
+	msd_index: INTEGER
 			-- Index of most significant (non-zero) digit
 		local
 			l_digits: like digits
@@ -77,7 +77,7 @@ feature -- Access
 			end
 		end
 
-	subcoefficient (index_start, index_end: INTEGER): MA_DECIMAL_COEFFICIENT is
+	subcoefficient (index_start, index_end: INTEGER): MA_DECIMAL_COEFFICIENT
 			-- Subcoefficient made of digits in range [index_start..index_end]
 		local
 			index: INTEGER
@@ -98,14 +98,14 @@ feature -- Measurement
 	count: INTEGER
 			-- Number of decimal digits
 
-	lower: INTEGER is
+	lower: INTEGER
 			-- Lower index
 		do
 --			Result := digits.lower
 			Result := 0
 		end
 
-	upper: INTEGER is
+	upper: INTEGER
 			-- Upper index
 		do
 			Result := capacity - 1
@@ -116,7 +116,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	set_from_substring (s: STRING; coefficient_begin, coefficient_end: INTEGER) is
+	set_from_substring (s: STRING; coefficient_begin, coefficient_end: INTEGER)
 			-- Set from `s', skip the decimal point if it is present.
 		local
 			i, k: INTEGER
@@ -130,8 +130,6 @@ feature -- Element change
 			from
 				i := coefficient_end
 				k := 0
-			variant
-				i
 			until
 				i < coefficient_begin
 			loop
@@ -144,11 +142,13 @@ feature -- Element change
 						-- Do nothing.
 				end
 				i := i - 1
+			variant
+				i
 			end
 			set_count (k)
 		end
 
-	grow (a_capacity: INTEGER) is
+	grow (a_capacity: INTEGER)
 			-- Grow coefficient so that it can contain up to `a_capacity' digits.
 		local
 			index, new_upper: INTEGER
@@ -156,7 +156,7 @@ feature -- Element change
 		do
 			new_upper := a_capacity - 1
 			if a_capacity > capacity then
-				digits := SPECIAL_DIGITS_.resize (digits, new_upper + 1)
+				digits := SPECIAL_DIGITS_.aliased_resized_area_with_default (digits, 0, new_upper + 1)
 				capacity := new_upper + 1
 			end
 				-- Zero msd.
@@ -172,7 +172,7 @@ feature -- Element change
 			set_count (a_capacity)
 		end
 
-	put (v, index: INTEGER) is
+	put (v, index: INTEGER)
 			-- Put `v' at `index'-th item.
 		do
 			digits.put (INTEGER_.to_integer_8 (v), index)
@@ -183,7 +183,7 @@ feature -- Element change
 
 feature -- Comparison
 
-	three_way_comparison (other: like Current): INTEGER is
+	three_way_comparison (other: like Current): INTEGER
 			-- Compare `other'; Result is [-1,0,+1] if [Current < other, Current = other, Current > other] respectively
 		local
 			index, count_a, count_b, local_difference: INTEGER
@@ -213,7 +213,7 @@ feature -- Comparison
 
 feature -- Conversion
 
-	out: STRING is
+	out: STRING
 			-- Terse printable representation
 		local
 			index: INTEGER
@@ -231,7 +231,7 @@ feature -- Conversion
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- copy `other' into `Current' without aliasing.
 		local
 			index, l_upper: INTEGER
@@ -258,7 +258,7 @@ feature -- Duplication
 			end
 		end
 
-	to_twin: like Current is
+	to_twin: like Current
 			-- Cloned version of `Current'
 		do
 			create Result.make_copy (Current)
@@ -266,7 +266,7 @@ feature -- Duplication
 
 feature -- Basic operations
 
-	keep_head (a_count: INTEGER) is
+	keep_head (a_count: INTEGER)
 			-- Keep head of 'a_count' digits.
 		local
 			index: INTEGER
@@ -287,7 +287,7 @@ feature -- Basic operations
 			set_count (a_count)
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Are `Current' and `other' considered equal?
 		local
 			index: INTEGER
@@ -298,19 +298,19 @@ feature -- Basic operations
 					index := count - 1
 					l_digits := digits
 					l_other_digits := other.digits
-				variant
-					index + 1
 				until
 					index < lower or else l_digits.item (index) /= l_other_digits.item (index)
 				loop
 					index := index - 1
+				variant
+					index + 1
 				end
 					-- found no equal item
 				Result := (index < lower)
 			end
 		end
 
-	shift_left (a_count: INTEGER) is
+	shift_left (a_count: INTEGER)
 			-- Shift items left.
 		local
 			index: INTEGER
@@ -337,7 +337,7 @@ feature -- Basic operations
 			end
 		end
 
-	shift_right (a_count: INTEGER) is
+	shift_right (a_count: INTEGER)
 			-- Shift items right.
 		local
 			index: INTEGER
@@ -365,7 +365,7 @@ feature -- Basic operations
 			end
 		end
 
-	integer_add (other: like Current) is
+	integer_add (other: like Current)
 			-- Integer add of `other' to `Current'.
 		local
 			carry: INTEGER
@@ -393,7 +393,7 @@ feature -- Basic operations
 			end
 		end
 
-	integer_multiply (a, b: like Current) is
+	integer_multiply (a, b: like Current)
 			-- Multiply `a', `b' into `Current'.
 		local
 			i, j, carry, digit: INTEGER
@@ -454,7 +454,7 @@ feature -- Basic operations
 			strip_leading_zeroes
 		end
 
-	integer_quick_add_msd (other, digits_count: INTEGER) is
+	integer_quick_add_msd (other, digits_count: INTEGER)
 			-- Integer add of `other' (between 0 and 9) to `Current',
 			-- restricted to `digits_count' most significant digits.
 		local
@@ -488,7 +488,7 @@ feature -- Basic operations
 			end
 		end
 
-	integer_subtract (other: like Current) is
+	integer_subtract (other: like Current)
 			-- Integer subtract of `other' to `Current',
 			-- provided that result will not be negative.
 		local
@@ -533,7 +533,7 @@ feature -- Basic operations
 			strip_leading_zeroes
 		end
 
-	integer_quick_subtract_msd (other, digits_count: INTEGER) is
+	integer_quick_subtract_msd (other, digits_count: INTEGER)
 			-- Integer subtract of `other' (between 0 and 9) to `Current'
 			-- restricted to `digits_count' most significant digits.
 		local
@@ -569,7 +569,7 @@ feature {MA_DECIMAL_COEFFICIENT_IMP} -- Implementation
 	digits: SPECIAL [INTEGER_8]
 			-- Array of digits (with the least significant first)
 
-	SPECIAL_DIGITS_: KL_SPECIAL_ROUTINES [INTEGER_8] is
+	SPECIAL_DIGITS_: KL_SPECIAL_ROUTINES [INTEGER_8]
 			-- Routines that ought to be in class SPECIAL
 		once
 			create Result
@@ -579,7 +579,7 @@ feature {MA_DECIMAL_COEFFICIENT_IMP} -- Implementation
 
 feature {MA_DECIMAL} -- Implementation
 
-	set_count (a_count: INTEGER) is
+	set_count (a_count: INTEGER)
 			-- Set `count' to `a_count'.
 		do
 			count := a_count

@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel provider checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,7 @@ create
 
 feature -- Processing
 
-	process_class (a_class: ET_CLASS) is
+	process_class (a_class: ET_CLASS)
 			-- Parse `a_class' if not already done. Then check
 			-- the dependence constraint of its cluster.
 		local
@@ -45,6 +45,7 @@ feature -- Processing
 				a_processor.process_class (a_class)
 			elseif a_class.is_unknown then
 				set_fatal_error (a_class)
+				error_handler.report_giaaa_error
 			elseif not a_class.is_preparsed then
 				set_fatal_error (a_class)
 			else
@@ -54,7 +55,7 @@ feature -- Processing
 
 feature -- Error handling
 
-	set_fatal_error (a_class: ET_CLASS) is
+	set_fatal_error (a_class: ET_CLASS)
 			-- Report a fatal error to `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -64,7 +65,7 @@ feature -- Error handling
 
 feature {NONE} -- Processing
 
-	internal_process_class (a_class: ET_CLASS) is
+	internal_process_class (a_class: ET_CLASS)
 			-- Parse `a_class' if not already done. Then check
 			-- the dependence constraint of its cluster.
 		require
@@ -88,13 +89,14 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Cluster dependence constraints
 
-	check_cluster_dependence_constraints is
+	check_cluster_dependence_constraints
 			-- Check of cluster dependence constraints.
 		local
 			l_group: ET_GROUP
 			l_cluster: ET_CLUSTER
-			l_providers: DS_HASH_SET [ET_CLASS]
-			l_providers_cursor: DS_HASH_SET_CURSOR [ET_CLASS]
+			l_providers: DS_HASH_SET [ET_NAMED_CLASS]
+			l_providers_cursor: DS_HASH_SET_CURSOR [ET_NAMED_CLASS]
+			l_named_provider: ET_NAMED_CLASS
 			l_provider: ET_CLASS
 			l_provider_group: ET_GROUP
 			l_dependant_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
@@ -135,7 +137,8 @@ feature {NONE} -- Cluster dependence constraints
 				if l_providers /= Void then
 					l_providers_cursor := l_providers.new_cursor
 					from l_providers_cursor.start until l_providers_cursor.after loop
-						l_provider := l_providers_cursor.item
+						l_named_provider := l_providers_cursor.item
+						l_provider := l_named_provider.actual_class
 						if l_provider.is_none then
 							-- Skip this one: no constraint on class NONE.
 						elseif l_provider.is_preparsed then

@@ -326,17 +326,17 @@ feature -- Status setting
 	sign_cr_dr
 			-- Set sign for CR/DR
 		do
-			sign_string := "CR DR"
+			sign_string := "CR  DR"
 		ensure
-			sign_string ~ "CR DR"
+			sign_string ~ "CR  DR"
 		end
 
 	sign_dr_cr
 			-- Set sign for DR/CR
 		do
-			sign_string := "DR CR"
+			sign_string := "DR  CR"
 		ensure
-			sign_string ~ "DR CR"
+			sign_string ~ "DR  CR"
 		end
 
 	sign_floating_dollar
@@ -559,7 +559,9 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	sign_string_constraint: sign_string /= Void
+	sign_string_attached: sign_string /= Void
+	sign_string_count: sign_string.count >= 3
+	sign_string_equal_parts: sign_string.count \\ 3 = 0
 	wide_enough: width >= 1
 	no_justification <= justification and justification <= right_justification
 

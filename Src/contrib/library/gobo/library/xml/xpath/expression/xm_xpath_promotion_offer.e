@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_requested_action: INTEGER; a_binding_list: DS_LIST [XM_XPATH_BINDING]; containing: XM_XPATH_EXPRESSION; eliminate: BOOLEAN; dependent: BOOLEAN) is
+	make (a_requested_action: INTEGER; a_binding_list: DS_LIST [XM_XPATH_BINDING]; containing: XM_XPATH_EXPRESSION; eliminate: BOOLEAN; dependent: BOOLEAN)
 			-- Set defaults.
 		require
 			action: a_requested_action = Range_independent
@@ -79,7 +79,7 @@ feature -- Access
 
 	accepted_expression : XM_XPATH_EXPRESSION
 			-- Result from `accept'
-	
+
 feature -- Status report
 
 	may_promote_document_dependent: BOOLEAN
@@ -102,7 +102,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	disallow_promoting_xslt_functions is
+	disallow_promoting_xslt_functions
 			-- Disallow promotion of XSLT functions such as current().
 		do
 			may_promote_xslt_functions := False
@@ -112,7 +112,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	accept (a_child_expression: XM_XPATH_EXPRESSION) is
+	accept (a_child_expression: XM_XPATH_EXPRESSION)
 			-- Test whether a subexpression qualifies for promotion, and if so, accept the promotion
 		require
 			sub_expression_dependencies_and_cardinalities_computed: a_child_expression /= Void and then a_child_expression.are_dependencies_computed and then a_child_expression.are_cardinalities_computed
@@ -128,7 +128,7 @@ feature -- Optimization
 					promote (a_child_expression)
 					accepted_expression := promoted_expression
 				end
-			when Focus_independent then 
+			when Focus_independent then
 				if not may_promote_xslt_functions and then a_child_expression.depends_upon_xslt_context then
 					accepted_expression := Void
 				elseif not a_child_expression.depends_upon_focus and then a_child_expression.non_creating then
@@ -173,12 +173,12 @@ feature -- Optimization
 				else
 					accepted_expression := Void
 				end
-			end			
+			end
 		end
 
 feature -- Element change
 
-	set_containing_expression (exp:  XM_XPATH_EXPRESSION) is
+	set_containing_expression (exp:  XM_XPATH_EXPRESSION)
 			-- Set `containing_expression'.
 		require
 			expression_not_void: exp /= Void
@@ -188,7 +188,7 @@ feature -- Element change
 			set: containing_expression = exp
 		end
 
-	set_binding_list (a_list: like binding_list) is
+	set_binding_list (a_list: like binding_list)
 			-- Set `binding_list'
 		require
 			list_not_empty: a_list /= Void and then a_list.count > 0
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 	promoted_expression: XM_XPATH_EXPRESSION
 			-- Result from `promote'
 
-	promote (a_child_expression: XM_XPATH_EXPRESSION) is
+	promote (a_child_expression: XM_XPATH_EXPRESSION)
 			-- Promote `a_child_expression'
 		require
 			sub_expression_cardinalities_computed: a_child_expression /= Void and then a_child_expression.are_cardinalities_computed
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 			set_containing_expression (a_let_expression)
 		end
 
-	depends_upon_variable (a_child_expression: XM_XPATH_EXPRESSION; a_binding_list: DS_LIST [XM_XPATH_BINDING]):BOOLEAN is
+	depends_upon_variable (a_child_expression: XM_XPATH_EXPRESSION; a_binding_list: DS_LIST [XM_XPATH_BINDING]):BOOLEAN
 			-- Does `a_child_expression' depend upon `a_binding'?
 		require
 			child_not_void: a_child_expression /= Void
@@ -257,8 +257,6 @@ feature {NONE} -- Implementation
 				from
 					children := a_child_expression.sub_expressions
 					an_index := 1
-				variant
-					children.count + 1 - an_index
 				until
 					Result or else an_index > children.count
 				loop
@@ -266,6 +264,8 @@ feature {NONE} -- Implementation
 						Result := True
 					end
 					an_index := an_index + 1
+				variant
+					children.count + 1 - an_index
 				end
 			end
 		end
@@ -279,6 +279,6 @@ invariant
 	binding_for_inline_variables: action = Inline_variable_references implies binding_list /= Void and then binding_list.count = 1
 	containing_expression: action /= Unordered implies containing_expression /= Void
 	replace_current: action = Replace_current implies containing_expression /= Void and then containing_expression.is_let_expression
-	
+
 end
-	
+

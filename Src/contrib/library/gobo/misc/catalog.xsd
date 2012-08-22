@@ -4,7 +4,7 @@
            targetNamespace="urn:oasis:names:tc:entity:xmlns:xml:catalog"
            elementFormDefault="qualified">
 
-  <!-- $Id: catalog.xsd 5056 2005-07-11 21:07:23Z ericb $ -->
+  <!-- $Id$ -->
 
   <xs:import namespace="http://www.w3.org/XML/1998/namespace"/>
 

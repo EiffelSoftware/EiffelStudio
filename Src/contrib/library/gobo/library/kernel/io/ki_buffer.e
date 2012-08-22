@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Interface for buffers"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,28 +14,17 @@ deferred class KI_BUFFER [G]
 
 feature -- Access
 
-	item (i: INTEGER): G is
+	item (i: INTEGER): G
 			-- Item at position `i'
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
-		local
-			r: ?G
-		do
-				-- TODO: This routine should be deferred, but there is
-				-- a bug with ISE Eiffel 5.1.5 up to 6.3 in the generated
-				-- C code in finalized mode (ISE bug#15375), and having this
-				-- routine effective is a workaround.
-			check
-					-- Fooling the compiler.
-				r_not_void: r /= Void
-			end
-			Result := r
+		deferred
 		end
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in buffer
 		deferred
 		ensure
@@ -44,21 +33,17 @@ feature -- Measurement
 
 feature -- Element change
 
-	put (v: G; i: INTEGER) is
+	put (v: G; i: INTEGER)
 			-- Replace item at position `i' by `v'.
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
-		do
-				-- TODO: This routine should be deferred, but there is
-				-- a bug with ISE Eiffel 5.1.5 up to 6.3 in the generated
-				-- C code in finalized mode (ISE bug#15375), and having this
-				-- routine effective is a workaround.
+		deferred
 		ensure
 			inserted: item (i) = v
 		end
 
-	fill_from_stream (a_stream: KI_INPUT_STREAM [G]; pos, nb: INTEGER): INTEGER is
+	fill_from_stream (a_stream: KI_INPUT_STREAM [G]; pos, nb: INTEGER): INTEGER
 			-- Fill buffer, starting at position `pos', with
 			-- at most `nb' items read from `a_stream'.
 			-- Return the number of items actually read.
@@ -77,7 +62,7 @@ feature -- Element change
 			not_end_of_input: not a_stream.end_of_input implies Result > 0
 		end
 
-	move_left (old_pos, new_pos: INTEGER; nb: INTEGER) is
+	move_left (old_pos, new_pos: INTEGER; nb: INTEGER)
 			-- Copy `nb' items from `old_pos' to
 			-- `new_pos' in buffer.
 		require
@@ -105,7 +90,7 @@ feature -- Element change
 			end
 		end
 
-	move_right (old_pos, new_pos: INTEGER; nb: INTEGER) is
+	move_right (old_pos, new_pos: INTEGER; nb: INTEGER)
 			-- Copy `nb' items from `old_pos' to
 			-- `new_pos' in buffer.
 		require
@@ -134,7 +119,7 @@ feature -- Element change
 
 feature -- Resizing
 
-	resize (n: INTEGER) is
+	resize (n: INTEGER)
 			-- Resize buffer so that it contains `n' items.
 			-- Do not lose any previously entered items.
 		require

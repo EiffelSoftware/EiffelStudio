@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -30,10 +30,10 @@ create {XM_XSLT_NODE_FACTORY}
 	make_style_element
 
 feature {NONE} -- Initialization
-	
+
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER;  a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
 		do
 			create extension_attributes.make_with_equality_testers (1, string_equality_tester, string_equality_tester)
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -58,8 +58,6 @@ feature -- Element change
 				from
 					l_cursor := attribute_collection.name_code_cursor
 					l_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - l_cursor.index				
 				until
 					l_cursor.after or any_compile_errors
 				loop
@@ -70,17 +68,17 @@ feature -- Element change
 					elseif STRING_.same_string (an_expanded_name, Method_attribute) then
 						method := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (method); STRING_.right_adjust (method)
 					elseif STRING_.same_string (an_expanded_name, Version_attribute) then
-						output_version := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (output_version); STRING_.right_adjust (output_version)					
+						output_version := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (output_version); STRING_.right_adjust (output_version)
 					elseif STRING_.same_string (an_expanded_name, Encoding_attribute) then
 						encoding := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (encoding); STRING_.right_adjust (encoding)
 					elseif STRING_.same_string (an_expanded_name, Omit_xml_declaration_attribute) then
 						omit_xml_declaration := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (omit_xml_declaration); STRING_.right_adjust (omit_xml_declaration)
 					elseif STRING_.same_string (an_expanded_name, Standalone_attribute) then
-						standalone := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (standalone); STRING_.right_adjust (standalone)					
+						standalone := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (standalone); STRING_.right_adjust (standalone)
 					elseif STRING_.same_string (an_expanded_name, Doctype_public_attribute) then
 						doctype_public := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (doctype_public); STRING_.right_adjust (doctype_public)
 					elseif STRING_.same_string (an_expanded_name, Doctype_system_attribute) then
-						doctype_system := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (doctype_system); STRING_.right_adjust (doctype_system)					
+						doctype_system := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (doctype_system); STRING_.right_adjust (doctype_system)
 					elseif STRING_.same_string (an_expanded_name, Cdata_section_elements_attribute) then
 						cdata_section_elements := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (cdata_section_elements); STRING_.right_adjust (cdata_section_elements)
 					elseif STRING_.same_string (an_expanded_name, Indent_attribute) then
@@ -114,6 +112,8 @@ feature -- Element change
 						end
 					end
 					l_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - l_cursor.index
 				end
 			end
 			if a_name_attribute /= Void then
@@ -125,7 +125,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			an_error: XM_XPATH_ERROR_VALUE
@@ -252,17 +252,17 @@ feature -- Element change
 					create an_error.make_from_string ("byte-order-mark must be 'yes' or 'no'", Xpath_errors_uri, "SEPM0016", Static_error)
 					report_compile_error (an_error)
 				end
-			end			
+			end
 			validated := True
 		end
-			
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		do
 			last_generated_expression := Void
 		end
 
-	gather_output_properties (a_property_set: XM_XSLT_OUTPUT_PROPERTIES) is
+	gather_output_properties (a_property_set: XM_XSLT_OUTPUT_PROPERTIES)
 			-- Accumulate output properties into `a_property_set'.
 		require
 			property_set_not_void: a_property_set /= Void
@@ -295,7 +295,7 @@ feature -- Element change
 			end
 			if doctype_system /= Void and then not a_property_set.is_error then
 				gather_doctype_system_property (a_property_set, l_import_precedence)
-			end			
+			end
 			if doctype_public /= Void and then not a_property_set.is_error then
 				gather_doctype_public_property (a_property_set, l_import_precedence)
 			end
@@ -316,7 +316,7 @@ feature -- Element change
 			end
 			if character_representation /= Void and then not a_property_set.is_error then
 				gather_character_representation_property (a_property_set, l_import_precedence)
-			end			
+			end
 			if include_content_type /= Void and then not a_property_set.is_error then
 				gather_include_content_type_property (a_property_set, l_import_precedence)
 			end
@@ -325,7 +325,7 @@ feature -- Element change
 			end
 			if normalization_form /= Void and then not a_property_set.is_error then
 				gather_normalization_form_property (a_property_set, l_import_precedence)
-			end			
+			end
 			if byte_order_mark /= Void and then not a_property_set.is_error then
 				gather_byte_order_mark_property (a_property_set, l_import_precedence)
 			end
@@ -334,13 +334,13 @@ feature -- Element change
 
 feature -- Conversion
 
-	is_output: BOOLEAN is
+	is_output: BOOLEAN
 			-- Is `Current' an xsl:output?
 		do
 			Result := True
 		end
 
-	as_output: XM_XSLT_OUTPUT is
+	as_output: XM_XSLT_OUTPUT
 			-- `Current' seen as an xsl:output
 		do
 			Result := Current
@@ -408,7 +408,7 @@ feature {NONE} -- Implementation
 	method_qname_parser: XM_XPATH_QNAME_PARSER
 			-- Parser for method name
 
-	gather_method_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+	gather_method_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER)
 			-- Set method-related properties in `a_property_set'.
 		require
 			property_set_not_void: a_property_set /= Void
@@ -464,7 +464,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	gather_version_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+	gather_version_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER)
 			-- Set version property in `a_property_set'.
 		require
 			property_set_not_void: a_property_set /= Void
@@ -479,7 +479,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	gather_indent_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+	gather_indent_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER)
 			-- Set indent property in `a_property_set'.
 		require
 			property_set_not_void: a_property_set /= Void
@@ -495,7 +495,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	gather_indent_spaces_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+	gather_indent_spaces_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER)
 			-- Set indent-spaces property in `a_property_set'.
 		require
 			property_set_not_void: a_property_set /= Void
@@ -507,10 +507,10 @@ feature {NONE} -- Implementation
 			elseif not a_property_set.is_lower_precedence (a_import_precedence, Gexslt_indent_spaces_attribute) and then
 				indent_spaces.to_integer /= a_property_set.indent_spaces then
 				a_property_set.set_duplication_error (Gexslt_indent_spaces_attribute)
-			end	
+			end
 		end
 
-	gather_next_in_chain_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+	gather_next_in_chain_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER)
 			-- Set next-in-chain property in `a_property_set'.
 		require
 			property_set_not_void: a_property_set /= Void
@@ -525,7 +525,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	gather_encoding_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+	gather_encoding_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER)
 			-- Set encoding property in `a_property_set'.
 		require
 			property_set_not_void: a_property_set /= Void
@@ -540,7 +540,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	gather_media_type_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+	gather_media_type_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER)
 			-- Set media-type property in `a_property_set'.
 		require
 			property_set_not_void: a_property_set /= Void
@@ -555,7 +555,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	gather_doctype_system_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+	gather_doctype_system_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER)
 			-- Set doctype-system property in `a_property_set'.
 		require
 			property_set_not_void: a_property_set /= Void
@@ -570,7 +570,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	gather_doctype_public_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+	gather_doctype_public_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER)
 			-- Set doctype-public property in `a_property_set'.
 		require
 			property_set_not_void: a_property_set /= Void
@@ -585,7 +585,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	gather_omit_xml_declaration_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+	gather_omit_xml_declaration_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER)
 			-- Set omit-xml-declaration property in `a_property_set'.
 		require
 			property_set_not_void: a_property_set /= Void
@@ -602,7 +602,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	gather_standalone_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+	gather_standalone_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER)
 			-- Set standalone property in `a_property_set'.
 		require
 			property_set_not_void: a_property_set /= Void
@@ -617,7 +617,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	gather_escape_uri_attributes_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+	gather_escape_uri_attributes_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER)
 			-- Set escape-uri-attributes property in `a_property_set'.
 		require
 			property_set_not_void: a_property_set /= Void
@@ -634,7 +634,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	gather_character_representation_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+	gather_character_representation_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER)
 			-- Set character-representation property in `a_property_set'.
 		require
 			property_set_not_void: a_property_set /= Void
@@ -653,7 +653,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	gather_include_content_type_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+	gather_include_content_type_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER)
 			-- Set include-content-type property in `a_property_set'.
 		require
 			property_set_not_void: a_property_set /= Void
@@ -670,7 +670,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	gather_undeclare_prefixes_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+	gather_undeclare_prefixes_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER)
 			-- Set undeclare-prefixes property in `a_property_set'.
 		require
 			property_set_not_void: a_property_set /= Void
@@ -687,7 +687,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	gather_normalization_form_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+	gather_normalization_form_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER)
 			-- Set normalization-form property in `a_property_set'.
 		require
 			property_set_not_void: a_property_set /= Void
@@ -696,13 +696,13 @@ feature {NONE} -- Implementation
 		do
 			if a_property_set.is_higher_precedence (a_import_precedence, Normalization_form_attribute) then
 				a_property_set.set_normalization_form (normalization_form, a_import_precedence)
-			elseif not a_property_set.is_lower_precedence (a_import_precedence, Normalization_form_attribute) 
+			elseif not a_property_set.is_lower_precedence (a_import_precedence, Normalization_form_attribute)
 				and then not STRING_.same_string (normalization_form, a_property_set.normalization_form) then
 				a_property_set.set_duplication_error (Normalization_form_attribute)
 			end
 		end
 
-	gather_byte_order_mark_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER) is
+	gather_byte_order_mark_property (a_property_set: XM_XSLT_OUTPUT_PROPERTIES; a_import_precedence: INTEGER)
 			-- Set byte-order-form property in `a_property_set'.
 		require
 			property_set_not_void: a_property_set /= Void

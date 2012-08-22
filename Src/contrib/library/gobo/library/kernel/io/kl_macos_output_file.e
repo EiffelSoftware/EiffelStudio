@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -30,7 +30,7 @@ create
 
 feature -- Access
 
-	eol: STRING is "%R"
+	eol: STRING = "%R"
 			-- Line separator
 
 end

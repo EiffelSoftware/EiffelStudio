@@ -8,8 +8,8 @@
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2008, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2008-10-26 12:29:45 -0700 (Sun, 26 Oct 2008) $"
-	revision: "$Revision: 6539 $"
+	date: "$Date$"
+	revision: "$Revision$"
 -->
 
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="tools/ecf">

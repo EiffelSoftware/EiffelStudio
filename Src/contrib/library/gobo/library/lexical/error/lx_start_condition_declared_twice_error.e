@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Error: Start condition declared twice"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,14 +22,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; sc: STRING) is
+	make (filename: STRING; line: INTEGER; sc: STRING)
 			-- Create a new error reporting that
 			-- `sc' has been declared twice.
 		require
 			filename_not_void: filename /= Void
 			sc_not_void: sc /= Void
 		do
-			create parameters.make (1, 3)
+			create parameters.make_filled (empty_string, 1, 3)
 			parameters.put (filename, 1)
 			parameters.put (line.out, 2)
 			parameters.put (sc, 3)
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: start condition $3 declared twice"
+	default_template: STRING = "%"$1%", line $2: start condition $3 declared twice"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0017"
+	code: STRING = "LX0017"
 			-- Error code
 
 invariant

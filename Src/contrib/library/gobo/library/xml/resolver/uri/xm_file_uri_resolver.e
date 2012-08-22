@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -28,22 +28,22 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create.
 		do
 		end
 
 feature -- Status report
 
-	scheme: STRING is "file"
+	scheme: STRING = "file"
 			-- Scheme
 
 feature -- Action(s)
 
-	resolve (a_uri: UT_URI) is
+	resolve (a_uri: UT_URI)
 			-- Resolve file URI.
 		local
-			l_path: ?STRING
+			l_path: detachable STRING
 		do
 			last_stream := Void
 			l_path := File_uri.uri_to_filename (a_uri)
@@ -60,25 +60,25 @@ feature -- Action(s)
 
 feature -- Result
 
-	last_stream: ?KI_BINARY_INPUT_FILE
+	last_stream: detachable KI_BINARY_INPUT_FILE
 			-- File matching stream
 
 	last_error: STRING
 			-- Error
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Is there an error?
 		do
 			Result := last_error /= Void
 		end
 
-	has_media_type: BOOLEAN is
+	has_media_type: BOOLEAN
 			-- Is the media type available.
 		do
 			Result := False
 		end
 
-	last_media_type: UT_MEDIA_TYPE is
+	last_media_type: UT_MEDIA_TYPE
 			-- Media type, if available.
 		do
 			-- pre-condition is never met
@@ -86,7 +86,7 @@ feature -- Result
 
 feature {NONE} -- Error messages
 
-	Cannot_open_file_error: STRING is "Cannot open file "
+	Cannot_open_file_error: STRING = "Cannot open file "
 			-- Error message
 
 end

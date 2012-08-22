@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Skeletons of interactive scanners implemented with compressed tables"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,7 +23,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_buffer (a_buffer: like input_buffer) is
+	make_with_buffer (a_buffer: like input_buffer)
 			-- Create a new scanner with
 			-- `a_buffer' as input buffer.
 		do
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Scanning
 
-	read_token is
+	read_token
 			-- Read a token from `input_buffer'.
 			-- Make result available in `last_token'.
 		local
@@ -92,7 +92,7 @@ feature -- Scanning
 					yy_current_state := yy_start_state + yy_at_beginning_of_line
 					if yyReject_or_variable_trail_context then
 							-- Set up for storing up states.
-						yy_state_stack.put (yy_current_state, 0)
+						SPECIAL_INTEGER_.force (yy_state_stack, yy_current_state, 0)
 						yy_state_count := 1
 					end
 					yy_goto := yyMatch
@@ -143,7 +143,7 @@ feature -- Scanning
 						end
 						yy_current_state := yy_nxt.item (yy_base.item (yy_current_state) + yy_c)
 						if yyReject_or_variable_trail_context then
-							yy_state_stack.put (yy_current_state, yy_state_count)
+							SPECIAL_INTEGER_.force (yy_state_stack, yy_current_state, yy_state_count)
 							yy_state_count := yy_state_count + 1
 						end
 						yy_cp := yy_cp + 1
@@ -338,7 +338,7 @@ feature -- Scanning
 
 feature -- Input
 
-	set_input_buffer (a_buffer: like input_buffer) is
+	set_input_buffer (a_buffer: like input_buffer)
 			-- Set `input_buffer' to `a_buffer'.
 		do
 			if a_buffer /= input_buffer then

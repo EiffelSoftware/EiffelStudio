@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Parser token codes"
 	generator: "geyacc version 3.9"
@@ -18,7 +18,7 @@ feature -- Last values
 
 feature -- Access
 
-	token_name (a_token: INTEGER): STRING is
+	token_name (a_token: INTEGER): STRING
 			-- Name of token `a_token'
 		do
 			inspect a_token
@@ -51,14 +51,14 @@ feature -- Access
 
 feature -- Token codes
 
-	ENDSECT: INTEGER is 258
-	EOF_OP: INTEGER is 259
-	PIPED: INTEGER is 260
-	EMPTY: INTEGER is 261
-	EIF_CODE: INTEGER is 262
-	NAME: INTEGER is 263
-	CHAR: INTEGER is 264
-	NUMBER: INTEGER is 265
-	CCL_OP: INTEGER is 266
+	ENDSECT: INTEGER = 258
+	EOF_OP: INTEGER = 259
+	PIPED: INTEGER = 260
+	EMPTY: INTEGER = 261
+	EIF_CODE: INTEGER = 262
+	NAME: INTEGER = 263
+	CHAR: INTEGER = 264
+	NUMBER: INTEGER = 265
+	CCL_OP: INTEGER = 266
 
 end

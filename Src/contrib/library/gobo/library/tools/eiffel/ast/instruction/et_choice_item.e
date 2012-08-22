@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	choice: ET_CHOICE is
+	choice: ET_CHOICE
 			-- Choice in comma-separated list
 		deferred
 		ensure

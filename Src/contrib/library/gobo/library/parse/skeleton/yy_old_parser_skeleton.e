@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -9,7 +9,7 @@ indexing
 		and 'geyacc --new_typing' instead.
 	]"
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,14 +29,14 @@ inherit
 
 feature {YY_PARSER_ACTION} -- Scanning
 
-	last_value: G is
+	last_value: G
 			-- Semantic value of last token read
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	yy_create_value_stacks is
+	yy_create_value_stacks
 			-- Create value stacks.
 		do
 			create yy_special_routines
@@ -44,20 +44,20 @@ feature {NONE} -- Implementation
 			yyvs := yy_special_routines.make (yyvsc)
 		end
 
-	yy_init_value_stacks is
+	yy_init_value_stacks
 			-- Initialize value stacks.
 		do
 			yyvsp := -1
 		end
 
-	yy_clear_value_stacks is
+	yy_clear_value_stacks
 			-- Clear objects in semantic value stacks so that
 			-- they can be collected by the garbage collector.
 		do
 			yyvs.clear_all
 		end
 
-	yy_push_last_value (yychar1: INTEGER) is
+	yy_push_last_value (yychar1: INTEGER)
 			-- Push semantic value associated with token `last_token'
 			-- (with internal id `yychar1') on top of corresponding
 			-- value stack.
@@ -72,10 +72,10 @@ feature {NONE} -- Implementation
 					std.error.put_new_line
 				end
 			end
-			yyvs.put (last_value, yyvsp)
+			yy_special_routines.force (yyvs, last_value, yyvsp)
 		end
 
-	yy_push_error_value is
+	yy_push_error_value
 			-- Push semantic value associated with token 'error'
 			-- on top of corresponding value stack.
 		local
@@ -91,10 +91,10 @@ feature {NONE} -- Implementation
 					std.error.put_new_line
 				end
 			end
-			yyvs.put (yyv, yyvsp)
+			yy_special_routines.force (yyvs, yyv, yyvsp)
 		end
 
-	yy_pop_last_value (yystate: INTEGER) is
+	yy_pop_last_value (yystate: INTEGER)
 			-- Pop semantic value from stack when in state `yystate'.
 		do
 			yyvsp := yyvsp - 1
@@ -112,12 +112,12 @@ feature {NONE} -- Implementation
 	yyval: G
 			-- Semantic value from action
 
-	yyval_default: G is
+	yyval_default: G
 			-- Default value for `yyval'
 		do
 		end
 
-	yy_clear_all is
+	yy_clear_all
 			-- Clear temporary objects so that they can be collected
 			-- by the garbage collector. This routine is called by
 			-- `parse' before exiting.
@@ -133,7 +133,7 @@ feature {NONE} -- Constants
 	yy_special_routines: KL_SPECIAL_ROUTINES [G]
 			-- Routines that ought to be in SPECIAL
 
-	FIXED_ARRAY_: KL_SPECIAL_ROUTINES [G] is
+	FIXED_ARRAY_: KL_SPECIAL_ROUTINES [G]
 			-- Routines that ought to be in FIXED_ARRAY
 		obsolete
 			"[050105] Use `yy_special_routines' instead."

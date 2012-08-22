@@ -8,8 +8,8 @@
 	library: "Gobo Eiffel Developer Guidelines"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2008-04-22 09:12:58 -0700 (Tue, 22 Apr 2008) $"
-	revision: "$Revision: 6373 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 -->
 
@@ -281,7 +281,7 @@ as in the following example:
 <para>
 
 <programlisting>
-<text>_   </text><featurename>new_foo</featurename> (<argument>a_string</argument>: <classname>STRING</classname>): <returnvalue><classname>FOO</classname></returnvalue> is
+<text>_   </text><featurename>new_foo</featurename> (<argument>a_string</argument>: <classname>STRING</classname>): <returnvalue><classname>FOO</classname></returnvalue>
 <text>_   _   _   </text><comment>Foo made up of characters of <argument>a_string</argument></comment>
 <text>_   _   _   </text><comment>(Create a new objet at each call.)</comment>
 <text>_   _   </text>require

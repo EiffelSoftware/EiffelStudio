@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Regular expressions"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,9 +19,12 @@ inherit
 	UT_CHARACTER_CODES
 		export {NONE} all end
 
+	KL_IMPORTED_ARRAY_ROUTINES
+		export {NONE} all end
+
 feature -- Replacement
 
-	replacement (a_replacement: STRING): STRING is
+	replacement (a_replacement: STRING): STRING
 			-- Copy of `a_replacement' where all occurrences of \n\ have
 			-- been replaced by the corresponding n-th captured substrings
 			-- if any
@@ -37,7 +40,7 @@ feature -- Replacement
 			same_type: ANY_.same_types (Result, a_replacement)
 		end
 
-	append_replacement_to_string (a_string, a_replacement: STRING) is
+	append_replacement_to_string (a_string, a_replacement: STRING)
 			-- Append to `a_string' a copy of `a_replacement' where all occurrences
 			-- of \n\ have been replaced by the corresponding n-th captured substrings
 			-- if any.
@@ -104,7 +107,7 @@ feature -- Replacement
 			end
 		end
 
-	replace (a_replacement: STRING): STRING is
+	replace (a_replacement: STRING): STRING
 			-- Substring of `subject' between `subject_start' and `subject_end'
 			-- where the whole matched string has been replaced by `a_replacement';
 			-- All occurrences of \n\ in `a_replacement' will have been replaced
@@ -121,7 +124,7 @@ feature -- Replacement
 			same_type: ANY_.same_types (Result, subject)
 		end
 
-	append_replace_to_string (a_string, a_replacement: STRING) is
+	append_replace_to_string (a_string, a_replacement: STRING)
 			-- Append to `a_string' a substring of `subject' between `subject_start'
 			-- and `subject_end' where the whole matched string has been replaced by
 			-- `a_replacement'. All occurrences of \n\ in `a_replacement' will have
@@ -142,7 +145,7 @@ feature -- Replacement
 			end
 		end
 
-	replace_all (a_replacement: STRING): STRING is
+	replace_all (a_replacement: STRING): STRING
 			-- Substring of `subject' between `subject_start' and `subject_end'
 			-- where the whole matched string has been repeatedly replaced by
 			-- `a_replacement'; All occurrences of \n\ in `a_replacement' will
@@ -161,7 +164,7 @@ feature -- Replacement
 			same_type: ANY_.same_types (Result, subject)
 		end
 
-	append_replace_all_to_string (a_string, a_replacement: STRING) is
+	append_replace_all_to_string (a_string, a_replacement: STRING)
 			-- Append to `a_string' a substring of `subject' between `subject_start'
 			-- and `subject_end' where the whole matched string has been repeatedly
 			-- replaced by `a_replacement'. All occurrences of \n\ in `a_replacement'
@@ -214,20 +217,20 @@ feature -- Replacement
 
 feature -- Splitting
 
-	split: ARRAY [STRING] is
+	split: ARRAY [STRING]
 			-- Parts of `subject' between `subject_start' and `subject_end'
 			-- which do not match the pattern.
 		require
 			is_matching: is_matching
 		do
-			create Result.make (1, 0)
+			Result := STRING_ARRAY_.make_empty_with_lower (1)
 			append_split_to_array (Result)
 		ensure
 			all_matched: not has_matched
 			split_not_void: Result /= Void
 		end
 
-	append_split_to_array (an_array: ARRAY [STRING]) is
+	append_split_to_array (an_array: ARRAY [STRING])
 			-- Append to `an_array' the parts of `subject' between `subject_start'
 			-- and `subject_end' which do not match the pattern.
 		require

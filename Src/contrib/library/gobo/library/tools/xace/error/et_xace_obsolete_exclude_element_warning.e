@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Warning: Obsolete <exclude> element"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,22 +22,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_position: XM_POSITION) is
+	make (a_position: XM_POSITION)
 			-- Create a warning reporting that an exclude element
 			-- is obsoleted by if/unless attributes.
 		require
 			a_position_not_void: a_position /= Void
 		do
-			create parameters.make (1, 1)
+			create parameters.make_filled (empty_string, 1, 1)
 			parameters.put (a_position.out, 1)
 		end
 
 feature -- Access
 
-	default_template: STRING is "<exclude> at $1 is obsolete, use 'if'/'unless' attributes instead"
+	default_template: STRING = "<exclude> at $1 is obsolete, use 'if'/'unless' attributes instead"
 			-- Default template used to built the error message
 
-	code: STRING is "XA0015"
+	code: STRING = "XA0015"
 			-- Error code
 
 end

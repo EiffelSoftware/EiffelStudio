@@ -1,15 +1,15 @@
 %{
-indexing
+note
 
 	description:
 
 		"Scanners for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2009-06-19 06:29:14 -0700 (Fri, 19 Jun 2009) $"
-	revision: "$Revision: 6645 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ET_EIFFEL_SCANNER
 
@@ -27,10 +27,20 @@ create
 
 CHAR_CODE (0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))
 
+UTF8_BOM (\xEF\xBB\xBF)
+
 %x BREAK MS MSN VS1 VS2 VS3 LAVS1 LAVS2 LAVS3
 %option nodefault line outfile="et_eiffel_scanner.e"
 
 %%
+
+----------/** BOM **/-----------------------------------------------------------
+
+{UTF8_BOM}	{
+				-- Ignore byte order mark (BOM).
+				-- See http://en.wikipedia.org/wiki/Byte_order_mark
+			}
+
 
 ----------/** Eiffel symbols **/------------------------------------------------
 
@@ -84,13 +94,31 @@ CHAR_CODE (0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))
 -- to figure out that the first once keyword in the following example
 -- in part of a once manifest string expression and the second is
 -- part of the compound of the once routine:
---   f is
+--
+--   f
 --      require
 --         once "foo" /= Void
 --      once
 --         do_nothing
 --      end
-[oO][nN][cC][eE]/\"	{
+--
+-- Also covers the case of typed manifest string:
+--
+--   f
+--      require
+--         once {STRING_8} "foo" /= Void
+--      once
+--         do_nothing
+--      end
+--
+-- although this will produce a syntax error when writing:
+--
+--   f
+--      once
+--         {CHARACTER_8}.Max_value.do_nothing
+--      end
+--
+[oO][nN][cC][eE]/["{]	{
 				last_token := E_ONCE_STRING
 				last_literal_start := 1
 				last_literal_end := 4
@@ -98,7 +126,7 @@ CHAR_CODE (0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))
 				last_comment_end := 0
 				last_et_keyword_value := ast_factory.new_once_keyword (Current)
 			}
-[oO][nN][cC][eE][ \t\r\n]+/\"	{
+[oO][nN][cC][eE][ \t\r\n]+/["{]	{
 				last_token := E_ONCE_STRING
 				last_literal_start := 1
 				last_literal_end := 4
@@ -107,7 +135,7 @@ CHAR_CODE (0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))
 				last_comment_end := 0
 				last_et_keyword_value := ast_factory.new_once_keyword (Current)
 			}
-[oO][nN][cC][eE]([ \t\r\n]|"--".*\n)+/\"	{
+[oO][nN][cC][eE]([ \t\r\n]|"--".*\n)+/["{]	{
 				last_token := E_ONCE_STRING
 				last_literal_start := 1
 				last_literal_end := 4
@@ -1152,7 +1180,7 @@ CHAR_CODE (0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))
 
 feature -- Scanning
 
-	read_token is
+	read_token
 			-- (NOTE: THIS IS THE COPY/PASTE VERSION OF THE CODE IN
 			-- THE YY_COMPRESSED_SCANNER_SKELETON CLASS, FOR OPTIMISATION
 			-- WITH ISE EIFFEL (ALLOW INLINING NOT POSSIBLE IN
@@ -1221,7 +1249,7 @@ feature -- Scanning
 					-- END INLINING 'yy_at_beginning_of_line'
 					if yyReject_or_variable_trail_context then
 							-- Set up for storing up states.
-						yy_state_stack.put (yy_current_state, 0)
+						SPECIAL_INTEGER_.force (yy_state_stack, yy_current_state, 0)
 						yy_state_count := 1
 					end
 					yy_goto := yyMatch
@@ -1277,7 +1305,7 @@ feature -- Scanning
 						end
 						yy_current_state := yy_nxt.item (yy_base.item (yy_current_state) + yy_c)
 						if yyReject_or_variable_trail_context then
-							yy_state_stack.put (yy_current_state, yy_state_count)
+							SPECIAL_INTEGER_.force (yy_state_stack, yy_current_state, yy_state_count)
 							yy_state_count := yy_state_count + 1
 						end
 						yy_cp := yy_cp + 1

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -39,7 +39,7 @@ create
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_semicolon_symbol (Current)

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -25,7 +25,7 @@ create
 
 feature -- Initialization
 
-	reset_options is
+	reset_options
 			-- Reset options to their default values.
 		do
 			precursor
@@ -34,10 +34,10 @@ feature -- Initialization
 
 feature -- Status report
 
-	valid_parameter (a_parameter: ANY): BOOLEAN is
+	valid_parameter (a_parameter: ANY): BOOLEAN
 			-- Is `a_parameter' a valid parameter for current formatter?
 		local
-			a_string: ?STRING
+			a_string: detachable STRING
 		do
 			a_string ?= a_parameter
 			Result := a_string /= Void
@@ -45,10 +45,10 @@ feature -- Status report
 
 feature -- Formatting
 
-	format_to (a_parameter: ANY; a_stream: KI_CHARACTER_OUTPUT_STREAM) is
+	format_to (a_parameter: ANY; a_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Format `a_parameter' to `a_stream'.
 		local
-			a_string: ?STRING
+			a_string: detachable STRING
 		do
 			a_string ?= a_parameter
 			check
@@ -58,7 +58,7 @@ feature -- Formatting
 			string_format_to (a_string, a_stream)
 		end
 
-	string_format_to (a_parameter: STRING; a_stream: KI_CHARACTER_OUTPUT_STREAM) is
+	string_format_to (a_parameter: STRING; a_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Format `a_parameter' to `a_stream'.
 		require
 			a_parameter_not_void: a_parameter /= Void

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Objects that format a list of integers as a character string under the control of a format string"
 
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_format: STRING) is
+	make (a_format: STRING)
 			-- Tokenize `a_format' into alternating alphanumeric and non-alphanumeric tokens.
 		require
 			format_string_not_void: a_format /= Void
@@ -93,7 +93,7 @@ feature -- Access
 
 	formatted_string (a_numbers: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE];
 							a_group_size: INTEGER; a_group_separator, a_letter, an_ordinal: STRING;
-							a_numberer: ST_XSLT_NUMBERER): STRING is
+							a_numberer: ST_XSLT_NUMBERER): STRING
 			-- Formatted string
 		require
 			a_numbers_not_void: a_numbers /= Void
@@ -123,8 +123,6 @@ feature -- Access
 
 			from
 				l_cursor := a_numbers.new_cursor; l_cursor.start
-			variant
-				a_numbers.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -143,10 +141,10 @@ feature -- Access
 						a_group_size, a_group_separator, a_letter, an_ordinal)
 				elseif l_atomic.is_integer_value then
 					l_string := a_numberer.formatted_string (l_atomic.as_integer_value.value, formatting_tokens.item (l_token_index),
-						a_group_size, a_group_separator, a_letter, an_ordinal)					
+						a_group_size, a_group_separator, a_letter, an_ordinal)
 				elseif l_atomic.is_decimal_value then
 					l_string := a_numberer.formatted_string (l_atomic.as_decimal_value.value, formatting_tokens.item (l_token_index),
-						a_group_size, a_group_separator, a_letter, an_ordinal)					
+						a_group_size, a_group_separator, a_letter, an_ordinal)
 				else
 					l_string := l_atomic.string_value
 				end
@@ -156,6 +154,8 @@ feature -- Access
 					l_token_index := l_token_index - 1
 				end
 				l_cursor.forth
+			variant
+				a_numbers.count + 1 - l_cursor.index
 			end
 
 			-- Output the final punctuation token.
@@ -164,7 +164,7 @@ feature -- Access
 				Result := STRING_.appended_string (Result, formatting_separators.item (formatting_separators.count))
 			end
 		ensure
-			formatted_string_not_void: Result /= Void	
+			formatted_string_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -182,6 +182,6 @@ invariant
 
 	formatting_tokens: formatting_tokens /= Void
 	formatting_separators: formatting_separators /= Void
-	
+
 end
 

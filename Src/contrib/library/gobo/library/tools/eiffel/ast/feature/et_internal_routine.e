@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel internal (do or once) routines"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ inherit
 		undefine
 			locals
 		redefine
-			reset_after_features_flattened
+			reset_after_interface_checked
 		end
 
 	ET_INTERNAL_ROUTINE_CLOSURE
@@ -30,10 +30,10 @@ inherit
 
 feature -- Initialization
 
-	reset_after_features_flattened is
-			-- Reset current feature as it was just after it was last flattened.
+	reset_after_interface_checked
+			-- Reset current feature as it was just after its interface was last checked.
 		do
-			if implementation_checked then
+			if validity_checked then
 				if locals /= Void then
 					locals.reset
 				end

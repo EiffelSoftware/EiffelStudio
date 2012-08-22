@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -28,7 +28,7 @@ inherit
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset inline agent as it was just after it was last parsed.
 		do
 			precursor

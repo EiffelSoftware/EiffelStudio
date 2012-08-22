@@ -40,6 +40,9 @@ create
 
 feature {NONE} -- Initialization
 
+	is_html5_backend_enabled: BOOLEAN = False
+		-- Is broadway backend enabled?
+
 	make
 			-- Set up the callback marshal and initialize GTK+.
 		do
@@ -50,7 +53,11 @@ feature {NONE} -- Initialization
 --			put ("localhost:0", "DISPLAY")
 				-- This line may be uncommented to allow for display redirection to another machine for debugging purposes
 
-			--put ("broadway", "GDK_BACKEND")
+			if is_html5_backend_enabled then
+				put ("broadway", "GDK_BACKEND")
+			end
+				--Disable overlay scrollbar as this causes problems for web backend.
+			put ("0", "LIBOVERLAY_SCROLLBAR")
 
 			create character_string_buffer.make (4)
 

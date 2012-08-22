@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel type checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,18 +44,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new type checker.
 		do
 			precursor {ET_CLASS_SUBPROCESSOR}
 			current_type := tokens.unknown_class
 			current_class_impl := tokens.unknown_class
 			current_feature_impl := dummy_feature
+			create constraint_context.make_with_capacity (current_class, 1)
 		end
 
 feature -- Validity checking
 
-	check_type_validity (a_type: ET_TYPE; a_current_feature_impl: ET_CLOSURE; a_current_class_impl: ET_CLASS; a_current_type: ET_BASE_TYPE) is
+	check_type_validity (a_type: ET_TYPE; a_current_feature_impl: ET_CLOSURE; a_current_class_impl: ET_CLASS; a_current_type: ET_BASE_TYPE)
 			-- Check validity of `a_type' written in `a_current_feature_impl' in
 			-- `a_current_class_impl' viewed from `a_current_type'. Resolve
 			-- identifiers (such as 'like identifier', 'BIT identifier',
@@ -75,7 +76,6 @@ feature -- Validity checking
 			old_type: ET_BASE_TYPE
 			old_class: ET_CLASS
 			old_class_impl: ET_CLASS
-			l_type: ET_TYPE
 		do
 			has_fatal_error := False
 			old_feature_impl := current_feature_impl
@@ -86,17 +86,14 @@ feature -- Validity checking
 			current_class := current_type.base_class
 			old_class_impl := current_class_impl
 			current_class_impl := a_current_class_impl
-			l_type := resolved_formal_parameters (a_type, current_class_impl, current_type)
-			if not has_fatal_error then
-				l_type.process (Current)
-			end
+			a_type.process (Current)
 			current_class_impl := old_class_impl
 			current_class := old_class
 			current_type := old_type
 			current_feature_impl := old_feature_impl
 		end
 
-	check_creation_type_validity (a_type: ET_CLASS_TYPE; a_current_class_impl: ET_CLASS; a_current_type: ET_BASE_TYPE; a_position: ET_POSITION) is
+	check_creation_type_validity (a_type: ET_CLASS_TYPE; a_current_class_impl: ET_CLASS; a_current_type: ET_BASE_TYPE; a_position: ET_POSITION)
 			-- Check validity of `a_type' as a creation type written in `a_current_class_impl'
 			-- and viewed from `a_current_type'. Note that `a_type' should already be a valid
 			-- type by itself (call `check_type_validity' for that).
@@ -204,7 +201,7 @@ feature -- Validity checking
 												--
 												--   class A [G -> B create default_create end]
 												--   feature
-												--     f is
+												--     f
 												--       local
 												--         b: G
 												--       do
@@ -215,7 +212,7 @@ feature -- Validity checking
 												--
 												--   deferred class B
 												--   feature
-												--     f is
+												--     f
 												--        local
 												--          a: A [like Current]
 												--        do
@@ -232,7 +229,7 @@ feature -- Validity checking
 												--
 												--   deferred class B
 												--   feature
-												--     f is
+												--     f
 												--        local
 												--          a: like a1
 												--        do
@@ -246,7 +243,7 @@ feature -- Validity checking
 												--
 												--   deferred class B
 												--   feature
-												--     f is
+												--     f
 												--        local
 												--          a: A [like b]
 												--        do
@@ -312,100 +309,9 @@ feature -- Validity checking
 			current_type := old_type
 		end
 
-	resolved_formal_parameters (a_type: ET_TYPE; a_current_class_impl: ET_CLASS; a_current_type: ET_BASE_TYPE): ET_TYPE is
-			-- Replace formal generic parameters in `a_type' (when
-			-- written in class `a_current_class_impl') by their
-			-- corresponding actual parameters in `a_current_type'.
-			-- Set `has_fatal_error' if an error occurred.
-		require
-			a_type_not_void: a_type /= Void
-			a_current_class_impl_not_void: a_current_class_impl /= Void
-			a_current_type_not_void: a_current_type /= Void
-			a_current_type_valid: a_current_type.is_valid_context
-			a_current_class_preparsed: a_current_type.base_class.is_preparsed
-		local
-			an_ancestor: ET_BASE_TYPE
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
-			old_type: ET_BASE_TYPE
-			old_class: ET_CLASS
-			old_class_impl: ET_CLASS
-		do
-			has_fatal_error := False
-			old_type := current_type
-			current_type := a_current_type
-			old_class := current_class
-			current_class := current_type.base_class
-			old_class_impl := current_class_impl
-			current_class_impl := a_current_class_impl
-			if current_class_impl = current_type then
-				Result := a_type
-			elseif not current_class_impl.is_generic then
-				Result := a_type
-			else
-					-- We need to replace formal generic parameters in
-					-- `a_type' by their corresponding actual parameters.
-				if current_class_impl /= current_class then
-						-- We need first to get the ancestor of `current_class'
-						-- corresponding to `current_class_impl' in order to find
-						-- the various generic derivations which occurred on the
-						-- parent clauses between `current_class' and
-						-- `current_class_impl' where `a_type' was actually written.
-					current_class.process (current_system.ancestor_builder)
-					if not current_class.ancestors_built or else current_class.has_ancestors_error then
-						set_fatal_error
-							-- Return the input type despite the error.
-						Result := a_type
-					else
-						an_ancestor := current_class.ancestor (current_class_impl)
-						if an_ancestor = Void then
-								-- Internal error: `current_class' is a descendant of `current_class_impl'.
-							set_fatal_error
-							error_handler.report_giaaa_error
-								-- Return the input type despite the error.
-							Result := a_type
-						else
-							a_parameters := an_ancestor.actual_parameters
-							if a_parameters = Void then
-									-- Internal error: we said that `a_current_class_impl' was generic.
-								set_fatal_error
-								error_handler.report_giaaa_error
-									-- Return the input type despite the error.
-								Result := a_type
-							else
-								Result := a_type.resolved_formal_parameters (a_parameters)
-							end
-						end
-					end
-				else
-					Result := a_type
-				end
-				if not has_fatal_error then
-					if current_class.is_generic and current_type /= current_class then
-							-- We need to replace the formal generic parameters of
-							-- `current_class' by their corresponding actual
-							-- parameters in `current_type'.
-						a_parameters := current_type.actual_parameters
-						if a_parameters = Void then
-								-- Internal error: we said that `current_class' was generic.
-								-- Therefore `current_type' is generic as well.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							Result := Result.resolved_formal_parameters (a_parameters)
-						end
-					end
-				end
-			end
-			current_class_impl := old_class_impl
-			current_class := old_class
-			current_type := old_type
-		ensure
-			resolved_type_not_void: Result /= Void
-		end
-
 feature -- Type conversion
 
-	convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_FEATURE is
+	convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_FEATURE
 			-- Feature to convert `a_source_type' to `a_target_type';
 			-- Void if no such feature
 		require
@@ -437,7 +343,7 @@ feature -- Type conversion
 			end
 			if Result = Void then
 				a_source_named_type := a_source_type.named_type
-				if a_target_base_class.is_preparsed and then a_target_base_class.current_system.is_dotnet and a_target_base_class = a_target_base_class.current_system.system_object_class then
+				if a_target_base_class.is_preparsed and then a_target_base_class.is_dotnet and a_target_base_class.is_system_object_class then
 						-- Needed for Eiffel for .NET.
 					create {ET_BUILTIN_CONVERT_FEATURE} Result.make (a_source_named_type)
 				end
@@ -446,7 +352,7 @@ feature -- Type conversion
 
 feature {NONE} -- Validity checking
 
-	check_bit_feature_validity (a_type: ET_BIT_FEATURE) is
+	check_bit_feature_validity (a_type: ET_BIT_FEATURE)
 			-- Check validity of `a_type'.
 			-- Resolve identifier in 'BIT identifier' if not already done.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -517,7 +423,7 @@ feature {NONE} -- Validity checking
 			end
 		end
 
-	check_bit_n_validity (a_type: ET_BIT_N) is
+	check_bit_n_validity (a_type: ET_BIT_N)
 			-- Check validity of `a_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -530,7 +436,7 @@ feature {NONE} -- Validity checking
 			-- already been checked during the parsing.
 		end
 
-	check_bit_type_validity (a_type: ET_BIT_TYPE) is
+	check_bit_type_validity (a_type: ET_BIT_TYPE)
 			-- Check validity of the integer constant.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -559,7 +465,7 @@ feature {NONE} -- Validity checking
 			end
 		end
 
-	check_class_type_validity (a_type: ET_CLASS_TYPE) is
+	check_class_type_validity (a_type: ET_CLASS_TYPE)
 			-- Check validity of `a_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -587,18 +493,18 @@ feature {NONE} -- Validity checking
 						error_handler.report_vtug1a_error (current_class_impl, a_type)
 					end
 				end
+			elseif a_class.is_unknown then
+				set_fatal_error
+				if current_class = current_class_impl then
+					error_handler.report_vtct0a_error (current_class, a_type)
+				else
+-- TODO: this error should have already been reported when processing `current_class_impl'.
+					error_handler.report_vtct0a_error (current_class_impl, a_type)
+				end
 			else
 				a_class.process (current_system.interface_checker)
 				if not a_class.interface_checked then
 					set_fatal_error
-				elseif not a_class.is_preparsed then
-					set_fatal_error
-					if current_class = current_class_impl then
-						error_handler.report_vtct0a_error (current_class, a_type)
-					else
--- TODO: this error should have already been reported when processing `current_class_impl'.
-						error_handler.report_vtct0a_error (current_class_impl, a_type)
-					end
 				elseif a_class.has_interface_error then
 						-- Error should already have been
 						-- reported somewhere else.
@@ -640,43 +546,41 @@ feature {NONE} -- Validity checking
 						nb := an_actuals.count
 						from i := 1 until i > nb loop
 							an_actual := an_actuals.type (i)
+							had_error := has_fatal_error
+							an_actual.process (Current)
+							reset_fatal_error (has_fatal_error or had_error)
 							a_formal := a_formals.formal_parameter (i)
 							if a_formal.is_expanded then
 								if not an_actual.is_type_expanded (current_type) then
 									set_fatal_error
-									error_handler.report_gvtcg5b_error (current_class, a_type, an_actual, a_formal)
+									error_handler.report_gvtcg5b_error (current_class, current_class_impl, a_type, an_actual, a_formal)
 								end
 							elseif a_formal.is_reference then
 								if not an_actual.is_type_reference (current_type) then
 									set_fatal_error
-									error_handler.report_gvtcg5a_error (current_class, a_type, an_actual, a_formal)
+									error_handler.report_gvtcg5a_error (current_class, current_class_impl, a_type, an_actual, a_formal)
 								end
 							end
-							had_error := has_fatal_error
-							an_actual.process (Current)
-							reset_fatal_error (has_fatal_error or had_error)
 							a_constraint := a_formal.constraint
-							if a_constraint /= Void then
-									-- If we have:
-									--
-									--   class A [G, H -> LIST [G]] ...
-									--   class X feature foo: A [ANY, LIST [STRING]] ...
-									--
-									-- we need to check that "LIST[STRING]" conforms to
-									-- "LIST[ANY]", not just "LIST[G]".
-									-- Likewise if we have:
-									--
-									--   class A [G -> LIST [G]] ...
-									--   class X feature foo: A [LIST [FOO]] ...
-									--
-									-- we need to check that "LIST[FOO]" conforms to
-									-- "LIST[LIST[FOO]]", not just "LIST[G]".
-									-- Hence the necessary resolving of formal parameters in the constraint.
-								a_constraint := a_constraint.resolved_formal_parameters (an_actuals)
-							else
-								a_constraint := current_system.any_type
+							if a_constraint = Void then
+								a_constraint := current_system.detachable_any_type
 							end
-							if not an_actual.conforms_to_type (a_constraint, current_type, current_type) then
+								-- If we have:
+								--
+								--   class A [G, H -> LIST [G]] ...
+								--   class X feature foo: A [ANY, LIST [STRING]] ...
+								--
+								-- we need to check that "LIST [STRING]" conforms to
+								-- "LIST [ANY]", not just "LIST [G]".
+								-- Likewise if we have:
+								--
+								--   class A [G -> LIST [G]] ...
+								--   class X feature foo: A [LIST [FOO]] ...
+								--
+								-- we need to check that "LIST [FOO]" conforms to
+								-- "LIST [LIST [FOO]]", not just "LIST [G]".
+							constraint_context.set (a_type, current_type)
+							if not an_actual.conforms_to_type (a_constraint, constraint_context, current_type) then
 									-- The actual parameter does not conform to the
 									-- constraint of its corresponding formal parameter.
 									--
@@ -712,7 +616,7 @@ feature {NONE} -- Validity checking
 			end
 		end
 
-	check_like_current_validity (a_type: ET_LIKE_CURRENT) is
+	check_like_current_validity (a_type: ET_LIKE_CURRENT)
 			-- Check validity of `a_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -723,7 +627,7 @@ feature {NONE} -- Validity checking
 			-- No validity rule to be checked.
 		end
 
-	check_like_feature_validity (a_type: ET_LIKE_FEATURE) is
+	check_like_feature_validity (a_type: ET_LIKE_FEATURE)
 			-- Check validity of `a_type'.
 			-- Resolve identifer in 'like identifier' if not already done.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -762,10 +666,9 @@ feature {NONE} -- Validity checking
 							a_type.resolve_like_feature (l_query)
 							resolved := True
 							if in_qualified_anchored_type then
-								if  l_query.type.has_identifier_anchored_type then
+								if  l_query.type.depends_on_qualified_anchored_type (current_class) then
 										-- Error: the type of the anchor appearing in a qualified
-										-- anchored type should not contain anchored types
-										-- (other than 'like Current').
+										-- anchored type should not depend on a qualified anchored type.
 										-- This is a way to avoid cycles in qualified anchored types.
 									set_fatal_error
 									error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
@@ -788,10 +691,9 @@ feature {NONE} -- Validity checking
 											a_type.resolve_like_argument (l_feature)
 											resolved := True
 											if in_qualified_anchored_type then
-												if args.item (l_index).type.has_identifier_anchored_type then
+												if args.item (l_index).type.depends_on_qualified_anchored_type (current_class) then
 														-- Error: the type of the anchor appearing in a qualified
-														-- anchored type should not contain anchored types
-														-- (other than 'like Current').
+														-- anchored type should not depend on a qualified anchored type.
 														-- This is a way to avoid cycles in qualified anchored types.
 													set_fatal_error
 													error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
@@ -826,10 +728,9 @@ feature {NONE} -- Validity checking
 							args := l_feature.arguments
 							l_index := a_type.index
 							if args /= Void and then l_index <= args.count then
-								if args.item (l_index).type.has_identifier_anchored_type then
+								if args.item (l_index).type.depends_on_qualified_anchored_type (current_class) then
 										-- Error: the type of the anchor appearing in a qualified
-										-- anchored type should not contain anchored types
-										-- (other than 'like Current').
+										-- anchored type should not depend on a qualified anchored type.
 										-- This is a way to avoid cycles in qualified anchored types.
 									set_fatal_error
 									error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
@@ -850,10 +751,9 @@ feature {NONE} -- Validity checking
 					else
 						l_query := current_class.seeded_query (l_seed)
 						if l_query /= Void then
-							if  l_query.type.has_identifier_anchored_type then
+							if  l_query.type.depends_on_qualified_anchored_type (current_class) then
 									-- Error: the type of the anchor appearing in a qualified
-									-- anchored type should not contain anchored types
-									-- (other than 'like Current').
+									-- anchored type should not depend on a qualified anchored type.
 									-- This is a way to avoid cycles in qualified anchored types.
 								set_fatal_error
 								error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
@@ -872,7 +772,7 @@ feature {NONE} -- Validity checking
 			end
 		end
 
-	check_qualified_like_identifier_validity (a_type: ET_QUALIFIED_LIKE_IDENTIFIER) is
+	check_qualified_like_identifier_validity (a_type: ET_QUALIFIED_LIKE_IDENTIFIER)
 			-- Check validity of `a_type'.
 			-- Resolve 'identifier' in 'like identifier.b', 'like a.identifier'
 			-- or 'like {A}.identifier' if not already done.
@@ -913,10 +813,9 @@ feature {NONE} -- Validity checking
 							if l_query /= Void then
 								a_type.resolve_identifier_type (l_query.first_seed)
 -- TODO: check that `l_query' is exported to `current_class'.
-								if  l_query.type.has_identifier_anchored_type then
+								if  l_query.type.depends_on_qualified_anchored_type (l_class) then
 										-- Error: the type of the anchor appearing in a qualified
-										-- anchored type should not contain anchored types
-										-- (other than 'like Current').
+										-- anchored type should not depend on a qualified anchored type.
 										-- This is a way to avoid cycles in qualified anchored types.
 									set_fatal_error
 									error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
@@ -937,10 +836,9 @@ feature {NONE} -- Validity checking
 						l_query := l_class.seeded_query (l_seed)
 						if l_query /= Void then
 -- TODO: check that `l_query' is exported to `current_class'.
-							if l_query.type.has_identifier_anchored_type then
+							if l_query.type.depends_on_qualified_anchored_type (l_class) then
 									-- Error: the type of the anchor appearing in a qualified
-									-- anchored type should not contain anchored types
-									-- (other than 'like Current').
+									-- anchored type should not depend on a qualified anchored type.
 									-- This is a way to avoid cycles in qualified anchored types.
 								set_fatal_error
 								error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
@@ -956,7 +854,7 @@ feature {NONE} -- Validity checking
 			in_qualified_anchored_type := old_in_qualified_anchored_type
 		end
 
-	check_tuple_type_validity (a_type: ET_TUPLE_TYPE) is
+	check_tuple_type_validity (a_type: ET_TUPLE_TYPE)
 			-- Check validity of `a_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -988,7 +886,7 @@ feature -- Client/Supplier relationship
 	supplier_handler: ET_SUPPLIER_HANDLER
 			-- Supplier handler
 
-	set_supplier_handler (a_handler: like supplier_handler) is
+	set_supplier_handler (a_handler: like supplier_handler)
 			-- Set `supplier_handler' to `a_handler'.
 		do
 			supplier_handler := a_handler
@@ -998,7 +896,7 @@ feature -- Client/Supplier relationship
 
 feature {NONE} -- Client/Supplier relationship
 
-	report_qualified_anchored_type_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE) is
+	report_qualified_anchored_type_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE)
 			-- Report the fact that `a_supplier' is the target type of a
 			-- qualified anchored type in a feature or invariant in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
@@ -1015,61 +913,61 @@ feature {NONE} -- Client/Supplier relationship
 
 feature {ET_AST_NODE} -- Type processing
 
-	process_bit_feature (a_type: ET_BIT_FEATURE) is
+	process_bit_feature (a_type: ET_BIT_FEATURE)
 			-- Process `a_type'.
 		do
 			check_bit_feature_validity (a_type)
 		end
 
-	process_bit_n (a_type: ET_BIT_N) is
+	process_bit_n (a_type: ET_BIT_N)
 			-- Process `a_type'.
 		do
 			check_bit_n_validity (a_type)
 		end
 
-	process_class (a_type: ET_CLASS) is
+	process_class (a_type: ET_CLASS)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_class_type (a_type: ET_CLASS_TYPE) is
+	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			check_class_type_validity (a_type)
 		end
 
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
+	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_like_current (a_type: ET_LIKE_CURRENT) is
+	process_like_current (a_type: ET_LIKE_CURRENT)
 			-- Process `a_type'.
 		do
 			check_like_current_validity (a_type)
 		end
 
-	process_like_feature (a_type: ET_LIKE_FEATURE) is
+	process_like_feature (a_type: ET_LIKE_FEATURE)
 			-- Process `a_type'.
 		do
 			check_like_feature_validity (a_type)
 		end
 
-	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
 		do
 			check_qualified_like_identifier_validity (a_type)
 		end
 
-	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE)
 			-- Process `a_type'.
 		do
 			check_qualified_like_identifier_validity (a_type)
 		end
 
-	process_tuple_type (a_type: ET_TUPLE_TYPE) is
+	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
 		do
 			check_tuple_type_validity (a_type)
@@ -1093,7 +991,10 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	dummy_feature: ET_FEATURE is
+	constraint_context: ET_NESTED_TYPE_CONTEXT
+			-- Constraint context for type conformance checking
+
+	dummy_feature: ET_FEATURE
 			-- Dummy feature
 		local
 			a_name: ET_FEATURE_NAME
@@ -1111,5 +1012,6 @@ invariant
 	valid_current_type: current_type.is_valid_context
 	current_class_definition: current_class = current_type.base_class
 	current_feature_impl_not_void: current_feature_impl /= Void
+	constraint_context_not_void: constraint_context /= Void
 
 end

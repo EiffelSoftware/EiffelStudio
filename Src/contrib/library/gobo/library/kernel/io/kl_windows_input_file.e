@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -32,7 +32,7 @@ inherit
 				old_is_closed,
 				old_put_string,
 				old_is_open_write
-			{NONE} all
+			{RAW_FILE} all
 		end
 
 create
@@ -41,7 +41,7 @@ create
 
 feature -- Input
 
-	read_line is
+	read_line
 			-- Read characters from input file until a line separator
 			-- or end of file is reached. Make the characters that have
 			-- been read available in `last_string' and discard the line
@@ -53,7 +53,7 @@ feature -- Input
 			has_carriage: BOOLEAN
 			is_eof: BOOLEAN
 		do
-			last_string.clear_all
+			STRING_.wipe_out (last_string)
 			is_eof := True
 			a_target := last_string
 			from
@@ -94,7 +94,7 @@ feature -- Input
 			end_of_file := is_eof
 		end
 
-	read_new_line is
+	read_new_line
 			-- Read a line separator from input file.
 			-- Make the characters making up the recognized
 			-- line separator available in `last_string',
@@ -102,7 +102,7 @@ feature -- Input
 			-- input file unchanged if no line separator
 			-- was found.
 		do
-			last_string.clear_all
+			STRING_.wipe_out (last_string)
 			read_character
 			if not end_of_file then
 				if last_character = '%R' then
@@ -129,7 +129,7 @@ feature -- Input
 
 feature -- Access
 
-	eol: STRING is "%R%N"
+	eol: STRING = "%R%N"
 			-- Line separator
 
 end

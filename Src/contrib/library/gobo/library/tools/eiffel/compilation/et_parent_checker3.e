@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel parent validity third pass checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new parent third pass checker.
 		do
 			precursor {ET_CLASS_SUBPROCESSOR}
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Validity checking
 
-	check_parents_validity (a_class: ET_CLASS) is
+	check_parents_validity (a_class: ET_CLASS)
 			-- Third pass of the validity check of parents of `a_class'.
 			-- Check the creation procedures of formal parameters.
 			-- Set `has_fatal_error' if an error occurred.
@@ -58,7 +58,7 @@ feature -- Validity checking
 			has_fatal_error := False
 			old_class := current_class
 			current_class := a_class
-			a_parents := current_class.parents
+			a_parents := current_class.parent_clause
 			if a_parents /= Void then
 				nb := a_parents.count
 				from i := 1 until i > nb loop
@@ -66,15 +66,15 @@ feature -- Validity checking
 					i := i + 1
 				end
 			end
-			current_class := a_class
+			current_class := old_class
 		end
 
 feature {NONE} -- Parent validity
 
-	check_class_type_validity (a_type: ET_CLASS_TYPE) is
+	check_class_type_validity (a_type: ET_CLASS_TYPE)
 			-- Check validity of `a_type' when it appears in the parent
 			-- clause `a_parent' in `current_class'. Check whether the
-			-- actual generic parameters of `a_type' are equipped with
+			-- actual generic parameters of `a_type' are equiped with
 			-- the creation procedures listed in the corresponding formal
 			-- parameters' constraints. Set `has_fatal_error' if an error
 			-- occurred.
@@ -164,8 +164,8 @@ feature {NONE} -- Parent validity
 													-- So we must have something like that:
 													-- "[G -> H create make end, H -> G]".
 													-- We consider that the base class of the
-													-- constraint in ANY in that case.
-												a_constraint_class := current_system.any_class
+													-- constraint is 'ANY' in that case.
+												a_constraint_class := a_class.universe.detachable_any_type.base_class
 											end
 												-- Build the feature table.
 											a_constraint_class.process (current_system.feature_flattener)
@@ -184,7 +184,7 @@ feature {NONE} -- Parent validity
 											set_fatal_error
 											if not a_class.interface_checked then
 													-- Make sure that the error will be reported.
-													-- For that, we need to force the interface 
+													-- For that, we need to force the interface
 													-- of `a_class' to be checked.
 												classes_to_be_processed.force_last (a_class)
 											end
@@ -239,19 +239,19 @@ feature {NONE} -- Parent validity
 
 feature {ET_AST_NODE} -- Type dispatcher
 
-	process_class (a_class: ET_CLASS) is
+	process_class (a_class: ET_CLASS)
 			-- Process `a_class'.
 		do
 			process_class_type (a_class)
 		end
 
-	process_class_type (a_type: ET_CLASS_TYPE) is
+	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			check_class_type_validity (a_type)
 		end
 
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
+	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
@@ -266,7 +266,7 @@ feature {NONE} -- Access
 
 feature {ET_INTERFACE_CHECKER} -- Access
 
-	set_classes_to_be_processed (a_classes: like classes_to_be_processed) is
+	set_classes_to_be_processed (a_classes: like classes_to_be_processed)
 			-- Set `classes_to_be_processed' to `a_classes'.
 		require
 			a_classes_not_void: a_classes /= Void

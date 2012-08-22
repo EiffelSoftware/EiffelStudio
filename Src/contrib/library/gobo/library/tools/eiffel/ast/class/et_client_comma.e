@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel clients followed by a comma"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,19 +27,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_base_class: like base_class; a_comma: like comma) is
+	make (a_name: like name; a_named_base_class: like named_base_class; a_comma: like comma)
 			-- Create a new client-comma.
 		require
 			a_name_not_void: a_name /= Void
-			a_base_class_not_void: a_base_class /= Void
+			a_named_base_class_not_void: a_named_base_class /= Void
 			a_comma_not_void: a_comma /= Void
 		do
 			name := a_name
-			base_class := a_base_class
+			named_base_class := a_named_base_class
 			comma := a_comma
 		ensure
 			name_set: name = a_name
-			base_class_set: base_class = a_base_class
+			named_base_class_set: named_base_class = a_named_base_class
 			comma_set: comma = a_comma
 		end
 
@@ -48,13 +48,13 @@ feature -- Access
 	comma: ET_SYMBOL
 			-- Comma separator
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := comma
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := comma.break
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_client_comma (Current)

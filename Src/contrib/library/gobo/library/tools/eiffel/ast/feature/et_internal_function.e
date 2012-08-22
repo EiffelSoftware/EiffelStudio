@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -16,7 +16,7 @@ inherit
 
 	ET_FUNCTION
 		undefine
-			reset_after_features_flattened, locals
+			reset_after_interface_checked, locals
 		end
 
 	ET_INTERNAL_ROUTINE

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new system clock.
 		do
 		end
@@ -52,10 +52,10 @@ feature -- Access
 
 feature -- Setting
 
-	set_local_time is
+	set_local_time
 			-- Set clock to current local time.
 		local
-			l_clock: ?C_DATE
+			l_clock: detachable C_DATE
 		do
 			l_clock := local_clock
 			if l_clock = Void then
@@ -73,10 +73,10 @@ feature -- Setting
 			millisecond := l_clock.millisecond_now
 		end
 
-	set_utc_time is
+	set_utc_time
 			-- Set clock to current UTC time.
 		local
-			l_clock: ?C_DATE
+			l_clock: detachable C_DATE
 		do
 			l_clock := utc_clock
 			if l_clock = Void then
@@ -96,10 +96,10 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	utc_clock: ?C_DATE
+	utc_clock: detachable C_DATE
 			-- Clock in UTC time
 
-	local_clock: ?C_DATE
+	local_clock: detachable C_DATE
 			-- Clock in local time
 
 end

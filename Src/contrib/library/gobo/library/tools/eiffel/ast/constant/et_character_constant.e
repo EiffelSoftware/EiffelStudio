@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel character constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,7 +43,7 @@ inherit
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset constant as it was just after it was last parsed.
 		do
 			type := Void
@@ -54,7 +54,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	is_character_constant: BOOLEAN is True
+	is_character_constant: BOOLEAN = True
 			-- Is current constant a CHARACTER constant?
 
 feature -- Access
@@ -69,7 +69,7 @@ feature -- Access
 			-- Type of character constant;
 			-- Void if not determined yet
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -80,7 +80,7 @@ feature -- Access
 			end
 		end
 
-	first_position: ET_POSITION is
+	first_position: ET_POSITION
 			-- Position of first character of current node in source code
 		do
 			if cast_type /= Void then
@@ -90,7 +90,7 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			if cast_type /= Void then
@@ -102,7 +102,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_cast_type (a_type: like cast_type) is
+	set_cast_type (a_type: like cast_type)
 			-- Set `cast_type' to `a_type'.
 		do
 			cast_type := a_type
@@ -110,7 +110,7 @@ feature -- Setting
 			cast_type_set: cast_type = a_type
 		end
 
-	set_type (a_type: like type) is
+	set_type (a_type: like type)
 			-- Set `type' to `a_type'.
 		do
 			type := a_type
@@ -120,27 +120,18 @@ feature -- Setting
 
 feature -- Type conversion
 
-	manifest_constant_convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_FEATURE is
+	manifest_constant_convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CONVERT_FEATURE
 			-- Implicit feature to convert `Current' of type `a_source_type' to `a_target_type'.
-			-- This is only possible when there is no explicit type case and the value of the
+			-- This is only possible when there is no explicit type cast and the value of the
 			-- constant can be represented in `a_target_type'.
 			-- Void if no such feature or when not possible.
-		local
-			l_target_base_class: ET_CLASS
-			l_system: ET_SYSTEM
 		do
 			if cast_type = Void then
 -- TODO: check that the value of `Current' can be represented in `a_target_type'.
-				l_target_base_class := a_target_type.base_class
-				if not l_target_base_class.is_preparsed then
-					-- No conversion to non-existing type.
-				else
-					l_system := l_target_base_class.current_system
-					if l_target_base_class = l_system.character_8_class then
-						Result := l_system.character_8_convert_feature
-					elseif l_target_base_class = l_system.character_32_class then
-						Result := l_system.character_32_convert_feature
-					end
+				if a_target_type.same_named_context (a_universe.character_8_type) then
+					Result := a_universe.character_8_convert_feature
+				elseif a_target_type.same_named_context (a_universe.character_32_type) then
+					Result := a_universe.character_32_convert_feature
 				end
 			end
 		end

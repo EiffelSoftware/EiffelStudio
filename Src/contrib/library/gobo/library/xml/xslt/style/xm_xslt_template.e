@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -35,10 +35,10 @@ create {XM_XSLT_NODE_FACTORY}
 	make_style_element
 
 feature {NONE} -- Initialization
-		
+
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
 		do
 			internal_fingerprint := -1 -- Not yet calculated, or not a named template
@@ -60,7 +60,7 @@ feature -- Access
 	compiled_template: XM_XSLT_COMPILED_TEMPLATE
 			-- Compiled version of `Current'
 
-	template_fingerprint: INTEGER is
+	template_fingerprint: INTEGER
 			-- Fingerprint of named template;
 			-- If called before `prepare_attributes', then call `ensure_template_fingerprint' first.
 		do
@@ -72,13 +72,13 @@ feature -- Access
 
 feature -- Status report
 
-	may_contain_sequence_constructor: BOOLEAN is
+	may_contain_sequence_constructor: BOOLEAN
 			-- Is `Current' allowed to contain a sequence constructor?
 		do
 			Result := True
 		end
-	
-	is_permitted_child (a_style_element: XM_XSLT_STYLE_ELEMENT): BOOLEAN is
+
+	is_permitted_child (a_style_element: XM_XSLT_STYLE_ELEMENT): BOOLEAN
 			-- Is `a_style_element' a permitted child of `Current'?
 		do
 			Result := a_style_element.is_param
@@ -86,7 +86,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	mark_tail_calls is
+	mark_tail_calls
 			-- Mark tail-recursive calls on templates and functions.
 		local
 			a_last_instruction: XM_XSLT_STYLE_ELEMENT
@@ -104,14 +104,14 @@ feature -- Status setting
 
 feature -- Element change
 
-	allocate_slots (a_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
+	allocate_slots (a_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER)
 			-- Allocate slots in the stack frame for local variables contained in `an_expression', which will include a match pattern.
 		do
 			a_expression.allocate_slots (1, a_slot_manager)
 			containing_stylesheet.allocate_pattern_slots (a_expression.last_slot_number)
 		end
-	
-	prepare_attributes is
+
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -123,12 +123,11 @@ feature -- Element change
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index				
 				until
 					a_cursor.after or any_compile_errors
-				loop a_name_code := a_cursor.item
-				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
+				loop
+					a_name_code := a_cursor.item
+					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
 					if STRING_.same_string (an_expanded_name, Name_attribute) then
 						a_name_attribute := attribute_value_by_index (a_cursor.index)
 						STRING_.left_adjust (a_name_attribute)
@@ -149,6 +148,8 @@ feature -- Element change
 						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			prepare_mode_attribute (a_mode_attribute, a_match_attribute = Void)
@@ -179,7 +180,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-		ensure_template_fingerprint is
+		ensure_template_fingerprint
 			-- Ensure `template_fingerprint' returns correct result.
 		local
 			l_name: STRING
@@ -203,7 +204,7 @@ feature -- Element change
 			end
 		end
 
-	set_redundant_named_template is
+	set_redundant_named_template
 			-- Mark as a redundant named template.
 		do
 			redundant_named_template := True
@@ -211,7 +212,7 @@ feature -- Element change
 			redundant_named_template_set:	redundant_named_template = True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
@@ -239,11 +240,11 @@ feature -- Element change
 				 l_has_required_parameters := True
 				end
 				l_child_iterator.forth
-			end	
+			end
 			compiled_template.set_has_required_parameters (l_has_required_parameters)
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
 			l_rule_manager: XM_XSLT_RULE_MANAGER
@@ -280,7 +281,7 @@ feature -- Element change
 						report_compile_error (l_type_checker.static_type_check_error)
 					else
 						l_content := l_type_checker.checked_expression
-					end	
+					end
 				end
 			end
 			if not any_compile_errors then
@@ -315,8 +316,6 @@ feature -- Element change
 							from
 								l_cursor := mode_name_codes.new_cursor
 								l_cursor.start
-							variant
-								mode_name_codes.count + 1 - l_cursor.index
 							until
 								l_cursor.after
 							loop
@@ -332,6 +331,8 @@ feature -- Element change
 									l_rule_manager.set_handler_with_default_priority (match, l_rule_value, l_mode, precedence)
 								end
 								l_cursor.forth
+							variant
+								mode_name_codes.count + 1 - l_cursor.index
 							end
 						end
 						if is_explaining or else principal_stylesheet.is_all_explaining then
@@ -357,7 +358,7 @@ feature -- Element change
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 
-	returned_item_type: XM_XPATH_ITEM_TYPE is
+	returned_item_type: XM_XPATH_ITEM_TYPE
 			-- Type of item returned by this instruction
 		do
 			if required_type = Void then
@@ -369,13 +370,13 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 
 feature -- Conversion
 
-	is_template: BOOLEAN is
+	is_template: BOOLEAN
 			-- Is `Current' an xsl:template?
 		do
 			Result := True
 		end
 
-	as_template: XM_XSLT_TEMPLATE is
+	as_template: XM_XSLT_TEMPLATE
 			-- `Current' seen as an xsl:template
 		do
 			Result := Current
@@ -395,7 +396,7 @@ feature {NONE} -- Implementation
 	role_identifier: STRING
 			-- Role identificaton
 
-	minimum_import_precedence: INTEGER is
+	minimum_import_precedence: INTEGER
 			-- Lowest import pecedence
 		local
 			a_stylesheet: XM_XSLT_STYLESHEET
@@ -407,7 +408,7 @@ feature {NONE} -- Implementation
 			Result := a_stylesheet.minimum_import_precedence
 		end
 
-	prepare_mode_attribute (l_mode_attribute: STRING; is_match_attribute_void: BOOLEAN) is
+	prepare_mode_attribute (l_mode_attribute: STRING; is_match_attribute_void: BOOLEAN)
 			-- Prepare mode attribute
 		require
 			attributes_not_prepared: not attributes_prepared
@@ -437,8 +438,6 @@ feature {NONE} -- Implementation
 						from
 							l_cursor := mode_tokens.new_cursor
 							l_cursor.start
-						variant
-							mode_tokens.count + 1 - l_cursor.index
 						until
 							l_cursor.after
 						loop
@@ -465,6 +464,8 @@ feature {NONE} -- Implementation
 								end
 							end
 							l_cursor.forth
+						variant
+							mode_tokens.count + 1 - l_cursor.index
 						end
 						if not any_compile_errors then
 							check_all_modes_distinct
@@ -476,7 +477,7 @@ feature {NONE} -- Implementation
 			mode_name_codes_not_void: not any_compile_errors implies mode_name_codes /= Void
 		end
 
-	prepare_name_attribute (a_name_attribute: STRING) is
+	prepare_name_attribute (a_name_attribute: STRING)
 			-- Prepare name attribute
 		local
 			an_error: XM_XPATH_ERROR_VALUE
@@ -497,7 +498,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	prepare_priority_attribute (a_priority_attribute: STRING; is_match_attribute_void: BOOLEAN) is
+	prepare_priority_attribute (a_priority_attribute: STRING; is_match_attribute_void: BOOLEAN)
 			-- Prepare priority attribute
 		local
 			l_message: STRING
@@ -524,7 +525,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_all_modes_distinct is
+	check_all_modes_distinct
 			-- Check no duplicate mode names.
 		local
 			a_set: DS_HASH_SET [INTEGER]
@@ -535,8 +536,6 @@ feature {NONE} -- Implementation
 			create a_set.make (mode_name_codes.count)
 			from
 				l_cursor := mode_name_codes.new_cursor; l_cursor.start
-			variant
-				mode_name_codes.count + 1 - l_cursor.index
 			until
 				any_compile_errors or else l_cursor.after
 			loop
@@ -548,6 +547,8 @@ feature {NONE} -- Implementation
 					a_set.put (l_name_code)
 				end
 				l_cursor.forth
+			variant
+				mode_name_codes.count + 1 - l_cursor.index
 			end
 		end
 

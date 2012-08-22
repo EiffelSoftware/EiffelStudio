@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Tables for scanners"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_from_tables (other: like to_tables) is
+	make_from_tables (other: like to_tables)
 			-- Make new scanner tables from `other'.
 		require
 			other_not_void: other /= Void
@@ -43,7 +43,7 @@ feature -- Tables
 	yy_rules: ARRAY [LX_RULE]
 			-- Rules with associated semantic actions
 
-	yy_eof_rules: ARRAY [LX_RULE]
+	yy_eof_rules: ARRAY [detachable LX_RULE]
 			-- End-of-file rules with associated semantic actions
 
 	yy_start_conditions: ARRAY [STRING]
@@ -68,7 +68,7 @@ feature -- Constants
 
 feature -- Conversion
 
-	from_tables (other: like to_tables) is
+	from_tables (other: like to_tables)
 			-- Set current tables with those of `other'.
 		require
 			other_not_void: other /= Void
@@ -77,7 +77,7 @@ feature -- Conversion
 --			set: forall attribute, attribute = other.attribute
 		end
 
-	to_tables: LX_TABLES is
+	to_tables: LX_TABLES
 			-- New scanner tables made from current tables
 		deferred
 		ensure
@@ -89,9 +89,9 @@ invariant
 
 	yy_accept_not_void: yy_accept /= Void
 	yy_rules_not_void: yy_rules /= Void
-	no_void_rules: not ANY_ARRAY_.has (yy_rules, Void)
+	no_void_rules: not ANY_ARRAY_.has_void (yy_rules)
 	yy_eof_rules_not_void: yy_eof_rules /= Void
 	yy_start_conditions_not_void: yy_start_conditions /= Void
-	no_void_start_condition: not ANY_ARRAY_.has (yy_start_conditions, Void)
+	no_void_start_condition: not ANY_ARRAY_.has_void (yy_start_conditions)
 
 end

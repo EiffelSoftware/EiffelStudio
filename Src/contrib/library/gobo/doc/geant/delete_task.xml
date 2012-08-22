@@ -8,8 +8,8 @@
 	library: "Gobo Eiffel Ant"
 	copyright: "Copyright (c) 2002, Sven Ehrke and others"
 	license: "MIT License"
-	date: "$Date: 2008-02-10 09:08:16 -0800 (Sun, 10 Feb 2008) $"
-	revision: "$Revision: 6290 $"
+	date: "$Date$"
+	revision: "$Revision$"
 -->
 
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="delete_task">

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -25,7 +25,7 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature -- Status setting
 
-	mark_tail_calls is
+	mark_tail_calls
 			-- Mark tail-recursive calls on templates and functions.
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -46,7 +46,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -57,8 +57,6 @@ feature -- Element change
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index				
 				until
 					a_cursor.after or any_compile_errors
 				loop
@@ -66,12 +64,14 @@ feature -- Element change
 					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
 					check_unknown_attribute (a_name_code)
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -119,7 +119,7 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
 			l_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -184,7 +184,7 @@ feature -- Element change
 					if compiled_conditions.item (1).as_boolean_value.value then
 
 						-- only one condition left, and it's known to be true: return the corresponding action
-						
+
 						last_generated_expression := compiled_actions.item (1)
 					else
 
@@ -199,11 +199,11 @@ feature -- Element change
 				create {XM_XSLT_COMPILED_CHOOSE} last_generated_expression.make (an_executable, compiled_conditions, compiled_actions)
 			end
 		end
-	
+
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 
-	returned_item_type: XM_XPATH_ITEM_TYPE is
+	returned_item_type: XM_XPATH_ITEM_TYPE
 			-- Type of item returned by this instruction
 		do
 			Result := common_child_item_type
@@ -228,11 +228,11 @@ feature {NONE} -- Implementation
 
 	compiled_conditions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			--	Conditions present in compiled instruction
-	
+
 	compiled_actions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Actions present in compiled instruction
 
-	compile_when (an_executable: XM_XSLT_EXECUTABLE; l_when: XM_XSLT_WHEN) is
+	compile_when (an_executable: XM_XSLT_EXECUTABLE; l_when: XM_XSLT_WHEN)
 			-- Compile when clause.
 		require
 			executable_not_void: an_executable /= Void
@@ -261,7 +261,7 @@ feature {NONE} -- Implementation
 				end
 
 				-- Optimize for constant conditions (true or false)
-				
+
 				if l_condition.is_boolean_value then
 					if l_condition.as_boolean_value.value then
 						compiled_actions_count := compiled_actions_count + 1
@@ -269,14 +269,14 @@ feature {NONE} -- Implementation
 						compiled_actions.put_last (l_action)
 						has_compile_loop_finished := True
 					else
-						
+
 						--  constant false: omit this test
-						
+
 					end
 				else
 					compiled_actions_count := compiled_actions_count + 1
 					compiled_conditions.put_last (l_condition)
-					compiled_actions.put_last (l_action)						
+					compiled_actions.put_last (l_action)
 				end
 			end
 		end

@@ -15,13 +15,14 @@ deferred class
 inherit
 	READABLE_STRING_GENERAL
 		rename
-			same_string as same_string_general
+			same_string as same_string_general,
+			plus as plus_string_general
 		redefine
 			copy, is_equal, out
 		end
 
 convert
-	to_cil: {SYSTEM_STRING, detachable SYSTEM_STRING},
+	to_cil: {SYSTEM_STRING},
 	as_string_8: {STRING_8},
 	as_string_32: {READABLE_STRING_32, STRING_32}
 

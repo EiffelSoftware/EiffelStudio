@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Invalid use of $$ in error action"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,23 +22,23 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER) is
+	make (filename: STRING; line: INTEGER)
 			-- Create a new error reporting that $$ has
 			-- been used in an error action.
 		require
 			filename_not_void: filename /= Void
 		do
-			create parameters.make (1, 2)
+			create parameters.make_filled (empty_string, 1, 2)
 			parameters.put (filename, 1)
 			parameters.put (line.out, 2)
 		end
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: invalid use of $$$$ in error action"
+	default_template: STRING = "%"$1%", line $2: invalid use of $$$$ in error action"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0026"
+	code: STRING = "PR0026"
 			-- Error code
 
 invariant

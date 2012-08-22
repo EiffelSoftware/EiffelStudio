@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel queries (functions or attributes)"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@ inherit
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset current feature as it was just after it was last parsed.
 		local
 			l_assigner: ET_ASSIGNER
@@ -36,7 +36,7 @@ feature -- Initialization
 
 feature -- Access
 
-	type: ET_TYPE is
+	type: ET_TYPE
 			-- Return type
 		do
 			Result := declared_type.type
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_assigner (an_assigner: like assigner) is
+	set_assigner (an_assigner: like assigner)
 			-- Set `assigner' to `an_assigner'.
 		do
 			assigner := an_assigner
@@ -62,7 +62,7 @@ feature -- Setting
 
 feature -- Conversion
 
-	undefined_feature (a_name: like extended_name): ET_DEFERRED_FUNCTION is
+	undefined_feature (a_name: like extended_name): ET_DEFERRED_FUNCTION
 			-- Undefined version of current feature
 		do
 			create Result.make (a_name, arguments, declared_type, implementation_class)
@@ -77,25 +77,9 @@ feature -- Conversion
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
+			Result.set_across_components (across_components)
 			Result.set_first_seed (first_seed)
 			Result.set_other_seeds (other_seeds)
-		end
-
-feature -- Type processing
-
-	resolve_inherited_signature (a_parent: ET_PARENT) is
-			-- Resolve arguments and type inherited from `a_parent'.
-			-- Resolve any formal generic parameters of declared types
-			-- with the corresponding actual parameters in `a_parent',
-			-- and duplicate identifier anchored types (and clear their
-			-- base types).
-		local
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
-		do
-			a_parameters := a_parent.actual_parameters
-			if a_parameters /= Void then
-				declared_type := declared_type.resolved_formal_parameters (a_parameters)
-			end
 		end
 
 invariant

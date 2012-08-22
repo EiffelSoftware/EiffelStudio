@@ -1,14 +1,14 @@
 %{
-indexing
+note
 
 	description:
 
 		"Scanners for Eiffel parsers"
 
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2009-02-26 14:52:17 -0800 (Thu, 26 Feb 2009) $"
-	revision: "$Revision: 6590 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EIFFEL_SCANNER
 
@@ -143,6 +143,7 @@ create
 [lL][oO][cC][aA][lL]					last_token := E_LOCAL
 [lL][oO][oO][pP]						last_token := E_LOOP
 [nN][oO][tT]							last_token := E_NOT
+[nN][oO][tT][eE]						last_token := E_NOTE
 [oO][bB][sS][oO][lL][eE][tT][eE]		last_token := E_OBSOLETE
 [oO][lL][dD]							last_token := E_OLD
 [oO][nN][cC][eE]						last_token := E_ONCE
@@ -407,7 +408,7 @@ feature {NONE} -- Local variables
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new Eiffel scanner.
 		do
 			make_with_buffer (Empty_buffer)
@@ -416,7 +417,7 @@ feature {NONE} -- Initialization
 			create_keyword := True
 		end
 
-	execute is
+	execute
 			-- Analyze Eiffel files `arguments (1..argument_count)'.
 		local
 			j, n: INTEGER
@@ -447,7 +448,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	benchmark is
+	benchmark
 			-- Analyze Eiffel file `argument (2)' `argument (1)' times.
 		local
 			j, n: INTEGER
@@ -484,7 +485,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset scanner before scanning next input.
 		do
 			reset_compressed_scanner_skeleton
@@ -517,7 +518,7 @@ feature -- Status report
 
 feature {NONE} -- Processing
 
-	process_operator (op: INTEGER): INTEGER is
+	process_operator (op: INTEGER): INTEGER
 			-- Process current token as operator `op' or as
 			-- an Eiffel string depending on the context
 		require
@@ -534,7 +535,7 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Constants
 
-	Init_buffer_size: INTEGER is 256
+	Init_buffer_size: INTEGER = 256
 				-- Initial size for `eif_buffer'
 
 invariant

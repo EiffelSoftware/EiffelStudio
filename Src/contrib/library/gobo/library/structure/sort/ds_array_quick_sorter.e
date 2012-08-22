@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Array sorters using quick sort algorithm"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@ create
 
 feature -- Sort
 
-	subsort_with_comparator (a_container: ARRAY [G]; a_comparator: KL_PART_COMPARATOR [G]; lower, upper: INTEGER) is
+	subsort_with_comparator (a_container: ARRAY [G]; a_comparator: KL_PART_COMPARATOR [G]; lower, upper: INTEGER)
 			-- Sort `a_container' according to `a_comparator''s
 			-- comparison criterion within bounds `lower'..`upper'?
 		local
@@ -41,8 +41,8 @@ feature -- Sort
 			end
 			i := i + 10
 			from
-				create lowers.make (1, i)
-				create uppers.make (1, i)
+				create lowers.make_filled (0, 1, i)
+				create uppers.make_filled (0, 1, i)
 				lowers.put (lower, 1)
 				uppers.put (upper, 1)
 				i := 1

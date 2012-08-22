@@ -3,7 +3,7 @@
          ns="urn:oasis:names:tc:entity:xmlns:xml:catalog"
          datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
 
-  <!-- $Id: catalog.rng 5056 2005-07-11 21:07:23Z ericb $ -->
+  <!-- $Id$ -->
 
   <start>
     <choice>

@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel class feature flatteners"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,7 +41,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new feature flattener for given classes.
 		do
 			precursor {ET_CLASS_PROCESSOR}
@@ -60,13 +60,14 @@ feature {NONE} -- Initialization
 			create signature_checker.make
 			create parent_checker.make
 			create formal_parameter_checker.make
+			create builtin_feature_checker.make
 			create precursor_checker.make
 			create precursors.make_map (20)
 		end
 
 feature -- Error handling
 
-	set_fatal_error (a_class: ET_CLASS) is
+	set_fatal_error (a_class: ET_CLASS)
 			-- Report a fatal error to `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -80,7 +81,7 @@ feature -- Error handling
 
 feature -- Processing
 
-	process_class (a_class: ET_CLASS) is
+	process_class (a_class: ET_CLASS)
 			-- Build ancestors of `a_class' if not already done.
 			-- Then run second pass of the formal generic parameters
 			-- validity check of `a_class', and the second pass of
@@ -99,6 +100,7 @@ feature -- Processing
 				a_processor.process_class (a_class)
 			elseif a_class.is_unknown then
 				set_fatal_error (a_class)
+				error_handler.report_giaaa_error
 			elseif not a_class.is_preparsed then
 				set_fatal_error (a_class)
 			else
@@ -110,7 +112,7 @@ feature -- Processing
 
 feature {NONE} -- Processing
 
-	internal_process_class (a_class: ET_CLASS) is
+	internal_process_class (a_class: ET_CLASS)
 			-- Build ancestors of `a_class' if not already done.
 			-- Then run second pass of the formal generic parameters
 			-- validity check of `a_class', and the second pass of
@@ -134,16 +136,6 @@ feature {NONE} -- Processing
 					current_class.set_features_flattened
 						-- Process parents first.
 					a_parents := current_class.parents
-					if a_parents = Void or else a_parents.is_empty then
-						if current_class = current_system.any_class then
-								-- "ANY" has no implicit parents.
-							a_parents := Void
-						elseif current_class.is_dotnet and current_class /= current_system.system_object_class then
-							a_parents := current_system.system_object_parents
-						else
-							a_parents := current_system.any_parents
-						end
-					end
 					if a_parents /= Void then
 						nb := a_parents.count
 						from i := 1 until i > nb loop
@@ -210,7 +202,7 @@ feature {NONE} -- Feature adaptation
 	dotnet_feature_adaptation_resolver: ET_DOTNET_FEATURE_ADAPTATION_RESOLVER
 			-- Feature adaptation resolver for .NET classes
 
-	resolve_feature_adaptations is
+	resolve_feature_adaptations
 			-- Resolve the feature adaptations of the inheritance clause of
 			-- `current_class' and put resulting features in `named_features'.
 		do
@@ -229,7 +221,7 @@ feature {NONE} -- Feature adaptation
 
 feature {NONE} -- Feature flattening
 
-	flatten_features is
+	flatten_features
 			-- Flatten inherited features into `current_class'.
 		local
 			a_named_feature: ET_FLATTENED_FEATURE
@@ -562,6 +554,7 @@ feature {NONE} -- Feature flattening
 				check_assigners_validity
 				check_creators_validity
 				check_convert_validity
+				check_kernel_features_validity
 			end
 			named_features.wipe_out
 		ensure
@@ -571,7 +564,7 @@ feature {NONE} -- Feature flattening
 
 feature {NONE} -- Feature processing
 
-	flatten_feature (a_feature: ET_FLATTENED_FEATURE) is
+	flatten_feature (a_feature: ET_FLATTENED_FEATURE)
 			-- Flatten `a_feature' and process its feature adaptation clause.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -596,7 +589,7 @@ feature {NONE} -- Feature processing
 			end
 		end
 
-	flatten_immediate_feature (a_feature: ET_FEATURE) is
+	flatten_immediate_feature (a_feature: ET_FEATURE)
 			-- Flatten `a_feature' and process its feature adaptation clause.
 			-- `a_feature' has been introduced in `current_class' (ETL2, p. 56).
 		require
@@ -604,10 +597,12 @@ feature {NONE} -- Feature processing
 		do
 			if a_feature.implementation_class /= current_class then
 -- TODO: error: this can happen when processing .NET features.
+			else
+				check_builtin_feature_validity (a_feature)
 			end
 		end
 
-	flatten_redeclared_feature (a_feature: ET_REDECLARED_FEATURE) is
+	flatten_redeclared_feature (a_feature: ET_REDECLARED_FEATURE)
 			-- Flatten `a_feature' and process its feature adaptation clause.
 			-- `a_feature' is an inherited feature which has been given a new
 			-- declaration in `current_class'.
@@ -628,6 +623,7 @@ feature {NONE} -- Feature processing
 			i, nb: INTEGER
 		do
 			l_flattened_feature := a_feature.flattened_feature
+			check_builtin_feature_validity (l_flattened_feature)
 			l_dotnet := (current_class.is_dotnet and then l_flattened_feature.is_dotnet)
 			if l_dotnet then
 				if
@@ -710,7 +706,7 @@ feature {NONE} -- Feature processing
 			end
 		end
 
-	flatten_inherited_feature (a_feature: ET_INHERITED_FEATURE) is
+	flatten_inherited_feature (a_feature: ET_INHERITED_FEATURE)
 			-- Flatten `a_feature' and process its feature adaptation clause.
 			-- `a_feature' is an inherited feature which has not been given
 			-- a new declaration in `current_class'.
@@ -782,7 +778,6 @@ feature {NONE} -- Feature processing
 									not l_effective.has_rename and then
 									l_effective.first_seed = l_first_seed and then
 									l_effective.other_seeds = l_other_seeds and then
-									not l_effective.signature_has_formal_types and then
 									l_effective.clients.same_clients (l_clients)
 								then
 									l_feature_found := True
@@ -813,7 +808,6 @@ feature {NONE} -- Feature processing
 								not l_deferred.has_undefine and then
 								l_deferred.first_seed = l_first_seed and then
 								l_deferred.other_seeds = l_other_seeds and then
-								not l_deferred.signature_has_formal_types and then
 								l_deferred.clients.same_clients (l_clients)
 							then
 								l_feature_found := True
@@ -925,7 +919,6 @@ feature {NONE} -- Feature processing
 						process_replicated_seeds (a_feature, l_flattened_feature.id)
 					end
 				end
-				l_flattened_feature.resolve_inherited_signature (l_parent_feature.parent)
 				l_flattened_feature.set_clients (l_clients)
 				l_flattened_feature.set_first_seed (a_feature.first_seed)
 				l_flattened_feature.set_other_seeds (a_feature.other_seeds)
@@ -980,7 +973,7 @@ feature {NONE} -- Feature processing
 
 feature {NONE} -- Replication
 
-	process_replicated_seeds (a_feature: ET_ADAPTED_FEATURE; a_new_seed: INTEGER) is
+	process_replicated_seeds (a_feature: ET_ADAPTED_FEATURE; a_new_seed: INTEGER)
 			-- Process the seeds of replicated feature `a_feature'.
 			-- Remove seeds in `a_feature.replicated_seeds' and
 			-- add `a_new_seed'.
@@ -1070,7 +1063,7 @@ feature {NONE} -- Clients
 	client_classes: DS_HASH_TABLE [ET_CLIENT, ET_CLASS]
 			-- Clients indexed by classes
 
-	inherited_clients (a_feature: ET_INHERITED_FEATURE): ET_CLIENT_LIST is
+	inherited_clients (a_feature: ET_INHERITED_FEATURE): ET_CLIENT_LIST
 			-- Clients inherited by the not redeclared feature `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -1201,7 +1194,7 @@ feature {NONE} -- Clients
 feature {NONE} -- Feature adaptation validity
 
 	check_redeclaration_validity (a_parent_feature: ET_PARENT_FEATURE;
-		a_redeclared_feature: ET_FEATURE; has_redefine: BOOLEAN) is
+		a_redeclared_feature: ET_FEATURE; has_redefine: BOOLEAN)
 			-- Check validity when `a_parent_feature' has been
 			-- given a new declaration `a_redeclared_feature' in
 			-- `current_class'. `has_redefine' indicates whether the
@@ -1281,7 +1274,7 @@ feature {NONE} -- Feature adaptation validity
 			end
 		end
 
-	check_no_redeclaration_validity (a_parent_feature: ET_PARENT_FEATURE) is
+	check_no_redeclaration_validity (a_parent_feature: ET_PARENT_FEATURE)
 			-- Check validity when `a_parent_feature' has not been given a new
 			-- declaration in `current_class'.
 		require
@@ -1297,7 +1290,7 @@ feature {NONE} -- Feature adaptation validity
 			end
 		end
 
-	check_rename_clause_validity (a_parent_feature: ET_PARENT_FEATURE) is
+	check_rename_clause_validity (a_parent_feature: ET_PARENT_FEATURE)
 			-- Check validity of rename clause for `a_parent_feature'.
 		require
 			a_parent_feature_not_void: a_parent_feature /= Void
@@ -1367,7 +1360,7 @@ feature {NONE} -- Feature adaptation validity
 			end
 		end
 
-	check_undefine_clause_validity (a_parent_feature: ET_PARENT_FEATURE) is
+	check_undefine_clause_validity (a_parent_feature: ET_PARENT_FEATURE)
 			-- Check validity of undefine clause for `a_parent_feature'.
 		require
 			a_parent_feature_not_void: a_parent_feature /= Void
@@ -1395,7 +1388,7 @@ feature {NONE} -- Feature adaptation validity
 			end
 		end
 
-	check_redefine_clause_validity (a_parent_feature: ET_PARENT_FEATURE) is
+	check_redefine_clause_validity (a_parent_feature: ET_PARENT_FEATURE)
 			-- Check validity of redefine clause for `a_parent_feature'.
 		require
 			a_parent_feature_not_void: a_parent_feature /= Void
@@ -1420,7 +1413,7 @@ feature {NONE} -- Feature adaptation validity
 
 feature {NONE} -- Precursor validity
 
-	check_precursor_validity (a_feature: ET_REDECLARED_FEATURE) is
+	check_precursor_validity (a_feature: ET_REDECLARED_FEATURE)
 			-- Check validity of Precursor constructs in `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -1436,7 +1429,7 @@ feature {NONE} -- Precursor validity
 
 feature {NONE} -- Signature resolving
 
-	resolve_identifier_signature (a_feature: ET_FEATURE) is
+	resolve_identifier_signature (a_feature: ET_FEATURE)
 			-- Resolve identifier types (e.g. "like identifier"
 			-- or "BIT identifier") in signature of `a_feature'
 			-- in `current_class'. Do not try to resolve qualified
@@ -1506,7 +1499,7 @@ feature {NONE} -- Signature resolving
 
 feature {NONE} -- Signature validity
 
-	check_anchored_signatures is
+	check_anchored_signatures
 			-- Check whether there is no cycle in the anchored types
 			-- held in the types of all signatures of `current_class'.
 			-- Do not try to follow qualified anchored types. This is done
@@ -1523,7 +1516,7 @@ feature {NONE} -- Signature validity
 	anchored_type_checker: ET_ANCHORED_TYPE_CHECKER
 			-- Anchored type checker
 
-	check_signature_vtct_validity (a_feature: ET_FEATURE) is
+	check_signature_vtct_validity (a_feature: ET_FEATURE)
 			-- Check whether the types in the signature of `a_feature'
 			-- (declared in `current_class') are based on known classes.
 		require
@@ -1536,7 +1529,7 @@ feature {NONE} -- Signature validity
 			end
 		end
 
-	check_signature_validity (a_feature: ET_FLATTENED_FEATURE) is
+	check_signature_validity (a_feature: ET_FLATTENED_FEATURE)
 			-- Check signature validity for redeclarations and joinings.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -1568,9 +1561,165 @@ feature {NONE} -- Signature validity
 			-- features. It can also be that the signature of one of the features of
 			-- `current_class' is based on an unknown class.
 
+feature {NONE} -- Built-in feature validity
+
+	check_builtin_feature_validity (a_feature: ET_FEATURE)
+			-- Check whether `a_feature' is a known built-in feature,
+			-- and if yes, check the validity of its signature.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			builtin_feature_checker.check_builtin_feature_validity (a_feature)
+			if builtin_feature_checker.has_fatal_error then
+				set_fatal_error (current_class)
+			end
+		end
+
+	builtin_feature_checker: ET_BUILTIN_FEATURE_CHECKER
+			-- Built-in feature validity checker
+
+feature {NONE} -- Kernel feature validity
+
+	check_kernel_features_validity
+			-- Check validity of kernel features declared in `current_class'.
+			-- Keep track of their seeds if needed.
+		local
+			l_class: ET_CLASS
+			l_feature: ET_FEATURE
+		do
+			l_class := current_class
+			if l_class.is_any_class then
+					-- ANY.default_create.
+				named_features.search (tokens.default_create_feature_name)
+				if named_features.found then
+					l_feature := named_features.found_item.flattened_feature
+					if l_feature.is_procedure then
+						current_system.set_default_create_seed (l_feature.first_seed)
+					else
+						set_fatal_error (l_class)
+						error_handler.report_gvkfe4a_error (l_class, l_feature)
+						current_system.set_default_create_seed (0)
+					end
+				else
+					set_fatal_error (l_class)
+					error_handler.report_gvkfe1a_error (l_class, tokens.default_create_feature_name)
+					current_system.set_default_create_seed (0)
+				end
+					-- ANY.copy.
+				named_features.search (tokens.copy_feature_name)
+				if named_features.found then
+					l_feature := named_features.found_item.flattened_feature
+					if l_feature.is_procedure then
+						current_system.set_copy_seed (l_feature.first_seed)
+					else
+						set_fatal_error (l_class)
+						error_handler.report_gvkfe4a_error (l_class, l_feature)
+						current_system.set_copy_seed (0)
+					end
+				else
+					set_fatal_error (l_class)
+					error_handler.report_gvkfe1a_error (l_class, tokens.copy_feature_name)
+					current_system.set_copy_seed (0)
+				end
+					-- ANY.is_equal.
+				named_features.search (tokens.is_equal_feature_name)
+				if named_features.found then
+					l_feature := named_features.found_item.flattened_feature
+					if l_feature.is_query then
+						current_system.set_is_equal_seed (l_feature.first_seed)
+					else
+						set_fatal_error (l_class)
+						error_handler.report_gvkfe5a_error (l_class, l_feature)
+						current_system.set_is_equal_seed (0)
+					end
+				else
+					set_fatal_error (l_class)
+					error_handler.report_gvkfe1a_error (l_class, tokens.is_equal_feature_name)
+					current_system.set_is_equal_seed (0)
+				end
+			elseif l_class.is_routine_class then
+					-- ROUTINE.call.
+				named_features.search (tokens.call_feature_name)
+				if named_features.found then
+					l_feature := named_features.found_item.flattened_feature
+					if l_feature.is_procedure then
+						current_system.set_routine_call_seed (l_feature.first_seed)
+					else
+						current_system.set_routine_call_seed (0)
+					end
+				else
+					current_system.set_routine_call_seed (0)
+				end
+			elseif l_class.is_function_class then
+					-- FUNCTION.item.
+				named_features.search (tokens.item_feature_name)
+				if named_features.found then
+					l_feature := named_features.found_item.flattened_feature
+					if l_feature.is_query then
+						current_system.set_function_item_seed (l_feature.first_seed)
+					else
+						current_system.set_function_item_seed (0)
+					end
+				else
+					current_system.set_function_item_seed (0)
+				end
+			elseif l_class.is_disposable_class then
+					-- DISPOSABLE.dispose.
+				named_features.search (tokens.dispose_feature_name)
+				if named_features.found then
+					l_feature := named_features.found_item.flattened_feature
+					if l_feature.is_procedure then
+						current_system.set_dispose_seed (l_feature.first_seed)
+					else
+						current_system.set_dispose_seed (0)
+					end
+				else
+					current_system.set_dispose_seed (0)
+				end
+			elseif l_class.is_iterable_class then
+					-- ITERABLE.new_cursor.
+				named_features.search (tokens.new_cursor_feature_name)
+				if named_features.found then
+					l_feature := named_features.found_item.flattened_feature
+					if l_feature.is_query then
+						current_system.set_iterable_new_cursor_seed (l_feature.first_seed)
+					else
+						current_system.set_iterable_new_cursor_seed (0)
+					end
+				else
+					current_system.set_iterable_new_cursor_seed (0)
+				end
+			elseif l_class.is_iteration_cursor_class then
+					-- ITERATION_CUREOR.after.
+				named_features.search (tokens.after_feature_name)
+				if named_features.found then
+					l_feature := named_features.found_item.flattened_feature
+					if l_feature.is_query then
+						current_system.set_iteration_cursor_after_seed (l_feature.first_seed)
+					else
+						current_system.set_iteration_cursor_after_seed (0)
+					end
+				else
+					current_system.set_iteration_cursor_after_seed (0)
+				end
+					-- ITERATION_CUREOR.forth.
+				named_features.search (tokens.forth_feature_name)
+				if named_features.found then
+					l_feature := named_features.found_item.flattened_feature
+					if l_feature.is_procedure then
+						current_system.set_iteration_cursor_forth_seed (l_feature.first_seed)
+					else
+						current_system.set_iteration_cursor_forth_seed (0)
+					end
+				else
+					current_system.set_iteration_cursor_forth_seed (0)
+				end
+			end
+		end
+
 feature {NONE} -- Formal parameters validity
 
-	check_formal_parameters_validity is
+	check_formal_parameters_validity
 			-- Check validity of formal parameters of `current_class'.
 		do
 			formal_parameter_checker.check_formal_parameters_validity (current_class)
@@ -1584,7 +1733,7 @@ feature {NONE} -- Formal parameters validity
 
 feature {NONE} -- Parents validity
 
-	check_parents_validity is
+	check_parents_validity
 			-- Check validity of parents of `current_class'.
 		do
 			parent_checker.check_parents_validity (current_class)
@@ -1598,7 +1747,7 @@ feature {NONE} -- Parents validity
 
 feature {NONE} -- Creators validity
 
-	check_creators_validity is
+	check_creators_validity
 			-- Check validity of creators of `current_class'.
 		local
 			a_creators: ET_CREATOR_LIST
@@ -1678,7 +1827,7 @@ feature {NONE} -- Creators validity
 
 feature {NONE} -- Convert validity
 
-	check_convert_validity is
+	check_convert_validity
 			-- Check validity of convert clause of `current_class'.
 		local
 			a_convert_features: ET_CONVERT_FEATURE_LIST
@@ -1712,7 +1861,7 @@ feature {NONE} -- Convert validity
 
 feature -- Assigner validity
 
-	check_assigners_validity is
+	check_assigners_validity
 			-- Check validity of assigner clauses of queries of `current_class'.
 		local
 			l_queries: ET_QUERY_LIST
@@ -1724,6 +1873,7 @@ feature -- Assigner validity
 			l_procedure_arguments: ET_FORMAL_ARGUMENT_LIST
 			i, nb: INTEGER
 			j, nb_args: INTEGER
+			l_arg_offset: INTEGER
 			l_type, l_other_type: ET_TYPE
 			l_procedure: ET_PROCEDURE
 			l_seed: INTEGER
@@ -1757,19 +1907,39 @@ feature -- Assigner validity
 								error_handler.report_vfac2a_error (current_class, l_feature_name, l_query, l_procedure)
 							else
 								l_type := l_query.type
-								l_other_type := l_procedure_arguments.formal_argument (1).type
-								if not l_type.same_named_type (l_other_type, current_class, current_class) then
-									set_fatal_error (current_class)
-									error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
+								if current_class.is_dotnet then
+										-- Under .NET the value is passed as the last argument of the assigner.
+									l_other_type := l_procedure_arguments.formal_argument (l_procedure_arguments.count).type
+									l_arg_offset := 0
+								else
+									l_other_type := l_procedure_arguments.formal_argument (1).type
+									l_arg_offset := 1
 								end
-								nb_args := l_procedure_arguments.count
-								l_query_arguments := l_query.arguments
-								from j := 2 until j > nb_args loop
-									l_type := l_query_arguments.formal_argument (j - 1).type
-									l_other_type := l_procedure_arguments.formal_argument (j).type
+								if current_system.is_ise then
+										-- ECMA 367-2 says that the type of the query and of the first formal argument
+										-- of the assigner procedure should have the same deanchored form.
+										-- But EiffelStudio 6.8.8.6542 actually only checks that the type of the
+										-- formal argument of the assigner procedure conforms to the type of the query.
+										-- The conformance in the other direction is checked in the client code,
+										-- which is not what ECMA 367-2 suggests (see rules VFAC-3 and VBAC-1).
+									if not l_other_type.conforms_to_type (l_type, current_class, current_class) then
+										set_fatal_error (current_class)
+										error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
+									end
+								else
 									if not l_type.same_named_type (l_other_type, current_class, current_class) then
 										set_fatal_error (current_class)
-										error_handler.report_vfac4a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure, j - 1)
+										error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
+									end
+								end
+								l_query_arguments := l_query.arguments
+								nb_args := l_procedure_arguments.count - 1
+								from j := 1 until j > nb_args loop
+									l_type := l_query_arguments.formal_argument (j).type
+									l_other_type := l_procedure_arguments.formal_argument (j + l_arg_offset).type
+									if not l_type.same_named_type (l_other_type, current_class, current_class) then
+										set_fatal_error (current_class)
+										error_handler.report_vfac4a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure, j)
 									end
 									j := j + 1
 								end
@@ -1828,19 +1998,39 @@ feature -- Assigner validity
 								end
 							else
 								l_type := l_query.type
-								l_other_type := l_procedure_arguments.formal_argument (1).type
-								if not l_type.same_named_type (l_other_type, current_class, current_class) then
-									set_fatal_error (current_class)
-									error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
+								if l_query.implementation_class.is_dotnet then
+										-- Under .NET the value is passed as the last argument of the assigner.
+									l_other_type := l_procedure_arguments.formal_argument (l_procedure_arguments.count).type
+									l_arg_offset := 0
+								else
+									l_other_type := l_procedure_arguments.formal_argument (1).type
+									l_arg_offset := 1
 								end
-								nb_args := l_procedure_arguments.count
-								l_query_arguments := l_query.arguments
-								from j := 2 until j > nb_args loop
-									l_type := l_query_arguments.formal_argument (j - 1).type
-									l_other_type := l_procedure_arguments.formal_argument (j).type
+								if current_system.is_ise then
+										-- ECMA 367-2 says that the type of the query and of the first formal argument
+										-- of the assigner procedure should have the same deanchored form.
+										-- But EiffelStudio 6.8.8.6542 actually only checks that the type of the
+										-- formal argument of the assigner procedure conforms to the type of the query.
+										-- The conformance in the other direction is checked in the client code,
+										-- which is not what ECMA 367-2 suggests (see rules VFAC-3 and VBAC-1).
+									if not l_other_type.conforms_to_type (l_type, current_class, current_class) then
+										set_fatal_error (current_class)
+										error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
+									end
+								else
 									if not l_type.same_named_type (l_other_type, current_class, current_class) then
 										set_fatal_error (current_class)
-										error_handler.report_vfac4a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure, j - 1)
+										error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
+									end
+								end
+								l_query_arguments := l_query.arguments
+								nb_args := l_procedure_arguments.count - 1
+								from j := 1 until j > nb_args loop
+									l_type := l_query_arguments.formal_argument (j).type
+									l_other_type := l_procedure_arguments.formal_argument (j + l_arg_offset).type
+									if not l_type.same_named_type (l_other_type, current_class, current_class) then
+										set_fatal_error (current_class)
+										error_handler.report_vfac4a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure, j)
 									end
 									j := j + 1
 								end
@@ -1854,7 +2044,7 @@ feature -- Assigner validity
 
 feature {NONE} -- Constants
 
-	query_sorter: DS_QUICK_SORTER [ET_QUERY] is
+	query_sorter: DS_QUICK_SORTER [ET_QUERY]
 			-- Query sorter by increasing first seed values
 		local
 			l_comparator: ET_SEEDED_QUERY_COMPARATOR
@@ -1865,7 +2055,7 @@ feature {NONE} -- Constants
 			query_sorter_not_void: Result /= Void
 		end
 
-	procedure_sorter: DS_QUICK_SORTER [ET_PROCEDURE] is
+	procedure_sorter: DS_QUICK_SORTER [ET_PROCEDURE]
 			-- Procedure sorter by increasing first seed values
 		local
 			l_comparator: ET_SEEDED_PROCEDURE_COMPARATOR
@@ -1898,6 +2088,7 @@ invariant
 	signature_checker_not_void: signature_checker /= Void
 	parent_checker_not_void: parent_checker /= Void
 	formal_parameter_checker_not_void: formal_parameter_checker /= Void
+	builtin_feature_checker_not_void: builtin_feature_checker /= Void
 	precursor_checker_not_void: precursor_checker /= Void
 	precursors_not_void: precursors /= Void
 	no_void_precursor: not precursors.has_void_item

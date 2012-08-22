@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel 'BIT N' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,25 +21,36 @@ inherit
 			lower_name as bit_keyword_lower_name
 		redefine
 			bit_keyword,
-			shallow_base_type,
-			same_syntactical_bit_type,
-			same_named_bit_type,
-			same_base_bit_type,
-			conforms_from_bit_type
+			shallow_base_type_with_type_mark,
+			same_syntactical_bit_type_with_type_marks,
+			same_named_bit_type_with_type_marks,
+			same_base_bit_type_with_type_marks,
+			conforms_from_bit_type_with_type_marks
 		end
 
 feature -- Status report
 
-	is_expanded: BOOLEAN is True
+	is_expanded: BOOLEAN = True
 			-- Is current type expanded?
 
-	is_type_expanded (a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Is current type expanded when viewed from `a_context'?
+	is_type_expanded_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `is_type_expanded' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
 		do
 			Result := True
 		end
 
-	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	is_attached: BOOLEAN = True
+			-- Is current type attached?
+
+	is_type_attached_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `is_type_expanded' except that the type mark status is
+			-- overridden by `a_type_mark', if not Void
+		do
+			Result := True
+		end
+
+	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does the base type of current type contain `a_class'
 			-- when it appears in `a_context'?
 		do
@@ -61,14 +72,9 @@ feature -- Access
 	size: INTEGER
 			-- Size of current bit type
 
-	base_type (a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE is
-			-- Base type of current type, when it appears in `a_context',
-			-- only made up of class names and generic formal parameters
-			-- when the root type of `a_context' is a generic type not
-			-- fully derived (Definition of base type in ETL2 p.198).
-			-- Replace by "*UNKNOWN*" any unresolved identifier type, or
-			-- unmatched formal generic parameter if this parameter
-			-- is current type.
+	base_type_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
+			-- Same as `base_type' except that its type mark status is
+			-- overridden by `a_type_mark', if not Void
 		do
 			if constant /= Void then
 				Result := Current
@@ -78,18 +84,16 @@ feature -- Access
 			end
 		end
 
-	shallow_base_type (a_context: ET_BASE_TYPE): ET_BASE_TYPE is
-			-- Base type of current type, when it appears in `a_context',
-			-- but where the actual generic parameters are not replaced
-			-- by their named version and should still be considered as
-			-- viewed from `a_context'
+	shallow_base_type_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_BASE_TYPE
+			-- Same as `shallow_base_type' except that its type mark status is
+			-- overridden by `a_type_mark', if not Void
 		do
-			Result := base_type (a_context)
+			Result := base_type_with_type_mark (a_type_mark, a_context)
 		end
 
 feature -- Setting
 
-	set_bit_keyword (a_bit: like bit_keyword) is
+	set_bit_keyword (a_bit: like bit_keyword)
 			-- Set `bit_keyword' to `a_bit'.
 		require
 			a_bit_not_void: a_bit /= Void
@@ -101,19 +105,19 @@ feature -- Setting
 
 feature -- Size
 
-	size_computed: BOOLEAN is
+	size_computed: BOOLEAN
 			-- Has `size' already been computed?
 		do
 			Result := (size /= No_size)
 		end
 
-	has_size_error: BOOLEAN is
+	has_size_error: BOOLEAN
 			-- Has an error occurred when computing `size'?
 		do
 			Result := (size = Invalid_size)
 		end
 
-	compute_size is
+	compute_size
 			-- Compute `size'.
 		do
 			if size = No_size then
@@ -136,65 +140,62 @@ feature -- Size
 
 feature -- Comparison
 
-	same_syntactical_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Are current type appearing in `a_context' and `other'
-			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
-			-- Therefore anchored types are considered the same
-			-- only if they have the same anchor. An anchor type
-			-- is not considered the same as any other type even
-			-- if they have the same base type.)
+	same_syntactical_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `same_syntactical_type' except that the type mark status of `Current'
+			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		do
-			if base_class = tokens.unknown_class then
+			if base_class.is_unknown then
 					-- "*UNKNOWN*" is equal to no type, not even itself.
 				Result := False
 			elseif other = Current and then other_context = a_context then
 				Result := True
 			else
-				Result := other.same_syntactical_bit_type (Current, a_context, other_context)
+				Result := other.same_syntactical_bit_type_with_type_marks (Current, a_type_mark, a_context, other_type_mark, other_context)
 			end
 		end
 
-	same_named_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Do current type appearing in `a_context' and `other' type
-			-- appearing in `other_context' have the same named type?
+	same_named_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `same_named_type' except that the type mark status of `Current'
+			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		do
-			if base_class = tokens.unknown_class then
+			if base_class.is_unknown then
 					-- "*UNKNOWN*" is equal to no type, not even itself.
 				Result := False
 			elseif other = Current and then other_context = a_context then
 				Result := True
 			else
-				Result := other.same_named_bit_type (Current, a_context, other_context)
+				Result := other.same_named_bit_type_with_type_marks (Current, a_type_mark, a_context, other_type_mark, other_context)
 			end
 		end
 
-	same_base_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Do current type appearing in `a_context' and `other' type
-			-- appearing in `other_context' have the same base type?
+	same_base_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `same_base_type' except that the type mark status of `Current'
+			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		do
-			if base_class = tokens.unknown_class then
+			if base_class.is_unknown then
 					-- "*UNKNOWN*" is equal to no type, not even itself.
 				Result := False
 			elseif other = Current and then other_context = a_context then
 				Result := True
 			else
-				Result := other.same_base_bit_type (Current, a_context, other_context)
+				Result := other.same_base_bit_type_with_type_marks (Current, a_type_mark, a_context, other_type_mark, other_context)
 			end
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
-	same_syntactical_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_syntactical_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
 			-- if they have the same base type.)
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		do
-			if base_class = tokens.unknown_class then
+			if base_class.is_unknown then
 					-- "*UNKNOWN*" is equal to no type, not even itself.
 				Result := False
 			elseif other = Current and then other_context = a_context then
@@ -210,47 +211,51 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_named_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		do
-			Result := same_syntactical_bit_type (other, other_context, a_context)
+			Result := same_syntactical_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context)
 		end
 
-	same_base_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	same_base_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		do
-			Result := same_syntactical_bit_type (other, other_context, a_context)
+			Result := same_syntactical_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context)
 		end
 
 feature -- Conformance
 
-	conforms_to_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does current type appearing in `a_context' conform
-			-- to `other' type appearing in `other_context'?
-			-- (Note: 'current_system.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance.)
+	conforms_to_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Same as `conforms_to_type' except that the type mark status of `Current'
+			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		do
-			if base_class = tokens.unknown_class then
+			if base_class.is_unknown then
 					-- "*UNKNOWN*" conforms to no type, not even itself.
 				Result := False
 			elseif other = Current and then other_context = a_context then
 				Result := True
 			else
-				Result := other.conforms_from_bit_type (Current, a_context, other_context)
+				Result := other.conforms_from_bit_type_with_type_marks (Current, a_type_mark, a_context, other_type_mark, other_context)
 			end
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
-	conforms_from_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	conforms_from_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
+			-- Note that the type mark status of `Current' and `other' is
+			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 			-- (Note: 'current_system.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		do
-			if base_class = tokens.unknown_class then
+			if base_class.is_unknown then
 					-- "*UNKNOWN*" conforms to no type, not even itself.
 				Result := False
 			elseif other = Current and then other_context = a_context then
@@ -269,13 +274,13 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
 feature {NONE} -- Constants
 
-	bit_space: STRING is "BIT "
+	bit_space: STRING = "BIT "
 			-- Eiffel keywords
 
-	No_size: INTEGER is -1
+	No_size: INTEGER = -1
 			-- Marker which says that `size' has not been computed yet
 
-	Invalid_size: INTEGER is -2
+	Invalid_size: INTEGER = -2
 			-- Marker which says that `size' has an invalid value
 
 invariant

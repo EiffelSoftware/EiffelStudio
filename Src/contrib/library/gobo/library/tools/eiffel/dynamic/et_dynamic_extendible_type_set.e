@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -16,7 +16,8 @@ inherit
 
 	ET_DYNAMIC_TYPE_SET
 		redefine
-			propagate_can_be_void
+			propagate_can_be_void,
+			has_type, index_of
 		end
 
 feature -- Status report
@@ -27,9 +28,28 @@ feature -- Status report
 			-- set should also be non-empty. Therefore it is recommended to
 			-- use 'not can_be_void'.)
 
+	has_type (a_type: ET_DYNAMIC_TYPE): BOOLEAN
+			-- Do current dynamic types contain `a_type'?
+		local
+			i: INTEGER
+		do
+			if dynamic_types = Void then
+				Result := False
+			elseif dynamic_types.count = count  then
+				Result := dynamic_types.has_type (a_type)
+			elseif attached {ET_DYNAMIC_TYPE_HASH_LIST} dynamic_types as l_hash_list then
+				i := l_hash_list.index_of (a_type)
+				if i > 0 and i <= count then
+					Result := True
+				end
+			else
+				Result := precursor (a_type)
+			end
+		end
+
 feature -- Status setting
 
-	set_never_void is
+	set_never_void
 			-- Set `is_never_void' to True.
 		do
 			is_never_void := True
@@ -40,10 +60,29 @@ feature -- Access
 	static_type: ET_DYNAMIC_TYPE
 			-- Type at compilation time
 
-	dynamic_type (i: INTEGER): ET_DYNAMIC_TYPE is
+	dynamic_type (i: INTEGER): ET_DYNAMIC_TYPE
 			-- Dynamic type at index `i'
 		do
 			Result := dynamic_types.dynamic_type (i)
+		end
+
+	index_of (a_type: ET_DYNAMIC_TYPE): INTEGER
+			-- Index of first occurrence of `a_type'?
+		local
+			i: INTEGER
+		do
+			if dynamic_types = Void then
+				Result := 0
+			elseif dynamic_types.count = count  then
+				Result := dynamic_types.index_of (a_type)
+			elseif attached {ET_DYNAMIC_TYPE_HASH_LIST} dynamic_types as l_hash_list then
+				i := l_hash_list.index_of (a_type)
+				if i <= count then
+					Result := i
+				end
+			else
+				Result := precursor (a_type)
+			end
 		end
 
 feature -- Measurement
@@ -53,13 +92,13 @@ feature -- Measurement
 
 feature -- Element change
 
-	put_type (a_type: ET_DYNAMIC_TYPE) is
+	put_type (a_type: ET_DYNAMIC_TYPE)
 			-- Add `a_type' to current set.
 			-- Do not check for type conformance with `static_type' and do not propagate to targets.
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_dynamic_type_list: ET_DYNAMIC_TYPE_LIST
+			l_dynamic_type_list: ET_DYNAMIC_TYPE_HASH_LIST
 		do
 			if dynamic_types = Void then
 					-- The current set is made up of only one type.
@@ -95,7 +134,7 @@ feature -- Element change
 			has_type: has_type (a_type)
 		end
 
-	put_types (other: ET_DYNAMIC_TYPES) is
+	put_types (other: ET_DYNAMIC_TYPES)
 			-- Add types of `other' to current set.
 			-- Do not check for type conformance with `static_type' and do not propagate to targets.
 		require
@@ -110,10 +149,10 @@ feature -- Element change
 			end
 		end
 
-	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM) is
+	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_type' coming from `a_type_set' to current target.
 		local
-			l_dynamic_type_list: ET_DYNAMIC_TYPE_LIST
+			l_dynamic_type_list: ET_DYNAMIC_TYPE_HASH_LIST
 			l_other_dynamic_types: ET_DYNAMIC_TYPES
 		do
 			if a_type.conforms_to_type (static_type) then
@@ -177,7 +216,7 @@ feature -- Element change
 			end
 		end
 
-	propagate_can_be_void (a_type_set: ET_DYNAMIC_TYPE_SET) is
+	propagate_can_be_void (a_type_set: ET_DYNAMIC_TYPE_SET)
 			-- Propagate the information that `a_type_set', from which types
 			-- are propagated, is the dynamic type set of an expression which
 			-- can be void at some point during execution.

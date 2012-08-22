@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Objects that strip white space from stylesheet elements."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -13,7 +13,7 @@ indexing
 class	XM_XSLT_STYLESHEET_STRIPPER
 
 inherit
-	
+
 	XM_XSLT_STRIPPER
 		rename
 			make as make_stripper
@@ -27,13 +27,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_underlying_receiver: XM_XPATH_RECEIVER) is
+	make (an_underlying_receiver: XM_XPATH_RECEIVER)
 			-- Build stylesheet rules.
 		require
 			underlying_receiver_not_void: an_underlying_receiver /= Void
 		do
 			xsl_text_fingerprint := shared_name_pool.fingerprint (Xslt_uri, "text")
-			create specials.make (1, 10)
+			create specials.make_filled (0, 1, 10)
 			specials.put (shared_name_pool.fingerprint (Xslt_uri, "analyze-string"), 1)
 			specials.put (shared_name_pool.fingerprint (Xslt_uri, "apply-imports"), 2)
 			specials.put (shared_name_pool.fingerprint (Xslt_uri, "apply-templates"), 3)
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			base_receiver_set: base_receiver = an_underlying_receiver
 		end
 
-	make_another (other: XM_XSLT_STYLESHEET_STRIPPER) is
+	make_another (other: XM_XSLT_STYLESHEET_STRIPPER)
 			-- Create another stylesheet stripper.
 		require
 			stripper_not_void: other /= Void
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	find_space_preserving_mode (a_name_code: INTEGER) is
+	find_space_preserving_mode (a_name_code: INTEGER)
 			-- Find space-preserving mode for element identitifed by `a_name_code'
 		local
 			a_fingerprint, counter: INTEGER
@@ -80,16 +80,16 @@ feature -- Access
 			else
 				from
 					counter := 1
-				variant
-					11 - counter
 				until
 					found or else counter > 10
 				loop
 					if specials.item (counter) = a_fingerprint then
 						found := True
 						found_space_preserving_mode := Always_strip
-					end	
+					end
 					counter := counter + 1
+				variant
+					11 - counter
 				end
 				if not found then
 					found_space_preserving_mode := Strip_default
@@ -99,7 +99,7 @@ feature -- Access
 
 feature -- Duplication
 
-	another: XM_XSLT_STRIPPER is
+	another: XM_XSLT_STRIPPER
 			-- A clean copy of `Current'
 		do
 			create {XM_XSLT_STYLESHEET_STRIPPER} Result.make_another (Current)
@@ -113,7 +113,7 @@ feature {XM_XSLT_STYLESHEET_STRIPPER} -- Local
 	specials: ARRAY [INTEGER]
 			-- Fingerprints for xsl elements which must always be white-space-stripped
 
-	is_local_invariant_met: BOOLEAN is
+	is_local_invariant_met: BOOLEAN
 			-- is the invariant met?
 		do
 			Result := strip_stack /= Void
@@ -125,4 +125,4 @@ invariant
 	no_stripper_mode: stripper_mode = Void
 
 end
-	
+

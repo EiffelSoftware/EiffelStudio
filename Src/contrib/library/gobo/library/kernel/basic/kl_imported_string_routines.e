@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -14,7 +14,7 @@ class KL_IMPORTED_STRING_ROUTINES
 
 feature -- Access
 
-	STRING_: KL_STRING_ROUTINES is
+	STRING_: KL_STRING_ROUTINES
 			-- Routines that ought to be in class STRING
 		once
 			create Result

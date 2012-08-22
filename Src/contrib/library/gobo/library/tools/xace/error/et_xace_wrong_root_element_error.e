@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Error: Wrong root element in Xace file"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2011, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_element_name: STRING; a_position: XM_POSITION) is
+	make (an_element_name: STRING; a_position: XM_POSITION)
 			-- Create a new error reporting that Xace file does not
 			-- contain the expected root element `an_element_name'.
 		require
@@ -30,17 +30,17 @@ feature {NONE} -- Initialization
 			an_element_name_not_empty: an_element_name.count > 0
 			a_position_not_void: a_position /= Void
 		do
-			create parameters.make (1, 2)
+			create parameters.make_filled (empty_string, 1, 2)
 			parameters.put (an_element_name, 1)
 			parameters.put (a_position.out, 2)
 		end
 
 feature -- Access
 
-	default_template: STRING is "Xace document must have a '$1' root-element $2"
+	default_template: STRING = "Xace document must have a '$1' root-element $2"
 			-- Default template used to built the error message
 
-	code: STRING is "XA0001"
+	code: STRING = "XA0001"
 			-- Error code
 
 end

@@ -17,7 +17,7 @@ class BOUNDED_QUEUE [G] inherit
 
 	QUEUE [G]
 		redefine
-			linear_representation, has
+			has
 		end
 
 	BOUNDED [G]
@@ -248,7 +248,7 @@ feature -- Conversion
 					i := i + 1
 				end
 				from
-					i := 1
+					i := 0
 				until
 					i >= in_index
 				loop

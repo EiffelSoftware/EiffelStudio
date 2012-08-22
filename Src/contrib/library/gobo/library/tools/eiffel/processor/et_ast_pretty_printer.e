@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel AST pretty printers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,8 @@ inherit
 	ET_AST_PRINTER
 		redefine
 			make, file,
+			process_across_expression,
+			process_across_instruction,
 			process_actual_argument_list,
 			process_actual_parameter_list,
 			process_agent_argument_operand_list,
@@ -29,6 +31,8 @@ inherit
 			process_assigner_instruction,
 			process_assignment,
 			process_assignment_attempt,
+			process_attachment_separate_keywords,
+			process_attachment_symbol_separate_keyword,
 			process_attribute,
 			process_bang_instruction,
 			process_binary_integer_constant,
@@ -76,6 +80,7 @@ inherit
 			process_elseif_part_list,
 			process_equality_expression,
 			process_export_list,
+			process_extended_attribute,
 			process_external_function,
 			process_external_function_inline_agent,
 			process_external_procedure,
@@ -182,7 +187,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file: like file) is
+	make (a_file: like file)
 			-- Create a new AST pretty-printer, using `a_file' as output file.
 		do
 			precursor (a_file)
@@ -192,7 +197,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset for another pretty-printing.
 		do
 			reset_indentation
@@ -212,7 +217,7 @@ feature -- Indentation
 	indentation: INTEGER
 			-- Indentation in `file'
 
-	indent is
+	indent
 			-- Increment indentation.
 		do
 			indentation := indentation + 1
@@ -220,7 +225,7 @@ feature -- Indentation
 			one_more: indentation = old indentation + 1
 		end
 
-	dedent is
+	dedent
 			-- Decrement indentation.
 		do
 			indentation := indentation - 1
@@ -228,7 +233,7 @@ feature -- Indentation
 			one_less: indentation = old indentation - 1
 		end
 
-	reset_indentation is
+	reset_indentation
 			-- Reset indentation.
 		do
 			indentation := 0
@@ -238,7 +243,127 @@ feature -- Indentation
 
 feature {ET_AST_NODE} -- Processing
 
-	process_actual_argument_list (a_list: ET_ACTUAL_ARGUMENT_LIST) is
+	process_across_expression (an_expression: ET_ACROSS_EXPRESSION)
+			-- Process `an_expression'.
+		local
+			an_invariant_part: ET_LOOP_INVARIANTS
+			a_variant_part: ET_VARIANT
+			l_conditional: ET_CONDITIONAL
+			l_expression: ET_EXPRESSION
+		do
+			an_expression.across_keyword.process (Current)
+			print_space
+			an_expression.iterable_expression.process (Current)
+			print_space
+			an_expression.as_keyword.process (Current)
+			print_space
+			an_expression.cursor_name.process (Current)
+			print_space
+			an_invariant_part := an_expression.invariant_part
+			if an_invariant_part /= Void then
+				an_invariant_part.process (Current)
+			end
+			l_conditional := an_expression.until_conditional
+			if l_conditional /= Void then
+				tokens.until_keyword.process (Current)
+				print_space
+				l_expression := l_conditional.expression
+				l_expression.process (Current)
+				comment_finder.add_excluded_node (l_expression)
+				comment_finder.find_comments (l_conditional, comment_list)
+				comment_finder.reset_excluded_nodes
+				print_space
+			end
+			l_conditional := an_expression.iteration_conditional
+			if an_expression.is_all then
+				tokens.all_keyword.process (Current)
+			else
+				tokens.some_keyword.process (Current)
+			end
+			print_space
+			l_expression := l_conditional.expression
+			l_expression.process (Current)
+			comment_finder.add_excluded_node (l_expression)
+			comment_finder.find_comments (l_conditional, comment_list)
+			comment_finder.reset_excluded_nodes
+			print_space
+			a_variant_part := an_expression.variant_part
+			if a_variant_part /= Void then
+				a_variant_part.process (Current)
+				print_space
+			end
+			an_expression.end_keyword.process (Current)
+		end
+
+	process_across_instruction (an_instruction: ET_ACROSS_INSTRUCTION)
+			-- Process `an_instruction'.
+		local
+			an_invariant_part: ET_LOOP_INVARIANTS
+			a_variant_part: ET_VARIANT
+			a_compound: ET_COMPOUND
+			l_conditional: ET_CONDITIONAL
+			l_expression: ET_EXPRESSION
+		do
+			an_instruction.across_keyword.process (Current)
+			print_new_line
+			indent
+			process_comments
+			an_instruction.iterable_expression.process (Current)
+			print_new_line
+			process_comments
+			dedent
+			an_instruction.as_keyword.process (Current)
+			print_new_line
+			indent
+			process_comments
+			an_instruction.cursor_name.process (Current)
+			print_new_line
+			process_comments
+			dedent
+			a_compound := an_instruction.from_compound
+			if a_compound /= Void then
+				a_compound.process (Current)
+			end
+			print_new_line
+			process_comments
+			an_invariant_part := an_instruction.invariant_part
+			if an_invariant_part /= Void then
+				an_invariant_part.process (Current)
+				process_comments
+			end
+			l_conditional := an_instruction.until_conditional
+			if l_conditional /= Void then
+				tokens.until_keyword.process (Current)
+				print_new_line
+				indent
+				process_comments
+				l_expression := l_conditional.expression
+				l_expression.process (Current)
+				comment_finder.add_excluded_node (l_expression)
+				comment_finder.find_comments (l_conditional, comment_list)
+				comment_finder.reset_excluded_nodes
+				print_new_line
+				process_comments
+				dedent
+			end
+			a_compound := an_instruction.loop_compound
+			if a_compound /= Void then
+				a_compound.process (Current)
+			else
+				tokens.loop_keyword.process (Current)
+			end
+			print_new_line
+			process_comments
+			a_variant_part := an_instruction.variant_part
+			if a_variant_part /= Void then
+				a_variant_part.process (Current)
+				print_new_line
+				process_comments
+			end
+			an_instruction.end_keyword.process (Current)
+		end
+
+	process_actual_argument_list (a_list: ET_ACTUAL_ARGUMENT_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -265,7 +390,7 @@ feature {ET_AST_NODE} -- Processing
 			a_list.right_symbol.process (Current)
 		end
 
-	process_actual_parameter_list (a_list: ET_ACTUAL_PARAMETER_LIST) is
+	process_actual_parameter_list (a_list: ET_ACTUAL_PARAMETER_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -351,7 +476,7 @@ feature {ET_AST_NODE} -- Processing
 			a_list.right_bracket.process (Current)
 		end
 
-	process_agent_argument_operand_list (a_list: ET_AGENT_ARGUMENT_OPERAND_LIST) is
+	process_agent_argument_operand_list (a_list: ET_AGENT_ARGUMENT_OPERAND_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -378,7 +503,7 @@ feature {ET_AST_NODE} -- Processing
 			a_list.right_parenthesis.process (Current)
 		end
 
-	process_agent_typed_open_argument (an_argument: ET_AGENT_TYPED_OPEN_ARGUMENT) is
+	process_agent_typed_open_argument (an_argument: ET_AGENT_TYPED_OPEN_ARGUMENT)
 			-- Process `an_argument'.
 		do
 			an_argument.left_brace.process (Current)
@@ -388,7 +513,7 @@ feature {ET_AST_NODE} -- Processing
 			an_argument.question_mark.process (Current)
 		end
 
-	process_alias_free_name (a_name: ET_ALIAS_FREE_NAME) is
+	process_alias_free_name (a_name: ET_ALIAS_FREE_NAME)
 			-- Process `a_name'.
 		do
 			a_name.alias_keyword.process (Current)
@@ -396,7 +521,7 @@ feature {ET_AST_NODE} -- Processing
 			a_name.alias_string.process (Current)
 		end
 
-	process_alias_name (a_name: ET_ALIAS_NAME) is
+	process_alias_name (a_name: ET_ALIAS_NAME)
 			-- Process `a_name'.
 		do
 			a_name.alias_keyword.process (Current)
@@ -404,7 +529,7 @@ feature {ET_AST_NODE} -- Processing
 			a_name.alias_string.process (Current)
 		end
 
-	process_aliased_feature_name (a_name: ET_ALIASED_FEATURE_NAME) is
+	process_aliased_feature_name (a_name: ET_ALIASED_FEATURE_NAME)
 			-- Process `a_name'.
 		do
 			a_name.feature_name.process (Current)
@@ -412,7 +537,7 @@ feature {ET_AST_NODE} -- Processing
 			a_name.alias_name.process (Current)
 		end
 
-	process_all_export (an_export: ET_ALL_EXPORT) is
+	process_all_export (an_export: ET_ALL_EXPORT)
 			-- Process `an_export'.
 		do
 			an_export.clients_clause.process (Current)
@@ -420,7 +545,7 @@ feature {ET_AST_NODE} -- Processing
 			an_export.all_keyword.process (Current)
 		end
 
-	process_assertions (a_list: ET_ASSERTIONS) is
+	process_assertions (a_list: ET_ASSERTIONS)
 			-- Process `a_list'.
 		require
 			a_list_not_void: a_list /= Void
@@ -466,7 +591,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_assign_feature_name (an_assigner: ET_ASSIGN_FEATURE_NAME) is
+	process_assign_feature_name (an_assigner: ET_ASSIGN_FEATURE_NAME)
 			-- Process `an_assigner'.
 		do
 			an_assigner.assign_keyword.process (Current)
@@ -474,7 +599,7 @@ feature {ET_AST_NODE} -- Processing
 			an_assigner.feature_name.process (Current)
 		end
 
-	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION) is
+	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			an_instruction.call.process (Current)
@@ -484,7 +609,7 @@ feature {ET_AST_NODE} -- Processing
 			an_instruction.source.process (Current)
 		end
 
-	process_assignment (an_instruction: ET_ASSIGNMENT) is
+	process_assignment (an_instruction: ET_ASSIGNMENT)
 			-- Process `an_instruction'.
 		do
 			an_instruction.target.process (Current)
@@ -494,7 +619,7 @@ feature {ET_AST_NODE} -- Processing
 			an_instruction.source.process (Current)
 		end
 
-	process_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT) is
+	process_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT)
 			-- Process `an_instruction'.
 		do
 			an_instruction.target.process (Current)
@@ -504,7 +629,23 @@ feature {ET_AST_NODE} -- Processing
 			an_instruction.source.process (Current)
 		end
 
-	process_attribute (a_feature: ET_ATTRIBUTE) is
+	process_attachment_separate_keywords (a_keywords: ET_ATTACHMENT_SEPARATE_KEYWORDS)
+			-- Process `a_keywords'.
+		do
+			a_keywords.attachment_keyword.process (Current)
+			print_space
+			a_keywords.separateness_keyword.process (Current)
+		end
+
+	process_attachment_symbol_separate_keyword (a_keywords: ET_ATTACHMENT_SYMBOL_SEPARATE_KEYWORD)
+			-- Process `a_keywords'.
+		do
+			a_keywords.attachment_symbol.process (Current)
+			print_space
+			a_keywords.separateness_keyword.process (Current)
+		end
+
+	process_attribute (a_feature: ET_ATTRIBUTE)
 			-- Process `a_feature'.
 		local
 			l_frozen_keyword: ET_TOKEN
@@ -574,7 +715,7 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
-	process_bang_instruction (an_instruction: ET_BANG_INSTRUCTION) is
+	process_bang_instruction (an_instruction: ET_BANG_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
 			l_type: ET_TYPE
@@ -601,7 +742,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT) is
+	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		local
 			l_cast_type: ET_TARGET_TYPE
@@ -629,7 +770,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_constant.break)
 		end
 
-	process_bit_feature (a_type: ET_BIT_FEATURE) is
+	process_bit_feature (a_type: ET_BIT_FEATURE)
 			-- Process `a_type'.
 		do
 			a_type.bit_keyword.process (Current)
@@ -637,7 +778,7 @@ feature {ET_AST_NODE} -- Processing
 			a_type.name.process (Current)
 		end
 
-	process_bit_n (a_type: ET_BIT_N) is
+	process_bit_n (a_type: ET_BIT_N)
 			-- Process `a_type'.
 		do
 			a_type.bit_keyword.process (Current)
@@ -645,7 +786,7 @@ feature {ET_AST_NODE} -- Processing
 			a_type.constant.process (Current)
 		end
 
-	process_braced_type_list (a_list: ET_BRACED_TYPE_LIST) is
+	process_braced_type_list (a_list: ET_BRACED_TYPE_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -672,7 +813,7 @@ feature {ET_AST_NODE} -- Processing
 			a_list.right_brace.process (Current)
 		end
 
-	process_bracket_argument_list (a_list: ET_BRACKET_ARGUMENT_LIST) is
+	process_bracket_argument_list (a_list: ET_BRACKET_ARGUMENT_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -699,7 +840,7 @@ feature {ET_AST_NODE} -- Processing
 			a_list.right_symbol.process (Current)
 		end
 
-	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION) is
+	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION)
 			-- Process `an_expression'.
 		local
 			l_arguments: ET_BRACKET_ARGUMENT_LIST
@@ -712,7 +853,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_break (a_break: ET_BREAK) is
+	process_break (a_break: ET_BREAK)
 			-- Process `a_break'.
 		do
 			if a_break /= Void and then a_break.has_comment then
@@ -720,7 +861,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT) is
+	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		local
 			l_cast_type: ET_TARGET_TYPE
@@ -745,7 +886,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_constant.break)
 		end
 
-	process_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT) is
+	process_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		local
 			l_cast_type: ET_TARGET_TYPE
@@ -771,7 +912,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_constant.break)
 		end
 
-	process_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT) is
+	process_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		local
 			l_cast_type: ET_TARGET_TYPE
@@ -799,7 +940,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_constant.break)
 		end
 
-	process_call_agent (an_expression: ET_CALL_AGENT) is
+	process_call_agent (an_expression: ET_CALL_AGENT)
 			-- Process `an_expression'.
 		local
 			l_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
@@ -835,7 +976,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_call_expression (an_expression: ET_CALL_EXPRESSION) is
+	process_call_expression (an_expression: ET_CALL_EXPRESSION)
 			-- Process `an_expression'.
 		local
 			l_target: ET_EXPRESSION
@@ -868,7 +1009,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_call_instruction (an_instruction: ET_CALL_INSTRUCTION) is
+	process_call_instruction (an_instruction: ET_CALL_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
 			l_target: ET_EXPRESSION
@@ -901,8 +1042,10 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_check_instruction (an_instruction: ET_CHECK_INSTRUCTION) is
+	process_check_instruction (an_instruction: ET_CHECK_INSTRUCTION)
 			-- Process `an_instruction'.
+		local
+			l_compound: ET_COMPOUND
 		do
 			an_instruction.check_keyword.process (Current)
 			print_new_line
@@ -911,10 +1054,16 @@ feature {ET_AST_NODE} -- Processing
 			process_assertions (an_instruction)
 			process_comments
 			dedent
+			l_compound := an_instruction.then_compound
+			if l_compound /= Void then
+				l_compound.process (Current)
+				process_comments
+				print_new_line
+			end
 			an_instruction.end_keyword.process (Current)
 		end
 
-	process_choice_list (a_list: ET_CHOICE_LIST) is
+	process_choice_list (a_list: ET_CHOICE_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -943,7 +1092,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_choice_range (a_choice: ET_CHOICE_RANGE) is
+	process_choice_range (a_choice: ET_CHOICE_RANGE)
 			-- Process `a_choice'.
 		do
 			a_choice.lower.process (Current)
@@ -953,7 +1102,7 @@ feature {ET_AST_NODE} -- Processing
 			a_choice.upper.process (Current)
 		end
 
-	process_class (a_class: ET_CLASS) is
+	process_class (a_class: ET_CLASS)
 			-- Process `a_class'.
 		local
 			an_indexing: ET_INDEXING_LIST
@@ -1029,7 +1178,7 @@ feature {ET_AST_NODE} -- Processing
 				print_new_line
 				print_new_line
 			end
-			a_parents := a_class.parents
+			a_parents := a_class.parent_clause
 			if a_parents /= Void then
 				a_parents.process (Current)
 				process_comments
@@ -1068,22 +1217,22 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 		end
 
-	process_class_type (a_type: ET_CLASS_TYPE) is
+	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		local
-			a_type_mark: ET_TYPE_MARK
+			l_type_mark: ET_TYPE_MARK
 		do
-			a_type_mark := a_type.type_mark
-			if a_type_mark /= Void then
-				a_type_mark.process (Current)
-				if a_type_mark.is_keyword then
+			l_type_mark := a_type.type_mark
+			if l_type_mark /= Void then
+				l_type_mark.process (Current)
+				if not l_type_mark.is_implicit_mark then
 					print_space
 				end
 			end
 			a_type.name.process (Current)
 		end
 
-	process_clients (a_list: ET_CLIENTS) is
+	process_clients (a_list: ET_CLIENTS)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -1110,7 +1259,7 @@ feature {ET_AST_NODE} -- Processing
 			a_list.right_brace.process (Current)
 		end
 
-	process_colon_type (a_type: ET_COLON_TYPE) is
+	process_colon_type (a_type: ET_COLON_TYPE)
 			-- Process `a_type'.
 		do
 			a_type.colon.process (Current)
@@ -1118,7 +1267,7 @@ feature {ET_AST_NODE} -- Processing
 			a_type.type.process (Current)
 		end
 
-	process_comments is
+	process_comments
 			-- Process comments that have not been printed yet.
 			-- Print comments in `comment_list' on their own line (go to
 			-- next line if necessary), with an extra indentation level.
@@ -1130,7 +1279,7 @@ feature {ET_AST_NODE} -- Processing
 			no_more_comments: comment_list.is_empty
 		end
 
-	process_comments_on_same_line is
+	process_comments_on_same_line
 			-- Process comments that have not been printed yet.
 			-- If `comment_list' is not empty, then print a space followed by
 			-- the first comment on the current line. The remaining comments
@@ -1143,65 +1292,16 @@ feature {ET_AST_NODE} -- Processing
 			no_more_comments: comment_list.is_empty
 		end
 
-	process_compound (a_list: ET_COMPOUND) is
+	process_compound (a_list: ET_COMPOUND)
 			-- Process `a_list'.
-		local
-			i, nb: INTEGER
-			l_instruction: ET_INSTRUCTION
-			l_identifier: ET_IDENTIFIER
-			l_symbol: ET_SYMBOL
 		do
 			a_list.keyword.process (Current)
-			nb := a_list.count
-				-- Start to skip all leading null instructions.
-			from
-				i := 1
-			until
-				i > nb or else not a_list.item (i).is_semicolon
-			loop
-				comment_finder.find_comments (a_list.item (i), comment_list)
-				i := i + 1
-			end
 			indent
-			process_comments
-			from until i > nb loop
-				l_instruction := a_list.item (i)
-				print_new_line
-				l_instruction.process (Current)
-					-- Skip null instructions.
-				from
-					i := i + 1
-				until
-					i > nb or else not a_list.item (i).is_semicolon
-				loop
-					comment_finder.find_comments (a_list.item (i), comment_list)
-					i := i + 1
-				end
-				if i <= nb then
-					l_identifier ?= l_instruction.last_leaf
-					l_symbol ?= a_list.item (i).first_leaf
-					if l_identifier /= Void and l_symbol /= Void and then (l_symbol.is_left_parenthesis or l_symbol.is_left_bracket) then
-							-- Print a semicolon in order to avoid syntax ambiguity.
-							-- For example if we have:
-							--
-							--  do
-							--     f.g
-							--     (a + b).h
-							--
-							-- it could also be seen as:
-							--
-							--  do
-							--     f.g (a + b).h
-							--
-						tokens.semicolon_symbol.process (Current)
-					end
-				end
-				process_comments
-			end
+			process_instruction_list (a_list)
 			dedent
 		end
 
-	process_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE) is
+	process_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE)
 			-- Process `a_feature'.
 		local
 			l_frozen_keyword: ET_TOKEN
@@ -1276,7 +1376,7 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
-	process_constrained_formal_parameter (a_parameter: ET_CONSTRAINED_FORMAL_PARAMETER) is
+	process_constrained_formal_parameter (a_parameter: ET_CONSTRAINED_FORMAL_PARAMETER)
 			-- Process `a_parameter'.
 		local
 			a_creation_procedures: ET_CONSTRAINT_CREATOR
@@ -1299,7 +1399,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_constraint_creator (a_list: ET_CONSTRAINT_CREATOR) is
+	process_constraint_creator (a_list: ET_CONSTRAINT_CREATOR)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -1327,7 +1427,7 @@ feature {ET_AST_NODE} -- Processing
 			a_list.end_keyword.process (Current)
 		end
 
-	process_convert_feature_list (a_list: ET_CONVERT_FEATURE_LIST) is
+	process_convert_feature_list (a_list: ET_CONVERT_FEATURE_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -1360,7 +1460,7 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
-	process_convert_function (a_convert_function: ET_CONVERT_FUNCTION) is
+	process_convert_function (a_convert_function: ET_CONVERT_FUNCTION)
 			-- Process `a_convert_function'.
 		do
 			a_convert_function.name.process (Current)
@@ -1369,7 +1469,7 @@ feature {ET_AST_NODE} -- Processing
 			a_convert_function.types.process (Current)
 		end
 
-	process_convert_procedure (a_convert_procedure: ET_CONVERT_PROCEDURE) is
+	process_convert_procedure (a_convert_procedure: ET_CONVERT_PROCEDURE)
 			-- Process `a_convert_procedure'.
 		do
 			a_convert_procedure.name.process (Current)
@@ -1379,7 +1479,7 @@ feature {ET_AST_NODE} -- Processing
 			a_convert_procedure.right_parenthesis.process (Current)
 		end
 
-	process_create_expression (an_expression: ET_CREATE_EXPRESSION) is
+	process_create_expression (an_expression: ET_CREATE_EXPRESSION)
 			-- Process `an_expression'.
 		local
 			l_creation_type: ET_TARGET_TYPE
@@ -1402,7 +1502,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_create_instruction (an_instruction: ET_CREATE_INSTRUCTION) is
+	process_create_instruction (an_instruction: ET_CREATE_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
 			l_creation_type: ET_TARGET_TYPE
@@ -1429,7 +1529,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_creator (a_list: ET_CREATOR) is
+	process_creator (a_list: ET_CREATOR)
 			-- Process `a_list'.
 		local
 			l_clients: ET_CLIENTS
@@ -1468,7 +1568,7 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
-	process_creator_list (a_list: ET_CREATOR_LIST) is
+	process_creator_list (a_list: ET_CREATOR_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -1487,7 +1587,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_custom_attribute (an_attribute: ET_CUSTOM_ATTRIBUTE) is
+	process_custom_attribute (an_attribute: ET_CUSTOM_ATTRIBUTE)
 			-- Process `an_attribute'.
 		local
 			l_settings: ET_MANIFEST_TUPLE
@@ -1502,15 +1602,11 @@ feature {ET_AST_NODE} -- Processing
 			an_attribute.end_keyword.process (Current)
 		end
 
-	process_debug_instruction (an_instruction: ET_DEBUG_INSTRUCTION) is
+	process_debug_instruction (an_instruction: ET_DEBUG_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
 			l_compound: ET_COMPOUND
 			l_keys: ET_MANIFEST_STRING_LIST
-			l_instruction: ET_INSTRUCTION
-			l_identifier: ET_IDENTIFIER
-			l_symbol: ET_SYMBOL
-			i, nb: INTEGER
 		do
 			tokens.debug_keyword.process (Current)
 			l_compound := an_instruction.compound
@@ -1528,59 +1624,9 @@ feature {ET_AST_NODE} -- Processing
 				end
 			end
 			if l_compound /= Void then
-				nb := l_compound.count
-					-- Start to skip all leading null instructions.
-				from
-					i := 1
-				until
-					i > nb or else not l_compound.item (i).is_semicolon
-				loop
-					comment_finder.find_comments (l_compound.item (i), comment_list)
-					i := i + 1
-				end
-				if i > nb then
-						-- There is no instruction to be printed.
-						-- Print any comments with only one extra indentation level.
-					process_comments
-				else
-					indent
-					process_comments
-					from until i > nb loop
-						l_instruction := l_compound.item (i)
-						print_new_line
-						l_instruction.process (Current)
-							-- Skip null instructions.
-						from
-							i := i + 1
-						until
-							i > nb or else not l_compound.item (i).is_semicolon
-						loop
-							comment_finder.find_comments (l_compound.item (i), comment_list)
-							i := i + 1
-						end
-						if i <= nb then
-							l_identifier ?= l_instruction.last_leaf
-							l_symbol ?= l_compound.item (i).first_leaf
-							if l_identifier /= Void and l_symbol /= Void and then (l_symbol.is_left_parenthesis or l_symbol.is_left_bracket) then
-									-- Print a semicolon in order to avoid syntax ambiguity.
-									-- For example if we have:
-									--
-									--  debug
-									--     f.g
-									--     (a + b).h
-									--
-									-- it could also be seen as:
-									--
-									--  debug
-									--     f.g (a + b).h
-									--
-								tokens.semicolon_symbol.process (Current)
-							end
-						end
-						process_comments
-					end
-					dedent
-				end
+				indent
+				process_instruction_list (l_compound)
+				dedent
 			else
 				process_comments
 			end
@@ -1588,7 +1634,7 @@ feature {ET_AST_NODE} -- Processing
 			an_instruction.end_keyword.process (Current)
 		end
 
-	process_deferred_function (a_feature: ET_DEFERRED_FUNCTION) is
+	process_deferred_function (a_feature: ET_DEFERRED_FUNCTION)
 			-- Process `a_feature'.
 		local
 			l_frozen_keyword: ET_TOKEN
@@ -1675,7 +1721,7 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 			l_indexing := a_feature.first_indexing
 			if l_indexing /= Void then
-				l_indexing.process (Current)
+				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
@@ -1716,7 +1762,7 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
-	process_deferred_procedure (a_feature: ET_DEFERRED_PROCEDURE) is
+	process_deferred_procedure (a_feature: ET_DEFERRED_PROCEDURE)
 			-- Process `a_feature'.
 		local
 			l_frozen_keyword: ET_TOKEN
@@ -1785,7 +1831,7 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 			l_indexing := a_feature.first_indexing
 			if l_indexing /= Void then
-				l_indexing.process (Current)
+				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
@@ -1826,7 +1872,7 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
-	process_do_function (a_feature: ET_DO_FUNCTION) is
+	process_do_function (a_feature: ET_DO_FUNCTION)
 			-- Process `a_feature'.
 		local
 			l_frozen_keyword: ET_TOKEN
@@ -1915,7 +1961,7 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 			l_indexing := a_feature.first_indexing
 			if l_indexing /= Void then
-				l_indexing.process (Current)
+				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
@@ -1943,7 +1989,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_locals /= Void then
 				l_locals.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_compound := a_feature.compound
 			if l_compound /= Void then
@@ -1973,7 +2018,7 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
-	process_do_function_inline_agent (an_expression: ET_DO_FUNCTION_INLINE_AGENT) is
+	process_do_function_inline_agent (an_expression: ET_DO_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
 		local
 			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
@@ -2017,7 +2062,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_locals /= Void then
 				l_locals.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_compound := an_expression.compound
 			if l_compound /= Void then
@@ -2052,7 +2096,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_do_procedure (a_feature: ET_DO_PROCEDURE) is
+	process_do_procedure (a_feature: ET_DO_PROCEDURE)
 			-- Process `a_feature'.
 		local
 			l_frozen_keyword: ET_TOKEN
@@ -2123,7 +2167,7 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 			l_indexing := a_feature.first_indexing
 			if l_indexing /= Void then
-				l_indexing.process (Current)
+				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
@@ -2151,7 +2195,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_locals /= Void then
 				l_locals.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_compound := a_feature.compound
 			if l_compound /= Void then
@@ -2181,7 +2224,7 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
-	process_do_procedure_inline_agent (an_expression: ET_DO_PROCEDURE_INLINE_AGENT) is
+	process_do_procedure_inline_agent (an_expression: ET_DO_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
 		local
 			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
@@ -2213,7 +2256,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_locals /= Void then
 				l_locals.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_compound := an_expression.compound
 			if l_compound /= Void then
@@ -2248,7 +2290,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_dotnet_function (a_feature: ET_DOTNET_FUNCTION) is
+	process_dotnet_function (a_feature: ET_DOTNET_FUNCTION)
 			-- Process `a_feature'.
 		local
 			l_frozen_keyword: ET_TOKEN
@@ -2340,7 +2382,7 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
-	process_dotnet_procedure (a_feature: ET_DOTNET_PROCEDURE) is
+	process_dotnet_procedure (a_feature: ET_DOTNET_PROCEDURE)
 			-- Process `a_feature'.
 		local
 			l_frozen_keyword: ET_TOKEN
@@ -2414,7 +2456,7 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
-	process_elseif_part (an_elseif_part: ET_ELSEIF_PART) is
+	process_elseif_part (an_elseif_part: ET_ELSEIF_PART)
 			-- Process `an_elseif_part'.
 		local
 			l_compound: ET_COMPOUND
@@ -2438,7 +2480,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_elseif_part_list (a_list: ET_ELSEIF_PART_LIST) is
+	process_elseif_part_list (a_list: ET_ELSEIF_PART_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -2454,7 +2496,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_equality_expression (an_expression: ET_EQUALITY_EXPRESSION) is
+	process_equality_expression (an_expression: ET_EQUALITY_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			an_expression.left.process (Current)
@@ -2464,7 +2506,7 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.right.process (Current)
 		end
 
-	process_export_list (a_list: ET_EXPORT_LIST) is
+	process_export_list (a_list: ET_EXPORT_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -2493,7 +2535,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_export_list_same_line (a_list: ET_EXPORT_LIST) is
+	process_export_list_same_line (a_list: ET_EXPORT_LIST)
 			-- Process `a_list'.
 			-- Print every thing on the same line.
 		require
@@ -2524,7 +2566,135 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_external_function (a_feature: ET_EXTERNAL_FUNCTION) is
+	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE)
+			-- Process `a_feature'.
+		local
+			l_frozen_keyword: ET_TOKEN
+			l_extended_feature_name: ET_EXTENDED_FEATURE_NAME
+			l_feature_name: ET_FEATURE_NAME
+			l_alias_name: ET_ALIAS_NAME
+			l_declared_type: ET_DECLARED_TYPE
+			l_type: ET_TYPE
+			l_synonym: ET_FEATURE
+			l_indexing: ET_INDEXING_LIST
+			l_obsolete_message: ET_OBSOLETE
+			l_preconditions: ET_PRECONDITIONS
+			l_postconditions: ET_POSTCONDITIONS
+			l_semicolon: ET_SEMICOLON_SYMBOL
+			l_assigner: ET_ASSIGNER
+			l_obsolete_string: ET_MANIFEST_STRING
+			l_locals: ET_LOCAL_VARIABLE_LIST
+			l_compound: ET_COMPOUND
+		do
+			from
+				l_synonym := a_feature
+			until
+				l_synonym = Void
+			loop
+				l_frozen_keyword := l_synonym.frozen_keyword
+				if l_frozen_keyword /= Void then
+					l_frozen_keyword.process (Current)
+					print_space
+				end
+				l_extended_feature_name := l_synonym.extended_name
+				l_feature_name := l_extended_feature_name.feature_name
+				l_alias_name := l_extended_feature_name.alias_name
+				l_feature_name.process (Current)
+				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+						-- For infix and prefix features, do not repeat the name twice.
+					print_space
+					l_alias_name.process (Current)
+					comment_finder.add_excluded_node (l_alias_name)
+				end
+				comment_finder.add_excluded_node (l_feature_name)
+				comment_finder.find_comments (l_extended_feature_name, comment_list)
+				comment_finder.reset_excluded_nodes
+				l_synonym := l_synonym.synonym
+				if l_synonym /= Void then
+						-- The AST may or may not contain the comma.
+						-- So we have to print it explicitly here.
+					tokens.comma_symbol.process (Current)
+					print_space
+				end
+			end
+				-- The AST may or may not contain the colon.
+				-- So we have to print it explicitly here.
+			l_declared_type := a_feature.declared_type
+			l_type := l_declared_type.type
+			tokens.colon_symbol.process (Current)
+			comment_finder.add_excluded_node (l_type)
+			comment_finder.find_comments (l_declared_type, comment_list)
+			comment_finder.reset_excluded_nodes
+			print_space
+			l_type.process (Current)
+			l_assigner := a_feature.assigner
+			if l_assigner /= Void then
+				print_space
+				l_assigner.process (Current)
+			end
+			indent
+			process_comments
+			print_new_line
+			l_indexing := a_feature.first_indexing
+			if l_indexing /= Void then
+				process_indexing_clause (l_indexing, False)
+				process_comments
+				print_new_line
+			end
+			l_obsolete_message := a_feature.obsolete_message
+			if l_obsolete_message /= Void then
+				tokens.obsolete_keyword.process (Current)
+				l_obsolete_string := l_obsolete_message.manifest_string
+				comment_finder.add_excluded_node (l_obsolete_string)
+				comment_finder.find_comments (l_obsolete_message, comment_list)
+				comment_finder.reset_excluded_nodes
+				indent
+				process_comments
+				print_new_line
+				l_obsolete_string.process (Current)
+				process_comments
+				print_new_line
+				dedent
+			end
+			l_preconditions := a_feature.preconditions
+			if l_preconditions /= Void then
+				l_preconditions.process (Current)
+				process_comments
+			end
+			l_locals := a_feature.locals
+			if l_locals /= Void then
+				l_locals.process (Current)
+				process_comments
+			end
+			l_compound := a_feature.compound
+			if l_compound /= Void then
+				l_compound.process (Current)
+			else
+				tokens.do_keyword.process (Current)
+			end
+			process_comments
+			print_new_line
+			l_postconditions := a_feature.postconditions
+			if l_postconditions /= Void then
+				l_postconditions.process (Current)
+				process_comments
+			end
+			l_compound := a_feature.rescue_clause
+			if l_compound /= Void then
+				l_compound.process (Current)
+				process_comments
+				print_new_line
+			end
+			a_feature.end_keyword.process (Current)
+			l_semicolon := a_feature.semicolon
+			if l_semicolon /= Void then
+					-- Do not print the semicolon, but keep track of its comments if any.
+				process_break (l_semicolon.break)
+			end
+			dedent
+		end
+
+	process_external_function (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Process `a_feature'.
 		local
 			l_frozen_keyword: ET_TOKEN
@@ -2614,7 +2784,7 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 			l_indexing := a_feature.first_indexing
 			if l_indexing /= Void then
-				l_indexing.process (Current)
+				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
@@ -2680,7 +2850,7 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
-	process_external_function_inline_agent (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT) is
+	process_external_function_inline_agent (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
 		local
 			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
@@ -2770,7 +2940,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
+	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Process `a_feature'.
 		local
 			l_frozen_keyword: ET_TOKEN
@@ -2842,7 +3012,7 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 			l_indexing := a_feature.first_indexing
 			if l_indexing /= Void then
-				l_indexing.process (Current)
+				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
@@ -2908,7 +3078,7 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
-	process_external_procedure_inline_agent (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT) is
+	process_external_procedure_inline_agent (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
 		local
 			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
@@ -2986,7 +3156,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_feature_clause (a_feature_clause: ET_FEATURE_CLAUSE) is
+	process_feature_clause (a_feature_clause: ET_FEATURE_CLAUSE)
 			-- Process `a_feature_clause'.
 		local
 			l_clients: ET_CLIENTS
@@ -3000,7 +3170,7 @@ feature {ET_AST_NODE} -- Processing
 			process_comments_on_same_line
 		end
 
-	process_feature_clause_list (a_list: ET_FEATURE_CLAUSE_LIST) is
+	process_feature_clause_list (a_list: ET_FEATURE_CLAUSE_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -3015,7 +3185,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_feature_export (an_export: ET_FEATURE_EXPORT) is
+	process_feature_export (an_export: ET_FEATURE_EXPORT)
 			-- Process `an_export'.
 		local
 			i, nb: INTEGER
@@ -3048,7 +3218,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_features (a_class: ET_CLASS) is
+	process_features (a_class: ET_CLASS)
 			-- Process feature clauses of `a_class'.
 		local
 			a_feature_clauses: ET_FEATURE_CLAUSE_LIST
@@ -3178,7 +3348,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_formal_argument (an_argument: ET_FORMAL_ARGUMENT) is
+	process_formal_argument (an_argument: ET_FORMAL_ARGUMENT)
 			-- Process `an_argument'.
 		local
 			l_name_item: ET_ARGUMENT_NAME
@@ -3204,7 +3374,7 @@ feature {ET_AST_NODE} -- Processing
 			l_type.process (Current)
 		end
 
-	process_formal_argument_list (a_list: ET_FORMAL_ARGUMENT_LIST) is
+	process_formal_argument_list (a_list: ET_FORMAL_ARGUMENT_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -3247,7 +3417,7 @@ feature {ET_AST_NODE} -- Processing
 			a_list.right_parenthesis.process (Current)
 		end
 
-	process_formal_comma_argument (an_argument: ET_FORMAL_COMMA_ARGUMENT) is
+	process_formal_comma_argument (an_argument: ET_FORMAL_COMMA_ARGUMENT)
 			-- Process `an_argument'.
 		local
 			l_name_item: ET_ARGUMENT_NAME
@@ -3264,7 +3434,7 @@ feature {ET_AST_NODE} -- Processing
 			tokens.comma_symbol.process (Current)
 		end
 
-	process_formal_parameter (a_parameter: ET_FORMAL_PARAMETER) is
+	process_formal_parameter (a_parameter: ET_FORMAL_PARAMETER)
 			-- Process `a_parameter'.
 		local
 			a_type_mark: ET_KEYWORD
@@ -3277,7 +3447,7 @@ feature {ET_AST_NODE} -- Processing
 			a_parameter.name.process (Current)
 		end
 
-	process_formal_parameter_list (a_list: ET_FORMAL_PARAMETER_LIST) is
+	process_formal_parameter_list (a_list: ET_FORMAL_PARAMETER_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -3304,7 +3474,7 @@ feature {ET_AST_NODE} -- Processing
 			a_list.right_bracket.process (Current)
 		end
 
-	process_formal_parameter_type (a_type: ET_FORMAL_PARAMETER_TYPE) is
+	process_formal_parameter_type (a_type: ET_FORMAL_PARAMETER_TYPE)
 			-- Process `a_type'.
 		local
 			l_type_mark: ET_TYPE_MARK
@@ -3312,14 +3482,14 @@ feature {ET_AST_NODE} -- Processing
 			l_type_mark := a_type.type_mark
 			if l_type_mark /= Void then
 				l_type_mark.process (Current)
-				if l_type_mark.is_keyword then
+				if not l_type_mark.is_implicit_mark then
 					print_space
 				end
 			end
 			a_type.name.process (Current)
 		end
 
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
+	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
 			-- Process `a_type'.
 		local
 			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
@@ -3335,7 +3505,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT) is
+	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		local
 			l_cast_type: ET_TARGET_TYPE
@@ -3363,7 +3533,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_constant.break)
 		end
 
-	process_if_instruction (an_instruction: ET_IF_INSTRUCTION) is
+	process_if_instruction (an_instruction: ET_IF_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
 			l_compound: ET_COMPOUND
@@ -3403,8 +3573,16 @@ feature {ET_AST_NODE} -- Processing
 			an_instruction.end_keyword.process (Current)
 		end
 
-	process_indexing_list (a_list: ET_INDEXING_LIST) is
+	process_indexing_list (a_list: ET_INDEXING_LIST)
 			-- Process `a_list'.
+		do
+			process_indexing_clause (a_list, True)
+		end
+
+	process_indexing_clause (a_list: ET_INDEXING_LIST; a_new_line: BOOLEAN)
+			-- Process `a_list'.
+			-- `a_new_line' indicates that an empty new-line should
+			-- appear between the 'indexing' keyword and the first item.
 		local
 			i, nb: INTEGER
 			l_item: ET_INDEXING_ITEM
@@ -3412,13 +3590,15 @@ feature {ET_AST_NODE} -- Processing
 			l_tagged_indexing: ET_TAGGED_INDEXING
 		do
 			if a_list.is_empty then
-					-- Do not print empty indexing, but keep the comments if any.
+					-- Do not print empty note clause, but keep the comments if any.
 				comment_finder.find_comments (a_list, comment_list)
 			else
 				a_list.indexing_keyword.process (Current)
 				indent
 				process_comments
-				print_new_line
+				if a_new_line then
+					print_new_line
+				end
 				nb := a_list.count
 				from i := 1 until i > nb loop
 					process_comments
@@ -3441,7 +3621,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_indexing_term_list (a_list: ET_INDEXING_TERM_LIST) is
+	process_indexing_term_list (a_list: ET_INDEXING_TERM_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -3466,7 +3646,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_infix_and_then_operator (an_operator: ET_INFIX_AND_THEN_OPERATOR) is
+	process_infix_and_then_operator (an_operator: ET_INFIX_AND_THEN_OPERATOR)
 			-- Process `an_operator'.
 		do
 			an_operator.and_keyword.process (Current)
@@ -3474,7 +3654,7 @@ feature {ET_AST_NODE} -- Processing
 			an_operator.then_keyword.process (Current)
 		end
 
-	process_infix_expression (an_expression: ET_INFIX_EXPRESSION) is
+	process_infix_expression (an_expression: ET_INFIX_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			an_expression.left.process (Current)
@@ -3484,7 +3664,7 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.right.process (Current)
 		end
 
-	process_infix_name (a_name: ET_INFIX_NAME) is
+	process_infix_name (a_name: ET_INFIX_NAME)
 			-- Process `a_name'.
 		do
 			a_name.infix_keyword.process (Current)
@@ -3492,7 +3672,7 @@ feature {ET_AST_NODE} -- Processing
 			a_name.operator_name.process (Current)
 		end
 
-	process_infix_or_else_operator (an_operator: ET_INFIX_OR_ELSE_OPERATOR) is
+	process_infix_or_else_operator (an_operator: ET_INFIX_OR_ELSE_OPERATOR)
 			-- Process `an_operator'.
 		do
 			an_operator.or_keyword.process (Current)
@@ -3500,7 +3680,7 @@ feature {ET_AST_NODE} -- Processing
 			an_operator.else_keyword.process (Current)
 		end
 
-	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION) is
+	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
 			l_conditional: ET_CONDITIONAL
@@ -3536,7 +3716,64 @@ feature {ET_AST_NODE} -- Processing
 			an_instruction.end_keyword.process (Current)
 		end
 
-	process_invariants (a_list: ET_INVARIANTS) is
+	process_instruction_list (a_list: ET_COMPOUND)
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i, nb: INTEGER
+			l_instruction: ET_INSTRUCTION
+			l_identifier: ET_IDENTIFIER
+			l_symbol: ET_SYMBOL
+		do
+			nb := a_list.count
+				-- Start to skip all leading null instructions.
+			from
+				i := 1
+			until
+				i > nb or else not a_list.item (i).is_semicolon
+			loop
+				comment_finder.find_comments (a_list.item (i), comment_list)
+				i := i + 1
+			end
+			process_comments
+			from until i > nb loop
+				l_instruction := a_list.item (i)
+				print_new_line
+				l_instruction.process (Current)
+					-- Skip null instructions.
+				from
+					i := i + 1
+				until
+					i > nb or else not a_list.item (i).is_semicolon
+				loop
+					comment_finder.find_comments (a_list.item (i), comment_list)
+					i := i + 1
+				end
+				if i <= nb then
+					l_identifier ?= l_instruction.last_leaf
+					l_symbol ?= a_list.item (i).first_leaf
+					if l_identifier /= Void and l_symbol /= Void and then (l_symbol.is_left_parenthesis or l_symbol.is_left_bracket) then
+							-- Print a semicolon in order to avoid syntax ambiguity.
+							-- For example if we have:
+							--
+							--  do
+							--     f.g
+							--     (a + b).h
+							--
+							-- it could also be seen as:
+							--
+							--  do
+							--     f.g (a + b).h
+							--
+						tokens.semicolon_symbol.process (Current)
+					end
+				end
+				process_comments
+			end
+		end
+
+	process_invariants (a_list: ET_INVARIANTS)
 			-- Process `a_list'.
 		local
 			l_break: ET_BREAK
@@ -3565,7 +3802,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_keyword_expression (an_expression: ET_KEYWORD_EXPRESSION) is
+	process_keyword_expression (an_expression: ET_KEYWORD_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			an_expression.keyword.process (Current)
@@ -3573,7 +3810,7 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.expression.process (Current)
 		end
 
-	process_keyword_feature_name_list (a_list: ET_KEYWORD_FEATURE_NAME_LIST) is
+	process_keyword_feature_name_list (a_list: ET_KEYWORD_FEATURE_NAME_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -3602,7 +3839,7 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
-	process_keyword_manifest_string (a_string: ET_KEYWORD_MANIFEST_STRING) is
+	process_keyword_manifest_string (a_string: ET_KEYWORD_MANIFEST_STRING)
 			-- Process `a_string'.
 		do
 			a_string.keyword.process (Current)
@@ -3610,7 +3847,7 @@ feature {ET_AST_NODE} -- Processing
 			a_string.manifest_string.process (Current)
 		end
 
-	process_labeled_actual_parameter (a_parameter: ET_LABELED_ACTUAL_PARAMETER) is
+	process_labeled_actual_parameter (a_parameter: ET_LABELED_ACTUAL_PARAMETER)
 			-- Process `a_parameter'.
 		local
 			l_name_item: ET_LABEL
@@ -3636,7 +3873,7 @@ feature {ET_AST_NODE} -- Processing
 			l_type.process (Current)
 		end
 
-	process_labeled_comma_actual_parameter (a_parameter: ET_LABELED_COMMA_ACTUAL_PARAMETER) is
+	process_labeled_comma_actual_parameter (a_parameter: ET_LABELED_COMMA_ACTUAL_PARAMETER)
 			-- Process `a_parameter'.
 		local
 			l_name_item: ET_LABEL
@@ -3653,7 +3890,7 @@ feature {ET_AST_NODE} -- Processing
 			tokens.comma_symbol.process (Current)
 		end
 
-	process_like_current (a_type: ET_LIKE_CURRENT) is
+	process_like_current (a_type: ET_LIKE_CURRENT)
 			-- Process `a_type'.
 		local
 			l_type_mark: ET_TYPE_MARK
@@ -3661,7 +3898,7 @@ feature {ET_AST_NODE} -- Processing
 			l_type_mark := a_type.type_mark
 			if l_type_mark /= Void then
 				l_type_mark.process (Current)
-				if l_type_mark.is_keyword then
+				if not l_type_mark.is_implicit_mark then
 					print_space
 				end
 			end
@@ -3670,7 +3907,7 @@ feature {ET_AST_NODE} -- Processing
 			a_type.current_keyword.process (Current)
 		end
 
-	process_like_feature (a_type: ET_LIKE_FEATURE) is
+	process_like_feature (a_type: ET_LIKE_FEATURE)
 			-- Process `a_type'.
 		local
 			l_type_mark: ET_TYPE_MARK
@@ -3678,7 +3915,7 @@ feature {ET_AST_NODE} -- Processing
 			l_type_mark := a_type.type_mark
 			if l_type_mark /= Void then
 				l_type_mark.process (Current)
-				if l_type_mark.is_keyword then
+				if not l_type_mark.is_implicit_mark then
 					print_space
 				end
 			end
@@ -3687,7 +3924,7 @@ feature {ET_AST_NODE} -- Processing
 			a_type.name.process (Current)
 		end
 
-	process_local_comma_variable (a_local: ET_LOCAL_COMMA_VARIABLE) is
+	process_local_comma_variable (a_local: ET_LOCAL_COMMA_VARIABLE)
 			-- Process `a_local'.
 		local
 			l_name_item: ET_LOCAL_NAME
@@ -3704,7 +3941,7 @@ feature {ET_AST_NODE} -- Processing
 			tokens.comma_symbol.process (Current)
 		end
 
-	process_local_variable (a_local: ET_LOCAL_VARIABLE) is
+	process_local_variable (a_local: ET_LOCAL_VARIABLE)
 			-- Process `a_local'.
 		local
 			l_name_item: ET_LOCAL_NAME
@@ -3730,52 +3967,62 @@ feature {ET_AST_NODE} -- Processing
 			l_type.process (Current)
 		end
 
-	process_local_variable_list (a_list: ET_LOCAL_VARIABLE_LIST) is
+	process_local_variable_list (a_list: ET_LOCAL_VARIABLE_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
 			l_item: ET_LOCAL_VARIABLE_ITEM
 			l_name: ET_IDENTIFIER
 			l_type: ET_TYPE
+			l_break: ET_BREAK
+			l_has_comment_assertion: BOOLEAN
 		do
-			a_list.local_keyword.process (Current)
-			print_new_line
-			indent
-			process_comments
-			nb := a_list.count
-			from i := 1 until i > nb loop
-				l_item := a_list.item (i)
-				l_name := l_item.name
-				l_name.process (Current)
-				if l_item.is_last_entity or i = nb then
-					tokens.colon_symbol.process (Current)
-					print_space
-					l_type := l_item.type
-					l_type.process (Current)
-					comment_finder.add_excluded_node (l_name)
-					comment_finder.add_excluded_node (l_type)
-					comment_finder.find_comments (l_item, comment_list)
-					comment_finder.reset_excluded_nodes
-					if i /= nb then
+			l_break := a_list.break
+			l_has_comment_assertion := l_break /= Void and then l_break.has_comment
+			if a_list.is_empty and not l_has_comment_assertion then
+					-- Do not print empty local variable clause, but keep the comments if any.
+					--
+					-- Note that a comment could be a commented out local variable,
+					-- so the local variable clause is not considered empty in that case.
+				comment_finder.find_comments (a_list, comment_list)
+			else
+				a_list.local_keyword.process (Current)
+				print_new_line
+				indent
+				process_comments
+				nb := a_list.count
+				from i := 1 until i > nb loop
+					l_item := a_list.item (i)
+					l_name := l_item.name
+					l_name.process (Current)
+					if l_item.is_last_entity or i = nb then
+						tokens.colon_symbol.process (Current)
+						print_space
+						l_type := l_item.type
+						l_type.process (Current)
+						comment_finder.add_excluded_node (l_name)
+						comment_finder.add_excluded_node (l_type)
+						comment_finder.find_comments (l_item, comment_list)
+						comment_finder.reset_excluded_nodes
 						print_new_line
 						process_comments
+					else
+						comment_finder.add_excluded_node (l_name)
+						comment_finder.find_comments (l_item, comment_list)
+						comment_finder.reset_excluded_nodes
+							-- The AST may or may not contain the comma.
+							-- So we have to print it explicitly here.
+						tokens.comma_symbol.process (Current)
+						print_space
 					end
-				else
-					comment_finder.add_excluded_node (l_name)
-					comment_finder.find_comments (l_item, comment_list)
-					comment_finder.reset_excluded_nodes
-						-- The AST may or may not contain the comma.
-						-- So we have to print it explicitly here.
-					tokens.comma_symbol.process (Current)
-					print_space
+					i := i + 1
 				end
-				i := i + 1
+				process_comments
+				dedent
 			end
-			process_comments
-			dedent
 		end
 
-	process_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION) is
+	process_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
 			an_invariant_part: ET_LOOP_INVARIANTS
@@ -3832,7 +4079,7 @@ feature {ET_AST_NODE} -- Processing
 			an_instruction.end_keyword.process (Current)
 		end
 
-	process_loop_invariants (a_list: ET_LOOP_INVARIANTS) is
+	process_loop_invariants (a_list: ET_LOOP_INVARIANTS)
 			-- Process `a_list'.
 		local
 			l_break: ET_BREAK
@@ -3856,7 +4103,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_manifest_array (an_expression: ET_MANIFEST_ARRAY) is
+	process_manifest_array (an_expression: ET_MANIFEST_ARRAY)
 			-- Process `an_expression'.
 		local
 			i, nb: INTEGER
@@ -3883,7 +4130,7 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.right_symbol.process (Current)
 		end
 
-	process_manifest_string_list (a_list: ET_MANIFEST_STRING_LIST) is
+	process_manifest_string_list (a_list: ET_MANIFEST_STRING_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -3910,7 +4157,7 @@ feature {ET_AST_NODE} -- Processing
 			a_list.right_parenthesis.process (Current)
 		end
 
-	process_manifest_tuple (an_expression: ET_MANIFEST_TUPLE) is
+	process_manifest_tuple (an_expression: ET_MANIFEST_TUPLE)
 			-- Process `an_expression'.
 		local
 			i, nb: INTEGER
@@ -3937,7 +4184,7 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.right_symbol.process (Current)
 		end
 
-	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST) is
+	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST)
 			-- Process `an_expression'.
 		local
 			l_declared_type: ET_TARGET_TYPE
@@ -3963,7 +4210,7 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.name.process (Current)
 		end
 
-	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
+	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			an_expression.left.process (Current)
@@ -3973,7 +4220,7 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.right.process (Current)
 		end
 
-	process_object_test (an_expression: ET_OBJECT_TEST) is
+	process_object_test (an_expression: ET_OBJECT_TEST)
 			-- Process `an_expression'.
 		local
 			l_declared_type: ET_TARGET_TYPE
@@ -3995,7 +4242,7 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.expression.process (Current)
 		end
 
-	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT) is
+	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		local
 			l_cast_type: ET_TARGET_TYPE
@@ -4023,7 +4270,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_constant.break)
 		end
 
-	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
+	process_old_expression (an_expression: ET_OLD_EXPRESSION)
 			-- Process `an_expression'.
 		do
 			an_expression.old_keyword.process (Current)
@@ -4031,7 +4278,7 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.expression.process (Current)
 		end
 
-	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST) is
+	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST)
 			-- Process `an_expression'.
 		do
 			an_expression.left_brace.process (Current)
@@ -4044,7 +4291,7 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.expression.process (Current)
 		end
 
-	process_once_function (a_feature: ET_ONCE_FUNCTION) is
+	process_once_function (a_feature: ET_ONCE_FUNCTION)
 			-- Process `a_feature'.
 		local
 			l_frozen_keyword: ET_TOKEN
@@ -4065,6 +4312,7 @@ feature {ET_AST_NODE} -- Processing
 			l_obsolete_string: ET_MANIFEST_STRING
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
+			l_keys: ET_MANIFEST_STRING_LIST
 		do
 			from
 				l_synonym := a_feature
@@ -4133,7 +4381,7 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 			l_indexing := a_feature.first_indexing
 			if l_indexing /= Void then
-				l_indexing.process (Current)
+				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
@@ -4161,15 +4409,29 @@ feature {ET_AST_NODE} -- Processing
 			if l_locals /= Void then
 				l_locals.process (Current)
 				process_comments
-				print_new_line
 			end
+			tokens.once_keyword.process (Current)
 			l_compound := a_feature.compound
 			if l_compound /= Void then
-				l_compound.process (Current)
-			else
-				tokens.once_keyword.process (Current)
+				process_break (l_compound.keyword.break)
 			end
-			process_comments
+			l_keys := a_feature.keys
+			if l_keys /= Void then
+				if l_keys.is_empty then
+						-- Do not print empty parentheses, but keep the comments if any.
+					comment_finder.find_comments (l_keys, comment_list)
+				else
+					print_space
+					l_keys.process (Current)
+				end
+			end
+			if l_compound /= Void then
+				indent
+				process_instruction_list (l_compound)
+				dedent
+			else
+				process_comments
+			end
 			print_new_line
 			l_postconditions := a_feature.postconditions
 			if l_postconditions /= Void then
@@ -4191,7 +4453,7 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
-	process_once_function_inline_agent (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT) is
+	process_once_function_inline_agent (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
 		local
 			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
@@ -4200,6 +4462,7 @@ feature {ET_AST_NODE} -- Processing
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_postconditions: ET_POSTCONDITIONS
 			l_compound: ET_COMPOUND
+			l_keys: ET_MANIFEST_STRING_LIST
 			l_declared_type: ET_DECLARED_TYPE
 			l_type: ET_TYPE
 		do
@@ -4235,15 +4498,29 @@ feature {ET_AST_NODE} -- Processing
 			if l_locals /= Void then
 				l_locals.process (Current)
 				process_comments
-				print_new_line
 			end
+			tokens.once_keyword.process (Current)
 			l_compound := an_expression.compound
 			if l_compound /= Void then
-				l_compound.process (Current)
-			else
-				tokens.once_keyword.process (Current)
+				process_break (l_compound.keyword.break)
 			end
-			process_comments
+			l_keys := an_expression.keys
+			if l_keys /= Void then
+				if l_keys.is_empty then
+						-- Do not print empty parentheses, but keep the comments if any.
+					comment_finder.find_comments (l_keys, comment_list)
+				else
+					print_space
+					l_keys.process (Current)
+				end
+			end
+			if l_compound /= Void then
+				indent
+				process_instruction_list (l_compound)
+				dedent
+			else
+				process_comments
+			end
 			print_new_line
 			l_postconditions := an_expression.postconditions
 			if l_postconditions /= Void then
@@ -4270,7 +4547,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_once_manifest_string (an_expression: ET_ONCE_MANIFEST_STRING) is
+	process_once_manifest_string (an_expression: ET_ONCE_MANIFEST_STRING)
 			-- Process `an_expression'.
 		do
 			an_expression.once_keyword.process (Current)
@@ -4278,7 +4555,7 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.manifest_string.process (Current)
 		end
 
-	process_once_procedure (a_feature: ET_ONCE_PROCEDURE) is
+	process_once_procedure (a_feature: ET_ONCE_PROCEDURE)
 			-- Process `a_feature'.
 		local
 			l_frozen_keyword: ET_TOKEN
@@ -4296,6 +4573,7 @@ feature {ET_AST_NODE} -- Processing
 			l_obsolete_string: ET_MANIFEST_STRING
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
+			l_keys: ET_MANIFEST_STRING_LIST
 		do
 			from
 				l_synonym := a_feature
@@ -4349,7 +4627,7 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 			l_indexing := a_feature.first_indexing
 			if l_indexing /= Void then
-				l_indexing.process (Current)
+				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
@@ -4377,15 +4655,29 @@ feature {ET_AST_NODE} -- Processing
 			if l_locals /= Void then
 				l_locals.process (Current)
 				process_comments
-				print_new_line
 			end
+			tokens.once_keyword.process (Current)
 			l_compound := a_feature.compound
 			if l_compound /= Void then
-				l_compound.process (Current)
-			else
-				tokens.once_keyword.process (Current)
+				process_break (l_compound.keyword.break)
 			end
-			process_comments
+			l_keys := a_feature.keys
+			if l_keys /= Void then
+				if l_keys.is_empty then
+						-- Do not print empty parentheses, but keep the comments if any.
+					comment_finder.find_comments (l_keys, comment_list)
+				else
+					print_space
+					l_keys.process (Current)
+				end
+			end
+			if l_compound /= Void then
+				indent
+				process_instruction_list (l_compound)
+				dedent
+			else
+				process_comments
+			end
 			print_new_line
 			l_postconditions := a_feature.postconditions
 			if l_postconditions /= Void then
@@ -4407,7 +4699,7 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
-	process_once_procedure_inline_agent (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT) is
+	process_once_procedure_inline_agent (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
 		local
 			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
@@ -4416,6 +4708,7 @@ feature {ET_AST_NODE} -- Processing
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_postconditions: ET_POSTCONDITIONS
 			l_compound: ET_COMPOUND
+			l_keys: ET_MANIFEST_STRING_LIST
 		do
 			an_expression.agent_keyword.process (Current)
 			l_formal_arguments := an_expression.formal_arguments
@@ -4439,15 +4732,29 @@ feature {ET_AST_NODE} -- Processing
 			if l_locals /= Void then
 				l_locals.process (Current)
 				process_comments
-				print_new_line
 			end
+			tokens.once_keyword.process (Current)
 			l_compound := an_expression.compound
 			if l_compound /= Void then
-				l_compound.process (Current)
-			else
-				tokens.once_keyword.process (Current)
+				process_break (l_compound.keyword.break)
 			end
-			process_comments
+			l_keys := an_expression.keys
+			if l_keys /= Void then
+				if l_keys.is_empty then
+						-- Do not print empty parentheses, but keep the comments if any.
+					comment_finder.find_comments (l_keys, comment_list)
+				else
+					print_space
+					l_keys.process (Current)
+				end
+			end
+			if l_compound /= Void then
+				indent
+				process_instruction_list (l_compound)
+				dedent
+			else
+				process_comments
+			end
 			print_new_line
 			l_postconditions := an_expression.postconditions
 			if l_postconditions /= Void then
@@ -4474,7 +4781,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_parent (a_parent: ET_PARENT) is
+	process_parent (a_parent: ET_PARENT)
 			-- Process `a_parent'.
 		local
 			a_renames: ET_RENAME_LIST
@@ -4553,7 +4860,7 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
-	process_parent_list (a_list: ET_PARENT_LIST) is
+	process_parent_list (a_list: ET_PARENT_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -4584,7 +4891,7 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
-	process_postconditions (a_list: ET_POSTCONDITIONS) is
+	process_postconditions (a_list: ET_POSTCONDITIONS)
 			-- Process `a_list'.
 		local
 			a_then_keyword: ET_TOKEN
@@ -4614,7 +4921,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_preconditions (a_list: ET_PRECONDITIONS) is
+	process_preconditions (a_list: ET_PRECONDITIONS)
 			-- Process `a_list'.
 		local
 			an_else_keyword: ET_TOKEN
@@ -4644,7 +4951,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION) is
+	process_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION)
 			-- Process `an_expression'.
 		local
 			l_parent_name: ET_PRECURSOR_CLASS_NAME
@@ -4675,7 +4982,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION) is
+	process_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
 			l_parent_name: ET_PRECURSOR_CLASS_NAME
@@ -4706,7 +5013,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_prefix_expression (an_expression: ET_PREFIX_EXPRESSION) is
+	process_prefix_expression (an_expression: ET_PREFIX_EXPRESSION)
 			-- Process `an_expression'.
 		local
 			l_operator: ET_OPERATOR
@@ -4725,7 +5032,7 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.expression.process (Current)
 		end
 
-	process_prefix_name (a_name: ET_PREFIX_NAME) is
+	process_prefix_name (a_name: ET_PREFIX_NAME)
 			-- Process `a_name'.
 		do
 			a_name.prefix_keyword.process (Current)
@@ -4733,7 +5040,7 @@ feature {ET_AST_NODE} -- Processing
 			a_name.operator_name.process (Current)
 		end
 
-	process_qualified_call (a_call: ET_QUALIFIED_CALL) is
+	process_qualified_call (a_call: ET_QUALIFIED_CALL)
 			-- Process `a_call'.
 		local
 			l_arguments: ET_ACTUAL_ARGUMENT_LIST
@@ -4761,24 +5068,25 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
 		local
-			l_braced_type: ET_TARGET_TYPE
-			l_target_type: ET_TYPE
 			l_qualified_feature_name: ET_QUALIFIED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
+			l_type_mark: ET_TYPE_MARK
 		do
+			l_type_mark := a_type.type_mark
+			if l_type_mark /= Void then
+				l_type_mark.process (Current)
+				if not l_type_mark.is_implicit_mark then
+					print_space
+				end
+			end
 			a_type.like_keyword.process (Current)
 			print_space
-			l_braced_type := a_type.braced_type
-			l_target_type := l_braced_type.type
-			tokens.left_brace_symbol.process (Current)
-			l_target_type.process (Current)
-			tokens.right_brace_symbol.process (Current)
-			comment_finder.add_excluded_node (l_target_type)
-			comment_finder.find_comments (l_braced_type, comment_list)
-			comment_finder.reset_excluded_nodes
+			a_type.left_brace.process (Current)
+			a_type.target_type.process (Current)
+			a_type.right_brace.process (Current)
 				-- The AST may or may not contain the dot.
 				-- So we have to print them explicitly here.
 			tokens.dot_symbol.process (Current)
@@ -4790,12 +5098,20 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.reset_excluded_nodes
 		end
 
-	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE)
 			-- Process `a_type'.
 		local
 			l_qualified_feature_name: ET_QUALIFIED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
+			l_type_mark: ET_TYPE_MARK
 		do
+			l_type_mark := a_type.type_mark
+			if l_type_mark /= Void then
+				l_type_mark.process (Current)
+				if not l_type_mark.is_implicit_mark then
+					print_space
+				end
+			end
 			a_type.target_type.process (Current)
 				-- The AST may or may not contain the dot.
 				-- So we have to print them explicitly here.
@@ -4808,7 +5124,7 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.reset_excluded_nodes
 		end
 
-	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT) is
+	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		local
 			l_cast_type: ET_TARGET_TYPE
@@ -4836,7 +5152,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_constant.break)
 		end
 
-	process_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING) is
+	process_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING)
 			-- Process `a_string'.
 		local
 			l_cast_type: ET_TARGET_TYPE
@@ -4861,7 +5177,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_string.break)
 		end
 
-	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT) is
+	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT)
 			-- Process `a_constant'.
 		local
 			l_cast_type: ET_TARGET_TYPE
@@ -4889,7 +5205,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_constant.break)
 		end
 
-	process_rename (a_rename: ET_RENAME) is
+	process_rename (a_rename: ET_RENAME)
 			-- Process `a_rename'.
 		do
 			a_rename.old_name.process (Current)
@@ -4899,7 +5215,7 @@ feature {ET_AST_NODE} -- Processing
 			a_rename.new_name.process (Current)
 		end
 
-	process_rename_list (a_list: ET_RENAME_LIST) is
+	process_rename_list (a_list: ET_RENAME_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -4930,14 +5246,14 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
-	process_result (an_expression: ET_RESULT) is
+	process_result (an_expression: ET_RESULT)
 			-- Process `an_expression'.
 		do
 			process_keyword (tokens.result_keyword)
 			comment_finder.find_comments (an_expression, comment_list)
 		end
 
-	process_result_address (an_expression: ET_RESULT_ADDRESS) is
+	process_result_address (an_expression: ET_RESULT_ADDRESS)
 			-- Process `an_expression'.
 		do
 			tokens.dollar_symbol.process (Current)
@@ -4945,21 +5261,21 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.find_comments (an_expression, comment_list)
 		end
 
-	process_retry_instruction (an_instruction: ET_RETRY_INSTRUCTION) is
+	process_retry_instruction (an_instruction: ET_RETRY_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
 			process_keyword (tokens.retry_keyword)
 			comment_finder.find_comments (an_instruction, comment_list)
 		end
 
-	process_semicolon_symbol (a_symbol: ET_SEMICOLON_SYMBOL) is
+	process_semicolon_symbol (a_symbol: ET_SEMICOLON_SYMBOL)
 			-- Process `a_symbol'.
 		do
 			process_symbol (tokens.semicolon_symbol)
 			comment_finder.find_comments (a_symbol, comment_list)
 		end
 
-	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING) is
+	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING)
 			-- Process `a_string'.
 		local
 			l_cast_type: ET_TARGET_TYPE
@@ -4984,7 +5300,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_string.break)
 		end
 
-	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION) is
+	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION)
 			-- Process `an_expression'.
 		local
 			l_static_type: ET_TARGET_TYPE
@@ -5006,7 +5322,7 @@ feature {ET_AST_NODE} -- Processing
 			process_qualified_call (an_expression)
 		end
 
-	process_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION) is
+	process_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
 			l_static_type: ET_TARGET_TYPE
@@ -5028,7 +5344,7 @@ feature {ET_AST_NODE} -- Processing
 			process_qualified_call (an_instruction)
 		end
 
-	process_strip_expression (an_expression: ET_STRIP_EXPRESSION) is
+	process_strip_expression (an_expression: ET_STRIP_EXPRESSION)
 			-- Process `an_expression'.
 		local
 			i, nb: INTEGER
@@ -5057,14 +5373,14 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.right_parenthesis.process (Current)
 		end
 
-	process_symbol (a_symbol: ET_SYMBOL) is
+	process_symbol (a_symbol: ET_SYMBOL)
 			-- Process `a_symbol'.
 		do
 			print_string (a_symbol.text)
 			process_break (a_symbol.break)
 		end
 
-	process_tagged_assertion (an_assertion: ET_TAGGED_ASSERTION) is
+	process_tagged_assertion (an_assertion: ET_TAGGED_ASSERTION)
 			-- Process `an_assertion'.
 		local
 			l_tag: ET_TAG
@@ -5087,7 +5403,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_tagged_indexing (an_indexing: ET_TAGGED_INDEXING) is
+	process_tagged_indexing (an_indexing: ET_TAGGED_INDEXING)
 			-- Process `an_indexing'.
 		local
 			l_tag: ET_TAG
@@ -5106,9 +5422,9 @@ feature {ET_AST_NODE} -- Processing
 			process_indexing (an_indexing)
 		end
 
-	process_tagged_indexing_indented (an_indexing: ET_TAGGED_INDEXING) is
+	process_tagged_indexing_indented (an_indexing: ET_TAGGED_INDEXING)
 			-- Process `an_indexing'.
-			-- Print the tag, then the indexing terms indented two lines below.
+			-- Print the tag, then the note terms indented two lines below.
 		require
 			an_indexing_not_void: an_indexing /= Void
 		local
@@ -5146,21 +5462,21 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_token (a_token: ET_TOKEN) is
+	process_token (a_token: ET_TOKEN)
 			-- Process `a_token'.
 		do
 			print_string (a_token.text)
 			process_break (a_token.break)
 		end
 
-	process_true_constant (a_constant: ET_TRUE_CONSTANT) is
+	process_true_constant (a_constant: ET_TRUE_CONSTANT)
 			-- Process `a_constant'.
 		do
 			process_keyword (tokens.true_keyword)
 			comment_finder.find_comments (a_constant, comment_list)
 		end
 
-	process_tuple_type (a_type: ET_TUPLE_TYPE) is
+	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
 		local
 			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
@@ -5169,7 +5485,7 @@ feature {ET_AST_NODE} -- Processing
 			l_type_mark := a_type.type_mark
 			if l_type_mark /= Void then
 				l_type_mark.process (Current)
-				if l_type_mark.is_keyword then
+				if not l_type_mark.is_implicit_mark then
 					print_space
 				end
 			end
@@ -5187,7 +5503,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
+	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		local
 			l_cast_type: ET_TARGET_TYPE
@@ -5215,7 +5531,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_constant.break)
 		end
 
-	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT) is
+	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT)
 			-- Process `a_constant'.
 		local
 			l_cast_type: ET_TARGET_TYPE
@@ -5243,7 +5559,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_constant.break)
 		end
 
-	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE) is
+	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE)
 			-- Process `a_feature'.
 		local
 			l_frozen_keyword: ET_TOKEN
@@ -5319,19 +5635,17 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
-	process_variant (a_variant: ET_VARIANT) is
+	process_variant (a_variant: ET_VARIANT)
 			-- Process `a_variant'.
 		local
 			l_tag: ET_TAG
 			l_identifier: ET_IDENTIFIER
-			l_expression: ET_EXPRESSION
 		do
 			a_variant.variant_keyword.process (Current)
 			indent
 			print_new_line
 			process_comments
 			l_tag := a_variant.tag
-			l_expression := a_variant.expression
 			if l_tag /= Void then
 				l_identifier := l_tag.identifier
 				l_identifier.process (Current)
@@ -5341,18 +5655,14 @@ feature {ET_AST_NODE} -- Processing
 					-- The AST may or may not contain the colon.
 					-- So we have to print it explicitly here.
 				tokens.colon_symbol.process (Current)
-				if l_expression /= Void then
-					print_space
-				end
+				print_space
 			end
-			if l_expression /= Void then
-				l_expression.process (Current)
-			end
+			a_variant.expression.process (Current)
 			process_comments
 			dedent
 		end
 
-	process_verbatim_string (a_string: ET_VERBATIM_STRING) is
+	process_verbatim_string (a_string: ET_VERBATIM_STRING)
 			-- Process `a_string'.
 		local
 			l_cast_type: ET_TARGET_TYPE
@@ -5391,14 +5701,14 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_string.break)
 		end
 
-	process_void (an_expression: ET_VOID) is
+	process_void (an_expression: ET_VOID)
 			-- Process `an_expression'.
 		do
 			process_keyword (tokens.void_keyword)
 			comment_finder.find_comments (an_expression, comment_list)
 		end
 
-	process_when_part (a_when_part: ET_WHEN_PART) is
+	process_when_part (a_when_part: ET_WHEN_PART)
 			-- Process `a_when_part'.
 		local
 			a_compound: ET_COMPOUND
@@ -5413,7 +5723,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_when_part_list (a_list: ET_WHEN_PART_LIST) is
+	process_when_part_list (a_list: ET_WHEN_PART_LIST)
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
@@ -5431,7 +5741,7 @@ feature {ET_AST_NODE} -- Processing
 
 feature {NONE} -- Printing
 
-	print_character (c: CHARACTER) is
+	print_character (c: CHARACTER)
 			-- Print character `c'.
 			-- Print indentation first if not done yet.
 		do
@@ -5442,7 +5752,7 @@ feature {NONE} -- Printing
 			comment_printed := False
 		end
 
-	print_space is
+	print_space
 			-- Print space character, unless a comment had just been printed.
 		do
 			if not comment_printed then
@@ -5451,7 +5761,7 @@ feature {NONE} -- Printing
 			comment_printed := False
 		end
 
-	print_string (s: STRING) is
+	print_string (s: STRING)
 			-- Print string `s'.
 			-- Print indentation first if not done yet.
 		require
@@ -5464,7 +5774,7 @@ feature {NONE} -- Printing
 			comment_printed := False
 		end
 
-	print_new_line is
+	print_new_line
 			-- Print new-line character unless a comment had just been printed.
 		do
 			if not comment_printed then
@@ -5476,7 +5786,7 @@ feature {NONE} -- Printing
 
 feature {NONE} -- Indentation
 
-	print_indentation is
+	print_indentation
 			-- Print indentation to `file'.
 		local
 			i, nb: INTEGER
@@ -5495,7 +5805,7 @@ feature {NONE} -- Indentation
 
 feature {NONE} -- Comments
 
-	print_comment (a_break: ET_BREAK) is
+	print_comment (a_break: ET_BREAK)
 			-- Print comment held in `a_break', followed by a new-line.
 		require
 			a_break_not_void: a_break /= Void
@@ -5550,7 +5860,7 @@ feature {NONE} -- Comments
 			comment_printed := True
 		end
 
-	print_indented_comment (a_break: ET_BREAK) is
+	print_indented_comment (a_break: ET_BREAK)
 			-- Print comment held in `a_break' on its own line (go to next
 			-- line if necessary), with an extra indentation level.
 			-- Comments are followed by a new-line.
@@ -5573,7 +5883,7 @@ feature {NONE} -- Comments
 			dedent
 		end
 
-	print_indented_comments (a_comments: DS_ARRAYED_LIST [ET_BREAK]) is
+	print_indented_comments (a_comments: DS_ARRAYED_LIST [ET_BREAK])
 			-- Print each comment in `a_comments' on their own line (go to
 			-- next line if necessary), with an extra indentation level.
 			-- Comments are followed by a new-line.
@@ -5585,7 +5895,7 @@ feature {NONE} -- Comments
 			a_comments.do_all (agent print_indented_comment)
 		end
 
-	print_comments_on_same_line (a_comments: DS_ARRAYED_LIST [ET_BREAK]) is
+	print_comments_on_same_line (a_comments: DS_ARRAYED_LIST [ET_BREAK])
 			-- If `a_comments' is not empty, then print a space followed by
 			-- the first comment on the current line. The remaining comments
 			-- are printed on their own line, with an extra indentation level.

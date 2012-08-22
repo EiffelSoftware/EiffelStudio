@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -30,7 +30,7 @@ inherit
 	KL_OPERATING_SYSTEM
 		export {NONE} all end
 
-	KL_IMPORTED_ANY_ROUTINES
+	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
 	CONSOLE
@@ -54,7 +54,7 @@ inherit
 				is_closed,
 				put_string,
 				is_open_write
-			{NONE} all
+			{CONSOLE} all
 		redefine
 			file_readable,
 			last_string
@@ -66,7 +66,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new standard input file.
 		do
 			create last_string.make_empty
@@ -87,12 +87,12 @@ feature -- Access
 			-- is to be kept beyond the next call to this feature.
 			-- However `last_string' is not shared between file objects.)
 
-	eol: STRING is "%N"
+	eol: STRING = "%N"
 			-- Line separator
 
 feature -- Status report
 
-	is_open_read: BOOLEAN is
+	is_open_read: BOOLEAN
 			-- Is standard input file opened in read mode?
 		do
 			Result := old_is_open_read
@@ -103,7 +103,7 @@ feature -- Status report
 
 feature -- Input
 
-	read_character is
+	read_character
 			-- Read the next character in standard input file.
 			-- Make the result available in `last_character'.
 		local
@@ -121,7 +121,7 @@ feature -- Input
 			end
 		end
 
-	unread_character (a_character: CHARACTER) is
+	unread_character (a_character: CHARACTER)
 			-- Put `a_character' back in input file.
 			-- This character will be read first by the next
 			-- call to a read routine.
@@ -139,7 +139,7 @@ feature -- Input
 			end_of_file := False
 		end
 
-	read_string (nb: INTEGER) is
+	read_string (nb: INTEGER)
 			-- Read at most `nb' characters from standard input file.
 			-- Make the characters that have actually been read
 			-- available in `last_string'.
@@ -156,6 +156,7 @@ feature -- Input
 				if not old_end_of_file then
 					last_string.set_count (nb)
 					i := old_read_to_string (last_string, 1, nb)
+					last_string.set_internal_hash_code (0)
 					last_string.set_count (i)
 				else
 					last_string.set_count (0)
@@ -168,7 +169,7 @@ feature -- Input
 			end_of_file := (last_string.count = 0)
 		end
 
-	read_line is
+	read_line
 			-- Read characters from standard input file until a line separator
 			-- or end of file is reached. Make the characters that have
 			-- been read available in `last_string' and discard the line
@@ -181,7 +182,7 @@ feature -- Input
 			is_eof: BOOLEAN
 			has_carriage: BOOLEAN
 		do
-			last_string.clear_all
+			STRING_.wipe_out (last_string)
 			is_eof := True
 			from
 			until
@@ -212,7 +213,7 @@ feature -- Input
 			end_of_file := is_eof
 		end
 
-	read_new_line is
+	read_new_line
 			-- Read a line separator from standard input file.
 			-- Make the characters making up the recognized
 			-- line separator available in `last_string',
@@ -222,7 +223,7 @@ feature -- Input
 			-- Line separators recognized by current standard
 			-- input file are: '%N', '%R%N and '%R'.
 		do
-			last_string.clear_all
+			STRING_.wipe_out (last_string)
 			read_character
 			if not end_of_file then
 				inspect last_character
@@ -247,7 +248,7 @@ feature -- Input
 			end_of_file := False
 		end
 
-	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
+	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
 			-- Fill `a_string', starting at position `pos' with at
 			-- most `nb' characters read from standard input file.
 			-- Return the number of characters actually read.
@@ -276,11 +277,13 @@ feature -- Input
 				if not old_end_of_file then
 					if ANY_.same_types (a_string, dummy_string) then
 						Result := i + old_read_to_string (a_string, j, nb - i)
+						a_string.set_internal_hash_code (0)
 					else
 						nb2 := nb - i
 						create tmp_string.make (nb2)
 						tmp_string.set_count (nb2)
 						nb2 := old_read_to_string (tmp_string, 1, nb2)
+						tmp_string.set_internal_hash_code (0)
 						from
 							k := 1
 						until
@@ -301,7 +304,7 @@ feature -- Input
 			end
 		end
 
-	read_to_buffer (a_buffer: KI_BUFFER [CHARACTER]; pos, nb: INTEGER): INTEGER is
+	read_to_buffer (a_buffer: KI_BUFFER [CHARACTER]; pos, nb: INTEGER): INTEGER
 			-- Fill `a_buffer', starting at position `pos', with
 			-- at most `nb' characters read from standard input file.
 			-- Return the number of characters actually read.
@@ -309,7 +312,7 @@ feature -- Input
 			-- in standard input file, there is no guarantee that they
 			-- will all be read.)
 		local
-			char_buffer: ?KL_CHARACTER_BUFFER
+			char_buffer: detachable KL_CHARACTER_BUFFER
 		do
 			char_buffer ?= a_buffer
 			if char_buffer /= Void then
@@ -319,18 +322,20 @@ feature -- Input
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {CONSOLE} -- Implementation
 
-	character_buffer: ?KL_LINKABLE [CHARACTER]
-			-- Unread characters
-
-	file_readable: BOOLEAN is
+	file_readable: BOOLEAN
 			-- Is there a current item that may be read?
 		do
 			Result := is_open_read
 		end
 
-	dummy_string: STRING is ""
+feature {NONE} -- Implementation
+
+	character_buffer: detachable KL_LINKABLE [CHARACTER]
+			-- Unread characters
+
+	dummy_string: STRING = ""
 			-- Dummy string
 
 end

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_executable: XM_XSLT_EXECUTABLE; a_head, a_tail: XM_XPATH_EXPRESSION; a_module_number, a_line_number: INTEGER) is
+	make (a_executable: XM_XSLT_EXECUTABLE; a_head, a_tail: XM_XPATH_EXPRESSION; a_module_number, a_line_number: INTEGER)
 			-- Create a general-purpose block.
 		require
 			a_executable_not_void: a_executable /= Void
@@ -56,14 +56,14 @@ feature {NONE} -- Initialization
 		do
 			make_sequence (a_head, a_tail)
 			set_source_location (a_module_number, a_line_number)
-			executable := a_executable			
+			executable := a_executable
 		ensure
 			executable_set: executable = a_executable
 		end
 
 feature -- Status report
 
-	creates_new_nodes: BOOLEAN is
+	creates_new_nodes: BOOLEAN
 			-- Can `Current' create new nodes?
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -71,8 +71,6 @@ feature -- Status report
 			if children.count > 0 then
 				from
 					a_cursor := children.new_cursor; a_cursor.start
-				variant
-					children.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -82,13 +80,15 @@ feature -- Status report
 					else
 						a_cursor.forth
 					end
+				variant
+					children.count + 1 - a_cursor.index
 				end
 			end
 		end
 
 feature -- Optimization
 
-	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -99,8 +99,6 @@ feature -- Optimization
 				create l_replacement.make (Void)
 				l_cursor := children.new_cursor
 				l_cursor.start
-			variant
-				children.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -112,12 +110,14 @@ feature -- Optimization
 				end
 				l_replacement.put (Void)
 				l_cursor.forth
-			end	
+			variant
+				children.count + 1 - l_cursor.index
+			end
 		end
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -130,8 +130,6 @@ feature -- Evaluation
 		do
 			from
 				l_cursor := children.new_cursor; l_cursor.start
-			variant
-				children.count + 1 - l_cursor.index
 			until
 				a_context.transformer.is_error or else l_cursor.after
 			loop
@@ -167,12 +165,14 @@ feature -- Evaluation
 					end
 				end
 				l_cursor.forth
+			variant
+				children.count + 1 - l_cursor.index
 			end
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_special_properties is
+	compute_special_properties
 			-- Compute special properties.
 		do
 			Precursor {XM_XPATH_SEQUENCE_EXPRESSION}
@@ -182,12 +182,12 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		end
 
 feature {NONE} -- Implementation
-	
-	native_implementations: INTEGER is
+
+	native_implementations: INTEGER
 			-- Natively-supported evaluation routines
 		do
 				Result := Supports_process + Supports_iterator
 		end
 
 end
-	
+

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -24,7 +24,7 @@ inherit
 
 feature -- Status report
 
-	test (v, u: ?UT_MEDIA_TYPE): BOOLEAN is
+	test (v, u: detachable UT_MEDIA_TYPE): BOOLEAN
 			-- Are `v' and `u' considered equal?
 			-- This version ignores all parameters.
 		do

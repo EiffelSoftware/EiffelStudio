@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -22,7 +22,7 @@ inherit
 
 feature -- Access
 
-	type: ET_TYPE is
+	type: ET_TYPE
 			-- Return type
 		do
 			Result := declared_type.type

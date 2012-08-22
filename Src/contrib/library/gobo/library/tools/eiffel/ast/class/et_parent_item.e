@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	parent: ET_PARENT is
+	parent: ET_PARENT
 			-- Class parent in semicolon-separated list
 		deferred
 		ensure

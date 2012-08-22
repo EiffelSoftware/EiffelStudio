@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -6,7 +6,7 @@ indexing
 		%incompatible with full tables"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,20 +23,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new error reporting that the use
 			-- of variable trailing context is incompatible
 			-- with full tables.
 		do
-			create parameters.make (1, 0)
+			create parameters.make_filled (empty_string, 1, 0)
 		end
 
 feature -- Access
 
-	default_template: STRING is "$0: variable trailing context rules cannot be used with -f"
+	default_template: STRING = "$0: variable trailing context rules cannot be used with -f"
 			-- Default template used to built the error message
 
-	code: STRING is "LX0029"
+	code: STRING = "LX0029"
 			-- Error code
 
 invariant

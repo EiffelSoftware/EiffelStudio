@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel feature id lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,27 +40,27 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_id: INTEGER) is
+	make (an_id: INTEGER)
 			-- Create a new feature id list with
 			-- `an_id' as first id.
 		require
 			an_id_positive: an_id > 0
 		do
-			create feature_ids.make (1, 1)
+			create feature_ids.make_filled (0, 1, 1)
 			put (an_id)
 		ensure
 			count_set: count = 1
 			first_set: first = an_id
 		end
 
-	make_with_capacity (an_id: INTEGER; nb: INTEGER) is
+	make_with_capacity (an_id: INTEGER; nb: INTEGER)
 			-- Create a new feature id list with
 			-- `an_id' as first id.
 		require
 			an_id_positive: an_id > 0
 			nb_large_enough: nb > 1
 		do
-			create feature_ids.make (1, nb)
+			create feature_ids.make_filled (0, 1, nb)
 			put (an_id)
 		ensure
 			count_set: count = 1
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item (i: INTEGER): INTEGER is
+	item (i: INTEGER): INTEGER
 			-- `i'-th feature id
 		require
 			i_large_enough: i >= 1
@@ -80,7 +80,7 @@ feature -- Access
 			item_positive: Result > 0
 		end
 
-	first: INTEGER is
+	first: INTEGER
 			-- First id
 		do
 			Result := item (1)
@@ -95,7 +95,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	has (an_id: INTEGER): BOOLEAN is
+	has (an_id: INTEGER): BOOLEAN
 			-- Is `an_id' included in the list of featire ids?
 		local
 			i, nb: INTEGER
@@ -113,7 +113,7 @@ feature -- Status report
 
 feature -- Element change
 
-	put (an_id: INTEGER) is
+	put (an_id: INTEGER)
 			-- Add `an_id' to the list of feature ids.
 		require
 			an_id_positive: an_id > 0
@@ -129,7 +129,7 @@ feature -- Element change
 			inserted: item (count) = an_id
 		end
 
-	replace (old_id, new_id: INTEGER) is
+	replace (old_id, new_id: INTEGER)
 			-- Replace `old_id' by `new_id'.
 		require
 			has_old_id: has (old_id)
@@ -155,7 +155,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (an_id: INTEGER) is
+	remove (an_id: INTEGER)
 			-- Remove `an_id' from the list of feature ids.
 		require
 			has_id: has (an_id)
@@ -182,7 +182,7 @@ feature -- Removal
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Copy `other' to `Current'.
 		do
 			standard_copy (other)
@@ -191,7 +191,7 @@ feature -- Duplication
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Are `Current' and `other' considered equal?
 		local
 			i, nb: INTEGER

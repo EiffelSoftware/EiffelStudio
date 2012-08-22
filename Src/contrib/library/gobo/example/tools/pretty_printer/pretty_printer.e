@@ -1,10 +1,10 @@
-indexing
+note
 
 	description:
 
 		"Eiffel pretty-printer"
 
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Execution
 
-	execute is
+	execute
 			-- Execute tool.
 		local
 			a_system: ET_SYSTEM
@@ -34,17 +34,16 @@ feature {NONE} -- Execution
 			in_file: KL_TEXT_INPUT_FILE
 			out_file: KL_TEXT_OUTPUT_FILE
 			a_cluster: ET_XACE_CLUSTER
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			a_printer: ET_AST_PRETTY_PRINTER
-			a_class: ET_CLASS
 			a_time_stamp: INTEGER
 			a_parser: ET_EIFFEL_PARSER
 			a_eiffel_error_handler: ET_ERROR_HANDLER
+			a_class_text: STRING
 		do
 			Arguments.set_program_name ("pretty_printer")
 			create error_handler.make_standard
 			read_arguments
-			create a_system.make
+			create a_system.make ("system_name")
 			a_system.set_ise_version (ise_latest)
 			create an_ast_factory.make
 			an_ast_factory.set_keep_all_breaks (True)
@@ -54,7 +53,7 @@ feature {NONE} -- Execution
 			a_eiffel_error_handler.set_info_file (std.error)
 			a_system.set_error_handler (a_eiffel_error_handler)
 				-- Make sure that kernel classes are set correctly.
-			a_system.preparse_local
+			a_system.preparse
 			create a_cluster.make ("cluster_name", ".", a_system)
 			create a_parser.make
 			create in_file.make (in_filename)
@@ -77,14 +76,22 @@ feature {NONE} -- Execution
 						std.output.append (in_file)
 						in_file.close
 					else
+						create a_class_text.make (1024)
+						from
+							in_file.read_string (1024)
+						until
+							in_file.end_of_file
+						loop
+							a_class_text.append_string (in_file.last_string)
+							in_file.read_string (1024)
+						end
+						in_file.close
 						create out_file.make (out_filename)
 						out_file.recursive_open_write
 						if out_file.is_open_write then
-							out_file.append (in_file)
+							out_file.put_string (a_class_text)
 							out_file.close
-							in_file.close
 						else
-							in_file.close
 							report_cannot_write_error (out_filename)
 							Exceptions.die (1)
 						end
@@ -108,21 +115,14 @@ feature {NONE} -- Execution
 						Exceptions.die (1)
 					end
 				end
-				a_cursor := a_system.classes.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					a_class := a_cursor.item
-					if a_class.is_parsed then
-						a_class.process (a_printer)
-					end
-					a_cursor.forth
-				end
+				a_system.classes_do_if_recursive (agent {ET_CLASS}.process (a_printer), agent {ET_CLASS}.is_parsed)
 				if out_file /= Void and then not out_file.is_closed then
 					out_file.close
 				end
 			end
 		end
 
-	read_arguments is
+	read_arguments
 			-- Read command-line arguments.
 		do
 				-- Read filenames.
@@ -154,7 +154,7 @@ feature -- Access
 
 feature -- Error handling
 
-	report_cannot_read_error (a_filename: STRING) is
+	report_cannot_read_error (a_filename: STRING)
 			-- Report that `a_filename' cannot be
 			-- opened in read mode.
 		require
@@ -166,7 +166,7 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_cannot_write_error (a_filename: STRING) is
+	report_cannot_write_error (a_filename: STRING)
 			-- Report that `a_filename' cannot be
 			-- opened in write mode.
 		require
@@ -178,13 +178,13 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_usage_error is
+	report_usage_error
 			-- Report usage error.
 		do
 			error_handler.report_error (Usage_message)
 		end
 
-	Usage_message: UT_USAGE_MESSAGE is
+	Usage_message: UT_USAGE_MESSAGE
 			-- Usage message
 		once
 			create Result.make ("input_filename [output_filename]")

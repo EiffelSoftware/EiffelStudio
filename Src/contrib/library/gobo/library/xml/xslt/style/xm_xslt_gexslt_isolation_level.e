@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Status report
 
-	isolation_level: INTEGER is
+	isolation_level: INTEGER
 			-- Isolation-level
 		require
 			validation_complete: validated
@@ -50,7 +50,7 @@ feature -- Status report
 feature -- Element change
 
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -61,8 +61,6 @@ feature -- Element change
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index				
 				until
 					a_cursor.after or any_compile_errors
 				loop
@@ -75,13 +73,15 @@ feature -- Element change
 						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if isolation_level_attribute_value = Void then report_absence ("isolation-level") end
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -97,7 +97,7 @@ feature -- Element change
 				if a_child_iterator.item.node_type = Text_node and then is_all_whitespace (a_child_iterator.item.string_value) then
 					-- do nothing, as xml:space="preserve" makes this legitimate
 				else
-					create an_error.make_from_string ("Only gexslt:isolation-level may not have child nodes", Xpath_errors_uri, "XTSE0010", Static_error) 
+					create an_error.make_from_string ("Only gexslt:isolation-level may not have child nodes", Xpath_errors_uri, "XTSE0010", Static_error)
 					report_compile_error (an_error); finished := True
 				end
 				a_child_iterator.forth
@@ -118,7 +118,7 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		do
 			if principal_stylesheet = containing_stylesheet then

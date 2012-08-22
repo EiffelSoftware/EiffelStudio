@@ -1,15 +1,55 @@
 Version 3.10 - ?
 
-	gec:
-
-	* Added option --gelint to force the whole content of classes to be
-	  checked (even features not reachable from the root creation procedure).
-
 	geant:
 
 	* Extended the attributes 'if' and 'unless' to accept the values
 	  "true" and "false". This can be useful when automatically generating
 	  geant build files. See bug#2657770.
+	* Use ISE Eiffel's ec instead of ecb, so output is compatible with
+	  estudio; else estudio will complain about a corrupted project.
+
+	gec:
+
+	* Added option --gelint to force the whole content of classes to be
+	  checked (even features not reachable from the root creation procedure).
+	* Fixed bug in the generated C code for call agents whose feature was
+	  FUNCTION.item or ROUTINE.call and whose closed argument was a manifest
+	  tuple. See bug#2997112.
+	* Fixed implementation of class IDENTIFIED_ROUTINES. Object addresses
+	  were casted to INTEGER_32, which causes loss of information when
+	  compiled on a 64-bit computer. See bug#2999209.
+	* Fixed type system bug when processing constant attributes in
+	  inspect instructions. See bug#3238111.
+	* Fixed bug when an inspect instruction had no else-branch. No exception
+	  was raised.
+	* Fixed bug when running 'gec --gelint ...'. Validity errors were
+	  reported twice.
+	* Qualified anchored types are now accepted by default.
+
+	gelint:
+
+	* Fixed bug where it was reporting an internal error instead of a VTCT error
+	  when the type of a local variable was a generic class type whose base class
+	  did not exist.
+	* Report a VIPR-3 error for inline agent of the once and external forms.
+	  This is not in ECMA 367-2, but a restriction in ISE.
+	* Qualified anchored types are now accepted by default.
+
+	getest:
+
+	* Set exit code to 4 when at least one of the test cases has been aborted.
+	* Split the feature `build_suite' in smaller routines in the generated test
+	  harness so that the back-end C compiler (in particular MSVC under Windows)
+	  can compile the generated C code for this routine in a reasonable amount
+	  of time.
+	* Added command-line options to the generated test harness to monitor which
+	  of the registered test cases should be executed or ignored.
+	* Improved command-line processing of the generated test harness.
+
+	gexace:
+
+	* Added option "syntax" to support the corresponding option in ECF.
+	* Added documentation explaining how to add a new option in Xace.
 
 	geyacc:
 
@@ -24,6 +64,8 @@ Version 3.10 - ?
 	  are replaced by underscores. It is now possible to customize the
 	  name of this variable to `last_<alias_name>_value' by declaring
 	  '%token <EIFFEL_TYPE as alias_name> ...'. See bug#2621302.
+	* Added support for qualified anchored types in %type and %token declarations
+	  in .y files.
 
 	Gobo Eiffel Kernel Library:
 
@@ -31,11 +73,20 @@ Version 3.10 - ?
 	* Features `test' in class KL_EQUALITY_TESTER and `equal_objects' in
 	  class KL_ANY_ROUTINES now use the new ECMA construct '~' instead
 	  of the combination `same_type' and then `is_equal'.
+	* Added feature `is_true' to class KL_AGENT_ROUTINES.
+	* Fixed bug in feature `read_to_string' of file classes where the
+	  hash code was not reset properly.
 
 	Gobo Eiffel Lexical Library:
 
 	* Fixed bug in LX_DFA_REGULAR_EXPRESSION where `compile ("foo\$")' was
 	  setting `has_dollar' to True even though the dollar sign was escaped.
+	* Added features `pattern' and `is_case_insensitive' in class LX_PATTERN_MATCHER.
+
+	Gobo Eiffel Regexp Library:
+
+	* The pattern being matched and the case-sensitiveness are now available
+	  using queries `pattern' and `is_case_insensitive'.
 
 	Gobo Eiffel String Library:
 
@@ -46,6 +97,12 @@ Version 3.10 - ?
 
 	* Fixed assertion violation in feature `compress' from DS_SPARSE_CONTAINER.
 	  See bug#2831433.
+	* Relaxed precondition of `put' and `put_last' in classes DS_SET and
+	  DS_SPARSE_TABLE (i.e. the ancestors of DS_HASH_SET and DS_HASH_TABLE) to
+	  be "not is_full or else has (k)" instead of just "not is_full".
+	* Added features `do_until' and `do_if_until' to DS_CONTAINER and its
+	  descendants.
+	* Added feature `has_void' to DS_CELL and DS_PAIR.
 
 	Gobo Eiffel Time Library:
 
@@ -68,11 +125,41 @@ Version 3.10 - ?
 	  types (e.g. 'attached FOO' or 'detachable BAR') and for object-tests
 	  (e.g. 'attached {T} exp as x' with '{T}' and 'x' optional). See
 	  bug#2682694.
+	* Added the notion of ignored classes. We can programmatically decide
+	  to ignore the class from a cluster and take it into account later on
+	  after some processing.
+	* Added support for attribute initialization body.
+	* Added support for renaming clause in libraries when parsing ECF files.
+	* Fixed pretty-printer when processing indexing clauses in features.
+	  An extra empty line was inserted.
+	* Added support for check instructions with a then-branch.
+	* Added support for once keys in once routines.
+	* Improved the way the type of a manifest array is determined in the
+	  case where the types of all items conform to one of them. In that
+	  case the manifest array will be an array of that type.
+	* The scope of object-test locals can cover the following assertions
+	  in the same postcondition or invariant clause because it's as if
+	  they were separated by "and then" operators. It was already
+	  implemented that way in preconditions.
+	* Support the ECMA syntax for typed manifest strings and typed character
+	  constants.
+	* Accept class text files which start with the byte order mark (BOM).
+	  (See http://en.wikipedia.org/wiki/Byte_order_mark.)
+	* Started checking void-safety validity rules.
+	* Relaxed the validity rule to prevent cycles in qualified anchored types
+	  so that it can accept code appearing in ISE's libraries.
+	* Added support for across instructions/expressions.
+
+	Gobo Eiffel XML Library:
+
+	* Added option to let the XML pretty printer use empty element tags
+	  <tag/> instead of <tag><tag/>.
 
 	Miscellaneous:
 
 	* Removed classes and features that had been marked as obsolete
 	  in 2004 or before.
+	* Removed warnings when compiling with ISE 6.6.
 
 Version 3.9 - 20 November 2008
 
@@ -199,7 +286,7 @@ Version 3.8 - 11 May 2008
 
 	gelint:
 
-	* Fixed bug in the flat Degree 3 mode where the precursor features 
+	* Fixed bug in the flat Degree 3 mode where the precursor features
 	  corresponding to precursor expressions or instructions were not checked.
 	* Fixed bug when the type in a manifest type is based on an unknown class.
 	  Instead of reporting a VTCT error, gelint/gec were reporting another
@@ -325,7 +412,7 @@ Version 3.7 - 5 November 2007
 
 	gelint:
 
-	* Fixed bug when determining the type of a call to a Tuple label 
+	* Fixed bug when determining the type of a call to a Tuple label
 	  when appearing in a generic class.
 	* Added support for some incrementality when used within the same session.
 
@@ -334,7 +421,7 @@ Version 3.7 - 5 November 2007
 	* Added the possibility to specify a maximum number of options.
 	* Added the possibility to make option arguments optional for options
 	  that only have a long form.
-	* The contracts now certify that the setup of arguments are 
+	* The contracts now certify that the setup of arguments are
 	  unambiguous.
 
 	Gobo Eiffel Kernel Library:
@@ -365,7 +452,7 @@ Version 3.6 - 14 June 2007
 
 	Gobo Eiffel Structure Library:
 
-	* Added iterator features (`do_all', `do_all_with_index', `do_if', 
+	* Added iterator features (`do_all', `do_all_with_index', `do_if',
 	  `do_if_with_index', `there_exists') to relevant classes.
 	* Fixed bug in invariant of DS_MULTIARRAYED_SPARSE_SET and
 	  DS_MULTIARRAYED_SPARSE_TABLE when `capacity' is zero.
@@ -430,7 +517,7 @@ Version 3.5 - 23 January 2007
 	* Fixed bug in KL_(UNIX|WINDOWS)_FILE_SYSTEM.absolute_parent_pathname.
 	  When the result was a root directory it was erroneously returning
 	  `absolute_root_directory'. So if you were in 'C:\gobo' and asked for
-	  the `absolute_parent_pathname' of 'D:\foo' you were getting 'C:\' 
+	  the `absolute_parent_pathname' of 'D:\foo' you were getting 'C:\'
 	  instead of the expected 'D:\'.
 	* Fixed bug in KL_WINDOWS_FILE_SYSTEM.canonical_pathname which for the
 	  input '\\gobo\foo\..' was returning the invalid pathname '\\gobo\'
@@ -451,7 +538,7 @@ Version 3.5 - 23 January 2007
 	      append_code -> append_item_code
 	      has_code -> has_item_code
 	      index_of_code -> index_of_item_code
-	  The new names are not great, but they match the feature `item_code'. 
+	  The new names are not great, but they match the feature `item_code'.
 
 	Gobo Eiffel Math/Decimal Library:
 
@@ -555,7 +642,7 @@ Version 3.4 - 10 July 2005
 
 	getest:
 
-	* Added command-line options '--verbose' and '-v' to run 
+	* Added command-line options '--verbose' and '-v' to run
 	  getest in verbose mode.
 	* In verbose mode getest prints the number of test cases
 	  that have been generated.
@@ -591,7 +678,7 @@ Version 3.4 - 10 July 2005
 	* Added feature `truncated_to_integer' to KL_DOUBLE_ROUTINES because
 	  this routine is not supported anymore in SE 2.2b1.
 	* Added class KL_CLONABLE. This class should be used whenever
-	  the corresponding objects need to be cloned. This is the 
+	  the corresponding objects need to be cloned. This is the
 	  consequence of `clone' not being supported anymore in SE 2.2b1.
 	  If you need to clone strings or arrays, use `cloned_string'
 	  by inheriting from KL_IMPORTED_STRING_ROUTINES and `cloned_array'
@@ -609,9 +696,9 @@ Version 3.4 - 10 July 2005
 	Gobo Eiffel Math/Decimal Library:
 
 	* New library, incorporated from the SAFE project (http://safe.sf.net).
-	* Contains MA_DECIMAL, which provides Decimal floating-point arithmetic, 
-	  with unrounded and integer arithmetic as a subset 
-	  (IEEE 754R + IEEE 854 + ANSI X3.274 + ECMA 334). 
+	* Contains MA_DECIMAL, which provides Decimal floating-point arithmetic,
+	  with unrounded and integer arithmetic as a subset
+	  (IEEE 754R + IEEE 854 + ANSI X3.274 + ECMA 334).
 
 	Gobo Eiffel String Library:
 

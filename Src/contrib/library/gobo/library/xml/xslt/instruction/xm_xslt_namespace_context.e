@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_namespace_code_list: DS_ARRAYED_LIST [INTEGER]) is
+	make (a_namespace_code_list: DS_ARRAYED_LIST [INTEGER])
 			-- Establish invariant.
 		require
 			namespace_code_list_not_void: a_namespace_code_list /= Void
@@ -42,7 +42,7 @@ feature -- Access
 	namespace_code_list: DS_ARRAYED_LIST [INTEGER]
 			-- List of namespace codes
 
-	uri_for_defaulted_prefix (a_prefix: STRING; use_default_namespace: BOOLEAN): STRING is
+	uri_for_defaulted_prefix (a_prefix: STRING; use_default_namespace: BOOLEAN): STRING
 			-- Namespace URI corresponding to a given prefix
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -53,8 +53,6 @@ feature -- Access
 				from
 					a_cursor := namespace_code_list.new_cursor
 					a_cursor.finish
-				variant
-					a_cursor.index
 				until
 					a_cursor.before
 				loop
@@ -64,6 +62,8 @@ feature -- Access
 					else
 						a_cursor.back
 					end
+				variant
+					a_cursor.index
 				end
 			end
 			if Result = Void then
@@ -77,11 +77,11 @@ feature -- Access
 			end
 		end
 
-	fingerprint (a_qname: STRING; use_default_namespace: BOOLEAN): INTEGER is
+	fingerprint (a_qname: STRING; use_default_namespace: BOOLEAN): INTEGER
 			-- Fingerprint of `a_qname'
 		local
 			a_parser: XM_XPATH_QNAME_PARSER
-			a_uri: STRING			
+			a_uri: STRING
 		do
 			create a_parser.make (a_qname)
 			a_uri := uri_for_defaulted_prefix (a_parser.optional_prefix, use_default_namespace)
@@ -95,6 +95,6 @@ feature -- Access
 invariant
 
 	namespace_code_list_not_void: namespace_code_list /= Void
-	
+
 end
 

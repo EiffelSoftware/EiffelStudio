@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,13 +37,11 @@ inherit
 			as_feature
 		end
 
-	HASHABLE
-
 	DEBUG_OUTPUT
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset current feature as it was just after it was last parsed.
 		local
 			l_type: like type
@@ -66,28 +64,31 @@ feature -- Initialization
 			reset_after_features_flattened
 		end
 
-	reset_after_features_flattened is
+	reset_after_features_flattened
 			-- Reset current feature as it was just after it was last flattened.
+		do
+			reset_after_interface_checked
+			reset_signature_qualified_anchored_types
+		end
+
+	reset_after_interface_checked
+			-- Reset current feature as it was just after its interface was last checked.
 		local
 			l_preconditions: like preconditions
 			l_postconditions: like postconditions
 		do
-			reset_signature_qualified_anchored_types
-			if assertions_checked then
-				l_preconditions := preconditions
-				if l_preconditions /= Void then
-					l_preconditions.reset
-				end
-				l_postconditions := postconditions
-				if l_postconditions /= Void then
-					l_postconditions.reset
-				end
+			l_preconditions := preconditions
+			if l_preconditions /= Void then
+				l_preconditions.reset
 			end
-			reset_assertions_checked
-			reset_implementation_checked
+			l_postconditions := postconditions
+			if l_postconditions /= Void then
+				l_postconditions.reset
+			end
+			reset_validity_checked
 		end
 
-	reset_signature_qualified_anchored_types is
+	reset_signature_qualified_anchored_types
 			-- Reset qualified anchored types contained in signature of
 			-- current feature as they were just after they were last parsed.
 		local
@@ -106,13 +107,13 @@ feature -- Initialization
 
 feature -- Access
 
-	name: ET_FEATURE_NAME is
+	name: ET_FEATURE_NAME
 			-- Feature name
 		do
 			Result := extended_name.feature_name
 		end
 
-	lower_name: STRING is
+	lower_name: STRING
 			-- Lower-name of feature
 			-- (May return the same object as `name.name' if already in lower case,
 			-- otherwise return a new object at each call.)
@@ -124,7 +125,7 @@ feature -- Access
 			definition: Result.is_equal (name.name.as_lower)
 		end
 
-	alias_name: ET_ALIAS_NAME is
+	alias_name: ET_ALIAS_NAME
 			-- Alias name, if any
 		do
 			Result := extended_name.alias_name
@@ -133,7 +134,7 @@ feature -- Access
 	extended_name: ET_EXTENDED_FEATURE_NAME
 			-- Extended feature name (possibly followed by comma for synomyms)
 
-	overloaded_extended_name: ET_EXTENDED_FEATURE_NAME is
+	overloaded_extended_name: ET_EXTENDED_FEATURE_NAME
 			-- Possibly overloaded extended Eiffel feature name
 			-- (useful in .NET)
 		do
@@ -142,7 +143,7 @@ feature -- Access
 			overloaded_extended_name_not_void: Result /= Void
 		end
 
-	overloaded_name: ET_FEATURE_NAME is
+	overloaded_name: ET_FEATURE_NAME
 			-- Possibly overloaded Eiffel feature name
 			-- (useful in .NET)
 		do
@@ -151,37 +152,25 @@ feature -- Access
 			overloaded_name_not_void: Result /= Void
 		end
 
-	overloaded_alias_name: ET_ALIAS_NAME is
+	overloaded_alias_name: ET_ALIAS_NAME
 			-- Possibly overloaded Eiffel alias name, if any
 			-- (useful in .NET)
 		do
 			Result := overloaded_extended_name.alias_name
 		end
 
-	header_break: ET_BREAK is
+	header_break: ET_BREAK
 			-- Break which appears where the header comment is expected
 		deferred
 		end
 
-	preconditions: ET_PRECONDITIONS is
-			-- Preconditions;
-			-- Void if not a routine or a routine with no preconditions
-		do
-		end
-
-	postconditions: ET_POSTCONDITIONS is
-			-- Postconditions;
-			-- Void if not a routine or a routine with no postconditions
-		do
-		end
-
-	obsolete_message: ET_OBSOLETE is
+	obsolete_message: ET_OBSOLETE
 			-- Obsolete message
 		do
 		end
 
 	first_indexing: ET_INDEXING_LIST
-			-- Indexing clause at the beginning of the feature
+			-- Note clause at the beginning of the feature
 
 	id: INTEGER
 			-- Feature ID
@@ -240,7 +229,7 @@ feature -- Access
 	hash_code: INTEGER
 			-- Hash code value
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -254,7 +243,7 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			if not is_frozen then
@@ -266,7 +255,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_registered: BOOLEAN is
+	is_registered: BOOLEAN
 			-- Has feature been registered to the surrounding universe?
 		do
 			Result := (id > 0)
@@ -274,7 +263,7 @@ feature -- Status report
 			definition: Result = (id > 0)
 		end
 
-	has_header_comment: BOOLEAN is
+	has_header_comment: BOOLEAN
 			-- Does current feature have a header comment?
 		local
 			a_break: like break
@@ -285,7 +274,7 @@ feature -- Status report
 			end
 		end
 
-	has_non_empty_header_comment: BOOLEAN is
+	has_non_empty_header_comment: BOOLEAN
 			-- Does current feature have a non-empty header comment?
 			-- (Comments only made up of white characters or minus signs are not taken into account.)
 		local
@@ -297,74 +286,61 @@ feature -- Status report
 			end
 		end
 
-	signature_has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does at least one type in the signature of current feature contain
-			-- a formal generic parameter when viewed from `a_context'?
-		require
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			-- no_cycle: no cycle in anchored types involved.
-		local
-			l_type: like type
-			l_arguments: like arguments
-		do
-			l_type := type
-			if l_type /= Void then
-				Result := l_type.has_formal_types (a_context)
-			end
-			if not Result then
-				l_arguments := arguments
-				if l_arguments /= Void then
-					Result := l_arguments.has_formal_types (a_context)
-				end
-			end
-		end
-
-	is_frozen: BOOLEAN is
+	is_frozen: BOOLEAN
 			-- Has feature been declared as frozen?
 		do
 			Result := (frozen_keyword /= Void)
 		end
 
-	is_deferred: BOOLEAN is
+	is_deferred: BOOLEAN
 			-- Is feature deferred?
 		do
 			-- Result := False
 		end
 
-	is_function: BOOLEAN is
+	is_external: BOOLEAN
+			-- Is feature external?
+		do
+			-- Result := False
+		end
+
+	is_function: BOOLEAN
 			-- Is feature a function?
 		do
 			-- Result := False
 		ensure
 			query: Result implies is_query
+			routine: Result implies is_routine
 		end
 
-	is_attribute: BOOLEAN is
+	is_attribute: BOOLEAN
 			-- Is feature an attribute?
 		do
 			-- Result := False
 		ensure
 			query: Result implies is_query
+			not_routine: Result implies not is_routine
 		end
 
-	is_constant_attribute: BOOLEAN is
+	is_constant_attribute: BOOLEAN
 			-- Is feature a constant attribute?
 		do
 			-- Result := False
 		ensure
 			query: Result implies is_query
+			not_routine: Result implies not is_routine
 		end
 
-	is_unique_attribute: BOOLEAN is
+	is_unique_attribute: BOOLEAN
 			-- Is feature a unique attribute?
 		do
 			-- Result := False
 		ensure
 			query: Result implies is_query
+			not_routine: Result implies not is_routine
 		end
 
-	is_query: BOOLEAN is
+	is_query: BOOLEAN
 			-- Is current feature a query?
 		do
 			Result := (type /= Void)
@@ -372,21 +348,28 @@ feature -- Status report
 			definition: Result = (type /= Void)
 		end
 
-	is_procedure: BOOLEAN is
+	is_procedure: BOOLEAN
 			-- Is current feature a procedure?
 		do
 			Result := (type = Void)
 		ensure
 			definition: Result = (type = Void)
+			routine: Result implies is_routine
 		end
 
-	is_once: BOOLEAN is
+	is_routine: BOOLEAN
+			-- Is feature a routine?
+		do
+			-- Result := False
+		end
+
+	is_once: BOOLEAN
 			-- Is current feature a once feature?
 		do
 			-- Result := False
 		end
 
-	is_infixable: BOOLEAN is
+	is_infixable: BOOLEAN
 			-- Can current feature have a name of
 			-- the form 'infix ...'?
 		do
@@ -395,7 +378,7 @@ feature -- Status report
 			definition: not is_dotnet implies Result = (type /= Void and (arguments /= Void and then arguments.count = 1))
 		end
 
-	is_prefixable: BOOLEAN is
+	is_prefixable: BOOLEAN
 			-- Can current feature have a name of
 			-- the form 'prefix ...'?
 		do
@@ -404,7 +387,7 @@ feature -- Status report
 			definition: not is_dotnet implies Result = (type /= Void and (arguments = Void or else arguments.count = 0))
 		end
 
-	is_bracketable: BOOLEAN is
+	is_bracketable: BOOLEAN
 			-- Can current feature have a name of
 			-- the form 'alias "[]"'?
 		do
@@ -413,7 +396,7 @@ feature -- Status report
 			definition: Result = (type /= Void and (arguments /= Void and then arguments.count > 0))
 		end
 
-	is_flattened_immediate: BOOLEAN is True
+	is_flattened_immediate: BOOLEAN = True
 			-- Is current feature immediate?
 			--
 			-- Note that this feature only make sense when flattening the features.
@@ -422,7 +405,7 @@ feature -- Status report
 			-- range 1 to `declared_count', and (non-redeclared) inherited features
 			-- from range `declared_count' + 1 to `count'.
 
-	is_redeclaration (a_class: ET_CLASS): BOOLEAN is
+	is_redeclaration (a_class: ET_CLASS): BOOLEAN
 			-- Assuming that the current feature has been declared in `a_class'
 			-- (i.e. it appears in range 1 to 'declared_count' in 'a_class.queries'
 			-- or 'a_class.procedures'), is current feature the redeclaration
@@ -439,7 +422,7 @@ feature -- Status report
 			Result := (first_precursor /= Void)
 		end
 
-	is_join (a_class: ET_CLASS): BOOLEAN is
+	is_join (a_class: ET_CLASS): BOOLEAN
 			-- Assuming that the current feature has been inherited without being
 			-- redefined (i.e. it appears in range 'declared_count' + 1 to 'count'
 			-- in 'a_class.queries' or 'a_class.procedures'), is current feature the
@@ -466,7 +449,7 @@ feature -- Status report
 			end
 		end
 
-	is_feature: BOOLEAN is True
+	is_feature: BOOLEAN = True
 			-- Is `Current' a feature?
 
 	is_used: BOOLEAN
@@ -476,7 +459,7 @@ feature -- Status report
 
 feature -- Measurement
 
-	arguments_count: INTEGER is
+	arguments_count: INTEGER
 			-- Number of formal arguments
 		local
 			l_arguments: like arguments
@@ -493,7 +476,7 @@ feature -- Measurement
 
 feature -- Export status
 
-	is_exported_to (a_client: ET_CLASS): BOOLEAN is
+	is_exported_to (a_client: ET_CLASS): BOOLEAN
 			-- Is current feature exported to `a_client'?
 			-- (Note: Use `current_system.ancestor_builder' on the classes whose ancestors
 			-- need to be built in order to check for descendants.)
@@ -503,7 +486,7 @@ feature -- Export status
 			Result := clients.has_descendant (a_client)
 		end
 
-	is_directly_exported_to (a_client: ET_CLASS): BOOLEAN is
+	is_directly_exported_to (a_client: ET_CLASS): BOOLEAN
 			-- Does `a_client' appear in the list of clients of current feature?
 			-- (This is different from `is_exported_to' where `a_client' can
 			-- be a descendant of a class appearing in the list of clients.
@@ -515,7 +498,7 @@ feature -- Export status
 			Result := clients.has_class (a_client)
 		end
 
-	is_creation_exported_to (a_client, a_class: ET_CLASS): BOOLEAN is
+	is_creation_exported_to (a_client, a_class: ET_CLASS): BOOLEAN
 			-- Is current feature listed in the creation clauses of `a_class'
 			-- and exported to `a_client', or is current feature the version of
 			-- 'default_create' in `a_class' with `a_class' being a non-deferred
@@ -536,7 +519,7 @@ feature -- Export status
 			end
 		end
 
-	is_creation_directly_exported_to (a_client, a_class: ET_CLASS): BOOLEAN is
+	is_creation_directly_exported_to (a_client, a_class: ET_CLASS): BOOLEAN
 			-- Is current feature listed in the creation clauses
 			-- of `a_class' and directly exported to `a_client'?
 			-- (This is different from `is_creation_exported_to' where `a_client'
@@ -553,7 +536,7 @@ feature -- Export status
 	clients: ET_CLIENT_LIST
 			-- Clients to which feature is exported
 
-	set_clients (a_clients: like clients) is
+	set_clients (a_clients: like clients)
 			-- Set `clients' to `a_clients'.
 		require
 			a_clients_not_void: a_clients /= Void
@@ -565,7 +548,7 @@ feature -- Export status
 
 feature -- Comparison
 
-	same_version (other: ET_FEATURE): BOOLEAN is
+	same_version (other: ET_FEATURE): BOOLEAN
 			-- Do current feature and `other' have the same version?
 		require
 			other_not_void: other /= Void
@@ -577,7 +560,7 @@ feature -- Comparison
 
 feature -- Setting
 
-	set_id (an_id: INTEGER) is
+	set_id (an_id: INTEGER)
 			-- Set `id' to `an_id'.
 		require
 			an_id_positive: an_id > 0
@@ -593,7 +576,7 @@ feature -- Setting
 			id_set: id = an_id
 		end
 
-	set_feature_clause (a_feature_clause: like feature_clause) is
+	set_feature_clause (a_feature_clause: like feature_clause)
 			-- Set `feature_clause' to `a_feature_clause'.
 		do
 			feature_clause := a_feature_clause
@@ -601,7 +584,7 @@ feature -- Setting
 			feature_clause_set: feature_clause = a_feature_clause
 		end
 
-	set_first_indexing (an_indexing: like first_indexing) is
+	set_first_indexing (an_indexing: like first_indexing)
 			-- Set `first_indexing' to `an_indexing'
 		do
 			first_indexing := an_indexing
@@ -609,7 +592,7 @@ feature -- Setting
 			first_indexing_set: first_indexing = an_indexing
 		end
 
-	set_version (a_version: INTEGER) is
+	set_version (a_version: INTEGER)
 			-- Set `version' to `a_version'.
 		require
 			a_version_not_void: a_version > 0
@@ -619,7 +602,7 @@ feature -- Setting
 			version_set: version = a_version
 		end
 
-	set_implementation_class (a_class: like implementation_class) is
+	set_implementation_class (a_class: like implementation_class)
 			-- Set `implementation_class' to `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -629,7 +612,7 @@ feature -- Setting
 			implementation_class_set: implementation_class = a_class
 		end
 
-	set_implementation_feature (a_feature: like implementation_feature) is
+	set_implementation_feature (a_feature: like implementation_feature)
 			-- Set `implementation_feature' to `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -639,7 +622,7 @@ feature -- Setting
 			implementation_feature_set: implementation_feature = a_feature
 		end
 
-	set_first_seed (a_seed: INTEGER) is
+	set_first_seed (a_seed: INTEGER)
 			-- Set `first_seed' to `a_seed'.
 		require
 			a_seed_positive: a_seed > 0
@@ -649,7 +632,7 @@ feature -- Setting
 			first_seed_set: first_seed = a_seed
 		end
 
-	set_other_seeds (a_seeds: like other_seeds) is
+	set_other_seeds (a_seeds: like other_seeds)
 			-- Set `other_seeds' to `a_seeds'.
 		do
 			other_seeds := a_seeds
@@ -657,7 +640,7 @@ feature -- Setting
 			other_seeds_set: other_seeds = a_seeds
 		end
 
-	set_first_precursor (a_precursor: like first_precursor) is
+	set_first_precursor (a_precursor: like first_precursor)
 			-- Set `first_precursor' to `a_precursor'.
 		do
 			first_precursor := a_precursor
@@ -665,7 +648,7 @@ feature -- Setting
 			first_precursor_set: first_precursor = a_precursor
 		end
 
-	set_other_precursors (a_precursors: like other_precursors) is
+	set_other_precursors (a_precursors: like other_precursors)
 			-- Set `other_precursors' to `a_precursors'.
 		do
 			other_precursors := a_precursors
@@ -673,7 +656,7 @@ feature -- Setting
 			other_precursors_set: other_precursors = a_precursors
 		end
 
-	set_frozen_keyword (a_frozen: like frozen_keyword) is
+	set_frozen_keyword (a_frozen: like frozen_keyword)
 			-- Set `frozen_keyword' to `a_frozen'.
 		do
 			frozen_keyword := a_frozen
@@ -681,7 +664,7 @@ feature -- Setting
 			frozen_keyword_set: frozen_keyword = a_frozen
 		end
 
-	set_synonym (a_synonym: like synonym) is
+	set_synonym (a_synonym: like synonym)
 			-- Set `synonym' to `a_synonym'.
 		do
 			synonym := a_synonym
@@ -689,7 +672,7 @@ feature -- Setting
 			synonym_set: a_synonym = a_synonym
 		end
 
-	set_semicolon (a_semicolon: like semicolon) is
+	set_semicolon (a_semicolon: like semicolon)
 			-- Set `semicolon' to `a_semicolon'.
 		do
 			semicolon := a_semicolon
@@ -697,14 +680,14 @@ feature -- Setting
 			semicolon_set: semicolon = a_semicolon
 		end
 
-	reset_preconditions is
+	reset_preconditions
 			-- Set `preconditions' to Void.
 		do
 		ensure
 			preconditions_reset: preconditions = Void
 		end
 
-	reset_postconditions is
+	reset_postconditions
 			-- Set `postconditions' to Void.
 		do
 		ensure
@@ -713,7 +696,7 @@ feature -- Setting
 
 feature -- Status setting
 
-	set_used (b: BOOLEAN) is
+	set_used (b: BOOLEAN)
 			-- Set `is_used' to `b'.
 		do
 			is_used := b
@@ -723,7 +706,7 @@ feature -- Status setting
 
 feature -- Duplication
 
-	new_synonym (a_name: like extended_name): like Current is
+	new_synonym (a_name: like extended_name): like Current
 			-- Synonym feature
 		require
 			a_name_not_void: a_name /= Void
@@ -735,7 +718,7 @@ feature -- Duplication
 
 feature -- Conversion
 
-	renamed_feature (a_name: like extended_name): like Current is
+	renamed_feature (a_name: like extended_name): like Current
 			-- Renamed version of current feature
 		require
 			a_name_not_void: a_name /= Void
@@ -747,7 +730,7 @@ feature -- Conversion
 			other_precursors_set: Result.other_precursors = other_precursors
 		end
 
-	undefined_feature (a_name: like extended_name): ET_DEFERRED_ROUTINE is
+	undefined_feature (a_name: like extended_name): ET_DEFERRED_ROUTINE
 			-- Undefined version of current feature
 		require
 			a_name_not_void: a_name /= Void
@@ -760,22 +743,9 @@ feature -- Conversion
 			other_precursors_set: Result.other_precursors = Void
 		end
 
-feature -- Type processing
-
-	resolve_inherited_signature (a_parent: ET_PARENT) is
-			-- Resolve arguments and type inherited from `a_parent'.
-			-- Resolve any formal generic parameters of declared types
-			-- with the corresponding actual parameters in `a_parent',
-			-- and duplicate identifier anchored types (and clear their
-			-- base types).
-		require
-			a_parent_not_void: a_parent /= Void
-		deferred
-		end
-
 feature -- Inheritance
 
-	flattened_feature: ET_FEATURE is
+	flattened_feature: ET_FEATURE
 			-- Feature resulting after feature flattening
 		do
 			Result := Current
@@ -783,7 +753,7 @@ feature -- Inheritance
 			definition: Result = Current
 		end
 
-	flattened_immediate_feature: ET_FEATURE is
+	flattened_immediate_feature: ET_FEATURE
 			-- Current feature viewed as an immediate feature
 		do
 			Result := Current
@@ -791,7 +761,7 @@ feature -- Inheritance
 
 feature -- Conversion
 
-	as_feature: ET_FEATURE is
+	as_feature: ET_FEATURE
 			-- `Current' viewed as a feature
 		do
 			Result := Current
@@ -799,7 +769,7 @@ feature -- Conversion
 
 feature -- Output
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'
 		do
 			Result := name.name

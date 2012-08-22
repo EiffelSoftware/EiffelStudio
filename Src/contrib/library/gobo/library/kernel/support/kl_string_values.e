@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -24,7 +24,7 @@ inherit
 
 feature -- Conversion
 
-	interpreted_string (a_string: STRING): STRING is
+	interpreted_string (a_string: STRING): STRING
 			-- String where the variables have been replaced by their values.
 			-- The variables are considered to be either ${[^}]*} or
 			-- $[a-zA-Z0-9_]+ and the dollar sign is escaped using $$.
@@ -36,7 +36,7 @@ feature -- Conversion
 			a_string_not_void: a_string /= Void
 		local
 			l_name: STRING
-			l_value: ?STRING
+			l_value: detachable STRING
 			i, nb: INTEGER
 			c: CHARACTER
 			stop: BOOLEAN

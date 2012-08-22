@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_lexical_date_time: STRING) is
+	make (a_lexical_date_time: STRING)
 			-- Create from lexical xs:dateTime.
 		require
 			lexical_date_time: a_lexical_date_time /= Void and then is_date_time (a_lexical_date_time)
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_from_date_time (a_date_time: DT_DATE_TIME) is
+	make_from_date_time (a_date_time: DT_DATE_TIME)
 			-- Create from date_time object.
 		require
 			date_time_not_void: a_date_time /= Void
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			local_date_time := a_date_time.twin
 		end
 
-	make_from_zoned_date_time (a_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME) is
+	make_from_zoned_date_time (a_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME)
 			-- Create from date_time object.
 		require
 			date_time_not_void: a_date_time /= Void
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			zoned := True
 		end
 
-	make_from_date (a_date: DT_DATE) is
+	make_from_date (a_date: DT_DATE)
 			-- Create from date object.
 		require
 			date_not_void: a_date /= Void
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			create local_date_time.make_from_date (a_date)
 		end
 
-	make_from_zoned_date (a_date: DT_FIXED_OFFSET_ZONED_DATE) is
+	make_from_zoned_date (a_date: DT_FIXED_OFFSET_ZONED_DATE)
 			-- Create from zoned date object.
 		require
 			date_not_void: a_date /= Void
@@ -82,31 +82,31 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	zoned_date_time: ?DT_FIXED_OFFSET_ZONED_DATE_TIME
+	zoned_date_time: detachable DT_FIXED_OFFSET_ZONED_DATE_TIME
 			-- Zoned date_time value
 
-	local_date_time: ?DT_DATE_TIME
+	local_date_time: detachable DT_DATE_TIME
 			-- Date_Time value without zone
 
-	date: DT_DATE is
+	date: DT_DATE
 			-- Date component, ignoring time zone
 		local
-			l_date: ?like date
+			l_date: detachable like date
 			l_zoned_date_time: like zoned_date_time
 			l_local_date_time: like local_date_time
 		do
 			if zoned then
 				l_zoned_date_time := zoned_date_time
-				check 
+				check
 						-- condition `zoned'
-					zoned: l_zoned_date_time /= Void 
+					zoned: l_zoned_date_time /= Void
 				end
 				l_date := l_zoned_date_time.zoned_date.date
 			else
 				l_local_date_time := local_date_time
-				check 
+				check
 						-- condition by `not zoned'
-					not_zoned: l_local_date_time /= Void 
+					not_zoned: l_local_date_time /= Void
 				end
 				l_date := l_local_date_time.date
 			end
@@ -115,7 +115,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	time: DT_TIME is
+	time: DT_TIME
 			-- Time component, ignoring time zone
 		local
 			l_time: DT_TIME
@@ -124,16 +124,16 @@ feature -- Access
 		do
 			if zoned then
 				l_zoned_date_time := zoned_date_time
-				check 
+				check
 						-- condition `zoned'
-					zoned: l_zoned_date_time /= Void 
+					zoned: l_zoned_date_time /= Void
 				end
 				l_time := l_zoned_date_time.zoned_time.time
 			else
 				l_local_date_time := local_date_time
-				check 
+				check
 						-- condition `not zoned'
-					not_zoned: l_local_date_time /= Void 
+					not_zoned: l_local_date_time /= Void
 				end
 				l_time := l_local_date_time.time
 			end
@@ -144,13 +144,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_xpath_date_time: BOOLEAN is
+	is_xpath_date_time: BOOLEAN
 			-- Does `Current' have both a time component and a date component?
 		do
 			Result := True
 		end
 
-	is_date_time (a_lexical_date_time: STRING): BOOLEAN is
+	is_date_time (a_lexical_date_time: STRING): BOOLEAN
 			-- Is `a_lexical_date_time' a valid xs:dateTime?
 		require
 			lexical_date_time_not_void: a_lexical_date_time /= Void
@@ -163,7 +163,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	as_xpath_date_time: ST_XPATH_DATE_TIME_VALUE is
+	as_xpath_date_time: ST_XPATH_DATE_TIME_VALUE
 			-- `Current' seen as a date-time value
 		do
 			Result := Current

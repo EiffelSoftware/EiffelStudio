@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -14,12 +14,12 @@ class KL_HASHABLE_ROUTINES
 
 feature -- Access
 
-	hash_value (an_any: ANY): INTEGER is
+	hash_value (an_any: ANY): INTEGER
 			-- Hash code value
 		require
 			an_any_not_void: an_any /= Void
 		local
-			hashable: ?HASHABLE
+			hashable: detachable HASHABLE
 		do
 			hashable ?= an_any
 			if hashable /= Void then

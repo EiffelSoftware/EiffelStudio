@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel identifiers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,7 +23,9 @@ inherit
 			is_identifier, is_equal,
 			local_name, argument_name,
 			object_test_local_name,
-			is_object_test_local
+			is_object_test_local,
+			across_cursor_name,
+			is_across_cursor
 		end
 
 	ET_CLASS_NAME
@@ -130,13 +132,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name) is
+	make (a_name: like name)
 			-- Create a new identifier.
 		do
 			make_with_hash_code (a_name, new_hash_code (a_name))
 		end
 
-	make_with_hash_code (a_name: like name; a_code: INTEGER) is
+	make_with_hash_code (a_name: like name; a_code: INTEGER)
 			-- Create a new identifier with hash code `a_code'.
 		require
 			a_name_not_void: a_name /= Void
@@ -155,17 +157,20 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset identifier as it was just after it was last parsed.
 		do
 			if not is_local and not is_argument then
 				seed := 0
+				if is_tuple_label then
+					set_tuple_label (False)
+				end
 			end
 		end
 
 feature -- Access
 
-	lower_name: STRING is
+	lower_name: STRING
 			-- Lower-name of identifier
 			-- (May return the same object as `name' if already in lower case,
 			-- otherwise return a new object at each call.)
@@ -186,7 +191,7 @@ feature -- Access
 			end
 		end
 
-	upper_name: STRING is
+	upper_name: STRING
 			-- Upper-name of identifer
 			-- (May return the same object as `name' if already in upper case,
 			-- otherwise return a new object at each call.)
@@ -207,14 +212,14 @@ feature -- Access
 			end
 		end
 
-	target: ET_EXPRESSION is
+	target: ET_EXPRESSION
 			-- Target
 		do
 		ensure then
 			no_target: Result = Void
 		end
 
-	arguments: ET_ACTUAL_ARGUMENTS is
+	arguments: ET_ACTUAL_ARGUMENTS
 			-- Arguments
 		do
 		ensure then
@@ -224,7 +229,7 @@ feature -- Access
 	hash_code: INTEGER
 			-- Hash code value
 
-	identifier: ET_IDENTIFIER is
+	identifier: ET_IDENTIFIER
 			-- Identifier
 		do
 			Result := Current
@@ -232,59 +237,65 @@ feature -- Access
 
 feature -- Status report
 
-	is_identifier: BOOLEAN is True
+	is_identifier: BOOLEAN = True
 			-- Is current feature name an identifier?
 
-	is_local: BOOLEAN is
+	is_local: BOOLEAN
 			-- Is current identifier a local variable name?
 		do
 			Result := (status_code = local_code)
 		end
 
-	is_object_test_local: BOOLEAN is
+	is_object_test_local: BOOLEAN
 			-- Is current identifier actually an object-test local name?
 		do
 			Result := (status_code = object_test_local_code)
 		end
 
-	is_temporary: BOOLEAN is
+	is_across_cursor: BOOLEAN
+			-- Is current identifier actually an across cursor name?
+		do
+			Result := (status_code = across_cursor_code)
+		end
+
+	is_temporary: BOOLEAN
 			-- Is current identifier a temporary variable name?
 			-- (Used in C code generation for example.)
 		do
 			Result := (status_code = temporary_code)
 		end
 
-	is_argument: BOOLEAN is
+	is_argument: BOOLEAN
 			-- Is current identifier a formal argument name?
 		do
 			Result := (status_code = argument_code)
 		end
 
-	is_tuple_label: BOOLEAN is
+	is_tuple_label: BOOLEAN
 			-- Is current identifier a tuple label?
 		do
 			Result := (status_code = tuple_label_code)
 		end
 
-	is_agent_open_operand: BOOLEAN is
+	is_agent_open_operand: BOOLEAN
 			-- Is current identifier an agent open operand?
 		do
 			Result := (status_code = agent_open_operand_code)
 		end
 
-	is_agent_closed_operand: BOOLEAN is
+	is_agent_closed_operand: BOOLEAN
 			-- Is current identifier an agent closed operand?
 		do
 			Result := (status_code = agent_closed_operand_code)
 		end
 
-	is_instruction: BOOLEAN is
+	is_instruction: BOOLEAN
 			-- Is current identifier an argumentless unqualified call?
 		do
 			Result := (status_code = instruction_code)
 		end
 
-	is_never_void: BOOLEAN is
+	is_never_void: BOOLEAN
 			-- Can current expression never be void?
 		do
 			Result := is_object_test_local
@@ -292,7 +303,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_local (b: BOOLEAN) is
+	set_local (b: BOOLEAN)
 			-- Set `is_local' to `b'.
 		do
 			if b then
@@ -304,7 +315,7 @@ feature -- Status setting
 			local_set: is_local = b
 		end
 
-	set_object_test_local (b: BOOLEAN) is
+	set_object_test_local (b: BOOLEAN)
 			-- Set `is_object_test_local' to `b'.
 		do
 			if b then
@@ -316,7 +327,19 @@ feature -- Status setting
 			object_test_local_set: is_object_test_local = b
 		end
 
-	set_temporary (b: BOOLEAN) is
+	set_across_cursor (b: BOOLEAN)
+			-- Set `is_across_cursor' to `b'.
+		do
+			if b then
+				status_code := across_cursor_code
+			else
+				status_code := no_code
+			end
+		ensure
+			across_local_set: is_across_cursor = b
+		end
+
+	set_temporary (b: BOOLEAN)
 			-- Set `is_temporary' to `b'.
 		do
 			if b then
@@ -328,7 +351,7 @@ feature -- Status setting
 			temporary_set: is_temporary = b
 		end
 
-	set_argument (b: BOOLEAN) is
+	set_argument (b: BOOLEAN)
 			-- Set `is_argument' to `b'.
 		do
 			if b then
@@ -340,7 +363,7 @@ feature -- Status setting
 			argument_set: is_argument = b
 		end
 
-	set_tuple_label (b: BOOLEAN) is
+	set_tuple_label (b: BOOLEAN)
 			-- Set `is_tuple_label' to `b'.
 		do
 			if b then
@@ -352,7 +375,7 @@ feature -- Status setting
 			tuple_label_set: is_tuple_label = b
 		end
 
-	set_agent_open_operand (b: BOOLEAN) is
+	set_agent_open_operand (b: BOOLEAN)
 			-- Set `is_agent_open_operand' to `b'.
 		do
 			if b then
@@ -364,7 +387,7 @@ feature -- Status setting
 			agent_open_operand_set: is_agent_open_operand = b
 		end
 
-	set_agent_closed_operand (b: BOOLEAN) is
+	set_agent_closed_operand (b: BOOLEAN)
 			-- Set `is_agent_closed_operand' to `b'.
 		do
 			if b then
@@ -376,7 +399,7 @@ feature -- Status setting
 			agent_closed_operand_set: is_agent_closed_operand = b
 		end
 
-	set_instruction (b: BOOLEAN) is
+	set_instruction (b: BOOLEAN)
 			-- Set `is_instruction' to `b'.
 		do
 			if b then
@@ -390,7 +413,7 @@ feature -- Status setting
 
 feature -- Comparison
 
-	same_call_name (other: ET_CALL_NAME): BOOLEAN is
+	same_call_name (other: ET_CALL_NAME): BOOLEAN
 			-- Are `Current' and `other' the same feature call name?
 			-- (case insensitive)
 		local
@@ -414,7 +437,7 @@ feature -- Comparison
 			end
 		end
 
-	same_feature_name (other: ET_FEATURE_NAME): BOOLEAN is
+	same_feature_name (other: ET_FEATURE_NAME): BOOLEAN
 			-- Are feature name and `other' the same feature name?
 			-- (case insensitive)
 		local
@@ -438,7 +461,7 @@ feature -- Comparison
 			end
 		end
 
-	same_class_name (other: ET_CLASS_NAME): BOOLEAN is
+	same_class_name (other: ET_CLASS_NAME): BOOLEAN
 			-- Are class name and `other' the same class name?
 			-- (case insensitive)
 		local
@@ -462,7 +485,7 @@ feature -- Comparison
 			end
 		end
 
-	same_identifier (other: ET_IDENTIFIER): BOOLEAN is
+	same_identifier (other: ET_IDENTIFIER): BOOLEAN
 			-- Are current identifier and `other' the same identifier?
 			-- (case insensitive)
 		require
@@ -482,7 +505,7 @@ feature -- Comparison
 			end
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Are current identifier and `other' considered equal?
 		do
 			if ANY_.same_types (Current, other) then
@@ -492,27 +515,33 @@ feature -- Comparison
 
 feature -- Conversion
 
-	local_name: ET_LOCAL_NAME is
+	local_name: ET_LOCAL_NAME
 			-- Current name viewed as a local name
 		do
 			Result := Current
 		end
 
-	argument_name: ET_ARGUMENT_NAME is
+	argument_name: ET_ARGUMENT_NAME
 			-- Current name viewed as an argument name
 		do
 			Result := Current
 		end
 
-	object_test_local_name: ET_OBJECT_TEST_LOCAL_NAME is
+	object_test_local_name: ET_OBJECT_TEST_LOCAL_NAME
 			-- Current name viewed as an object-test local name
+		do
+			Result := Current
+		end
+
+	across_cursor_name: ET_IDENTIFIER
+			-- Current name viewed as an across cursor name
 		do
 			Result := Current
 		end
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_identifier (Current)
@@ -520,7 +549,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	new_hash_code (a_name: STRING): INTEGER is
+	new_hash_code (a_name: STRING): INTEGER
 			-- Hash code value of `a_name' which doesn't
 			-- take case sensitivity into account
 		require
@@ -543,15 +572,16 @@ feature {NONE} -- Implementation
 		end
 
 	status_code: CHARACTER
-	local_code: CHARACTER is 'l'
-	object_test_local_code: CHARACTER is 'm'
-	argument_code: CHARACTER is 'a'
-	temporary_code: CHARACTER is 'v'
-	tuple_label_code: CHARACTER is 't'
-	instruction_code: CHARACTER is 'i'
-	agent_open_operand_code: CHARACTER is 'o'
-	agent_closed_operand_code: CHARACTER is 'c'
-	no_code: CHARACTER is '%U'
+	local_code: CHARACTER = 'l'
+	object_test_local_code: CHARACTER = 'm'
+	across_cursor_code: CHARACTER = 'u'
+	argument_code: CHARACTER = 'a'
+	temporary_code: CHARACTER = 'v'
+	tuple_label_code: CHARACTER = 't'
+	instruction_code: CHARACTER = 'i'
+	agent_open_operand_code: CHARACTER = 'o'
+	agent_closed_operand_code: CHARACTER = 'c'
+	no_code: CHARACTER = '%U'
 			-- Status codes
 
 end

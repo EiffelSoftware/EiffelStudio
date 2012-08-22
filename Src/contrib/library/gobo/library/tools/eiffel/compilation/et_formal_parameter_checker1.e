@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel formal parameter validity checkers, first pass"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new formal parameter first pass checker.
 		do
 			precursor {ET_CLASS_SUBPROCESSOR}
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Validity checking
 
-	check_formal_parameters_validity (a_class: ET_CLASS) is
+	check_formal_parameters_validity (a_class: ET_CLASS)
 			-- First pass of the validity check of the formal generic
 			-- parameters of `a_class'. Do not try to do any conformance
 			-- checking (this is done after the ancestors have been built
@@ -83,11 +83,11 @@ feature -- Validity checking
 				from i := 1 until i > nb loop
 					a_formal := a_parameters.formal_parameter (i)
 					a_name := a_formal.name
-					if universe.has_class (a_name) then
+					if current_universe.has_master_class (a_name) then
 							-- The name of a formal parameter cannot be the
 							-- name of a class in the universe.
 						set_fatal_error
-						other_class := universe.eiffel_class (a_name)
+						other_class := current_universe.master_class (a_name).actual_class
 						error_handler.report_vcfg1a_error (current_class, a_formal, other_class)
 					else
 						from j := 1 until j >= i loop
@@ -110,7 +110,7 @@ feature -- Validity checking
 
 feature {NONE} -- Constraint validity
 
-	check_constraint_validity (a_formal: ET_FORMAL_PARAMETER) is
+	check_constraint_validity (a_formal: ET_FORMAL_PARAMETER)
 			-- Check whether the constraint of `a_formal' is a valid
 			-- constraint in `current_class'. Record any dependences
 			-- between formal parameters to check for cycles later on.
@@ -132,7 +132,7 @@ feature {NONE} -- Constraint validity
 			end
 		end
 
-	check_bit_feature_constraint (a_type: ET_BIT_FEATURE; a_formal: ET_FORMAL_PARAMETER) is
+	check_bit_feature_constraint (a_type: ET_BIT_FEATURE; a_formal: ET_FORMAL_PARAMETER)
 			-- Check whether `a_type' is valid when appearing in a
 			-- constraint of `a_formal' in `current_class'. Record
 			-- any dependences between formal parameters to check for
@@ -150,7 +150,7 @@ feature {NONE} -- Constraint validity
 			error_handler.report_vcfg3a_error (current_class, a_type)
 		end
 
-	check_bit_n_constraint (a_type: ET_BIT_N; a_formal: ET_FORMAL_PARAMETER) is
+	check_bit_n_constraint (a_type: ET_BIT_N; a_formal: ET_FORMAL_PARAMETER)
 			-- Check whether `a_type' is valid when appearing in a
 			-- constraint of `a_formal' in `current_class'. Record
 			-- any dependences between formal parameters to check for
@@ -173,7 +173,7 @@ feature {NONE} -- Constraint validity
 			end
 		end
 
-	check_class_type_constraint (a_type: ET_CLASS_TYPE; a_formal: ET_FORMAL_PARAMETER) is
+	check_class_type_constraint (a_type: ET_CLASS_TYPE; a_formal: ET_FORMAL_PARAMETER)
 			-- Check whether `a_type' is valid when appearing in a
 			-- constraint of `a_formal' in `current_class'. Record
 			-- any dependences between formal parameters to check for
@@ -224,19 +224,19 @@ feature {NONE} -- Constraint validity
 					nb := an_actuals.count
 					from i := 1 until i > nb loop
 						l_actual := an_actuals.type (i)
+						l_actual.process (Current)
 						l_formal := a_formals.formal_parameter (i)
 						if l_formal.is_expanded then
 							if not l_actual.is_type_expanded (current_class) then
-								error_handler.report_gvtcg5b_error (current_class, a_type, l_actual, l_formal)
+								error_handler.report_gvtcg5b_error (current_class, current_class, a_type, l_actual, l_formal)
 								set_fatal_error
 							end
 						elseif l_formal.is_reference then
 							if not l_actual.is_type_reference (current_class) then
-								error_handler.report_gvtcg5a_error (current_class, a_type, l_actual, l_formal)
+								error_handler.report_gvtcg5a_error (current_class, current_class, a_type, l_actual, l_formal)
 								set_fatal_error
 							end
 						end
-						l_actual.process (Current)
 						i := i + 1
 					end
 				end
@@ -255,7 +255,7 @@ feature {NONE} -- Constraint validity
 			end
 		end
 
-	check_formal_parameter_type_constraint (a_type: ET_FORMAL_PARAMETER_TYPE; a_formal: ET_FORMAL_PARAMETER) is
+	check_formal_parameter_type_constraint (a_type: ET_FORMAL_PARAMETER_TYPE; a_formal: ET_FORMAL_PARAMETER)
 			-- Check whether `a_type' is valid when appearing in a
 			-- constraint of `a_formal' in `current_class'. Record
 			-- any dependences between formal parameters to check for
@@ -287,7 +287,7 @@ feature {NONE} -- Constraint validity
 						-- itself (e.g. "A [G -> G]"). This is not
 						-- considered as a fatal error by gelint. The
 						-- base class of this formal parameter will be
-						-- considered to be ANY.
+						-- considered to be "detachable ANY".
 					if current_system.is_ise and then current_system.ise_version <= ise_6_1_latest then
 						error_handler.report_vcfg3d_error (current_class, a_formal, a_type)
 					end
@@ -296,8 +296,8 @@ feature {NONE} -- Constraint validity
 						-- parameter appearing before (e.g. "A [G, H -> G]").
 						-- This is not considered as a fatal error by gelint.
 						-- The base class of this formal parameter will be the
-						-- base class of its constraint, or ANY if there is
-						-- a cycle (e.g. "A [G -> H, H -> G]").
+						-- base class of its constraint, or "detachable ANY"
+						-- if there is a cycle (e.g. "A [G -> H, H -> G]").
 					other_formal := a_parameters.formal_parameter (index1)
 					direct_formal_parameter_sorter.force_relation (other_formal, a_formal)
 					formal_parameter_sorter.force_relation (other_formal, a_formal)
@@ -310,8 +310,8 @@ feature {NONE} -- Constraint validity
 						-- parameter appearing after (e.g. "A [G -> H, H]").
 						-- This is not considered as a fatal error by gelint.
 						-- The base class of this formal parameter will be the
-						-- base class of its constraint, or ANY if there is
-						-- a cycle (e.g. "A [G -> H, H -> G]").
+						-- base class of its constraint, or "detachable ANY "
+						-- if there is a cycle (e.g. "A [G -> H, H -> G]").
 					other_formal := a_parameters.formal_parameter (index1)
 					direct_formal_parameter_sorter.force_relation (other_formal, a_formal)
 					formal_parameter_sorter.force_relation (other_formal, a_formal)
@@ -356,7 +356,7 @@ feature {NONE} -- Constraint validity
 			end
 		end
 
-	check_like_type_constraint (a_type: ET_LIKE_TYPE; a_formal: ET_FORMAL_PARAMETER) is
+	check_like_type_constraint (a_type: ET_LIKE_TYPE; a_formal: ET_FORMAL_PARAMETER)
 			-- Check whether `a_type' is valid when appearing in a
 			-- constraint of `a_formal' in `current_class'. Record
 			-- any dependences between formal parameters to check for
@@ -374,7 +374,7 @@ feature {NONE} -- Constraint validity
 			error_handler.report_vcfg3c_error (current_class, a_type)
 		end
 
-	check_tuple_type_constraint (a_type: ET_TUPLE_TYPE; a_formal: ET_FORMAL_PARAMETER) is
+	check_tuple_type_constraint (a_type: ET_TUPLE_TYPE; a_formal: ET_FORMAL_PARAMETER)
 			-- Check whether `a_type' is valid when appearing in a
 			-- constraint of `a_formal' in `current_class'. Record
 			-- any dependences between formal parameters to check for
@@ -414,7 +414,7 @@ feature {NONE} -- Constraint validity
 
 feature {NONE} -- Constraint cycles
 
-	check_constraint_cycles is
+	check_constraint_cycles
 			-- Check for cycles in the constraints of the formal
 			-- generic parameters of `current_class'.
 			-- Set `has_fatal_error' if an error occurred.
@@ -428,7 +428,7 @@ feature {NONE} -- Constraint cycles
 			a_base_type: ET_BASE_TYPE
 			has_cycle: BOOLEAN
 			i, nb: INTEGER
-			any_type: ET_CLASS_TYPE
+			l_detachable_any_type: ET_CLASS_TYPE
 		do
 			if direct_formal_parameter_sorter.count > 0 then
 				direct_formal_parameter_sorter.sort
@@ -437,7 +437,7 @@ feature {NONE} -- Constraint cycles
 						-- constraints (e.g. "A [G -> H, H -> G]"). This is
 						-- not considered as a fatal error by gelint. The
 						-- base class of the formal parameters involved in
-						-- this cycle will be considered to be ANY.
+						-- this cycle will be considered to be "detachable ANY".
 					has_cycle := True
 					if current_system.is_ise and then current_system.ise_version <= ise_6_1_latest then
 						error_handler.report_vcfg3g_error (current_class, direct_formal_parameter_sorter.cycle)
@@ -449,7 +449,7 @@ feature {NONE} -- Constraint cycles
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					any_type := current_system.any_class
+					l_detachable_any_type := current_universe.detachable_any_type
 					a_parameters_count := a_parameters.count
 					a_sorted_formals := direct_formal_parameter_sorter.sorted_items
 					nb := a_sorted_formals.count
@@ -471,7 +471,7 @@ feature {NONE} -- Constraint cycles
 								if a_base_type /= Void then
 									a_formal.set_constraint_base_type (a_base_type)
 								else
-									a_formal.set_constraint_base_type (any_type)
+									a_formal.set_constraint_base_type (l_detachable_any_type)
 								end
 							end
 						end
@@ -511,7 +511,7 @@ feature {NONE} -- Constraint cycles
 
 feature {ET_AST_NODE} -- Type dispatcher
 
-	process_bit_feature (a_type: ET_BIT_FEATURE) is
+	process_bit_feature (a_type: ET_BIT_FEATURE)
 			-- Process `a_type'.
 		do
 			if current_formal /= Void then
@@ -519,7 +519,7 @@ feature {ET_AST_NODE} -- Type dispatcher
 			end
 		end
 
-	process_bit_n (a_type: ET_BIT_N) is
+	process_bit_n (a_type: ET_BIT_N)
 			-- Process `a_type'.
 		do
 			if current_formal /= Void then
@@ -527,13 +527,13 @@ feature {ET_AST_NODE} -- Type dispatcher
 			end
 		end
 
-	process_class (a_class: ET_CLASS) is
+	process_class (a_class: ET_CLASS)
 			-- Process `a_class'.
 		do
 			process_class_type (a_class)
 		end
 
-	process_class_type (a_type: ET_CLASS_TYPE) is
+	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			if current_formal /= Void then
@@ -541,7 +541,7 @@ feature {ET_AST_NODE} -- Type dispatcher
 			end
 		end
 
-	process_formal_parameter_type (a_type: ET_FORMAL_PARAMETER_TYPE) is
+	process_formal_parameter_type (a_type: ET_FORMAL_PARAMETER_TYPE)
 			-- Process `a_type'.
 		do
 			if current_formal /= Void then
@@ -549,25 +549,25 @@ feature {ET_AST_NODE} -- Type dispatcher
 			end
 		end
 
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
+	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_like_current (a_type: ET_LIKE_CURRENT) is
+	process_like_current (a_type: ET_LIKE_CURRENT)
 			-- Process `a_type'.
 		do
 			process_like_type (a_type)
 		end
 
-	process_like_feature (a_type: ET_LIKE_FEATURE) is
+	process_like_feature (a_type: ET_LIKE_FEATURE)
 			-- Process `a_type'.
 		do
 			process_like_type (a_type)
 		end
 
-	process_like_type (a_type: ET_LIKE_TYPE) is
+	process_like_type (a_type: ET_LIKE_TYPE)
 			-- Process `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -577,19 +577,19 @@ feature {ET_AST_NODE} -- Type dispatcher
 			end
 		end
 
-	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
 		do
 			process_like_type (a_type)
 		end
 
-	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE)
 			-- Process `a_type'.
 		do
 			process_like_type (a_type)
 		end
 
-	process_tuple_type (a_type: ET_TUPLE_TYPE) is
+	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
 		do
 			if current_formal /= Void then

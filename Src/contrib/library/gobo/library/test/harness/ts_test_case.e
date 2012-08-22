@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Test cases"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_default is
+	make_default
 			-- Default initialization.
 		do
 			initialize
@@ -32,14 +32,14 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize current test case.
 			-- (This routine is called by the creation routine
 			-- and can be redefined in descendant classes.)
 		do
 		end
 
-	set_test (a_name: like name; a_test_feature: PROCEDURE [TS_TEST_CASE, TUPLE]) is
+	set_test (a_name: like name; a_test_feature: PROCEDURE [TS_TEST_CASE, TUPLE])
 			-- Identify one of the test features of current test case
 			-- as being the one that will be executed when running
 			-- this test case.
@@ -56,7 +56,7 @@ feature -- Initialization
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name
 		do
 			Result := internal_name
@@ -65,7 +65,7 @@ feature -- Access
 			end
 		end
 
-	variables: TS_VARIABLES is
+	variables: TS_VARIABLES
 			-- Defined variables
 		do
 			if internal_variables = Void then
@@ -74,7 +74,7 @@ feature -- Access
 			Result := internal_variables
 		end
 
-	assertions: TS_ASSERTIONS is
+	assertions: TS_ASSERTIONS
 			-- Assertions
 		do
 			if internal_assertions = Void then
@@ -83,15 +83,7 @@ feature -- Access
 			Result := internal_assertions
 		end
 
-	test_logger: TS_TEST_LOGGER is
-			-- Logger for tests and assertion checkings
-		obsolete
-			"[080210] Use `logger' instead"
-		do
-			Result := logger
-		end
-
-	logger: TS_TEST_LOGGER is
+	logger: TS_TEST_LOGGER
 			-- Logger for tests and assertion checkings
 		do
 			if internal_logger = Void then
@@ -102,7 +94,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_variables (a_variables: like variables) is
+	set_variables (a_variables: like variables)
 			-- Set `variables' to `a_variables'.
 		require
 			a_variables_not_void: a_variables /= Void
@@ -112,19 +104,7 @@ feature -- Setting
 			variables_set: variables = a_variables
 		end
 
-	set_test_logger (a_logger: like test_logger) is
-			-- Set `logger' to `a_logger'.
-		obsolete
-			"[080210] Use `set_logger' instead"
-		require
-			a_logger_not_void: a_logger /= Void
-		do
-			set_logger (a_logger)
-		ensure
-			logger_set: logger = a_logger
-		end
-
-	set_logger (a_logger: like logger) is
+	set_logger (a_logger: like logger)
 			-- Set `logger' to `a_logger'.
 		do
 			internal_logger := a_logger
@@ -134,19 +114,21 @@ feature -- Setting
 
 feature -- Measurement
 
-	count: INTEGER is 1
+	count: INTEGER = 1
 			-- Number of test cases
 
 feature -- Execution
 
-	execute (a_summary: TS_SUMMARY) is
+	execute (a_summary: TS_SUMMARY)
 			-- Run test and put results in `a_summary'.
 		local
 			l_collecting: BOOLEAN
-			l_enabled_test_cases: RX_REGULAR_EXPRESSION
+			l_enabled_test_cases: DS_LINKED_LIST [RX_REGULAR_EXPRESSION]
+			l_disabled_test_cases: DS_LINKED_LIST [RX_REGULAR_EXPRESSION]
 		do
 			l_enabled_test_cases := a_summary.enabled_test_cases
-			if l_enabled_test_cases = Void or else l_enabled_test_cases.recognizes (name) then
+			l_disabled_test_cases := a_summary.disabled_test_cases
+			if (l_enabled_test_cases = Void or else l_enabled_test_cases.there_exists (agent {RX_REGULAR_EXPRESSION}.recognizes (name))) and then (l_disabled_test_cases = Void or else not l_disabled_test_cases.there_exists (agent {RX_REGULAR_EXPRESSION}.recognizes (name))) then
 				l_collecting := memory.collecting
 				assertions.reset
 				a_summary.start_test (Current)
@@ -171,19 +153,19 @@ feature -- Execution
 			end
 		end
 
-	set_up is
+	set_up
 			-- Setup for a test.
 			-- (Can be redefined in descendant classes.)
 		do
 		end
 
-	tear_down is
+	tear_down
 			-- Tear down after a test.
 			-- (Can be redefined in descendant classes.)
 		do
 		end
 
-	default_test is
+	default_test
 			-- Run default test case.
 			-- (Can be redefined in descendant classes.)
 		do
@@ -191,7 +173,7 @@ feature -- Execution
 
 feature -- Registration
 
-	register_test_case (a_tester: TS_TESTER; a_test_name: STRING; a_test_feature: PROCEDURE [TS_TEST_CASE, TUPLE]) is
+	register_test_case (a_tester: TS_TESTER; a_test_name: STRING; a_test_feature: PROCEDURE [TS_TEST_CASE, TUPLE])
 			-- Register `a_test_feature' in `a_tester' with name `a_test_name'.
 		require
 			a_tester_not_void: a_tester /= Void
@@ -203,7 +185,7 @@ feature -- Registration
 			a_tester.put_test (Current)
 		end
 
-	register_cloned_test_case (a_tester: TS_TESTER; a_test_name: STRING; a_test_feature: PROCEDURE [TS_TEST_CASE, TUPLE]) is
+	register_cloned_test_case (a_tester: TS_TESTER; a_test_name: STRING; a_test_feature: PROCEDURE [TS_TEST_CASE, TUPLE])
 			-- Register `a_test_feature' in `a_tester' with name `a_test_name'
 			-- using a clone of `Current' as test case object.
 		require
@@ -220,7 +202,7 @@ feature -- Registration
 			a_tester.put_test (l_test_case)
 		end
 
-	register_test_cases (a_tester: TS_TESTER) is
+	register_test_cases (a_tester: TS_TESTER)
 			-- Register all test cases in `features_under_test'.
 			-- Can be redefined to provide more meaningful test names.
 		require
@@ -245,11 +227,11 @@ feature -- Registration
 			end
 		end
 
-	features_under_test: ARRAY [PROCEDURE [TS_TEST_CASE, TUPLE]] is
+	features_under_test: ARRAY [PROCEDURE [TS_TEST_CASE, TUPLE]]
 			-- Features to be registered to the test harness
 			-- using `register_test_cases'
 		once
-			create Result.make (1, 0)
+			Result := array_routines.make_empty_with_lower (1)
 		ensure
 			features_under_test_not_void: Result /= Void
 			no_void_feature_under_test: not Result.has (Void)
@@ -258,7 +240,7 @@ feature -- Registration
 
 feature {NONE} -- Execution
 
-	execute_without_rescue (a_summary: TS_SUMMARY) is
+	execute_without_rescue (a_summary: TS_SUMMARY)
 			-- Run test and put results in `a_summary'.
 		require
 			a_summary_not_void: a_summary /= Void
@@ -289,7 +271,7 @@ feature {NONE} -- Execution
 			end
 		end
 
-	execute_with_rescue (a_summary: TS_SUMMARY) is
+	execute_with_rescue (a_summary: TS_SUMMARY)
 			-- Run test and put results in `a_summary'.
 		require
 			a_summary_not_void: a_summary /= Void
@@ -322,7 +304,14 @@ feature {NONE} -- Execution
 						end
 					end
 				else
-					logger.report_abort
+						-- Get exception trace.
+					l_message := Exceptions.exception_trace
+					if l_message = Void or else l_message.is_empty then
+						l_message := "Eiffel exception"
+					else
+						l_message := "Eiffel exception%N" + l_message
+					end
+					logger.report_abort (l_message)
 						-- Report any test failure before reporting the Eiffel exception.
 					an_error_messages := assertions.error_messages
 					nb := an_error_messages.count
@@ -335,12 +324,6 @@ feature {NONE} -- Execution
 						i := i + 1
 					end
 						-- Report the Eiffel exception.
-					l_message := Exceptions.exception_trace
-					if l_message = Void or else l_message.is_empty then
-						l_message := "Eiffel exception"
-					else
-						l_message := "Eiffel exception%N" + l_message
-					end
 					a_summary.put_abort (Current, l_message)
 				end
 			end
@@ -369,9 +352,17 @@ feature {NONE} -- Implementation
 	internal_logger: TS_TEST_LOGGER
 			-- Internal implementation of `logger'
 
+	array_routines: KL_ARRAY_ROUTINES [PROCEDURE [TS_TEST_CASE, TUPLE]]
+			-- Routines that ought to be in class "ARRAY"
+		once
+			create Result
+		ensure
+			array_routines_not_void: Result /= Void
+		end
+
 feature {NONE} -- Constants
 
-	default_test_name: STRING is "Default test"
+	default_test_name: STRING = "Default test"
 			-- Name for default test
 
 end

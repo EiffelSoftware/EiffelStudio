@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -32,7 +32,7 @@ create
 
 feature -- Status report
 
-	valid_start_condition (sc: INTEGER): BOOLEAN is
+	valid_start_condition (sc: INTEGER): BOOLEAN
 			-- Is `sc' a valid start condition?
 		do
 			Result := (INITIAL <= sc and sc <= EIFFEL_BLOCK2)
@@ -40,7 +40,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	yy_build_tables is
+	yy_build_tables
 			-- Build scanner tables.
 		do
 			yy_nxt := yy_nxt_template
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 			yy_accept := yy_accept_template
 		end
 
-	yy_execute_action (yy_act: INTEGER) is
+	yy_execute_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		do
 if yy_act <= 60 then
@@ -1236,7 +1236,7 @@ end
 			yy_set_beginning_of_line
 		end
 
-	yy_execute_eof_action (yy_sc: INTEGER) is
+	yy_execute_eof_action (yy_sc: INTEGER)
 			-- Execute EOF semantic action.
 		do
 			terminate
@@ -1244,17 +1244,17 @@ end
 
 feature {NONE} -- Table templates
 
-	yy_nxt_template: SPECIAL [INTEGER] is
+	yy_nxt_template: SPECIAL [INTEGER]
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make (0, 1702)
+			create an_array.make_filled (0, 0, 1702)
 			yy_nxt_template_1 (an_array)
 			yy_nxt_template_2 (an_array)
 			Result := yy_fixed_array (an_array)
 		end
 
-	yy_nxt_template_1 (an_array: ARRAY [INTEGER]) is
+	yy_nxt_template_1 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			    0,  470,   39,   40,   39,  120,  120,  121,  121,  138,
@@ -1369,7 +1369,7 @@ feature {NONE} -- Table templates
 			1, 1000, 0)
 		end
 
-	yy_nxt_template_2 (an_array: ARRAY [INTEGER]) is
+	yy_nxt_template_2 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  177,  177,  177,  177,  177,  177,  177,  177,  177,  177,
@@ -1453,17 +1453,17 @@ feature {NONE} -- Table templates
 			1, 703, 1000)
 		end
 
-	yy_chk_template: SPECIAL [INTEGER] is
+	yy_chk_template: SPECIAL [INTEGER]
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make (0, 1702)
+			create an_array.make_filled (0, 0, 1702)
 			yy_chk_template_1 (an_array)
 			yy_chk_template_2 (an_array)
 			Result := yy_fixed_array (an_array)
 		end
 
-	yy_chk_template_1 (an_array: ARRAY [INTEGER]) is
+	yy_chk_template_1 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			    0,    0,    1,    1,    1,   31,   32,   31,   32,   39,
@@ -1578,7 +1578,7 @@ feature {NONE} -- Table templates
 			1, 1000, 0)
 		end
 
-	yy_chk_template_2 (an_array: ARRAY [INTEGER]) is
+	yy_chk_template_2 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  493,  493,  493,  493,  493,  493,  493,  493,  493,  493,
@@ -1662,7 +1662,7 @@ feature {NONE} -- Table templates
 			1, 703, 1000)
 		end
 
-	yy_base_template: SPECIAL [INTEGER] is
+	yy_base_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    0,   12,   60,  108,    0,    0,   61,   70,  157,
@@ -1725,7 +1725,7 @@ feature {NONE} -- Table templates
 			 1451, yy_Dummy>>)
 		end
 
-	yy_def_template: SPECIAL [INTEGER] is
+	yy_def_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,  471,  470,  472,  472,  473,  473,  474,  474,  470,
@@ -1788,7 +1788,7 @@ feature {NONE} -- Table templates
 			  470, yy_Dummy>>)
 		end
 
-	yy_ec_template: SPECIAL [INTEGER] is
+	yy_ec_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
@@ -1821,7 +1821,7 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    1,    1,    1, yy_Dummy>>)
 		end
 
-	yy_meta_template: SPECIAL [INTEGER] is
+	yy_meta_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    2,    3,    4,    1,    5,    6,    1,
@@ -1831,7 +1831,7 @@ feature {NONE} -- Table templates
 			   15,   16,    1,    1,   17,    1,   18,   19,    1,   20, yy_Dummy>>)
 		end
 
-	yy_accept_template: SPECIAL [INTEGER] is
+	yy_accept_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    0,    0,    0,    0,    0,    0,   11,   11,    0,
@@ -1890,62 +1890,62 @@ feature {NONE} -- Table templates
 
 feature {NONE} -- Constants
 
-	yyJam_base: INTEGER is 1653
+	yyJam_base: INTEGER = 1653
 			-- Position in `yy_nxt'/`yy_chk' tables
 			-- where default jam table starts
 
-	yyJam_state: INTEGER is 470
+	yyJam_state: INTEGER = 470
 			-- State id corresponding to jam state
 
-	yyTemplate_mark: INTEGER is 471
+	yyTemplate_mark: INTEGER = 471
 			-- Mark between normal states and templates
 
-	yyNull_equiv_class: INTEGER is 1
+	yyNull_equiv_class: INTEGER = 1
 			-- Equivalence code for NULL character
 
-	yyReject_used: BOOLEAN is false
+	yyReject_used: BOOLEAN = false
 			-- Is `reject' called?
 
-	yyVariable_trail_context: BOOLEAN is false
+	yyVariable_trail_context: BOOLEAN = false
 			-- Is there a regular expression with
 			-- both leading and trailing parts having
 			-- variable length?
 
-	yyReject_or_variable_trail_context: BOOLEAN is false
+	yyReject_or_variable_trail_context: BOOLEAN = false
 			-- Is `reject' called or is there a
 			-- regular expression with both leading
 			-- and trailing parts having variable length?
 
-	yyNb_rules: INTEGER is 119
+	yyNb_rules: INTEGER = 119
 			-- Number of rules
 
-	yyEnd_of_buffer: INTEGER is 120
+	yyEnd_of_buffer: INTEGER = 120
 			-- End of buffer rule code
 
-	yyLine_used: BOOLEAN is false
+	yyLine_used: BOOLEAN = false
 			-- Are line and column numbers used?
 
-	yyPosition_used: BOOLEAN is false
+	yyPosition_used: BOOLEAN = false
 			-- Is `position' used?
 
-	INITIAL: INTEGER is 0
-	SECT2: INTEGER is 1
-	SECT3: INTEGER is 2
-	EIFFEL_BLOCK: INTEGER is 3
-	OPTION: INTEGER is 4
-	RECOVER1: INTEGER is 5
-	SCNAME: INTEGER is 6
-	XSCNAME: INTEGER is 7
-	NUM: INTEGER is 8
-	QUOTE: INTEGER is 9
-	SCOND: INTEGER is 10
-	ACTION_TEXT: INTEGER is 11
-	DEFINITION: INTEGER is 12
-	FIRSTCCL: INTEGER is 13
-	CCL: INTEGER is 14
-	OUTFILE: INTEGER is 15
-	REGEXP: INTEGER is 16
-	EIFFEL_BLOCK2: INTEGER is 17
+	INITIAL: INTEGER = 0
+	SECT2: INTEGER = 1
+	SECT3: INTEGER = 2
+	EIFFEL_BLOCK: INTEGER = 3
+	OPTION: INTEGER = 4
+	RECOVER1: INTEGER = 5
+	SCNAME: INTEGER = 6
+	XSCNAME: INTEGER = 7
+	NUM: INTEGER = 8
+	QUOTE: INTEGER = 9
+	SCOND: INTEGER = 10
+	ACTION_TEXT: INTEGER = 11
+	DEFINITION: INTEGER = 12
+	FIRSTCCL: INTEGER = 13
+	CCL: INTEGER = 14
+	OUTFILE: INTEGER = 15
+	REGEXP: INTEGER = 16
+	EIFFEL_BLOCK2: INTEGER = 17
 			-- Start condition codes
 
 feature -- User-defined features

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -14,11 +14,11 @@ class KL_OPERATING_SYSTEM
 
 feature -- Status report
 
-	is_windows: BOOLEAN is
+	is_windows: BOOLEAN
 			-- Is underlying operating system Windows-like?
 		local
 			cwd: STRING
-			gobo_os, os: ?STRING
+			gobo_os, os: detachable STRING
 		once
 			gobo_os := variable_value ("GOBO_OS")
 			if gobo_os /= Void and then gobo_os.count > 0 then
@@ -42,11 +42,11 @@ feature -- Status report
 			end
 		end
 
-	is_unix: BOOLEAN is
+	is_unix: BOOLEAN
 			-- Is underlying operating system Unix-like?
 		local
 			cwd: STRING
-			gobo_os: ?STRING
+			gobo_os: detachable STRING
 		once
 			gobo_os := variable_value ("GOBO_OS")
 			if gobo_os /= Void and then gobo_os.count > 0 then
@@ -61,7 +61,7 @@ feature -- Status report
 			end
 		end
 
-	is_dotnet: BOOLEAN is
+	is_dotnet: BOOLEAN
 			-- Has this application been compiled with Eiffel for .NET?
 		local
 			p: PLATFORM
@@ -72,7 +72,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	current_working_directory: STRING is
+	current_working_directory: STRING
 			-- Name of current working directory;
 			-- Return absolute pathname with the naming
 			-- convention of the underlying file system
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			current_working_directory_not_void: Result /= Void
 		end
 
-	variable_value (a_variable: STRING): ?STRING is
+	variable_value (a_variable: STRING): detachable STRING
 			-- Value of environment variable `a_variable',
 			-- Void if `a_variable' has not been set
 		require
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 			Result := execution_environment.get (a_variable)
 		end
 
-	execution_environment: EXECUTION_ENVIRONMENT is
+	execution_environment: EXECUTION_ENVIRONMENT
 			-- Execution environment implementation
 		once
 			create Result

@@ -1,11 +1,11 @@
 %{
-indexing
+note
 
 	description:
 
 		"Eiffel parsers"
 
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,7 +45,7 @@ create
 %token E_DO E_ELSE E_ELSEIF E_END E_ENSURE E_EXPANDED E_EXPORT
 %token E_EXTERNAL E_FALSE E_FEATURE E_FROM E_FROZEN E_IF E_INDEXING
 %token E_INFIX E_INHERIT E_INSPECT E_INVARIANT E_IS E_LIKE E_LOCAL
-%token E_LOOP E_OBSOLETE E_ONCE E_PREFIX E_REDEFINE E_RENAME E_REQUIRE
+%token E_LOOP E_NOTE E_OBSOLETE E_ONCE E_PREFIX E_REDEFINE E_RENAME E_REQUIRE
 %token E_RESCUE E_RETRY E_SELECT E_SEPARATE E_STRIP E_THEN E_TRUE
 %token E_UNDEFINE E_UNIQUE E_UNTIL E_VARIANT E_WHEN E_CURRENT E_RESULT
 %token E_PRECURSOR E_CREATE
@@ -88,6 +88,7 @@ Creators_features_invariant_opt: Creators_opt Features_opt Invariant_opt
 
 Indexing_opt: -- Empty
 	| E_INDEXING Index_list
+	| E_NOTE Index_list
 	;
 
 Index_list: -- Empty
@@ -349,12 +350,12 @@ Declaration_body: Formal_arguments_opt Type_mark_opt Constant_or_routine_opt
 	;
 
 Constant_or_routine_opt: -- Empty
-	| E_IS Feature_value
-	;
-
-Feature_value: Manifest_constant
-	| E_UNIQUE
+	| E_IS Routine
 	| Routine
+	| '=' Manifest_constant
+	| E_IS Manifest_constant
+	| '=' E_UNIQUE
+	| E_IS E_UNIQUE
 	;
 
 --------------------------------------------------------------------------------
@@ -813,14 +814,14 @@ Identifier: E_IDENTIFIER
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new Eiffel parser.
 		do
 			make_eiffel_scanner
 			make_parser_skeleton
 		end
 
-	execute is
+	execute
 			-- Parse Eiffel files `arguments (1..argument_count)'.
 		local
 			j, n: INTEGER
@@ -852,7 +853,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	benchmark is
+	benchmark
 			-- Parse Eiffel file `argument (2)' `argument (1)' times.
 		local
 			j, n: INTEGER
@@ -890,7 +891,7 @@ feature {NONE} -- Initialization
 
 feature -- Error handling
 
-	report_error (a_message: STRING) is
+	report_error (a_message: STRING)
 			-- Print error message.
 		local
 			f_buffer: YY_FILE_BUFFER

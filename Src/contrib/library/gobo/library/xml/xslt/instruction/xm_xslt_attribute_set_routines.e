@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -14,7 +14,7 @@ class XM_XSLT_ATTRIBUTE_SET_ROUTINES
 
 feature {NONE} -- Implementation
 
-	expand_attribute_sets (a_executable: XM_XSLT_EXECUTABLE; a_set: DS_ARRAYED_LIST [INTEGER]; a_context: XM_XPATH_CONTEXT) is
+	expand_attribute_sets (a_executable: XM_XSLT_EXECUTABLE; a_set: DS_ARRAYED_LIST [INTEGER]; a_context: XM_XPATH_CONTEXT)
 			-- Expand attribute sets to their constituents.
 		require
 			a_executable_not_void: a_executable /= Void
@@ -26,8 +26,6 @@ feature {NONE} -- Implementation
 		do
 			from
 				l_cursor := a_set.new_cursor; l_cursor.start
-			variant
-				a_set.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -45,6 +43,8 @@ feature {NONE} -- Implementation
 					l_cursor_2.forth
 				end
 				l_cursor.forth
+			variant
+				a_set.count + 1 - l_cursor.index
 			end
 		end
 

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	feature_name: ET_FEATURE_NAME is
+	feature_name: ET_FEATURE_NAME
 			-- Feature name
 		deferred
 		ensure

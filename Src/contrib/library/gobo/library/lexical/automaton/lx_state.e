@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -18,7 +18,7 @@ inherit
 
 feature -- Status report
 
-	is_accepting: BOOLEAN is
+	is_accepting: BOOLEAN
 			-- Is current state an accepting state?
 		deferred
 		end

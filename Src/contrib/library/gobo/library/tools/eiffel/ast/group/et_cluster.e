@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,26 +14,34 @@ deferred class ET_CLUSTER
 
 inherit
 
-	ET_GROUP
+	ET_PRIMARY_GROUP
 		redefine
 			is_cluster, cluster,
-			full_name, full_lower_name,
-			full_pathname, full_unix_pathname
+			relative_name, relative_lower_name,
+			full_pathname, full_unix_pathname,
+			kind_name,
+			has_class_recursive,
+			class_count_recursive,
+			classes_do_recursive,
+			classes_do_if_recursive
 		end
 
+	ET_IMPORTED_AGENT_ROUTINES
+		export {NONE} all end
+
 	KL_SHARED_OPERATING_SYSTEM
-	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 feature -- Status report
 
-	is_cluster: BOOLEAN is True
+	is_cluster: BOOLEAN = True
 			-- Is current group a cluster?
 
 	is_abstract: BOOLEAN
 			-- Is there no classes in current cluster?
 			-- (i.e. 'abstract' keyword in HACT's LACE.)
 
-	is_fully_abstract: BOOLEAN is
+	is_fully_abstract: BOOLEAN
 			-- Are current cluster and recursively all its
 			-- subclusters abstract?
 		local
@@ -117,9 +125,10 @@ feature -- Status report
 	is_implicit: BOOLEAN
 			-- Has current cluster not been explicitly declared
 			-- but is instead the result of the fact that its
-			-- parent is a recursive cluster?
+			-- parent (or recursively the parent of its parent)
+			-- is a recursive cluster?
 
-	has_ancestor (a_cluster: ET_CLUSTER): BOOLEAN is
+	has_ancestor (a_cluster: ET_CLUSTER): BOOLEAN
 			-- Is `a_cluster' the current cluster itself,
 			-- or recursively one of its parents?
 		require
@@ -145,7 +154,7 @@ feature -- Status report
 			end
 		end
 
-	has_subcluster (a_cluster: ET_CLUSTER): BOOLEAN is
+	has_subcluster (a_cluster: ET_CLUSTER): BOOLEAN
 			-- Is `a_cluster' (recursively) one of the subclusters
 			-- of current cluster?
 		require
@@ -163,7 +172,7 @@ feature -- Status report
 			end
 		end
 
-	has_cluster_by_name (a_names: ARRAY [STRING]): BOOLEAN is
+	has_cluster_by_name (a_names: ARRAY [STRING]): BOOLEAN
 			-- Is there a subcluster (recursively) named `a_names',
 			-- or True if `a_names' is empty?
 			-- Do not take into account missing implicit subclusters.
@@ -179,7 +188,7 @@ feature -- Status report
 			end
 		end
 
-	has_cluster_with_absolute_pathname (a_pathname: STRING): BOOLEAN is
+	has_cluster_with_absolute_pathname (a_pathname: STRING): BOOLEAN
 			-- Does current cluster or one of its subclusters (recursively)
 			-- have the absolute pathname `a_pathname'?
 			--
@@ -196,7 +205,7 @@ feature -- Status report
 			end
 		end
 
-	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN is
+	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN
 			-- Is `a_filename' an Eiffel filename which has
 			-- not been excluded?
 		require
@@ -205,7 +214,7 @@ feature -- Status report
 			Result := has_eiffel_extension (a_filename)
 		end
 
-	is_valid_directory_name (a_dirname: STRING): BOOLEAN is
+	is_valid_directory_name (a_dirname: STRING): BOOLEAN
 			-- Is `a_dirname' a directory name other than "." and
 			-- ".." and which has not been excluded?
 		require
@@ -216,50 +225,87 @@ feature -- Status report
 				not STRING_.same_string (a_dirname, dot_dot_directory_name)
 		end
 
+	has_class (a_class: ET_CLASS): BOOLEAN
+			-- Is current cluster the primary group of `a_class'?
+			-- Do not take into account overridden classes.
+		do
+			Result := a_class.is_in_group (Current) and then not a_class.is_overridden
+		end
+
+	has_class_recursive (a_class: ET_CLASS): BOOLEAN
+			-- Has `a_class' been declared in current cluster or recursively
+			-- in one of its subclusters?
+			-- Do not take into account overridden classes.
+		do
+			Result := a_class.is_in_group_recursive (Current) and then not a_class.is_overridden
+		end
+
 feature -- Access
 
 	universe: ET_UNIVERSE
 			-- Surrounding universe
 
-	full_name (a_separator: CHARACTER): STRING is
-			-- Full name (use `a_separator' as separator
-			-- between parents' names)
+	relative_name (a_universe: ET_UNIVERSE; a_separator: CHARACTER): STRING
+			-- Name of current group relative its parents and its universe down to `a_universe'
+			-- (use `a_separator' as separator between parents' and universes' names)
+			--
+			-- If `a_universe' is `universe' then return the name relative to its
+			-- parents only. Otherwise Use one of the shortest paths between
+			-- `a_universe' and `universe', and if no such path exists then return
+			-- the name relative to its parents only.
 		local
-			parent_name: STRING
-			a_basename: STRING
+			l_parent: like parent
+			l_parent_name: STRING
+			l_basename: STRING
 		do
-			if parent /= Void then
-				parent_name := parent.full_name (a_separator)
-				a_basename := name
-				Result := STRING_.new_empty_string (parent_name, parent_name.count + a_basename.count + 1)
-				Result.append_string (parent_name)
-				Result.append_character (a_separator)
-				Result := STRING_.appended_string (Result, a_basename)
+			if a_universe = universe then
+				l_parent := parent
+				if l_parent /= Void then
+					l_parent_name := l_parent.relative_name (l_parent.universe, a_separator)
+					l_basename := name
+					Result := STRING_.new_empty_string (l_parent_name, l_parent_name.count + l_basename.count + 1)
+					Result.append_string (l_parent_name)
+					Result.append_character (a_separator)
+					Result := STRING_.appended_string (Result, l_basename)
+				else
+					Result := name
+				end
 			else
-				Result := name
+				Result := precursor (a_universe, a_separator)
 			end
 		end
 
-	full_lower_name (a_separator: CHARACTER): STRING is
-			-- Full lower_name (use `a_separator' as separator
-			-- between parents' names)
+	relative_lower_name (a_universe: ET_UNIVERSE; a_separator: CHARACTER): STRING
+			-- Lower-name of current group relative its parents and its universe down to `a_universe'
+			-- (use `a_separator' as separator between parents' and universes' names)
+			--
+			-- If `a_universe' is `universe' then return the name relative to its
+			-- parents only. Otherwise Use one of the shortest paths between
+			-- `a_universe' and `universe', and if no such path exists then return
+			-- the name relative to its parents only.
 		local
-			parent_name: STRING
-			a_basename: STRING
+			l_parent: like parent
+			l_parent_name: STRING
+			l_basename: STRING
 		do
-			if parent /= Void then
-				parent_name := parent.full_lower_name (a_separator)
-				a_basename := lower_name
-				Result := STRING_.new_empty_string (parent_name, parent_name.count + a_basename.count + 1)
-				Result.append_string (parent_name)
-				Result.append_character (a_separator)
-				Result := STRING_.appended_string (Result, a_basename)
+			if a_universe = universe then
+				l_parent := parent
+				if l_parent /= Void then
+					l_parent_name := l_parent.relative_lower_name (l_parent.universe, a_separator)
+					l_basename := lower_name
+					Result := STRING_.new_empty_string (l_parent_name, l_parent_name.count + l_basename.count + 1)
+					Result.append_string (l_parent_name)
+					Result.append_character (a_separator)
+					Result := STRING_.appended_string (Result, l_basename)
+				else
+					Result := lower_name
+				end
 			else
-				Result := lower_name
+				Result := precursor (a_universe, a_separator)
 			end
 		end
 
-	full_pathname: STRING is
+	full_pathname: STRING
 			-- Full directory pathname
 		local
 			a_pathname: STRING
@@ -282,7 +328,7 @@ feature -- Access
 			end
 		end
 
-	full_unix_pathname: STRING is
+	full_unix_pathname: STRING
 			-- Full Unix directory pathname
 		local
 			a_pathname: STRING
@@ -305,7 +351,7 @@ feature -- Access
 			end
 		end
 
-	cluster: ET_CLUSTER is
+	cluster: ET_CLUSTER
 			-- Current group viewed as a cluster
 		do
 			Result := Current
@@ -313,12 +359,18 @@ feature -- Access
 			definition: Result = Current
 		end
 
+	kind_name: STRING
+			-- Name of the kind of group (e.g. "cluster", "assembly", etc.)
+		once
+			Result := "cluster"
+		end
+
 feature -- Nested
 
 	parent: ET_CLUSTER
 			-- Parent cluster
 
-	cluster_by_name (a_names: ARRAY [STRING]): ET_CLUSTER is
+	cluster_by_name (a_names: ARRAY [STRING]): ET_CLUSTER
 			-- Current cluster if `a_names' is empty, otherwise
 			-- (recursively) subcluster named `a_names'
 			--
@@ -347,7 +399,7 @@ feature -- Nested
 			has_ancestor: Result /= Void implies Result.has_ancestor (Current)
 		end
 
-	cluster_with_absolute_pathname (a_pathname: STRING): ET_CLUSTER is
+	cluster_with_absolute_pathname (a_pathname: STRING): ET_CLUSTER
 			-- Cluster with absolute pathname `a_pathname' in either current cluster
 			-- or one of its subclusters (recursively)
 			--
@@ -376,7 +428,7 @@ feature -- Nested
 			has_ancestor: Result /= Void implies Result.has_ancestor (Current)
 		end
 
-	cluster_with_relative_pathname_to (a_cluster, a_ancestor: ET_CLUSTER): ET_CLUSTER is
+	cluster_with_relative_pathname_to (a_cluster, a_ancestor: ET_CLUSTER): ET_CLUSTER
 			-- Cluster in either current cluster or one of its subclusters (recursively)
 			-- whose relative pathname to current cluster is the same as the relative
 			-- pathname between `a_cluster' and `a_ancestor'
@@ -461,7 +513,7 @@ feature -- SCM mappings
 			-- See class ET_CLUSTER_SCM_WRITE_MAPPING for explanations
 			-- about SCM write mappings.
 
-	scm_read_mapping_recursive: ET_CLUSTER_SCM_READ_MAPPING is
+	scm_read_mapping_recursive: ET_CLUSTER_SCM_READ_MAPPING
 			-- SCM read mapping applicable to current cluster;
 			-- It is either `scm_read_mapping' if not Void, or recursively
 			-- the version from the parent cluster if the current cluster is relative
@@ -477,7 +529,7 @@ feature -- SCM mappings
 			is_relative: Result /= Void implies is_relative_to (result.current_cluster)
 		end
 
-	scm_write_mapping_recursive: ET_CLUSTER_SCM_WRITE_MAPPING is
+	scm_write_mapping_recursive: ET_CLUSTER_SCM_WRITE_MAPPING
 			-- SCM write mapping applicable to current cluster;
 			-- It is either `scm_write_mapping' if not Void, or recursively
 			-- the version from its parent cluster if the current cluster is relative
@@ -493,7 +545,7 @@ feature -- SCM mappings
 			is_relative: Result /= Void implies is_relative_to (result.current_cluster)
 		end
 
-	scm_mapping_recursive: ET_CLUSTER_SCM_MAPPING is
+	scm_mapping_recursive: ET_CLUSTER_SCM_MAPPING
 			-- SCM read or write mapping applicable to current cluster;
 			-- It is either `scm_write_mapping' if not Void, or else
 			-- `scm_read_mapping' if not Void, or recursively the version
@@ -515,51 +567,74 @@ feature -- SCM mappings
 
 feature -- Measurement
 
-	count: INTEGER is
+	count_recursive: INTEGER
 			-- Number (recursively) of non-abstract clusters,
-			-- including current cursor
+			-- including current cluster
 		do
 			if not is_abstract then
 				Result := 1
 			end
 			if subclusters /= Void then
-				Result := Result + subclusters.count
+				Result := Result + subclusters.count_recursive
 			end
 		ensure
-			count_non_negative: Result >= 0
+			count_recursive_not_negative: Result >= 0
 		end
 
-	override_count: INTEGER is
+	override_count_recursive: INTEGER
 			-- Number (recursively) of non-abstract non-read-only override clusters,
-			-- including current cursor
+			-- including current cluster
 		do
 			if not is_read_only and not is_abstract and is_override then
 				Result := 1
 			end
 			if subclusters /= Void then
-				Result := Result + subclusters.override_count
+				Result := Result + subclusters.override_count_recursive
 			end
 		ensure
-			override_count_non_negative: Result >= 0
+			override_count_not_negative: Result >= 0
 		end
 
-	read_write_count: INTEGER is
+	read_write_count_recursive: INTEGER
 			-- Number (recursively) of non-abstract non-read-only clusters,
-			-- including current cursor
+			-- including current cluster
 		do
 			if not is_read_only and not is_abstract then
 				Result := 1
 			end
 			if subclusters /= Void then
-				Result := Result + subclusters.read_write_count
+				Result := Result + subclusters.read_write_count_recursive
 			end
 		ensure
-			read_write_count_non_negative: Result >= 0
+			read_write_count_recursive_not_negative: Result >= 0
+		end
+
+	class_count: INTEGER
+			-- Number of classes which have been declared in
+			-- current cluster or recursively in one of its subclusters.
+			-- Do not take into account overridden classes.
+		local
+			l_counter: UT_COUNTER
+		do
+			create l_counter.make (0)
+			classes_do_all (agent class_actions.call (?, agent l_counter.increment))
+			Result := l_counter.item
+		end
+
+	class_count_recursive: INTEGER
+			-- Number of classes with current cluster as primary group.
+			-- Do not take into account overridden classes.
+		local
+			l_counter: UT_COUNTER
+		do
+			create l_counter.make (0)
+			classes_do_recursive (agent class_actions.call (?, agent l_counter.increment))
+			Result := l_counter.item
 		end
 
 feature -- Status setting
 
-	set_abstract (b: BOOLEAN) is
+	set_abstract (b: BOOLEAN)
 			-- Set `is_abstract' to `b'.
 		do
 			is_abstract := b
@@ -567,7 +642,7 @@ feature -- Status setting
 			abstract_set: is_abstract = b
 		end
 
-	set_recursive (b: BOOLEAN) is
+	set_recursive (b: BOOLEAN)
 			-- Set `is_recursive' to `b'.
 		do
 			is_recursive := b
@@ -575,7 +650,7 @@ feature -- Status setting
 			recursive_set: is_recursive = b
 		end
 
-	set_relative (b: BOOLEAN) is
+	set_relative (b: BOOLEAN)
 			-- Set `is_relative' to `b'.
 		do
 			is_relative := b
@@ -583,7 +658,7 @@ feature -- Status setting
 			relative_set: is_relative = b
 		end
 
-	set_override (b: BOOLEAN) is
+	set_override (b: BOOLEAN)
 			-- Set `is_override' to `b'.
 		do
 			is_override := b
@@ -591,7 +666,7 @@ feature -- Status setting
 			override_set: is_override = b
 		end
 
-	set_read_only (b: BOOLEAN) is
+	set_read_only (b: BOOLEAN)
 			-- Set `is_read_only' to `b'.
 		do
 			is_read_only := b
@@ -599,7 +674,7 @@ feature -- Status setting
 			read_only_set: is_read_only = b
 		end
 
-	set_preparsed (b: BOOLEAN) is
+	set_preparsed (b: BOOLEAN)
 			-- Set `is_preparsed' to `b'.
 		do
 			is_preparsed := b
@@ -607,7 +682,7 @@ feature -- Status setting
 			preparsed_set: is_preparsed = b
 		end
 
-	set_implicit (b: BOOLEAN) is
+	set_implicit (b: BOOLEAN)
 			-- Set `is_implicit' to `b'.
 		do
 			is_implicit := b
@@ -615,7 +690,7 @@ feature -- Status setting
 			implicit_set: is_implicit = b
 		end
 
-	set_overridden_constraint_enabled (b: BOOLEAN) is
+	set_overridden_constraint_enabled (b: BOOLEAN)
 			-- Set `overridden_constraint_enabled' to `b'.
 		do
 			if b then
@@ -629,7 +704,7 @@ feature -- Status setting
 			overridden_constraint_enabled_set: overridden_constraint_enabled = b
 		end
 
-	set_scm_mapping_constraint_enabled (b: BOOLEAN) is
+	set_scm_mapping_constraint_enabled (b: BOOLEAN)
 			-- Set `scm_mapping_constraint_enabled' to `b'.
 		do
 			if b then
@@ -645,7 +720,7 @@ feature -- Status setting
 
 feature -- Setting
 
-	set_subclusters (a_subclusters: like subclusters) is
+	set_subclusters (a_subclusters: like subclusters)
 			-- Set `subclusters' to `a_subclusters'.
 		do
 			if subclusters /= Void then
@@ -659,7 +734,7 @@ feature -- Setting
 			subclusters_set: subclusters = a_subclusters
 		end
 
-	set_provider_constraint (a_constraint: like provider_constraint) is
+	set_provider_constraint (a_constraint: like provider_constraint)
 			-- Set `provider_constraint' to `a_constraint'.
 		do
 			provider_constraint := a_constraint
@@ -670,7 +745,7 @@ feature -- Setting
 			provider_constraint_set: provider_constraint = a_constraint
 		end
 
-	set_dependant_constraint (a_constraint: like dependant_constraint) is
+	set_dependant_constraint (a_constraint: like dependant_constraint)
 			-- Set `dependant_constraint' to `a_constraint'.
 		do
 			dependant_constraint := a_constraint
@@ -681,7 +756,7 @@ feature -- Setting
 			dependant_constraint_set: dependant_constraint = a_constraint
 		end
 
-	set_scm_read_mapping (a_scm_mapping: like scm_read_mapping) is
+	set_scm_read_mapping (a_scm_mapping: like scm_read_mapping)
 			-- Set `scm_read_mapping' to `a_scm_mapping'.
 		do
 			scm_read_mapping := a_scm_mapping
@@ -689,7 +764,7 @@ feature -- Setting
 			scm_read_mapping_set: scm_read_mapping = a_scm_mapping
 		end
 
-	set_scm_write_mapping (a_scm_mapping: like scm_write_mapping) is
+	set_scm_write_mapping (a_scm_mapping: like scm_write_mapping)
 			-- Set `scm_write_mapping' to `a_scm_mapping'.
 		do
 			scm_write_mapping := a_scm_mapping
@@ -699,7 +774,7 @@ feature -- Setting
 
 feature -- Element change
 
-	add_subcluster (a_cluster: like parent) is
+	add_subcluster (a_cluster: like parent)
 			-- Add `a_cluster' to the list of subsclusters.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -716,7 +791,7 @@ feature -- Element change
 			subclusters_not_void: subclusters /= Void
 		end
 
-	add_recursive_cluster (a_name: STRING) is
+	add_recursive_cluster (a_name: STRING)
 			-- Add recursive cluster named `s' to `subclusters'
 			-- if not present yet.
 		require
@@ -749,10 +824,10 @@ feature -- Element change
 			subclusters_not_void: subclusters /= Void
 		end
 
-	add_implicit_subclusters is
+	add_implicit_subclusters
 			-- Add (recursively) implicit subclusters to current cluster if it is recursive.
 			-- Note that these subclusters will otherwise be added when running one of
-			-- the `preparse_*' or `parse_*_all' routines of ET_UNIVERSE.
+			-- the `preparse*' or `parse_all*' routines of ET_UNIVERSE.
 		local
 			dir_name: STRING
 			dir: KL_DIRECTORY
@@ -783,9 +858,43 @@ feature -- Element change
 			end
 		end
 
+feature -- Iteration
+
+	classes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+			-- Apply `an_action' on all classes with current cluster as primary group.
+			-- Do not take into account overridden classes.
+		do
+			universe.classes_do_if (an_action, agent {ET_CLASS}.is_in_group (Current))
+		end
+
+	classes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
+			-- Apply `an_action' on all classes with current cluster as primary group,
+			-- and which satisfy `a_test'.
+			-- Do not take into account overridden classes.
+		do
+			universe.classes_do_if (an_action, agent class_actions.conjuncted_semistrict (?, agent {ET_CLASS}.is_in_group (Current), a_test))
+		end
+
+	classes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+			-- Apply `an_action' on all classes which have been declared in
+			-- current cluster or recursively in one of its subclusters.
+			-- Do not take into account overridden classes.
+		do
+			universe.classes_do_if (an_action, agent {ET_CLASS}.is_in_group_recursive (Current))
+		end
+
+	classes_do_if_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
+			-- Apply `an_action' on all classes which have been declared in
+			-- current cluster or recursively in one of its subclusters,
+			-- and which satisfy `a_test'.
+			-- Do not take into account overridden classes.
+		do
+			universe.classes_do_if (an_action, agent class_actions.conjuncted_semistrict (?, agent {ET_CLASS}.is_in_group_recursive (Current), a_test))
+		end
+
 feature {ET_CLUSTER, ET_CLUSTERS} -- Setting
 
-	set_parent (a_parent: like parent) is
+	set_parent (a_parent: like parent)
 			-- Set `parent' to `a_parent'.
 		do
 			parent := a_parent
@@ -802,7 +911,7 @@ feature {ET_CLUSTER, ET_CLUSTERS} -- Setting
 
 feature {NONE} -- Implementation
 
-	new_recursive_cluster (a_name: STRING): like Current is
+	new_recursive_cluster (a_name: STRING): like Current
 			-- New recursive cluster
 		require
 			a_name_not_void: a_name /= Void
@@ -816,7 +925,7 @@ feature {NONE} -- Implementation
 			implicit: Result.is_implicit
 		end
 
-	has_eiffel_extension (a_filename: STRING): BOOLEAN is
+	has_eiffel_extension (a_filename: STRING): BOOLEAN
 			-- Has `a_filename' an Eiffel extension (.e)?
 		require
 			a_filename_not_void: a_filename /= Void
@@ -843,13 +952,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	dot_directory_name: STRING is "."
-	dot_dot_directory_name: STRING is ".."
+	dot_directory_name: STRING = "."
+	dot_dot_directory_name: STRING = ".."
 			-- Directory names
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		require
 			a_processor_not_void: a_processor /= Void

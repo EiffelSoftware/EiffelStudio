@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Element nodes in an XSLT stylesheet"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,6 +21,8 @@ inherit
 	XM_XSLT_VALIDATION
 
 	ST_STRING_ROUTINES
+
+	XM_XSLT_STYLE_CONSTANTS
 
 	XM_XPATH_SHARED_EXPRESSION_FACTORY
 		export {NONE} all end
@@ -54,7 +56,7 @@ feature {NONE} -- Initialization
 
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 	an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-	a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
+	a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
 		require
 			error_listener_not_void: an_error_listener /= Void
@@ -75,7 +77,7 @@ feature {NONE} -- Initialization
 
 feature {XM_XSLT_NODE_FACTORY} -- Validation
 
-	check_default_collation_name is
+	check_default_collation_name
 			-- Check default collation_name is valid.
 		local
 			l_error: XM_XPATH_ERROR_VALUE
@@ -88,13 +90,13 @@ feature {XM_XSLT_NODE_FACTORY} -- Validation
 
 feature -- Access
 
-	construct_type: INTEGER is
+	construct_type: INTEGER
 			-- Type of construct being traced
 		do
 			Result := fingerprint
 		end
 
-	trace_properties: DS_LIST [STRING] is
+	trace_properties: DS_LIST [STRING]
 			-- Additional trace properties
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -113,13 +115,13 @@ feature -- Access
 			end
 		end
 
-	trace_property (an_expanded_name: STRING): STRING is
+	trace_property (an_expanded_name: STRING): STRING
 			-- Value of trace-property
 		do
 			Result := attribute_value_by_name (namespace_uri_from_expanded_name (an_expanded_name), local_name_from_expanded_name (an_expanded_name))
 		end
 
-	default_collation_name: STRING is
+	default_collation_name: STRING
 			-- Default collation name
 		local
 			a_splitter: ST_SPLITTER
@@ -133,8 +135,6 @@ feature -- Access
 				some_collation_names := a_splitter.split (local_default_collation_name)
 				from
 					a_cursor := some_collation_names.new_cursor; a_cursor.start
-				variant
-					some_collation_names.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -145,6 +145,8 @@ feature -- Access
 					else
 						a_cursor.forth
 					end
+				variant
+					some_collation_names.count + 1 - a_cursor.index
 				end
 				if Result = Void then
 					Result := ""
@@ -180,7 +182,7 @@ feature -- Access
 	used_attribute_sets: DS_ARRAYED_LIST [INTEGER]
 			-- Names of attribute-sets used by `Current'
 
-	is_permitted_child (a_style_element: XM_XSLT_STYLE_ELEMENT): BOOLEAN is
+	is_permitted_child (a_style_element: XM_XSLT_STYLE_ELEMENT): BOOLEAN
 			-- Is `a_style_element' a permitted child of `Current'?
 		require
 			not_void: a_style_element /= Void
@@ -188,13 +190,13 @@ feature -- Access
 			Result := False
 		end
 
-	parameter_references (a_binding: XM_XPATH_BINDING): INTEGER is
+	parameter_references (a_binding: XM_XPATH_BINDING): INTEGER
 			-- Approximate count of references by parameters of `Current' to `a_binding'
 		do
 			-- pre-condition cannot be met
 		end
 
-	default_xpath_namespace: STRING is
+	default_xpath_namespace: STRING
 			-- Namespace URI of default XPath namespace
 		local
 			l_style_element: XM_XSLT_STYLE_ELEMENT
@@ -219,13 +221,13 @@ feature -- Access
 			end
 		end
 
-	containing_slot_manager: XM_XPATH_SLOT_MANAGER is
+	containing_slot_manager: XM_XPATH_SLOT_MANAGER
 			-- Slot manager from containing procedure
 		do
 			Result := owning_procedure.slot_manager
 		end
 
-	containing_stylesheet: XM_XSLT_STYLESHEET is
+	containing_stylesheet: XM_XSLT_STYLESHEET
 			-- Containing stylesheet;
 			-- N.B. This may not be the principal stylersheet, it may be
 			--  an included or imported module.
@@ -257,7 +259,7 @@ feature -- Access
 			-- containing_stylesheet_not_void: Result /= Void
 		end
 
-	principal_stylesheet: XM_XSLT_STYLESHEET is
+	principal_stylesheet: XM_XSLT_STYLESHEET
 			-- Top-level stylesheet
 		local
 			another_stylesheet: XM_XSLT_STYLESHEET
@@ -278,13 +280,13 @@ feature -- Access
 			-- prinicpal_stylesheet_not_void: Result /= Void
 		end
 
-	stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER is
+	stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
 			-- Stylesheet compiler
 		do
 			Result := principal_stylesheet.stylesheet_compiler
 		end
 
-	owning_procedure: XM_XSLT_PROCEDURE is
+	owning_procedure: XM_XSLT_PROCEDURE
 			-- Owning Procedure definition, if this is a local variable
 		local
 			a_node, a_next_node: XM_XPATH_NODE
@@ -320,7 +322,7 @@ feature -- Access
 			end
 		end
 
-	attribute_value_by_expanded_name (an_attribute_name: STRING): STRING is
+	attribute_value_by_expanded_name (an_attribute_name: STRING): STRING
 			-- Value of `an_attribute_name'
 		require
 			valid_attribute_name: an_attribute_name /= Void
@@ -333,13 +335,13 @@ feature -- Access
 			Result := attribute_value (shared_name_pool.fingerprint_from_expanded_name (an_attribute_name))
 		end
 
-	precedence: INTEGER is
+	precedence: INTEGER
 			-- Import precedence of `Current'
 		do
 			Result := containing_stylesheet.precedence
 		end
 
-	uri_for_prefix (an_xml_prefix: STRING; use_default_namespace: BOOLEAN): STRING is
+	uri_for_prefix (an_xml_prefix: STRING; use_default_namespace: BOOLEAN): STRING
 			-- URI for `an_xml_prefix' using the in-scope namespaces
 		require
 			prefix_not_void: an_xml_prefix /= Void
@@ -356,7 +358,7 @@ feature -- Access
 			end
 		end
 
-	last_child_instruction: XM_XSLT_STYLE_ELEMENT is
+	last_child_instruction: XM_XSLT_STYLE_ELEMENT
 			-- Last child instruction of this instruction.
 			-- Returns `Void' if there are no child instructions,
 			--  or if the last child is a text node.
@@ -380,13 +382,13 @@ feature -- Access
 			end
 		end
 
-	namespace_context: XM_XSLT_NAMESPACE_CONTEXT is
+	namespace_context: XM_XSLT_NAMESPACE_CONTEXT
 			-- Namespace context
 		do
 			create Result.make (namespace_codes_in_scope)
 		end
 
-	with_param_instructions (an_executable: XM_XSLT_EXECUTABLE; is_tunnel: BOOLEAN): DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM] is
+	with_param_instructions (an_executable: XM_XSLT_EXECUTABLE; is_tunnel: BOOLEAN): DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]
 			-- List of tunnel or non-tunnel parameters
 		require
 			executable_not_void: an_executable /= Void
@@ -433,7 +435,7 @@ feature -- Access
 	sort_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]
 			-- List of sort keys
 
-	assemble_sort_keys is
+	assemble_sort_keys
 			-- Create and assemble sort keys
 		require
 			no_previous_error: not any_compile_errors
@@ -476,7 +478,7 @@ feature -- Access
 			sort_key_list_not_void: sort_keys /= Void
 		end
 
-	stylesheet_function (a_fingerprint, an_arity: INTEGER): XM_XSLT_FUNCTION is
+	stylesheet_function (a_fingerprint, an_arity: INTEGER): XM_XSLT_FUNCTION
 			-- Xsl:function named by `a_fingerprint' with `an_arity' arguments
 		require
 			positive_fingerprint: a_fingerprint >= 0
@@ -493,8 +495,6 @@ feature -- Access
 			a_top_level_element_list := a_root.top_level_elements
 			from
 				a_cursor := a_top_level_element_list.new_cursor; a_cursor.finish
-			variant
-				a_cursor.index
 			until
 				a_cursor.before
 			loop
@@ -505,12 +505,14 @@ feature -- Access
 				else
 					a_cursor.back
 				end
+			variant
+				a_cursor.index
 			end
 		ensure
 			function_may_not_be_available: True
 		end
 
-	is_extension_instruction_namespace (a_uri_code: INTEGER): BOOLEAN is
+	is_extension_instruction_namespace (a_uri_code: INTEGER): BOOLEAN
 			-- Is `a_uri_code' an in-scope extension instruction namespace?
 		local
 			an_ancestor: XM_XPATH_NODE
@@ -530,7 +532,7 @@ feature -- Access
 			end
 		end
 
-	system_id_from_module_number (a_module_number: INTEGER): STRING is
+	system_id_from_module_number (a_module_number: INTEGER): STRING
 			-- System identifier
 		do
 			Result := principal_stylesheet.system_id_from_module_number (a_module_number)
@@ -538,7 +540,7 @@ feature -- Access
 
 feature -- Status_report
 
-	any_compile_errors: BOOLEAN is
+	any_compile_errors: BOOLEAN
 			-- Have any compile errors been reported?
 		local
 			l_stylesheet: like principal_stylesheet
@@ -585,25 +587,25 @@ feature -- Status_report
 			-- Error value created by `generate_name_code'
 
 
-	frozen is_computed_expression: BOOLEAN is
+	frozen is_computed_expression: BOOLEAN
 			-- Is `Current' a computed expression?
 		do
 			-- `False'
 		end
 
-	is_absent_extension_element: BOOLEAN is
+	is_absent_extension_element: BOOLEAN
 			-- Is `Current' and `XM_XSLT_ABSENT_EXTENSION_ELEMENT'?
 		do
 			Result := False
 		end
 
-	is_user_function: BOOLEAN is
+	is_user_function: BOOLEAN
 			-- Is `Current' a compiled user function?
 		do
 			-- `False'
 		end
 
-	is_stylesheet_in_error: BOOLEAN is
+	is_stylesheet_in_error: BOOLEAN
 			-- is any element of the stylsheet tree compiled in error?
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_TREE_NODE]
@@ -617,8 +619,6 @@ feature -- Status_report
 				from
 					a_cursor := children.new_cursor
 					a_cursor.start
-				variant
-					children.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -630,17 +630,19 @@ feature -- Status_report
 						end
 					end
 					if not a_cursor.after then a_cursor.forth end
+				variant
+					children.count + 1 - a_cursor.index
 				end
 			end
 		end
 
-	is_forwards_compatible_processing_enabled: BOOLEAN is
+	is_forwards_compatible_processing_enabled: BOOLEAN
 			-- Is forwards-compatible mode enabled for this element?
 		do
 			Result := version > decimal_two
 		end
 
-	is_backwards_compatible_processing_enabled: BOOLEAN is
+	is_backwards_compatible_processing_enabled: BOOLEAN
 			-- Is backwards-compatible mode enabled for this element?
 		do
 			Result := version < decimal_two
@@ -649,7 +651,7 @@ feature -- Status_report
 	is_explaining: BOOLEAN
 			-- Has "gexslt:explain" been coded on this or any child element?
 
-	is_top_level: BOOLEAN is
+	is_top_level: BOOLEAN
 			-- Is `Current' a top-level element?
 		local
 			a_stylesheet: XM_XSLT_STYLESHEET
@@ -658,7 +660,7 @@ feature -- Status_report
 			Result := a_stylesheet /= Void
 		end
 
-	is_variable_declared (a_fingerprint: INTEGER): BOOLEAN is
+	is_variable_declared (a_fingerprint: INTEGER): BOOLEAN
 			-- Does `a_fingerprint' represent an in-scope variable?
 		require
 			positive_fingerprint: a_fingerprint >= 0
@@ -667,7 +669,7 @@ feature -- Status_report
 				or else is_global_variable_declared (a_fingerprint)
 		end
 
-	is_excluded_namespace (a_uri_code: INTEGER): BOOLEAN is
+	is_excluded_namespace (a_uri_code: INTEGER): BOOLEAN
 			-- Is `a_uri_code' defined as an excluded namespace on this or any ancestor element?
 		local
 			a_style_element: XM_XSLT_STYLE_ELEMENT
@@ -691,151 +693,151 @@ feature -- Status_report
 			end
 		end
 
-	may_contain_sequence_constructor: BOOLEAN is
+	may_contain_sequence_constructor: BOOLEAN
 			-- Is `Current' allowed to contain a sequence constructor?
 		do
 			Result := False
 		end
 
-	may_contain_fallback: BOOLEAN is
+	may_contain_fallback: BOOLEAN
 			-- Is `Current' allowed to contain an xsl:fallback?
 		do
 			Result := may_contain_sequence_constructor
 		end
 
-	is_apply_templates: BOOLEAN is
+	is_apply_templates: BOOLEAN
 			-- Is `Current' an xsl:apply-templates?
 		do
 			Result := False
 		end
 
-	is_param: BOOLEAN is
+	is_param: BOOLEAN
 			-- Is `Current' an xsl:param?
 		do
 			Result := False
 		end
 
-	is_stylesheet: BOOLEAN is
+	is_stylesheet: BOOLEAN
 			-- Is `Current' an xsl:stylesheet or xsl:transform?
 		do
 			Result := False
 		end
 
-	is_for_each: BOOLEAN is
+	is_for_each: BOOLEAN
 			-- Is `Current' an xsl:for-each?
 		do
 			Result := False
 		end
 
-	is_for_each_group: BOOLEAN is
+	is_for_each_group: BOOLEAN
 			-- Is `Current' an xsl:for-each-group?
 		do
 			Result := False
 		end
 
-	is_perform_sort: BOOLEAN is
+	is_perform_sort: BOOLEAN
 			-- Is `Current' an xsl:perform-sort?
 		do
 			Result := False
 		end
 
-	is_sort: BOOLEAN is
+	is_sort: BOOLEAN
 			-- Is `Current' an xsl:sort?
 		do
 			Result := False
 		end
 
-	is_template: BOOLEAN is
+	is_template: BOOLEAN
 			-- Is `Current' an xsl:template?
 		do
 			Result := False
 		end
 
-	is_xslt_variable: BOOLEAN is
+	is_xslt_variable: BOOLEAN
 			-- Is `Current' an xsl:variable?
 		do
 			Result := False
 		end
 
-	is_character_map: BOOLEAN is
+	is_character_map: BOOLEAN
 			-- Is `Current' an xsl:character-map?
 		do
 			Result := False
 		end
 
-	is_attribute_set: BOOLEAN is
+	is_attribute_set: BOOLEAN
 			-- Is `Current' an xsl:attribute-set?
 		do
 			Result := False
 		end
 
-	is_xslt_variable_declaration: BOOLEAN is
+	is_xslt_variable_declaration: BOOLEAN
 			-- Is `Current' an xsl:variable or xsl:param?
 		do
 			Result := False
 		end
 
-	is_namespace_alias: BOOLEAN is
+	is_namespace_alias: BOOLEAN
 			-- Is `Current' an xsl:namespace-alias?
 		do
 			Result := False
 		end
 
-	is_xslt_function: BOOLEAN is
+	is_xslt_function: BOOLEAN
 			-- Is `Current' an xsl:function?
 		do
 			Result := False
 		end
 
-	is_module: BOOLEAN is
+	is_module: BOOLEAN
 			-- Is `Current' an xsl:include/import?
 		do
 			Result := False
 		end
 
-	is_output: BOOLEAN is
+	is_output: BOOLEAN
 			-- Is `Current' an xsl:output?
 		do
 			Result := False
 		end
 
-	is_key: BOOLEAN is
+	is_key: BOOLEAN
 			-- Is `Current' an xsl:key?
 		do
 			Result := False
 		end
 
-	is_fallback: BOOLEAN is
+	is_fallback: BOOLEAN
 			-- Is `Current' an xsl:fallback?
 		do
 			Result := False
 		end
 
-	is_matching_substring: BOOLEAN is
+	is_matching_substring: BOOLEAN
 			-- Is `Current' an xsl:matching-substring?
 		do
 			Result := False
 		end
 
-	is_non_matching_substring: BOOLEAN is
+	is_non_matching_substring: BOOLEAN
 			-- Is `Current' an xsl:non-matching-substring?
 		do
 			Result := False
 		end
 
-	is_decimal_format: BOOLEAN is
+	is_decimal_format: BOOLEAN
 			-- Is `Current' an xsl:decimal_format?
 		do
 			Result := False
 		end
 
-	is_gexslt_document: BOOLEAN is
+	is_gexslt_document: BOOLEAN
 			-- Is `Current' a gexslt:document?
 		do
 			Result := False
 		end
 
-	is_gexslt_collection: BOOLEAN is
+	is_gexslt_collection: BOOLEAN
 			-- Is `Current' a gexslt:collection?
 		do
 			Result := False
@@ -843,7 +845,7 @@ feature -- Status_report
 
 feature -- Status setting
 
-	set_validation_error (an_error: XM_XPATH_ERROR_VALUE; a_condition: INTEGER) is
+	set_validation_error (an_error: XM_XPATH_ERROR_VALUE; a_condition: INTEGER)
 			-- Set a validation error.
 		require
 			error_not_void: an_error /= Void
@@ -859,7 +861,7 @@ feature -- Status setting
 			reporting_circumstances: reporting_circumstances <= a_condition
 		end
 
-	report_absence (an_attribute_name: STRING) is
+	report_absence (an_attribute_name: STRING)
 			-- Report absence of a compulsory attribute.
 		require
 			attribute_name_not_void:  an_attribute_name /= Void
@@ -873,7 +875,7 @@ feature -- Status setting
 			report_compile_error (an_error)
 		end
 
-	report_compile_error (a_error: XM_XPATH_ERROR_VALUE) is
+	report_compile_error (a_error: XM_XPATH_ERROR_VALUE)
 			-- Report a compile error.
 		require
 			validation_message_not_void: a_error /= Void
@@ -890,7 +892,7 @@ feature -- Status setting
 			compile_errors: principal_stylesheet /= Void implies any_compile_errors
 		end
 
-	report_compile_warning (a_message: STRING) is
+	report_compile_warning (a_message: STRING)
 			-- Report a compile warning.
 		require
 			validation_message_not_void: a_message /= Void
@@ -898,13 +900,13 @@ feature -- Status setting
 			error_listener.warning (a_message, Current)
 		end
 
-	mark_tail_calls is
+	mark_tail_calls
 			-- Mark tail-recursive calls on templates and functions.
 		do
 			-- do nothing
 		end
 
-	check_unknown_attribute (a_name_code: INTEGER) is
+	check_unknown_attribute (a_name_code: INTEGER)
 			-- Check whether an unknown attribute is permitted.
 		local
 			an_error: XM_XPATH_ERROR_VALUE
@@ -966,7 +968,7 @@ feature -- Status setting
 			end
 		end
 
-	check_top_level (an_error_code: STRING) is
+	check_top_level (an_error_code: STRING)
 			-- Check `Current' is a top-level element.
 		local
 			an_error: XM_XPATH_ERROR_VALUE
@@ -983,7 +985,7 @@ feature -- Status setting
 			end
 		end
 
-	check_empty is
+	check_empty
 			-- Check `Current' has no children (except permitted fallbacks)
 		local
 			l_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -1013,7 +1015,7 @@ feature -- Status setting
 			end
 		end
 
-	check_empty_with_attribute (an_attribute_name, an_error_code: STRING) is
+	check_empty_with_attribute (an_attribute_name, an_error_code: STRING)
 			-- Check `Current' has no children
 		require
 			attribute_name_not_void: an_attribute_name /= Void
@@ -1031,7 +1033,7 @@ feature -- Status setting
 			end
 		end
 
-	check_not_empty_missing_attribute (an_attribute_name, an_error_code: STRING) is
+	check_not_empty_missing_attribute (an_attribute_name, an_error_code: STRING)
 			-- Check `Current' has children
 		require
 			attribute_name_not_void: an_attribute_name /= Void
@@ -1049,7 +1051,7 @@ feature -- Status setting
 			end
 		end
 
-	type_check_expression (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];	a_name: STRING; a_expression: XM_XPATH_EXPRESSION) is
+	type_check_expression (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];	a_name: STRING; a_expression: XM_XPATH_EXPRESSION)
 			-- Type-check and optimize `an expression.'.
 			-- This is called to check each expression while the containing  instruction is being validated.
 			-- It is not just a static type-check, it also adds code
@@ -1084,7 +1086,7 @@ feature -- Status setting
 			end
 		end
 
-	type_check_pattern (a_name: STRING; a_pattern: XM_XSLT_PATTERN) is
+	type_check_pattern (a_name: STRING; a_pattern: XM_XSLT_PATTERN)
 			-- Type-check `a_pattern'.
 			-- This is called to check each pattern while the containing  instruction is being validated.
 			-- It is not just a static type-check, it also adds code
@@ -1149,7 +1151,7 @@ feature -- Status setting
 			end
 		end
 
-	check_within_template is
+	check_within_template
 			-- Check `Current' is within a template.
 		local
 			an_error: XM_XPATH_ERROR_VALUE
@@ -1165,7 +1167,7 @@ feature -- Status setting
 			end
 		end
 
-	check_sort_comes_first (sort_required: BOOLEAN) is
+	check_sort_comes_first (sort_required: BOOLEAN)
 			-- Check if all xsl:sort children precede all other elements
 		local
 			an_error: XM_XPATH_ERROR_VALUE
@@ -1208,7 +1210,7 @@ feature -- Status setting
 			end
 		end
 
-	check_only_with_parameter_content is
+	check_only_with_parameter_content
 			-- Check contents of `Current' is only xsl:with-param elements.
 		local
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -1251,7 +1253,7 @@ feature -- Status setting
 
 feature -- Creation
 
-	new_trace_wrapper (a_child: XM_XPATH_EXPRESSION; an_executable: XM_XSLT_EXECUTABLE;  some_details: XM_XSLT_TRACE_DETAILS): XM_XSLT_TRACE_WRAPPER is
+	new_trace_wrapper (a_child: XM_XPATH_EXPRESSION; an_executable: XM_XSLT_EXECUTABLE;  some_details: XM_XSLT_TRACE_DETAILS): XM_XSLT_TRACE_WRAPPER
 			-- newly created trace wrapper
 		require
 			child_expresion_not_void: a_child /= Void
@@ -1273,7 +1275,7 @@ feature -- Creation
 			trace_wrapper_not_void: Result /= Void
 		end
 
-	generate_attribute_value_template (a_avt: STRING; a_static_context: XM_XSLT_EXPRESSION_CONTEXT) is
+	generate_attribute_value_template (a_avt: STRING; a_static_context: XM_XSLT_EXPRESSION_CONTEXT)
 			-- Generate an attribute-valued-template.
 			-- The static context may be altered as a result of parsing.
 		require
@@ -1309,7 +1311,7 @@ feature -- Creation
 			attribute_value_template_not_void: last_generated_expression /= Void
 		end
 
-	generate_name_code (a_qname: STRING) is
+	generate_name_code (a_qname: STRING)
 			-- Generate a name code and register it in the name pool.
 			-- `Current' is used as the context for namespace resolution.
 			-- The default namespace is not used.
@@ -1366,7 +1368,7 @@ feature -- Creation
 			possible_error: last_generated_name_code = -1 implies name_code_error_value /= Void
 		end
 
-	generate_expression (a_expression: STRING) is
+	generate_expression (a_expression: STRING)
 			-- Create an expression.
 		require
 			expression_text_not_void: a_expression /= Void
@@ -1401,7 +1403,7 @@ feature -- Creation
 			generated_expression: last_generated_expression /= Void
 		end
 
-	generate_pattern (a_pattern: STRING) is
+	generate_pattern (a_pattern: STRING)
 			-- Create a pattern.
 		require
 			pattern_text_not_void: a_pattern /= Void
@@ -1429,7 +1431,7 @@ feature -- Creation
 			generated_pattern: last_generated_pattern /= Void
 		end
 
-	generate_sequence_type (a_sequence_type: STRING) is
+	generate_sequence_type (a_sequence_type: STRING)
 			-- Create a sequence type.
 		require
 			sequence_type_not_void: a_sequence_type /= Void
@@ -1455,7 +1457,7 @@ feature -- Creation
 
 feature -- Element change
 
-	bind_variable (a_fingerprint: INTEGER) is
+	bind_variable (a_fingerprint: INTEGER)
 			-- Bind variable to it's declaration.
 		require
 			variable_declared: is_variable_declared (a_fingerprint)
@@ -1469,7 +1471,7 @@ feature -- Element change
 			variable_bound: static_context.last_bound_variable /= Void
 		end
 
-	fixup_references is
+	fixup_references
 			-- Fix up references from XPath expressions.
 		local
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -1489,7 +1491,7 @@ feature -- Element change
 			end
 		end
 
-	style_element_allocate_slots (a_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
+	style_element_allocate_slots (a_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER)
 			-- Allocate slots in the stack frame for local variables contained in `an_expression'.
 			-- This version can be called by XM_XSLT_TEMPLATE, even though it redefines `allocate_slots'.
 		require
@@ -1511,7 +1513,7 @@ feature -- Element change
 			no_fewer_slots_allocated: a_slot_manager.number_of_variables >= old a_slot_manager.number_of_variables
 		end
 
-	allocate_slots (a_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
+	allocate_slots (a_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER)
 			-- Allocate slots in the stack frame for local variables contained in `an_expression'.
 		require
 			expression_not_in_error: a_expression /= Void and then not a_expression.is_error
@@ -1520,7 +1522,7 @@ feature -- Element change
 			style_element_allocate_slots (a_expression, a_slot_manager)
 		end
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		require
 			attributes_not_prepared: not attributes_prepared
@@ -1530,7 +1532,7 @@ feature -- Element change
 			attributes_prepared: attributes_prepared
 		end
 
-	process_attributes is
+	process_attributes
 			-- Process the attribute list for the element.
 		require
 			--attributes_not_prepared: not attributes_prepared
@@ -1547,10 +1549,10 @@ feature -- Element change
 			attributes_prepared: attributes_prepared
 		end
 
-	process_all_attributes is
+	process_all_attributes
 			-- Process the attributes of this element and all its children.
 		require
-			--attributes_not_prepared: not attributes_prepared		
+			--attributes_not_prepared: not attributes_prepared
 		local
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			a_style_element: XM_XSLT_STYLE_ELEMENT
@@ -1576,7 +1578,7 @@ feature -- Element change
 			attributes_prepared: attributes_prepared
 		end
 
-	process_default_xpath_namespace_attribute (an_attribute_name: STRING) is
+	process_default_xpath_namespace_attribute (an_attribute_name: STRING)
 			--	Process the [xsl:]default-xpath-namespace attribute.
 		require
 			attributes_not_prepared: not attributes_prepared
@@ -1593,7 +1595,7 @@ feature -- Element change
 			end
 		end
 
-	process_version_attribute (an_attribute_name: STRING; a_condition: INTEGER) is
+	process_version_attribute (an_attribute_name: STRING; a_condition: INTEGER)
 			--	Process the [xsl:]version attribute.
 		require
 			attributes_not_prepared: not attributes_prepared
@@ -1651,7 +1653,7 @@ feature -- Element change
 			version_attribute_processed: version_attribute_processed
 		end
 
-	process_default_collation_attribute (an_attribute_name: STRING) is
+	process_default_collation_attribute (an_attribute_name: STRING)
 			--	Process the [xsl:]default-collation attribute.
 		require
 			attributes_not_prepared: not attributes_prepared
@@ -1664,7 +1666,7 @@ feature -- Element change
 			local_default_collation_name := attribute_value_by_expanded_name (an_attribute_name)
 		end
 
-	process_extension_element_attribute (an_attribute_name: STRING) is
+	process_extension_element_attribute (an_attribute_name: STRING)
 			--	Process the [xsl:]extension-element-prefixes attribute.
 		require
 			attributes_not_prepared: not attributes_prepared
@@ -1690,8 +1692,6 @@ feature -- Element change
 					from
 						a_cursor := an_extension_list.new_cursor
 						a_cursor.start
-					variant
-						an_extension_list.count + 1 - a_cursor.index
 					until
 						a_cursor.after
 					loop
@@ -1708,12 +1708,14 @@ feature -- Element change
 							extension_namespaces.put_last (a_code)
 							a_cursor.forth
 						end
+					variant
+						an_extension_list.count + 1 - a_cursor.index
 					end
 				end
 			end
 		end
 
-	process_excluded_namespaces_attribute (a_attribute_name: STRING) is
+	process_excluded_namespaces_attribute (a_attribute_name: STRING)
 			--	Process the  [xsl:]exclude-result-prefixes attribute.
 		require
 			attributes_not_prepared: not attributes_prepared
@@ -1747,8 +1749,6 @@ feature -- Element change
 						from
 							l_cursor := l_exclusion_list.new_cursor
 							l_cursor.start
-						variant
-							l_exclusion_list.count + 1 - l_cursor.index
 						until
 							l_cursor.after
 						loop
@@ -1776,13 +1776,15 @@ feature -- Element change
 								excluded_namespaces.put_last (l_code)
 								l_cursor.forth
 							end
+						variant
+							l_exclusion_list.count + 1 - l_cursor.index
 						end
 					end
 				end
 			end
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
@@ -1793,7 +1795,7 @@ feature -- Element change
 			validated := True
 		end
 
-	post_validate is
+	post_validate
 			-- Hook to allow additional validation of a parent element
 			--  immediately after its children have been validated.
 		require
@@ -1803,7 +1805,7 @@ feature -- Element change
 			post_validated := True
 		end
 
-	validate_subtree is
+	validate_subtree
 			-- Recursively walk through the stylesheet to validate all nodes.
 		require
 			not_validated: not validated
@@ -1826,7 +1828,7 @@ feature -- Element change
 			end
 		end
 
-	validate_children is
+	validate_children
 			-- Validate the children of this node, recursively.
 		require
 			validated: validated
@@ -1868,7 +1870,7 @@ feature -- Element change
 			children_validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an expression.
 		require
 			not_in_error: not is_error
@@ -1881,7 +1883,7 @@ feature -- Element change
 			last_generated_expression_may_be_void: True -- not all descendants actually generate an expression
 		end
 
-	compile_sequence_constructor (an_executable: XM_XSLT_EXECUTABLE; an_axis_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; include_parameters: BOOLEAN) is
+	compile_sequence_constructor (an_executable: XM_XSLT_EXECUTABLE; an_axis_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; include_parameters: BOOLEAN)
 			-- Compile any sequence constructor child nodes to an expression.
 		require
 			not_in_error: not is_error
@@ -1932,7 +1934,7 @@ feature -- Element change
 			last_generated_expression_may_be_void: True -- sequence constructors aren't compulsory in all descendants
 		end
 
-	compile_variable (an_executable: XM_XSLT_EXECUTABLE; a_variable: XM_XSLT_VARIABLE; an_axis_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; include_parameters: BOOLEAN) is
+	compile_variable (an_executable: XM_XSLT_EXECUTABLE; a_variable: XM_XSLT_VARIABLE; an_axis_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; include_parameters: BOOLEAN)
 			-- Compile `a_variable'.
 		require
 			not_in_error: not is_error
@@ -1987,7 +1989,7 @@ feature -- Element change
 			end
 		end
 
-	fallback_processing (a_executable: XM_XSLT_EXECUTABLE; a_style_element: XM_XSLT_STYLE_ELEMENT) is
+	fallback_processing (a_executable: XM_XSLT_EXECUTABLE; a_style_element: XM_XSLT_STYLE_ELEMENT)
 			-- Perform fallback processing.
 		require
 			executable_not_void: a_executable /= Void
@@ -2050,7 +2052,7 @@ feature -- Element change
 			end
 		end
 
-	accumulate_attribute_sets (a_sets: STRING; a_usage_list: DS_ARRAYED_LIST [XM_XSLT_ATTRIBUTE_SET]) is
+	accumulate_attribute_sets (a_sets: STRING; a_usage_list: DS_ARRAYED_LIST [XM_XSLT_ATTRIBUTE_SET])
 			-- Accumulate attribute sets associated with `Current'
 		require
 			used_attribute_sets_not_void: a_sets /= Void
@@ -2079,8 +2081,6 @@ feature -- Element change
 			l_attribute_set_list := l_splitter.split (a_sets)
 			from
 				l_cursor := l_attribute_set_list.new_cursor; l_cursor.start
-			variant
-				l_attribute_set_list.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -2096,8 +2096,6 @@ feature -- Element change
 						-- Search for the named attribute set, using all of them if there are several with the same name
 						from
 							l_second_cursor := l_top_level_elements.new_cursor; l_second_cursor.start
-						variant
-							l_top_level_elements.count + 1 - l_second_cursor.index
 						until
 							l_second_cursor.after
 						loop
@@ -2106,6 +2104,8 @@ feature -- Element change
 								l_list.force_last (l_second_cursor.item.as_attribute_set)
 							end
 							l_second_cursor.forth
+						variant
+							l_top_level_elements.count + 1 - l_second_cursor.index
 						end
 						if not found then
 							create l_error.make_from_string (STRING_.concat ("No attribute-set exists named ", l_set_name), Xpath_errors_uri, "XTSE0710", Static_error)
@@ -2120,19 +2120,21 @@ feature -- Element change
 					report_compile_error (l_error)
 					l_cursor.go_after
 				end
+			variant
+				l_attribute_set_list.count + 1 - l_cursor.index
 			end
 			if not any_compile_errors then
 				create used_attribute_sets.make (l_list.count)
 				from
 					l_third_cursor := l_list.new_cursor; l_third_cursor.start
-				variant
-					l_list.count + 1 - l_third_cursor.index
 				until
 					l_third_cursor.after
 				loop
 					l_third_cursor.item.increment_reference_count
 					used_attribute_sets.put_last (l_third_cursor.item.attribute_set_name_code)
 					l_third_cursor.forth
+				variant
+					l_list.count + 1 - l_third_cursor.index
 				end
 			end
 		ensure
@@ -2141,7 +2143,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	as_template: XM_XSLT_TEMPLATE is
+	as_template: XM_XSLT_TEMPLATE
 			-- `Current' seen as an xsl:template
 		require
 			template: is_template
@@ -2150,7 +2152,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_param: XM_XSLT_PARAM is
+	as_param: XM_XSLT_PARAM
 			-- `Current' seen as an xsl:param
 		require
 			parameter: is_param
@@ -2159,7 +2161,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_key: XM_XSLT_KEY is
+	as_key: XM_XSLT_KEY
 			-- `Current' seen as an xsl:key
 		require
 			key: is_key
@@ -2168,7 +2170,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_output: XM_XSLT_OUTPUT is
+	as_output: XM_XSLT_OUTPUT
 			-- `Current' seen as an xsl:output
 		require
 			output: is_output
@@ -2177,7 +2179,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_module: XM_XSLT_MODULE is
+	as_module: XM_XSLT_MODULE
 			-- `Current' seen as an xsl:include/import
 		require
 			module: is_module
@@ -2186,7 +2188,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_xslt_function: XM_XSLT_FUNCTION is
+	as_xslt_function: XM_XSLT_FUNCTION
 			-- `Current' seen as an xsl:function
 		require
 			xslt_function: is_xslt_function
@@ -2195,7 +2197,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_namespace_alias: XM_XSLT_NAMESPACE_ALIAS is
+	as_namespace_alias: XM_XSLT_NAMESPACE_ALIAS
 			-- `Current' seen as an xsl:namespace-alias
 		require
 			namespace_alias: is_namespace_alias
@@ -2204,7 +2206,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_xslt_variable: XM_XSLT_VARIABLE is
+	as_xslt_variable: XM_XSLT_VARIABLE
 			-- `Current' seen as an xsl:variable
 		require
 			xslt_variable: is_xslt_variable
@@ -2213,7 +2215,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_xslt_variable_declaration: XM_XSLT_VARIABLE_DECLARATION is
+	as_xslt_variable_declaration: XM_XSLT_VARIABLE_DECLARATION
 			-- `Current' seen as an XSLT variable declaration
 		require
 			xslt_variable_declaration: is_xslt_variable_declaration
@@ -2222,7 +2224,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_attribute_set: XM_XSLT_ATTRIBUTE_SET is
+	as_attribute_set: XM_XSLT_ATTRIBUTE_SET
 			-- `Current' seen as an xsl:attribute-set
 		require
 			attribute_set: is_attribute_set
@@ -2231,7 +2233,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_character_map: XM_XSLT_CHARACTER_MAP is
+	as_character_map: XM_XSLT_CHARACTER_MAP
 			-- `Current' seen as an xsl:character-map
 		require
 			character_map: is_character_map
@@ -2240,7 +2242,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_matching_substring: XM_XSLT_MATCHING_SUBSTRING is
+	as_matching_substring: XM_XSLT_MATCHING_SUBSTRING
 			-- `Current' seen as an xsl:matching-substring
 		require
 			matching_substring: is_matching_substring
@@ -2249,7 +2251,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_non_matching_substring: XM_XSLT_NON_MATCHING_SUBSTRING is
+	as_non_matching_substring: XM_XSLT_NON_MATCHING_SUBSTRING
 			-- `Current' seen as an xsl:non-matching-substring
 		require
 			non_matching_substring: is_non_matching_substring
@@ -2258,7 +2260,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_decimal_format: XM_XSLT_DECIMAL_FORMAT is
+	as_decimal_format: XM_XSLT_DECIMAL_FORMAT
 			-- `Current' seen as an xsl:decimal_format
 		require
 			decimal_format: is_decimal_format
@@ -2269,7 +2271,7 @@ feature -- Conversion
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Local
 
-	is_defined_excluded_namespace (a_uri_code: INTEGER): BOOLEAN is
+	is_defined_excluded_namespace (a_uri_code: INTEGER): BOOLEAN
 			-- Is `a_uri_code' defined as an excluded namespace within `Current'?
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -2278,8 +2280,6 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Local
 				from
 					a_cursor := excluded_namespaces.new_cursor
 					a_cursor.start
-				variant
-					excluded_namespaces.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -2289,11 +2289,13 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Local
 					else
 						a_cursor.forth
 					end
+				variant
+					excluded_namespaces.count + 1 - a_cursor.index
 				end
 			end
 		end
 
-	is_defined_extension_instruction_namespace (a_uri_code: INTEGER): BOOLEAN is
+	is_defined_extension_instruction_namespace (a_uri_code: INTEGER): BOOLEAN
 			-- Is `a_uri_code' defined as an extension instruction namespace in `Current'?
 		local
 		do
@@ -2302,7 +2304,7 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Local
 			end
 		end
 
-	is_local_variable_declared (a_fingerprint: INTEGER): BOOLEAN is
+	is_local_variable_declared (a_fingerprint: INTEGER): BOOLEAN
 			-- Does `a_fingerprint' represent an in-scope local variable?
 		require
 			positive_fingerprint: a_fingerprint >= 0
@@ -2367,7 +2369,7 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Local
 			end
 		end
 
-	is_global_variable_declared (a_fingerprint: INTEGER): BOOLEAN is
+	is_global_variable_declared (a_fingerprint: INTEGER): BOOLEAN
 			-- Does `a_fingerprint' represent a global variable?
 		require
 			positive_fingerprint: a_fingerprint >= 0
@@ -2375,7 +2377,7 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Local
 			Result := principal_stylesheet.is_global_variable_declared (a_fingerprint)
 		end
 
-	returned_item_type: XM_XPATH_ITEM_TYPE is
+	returned_item_type: XM_XPATH_ITEM_TYPE
 			-- Type of item returned by this instruction
 		do
 			Result := any_item
@@ -2385,7 +2387,7 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Local
 
 feature {XM_XSLT_NODE_FACTORY} -- Status setting
 
-	flag_as_instruction is
+	flag_as_instruction
 			-- Flag `Current' as an XSLT instruction.
 		do
 			is_instruction := True
@@ -2405,7 +2407,7 @@ feature {NONE} -- Implementation
 			-- Namespace URI codes of extension elements
 
 
-	exclude_namespace (a_namespace_code, a_index: INTEGER) is
+	exclude_namespace (a_namespace_code, a_index: INTEGER)
 			-- Mark `a_namespace_code' as excluded.
 		require
 			excluded_namespaces_not_void: excluded_namespaces /= Void
@@ -2415,7 +2417,7 @@ feature {NONE} -- Implementation
 			excluded_namespaces.replace (INTEGER_.bit_and (a_namespace_code, 0x0000ffff), a_index)
 		end
 
-	common_child_item_type: XM_XPATH_ITEM_TYPE is
+	common_child_item_type: XM_XPATH_ITEM_TYPE
 			-- Most general type of item returned by the children of this instruction
 		local
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -2451,7 +2453,7 @@ feature {NONE} -- Implementation
 			common_child_item_type_not_void: Result /= Void
 		end
 
-	decimal_two: MA_DECIMAL is
+	decimal_two: MA_DECIMAL
 			-- 2.0
 		once
 			create Result.make_from_integer (2)
@@ -2459,7 +2461,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	bind_local_variable (a_fingerprint: INTEGER) is
+	bind_local_variable (a_fingerprint: INTEGER)
 			-- Bind variable to it's declaration.
 		require
 			variable_declared: is_local_variable_declared (a_fingerprint)
@@ -2520,7 +2522,7 @@ feature {NONE} -- Implementation
 			variable_bound: static_context.last_bound_variable /= Void
 		end
 
-	compile_style_element (an_executable: XM_XSLT_EXECUTABLE; a_style_element: XM_XSLT_STYLE_ELEMENT;  an_axis_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; include_parameters: BOOLEAN) is
+	compile_style_element (an_executable: XM_XSLT_EXECUTABLE; a_style_element: XM_XSLT_STYLE_ELEMENT;  an_axis_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; include_parameters: BOOLEAN)
 			-- Compile a child style element.
 		require
 			not_in_error: not is_error

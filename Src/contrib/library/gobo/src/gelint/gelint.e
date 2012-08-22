@@ -1,10 +1,10 @@
-indexing
+note
 
 	description:
 
 		"Gobo Eiffel Lint"
 
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,6 +26,9 @@ inherit
 	UT_SHARED_ISE_VERSIONS
 		export {NONE} all end
 
+	ET_SHARED_ISE_VARIABLES
+		export {NONE} all end
+
 	UT_SHARED_ECMA_VERSIONS
 		export {NONE} all end
 
@@ -35,7 +38,7 @@ create
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Start 'gelint' execution.
 		local
 			a_filename: STRING
@@ -46,8 +49,12 @@ feature -- Execution
 			a_ise_regexp: RX_PCRE_REGULAR_EXPRESSION
 		do
 			Arguments.set_program_name ("gelint")
+				-- For compatibility with ISE's tools, define the environment
+				-- variable "$ISE_LIBRARY" to $ISE_EIFFEL" if not set yet.
+			ise_variables.set_ise_library_variable
 			create error_handler.make_standard
 			is_flat_dbc := True
+			qualified_anchored_types_enabled := True
 			nb := Arguments.argument_count
 			from i := 1 until i > nb loop
 				arg := Arguments.argument (i)
@@ -170,7 +177,7 @@ feature -- Access
 
 feature {NONE} -- Eiffel config file parsing
 
-	parse_ace_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_ace_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Read Ace file `a_file'.
 			-- Put result in `last_system' if no error occurred.
 		require
@@ -189,7 +196,7 @@ feature {NONE} -- Eiffel config file parsing
 			end
 		end
 
-	parse_xace_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_xace_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Read Xace file `a_file'.
 			-- Put result in `last_system' if no error occurred.
 		require
@@ -240,7 +247,7 @@ feature {NONE} -- Eiffel config file parsing
 			end
 		end
 
-	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Read ECF file `a_file'.
 			-- Put result in `last_system' if no error occurred.
 		require
@@ -264,7 +271,7 @@ feature {NONE} -- Eiffel config file parsing
 
 feature {NONE} -- Processing
 
-	process_system (a_system: ET_SYSTEM) is
+	process_system (a_system: ET_SYSTEM)
 			-- Process `a_system'.
 		require
 			a_system_not_void: a_system /= Void
@@ -294,13 +301,14 @@ feature {NONE} -- Processing
 			else
 				a_system.set_providers_enabled (True)
 				a_system.set_cluster_dependence_enabled (True)
+				a_system.set_use_cluster_dependence_pathnames (True)
 				a_system.compile
 			end
 		end
 
 feature -- Error handling
 
-	report_cannot_read_error (a_filename: STRING) is
+	report_cannot_read_error (a_filename: STRING)
 			-- Report that `a_filename' cannot be
 			-- opened in read mode.
 		require
@@ -312,13 +320,13 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_usage_message is
+	report_usage_message
 			-- Report usage message.
 		do
 			error_handler.report_info (Usage_message)
 		end
 
-	report_version_number is
+	report_version_number
 			-- Report version number.
 		local
 			a_message: UT_VERSION_NUMBER
@@ -327,7 +335,7 @@ feature -- Error handling
 			error_handler.report_info (a_message)
 		end
 
-	Usage_message: UT_USAGE_MESSAGE is
+	Usage_message: UT_USAGE_MESSAGE
 			-- Gelint usage message.
 		once
 			create Result.make ("[--ecma][--ise[=major[.minor[.revision[.build]]]]][--define=variables]%N%

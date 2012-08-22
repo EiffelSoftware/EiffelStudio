@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Parser token codes"
 	generator: "geyacc version 3.9"
@@ -16,7 +16,7 @@ feature -- Last values
 
 feature -- Access
 
-	token_name (a_token: INTEGER): STRING is
+	token_name (a_token: INTEGER): STRING
 			-- Name of token `a_token'
 		do
 			inspect a_token
@@ -57,18 +57,18 @@ feature -- Access
 
 feature -- Token codes
 
-	T_CLASS: INTEGER is 258
-	T_CLUSTER: INTEGER is 259
-	T_COMPILE: INTEGER is 260
-	T_DEFAULT: INTEGER is 261
-	T_END: INTEGER is 262
-	T_EXECUTE: INTEGER is 263
-	T_FEATURE: INTEGER is 264
-	T_PREFIX: INTEGER is 265
-	T_TEST: INTEGER is 266
-	T_TESTGEN: INTEGER is 267
-	T_STRERR: INTEGER is 268
-	T_IDENTIFIER: INTEGER is 269
-	T_STRING: INTEGER is 270
+	T_CLASS: INTEGER = 258
+	T_CLUSTER: INTEGER = 259
+	T_COMPILE: INTEGER = 260
+	T_DEFAULT: INTEGER = 261
+	T_END: INTEGER = 262
+	T_EXECUTE: INTEGER = 263
+	T_FEATURE: INTEGER = 264
+	T_PREFIX: INTEGER = 265
+	T_TEST: INTEGER = 266
+	T_TESTGEN: INTEGER = 267
+	T_STRERR: INTEGER = 268
+	T_IDENTIFIER: INTEGER = 269
+	T_STRING: INTEGER = 270
 
 end

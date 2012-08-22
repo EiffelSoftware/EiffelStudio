@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # description: "Install Gobo Eiffel package"
-# copyright: "Copyright (c) 2007-2008, Eric Bezault and others"
+# copyright: "Copyright (c) 2007-2012, Eric Bezault and others"
 # license: "MIT License"
 # date: "$Date$"
 # revision: "$Revision$"
@@ -41,6 +41,8 @@ BOOTSTRAP_DIR=$GOBO/bin
 cd $BIN_DIR
 
 c_compilation() {
+	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec16.c
+	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec15.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec14.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec13.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec12.c
@@ -165,7 +167,7 @@ if [ "$EIF" = "ge" ]; then
 	export GOBO_EIFFEL
 	cd $BIN_DIR
 	$BIN_DIR/gec$EXE --finalize $GOBO/src/geant/ge.xace
-	strip geant$EXE}
+	strip geant${EXE}
 	$BIN_DIR/gec$EXE --finalize $GOBO/src/gexace/ge.xace
 	strip gexace${EXE}
 	$BIN_DIR/gec$EXE --finalize $GOBO/src/gelex/ge.xace

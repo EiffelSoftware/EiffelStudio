@@ -1,10 +1,10 @@
-indexing
+note
 
 	description:
 
 		"Gobo Eiffel Compiler"
 
-	copyright: "Copyright (c) 2005-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,13 @@ inherit
 	UT_SHARED_ISE_VERSIONS
 		export {NONE} all end
 
+	ET_SHARED_ISE_VARIABLES
+		export {NONE} all end
+
 	ET_SHARED_ERROR_HANDLERS
+		export {NONE} all end
+
+	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
 
 create
@@ -38,7 +44,7 @@ create
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Start 'gec' execution.
 		local
 			a_filename: STRING
@@ -46,6 +52,9 @@ feature -- Execution
 			nb: INTEGER
 		do
 			Arguments.set_program_name ("gec")
+				-- For compatibility with ISE's tools, define the environment
+				-- variable "$ISE_LIBRARY" to $ISE_EIFFEL" if not set yet.
+			ise_variables.set_ise_library_variable
 			create error_handler.make_standard
 			parse_arguments
 			a_filename := ace_filename
@@ -92,7 +101,7 @@ feature -- Access
 
 feature {NONE} -- Eiffel config file parsing
 
-	parse_ace_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_ace_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Read Ace file `a_file'.
 			-- Put result in `last_system' if no error occurred.
 		require
@@ -111,7 +120,7 @@ feature {NONE} -- Eiffel config file parsing
 			end
 		end
 
-	parse_xace_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_xace_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Read Xace file `a_file'.
 			-- Put result in `last_system' if no error occurred.
 		require
@@ -163,7 +172,7 @@ feature {NONE} -- Eiffel config file parsing
 			end
 		end
 
-	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Read ECF file `a_file'.
 			-- Put result in `last_system' if no error occurred.
 		require
@@ -172,26 +181,48 @@ feature {NONE} -- Eiffel config file parsing
 		local
 			l_ecf_parser: ET_ECF_SYSTEM_PARSER
 			l_ecf_error_handler: ET_ECF_ERROR_HANDLER
+			l_gobo_eiffel: STRING
+			l_ecf_system: ET_ECF_SYSTEM
+			l_target: ET_ECF_TARGET
+			l_value: STRING
 		do
 			last_system := Void
+			l_gobo_eiffel := Execution_environment.variable_value ("GOBO_EIFFEL")
+			if l_gobo_eiffel = Void or else l_gobo_eiffel.is_empty then
+				Execution_environment.set_variable_value ("GOBO_EIFFEL", "ge")
+			end
 			create l_ecf_error_handler.make_standard
 			create l_ecf_parser.make (l_ecf_error_handler)
+			l_ecf_parser.set_finalize_mode (is_finalize)
 			l_ecf_parser.parse_file (a_file)
 			if not l_ecf_error_handler.has_error then
-				last_system := l_ecf_parser.last_system
+				l_ecf_system := l_ecf_parser.last_system
+				if l_ecf_system /= Void then
+					l_target := l_ecf_system.selected_target
+					if l_target /= Void then
+						l_value := l_target.variables.value ("gelint")
+						if l_value /= Void and then l_value.is_boolean then
+							ecf_gelint_option := l_value.to_boolean
+						end
+					end
+					last_system := l_ecf_system
+				end
 			end
 		end
 
+	ecf_gelint_option: BOOLEAN
+			-- Same as command-line option --gelint, but specified from the ECF file
+
 feature {NONE} -- Processing
 
-	process_system (a_system: ET_SYSTEM) is
+	process_system (a_system: ET_SYSTEM)
 			-- Process `a_system'.
 		require
 			a_system_not_void: a_system /= Void
 		local
 			l_system: ET_DYNAMIC_SYSTEM
 			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
-			l_class: ET_CLASS
+			l_root_type: ET_BASE_TYPE
 			l_generator: ET_C_GENERATOR
 			l_command: KL_SHELL_COMMAND
 			l_filename: STRING
@@ -217,10 +248,10 @@ feature {NONE} -- Processing
 			create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} l_builder.make (l_system)
 			l_system.set_dynamic_type_set_builder (l_builder)
 			l_system.compile
-			l_class := a_system.root_class
-			if l_class = Void then
+			l_root_type := a_system.root_type
+			if l_root_type = Void then
 				-- Do nothing.
-			elseif l_class = a_system.none_class then
+			elseif l_root_type.same_named_type (a_system.none_type, tokens.unknown_class, tokens.unknown_class) then
 				-- Do nothing.
 			elseif l_system.has_fatal_error then
 				Exceptions.die (1)
@@ -228,7 +259,7 @@ feature {NONE} -- Processing
 					-- C code generation.
 				l_system_name := a_system.system_name
 				if l_system_name = Void then
-					l_system_name := l_class.lower_name
+					l_system_name := l_root_type.base_class.lower_name
 				end
 				create l_generator.make (l_system)
 				if gc_option.was_found then
@@ -269,7 +300,7 @@ feature {NONE} -- Processing
 
 feature -- Error handling
 
-	report_cannot_read_error (a_filename: STRING) is
+	report_cannot_read_error (a_filename: STRING)
 			-- Report that `a_filename' cannot be
 			-- opened in read mode.
 		require
@@ -281,7 +312,7 @@ feature -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-	report_version_number is
+	report_version_number
 			-- Report version number.
 		local
 			a_message: UT_VERSION_NUMBER
@@ -292,43 +323,43 @@ feature -- Error handling
 
 feature -- Status report
 
-	is_finalize: BOOLEAN is
+	is_finalize: BOOLEAN
 			-- Compilation with optimizations turned on?
 		do
 			Result := finalize_flag.was_found
 		end
 
-	is_gelint: BOOLEAN is
+	is_gelint: BOOLEAN
 			-- Should gelint be run on the full content of each class being compiled?
 		do
-			Result := gelint_flag.was_found
+			Result := gelint_flag.was_found or ecf_gelint_option
 		end
 
-	catcall_error_mode: BOOLEAN is
+	catcall_error_mode: BOOLEAN
 			-- Are CAT-call errors considered as fatal errors?
 		do
 			Result := catcall_option.was_found and then STRING_.same_string (catcall_option.parameter, "error")
 		end
 
-	catcall_warning_mode: BOOLEAN is
+	catcall_warning_mode: BOOLEAN
 			-- Are CAT-call errors considered just as warnings?
 		do
 			Result := not catcall_option.was_found or else STRING_.same_string (catcall_option.parameter, "warning")
 		end
 
-	qualified_anchored_types_enabled: BOOLEAN is
+	qualified_anchored_types_enabled: BOOLEAN
 			-- Are Qualified Anchored Types allowed?
 		do
-			Result := qat_option.was_found and then qat_option.parameter
+			Result := not qat_option.was_found or else qat_option.parameter
 		end
 
-	no_c_compile: BOOLEAN is
+	no_c_compile: BOOLEAN
 			-- Should the back-end C compiler not be invoked on the generated C code?
 		do
 			Result := c_compile_option.was_found and then not c_compile_option.parameter
 		end
 
-	no_split: BOOLEAN is
+	no_split: BOOLEAN
 			-- Should C code be generated into a single file?
 		do
 			Result := split_option.was_found and then not split_option.parameter
@@ -337,19 +368,19 @@ feature -- Status report
 	split_size: INTEGER
 			-- Size (in bytes) of generated C files in bytes when in split mode
 
-	use_boehm_gc: BOOLEAN is
+	use_boehm_gc: BOOLEAN
 			-- Should the application be compiled with the Boehm GC?
 		do
 			Result := gc_option.was_found and then STRING_.same_string (gc_option.parameter, "boehm")
 		end
 
-	is_silent: BOOLEAN is
+	is_silent: BOOLEAN
 			-- Should gec run in silent mode?
 		do
 			Result := silent_flag.was_found
 		end
 
-	is_verbose: BOOLEAN is
+	is_verbose: BOOLEAN
 			-- Should gec run in verbose mode?
 		do
 			Result := verbose_flag.was_found
@@ -393,7 +424,7 @@ feature -- Argument parsing
 	version_flag: AP_FLAG
 			-- Flag for '--version'
 
-	parse_arguments is
+	parse_arguments
 			-- Initialize options and parse the command line.
 		local
 			a_parser: AP_PARSER
@@ -421,7 +452,7 @@ feature -- Argument parsing
 			a_parser.options.force_last (catcall_option)
 				-- qat
 			create qat_option.make_with_long_form ("qat")
-			qat_option.set_description ("Are Qualified Anchored Types allowed? (default: no)")
+			qat_option.set_description ("Are Qualified Anchored Types allowed? (default: yes)")
 			qat_option.set_parameter_description ("no|yes")
 			a_parser.options.force_last (qat_option)
 				-- cc

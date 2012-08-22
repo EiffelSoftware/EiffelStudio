@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Lace parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_standard is
+	make_standard
 			-- Create a new Lace parser.
 			-- Error messages will be sent to standard files.
 		local
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			make (a_handler)
 		end
 
-	make (an_error_handler: like error_handler) is
+	make (an_error_handler: like error_handler)
 			-- Create a new Lace parser.
 		require
 			an_error_handler_not_void: an_error_handler /= Void
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			error_handler_set: error_handler = an_error_handler
 		end
 
-	make_with_factory (a_factory: like ast_factory; an_error_handler: like error_handler) is
+	make_with_factory (a_factory: like ast_factory; an_error_handler: like error_handler)
 			-- Create a new Lace parser.
 		require
 			a_factory_not_void: a_factory /= Void
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 
 feature -- Parsing
 
-	parse_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Parse Ace file `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -87,7 +87,7 @@ feature -- Parsing
 			reset
 			named_clusters.wipe_out
 			set_input_buffer (new_file_buffer (a_file))
-			last_system := new_system
+			last_system := Void
 			override_cluster_names.wipe_out
 			named_clusters.wipe_out
 			external_include_pathnames.wipe_out
@@ -139,7 +139,7 @@ feature -- Default options
 
 feature {NONE} -- AST factory
 
-	new_assembly (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER): ET_LACE_DOTNET_ASSEMBLY is
+	new_assembly (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER): ET_LACE_DOTNET_ASSEMBLY
 			-- New assembly
 		require
 			a_name_not_void: a_name /= Void
@@ -147,13 +147,13 @@ feature {NONE} -- AST factory
 			if last_system /= Void then
 				Result := ast_factory.new_assembly (a_name, a_pathname, last_system)
 			else
-				Result := ast_factory.new_assembly (a_name, a_pathname, tokens.empty_system)
+				Result := ast_factory.new_assembly (a_name, a_pathname, tokens.unknown_system)
 			end
 		ensure
 			assembly_not_void: Result /= Void
 		end
 
-	new_assemblies (an_assembly: ET_LACE_DOTNET_ASSEMBLY): ET_ADAPTED_DOTNET_ASSEMBLIES is
+	new_assemblies (an_assembly: ET_LACE_DOTNET_ASSEMBLY): ET_ADAPTED_DOTNET_ASSEMBLIES
 			-- New assembly list
 		require
 			an_assembly_not_void: an_assembly /= Void
@@ -163,7 +163,7 @@ feature {NONE} -- AST factory
 			assemblies_not_void: Result /= Void
 		end
 
-	new_cluster (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER): ET_LACE_CLUSTER is
+	new_cluster (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER): ET_LACE_CLUSTER
 			-- New cluster
 		require
 			a_name_not_void: a_name /= Void
@@ -171,14 +171,14 @@ feature {NONE} -- AST factory
 			if last_system /= Void then
 				Result := ast_factory.new_cluster (a_name, a_pathname, last_system)
 			else
-				Result := ast_factory.new_cluster (a_name, a_pathname, tokens.empty_system)
+				Result := ast_factory.new_cluster (a_name, a_pathname, tokens.unknown_system)
 			end
 			named_clusters.force_last (Result, a_name)
 		ensure
 			cluster_not_void: Result /= Void
 		end
 
-	new_clusters (a_cluster: ET_LACE_CLUSTER): ET_LACE_CLUSTERS is
+	new_clusters (a_cluster: ET_LACE_CLUSTER): ET_LACE_CLUSTERS
 			-- New cluster list
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -188,7 +188,7 @@ feature {NONE} -- AST factory
 			clusters_not_void: Result /= Void
 		end
 
-	new_default_value (a_name, a_value: ET_IDENTIFIER): ANY is
+	new_default_value (a_name, a_value: ET_IDENTIFIER): ANY
 			-- New default value;
 			-- Void if not recognized
 		require
@@ -241,7 +241,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_gac_assembly (a_name: ET_IDENTIFIER; an_assembly_name, a_version, a_culture, a_public_key_token: ET_IDENTIFIER): ET_LACE_DOTNET_GAC_ASSEMBLY is
+	new_gac_assembly (a_name: ET_IDENTIFIER; an_assembly_name, a_version, a_culture, a_public_key_token: ET_IDENTIFIER): ET_LACE_DOTNET_GAC_ASSEMBLY
 			-- New GAC assembly
 		require
 			a_name_not_void: a_name /= Void
@@ -250,7 +250,7 @@ feature {NONE} -- AST factory
 			if last_system /= Void then
 				Result := ast_factory.new_gac_assembly (a_name, an_assembly_name, last_system)
 			else
-				Result := ast_factory.new_gac_assembly (a_name, an_assembly_name, tokens.empty_system)
+				Result := ast_factory.new_gac_assembly (a_name, an_assembly_name, tokens.unknown_system)
 			end
 			Result.set_assembly_version_id (a_version)
 			Result.set_assembly_culture_id (a_culture)
@@ -260,7 +260,7 @@ feature {NONE} -- AST factory
 		end
 
 	new_qualified_subcluster (a_name: ET_IDENTIFIER; a_parent: ET_IDENTIFIER;
-		a_pathname: ET_IDENTIFIER; an_exclude: ET_LACE_EXCLUDE): ET_LACE_CLUSTER is
+		a_pathname: ET_IDENTIFIER; an_exclude: ET_LACE_EXCLUDE): ET_LACE_CLUSTER
 			-- New subcluster named `a_name' with pathname `a_pathname'
 			-- Add this subcluster to parent cluster named `a_parent'.
 			-- The leading '$' sign in `a_pathname' will be replaced by
@@ -323,17 +323,20 @@ feature {NONE} -- AST factory
 			subcluster_not_void: Result /= Void
 		end
 
-	new_system: ET_LACE_SYSTEM is
+	new_system (a_name: STRING): ET_LACE_SYSTEM
 			-- New Eiffel system
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
 		do
-			Result := ast_factory.new_system
+			Result := ast_factory.new_system (a_name)
 			Result.set_error_handler (ast_factory.new_error_handler)
 			Result.set_ast_factory (ast_factory.new_ast_factory)
 		ensure
 			system_not_void: Result /= Void
 		end
 
-	set_system (a_system: ET_LACE_SYSTEM) is
+	set_system (a_system: ET_LACE_SYSTEM)
 			-- Set Eiffel system.
 		require
 			a_system_not_void: a_system /= Void
@@ -354,7 +357,7 @@ feature {NONE} -- AST factory
 			a_system.set_trace_mode (trace_value)
 		end
 
-	add_external_value (a_name, a_value: ET_IDENTIFIER) is
+	add_external_value (a_name, a_value: ET_IDENTIFIER)
 			-- Add external value.
 			-- Do nothing if not recognized.
 		require
@@ -375,7 +378,7 @@ feature {NONE} -- Implementation
 
 feature -- Error handling
 
-	report_error (a_message: STRING) is
+	report_error (a_message: STRING)
 			-- Print error message.
 		local
 			f_buffer: YY_FILE_BUFFER
@@ -399,7 +402,7 @@ feature -- Error handling
 
 feature {NONE} -- Constants
 
-	console_application_option: ET_IDENTIFIER is
+	console_application_option: ET_IDENTIFIER
 			-- 'console_application' external option name
 		once
 			Result := new_identifier ("console_application")
@@ -407,7 +410,7 @@ feature {NONE} -- Constants
 			console_application_option_not_void: Result /= Void
 		end
 
-	exception_trace_option: ET_IDENTIFIER is
+	exception_trace_option: ET_IDENTIFIER
 			-- 'exception_trace' external option name
 		once
 			Result := new_identifier ("exception_trace")
@@ -415,7 +418,7 @@ feature {NONE} -- Constants
 			exception_trace_option_not_void: Result /= Void
 		end
 
-	include_path_option: ET_IDENTIFIER is
+	include_path_option: ET_IDENTIFIER
 			-- 'include_path' external option name
 		once
 			Result := new_identifier ("include_path")
@@ -423,7 +426,7 @@ feature {NONE} -- Constants
 			include_path_option_not_void: Result /= Void
 		end
 
-	metadata_cache_path_option: ET_IDENTIFIER is
+	metadata_cache_path_option: ET_IDENTIFIER
 			-- 'metadata_cache_path' default option name
 		once
 			Result := new_identifier ("metadata_cache_path")
@@ -431,7 +434,7 @@ feature {NONE} -- Constants
 			metadata_cache_path_option_not_void: Result /= Void
 		end
 
-	msil_clr_version_option: ET_IDENTIFIER is
+	msil_clr_version_option: ET_IDENTIFIER
 			-- 'msil_clr_version' default option name
 		once
 			Result := new_identifier ("msil_clr_version")
@@ -439,7 +442,7 @@ feature {NONE} -- Constants
 			msil_clr_version_option_not_void: Result /= Void
 		end
 
-	object_option: ET_IDENTIFIER is
+	object_option: ET_IDENTIFIER
 			-- 'object' external option name
 		once
 			Result := new_identifier ("object")
@@ -447,7 +450,7 @@ feature {NONE} -- Constants
 			object_option_not_void: Result /= Void
 		end
 
-	override_cluster_option: ET_IDENTIFIER is
+	override_cluster_option: ET_IDENTIFIER
 			-- 'override_cluster' default option name
 		once
 			Result := new_identifier ("override_cluster")
@@ -455,7 +458,7 @@ feature {NONE} -- Constants
 			override_cluster_option_not_void: Result /= Void
 		end
 
-	trace_option: ET_IDENTIFIER is
+	trace_option: ET_IDENTIFIER
 			-- 'trace' external option name
 		once
 			Result := new_identifier ("trace")
@@ -463,7 +466,7 @@ feature {NONE} -- Constants
 			trace_option_not_void: Result /= Void
 		end
 
-	no_value: ET_IDENTIFIER is
+	no_value: ET_IDENTIFIER
 			-- 'no' value
 		once
 			Result := new_identifier ("no")
@@ -471,7 +474,7 @@ feature {NONE} -- Constants
 			no_value_not_void: Result /= Void
 		end
 
-	yes_value: ET_IDENTIFIER is
+	yes_value: ET_IDENTIFIER
 			-- 'yes' value
 		once
 			Result := new_identifier ("yes")

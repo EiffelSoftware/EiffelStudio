@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -22,8 +22,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tag: like tag; an_expression: like expression) is
+	make (a_tag: like tag; an_expression: like expression)
 			-- Create a new empty loop variant clause.
+		require
+			an_expression_not_void: an_expression /= Void
 		do
 			variant_keyword := tokens.variant_keyword
 			tag := a_tag
@@ -35,12 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset variant as it was when it was last parsed.
 		do
-			if expression /= Void then
-				expression.reset
-			end
+			expression.reset
 		end
 
 feature -- Access
@@ -54,7 +54,7 @@ feature -- Access
 	expression: ET_EXPRESSION
 			-- Integer expression
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -62,45 +62,33 @@ feature -- Access
 			if Result.is_null then
 				if tag /= Void then
 					Result := tag.position
-				elseif expression /= Void then
+				else
 					Result := expression.position
 				end
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := variant_keyword
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
-			if expression /= Void then
-				Result := expression.last_leaf
-			elseif tag /= Void then
-				Result := tag.last_leaf
-			else
-				Result := variant_keyword
-			end
+			Result := expression.last_leaf
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
-			if expression /= Void then
-				Result := expression.break
-			elseif tag /= Void then
-				Result := tag.break
-			else
-				Result := variant_keyword.break
-			end
+			Result := expression.break
 		end
 
 feature -- Setting
 
-	set_variant_keyword (a_variant: like variant_keyword) is
+	set_variant_keyword (a_variant: like variant_keyword)
 			-- Set `variant_keyword' to `a_variant'.
 		require
 			a_variant_not_void: a_variant /= Void
@@ -112,7 +100,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_variant (Current)
@@ -121,5 +109,6 @@ feature -- Processing
 invariant
 
 	variant_keyword_not_void: variant_keyword /= Void
+	expression_not_void: expression /= Void
 
 end

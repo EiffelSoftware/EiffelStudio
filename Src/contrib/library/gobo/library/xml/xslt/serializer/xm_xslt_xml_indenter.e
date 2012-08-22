@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_serializer: XM_XSLT_SERIALIZER; a_receiver: XM_XSLT_EMITTER; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES) is
+	make (a_serializer: XM_XSLT_SERIALIZER; a_receiver: XM_XSLT_EMITTER; some_output_properties: XM_XSLT_OUTPUT_PROPERTIES)
 			-- Establish invariant.
 		require
 			serializer_not_void: a_serializer /= Void
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 
 feature -- Events
 
-	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
+	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER)
 			-- Notify the start of an element
 		do
 			if is_after_tag then indent end
@@ -75,7 +75,7 @@ feature -- Events
 			line := 0
 		end
 
-	end_element is
+	end_element
 			-- Notify the end of an element.
 		do
 			level := level - 1
@@ -93,7 +93,7 @@ feature -- Events
 			end
 		end
 
-	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER)
 			-- Notify an attribute.
 		do
 			if fingerprint_from_name_code (a_name_code) = xml_space_code and then
@@ -103,22 +103,20 @@ feature -- Events
 			Precursor (a_name_code, a_type_code, a_value, properties)
 		end
 
-	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
+	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER)
 			-- Notify a processing instruction.
 		do
 			Precursor (a_name, a_data_string, properties)
 			is_after_tag := True
 		end
 
-	notify_characters (chars: STRING; properties: INTEGER) is
+	notify_characters (chars: STRING; properties: INTEGER)
 			-- Notify character data.
 		local
 			an_index, a_character_code: INTEGER
 		do
 			from
 				an_index := 1
-			variant
-				chars.count + 1 - an_index
 			until
 				an_index > chars.count
 			loop
@@ -132,12 +130,14 @@ feature -- Events
 				end
 				column := column + 1
 				an_index := an_index + 1
+			variant
+				chars.count + 1 - an_index
 			end
 			Precursor (chars, properties)
 			if not is_allwhite then is_after_tag := False end
 		end
 
-	notify_comment (a_content_string: STRING; properties: INTEGER) is
+	notify_comment (a_content_string: STRING; properties: INTEGER)
 			-- Notify a comment.
 		do
 			Precursor (a_content_string, properties)
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 	line, column: INTEGER
 			-- Number of lines and columns  in whitespace text nodes between tags
 
-	indentation_characters: STRING is "                                                                                   "
+	indentation_characters: STRING = "                                                                                   "
 			--
 
 	level: INTEGER
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 	xml_space_code: INTEGER
 			-- name code for xml:space
 
-	indent is
+	indent
 			-- Output white space to reflect the current indentation level.
 		local
 			a_spaces_count: INTEGER
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_whitespace (a_character_code: INTEGER): BOOLEAN is
+	is_whitespace (a_character_code: INTEGER): BOOLEAN
 			-- Is `a_character_code' XML white space?
 		do
 			Result := a_character_code = 10 or else a_character_code = 13 or else
@@ -204,4 +204,4 @@ invariant
 	emitter_is_base_receiver: emitter = base_receiver
 
 end
-	
+

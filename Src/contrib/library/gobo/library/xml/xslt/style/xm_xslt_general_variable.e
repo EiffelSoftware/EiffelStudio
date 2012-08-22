@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -32,26 +32,26 @@ feature -- Access
 	select_expression: XM_XPATH_EXPRESSION
 			-- Optional expression given by "select" attribute
 
-	allows_required: BOOLEAN is
+	allows_required: BOOLEAN
 			-- Is the "required" attribute allowed?
 		do
 			Result := False
 		end
 
-	allows_value: BOOLEAN is
+	allows_value: BOOLEAN
 			-- Is the "select" attribute allowed?
 		do
 			Result := True
 		end
 
-	allows_tunnel: BOOLEAN 
+	allows_tunnel: BOOLEAN
 			-- Is the "tunnel" attribute allowed to be "yes"?
 
 	variable_name: STRING
 			-- Name of variable;
 			-- For use in diagnostics - lexically, a QName
 
-	variable_fingerprint: INTEGER is
+	variable_fingerprint: INTEGER
 			-- Fingerprint of the variable name
 		local
 			l_name: STRING
@@ -80,13 +80,13 @@ feature -- Access
 				Result := cached_variable_fingerprint
 			end
 		ensure
-			variable_fingerprint_nearly_positive: Result > -2	
+			variable_fingerprint_nearly_positive: Result > -2
 		end
 
 
 feature -- Status report
 
-	may_contain_sequence_constructor: BOOLEAN is
+	may_contain_sequence_constructor: BOOLEAN
 			-- Is `Current' allowed to contain a sequence constructor?
 		do
 			Result := True
@@ -95,12 +95,12 @@ feature -- Status report
 	is_redundant_variable: BOOLEAN
 			-- Is `Current' a redundant variable?
 
-	is_global_variable: BOOLEAN is
+	is_global_variable: BOOLEAN
 			-- Is `Current' a global variable?
 		do
 			Result := is_top_level
 		end
-	
+
 	is_required_parameter: BOOLEAN
 			-- Is this a required parameter?
 
@@ -111,8 +111,8 @@ feature -- Status report
 			-- Is this a tunnel parameter?
 
 feature -- Status setting
-	
-	set_redundant_variable is
+
+	set_redundant_variable
 			-- Mark as a redundant variable
 		require
 			attributes_not_prepared: not attributes_prepared
@@ -122,7 +122,7 @@ feature -- Status setting
 			redundant_variable_set:	is_redundant_variable = True
 		end
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -134,8 +134,6 @@ feature -- Status setting
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index				
 				until
 					a_cursor.after or any_compile_errors
 				loop
@@ -146,7 +144,7 @@ feature -- Status setting
 						STRING_.left_adjust (variable_name)
 						STRING_.right_adjust (variable_name)
 					elseif STRING_.same_string (an_expanded_name, Select_attribute) then
-						a_select_attribute := attribute_value_by_index (a_cursor.index)					
+						a_select_attribute := attribute_value_by_index (a_cursor.index)
 					elseif STRING_.same_string (an_expanded_name, As_attribute) then
 						an_as_attribute := attribute_value_by_index (a_cursor.index)
 					elseif STRING_.same_string (an_expanded_name, Required_attribute) and then allows_required then
@@ -161,6 +159,8 @@ feature -- Status setting
 						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 
 				if variable_name = Void then
@@ -191,7 +191,7 @@ feature -- Status setting
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			l_message: STRING
@@ -223,11 +223,11 @@ feature -- Status setting
 									if as_type.cardinality_allows_zero then
 										create {XM_XPATH_EMPTY_SEQUENCE} select_expression.make
 									else
-										
+
 										-- The implicit default value () is not valid for the required type,
 										--  so we treat it as if there is no default
-										
-										is_implicitly_required_parameter := True 
+
+										is_implicitly_required_parameter := True
 									end
 								end
 							else -- not an xsl:param
@@ -242,19 +242,19 @@ feature -- Status setting
 							l_first_node := l_child_iterator.item
 							l_child_iterator.forth
 							if l_child_iterator.after then
-								
+
 								-- There is exactly one child node
 
 								if l_first_node.node_type = Text_node then
 									constant_text := l_first_node.string_value
 								end
 							end
-							
+
 							-- Determine if the temporary tree can only contain text nodes
 
 							is_text_only := common_child_item_type = text_node_kind_test
 						end
-					end	
+					end
 				end
 			end
 			if select_expression /= Void then
@@ -264,7 +264,7 @@ feature -- Status setting
 			end
 		end
 
-	check_against_required_type (a_required_type: XM_XPATH_SEQUENCE_TYPE) is
+	check_against_required_type (a_required_type: XM_XPATH_SEQUENCE_TYPE)
 			-- Check the expression conforms to `as_type'.
 		require
 			no_compile_errors: not any_compile_errors
@@ -295,7 +295,7 @@ feature -- Status setting
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 
-	returned_item_type: XM_XPATH_ITEM_TYPE is
+	returned_item_type: XM_XPATH_ITEM_TYPE
 			-- Type of item returned by this instruction;
 			-- This is EMPTY for a variable: we are not
 			--  interested in the type of the variable, but in what the xsl:variable constributes
@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 	constant_text: STRING
 			-- Value of `Current' when it has a single text node child
 
-	initialize_instruction (a_executable: XM_XSLT_EXECUTABLE; a_variable: XM_XSLT_COMPILED_GENERAL_VARIABLE) is
+	initialize_instruction (a_executable: XM_XSLT_EXECUTABLE; a_variable: XM_XSLT_COMPILED_GENERAL_VARIABLE)
 			-- Initialize - common code called from the `compile' routine of all subclasses.
 		require
 			executable_not_void: a_executable /= Void
@@ -375,7 +375,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initialize_global_variable (a_global_variable: XM_XSLT_GLOBAL_VARIABLE; a_executable: XM_XSLT_EXECUTABLE) is
+	initialize_global_variable (a_global_variable: XM_XSLT_GLOBAL_VARIABLE; a_executable: XM_XSLT_EXECUTABLE)
 			-- Initialize global variable.
 		require
 			global_variable: is_global_variable and then a_global_variable /= Void
@@ -385,7 +385,7 @@ feature {NONE} -- Implementation
 			l_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			
+
 			if select_expression /= Void then
 				create l_replacement.make (Void)
 				select_expression.simplify (l_replacement)
@@ -417,7 +417,7 @@ feature {NONE} -- Implementation
 			a_global_variable.set_selector (l_expression)
 		end
 
-	prepare_attributes_2 (a_required_attribute, a_tunnel_attribute, an_as_attribute: STRING) is
+	prepare_attributes_2 (a_required_attribute, a_tunnel_attribute, an_as_attribute: STRING)
 			-- Prepare attributes - stage 2.
 		local
 			l_error: XM_XPATH_ERROR_VALUE
@@ -447,5 +447,5 @@ feature {NONE} -- Implementation
 				as_type := last_generated_sequence_type
 			end
 		end
-	
+
 end

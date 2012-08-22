@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			name := "concat"
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			Result := type_factory.string_type
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 			create Result.make_optional_atomic -- infinite number of possible arguments, all the same
@@ -67,14 +67,14 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			evaluate_as_string (a_context)
 			a_result.put (last_evaluated_string)
 		end
 
-	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
+	evaluate_as_string (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a String.
 		local
 			l_string: STRING
@@ -84,8 +84,6 @@ feature -- Evaluation
 			from
 				create l_string.make (0)
 				l_cursor := arguments.new_cursor; l_cursor.start
-			variant
-				arguments.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -100,17 +98,19 @@ feature -- Evaluation
 					end
 				end
 				l_cursor.forth
+			variant
+				arguments.count + 1 - l_cursor.index
 			end
 			create last_evaluated_string.make (l_string)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
 		end
 
 end
-	
+

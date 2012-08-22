@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_configuration: XM_XPATH_CONFIGURATION) is
+	make (a_configuration: XM_XPATH_CONFIGURATION)
 			-- Initialize `scheme' and register system property.
 		require
 			a_configuration_not_void: a_configuration /= Void
@@ -52,12 +52,12 @@ feature -- Status report
 
 feature -- Element change
 
-	resolve (a_uri: UT_URI; a_context: XM_XPATH_CONTEXT) is
+	resolve (a_uri: UT_URI; a_context: XM_XPATH_CONTEXT)
 			-- Resolve `a_uri' to a sequence of nodes.
 		local
 			l_directory_name: STRING
 			l_directory: KL_DIRECTORY
-			l_pathname: ?KL_PATHNAME
+			l_pathname: detachable KL_PATHNAME
 		do
 			if a_uri.has_fragment then
 				create last_error.make_from_string ("Fragment identifiers are not allowed on file URIs for fn:collection()", Xpath_errors_uri, "FODC0004", Dynamic_error)

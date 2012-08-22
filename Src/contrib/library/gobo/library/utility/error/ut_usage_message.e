@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Command-line usage messages"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,21 +22,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make (msg: STRING) is
+	make (msg: STRING)
 			-- Create a new command-line usage message.
 		require
 			msg_not_void: msg /= Void
 		do
-			create parameters.make (1, 1)
+			create parameters.make_filled (empty_string, 1, 1)
 			parameters.put (msg, 1)
 		end
 
 feature -- Access
 
-	default_template: STRING is "usage: $0 $1"
+	default_template: STRING = "usage: $0 $1"
 			-- Default template used to built the error message
 
-	code: STRING is "UT0005"
+	code: STRING = "UT0005"
 			-- Error code
 
 invariant

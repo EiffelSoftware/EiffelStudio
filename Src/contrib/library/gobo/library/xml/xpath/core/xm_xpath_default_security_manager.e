@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -17,12 +17,12 @@ inherit
 	 XM_XPATH_SECURITY_MANAGER
 
 feature -- Access
-	
-	is_uri_permitted (an_absolute_uri: UT_URI): BOOLEAN is
+
+	is_uri_permitted (an_absolute_uri: UT_URI): BOOLEAN
 			-- Is reading permitted from `an_absolute_uri'?
 		do
 			Result := True
 		end
 
 end
-	
+

@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Error: Missing characters"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,14 +22,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filename: STRING; line: INTEGER; chars: STRING) is
+	make (filename: STRING; line: INTEGER; chars: STRING)
 			-- Create a new error reporting that
 			-- `chars' is missing.
 		require
 			filename_not_void: filename /= Void
 			chars_not_void: chars /= Void
 		do
-			create parameters.make (1, 3)
+			create parameters.make_filled (empty_string, 1, 3)
 			parameters.put (filename, 1)
 			parameters.put (line.out, 2)
 			parameters.put (chars, 3)
@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: missing $3"
+	default_template: STRING = "%"$1%", line $2: missing $3"
 			-- Default template used to built the error message
 
-	code: STRING is "PR0001"
+	code: STRING = "PR0001"
 			-- Error code
 
 invariant

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -31,10 +31,10 @@ create
 	make_style_element
 
 feature {NONE} -- Initialization
-	
+
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
 		do
 			internal_function_fingerprint := -1
@@ -55,7 +55,7 @@ feature -- Access
 	function_name: STRING
 			-- QName of function
 
-	arity: INTEGER is
+	arity: INTEGER
 			-- Arity of function;
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -79,7 +79,7 @@ feature -- Access
 			positive_arity: Result >= 0
 		end
 
-	argument_types: DS_ARRAYED_LIST [XM_XPATH_SEQUENCE_TYPE] is
+	argument_types: DS_ARRAYED_LIST [XM_XPATH_SEQUENCE_TYPE]
 			-- Types for arguments
 		require
 			validated: validated
@@ -101,7 +101,7 @@ feature -- Access
 			end
 		end
 
-	function_fingerprint: INTEGER is
+	function_fingerprint: INTEGER
 			-- Fingerprint of function's QName;
 			-- CAUTION: not pure - memo function
 		do
@@ -122,13 +122,13 @@ feature -- Access
 
 feature -- Status report
 
-	may_contain_sequence_constructor: BOOLEAN is
+	may_contain_sequence_constructor: BOOLEAN
 			-- Is `Current' allowed to contain a sequence constructor?
 		do
 			Result := True
 		end
-	
-	is_permitted_child (a_style_element: XM_XSLT_STYLE_ELEMENT): BOOLEAN is
+
+	is_permitted_child (a_style_element: XM_XSLT_STYLE_ELEMENT): BOOLEAN
 			-- Is `a_style_element' a permitted child of `Current'?
 		do
 			Result := a_style_element.is_param
@@ -139,7 +139,7 @@ feature -- Status report
 
 feature -- Element change
 
-	register_reference (a_reference: XM_XSLT_USER_FUNCTION_CALL) is
+	register_reference (a_reference: XM_XSLT_USER_FUNCTION_CALL)
 			-- Register a function call reference for future fix-up.
 		require
 			reference_not_void: a_reference /= Void
@@ -147,7 +147,7 @@ feature -- Element change
 			references.force_last (a_reference)
 		end
 
-	fixup_references is
+	fixup_references
 			-- Fix up references from XPath expressions.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_USER_FUNCTION_CALL]
@@ -165,7 +165,7 @@ feature -- Element change
 			Precursor
 		end
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -177,8 +177,6 @@ feature -- Element change
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index				
 				until
 					a_cursor.after or any_compile_errors
 				loop
@@ -193,14 +191,14 @@ feature -- Element change
 							report_compile_error (an_error)
 						elseif not is_qname (function_name) then
 							create an_error.make_from_string ("Xsl:function name must be a lexical QName", Xpath_errors_uri, "XTSE0020", Static_error)
-							report_compile_error (an_error)						
+							report_compile_error (an_error)
 						else
 							generate_name_code (function_name)
 							internal_function_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 							if internal_function_fingerprint = -1 then
 								-- Must be because the namespace is reserved
 								create an_error.make_from_string ("Xsl:function name may not use a reserved namespace", Xpath_errors_uri, "XTSE0080", Static_error)
-								report_compile_error (an_error)							
+								report_compile_error (an_error)
 							end
 						end
 					elseif STRING_.same_string (an_expanded_name, As_attribute) then
@@ -236,6 +234,8 @@ feature -- Element change
 						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if function_name = Void then
@@ -250,7 +250,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
@@ -268,8 +268,6 @@ feature -- Element change
 			from
 				a_root := principal_stylesheet
 				a_cursor := a_root.top_level_elements.new_cursor; a_cursor.finish
-			variant
-				a_cursor.index
 			until
 				a_cursor.before
 			loop
@@ -283,11 +281,13 @@ feature -- Element change
 				else
 					a_cursor.back
 				end
+			variant
+				a_cursor.index
 			end
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
 			l_body: XM_XPATH_EXPRESSION
@@ -304,7 +304,7 @@ feature -- Element change
 			-- The XM_XSLT_COMPILED_USER_FUNCTION that is created will be linked from all calls to
 			--  this function, so nothing else needs to be done with the result. If there are
 			--  no calls to it, the compiled function will be garbage-collected away.
-  
+
 			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), False)
 			l_body := last_generated_expression
 			if l_body = Void then
@@ -373,13 +373,13 @@ feature -- Element change
 
 feature -- Conversion
 
-	is_xslt_function: BOOLEAN is
+	is_xslt_function: BOOLEAN
 			-- Is `Current' an xsl:function?
 		do
 			Result := True
 		end
 
-	as_xslt_function: XM_XSLT_FUNCTION is
+	as_xslt_function: XM_XSLT_FUNCTION
 			-- `Current' seen as an xsl:function
 		do
 			Result := Current
@@ -396,7 +396,7 @@ feature {NONE} -- Implementation
 	is_memo_function: BOOLEAN
 			-- Is this function a memo function? (From: gexslt extension attribute)
 
-	fixup_instruction (a_user_function: XM_XSLT_COMPILED_USER_FUNCTION) is
+	fixup_instruction (a_user_function: XM_XSLT_COMPILED_USER_FUNCTION)
 			-- Fix-up all references.
 		require
 			user_function_not_void: a_user_function /= Void
@@ -405,8 +405,6 @@ feature {NONE} -- Implementation
 		do
 			from
 				a_cursor := references.new_cursor; a_cursor.start
-			variant
-				references.count + 1 - a_cursor.index
 			until
 				any_compile_errors or else a_cursor.after
 			loop
@@ -415,10 +413,12 @@ feature {NONE} -- Implementation
 					report_compile_error (a_cursor.item.error_value)
 				end
 				a_cursor.forth
+			variant
+				references.count + 1 - a_cursor.index
 			end
 		end
 
-	set_parameter_definitions (a_user_function: XM_XSLT_COMPILED_USER_FUNCTION) is
+	set_parameter_definitions (a_user_function: XM_XSLT_COMPILED_USER_FUNCTION)
 			-- Compile and save the xsl:param definitions.
 		require
 			user_function_not_void: a_user_function /= Void
@@ -445,10 +445,10 @@ feature {NONE} -- Implementation
 				an_iterator.forth
 			end
 		end
-			
+
 invariant
 
 	references_not_void: references /= Void
 
-end	
+end
 

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Exception manager factory.
 		]"
@@ -13,7 +13,7 @@ class
 
 feature -- Access
 
-	exception_manager: EXCEPTION_MANAGER is
+	exception_manager: EXCEPTION_MANAGER
 			-- Exception manager
 		once
 			create Result

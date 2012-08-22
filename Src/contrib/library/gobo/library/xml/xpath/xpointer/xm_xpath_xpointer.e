@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (report_scheme_errors: BOOLEAN) is
+	make (report_scheme_errors: BOOLEAN)
 			-- Establish invariant.
 		do
 			create registered_schemes.make_with_equality_testers (3, Void, string_equality_tester)
@@ -53,7 +53,7 @@ feature -- Access
 	is_reporting_scheme_errors: BOOLEAN
 			-- Are scheme errors to be reported to the application?
 
-	is_valid_name (a_name: STRING): BOOLEAN is
+	is_valid_name (a_name: STRING): BOOLEAN
 			-- Is `a_name' a valid in-scope QName?
 		require
 			qname: a_name /= Void and then is_qname (a_name)
@@ -64,7 +64,7 @@ feature -- Access
 			Result := a_parser.is_valid and then a_parser.is_prefix_present implies namespace_bindings.is_prefix_declared (a_parser.optional_prefix)
 		end
 
-	expanded_name (a_name: STRING): STRING is
+	expanded_name (a_name: STRING): STRING
 			-- Expanded version of `a_name'
 		require
 			qname: a_name /= Void and then is_qname (a_name)
@@ -87,7 +87,7 @@ feature -- Access
 			-- Even if this is not in error, it may not be a valid result for
 			--  the application - for instance, XSLT requires a node sequence.
 
-	is_registered (a_scheme_name: STRING): BOOLEAN is
+	is_registered (a_scheme_name: STRING): BOOLEAN
 			-- Is `a_scheme_name' the expanded name of a registered scheme processor?
 		require
 			scheme_name_not_void: a_scheme_name /= Void
@@ -98,7 +98,7 @@ feature -- Access
 
 feature -- Evaluation
 
-	evaluate (an_xpointer: STRING; a_resource: XM_XPATH_DOCUMENT) is
+	evaluate (an_xpointer: STRING; a_resource: XM_XPATH_DOCUMENT)
 			-- Evaluate `an_xpointer' against `a_resource'.
 		require
 			xpointer_not_empty: an_xpointer /= Void and then an_xpointer.count > 0
@@ -126,8 +126,6 @@ feature -- Evaluation
 			else
 				from
 					a_cursor := a_parser.scheme_sequence.new_cursor; a_cursor.start
-				variant
-					a_parser.scheme_sequence.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -151,6 +149,8 @@ feature -- Evaluation
 					else
 						a_cursor.forth
 					end
+				variant
+					a_parser.scheme_sequence.count + 1 - a_cursor.index
 				end
 				if value = Void then
 					create {XM_XPATH_EMPTY_SEQUENCE} value.make
@@ -162,7 +162,7 @@ feature -- Evaluation
 
 feature -- Element change
 
-	register_scheme (a_scheme: XM_XPATH_XPOINTER_SCHEME) is
+	register_scheme (a_scheme: XM_XPATH_XPOINTER_SCHEME)
 			-- Register `a_scheme' as an XPointer scheme.
 		require
 			scheme_not_empty: a_scheme /= Void
@@ -172,14 +172,14 @@ feature -- Element change
 		ensure
 			scheme_registered: is_registered (a_scheme.expanded_name) and then registered_schemes.item (a_scheme.expanded_name) = a_scheme
 		end
-	
+
 feature {NONE} -- Implementation
 
 	registered_schemes: DS_HASH_TABLE [XM_XPATH_XPOINTER_SCHEME, STRING]
 			-- Registered scheme processors, indexed by expanded-name
 
 	namespace_bindings: XM_XPOINTER_NAMESPACE_CONTEXT
-	
+
 invariant
 
 	registered_schemes_not_void: registered_schemes /= Void

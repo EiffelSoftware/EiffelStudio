@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel parent validity second pass checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ class ET_PARENT_CHECKER2
 inherit
 
 	ET_CLASS_SUBPROCESSOR
+		redefine
+			make
+		end
 
 	ET_AST_NULL_PROCESSOR
 		undefine
@@ -30,9 +33,18 @@ create
 
 	make
 
+feature {NONE} -- Initialization
+
+	make
+			-- Create a new signature checker for features of  given classes.
+		do
+			precursor {ET_CLASS_SUBPROCESSOR}
+			create constraint_context.make_with_capacity (current_class, 1)
+		end
+
 feature -- Validity checking
 
-	check_parents_validity (a_class: ET_CLASS) is
+	check_parents_validity (a_class: ET_CLASS)
 			-- Second pass of the validity check of parents of `a_class'.
 			-- Do not try to check the creation procedures of formal parameters
 			-- (this is done after the features have been flattened during
@@ -48,7 +60,7 @@ feature -- Validity checking
 			has_fatal_error := False
 			old_class := current_class
 			current_class := a_class
-			a_parents := current_class.parents
+			a_parents := current_class.parent_clause
 			if a_parents /= Void then
 				nb := a_parents.count
 				from i := 1 until i > nb loop
@@ -56,12 +68,12 @@ feature -- Validity checking
 					i := i + 1
 				end
 			end
-			current_class := a_class
+			current_class := old_class
 		end
 
 feature {NONE} -- Parent validity
 
-	check_class_type_validity (a_type: ET_CLASS_TYPE) is
+	check_class_type_validity (a_type: ET_CLASS_TYPE)
 			-- Check validity of `a_type' when it appears in the parent
 			-- clause `a_parent' in `current_class'. Check whether the
 			-- actual generic parameters of `a_type' conform to their
@@ -96,18 +108,17 @@ feature {NONE} -- Parent validity
 						an_actual.process (Current)
 						a_formal := a_formals.formal_parameter (i)
 						a_constraint := a_formal.constraint
-						if a_constraint /= Void then
-								-- If we have:
-								--    class A [G, H -> LIST [G]] ...
-								--    class X inherit A [ANY, LIST [STRING]] ...
-								-- we need to check that "LIST[STRING]" conforms to
-								-- "LIST[ANY]", not just "LIST[G]". Hence the necessary
-								-- resolving of formal parameters in the constraint.
-							a_constraint := a_constraint.resolved_formal_parameters (an_actuals)
-						else
-							a_constraint := current_system.any_type
+						if a_constraint = Void then
+							a_constraint := current_system.detachable_any_type
 						end
-						if not an_actual.conforms_to_type (a_constraint, current_class, current_class) then
+							-- If we have:
+							--    class A [G, H -> LIST [G]] ...
+							--    class X inherit A [ANY, LIST [STRING]] ...
+							-- we need to check that "LIST[STRING]" conforms to
+							-- "LIST[ANY]", not just "LIST[G]". So, the constraint
+							-- needs to be handled in the correct type context.
+						constraint_context.set (a_type, current_class)
+						if not an_actual.conforms_to_type (a_constraint, constraint_context, current_class) then
 								-- The actual parameter does not conform to the
 								-- constraint of its corresponding formal parameter.
 							set_fatal_error
@@ -119,7 +130,7 @@ feature {NONE} -- Parent validity
 			end
 		end
 
-	check_tuple_type_validity (a_type: ET_TUPLE_TYPE) is
+	check_tuple_type_validity (a_type: ET_TUPLE_TYPE)
 			-- Check validity of `a_type' when it appears in the parent
 			-- clause `a_parent' in `current_class'. Check whether the
 			-- actual generic parameters of `a_type' conform to their
@@ -145,28 +156,37 @@ feature {NONE} -- Parent validity
 
 feature {ET_AST_NODE} -- Type dispatcher
 
-	process_class (a_class: ET_CLASS) is
+	process_class (a_class: ET_CLASS)
 			-- Process `a_class'.
 		do
 			process_class_type (a_class)
 		end
 
-	process_class_type (a_type: ET_CLASS_TYPE) is
+	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			check_class_type_validity (a_type)
 		end
 
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
+	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
 		end
 
-	process_tuple_type (a_type: ET_TUPLE_TYPE) is
+	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
 		do
 			check_tuple_type_validity (a_type)
 		end
+
+feature {NONE} -- Implementation
+
+	constraint_context: ET_NESTED_TYPE_CONTEXT
+			-- Constraint context for type conformance checking
+
+invariant
+
+	constraint_context_not_void: constraint_context /= Void
 
 end

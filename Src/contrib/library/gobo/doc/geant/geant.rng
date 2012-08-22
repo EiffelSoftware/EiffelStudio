@@ -5,8 +5,8 @@
 	system: "Gobo Eiffel Ant"
 	copyright: "Copyright (c) 2002-2009, Sven Ehrke and others"
 	license: "MIT License"
-	date: "$Date: 2009-03-14 14:31:32 -0700 (Sat, 14 Mar 2009) $"
-	revision: "$Revision: 6614 $"
+	date: "$Date$"
+	revision: "$Revision$"
 -->
 
 <grammar xmlns="http://relaxng.org/ns/structure/1.0">

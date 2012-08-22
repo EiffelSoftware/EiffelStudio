@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -8,7 +8,7 @@ indexing
 		%of formal generic parameters."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type_mark: like type_mark; a_name: like name) is
+	make (a_type_mark: like type_mark; a_name: like name)
 			-- Create a new constraint named type.
 		require
 			a_name_not_void: a_name /= Void
@@ -46,7 +46,7 @@ feature -- Access
 			-- 'expanded', 'reference' or 'separate' keyword,
 			-- or '!' or '?' symbol
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -60,14 +60,14 @@ feature -- Access
 feature -- Conversion
 
 	resolved_syntactical_constraint (a_formals: ET_FORMAL_PARAMETER_LIST;
-		a_parser: ET_EIFFEL_PARSER_SKELETON): ET_TYPE is
-			-- Version of current type, appearing in the constraint of
-			-- one of the formal generic parameters in `a_formals', where
-			-- class names and formal generic parameter names have been
+		a_class: ET_CLASS; a_parser: ET_EIFFEL_PARSER_SKELETON): ET_TYPE
+			-- Version of current type, appearing in the constraint of one
+			-- of the formal generic parameters in `a_formals' of `a_class',
+			-- where class names and formal generic parameter names have been
 			-- resolved (i.e. replaced by the corresponding Class_type,
 			-- Tuple_type and Formal_parameter_type)
 		do
-			Result := a_parser.resolved_constraint_named_type (Current, a_formals)
+			Result := a_parser.resolved_constraint_named_type (Current, a_formals, a_class)
 		end
 
 invariant

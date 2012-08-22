@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Functions implemented in .NET"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,9 +32,9 @@ inherit
 			reset_postconditions,
 			obsolete_message,
 			is_function,
+			is_routine,
 			is_prefixable, is_infixable,
 			is_bracketable, undefined_feature,
-			resolve_inherited_signature,
 			is_deferred
 		end
 
@@ -50,7 +50,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like extended_name; args: like arguments; a_type: like declared_type; a_class: like implementation_class) is
+	make (a_name: like extended_name; args: like arguments; a_type: like declared_type; a_class: like implementation_class)
 			-- Create a new .NET function.
 		do
 			precursor (a_name, args, a_type, a_class)
@@ -63,14 +63,14 @@ feature {NONE} -- Initialization
 
 feature -- status report
 
-	is_infixable: BOOLEAN is
+	is_infixable: BOOLEAN
 			-- Can current feature have a name of
 			-- the form 'infix ...'?
 		do
 			Result := arguments /= Void and then (arguments.count = 1 or (is_static and arguments.count = 2))
 		end
 
-	is_prefixable: BOOLEAN is
+	is_prefixable: BOOLEAN
 			-- Can current feature have a name of
 			-- the form 'prefix ...'?
 		do
@@ -79,7 +79,7 @@ feature -- status report
 
 feature -- Duplication
 
-	new_synonym (a_name: like extended_name): like Current is
+	new_synonym (a_name: like extended_name): like Current
 			-- Synonym feature
 		do
 			create Result.make (a_name, arguments, declared_type, implementation_class)
@@ -92,12 +92,13 @@ feature -- Duplication
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
+			Result.set_across_components (across_components)
 			Result.set_synonym (Current)
 		end
 
 feature -- Conversion
 
-	renamed_feature (a_name: like extended_name): like Current is
+	renamed_feature (a_name: like extended_name): like Current
 			-- Renamed version of current feature
 		do
 			create Result.make (a_name, arguments, declared_type, implementation_class)
@@ -115,13 +116,14 @@ feature -- Conversion
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
+			Result.set_across_components (across_components)
 			Result.set_first_seed (first_seed)
 			Result.set_other_seeds (other_seeds)
 		end
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_dotnet_function (Current)

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -62,7 +62,7 @@ inherit
 			append as old_append
 		export
 			{PLAIN_TEXT_FILE} old_open_read, extendible, file_pointer, old_count, old_close, old_is_closed, old_put_string, old_is_open_write;
-			{NONE} all
+			{PLAIN_TEXT_FILE} all
 		redefine
 
 
@@ -77,7 +77,7 @@ create
 
 feature -- Access
 
-	eol: STRING is "%N"
+	eol: STRING = "%N"
 			-- Line separator
 
 feature {NONE} -- Implementation

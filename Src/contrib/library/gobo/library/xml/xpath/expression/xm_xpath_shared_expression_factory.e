@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -11,10 +11,10 @@ indexing
 	revision: "$Revision$"
 
 class XM_XPATH_SHARED_EXPRESSION_FACTORY
-	
+
 feature -- Access
 
-	expression_factory: XM_XPATH_EXPRESSION_FACTORY is
+	expression_factory: XM_XPATH_EXPRESSION_FACTORY
 			-- Expression equality tester
 		once
 			create Result

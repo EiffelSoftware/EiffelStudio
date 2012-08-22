@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -13,6 +13,6 @@ class KL_GOBO_VERSION
 
 feature -- Constants
 
-	Version_number: STRING is "3.9"
+	Version_number: STRING = "3.9"
 
 end

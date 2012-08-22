@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -27,7 +27,7 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature -- Access
 
-	is_non_white_following_sibling: BOOLEAN is
+	is_non_white_following_sibling: BOOLEAN
 			-- Is `Current' such that an immediate preceding-sibling all-whitspace text node should be stripped in xslt stylesheets?
 		do
 			Result := True
@@ -39,7 +39,7 @@ feature -- Access
 	stable_attribute_value: XM_XPATH_EXPRESSION
 			-- Optional value of stable attribute
 
-	may_contain_sequence_constructor: BOOLEAN is
+	may_contain_sequence_constructor: BOOLEAN
 			-- Is `Current' allowed to contain a sequence constructor?
 		do
 			Result := True
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -59,8 +59,6 @@ feature -- Element change
 				from
 					l_cursor := attribute_collection.name_code_cursor
 					l_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - l_cursor.index				
 				until
 					l_cursor.after or any_compile_errors
 				loop
@@ -98,6 +96,8 @@ feature -- Element change
 						check_unknown_attribute (l_name_code)
 					end
 					l_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - l_cursor.index
 				end
 			end
 			prepare_attributes_2 (l_select_attribute, l_order_attribute, l_case_order_attribute,
@@ -105,7 +105,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			l_style_element: XM_XSLT_STYLE_ELEMENT
@@ -138,7 +138,7 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (a_executable: XM_XSLT_EXECUTABLE) is
+	compile (a_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
 			l_content: XM_XPATH_EXPRESSION
@@ -162,7 +162,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	is_sort: BOOLEAN is
+	is_sort: BOOLEAN
 			-- Is `Current' an xsl:sort?
 		do
 			Result := True
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 
 	case_order: XM_XPATH_EXPRESSION
 			-- Case order
-	
+
 	data_type: XM_XPATH_EXPRESSION
 			-- Data type to which sort-key-values will be coerced
 
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 			-- Name of collation
 
 	prepare_attributes_2 (a_select_attribute, a_order_attribute, a_case_order_attribute,
-		a_data_type_attribute,	a_lang_attribute, a_collation_attribute, a_stable_attribute: STRING) is
+		a_data_type_attribute,	a_lang_attribute, a_collation_attribute, a_stable_attribute: STRING)
 			-- Prepare attributes some more.
 			-- TODO: take advantage of stable="no"
 		do
@@ -214,10 +214,10 @@ feature {NONE} -- Implementation
 				case_order := last_generated_expression
 				if case_order.is_error then
 					report_compile_error (case_order.error_value)
-				end				
+				end
 			else
 				create {XM_XPATH_STRING_VALUE} case_order.make ("#default")
-			end			
+			end
 			if a_data_type_attribute /= Void then
 				generate_attribute_value_template (a_data_type_attribute, static_context)
 				data_type := last_generated_expression
@@ -258,7 +258,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	validate_2 is
+	validate_2
 			-- Perform further validation.
 		local
 			l_type_checker: XM_XPATH_TYPE_CHECKER
@@ -321,7 +321,7 @@ feature {NONE} -- Implementation
 				if stable_attribute_value.is_error then
 					report_compile_error (stable_attribute_value.error_value)
 				end
-			end			
+			end
 			if select_expression /= Void then
 				create l_role.make (Instruction_role, "xsl:sort/select", 1, Xpath_errors_uri, "XPTY0004")
 				create l_type_checker

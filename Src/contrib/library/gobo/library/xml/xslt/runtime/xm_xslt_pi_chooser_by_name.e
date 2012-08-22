@@ -1,7 +1,7 @@
-indexing
-	
+note
+
 	description:
-	
+
 		"Objects that select a named xml-stylsheet"
 
 	library: "Gobo Eiffel XSLT Library"
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: STRING)
 			-- Set name of stylesheet to be chosen.
 		require
 			name_not_void: a_name /= Void
@@ -40,7 +40,7 @@ feature -- Access
 			-- Name of stylesheet to be chosen;
 			-- Empty string means select preferred stylesheet.
 
-	selected_index (a_list: DS_LIST [STRING]): INTEGER is
+	selected_index (a_list: DS_LIST [STRING]): INTEGER
 			-- Index of chosen xml-stylesheet from within `a_list'
 		local
 			a_cursor: DS_LIST_CURSOR [STRING]
@@ -52,10 +52,8 @@ feature -- Access
 				from
 					Result := 1
 					a_cursor := a_list.new_cursor; a_cursor.start
-				variant
-					a_list.count + 1 - a_cursor.index
 				until
-					selected or else a_cursor.after 
+					selected or else a_cursor.after
 				loop
 					if STRING_.same_string (a_cursor.item, name) then selected := True end
 					if selected then
@@ -64,13 +62,15 @@ feature -- Access
 					else
 						a_cursor.forth
 					end
+				variant
+					a_list.count + 1 - a_cursor.index
 				end
 			end
 		end
 
 feature -- Element change
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set name of stylesheet to be chosen.
 		require
 			name_not_void: a_name /= Void
@@ -85,4 +85,4 @@ invariant
 	name_not_void: name /= Void
 
 end
-	
+

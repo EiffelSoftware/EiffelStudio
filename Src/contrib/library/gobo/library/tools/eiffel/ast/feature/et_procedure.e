@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel procedures"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_name: like extended_name; args: like arguments; a_class: like implementation_class) is
+	make (a_name: like extended_name; args: like arguments; a_class: like implementation_class)
 			-- Create a new procedure.
 		require
 			a_name_not_void: a_name /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Conversion
 
-	undefined_feature (a_name: like extended_name): ET_DEFERRED_PROCEDURE is
+	undefined_feature (a_name: like extended_name): ET_DEFERRED_PROCEDURE
 			-- Undefined version of current feature
 		do
 			create Result.make (a_name, arguments, implementation_class)
@@ -56,39 +56,28 @@ feature -- Conversion
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
+			Result.set_across_components (across_components)
 			Result.set_first_seed (first_seed)
 			Result.set_other_seeds (other_seeds)
 		end
 
 feature -- Access
 
-	header_break: ET_BREAK is
+	header_break: ET_BREAK
 			-- Break which appears where the header comment is expected
+		local
+			l_synonym: ET_FEATURE
 		do
 			if is_keyword /= Void then
 				Result := is_keyword.break
 			elseif arguments /= Void then
 				Result := arguments.break
 			else
-				Result := extended_name.break
-			end
-		end
-
-feature -- Type processing
-
-	resolve_inherited_signature (a_parent: ET_PARENT) is
-			-- Resolve arguments and type inherited from `a_parent'.
-			-- Resolve any formal generic parameters of declared types
-			-- with the corresponding actual parameters in `a_parent',
-			-- and duplicate identifier anchored types (and clear their
-			-- base types).
-		local
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
-		do
-			a_parameters := a_parent.actual_parameters
-			if a_parameters /= Void then
-				if arguments /= Void then
-					arguments := arguments.resolved_formal_parameters (a_parameters)
+				l_synonym := implementation_feature.synonym
+				if l_synonym /= Void then
+					Result := l_synonym.header_break
+				else
+					Result := extended_name.break
 				end
 			end
 		end

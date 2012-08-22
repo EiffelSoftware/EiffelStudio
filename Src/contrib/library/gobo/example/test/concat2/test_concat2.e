@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -21,7 +21,7 @@ create
 
 feature -- Test
 
-	test_concat is
+	test_concat
 			-- Test feature `concat'.
 		local
 			c: CONCAT2

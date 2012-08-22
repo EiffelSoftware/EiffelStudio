@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel AST lists where insertions to and removals from the tail are optimized"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ deferred class ET_TAIL_LIST [G]
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new empty list.
 		do
 			count := 0
@@ -24,10 +24,10 @@ feature {NONE} -- Initialization
 			capacity_set: capacity = 0
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create a new empty list with capacity `nb'.
 		require
-			nb_positive: nb >= 0
+			nb_not_negative: nb >= 0
 		do
 			count := 0
 			if nb > 0 then
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item (i: INTEGER): G is
+	item (i: INTEGER): G
 			-- Item at index `i' in list
 		require
 			i_large_enough: i >= 1
@@ -53,7 +53,7 @@ feature -- Access
 			item_not_void: Result /= Void
 		end
 
-	first: like item is
+	first: like item
 			-- First item
 		require
 			not_empty: not is_empty
@@ -64,7 +64,7 @@ feature -- Access
 			definition: Result = item (1)
 		end
 
-	last: like item is
+	last: like item
 			-- Last item
 		require
 			not_empty: not is_empty
@@ -75,31 +75,8 @@ feature -- Access
 			definition: Result = item (count)
 		end
 
-feature -- Measurement
-
-	count: INTEGER
-			-- Number of items in list
-
-	capacity: INTEGER is
-			-- Maximum number of items in list
-		do
-			if storage /= Void then
-				Result := storage.count - 1
-			end
-		end
-
-feature -- Status report
-
-	is_empty: BOOLEAN is
-			-- Is there no item in list?
-		do
-			Result := (count = 0)
-		ensure
-			definition: Result = (count = 0)
-		end
-
-	has (an_item: like item): BOOLEAN is
-			-- Does list contain `an_item'?
+	index_of (an_item: like item): INTEGER
+			-- Index of first occurrence of `an_item' if any, 0 otherwise
 			-- (Use `=' as comparison criterion.)
 		require
 			an_item_not_void: an_item /= Void
@@ -109,15 +86,50 @@ feature -- Status report
 			nb := count
 			from i := 1 until i > nb loop
 				if storage.item (i) = an_item then
-					Result := True
+					Result := i
 					i := nb + 1 -- Jump out of the loop.
 				else
 					i := i + 1
 				end
 			end
+		ensure
+			index_large_enough: Result >= 0
+			index_small_enough: Result <= count
 		end
 
-	valid_index (i: INTEGER): BOOLEAN is
+feature -- Measurement
+
+	count: INTEGER
+			-- Number of items in list
+
+	capacity: INTEGER
+			-- Maximum number of items in list
+		do
+			if storage /= Void then
+				Result := storage.capacity - 1
+			end
+		end
+
+feature -- Status report
+
+	is_empty: BOOLEAN
+			-- Is there no item in list?
+		do
+			Result := (count = 0)
+		ensure
+			definition: Result = (count = 0)
+		end
+
+	has (an_item: like item): BOOLEAN
+			-- Does list contain `an_item'?
+			-- (Use `=' as comparison criterion.)
+		require
+			an_item_not_void: an_item /= Void
+		do
+			Result := index_of (an_item) /= 0
+		end
+
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is there an item at index `i'?
 		do
 			Result := (1 <= i and i <= count)
@@ -127,66 +139,65 @@ feature -- Status report
 
 feature -- Element change
 
-	put_last (an_item: like item) is
+	put_last (an_item: like item)
 			-- Put `an_item' at last position in list.
 		require
 			an_item_not_void: an_item /= Void
 			not_full: count < capacity
 		do
+			if count = 0 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				fixed_array.force (storage, an_item, 0)
+			end
 			count := count + 1
-			storage.put (an_item, count)
+			fixed_array.force (storage, an_item, count)
 		ensure
 			one_more: count = old count + 1
 			last_set: last = an_item
 		end
 
-	force_last (an_item: like item) is
+	force_last (an_item: like item)
 			-- Put `an_item' at last position in list.
 			-- Resize list if necessary.
 		require
 			an_item_not_void: an_item /= Void
-		local
-			new_capacity: INTEGER
 		do
 			if count >= capacity then
-				new_capacity := (capacity + 1) * 2
-				if storage = Void then
-					storage := fixed_array.make (new_capacity + 1)
-				else
-					storage := fixed_array.resize (storage, new_capacity + 1)
-				end
+				resize (new_capacity (count + 1))
+			end
+			if count = 0 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				fixed_array.force (storage, an_item, 0)
 			end
 			count := count + 1
-			storage.put (an_item, count)
+			fixed_array.force (storage, an_item, count)
 		ensure
 			one_more: count = old count + 1
 			last_set: last = an_item
 		end
 
-	append_last (other: ET_TAIL_LIST [like item]) is
+	append_last (other: ET_TAIL_LIST [like item])
 			-- Add items of `other' to the end of list.
 			-- Keep items of `other' in the same order.
 			-- Resize list if necessary.
 		require
 			other_not_void: other /= Void
 		local
-			new_capacity: INTEGER
 			i, nb: INTEGER
 			j: INTEGER
 		do
 			nb := other.count
 			if count + nb > capacity then
-				new_capacity := (capacity + nb) * 2
-				if storage = Void then
-					storage := fixed_array.make (new_capacity + 1)
-				else
-					storage := fixed_array.resize (storage, new_capacity + 1)
-				end
+				resize (new_capacity (count + nb))
+			end
+			if count = 0 and other.count > 0 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				fixed_array.force (storage, other.first, 0)
 			end
 			j := count
 			from i := 1 until i > nb loop
 				j := j + 1
-				storage.put (other.item (i), j)
+				fixed_array.force (storage, other.item (i), j)
 				i := i + 1
 			end
 			count := j
@@ -194,13 +205,17 @@ feature -- Element change
 			new_more: count = old (count + other.count)
 		end
 
-	put (an_item: like item; i: INTEGER) is
+	put (an_item: like item; i: INTEGER)
 			-- Put `an_item' at index `i' in list.
 		require
 			an_item_not_void: an_item /= Void
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		do
+			if i = 1 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				storage.put (an_item, 0)
+			end
 			storage.put (an_item, i)
 		ensure
 			same_count: count = old count
@@ -209,27 +224,29 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_last is
+	remove_last
 			-- Remove last item.
 		require
 			not_empty: not is_empty
-		local
-			dead_item: like item
 		do
-			storage.put (dead_item, count)
+			if count = 1 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				fixed_array.keep_head (storage, 0, count + 1)
+			else
+				fixed_array.keep_head (storage, count, count + 1)
+			end
 			count := count - 1
 		ensure
 			one_less: count = old count - 1
 		end
 
-	remove (i: INTEGER) is
+	remove (i: INTEGER)
 			-- Remove item at index `i'.
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		local
 			j, nb: INTEGER
-			dead_item: like item
 		do
 			j := i
 			nb := count - 1
@@ -237,22 +254,21 @@ feature -- Removal
 				storage.put (storage.item (j + 1), j)
 				j := j + 1
 			end
-			storage.put (dead_item, j)
+			if count = 1 then
+					-- Take care of the dummy item at position 0 in `storage'.
+				fixed_array.keep_head (storage, 0, count + 1)
+			else
+				fixed_array.keep_head (storage, count, count + 1)
+			end
 			count := count - 1
 		ensure
 			one_less: count = old count - 1
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
-		local
-			i: INTEGER
-			dead_item: like item
 		do
-			from i := count until i < 1 loop
-				storage.put (dead_item, i)
-				i := i - 1
-			end
+			fixed_array.keep_head (storage, 0, count + 1)
 			count := 0
 		ensure
 			wiped_out: is_empty
@@ -260,10 +276,10 @@ feature -- Removal
 
 feature -- Resizing
 
-	resize (nb: INTEGER) is
-			-- Resize to accommodate at least `n' items.
+	resize (nb: INTEGER)
+			-- Resize to accommodate at least `nb' items.
 		require
-			nb_positive: nb >= 0
+			nb_not_negative: nb >= 0
 		do
 			if nb > capacity then
 				if storage = Void then
@@ -278,7 +294,7 @@ feature -- Resizing
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [like item]]) is
+	do_all (an_action: PROCEDURE [ANY, TUPLE [like item]])
 			-- Apply `an_action' to every item, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -293,7 +309,34 @@ feature -- Iteration
 			end
 		end
 
-	do_if (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]) is
+	do_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+			-- Apply `an_action' to every item, from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+		local
+			i, nb: INTEGER
+		do
+			if a_stop_request = Void then
+				do_all (an_action)
+			elseif not a_stop_request.item ([]) then
+				nb := count
+				from i := 1 until i > nb loop
+					if a_stop_request.item ([]) then
+						i := nb + 1
+					else
+						an_action.call ([storage.item (i)])
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	do_if (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
 		require
@@ -313,12 +356,94 @@ feature -- Iteration
 			end
 		end
 
+	do_if_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			i, nb: INTEGER
+			l_item: like item
+		do
+			if a_stop_request = Void then
+				do_if (an_action, a_test)
+			elseif not a_stop_request.item ([]) then
+				nb := count
+				from i := 1 until i > nb loop
+					if a_stop_request.item ([]) then
+						i := nb + 1
+					else
+						l_item := storage.item (i)
+						if a_test.item ([l_item]) then
+							an_action.call ([l_item])
+						end
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	there_exists (a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]): BOOLEAN
+			-- Is `a_test' true for at least one item?
+			-- (Semantics not guaranteed if `a_test' changes the list.)
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if a_test.item ([storage.item (i)]) then
+					Result := True
+						-- Jump out of the loop.
+					i := nb + 1
+				else
+					i := i + 1
+				end
+			end
+		end
+
+	for_all (a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]): BOOLEAN
+			-- Is `a_test' true for all items?
+			-- (Semantics not guaranteed if `a_test' changes the list.)
+		local
+			i, nb: INTEGER
+		do
+			Result := True
+			nb := count
+			from i := 1 until i > nb loop
+				if not a_test.item ([storage.item (i)]) then
+					Result := False
+						-- Jump out of the loop.
+					i := nb + 1
+				else
+					i := i + 1
+				end
+			end
+		end
+
+feature {NONE} -- Configuration
+
+	new_capacity (n: INTEGER): INTEGER
+			-- New capacity which could accommodate at least
+			-- `n' items (Used as argument of `resize'.)
+		require
+			n_large_enough: n > capacity
+		do
+			Result := 2 * n
+		ensure
+			definition: Result >= n
+		end
+
 feature {NONE} -- Implementation
 
 	storage: SPECIAL [like item]
 			-- Internal storage
 
-	fixed_array: KL_SPECIAL_ROUTINES [G] is
+	fixed_array: KL_SPECIAL_ROUTINES [G]
 			-- Fixed array routines
 		deferred
 		ensure
@@ -327,8 +452,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	count_positive: count >= 0
+	count_not_negative: count >= 0
 	consistent_count: count <= capacity
-	storage_not_void: not is_empty implies storage /= Void
+	storage_not_void: capacity > 0 implies storage /= Void
 
 end

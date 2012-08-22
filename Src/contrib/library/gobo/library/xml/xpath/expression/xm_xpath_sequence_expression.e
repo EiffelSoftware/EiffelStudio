@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_head, a_tail: XM_XPATH_EXPRESSION) is
+	make (a_head, a_tail: XM_XPATH_EXPRESSION)
 			-- Initialize `Current'.
 		require
 			a_head_not_void: a_head /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			if not a_head.is_sequence_expression and not a_tail.is_sequence_expression then
 				create children.make (2)
 				children.put (a_head, 1)
-				children.put (a_tail, 2)				
+				children.put (a_tail, 2)
 			else
 				if not a_head.is_sequence_expression then
 					l_child_count := 1
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 					children.put_last (a_tail)
 				else
 					children.extend_last (a_tail.as_sequence_expression.children)
-				end	
+				end
 			end
 			children.set_equality_tester (expression_tester)
 			children.do_all (agent adopt_child_expression)
@@ -76,7 +76,7 @@ feature -- Access
 	children: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Child expressions
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 		local
 			l_type: XM_XPATH_ITEM_TYPE
@@ -88,8 +88,6 @@ feature -- Access
 				from
 					l_cursor := children.new_cursor
 					l_cursor.start
-				variant
-					children.count + 1 - l_cursor.index
 				until
 					l_cursor.after
 				loop
@@ -105,11 +103,13 @@ feature -- Access
 							l_cursor.forth
 						end
 					end
+				variant
+					children.count + 1 - l_cursor.index
 				end
 			end
 		end
 
-	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
+	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Immediate sub-expressions of `Current'
 		do
 			Result := children
@@ -117,7 +117,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_expression (a_other: XM_XPATH_EXPRESSION): BOOLEAN is
+	same_expression (a_other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `a_other' the same expression?
 		local
 			l_seq: XM_XPATH_SEQUENCE_EXPRESSION
@@ -142,13 +142,13 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_sequence_expression: BOOLEAN is
+	is_sequence_expression: BOOLEAN
 			-- Is `Current' a sequence expression [e.g. (,,,)]?
 		do
 			Result := True
 		end
 
-	display (a_level: INTEGER) is
+	display (a_level: INTEGER)
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			l_string: STRING
@@ -159,10 +159,10 @@ feature -- Status report
 			children.do_all (agent {XM_XPATH_EXPRESSION}.display (a_level + 1))
 			l_string := STRING_.appended_string (indentation (a_level), ")")
 			std.error.put_string (l_string)
-			std.error.put_new_line			
+			std.error.put_new_line
 		end
 
-	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE is
+	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE
 			-- Does `Current' contains recursive tail calls of stylesheet functions?
 			-- `Undecided' means it contains a tail call to another function.
 		do
@@ -171,7 +171,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	mark_tail_function_calls is
+	mark_tail_function_calls
 			-- Mark tail-recursive calls on stylesheet functions.
 		do
 			children.last.mark_tail_function_calls
@@ -179,7 +179,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
 			l_all_atomic, l_nested: DS_CELL [BOOLEAN]
@@ -216,7 +216,7 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_nested: DS_CELL [BOOLEAN]
@@ -234,7 +234,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			children.do_all_with_index (agent optimize_child (a_replacement, a_context, a_context_item_type, ?, ?))
@@ -243,7 +243,7 @@ feature -- Optimization
 			end
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote `Current'.
 		local
 			l_promotion: XM_XPATH_EXPRESSION
@@ -256,7 +256,7 @@ feature -- Optimization
 				children.do_all_with_index (agent promote_child (a_offer, ?, ?))
 				if a_replacement.item = Void then
 					a_replacement.put (Current)
-				end				
+				end
 			else
 				a_replacement.put (Current)
 			end
@@ -264,7 +264,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterate over the values of a sequence.
 		do
 			if children.is_empty then
@@ -276,7 +276,7 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterate over the nodees of a sequence.
 		do
 			if children.is_empty then
@@ -288,7 +288,7 @@ feature -- Evaluation
 
 feature -- Conversion
 
-	as_sequence_expression: XM_XPATH_SEQUENCE_EXPRESSION is
+	as_sequence_expression: XM_XPATH_SEQUENCE_EXPRESSION
 			-- `Current' seen as a sequence expression
 		do
 			Result := Current
@@ -296,7 +296,7 @@ feature -- Conversion
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		local
 			l_cardinality: DS_CELL [INTEGER]
@@ -312,7 +312,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Agents
 
-	compute_child_cardinality (a_cardinality: DS_CELL [INTEGER]; a_child: XM_XPATH_EXPRESSION) is
+	compute_child_cardinality (a_cardinality: DS_CELL [INTEGER]; a_child: XM_XPATH_EXPRESSION)
 			-- Compute and add cardinality for `a_child' to `a_cardinality'.
 		require
 			a_cardinality_not_void: a_cardinality /= Void
@@ -321,7 +321,7 @@ feature {NONE} -- Agents
 			a_cardinality.put (add_cardinality (a_cardinality.item, a_child.cardinality))
 		end
 
-	simplify_child (a_all_atomic, a_nested: DS_CELL [BOOLEAN]; a_child: XM_XPATH_EXPRESSION; a_index: INTEGER) is
+	simplify_child (a_all_atomic, a_nested: DS_CELL [BOOLEAN]; a_child: XM_XPATH_EXPRESSION; a_index: INTEGER)
 			-- Simplify `a_child' and conditionally replace at `children.item (a_index)'.
 		require
 			initialized: initialized
@@ -347,7 +347,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	add_atomic_value (a_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]; a_expression: XM_XPATH_EXPRESSION) is
+	add_atomic_value (a_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]; a_expression: XM_XPATH_EXPRESSION)
 			-- Add `a_expression' to `a_list' at end.
 		require
 			a_list_not_void: a_list /= Void
@@ -362,7 +362,7 @@ feature {NONE} -- Agents
 		end
 
 	check_child_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_nested: DS_CELL [BOOLEAN]; a_context: XM_XPATH_STATIC_CONTEXT;
-		a_context_item_type: XM_XPATH_ITEM_TYPE; a_child: XM_XPATH_EXPRESSION; a_index: INTEGER) is
+		a_context_item_type: XM_XPATH_ITEM_TYPE; a_child: XM_XPATH_EXPRESSION; a_index: INTEGER)
 			-- Check static type of `a_child'.
 		require
 			initialized: initialized
@@ -397,7 +397,7 @@ feature {NONE} -- Agents
 		end
 
 	optimize_child (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT;
-		a_context_item_type: XM_XPATH_ITEM_TYPE; a_child: XM_XPATH_EXPRESSION; a_index: INTEGER) is
+		a_context_item_type: XM_XPATH_ITEM_TYPE; a_child: XM_XPATH_EXPRESSION; a_index: INTEGER)
 			-- Optimize `a_child'.
 		require
 			initialized: initialized
@@ -419,11 +419,11 @@ feature {NONE} -- Agents
 					set_replacement (a_replacement, l_replacement.item)
 				elseif a_child /= l_replacement.item then
 					children.replace (l_replacement.item, a_index)
-				end			
+				end
 			end
 		end
 
-	promote_child (a_offer: XM_XPATH_PROMOTION_OFFER; a_child: XM_XPATH_EXPRESSION; a_index: INTEGER) is
+	promote_child (a_offer: XM_XPATH_PROMOTION_OFFER; a_child: XM_XPATH_EXPRESSION; a_index: INTEGER)
 			-- Promote `a_child'.
 		require
 			initialized: initialized
@@ -432,19 +432,19 @@ feature {NONE} -- Agents
 			a_index_large_enough: a_index > 0
 			a_index_small_enough: a_index <= children.count
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]			
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			a_child.promote (l_replacement, a_offer)
 			if a_child /= l_replacement.item then
 				children.replace (l_replacement.item, a_index)
 				reset_static_properties
-			end			
+			end
 		end
 
 feature {XM_XPATH_SEQUENCE_EXPRESSION} -- Implementation
 
-	flatten_list (a_list: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION])is
+	flatten_list (a_list: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION])
 			-- Reallocate `a_list' so it contains no sequence expressions.
 		require
 			initialized: initialized
@@ -472,10 +472,10 @@ feature {XM_XPATH_SEQUENCE_EXPRESSION} -- Implementation
 				end
 				l_cursor.forth
 			end
-			
+
 		end
 
-	repopulate_children (a_list: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
+	repopulate_children (a_list: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION])
 			-- Recreate and repopulate `children' from `a_list'.
 		require
 			initialized: initialized

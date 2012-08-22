@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel parenthesized expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,9 @@ inherit
 
 	ET_EXPRESSION
 		redefine
-			reset, index, is_current
+			unparenthesized_expression,
+			reset, index, is_current,
+			is_false
 		end
 
 	ET_AGENT_TARGET
@@ -32,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (e: like expression) is
+	make (e: like expression)
 			-- Create a new parenthesized expression.
 		require
 			e_not_void: e /= Void
@@ -46,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset expression as it was just after it was last parsed.
 		do
 			expression.reset
@@ -54,10 +56,16 @@ feature -- Initialization
 
 feature -- Status report
 
-	is_current: BOOLEAN is
+	is_current: BOOLEAN
 			-- Is current expression the 'Current' entity (possibly parenthesized)?
 		do
 			Result := expression.is_current
+		end
+
+	is_false: BOOLEAN
+			-- Is current expression the 'False' entity (possibly parenthesized)?
+		do
+			Result := expression.is_false
 		end
 
 feature -- Access
@@ -71,11 +79,17 @@ feature -- Access
 	right_parenthesis: ET_SYMBOL
 			-- Right parenthesis
 
+	unparenthesized_expression: ET_EXPRESSION
+			-- Version of current expression without any surrounding parentheses
+		do
+			Result := expression.unparenthesized_expression
+		end
+
 	index: INTEGER
 			-- Index of expression in enclosing feature;
 			-- Used to get dynamic information about this expression.
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
@@ -85,19 +99,19 @@ feature -- Access
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := left_parenthesis
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := right_parenthesis
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			Result := right_parenthesis.break
@@ -105,7 +119,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_left_parenthesis (l: like left_parenthesis) is
+	set_left_parenthesis (l: like left_parenthesis)
 			-- Set `left_parenthesis' to `l'.
 		require
 			l_not_void: l /= Void
@@ -115,7 +129,7 @@ feature -- Setting
 			left_parenthesis_set: left_parenthesis = l
 		end
 
-	set_right_parenthesis (r: like right_parenthesis) is
+	set_right_parenthesis (r: like right_parenthesis)
 			-- Set `right_parenthesis' to `r'.
 		require
 			r_not_void: r /= Void
@@ -127,7 +141,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_parenthesized_expression (Current)

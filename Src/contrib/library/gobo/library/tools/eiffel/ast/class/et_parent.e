@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -23,20 +23,12 @@ create
 feature {NONE} -- Initialization
 
 	make (a_type: like type; a_renames: like renames; an_exports: like exports;
-		an_undefines: like undefines; a_redefines: like redefines; a_selects: like selects) is
+		an_undefines: like undefines; a_redefines: like redefines; a_selects: like selects)
 			-- Create a new parent clause.
 		require
 			a_type_not_void: a_type /= Void
-		local
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			type := a_type
-				-- Find out whether formal parameters have
-				-- been given actual derivations.
-			a_parameters := a_type.actual_parameters
-			if a_parameters /= Void and then a_parameters.has_derived_parameters then
-				actual_parameters := a_parameters
-			end
 			renames := a_renames
 			exports := an_exports
 			undefines := an_undefines
@@ -56,13 +48,10 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset parent as it was when it was last parsed.
 		do
 			type.reset
-			if actual_parameters /= Void then
-				actual_parameters.reset
-			end
 			if renames /= Void then
 				renames.reset
 			end
@@ -85,12 +74,6 @@ feature -- Access
 	type: ET_BASE_TYPE
 			-- Parent type
 
-	actual_parameters: ET_ACTUAL_PARAMETER_LIST
-			-- Actual generic parameters;
-			-- Void if `type' is not generic or if its
-			-- actual parameters are not different from
-			-- their corresponding formal parameters
-
 	renames: ET_RENAME_LIST
 			-- Rename clause
 
@@ -109,26 +92,26 @@ feature -- Access
 	end_keyword: ET_KEYWORD
 			-- 'end' keyword
 
-	parent: ET_PARENT is
+	parent: ET_PARENT
 			-- Class parent in semicolon-separated list
 		do
 			Result := Current
 		end
 
-	position: ET_POSITION is
+	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := type.position
 		end
 
-	first_leaf: ET_AST_LEAF is
+	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
 			Result := type.first_leaf
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if end_keyword /= Void then
@@ -138,7 +121,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if end_keyword /= Void then
@@ -150,7 +133,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_feature_adaptation: BOOLEAN is
+	has_feature_adaptation: BOOLEAN
 			-- Does current parent have a feature adaptation clause?
 		do
 			Result := renames /= Void or exports /= Void or
@@ -162,7 +145,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_end_keyword (an_end: like end_keyword) is
+	set_end_keyword (an_end: like end_keyword)
 			-- Set `end_keyword' to `an_end'.
 		require
 			an_end_not_void: has_feature_adaptation implies an_end /= Void
@@ -174,7 +157,7 @@ feature -- Setting
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_parent (Current)

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -40,7 +40,7 @@ indexing
 		      class A feature f do ... end end
 		      class B inherit A end
 		      class C inherit A redefine f end feature f do ... end end
-		  feature C.f will marked even though C is not a descendant of B.
+		  feature C.f will be marked even though C is not a descendant of B.
 		  Also replication might produce false positives because even through
 		  there might be redeclaration, this is not necessarily the version
 		  that has been selected in the inheritance clause.
@@ -62,7 +62,7 @@ indexing
 		* ET_DYNAMIC_SYSTEM_FEATURE_MARKER: uses the dynamic type set mechanism
 		  implemented in the Gobo Eiffel compiler to determine which features
 		  are to be part of the resulting executable should the given feature
-		  be used as root creation procedure. This algorithm in the most accurate
+		  be used as root creation procedure. This algorithm is the most accurate
 		  of the four, but is slower.
 
 		  Note that assertions and debug instructions are not traversed, and
@@ -132,14 +132,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new system feature marker.
 		do
 		end
 
 feature -- Processing
 
-	mark_system (a_feature: ET_FEATURE; a_target_type: ET_BASE_TYPE) is
+	mark_system (a_feature: ET_FEATURE; a_target_type: ET_BASE_TYPE)
 			-- Identify the features that `a_feature' from `a_target_type'
 			-- recursively depends on (i.e. they might be executed if
 			-- `a_feature' is itself executed) and mark them as being
@@ -187,7 +187,7 @@ feature -- Processing
 			a_feature_used: a_feature.implementation_feature.is_used
 		end
 
-	unmark_all (a_system: ET_SYSTEM) is
+	unmark_all (a_system: ET_SYSTEM)
 			-- Unmark all features of `a_system' as if none of them was in the system.
 		require
 			a_system_not_void: a_system /= Void
@@ -197,7 +197,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	mark_feature (a_feature: ET_DYNAMIC_FEATURE) is
+	mark_feature (a_feature: ET_DYNAMIC_FEATURE)
 			-- Mark `a_feature' as being used.
 		require
 			a_feature_not_void: a_feature /= Void

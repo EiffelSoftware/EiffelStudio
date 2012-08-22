@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -119,7 +119,7 @@ indexing
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -132,24 +132,8 @@ inherit
 		rename
 			make as make_feature_call_handler
 		redefine
-			report_attribute_address,
-			report_attribute_assignment_target,
-			report_creation_expression,
-			report_creation_instruction,
-			report_precursor_expression,
-			report_precursor_instruction,
-			report_procedure_address,
-			report_qualified_call_expression,
-			report_qualified_call_instruction,
-			report_qualified_procedure_call_agent,
-			report_qualified_query_call_agent,
-			report_function_address,
-			report_static_call_expression,
-			report_static_call_instruction,
-			report_unqualified_call_expression,
-			report_unqualified_call_instruction,
-			report_unqualified_procedure_call_agent,
-			report_unqualified_query_call_agent
+			report_polymorphic_feature_call,
+			report_monomorphic_feature_call
 		end
 
 create
@@ -158,17 +142,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new system feature marker.
 		do
 			create used_features.make (500000)
-			create descendants_cache.make (50000)
+			create descendant_classes.make
+			descendant_classes.set_deferred_excluded (True)
+			descendant_classes.set_none_excluded (True)
+			create precursor_features.make
+			precursor_features.set_use_implementation_feature (True)
+			create marked_polymorphic_calls.make_map (50000)
 			make_feature_call_handler
 		end
 
 feature -- Processing
 
-	mark_system (a_feature: ET_FEATURE) is
+	mark_system (a_feature: ET_FEATURE)
 			-- Identify the features that `a_feature' (when viewed from
 			-- the class it has been written in -- its 'implementation_class')
 			-- recursively depends on (i.e. they might be executed if
@@ -188,7 +177,43 @@ feature -- Processing
 			-- and ET_CLASS.implementation_checked) has been successfully
 			-- run on all these classes that have been marked as being part
 			-- of the system. Otherwise internal errors may be reported
-			-- (using ET_ERROR_HANDLER.report_giaaa_error).
+			-- (using ET_ERROR_HANDLER.report_giaaa_error) if the class has
+			-- not been checked or if `internal_error_enabled' has been set.
+		require
+			a_feature_not_void: a_feature /= Void
+			implementation_class_preparsed: a_feature.implementation_class.is_preparsed
+		do
+			mark_system_until (a_feature, Void)
+		ensure
+			a_feature_used: a_feature.implementation_feature.is_used
+		end
+
+	mark_system_until (a_feature: ET_FEATURE; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+			-- Identify the features that `a_feature' (when viewed from
+			-- the class it has been written in -- its 'implementation_class')
+			-- recursively depends on (i.e. they might be executed if
+			-- `a_feature' is itself executed) and mark them as being part
+			-- of the system. Mark `a_feature' as well.
+			--
+			-- Note that marking a feature means that the query 'is_used'
+			-- of its 'implementation_feature' (i.e. feature in the class
+			-- it has been written) will be set to True.
+			--
+			-- The processing will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+			--
+			-- It is assumed that the classes that the 'implementation_class'
+			-- of `a_feature' recursively depends on have already been
+			-- marked as being part of the system. Use feature 'mark_system'
+			-- from class ET_SYSTEM_MARKER for that.
+			-- It is also assumed that the implementation checker (equivalent
+			-- of ISE's Degree 3 -- see ET_SYSTEM.implementation_checker
+			-- and ET_CLASS.implementation_checked) has been successfully
+			-- run on all these classes that have been marked as being part
+			-- of the system. Otherwise internal errors may be reported
+			-- (using ET_ERROR_HANDLER.report_giaaa_error) if the class has
+			-- not been checked or if `internal_error_enabled' has been set.
 		require
 			a_feature_not_void: a_feature /= Void
 			implementation_class_preparsed: a_feature.implementation_class.is_preparsed
@@ -200,12 +225,18 @@ feature -- Processing
 			l_class := a_feature.implementation_class
 			l_system := l_class.current_system
 			unmark_all (l_system)
-			descendants_cache.wipe_out
+			descendant_classes.build_all_descendants (l_system)
+			precursor_features.mark_precursors (l_system)
+			marked_polymorphic_calls.wipe_out
 			used_features.wipe_out
 			l_feature := a_feature.implementation_feature
 			l_feature.set_used (True)
 			used_features.force (l_feature)
-			from until used_features.is_empty loop
+			from
+			until
+				used_features.is_empty or else
+				(a_stop_request /= Void and then a_stop_request.item ([]))
+			loop
 				l_feature := used_features.item
 				used_features.remove
 				l_feature := l_feature.implementation_feature
@@ -214,12 +245,15 @@ feature -- Processing
 					process_feature (l_feature, l_class)
 				end
 			end
-			descendants_cache.wipe_out
+			used_features.wipe_out
+			marked_polymorphic_calls.wipe_out
+			precursor_features.unmark_all
+			descendant_classes.reset
 		ensure
 			a_feature_used: a_feature.implementation_feature.is_used
 		end
 
-	mark_shallow (a_feature: ET_FEATURE) is
+	mark_shallow (a_feature: ET_FEATURE)
 			-- Identify the features that `a_feature' (when viewed from
 			-- the class it has been written in -- its 'implementation_class')
 			-- depends on (i.e. they might be called directly from `a_feature')
@@ -239,7 +273,8 @@ feature -- Processing
 			-- and ET_CLASS.implementation_checked) has been successfully
 			-- run on all these classes that have been marked as being part
 			-- of the system. Otherwise internal errors may be reported
-			-- (using ET_ERROR_HANDLER.report_giaaa_error).
+			-- (using ET_ERROR_HANDLER.report_giaaa_error) if the class has
+			-- not been checked or if `internal_error_enabled' has been set.
 		require
 			a_feature_not_void: a_feature /= Void
 			implementation_class_preparsed: a_feature.implementation_class.is_preparsed
@@ -251,7 +286,7 @@ feature -- Processing
 			mark_shallow_no_unmark (a_feature)
 		end
 
-	mark_shallow_no_unmark (a_feature: ET_FEATURE) is
+	mark_shallow_no_unmark (a_feature: ET_FEATURE)
 			-- Identify the features that `a_feature' (when viewed from
 			-- the class it has been written in -- its 'implementation_class')
 			-- depends on (i.e. they might be called directly from `a_feature')
@@ -272,7 +307,8 @@ feature -- Processing
 			-- and ET_CLASS.implementation_checked) has been successfully
 			-- run on all these classes that have been marked as being part
 			-- of the system. Otherwise internal errors may be reported
-			-- (using ET_ERROR_HANDLER.report_giaaa_error).
+			-- (using ET_ERROR_HANDLER.report_giaaa_error) if the class has
+			-- not been checked or if `internal_error_enabled' has been set.
 		require
 			a_feature_not_void: a_feature /= Void
 			implementation_class_preparsed: a_feature.implementation_class.is_preparsed
@@ -280,16 +316,20 @@ feature -- Processing
 			l_feature: ET_FEATURE
 			l_class: ET_CLASS
 		do
-			descendants_cache.wipe_out
 			used_features.wipe_out
 			l_feature := a_feature.implementation_feature
 			l_class := l_feature.implementation_class
+			descendant_classes.build_all_descendants (l_class.current_system)
+			precursor_features.mark_precursors (l_class.current_system)
+			marked_polymorphic_calls.wipe_out
 			process_feature (l_feature, l_class)
 			used_features.wipe_out
-			descendants_cache.wipe_out
+			marked_polymorphic_calls.wipe_out
+			precursor_features.unmark_all
+			descendant_classes.reset
 		end
 
-	unmark_all (a_system: ET_SYSTEM) is
+	unmark_all (a_system: ET_SYSTEM)
 			-- Unmark all features of `a_system' as if none of them was used.
 		require
 			a_system_not_void: a_system /= Void
@@ -297,7 +337,7 @@ feature -- Processing
 			a_system.classes_do_recursive (agent {ET_CLASS}.features_do_declared (agent {ET_FEATURE}.set_used (False)))
 		end
 
-	is_dependent_recursive (a_caller_feature, a_callee_feature: ET_FEATURE): BOOLEAN is
+	is_dependent_recursive (a_caller_feature, a_callee_feature: ET_FEATURE): BOOLEAN
 			-- Does `a_caller_feature' (when viewed from the class it has been
 			-- written in -- its 'implementation_class') recursively depend on
 			-- `a_callee_feature' (either viewed from the class it has been
@@ -320,7 +360,8 @@ feature -- Processing
 			-- and ET_CLASS.implementation_checked) has been successfully
 			-- run on all these classes that have been marked as being part
 			-- of the system. Otherwise internal errors may be reported
-			-- (using ET_ERROR_HANDLER.report_giaaa_error).
+			-- (using ET_ERROR_HANDLER.report_giaaa_error) if the class has
+			-- not been checked or if `internal_error_enabled' has been set.
 		require
 			a_caller_feature_not_void: a_caller_feature /= Void
 			caller_implementation_class_preparsed: a_caller_feature.implementation_class.is_preparsed
@@ -331,14 +372,16 @@ feature -- Processing
 			l_system: ET_SYSTEM
 			l_callee_feature_impl: ET_FEATURE
 		do
-			if not a_callee_feature.implementation_class.in_system then
+			if not a_callee_feature.implementation_class.is_marked then
 				Result := False
 			else
 				l_callee_feature_impl := a_callee_feature.implementation_feature
 				l_class := a_caller_feature.implementation_class
 				l_system := l_class.current_system
 				unmark_all (l_system)
-				descendants_cache.wipe_out
+				descendant_classes.build_all_descendants (l_class.current_system)
+				precursor_features.mark_precursors (l_system)
+				marked_polymorphic_calls.wipe_out
 				used_features.wipe_out
 				l_feature := a_caller_feature.implementation_feature
 				l_feature.set_used (True)
@@ -354,299 +397,102 @@ feature -- Processing
 					end
 				end
 				used_features.wipe_out
-				descendants_cache.wipe_out
+				marked_polymorphic_calls.wipe_out
+				precursor_features.unmark_all
+				descendant_classes.reset
 			end
 		end
 
 feature {NONE} -- Event handling
 
-	report_feature_called (a_feature: ET_FEATURE; a_base_class, a_descendant: ET_CLASS) is
-			-- Report that `a_feature' of `a_base_class' is called.
+	report_polymorphic_feature_call (a_feature: ET_FEATURE; a_target_class: ET_CLASS)
+			-- Report a call to `a_feature' where its versions in descendants of
+			-- `a_target_class' should be taken into account.
+		local
+			l_features: DS_HASH_SET [ET_FEATURE]
+			l_feature_impl: ET_FEATURE
+		do
+			report_monomorphic_feature_call (a_feature, a_target_class)
+			l_feature_impl := a_feature.implementation_feature
+			if not precursor_features.is_marked (l_feature_impl) then
+				if a_target_class.is_deferred and then not l_feature_impl.is_deferred then
+					mark_called_feature (l_feature_impl)
+				end
+			else
+				marked_polymorphic_calls.search (a_target_class)
+				if marked_polymorphic_calls.found then
+					l_features := marked_polymorphic_calls.found_item
+					if not l_features.has (a_feature) then
+						l_features.force_last (a_feature)
+						descendant_classes.descendants (a_target_class).do_all (agent report_descendant_feature_call (a_feature, a_target_class, ?))
+					end
+				else
+					create l_features.make (50)
+					l_features.force_last (a_feature)
+					marked_polymorphic_calls.force_last_new (l_features, a_target_class)
+					descendant_classes.descendants (a_target_class).do_all (agent report_descendant_feature_call (a_feature, a_target_class, ?))
+				end
+			end
+		end
+
+	report_monomorphic_feature_call (a_feature: ET_FEATURE; a_target_class: ET_CLASS)
+			-- Report a call to `a_feature' where its versions in descendants of
+			-- `a_target_class' should not be taken into account.
+		do
+			if not a_target_class.is_deferred then
+				mark_called_feature (a_feature.implementation_feature)
+			end
+		end
+
+	report_descendant_feature_call (a_feature: ET_FEATURE; a_target_class, a_descendant: ET_CLASS)
 			-- Mark as used the version of this feature in `a_descendant'
-			-- which is supposed to be a descendant class of `a_base_class'
-			-- (including `a_class' itself) that has been marked as being part of the
-			-- system, that is not deferred and is different from the class "NONE".
+			-- which is supposed to be a descendant class of `a_target_class'.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_base_class_not_void: a_base_class /= Void
+			a_target_class_not_void: a_target_class /= Void
 			a_descendant_not_void: a_descendant /= Void
 		local
 			l_other_feature: ET_FEATURE
-			l_feature_impl: ET_FEATURE
+			l_features: DS_HASH_SET [ET_FEATURE]
 		do
-			if a_descendant = a_base_class then
-				l_feature_impl := a_feature.implementation_feature
-				if not l_feature_impl.is_used then
-					l_feature_impl.set_used (True)
-					used_features.force (l_feature_impl)
-				end
+			if a_feature.is_query then
+				l_other_feature := a_descendant.seeded_query (a_feature.first_seed)
 			else
-				if a_feature.is_query then
-					l_other_feature := a_descendant.seeded_query (a_feature.first_seed)
-				else
-					l_other_feature := a_descendant.seeded_procedure (a_feature.first_seed)
-				end
-				if l_other_feature = Void then
-					if a_descendant.features_flattened_successfully then
-							-- Internal error: `a_descendant' is a descendant of
-							-- `a_base_class', so it should have a version of `a_feature'.
-						set_fatal_error
+				l_other_feature := a_descendant.seeded_procedure (a_feature.first_seed)
+			end
+			if l_other_feature = Void then
+				if a_descendant.features_flattened_successfully then
+						-- Internal error: `a_descendant' is a descendant of
+						-- `a_target_class', so it should have a version of `a_feature'.
+					set_fatal_error
+					if internal_error_enabled or not current_class.has_implementation_error then
 						error_handler.report_giaaa_error
 					end
-				else
-					l_feature_impl := l_other_feature.implementation_feature
-					if not l_feature_impl.is_used then
-						l_feature_impl.set_used (True)
-						used_features.force (l_feature_impl)
-					end
 				end
-			end
-		end
-
-	report_attribute_address (an_expression: ET_FEATURE_ADDRESS; an_attribute: ET_QUERY) is
-			-- Report that attribute `an_attribute' has been processed
-			-- as target of feature address `an_expression'.
-		do
-			descendants (current_class).do_all (agent report_feature_called (an_attribute, current_class, ?))
-		end
-
-	report_attribute_assignment_target (a_writable: ET_WRITABLE; an_attribute: ET_QUERY) is
-			-- Report that attribute `an_attribute' has been processed
-			-- as target `a_writable' of an assignment (attempt).
-		do
-			descendants (current_class).do_all (agent report_feature_called (an_attribute, current_class, ?))
-		end
-
-	report_creation_expression (an_expression: ET_EXPRESSION; a_creation_type: ET_TYPE_CONTEXT;
-		a_procedure: ET_PROCEDURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
-			-- Report that a creation expression `an_expression' has been processed,
-			-- where `a_creation_type' is the creation type and `a_procedure' is the creation procedure.
-		local
-			l_base_class: ET_CLASS
-		do
-			l_base_class := a_creation_type.base_class
-			descendants (l_base_class).do_all (agent report_feature_called (a_procedure, l_base_class, ?))
-		end
-
-	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
-			-- Report that a creation instruction `an_instruction' has been processed,
-			-- where `a_creation_type' is the creation type and `a_procedure' is the creation procedure.
-		local
-			l_base_class: ET_CLASS
-		do
-			l_base_class := a_creation_type.base_class
-			descendants (l_base_class).do_all (agent report_feature_called (a_procedure, l_base_class, ?))
-		end
-
-	report_function_address (an_expression: ET_FEATURE_ADDRESS; a_query: ET_QUERY) is
-			-- Report that function `a_query' has been processed
-			-- as target of feature address `an_expression'.
-		do
-			descendants (current_class).do_all (agent report_feature_called (a_query, current_class, ?))
-		end
-
-	report_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION; a_parent_type: ET_BASE_TYPE; a_query: ET_QUERY) is
-			-- Report that a precursor expression has been processed.
-			-- `a_parent_type' is viewed in the context of `current_type'
-			-- and `a_query' is the precursor feature.
-		local
-			l_feature_impl: ET_FEATURE
-		do
-			l_feature_impl := a_query.implementation_feature
-			if not l_feature_impl.is_used then
-				l_feature_impl.set_used (True)
-				used_features.force (l_feature_impl)
-			end
-		end
-
-	report_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION; a_parent_type: ET_BASE_TYPE; a_procedure: ET_PROCEDURE) is
-			-- Report that a precursor instruction has been processed.
-			-- `a_parent_type' is viewed in the context of `current_type'
-			-- and `a_procedure' is the precursor feature.
-		local
-			l_feature_impl: ET_FEATURE
-		do
-			l_feature_impl := a_procedure.implementation_feature
-			if not l_feature_impl.is_used then
-				l_feature_impl.set_used (True)
-				used_features.force (l_feature_impl)
-			end
-		end
-
-	report_procedure_address (an_expression: ET_FEATURE_ADDRESS; a_procedure: ET_PROCEDURE) is
-			-- Report that procedure `a_procedure' has been processed
-			-- as target of feature address `an_expression'.
-		do
-			descendants (current_class).do_all (agent report_feature_called (a_procedure, current_class, ?))
-		end
-
-	report_qualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY) is
-			-- Report that a qualified call expression `an_expression' has been processed,
-			-- where `a_target_type' is the type of the target and `a_query' is the
-			-- query being called.
-		local
-			l_base_class: ET_CLASS
-		do
-			l_base_class := a_target_type.base_class
-			descendants (l_base_class).do_all (agent report_feature_called (a_query, l_base_class, ?))
-		end
-
-	report_qualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
-			-- Report that a qualified call instruction `an_instruction' has been processed,
-			-- where `a_target_type' is the type of the target and `a_procedure' is the
-			-- procedure being called.
-		local
-			l_base_class: ET_CLASS
-		do
-			l_base_class := a_target_type.base_class
-			descendants (l_base_class).do_all (agent report_feature_called (a_procedure, l_base_class, ?))
-		end
-
-	report_qualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
-			-- Report that a qualified procedure call agent `an_agent' has been processed,
-			-- where `a_procedure' is the procedure being called by the agent and
-			-- `a_target_type' is the type of the target of that call.
-		local
-			l_base_class: ET_CLASS
-		do
-			l_base_class := a_target_type.base_class
-			descendants (l_base_class).do_all (agent report_feature_called (a_procedure, l_base_class, ?))
-		end
-
-	report_qualified_query_call_agent (an_expression: ET_CALL_AGENT; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY) is
-			-- Report that a qualified query call agent `an_expression' has been processed.
-			-- where `a_query' is the query being called by the agent and
-			-- `a_target_type' is the type of the target of that call.
-		local
-			l_base_class: ET_CLASS
-		do
-			l_base_class := a_target_type.base_class
-			descendants (l_base_class).do_all (agent report_feature_called (a_query, l_base_class, ?))
-		end
-
-	report_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION; a_type: ET_TYPE; a_query: ET_QUERY) is
-			-- Report that a static call expression `an_expression' has been processed,
-			-- where `a_query' is the query being called anf `a_type' is the type
-			-- as declared in the class where `an_expression' was written.
-		local
-			l_base_class: ET_CLASS
-		do
-			l_base_class := a_type.base_class (current_class)
-			descendants (l_base_class).do_all (agent report_feature_called (a_query, l_base_class, ?))
-		end
-
-	report_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION; a_type: ET_TYPE; a_procedure: ET_PROCEDURE) is
-			-- Report that a static call instruction `an_instruction' has been processed,
-			-- where `a_procedure' is the procedure being called anf `a_type' is the type
-			-- as declared in the class where `an_expression' was written.
-		local
-			l_base_class: ET_CLASS
-		do
-			l_base_class := a_type.base_class (current_class)
-			descendants (l_base_class).do_all (agent report_feature_called (a_procedure, l_base_class, ?))
-		end
-
-	report_unqualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_query: ET_QUERY) is
-			-- Report that an unqualified call expression `an_expression' has been processed,
-			-- where `a_query' is the query being called.
-		do
-			descendants (current_class).do_all (agent report_feature_called (a_query, current_class, ?))
-		end
-
-	report_unqualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_procedure: ET_PROCEDURE) is
-			-- Report that an unqualified call instruction `an_instruction' has been processed,
-			-- where `a_procedure' is the procedure being called.
-		do
-			descendants (current_class).do_all (agent report_feature_called (a_procedure, current_class, ?))
-		end
-
-	report_unqualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE) is
-			-- Report that an unqualified procedure call agent `an_expression' has been processed,
-			-- where `a_procedure' is the procedure being called by the agent.
-		do
-			descendants (current_class).do_all (agent report_feature_called (a_procedure, current_class, ?))
-		end
-
-	report_unqualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY) is
-			-- Report that an unqualified query call agent `an_expression' has been processed,
-			-- where `a_query' is the query being called by the agent.
-		do
-			descendants (current_class).do_all (agent report_feature_called (a_query, current_class, ?))
-		end
-
-feature {NONE} -- Descendants cache
-
-	descendants_cache: DS_HASH_TABLE [DS_ARRAYED_LIST [ET_CLASS], ET_CLASS]
-			-- Descendants of a given class that have already been computed,
-			-- indexed by the given class
-			--
-			-- Using this cache gives much better performance than having
-			-- to traverse all classes of the Eiffel system each time we
-			-- want to know the descendant classes of the base class of the
-			-- target of a call. Benchmarks (compiled with gec with no GC)
-			-- when using the root creation procedure of gelint:
-			-- With the cache:
-			--    memory: 5 MB (+ 205 MB before calling this feature)
-			--    time: 0.7 seconds
-			--    traversed features: 13,142
-			--    marked features: 13,142
-			-- Without the cache:
-			--    memory: 84 KB (+ 204 KB before calling this feature)
-			--    time: 31 seconds
-			--    traversed features: 13,139
-			--    marked features: 13,139
-
-	descendants (a_class: ET_CLASS): DS_ARRAYED_LIST [ET_CLASS] is
-			-- Descendant classes of `a_class' (including `a_class' itself)
-			-- that have been marked as being part of the system, that are
-			-- not deferred and are different from the class "NONE"
-		require
-			a_class_not_void: a_class /= Void
-		local
-			l_system: ET_SYSTEM
-		do
-			descendants_cache.search (a_class)
-			if descendants_cache.found then
-				Result := descendants_cache.found_item
 			else
-				create Result.make (50)
-				descendants_cache.force_last_new (Result, a_class)
-				if a_class.is_preparsed then
-					l_system := a_class.current_system
-					l_system.classes_do_recursive (agent add_to_descendants (a_class, ?, Result))
+				marked_polymorphic_calls.search (a_descendant)
+				if marked_polymorphic_calls.found then
+					l_features := marked_polymorphic_calls.found_item
+				else
+					create l_features.make (50)
+					marked_polymorphic_calls.force_last_new (l_features, a_descendant)
 				end
+				l_features.force_last (l_other_feature)
+				report_monomorphic_feature_call (l_other_feature, a_descendant)
 			end
-		ensure
-			descendants_not_void: Result /= Void
-			no_void_descendant: not Result.has_void
 		end
 
-	add_to_descendants (a_class, a_other_class: ET_CLASS; a_descendants: DS_ARRAYED_LIST [ET_CLASS])
-			-- Add `a_other_class' to `a_descendants' if it is a descendant of `a_class'
-			-- (including `a_class' itself) that have been marked as being part of the
-			-- system, that are not deferred and are different from the class "NONE".
+	mark_called_feature (a_feature: ET_FEATURE)
+			-- Indicate that `a_feature' is being called by `current_feature'.
 		require
-			a_class_not_void: a_class /= Void
-			a_other_class_not_void: a_other_class /= Void
-			a_descendants_not_void: a_descendants /= Void
-			no_void_descendants: not a_descendants.has_void
+			a_feature_not_void: a_feature /= Void
 		do
-			if not a_other_class.in_system then
-				-- Ignore this class: not in the compiled system.
-			elseif a_other_class.is_none then
-				-- We are not interested in class "NONE".
-			elseif a_other_class.is_deferred then
-				-- Deferred classes will not have instances at run-time.
-			elseif a_other_class = a_class then
-				a_descendants.force_last (a_other_class)
-			elseif not a_other_class.ancestors_built_successfully then
-				-- We cannot determine whether `a_base_class' is an
-				-- ancestor of `a_other_class' in that case.
-			elseif a_other_class.has_ancestor (a_class) then
-				a_descendants.force_last (a_other_class)
+			if not a_feature.is_used then
+				a_feature.set_used (True)
+				used_features.force (a_feature)
 			end
 		ensure
-			no_void_descendants: not a_descendants.has_void
+			a_feature_used: a_feature.is_used
 		end
 
 feature {NONE} -- Access
@@ -655,12 +501,22 @@ feature {NONE} -- Access
 			-- Features which have already been marked as used but
 			-- have not been traversed yet
 
+	descendant_classes: ET_DESCENDANT_CLASSES
+			-- Descendants of classes, indexed by the given class
+
+	precursor_features: ET_PRECURSOR_FEATURE_MARKER
+			-- Features marked as being the precursor of at least one other feature
+
+	marked_polymorphic_calls: DS_HASH_TABLE [DS_HASH_SET [ET_FEATURE], ET_CLASS]
+			-- Polymorphic calls which have already been marked as used
+
 invariant
 
 	used_features_not_void: used_features /= Void
 	no_void_used_feature: not used_features.has_void
-	descendants_cache_not_void: descendants_cache /= Void
-	no_void_descendant_list: not descendants_cache.has_void_item
-	no_void_descendants: not descendants_cache.there_exists (agent {DS_ARRAYED_LIST [ET_CLASS]}.has_void)
+	descendant_classes_not_void: descendant_classes /= Void
+	precursor_features_not_void: precursor_features /= Void
+	marked_polymorphic_calls_not_void: marked_polymorphic_calls /= Void
+	no_void_marked_polymorphic_call: not marked_polymorphic_calls.has (Void)
 
 end

@@ -1,5 +1,5 @@
 %{
-indexing
+note
 
 	description:
 
@@ -8,8 +8,8 @@ indexing
 	library: "Gobo Eiffel Test Library"
 	copyright: "Copyright (c) 2000-2003, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2007-01-26 10:55:25 -0800 (Fri, 26 Jan 2007) $"
-	revision: "$Revision: 5877 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class TS_CONFIG_SCANNER
 

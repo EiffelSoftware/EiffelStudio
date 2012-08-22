@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Error: Wrong attribute value error"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,7 @@ create
 feature {NONE} -- Initialization
 
 	make (an_element: XM_ELEMENT; an_attribute_name: STRING; an_actual_value: STRING;
-		an_expected_values: DS_LINEAR [STRING]; a_position: XM_POSITION) is
+		an_expected_values: DS_LINEAR [STRING]; a_position: XM_POSITION)
 			-- Create an error reporting that the value `an_actual_value' of
 			-- attribute `an_attribute_name' in element `an_element' should be
 			-- one of the `an_expected_values'.
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			a_cursor: DS_LINEAR_CURSOR [STRING]
 			a_string: STRING
 		do
-			create parameters.make (1, 5)
+			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (an_element.name, 1)
 			parameters.put (an_attribute_name, 2)
 			parameters.put (an_actual_value, 3)
@@ -67,10 +67,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "attribute '$2' in element '$1' should have one of the following values: $4 $5"
+	default_template: STRING = "attribute '$2' in element '$1' should have one of the following values: $4 $5"
 			-- Default template used to built the error message
 
-	code: STRING is "XA0010"
+	code: STRING = "XA0010"
 			-- Error code
 
 end

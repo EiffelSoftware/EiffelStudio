@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Ancestor of all exception classes.
 		]"
@@ -29,11 +29,20 @@ feature -- Access
 	message: ?STRING
 			-- Message(Tag) of current exception
 
-	exception_trace: STRING is
+	exception_trace: STRING
 			-- String representation of current exception trace
 		do
 -- TODO
 			Result := ""
+		end
+
+	frozen original: EXCEPTION
+			-- The original exception directly triggered current exception
+		do
+-- TODO
+			Result := Current
+		ensure
+			original_not_void: Result /= Void
 		end
 
 feature -- Status settings

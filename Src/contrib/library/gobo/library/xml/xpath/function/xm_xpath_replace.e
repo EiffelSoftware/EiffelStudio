@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			name := "replace"; namespace_uri := Xpath_standard_functions_uri
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			Result := type_factory.string_type
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 			inspect
@@ -72,7 +72,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		local
 			n: INTEGER
@@ -89,10 +89,10 @@ feature -- Optimization
 				end
 			end
 		end
-		
+
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_input_string, l_pattern_string, l_flags_string: STRING
@@ -117,7 +117,7 @@ feature -- Evaluation
 					end
 					if a_result.item.is_error then
 						-- nothing to do
-					else	
+					else
 						check
 							atomic_pattern: a_result.item.is_atomic_value
 							-- Statically typed as a single string
@@ -165,7 +165,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 	any_captures: BOOLEAN
 			-- Were any captured-substring replacement requests detected.
 
-	check_replacement_string (a_result: DS_CELL [XM_XPATH_ITEM]) is
+	check_replacement_string (a_result: DS_CELL [XM_XPATH_ITEM])
 			-- Check `replacement_string' conforms to required format.
 			-- Captured-substring replacement syntax is modified for pcre -
 			--  i.e. $n is replaced by \n\ .
@@ -195,8 +195,6 @@ feature {NONE} -- Implementation
 		do
 			from
 				l_index := 1
-			variant
-				replacement_string.count + 1 - l_index
 			until
 				regexp_error_value /= Void or else l_index > replacement_string.count
 			loop
@@ -239,13 +237,15 @@ feature {NONE} -- Implementation
 				else
 				end
 				l_index := l_index + 1
+			variant
+				replacement_string.count + 1 - l_index
 			end
 			if a_result.item = Void and any_captures then
 				perform_replacement_string_substitution
 			end
 		end
 
-	perform_replacement_string_substitution is
+	perform_replacement_string_substitution
 			-- Replace Sn in `replacement_string' with \n\ throughout,
 		require
 			replacement_string_not_void: replacement_string /= Void
@@ -257,8 +257,6 @@ feature {NONE} -- Implementation
 		do
 			from
 				l_index := 1
-			variant
-				replacement_string.count + 1 - l_index
 			until
 				l_index > replacement_string.count
 			loop
@@ -278,10 +276,12 @@ feature {NONE} -- Implementation
 					l_substitution_just_performed := True
 					l_index := l_index + 1
 				end
+			variant
+				replacement_string.count + 1 - l_index
 			end
 		end
-			
-	evaluate_replacement (a_result: DS_CELL [XM_XPATH_ITEM]; a_input_string: STRING) is
+
+	evaluate_replacement (a_result: DS_CELL [XM_XPATH_ITEM]; a_input_string: STRING)
 			-- Ensure subject and replacement strings are same type, then evaluate.
 		require
 			a_result_not_void: a_result /= Void
@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	fetch_regular_expression (a_result: DS_CELL [XM_XPATH_ITEM]; a_pattern_string, a_flags_string: STRING) is
+	fetch_regular_expression (a_result: DS_CELL [XM_XPATH_ITEM]; a_pattern_string, a_flags_string: STRING)
 			-- Fetch regular expression.
 		require
 			a_result_not_void: a_result /= Void
@@ -346,7 +346,7 @@ feature {NONE} -- Implementation
 			regexp_set: a_result.item = Void implies regexp /= Void
 		end
 
-	fetch_replacement_string  (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	fetch_replacement_string  (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Fetch replacement string.
 		require
 			a_result_not_void: a_result /= Void
@@ -367,4 +367,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+

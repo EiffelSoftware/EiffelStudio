@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Eiffel constant attributes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,7 +27,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_name: like extended_name; a_type: like declared_type;
-		a_constant: like constant; a_class: like implementation_class) is
+		a_constant: like constant; a_class: like implementation_class)
 			-- Create a new constant attribute.
 		require
 			a_name_not_void: a_name /= Void
@@ -59,25 +59,35 @@ feature -- Access
 	constant: ET_CONSTANT
 			-- Constant value
 
-	header_break: ET_BREAK is
+	header_break: ET_BREAK
 			-- Break which appears where the header comment is expected
 		local
 			l_break: ET_BREAK
 		do
 			if semicolon /= Void then
-				Result := semicolon.break
-			else
-				Result := constant.break
+				l_break := semicolon.break
+				if l_break /= Void and then l_break.has_comment then
+					Result := l_break
+				end
 			end
-			if Result = Void or else not Result.has_comment then
+			if Result = Void then
+				l_break := constant.break
+				if l_break /= Void and then l_break.has_comment then
+					Result := l_break
+				end
+			end
+			if Result = Void then
 				l_break := is_keyword.break
 				if l_break /= Void and then l_break.has_comment then
 					Result := l_break
 				end
 			end
+			if Result = Void then
+				Result := constant.break
+			end
 		end
 
-	last_leaf: ET_AST_LEAF is
+	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			if semicolon /= Void then
@@ -87,7 +97,7 @@ feature -- Access
 			end
 		end
 
-	break: ET_BREAK is
+	break: ET_BREAK
 			-- Break which appears just after current node
 		do
 			if semicolon /= Void then
@@ -99,16 +109,16 @@ feature -- Access
 
 feature -- Status report
 
-	is_constant_attribute: BOOLEAN is True
+	is_constant_attribute: BOOLEAN = True
 			-- Is feature a constant attribute?
 
-	is_prefixable: BOOLEAN is True
+	is_prefixable: BOOLEAN = True
 			-- Can current feature have a name of
 			-- the form 'prefix ...'?
 
 feature -- Setting
 
-	set_is_keyword (an_is: like is_keyword) is
+	set_is_keyword (an_is: like is_keyword)
 			-- Set `is_keyword' to `an_is'.
 		require
 			an_is_not_void: an_is /= Void
@@ -120,7 +130,7 @@ feature -- Setting
 
 feature -- Duplication
 
-	new_synonym (a_name: like extended_name): like Current is
+	new_synonym (a_name: like extended_name): like Current
 			-- Synonym feature
 		do
 			create Result.make (a_name, declared_type, constant, implementation_class)
@@ -131,12 +141,13 @@ feature -- Duplication
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
+			Result.set_across_components (across_components)
 			Result.set_synonym (Current)
 		end
 
 feature -- Conversion
 
-	renamed_feature (a_name: like extended_name): like Current is
+	renamed_feature (a_name: like extended_name): like Current
 			-- Renamed version of current feature
 		do
 			create Result.make (a_name, declared_type, constant, implementation_class)
@@ -152,13 +163,14 @@ feature -- Conversion
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
+			Result.set_across_components (across_components)
 			Result.set_first_seed (first_seed)
 			Result.set_other_seeds (other_seeds)
 		end
 
 feature -- Processing
 
-	process (a_processor: ET_AST_PROCESSOR) is
+	process (a_processor: ET_AST_PROCESSOR)
 			-- Process current node.
 		do
 			a_processor.process_constant_attribute (Current)

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -11,10 +11,10 @@ indexing
 	revision: "$Revision$"
 
 class XM_XPATH_SHARED_ATOMIC_VALUE_TESTER
-	
+
 feature -- Access
 
-	atomic_value_tester: XM_XPATH_ATOMIC_VALUE_TESTER is
+	atomic_value_tester: XM_XPATH_ATOMIC_VALUE_TESTER
 			-- Atomic_value equality tester
 		once
 			create Result

@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"ECF multithreaded conditions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: BOOLEAN) is
+	make (a_value: BOOLEAN)
 			-- Create a new condition where multithreaded should be equal to `a_value'.
 		do
 			value := a_value
@@ -37,10 +37,10 @@ feature -- Access
 
 feature -- Status report
 
-	is_enabled (a_state: ET_ECF_STATE): BOOLEAN is
+	is_enabled (a_state: ET_ECF_STATE): BOOLEAN
 			-- Does `a_state' fulfill current condition?
 		do
-			Result := value
+			Result := value = a_state.is_multithreaded
 		end
 
 end

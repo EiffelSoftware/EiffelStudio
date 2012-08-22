@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Warning: Unknown option name"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2011, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_element: XM_ELEMENT; a_position: XM_POSITION) is
+	make (an_element: XM_ELEMENT; a_position: XM_POSITION)
 			-- Create a warning reporting that the value of the attribute "name"
 			-- in the "option" elment `an_element' is unknown.
 		require
@@ -36,17 +36,17 @@ feature {NONE} -- Initialization
 			a_name_attribute_not_empty: an_element.attribute_by_name (uc_name).value.count > 0
 			a_position_not_void: a_position /= Void
 		do
-			create parameters.make (1, 2)
+			create parameters.make_filled (empty_string, 1, 2)
 			parameters.put (an_element.attribute_by_name (uc_name).value, 1)
 			parameters.put (a_position.out, 2)
 		end
 
 feature -- Access
 
-	default_template: STRING is "option name '$1' in option-element is unknown $2"
+	default_template: STRING = "option name '$1' in option-element is unknown $2"
 			-- Default template used to built the error message
 
-	code: STRING is "XA0012"
+	code: STRING = "XA0012"
 			-- Error code
 
 end

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -40,7 +40,7 @@ indexing
 		      class A feature f do ... end end
 		      class B inherit A end
 		      class C inherit A redefine f end feature f do ... end end
-		  feature C.f will marked even though C is not a descendant of B.
+		  feature C.f will be marked even though C is not a descendant of B.
 		  Also replication might produce false positives because even through
 		  there might be redeclaration, this is not necessarily the version
 		  that has been selected in the inheritance clause.
@@ -62,7 +62,7 @@ indexing
 		* ET_DYNAMIC_SYSTEM_FEATURE_MARKER: uses the dynamic type set mechanism
 		  implemented in the Gobo Eiffel compiler to determine which features
 		  are to be part of the resulting executable should the given feature
-		  be used as root creation procedure. This algorithm in the most accurate
+		  be used as root creation procedure. This algorithm is the most accurate
 		  of the four, but is slower.
 
 		  Note that assertions and debug instructions are not traversed, and
@@ -119,7 +119,7 @@ indexing
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -158,7 +158,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new system feature marker.
 		do
 			create used_features.make (500000)
@@ -167,7 +167,7 @@ feature {NONE} -- Initialization
 
 feature -- Processing
 
-	mark_system (a_feature: ET_FEATURE) is
+	mark_system (a_feature: ET_FEATURE)
 			-- Identify the features that `a_feature' (when viewed from
 			-- the class it has been written in -- its 'implementation_class')
 			-- recursively depends on (i.e. they might be executed if
@@ -187,7 +187,8 @@ feature -- Processing
 			-- and ET_CLASS.implementation_checked) has been successfully
 			-- run on all these classes that have been marked as being part
 			-- of the system. Otherwise internal errors may be reported
-			-- (using ET_ERROR_HANDLER.report_giaaa_error).
+			-- (using ET_ERROR_HANDLER.report_giaaa_error) if the class has
+			-- not been checked or if `internal_error_enabled' has been set.
 		require
 			a_feature_not_void: a_feature /= Void
 			implementation_class_preparsed: a_feature.implementation_class.is_preparsed
@@ -254,7 +255,7 @@ feature -- Processing
 			a_feature_used: a_feature.implementation_feature.is_used
 		end
 
-	mark_shallow (a_feature: ET_FEATURE) is
+	mark_shallow (a_feature: ET_FEATURE)
 			-- Identify the features that `a_feature' (when viewed from
 			-- the class it has been written in -- its 'implementation_class')
 			-- depends on (i.e. they might be called directly from `a_feature')
@@ -278,7 +279,8 @@ feature -- Processing
 			-- and ET_CLASS.implementation_checked) has been successfully
 			-- run on all these classes that have been marked as being part
 			-- of the system. Otherwise internal errors may be reported
-			-- (using ET_ERROR_HANDLER.report_giaaa_error).
+			-- (using ET_ERROR_HANDLER.report_giaaa_error) if the class has
+			-- not been checked or if `internal_error_enabled' has been set.
 		require
 			a_feature_not_void: a_feature /= Void
 			implementation_class_preparsed: a_feature.implementation_class.is_preparsed
@@ -290,7 +292,7 @@ feature -- Processing
 			mark_shallow_no_unmark (a_feature)
 		end
 
-	mark_shallow_no_unmark (a_feature: ET_FEATURE) is
+	mark_shallow_no_unmark (a_feature: ET_FEATURE)
 			-- Identify the features that `a_feature' (when viewed from
 			-- the class it has been written in -- its 'implementation_class')
 			-- depends on (i.e. they might be called directly from `a_feature')
@@ -316,7 +318,8 @@ feature -- Processing
 			-- and ET_CLASS.implementation_checked) has been successfully
 			-- run on all these classes that have been marked as being part
 			-- of the system. Otherwise internal errors may be reported
-			-- (using ET_ERROR_HANDLER.report_giaaa_error).
+			-- (using ET_ERROR_HANDLER.report_giaaa_error) if the class has
+			-- not been checked or if `internal_error_enabled' has been set.
 		require
 			a_feature_not_void: a_feature /= Void
 			implementation_class_preparsed: a_feature.implementation_class.is_preparsed
@@ -331,7 +334,7 @@ feature -- Processing
 			used_features.wipe_out
 		end
 
-	unmark_all (a_system: ET_SYSTEM) is
+	unmark_all (a_system: ET_SYSTEM)
 			-- Unmark all features of `a_system' as if none of them was used.
 		require
 			a_system_not_void: a_system /= Void
@@ -339,7 +342,7 @@ feature -- Processing
 			a_system.classes_do_recursive (agent {ET_CLASS}.features_do_declared (agent {ET_FEATURE}.set_used (False)))
 		end
 
-	is_dependent_recursive (a_caller_feature, a_callee_feature: ET_FEATURE): BOOLEAN is
+	is_dependent_recursive (a_caller_feature, a_callee_feature: ET_FEATURE): BOOLEAN
 			-- Does `a_caller_feature' (when viewed from the class it has been
 			-- written in -- its 'implementation_class') recursively depend on
 			-- `a_callee_feature' (either viewed from the class it has been
@@ -362,7 +365,8 @@ feature -- Processing
 			-- and ET_CLASS.implementation_checked) has been successfully
 			-- run on all these classes that have been marked as being part
 			-- of the system. Otherwise internal errors may be reported
-			-- (using ET_ERROR_HANDLER.report_giaaa_error).
+			-- (using ET_ERROR_HANDLER.report_giaaa_error) if the class has
+			-- not been checked or if `internal_error_enabled' has been set.
 		require
 			a_caller_feature_not_void: a_caller_feature /= Void
 			caller_implementation_class_preparsed: a_caller_feature.implementation_class.is_preparsed
@@ -444,7 +448,7 @@ feature -- Processing
 
 feature {NONE} -- Event handling
 
-	report_feature_called (a_feature: ET_FEATURE) is
+	report_feature_called (a_feature: ET_FEATURE)
 			-- Report that `a_feature' is called.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -460,14 +464,14 @@ feature {NONE} -- Event handling
 			a_feature_used: a_feature.implementation_feature.is_used
 		end
 
-	report_attribute_address (an_expression: ET_FEATURE_ADDRESS; an_attribute: ET_QUERY) is
+	report_attribute_address (an_expression: ET_FEATURE_ADDRESS; an_attribute: ET_QUERY)
 			-- Report that attribute `an_attribute' has been processed
 			-- as target of feature address `an_expression'.
 		do
 			report_feature_called (an_attribute)
 		end
 
-	report_attribute_assignment_target (a_writable: ET_WRITABLE; an_attribute: ET_QUERY) is
+	report_attribute_assignment_target (a_writable: ET_WRITABLE; an_attribute: ET_QUERY)
 			-- Report that attribute `an_attribute' has been processed
 			-- as target `a_writable' of an assignment (attempt).
 		do
@@ -475,28 +479,28 @@ feature {NONE} -- Event handling
 		end
 
 	report_creation_expression (an_expression: ET_EXPRESSION; a_creation_type: ET_TYPE_CONTEXT;
-		a_procedure: ET_PROCEDURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
+		a_procedure: ET_PROCEDURE; an_actuals: ET_ACTUAL_ARGUMENTS)
 			-- Report that a creation expression `an_expression' has been processed,
 			-- where `a_creation_type' is the creation type and `a_procedure' is the creation procedure.
 		do
 			report_feature_called (a_procedure)
 		end
 
-	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
+	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE)
 			-- Report that a creation instruction `an_instruction' has been processed,
 			-- where `a_creation_type' is the creation type and `a_procedure' is the creation procedure.
 		do
 			report_feature_called (a_procedure)
 		end
 
-	report_function_address (an_expression: ET_FEATURE_ADDRESS; a_query: ET_QUERY) is
+	report_function_address (an_expression: ET_FEATURE_ADDRESS; a_query: ET_QUERY)
 			-- Report that function `a_query' has been processed
 			-- as target of feature address `an_expression'.
 		do
 			report_feature_called (a_query)
 		end
 
-	report_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION; a_parent_type: ET_BASE_TYPE; a_query: ET_QUERY) is
+	report_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION; a_parent_type: ET_BASE_TYPE; a_query: ET_QUERY)
 			-- Report that a precursor expression has been processed.
 			-- `a_parent_type' is viewed in the context of `current_type'
 			-- and `a_query' is the precursor feature.
@@ -504,7 +508,7 @@ feature {NONE} -- Event handling
 			report_feature_called (a_query)
 		end
 
-	report_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION; a_parent_type: ET_BASE_TYPE; a_procedure: ET_PROCEDURE) is
+	report_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION; a_parent_type: ET_BASE_TYPE; a_procedure: ET_PROCEDURE)
 			-- Report that a precursor instruction has been processed.
 			-- `a_parent_type' is viewed in the context of `current_type'
 			-- and `a_procedure' is the precursor feature.
@@ -512,14 +516,14 @@ feature {NONE} -- Event handling
 			report_feature_called (a_procedure)
 		end
 
-	report_procedure_address (an_expression: ET_FEATURE_ADDRESS; a_procedure: ET_PROCEDURE) is
+	report_procedure_address (an_expression: ET_FEATURE_ADDRESS; a_procedure: ET_PROCEDURE)
 			-- Report that procedure `a_procedure' has been processed
 			-- as target of feature address `an_expression'.
 		do
 			report_feature_called (a_procedure)
 		end
 
-	report_qualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY) is
+	report_qualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY)
 			-- Report that a qualified call expression `an_expression' has been processed,
 			-- where `a_target_type' is the type of the target and `a_query' is the
 			-- query being called.
@@ -527,7 +531,7 @@ feature {NONE} -- Event handling
 			report_feature_called (a_query)
 		end
 
-	report_qualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
+	report_qualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE)
 			-- Report that a qualified call instruction `an_instruction' has been processed,
 			-- where `a_target_type' is the type of the target and `a_procedure' is the
 			-- procedure being called.
@@ -535,7 +539,7 @@ feature {NONE} -- Event handling
 			report_feature_called (a_procedure)
 		end
 
-	report_qualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
+	report_qualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE)
 			-- Report that a qualified procedure call agent `an_agent' has been processed,
 			-- where `a_procedure' is the procedure being called by the agent and
 			-- `a_target_type' is the type of the target of that call.
@@ -543,7 +547,7 @@ feature {NONE} -- Event handling
 			report_feature_called (a_procedure)
 		end
 
-	report_qualified_query_call_agent (an_expression: ET_CALL_AGENT; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY) is
+	report_qualified_query_call_agent (an_expression: ET_CALL_AGENT; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY)
 			-- Report that a qualified query call agent `an_expression' has been processed.
 			-- where `a_query' is the query being called by the agent and
 			-- `a_target_type' is the type of the target of that call.
@@ -551,7 +555,7 @@ feature {NONE} -- Event handling
 			report_feature_called (a_query)
 		end
 
-	report_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION; a_type: ET_TYPE; a_query: ET_QUERY) is
+	report_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION; a_type: ET_TYPE; a_query: ET_QUERY)
 			-- Report that a static call expression `an_expression' has been processed,
 			-- where `a_query' is the query being called anf `a_type' is the type
 			-- as declared in the class where `an_expression' was written.
@@ -559,7 +563,7 @@ feature {NONE} -- Event handling
 			report_feature_called (a_query)
 		end
 
-	report_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION; a_type: ET_TYPE; a_procedure: ET_PROCEDURE) is
+	report_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION; a_type: ET_TYPE; a_procedure: ET_PROCEDURE)
 			-- Report that a static call instruction `an_instruction' has been processed,
 			-- where `a_procedure' is the procedure being called anf `a_type' is the type
 			-- as declared in the class where `an_expression' was written.
@@ -567,28 +571,28 @@ feature {NONE} -- Event handling
 			report_feature_called (a_procedure)
 		end
 
-	report_unqualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_query: ET_QUERY) is
+	report_unqualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_query: ET_QUERY)
 			-- Report that an unqualified call expression `an_expression' has been processed,
 			-- where `a_query' is the query being called.
 		do
 			report_feature_called (a_query)
 		end
 
-	report_unqualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_procedure: ET_PROCEDURE) is
+	report_unqualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_procedure: ET_PROCEDURE)
 			-- Report that an unqualified call instruction `an_instruction' has been processed,
 			-- where `a_procedure' is the procedure being called.
 		do
 			report_feature_called (a_procedure)
 		end
 
-	report_unqualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE) is
+	report_unqualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE)
 			-- Report that an unqualified procedure call agent `an_expression' has been processed,
 			-- where `a_procedure' is the procedure being called by the agent.
 		do
 			report_feature_called (a_procedure)
 		end
 
-	report_unqualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY) is
+	report_unqualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY)
 			-- Report that an unqualified query call agent `an_expression' has been processed,
 			-- where `a_query' is the query being called by the agent.
 		do
@@ -603,7 +607,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	add_redeclarations (a_class: ET_CLASS; a_redeclarations: DS_ARRAYED_LIST [ET_FEATURE]) is
+	add_redeclarations (a_class: ET_CLASS; a_redeclarations: DS_ARRAYED_LIST [ET_FEATURE])
 			-- Add to `a_redeclarations' the features of `a_class' that are either a redeclaration
 			-- or a join of two or more features inherited from parent classes.
 		require

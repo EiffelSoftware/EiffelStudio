@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Scanner skeletons for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,7 +40,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_filename: STRING) is
+	make (a_filename: STRING)
 			-- Create a new Eiffel scanner.
 		require
 			a_filename_not_void: a_filename /= Void
@@ -50,14 +50,14 @@ feature {NONE} -- Initialization
 			last_text_count := 1
 			last_literal_start := 1
 			filename := a_filename
-			group := tokens.unknown_class.group
+			group := tokens.unknown_group
 		ensure
 			filename_set: filename = a_filename
 		end
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset scanner before scanning next input.
 		do
 			last_literal_start := 1
@@ -73,28 +73,26 @@ feature -- Access
 	filename: STRING
 			-- Name of file being parsed
 
-	group: ET_GROUP
+	group: ET_PRIMARY_GROUP
 			-- Group to which the class being parsed belongs
 
-	universe: ET_UNIVERSE is
+	current_universe: ET_UNIVERSE
 			-- Universe to which the class being parsed belongs
 		do
 			Result := group.universe
 		ensure
-			universe_not_void: Result /= Void
+			current_universe_not_void: Result /= Void
 		end
 
-	current_system: ET_SYSTEM is
+	current_system: ET_SYSTEM
 			-- Surrounding Eiffel system
-			-- (Note: there is a frozen feature called `system' in
-			-- class GENERAL of SmartEiffel 1.0)
 		do
 			Result := group.current_system
 		ensure
 			current_system_not_void: Result /= Void
 		end
 
-	current_position: ET_POSITION is
+	current_position: ET_POSITION
 			-- Current position
 			-- (Create a new object at each call.)
 		do
@@ -103,7 +101,7 @@ feature -- Access
 			current_position_not_void: Result /= Void
 		end
 
-	ast_factory: ET_AST_FACTORY is
+	ast_factory: ET_AST_FACTORY
 			-- Abstract Syntax Tree factory
 		do
 			Result := current_system.ast_factory
@@ -113,35 +111,43 @@ feature -- Access
 
 feature -- Status report
 
-	use_attached_keyword: BOOLEAN is
+	use_attached_keyword: BOOLEAN
 			-- Should 'attached' be considered as
 			-- a keyword (otherwise identifier)?
 		do
 			Result := current_system.use_attached_keyword
 		end
 
-	use_attribute_keyword: BOOLEAN is
+	use_attribute_keyword: BOOLEAN
 			-- Should 'attribute' be considered as
 			-- a keyword (otherwise identifier)?
 		do
-			Result := current_system.use_attribute_keyword
+			if group.use_obsolete_syntax then
+				Result := False
+			else
+				Result := current_system.use_attribute_keyword
+			end
 		end
 
-	use_detachable_keyword: BOOLEAN is
+	use_detachable_keyword: BOOLEAN
 			-- Should 'detachable' be considered as
 			-- a keyword (otherwise identifier)?
 		do
 			Result := current_system.use_detachable_keyword
 		end
 
-	use_note_keyword: BOOLEAN is
+	use_note_keyword: BOOLEAN
 			-- Should 'note' be considered as
 			-- a keyword (otherwise identifier)?
 		do
-			Result := current_system.use_note_keyword
+			if group.use_obsolete_syntax then
+				Result := False
+			else
+				Result := current_system.use_note_keyword
+			end
 		end
 
-	use_reference_keyword: BOOLEAN is
+	use_reference_keyword: BOOLEAN
 			-- Should 'reference' be considered as
 			-- a keyword (otherwise identifier)?
 		do
@@ -150,7 +156,7 @@ feature -- Status report
 
 feature -- Error handling
 
-	error_handler: ET_ERROR_HANDLER is
+	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 		do
 			Result := current_system.error_handler
@@ -158,14 +164,14 @@ feature -- Error handling
 			error_handler_not_void: Result /= Void
 		end
 
-	fatal_error (a_message: STRING) is
+	fatal_error (a_message: STRING)
 			-- A fatal error occurred.
 			-- Print error message.
 		do
 			report_syntax_error (current_position)
 		end
 
-	report_syntax_error (a_position: ET_POSITION) is
+	report_syntax_error (a_position: ET_POSITION)
 			-- Report a syntax error at position `a_position'.
 		require
 			a_position_not_void: a_position /= Void
@@ -174,14 +180,14 @@ feature -- Error handling
 			error_handler.report_syntax_error (filename, a_position)
 		end
 
-	set_syntax_error is
+	set_syntax_error
 			-- Set syntax error flag in class being parsed, if already known.
 		do
 		end
 
 feature -- Cluster dependences
 
-	build_provider_constraint (a_cluster: ET_CLUSTER) is
+	build_provider_constraint (a_cluster: ET_CLUSTER)
 			-- Build `provider_constraint' of `a_cluster'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -193,7 +199,8 @@ feature -- Cluster dependences
 			l_names: DS_LIST [STRING]
 			l_cluster_names: DS_ARRAYED_LIST [STRING]
 			l_provider_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
-			old_group: ET_GROUP
+			old_group: ET_PRIMARY_GROUP
+			i: INTEGER
 		do
 			old_group := group
 			group := a_cluster
@@ -216,7 +223,24 @@ feature -- Cluster dependences
 					l_splitter.set_separators (" %T%R%N")
 					l_names := l_splitter.split (l_string)
 					create l_cluster_names.make_from_linear (l_names)
-					create l_provider_constraint.make (a_cluster, l_cluster_names)
+					if current_system.use_cluster_dependence_pathnames then
+						if not current_system.is_dotnet then
+								-- Remove assembly dlls from the list.
+							from
+								i := l_cluster_names.count
+							until
+								i < 1
+							loop
+								if l_cluster_names.item (i).as_lower.ends_with (".dll") then
+									l_cluster_names.remove (i)
+								end
+								i := i - 1
+							end
+						end
+						create l_provider_constraint.make_with_pathnames (a_cluster, l_cluster_names)
+					else
+						create l_provider_constraint.make (a_cluster, l_cluster_names)
+					end
 				elseif a_cluster.parent /= Void then
 					l_provider_constraint := a_cluster.parent.provider_constraint
 				end
@@ -225,7 +249,7 @@ feature -- Cluster dependences
 			group := old_group
 		end
 
-	build_dependant_constraint (a_cluster: ET_CLUSTER) is
+	build_dependant_constraint (a_cluster: ET_CLUSTER)
 			-- Build `dependant_constraint' of `a_cluster'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -237,7 +261,8 @@ feature -- Cluster dependences
 			l_names: DS_LIST [STRING]
 			l_cluster_names: DS_ARRAYED_LIST [STRING]
 			l_dependant_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
-			old_group: ET_GROUP
+			old_group: ET_PRIMARY_GROUP
+			i: INTEGER
 		do
 			old_group := group
 			group := a_cluster
@@ -260,7 +285,24 @@ feature -- Cluster dependences
 					l_splitter.set_separators (" %T%R%N")
 					l_names := l_splitter.split (l_string)
 					create l_cluster_names.make_from_linear (l_names)
-					create l_dependant_constraint.make (a_cluster, l_cluster_names)
+					if current_system.use_cluster_dependence_pathnames then
+						if not current_system.is_dotnet then
+								-- Remove assembly dlls from the list.
+							from
+								i := l_cluster_names.count
+							until
+								i < 1
+							loop
+								if l_cluster_names.item (i).as_lower.ends_with (".dll") then
+									l_cluster_names.remove (i)
+								end
+								i := i - 1
+							end
+						end
+						create l_dependant_constraint.make_with_pathnames (a_cluster, l_cluster_names)
+					else
+						create l_dependant_constraint.make (a_cluster, l_cluster_names)
+					end
 				elseif a_cluster.parent /= Void then
 					l_dependant_constraint := a_cluster.parent.dependant_constraint
 				end
@@ -271,7 +313,7 @@ feature -- Cluster dependences
 
 feature -- Tokens
 
-	has_break: BOOLEAN is
+	has_break: BOOLEAN
 			-- Has a break been scanned?
 		do
 			Result := last_break_end > last_text_count
@@ -279,7 +321,7 @@ feature -- Tokens
 			definition: Result = (last_break_end > last_text_count)
 		end
 
-	has_comment: BOOLEAN is
+	has_comment: BOOLEAN
 			-- Has a comment been scanned?
 		do
 			Result := last_comment_end > last_text_count
@@ -287,7 +329,7 @@ feature -- Tokens
 			definition: Result = (last_comment_end > last_text_count)
 		end
 
-	last_literal_count: INTEGER is
+	last_literal_count: INTEGER
 			-- Number of characters in `last_literal'
 		do
 			Result := last_literal_end - last_literal_start + 1
@@ -296,7 +338,7 @@ feature -- Tokens
 			definition: Result = last_literal.count
 		end
 
-	last_literal: STRING is
+	last_literal: STRING
 			-- Last literal scanned
 		do
 			Result := text_substring (last_literal_start, last_literal_end)
@@ -304,7 +346,7 @@ feature -- Tokens
 			last_literal_not_void: Result /= Void
 		end
 
-	last_identifier: ET_IDENTIFIER is
+	last_identifier: ET_IDENTIFIER
 			-- Last identifier scanned
 		require
 			last_literal_not_empty: last_literal_count > 0
@@ -336,7 +378,7 @@ feature -- Tokens
 			last_identifier_not_void: Result /= Void
 		end
 
-	last_c3_character_constant: ET_C3_CHARACTER_CONSTANT is
+	last_c3_character_constant: ET_C3_CHARACTER_CONSTANT
 			-- Last character constant scanned of the form '%/code/'
 		require
 			-- valid_literal: ([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]).recognizes (last_literal)
@@ -360,7 +402,7 @@ feature -- Tokens
 			last_c3_character_constant_not_void: Result /= Void
 		end
 
-	last_special_manifest_string: ET_SPECIAL_MANIFEST_STRING is
+	last_special_manifest_string: ET_SPECIAL_MANIFEST_STRING
 			-- Last special manifest string scanned
 		require
 			-- valid_literal: (([^"%\n]|%([^\n]|\/([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\/|[ \t\r]*\n[ \t\r\n]*%))*).recognizes (last_literal)
@@ -484,7 +526,7 @@ feature -- Tokens
 			last_special_manifest_string_not_void: Result /= Void
 		end
 
-	last_verbatim_string (a_marker, an_open, a_close: STRING; a_left_aligned: BOOLEAN): ET_VERBATIM_STRING is
+	last_verbatim_string (a_marker, an_open, a_close: STRING; a_left_aligned: BOOLEAN): ET_VERBATIM_STRING
 			-- Last verbatim string scanned
 		require
 			a_marker_not_void: a_marker /= Void
@@ -576,7 +618,7 @@ feature -- Tokens
 			last_verbatim_string_not_void: Result /= Void
 		end
 
-	last_break: STRING is
+	last_break: STRING
 			-- Last break scanned
 		require
 			has_break: has_break
@@ -587,7 +629,7 @@ feature -- Tokens
 			last_break_not_empty: Result.count > 0
 		end
 
-	last_comment: STRING is
+	last_comment: STRING
 			-- Last comment scanned
 		require
 			has_comment: has_comment
@@ -598,7 +640,7 @@ feature -- Tokens
 			last_comment_not_empty: Result.count > 0
 		end
 
-	text: STRING is
+	text: STRING
 			-- Text of last token read
 			-- (Share strings when already scanned.)
 		local
@@ -617,7 +659,7 @@ feature -- Tokens
 			end
 		end
 
-	text_substring (s, e: INTEGER): STRING is
+	text_substring (s, e: INTEGER): STRING
 			-- Substring of last token read
 			-- (Share strings when already scanned.)
 		local
@@ -655,7 +697,7 @@ feature {NONE} -- Positions
 
 feature {NONE} -- String handler
 
-	strings: DS_HASH_TABLE [INTEGER, STRING] is
+	strings: DS_HASH_TABLE [INTEGER, STRING]
 			-- Strings known by the current scanner, and the associated
 			-- hash codes when they are used as identifier
 		once
@@ -704,6 +746,9 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.capitalized_integer_16_name)
 			Result.force_new (-1, tokens.capitalized_integer_32_name)
 			Result.force_new (-1, tokens.capitalized_integer_64_name)
+			Result.force_new (-1, tokens.capitalized_internal_name)
+			Result.force_new (-1, tokens.capitalized_iterable_name)
+			Result.force_new (-1, tokens.capitalized_iteration_cursor_name)
 			Result.force_new (-1, tokens.capitalized_memory_name)
 			Result.force_new (-1, tokens.capitalized_native_array_name)
 			Result.force_new (-1, tokens.capitalized_natural_name)
@@ -732,6 +777,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.capitalized_wide_character_name)
 			Result.force_new (-1, tokens.capitalized_unknown_name)
 				-- Feature names.
+			Result.force_new (-1, tokens.after_name)
 			Result.force_new (-1, tokens.aliased_resized_area_name)
 			Result.force_new (-1, tokens.area_name)
 			Result.force_new (-1, tokens.argument_name)
@@ -745,6 +791,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.as_integer_32_name)
 			Result.force_new (-1, tokens.as_integer_64_name)
 			Result.force_new (-1, tokens.base_address_name)
+			Result.force_new (-1, tokens.base_class_name_name)
 			Result.force_new (-1, tokens.bit_and_name)
 			Result.force_new (-1, tokens.bit_not_name)
 			Result.force_new (-1, tokens.bit_or_name)
@@ -753,11 +800,15 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.bit_xor_name)
 			Result.force_new (-1, tokens.boolean_bytes_name)
 			Result.force_new (-1, tokens.boolean_item_name)
+			Result.force_new (-1, tokens.boolean_field_name)
 			Result.force_new (-1, tokens.call_name)
+			Result.force_new (-1, tokens.capacity_name)
 			Result.force_new (-1, tokens.ceiling_real_32_name)
 			Result.force_new (-1, tokens.ceiling_real_64_name)
 			Result.force_new (-1, tokens.character_8_item_name)
+			Result.force_new (-1, tokens.character_8_field_name)
 			Result.force_new (-1, tokens.character_32_item_name)
+			Result.force_new (-1, tokens.character_32_field_name)
 			Result.force_new (-1, tokens.character_bytes_name)
 			Result.force_new (-1, tokens.closed_operands_name)
 			Result.force_new (-1, tokens.code_name)
@@ -777,9 +828,15 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.eif_object_id_name)
 			Result.force_new (-1, tokens.eif_object_id_free_name)
 			Result.force_new (-1, tokens.element_size_name)
+			Result.force_new (-1, tokens.field_name)
+			Result.force_new (-1, tokens.field_count_name)
+			Result.force_new (-1, tokens.field_name_name)
+			Result.force_new (-1, tokens.field_static_type_name)
+			Result.force_new (-1, tokens.field_type_name)
 			Result.force_new (-1, tokens.find_referers_name)
 			Result.force_new (-1, tokens.floor_real_32_name)
 			Result.force_new (-1, tokens.floor_real_64_name)
+			Result.force_new (-1, tokens.forth_name)
 			Result.force_new (-1, tokens.free_name)
 			Result.force_new (-1, tokens.generating_type_name)
 			Result.force_new (-1, tokens.generator_name)
@@ -788,41 +845,54 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.hash_code_name)
 			Result.force_new (-1, tokens.implication_name)
 			Result.force_new (-1, tokens.integer_8_item_name)
+			Result.force_new (-1, tokens.integer_8_field_name)
 			Result.force_new (-1, tokens.integer_16_item_name)
+			Result.force_new (-1, tokens.integer_16_field_name)
 			Result.force_new (-1, tokens.integer_32_item_name)
+			Result.force_new (-1, tokens.integer_32_field_name)
 			Result.force_new (-1, tokens.integer_64_item_name)
+			Result.force_new (-1, tokens.integer_64_field_name)
 			Result.force_new (-1, tokens.integer_bytes_name)
 			Result.force_new (-1, tokens.integer_quotient_name)
 			Result.force_new (-1, tokens.integer_remainder_name)
 			Result.force_new (-1, tokens.is_deep_equal_name)
 			Result.force_new (-1, tokens.is_dotnet_name)
 			Result.force_new (-1, tokens.is_equal_name)
+			Result.force_new (-1, tokens.is_expanded_name)
 			Result.force_new (-1, tokens.is_less_name)
 			Result.force_new (-1, tokens.is_mac_name)
 			Result.force_new (-1, tokens.is_target_closed_name)
 			Result.force_new (-1, tokens.is_thread_capable_name)
 			Result.force_new (-1, tokens.is_unix_name)
 			Result.force_new (-1, tokens.is_vms_name)
+			Result.force_new (-1, tokens.is_vxworks_name)
 			Result.force_new (-1, tokens.is_windows_name)
 			Result.force_new (-1, tokens.item_name)
 			Result.force_new (-1, tokens.item_code_name)
 			Result.force_new (-1, tokens.last_result_name)
 			Result.force_new (-1, tokens.lower_name)
 			Result.force_new (-1, tokens.make_name)
+			Result.force_new (-1, tokens.max_type_id_name)
 			Result.force_new (-1, tokens.minus_name)
 			Result.force_new (-1, tokens.name_name)
 			Result.force_new (-1, tokens.natural_8_item_name)
+			Result.force_new (-1, tokens.natural_8_field_name)
 			Result.force_new (-1, tokens.natural_16_item_name)
+			Result.force_new (-1, tokens.natural_16_field_name)
 			Result.force_new (-1, tokens.natural_32_code_name)
 			Result.force_new (-1, tokens.natural_32_item_name)
+			Result.force_new (-1, tokens.natural_32_field_name)
 			Result.force_new (-1, tokens.natural_64_item_name)
+			Result.force_new (-1, tokens.natural_64_field_name)
 			Result.force_new (-1, tokens.negated_name)
+			Result.force_new (-1, tokens.new_cursor_name)
 			Result.force_new (-1, tokens.object_comparison_name)
 			Result.force_new (-1, tokens.opposite_name)
 			Result.force_new (-1, tokens.out_name)
 			Result.force_new (-1, tokens.plus_name)
 			Result.force_new (-1, tokens.pointer_bytes_name)
 			Result.force_new (-1, tokens.pointer_item_name)
+			Result.force_new (-1, tokens.pointer_field_name)
 			Result.force_new (-1, tokens.power_name)
 			Result.force_new (-1, tokens.product_name)
 			Result.force_new (-1, tokens.put_name)
@@ -844,13 +914,31 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.put_reference_name)
 			Result.force_new (-1, tokens.quotient_name)
 			Result.force_new (-1, tokens.real_32_item_name)
+			Result.force_new (-1, tokens.real_32_field_name)
 			Result.force_new (-1, tokens.real_64_item_name)
+			Result.force_new (-1, tokens.real_64_field_name)
 			Result.force_new (-1, tokens.real_bytes_name)
 			Result.force_new (-1, tokens.reference_item_name)
+			Result.force_new (-1, tokens.runtime_name_name)
 			Result.force_new (-1, tokens.same_type_name)
+			Result.force_new (-1, tokens.set_boolean_field_name)
+			Result.force_new (-1, tokens.set_character_8_field_name)
+			Result.force_new (-1, tokens.set_character_32_field_name)
+			Result.force_new (-1, tokens.set_integer_8_field_name)
+			Result.force_new (-1, tokens.set_integer_16_field_name)
+			Result.force_new (-1, tokens.set_integer_32_field_name)
+			Result.force_new (-1, tokens.set_integer_64_field_name)
 			Result.force_new (-1, tokens.set_item_name)
+			Result.force_new (-1, tokens.set_natural_8_field_name)
+			Result.force_new (-1, tokens.set_natural_16_field_name)
+			Result.force_new (-1, tokens.set_natural_32_field_name)
+			Result.force_new (-1, tokens.set_natural_64_field_name)
 			Result.force_new (-1, tokens.set_object_comparison_name)
 			Result.force_new (-1, tokens.set_operands_name)
+			Result.force_new (-1, tokens.set_pointer_field_name)
+			Result.force_new (-1, tokens.set_real_32_field_name)
+			Result.force_new (-1, tokens.set_real_64_field_name)
+			Result.force_new (-1, tokens.set_reference_field_name)
 			Result.force_new (-1, tokens.standard_copy_name)
 			Result.force_new (-1, tokens.standard_is_equal_name)
 			Result.force_new (-1, tokens.standard_twin_name)
@@ -869,6 +957,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.truncated_to_real_name)
 			Result.force_new (-1, tokens.twin_name)
 			Result.force_new (-1, tokens.type_id_name)
+			Result.force_new (-1, tokens.type_of_type_name)
 			Result.force_new (-1, tokens.upper_name)
 			Result.force_new (-1, tokens.wide_character_bytes_name)
 				-- Keywords.
@@ -879,6 +968,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.capitalized_true_keyword_name)
 			Result.force_new (-1, tokens.capitalized_void_keyword_name)
 			Result.force_new (-1, tokens.capitalized_unique_keyword_name)
+			Result.force_new (-1, tokens.across_keyword_name)
 			Result.force_new (-1, tokens.agent_keyword_name)
 			Result.force_new (-1, tokens.alias_keyword_name)
 			Result.force_new (-1, tokens.all_keyword_name)
@@ -936,6 +1026,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.retry_keyword_name)
 			Result.force_new (-1, tokens.select_keyword_name)
 			Result.force_new (-1, tokens.separate_keyword_name)
+			Result.force_new (-1, tokens.some_keyword_name)
 			Result.force_new (-1, tokens.strip_keyword_name)
 			Result.force_new (-1, tokens.then_keyword_name)
 			Result.force_new (-1, tokens.true_keyword_name)
@@ -986,7 +1077,7 @@ feature {NONE} -- String handler
 			no_void_string: not Result.has_void
 		end
 
-	string_buffer: STRING is
+	string_buffer: STRING
 			-- String buffer
 		once
 			create Result.make (30)
@@ -1011,7 +1102,7 @@ feature {NONE} -- Verbatim strings
 	verbatim_close_white_characters: STRING
 			-- White characters before ]xyz"
 
-	is_verbatim_string_closer (a_start, an_end: INTEGER): BOOLEAN is
+	is_verbatim_string_closer (a_start, an_end: INTEGER): BOOLEAN
 			-- Is string between indexes `a_start' and `an_end' the
 			-- end marker of the verbatim string currently scanned?
 		require
@@ -1065,74 +1156,74 @@ feature {NONE} -- Breaks
 			-- Kind of break being parsed when reading the
 			-- following break or comment
 
-	identifier_break: INTEGER is 1
+	identifier_break: INTEGER = 1
 			-- Internal code corresponding to a break that
 			-- follows an identifier
 
-	freeop_break: INTEGER is 2
+	freeop_break: INTEGER = 2
 			-- Internal code corresponding to a break that
 			-- follows a freeop
 
-	character_break: INTEGER is 3
+	character_break: INTEGER = 3
 			-- Internal code corresponding to a break that
 			-- follows a character
 
-	integer_break: INTEGER is 4
+	integer_break: INTEGER = 4
 			-- Internal code corresponding to a break that
 			-- follows an integer
 
-	uinteger_break: INTEGER is 5
+	uinteger_break: INTEGER = 5
 			-- Internal code corresponding to a break that
 			-- follows an integer with underscores
 
-	hinteger_break: INTEGER is 6
+	hinteger_break: INTEGER = 6
 			-- Internal code corresponding to a break that
 			-- follows an hexadecimal integer
 
-	ointeger_break: INTEGER is 7
+	ointeger_break: INTEGER = 7
 			-- Internal code corresponding to a break that
 			-- follows an octal integer
 
-	binteger_break: INTEGER is 8
+	binteger_break: INTEGER = 8
 			-- Internal code corresponding to a break that
 			-- follows binary integer
 
-	real_break: INTEGER is 9
+	real_break: INTEGER = 9
 			-- Internal code corresponding to a break that
 			-- follows a real
 
-	ureal_break: INTEGER is 10
+	ureal_break: INTEGER = 10
 			-- Internal code corresponding to a break that
 			-- follows a real with underscores
 
-	bit_break: INTEGER is 11
+	bit_break: INTEGER = 11
 			-- Internal code corresponding to a break that
 			-- follows a bit
 
-	string_break: INTEGER is 12
+	string_break: INTEGER = 12
 			-- Internal code corresponding to a break that
 			-- follows a manifest string
 
-	str_freeop_break: INTEGER is 13
+	str_freeop_break: INTEGER = 13
 			-- Internal code corresponding to a break that
 			-- follows a manifest string containing the
 			-- name of a freeop
 
-	str_special_break: INTEGER is 14
+	str_special_break: INTEGER = 14
 			-- Internal code corresponding to a break that
 			-- follows a manifest string with special characters
 
-	str_verbatim_break: INTEGER is 15
+	str_verbatim_break: INTEGER = 15
 			-- Internal code corresponding to a break that
 			-- follows a verbatim manifest string
 
-	str_left_aligned_verbatim_break: INTEGER is 16
+	str_left_aligned_verbatim_break: INTEGER = 16
 			-- Internal code corresponding to a break that
 			-- follows a left-aligned verbatim manifest string
 
 feature {NONE} -- Processing
 
-	process_identifier (nb: INTEGER) is
+	process_identifier (nb: INTEGER)
 			-- Process identifier with `nb' characters.
 			-- Detect keywords.
 		require
@@ -1373,6 +1464,24 @@ feature {NONE} -- Processing
 							when 'e', 'E' then
 								last_token := E_ONCE
 								last_et_keyword_value := ast_factory.new_once_keyword (Current)
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 's', 'S' then
+					inspect text_item (2)
+					when 'o', 'O' then
+						inspect text_item (3)
+						when 'm', 'M' then
+							inspect text_item (4)
+							when 'e', 'E' then
+								last_token := E_SOME
+								last_et_keyword_value := ast_factory.new_some_keyword (Current)
 							else
 								-- Do nothing.
 							end
@@ -1727,6 +1836,29 @@ feature {NONE} -- Processing
 				inspect text_item (1)
 				when 'a', 'A' then
 					inspect text_item (2)
+					when 'c', 'C' then
+						inspect text_item (3)
+						when 'r', 'R' then
+							inspect text_item (4)
+							when 'o', 'O' then
+								inspect text_item (5)
+								when 's', 'S' then
+									inspect text_item (6)
+									when 's', 'S' then
+										last_token := E_ACROSS
+										last_et_keyword_value := ast_factory.new_across_keyword (Current)
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
 					when 's', 'S' then
 						inspect text_item (3)
 						when 's', 'S' then
@@ -2899,7 +3031,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	process_one_char_symbol (c: CHARACTER) is
+	process_one_char_symbol (c: CHARACTER)
 			-- Process Eiffel symbol with made up of only
 			-- one character `c'.
 		require
@@ -2982,7 +3114,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	process_two_char_symbol (c1, c2: CHARACTER) is
+	process_two_char_symbol (c1, c2: CHARACTER)
 			-- Process Eiffel symbol with made up of exactly
 			-- two characters `c1' and `c2'.
 		require
@@ -3059,7 +3191,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	process_c1_character_constant (c: CHARACTER) is
+	process_c1_character_constant (c: CHARACTER)
 			-- Process character constant of the form 'A'.
 		require
 			c1_char: text_count >= 3
@@ -3080,7 +3212,7 @@ feature {NONE} -- Processing
 			last_et_character_constant_value := ast_factory.new_c1_character_constant (c, Current)
 		end
 
-	process_c2_character_constant (c: CHARACTER) is
+	process_c2_character_constant (c: CHARACTER)
 			-- Process character constant of the form '%A'.
 		require
 			c2_char: text_count >= 4
@@ -3273,7 +3405,7 @@ feature {NONE} -- Processing
 			last_et_character_constant_value := ast_factory.new_c2_character_constant (a_value, Current)
 		end
 
-	process_regular_manifest_string (nb: INTEGER) is
+	process_regular_manifest_string (nb: INTEGER)
 			-- Process regular manifest string of the form "..."
 			-- with length `nb' (including the two quotes).
 		require
@@ -3516,7 +3648,7 @@ feature {NONE} -- Processing
 			last_et_manifest_string_value := ast_factory.new_regular_manifest_string (Current)
 		end
 
-	process_break is
+	process_break
 			-- Process break.
 		do
 			inspect break_kind
@@ -3582,7 +3714,7 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Implementation
 
-	tmp_file: KL_TEXT_INPUT_FILE is
+	tmp_file: KL_TEXT_INPUT_FILE
 			-- Temporary file object
 		do
 			Result := shared_file
@@ -3594,7 +3726,7 @@ feature {NONE} -- Implementation
 			file_closed: Result.is_closed
 		end
 
-	shared_file: KL_TEXT_INPUT_FILE is
+	shared_file: KL_TEXT_INPUT_FILE
 			-- Shared file object
 		once
 			create Result.make (dummy_name)
@@ -3602,7 +3734,7 @@ feature {NONE} -- Implementation
 			file_not_void: Result /= Void
 		end
 
-	dummy_name: STRING is "dummy"
+	dummy_name: STRING = "dummy"
 			-- Dummy name
 
 invariant

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -6,7 +6,7 @@ indexing
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
-	license: "MIT License"	
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -26,16 +26,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		-- Nothing to do
 		do
 		end
 
 feature -- Operation(s)
 
-	scheme: STRING is "data"
+	scheme: STRING = "data"
 
-	resolve (a_uri: UT_URI) is
+	resolve (a_uri: UT_URI)
 			-- Resolve URI to stream.
 		local
 			l_string_stream: KL_STRING_INPUT_STREAM
@@ -95,10 +95,10 @@ feature -- Result
 	last_stream: KI_CHARACTER_INPUT_STREAM
 			-- Matching stream
 
-	has_media_type: BOOLEAN is
+	has_media_type: BOOLEAN
 			-- Is the media type available.
 		do
-			Result := not has_error 
+			Result := not has_error
 		end
 
 	last_media_type: UT_MEDIA_TYPE
@@ -112,10 +112,10 @@ feature {NONE} -- Implementation
 	is_base_64: BOOLEAN
 			-- Is `data' base-64 encoded?
 
-	Charset_parameter: STRING is "charset"
+	Charset_parameter: STRING = "charset"
 			-- Name of content-type character-set parameter
 
-	set_last_error (a_message: STRING) is
+	set_last_error (a_message: STRING)
 			-- Set `last_eeror' to `a_message'.
 		require
 			message_not_empty: a_message /= Void and then a_message.count > 0
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			error_text_set: last_error = a_message
 		end
 
-	parse_components (a_uri: UT_URI) is
+	parse_components (a_uri: UT_URI)
 			-- Parse `a_uri' into parameters, media-type and data
 		require
 			data_uri: a_uri /= Void and then a_uri.is_opaque and then a_uri.scheme.is_equal (scheme)
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 			media_type_set_or_error: not has_error implies last_media_type /= Void
 		end
 
-	parse_parameters (a_parameter_string: STRING) is
+	parse_parameters (a_parameter_string: STRING)
 			-- Parse media-type and base-64 indicator.
 		require
 			parameter_string_not_empty: a_parameter_string /= Void and then a_parameter_string.count > 0
@@ -187,8 +187,6 @@ feature {NONE} -- Implementation
 					from
 						a_splitter.set_separators ("=")
 						a_cursor := some_parameters.new_cursor; a_cursor.start
-					variant
-						some_parameters.count + 1 - a_cursor.index
 					until
 						a_cursor.after
 					loop
@@ -200,6 +198,8 @@ feature {NONE} -- Implementation
 							last_media_type.add_parameter (a_parameter_pair.item (1), a_parameter_pair.item (2))
 							a_cursor.forth
 						end
+					variant
+						some_parameters.count + 1 - a_cursor.index
 					end
 				end
 			end

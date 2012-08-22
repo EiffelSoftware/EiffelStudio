@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -22,10 +22,10 @@ create
 
 feature -- Status report
 
-	valid_parameter (a_parameter: ANY): BOOLEAN is
+	valid_parameter (a_parameter: ANY): BOOLEAN
 			-- Is `a_parameter' a valid parameter for current formatter?
 		local
-			a_cell: ?DS_CELL [CHARACTER]
+			a_cell: detachable DS_CELL [CHARACTER]
 		do
 			a_cell ?= a_parameter
 			Result := a_cell /= Void
@@ -33,12 +33,12 @@ feature -- Status report
 
 feature -- Formatting
 
-	format_to (a_parameter: ANY; a_stream: KI_CHARACTER_OUTPUT_STREAM) is
+	format_to (a_parameter: ANY; a_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Format `a_parameter' to `a_stream'.
 			-- (Use DS_CELL [CHARACTER] because in SE 2.1
 			-- CHARACTER does not conform to ANY.)
 		local
-			a_cell: ?DS_CELL [CHARACTER]
+			a_cell: detachable DS_CELL [CHARACTER]
 		do
 			a_cell ?= a_parameter
 			check
@@ -48,7 +48,7 @@ feature -- Formatting
 			character_format_to (a_cell.item, a_stream)
 		end
 
-	character_format_to (a_parameter: CHARACTER; a_stream: KI_CHARACTER_OUTPUT_STREAM) is
+	character_format_to (a_parameter: CHARACTER; a_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Format `a_parameter' to `a_stream'.
 		require
 			a_stream_not_void: a_stream /= Void
@@ -60,7 +60,7 @@ feature -- Formatting
 
 feature {NONE} -- Constants
 
-	character_buffer: STRING is "#"
+	character_buffer: STRING = "#"
 			-- Buffer used in `character_format_to'
 
 end

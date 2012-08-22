@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Establish invariant
 		do
 			name := "contains"
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
 			Result := type_factory.boolean_type
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Status report
 
-	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
 			-- Type of argument number `argument_number'
 		do
 			if argument_number < 3 then
@@ -72,7 +72,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
+	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_collator: ST_COLLATOR
@@ -118,7 +118,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
-	compute_cardinality is
+	compute_cardinality
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
@@ -126,7 +126,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	collation_contains (s1, s2: STRING; a_collator: ST_COLLATOR): BOOLEAN is
+	collation_contains (s1, s2: STRING; a_collator: ST_COLLATOR): BOOLEAN
 			-- Does `s1' contain `s2' according to the rules of `a_collator'?
 		require
 			first_string_not_void: s1 /= Void
@@ -144,17 +144,17 @@ feature {NONE} -- Implementation
 			elseif l_ct_2 < l_ct_1 then
 				from
 					l_index := 1
-				variant
-					l_ct_1 - l_ct_2 + 2 - l_index
 				until
 					Result or else l_index > l_ct_1 - l_ct_2 + 1
 				loop
 					l_substring := s1.substring (l_index, l_index + l_ct_2 - 1)
 					Result := a_collator.three_way_comparison (l_substring, s2) = 0
 					l_index := l_index + 1
+				variant
+					l_ct_1 - l_ct_2 + 2 - l_index
 				end
 			end
 		end
-	
+
 end
-	
+

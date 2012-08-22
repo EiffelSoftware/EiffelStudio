@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -21,9 +21,9 @@ inherit
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
-		
+
 	KL_IMPORTED_STRING_ROUTINES
-		
+
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
 
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system_id: STRING) is
+	make (a_system_id: STRING)
 			-- Establish invariant.
 		require
 			system_id_not_void: a_system_id /= Void
@@ -53,7 +53,7 @@ feature -- Access
 	system_id: STRING
 			-- System-id of source
 
-	fragment_identifier: ?STRING
+	fragment_identifier: detachable STRING
 			-- Possible decoded fragment identifier
 
 	default_media_type: UT_MEDIA_TYPE
@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Events
 
-	send (a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; a_uri: UT_URI; is_stylesheet: BOOLEAN) is
+	send (a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; a_uri: UT_URI; is_stylesheet: BOOLEAN)
 			-- Generate and send  events to `a_receiver'
 		local
 			l_locator: XM_XPATH_RESOLVER_LOCATOR
@@ -113,7 +113,7 @@ feature -- Events
 			media_type := xpointer_filter.media_type
 		end
 
-	send_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM; a_system_id: UT_URI; a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; is_stylesheet: BOOLEAN) is
+	send_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM; a_system_id: UT_URI; a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; is_stylesheet: BOOLEAN)
 			-- Generate and send  events to `a_receiver'
 		require
 			stream_is_open_read: a_stream /= Void and then a_stream.is_open_read
@@ -155,7 +155,7 @@ feature -- Events
 				else
 					xpointer_filter.allow_generic_xml_types (True)
 					xpointer_filter.add_standard_media_types
-				end				
+				end
 			end
 			create start.set_next (xpointer_filter)
 			create l_locator.make (a_parser)
@@ -174,7 +174,7 @@ feature -- Events
 
 feature -- Element change
 
-	set_system_id (a_system_id: STRING) is
+	set_system_id (a_system_id: STRING)
 			-- Set `system_id'.
 		do
 			system_id := a_system_id
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 
 	content: XM_CONTENT_CONCATENATOR
 			-- Content concatenator
-		
+
 	error: XM_PARSER_STOP_ON_ERROR_FILTER
 			-- Error collector
 
@@ -212,4 +212,4 @@ invariant
 	default_media_type_not_void: default_media_type /= Void
 
 end
-	
+

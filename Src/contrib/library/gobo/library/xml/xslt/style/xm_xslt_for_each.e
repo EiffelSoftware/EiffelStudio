@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -26,21 +26,21 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature -- Status report
 
-	may_contain_sequence_constructor: BOOLEAN is
+	may_contain_sequence_constructor: BOOLEAN
 			-- Is `Current' allowed to contain a sequence constructor?
 		do
 			Result := True
 		end
 
-	is_permitted_child (a_style_element: XM_XSLT_STYLE_ELEMENT): BOOLEAN is
+	is_permitted_child (a_style_element: XM_XSLT_STYLE_ELEMENT): BOOLEAN
 			-- Is `a_style_element' a permitted child of `Current'?
 		do
 			Result := a_style_element.is_sort
 		end
-		
+
 feature -- Element change
 
-	prepare_attributes is
+	prepare_attributes
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -51,8 +51,6 @@ feature -- Element change
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index				
 				until
 					a_cursor.after or any_compile_errors
 				loop
@@ -66,6 +64,8 @@ feature -- Element change
 						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if a_select_attribute /= Void then
@@ -77,7 +77,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	validate is
+	validate
 			-- Check that the stylesheet element is valid.
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
@@ -94,7 +94,7 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
 			l_sort_key_list: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]
@@ -125,8 +125,8 @@ feature -- Element change
 		end
 
 feature -- Conversion
-	
-	is_for_each: BOOLEAN is
+
+	is_for_each: BOOLEAN
 			-- Is `Current' an xsl:for-each?
 		do
 			Result := True
@@ -134,7 +134,7 @@ feature -- Conversion
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 
-	returned_item_type: XM_XPATH_ITEM_TYPE is
+	returned_item_type: XM_XPATH_ITEM_TYPE
 			-- Type of item returned by this instruction
 		do
 			Result := common_child_item_type

@@ -1,11 +1,11 @@
-indexing
+note
 
 	description:
 
 		"Routines that ought to be in class ARRAY"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ inherit
 
 feature -- Initialization
 
-	make_from_array (an_array: ARRAY [G]; min_index: INTEGER): ARRAY [G] is
+	make_from_array (an_array: ARRAY [G]; min_index: INTEGER): ARRAY [G]
 			-- Create a new array and initialize it
 			-- with items from `an_array'.
 		require
@@ -32,9 +32,27 @@ feature -- Initialization
 --			same_items: forall i in Result.lower .. Result.upper, Result.item (i) = an_array.item (i + an_array.lower - min_index)
 		end
 
+	make_empty_with_lower (min_index: INTEGER): ARRAY [G]
+			-- Create an empty array with `min_index' as lower bound.
+		local
+			l_array: KL_ARRAY [G]
+		do
+			if min_index = 1 then
+				create Result.make_empty
+			else
+				create l_array.make_empty
+				l_array.new_rebase (min_index)
+				create Result.make_from_array (l_array)
+			end
+		ensure
+			array_not_void: Result /= Void
+			lower_set: Result.lower = min_index
+			is_empty: Result.is_empty
+		end
+
 feature -- Status report
 
-	has (an_array: ARRAY [G]; v: G): BOOLEAN is
+	has (an_array: ARRAY [G]; v: G): BOOLEAN
 			-- Does `v' appear in `an_array' (use '=' for item comparison).
 			-- Reasons why we don't use ARRAY.has directly:
 			-- * `has' is not in ELKS ARRAY 2000.
@@ -60,7 +78,7 @@ feature -- Status report
 			end
 		end
 
-	has_void (a_array: ARRAY [G]): BOOLEAN is
+	has_void (a_array: ARRAY [G]): BOOLEAN
 			-- Does 'Void' appear in `an_array' (use '=' for item comparison).
 			-- Reason why we don't use `has (Void)' directly:
 			-- * the actual generic parameter may be attached and
@@ -69,7 +87,7 @@ feature -- Status report
 			a_array_not_void: a_array /= Void
 		local
 			i, nb: INTEGER
-			l_array: ?ARRAY [?G]
+			l_array: detachable ARRAY [detachable G]
 		do
 			l_array ?= a_array
 			if l_array /= Void then
@@ -92,7 +110,7 @@ feature -- Status report
 
 feature -- Access
 
-	subarray (an_array: ARRAY [G]; start_pos, end_pos, min_index: INTEGER): ARRAY [G] is
+	subarray (an_array: ARRAY [G]; start_pos, end_pos, min_index: INTEGER): ARRAY [G]
 			-- Array made up of items from `an_array' within
 			-- bounds `start_pos' and `end_pos'
 			-- Reasons why we don't use ARRAY.subarray directly:
@@ -108,8 +126,12 @@ feature -- Access
 			end_pos_small_enough: end_pos <= an_array.upper
 			valid_bounds: start_pos <= end_pos + 1
 		do
-			create Result.make (min_index, min_index + end_pos - start_pos)
-			subcopy (Result, an_array, start_pos, end_pos, min_index)
+			if end_pos < start_pos then
+				Result := make_empty_with_lower (min_index)
+			else
+				create Result.make_filled (an_array.item (start_pos), min_index, min_index + end_pos - start_pos)
+				subcopy (Result, an_array, start_pos, end_pos, min_index)
+			end
 		ensure
 			array_not_void: Result /= Void
 			lower_set: Result.lower = min_index
@@ -119,7 +141,7 @@ feature -- Access
 
 feature -- Duplication
 
-	cloned_array (an_array: ARRAY [G]): ARRAY [G] is
+	cloned_array (an_array: ARRAY [G]): ARRAY [G]
 			-- Clone of `an_array'
 		require
 			an_array_not_void: an_array /= Void
@@ -133,7 +155,7 @@ feature -- Duplication
 
 feature -- Element change
 
-	subcopy (an_array: ARRAY [G]; other: ARRAY [G]; start_pos, end_pos, index_pos: INTEGER) is
+	subcopy (an_array: ARRAY [G]; other: ARRAY [G]; start_pos, end_pos, index_pos: INTEGER)
 			-- Copy items of `other' within bounds `start_pos' and `end_pos'
 			-- to `an_array' starting at index `index_pos'.
 			-- Reasons why we don't use ARRAY.subcopy directly:
@@ -157,7 +179,7 @@ feature -- Element change
 
 feature -- Resizing
 
-	resize (an_array: ARRAY [G]; min_index, max_index: INTEGER) is
+	resize (an_array: ARRAY [G]; min_index, max_index: INTEGER)
 			-- Rearrange array so that it can accommodate
 			-- indices down to `min_index' and up to `max_index'.
 			-- Do not lose any previously entered item.

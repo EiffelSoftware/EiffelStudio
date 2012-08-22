@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create object.
 		do
 			-- do_nothing
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_correct_scheme (a_scheme: STRING): BOOLEAN is
+	is_correct_scheme (a_scheme: STRING): BOOLEAN
 			-- does `Current' handle URIs for `a_scheme'?
 		do
 			Result := STRING_.same_string (a_scheme, "file")
@@ -44,12 +44,12 @@ feature -- Status report
 
 feature -- Action
 
-	resolve (a_uri: UT_URI) is
+	resolve (a_uri: UT_URI)
 			-- Resolve `a_uri'.
 		local
 			l_output: XM_OUTPUT
 			l_stream: KL_TEXT_OUTPUT_FILE
-			l_filename: ?STRING
+			l_filename: detachable STRING
 		do
 			last_result := Void
 			check
@@ -71,4 +71,4 @@ feature -- Action
 		end
 
 end
-	
+

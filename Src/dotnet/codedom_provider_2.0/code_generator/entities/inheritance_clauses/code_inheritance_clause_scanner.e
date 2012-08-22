@@ -1,7 +1,5 @@
-note
+indexing
 	description: "Scanners for snippet inheritance clauses"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -51,205 +49,205 @@ feature {NONE} -- Implementation
 		do
 			inspect yy_act
 when 1 then
---|#line 35 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 35")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 when 2 then
---|#line 36 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 36")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 when 3 then
---|#line 40 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 40")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_COMMA
 			
 when 4 then
---|#line 43 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 43")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_SEMICOLON
 			
 when 5 then
---|#line 46 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 46")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_LCURLY
 			
 when 6 then
---|#line 49 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 49")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_RCURLY
 			
 when 7 then
---|#line 52 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 52")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_LSQURE
 			
 when 8 then
---|#line 55 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 55")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_RSQURE
 			
 when 9 then
---|#line 58 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 58")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_PLUS
 			
 when 10 then
---|#line 61 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 61")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_MINUS
 			
 when 11 then
---|#line 66 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 66")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_ALL
 			
 when 12 then
---|#line 69 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 69")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_AS
 			
 when 13 then
---|#line 72 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 72")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_BIT
 			
 when 14 then
---|#line 75 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 75")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_CURRENT
 			
 when 15 then
---|#line 78 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 78")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_END
 			
 when 16 then
---|#line 81 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 81")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_EXPORT
 			
 when 17 then
---|#line 84 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 84")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_INFIX
 			
 when 18 then
---|#line 87 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 87")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_INHERIT
 			
 when 19 then
---|#line 90 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 90")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_LIKE
 			
 when 20 then
---|#line 93 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 93")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_PREFIX
 			
 when 21 then
---|#line 96 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 96")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_REDEFINE
 			
 when 22 then
---|#line 99 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 99")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_RENAME
 			
 when 23 then
---|#line 102 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 102")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_SELECT
 			
 when 24 then
---|#line 105 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 105")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_SEPARATE
 			
 when 25 then
---|#line 108 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 108")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_UNDEFINE
 			
 when 26 then
---|#line 114 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 114")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 					-- Note: Identifiers are converted to lower-case.
@@ -258,97 +256,97 @@ end
 				last_token := TE_ID
 			
 when 27 then
---|#line 123 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 123")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_STR_LT
 			
 when 28 then
---|#line 126 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 126")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_STR_GT
 			
 when 29 then
---|#line 129 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 129")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_STR_LE
 			
 when 30 then
---|#line 132 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 132")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_STR_GE
 			
 when 31 then
---|#line 135 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 135")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_STR_PLUS
 			
 when 32 then
---|#line 138 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 138")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_STR_MINUS
 			
 when 33 then
---|#line 141 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 141")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_STR_STAR
 			
 when 34 then
---|#line 144 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 144")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_STR_SLASH
 			
 when 35 then
---|#line 147 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 147")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_STR_POWER
 			
 when 36 then
---|#line 150 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 150")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_STR_DIV
 			
 when 37 then
---|#line 153 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 153")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				last_token := TE_STR_MOD
 			
 when 38 then
---|#line 156 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 156")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				token_buffer.clear_all
@@ -356,9 +354,9 @@ end
 				last_token := TE_STR_AND
 			
 when 39 then
---|#line 161 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 161")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				token_buffer.clear_all
@@ -366,9 +364,9 @@ end
 				last_token := TE_STR_AND_THEN
 			
 when 40 then
---|#line 166 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 166")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				token_buffer.clear_all
@@ -376,9 +374,9 @@ end
 				last_token := TE_STR_IMPLIES
 			
 when 41 then
---|#line 171 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 171")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				token_buffer.clear_all
@@ -386,9 +384,9 @@ end
 				last_token := TE_STR_NOT
 			
 when 42 then
---|#line 176 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 176")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				token_buffer.clear_all
@@ -396,9 +394,9 @@ end
 				last_token := TE_STR_OR
 			
 when 43 then
---|#line 181 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 181")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				token_buffer.clear_all
@@ -406,9 +404,9 @@ end
 				last_token := TE_STR_OR_ELSE
 			
 when 44 then
---|#line 186 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 186")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				token_buffer.clear_all
@@ -416,9 +414,9 @@ end
 				last_token := TE_STR_XOR
 			
 when 45 then
---|#line 191 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 191")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 				token_buffer.clear_all
@@ -426,16 +424,16 @@ end
 				last_token := TE_STR_FREE
 			
 when 46 then
---|#line 197 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 197")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 
 			
 when 47 then
---|#line 0 "inheritance_clause.l"
+--|#line <not available> "inheritance_clause.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line 0")
+	std.error.put_line ("Executing scanner user-code from file 'inheritance_clause.l' at line <not available>")
 end
 last_token := yyError_token
 fatal_error ("scanner jammed")
@@ -705,7 +703,7 @@ feature -- User-defined features
 
 feature {NONE} -- Initialization
 
-	make
+	make is
 			-- Create a new external scanner.
 		do
 			make_with_buffer (Empty_buffer)
@@ -714,7 +712,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset
+	reset is
 			-- Reset scanner before scanning next input source.
 			-- (This routine can be called in wrap before scanning
 			-- another input buffer.)
@@ -733,43 +731,22 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Initial_buffer_size: INTEGER = 1024 
+	Initial_buffer_size: INTEGER is 1024 
 				-- Initial size for `token_buffer'
 
 invariant
 	token_buffer_not_void: token_buffer /= Void
 
-note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
-	copying: "[
-			This file is part of Eiffel Software's Eiffel Development Environment.
-			
-			Eiffel Software's Eiffel Development Environment is free
-			software; you can redistribute it and/or modify it under
-			the terms of the GNU General Public License as published
-			by the Free Software Foundation, version 2 of the License
-			(available at the URL listed under "license" above).
-			
-			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
-			WITHOUT ANY WARRANTY; without even the implied warranty
-			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
-			
-			You should have received a copy of the GNU General Public
-			License along with Eiffel Software's Eiffel Development
-			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-		]"
-	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
 end -- class CODE_INHERITANCE_CLAUSE_SCANNER
 
 
+--+--------------------------------------------------------------------
+--| Eiffel CodeDOM Provider
+--| Copyright (C) 2001-2004 Eiffel Software
+--| Eiffel Software Confidential
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| http://www.eiffel.com
+--+--------------------------------------------------------------------

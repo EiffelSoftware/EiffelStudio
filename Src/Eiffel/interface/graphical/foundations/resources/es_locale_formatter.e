@@ -28,12 +28,7 @@ feature -- Basic operations
 		require
 			a_string_attached: a_string /= Void
 		do
-			if attached {STRING_32} locale.translation (a_string.as_string_8) as l_result then
-				Result := l_result
-			else
-				check False end
-				create Result.make_empty
-			end
+			Result := translation_in_context (a_string, Void)
 		end
 
 	plural_translation (a_singular: READABLE_STRING_GENERAL; a_plural: READABLE_STRING_GENERAL; a_plural_number: INTEGER): attached STRING_32
@@ -48,7 +43,38 @@ feature -- Basic operations
 			a_plural_attached: a_plural /= Void
 			a_plural_number_non_negative: a_plural_number >= 0
 		do
-			if attached {STRING_32} locale.plural_translation (a_singular.as_string_8, a_plural.as_string_8, a_plural_number) as l_result then
+			Result := plural_translation_in_context (a_singular, a_plural, Void, a_plural_number)
+		end
+
+	translation_in_context (a_string: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): attached STRING_32
+			-- Translation of `a_string' in locale
+			--
+			-- `a_string': String to translate
+			-- `Result': Translated string, or the original string if no translation is available
+		require
+			a_string_attached: a_string /= Void
+		do
+			if attached {STRING_32} locale.translation_in_context (a_string.as_string_8, a_context) as l_result then
+				Result := l_result
+			else
+				check False end
+				create Result.make_empty
+			end
+		end
+
+	plural_translation_in_context (a_singular: READABLE_STRING_GENERAL; a_plural: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL; a_plural_number: INTEGER): attached STRING_32
+			-- Translation of `a_singular' or `a_plural' in locale depending on `a_plural_number'
+			--
+			-- `a_singular': String to translate if singular is used
+			-- `a_plural': String to translate if plural is used
+			-- `a_plural_number': Plural number to use
+			-- `Result': Translation of singular or plural string, or the original string if no translation is available
+		require
+			a_singular_attached: a_singular /= Void
+			a_plural_attached: a_plural /= Void
+			a_plural_number_non_negative: a_plural_number >= 0
+		do
+			if attached {STRING_32} locale.plural_translation_in_context (a_singular.as_string_8, a_plural.as_string_8, a_context, a_plural_number) as l_result then
 				Result := l_result
 			else
 				check False end
@@ -82,7 +108,7 @@ feature -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

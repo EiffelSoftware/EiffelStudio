@@ -38,7 +38,7 @@ feature -- Access
 	title: attached STRING_32
 			-- <Precursor>
 		do
-			Result := locale_formatter.translation (t_tool_title)
+			Result := t_tool_title
 		end
 
 	mode: NATURAL_8 assign set_mode
@@ -86,10 +86,13 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Internationalization
 
-	t_tool_title: STRING = "Feature"
+	t_tool_title: STRING_32
+		do
+			Result := locale_formatter.translation_in_context ("Feature", "eiffelstudio.feature_relation_tool.title")
+		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

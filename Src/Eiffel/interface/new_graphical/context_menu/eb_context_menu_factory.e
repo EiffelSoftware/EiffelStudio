@@ -1981,7 +1981,7 @@ feature {NONE} -- Implementation
 				l_classi_stone ?= a_pebble
 				if l_classi_stone /= Void then
 					last_name := l_classi_stone.class_name
-					last_type := names.t_class
+					last_type := names.t_context_menu_class
 				else
 					l_cluster_stone ?= a_pebble
 					if l_cluster_stone /= Void then

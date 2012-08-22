@@ -114,9 +114,9 @@ feature {NONE} -- Initialization
 			vb.disable_item_expand (tool_bar)
 			create exports_list
 			if is_windows then
-				exports_list.set_column_titles (<<Interface_names.t_Class, Interface_names.t_Creation_routine, Interface_names.t_Exported_feature, Interface_names.t_Alias, Interface_names.t_Index, Interface_names.t_Calling_convention>>)
+				exports_list.set_column_titles (<<Interface_names.t_expression_definition_dialog_class, Interface_names.t_Creation_routine, Interface_names.t_Exported_feature, Interface_names.t_Alias, Interface_names.t_Index, Interface_names.t_Calling_convention>>)
 			else
-				exports_list.set_column_titles (<<Interface_names.t_Class, Interface_names.t_Creation_routine, Interface_names.t_Exported_feature, Interface_names.t_Alias>>)
+				exports_list.set_column_titles (<<Interface_names.t_expression_definition_dialog_class, Interface_names.t_Creation_routine, Interface_names.t_Exported_feature, Interface_names.t_Alias>>)
 			end
 			exports_list.select_actions.extend (agent item_selected)
 			exports_list.deselect_actions.extend (agent item_deselected)
@@ -1806,7 +1806,7 @@ invariant
 	graphical_synchronization_ok: exports_list.count = exports.count
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

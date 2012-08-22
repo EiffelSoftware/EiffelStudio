@@ -107,7 +107,7 @@ feature -- Button texts
 	b_Remove_all: STRING_32						do Result := locale.translation("Remove all")	end
 	b_Remove_handles: STRING_32					do Result := locale.translation("Remove handles")	end
 	b_Remove_text: STRING_32 					do Result := locale.translation("<- Remove")	end
-	b_Rename: STRING_32							do Result := locale.translation("Rename") end
+	b_Rename: STRING_32							do Result := locale.translation_in_context ("Rename", "eiffelstudio.create_class_dialog.button_name") end
 	b_Retry: STRING_32							do Result := locale.translation("Retry")	end
 	b_Search: STRING_32							do Result := locale.translation("Search")	end
 	b_select_target: STRING_32					do Result := locale.translation ("Select target") end
@@ -642,7 +642,7 @@ feature -- Accelerator, focus label and menu name
 	f_refactoring_undo: STRING_32		do Result := locale.translation("Undo Last Refactoring (only works as long as no file that was refactored has been changed by hand)")	end
 	f_refactoring_redo: STRING_32		do Result := locale.translation("Redo Last Refactoring (only works as long as no file that was refactored has been changed by hand)")	end
 	b_refactoring_pull: STRING_32		do Result := locale.translation("Pull Up")	end
-	b_refactoring_rename: STRING_32		do Result := locale.translation("Rename")	end
+	b_refactoring_rename: STRING_32		do Result := locale.translation_in_context ("Rename", "eiffelstudio.refactor_tool")	end
 	b_refactoring_undo: STRING_32		do Result := locale.translation("Undo Refactoring")	end
 	b_refactoring_redo: STRING_32		do Result := locale.translation("Redo Refactoring")	end
 	l_rename_file: STRING_32				do Result := locale.translation("Rename File")	end
@@ -1105,7 +1105,7 @@ feature -- Label texts
 	l_one_target_among: STRING_32			do Result := locale.translation("Choose one target among: ")	end
 	l_Only_available_for_stopped_application: STRING_32 do Result := locale.translation("This feature is only available when debugging, and when the execution is stopped.")	end
 
-	l_class: STRING_32					do Result := locale.translation ("Class") end
+	l_class: STRING_32					do Result := locale.translation_in_context ("Class", "eiffelstudio.address_bar") end
 	l_class_address: STRING_32			do Result := locale.translation ("Class address") end
 	l_class_colon: STRING_32				do Result := locale.translation("Class:")	end
 	l_class_does_not_have_feature (a_class, a_feature: READABLE_STRING_GENERAL): STRING_32
@@ -1339,7 +1339,7 @@ feature -- Label texts
 	l_false: STRING_32					do Result := locale.translation ("False") end
 	l_failures: STRING_32				do Result := locale.translation ("Failures") end
 	l_External: STRING_32				do Result := locale.translation("External features")	end
-	l_Feature: STRING_32					do Result := locale.translation("Feature")	end
+	l_Feature: STRING_32					do Result := locale.translation_in_context ("Feature", "eiffelstudio.address_bar")	end
 	l_Feature_colon: STRING_32			do Result := locale.translation("Feature:")	end
 	l_feature_count (a_count: INTEGER): STRING_32
 		do
@@ -1439,7 +1439,6 @@ feature -- Label texts
 	l_New_breakpoint: STRING_32			do Result := locale.translation("New breakpoint(s) to commit")	end
 	l_New_files_will_be_generated_at: STRING_32	do Result := locale.translation("New files will be generated at:")	end
 	l_Update_breakpoint: STRING_32		do Result := locale.translation("Update breakpoint(s) status")	end
-	l_note: STRING_32					do Result := locale.translation ("Note") end
 	l_no_description_text: STRING_32 	do Result := locale.translation ("No description available for this preference.") end
 	l_no_default_value: STRING_32		do Result := locale.translation ("No default value") end
 	l_No_feature: STRING_32				do Result := locale.translation("Select a fully compiled feature to have information about it.")	end
@@ -1984,9 +1983,9 @@ feature -- Label texts
 	h_show_feature_from_any: STRING_32  do Result := locale.translation("Show unchanged features from class ANY?")	end
 	h_show_tooltip: STRING_32 do Result := locale.translation("Show tooltips?")	end
 	h_show_item_location: STRING_32 do Result := locale.translation("Show class location?")	end
-	l_class_browser_classes: STRING_32 do Result := locale.translation("Class")	end
+	l_class_browser_classes: STRING_32 do Result := locale.translation_in_context ("Class", "eiffelstudio.formatter.column_name")	end
 	l_class_browser_Path: STRING_32 do Result := locale.translation("Path")	end
-	l_class_browser_features: STRING_32 do Result := locale.translation("Feature")	end
+	l_class_browser_features: STRING_32 do Result := locale.translation_in_context ("Feature", "eiffelstudio.formatter.column_name")	end
 	l_version_from: STRING_32 do Result := locale.translation("Declared in class")	end
 	l_version_in (a_class: READABLE_STRING_GENERAL): STRING_32 do Result := locale.formatted_string (locale.translation("Version from class $1"), [a_class])	end
 	l_branch (a_bra: INTEGER): STRING_32 do Result := locale.formatted_string (locale.translation("Branch #$1"), [a_bra.out]) end
@@ -2201,7 +2200,9 @@ feature -- Title part
 	t_Choose_folder_name: STRING_32				do Result := locale.translation("Choose a Folder Name")	end
 	t_choose_name_for_new_configuration_file: STRING_32 do Result := locale.translation ("Choose name for new configuration file") end
 	t_Choose_project_and_directory: STRING_32 	do Result := locale.translation("Choose Your Project Name and Directory")	end
-	t_Class: STRING_32							do Result := locale.translation("Class")	end
+	t_context_menu_class: STRING_32							do Result := locale.translation_in_context ("Class", "eiffelstudio.context_menu")	end
+	t_dynamic_lib_window_class: STRING_32					do Result := locale.translation_in_context ("Class", "eiffelstudio.dynamic_library_builder_window.export_column_name")	end
+	t_expression_definition_dialog_class: STRING_32			do Result := locale.translation_in_context ("Class", "eiffelstudio.expression_definition_dialog_class")	end
 	t_clean_up_affected_items: STRING_32			do Result := locale.translation("Clean up affected items.")	end
 	t_Clients_of: STRING_32						do Result := locale.translation("Clients of Class ")	end
 	t_Creation_routine: STRING_32				do Result := locale.translation("Creation Procedure")	end
@@ -2224,7 +2225,7 @@ feature -- Title part
 																						%options to specify the class to test") end
 
 	t_error: STRING_32 							do Result := locale.translation ("Error") end
-	t_Exported_feature: STRING_32				do Result := locale.translation("Feature")	end
+	t_Exported_feature: STRING_32				do Result := locale.translation_in_context ("Feature", "eiffelstudio.dynamic_library_builder_windows.export_column_name")	end
 	t_Expression_evaluation: STRING_32			do Result := locale.translation("Evaluation")	end
 	t_Extended_explanation: STRING_32			do Result := locale.translation("Compilation Error Wizard")	end
 	t_external_command: STRING_32				do Result := locale.translation("External Command")	end

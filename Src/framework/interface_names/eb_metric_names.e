@@ -296,7 +296,7 @@ feature -- Tooltip
 
 	l_target_unit: STRING_32 do Result := locale.translation("Target") end
 	l_group_unit: STRING_32 do Result := locale.translation("Group") end
-	l_class_unit: STRING_32 do Result := locale.translation("Class") end
+	l_class_unit: STRING_32 do Result := locale.translation_in_context ("Class", "eiffelstuido.metric_tool.unit_name") end
 	l_feature_unit: STRING_32 do Result := locale.translation("Feature") end
 	l_generic_unit: STRING_32 do Result := locale.translation("Generic") end
 	l_assertion_unit: STRING_32 do Result := locale.translation("Assertion") end

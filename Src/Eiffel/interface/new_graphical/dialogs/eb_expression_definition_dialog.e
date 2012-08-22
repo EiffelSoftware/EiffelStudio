@@ -226,7 +226,7 @@ feature {NONE} -- Graphical initialization and changes
 			dialog.set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 
 				--| Create and set up the radio buttons.
-			create class_radio.make_with_text (Interface_names.t_Class)
+			create class_radio.make_with_text (Interface_names.t_expression_definition_dialog_class)
 			class_radio.select_actions.extend (agent event_class_radio_selected)
 
 			create on_object_radio.make_with_text (Interface_names.l_On_object)
@@ -854,7 +854,7 @@ invariant
 	dialog_not_void: dialog /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

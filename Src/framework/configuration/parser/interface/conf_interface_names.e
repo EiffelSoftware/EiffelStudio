@@ -304,7 +304,7 @@ feature -- Option names and descriptions
 	option_require_description: STRING_GENERAL do Result := locale.translation ("Evaluate precondition assertions?")	end
 	option_ensure_name: STRING_GENERAL do Result := locale.translation ("Ensure")	end
 	option_ensure_description: STRING_GENERAL do Result := locale.translation ("Evaluate postcondition assertions?")	end
-	option_check_name: STRING_GENERAL do Result := locale.translation ("Check")	end
+	option_check_name: STRING_GENERAL do Result := locale.translation_in_context ("Check", "configuration.parser")	end
 	option_check_description: STRING_GENERAL do Result := locale.translation ("Evaluate check assertions?")	end
 	option_invariant_name: STRING_GENERAL do Result := locale.translation ("Invariant")	end
 	option_invariant_description: STRING_GENERAL do Result := locale.translation ("Evaluate invariant assertions?")	end

@@ -4825,8 +4825,8 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			reposition_locked_items
 		ensure
 			viewable_dimensions_set: viewable_width = a_width and viewable_height = a_height
-			viewport_item_at_least_as_big_as_viewport: viewport.item.width >= viewable_width and
-				viewport.item.height >= viewable_height
+			viewport_item_at_least_as_big_as_viewport: viewport.readable implies (viewport.item.width >= viewable_width and
+				viewport.item.height >= viewable_height)
 		end
 
 	reposition_locked_items

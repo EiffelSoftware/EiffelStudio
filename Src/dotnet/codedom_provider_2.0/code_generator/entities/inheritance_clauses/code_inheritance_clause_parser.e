@@ -1,8 +1,7 @@
-note
+indexing
 
 	description: "Eiffel inheritance clause parser"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -60,51 +59,67 @@ feature {NONE} -- Implementation
 	yy_clear_value_stacks
 			-- Clear objects in semantic value stacks so that
 			-- they can be collected by the garbage collector.
+		local
+			l_yyvs1_default_item: ANY
+			l_yyvs2_default_item: CODE_SNIPPET_PARENT
+			l_yyvs3_default_item: LIST [CODE_SNIPPET_PARENT]
+			l_yyvs4_default_item: STRING
+			l_yyvs5_default_item: LIST [STRING]
+			l_yyvs6_default_item: CODE_SNIPPET_RENAME_CLAUSE
+			l_yyvs7_default_item: LIST [CODE_SNIPPET_RENAME_CLAUSE]
+			l_yyvs8_default_item: CODE_SNIPPET_EXPORT_CLAUSE
+			l_yyvs9_default_item: LIST [CODE_SNIPPET_EXPORT_CLAUSE]
+			l_yyvs10_default_item: CODE_SNIPPET_UNDEFINE_CLAUSE
+			l_yyvs11_default_item: LIST [CODE_SNIPPET_UNDEFINE_CLAUSE]
+			l_yyvs12_default_item: CODE_SNIPPET_REDEFINE_CLAUSE
+			l_yyvs13_default_item: LIST [CODE_SNIPPET_REDEFINE_CLAUSE]
+			l_yyvs14_default_item: CODE_SNIPPET_SELECT_CLAUSE
+			l_yyvs15_default_item: LIST [CODE_SNIPPET_SELECT_CLAUSE]
 		do
 			if yyvs1 /= Void then
-				yyvs1.clear_all
+				yyvs1.fill_with (l_yyvs1_default_item, 0, yyvs1.upper)
 			end
 			if yyvs2 /= Void then
-				yyvs2.clear_all
+				yyvs2.fill_with (l_yyvs2_default_item, 0, yyvs2.upper)
 			end
 			if yyvs3 /= Void then
-				yyvs3.clear_all
+				yyvs3.fill_with (l_yyvs3_default_item, 0, yyvs3.upper)
 			end
 			if yyvs4 /= Void then
-				yyvs4.clear_all
+				yyvs4.fill_with (l_yyvs4_default_item, 0, yyvs4.upper)
 			end
 			if yyvs5 /= Void then
-				yyvs5.clear_all
+				yyvs5.fill_with (l_yyvs5_default_item, 0, yyvs5.upper)
 			end
 			if yyvs6 /= Void then
-				yyvs6.clear_all
+				yyvs6.fill_with (l_yyvs6_default_item, 0, yyvs6.upper)
 			end
 			if yyvs7 /= Void then
-				yyvs7.clear_all
+				yyvs7.fill_with (l_yyvs7_default_item, 0, yyvs7.upper)
 			end
 			if yyvs8 /= Void then
-				yyvs8.clear_all
+				yyvs8.fill_with (l_yyvs8_default_item, 0, yyvs8.upper)
 			end
 			if yyvs9 /= Void then
-				yyvs9.clear_all
+				yyvs9.fill_with (l_yyvs9_default_item, 0, yyvs9.upper)
 			end
 			if yyvs10 /= Void then
-				yyvs10.clear_all
+				yyvs10.fill_with (l_yyvs10_default_item, 0, yyvs10.upper)
 			end
 			if yyvs11 /= Void then
-				yyvs11.clear_all
+				yyvs11.fill_with (l_yyvs11_default_item, 0, yyvs11.upper)
 			end
 			if yyvs12 /= Void then
-				yyvs12.clear_all
+				yyvs12.fill_with (l_yyvs12_default_item, 0, yyvs12.upper)
 			end
 			if yyvs13 /= Void then
-				yyvs13.clear_all
+				yyvs13.fill_with (l_yyvs13_default_item, 0, yyvs13.upper)
 			end
 			if yyvs14 /= Void then
-				yyvs14.clear_all
+				yyvs14.fill_with (l_yyvs14_default_item, 0, yyvs14.upper)
 			end
 			if yyvs15 /= Void then
-				yyvs15.clear_all
+				yyvs15.fill_with (l_yyvs15_default_item, 0, yyvs15.upper)
 			end
 		end
 
@@ -130,7 +145,7 @@ feature {NONE} -- Implementation
 					yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 				end
 			end
-			yyvs1.put (last_any_value, yyvsp1)
+			yyspecial_routines1.force (yyvs1, last_any_value, yyvsp1)
 		end
 
 	yy_push_error_value
@@ -156,7 +171,7 @@ feature {NONE} -- Implementation
 					yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 				end
 			end
-			yyvs1.put (yyval1, yyvsp1)
+			yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 		end
 
 	yy_pop_last_value (yystate: INTEGER)
@@ -512,10 +527,10 @@ debug ("GEYACC")
 end
 
 parents := yyvs3.item (yyvsp3) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp3 := yyvsp3 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 		end
 
@@ -530,10 +545,10 @@ debug ("GEYACC")
 end
 
 parents := create {ARRAYED_LIST [CODE_SNIPPET_PARENT]}.make (0) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 		end
 
@@ -550,7 +565,7 @@ end
 				yyval3 := create {ARRAYED_LIST [CODE_SNIPPET_PARENT]}.make (Initial_parent_list_size)
 				yyval3.extend (yyvs2.item (yyvsp2))
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp3 := yyvsp3 + 1
 	yyvsp2 := yyvsp2 -1
@@ -570,7 +585,7 @@ if yy_parsing_status = yyContinue then
 			yyvs3 := yyspecial_routines3.resize (yyvs3, yyvsc3)
 		end
 	end
-	yyvs3.put (yyval3, yyvsp3)
+	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 		end
 
@@ -587,10 +602,10 @@ end
 				yyval3 := yyvs3.item (yyvsp3)
 				yyval3.extend (yyvs2.item (yyvsp2))
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp2 := yyvsp2 -1
-	yyvs3.put (yyval3, yyvsp3)
+	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 		end
 
@@ -605,9 +620,9 @@ debug ("GEYACC")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -622,10 +637,10 @@ debug ("GEYACC")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -641,7 +656,7 @@ end
 
 				yyval2 := create {CODE_SNIPPET_PARENT}.make (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), Void, Void, Void, Void, Void)
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp2 := yyvsp2 + 1
 	yyvsp4 := yyvsp4 -2
@@ -661,7 +676,7 @@ if yy_parsing_status = yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -677,7 +692,7 @@ end
 
 				yyval2 := create {CODE_SNIPPET_PARENT}.make (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), yyvs7.item (yyvsp7), yyvs9.item (yyvsp9), yyvs11.item (yyvsp11), yyvs13.item (yyvsp13), yyvs15.item (yyvsp15))
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 8
 	yyvsp2 := yyvsp2 + 1
 	yyvsp4 := yyvsp4 -2
@@ -703,7 +718,7 @@ if yy_parsing_status = yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -719,7 +734,7 @@ end
 
 				yyval2 := create {CODE_SNIPPET_PARENT}.make (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), Void, yyvs9.item (yyvsp9), yyvs11.item (yyvsp11), yyvs13.item (yyvsp13), yyvs15.item (yyvsp15))
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 7
 	yyvsp2 := yyvsp2 + 1
 	yyvsp4 := yyvsp4 -2
@@ -744,7 +759,7 @@ if yy_parsing_status = yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -760,7 +775,7 @@ end
 
 				yyval2 := create {CODE_SNIPPET_PARENT}.make (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), Void, Void, yyvs11.item (yyvsp11), yyvs13.item (yyvsp13), yyvs15.item (yyvsp15))
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 6
 	yyvsp2 := yyvsp2 + 1
 	yyvsp4 := yyvsp4 -2
@@ -784,7 +799,7 @@ if yy_parsing_status = yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -800,7 +815,7 @@ end
 
 				yyval2 := create {CODE_SNIPPET_PARENT}.make (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), Void, Void, Void, yyvs13.item (yyvsp13), yyvs15.item (yyvsp15))
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 5
 	yyvsp2 := yyvsp2 + 1
 	yyvsp4 := yyvsp4 -2
@@ -823,7 +838,7 @@ if yy_parsing_status = yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -839,7 +854,7 @@ end
 
 				yyval2 := create {CODE_SNIPPET_PARENT}.make (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), Void, Void, Void, Void, yyvs15.item (yyvsp15))
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp2 := yyvsp2 + 1
 	yyvsp4 := yyvsp4 -2
@@ -861,7 +876,7 @@ if yy_parsing_status = yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -877,7 +892,7 @@ end
 
 				yyval2 := create {CODE_SNIPPET_PARENT}.make (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), Void, Void, Void, Void, Void)
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp2 := yyvsp2 + 1
 	yyvsp4 := yyvsp4 -2
@@ -898,7 +913,7 @@ if yy_parsing_status = yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -913,9 +928,9 @@ debug ("GEYACC")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -930,9 +945,9 @@ debug ("GEYACC")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -953,11 +968,11 @@ end
 					yyval4.append (yyvs4.item (yyvsp4))
 				end
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp4 := yyvsp4 -1
 	yyvsp1 := yyvsp1 -1
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -978,11 +993,11 @@ end
 					yyval4.append (yyvs4.item (yyvsp4))
 				end
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp4 := yyvsp4 -1
 	yyvsp1 := yyvsp1 -1
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -1000,10 +1015,10 @@ end
 				yyval4.append ("BIT ")
 				yyval4.append (yyvs4.item (yyvsp4))
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -1021,10 +1036,10 @@ end
 				yyval4.append ("BIT ")
 				yyval4.append (yyvs4.item (yyvsp4))
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -1042,10 +1057,10 @@ end
 				yyval4.append ("like ")
 				yyval4.append (yyvs4.item (yyvsp4))
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -1060,7 +1075,7 @@ debug ("GEYACC")
 end
 
 yyval4 := "like Current" 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -2
@@ -1080,7 +1095,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -1099,10 +1114,10 @@ end
 					yyval4.append (yyvs4.item (yyvsp4))
 				end
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp4 := yyvsp4 -1
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -1117,7 +1132,7 @@ debug ("GEYACC")
 end
 
 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp4 := yyvsp4 + 1
 	if yyvsp4 >= yyvsc4 then
@@ -1136,7 +1151,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -1151,7 +1166,7 @@ debug ("GEYACC")
 end
 
 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -2
@@ -1171,7 +1186,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -1190,10 +1205,10 @@ end
 				yyval4.append (yyvs4.item (yyvsp4))
 				yyval4.append_character (']')
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -1208,9 +1223,9 @@ debug ("GEYACC")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -1228,11 +1243,11 @@ end
 				yyval4.append (", ")
 				yyval4.append (yyvs4.item (yyvsp4))
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp4 := yyvsp4 -1
 	yyvsp1 := yyvsp1 -1
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -1249,7 +1264,7 @@ end
 				yyval5 := create {ARRAYED_LIST [STRING]}.make (1)
 				yyval5.extend ("{NONE}")
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp5 := yyvsp5 + 1
 	yyvsp1 := yyvsp1 -2
@@ -1269,7 +1284,7 @@ if yy_parsing_status = yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 		end
 
@@ -1284,10 +1299,10 @@ debug ("GEYACC")
 end
 
 yyval5 := yyvs5.item (yyvsp5) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 		end
 
@@ -1304,7 +1319,7 @@ end
 				yyval5 := create {ARRAYED_LIST [STRING]}.make (1)
 				yyval5.extend (yyvs4.item (yyvsp4))
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
 	yyvsp4 := yyvsp4 -1
@@ -1324,7 +1339,7 @@ if yy_parsing_status = yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 		end
 
@@ -1341,11 +1356,11 @@ end
 				yyval5 := yyvs5.item (yyvsp5)
 				yyval5.extend (yyvs4.item (yyvsp4))
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
 	yyvsp4 := yyvsp4 -1
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 		end
 
@@ -1360,7 +1375,7 @@ debug ("GEYACC")
 end
 
 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp7 := yyvsp7 + 1
 	yyvsp1 := yyvsp1 -1
@@ -1380,7 +1395,7 @@ if yy_parsing_status = yyContinue then
 			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
 		end
 	end
-	yyvs7.put (yyval7, yyvsp7)
+	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 		end
 
@@ -1395,10 +1410,10 @@ debug ("GEYACC")
 end
 
 yyval7 := yyvs7.item (yyvsp7) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs7.put (yyval7, yyvsp7)
+	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 		end
 
@@ -1415,7 +1430,7 @@ end
 				yyval7 := create {ARRAYED_LIST [CODE_SNIPPET_RENAME_CLAUSE]}.make (Initial_clause_list_size)
 				yyval7.extend (yyvs6.item (yyvsp6))
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp7 := yyvsp7 + 1
 	yyvsp6 := yyvsp6 -1
@@ -1435,7 +1450,7 @@ if yy_parsing_status = yyContinue then
 			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
 		end
 	end
-	yyvs7.put (yyval7, yyvsp7)
+	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 		end
 
@@ -1452,11 +1467,11 @@ end
 				yyval7 := yyvs7.item (yyvsp7)
 				yyval7.extend (yyvs6.item (yyvsp6))
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
 	yyvsp6 := yyvsp6 -1
-	yyvs7.put (yyval7, yyvsp7)
+	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 		end
 
@@ -1472,7 +1487,7 @@ end
 
 				yyval6 := create {CODE_SNIPPET_RENAME_CLAUSE}.make (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp6 := yyvsp6 + 1
 	yyvsp4 := yyvsp4 -2
@@ -1493,7 +1508,7 @@ if yy_parsing_status = yyContinue then
 			yyvs6 := yyspecial_routines6.resize (yyvs6, yyvsc6)
 		end
 	end
-	yyvs6.put (yyval6, yyvsp6)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 		end
 
@@ -1508,7 +1523,7 @@ debug ("GEYACC")
 end
 
 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp9 := yyvsp9 + 1
 	if yyvsp9 >= yyvsc9 then
@@ -1527,7 +1542,7 @@ if yy_parsing_status = yyContinue then
 			yyvs9 := yyspecial_routines9.resize (yyvs9, yyvsc9)
 		end
 	end
-	yyvs9.put (yyval9, yyvsp9)
+	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 		end
 
@@ -1542,9 +1557,9 @@ debug ("GEYACC")
 end
 
 yyval9 := yyvs9.item (yyvsp9) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs9.put (yyval9, yyvsp9)
+	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 		end
 
@@ -1564,10 +1579,10 @@ end
 					yyval9 := yyvs9.item (yyvsp9)
 				end
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs9.put (yyval9, yyvsp9)
+	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 		end
 
@@ -1582,7 +1597,7 @@ debug ("GEYACC")
 end
 
 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp9 := yyvsp9 + 1
 	yyvsp1 := yyvsp1 -2
@@ -1602,7 +1617,7 @@ if yy_parsing_status = yyContinue then
 			yyvs9 := yyspecial_routines9.resize (yyvs9, yyvsc9)
 		end
 	end
-	yyvs9.put (yyval9, yyvsp9)
+	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 		end
 
@@ -1617,9 +1632,9 @@ debug ("GEYACC")
 end
 
 yyval9 := yyvs9.item (yyvsp9) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs9.put (yyval9, yyvsp9)
+	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 		end
 
@@ -1638,10 +1653,10 @@ end
 					yyval9.append (yyvs9.item (yyvsp9))
 				end
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp9 := yyvsp9 -1
-	yyvs9.put (yyval9, yyvsp9)
+	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 		end
 
@@ -1667,7 +1682,7 @@ end
 					end
 				end
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp9 := yyvsp9 + 1
 	yyvsp5 := yyvsp5 -2
@@ -1688,7 +1703,7 @@ if yy_parsing_status = yyContinue then
 			yyvs9 := yyspecial_routines9.resize (yyvs9, yyvsc9)
 		end
 	end
-	yyvs9.put (yyval9, yyvsp9)
+	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 		end
 
@@ -1703,7 +1718,7 @@ debug ("GEYACC")
 end
 
 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp5 := yyvsp5 + 1
 	if yyvsp5 >= yyvsc5 then
@@ -1722,7 +1737,7 @@ if yy_parsing_status = yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 		end
 
@@ -1739,7 +1754,7 @@ end
 				yyval5 := create {ARRAYED_LIST [STRING]}.make (1)
 				yyval5.extend ("all")
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
 	yyvsp1 := yyvsp1 -1
@@ -1759,7 +1774,7 @@ if yy_parsing_status = yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 		end
 
@@ -1774,9 +1789,9 @@ debug ("GEYACC")
 end
 
 yyval5 := yyvs5.item (yyvsp5) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 		end
 
@@ -1793,7 +1808,7 @@ end
 				yyval5 := create {ARRAYED_LIST [STRING]}.make (Initial_feature_list_size)
 				yyval5.extend (yyvs4.item (yyvsp4))
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp5 := yyvsp5 + 1
 	yyvsp4 := yyvsp4 -1
@@ -1813,7 +1828,7 @@ if yy_parsing_status = yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 		end
 
@@ -1830,11 +1845,11 @@ end
 				yyval5 := yyvs5.item (yyvsp5)
 				yyval5.extend (yyvs4.item (yyvsp4))
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
 	yyvsp4 := yyvsp4 -1
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 		end
 
@@ -1849,7 +1864,7 @@ debug ("GEYACC")
 end
 
 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp11 := yyvsp11 + 1
 	if yyvsp11 >= yyvsc11 then
@@ -1868,7 +1883,7 @@ if yy_parsing_status = yyContinue then
 			yyvs11 := yyspecial_routines11.resize (yyvs11, yyvsc11)
 		end
 	end
-	yyvs11.put (yyval11, yyvsp11)
+	yyspecial_routines11.force (yyvs11, yyval11, yyvsp11)
 end
 		end
 
@@ -1883,9 +1898,9 @@ debug ("GEYACC")
 end
 
 yyval11 := yyvs11.item (yyvsp11) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs11.put (yyval11, yyvsp11)
+	yyspecial_routines11.force (yyvs11, yyval11, yyvsp11)
 end
 		end
 
@@ -1900,7 +1915,7 @@ debug ("GEYACC")
 end
 
 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp11 := yyvsp11 + 1
 	yyvsp1 := yyvsp1 -1
@@ -1920,7 +1935,7 @@ if yy_parsing_status = yyContinue then
 			yyvs11 := yyspecial_routines11.resize (yyvs11, yyvsc11)
 		end
 	end
-	yyvs11.put (yyval11, yyvsp11)
+	yyspecial_routines11.force (yyvs11, yyval11, yyvsp11)
 end
 		end
 
@@ -1944,7 +1959,7 @@ end
 					yyvs5.item (yyvsp5).forth
 				end
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp11 := yyvsp11 + 1
 	yyvsp1 := yyvsp1 -1
@@ -1965,7 +1980,7 @@ if yy_parsing_status = yyContinue then
 			yyvs11 := yyspecial_routines11.resize (yyvs11, yyvsc11)
 		end
 	end
-	yyvs11.put (yyval11, yyvsp11)
+	yyspecial_routines11.force (yyvs11, yyval11, yyvsp11)
 end
 		end
 
@@ -1980,7 +1995,7 @@ debug ("GEYACC")
 end
 
 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp13 := yyvsp13 + 1
 	if yyvsp13 >= yyvsc13 then
@@ -1999,7 +2014,7 @@ if yy_parsing_status = yyContinue then
 			yyvs13 := yyspecial_routines13.resize (yyvs13, yyvsc13)
 		end
 	end
-	yyvs13.put (yyval13, yyvsp13)
+	yyspecial_routines13.force (yyvs13, yyval13, yyvsp13)
 end
 		end
 
@@ -2014,9 +2029,9 @@ debug ("GEYACC")
 end
 
 yyval13 := yyvs13.item (yyvsp13) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs13.put (yyval13, yyvsp13)
+	yyspecial_routines13.force (yyvs13, yyval13, yyvsp13)
 end
 		end
 
@@ -2031,7 +2046,7 @@ debug ("GEYACC")
 end
 
 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp13 := yyvsp13 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2051,7 +2066,7 @@ if yy_parsing_status = yyContinue then
 			yyvs13 := yyspecial_routines13.resize (yyvs13, yyvsc13)
 		end
 	end
-	yyvs13.put (yyval13, yyvsp13)
+	yyspecial_routines13.force (yyvs13, yyval13, yyvsp13)
 end
 		end
 
@@ -2075,7 +2090,7 @@ end
 					yyvs5.item (yyvsp5).forth
 				end
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp13 := yyvsp13 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2096,7 +2111,7 @@ if yy_parsing_status = yyContinue then
 			yyvs13 := yyspecial_routines13.resize (yyvs13, yyvsc13)
 		end
 	end
-	yyvs13.put (yyval13, yyvsp13)
+	yyspecial_routines13.force (yyvs13, yyval13, yyvsp13)
 end
 		end
 
@@ -2111,7 +2126,7 @@ debug ("GEYACC")
 end
 
 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp15 := yyvsp15 + 1
 	if yyvsp15 >= yyvsc15 then
@@ -2130,7 +2145,7 @@ if yy_parsing_status = yyContinue then
 			yyvs15 := yyspecial_routines15.resize (yyvs15, yyvsc15)
 		end
 	end
-	yyvs15.put (yyval15, yyvsp15)
+	yyspecial_routines15.force (yyvs15, yyval15, yyvsp15)
 end
 		end
 
@@ -2145,9 +2160,9 @@ debug ("GEYACC")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs15.put (yyval15, yyvsp15)
+	yyspecial_routines15.force (yyvs15, yyval15, yyvsp15)
 end
 		end
 
@@ -2162,7 +2177,7 @@ debug ("GEYACC")
 end
 
 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp15 := yyvsp15 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2182,7 +2197,7 @@ if yy_parsing_status = yyContinue then
 			yyvs15 := yyspecial_routines15.resize (yyvs15, yyvsc15)
 		end
 	end
-	yyvs15.put (yyval15, yyvsp15)
+	yyspecial_routines15.force (yyvs15, yyval15, yyvsp15)
 end
 		end
 
@@ -2206,7 +2221,7 @@ end
 					yyvs5.item (yyvsp5).forth
 				end
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp15 := yyvsp15 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2227,7 +2242,7 @@ if yy_parsing_status = yyContinue then
 			yyvs15 := yyspecial_routines15.resize (yyvs15, yyvsc15)
 		end
 	end
-	yyvs15.put (yyval15, yyvsp15)
+	yyspecial_routines15.force (yyvs15, yyval15, yyvsp15)
 end
 		end
 
@@ -2242,9 +2257,9 @@ debug ("GEYACC")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2259,9 +2274,9 @@ debug ("GEYACC")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2276,9 +2291,9 @@ debug ("GEYACC")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2293,10 +2308,10 @@ debug ("GEYACC")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2311,10 +2326,10 @@ debug ("GEYACC")
 end
 
 yyval4 := yyvs4.item (yyvsp4) 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2329,7 +2344,7 @@ debug ("GEYACC")
 end
 
 yyval4 := "prefix %"-%"" 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2349,7 +2364,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2364,7 +2379,7 @@ debug ("GEYACC")
 end
 
 yyval4 := "prefix %"+%"" 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2384,7 +2399,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2399,7 +2414,7 @@ debug ("GEYACC")
 end
 
 yyval4 := "prefix %"not%"" 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2419,7 +2434,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2438,7 +2453,7 @@ end
 				yyval4.append (token_buffer.as_lower)
 				yyval4.append_character ('"')
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2458,7 +2473,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2473,7 +2488,7 @@ debug ("GEYACC")
 end
 
 yyval4 := "infix %"<%"" 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2493,7 +2508,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2508,7 +2523,7 @@ debug ("GEYACC")
 end
 
 yyval4 := "infix %"<=%"" 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2528,7 +2543,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2543,7 +2558,7 @@ debug ("GEYACC")
 end
 
 yyval4 := "infix %">%"" 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2563,7 +2578,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2578,7 +2593,7 @@ debug ("GEYACC")
 end
 
 yyval4 := "infix %">=%"" 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2598,7 +2613,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2613,7 +2628,7 @@ debug ("GEYACC")
 end
 
 yyval4 := "infix %"-%"" 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2633,7 +2648,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2648,7 +2663,7 @@ debug ("GEYACC")
 end
 
 yyval4 := "infix %"+%"" 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2668,7 +2683,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2683,7 +2698,7 @@ debug ("GEYACC")
 end
 
 yyval4 := "infix %"*%"" 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2703,7 +2718,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2718,7 +2733,7 @@ debug ("GEYACC")
 end
 
 yyval4 := "infix %"/%"" 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2738,7 +2753,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2753,7 +2768,7 @@ debug ("GEYACC")
 end
 
 yyval4 := "infix %"\\%"" 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2773,7 +2788,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2788,7 +2803,7 @@ debug ("GEYACC")
 end
 
 yyval4 := "infix %"//%"" 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2808,7 +2823,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2823,7 +2838,7 @@ debug ("GEYACC")
 end
 
 yyval4 := "infix %"^%"" 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2843,7 +2858,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2858,7 +2873,7 @@ debug ("GEYACC")
 end
 
 yyval4 := "infix %"and%"" 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2878,7 +2893,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2893,7 +2908,7 @@ debug ("GEYACC")
 end
 
 yyval4 := "infix %"and then%"" 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2913,7 +2928,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2928,7 +2943,7 @@ debug ("GEYACC")
 end
 
 yyval4 := "infix %"implies%"" 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2948,7 +2963,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2963,7 +2978,7 @@ debug ("GEYACC")
 end
 
 yyval4 := "infix %"or%"" 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -2983,7 +2998,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2998,7 +3013,7 @@ debug ("GEYACC")
 end
 
 yyval4 := "infix %"or else%"" 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -3018,7 +3033,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -3033,7 +3048,7 @@ debug ("GEYACC")
 end
 
 yyval4 := "infix %"xor%"" 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -3053,7 +3068,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -3072,7 +3087,7 @@ end
 				yyval4.append (token_buffer.as_lower)
 				yyval4.append_character ('"')
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -3092,7 +3107,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -3108,7 +3123,7 @@ end
 
 				yyval4 := token_buffer.twin
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -3128,7 +3143,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -3144,7 +3159,7 @@ end
 
 				yyval4 := token_buffer.twin
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -2
@@ -3164,7 +3179,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -3180,7 +3195,7 @@ end
 
 				yyval4 := token_buffer.twin
 			
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -2
@@ -3200,7 +3215,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -3215,7 +3230,7 @@ debug ("GEYACC")
 end
 
 yyval4 := token_buffer.twin 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp4 := yyvsp4 + 1
 	yyvsp1 := yyvsp1 -1
@@ -3235,7 +3250,7 @@ if yy_parsing_status = yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -3250,7 +3265,7 @@ debug ("GEYACC")
 end
 
 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp1 := yyvsp1 + 1
 	if yyvsp1 >= yyvsc1 then
@@ -3269,7 +3284,7 @@ if yy_parsing_status = yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 		end
 
@@ -3284,9 +3299,9 @@ debug ("GEYACC")
 end
 
 
-if yy_parsing_status = yyContinue then
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs1.put (yyval1, yyvsp1)
+	yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 end
 		end
 
@@ -3306,6 +3321,7 @@ end
 feature {NONE} -- Table templates
 
 	yytranslate_template: SPECIAL [INTEGER]
+			-- Template for `yytranslate'
 		once
 			Result := yyfixed_array (<<
 			    0,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -3345,6 +3361,7 @@ feature {NONE} -- Table templates
 		end
 
 	yyr1_template: SPECIAL [INTEGER]
+			-- Template for `yyr1'
 		once
 			Result := yyfixed_array (<<
 			    0,   80,   80,   48,   48,   49,   49,   50,   50,   50,
@@ -3360,6 +3377,7 @@ feature {NONE} -- Table templates
 		end
 
 	yytypes1_template: SPECIAL [INTEGER]
+			-- Template for `yytypes1'
 		once
 			Result := yyfixed_array (<<
 			    1,    1,    1,    1,    3,    2,    2,    4,    1,    2,
@@ -3380,6 +3398,7 @@ feature {NONE} -- Table templates
 		end
 
 	yytypes2_template: SPECIAL [INTEGER]
+			-- Template for `yytypes2'
 		once
 			Result := yyfixed_array (<<
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -3390,6 +3409,7 @@ feature {NONE} -- Table templates
 		end
 
 	yydefact_template: SPECIAL [INTEGER]
+			-- Template for `yydefact'
 		once
 			Result := yyfixed_array (<<
 			    0,   92,   91,   93,    1,    3,    5,   23,    2,    4,
@@ -3410,6 +3430,7 @@ feature {NONE} -- Table templates
 		end
 
 	yydefgoto_template: SPECIAL [INTEGER]
+			-- Template for `yydefgoto'
 		once
 			Result := yyfixed_array (<<
 			    4,    5,    6,   48,   49,   50,  100,   81,   39,   12,
@@ -3419,6 +3440,7 @@ feature {NONE} -- Table templates
 		end
 
 	yypact_template: SPECIAL [INTEGER]
+			-- Template for `yypact'
 		once
 			Result := yyfixed_array (<<
 			   97,   40, -32768, -32768,   44, -32768,  102,   89, -32768, -32768,
@@ -3439,6 +3461,7 @@ feature {NONE} -- Table templates
 		end
 
 	yypgoto_template: SPECIAL [INTEGER]
+			-- Template for `yypgoto'
 		once
 			Result := yyfixed_array (<<
 			 -32768,  113, -32768,  -23, -32768, -32768, -32768, -32768, -32768,  -14,
@@ -3448,6 +3471,7 @@ feature {NONE} -- Table templates
 		end
 
 	yytable_template: SPECIAL [INTEGER]
+			-- Template for `yytable'
 		once
 			Result := yyfixed_array (<<
 			    7,   62,   54,    7,    2,  113,  112,   53,   45,   57,
@@ -3466,6 +3490,7 @@ feature {NONE} -- Table templates
 		end
 
 	yycheck_template: SPECIAL [INTEGER]
+			-- Template for `yycheck'
 		once
 			Result := yyfixed_array (<<
 			    1,   27,   25,    4,    6,   68,   66,   24,   22,   26,
@@ -3691,36 +3716,15 @@ feature -- User-defined features
 
 
 
-note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
-	copying: "[
-			This file is part of Eiffel Software's Eiffel Development Environment.
-			
-			Eiffel Software's Eiffel Development Environment is free
-			software; you can redistribute it and/or modify it under
-			the terms of the GNU General Public License as published
-			by the Free Software Foundation, version 2 of the License
-			(available at the URL listed under "license" above).
-			
-			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
-			WITHOUT ANY WARRANTY; without even the implied warranty
-			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
-			
-			You should have received a copy of the GNU General Public
-			License along with Eiffel Software's Eiffel Development
-			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-		]"
-	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
 end -- class CODE_INHERITANCE_CLAUSE_PARSER
 
+--+--------------------------------------------------------------------
+--| Eiffel CodeDOM Provider
+--| Copyright (C) 2001-2004 Eiffel Software
+--| Eiffel Software Confidential
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| http://www.eiffel.com
+--+--------------------------------------------------------------------

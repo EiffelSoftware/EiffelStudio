@@ -546,7 +546,7 @@ feature {NONE} -- Table templates
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make (0, 8017)
+			create an_array.make_filled (0, 0, 8017)
 			yy_nxt_template_1 (an_array)
 			yy_nxt_template_2 (an_array)
 			yy_nxt_template_3 (an_array)
@@ -1491,7 +1491,7 @@ feature {NONE} -- Table templates
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make (0, 8017)
+			create an_array.make_filled (0, 0, 8017)
 			yy_chk_template_1 (an_array)
 			yy_chk_template_2 (an_array)
 			yy_chk_template_3 (an_array)
@@ -2436,7 +2436,7 @@ feature {NONE} -- Table templates
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make (0, 1096)
+			create an_array.make_filled (0, 0, 1096)
 			yy_base_template_1 (an_array)
 			yy_base_template_2 (an_array)
 			Result := yy_fixed_array (an_array)
@@ -2577,7 +2577,7 @@ feature {NONE} -- Table templates
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make (0, 1096)
+			create an_array.make_filled (0, 0, 1096)
 			yy_def_template_1 (an_array)
 			yy_def_template_2 (an_array)
 			Result := yy_fixed_array (an_array)
@@ -2768,7 +2768,7 @@ feature {NONE} -- Table templates
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make (0, 1077)
+			create an_array.make_filled (0, 0, 1077)
 			yy_accept_template_1 (an_array)
 			yy_accept_template_2 (an_array)
 			Result := yy_fixed_array (an_array)
@@ -2907,7 +2907,7 @@ feature {NONE} -- Table templates
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make (0, 1587)
+			create an_array.make_filled (0, 0, 1587)
 			yy_acclist_template_1 (an_array)
 			yy_acclist_template_2 (an_array)
 			Result := yy_fixed_array (an_array)

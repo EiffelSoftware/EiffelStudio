@@ -3,8 +3,6 @@ note
 	description:
 
 		"Scanners for Eiffel parsers"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
 
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
 	copyright:  "Copyright (c) 1998, Eric Bezault"
@@ -57,623 +55,745 @@ feature {NONE} -- Implementation
 	yy_build_tables
 			-- Build scanner tables.
 		do
-			yy_nxt ?= yy_nxt_template
-			yy_accept ?= yy_accept_template
+			yy_nxt := yy_nxt_template
+			yy_accept := yy_accept_template
 		end
 
 	yy_execute_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		do
-if yy_act <= 93 then
-if yy_act <= 47 then
-if yy_act <= 24 then
-if yy_act <= 12 then
-if yy_act <= 6 then
-if yy_act <= 3 then
-if yy_act <= 2 then
-if yy_act = 1 then
---|#line 54
+			inspect yy_act
+when 1 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 move (text_count) -- Ignore separators
-else
---|#line 55
+when 2 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 move (text_count); eif_lineno := eif_lineno + text_count
+when 3 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 60
 move (text_count); last_token := E_COMMENT -- Ignore comments
+when 4 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 5 then
-if yy_act = 4 then
---|#line 61
 move (text_count); last_token := E_COMMENT; eif_lineno := eif_lineno + 1
-else
---|#line 66
+when 5 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 move (text_count); last_token := Minus_code
+when 6 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 67
 move (text_count); last_token := Plus_code
+when 7 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-else
-if yy_act <= 9 then
-if yy_act <= 8 then
-if yy_act = 7 then
---|#line 68
 move (text_count); last_token := Star_code
-else
---|#line 69
+when 8 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 move (text_count); last_token := Slash_code
+when 9 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 70
 move (text_count); last_token := Caret_code
+when 10 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 11 then
-if yy_act = 10 then
---|#line 71
 move (text_count); last_token := Equal_code
-else
---|#line 72
+when 11 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 move (text_count); last_token := Greater_than_code
+when 12 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 73
 move (text_count); last_token := Less_than_code
+when 13 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-end
-else
-if yy_act <= 18 then
-if yy_act <= 15 then
-if yy_act <= 14 then
-if yy_act = 13 then
---|#line 74
 move (text_count); last_token := Dot_code
-else
---|#line 75
+when 14 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 move (text_count); last_token := Semicolon_code
+when 15 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 76
 move (text_count); last_token := Comma_code
+when 16 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 17 then
-if yy_act = 16 then
---|#line 77
 move (text_count); last_token := Colon_code
-else
---|#line 78
+when 17 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 move (text_count); last_token := Exclamation_code
+when 18 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 79
 move (text_count); last_token := Left_parenthesis_code
+when 19 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-else
-if yy_act <= 21 then
-if yy_act <= 20 then
-if yy_act = 19 then
---|#line 80
 move (text_count); last_token := Right_parenthesis_code
-else
---|#line 81
+when 20 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 move (text_count); last_token := Left_brace_code
+when 21 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 82
 move (text_count); last_token := Right_brace_code
+when 22 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 23 then
-if yy_act = 22 then
---|#line 83
 move (text_count); last_token := Left_bracket_code
-else
---|#line 84
+when 23 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 move (text_count); last_token := Right_bracket_code
+when 24 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 85
 move (text_count); last_token := Dollar_code
+when 25 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-end
-end
-else
-if yy_act <= 36 then
-if yy_act <= 30 then
-if yy_act <= 27 then
-if yy_act <= 26 then
-if yy_act = 25 then
---|#line 86
 move (text_count); last_token := E_DIV
-else
---|#line 87
+when 26 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 move (text_count); last_token := E_MOD
+when 27 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 88
 move (text_count); last_token := E_NE
+when 28 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 29 then
-if yy_act = 28 then
---|#line 89
 move (text_count); last_token := E_GE
-else
---|#line 90
+when 29 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 move (text_count); last_token := E_LE
+when 30 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 91
 move (text_count); last_token := E_BANGBANG
+when 31 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-else
-if yy_act <= 33 then
-if yy_act <= 32 then
-if yy_act = 31 then
---|#line 92
 move (text_count); last_token := E_ARROW
-else
---|#line 93
+when 32 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 move (text_count); last_token := E_DOTDOT
+when 33 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 94
 move (text_count); last_token := E_LARRAY
+when 34 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 35 then
-if yy_act = 34 then
---|#line 95
 move (text_count); last_token := E_RARRAY
-else
---|#line 96
+when 35 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 move (text_count); last_token := E_ASSIGN
+when 36 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 97
 move (text_count); last_token := E_REVERSE
+when 37 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-end
-else
-if yy_act <= 42 then
-if yy_act <= 39 then
-if yy_act <= 38 then
-if yy_act = 37 then
---|#line 102
 move (text_count); last_token := E_ALIAS 
-else
---|#line 103
+when 38 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 move (text_count); last_token := E_ALL
+when 39 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 104
 last_token := E_AND;move (text_count)
+when 40 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 41 then
-if yy_act = 40 then
---|#line 105
 last_token := E_AS;move (text_count)
-else
---|#line 106
+when 41 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_BITTYPE;move (text_count)
+when 42 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 107
 last_token := E_CHECK;move (text_count)
+when 43 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-else
-if yy_act <= 45 then
-if yy_act <= 44 then
-if yy_act = 43 then
---|#line 108
 last_token := E_CLASS;move (text_count)
-else
---|#line 109
+when 44 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_CREATION;move (text_count)
+when 45 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 110
 last_token := E_CURRENT;move (text_count)
+when 46 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act = 46 then
---|#line 111
 last_token := E_DEBUG;move (text_count)
-else
---|#line 112
+when 47 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_DEFERRED;move (text_count)
+when 48 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-end
-end
-end
-else
-if yy_act <= 70 then
-if yy_act <= 59 then
-if yy_act <= 53 then
-if yy_act <= 50 then
-if yy_act <= 49 then
-if yy_act = 48 then
---|#line 113
 last_token := E_DO;move (text_count)
-else
---|#line 114
+when 49 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_ELSE;move (text_count)
+when 50 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 115
 last_token := E_ELSEIF;move (text_count)
+when 51 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 52 then
-if yy_act = 51 then
---|#line 116
 last_token := E_END;move (text_count)
-else
---|#line 117
+when 52 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_ENSURE;move (text_count)
+when 53 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 118
 last_token := E_EXPANDED;move (text_count)
+when 54 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-else
-if yy_act <= 56 then
-if yy_act <= 55 then
-if yy_act = 54 then
---|#line 119
 last_token := E_EXPORT;move (text_count)
-else
---|#line 120
+when 55 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_EXTERNAL;move (text_count)
+when 56 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 121
 last_token := E_FALSE;move (text_count)
+when 57 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 58 then
-if yy_act = 57 then
---|#line 122
 last_token := E_FEATURE;move (text_count)
-else
---|#line 123
+when 58 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_FROM;move (text_count)
+when 59 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 124
 last_token := E_FROZEN;move (text_count)
+when 60 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-end
-else
-if yy_act <= 65 then
-if yy_act <= 62 then
-if yy_act <= 61 then
-if yy_act = 60 then
---|#line 125
 last_token := E_IF;move (text_count)
-else
---|#line 126
+when 61 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_IMPLIES;move (text_count)
+when 62 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 127
 last_token := E_INDEXING;move (text_count)
+when 63 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 64 then
-if yy_act = 63 then
---|#line 128
 
 										is_operator := True
 										last_token := E_INFIX;move (text_count)
 									
-else
---|#line 132
+when 64 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_INHERIT;move (text_count)
+when 65 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 133
 last_token := E_INSPECT;move (text_count)
+when 66 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-else
-if yy_act <= 68 then
-if yy_act <= 67 then
-if yy_act = 66 then
---|#line 134
 last_token := E_INVARIANT;move (text_count)
-else
---|#line 135
+when 67 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_IS;move (text_count)
+when 68 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 136
 last_token := E_LIKE;move (text_count)
+when 69 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act = 69 then
---|#line 137
 last_token := E_LOCAL;move (text_count)
-else
---|#line 138
+when 70 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_LOOP;move (text_count)
+when 71 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-end
-end
-else
-if yy_act <= 82 then
-if yy_act <= 76 then
-if yy_act <= 73 then
-if yy_act <= 72 then
-if yy_act = 71 then
---|#line 139
 last_token := E_NOT;move (text_count)
-else
---|#line 140
+when 72 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_OBSOLETE;move (text_count)
+when 73 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 141
 last_token := E_OLD;move (text_count)
+when 74 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 75 then
-if yy_act = 74 then
---|#line 142
 last_token := E_ONCE;move (text_count)
-else
---|#line 143
+when 75 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_OR;move (text_count)
+when 76 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 144
 last_token := E_PRECURSOR;move (text_count)
+when 77 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-else
-if yy_act <= 79 then
-if yy_act <= 78 then
-if yy_act = 77 then
---|#line 145
 
 										is_operator := True
 										last_token := E_PREFIX;move (text_count)
 									
-else
---|#line 149
+when 78 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_REDEFINE;move (text_count)
+when 79 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 150
 last_token := E_RENAME;move (text_count)
+when 80 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 81 then
-if yy_act = 80 then
---|#line 151
 last_token := E_REQUIRE;move (text_count)
-else
---|#line 152
+when 81 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_RESCUE;move (text_count)
+when 82 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 153
 last_token := E_RESULT;move (text_count)
+when 83 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-end
-else
-if yy_act <= 88 then
-if yy_act <= 85 then
-if yy_act <= 84 then
-if yy_act = 83 then
---|#line 154
 last_token := E_RETRY;move (text_count)
-else
---|#line 155
+when 84 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_SELECT;move (text_count)
+when 85 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 156
 last_token := E_SEPARATE;move (text_count)
+when 86 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 87 then
-if yy_act = 86 then
---|#line 157
 last_token := E_STRIP;move (text_count)
-else
---|#line 158
+when 87 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_THEN;move (text_count)
+when 88 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 159
 last_token := E_TRUE;move (text_count)
+when 89 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-else
-if yy_act <= 91 then
-if yy_act <= 90 then
-if yy_act = 89 then
---|#line 160
 last_token := E_UNDEFINE;move (text_count)
-else
---|#line 161
+when 90 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_UNIQUE;move (text_count)
+when 91 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 162
 last_token := E_UNTIL;move (text_count)
+when 92 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act = 92 then
---|#line 163
 last_token := E_VARIANT;move (text_count)
-else
---|#line 164
+when 93 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_WHEN;move (text_count)
+when 94 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-end
-end
-end
-end
-else
-if yy_act <= 139 then
-if yy_act <= 116 then
-if yy_act <= 105 then
-if yy_act <= 99 then
-if yy_act <= 96 then
-if yy_act <= 95 then
-if yy_act = 94 then
---|#line 165
 last_token := E_XOR;move (text_count)
-else
---|#line 170
+when 95 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 
 				last_token := E_IDENTIFIER
 				last_value := text;move (text_count)
 			
+when 96 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 178
 
 				last_token := E_FREEOP
 				last_value := text;move (text_count)
 			
+when 97 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 98 then
-if yy_act = 97 then
---|#line 189
 last_token := E_CHARACTER; last_value := text_item (2);move (text_count)
-else
---|#line 192
-last_token := E_CHARACTER; last_value := '%'';move (text_count)
+when 98 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 193
+last_token := E_CHARACTER; last_value := '%'';move (text_count)
+when 99 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_CHARACTER; last_value := '%A';move (text_count)
+when 100 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-else
-if yy_act <= 102 then
-if yy_act <= 101 then
-if yy_act = 100 then
---|#line 194
 last_token := E_CHARACTER; last_value := '%B';move (text_count)
-else
---|#line 195
+when 101 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_CHARACTER; last_value := '%C';move (text_count)
+when 102 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 196
 last_token := E_CHARACTER; last_value := '%D';move (text_count)
+when 103 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 104 then
-if yy_act = 103 then
---|#line 197
 last_token := E_CHARACTER; last_value := '%F';move (text_count)
-else
---|#line 198
+when 104 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_CHARACTER; last_value := '%H';move (text_count)
+when 105 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 199
 last_token := E_CHARACTER; last_value := '%L';move (text_count)
+when 106 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-end
-else
-if yy_act <= 111 then
-if yy_act <= 108 then
-if yy_act <= 107 then
-if yy_act = 106 then
---|#line 200
 last_token := E_CHARACTER; last_value := '%N';move (text_count)
-else
---|#line 201
+when 107 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_CHARACTER; last_value := '%Q';move (text_count)
+when 108 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 202
 last_token := E_CHARACTER; last_value := '%R';move (text_count)
+when 109 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 110 then
-if yy_act = 109 then
---|#line 203
 last_token := E_CHARACTER; last_value := '%S';move (text_count)
-else
---|#line 204
+when 110 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_CHARACTER; last_value := '%T';move (text_count)
+when 111 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 205
 last_token := E_CHARACTER; last_value := '%U';move (text_count)
+when 112 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-else
-if yy_act <= 114 then
-if yy_act <= 113 then
-if yy_act = 112 then
---|#line 206
 last_token := E_CHARACTER; last_value := '%V';move (text_count)
-else
---|#line 207
+when 113 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_CHARACTER; last_value := '%%';move (text_count)
+when 114 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 208
 last_token := E_CHARACTER; last_value := '%'';move (text_count)
+when 115 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act = 115 then
---|#line 209
 last_token := E_CHARACTER; last_value := '%"';move (text_count)
-else
---|#line 210
+when 116 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_CHARACTER; last_value := '%(';move (text_count)
+when 117 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-end
-end
-else
-if yy_act <= 128 then
-if yy_act <= 122 then
-if yy_act <= 119 then
-if yy_act <= 118 then
-if yy_act = 117 then
---|#line 211
 last_token := E_CHARACTER; last_value := '%)';move (text_count)
-else
---|#line 212
+when 118 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_CHARACTER; last_value := '%<';move (text_count)
+when 119 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 213
 last_token := E_CHARACTER; last_value := '%>';move (text_count)
+when 120 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 121 then
-if yy_act = 120 then
---|#line 214
 
 						code_ := text_substring (4, text_count - 2).to_integer
 						if code_ > Platform.Maximum_character_code then
@@ -684,114 +804,131 @@ if yy_act = 120 then
 						end
 						move (text_count)
 					
-else
---|#line 226
+when 121 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := E_CHARACTER; last_value := text_item (3);move (text_count)
+when 122, 123 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 228
 last_token := E_CHARERR;move (text_count)	-- Catch-all rules (no backing up)
+when 124 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-else
-if yy_act <= 125 then
-if yy_act <= 124 then
-if yy_act = 123 then
---|#line 229
-last_token := E_CHARERR;move (text_count)	-- Catch-all rules (no backing up)
-else
---|#line 234
 last_token := process_operator (E_STRPLUS);move (text_count)
+when 125 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 235
 last_token := process_operator (E_STRMINUS);move (text_count)
+when 126 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 127 then
-if yy_act = 126 then
---|#line 236
 last_token := process_operator (E_STRSTAR);move (text_count)
-else
---|#line 237
+when 127 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := process_operator (E_STRSLASH);move (text_count)
+when 128 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 238
 last_token := process_operator (E_STRDIV);move (text_count)
+when 129 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-end
-else
-if yy_act <= 134 then
-if yy_act <= 131 then
-if yy_act <= 130 then
-if yy_act = 129 then
---|#line 239
 last_token := process_operator (E_STRMOD);move (text_count)
-else
---|#line 240
+when 130 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := process_operator (E_STRPOWER);move (text_count)
+when 131 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 241
 last_token := process_operator (E_STRLT);move (text_count)
+when 132 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 133 then
-if yy_act = 132 then
---|#line 242
 last_token := process_operator (E_STRLE);move (text_count)
-else
---|#line 243
+when 133 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := process_operator (E_STRGT);move (text_count)
+when 134 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 244
 last_token := process_operator (E_STRGE);move (text_count)
+when 135 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-else
-if yy_act <= 137 then
-if yy_act <= 136 then
-if yy_act = 135 then
---|#line 245
 last_token := process_operator (E_STRNOT);move (text_count)
-else
---|#line 246
+when 136 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := process_operator (E_STRAND);move (text_count)
+when 137 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 247
 last_token := process_operator (E_STROR);move (text_count)
+when 138 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act = 138 then
---|#line 248
 last_token := process_operator (E_STRXOR);move (text_count)
-else
---|#line 249
+when 139 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := process_operator (E_STRANDTHEN);move (text_count)
+when 140 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-end
-end
-end
-else
-if yy_act <= 162 then
-if yy_act <= 151 then
-if yy_act <= 145 then
-if yy_act <= 142 then
-if yy_act <= 141 then
-if yy_act = 140 then
---|#line 250
 last_token := process_operator (E_STRORELSE);move (text_count)
-else
---|#line 251
-last_token := process_operator (E_STRIMPLIES);move (text_count)
+when 141 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 252
+last_token := process_operator (E_STRIMPLIES);move (text_count)
+when 142 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 
 			if is_operator then
 				is_operator := False
@@ -801,135 +938,163 @@ else
 			end
 			last_value := text_substring (2, text_count - 1);move (text_count)
 		
+when 143 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 144 then
-if yy_act = 143 then
---|#line 261
 
 				last_token := E_STRING
 				last_value := text_substring (2, text_count - 1);move (text_count)
 			
-else
---|#line 265
+when 144 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 
 				if text_count > 1 then
 					eif_buffer.append_string (text_substring (2, text_count))
 				end
 				set_start_condition (IN_STR);move (text_count)
 			
+when 145 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 271
 eif_buffer.append_string (text);move (text_count)
+when 146 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-else
-if yy_act <= 148 then
-if yy_act <= 147 then
-if yy_act = 146 then
---|#line 272
 eif_buffer.append_character ('%A');move (text_count)
-else
---|#line 273
+when 147 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 eif_buffer.append_character ('%B');move (text_count)
+when 148 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 274
 eif_buffer.append_character ('%C');move (text_count)
+when 149 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 150 then
-if yy_act = 149 then
---|#line 275
 eif_buffer.append_character ('%D');move (text_count)
-else
---|#line 276
+when 150 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 eif_buffer.append_character ('%F');move (text_count)
+when 151 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 277
 eif_buffer.append_character ('%H');move (text_count)
+when 152 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-end
-else
-if yy_act <= 157 then
-if yy_act <= 154 then
-if yy_act <= 153 then
-if yy_act = 152 then
---|#line 278
 eif_buffer.append_character ('%L');move (text_count)
-else
---|#line 279
+when 153 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 eif_buffer.append_character ('%N');move (text_count)
+when 154 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 280
 eif_buffer.append_character ('%Q');move (text_count)
+when 155 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 156 then
-if yy_act = 155 then
---|#line 281
 eif_buffer.append_character ('%R');move (text_count)
-else
---|#line 282
+when 156 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 eif_buffer.append_character ('%S');move (text_count)
+when 157 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 283
 eif_buffer.append_character ('%T');move (text_count)
+when 158 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-else
-if yy_act <= 160 then
-if yy_act <= 159 then
-if yy_act = 158 then
---|#line 284
 eif_buffer.append_character ('%U');move (text_count)
-else
---|#line 285
+when 159 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 eif_buffer.append_character ('%V');move (text_count)
+when 160 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 286
 eif_buffer.append_character ('%%');move (text_count)
+when 161 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act = 161 then
---|#line 287
 eif_buffer.append_character ('%'');move (text_count)
-else
---|#line 288
+when 162 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 eif_buffer.append_character ('%"');move (text_count)
+when 163 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-end
-end
-else
-if yy_act <= 174 then
-if yy_act <= 168 then
-if yy_act <= 165 then
-if yy_act <= 164 then
-if yy_act = 163 then
---|#line 289
 eif_buffer.append_character ('%(');move (text_count)
-else
---|#line 290
+when 164 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 eif_buffer.append_character ('%)');move (text_count)
+when 165 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 291
 eif_buffer.append_character ('%<');move (text_count)
+when 166 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 167 then
-if yy_act = 166 then
---|#line 292
 eif_buffer.append_character ('%>');move (text_count)
-else
---|#line 293
+when 167 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 
 			code_ := text_substring (3, text_count - 1).to_integer
 			if (code_ > Platform.Maximum_character_code) then
@@ -939,17 +1104,17 @@ else
 				eif_buffer.append_character (INTEGER_.to_character (code_))
 			end;move (text_count)
 		
+when 168 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 306
 eif_lineno := eif_lineno + 1;move (text_count)
+when 169 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-else
-if yy_act <= 171 then
-if yy_act <= 170 then
-if yy_act = 169 then
---|#line 307
 
 			last_token := E_STRING
 			if text_count > 1 then
@@ -961,50 +1126,41 @@ if yy_act = 169 then
 			last_value := str_
 			set_start_condition (INITIAL);move (text_count)
 		
-else
---|#line 320
+when 170 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 eif_buffer.append_character (text_item (2));move (text_count)
+when 171, 172, 173 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 322
 	-- Catch-all rules (no backing up)
 							last_token := E_STRERR
 							set_start_condition (INITIAL);move (text_count)
 						
+when 174 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 173 then
-if yy_act = 172 then
---|#line 323
-	-- Catch-all rules (no backing up)
-							last_token := E_STRERR
-							set_start_condition (INITIAL);move (text_count)
-						
-else
---|#line 324
-	-- Catch-all rules (no backing up)
-							last_token := E_STRERR
-							set_start_condition (INITIAL);move (text_count)
-						
-end
-else
---|#line 333
 last_token := E_BIT; last_value := text;move (text_count)
+when 175 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-end
-end
-else
-if yy_act <= 180 then
-if yy_act <= 177 then
-if yy_act <= 176 then
-if yy_act = 175 then
---|#line 338
 
 						last_token := E_INTEGER
 						last_value := text.to_integer;move (text_count)
 					
-else
---|#line 342
+when 176 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 
 						last_token := E_INTEGER
 						str_ := text
@@ -1019,41 +1175,37 @@ else
 						last_value := eif_buffer.to_integer
 						eif_buffer.wipe_out;move (text_count)
 					
+when 177 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 356
 last_token := E_INTERR	;move (text_count)-- Catch-all rule (no backing up)
+when 178 then
+	yy_end := yy_end - 1
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
-if yy_act <= 179 then
-if yy_act = 178 then
-	yy_position := yy_position - 1
---|#line 361
 
 						last_token := E_REAL
 						last_value := text.to_double;move (text_count)
 					
-else
---|#line 362
+when 179, 180 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 
 						last_token := E_REAL
 						last_value := text.to_double;move (text_count)
 					
+when 181 then
+	yy_end := yy_end - 1
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 363
-
-						last_token := E_REAL
-						last_value := text.to_double;move (text_count)
-					
-end
-end
-else
-if yy_act <= 183 then
-if yy_act <= 182 then
-if yy_act = 181 then
-	yy_position := yy_position - 1
---|#line 367
 
 						last_token := E_REAL
 						str_ := text
@@ -1068,8 +1220,11 @@ if yy_act = 181 then
 						last_value := eif_buffer.to_double
 						eif_buffer.wipe_out;move (text_count)
 					
-else
---|#line 368
+when 182, 183 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 
 						last_token := E_REAL
 						str_ := text
@@ -1084,39 +1239,23 @@ else
 						last_value := eif_buffer.to_double
 						eif_buffer.wipe_out;move (text_count)
 					
+when 184 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
 end
-else
---|#line 369
-
-						last_token := E_REAL
-						str_ := text
-						nb_ := text_count
-						from i_ := 1 until i_ > nb_ loop
-							char_ := str_.item (i_)
-							if char_ /= '_' then
-								eif_buffer.append_character (char_)
-							end
-							i_ := i_ + 1
-						end
-						last_value := eif_buffer.to_double
-						eif_buffer.wipe_out;move (text_count)
-					
-end
-else
-if yy_act = 184 then
---|#line 391
 last_token := text_item (1).code;move (text_count)
-else
---|#line 0
+when 185 then
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 last_token := yyError_token
 fatal_error ("scanner jammed")
-end
-end
-end
-end
-end
-end
-end
+			else
+				last_token := yyError_token
+				fatal_error ("fatal scanner internal error: no action found")
+			end
 		end
 
 	yy_execute_eof_action (yy_sc: INTEGER)
@@ -1124,10 +1263,16 @@ end
 		do
 			inspect yy_sc
 when 0 then
---|#line 0
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 terminate
 when 1 then
---|#line 0
+--|#line <not available> "eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel_scanner.l' at line <not available>")
+end
 	-- Catch-all rules (no backing up)
 							last_token := E_STRERR
 							set_start_condition (INITIAL);move (text_count)
@@ -1139,13 +1284,11 @@ when 1 then
 
 feature {NONE} -- Table templates
 
-	yy_nxt_template: ANY
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yy_nxt_template: SPECIAL [INTEGER]
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make (0, 137494)
+			create an_array.make_filled (0, 0, 137494)
 			yy_nxt_template_1 (an_array)
 			yy_nxt_template_2 (an_array)
 			yy_nxt_template_3 (an_array)
@@ -1192,6 +1335,98 @@ feature {NONE} -- Table templates
 			yy_nxt_template_44 (an_array)
 			yy_nxt_template_45 (an_array)
 			yy_nxt_template_46 (an_array)
+			yy_nxt_template_47 (an_array)
+			yy_nxt_template_48 (an_array)
+			yy_nxt_template_49 (an_array)
+			yy_nxt_template_50 (an_array)
+			yy_nxt_template_51 (an_array)
+			yy_nxt_template_52 (an_array)
+			yy_nxt_template_53 (an_array)
+			yy_nxt_template_54 (an_array)
+			yy_nxt_template_55 (an_array)
+			yy_nxt_template_56 (an_array)
+			yy_nxt_template_57 (an_array)
+			yy_nxt_template_58 (an_array)
+			yy_nxt_template_59 (an_array)
+			yy_nxt_template_60 (an_array)
+			yy_nxt_template_61 (an_array)
+			yy_nxt_template_62 (an_array)
+			yy_nxt_template_63 (an_array)
+			yy_nxt_template_64 (an_array)
+			yy_nxt_template_65 (an_array)
+			yy_nxt_template_66 (an_array)
+			yy_nxt_template_67 (an_array)
+			yy_nxt_template_68 (an_array)
+			yy_nxt_template_69 (an_array)
+			yy_nxt_template_70 (an_array)
+			yy_nxt_template_71 (an_array)
+			yy_nxt_template_72 (an_array)
+			yy_nxt_template_73 (an_array)
+			yy_nxt_template_74 (an_array)
+			yy_nxt_template_75 (an_array)
+			yy_nxt_template_76 (an_array)
+			yy_nxt_template_77 (an_array)
+			yy_nxt_template_78 (an_array)
+			yy_nxt_template_79 (an_array)
+			yy_nxt_template_80 (an_array)
+			yy_nxt_template_81 (an_array)
+			yy_nxt_template_82 (an_array)
+			yy_nxt_template_83 (an_array)
+			yy_nxt_template_84 (an_array)
+			yy_nxt_template_85 (an_array)
+			yy_nxt_template_86 (an_array)
+			yy_nxt_template_87 (an_array)
+			yy_nxt_template_88 (an_array)
+			yy_nxt_template_89 (an_array)
+			yy_nxt_template_90 (an_array)
+			yy_nxt_template_91 (an_array)
+			yy_nxt_template_92 (an_array)
+			yy_nxt_template_93 (an_array)
+			yy_nxt_template_94 (an_array)
+			yy_nxt_template_95 (an_array)
+			yy_nxt_template_96 (an_array)
+			yy_nxt_template_97 (an_array)
+			yy_nxt_template_98 (an_array)
+			yy_nxt_template_99 (an_array)
+			yy_nxt_template_100 (an_array)
+			yy_nxt_template_101 (an_array)
+			yy_nxt_template_102 (an_array)
+			yy_nxt_template_103 (an_array)
+			yy_nxt_template_104 (an_array)
+			yy_nxt_template_105 (an_array)
+			yy_nxt_template_106 (an_array)
+			yy_nxt_template_107 (an_array)
+			yy_nxt_template_108 (an_array)
+			yy_nxt_template_109 (an_array)
+			yy_nxt_template_110 (an_array)
+			yy_nxt_template_111 (an_array)
+			yy_nxt_template_112 (an_array)
+			yy_nxt_template_113 (an_array)
+			yy_nxt_template_114 (an_array)
+			yy_nxt_template_115 (an_array)
+			yy_nxt_template_116 (an_array)
+			yy_nxt_template_117 (an_array)
+			yy_nxt_template_118 (an_array)
+			yy_nxt_template_119 (an_array)
+			yy_nxt_template_120 (an_array)
+			yy_nxt_template_121 (an_array)
+			yy_nxt_template_122 (an_array)
+			yy_nxt_template_123 (an_array)
+			yy_nxt_template_124 (an_array)
+			yy_nxt_template_125 (an_array)
+			yy_nxt_template_126 (an_array)
+			yy_nxt_template_127 (an_array)
+			yy_nxt_template_128 (an_array)
+			yy_nxt_template_129 (an_array)
+			yy_nxt_template_130 (an_array)
+			yy_nxt_template_131 (an_array)
+			yy_nxt_template_132 (an_array)
+			yy_nxt_template_133 (an_array)
+			yy_nxt_template_134 (an_array)
+			yy_nxt_template_135 (an_array)
+			yy_nxt_template_136 (an_array)
+			yy_nxt_template_137 (an_array)
+			yy_nxt_template_138 (an_array)
 			Result := yy_fixed_array (an_array)
 		end
 
@@ -1306,8 +1541,13 @@ feature {NONE} -- Table templates
 			   56,   56,   56,   56,   56,   56,   56,   56,   56,   56,
 			   56,   56,   56,   56,   56,   56,   56,   56,   56,   56,
 			   56,   56,   56,   56,   56,   56,   56,   56,   56,   56,
-			   56,   56,   56,   56,   56,   56,   56,   56,   56,   56,
+			   56,   56,   56,   56,   56,   56,   56,   56,   56,   56, yy_Dummy>>,
+			1, 1000, 0)
+		end
 
+	yy_nxt_template_2 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			   56,   56,   56,   56,   56,   56,   56,   56,   56,   56,
 			   56,   56,   56,   56,   56,   56,   56,   56,   56,   56,
 			   56,   56,   56,   56,   56,   56,   56,   56,    5,   56,
@@ -1416,8 +1656,13 @@ feature {NONE} -- Table templates
 			   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,
 			   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,
 			   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,
-			   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,
+			   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7, yy_Dummy>>,
+			1, 1000, 1000)
+		end
 
+	yy_nxt_template_3 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,
 			   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,
 			   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,
@@ -1526,11 +1771,11 @@ feature {NONE} -- Table templates
 			   79,   79,   79,   79,   79,   79,   79,   79,   79,   79,
 			   79,   79,   79,   79,   79,   79,   79,   79,   79,   79,
 			   79,   79,   79,   79,   79,   79,   79,   79,   79,   79,
-			   79,   79,   79,   79,   79,   79,   79,   79,   79,   79>>,
-			1, 3000, 0)
+			   79,   79,   79,   79,   79,   79,   79,   79,   79,   79, yy_Dummy>>,
+			1, 1000, 2000)
 		end
 
-	yy_nxt_template_2 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_4 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			   79,   79,   79,   79,   79,   79,   79,   79,   79,   79,
@@ -1641,8 +1886,13 @@ feature {NONE} -- Table templates
 			  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,
 			  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,
 			  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,
-			  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,
+			  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15, yy_Dummy>>,
+			1, 1000, 3000)
+		end
 
+	yy_nxt_template_5 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,
 			  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,
 			  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,  -15,
@@ -1751,8 +2001,13 @@ feature {NONE} -- Table templates
 			  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,
 			  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,
 			  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,
-			  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,
+			  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19, yy_Dummy>>,
+			1, 1000, 4000)
+		end
 
+	yy_nxt_template_6 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,
 			  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,
 			  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,  -19,
@@ -1861,11 +2116,11 @@ feature {NONE} -- Table templates
 			   91,   91,   91,   91,   91,   91,   91,   91,   91,  -23,
 			  -23,  -23,  -23,  -23,  -23,  -23,  -23,  -23,  -23,  -23,
 			  -23,  -23,  -23,  -23,  -23,  -23,  -23,  -23,  -23,  -23,
-			  -23,  -23,  -23,  -23,  -23,  -23,  -23,  -23,  -23,  -23>>,
-			1, 3000, 3000)
+			  -23,  -23,  -23,  -23,  -23,  -23,  -23,  -23,  -23,  -23, yy_Dummy>>,
+			1, 1000, 5000)
 		end
 
-	yy_nxt_template_3 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_7 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  -23,  -23,  -23,  -23,  -23,  -23,   93,  -23,  -23,  -23,
@@ -1976,8 +2231,13 @@ feature {NONE} -- Table templates
 			  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,
 			  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,
 			  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,
-			  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,
+			  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27, yy_Dummy>>,
+			1, 1000, 6000)
+		end
 
+	yy_nxt_template_8 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,
 			  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,
 			  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,  -27,
@@ -2086,8 +2346,13 @@ feature {NONE} -- Table templates
 			  -30,  -30,  -30,  -30,  -30,  -30,  -30,    5,  -31,  -31,
 			  -31,  -31,  -31,  -31,  -31,  -31,  -31,  -31,  -31,  -31,
 			  -31,  -31,  -31,  -31,  -31,  -31,  -31,  -31,  -31,  -31,
-			  -31,  -31,  -31,  -31,  -31,  -31,  -31,  -31,  -31,  -31,
+			  -31,  -31,  -31,  -31,  -31,  -31,  -31,  -31,  -31,  -31, yy_Dummy>>,
+			1, 1000, 7000)
+		end
 
+	yy_nxt_template_9 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  -31,  -31,  -31,  -31,  -31,  -31,  -31,  -31,  -31,  -31,
 			  -31,  -31,  -31,  -31,  -31,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  -31,  -31,  -31,  -31,  -31,
@@ -2196,11 +2461,11 @@ feature {NONE} -- Table templates
 			  -34,  -34,  -34,  -34,  -34,  -34,  -34,  -34,  -34,  -34,
 			  -34,  -34,  -34,  -34,  -34,  -34,  -34,  -34,  -34,  -34,
 			  -34,  -34,  -34,  -34,  -34,  -34,  -34,  -34,  -34,  -34,
-			  -34,  -34,  -34,  -34,  -34,    5,  -35,  -35,  -35,  -35>>,
-			1, 3000, 6000)
+			  -34,  -34,  -34,  -34,  -34,    5,  -35,  -35,  -35,  -35, yy_Dummy>>,
+			1, 1000, 8000)
 		end
 
-	yy_nxt_template_4 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_10 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  -35,  -35,  -35,  -35,  -35,  -35,  -35,  -35,  -35,  -35,
@@ -2311,8 +2576,13 @@ feature {NONE} -- Table templates
 			  -38,  -38,  -38,  -38,  -38,  -38,  -38,  -38,  -38,  -38,
 			  -38,  -38,  -38,  -38,  -38,  -38,  -38,  -38,  -38,  -38,
 			  -38,  -38,  -38,  -38,  -38,  -38,  -38,  -38,  -38,  -38,
-			  -38,  -38,  -38,  -38,  -38,  -38,  -38,  -38,  -38,  -38,
+			  -38,  -38,  -38,  -38,  -38,  -38,  -38,  -38,  -38,  -38, yy_Dummy>>,
+			1, 1000, 9000)
+		end
 
+	yy_nxt_template_11 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  -38,  -38,  -38,  -38,  -38,  -38,  -38,  -38,  -38,  -38,
 			  -38,  -38,  -38,  -38,  -38,  -38,  -38,  -38,  -38,  -38,
 			  -38,  -38,  -38,    5,  -39,  -39,  -39,  -39,  -39,  -39,
@@ -2421,8 +2691,13 @@ feature {NONE} -- Table templates
 			  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,
 			  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,
 			  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,
-			  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,
+			  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42, yy_Dummy>>,
+			1, 1000, 10000)
+		end
 
+	yy_nxt_template_12 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,
 			  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,
 			  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,  -42,
@@ -2531,11 +2806,11 @@ feature {NONE} -- Table templates
 			  -46,  -46,  -46,  -46,  -46,  -46,  -46,  -46,  -46,  -46,
 			  -46,  -46,  -46,  -46,  -46,  -46,  -46,  -46,  -46,  -46,
 			  -46,  -46,  -46,  -46,  -46,  -46,  -46,  -46,  -46,  -46,
-			  -46,  -46,  -46,  -46,  -46,  -46,  -46,  -46,  -46,  -46>>,
-			1, 3000, 9000)
+			  -46,  -46,  -46,  -46,  -46,  -46,  -46,  -46,  -46,  -46, yy_Dummy>>,
+			1, 1000, 11000)
 		end
 
-	yy_nxt_template_5 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_13 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  -46,  -46,  -46,  -46,  -46,  -46,  -46,  -46,  -46,  -46,
@@ -2646,8 +2921,13 @@ feature {NONE} -- Table templates
 			  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,
 			  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,
 			  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,
-			  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,
+			  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50, yy_Dummy>>,
+			1, 1000, 12000)
+		end
 
+	yy_nxt_template_14 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,
 			  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,
 			  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,  -50,
@@ -2756,8 +3036,13 @@ feature {NONE} -- Table templates
 			  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,
 			  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,
 			  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,
-			  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,
+			  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54, yy_Dummy>>,
+			1, 1000, 13000)
+		end
 
+	yy_nxt_template_15 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,
 			  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,
 			  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,  -54,
@@ -2866,11 +3151,11 @@ feature {NONE} -- Table templates
 			  -58,  -58,  -58,  -58,  -58,  -58,  -58,  -58,  -58,  -58,
 			  -58,  -58,  -58,  -58,  -58,  -58,  -58,  -58,  -58,  -58,
 			  -58,  -58,  -58,  -58,  -58,  -58,  -58,  -58,  -58,  -58,
-			  -58,  -58,  -58,  -58,  -58,  -58,  -58,  -58,  -58,  -58>>,
-			1, 3000, 12000)
+			  -58,  -58,  -58,  -58,  -58,  -58,  -58,  -58,  -58,  -58, yy_Dummy>>,
+			1, 1000, 14000)
 		end
 
-	yy_nxt_template_6 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_16 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  -58,  -58,  -58,  -58,  -58,  -58,  -58,  -58,  -58,  -58,
@@ -2981,8 +3266,13 @@ feature {NONE} -- Table templates
 			  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,
 			  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,
 			  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,
-			  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,
+			  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62, yy_Dummy>>,
+			1, 1000, 15000)
+		end
 
+	yy_nxt_template_17 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,
 			  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,
 			  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,  -62,
@@ -3091,8 +3381,13 @@ feature {NONE} -- Table templates
 			   65,   65,    5,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,  -66,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
-			   63,   63,   63,   63,   63,   63,  168,   63,   63,  -66,
+			   63,   63,   63,   63,   63,   63,  168,   63,   63,  -66, yy_Dummy>>,
+			1, 1000, 16000)
+		end
 
+	yy_nxt_template_18 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
@@ -3201,11 +3496,11 @@ feature {NONE} -- Table templates
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
-			    5,   63,   63,   63,   63,   63,   63,   63,   63,   63>>,
-			1, 3000, 15000)
+			    5,   63,   63,   63,   63,   63,   63,   63,   63,   63, yy_Dummy>>,
+			1, 1000, 17000)
 		end
 
-	yy_nxt_template_7 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_19 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  -70,   63,   63,   63,   63,   63,   63,   63,   63,   63,
@@ -3316,8 +3611,13 @@ feature {NONE} -- Table templates
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
-			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
+			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63, yy_Dummy>>,
+			1, 1000, 18000)
+		end
 
+	yy_nxt_template_20 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,    5,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,  -74,   63,
@@ -3426,8 +3726,13 @@ feature {NONE} -- Table templates
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
-			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
+			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63, yy_Dummy>>,
+			1, 1000, 19000)
+		end
 
+	yy_nxt_template_21 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
@@ -3536,11 +3841,11 @@ feature {NONE} -- Table templates
 			  186,  186,  186,  186,  186,  186,  186,  186,  186,  186,
 			  186,  186,  186,  186,  186,  186,  186,  186,  186,  186,
 			  186,  186,  186,  186,  186,  186,  186,  186,  186,  186,
-			  186,  186,  186,  186,  186,  186,  186,  186,  186,  186>>,
-			1, 3000, 18000)
+			  186,  186,  186,  186,  186,  186,  186,  186,  186,  186, yy_Dummy>>,
+			1, 1000, 20000)
 		end
 
-	yy_nxt_template_8 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_22 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  186,  186,  186,  186,  186,  186,  186,  186,  186,  186,
@@ -3651,8 +3956,13 @@ feature {NONE} -- Table templates
 			  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,
 			  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,
 			  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,
-			  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,
+			  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85, yy_Dummy>>,
+			1, 1000, 21000)
+		end
 
+	yy_nxt_template_23 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,
 			  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,
 			  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,  -85,
@@ -3761,8 +4071,13 @@ feature {NONE} -- Table templates
 			  214,  214,  214,  214,  214,  214,  214,  214,  214,  214,
 			  214,  214,  214,  214,  216,  214,  214,  214,  214,  214,
 			  214,  214,  214,  214,  214,  214,  214,  214,  214,  214,
-			  214,  214,  214,  214,  214,  214,  214,  214,  214,  214,
+			  214,  214,  214,  214,  214,  214,  214,  214,  214,  214, yy_Dummy>>,
+			1, 1000, 22000)
+		end
 
+	yy_nxt_template_24 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  214,  214,  214,  214,  214,  214,  214,  214,  214,  214,
 			  214,  214,  214,  214,  214,  214,  214,  214,  214,  214,
 			  214,  214,  214,  214,  214,  214,  214,  214,  214,  214,
@@ -3871,11 +4186,11 @@ feature {NONE} -- Table templates
 			  -93,  -93,  -93,  -93,  -93,  -93,  -93,  -93,  -93,  -93,
 			  -93,  -93,  -93,  -93,  -93,  -93,  -93,  -93,  -93,  -93,
 			  -93,  -93,  -93,  -93,  -93,  -93,  -93,  -93,  -93,  -93,
-			  -93,  -93,  -93,  -93,  -93,  -93,  139,  -93,  -93,  -93>>,
-			1, 3000, 21000)
+			  -93,  -93,  -93,  -93,  -93,  -93,  139,  -93,  -93,  -93, yy_Dummy>>,
+			1, 1000, 23000)
 		end
 
-	yy_nxt_template_9 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_25 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  -93,  -93,  -93,  -93,  -93,  -93,  -93,  -93,  -93,  -93,
@@ -3986,8 +4301,13 @@ feature {NONE} -- Table templates
 			  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,
 			  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,
 			  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,
-			  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,
+			  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97, yy_Dummy>>,
+			1, 1000, 24000)
+		end
 
+	yy_nxt_template_26 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,
 			  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,
 			  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,  -97,
@@ -4096,8 +4416,13 @@ feature {NONE} -- Table templates
 			 -101, -101, -101, -101, -101, -101, -101, -101, -101, -101,
 			 -101, -101, -101, -101, -101, -101, -101, -101, -101, -101,
 			 -101, -101, -101, -101, -101, -101, -101, -101, -101, -101,
-			 -101, -101, -101, -101, -101, -101, -101, -101, -101, -101,
+			 -101, -101, -101, -101, -101, -101, -101, -101, -101, -101, yy_Dummy>>,
+			1, 1000, 25000)
+		end
 
+	yy_nxt_template_27 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -101, -101, -101, -101, -101,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100, -101, -101, -101, -101, -101,
 			 -101, -101,  100,  100,  100,  100,  100,  100,  100,  100,
@@ -4206,11 +4531,11 @@ feature {NONE} -- Table templates
 			 -104, -104, -104, -104, -104, -104, -104, -104, -104, -104,
 			 -104, -104, -104, -104, -104, -104, -104, -104, -104, -104,
 			 -104, -104, -104, -104, -104,    5, -105, -105, -105, -105,
-			 -105, -105, -105, -105, -105, -105, -105, -105, -105, -105>>,
-			1, 3000, 24000)
+			 -105, -105, -105, -105, -105, -105, -105, -105, -105, -105, yy_Dummy>>,
+			1, 1000, 26000)
 		end
 
-	yy_nxt_template_10 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_28 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -105, -105, -105, -105, -105, -105, -105, -105, -105, -105,
@@ -4321,8 +4646,13 @@ feature {NONE} -- Table templates
 			 -108, -108, -108, -108, -108, -108, -108, -108, -108, -108,
 			 -108, -108, -108, -108, -108, -108, -108, -108, -108, -108,
 			 -108, -108, -108, -108, -108, -108, -108, -108, -108, -108,
-			 -108, -108, -108, -108, -108, -108, -108, -108, -108, -108,
+			 -108, -108, -108, -108, -108, -108, -108, -108, -108, -108, yy_Dummy>>,
+			1, 1000, 27000)
+		end
 
+	yy_nxt_template_29 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -108, -108, -108, -108, -108, -108, -108, -108, -108, -108,
 			 -108, -108, -108,    5, -109, -109, -109, -109, -109, -109,
 			 -109, -109, -109, -109, -109, -109, -109, -109, -109, -109,
@@ -4431,8 +4761,13 @@ feature {NONE} -- Table templates
 			 -112, -112, -112, -112, -112, -112, -112, -112, -112, -112,
 			 -112, -112, -112, -112, -112, -112, -112, -112, -112, -112,
 			 -112, -112, -112, -112, -112, -112, -112, -112, -112, -112,
-			 -112, -112, -112, -112, -112, -112, -112, -112, -112, -112,
+			 -112, -112, -112, -112, -112, -112, -112, -112, -112, -112, yy_Dummy>>,
+			1, 1000, 28000)
+		end
 
+	yy_nxt_template_30 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -112, -112, -112, -112, -112, -112, -112, -112, -112, -112,
 			 -112, -112, -112, -112, -112, -112, -112, -112, -112, -112,
 			 -112, -112, -112, -112, -112, -112, -112, -112, -112, -112,
@@ -4541,11 +4876,11 @@ feature {NONE} -- Table templates
 			 -116, -116, -116, -116, -116, -116, -116, -116, -116, -116,
 			 -116, -116, -116, -116, -116, -116, -116, -116, -116, -116,
 			 -116, -116, -116, -116, -116, -116, -116, -116, -116, -116,
-			 -116, -116, -116, -116, -116, -116, -116, -116, -116, -116>>,
-			1, 3000, 27000)
+			 -116, -116, -116, -116, -116, -116, -116, -116, -116, -116, yy_Dummy>>,
+			1, 1000, 29000)
 		end
 
-	yy_nxt_template_11 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_31 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -116, -116, -116, -116, -116, -116, -116, -116, -116, -116,
@@ -4656,8 +4991,13 @@ feature {NONE} -- Table templates
 			  100,  100,  100, -120, -120, -120, -120, -120, -120, -120,
 			 -120, -120, -120, -120, -120, -120, -120, -120, -120, -120,
 			 -120, -120, -120, -120, -120, -120, -120, -120, -120, -120,
-			 -120, -120, -120, -120, -120, -120, -120, -120, -120, -120,
+			 -120, -120, -120, -120, -120, -120, -120, -120, -120, -120, yy_Dummy>>,
+			1, 1000, 30000)
+		end
 
+	yy_nxt_template_32 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -120, -120, -120, -120, -120, -120, -120, -120, -120, -120,
 			 -120, -120, -120, -120, -120, -120, -120, -120, -120, -120,
 			 -120, -120, -120, -120, -120, -120, -120, -120, -120, -120,
@@ -4766,8 +5106,13 @@ feature {NONE} -- Table templates
 			 -124, -124, -124,  100, -124,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  248,  100,  100,  100,  100,  100,  100,
-			  100, -124, -124, -124, -124, -124, -124, -124, -124, -124,
+			  100, -124, -124, -124, -124, -124, -124, -124, -124, -124, yy_Dummy>>,
+			1, 1000, 31000)
+		end
 
+	yy_nxt_template_33 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -124, -124, -124, -124, -124, -124, -124, -124, -124, -124,
 			 -124, -124, -124, -124, -124, -124, -124, -124, -124, -124,
 			 -124, -124, -124, -124, -124, -124, -124, -124, -124, -124,
@@ -4876,11 +5221,11 @@ feature {NONE} -- Table templates
 			 -128,  100,  100,  100,  100,  251,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100, -128, -128, -128,
-			 -128,  100, -128,  100,  100,  100,  100,  251,  100,  100>>,
-			1, 3000, 30000)
+			 -128,  100, -128,  100,  100,  100,  100,  251,  100,  100, yy_Dummy>>,
+			1, 1000, 32000)
 		end
 
-	yy_nxt_template_12 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_34 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
@@ -4991,8 +5336,13 @@ feature {NONE} -- Table templates
 			 -132, -132, -132, -132, -132, -132, -132, -132, -132, -132,
 			 -132, -132,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100, -132, -132, -132, -132, -132, -132, -132,  100,
-			  100,  100,  100,  260,  100,  100,  100,  100,  100,  100,
+			  100,  100,  100,  260,  100,  100,  100,  100,  100,  100, yy_Dummy>>,
+			1, 1000, 33000)
+		end
 
+	yy_nxt_template_35 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100, -132, -132, -132, -132,  100,
 			 -132,  100,  100,  100,  100,  260,  100,  100,  100,  100,
@@ -5101,8 +5451,13 @@ feature {NONE} -- Table templates
 			 -136, -136, -136, -136, -136, -136, -136, -136, -136, -136,
 			 -136, -136, -136, -136, -136, -136, -136, -136, -136, -136,
 			 -136, -136, -136, -136, -136, -136, -136, -136, -136, -136,
-			 -136, -136, -136, -136, -136, -136, -136, -136, -136, -136,
+			 -136, -136, -136, -136, -136, -136, -136, -136, -136, -136, yy_Dummy>>,
+			1, 1000, 34000)
+		end
 
+	yy_nxt_template_36 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			 -136, -136, -136, -136, -136, -136, -136,  100,  100,  100,
 			  100,  266,  100,  100,  100,  100,  100,  100,  100,  100,
@@ -5211,11 +5566,11 @@ feature {NONE} -- Table templates
 			 -139, -139, -139, -139, -139, -139, -139, -139, -139, -139,
 			 -139, -139, -139, -139, -139, -139, -139, -139, -139, -139,
 			    5,  140,  140,  140,  140,  140,  140,  140,  140,  140,
-			 -140,  140,  140,  140,  140,  140,  140,  140,  140,  140>>,
-			1, 3000, 33000)
+			 -140,  140,  140,  140,  140,  140,  140,  140,  140,  140, yy_Dummy>>,
+			1, 1000, 35000)
 		end
 
-	yy_nxt_template_13 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_37 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  140,  140,  140,  140,  140,  140,  140,  140,  140,  140,
@@ -5326,8 +5681,13 @@ feature {NONE} -- Table templates
 			 -143, -143, -143, -143, -143, -143, -143, -143, -143, -143,
 			 -143, -143, -143, -143, -143, -143, -143, -143, -143, -143,
 			 -143, -143, -143, -143, -143, -143, -143, -143, -143, -143,
-			 -143, -143, -143, -143, -143, -143, -143, -143, -143, -143,
+			 -143, -143, -143, -143, -143, -143, -143, -143, -143, -143, yy_Dummy>>,
+			1, 1000, 36000)
+		end
 
+	yy_nxt_template_38 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -143, -143, -143, -143, -143, -143, -143, -143,    5, -144,
 			 -144, -144, -144, -144, -144, -144, -144,  144, -144, -144,
 			 -144,  144, -144, -144, -144, -144, -144, -144, -144, -144,
@@ -5436,8 +5796,13 @@ feature {NONE} -- Table templates
 			 -147, -147, -147, -147, -147, -147, -147, -147, -147, -147,
 			 -147, -147, -147, -147, -147, -147, -147, -147, -147, -147,
 			 -147, -147, -147, -147, -147, -147, -147, -147, -147, -147,
-			 -147, -147, -147, -147, -147, -147, -147, -147, -147, -147,
+			 -147, -147, -147, -147, -147, -147, -147, -147, -147, -147, yy_Dummy>>,
+			1, 1000, 37000)
+		end
 
+	yy_nxt_template_39 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -147, -147, -147, -147, -147, -147, -147, -147, -147, -147,
 			 -147, -147, -147, -147, -147, -147, -147, -147, -147, -147,
 			 -147, -147, -147, -147, -147, -147, -147, -147, -147, -147,
@@ -5546,11 +5911,11 @@ feature {NONE} -- Table templates
 			 -151, -151, -151, -151, -151, -151, -151, -151, -151, -151,
 			 -151, -151, -151, -151, -151, -151, -151, -151, -151, -151,
 			 -151, -151, -151, -151, -151, -151, -151, -151, -151, -151,
-			 -151, -151, -151, -151, -151, -151, -151, -151, -151, -151>>,
-			1, 3000, 36000)
+			 -151, -151, -151, -151, -151, -151, -151, -151, -151, -151, yy_Dummy>>,
+			1, 1000, 38000)
 		end
 
-	yy_nxt_template_14 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_40 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -151, -151, -151, -151, -151, -151, -151, -151, -151, -151,
@@ -5661,8 +6026,13 @@ feature {NONE} -- Table templates
 			 -155, -155, -155, -155, -155, -155, -155, -155, -155, -155,
 			 -155, -155, -155, -155, -155, -155, -155, -155, -155, -155,
 			 -155, -155, -155, -155, -155, -155, -155, -155, -155, -155,
-			 -155, -155, -155, -155, -155, -155, -155, -155, -155, -155,
+			 -155, -155, -155, -155, -155, -155, -155, -155, -155, -155, yy_Dummy>>,
+			1, 1000, 39000)
+		end
 
+	yy_nxt_template_41 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -155, -155, -155, -155, -155, -155, -155, -155, -155, -155,
 			 -155, -155, -155, -155, -155, -155, -155, -155, -155, -155,
 			 -155, -155, -155, -155, -155, -155, -155, -155, -155, -155,
@@ -5771,8 +6141,13 @@ feature {NONE} -- Table templates
 			 -159, -159, -159, -159, -159, -159, -159, -159, -159, -159,
 			 -159, -159, -159, -159, -159, -159, -159, -159, -159, -159,
 			 -159, -159, -159, -159, -159, -159, -159, -159, -159, -159,
-			 -159, -159, -159, -159, -159, -159, -159, -159, -159, -159,
+			 -159, -159, -159, -159, -159, -159, -159, -159, -159, -159, yy_Dummy>>,
+			1, 1000, 40000)
+		end
 
+	yy_nxt_template_42 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -159, -159, -159, -159, -159, -159, -159, -159, -159, -159,
 			 -159, -159, -159, -159, -159, -159, -159, -159, -159, -159,
 			 -159, -159, -159, -159, -159, -159, -159, -159, -159, -159,
@@ -5881,11 +6256,11 @@ feature {NONE} -- Table templates
 			 -163, -163, -163, -163, -163, -163, -163, -163, -163, -163,
 			 -163, -163, -163, -163, -163, -163, -163, -163, -163, -163,
 			 -163, -163, -163, -163, -163, -163, -163, -163, -163, -163,
-			 -163, -163, -163, -163, -163, -163, -163, -163, -163, -163>>,
-			1, 3000, 39000)
+			 -163, -163, -163, -163, -163, -163, -163, -163, -163, -163, yy_Dummy>>,
+			1, 1000, 41000)
 		end
 
-	yy_nxt_template_15 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_43 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -163, -163, -163, -163, -163, -163, -163, -163, -163, -163,
@@ -5996,8 +6371,13 @@ feature {NONE} -- Table templates
 			 -167, -167, -167, -167, -167, -167, -167, -167, -167, -167,
 			 -167, -167, -167, -167, -167, -167, -167, -167, -167, -167,
 			 -167, -167, -167, -167, -167, -167, -167, -167, -167, -167,
-			 -167, -167, -167, -167, -167, -167, -167, -167, -167, -167,
+			 -167, -167, -167, -167, -167, -167, -167, -167, -167, -167, yy_Dummy>>,
+			1, 1000, 42000)
+		end
 
+	yy_nxt_template_44 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -167, -167, -167, -167, -167, -167, -167, -167, -167, -167,
 			 -167, -167, -167, -167, -167, -167, -167, -167, -167, -167,
 			 -167, -167, -167, -167, -167, -167, -167, -167, -167, -167,
@@ -6106,8 +6486,13 @@ feature {NONE} -- Table templates
 			 -171, -171, -171, -171, -171, -171, -171, -171, -171, -171,
 			 -171, -171, -171, -171, -171, -171, -171, -171, -171, -171,
 			 -171, -171, -171, -171, -171, -171, -171, -171, -171, -171,
-			 -171, -171, -171, -171, -171, -171, -171, -171, -171, -171,
+			 -171, -171, -171, -171, -171, -171, -171, -171, -171, -171, yy_Dummy>>,
+			1, 1000, 43000)
+		end
 
+	yy_nxt_template_45 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -171, -171, -171, -171, -171, -171, -171, -171, -171, -171,
 			 -171, -171, -171, -171, -171, -171, -171, -171, -171, -171,
 			 -171, -171, -171, -171, -171, -171, -171, -171, -171, -171,
@@ -6216,11 +6601,11 @@ feature {NONE} -- Table templates
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,    5, -175, -175, -175, -175,
 			 -175, -175, -175, -175, -175, -175, -175, -175, -175, -175,
-			 -175, -175, -175, -175, -175, -175, -175, -175, -175, -175>>,
-			1, 3000, 42000)
+			 -175, -175, -175, -175, -175, -175, -175, -175, -175, -175, yy_Dummy>>,
+			1, 1000, 44000)
 		end
 
-	yy_nxt_template_16 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_46 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -175, -175, -175, -175, -175, -175, -175, -175, -175, -175,
@@ -6331,8 +6716,13 @@ feature {NONE} -- Table templates
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
-			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
+			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63, yy_Dummy>>,
+			1, 1000, 45000)
+		end
 
+	yy_nxt_template_47 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			   63,   63,   63,    5,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63, -179,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
@@ -6441,8 +6831,13 @@ feature {NONE} -- Table templates
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
-			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
+			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63, yy_Dummy>>,
+			1, 1000, 46000)
+		end
 
+	yy_nxt_template_48 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
@@ -6551,11 +6946,11 @@ feature {NONE} -- Table templates
 			 -186, -186, -186, -186, -186, -186, -186, -186, -186, -186,
 			 -186, -186, -186, -186, -186, -186, -186, -186, -186, -186,
 			 -186, -186, -186, -186, -186, -186, -186, -186, -186, -186,
-			 -186, -186, -186, -186, -186, -186, -186, -186, -186, -186>>,
-			1, 3000, 45000)
+			 -186, -186, -186, -186, -186, -186, -186, -186, -186, -186, yy_Dummy>>,
+			1, 1000, 47000)
 		end
 
-	yy_nxt_template_17 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_49 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -186, -186, -186, -186, -186, -186, -186, -186, -186, -186,
@@ -6666,8 +7061,13 @@ feature {NONE} -- Table templates
 			 -190, -190, -190, -190, -190, -190, -190, -190, -190, -190,
 			 -190, -190, -190, -190, -190, -190, -190, -190, -190, -190,
 			 -190, -190, -190, -190, -190, -190, -190, -190, -190, -190,
-			 -190, -190, -190, -190, -190, -190, -190, -190, -190, -190,
+			 -190, -190, -190, -190, -190, -190, -190, -190, -190, -190, yy_Dummy>>,
+			1, 1000, 48000)
+		end
 
+	yy_nxt_template_50 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -190, -190, -190, -190, -190, -190, -190, -190, -190, -190,
 			 -190, -190, -190, -190, -190, -190, -190, -190, -190, -190,
 			 -190, -190, -190, -190, -190, -190, -190, -190, -190, -190,
@@ -6776,8 +7176,13 @@ feature {NONE} -- Table templates
 			 -194, -194, -194, -194, -194, -194, -194, -194, -194, -194,
 			 -194, -194, -194, -194, -194, -194, -194, -194, -194, -194,
 			 -194, -194, -194, -194, -194, -194, -194, -194, -194, -194,
-			 -194, -194, -194, -194, -194, -194, -194, -194, -194, -194,
+			 -194, -194, -194, -194, -194, -194, -194, -194, -194, -194, yy_Dummy>>,
+			1, 1000, 49000)
+		end
 
+	yy_nxt_template_51 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -194, -194, -194, -194, -194, -194, -194, -194, -194, -194,
 			 -194, -194, -194, -194, -194, -194, -194, -194, -194, -194,
 			 -194, -194, -194, -194, -194, -194, -194, -194, -194, -194,
@@ -6886,11 +7291,11 @@ feature {NONE} -- Table templates
 			 -198, -198, -198, -198, -198, -198, -198, -198, -198, -198,
 			 -198, -198, -198, -198, -198, -198, -198, -198, -198, -198,
 			 -198, -198, -198, -198, -198, -198, -198, -198, -198, -198,
-			 -198, -198, -198, -198, -198, -198, -198, -198, -198, -198>>,
-			1, 3000, 48000)
+			 -198, -198, -198, -198, -198, -198, -198, -198, -198, -198, yy_Dummy>>,
+			1, 1000, 50000)
 		end
 
-	yy_nxt_template_18 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_52 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -198, -198, -198, -198, -198, -198, -198, -198, -198, -198,
@@ -7001,8 +7406,13 @@ feature {NONE} -- Table templates
 			 -202, -202, -202, -202, -202, -202, -202, -202, -202, -202,
 			 -202, -202, -202, -202, -202, -202, -202, -202, -202, -202,
 			 -202, -202, -202, -202, -202, -202, -202, -202, -202, -202,
-			 -202, -202, -202, -202, -202, -202, -202, -202, -202, -202,
+			 -202, -202, -202, -202, -202, -202, -202, -202, -202, -202, yy_Dummy>>,
+			1, 1000, 51000)
+		end
 
+	yy_nxt_template_53 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -202, -202, -202, -202, -202, -202, -202, -202, -202, -202,
 			 -202, -202, -202, -202, -202, -202, -202, -202, -202, -202,
 			 -202, -202, -202, -202, -202, -202, -202, -202, -202, -202,
@@ -7111,8 +7521,13 @@ feature {NONE} -- Table templates
 			 -206, -206, -206, -206, -206, -206, -206, -206, -206, -206,
 			 -206, -206, -206, -206, -206, -206, -206, -206, -206, -206,
 			 -206,  301, -206, -206, -206, -206, -206, -206, -206, -206,
-			 -206, -206, -206, -206, -206, -206, -206, -206, -206, -206,
+			 -206, -206, -206, -206, -206, -206, -206, -206, -206, -206, yy_Dummy>>,
+			1, 1000, 52000)
+		end
 
+	yy_nxt_template_54 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -206, -206, -206, -206, -206, -206, -206, -206, -206, -206,
 			 -206, -206, -206, -206, -206, -206, -206, -206, -206, -206,
 			 -206, -206, -206, -206, -206, -206, -206, -206, -206, -206,
@@ -7221,11 +7636,11 @@ feature {NONE} -- Table templates
 			 -209, -209, -209, -209, -209, -209, -209, -209, -209, -209,
 			    5, -210, -210, -210, -210, -210, -210, -210, -210,  210,
 			 -210, -210, -210,  210, -210, -210, -210, -210, -210, -210,
-			 -210, -210, -210, -210, -210, -210, -210, -210, -210, -210>>,
-			1, 3000, 51000)
+			 -210, -210, -210, -210, -210, -210, -210, -210, -210, -210, yy_Dummy>>,
+			1, 1000, 53000)
 		end
 
-	yy_nxt_template_19 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_55 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -210, -210,  210, -210, -210, -210, -210, -210, -210, -210,
@@ -7336,8 +7751,13 @@ feature {NONE} -- Table templates
 			 -213, -213, -213, -213, -213, -213, -213, -213, -213, -213,
 			 -213, -213, -213, -213, -213, -213, -213, -213, -213, -213,
 			 -213, -213, -213, -213, -213, -213, -213, -213, -213, -213,
-			 -213, -213, -213, -213, -213, -213, -213, -213,    5, -214,
+			 -213, -213, -213, -213, -213, -213, -213, -213,    5, -214, yy_Dummy>>,
+			1, 1000, 54000)
+		end
 
+	yy_nxt_template_56 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -214, -214, -214, -214, -214, -214, -214, -214, -214, -214,
 			 -214, -214, -214, -214, -214, -214, -214, -214, -214, -214,
 			 -214, -214, -214, -214, -214, -214, -214, -214, -214, -214,
@@ -7446,8 +7866,13 @@ feature {NONE} -- Table templates
 			 -217, -217, -217, -217, -217, -217, -217, -217, -217, -217,
 			 -217, -217, -217, -217, -217, -217, -217, -217, -217, -217,
 			 -217, -217, -217, -217, -217, -217, -217, -217, -217, -217,
-			 -217, -217, -217, -217, -217, -217, -217, -217, -217, -217,
+			 -217, -217, -217, -217, -217, -217, -217, -217, -217, -217, yy_Dummy>>,
+			1, 1000, 55000)
+		end
 
+	yy_nxt_template_57 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -217, -217, -217, -217, -217, -217, -217, -217, -217, -217,
 			 -217, -217, -217, -217, -217, -217, -217, -217, -217, -217,
 			 -217, -217, -217, -217, -217, -217,    5, -218, -218, -218,
@@ -7556,11 +7981,11 @@ feature {NONE} -- Table templates
 			 -221, -221, -221, -221, -221, -221, -221, -221, -221, -221,
 			 -221, -221, -221, -221, -221, -221, -221, -221, -221, -221,
 			 -221, -221, -221, -221, -221, -221, -221, -221, -221, -221,
-			 -221, -221, -221, -221, -221, -221, -221, -221, -221, -221>>,
-			1, 3000, 54000)
+			 -221, -221, -221, -221, -221, -221, -221, -221, -221, -221, yy_Dummy>>,
+			1, 1000, 56000)
 		end
 
-	yy_nxt_template_20 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_58 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -221, -221, -221, -221, -221, -221, -221, -221, -221, -221,
@@ -7671,8 +8096,13 @@ feature {NONE} -- Table templates
 			 -225, -225, -225, -225, -225, -225, -225, -225, -225, -225,
 			 -225, -225, -225, -225, -225, -225, -225, -225, -225, -225,
 			 -225, -225, -225, -225, -225, -225, -225, -225, -225, -225,
-			 -225, -225, -225, -225, -225, -225, -225, -225, -225, -225,
+			 -225, -225, -225, -225, -225, -225, -225, -225, -225, -225, yy_Dummy>>,
+			1, 1000, 57000)
+		end
 
+	yy_nxt_template_59 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -225, -225, -225, -225, -225, -225, -225, -225, -225, -225,
 			 -225, -225, -225, -225, -225, -225, -225, -225, -225, -225,
 			 -225, -225, -225, -225, -225, -225, -225, -225, -225, -225,
@@ -7781,8 +8211,13 @@ feature {NONE} -- Table templates
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100, -229, -229, -229, -229,
 			 -229, -229, -229, -229, -229, -229, -229, -229, -229, -229,
-			 -229, -229, -229, -229, -229, -229, -229, -229, -229, -229,
+			 -229, -229, -229, -229, -229, -229, -229, -229, -229, -229, yy_Dummy>>,
+			1, 1000, 58000)
+		end
 
+	yy_nxt_template_60 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -229, -229, -229, -229, -229, -229, -229, -229, -229, -229,
 			 -229, -229, -229, -229, -229, -229, -229, -229, -229, -229,
 			 -229, -229, -229, -229, -229, -229, -229, -229, -229, -229,
@@ -7891,11 +8326,11 @@ feature {NONE} -- Table templates
 			  326,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100, -233, -233, -233, -233,  100, -233,  325,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
-			  100,  100,  326,  100,  100,  100,  100,  100,  100,  100>>,
-			1, 3000, 57000)
+			  100,  100,  326,  100,  100,  100,  100,  100,  100,  100, yy_Dummy>>,
+			1, 1000, 59000)
 		end
 
-	yy_nxt_template_21 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_61 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  100,  100,  100,  100, -233, -233, -233, -233, -233, -233,
@@ -8006,8 +8441,13 @@ feature {NONE} -- Table templates
 			  100,  100,  100,  100,  100,  100,  100, -237, -237, -237,
 			 -237, -237, -237, -237,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  330,  100,  100,  100,
-			  100,  100,  100,  100,  100,  100,  100,  100,  100,  331,
+			  100,  100,  100,  100,  100,  100,  100,  100,  100,  331, yy_Dummy>>,
+			1, 1000, 60000)
+		end
 
+	yy_nxt_template_62 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -237, -237, -237, -237,  100, -237,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  330,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
@@ -8116,8 +8556,13 @@ feature {NONE} -- Table templates
 			 -241, -241, -241, -241, -241, -241, -241, -241, -241, -241,
 			 -241, -241, -241, -241, -241, -241, -241, -241, -241, -241,
 			 -241, -241, -241, -241, -241,  100,  100,  100,  100,  100,
-			  100,  100,  100,  100,  100, -241, -241, -241, -241, -241,
+			  100,  100,  100,  100,  100, -241, -241, -241, -241, -241, yy_Dummy>>,
+			1, 1000, 61000)
+		end
 
+	yy_nxt_template_63 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -241, -241,  100,  100,  100,  100,  335,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100, -241, -241,
@@ -8226,11 +8671,11 @@ feature {NONE} -- Table templates
 			 -244, -244, -244, -244, -244,    5, -245, -245, -245, -245,
 			 -245, -245, -245, -245, -245, -245, -245, -245, -245, -245,
 			 -245, -245, -245, -245, -245, -245, -245, -245, -245, -245,
-			 -245, -245, -245, -245, -245, -245, -245, -245, -245, -245>>,
-			1, 3000, 60000)
+			 -245, -245, -245, -245, -245, -245, -245, -245, -245, -245, yy_Dummy>>,
+			1, 1000, 62000)
 		end
 
-	yy_nxt_template_22 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_64 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -245, -245, -245, -245, -245, -245, -245, -245, -245, -245,
@@ -8341,8 +8786,13 @@ feature {NONE} -- Table templates
 			 -248, -248, -248, -248, -248, -248, -248, -248, -248, -248,
 			 -248, -248, -248, -248, -248, -248, -248, -248, -248, -248,
 			 -248, -248, -248, -248, -248, -248, -248, -248, -248, -248,
-			 -248, -248, -248,    5, -249, -249, -249, -249, -249, -249,
+			 -248, -248, -248,    5, -249, -249, -249, -249, -249, -249, yy_Dummy>>,
+			1, 1000, 63000)
+		end
 
+	yy_nxt_template_65 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -249, -249, -249, -249, -249, -249, -249, -249, -249, -249,
 			 -249, -249, -249, -249, -249, -249, -249, -249, -249, -249,
 			 -249, -249, -249, -249, -249, -249, -249, -249, -249, -249,
@@ -8451,8 +8901,13 @@ feature {NONE} -- Table templates
 			 -252, -252, -252, -252, -252, -252, -252, -252, -252, -252,
 			 -252, -252, -252, -252, -252, -252, -252, -252, -252, -252,
 			 -252, -252, -252, -252, -252, -252, -252, -252, -252, -252,
-			 -252, -252, -252, -252, -252, -252, -252, -252, -252, -252,
+			 -252, -252, -252, -252, -252, -252, -252, -252, -252, -252, yy_Dummy>>,
+			1, 1000, 64000)
+		end
 
+	yy_nxt_template_66 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -252, -252, -252, -252, -252, -252, -252, -252, -252, -252,
 			 -252, -252, -252, -252, -252, -252, -252, -252, -252, -252,
 			 -252,    5, -253, -253, -253, -253, -253, -253, -253, -253,
@@ -8561,11 +9016,11 @@ feature {NONE} -- Table templates
 			 -256, -256, -256, -256, -256, -256, -256, -256, -256, -256,
 			 -256, -256, -256, -256, -256, -256, -256, -256, -256, -256,
 			 -256, -256, -256, -256, -256, -256, -256, -256, -256, -256,
-			 -256, -256, -256, -256, -256, -256, -256, -256, -256, -256>>,
-			1, 3000, 63000)
+			 -256, -256, -256, -256, -256, -256, -256, -256, -256, -256, yy_Dummy>>,
+			1, 1000, 65000)
 		end
 
-	yy_nxt_template_23 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_67 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -256, -256, -256, -256, -256, -256, -256, -256, -256, -256,
@@ -8676,8 +9131,13 @@ feature {NONE} -- Table templates
 			 -260, -260, -260, -260, -260, -260, -260, -260, -260, -260,
 			 -260, -260, -260, -260, -260, -260, -260, -260, -260, -260,
 			 -260, -260, -260, -260, -260, -260, -260, -260, -260, -260,
-			 -260, -260, -260, -260, -260, -260, -260, -260, -260, -260,
+			 -260, -260, -260, -260, -260, -260, -260, -260, -260, -260, yy_Dummy>>,
+			1, 1000, 66000)
+		end
 
+	yy_nxt_template_68 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -260, -260, -260, -260, -260, -260, -260, -260, -260, -260,
 			 -260, -260, -260, -260, -260, -260, -260, -260, -260, -260,
 			 -260, -260, -260, -260, -260, -260, -260, -260, -260, -260,
@@ -8786,8 +9246,13 @@ feature {NONE} -- Table templates
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100, -264, -264, -264, -264, -264, -264, -264, -264, -264,
 			 -264, -264, -264, -264, -264, -264, -264, -264, -264, -264,
-			 -264, -264, -264, -264, -264, -264, -264, -264, -264, -264,
+			 -264, -264, -264, -264, -264, -264, -264, -264, -264, -264, yy_Dummy>>,
+			1, 1000, 67000)
+		end
 
+	yy_nxt_template_69 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -264, -264, -264, -264, -264, -264, -264, -264, -264, -264,
 			 -264, -264, -264, -264, -264, -264, -264, -264, -264, -264,
 			 -264, -264, -264, -264, -264, -264, -264, -264, -264, -264,
@@ -8896,11 +9361,11 @@ feature {NONE} -- Table templates
 			 -268, -268, -268, -268, -268, -268, -268, -268, -268, -268,
 			 -268, -268, -268, -268, -268, -268, -268, -268, -268, -268,
 			 -268, -268, -268, -268, -268, -268, -268, -268, -268, -268,
-			 -268, -268, -268, -268, -268, -268, -268, -268, -268, -268>>,
-			1, 3000, 66000)
+			 -268, -268, -268, -268, -268, -268, -268, -268, -268, -268, yy_Dummy>>,
+			1, 1000, 68000)
 		end
 
-	yy_nxt_template_24 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_70 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -268, -268, -268, -268, -268, -268, -268, -268, -268, -268,
@@ -9011,8 +9476,13 @@ feature {NONE} -- Table templates
 			 -272, -272, -272, -272, -272, -272, -272, -272, -272, -272,
 			 -272, -272, -272, -272, -272, -272, -272, -272, -272, -272,
 			 -272, -272, -272, -272, -272, -272, -272, -272, -272, -272,
-			 -272, -272, -272, -272, -272, -272, -272, -272, -272, -272,
+			 -272, -272, -272, -272, -272, -272, -272, -272, -272, -272, yy_Dummy>>,
+			1, 1000, 69000)
+		end
 
+	yy_nxt_template_71 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -272, -272, -272, -272, -272, -272, -272, -272, -272, -272,
 			 -272, -272, -272, -272, -272, -272, -272, -272, -272, -272,
 			 -272, -272, -272, -272, -272, -272, -272, -272, -272, -272,
@@ -9121,8 +9591,13 @@ feature {NONE} -- Table templates
 			   63,   63,   63,   63,   63,   63,  365,   63,   63, -276,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
-			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
+			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63, yy_Dummy>>,
+			1, 1000, 70000)
+		end
 
+	yy_nxt_template_72 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
@@ -9231,11 +9706,11 @@ feature {NONE} -- Table templates
 			    5, -280, -280, -280, -280, -280, -280, -280, -280, -280,
 			 -280, -280, -280, -280, -280, -280, -280, -280, -280, -280,
 			 -280, -280, -280, -280, -280, -280, -280, -280, -280, -280,
-			 -280, -280, -280, -280, -280, -280, -280, -280, -280, -280>>,
-			1, 3000, 69000)
+			 -280, -280, -280, -280, -280, -280, -280, -280, -280, -280, yy_Dummy>>,
+			1, 1000, 71000)
 		end
 
-	yy_nxt_template_25 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_73 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -280, -280, -280, -280, -280, -280, -280, -280, -280, -280,
@@ -9346,8 +9821,13 @@ feature {NONE} -- Table templates
 			 -283, -283, -283, -283, -283, -283, -283, -283, -283, -283,
 			 -283, -283, -283, -283, -283, -283, -283, -283, -283, -283,
 			 -283, -283, -283, -283, -283, -283, -283, -283,    5, -284,
-			 -284, -284, -284, -284, -284, -284, -284, -284, -284, -284,
+			 -284, -284, -284, -284, -284, -284, -284, -284, -284, -284, yy_Dummy>>,
+			1, 1000, 72000)
+		end
 
+	yy_nxt_template_74 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -284, -284, -284, -284, -284, -284, -284, -284, -284, -284,
 			 -284, -284, -284, -284, -284, -284, -284, -284, -284, -284,
 			 -284, -284, -284, -284, -284, -284, -284, -284, -284, -284,
@@ -9456,8 +9936,13 @@ feature {NONE} -- Table templates
 			 -287, -287, -287, -287, -287, -287, -287, -287, -287, -287,
 			 -287, -287, -287, -287, -287, -287, -287, -287, -287, -287,
 			 -287, -287, -287, -287, -287, -287, -287, -287, -287, -287,
-			 -287, -287, -287, -287, -287, -287, -287, -287, -287, -287,
+			 -287, -287, -287, -287, -287, -287, -287, -287, -287, -287, yy_Dummy>>,
+			1, 1000, 73000)
+		end
 
+	yy_nxt_template_75 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -287, -287, -287, -287, -287, -287, -287, -287, -287, -287,
 			 -287, -287, -287, -287, -287, -287,    5, -288, -288, -288,
 			 -288, -288, -288, -288, -288, -288, -288, -288, -288, -288,
@@ -9566,11 +10051,11 @@ feature {NONE} -- Table templates
 			 -291, -291, -291, -291, -291, -291, -291, -291, -291, -291,
 			 -291, -291, -291, -291, -291, -291, -291, -291, -291, -291,
 			 -291, -291, -291, -291, -291, -291, -291, -291, -291, -291,
-			 -291, -291, -291, -291, -291, -291, -291, -291, -291, -291>>,
-			1, 3000, 72000)
+			 -291, -291, -291, -291, -291, -291, -291, -291, -291, -291, yy_Dummy>>,
+			1, 1000, 74000)
 		end
 
-	yy_nxt_template_26 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_76 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -291, -291, -291, -291, -291, -291, -291, -291, -291, -291,
@@ -9681,8 +10166,13 @@ feature {NONE} -- Table templates
 			 -295, -295, -295, -295, -295, -295, -295, -295, -295, -295,
 			 -295, -295, -295, -295, -295, -295, -295, -295, -295, -295,
 			 -295, -295, -295, -295, -295, -295, -295, -295, -295, -295,
-			 -295, -295, -295, -295, -295, -295, -295, -295, -295, -295,
+			 -295, -295, -295, -295, -295, -295, -295, -295, -295, -295, yy_Dummy>>,
+			1, 1000, 75000)
+		end
 
+	yy_nxt_template_77 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -295, -295, -295, -295, -295, -295, -295, -295, -295, -295,
 			 -295, -295, -295, -295, -295, -295, -295, -295, -295, -295,
 			 -295, -295, -295, -295, -295, -295, -295, -295, -295, -295,
@@ -9791,8 +10281,13 @@ feature {NONE} -- Table templates
 			 -299, -299, -299, -299, -299, -299, -299, -299, -299, -299,
 			 -299, -299, -299, -299, -299, -299, -299, -299, -299, -299,
 			 -299, -299, -299, -299, -299, -299, -299, -299, -299, -299,
-			 -299, -299, -299, -299, -299, -299, -299, -299, -299, -299,
+			 -299, -299, -299, -299, -299, -299, -299, -299, -299, -299, yy_Dummy>>,
+			1, 1000, 76000)
+		end
 
+	yy_nxt_template_78 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -299, -299, -299, -299, -299, -299, -299, -299, -299, -299,
 			 -299, -299, -299, -299, -299, -299, -299, -299, -299, -299,
 			 -299, -299, -299, -299, -299, -299, -299, -299, -299, -299,
@@ -9901,11 +10396,11 @@ feature {NONE} -- Table templates
 			 -303, -303, -303, -303, -303, -303, -303, -303, -303, -303,
 			 -303, -303, -303, -303, -303, -303, -303, -303, -303, -303,
 			 -303, -303, -303, -303, -303, -303, -303, -303, -303, -303,
-			 -303, -303, -303, -303, -303, -303, -303, -303, -303, -303>>,
-			1, 3000, 75000)
+			 -303, -303, -303, -303, -303, -303, -303, -303, -303, -303, yy_Dummy>>,
+			1, 1000, 77000)
 		end
 
-	yy_nxt_template_27 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_79 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -303, -303, -303, -303, -303, -303, -303, -303, -303, -303,
@@ -10016,8 +10511,13 @@ feature {NONE} -- Table templates
 			 -307, -307, -307, -307, -307, -307, -307, -307, -307, -307,
 			 -307, -307, -307, -307, -307, -307, -307, -307, -307, -307,
 			 -307, -307, -307, -307, -307, -307, -307, -307, -307, -307,
-			 -307, -307, -307, -307, -307, -307, -307, -307, -307, -307,
+			 -307, -307, -307, -307, -307, -307, -307, -307, -307, -307, yy_Dummy>>,
+			1, 1000, 78000)
+		end
 
+	yy_nxt_template_80 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -307, -307, -307, -307, -307, -307, -307, -307, -307, -307,
 			 -307, -307, -307, -307, -307, -307, -307, -307, -307, -307,
 			 -307, -307, -307, -307, -307, -307, -307, -307, -307, -307,
@@ -10126,8 +10626,13 @@ feature {NONE} -- Table templates
 			 -311, -311, -311, -311, -311, -311, -311, -311, -311, -311,
 			 -311, -311, -311, -311, -311,  312,  312,  312,  312,  312,
 			  312,  312,  312,  312,  312, -311, -311, -311, -311, -311,
-			 -311, -311, -311, -311, -311, -311, -311, -311, -311, -311,
+			 -311, -311, -311, -311, -311, -311, -311, -311, -311, -311, yy_Dummy>>,
+			1, 1000, 79000)
+		end
 
+	yy_nxt_template_81 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -311, -311, -311, -311, -311, -311, -311, -311, -311, -311,
 			 -311, -311, -311, -311, -311, -311, -311, -311, -311, -311,
 			 -311, -311, -311, -311, -311, -311, -311, -311, -311, -311,
@@ -10236,11 +10741,11 @@ feature {NONE} -- Table templates
 			 -315, -315, -315, -315, -315, -315, -315, -315, -315, -315,
 			 -315, -315, -315, -315, -315, -315, -315, -315, -315, -315,
 			 -315, -315, -315, -315, -315, -315, -315, -315, -315, -315,
-			 -315, -315, -315, -315, -315, -315, -315, -315, -315, -315>>,
-			1, 3000, 78000)
+			 -315, -315, -315, -315, -315, -315, -315, -315, -315, -315, yy_Dummy>>,
+			1, 1000, 80000)
 		end
 
-	yy_nxt_template_28 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_82 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -315, -315, -315,  380,  380,  380,  380,  380,  380,  380,
@@ -10351,8 +10856,13 @@ feature {NONE} -- Table templates
 			 -318, -318, -318, -318, -318, -318, -318, -318, -318, -318,
 			 -318, -318, -318, -318, -318, -318, -318, -318, -318, -318,
 			 -318, -318, -318,    5, -319, -319, -319, -319, -319, -319,
-			 -319, -319, -319, -319, -319, -319, -319, -319, -319, -319,
+			 -319, -319, -319, -319, -319, -319, -319, -319, -319, -319, yy_Dummy>>,
+			1, 1000, 81000)
+		end
 
+	yy_nxt_template_83 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -319, -319, -319, -319, -319, -319, -319, -319, -319, -319,
 			 -319, -319, -319, -319, -319, -319, -319, -319, -319, -319,
 			 -319, -319, -319, -319, -319, -319, -319, -319, -319, -319,
@@ -10461,8 +10971,13 @@ feature {NONE} -- Table templates
 			 -322, -322, -322, -322, -322, -322, -322, -322, -322, -322,
 			 -322, -322, -322, -322, -322, -322, -322, -322, -322, -322,
 			 -322, -322, -322, -322, -322, -322, -322, -322, -322, -322,
-			 -322, -322, -322, -322, -322, -322, -322, -322, -322, -322,
+			 -322, -322, -322, -322, -322, -322, -322, -322, -322, -322, yy_Dummy>>,
+			1, 1000, 82000)
+		end
 
+	yy_nxt_template_84 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -322, -322, -322, -322, -322, -322, -322, -322, -322, -322,
 			 -322,    5, -323, -323, -323, -323, -323, -323, -323, -323,
 			 -323, -323, -323, -323, -323, -323, -323, -323, -323, -323,
@@ -10571,11 +11086,11 @@ feature {NONE} -- Table templates
 			 -326, -326, -326, -326, -326, -326, -326, -326, -326, -326,
 			 -326, -326, -326, -326, -326, -326, -326, -326, -326, -326,
 			 -326, -326, -326, -326, -326, -326, -326, -326, -326, -326,
-			 -326, -326, -326, -326, -326, -326, -326, -326, -326, -326>>,
-			1, 3000, 81000)
+			 -326, -326, -326, -326, -326, -326, -326, -326, -326, -326, yy_Dummy>>,
+			1, 1000, 83000)
 		end
 
-	yy_nxt_template_29 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_85 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -326, -326, -326, -326, -326, -326, -326, -326, -326, -326,
@@ -10686,8 +11201,13 @@ feature {NONE} -- Table templates
 			 -330, -330, -330, -330, -330, -330, -330, -330, -330, -330,
 			 -330, -330, -330, -330, -330, -330, -330, -330, -330, -330,
 			 -330, -330, -330, -330, -330, -330, -330, -330, -330, -330,
-			 -330, -330, -330, -330, -330, -330, -330, -330, -330, -330,
+			 -330, -330, -330, -330, -330, -330, -330, -330, -330, -330, yy_Dummy>>,
+			1, 1000, 84000)
+		end
 
+	yy_nxt_template_86 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -330, -330, -330, -330, -330, -330, -330, -330, -330, -330,
 			 -330, -330, -330, -330, -330, -330, -330, -330, -330, -330,
 			 -330, -330, -330, -330, -330, -330, -330, -330, -330, -330,
@@ -10796,8 +11316,13 @@ feature {NONE} -- Table templates
 			  100, -334, -334, -334, -334, -334, -334, -334, -334, -334,
 			 -334, -334, -334, -334, -334, -334, -334, -334, -334, -334,
 			 -334, -334, -334, -334, -334, -334, -334, -334, -334, -334,
-			 -334, -334, -334, -334, -334, -334, -334, -334, -334, -334,
+			 -334, -334, -334, -334, -334, -334, -334, -334, -334, -334, yy_Dummy>>,
+			1, 1000, 85000)
+		end
 
+	yy_nxt_template_87 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -334, -334, -334, -334, -334, -334, -334, -334, -334, -334,
 			 -334, -334, -334, -334, -334, -334, -334, -334, -334, -334,
 			 -334, -334, -334, -334, -334, -334, -334, -334, -334, -334,
@@ -10906,11 +11431,11 @@ feature {NONE} -- Table templates
 			 -338,  100, -338,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100, -338,
-			 -338, -338, -338, -338, -338, -338, -338, -338, -338, -338>>,
-			1, 3000, 84000)
+			 -338, -338, -338, -338, -338, -338, -338, -338, -338, -338, yy_Dummy>>,
+			1, 1000, 86000)
 		end
 
-	yy_nxt_template_30 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_88 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -338, -338, -338, -338, -338, -338, -338, -338, -338, -338,
@@ -11021,8 +11546,13 @@ feature {NONE} -- Table templates
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100, -342, -342, -342, -342,  100,
-			 -342,  100,  100,  100,  100,  100,  100,  100,  100,  100,
+			 -342,  100,  100,  100,  100,  100,  100,  100,  100,  100, yy_Dummy>>,
+			1, 1000, 87000)
+		end
 
+	yy_nxt_template_89 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100, -342, -342, -342,
 			 -342, -342, -342, -342, -342, -342, -342, -342, -342, -342,
@@ -11131,8 +11661,13 @@ feature {NONE} -- Table templates
 			 -346, -346, -346, -346, -346, -346, -346, -346, -346, -346,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			 -346, -346, -346, -346, -346, -346, -346,  100,  100,  100,
-			  100,  100,  100,  100,  100,  100,  100,  100,  100,  407,
+			  100,  100,  100,  100,  100,  100,  100,  100,  100,  407, yy_Dummy>>,
+			1, 1000, 88000)
+		end
 
+	yy_nxt_template_90 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100, -346, -346, -346, -346,  100, -346,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
@@ -11241,11 +11776,11 @@ feature {NONE} -- Table templates
 			 -350, -350, -350, -350, -350, -350, -350, -350, -350, -350,
 			 -350, -350, -350, -350, -350, -350, -350, -350, -350, -350,
 			 -350, -350, -350, -350, -350, -350, -350, -350, -350, -350,
-			 -350, -350, -350, -350, -350, -350, -350, -350,  100,  100>>,
-			1, 3000, 87000)
+			 -350, -350, -350, -350, -350, -350, -350, -350,  100,  100, yy_Dummy>>,
+			1, 1000, 89000)
 		end
 
-	yy_nxt_template_31 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_91 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  100,  100,  100,  100,  100,  100,  100,  100, -350, -350,
@@ -11356,8 +11891,13 @@ feature {NONE} -- Table templates
 			 -353, -353, -353, -353, -353, -353, -353, -353, -353, -353,
 			 -353, -353, -353, -353, -353, -353, -353, -353,    5, -354,
 			 -354, -354, -354, -354, -354, -354, -354, -354, -354, -354,
-			 -354, -354, -354, -354, -354, -354, -354, -354, -354, -354,
+			 -354, -354, -354, -354, -354, -354, -354, -354, -354, -354, yy_Dummy>>,
+			1, 1000, 90000)
+		end
 
+	yy_nxt_template_92 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -354, -354, -354, -354, -354, -354, -354, -354, -354, -354,
 			 -354, -354, -354, -354, -354, -354, -354, -354, -354, -354,
 			 -354, -354, -354, -354, -354, -354,  100,  100,  100,  100,
@@ -11466,8 +12006,13 @@ feature {NONE} -- Table templates
 			 -357, -357, -357, -357, -357, -357, -357, -357, -357, -357,
 			 -357, -357, -357, -357, -357, -357, -357, -357, -357, -357,
 			 -357, -357, -357, -357, -357, -357, -357, -357, -357, -357,
-			 -357, -357, -357, -357, -357, -357, -357, -357, -357, -357,
+			 -357, -357, -357, -357, -357, -357, -357, -357, -357, -357, yy_Dummy>>,
+			1, 1000, 91000)
+		end
 
+	yy_nxt_template_93 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -357, -357, -357, -357, -357, -357,    5, -358, -358, -358,
 			 -358, -358, -358, -358, -358, -358, -358, -358, -358, -358,
 			 -358, -358, -358, -358, -358, -358, -358, -358, -358, -358,
@@ -11576,11 +12121,11 @@ feature {NONE} -- Table templates
 			 -361, -361, -361, -361, -361, -361, -361, -361, -361, -361,
 			 -361, -361, -361, -361, -361, -361, -361, -361, -361, -361,
 			 -361, -361, -361, -361, -361, -361, -361, -361, -361, -361,
-			 -361, -361, -361, -361, -361, -361, -361, -361, -361, -361>>,
-			1, 3000, 90000)
+			 -361, -361, -361, -361, -361, -361, -361, -361, -361, -361, yy_Dummy>>,
+			1, 1000, 92000)
 		end
 
-	yy_nxt_template_32 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_94 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -361, -361, -361, -361, -361, -361, -361, -361, -361, -361,
@@ -11691,8 +12236,13 @@ feature {NONE} -- Table templates
 			 -365, -365, -365, -365, -365, -365, -365, -365, -365, -365,
 			 -365, -365, -365, -365, -365, -365, -365, -365, -365, -365,
 			 -365, -365, -365, -365, -365, -365, -365, -365, -365, -365,
-			 -365, -365, -365, -365, -365, -365, -365, -365, -365, -365,
+			 -365, -365, -365, -365, -365, -365, -365, -365, -365, -365, yy_Dummy>>,
+			1, 1000, 93000)
+		end
 
+	yy_nxt_template_95 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -365, -365, -365, -365, -365, -365, -365, -365, -365, -365,
 			 -365, -365, -365, -365, -365, -365, -365, -365, -365, -365,
 			 -365, -365, -365, -365, -365, -365, -365, -365, -365, -365,
@@ -11801,8 +12351,13 @@ feature {NONE} -- Table templates
 			 -369, -369, -369, -369, -369, -369, -369, -369, -369, -369,
 			 -369, -369, -369, -369, -369, -369, -369, -369, -369, -369,
 			 -369, -369, -369, -369, -369, -369, -369, -369, -369, -369,
-			 -369, -369, -369, -369, -369, -369, -369, -369, -369, -369,
+			 -369, -369, -369, -369, -369, -369, -369, -369, -369, -369, yy_Dummy>>,
+			1, 1000, 94000)
+		end
 
+	yy_nxt_template_96 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -369, -369, -369, -369, -369, -369, -369, -369, -369, -369,
 			 -369, -369, -369, -369, -369, -369, -369, -369, -369, -369,
 			 -369, -369, -369, -369, -369, -369, -369, -369, -369, -369,
@@ -11911,11 +12466,11 @@ feature {NONE} -- Table templates
 			 -373, -373,  309, -373, -373, -373, -373, -373, -373, -373,
 			 -373, -373, -373, -373, -373, -373, -373, -373, -373, -373,
 			 -373, -373, -373, -373, -373, -373, -373, -373, -373, -373,
-			 -373, -373, -373, -373, -373, -373, -373, -373, -373, -373>>,
-			1, 3000, 93000)
+			 -373, -373, -373, -373, -373, -373, -373, -373, -373, -373, yy_Dummy>>,
+			1, 1000, 95000)
 		end
 
-	yy_nxt_template_33 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_97 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -373, -373, -373, -373, -373, -373, -373, -373, -373, -373,
@@ -12026,8 +12581,13 @@ feature {NONE} -- Table templates
 			 -377, -377, -377, -377, -377, -377, -377, -377, -377, -377,
 			 -377, -377, -377, -377, -377, -377, -377, -377, -377, -377,
 			 -377, -377, -377, -377,  378, -377, -377, -377, -377, -377,
-			 -377, -377, -377, -377, -377, -377, -377, -377, -377, -377,
+			 -377, -377, -377, -377, -377, -377, -377, -377, -377, -377, yy_Dummy>>,
+			1, 1000, 96000)
+		end
 
+	yy_nxt_template_98 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -377, -377, -377, -377, -377, -377, -377, -377, -377, -377,
 			 -377, -377, -377, -377, -377, -377, -377, -377, -377, -377,
 			 -377, -377, -377, -377, -377, -377, -377, -377, -377, -377,
@@ -12136,8 +12696,13 @@ feature {NONE} -- Table templates
 			 -381, -381, -381, -381, -381,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100, -381, -381, -381, -381, -381,
 			 -381, -381,  100,  100,  100,  100,  100,  100,  100,  100,
-			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
+			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100, yy_Dummy>>,
+			1, 1000, 97000)
+		end
 
+	yy_nxt_template_99 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  100,  100,  100,  100,  100,  100,  100,  100, -381, -381,
 			 -381, -381,  100, -381,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
@@ -12246,11 +12811,11 @@ feature {NONE} -- Table templates
 			 -385, -385, -385, -385, -385, -385, -385, -385, -385, -385,
 			 -385, -385, -385, -385, -385, -385, -385, -385, -385, -385,
 			 -385, -385, -385, -385, -385, -385, -385, -385, -385, -385,
-			 -385, -385, -385,  100,  100,  100,  100,  100,  100,  100>>,
-			1, 3000, 96000)
+			 -385, -385, -385,  100,  100,  100,  100,  100,  100,  100, yy_Dummy>>,
+			1, 1000, 98000)
 		end
 
-	yy_nxt_template_34 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_100 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  100,  100,  100, -385, -385, -385, -385, -385, -385, -385,
@@ -12361,8 +12926,13 @@ feature {NONE} -- Table templates
 			 -388, -388, -388, -388, -388, -388, -388, -388, -388, -388,
 			 -388, -388, -388,    5, -389, -389, -389, -389, -389, -389,
 			 -389, -389, -389, -389, -389, -389, -389, -389, -389, -389,
-			 -389, -389, -389, -389, -389, -389, -389, -389, -389, -389,
+			 -389, -389, -389, -389, -389, -389, -389, -389, -389, -389, yy_Dummy>>,
+			1, 1000, 99000)
+		end
 
+	yy_nxt_template_101 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -389, -389, -389, -389, -389, -389, -389, -389, -389, -389,
 			 -389, -389, -389, -389, -389, -389, -389, -389, -389, -389,
 			 -389,  100,  100,  100,  100,  100,  100,  100,  100,  100,
@@ -12471,8 +13041,13 @@ feature {NONE} -- Table templates
 			 -392, -392, -392, -392, -392, -392, -392, -392, -392, -392,
 			 -392, -392, -392, -392, -392, -392, -392, -392, -392, -392,
 			 -392, -392, -392, -392, -392, -392, -392, -392, -392, -392,
-			 -392, -392, -392, -392, -392, -392, -392, -392, -392, -392,
+			 -392, -392, -392, -392, -392, -392, -392, -392, -392, -392, yy_Dummy>>,
+			1, 1000, 100000)
+		end
 
+	yy_nxt_template_102 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -392,    5, -393, -393, -393, -393, -393, -393, -393, -393,
 			 -393, -393, -393, -393, -393, -393, -393, -393, -393, -393,
 			 -393, -393, -393, -393, -393, -393, -393, -393, -393, -393,
@@ -12581,11 +13156,11 @@ feature {NONE} -- Table templates
 			 -396, -396, -396, -396, -396, -396, -396, -396, -396, -396,
 			 -396, -396, -396, -396, -396, -396, -396, -396, -396, -396,
 			 -396, -396, -396, -396, -396, -396, -396, -396, -396, -396,
-			 -396, -396, -396, -396, -396, -396, -396, -396, -396, -396>>,
-			1, 3000, 99000)
+			 -396, -396, -396, -396, -396, -396, -396, -396, -396, -396, yy_Dummy>>,
+			1, 1000, 101000)
 		end
 
-	yy_nxt_template_35 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_103 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -396, -396, -396, -396, -396, -396, -396, -396, -396, -396,
@@ -12696,8 +13271,13 @@ feature {NONE} -- Table templates
 			 -400, -400, -400, -400, -400, -400, -400, -400, -400, -400,
 			 -400, -400, -400, -400, -400, -400, -400, -400, -400, -400,
 			 -400, -400, -400, -400, -400, -400, -400, -400, -400, -400,
-			 -400, -400, -400, -400, -400, -400, -400, -400, -400, -400,
+			 -400, -400, -400, -400, -400, -400, -400, -400, -400, -400, yy_Dummy>>,
+			1, 1000, 102000)
+		end
 
+	yy_nxt_template_104 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -400, -400, -400, -400, -400, -400, -400, -400, -400, -400,
 			 -400, -400, -400, -400, -400, -400, -400, -400, -400, -400,
 			 -400, -400, -400, -400, -400, -400, -400, -400, -400, -400,
@@ -12806,8 +13386,13 @@ feature {NONE} -- Table templates
 			 -404, -404, -404, -404, -404, -404, -404, -404, -404, -404,
 			 -404, -404, -404, -404, -404, -404, -404, -404, -404, -404,
 			 -404, -404, -404, -404, -404, -404, -404, -404, -404, -404,
-			 -404, -404, -404, -404, -404, -404, -404, -404, -404, -404,
+			 -404, -404, -404, -404, -404, -404, -404, -404, -404, -404, yy_Dummy>>,
+			1, 1000, 103000)
+		end
 
+	yy_nxt_template_105 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -404, -404, -404, -404, -404, -404, -404, -404, -404, -404,
 			 -404, -404, -404, -404, -404, -404, -404, -404, -404, -404,
 			 -404, -404, -404, -404, -404, -404, -404, -404, -404, -404,
@@ -12916,11 +13501,11 @@ feature {NONE} -- Table templates
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  455,  100,  100,  100,  100,  100,  100,  100,  100, -408,
 			 -408, -408, -408, -408, -408, -408, -408, -408, -408, -408,
-			 -408, -408, -408, -408, -408, -408, -408, -408, -408, -408>>,
-			1, 3000, 102000)
+			 -408, -408, -408, -408, -408, -408, -408, -408, -408, -408, yy_Dummy>>,
+			1, 1000, 104000)
 		end
 
-	yy_nxt_template_36 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_106 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -408, -408, -408, -408, -408, -408, -408, -408, -408, -408,
@@ -13031,8 +13616,13 @@ feature {NONE} -- Table templates
 			  100,  100,  100,  100,  100,  100,  100,  100,  458,  100,
 			  100,  100,  100,  100,  100, -412, -412, -412, -412,  100,
 			 -412,  100,  100,  100,  100,  100,  100,  100,  100,  100,
-			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
+			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100, yy_Dummy>>,
+			1, 1000, 105000)
+		end
 
+	yy_nxt_template_107 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  458,  100,  100,  100,  100,  100,  100, -412, -412, -412,
 			 -412, -412, -412, -412, -412, -412, -412, -412, -412, -412,
 			 -412, -412, -412, -412, -412, -412, -412, -412, -412, -412,
@@ -13141,8 +13731,13 @@ feature {NONE} -- Table templates
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			 -416, -416, -416, -416, -416, -416, -416,  100,  100,  100,
 			  100,  461,  100,  100,  100,  100,  100,  100,  100,  100,
-			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
+			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100, yy_Dummy>>,
+			1, 1000, 106000)
+		end
 
+	yy_nxt_template_108 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  100,  100,  100, -416, -416, -416, -416,  100, -416,  100,
 			  100,  100,  100,  461,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
@@ -13251,11 +13846,11 @@ feature {NONE} -- Table templates
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   64,   63,   63, -420,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
-			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63>>,
-			1, 3000, 105000)
+			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63, yy_Dummy>>,
+			1, 1000, 107000)
 		end
 
-	yy_nxt_template_37 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_109 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,  464,
@@ -13366,8 +13961,13 @@ feature {NONE} -- Table templates
 			 -423, -423, -423, -423, -423, -423, -423, -423,    5, -424,
 			 -424, -424, -424, -424, -424, -424, -424, -424, -424, -424,
 			 -424, -424, -424, -424, -424, -424, -424, -424, -424, -424,
-			 -424, -424, -424, -424, -424, -424, -424, -424, -424, -424,
+			 -424, -424, -424, -424, -424, -424, -424, -424, -424, -424, yy_Dummy>>,
+			1, 1000, 108000)
+		end
 
+	yy_nxt_template_110 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -424, -424, -424, -424, -424, -424, -424, -424, -424, -424,
 			 -424, -424, -424, -424, -424, -424,  467,  467,  467,  467,
 			  467,  467,  467,  467,  467,  467, -424, -424, -424, -424,
@@ -13476,8 +14076,13 @@ feature {NONE} -- Table templates
 			 -427, -427, -427, -427, -427, -427, -427, -427, -427, -427,
 			 -427, -427, -427, -427, -427, -427, -427, -427, -427, -427,
 			 -427, -427, -427, -427, -427, -427, -427, -427, -427, -427,
-			 -427, -427, -427, -427, -427, -427,    5, -428, -428, -428,
+			 -427, -427, -427, -427, -427, -427,    5, -428, -428, -428, yy_Dummy>>,
+			1, 1000, 109000)
+		end
 
+	yy_nxt_template_111 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -428, -428, -428, -428, -428, -428, -428, -428, -428, -428,
 			 -428, -428, -428, -428, -428, -428, -428, -428, -428, -428,
 			 -428, -428, -428, -428, -428, -428, -428, -428, -428, -428,
@@ -13586,11 +14191,11 @@ feature {NONE} -- Table templates
 			 -431, -431, -431, -431, -431, -431, -431, -431, -431, -431,
 			 -431, -431, -431, -431, -431, -431, -431, -431, -431, -431,
 			 -431, -431, -431, -431, -431, -431, -431, -431, -431, -431,
-			 -431, -431, -431, -431, -431, -431, -431, -431, -431, -431>>,
-			1, 3000, 108000)
+			 -431, -431, -431, -431, -431, -431, -431, -431, -431, -431, yy_Dummy>>,
+			1, 1000, 110000)
 		end
 
-	yy_nxt_template_38 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_112 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -431, -431, -431, -431, -431, -431, -431, -431, -431, -431,
@@ -13701,8 +14306,13 @@ feature {NONE} -- Table templates
 			 -435, -435, -435, -435, -435, -435, -435, -435, -435, -435,
 			 -435, -435, -435, -435, -435, -435, -435, -435, -435, -435,
 			 -435, -435, -435, -435, -435, -435, -435, -435, -435, -435,
-			 -435, -435, -435, -435, -435, -435, -435, -435, -435, -435,
+			 -435, -435, -435, -435, -435, -435, -435, -435, -435, -435, yy_Dummy>>,
+			1, 1000, 111000)
+		end
 
+	yy_nxt_template_113 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -435, -435, -435, -435, -435, -435, -435, -435, -435, -435,
 			 -435, -435, -435, -435, -435, -435, -435, -435, -435, -435,
 			 -435, -435, -435, -435, -435, -435, -435, -435, -435, -435,
@@ -13811,8 +14421,13 @@ feature {NONE} -- Table templates
 			 -439, -439, -439, -439, -439, -439, -439, -439, -439, -439,
 			 -439, -439, -439, -439, -439, -439, -439, -439, -439, -439,
 			 -439, -439, -439, -439, -439, -439, -439, -439, -439, -439,
-			 -439, -439, -439, -439, -439, -439, -439, -439, -439, -439,
+			 -439, -439, -439, -439, -439, -439, -439, -439, -439, -439, yy_Dummy>>,
+			1, 1000, 112000)
+		end
 
+	yy_nxt_template_114 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -439, -439, -439, -439, -439, -439, -439, -439, -439, -439,
 			 -439, -439, -439, -439, -439, -439, -439, -439, -439, -439,
 			 -439, -439, -439, -439, -439, -439, -439, -439, -439, -439,
@@ -13921,11 +14536,11 @@ feature {NONE} -- Table templates
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100, -443, -443, -443, -443, -443, -443,
 			 -443, -443, -443, -443, -443, -443, -443, -443, -443, -443,
-			 -443, -443, -443, -443, -443, -443, -443, -443, -443, -443>>,
-			1, 3000, 111000)
+			 -443, -443, -443, -443, -443, -443, -443, -443, -443, -443, yy_Dummy>>,
+			1, 1000, 113000)
 		end
 
-	yy_nxt_template_39 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_115 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -443, -443, -443, -443, -443, -443, -443, -443, -443, -443,
@@ -14036,8 +14651,13 @@ feature {NONE} -- Table templates
 			  100,  100,  100,  488,  100,  100,  100,  100,  100,  100,
 			 -447, -447, -447, -447,  100, -447,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
-			  100,  100,  100,  100,  100,  488,  100,  100,  100,  100,
+			  100,  100,  100,  100,  100,  488,  100,  100,  100,  100, yy_Dummy>>,
+			1, 1000, 114000)
+		end
 
+	yy_nxt_template_116 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  100,  100, -447, -447, -447, -447, -447, -447, -447, -447,
 			 -447, -447, -447, -447, -447, -447, -447, -447, -447, -447,
 			 -447, -447, -447, -447, -447, -447, -447, -447, -447, -447,
@@ -14146,8 +14766,13 @@ feature {NONE} -- Table templates
 			  100,  100,  100,  100,  100, -451, -451, -451, -451, -451,
 			 -451, -451,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
-			  492,  100,  100,  100,  100,  100,  100,  100, -451, -451,
+			  492,  100,  100,  100,  100,  100,  100,  100, -451, -451, yy_Dummy>>,
+			1, 1000, 115000)
+		end
 
+	yy_nxt_template_117 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -451, -451,  100, -451,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100,  492,  100,  100,  100,  100,  100,  100,  100,
@@ -14256,11 +14881,11 @@ feature {NONE} -- Table templates
 			 -455, -455, -455, -455, -455, -455, -455, -455, -455, -455,
 			 -455, -455, -455, -455, -455, -455, -455, -455, -455, -455,
 			 -455, -455, -455,  100,  100,  100,  100,  100,  100,  100,
-			  100,  100,  100, -455, -455, -455, -455, -455, -455, -455>>,
-			1, 3000, 114000)
+			  100,  100,  100, -455, -455, -455, -455, -455, -455, -455, yy_Dummy>>,
+			1, 1000, 116000)
 		end
 
-	yy_nxt_template_40 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_118 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  100,  100,  100,  100,  494,  100,  100,  100,  100,  100,
@@ -14371,8 +14996,13 @@ feature {NONE} -- Table templates
 			 -458, -458, -458,    5, -459, -459, -459, -459, -459, -459,
 			 -459, -459, -459, -459, -459, -459, -459, -459, -459, -459,
 			 -459, -459, -459, -459, -459, -459, -459, -459, -459, -459,
-			 -459, -459, -459, -459, -459, -459, -459, -459, -459, -459,
+			 -459, -459, -459, -459, -459, -459, -459, -459, -459, -459, yy_Dummy>>,
+			1, 1000, 117000)
+		end
 
+	yy_nxt_template_119 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -459, -459, -459, -459, -459, -459, -459, -459, -459, -459,
 			 -459,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100, -459, -459, -459, -459, -459, -459, -459,  100,  100,
@@ -14481,8 +15111,13 @@ feature {NONE} -- Table templates
 			 -462, -462, -462, -462, -462, -462, -462, -462, -462, -462,
 			 -462, -462, -462, -462, -462, -462, -462, -462, -462, -462,
 			 -462, -462, -462, -462, -462, -462, -462, -462, -462, -462,
-			 -462,    5,   63,   63,   63,   63,   63,   63,   63,   63,
+			 -462,    5,   63,   63,   63,   63,   63,   63,   63,   63, yy_Dummy>>,
+			1, 1000, 118000)
+		end
 
+	yy_nxt_template_120 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			   63, -463,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   64,   63,   63, -463,   63,
@@ -14591,11 +15226,11 @@ feature {NONE} -- Table templates
 			 -466, -466, -466, -466, -466, -466, -466, -466, -466, -466,
 			 -466, -466, -466, -466, -466, -466, -466, -466, -466, -466,
 			 -466, -466, -466, -466, -466, -466, -466, -466, -466, -466,
-			 -466, -466, -466, -466, -466, -466, -466, -466, -466, -466>>,
-			1, 3000, 117000)
+			 -466, -466, -466, -466, -466, -466, -466, -466, -466, -466, yy_Dummy>>,
+			1, 1000, 119000)
 		end
 
-	yy_nxt_template_41 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_121 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -466, -466, -466, -466, -466, -466, -466, -466, -466, -466,
@@ -14706,8 +15341,13 @@ feature {NONE} -- Table templates
 			 -470, -470, -470, -470, -470, -470, -470, -470, -470, -470,
 			 -470, -470, -470, -470, -470, -470, -470, -470, -470, -470,
 			 -470, -470, -470, -470, -470, -470, -470, -470, -470, -470,
-			 -470, -470, -470, -470, -470, -470, -470, -470, -470, -470,
+			 -470, -470, -470, -470, -470, -470, -470, -470, -470, -470, yy_Dummy>>,
+			1, 1000, 120000)
+		end
 
+	yy_nxt_template_122 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -470, -470, -470, -470, -470, -470, -470, -470, -470, -470,
 			 -470, -470, -470, -470, -470, -470, -470, -470, -470, -470,
 			 -470, -470, -470, -470, -470, -470, -470, -470, -470, -470,
@@ -14816,8 +15456,13 @@ feature {NONE} -- Table templates
 			 -474, -474, -474, -474, -474, -474, -474, -474, -474, -474,
 			 -474, -474, -474, -474, -474, -474, -474, -474, -474, -474,
 			 -474, -474, -474, -474, -474, -474, -474, -474, -474, -474,
-			 -474, -474, -474, -474, -474, -474, -474, -474, -474, -474,
+			 -474, -474, -474, -474, -474, -474, -474, -474, -474, -474, yy_Dummy>>,
+			1, 1000, 121000)
+		end
 
+	yy_nxt_template_123 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -474, -474, -474, -474, -474, -474, -474, -474, -474, -474,
 			 -474, -474, -474, -474, -474, -474, -474, -474, -474, -474,
 			 -474, -474, -474, -474, -474, -474, -474, -474, -474, -474,
@@ -14926,11 +15571,11 @@ feature {NONE} -- Table templates
 			 -478, -478, -478, -478, -478, -478, -478, -478, -478, -478,
 			 -478, -478, -478, -478, -478, -478, -478, -478, -478, -478,
 			 -478, -478, -478, -478, -478, -478, -478, -478, -478, -478,
-			 -478, -478, -478, -478, -478, -478, -478, -478, -478, -478>>,
-			1, 3000, 120000)
+			 -478, -478, -478, -478, -478, -478, -478, -478, -478, -478, yy_Dummy>>,
+			1, 1000, 122000)
 		end
 
-	yy_nxt_template_42 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_124 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -478, -478, -478, -478, -478, -478, -478, -478, -478, -478,
@@ -15041,8 +15686,13 @@ feature {NONE} -- Table templates
 			  100,  100,  100,  100,  100, -482, -482, -482, -482,  100,
 			 -482,  100,  100,  100,  513,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
-			  100,  100,  100,  100,  100,  100,  100, -482, -482, -482,
+			  100,  100,  100,  100,  100,  100,  100, -482, -482, -482, yy_Dummy>>,
+			1, 1000, 123000)
+		end
 
+	yy_nxt_template_125 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -482, -482, -482, -482, -482, -482, -482, -482, -482, -482,
 			 -482, -482, -482, -482, -482, -482, -482, -482, -482, -482,
 			 -482, -482, -482, -482, -482, -482, -482, -482, -482, -482,
@@ -15151,8 +15801,13 @@ feature {NONE} -- Table templates
 			 -486, -486, -486, -486, -486, -486, -486,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
-			  100,  100,  100, -486, -486, -486, -486,  100, -486,  100,
+			  100,  100,  100, -486, -486, -486, -486,  100, -486,  100, yy_Dummy>>,
+			1, 1000, 124000)
+		end
 
+	yy_nxt_template_126 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100, -486, -486, -486, -486, -486,
@@ -15261,11 +15916,11 @@ feature {NONE} -- Table templates
 			 -490, -490, -490, -490, -490, -490, -490, -490, -490, -490,
 			 -490, -490, -490, -490, -490, -490, -490, -490,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100, -490, -490,
-			 -490, -490, -490, -490, -490,  100,  100,  100,  100,  100>>,
-			1, 3000, 123000)
+			 -490, -490, -490, -490, -490,  100,  100,  100,  100,  100, yy_Dummy>>,
+			1, 1000, 125000)
 		end
 
-	yy_nxt_template_43 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_127 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			  100,  100,  100,  100,  100,  100,  100,  100,  517,  100,
@@ -15376,8 +16031,13 @@ feature {NONE} -- Table templates
 			 -494, -494, -494, -494, -494, -494, -494, -494, -494, -494,
 			 -494, -494, -494, -494, -494, -494, -494, -494, -494, -494,
 			 -494, -494, -494, -494, -494, -494, -494, -494, -494, -494,
-			 -494, -494, -494, -494, -494, -494, -494, -494, -494, -494,
+			 -494, -494, -494, -494, -494, -494, -494, -494, -494, -494, yy_Dummy>>,
+			1, 1000, 126000)
+		end
 
+	yy_nxt_template_128 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -494, -494, -494, -494, -494, -494,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100, -494, -494, -494, -494,
 			 -494, -494, -494,  100,  100,  100,  100,  100,  100,  100,
@@ -15486,8 +16146,13 @@ feature {NONE} -- Table templates
 			 -497, -497, -497, -497, -497, -497, -497, -497, -497, -497,
 			 -497, -497, -497, -497, -497, -497, -497, -497, -497, -497,
 			 -497, -497, -497, -497, -497, -497,    5,   63,   63,   63,
-			   63,   63,   63,   63,   63,   63, -498,   63,   63,   63,
+			   63,   63,   63,   63,   63,   63, -498,   63,   63,   63, yy_Dummy>>,
+			1, 1000, 127000)
+		end
 
+	yy_nxt_template_129 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   63,   63,   63,   63,   63,   63,   63,   63,   63,   63,
 			   64,   63,   63, -498,   63,   63,   63,   63,   63,   63,
@@ -15596,11 +16261,11 @@ feature {NONE} -- Table templates
 			 -501, -501, -501, -501, -501, -501, -501, -501, -501, -501,
 			 -501, -501, -501, -501, -501, -501, -501, -501, -501, -501,
 			 -501, -501, -501, -501, -501, -501, -501, -501, -501, -501,
-			 -501, -501, -501, -501, -501, -501, -501, -501, -501, -501>>,
-			1, 3000, 126000)
+			 -501, -501, -501, -501, -501, -501, -501, -501, -501, -501, yy_Dummy>>,
+			1, 1000, 128000)
 		end
 
-	yy_nxt_template_44 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_130 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -501, -501, -501, -501, -501, -501, -501, -501, -501, -501,
@@ -15711,8 +16376,13 @@ feature {NONE} -- Table templates
 			 -505, -505, -505, -505, -505, -505, -505, -505, -505, -505,
 			 -505, -505, -505, -505, -505, -505, -505, -505, -505, -505,
 			 -505, -505, -505, -505, -505, -505, -505, -505, -505, -505,
-			 -505, -505, -505, -505, -505, -505, -505, -505, -505, -505,
+			 -505, -505, -505, -505, -505, -505, -505, -505, -505, -505, yy_Dummy>>,
+			1, 1000, 129000)
+		end
 
+	yy_nxt_template_131 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -505, -505, -505, -505, -505, -505, -505, -505, -505, -505,
 			 -505, -505, -505, -505, -505, -505, -505, -505, -505, -505,
 			 -505, -505, -505, -505, -505, -505, -505, -505, -505, -505,
@@ -15821,8 +16491,13 @@ feature {NONE} -- Table templates
 			 -509, -509, -509, -509, -509, -509, -509, -509, -509, -509,
 			 -509, -509, -509, -509, -509, -509, -509, -509, -509, -509,
 			 -509, -509, -509, -509, -509, -509, -509, -509, -509, -509,
-			 -509, -509, -509, -509, -509, -509, -509, -509, -509, -509,
+			 -509, -509, -509, -509, -509, -509, -509, -509, -509, -509, yy_Dummy>>,
+			1, 1000, 130000)
+		end
 
+	yy_nxt_template_132 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -509, -509, -509, -509, -509, -509, -509, -509, -509, -509,
 			 -509, -509, -509, -509, -509, -509, -509, -509, -509, -509,
 			 -509, -509, -509, -509, -509, -509, -509, -509, -509, -509,
@@ -15931,11 +16606,11 @@ feature {NONE} -- Table templates
 			  100,  100,  100,  100, -513, -513, -513, -513, -513, -513,
 			 -513, -513, -513, -513, -513, -513, -513, -513, -513, -513,
 			 -513, -513, -513, -513, -513, -513, -513, -513, -513, -513,
-			 -513, -513, -513, -513, -513, -513, -513, -513, -513, -513>>,
-			1, 3000, 129000)
+			 -513, -513, -513, -513, -513, -513, -513, -513, -513, -513, yy_Dummy>>,
+			1, 1000, 131000)
 		end
 
-	yy_nxt_template_45 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_133 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -513, -513, -513, -513, -513, -513, -513, -513, -513, -513,
@@ -16046,8 +16721,13 @@ feature {NONE} -- Table templates
 			 -517, -517, -517, -517,  100, -517,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  531,  100,  100,  100,  100,
-			  100,  100, -517, -517, -517, -517, -517, -517, -517, -517,
+			  100,  100, -517, -517, -517, -517, -517, -517, -517, -517, yy_Dummy>>,
+			1, 1000, 132000)
+		end
 
+	yy_nxt_template_134 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -517, -517, -517, -517, -517, -517, -517, -517, -517, -517,
 			 -517, -517, -517, -517, -517, -517, -517, -517, -517, -517,
 			 -517, -517, -517, -517, -517, -517, -517, -517, -517, -517,
@@ -16156,8 +16836,13 @@ feature {NONE} -- Table templates
 			 -521, -521,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100, -521, -521,
-			 -521, -521,  100, -521,  100,  100,  100,  100,  100,  100,
+			 -521, -521,  100, -521,  100,  100,  100,  100,  100,  100, yy_Dummy>>,
+			1, 1000, 133000)
+		end
 
+	yy_nxt_template_135 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			  100,  100,  100,  100,  100,  100,  100,  100,  100,  100,
 			 -521, -521, -521, -521, -521, -521, -521, -521, -521, -521,
@@ -16266,11 +16951,11 @@ feature {NONE} -- Table templates
 			 -525, -525, -525, -525, -525, -525, -525, -525, -525, -525,
 			 -525, -525, -525, -525, -525, -525, -525, -525, -525, -525,
 			 -525, -525, -525, -525, -525, -525, -525, -525, -525, -525,
-			 -525, -525, -525, -525, -525, -525, -525, -525, -525, -525>>,
-			1, 3000, 132000)
+			 -525, -525, -525, -525, -525, -525, -525, -525, -525, -525, yy_Dummy>>,
+			1, 1000, 134000)
 		end
 
-	yy_nxt_template_46 (an_array: ARRAY [INTEGER])
+	yy_nxt_template_136 (an_array: ARRAY [INTEGER])
 		do
 			yy_array_subcopy (an_array, <<
 			 -525, -525, -525, -525, -525, -525, -525, -525, -525, -525,
@@ -16381,8 +17066,13 @@ feature {NONE} -- Table templates
 			 -529, -529, -529, -529, -529, -529, -529, -529, -529, -529,
 			 -529, -529, -529, -529, -529, -529, -529, -529, -529, -529,
 			 -529, -529, -529, -529, -529, -529, -529, -529, -529, -529,
-			 -529, -529, -529, -529, -529, -529, -529, -529, -529, -529,
+			 -529, -529, -529, -529, -529, -529, -529, -529, -529, -529, yy_Dummy>>,
+			1, 1000, 135000)
+		end
 
+	yy_nxt_template_137 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -529,  534,  534,  534,  534,  534,  534,  534,  534,  534,
 			  534, -529, -529, -529, -529, -529, -529, -529, -529, -529,
 			 -529, -529, -529, -529, -529, -529, -529, -529, -529, -529,
@@ -16491,8 +17181,13 @@ feature {NONE} -- Table templates
 			 -532, -532, -532, -532, -532, -532, -532, -532, -532, -532,
 			 -532, -532, -532, -532, -532, -532, -532, -532, -532, -532,
 			 -532,    5, -533, -533, -533, -533, -533, -533, -533, -533,
-			 -533, -533, -533, -533, -533, -533, -533, -533, -533, -533,
+			 -533, -533, -533, -533, -533, -533, -533, -533, -533, -533, yy_Dummy>>,
+			1, 1000, 136000)
+		end
 
+	yy_nxt_template_138 (an_array: ARRAY [INTEGER])
+		do
+			yy_array_subcopy (an_array, <<
 			 -533, -533, -533, -533, -533, -533, -533, -533, -533, -533,
 			 -533, -533, -533, -533, -533, -533, -533, -533, -533, -533,
 			 -533, -533, -533, -533, -533, -533, -533, -533, -533, -533,
@@ -16546,13 +17241,11 @@ feature {NONE} -- Table templates
 			 -534, -534, -534, -534, -534, -534, -534, -534, -534, -534,
 			 -534, -534, -534, -534, -534, -534, -534, -534, -534, -534,
 			 -534, -534, -534, -534, -534, -534, -534, -534, -534, -534,
-			 -534, -534, -534, -534, -534>>,
-			1, 2495, 135000)
+			 -534, -534, -534, -534, -534, yy_Dummy>>,
+			1, 495, 137000)
 		end
 
-	yy_accept_template: ANY
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yy_accept_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    0,    0,    0,    0,  186,  184,    1,    2,   17,
@@ -16613,7 +17306,7 @@ feature {NONE} -- Table templates
 			  144,  183,    0,  183,    0,  179,    0,    0,  182,  183,
 			    0,  182,   44,   47,   53,   55,   62,   95,   72,   95,
 			   78,   85,   89,  144,  141,  140,  183,  182,    0,  182,
-			  182,   66,   76,  139,  182>>)
+			  182,   66,   76,  139,  182, yy_Dummy>>)
 		end
 
 feature {NONE} -- Constants
@@ -16633,6 +17326,12 @@ feature {NONE} -- Constants
 
 	yyEnd_of_buffer: INTEGER = 186
 			-- End of buffer rule code
+
+	yyLine_used: BOOLEAN = false
+			-- Are line and column numbers used?
+
+	yyPosition_used: BOOLEAN = false
+			-- Is `position' used?
 
 	INITIAL: INTEGER = 0
 	IN_STR: INTEGER = 1
@@ -16826,18 +17525,4 @@ invariant
 	eif_buffer_not_void: eif_buffer /= Void
 	
 	
-note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
-
-
-
-
 end -- class EIFFEL_SCANNER

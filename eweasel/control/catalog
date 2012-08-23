@@ -1717,6 +1717,7 @@ test	small-eif-memory-scavenge-2		exec347	tcf pass execution
 test	environment-setting				exec348	tcf pass execution eweasel
 test	none-and-attachement			exec349	tcf pass execution conformance
 test	wrong-type-in-tuple				exec350	tcf pass execution tuple
+test	nested-expanded-copy-2			exec351 tcf pass execution expanded
 
 -- Once specific
 

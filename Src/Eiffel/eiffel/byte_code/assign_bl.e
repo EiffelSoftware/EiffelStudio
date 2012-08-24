@@ -596,10 +596,19 @@ feature
 		local
 			buf: GENERATION_BUFFER
 			target_type: CL_TYPE_A
+			l_skeleton: SKELETON
 		do
 			buf := buffer
-			if not target.is_predefined and target.c_type.is_reference then
-					-- Assignment on attribute. We need aging test, thus we use RTXA.
+			target_type ?= context.real_type (target.type)
+			check
+					-- An expanded is a valid class type.
+				target_type_not_void: target_type /= Void
+			end
+			l_skeleton := target_type.associated_class_type (context.context_class_type.type).skeleton
+
+			if (not target.is_predefined and target.c_type.is_reference) or l_skeleton.nb_expanded >= 0 then
+					-- Assignment on attribute or assignment of complex expanded objects.
+					-- We need aging test, thus we use RTXA.
 					-- FIXME: Optimization for attributes which are known to not have
 					-- references in final mode, we should just do a `memmove' which
 					-- is much faster.
@@ -611,11 +620,6 @@ feature
 				buf.put_character (')')
 				buf.put_character (';')
 			else
-				target_type ?= context.real_type (target.type)
-				check
-						-- An expanded is a valid class type.
-					target_type_not_void: target_type /= Void
-				end
 				buf.put_new_line
 				buf.put_string ("memmove(")
 				target.print_register
@@ -742,7 +746,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

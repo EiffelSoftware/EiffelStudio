@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 					yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 				end
 			end
-			yyvs1.put (last_any_value, yyvsp1)
+			yyspecial_routines1.force (yyvs1, last_any_value, yyvsp1)
 		end
 
 	yy_push_error_value
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 					yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 				end
 			end
-			yyvs1.put (yyval1, yyvsp1)
+			yyspecial_routines1.force (yyvs1, yyval1, yyvsp1)
 		end
 
 	yy_pop_last_value (yystate: INTEGER)
@@ -461,7 +461,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
 	yyvsp6 := yyvsp6 -1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -482,7 +482,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
 	yyvsp6 := yyvsp6 -1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -502,7 +502,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp6 := yyvsp6 -1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -522,7 +522,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp6 := yyvsp6 -1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -558,7 +558,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -594,7 +594,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -630,7 +630,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -648,7 +648,7 @@ end
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -683,7 +683,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs6 := yyspecial_routines6.resize (yyvs6, yyvsc6)
 		end
 	end
-	yyvs6.put (yyval6, yyvsp6)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 		end
 
@@ -719,7 +719,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs6 := yyspecial_routines6.resize (yyvs6, yyvsc6)
 		end
 	end
-	yyvs6.put (yyval6, yyvsp6)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 		end
 
@@ -756,7 +756,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -796,7 +796,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -835,7 +835,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -872,7 +872,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -890,7 +890,7 @@ end
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -930,7 +930,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -969,7 +969,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -1006,7 +1006,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -1044,7 +1044,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -1083,7 +1083,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -1122,7 +1122,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -1161,7 +1161,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -1202,7 +1202,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -1243,7 +1243,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -1277,7 +1277,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
 		end
 	end
-	yyvs7.put (yyval7, yyvsp7)
+	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 		end
 
@@ -1312,7 +1312,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
 		end
 	end
-	yyvs7.put (yyval7, yyvsp7)
+	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 		end
 
@@ -1351,7 +1351,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -1390,7 +1390,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -1429,7 +1429,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -1468,7 +1468,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -1507,7 +1507,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -1546,7 +1546,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -1585,7 +1585,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -1624,7 +1624,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -1663,7 +1663,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -1702,7 +1702,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -1741,7 +1741,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -1780,7 +1780,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
 		end
 	end
-	yyvs2.put (yyval2, yyvsp2)
+	yyspecial_routines2.force (yyvs2, yyval2, yyvsp2)
 end
 		end
 
@@ -1816,7 +1816,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
 		end
 	end
-	yyvs7.put (yyval7, yyvsp7)
+	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 		end
 
@@ -1852,7 +1852,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
 		end
 	end
-	yyvs7.put (yyval7, yyvsp7)
+	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 		end
 
@@ -1886,7 +1886,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs3 := yyspecial_routines3.resize (yyvs3, yyvsc3)
 		end
 	end
-	yyvs3.put (yyval3, yyvsp3)
+	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 		end
 
@@ -1903,7 +1903,7 @@ end
 yyval3 := yyvs3.item (yyvsp3)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs3.put (yyval3, yyvsp3)
+	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 		end
 
@@ -1941,7 +1941,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs3 := yyspecial_routines3.resize (yyvs3, yyvsc3)
 		end
 	end
-	yyvs3.put (yyval3, yyvsp3)
+	yyspecial_routines3.force (yyvs3, yyval3, yyvsp3)
 end
 		end
 
@@ -1975,7 +1975,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs9 := yyspecial_routines9.resize (yyvs9, yyvsc9)
 		end
 	end
-	yyvs9.put (yyval9, yyvsp9)
+	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 		end
 
@@ -1992,7 +1992,7 @@ end
 yyval9 := yyvs9.item (yyvsp9)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs9.put (yyval9, yyvsp9)
+	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 		end
 
@@ -2010,7 +2010,7 @@ yyval9 := yyvs9.item (yyvsp9)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
-	yyvs9.put (yyval9, yyvsp9)
+	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 		end
 
@@ -2044,7 +2044,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs9 := yyspecial_routines9.resize (yyvs9, yyvsc9)
 		end
 	end
-	yyvs9.put (yyval9, yyvsp9)
+	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 		end
 
@@ -2061,7 +2061,7 @@ end
 yyval9 := yyvs9.item (yyvsp9)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs9.put (yyval9, yyvsp9)
+	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 		end
 
@@ -2098,7 +2098,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs9 := yyspecial_routines9.resize (yyvs9, yyvsc9)
 		end
 	end
-	yyvs9.put (yyval9, yyvsp9)
+	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 		end
 
@@ -2119,7 +2119,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
 	yyvsp4 := yyvsp4 -1
-	yyvs9.put (yyval9, yyvsp9)
+	yyspecial_routines9.force (yyvs9, yyval9, yyvsp9)
 end
 		end
 
@@ -2153,7 +2153,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2171,7 +2171,7 @@ yyval4 := yyvs4.item (yyvsp4)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2211,7 +2211,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2252,7 +2252,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2292,7 +2292,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2332,7 +2332,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2372,7 +2372,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2412,7 +2412,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2452,7 +2452,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2492,7 +2492,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2526,7 +2526,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
 		end
 	end
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2545,7 +2545,7 @@ end
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs4.put (yyval4, yyvsp4)
+	yyspecial_routines4.force (yyvs4, yyval4, yyvsp4)
 end
 		end
 
@@ -2579,7 +2579,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
 		end
 	end
-	yyvs7.put (yyval7, yyvsp7)
+	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 		end
 
@@ -2597,7 +2597,7 @@ yyval7 := yyvs7.item (yyvsp7) + 1
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs7.put (yyval7, yyvsp7)
+	yyspecial_routines7.force (yyvs7, yyval7, yyvsp7)
 end
 		end
 
@@ -2631,7 +2631,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs6 := yyspecial_routines6.resize (yyvs6, yyvsc6)
 		end
 	end
-	yyvs6.put (yyval6, yyvsp6)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 		end
 
@@ -2666,7 +2666,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs6 := yyspecial_routines6.resize (yyvs6, yyvsc6)
 		end
 	end
-	yyvs6.put (yyval6, yyvsp6)
+	yyspecial_routines6.force (yyvs6, yyval6, yyvsp6)
 end
 		end
 
@@ -2700,7 +2700,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs8 := yyspecial_routines8.resize (yyvs8, yyvsc8)
 		end
 	end
-	yyvs8.put (yyval8, yyvsp8)
+	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 		end
 
@@ -2717,7 +2717,7 @@ end
 yyval8 := yyvs8.item (yyvsp8)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
-	yyvs8.put (yyval8, yyvsp8)
+	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 		end
 
@@ -2735,7 +2735,7 @@ yyval8 := yyvs8.item (yyvsp8)
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
-	yyvs8.put (yyval8, yyvsp8)
+	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 		end
 
@@ -2772,7 +2772,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs8 := yyspecial_routines8.resize (yyvs8, yyvsc8)
 		end
 	end
-	yyvs8.put (yyval8, yyvsp8)
+	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 		end
 
@@ -2793,7 +2793,7 @@ if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
 	yyvsp5 := yyvsp5 -1
-	yyvs8.put (yyval8, yyvsp8)
+	yyspecial_routines8.force (yyvs8, yyval8, yyvsp8)
 end
 		end
 
@@ -2829,7 +2829,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 		end
 
@@ -2865,7 +2865,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 		end
 
@@ -2901,7 +2901,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 		end
 
@@ -2937,7 +2937,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 		end
 
@@ -2973,7 +2973,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 		end
 
@@ -3009,7 +3009,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 		end
 
@@ -3045,7 +3045,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 		end
 
@@ -3081,7 +3081,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 		end
 
@@ -3117,7 +3117,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 		end
 
@@ -3152,7 +3152,7 @@ if yy_parsing_status >= yyContinue then
 			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
 		end
 	end
-	yyvs5.put (yyval5, yyvsp5)
+	yyspecial_routines5.force (yyvs5, yyval5, yyvsp5)
 end
 		end
 

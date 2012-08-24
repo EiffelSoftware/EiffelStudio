@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Eiffel inheritance clause parser"
 	status: "See notice at end of class"

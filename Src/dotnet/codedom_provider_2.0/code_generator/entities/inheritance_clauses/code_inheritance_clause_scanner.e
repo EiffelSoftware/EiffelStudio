@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Scanners for snippet inheritance clauses"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -703,7 +703,7 @@ feature -- User-defined features
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new external scanner.
 		do
 			make_with_buffer (Empty_buffer)
@@ -712,7 +712,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset scanner before scanning next input source.
 			-- (This routine can be called in wrap before scanning
 			-- another input buffer.)
@@ -731,7 +731,7 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	Initial_buffer_size: INTEGER is 1024 
+	Initial_buffer_size: INTEGER = 1024 
 				-- Initial size for `token_buffer'
 
 invariant

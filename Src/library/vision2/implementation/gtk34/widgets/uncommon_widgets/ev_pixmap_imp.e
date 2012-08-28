@@ -219,31 +219,35 @@ feature -- Element change
 	stretch (a_x, a_y: INTEGER)
 			-- Stretch the image to fit in size `a_x' by `a_y'.
 		local
---			a_gdkpixbuf, scaled_pixbuf: POINTER
---			a_scale_type: INTEGER
---			l_width, l_height: INTEGER
+			a_gdkpixbuf, scaled_pixbuf: POINTER
+			a_scale_type: INTEGER
+			l_width, l_height: INTEGER
 		do
---			l_width := width
---			l_height := height
---			if l_width /= a_x or else l_height /= a_y then
---				a_gdkpixbuf := pixbuf_from_drawable
---				if l_width <= 16 and then l_height <= 16 then
---						-- For small images this method scales better
---					a_scale_type := {GTK2}.gdk_interp_nearest
---				else
---						-- For larger images this mode provides better scaling
---					a_scale_type := {GTK2}.gdk_interp_bilinear
---				end
---				scaled_pixbuf := {GTK2}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_x, a_y, a_scale_type)
---				{GTK2}.object_unref (a_gdkpixbuf)
---				set_pixmap_from_pixbuf (scaled_pixbuf)
---				{GTK2}.object_unref (scaled_pixbuf)
---			end
+			l_width := width
+			l_height := height
+			if l_width /= a_x or else l_height /= a_y then
+				a_gdkpixbuf := pixbuf_from_drawable
+				if l_width <= 16 and then l_height <= 16 then
+						-- For small images this method scales better
+					a_scale_type := {GTK2}.gdk_interp_nearest
+				else
+						-- For larger images this mode provides better scaling
+					a_scale_type := {GTK2}.gdk_interp_bilinear
+				end
+				scaled_pixbuf := {GTK2}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_x, a_y, a_scale_type)
+				{GTK2}.g_object_unref (a_gdkpixbuf)
+				set_pixmap_from_pixbuf (scaled_pixbuf)
+				{GTK2}.g_object_unref (scaled_pixbuf)
+			end
 		end
 
 	set_size (a_width, a_height: INTEGER)
 			-- Set the size of the pixmap to `a_width' by `a_height'.
 		do
+			if cairo_surface /= default_pointer then
+				{CAIRO}.cairo_surface_destroy (cairo_surface)
+				{CAIRO}.cairo_destroy (drawable)
+			end
 			cairo_surface := {CAIRO}.cairo_image_surface_create ({CAIRO}.cairo_format_argb32, a_width, a_height)
 			drawable := {CAIRO}.cairo_create (cairo_surface)
 			init_default_values

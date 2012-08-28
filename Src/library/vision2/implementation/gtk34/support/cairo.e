@@ -124,6 +124,11 @@ feature
 			"C signature (cairo_t*) use <cairo.h>"
 		end
 
+	cairo_status (cr: POINTER): INTEGER
+		external
+			"C signature (cairo_t*): cairo_status_t use <cairo.h>"
+		end
+
 	cairo_surface_destroy (cr: POINTER)
 		external
 			"C signature (cairo_surface_t*) use <cairo.h>"

@@ -269,20 +269,22 @@ feature -- Clearing operations
 			-- Erase rectangle specified with `background_color'.
 		local
 			l_bg_color: detachable EV_COLOR
+			l_drawable: POINTER
 		do
-			if drawable /= default_pointer then
-				{CAIRO}.cairo_save (drawable)
+			l_drawable := get_drawable
+			if l_drawable /= default_pointer then
+				{CAIRO}.cairo_save (l_drawable)
 				l_bg_color := internal_background_color
 				if l_bg_color /= Void then
-					{CAIRO}.cairo_set_source_rgb (drawable, l_bg_color.red, l_bg_color.green, l_bg_color.blue)
+					{CAIRO}.cairo_set_source_rgb (l_drawable, l_bg_color.red, l_bg_color.green, l_bg_color.blue)
 				else
-					{CAIRO}.cairo_set_source_rgb (drawable, 1.0, 1.0, 1.0)
+					{CAIRO}.cairo_set_source_rgb (l_drawable, 1.0, 1.0, 1.0)
 				end
-				{CAIRO}.cairo_rectangle (drawable, x + device_x_offset, y + device_y_offset, a_width, a_height)
-				{CAIRO}.cairo_fill (drawable)
+				{CAIRO}.cairo_rectangle (l_drawable, x + device_x_offset, y + device_y_offset, a_width, a_height)
+				{CAIRO}.cairo_fill (l_drawable)
 
-				{CAIRO}.cairo_restore (drawable)
-				update_if_needed
+				{CAIRO}.cairo_restore (l_drawable)
+				release_drawable (l_drawable)
 			end
 		end
 
@@ -374,10 +376,12 @@ feature -- Drawing operations
 			a_pango_matrix, a_pango_context: POINTER
 			l_app_imp: like App_implementation
 			l_ellipsize_symbol: POINTER
+			l_drawable: POINTER
 		do
-			if drawable /= default_pointer then
+			l_drawable := get_drawable
+			if l_drawable /= default_pointer then
 
-				{CAIRO}.cairo_save (drawable)
+				{CAIRO}.cairo_save (l_drawable)
 
 				l_app_imp := App_implementation
 
@@ -387,7 +391,7 @@ feature -- Drawing operations
 
 				a_cs := l_app_imp.c_string_from_eiffel_string (a_text)
 
-				a_pango_layout := {GTK2}.pango_cairo_create_layout (drawable)
+				a_pango_layout := {GTK2}.pango_cairo_create_layout (l_drawable)
 
 				{GTK2}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
 				if internal_font_imp /= Void then
@@ -413,7 +417,7 @@ feature -- Drawing operations
 					-- Handle rotation
 				end
 
-				{GTK2}.pango_cairo_show_layout (drawable, a_pango_layout)
+				{GTK2}.pango_cairo_show_layout (l_drawable, a_pango_layout)
 
 					-- Reset all changed values.
 				if a_width /= -1 then
@@ -437,9 +441,9 @@ feature -- Drawing operations
 					{GTK2}.pango_matrix_free (a_pango_matrix)
 				end
 
-				{CAIRO}.cairo_restore (drawable)
+				{CAIRO}.cairo_restore (l_drawable)
 
-				update_if_needed
+				release_drawable (l_drawable)
 			end
 		end
 
@@ -458,12 +462,15 @@ feature -- Drawing operations
 
 	draw_segment (x1, y1, x2, y2: INTEGER)
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
+		local
+			l_drawable: POINTER
 		do
-			if drawable /= default_pointer then
-				{CAIRO}.cairo_move_to (drawable, x1 + device_x_offset, y1 + device_y_offset)
-				{CAIRO}.cairo_line_to (drawable, x2 + device_x_offset, y2 + device_y_offset)
-				{CAIRO}.cairo_stroke (drawable)
-				update_if_needed
+			l_drawable := get_drawable
+			if l_drawable /= default_pointer then
+				{CAIRO}.cairo_move_to (l_drawable, x1 + device_x_offset, y1 + device_y_offset)
+				{CAIRO}.cairo_line_to (l_drawable, x2 + device_x_offset, y2 + device_y_offset)
+				{CAIRO}.cairo_stroke (l_drawable)
+				release_drawable (l_drawable)
 			end
 		end
 
@@ -514,19 +521,21 @@ feature -- Drawing operations
 		end
 
 	draw_full_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; x_src, y_src, src_width, src_height: INTEGER)
+		local
+			l_drawable: POINTER
 		do
-			if drawable /= default_pointer and then attached {EV_PIXMAP_IMP} a_pixmap.implementation as l_pixmap_imp then
+			l_drawable := get_drawable
+			if l_drawable /= default_pointer and then attached {EV_PIXMAP_IMP} a_pixmap.implementation as l_pixmap_imp then
 
-				{CAIRO}.cairo_save (drawable)
+				{CAIRO}.cairo_save (l_drawable)
 
-				{CAIRO}.cairo_set_source_surface (drawable, l_pixmap_imp.cairo_surface, x - x_src, y - y_src)
+				{CAIRO}.cairo_set_source_surface (l_drawable, l_pixmap_imp.cairo_surface, x - x_src, y - y_src)
 
-				{CAIRO}.cairo_rectangle (drawable, x + device_x_offset, y + device_y_offset, src_width, src_height)
-				{CAIRO}.cairo_fill (drawable)
+				{CAIRO}.cairo_rectangle (l_drawable, x + device_x_offset, y + device_y_offset, src_width, src_height)
+				{CAIRO}.cairo_fill (l_drawable)
 
-				{CAIRO}.cairo_restore (drawable)
-
-				update_if_needed
+				{CAIRO}.cairo_restore (l_drawable)
+				release_drawable (l_drawable)
 			end
 		end
 
@@ -571,8 +580,10 @@ feature -- Drawing operations
 		local
 			l_xc, l_yc, l_radius, l_y_scale: REAL_64
 			l_close: BOOLEAN
+			l_drawable: POINTER
 		do
-			if drawable /= default_pointer then
+			l_drawable := get_drawable
+			if l_drawable /= default_pointer then
 				if (a_width > 0 and a_height > 0 ) then
 
 					l_close := a_close and then an_aperture /= (2 * {DOUBLE_MATH}.Pi)
@@ -583,39 +594,35 @@ feature -- Drawing operations
 					l_radius := a_width / 2
 					if a_width /= a_height then
 						l_y_scale := a_height / a_width
-						{CAIRO}.cairo_scale (drawable, 1.0, l_y_scale)
+						{CAIRO}.cairo_scale (l_drawable, 1.0, l_y_scale)
 						l_yc := (l_yc - device_y_offset) / l_y_scale + device_y_offset
 					end
 
 					if l_close then
-						{CAIRO}.cairo_move_to (drawable, l_xc, l_yc)
+						{CAIRO}.cairo_move_to (l_drawable, l_xc, l_yc)
 					end
 
-
-
-					{CAIRO}.cairo_arc_negative (drawable, l_xc, l_yc, a_height / 2, a_start_angle, - (a_start_angle + an_aperture))
+					{CAIRO}.cairo_arc_negative (l_drawable, l_xc, l_yc, a_height / 2, a_start_angle, - (a_start_angle + an_aperture))
 					if a_fill then
-						{CAIRO}.cairo_save (drawable)
+						{CAIRO}.cairo_save (l_drawable)
 						if attached internal_foreground_color as l_fg_color then
-							{CAIRO}.cairo_set_source_rgb (drawable, l_fg_color.red.to_double, l_fg_color.green.to_double, l_fg_color.blue.to_double)
+							{CAIRO}.cairo_set_source_rgb (l_drawable, l_fg_color.red.to_double, l_fg_color.green.to_double, l_fg_color.blue.to_double)
 						else
-							{CAIRO}.cairo_set_source_rgb (drawable, 0.0, 0.0, 0.0)
+							{CAIRO}.cairo_set_source_rgb (l_drawable, 0.0, 0.0, 0.0)
 						end
-						{CAIRO}.cairo_fill (drawable)
-						{CAIRO}.cairo_restore (drawable)
+						{CAIRO}.cairo_fill (l_drawable)
+						{CAIRO}.cairo_restore (l_drawable)
 					end
 
 					if l_close then
-						{CAIRO}.cairo_close_path (drawable)
+						{CAIRO}.cairo_close_path (l_drawable)
 					end
-
-					{CAIRO}.cairo_stroke (drawable)
+					{CAIRO}.cairo_stroke (l_drawable)
 
 					if a_width /= a_height then
-						{CAIRO}.cairo_scale (drawable, 1.0, 1.0)
+						{CAIRO}.cairo_scale (l_drawable, 1.0, 1.0)
 					end
-
-					update_if_needed
+					release_drawable (l_drawable)
 				end
 			end
 		end
@@ -634,23 +641,27 @@ feature -- Drawing operations
 			-- and last point in `points'.
 		local
 			i, l_count: INTEGER
+			l_drawable: POINTER
 		do
-			if drawable /= default_pointer and then not points.is_empty then
-				from
-					l_count := points.count
-					{CAIRO}.cairo_move_to (drawable, points [1].x_precise, points [1].y_precise)
-					i := 2
-				until
-					i > l_count
-				loop
-					{CAIRO}.cairo_line_to (drawable, points [i].x_precise, points [i].y_precise)
-					i := i + 1
+			if not points.is_empty then
+				l_drawable := get_drawable
+				if l_drawable /= default_pointer then
+					from
+						l_count := points.count
+						{CAIRO}.cairo_move_to (l_drawable, points [1].x_precise, points [1].y_precise)
+						i := 2
+					until
+						i > l_count
+					loop
+						{CAIRO}.cairo_line_to (l_drawable, points [i].x_precise, points [i].y_precise)
+						i := i + 1
+					end
+					if is_closed then
+						{CAIRO}.cairo_close_path (l_drawable)
+					end
+					{CAIRO}.cairo_stroke (l_drawable)
+					release_drawable (l_drawable)
 				end
-				if is_closed then
-					{CAIRO}.cairo_close_path (drawable)
-				end
-				{CAIRO}.cairo_stroke (drawable)
-				update_if_needed
 			end
 		end
 
@@ -719,6 +730,20 @@ feature -- filling operations
 			-- Angles are measured in radians.
 		do
 			draw_ellipse_internal (x, y, a_width, a_height, a_start_angle, an_aperture, True, True)
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	get_drawable: POINTER
+			-- Drawable used for rendering docking components.
+		do
+			Result := drawable
+		end
+
+	release_drawable (a_drawable: POINTER)
+			-- Release resources of drawable `a_drawable'.
+		do
+			--| By default do nothing, redefined in descendents
 		end
 
 feature {NONE} -- Implemention

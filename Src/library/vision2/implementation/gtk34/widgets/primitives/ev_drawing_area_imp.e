@@ -16,7 +16,7 @@ inherit
 
 	EV_DRAWABLE_IMP
 		redefine
-			interface
+			interface, get_drawable, release_drawable
 		end
 
 	EV_PRIMITIVE_IMP
@@ -92,16 +92,7 @@ feature {NONE} -- Implementation
 
 	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER)
 			-- Gtk_Widget."size-allocate" happened.
-		local
-			l_window: POINTER
 		do
-			l_window := {GTK}.gtk_widget_get_window (c_object)
-			if l_window /= default_pointer then
-				if drawable /= default_pointer then
-					{CAIRO}.cairo_destroy (drawable)
-				end
-				drawable := {GTK}.gdk_cairo_create (l_window)
-			end
 			Precursor (a_x, a_y, a_width, a_height)
 		end
 
@@ -172,7 +163,6 @@ feature {EV_ANY_I} -- Implementation
 			-- Release resources of drawable `a_drawable'.
 		do
 			if a_drawable /= drawable and then a_drawable /= default_pointer then
-				redraw
 				{CAIRO}.cairo_destroy (a_drawable)
 			end
 		end
@@ -190,7 +180,6 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		do
 			in_expose_actions := True
 
-			l_drawable := drawable
 			drawable := a_cairo_context
 
 			{CAIRO}.cairo_clip_extents (a_cairo_context, $l_x, $l_y, $l_width, $l_height)
@@ -203,12 +192,11 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 			internal_set_color (True, l_red, l_green, l_blue)
 
-
 			if expose_actions_internal /= Void then
 				expose_actions_internal.call ([l_x.truncated_to_integer, l_y.truncated_to_integer, l_width.truncated_to_integer, l_height.truncated_to_integer])
 			end
 
-			drawable := l_drawable
+			drawable := default_pointer
 
 			in_expose_actions := False
 		end

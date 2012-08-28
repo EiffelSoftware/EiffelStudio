@@ -103,7 +103,7 @@ feature -- Event handling
 			if not {GTK}.gtk_is_window (c_object) then
 					-- Window resize events are connected separately
 				l_app_imp := app_implementation
-				l_app_imp.gtk_marshal.signal_connect (c_object, l_app_imp.size_allocate_event_string, agent (l_app_imp.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), l_app_imp.gtk_marshal.size_allocate_translate_agent, False)
+				l_app_imp.gtk_marshal.signal_connect (c_object, l_app_imp.size_allocate_event_string, agent (l_app_imp.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), l_app_imp.gtk_marshal.size_allocate_translate_agent, True)
 			end
 		end
 
@@ -143,14 +143,14 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

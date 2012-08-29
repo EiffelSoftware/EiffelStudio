@@ -144,7 +144,9 @@ feature -- Drawing operations
 	redraw
 			-- Force `Current' to redraw itself.
 		do
-			update_if_needed
+			if is_displayed then
+				{GTK}.gtk_widget_queue_draw (visual_widget)
+			end
 		end
 
 	flush
@@ -153,14 +155,6 @@ feature -- Drawing operations
 			-- become visible.
 		do
 			refresh_now
-		end
-
-	update_if_needed
-			-- Update `Current' if needed.
-		do
-			if is_displayed then
-				{GTK}.gtk_widget_queue_draw (visual_widget)
-			end
 		end
 
 	disable_double_buffering

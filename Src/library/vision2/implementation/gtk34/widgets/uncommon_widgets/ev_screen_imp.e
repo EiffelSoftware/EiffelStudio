@@ -49,11 +49,11 @@ feature {NONE} -- Initialization
 
 	make
 			-- Set up action sequence connections and create graphics context.
+		local
+			l_window: POINTER
 		do
-			--drawable := {GTK2}.gdk_screen_get_root_window ({GTK2}.gdk_screen_get_default)
-
---			gc := {GTK}.gdk_gc_new (drawable)
---			{GTK}.gdk_gc_set_subwindow (gc, {GTK}.gdk_include_inferiors_enum)
+			l_window := {GTK2}.gdk_screen_get_root_window ({GTK2}.gdk_screen_get_default)
+			drawable := {GTK}.gdk_cairo_create (l_window)
 			init_default_values
 
 				-- Set offset values to match Win32 implementation.

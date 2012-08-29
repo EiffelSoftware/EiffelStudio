@@ -155,6 +155,7 @@ feature {EV_ANY_I} -- Implementation
 				l_window := {GTK}.gtk_widget_get_window (c_object)
 				if l_window /= default_pointer then
 					Result := {GTK}.gdk_cairo_create (l_window)
+					initialize_drawable (Result)
 				end
 			end
 		end
@@ -175,7 +176,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 	process_draw_event (a_cairo_context: POINTER)
 			-- Call the expose actions for the drawing area.
 		local
-			l_x, l_y, l_width, l_height, l_red, l_green, l_blue: REAL_64
+			l_x, l_y, l_width, l_height: REAL_64
 			l_drawable: POINTER
 		do
 			in_expose_actions := True
@@ -184,13 +185,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 			{CAIRO}.cairo_clip_extents (a_cairo_context, $l_x, $l_y, $l_width, $l_height)
 
-			set_line_width (line_width)
-			if attached internal_foreground_color as l_internal_foreground_color then
-				l_red := l_internal_foreground_color.red
-				l_green := l_internal_foreground_color.green
-				l_blue := l_internal_foreground_color.blue
-			end
-			internal_set_color (True, l_red, l_green, l_blue)
+			initialize_drawable (a_cairo_context)
 
 			if expose_actions_internal /= Void then
 				expose_actions_internal.call ([l_x.truncated_to_integer, l_y.truncated_to_integer, l_width.truncated_to_integer, l_height.truncated_to_integer])
@@ -199,6 +194,20 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			drawable := default_pointer
 
 			in_expose_actions := False
+		end
+
+	initialize_drawable (a_drawable: POINTER)
+			-- Initialize new `drawable' to existing parameters.
+		local
+			l_red, l_green, l_blue: REAL_64
+		do
+			{CAIRO}.cairo_set_line_width (a_drawable, line_width.to_double)
+			if attached internal_foreground_color as l_internal_foreground_color then
+				l_red := l_internal_foreground_color.red
+				l_green := l_internal_foreground_color.green
+				l_blue := l_internal_foreground_color.blue
+			end
+			{CAIRO}.cairo_set_source_rgb (a_drawable, l_red, l_green, l_blue)
 		end
 
 	internal_set_focus

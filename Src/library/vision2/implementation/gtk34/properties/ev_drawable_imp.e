@@ -404,7 +404,7 @@ feature -- Drawing operations
 				end
 				l_y := l_y - 0.5
 					-- Cairo adds 0.5 in calculation to account for center pixel coordinates but we want top left.
-				{CAIRO}.cairo_translate (drawable, l_x, l_y)
+				{CAIRO}.cairo_translate (l_drawable, l_x, l_y)
 
 				if a_width /= -1 then
 						-- We need to perform ellipsizing on text if available, otherwise we clip.
@@ -685,25 +685,28 @@ feature -- filling operations
 
 	draw_rectangle_internal (x, y, a_width, a_height: INTEGER; a_fill: BOOLEAN)
 			-- Draw rectangle with upper-left corner on (`x', `y')
+		local
+			l_drawable: POINTER
 		do
-			if drawable /= default_pointer then
+			l_drawable := get_drawable
+			if l_drawable /= default_pointer then
 				if a_width > 0 and then a_height > 0 then
 						-- If width or height are zero then nothing will be rendered.
-					{CAIRO}.cairo_rectangle (drawable, x + device_x_offset, y + device_y_offset, a_width, a_height)
+					{CAIRO}.cairo_rectangle (l_drawable, x + device_x_offset, y + device_y_offset, a_width, a_height)
 					if a_fill then
-						{CAIRO}.cairo_stroke_preserve (drawable)
-						{CAIRO}.cairo_save (drawable)
+						{CAIRO}.cairo_stroke_preserve (l_drawable)
+						{CAIRO}.cairo_save (l_drawable)
 						if attached internal_foreground_color as l_fg_color then
-							{CAIRO}.cairo_set_source_rgba (drawable, l_fg_color.red, l_fg_color.green, l_fg_color.blue, 1.0)
+							{CAIRO}.cairo_set_source_rgba (l_drawable, l_fg_color.red, l_fg_color.green, l_fg_color.blue, 1.0)
 						else
-							{CAIRO}.cairo_set_source_rgba (drawable, 1.0, 1.0, 1.0, 1.0)
+							{CAIRO}.cairo_set_source_rgba (l_drawable, 1.0, 1.0, 1.0, 1.0)
 						end
-						{CAIRO}.cairo_fill (drawable)
-						{CAIRO}.cairo_restore (drawable)
+						{CAIRO}.cairo_fill (l_drawable)
+						{CAIRO}.cairo_restore (l_drawable)
 					end
-					{CAIRO}.cairo_stroke (drawable)
-					update_if_needed
+					{CAIRO}.cairo_stroke (l_drawable)
 				end
+				release_drawable (l_drawable)
 			end
 		end
 
@@ -898,11 +901,6 @@ feature {NONE} -- Implementation
 
 	flush
 			-- Force all queued expose events to be called.
-		deferred
-		end
-
-	update_if_needed
-			-- Force update of `Current' if needed
 		deferred
 		end
 

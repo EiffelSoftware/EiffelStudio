@@ -85,11 +85,11 @@ feature -- Element change
 			if l_x_offset_changed or else l_y_offset_changed then
 				if l_x_offset_changed then
 					internal_x_offset := a_x
-					internal_set_value_from_adjustment (horizontal_adjustment, a_x + internal_x_y_offset)
+					{GTK}.gtk_adjustment_set_value (horizontal_adjustment, a_x + internal_x_y_offset)
 				end
 				if l_y_offset_changed then
 					internal_y_offset := a_y
-					internal_set_value_from_adjustment (vertical_adjustment, a_y + internal_x_y_offset)
+					{GTK}.gtk_adjustment_set_value (vertical_adjustment, a_y + internal_x_y_offset)
 				end
 				if l_x_offset_changed then
 					{GTK}.gtk_adjustment_value_changed (horizontal_adjustment)
@@ -194,19 +194,6 @@ feature {NONE} -- Implementation
 		do
 			Result := {GTK}.gtk_scrollable_get_vadjustment (viewport)
 		end
-
-	internal_set_value_from_adjustment (l_adj: POINTER; a_value: INTEGER)
-			-- Set `value' of adjustment `l_adj' to `a_value'.
-		require
-			l_adj_not_null: l_adj /= default_pointer
-		do
-			if {GTK}.gtk_adjustment_get_lower (l_adj) > a_value then
-				{GTK}.gtk_adjustment_set_lower (l_adj, a_value)
-			elseif {GTK}.gtk_adjustment_get_upper (l_adj) < a_value then
-				{GTK}.gtk_adjustment_set_upper (l_adj, a_value)
-			end
-			{GTK}.gtk_adjustment_set_value (l_adj, a_value)
-  		end
 
 	viewport: POINTER
 			-- Pointer to viewport, used for reuse of adjustment functions from descendants.

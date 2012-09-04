@@ -98,12 +98,20 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 
 	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER)
 			-- Gtk_Widget."size-allocate" happened.
+		local
+			l_x_y_offset: INTEGER
+			l_x, l_y: INTEGER
 		do
 			if a_width /= previous_width or else a_height /= previous_height then
+				if attached parent_imp as l_parent_imp then
+					l_x_y_offset := l_parent_imp.internal_x_y_offset
+				end
+				l_x := a_x - l_x_y_offset
+				l_y := a_y - l_x_y_offset
 				previous_width := a_width.to_integer_16
 				previous_height := a_height.to_integer_16
 				if resize_actions_internal /= Void then
-					resize_actions_internal.call (app_implementation.gtk_marshal.dimension_tuple (a_x, a_y, a_width, a_height))
+					resize_actions_internal.call (app_implementation.gtk_marshal.dimension_tuple (l_x, l_y, a_width, a_height))
 				end
 			end
 			if attached parent_imp as l_parent_imp then
@@ -401,6 +409,15 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 	on_widget_unmapped
 			-- `Current' has been unmapped from the screen
 		do
+		end
+
+feature {EV_WIDGET_I} -- Implementation
+
+	internal_x_y_offset: INTEGER
+			-- Internal offset added to x/y coordinates of children.
+		do
+				-- Redefined by GtkLayout containers.
+			Result := 0
 		end
 
 feature {NONE} -- Implementation

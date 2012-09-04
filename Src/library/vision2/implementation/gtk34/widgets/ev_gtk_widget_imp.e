@@ -58,7 +58,6 @@ feature {EV_ANY_I, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retrieval
 			-- Horizontal position of the client area on screen,
 		local
 			a_x: INTEGER
-			a_aux_info: POINTER
 			i: INTEGER
 			l_null: POINTER
 		do
@@ -67,11 +66,6 @@ feature {EV_ANY_I, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retrieval
 						{GTK}.gtk_widget_get_window (visual_widget),
 				    	$a_x, l_null)
 					Result := a_x
-			else
-				a_aux_info := aux_info_struct
-				if a_aux_info /= l_null then
-					Result := {GTK}.gtk_widget_aux_info_struct_halign (a_aux_info)
-				end
 			end
 			Result := Result + app_implementation.screen_virtual_x
 		end
@@ -80,7 +74,6 @@ feature {EV_ANY_I, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retrieval
 			-- Vertical position of the client area on screen,
 		local
 			a_y: INTEGER
-			a_aux_info: POINTER
 			i: INTEGER
 			l_null: POINTER
 		do
@@ -89,13 +82,8 @@ feature {EV_ANY_I, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retrieval
 						{GTK}.gtk_widget_get_window (visual_widget),
 				    	l_null, $a_y)
 					Result := a_y
-			else
-				a_aux_info := aux_info_struct
-				if a_aux_info /= l_null then
-					Result := {GTK}.gtk_widget_aux_info_struct_valign (a_aux_info)
-				end
 			end
-			Result := Result +  + app_implementation.screen_virtual_y
+			Result := Result + app_implementation.screen_virtual_y
 		end
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -104,21 +92,12 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Horizontal offset relative to parent `x_position'.
 			-- Unit of measurement: screen pixels.
 		local
-			a_aux_info, l_null: POINTER
-			tmp_struct_x: INTEGER
 			l_alloc: POINTER
 		do
 			l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
 			{GTK}.gtk_widget_get_allocation (c_object, l_alloc)
 			Result := {GTK}.gtk_allocation_struct_y (l_alloc)
 			l_alloc.memory_free
-			a_aux_info := aux_info_struct
-			if a_aux_info /= l_null then
-				tmp_struct_x := {GTK}.gtk_widget_aux_info_struct_halign (a_aux_info)
-				if tmp_struct_x >= 0 then
-					Result := tmp_struct_x
-				end
-			end
 			Result := Result.max (0)
 		end
 
@@ -126,21 +105,12 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Vertical offset relative to parent `y_position'.
 			-- Unit of measurement: screen pixels.
 		local
-			a_aux_info, l_null: POINTER
-			tmp_struct_y: INTEGER
 			l_alloc: POINTER
 		do
 			l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
 			{GTK}.gtk_widget_get_allocation (c_object, l_alloc)
 			Result := {GTK}.gtk_allocation_struct_y (l_alloc)
 			l_alloc.memory_free
-			a_aux_info := aux_info_struct
-			if a_aux_info /= l_null then
-				tmp_struct_y := {GTK}.gtk_widget_aux_info_struct_valign (a_aux_info)
-				if tmp_struct_y >= 0 then
-					Result := tmp_struct_y
-				end
-			end
 			Result := Result.max (0)
 		end
 
@@ -306,12 +276,12 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
 				{GTK}.gtk_widget_get_allocation (c_object, l_alloc)
 				l_allocated_width := {GTK}.gtk_allocation_struct_width (l_alloc)
-				if is_displayed and then {GTK}.gtk_widget_get_parent (c_object) /= default_pointer and then l_allocated_width < l_minimum_width then
+				if {GTK}.gtk_widget_get_parent (c_object) /= default_pointer and then l_allocated_width < l_minimum_width then
 					{GTK}.gtk_container_check_resize ({GTK}.gtk_widget_get_parent (c_object))
 					{GTK}.gtk_widget_get_allocation (c_object, l_alloc)
 					l_allocated_width := {GTK}.gtk_allocation_struct_width (l_alloc)
-					l_alloc.memory_free
 				end
+				l_alloc.memory_free
 			end
 			Result := l_minimum_width.max (l_allocated_width)
 		end
@@ -329,7 +299,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
 				{GTK}.gtk_widget_get_allocation (c_object, l_alloc)
 				l_allocated_height := {GTK}.gtk_allocation_struct_height (l_alloc)
-				if is_displayed and then {GTK}.gtk_widget_get_parent (c_object) /= default_pointer and then l_allocated_height < l_minimum_height then
+				if {GTK}.gtk_widget_get_parent (c_object) /= default_pointer and then l_allocated_height < l_minimum_height then
 					{GTK}.gtk_container_check_resize ({GTK}.gtk_widget_get_parent (c_object))
 					{GTK}.gtk_widget_get_allocation (c_object, l_alloc)
 					l_allocated_height := {GTK}.gtk_allocation_struct_height (l_alloc)
@@ -337,12 +307,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				l_alloc.memory_free
 			end
 			Result := l_minimum_height.max (l_allocated_height)
-		end
-
-	aux_info_struct: POINTER
-			-- Pointer to the auxillary information struct used for retrieving when widget is unmapped
-		do
-			--{GTK2}.g_object_get_pointer (c_object, aux_info_string.item, $Result)
 		end
 
 	show

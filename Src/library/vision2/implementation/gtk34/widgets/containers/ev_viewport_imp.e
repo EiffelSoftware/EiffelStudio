@@ -23,11 +23,11 @@ inherit
 			interface,
 			container_widget,
 			visual_widget,
-			on_removed_item,
 			needs_event_box,
 			gtk_insert_i_th,
 			gtk_container_remove,
-			make
+			make,
+			internal_x_y_offset
 		end
 
 create
@@ -41,9 +41,10 @@ feature {NONE} -- Initialization
 			if c_object = default_pointer then
 					-- Only set c_object if not already set by a descendent.
 				viewport := {GTK}.gtk_layout_new ({GTK}.null_pointer, {GTK}.null_pointer)
-				{GTK2}.gtk_layout_set_size (viewport, 32768, 32768)
+				{GTK2}.gtk_layout_set_size (viewport, internal_x_y_offset * 2, internal_x_y_offset * 2)
 				set_c_object (viewport)
 				container_widget := viewport
+				reset_offset_to_origin
 			end
 			Precursor
 		end
@@ -67,27 +68,6 @@ feature -- Access
 
 feature -- Element change
 
-	block_resize_actions
-			-- Block any resize actions that may occur.
-		do
-			if attached item as l_item then
-				-- The blocking of resize actions is due to set uposition causing temporary resizing.
-				if l_item.implementation.resize_actions_internal /= Void then
-					l_item.implementation.resize_actions.block
-				end
-			end
-		end
-
-	unblock_resize_actions
-			-- Unblock all resize actions.
-		do
-			if attached item as l_item then
-				if l_item.implementation.resize_actions_internal /= Void then
-					l_item.implementation.resize_actions.resume
-				end
-			end
-		end
-
 	set_x_offset (a_x: INTEGER)
 			-- Set `x_offset' to `a_x'.
 		do
@@ -103,32 +83,20 @@ feature -- Element change
 			l_x_offset_changed := a_x /= internal_x_offset
 			l_y_offset_changed := a_y /= internal_y_offset
 			if l_x_offset_changed or else l_y_offset_changed then
-				block_resize_actions
-
 				if l_x_offset_changed then
 					internal_x_offset := a_x
-					internal_set_value_from_adjustment (horizontal_adjustment, a_x)
+					internal_set_value_from_adjustment (horizontal_adjustment, a_x + internal_x_y_offset)
 				end
 				if l_y_offset_changed then
 					internal_y_offset := a_y
-					internal_set_value_from_adjustment (vertical_adjustment, a_y)
+					internal_set_value_from_adjustment (vertical_adjustment, a_y + internal_x_y_offset)
 				end
-
-					-- Code below is to ensure that if the widget is visible then
-					-- we only move the window, and not call the `expose_actions' on `item'
-					-- as it is the case when calling `gtk_adjustment_value_changed'.
-				if {GTK}.gtk_layout_get_bin_window (viewport) /= l_null then
-					{GTK}.gdk_window_move (
-						{GTK}.gtk_layout_get_bin_window (viewport), -a_x, -a_y)
-				else
-					if l_x_offset_changed then
-						{GTK}.gtk_adjustment_value_changed (horizontal_adjustment)
-					end
-					if l_y_offset_changed then
-						{GTK}.gtk_adjustment_value_changed (vertical_adjustment)
-					end
+				if l_x_offset_changed then
+					{GTK}.gtk_adjustment_value_changed (horizontal_adjustment)
 				end
-				unblock_resize_actions
+				if l_y_offset_changed then
+					{GTK}.gtk_adjustment_value_changed (vertical_adjustment)
+				end
 			end
 		end
 
@@ -156,8 +124,7 @@ feature -- Element change
 			l_parent_box := {GTK}.gtk_widget_get_parent (l_c_object)
 
 			l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
-			{GTK}.set_gtk_allocation_struct_x (l_alloc, internal_x_offset)
-			{GTK}.set_gtk_allocation_struct_y (l_alloc, internal_y_offset)
+			{GTK}.gtk_widget_get_allocation (l_parent_box, l_alloc)
 			{GTK}.set_gtk_allocation_struct_width (l_alloc, a_width)
 			{GTK}.set_gtk_allocation_struct_height (l_alloc, a_height)
 			{GTK2}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
@@ -166,6 +133,9 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
+
+	internal_x_y_offset: INTEGER = 16384
+		-- <Precursor>
 
 	gtk_insert_i_th (a_container, a_child: POINTER; a_position: INTEGER)
 			-- Move `a_child' to `a_position' in `a_container'.
@@ -179,7 +149,9 @@ feature {NONE} -- Implementation
 			{GTK2}.gtk_event_box_set_visible_window (l_parent_box, False)
 			{GTK}.gtk_widget_show (l_parent_box)
 			{GTK}.gtk_container_add (l_parent_box, a_child)
-			{GTK}.gtk_container_add (a_container, l_parent_box)
+			{GTK2}.gtk_layout_put (a_container, l_parent_box, internal_x_y_offset, internal_x_y_offset)
+
+			reset_offset_to_origin
 		end
 
 	gtk_container_remove (a_container, a_child: POINTER)
@@ -190,6 +162,15 @@ feature {NONE} -- Implementation
 			l_parent_box := {GTK}.gtk_widget_get_parent (a_child)
 			{GTK}.gtk_container_remove (l_parent_box, a_child)
 			{GTK}.gtk_container_remove (a_container, l_parent_box)
+
+			reset_offset_to_origin
+		end
+
+	reset_offset_to_origin
+		do
+			internal_x_offset := -1
+			internal_y_offset := -1
+			set_offset (0, 0)
 		end
 
 	container_widget: POINTER
@@ -199,13 +180,6 @@ feature {NONE} -- Implementation
 			-- Pointer to the GtkViewport widget.
 		do
 			Result := viewport
-		end
-
-	on_removed_item (a_widget_imp: EV_WIDGET_IMP)
-			-- Reset minimum size.
-		do
-			Precursor (a_widget_imp)
-			set_offset (0, 0)
 		end
 
 	internal_x_offset, internal_y_offset: INTEGER
@@ -232,8 +206,6 @@ feature {NONE} -- Implementation
 				{GTK}.gtk_adjustment_set_upper (l_adj, a_value)
 			end
 			{GTK}.gtk_adjustment_set_value (l_adj, a_value)
-		ensure
-			value_set: {GTK}.gtk_adjustment_get_value (l_adj) = a_value
   		end
 
 	viewport: POINTER

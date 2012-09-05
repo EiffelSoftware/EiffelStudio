@@ -1376,6 +1376,11 @@ feature
 			"C (GtkContainer*) | <ev_gtk.h>"
 		end
 
+	frozen gtk_container_resize_children (a_container: POINTER)
+		external
+			"C (GtkContainer*) | <ev_gtk.h>"
+		end
+
 	frozen gtk_container_get_children (a_container: POINTER): POINTER
 		external
 			"C (GtkContainer*): GList* | <ev_gtk.h>"

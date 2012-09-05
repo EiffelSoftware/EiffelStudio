@@ -178,6 +178,19 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
+	internal_set_value_from_adjustment (l_adj: POINTER; a_value: INTEGER)
+			-- Set `value' of adjustment `l_adj' to `a_value'.
+		require
+			l_adj_not_null: l_adj /= default_pointer
+		do
+			if {GTK}.gtk_adjustment_get_lower (l_adj) > a_value then
+				{GTK}.gtk_adjustment_set_lower (l_adj, a_value)
+			elseif {GTK}.gtk_adjustment_get_upper (l_adj) < a_value then
+				{GTK}.gtk_adjustment_set_upper (l_adj, a_value)
+			end
+			{GTK}.gtk_adjustment_set_value (l_adj, a_value)
+  		end
+
 	fixed_widget: POINTER
 		-- Pointer to the fixed widget used for central positioning when `item' cannot be scrolled.
 

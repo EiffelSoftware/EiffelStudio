@@ -981,7 +981,7 @@ feature {NONE} -- Tool construction
 				l_shortcut := develop_window.preferences.misc_shortcut_data.shortcuts.item (a_tool.shortcut_preference_name)
 				if l_shortcut /= Void then
 					create l_accel.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
-					l_accel.actions.extend (agent l_show_cmd.execute)
+					l_accel.actions.extend (agent check_mode_and_show (l_show_cmd, a_tool))
 					l_show_cmd.set_accelerator (l_accel)
 					l_show_cmd.set_referred_shortcut (l_shortcut)
 				end
@@ -1009,7 +1009,7 @@ feature {NONE} -- Docking
 			l_eb_debugger_manager ?= develop_window.debugger_manager
 			check not_void: l_eb_debugger_manager /= Void end
 			if not l_eb_debugger_manager.raised then
-				-- We don't restore debug related tools for non-debug mode.
+				-- We don't restore debug related tools for non-debug mode except breakpoint tool.
 				create l_internal
 				check exists: l_internal.dynamic_type_from_string ("ES_CALL_STACK_TOOL") /= -1 end
 				check exists: l_internal.dynamic_type_from_string ("ES_OBJECTS_TOOL") /= -1 end
@@ -1017,12 +1017,13 @@ feature {NONE} -- Docking
 				check exists: l_internal.dynamic_type_from_string ("ES_WATCH_TOOL") /= -1 end
 				check exists: l_internal.dynamic_type_from_string ("ES_THREADS_TOOL") /= -1 end
 				check exists: l_internal.dynamic_type_from_string ("ES_BREAKPOINTS_TOOL") /= -1 end
-				if a_tool_id.as_string_8.is_equal ("ES_CALL_STACK_TOOL") or
+				if
+					a_tool_id.as_string_8.is_equal ("ES_CALL_STACK_TOOL") or
 					a_tool_id.as_string_8.is_equal ("ES_OBJECTS_TOOL") or
 					a_tool_id.as_string_8.is_equal ("ES_OBJECT_VIEWER_TOOL") or
 					a_tool_id.as_string_8.has_substring  ("ES_WATCH_TOOL") or -- We use `has_substring' here since second watch tool's name is ES_WATCH_TOOL:2, 3rd tool's name is ES_WATCH_TOOL:3, ...
-					a_tool_id.as_string_8.is_equal ("ES_THREADS_TOOL") or
-					a_tool_id.as_string_8.is_equal ("ES_BREAKPOINTS_TOOL") then
+					a_tool_id.as_string_8.is_equal ("ES_THREADS_TOOL")
+				then
 					l_ignore := True
 				end
 			end
@@ -1184,6 +1185,51 @@ feature{NONE} -- Implementation
 			create l_cmd.make (l_acc)
 			l_cmd.set_referred_shortcut (l_shortcut)
 			develop_window.commands.simple_shortcut_commands.extend (l_cmd)
+		end
+
+	check_mode_and_show (a_show_tool_command: ES_SHOW_TOOL_COMMAND; a_tool: ES_TOOL [EB_TOOL])
+			-- Check if a tool should be shown by accelerator in debugging or editing mode
+			-- before calling the actual show command
+		require
+			a_show_tool_command_not_void: a_show_tool_command /= Void
+			a_tool_not_void: a_tool /= Void
+		do
+			if attached {EB_DEBUGGER_MANAGER} develop_window.debugger_manager as l_db_mnger then
+				if l_db_mnger.raised or else not debug_mode_tools.has (a_tool.generating_type) then
+					a_show_tool_command.execute
+				end
+			else
+				check debugger_not_ready: False end
+			end
+		end
+
+	debug_mode_tools: ARRAYED_LIST [TYPE [ES_TOOL [EB_TOOL]]]
+			-- Tools only displayed in debug mode
+		local
+			l_all_tools: like develop_window.shell_tools.all_tools
+			l_info: like Tool_utils.tool_info
+		once
+			create Result.make (5)
+			l_info := Tool_utils.tool_info ("ES_CALL_STACK_TOOL")
+			if l_info /= Void then
+				Result.extend (l_info.type)
+			end
+			l_info := Tool_utils.tool_info ("ES_OBJECTS_TOOL")
+			if l_info /= Void then
+				Result.extend (l_info.type)
+			end
+			l_info := Tool_utils.tool_info ("ES_OBJECT_VIEWER_TOOL")
+			if l_info /= Void then
+				Result.extend (l_info.type)
+			end
+			l_info := Tool_utils.tool_info ("ES_WATCH_TOOL")
+			if l_info /= Void then
+				Result.extend (l_info.type)
+			end
+			l_info := Tool_utils.tool_info ("ES_THREADS_TOOL")
+			if l_info /= Void then
+				Result.extend (l_info.type)
+			end
 		end
 
 note

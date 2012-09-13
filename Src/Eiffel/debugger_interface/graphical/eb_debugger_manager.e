@@ -806,7 +806,6 @@ feature -- tools management
 			-- New debugging tools menu.
 		do
 			create Result.make_with_text (Interface_names.m_Tools)
-			Result.disable_sensitive
 		ensure
 			Result /= Void
 		end
@@ -820,88 +819,119 @@ feature -- tools management
 			mi: EB_COMMAND_MENU_ITEM
 			mn: STRING_GENERAL
 			wt: ES_WATCH_TOOL
-			l_recyclable: EB_RECYCLABLE
 			l_show_cmd: ES_SHOW_TOOL_COMMAND
 			l_wt_lst: like watch_tool_list
 		do
 			m := w.menus.debugging_tools_menu
-			if raised then
-				m.enable_sensitive
-			end
+
 				-- Recycle existing menu items.
 			from
 				m.start
 			until
 				m.after
 			loop
-				l_recyclable ?= m.item
-				if l_recyclable /= Void then
+				if attached {EB_RECYCLABLE} m.item as l_recyclable then
 					l_recyclable.recycle
 				end
 				m.forth
 			end
 			m.wipe_out
 
+				-- Breakpoint tool
+			if debugging_window /= Void then
+				l_show_cmd := debugging_window.commands.show_shell_tool_commands.item (debugging_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL}))
+				mi := l_show_cmd.new_menu_item
+				m.extend (mi)
+				w.auto_recycle (mi)
+			end
+
+				-- Callstack tool
+			mi := show_call_stack_tool_command.new_menu_item
+			m.extend (mi)
 			if raised then
-				if debugging_window /= Void then
-					l_show_cmd := debugging_window.commands.show_shell_tool_commands.item (debugging_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL}))
-					mi := l_show_cmd.new_menu_item
-					m.extend (mi)
-					w.auto_recycle (mi)
-				end
-				mi := show_call_stack_tool_command.new_menu_item
-				m.extend (mi)
-				w.auto_recycle (mi)
-				mi := show_thread_tool_command.new_menu_item
-				m.extend (mi)
-				w.auto_recycle (mi)
-				mi := show_objects_tool_command.new_menu_item
-				m.extend (mi)
-				w.auto_recycle (mi)
-				mi := show_object_viewer_tool_command.new_menu_item
-				m.extend (mi)
-				w.auto_recycle (mi)
-
-				l_wt_lst := watch_tool_list
-
-					-- Do not display shortcut if any watch tool exists.
-				if not l_wt_lst.is_empty then
-					create_and_show_watch_tool_command.set_referred_shortcut (Void)
-				else
-					create_and_show_watch_tool_command.set_referred_shortcut (show_watch_tool_preference)
-				end
-				mi := create_and_show_watch_tool_command.new_menu_item
-				m.extend (mi)
-				w.auto_recycle (mi)
-
-				if l_wt_lst /= Void and then not l_wt_lst.is_empty then
-					m.extend (create {EV_MENU_SEPARATOR})
-					from
-						l_wt_lst.start
-					until
-						l_wt_lst.after
-					loop
-						wt := l_wt_lst.item
-						if wt.is_tool_instantiated then
-							mn := wt.edition_title.twin
-							if show_watch_tool_command.shortcut_available then
-								mn.append ("%T")
-								mn.append (show_watch_tool_command.shortcut_string)
-							end
-							mi := show_watch_tool_command.new_menu_item
-							mi.set_text (mn)
-							mi.select_actions.wipe_out
-							mi.select_actions.extend (agent wt.show (True))
-							m.extend (mi)
-							w.auto_recycle (mi)
-						end
-
-						l_wt_lst.forth
-					end
-				end
-				m.enable_sensitive
+				mi.enable_sensitive
 			else
-				m.disable_sensitive
+				mi.disable_sensitive
+			end
+			w.auto_recycle (mi)
+
+				-- Thread tool
+			mi := show_thread_tool_command.new_menu_item
+			m.extend (mi)
+			if raised then
+				mi.enable_sensitive
+			else
+				mi.disable_sensitive
+			end
+			w.auto_recycle (mi)
+
+				-- Object tool
+			mi := show_objects_tool_command.new_menu_item
+			m.extend (mi)
+			if raised then
+				mi.enable_sensitive
+			else
+				mi.disable_sensitive
+			end
+			w.auto_recycle (mi)
+
+				-- Object viewer
+			mi := show_object_viewer_tool_command.new_menu_item
+			m.extend (mi)
+			if raised then
+				mi.enable_sensitive
+			else
+				mi.disable_sensitive
+			end
+			w.auto_recycle (mi)
+
+				-- Create Watch tool
+			l_wt_lst := watch_tool_list
+				-- Do not display shortcut if any watch tool exists.
+			if not l_wt_lst.is_empty then
+				create_and_show_watch_tool_command.set_referred_shortcut (Void)
+			else
+				create_and_show_watch_tool_command.set_referred_shortcut (show_watch_tool_preference)
+			end
+			mi := create_and_show_watch_tool_command.new_menu_item
+			m.extend (mi)
+			w.auto_recycle (mi)
+			if raised then
+				mi.enable_sensitive
+			else
+				mi.disable_sensitive
+			end
+
+				-- Watch tools
+			if l_wt_lst /= Void and then not l_wt_lst.is_empty then
+				m.extend (create {EV_MENU_SEPARATOR})
+				from
+					l_wt_lst.start
+				until
+					l_wt_lst.after
+				loop
+					wt := l_wt_lst.item
+					if wt.is_tool_instantiated then
+						mn := wt.edition_title.twin
+						if show_watch_tool_command.shortcut_available then
+							mn.append ("%T")
+							mn.append (show_watch_tool_command.shortcut_string)
+						end
+						mi := show_watch_tool_command.new_menu_item
+						mi.set_text (mn)
+						mi.select_actions.wipe_out
+						mi.select_actions.extend (agent wt.show (True))
+						m.extend (mi)
+						if raised then
+							mi.enable_sensitive
+						else
+							mi.disable_sensitive
+						end
+						w.auto_recycle (mi)
+					end
+
+					l_wt_lst.forth
+				end
 			end
 		end
 
@@ -2569,7 +2599,7 @@ feature {NONE} -- MSIL system implementation
 			-- DLL type constant for MSIL system
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

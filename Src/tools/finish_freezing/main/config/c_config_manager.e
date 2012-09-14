@@ -289,10 +289,14 @@ feature {NONE} -- Access
 			l_32_bits := not {PLATFORM_CONSTANTS}.is_64_bits or else a_use_32bit
 			create Result.make (11)
 
+				-- VS 11.0 (aka VS 2012)
+			Result.extend (create {VS_NEW_CONFIG}.make ("Microsoft\VisualStudio\11.0\Setup\VC", a_use_32bit, "VC110", "Microsoft Visual Studio 2012 VC++ (11.0)", "2012-VS", False))
+
+				-- Windows SDKs
 			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v7.1", a_use_32bit, {WSDK_CONFIG}.wsdk_71, "Microsoft Windows SDK 7.1 (Windows 7)", "2010-WSDK", False))
 			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v7.0", a_use_32bit, {WSDK_CONFIG}.wsdk_70, "Microsoft Windows SDK 7.0 (Windows 7)", "2009-WSDK", False))
 
-				-- VS 10.0
+				-- VS 10.0 (aka VS 2010)
 			Result.extend (create {VS_NEW_CONFIG}.make ("Microsoft\VisualStudio\10.0\Setup\VC", a_use_32bit, "VC100", "Microsoft Visual Studio 2010 VC++ (10.0)", "2010-VS", False))
 			if l_32_bits then
 				Result.extend (create {VS_CONFIG}.make ("Microsoft\VCExpress\10.0\Setup\VC", True, "VC100X", "Microsoft Visual C++ 2010 Express (10.0)", "2010-VC", False))
@@ -352,7 +356,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

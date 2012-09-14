@@ -12,7 +12,7 @@ class
 
 inherit
 	ANY
-	
+
 	THREAD_CONTROL
 		export
 			{NONE} all
@@ -59,8 +59,6 @@ feature -- Access
 			mutex.unlock
 		ensure
 			result_attached: Result /= Void
-			result_contains_attached_items: attached {LIST [detachable ANY]} Result as l_processes and then
-				not l_processes.has (Void)
 		end
 
 	unsuccessful_processes: ARRAYED_LIST [PROCESS]
@@ -73,8 +71,6 @@ feature -- Access
 			mutex.unlock
 		ensure
 			result_attached: Result /= Void
-			result_contains_attached_items: attached {LIST [detachable ANY]} Result as l_processes and then
-				not l_processes.has (Void)
 		end
 
 feature {NONE} -- Access

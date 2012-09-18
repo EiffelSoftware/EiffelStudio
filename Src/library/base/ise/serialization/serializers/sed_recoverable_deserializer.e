@@ -83,7 +83,7 @@ feature -- Settings
 	allow_conforming_mismatches
 			-- Set `is_conforming_mismatch_allowed' to True.
 		do
-			is_conforming_mismatch_allowed := False
+			is_conforming_mismatch_allowed := True
 		ensure
 			is_conforming_mismatch_allowed_set: is_conforming_mismatch_allowed
 		end

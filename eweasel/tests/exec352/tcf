@@ -1,0 +1,22 @@
+test_name 	 integer-is-greater-equal-seg
+test_description INTEGER_32 is_greater_equal(1) generates segmentation violation but >= 1 does not.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result 	 ok
+
+execute_work	 NONE exec_output_m
+execute_result	 ok
+
+compile_frozen
+compile_result 	 ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work	 NONE exec_output_w
+execute_result	 ok
+
+test_end

@@ -737,6 +737,12 @@ feature -- filling operations
 
 feature {EV_ANY_I} -- Implementation
 
+	get_surface: POINTER
+			-- Surface that holds drawable data.
+		do
+
+		end
+
 	get_drawable: POINTER
 			-- Drawable used for rendering docking components.
 		do
@@ -792,32 +798,8 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 
 	pixbuf_from_drawable_at_position (src_x, src_y, dest_x, dest_y, a_width, a_height: INTEGER): POINTER
 			-- Return a GdkPixbuf object from the current Gdkpixbuf structure
-		local
-			new_pix: POINTER--, new_mask_pix, l_image, l_mask_image, a_pix, a_mask_pix, l_temp_pix: POINTER
 		do
-			new_pix := {GTK}.gdk_pixbuf_new (0, True, 8, a_width, a_height)
---			l_image := default_pointer
-
---			if mask /= default_pointer then
---				new_mask_pix := {GTK}.gdk_pixbuf_new (0, True, 8, a_width, a_height)
-----				l_mask_image := {GTK2}.gdk_drawable_copy_to_image (mask, default_pointer, src_x, src_y, dest_x, dest_y, a_width, a_height)
-----				a_mask_pix := {GTK2}.gdk_pixbuf_get_from_image (new_mask_pix, l_mask_image, default_pointer, 0, 0, 0, 0, a_width, a_height)
-----				{GTK2}.g_object_unref (l_mask_image)
-----				l_mask_image := default_pointer
-
-----				l_temp_pix := a_mask_pix
-----				a_mask_pix := {GTK2}.gdk_pixbuf_add_alpha (l_temp_pix, True, 255, 255, 255)
---					-- Draw mask on top of pixbuf.
---				{GTK2}.gdk_pixbuf_composite (a_mask_pix, a_pix, 0, 0, a_width, a_height, 0, 0, 1, 1, {GTK2}.gdk_interp_bilinear, 255)
---				draw_mask_on_pixbuf (a_pix, a_mask_pix)
-
---				 -- Clean up
---				{GTK2}.g_object_unref (a_mask_pix)
-
---				Result := a_pix
---			else
---				Result := a_pix
---			end
+			Result := {GTK}.gdk_pixbuf_new (0, True, 8, a_width, a_height)
 		end
 
 	pixbuf_from_drawable_with_size (a_width, a_height: INTEGER): POINTER
@@ -891,13 +873,6 @@ feature {NONE} -- Implementation
 	internal_background_color: detachable EV_COLOR
 			-- Color used for erasing of canvas.
 			-- Default: white.
-
-	corruptable_onscreen: BOOLEAN
-			-- Is pixel data corruptable if displayed on screen.
-			-- True if drawing area or screen.
-		do
-			Result := True
-		end
 
 	flush
 			-- Force all queued expose events to be called.

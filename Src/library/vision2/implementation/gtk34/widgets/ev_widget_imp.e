@@ -481,6 +481,7 @@ feature {NONE} -- Implementation
 				real_set_background_color (a_c_object, bg)
 			end
 		end
+
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	call_draw_actions (a_cairo_context: POINTER)

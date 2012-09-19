@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 	make
 			-- Create an initialize GTK horizontal box.
 		do
-			set_c_object ({GTK}.gtk_hbox_new (Default_homogeneous, Default_spacing))
+			set_c_object ({GTK}.gtk_box_new (0, Default_spacing))
 			Precursor
 		end
 
@@ -49,14 +49,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_HORIZONTAL_BOX note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_HORIZONTAL_BOX_IMP

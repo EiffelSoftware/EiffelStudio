@@ -22,7 +22,8 @@ inherit
 	EV_WIDGET_LIST_IMP
 		redefine
 			interface,
-			needs_event_box
+			needs_event_box,
+			gtk_container_remove
 		end
 
 feature -- Access
@@ -90,22 +91,34 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN)
 			-- Set whether `child' expands to fill available spare space.
 		local
-			old_expand, fill, pad, pack_type: INTEGER
 			wid_imp: detachable EV_WIDGET_IMP
 		do
 			wid_imp ?= child.implementation
 			check wid_imp /= Void end
+			set_child_expandable_internal (container_widget, wid_imp.c_object, flag)
+			if attached {EV_VERTICAL_BOX_IMP} Current then
+				{GTK}.gtk_widget_set_vexpand(wid_imp.c_object, flag)
+			else
+				{GTK}.gtk_widget_set_hexpand (wid_imp.c_object, flag)
+			end
+		end
+
+	set_child_expandable_internal (a_container, a_widget: POINTER; flag: BOOLEAN)
+			-- Set whether `child' expands to fill available spare space.
+		local
+			old_expand, fill, pad, pack_type: INTEGER
+		do
 			{GTK}.gtk_box_query_child_packing (
-				container_widget,
-				wid_imp.c_object,
+				a_container,
+				a_widget,
 				$old_expand,
 				$fill,
 				$pad,
 				$pack_type
 			)
 			{GTK}.gtk_box_set_child_packing (
-				container_widget,
-				wid_imp.c_object,
+				a_container,
+				a_widget,
 				flag,
 				fill.to_boolean,
 				pad,
@@ -124,10 +137,18 @@ feature {EV_ANY_I} -- Implementation
 	gtk_insert_i_th (a_container, a_widget: POINTER; i: INTEGER)
 			-- Insert `a_widget' in to `a_container' at position `i'.
 		do
-			{GTK}.gtk_container_add (a_container, a_widget)
+			{GTK}.gtk_box_pack_start (a_container, a_widget, True, True, default_spacing)
 			if i < count then
 				{GTK}.gtk_box_reorder_child (a_container, a_widget, i)
 			end
+		end
+
+	gtk_container_remove (a_container, a_child: POINTER)
+		do
+			Precursor (a_container, a_child)
+				-- Reset h/vexpand flags
+			{GTK}.gtk_widget_set_vexpand (a_child, True)
+			{GTK}.gtk_widget_set_hexpand (a_child, True)
 		end
 
 feature {EV_ANY_I, EV_ANY} -- Implementation

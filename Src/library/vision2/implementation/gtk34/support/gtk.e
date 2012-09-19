@@ -7,6 +7,56 @@ class
 
 feature
 
+	gtk_widget_set_hexpand (a_widget: POINTER; a_expand: BOOLEAN)
+		external
+			"C signature (GtkWidget*, gboolean) use <ev_gtk.h>"
+		end
+
+	gtk_widget_set_vexpand (a_widget: POINTER; a_expand: BOOLEAN)
+		external
+			"C signature (GtkWidget*, gboolean) use <ev_gtk.h>"
+		end
+
+	gtk_widget_get_hexpand (a_widget: POINTER): BOOLEAN
+		external
+			"C signature (GtkWidget*): gboolean use <ev_gtk.h>"
+		end
+
+	gtk_widget_get_vexpand (a_widget: POINTER): BOOLEAN
+		external
+			"C signature (GtkWidget*): gboolean use <ev_gtk.h>"
+		end
+
+	gtk_widget_set_hexpand_set (a_widget: POINTER; a_expand: BOOLEAN)
+		external
+			"C signature (GtkWidget*, gboolean) use <ev_gtk.h>"
+		end
+
+	gtk_widget_set_vexpand_set (a_widget: POINTER; a_expand: BOOLEAN)
+		external
+			"C signature (GtkWidget*, gboolean) use <ev_gtk.h>"
+		end
+
+	gtk_widget_get_hexpand_set (a_widget: POINTER): BOOLEAN
+		external
+			"C signature (GtkWidget*): gboolean use <ev_gtk.h>"
+		end
+
+	gtk_widget_get_vexpand_set (a_widget: POINTER): BOOLEAN
+		external
+			"C signature (GtkWidget*): gboolean use <ev_gtk.h>"
+		end
+
+	gtk_widget_compute_expand (a_widget: POINTER; a_orientation: INTEGER): BOOLEAN
+		external
+			"C signature (GtkWidget*, GtkOrientation): gboolean use <ev_gtk.h>"
+		end
+
+	gtk_widget_queue_compute_expand (a_widget: POINTER)
+		external
+			"C signature (GtkWidget*) use <ev_gtk.h>"
+		end
+
 	gdk_window_create_similar_surface (a_window, a_content: POINTER; a_width, a_height: INTEGER): POINTER
 		external
 			"C signature (GdkWindow*, cairo_content_t, int, int): cairo_surface_t* use <ev_gtk.h>"
@@ -1542,6 +1592,11 @@ feature
 	frozen gtk_hbox_new (a_homogeneous: BOOLEAN; a_spacing: INTEGER_32): POINTER
 		external
 			"C (gboolean, gint): GtkWidget* | <ev_gtk.h>"
+		end
+
+	frozen gtk_box_new (a_orientation: INTEGER; a_spacing: INTEGER_32): POINTER
+		external
+			"C (GtkOrientation, gint): GtkWidget* | <ev_gtk.h>"
 		end
 
 	frozen gtk_paned_new (a_orientation: NATURAL_8): POINTER

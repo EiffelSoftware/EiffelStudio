@@ -48,6 +48,8 @@ feature -- Status Setting
 --			oldpix: POINTER
 --			l_width, l_height: INTEGER
 		do
+			width := a_width
+			height := a_height
 --			if drawable /= default_pointer then
 --				oldpix := drawable
 --				l_width := width
@@ -78,23 +80,23 @@ feature -- Access
 
 	width: INTEGER
 		-- Width in pixels of mask bitmap.
-		local
---			a_y: INTEGER
-		do
-			if drawable /= default_pointer then
---				{GTK}.gdk_window_get_size (drawable, $Result, $a_y)
-			end
-		end
+--		local
+----			a_y: INTEGER
+--		do
+--			if drawable /= default_pointer then
+----				{GTK}.gdk_window_get_size (drawable, $Result, $a_y)
+--			end
+--		end
 
 	height: INTEGER
 		-- Width in pixels of mask bitmap.
-		local
---			a_x: INTEGER
-		do
-			if drawable /= default_pointer then
---				{GTK}.gdk_window_get_size (drawable, $a_x, $Result)
-			end
-		end
+--		local
+----			a_x: INTEGER
+--		do
+--			if drawable /= default_pointer then
+----				{GTK}.gdk_window_get_size (drawable, $a_x, $Result)
+--			end
+--		end
 
 feature {NONE} -- Implementation
 

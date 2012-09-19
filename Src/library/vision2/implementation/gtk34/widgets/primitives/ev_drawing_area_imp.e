@@ -188,7 +188,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			initialize_drawable (a_cairo_context)
 
 			if expose_actions_internal /= Void then
-				expose_actions_internal.call ([l_x.truncated_to_integer, l_y.truncated_to_integer, l_width.truncated_to_integer, l_height.truncated_to_integer])
+				expose_actions_internal.call (app_implementation.gtk_marshal.dimension_tuple (l_x.truncated_to_integer, l_y.truncated_to_integer, l_width.truncated_to_integer, l_height.truncated_to_integer))
 			end
 
 			drawable := default_pointer

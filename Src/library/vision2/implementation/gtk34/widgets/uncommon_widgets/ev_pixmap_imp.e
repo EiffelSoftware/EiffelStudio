@@ -25,7 +25,7 @@ inherit
 			height,
 			destroy,
 			drawable,
-			corruptable_onscreen
+			pixbuf_from_drawable_at_position
 		end
 
 	EV_PRIMITIVE_IMP
@@ -202,12 +202,13 @@ feature -- Element change
 		end
 
 	cairo_surface: POINTER
+		-- Cairo drawable surface used for storing pixmap data in RGB format.
 
 	set_with_default
 			-- Initialize the pixmap with the default
 			-- pixmap (Vision2 logo)
 		do
---			set_from_xpm_data (default_pixmap_xpm)
+			set_from_xpm_data (default_pixmap_xpm)
 		end
 
 	stretch (a_x, a_y: INTEGER)
@@ -255,12 +256,15 @@ feature -- Element change
 
 	set_mask (a_mask: EV_BITMAP)
 			-- Set the GdkBitmap used for masking `Current'.
---		local
---			a_mask_imp: detachable EV_BITMAP_IMP
 		do
---			a_mask_imp ?= a_mask.implementation
---			check a_mask_imp /= Void end
---			copy_from_gdk_data (drawable, a_mask_imp.drawable, width, height)
+		end
+
+feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
+
+	pixbuf_from_drawable_at_position (src_x, src_y, dest_x, dest_y, a_width, a_height: INTEGER): POINTER
+			-- Return a GdkPixbuf object from the current Gdkpixbuf structure
+		do
+			Result := {GTK}.gdk_pixbuf_get_from_surface (cairo_surface, src_x, src_y, a_width, a_height)
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -274,7 +278,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			l_height := {GTK}.gtk_widget_get_allocated_height (c_object)
 
 			if expose_actions_internal /= Void then
-				expose_actions_internal.call ([0, 0, l_width, l_height])
+				expose_actions_internal.call (app_implementation.gtk_marshal.dimension_tuple (0, 0, l_width, l_height))
 			end
 
 			{CAIRO}.cairo_set_source_surface (a_cairo_context, cairo_surface, (l_width - width) / 2, (l_height - height) / 2)
@@ -373,12 +377,6 @@ feature {EV_ANY_I} -- Implementation
 	drawable: POINTER
 			-- Pointer to the GdkPixmap image data.
 
-	mask: POINTER
-			-- Pointer to the GdkBitmap used for masking.
-
-	corruptable_onscreen: BOOLEAN = False
-			-- Is drawable corruptable onscreen?
-
 feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 
 	internal_xpm_data: POINTER
@@ -386,17 +384,20 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 
 feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_PIXEL_BUFFER_IMP} -- Implementation
 
-
 	set_from_xpm_data (a_xpm_data: POINTER)
 			-- Pixmap symbolizing a piece of information.
 		require
 			xpm_data_not_null: a_xpm_data /= NULL
 		local
---			gdkpix, gdkmask: POINTER
+			xpmpixbuf: POINTER
 		do
---			internal_xpm_data := a_xpm_data
---			gdkpix := {GTK}.gdk_pixmap_create_from_xpm_d (App_implementation.default_gdk_window, $gdkmask, NULL, a_xpm_data)
---			set_pixmap (gdkpix, gdkmask)
+				-- Store internal xpm data for default stock cursor handling.
+			internal_xpm_data := a_xpm_data
+			xpmpixbuf := {GTK}.gdk_pixbuf_new_from_xpm_data (a_xpm_data)
+
+			set_pixmap_from_pixbuf (xpmpixbuf)
+				-- Unreference pixbuf so that it may be collected.
+			{GTK2}.g_object_unref (xpmpixbuf)
 		end
 
 	set_from_stock_id (a_stock_id: POINTER)
@@ -419,32 +420,32 @@ feature {NONE} -- Implementation
 	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME)
 			-- Save `Current' in `a_format' to `a_filename'
 		local
---			a_gdkpixbuf, stretched_pixbuf: POINTER
---			a_gerror: POINTER
---			a_handle, a_filetype: EV_GTK_C_STRING
+			a_gdkpixbuf, stretched_pixbuf: POINTER
+			a_gerror: POINTER
+			a_handle, a_filetype: EV_GTK_C_STRING
 		do
---			if app_implementation.writeable_pixbuf_formats.has (a_format.file_extension.as_upper) then
---					-- Perform custom saving with GdkPixbuf
---				a_gdkpixbuf := pixbuf_from_drawable
---				a_handle := a_filename.string
---				a_filetype := a_format.file_extension
---				if a_format.scale_width > 0 and then a_format.scale_height > 0 then
---					stretched_pixbuf := {GTK2}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_format.scale_width, a_format.scale_height, {GTK2}.gdk_interp_bilinear)
---						-- Unref original pixbuf so it gets deleted from memory
---					{GTK2}.object_unref (a_gdkpixbuf)
---						-- Set our scaled pixbuf to be the one that is saved
---					a_gdkpixbuf := stretched_pixbuf
---				end
---				{GTK2}.gdk_pixbuf_save (a_gdkpixbuf, a_handle.item, a_filetype.item, $a_gerror)
---				if a_gerror /= default_pointer then
---					-- We could not save the image so raise an exception
---					(create {EXCEPTIONS}).raise ("Could not save image file.")
---				end
---				{GTK2}.object_unref (a_gdkpixbuf)
---			else
---				-- If Gtk cannot save the file then the default is called
---				Precursor {EV_PIXMAP_I} (a_format, a_filename)
---			end
+			if app_implementation.writeable_pixbuf_formats.has (a_format.file_extension.as_upper) then
+					-- Perform custom saving with GdkPixbuf
+				a_gdkpixbuf := pixbuf_from_drawable
+				a_handle := a_filename.string
+				a_filetype := a_format.file_extension
+				if a_format.scale_width > 0 and then a_format.scale_height > 0 then
+					stretched_pixbuf := {GTK2}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_format.scale_width, a_format.scale_height, {GTK2}.gdk_interp_bilinear)
+						-- Unref original pixbuf so it gets deleted from memory
+					{GTK2}.g_object_unref (a_gdkpixbuf)
+						-- Set our scaled pixbuf to be the one that is saved
+					a_gdkpixbuf := stretched_pixbuf
+				end
+				{GTK2}.gdk_pixbuf_save (a_gdkpixbuf, a_handle.item, a_filetype.item, $a_gerror)
+				if a_gerror /= default_pointer then
+					-- We could not save the image so raise an exception
+					(create {EXCEPTIONS}).raise ("Could not save image file.")
+				end
+				{GTK2}.g_object_unref (a_gdkpixbuf)
+			else
+				-- If Gtk cannot save the file then the default is called
+				Precursor {EV_PIXMAP_I} (a_format, a_filename)
+			end
 		end
 
 	destroy

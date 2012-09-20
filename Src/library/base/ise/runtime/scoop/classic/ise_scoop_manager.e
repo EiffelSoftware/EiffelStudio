@@ -746,8 +746,8 @@ feature -- Command/Query Handling
 			l_request_chain_node_id: like invalid_request_chain_node_id
 			l_request_chain_node_queue: detachable like new_request_chain_node_queue
 			l_client_request_chain_node_queue_entry, l_request_chain_node_queue_entry: detachable like new_request_chain_node_queue_entry
-			l_unique_pid_count, i, l_last_pid_index, l_logged_calls_original_count, l_logged_calls_current_count, l_request_chain_depth, l_pid: INTEGER_32
-			l_is_synchronous, l_client_is_sibling, l_client_sync_needed, l_exit_loop, l_temporary_chain_opened: BOOLEAN
+			l_unique_pid_count, i, l_last_pid_index, l_logged_calls_original_count, l_logged_calls_current_count, l_request_chain_depth, l_request_chain_owner, l_pid: INTEGER_32
+			l_is_synchronous, l_client_sync_needed, l_exit_loop, l_temporary_chain_opened: BOOLEAN
 			l_call_ptr, l_null_ptr: POINTER
 		do
 			debug ("ISE_SCOOP_MANAGER")
@@ -793,8 +793,6 @@ feature -- Command/Query Handling
 					l_pid := l_client_request_chain_meta_data [i]
 					if l_pid = a_supplier_processor_id then
 						l_request_chain_node_id := l_client_request_chain_meta_data [i + l_unique_pid_count]
-					elseif l_pid = a_client_processor_id then
-						l_client_is_sibling := True
 					end
 					i := i + 1
 				end
@@ -807,6 +805,8 @@ feature -- Command/Query Handling
 				l_request_chain_node_queue_entry := l_request_chain_node_queue [l_request_chain_node_id]
 			else
 				l_request_chain_node_queue_entry := l_request_chain_node_queue [l_request_chain_node_id]
+					-- We may be lock passing from the creation of a new processor, in which case we check if the original chain client is the current supplier.
+				l_client_sync_needed := l_is_synchronous and then a_supplier_processor_id = l_client_request_chain_meta_data [request_chain_client_pid_index]
 			end
 
 			if l_request_chain_node_queue_entry = Void then

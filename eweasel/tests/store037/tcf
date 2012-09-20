@@ -1,0 +1,26 @@
+test_name	store-retrieve-non-void-safe
+test_description Test that storing a non-void-safe system can be retrieved if all the attached attributes can be attached to an object.
+
+copy_sub 	Ace $TEST Ace
+copy_sub	test.e $CLUSTER test.e
+copy_sub	a.e $CLUSTER a.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m1 1
+execute_result	ok
+compare		exec_output_m1 output
+
+cleanup_compile
+
+copy_sub	Ace_safe $TEST Ace
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output_m2
+execute_result	ok
+compare		exec_output_m2 output
+
+test_end

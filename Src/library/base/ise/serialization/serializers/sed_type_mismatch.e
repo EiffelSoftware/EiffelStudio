@@ -101,7 +101,7 @@ feature -- Element change
 		local
 			l_info: like attribute_info
 		do
-			l_info := [a_old_name, a_new_name, a_old_attr_type, a_new_attr_type, a_old_pos, a_new_pos, True, False, True]
+			l_info := [a_old_name, a_new_name, a_old_attr_type, a_new_attr_type, a_old_pos, a_new_pos, False, False, True]
 			mismatches_by_name.put (l_info, a_new_name)
 			mismatches_by_stored_position.put (l_info, a_old_pos)
 		end

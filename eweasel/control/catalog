@@ -2133,6 +2133,7 @@ test	store-bounded-queues-stacks	store033 tcf pass storable
 test	old-hashtable-retrieval		store034 tcf pass storable table
 test	store-retrieve-bogus-version-mismatch	store035 tcf pass storable
 test	correct-mismatch-memory-corruption store036 tcf pass storable
+test	store-retrieve-non-void-safe	store037 tcf pass storable attached_types
 
 -- Flat, short, flatshort tests
 

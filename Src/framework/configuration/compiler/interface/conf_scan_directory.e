@@ -13,7 +13,7 @@ inherit
 
 feature -- Event handling
 
-	on_process_directory (a_cluster: CONF_CLUSTER; a_path: STRING_8)
+	on_process_directory (a_cluster: CONF_CLUSTER; a_path: READABLE_STRING_32)
 			-- (Sub)directory a_path of a_cluster is processed.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -23,73 +23,57 @@ feature -- Event handling
 
 feature -- Processing
 
-	process_cluster_recursive (a_path: STRING; a_cluster: CONF_CLUSTER; a_file_rule: CONF_FILE_RULE)
+	process_cluster_recursive (a_path: READABLE_STRING_32; a_cluster: CONF_CLUSTER; a_file_rule: CONF_FILE_RULE)
 			-- Recursively process `a_path'.
 		require
 			a_file_rule_not_void: a_file_rule /= Void
 			a_cluster_not_void: a_cluster /= Void
 			a_path_not_void: a_path /= Void
 		local
-			l_dir: KL_DIRECTORY
-			l_files: ARRAY [STRING]
-			i, cnt: INTEGER
-			l_name: STRING
-			l_path: STRING
-			l_cluster_separator: STRING
-			l_full_path: STRING
+			l_name: STRING_32
+			l_path: STRING_32
+			l_cluster_separator: READABLE_STRING_32
+			l_full_path: STRING_32
+			u: FILE_UTILITIES
 		do
 			l_cluster_separator := "/"
 			on_process_directory (a_cluster, a_path)
 			l_path := a_cluster.location.build_path (a_path, "")
-			create l_dir.make (l_path)
 			create l_full_path.make (128)
 
-			if not l_dir.is_readable then
+			if not attached u.file_names (l_path) as l_files then
 				if not a_cluster.is_test_cluster then
 					add_and_raise_error (create {CONF_ERROR_DIR}.make (l_path, a_cluster.location.original_path + a_path, a_cluster.target.system.file_name))
 				end
 			else
 					-- look for classes in directory itself.
-				l_files := l_dir.filenames
-				if l_files = Void then
-					add_and_raise_error (create {CONF_ERROR_DIR}.make (l_path, a_cluster.location.original_path + a_path, a_cluster.target.system.file_name))
-				else
-					from
-						i := l_files.lower
-						cnt := l_files.upper
-					until
-						i > cnt
+				across
+					l_files as f
+				loop
+					l_name := f.item
+						-- Reuse `l_full_path' string buffer.
+					l_full_path.wipe_out
+					l_full_path.append (a_path)
+					l_full_path.append (l_cluster_separator)
+					l_full_path.append (l_name)
+					if l_name.count >= 2 and then a_file_rule.is_included (l_full_path) then
+						handle_class (l_name, a_path, a_cluster)
+					end
+				end
+
+					-- if we check recursive
+				if a_cluster.is_recursive and then attached u.directory_names (l_path) as l_subdirs then
+					across
+						l_subdirs as d
 					loop
-						l_name := l_files [i]
 							-- Reuse `l_full_path' string buffer.
 						l_full_path.wipe_out
 						l_full_path.append (a_path)
 						l_full_path.append (l_cluster_separator)
-						l_full_path.append (l_name)
-						if l_name.count >= 2 and then a_file_rule.is_included (l_full_path) then
-							handle_class (l_name, a_path, a_cluster)
-						end
-						i := i + 1
-					end
-
-						-- if we check recursive
-					if a_cluster.is_recursive and then attached l_dir.directory_names as l_subdirs then
-						from
-							i := 1
-							cnt := l_subdirs.count
-						until
-							i > cnt
-						loop
-								-- Reuse `l_full_path' string buffer.
-							l_full_path.wipe_out
-							l_full_path.append (a_path)
-							l_full_path.append (l_cluster_separator)
-							l_full_path.append (l_subdirs [i])
-							if a_file_rule.is_included (l_full_path) then
-									-- We need a copy of the string as it is stored as a reference indirectly from this routine.
-								process_cluster_recursive (l_full_path.string, a_cluster, a_file_rule)
-							end
-							i := i + 1
+						l_full_path.append (d.item)
+						if a_file_rule.is_included (l_full_path) then
+								-- We need a copy of the string as it is stored as a reference indirectly from this routine.
+							process_cluster_recursive (l_full_path, a_cluster, a_file_rule)
 						end
 					end
 				end
@@ -107,7 +91,7 @@ feature -- Processing
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

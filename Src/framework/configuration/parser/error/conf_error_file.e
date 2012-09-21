@@ -39,10 +39,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	orig_file, file: STRING
+	orig_file, file: STRING_32
 			-- File that could not be opened.
 
-	config: STRING
+	config: STRING_32
 			-- Config where the file was referenced.
 
 	text: STRING_32
@@ -51,12 +51,12 @@ feature -- Access
 			check
 				file_not_void: file /= Void
 			end
-			Result := "Could not open file: "+file
+			Result := {STRING_32} "Could not open file: " + file
 			if orig_file /= Void then
-				Result.append ("%N"+orig_file)
+				Result.append ({STRING_32} "%N" + orig_file)
 			end
 			if config /= Void then
-				Result.append ("%NConfiguration: "+config)
+				Result.append ({STRING_32} "%NConfiguration: " + config)
 			end
 		end
 
@@ -81,7 +81,7 @@ feature -- Update
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -138,7 +138,7 @@ feature -- Access queries
 			end
 		end
 
-	path: STRING
+	path: STRING_32
 			-- Path to the configuration file.
 		do
 			Result := resolver.resolved_library_path (location.evaluated_path)
@@ -198,7 +198,7 @@ invariant
 	library_target_set: classes_set implies library_target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

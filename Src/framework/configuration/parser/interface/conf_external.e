@@ -71,7 +71,7 @@ feature -- Access, stored in configuration file
 	location: like internal_location
 			-- The file location.
 		local
-			l_path: STRING
+			l_path: like {CONF_TARGET}.library_root
 		do
 			Result := internal_location.twin
 			l_path := target.library_root
@@ -114,7 +114,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 feature {CONF_ACCESS} -- Implementation
 
-	internal_location: STRING
+	internal_location: STRING_32
 			-- The file location.
 
 invariant

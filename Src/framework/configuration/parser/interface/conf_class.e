@@ -34,7 +34,7 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make (a_file_name: STRING; a_group: like group; a_path, a_classname: STRING; a_factory: like factory)
+	make (a_file_name: like file_name; a_group: like group; a_path: like path; a_classname: STRING; a_factory: like factory)
 			-- Create
 		require
 			a_file_name_ok: a_file_name /= Void and then not a_file_name.is_empty
@@ -154,16 +154,16 @@ feature -- Access, in compiled only, not stored to configuration file
 	group: CONF_PHYSICAL_GROUP
 			-- The group this class belongs to.
 
-	file_name: STRING
+	file_name: STRING_32
 			-- The file name of the class.
 
-	full_file_name: STRING
+	full_file_name: like path
 			-- The full file name of the class (including path).
 		do
 			Result := group.location.build_path (path, file_name)
 		end
 
-	path: STRING
+	path: STRING_32
 			-- The path of the class, relative to the group, in unix format.
 
 	overriden_by: like class_type
@@ -349,7 +349,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			is_valid := True
 		end
 
-	rebuild (a_file_name: STRING; a_group: like group; a_path: STRING)
+	rebuild (a_file_name: like file_name; a_group: like group; a_path: like path)
 			-- Update the informations during a rebuild.
 			-- More or less the same thing as we during `make'.
 		require
@@ -525,7 +525,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

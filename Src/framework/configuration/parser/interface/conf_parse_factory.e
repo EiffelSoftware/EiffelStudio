@@ -42,7 +42,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_location_from_path (a_path: STRING; a_target: CONF_TARGET): CONF_DIRECTORY_LOCATION
+	new_location_from_path (a_path: like {CONF_LOCATION}.original_path; a_target: CONF_TARGET): CONF_DIRECTORY_LOCATION
 			-- Create a `CONF_LOCATION' object.
 			-- Create with `a_path' (without a filename).
 			-- e.g. aa/bb/cc =>
@@ -57,7 +57,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_location_from_full_path (a_full_path: STRING; a_target: CONF_TARGET): CONF_FILE_LOCATION
+	new_location_from_full_path (a_full_path: like {CONF_LOCATION}.original_path; a_target: CONF_TARGET): CONF_FILE_LOCATION
 			-- Create a `CONF_LOCATION' object.
 			-- Create with `a_full_path' (with a filename).
 			-- e.g. aa/bb/cc =>

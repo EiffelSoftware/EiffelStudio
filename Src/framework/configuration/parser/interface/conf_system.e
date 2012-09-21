@@ -126,10 +126,10 @@ feature -- Access, stored in configuration file
 
 feature -- Access, in compiled only
 
-	directory: STRING
+	directory: like file_name
 			-- Directory where the configuration file is stored in platform specific format.
 
-	file_name: STRING
+	file_name: STRING_32
 			-- File name of config file.
 
 	file_date: INTEGER
@@ -256,7 +256,7 @@ feature -- Store to disk
 			is_location_set: is_location_set
 		local
 			l_print: CONF_PRINT_VISITOR
-			l_file: PLAIN_TEXT_FILE
+			l_file: PLAIN_TEXT_FILE_32
 		do
 			store_successful := False
 			create l_print.make

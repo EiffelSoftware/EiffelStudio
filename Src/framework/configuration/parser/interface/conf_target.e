@@ -82,10 +82,10 @@ feature -- Access, stored in configuration file
 
 feature -- Access, in compiled only, not stored to configuration file
 
-	environ_variables: HASH_TABLE [STRING, STRING]
+	environ_variables: HASH_TABLE [STRING_32, STRING_32]
 			-- Saved environment variables.
 
-	library_root: STRING
+	library_root: STRING_32
 			-- Root location to use for relative paths, defaults to the location of the configuration file.
 		require
 			location_set: system.is_location_set
@@ -496,7 +496,7 @@ feature -- Access queries for settings
 			Result := setting_boolean (s_dynamic_runtime)
 		end
 
-	setting_executable_name: STRING
+	setting_executable_name: STRING_32
 			-- Value for the executable_name setting.
 		do
 			Result := settings.item (s_executable_name)
@@ -991,7 +991,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			settings_set: internal_settings = a_settings
 		end
 
-	add_setting (a_name, a_value: STRING)
+	add_setting (a_name, a_value: STRING_32)
 			-- Add a new setting.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -1002,7 +1002,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			added: internal_settings.item (a_name) = a_value
 		end
 
-	update_setting (a_name, a_value: STRING)
+	update_setting (a_name, a_value: STRING_32)
 			-- Update/add/remove a setting.
 		require
 			a_name_valid: a_name /= Void and then valid_setting (a_name)
@@ -1303,7 +1303,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 					not internal_post_compile_action.has (an_action)
 		end
 
-	add_variable (a_name, a_value: STRING)
+	add_variable (a_name, a_value: STRING_32)
 			-- Add a variable with `a_name' and `a_value'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -1314,7 +1314,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			variable_added: internal_variables.has (a_name.as_lower) and then internal_variables.item (a_name.as_lower) = a_value
 		end
 
-	remove_variable (a_name: STRING)
+	remove_variable (a_name: STRING_32)
 			-- Remove a variable with `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -1501,7 +1501,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 			Result_not_void: Result /= Void
 		end
 
-	internal_settings: HASH_TABLE [STRING, STRING]
+	internal_settings: HASH_TABLE [STRING_32, STRING_32]
 			-- Settings of this target itself.
 
 	internal_external_include: ARRAYED_LIST [CONF_EXTERNAL_INCLUDE]
@@ -1531,7 +1531,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 	internal_post_compile_action: ARRAYED_LIST [CONF_ACTION]
 			-- Actions to be executed after compilation of this target itself.
 
-	internal_variables: EQUALITY_HASH_TABLE [STRING, STRING]
+	internal_variables: EQUALITY_HASH_TABLE [STRING_32, STRING_32]
 			-- User defined variables of this target itself.
 
 feature {NONE} -- Implementation

@@ -445,7 +445,7 @@ feature {NONE} -- Implementation helper
 		do
 			a_property.set_refresh_action (agent get_setting (a_name))
 			a_property.refresh
-			a_property.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent set_string_setting (a_name, a_default, ?)))
+			a_property.change_value_actions.extend (agent set_string_setting (a_name, a_default, ?))
 			a_property.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent update_inheritance_setting (a_name, a_property)))
 			a_property.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			a_property.use_inherited_actions.extend (agent current_target.update_setting (a_name, Void))
@@ -474,7 +474,7 @@ feature {NONE} -- Implementation helper
 
 feature {NONE} -- Inheritance handling
 
-	update_inheritance_setting (a_name: STRING; a_property: PROPERTY)
+	update_inheritance_setting (a_name: STRING_32; a_property: PROPERTY)
 			-- Enable inheritance/override on `a_property' accordint to the setting `a_name'.
 		require
 			a_name_valid: valid_setting (a_name)
@@ -556,7 +556,7 @@ feature {NONE} -- Configuration setting
 			end
 		end
 
-	set_string_setting (a_name: STRING; a_default: STRING; a_value: STRING)
+	set_string_setting (a_name: STRING_32; a_default: STRING_32; a_value: STRING_32)
 			-- Set a string setting with `a_name' to `a_value'.
 		require
 			a_name_valid: valid_setting (a_name)

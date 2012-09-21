@@ -290,7 +290,7 @@ feature {NONE} -- Actions
 	browse_dialog: EV_FILE_OPEN_DIALOG
 			-- Dialog to browse to a library
 		local
-			l_dir: DIRECTORY
+			l_dir: DIRECTORY_32
 		once
 			create Result
 			create l_dir.make (target.system.directory)
@@ -386,7 +386,7 @@ feature {NONE} -- Actions
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

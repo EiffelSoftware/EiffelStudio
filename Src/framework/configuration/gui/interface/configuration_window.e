@@ -239,7 +239,7 @@ feature -- Access
 	selected_target: STRING
 			-- Target to select on startup.
 
-	external_editor_command: FUNCTION [ANY, TUPLE [STRING, INTEGER], STRING]
+	external_editor_command: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL, INTEGER], READABLE_STRING_GENERAL]
 			-- Command that builds an external editor command line by taking a target and a line number.
 
 	split_position: INTEGER
@@ -813,10 +813,10 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			is_initialized: is_initialized
 			not_refreshing: not is_refreshing
 		local
-			l_vars, l_inh_vars: EQUALITY_HASH_TABLE [STRING, STRING]
+			l_vars, l_inh_vars: like {CONF_TARGET}.variables
 			i: INTEGER
 			l_item: STRING_PROPERTY
-			l_var_key: STRING
+			l_var_key: STRING_32
 		do
 			current_target := a_target
 			is_refreshing := True
@@ -845,24 +845,24 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 				l_item.set_value (l_var_key)
 				l_item.pointer_button_press_actions.wipe_out
 				l_item.pointer_double_press_actions.force_extend (agent l_item.activate)
-				l_item.change_value_actions.extend (agent (s: STRING_32; a_var_key: STRING)
+				l_item.change_value_actions.extend (agent (s: STRING_32; a_var_key: STRING_32)
 					require
 						s_not_void: s /= Void
 						a_var_key_not_void: a_var_key /= Void
 					do
-						update_variable_key (a_var_key, s.as_string_8)
+						update_variable_key (a_var_key, s)
 					end (?, l_var_key))
 				grid.set_item (1, i + 1, l_item)
 				create l_item.make ("")
 				l_item.set_value (l_vars.item_for_iteration)
 				l_item.pointer_button_press_actions.wipe_out
 				l_item.pointer_double_press_actions.force_extend (agent l_item.activate)
-				l_item.change_value_actions.extend (agent (s: STRING_32; a_var_key: STRING)
+				l_item.change_value_actions.extend (agent (s: STRING_32; a_var_key: STRING_32)
 					require
 						s_not_void: s /= Void
 						a_var_key_not_void: a_var_key /= Void
 					do
-						update_variable_value (a_var_key, s.as_string_8)
+						update_variable_value (a_var_key, s)
 					end (?, l_var_key))
 				grid.set_item (2, i + 1, l_item)
 				l_inh_vars.search (l_var_key)
@@ -1050,8 +1050,8 @@ feature {NONE} -- Implementation
 	open_text_editor
 			-- Open editor to edit the configuration file by hand.
 		local
-			l_cmd_string: STRING
-			l_env: EXECUTION_ENVIRONMENT
+			l_cmd_string: like external_editor_command.item
+			l_env: EXECUTION_ENVIRONMENT_32
 		do
 			l_cmd_string := external_editor_command.item ([conf_system.file_name, 1])
 			if l_cmd_string /= Void and then not l_cmd_string.is_empty then
@@ -1206,7 +1206,7 @@ feature {NONE} -- Implementation
 				l_dir_prop.set_description (conf_interface_names.external_location_description)
 				l_dir_prop.enable_text_editing
 				l_dir_prop.set_value (an_external.location)
-				l_dir_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?,  agent an_external.set_location))
+				l_dir_prop.change_value_actions.extend (agent an_external.set_location)
 				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 				properties.add_property (l_dir_prop)
 			elseif an_external.is_cflag or else an_external.is_linker_flag then
@@ -1214,7 +1214,7 @@ feature {NONE} -- Implementation
 				create l_prop.make (conf_interface_names.external_value_name)
 				l_prop.set_description (conf_interface_names.external_value_description)
 				l_prop.set_value (an_external.location)
-				l_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent an_external.set_location ))
+				l_prop.change_value_actions.extend (agent an_external.set_location )
 				l_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 				properties.add_property (l_prop)
 			else
@@ -1223,7 +1223,7 @@ feature {NONE} -- Implementation
 				l_file_prop.set_description (conf_interface_names.external_location_description)
 				l_file_prop.enable_text_editing
 				l_file_prop.set_value (an_external.location)
-				l_file_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?,  agent an_external.set_location))
+				l_file_prop.change_value_actions.extend ( agent an_external.set_location)
 				l_file_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 				if an_external.is_resource then
 					l_file_prop.add_filters (text_files_filter, text_files_description)
@@ -1288,7 +1288,7 @@ feature {NONE} -- Implementation
 					do
 						Result := not a_name.is_empty
 					end)
-			l_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent a_task.set_command))
+			l_prop.change_value_actions.extend (agent a_task.set_command)
 			l_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_prop)
 
@@ -1374,7 +1374,7 @@ feature {NONE} -- Configuration setting
 			end
 		end
 
-	update_variable_key (an_old_key: STRING; a_new_key: STRING)
+	update_variable_key (an_old_key: STRING_32; a_new_key: STRING_32)
 			-- Update key part of a variable.
 		require
 			current_target: current_target /= Void
@@ -1387,7 +1387,7 @@ feature {NONE} -- Configuration setting
 			show_properties_target_variables (current_target)
 		end
 
-	update_variable_value (a_key: STRING; a_value: STRING)
+	update_variable_value (a_key: STRING_32; a_value: STRING_32)
 			-- Update value part of a variable.
 		require
 			current_target: current_target /= Void

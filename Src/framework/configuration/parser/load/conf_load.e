@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	retrieve_configuration (a_file: STRING)
+	retrieve_configuration (a_file: READABLE_STRING_32)
 			-- Retreive the configuration in `a_file' and make it available in `last_system'.
 		require
 			a_file_ok: a_file /= Void
@@ -104,7 +104,7 @@ feature -- Basic operation
 			no_error_implies_last_system_not_void: not is_error implies last_system /= Void
 		end
 
-	retrieve_uuid (a_file: STRING)
+	retrieve_uuid (a_file: STRING_32)
 			-- Retrieve the uuid of the configuration in `a_file' and make it available in `last_uuid'.
 		require
 			a_file_ok: a_file /= Void and then not a_file.is_empty
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 	factory: CONF_PARSE_FACTORY
 			-- Factory to create nodes.
 
-	parse_file (a_file: STRING; a_callback: CONF_LOAD_CALLBACKS)
+	parse_file (a_file: READABLE_STRING_32; a_callback: CONF_LOAD_CALLBACKS)
 			-- Parse `a_file' using `a_callbacks'.
 		require
 			a_file_ok: a_file /= Void
@@ -145,6 +145,7 @@ feature {NONE} -- Implementation
 			l_end_tag_checker: XML_END_TAG_CHECKER
 			l_pos: XML_POSITION
 			l_retried: BOOLEAN
+			u: FILE_UTILITIES
 		do
 			if not l_retried then
 				is_error := False
@@ -161,7 +162,7 @@ feature {NONE} -- Implementation
 					l_ns_cb.set_associated_parser (l_parser)
 					l_parser.set_callbacks (l_ns_cb)
 
-					create l_file.make (a_file)
+					l_file := u.make_text_file (a_file)
 					if l_file.exists and then l_file.is_readable then
 						l_file.open_read
 					end
@@ -202,7 +203,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

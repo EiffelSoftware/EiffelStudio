@@ -83,7 +83,7 @@ feature -- Visit nodes
 			l_target: CONF_TARGET
 			l_load: CONF_LOAD
 			l_uuid: UUID
-			l_path: STRING
+			l_path: like {CONF_LIBRARY}.path
 			l_comparer: FILE_COMPARER
 			l_cond: CONF_CONDITION
 			l_ferr: CONF_ERROR_FILE
@@ -214,7 +214,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

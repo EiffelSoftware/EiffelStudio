@@ -99,13 +99,11 @@ feature -- Basic operation
 		local
 			l_parser: LACE_PARSER
 			l_error: CONF_ERROR_PARSE
-			l_ast: ACE_SD
 			l_desc: STRING
 		do
 			create l_parser.make
 			l_parser.parse_file (a_file, False)
-			l_ast ?= l_parser.ast
-			if l_ast = Void then
+			if not attached {ACE_SD} l_parser.ast as l_ast then
 				create l_error
 				l_error.set_position (a_file, l_parser.line, l_parser.column)
 				l_error.set_ace_parse_mode
@@ -332,7 +330,6 @@ feature {NONE} -- Implementation of data retrieval
 			l_parser: LACE_PARSER
 			l_name: STRING
 			l_location: CONF_LOCATION
-			l_use_prop: CLUST_PROP_SD
 			l_excludes: LACE_LIST [FILE_NAME_SD]
 			l_cl_opt: LACE_LIST [O_OPTION_SD]
 			l_fr: CONF_FILE_RULE
@@ -366,11 +363,10 @@ feature {NONE} -- Implementation of data retrieval
 							l_file.open_read
 							create l_parser.make
 							l_parser.parse_file (l_file_path, True)
-							l_use_prop ?= l_parser.ast
-							if l_use_prop = Void then
-								set_error (create {CONF_ERROR_PARSE}.make ("Problem in use file:"+l_file_path))
-							else
+							if attached {CLUST_PROP_SD} l_parser.ast as l_use_prop then
 								process_cluster_properties (l_use_prop)
+							else
+								set_error (create {CONF_ERROR_PARSE}.make ("Problem in use file:"+l_file_path))
 							end
 						end
 					end
@@ -738,7 +734,7 @@ feature {NONE} -- Implementation of data retrieval
 								current_target.immediate_setting_concurrency.put_index ({CONF_TARGET}.setting_concurrency_index_none)
 							end
 						elseif valid_setting (l_name) and l_value /= Void then
-							current_target.add_setting (l_name, l_value.value)
+							current_target.add_setting (l_name, l_value.value.as_string_32)
 						end
 					end
 					a_defaults.forth
@@ -859,8 +855,9 @@ feature {NONE} -- Implementation of data retrieval
 		require
 			current_target /= Void
 		local
-			l_settings: HASH_TABLE [STRING, STRING]
-			l_name, l_value: STRING
+			l_settings: like {CONF_TARGET}.settings
+			l_name: like {CONF_TARGET}.settings.key_for_iteration
+			l_value: like {CONF_TARGET}.settings.item_for_iteration
 		do
 			from
 				l_settings := current_target.settings

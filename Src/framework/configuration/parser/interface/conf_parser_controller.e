@@ -24,11 +24,11 @@ feature -- Status
 
 feature -- Access
 
-	resolved_library_path (path: STRING): STRING
+	resolved_library_path (path: STRING_32): STRING_32
 			-- Library path computed under current conditions.
 		local
-			extension: STRING
-			file: PLAIN_TEXT_FILE
+			extension: STRING_32
+			file: RAW_FILE_32
 		do
 			Result := path
 				-- Check if "-safe" may need to be added.
@@ -42,7 +42,7 @@ feature -- Access
 						Result := path.substring (1, path.count - 4)
 						Result.append_string ("-safe")
 						Result.append_string (extension)
-						file.make (Result)
+						file.reset (path)
 							-- Check if the "safe" version of the file exists.
 						if not file.exists or else not file.is_readable then
 								-- Rollback to the original path.
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

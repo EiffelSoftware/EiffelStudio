@@ -66,7 +66,7 @@ feature -- Access
 	is_read_only: BOOLEAN = True
 			-- Is the class read only?
 
-	full_file_name: STRING
+	full_file_name: like path
 			-- The full file name of the class (including path).
 		do
 			Result := base_location.build_path (path, file_name)
@@ -210,7 +210,7 @@ feature {NONE} -- Shared instances
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

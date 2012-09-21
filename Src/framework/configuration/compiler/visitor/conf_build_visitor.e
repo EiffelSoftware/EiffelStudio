@@ -149,7 +149,7 @@ feature -- Observers
 	process_group_observer: ACTION_SEQUENCE [TUPLE [CONF_GROUP]]
 			-- Observer if a group is processed.
 
-	process_directory: ACTION_SEQUENCE [TUPLE [CONF_CLUSTER, STRING]]
+	process_directory: ACTION_SEQUENCE [TUPLE [CONF_CLUSTER, READABLE_STRING_32]]
 			-- Observer if a cluster directory is processed.
 
 feature -- Events
@@ -162,7 +162,7 @@ feature -- Events
 			process_group_observer.call ([a_group])
 		end
 
-	on_process_directory (a_cluster: CONF_CLUSTER; a_path: STRING)
+	on_process_directory (a_cluster: CONF_CLUSTER; a_path: READABLE_STRING_32)
 			-- (Sub)directory `a_path' of `a_cluster' is processed.
 		do
 			process_directory.call ([a_cluster, a_path])
@@ -1107,7 +1107,7 @@ invariant
 	last_warnings_not_void: last_warnings /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -9,45 +9,39 @@ deferred class
 	CONF_LOCATION
 
 inherit
-	ANY
-		redefine
-			is_equal
-		end
 
 	CONF_VALIDITY
-		undefine
+		redefine
 			is_equal
 		end
 
 	KL_SHARED_OPERATING_SYSTEM
 		export
 			{NONE} all
-		undefine
+		redefine
 			is_equal
 		end
 
 	KL_SHARED_FILE_SYSTEM
 		export
 			{NONE} all
-		undefine
+		redefine
 			is_equal
 		end
 
-	KL_SHARED_EXECUTION_ENVIRONMENT
-		export
-			{NONE} all
-		undefine
+	SHARED_EXECUTION_ENVIRONMENT
+		redefine
 			is_equal
 		end
 
 feature -- Access, stored in configuration file
 
-	original_path: STRING
+	original_path: STRING_32
 			-- Path without resolved variables and parent cluster path.
 
 feature -- Access queries
 
-	original_directory: STRING
+	original_directory: like original_path
 			-- The directory part of `original_path' (without trailing '\').
 		do
 			Result := directory (original_path)
@@ -55,7 +49,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	original_file: STRING
+	original_file: like original_path
 			-- The file part of `original_path'.
 		do
 			Result := file (original_path)
@@ -63,26 +57,36 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	evaluated_path: STRING
+	evaluated_path: like original_path
 			-- The fully resolved path with file name.
 		local
 			l_file_system: like file_system
+			u: UTF_CONVERTER
 		do
 			l_file_system := file_system
-			Result := l_file_system.canonical_pathname (l_file_system.pathname_from_file_system (internal_evaluated_path, windows_file_system))
+				-- {KI_FILE_SYSTEM}.canonical_pathname works on {STRING_8}
+				-- therefore the original path is converted from {STRING_32} to {STRING_8}
+				-- and after the normalization back to {STRING_32}. This works because
+				-- all non-ASCII codes of UTF-8 stay untouched during normalization.
+			Result := u.utf_8_string_8_to_string_32
+				(l_file_system.canonical_pathname (l_file_system.pathname_from_file_system
+					(u.string_32_to_utf_8_string_8 (internal_evaluated_path), windows_file_system)))
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	evaluated_directory: STRING
+	evaluated_directory: like original_path
 			-- The directory part of `evaluated_path' (without trailing '\' or '/').
 		local
 			l_file_system: like file_system
+			u: UTF_CONVERTER
 		do
 			l_file_system := file_system
 				-- If call to 'pathname_from_file_system' is empty that means we only got a '\' or '/' which got removed because we remove
 				-- trailing separators
-			Result := l_file_system.canonical_pathname (l_file_system.pathname_from_file_system (directory (internal_evaluated_path), windows_file_system))
+			Result := u.utf_8_string_8_to_string_32
+				(l_file_system.canonical_pathname (l_file_system.pathname_from_file_system
+					(u.string_32_to_utf_8_string_8 (directory (internal_evaluated_path)), windows_file_system)))
 			if Result.count = 0 then
 				Result := operating_environment.directory_separator.out
 			end
@@ -90,7 +94,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	evaluated_file: STRING
+	evaluated_file: like original_path
 			-- The file part of `evaluated_path'.
 		do
 			Result := file (internal_evaluated_path)
@@ -108,15 +112,16 @@ feature -- Access queries
 			end
 		end
 
-	build_path (a_directory, a_file: STRING): STRING
+	build_path (a_directory, a_file: like original_path): like original_path
 			-- Add directories and filename to current directory.
 			-- `a_directory' can be in any format.
 		require
 			a_directory_not_void: a_directory /= Void
 			a_file_not_void: a_file /= Void
 		local
-			l_dir: STRING
+			l_dir: like original_path
 			l_cluster_separator: CHARACTER_8
+			u: FILE_UTILITIES
 		do
 			l_cluster_separator := '\'
 			Result := evaluated_directory
@@ -124,7 +129,7 @@ feature -- Access queries
 				Result.append_character (operating_environment.directory_separator)
 			end
 			if not a_directory.is_empty then
-				l_dir := windows_file_system.pathname_from_file_system (a_directory, unix_file_system)
+				l_dir := u.adapt_unix_to_windows (a_directory)
 				if l_dir.item (1) /= l_cluster_separator then
 					l_dir.prepend_character (l_cluster_separator)
 				end
@@ -135,9 +140,10 @@ feature -- Access queries
 				l_dir.remove_tail (1)
 			end
 			if not a_file.is_empty then
-				l_dir.append (l_cluster_separator.out + a_file)
+				l_dir.append_character (l_cluster_separator)
+				l_dir.append_string (a_file)
 			end
-			l_dir := file_system.pathname_from_file_system (l_dir, windows_file_system)
+			l_dir := u.adapt_windows_to_current (l_dir)
 			Result.append (l_dir)
 		ensure
 			Result_not_void: Result /= Void
@@ -184,7 +190,7 @@ feature {NONE} -- Implementation
 	--| The internal format uses the windows format (because we would otherwise lose the drive letter)
 	--| directories are always terminated by a \
 
-	to_internal (a_path: STRING): STRING
+	to_internal (a_path: like original_path): like original_path
 			-- Convert `a_path' into the internal representation.
 		require
 			a_path_not_void: a_path /= Void
@@ -209,14 +215,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_evaluated_path: STRING
+	internal_evaluated_path: like original_path
 			-- The fully resolved path with file name in internal format.
 		local
 			i, j, k: INTEGER
 			l_old_i: INTEGER
-			l_key: STRING
-			l_value: STRING
-			l_relative_base: STRING
+			l_key: like original_path
+			l_value: like original_path
+			l_relative_base: like original_path
 			l_offset: INTEGER
 			l_stop: BOOLEAN
 		do
@@ -262,7 +268,7 @@ feature {NONE} -- Implementation
 				if l_key /= Void then
 					l_value := target.variables.item (l_key.as_lower)
 					if l_value = Void then
-						l_value := execution_environment.variable_value (l_key)
+						l_value := execution_environment.get (l_key)
 						if l_value = Void then
 							l_value := once ""
 						end
@@ -280,7 +286,12 @@ feature {NONE} -- Implementation
 			end
 
 				-- handle relative path
-			if (Result.count >= 2 and then Result.item (1).is_alpha_numeric and Result.item (2) /= ':') or else Result.item (1) = '.' then
+			if (Result.count >= 2 and then
+					Result [1].is_character_8 and then
+					Result [1].to_character_8.is_alpha_numeric and then
+					Result [2] /= ':') or else
+				Result [1] = '.'
+			then
 				l_relative_base := target.library_root
 				if l_relative_base /= Void then
 					Result.prepend (l_relative_base)
@@ -297,7 +308,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	directory (a_path: STRING): STRING
+	directory (a_path: like original_path): like original_path
 			-- Get the directory of `a_path' that is in the internal format.
 			-- a_path = directory + '\' + path
 		require
@@ -319,7 +330,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	file (a_path: STRING): STRING
+	file (a_path: like original_path): like original_path
 			-- Get the file of `a_path' that is in the internal format.
 			-- a_path = directory + '\' + path
 		require
@@ -346,7 +357,7 @@ invariant
 	target_not_void: target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

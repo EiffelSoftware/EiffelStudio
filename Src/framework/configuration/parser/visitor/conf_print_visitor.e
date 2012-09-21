@@ -117,10 +117,12 @@ feature -- Visit nodes
 		local
 			l_root: CONF_ROOT
 			l_version: CONF_VERSION
-			l_settings, l_variables: HASH_TABLE [STRING, STRING]
+			l_settings: like {CONF_TARGET}.settings
+			l_variables: like {CONF_TARGET}.internal_variables
 			l_a_name, l_a_val: ARRAYED_LIST [STRING]
-			l_sorted_list: ARRAYED_LIST [STRING]
-			l_sorter: QUICK_SORTER [STRING]
+			l_name, l_val: ARRAYED_LIST [STRING_32]
+			l_sorted_list: ARRAYED_LIST [STRING_32]
+			l_sorter: QUICK_SORTER [STRING_32]
 		do
 			current_target := a_target
 			append_text_indent ("<target name=%""+escape_xml (a_target.name)+"%"")
@@ -176,22 +178,22 @@ feature -- Visit nodes
 			append_file_rule (a_target.internal_file_rule)
 			append_options (a_target.internal_options, Void)
 			from
-				create l_a_name.make (2)
-				l_a_name.force ("name")
-				l_a_name.force ("value")
-				create l_a_val.make (2)
+				create l_name.make (2)
+				l_name.force ("name")
+				l_name.force ("value")
+				create l_val.make (2)
 				l_settings := a_target.internal_settings
 				create l_sorted_list.make_from_array (l_settings.current_keys)
-				create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
+				create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING_32]})
 				l_sorter.sort (l_sorted_list)
 				l_sorted_list.start
 			until
 				l_sorted_list.after
 			loop
-				l_a_val.wipe_out
-				l_a_val.force (l_sorted_list.item_for_iteration)
-				l_a_val.force (l_settings.item (l_sorted_list.item_for_iteration))
-				append_tag ("setting", Void, l_a_name, l_a_val)
+				l_val.wipe_out
+				l_val.force (l_sorted_list.item_for_iteration)
+				l_val.force (l_settings.item (l_sorted_list.item_for_iteration))
+				append_tag_32 ("setting", Void, l_name, l_val)
 				l_sorted_list.forth
 			end
 			if a_target.immediate_setting_concurrency.is_set then
@@ -452,6 +454,48 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	append_tag_32 (a_name, a_value: STRING_32; an_attribute_names, an_attribute_values: ARRAYED_LIST [STRING_32])
+			-- Append a tag with `a_name', `a_value' and `an_attributes' to `text', intendend it with `indent' tabs.
+		require
+			a_name_ok: a_name /= Void and then not a_name.is_empty
+			attributes_same_count: (an_attribute_names = Void and an_attribute_values = Void) or else
+					(an_attribute_names /= Void and an_attribute_values /= Void and then an_attribute_names.count = an_attribute_values.count)
+		local
+			l_val: STRING_32
+			u: UTF_CONVERTER
+		do
+			append_text_indent ("<")
+			append_text (u.string_32_to_utf_8_string_8 (a_name))
+			if an_attribute_names /= Void and then not an_attribute_names.is_empty then
+				from
+					an_attribute_names.start
+					an_attribute_values.start
+				until
+					an_attribute_names.after
+				loop
+					l_val := an_attribute_values.item
+					if l_val /= Void and then not l_val.is_empty then
+						append_text (" ")
+						append_text (u.string_32_to_utf_8_string_8 (an_attribute_names.item))
+						append_text ("=%"")
+						append_text (escape_xml (u.string_32_to_utf_8_string_8 (l_val)))
+						append_text ("%"")
+					end
+					an_attribute_names.forth
+					an_attribute_values.forth
+				end
+			end
+			if a_value /= Void and not a_value.is_empty then
+				append_text (">")
+				append_text (escape_xml (u.string_32_to_utf_8_string_8 (a_value)))
+				append_text ("</")
+				append_text (u.string_32_to_utf_8_string_8 (a_name))
+				append_text (">%N")
+			else
+				append_text ("/>%N")
+			end
+		end
+
 	append_text_indent (a_text: STRING)
 			-- Append `a_text' at the current `indent' intendation level.
 		require
@@ -521,8 +565,8 @@ feature {NONE} -- Implementation
 		local
 			l_condition: CONF_CONDITION
 			l_done: BOOLEAN
-			l_custs: HASH_TABLE [EQUALITY_TUPLE [TUPLE [value: STRING_GENERAL; invert: BOOLEAN]], STRING_GENERAL]
-			l_custom: EQUALITY_TUPLE [TUPLE [value: STRING_GENERAL; invert: BOOLEAN]]
+			l_custs: HASH_TABLE [EQUALITY_TUPLE [TUPLE [value: READABLE_STRING_32; invert: BOOLEAN]], READABLE_STRING_32]
+			l_custom: EQUALITY_TUPLE [TUPLE [value: READABLE_STRING_32; invert: BOOLEAN]]
 			l_versions: HASH_TABLE [EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]], STRING]
 			l_name: STRING
 			l_ver: EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]
@@ -950,7 +994,6 @@ feature {NONE} -- Implementation
 			a_tag_ok: a_tag /= Void and then not a_tag.is_empty
 		local
 			l_str: STRING
-			l_vg: CONF_VIRTUAL_GROUP
 		do
 			l_str := a_group.location.original_path
 			if l_str.is_empty then
@@ -964,8 +1007,7 @@ feature {NONE} -- Implementation
 				append_text (" readonly=%""+a_group.is_readonly.out.as_lower+"%"")
 			end
 
-			l_vg ?= a_group
-			if l_vg /= Void then
+			if attached {CONF_VIRTUAL_GROUP} a_group as l_vg then
 				l_str := l_vg.name_prefix
 				if l_str /= Void and then not l_str.is_empty then
 					append_text (" prefix=%""+escape_xml (l_str)+"%"")
@@ -977,10 +1019,6 @@ feature {NONE} -- Implementation
 			-- Append the things that come in the value part of `a_group'.
 		require
 			a_group_not_void: a_group /= Void
-		local
-			l_renaming: HASH_TABLE [STRING, STRING]
-			l_c_opt: HASH_TABLE [CONF_OPTION, STRING]
-			l_vg: CONF_VIRTUAL_GROUP
 		do
 			append_text (">%N")
 			indent := indent + 1
@@ -989,22 +1027,20 @@ feature {NONE} -- Implementation
 			append_description_tag (a_group.description)
 			append_conditionals (a_group.internal_conditions, a_group.is_assembly)
 			append_options (a_group.internal_options, Void)
-			l_vg ?= a_group
-			if l_vg /= Void then
-				l_renaming := l_vg.renaming
-				if l_renaming /= Void then
-					from
-						l_renaming.start
-					until
-						l_renaming.after
-					loop
-						append_text_indent ("<renaming old_name=%""+escape_xml (l_renaming.key_for_iteration)+"%" new_name=%""+escape_xml (l_renaming.item_for_iteration)+"%"/>%N")
-						l_renaming.forth
-					end
+			if
+				attached {CONF_VIRTUAL_GROUP} a_group as l_vg and then
+				attached l_vg.renaming as l_renaming
+			then
+				from
+					l_renaming.start
+				until
+					l_renaming.after
+				loop
+					append_text_indent ("<renaming old_name=%""+escape_xml (l_renaming.key_for_iteration)+"%" new_name=%""+escape_xml (l_renaming.item_for_iteration)+"%"/>%N")
+					l_renaming.forth
 				end
 			end
-			l_c_opt := a_group.internal_class_options
-			if l_c_opt /= Void then
+			if attached a_group.internal_class_options as l_c_opt then
 				from
 					l_c_opt.start
 				until

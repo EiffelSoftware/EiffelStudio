@@ -439,7 +439,7 @@ feature -- Condition dialog
 	dial_cond_version_clr: STRING_GENERAL do Result := locale.translation ("<= MSIL CLR version <= ")	end
 	dial_cond_custom: STRING_GENERAL do Result := locale.translation ("Custom")	end
 	dial_cond_new_custom: STRING_GENERAL do Result := locale.translation ("new")	end
-	dial_cond_new_custom_value: STRING_GENERAL do Result := locale.translation ("new_value")	end
+	dial_cond_new_custom_value: STRING_32 do Result := locale.translation ("new_value")	end
 	dial_cond_custom_variable: STRING_GENERAL do Result := locale.translation ("Variable")	end
 	dial_cond_custom_value: STRING_GENERAL do Result := locale.translation ("Value")	end
 	dial_cond_add_and_term: STRING_GENERAL do Result := locale.translation ("Add and-term")	end

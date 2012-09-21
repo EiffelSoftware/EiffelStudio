@@ -47,7 +47,7 @@ feature -- Basic operations
 	edit_configuration
 			-- Open a new dialog to edit the `group'.
 		local
-			l_config: STRING
+			l_config: STRING_32
 			l_load: CONF_LOAD
 			l_lib_conf: CONFIGURATION_WINDOW
 		do

@@ -540,7 +540,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	update_variable (a_new_key: STRING_GENERAL; an_old_key: STRING_GENERAL)
+	update_variable (a_new_key: READABLE_STRING_32; an_old_key: READABLE_STRING_32)
 			-- Update variable name from `an_old_key' to `a_new_key'.
 		require
 			an_old_key_ok: an_old_key /= Void and then data.custom /= Void and then data.custom.has (an_old_key)
@@ -552,7 +552,7 @@ feature {NONE} -- Actions
 			fill_custom
 		end
 
-	update_invert (a_value: STRING_GENERAL; a_key: STRING_GENERAL)
+	update_invert (a_value: READABLE_STRING_32; a_key: READABLE_STRING_32)
 			-- Update inversion status of custom condition of `a_key'.
 		require
 			a_key_ok: a_key /= Void and then data.custom /= Void and then data.custom.has (a_key)
@@ -565,7 +565,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	update_value (a_value: STRING_GENERAL; a_key: STRING_GENERAL)
+	update_value (a_value: READABLE_STRING_32; a_key: READABLE_STRING_32)
 			-- Update value of custom condition of `a_key'.
 		require
 			a_key_ok: a_key /= Void and then data.custom /= Void and then data.custom.has (a_key)
@@ -580,9 +580,12 @@ feature {NONE} -- Actions
 
 	add_custom
 			-- Add a new custom condition.
+		local
+			v: TUPLE [READABLE_STRING_32, BOOLEAN]
 		do
 			if not data.custom.has (conf_interface_names.dial_cond_new_custom) then
-				data.custom.force ([conf_interface_names.dial_cond_new_custom_value, False], conf_interface_names.dial_cond_new_custom)
+				v := [conf_interface_names.dial_cond_new_custom_value, False]
+				data.custom.force (v, conf_interface_names.dial_cond_new_custom)
 			end
 			fill_custom
 		end
@@ -663,11 +666,11 @@ feature {NONE} -- Implementation
 	fill_custom
 			-- Fill custom conditions.
 		local
-			l_cust: HASH_TABLE [EQUALITY_TUPLE [TUPLE [value: STRING_GENERAL; invert: BOOLEAN]], STRING_GENERAL]
+			l_cust: HASH_TABLE [EQUALITY_TUPLE [TUPLE [value: READABLE_STRING_32; invert: BOOLEAN]], READABLE_STRING_32]
 			l_text: STRING_PROPERTY
 			l_choice: STRING_CHOICE_PROPERTY
 			i: INTEGER
-			l_key: STRING_GENERAL
+			l_key: READABLE_STRING_32
 			l_list: ARRAYED_LIST [STRING]
 		do
 			custom.wipe_out
@@ -732,7 +735,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

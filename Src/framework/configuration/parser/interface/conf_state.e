@@ -62,7 +62,7 @@ feature -- Access
 	version: HASH_TABLE [CONF_VERSION, STRING]
 			-- Versions?
 
-	custom_variables: EQUALITY_HASH_TABLE [STRING, STRING]
+	custom_variables: like {CONF_TARGET}.variables
 			-- User defined variables.
 
 invariant
@@ -72,7 +72,7 @@ invariant
 	custom_variables_not_void: custom_variables /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

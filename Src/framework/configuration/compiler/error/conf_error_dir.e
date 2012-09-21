@@ -16,14 +16,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_dir, a_orig_dir: STRING; a_config: STRING)
+	make (a_dir, a_orig_dir: READABLE_STRING_32; a_config: READABLE_STRING_32)
 			-- Create.
 		require
 			a_dir_not_void: a_dir /= Void
 			a_orig_dir_not_void: a_orig_dir /= Void
 			a_config_not_void: a_config /= Void
 		do
-			text := "Directory open error: "+a_dir+"%N"+a_orig_dir+"%NConfiguration: "+a_config
+			text := {STRING_32} "Directory open error: "+a_dir+"%N"+a_orig_dir+"%NConfiguration: "+a_config
 		end
 
 feature -- Access
@@ -32,7 +32,7 @@ feature -- Access
 		-- Error text.
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

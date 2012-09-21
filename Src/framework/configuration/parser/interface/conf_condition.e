@@ -15,10 +15,8 @@ inherit
 			is_equal
 		end
 
-	KL_SHARED_EXECUTION_ENVIRONMENT
-		export
-			{NONE} all
-		undefine
+	SHARED_EXECUTION_ENVIRONMENT
+		redefine
 			out,
 			is_equal
 		end
@@ -55,7 +53,7 @@ feature -- Access
 	version: HASH_TABLE [EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]], STRING]
 			-- Enabled for a certain version number? Indexed by the type of the version number.
 
-	custom: HASH_TABLE [EQUALITY_TUPLE [TUPLE [value: STRING_GENERAL; invert: BOOLEAN]], STRING_GENERAL]
+	custom: HASH_TABLE [EQUALITY_TUPLE [TUPLE [value: READABLE_STRING_32; invert: BOOLEAN]], READABLE_STRING_32]
 			-- Custom variables that have to be fullfilled indexed by the variable name.
 
 feature -- Queries
@@ -65,12 +63,12 @@ feature -- Queries
 		require
 			a_state_not_void: a_state /= Void
 		local
-			l_cust_cond: EQUALITY_TUPLE [TUPLE [value: STRING_GENERAL; invert: BOOLEAN]]
-			l_vars: EQUALITY_HASH_TABLE [STRING_GENERAL, STRING_GENERAL]
+			l_cust_cond: EQUALITY_TUPLE [TUPLE [value: READABLE_STRING_32; invert: BOOLEAN]]
+			l_vars: EQUALITY_HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]
 			l_version: HASH_TABLE [CONF_VERSION, STRING]
 			l_ver_cond: EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]
 			l_ver_state: CONF_VERSION
-			l_var_key, l_var_val: STRING_GENERAL
+			l_var_key, l_var_val: READABLE_STRING_32
 		do
 			Result := True
 
@@ -127,10 +125,7 @@ feature -- Queries
 					l_var_key := custom.key_for_iteration
 					l_var_val := l_vars.item (l_var_key)
 					if l_var_val = Void then
-						check
-							l_var_key_valid_as_string_8: l_var_key.is_valid_as_string_8
-						end
-						l_var_val := execution_environment.variable_value (l_var_key.as_string_8)
+						l_var_val := execution_environment.get (l_var_key)
 					end
 					Result := equal (l_var_val, l_cust_cond.item.value) xor l_cust_cond.item.invert
 					custom.forth
@@ -269,22 +264,22 @@ feature -- Update
 			dynamic_runtime := Void
 		end
 
-	add_custom (a_name, a_value: STRING)
+	add_custom (a_name, a_value: READABLE_STRING_32)
 			-- Add requirement that `a_name'=`a_value'.
 		require
 			a_name_not_void: a_name /= Void
 			a_value_not_void: a_value /= Void
 		do
-			custom.force (create {EQUALITY_TUPLE [TUPLE [STRING_GENERAL, BOOLEAN]]}.make ([a_value, False]), a_name.as_lower)
+			custom.force (create {EQUALITY_TUPLE [TUPLE [READABLE_STRING_32, BOOLEAN]]}.make ([a_value, False]), a_name.as_lower)
 		end
 
-	exclude_custom (a_name, a_value: STRING)
+	exclude_custom (a_name, a_value: READABLE_STRING_32)
 			-- Add exclude requirement that `a_name'=`a_value'.
 		require
 			a_name_not_void: a_name /= Void
 			a_value_not_void: a_value /= Void
 		do
-			custom.force (create {EQUALITY_TUPLE [TUPLE [STRING_GENERAL, BOOLEAN]]}.make ([a_value, True]), a_name.as_lower)
+			custom.force (create {EQUALITY_TUPLE [TUPLE [READABLE_STRING_32, BOOLEAN]]}.make ([a_value, True]), a_name.as_lower)
 		end
 
 	wipe_out_custom
@@ -444,7 +439,7 @@ invariant
 	custom_not_void: custom /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

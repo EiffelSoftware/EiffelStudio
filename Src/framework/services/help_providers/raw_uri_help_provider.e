@@ -45,7 +45,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	context_variables: HASH_TABLE [STRING, READABLE_STRING_8]
+	context_variables: HASH_TABLE [STRING_32, READABLE_STRING_32]
 			-- <Precursor>
 		do
 			if attached internal_context_variables as l_result then
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

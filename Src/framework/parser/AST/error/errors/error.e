@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of a compiler error (either syntax or semantics)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ feature -- Access
 	column: INTEGER
 			-- Column number involved in error
 
-	file_name: detachable STRING
+	file_name: like {EIFFEL_SCANNER_SKELETON}.filename
 			-- Path to file involved in error.
 			-- Could be Void if not a file specific error.
 		require
@@ -279,7 +279,7 @@ invariant
 	non_void_help_file_name: help_file_name /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

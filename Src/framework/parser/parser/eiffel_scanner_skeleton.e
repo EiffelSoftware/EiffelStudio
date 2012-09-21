@@ -118,7 +118,7 @@ feature -- Access
 			-- Current class being parsed.
 			-- It can be Void in a parsing that does not involve compilation
 
-	filename: STRING
+	filename: READABLE_STRING_GENERAL
 			-- Name of file being parsed
 
 	last_value: ANY

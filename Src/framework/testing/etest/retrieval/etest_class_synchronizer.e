@@ -367,7 +367,7 @@ feature {NONE} -- Implementation: tags
 			l_current, l_group: CONF_GROUP
 			l_uni: UNIVERSE_I
 			l_list: LIST [CONF_LIBRARY]
-			l_path: LIST [STRING]
+			l_path: LIST [STRING_32]
 			l_class: EIFFEL_CLASS_I
 			l_uuid: detachable UUID
 			l_dir: detachable STRING
@@ -649,7 +649,7 @@ invariant
 		attached old_test_map implies attached test_class
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

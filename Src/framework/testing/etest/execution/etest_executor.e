@@ -116,13 +116,10 @@ feature {NONE} -- Access
 	max_controller_count: NATURAL
 			-- Maximum number of controllers the can be launched in parallel
 
-	testing_directory: DIRECTORY_NAME
+	testing_directory: like {PROJECT_DIRECTORY}.path
 			-- Directory in which tests should be executed
-		local
-			l_dir: STRING
 		do
-			l_dir := etest_suite.project_access.project.project_directory.testing_results_path
-			create Result.make_from_string (l_dir)
+			create Result.make_from_string (etest_suite.project_access.project.project_directory.testing_results_path)
 			Result.extend (testing_directory_name)
 		end
 
@@ -367,7 +364,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_directory_safe (a_name: STRING)
+	create_directory_safe (a_name: READABLE_STRING_GENERAL)
 			-- Try to recursively create directory of given name.
 			--
 			-- `a_name': Name of directory to be created.
@@ -375,13 +372,10 @@ feature {NONE} -- Implementation
 			a_name_attached: a_name /= Void
 		local
 			l_retried: BOOLEAN
-			d: DIRECTORY
+			u: FILE_UTILITIES
 		do
 			if not l_retried then
-				create d.make (a_name)
-				if not d.exists then
-					d.recursive_create_dir
-				end
+				u.create_directory (a_name)
 			end
 		rescue
 			l_retried := True
@@ -400,7 +394,7 @@ feature {NONE} -- Implementation
 			l_service: SERVICE_CONSUMER [SESSION_MANAGER_S]
 			l_session: SESSION_I
 			l_key: STRING
-			l_dir: DIRECTORY
+			l_dir: DIRECTORY_32
 		do
 			if not l_retried then
 				create l_service
@@ -533,7 +527,7 @@ invariant
 	empty_tasks_empty: empty_tasks.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

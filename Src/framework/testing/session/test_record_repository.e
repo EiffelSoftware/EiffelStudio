@@ -71,10 +71,11 @@ feature {NONE} -- Initialization
 			not_retrieved_records: not has_retrieved_records
 		local
 			l_path: like path
-			l_directory: DIRECTORY
+			l_directory: DIRECTORY_32
 			l_done: BOOLEAN
 			l_filename: FILE_NAME
 			l_existing: like record_storage
+			u: FILE_UTILITIES
 		do
 			l_existing := record_storage.twin
 			l_path := path
@@ -89,9 +90,7 @@ feature {NONE} -- Initialization
 					loop
 						l_directory.readentry
 						if attached l_directory.lastentry as l_entry then
-							create l_filename.make_from_string (l_path)
-							l_filename.set_file_name (l_entry)
-							retrieve_record (l_filename)
+							retrieve_record (u.make_raw_file_in (l_entry, l_path))
 						else
 							l_done := True
 						end
@@ -114,28 +113,34 @@ feature {NONE} -- Initialization
 			retrieved_records: has_retrieved_records
 		end
 
-	retrieve_record (a_filename: FILE_NAME)
-			-- Try to retrieve record/properties from given filename.
+	retrieve_record (a_file: RAW_FILE)
+			-- Try to retrieve record/properties from given file.
+		require
+			a_file_attached: attached a_file
+			a_file_closed: a_file.is_closed
 		local
 			l_retried: BOOLEAN
-			l_file: detachable RAW_FILE
 		do
-			if not l_retried then
-				create l_file.make (a_filename)
-				if l_file.exists and then l_file.is_plain then
-					l_file.open_read
-					if l_file.is_open_read and l_file.readable then
-						if attached {TUPLE [record: TEST_SESSION_RECORD; props: detachable TUPLE]} l_file.retrieved as l_retrieved then
-							if not has_record (l_retrieved.record) then
-								append_record_sorted (l_retrieved.record, new_property_tuple (l_retrieved.props))
-							end
-						end
-					end
+			if
+				not l_retried and then
+				a_file.exists and then
+				a_file.is_plain
+			then
+				a_file.open_read
+				if
+					a_file.is_open_read and then
+					a_file.readable and then
+					attached {TUPLE [record: TEST_SESSION_RECORD; props: detachable TUPLE]} a_file.retrieved as l_retrieved and then
+					not has_record (l_retrieved.record)
+				then
+					append_record_sorted (l_retrieved.record, new_property_tuple (l_retrieved.props))
 				end
 			end
-			if attached l_file and then not l_file.is_closed then
-				l_file.close
+			if not a_file.is_closed then
+				a_file.close
 			end
+		ensure
+			a_file_closed: a_file.is_closed
 		rescue
 			l_retried := True
 			retry
@@ -198,7 +203,7 @@ feature {NONE} -- Access
 	property_storage: ARRAYED_LIST [like new_property_tuple]
 			-- List of properties associated with records in `record_storage'
 
-	path: DIRECTORY_NAME
+	path: DIRECTORY_NAME_32
 			-- Path to record files
 		require
 			project_initialized: is_project_initialized
@@ -207,16 +212,17 @@ feature {NONE} -- Access
 			Result.extend (record_directory_name)
 		end
 
-	file_name (a_record: TEST_SESSION_RECORD): FILE_NAME
+	file (a_record: TEST_SESSION_RECORD): RAW_FILE
 			-- File name for given record
 			--
 			-- `a_record': Record for which file name should be returned.
 		require
 			a_record_attached: a_record /= Void
 			project_initialized: is_project_initialized
+		local
+			u: FILE_UTILITIES
 		do
-			create Result.make_from_string (path)
-			Result.set_file_name (a_record.creation_date.formatted_out (file_name_format_string))
+			Result := u.make_raw_file_in (a_record.creation_date.formatted_out (file_name_format_string), path)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -335,7 +341,7 @@ feature {NONE} -- Element change
 		do
 			if not l_retried and is_project_initialized and has_retrieved_records then
 				l_record := record_storage.i_th (an_index)
-				create l_file.make (file_name (l_record))
+				l_file := file (l_record)
 				l_file.create_read_write
 				l_file.independent_store ([l_record, property_storage.i_th (an_index)])
 			end
@@ -366,7 +372,7 @@ feature {NONE} -- Element change
 			l_records.remove
 
 			if is_project_initialized then
-				create l_file.make (file_name (l_record))
+				l_file := file (l_record)
 				if l_file.exists then
 					l_file.delete
 				end
@@ -500,7 +506,7 @@ invariant
 	same_record_and_property_count: record_storage.count = property_storage.count
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -63,10 +63,10 @@ feature {NONE} -- Initialization
 	retrieve_statistics
 			-- Retrieve `test_statistics' from hard drive.
 		local
-			l_path: FILE_NAME
 			l_file: RAW_FILE
 			l_retrieval: FUNCTION [ANY, TUPLE [RAW_FILE], detachable ANY]
 			l_test_suite: like test_suite
+			u: FILE_UTILITIES
 		do
 			if not has_retrieved_statistics then
 
@@ -74,10 +74,9 @@ feature {NONE} -- Initialization
 					no_statistics_yet: test_statistics.count = 0
 				end
 
-				create l_path.make_from_string (eiffel_project.project_directory.testing_results_path)
-				l_path.set_file_name (statistics_file_name)
-				l_path.add_extension (statistics_file_extension)
-				create l_file.make (l_path)
+				l_file := u.make_raw_file_in
+					(statistics_file_name + "." + statistics_file_extension,
+					eiffel_project.project_directory.testing_results_path)
 				if l_file.exists then
 					l_retrieval := agent (a_file: RAW_FILE): detachable ANY
 						local
@@ -306,20 +305,15 @@ feature {NONE} -- Implementation
 		require
 			project_initialized: is_project_initialized
 		local
-			l_path: FILE_NAME
-			l_directory: DIRECTORY
 			l_retried: BOOLEAN
 			l_raw_file: detachable RAW_FILE
+			u: FILE_UTILITIES
 		do
 			if not l_retried then
-				create l_path.make_from_string (eiffel_project.project_directory.testing_results_path)
-				create l_directory.make (l_path.twin)
-				if not l_directory.exists then
-					l_directory.recursive_create_dir
-				end
-				l_path.set_file_name (statistics_file_name)
-				l_path.add_extension (statistics_file_extension)
-				create l_raw_file.make_open_write (l_path)
+				u.create_directory (eiffel_project.project_directory.testing_results_path)
+				l_raw_file := u.open_write_raw_file_in
+					(statistics_file_name + "." + statistics_file_extension,
+					eiffel_project.project_directory.testing_results_path)
 				l_raw_file.independent_store (test_statistics)
 			end
 			if l_raw_file /= Void and then not l_raw_file.is_closed then
@@ -410,7 +404,7 @@ invariant
 	collect_stats_after_retrieving: test_statistics.count > 0 implies has_retrieved_statistics
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

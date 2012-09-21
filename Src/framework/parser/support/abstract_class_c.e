@@ -17,12 +17,12 @@ feature -- Access
 			name_not_void: name /= Void
 		end
 
-	file_name: STRING
+	file_name: STRING_32
 			-- File name of the class.
 		deferred
 		ensure
 			file_name_not_void: Result /= Void
-			file_name_is_string: Result.same_type ("")
+			file_name_is_string: Result.same_type ({STRING_32} "")
 		end
 
 	has_text: BOOLEAN
@@ -59,7 +59,7 @@ feature -- Element Change
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

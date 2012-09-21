@@ -185,8 +185,8 @@ feature {NONE} -- Implementation
 			l_yyvs11_default_item: VOID_AS
 			l_yyvs12_default_item: KEYWORD_AS
 			l_yyvs13_default_item: INTEGER
-			l_yyvs14_default_item: STRING
-			l_yyvs15_default_item: TUPLE [keyword: KEYWORD_AS; id: ID_AS; line, column: INTEGER; filename: STRING]
+			l_yyvs14_default_item: READABLE_STRING_GENERAL
+			l_yyvs15_default_item: TUPLE [keyword: KEYWORD_AS; id: ID_AS; line, column: INTEGER; filename: READABLE_STRING_GENERAL]
 			l_yyvs16_default_item: STRING_AS
 			l_yyvs17_default_item: ALIAS_TRIPLE
 			l_yyvs18_default_item: INSTRUCTION_AS
@@ -24897,8 +24897,8 @@ feature {NONE} -- Semantic value stacks
 	yyspecial_routines13: KL_SPECIAL_ROUTINES [INTEGER]
 			-- Routines that ought to be in SPECIAL [INTEGER]
 
-	yyvs14: SPECIAL [STRING]
-			-- Stack for semantic values of type STRING
+	yyvs14: SPECIAL [READABLE_STRING_GENERAL]
+			-- Stack for semantic values of type READABLE_STRING_GENERAL
 
 	yyvsc14: INTEGER
 			-- Capacity of semantic value stack `yyvs14'
@@ -24906,11 +24906,11 @@ feature {NONE} -- Semantic value stacks
 	yyvsp14: INTEGER
 			-- Top of semantic value stack `yyvs14'
 
-	yyspecial_routines14: KL_SPECIAL_ROUTINES [STRING]
-			-- Routines that ought to be in SPECIAL [STRING]
+	yyspecial_routines14: KL_SPECIAL_ROUTINES [READABLE_STRING_GENERAL]
+			-- Routines that ought to be in SPECIAL [READABLE_STRING_GENERAL]
 
-	yyvs15: SPECIAL [TUPLE [keyword: KEYWORD_AS; id: ID_AS; line, column: INTEGER; filename: STRING]]
-			-- Stack for semantic values of type TUPLE [keyword: KEYWORD_AS; id: ID_AS; line, column: INTEGER; filename: STRING]
+	yyvs15: SPECIAL [TUPLE [keyword: KEYWORD_AS; id: ID_AS; line, column: INTEGER; filename: READABLE_STRING_GENERAL]]
+			-- Stack for semantic values of type TUPLE [keyword: KEYWORD_AS; id: ID_AS; line, column: INTEGER; filename: READABLE_STRING_GENERAL]
 
 	yyvsc15: INTEGER
 			-- Capacity of semantic value stack `yyvs15'
@@ -24918,8 +24918,8 @@ feature {NONE} -- Semantic value stacks
 	yyvsp15: INTEGER
 			-- Top of semantic value stack `yyvs15'
 
-	yyspecial_routines15: KL_SPECIAL_ROUTINES [TUPLE [keyword: KEYWORD_AS; id: ID_AS; line, column: INTEGER; filename: STRING]]
-			-- Routines that ought to be in SPECIAL [TUPLE [keyword: KEYWORD_AS; id: ID_AS; line, column: INTEGER; filename: STRING]]
+	yyspecial_routines15: KL_SPECIAL_ROUTINES [TUPLE [keyword: KEYWORD_AS; id: ID_AS; line, column: INTEGER; filename: READABLE_STRING_GENERAL]]
+			-- Routines that ought to be in SPECIAL [TUPLE [keyword: KEYWORD_AS; id: ID_AS; line, column: INTEGER; filename: READABLE_STRING_GENERAL]]
 
 	yyvs16: SPECIAL [STRING_AS]
 			-- Stack for semantic values of type STRING_AS

@@ -32,19 +32,13 @@ inherit
 	DT_SHARED_SYSTEM_CLOCK
 		export {NONE} all end
 
-	KL_SHARED_FILE_SYSTEM
-		export {NONE} all end
-
-	KL_SHARED_EXECUTION_ENVIRONMENT
-		export {NONE} all end
-
 	KL_SHARED_OPERATING_SYSTEM
 		export {NONE} all end
 
 	UNIX_SIGNALS
 		export {NONE} all end
 
-	EXECUTION_ENVIRONMENT
+	EXECUTION_ENVIRONMENT_32
 		rename
 			system as execution_system
 		export
@@ -69,10 +63,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_executable_file_name: STRING;
+	make (an_executable_file_name: READABLE_STRING_GENERAL;
 			a_system: like system;
-			an_interpreter_log_filename: STRING;
-			a_proxy_log_filename: STRING;
+			an_interpreter_log_filename: READABLE_STRING_GENERAL;
+			a_proxy_log_filename: READABLE_STRING_GENERAL;
 			a_error_handler: like error_handler)
 			-- Create a new proxy for the interpreter found at `an_executable_file_name'.
 		require
@@ -84,6 +78,7 @@ feature {NONE} -- Initialization
 			interpreter_root_class_attached: interpreter_root_class /= Void
 		local
 			l_itp_class: CLASS_C
+			u: FILE_UTILITIES
 		do
 			make_event_producer
 			create variable_table.make (a_system)
@@ -109,9 +104,9 @@ feature {NONE} -- Initialization
 			request_printer.extend (socket_data_printer)
 
 			executable_file_name := an_executable_file_name
-			melt_path := file_system.dirname (executable_file_name)
+			melt_path := u.file_directory_path (an_executable_file_name)
 			interpreter_log_filename := an_interpreter_log_filename
-			create proxy_log_file.make (a_proxy_log_filename)
+			proxy_log_file := u.make_text_output_file (a_proxy_log_filename)
 			proxy_log_file.open_write
 
 			create response_printer.make_with_prefix (proxy_log_file, interpreter_log_prefix)
@@ -674,12 +669,12 @@ feature{NONE} -- Process scheduling
 	launch_process
 			-- Launch `process'.
 		local
-			arguments: ARRAYED_LIST [STRING]
+			arguments: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_body_id: INTEGER
-			l_workdir: STRING
+			l_workdir: STRING_32
 		do
 				-- $MELT_PATH needs to be set here in only to allow debugging.
-			execution_environment.set_variable_value ("MELT_PATH", melt_path)
+			put (melt_path, "MELT_PATH")
 			create stdout_reader.make
 
 				-- We need `injected_feature_body_id'-1 because the underlying C array is 0-based.
@@ -931,13 +926,13 @@ feature {NONE} -- Logging
 
 feature {NONE} -- Implementation
 
-	executable_file_name: STRING
+	executable_file_name: READABLE_STRING_GENERAL
 			-- File name of interpreter executable
 
-	interpreter_log_filename: STRING
+	interpreter_log_filename: READABLE_STRING_GENERAL
 			-- File name of the interpreters log
 
-	melt_path: STRING
+	melt_path: READABLE_STRING_GENERAL
 			-- Path where melt file of test client resides
 
 	request_printer: AUT_REQUEST_PROCESSORS
@@ -1034,7 +1029,7 @@ invariant
 
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

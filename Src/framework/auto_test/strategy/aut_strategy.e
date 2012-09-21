@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			a_system_not_void: a_system /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		local
-			l_dirname: DIRECTORY_NAME
+			l_dirname: DIRECTORY_NAME_32
 		do
 			interpreter := a_interpreter
 			system := a_system
@@ -51,7 +51,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	log_dirname: STRING
+	log_dirname: STRING_32
 			-- Logging directory
 
 	error_handler: AUT_ERROR_HANDLER
@@ -78,7 +78,7 @@ invariant
 	interpreter_not_void: interpreter /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

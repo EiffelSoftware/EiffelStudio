@@ -49,7 +49,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_executable: STRING; a_args: LIST [STRING]; a_directory: STRING)
+	make (a_executable: READABLE_STRING_GENERAL; a_args: LIST [READABLE_STRING_GENERAL]; a_directory: READABLE_STRING_GENERAL)
 			-- Prepare process object
 			--
 			-- `a_executable': Filename of executable to be launched

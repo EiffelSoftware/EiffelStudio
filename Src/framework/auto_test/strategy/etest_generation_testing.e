@@ -342,9 +342,11 @@ feature {NONE} -- Factory
 			-- Create a new interpreter proxy, Void if executable did not exist.
 		local
 			l_itp_gen: AUT_INTERPRETER_GENERATOR
+			u: FILE_UTILITIES
 		do
 			l_itp_gen := interpreter_generator
-			l_itp_gen.create_interpreter (file_system.pathname (generation.output_dirname, "log"))
+			l_itp_gen.create_interpreter
+				(u.make_directory_name_in ({STRING_32} "log", generation.output_dirname))
 
 				-- FIXME: ensure `last_interpreter' is attached, even if executable does not exist!
 			Result := l_itp_gen.last_interpreter
@@ -402,7 +404,7 @@ invariant
 	minimizing_implies_test_task_has_next_step: minimize_task_cache = sub_task implies test_task.has_next_step
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

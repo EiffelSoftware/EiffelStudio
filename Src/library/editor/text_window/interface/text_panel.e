@@ -210,7 +210,7 @@ feature -- Access
 	text_displayed: TEXT
 			-- Text currently displayed on the screen.
 
-	file_name: detachable FILE_NAME
+	file_name: detachable FILE_NAME_32
 			-- Name of the currently opened file, if any.
 
 	size_of_file_when_loaded: INTEGER
@@ -689,12 +689,12 @@ feature -- Basic Operations
 			set_first_line_displayed (first_line_displayed, True)
 		end
 
-	load_file (a_filename: STRING)
+	load_file (a_filename: STRING_32)
 			-- Load contents of `a_filename'
 		require
 			filename_not_void: a_filename /= Void
 		local
-			l_file: RAW_FILE
+			l_file: RAW_FILE_32
 			l_doc_type: STRING
 			l_date: like date_of_file_when_loaded
 			l_size: like size_of_file_when_loaded
@@ -1566,7 +1566,7 @@ feature {NONE} -- Text loading
 			-- Reload the opened file from disk.
 		do
 			if attached file_name as l_name and then not l_name.is_empty then
-				load_file (l_name.string)
+				load_file (l_name)
 			end
 		end
 
@@ -1760,12 +1760,12 @@ feature -- Implementation
 			file_loaded: file_loaded
 			file_exists: file_exists
 		local
-			l_file: RAW_FILE
-			l_name: detachable STRING
+			l_file: RAW_FILE_32
+			l_name: detachable STRING_32
 		do
 			l_name := file_name
 			check l_name /= Void end -- Implied by precondition
-			l_name := l_name.string
+			l_name := l_name.as_string_32
 			create l_file.make (l_name)
 			Result := l_file.date
 		end
@@ -1776,27 +1776,27 @@ feature -- Implementation
 			file_loaded: file_loaded
 			file_exists: file_exists
 		local
-			l_file: RAW_FILE
-			l_name: detachable STRING
+			l_file: RAW_FILE_32
+			l_name: detachable STRING_32
 		do
 			l_name := file_name
 			check l_name /= Void end -- Implied by precondition
-			l_name := l_name.string
+			l_name := l_name.as_string_32
 			create l_file.make (l_name)
 			Result := l_file.count
 		end
 
 	file_exists: BOOLEAN
-			-- Retrieve file last modified date in the number of ticks
+			-- Does file exist?
 		require
 			file_loaded: file_loaded
 		local
-			l_file: RAW_FILE
-			l_name: detachable STRING
+			l_file: RAW_FILE_32
+			l_name: detachable STRING_32
 		do
 			l_name := file_name
 			check l_name /= Void end -- Implied by precondition
-			l_name := l_name.string
+			l_name := l_name.as_string_32
 			create l_file.make (l_name)
 			Result := l_file.exists
 		end
@@ -1933,17 +1933,14 @@ invariant
 	buffered_line_not_void: is_initialized implies buffered_line /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class TEXT_PANEL
+end

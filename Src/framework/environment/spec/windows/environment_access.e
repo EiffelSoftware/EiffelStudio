@@ -9,11 +9,11 @@ class
 	ENVIRONMENT_ACCESS
 
 inherit
-	EXECUTION_ENVIRONMENT
+	EXECUTION_ENVIRONMENT_32
 
 feature -- Access
 
-	get_from_application (a_var: STRING; a_app: detachable STRING): detachable STRING
+	get_from_application (a_var: READABLE_STRING_32; a_app: detachable READABLE_STRING_32): detachable STRING_32
 			-- Get `a_var' as if we were `a_app'.
 		require
 			a_var_ok: a_var /= Void and then not a_var.has ('%U')
@@ -52,7 +52,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

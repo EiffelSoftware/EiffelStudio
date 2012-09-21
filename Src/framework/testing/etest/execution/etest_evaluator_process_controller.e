@@ -89,7 +89,7 @@ feature {NONE} -- Status setting
 			l_project: E_PROJECT
 			l_factory: PROCESS_FACTORY
 			l_process: like process
-			l_cmd: STRING
+			l_cmd: STRING_32
 		do
 			create l_factory
 			create l_cmd.make (100)
@@ -150,7 +150,7 @@ feature {NONE} -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

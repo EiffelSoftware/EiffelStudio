@@ -86,7 +86,7 @@ feature {NONE} -- Access
 	internal_connection: detachable like connection
 			-- Connection to evaluator
 
-	testing_directory: STRING
+	testing_directory: STRING_32
 			-- Directory in which tests should be executed
 
 feature -- Status report
@@ -149,6 +149,7 @@ feature -- Status setting
 		local
 			l_connection: like connection
 			l_args: STRING
+			u: UTF_CONVERTER
 		do
 			if is_running and has_died then
 				reset
@@ -159,7 +160,7 @@ feature -- Status setting
 				create l_args.make (100)
 				l_args.append_integer (l_connection.current_port)
 				l_args.append (" %"")
-				l_args.append_string (testing_directory)
+				l_args.append_string (u.string_32_to_utf_8_string_8 (testing_directory))
 				l_args.append_character ('"')
 				l_args.append (" -eif_root ")
 				l_args.append ({TEST_SYSTEM_I}.eqa_evaluator_name)
@@ -260,7 +261,7 @@ invariant
 	has_next_step_implies_running: has_next_step implies (is_running and then is_evaluator_launched)
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

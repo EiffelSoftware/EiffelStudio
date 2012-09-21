@@ -174,13 +174,13 @@ feature {NONE} -- Basic operations
 			running: has_next_step
 		local
 			l_cluster: like cluster
-			l_location: DIRECTORY_NAME
-			l_directory: DIRECTORY
-			l_path: detachable FILE_NAME
+			l_location: like {PROJECT_DIRECTORY}.path
+			l_directory: DIRECTORY_32
 			l_file: KL_TEXT_OUTPUT_FILE
 			l_filename: STRING
 			l_class_name: STRING
 			l_retry: BOOLEAN
+			u: FILE_UTILITIES
 		do
 			l_cluster := cluster
 			if l_cluster /= Void then
@@ -195,9 +195,8 @@ feature {NONE} -- Basic operations
 
 			if l_directory.exists and l_directory.is_writable then
 				from until
-					l_filename /= Void
+					l_file /= Void
 				loop
-					create l_path.make_from_string (l_location)
 					l_class_name := class_name.as_string_8
 					l_class_name.to_lower
 					if creates_multiple_classes or l_retry then
@@ -214,13 +213,11 @@ feature {NONE} -- Basic operations
 						l_filename := l_class_name
 					end
 					l_filename.append (".e")
-					l_path.set_file_name (l_filename)
-					create l_file.make (l_path)
-
+					l_file := u.make_text_output_file_in (l_filename, l_location)
 					if l_file.exists then
 						class_name_counter := class_name_counter + 1
 						if class_name_counter <= 999 then
-							l_filename := Void
+							l_file := Void
 						end
 					end
 					l_retry := True

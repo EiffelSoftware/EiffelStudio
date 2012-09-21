@@ -125,7 +125,7 @@ feature -- Save inner container data.
 				save_place_holder_data (l_config_data)
 			end
 			if l_config_data /= Void then
-				Result := save_config_data_to_file (l_config_data, a_file.as_string_8)
+				Result := save_config_data_to_file (l_config_data, a_file)
 			end
 			top_container := Void
 		ensure
@@ -574,7 +574,15 @@ feature {NONE} -- Implementation
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				create l_file.make_create_read_write (a_file.as_string_8)
+				debug ("to_implement")
+					(create {REFACTORING_HELPER}).to_implement ("Use FILE_UTILITIES to deal with `a_file' when available in a library.")
+				end
+				if attached {READABLE_STRING_8} a_file as f then
+					create l_file.make_create_read_write (f)
+				else
+					create {RAW_FILE_32} l_file.make (a_file.as_string_32)
+					l_file.create_read_write
+				end
 				create l_writer.make (l_file)
 				create l_facility
 				l_facility.store (a_config_data, l_writer)
@@ -600,7 +608,7 @@ feature {NONE} -- Implementation attributes
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

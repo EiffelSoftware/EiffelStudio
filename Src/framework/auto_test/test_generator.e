@@ -48,6 +48,8 @@ feature {NONE} -- Initialization
 
 	make (a_test_suite: like test_suite; a_etest_suite: like etest_suite; a_is_gui: BOOLEAN)
 			-- <Precursor>
+		local
+			u: FILE_UTILITIES
 		do
 			Precursor (a_test_suite, a_etest_suite, a_is_gui)
 			create output_stream.make_empty
@@ -60,7 +62,9 @@ feature {NONE} -- Initialization
 			class_names.set_equality_tester (create {KL_STRING_EQUALITY_TESTER_A [STRING]})
 			proxy_time_out := 2
 			set_time_out (3)
-			output_dirname := file_system.pathname (etest_suite.project_access.project.project_directory.testing_results_path, "auto_test")
+			output_dirname := u.make_file_name_in
+				({STRING_32} "auto_test",
+				etest_suite.project_access.project.project_directory.testing_results_path).as_string_32
 			set_seed ((create {TIME}.make_now).milli_second.as_natural_32)
 			create error_handler.make (system)
 		end
@@ -81,7 +85,7 @@ feature -- Access
 
 feature -- Access: options
 
-	output_dirname: STRING
+	output_dirname: STRING_32
 			-- Name of output directory
 
 	class_names: DS_HASH_SET [STRING]
@@ -480,7 +484,7 @@ feature {NONE} -- Constants
 			-- Maximal number of test routines in a single class
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

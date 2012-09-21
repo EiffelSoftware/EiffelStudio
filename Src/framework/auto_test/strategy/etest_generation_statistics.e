@@ -75,8 +75,13 @@ feature {NONE} -- Basic operations
 			result_repository_not_void: a_result_repository /= Void
 		local
 			l_generator: AUT_TEXT_STATISTICS_GENERATOR
+			u: FILE_UTILITIES
 		do
-			create l_generator.make ("", file_system.pathname (generation.output_dirname, "result"), generation.system, a_class_name_list)
+			create l_generator.make
+				("",
+				u.make_file_name_in ({STRING_32} "result", generation.output_dirname).as_string_32,
+				generation.system,
+				a_class_name_list)
 			l_generator.generate (a_result_repository)
 			if l_generator.has_fatal_error then
 				generation.error_handler.report_text_generation_error
@@ -91,8 +96,11 @@ feature {NONE} -- Basic operations
 			result_repository_not_void: a_result_repo /= Void
 		local
 			l_generator: AUT_HTML_STATISTICS_GENERATOR
+			u: FILE_UTILITIES
 		do
-			create l_generator.make (file_system.pathname (generation.output_dirname, "result"), generation.system, a_class_name_list)
+			create l_generator.make
+				(u.make_directory_name_in ({STRING_32} "result", generation.output_dirname).as_string_32,
+				generation.system, a_class_name_list)
 			l_generator.set_repository (a_result_repo)
 			l_generator.start
 			sub_task := l_generator
@@ -101,7 +109,7 @@ feature {NONE} -- Basic operations
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -17,7 +17,7 @@ inherit
 			{NONE} all
 		end
 
-	EXECUTION_ENVIRONMENT
+	EXECUTION_ENVIRONMENT_32
 		export
 			{NONE} all
 		end
@@ -37,15 +37,19 @@ feature -- Execution
 	execute
 			-- Start the precompilation wizard.
 		local
-			command: STRING
+			command: STRING_32
 		do
 			create command.make (50)
-			command.append ("%"" + eiffel_layout.Precompilation_wizard_command_name + "%"")
-			command.append (" %"")
-			command.append (eiffel_layout.precompilation_wizard_resources_path)
-			command.append ("%" ")
-			command.append (locale.info.id.name.out)
-			launch(command)
+			command.append_character ('"')
+			command.append_string (eiffel_layout.Precompilation_wizard_command_name)
+			command.append_character ('"')
+			command.append_character (' ')
+			command.append_character ('"')
+			command.append_string (eiffel_layout.precompilation_wizard_resources_path)
+			command.append_character ('"')
+			command.append_character (' ')
+			command.append_string (locale.info.id.name)
+			launch (command)
 		end
 
 feature {NONE} -- Implementation

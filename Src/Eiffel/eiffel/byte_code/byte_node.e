@@ -62,6 +62,7 @@ feature -- Eiffel source line information
 			-- Generate source line information.
 		local
 			l_buffer: like buffer
+			u: UTF_CONVERTER
 		do
 			if line_number > 0 and then System.line_generation then
 				l_buffer := context.buffer
@@ -69,7 +70,8 @@ feature -- Eiffel source line information
 				l_buffer.put_string (LINE_INFO)
 				l_buffer.put_integer (line_number)
 				l_buffer.put_character (' ')
-				l_buffer.put_indivisible_string_literal (context.associated_class.lace_class.file_name)
+				l_buffer.put_indivisible_string_literal
+					(u.string_32_to_utf_8_string_8 (context.associated_class.lace_class.file_name))
 			end
 		end
 
@@ -457,7 +459,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

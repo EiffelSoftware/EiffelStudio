@@ -150,10 +150,9 @@ feature -- Status
 	exists: BOOLEAN
 			-- Does the application file exists?
 		local
-			f: PLAIN_TEXT_FILE
+			u: FILE_UTILITIES
 		do
-			create f.make (Eiffel_system.application_name (True))
-			Result := f.exists
+			Result := u.file_exists (Eiffel_system.application_name (True))
 		end
 
 	is_valid_and_known_object_address (addr: DBG_ADDRESS): BOOLEAN
@@ -250,7 +249,6 @@ feature -- Execution
 		local
 			l_envstr: STRING_32
 			env: HASH_TABLE [STRING_32, STRING_32]
-			app: STRING
 			ctlr: DEBUGGER_CONTROLLER
 		do
 			parameters := params
@@ -258,8 +256,7 @@ feature -- Execution
 			env := ctlr.environment_variables_updated_with (params.environment_variables, True)
 			l_envstr := environment_variables_to_string (env)
 
-			app := Eiffel_system.application_name (True)
-			run_with_env_string (app, params.arguments, params.working_directory, l_envstr)
+			run_with_env_string (Eiffel_system.application_name (True), params.arguments, params.working_directory, l_envstr)
 		ensure
 			successful_app_is_not_stopped: is_running implies not is_stopped
 		end
@@ -277,14 +274,11 @@ feature -- Execution
 			application_exists: exists
 			non_negative_interrupt: debugger_manager.interrupt_number >= 0
 		local
-			app: STRING
 			ctlr: DEBUGGER_CONTROLLER
 		do
 			parameters := Void
 			ctlr := debugger_manager.controller
-
-			app := Eiffel_system.application_name (True)
-			attach_using_port (app, a_port)
+			attach_using_port (Eiffel_system.application_name (True), a_port)
 		ensure
 			successful_app_is_not_stopped: is_running implies not is_stopped
 		end
@@ -1337,7 +1331,7 @@ feature {NONE} -- fake
 			last_assertion_check_stack.wipe_out
 		end
 
-	run_with_env_string (app, args, cwd: STRING; env: detachable STRING_GENERAL)
+	run_with_env_string (app: READABLE_STRING_GENERAL; args, cwd: STRING; env: detachable STRING_GENERAL)
 			-- Run application with arguments `args' in directory `cwd'.
 			-- If `is_running' is false after the
 			-- execution of this routine, it means that
@@ -1357,7 +1351,7 @@ feature {NONE} -- fake
 			successful_app_is_not_stopped: is_running implies not is_stopped
 		end
 
-	attach_using_port (app: STRING; a_port: INTEGER)
+	attach_using_port (app: READABLE_STRING_GENERAL; a_port: INTEGER)
 		require
 			app_not_void: app /= Void
 			application_not_running: not is_running
@@ -1374,7 +1368,7 @@ feature {NONE} -- fake
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -74,7 +74,7 @@ feature -- Basic Operation
 
 				-- Update controls to reflect `information'
 			select_profiler (information.runtime_information_type)
-			runtime_information_record_textfield.set_text (information.runtime_information_record)
+			runtime_information_record_textfield.set_text (information.runtime_information_record.to_string_32)
 		end
 
 	proceed_with_current_info
@@ -89,7 +89,7 @@ feature -- Basic Operation
 	update_state_information
 			-- Check User Entries
 		local
-			record_filename: FILE_NAME
+			record_filename: FILE_NAME_32
 		do
 			Precursor
 

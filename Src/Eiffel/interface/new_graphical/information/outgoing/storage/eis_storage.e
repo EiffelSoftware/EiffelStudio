@@ -48,7 +48,7 @@ feature -- Retrieve and save
 	retrieve_from_file
 			-- Retrieve storage from file	
 		local
-			l_file: RAW_FILE
+			l_file: RAW_FILE_32
 			l_facility: SED_STORABLE_FACILITIES
 			l_reader: SED_MEDIUM_READER_WRITER
 			l_retried: BOOLEAN
@@ -87,10 +87,12 @@ feature -- Retrieve and save
 			l_facility: SED_STORABLE_FACILITIES
 			l_writer: SED_MEDIUM_READER_WRITER
 			l_retried: BOOLEAN
+			u: FILE_UTILITIES
 		do
 			if not l_retried and then save_needed then
 				l_tuple := [tag_server, entry_server, date_server]
-				create l_file.make_create_read_write (storage_file_name)
+				l_file := u.make_raw_file (storage_file_name)
+				l_file.create_read_write
 				create l_writer.make (l_file)
 				create l_facility
 				l_facility.store (l_tuple, l_writer)
@@ -314,10 +316,10 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	storage_file_name: FILE_NAME
+	storage_file_name: FILE_NAME_32
 			-- Path to save the storage
 		do
-			create Result.make_from_string (project_location.target_path)
+			create Result.make_from_string (project_location.target_path.to_string_32)
 			Result.set_file_name (eiffel_layout.eis_storage_file)
 		ensure
 			storage_file_name_attached: Result /= Void

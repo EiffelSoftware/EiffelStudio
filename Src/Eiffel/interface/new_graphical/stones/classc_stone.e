@@ -91,12 +91,12 @@ feature -- Access
 																eiffel_universe.target_name,
 																c.group.name,
 																stone_signature,
-																console_encoding_to_utf32 (system_encoding, c.lace_class.file_name))
+																c.lace_class.file_name)
 				end
 			end
 		end
 
-	file_name: STRING
+	file_name: like {ERROR}.file_name
 			-- The one from CLASSC
 		do
 			if e_class /= Void then

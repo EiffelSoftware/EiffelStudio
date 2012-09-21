@@ -141,8 +141,8 @@ feature {NONE} -- Implementation
 			vd41: VD41;
 			vd45: VD45;
 			vd52: VD52;
-			precomp_ids: HASH_TABLE [INTEGER, STRING];
-			dir_name: STRING;
+			precomp_ids: HASH_TABLE [INTEGER, READABLE_STRING_GENERAL];
+			dir_name: READABLE_STRING_GENERAL;
 			id: INTEGER
 		do
 			create precomp_ids.make (15)
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 						info.forth
 					end;
 					id := info.compilation_id
-					if precomp_ids.has_key (a_project_location.target_path.string) then
+					if precomp_ids.has_key (a_project_location.target_path) then
 							-- Check compatibility between
 							-- precompiled libraries.
 						if id /= precomp_ids.found_item then
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 							Error_handler.raise_error
 						end
 					else
-						precomp_ids.put (id, a_project_location.target_path.string)
+						precomp_ids.put (id, a_project_location.target_path)
 					end;
 					Result := project_dir
 				end
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -226,22 +226,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class PRECOMP_R

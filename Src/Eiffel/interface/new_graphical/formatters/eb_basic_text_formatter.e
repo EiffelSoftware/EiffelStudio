@@ -73,7 +73,7 @@ feature -- Formatting
 	format
 			-- Refresh `widget'.
 		local
-			f_name: STRING
+			f_name: STRING_32
 		do
 			if
 				classi /= Void and then

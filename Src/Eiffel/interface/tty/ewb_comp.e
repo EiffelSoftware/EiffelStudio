@@ -214,9 +214,9 @@ feature {NONE} -- Output
 			else
 				localized_print_error (ewb_names.you_must_now_run (eiffel_layout.Finish_freezing_script))
 				if finalized_dir then
-					io.error.put_string (project_location.final_path)
+					localized_print_error (project_location.final_path)
 				else
-					io.error.put_string (project_location.workbench_path)
+					localized_print_error (project_location.workbench_path)
 				end;
 				io.error.put_new_line;
 			end
@@ -247,26 +247,24 @@ feature {NONE} -- Compilation
 		require
 			error: Eiffel_project.save_error
 		local
-			finished: BOOLEAN;
-			file_name: FILE_NAME
+			finished: BOOLEAN
 		do
 			from
 			until
 				finished
 			loop
 				if Eiffel_project.save_error then
-					create file_name.make_from_string (project_location.project_file_name)
-					localized_print_error (ewb_names.error_could_not_write_to (file_name))
-					io.error.put_new_line;
-					finished := stop_on_error or else command_line_io.termination_requested;
+					localized_print_error (ewb_names.error_could_not_write_to (project_location.project_file_name))
+					io.error.put_new_line
+					finished := stop_on_error or else command_line_io.termination_requested
 					if finished then
 						lic_die (-1)
 					else
 						perform_compilation
-					end;
+					end
 				end
 			end
-		end;
+		end
 
 	check_ace_file (fn: STRING)
 			-- Check that the Ace file exists and is readable and plain

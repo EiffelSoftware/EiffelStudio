@@ -160,12 +160,13 @@ feature -- Setting
 			-- `a_error_agent' is the agent invoked when error occurs during loading.
 		local
 			l_file: RAW_FILE
+			u: FILE_UTILITIES
 		do
 			formatter_descriptors.wipe_out
 
 			load_formatters (global_formatter_file, True, a_error_agent)
 			if workbench.universe_defined then
-				create l_file.make (target_formatter_file)
+				l_file := u.make_raw_file (target_formatter_file)
 				if l_file.exists then
 					load_formatters (target_formatter_file, False, a_error_agent)
 				end
@@ -197,7 +198,7 @@ feature -- Setting
 
 feature{NONE} -- Implementation
 
-	load_formatters (a_file: STRING; a_global: BOOLEAN; a_error_agent: PROCEDURE [ANY, TUPLE])
+	load_formatters (a_file: READABLE_STRING_GENERAL; a_global: BOOLEAN; a_error_agent: PROCEDURE [ANY, TUPLE])
 			-- Load formatters contained in file `a_file' and mark loaded formatters as of global scope if `a_global' is True,
 			-- otherwise as of target scope.
 			-- If error occurs, call `a_error_agent'.
@@ -246,7 +247,7 @@ feature{NONE} -- Implementation/Data
 	formatter_file_name: STRING = "formatters.xml"
 			-- File name of formatter definition
 
-	target_formatter_file_path: FILE_NAME
+	target_formatter_file_path: READABLE_STRING_GENERAL
 			-- Path to store target formatter file
 		require
 			system_defined: workbench.universe_defined
@@ -256,13 +257,13 @@ feature{NONE} -- Implementation/Data
 			result_attached: Result /= Void
 		end
 
-	global_formatter_file: STRING
+	global_formatter_file: READABLE_STRING_GENERAL
 			-- File to store global customized formatters information
 		do
 			Result := absolute_file_name (global_file_path, formatter_file_name)
 		end
 
-	target_formatter_file: STRING
+	target_formatter_file: READABLE_STRING_GENERAL
 			-- File to store target customized formatters information
 		require
 			system_defined: workbench.universe_defined

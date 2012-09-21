@@ -1087,45 +1087,33 @@ feature {NONE} -- Export call stack
 			-- Saves the current call stack representation in a file.
 		local
 			fd: EB_FILE_SAVE_DIALOG
-			standard_path: DIRECTORY_NAME
+			standard_path: READABLE_STRING_GENERAL
 			f: RAW_FILE
-			fn: FILE_NAME
-			last_path: STRING
 			i: INTEGER
+			u: FILE_UTILITIES
 		do
 				--| Get last path from the preferences.
-			last_path := preferences.debug_tool_data.last_saved_stack_path
-			if last_path = Void or else last_path.is_empty then
-					--| The first time, start in the project directory.
-				create standard_path.make
-				standard_path.extend (Eiffel_project.project_directory.path)
+			if attached preferences.debug_tool_data.last_saved_stack_path as p and then not p.is_empty then
+				standard_path := p
 			else
-				create standard_path.make
-				standard_path.extend (last_path)
+					--| The first time, start in the project directory.
+				standard_path := Eiffel_project.project_directory.path
 			end
 			create fd.make_with_preference (preferences.dialog_data.last_saved_call_stack_directory_preference)
 			set_dialog_filters_and_add_all (fd, <<Text_files_filter>>)
 			fd.set_start_directory (standard_path)
 				--| We try to find a file_name that does not exist.
-			create fn.make
-			fn.set_directory (standard_path)
-			fn.set_file_name (Interface_names.default_stack_file_name)
-			fn.add_extension ("txt")
-			create f.make (fn)
+			f := u.make_raw_file_in (Interface_names.default_stack_file_name + ".txt", standard_path)
 			from
 				i := 1
 			until
 				not f.exists
 			loop
-				create fn.make
-				fn.set_directory (standard_path)
-				fn.set_file_name (Interface_names.default_stack_file_name + i.out)
-				fn.add_extension ("txt")
-				create f.make (fn)
+				f := u.make_raw_file_in (Interface_names.default_stack_file_name + i.out + ".txt", standard_path)
 				i := i + 1
 			end
-				--| OK, now `fn' represents a file that does not exist.
-			fd.set_file_name (fn)
+				--| OK, now `u.file_name (f)' represents a file that does not exist.
+			fd.set_file_name (u.file_name (f))
 			fd.save_actions.extend (agent save_call_stack_to_file (fd))
 			fd.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
 		end
@@ -1170,13 +1158,14 @@ feature {NONE} -- Export call stack
 			retry
 		end
 
-	save_call_stack_to_filename (a_fp: STRING; a_fn: STRING; is_append: BOOLEAN)
+	save_call_stack_to_filename (a_fp: like {EB_DEBUG_TOOL_DATA}.last_saved_stack_path; a_fn: STRING; is_append: BOOLEAN)
 			-- Save call stack into file named `a_fn'.
 			-- if the file already exists and `is_append' is True
 			-- then append the stack in the same file
 		local
 			fn: FILE_WINDOW
 			retried: BOOLEAN
+			u: UTF_CONVERTER
 		do
 			if not retried then
 					--| We create a file (or open it).
@@ -1193,8 +1182,10 @@ feature {NONE} -- Export call stack
 				if not fn.is_closed then
 					fn.close
 				end
-					--| Save the path to the preferences.
-				preferences.debug_tool_data.last_saved_stack_path_preference.set_value (a_fp)
+					-- Save the path to the preferences.
+					-- Encode it as UTF-8.
+				preferences.debug_tool_data.last_saved_stack_path_preference.set_value
+					(u.string_32_to_utf_8_string_8 (a_fp))
 				preferences.preferences.save_preference (preferences.debug_tool_data.last_saved_stack_path_preference)
 			else
 					-- The file name was probably incorrect (not creatable).

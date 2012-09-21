@@ -71,7 +71,7 @@ feature -- Basic operations
 			l_sorted_debugs: ARRAYED_LIST [STRING]
 			l_fact: CONF_COMP_FACTORY
 			l_load: CONF_LOAD
-			l_config: STRING
+			l_config: STRING_32
 			l_sorter: QUICK_SORTER [STRING]
 		do
 			if not rescued then
@@ -159,7 +159,7 @@ feature {NONE} -- Actions
 			l_sorted_debugs: ARRAYED_LIST [STRING]
 			l_fact: CONF_COMP_FACTORY
 			l_load: CONF_LOAD
-			l_config: STRING
+			l_config: STRING_32
 			l_stone: CLUSTER_STONE
 		do
 			l_stone ?= a_stone

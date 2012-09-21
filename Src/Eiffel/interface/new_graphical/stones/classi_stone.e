@@ -70,10 +70,10 @@ feature -- Properties
 			Result := Cursors.cur_X_Class
 		end
 
-	file_name: STRING
+	file_name: like {ERROR}.file_name
 			-- File associated with `class_i'.
 		do
-			Result := class_i.file_name.string
+			Result := class_i.file_name.twin
 		end
 
 	stone_signature: STRING_32
@@ -95,7 +95,7 @@ feature -- Properties
 														 eiffel_universe.target_name,
 														 class_i.group.name,
 														 stone_signature,
-														 class_i.file_name)
+														 class_i.file_name.to_string_32)
 		end
 
 	synchronized_stone: CLASSI_STONE

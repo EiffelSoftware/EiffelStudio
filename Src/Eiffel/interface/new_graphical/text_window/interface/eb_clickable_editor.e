@@ -647,9 +647,9 @@ feature -- Update
 	on_text_saved
 			-- Update the editor as the text has been saved.
 		local
-			fn: STRING
-			backup_file: RAW_FILE
-			file: RAW_FILE
+			fn: STRING_32
+			backup_file: RAW_FILE_32
+			file: RAW_FILE_32
 		do
 			text_displayed.set_changed (False, True)
 			if open_backup then

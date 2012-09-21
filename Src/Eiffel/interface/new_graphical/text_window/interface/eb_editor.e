@@ -204,12 +204,11 @@ feature -- Status setting
 
 feature -- Text Loading
 
-	load_file (a_filename: STRING)
+	load_file (a_filename: STRING_32)
 	        -- Load contents of `a_filename'
 		local
-	--	    test_file, test_file_2: RAW_FILE
-			l_file: RAW_FILE
-		    l_filename: FILE_NAME
+			l_file: RAW_FILE_32
+		    l_filename: FILE_NAME_32
   	   	do
   	   		reset
 
@@ -374,6 +373,8 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} 
 			-- Prettify class text if possible.
 		local
 			l_show_pretty: E_SHOW_PRETTY
+			n: STRING_32
+			f: RAW_FILE_32
 		do
 			if is_read_only and then not allow_edition then
 					-- Don't prettify class text if we are in a read-only view.
@@ -381,7 +382,9 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} 
 			elseif text_displayed.is_modified then
 				save_class_before_prettifying
 			else
-				create l_show_pretty.make (file_name, file_name + ".pretty")
+					-- Name a temporary file by adding an extension ".pretty" to the original name.
+				n := file_name.to_string_32 + ".pretty"
+				create l_show_pretty.make (file_name, n)
 
 					-- Try to prettify the class
 				l_show_pretty.execute
@@ -399,6 +402,9 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} 
 					text_displayed.cursor.go_start_line
 					text_displayed.cursor.go_to_position (1)
 				end
+					-- Remove temporary file.
+				create f.make (n)
+				f.delete
 			end
 		end
 

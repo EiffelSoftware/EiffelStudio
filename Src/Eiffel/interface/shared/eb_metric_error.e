@@ -36,7 +36,7 @@ feature -- Access
 	location: STRING_GENERAL
 			-- Location where current error occurs
 
-	file_location: STRING_GENERAL
+	file_location: READABLE_STRING_GENERAL
 			-- File location if Current error occurs in a file
 
 	message_with_location: STRING_GENERAL
@@ -58,7 +58,7 @@ feature -- Access
 				l_str.append (metric_names.new_line_separator)
 				l_str.append (metric_names.coloned_string (names.l_file_location, True))
 				l_str.append (metric_names.space_separator)
-				l_str.append (file_location)
+				l_str.append (file_location.as_string_32)
 			end
 			Result := l_str
 		ensure

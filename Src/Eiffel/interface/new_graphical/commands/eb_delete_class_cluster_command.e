@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 			classi_non_void: class_i /= Void
 			could_not_delete_initialized: could_not_delete
 		local
-			file: PLAIN_TEXT_FILE
+			file: PLAIN_TEXT_FILE_32
 			retried: BOOLEAN
 		do
 			if not retried then

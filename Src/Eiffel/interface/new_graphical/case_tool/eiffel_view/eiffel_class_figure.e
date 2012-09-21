@@ -354,7 +354,7 @@ feature {NONE} -- Implementation (adding relations)
 	on_class_drop (a_stone: CLASSI_FIGURE_STONE)
 			-- `a_stone' was dropped on `Current'.
 		local
-			class_file: PLAIN_TEXT_FILE
+			class_file: PLAIN_TEXT_FILE_32
 		do
 			create class_file.make (a_stone.class_i.file_name)
 			if not class_file.exists then

@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Text fragment. A text fragment can be replaced by another string"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,7 +11,7 @@ inherit
 
 feature -- Access
 
-	text: STRING
+	text: STRING_32
 			-- Text to be replaced
 
 	text_count: INTEGER

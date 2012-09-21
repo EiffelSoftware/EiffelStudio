@@ -13,11 +13,6 @@ class
 inherit
 	ANY
 
-	KL_SHARED_FILE_SYSTEM
-		export
-			{NONE} all
-		end
-
 	EIFFEL_LAYOUT
 		export
 			{NONE} all
@@ -85,6 +80,7 @@ feature -- Query
 			l_matrices: like matrices
 			l_file_name: STRING
 			l_buffer: EV_PIXEL_BUFFER
+			u: FILE_UTILITIES
 		do
 			l_matrices := matrices
 			if l_matrices.has (a_name) then
@@ -98,7 +94,7 @@ feature -- Query
 						-- The user has replaced the pixmaps.
 					l_file_name := l_user_file_name
 				end
-				if file_system.file_exists (l_file_name) then
+				if u.file_exists (l_file_name) then
 					create l_buffer
 					l_buffer.set_with_named_file (l_file_name)
 

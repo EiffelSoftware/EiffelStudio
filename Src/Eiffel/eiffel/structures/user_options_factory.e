@@ -19,21 +19,21 @@ feature -- Access
 	successful: BOOLEAN
 			-- Is last store/retrieve operation successful?
 
-	last_options: USER_OPTIONS
+	last_options: detachable USER_OPTIONS
 			-- Last retrieved options.
 
-	last_file_name: FILE_NAME
+	last_file_name: FILE_NAME_32
 			-- Last file name for last store/load operation.
 
 feature -- Query
 
-	mapped_uuid (a_file_path: STRING): detachable UUID
+	mapped_uuid (a_file_path: READABLE_STRING_32): detachable UUID
 			-- Retrieves a mapped UUID for a given file path
 		require
 			a_file_path_attached: a_file_path /= Void
 			not_a_file_path_is_empty: not a_file_path.is_empty
 		local
-			l_uuid: STRING
+			l_uuid: STRING_32
 		do
 			l_uuid := mapping.item (a_file_path)
 			if l_uuid /= Void and then not l_uuid.is_empty then
@@ -51,7 +51,7 @@ feature -- Store/Retrieve
 		require
 			a_options_set: a_options /= Void
 		local
-			l_file: RAW_FILE
+			l_file: RAW_FILE_32
 			l_sed_rw: SED_MEDIUM_READER_WRITER
 			l_sed_facilities: SED_STORABLE_FACILITIES
 			retried: BOOLEAN
@@ -94,13 +94,13 @@ feature -- Store/Retrieve
 			retry
 		end
 
-	load (a_file_path: STRING)
+	load (a_file_path: STRING_32)
 			-- Retrieve content of user data associated with `a_file_path' into `last_options'.
 			-- If no such file is found, then `last_options' is set to Void.
 		require
 			a_file_path_not_void: a_file_path /= Void
 		local
-			l_file: RAW_FILE
+			l_file: RAW_FILE_32
 			l_sed_rw: SED_MEDIUM_READER_WRITER
 			l_sed_facilities: SED_STORABLE_FACILITIES
 			retried: BOOLEAN
@@ -124,7 +124,9 @@ feature -- Store/Retrieve
 						create l_sed_rw.make (l_file)
 						l_sed_rw.set_for_reading
 						create l_sed_facilities
-						last_options ?= l_sed_facilities.retrieved (l_sed_rw, True)
+						if attached {like last_options} l_sed_facilities.retrieved (l_sed_rw, True) as o then
+							last_options := o
+						end
 						l_file.close
 					end
 				end
@@ -150,11 +152,12 @@ feature {NONE} -- Implementation
 	mapping: HASH_TABLE [STRING, STRING]
 			-- Mapping between path to a config file and its associated user option file.
 		local
-			l_file: RAW_FILE
+			l_file: RAW_FILE_32
 			l_sed_rw: SED_MEDIUM_READER_WRITER
 			l_sed_facilities: SED_STORABLE_FACILITIES
 			retried: BOOLEAN
-			l_file_name: FILE_NAME
+			l_file_name: FILE_NAME_32
+			r: detachable ANY
 		do
 			if not retried then
 				create l_file_name.make_from_string (eiffel_layout.projects_data_path)
@@ -168,11 +171,13 @@ feature {NONE} -- Implementation
 					create l_sed_rw.make (l_file)
 					l_sed_rw.set_for_reading
 					create l_sed_facilities
-					Result ?= l_sed_facilities.retrieved (l_sed_rw, True)
+					r := l_sed_facilities.retrieved (l_sed_rw, True)
 					l_file.close
 				end
 			end
-			if Result = Void then
+			if attached {like mapping} r as m then
+				Result := m
+			else
 				create Result.make (0)
 			end
 		ensure
@@ -187,11 +192,11 @@ feature {NONE} -- Implementation
 		require
 			a_mapping_not_void: a_mapping /= Void
 		local
-			l_file: RAW_FILE
+			l_file: RAW_FILE_32
 			l_sed_rw: SED_MEDIUM_READER_WRITER
 			l_sed_facilities: SED_STORABLE_FACILITIES
 			retried: BOOLEAN
-			l_file_name: FILE_NAME
+			l_file_name: FILE_NAME_32
 		do
 			if not retried then
 				create l_file_name.make_from_string (eiffel_layout.projects_data_path)
@@ -222,7 +227,7 @@ feature {NONE} -- Implementation
 			-- Name of file where `mapping' is stored.
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

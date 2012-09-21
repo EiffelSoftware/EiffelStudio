@@ -56,7 +56,7 @@ feature -- Dynamic Library file
 			dynamic_lib_exports: HASH_TABLE [LINKED_LIST[DYNAMIC_LIB_EXPORT_FEATURE],INTEGER]
 			dl_exp: DYNAMIC_LIB_EXPORT_FEATURE
 			dynamic_lib_def_file: INDENT_FILE
-			dynamic_lib_def_file_name: FILE_NAME
+			dynamic_lib_def_file_name: FILE_NAME_32
 			C_dynamic_lib_file: INDENT_FILE
 			is_dll_generated: BOOLEAN
 			dynamic_lib: E_DYNAMIC_LIB
@@ -428,6 +428,7 @@ feature -- Plug and Makefile file
 			i: INTEGER
 			arg_types: ARRAY [STRING]
 			l_is_scoop_capable: BOOLEAN
+			u: UTF_CONVERTER
 		do
 				-- Clear buffer for current generation
 			buffer := generation_buffer
@@ -1040,9 +1041,9 @@ feature -- Plug and Makefile file
 			buffer.put_string (System.name)
 			buffer.put_string ("%";%N%Tegc_system_location = ")
 			if final_mode then
-				buffer.put_string_literal (project_location.final_path)
+				buffer.put_string_literal (u.string_32_to_utf_8_string_8 (project_location.final_path))
 			else
-				buffer.put_string_literal (project_location.workbench_path)
+				buffer.put_string_literal (u.string_32_to_utf_8_string_8 (project_location.workbench_path))
 			end
 			buffer.put_string (";%N%Tegc_compiler_tag = ")
 			buffer.put_integer (System.version_tag)

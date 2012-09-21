@@ -95,12 +95,12 @@ feature -- Access
 			actual_class_not_void: Result /= Void
 		end
 
-	path: STRING
+	path: STRING_32
 			-- Path of the class, relative to the group, in unix format.
 		deferred
 		end
 
-	base_name: STRING
+	base_name: STRING_32
 			-- File name of the class.
 		deferred
 		end
@@ -446,7 +446,7 @@ feature -- Status report
 			l_name := actual_namespace
 		end
 
-	file_name: FILE_NAME
+	file_name: FILE_NAME_32
 			-- Full file name of the class
 		do
 			create Result.make_from_string (group.location.build_path (path, ""))
@@ -462,7 +462,7 @@ feature -- Status report
 		require
 			valid_file_name: file_name /= Void
 		local
-			a_file: RAW_FILE
+			a_file: RAW_FILE_32
 			retried: BOOLEAN
 			l_stream: STRING
 			l_converter: ENCODING_CONVERTER
@@ -517,7 +517,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 		require
 			valid_file_name: file_name /= Void
 		local
-			a_file: RAW_FILE
+			a_file: RAW_FILE_32
 			retried: BOOLEAN
 			l_stream: STRING
 			l_converter: ENCODING_CONVERTER
@@ -649,7 +649,7 @@ invariant
 	compiled_class_connection: is_compiled implies compiled_class.original_class = Current
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

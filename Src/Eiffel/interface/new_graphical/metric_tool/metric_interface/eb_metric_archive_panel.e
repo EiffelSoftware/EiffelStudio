@@ -666,34 +666,31 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	save_file_from_url (a_url_address: STRING; a_target_file_name: STRING): STRING
+	save_file_from_url (a_url_address: STRING; a_target_file_name: STRING): READABLE_STRING_GENERAL
 			-- Save file from url address `a_url_address' and return the saved file name in local machine.
 		require
 			a_url_address_attached: a_url_address /= Void
 			a_target_file_name_attached: a_target_file_name /= Void
 		local
-			file_name: FILE_NAME
-			target_file: STRING
-			directory: DIRECTORY
+			file_name: READABLE_STRING_GENERAL
+			target_file: STRING_32
 			file: PLAIN_TEXT_FILE
+			u: FILE_UTILITIES
 		do
-			create directory.make (metric_manager.userdefined_metrics_path)
-			if not directory.exists then
-				directory.create_dir
-			end
-			create file_name.make_from_string (metric_manager.userdefined_metrics_path)
-			file_name.set_file_name (a_target_file_name)
-			create file.make (file_name)
+			u.create_directory (metric_manager.userdefined_metrics_path)
+			file := u.make_text_file_in (a_target_file_name, metric_manager.userdefined_metrics_path)
+			file_name := u.file_name (file)
 
 			if file.exists then
 				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt_with_cancel (
 					metric_names.err_archive_file_name_exists (file_name), metric_tool_window, agent overwrite_action, agent abort_overwrite_action)
 			end
 			if not file.exists or overwrite then
-				target_file := "file://" + file_name
+				target_file := {STRING_32} "file://"
+				target_file.append_string_general (file_name)
 				transfer_manager_builder.set_timeout (10)
 				transfer_manager_builder.wipe_out
-				transfer_manager_builder.add_transaction (a_url_address, target_file)
+				transfer_manager_builder.add_transaction (a_url_address.as_string_32, target_file)
 				if not transfer_manager_builder.last_added_source_correct then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (
 						metric_names.err_unable_to_read_from_url (a_url_address), metric_tool_window, Void)

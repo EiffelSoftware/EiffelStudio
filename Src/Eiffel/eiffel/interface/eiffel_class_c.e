@@ -35,10 +35,10 @@ inherit
 
 	SHARED_GENERATION
 
-	KL_SHARED_FILE_SYSTEM
-		export
-			{NONE} all
-		end
+--	KL_SHARED_FILE_SYSTEM
+--		export
+--			{NONE} all
+--		end
 
 create
 	make
@@ -187,11 +187,11 @@ feature -- Action
 			l_types: TYPE_LIST
 			cl_type: CLASS_TYPE
 			object_name: STRING
-			generation_dir: DIRECTORY_NAME
-			c_file_name: FILE_NAME
-			file: PLAIN_TEXT_FILE
-			finished_file_name: FILE_NAME
-			finished_file: PLAIN_TEXT_FILE
+			generation_dir: DIRECTORY_NAME_32
+			c_file_name: FILE_NAME_32
+			file: PLAIN_TEXT_FILE_32
+			finished_file_name: FILE_NAME_32
+			finished_file: PLAIN_TEXT_FILE_32
 		do
 			if not retried and System.makefile_generator /= Void and then has_types then
 				create generation_dir.make_from_string (project_location.workbench_path)
@@ -267,18 +267,18 @@ feature -- Action
 		local
 			parser: like eiffel_parser
 			file: KL_BINARY_INPUT_FILE
-			l_dir: KL_DIRECTORY
-			l_dir_name: DIRECTORY_NAME
+			l_dir: DIRECTORY_32
+			l_dir_name: DIRECTORY_NAME_32
 			vd21: VD21
 			l_options: CONF_OPTION
 			l_dummy_file: RAW_FILE
-			l_dummy_file_name: FILE_NAME
 			l_uuid: STRING
 			l_system: CONF_SYSTEM
 			l_lace_class: like lace_class
 			l_error_level: NATURAL_32
+			u: FILE_UTILITIES
 		do
-			create file.make (file_name)
+			file := u.make_binary_input_file (file_name)
 			file.open_read
 
 				-- Check if the file to parse is readable
@@ -347,9 +347,7 @@ feature -- Action
 					l_system := l_lace_class.cluster.target.system
 					l_uuid := l_system.uuid.out
 					if l_system = l_system.application_target.system then
-						create l_dummy_file_name.make_from_string (workbench.backup_subdirectory)
-						l_dummy_file_name.set_file_name (l_uuid+".txt")
-						create l_dummy_file.make (l_dummy_file_name)
+						l_dummy_file := u.make_raw_file_in (l_uuid + ".txt", workbench.backup_subdirectory)
 						if not l_dummy_file.exists and then l_dummy_file.is_creatable then
 							l_dummy_file.create_read_write
 							l_dummy_file.close
@@ -359,7 +357,7 @@ feature -- Action
 					l_dir_name.extend (l_uuid)
 					create l_dir.make (l_dir_name)
 					if not l_dir.exists then
-						l_dir.create_directory
+						u.create_directory (l_dir_name)
 						adapt_and_copy_configuration (l_system, workbench.backup_subdirectory)
 					end
 
@@ -1326,18 +1324,18 @@ feature -- Workbench feature and descriptor table generation
 
 feature
 
-	feature_table_file_name: FILE_NAME
+	feature_table_file_name: FILE_NAME_32
 			-- Generated file name prefix
 			-- Side effect: Create the corresponding subdirectory if it
 			-- doesnot exist yet.
 		require
 			has_types: has_types
 		local
-			subdirectory, base_name: STRING
-			dir: DIRECTORY
-			dir_name: DIRECTORY_NAME
-			finished_file: PLAIN_TEXT_FILE
-			finished_file_name: FILE_NAME
+			subdirectory, base_name: STRING_32
+			dir: DIRECTORY_32
+			dir_name: DIRECTORY_NAME_32
+			finished_file: PLAIN_TEXT_FILE_32
+			finished_file_name: FILE_NAME_32
 		do
 			if System.in_final_mode then
 				create dir_name.make_from_string (project_location.final_path)
@@ -2201,22 +2199,22 @@ feature -- Conformance table generation
 
 feature {NONE} -- Backup implementation
 
-	copy_class (a_class: CONF_CLASS; a_location: STRING)
+	copy_class (a_class: CONF_CLASS; a_location: READABLE_STRING_32)
 			-- Make a backup of `a_class' in `a_location'.
 		require
 			a_class_not_void: a_class /= Void
 			a_location_ok: a_location /= Void and then not a_location.is_empty
 		local
-			l_dir_name: DIRECTORY_NAME
-			l_fname: FILE_NAME
-			l_dir: KL_DIRECTORY
+			l_dir_name: DIRECTORY_NAME_32
+			l_fname: FILE_NAME_32
+			l_dir: DIRECTORY_32
 			l_over: ARRAYED_LIST [CONF_CLASS]
+			u: FILE_UTILITIES
 		do
 				-- create cluster directory if necessary
 			create l_dir_name.make_from_string (a_location)
 			l_dir_name.extend (a_class.group.name)
-			create l_dir.make (l_dir_name)
-			l_dir.create_directory
+			u.create_directory (l_dir_name)
 
 				-- copy file using as target the eiffel class name, as in a cluster/library there
 				-- cannot be two classes with the same name, but you can have two classes with the same
@@ -2224,7 +2222,7 @@ feature {NONE} -- Backup implementation
 			create l_fname.make_from_string (l_dir_name)
 			l_fname.extend (a_class.name.as_lower)
 			l_fname.add_extension ("e")
-			file_system.copy_file (a_class.full_file_name, l_fname)
+			u.copy_file (a_class.full_file_name, l_fname)
 
 				-- if the class does override, also copy the overriden classes
 			if a_class.does_override then
@@ -2240,7 +2238,7 @@ feature {NONE} -- Backup implementation
 					create l_dir.make (l_dir_name)
 					if not l_dir.exists then
 							-- We need to create the directory.
-						l_dir.create_directory
+						u.create_directory (l_dir_name)
 							-- But also to copy the config files.
 						adapt_and_copy_configuration (l_over.item.group.target.system, workbench.backup_subdirectory)
 					end
@@ -2250,23 +2248,24 @@ feature {NONE} -- Backup implementation
 			end
 		end
 
-	adapt_and_copy_configuration (a_system: CONF_SYSTEM; a_location: STRING)
+	adapt_and_copy_configuration (a_system: CONF_SYSTEM; a_location: READABLE_STRING_32)
 			-- Adapt `a_system' for backup locations and copy the adapted configuration file and assemblies into `a_location'.
 		require
 			a_system_not_void: a_system /= Void
 			a_location_ok: a_location /= Void and then not a_location.is_empty
 		local
-			l_file_name: FILE_NAME
+			l_file_name: FILE_NAME_32
 			l_load: CONF_LOAD
 			l_fact: CONF_COMP_FACTORY
 			l_system: CONF_SYSTEM
 			l_vis: CONF_BACKUP_VISITOR
+			u: FILE_UTILITIES
 		do
 				-- copy original configuration file
 			create l_file_name.make_from_string (a_location)
 			l_file_name.extend (a_system.uuid.out)
 			l_file_name.set_file_name (backup_config_file)
-			file_system.copy_file (a_system.file_name, l_file_name)
+			u.copy_file (a_system.file_name, l_file_name)
 
 				-- adapt configuration file
 			create l_fact

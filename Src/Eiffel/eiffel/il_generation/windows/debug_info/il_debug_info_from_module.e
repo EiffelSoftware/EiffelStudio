@@ -69,7 +69,7 @@ feature -- reset
 
 feature {IL_DEBUG_INFO_RECORDER} -- Update Module Name
 
-	update_module_filename (a_mod_filename: STRING)
+	update_module_filename (a_mod_filename: like module_filename)
 			-- Update Current module filename with `a_mod_filename'.
 		require
 			a_mod_name_not_empty: a_mod_filename /= Void and then not a_mod_filename.is_empty
@@ -92,7 +92,7 @@ feature {IL_DEBUG_INFO_RECORDER} -- Update Module Name
 
 feature -- Properties
 
-	module_filename: STRING
+	module_filename: STRING_32
 			-- formatted Module filename
 
 	module_name: STRING
@@ -279,7 +279,7 @@ feature
 			--
 		do
 			io.put_string ("************************************************************%N")
-			io.put_string ("* Module=" + module_filename + "%N")
+			io.put_string ("* Module=" + module_filename.as_string_8 + "%N")
 			io.put_string ("************************************************************%N")
 			io.put_string ("%N Class Token  => static_class_type %N%N")
 
@@ -302,7 +302,7 @@ invariant
 	module_filename_not_void: module_filename /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -130,19 +130,21 @@ feature -- Status
 
 feature {EB_DIAGRAM_HTML_GENERATOR} -- Load view
 
-	change_view (view_name: STRING; file_name: STRING)
-			-- Change view to `view_name' load from `file_name' without saving `Current'.
-		local
-			f: RAW_FILE
+	change_view (view_name: STRING; f: RAW_FILE)
+			-- Change view to `view_name' load from file `f' without saving `Current'.
+		require
+			f_closed: f.is_closed
 		do
 			current_view := view_name
-			create f.make (file_name)
 			if f.exists then
 				f.open_read
 				if f.readable then
 					retrieve (f)
 				end
+				f.close
 			end
+		ensure
+			f_closed: f.is_closed
 		end
 
 feature {NONE} -- Implementation

@@ -80,14 +80,15 @@ feature {NONE} -- Access
 			Result := development_window.docking_manager.as_attached
 		end
 
-	editors_configuration_file: attached FILE_NAME
+	editors_configuration_file: attached READABLE_STRING_GENERAL
 			-- The file name for the project's editors configuration.
 		require
 			is_interface_usable: is_interface_usable
 			system_defined: (create {SHARED_WORKBENCH}).workbench.system_defined
+		local
+			u: FILE_UTILITIES
 		do
-			create Result.make_from_string (development_window.project_location.target_path)
-			Result.set_file_name ("editors_" + development_window.window_id.out)
+			Result := u.file_name (u.make_raw_file_in ("editors_" + development_window.window_id.out, development_window.project_location.target_path))
 		end
 
 feature -- Status report
@@ -434,13 +435,14 @@ feature -- Basic operations: Editor configuration
 			is_interface_usable: is_interface_usable
 			system_defined: (create {SHARED_WORKBENCH}).workbench.system_defined
 		local
-			l_fn: attached FILE_NAME
+			l_fn: attached like editors_configuration_file
 			retried: BOOLEAN
+			u: FILE_UTILITIES
 		do
 			if not retried then
 				l_fn := editors_configuration_file
-				if (create {RAW_FILE}.make (l_fn.string)).exists then
-					development_window.docking_manager.open_editors_config (l_fn.string)
+				if u.file_exists (l_fn) then
+					development_window.docking_manager.open_editors_config (l_fn)
 				end
 			end
 		rescue

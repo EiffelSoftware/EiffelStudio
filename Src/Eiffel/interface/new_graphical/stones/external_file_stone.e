@@ -64,7 +64,7 @@ feature -- Properties
 			Result := Cursors.cur_X_Class
 		end
 
-	file_name: STRING
+	file_name: like {ERROR}.file_name
 			-- File associated with `file'.
 		do
 			Result := file.name.twin

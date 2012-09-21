@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_new_name: STRING; a_class: like class_i)
+	make (a_new_name: like {CONF_CLASS}.file_name; a_class: like class_i)
 			-- Rename the file of `a_class' into `a_new_name'
 			-- (a_new_name is just the file_name without path or extension)
 			-- and update the information in `a_class' accordingly.
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_new_name_not_void: a_new_name /= Void
 		local
-			new_file_name: FILE_NAME
+			new_file_name: FILE_NAME_32
 		do
 			class_i := a_class
 			create new_file_name.make_from_string (a_class.cluster.location.build_path (a_class.path, ""))

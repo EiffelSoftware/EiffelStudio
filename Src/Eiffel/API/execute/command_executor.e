@@ -22,7 +22,7 @@ feature -- Command Execution
 			Execution_environment.launch (command)
 		end
 
-	execute_with_args (appl_name, args: STRING)
+	execute_with_args (appl_name: READABLE_STRING_GENERAL; args: READABLE_STRING_GENERAL)
 			-- Execute external command `appl_name' with following arguments.
 		require
 			appl_name_not_void: appl_name /= Void
@@ -31,7 +31,7 @@ feature -- Command Execution
 			execute_with_args_and_working_directory (appl_name, args, Execution_environment.current_working_directory)
 		end
 
-	execute_with_args_and_working_directory (appl_name, args, working_directory: STRING)
+	execute_with_args_and_working_directory (appl_name: READABLE_STRING_GENERAL; args: READABLE_STRING_GENERAL; working_directory: STRING)
 			-- Execute external command `appl_name' with following arguments and working_directory.
 		require
 			appl_name_not_void: appl_name /= Void
@@ -41,7 +41,7 @@ feature -- Command Execution
 			execute_with_args_and_working_directory_and_environment (appl_name, args, working_directory, Void)
 		end
 
-	execute_with_args_and_working_directory_and_environment (appl_name, args, working_directory: STRING;
+	execute_with_args_and_working_directory_and_environment (appl_name: READABLE_STRING_GENERAL; args: READABLE_STRING_GENERAL; working_directory: STRING;
 				envir: HASH_TABLE [STRING, STRING])
 			-- Execute external command `appl_name' with following arguments and working_directory.
 		require
@@ -49,14 +49,11 @@ feature -- Command Execution
 			args_not_void: args /= Void
 			working_directory_not_void: working_directory /= Void
 		local
-			command: STRING
+			command: READABLE_STRING_GENERAL
 			l_prc_factory: PROCESS_FACTORY
 			l_prc_launcher: PROCESS
 		do
-			create command.make (appl_name.count + args.count + 1)
-			command.append (appl_name)
-			command.append_character (' ')
-			command.append (args)
+			command := appl_name + " " + args
 			create l_prc_factory
 			l_prc_launcher := l_prc_factory.process_launcher_with_command_line (command, working_directory)
 			if envir /= Void then
@@ -68,13 +65,26 @@ feature -- Command Execution
 
 feature -- Compiler specific calls
 
-	link_eiffel_driver (c_code_dir, system_name, prelink_cmd_name, driver_name: STRING)
+	link_eiffel_driver
+		(c_code_dir: READABLE_STRING_32;
+		system_name, prelink_cmd_name: READABLE_STRING_GENERAL;
+		driver_name: READABLE_STRING_32)
 			-- Link the driver of the precompilation to
 			-- the eiffel project.
+		local
+			u: FILE_UTILITIES
 		do
-			eif_link_driver (
-				c_code_dir.to_c, system_name.to_c,
-				prelink_cmd_name.to_c, driver_name.to_c)
+				-- Copy precompiled driver to the target directory.
+			if {PLATFORM}.is_windows then
+				u.copy_file (driver_name, u.make_file_name_in (system_name, c_code_dir) + {STRING_32} ".exe")
+			elseif {PLATFORM}.is_vms then
+				u.copy_file (driver_name, u.make_file_name_in (system_name, c_code_dir))
+			else
+				execution_environment.system
+					({STRING_32} "%"" + prelink_cmd_name.as_string_32 + {STRING_32} "%" " +
+					driver_name + {STRING_32} " " +
+					u.make_file_name_in (system_name, c_code_dir).as_string_32)
+			end
 		end
 
 	invoke_finish_freezing (c_code_dir, freeze_command: STRING; asynchronous: BOOLEAN; workbench_mode: BOOLEAN)
@@ -103,15 +113,8 @@ feature -- Compiler specific calls
 		do
 		end
 
-feature {NONE} -- Externals
-
-	eif_link_driver (c_code_dir, system_name, prelink_cmd_name, driver_name: ANY)
-		external
-			"C"
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -124,22 +127,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class COMMAND_EXECUTOR

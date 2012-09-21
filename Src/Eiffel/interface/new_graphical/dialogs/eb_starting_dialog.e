@@ -443,11 +443,11 @@ feature {NONE} -- Implementation
 	load_available_wizards
 			-- Enumerate the available wizards.
 		local
-			new_project_directory: DIRECTORY
-			entries: ARRAYED_LIST [STRING]
-			extension: STRING
+			new_project_directory: DIRECTORY_32
+			entries: ARRAYED_LIST [STRING_32]
+			extension: STRING_32
 			wizard: EB_NEW_PROJECT_WIZARD
-			filename: FILE_NAME
+			filename: FILE_NAME_32
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -463,7 +463,7 @@ feature {NONE} -- Implementation
 					extension := entries.item.twin
 					extension.keep_tail(4)
 
-					if extension.is_equal (".dsc") then
+					if extension.is_equal ({STRING_32} ".dsc") then
 						create filename.make_from_string (eiffel_layout.new_project_wizards_path)
 						filename.extend (entries.item)
 						create wizard.make_with_file (filename)
@@ -509,7 +509,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_project (directory_name: STRING; ace_file_name: STRING)
+	create_project (directory_name: STRING_32; ace_file_name: STRING_32)
 			-- Create a project in directory `directory_name', with ace file
 			-- `ace_file_name'.
 		require
@@ -518,15 +518,13 @@ feature {NONE} -- Implementation
 		local
 			l_loader: EB_GRAPHICAL_PROJECT_LOADER
 			ebench_name: STRING
-			last_char: CHARACTER
-			ace_name, dir_name: STRING
+			ace_name, dir_name: STRING_32
 		do
 			ace_name := ace_file_name.twin
 			dir_name := directory_name.twin
 
 			if dir_name.count > 1 then
-				last_char := dir_name.item (dir_name.count)
-				if last_char = Operating_environment.Directory_separator then
+				if dir_name.item (dir_name.count) = Operating_environment.Directory_separator then
 					dir_name.remove (dir_name.count)
 				end
 			end
@@ -562,9 +560,9 @@ feature {NONE} -- Implementation
 			-- Start the selected wizard, wait for the wizard to
 			-- terminate and load the generated wizard.
 		local
-			result_parameters: LIST [ARRAY [STRING]]
-			ace_filename: STRING
-			directory_name: STRING
+			result_parameters: LIST [TUPLE [name: STRING_32; value: STRING_32]]
+			ace_filename: STRING_32
+			directory_name: STRING_32
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -587,17 +585,17 @@ feature {NONE} -- Implementation
 					until
 						result_parameters.after
 					loop
-						if (result_parameters.item @ 1).is_equal ("ace") then
-							ace_filename := result_parameters.item.item (2).twin
-						elseif (result_parameters.item @ 1).is_equal ("directory") then
-							directory_name := result_parameters.item.item (2).twin
-						elseif (result_parameters.item @ 1).is_equal ("compilation") then
-							(result_parameters.item @ 2).to_lower
-							compile_project := (result_parameters.item @ 2).is_equal ("yes")
-						elseif (result_parameters.item @ 1).is_equal ("compilation_type") then
-							(result_parameters.item @ 2).to_lower
-							freeze_project := (result_parameters.item @ 2).is_equal ("freeze")
-						elseif (result_parameters.item @ 1).is_equal ("success") then
+						if result_parameters.item.name.is_equal ("ace") then
+							ace_filename := result_parameters.item.value.twin
+						elseif result_parameters.item.name.is_equal ("directory") then
+							directory_name := result_parameters.item.value.twin
+						elseif result_parameters.item.name.is_equal ("compilation") then
+							result_parameters.item.value.to_lower
+							compile_project := result_parameters.item.value.is_equal ("yes")
+						elseif result_parameters.item.name.is_equal ("compilation_type") then
+							result_parameters.item.value.to_lower
+							freeze_project := result_parameters.item.value.is_equal ("freeze")
+						elseif result_parameters.item.name.is_equal ("success") then
 							-- Do nothing
 						else
 							check false end -- Invalid parameter!!

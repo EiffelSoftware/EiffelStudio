@@ -106,21 +106,12 @@ feature -- Access
 	project_location: PROJECT_DIRECTORY
 			-- Info about remote project location
 
-	compilation_path: DIRECTORY_NAME
+	compilation_path: like {PROJECT_DIRECTORY}.path
 			-- Path of the COMP directory
 		do
 			Result := project_location.compilation_path
 		ensure
 			compilation_path_not_void: Result /= Void
-		end
-
-	project_epr_location: FILE_NAME
-			-- Full name of the file where the
-			-- workbench is stored
-		do
-			Result := project_location.project_file_name
-		ensure
-			project_epr_location_not_void: Result /= Void
 		end
 
 	project_epr_file: PROJECT_EIFFEL_FILE
@@ -139,7 +130,7 @@ feature -- Access
 			precomp_eif_file_not_void: Result /= Void
 		end
 
-	precomp_il_info_file (a_use_optimized_precompile: BOOLEAN): FILE_NAME
+	precomp_il_info_file (a_use_optimized_precompile: BOOLEAN): FILE_NAME_32
 			-- File where the il debug info for the precompiled is stored
 		do
 			if a_use_optimized_precompile then
@@ -153,7 +144,7 @@ feature -- Access
 			precomp_il_info_file_not_void: Result /= Void
 		end
 
-	precompiled_preobj: FILE_NAME
+	precompiled_preobj: FILE_NAME_32
 			-- Full name of `preobj' object file
 		do
 			create Result.make_from_string (project_location.workbench_path)
@@ -162,7 +153,7 @@ feature -- Access
 			precompiled_preobj_not_void: Result /= Void
 		end
 
-	precompiled_driver: FILE_NAME
+	precompiled_driver: FILE_NAME_32
 			-- Full name of the precompilation driver
 		do
 			create Result.make_from_string (project_location.workbench_path)
@@ -171,7 +162,7 @@ feature -- Access
 			precompiled_driver_not_void: Result /= Void
 		end
 
-	assembly_driver (a_use_optimized_precompile: BOOLEAN): FILE_NAME
+	assembly_driver (a_use_optimized_precompile: BOOLEAN): FILE_NAME_32
 			-- Full name of assembly driver.
 		do
 			if a_use_optimized_precompile then
@@ -185,7 +176,7 @@ feature -- Access
 			assembly_driver_not_void: Result /= Void
 		end
 
-	assembly_helper_driver (a_use_optimized_precompile: BOOLEAN): FILE_NAME
+	assembly_helper_driver (a_use_optimized_precompile: BOOLEAN): FILE_NAME_32
 			-- Full name of assembly driver.
 		do
 			if a_use_optimized_precompile then
@@ -199,7 +190,7 @@ feature -- Access
 			assembly_herlp_driver_not_void: Result /= Void
 		end
 
-	assembly_debug_info (a_use_optimized_precompile: BOOLEAN): FILE_NAME
+	assembly_debug_info (a_use_optimized_precompile: BOOLEAN): FILE_NAME_32
 			-- Full name of assembly pdb.
 		do
 			if a_use_optimized_precompile then
@@ -319,64 +310,66 @@ feature {NONE} -- Implementation
 
 		end
 
-	check_directory (a_directory: STRING)
+	check_directory (a_directory: STRING_32)
 			-- Check readability of directory of name
 			-- `rn' relative to Current.
 		require
 			a_directory_not_void: a_directory /= Void
 		local
-			d: DIRECTORY;
-			vd42: VD42;
+			d: DIRECTORY_32
+			vd42: VD42
 		do
 			if is_valid then
-				create d.make (a_directory);
+				create d.make (a_directory)
 				is_valid :=
 					d.exists and then
 					d.is_readable and then
 					d.is_executable
 				if not is_valid and then is_precompile then
-					create vd42;
-					vd42.set_path (a_directory);
-					vd42.set_is_directory;
-					Error_handler.insert_error (vd42);
+					create vd42
+					vd42.set_path (a_directory)
+					vd42.set_is_directory
+					Error_handler.insert_error (vd42)
 				end
 			end
-		end;
+		end
 
-	check_file (n: STRING)
+	check_file (n: READABLE_STRING_GENERAL)
 			-- Check readability of file of name
 			-- `rn' relative to Current.
 		require
 			n_not_void: n /= Void
 		local
-			f: RAW_FILE;
-			vd42: VD42;
+			f: RAW_FILE
+			vd42: VD42
+			u: FILE_UTILITIES
 		do
 			if is_valid then
-				create f.make (n)
+				f := u.make_raw_file (n)
 				is_valid :=
 					f.exists and then
 					f.is_plain and then
 					f.is_readable
 				if not is_valid and then is_precompile then
-					create vd42;
-					vd42.set_path (n);
-					Error_handler.insert_error (vd42);
+					create vd42
+					vd42.set_path (n)
+					Error_handler.insert_error (vd42)
 				end
 			end
-		end;
+		end
 
-	check_precompiled_optional (rn: STRING)
+	check_precompiled_optional (rn: READABLE_STRING_GENERAL)
 			-- Check that `rn' is a valid path.
 		require
 			rn_not_void: rn /= Void
 		local
-			f: RAW_FILE;
-			vd43: VD43;
+			f: RAW_FILE
+			vd43: VD43
 			ok: BOOLEAN
+			u: FILE_UTILITIES
 		do
 			if is_valid then
-				create f.make (rn)
+				f := u.make_raw_file (rn)
 				ok :=
 					f.exists and then
 					f.is_plain and then
@@ -403,7 +396,7 @@ invariant
 	project_location_not_void: project_location /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -416,22 +409,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class REMOTE_PROJECT_DIRECTORY

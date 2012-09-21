@@ -250,7 +250,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	is_class_buffer_name_valid (a_class_buffer_name: STRING): BOOLEAN
+	is_class_buffer_name_valid (a_class_buffer_name: STRING_32): BOOLEAN
 			-- Is `a_class_buffer_name' valid?
 		require
 			a_class_buffer_name_attached: a_class_buffer_name /= Void
@@ -258,7 +258,7 @@ feature{NONE} -- Implementation
 			Result := True
 		end
 
-	is_feature_buffer_name_valid (a_feature_name: STRING): BOOLEAN
+	is_feature_buffer_name_valid (a_feature_name: STRING_32): BOOLEAN
 			-- Is `a_feature_name' valid?
 		require
 			a_feature_name_attached: a_feature_name /= Void
@@ -266,7 +266,7 @@ feature{NONE} -- Implementation
 			Result := True
 		end
 
-	new_path_replacement (a_text: STRING): STRING
+	new_path_replacement (a_text: STRING_32): STRING_32
 			-- New path for `a_text'
 			-- Return the file name (with path) of the currently focused class in editor,
 			-- if there is no such class, return a copy of `a_text'.
@@ -285,7 +285,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_file_name_replacement (a_text: STRING): STRING
+	new_file_name_replacement (a_text: STRING_32): STRING_32
 			-- New file name  (only the file name part) replacement for `a_text'
 			-- Return the file name (with path) of the currently focused class in editor,
 			-- if there is no such class, return a copy of `a_text'.
@@ -319,7 +319,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	new_directory_name_replacement (a_text: STRING): STRING
+	new_directory_name_replacement (a_text: STRING_32): STRING_32
 			-- New directory name replacement for `a_text'
 			-- Return the directory name of the currently focused class in editor,
 			-- if there is no such class, return a copy of `a_text'.
@@ -347,7 +347,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_group_directory_replacement (a_text: STRING): STRING
+	new_group_directory_replacement (a_text: STRING_32): STRING_32
 			-- New group path replacement for `a_text'
 			-- Return the path of the group where the currently focused class in editor is defined,
 			-- if there is no such class, return a copy of `a_text'.
@@ -367,7 +367,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_group_name_replacement (a_text: STRING): STRING
+	new_group_name_replacement (a_text: STRING_32): STRING_32
 			-- New group name replacement for `a_text'
 			-- Return the path of the group where the currently focused class in editor is defined,
 			-- if there is no such class, return a copy of `a_text'.
@@ -403,7 +403,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	new_class_name_replacement (a_text: STRING): STRING
+	new_class_name_replacement (a_text: STRING_32): STRING_32
 			-- New class name replacement for `a_text'
 			-- Return name of the currently focused class in editor,
 			-- If there is no such class, return a copy of `a_text'.
@@ -426,7 +426,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_line_replacement (a_text: STRING): STRING
+	new_line_replacement (a_text: STRING_32): STRING_32
 			-- New line replacement for `a_text'
 			-- Return the line number of the cursor in the currently focused editor
 			-- If no such line number, return a copy of `a_text'.
@@ -450,18 +450,19 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	file_content (a_file_name: STRING): STRING
+	file_content (a_file_name: STRING_32): STRING
 			-- Content of file specified by `a_file_name'
 		require
 			a_file_name_attached: a_file_name /= Void
 		local
 			l_retried: BOOLEAN
-			l_file: PLAIN_TEXT_FILE
+			l_file: PLAIN_TEXT_FILE_32
 		do
 			if not l_retried then
-				create l_file.make_open_read (a_file_name)
+				create l_file.make (a_file_name)
+				l_file.open_read
 				l_file.read_stream (l_file.count)
-				Result := l_file.last_string.twin
+				Result := l_file.last_string
 				l_file.close
 			else
 				Result := ""
@@ -501,7 +502,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	new_buffer_file_name (a_file_name: STRING): STRING
+	new_buffer_file_name (a_file_name: STRING_32): STRING_32
 			-- New file name for `a_file_name' used in external command launching,
 			-- If on Windows and `a_file_name' contains space, we srround `a_file_name' with double quotes.
 		require

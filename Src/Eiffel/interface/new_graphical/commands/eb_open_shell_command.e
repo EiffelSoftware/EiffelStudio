@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 			ast_not_void: s /= Void
 		local
 			req: COMMAND_EXECUTOR
-			fn: STRING
+			fn: like {AST_STONE}.file_name
 			ln: INTEGER
 		do
 			fn := s.file_name
@@ -192,13 +192,10 @@ feature {NONE} -- Implementation
 			req.execute (preferences.misc_data.external_editor_cli (window_file_name, line_nb.max (1)))
 		end
 
-	window_file_name: STRING
+	window_file_name: like {FILED_STONE}.file_name
 			-- Provides the filename of the current edited element, if possible.
-		local
-			fs: FILED_STONE
 		do
-			fs ?= target.stone
-			if fs /= Void then
+			if attached {FILED_STONE} target.stone as fs then
 				Result := fs.file_name
 			end
 		end

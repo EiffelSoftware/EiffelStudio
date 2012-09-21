@@ -19,11 +19,6 @@ inherit
 			on_locale_changed
 		end
 
-	KL_SHARED_FILE_SYSTEM
-		export
-			{NONE} all
-		end
-
 	SHARED_WORKBENCH
 		export
 			{NONE} all
@@ -69,7 +64,7 @@ feature -- Status report
 
 feature {NONE} -- Query
 
-	path (a_type: INTEGER): detachable STRING
+	path (a_type: INTEGER): detachable like {PROJECT_DIRECTORY}.location
 			-- Retrieves a path based on a defined path type
 			--
 			-- `a_type': The type of path to retrieve.
@@ -80,7 +75,7 @@ feature {NONE} -- Query
 				a_type = path_type_workbench or
 				a_type = path_type_finalized
 		local
-			l_location: detachable STRING
+			l_location: detachable like {PROJECT_DIRECTORY}.location
 		do
 			if attached workbench.eiffel_project as l_project then
 				inspect a_type
@@ -104,7 +99,7 @@ feature {NONE} -- Query
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
 
-	path_from_stone (a_stone: STONE): detachable STRING
+	path_from_stone (a_stone: STONE): detachable like {FILED_STONE}.file_name
 			-- Retrieves a path based on a supplied stone.
 			--
 			-- `a_stone': A stone to retrieve a path for.
@@ -119,6 +114,7 @@ feature {NONE} -- Query
 			l_mapper: ES_EIFFEL_TO_C_FUNCTION_MAPPER
 			l_class_c: CLASS_C
 			l_ctrl: BOOLEAN
+			u: FILE_UTILITIES
 		do
 				-- Should the generated F_code information be shown?
 			l_ctrl := ev_application.ctrl_pressed
@@ -149,9 +145,6 @@ feature {NONE} -- Query
 						Result := l_mapper.c_class_path
 					end
 				end
-				if Result /= Void then
-					Result := Result.string
-				end
 			elseif attached {CLASSI_STONE} a_stone as l_class then
 				if not l_ctrl then
 						-- The class is not compiled so there will be no externally generated code.
@@ -160,14 +153,14 @@ feature {NONE} -- Query
 			elseif attached {FILED_STONE} a_stone as l_filed then
 					-- Unknown stone type but it has a file associated with it.
 				if not l_ctrl then
-					Result := file_system.dirname (l_filed.file_name)
+					Result := u.file_directory_path (l_filed.file_name)
 				end
 			end
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
 
-	file_name_from_stone (a_stone: STONE): detachable TUPLE [file_name: STRING; line: INTEGER]
+	file_name_from_stone (a_stone: STONE): detachable TUPLE [file_name: READABLE_STRING_GENERAL; line: INTEGER]
 			-- Open a stone in the specified external editor.
 			--
 			-- `a_stone': The stone to open in the external editor.
@@ -179,7 +172,7 @@ feature {NONE} -- Query
 			l_class_type: detachable CLASS_TYPE
 			l_mapper: ES_EIFFEL_TO_C_FUNCTION_MAPPER
 			l_class_c: CLASS_C
-			l_file_name: detachable STRING
+			l_file_name: detachable READABLE_STRING_GENERAL
 			l_line: INTEGER
 			l_ctrl: BOOLEAN
 		do
@@ -270,7 +263,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Basic operations
 
-	open_folder (a_folder: READABLE_STRING_8)
+	open_folder (a_folder: READABLE_STRING_GENERAL)
 			-- Attempts to open a folder in the default file browser.
 			--
 			-- `a_folder': The folder to open.
@@ -281,19 +274,18 @@ feature {NONE} -- Basic operations
 			not_a_folder_is_empty: not a_folder.is_empty
 			a_folder_exists:
 		local
-			l_folder: STRING
 			l_error: ES_ERROR_PROMPT
+			u: FILE_UTILITIES
 		do
-			l_folder := a_folder.as_string_8
-			if file_system.directory_exists (l_folder) then
-				(create {EB_SHARED_MANAGERS}).external_launcher.open_dir_in_file_browser (l_folder)
+			if u.directory_exists (a_folder) then
+				(create {EB_SHARED_MANAGERS}).external_launcher.open_dir_in_file_browser (a_folder)
 			else
-				create l_error.make_standard (interface_messages.e_folder_does_not_exists (l_folder))
+				create l_error.make_standard (interface_messages.e_folder_does_not_exists (a_folder))
 				l_error.show_on_active_window
 			end
 		end
 
-	open_terminal (a_folder: READABLE_STRING_8)
+	open_terminal (a_folder: READABLE_STRING_GENERAL)
 			-- Attempts to open in a folder in the default terminal.
 			--
 			-- `a_folder': The folder to open.
@@ -303,19 +295,18 @@ feature {NONE} -- Basic operations
 			a_folder_attached: a_folder /= Void
 			not_a_folder_is_empty: not a_folder.is_empty
 		local
-			l_folder: STRING
 			l_error: ES_ERROR_PROMPT
+			u: FILE_UTILITIES
 		do
-			l_folder := a_folder.as_string_8
-			if file_system.directory_exists (l_folder) then
-				(create {EB_SHARED_MANAGERS}).external_launcher.open_console_in_dir (l_folder)
+			if u.directory_exists (a_folder) then
+				(create {EB_SHARED_MANAGERS}).external_launcher.open_console_in_dir (a_folder)
 			else
-				create l_error.make_standard (interface_messages.e_folder_does_not_exists (l_folder))
+				create l_error.make_standard (interface_messages.e_folder_does_not_exists (a_folder))
 				l_error.show_on_active_window
 			end
 		end
 
-	open_external (a_file_name: READABLE_STRING_8; a_line: NATURAL)
+	open_external (a_file_name: READABLE_STRING_GENERAL; a_line: NATURAL)
 			-- Attempts to open a file in an external editor at a specified line number
 			--
 			-- `a_file_name': The name of the file to open.
@@ -327,14 +318,13 @@ feature {NONE} -- Basic operations
 			not_a_file_name_is_empty: not a_file_name.is_empty
 			a_line_positive: a_line > 0
 		local
-			l_file_name: STRING
 			l_error: ES_ERROR_PROMPT
+			u: FILE_UTILITIES
 		do
-			l_file_name := a_file_name.as_string_8
-			if file_system.file_exists (l_file_name) then
-				(create {COMMAND_EXECUTOR}).execute (preferences.misc_data.external_editor_cli (l_file_name, a_line.as_integer_32))
+			if u.file_exists (a_file_name) then
+				(create {COMMAND_EXECUTOR}).execute (preferences.misc_data.external_editor_cli (a_file_name, a_line.as_integer_32))
 			else
-				create l_error.make_standard (interface_messages.e_file_does_not_exists (l_file_name))
+				create l_error.make_standard (interface_messages.e_file_does_not_exists (a_file_name))
 				l_error.show_on_active_window
 			end
 		end
@@ -454,15 +444,16 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 		local
 			l_selected: detachable STRING_32
-			l_file_name: STRING
-			l_compilation_folder: STRING
+			l_file_name: STRING_32
+			l_compilation_folder: like {PROJECT_DIRECTORY}.path
 			l_colon: INTEGER
 			l_comma: INTEGER
 			l_line_string: STRING_32
 			l_line: NATURAL
-			l_full_file_name: FILE_NAME
+			l_full_file_name: FILE_NAME_32
 			l_files: ARRAYED_LIST [STRING_8]
 			l_expr: RX_PCRE_MATCHER
+			u: FILE_UTILITIES
 		do
 			l_selected := editor.text_displayed.selected_wide_string
 			if l_selected /= Void and then not l_selected.is_empty then
@@ -494,8 +485,8 @@ feature {NONE} -- Action handlers
 					end
 				end
 
-				l_file_name := l_selected.as_string_8
-				if not file_system.file_exists (l_file_name) then
+				l_file_name := l_selected
+				if not u.file_exists (l_file_name) then
 
 						-- Fetch the last applicable compilation folder
 					if (create {SHARED_BYTE_CONTEXT}).context.workbench_mode then
@@ -507,7 +498,7 @@ feature {NONE} -- Action handlers
 						-- Check for relative paths
 					create l_full_file_name.make_from_string (l_compilation_folder)
 					l_full_file_name.set_file_name (l_file_name)
-					if not file_system.file_exists (l_full_file_name) then
+					if not u.file_exists (l_full_file_name) then
 							-- GCC doesn't show the full path name, so try scanning the compilation folder
 						l_file_name.replace_substring_all (".", "\.")
 						l_file_name.append_character ('$')
@@ -521,10 +512,10 @@ feature {NONE} -- Action handlers
 							end
 						end
 					end
-					l_file_name := l_full_file_name.string
+					l_file_name := l_full_file_name
 				end
 
-				if file_system.file_exists (l_file_name) then
+				if u.file_exists (l_file_name) then
 						-- Open the external editor.
 					open_external (l_file_name, l_line.max (1).as_natural_32)
 				end
@@ -541,7 +532,7 @@ feature {NONE} -- Action handlers
 			a_stone_is_filed: attached {FILED_STONE} a_stone
 		do
 			if attached file_name_from_stone (a_stone) as l_file_name then
-				open_external (l_file_name.file_name.string, l_file_name.line.max (1).as_natural_32)
+				open_external (l_file_name.file_name, l_file_name.line.max (1).as_natural_32)
 			end
 		end
 

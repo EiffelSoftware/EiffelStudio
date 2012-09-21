@@ -17,17 +17,15 @@ feature -- Makefile generation
 
 	Make_f (final_mode: BOOLEAN): INDENT_FILE
 			-- Makefile for C compilation
-		local
-			f_name: FILE_NAME
 		do
-			create f_name.make_from_string (
-				full_file_name (final_mode, Void, Makefile_sh, Void))
-			create Result.make (f_name)
+			create Result.make_open_write (full_file_name (final_mode, Void, Makefile_sh, Void))
+		ensure
+			is_open_write: Result.is_open_write
 		end
 
 feature -- C code generation
 
-	gen_file_name (final_mode: BOOLEAN; base_name: STRING): STRING
+	gen_file_name (final_mode: BOOLEAN; base_name: STRING): STRING_32
 			-- Generate a file name either in workbench or final mode with
 			-- a `.c' extension in the E1 directory.
 		require
@@ -38,7 +36,7 @@ feature -- C code generation
 			result_not_void: Result /= Void
 		end
 
-	x_gen_file_name (final_mode: BOOLEAN; base_name: STRING): STRING
+	x_gen_file_name (final_mode: BOOLEAN; base_name: STRING): STRING_32
 			-- Generate a file name either in workbench or final mode with
 			-- a `.x' extension in the E1 directory.
 		require
@@ -53,7 +51,7 @@ feature -- C code generation
 			result_not_void: Result /= Void
 		end
 
-	final_file_name (base_name, extension: STRING; n: INTEGER): STRING
+	final_file_name (base_name, extension: STRING; n: INTEGER): STRING_32
 			-- Generate a file name in final_mode with file `extension'
 			-- in system directory E`n'.
 		require
@@ -66,7 +64,7 @@ feature -- C code generation
 			result_not_void: Result /= Void
 		end
 
-	workbench_file_name (base_name, extension: STRING; n: INTEGER): STRING
+	workbench_file_name (base_name, extension: STRING; n: INTEGER): STRING_32
 			-- Generate a file in workbench_mode with file `extension'
 			-- in system directory E1.
 		require
@@ -79,7 +77,7 @@ feature -- C code generation
 			result_not_void: Result /= Void
 		end
 
-	full_file_name (final_mode: BOOLEAN; sub_dir: STRING; file_name, extension: STRING): STRING
+	full_file_name (final_mode: BOOLEAN; sub_dir: STRING; file_name, extension: STRING): STRING_32
 			-- Generated file name for `final_mode' creating a subdirectory
 			-- if `sub_dir' is not Void or empty, using `file_name'+`extension' as filename.
 			-- Side effect: Create the corresponding subdirectory if it
@@ -87,12 +85,12 @@ feature -- C code generation
 		require
 			file_name_not_void: file_name /= Void
 		local
-			dir: DIRECTORY
-			f_name: FILE_NAME
-			dir_name: DIRECTORY_NAME
-			finished_file: PLAIN_TEXT_FILE
-			finished_file_name: FILE_NAME
-			l_name: STRING
+			dir: DIRECTORY_32
+			f_name: FILE_NAME_32
+			dir_name: DIRECTORY_NAME_32
+			finished_file: PLAIN_TEXT_FILE_32
+			finished_file_name: FILE_NAME_32
+			l_name: STRING_32
 		do
 			if final_mode then
 				Result := project_location.final_path

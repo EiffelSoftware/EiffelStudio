@@ -1,11 +1,10 @@
-note
-
+﻿note
 	description:
 		"Error object sent by the compiler to the workbench."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class EIFFEL_ERROR
 
@@ -26,7 +25,7 @@ feature -- Properties
 	class_c: CLASS_C;
 			-- Class where the error is encountered
 
-	file_name: STRING
+	file_name: like {ERROR}.file_name
 			-- File where error is encountered
 		do
 			Result := class_c.file_name
@@ -46,7 +45,7 @@ feature -- Access
 			Result := class_c /= Void
 		ensure
 			yes_implies_valid_class: Result implies class_c /= Void
-		end;
+		end
 
 feature -- Output
 
@@ -56,11 +55,11 @@ feature -- Output
 
 	trace (a_text_formatter: TEXT_FORMATTER)
 		do
-			print_error_message (a_text_formatter);
+			print_error_message (a_text_formatter)
 			if is_class_defined then
-				a_text_formatter.add ("Class: ");
-				class_c.append_signature (a_text_formatter, False);
-				a_text_formatter.add_new_line;
+				a_text_formatter.add ("Class: ")
+				class_c.append_signature (a_text_formatter, False)
+				a_text_formatter.add_new_line
 			end
 			build_explain (a_text_formatter)
 		end
@@ -83,10 +82,10 @@ feature {COMPILER_EXPORTER}
 			valid_c: c /= Void
 		do
 			class_c := c
-		end;
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

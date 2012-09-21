@@ -130,7 +130,7 @@ feature{NONE} -- Implementation
 		do
 			if msr_search_strategy_internal = Void then
 				create msr_search_strategy_internal.make_empty
-				msr_search_strategy_internal.set_text_in_file_path(create {FILE_NAME}.make)
+				msr_search_strategy_internal.set_text_in_file_path(create {FILE_NAME_32}.make_from_string (""))
 			end
 			Result := msr_search_strategy_internal
 		ensure

@@ -36,7 +36,7 @@ feature{NONE} -- Data storage
 
 feature{NONE} -- Generation path
 
-	generation_path: STRING
+	generation_path: STRING_32
 			-- Path on which c compiler will be launched.
 			-- Used when we need to open a console there.
 		do

@@ -45,6 +45,7 @@ feature -- Validation
 			l_ast: detachable CLASS_AS
 			l_file: KL_BINARY_INPUT_FILE
 			b: BOOLEAN
+			u: FILE_UTILITIES
 		do
 			validate_feature_name (a_feature_name)
 			if is_valid then
@@ -57,7 +58,7 @@ feature -- Validation
 						error_handler_empty: error_handler.error_list.is_empty and
 								error_handler.warning_list.is_empty
 					end
-					create l_file.make (a_class.file_name)
+					l_file := u.make_binary_input_file (a_class.file_name)
 					l_file.open_read
 					if l_file.is_open_read then
 						entity_feature_parser.parse (l_file)

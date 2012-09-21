@@ -54,7 +54,7 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	context_variables: HASH_TABLE [STRING_8, READABLE_STRING_8]
+	context_variables: HASH_TABLE [STRING_32, READABLE_STRING_32]
 			-- <precursor>
 		do
 			Result := eis_variables.es_built_in_variables.twin

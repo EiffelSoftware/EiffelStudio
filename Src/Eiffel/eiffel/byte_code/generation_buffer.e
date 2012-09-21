@@ -112,7 +112,7 @@ feature -- Open, close buffer operations
 			end
 		end
 
-	put_in_file (file: FILE)
+	put_in_file (file: INDENT_FILE)
 			-- Write Current into `file'
 		require
 			file_not_void: file /= Void
@@ -922,7 +922,7 @@ invariant
 	buffers_not_void: buffers /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

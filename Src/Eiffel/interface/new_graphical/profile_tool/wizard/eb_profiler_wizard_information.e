@@ -11,17 +11,17 @@ class
 
 inherit
 	EB_WIZARD_INFORMATION
-	
+
 	PROJECT_CONTEXT
 		export
 			{NONE} all
 		end
-		
+
 	SYSTEM_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 create
 	make
 
@@ -30,23 +30,23 @@ feature  {NONE} -- Initialization
 	make
 			-- Assign default values
 		local
-			filename: FILE_NAME
+			filename: like runtime_information_record
 		do
 			set_workbench_mode
-			
+
 			wkb_existing_profile := find_execution_profile (True)
 			flz_existing_profile := find_execution_profile (False)
-			
+
 			wkb_generate_execution_profile := (wkb_existing_profile = Void)
 			flz_generate_execution_profile := (flz_existing_profile = Void)
-			
-			create filename.make_from_string (project_location.workbench_path)
+
+			create filename.make_from_string (project_location.workbench_path.to_string_32)
 			filename.set_file_name ("profinfo")
 			wkb_runtime_information_record := filename
-			create filename.make_from_string (project_location.final_path)
+			create filename.make_from_string (project_location.final_path.to_string_32)
 			filename.set_file_name ("profinfo")
 			flz_runtime_information_record := filename
-			
+
 			wkb_runtime_information_type := "eiffel"
 			flz_runtime_information_type := "eiffel"
 
@@ -61,7 +61,7 @@ feature -- Access
 
 	workbench_mode: BOOLEAN
 			-- Analyse a system compiled in workbench mode?
-			
+
 	finalized_mode: BOOLEAN
 			-- Analyse a system compiled in finalized mode?
 		do
@@ -75,7 +75,7 @@ feature -- Access
 				Result := wkb_generate_execution_profile
 			else
 				Result := flz_generate_execution_profile
-			end	
+			end
 		end
 
 	use_existing_execution_profile: BOOLEAN
@@ -83,8 +83,8 @@ feature -- Access
 		do
 			Result := not generate_execution_profile
 		end
-		
-	existing_profile: FILE_NAME
+
+	existing_profile: FILE_NAME_32
 			-- Existing profile to use, Void if none
 		do
 			if workbench_mode then
@@ -93,8 +93,8 @@ feature -- Access
 				Result := flz_existing_profile
 			end
 		end
-			
-	runtime_information_record: FILE_NAME
+
+	runtime_information_record: FILE_NAME_32
 			-- Runtime information record to use when generating the execution profile
 		do
 			if workbench_mode then
@@ -103,7 +103,7 @@ feature -- Access
 				Result := flz_runtime_information_record
 			end
 		end
-			
+
 	runtime_information_type: STRING
 			-- Type of profiler used to produce `runtime_information_record'
 			-- (gcc profiler, eiffel profiler, ...)
@@ -114,7 +114,7 @@ feature -- Access
 				Result := flz_runtime_information_type
 			end
 		end
-		
+
 	name_switch: BOOLEAN
 			-- Switch for the feature names
 
@@ -136,7 +136,7 @@ feature -- Access
 			-- Switch for the amount of time
 			-- spent in both the function itself
 			-- and the called ones.
-			
+
 	eiffel_switch: BOOLEAN
 			-- Switch for output of eiffel features
 
@@ -152,15 +152,15 @@ feature -- Access
 	default_query: STRING = "calls > 0"
 			-- Default query input
 
-	generation_path: STRING
+	generation_path: STRING_32
 			-- Generation path for "profinfo.pfi"
 		do
 			if workbench_mode then
-				Result := project_location.workbench_path
+				Result := project_location.workbench_path.to_string_32
 			else
-				Result := project_location.final_path
+				Result := project_location.final_path.to_string_32
 			end
-		end	
+		end
 
 feature -- Element change
 
@@ -171,7 +171,7 @@ feature -- Element change
 		ensure
 			Result_set: workbench_mode
 		end
-		
+
 	set_finalized_mode
 			-- Analyse a system compiled in finalized mode.
 		do
@@ -179,7 +179,7 @@ feature -- Element change
 		ensure
 			Result_set: finalized_mode
 		end
-		
+
 	set_generate_execution_profile
 			-- Generate the execution profile from a Run-time information record.
 		do
@@ -192,7 +192,7 @@ feature -- Element change
 			flag_set: generate_execution_profile
 		end
 
-	set_use_existing_execution_profile (an_existing_profile: FILE_NAME)
+	set_use_existing_execution_profile (an_existing_profile: like existing_profile)
 			-- Use the existring execution profile named `an_existing_profile'.
 		require
 			valid_profile: an_existing_profile /= Void
@@ -209,9 +209,9 @@ feature -- Element change
 			profile_not_void: existing_profile /=  Void
 			profile_set: existing_profile.is_equal (an_existing_profile)
 		end
-		
-	set_runtime_information_record (a_record: FILE_NAME)
-			-- Set the Runtime information record to use when generating 
+
+	set_runtime_information_record (a_record: FILE_NAME_32)
+			-- Set the Runtime information record to use when generating
 			-- the execution profile to `a_record'.
 		require
 			valid_record: a_record /= Void
@@ -277,7 +277,7 @@ feature -- Element change
 		ensure
 			query_not_void: query /= Void
 		end
-		
+
 feature {NONE} -- Implementation
 
 	wkb_generate_execution_profile: BOOLEAN
@@ -285,41 +285,41 @@ feature {NONE} -- Implementation
 
 	flz_generate_execution_profile: BOOLEAN
 			-- Generate the execution profile from a Run-time information record?
-			
-	wkb_existing_profile: FILE_NAME
+
+	wkb_existing_profile: FILE_NAME_32
 			-- Existing profile to use (Workbench mode)
-	
-	flz_existing_profile: FILE_NAME
+
+	flz_existing_profile: FILE_NAME_32
 			-- Existing profile to use (Finalized mode)
 
-	wkb_runtime_information_record: FILE_NAME
+	wkb_runtime_information_record: FILE_NAME_32
 			-- Runtime information record to use when generating the
 			-- execution profile (Workbench mode)
-			
-	flz_runtime_information_record: FILE_NAME
-			-- Runtime information record to use when generating the 
+
+	flz_runtime_information_record: FILE_NAME_32
+			-- Runtime information record to use when generating the
 			-- execution profile (Finalized mode)
-			
+
 	wkb_runtime_information_type: STRING
 			-- Type of profiler used to produce `runtime_information_record'
 			-- (gcc profiler, eiffel profiler, ...)
-			
+
 	flz_runtime_information_type: STRING
 			-- Type of profiler used to produce `runtime_information_record'
 			-- (gcc profiler, eiffel profiler, ...)
-			
-	find_execution_profile (is_workbench_mode: BOOLEAN) : FILE_NAME
+
+	find_execution_profile (is_workbench_mode: BOOLEAN) : FILE_NAME_32
 			-- Find an existing execution profile for the workbench
 			-- compilation mode if `workbench_mode' is set, for the
 			-- finalized mode otherwise.
-			-- 
+			--
 			-- Return Void if not found.
 		local
-			dir: DIRECTORY
-			path: STRING
-			files: ARRAYED_LIST [STRING]
-			file: STRING
-			substring: STRING
+			dir: DIRECTORY_32
+			path: STRING_32
+			files: ARRAYED_LIST [STRING_32]
+			file: STRING_32
+			substring: STRING_32
 		do
 			if is_workbench_mode then
 				path := project_location.workbench_path
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 			end
 			create dir.make (path)
 			files := dir.linear_representation
-			
+
 			from
 				files.start
 			until

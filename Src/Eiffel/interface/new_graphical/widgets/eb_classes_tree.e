@@ -702,7 +702,7 @@ feature {NONE} -- Implementation
 			conv_class: EB_CLASSES_TREE_CLASS_ITEM
 			conv_cluster: EB_CLASSES_TREE_FOLDER_ITEM
 			titem: EV_TREE_NODE
-			testfile: RAW_FILE
+			testfile: RAW_FILE_32
 		do
 			titem := selected_item
 			if

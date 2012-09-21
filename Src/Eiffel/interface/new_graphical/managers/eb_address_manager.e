@@ -1059,7 +1059,7 @@ feature {NONE} -- Execution
 			-- Open a new tab if Ctrl pressed and editor with current class/feature not exists
 		local
 			l_env: EV_ENVIRONMENT
-			l_file_name: detachable FILE_NAME
+			l_file_name: detachable FILE_NAME_32
 			l_class_c: detachable CLASS_C
 		do
 			create l_env
@@ -2467,12 +2467,9 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 
 	highlight_label (lab: EV_LABEL)
 			-- Display `lab' with a bold font.
-		local
-			a_font: EV_FONT
 		do
-			a_font := big_font
 			lab.set_minimum_width (maximum_label_width (lab.text))
-			lab.set_font (a_font)
+			lab.set_font (big_font)
 		end
 
 	maximum_label_width (a_text: STRING_GENERAL): INTEGER

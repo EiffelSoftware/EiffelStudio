@@ -1113,7 +1113,7 @@ feature -- Interaction with .Net Debugger
 			eif_debug_display ("[EIFDBG] " + a_title)
 		end
 
-	do_create_process (cmd, cwd, args: STRING; env: detachable STRING_GENERAL)
+	do_create_process (cmd: READABLE_STRING_GENERAL; cwd, args: STRING; env: detachable STRING_GENERAL)
 			-- Create Process
 		require
 			cmd_attached: cmd /= Void
@@ -1135,7 +1135,7 @@ feature -- Interaction with .Net Debugger
 			end
 		end
 
-	do_run (cmd, cwd, args: STRING; env: detachable STRING_GENERAL)
+	do_run (cmd: READABLE_STRING_GENERAL; cwd, args: STRING; env: detachable STRING_GENERAL)
 			-- Start the process to debug
 		require
 			cmd_attached: cmd /= Void
@@ -1579,21 +1579,15 @@ feature -- Easy access
 	icor_debug_module_for_class (a_class_c: CLASS_C): ICOR_DEBUG_MODULE
 		require
 			arg_class_c_not_void: a_class_c /= Void
-		local
-			l_class_module_name: STRING
 		do
-			l_class_module_name := Il_debug_info_recorder.module_file_name_for_class (a_class_c)
-			Result := icor_debug_module (l_class_module_name)
+			Result := icor_debug_module (Il_debug_info_recorder.module_file_name_for_class (a_class_c))
 		end
 
 	icor_debug_module_for_class_type (a_class_type: CLASS_TYPE): ICOR_DEBUG_MODULE
 		require
 			a_class_type_not_void: a_class_type /= Void
-		local
-			l_class_module_name: STRING
 		do
-			l_class_module_name := Il_debug_info_recorder.module_file_name_for_class_type (a_class_type)
-			Result := icor_debug_module (l_class_module_name)
+			Result := icor_debug_module (Il_debug_info_recorder.module_file_name_for_class_type (a_class_type))
 		end
 
 	icor_debug_module_for_external_class (a_class_c: CLASS_C): ICOR_DEBUG_MODULE
@@ -1603,7 +1597,7 @@ feature -- Easy access
 			ai: ASSEMBLY_I
 			n: STRING
 			m: ICOR_DEBUG_MODULE
-			mods: HASH_TABLE [ICOR_DEBUG_MODULE, STRING_8]
+			mods: like {EIFNET_DEBUGGER_INFO}.loaded_modules
 		do
 			ai ?= a_class_c.group
 			n := ai.consumed_assembly.name
@@ -1648,7 +1642,7 @@ feature -- Easy access
 
 feature -- Bridge to MD_IMPORT
 
-	class_token (a_mod_name: STRING; a_class_type: CLASS_TYPE): NATURAL_32
+	class_token (a_mod_name: READABLE_STRING_GENERAL; a_class_type: CLASS_TYPE): NATURAL_32
 			-- Find class token using Meta Data.
 		local
 			l_icd_module: ICOR_DEBUG_MODULE
@@ -1741,7 +1735,6 @@ feature -- Function Evaluation
 			l_feat_name: STRING
 			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
-			l_class_module_name: STRING
 			l_icd_obj_val: ICOR_DEBUG_OBJECT_VALUE
 			l_info: EIFNET_DEBUG_VALUE_INFO
 		do
@@ -1769,8 +1762,7 @@ feature -- Function Evaluation
 			else
 					--| This should be an true Eiffel type
 				l_feat_tok := Il_debug_info_recorder.feature_token_for_feat_and_class_type (a_feat, ct)
-				l_class_module_name := Il_debug_info_recorder.module_file_name_for_class_type (ct)
-				l_icd_module := icor_debug_module (l_class_module_name)
+				l_icd_module := icor_debug_module (Il_debug_info_recorder.module_file_name_for_class_type (ct))
 				if l_feat_tok = 0 then
 					l_feat_name := a_feat.feature_name
 				end

@@ -11,11 +11,11 @@ feature -- Status setting
 
 	set_output_names (names: ARRAY [STRING])
 			-- Set `output_names' to `names'.
-		do	
+		do
 			output_names := names
 		end
 
-	set_filenames (names: ARRAY [STRING])
+	set_filenames (names: like filenames)
 			-- Set `filenames' to `names'.
 		do
 			filenames := names
@@ -32,13 +32,13 @@ feature -- Status report
 	output_names: ARRAY [STRING]
 			-- The names of the columns to display
 
-	filenames: ARRAY [STRING]
+	filenames: ARRAY [STRING_32]
 			-- The names of the files to be taken into account
 
 	language_names: ARRAY [STRING]
 			-- The languages to be taken into account
 
-	image: STRING
+	image: STRING_32
 			-- Options as a string value
 		local
 			idx: INTEGER
@@ -52,7 +52,7 @@ feature -- Status report
 			until
 				idx > filenames.count
 			loop
-				Result.append (filenames @ idx)
+				Result.append (filenames [idx])
 				Result.append ("%N")
 				idx := idx + 1
 			end
@@ -64,14 +64,14 @@ feature -- Status report
 			until
 				idx > language_names.count
 			loop
-				Result.append (language_names @ idx)
+				Result.append (language_names [idx])
 				Result.append ("%N")
 				idx := idx + 1
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

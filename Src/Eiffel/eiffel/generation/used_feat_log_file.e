@@ -4,7 +4,7 @@ note
 class USED_FEAT_LOG_FILE
 
 inherit
-	PLAIN_TEXT_FILE
+	PLAIN_TEXT_FILE_32
 
 create
 	make
@@ -31,7 +31,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Element change
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

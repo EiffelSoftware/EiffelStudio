@@ -83,21 +83,21 @@ feature -- Value
 			Result := text_mode_is_windows_preference.value
 		end
 
-	external_editor_command: STRING
+	external_editor_command: STRING_32
 		do
 			Result := external_editor_command_preference.value
 		ensure
 			external_editor_command_not_void: Result /= Void
 		end
 
-	external_editor_cli (a_target: STRING; a_line: INTEGER): STRING
+	external_editor_cli (a_target: READABLE_STRING_GENERAL; a_line: INTEGER): like external_editor_command
 			-- Update `external_editor_command' by replacing $target and
 			-- $line with `a_target' and `a_line' to create a working command
 			-- line.
 		require
 			a_line_positive: a_line > 0
 		local
-			l_target: STRING
+			l_target: READABLE_STRING_GENERAL
 		do
 				-- Extract the command and adapt it if missing.
 			Result := external_editor_command
@@ -113,10 +113,8 @@ feature -- Value
 			end
 				-- Replace $target and $line with the expected values
 			if a_target /= Void then
-				if a_target.count > 1 and a_target.item (1) /= '"' then
-					l_target := a_target.twin
-					l_target.prepend_character ('"')
-					l_target.append_character ('"')
+				if a_target.count > 1 and a_target.code (1) /= ('"').code.as_natural_32 then
+					l_target := a_target.substring (1, 0) + "%"" + a_target + "%""
 				else
 					l_target := a_target
 				end
@@ -124,7 +122,7 @@ feature -- Value
 				l_target := ""
 			end
 			check l_target_not_void: l_target /= Void end
-			Result.replace_substring_all ("$target", l_target)
+			Result.replace_substring_all ("$target", l_target.as_string_32)
 			Result.replace_substring_all ("$line", a_line.out)
 		ensure
 			external_editor_cli_not_void: Result /= Void

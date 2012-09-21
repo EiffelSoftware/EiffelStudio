@@ -168,7 +168,7 @@ feature -- Storage
 
 feature -- Output helpers
 
-	debugger_message (m: STRING_GENERAL)
+	debugger_message (m: READABLE_STRING_GENERAL)
 			-- Display debugger message `m'
 		require
 			m_not_void: m /= Void
@@ -177,14 +177,14 @@ feature -- Output helpers
 			debugger_status_message (m)
 		end
 
-	debugger_output_message (m: STRING_GENERAL)
+	debugger_output_message (m: READABLE_STRING_GENERAL)
 			-- Display debugger message `m' on the output
 		require
 			m_not_void: m /= Void
 		do
 		end
 
-	debugger_warning_message (m: STRING_GENERAL)
+	debugger_warning_message (m: READABLE_STRING_GENERAL)
 			-- Display debugger warning message `m'
 		require
 			m_not_void: m /= Void
@@ -192,7 +192,7 @@ feature -- Output helpers
 			debugger_output_message (m)
 		end
 
-	debugger_error_message (m: STRING_GENERAL)
+	debugger_error_message (m: READABLE_STRING_GENERAL)
 			-- Display debugger error message `m'
 		require
 			m_not_void: m /= Void
@@ -200,7 +200,7 @@ feature -- Output helpers
 			debugger_output_message (m)
 		end
 
-	debugger_status_message (m: STRING_GENERAL)
+	debugger_status_message (m: READABLE_STRING_GENERAL)
 			-- Display debugger message `m' on the status output
 		require
 			m_not_void: m /= Void
@@ -1751,7 +1751,7 @@ invariant
 	application_associated_to_current: application /= Void implies application.debugger_manager = Current
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

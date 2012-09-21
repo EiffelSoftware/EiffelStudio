@@ -73,13 +73,13 @@ feature -- Basic operations
 					l_file.open_read
 					l_file.read_string (l_count)
 					l_contents := l_file.last_string
+					l_file.close
 					if attached l_contents then
 						Result := render_template (l_contents, a_parameters)
 					end
 				else
 					create Result.make_empty
 				end
-				l_file.close
 			end
 		rescue
 			if attached l_file and then not l_file.is_closed then

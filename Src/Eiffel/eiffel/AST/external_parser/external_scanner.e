@@ -76,7 +76,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_COLON
-			
+
 when 4 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
@@ -86,7 +86,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_LPARAN
-			
+
 when 5 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
@@ -96,7 +96,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_RPARAN
-			
+
 when 6 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
@@ -106,7 +106,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_COMMA
-			
+
 when 7 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
@@ -116,7 +116,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_STAR
-			
+
 when 8 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
@@ -126,7 +126,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_ADDRESS
-			
+
 when 9 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
@@ -136,7 +136,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_LT
-			
+
 when 10 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
@@ -146,7 +146,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_GT
-			
+
 when 11 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
@@ -156,7 +156,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_DQUOTE
-			
+
 when 12 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
@@ -166,7 +166,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_ACCESS
-			
+
 when 13 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
@@ -176,7 +176,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_BLOCKING
-			
+
 when 14 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
@@ -186,7 +186,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_BUILT_IN
-			
+
 when 15 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
@@ -196,7 +196,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_C_LANGUAGE
-			
+
 when 16 then
 	yy_column := yy_column + 16
 	yy_position := yy_position + 16
@@ -206,7 +206,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_C_LANGUAGE
-			
+
 when 17 then
 	yy_column := yy_column + 22
 	yy_position := yy_position + 22
@@ -216,7 +216,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_C_LANGUAGE
-			
+
 when 18 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
@@ -226,7 +226,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_CPP_LANGUAGE
-			
+
 when 19 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
@@ -236,7 +236,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_CONST
-			
+
 when 20 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
@@ -246,7 +246,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_CREATOR
-			
+
 when 21 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
@@ -256,7 +256,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_DEFERRED
-			
+
 when 22 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
@@ -266,7 +266,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_DELETE
-			
+
 when 23 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
@@ -276,7 +276,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_DLL_LANGUAGE
-			
+
 when 24 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
@@ -286,7 +286,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_DLLWIN_LANGUAGE
-			
+
 when 25 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
@@ -296,7 +296,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_ENUM
-			
+
 when 26 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
@@ -306,7 +306,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_FIELD
-			
+
 when 27 then
 	yy_column := yy_column + 12
 	yy_position := yy_position + 12
@@ -316,7 +316,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_GET_PROPERTY
-			
+
 when 28 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
@@ -326,7 +326,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_IL_LANGUAGE
-			
+
 when 29 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
@@ -336,7 +336,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_INLINE
-			
+
 when 30 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
@@ -346,7 +346,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_JAVA_LANGUAGE
-			
+
 when 31 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
@@ -356,7 +356,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_MACRO
-			
+
 when 32 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
@@ -366,7 +366,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_OPERATOR
-			
+
 when 33 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
@@ -376,7 +376,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_SET_FIELD
-			
+
 when 34 then
 	yy_column := yy_column + 12
 	yy_position := yy_position + 12
@@ -386,7 +386,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_SET_PROPERTY
-			
+
 when 35 then
 	yy_column := yy_column + 16
 	yy_position := yy_position + 16
@@ -396,7 +396,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_SET_STATIC_FIELD
-			
+
 when 36 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
@@ -406,7 +406,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_SIGNATURE
-			
+
 when 37 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
@@ -416,7 +416,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_SIGNED
-			
+
 when 38 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
@@ -426,7 +426,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_STATIC
-			
+
 when 39 then
 	yy_column := yy_column + 12
 	yy_position := yy_position + 12
@@ -436,7 +436,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_STATIC_FIELD
-			
+
 when 40 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
@@ -446,7 +446,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_STRUCT
-			
+
 when 41 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
@@ -456,7 +456,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_TYPE
-			
+
 when 42 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
@@ -466,7 +466,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_UNSIGNED
-			
+
 when 43 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
@@ -476,7 +476,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_USE
-			
+
 when 44 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
@@ -489,7 +489,7 @@ end
 				append_text_to_string (token_buffer)
 				token_buffer.remove_head (1)
 				last_token := TE_INTEGER
-			
+
 when 45 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
@@ -503,7 +503,7 @@ end
 				append_text_to_string (token_buffer)
 				token_buffer.remove_head (1)
 				last_token := TE_ID
-			
+
 when 46 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
@@ -516,7 +516,7 @@ end
 				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				last_token := TE_ID
-			
+
 when 47 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
@@ -531,7 +531,7 @@ end
 				token_buffer.wipe_out
 				append_text_to_string (token_buffer)
 				last_token := TE_FILE_ID
-			
+
 when 48 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
@@ -541,7 +541,7 @@ debug ("GELEX")
 end
 
 				 report_unrecognized_character_error (text_item (1))
-			
+
 when 49 then
 yy_set_line_column
 	yy_position := yy_position + 1
@@ -568,7 +568,7 @@ debug ("GELEX")
 end
 
 				terminate
-			
+
 			else
 				terminate
 			end
@@ -1266,7 +1266,7 @@ feature -- Access
 	trigger_error: BOOLEAN
 			-- Should error be triggered?
 
-	filename: STRING
+	filename: READABLE_STRING_GENERAL
 			-- Current parsed file.
 
 	file_line, file_column: INTEGER
@@ -1306,14 +1306,14 @@ feature {NONE} -- Error handling
 
 feature {NONE} -- Constants
 
-	Initial_buffer_size: INTEGER = 1024 
+	Initial_buffer_size: INTEGER = 1024
 				-- Initial size for `token_buffer'
 
 invariant
 	token_buffer_not_void: token_buffer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1326,22 +1326,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EXTERNAL_SCANNER

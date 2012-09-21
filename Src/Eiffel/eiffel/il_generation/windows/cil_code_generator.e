@@ -172,7 +172,7 @@ feature {NONE} -- Access
 	standard_twin_body_index: INTEGER
 			-- Body index of `standard_twin' from ANY
 
-	output_file_name: FILE_NAME
+	output_file_name: READABLE_STRING_GENERAL
 			-- File where assembly is stored.
 
 	md_dispenser: MD_DISPENSER
@@ -271,7 +271,7 @@ feature {NONE} -- Access
 	c_module_name: STRING
 			-- Name of C generated module containing all C externals.
 
-	location_path: STRING
+	location_path: READABLE_STRING_GENERAL
 			-- Path where assemblies are being generated.
 
 	current_feature_token: INTEGER
@@ -542,7 +542,7 @@ feature -- Generation Structure
 	start_assembly_generation (
 			a_assembly_name, a_file_name: STRING;
 			a_public_key: like public_key;
-			location: STRING;
+			location: READABLE_STRING_GENERAL;
 			assembly_info: ASSEMBLY_INFO;
 			debug_mode: BOOLEAN)
 
@@ -557,6 +557,7 @@ feature -- Generation Structure
 		local
 			l_assembly_flags: INTEGER
 			l_host: CLR_HOST
+			u: FILE_UTILITIES
 		do
 				--| Initialize recording of IL Information used for eStudio .NET debugger			
 			Il_debug_info_recorder.start_recording_session (debug_mode)
@@ -610,8 +611,7 @@ feature -- Generation Structure
 			is_debug_info_enabled := debug_mode
 			-- FIXME jfiat [2003/10/10 - 16:41] try without debug_mode, for no pdb info
 
-			create output_file_name.make_from_string (location)
-			output_file_name.set_file_name (a_file_name)
+			output_file_name := u.make_file_name_in (a_file_name, location)
 
 			create main_module.make (
 				a_assembly_name,
@@ -949,14 +949,14 @@ feature -- Generation Structure
 			l_resource_generator.generate
 		end
 
-	define_file (a_module: IL_MODULE; a_file, a_name: STRING; file_flags: INTEGER; a_signing: MD_STRONG_NAME): INTEGER
+	define_file (a_module: IL_MODULE; a_file: READABLE_STRING_GENERAL; a_name: STRING; file_flags: INTEGER; a_signing: MD_STRONG_NAME): INTEGER
 			-- Add `a_file' of name `a_name' in list of files referenced by `a_module'.
 		require
 			a_module_not_void: a_module /= Void
 			a_file_not_void: a_file /= Void
 			a_name_not_void: a_name /= Void
 			a_file_valid: a_file.has_substring (a_name) and
-				a_name.is_equal (
+				a_name.same_string_general (
 					a_file.substring (a_file.count - a_name.count + 1, a_file.count))
 			file_flags_valid:
 				(file_flags = {MD_FILE_FLAGS}.Has_meta_data) or
@@ -7812,8 +7812,8 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			a_class_not_void: a_class /= Void
 		local
 			l_type_id: INTEGER
-			l_output: FILE_NAME
 			l_module_name: STRING
+			u: FILE_UTILITIES
 		do
 			if is_single_module then
 				l_type_id := 1
@@ -7822,12 +7822,10 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			end
 			Result := internal_il_modules.item (l_type_id)
 			if Result = Void then
-				create l_output.make_from_string (location_path)
 				l_module_name := "module_" + l_type_id.out + ".dll"
-				l_output.set_file_name (l_module_name)
 				create Result.make (
 					l_module_name,
-					l_output.string,
+					u.make_file_name_in (l_module_name, location_path),
 					c_module_name,
 					Void,
 					Current,
@@ -8286,7 +8284,7 @@ feature -- Inline agents
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

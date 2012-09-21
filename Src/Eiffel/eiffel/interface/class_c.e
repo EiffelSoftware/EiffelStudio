@@ -3837,16 +3837,16 @@ feature -- Server Access
 			group_not_void: Result /= Void
 		end
 
-	file_name: STRING
+	file_name: STRING_32
 			-- File name of the class
 		do
-			Result := lace_class.file_name.string
+			Result := lace_class.file_name
 		end
 
 	file_is_readable: BOOLEAN
 			-- Is file with `file_name' readable?
 		local
-			f: PLAIN_TEXT_FILE
+			f: PLAIN_TEXT_FILE_32
 		do
 			create f.make (file_name)
 			Result := f.exists and f.is_readable

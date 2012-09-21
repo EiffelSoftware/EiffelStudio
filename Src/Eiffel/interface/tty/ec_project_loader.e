@@ -37,13 +37,13 @@ feature {NONE} -- Settings
 			-- Nothing to be done, as it is handled later in batch mode.
 		end
 
-	launch_precompile_process (a_arguments: LIST [STRING])
+	launch_precompile_process (a_arguments: LIST [READABLE_STRING_32])
 			-- Launch precompile process `a_command'.
 		local
 			l_prc_factory: PROCESS_FACTORY
 			l_prc_launcher: PROCESS
-			l_cmd_line: STRING
-			l_exec: EXECUTION_ENVIRONMENT
+			l_cmd_line: STRING_32
+			l_exec: EXECUTION_ENVIRONMENT_32
 		do
 			if {PLATFORM}.is_thread_capable then
 				create l_prc_factory
@@ -56,7 +56,7 @@ feature {NONE} -- Settings
 				end
 			else
 				create l_cmd_line.make (512)
-				l_cmd_line.append_string (eiffel_layout.ec_command_name)
+				l_cmd_line.append_string (eiffel_layout.ec_command_name.string)
 				across a_arguments as l_args loop
 					l_cmd_line.append_character (' ')
 					if not l_args.item.is_empty and then l_args.item [1] /= '-' then
@@ -95,7 +95,7 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_cannot_read_ace_file (a_file_name: STRING; a_conf_error: CONF_ERROR)
+	report_cannot_read_ace_file (a_file_name: READABLE_STRING_32; a_conf_error: CONF_ERROR)
 			-- Report an error when ace  file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		local
@@ -108,7 +108,7 @@ feature {NONE} -- Error reporting
 			error_handler.raise_error
 		end
 
-	report_cannot_read_config_file (a_file_name: STRING; a_conf_error: CONF_ERROR)
+	report_cannot_read_config_file (a_file_name: READABLE_STRING_32; a_conf_error: CONF_ERROR)
 			-- Report an error when a config file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		local
@@ -121,7 +121,7 @@ feature {NONE} -- Error reporting
 			error_handler.raise_error
 		end
 
-	report_cannot_save_converted_file (a_file_name: STRING)
+	report_cannot_save_converted_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Report an error when result of a conversion from ace to new format cannot be stored
 			-- in file `a_file_name'.
 		do
@@ -143,11 +143,9 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_cannot_create_project (a_dir_name: STRING)
+	report_cannot_create_project (a_dir_name: READABLE_STRING_GENERAL)
 			-- Report an error when we cannot create project in `a_dir_name'.
 		do
-			--|FIXME: `out' could cause information loss.
-			-- encoding of the argument should have been localized.
 			localized_print (warning_messages.w_cannot_create_project_directory (a_dir_name))
 			io.put_new_line
 			set_has_error
@@ -235,20 +233,18 @@ feature {NONE} -- Error reporting
 
 feature {NONE} -- User interaction
 
-	ask_for_config_name (a_dir_name, a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [STRING]])
+	ask_for_config_name (a_dir_name: READABLE_STRING_GENERAL; a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]])
 			-- Given `a_dir_name' and a proposed `a_file_name' name for the new format, ask the
 			-- user if he wants to create `a_file_name' or a different name. If he said yes, then
 			-- execute `a_action' with chosen file_name, otherwise do nothing.
 		local
-			l_file_name: FILE_NAME
 			l_answered: BOOLEAN
+			u: FILE_UTILITIES
 		do
 			if should_stop_on_prompt then
 				localized_print (ewb_names.batch_mode (a_file_name))
 				io.put_new_line
-				create l_file_name.make_from_string (a_dir_name)
-				l_file_name.set_file_name (a_file_name)
-				a_action.call ([l_file_name.string])
+				a_action.call ([u.file_name (u.make_raw_file_in (a_file_name, a_dir_name))])
 			else
 				from
 				until
@@ -257,9 +253,7 @@ feature {NONE} -- User interaction
 					io.put_string (ewb_names.save_new_configuration_as (a_file_name).as_string_32 + ewb_names.yes_or_no)
 					io.read_line
 					if io.last_string.item (1).as_lower = 'y' then
-						create l_file_name.make_from_string (a_dir_name)
-						l_file_name.set_file_name (a_file_name)
-						a_action.call ([l_file_name.string])
+						a_action.call ([u.file_name (u.make_raw_file_in (a_file_name, a_dir_name))])
 						l_answered := True
 					elseif io.last_string.item (1).as_lower = 'n' then
 						from
@@ -270,9 +264,7 @@ feature {NONE} -- User interaction
 							localized_print (ewb_names.enter_name_for_configuration_file)
 							io.read_line
 							if not io.last_string.is_empty then
-								create l_file_name.make_from_string (a_dir_name)
-								l_file_name.set_file_name (io.last_string)
-								a_action.call ([l_file_name.string])
+								a_action.call ([u.file_name (u.make_raw_file_in (io.last_string, a_dir_name))])
 								l_answered := True
 							end
 						end

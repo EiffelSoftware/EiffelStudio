@@ -307,14 +307,14 @@ feature -- Basic operations
 
 feature -- Basic operations: Degrees
 
-	put_degree_6 (a_cluster: CONF_CLUSTER; a_path: STRING)
+	put_degree_6 (a_cluster: CONF_CLUSTER; a_path: READABLE_STRING_32)
 			-- Put message to indicate that `a_path' of `a_cluster' is processed.
 		require
 			a_cluster_attached: a_cluster /= Void
 			a_path_attached: a_path /= Void
 		do
 			total_number := 1
-			put_degree (degree_message (6), 1, a_cluster.name + a_path)
+			put_degree (degree_message (6), 1, a_cluster.name.as_string_32 + a_path)
 		end
 
 	put_degree_5 (a_class: CLASS_C; a_to_go: INTEGER)
@@ -501,7 +501,7 @@ feature -- Basic operations
 			last_degree_unchanged: last_degree = old last_degree
 		end
 
-	put_degree (a_degree: STRING_32; a_to_go: INTEGER; a_name: STRING)
+	put_degree (a_degree: STRING_32; a_to_go: INTEGER; a_name: READABLE_STRING_32)
 			-- Puts a degree line message to the output.
 			--
 			-- `a_degree': A degree message string (or prefix).
@@ -702,7 +702,7 @@ feature {NONE} -- Internationalization
 	lb_case_cluster_message: STRING = "Analyzing Cluster "
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

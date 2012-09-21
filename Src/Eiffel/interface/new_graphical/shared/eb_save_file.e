@@ -85,7 +85,7 @@ feature -- Basic operations
 			end
 		end
 
-	save (a_file_name: STRING; a_text: STRING_GENERAL; a_encoding: ENCODING; a_bom: detachable STRING_8)
+	save (a_file_name: READABLE_STRING_GENERAL; a_text: STRING_GENERAL; a_encoding: ENCODING; a_bom: detachable STRING_8)
 			-- Save `a_text' into `a_file_name'. Creates file if it doesn't already exist.
 			-- `a_text' should be in UTF-32 encoding.
 		require
@@ -93,16 +93,17 @@ feature -- Basic operations
 		local
 			new_file, tmp_file: RAW_FILE -- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
 			aok, create_backup, new_created: BOOLEAN
-			tmp_name: STRING
+			tmp_name: READABLE_STRING_GENERAL
 			l_retry: BOOLEAN
 			l_notifier: SERVICE_CONSUMER [FILE_NOTIFIER_S]
 			l_text: STRING_32
 			l_stream: STRING
+			u: FILE_UTILITIES
 		do
 			if not l_retry then
 					-- Always assume a saving is successful.
 				last_saving_success := True
-				create new_file.make (a_file_name)
+				new_file := u.make_raw_file (a_file_name)
 
 				aok := True
 				if not new_file.exists then
@@ -126,9 +127,8 @@ feature -- Basic operations
 				end
 
 				-- Create a backup of the file in case there will be a problem during the savings.
-				tmp_name := a_file_name.twin
-				tmp_name.append (".swp")
-				create tmp_file.make (tmp_name)
+				tmp_name := a_file_name + ".swp"
+				tmp_file := u.make_raw_file (tmp_name)
 				create_backup := not new_created and not tmp_file.exists and then tmp_file.is_creatable
 				if not create_backup then
 					tmp_file := new_file
@@ -154,9 +154,9 @@ feature -- Basic operations
 					end
 					tmp_file.close
 					if create_backup then
-						robust_rename (tmp_file, a_file_name)
+						robust_rename (u.file_name (tmp_file), a_file_name)
 					elseif last_saving_success then
-						create new_file.make (tmp_name)
+						new_file := u.make_raw_file (tmp_name)
 						if new_file.exists then
 							robust_delete (new_file)
 						end
@@ -208,10 +208,10 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	robust_rename (a_file: FILE; a_new_name: STRING)
+	robust_rename (a_old_name: READABLE_STRING_GENERAL; a_new_name: READABLE_STRING_GENERAL)
 			-- More robust version of change_name, which tries multiple times before giving up.
 		require
-			a_file_ok: a_file /= Void
+			a_old_name_ok: a_old_name /= Void and then not a_old_name.is_empty
 			a_new_name_ok: a_new_name /= Void and then not a_new_name.is_empty
 		local
 			l_retried, l_user_ask_for_retry: BOOLEAN
@@ -219,11 +219,12 @@ feature {NONE} -- Implementation
 			l_buttons: ES_DIALOG_BUTTONS
 			l_win: EV_WINDOW
 			l_editor: EB_SMART_EDITOR
+			u: FILE_UTILITIES
 		do
 			if l_retried then
 				l_editor := window_manager.last_focused_development_window.editors_manager.current_editor
 				create l_buttons
-				create l_ed.make (warning_messages.w_Not_rename_swp (a_file.name, a_new_name), l_buttons.ok_cancel_buttons, l_buttons.ok_button, l_buttons.ok_button, l_buttons.cancel_button)
+				create l_ed.make (warning_messages.w_Not_rename_swp (a_old_name, a_new_name), l_buttons.ok_cancel_buttons, l_buttons.ok_button, l_buttons.ok_button, l_buttons.cancel_button)
 				l_ed.set_button_text (l_buttons.ok_button, interface_names.b_retry)
 				l_ed.set_button_text (l_buttons.cancel_button, interface_names.b_ignore)
 
@@ -243,7 +244,7 @@ feature {NONE} -- Implementation
 				l_user_ask_for_retry := True
 			end
 			if l_user_ask_for_retry then
-				a_file.change_name (a_new_name)
+				u.rename_file (a_old_name, a_new_name)
 			else
 				last_saving_success := False
 			end

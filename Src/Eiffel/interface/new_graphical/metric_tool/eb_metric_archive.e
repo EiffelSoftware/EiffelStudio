@@ -176,7 +176,7 @@ feature -- Status report
 
 feature -- Archive manipulation
 
-	load_archive (a_file_name: STRING)
+	load_archive (a_file_name: READABLE_STRING_GENERAL)
 			-- Load metric archive from file named `a_file_name'.
 			-- Store result in `last_loaded_metric_archive'.
 			-- Set `last_loaded_metric_archive' to Void if error occurs.
@@ -204,7 +204,7 @@ feature -- Archive manipulation
 			end
 		end
 
-	store_archive (a_file_name: STRING; a_error_agent: PROCEDURE [ANY, TUPLE])
+	store_archive (a_file_name: READABLE_STRING_GENERAL; a_error_agent: PROCEDURE [ANY, TUPLE])
 			-- Write `archive' into file `a_file_name'.
 			-- Clear content of `a_file_name' if file already exists.
 			-- `a_error_agent' will be invoked when error occurs.

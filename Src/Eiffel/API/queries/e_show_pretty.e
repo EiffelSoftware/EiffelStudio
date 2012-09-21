@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_in_filename, a_out_filename: STRING)
+	make (a_in_filename, a_out_filename: STRING_32)
 			-- Initialization
 		require
 			a_in_filename_not_void: a_in_filename /= Void

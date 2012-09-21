@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 			deleting_dialog.show_relative_to_window (parent_window)
 		end
 
-	on_delete_directory (deleted_files: ARRAYED_LIST [STRING])
+	on_delete_directory (deleted_files: ARRAYED_LIST [STRING_32])
 			-- The files in `deleted_files' have just been deleted.
 			-- Display
 		local

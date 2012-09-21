@@ -126,7 +126,7 @@ feature {NONE} -- Basic operations
 			window_manager.display_percentage (100)
 		end
 
-	put_degree (a_degree: STRING_32; a_to_go: INTEGER; a_name: STRING)
+	put_degree (a_degree: STRING_32; a_to_go: INTEGER; a_name: READABLE_STRING_32)
 			-- <Precursor>
 		local
 			l_desc: STRING_32

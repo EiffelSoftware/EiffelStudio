@@ -129,7 +129,7 @@ feature -- Convert
 			end
 		end
 
-	associated_file_name: FILE_NAME
+	associated_file_name: detachable FILE_NAME_32
 			-- Full file name of this favorite class.
 		local
 			class_i: CLASS_I

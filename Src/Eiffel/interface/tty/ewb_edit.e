@@ -16,7 +16,7 @@ inherit
 
 feature -- Element change
 
-	edit (a_file: STRING)
+	edit (a_file: STRING_32)
 			-- Edit file `a_file'.
 		require
 			file_not_void: a_file /= Void

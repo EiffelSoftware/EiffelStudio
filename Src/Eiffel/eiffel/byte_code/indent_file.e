@@ -1,87 +1,93 @@
 note
-	description: "A file with primitives for indenting"
+	description: "A file with primitives for indenting."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class INDENT_FILE
-
-inherit
-	PLAIN_TEXT_FILE
-		rename
-			putchar as file_putchar,
-			new_line as file_new_line,
-			putint as file_putint,
-			putstring as file_putstring,
-			putreal as file_putreal,
-			putdouble as file_putdouble
-		end
-
-	PLAIN_TEXT_FILE
-		redefine
-			putdouble, putreal, putstring, putint, new_line, putchar
-		select
-			putdouble, putreal, putstring, putint, new_line, putchar
-		end
+class
+	INDENT_FILE
 
 create
-	make, make_open_write, make_c_code_file
+	make_open_write, make_c_code_file
 
 feature {NONE} -- Initialization
 
-	make_c_code_file (fn: STRING)
+	make_open_write, make_c_code_file (fn: READABLE_STRING_GENERAL)
 			-- Create file object with `fn' as file name
-			-- and open file for writing;
-			-- create it if it does not exist.
-			-- Insert `#line 2 "fn"' at beginning of file.
+			-- and open file for writing.
+			-- Create it if it does not exist.
 		require
-			string_exists: fn /= Void;
+			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
+		local
+			u: FILE_UTILITIES
 		do
-			make_open_write (fn)
+			file := u.open_write_text_file (fn)
 		end
 
-feature
+feature -- Termination
 
-	tabs: INTEGER;
+	close
+			-- Close file.
+		do
+			file.close
+		end
+
+feature -- Status report
+
+	exists: BOOLEAN
+			-- Does file exist?
+		do
+			Result := file.exists
+		end
+
+	is_open_write: BOOLEAN
+			-- Is file open for writing?
+		do
+			Result := file.is_open_write
+		end
+
+feature {NONE} -- Status report
+
+	tabs: INTEGER
 			-- Value of indentation, in tabs
 
-	old_tabs: INTEGER;
+	old_tabs: INTEGER
 			-- Saved indentation value
 
-	emitted: BOOLEAN;
+	emitted: BOOLEAN
 			-- Have leading tabs already been emitted ?
 
-feature
+feature {NONE} -- Indentation
 
 	indent
 			-- Indent next output line by one tab.
 		do
-			tabs := tabs + 1;
-		end;
+			tabs := tabs + 1
+		end
 
 	exdent
 			-- Remove one leading tab for next line.
 		require
-			valid_tabs: tabs > 0;
+			valid_tabs: tabs > 0
 		do
-			tabs := tabs - 1;
-		end;
+			tabs := tabs - 1
+		end
 
 	left_margin
 			-- Temporary reset to left margin
 		do
-			old_tabs := tabs;
-			tabs := 0;
-		end;
+			old_tabs := tabs
+			tabs := 0
+		end
 
 	restore_margin
 			-- Restore margin value as of the one which was in
 			-- use when a `left_margin' call was issued.
 		do
-			tabs := old_tabs;
-		end;
+			tabs := old_tabs
+		end
 
 	emit_tabs
 			-- Emit the `tabs' leading tabs
@@ -90,174 +96,208 @@ feature
 		do
 			if not emitted then
 				from
-					i := 1;
+					i := 1
 				until
 					i > tabs
 				loop
-					file_putchar ('%T');
-					i := i + 1;
-				end;
-				emitted := true;
-			end;
-			debug ("FLUSH_FILE")
-				flush
+					file.putchar ('%T')
+					i := i + 1
+				end
+				emitted := true
 			end
-		end;
+			debug ("FLUSH_FILE")
+				file.flush
+			end
+		end
+
+feature -- Output
+
+	put_new_line
+			-- Write new line.
+		do
+			file.put_new_line
+		end
 
 	new_line
 			-- Write a '\n'.
-			-- Do not allow two ore more consecutive blank lines.
 		do
-			file_new_line;
-			emitted := false;
+			file.new_line
+			emitted := false
 			debug ("FLUSH_FILE")
-				flush
+				file.flush
 			end
-		end;
+		end
+
+	put_character (c: CHARACTER)
+			-- Write character `c'.
+		do
+			file.put_character (c)
+		end
 
 	putchar (c: CHARACTER)
 			-- Write char `c'.
 		do
-			emit_tabs;
-			file_putchar (c);
+			emit_tabs
+			file.putchar (c)
 			debug ("FLUSH_FILE")
-				flush
+				file.flush
 			end
-		end;
+		end
+
+	put_string (s: STRING)
+			-- Write string `s'.
+		do
+			file.put_string (s)
+		end
+
+	putstring (s: STRING)
+			-- Write string `s' with indentation if erquired.
+		do
+			emit_tabs
+			file.putstring (s)
+			debug ("FLUSH_FILE")
+				file.flush
+			end
+		end
+
+	put_integer (i: INTEGER)
+			-- Write integer `i'.
+		do
+			file.put_integer (i)
+		end
+
+feature {NONE} -- Output
 
 	putint (i: INTEGER)
 			-- Write int `i'.
 		do
-			emit_tabs;
-			file_putint (i);
+			emit_tabs
+			file.putint (i)
 			debug ("FLUSH_FILE")
-				flush
+				file.flush
 			end
-		end;
+		end
 
 	putreal (r: REAL)
-			-- Writes real `r'.
+			-- Write real `r'.
 		do
-			emit_tabs;
-			file_putreal (r);
+			emit_tabs
+			file.putreal (r)
 			debug ("FLUSH_FILE")
-				flush
+				file.flush
 			end
-		end;
+		end
 
 	putdouble (d: DOUBLE)
-			-- Write double `d'.
+			-- Write real `d'.
 		do
-			emit_tabs;
-			file_putdouble (d);
+			emit_tabs
+			file.putdouble (d)
 			debug ("FLUSH_FILE")
-				flush
+				file.flush
 			end
-		end;
-
-	putstring (s: STRING)
-			-- Write string `s'.
-		do
-			emit_tabs;
-			file_putstring (s);
-			debug ("FLUSH_FILE")
-				flush
-			end
-		end;
+		end
 
 	putoctal (i: INTEGER)
 			-- Print octal representation of `i'
 			--| always generate 3 digits
 		local
-			val, remain: INTEGER;
-			s, t: STRING;
+			val, remain: INTEGER
+			s, t: STRING
 		do
 			if i = 0 then
-				file_putstring ("000")
+				file.putstring ("000")
 			elseif i < 8 then
-				file_putstring ("00")
-				file_putint (i)
+				file.putstring ("00")
+				file.putint (i)
 			else
 				if i < 64 then
-					file_putstring ("0")
+					file.putstring ("0")
 				end
-
-				create s.make (3);
+				create s.make (3)
 				from
-					val := i;
+					val := i
 				until
 					val = 0
 				loop
-					remain := val \\ 8;
-					val := val // 8;
-					t := remain.out;
-					s.prepend (t);
+					remain := val \\ 8
+					val := val // 8
+					t := remain.out
+					s.prepend (t)
 				variant
 					val + 1
-				end;
-				file_putstring (s);
-			end;
-			debug ("FLUSH_FILE")
-				flush
+				end
+				file.putstring (s)
 			end
-		end;
+			debug ("FLUSH_FILE")
+				file.flush
+			end
+		end
 
 	escape_char (c: CHARACTER)
 			-- Write char `c' with C escape sequences
 		do
 				-- Assume ASCII set, sorry--RAM.
 			if c < ' ' or c > '%/127/' then
-				file_putstring ("\");
-				putoctal (c.code);
+				file.putstring ("\")
+				putoctal (c.code)
 			elseif c = '\' then
-				file_putstring ("\\");
+				file.putstring ("\\")
 			elseif c = '%'' then
-				file_putstring ("\'");
+				file.putstring ("\'")
 			else
-				file_putchar (c);
-			end;
-			debug ("FLUSH_FILE")
-				flush
+				file.putchar (c)
 			end
-		end;
+			debug ("FLUSH_FILE")
+				file.flush
+			end
+		end
 
 	escape_string (s: STRING)
 			-- Write string `s' with escape quotes
 		require
 			good_argument: s /= Void
 		local
-			i, nb: INTEGER;
-			c: CHARACTER;
+			i, nb: INTEGER
+			c: CHARACTER
 		do
 			from
-				i := 1;
-				nb := s.count;
+				i := 1
+				nb := s.count
 			until
 				i > nb
 			loop
-				c := s.item (i);
+				c := s.item (i)
 				if c = '"' then
-					file_putstring ("\%"");
+					file.putstring ("\%"")
 				elseif c = '\' then
-					file_putstring ("\\");
+					file.putstring ("\\")
 				elseif c < ' ' or c > '%/127/' then
 						-- Assume ASCII set, sorry--RAM.
-					file_putstring ("\");
-					putoctal (c.code);
+					file.putstring ("\")
+					putoctal (c.code)
 				else
-					file_putchar (c);
-				end;
-				i := i + 1;
-			end;
-			debug ("FLUSH_FILE")
-				flush
+					file.putchar (c)
+				end
+				i := i + 1
 			end
-		end;
+			debug ("FLUSH_FILE")
+				file.flush
+			end
+		end
+
+feature {NONE} -- Access
+
+	file: PLAIN_TEXT_FILE
+			-- File on which all operations are performed.
+
+invariant
+	file_attached: attached file
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -268,22 +308,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class INDENT_FILE

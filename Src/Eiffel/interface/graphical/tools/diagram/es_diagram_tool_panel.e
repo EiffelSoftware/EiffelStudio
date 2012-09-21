@@ -939,7 +939,7 @@ feature -- Element change
 
 				class_graph.set_center_class (es_class)
 
-				create f.make (diagram_file_name (class_graph))
+				f := diagram_file (class_graph)
 
 				if load_when_possible and then is_valid_diagram_file (f) then
 					a_class_view.retrieve (f)
@@ -1085,7 +1085,7 @@ feature -- Element change
 				create new_cluster.make (a_group)
 				cluster_graph.set_center_cluster (new_cluster)
 
-				create f.make (diagram_file_name (cluster_graph))
+				f := diagram_file (cluster_graph)
 
 				if load_when_possible and then is_valid_diagram_file (f) then
 					l_cluster_view.retrieve (f)
@@ -1199,7 +1199,7 @@ feature {EB_TOGGLE_UML_COMMAND} -- UML/BON toggle.
 					view_selector.set_text ("DEFAULT:BON")
 					on_view_changed
 				else
-					create f.make (diagram_file_name (graph))
+					f := diagram_file (graph)
 					if f.exists then
 						f.open_read
 					else
@@ -1241,7 +1241,7 @@ feature {EB_TOGGLE_UML_COMMAND} -- UML/BON toggle.
 					view_selector.set_text ("DEFAULT:UML")
 					on_view_changed
 				else
-					create f.make (diagram_file_name (graph))
+					f := diagram_file (graph)
 					if f.exists then
 						f.open_read
 					else
@@ -2261,7 +2261,7 @@ feature {EIFFEL_WORLD} -- XML Output
 					(cluster_graph /= Void and then cluster_graph.center_cluster /= Void)
 				then
 					if not retried then
-						create ptf.make (diagram_file_name (graph))
+						ptf := diagram_file (graph)
 						if ptf.exists then
 							ptf.open_read
 						else
@@ -2277,29 +2277,25 @@ feature {EIFFEL_WORLD} -- XML Output
 			retry
 		end
 
-	diagram_file_name (esg: ES_GRAPH): FILE_NAME
-			-- Location of XML file.
+	diagram_file (esg: ES_GRAPH): RAW_FILE
+			-- XML file.
 		require
 			diagram_exists: esg /= Void
 		local
-			clg: ES_CLUSTER_GRAPH
-			cg: ES_CLASS_GRAPH
-			l_class: CLASS_I
+			n: like id_of_class
+			u: FILE_UTILITIES
 		do
-			clg ?= esg
-			if clg = Void then
-				cg ?= esg
-				check
-					is_class_graph: cg /= Void
-				end
-				create Result.make_from_string (Eiffel_system.context_diagram_path)
-				l_class := cg.center_class.class_i
-				Result.extend (id_of_class (l_class.config_class))
+			if attached {ES_CLUSTER_GRAPH} esg as clg then
+				n := clg.center_cluster.group_id
 			else
-				create Result.make_from_string (Eiffel_system.context_diagram_path)
-				Result.extend (clg.center_cluster.group_id)
+				check attached {ES_CLASS_GRAPH} esg as cg then
+					n := id_of_class (cg.center_class.class_i.config_class)
+				end
 			end
-			Result.add_extension ("xml")
+			Result := u.make_raw_file_in (n + ".xml", Eiffel_system.context_diagram_path)
+		ensure
+			result_attached: attached Result
+			result_closed: Result.is_closed
 		end
 
 	is_valid_diagram_file (f: RAW_FILE): BOOLEAN

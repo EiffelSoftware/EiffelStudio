@@ -732,7 +732,7 @@ feature -- Stone process
 			cv_cst: detachable CLASSI_STONE
 			ef_stone: detachable EXTERNAL_FILE_STONE
 			l: LIST [EB_DEVELOPMENT_WINDOW]
-			l_filename: detachable STRING
+			l_filename: detachable like {ERROR}.file_name
 		do
 			cv_cst ?= a_stone
 			if cv_cst /= Void then

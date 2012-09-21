@@ -242,7 +242,7 @@ feature -- Bridge to Debugger
 
 feature -- Execution
 
-	run_with_env_string (app, args, cwd: STRING; env: detachable STRING_GENERAL)
+	run_with_env_string (app: STRING_32; args, cwd: STRING; env: detachable STRING_GENERAL)
 			-- <Precursor>
 		do
 			reload_dotnet_debug_info_if_needed
@@ -272,7 +272,7 @@ feature -- Execution
 			end
 		end
 
-	attach_using_port (app: STRING; a_port: INTEGER)
+	attach_using_port (app: READABLE_STRING_GENERAL; a_port: INTEGER)
 		do
 			check not_supported: False end
 		end
@@ -1179,7 +1179,7 @@ feature {NONE} -- BreakPoints
 			l_feature_token: NATURAL_32
 			l_il_offset_set: IL_OFFSET_SET
 			l_il_offset: INTEGER
-			l_module_name: STRING
+			l_module_name: like {IL_DEBUG_INFO_RECORDER}.module_file_name_for_class_type
 			l_class_c: CLASS_C
 			l_class_token: NATURAL_32
 
@@ -1253,7 +1253,7 @@ feature {NONE} -- Implementation
 			l_class_type: CLASS_TYPE
 
 			l_class_token: NATURAL_32
-			l_module_name: STRING
+			l_module_name: like {IL_DEBUG_INFO_RECORDER}.module_file_name_for_class_type
 		do
 			l_str := "----%N"
 			l_str.append_string ("%TFeature :: ")
@@ -1294,7 +1294,7 @@ feature {NONE} -- Implementation
 				l_str.append_string ("]")
 				l_str.append_string ("%N")
 
-				l_str.append_string ("%T module_name="+Il_debug_info_recorder.module_file_name_for_class (l_class_c) )
+				l_str.append_string ("%T module_name="+Il_debug_info_recorder.module_file_name_for_class (l_class_c).to_string_32.as_string_8)
 			end
 
 			print (l_str)
@@ -1709,7 +1709,7 @@ feature {NONE} -- Constants for dotnet interactions
 			-- {EXCEPTION_MANAGER}.wrapped_exception feature name (for dotnet)
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -296,7 +296,7 @@ feature -- Queries : eStudio data from debugger data
 
 feature -- Access to module name computing
 
-	module_file_name_for_class (a_class_c: CLASS_C): FILE_NAME
+	module_file_name_for_class (a_class_c: CLASS_C): FILE_NAME_32
 			-- Computed module file name for `a_class_c'
 		require
 			class_c_not_void: a_class_c /= Void
@@ -350,7 +350,7 @@ feature -- Access to module name computing
 			end
 		end
 
-	module_file_name_for_class_type (a_class_type: CLASS_TYPE): FILE_NAME
+	module_file_name_for_class_type (a_class_type: CLASS_TYPE): like module_file_name_for_class
 			-- Computed module file name for `a_class_type'
 			--| we use CLASS_TYPE for the precompiled case .
 		require
@@ -407,7 +407,7 @@ feature -- Access to module name computing
 
 feature -- Queries : dotnet data from estudio data
 
-	class_token (a_module_filename: STRING; a_class_type: CLASS_TYPE): NATURAL_32
+	class_token (a_module_filename: STRING_32; a_class_type: CLASS_TYPE): NATURAL_32
 			-- Class token for CLASS_TYPE.
 		local
 			l_info_from_module: IL_DEBUG_INFO_FROM_MODULE
@@ -940,7 +940,7 @@ feature {NONE} -- Record processing
 							+ "%N")
 				end
 					--| Record `feature_i' indexed by `feature_token'
-				l_info_from_module := info_from_module_or_create (a_module.module_file_name, a_module.module_name)
+				l_info_from_module := info_from_module_or_create (a_module.module_file_name.as_string_32, a_module.module_name)
 				l_info_from_module.record_feature_i (a_class_type, a_feature, a_feature_token)
 
 					--| Record `feature_token' indexed by `feature_i'
@@ -958,10 +958,10 @@ feature {NONE} -- Class Specific info
 			class_type_not_void: a_class_type /= Void
 			class_token_positive: a_class_token > 0
 		do
-			internal_record_class_type (a_module.module_file_name, a_module.module_name, a_class_type, a_class_token)
+			internal_record_class_type (a_module.module_file_name.as_string_32, a_module.module_name, a_class_type, a_class_token)
 		end
 
-	internal_record_class_type (a_module_filename: STRING; a_module_name: STRING;
+	internal_record_class_type (a_module_filename: STRING_32; a_module_name: STRING;
 			a_class_type: CLASS_TYPE; a_class_token: NATURAL_32)
 				--| New mecanism
 		require
@@ -987,7 +987,7 @@ feature {NONE} -- Class Specific info
 
 feature {CIL_CODE_GENERATOR} -- Cleaning
 
-	last_module_info_cleaned: STRING
+	last_module_info_cleaned: like module_file_name_for_class
 			-- Last cleaned Module
 
 	last_class_type_info_cleaned: CLASS_TYPE
@@ -999,7 +999,7 @@ feature {CIL_CODE_GENERATOR} -- Cleaning
 			class_type_not_void: a_class_type /= Void
 		local
 			l_class_type: CLASS_TYPE
-			l_module_filename: STRING
+			l_module_filename: like module_file_name_for_class_type
 			l_info_from_class_type: IL_DEBUG_INFO_FROM_CLASS_TYPE
 			l_info_from_module: IL_DEBUG_INFO_FROM_MODULE
 		do
@@ -1032,7 +1032,7 @@ feature {CIL_CODE_GENERATOR} -- Cleaning
 			 then
 				last_module_info_cleaned := l_module_filename
 				debug ("debugger_il_info_trace")
-					print ("Cleaning : " + l_module_filename + "%N")
+					print ("Cleaning : " + l_module_filename.to_string_32.as_string_8 + "%N")
 				end
 
 				l_info_from_module := info_from_module_if_exists (l_module_filename)
@@ -1097,7 +1097,7 @@ feature {NONE} -- Debugger Info List Access
 			(Result = Void) implies (not a_create_if_not_found)
 		end
 
-	info_from_module_or_create (a_module_filename: STRING; a_module_name: STRING): IL_DEBUG_INFO_FROM_MODULE
+	info_from_module_or_create (a_module_filename: STRING_32; a_module_name: STRING): IL_DEBUG_INFO_FROM_MODULE
 			-- Info from Module_filename
 		require
 			module_filename_not_empty: a_module_filename /= Void and then not a_module_filename.is_empty
@@ -1108,7 +1108,7 @@ feature {NONE} -- Debugger Info List Access
 			result_not_void: Result /= Void
 		end
 
-	info_from_module_if_exists (a_module_filename: STRING): IL_DEBUG_INFO_FROM_MODULE
+	info_from_module_if_exists (a_module_filename: STRING_32): IL_DEBUG_INFO_FROM_MODULE
 			-- Info from Module_filename
 		require
 			module_filename_not_empty: a_module_filename /= Void and then not a_module_filename.is_empty
@@ -1116,7 +1116,7 @@ feature {NONE} -- Debugger Info List Access
 			Result := info_from_module (a_module_filename, False)
 		end
 
-	info_from_module (a_module_filename: STRING; a_create_if_not_found: BOOLEAN): IL_DEBUG_INFO_FROM_MODULE
+	info_from_module (a_module_filename: STRING_32; a_create_if_not_found: BOOLEAN): IL_DEBUG_INFO_FROM_MODULE
 			-- Info from Module_filename
 			--| Should not be called directly anymore,
 			--| use `info_from_module_or_create' or `info_from_module_if_exists'
@@ -1189,7 +1189,7 @@ feature {CIL_CODE_GENERATOR, IL_DEBUG_INFO_RECORDER_EXPORTER} -- Persistence
 	load_successful: BOOLEAN
 			-- Is last loading successful ?
 
-	loading_errors_message: STRING
+	loading_errors_message: STRING_32
 		do
 			create Result.make (50)
 			Result.append_string (" ERROR while retrieving IL DEBUG INFO data ...%N")
@@ -1200,7 +1200,9 @@ feature {CIL_CODE_GENERATOR, IL_DEBUG_INFO_RECORDER_EXPORTER} -- Persistence
 				until
 					loading_errors.after
 				loop
-					Result.append_string ("   - " + loading_errors.item + "%N")
+					Result.append_string ("   - ")
+					Result.append_string (loading_errors.item.as_string_32)
+					Result.append_string ("%N")
 					loading_errors.forth
 				end
 			end
@@ -1212,11 +1214,11 @@ feature {CIL_CODE_GENERATOR, IL_DEBUG_INFO_RECORDER_EXPORTER} -- Persistence
 
 feature {NONE}-- Implementation for save and load task
 
-	save (a_filename_to_save: STRING)
+	save (a_filename_to_save: READABLE_STRING_GENERAL)
 			-- Save info into file.
 		local
 			l_object_to_save: IL_DEBUG_INFO_STORAGE
-			l_project_path: STRING
+			l_project_path: like {PROJECT_DIRECTORY}.path
 		do
 			if is_debug_info_enabled then
 				debug ("debugger_il_info_trace")
@@ -1240,7 +1242,7 @@ feature {NONE}-- Implementation for save and load task
 			end
 		end
 
-	load (a_il_info_file_name: STRING)
+	load (a_il_info_file_name: READABLE_STRING_GENERAL)
 			-- Load info from saved file.
 		require
 			a_il_info_file_name_not_void: a_il_info_file_name /= Void
@@ -1248,17 +1250,17 @@ feature {NONE}-- Implementation for save and load task
 			l_succeed: BOOLEAN
 			l_precomp_dirs: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
 			l_remote_project_directory: REMOTE_PROJECT_DIRECTORY
-			l_pfn: FILE_NAME
+			l_pfn: READABLE_STRING_GENERAL
 		do
 			debug ("debugger_il_info_trace")
-				print ("Loading IL Info from [" + a_il_info_file_name + "] %N")
+				print (a_il_info_file_name.substring (1, 0) + "Loading IL Info from [" + a_il_info_file_name + "] %N")
 			end
 
 			load_successful := True
 			create loading_errors.make
 
 			reset
-			l_succeed := import_file_data (a_il_info_file_name.string, System.name, False)
+			l_succeed := import_file_data (a_il_info_file_name, System.name, False)
 
 			load_successful := load_successful and l_succeed
 
@@ -1276,7 +1278,7 @@ feature {NONE}-- Implementation for save and load task
 						print (l_pfn)
 						io.put_new_line
 					end
-					l_succeed := import_file_data (l_pfn.string, l_remote_project_directory.system_name, True)
+					l_succeed := import_file_data (l_pfn, l_remote_project_directory.system_name, True)
 					load_successful := load_successful and l_succeed
 					l_precomp_dirs.forth
 				end
@@ -1294,26 +1296,25 @@ feature {NONE}-- Implementation for save and load task
 			end
 		end
 
-	loading_errors: LINKED_LIST [STRING]
+	loading_errors: LINKED_LIST [READABLE_STRING_GENERAL]
 			-- Loading error messages.
 
-	save_storable_data (d: IL_DEBUG_INFO_STORAGE; a_filename_to_save: STRING)
+	save_storable_data (d: IL_DEBUG_INFO_STORAGE; a_filename_to_save: READABLE_STRING_GENERAL)
 			-- Save Storable data
 		require
 			data_valid: d /= Void
 			filename_not_empty: a_filename_to_save /= Void
 		local
 			l_il_info_file: RAW_FILE
+			u: FILE_UTILITIES
 		do
 				--| Save into file
-			create l_il_info_file.make (a_filename_to_save)
-
-			l_il_info_file.open_write
+			l_il_info_file := u.open_write_raw_file (a_filename_to_save)
 			l_il_info_file.independent_store (d)
 			l_il_info_file.close
 		end
 
-	import_file_data (a_fn: STRING; a_system_name: STRING; is_from_precompiled: BOOLEAN): BOOLEAN
+	import_file_data (a_fn: READABLE_STRING_GENERAL; a_system_name: STRING; is_from_precompiled: BOOLEAN): BOOLEAN
 			-- Add data contained in `a_fn' into current structure
 		local
 			retried: BOOLEAN
@@ -1321,22 +1322,23 @@ feature {NONE}-- Implementation for save and load task
 			l_retrieved_object: IL_DEBUG_INFO_STORAGE
 
 			l_dbg_system_name: STRING
-			l_dbg_info_project_path: STRING
+			l_dbg_info_project_path: like {IL_DEBUG_INFO_STORAGE}.project_path
 			l_dbg_info_modules: like dbg_info_modules
 			l_patched_dbg_info_modules: like dbg_info_modules
 			l_dbg_info_class_types: like dbg_info_class_types
 			l_il_info_file: RAW_FILE
 
-			l_current_project_path: STRING
+			l_current_project_path: like direct_module_key
 			l_info_module: IL_DEBUG_INFO_FROM_MODULE
+			u: FILE_UTILITIES
 		do
 			if not retried then
 				debug ("debugger_il_info_trace")
-					io.error.put_string ("Importing IL Info from [" + a_fn + "] %N")
+					io.error.put_string ("Importing IL Info from [" + a_fn.as_string_8 + "] %N")
 				end
 				Result := True
 
-				create l_il_info_file.make (a_fn)
+				l_il_info_file := u.make_raw_file (a_fn)
 				if l_il_info_file.exists then
 					l_il_info_file.open_read
 					l_retrieved := l_il_info_file.retrieved
@@ -1380,7 +1382,7 @@ feature {NONE}-- Implementation for save and load task
 									io.error.put_string ("  - Location = " + l_dbg_info_project_path +"%N")
 									io.error.put_string (" [Current ] %N")
 									io.error.put_string ("  - System   = " + system.name + "%N")
-									io.error.put_string ("  - Location = " + l_current_project_path +"%N")
+									io.error.put_string ("  - Location = " + l_current_project_path.as_string_8 +"%N")
 									io.error.put_string (" => Updating data ... ")
 								end
 								from
@@ -1447,17 +1449,17 @@ feature {NONE}-- Implementation for save and load task
 				end
 			else
 				Result := False
-				loading_errors.extend ("Unable to load [" + a_fn + "]")
+				loading_errors.extend (a_fn.substring (1, 0) + "Unable to load [" + a_fn + "]")
 			end
 		rescue
 			retried := True
 			retry
 		end
 
-	update_imported_project_info_module (a_project_path: STRING; a_info_module: IL_DEBUG_INFO_FROM_MODULE)
+	update_imported_project_info_module (a_project_path: like direct_module_key; a_info_module: IL_DEBUG_INFO_FROM_MODULE)
 			-- Update imported project module name to effective module name.
 		local
-			l_fn: FILE_NAME
+			l_fn: like module_file_name_for_class
 		do
 			create l_fn.make_from_string (a_project_path)
 			l_fn.set_file_name (a_info_module.module_name)
@@ -1468,7 +1470,7 @@ feature {NONE}-- Implementation for save and load task
 	update_imported_precompilation_info_module (a_system_name: STRING; a_info_module: IL_DEBUG_INFO_FROM_MODULE)
 			-- Update imported precompilation module name to effective module name.
 		local
-			l_mod_fn: STRING
+			l_mod_fn: like module_file_name_for_class
 		do
 --| FIXME: when we debug we use the W_code\assemblies\....dll one
 --			if system.msil_use_optimized_precompile then
@@ -1481,12 +1483,12 @@ feature {NONE}-- Implementation for save and load task
 
 feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Module indexer implementation
 
-	resolved_module_key (a_mod_filename: STRING): STRING
+	resolved_module_key (a_mod_filename: STRING_32): STRING_32
 			-- Lowered and resolved Module key for `a_mod_filename' used for indexation
 		require
 			mod_name_valid: a_mod_filename /= Void and then not a_mod_filename.is_empty
 		do
-			Result := a_mod_filename.as_lower -- So this is a twin lowered
+			Result := direct_module_key (a_mod_filename) -- So this is a twin lowered
 			Result := internal_module_key (Result)
 		ensure
 			Result_valid: Result /= Void and then not Result.is_empty
@@ -1495,19 +1497,19 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Module indexer implementation
 
 feature {NONE} -- Module indexer implementation
 
-	direct_module_key (a_mod_filename: STRING): STRING
+	direct_module_key (a_mod_filename: STRING_32): STRING_32
 			-- Module key for `a_mod_filename' used for indexation
 			-- Nota: Only for recording session features
 		require
 			mod_name_valid: a_mod_filename /= Void and then not a_mod_filename.is_empty
 		do
-			Result := a_mod_filename.as_lower -- So this is a twin lowered
+			Result := a_mod_filename.as_lower
 		ensure
 			Result_valid: Result /= Void and then not Result.is_empty
 			Result_is_lower_case: Result.as_lower.is_equal (Result)
 		end
 
-	internal_module_key (a_mod_key: STRING): STRING
+	internal_module_key (a_mod_key: like internal_module_key): STRING_32
 			-- Module key used in the internal structure.
 			-- as opposed to external module key
 			-- which comes from dotnet debugger
@@ -1569,12 +1571,12 @@ feature {NONE} -- Module indexer implementation
 			Result_is_lower_case: Result.as_lower.is_equal (Result)
 		end
 
-	internal_module_key_table: HASH_TABLE [STRING, STRING];
+	internal_module_key_table: HASH_TABLE [like internal_module_key, like internal_module_key];
 			-- Table to make relation between external module name,
 			-- and internal key for module
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

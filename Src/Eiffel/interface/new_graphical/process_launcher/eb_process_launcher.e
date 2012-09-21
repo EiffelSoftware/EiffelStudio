@@ -354,14 +354,13 @@ feature -- Control
 
 feature -- Unmanaged process launch
 
-	open_console_in_dir (dir: STRING)
+	open_console_in_dir (dir: READABLE_STRING_GENERAL)
 			-- Open console in `dir'.
 		require
 			dir_not_void: dir /= VOid
 		local
 			cmdexe: STRING
-			str: STRING
-			cl: STRING
+			cl: STRING_32
 			console_shell: STRING
 		do
 			create cl.make (50)
@@ -383,30 +382,29 @@ feature -- Unmanaged process launch
 				end
 			end
 
-			str := execution_environment.current_working_directory
 			execution_environment.change_working_directory (dir)
 			execution_environment.launch (cl)
-			execution_environment.change_working_directory (str)
+			execution_environment.change_working_directory (execution_environment.current_working_directory)
 		end
 
-	open_file_in_file_browser (a_full_path: STRING)
+	open_file_in_file_browser (a_full_path: READABLE_STRING_GENERAL)
 			-- Open directory `a_full_path' in file browser and select the file
 		require
 			dir_attached: a_full_path /= Void
 		local
-			l_cmd: STRING
+			l_cmd: STRING_32
 			l_platform: PLATFORM
-			l_path: STRING
+			l_path: STRING_32
 			l_index: INTEGER
 		do
-			l_cmd := preferences.misc_data.file_browser_command.twin
+			l_cmd := preferences.misc_data.file_browser_command.twin.as_string_32
 			if l_cmd /= Void then
-				l_path := a_full_path.twin
+				l_path := a_full_path.twin.as_string_32
 
 				create l_platform
 				if l_platform.is_windows then
 					-- We add argument to select file
-					l_path	:= "/select,%"" + l_path + "%""
+					l_path	:= {STRING_32} "/select,%"" + l_path + {STRING_32} "%""
 				elseif l_platform.is_unix then
 					-- "nautilus" don't accept last file name, we removed it here
 					-- We should find a way to select file in "nautilus" file browser like Windows explorer does
@@ -414,25 +412,26 @@ feature -- Unmanaged process launch
 					l_path.remove_substring (l_index, l_path.count)
 				end
 
-				l_cmd.replace_substring_all ("$target", l_path)
+				l_cmd.replace_substring_all ({STRING_32} "$target", l_path)
 				execution_environment.launch (l_cmd)
 			end
 		end
 
-	open_dir_in_file_browser (dir: STRING)
+	open_dir_in_file_browser (dir: READABLE_STRING_GENERAL)
 			-- Open directory `dir' in file browser.
 		require
 			dir_attached: dir /= Void
 		local
-			l_cmd: STRING
-			l_target: STRING
+			l_cmd: STRING_32
+			l_target: STRING_32
 		do
-			l_cmd := preferences.misc_data.file_browser_command.twin
+			l_cmd := preferences.misc_data.file_browser_command
 			if l_cmd /= Void then
 				create l_target.make (2 + dir.count)
 				l_target.append_character ('%"')
-				l_target.append (dir)
+				l_target.append_string_general (dir)
 				l_target.append_character ('%"')
+				l_cmd := l_cmd.twin
 				l_cmd.replace_substring_all ("$target", l_target)
 				execution_environment.launch (l_cmd)
 			end

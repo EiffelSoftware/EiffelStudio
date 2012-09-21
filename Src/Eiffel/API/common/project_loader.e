@@ -66,11 +66,6 @@ inherit
 
 	CONF_ACCESS
 
-	KL_SHARED_FILE_SYSTEM
-		export
-			{NONE} all
-		end
-
 	SHARED_COMPILER_PROFILE
 		rename
 			reset as reset_compiler_profile
@@ -78,7 +73,7 @@ inherit
 
 feature -- Loading
 
-	open_project_file (a_file_name: STRING; a_target_name: STRING; a_project_path: STRING; from_scratch: BOOLEAN)
+	open_project_file (a_file_name: READABLE_STRING_32; a_target_name: STRING; a_project_path: STRING_32; from_scratch: BOOLEAN)
 			-- Initialize current project using `a_file_name'.
 		local
 			l_ext: STRING_8
@@ -86,8 +81,8 @@ feature -- Loading
 			l_default_file_name: FILE_NAME
 			l_load_ace: CONF_LOAD_LACE
 			l_load_config: CONF_LOAD
-			l_dir_name: STRING
 			l_factory: CONF_COMP_FACTORY
+			u: FILE_UTILITIES
 		do
 			create l_factory
 			reset
@@ -117,8 +112,7 @@ feature -- Loading
 							config_file_name := l_default_file_name.string
 						else
 								-- Convert Ace file into new format.
-							l_dir_name := file_system.dirname (l_default_file_name)
-							ask_for_config_name (l_dir_name,
+							ask_for_config_name (u.file_directory_path (l_default_file_name),
 								l_load_ace.last_system.name + {EIFFEL_CONSTANTS}.dotted_config_extension,
 								agent store_converted ((l_load_ace.last_system), ?))
 						end
@@ -270,27 +264,28 @@ feature -- Loading
 			a_libraries_not_void: a_libraries /= Void
 			a_class_filename_not_void: a_class_filename /= Void
 		local
-			l_directory, l_filename, l_target_name, l_config_file_name: STRING
+			l_filename, l_target_name: STRING
+			l_config_file_name: like config_file_name
 			l_file: RAW_FILE
 			l_factory: CONF_FACTORY
 			l_system: CONF_SYSTEM
 			l_target: CONF_TARGET
 			l_load: CONF_LOAD
+			u: FILE_UTILITIES
 		do
 				-- First split the class name into components. A possible classname is 'path/to/file/hello_world.e'
 				-- This will be split into:
 				--   l_directory: 'path/to/file'
 				--   l_filename: 'hello_world.e'
 				--   l_target_name: 'hello_world'
-			l_directory := file_system.dirname (a_class_filename)
 			l_filename := file_system.basename (a_class_filename)
 			l_target_name := l_filename.twin
 			l_target_name.remove_tail (2)
-			l_config_file_name := file_system.pathname (l_directory, l_target_name + {EIFFEL_CONSTANTS}.dotted_config_extension)
 
 			create l_factory
 				-- Only create ecf if it does not exist yet
-			create l_file.make (l_config_file_name)
+			l_file := u.make_raw_file_in (l_target_name + {EIFFEL_CONSTANTS}.dotted_config_extension, u.file_directory_path (a_class_filename))
+			l_config_file_name := u.file_name (l_file).as_string_32
 			if l_file.exists then
 					-- ecf exists, load it
 				create l_load.make (l_factory)
@@ -440,13 +435,13 @@ feature {NONE} -- Settings
 
 feature {NONE} -- Implementation: access
 
-	config_file_name: STRING
+	config_file_name: STRING_32
 			-- Name of new format config file chosen by user.
 
 	target_name: STRING
 			-- Name of a target chose by user.
 
-	project_location: STRING
+	project_location: STRING_32
 			-- Location of project chosen by user.
 
 	should_override_project: BOOLEAN
@@ -458,39 +453,42 @@ feature {NONE} -- Implementation: access
 
 feature -- Status report
 
-	is_file_readable (a_file_name: STRING): BOOLEAN
+	is_file_readable (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does file of path `a_file_name' exist and is readable?
 		require
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
 		local
+			u: FILE_UTILITIES
 			l_file: RAW_FILE
 		do
-			create l_file.make (a_file_name)
+			l_file := u.make_raw_file (a_file_name)
 			Result := l_file.exists and then l_file.is_readable
 		end
 
-	is_file_writable (a_file_name: STRING): BOOLEAN
+	is_file_writable (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does file of path `a_file_name' exist and can be written/created?
 		require
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
 		local
+			u: FILE_UTILITIES
 			l_file: RAW_FILE
 		do
-			create l_file.make (a_file_name)
+			l_file := u.make_raw_file (a_file_name)
 			Result := (l_file.exists and then l_file.is_writable) or else l_file.is_creatable
 		end
 
-	is_directory_readable (a_dir_name: STRING): BOOLEAN
+	is_directory_readable (a_dir_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does directory of path `a_dir_name' exist and is readable?
 		require
 			a_dir_name_not_void: a_dir_name /= Void
 			a_dir_name_not_empty: not a_dir_name.is_empty
 		local
+			u: FILE_UTILITIES
 			l_dir: DIRECTORY
 		do
-			create l_dir.make (a_dir_name)
+			l_dir := u.make_directory (a_dir_name)
 			Result := l_dir.exists and then l_dir.is_readable
 		end
 
@@ -534,7 +532,7 @@ feature {NONE} -- Settings
 			config_file_name_set: not has_error implies is_config_file_name_valid
 		end
 
-	convert_ace (a_file_name: STRING)
+	convert_ace (a_file_name: STRING_32)
 			-- Convert `a_file_name' which is supposely in the `ace' format to the
 			-- new configuration format.
 		require
@@ -543,8 +541,8 @@ feature {NONE} -- Settings
 			a_file_name_readable: is_file_readable (a_file_name)
 		local
 			l_load: CONF_LOAD_LACE
-			l_dir_name: STRING
 			l_factory: CONF_COMP_FACTORY
+			u: FILE_UTILITIES
 		do
 				-- load config from ace
 			create l_factory
@@ -558,15 +556,14 @@ feature {NONE} -- Settings
 			else
 					-- Ask user for a new name for the converted config file.
 					-- If user does not specify one, then the processing will stop right there.
-				l_dir_name := file_system.dirname (a_file_name)
-				ask_for_config_name (l_dir_name,  l_load.last_system.name + {EIFFEL_CONSTANTS}.dotted_config_extension,
+				ask_for_config_name (u.file_directory_path (a_file_name),  l_load.last_system.name + {EIFFEL_CONSTANTS}.dotted_config_extension,
 					agent store_converted ( l_load.last_system, ?))
 			end
 		ensure
 			config_file_name_set: not has_error implies is_config_file_name_valid
 		end
 
-	store_converted  (a_conf_system: CONF_SYSTEM; a_file_name: STRING)
+	store_converted  (a_conf_system: CONF_SYSTEM; a_file_name: READABLE_STRING_GENERAL)
 			-- Store updated configuration into `file_name'.
 		require
 			a_conf_system_not_void: a_conf_system /= Void
@@ -575,6 +572,7 @@ feature {NONE} -- Settings
 		local
 			l_print: CONF_PRINT_VISITOR
 			l_file: PLAIN_TEXT_FILE
+			u: FILE_UTILITIES
 		do
 			create l_print.make
 			a_conf_system.process (l_print)
@@ -582,10 +580,10 @@ feature {NONE} -- Settings
 				no_error: not l_print.is_error
 			end
 			if is_file_writable (a_file_name) then
-				create l_file.make_open_write (a_file_name)
+				l_file := u.open_write_text_file (a_file_name)
 				l_file.put_string (l_print.text)
 				l_file.close
-				config_file_name := a_file_name
+				config_file_name := a_file_name.as_string_32
 			else
 				report_cannot_save_converted_file (a_file_name)
 			end
@@ -594,7 +592,7 @@ feature {NONE} -- Settings
 			config_file_name_valid: not has_error implies is_config_file_name_valid
 		end
 
-	retrieve_or_create_project (a_project_path: STRING)
+	retrieve_or_create_project (a_project_path: READABLE_STRING_32)
 			-- Retrieve or create project.
 		local
 			msg: STRING_32
@@ -660,8 +658,8 @@ feature {NONE} -- Settings
 	check_used_environemnt
 			-- Check if the current environment values still have the same values as the ones stored in the project settings.
 		local
-			l_envs: HASH_TABLE [STRING, STRING]
-			l_key, l_old_val, l_new_val: STRING
+			l_envs: HASH_TABLE [STRING_32, STRING_32]
+			l_key, l_old_val, l_new_val: STRING_32
 		do
 			if
 				eiffel_project.system_defined and then eiffel_project.initialized and then
@@ -676,7 +674,7 @@ feature {NONE} -- Settings
 				loop
 					l_key := l_envs.key_for_iteration
 					l_old_val := l_envs.item_for_iteration
-					l_new_val := eiffel_layout.get_environment (l_key)
+					l_new_val := eiffel_layout.get_environment_32 (l_key)
 					if {PLATFORM}.is_windows then
 						l_old_val.to_lower
 						if l_new_val /= Void then
@@ -697,7 +695,7 @@ feature {NONE} -- Settings
 							end
 							system.force_rebuild
 						else
-							eiffel_layout.set_environment (l_old_val, l_key)
+							eiffel_layout.set_environment_32 (l_old_val, l_key)
 						end
 					end
 					l_envs.forth
@@ -705,7 +703,7 @@ feature {NONE} -- Settings
 			end
 		end
 
-	create_project (a_project_path: STRING; a_should_prompt_for_project_location: BOOLEAN)
+	create_project (a_project_path: READABLE_STRING_32; a_should_prompt_for_project_location: BOOLEAN)
 			-- Try to create a project and ask for project's location if `a_should_prompt_for_project_location'.
 		require
 			a_project_path_not_void: a_project_path /= Void
@@ -762,13 +760,15 @@ feature {NONE} -- Settings
 		require
 			a_precompile_not_void: a_precompile /= Void
 		local
-			l_path: STRING
+			l_path: STRING_32
 			l_target: CONF_TARGET
-			l_args: ARRAYED_LIST [STRING]
+			l_args: ARRAYED_LIST [READABLE_STRING_32]
 		do
 			l_target := a_precompile.target
 			create l_args.make (10)
-			l_args.merge_right (command_line_profile_option_list)
+			across command_line_profile_option_list as c loop
+				l_args.extend (c.item)
+			end
 			l_args.extend ("-config")
 			l_args.extend (a_precompile.path)
 			l_args.extend ("-precompile")
@@ -810,7 +810,7 @@ feature {NONE} -- Settings
 			launch_precompile_process (l_args)
 		end
 
-	launch_precompile_process (a_arguments: LIST [STRING])
+	launch_precompile_process (a_arguments: LIST [READABLE_STRING_32])
 			-- Launch precompile process `a_command'.
 		require
 			a_arguments_ok: a_arguments /= Void
@@ -907,7 +907,7 @@ feature {NONE} -- Error reporting
 			has_error_set: has_error
 		end
 
-	report_cannot_read_ace_file (a_file_name: STRING; a_conf_error: CONF_ERROR)
+	report_cannot_read_ace_file (a_file_name: READABLE_STRING_32; a_conf_error: CONF_ERROR)
 			-- Report an error when ace  file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		require
@@ -919,7 +919,7 @@ feature {NONE} -- Error reporting
 			has_error_set: has_error
 		end
 
-	report_cannot_read_config_file (a_file_name: STRING; a_conf_error: CONF_ERROR)
+	report_cannot_read_config_file (a_file_name: READABLE_STRING_32; a_conf_error: CONF_ERROR)
 			-- Report an error when a config file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		require
@@ -931,7 +931,7 @@ feature {NONE} -- Error reporting
 			has_error_set: has_error
 		end
 
-	report_cannot_save_converted_file (a_file_name: STRING)
+	report_cannot_save_converted_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Report an error when result of a conversion from ace to new format cannot be stored
 			-- in file `a_file_name'.
 		require
@@ -952,7 +952,7 @@ feature {NONE} -- Error reporting
 			has_error_set: has_error
 		end
 
-	report_cannot_create_project (a_dir_name: STRING)
+	report_cannot_create_project (a_dir_name: READABLE_STRING_GENERAL)
 			-- Report an error when we cannot create project in `a_dir_name'.
 		require
 			a_dir_name_not_void: a_dir_name /= Void
@@ -1017,7 +1017,7 @@ feature {NONE} -- Error reporting
 
 feature {NONE} -- User interaction
 
-	ask_for_config_name (a_dir_name, a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [STRING]])
+	ask_for_config_name (a_dir_name: READABLE_STRING_GENERAL; a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]])
 			-- Given `a_dir_name' and a proposed `a_file_name' name for the new format, ask the
 			-- user if he wants to create `a_file_name' or a different name. If he said yes, then
 			-- execute `a_action' with chosen file_name, otherwise do nothing.
@@ -1065,7 +1065,7 @@ feature {NONE} -- User interaction
 
 feature {NONE} -- Deletion
 
-	deletion_agent: PROCEDURE [ANY, TUPLE [ARRAYED_LIST [STRING]]]
+	deletion_agent: PROCEDURE [ANY, TUPLE [LIST [READABLE_STRING_32]]]
 			-- Agent for displaying progress when deleting files of a project.
 
 	cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
@@ -1245,7 +1245,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

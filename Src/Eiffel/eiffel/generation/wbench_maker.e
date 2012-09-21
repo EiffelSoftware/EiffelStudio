@@ -260,7 +260,7 @@ feature
 			end
 
 			Result.append (boehm_library)
-		end;
+		end
 
 	generate_precompile_objects
 		local
@@ -268,33 +268,35 @@ feature
 			dir: REMOTE_PROJECT_DIRECTORY
 			l_path: STRING
 			l_first: BOOLEAN
+			u: UTF_CONVERTER
 		do
 			if System.uses_precompiled then
 				from
-					precomp := Precompilation_directories;
+					precomp := Precompilation_directories
 					precomp.start
 					l_first := True
 				until
 					precomp.after
 				loop
-					dir := precomp.item_for_iteration;
+					dir := precomp.item_for_iteration
 					if dir.has_precompiled_preobj then
 						if not l_first then
-							Make_file.put_character (' ');
-							Make_file.put_character (Continuation);
+							Make_file.put_character (' ')
+							Make_file.put_character (Continuation)
 							Make_file.put_new_line
 							Make_file.put_character ('%T')
 						else
 							l_first := False
 						end
-						l_path := dir.precompiled_preobj
+							-- Use UTF-8 encoding in the generated Makefile.
+						l_path := u.string_32_to_utf_8_string_8 (dir.precompiled_preobj)
 						safe_external_path (l_path)
-						Make_file.put_string (l_path);
-					end;
+						Make_file.put_string (l_path)
+					end
 					precomp.forth
 				end
-			end;
-		end;
+			end
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2012, Eiffel Software"

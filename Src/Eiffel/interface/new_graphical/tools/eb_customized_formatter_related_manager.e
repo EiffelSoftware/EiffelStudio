@@ -90,26 +90,7 @@ feature -- Setting
 
 feature{NONE} -- Implementation
 
-	create_formatter_file_dir (a_path: FILE_NAME)
-			-- Create dir `a_path' if not exists.
-		require
-			a_path_attached: a_path /= Void
-		local
-			l_dir: DIRECTORY
-			l_retried: BOOLEAN
-		do
-			if not l_retried then
-				create l_dir.make (a_path)
-				if not l_dir.exists then
-					l_dir.create_dir
-				end
-			end
-		rescue
-			l_retried := True
-			retry
-		end
-
-	store_in_file (a_descriptors: LIST [G]; a_root_name: STRING; a_xml_generator: FUNCTION [ANY, TUPLE [a_item: G; a_parent: XML_COMPOSITE], XML_ELEMENT]; a_path: FILE_NAME; a_file_name: STRING)
+	store_in_file (a_descriptors: LIST [G]; a_root_name: STRING; a_xml_generator: FUNCTION [ANY, TUPLE [a_item: G; a_parent: XML_COMPOSITE], XML_ELEMENT]; a_path: READABLE_STRING_GENERAL; a_file_name: STRING)
 			-- Store `a_descritpors' in formatter descriptor `a_file_name' in `a_path'.
 			-- If `a_descriptors' doesn't contain any formatter descriptor but formatter file in `a_path exists, remove that file.
 			-- `a_error_agent' will be invoked when error occurs.
@@ -122,17 +103,18 @@ feature{NONE} -- Implementation
 		local
 			l_file: RAW_FILE
 			l_retried: BOOLEAN
-			l_file_name: STRING
+			l_file_name: READABLE_STRING_GENERAL
+			u: FILE_UTILITIES
 		do
 			if not l_retried then
 				l_file_name := absolute_file_name (a_path, a_file_name)
 				if a_descriptors.is_empty then
-					create l_file.make (l_file_name)
+					l_file := u.make_raw_file (l_file_name)
 					if l_file.exists then
 						l_file.delete
 					end
 				else
-					create_formatter_file_dir (a_path)
+					u.create_directory (a_path)
 					store_xml (xml_document_for_items (a_root_name, a_descriptors, a_xml_generator), l_file_name, agent set_last_error (create {EB_METRIC_ERROR}.make (metric_names.err_file_not_writable (l_file_name))))
 				end
 			end
@@ -143,21 +125,24 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation/Data
 
-	formatter_file_path (a_base_path: STRING): FILE_NAME
+	formatter_file_path (a_base_path: like {PROJECT_DIRECTORY}.path): READABLE_STRING_GENERAL
 			-- Path for formatter file based on `a_base_path'
 		require
 			a_base_path_attached: a_base_path /= Void
+		local
+			d: like {PROJECT_DIRECTORY}.path
 		do
-			create Result.make_from_string (a_base_path)
-			Result.extend ("formatters")
+			d := a_base_path.twin
+			d.extend ("formatters")
+			Result := d
 		ensure
 			result_attached: Result /= Void
 		end
 
-	global_file_path: FILE_NAME
+	global_file_path: READABLE_STRING_GENERAL
 			-- Path to store global formatter related file
 		do
-			Result := formatter_file_path (eiffel_layout.hidden_files_path)
+			Result := formatter_file_path (eiffel_layout.hidden_files_path_32)
 		ensure
 			result_attached: Result /= Void
 		end

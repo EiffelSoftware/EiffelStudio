@@ -164,7 +164,7 @@ feature {SYSTEM_I} -- Basic operations
 			-- and everything needed for test execution, otherwise clean up any previously generated
 			-- directory or classes.
 		local
-			l_path: DIRECTORY_NAME
+			l_path: DIRECTORY_NAME_32
 		do
 				-- Set `suppliers_cache' accordingly as it will define from now on
 				-- whether testing is enabled or not
@@ -313,13 +313,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	adopt_eifgens_cluster (a_target: CONF_TARGET; a_path: READABLE_STRING_8)
+	adopt_eifgens_cluster (a_target: CONF_TARGET; a_path: READABLE_STRING_32)
 			-- Add internal {CONF_CLUSTER} to current target if testing is enabled.
 			--
 			-- `a_target': Target to which cluster is added if path exists.
 			-- `a_path': Path for which a cluster is added.
 		local
-			l_dir: DIRECTORY
+			l_dir: DIRECTORY_32
 			l_vis: CONF_FIND_LOCATION_VISITOR
 			l_loc: CONF_DIRECTORY_LOCATION
 			l_cluster: CONF_CLUSTER
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

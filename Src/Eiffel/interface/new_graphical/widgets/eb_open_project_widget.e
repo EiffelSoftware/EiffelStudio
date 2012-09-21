@@ -36,11 +36,6 @@ inherit
 			{NONE} all
 		end
 
-	KL_SHARED_FILE_SYSTEM
-		export
-			{NONE} all
-		end
-
 	EB_SHARED_PIXMAPS
 		export
 			{NONE} all
@@ -484,7 +479,7 @@ feature {NONE} -- Initialization
 					if
 						p /= Void and then not p.file.is_empty and then
 						not f.has (p.file) and then
-						is_file_readable (p.file.as_string_8)
+						is_file_readable (p.file)
 					then
 						project_exist := True
 						f.extend (p.file)
@@ -577,16 +572,18 @@ feature {NONE} -- Implementation
 		local
 			ln, lp: EV_GRID_LABEL_ITEM
 			lt: EV_GRID_CHOICE_ITEM
-			l_filepath: STRING
+			l_filepath: like {EV_GRID_LABEL_ITEM}.text
 			l_conf: CONF_LOAD
 			l_project_location: PROJECT_DIRECTORY
 			l_project_file: PROJECT_EIFFEL_FILE
 			l_options: USER_OPTIONS
 			l_pixmap: EV_PIXMAP
 			l_tooltip: STRING_GENERAL
-			l_last_location, l_last_target: STRING
+			l_last_location: STRING_32
+			l_last_target: STRING
 			l_targets: DS_ARRAYED_LIST [STRING]
 			l_force_clean: BOOLEAN
+			u: FILE_UTILITIES
 		do
 			ln ?= a_row.item (name_column_index)
 			lt ?= a_row.item (target_column_index)
@@ -626,7 +623,7 @@ feature {NONE} -- Implementation
 					if l_options /= Void and then l_options.target.last_location /= Void then
 						l_last_location := l_options.target.last_location
 					else
-						l_last_location := file_system.dirname (last_state.system.file_name)
+						l_last_location := u.file_directory_path (last_state.system.file_name).as_string_32
 					end
 					l_targets := available_targets (last_state.system)
 					if l_targets.is_empty then
@@ -811,8 +808,9 @@ feature {NONE} -- Implementation
 			not_has_error: not has_error
 		local
 			l_item: EV_LIST_ITEM
-			l_eifgens: ARRAYED_LIST [STRING]
+			l_eifgens: like {TARGET_USER_OPTIONS}.locations
 			l_target_options: TARGET_USER_OPTIONS
+			u: FILE_UTILITIES
 		do
 			location_combo.change_actions.block
 			location_combo.set_foreground_color (default_color)
@@ -823,7 +821,7 @@ feature {NONE} -- Implementation
 			end
 			if l_target_options = Void or else l_target_options.locations = Void then
 					-- No target options found, we do as if there were no options yet.
-				create l_item.make_with_text (file_system.dirname (last_state.system.file_name))
+				create l_item.make_with_text (u.file_directory_path (last_state.system.file_name))
 				l_item.select_actions.extend (agent on_location_selected)
 				location_combo.extend (l_item)
 				l_item.enable_select
@@ -1018,7 +1016,7 @@ feature {NONE} -- Actions
 			a_dlg_not_void: a_dlg /= Void
 			a_dlg_not_destroyed: not a_dlg.is_destroyed
 		local
-			l_filename: STRING
+			l_filename: STRING_32
 			l_item: EV_GRID_LABEL_ITEM
 			l_has_file, l_is_ecf: BOOLEAN
 			i, nb: INTEGER
@@ -1255,8 +1253,9 @@ feature {NONE} -- Convenience
 			a_file_name_not_empty: not a_file_name.is_empty
 		local
 			l_file: RAW_FILE
+			u: FILE_UTILITIES
 		do
-			create l_file.make (a_file_name.as_string_8)
+			l_file := u.make_raw_file (a_file_name)
 			Result := l_file.exists and then l_file.is_readable
 		end
 

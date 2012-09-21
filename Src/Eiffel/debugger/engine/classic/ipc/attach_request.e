@@ -20,7 +20,7 @@ create
 
 feature -- Status report
 
-	application_name: STRING
+	application_name: READABLE_STRING_GENERAL
 			-- Path to executable of application
 
 	port_number: INTEGER
@@ -31,7 +31,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_application_name (s: STRING)
+	set_application_name (s: like application_name)
 			-- Assign `s' to `application_name'.
 		require
 			s_not_void: s /= Void
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			-- Process ID of last application attached
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

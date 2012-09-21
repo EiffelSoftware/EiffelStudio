@@ -164,7 +164,7 @@ feature -- Status setting
 
 feature -- Setting
 
-	set_base_name (s: STRING)
+	set_base_name (s: like base_name)
 			-- Assign `s' to `base_name'.
 		require
 			s_not_void: s /= Void
@@ -249,7 +249,7 @@ feature {COMPILER_EXPORTER} -- Setting
 
 feature {CONF_ACCESS} -- Recompilation
 
-	rebuild (a_file_name: STRING; a_group: like cluster; a_path: STRING)
+	rebuild (a_file_name: like path; a_group: like cluster; a_path: like path)
 			-- <Precursor>
 		do
 			Precursor (a_file_name, a_group, a_path)
@@ -287,7 +287,7 @@ invariant
 	name_in_upper: name.as_upper.is_equal (name)
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

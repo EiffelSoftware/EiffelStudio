@@ -57,12 +57,12 @@ feature {EB_RECENT_PROJECTS_MANAGER} -- Observer pattern
 	update
 			-- (Re)build the menu.
 		local
-			recent_projects: ARRAYED_LIST [TUPLE [file: READABLE_STRING_GENERAL; target: READABLE_STRING_GENERAL]]
-			project: TUPLE [file: READABLE_STRING_GENERAL; target: READABLE_STRING_GENERAL]
+			recent_projects: ARRAYED_LIST [TUPLE [file: READABLE_STRING_32; target: READABLE_STRING_GENERAL]]
+			project: TUPLE [file: READABLE_STRING_32; target: READABLE_STRING_GENERAL]
 			target: READABLE_STRING_GENERAL
 			open_cmd: EB_OPEN_PROJECT_COMMAND
 			menu_item: EV_MENU_ITEM
-			project_file_name: READABLE_STRING_GENERAL
+			project_file_name: READABLE_STRING_32
 		do
 			wipe_out
 			recent_projects := recent_projects_manager.recent_projects

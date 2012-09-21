@@ -17,12 +17,12 @@ inherit
 
 feature -- Access
 
-	file_name: STRING
+	file_name: like {ERROR}.file_name
 			-- Name of the file which parsing led
 			-- to the creation of current AST node.
 		deferred
 		ensure
-			file_name_valid: Result /= Void implies Result.same_type ("")
+			file_name_valid: Result /= Void
 		end
 
 	origin_text: STRING
@@ -30,9 +30,10 @@ feature -- Access
 			-- Void if unreadable file.
 		local
 			a_file: RAW_FILE
+			u: FILE_UTILITIES
 		do
 			if is_valid then
-				create a_file.make (file_name)
+				a_file := u.make_raw_file (file_name)
 				if a_file.exists and then a_file.is_readable then
 					a_file.open_read
 					a_file.read_stream (a_file.count)
@@ -45,12 +46,9 @@ feature -- Access
 	is_valid: BOOLEAN
 			-- Does `Current' still represent a valid file?
 		local
-			testfile: RAW_FILE
+			u: FILE_UTILITIES
 		do
-			create testfile.make (file_name)
-			if testfile.exists then
-				Result := True
-			end
+			Result := u.make_raw_file (file_name).exists
 		end
 
 	synchronized_stone: STONE

@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 	delete_class
 			-- Remove `class_i' from the system.
 		local
-			file: PLAIN_TEXT_FILE
+			file: PLAIN_TEXT_FILE_32
 			retried: BOOLEAN
 			es_class: ES_CLASS
 			es_classes: ARRAYED_LIST [ES_CLASS]

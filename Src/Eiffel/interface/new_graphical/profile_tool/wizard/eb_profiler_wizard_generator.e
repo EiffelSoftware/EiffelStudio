@@ -155,8 +155,8 @@ feature {NONE} -- Implementation
 				shared_values.filenames /= Void
 		local
 			parser: EB_QUERY_PARSER
-			filename: STRING
-			file_name: FILE_NAME
+			filename: STRING_32
+			file_name: FILE_NAME_32
 			result_language: BOOLEAN
 			result_output_switches: BOOLEAN
 		do
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 			new_window.raise
 		end
 
-	strip_path (a_full_pathname: STRING): STRING
+	strip_path (a_full_pathname: STRING_32): STRING_32
 			-- Return the base filename of a full qualified pathname
 			-- Ex: strip_path ("c:\temp\test.pfi") = "test.pfi"
 		local

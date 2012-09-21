@@ -1085,7 +1085,7 @@ feature {NONE} -- Implementation attributes
 	error_line: INTEGER
 			-- Line number where has error.
 
-	class_file: RAW_FILE
+	class_file: RAW_FILE_32
 			-- File associate with a class.
 
 	class_text_exists: BOOLEAN

@@ -251,7 +251,7 @@ feature{NONE} -- Implementation
 	tool_file_name: STRING = "tools.xml"
 			-- File name of customized tool definition xml
 
-	tool_file: STRING
+	tool_file: READABLE_STRING_GENERAL
 			-- File including path of customized tool definition xml
 		do
 			Result := absolute_file_name (global_file_path, tool_file_name)

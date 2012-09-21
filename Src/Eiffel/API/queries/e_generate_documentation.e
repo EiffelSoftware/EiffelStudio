@@ -103,8 +103,8 @@ feature -- Execution
 			-- Show classes in universe
 		local
 			doc: DOCUMENTATION
-			dir: DIRECTORY
 			retried, l_dir_created: BOOLEAN
+			u: FILE_UTILITIES
 		do
 			if eiffel_layout.has_documentation_generation and not retried then
 				create doc.make
@@ -120,8 +120,7 @@ feature -- Execution
 				)
 
 				doc.set_all_universe
-				create dir.make (Eiffel_system.document_path)
-				doc.set_directory (dir)
+				doc.set_directory (u.make_directory (Eiffel_system.document_path))
 				l_dir_created := True
 				doc.set_cluster_formats (True, False)
 				doc.set_system_formats (True, True, True)
@@ -130,7 +129,7 @@ feature -- Execution
 			end
 		rescue
 			if not l_dir_created then
-				error_window.put_string ((create {WARNING_MESSAGES}).w_invalid_directory_or_cannot_be_created (dir.name))
+				error_window.put_string ((create {WARNING_MESSAGES}).w_invalid_directory_or_cannot_be_created (Eiffel_system.document_path))
 			elseif doc /= Void and then doc.target_file_name /= Void then
 				error_window.put_string ((create {WARNING_MESSAGES}).w_Cannot_create_file (doc.target_file_name))
 			end

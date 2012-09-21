@@ -166,7 +166,7 @@ feature -- Content change
 			-- is sensitive.
 			-- `file_name' is left unchanged.
 		local
-			f_n: FILE_NAME
+			f_n: FILE_NAME_32
 			f_d, f_d_c, f_s: INTEGER
 		do
 			f_n := file_name
@@ -1217,7 +1217,7 @@ feature {NONE} -- Implementation
 			syn_error: SYNTAX_ERROR
 			txt: STRING_32
 			retried: BOOLEAN
-			fl: RAW_FILE
+			fl: RAW_FILE_32
 		do
 			if text_is_fully_loaded then
 				if retried then
@@ -1227,7 +1227,8 @@ feature {NONE} -- Implementation
 					syn_error := text_displayed.last_syntax_error
 					text_displayed.clear_syntax_error
 					if file_name /= Void and syn_error /= Void then
-						create fl.make_open_read (file_name)
+						create fl.make (file_name)
+						fl.open_read
 						fl.read_stream (fl.count)
 						fl.close
 						txt := fl.last_string
@@ -1271,7 +1272,7 @@ feature {NONE} -- Implementation
 
 feature -- Text Loading	
 
-	load_file (a_file_name: STRING)
+	load_file (a_file_name: STRING_32)
 			-- Load file named `a_file_name' in the editor.
 		do
 			if (not load_without_save) and then changed then

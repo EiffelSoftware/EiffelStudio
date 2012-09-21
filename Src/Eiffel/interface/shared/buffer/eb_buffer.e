@@ -52,7 +52,7 @@ feature -- Access
 			retry
 		end
 
-	temp_file_name: STRING
+	temp_file_name: STRING_32
 			-- File to store `content' temporarily
 			-- Buffer is always treated as a file stored on disk.
 

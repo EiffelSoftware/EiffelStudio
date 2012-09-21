@@ -16,11 +16,6 @@ class
 inherit
 	ANY
 
-	KL_SHARED_FILE_SYSTEM
-		export
-			{NONE} all
-		end
-
 	SHARED_CODE_FILES
 		export
 			{NONE} all
@@ -77,11 +72,12 @@ feature -- Status setting
 
 feature -- Query
 
-	c_class_file_name: detachable FILE_NAME
+	c_class_file_name: detachable FILE_NAME_32
 			-- Retrieves the name of the Eiffel generated C file name.
 			-- Note: The result may not exist.
 		local
-			l_file_name: STRING
+			l_file_name: STRING_32
+			u: FILE_UTILITIES
 		do
 			if project_location.is_compiled then
 				create l_file_name.make (class_type.base_file_name.count + dot_c.count)
@@ -96,25 +92,27 @@ feature -- Query
 				Result.extend (packet_name (c_prefix, class_type.packet_number))
 				Result.set_file_name (l_file_name)
 
-				if not file_system.file_exists (Result.string) then
+				if not u.file_exists (Result) then
 					Result := Void
 				end
 			end
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
-			result_exists: Result /= Void implies file_system.file_exists (Result)
+			result_exists: Result /= Void implies (create {FILE_UTILITIES}).file_exists (Result)
 		end
 
-	c_class_path: detachable DIRECTORY_NAME
+	c_class_path: detachable DIRECTORY_NAME_32
 			-- Retrieves the name of the Eiffel generated C file name's containing folder.
 			-- Note: The result may not exist.
+		local
+			u: FILE_UTILITIES
 		do
 			if attached c_class_file_name as l_file_name then
-				create Result.make_from_string (file_system.dirname (l_file_name))
+				create Result.make_from_string (u.file_directory_path (l_file_name).as_string_32)
 			end
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
-			result_exists: Result /= Void implies file_system.directory_exists (Result)
+			result_exists: Result /= Void implies (create {FILE_UTILITIES}).directory_exists (Result)
 		end
 
 	c_feature_line (a_feature: E_FEATURE): NATURAL
@@ -130,9 +128,10 @@ feature -- Query
 			l_file: PLAIN_TEXT_FILE
 			l_line: STRING
 			i: NATURAL
+			u: FILE_UTILITIES
 		do
 			if attached c_class_file_name as l_file_name then
-				create l_file.make (l_file_name)
+				l_file := u.make_text_file (l_file_name)
 				if l_file.exists and then l_file.is_readable then
 						-- Build the search string, identifying the written class and feature name.
 					create l_search_string.make (30)

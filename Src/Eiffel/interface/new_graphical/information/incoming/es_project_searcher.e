@@ -8,14 +8,6 @@ note
 class
 	ES_PROJECT_SEARCHER
 
-inherit
-	ANY
-
-	KL_SHARED_FILE_SYSTEM
-		export
-			{NONE} all
-		end
-
 feature -- Searcher
 
 	search_project (a_path: attached STRING; a_system_name, a_system_uuid, a_target_name, a_target_uuid: detachable STRING)
@@ -95,7 +87,7 @@ feature -- Access
 	found_project_option: detachable USER_OPTIONS
 			-- Found project option
 
-	found_project: detachable STRING
+	found_project: detachable STRING_32
 			-- Found project file name.
 
 feature {NONE} -- Access
@@ -126,8 +118,9 @@ feature {NONE} -- Implemetation
 			l_file_uti: FILE_UTILITIES
 			l_files: attached ARRAYED_LIST [STRING]
 			l_file: detachable STRING
+			u: FILE_UTILITIES
 		do
-			if file_system.directory_exists (a_path) then
+			if u.directory_exists (a_path) then
 				create l_file_uti
 				l_files := l_file_uti.scan_for_files (a_path, -1, file_matcher, Void)
 				from

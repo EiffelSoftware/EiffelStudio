@@ -34,7 +34,7 @@ feature -- Access
 	class_name : STRING
 			-- Class name of current
 
-	path : FILE_NAME
+	path : FILE_NAME_32
 			-- File path `source_text' locates
 
 	source_text: STRING_32

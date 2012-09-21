@@ -233,7 +233,7 @@ feature -- Status setting
 			-- A modifying session is about to begin.
 			-- Update `date'.
 		local
-			class_file: PLAIN_TEXT_FILE
+			class_file: PLAIN_TEXT_FILE_32
 			l_prev_date: like date
 		do
 			l_prev_date := date
@@ -336,7 +336,7 @@ feature -- Modification (Add/Remove feature)
 			a_name_not_void: a_name /= Void
 		local
 			p: PARENT_AS
-			class_file: PLAIN_TEXT_FILE
+			class_file: PLAIN_TEXT_FILE_32
 		do
 			create class_file.make (class_i.file_name)
 			check class_file.exists end
@@ -385,7 +385,7 @@ feature -- Modification (Add/Remove feature)
 		require
 			a_name /= Void
 		local
-			class_file: PLAIN_TEXT_FILE
+			class_file: PLAIN_TEXT_FILE_32
 		do
 			create class_file.make (class_i.file_name)
 			check class_file.exists end
@@ -427,7 +427,7 @@ feature -- Modification (Add/Remove feature)
 		require
 			data_not_void: data /= Void
 		local
-			class_file: PLAIN_TEXT_FILE
+			class_file: PLAIN_TEXT_FILE_32
 			actual_feature_as: FEATURE_AS
 			l_item: FEATURE_AS
 			feat_code: STRING
@@ -510,7 +510,7 @@ feature -- Modification (Add/Remove feature)
 		require
 			data_not_void: data /= Void
 		local
-			class_file: PLAIN_TEXT_FILE
+			class_file: PLAIN_TEXT_FILE_32
 			l_item: TUPLE [str: STRING; pos: INTEGER]
 			str: STRING
 		do
@@ -544,7 +544,7 @@ feature -- Modification (Add/Remove feature)
 	delete_code (data: LIST [TUPLE [str: STRING; pos: INTEGER]])
 			--
 		local
-			class_file: PLAIN_TEXT_FILE
+			class_file: PLAIN_TEXT_FILE_32
 			l_item: TUPLE [str: STRING; pos: INTEGER]
 			str: STRING
 			pos: INTEGER
@@ -1333,7 +1333,7 @@ feature {NONE} -- Implementation
 			wizard_not_void: fcw /= Void
 		local
 			l_error: ES_ERROR_PROMPT
-			class_file: PLAIN_TEXT_FILE
+			class_file: PLAIN_TEXT_FILE_32
 			inv: STRING
 			editor: EB_SMART_EDITOR
 			new_code: STRING

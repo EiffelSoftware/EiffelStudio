@@ -49,7 +49,7 @@ feature {NONE} -- Help message
 				until
 					i > filenames.count
 				loop
-					l_str.append (filenames.item (i));
+					l_str.append (filenames.item (i).as_string_32);
 					i := i + 1
 					if i <= filenames.count then
 						l_str.extend (' ');
@@ -64,38 +64,38 @@ feature {NONE} -- Execute
 
 	loop_action
 		local
-			command_arguments: EWB_ARGUMENTS;
-			i: INTEGER;
-			empty_array: ARRAY [STRING];
+			command_arguments: EWB_ARGUMENTS
+			i: INTEGER
+			empty_array: like filenames
 		do
-			create empty_array.make (1, 0);
-			command_arguments := command_line_io.command_arguments;
+			create empty_array.make (1, 0)
+			command_arguments := command_line_io.command_arguments
 			if first_run and command_arguments.argument_count = 1 then
-				filenames.copy (empty_array);
-				filenames.force ("*.pfi", filenames.count + 1);
+				filenames.copy (empty_array)
+				filenames.force ("*.pfi", filenames.count + 1)
 			else
 				if command_arguments.argument_count = 1 then
 					if filenames.count = 1 then
-						command_arguments.force ("last_output", 1);
+						command_arguments.force ("last_output", 1)
 					else
 						localized_print (ewb_names.arrow_filenames)
-						command_line_io.get_name;
-					end;
-					i := 1;
+						command_line_io.get_name
+					end
+					i := 1
 				else
-					i := 2;
+					i := 2
 				end;
-				filenames.copy (empty_array);
+				filenames.copy (empty_array)
 				from
 				until
 					i > command_arguments.argument_count
 				loop
-					filenames.force (command_arguments.item (i), filenames.count + 1);
-					i := i + 1;
-				end;
-			end;
-			execute;
-		end;
+					filenames.force (command_arguments.item (i), filenames.count + 1)
+					i := i + 1
+				end
+			end
+			execute
+		end
 
 	-- don't know exactly how, but that comes.
 	-- IDEA: wipe_out current and replace with user's.

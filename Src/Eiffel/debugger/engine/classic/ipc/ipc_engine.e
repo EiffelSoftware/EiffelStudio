@@ -69,7 +69,7 @@ feature -- Launching
 		require
 			ecdbgd_launched_only_if_not_closed: ec_dbg_launched implies not close_ecdbgd_on_end_of_debugging
 		local
-			cmd: STRING
+			cmd: like safe_path
 			cs_pname, cs_cmd: C_STRING
 			r: INTEGER
 		do
@@ -89,7 +89,7 @@ feature -- Launching
 					create cs_pname.make ("ecdbgd")
 
 					debug ("ipc")
-						io.put_string ("Launching ecdbgd : " + cmd + " (timeout=" + ise_timeout.out + ") %N")
+						io.put_string ("Launching ecdbgd : " + cmd.as_string_8 + " (timeout=" + ise_timeout.out + ") %N")
 					end
 
 					r := c_launch_ecdbgd (cs_pname.item, cs_cmd.item, ise_timeout)

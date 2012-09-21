@@ -1115,7 +1115,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 		local
 			incremental_search_strategy: MSR_SEARCH_INCREMENTAL_STRATEGY
 			class_i: CLASS_I
-			file_name: FILE_NAME
+			file_name: FILE_NAME_32
 			class_name: STRING
 			class_stone: CLASSI_STONE
 			l_text: STRING_32
@@ -1136,7 +1136,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 						class_name := class_i.name
 					else
 						class_name := ""
-						create file_name.make
+						create file_name.make_from_string ("")
 					end
 
 					create incremental_search_strategy.make_with_start (currently_searched,
@@ -1187,7 +1187,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 		local
 			text_strategy: MSR_SEARCH_TEXT_STRATEGY
 			class_i: CLASS_I
-			file_name: FILE_NAME
+			file_name: FILE_NAME_32
 			class_name: STRING
 			class_stone: CLASSI_STONE
 		do
@@ -1205,7 +1205,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 				class_name := class_i.name
 			else
 				class_name := "Not a class"
-				create file_name.make
+				create file_name.make_from_string ("")
 			end
 			if is_editor_ready and then not editor.is_empty then
 				create text_strategy.make (currently_searched, surrounding_text_number, class_name, file_name, editor.text_displayed.wide_text)
@@ -1237,7 +1237,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 		local
 			text_strategy: MSR_SEARCH_TEXT_STRATEGY
 			class_i: CLASS_I
-			file_name: FILE_NAME
+			file_name: FILE_NAME_32
 			class_name: STRING
 			class_stone: CLASSI_STONE
 		do
@@ -1255,7 +1255,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 					class_name := class_i.name
 				else
 					class_name := "Not a class"
-					create file_name.make
+					create file_name.make_from_string ("")
 					create class_name.make_empty
 				end
 				if is_editor_ready and then not editor.is_empty then

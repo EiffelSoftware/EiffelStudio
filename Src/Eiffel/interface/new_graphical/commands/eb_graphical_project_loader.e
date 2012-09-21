@@ -127,7 +127,7 @@ feature -- Settings
 				agent (window_manager.last_focused_development_window.melt_project_cmd).execute)
 		end
 
-	launch_precompile_process (a_arguments: LIST [STRING])
+	launch_precompile_process (a_arguments: LIST [READABLE_STRING_32])
 			-- Launch precompile process `a_command'.
 		local
 			l_prc_factory: PROCESS_FACTORY
@@ -240,7 +240,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	retrieve_or_create_project (a_project_path: STRING_8)
+	retrieve_or_create_project (a_project_path: READABLE_STRING_32)
 			-- Retrieve or create project.
 		local
 			l_win: EB_DEVELOPMENT_WINDOW
@@ -279,21 +279,21 @@ feature {NONE} -- Error reporting
 			report_loading_error (warning_messages.w_cannot_read_ace_file_from_epr (a_epr_name, a_file_name))
 		end
 
-	report_cannot_read_ace_file (a_file_name: STRING; a_conf_error: CONF_ERROR)
+	report_cannot_read_ace_file (a_file_name: READABLE_STRING_32; a_conf_error: CONF_ERROR)
 			-- Report an error when ace  file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		do
 			report_loading_error (warning_messages.w_unable_to_load_ace_file (a_file_name, a_conf_error.text))
 		end
 
-	report_cannot_read_config_file (a_file_name: STRING; a_conf_error: CONF_ERROR)
+	report_cannot_read_config_file (a_file_name: READABLE_STRING_32; a_conf_error: CONF_ERROR)
 			-- Report an error when a config file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		do
 			report_loading_error (warning_messages.w_unable_to_load_config_file (a_file_name, a_conf_error.text))
 		end
 
-	report_cannot_save_converted_file (a_file_name: STRING)
+	report_cannot_save_converted_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Report an error when result of a conversion from ace to new format cannot be stored
 			-- in file `a_file_name'.
 		do
@@ -306,7 +306,7 @@ feature {NONE} -- Error reporting
 			report_loading_error (warning_messages.w_cannot_convert_file (a_file_name))
 		end
 
-	report_cannot_create_project (a_dir_name: STRING)
+	report_cannot_create_project (a_dir_name: READABLE_STRING_GENERAL)
 			-- Report an error when we cannot create project in `a_dir_name'.
 		do
 			report_loading_error (warning_messages.w_cannot_create_project_directory (a_dir_name))
@@ -419,18 +419,18 @@ feature {NONE} -- Error reporting
 
 feature {NONE} -- User interaction
 
-	ask_for_config_name (a_dir_name, a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [STRING]])
+	ask_for_config_name (a_dir_name: READABLE_STRING_GENERAL; a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]])
 			-- Given `a_dir_name' and a proposed `a_file_name' name for the new format, ask the
 			-- user if he wants to create `a_file_name' or a different name. If he said yes, then
 			-- execute `a_action' with chosen file_name, otherwise do nothing.
 		local
 			l_save_as: EV_FILE_SAVE_DIALOG
-			l_file_name: FILE_NAME
+			l_file_name: READABLE_STRING_GENERAL
 			l_ev: EV_MESSAGE_DIALOG
 			l_save_as_msg: STRING_32
+			u: FILE_UTILITIES
 		do
-			create l_file_name.make_from_string (a_dir_name)
-			l_file_name.set_file_name (a_file_name)
+			l_file_name := u.file_name (u.make_raw_file_in (a_file_name, a_dir_name))
 
 			create l_ev
 			l_save_as_msg := interface_names.b_Save_as
@@ -449,7 +449,7 @@ feature {NONE} -- User interaction
 
 			l_ev.button (l_save_as_msg).select_actions.extend (agent l_save_as.show_modal_to_window (parent_window))
 			l_ev.button (interface_names.b_cancel).select_actions.extend (agent on_cancelled (l_ev))
-			l_ev.button (interface_names.b_ok).select_actions.extend (agent a_action.call ([l_file_name.string]))
+			l_ev.button (interface_names.b_ok).select_actions.extend (agent a_action.call ([l_file_name]))
 			l_ev.show_modal_to_window (parent_window)
 		end
 
@@ -609,7 +609,7 @@ feature {NONE} -- Actions
 	choose_again: BOOLEAN
 			-- We need to choose again the file
 
-	on_delete_directory (deleted_files: ARRAYED_LIST [STRING])
+	on_delete_directory (deleted_files: LIST [READABLE_STRING_32])
 			-- The files in `deleted_files' have just been deleted.
 			-- Display
 		local
@@ -623,7 +623,7 @@ feature {NONE} -- Actions
 					delete_status_prompt := create_delete_status_prompt
 					delete_status_prompt.dialog.set_minimum_width (600)
 				end
-				delete_status_prompt.set_text ((create {ISE_DIRECTORY_UTILITIES}).path_ellipsis (deleted_files.first, path_ellipsis_width))
+				delete_status_prompt.set_text ((create {ISE_DIRECTORY_UTILITIES}).path_ellipsis (deleted_files.first.as_string_32, path_ellipsis_width))
 				if l_show then
 					delete_status_prompt.show (parent_window)
 				end

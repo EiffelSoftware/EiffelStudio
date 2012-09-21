@@ -45,7 +45,7 @@ feature -- Access
 	is_class_name_mismatch: BOOLEAN
 			-- Is internal error due to a class name mismatch found at degree 5?
 
-	file_name: STRING
+	file_name: like {ERROR}.file_name
 		do
 		end
 
@@ -67,7 +67,7 @@ invariant
 	message_not_void: message /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -124,7 +124,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	path (a_item: QL_ITEM; a_text: STRING): STRING
+	path (a_item: QL_ITEM; a_text: STRING_32): STRING_32
 			-- File name of `a_item'
 		require
 			a_item_attached: a_item /= Void
@@ -151,7 +151,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	file (a_item: QL_ITEM; a_text: STRING): STRING
+	file (a_item: QL_ITEM; a_text: STRING_32): STRING_32
 			-- File name of `a_item'
 		require
 			a_item_attached: a_item /= Void
@@ -178,7 +178,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	class_name (a_item: QL_ITEM; a_text: STRING): STRING
+	class_name (a_item: QL_ITEM; a_text: STRING_32): STRING_32
 			-- Class name of `a_item' if `a_item' is a code structure item,
 			-- otherwise return a copy of `a_text'.
 		require
@@ -192,7 +192,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	group_directory (a_item: QL_ITEM; a_text: STRING): STRING
+	group_directory (a_item: QL_ITEM; a_text: STRING_32): STRING_32
 			-- Directory name of `a_item'
 		require
 			a_item_attached: a_item /= Void
@@ -223,7 +223,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	group_name (a_item: QL_ITEM; a_text: STRING): STRING
+	group_name (a_item: QL_ITEM; a_text: STRING_32): STRING_32
 			-- Group name of `a_item'
 		require
 			a_item_attached: a_item /= Void
@@ -254,7 +254,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	directory_name (a_item: QL_ITEM; a_text: STRING): STRING
+	directory_name (a_item: QL_ITEM; a_text: STRING_32): STRING_32
 			-- Directory name of `a_item'
 		require
 			a_item_attached: a_item /= Void

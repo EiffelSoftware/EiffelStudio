@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make (a_system_name, a_root_class_name, a_root_cluster_name, a_root_feature_name: STRING; a_project_directory: STRING)
+	make (a_system_name, a_root_class_name, a_root_cluster_name, a_root_feature_name: STRING; a_project_directory: STRING_32)
 			-- Set up the blank ace builder to work with a system named
 			-- `a_system_name' and a project located in `a_project_directory'.
 			-- `a_root_class_name', `a_root_cluster_name' and `a_root_feature_name' are the root attribute names.
@@ -65,10 +65,10 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	ace_filename: FILE_NAME
+	ace_filename: FILE_NAME_32
 			-- Filename of the ace file for this project.
 
-	root_class_filename: FILE_NAME
+	root_class_filename: FILE_NAME_32
 			-- Filename of the root class file for this project.
 
 feature -- Basic operations.
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 		require
 			valid_contents: contents /= Void
 		local
-			new_file: PLAIN_TEXT_FILE
+			new_file: PLAIN_TEXT_FILE_32
 			char: CHARACTER
 		do
 			create new_file.make (ace_filename)
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			new_file.close
 		rescue
 			add_error_message (
-				"Unable to create or overwrite the ace file '"+ace_filename+"'%N%
+				{STRING_32} "Unable to create or overwrite the ace file '"+ace_filename+"'%N%
 				%Check your write permissions in this directory")
 		end
 
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 			-- Create the file named `root_class_filename' and flush the content
 			-- of the default root class in it.
 		local
-			new_class: PLAIN_TEXT_FILE
+			new_class: PLAIN_TEXT_FILE_32
 		do
 			create new_class.make (root_class_filename)
 			if not new_class.exists then
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 			end
 		rescue
 			add_error_message (
-				"Unable to create the root class file '"+ root_class_filename +"'%N%
+				{STRING_32} "Unable to create the root class file '"+ root_class_filename +"'%N%
 				%Check your write permissions on this file and on this directory")
 		end
 
@@ -210,11 +210,11 @@ feature {NONE} -- Private attributes
 	root_feature_name: STRING
 			-- Name of the system of the project to build.
 
-	project_directory: STRING;
+	project_directory: STRING_32;
 			-- Location of the project to build.
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

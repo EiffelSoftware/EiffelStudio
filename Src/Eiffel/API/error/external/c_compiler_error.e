@@ -84,7 +84,7 @@ feature -- Access
 	message: STRING_32
 			-- Message from C compiler.
 
-	file_name: detachable STRING
+	file_name: detachable like {ERROR}.file_name
 			-- Location of the compilation error.
 
 	associated_feature: detachable E_FEATURE assign set_associated_feature
@@ -187,7 +187,7 @@ feature {NONE} -- Output
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

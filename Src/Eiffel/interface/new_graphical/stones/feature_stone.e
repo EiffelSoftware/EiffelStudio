@@ -167,7 +167,7 @@ feature -- dragging
 			Result.append ("%N")
 		end
 
-	file_name: STRING
+	file_name: like {ERROR}.file_name
 			-- The one from class origin of `e_feature'
 		do
 			if e_feature /= Void and then e_feature.is_valid then
@@ -188,7 +188,7 @@ feature -- dragging
 			-- Name for the stone.
 		local
 			l_feature_name: STRING_32
-			l_file_name: FILE_NAME
+			l_file_name: FILE_NAME_32
 		do
 
 			create l_feature_name.make (20)
@@ -205,7 +205,7 @@ feature -- dragging
 															eiffel_universe.target_name,
 															e_class.group.name,
 															l_feature_name,
-															l_file_name)
+															l_file_name.to_string_32)
 			else
 				Result := interface_names.l_feature_header_precompiled (eiffel_system.name,
 															eiffel_universe.target_name,

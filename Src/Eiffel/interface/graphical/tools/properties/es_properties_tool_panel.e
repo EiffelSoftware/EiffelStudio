@@ -212,7 +212,7 @@ feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 					l_name_prop.enable_readonly
 					properties.add_property (l_name_prop)
 					create l_name_prop.make (conf_interface_names.class_option_file_name)
-					l_name_prop.set_value (l_cs.file_name)
+					l_name_prop.set_value (l_cs.file_name.as_string_32)
 					l_name_prop.enable_readonly
 					properties.add_property (l_name_prop)
 					add_misc_option_properties (l_class_options, l_inh_options, True, False)

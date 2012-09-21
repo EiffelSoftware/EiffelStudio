@@ -1,11 +1,10 @@
 note
-
-	description: 
-		"Error for invalid precompiled systems used for a project"
+	description:
+		"Error for invalid precompiled systems used for a project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class VD53
 
@@ -14,17 +13,17 @@ inherit
 	LACE_ERROR
 		redefine
 			build_explain, is_defined
-		end;
+		end
 
 feature -- Access
 
-	path: STRING;
+	path: READABLE_STRING_GENERAL
 			-- Path of precompiled project
 
-	expected_date: STRING;
+	expected_date: STRING
 			-- Expected date of precompile
 
-	precompiled_date: STRING;
+	precompiled_date: STRING
 			-- Precompile date
 
 	is_defined: BOOLEAN
@@ -38,41 +37,43 @@ feature -- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
-			a_text_formatter.add ("Precompiled path: ");
-			a_text_formatter.add (path);
+			a_text_formatter.add ("Precompiled path: ")
+			a_text_formatter.add (path)
 			a_text_formatter.add_new_line
 			a_text_formatter.add ("Expected creation date: ")
-			a_text_formatter.add (expected_date);
-			a_text_formatter.add_new_line;
-			a_text_formatter.add ("Precompilation creation date: ");
-			a_text_formatter.add (precompiled_date);
-			a_text_formatter.add_new_line;
-		end;
+			a_text_formatter.add (expected_date)
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Precompilation creation date: ")
+			a_text_formatter.add (precompiled_date)
+			a_text_formatter.add_new_line
+		end
 
 feature {PRECOMP_R, REMOTE_PROJECT_DIRECTORY} -- Setting
 
-	set_path (s: STRING)
+	set_path (s: like path)
 			-- Assign `s' to `path'.
 		do
-			path := s;
-		end;
+			path := s
+		end
 
 	set_precompiled_date (i: like precompiled_date)
 			-- Assign `i' to `precompiled_date'.
 		do
-			i.replace_substring_all ("%N", ""); -- Hack to remove %N
-			precompiled_date := i;
-		end;
+				-- Remove new lines.
+			i.prune_all ('%N')
+			precompiled_date := i
+		end
 
 	set_expected_date (i: like expected_date)
 			-- Assign `i' to `expected_date'.
 		do
-			i.replace_substring_all ("%N", ""); -- Hack to remove %N
+				-- Remove new lines.
+			i.prune_all ('%N')
 			expected_date := i
-		end;
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -85,22 +86,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class VD53

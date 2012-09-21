@@ -436,7 +436,7 @@ feature -- Basic operations
 
 			if not l_set_in_editor or not l_was_modified then
 					-- Save only if the text wasn't set in the editor or the editor was not modified before applying the modifications.
-				if (create {RAW_FILE}.make (context_class.file_name)).exists and then original_file_date /= context_class.file_date then
+				if (create {RAW_FILE_32}.make (context_class.file_name)).exists and then original_file_date /= context_class.file_date then
 						-- Need to use merge
 					l_new_text := context_class.text_32.as_attached
 					l_new_text.prune_all ('%R')

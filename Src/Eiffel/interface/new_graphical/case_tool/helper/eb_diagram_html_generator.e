@@ -99,13 +99,13 @@ feature {EB_DOCUMENTATION_WIZARD} -- Basic operations
 		local
 			l_parser: XML_LITE_STOPPABLE_PARSER
 			l_tree: XML_CALLBACKS_NULL_FILTER_DOCUMENT
-			l_file: PLAIN_TEXT_FILE
+			l_file: RAW_FILE
 			l_concatenator: XML_CONTENT_CONCATENATOR
 			diagram_input: XML_ELEMENT
 			a_cursor: XML_COMPOSITE_CURSOR
 		do
 			create Result.make
-			create l_file.make (diagram_file_name)
+			l_file := diagram_file
 			if l_file.exists and then l_file.is_readable then
 				l_file.open_read
 				check is_open_read: l_file.is_open_read end
@@ -163,7 +163,7 @@ feature {DOCUMENTATION} -- Basic operations
 			end
 			l_diagram := diagram
 			if attached view_name as l_view_name then
-				l_diagram.change_view (l_view_name, diagram_file_name)
+				l_diagram.change_view (l_view_name, diagram_file)
 			else
 				l_diagram.model.set_center_cluster (create {ES_CLUSTER}.make (cluster))
 				l_diagram.model.explore_center_cluster
@@ -258,12 +258,12 @@ feature {NONE} -- Implementation
 	target_file_name: FILE_NAME
 			-- Output file for generated diagram.
 
-	diagram_file_name: FILE_NAME
-			-- Where views for `diagram' are stored.	
+	diagram_file: RAW_FILE
+			-- File where views for `diagram' are stored.	
+		local
+			u: FILE_UTILITIES
 		do
-			create Result.make_from_string (Eiffel_system.context_diagram_path)
-			Result.extend (id_of_group (cluster))
-			Result.add_extension ("xml")
+			Result := u.make_raw_file_in (id_of_group (cluster) + ".xml", Eiffel_system.context_diagram_path)
 		end
 
 	form_code: STRING

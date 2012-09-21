@@ -164,7 +164,7 @@ feature -- Object (Reference) transfert
 
 feature -- Text transfert to daemon
 
-	send_string_content (s: STRING_GENERAL)
+	send_string_content (s: READABLE_STRING_GENERAL)
 			-- Used by the debugger to send the text `s' to the daemon  (ecdbgd)
 		local
 			c_string: C_STRING
@@ -173,7 +173,7 @@ feature -- Text transfert to daemon
 			c_send_str (c_string.item)
 		end
 
-	send_string_content_with_size (s: STRING_GENERAL; a_size: INTEGER)
+	send_string_content_with_size (s: READABLE_STRING_GENERAL; a_size: INTEGER)
 			-- Used by the debugger to send the text `s' to the daemon  (ecdbgd)
 			-- with size `a_size'
 			--| Indeed it might contain '%U' character,
@@ -422,7 +422,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

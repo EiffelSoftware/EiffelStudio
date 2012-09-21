@@ -184,7 +184,7 @@ feature -- Access
 			end
 		end
 
-	editor_with_class (a_file_name: FILE_NAME) : like current_editor
+	editor_with_class (a_file_name: FILE_NAME_32) : like current_editor
 			-- Editor editing a class with `a_file_name'
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -524,7 +524,7 @@ feature {NONE} -- Action handlers
 
 feature -- Status report
 
-	is_class_editing (a_file_name: STRING) : BOOLEAN
+	is_class_editing (a_file_name: like {ERROR}.file_name) : BOOLEAN
 			-- Editor editing a class with `a_file_name'
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -532,7 +532,6 @@ feature -- Status report
 			l_editors: like editors_internal
 			l_classi_stone: CLASSI_STONE
 			l_external_file_stone: EXTERNAL_FILE_STONE
-			l_fn: STRING
 		do
 			l_editors := editors
 			from
@@ -543,15 +542,12 @@ feature -- Status report
 				l_classi_stone ?= l_editors.item.stone
 				l_external_file_stone ?= l_editors.item.stone
 				if l_classi_stone /= Void then
-					l_fn := l_classi_stone.file_name
-					if l_fn /= Void and then l_fn.is_equal (a_file_name.string) then
-						Result := True
-					end
+					Result :=
+						attached l_classi_stone.file_name as l_fn and then
+						l_fn.same_string (a_file_name)
 				elseif l_external_file_stone /= Void then
-					l_fn := l_external_file_stone.file_name
-					if l_fn /= Void and then l_fn.string.is_equal (a_file_name) then
-						Result := True
-					end
+					Result := attached l_external_file_stone.file_name as l_fn and then
+						l_fn.same_string (a_file_name)
 				end
 				l_editors.forth
 			end
@@ -892,7 +888,7 @@ feature -- Element change
 			l_class_stone: CLASSI_STONE
 			l_cluster_stone: CLUSTER_STONE
 			l_shared: SD_SHARED
-			l_name: STRING_8
+			l_name: like {FILED_STONE}.file_name
 		do
 			if a_content /= Void then
 				l_class_stone ?= a_stone
@@ -901,8 +897,8 @@ feature -- Element change
 					a_content.set_description (interface_names.l_eiffel_class)
 					l_name := l_class_stone.file_name
 					if l_name /= Void then
-						a_content.set_detail (l_name)
-						a_content.set_tab_tooltip (l_name)
+						a_content.set_detail (l_name.as_string_32)
+						a_content.set_tab_tooltip (l_name.as_string_32)
 					else
 						a_content.set_tab_tooltip (Void)
 					end
@@ -915,8 +911,8 @@ feature -- Element change
 					end
 
 					if l_name /= Void then
-						a_content.set_detail (l_name)
-						a_content.set_tab_tooltip (l_name)
+						a_content.set_detail (l_name.as_string_32)
+						a_content.set_tab_tooltip (l_name.as_string_32)
 					else
 						a_content.set_tab_tooltip (Void)
 					end
@@ -1741,8 +1737,8 @@ feature {NONE} -- Implementation
 			a_editor_not_void: a_editor /= Void
 		local
 			retried: BOOLEAN
-			tmp_name: FILE_NAME
-			tmp_file: RAW_FILE
+			tmp_name: FILE_NAME_32
+			tmp_file: RAW_FILE_32
 			l_encoding: ENCODING
 			l_stream: STRING
 			l_text: STRING_32
@@ -1868,7 +1864,7 @@ feature {NONE} -- Implementation
 			if attached fake_editors as l_fake_editors then
 				l_all.merge_right (l_fake_editors.twin)
 			end
-			
+
 			Result := has_duplicated_stone_imp (l_all)
 		end
 

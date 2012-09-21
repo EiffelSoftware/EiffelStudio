@@ -11,7 +11,6 @@ class
 inherit
 	COMPILER_ERROR
 		redefine
-			error_string,
 			print_error_message
 		end
 
@@ -51,14 +50,14 @@ feature {NONE} -- Initialization
 			internal_error_string := "File: " + t + " is in use.%NSystem compilation aborted.%N"
 		end
 
-	make_pdb_in_use (module_name: STRING)
+	make_pdb_in_use (module_name: READABLE_STRING_GENERAL)
 			-- Error when trying to create PDB file associated to module `module_name'.
 		require
 			module_name_not_void: module_name /= Void
 			module_name_not_empty: not module_name.is_empty
 		do
-			internal_error_string := "Cannot create PDB file associated to module:%N" +
-				module_name + ".%NSystem compilation aborted.%N"
+			internal_error_string := {STRING_32} "Cannot create PDB file associated to module:%N" +
+				module_name.as_string_32 + ".%NSystem compilation aborted.%N"
 		end
 
 feature -- Properties
@@ -69,13 +68,7 @@ feature -- Properties
 			Result := "VIGE"
 		end
 
-	Error_string: STRING
-			-- Error description
-		do
-			Result := internal_error_string
-		end
-
-	file_name: STRING
+	file_name: like {ERROR}.file_name
 			-- No associated file
 		do
 		end
@@ -89,38 +82,40 @@ feature -- Output
 	print_error_message (a_text_formatter: TEXT_FORMATTER)
 			-- Print error message on output.
 		local
+			e: like internal_error_string
 			i, j: INTEGER
 		do
 			a_text_formatter.add ("IL Generation Error:")
 			a_text_formatter.add_new_line
 
-			i := error_string.index_of ('%N', 1)
+			e := internal_error_string
+			i := e.index_of_code (('%N').code.as_natural_32, 1)
 			if i = 0 then
-				a_text_formatter.add (error_string)
+				a_text_formatter.add (e)
 				a_text_formatter.add_new_line
 			else
 				from
 				until
 					i = 0
 				loop
-					a_text_formatter.add (error_string.substring (j + 1, i - 1))
+					a_text_formatter.add (e.substring (j + 1, i - 1))
 					a_text_formatter.add_new_line
 					j := i
-					i := error_string.index_of ('%N', i + 1)
+					i := e.index_of_code (('%N').code.as_natural_32, i + 1)
 				end
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	internal_error_string: STRING
+	internal_error_string: STRING_32
 			-- Internal copy of error description
 
 invariant
 	internal_error_string_not_void: internal_error_string /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -133,22 +128,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class VIGE

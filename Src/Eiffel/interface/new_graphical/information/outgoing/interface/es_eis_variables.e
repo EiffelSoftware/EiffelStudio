@@ -11,7 +11,7 @@ inherit
 
 feature -- Access
 
-	all_supported_variables_from_entry (a_entry: EIS_ENTRY): HASH_TABLE [STRING, READABLE_STRING_8]
+	all_supported_variables_from_entry (a_entry: EIS_ENTRY): HASH_TABLE [STRING_32, READABLE_STRING_32]
 			-- All variables
 		require
 			a_entry_not_void: a_entry /= Void
@@ -23,7 +23,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	all_supported_variables_for_auto_entry (a_target: CONF_TARGET): HASH_TABLE [STRING, READABLE_STRING_8]
+	all_supported_variables_for_auto_entry (a_target: CONF_TARGET): HASH_TABLE [STRING_32, READABLE_STRING_32]
 			-- All variables available for auto entry.
 			-- If that variable needs specific information from the context,
 			-- an empty string is put.
@@ -53,7 +53,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	eis_variables_from_entry (a_entry: EIS_ENTRY): HASH_TABLE [STRING, READABLE_STRING_8]
+	eis_variables_from_entry (a_entry: EIS_ENTRY): HASH_TABLE [STRING_32, READABLE_STRING_32]
 			-- Variables
 			--
 			-- component names
@@ -115,7 +115,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	es_built_in_variables: HASH_TABLE [STRING, READABLE_STRING_8]
+	es_built_in_variables: HASH_TABLE [STRING_32, READABLE_STRING_32]
 			-- ES built-in variables.
 			-- These variables should ideally be built into a configure file.
 		once
@@ -129,7 +129,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	environment_variables: HASH_TABLE [STRING, READABLE_STRING_8]
+	environment_variables: HASH_TABLE [STRING_32, READABLE_STRING_32]
 			-- Environment variables
 		local
 			l_variables: detachable like environment_variables

@@ -54,8 +54,8 @@ feature -- Execution
 			-- Execute the C compilation.
 		local
 			byte_context: BYTE_CONTEXT
-			makefile_sh_name: FILE_NAME
-			file: PLAIN_TEXT_FILE
+			makefile_sh_name: FILE_NAME_32
+			file: PLAIN_TEXT_FILE_32
 		do
 			byte_context := (create {SHARED_BYTE_CONTEXT}).context
 			if is_workbench then

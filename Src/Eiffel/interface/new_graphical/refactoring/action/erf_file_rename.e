@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_original_name: STRING; a_new_name: STRING)
+	make (an_original_name: STRING_32; a_new_name: STRING_32)
 			-- Rename `an_original_name' into `a_new_name'
 		require
 			an_original_name_not_void: an_original_name /= void

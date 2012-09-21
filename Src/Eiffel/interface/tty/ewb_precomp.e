@@ -58,22 +58,17 @@ feature {NONE} -- Execution
 	save_project_again
 			-- Try to save the project again.
 		local
-			finished: BOOLEAN;
-			temp: STRING
+			finished: BOOLEAN
 		do
 			from
 			until
 				finished
 			loop
 				if Eiffel_project.precomp_save_error then
-					create temp.make (0);
-					temp.append ("Error: could not write to ");
-					temp.append (project_location.precompilation_file_name);
-					temp.append ("%NPlease check permissions and disk space");
-					io.error.put_string (temp);
-					io.error.put_new_line;
+					localized_print_error (ewb_names.error_could_not_write_to (project_location.precompilation_file_name))
+					io.error.put_new_line
 					finished := stop_on_error or else
-						command_line_io.termination_requested;
+						command_line_io.termination_requested
 					if finished then
 						lic_die (-1)
 					else

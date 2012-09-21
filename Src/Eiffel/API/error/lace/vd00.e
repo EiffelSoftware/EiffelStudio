@@ -22,7 +22,7 @@ feature -- Properties
 	error: CONF_ERROR
 			-- Error from configuration system.
 
-	file_name: STRING
+	file_name: like {ERROR}.file_name
 			-- <Precursor>
 		do
 			if attached {CONF_ERROR_PARSE} error as l_parse_error then
@@ -76,7 +76,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

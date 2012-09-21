@@ -78,16 +78,16 @@ feature -- Status
 
 feature -- Access
 
-	file_name: STRING
+	file_name: STRING_32
 			-- Full path to the universe/system description.
 
-	directory_name: STRING
+	directory_name: STRING_32
 			-- Full path to the universe/system description parent directory.
 
 	target_name: STRING
 			-- Target to use. (optional, if only one target).
 
-	project_path: STRING
+	project_path: STRING_32
 			-- Project path to use. (optional).
 
 	date: INTEGER
@@ -165,7 +165,7 @@ feature -- Status setting
 			l_factory: CONF_COMP_FACTORY
 			l_project_location: PROJECT_DIRECTORY
 			l_epr: PROJECT_EIFFEL_FILE
-			l_epr_file: FILE_NAME
+			l_epr_file: FILE_NAME_32
 		do
 				-- check if the precompile is valid
 			precompile := target.precompile
@@ -197,15 +197,20 @@ feature -- Status setting
 			compilation_need_implies_ok: is_precompilation_needed implies precompile /= Void and not is_precompile_invalid
 		end
 
-	set_file_name (s: STRING)
+	set_file_name (s: STRING_32)
 			-- Assign `s' to `file_name'.
 			-- if s is relative, the file_name will be absolute.
 			-- Assign parent directory of file_name
 		require
 			s_not_void: s /= Void
+		local
+			f: FILE_UTILITIES
+			u: UTF_CONVERTER
 		do
-			file_name := file_system.absolute_pathname (s)
-			directory_name := file_system.absolute_parent_directory (file_name)
+			file_name := f.absolute_path (s, True)
+			directory_name := u.utf_8_string_8_to_string_32
+				(file_system.absolute_parent_directory
+					(u.string_32_to_utf_8_string_8(file_name)))
 		end
 
 	set_target_name (s: STRING)
@@ -247,7 +252,7 @@ feature -- Status setting
 		require
 			file_name_exists: file_name /= Void
 		local
-			file: PLAIN_TEXT_FILE
+			file: PLAIN_TEXT_FILE_32
 			vd21: VD21
 			d1, d2: DATE_TIME
 		do
@@ -301,7 +306,7 @@ feature -- Status setting
 	compile_all_classes: BOOLEAN
 			-- Are all classes root? i.e. all the classes must be compiled
 
-	process_user_file (a_project_path: STRING; a_user_file_enabled: BOOLEAN)
+	process_user_file (a_project_path: READABLE_STRING_32; a_user_file_enabled: BOOLEAN)
 			-- Handle the user file.
 			-- If `a_user_file_enabled' and then if we have a user file retrieve it, else create it
 			-- If we have a -project_directory argument, set the new path, else set the default path.
@@ -315,6 +320,7 @@ feature -- Status setting
 			l_changed: BOOLEAN
 			l_user_factory: USER_OPTIONS_FACTORY
 			l_target_options: TARGET_USER_OPTIONS
+			u: FILE_UTILITIES
 		do
 			if a_user_file_enabled then
 				create l_user_factory
@@ -350,15 +356,15 @@ feature -- Status setting
 				project_path := a_project_path.twin
 
 					-- make it into an absolute path
-				project_path := file_system.absolute_pathname (project_path)
+				project_path := u.absolute_path (project_path, True)
 
-				l_changed := not equal (project_path, l_target_options.last_location)
+				l_changed := project_path /~ l_target_options.last_location
 				l_target_options.set_last_location (project_path)
 				l_changed := True
 			elseif l_target_options.last_location /= Void then
 				project_path := l_target_options.last_location
 			else
-				project_path := file_system.dirname (file_name)
+				project_path := u.file_directory_path (file_name).as_string_32
 				l_target_options.set_last_location (project_path)
 				l_changed := True
 			end
@@ -377,7 +383,7 @@ feature -- Status setting
 	check_shared_library_definition_stamp
 			-- Check if a shared library definition file has changed and request to freeze if required.
 		local
-			s: STRING
+			s: like {SYSTEM_I}.dynamic_def_file
 		do
 			s := system.dynamic_def_file
 			if s = Void then
@@ -683,12 +689,12 @@ feature {NONE} -- Implementation
 			a_target_not_void: a_target /= Void
 			system_valid: system /= Void
 		local
-			l_s: STRING
+			l_s: like {CONF_TARGET}.settings.item
 			l_b: BOOLEAN
 			vd15: VD15
 			vd83: VD83
 			vd86: VD86
-			l_settings: HASH_TABLE [STRING, STRING]
+			l_settings: like {CONF_TARGET}.settings
 			l_factory: CONF_COMP_FACTORY
 		do
 			create l_factory
@@ -1032,7 +1038,7 @@ feature {NONE} -- Implementation
 					Error_handler.insert_warning (vd83)
 				end
 				-- new system without precompile, set value
-			elseif (a_target.precompile = Void and not workbench.has_compilation_started) then
+			elseif a_target.precompile = Void and not workbench.has_compilation_started then
 				if l_s = Void then
 					l_s := eiffel_layout.assemblies_path
 				end
@@ -1280,7 +1286,7 @@ feature {NONE} -- Implementation
 			l_load: CONF_LOAD
 			vd77: VD77
 			vd78: VD78
-			l_file_name: STRING
+			l_file_name: like {CONF_PRECOMPILE}.path
 			l_precomp_r: PRECOMP_R
 			l_target: CONF_TARGET
 			l_old_target: CONF_TARGET
@@ -1385,7 +1391,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

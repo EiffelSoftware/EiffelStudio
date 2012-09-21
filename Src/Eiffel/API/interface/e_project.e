@@ -65,7 +65,7 @@ feature -- Initialization
 		base_dir: DIRECTORY;
 		a_project_location: PROJECT_DIRECTORY
 		deletion_requested: BOOLEAN
-		deletion_agent: PROCEDURE [ANY, TUPLE [ARRAYED_LIST [STRING]]]
+		deletion_agent: PROCEDURE [ANY, TUPLE [LIST [READABLE_STRING_32]]]
 		cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
 	)
 			-- Create an Eiffel Project.
@@ -98,8 +98,8 @@ feature -- Initialization
 			prev_read_write_error: not read_write_error
 			valid_deletion_agent: deletion_agent /= Void implies deletion_requested
 		local
-			d: DIRECTORY
-			new_name: STRING
+			d: DIRECTORY_32
+			new_name: STRING_32
 			l_prev_work: STRING
 		do
 			l_prev_work := Execution_environment.current_working_directory
@@ -162,7 +162,7 @@ feature -- Properties
 	system: E_SYSTEM
 			-- Eiffel system
 
-	name: DIRECTORY_NAME
+	name: DIRECTORY_NAME_32
 			-- Path of eiffel project
 		do
 			Result := project_directory.path
@@ -563,7 +563,7 @@ feature -- Update
 			-- an eiffel project in W_code or F_wode
 			-- depending on the value `workbench_mode'
 		local
-			path: STRING
+			path: STRING_32
 			l_cmd: STRING
 			l_processors: INTEGER
 		do
@@ -591,7 +591,7 @@ feature -- Update
 			-- depending on the value `workbench_mode'.
 			-- Wait until C compilation is done.
 		local
-			path: STRING
+			path: STRING_32
 			l_cmd: STRING
 			l_processors: INTEGER
 		do
@@ -682,7 +682,7 @@ feature -- Update
 		end
 
 	delete_generation_directory (
-			base_name: STRING; deletion_agent: PROCEDURE [ANY, TUPLE];
+			base_name: READABLE_STRING_32; deletion_agent: PROCEDURE [ANY, TUPLE [LIST [READABLE_STRING_32]]];
 			cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN])
 
 			-- Delete then EIFFEL generated directory named `base_name'.
@@ -691,7 +691,7 @@ feature -- Update
 			-- files are deleted.
 			-- same for `cancel_agent'. Make it return `True' to cancel the operation.
 		local
-			generation_directory: DIRECTORY
+			generation_directory: DIRECTORY_32
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -710,16 +710,17 @@ feature -- Update
 			retry
 		end
 
-	delete_project_file (a_file_name: STRING)
+	delete_project_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Delete `a_file_name' if possible.
 		require
 			a_file_name_not_void: a_file_name /= Void
 		local
 			l_file: RAW_FILE
 			retried: BOOLEAN
+			u: FILE_UTILITIES
 		do
 			if not retried then
-				create l_file.make (a_file_name)
+				l_file := u.make_raw_file (a_file_name)
 				if l_file.exists then
 					l_file.delete
 				end
@@ -1027,9 +1028,9 @@ feature {NONE} -- Implementation
 
 	link_driver
 		local
-			uf: PLAIN_TEXT_FILE
+			uf: PLAIN_TEXT_FILE_32
 			app_name: STRING
-			file_name: FILE_NAME
+			file_name: FILE_NAME_32
 		do
 			if Comp_system.uses_precompiled then
 					-- Target
@@ -1057,7 +1058,7 @@ invariant
 	degree_output_not_void: degree_output /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

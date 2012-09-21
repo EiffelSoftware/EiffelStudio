@@ -11,7 +11,7 @@ feature -- Access
 			Result.compare_objects
 		end
 
-	filenames : ARRAY [STRING]	
+	filenames : ARRAY [STRING_32]
 		once
 			create Result.make(1, 0)
 			Result.compare_objects
@@ -64,21 +64,24 @@ feature -- Element change
 			-- reset values to their defaults.
 		local
 			empty_array: ARRAY [STRING]
+			empty_filenames: like filenames
 		do
 			create empty_array.make (1, 0)
 			empty_array.compare_objects
 			output_names.copy (empty_array)
-			filenames.copy (empty_array)
 			language_names.copy (empty_array)
 			column_names.copy (empty_array)
 			binary_operators.copy (empty_array)
 			values.copy (empty_array)
 			boolean_operators.copy (empty_array)
+			create empty_filenames.make_empty
+			empty_filenames.compare_objects
+			filenames.copy (empty_filenames)
 			subqueries.wipe_out
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -128,7 +128,8 @@ feature -- Initialization
 			ewb_loop: EWB_LOOP
 			e_displayer: DEFAULT_ERROR_DISPLAYER
 			l_loader: EC_PROJECT_LOADER
-			l_generated_file, l_target_file: RAW_FILE
+			l_generated_name: READABLE_STRING_GENERAL
+			u: FILE_UTILITIES
 		do
 			if not retried then
 						-- Read the resource files
@@ -201,19 +202,14 @@ feature -- Initialization
 								if is_single_file_compilation and then l_loader.eiffel_project.successful then
 										-- Copy generated executable in single file compilation to project location
 									if is_finalizing then
-										create l_generated_file.make (l_loader.eiffel_project.project_directory.final_executable_file_name)
+										l_generated_name := l_loader.eiffel_project.project_directory.final_executable_file_name
 									else
-										create l_generated_file.make (l_loader.eiffel_project.project_directory.workbench_executable_file_name)
+										l_generated_name := l_loader.eiffel_project.project_directory.workbench_executable_file_name
 									end
 										-- Check if generated file exists. If the C compilation fails, the file will not be generated.
-									if l_generated_file.exists then
-										 -- If generated file exists, copy it to the target location
-										create l_target_file.make (l_loader.eiffel_project.project_directory.single_file_compilation_executable_file_name)
-										l_generated_file.open_read
-										l_target_file.open_write
-										l_generated_file.copy_to (l_target_file)
-										l_target_file.close
-										l_generated_file.close
+									if u.file_exists (l_generated_name) then
+											-- If generated file exists, copy it to the target location.
+										u.copy_file (l_generated_name, l_loader.eiffel_project.project_directory.single_file_compilation_executable_file_name)
 									end
 								end
 							end
@@ -1403,14 +1399,20 @@ feature {NONE} -- Onces
 
 feature {NONE} -- Implementation
 
-	old_ace_file: STRING
+	old_ace_file: STRING_32
 			-- Old ace file to convert.
 
-	old_project_file: STRING
+	old_project_file: STRING_32
 			-- Old project file to convert.
 
-	config_file_name, target_name, project_path: STRING;
-			-- Name of the config file, target and path where project will be compiled.
+	config_file_name: STRING_32
+			-- Name of the configuration file.
+
+	target_name: STRING
+			-- Name of the target.
+
+	project_path: STRING_32
+			-- Name of the path where project will be compiled.
 
 	is_eiffel_class_file_name (a_filename: STRING): BOOLEAN
 			-- Is `a_filename' an Eiffel class file?

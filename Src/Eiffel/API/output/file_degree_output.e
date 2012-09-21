@@ -111,7 +111,7 @@ feature -- Basic operations: Eiffel compiler
 
 feature {NONE} -- Basic operations
 
-	put_degree (a_degree: STRING_32; a_to_go: INTEGER; a_name: STRING)
+	put_degree (a_degree: STRING_32; a_to_go: INTEGER; a_name: READABLE_STRING_32)
 			-- <Precursor>
 		do
 			open_file
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

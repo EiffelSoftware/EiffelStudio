@@ -971,9 +971,9 @@ feature -- Generation
 			-- Open in write mode a file for generating class code
 			-- of the current class type
 		local
-			l_file_name: STRING
-			previous_file_name: STRING
-			previous_file: PLAIN_TEXT_FILE
+			l_file_name: like full_file_name
+			previous_file_name: like full_file_name
+			previous_file: RAW_FILE_32
 		do
 			l_file_name := full_file_name (System.in_final_mode, packet_name (C_prefix, packet_number), base_file_name, Void)
 			if byte_context.workbench_mode then
@@ -1005,7 +1005,7 @@ feature -- Generation
 		require
 			Workbench_mode: not byte_context.final_mode
 		local
-			l_file_name: STRING
+			l_file_name: like full_file_name
 		do
 			l_file_name := full_file_name (System.in_final_mode, packet_name (C_prefix, packet_number), base_file_name, Void)
 			l_file_name.append_character (Descriptor_file_suffix)
@@ -1013,7 +1013,7 @@ feature -- Generation
 			create Result.make_c_code_file (l_file_name)
 		end
 
-	extern_declaration_filename: STRING
+	extern_declaration_filename: like full_file_name
 			-- File name for external declarations in final mode
 		do
 			Result := full_file_name (System.in_final_mode, packet_name (C_prefix, packet_number), base_file_name, Void)
@@ -1903,12 +1903,12 @@ feature -- Cleaning
 		local
 			retried, file_exists: BOOLEAN
 			object_name: STRING
-			generation_dir: DIRECTORY_NAME
-			c_file_name, cpp_file_name: FILE_NAME
+			generation_dir: DIRECTORY_NAME_32
+			c_file_name, cpp_file_name: FILE_NAME_32
 			packet_nb: INTEGER
-			file: PLAIN_TEXT_FILE
-			finished_file_name: FILE_NAME
-			finished_file: PLAIN_TEXT_FILE
+			file: PLAIN_TEXT_FILE_32
+			finished_file_name: FILE_NAME_32
+			finished_file: PLAIN_TEXT_FILE_32
 		do
 			if not retried and not is_precompiled and System.makefile_generator /= Void then
 				create generation_dir.make_from_string (project_location.workbench_path)
@@ -2087,7 +2087,7 @@ invariant
 	valid_implementation_id: System.il_generation implies implementation_id > 0
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

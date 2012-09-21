@@ -968,8 +968,7 @@ end
 			vd80: VD80
 			vd25: VD25
 			l_target: CONF_TARGET
-			l_file: PLAIN_TEXT_FILE
-			l_file_name: FILE_NAME
+			l_file: PLAIN_TEXT_FILE_32
 			d1, d2: DATE_TIME
 			l_factory: CONF_COMP_FACTORY
 			l_state: CONF_STATE
@@ -1102,9 +1101,8 @@ end
 
 					-- removed classes
 				if automatic_backup then
-					create l_file_name.make_from_string (workbench.backup_subdirectory)
-					l_file_name.set_file_name (backup_info)
-					create l_file.make_open_append (l_file_name)
+					create l_file.make (workbench.backup_info_file_name)
+					l_file.open_append
 				end
 				l_classes := l_vis_build.removed_classes
 				from
@@ -1520,7 +1518,6 @@ feature -- SPECIAL.make routine id
 				internal_special_make_filled_rout_id := Result
 			end
 		end
-
 
 feature -- Routine IDS update
 
@@ -2558,7 +2555,6 @@ end
 		local
 			file_pointer: POINTER
 			melted_file: RAW_FILE
-			file_name: FILE_NAME
 			l_name: STRING
 			l_ba: BYTE_ARRAY
 
@@ -2570,6 +2566,7 @@ end
 			l_root_rout_info: ROUT_INFO
 			l_root_rout_id: INTEGER
 			l_rcorigin, l_rcoffset: INTEGER
+			u: FILE_UTILITIES
 		do
 debug ("ACTIVITY")
 	io.error.put_string ("Updating name.eif%N")
@@ -2581,15 +2578,11 @@ end
 				-- the life cycle of the project, this can be detected by checking that
 				-- `melted_file_name' from WORKBENCH_I has not been reset.
 			if workbench.melted_file_name /= Void then
-				l_name := Workbench.melted_file_name.twin
+				l_name := Workbench.melted_file_name
 			else
-				l_name := name.twin
+				l_name := name
 			end
-
-			l_name.append (".melted")
-			create file_name.make_from_string (project_location.workbench_path)
-			file_name.set_file_name (l_name)
-			create melted_file.make_open_write (file_name)
+			melted_file := u.open_write_raw_file_in (l_name + ".melted", project_location.workbench_path)
 
 				-- There is something to update
 			melted_file.put_boolean (not empty)
@@ -3998,9 +3991,9 @@ feature -- Generation
 			i, nb: INTEGER
 			l_new_old_mapping: ARRAY [INTEGER]
 			l_writer: SED_MEDIUM_READER_WRITER
-			l_mapping_file: RAW_FILE
-			l_file_name: FILE_NAME
 			l_facility: SED_STORABLE_FACILITIES
+			l_mapping_file: RAW_FILE
+			u: FILE_UTILITIES
 		do
 				-- Build mapping between the new IDs and the old one.
 			from
@@ -4026,9 +4019,7 @@ feature -- Generation
 				i := i + 1
 			end
 
-			create l_file_name.make_from_string (project_location.final_path)
-			l_file_name.set_file_name (finalized_type_mapping)
-			create l_mapping_file.make_open_write (l_file_name)
+			l_mapping_file := u.open_write_raw_file_in (finalized_type_mapping, project_location.final_path)
 			create l_writer.make (l_mapping_file)
 			l_writer.set_for_writing
 			create l_facility
@@ -4045,15 +4036,13 @@ feature -- Generation
 			l_file: RAW_FILE
 			l_facility: SED_STORABLE_FACILITIES
 			l_reader: SED_MEDIUM_READER_WRITER
-			l_file_name: FILE_NAME
 			retried: BOOLEAN
+			u: FILE_UTILITIES
 		do
 			if not retried then
 				Result := internal_retrieved_finalized_type_mapping
 				if Result = Void then
-					create l_file_name.make_from_string (project_location.final_path)
-					l_file_name.set_file_name (finalized_type_mapping)
-					create l_file.make (l_file_name)
+					l_file := u.make_raw_file_in (finalized_type_mapping, project_location.final_path)
 					if l_file.exists then
 						l_file.open_read
 						create l_reader.make (l_file)
@@ -4821,9 +4810,9 @@ feature -- Generation
 			a_class: CLASS_C
 			final_mode: BOOLEAN
 			temp: STRING
-			subdir: DIRECTORY
-			f_name: FILE_NAME
-			dir_name: DIRECTORY_NAME
+			subdir: DIRECTORY_32
+			f_name: FILE_NAME_32
+			dir_name: DIRECTORY_NAME_32
 			cecil_file, header_file: INDENT_FILE
 			buffer, header_buffer: GENERATION_BUFFER
 			l_has_visible: BOOLEAN
@@ -6110,7 +6099,7 @@ feature -- Log files
 
 	open_log_files
 		local
-			f_name: FILE_NAME
+			f_name: FILE_NAME_32
 		do
 			if in_final_mode then
 					-- removed_log_file is used only in final mode

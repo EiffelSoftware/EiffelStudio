@@ -60,7 +60,7 @@ feature -- Attributes
 	precompiled_directories: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
 			-- Precompilation directories, indexed by precompilation ids
 
-	precompiled_driver: FILE_NAME
+	precompiled_driver: FILE_NAME_32
 			-- Full file name of the precompilation driver
 
 	melted_file_name: STRING
@@ -567,7 +567,7 @@ feature -- Directory creation
 	create_data_directory
 			-- Create the subdirectory for data storage.
 		local
-			d: DIRECTORY
+			d: DIRECTORY_32
 		do
 			if universe_defined then
 				create d.make (project_location.data_path)
@@ -582,7 +582,7 @@ feature -- Automatic backup
 	create_backup_directory
 			-- Create the subdirectory for backup `backup_counter'
 		local
-			d: DIRECTORY
+			d: DIRECTORY_32
 		do
 				-- Create the EIFGEN/BACKUP directory
 			create d.make (project_location.backup_path)
@@ -597,10 +597,10 @@ feature -- Automatic backup
 			end
 		end
 
-	backup_subdirectory: DIRECTORY_NAME
+	backup_subdirectory: DIRECTORY_NAME_32
 			-- Current backup subdirectory
 		local
-			temp: STRING
+			temp: STRING_32
 		do
 			create Result.make_from_string (project_location.backup_path)
 			create temp.make (9)
@@ -609,7 +609,7 @@ feature -- Automatic backup
 			Result.extend (temp)
 		end
 
-	backup_info_file_name: FILE_NAME
+	backup_info_file_name: FILE_NAME_32
 			-- File where info about the compilation is saved
 		do
 			create Result.make_from_string (backup_subdirectory)
@@ -619,7 +619,7 @@ feature -- Automatic backup
 	save_starting_backup_info
 			-- Save the information about this compilation
 		local
-			file: PLAIN_TEXT_FILE
+			file: PLAIN_TEXT_FILE_32
 		do
 			create file.make (backup_info_file_name)
 			if file.is_creatable or else (file.exists and then file.is_writable) then
@@ -648,7 +648,7 @@ feature -- Automatic backup
 	save_ending_backup_info
 			-- Save the information about the status of this compilation
 		local
-			file: PLAIN_TEXT_FILE
+			file: PLAIN_TEXT_FILE_32
 		do
 			create file.make (backup_info_file_name)
 			if file.is_creatable or else (file.exists and then file.is_writable) then
@@ -698,7 +698,7 @@ feature {NONE} -- Implementation
 			-- Was there a problem during running the pre and post compile actions?
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

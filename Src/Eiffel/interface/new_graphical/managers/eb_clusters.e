@@ -367,16 +367,16 @@ feature -- Element change
 			valid_clusters: old_group /= Void and new_cluster /= Void
 			valid_path: new_path /= Void
 		local
-			old_file: RAW_FILE
-			new_file: RAW_FILE
+			old_file: RAW_FILE_32
+			new_file: RAW_FILE_32
 			input: STRING
 			retried: BOOLEAN
-			fname: FILE_NAME
+			fname: FILE_NAME_32
 			tdirsrc, tdirdes: KL_DIRECTORY
 			l_lib_usage: ARRAYED_LIST [CONF_LIBRARY]
-			l_src_path, l_dst_path: STRING
+			l_src_path, l_dst_path: STRING_32
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
-			l_old_relative_path: STRING
+			l_old_relative_path: STRING_32
 		do
 			if
 				not retried
@@ -520,7 +520,7 @@ feature -- Element change
 					-- Perform a quick melt so that class is correctly added to the system as unreferenced.
 				eiffel_project.quick_melt (True, True, False)
 			end
-			
+
 			if attached last_added_class as l_class_i then
 					-- Must set_stone before `synchronize_all', otherwise {EB_DEVELOPMENT_WINDOW}.synchronize
 					-- would switch editor tab to last stone which is not the class just created. see bug#16707

@@ -59,7 +59,43 @@ feature -- Basic operations
 			Result_is_void_or_a_valid_directory: Result = Void or else (Result.is_valid and not Result.is_empty)
 		end
 
-	recursive_create_directory (a_directory_name: DIRECTORY_NAME)
+	validate_directory_name_32 (a_directory_name: STRING_32): DIRECTORY_NAME_32
+			-- Check the validy of `a_directory_name'. If it is valid or almost
+			-- valid, returns the valid name of `a_directory_name', otherwise
+			-- returns Void.
+		require
+			a_directory_name_not_void_nor_empty:
+				a_directory_name /= Void and then not a_directory_name.is_empty
+		local
+			a_directory_name_string: STRING_32
+			ending_char: CHARACTER_32
+		do
+			a_directory_name_string := a_directory_name.twin
+
+				-- Remove blanks
+			a_directory_name_string.left_adjust
+			a_directory_name_string.right_adjust
+
+			if a_directory_name_string.count /= 0 then
+					-- Remove any ending separator
+				ending_char := (a_directory_name_string @ a_directory_name_string.count)
+				if ending_char = Operating_environment.Directory_separator and then
+				   a_directory_name_string.count >= 2 and then
+				   a_directory_name_string @ (a_directory_name_string.count - 1) /= ':'
+				then
+				   a_directory_name_string.remove_tail (1)
+				end
+
+				create Result.make_from_string (a_directory_name_string)
+				if not Result.is_valid then
+					Result := Void
+				end
+			end
+		ensure
+			Result_is_void_or_a_valid_directory: Result = Void or else (Result.is_valid and not Result.is_empty)
+		end
+
+	recursive_create_directory (a_directory_name: DIRECTORY_NAME_32)
 			-- Create the directory `a_directory_name' recursively.
 			--
 			-- Ex: if /temp/ exists but not /temp/test, calling
@@ -71,10 +107,10 @@ feature -- Basic operations
 				not a_directory_name.is_empty and then
 				a_directory_name.is_valid
 		local
-			a_directory: DIRECTORY
-			new_directory_name: DIRECTORY_NAME
+			a_directory: DIRECTORY_32
+			new_directory_name: DIRECTORY_NAME_32
 			directories_to_build: LINKED_LIST [STRING]
-			built_directory: STRING
+			built_directory: STRING_32
 			loc_directory_name: STRING
 			separator_index: INTEGER
 		do
@@ -119,10 +155,10 @@ feature -- Basic operations
 				end
 			end
 		ensure
-			Result_exists: (create {DIRECTORY}.make (a_directory_name)).exists
+			Result_exists: (create {DIRECTORY_32}.make (a_directory_name)).exists
 		end
 
-	path_ellipsis (a_path: STRING; a_max_length: INTEGER): STRING
+	path_ellipsis (a_path: STRING_32; a_max_length: INTEGER): STRING_32
 			-- Create the displayed string of `a_path', with a maximum
 			-- length of `a_max_length' characters. If `a_path' is
 			-- longer than `a_max_length', we only keep the beginning
@@ -179,7 +215,7 @@ feature {NONE} -- Validation
 	make_for_test
 			-- Test the features of this class.
 		local
-			dir: DIRECTORY_NAME
+			dir: DIRECTORY_NAME_32
 		do
 			if Operating_environment.directory_separator = '\' then
 				test_validate_directory_name ("c:\", True)

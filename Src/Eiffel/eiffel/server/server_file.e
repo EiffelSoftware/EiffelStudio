@@ -32,10 +32,9 @@ feature -- Initialization
 		require
 			positive_argument: i /= 0
 		local
-			f_name: FILE_NAME
-			d_name: DIRECTORY_NAME
-			temp: STRING
-			d: DIRECTORY
+			d_name: DIRECTORY_NAME_32
+			temp: STRING_32
+			d: DIRECTORY_32
 		do
 			create d_name.make_from_string (project_location.compilation_path)
 			create temp.make (5)
@@ -46,9 +45,7 @@ feature -- Initialization
 			if not d.exists then
 				d.create_dir
 			end
-			create f_name.make_from_string (d_name)
-			f_name.set_file_name (file_name (i))
-			file_make (f_name)
+			file_make_in (file_name (i), d_name)
 			if not Eiffel_project.is_read_only then
 					--| Re-finalization after a crash: the COMP
 					--| directory doesn't grow and grow and grow
@@ -64,38 +61,55 @@ end
 
 feature -- Initialization
 
-	file_make (fn: STRING)
-			-- Create file object with `fn' as file name.
+	file_make_in (fn: READABLE_STRING_GENERAL; d: READABLE_STRING_GENERAL)
+			-- Create file object with `fn' as file name in directory `d'.
 		require
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
+			d_attached: attached d
+		local
+			u: FILE_UTILITIES
 		do
-			name := fn
+			file := u.make_raw_file_in (fn, d)
 		ensure
-			file_named: name.is_equal (fn)
+			file_named: attached name -- name.is_equal (d + fn)
 			file_closed: not is_open
 		end
 
 feature -- Access
 
-	name: STRING
+	name: READABLE_STRING_GENERAL
 			-- File name
+		do
+			if attached {FILE_32} file as f then
+					-- Use 32-bit version of the name
+				Result := f.name
+			else
+				Result := file.name
+			end
+		end
 
 	file_pointer: POINTER
 			-- File pointer as required in C
+		do
+			Result := file.file_pointer
+		end
 
 	occurrence: INTEGER
 			-- Occurrence of the file in the server control
 
 	is_open: BOOLEAN
 			-- Is the current file open ?
+		do
+			Result := file.is_open_read or else file.is_open_write or else file.is_open_append
+		end
 
 	descriptor: INTEGER
 			-- File descriptor as used by the operating system.
 		require
 			file_opened: is_open
 		do
-			Result := file_fd (file_pointer)
+			Result := file.descriptor
 		end
 
 	add_occurrence
@@ -131,20 +145,17 @@ feature -- Status setting
 		require
 			is_closed: not is_open
 		local
-			external_name: ANY
 			l_open_write: BOOLEAN
 			is_retried: BOOLEAN
 		do
-			external_name := name.to_c
 			if Eiffel_project.is_read_only or else precompiled or else l_open_write then
 					-- Open the file in `Read' mode only.
-				file_pointer := file_open ($external_name, 0)
+				file.open_read
 			else
 					-- Open the file in `Read-Write' mode.
 				l_open_write := True
-				file_pointer := file_open ($external_name, 3)
+				file.open_read_write
 			end
-			is_open := True
 debug ("SERVER")
 	io.error.put_string ("Opening file ")
 	io.error.put_string (file_name (file_id))
@@ -169,12 +180,8 @@ end
 			-- COMPILER_SERVER
 		require
 			is_closed: not is_open
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			file_pointer := file_open ($external_name, 5)
-			is_open := True
+			file.open_read_append
 		ensure
 			opened: is_open
 		end
@@ -184,12 +191,7 @@ end
 		require
 			file_exists: is_open or else exists
 		do
-			if not is_open then
-				set_buffer
-				Result := buffered_file_info.size
-			else
-				Result := file_size (file_pointer)
-			end
+			Result := file.count
 		end
 
 	close
@@ -197,9 +199,7 @@ end
 		require
 			is_open: is_open
 		do
-			file_close (file_pointer)
-			file_pointer := default_pointer
-			is_open := False
+			file.close
 		ensure
 			is_closed: not is_open
 		end
@@ -208,13 +208,10 @@ end
 			-- Clear the content of a file by opening it
 			-- in write-only mode and closing it.
 		local
-			external_name: ANY
 			retried: BOOLEAN
 		do
 			if not retried then
-				external_name := name.to_c
-				file_pointer := file_open ($external_name, 1)
-				is_open := True
+				file.open_write
 				close
 			end
 		rescue
@@ -227,16 +224,15 @@ end
 			-- server file. (It might have changed
 			-- between compilations)
 		local
-			fname: FILE_NAME
+			d: DIRECTORY_NAME_32
 			temp: STRING
 		do
-			create fname.make_from_string (directory_path (file_id))
 			create temp.make (5)
 			temp.extend ('S')
 			temp.append_integer (packet_number (file_id))
-			fname.extend (temp)
-			fname.set_file_name (file_name (file_id))
-			name := fname
+			create d.make_from_string (directory_path (file_id))
+			d.extend (temp)
+			file_make_in (file_name (file_id), d)
 		end
 
 feature -- Status report
@@ -244,35 +240,29 @@ feature -- Status report
 	exists: BOOLEAN
 			-- Does physical file exist?
 			-- (Uses effective UID.)
-		local
-			external_name: ANY
 		do
-			external_name := name.to_c
-			Result := file_exists ($external_name)
+			Result := file.exists
 		end
 
 	is_readable: BOOLEAN
 			-- Is file readable?
 			-- (Checks permission for effective UID.)
 		do
-			set_buffer
-			Result := buffered_file_info.is_readable
+			Result := file.is_readable
 		end
 
 	is_writable: BOOLEAN
 			-- Is file writable?
 			-- (Checks write permission for effective UID.)
 		do
-			set_buffer
-			Result := buffered_file_info.is_writable
+			Result := file.is_writable
 		end
 
 	is_readable_and_writable: BOOLEAN
-			-- Is file readable?
+			-- Is file readable and writable?
 			-- (Checks permission for effective UID.)
 		do
-			set_buffer
-			Result := buffered_file_info.is_readable and buffered_file_info.is_writable
+			Result := file.is_readable and then file.is_writable
 		end
 
 	precompiled: BOOLEAN
@@ -293,12 +283,10 @@ feature -- Removal
 		require
 			exists: exists
 		local
-			external_name: ANY
 			retried: BOOLEAN
 		do
 			if not retried then
-				external_name := name.to_c
-				file_unlink ($external_name)
+				file.delete
 			end
 		rescue
 			retried := True
@@ -334,7 +322,7 @@ feature {SERVER_CONTROL, SERVER_FILE} -- File access
 			Result.append_integer (an_id)
 		end
 
-	directory_path (an_id: INTEGER): STRING
+	directory_path (an_id: INTEGER): STRING_32
 			-- Server file directory path
 		do
 			if an_id > file_counter.precompiled_offset then
@@ -347,68 +335,17 @@ feature {SERVER_CONTROL, SERVER_FILE} -- File access
 
 feature {NONE} -- Implementation
 
+	file: RAW_FILE
+			-- Associated file.
+
 	file_counter: FILE_COUNTER
 			-- File counter
 		once
 			Result := server_controler.file_counter
 		end
 
-	buffered_file_info: UNIX_FILE_INFO
-			-- Information about the file.
-		once
-			create Result.make
-		end
-
-	set_buffer
-			-- Resynchronizes information on file
-		require
-			file_exists: exists
-		do
-			buffered_file_info.update (name)
-		end
-
-	file_open (f_name: POINTER; how: INTEGER): POINTER
-			-- File pointer for file `f_name', in mode `how'.
-		external
-			"C use %"eif_file.h%""
-		alias
-			"file_binary_open"
-		end
-
-	file_close (file: POINTER)
-			-- Close `file'.
-		external
-			"C signature (FILE *) use %"eif_file.h%""
-		end
-
-	file_unlink (fname: POINTER)
-			-- Delete file `fname'.
-		external
-			"C use %"eif_file.h%""
-		end
-
-	file_fd (file: POINTER): INTEGER
-			-- Operating system's file descriptor
-		external
-			"C signature (FILE *): EIF_INTEGER use %"eif_file.h%""
-		end
-
-	file_exists (f_name: POINTER): BOOLEAN
-			-- Does `f_name' exist.
-		external
-			"C use %"eif_file.h%""
-		end
-
-	file_size (file: POINTER): INTEGER
-			-- Size of `file'
-		external
-			"C signature (FILE *): EIF_INTEGER use %"eif_file.h%""
-		alias
-			"eif_file_size"
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

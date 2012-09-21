@@ -213,7 +213,7 @@ feature -- Basic operations
 
 feature -- Access
 
-	development_windows_with_class (cl_name: STRING): LIST [EB_DEVELOPMENT_WINDOW]
+	development_windows_with_class (cl_name: like {ERROR}.file_name): LIST [EB_DEVELOPMENT_WINDOW]
 			-- List of all windows with `cl_name' opened.
 		require
 			cl_name_not_void: cl_name /= Void

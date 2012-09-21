@@ -171,10 +171,9 @@ feature -- Status report
 	is_userdefined_metric_file_exist: BOOLEAN
 			-- Does user defined metric file exist?
 		local
-			l_file: RAW_FILE
+			u: FILE_UTILITIES
 		do
-			create l_file.make (userdefined_metrics_file)
-			Result := l_file.exists
+			Result := u.file_exists (userdefined_metrics_file)
 		end
 
 	is_metric_name_equal (a_metric_name, b_metric_name: STRING): BOOLEAN
@@ -232,44 +231,37 @@ feature -- Status report
 
 feature -- Access
 
-	userdefined_metrics_file: STRING
+	userdefined_metrics_file: READABLE_STRING_GENERAL
 			-- File to store user-defined metrics
 		require
 			system_defined: workbench.system_defined and then workbench.is_already_compiled
 		local
-			l_file_name: FILE_NAME
+			u: FILE_UTILITIES
 		do
-			create l_file_name.make_from_string (userdefined_metrics_path)
-			l_file_name.set_file_name ("userdefined_metrics.xml")
-			Result := l_file_name.out
+			Result := u.file_name (u.make_raw_file_in ("userdefined_metrics.xml", userdefined_metrics_path))
 		ensure
 			good_result: Result /= Void and then not Result.is_empty
 		end
 
-	archive_history_file: STRING
+	archive_history_file: READABLE_STRING_GENERAL
 			-- File to store metric history
 		require
 			system_defined: workbench.system_defined and then workbench.is_already_compiled
 		local
-			l_file_name: FILE_NAME
+			u: FILE_UTILITIES
 		do
-			create l_file_name.make_from_string (userdefined_metrics_path)
-			l_file_name.set_file_name ("history.xml")
-			Result := l_file_name.out
+			Result := u.file_name (u.make_raw_file_in ("history.xml", userdefined_metrics_path))
 		ensure
 			good_result: Result /= Void and then not Result.is_empty
 		end
 
-	userdefined_metrics_path: STRING
+	userdefined_metrics_path: like {PROJECT_DIRECTORY}.path
 			-- File path where `userdefined_metric_file' is located, not including the trailing directory separator
 		require
 			system_defined: workbench.system_defined and then workbench.is_already_compiled
-		local
-			l_file_name: FILE_NAME
 		do
-			create l_file_name.make_from_string (project_location.data_path)
-			l_file_name.extend ("metrics")
-			Result :=  l_file_name.out
+			create Result.make_from_string (project_location.data_path)
+			Result.extend ("metrics")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -428,7 +420,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	metrics_from_file (a_file_name: STRING): LIST [EB_METRIC]
+	metrics_from_file (a_file_name: READABLE_STRING_GENERAL): LIST [EB_METRIC]
 			-- Metrics defined in file named `a_file_name'
 			-- If error occurs when opening the file or loading metric definitions,
 			-- result will be Void and the actual error will be in `last_error'.
@@ -518,7 +510,7 @@ feature -- Metric management
 			end
 		end
 
-	load_metric_definitions (a_file_name: STRING; a_predefined: BOOLEAN)
+	load_metric_definitions (a_file_name: READABLE_STRING_GENERAL; a_predefined: BOOLEAN)
 			-- Load metric definitions in `a_file_name'.
 			-- If some error occurs when parsing `a_file_name', no metric will be registered in `metrics'.
 			-- If `a_predefined' is True, mark loaded metrics predefined.
@@ -528,8 +520,9 @@ feature -- Metric management
 		local
 			l_loaded_metrics: like metrics
 			l_file: RAW_FILE
+			u: FILE_UTILITIES
 		do
-			create l_file.make (a_file_name)
+			l_file := u.make_raw_file (a_file_name)
 			if l_file.exists then
 				if l_file.is_readable then
 					l_loaded_metrics := metrics_from_file (a_file_name)
@@ -550,7 +543,7 @@ feature -- Metric management
 			end
 		end
 
-	store_metric_definitions (a_file_name: STRING)
+	store_metric_definitions (a_file_name: READABLE_STRING_GENERAL)
 			-- Store non-predefined `metrics' in `a_file_name'.
 			-- Note: Always create new file when store.
 		require
@@ -569,15 +562,12 @@ feature -- Metric management
 	store_userdefined_metrics
 			-- Store user-defined metrics.
 		local
-			l_folder: DIRECTORY
 			l_retried: BOOLEAN
+			u: FILE_UTILITIES
 		do
 			if not l_retried then
 				workbench.create_data_directory
-				create l_folder.make (userdefined_metrics_path)
-				if not l_folder.exists then
-					l_folder.create_dir
-				end
+				u.create_directory (userdefined_metrics_path)
 				store_metric_definitions (userdefined_metrics_file)
 			end
 		rescue
@@ -686,12 +676,13 @@ feature -- Metric management
 	load_archive_history
 			-- Load archive history from `archive_history_file' into `archive_history'.
 		local
-			l_file_name: RAW_FILE
+			l_file: RAW_FILE
+			u: FILE_UTILITIES
 		do
 			clear_last_error
 			create archive_history.make
-			create l_file_name.make (archive_history_file)
-			if l_file_name.exists and then l_file_name.is_readable then
+			l_file := u.make_raw_file (archive_history_file)
+			if l_file.exists and then l_file.is_readable then
 				archive_history.load_archive (archive_history_file)
 				archive_history.mark_archive_as_old
 				if archive_history.has_error then
@@ -708,15 +699,12 @@ feature -- Metric management
 			archive_history_loaded: has_archive_been_loaded
 		local
 			l_retried: BOOLEAN
-			l_folder: DIRECTORY
+			u: FILE_UTILITIES
 		do
 			if not l_retried then
 				if archive_history.count > 0 then
 					workbench.create_data_directory
-					create l_folder.make (userdefined_metrics_path)
-					if not l_folder.exists then
-						l_folder.create_dir
-					end
+					u.create_directory (userdefined_metrics_path)
 					clear_last_error
 					archive_history.clear_last_error
 					archive_history.store_archive (archive_history_file, agent archive_history.create_last_error (metric_names.err_file_not_writable (archive_history_file)))

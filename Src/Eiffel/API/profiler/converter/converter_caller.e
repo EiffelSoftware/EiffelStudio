@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 	check_profile_file (profile_name: STRING; comp_type: STRING)
 			-- Checks if the file exists.
 		local
-			file: PLAIN_TEXT_FILE
+			file: PLAIN_TEXT_FILE_32
 		do
 			if comp_type.is_equal ("workbench") then
 				create profile_out_file.make_from_string (project_location.workbench_path)
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 	check_project_directory (comp_type: STRING)
 			-- Checks wether the project directory exists.
 		local
-			file: PLAIN_TEXT_FILE;
+			file: PLAIN_TEXT_FILE_32
 		do
 			if comp_type.is_equal ("workbench") then
 				create translat_file.make_from_string (project_location.workbench_path)
@@ -139,10 +139,10 @@ feature {NONE} -- attributes
 	exists : BOOLEAN
 			-- Does the file passed as argument exist?
 
-	profile_out_file: FILE_NAME
+	profile_out_file: FILE_NAME_32
 			-- File name where the output file is written
 
-	translat_file: FILE_NAME
+	translat_file: FILE_NAME_32
 			-- File name where TRANSLAT really is; is based upon
 			-- commandline argument (2).
 

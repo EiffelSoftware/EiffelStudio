@@ -67,7 +67,7 @@ feature -- Callbacks
 
 feature {NONE} -- Attributes
 
-	c_code_directory: STRING
+	c_code_directory: STRING_32
 			-- Directory where the C code is stored.
 		do
 			Result := project_location.final_path

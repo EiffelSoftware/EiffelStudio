@@ -260,7 +260,7 @@ feature {NONE} -- Attributes
 	retried: BOOLEAN
 			-- Is this already tried?
 
-	c_code_directory: STRING
+	c_code_directory: STRING_32
 			-- Directory where the C code is stored.
 		do
 			Result := project_location.workbench_path

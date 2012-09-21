@@ -46,7 +46,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- IL info file names
 
-	Il_info_file_name: FILE_NAME
+	Il_info_file_name: READABLE_STRING_GENERAL
 			-- Filename for IL info storage used to load data
 			-- in the context, we load workbench information
 			-- in finalized we generate each time all IL code
@@ -59,44 +59,44 @@ feature {NONE} -- IL info file names
 			end
 		end
 
-	Workbench_il_info_file_name: FILE_NAME
+	Workbench_il_info_file_name: READABLE_STRING_GENERAL
 			-- Filename for Workbench IL info storage
-		do
-			create Result.make_from_string (project_location.workbench_path)
-			Result.set_file_name (Il_info_name)
-			Result.add_extension (Il_info_extension)
+		local
+			u: FILE_UTILITIES
+		once
+			Result := u.make_file_name_in (Il_info_name + "." + Il_info_extension, project_location.workbench_path)
 		end
 
-	Final_il_info_file_name: FILE_NAME
+	Final_il_info_file_name: READABLE_STRING_GENERAL
 			-- Filename for Final IL info storage
+		local
+			u: FILE_UTILITIES
 		once
-			create Result.make_from_string (project_location.final_path)
-			Result.set_file_name (Il_info_name)
-			Result.add_extension (Il_info_extension)
+			Result := u.make_file_name_in (Il_info_name + "." + Il_info_extension, project_location.final_path)
 		end
 
 feature {NONE} -- File name data From compiler world
 
-	workbench_module_directory_path_name: STRING
+	workbench_module_directory_path_name: like {PROJECT_DIRECTORY}.path
 			-- Directory path where module are located
 		do
 			Result := project_location.workbench_path
 		end
 
-	finalized_module_directory_path_name: STRING
+	finalized_module_directory_path_name: like {PROJECT_DIRECTORY}.path
 			-- Directory path where module are located
 		do
 			Result := project_location.final_path
 		end
 
-	workbench_assembly_directory_path_name: STRING
+	workbench_assembly_directory_path_name: like {PROJECT_DIRECTORY}.path
 			-- Directory path where assemblies are located
 			-- that is also valid for precompilation assemblies
 		do
 			Result := project_location.workbench_assemblies_path
 		end
 
-	finalized_assembly_directory_path_name: STRING
+	finalized_assembly_directory_path_name: like {PROJECT_DIRECTORY}.path
 			-- Directory path where assemblies are located
 			-- that is also valid for precompilation assemblies
 		do
@@ -108,13 +108,13 @@ feature {NONE} -- File name data From compiler world
 			Result := a_system_name + ".dll"
 		end
 
-	workbench_precompilation_module_filename (a_system_name: STRING): FILE_NAME
+	workbench_precompilation_module_filename (a_system_name: STRING): FILE_NAME_32
 		do
 			create Result.make_from_string (workbench_assembly_directory_path_name)
 			Result.set_file_name (precompilation_module_name (a_system_name))
 		end
 
-	finalized_precompilation_module_filename (a_system_name: STRING): FILE_NAME
+	finalized_precompilation_module_filename (a_system_name: STRING): FILE_NAME_32
 			-- Finalized precompilation module file name for `a_system_name'.
 		do
 			create Result.make_from_string (finalized_assembly_directory_path_name)
@@ -122,7 +122,7 @@ feature {NONE} -- File name data From compiler world
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

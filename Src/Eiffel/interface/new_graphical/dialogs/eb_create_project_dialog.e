@@ -1,4 +1,4 @@
-note
+﻿note
 	description	: "Command to create a new project"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -115,7 +115,7 @@ feature {NONE} -- Initialization
 			set_title (Interface_names.t_Choose_project_and_directory)
 		end
 
-	make_with_ace (a_parent_window: EV_WINDOW; ace_name: STRING; a_suggested_directory_name: STRING)
+	make_with_ace (a_parent_window: EV_WINDOW; ace_name: STRING_32; a_suggested_directory_name: STRING_32)
 			-- Create a new project using the ace file named `ace_name'.
 			-- and the suggested project directory `dir_name'.
 			--
@@ -148,7 +148,7 @@ feature -- Access
 	success: BOOLEAN
 			-- Was last operation sucessful?
 
-	project_location: STRING
+	project_location: STRING_32
 			-- Location for selected project
 		require
 			success: success
@@ -171,7 +171,7 @@ feature -- Execution
 		local
 			blank_project_builder: BLANK_PROJECT_BUILDER
 			retried: BOOLEAN
-			cla, clu, f: STRING
+			cla, clu, f: STRING_32
 			sc: EIFFEL_SYNTAX_CHECKER
 			l_project_loader: EB_GRAPHICAL_PROJECT_LOADER
 			l_project_initialized: BOOLEAN
@@ -215,7 +215,7 @@ feature -- Execution
 				ace_file_name := blank_project_builder.ace_filename
 				compile_project := compile_project_check_button.is_selected
 
-				if (create {PLAIN_TEXT_FILE}.make (ace_file_name)).exists then
+				if (create {PLAIN_TEXT_FILE_32}.make (ace_file_name)).exists then
 						-- Warn that the existing configuration file will be overwritten.
 					prompts.show_warning_prompt_with_cancel (
 						warning_messages.w_file_exists (ace_file_name),
@@ -462,14 +462,14 @@ feature {NONE} -- Implementation
 			-- Popup a "select directory" dialog.
 		local
 			dd: EV_DIRECTORY_DIALOG
-			start_directory: STRING
+			start_directory: STRING_32
 		do
 			create dd
 			dd.set_title (Interface_names.t_select_a_directory)
 			if directory_field /= Void then
 				start_directory := directory_field.text
 				if not start_directory.is_empty then
-					start_directory := validate_directory_name (start_directory)
+					start_directory := validate_directory_name_32 (start_directory)
 					if (create {DIRECTORY}.make (start_directory)).exists then
 						dd.set_start_directory (start_directory)
 					end
@@ -479,13 +479,13 @@ feature {NONE} -- Implementation
 			dd.show_modal_to_window (Current)
 		end
 
-	check_and_create_directory (a_directory_name: DIRECTORY_NAME)
+	check_and_create_directory (a_directory_name: DIRECTORY_NAME_32)
 			-- Check that the directory `a_directory_name' is valid and exists and MODIFY IT if needed.
 			-- If `a_directory_name' is not valid or does not exits, a developper exception is raised.
 		local
-			new_directory_name: DIRECTORY_NAME
+			new_directory_name: DIRECTORY_NAME_32
 		do
-			new_directory_name := validate_directory_name (a_directory_name)
+			new_directory_name := validate_directory_name_32 (a_directory_name)
 			if new_directory_name = Void then
 				raise_exception (Invalid_directory_exception)
 			else
@@ -496,12 +496,12 @@ feature {NONE} -- Implementation
 			add_error_message (Warning_messages.w_Invalid_directory_or_cannot_be_created (a_directory_name))
 		end
 
-	create_default_directory_name (project_name: STRING): STRING
+	create_default_directory_name (project_name: STRING_32): STRING_32
 			-- Return the proposed directory for project `project_name'
 		local
-			l_project_location: STRING
+			l_project_location: STRING_32
 		do
-			l_project_location := eiffel_layout.user_projects_path.twin
+			l_project_location := eiffel_layout.user_projects_path_32.twin
 			if l_project_location @ l_project_location.count /= Operating_environment.Directory_separator then
 				l_project_location.append_character (Operating_environment.Directory_separator)
 			end
@@ -509,7 +509,7 @@ feature {NONE} -- Implementation
 			Result := l_project_location
 		end
 
-	old_project_name: STRING
+	old_project_name: STRING_32
 			-- Old project name, set by user
 
 feature {NONE} -- Callbacks
@@ -534,8 +534,8 @@ feature {NONE} -- Callbacks
 	on_change_project_name
 			-- The user has changed the project name, update the project location
 		local
-			curr_project_location: STRING
-			curr_project_name: STRING
+			curr_project_location: STRING_32
+			curr_project_name: STRING_32
 			sep_index: INTEGER
 		do
 			curr_project_name := system_name_field.text
@@ -563,7 +563,7 @@ feature {NONE} -- Callbacks
 	retrieve_directory (dialog: EV_DIRECTORY_DIALOG)
 			-- Get callback information from `dialog', then send it to the directory field.
 		local
-			dir_name: STRING
+			dir_name: STRING_32
 		do
 			dir_name := dialog.directory
 			if dir_name.is_empty then
@@ -581,16 +581,16 @@ feature {NONE} -- Private attributes
 	parent_window: EV_WINDOW
 			-- Parent window
 
-	ace_file_name: STRING
+	ace_file_name: STRING_32
 			-- Name of the ace file to create the project with.
 
-	directory_name: DIRECTORY_NAME
+	directory_name: DIRECTORY_NAME_32
 			-- Directory to create the project in.
 
-	system_name: STRING
+	system_name: STRING_32
 			-- Name of the system of the project to create.
 
-	suggested_directory_name: STRING
+	suggested_directory_name: STRING_32
 			-- Initial directory (suggestion, can be Void)
 
 	ask_for_system_name: BOOLEAN
@@ -619,7 +619,7 @@ feature {NONE} -- Vision2 architechture
 
 feature {NONE} -- Constants
 
-	Default_project_name: STRING = "project"
+	Default_project_name: STRING_32 = "project"
 
 	Default_root_class_name: STRING = "APPLICATION"
 
@@ -634,7 +634,7 @@ feature {NONE} -- Constants
 	Invalid_project_name_exception: STRING = "Invalid_project_name";
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -658,11 +658,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CREATE_PROJECT_DIALOG
+end

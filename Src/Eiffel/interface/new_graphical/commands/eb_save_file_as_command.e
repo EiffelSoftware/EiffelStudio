@@ -70,7 +70,7 @@ feature -- Execution
 			end
 		end
 
-	execute_with_filename (new_filename: STRING)
+	execute_with_filename (new_filename: READABLE_STRING_GENERAL)
 			-- Save a file with a chosen name.
 		require
 			valid_filename: new_filename /= Void and then not new_filename.is_empty
@@ -146,7 +146,7 @@ feature {EB_FILE_OPENER} -- Callbacks
 
 feature {EB_SAVE_FILE_COMMAND} -- Implementation
 
-	execute_with_dialog (argument: detachable EB_FILE_SAVE_DIALOG; a_file_name: detachable STRING)
+	execute_with_dialog (argument: detachable EB_FILE_SAVE_DIALOG; a_file_name: detachable READABLE_STRING_GENERAL)
 			-- Save a file with the chosen name.
 		local
 			fsd: EB_FILE_SAVE_DIALOG
@@ -159,7 +159,7 @@ feature {EB_SAVE_FILE_COMMAND} -- Implementation
 				end
 				create fsd.make_with_preference (l_pref)
 				if attached a_file_name as a_f then
-					fsd.set_file_name (a_f.substring (a_f.last_index_of (Directory_separator, a_f.count) + 1, a_f.count))
+					fsd.set_file_name (a_f.substring (a_f.last_index_of_code (Directory_separator.code.as_natural_32, a_f.count) + 1, a_f.count))
 				end
 				fsd.save_actions.extend (agent execute_with_dialog (fsd, Void))
 				fsd.show_modal_to_window (window_manager.last_focused_development_window.window)

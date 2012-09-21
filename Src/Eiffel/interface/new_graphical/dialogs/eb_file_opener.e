@@ -21,14 +21,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_parent (caller: EB_FILE_OPENER_CALLBACK; fn: STRING; parent_window: EV_WINDOW)
+	make_with_parent (caller: EB_FILE_OPENER_CALLBACK; fn: READABLE_STRING_GENERAL; parent_window: EV_WINDOW)
 			-- Initialize with parent window `a_parent'
 		local
 			warning_message: STRING_GENERAL
 			file: RAW_FILE -- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
+			u: FILE_UTILITIES
 		do
 			if not fn.is_empty then
-				create file.make (fn)
+				file := u.make_raw_file (fn)
 				if file.exists and then not file.is_plain then
 					warning_message := Warning_messages.w_Not_a_plain_file (fn)
 

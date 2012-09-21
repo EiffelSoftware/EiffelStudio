@@ -42,7 +42,7 @@ feature -- Access
 	cluster: CLUSTER_I
 			-- Cluster to which the class belongs to.
 
-	file_name: FILE_NAME
+	file_name: FILE_NAME_32
 			-- Full file name of the class.
 		do
 			create Result.make_from_string (base_location.build_path (path, ""))
@@ -57,7 +57,7 @@ feature {NONE} -- Type anchor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

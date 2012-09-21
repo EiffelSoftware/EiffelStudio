@@ -1562,7 +1562,7 @@ feature -- Docking library menu items
 		local
 			l_editor: EB_SMART_EDITOR
 			l_all_editors: LIST [EB_SMART_EDITOR]
-			l_file_name: STRING
+			l_file_name: like {FILED_STONE}.file_name
 			l_menu_item: EV_MENU_ITEM
 		do
 			if a_content.type = {SD_ENUMERATION}.editor then
@@ -1584,7 +1584,7 @@ feature -- Docking library menu items
 							l_file_name := lt_class_stone.file_name
 							if l_file_name /= Void and then not l_file_name.is_empty then
 								create l_menu_item.make_with_text (a_dev_window.interface_names.m_Copy_full_path)
-								l_menu_item.select_actions.extend (agent (a_path: STRING)
+								l_menu_item.select_actions.extend (agent (a_path: READABLE_STRING_GENERAL)
 										require
 											not_void: a_path /= Void and then not a_path.is_empty
 										local
@@ -1596,7 +1596,7 @@ feature -- Docking library menu items
 								a_list.extend (l_menu_item)
 								auto_recycle (l_menu_item)
 								create l_menu_item.make_with_text (a_dev_window.interface_names.m_open_containing_folder)
-								l_menu_item.select_actions.extend (agent (a_path: STRING)
+								l_menu_item.select_actions.extend (agent (a_path: READABLE_STRING_GENERAL)
 									require
 										not_void: a_path /= Void and then not a_path.is_empty
 									local

@@ -199,7 +199,7 @@ end;
 			directory: DIRECTORY;
 			wildcard_matcher: KMP_WILD;
 			entries: ARRAYED_LIST [STRING];
-			empty_array: ARRAY [STRING]
+			empty_array: like {PROFILER_OPTIONS}.filenames
 		do
 			from
 				i := prof_options.filenames.lower

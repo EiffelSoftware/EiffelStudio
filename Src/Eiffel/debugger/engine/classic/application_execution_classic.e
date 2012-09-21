@@ -114,7 +114,7 @@ feature -- Properties
 
 feature -- Execution
 
-	run_with_env_string (app, args, cwd: STRING; env: detachable STRING_GENERAL)
+	run_with_env_string (app: READABLE_STRING_GENERAL; args, cwd: STRING; env: detachable STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_env_s8: STRING_8
@@ -143,7 +143,7 @@ feature -- Execution
 			end
 		end
 
-	attach_using_port (app: STRING; a_port: INTEGER)
+	attach_using_port (app: READABLE_STRING_GENERAL; a_port: INTEGER)
 			-- <Precursor/>
 		do
 			ipc_engine.launch_ec_dbg
@@ -722,7 +722,7 @@ invariant
 	ipc_engine_not_void: ipc_engine /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

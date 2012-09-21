@@ -22,7 +22,7 @@ create
 
 feature -- Creation
 
-	make (profile, translat: STRING; s_p_config: SHARED_PROF_CONFIG; a_is_final: BOOLEAN)
+	make (profile, translat: STRING_32; s_p_config: SHARED_PROF_CONFIG; a_is_final: BOOLEAN)
 			-- Create the converter.
 			-- `profile' is the output file from the profile-tool,
 			-- `translat' is the name of the TRANSLAT file for this
@@ -671,14 +671,14 @@ feature {NONE} -- Commands
 			file.close
 		end
 
-	read_translat_file (filename: STRING)
+	read_translat_file (filename: STRING_32)
 			-- reads the `TRANSLAT' file into memory
 		local
 			retried: BOOLEAN
-			file: PLAIN_TEXT_FILE
-			table_file: PLAIN_TEXT_FILE
-			binary_file: RAW_FILE
-			table_name: FILE_NAME
+			file: PLAIN_TEXT_FILE_32
+			table_file: PLAIN_TEXT_FILE_32
+			binary_file: RAW_FILE_32
+			table_name: FILE_NAME_32
 		do
 			if not config.configuration_name.is_equal ("eiffel") then
 
@@ -735,7 +735,7 @@ feature {NONE} -- Commands
 			retry
 		end
 
-	make_function_table (filename: STRING)
+	make_function_table (filename: READABLE_STRING_GENERAL)
 			-- creates the function table
 			-- and stores it on disk in file `filename'.
 			--| This will only be called when needed.
@@ -744,6 +744,7 @@ feature {NONE} -- Commands
 			first_tab, second_tab: INTEGER
 			new_function: EIFFEL_FUNCTION
 			object_file: RAW_FILE
+			u: FILE_UTILITIES
 		do
 			from
 				create functions.make (20)
@@ -782,7 +783,7 @@ feature {NONE} -- Commands
 				create new_function.make (cluster_name, cl_name, feature_name)
 				functions.put (new_function, c_name)
 			end
-			create object_file.make_open_write (filename)
+			object_file := u.open_write_raw_file (filename)
 			object_file.independent_store (functions)
 			object_file.close
 		end
@@ -807,7 +808,7 @@ feature {NONE} -- Attributes
 	is_finalized_profile: BOOLEAN
 			-- Is converter done on the finalized profile?
 
-	profilename: STRING
+	profilename: STRING_32
 
 	profile_information: PROFILE_INFORMATION
 		-- Information about the profiled application

@@ -81,7 +81,7 @@ feature -- Access
 				if l_result = Void then
 					if workbench.system_defined then
 							-- Use the project location
-						l_result := workbench.project_location.path.string
+						l_result := workbench.project_location.path
 					else
 							-- Use the working directory
 						l_result := (create {EXECUTION_ENVIRONMENT}).current_working_directory.as_string_32

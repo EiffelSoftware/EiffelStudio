@@ -34,10 +34,13 @@ feature {EB_PREFERENCES} -- Initialization
 
 feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Value
 
-	last_saved_stack_path: STRING
+	last_saved_stack_path: STRING_32
 			-- Last saved stack path.
+		local
+			u: UTF_CONVERTER
 		do
-			Result := last_saved_stack_path_preference.value
+				-- Decode value from UTF-8.
+			Result := u.utf_8_string_8_to_string_32 (last_saved_stack_path_preference.value)
 		end
 
 	default_expanded_view_size: INTEGER

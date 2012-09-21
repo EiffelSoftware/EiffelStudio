@@ -25,22 +25,24 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file_name: STRING)
+	make (a_file_name: like name)
 			-- Project file whose location is `a_file_name'.
 		require
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
+		local
+			u: FILE_UTILITIES
 		do
 			error_value := ok_value
 			name := a_file_name
-			create storage.make (a_file_name)
+			storage := u.make_raw_file (a_file_name)
 		ensure
 			name_set: name = a_file_name
-		end;
+		end
 
 feature -- Access
 
-	name: STRING
+	name: READABLE_STRING_GENERAL
 			-- Name of file for `storage'.
 
 	precompilation_id: INTEGER;
@@ -387,7 +389,7 @@ invariant
 	storage_not_void: storage /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

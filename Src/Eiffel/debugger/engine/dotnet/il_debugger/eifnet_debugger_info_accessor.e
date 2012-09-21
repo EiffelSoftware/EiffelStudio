@@ -62,10 +62,10 @@ feature {NONE} -- Private info
 
 feature -- Queries
 
-	icor_debug_module (a_mod_name: STRING): ICOR_DEBUG_MODULE
+	icor_debug_module (a_mod_name: READABLE_STRING_GENERAL): ICOR_DEBUG_MODULE
 			-- ICorDebugModule related to `a_mod_name'
 		do
-			Result := eifnet_debugger_info.icor_debug_module (a_mod_name)
+			Result := eifnet_debugger_info.icor_debug_module (a_mod_name.as_string_32)
 		end
 
 feature -- Status
@@ -210,12 +210,12 @@ feature -- Breakpoint related
 			Result := eifnet_debugger_info.current_breakpoint_location
 		end
 
-	request_breakpoint_add (a_bp: BREAKPOINT_LOCATION; a_module_name: STRING; a_class_token, a_feature_token: NATURAL_32; a_line: INTEGER)
+	request_breakpoint_add (a_bp: BREAKPOINT_LOCATION; a_module_name: READABLE_STRING_GENERAL; a_class_token, a_feature_token: NATURAL_32; a_line: INTEGER)
 		do
 			eifnet_debugger_info.request_breakpoint_add (a_bp, a_module_name, a_class_token, a_feature_token, a_line)
 		end
 
-	request_breakpoint_remove (a_bp: BREAKPOINT_LOCATION; a_module_name: STRING; a_class_token, a_feature_token: NATURAL_32; a_line: INTEGER)
+	request_breakpoint_remove (a_bp: BREAKPOINT_LOCATION; a_module_name: READABLE_STRING_GENERAL; a_class_token, a_feature_token: NATURAL_32; a_line: INTEGER)
 		do
 			eifnet_debugger_info.request_breakpoint_remove (a_bp, a_module_name, a_class_token, a_feature_token, a_line)
 		end
@@ -322,7 +322,7 @@ feature {EIFNET_EXPORTER} -- Stepping Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -335,22 +335,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EIFNET_DEBUGGER_INFO_ACCESSOR

@@ -1,17 +1,17 @@
 note
 
-	description: 
+	description:
 		"Edit class text."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class EWB_EDIT_CLASS 
+class EWB_EDIT_CLASS
 
 inherit
 
-	EWB_EDIT;
+	EWB_EDIT
 	EWB_CLASS
 		rename
 			name as edit_class_cmd_name,
@@ -31,13 +31,13 @@ feature {NONE} -- Execution
 			check
 				not_be_called: false
 			end
-		end;
+		end
 
 	process_uncompiled_class (class_i: CLASS_I)
 			-- Edit class `class_i'.
 		do
-			edit (class_i.file_name);
-		end;
+			edit (class_i.file_name)
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

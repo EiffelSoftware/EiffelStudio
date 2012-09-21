@@ -18,12 +18,12 @@ inherit
 		end
 
 create
-	make,
+--	make,
 	make_with_file
 
 feature {NONE} -- Initialization
 
-	make_with_file (a_filename: FILE_NAME)
+	make_with_file (a_filename: FILE_NAME_32)
 			-- Load the command from the description file named
 			-- `a_filename'.
 			--
@@ -33,8 +33,8 @@ feature {NONE} -- Initialization
 		require
 			valid_filename: a_filename /= Void and then not a_filename.is_empty
 		local
-			file: PLAIN_TEXT_FILE
-			entry: ARRAY [STRING]
+			file: PLAIN_TEXT_FILE_32
+			entry: TUPLE [name: STRING_32; value: STRING_32]
 		do
 			create file.make (a_filename)
 			from
@@ -45,15 +45,15 @@ feature {NONE} -- Initialization
 				file.read_line
 				entry := analyse_line (file.last_string)
 				if entry /= Void then
-					if (entry @ 1).is_equal ("name") then
-						set_name (entry @ 2)
-					elseif (entry @ 1).is_equal ("description") then
-						set_description (wrap_word (entry @ 2, 70))
-					elseif (entry @ 1).is_equal ("location") then
+					if entry.name.is_equal ("name") then
+						set_name (entry.value)
+					elseif entry.name.is_equal ("description") then
+						set_description (wrap_word (entry.value, 70))
+					elseif entry.name.is_equal ("location") then
 						create location.make_from_string (eiffel_layout.New_project_wizards_path)
-						location.extend (entry @ 2)
-					elseif (entry @ 1).is_equal ("platform") then
-						target_platform := entry.item (2).as_lower
+						location.extend (entry.value)
+					elseif entry.name.is_equal ("platform") then
+						target_platform := entry.value.as_lower
 					end
 				end
 			end

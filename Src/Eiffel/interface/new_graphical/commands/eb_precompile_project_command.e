@@ -1,9 +1,9 @@
-note
+﻿note
 	description	: "Command to precompile the Eiffel code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_PRECOMPILE_PROJECT_COMMAND
@@ -134,11 +134,8 @@ feature {NONE} -- Implementation
 
 	is_dotnet_project: BOOLEAN
 			-- is current loaded ace a .net project
-		local
-			l_value: STRING
 		do
-			l_value := lace.target.settings.item ("msil_generation")
-			Result := l_value /= Void and then l_value.is_case_insensitive_equal ("true")
+			Result := lace.target.setting_boolean ("msil_generation")
 		end
 
 	pixmap: EV_PIXMAP
@@ -154,7 +151,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

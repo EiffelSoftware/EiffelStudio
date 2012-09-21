@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Error that occurred within a feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ feature -- Properties
 			-- Class where the code is originally written.
 			-- (Non-void if it differs from `class_c'.)
 
-	file_name: STRING
+	file_name: like {ERROR}.file_name
 		do
 			if written_class = Void then
 				Result := class_c.file_name
@@ -139,7 +139,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

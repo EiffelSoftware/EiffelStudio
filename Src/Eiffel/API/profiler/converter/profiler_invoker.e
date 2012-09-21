@@ -84,70 +84,62 @@ feature {NONE} -- Implementation
 	invoke_gprof
 			-- Invokes gprof in order to generate the text file.
 		local
-			exec_string: STRING;
-			old_dir: STRING;
-			cm_bool: BOOLEAN;
-			app_name: STRING
+			exec_string: STRING_32
+			old_dir: STRING
+			cm_bool: BOOLEAN
 		do
-			if compile_type.is_equal ("workbench") then
-				cm_bool := true;
-			end;
-			exec_string := "gprof -b ";
-			app_name := Eiffel_system.application_name (cm_bool);
-			if app_name /= Void then
-				exec_string.append (Eiffel_system.application_name (cm_bool));
-				exec_string.append (" > ");
-				exec_string.append (output_file);
-				old_dir := Execution_environment.current_working_directory;
+			cm_bool := compile_type.is_equal ("workbench")
+			exec_string := "gprof -b "
+			if attached Eiffel_system.application_name (cm_bool) as app_name then
+				exec_string.append (app_name)
+				exec_string.append (" > ")
+				exec_string.append (output_file)
+				old_dir := Execution_environment.current_working_directory
 				if cm_bool then
-					Execution_environment.change_working_directory (project_location.workbench_path);
+					Execution_environment.change_working_directory (project_location.workbench_path)
 				else
-					Execution_environment.change_working_directory (project_location.final_path);
-				end;
-				Execution_environment.system (exec_string);
+					Execution_environment.change_working_directory (project_location.final_path)
+				end
+				Execution_environment.system (exec_string)
 				Execution_environment.change_working_directory (old_dir)
-			end;
-		end;
+			end
+		end
 
 	invoke_win32_ms
 			-- Invokes the profiler from Microsoft in order to
 			-- generate the text file.
 		local
-			exec_string: STRING;
-			old_dir: STRING;
-			cm_bool: BOOLEAN;
-			app_name: STRING
+			exec_string: STRING_32
+			old_dir: STRING
+			cm_bool: BOOLEAN
 		do
-			if compile_type.is_equal ("workbench") then
-				cm_bool := true;
-			end;
-			old_dir := Execution_environment.current_working_directory;
-			if cm_bool then
-				Execution_environment.change_working_directory (project_location.workbench_path);
-			else
-				Execution_environment.change_working_directory (project_location.final_path);
-			end;
-			app_name := Eiffel_system.application_name (cm_bool);
-			if app_name /= Void then
-				exec_string := "prep /nologo /om /ft ";
-				exec_string.append (app_name);
-				Execution_environment.system (exec_string);
-				exec_string := "profile /nologo ";
-				exec_string.append (app_name);
-				exec_string.extend (' ');
-				exec_string.append (arguments);
-				Execution_environment.system (exec_string);
-				exec_string := "prep /nologo /m ";
-				exec_string.append (app_name);
-				Execution_environment.system (exec_string);
-				exec_string := "plist /nologo ";
-				exec_string.append (app_name);
-				exec_string.append (" > ");
-				exec_string.append (output_file);
-				Execution_environment.system (exec_string);
-				Execution_environment.change_working_directory (old_dir);
-			end;
-		end;
+			cm_bool := compile_type.is_equal ("workbench")
+			if attached Eiffel_system.application_name (cm_bool) as app_name then
+				old_dir := Execution_environment.current_working_directory
+				if cm_bool then
+					Execution_environment.change_working_directory (project_location.workbench_path)
+				else
+					Execution_environment.change_working_directory (project_location.final_path)
+				end
+				exec_string := "prep /nologo /om /ft "
+				exec_string.append (app_name)
+				Execution_environment.system (exec_string)
+				exec_string := "profile /nologo "
+				exec_string.append (app_name)
+				exec_string.extend (' ')
+				exec_string.append (arguments)
+				Execution_environment.system (exec_string)
+				exec_string := "prep /nologo /m "
+				exec_string.append (app_name)
+				Execution_environment.system (exec_string)
+				exec_string := "plist /nologo "
+				exec_string.append (app_name)
+				exec_string.append (" > ")
+				exec_string.append (output_file)
+				Execution_environment.system (exec_string)
+				Execution_environment.change_working_directory (old_dir)
+			end
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

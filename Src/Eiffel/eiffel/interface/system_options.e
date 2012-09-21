@@ -25,7 +25,7 @@ feature -- Access
 	inlining_size: INTEGER
 			-- Size of the feature which will be inlined.
 
-	dynamic_def_file: STRING
+	dynamic_def_file: STRING_32
 			-- File where the `.def' file of the system is declared.
 
 	do_not_check_vape: BOOLEAN
@@ -141,7 +141,7 @@ feature -- Access: IL code generation
 	clr_runtime_version: STRING
 			-- Version of IL runtime available.
 
-	metadata_cache_path: STRING
+	metadata_cache_path: STRING_32
 			-- Alternative EAC metadata path
 
 	msil_generation_type: STRING
@@ -167,7 +167,7 @@ feature -- Access: IL code generation
 	msil_assembly_compatibility: STRING
 			-- Compatibility of current assembly with other assemblies.
 
-	msil_key_file_name: STRING
+	msil_key_file_name: STRING_32
 			-- Location of key pair used to sign current generated assembly.
 
 	cls_compliant, dotnet_naming_convention: BOOLEAN
@@ -242,7 +242,7 @@ feature -- Update
 				clr_runtime_version = version
 		end
 
-	set_metadata_cache_path (s: STRING)
+	set_metadata_cache_path (s: like metadata_cache_path)
 			-- Set `metadata_cache_path' to `s'
 		require
 			s_not_void: s /= Void
@@ -321,7 +321,7 @@ feature -- Update
 			msil_assembly_compatibility_set: msil_assembly_compatibility = comp
 		end
 
-	set_msil_key_file_name (a_file_name: STRING)
+	set_msil_key_file_name (a_file_name: like msil_key_file_name)
 			-- Set `msil_key_file_name' with `a_file_name'.
 		do
 			msil_key_file_name := a_file_name
@@ -524,7 +524,7 @@ feature -- Update
 			external_runtime_set: external_runtime = v
 		end
 
-	set_dynamic_def_file (f: STRING)
+	set_dynamic_def_file (f: like dynamic_def_file)
 			-- Set `dynamic_def_file' to `f'.
 		do
 			dynamic_def_file := f
@@ -609,7 +609,7 @@ feature {SYSTEM_I} -- Implementation
 			-- Is the system a multithreaded one?
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

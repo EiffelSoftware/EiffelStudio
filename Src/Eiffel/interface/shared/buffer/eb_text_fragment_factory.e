@@ -19,7 +19,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 feature -- Access
 
 	new_file_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
@@ -214,7 +214,7 @@ feature -- Access
 
 feature -- Text Normalizer
 
-	lower_case_text_normalizer (a_text: STRING): STRING
+	lower_case_text_normalizer (a_text: STRING_32): STRING_32
 			-- Text normalizer, return a copy of `a_text' in which all letters are turned into lower case
 		require
 			a_text_attached: a_text /= Void
@@ -224,7 +224,7 @@ feature -- Text Normalizer
 			result_attached: Result /= Void
 		end
 
-	upper_case_text_normalizer (a_text: STRING): STRING
+	upper_case_text_normalizer (a_text: STRING_32): STRING_32
 			-- Text normalizer, return a copy of `a_text' in which all letters are turned into upper case
 		require
 			a_text_attached: a_text /= Void
@@ -234,7 +234,7 @@ feature -- Text Normalizer
 			result_attached: Result /= Void
 		end
 
-	class_name_text_normalizer (a_text: STRING): STRING
+	class_name_text_normalizer (a_text: STRING_32): STRING_32
 			-- Text normalize which turns `a_text' in form of "{ class_name }" into "CLASS_NAME",
 			-- i.e., remove surrounding "{" and "}", remove heading and trailing space and turn all letters into upper case.
 		require
@@ -249,7 +249,7 @@ feature -- Text Normalizer
 			result_attached: Result /= Void
 		end
 
-	class_selected_text_normalizer (a_text: STRING): STRING
+	class_selected_text_normalizer (a_text: STRING_32): STRING_32
 			-- Text normalize which turns `a_text' in form of "@{ class_name }" into "CLASS_NAME",
 			-- i.e., remove surrounding "@{" and "}", remove heading and trailing space and turn all letters into upper case.
 		require
@@ -264,7 +264,7 @@ feature -- Text Normalizer
 			result_attached: Result /= Void
 		end
 
-	class_feature_text_normalizer (a_text: STRING): STRING
+	class_feature_text_normalizer (a_text: STRING_32): STRING_32
 			-- Text normalize which turns `a_text' in form of "{ class_name }.feature_name" into "CLASS_NAME.feature_name",
 			-- i.e., remove surrounding "{" and "}", remove heading and trailing space and turn all letters related to class
 			-- into upper case and all letters related to feature into lower case.
@@ -328,7 +328,7 @@ feature -- Text Normalizer
 
 feature{NONE} -- Implementation
 
-	is_string_case_insensitive_equal (a_string, b_string: STRING): BOOLEAN
+	is_string_case_insensitive_equal (a_string, b_string: STRING_32): BOOLEAN
 			-- Is `a_string' is case-insensitive equal to `b_string'?
 		require
 			a_string_attached: a_string /= Void
@@ -339,7 +339,7 @@ feature{NONE} -- Implementation
 			good_result: Result = a_string.is_case_insensitive_equal (b_string)
 		end
 
-	new_w_code_replacement (a_text: STRING): STRING
+	new_w_code_replacement (a_text: STRING_32): STRING_32
 			-- New w_code replacement for `a_text'.
 			-- Return path of `w_code' directory if system is defined,
 			-- otherwise return a copy of `a_text'.
@@ -355,7 +355,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_f_code_replacement (a_text: STRING): STRING
+	new_f_code_replacement (a_text: STRING_32): STRING_32
 			-- New w_code replacement for `a_text'.
 			-- Return path of `f_code' directory if system is defined,
 			-- otherwise return a copy of `a_text'.
@@ -371,7 +371,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_project_directory_replacement (a_text: STRING): STRING
+	new_project_directory_replacement (a_text: STRING_32): STRING_32
 			-- New project_path replacement for `a_text'.
 			-- Return path of current porject if system is defined,
 			-- otherwise return a copy of `a_text'.
@@ -387,7 +387,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_target_directory_replacement (a_text: STRING): STRING
+	new_target_directory_replacement (a_text: STRING_32): STRING_32
 			-- New target_path replacement for `a_text'.
 			-- Return path of current target if system is defined,
 			-- otherwise return a copy of `a_text'.
@@ -403,7 +403,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_target_name_replacement (a_text: STRING): STRING
+	new_target_name_replacement (a_text: STRING_32): STRING_32
 			-- New target_name replacement for `a_text'.
 			-- Return path of current target if system is defined,
 			-- otherwise return a copy of `a_text'.
@@ -424,14 +424,14 @@ feature{NONE} -- Implementation
 		require
 			a_scanner_attached: a_scanner /= Void
 		do
-			create {EB_AGENT_BASED_TEXT_FRAGMENT}Result.make (a_scanner.text, agent (a_text: STRING): STRING do Result := a_text.twin end, agent is_true)
+			create {EB_AGENT_BASED_TEXT_FRAGMENT}Result.make (a_scanner.text, agent (a_text: STRING_32): STRING_32 do Result := a_text.twin end, agent is_true)
 			Result.set_location (a_scanner.position)
-			Result.set_normalized_text_function (agent (a_text: STRING): STRING do Result := a_text.twin end)
+			Result.set_normalized_text_function (agent (a_text: STRING_32): STRING_32 do Result := a_text.twin end)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	is_true (a_text: STRING): BOOLEAN
+	is_true (a_text: STRING_32): BOOLEAN
 			-- Is `a_text' valid?
 			-- Always returns True.
 		require

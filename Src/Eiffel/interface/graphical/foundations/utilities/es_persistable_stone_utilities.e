@@ -268,7 +268,7 @@ feature {NONE} -- Specifics
 			l_group_name: detachable STRING
 			l_class_name: detachable STRING
 			l_class: detachable CLASS_I
-			l_file_name: detachable STRING
+			l_file_name: detachable STRING_32
 		do
 			l_group_name ?= a_session.value (session_id (a_base_id, group_name_session_id))
 			if l_group_name /= Void and then not l_group_name.is_empty then
@@ -281,7 +281,7 @@ feature {NONE} -- Specifics
 							l_class := universe.class_named (l_class_name, l_group)
 							if l_class /= Void then
 								l_file_name ?= a_session.value (session_id (a_base_id, location_session_id))
-								if l_file_name /= Void and then l_class.file_name.string.is_equal (l_file_name) then
+								if l_file_name /= Void and then l_class.file_name.to_string_32.is_equal (l_file_name) then
 									create Result.make (l_class)
 								end
 							end

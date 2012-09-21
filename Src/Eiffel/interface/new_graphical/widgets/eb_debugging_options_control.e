@@ -29,8 +29,6 @@ inherit
 
 	SHARED_DEBUGGER_MANAGER
 
-	KL_SHARED_FILE_SYSTEM
-
 create
 	make
 
@@ -1625,9 +1623,11 @@ feature {NONE} -- Environment implementation
 feature {NONE} -- Implementation
 
 	default_working_directory: STRING
+		local
+			u: FILE_UTILITIES
 		do
 			Result := Eiffel_system.lace.directory_name
-			if not file_system.directory_exists (Result) then
+			if not u.directory_exists (Result) then
 					--| If lace.directory_name does not exist,
 					--| let's use the project's location
 				Result := eiffel_system.project_location.location

@@ -15,12 +15,6 @@ inherit
 
 	DISPOSABLE_SAFE
 
---inherit {NONE}
-	KL_SHARED_FILE_SYSTEM
-		export
-			{NONE} all
-		end
-
 create
 	make
 
@@ -437,7 +431,7 @@ feature {NONE} -- Basic operations
 			is_interface_usable: is_interface_usable
 			a_file_name_attached: attached a_file_name
 			not_a_file_name_is_empty: not a_file_name.is_empty
-			a_file_name_exists: file_system.file_exists (a_file_name.as_string_8)
+			a_file_name_exists: (create {FILE_UTILITIES}).file_exists (a_file_name)
 		local
 			l_parser: like xml_lite_parser
 			l_file_name: detachable STRING

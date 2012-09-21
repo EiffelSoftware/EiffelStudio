@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_setting, an_old_value, a_new_value: STRING)
+	make (a_setting: STRING; an_old_value: like old_value; a_new_value: like new_value)
 			-- Create.
 		require
 			a_setting_not_void: a_setting /= Void
@@ -36,10 +36,10 @@ feature -- Properties
 	setting: STRING
 			-- Setting name.
 
-	old_value: STRING
+	old_value: READABLE_STRING_GENERAL
 			-- Old value (which was preserved).
 
-	new_value: STRING
+	new_value: like old_value
 			-- New value (which was ignored).
 
 feature -- Output
@@ -47,17 +47,19 @@ feature -- Output
 	build_explain (st: TEXT_FORMATTER)
 		do
 			st.add_new_line
-			st.add ("Value of a setting could not be changed because the system is already compiled or uses a precompile: ");
-			st.add (setting);
+			st.add ("Value of a setting could not be changed because the system is already compiled or uses a precompile: ")
+			st.add (setting)
 			st.add_new_line
-			st.add ("Old: "+old_value)
+			st.add ("Old: ")
+			st.add (old_value)
 			st.add_new_line
-			st.add ("New: "+new_value)
-			st.add_new_line;
-		end;
+			st.add ("New: ")
+			st.add (new_value)
+			st.add_new_line
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -70,22 +72,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

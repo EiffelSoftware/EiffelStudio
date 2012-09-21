@@ -71,7 +71,7 @@ feature -- Access
 			text_to_be_searched_adapter_not_void: Result /= Void
 		end
 
-	text_in_file_path: FILE_NAME
+	text_in_file_path: FILE_NAME_32
 			-- Path of the file in which the searching text is
 		require
 			text_in_file_path_not_void: is_text_in_file_path_set
@@ -139,7 +139,7 @@ feature -- Status setting
 			text_to_be_searched_internal_not_void: text_to_be_searched_internal.real_string = text
 		end
 
-	set_text_in_file_path (p_file_path: FILE_NAME)
+	set_text_in_file_path (p_file_path: FILE_NAME_32)
 			-- Set `text_in_file_path_internal' with p_file_path.
 		require
 			p_file_path_not_void: p_file_path /= Void
@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 	text_to_be_searched_internal : MSR_STRING_ADAPTER
 			-- Text to search in.
 
-	text_in_file_path_internal: FILE_NAME
+	text_in_file_path_internal: FILE_NAME_32
 			-- Path of the file in which the text is.
 
 	class_name_internal: STRING

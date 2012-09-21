@@ -28,38 +28,36 @@ feature {NONE} -- Implementation
 	loop_action
 			-- Execute the generated application
 		local
-			appl_name: STRING;
-			f_name: FILE_NAME;
-			f: RAW_FILE;
-			make_f: INDENT_FILE;
-			error: BOOLEAN;
+			appl_name: like {E_SYSTEM}.application_name
+			f: RAW_FILE
+			make_f: RAW_FILE
+			error: BOOLEAN
 			cmd_exec: COMMAND_EXECUTOR
+			u: FILE_UTILITIES
 		do
 			if Eiffel_system = Void or else Eiffel_system.name = Void then
 				output_window.put_string (Warning_messages.W_must_compile_first)
 				output_window.put_new_line
 			else
-				appl_name := Eiffel_system.application_name (True);
-				create f.make (appl_name);
+				appl_name := Eiffel_system.application_name (True)
+				f := u.make_raw_file (appl_name)
 				if not f.exists then
 					output_window.put_string (Warning_messages.w_file_not_exist (appl_name))
 					output_window.put_new_line
 				else
-					create f_name.make_from_string (project_location.workbench_path);
-					f_name.set_file_name (Makefile_SH);
-					create make_f.make (f_name);
+					make_f := u.make_raw_file_in (Makefile_SH, project_location.workbench_path)
 					if make_f.exists and then make_f.date > f.date then
 						output_window.put_string (Warning_messages.w_MakefileSH_more_recent)
 						output_window.put_new_line
 						error := True
 					end;
 					if not error then
-						create cmd_exec;
-						cmd_exec.execute_with_args (appl_name, arguments);
-					end;
+						create cmd_exec
+						cmd_exec.execute_with_args (appl_name, arguments)
+					end
 				end
 			end
-		end;
+		end
 
 	execute
 			-- This command is available only for the `loop' mode

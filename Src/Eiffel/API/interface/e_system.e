@@ -44,27 +44,24 @@ feature -- Access
 			Result := System.name
 		end;
 
-	document_path: DIRECTORY_NAME
+	document_path: like {SYSTEM_I}.document_path
 			-- Path specified for the documents directory for classes.
 			-- Void result implies no document generation
 		do
 			Result := System.document_path
 		end;
 
-	context_diagram_path: DIRECTORY_NAME
+	context_diagram_path: like {PROJECT_DIRECTORY}.path
 			-- Path where context diagrams should be stored.
 		local
-			d: DIRECTORY
+			u: FILE_UTILITIES
 		do
 			create Result.make_from_string (project_location.target_path)
 			Result.extend ("Diagrams")
-			create d.make (Result)
-			if not d.exists then
-				d.create_dir
-			end
+			u.create_directory (Result)
 		end
 
-	document_file_name: FILE_NAME
+	document_file_name: FILE_NAME_32
 			-- File name specified for the cluster text generation
 			-- Void result implies no document generation
 		do
@@ -161,7 +158,7 @@ feature -- Access
 			Result := System.has_class_of_id (i)
 		end;
 
-	application_name (workbench_mode: BOOLEAN): FILE_NAME
+	application_name (workbench_mode: BOOLEAN): FILE_NAME_32
 			-- Get the full qualified name of the application
 			-- For workbench-mode application `compile_type' is true
 		require
@@ -253,7 +250,7 @@ invariant
 	sub_clusters_exists: sub_clusters /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

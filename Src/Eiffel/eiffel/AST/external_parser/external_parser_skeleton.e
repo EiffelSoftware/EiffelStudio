@@ -62,7 +62,7 @@ feature -- Initialization
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Parsing
 
-	parse_external (a_class: like current_class; a_line, a_column: INTEGER; a_file: STRING; a_string: STRING)
+	parse_external (a_class: like current_class; a_line, a_column: INTEGER; a_file: like filename; a_string: STRING)
 			-- Parse external clause text from `a_string' located in `a_file'.
 			-- Make result available in `root_node'.
 			-- An exception is raised if a syntax error is found.
@@ -131,7 +131,7 @@ feature {NONE} -- Constants
 			-- Initial capacity for lists
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

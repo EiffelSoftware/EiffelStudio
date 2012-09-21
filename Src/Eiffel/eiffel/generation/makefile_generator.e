@@ -310,7 +310,7 @@ feature -- Actual generation
 			generate_sub_makefiles (system_object_prefix, system_baskets)
 
 			make_file := make_f (system.in_final_mode)
-			make_file.open_write
+
 				-- Generate main /bin/sh preamble
 			generate_preamble
 				-- Customize main Makefile macros
@@ -363,7 +363,6 @@ feature -- Actual generation
 
 			make_file := make_f (system.in_final_mode)
 
-			make_file.open_write
 				-- Generate main /bin/sh preamble
 			generate_preamble
 				-- Customize main Makefile macros
@@ -399,9 +398,9 @@ feature -- Sub makefile generation
 		require
 			baskets_not_void: baskets /= Void
 		local
-			old_makefile: INDENT_FILE
+			old_makefile: like make_file
 			nb, i: INTEGER
-			f_name: STRING
+			f_name: like full_file_name
 			basket: LINKED_LIST [STRING]
 		do
 			old_makefile := make_file
@@ -414,8 +413,7 @@ feature -- Sub makefile generation
 				basket := baskets.item (i)
 				if basket /= Void and then not basket.is_empty then
 					f_name := full_file_name (system.in_final_mode, packet_name (sub_dir, i), Makefile_sh, Void)
-					create make_file.make (f_name)
-					make_file.open_write
+					create make_file.make_open_write (f_name)
 						-- Generate main /bin/sh preamble
 					generate_sub_preamble (packet_name (sub_dir, i))
 						-- Customize main Makefile macros
@@ -462,7 +460,7 @@ feature -- Sub makefile generation
 			baskets_not_void: baskets /= Void
 		local
 			nb, i: INTEGER
-			f_name: FILE_NAME
+			f_name: FILE_NAME_32
 			basket: LINKED_LIST [STRING]
 		do
 			from
@@ -808,8 +806,8 @@ feature {NONE} -- Generate externals
 			a_data_attached: attached a_data
 			a_prefix_attached: attached a_prefix
 		local
-			l_added_items: SEARCH_TABLE [STRING]
-			l_path: STRING
+			l_added_items: SEARCH_TABLE [STRING_32]
+			l_path: STRING_32
 			l_state: CONF_STATE
 		do
 			if not a_is_generated then
@@ -1307,14 +1305,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	safe_recursive_delete (a_dir: STRING)
+	safe_recursive_delete (a_dir: STRING_32)
 			-- Delete `a_dir' content.
 		require
 			a_dir_not_void: a_dir /= Void
 			a_dir_not_empty: not a_dir.is_empty
 		local
 			retried: BOOLEAN
-			l_dir: DIRECTORY
+			l_dir: DIRECTORY_32
 		do
 			if not retried then
 				create l_dir.make (a_dir)
@@ -1327,15 +1325,12 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	safe_external_path (a_path: STRING)
-			-- Remove leading and trailing white space and
-			-- add double quotes around `a_path' if necessary.
+	safe_external_path (a_path: STRING_32)
+			-- Add double quotes around `a_path' if necessary.
 		require
 			a_path_not_void: a_path /= Void
 			a_path_not_empty: not a_path.is_empty
 		do
-			a_path.left_adjust
-			a_path.right_adjust
 				-- Add the double quotes around path so that
 				-- it will work in case the path has white spaces.
 				-- Do it if no double quotes are already present.

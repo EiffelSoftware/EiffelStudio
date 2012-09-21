@@ -28,10 +28,11 @@ feature {NONE} -- Initialization
 			valid_target_file_name: not a_target_file_name.is_empty
 		local
 			l_file: RAW_FILE
+			u: FILE_UTILITIES
 		do
 			source_file_name := a_source_file_name.twin
 			target_file_name := a_target_file_name.twin
-			create l_file.make (source_file_name)
+			l_file := u.make_raw_file (a_source_file_name)
 			if not l_file.exists then
 				is_missing_source := True
 			else
@@ -47,10 +48,10 @@ feature -- Properties
 	code: STRING = "VICF"
 		-- Error code
 
-	source_file_name: STRING
+	source_file_name: READABLE_STRING_GENERAL
 			-- Source file to copy from
 
-	target_file_name: STRING
+	target_file_name: READABLE_STRING_GENERAL
 			-- Target attempted to copy to
 
 	is_missing_source: BOOLEAN
@@ -59,7 +60,7 @@ feature -- Properties
 	is_unreadable_source: BOOLEAN
 			-- indicates that warning to due to an unreadable source file
 
-	file_name: STRING
+	file_name: like {ERROR}.file_name
 			-- No associated file name
 		do
 		end
@@ -104,7 +105,7 @@ invariant
 	valid_target_file_name: not target_file_name.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -117,22 +118,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class VICF

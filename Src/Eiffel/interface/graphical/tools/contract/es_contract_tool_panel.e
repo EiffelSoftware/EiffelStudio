@@ -477,7 +477,7 @@ feature {NONE} -- Basic operations
 				if
 					file_notifier.is_service_available and then
 					attached context.context_class.file_name as l_file_name and then
-					attached l_file_name.string.as_string_32 as l_fn
+					attached l_file_name.to_string_32 as l_fn
 				then
 						-- Poll for modifications, which will call `on_file_modified' if have occurred.
 					file_notifier.service.poll_modifications (l_fn).do_nothing
@@ -816,14 +816,14 @@ feature {NONE} -- Tool action handlers
 		do
 			if file_notifier.is_service_available then
 				l_service := file_notifier.service
-				if a_old_stone /= Void and then attached {CLASSI_STONE} a_old_stone as l_old_cs and then attached {STRING_32} l_old_cs.class_i.file_name.string.as_string_32 as l_old_fn then
+				if a_old_stone /= Void and then attached {CLASSI_STONE} a_old_stone as l_old_cs and then attached {STRING_32} l_old_cs.class_i.file_name as l_old_fn then
 						-- Remove old monitor
 					if l_service.is_monitoring (l_old_fn) then
 						l_service.uncheck_modifications_with_callback (l_old_fn, agent on_file_modified)
 					end
 				end
 
-				if stone /= Void and then attached {CLASSI_STONE} stone as l_new_cs and then attached {STRING_32} l_new_cs.class_i.file_name.string.as_string_32 as l_new_fn then
+				if stone /= Void and then attached {CLASSI_STONE} stone as l_new_cs and then attached {STRING_32} l_new_cs.class_i.file_name as l_new_fn then
 						-- Add monitor
 					l_service.check_modifications_with_callback (l_new_fn, agent on_file_modified)
 				end

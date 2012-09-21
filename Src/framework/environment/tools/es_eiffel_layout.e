@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	creatable_directories: ARRAYED_LIST [STRING]
+	creatable_directories: like {EC_EIFFEL_LAYOUT}.creatable_directories
 			-- <Precursor>
 		once
 			Result := Precursor {EC_EIFFEL_LAYOUT}

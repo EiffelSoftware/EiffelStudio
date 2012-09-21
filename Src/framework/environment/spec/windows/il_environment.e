@@ -168,7 +168,7 @@ feature -- Access
 			end
 		end
 
-	dotnet_framework_sdk_path: detachable STRING
+	dotnet_framework_sdk_path: like dotnet_framework_path
 			-- Path to .NET Framework SDK directory of version `version'.
 			-- Void if not installed.
 		local
@@ -213,7 +213,7 @@ feature -- Access
 			end
 		end
 
-	dotnet_framework_sdk_bin_path: detachable STRING
+	dotnet_framework_sdk_bin_path: like dotnet_framework_path
 			-- Path to bin directory of .NET Framework SDK of version `version'.
 		local
 			l_path: detachable STRING
@@ -257,7 +257,7 @@ feature -- Query
 		require
 			a_debug_not_void: a_debug /= Void
 		local
-			l_path: detachable STRING
+			l_path: like dotnet_framework_sdk_bin_path
 		do
 			if use_mdbg (a_debug) then
 				l_path := dotnet_framework_sdk_bin_path
@@ -327,7 +327,7 @@ feature {NONE} -- Implementation
 			Result.extend (l_path)
 		end
 
-	dotnet_runtime_path: detachable STRING
+	dotnet_runtime_path: STRING_32
 			-- Path to where .NET runtimes are installed. It can be a once since this value is
 			-- not dependent on `version'.
 		local
@@ -375,7 +375,7 @@ invariant
 	version_not_void: version /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

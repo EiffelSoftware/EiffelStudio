@@ -70,14 +70,14 @@ feature -- Initialization
 			"CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)"
 		end
 
-	frozen com_S_OK: INTEGER
+	frozen com_S_OK, frozen s_ok: INTEGER
 		external
 			"C macro use %"objbase.h%""
 		alias
 			"S_OK"
 		end
 
-	frozen com_S_FALSE: INTEGER
+	frozen com_S_FALSE, frozen s_false: INTEGER
 		external
 			"C macro use %"unknwn.h%""
 		alias
@@ -90,6 +90,29 @@ feature -- Initialization
 		alias
 			"RPC_E_CHANGED_MODE"
 		end
+
+feature -- VARTYPE constants
+
+	vt_empty: NATURAL_16 = 0
+	vt_null: NATURAL_16 = 1
+
+	vt_i1: NATURAL_16 = 16
+	vt_i2: NATURAL_16 = 2
+	vt_i4: NATURAL_16 = 3
+	vt_i8: NATURAL_16 = 20
+			-- Constants for signed integers.
+
+	vt_ui1: NATURAL_16 = 17
+	vt_ui2: NATURAL_16 = 18
+	vt_ui4: NATURAL_16 = 19
+	vt_ui8: NATURAL_16 = 21
+			-- Constant for unsigned integers.
+
+	vt_ptr: NATURAL_16 = 26
+			-- Constant for pointer.
+
+	vt_variant: NATURAL_16 = 12
+	vt_unknown: NATURAL_16 = 13
 
 note
 	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"

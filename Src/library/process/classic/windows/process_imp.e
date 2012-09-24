@@ -143,10 +143,15 @@ feature -- Control
 
 	wait_for_input
 			-- Wait launched process to start receiving events.
+		require
+			thread_capable: {PLATFORM}.is_thread_capable
+			process_launched: launched
 		local
 			l_wait: INTEGER
 		do
-			l_wait := {WEL_API}.wait_for_input_idle (child_process.process_info.process_handle, {WEL_API}.infinite)
+			if attached child_process.process_info as l_info then
+				l_wait := {WEL_API}.wait_for_input_idle (l_info.process_handle, {WEL_API}.infinite)
+			end
 		end
 
 feature -- Interprocess data transmission

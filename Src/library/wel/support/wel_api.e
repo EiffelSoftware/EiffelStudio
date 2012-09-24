@@ -119,6 +119,13 @@ feature -- Windows
 			"return EIF_TEST(DestroyWindow((HWND) $hwnd));"
 		end
 
+	find_window (a_class_name, a_window_name: POINTER): POINTER
+		external
+			"C inline use <windows.h>"
+		alias
+			"return FindWindow((LPCTSTR) $a_class_name, (LPCTSTR) $a_window_name);"
+		end
+
 feature -- Data Operations
 
 	loword (value: POINTER): INTEGER

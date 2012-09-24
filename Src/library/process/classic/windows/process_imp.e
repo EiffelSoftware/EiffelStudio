@@ -141,6 +141,14 @@ feature -- Control
 			is_last_wait_timeout := not timer.wait (a_timeout)
 		end
 
+	wait_for_input
+			-- Wait launched process to start receiving events.
+		local
+			l_wait: INTEGER
+		do
+			l_wait := {WEL_API}.wait_for_input_idle (child_process.process_info.process_handle, {WEL_API}.infinite)
+		end
+
 feature -- Interprocess data transmission
 
 	put_string (s: STRING)

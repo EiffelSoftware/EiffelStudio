@@ -81,7 +81,7 @@ feature -- Object storage Access
 		require
 			fn_attached: fn /= Void
 		local
-			o: ANY
+			o: detachable ANY
 			file: RAW_FILE
 			retried: BOOLEAN
 		do
@@ -112,11 +112,11 @@ feature -- Object storage Access
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
-			356 Storke Road, Goleta, CA 93117 USA
+			5949 Hollister Ave., Goleta, CA 93117 USA
 			Telephone 805-685-1006, Fax 805-685-6869
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com

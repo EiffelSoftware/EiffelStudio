@@ -28,15 +28,17 @@ feature -- Initialization
 
 	retrieve is
 		local
-			a: ANY
+			a: detachable ANY
 			l_file: RAW_FILE
 			retried: BOOLEAN
 		do
 			if not retried then
 				create l_file.make_open_read (file_name)
 				a := l_file.retrieved
-				print (a.generating_type)
-				print ("%N")
+				if a /= Void then
+					print (a.generating_type)
+					print ("%N")
+				end
 			end
 		rescue
 			print ("Exception caught.%N")

@@ -30,6 +30,7 @@ inherit
 				is_directory,
 				is_equal,
 				is_empty,
+				is_access_executable,
 				is_executable,
 				is_open_append,
 				is_open_read,

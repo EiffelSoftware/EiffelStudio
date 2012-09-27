@@ -535,6 +535,23 @@ feature -- Query
 			result_exists: (Result /= Void and a_must_exist) implies (create {DIRECTORY}.make (Result)).exists
 		end
 
+	docs_path: DIRECTORY_NAME_32
+			-- Folder contains Eiffel documention.
+		require
+			is_valid_environment: is_valid_environment
+		once
+			if is_unix_layout then
+				create Result.make_from_string (unix_layout_share_path.string)
+				Result.extend (docs_name)
+				Result.extend (unix_product_version_name)
+			else
+				Result := install_path_32.twin
+				Result.extend (docs_name)
+			end
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
 feature -- Directories (top-level)
 
 	install_path: DIRECTORY_NAME
@@ -633,12 +650,28 @@ feature -- Directories (top-level)
 			-- Eiffel path where the ECFs are located in the installation directory.
 			-- With platform: $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM
 			-- Without: /usr/share/eiffelstudio-7.x/precomp/spec/unix
+		obsolete "[
+				Use `installation_precompilation_path_32' instead 
+				as this function may not process Unicode paths correctly.
+			]"
+		require
+			is_valid_environment: is_valid_environment
+		do
+			create Result.make_from_string (installation_precompilation_path_32 (a_is_dotnet).to_string_32)
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	installation_precompilation_path_32 (a_is_dotnet: BOOLEAN): DIRECTORY_NAME_32
+			-- Eiffel path where the ECFs are located in the installation directory.
+			-- With platform: $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM
+			-- Without: /usr/share/eiffelstudio-7.x/precomp/spec/unix
 		require
 			is_valid_environment: is_valid_environment
 		local
-			l_dn_name: STRING
+			l_dn_name: STRING_32
 		do
-			Result := shared_path.twin
+			Result := shared_path_32.twin
 			Result.extend (precomp_name)
 			Result.extend (spec_name)
 			if a_is_dotnet then
@@ -664,16 +697,38 @@ feature -- Directories (top-level)
 			--   On Unix: ~/.es/Eiffel User Files/7.x/precomp/spec/$ISE_PLATFORM
 			-- Otherwise
 			--   $ISE_EIFFEL/studio/spec/$ISE_PLATFORM
+		obsolete "[
+				Use `precompilation_path_32' instead
+				as this function may not process Unicode paths correctly.
+			]"
+		require
+			is_valid_environment: is_valid_environment
+		do
+			create Result.make_from_string (precompilation_path_32 (a_is_dotnet).to_string_32)
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	precompilation_path_32 (a_is_dotnet: BOOLEAN): DIRECTORY_NAME_32
+			-- Actual location of the precompiled libraries.
+			-- When ISE_PRECOMP is defined:
+			--   $ISE_PRECOMP
+			-- Otherwise if `is_user_files_supported':
+			--   On Windows: C:\Users\manus\Documents\Eiffel User Files\7.x\precomp\spec\$ISE_PLATFORM
+			--   On Mac: ~/Eiffel User Files/7.x/precomp/spec/$ISE_PLATFORM
+			--   On Unix: ~/.es/Eiffel User Files/7.x/precomp/spec/$ISE_PLATFORM
+			-- Otherwise
+			--   $ISE_EIFFEL/studio/spec/$ISE_PLATFORM
 		require
 			is_valid_environment: is_valid_environment
 		local
-			l_value: like get_environment
-			l_dn_name: STRING
+			l_value: like get_environment_32
+			l_dn_name: STRING_32
 		do
-			l_value := get_environment ({EIFFEL_CONSTANTS}.ise_precomp_env)
+			l_value := get_environment_32 ({EIFFEL_CONSTANTS}.ise_precomp_env)
 			if l_value = Void or else l_value.is_empty then
 				if is_user_files_supported then
-					Result := user_files_path.twin
+					Result := user_files_path_32.twin
 					Result.extend (precomp_name)
 					Result.extend (spec_name)
 					if a_is_dotnet then
@@ -689,7 +744,7 @@ feature -- Directories (top-level)
 						-- No user file is specified, we use the installation
 						-- directory and if this is not writable, users will
 						-- get an error.
-					Result := installation_precompilation_path (a_is_dotnet)
+					Result := installation_precompilation_path_32 (a_is_dotnet)
 				end
 			else
 				create Result.make_from_string (l_value)

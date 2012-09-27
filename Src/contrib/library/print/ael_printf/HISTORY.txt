@@ -1,0 +1,69 @@
+History
+
+008 18-Aug-2012
+    Rebuilt and tested using Eiffel Studio 7.0
+    Complete void-safety, types attached by default, standard syntax
+
+007 03-Apr-2011
+    Rebuilt and tested using Eiffel Studio 6.7, void-safe
+
+    Added in AEL_PRINTF a few front-ends to routines that set global
+    values for delimiters, pad characters and error notification agent
+
+    Added support for non-default separators when grouping decimals
+    using %<c>d notation.
+
+    Enhanced binary support to fix field width issues and to support
+    1-filled fields for negative values
+
+    Tweaked extract_token to permit '.' as a delimiter for List 
+    and Decimal formats.
+
+    Broke out decimal_out to enable custom thousands delimeter 
+    when not decorated.
+
+006 17-Feb-2010
+    Compiled and tested using Eiffel 6.5 w/ standard syntax
+
+    Updated extract_token and extract_field_width to support float
+    formats missing overall width values (e.g. %%.2f)005 21-Jul-2009
+
+    Adapted for void-safety in Eiffel Studio 6.4
+
+    Added support for TUPLE as argument list, and for individual arguments
+    in the case of a single format.  See README.txt for more details.
+
+    Added support for printf containers, using the %L format.
+    See README.txt for more details.
+
+    Added argument type and count mismatch error and output messages.
+
+    Renamed constants and routines inherited by AEL_PRINTF (and therefore
+    by users of it) to avoid name clashes.
+
+    Added 'decoration' support for binary and decimal formats that were
+    described in previous version README but were not implemented
+
+004 03-Dec-2008
+    Fixed missing support for 64 bit integer params.
+
+003 21-Apr-2008
+    Changed type of args to FINITE to allow arg list to be original ARRAY,
+    as well as other common structures, like LINKED_LISTs.
+    Reformatted for consistency with other common Eiffel libraries.
+    Changed license terms to Eiffel Forum License v2
+
+002 05-February-2007
+    Removed preconditions in front-end routines (printf, fprintf, etc)
+    that raised exceptions on Void argument lists.  Now a Void arg list
+    is replaced by an empty, non-Void one before calling the lower level
+    routines.
+    Updated the readme.txt file
+
+20-Jan-2007
+    Reworked floating point representation; now the fp value is broken
+    into parts first, then the parts are formatted.
+    Floats now can be zero-padded (only ints could be before)
+
+07-Jan-2007
+    First publicly available version

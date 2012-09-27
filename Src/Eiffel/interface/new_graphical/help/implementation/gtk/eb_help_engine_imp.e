@@ -41,9 +41,9 @@ feature -- Basic Operations
 	show (a_help_context: EB_HELP_CONTEXT)
 			-- Show help with context `a_help_context'.
 		local
-			cmd: STRING
-			url: FILE_NAME
-			root: STRING
+			cmd: STRING_32
+			url: FILE_NAME_32
+			root: STRING_32
 			exists: BOOLEAN
 		do
 			cmd := preferences.misc_data.internet_browser_preference.string_value
@@ -56,14 +56,14 @@ feature -- Basic Operations
 				root := eiffel_layout.docs_path.twin
 				create url.make_from_string (root)
 				url.set_file_name (a_help_context.url)
-				if (create {DIRECTORY}.make (url)).exists then
+				if (create {DIRECTORY_32}.make (url)).exists then
 					url.set_file_name ("index")
 					url.add_extension ("html")
 				end
-				exists := (create {RAW_FILE}.make (url)).exists
+				exists := (create {RAW_FILE_32}.make (url)).exists
 				if exists then
 					cmd.replace_substring_all ("$url", url)
-					(create {EXECUTION_ENVIRONMENT}).launch (cmd)
+					(create {EXECUTION_ENVIRONMENT_32}).launch (cmd)
 					last_show_successful := True
 				else
 					last_show_successful := False

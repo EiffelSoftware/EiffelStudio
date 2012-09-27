@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			l_tag: ID_AS
 			l_parser: EIFFEL_PARSER
 			l_testing_factory: ES_EWEASEL_TEST_AST_FACTORY
-			l_file: KL_BINARY_INPUT_FILE
+			l_file: KL_BINARY_INPUT_FILE_32
 			l_class_c: CLASS_C
 			l_top_indexes: INDEXING_CLAUSE_AS
 			l_index_item: INDEX_AS
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 				-- If class not compiled, we parse it
 				create l_testing_factory
 				create l_parser.make_with_factory (l_testing_factory)
-				create l_file.make (a_class.file_name)
+				create l_file.make (a_class.file_name.to_string_32)
 				l_file.open_read
 				l_parser.parse (l_file)
 				l_top_indexes := l_testing_factory.top_indexing

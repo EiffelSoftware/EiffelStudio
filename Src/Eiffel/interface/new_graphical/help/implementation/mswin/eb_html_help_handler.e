@@ -27,7 +27,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	show (a_chm_url: STRING)
+	show (a_chm_url: READABLE_STRING_32)
 			-- Display help page page with url `a_chm_url'.
 		require
 			valid_chm_url: is_valid_chm_url (a_chm_url)

@@ -71,10 +71,10 @@ feature {NONE} -- Implementation
 	hh_handler: EB_HTML_HELP_HANDLER
 			-- Control content of Microsoft HTML Help
 
-	Url_prefix: STRING
+	Url_prefix: STRING_32
 			-- URL prefix for $EiffelGraphicalCompiler$ help files
 		once
-			Result := eiffel_layout.docs_path.string
+			Result := eiffel_layout.docs_path.to_string_32
 			Result.append ("\eiffel.chm::")
 		end
 

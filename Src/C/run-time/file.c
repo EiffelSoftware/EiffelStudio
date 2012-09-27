@@ -1447,6 +1447,167 @@ rt_public EIF_BOOLEAN eif_file_path_exists_16(EIF_NATURAL_16 *name)
 #endif
 }
 
+/* Modifiers passed to `eif_file_date_for'. */
+typedef enum {
+	eif_date_mode_mod, /* Modification date. */
+	eif_date_mode_acc, /* Access date. */
+#ifdef EIF_WINDOWS
+	eif_date_mode_mod_utf16, /* Modification date for UTF-16 name. */
+	eif_date_mode_acc_utf16  /* Access date for UTF-16 name. */
+#endif
+} eif_date_mode;
+
+/*
+doc:	<routine name="eif_file_date_for" return_type="EIF_INTEGER" export="private">
+doc:		<summary>Access time of a file.</summary>
+doc:		<return>Seconds since epoch (01 January 1970) in UTC or 0 if time cannot be retrieved.</return>
+doc:		<param name="name" type="char *">Null-terminated path in 1-byte or UTF-16 encoding, depending on mode.</param>
+doc:		<param name="mode" type="int">Mode of operation: modification or access time, 1-byte or UTF-16 encoding.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_private EIF_INTEGER eif_file_date_for (void * name, eif_date_mode mode)
+{
+	EIF_INTEGER result = 0;
+#ifdef EIF_WINDOWS
+		/* On NTFS file system, windows store UTC file stamps in 100 of nanoseconds
+		 * starting from January 1st 0. Converted in seconds, this time is greater
+		 * than 232 therefore we substract the EPOCH date January 1st 1970 to get
+		 * a 32 bits representation of the date.
+		 * FIXME: Manu 01/28/2004: On FAT file system, the date is in local time,
+		 * meaning that the code below does not compensate if you change your timezone
+		 * and will return a different date value for the same stamp just because
+		 * you are in different time zone.
+		 */
+		 
+		 /* WARNING: This is using the Ansi version of the Win32 API. Remember
+		  * that if you are doing any change below.
+		  */
+
+	WIN32_FIND_DATAA l_find_data_a;
+	WIN32_FIND_DATAW l_find_data_w;
+	HANDLE l_file_handle;
+	ULARGE_INTEGER l_date;
+
+	if ((eif_date_mode_mod == mode) || (eif_date_mode_acc == mode)) {
+		l_file_handle = FindFirstFileA (name, &l_find_data_a);
+	}
+	else {
+		l_file_handle = FindFirstFileW ((wchar_t *) name, &l_find_data_w);
+	}
+	if (l_file_handle != INVALID_HANDLE_VALUE) {
+ 			/* We do not need the file handle anymore, so we close it to
+			 * avoid handle leak. */
+		FindClose (l_file_handle);
+		switch (mode) {
+		case eif_date_mode_mod:
+			l_date.LowPart = l_find_data_a.ftLastWriteTime.dwLowDateTime;
+			l_date.HighPart = l_find_data_a.ftLastWriteTime.dwHighDateTime;
+			break;
+		case eif_date_mode_acc:
+			l_date.LowPart = l_find_data_a.ftLastAccessTime.dwLowDateTime;
+			l_date.HighPart = l_find_data_a.ftLastAccessTime.dwHighDateTime;
+			break;
+		case eif_date_mode_mod_utf16:
+			l_date.LowPart = l_find_data_w.ftLastWriteTime.dwLowDateTime;
+			l_date.HighPart = l_find_data_w.ftLastWriteTime.dwHighDateTime;
+			break;
+		case eif_date_mode_acc_utf16:
+			l_date.LowPart = l_find_data_w.ftLastAccessTime.dwLowDateTime;
+			l_date.HighPart = l_find_data_w.ftLastAccessTime.dwHighDateTime;
+			break;
+		}
+			/* Convert 100-nanosecond intervals to seconds
+			 * and ajust "1 Jan 1601" to "1 Jan 1970".
+			 * The difference between "1 Jan 1601" and "1 Jan 1970"
+			 * can be precomputed using the following code:
+			 *	SYSTEMTIME epoch = {1970, 1, 0, 1, 0, 0, 0, 0};
+			 *	FILETIME epoch_file;
+			 *	ULARGE_INTEGER epoch_date;
+			 *	SystemTimeToFileTime (&epoch, &epoch_file);
+			 *	epoch_date.LowPart = epoch_file.dwLowDateTime;
+			 *	epoch_date.HighPart = epoch_file.dwHighDateTime;
+			 * time_shift = epoch_date.QuadPart / 10000000UL; // 11644473600
+			 */
+		result = (EIF_INTEGER) (l_date.QuadPart / RTU64C(10000000) - RTU64C(11644473600));
+	}
+#else
+	static struct stat info;
+	if (-1 != stat (name,&info)) {
+		result = (eif_date_mode_mod == mode) ?
+			(EIF_INTEGER) info.st_mtime:
+			(EIF_INTEGER) info.st_atime;
+	}
+#endif
+	return result;
+}
+
+/*
+doc:	<routine name="eif_file_date" return_type="EIF_INTEGER" export="public">
+doc:		<summary>Modification time of a file.</summary>
+doc:		<return>Seconds since epoch (01 January 1970) in UTC or 0 if time cannot be retrieved.</return>
+doc:		<param name="name" type="char *">Null-terminated path.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_INTEGER eif_file_date (char * name)
+{
+	return eif_file_date_for (name, eif_date_mode_mod);
+}
+
+/*
+doc:	<routine name="eif_access_file_date" return_type="EIF_INTEGER" export="public">
+doc:		<summary>Access time of a file.</summary>
+doc:		<return>Seconds since epoch (01 January 1970) in UTC or 0 if time cannot be retrieved.</return>
+doc:		<param name="name" type="char *">Null-terminated path.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_INTEGER eif_file_access_date (char * name)
+{
+	return eif_file_date_for (name, eif_date_mode_acc);
+}
+
+/*
+doc:	<routine name="eif_file_date_16" return_type="EIF_INTEGER" export="public">
+doc:		<summary>Modification time of a file.</summary>
+doc:		<return>Seconds since epoch (01 January 1970) in UTC or 0 if time cannot be retrieved.</return>
+doc:		<param name="name" type="char *">Null-terminated path in UTF-16 encoding.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_INTEGER eif_file_date_16 (EIF_NATURAL_16 * name)
+{
+#ifndef EIF_WINDOWS
+	REQUIRE ("Platform is Windows", EIF_FALSE);
+	return 0;
+#else
+	return eif_file_date_for (name, eif_date_mode_mod_utf16);
+#endif
+}
+
+/*
+doc:	<routine name="eif_access_file_date_16" return_type="EIF_INTEGER" export="public">
+doc:		<summary>Access time of a file.</summary>
+doc:		<return>Seconds since epoch (01 January 1970) in UTC or 0 if time cannot be retrieved.</return>
+doc:		<param name="name" type="char *">Null-terminated path in UTF-16 encoding.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_INTEGER eif_file_access_date_16 (EIF_NATURAL_16 * name)
+{
+#ifndef EIF_WINDOWS
+	REQUIRE ("Platform is Windows", EIF_FALSE);
+	return 0;
+#else
+	return eif_file_date_for (name, eif_date_mode_acc_utf16);
+#endif
+}
 
 /*
  * Interfacing with file system.

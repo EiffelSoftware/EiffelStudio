@@ -11,8 +11,10 @@ inherit
 		rename
 			make as make_utf_8
 		undefine
+			access_date,
 			buffered_file_info,
 			create_read_write,
+			date,
 			is_creatable,
 			old_delete,
 			old_exists,

@@ -746,7 +746,7 @@ feature -- Command/Query Handling
 			l_request_chain_node_id: like invalid_request_chain_node_id
 			l_request_chain_node_queue: detachable like new_request_chain_node_queue
 			l_client_request_chain_node_queue_entry, l_request_chain_node_queue_entry: detachable like new_request_chain_node_queue_entry
-			l_unique_pid_count, i, l_last_pid_index, l_logged_calls_original_count, l_logged_calls_current_count, l_request_chain_depth, l_request_chain_owner, l_pid: INTEGER_32
+			l_unique_pid_count, i, l_last_pid_index, l_logged_calls_original_count, l_logged_calls_current_count, l_request_chain_depth, l_pid: INTEGER_32
 			l_is_synchronous, l_client_sync_needed, l_exit_loop, l_temporary_chain_opened: BOOLEAN
 			l_call_ptr, l_null_ptr: POINTER
 		do

@@ -43,9 +43,9 @@ feature {NONE} -- Initialization
 
 	create_interface_objects
 		do
-
 			create auto_resized_columns.make
 			auto_resized_columns.compare_objects
+			create manually_resized_columns.make (0)
 		end
 
 	initialize
@@ -62,9 +62,13 @@ feature {NONE} -- Initialization
 			header.item_pointer_button_press_actions.extend (agent on_header_item_clicked)
 			header.pointer_double_press_actions.force_extend (agent on_header_auto_width_resize)
 
+			header.item_resize_start_actions.extend (agent on_header_resize_start)
+			header.item_resize_end_actions.extend (agent on_header_resize_end)
+
 			create scrolling_behavior.make (Current)
 			create l_resizing_behavior.make (Current)
 			l_resizing_behavior.enable_column_resizing
+			l_resizing_behavior.header_resize_end_actions.extend (agent on_header_manually_resized)
 			resizing_behavior := l_resizing_behavior
 
 			key_press_actions.extend (agent on_key_pressed)
@@ -161,6 +165,12 @@ feature -- Status setting
 			auto_size_best_fit_column := 0
 		ensure
 			not_use_auto_size_best_fit: not use_auto_size_best_fit
+		end
+
+	reset_manually_resized_columns
+			-- Resize manually resized columns
+		do
+			manually_resized_columns.wipe_out
 		end
 
 feature -- properties
@@ -681,11 +691,13 @@ feature {NONE} -- column resizing impl
 										if l_new_width < 0 then
 											l_new_width := 0
 										end
-										resize_actions.block
-										virtual_size_changed_actions.block
-										l_col.set_width (l_new_width)
-										virtual_size_changed_actions.resume
-										resize_actions.resume
+										if manually_resized_columns.has (l_index) implies l_col.required_width_of_item_span (1, row_count) < l_new_width then
+											resize_actions.block
+											virtual_size_changed_actions.block
+											l_col.set_width (l_new_width)
+											virtual_size_changed_actions.resume
+											resize_actions.resume
+										end
 									end
 								end
 							else
@@ -738,7 +750,12 @@ feature {NONE} -- column resizing impl
 								then
 									resize_actions.block
 									virtual_size_changed_actions.block
-									last_col.set_width (l_new_width)
+									if is_header_displayed then
+										last_col.set_width (l_new_width.max (last_col.header_item.minimum_width))
+									else
+										last_col.set_width (l_new_width)
+									end
+
 										--| IEK This line does not seem to be needed and causes potential
 										--| infinite loops during resizing on gtk.
 									--implementation.recompute_horizontal_scroll_bar
@@ -841,7 +858,64 @@ feature {NONE} -- column resizing impl
 
 	auto_resized_columns: LINKED_LIST [INTEGER]
 
+	manually_resized_columns: ARRAYED_LIST [INTEGER]
+			-- Record of all manually rezied columns
+
+	header_resize_started: BOOLEAN
+			-- Header resize started?
+
 feature {NONE} -- Auto Events
+
+	header_item_column (a_header_item: EV_HEADER_ITEM): detachable EV_GRID_COLUMN
+		local
+			i, n: INTEGER
+		do
+			from
+				i := 1
+				n := column_count
+			until
+				Result /= Void
+			loop
+				if attached column (i) as col and then col.header_item = a_header_item then
+					Result := col
+				end
+				i := i + 1
+			end
+		end
+
+	on_header_resize_start (a_header_item: EV_HEADER_ITEM)
+			-- Call when the column header resizing starts.
+		do
+			header_resize_started := True
+		end
+
+	on_header_resize_end (a_header_item: EV_HEADER_ITEM)
+			-- Call when the column header resizing ends.
+		require
+			a_header_item_attached: a_header_item /= Void
+		do
+			if header_resize_started then
+				on_header_manually_resized (a_header_item)
+				header_resize_started := False
+			end
+		end
+
+	on_header_manually_resized (a_header_item: EV_HEADER_ITEM)
+			-- Call when the column header has been manually resized.
+		require
+			a_header_item_attached: a_header_item /= Void
+		local
+			l_index: INTEGER
+			l_columns: like manually_resized_columns
+		do
+			if attached header_item_column (a_header_item) as col then
+				l_columns := manually_resized_columns
+				l_index := col.index
+				if not l_columns.has (l_index) then
+					l_columns.extend (l_index)
+				end
+			end
+		end
 
 	on_resize_events (ax, ay, aw, ah: INTEGER)
 		do

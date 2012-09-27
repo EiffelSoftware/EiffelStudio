@@ -24,8 +24,10 @@ inherit
 		export
 			{NONE} all
 		undefine
+			access_date,
 			buffered_file_info,
 			create_read_write,
+			date,
 			delete,
 			exists,
 			is_creatable,

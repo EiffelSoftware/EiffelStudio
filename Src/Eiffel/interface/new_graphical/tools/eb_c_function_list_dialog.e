@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			create grid
 			grid.set_column_count_to (2)
 			grid.column (2).set_width (40)
-			grid.column (1).set_title (interface_names.t_class)
+			grid.column (1).set_title (interface_names.l_class_browser_classes)
 			create grid_wrapper.make (grid)
 			grid_wrapper.set_sort_info (1, create {EVS_GRID_TWO_WAY_SORTING_INFO [TUPLE [EV_GRID_ITEM, EV_GRID_ITEM]]}.make (agent class_name_tester, ascending_order))
 			grid_wrapper.enable_auto_sort_order_change

@@ -60,7 +60,7 @@ feature -- Query
 			Result := l_path + Operating_environment.directory_separator.out + l_exe_name
 		end
 
-	target_directory: DIRECTORY_NAME
+	target_directory: DIRECTORY_NAME_32
 			-- target directory under EIFGENs
 			-- Note: Result is long path name
 		local
@@ -199,10 +199,10 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 	output: attached STRING_GENERAL
 			-- eweasel temporary output directory
 		local
-			l_dir_name: DIRECTORY_NAME
+			l_dir_name: DIRECTORY_NAME_32
 			l_final_dir_name: STRING_GENERAL
 
-			l_dir: DIRECTORY
+			l_dir: DIRECTORY_32
 			l_short_name_helper: ES_FILE_NAME_HELPER
 		do
 			l_dir_name := target_directory

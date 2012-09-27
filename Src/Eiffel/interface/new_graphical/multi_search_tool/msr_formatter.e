@@ -41,12 +41,12 @@ class
 
 feature -- Path building
 
-	extend_file_path (a_path: FILE_NAME; file_name: STRING): FILE_NAME
+	extend_file_path (a_path: FILE_NAME_32; file_name: STRING): FILE_NAME_32
 			-- Make new file path, if no diretory seperator at the end of a_path, add one.
 		local
-			s: STRING
+			s: STRING_32
 		do
-			s := a_path.out
+			s := a_path.to_string_32
 			if s.item_code (s.count) /= operating_environment.directory_separator.code then
 				s.append_character (operating_environment.directory_separator)
 			end
@@ -158,9 +158,9 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	invariant_clause: True -- Your invariant here
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

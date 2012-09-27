@@ -24,27 +24,21 @@ feature -- Basic operations
 	launch
 			-- Launch searching.
 		local
-			file : PLAIN_TEXT_FILE
-			buffer_length : INTEGER
-			text : STRING
+			file: PLAIN_TEXT_FILE_32
+			text: STRING
 			class_item: MSR_CLASS_ITEM
 		do
 			create item_matched_internal.make (0)
-			buffer_length := 100
 			text := ""
 			create file.make (path)
-			if path.out.substring (path.out.last_index_of ('.',path.out.count),path.out.count).is_equal (".e") then
+			if path.to_string_32.ends_with (".e") then
 				if file.exists then
 					file.open_read
 					if file.is_readable then
-						from
-							file.start
-						until
-							file.end_of_file
-						loop
-							file.readstream (buffer_length)
-							text.append (file.laststring)
-						end
+							-- Read the whole file.
+						file.read_stream (file.count)
+						text := file.last_string
+						file.close
 						create text_strategy.make (keyword, surrounding_text_range_internal, "", path, text)
 						if case_sensitive then
 							text_strategy.set_case_sensitive
@@ -72,7 +66,6 @@ feature -- Basic operations
 							end
 						end
 					end
-					file.close
 				end
 			end
 			launched := True
@@ -93,10 +86,9 @@ feature {NONE} -- Implementation
 	text_strategy: MSR_SEARCH_TEXT_STRATEGY
 
 invariant
-	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

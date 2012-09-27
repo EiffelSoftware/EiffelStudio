@@ -18,7 +18,7 @@ create
 
 feature -- Command
 
-	append_init_parameter (a_list: LIST [STRING])
+	append_init_parameter (a_list: LIST [STRING_32])
 			-- Append eweasel process command line parameters.
 		require
 			not_void: a_list /= Void
@@ -27,12 +27,12 @@ feature -- Command
 			a_list.extend (manager.environment_manager.init)
 
 			a_list.extend ("-output")
-			a_list.extend (manager.environment_manager.output.as_string_8)
+			a_list.extend (manager.environment_manager.output)
 
 			-- eweasel need `ISE_EIFFEL' and `ISE_PLATFORM' as paramters to find ec.exe
 			a_list.extend ("-define")
 			a_list.extend ("ISE_EIFFEL")
-			a_list.extend (manager.environment_manager.ise_eiffel.as_string_8)
+			a_list.extend (manager.environment_manager.ise_eiffel)
 
 			a_list.extend ("-define")
 			a_list.extend ("ISE_PLATFORM")

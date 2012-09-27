@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_keyword: STRING; a_range: INTEGER; a_path: FILE_NAME)
+	make (a_keyword: STRING; a_range: INTEGER; a_path: like path)
 			-- Initialization
 		require
 			keyword_attached: a_keyword /= Void
@@ -33,14 +33,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	path: FILE_NAME
+	path: FILE_NAME_32
 			-- Directory that is searching
 		require else
 			path_not_void: is_path_set
 		do
 			Result:= path_internal
 		ensure then
-			path : Result = path_internal
+			path: Result = path_internal
 		end
 
 feature -- Status report
@@ -58,7 +58,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_path (p_path: FILE_NAME)
+	set_path (p_path: like path)
 			-- Set path to search.
 		require else
 			p_path_not_void: p_path /= Void
@@ -68,7 +68,7 @@ feature -- Status setting
 			is_path_set: is_path_set
 		end
 
-	set_one_file_searched_action (action: PROCEDURE [ANY, TUPLE [STRING]])
+	set_one_file_searched_action (action: PROCEDURE [ANY, TUPLE [STRING_32]])
 			-- Set action for invokation one a file searched
 		require
 			action_not_void: action /= Void
@@ -106,8 +106,8 @@ feature -- Basic operations
 			is_path_set: is_path_set
 		local
 			i:INTEGER
-			l_directory: DIRECTORY
-			l_file:RAW_FILE
+			l_directory: DIRECTORY_32
+			l_file: RAW_FILE_32
 		do
 			create item_matched_internal.make (0)
 			create l_directory.make (path)
@@ -122,7 +122,7 @@ feature -- Basic operations
 					i > l_directory.count
 				loop
 					if not(l_directory.lastentry.is_equal (".") or l_directory.lastentry.is_equal("..")) then
-						create l_file.make (string_formatter.extend_file_path (path, l_directory.lastentry).out)
+						create l_file.make (string_formatter.extend_file_path (path, l_directory.lastentry).to_string_32)
 						if l_file.exists then
 							if l_file.is_directory and then is_subdirectory_searched then
 								create directory_strategy.make (keyword, surrounding_text_range_internal, string_formatter.extend_file_path (path, l_directory.lastentry))
@@ -154,7 +154,7 @@ feature -- Basic operations
 								end
 							end
 							if one_file_searched_internal /= Void then
-								one_file_searched_internal.call ([string_formatter.extend_file_path (path, l_directory.lastentry).out])
+								one_file_searched_internal.call ([string_formatter.extend_file_path (path, l_directory.lastentry).to_string_32])
 							end
 						end
 					end
@@ -169,7 +169,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	path_internal : FILE_NAME
+	path_internal: detachable like path
 			-- Directory to be searched
 
 	file_strategy: MSR_SEARCH_FILE_STRATEGY
@@ -178,14 +178,14 @@ feature {NONE} -- Implementation
 	directory_strategy: MSR_SEARCH_DIRECTORY_STRATEGY
 			-- Directory strategy used for directory recursively searching
 
-	one_file_searched_internal: PROCEDURE [ANY, TUPLE [STRING]]
+	one_file_searched_internal: PROCEDURE [ANY, TUPLE [STRING_32]]
 			-- Invokes once one file searched
 
 invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

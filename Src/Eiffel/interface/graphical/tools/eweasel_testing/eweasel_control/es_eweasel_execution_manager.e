@@ -190,15 +190,13 @@ feature -- Query
 			l_shared: EB_SHARED_WINDOW_MANAGER
 			l_dev: EB_DEVELOPMENT_WINDOW
 			l_tool: ES_TOOL [EB_TOOL]
-			l_tmp_result: ES_EWEASEL_TESTING_TOOL_PANEL
 		do
 			create l_shared
 			l_dev := l_shared.window_manager.last_focused_development_window
 			if l_dev /= Void then
 				l_tool := l_dev.shell_tools.tool ({ES_EWEASEL_TESTING_TOOL})
 				if l_tool.is_tool_instantiated then
-					l_tmp_result ?= l_tool.panel
-					if l_tmp_result /= Void then
+					if attached {ES_EWEASEL_TESTING_TOOL_PANEL} l_tool.panel as l_tmp_result then
 						if l_tmp_result.is_initialized then
 							Result := l_tmp_result
 						end
@@ -214,15 +212,13 @@ feature -- Query
 			l_shared: EB_SHARED_WINDOW_MANAGER
 			l_dev: EB_DEVELOPMENT_WINDOW
 			l_tool: ES_TOOL [EB_TOOL]
-			l_tmp_result: ES_EWEASEL_TESTING_RESULT_TOOL_PANEL
 		do
 			create l_shared
 			l_dev := l_shared.window_manager.last_focused_development_window
 			if l_dev /= Void then
 				l_tool := l_dev.shell_tools.tool ({ES_EWEASEL_TESTING_RESULT_TOOL})
 				if l_tool.is_tool_instantiated then
-					l_tmp_result ?= l_tool.panel
-					if l_tmp_result /= Void then
+					if attached {ES_EWEASEL_TESTING_RESULT_TOOL_PANEL} l_tool.panel as l_tmp_result then
 						if l_tmp_result.is_initialized then
 							Result := l_tmp_result
 						end
@@ -357,7 +353,7 @@ feature {NONE} -- Implementation
 			-- ONLY used by `process'.
 		local
 			l_factory: PROCESS_FACTORY
-			l_list: ARRAYED_LIST [STRING]
+			l_list: ARRAYED_LIST [STRING_32]
 
 		do
 			create l_list.make (10)
@@ -411,15 +407,15 @@ feature {NONE} -- Implementation
 		require
 			ready: testing_tool /= Void
 		local
-			l_shim: ES_EWEASEL_TESTING_RESULT_TOOL
 			l_show_tool_command: ES_SHOW_TOOL_COMMAND
 			l_win: EB_DEVELOPMENT_WINDOW
 		do
 			if testing_result_tool = Void or else not testing_result_tool.is_visible then
 				l_win := testing_tool.develop_window
 				check not_void: l_win /= Void end
-				l_shim ?= l_win.shell_tools.tool ({ES_EWEASEL_TESTING_RESULT_TOOL})
-				if l_shim /= Void then
+				if attached {ES_EWEASEL_TESTING_RESULT_TOOL}
+					l_win.shell_tools.tool ({ES_EWEASEL_TESTING_RESULT_TOOL}) as l_shim
+				then
 					l_show_tool_command := l_win.commands.show_shell_tool_commands.item (l_shim)
 					l_show_tool_command.execute
 				end
@@ -483,7 +479,7 @@ feature {NONE} -- Implementation
 			l_project_file: PROJECT_EIFFEL_FILE
 		do
 			is_missing_error := False
-			create l_project_dir.make (eiffel_layout.precompilation_path (False), a_library_target_name)
+			create l_project_dir.make (eiffel_layout.precompilation_path_32 (False), a_library_target_name)
 			create l_remote_project_dir.make (l_project_dir)
 			l_remote_project_dir.check_version_number (1)
 			l_project_file := l_remote_project_dir.precomp_eif_file

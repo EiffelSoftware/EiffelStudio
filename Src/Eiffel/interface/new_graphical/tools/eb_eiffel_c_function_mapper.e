@@ -156,7 +156,7 @@ feature -- Status report
 
 feature{NONE} -- Implementation
 
-	c_file (a_class_type: CLASS_TYPE): STRING
+	c_file (a_class_type: CLASS_TYPE): STRING_32
 			-- C file name for `a_class_type'
 			-- If that C file is not generated, return an empty string.
 		require
@@ -165,9 +165,9 @@ feature{NONE} -- Implementation
 		local
 			l_mode: BOOLEAN
 			l_package_name: STRING
-			l_dir_name: DIRECTORY_NAME
-			l_location: STRING
-			l_dir: DIRECTORY
+			l_dir_name: DIRECTORY_NAME_32
+			l_location: STRING_32
+			l_dir: DIRECTORY_32
 		do
 			l_mode := context.workbench_mode
 			set_context_mode (is_for_workbench)
@@ -180,7 +180,7 @@ feature{NONE} -- Implementation
 			end
 			create l_dir_name.make_from_string (l_location)
 			l_package_name := packet_name (c_prefix, a_class_type.packet_number)
-			l_dir_name.set_subdirectory (l_package_name)
+			l_dir_name.extend (l_package_name)
 			create l_dir.make (l_dir_name)
 			if l_dir.exists then
 				Result := full_file_name (not is_for_workbench, l_package_name, a_class_type.base_file_name, Void)

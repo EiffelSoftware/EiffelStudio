@@ -166,6 +166,11 @@ RT_LNK void eif_file_unlink_16(EIF_NATURAL_16 *name);
 RT_LNK void eif_file_mkdir_16(EIF_NATURAL_16 *path);
 RT_LNK void eif_file_rename_16(EIF_NATURAL_16 *from, EIF_NATURAL_16 *to);
 
+RT_LNK EIF_INTEGER eif_file_date (char * name);
+RT_LNK EIF_INTEGER eif_file_access_date (char * name);
+RT_LNK EIF_INTEGER eif_file_date_16 (EIF_NATURAL_16 * name);
+RT_LNK EIF_INTEGER eif_file_access_date_16 (EIF_NATURAL_16 * name);
+
 #ifdef HAS_GETGROUPS
 /* Does the list of groups the user belongs to include `gid'? */
 extern EIF_BOOLEAN eif_group_in_list(int gid);

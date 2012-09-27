@@ -27,7 +27,6 @@ feature -- Access
 			window_enumerator_delegate: WEL_ENUM_WINDOW_DELEGATE
 			l_result: like internal_children
 		do
-			print ("Something happened%N")
 			create l_result.make (1)
 			internal_children := l_result
 			Result := l_result

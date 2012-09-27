@@ -44,6 +44,7 @@ inherit
 				last_string,
 				path_exists,
 				position,
+				prunable,
 				put_boolean,
 				put_character,
 				put_new_line,
@@ -53,7 +54,8 @@ inherit
 				read_stream,
 				retrieved,
 				support_storable,
-				standard_is_equal
+				standard_is_equal,
+				wipe_out
 		redefine
 			buffered_file_info,
 			create_read_write,

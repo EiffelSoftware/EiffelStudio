@@ -33,15 +33,17 @@ feature -- Element change
 	update (f_name: STRING_32)
 			-- Update information buffer: fill it in with information
 			-- from the inode of `f_name'.
-		require
-			{PLATFORM}.is_windows
 		local
 			n: like external_name_16
 			u: UTF_CONVERTER
 		do
-			file_name_8 := u.string_32_to_utf_8_string_8 (f_name)
-			n := external_name_16
-			exists := eif_file_stat_16 ($n, $buffered_file_info, is_following_symlinks) = 0
+			if {PLATFORM}.is_windows then
+				file_name_8 := u.string_32_to_utf_8_string_8 (f_name)
+				n := external_name_16
+				exists := eif_file_stat_16 ($n, $buffered_file_info, is_following_symlinks) = 0
+			else
+				update_8 (u.string_32_to_utf_8_string_8 (f_name))
+			end
 		end
 
 feature {NONE} -- Access

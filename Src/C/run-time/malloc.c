@@ -237,6 +237,9 @@ rt_shared struct ck_list cklst = {
 	(struct chunk *) 0,			/* cck_tail */
 	(struct chunk *) 0,			/* eck_head */
 	(struct chunk *) 0,			/* eck_tail */
+	(struct chunk *) 0,			/* cursor */
+	(struct chunk *) 0,			/* c_cursor */
+	(struct chunk *) 0,			/* e_cursor */
 };
 
 /*

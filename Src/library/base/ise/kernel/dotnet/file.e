@@ -285,7 +285,7 @@ feature -- Access
 			Result := eiffel_file_date_time (internal_file.last_access_time.to_universal_time)
 		end
 
-	retrieved: ANY
+	retrieved: detachable ANY
 			-- Retrieved object structure
 			-- To access resulting object under correct type,
 			-- use assignment attempt.
@@ -295,9 +295,7 @@ feature -- Access
 			l_formatter: BINARY_FORMATTER
 		do
 			create l_formatter.make
-			check attached l_formatter.deserialize (internal_stream) as l_result then
-				Result := l_result
-			end
+			Result := l_formatter.deserialize (internal_stream)
 		end
 
 feature -- Measurement

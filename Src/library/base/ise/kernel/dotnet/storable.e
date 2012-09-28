@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	retrieved (medium: IO_MEDIUM): ANY
+	retrieved (medium: IO_MEDIUM): detachable ANY
 			-- Retrieved object structure, from external
 			-- representation previously stored in `medium'.
 			-- To access resulting object under correct type,
@@ -32,8 +32,6 @@ feature -- Access
 			medium_supports_storable: medium.support_storable
 		do
 			Result := medium.retrieved
-		ensure
-			Result_exists: Result /= Void
 		end
 
 	retrieve_by_name (file_name: STRING): detachable ANY

@@ -28,7 +28,7 @@ create
 feature {NONE} -- Initialization
 
 	initialize (n: like class_name;
-			ext_name: STRING_AS;
+			ext_name: like external_class_name;
 			is_d, is_e, is_fc, is_ex, is_par: BOOLEAN;
 			top_ind: like top_indexes;
 			bottom_ind: like bottom_indexes;
@@ -221,7 +221,7 @@ feature -- Roundtrip
 			end
 		end
 
-	set_header_mark (a_frozen_keyword, a_expanded_keyword, a_deferred_keyword, a_external_keyword: KEYWORD_AS)
+	set_header_mark (a_frozen_keyword, a_expanded_keyword, a_deferred_keyword, a_external_keyword: detachable KEYWORD_AS)
 			-- Set header marks of a class.
 		do
 			if a_frozen_keyword /= Void then
@@ -243,7 +243,7 @@ feature -- Roundtrip
 			external_keyword_set: a_external_keyword /= Void implies external_keyword_index = a_external_keyword.index
 		end
 
-	set_class_keyword (k_as: KEYWORD_AS)
+	set_class_keyword (k_as: like class_keyword)
 			-- Set `class_keyword' with `k_as'.
 		do
 			if k_as /= Void then
@@ -253,7 +253,7 @@ feature -- Roundtrip
 			class_keyword_set: k_as /= Void implies class_keyword_index = k_as.index
 		end
 
-	set_alias_keyword (k_as: KEYWORD_AS)
+	set_alias_keyword (k_as: like alias_keyword)
 			-- Set `alias_keyword' with `k_as'.
 		do
 			if k_as /= Void then
@@ -263,7 +263,7 @@ feature -- Roundtrip
 			alias_keyword_set: k_as /= Void implies alias_keyword_index = k_as.index
 		end
 
-	set_obsolete_keyword (k_as: KEYWORD_AS)
+	set_obsolete_keyword (k_as: like obsolete_keyword)
 			-- Set `obsolete_keyword' with `k_as'.
 		do
 			if k_as /= Void then
@@ -321,10 +321,10 @@ feature -- Attributes
 	class_name: ID_AS
 			-- Class name
 
-	external_class_name: STRING_AS
+	external_class_name: detachable STRING_AS
 			-- External_name of class if `is_external'.
 
-	obsolete_message: STRING_AS
+	obsolete_message: detachable STRING_AS
 			-- Obsolete message clause
 			-- (Void if was not present)
 
@@ -399,16 +399,16 @@ feature -- Attributes
 			end
 		end
 
-	creators: EIFFEL_LIST [CREATE_AS]
+	creators: detachable EIFFEL_LIST [CREATE_AS]
 			-- Creators
 
-	convertors: CONVERT_FEAT_LIST_AS
+	convertors: detachable CONVERT_FEAT_LIST_AS
 			-- Convertors
 
-	features: EIFFEL_LIST [FEATURE_CLAUSE_AS]
+	features: detachable EIFFEL_LIST [FEATURE_CLAUSE_AS]
 			-- Feature list
 
-	replicated_features: EIFFEL_LIST [FEATURE_AS]
+	replicated_features: detachable EIFFEL_LIST [FEATURE_AS]
 			-- List of inherited features that are replicated in `Current'.
 			-- Even though this information is compilation specific it needs to be
 			-- here so that the AST's of the replicated features get stored to disk.
@@ -438,15 +438,16 @@ feature -- Attributes
 		local
 			l_clicklist_visitor: AST_CLICKABLE_VISITOR
 		do
-			Result := internal_click_list
-			if Result = Void then
+			if attached internal_click_list as l_click_list then
+				Result := l_click_list
+			else
 				create l_clicklist_visitor
 				Result := l_clicklist_visitor.click_list (Current)
 				internal_click_list := Result
 			end
 		end
 
-	internal_click_list: CLICK_LIST
+	internal_click_list: detachable CLICK_LIST
 			-- Clickable AST items for current class.
 
 	end_keyword: KEYWORD_AS

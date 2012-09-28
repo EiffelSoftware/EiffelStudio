@@ -40,7 +40,7 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	assignment_symbol: SYMBOL_AS
+	assignment_symbol: detachable SYMBOL_AS
 			-- Symbol ":=" associated with this structure
 
 feature -- Attributes

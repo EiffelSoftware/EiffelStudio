@@ -91,10 +91,10 @@ feature -- Attributes
 			-- (only complete assertions are included)
 			-- e.g. "tag:expr", "expr"
 
-	compound: EIFFEL_LIST [INSTRUCTION_AS]
+	compound: detachable EIFFEL_LIST [INSTRUCTION_AS]
 			-- Compound
 
-	end_keyword: KEYWORD_AS
+	end_keyword: detachable KEYWORD_AS
 			-- Line number where `end' keyword is located
 
 feature -- Roundtrip
@@ -141,7 +141,7 @@ feature -- Comparison
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

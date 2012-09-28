@@ -105,13 +105,13 @@ feature -- Attributes
 	condition: EXPR_AS
 			-- Conditional expression
 
-	compound: EIFFEL_LIST [INSTRUCTION_AS]
+	compound: detachable EIFFEL_LIST [INSTRUCTION_AS]
 			-- Compound
 
-	elsif_list: EIFFEL_LIST [ELSIF_AS]
+	elsif_list: detachable EIFFEL_LIST [ELSIF_AS]
 			-- Elsif list
 
-	else_part: EIFFEL_LIST [INSTRUCTION_AS]
+	else_part: detachable EIFFEL_LIST [INSTRUCTION_AS]
 			-- Else part
 
 	end_keyword: KEYWORD_AS

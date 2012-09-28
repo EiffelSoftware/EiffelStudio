@@ -156,7 +156,7 @@ feature -- Roundtrip
 			end
 		end
 
-	set_once_string_keyword (k_as: KEYWORD_AS)
+	set_once_string_keyword (k_as: detachable KEYWORD_AS)
 			-- Set `once_keyword' with `k_as'.
 		do
 			if k_as /= Void then
@@ -166,10 +166,10 @@ feature -- Roundtrip
 			once_string_keyword_set: k_as /= Void implies once_string_keyword_index = k_as.index
 		end
 
-	type: TYPE_AS
+	type: detachable TYPE_AS
 			-- Type that associated with this string.
 
-	set_type (t_as: TYPE_AS)
+	set_type (t_as: like type)
 			-- Set `type' with `t_as'.
 		do
 			type := t_as

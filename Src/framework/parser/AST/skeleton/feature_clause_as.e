@@ -52,7 +52,7 @@ feature -- Attributes
 	feature_keyword: KEYWORD_AS
 			-- Position after `feature' keyword.
 
-	clients: CLIENT_AS
+	clients: detachable CLIENT_AS
 			-- Client list
 
 	features: EIFFEL_LIST [FEATURE_AS]
@@ -196,16 +196,10 @@ feature -- Access
 			-- Does this feature clause have the same clients
 			-- as `other' feature clause?
 		do
-			Result := clients = Void and other.clients = Void
-
-			if not Result then
-				if clients /= Void then
-					if other.clients /= Void then
-						Result := clients.is_equiv (other.clients)
-					else
-						Result := False
-					end
-				end
+			if attached clients as l_clients and attached other.clients as l_other_clients then
+				Result := l_clients.is_equiv (l_other_clients)
+			else
+				Result := clients = other.clients
 			end
 		end
 

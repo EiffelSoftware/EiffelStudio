@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	PARAN_LIST_AS [G -> EIFFEL_LIST [AST_EIFFEL]]
+	PARAN_LIST_AS [G -> detachable EIFFEL_LIST [AST_EIFFEL]]
 
 inherit
 	AST_EIFFEL
@@ -68,10 +68,10 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
-			if content = Void then
-				Result := other.content = Void
+			if attached content as l_content and attached other.content as l_other_content then
+				Result := l_content.is_equivalent (l_other_content)
 			else
-				Result := other.content /= Void and then content.is_equivalent (other.content)
+				Result := content = other.content
 			end
 		end
 

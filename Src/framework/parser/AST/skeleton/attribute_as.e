@@ -19,7 +19,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (c: like compound; l_as: KEYWORD_AS)
+	make (c: like compound; l_as: like attribute_keyword)
 			-- Create new DO AST node.
 		do
 			initialize (c)

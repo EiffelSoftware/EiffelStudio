@@ -109,7 +109,7 @@ feature -- Roundtrip
 
 feature -- Settings
 
-	set_lcurly_symbol (s_as: SYMBOL_AS)
+	set_lcurly_symbol (s_as: detachable SYMBOL_AS)
 			-- Set `lcurly_symbol' with `s_as'.
 		do
 			if s_as /= Void then
@@ -119,7 +119,7 @@ feature -- Settings
 			lcurly_symbol_index_set: s_as /= Void implies lcurly_symbol_index = s_as.index
 		end
 
-	set_rcurly_symbol (s_as: SYMBOL_AS)
+	set_rcurly_symbol (s_as: detachable SYMBOL_AS)
 			-- Set `rcurly_symbol' with `s_as'.
 		do
 			if s_as /= Void then
@@ -186,7 +186,7 @@ feature -- Comparison
 
 feature -- Modification
 
-	set_attachment_mark (m: LEAF_AS; a: like has_attached_mark; d: like has_detachable_mark)
+	set_attachment_mark (m: detachable LEAF_AS; a: like has_attached_mark; d: like has_detachable_mark)
 		require
 			correct_attachment_status: not (a and d)
 			meaningfull_attachment_mark: (m /= Void) implies (a or d)
@@ -204,7 +204,7 @@ feature -- Modification
 			has_detachable_mark_set: has_detachable_mark = d
 		end
 
-	set_separate_mark (m: LEAF_AS)
+	set_separate_mark (m: detachable LEAF_AS)
 		do
 			if m = Void then
 				separate_mark_index := 0

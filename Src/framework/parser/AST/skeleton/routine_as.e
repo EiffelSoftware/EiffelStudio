@@ -105,16 +105,16 @@ feature -- Roundtrip
 
 feature -- Roundtrip
 
-	internal_locals: LOCAL_DEC_LIST_AS
+	internal_locals: detachable LOCAL_DEC_LIST_AS
 			-- Local declarations, in which keyword "local" is stored
 
 feature -- Attributes
 
-	obsolete_message: STRING_AS
+	obsolete_message: detachable STRING_AS
 			-- Obsolete clause message
 			-- (Void if was not present)
 
-	precondition: REQUIRE_AS
+	precondition: detachable REQUIRE_AS
 			-- Precondition list
 
 	locals: detachable EIFFEL_LIST [TYPE_DEC_AS]
@@ -133,20 +133,20 @@ feature -- Attributes
 	routine_body: ROUT_BODY_AS
 			-- Routine body
 
-	postcondition: ENSURE_AS
+	postcondition: detachable ENSURE_AS
 			-- Routine postconditions
 
-	rescue_clause: EIFFEL_LIST [INSTRUCTION_AS]
+	rescue_clause: detachable EIFFEL_LIST [INSTRUCTION_AS]
 			-- Rescue compound
 
 	once_manifest_string_count: INTEGER
 			-- Number of once manifest strings in precondition,
 			-- body, postcondition and rescue clause
 
-	end_keyword: KEYWORD_AS
+	end_keyword: detachable KEYWORD_AS
 			-- Location for `end' keyword
 
-	object_test_locals: ARRAYED_LIST [TUPLE [name: ID_AS; type: TYPE_AS]]
+	object_test_locals: detachable ARRAYED_LIST [TUPLE [name: ID_AS; type: TYPE_AS]]
 			-- Object test locals mentioned in the routine
 
 feature -- Location

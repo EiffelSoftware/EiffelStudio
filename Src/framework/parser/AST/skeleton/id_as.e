@@ -168,9 +168,7 @@ feature -- Access
 	name_32: STRING_32
 			-- Name of this id.
 		do
-			if attached name as l_name then
-				Result := encoding_converter.utf8_to_utf32 (l_name)
-			end
+			Result := encoding_converter.utf8_to_utf32 (name)
 		end
 
 	name_8: STRING_8
@@ -188,9 +186,8 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 	name: STRING
 			-- Name of this id.
 		do
+				-- Per invariant of class.
 			Result := names_heap.item (name_id)
-		ensure then
-			Result_ok: Result /= Void and then not Result.is_empty
 		end
 
 feature -- Visitor
@@ -230,8 +227,12 @@ feature {NONE} -- Implementation
 			Result := name
 		end
 
+invariant
+	name_id_positive: name_id > 0
+	name_id_in_bounds: names_heap.valid_index (name_id)
+
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

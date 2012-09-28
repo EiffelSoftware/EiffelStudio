@@ -612,7 +612,7 @@ feature
 
 	process_address_as (l_as: ADDRESS_AS)
 		do
-			safe_process (l_as.address_symbol)
+			safe_process (l_as.address_symbol (match_list))
 			safe_process (l_as.feature_name)
 		end
 

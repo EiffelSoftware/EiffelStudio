@@ -22,6 +22,8 @@ feature{NONE} -- Initialization
 
 	make (tp: like type; tg: like target; c: like call; l_as, r_as: like lbang_symbol)
 			-- Create new CREATE_CREATION AST node.
+		require
+			type_not_void: tp /= Void
 		do
 			initialize (tp, tg, c)
 			lbang_symbol := l_as
@@ -33,7 +35,7 @@ feature{NONE} -- Initialization
 
 feature -- Roundtrip
 
-	lbang_symbol, rbang_symbol: SYMBOL_AS
+	lbang_symbol, rbang_symbol: detachable SYMBOL_AS
 			-- Symbol "!" associated with this structure
 
 feature -- Visitor
@@ -54,8 +56,8 @@ feature -- Roundtrip/Token
 				else
 					Result := target.first_token (a_list)
 				end
-			else
-				Result := lbang_symbol.first_token (a_list)
+			elseif attached lbang_symbol as l_symbol then
+				Result := l_symbol
 			end
 		end
 

@@ -65,13 +65,6 @@ inherit
 			new_character_as, new_typed_char_as,
 			set_buffer, append_text_to_buffer,
 			new_once_string_keyword_as,
-			new_square_symbol_as,
-			new_creation_keyword_as,
-			new_end_keyword_as,
-			new_frozen_keyword_as,
-			new_infix_keyword_as,
-			new_precursor_keyword_as,
-			new_prefix_keyword_as,
 			new_integer_as,
 			new_integer_hexa_as,
 			new_real_as,
@@ -80,7 +73,6 @@ inherit
 			new_verbatim_string_as,
 			new_bin_and_then_as,
 			new_bin_or_else_as,
-			new_tagged_as,
 			create_break_as,
 			create_break_as_with_data,
 			new_filled_id_as_with_existing_stub,
@@ -90,7 +82,7 @@ inherit
 
 feature -- Roundtrip
 
-	new_integer_as (t: TYPE_AS; s: BOOLEAN; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT
+	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_CONSTANT
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -102,7 +94,7 @@ feature -- Roundtrip
 			end
 		end
 
-	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT
+	new_integer_hexa_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_CONSTANT
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -115,7 +107,7 @@ feature -- Roundtrip
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

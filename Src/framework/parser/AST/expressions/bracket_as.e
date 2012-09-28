@@ -48,7 +48,7 @@ feature {NONE} -- Creation
 
 feature -- Roundtrip
 
-	lbracket_symbol, rbracket_symbol: SYMBOL_AS
+	lbracket_symbol, rbracket_symbol: detachable SYMBOL_AS
 			-- Symbol "[" and "]" associated with this structure
 
 feature -- Access
@@ -87,7 +87,7 @@ feature -- Roundtrip/Token
 			if a_list = Void then
 				Result := operands.last_token (a_list)
 			else
-				Result := rbracket_symbol.last_token (a_list)
+				Result := rbracket_symbol
 			end
 		end
 

@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (k: like internal_keys; c: like compound; d_as, e: like end_keyword)
+	initialize (k: like internal_keys; c: like compound; d_as: like debug_keyword; e: like end_keyword)
 			-- Create a new DEBUG AST node.
 		require
 			e_not_void: e /= Void
@@ -61,7 +61,7 @@ feature -- Roundtrip
 
 feature -- Attributes
 
-	compound: EIFFEL_LIST [INSTRUCTION_AS]
+	compound: detachable EIFFEL_LIST [INSTRUCTION_AS]
 			-- Compound to debug
 
 	keys: detachable EIFFEL_LIST [STRING_AS]
@@ -83,7 +83,7 @@ feature -- Attributes
 
 feature -- Roundtrip
 
-	internal_keys: KEY_LIST_AS
+	internal_keys: detachable KEY_LIST_AS
 			-- Internal debug keys, in which "(" and ")" are stored		
 
 feature -- Roundtrip/Token

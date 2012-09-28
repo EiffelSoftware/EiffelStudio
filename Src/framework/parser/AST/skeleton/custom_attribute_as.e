@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (c: like creation_expr; t: like tuple; k_as: KEYWORD_AS)
+	initialize (c: like creation_expr; t: like tuple; k_as: like end_keyword)
 			-- Create a new UNIQUE AST node.
 		require
 			c_not_void: c /= Void
@@ -65,7 +65,7 @@ feature -- Access
 	creation_expr: CREATION_EXPR_AS
 			-- Creation of Custom attribute.
 
-	tuple: TUPLE_AS
+	tuple: detachable TUPLE_AS
 			-- Tuple for addition custom attribute settings.
 
 feature -- Roundtrip/Token

@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (v: like bits_value; b_as: KEYWORD_AS)
+	initialize (v: like bits_value; b_as: detachable KEYWORD_AS)
 			-- Create a new BITS AST node.
 		require
 			v_not_void: v /= Void

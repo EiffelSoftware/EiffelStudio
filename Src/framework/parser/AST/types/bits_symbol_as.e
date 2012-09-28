@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (s: like bits_symbol; b_as: KEYWORD_AS)
+	initialize (s: like bits_symbol; b_as: like bit_keyword)
 			-- Create a new BITS_SYMBOL AST node.
 		require
 			s_not_void: s /= Void

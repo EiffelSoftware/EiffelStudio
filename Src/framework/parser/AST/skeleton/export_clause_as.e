@@ -10,7 +10,7 @@ class
 	EXPORT_CLAUSE_AS
 
 inherit
-	INHERIT_CLAUSE_AS [EIFFEL_LIST [EXPORT_ITEM_AS]]
+	INHERIT_CLAUSE_AS [detachable EIFFEL_LIST [EXPORT_ITEM_AS]]
 		rename
 			clause_keyword as export_keyword,
 			clause_keyword_index as export_keyword_index
@@ -125,7 +125,7 @@ feature{NONE} -- Implementation
 			-- Flag to indicate whether or not `meaningful_content' has been calculated already.
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

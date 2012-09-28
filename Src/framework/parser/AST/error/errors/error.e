@@ -39,7 +39,7 @@ feature -- Access
 			file_name_not_void: Result /= Void
 		end
 
-	associated_class: ABSTRACT_CLASS_C
+	associated_class: detachable ABSTRACT_CLASS_C
 			-- Associate class, if any
 
 	help_file_name: STRING

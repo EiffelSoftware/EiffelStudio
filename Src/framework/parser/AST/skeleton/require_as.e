@@ -18,7 +18,7 @@ create
 
 feature -- Initialization
 
-	make (a: like assertions; k_as: KEYWORD_AS)
+	make (a: like assertions; k_as: like require_keyword)
 			-- Create new REQUIRE AST node.
 		do
 			initialize (a)

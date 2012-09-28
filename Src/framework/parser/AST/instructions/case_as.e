@@ -83,7 +83,7 @@ feature -- Attributes
 	interval: EIFFEL_LIST [INTERVAL_AS]
 			-- Interval of the alternative
 
-	compound: EIFFEL_LIST [INSTRUCTION_AS]
+	compound: detachable EIFFEL_LIST [INSTRUCTION_AS]
 			-- Compound
 
 feature -- Roundtrip/Token

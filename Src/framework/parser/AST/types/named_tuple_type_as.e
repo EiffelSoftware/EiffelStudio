@@ -69,7 +69,8 @@ feature -- Attributes
 	generics: EIFFEL_LIST [TYPE_DEC_AS]
 			-- Direct access to generic parameters
 		do
-		   Result := parameters.arguments
+				-- Per invariant
+			Result := parameters.arguments
 		ensure
 		   generics_not_void: Result /= Void
 		end
@@ -191,7 +192,7 @@ feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 				until
 					i > nb
 				loop
-					Result.append (l_generics.item.item_name (i))
+					Result.append_string (l_generics.item.item_name (i))
 					if i < nb then
 						Result.append_character (',')
 						Result.append_character (' ')

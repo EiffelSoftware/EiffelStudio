@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (i: like id_list; o: KEYWORD_AS; lp_as, rp_as: SYMBOL_AS)
+	initialize (i: like id_list; o: like strip_keyword; lp_as, rp_as: like lparan_symbol)
 			-- Create a new UN_STRIP AST node.
 		require
 			i_not_void: i /= Void

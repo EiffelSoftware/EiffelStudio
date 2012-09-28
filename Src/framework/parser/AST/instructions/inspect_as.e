@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (s: like switch; c: like case_list; e: like else_part; el, i_as, e_as: like end_keyword)
+	initialize (s: like switch; c: like case_list; e: like else_part; el: like end_keyword; i_as, e_as: detachable KEYWORD_AS)
 			-- Create a new INSPECT AST node.
 		require
 			s_not_void: s /= Void
@@ -85,10 +85,10 @@ feature -- Attributes
 	switch: EXPR_AS
 			-- Expression to inspect
 
-	case_list: EIFFEL_LIST [CASE_AS]
+	case_list: detachable EIFFEL_LIST [CASE_AS]
 			-- Alternatives
 
-	else_part: EIFFEL_LIST [INSTRUCTION_AS]
+	else_part: detachable EIFFEL_LIST [INSTRUCTION_AS]
 			-- Else part
 
 	end_keyword: KEYWORD_AS

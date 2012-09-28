@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (l: like language_name; a: STRING_AS; e_as, a_as: KEYWORD_AS)
+	initialize (l: like language_name; a: like alias_name_literal; e_as, a_as: detachable KEYWORD_AS)
 			-- Create a new EXTERNAL AST node.
 		require
 			l_not_void: l /= Void
@@ -89,7 +89,7 @@ feature -- Roundtrip
 			end
 		end
 
-	alias_name_literal: STRING_AS
+	alias_name_literal: detachable STRING_AS
 			-- String literal of alias name in this structure
 
 feature -- Attributes

@@ -80,7 +80,7 @@ feature -- Roundtrip
 
 feature -- Settings
 
-	set_lcurly_symbol (s_as: SYMBOL_AS)
+	set_lcurly_symbol (s_as: like lcurly_symbol)
 			-- Set `lcurly_symbol' with `s_as'.
 		do
 			if s_as /= Void then
@@ -90,7 +90,7 @@ feature -- Settings
 			lcurly_symbol_index_set: s_as /= Void implies lcurly_symbol_index = s_as.index
 		end
 
-	set_rcurly_symbol (s_as: SYMBOL_AS)
+	set_rcurly_symbol (s_as: like rcurly_symbol)
 			-- Set `rcurly_symbol' with `s_as'.
 		do
 			if s_as /= Void then

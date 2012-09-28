@@ -70,7 +70,7 @@ feature -- Access
 			-- second pass of the compiler in order to see if a feature
 			-- has change of body.
 
-	indexes: INDEXING_CLAUSE_AS
+	indexes: detachable INDEXING_CLAUSE_AS
 			-- Indexing clause for IL to specify `custom attributes' and `alias' name.
 
 feature -- Location
@@ -432,9 +432,7 @@ feature -- default rescue
 		require
 			valid_feature_name_id: def_resc_name_id > 0
 		do
-			if body /= Void then
-				body.create_default_rescue (def_resc_name_id)
-			end
+			body.create_default_rescue (def_resc_name_id)
 		end
 
 feature -- Conveniences
@@ -454,8 +452,6 @@ feature {COMPILER_EXPORTER} -- Incrementality
 
 	is_body_equiv (other: like Current): BOOLEAN
 			-- Is the current feature equivalent to `other' ?
-		require
-			valid_body: body /= Void
 		local
 			is_process_context: BOOLEAN
 			other_is_process_context: BOOLEAN
@@ -474,8 +470,6 @@ feature {COMPILER_EXPORTER} -- Incrementality
 
 	is_assertion_equiv (other: like Current): BOOLEAN
 			-- Is the current feature equivalent to `other' ?
-		require
-			valid_body: body /= Void
 		do
 			Result := body.is_assertion_equiv (other.body)
 		end
@@ -487,7 +481,7 @@ invariant
 	next_position_non_negative: next_position >= 0
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

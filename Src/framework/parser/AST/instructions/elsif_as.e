@@ -84,7 +84,7 @@ feature -- Attributes
 	expr: EXPR_AS
 			-- Conditional expression
 
-	compound: EIFFEL_LIST [INSTRUCTION_AS]
+	compound: detachable EIFFEL_LIST [INSTRUCTION_AS]
 			-- Compound
 
 feature -- Roundtrip/Token

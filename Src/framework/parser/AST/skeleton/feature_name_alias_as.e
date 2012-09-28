@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Creation
 
-	initialize (feature_id: ID_AS; alias_id: STRING_AS; convert_status: BOOLEAN; a_as, c_as: KEYWORD_AS)
+	initialize (feature_id: like feature_name; alias_id: like alias_name; convert_status: BOOLEAN; a_as, c_as: detachable KEYWORD_AS)
 			-- Create feature name object with given characteristics.
 		require
 			feature_id_not_void: feature_id /= Void

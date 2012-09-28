@@ -104,7 +104,7 @@ feature {NONE} -- Visitor implementation
 	process_class_type_as (l_as: CLASS_TYPE_AS)
 		local
 			l_class_name: ID_AS
-			l_formal_type, l_new_formal: FORMAL_AS
+			l_formal_type, l_new_formal: detachable FORMAL_AS
 			l_generics: detachable TYPE_LIST_AS
 		do
 			check not_has_node_changed: not has_node_changed end
@@ -242,7 +242,7 @@ feature {NONE} -- Types which should not occur
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -2042,7 +2042,9 @@ feature -- Environment access
 			a_var_attached: a_var /= Void
 			not_a_var_is_empty: not a_var.is_empty
 		do
-			if attached environment.get_from_application (a_var.to_string_8, application_name) as l_val then
+			if {PLATFORM}.is_windows then
+				Result := environment.get_from_application (a_var.to_string_32, application_name)
+			elseif attached environment.get_from_application (a_var.to_string_8, application_name) as l_val then
 				Result := l_val
 			end
 		end

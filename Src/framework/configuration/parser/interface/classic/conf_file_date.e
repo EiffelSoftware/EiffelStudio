@@ -17,7 +17,11 @@ feature -- Access
 		local
 			u: FILE_UTILITIES
 		do
-			Result := u.make_raw_file (a_path).date
+			if attached u.make_raw_file (a_path) as l_file and then l_file.exists then
+				Result := l_file.date
+			else
+				Result := -1
+			end
 		ensure
 			file_modified_date_valid: Result >= -1
 		end

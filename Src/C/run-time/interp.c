@@ -394,7 +394,7 @@ rt_public void xinterp(unsigned char *icval, rt_uint_ptr nb_pushed)
 	jmp_buf exenv;			/* C code call to interpreter exec. vector */
 	STACK_PRESERVE;			/* Stack contextual informations */
 	RTYD;					/* Store stack contexts */
-	EIF_OBJECT se = NULL;	/* Protected existing exception object */
+	EIF_OBJECT volatile se = NULL;	/* Protected existing exception object */
 	EIF_REFERENCE la = NULL;/* Last exception object, used to save RTLA */
 
 	/* Protect the existing exception object if any */
@@ -478,7 +478,7 @@ rt_public void xiinv(unsigned char *icval, int where)
 	jmp_buf exenv;			/* C code call to interpreter exec. vector */
 	RTYD;					/* Save stack contexts */
 	STACK_PRESERVE;			/* Stack contextual informations */
-	EIF_OBJECT se = NULL;	/* Protected existing exception object */
+	EIF_OBJECT volatile se = NULL;	/* Protected existing exception object */
 	EIF_REFERENCE la = NULL;/* Last exception object, used to save RTLA */
 
 	/* Protect the existing exception object if any */
@@ -582,7 +582,7 @@ rt_private void interpret(int flag, int where)
 	unsigned char * volatile rescue = NULL;	/* Location of rescue clause */
 	jmp_buf exenv;							/* In case we have to setjmp() */
 	jmp_buf exenvo;							/* For exception during once evaluation */
-	EIF_REFERENCE saved_except_for_old = NULL;	/* Saved exception object for old expression evaluation */
+	EIF_REFERENCE volatile saved_except_for_old = NULL;	/* Saved exception object for old expression evaluation */
 	int ex_pos;								/* Exception object local position */
 	unsigned char *IC_O;						/* Backup IC for old evaluation */
 	long volatile offset_o;					/* Offset for jump to the next BC_OLD/BC_END_OLD_EVAL */
@@ -591,17 +591,17 @@ rt_private void interpret(int flag, int where)
 	EIF_TYPED_VALUE * volatile stop = NULL;	/* To save stack context */
 	struct stochunk * volatile scur = NULL;	/* Current chunk (stack context) */
 #ifdef ISE_GC
-	char ** l_top = NULL;			/* Local top */
-	struct stchunk * l_cur = NULL;	/* Current local chunk */
-	char ** ls_top = NULL;			/* loc_stack top */
-	struct stchunk * ls_cur = NULL;/* Current loc_stack chunk */
-	char ** h_top = NULL;			/* Hector stack top */
-	struct stchunk * h_cur = NULL;	/* Current hector stack chunk */
+	char ** volatile l_top = NULL;			/* Local top */
+	struct stchunk * volatile l_cur = NULL;	/* Current local chunk */
+	char ** volatile ls_top = NULL;			/* loc_stack top */
+	struct stchunk * volatile ls_cur = NULL;/* Current loc_stack chunk */
+	char ** volatile h_top = NULL;			/* Hector stack top */
+	struct stchunk * volatile h_cur = NULL;	/* Current hector stack chunk */
 #endif
 	int volatile assert_type = 0;			/* Assertion type */
 	char volatile pre_success = (char) 0;	/* Flag for precondition success */
 	uint32 volatile rtype = 0;				/* Result type */
-	MTOT OResult = (MTOT) 0;				/* Item for once data */
+	MTOT volatile OResult = (MTOT) 0;		/* Item for once data */
 #ifdef EIF_THREADS
 	EIF_process_once_value_t * POResult = NULL;	/* Process-relative once data */
 	int volatile is_process_once = 0;		/* Is once routine process-relative? */

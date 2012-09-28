@@ -20,8 +20,6 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
-	DISPOSABLE
-
 create
 	make
 
@@ -79,20 +77,11 @@ feature -- Initialization
 feature -- Access
 
 	name: READABLE_STRING_GENERAL
-			-- File name
+			-- File name.
+		local
+			u: FILE_UTILITIES
 		do
-			if attached {FILE_32} file as f then
-					-- Use 32-bit version of the name
-				Result := f.name
-			else
-				Result := file.name
-			end
-		end
-
-	file_pointer: POINTER
-			-- File pointer as required in C
-		do
-			Result := file.file_pointer
+			Result := u.file_name (file)
 		end
 
 	occurrence: INTEGER
@@ -291,19 +280,6 @@ feature -- Removal
 		rescue
 			retried := True
 			retry
-		end
-
-feature -- Disposal
-
-	dispose
-			-- Close file if not yet closed
-		do
-			if file_pointer /= default_pointer then
-				close
-			end
-		ensure then
-			file_pointer_set: file_pointer = default_pointer
-			not_is_open: not is_open
 		end
 
 feature {SERVER_CONTROL, SERVER_FILE} -- File access

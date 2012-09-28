@@ -74,12 +74,10 @@ feature -- Status Settings
 	set_file_name (a_filename: like file_name)
 			-- Make `f' the name of the file associated with tool.
 			-- If `f' is Void, the tool is associated with no file.
-		require
-			a_file_name_valid_type: a_filename /= Void implies a_filename.same_type ("")
 		do
 			file_name := a_filename
 		ensure
-			file_name_set: equal (file_name, a_filename)
+			file_name_set: file_name = a_filename
 		end
 
 	set_last_saving_date (a_timestamp: INTEGER)

@@ -37,7 +37,7 @@ inherit
 
 feature -- Access
 
-	retrieved: ANY
+	retrieved: detachable ANY
 			-- Retrieved object structure
 			-- To access resulting object under correct type,
 			-- use assignment attempt.
@@ -1087,7 +1087,7 @@ feature {NONE} -- Externals
 			"C blocking"
 		end
 
-	eif_net_retrieved (file_handle: INTEGER): ANY
+	eif_net_retrieved (file_handle: INTEGER): detachable ANY
 			-- Object structured retrieved from file of pointer
 			-- `file_handle'
 		external

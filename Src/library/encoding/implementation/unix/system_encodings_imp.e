@@ -62,13 +62,7 @@ feature {NONE} -- Implementation
 		external
 			"C inline use %"eif_langinfo.h%""
 		alias
-			"[
-				#if EIF_OS == EIF_OS_OPENBSD
-					return locale_charset ();
-				#else
-					return nl_langinfo (CODESET);
-				#endif
-			]"
+			"return nl_langinfo (CODESET);"
 		end
 
 	c_strlen (ptr: POINTER): INTEGER

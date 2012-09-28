@@ -2048,7 +2048,7 @@ feature -- Access
 			put_register_name (ctype, num, buf)
 			if is_generic then
 					-- Record register type and zero pointer value for GC.
-				buf.put_string (once "x = {0, ")
+				buf.put_string (once "x = {{0}, ")
 				buf.put_string (register_sk_value (ctype))
 				buf.put_string ("};")
 				buf.put_new_line_only
@@ -3059,7 +3059,7 @@ invariant
 	postconditionobject_test_local_offset_attached: postcondition_object_test_local_offset /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

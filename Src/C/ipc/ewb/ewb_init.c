@@ -64,6 +64,11 @@ rt_public struct ewb_flags ewb_data = {	/* Internal ewb's flags */
 	(unsigned int) 0,	/* d_rqst */
 	(unsigned int) 0,	/* d_sent */
 	(STREAM *) 0,		/* d_cs */
+#ifdef EIF_WINDOWS
+	(HANDLE) 0,
+#else
+	(int) 0,
+#endif
 };
 
 /* Extern function declaration */

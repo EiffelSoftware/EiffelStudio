@@ -15,6 +15,7 @@
 				<platform value="windows"/>
 			</condition>
 		</library>
+		<library name="file_utilities" location="$ISE_LIBRARY\framework\file_utilities\file_utilities-safe.ecf"/>
 		<cluster name="environment" location=".\" recursive="true">
 			<option namespace="Environment">
 			</option>

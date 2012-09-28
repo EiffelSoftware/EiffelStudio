@@ -21,7 +21,7 @@ set assertions = ""
 set compile_type=F_code
 set secondary_compile_type=W_code
 #set compile_type=W_code
-#set secondary_compile_type=G_code
+#set secondary_compile_type=F_code
 
 # Remove old compilations
 \rm -rf EIFGENs

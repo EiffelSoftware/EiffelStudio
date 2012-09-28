@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (f: FORMAL_AS; c: like constraints; cf: like creation_feature_list; c_as: like constrain_symbol; ck_as: like create_keyword; ek_as: like end_keyword)
+	initialize (f: like formal; c: detachable like constraints; cf: like creation_feature_list; c_as: like constrain_symbol; ck_as: like create_keyword; ek_as: like end_keyword)
 			-- Create a new FORMAL_DECLARATION AST node.
 		require
 			f_not_void: f /= Void
@@ -150,7 +150,7 @@ feature -- Attributes
 	constraints: CONSTRAINT_LIST_AS
 			-- Constraints of the formal generic
 
-	creation_feature_list: EIFFEL_LIST [FEATURE_NAME]
+	creation_feature_list: detachable EIFFEL_LIST [FEATURE_NAME]
 			-- Constraint on the creation routines of the constraint
 
 feature -- Roundtrip/Token
@@ -293,7 +293,7 @@ feature -- Status
 			--
 			-- `a_feature_name_id' is the names heap id of the feature.
 		local
-			creation_list: EIFFEL_LIST [FEATURE_NAME]
+			creation_list: like creation_feature_list
 		do
 			from
 				creation_list := creation_feature_list

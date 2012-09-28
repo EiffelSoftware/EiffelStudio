@@ -62,7 +62,7 @@ feature -- Attributes
 	precursor_keyword: KEYWORD_AS
 			-- Position of Precursor keyword
 
-	parent_base_class: CLASS_TYPE_AS
+	parent_base_class: detachable CLASS_TYPE_AS
 			-- Optional name of the parent
 
 	parameters: detachable EIFFEL_LIST [EXPR_AS]
@@ -106,7 +106,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Attributes
 
 feature -- Roundtrip
 
-	internal_parameters: PARAMETER_LIST_AS
+	internal_parameters: detachable PARAMETER_LIST_AS
 			-- Internal list of parameters			
 
 feature -- Roundtrip/Token

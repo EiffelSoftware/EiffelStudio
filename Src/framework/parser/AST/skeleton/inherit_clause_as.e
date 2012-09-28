@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	INHERIT_CLAUSE_AS [G -> EIFFEL_LIST [AST_EIFFEL]]
+	INHERIT_CLAUSE_AS [G -> detachable EIFFEL_LIST [AST_EIFFEL]]
 
 inherit
 	AST_EIFFEL
@@ -16,7 +16,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (l: like content; k_as: KEYWORD_AS)
+	make (l: like content; k_as: like clause_keyword)
 			-- Initialize.
 		require
 			l_valid: l /= Void implies not l.is_empty

@@ -12,19 +12,19 @@ inherit
 feature -- Last values
 
 	last_any_value: ANY
-	last_symbol_as_value: SYMBOL_AS
-	last_keyword_as_value: KEYWORD_AS
-	last_id_as_value: ID_AS
-	last_char_as_value: CHAR_AS
-	last_bool_as_value: BOOL_AS
-	last_result_as_value: RESULT_AS
-	last_retry_as_value: RETRY_AS
-	last_unique_as_value: UNIQUE_AS
-	last_current_as_value: CURRENT_AS
-	last_deferred_as_value: DEFERRED_AS
-	last_void_as_value: VOID_AS
-	last_keyword_id_value: TUPLE [keyword: KEYWORD_AS; id: ID_AS; line, column: INTEGER; filename: READABLE_STRING_GENERAL]
-	last_string_as_value: STRING_AS
+	last_detachable_symbol_as_value: detachable SYMBOL_AS
+	last_detachable_keyword_as_value: detachable KEYWORD_AS
+	last_detachable_id_as_value: detachable ID_AS
+	last_detachable_char_as_value: detachable CHAR_AS
+	last_detachable_bool_as_value: detachable BOOL_AS
+	last_detachable_result_as_value: detachable RESULT_AS
+	last_detachable_retry_as_value: detachable RETRY_AS
+	last_detachable_unique_as_value: detachable UNIQUE_AS
+	last_detachable_current_as_value: detachable CURRENT_AS
+	last_detachable_deferred_as_value: detachable DEFERRED_AS
+	last_detachable_void_as_value: detachable VOID_AS
+	last_keyword_id_value: detachable TUPLE [keyword: detachable KEYWORD_AS; id: detachable ID_AS; line, column: INTEGER; filename: detachable READABLE_STRING_GENERAL]
+	last_detachable_string_as_value: detachable STRING_AS
 
 feature -- Access
 

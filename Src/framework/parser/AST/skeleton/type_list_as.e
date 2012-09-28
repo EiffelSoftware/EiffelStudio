@@ -48,7 +48,7 @@ feature -- Visitor
 
 feature -- Setting
 
-	set_positions (a_opener, a_closer: SYMBOL_AS)
+	set_positions (a_opener, a_closer: detachable SYMBOL_AS)
 			-- Set `start_location' and `end_location' with `a_opener' and `a_closer'
 			-- if not Void, nothing otherwise
 		do

@@ -55,7 +55,7 @@ feature -- Roundtrip
 			end
 		end
 
-	set_convert_keyword (a_keyword: KEYWORD_AS)
+	set_convert_keyword (a_keyword: detachable KEYWORD_AS)
 			-- Set `convert_keyword' with `a_keyword'.
 		do
 			if a_keyword /= Void then

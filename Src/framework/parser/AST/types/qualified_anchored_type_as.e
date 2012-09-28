@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_anchored (t: like qualifier; d: SYMBOL_AS; f: ID_AS)
+	make_anchored (t: like qualifier; d: detachable SYMBOL_AS; f: ID_AS)
 			-- Create an anchored type of the form "t.f" where "t" is known to be an anchored type.
 		require
 			t_attached: attached t
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			separator_set: attached d implies attached chain.separator_list as s and then s.last = d.index
 		end
 
-	make_explicit (l: KEYWORD_AS; t: like qualifier; d: SYMBOL_AS; f: ID_AS)
+	make_explicit (l: like like_keyword; t: like qualifier; d: detachable SYMBOL_AS; f: ID_AS)
 			-- Create an anchored type of the form "like {t}.f".
 		require
 			t_attached: attached t
@@ -66,7 +66,7 @@ feature -- Status
 
 feature -- Modification
 
-	extend (d: SYMBOL_AS; i: ID_AS)
+	extend (d: detachable SYMBOL_AS; i: ID_AS)
 			-- Add a new element to the end of the anchor chain.
 			-- E.g., a calling with ".d" on "like a.b.c" produces "like a.b.c.d".
 		require
@@ -183,7 +183,7 @@ invariant
 	chain_not_empty: not chain.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -22,6 +22,8 @@ feature {NONE} -- Initialization
 
 	initialize (t: like tag; e: like expr; s_as: like colon_symbol)
 			-- Create a new TAGGED AST node.
+		require
+			exclusive: not (t = Void and e = Void)
 		do
 			tag := t
 			expr := e
@@ -69,10 +71,10 @@ feature -- Roundtrip
 
 feature -- Attributes
 
-	tag: ID_AS
+	tag: detachable ID_AS
 			-- Expression tag
 
-	expr: EXPR_AS
+	expr: detachable EXPR_AS
 			-- Expression
 
 feature -- Status report

@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (a: like internal_arguments; t: like type; r: like assigner c: like content; c_as: SYMBOL_AS; k_as: LEAF_AS; a_as: KEYWORD_AS; i_as: like indexing_clause)
+	initialize (a: like internal_arguments; t: like type; r: like assigner c: like content; c_as: detachable SYMBOL_AS; k_as: detachable LEAF_AS; a_as: detachable KEYWORD_AS; i_as: like indexing_clause)
 			-- Create a new BODY AST node.
 		do
 			set_arguments (a)
@@ -120,13 +120,13 @@ feature -- Attributes
 						 (internal_arguments /= Void implies Result = internal_arguments.meaningful_content)
 		end
 
-	type: TYPE_AS
+	type: detachable TYPE_AS
 			-- Type if any
 
-	assigner: ID_AS
+	assigner: detachable ID_AS
 			-- Assigner mark if any
 
-	content: CONTENT_AS
+	content: detachable CONTENT_AS
 			-- Content of the body: constant or regular body
 
 	as_routine: detachable ROUTINE_AS
@@ -143,10 +143,10 @@ feature -- Attributes
 
 feature -- Roundtrip
 
-	internal_arguments: FORMAL_ARGU_DEC_LIST_AS
+	internal_arguments: detachable FORMAL_ARGU_DEC_LIST_AS
 			-- Internal list (of list) of arguments, in which "(" and ")" are stored
 
-	indexing_clause: INDEXING_CLAUSE_AS
+	indexing_clause: detachable INDEXING_CLAUSE_AS
 			-- Indexing clause in this structure
 
 feature -- Roundtrip/Token
@@ -294,15 +294,16 @@ feature -- New feature description
 			Result := equivalent (type, other.type) and then
 					equivalent (arguments, other.arguments)
 			if Result then
-				if (content = Void) and (other.content = Void) then
-				elseif (content = Void) or else (other.content = Void) then
-					Result := False
-				elseif (content.is_constant = other.content.is_constant) then
-						-- The two objects are of the same type.
-						-- There is no global typing problem.
-					Result := content.is_body_equiv (other.content)
+				if attached content as l_content and attached other.content as l_other_content then
+					if (l_content.is_constant = l_other_content.is_constant) then
+							-- The two objects are of the same type.
+							-- There is no global typing problem.
+						Result := l_content.is_body_equiv (l_other_content)
+					else
+						Result := False
+					end
 				else
-					Result := False
+					Result := content = other.content
 				end
 			end
 		end

@@ -150,7 +150,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Element change
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Convenience
 
-	convert_to_string_array (t: ARRAY [INTEGER]): ARRAY [STRING]
+	convert_to_string_array (t: ARRAY [INTEGER]): ARRAY [detachable STRING]
 			-- Convert `t' an array of indexes in NAMES_HEAP into an
 			-- array of STRINGs, each string being item of Current associated
 			-- with current value in `t'.

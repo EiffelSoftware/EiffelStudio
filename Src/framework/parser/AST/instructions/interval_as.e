@@ -45,7 +45,7 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	dotdot_symbol: SYMBOL_AS
+	dotdot_symbol: detachable SYMBOL_AS
 			-- Symbol ".." associated with this structure
 
 feature -- Attributes
@@ -53,7 +53,7 @@ feature -- Attributes
 	lower: ATOMIC_AS
 			-- Lower bound
 
-	upper: ATOMIC_AS
+	upper: detachable ATOMIC_AS
 			-- Upper bound
 			-- Void if constant rather than interval
 

@@ -511,7 +511,7 @@ feature -- Roundtrip
 			end
 		end
 
-	set_indexing_keyword (a_keyword: KEYWORD_AS)
+	set_indexing_keyword (a_keyword: like indexing_keyword)
 			-- Set `indexing_keyword' with `a_keyword'.
 		do
 			if a_keyword /= Void then
@@ -521,7 +521,7 @@ feature -- Roundtrip
 			indexing_keyword_set: a_keyword /= Void implies indexing_keyword_index = a_keyword.index
 		end
 
-	set_end_keyword (a_keyword: KEYWORD_AS)
+	set_end_keyword (a_keyword: like end_keyword)
 			-- Set `end_keyword' with `a_keyword'.
 		do
 			if a_keyword /= Void then

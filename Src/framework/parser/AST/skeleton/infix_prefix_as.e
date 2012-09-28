@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (op: STRING_AS; inf: BOOLEAN; l:KEYWORD_AS)
+	initialize (op: like alias_name; inf: BOOLEAN; l: like infix_prefix_keyword)
 			-- Create a new INFIX AST node.
 			-- `inf' is `is_infix', `l' is a start location.
 		require
@@ -55,7 +55,7 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	infix_prefix_keyword: KEYWORD_AS
+	infix_prefix_keyword: detachable KEYWORD_AS
 		-- Keyword "infix" or "prefix" associated with this structure.
 
 feature -- Properties

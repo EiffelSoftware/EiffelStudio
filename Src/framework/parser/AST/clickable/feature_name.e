@@ -186,7 +186,7 @@ feature -- Status setting
 			is_unary: is_unary
 		end
 
-	set_frozen_keyword (l: KEYWORD_AS)
+	set_frozen_keyword (l: like frozen_keyword)
 			-- Set location of the associated "frozen" keyword to `l'.
 		do
 			frozen_keyword := l
@@ -202,7 +202,7 @@ feature -- Comparison
 
 feature -- Location
 
-	frozen_keyword: KEYWORD_AS
+	frozen_keyword: detachable KEYWORD_AS
 			-- Keyword "frozen" (if any)
 
 feature {NONE} -- Implementation: helper functions
@@ -228,7 +228,7 @@ invariant
 	consistent_operator_name: (is_bracket or is_binary or is_unary) = (alias_name /= Void)
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -39,7 +39,7 @@ feature -- Attributes
 	clients: CLIENT_AS
 			-- Client list
 
-	features: FEATURE_SET_AS
+	features: detachable FEATURE_SET_AS
 			-- Feature set
 
 feature -- Roundtrip/Token

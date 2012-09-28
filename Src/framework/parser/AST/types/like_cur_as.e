@@ -19,7 +19,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (c_as: KEYWORD_AS; l_as: KEYWORD_AS)
+	make (c_as: like current_keyword; l_as: like like_keyword)
 			-- Create new LIKE_CURRENT AST node.
 		require
 			c_as_not_void: c_as /= Void

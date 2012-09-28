@@ -32,10 +32,12 @@ feature {NONE} -- Initialization
 			f_not_void: f /= Void
 		do
 			feature_name := f
-			address_symbol := a_as
+			if a_as /= Void then
+				address_symbol_index := a_as.index
+			end
 		ensure
 			feature_name_set: feature_name = f
-			address_symbol_set: address_symbol = a_as
+			address_symbol_set: a_as /= Void implies address_symbol_index = a_as.index
 		end
 
 feature -- Visitor
@@ -48,8 +50,24 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	address_symbol: SYMBOL_AS
-			-- Symbol "$" associated with this structure
+	address_symbol_index: INTEGER
+			-- Index of symbol "$" associated with this structure.
+
+	address_symbol (a_list: detachable LEAF_AS_LIST): detachable SYMBOL_AS
+			-- Symbol "[" associated with this structure
+		local
+			i: INTEGER
+		do
+			if a_list /= Void then
+				i := address_symbol_index
+				if
+					a_list.valid_index (i) and then
+					attached {like address_symbol} a_list.i_th (i) as l_result
+				then
+					Result := l_result
+				end
+			end
+		end
 
 feature -- Attributes
 
@@ -81,10 +99,9 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			if a_list = Void then
+			Result := address_symbol (a_list)
+			if Result = Void then
 				Result := feature_name.first_token (a_list)
-			else
-				Result := address_symbol.first_token (a_list)
 			end
 		end
 

@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (o: like old_name; n: like new_name; k_as: KEYWORD_AS)
+	initialize (o: like old_name; n: like new_name; k_as: like as_keyword)
 			-- Create a new RENAME_PAIR AST node.
 		require
 			o_not_void: o /= Void

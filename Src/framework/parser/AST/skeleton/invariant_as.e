@@ -81,7 +81,7 @@ feature -- Attribute
 	once_manifest_string_count: INTEGER
 			-- Number of once manifest strings
 
-	object_test_locals: ARRAYED_LIST [TUPLE [ID_AS, TYPE_AS]]
+	object_test_locals: detachable ARRAYED_LIST [TUPLE [ID_AS, 	TYPE_AS]]
 			-- Object test locals declared in the invariant
 
 feature -- Roundtrip/Token

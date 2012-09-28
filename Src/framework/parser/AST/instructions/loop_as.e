@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 
 	initialize (t: like iteration; f: like from_part; i: like invariant_part;
 		v: like variant_part; s: like stop;
-		c: like compound; e, f_as, i_as, u_as, l_as: like end_keyword)
+		c: like compound; e: like end_keyword; f_as, i_as, u_as, l_as: detachable KEYWORD_AS)
 			-- Create a new LOOP AST node.
 		require
 			t_or_s_attached: t /= Void or s /= Void

@@ -122,7 +122,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_SEMICOLON, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_SEMICOLON, Current)
 				last_token := TE_SEMICOLON
 			
 when 8 then
@@ -133,7 +133,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_COLON, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_COLON, Current)
 				last_token := TE_COLON
 			
 when 9 then
@@ -144,7 +144,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_COMMA, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_COMMA, Current)
 				last_token := TE_COMMA
 			
 when 10 then
@@ -155,7 +155,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_DOTDOT, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_DOTDOT, Current)
 				last_token := TE_DOTDOT
 			
 when 11 then
@@ -166,7 +166,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_QUESTION, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_QUESTION, Current)
 				last_token := TE_QUESTION
 			
 when 12 then
@@ -177,7 +177,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_TILDE, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_TILDE, Current)
 				last_token := TE_TILDE
 			
 when 13 then
@@ -188,7 +188,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_DOT, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_DOT, Current)
 				last_token := TE_DOT
 			
 when 14 then
@@ -199,7 +199,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_ADDRESS, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_ADDRESS, Current)
 				last_token := TE_ADDRESS
 			
 when 15 then
@@ -210,7 +210,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_ASSIGNMENT, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_ASSIGNMENT, Current)
 				last_token := TE_ASSIGNMENT
 			
 when 16 then
@@ -221,7 +221,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_ACCEPT, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_ACCEPT, Current)
 				last_token := TE_ACCEPT
 				if has_syntax_warning and then syntax_version /= obsolete_syntax then
 					report_one_warning (
@@ -237,7 +237,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_EQ, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_EQ, Current)
 				last_token := TE_EQ
 			
 when 18 then
@@ -248,7 +248,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_LT, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_LT, Current)
 				last_token := TE_LT
 			
 when 19 then
@@ -259,7 +259,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_GT, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_GT, Current)
 				last_token := TE_GT
 			
 when 20 then
@@ -270,7 +270,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_LE, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_LE, Current)
 				last_token := TE_LE
 			
 when 21 then
@@ -281,7 +281,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_GE, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_GE, Current)
 				last_token := TE_GE
 			
 when 22 then
@@ -292,7 +292,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_NOT_TILDE, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_NOT_TILDE, Current)
 				last_token := TE_NOT_TILDE
 			
 when 23 then
@@ -303,7 +303,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_NE, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_NE, Current)
 				last_token := TE_NE
 			
 when 24 then
@@ -314,7 +314,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_LPARAN, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_LPARAN, Current)
 				last_token := TE_LPARAN
 			
 when 25 then
@@ -325,7 +325,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_RPARAN, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_RPARAN, Current)
 				last_token := TE_RPARAN
 			
 when 26 then
@@ -336,7 +336,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_LCURLY, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_LCURLY, Current)
 				last_token := TE_LCURLY
 			
 when 27 then
@@ -347,7 +347,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_RCURLY, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_RCURLY, Current)
 				last_token := TE_RCURLY
 			
 when 28 then
@@ -358,7 +358,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_square_symbol_as (TE_LSQURE, Current)
+				last_detachable_symbol_as_value := ast_factory.new_square_symbol_as (TE_LSQURE, Current)
 				last_token := TE_LSQURE
 			
 when 29 then
@@ -369,7 +369,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_square_symbol_as (TE_RSQURE, Current)
+				last_detachable_symbol_as_value := ast_factory.new_square_symbol_as (TE_RSQURE, Current)
 				last_token := TE_RSQURE
 			
 when 30 then
@@ -380,7 +380,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_PLUS, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_PLUS, Current)
 				last_token := TE_PLUS
 			
 when 31 then
@@ -391,7 +391,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_MINUS, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_MINUS, Current)
 				last_token := TE_MINUS
 			
 when 32 then
@@ -402,7 +402,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_STAR, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_STAR, Current)
 				last_token := TE_STAR
 			
 when 33 then
@@ -413,7 +413,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_SLASH, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_SLASH, Current)
 				last_token := TE_SLASH
 			
 when 34 then
@@ -424,7 +424,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_POWER, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_POWER, Current)
 				last_token := TE_POWER
 			
 when 35 then
@@ -435,7 +435,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_CONSTRAIN, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_CONSTRAIN, Current)
 				last_token := TE_CONSTRAIN
 			
 when 36 then
@@ -446,7 +446,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_BANG, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_BANG, Current)
 				last_token := TE_BANG
 			
 when 37 then
@@ -457,7 +457,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_LARRAY, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_LARRAY, Current)
 				last_token := TE_LARRAY
 			
 when 38 then
@@ -468,7 +468,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_RARRAY, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_RARRAY, Current)
 				last_token := TE_RARRAY
 			
 when 39 then
@@ -479,7 +479,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_DIV, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_DIV, Current)
 				last_token := TE_DIV
 			
 when 40 then
@@ -490,7 +490,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_symbol_as_value := ast_factory.new_symbol_as (TE_MOD, Current)
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_MOD, Current)
 				last_token := TE_MOD
 			
 when 41 then
@@ -544,7 +544,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_AGENT, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_AGENT, Current)
 				last_token := TE_AGENT
 			
 when 45 then
@@ -555,7 +555,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_ALIAS, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_ALIAS, Current)
 				last_token := TE_ALIAS
 			
 when 46 then
@@ -566,7 +566,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_ALL, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_ALL, Current)
 				last_token := TE_ALL
 			
 when 47 then
@@ -577,7 +577,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_AND, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_AND, Current)
 				last_token := TE_AND
 			
 when 48 then
@@ -588,7 +588,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_AS, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_AS, Current)
 				last_token := TE_AS
 			
 when 49 then
@@ -652,7 +652,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_BIT, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_BIT, Current)
 				last_token := TE_BIT
 				if has_syntax_warning then
 					report_one_warning (
@@ -668,7 +668,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_CHECK, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_CHECK, Current)
 				last_token := TE_CHECK
 			
 when 54 then
@@ -679,7 +679,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_CLASS, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_CLASS, Current)
 				last_token := TE_CLASS
 			
 when 55 then
@@ -690,7 +690,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_CONVERT, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_CONVERT, Current)
 				last_token := TE_CONVERT
 			
 when 56 then
@@ -701,7 +701,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_CREATE, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_CREATE, Current)
 				last_token := TE_CREATE
 			
 when 57 then
@@ -712,7 +712,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_creation_keyword_as (Current)
+				last_detachable_keyword_as_value := ast_factory.new_creation_keyword_as (Current)
 				last_token := TE_CREATION
 			
 when 58 then
@@ -723,7 +723,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_current_as_value := ast_factory.new_current_as (Current)
+				last_detachable_current_as_value := ast_factory.new_current_as (Current)
 				last_token := TE_CURRENT
 			
 when 59 then
@@ -734,7 +734,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_DEBUG, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_DEBUG, Current)
 				last_token := TE_DEBUG
 			
 when 60 then
@@ -745,7 +745,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_deferred_as_value := ast_factory.new_deferred_as (Current)
+				last_detachable_deferred_as_value := ast_factory.new_deferred_as (Current)
 				last_token := TE_DEFERRED
 			
 when 61 then
@@ -777,7 +777,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_DO, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_DO, Current)
 				last_token := TE_DO
 			
 when 63 then
@@ -788,7 +788,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_ELSE, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_ELSE, Current)
 				last_token := TE_ELSE
 			
 when 64 then
@@ -799,7 +799,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_ELSEIF, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_ELSEIF, Current)
 				last_token := TE_ELSEIF
 			
 when 65 then
@@ -810,7 +810,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_end_keyword_as (Current)
+				last_detachable_keyword_as_value := ast_factory.new_end_keyword_as (Current)
 				last_token := TE_END
 			
 when 66 then
@@ -821,7 +821,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_ENSURE, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_ENSURE, Current)
 				last_token := TE_ENSURE
 			
 when 67 then
@@ -832,7 +832,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_EXPANDED, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_EXPANDED, Current)
 				last_token := TE_EXPANDED
 			
 when 68 then
@@ -843,7 +843,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_EXPORT, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_EXPORT, Current)
 				last_token := TE_EXPORT
 			
 when 69 then
@@ -854,7 +854,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_EXTERNAL, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_EXTERNAL, Current)
 				last_token := TE_EXTERNAL
 			
 when 70 then
@@ -865,7 +865,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_bool_as_value := ast_factory.new_boolean_as (False, Current)
+				last_detachable_bool_as_value := ast_factory.new_boolean_as (False, Current)
 				last_token := TE_FALSE
 			
 when 71 then
@@ -876,7 +876,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_FEATURE, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_FEATURE, Current)
 				last_token := TE_FEATURE
 			
 when 72 then
@@ -887,7 +887,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_FROM, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_FROM, Current)
 				last_token := TE_FROM
 			
 when 73 then
@@ -898,7 +898,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_frozen_keyword_as (Current)
+				last_detachable_keyword_as_value := ast_factory.new_frozen_keyword_as (Current)
 				last_token := TE_FROZEN
 			
 when 74 then
@@ -909,7 +909,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_IF, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_IF, Current)
 				last_token := TE_IF
 			
 when 75 then
@@ -920,7 +920,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_IMPLIES, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_IMPLIES, Current)
 				last_token := TE_IMPLIES
 			
 when 76 then
@@ -953,7 +953,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_infix_keyword_as (Current)
+				last_detachable_keyword_as_value := ast_factory.new_infix_keyword_as (Current)
 				last_token := TE_INFIX
 			
 when 78 then
@@ -964,7 +964,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_INHERIT, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_INHERIT, Current)
 				last_token := TE_INHERIT
 			
 when 79 then
@@ -975,7 +975,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_INSPECT, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_INSPECT, Current)
 				last_token := TE_INSPECT
 			
 when 80 then
@@ -986,7 +986,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_INVARIANT, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_INVARIANT, Current)
 				last_token := TE_INVARIANT
 			
 when 81 then
@@ -1019,7 +1019,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_LIKE, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_LIKE, Current)
 				last_token := TE_LIKE
 			
 when 83 then
@@ -1030,7 +1030,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_LOCAL, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_LOCAL, Current)
 				last_token := TE_LOCAL
 			
 when 84 then
@@ -1041,7 +1041,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_LOOP, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_LOOP, Current)
 				last_token := TE_LOOP
 			
 when 85 then
@@ -1052,7 +1052,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_NOT, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_NOT, Current)
 				last_token := TE_NOT
 			
 when 86 then
@@ -1084,7 +1084,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_OBSOLETE, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_OBSOLETE, Current)
 				last_token := TE_OBSOLETE
 			
 when 88 then
@@ -1095,7 +1095,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_OLD, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_OLD, Current)
 				last_token := TE_OLD
 			
 when 89 then
@@ -1108,7 +1108,7 @@ debug ("GELEX")
 end
 
 					-- `{' is for the typed manifest string.
-				last_keyword_as_value := ast_factory.new_once_string_keyword_as (text,  line, column, position, 4)
+				last_detachable_keyword_as_value := ast_factory.new_once_string_keyword_as (text,  line, column, position, 4)
 				last_token := TE_ONCE_STRING
 			
 when 90 then
@@ -1121,7 +1121,7 @@ debug ("GELEX")
 end
 
 					-- `{' is for the typed manifest string.
-				last_keyword_as_value := ast_factory.new_once_string_keyword_as (text_substring (1, 4),  line, column, position, 4)
+				last_detachable_keyword_as_value := ast_factory.new_once_string_keyword_as (text_substring (1, 4),  line, column, position, 4)
 					-- Assume all trailing characters are in the same line (which would be false if '\n' appears).
 				ast_factory.create_break_as_with_data (text_substring (5, text_count), line, column + 4, position + 4, text_count - 4)
 				last_token := TE_ONCE_STRING
@@ -1134,7 +1134,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_ONCE, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_ONCE, Current)
 				last_token := TE_ONCE
 			
 when 92 then
@@ -1161,7 +1161,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_OR, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_OR, Current)
 				last_token := TE_OR
 			
 when 94 then
@@ -1172,7 +1172,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_PARTIAL_CLASS, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_PARTIAL_CLASS, Current)
 				last_token := TE_PARTIAL_CLASS
 			
 when 95 then
@@ -1183,7 +1183,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_precursor_keyword_as (Current)
+				last_detachable_keyword_as_value := ast_factory.new_precursor_keyword_as (Current)
 				last_token := TE_PRECURSOR
 			
 when 96 then
@@ -1194,7 +1194,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_prefix_keyword_as (Current)
+				last_detachable_keyword_as_value := ast_factory.new_prefix_keyword_as (Current)
 				last_token := TE_PREFIX
 			
 when 97 then
@@ -1205,7 +1205,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_REDEFINE, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_REDEFINE, Current)
 				last_token := TE_REDEFINE
 			
 when 98 then
@@ -1216,7 +1216,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_REFERENCE, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_REFERENCE, Current)
 				last_token := TE_REFERENCE
 			
 when 99 then
@@ -1227,7 +1227,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_RENAME, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_RENAME, Current)
 				last_token := TE_RENAME
 			
 when 100 then
@@ -1238,7 +1238,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_REQUIRE, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_REQUIRE, Current)
 				last_token := TE_REQUIRE
 			
 when 101 then
@@ -1249,7 +1249,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_RESCUE, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_RESCUE, Current)
 				last_token := TE_RESCUE
 			
 when 102 then
@@ -1260,7 +1260,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_result_as_value := ast_factory.new_result_as (Current)
+				last_detachable_result_as_value := ast_factory.new_result_as (Current)
 				last_token := TE_RESULT
 			
 when 103 then
@@ -1271,7 +1271,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_retry_as_value := ast_factory.new_retry_as (Current)
+				last_detachable_retry_as_value := ast_factory.new_retry_as (Current)
 				last_token := TE_RETRY
 			
 when 104 then
@@ -1282,7 +1282,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_SELECT, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_SELECT, Current)
 				last_token := TE_SELECT
 			
 when 105 then
@@ -1293,7 +1293,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_SEPARATE, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_SEPARATE, Current)
 				last_token := TE_SEPARATE
 			
 when 106 then
@@ -1325,7 +1325,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_STRIP, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_STRIP, Current)
 				last_token := TE_STRIP
 			
 when 108 then
@@ -1336,7 +1336,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_THEN, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_THEN, Current)
 				last_token := TE_THEN
 			
 when 109 then
@@ -1347,7 +1347,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_bool_as_value := ast_factory.new_boolean_as (True, Current)
+				last_detachable_bool_as_value := ast_factory.new_boolean_as (True, Current)
 				last_token := TE_TRUE
 			
 when 110 then
@@ -1369,7 +1369,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_UNDEFINE, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_UNDEFINE, Current)
 				last_token := TE_UNDEFINE
 			
 when 112 then
@@ -1380,7 +1380,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_unique_as_value := ast_factory.new_unique_as (Current)
+				last_detachable_unique_as_value := ast_factory.new_unique_as (Current)
 				last_token := TE_UNIQUE
 			
 when 113 then
@@ -1391,7 +1391,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_UNTIL, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_UNTIL, Current)
 				last_token := TE_UNTIL
 			
 when 114 then
@@ -1402,7 +1402,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_VARIANT, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_VARIANT, Current)
 				last_token := TE_VARIANT
 			
 when 115 then
@@ -1413,7 +1413,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_void_as_value := ast_factory.new_void_as (Current)
+				last_detachable_void_as_value := ast_factory.new_void_as (Current)
 				last_token := TE_VOID
 			
 when 116 then
@@ -1424,7 +1424,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_WHEN, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_WHEN, Current)
 				last_token := TE_WHEN
 			
 when 117 then
@@ -1435,7 +1435,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
 end
 
-				last_keyword_as_value := ast_factory.new_keyword_as (TE_XOR, Current)
+				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_XOR, Current)
 				last_token := TE_XOR
 			
 when 118 then
@@ -1458,7 +1458,7 @@ debug ("GELEX")
 end
 
 				last_token := TE_A_BIT
-				last_id_as_value := ast_factory.new_filled_bit_id_as (Current)
+				last_detachable_id_as_value := ast_factory.new_filled_bit_id_as (Current)
 
 				if has_syntax_warning then
 					report_one_warning (
@@ -1571,7 +1571,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as (char_32_from_source (text_substring (2, text_count - 1)), line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as (char_32_from_source (text_substring (2, text_count - 1)), line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 128 then
@@ -1583,7 +1583,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as (char_32_from_source (text_substring (2, text_count - 1)), line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as (char_32_from_source (text_substring (2, text_count - 1)), line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 129 then
@@ -1596,7 +1596,7 @@ end
 
 					-- This is not correct Eiffel!
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%'', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%'', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 130 then
@@ -1608,7 +1608,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%A', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%A', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 131 then
@@ -1620,7 +1620,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%B', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%B', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 132 then
@@ -1632,7 +1632,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%C', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%C', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 133 then
@@ -1644,7 +1644,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%D', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%D', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 134 then
@@ -1656,7 +1656,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%F', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%F', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 135 then
@@ -1668,7 +1668,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%H', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%H', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 136 then
@@ -1680,7 +1680,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%L', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%L', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 137 then
@@ -1692,7 +1692,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%N', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%N', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 138 then
@@ -1704,7 +1704,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%Q', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%Q', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 139 then
@@ -1716,7 +1716,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%R', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%R', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 140 then
@@ -1728,7 +1728,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%S', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%S', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 141 then
@@ -1740,7 +1740,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%T', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%T', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 142 then
@@ -1752,7 +1752,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%U', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%U', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 143 then
@@ -1764,7 +1764,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%V', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%V', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 144 then
@@ -1776,7 +1776,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%%', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%%', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 145 then
@@ -1788,7 +1788,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%'', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%'', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 146 then
@@ -1800,7 +1800,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%"', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%"', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 147 then
@@ -1812,7 +1812,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%(', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%(', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 148 then
@@ -1824,7 +1824,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%)', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%)', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 149 then
@@ -1836,7 +1836,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%<', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%<', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 150 then
@@ -1848,7 +1848,7 @@ debug ("GELEX")
 end
 
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				last_char_as_value := ast_factory.new_character_as ('%>', line, column, position, text_count, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_as ('%>', line, column, position, text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 151 then
@@ -1863,7 +1863,7 @@ end
 				token_buffer.wipe_out
 					-- We discard the '%/ and the final /'.
 				append_text_substring_to_string (4, text_count - 2, token_buffer)
-				last_char_as_value := ast_factory.new_character_value_as (Current, token_buffer, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_value_as (Current, token_buffer, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 152 then
@@ -1878,7 +1878,7 @@ end
 				token_buffer.wipe_out
 					-- We discard the '%/ and the final /'.
 				append_text_substring_to_string (4, text_count - 2, token_buffer)
-				last_char_as_value := ast_factory.new_character_value_as (Current, token_buffer, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_value_as (Current, token_buffer, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 153 then
@@ -1893,7 +1893,7 @@ end
 				token_buffer.wipe_out
 					-- We discard the '%/ and the final /'.
 				append_text_substring_to_string (4, text_count - 2, token_buffer)
-				last_char_as_value := ast_factory.new_character_value_as (Current, token_buffer, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_value_as (Current, token_buffer, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 154 then
@@ -1908,7 +1908,7 @@ end
 				token_buffer.wipe_out
 					-- We discard the '%/ and the final /'.
 				append_text_substring_to_string (4, text_count - 2, token_buffer)
-				last_char_as_value := ast_factory.new_character_value_as (Current, token_buffer, roundtrip_token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_value_as (Current, token_buffer, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 155 then
@@ -2259,13 +2259,13 @@ end
 					end
 					if token_buffer.is_empty then
 							-- Empty string.
-						last_string_as_value := ast_factory.new_verbatim_string_as ("",
+						last_detachable_string_as_value := ast_factory.new_verbatim_string_as ("",
 							verbatim_marker.substring (2, verbatim_marker.count), verbatim_marker.item (1) = ']',
 							start_location.line, start_location.column, start_location.position,
 							position + text_count - start_location.position, verbatim_common_columns, roundtrip_token_buffer)
 						last_token := TE_EMPTY_VERBATIM_STRING
 					else
-						last_string_as_value := ast_factory.new_verbatim_string_as (cloned_string (token_buffer),
+						last_detachable_string_as_value := ast_factory.new_verbatim_string_as (cloned_string (token_buffer),
 							verbatim_marker.substring (2, verbatim_marker.count), verbatim_marker.item (1) = ']',
 							start_location.line, start_location.column, start_location.position,
 							position + text_count - start_location.position, verbatim_common_columns, roundtrip_token_buffer)
@@ -2649,13 +2649,13 @@ end
 				set_start_condition (INITIAL)
 				if token_buffer.is_empty then
 						-- Empty string.
-					last_string_as_value := ast_factory.new_string_as (
+					last_detachable_string_as_value := ast_factory.new_string_as (
 						cloned_string (token_buffer), start_location.line, start_location.column,
 						start_location.position,
 						position + text_count - start_location.position, roundtrip_token_buffer)
 					last_token := TE_EMPTY_STRING
 				else
-					last_string_as_value := ast_factory.new_string_as (
+					last_detachable_string_as_value := ast_factory.new_string_as (
 						cloned_string (token_buffer), start_location.line, start_location.column,
 						start_location.position,
 						position + text_count - start_location.position, roundtrip_token_buffer)

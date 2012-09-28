@@ -157,19 +157,19 @@ feature -- Attributes
 
 feature -- Roundtrip
 
-	internal_exports: EXPORT_CLAUSE_AS
+	internal_exports: detachable EXPORT_CLAUSE_AS
 			-- Internal exports for parent
 
-	internal_renaming: RENAME_CLAUSE_AS
+	internal_renaming: detachable RENAME_CLAUSE_AS
 			-- Internal rename clause
 
-	internal_redefining: REDEFINE_CLAUSE_AS
+	internal_redefining: detachable REDEFINE_CLAUSE_AS
 			-- Internal redefining clause
 
-	internal_undefining: UNDEFINE_CLAUSE_AS
+	internal_undefining: detachable UNDEFINE_CLAUSE_AS
 			-- Internal undefine clause
 
-	internal_selecting: SELECT_CLAUSE_AS
+	internal_selecting: detachable SELECT_CLAUSE_AS
 			-- Internal select clause
 
 feature -- Roundtrip/Token

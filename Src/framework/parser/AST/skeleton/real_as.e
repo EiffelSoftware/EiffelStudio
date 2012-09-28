@@ -114,7 +114,7 @@ feature -- Access
 			-- Real value
 			-- Can converted to STRING_32 safely.
 
-	constant_type: TYPE_AS
+	constant_type: detachable TYPE_AS
 			-- Actual type of real constant if specified.
 
 feature -- Comparison

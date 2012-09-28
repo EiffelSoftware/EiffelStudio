@@ -40,13 +40,6 @@ inherit
 
 			new_character_as, new_typed_char_as,
 			new_once_string_keyword_as,
-			new_square_symbol_as,
-			new_creation_keyword_as,
-			new_end_keyword_as,
-			new_frozen_keyword_as,
-			new_infix_keyword_as,
-			new_precursor_keyword_as,
-			new_prefix_keyword_as,
 			new_integer_as,
 			new_integer_hexa_as,
 			new_integer_octal_as,
@@ -59,7 +52,6 @@ inherit
 			new_bin_or_else_as,
 			new_integer_value,
 			new_real_value,
-			new_tagged_as,
 			create_break_as,
 			create_break_as_with_data,
 			new_filled_id_as_with_existing_stub
@@ -108,7 +100,7 @@ feature -- Match list maintain
 
 feature -- List operation
 
-	reverse_extend_separator (a_list: EIFFEL_LIST [AST_EIFFEL]; l_as: LEAF_AS)
+	reverse_extend_separator (a_list: detachable EIFFEL_LIST [AST_EIFFEL]; l_as: detachable LEAF_AS)
 			-- Add `l_as' into `a_list'.separator_list.
 		do
 			if a_list /= Void and l_as /= Void then
@@ -116,7 +108,7 @@ feature -- List operation
 			end
 		end
 
-	reverse_extend_identifier (a_list: IDENTIFIER_LIST l_as: ID_AS)
+	reverse_extend_identifier (a_list: detachable IDENTIFIER_LIST l_as: detachable ID_AS)
 			-- Add `l_as' into `a_list'.
 		do
 			if a_list /= Void and l_as /= Void then
@@ -124,7 +116,7 @@ feature -- List operation
 			end
 		end
 
-	reverse_extend_identifier_separator (a_list: IDENTIFIER_LIST; l_as: LEAF_AS)
+	reverse_extend_identifier_separator (a_list: detachable IDENTIFIER_LIST; l_as: detachable LEAF_AS)
 			-- Add `l_as' into `a_list.separator_list'.
 		do
 			if a_list /= Void and l_as /= Void then
@@ -134,7 +126,7 @@ feature -- List operation
 
 feature -- Leaf nodes
 
-	new_character_as (c: CHARACTER_32; l, co, p, n: INTEGER; a_text: STRING): CHAR_AS
+	new_character_as (c: CHARACTER_32; l, co, p, n: INTEGER; a_text: STRING): detachable CHAR_AS
 			-- New CHARACTER AST node
 		do
 			create Result.initialize (c, l, co, p, n)
@@ -142,7 +134,7 @@ feature -- Leaf nodes
 			Result.set_index (match_list_count)
 		end
 
-	new_typed_char_as (t_as: TYPE_AS; a_char: CHAR_AS): TYPED_CHAR_AS
+	new_typed_char_as (t_as: detachable TYPE_AS; a_char: detachable CHAR_AS): detachable TYPED_CHAR_AS
 			-- New TYPED_CHAR AST node.
 		do
 			if t_as /= Void and a_char /= Void then
@@ -151,7 +143,7 @@ feature -- Leaf nodes
 			end
 		end
 
-	new_string_as (s: STRING; l, c, p, n: INTEGER; buf: STRING): STRING_AS
+	new_string_as (s: detachable STRING; l, c, p, n: INTEGER; buf: STRING): detachable STRING_AS
 			-- New STRING AST node
 		do
 			if s /= Void then
@@ -161,17 +153,15 @@ feature -- Leaf nodes
 			end
 		end
 
-	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p, n, cc: INTEGER; buf: STRING): VERBATIM_STRING_AS
+	new_verbatim_string_as (s, marker: STRING; is_indentable: BOOLEAN; l, c, p, n, cc: INTEGER; buf: STRING): detachable VERBATIM_STRING_AS
 			-- New VERBATIM_STRING AST node
 		do
-			if s /= Void and marker /= Void then
-				create Result.initialize (s, marker, is_indentable, l, c, p, n, cc)
-				increase_match_list_count
-				Result.set_index (match_list_count)
-			end
+			create Result.initialize (s, marker, is_indentable, l, c, p, n, cc)
+			increase_match_list_count
+			Result.set_index (match_list_count)
 		end
 
-	new_integer_as (t: TYPE_AS; s: BOOLEAN; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS
+	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -183,7 +173,7 @@ feature -- Leaf nodes
 			end
 		end
 
-	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS
+	new_integer_hexa_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -195,7 +185,7 @@ feature -- Leaf nodes
 			end
 		end
 
-	new_integer_octal_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS
+	new_integer_octal_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -207,7 +197,7 @@ feature -- Leaf nodes
 			end
 		end
 
-	new_integer_binary_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS
+	new_integer_binary_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -219,7 +209,7 @@ feature -- Leaf nodes
 			end
 		end
 
-	new_real_as (t: TYPE_AS; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): REAL_AS
+	new_real_as (t: detachable TYPE_AS; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable REAL_AS
 			-- New REAL AST node
 		do
 			if v /= Void then
@@ -231,14 +221,14 @@ feature -- Leaf nodes
 			end
 		end
 
-	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON): ID_AS
+	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable ID_AS
 		do
 			Result := Precursor (a_scn)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
-	new_filled_id_as_with_existing_stub (a_scn: EIFFEL_SCANNER_SKELETON; a_index: INTEGER): ID_AS
+	new_filled_id_as_with_existing_stub (a_scn: EIFFEL_SCANNER_SKELETON; a_index: INTEGER): detachable ID_AS
 			-- New empty ID AST node.
 		local
 			l_cnt: INTEGER
@@ -252,7 +242,7 @@ feature -- Leaf nodes
 			Result.set_index (a_index)
 		end
 
-	new_filled_bit_id_as (a_scn: EIFFEL_SCANNER_SKELETON): ID_AS
+	new_filled_bit_id_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable ID_AS
 			-- New empty ID AST node.
 		do
 			Result := Precursor (a_scn)
@@ -260,56 +250,56 @@ feature -- Leaf nodes
 			Result.set_index (match_list_count)
 		end
 
-	new_void_as (a_scn: EIFFEL_SCANNER_SKELETON): VOID_AS
+	new_void_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable VOID_AS
 		do
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
-	new_unique_as (a_scn: EIFFEL_SCANNER_SKELETON): UNIQUE_AS
+	new_unique_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable UNIQUE_AS
 		do
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
-	new_retry_as (a_scn: EIFFEL_SCANNER_SKELETON): RETRY_AS
+	new_retry_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable RETRY_AS
 		do
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
-	new_result_as (a_scn: EIFFEL_SCANNER_SKELETON): RESULT_AS
+	new_result_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable RESULT_AS
 		do
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
-	new_boolean_as (b: BOOLEAN; a_scn: EIFFEL_SCANNER_SKELETON): BOOL_AS
+	new_boolean_as (b: BOOLEAN; a_scn: EIFFEL_SCANNER_SKELETON): detachable BOOL_AS
 		do
 			create Result.initialize (b, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
-	new_current_as (a_scn: EIFFEL_SCANNER_SKELETON): CURRENT_AS
+	new_current_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable CURRENT_AS
 		do
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
-	new_deferred_as (a_scn: EIFFEL_SCANNER_SKELETON): DEFERRED_AS
+	new_deferred_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable DEFERRED_AS
 		do
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
-	new_keyword_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
+	new_keyword_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable KEYWORD_AS
 			-- New KEYWORD AST node
 		do
 			create Result.make (a_code, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
@@ -344,43 +334,7 @@ feature -- Leaf nodes
 			Result := [l_keyword_as, l_id_as, a_scn.line, a_scn.column, a_scn.filename]
 		end
 
-	new_creation_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
-			-- New KEYWORD AST node for keyword "creation'
-		do
-			Result := new_keyword_as ({EIFFEL_TOKENS}.te_creation, a_scn)
-		end
-
-	new_end_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
-			-- New KEYWORD AST node for keyword "end'
-		do
-			Result := new_keyword_as ({EIFFEL_TOKENS}.te_end, a_scn)
-		end
-
-	new_frozen_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
-			-- New KEYWORD AST node for keyword "frozen'
-		do
-			Result := new_keyword_as ({EIFFEL_TOKENS}.te_frozen, a_scn)
-		end
-
-	new_infix_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
-			-- New KEYWORD AST node for keyword "infix'
-		do
-			Result := new_keyword_as ({EIFFEL_TOKENS}.te_infix, a_scn)
-		end
-
-	new_precursor_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
-			-- New KEYWORD AST node for keyword "precursor'
-		do
-			Result := new_keyword_as ({EIFFEL_TOKENS}.te_precursor, a_scn)
-		end
-
-	new_prefix_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): KEYWORD_AS
-			-- New KEYWORD AST node for keyword "prefix'
-		do
-			Result := new_keyword_as ({EIFFEL_TOKENS}.te_prefix, a_scn)
-		end
-
-	new_once_string_keyword_as (a_text: STRING; l, c, p, n: INTEGER): KEYWORD_AS
+	new_once_string_keyword_as (a_text: STRING; l, c, p, n: INTEGER): detachable KEYWORD_AS
 			-- New KEYWORD AST node
 		do
 			create Result.make ({EIFFEL_TOKENS}.te_once_string, a_text, l, c, p, n)
@@ -388,18 +342,11 @@ feature -- Leaf nodes
 			Result.set_index (match_list_count)
 		end
 
-	new_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): SYMBOL_AS
+	new_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable SYMBOL_AS
 			-- New KEYWORD AST node		
 		do
 			create Result.make (a_code, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 			increase_match_list_count
-			Result.set_index (match_list_count)
-		end
-
-	new_square_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): SYMBOL_AS
-			-- New KEYWORD AST node	only for symbol "[" and "]"
-		do
-			Result := new_symbol_as (a_code, a_scn)
 			Result.set_index (match_list_count)
 		end
 
@@ -417,7 +364,7 @@ feature -- Leaf nodes
 
 feature -- Access
 
-	new_integer_value (a_psr: EIFFEL_SCANNER_SKELETON; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): INTEGER_AS
+	new_integer_value (a_psr: EIFFEL_SCANNER_SKELETON; sign_symbol: CHARACTER; a_type: detachable TYPE_AS; buffer: STRING; s_as: detachable SYMBOL_AS): detachable INTEGER_AS
 		local
 			token_value: STRING
 		do
@@ -442,7 +389,7 @@ feature -- Access
 			end
 		end
 
-	new_real_value (a_psr: EIFFEL_SCANNER_SKELETON; is_signed: BOOLEAN; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): REAL_AS
+	new_real_value (a_psr: EIFFEL_SCANNER_SKELETON; is_signed: BOOLEAN; sign_symbol: CHARACTER; a_type: detachable TYPE_AS; buffer: STRING; s_as: detachable SYMBOL_AS): detachable REAL_AS
 		local
 			l_buffer: STRING
 		do
@@ -455,7 +402,7 @@ feature -- Access
 			Result := new_real_as (a_type, buffer, a_psr.text, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
 		end
 
-	new_bin_and_then_as (l, r: EXPR_AS; k_as, s_as: KEYWORD_AS): BIN_AND_THEN_AS
+	new_bin_and_then_as (l, r: detachable EXPR_AS; k_as, s_as: detachable KEYWORD_AS): detachable BIN_AND_THEN_AS
 			-- New binary and then AST node
 		do
 			if l /= Void and r /= Void then
@@ -463,7 +410,7 @@ feature -- Access
 			end
 		end
 
-	new_bin_or_else_as (l, r: EXPR_AS; k_as, s_as: KEYWORD_AS): BIN_OR_ELSE_AS
+	new_bin_or_else_as (l, r: detachable EXPR_AS; k_as, s_as: detachable KEYWORD_AS): detachable BIN_OR_ELSE_AS
 			-- New binary or else AST node
 		do
 			if l /= Void and r /= Void then
@@ -471,14 +418,8 @@ feature -- Access
 			end
 		end
 
-	new_tagged_as (t: ID_AS; e: EXPR_AS; s_as: SYMBOL_AS): TAGGED_AS
-			-- New TAGGED AST node
-		do
-			create Result.initialize (t, e, s_as)
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

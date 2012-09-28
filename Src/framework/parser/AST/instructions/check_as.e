@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (c: like check_list; c_as, e: like end_keyword)
+	initialize (c: like check_list; c_as: detachable like check_keyword; e: like end_keyword)
 			-- Create a new CHECK AST node.
 		require
 			e_not_void: e /= Void

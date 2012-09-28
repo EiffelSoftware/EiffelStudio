@@ -13,8 +13,6 @@ inherit
 		redefine
 			new_array_as,
 			new_bits_as,
-			new_class_as,
-			new_class_type_as,
 			set_expanded_class_type,
 			new_debug_as,
 			new_expr_address_as,
@@ -66,7 +64,7 @@ inherit
 
 feature -- Access
 
-	new_array_as (exp: EIFFEL_LIST [EXPR_AS]; l_as: SYMBOL_AS; r_as: detachable SYMBOL_AS): COMPILER_ARRAY_AS
+	new_array_as (exp: detachable EIFFEL_LIST [EXPR_AS]; l_as, r_as: detachable SYMBOL_AS): detachable COMPILER_ARRAY_AS
 			-- New COMPILER_ARRAY_AS
 		do
 			if exp /= Void then
@@ -74,7 +72,7 @@ feature -- Access
 			end
 		end
 
-	new_bits_as (v: INTEGER_AS; b_as: KEYWORD_AS): BITS_AS
+	new_bits_as (v: detachable INTEGER_AS; b_as: detachable KEYWORD_AS): detachable BITS_AS
 			-- New BITS AST node
 		local
 			l_vtbt: VTBT_SIMPLE
@@ -95,39 +93,7 @@ feature -- Access
 			end
 		end
 
-	new_class_as (n: ID_AS; ext_name: STRING_AS;
-			is_d, is_e, is_fc, is_ex, is_par: BOOLEAN;
-			top_ind, bottom_ind: INDEXING_CLAUSE_AS;
-			g: EIFFEL_LIST [FORMAL_DEC_AS];
-			cp: PARENT_LIST_AS;
-			ncp: PARENT_LIST_AS
-			c: EIFFEL_LIST [CREATE_AS];
-			co: CONVERT_FEAT_LIST_AS;
-			f: EIFFEL_LIST [FEATURE_CLAUSE_AS];
-			inv: INVARIANT_AS;
-			s: SUPPLIERS_AS;
-			o: STRING_AS;
-			ed: KEYWORD_AS): CLASS_AS
-			-- <Precursor>
-		do
-			if n /= Void and s /= Void and (co = Void or else not co.is_empty) and ed /= Void then
-				create Result.initialize (n, ext_name, is_d, is_e, is_fc, is_ex, is_par, top_ind,
-				bottom_ind, g, cp, ncp, c, co, f, inv, s, o, ed)
-			end
-		end
-
-	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS): CLASS_TYPE_AS
-		do
-			if n /= Void then
-				if g /= Void then
-					create {GENERIC_CLASS_TYPE_AS} Result.initialize (n, g)
-				else
-					create Result.initialize (n)
-				end
-			end
-		end
-
-	set_expanded_class_type (a_type: TYPE_AS; is_expanded: BOOLEAN; s_as: KEYWORD_AS)
+	set_expanded_class_type (a_type: detachable TYPE_AS; is_expanded: BOOLEAN; s_as: detachable KEYWORD_AS)
 		do
 			Precursor {AST_FACTORY} (a_type, is_expanded, s_as)
 			if is_expanded then
@@ -138,7 +104,7 @@ feature -- Access
 			end
 		end
 
-	new_debug_as (k: KEY_LIST_AS; c: EIFFEL_LIST [INSTRUCTION_AS]; d_as, e: KEYWORD_AS): DEBUG_AS
+	new_debug_as (k: detachable KEY_LIST_AS; c: detachable EIFFEL_LIST [INSTRUCTION_AS]; d_as, e: detachable KEYWORD_AS): detachable DEBUG_AS
 		local
 			l_str: STRING
 		do
@@ -160,7 +126,7 @@ feature -- Access
 			end
 		end
 
-	new_expr_address_as (e: EXPR_AS; a_as, l_as, r_as: SYMBOL_AS): EXPR_ADDRESS_AS
+	new_expr_address_as (e: detachable EXPR_AS; a_as, l_as, r_as: detachable SYMBOL_AS): detachable EXPR_ADDRESS_AS
 		do
 			if not system.address_expression_allowed then
 				error_handler.insert_error (create {SYNTAX_ERROR}.init (eiffel_parser))
@@ -169,7 +135,7 @@ feature -- Access
 			end
 		end
 
-	new_external_lang_as (l: STRING_AS): COMPILER_EXTERNAL_LANG_AS
+	new_external_lang_as (l: detachable STRING_AS): detachable COMPILER_EXTERNAL_LANG_AS
 			-- New EXTERNAL_LANGUAGE AST node
 		do
 			if l /= Void then
@@ -177,7 +143,7 @@ feature -- Access
 			end
 		end
 
-	new_feature_as (f: EIFFEL_LIST [FEATURE_NAME]; b: BODY_AS; i: INDEXING_CLAUSE_AS; next_pos: INTEGER): FEATURE_AS
+	new_feature_as (f: detachable EIFFEL_LIST [FEATURE_NAME]; b: detachable BODY_AS; i: detachable INDEXING_CLAUSE_AS; next_pos: INTEGER): detachable FEATURE_AS
 			-- New FEATURE AST node
 		local
 			feature_name: FEATURE_NAME
@@ -293,7 +259,7 @@ feature -- Access
 			end
 		end
 
-	new_formal_dec_as (f: FORMAL_AS; c: CONSTRAINT_LIST_AS; cf: EIFFEL_LIST [FEATURE_NAME]; c_as: SYMBOL_AS; ck_as, ek_as: KEYWORD_AS): FORMAL_CONSTRAINT_AS
+	new_formal_dec_as (f: detachable FORMAL_AS; c: detachable CONSTRAINT_LIST_AS; cf: detachable EIFFEL_LIST [FEATURE_NAME]; c_as: detachable SYMBOL_AS; ck_as, ek_as: detachable KEYWORD_AS): detachable FORMAL_CONSTRAINT_AS
 			-- New FORMAL_DECLARATION AST node
 		do
 			if f /= Void then
@@ -301,7 +267,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_as (t: TYPE_AS; s: BOOLEAN; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT
+	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_CONSTANT
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -310,7 +276,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT
+	new_integer_hexa_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_CONSTANT
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -319,7 +285,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_octal_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT
+	new_integer_octal_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_CONSTANT
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -328,7 +294,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_binary_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT
+	new_integer_binary_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n: INTEGER): detachable INTEGER_CONSTANT
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -339,7 +305,7 @@ feature -- Access
 
 feature -- Access for Errors
 
-	new_vtgc1_error (a_line: INTEGER; a_column: INTEGER; a_filename: STRING; a_type: TYPE_AS): VTGC1
+	new_vtgc1_error (a_line: INTEGER; a_column: INTEGER; a_filename: like {ERROR}.file_name; a_type: TYPE_AS): VTGC1
 			-- <Precursor>
 		do
 			create Result
@@ -349,13 +315,13 @@ feature -- Access for Errors
 			Result.set_location (a_type.start_location)
 		end
 
-	new_vvok1_error (a_line, a_column: INTEGER_32; a_filename: STRING_8; a_once_as: FEATURE_AS): VVOK1
+	new_vvok1_error (a_line: INTEGER; a_column: INTEGER; a_filename: like {ERROR}.file_name; a_once_as: FEATURE_AS): VVOK1
 			-- Create new VVOK1 error.
 		do
 			create Result.make (a_line, a_column, a_filename, Void)
 		end
 
-	new_vvok2_error (a_line, a_column: INTEGER_32; a_filename: STRING_8; a_once_as: FEATURE_AS): VVOK2
+	new_vvok2_error (a_line: INTEGER; a_column: INTEGER; a_filename: like {ERROR}.file_name; a_once_as: FEATURE_AS): VVOK2
 			-- Create new VVOK2 error.
 		do
 			create Result.make (a_line, a_column, a_filename, Void)
@@ -363,7 +329,7 @@ feature -- Access for Errors
 
 feature {NONE} -- Validation
 
-	validate_integer_real_type (a_psr: EIFFEL_SCANNER_SKELETON; a_type: TYPE_AS; buffer: STRING; for_integer: BOOLEAN)
+	validate_integer_real_type (a_psr: EIFFEL_SCANNER_SKELETON; a_type: detachable TYPE_AS; buffer: STRING; for_integer: BOOLEAN)
 			-- New integer value.
 		local
 			l_type: TYPE_A
@@ -402,7 +368,7 @@ feature {NONE} -- Validation
 			end
 		end
 
-	validate_non_conforming_inheritance_type (a_psr: EIFFEL_PARSER_SKELETON; a_type: TYPE_AS)
+	validate_non_conforming_inheritance_type (a_psr: EIFFEL_PARSER_SKELETON; a_type: detachable TYPE_AS)
 			-- Validate `a_type' for non-conforming inheritance.
 		local
 			l_none_type_as: NONE_TYPE_AS

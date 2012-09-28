@@ -279,7 +279,7 @@ feature -- Parsing (Unknown encoding)
 			a_string_not_void: a_string /= Void
 		local
 			l_ast_factory: like ast_factory
-			l_input_buffer: YY_BUFFER
+			l_input_buffer: detachable like input_buffer
 		do
 			reset_nodes
 
@@ -330,7 +330,7 @@ feature -- Parsing (Unknown encoding)
 			a_file_open_read: a_file.is_open_read
 		local
 			l_ast_factory: like ast_factory
-			l_input_buffer: YY_BUFFER
+			l_input_buffer: detachable YY_BUFFER
 		do
 			reset_nodes
 			if attached a_encoding then
@@ -406,7 +406,7 @@ feature -- Parsing (Known encoding)
 			reset
 		end
 
-	parse_from_utf8_string (a_string: STRING; a_class: ABSTRACT_CLASS_C)
+	parse_from_utf8_string (a_string: STRING; a_class: detachable ABSTRACT_CLASS_C)
 			-- Parse Eiffel class text in UTF-8 `a_string'.
 			-- Make result available in appropriate result node.
 			-- An exception is raised if a syntax error is found.
@@ -459,25 +459,25 @@ feature -- Parsing (Known encoding)
 
 feature -- Access: result nodes
 
-	root_node: CLASS_AS
+	root_node: detachable CLASS_AS
 			-- Root node of AST
 
-	type_node: TYPE_AS
+	type_node: detachable TYPE_AS
 			-- Type node of AST
 
-	expression_node: EXPR_AS
+	expression_node: detachable EXPR_AS
 			-- Expression node of AST
 
-	feature_node: FEATURE_AS
+	feature_node: detachable FEATURE_AS
 			-- Feature node of AST
 
-	indexing_node: INDEXING_CLAUSE_AS
+	indexing_node: detachable INDEXING_CLAUSE_AS
 			-- Indexing clause node of AST
 
-	invariant_node: INVARIANT_AS
+	invariant_node: detachable INVARIANT_AS
 			-- Invariant node of AST
 
-	entity_declaration_node: EIFFEL_LIST [TYPE_DEC_AS]
+	entity_declaration_node: detachable EIFFEL_LIST [TYPE_DEC_AS]
 			-- Local clause node of AST
 
 feature -- Access
@@ -504,7 +504,7 @@ feature -- Access
 	invariant_end_position: INTEGER
 			-- End of invariant
 
-	object_test_locals: ARRAYED_LIST [TUPLE [name: ID_AS; type: TYPE_AS]]
+	object_test_locals: detachable ARRAYED_LIST [TUPLE [name: ID_AS; type: TYPE_AS]]
 			-- List of object test locals found
 			-- in the current feature declaration
 
@@ -581,7 +581,7 @@ feature -- Settings
 
 feature -- Modification
 
-	insert_supplier (name: STRING; location: LOCATION_AS)
+	insert_supplier (name: STRING; location: detachable LOCATION_AS)
 			-- Insert supplier of the given `name' at the given `location'.
 		require
 			name_attached: name /= Void
@@ -689,42 +689,20 @@ feature {NONE} -- Implementation
 	has_type: BOOLEAN
 			-- Is expression undoubtly typed?
 
-	fclause_pos: KEYWORD_AS
+	fclause_pos: detachable KEYWORD_AS
 			-- To memorize the beginning of a feature clause
 
-	feature_indexes: INDEXING_CLAUSE_AS
+	feature_indexes: detachable INDEXING_CLAUSE_AS
 			-- Indexing clause for an Eiffel feature.
 			-- IL only
 
 	frozen_keyword,
 	expanded_keyword,
 	deferred_keyword,
-	external_keyword: KEYWORD_AS
+	external_keyword: detachable KEYWORD_AS
 			-- Keywords that may appear in header mark of a class
 
-	ast_location: LOCATION_AS
-			-- Temp location
-
-	constraining_type_list: CONSTRAINT_LIST_AS
-			-- Temp list of constraining types.
-
-	last_class_type: CLASS_TYPE_AS
-			-- Temporary local in semantic actions when
-			-- performing assignment attempts.
-
-	last_identifier_list: IDENTIFIER_LIST
-			-- Temporary locals in semantic actions.
-
-	last_type_list: TYPE_LIST_AS
-			-- Temporary locals in semantic actions.
-
-	last_type: TYPE_AS
-			-- Temporary locals in semantic actions.
-
-	last_symbol: SYMBOL_AS
-			-- Temporary locals in semantic actions.
-
-	last_rsqure: ARRAYED_STACK [SYMBOL_AS]
+	last_rsqure: ARRAYED_STACK [detachable SYMBOL_AS]
 			-- Stack of ']'s used for parsing named tuples
 
 feature {NONE} -- Counters
@@ -878,17 +856,17 @@ feature {NONE} -- Counters
 
 feature {NONE} -- Actions
 
-	new_class_description (n: ID_AS; n2: STRING_AS;
+	new_class_description (n: detachable ID_AS; n2: detachable STRING_AS;
 		is_d, is_e, is_fc, is_ex, is_par: BOOLEAN;
-		first_ind, last_ind: INDEXING_CLAUSE_AS; g: EIFFEL_LIST [FORMAL_DEC_AS];
-		a_parent_list_1: PARENT_LIST_AS; a_parent_list_2: PARENT_LIST_AS; c: EIFFEL_LIST [CREATE_AS]; co: CONVERT_FEAT_LIST_AS;
-		f: EIFFEL_LIST [FEATURE_CLAUSE_AS]; inv: INVARIANT_AS;
-		s: SUPPLIERS_AS; o: STRING_AS; ed: KEYWORD_AS): CLASS_AS
+		first_ind, last_ind: detachable INDEXING_CLAUSE_AS; g: detachable EIFFEL_LIST [FORMAL_DEC_AS];
+		a_parent_list_1: detachable PARENT_LIST_AS; a_parent_list_2: detachable PARENT_LIST_AS; c: detachable EIFFEL_LIST [CREATE_AS]; co: detachable CONVERT_FEAT_LIST_AS;
+		f: detachable EIFFEL_LIST [FEATURE_CLAUSE_AS]; inv: detachable INVARIANT_AS;
+		s: detachable SUPPLIERS_AS; o: detachable STRING_AS; ed: detachable KEYWORD_AS): detachable CLASS_AS
 			-- New CLASS AST node;
 			-- Update the clickable list.
 		local
 			ext_name: STRING_AS
-			l_conforming_parents, l_non_conforming_parents: PARENT_LIST_AS
+			l_conforming_parents, l_non_conforming_parents: detachable PARENT_LIST_AS
 		do
 			if n2 /= Void then
 				if not il_parser then
@@ -912,7 +890,7 @@ feature {NONE} -- Actions
 				last_ind, g, l_conforming_parents, l_non_conforming_parents, c, co, f, inv, s, o, ed)
 		end
 
-	extract_keyword (a_keyword_id: like last_keyword_id_value): KEYWORD_AS
+	extract_keyword (a_keyword_id: like last_keyword_id_value): detachable KEYWORD_AS
 			-- Extract `keyword' entry if present. Void otherwise.
 		do
 			if a_keyword_id /= Void then
@@ -920,7 +898,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	extract_id (a_keyword_id: like last_keyword_id_value): ID_AS
+	extract_id (a_keyword_id: like last_keyword_id_value): detachable ID_AS
 			-- Extract `id' entry if present. Void otherwise.
 		do
 			if a_keyword_id /= Void then
@@ -936,7 +914,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	check_object_test_expression (a_expr: EXPR_AS)
+	check_object_test_expression (a_expr: detachable EXPR_AS)
 			-- Check if `a_expr' is a valid expression for an object test.
 		do
 			if a_expr /= Void and then not a_expr.is_detachable_expression then
@@ -947,7 +925,7 @@ feature {NONE} -- Actions
 
 feature {NONE} -- ID factory
 
-	new_none_id: NONE_ID_AS
+	new_none_id: detachable NONE_ID_AS
 			-- New ID AST node for "NONE"
 		do
 			Result := ast_factory.new_filled_none_id_as (line, column, position, 4)
@@ -958,14 +936,13 @@ feature {NONE} -- Type factory
 	is_supplier_recorded: BOOLEAN
 			-- Are suppliers recorded in `suppliers'?
 
-	new_class_type (an_id: ID_AS; generics: TYPE_LIST_AS): TYPE_AS
+	new_class_type (an_id: detachable ID_AS; generics: detachable TYPE_LIST_AS): detachable TYPE_AS
 			-- New class type (Take care of formal generics);
 			-- Update the clickable list and register the resulting
 			-- type as a supplier of the class being parsed.
 		local
 			class_name: ID_AS
-			formal_type, l_new_formal: FORMAL_AS
-			class_type: CLASS_TYPE_AS
+			formal_type, l_new_formal: detachable FORMAL_AS
 		do
 			if an_id /= Void then
 				class_name := an_id
@@ -998,12 +975,11 @@ feature {NONE} -- Type factory
 					end
 					if Result = Void then
 							-- It is a common class type.
-						class_type := ast_factory.new_class_type_as (class_name, generics)
+						Result := ast_factory.new_class_type_as (class_name, generics)
 						if is_supplier_recorded then
 								-- Put the supplier in `suppliers'.
 							suppliers.insert_supplier_id (class_name)
 						end
-						Result := class_type
 					end
 				end
 			end
@@ -1011,7 +987,7 @@ feature {NONE} -- Type factory
 
 feature {NONE} -- BIT factory
 
-	new_bit_const (b: ID_AS): BIT_CONST_AS
+	new_bit_const (b: detachable ID_AS): detachable BIT_CONST_AS
 			-- New BIT_CONSTANT AST node with
 			-- with bit sequence contained in `b'.
 		do
@@ -1019,14 +995,14 @@ feature {NONE} -- BIT factory
 			insert_supplier ("BIT_REF", b)
 		end
 
-	new_bits (v: INTEGER_AS; b_as: KEYWORD_AS): BITS_AS
+	new_bits (v: detachable INTEGER_AS; b_as: detachable KEYWORD_AS): detachable BITS_AS
 			-- New BITS AST node
 		do
 			Result := ast_factory.new_bits_as (v, b_as)
 			insert_supplier ("BIT_REF", b_as)
 		end
 
-	new_bits_symbol (s: ID_AS; b_as: KEYWORD_AS): BITS_SYMBOL_AS
+	new_bits_symbol (s: detachable ID_AS; b_as: detachable KEYWORD_AS): detachable BITS_SYMBOL_AS
 			-- New BITS_SYMBOL AST node
 		do
 			Result := ast_factory.new_bits_symbol_as (s, b_as)
@@ -1035,33 +1011,27 @@ feature {NONE} -- BIT factory
 
 feature {NONE} -- Instruction factory
 
-	new_call_instruction_from_expression (e: EXPR_AS): INSTR_CALL_AS
+	new_call_instruction_from_expression (e: detachable EXPR_AS): detachable INSTR_CALL_AS
 			-- Check if expression `e' represents a call
 			-- and create a call instruction from it if this is the case.
 			-- Report syntax error otherwise.
 		local
-			expr_call: EXPR_CALL_AS
-			call: CALL_AS
-			leaf: LEAF_AS
-			creation_expr: CREATION_EXPR_AS
+			l_has_error: BOOLEAN
 		do
-			expr_call ?= e
-			if expr_call /= Void then
+			if attached {EXPR_CALL_AS} e as l_expr_call then
 					-- This is a call. Let's check if it is a normal feature call.
-				call ?= expr_call.call
-				leaf ?= call
-				creation_expr ?= call
-				if leaf /= Void or else creation_expr /= Void then
-						-- This is not a normal feature call.
-					call := Void
+				if attached {CALL_AS} l_expr_call.call as l_call then
+					if attached {LEAF_AS} l_call or attached {CREATION_EXPR_AS} l_call then
+							-- This is not a normal feature call.
+						l_has_error := True
+					else
+						Result := ast_factory.new_instr_call_as (l_call)
+					end
 				end
 			end
-			if call = Void then
+			if l_has_error then
 					-- Report error.
 				report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, "Expression cannot be used as an instruction"))
-			else
-					-- Make a call instruction.
-				Result := ast_factory.new_instr_call_as (call)
 			end
 		end
 
@@ -1094,13 +1064,13 @@ feature {AST_FACTORY} -- Error handling
 
 feature{NONE} -- Roundtrip
 
-	temp_string_as1: STRING_AS
-	temp_string_as2: STRING_AS
-	temp_keyword_as: KEYWORD_AS
-	temp_class_type_as: CLASS_TYPE_AS
-	temp_operand_as: OPERAND_AS
-	temp_address_current_as: ADDRESS_CURRENT_AS
-	temp_address_result_as: ADDRESS_RESULT_AS
+	temp_string_as1: detachable STRING_AS
+	temp_string_as2: detachable STRING_AS
+	temp_keyword_as: detachable KEYWORD_AS
+	temp_class_type_as: detachable CLASS_TYPE_AS
+	temp_operand_as: detachable OPERAND_AS
+	temp_address_current_as: detachable ADDRESS_CURRENT_AS
+	temp_address_result_as: detachable ADDRESS_RESULT_AS
 
 feature {NONE} -- Constants
 
@@ -1119,7 +1089,6 @@ invariant
 
 	suppliers_not_void: suppliers /= Void
 	formal_parameters_not_void: formal_parameters /= Void
-	no_void_formal_parameter: not formal_parameters.has (Void)
 	valid_id_level: (id_level = Normal_level) or
 		(id_level = Assert_level) or (id_level = Invariant_level)
 	is_external_class_not_set: not il_parser implies not is_external_class

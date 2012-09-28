@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	 initialize (a_as: KEYWORD_AS)
+	 initialize (a_as: like all_keyword)
 			-- Create a new ALL AST node.
 		do
 			if a_as /= Void then

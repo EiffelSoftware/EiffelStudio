@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (t: like tag; i: like index_list; c_as: SYMBOL_AS)
+	initialize (t: like tag; i: like index_list; c_as: like colon_symbol)
 			-- Create a new INDEX AST node.
 		require
 			i_not_void: i /= Void
@@ -62,7 +62,7 @@ feature -- Roundtrip
 
 feature -- Attributes
 
-	tag: ID_AS
+	tag: detachable ID_AS
 			-- Tag of the index list
 
 	index_list: EIFFEL_LIST [ATOMIC_AS]

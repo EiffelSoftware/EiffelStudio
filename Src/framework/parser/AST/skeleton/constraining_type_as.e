@@ -57,7 +57,7 @@ feature -- Access
 	type: TYPE_AS
 			-- Constraining type
 
-	renaming: RENAME_CLAUSE_AS
+	renaming: detachable RENAME_CLAUSE_AS
 			-- Renaming applied to feature of type `type'
 
 feature -- Visitor

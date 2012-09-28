@@ -32,7 +32,7 @@ feature{NONE} -- Initialization
 
 feature -- Roundtrip
 
-	lbang_symbol, rbang_symbol: SYMBOL_AS
+	lbang_symbol, rbang_symbol: detachable SYMBOL_AS
 			-- Symbol "!" associated with this structure
 
 feature -- Visitor
@@ -49,8 +49,8 @@ feature -- Roundtrip/Token
 		do
 			if a_list = Void then
 				Result := type.first_token (a_list)
-			else
-				Result := lbang_symbol.first_token (a_list)
+			elseif attached lbang_symbol as l_symbol then
+				Result := l_symbol
 			end
 		end
 
@@ -61,10 +61,9 @@ feature -- Roundtrip/Token
 			else
 				if a_list = Void then
 					Result := type.last_token (a_list)
-				else
-					Result := rbang_symbol.last_token (a_list)
+				elseif attached rbang_symbol as l_symbol then
+					Result := l_symbol
 				end
-
 			end
 		end
 

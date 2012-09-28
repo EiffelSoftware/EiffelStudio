@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (i: like id_list; t: like type; c_as: SYMBOL_AS)
+	initialize (i: like id_list; t: like type; c_as: like colon_symbol)
 			-- Create a new TYPE_DEC AST node.
 		require
 			i_not_void: i /= Void
@@ -73,16 +73,13 @@ feature -- Access
 	type: TYPE_AS
 			-- Type
 
-	item_name (i: INTEGER): STRING
+	item_name (i: INTEGER): detachable STRING
 			-- Name of `id' at position `i'.
 			-- item names are ascii compatible.
 		require
 			valid_index: id_list.valid_index (i)
 		do
 			Result := Names_heap.item (id_list.i_th (i))
-		ensure
-			Result_not_void: Result /= Void
-			Result_not_empty: not Result.is_empty
 		end
 
 feature -- Roundtrip/Token

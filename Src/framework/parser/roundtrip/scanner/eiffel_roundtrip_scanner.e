@@ -62,7 +62,7 @@ feature -- Scann
 				when TE_REAL then
 					l_as := ast_factory.new_real_as (Void, Void, text, Void, line, column, position, text_count)
 				when TE_CHAR then
-					l_as := last_char_as_value
+					l_as := last_detachable_char_as_value
 				when
 					TE_STR_LT, TE_STR_GT, TE_STR_LE, TE_STR_GE, TE_STR_PLUS, TE_STR_MINUS, TE_STR_STAR,
 					TE_STR_SLASH, TE_STR_POWER, TE_STR_DIV, TE_STR_MOD, TE_STR_BRACKET, TE_STR_AND,
@@ -71,7 +71,7 @@ feature -- Scann
 					TE_EMPTY_STRING, TE_EMPTY_VERBATIM_STRING,
 					TE_STRING, TE_VERBATIM_STRING
 				then
-					l_as := last_string_as_value
+					l_as := last_detachable_string_as_value
 				else
 				end
 			end
@@ -132,7 +132,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

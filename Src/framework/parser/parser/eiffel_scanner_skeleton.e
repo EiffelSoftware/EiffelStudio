@@ -85,7 +85,7 @@ feature -- Initialization
 
 feature -- Roundtrip
 
-	match_list: LEAF_AS_LIST
+	match_list: detachable LEAF_AS_LIST
 			-- List of all tokens used for roundtrip
 
 	initial_match_list_size: INTEGER = 1000
@@ -114,7 +114,7 @@ feature -- Access
 	ast_factory: AST_FACTORY
 			-- Abstract Syntax Tree factory
 
-	current_class: ABSTRACT_CLASS_C
+	current_class: detachable ABSTRACT_CLASS_C
 			-- Current class being parsed.
 			-- It can be Void in a parsing that does not involve compilation
 
@@ -124,7 +124,7 @@ feature -- Access
 	last_value: ANY
 			-- Semantic value to be passed to the parser
 
-	last_line_pragma: BREAK_AS
+	last_line_pragma: detachable BREAK_AS
 			-- Last line pragma to be associated with next instruction
 
 	start_location: LOCATION_AS
@@ -176,7 +176,7 @@ feature {NONE} -- Status
 
 feature -- Convenience
 
-	token_line (a_node: AST_EIFFEL): like line
+	token_line (a_node: detachable AST_EIFFEL): like line
 			-- Line of `a_node' if possible, `line' otherwise.
 		do
 				-- Not all nodes may have a proper location, in which case, we
@@ -188,7 +188,7 @@ feature -- Convenience
 			end
 		end
 
-	token_column (a_node: AST_EIFFEL): like column
+	token_column (a_node: detachable AST_EIFFEL): like column
 			-- Column of `a_node' if possible, `column' otherwise.
 		do
 				-- Not all nodes may have a proper location, in which case, we
@@ -381,7 +381,7 @@ feature {AST_FACTORY} -- Error handling
 			report_one_error (an_error)
 		end
 
-	report_integer_too_large_error (a_type: TYPE_AS; an_int: STRING)
+	report_integer_too_large_error (a_type: detachable TYPE_AS; an_int: STRING)
 			-- `an_int', although only made up of digits, doesn't fit
 			-- in an INTEGER (i.e. greater than maximum_integer_value).
 		require
@@ -400,7 +400,7 @@ feature {AST_FACTORY} -- Error handling
 			report_one_error (an_error)
 		end
 
-	report_integer_too_small_error (a_type: TYPE_AS; an_int: STRING)
+	report_integer_too_small_error (a_type: detachable TYPE_AS; an_int: STRING)
 			-- `an_int', although only made up of digits, doesn't fit
 			-- in an INTEGER (i.e. less than minimum_integer_value).
 		require
@@ -444,7 +444,7 @@ feature {NONE} -- Implementation
 			if l_count > maximum_string_length then
 				report_too_long_string (text)
 			else
-				last_id_as_value := ast_factory.new_filled_id_as (Current)
+				last_detachable_id_as_value := ast_factory.new_filled_id_as (Current)
 			end
 		end
 
@@ -461,23 +461,23 @@ feature {NONE} -- Implementation
 			if l_count > maximum_string_length then
 				report_too_long_string (text)
 			else
-				last_id_as_value := ast_factory.new_filled_id_as_with_existing_stub (Current, a_index)
+				last_detachable_id_as_value := ast_factory.new_filled_id_as_with_existing_stub (Current, a_index)
 				if has_syntax_warning then
-					if last_id_as_value = Void then
-						message := once "Keyword is used as identifier."
-					else
-						message := once "Keyword `" + last_id_as_value.name
+					if last_detachable_id_as_value /= Void and then attached last_detachable_id_as_value.name as l_name then
+						message := once "Keyword `" + l_name
 						message.append_string ("' is used as identifier.")
+					else
+						message := once "Keyword is used as identifier."
 					end
 					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line (keyword), token_column (keyword),
 							filename, message))
 				end
-				if last_id_as_value /= Void then
+				if last_detachable_id_as_value /= Void then
 					if is_lower then
-						last_id_as_value.to_lower
+						last_detachable_id_as_value.to_lower
 					else
-						last_id_as_value.to_upper
+						last_detachable_id_as_value.to_upper
 					end
 				end
 			end
@@ -519,7 +519,7 @@ feature {NONE} -- Implementation
 				-- `l_str' being a new object, it is just fine to pass it as is.
 				-- `roundtrip_token_buffer' is not a new object but redefinitions of `new_string_as'
 				-- take care of duplicating it when necessary.
-			last_string_as_value := ast_factory.new_string_as (l_str, line, column, position, n, roundtrip_token_buffer)
+			last_detachable_string_as_value := ast_factory.new_string_as (l_str, line, column, position, n, roundtrip_token_buffer)
 			last_token := a_token
 
 				-- Check if manifest string is not too long (excluding the double quotes).

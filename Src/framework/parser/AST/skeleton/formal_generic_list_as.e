@@ -117,7 +117,7 @@ feature -- Roundtrip
 
 feature -- Settings
 
-	set_lsqure_symbol (s_as: SYMBOL_AS)
+	set_lsqure_symbol (s_as: like lsqure_symbol)
 			-- Set `lsqure_symbol' with `s_as'.
 		do
 			if s_as /= Void then
@@ -127,7 +127,7 @@ feature -- Settings
 			lsqure_symbol_index_set: s_as /= Void implies lsqure_symbol_index = s_as.index
 		end
 
-	set_rsqure_symbol (s_as: SYMBOL_AS)
+	set_rsqure_symbol (s_as: like rsqure_symbol)
 			-- Set `rsqure_symbol' with `s_as'.
 		do
 			if s_as /= Void then
@@ -137,7 +137,7 @@ feature -- Settings
 			rsqure_symbol_index_set: s_as /= Void implies rsqure_symbol_index = s_as.index
 		end
 
-	set_squre_symbols (l_as, r_as: SYMBOL_AS)
+	set_squre_symbols (l_as, r_as: detachable SYMBOL_AS)
 			-- Set `lsqure_symbol' with `l_as' and `rsqure_symbol' with `r_as'.
 		do
 			set_lsqure_symbol (l_as)

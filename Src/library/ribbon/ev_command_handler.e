@@ -49,14 +49,9 @@ feature {EV_RIBBON_DISPACHER} -- Command
 			-- This function is called from C codes
 		local
 			l_result: NATURAL_32
-			l_property_key: EV_PROPERTY_KEY
-			l_propery_value: EV_PROPERTY_VARIANT
 			l_ribbon: detachable EV_RIBBON
 			l_ribbon_list: like ribbon_resource.ribbon_list
 		do
-			create l_property_key.share_from_pointer (a_property_key)
-			create l_propery_value.share_from_pointer (a_property_value)
-
 			from
 				l_ribbon_list := ribbon_resource.ribbon_list
 				l_ribbon_list.start

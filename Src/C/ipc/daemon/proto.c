@@ -93,7 +93,7 @@ rt_private void dprocess_request(EIF_PSTREAM sp, Request *rqst);			/* General pr
 rt_private void transfer(EIF_PSTREAM sp, Request *rqst);					/* Handle transfer requests */
 rt_private void commute(EIF_PSTREAM from, EIF_PSTREAM to, int size);		/* Commute data from one file to another */
 rt_private void run_command(EIF_PSTREAM sp);						/* Run specified command */
-rt_private void run_asynchronous(EIF_PSTREAM sp, Request *rqst);	/* Run command in background */
+rt_private void run_asynchronous(EIF_PSTREAM sp);	/* Run command in background */
 rt_private void set_ipc_ewb_pid(int pid);						/* Set IPC ewb pid value */
 rt_private void set_ipc_timeout(unsigned int t);				/* Set IPC TIMEOUT value */
 rt_private void start_app(EIF_PSTREAM sp);						/* Start Eiffel application */
@@ -190,7 +190,7 @@ rt_private void dprocess_request(EIF_PSTREAM sp, Request *rqst)
 		run_command(sp);
 		break;
 	case ASYNCMD:			/* Run a command asynchronously */
-		run_asynchronous(sp, rqst);
+		run_asynchronous(sp);
 		break;
 	case APPLICATION_CWD:	/* Current directory where application will be launched */
 		get_application_cwd(sp);	
@@ -632,7 +632,7 @@ rt_private void run_command(EIF_PSTREAM sp)
 #endif
 }
 
-rt_private void run_asynchronous(EIF_PSTREAM sp, Request *rqst)
+rt_private void run_asynchronous(EIF_PSTREAM sp)
 {
 	/* Run a command asynchronously, that is to say in background. The command
 	 * is identified by the client via a "job number", which is inserted in
@@ -643,8 +643,6 @@ rt_private void run_asynchronous(EIF_PSTREAM sp, Request *rqst)
 	 */
 
 	char *cmd;			/* Command to be run */
-	int jobnum;			/* Job number assigned to comamnd */
-	Request dans;		/* Answer (status of comamnd) */
 #ifdef EIF_WINDOWS
 	STARTUPINFO				siStartInfo;
 	PROCESS_INFORMATION		procinfo;
@@ -661,10 +659,6 @@ rt_private void run_asynchronous(EIF_PSTREAM sp, Request *rqst)
 	if (!cmd) {
 		daemon_exit (1);
 	}
-
-	dans.rq_type = ASYNACK;				/* Initialize the answer type */
-	jobnum = rqst->rq_opaque.op_1;	/* Job number assigned by client */
-	dans.rq_opaque.op_1 = jobnum;	/* Anwser is tagged with job number */
 
 #ifdef EIF_WINDOWS
 	current_dir = (char *) getcwd(NULL, PATH_MAX);
@@ -710,12 +704,6 @@ rt_private void run_asynchronous(EIF_PSTREAM sp, Request *rqst)
 		add_log(1, "SYSERR fork: %m (%e)");
 		add_log(2, "ERROR cannot run asynchronous command");
 #endif
-		dans.rq_opaque.op_2 = AK_ERROR;
-/*
- * Asynchronous commands do not send acknowledgment back anymore
- * -- FRED
-		dbg_send_packet(sp, &dans);
-*/
 		break;
 	case 0:					/* Child is performing the command */
 #ifdef USE_ADD_LOG
@@ -779,12 +767,6 @@ rt_private void run_asynchronous(EIF_PSTREAM sp, Request *rqst)
 	status = eifrt_vms_spawn(cmd, 1);
 #endif	/* EIF_VMS */
 
-	free(cmd);
-
-	if (status == 0)
-		dans.rq_opaque.op_2 = AK_OK;	/* Command completed sucessfully */
-	else
-		dans.rq_opaque.op_2 = AK_ERROR;	/* Comamnd failed */
 
 #ifdef EIF_VMS
 	if (status) {	/* command failed */
@@ -793,15 +775,14 @@ rt_private void run_asynchronous(EIF_PSTREAM sp, Request *rqst)
 		"-- failed cmd: \"%s\" -- %s\n", 
 		pgmname, __FILE__, errno, cmd, strerror(errno));
 	}
-	return;		/* skip send ack packet, Fred says not done anymore */
+	return;
 #else /* not VMS */
+	if (status) {
+		fprintf (stderr, "Cannot launch command: %s\n", cmd);
+	}
 
-/*
- * Asynchronous commands do not send command status back anymore
- *
- * -- FRED
-	dbg_send_packet(sp, &dans);
-*/
+	free(cmd);
+
 #ifdef USE_ADD_LOG
 	add_log(12, "child exiting");
 #endif
@@ -1101,7 +1082,6 @@ rt_public void dead_app(void)
 	Request rqst;					/* Request to send */
 #ifndef EIF_WINDOWS
 	int status;						/* Exit status of the application */
-	Pid_t child_pid;				/* pid of the dead application */
 #endif
 
 #ifdef USE_ADD_LOG
@@ -1116,7 +1096,8 @@ rt_public void dead_app(void)
 	 * running (just in case!)).
 	 */
 #if !defined (EIF_WINDOWS) && !defined (EIF_VMS) && !defined(VXWORKS)
-	child_pid = waitpid((Pid_t) daemon_data.d_app, &status, WNOHANG);
+		/* Ignore error if any, we only wait to get rid of defunct process. */
+	(void) waitpid((Pid_t) daemon_data.d_app, &status, WNOHANG);
 #endif
 
 	rqst.rq_type = DEAD;						/* Application is dead */

@@ -94,8 +94,6 @@ feature -- Buffer
 					detected_encoding := default_encoding
 				end
 			end
-		ensure
-			buffer_attached: Result /= Void
 		end
 
 	input_buffer_from_file_of_encoding (a_file: KL_BINARY_INPUT_FILE; a_encoding: ENCODING): detachable YY_BUFFER
@@ -115,8 +113,6 @@ feature -- Buffer
 			end
 			detected_encoding := a_encoding
 			last_bom := Void
-		ensure
-			buffer_attached: Result /= Void
 		end
 
 	input_buffer_from_ascii_string (a_string: STRING_8): YY_BUFFER
@@ -144,7 +140,7 @@ feature -- Buffer
 			last_bom := Void
 		end
 
-	input_buffer_from_string (a_string: STRING_8; a_class: detachable ANY): YY_BUFFER
+	input_buffer_from_string (a_string: STRING_8; a_class: detachable ANY): detachable YY_BUFFER
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -352,8 +348,6 @@ feature -- Validate
 				end
 				i := i + l_ref.item
 			end
-		ensure
-			Result_not_void: Result /= Void
 		end
 
 feature -- Detection

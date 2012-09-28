@@ -2036,13 +2036,15 @@ feature -- Environment access
 			end
 		end
 
-	get_environment_32 (a_var: READABLE_STRING_32): detachable STRING_32
+	get_environment_32 (a_var: READABLE_STRING_GENERAL): detachable STRING_32
 			-- Get `a_var' from the environment, taking into account the `application_name' to lookup the defaults.
 		require
 			a_var_attached: a_var /= Void
 			not_a_var_is_empty: not a_var.is_empty
 		do
-			Result := environment.get_from_application (a_var, application_name)
+			if attached environment.get_from_application (a_var.to_string_8, application_name) as l_val then
+				Result := l_val
+			end
 		end
 
 feature -- Environment update

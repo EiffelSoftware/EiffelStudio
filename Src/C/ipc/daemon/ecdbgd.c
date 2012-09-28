@@ -90,6 +90,15 @@ rt_public struct d_flags daemon_data = {	/* Internal daemon's flags */
 	(unsigned int) 0,	/* d_sent */
 	(STREAM *) 0,		/* d_cs */
 	(STREAM *) 0,		/* d_as */
+#ifdef EIF_WINDOWS
+	(HANDLE) 0,			/* d_ewb */
+	(HANDLE) 0,			/* d_app */
+	(DWORD) 0,			/* d_app_id */
+	NULL,				/* d_interrupt_flags */
+#else
+	(int) 0,			/* d_ewb */
+	(int) 0,			/* d_app */
+#endif
 };
 
 /* Function */

@@ -251,6 +251,7 @@ rt_public int net_send(EIF_PSTREAM cs, char *buf, size_t size)
 	int error;
 	Signal_t (*oldpipe)(int);
 #endif
+	char *l_buf = buf;
 
 #ifdef USE_ADD_LOG
 		add_log(2, "in net_send %d bytes on fd %d", size, writefd(cs));
@@ -267,11 +268,11 @@ rt_public int net_send(EIF_PSTREAM cs, char *buf, size_t size)
 
 
 	ReleaseSemaphore (writeev(cs),1,NULL);
-	for (length = 0; length < size; buf += error, length += error) {
+	for (length = 0; length < size; l_buf += error, length += error) {
 		amount = size - length;
 		if (amount > BUFSIZ)    /* do not write more than BUFSIZ */
 			amount = BUFSIZ;
-		fSuccess = WriteFile(writefd(cs), buf, (DWORD) amount, &error, NULL);
+		fSuccess = WriteFile(writefd(cs), l_buf, (DWORD) amount, &error, NULL);
 		if (!fSuccess){
 			fprintf (stderr, "net_send: write failed. fdesc = %p, errno = %u\n", writefd(cs), (unsigned int) GetLastError());
 			return -1;
@@ -290,12 +291,12 @@ rt_public int net_send(EIF_PSTREAM cs, char *buf, size_t size)
 	}
 
 
-	for (length = 0; length < size; buf += error, length += error) {
+	for (length = 0; length < size; l_buf += error, length += error) {
 		amount = size - length;
 		if (amount > BUFSIZ) {	/* do not write more than BUFSIZ */
 			amount = BUFSIZ;
 		}
-		error = write(writefd(cs), buf, amount);
+		error = write(writefd(cs), l_buf, amount);
 		if (error == -1){
 			if (errno != EINTR){
 #ifdef EIF_VMS

@@ -2239,16 +2239,16 @@ rt_public EIF_BOOLEAN eif_file_creatable_16(EIF_NATURAL_16 *path, EIF_INTEGER le
 	if (!temp) {
 		enomem();
 	} else {
-		wcsncpy_s (temp, length + 1, path, length);
+		wcsncpy (temp, path, length + 1);
 		ptr = wcsrchr (temp, '\\');
 		if (ptr) {
 			*ptr = '\0';
 			if ((ptr == temp) || (*(ptr - 1) == ':')) {
 					/* path is of the form a:\bbb or \bbb, parent is a:\ or \ */
-				wcscat_s (ptr, temp + length - ptr, L"\\");
+				wcscat (ptr, L"\\");
 			}
 		} else {
-			wcsncpy_s (temp, length + 1, L".", 1);
+			wcsncpy (temp, L".", 2);
 		}
 
 			/* Does the parent exist? */

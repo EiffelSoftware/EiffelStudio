@@ -155,7 +155,7 @@ rt_public EIF_POINTER eif_dir_open_16(EIF_NATURAL_16 *name)
 		enomem(MTC_NOARG);
 	}
 		/* Take care about terminating zero. */
-	wmemcpy_s (c->wname, n + 1, name, n);
+	wmemcpy (c->wname, name, n);
 	c->wname [n] = 0;
 		/* Do not use 1-byte name. */
 	c->name [0] = 0;

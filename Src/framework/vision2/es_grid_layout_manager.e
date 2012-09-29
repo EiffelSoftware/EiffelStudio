@@ -442,7 +442,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	restore_row_layout (a_row: EV_GRID_ROW; lay: like layout; on_idle: BOOLEAN; l_pid: INTEGER)
+	restore_row_layout (a_row: EV_GRID_ROW; lay: attached like layout; on_idle: BOOLEAN; l_pid: INTEGER)
 			-- if on_idle is True, this means the feature is called on idle
 			-- in this case, we identify the current processing id with `l_pid'
 			-- if it is different from `current_processing_id', this operation is cancelled.

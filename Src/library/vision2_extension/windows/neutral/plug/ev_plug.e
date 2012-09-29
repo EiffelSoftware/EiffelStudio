@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 	make (a_native_window_handle: POINTER)
 			-- Create a plug widget using `a_native_window_handle' window handle.
 		require
+			is_windows: {PLATFORM}.is_windows
 			a_handle_not_null: a_native_window_handle /= default_pointer
 		do
 			handle := a_native_window_handle

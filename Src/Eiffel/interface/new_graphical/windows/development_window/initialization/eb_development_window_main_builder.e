@@ -1206,7 +1206,6 @@ feature{NONE} -- Implementation
 	debug_mode_tools: ARRAYED_LIST [TYPE [ES_TOOL [EB_TOOL]]]
 			-- Tools only displayed in debug mode
 		local
-			l_all_tools: like develop_window.shell_tools.all_tools
 			l_info: like Tool_utils.tool_info
 		once
 			create Result.make (5)

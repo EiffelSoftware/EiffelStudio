@@ -194,7 +194,7 @@ feature -- Status setting
 			display_progress_value (0)
 		end
 
-	display_message (mess: STRING_GENERAL)
+	display_message (mess: READABLE_STRING_GENERAL)
 			-- Display `mess'.
 		do
 			label.set_foreground_color (black_color)
@@ -202,7 +202,7 @@ feature -- Status setting
 			label.refresh_now
 		end
 
-	display_error_message (mess: STRING_GENERAL)
+	display_error_message (mess: READABLE_STRING_GENERAL)
 			-- Display error message `mess'.
 		do
 			label.set_foreground_color (red_color)
@@ -528,7 +528,7 @@ feature {NONE} -- Implementation: event handling
 
 feature {NONE} -- Implementation
 
-	set_project_name (n: STRING_GENERAL)
+	set_project_name (n: READABLE_STRING_GENERAL)
 			-- Display `n' as the project name.
 		require
 			valid_name: n /= Void
@@ -540,11 +540,11 @@ feature {NONE} -- Implementation
 			f := project_label.font
 			create s.make (n.count + 2)
 			s.append_character (' ')
-			s.append (n)
+			s.append_string_general (n)
 			s.append_character (' ')
 			w := f.string_width (s)
 			if w > 200 then
-				s := n
+				s := n.to_string_32
 				w := f.string_width (s).min (100)
 			end
 			project_label.set_minimum_width (w)
@@ -619,7 +619,7 @@ invariant
 	running_icon_index_positive: running_icon_index > 0
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

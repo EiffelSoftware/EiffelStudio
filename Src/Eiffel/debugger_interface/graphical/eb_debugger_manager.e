@@ -1123,7 +1123,7 @@ feature -- Status report
 
 feature -- Output
 
-	debugger_output_message (m: STRING_GENERAL)
+	debugger_output_message (m: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_formatter: like debugger_formatter
@@ -1159,7 +1159,7 @@ feature -- Output
 			end
 		end
 
-	debugger_status_message (m: STRING_GENERAL)
+	debugger_status_message (m: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
 			if m.index_of_code (('%N').natural_32_code, 1) = 0 then

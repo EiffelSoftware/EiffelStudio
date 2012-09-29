@@ -738,7 +738,7 @@ feature -- Actions on all windows
 			end
 		end
 
-	display_message (m: STRING_GENERAL)
+	display_message (m: READABLE_STRING_GENERAL)
 			-- Display a message in status bars of all development windows.
 		require
 			one_line_message: m /= Void and then (not m.has_code (('%N').natural_32_code) and not m.has_code (('%R').natural_32_code))
@@ -1698,7 +1698,7 @@ feature{NONE} -- Implementation
 			-- Implementation of `compile_start_actions'
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

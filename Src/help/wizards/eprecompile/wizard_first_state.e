@@ -205,15 +205,15 @@ feature {NONE} -- Tools
 			-- called
 		local
 			it: EV_MULTI_COLUMN_LIST_ROW
-			eiffel_directory: DIRECTORY
-			list_of_preprecompilable_libraries: ARRAYED_LIST [STRING]
-			current_lib: STRING
-			current_precomp: FILE_NAME
+			eiffel_directory: DIRECTORY_32
+			list_of_preprecompilable_libraries: ARRAYED_LIST [STRING_32]
+			current_lib: STRING_32
+			current_precomp: FILE_NAME_32
 		do
 				-- NOTE: for now `a_is_dotnet' is set to False, in future
 				-- the wizard should support dotnet precompiles
 			eiffel_layout.set_precompile (False)
-			create eiffel_directory.make_open_read (eiffel_layout.precompilation_path (False))
+			create eiffel_directory.make (eiffel_layout.precompilation_path_32 (False))
 			if eiffel_directory.exists then
 				list_of_preprecompilable_libraries:= eiffel_directory.linear_representation
 
@@ -240,17 +240,17 @@ feature {NONE} -- Tools
 			end
 		end
 
-	fill_ev_list_items (path_lib: STRING; ace_name: STRING): EV_MULTI_COLUMN_LIST_ROW
+	fill_ev_list_items (path_lib: STRING_32; ace_name: STRING_32): EV_MULTI_COLUMN_LIST_ROW
 			-- retrun an ev_multi_column_list_item with the name of the system for text
 			-- and the path of the ace file for data.
 			-- 'dir/lib' is the directory where the ace file should be
 			-- for the ISE precompile libraries
 		local
 			info_lib: TUPLE [STRING, BOOLEAN]
-			path_name: FILE_NAME
+			path_name: FILE_NAME_32
 			l_conf: CONF_LOAD
 			l_factory: CONF_PARSE_FACTORY
-			l_file: RAW_FILE
+			l_file: RAW_FILE_32
 			l_target_name: STRING
 			l_targets: HASH_TABLE [CONF_TARGET, STRING]
 		do
@@ -420,8 +420,7 @@ feature {NONE} -- Tools
 		local
 			file_open_dialog: EV_FILE_OPEN_DIALOG
 			it: EV_MULTI_COLUMN_LIST_ROW
-			file_path: STRING
-			file_title: STRING
+			file_path, file_title: STRING_32
 			error_dialog: EV_WARNING_DIALOG
 		do
 			create file_open_dialog

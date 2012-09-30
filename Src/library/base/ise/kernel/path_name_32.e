@@ -90,6 +90,25 @@ feature -- Status setting
 			valid_file_name: is_valid
 		end
 
+	extend_from_array (directories: ARRAY [STRING_32])
+			-- Append the subdirectories from `directories' to the path name.
+		require
+			array_exists: directories /= Void and then not (directories.is_empty)
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := directories.lower
+				nb := directories.upper
+			until
+				i > nb
+			loop
+				extend (directories.item (i))
+				i := i + 1
+			end
+		ensure
+			valid_file_name: is_valid
+		end
 
 feature -- Duplication
 

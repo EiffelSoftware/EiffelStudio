@@ -85,6 +85,8 @@ feature -- Creation
 			elseif attached {RT_CLASS_TYPE} eiffel_type_from_string (class_type) as l_type then
 				Result := dynamic_type_from_rt_class_type (l_type)
 				l_table.put (Result, class_type)
+			else
+				Result := -1
 			end
 		ensure
 			dynamic_type_from_string_valid: Result = -1 or Result = none_type or Result >= 0
@@ -1766,8 +1768,10 @@ feature {TYPE, INTERNAL} -- Implementation
 			l_type_name: STRING
 			l_start_pos, l_end_pos, i: INTEGER
 			l_types: NATIVE_ARRAY [detachable RT_TYPE]
-			l_found: BOOLEAN
+			l_found, l_is_attached: BOOLEAN
 			l_class_type_name: STRING
+			nb: INTEGER
+			l_mark: CHARACTER
 		do
 				-- Load data from all assemblies in case it is not yet done.
 			load_assemblies
@@ -1778,15 +1782,35 @@ feature {TYPE, INTERNAL} -- Implementation
 			l_class_type_name.right_adjust
 
 				-- Search for a non generic class type.
+				-- We only check the mark if there is at least 3 characters.
+			fixme ("We currently ignore attachment marks when retrieving")
+			nb := l_class_type_name.count
+			if nb > 1 then
+				l_mark := l_class_type_name.item (1)
+				if l_mark = '!' or l_mark = '?' then
+					l_class_type_name.remove_head (1)
+					l_class_type_name.left_adjust
+					l_is_attached := l_mark = '!'
+				elseif (nb >= 10 and l_class_type_name.substring_index ("attached", 1) = 1) then
+						-- Remove `attached' and the white character after it.
+					l_class_type_name.remove_head (9)
+					l_class_type_name.left_adjust
+					l_is_attached := True
+				elseif (nb >= 12 and l_class_type_name.substring_index ("detachable", 1) = 1) then
+						-- Remove `attached' and the white character after it.					
+					l_class_type_name.remove_head (11)
+					l_class_type_name.left_adjust
+				end
+			end
 			eiffel_meta_type_mapping.search (mapped_type (l_class_type_name))
 			if eiffel_meta_type_mapping.found and then attached {ARRAYED_LIST [RT_CLASS_TYPE]} eiffel_meta_type_mapping.found_item as l_found_list then
 					-- It is a non-generic Eiffel type which was recorded in `load_assemblies'
 					-- Or possibly a basic type with its various associated referenced types.
 					-- Nevertheless the check fails for CHARACTER_32 because it is mapped to a NATURAL_32, this
 					-- is why it is commented out for the meantime.
---				check
---					only_one_element: l_found_list.count = 1 or else attached {RT_BASIC_TYPE} l_found_list.first
---				end
+				check
+					only_one_element: l_found_list.count = 1 or else attached {RT_BASIC_TYPE} l_found_list.first
+				end
 				Result := l_found_list.first
 			else
 					-- Let's see if it is a partially well-formed Eiffel generic class:
@@ -1992,7 +2016,10 @@ feature {TYPE, INTERNAL} -- Implementation
 		do
 			if not retried then
 				l_provider := a_type
-				l_cas := l_provider.get_custom_attributes_type ({EIFFEL_NAME_ATTRIBUTE}, False)
+					-- To avoid exceptions, we do not load types that have a & in them.
+				if attached a_type.name as l_type_name and then not l_type_name.ends_with ("\&") then
+					l_cas := l_provider.get_custom_attributes_type ({EIFFEL_NAME_ATTRIBUTE}, False)
+				end
 				if
 					l_cas /= Void and then l_cas.count > 0 and then
 					attached {EIFFEL_NAME_ATTRIBUTE} l_cas.item (0) as l_name
@@ -2168,6 +2195,12 @@ feature {TYPE, INTERNAL} -- Implementation
 			l_basic_type.set_type (({CHARACTER_8}).to_cil.type_handle)
 			l_list.extend (l_basic_type)
 			Result.put (l_list, "CHARACTER_8")
+
+			create l_list.make (1)
+			create l_basic_type.make
+			l_basic_type.set_type (({CHARACTER_32}).to_cil.type_handle)
+			l_list.extend (l_basic_type)
+			Result.put (l_list, "CHARACTER_32")
 
 			create l_list.make (1)
 			create l_basic_type.make

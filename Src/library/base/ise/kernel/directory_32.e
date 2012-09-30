@@ -48,10 +48,7 @@ inherit
 		end
 
 create
-	make
-
-create {DIRECTORY_32}
-	make_open_read
+	make, make_open_read
 
 feature {DIRECTORY_32} -- Creation
 

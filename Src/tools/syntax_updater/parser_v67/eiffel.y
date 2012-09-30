@@ -38,181 +38,180 @@ create
 %left		TE_DOT
 %right		TE_LPARAN
 
-%token <ID_AS> TE_FREE TE_ID TE_TUPLE TE_A_BIT
+%token <detachable ID_AS> TE_FREE TE_ID TE_TUPLE TE_A_BIT
 %token TE_INTEGER
 %token TE_REAL
-%token <CHAR_AS>		TE_CHAR
+%token <detachable CHAR_AS>		TE_CHAR
 
-%token <SYMBOL_AS> 		TE_LSQURE TE_RSQURE
-%token <SYMBOL_AS>		TE_ACCEPT TE_ADDRESS TE_ASSIGNMENT
-%token <SYMBOL_AS>		TE_LARRAY TE_RARRAY TE_RPARAN TE_LPARAN
-%token <SYMBOL_AS>		TE_LCURLY TE_RCURLY
-%token <SYMBOL_AS> 		TE_BANG TE_SEMICOLON
-%token <SYMBOL_AS>		TE_COLON TE_COMMA
-%token <SYMBOL_AS>		TE_CONSTRAIN TE_QUESTION
-%token <SYMBOL_AS> 		TE_DOTDOT TE_DOT
-%token <SYMBOL_AS> 		TE_TILDE TE_NOT_TILDE TE_EQ TE_LT TE_GT TE_LE TE_GE TE_NE
-%token <SYMBOL_AS> 		TE_PLUS TE_MINUS TE_STAR TE_SLASH TE_POWER
-%token <SYMBOL_AS> 		TE_DIV TE_MOD
+%token <detachable SYMBOL_AS> 		TE_LSQURE TE_RSQURE
+%token <detachable SYMBOL_AS>		TE_ACCEPT TE_ADDRESS TE_ASSIGNMENT
+%token <detachable SYMBOL_AS>		TE_LARRAY TE_RARRAY TE_RPARAN TE_LPARAN
+%token <detachable SYMBOL_AS>		TE_LCURLY TE_RCURLY
+%token <detachable SYMBOL_AS> 		TE_BANG TE_SEMICOLON
+%token <detachable SYMBOL_AS>		TE_COLON TE_COMMA
+%token <detachable SYMBOL_AS>		TE_CONSTRAIN TE_QUESTION
+%token <detachable SYMBOL_AS> 		TE_DOTDOT TE_DOT
+%token <detachable SYMBOL_AS> 		TE_TILDE TE_NOT_TILDE TE_EQ TE_LT TE_GT TE_LE TE_GE TE_NE
+%token <detachable SYMBOL_AS> 		TE_PLUS TE_MINUS TE_STAR TE_SLASH TE_POWER
+%token <detachable SYMBOL_AS> 		TE_DIV TE_MOD
 
-%token <BOOL_AS> TE_FALSE TE_TRUE
-%token <RESULT_AS> TE_RESULT
-%token <RETRY_AS> TE_RETRY
-%token <UNIQUE_AS> TE_UNIQUE
-%token <CURRENT_AS> TE_CURRENT
-%token <DEFERRED_AS> TE_DEFERRED
-%token <VOID_AS> TE_VOID
+%token <detachable BOOL_AS> TE_FALSE TE_TRUE
+%token <detachable RESULT_AS> TE_RESULT
+%token <detachable RETRY_AS> TE_RETRY
+%token <detachable UNIQUE_AS> TE_UNIQUE
+%token <detachable CURRENT_AS> TE_CURRENT
+%token <detachable DEFERRED_AS> TE_DEFERRED
+%token <detachable VOID_AS> TE_VOID
 
-%token <KEYWORD_AS> TE_END
-%token <KEYWORD_AS> TE_FROZEN
-%token <KEYWORD_AS> TE_PARTIAL_CLASS	
-%token <KEYWORD_AS> TE_INFIX
-%token <KEYWORD_AS> TE_CREATION
-%token <KEYWORD_AS> TE_PRECURSOR
-%token <KEYWORD_AS> TE_PREFIX
+%token <detachable KEYWORD_AS> TE_END
+%token <detachable KEYWORD_AS> TE_FROZEN
+%token <detachable KEYWORD_AS> TE_PARTIAL_CLASS	
+%token <detachable KEYWORD_AS> TE_INFIX
+%token <detachable KEYWORD_AS> TE_CREATION
+%token <detachable KEYWORD_AS> TE_PRECURSOR
+%token <detachable KEYWORD_AS> TE_PREFIX
 
-%token <KEYWORD_AS> TE_AGENT TE_ALIAS TE_ALL TE_AND TE_AS
-%token <KEYWORD_AS> TE_BIT TE_CHECK TE_CLASS TE_CONVERT
-%token <KEYWORD_AS> TE_CREATE TE_DEBUG TE_DO TE_ELSE TE_ELSEIF
-%token <KEYWORD_AS> TE_ENSURE TE_EXPANDED TE_EXPORT TE_EXTERNAL TE_FEATURE
-%token <KEYWORD_AS> TE_FROM TE_IF TE_IMPLIES TE_INHERIT
-%token <KEYWORD_AS> TE_INSPECT TE_INVARIANT TE_LIKE TE_LOCAL
-%token <KEYWORD_AS> TE_LOOP TE_NOT TE_OBSOLETE TE_OLD TE_ONCE
-%token <KEYWORD_AS> TE_ONCE_STRING TE_OR TE_REDEFINE TE_REFERENCE TE_RENAME
-%token <KEYWORD_AS> TE_REQUIRE TE_RESCUE TE_SELECT TE_SEPARATE TE_STRIP
-%token <KEYWORD_AS> TE_THEN TE_UNDEFINE	TE_UNTIL TE_VARIANT TE_WHEN	
-%token <KEYWORD_AS> TE_XOR
+%token <detachable KEYWORD_AS> TE_AGENT TE_ALIAS TE_ALL TE_AND TE_AS
+%token <detachable KEYWORD_AS> TE_BIT TE_CHECK TE_CLASS TE_CONVERT
+%token <detachable KEYWORD_AS> TE_CREATE TE_DEBUG TE_DO TE_ELSE TE_ELSEIF
+%token <detachable KEYWORD_AS> TE_ENSURE TE_EXPANDED TE_EXPORT TE_EXTERNAL TE_FEATURE
+%token <detachable KEYWORD_AS> TE_FROM TE_IF TE_IMPLIES TE_INHERIT
+%token <detachable KEYWORD_AS> TE_INSPECT TE_INVARIANT TE_LIKE TE_LOCAL
+%token <detachable KEYWORD_AS> TE_LOOP TE_NOT TE_OBSOLETE TE_OLD TE_ONCE
+%token <detachable KEYWORD_AS> TE_ONCE_STRING TE_OR TE_REDEFINE TE_REFERENCE TE_RENAME
+%token <detachable KEYWORD_AS> TE_REQUIRE TE_RESCUE TE_SELECT TE_SEPARATE TE_STRIP
+%token <detachable KEYWORD_AS> TE_THEN TE_UNDEFINE	TE_UNTIL TE_VARIANT TE_WHEN	
+%token <detachable KEYWORD_AS> TE_XOR
 -- Special type for keywords that are either keyword or identifier
-%token <TUPLE [KEYWORD_AS, ID_AS, INTEGER, INTEGER, STRING] as keyword_id> TE_ACROSS TE_ASSIGN TE_ATTRIBUTE TE_ATTACHED TE_DETACHABLE TE_INDEXING TE_IS TE_NOTE TE_SOME
+%token <detachable TUPLE [keyword: detachable KEYWORD_AS; id: detachable ID_AS; line, column: INTEGER; filename: detachable READABLE_STRING_GENERAL] as keyword_id> TE_ACROSS TE_ASSIGN TE_ATTRIBUTE TE_ATTACHED TE_DETACHABLE TE_INDEXING TE_IS TE_NOTE TE_SOME
 
-%token <STRING_AS> TE_STRING TE_EMPTY_STRING TE_VERBATIM_STRING	TE_EMPTY_VERBATIM_STRING
-%token <STRING_AS> TE_STR_LT TE_STR_LE TE_STR_GT TE_STR_GE TE_STR_MINUS
-%token <STRING_AS> TE_STR_PLUS TE_STR_STAR TE_STR_SLASH TE_STR_MOD
-%token <STRING_AS> TE_STR_DIV TE_STR_POWER TE_STR_AND TE_STR_AND_THEN
-%token <STRING_AS> TE_STR_IMPLIES TE_STR_OR TE_STR_OR_ELSE TE_STR_XOR
-%token <STRING_AS> TE_STR_NOT TE_STR_FREE TE_STR_BRACKET
+%token <detachable STRING_AS> TE_STRING TE_EMPTY_STRING TE_VERBATIM_STRING	TE_EMPTY_VERBATIM_STRING
+%token <detachable STRING_AS> TE_STR_LT TE_STR_LE TE_STR_GT TE_STR_GE TE_STR_MINUS
+%token <detachable STRING_AS> TE_STR_PLUS TE_STR_STAR TE_STR_SLASH TE_STR_MOD
+%token <detachable STRING_AS> TE_STR_DIV TE_STR_POWER TE_STR_AND TE_STR_AND_THEN
+%token <detachable STRING_AS> TE_STR_IMPLIES TE_STR_OR TE_STR_OR_ELSE TE_STR_XOR
+%token <detachable STRING_AS> TE_STR_NOT TE_STR_FREE TE_STR_BRACKET
 
-%type <SYMBOL_AS>ASemi
-%type <KEYWORD_AS> Alias_mark Is_keyword
-%type <ALIAS_TRIPLE>Alias
-%type <PAIR[KEYWORD_AS, EIFFEL_LIST [INSTRUCTION_AS]]> Else_part Rescue
+%type <detachable SYMBOL_AS>ASemi
+%type <detachable KEYWORD_AS> Alias_mark Is_keyword
+%type <detachable ALIAS_TRIPLE>Alias
+%type <detachable PAIR[KEYWORD_AS, EIFFEL_LIST [INSTRUCTION_AS]]> Else_part Rescue
 
-%type <PAIR[KEYWORD_AS, ID_AS]> Assigner_mark_opt
-%type <PAIR[KEYWORD_AS, STRING_AS]> External_name Obsolete
-%type <IDENTIFIER_LIST>		Identifier_list Strip_identifier_list
-%type <PAIR [KEYWORD_AS, EIFFEL_LIST [TAGGED_AS]]> Invariant
-%type <PAIR [KEYWORD_AS, EXPR_AS]>                 Exit_condition_opt 
-%type <AGENT_TARGET_TRIPLE> Agent_target
+%type <detachable PAIR[KEYWORD_AS, ID_AS]> Assigner_mark_opt
+%type <detachable PAIR[KEYWORD_AS, STRING_AS]> External_name Obsolete
+%type <detachable IDENTIFIER_LIST>		Identifier_list Strip_identifier_list
+%type <detachable PAIR [KEYWORD_AS, EIFFEL_LIST [TAGGED_AS]]> Invariant
+%type <detachable PAIR [KEYWORD_AS, EXPR_AS]>                 Exit_condition_opt 
+%type <detachable AGENT_TARGET_TRIPLE> Agent_target
 
-%type <ACCESS_AS>			A_feature Creation_target
-%type <ACCESS_FEAT_AS>		Feature_access
-%type <ACCESS_INV_AS>		Creation_call
-%type <ARRAY_AS>			Manifest_array
-%type <ASSIGN_AS>			Assignment
-%type <ASSIGNER_CALL_AS>	Assigner_call
-%type <ATOMIC_AS>			Index_value Manifest_constant Expression_constant
-%type <BINARY_AS>			Qualified_binary_expression
-%type <BIT_CONST_AS>		Bit_constant
-%type <BODY_AS>				Declaration_body
-%type <BOOL_AS>				Boolean_constant
-%type <CALL_AS>				Call Remote_call Qualified_call
-%type <CASE_AS>				When_part
-%type <CHAR_AS>				Character_constant
-%type <CHECK_AS>			Check
-%type <KEYWORD_AS>			Class_mark
-%type <CLIENT_AS>			Clients Feature_client_clause
-%type <CONSTANT_AS>			Constant_attribute
-%type <CONVERT_FEAT_AS>		Convert_feature
-%type <CREATE_AS>			Creation_clause
-%type <CREATION_AS>			Creation
-%type <CREATION_EXPR_AS>	Creation_expression
-%type <DEBUG_AS>			Debug
-%type <ELSIF_AS>			Elseif_part
-%type <ENSURE_AS>			Postcondition
-%type <EXPORT_ITEM_AS>		New_export_item
-%type <EXPR_AS>				Bracket_target Expression Factor Qualified_expression Qualified_factor Typed_expression
-%type <EXTERNAL_AS>			External
-%type <EXTERNAL_LANG_AS>	External_language
-%type <FEATURE_AS>			Feature_declaration
-%type <FEATURE_CLAUSE_AS>	Feature_clause
-%type <FEATURE_SET_AS>		Feature_set
-%type <FORMAL_AS>			Formal_parameter
-%type <FORMAL_DEC_AS>		Formal_generic
-%type <GUARD_AS>			Guard
-%type <ID_AS>				Class_or_tuple_identifier Class_identifier Tuple_identifier Identifier_as_lower Free_operator Feature_name_for_call
-%type <IF_AS>				Conditional
-%type <INDEX_AS>			Index_clause Index_clause_impl Note_entry Note_entry_impl
-%type <INSPECT_AS>			Multi_branch
-%type <INSTRUCTION_AS>		Instruction Instruction_impl
-%type <INTEGER_AS>	Integer_constant Signed_integer Nosigned_integer Typed_integer Typed_nosigned_integer Typed_signed_integer
-%type <INTERNAL_AS>			Internal
-%type <INTERVAL_AS>			Choice
-%type <INVARIANT_AS>		Class_invariant
-%type <LOOP_EXPR_AS>			Loop_expression
-%type <LOOP_AS>				Loop_instruction
-%type <NESTED_AS>			Call_on_feature_access
-%type <OPERAND_AS>			Delayed_actual
-%type <PARENT_AS>			Parent Parent_clause
-%type <PRECURSOR_AS>		A_precursor
-%type <STATIC_ACCESS_AS>	A_static_call Old_a_static_call New_a_static_call
-%type <REAL_AS>				Real_constant Signed_real Nosigned_real Typed_real Typed_nosigned_real Typed_signed_real
-%type <RENAME_AS>			Rename_pair
-%type <REQUIRE_AS>			Precondition
-%type <REVERSE_AS>			Reverse_assignment
-%type <ROUT_BODY_AS>		Routine_body
-%type <ROUTINE_AS>			Routine
-%type <ROUTINE_CREATION_AS>	Agent_call
-%type <STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias_name
-%type <TAGGED_AS>			Assertion_clause
-%type <TUPLE_AS>			Manifest_tuple
-%type <TYPE_AS>				Type Anchored_type Attached_type Non_class_type Typed Class_or_tuple_type Attached_class_type Attached_class_or_tuple_type Marked_class_or_tuple_type Tuple_type Type_no_id Unmarked_anchored_type Unmarked_class_or_tuple_type Unqualified_anchored_type Constraint_type
-%type <QUALIFIED_ANCHORED_TYPE_AS>	Qualified_anchored_type
-%type <PAIR [SYMBOL_AS, TYPE_AS]> Type_mark
-%type <CLASS_TYPE_AS>		Parent_class_type
-%type <TYPE_DEC_AS>			Entity_declaration_group
-%type <VARIANT_AS>			Variant Variant_opt
-%type <FEATURE_NAME>		Infix Prefix Feature_name Extended_feature_name New_feature
+%type <detachable ACCESS_AS>			A_feature Creation_target
+%type <detachable ACCESS_FEAT_AS>		Feature_access
+%type <detachable ACCESS_INV_AS>		Creation_call
+%type <detachable ARRAY_AS>			Manifest_array
+%type <detachable ASSIGN_AS>			Assignment
+%type <detachable ASSIGNER_CALL_AS>	Assigner_call
+%type <detachable ATOMIC_AS>			Index_value Manifest_constant Expression_constant
+%type <detachable BINARY_AS>			Qualified_binary_expression
+%type <detachable BIT_CONST_AS>		Bit_constant
+%type <detachable BODY_AS>				Declaration_body
+%type <detachable BOOL_AS>				Boolean_constant
+%type <detachable CALL_AS>				Call Remote_call Qualified_call
+%type <detachable CASE_AS>				When_part
+%type <detachable CHAR_AS>				Character_constant
+%type <detachable CHECK_AS>			Check
+%type <detachable KEYWORD_AS>			Class_mark
+%type <detachable CLIENT_AS>			Clients Feature_client_clause
+%type <detachable CONSTANT_AS>			Constant_attribute
+%type <detachable CONVERT_FEAT_AS>		Convert_feature
+%type <detachable CREATE_AS>			Creation_clause
+%type <detachable CREATION_AS>			Creation
+%type <detachable CREATION_EXPR_AS>	Creation_expression
+%type <detachable DEBUG_AS>			Debug
+%type <detachable ELSIF_AS>			Elseif_part
+%type <detachable ENSURE_AS>			Postcondition
+%type <detachable EXPORT_ITEM_AS>		New_export_item
+%type <detachable EXPR_AS>				Bracket_target Expression Factor Qualified_expression Qualified_factor Typed_expression
+%type <detachable EXTERNAL_AS>			External
+%type <detachable EXTERNAL_LANG_AS>	External_language
+%type <detachable FEATURE_AS>			Feature_declaration
+%type <detachable FEATURE_CLAUSE_AS>	Feature_clause
+%type <detachable FEATURE_SET_AS>		Feature_set
+%type <detachable FORMAL_AS>			Formal_parameter
+%type <detachable FORMAL_DEC_AS>		Formal_generic
+%type <detachable GUARD_AS>			Guard
+%type <detachable ID_AS>				Class_or_tuple_identifier Class_identifier Tuple_identifier Identifier_as_lower Free_operator Feature_name_for_call
+%type <detachable IF_AS>				Conditional
+%type <detachable INDEX_AS>			Index_clause Index_clause_impl Note_entry Note_entry_impl
+%type <detachable INSPECT_AS>			Multi_branch
+%type <detachable INSTRUCTION_AS>		Instruction Instruction_impl
+%type <detachable INTEGER_AS>	Integer_constant Signed_integer Nosigned_integer Typed_integer Typed_nosigned_integer Typed_signed_integer
+%type <detachable INTERNAL_AS>			Internal
+%type <detachable INTERVAL_AS>			Choice
+%type <detachable INVARIANT_AS>		Class_invariant
+%type <detachable LOOP_EXPR_AS>			Loop_expression
+%type <detachable LOOP_AS>				Loop_instruction
+%type <detachable NESTED_AS>			Call_on_feature_access
+%type <detachable OPERAND_AS>			Delayed_actual
+%type <detachable PARENT_AS>			Parent Parent_clause
+%type <detachable PRECURSOR_AS>		A_precursor
+%type <detachable STATIC_ACCESS_AS>	A_static_call Old_a_static_call New_a_static_call
+%type <detachable REAL_AS>				Real_constant Signed_real Nosigned_real Typed_real Typed_nosigned_real Typed_signed_real
+%type <detachable RENAME_AS>			Rename_pair
+%type <detachable REQUIRE_AS>			Precondition
+%type <detachable REVERSE_AS>			Reverse_assignment
+%type <detachable ROUT_BODY_AS>		Routine_body
+%type <detachable ROUTINE_AS>			Routine
+%type <detachable ROUTINE_CREATION_AS>	Agent_call
+%type <detachable STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias_name
+%type <detachable TAGGED_AS>			Assertion_clause
+%type <detachable TUPLE_AS>			Manifest_tuple
+%type <detachable TYPE_AS>				Type Anchored_type Attached_type Non_class_type Typed Class_or_tuple_type Attached_class_type Attached_class_or_tuple_type Marked_class_or_tuple_type Tuple_type Type_no_id Unmarked_anchored_type Unmarked_class_or_tuple_type Unqualified_anchored_type Constraint_type
+%type <detachable QUALIFIED_ANCHORED_TYPE_AS>	Qualified_anchored_type
+%type <detachable CLASS_TYPE_AS>		Parent_class_type
+%type <detachable TYPE_DEC_AS>			Entity_declaration_group
+%type <detachable VARIANT_AS>			Variant Variant_opt
+%type <detachable FEATURE_NAME>		Infix Prefix Feature_name Extended_feature_name New_feature
 
-%type <EIFFEL_LIST [ATOMIC_AS]>			Index_terms Note_values
-%type <EIFFEL_LIST [CASE_AS]>			When_part_list_opt When_part_list
-%type <CONVERT_FEAT_LIST_AS>			Convert_list Convert_clause
-%type <EIFFEL_LIST [CREATE_AS]>			Creators Creation_clause_list
-%type <EIFFEL_LIST [ELSIF_AS]>			Elseif_list Elseif_part_list
-%type <EIFFEL_LIST [EXPORT_ITEM_AS]>	New_export_list
-%type <EXPORT_CLAUSE_AS> 				New_exports New_exports_opt
-%type <EIFFEL_LIST [EXPR_AS]>			Expression_list
-%type <PARAMETER_LIST_AS> 	Parameters
-%type <EIFFEL_LIST [FEATURE_AS]>		Feature_declaration_list
-%type <EIFFEL_LIST [FEATURE_CLAUSE_AS]>	Features Feature_clause_list
-%type <EIFFEL_LIST [FEATURE_NAME]>		Feature_list Feature_list_impl New_feature_list
-%type <CREATION_CONSTRAIN_TRIPLE>	Creation_constraint
-%type <UNDEFINE_CLAUSE_AS>	Undefine Undefine_opt
-%type <REDEFINE_CLAUSE_AS> Redefine Redefine_opt
-%type <SELECT_CLAUSE_AS>	Select Select_opt
-%type <FORMAL_GENERIC_LIST_AS>		Formal_generics Formal_generic_list
-%type <CLASS_LIST_AS>					Client_list Class_list
+%type <detachable EIFFEL_LIST [ATOMIC_AS]>			Index_terms Note_values
+%type <detachable EIFFEL_LIST [CASE_AS]>			When_part_list_opt When_part_list
+%type <detachable CONVERT_FEAT_LIST_AS>			Convert_list Convert_clause
+%type <detachable EIFFEL_LIST [CREATE_AS]>			Creators Creation_clause_list
+%type <detachable EIFFEL_LIST [ELSIF_AS]>			Elseif_list Elseif_part_list
+%type <detachable EIFFEL_LIST [EXPORT_ITEM_AS]>	New_export_list
+%type <detachable EXPORT_CLAUSE_AS> 				New_exports New_exports_opt
+%type <detachable EIFFEL_LIST [EXPR_AS]>			Expression_list
+%type <detachable PARAMETER_LIST_AS> 	Parameters
+%type <detachable EIFFEL_LIST [FEATURE_AS]>		Feature_declaration_list
+%type <detachable EIFFEL_LIST [FEATURE_CLAUSE_AS]>	Features Feature_clause_list
+%type <detachable EIFFEL_LIST [FEATURE_NAME]>		Feature_list Feature_list_impl New_feature_list
+%type <detachable CREATION_CONSTRAIN_TRIPLE>	Creation_constraint
+%type <detachable UNDEFINE_CLAUSE_AS>	Undefine Undefine_opt
+%type <detachable REDEFINE_CLAUSE_AS> Redefine Redefine_opt
+%type <detachable SELECT_CLAUSE_AS>	Select Select_opt
+%type <detachable FORMAL_GENERIC_LIST_AS>		Formal_generics Formal_generic_list
+%type <detachable CLASS_LIST_AS>					Client_list Class_list
 
-%type <INDEXING_CLAUSE_AS>			Indexing Index_list Note_list Dotnet_indexing
-%type <ITERATION_AS>			Iteration
-%type <EIFFEL_LIST [INSTRUCTION_AS]>	Compound Instruction_list
-%type <EIFFEL_LIST [INTERVAL_AS]>		Choices
-%type <EIFFEL_LIST [OPERAND_AS]>		Delayed_actual_list
-%type <DELAYED_ACTUAL_LIST_AS>	Delayed_actuals
-%type <PARENT_LIST_AS>					Inheritance Parent_list
-%type <EIFFEL_LIST [RENAME_AS]>			Rename_list
-%type <RENAME_CLAUSE_AS>				Rename 
-%type <EIFFEL_LIST [STRING_AS]>			String_list
-%type <KEY_LIST_AS>			Key_list
-%type <EIFFEL_LIST [TAGGED_AS]>			Assertion Assertion_list
-%type <TYPE_LIST_AS>	Generics Generics_opt Type_list Type_list_impl Actual_parameter_list
-%type <TYPE_DEC_LIST_AS>		Entity_declaration_list Named_parameter_list 
-%type <LOCAL_DEC_LIST_AS>	Local_declarations
-%type <FORMAL_ARGU_DEC_LIST_AS> Formal_arguments Optional_formal_arguments
-%type <CONSTRAINT_TRIPLE>	Constraint
-%type <CONSTRAINT_LIST_AS> Multiple_constraint_list
-%type <CONSTRAINING_TYPE_AS> Single_constraint
+%type <detachable INDEXING_CLAUSE_AS>			Indexing Index_list Note_list Dotnet_indexing
+%type <detachable ITERATION_AS>			Iteration
+%type <detachable EIFFEL_LIST [INSTRUCTION_AS]>	Compound Instruction_list
+%type <detachable EIFFEL_LIST [INTERVAL_AS]>		Choices
+%type <detachable EIFFEL_LIST [OPERAND_AS]>		Delayed_actual_list
+%type <detachable DELAYED_ACTUAL_LIST_AS>	Delayed_actuals
+%type <detachable PARENT_LIST_AS>					Inheritance Parent_list
+%type <detachable EIFFEL_LIST [RENAME_AS]>			Rename_list
+%type <detachable RENAME_CLAUSE_AS>				Rename 
+%type <detachable EIFFEL_LIST [STRING_AS]>			String_list
+%type <detachable KEY_LIST_AS>			Key_list
+%type <detachable EIFFEL_LIST [TAGGED_AS]>			Assertion Assertion_list
+%type <detachable TYPE_LIST_AS>	Generics Generics_opt Type_list Type_list_impl Actual_parameter_list
+%type <detachable TYPE_DEC_LIST_AS>		Entity_declaration_list Named_parameter_list 
+%type <detachable LOCAL_DEC_LIST_AS>	Local_declarations
+%type <detachable FORMAL_ARGU_DEC_LIST_AS> Formal_arguments Optional_formal_arguments
+%type <detachable CONSTRAINT_TRIPLE>	Constraint
+%type <detachable CONSTRAINT_LIST_AS> Multiple_constraint_list
+%type <detachable CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 360
+%expect 361
 
 %%
 
@@ -314,7 +313,7 @@ Class_declaration:
 				end
 				
 				root_node := new_class_description ($4, temp_string_as1,
-					is_deferred, is_expanded, is_separate, is_frozen_class, is_external_class, is_partial_class,
+					is_deferred, is_expanded, is_frozen_class, is_external_class, is_partial_class,
 					$1, $18, $5, $9, $11, $13, $14, $15, $17, suppliers, temp_string_as2, $19)
 				if root_node /= Void then
 					root_node.set_text_positions (
@@ -326,7 +325,7 @@ Class_declaration:
 						if $7 /= Void then
 							root_node.set_obsolete_keyword ($7.first)
 						end
-						root_node.set_header_mark (frozen_keyword, expanded_keyword, deferred_keyword, separate_keyword, external_keyword)
+						root_node.set_header_mark (frozen_keyword, expanded_keyword, deferred_keyword, external_keyword)
 						root_node.set_class_keyword ($3)
 				end
 			}
@@ -930,7 +929,6 @@ Assigner_mark_opt: -- Empty
 
 Constant_attribute: Manifest_constant
 			{
-				setup_binary_manifest_string ($1)
 				$$ := ast_factory.new_constant_as ($1) 
 			}
 	|	TE_UNIQUE
@@ -1803,12 +1801,12 @@ Tuple_type: Tuple_identifier
 			{ $$ := ast_factory.new_class_type_as ($1, Void) }
 	|	Tuple_identifier Add_counter Add_counter2 TE_LSQURE TE_RSQURE
 			{
-			  	last_type_list := ast_factory.new_eiffel_list_type (0)
-				if last_type_list /= Void then
-					last_type_list.set_positions ($4, $5)
+				if attached ast_factory.new_eiffel_list_type (0) as l_type_list then
+					l_type_list.set_positions ($4, $5)
+					$$ := ast_factory.new_class_type_as ($1, l_type_list)
+				else
+					$$ := ast_factory.new_class_type_as ($1, Void)
 				end
-				$$ := ast_factory.new_class_type_as ($1, last_type_list)
-				last_type_list := Void
 				remove_counter
 				remove_counter2
 			}
@@ -1862,45 +1860,47 @@ Actual_parameter_list:	Type TE_RSQURE
 Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 			{
 				$$ := ast_factory.new_eiffel_list_type_dec_as (counter2_value + 1)
-				last_identifier_list := ast_factory.new_identifier_list (counter_value + 1)
-				
-				if $$ /= Void and last_identifier_list /= Void and $1 /= Void then
-					$1.to_lower		
-					last_identifier_list.reverse_extend ($1.name_id)
-					ast_factory.reverse_extend_identifier (last_identifier_list, $1)
-					$$.reverse_extend (ast_factory.new_type_dec_as (last_identifier_list, $3, $2))
+				if
+					$$ /= Void and then attached $1 as l_name and then
+					attached ast_factory.new_identifier_list (counter_value + 1) as l_list and then
+					attached ast_factory.new_type_dec_as (l_list, $3, $2) as l_type_dec_as
+				then
+					l_name.to_lower		
+					l_list.reverse_extend (l_name.name_id)
+					ast_factory.reverse_extend_identifier (l_list, l_name)
+					$$.reverse_extend (l_type_dec_as)
 				end
-				last_identifier_list := Void     
 				last_rsqure.force ($4)
 			}
 	|	TE_ID TE_COMMA Increment_counter Named_parameter_list
 
 			{
 				$$ := $4
-				if $$ /= Void and then not $$.is_empty then
-					last_identifier_list := $$.reversed_first.id_list
-					if last_identifier_list /= Void then
-						$1.to_lower		
-						last_identifier_list.reverse_extend ($1.name_id)
-						ast_factory.reverse_extend_identifier (last_identifier_list, $1)
-						ast_factory.reverse_extend_identifier_separator (last_identifier_list, $2)
-					end
-					last_identifier_list := Void     
+				if
+					$$ /= Void and then not $$.is_empty and then
+					attached $1 as l_name and then
+					attached $$.reversed_first.id_list as l_list
+				then
+					l_name.to_lower		
+					l_list.reverse_extend (l_name.name_id)
+					ast_factory.reverse_extend_identifier (l_list, l_name)
+					ast_factory.reverse_extend_identifier_separator (l_list, $2)
 				end
 			}
 	|	TE_ID TE_COLON Type ASemi Increment_counter2 Add_counter Named_parameter_list
 			{
 				remove_counter
 				$$ := $7
-				last_identifier_list := ast_factory.new_identifier_list (counter_value + 1)
-				
-				if $$ /= Void and $1 /= Void and $3 /= Void and last_identifier_list /= Void then
-					$1.to_lower		
-					last_identifier_list.reverse_extend ($1.name_id)
-					ast_factory.reverse_extend_identifier (last_identifier_list, $1)
-					$$.reverse_extend (ast_factory.new_type_dec_as (last_identifier_list, $3, $2))
+				if
+					$$ /= Void and then attached $1 as l_name and then $3 /= Void and then
+					attached ast_factory.new_identifier_list (counter_value + 1) as l_list and then
+					attached ast_factory.new_type_dec_as (l_list, $3, $2) as l_type_dec_as
+				then
+					l_name.to_lower		
+					l_list.reverse_extend (l_name.name_id)
+					ast_factory.reverse_extend_identifier (l_list, l_name)
+					$$.reverse_extend (l_type_dec_as)
 				end
-				last_identifier_list := Void
 			}
 	;
 			
@@ -2022,14 +2022,15 @@ Constraint: -- Empty
 	|	TE_CONSTRAIN Single_constraint Creation_constraint
 			{
 					-- We do not want Void items in this list.
-				if $2 /= Void then
-					constraining_type_list := ast_factory.new_eiffel_list_constraining_type_as (1)
-					constraining_type_list.reverse_extend ($2)
+				if
+					attached $2 as l_val and then
+					attached ast_factory.new_eiffel_list_constraining_type_as (1) as l_list
+				then
+					l_list.reverse_extend (l_val)
+					$$ := ast_factory.new_constraint_triple ($1, l_list, $3)
 				else
-					constraining_type_list := Void
+					$$ := ast_factory.new_constraint_triple ($1, Void, $3)
 				end
-
-				$$ := ast_factory.new_constraint_triple ($1, constraining_type_list, $3)
 			}
 	|	TE_CONSTRAIN TE_LCURLY Add_counter Multiple_constraint_list Remove_counter TE_RCURLY Creation_constraint
 			{
@@ -2527,18 +2528,15 @@ Creation_clause:
 	;
 
 Agent_call: 
-		TE_AGENT Optional_formal_arguments Type_mark {add_feature_frame} Routine {remove_feature_frame} Delayed_actuals
+		TE_AGENT Optional_formal_arguments {add_feature_frame} Routine {remove_feature_frame} Delayed_actuals
 		{
-			if $3 /= Void then
-				last_type := $3.second
-				last_symbol := $3.first
-			else
-				last_type := Void
-				last_symbol := Void
-			end
-			
 			$$ := ast_factory.new_inline_agent_creation_as (
-				ast_factory.new_body_as ($2, last_type, Void, $5, last_symbol, Void, Void, Void), $7, $1)
+				ast_factory.new_body_as ($2, Void, Void, $4, Void, Void, Void, Void), $6, $1)
+		}
+	|	TE_AGENT Optional_formal_arguments TE_COLON Type {add_feature_frame} Routine {remove_feature_frame} Delayed_actuals
+		{
+			$$ := ast_factory.new_inline_agent_creation_as (
+				ast_factory.new_body_as ($2, $4, Void, $6, $3, Void, Void, Void), $8, $1)
 		}
 	|	
 		TE_AGENT Feature_name_for_call Delayed_actuals
@@ -2568,13 +2566,6 @@ Optional_formal_arguments:
 		}
 	;
 	
-Type_mark:
-	|	TE_COLON Type
-		{
-			create $$.make ($1, $2)
-		}
-	;
-
 Agent_target: Identifier_as_lower
 		{ $$ := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, ast_factory.new_access_id_as ($1, Void), Void)) }
 	|	TE_LPARAN Add_counter Add_counter Expression Remove_counter Remove_counter TE_RPARAN
@@ -3172,7 +3163,6 @@ Expression_constant:
 			{ $$ := $1 }
 	|	Manifest_string
 			{
-				setup_binary_manifest_string ($1)
 				$$ := $1 
 			}
 	|	TE_ONCE_STRING Manifest_string
@@ -3180,7 +3170,6 @@ Expression_constant:
 				if $2 /= Void then
 					$2.set_is_once_string (True)
 					$2.set_once_string_keyword ($1)
-					setup_binary_manifest_string ($2)
 				end
 				increment_once_manifest_string_counter
 				$$ := $2

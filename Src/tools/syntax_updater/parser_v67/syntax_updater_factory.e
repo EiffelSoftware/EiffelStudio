@@ -13,7 +13,6 @@ inherit
 			new_creation_keyword_as,
 			new_keyword_as,
 			new_keyword_id_as,
-			new_old_routine_creation_as,
 			new_old_syntax_object_test_as,
 			new_static_access_as,
 			new_symbol_as

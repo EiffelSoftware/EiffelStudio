@@ -51,9 +51,9 @@ feature {NONE} -- Implementation
 			l_lib: CONF_LIBRARY
 			l_cl: CONF_CLUSTER
 			l_excludes: CONF_FILE_RULE
-			l_dir: DIRECTORY_NAME
-			l_fn: FILE_NAME
-			l_dest_dir: DIRECTORY_NAME
+			l_dir: DIRECTORY_NAME_32
+			l_fn: FILE_NAME_32
+			l_dest_dir: DIRECTORY_NAME_32
 			l_libs: HASH_TABLE [CONF_LIBRARY, STRING]
 			l_as: CONF_ASSERTIONS
 		do
@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 			Result := l_directory.is_empty
 		end
 
-	quote_path (a_path: STRING): STRING
+	quote_path (a_path: STRING_32): STRING_32
 			-- Added quotations marks around path `a_path' and returns the new result
 		require
 			a_path_attached: a_path /= Void
@@ -303,7 +303,7 @@ feature {NONE} -- Onces
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

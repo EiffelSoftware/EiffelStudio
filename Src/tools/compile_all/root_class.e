@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation: results
 
-	failed_compilations: LINKED_LIST [TUPLE [log: detachable READABLE_STRING_8; ecf: READABLE_STRING_8; system: READABLE_STRING_8; target: READABLE_STRING_8; uuid: READABLE_STRING_8]]
+	failed_compilations: LINKED_LIST [TUPLE [log: detachable READABLE_STRING_8; ecf: READABLE_STRING_32; system: READABLE_STRING_8; target: READABLE_STRING_8; uuid: READABLE_STRING_8]]
 
 	failed_compilations_count: INTEGER
 			-- Count of failed compilations
@@ -908,7 +908,7 @@ feature {NONE} -- Directory manipulation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

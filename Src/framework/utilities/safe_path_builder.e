@@ -10,22 +10,23 @@ class
 
 feature -- Safe path
 
-	safe_path (a_path: STRING_32): detachable STRING_32
+	safe_path (a_path: detachable READABLE_STRING_GENERAL): detachable STRING_32
 			-- Double quoted string from `a_path'.
 			-- Use double quote to avoid issue with blank in `a_path'
 		do
 			if a_path /= Void then
-				if not a_path.is_empty then
-					if a_path.item (1) /= '"' then
+				if a_path.is_empty then
+					create Result.make_empty
+				else
+					if a_path.code (1) /= ({CHARACTER_32}'"').natural_32_code then
 						create Result.make (a_path.count + 2)
-						Result.prepend_character ('"')
-						Result.append_string (a_path)
+						Result.append_character ('"')
+						Result.append_string_general (a_path)
 						Result.append_character ('"')
 					else
-						Result := a_path.twin
+						create Result.make (a_path.count)
+						Result.append_string_general (a_path)
 					end
-				else
-					create Result.make_empty
 				end
 			end
 		ensure

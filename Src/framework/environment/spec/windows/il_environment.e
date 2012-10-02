@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Information about current .NET environment"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -102,7 +102,7 @@ feature -- Access
 	installed_runtimes: ARRAYED_LIST [STRING]
 			-- List all installed version of the runtime.
 		local
-			l_runtime_path: detachable STRING
+			l_runtime_path: detachable STRING_32
 			l_content: ARRAYED_LIST [STRING]
 			l_dir: DIRECTORY
 			l_file_name: FILE_NAME
@@ -327,7 +327,7 @@ feature {NONE} -- Implementation
 			Result.extend (l_path)
 		end
 
-	dotnet_runtime_path: STRING_32
+	dotnet_runtime_path: detachable STRING_32
 			-- Path to where .NET runtimes are installed. It can be a once since this value is
 			-- not dependent on `version'.
 		local

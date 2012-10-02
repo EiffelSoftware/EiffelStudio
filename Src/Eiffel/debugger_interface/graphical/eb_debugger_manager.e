@@ -1139,7 +1139,7 @@ feature -- Output
 			end
 		end
 
-	debugger_warning_message (m: STRING_GENERAL)
+	debugger_warning_message (m: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
 			if ev_application = Void then
@@ -1149,7 +1149,7 @@ feature -- Output
 			end
 		end
 
-	debugger_error_message (m: STRING_GENERAL)
+	debugger_error_message (m: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
 			if ev_application = Void then

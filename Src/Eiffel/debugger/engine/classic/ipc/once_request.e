@@ -61,7 +61,7 @@ feature -- Initialization
 				if once_routine.is_process_relative then
 					send_rqst_3_integer (Rqst_once, Out_called, Out_once_per_process, l_index)
 				else
-					check 
+					check
 						is_thread_relative_once: once_routine.is_thread_relative_once
 					end
 					send_rqst_3_integer (Rqst_once, Out_called, Out_once_per_thread, l_index)
@@ -136,10 +136,8 @@ feature -- Implementation
 			is_once: once_routine.is_process_or_thread_relative_once
 		local
 			l_index: INTEGER
-			l_type: TYPE_A
+			l_type: detachable TYPE_A
 			l_type_value: NATURAL_32
-			l_once_func: ONCE_FUNC_I
-			l_const: CONSTANT_I
 			exc_v: EXCEPTION_DEBUG_VALUE
 			err_v: DUMMY_MESSAGE_DEBUG_VALUE
 			proc_v: PROCEDURE_RETURN_DEBUG_VALUE
@@ -155,14 +153,10 @@ feature -- Implementation
 					(once_routine.is_function or once_routine.is_constant) and
 					once_routine.type /= Void
 				then
-					l_once_func ?= once_routine
-					if l_once_func /= Void then
+					if attached {ONCE_FUNC_I} once_routine as l_once_func then
 						l_type := l_once_func.type
-					else
-						l_const ?= once_routine
-						if l_const /= Void then
-							l_type := l_const.type
-						end
+					elseif attached {CONSTANT_I} once_routine as l_const then
+						l_type := l_const.type
 					end
 					if l_type /= Void then
 							-- FIXME: Manu 2008/02/04: do we need a context type here?
@@ -360,7 +354,7 @@ feature -- Contract support
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -104,12 +104,9 @@ feature -- Access
 feature -- Expanded status
 
 	get_is_expanded
-		local
-			l_cl: CLASS_C
 		do
-			l_cl := dynamic_class
-			if l_cl /= Void then
-				is_expanded := dynamic_class.is_expanded
+			if attached dynamic_class as l_cl then
+				is_expanded := l_cl.is_expanded
 			end
 		end
 
@@ -117,14 +114,11 @@ feature {NONE} -- Output value
 
 	type_and_value: STRING_32
 			-- Return a string representing `Current'.
-		local
-			ec: CLASS_C;
 		do
 			if address = Void then
 				Result := NONE_representation
 			else
-				ec := dynamic_class;
-				if ec /= Void then
+				if attached dynamic_class as ec then
 					create Result.make (60)
 					Result.append (ec.name_in_upper)
 					Result.append (Left_address_delim)
@@ -210,7 +204,7 @@ feature {NONE} -- Property
 			-- Saved class
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

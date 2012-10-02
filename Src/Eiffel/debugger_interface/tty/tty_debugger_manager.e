@@ -554,13 +554,17 @@ feature -- Breakpoints management
 		local
 			s: STRING
 			d: STRING
-			wha: BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE
+			wha: detachable BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE
 		do
 			if bp.has_when_hits_action_for ({BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE}) then
-				wha ?= bp.when_hits_actions_for ({BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE}).first
-				s := wha.message
-				localized_print (debugger_names.m_current_bp_message(s))
-				d := "y"
+				if attached {BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE} bp.when_hits_actions_for ({BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE}).first as o_wha then
+					wha := o_wha
+					s := wha.message
+					localized_print (debugger_names.m_current_bp_message(s))
+					d := "y"
+				else
+					d := "n"
+				end
 			else
 				d := "n"
 			end

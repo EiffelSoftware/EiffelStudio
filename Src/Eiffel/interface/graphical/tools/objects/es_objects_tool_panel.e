@@ -921,7 +921,9 @@ feature {NONE} -- Update
 							end
 							if g.row_count > 0 then
 									--| be sure the grid is redrawn, and the first row is visible
-								g.row (1).redraw
+								if attached g.row (1) as l_row_1 then
+									l_row_1.redraw
+								end
 							end
 							g.restore_layout
 							l_grids.forth
@@ -929,7 +931,7 @@ feature {NONE} -- Update
 					end
 				end
 			end
-			update_header_box (dbg_was_stopped or l_status.break_on_assertion_violation_pending)
+			update_header_box (dbg_was_stopped or (l_status /= Void and then l_status.break_on_assertion_violation_pending))
 			on_objects_row_deselected (Void) -- reset toolbar buttons
 		end
 

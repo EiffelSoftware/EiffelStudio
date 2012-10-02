@@ -50,9 +50,11 @@ feature
 			create poll.make_read_only
 			poll.put_read_command (connection)
 
-			create std_input.make (io.input)
-			create input_poll.make_read_only
-			input_poll.put_read_command (std_input)
+			if not {PLATFORM}.is_windows then
+				create std_input.make (io.input)
+				create input_poll.make_read_only
+				input_poll.put_read_command (std_input)
+			end
 
 			send_name_to_server
 			processing
@@ -95,26 +97,36 @@ feature {NONE} -- Implementation
 		end
 
 	scan_from_std_input
+		do
+			if not {PLATFORM}.is_windows then
+				std_input.initialize
+				input_poll.execute (1, 1000)
+				if std_input.is_waiting then
+					read_content
+				end
+			else
+				io.put_string ("Enter message or nothing to refresh incoming messages: ")
+				read_content
+			end
+		end
+
+	read_content
 		local
 			temp: detachable STRING
 		do
-			std_input.initialize
-			input_poll.execute (1, 1000)
-			if std_input.is_waiting then
-				io.readline
-				temp := io.laststring
-				if temp /= Void then
-					if temp.is_equal ("bye") then
-						over := True
-					end
-					create message_out.make
-					message_out.extend (temp)
-					message_out.extend ("%N")
-					message_out.set_over (over)
-					message_out.set_client_name (client_name)
-					message_out.set_new (False)
-					send (message_out)
+			io.readline
+			temp := io.laststring
+			if temp /= Void then
+				if temp.is_equal ("bye") then
+					over := True
 				end
+				create message_out.make
+				message_out.extend (temp)
+				message_out.extend ("%N")
+				message_out.set_over (over)
+				message_out.set_client_name (client_name)
+				message_out.set_new (False)
+				send (message_out)
 			end
 		end
 
@@ -147,7 +159,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	connection, std_input: CONNECTION
+	connection: CONNECTION
+	std_input: detachable CONNECTION
 
 	message_out: MESSAGE
 	received: detachable MESSAGE
@@ -156,7 +169,8 @@ feature {NONE} -- Implementation
 
 	over: BOOLEAN
 
-	poll, input_poll: MEDIUM_POLLER
+	poll: MEDIUM_POLLER
+	input_poll: detachable MEDIUM_POLLER
 
 	max_to_poll: INTEGER;
 

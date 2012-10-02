@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			io.readline
 			l_name := io.laststring
 			check l_name_attached: l_name /= Void end
-			client_name := l_name
+			client_name := l_name.twin
 		end
 
 	scan_from_server

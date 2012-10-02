@@ -84,9 +84,9 @@ feature -- Launching
 			if not ec_dbg_launched then
 				get_environment
 				if valid_ise_ecdbgd_executable then
-					cmd := safe_path (ise_ecdbgd_path.string)
-					create cs_cmd.make (cmd)
-					create cs_pname.make ("ecdbgd")
+					cmd := safe_path (ise_ecdbgd_path.to_string_32)
+					create cs_cmd.make (cmd.as_string_8) --FIXME: [2012-oct-02] this should use unicode, but first have a quick fix to fix the debugger (in non unicode folder)
+					create cs_pname.make ("ecdbgd") -- Unused for now in C implementation of `c_launch_ecdbgd'
 
 					debug ("ipc")
 						io.put_string ("Launching ecdbgd : " + cmd.as_string_8 + " (timeout=" + ise_timeout.out + ") %N")
@@ -125,13 +125,15 @@ feature -- Launching
 	get_environment
 			-- Get environment needed to start the debugger
 		local
-			s: STRING_8
+			s: detachable READABLE_STRING_32
 		do
 			ise_timeout := Debugger_manager.classic_debugger_timeout
 			if ise_timeout <= 0 then
-				s := Execution_environment.get (Ise_timeout_varname)
-				if s /= Void and then s.is_integer then
-					ise_timeout := s.to_integer
+				if
+					attached Execution_environment.get (Ise_timeout_varname) as s_timeout and then
+					s_timeout.is_integer
+				then
+					ise_timeout := s_timeout.to_integer
 				end
 				if ise_timeout <= 0 then
 					ise_timeout := 30
@@ -143,15 +145,18 @@ feature -- Launching
 				ise_ending_timeout := 100
 			end
 
-			s := Debugger_manager.classic_debugger_location
+			if attached Debugger_manager.classic_debugger_location as p_dbg_location then
+				s := p_dbg_location.to_string_32
+			end
 			if s = Void or else s.is_empty then
-				s := Execution_environment.get (Ise_ecdbgd_varname)
+				if attached Execution_environment.get (Ise_ecdbgd_varname) as s_ecdbgd then
+					s := s_ecdbgd
+				end
 			end
-			if s /= Void then
-				create ise_ecdbgd_path.make_from_string (s)
-			else
-				ise_ecdbgd_path := eiffel_layout.Ecdbgd_command_name.twin
+			if s = Void or else s.is_empty then
+				s := eiffel_layout.Ecdbgd_command_name
 			end
+			create ise_ecdbgd_path.make_from_string (s)
 		end
 
 	end_of_debugging
@@ -209,7 +214,7 @@ feature -- Status
 			Result := (c_is_ecdbgd_alive = 1)
 		end
 
-	ise_ecdbgd_path: FILE_NAME
+	ise_ecdbgd_path: FILE_NAME_32
 			-- Path to the debugger daemon (i.e ecdbgd) executable
 
 	ise_timeout: INTEGER
@@ -301,13 +306,17 @@ feature {NONE} -- Implementation
 			-- Keep this for compatibility with old EiffelStudio
 		end
 
-	valid_executable (fn: FILE_NAME): BOOLEAN
+	valid_executable (fn: FILE_NAME_32): BOOLEAN
 			-- Does `fn' represents a valid executable ?
 		local
-			f: RAW_FILE
+			f: RAW_FILE_32
+			s32: READABLE_STRING_32
 		do
-			create f.make (fn)
-			Result := f.exists and then (is_windows or else f.is_access_executable)
+			s32 := fn.to_string_32
+			if not s32.is_empty then
+				create f.make (s32)
+				Result := f.exists and then (is_windows or else f.is_access_executable)
+			end
 		end
 
 feature {ANY} -- Constants

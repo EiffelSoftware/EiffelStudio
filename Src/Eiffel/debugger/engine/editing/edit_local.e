@@ -21,39 +21,43 @@ feature {NONE} -- Implementation of deferred features
 	start_feature
 			-- What to do to initialize the modification of an item.
 		do
-			stack ?= debugger_manager.application.status.current_call_stack_element
-			has_result := stack.routine.is_function
+			if attached {like stack} debugger_manager.application.status.current_call_stack_element as l_stack then
+				stack := l_stack
+				has_result := l_stack.routine.is_function
 
-			-- FIXME ARNAUD -- To do: a beautiful interface...
-			io.put_string("EDIT A LOCAL VARIABLE%N")
-			io.put_string("----------------------------%N")
-			io.put_string("Type of local item to edit ?%N")
-			if stack.arguments /= Void then
-				io.put_string("0. Argument%N")
-			end
-			if stack.locals /= Void then
-				io.put_string("1. Local Variable%N")
-			end
-			if has_result then
-				io.put_string("2. Result%N")
-			end
-			io.readline
-			item_type := io.last_string.to_integer
-			-- END FIXME
+				-- FIXME ARNAUD -- To do: a beautiful interface...
+				io.put_string("EDIT A LOCAL VARIABLE%N")
+				io.put_string("----------------------------%N")
+				io.put_string("Type of local item to edit ?%N")
+				if l_stack.arguments /= Void then
+					io.put_string("0. Argument%N")
+				end
+				if l_stack.locals /= Void then
+					io.put_string("1. Local Variable%N")
+				end
+				if has_result then
+					io.put_string("2. Result%N")
+				end
+				io.readline
+				item_type := io.last_string.to_integer
+				-- END FIXME
 
-				-- set the place where we should search the name of the item
-			inspect item_type
-				when Dlt_argument then
---					item_list := stack.arguments
-				when Dlt_localvar then
---					item_list := stack.locals
-				else
-					item_list := Void
-			end
+					-- set the place where we should search the name of the item
+				inspect item_type
+					when Dlt_argument then
+	--					item_list := l_stack.arguments
+					when Dlt_localvar then
+	--					item_list := l_stack.locals
+					else
+						item_list := Void
+				end
 
-				-- deals with a special case: the Result
-			if item_type = Dlt_result then
-				item := stack.result_value
+					-- deals with a special case: the Result
+				if item_type = Dlt_result then
+					item := l_stack.result_value
+				end
+			else
+				stack := Void
 			end
 		end
 
@@ -85,7 +89,7 @@ feature {NONE} -- Implementation of deferred features
 
 feature {NONE} -- Private variables
 
-	stack: EIFFEL_CALL_STACK_ELEMENT
+	stack: detachable EIFFEL_CALL_STACK_ELEMENT
 		-- Current call stack element being displayed.
 
 	has_result: BOOLEAN
@@ -101,7 +105,7 @@ feature {NONE} -- Private Constants (defined in eif_debug.h for the run-time sid
 	Dlt_result	: INTEGER = 2;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -114,22 +118,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EDIT_LOCAL

@@ -1362,9 +1362,10 @@ feature {NONE} -- Implementation
 			valid_system: workbench.system /= Void
 		end
 
-	set_clr_runtime_version (a_version: STRING)
+	set_clr_runtime_version (a_version: detachable READABLE_STRING_GENERAL)
 			-- Set clr runtime version, use default if `a_version' is Void.
 		local
+			v: STRING
 			l_installed_runtimes: LIST [STRING]
 			l_il_env: IL_ENVIRONMENT
 			vd15: VD15
@@ -1374,8 +1375,9 @@ feature {NONE} -- Implementation
 			if a_version = Void then
 				system.set_clr_runtime_version (l_il_env.default_version)
 			else
+				v := a_version.as_string_8
 				l_installed_runtimes := l_il_env.installed_runtimes
-				if not l_installed_runtimes.has (a_version) then
+				if not l_installed_runtimes.has (v) then
 					create vd15
 					vd15.set_option_name ("msil_clr_version")
 					vd15.set_option_value (a_version)
@@ -1383,7 +1385,7 @@ feature {NONE} -- Implementation
 					Error_handler.raise_error
 				end
 
-				system.set_clr_runtime_version (a_version)
+				system.set_clr_runtime_version (v)
 			end
 
 			create l_il_env.make (system.clr_runtime_version)

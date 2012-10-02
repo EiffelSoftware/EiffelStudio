@@ -521,15 +521,12 @@ feature {NONE} -- Implementation
 
 feature -- Query
 
-	current_object_from_callstack (cse: EIFFEL_CALL_STACK_ELEMENT): DUMP_VALUE
-		local
-			cse_dotnet: CALL_STACK_ELEMENT_DOTNET
-			l_curr_obj : ABSTRACT_DEBUG_VALUE
+	current_object_from_callstack (cse: EIFFEL_CALL_STACK_ELEMENT): detachable DUMP_VALUE
 		do
-			cse_dotnet ?= cse
-			l_curr_obj := cse_dotnet.current_object
-			if l_curr_obj /= Void then
-				Result := l_curr_obj.dump_value
+			if attached {CALL_STACK_ELEMENT_DOTNET} cse as cse_dotnet then
+				if attached cse_dotnet.current_object as l_curr_obj then
+					Result := l_curr_obj.dump_value
+				end
 			end
 		end
 
@@ -551,16 +548,15 @@ feature -- Query
 
 	class_c_from_external_b_with_extension (a_external_b: EXTERNAL_B): CLASS_C
 		local
-			exti: IL_EXTENSION_I
 			tk: INTEGER
 			n: STRING
 		do
-			exti ?= a_external_b.extension
-			if exti /= Void then
+			if attached {IL_EXTENSION_I} a_external_b.extension as exti then
 					--| Dotnet system
 				n := exti.base_class
 				tk := exti.token
 			end
+			--FIXME: missing implementation!?
 		end
 
 feature {NONE} -- Parameters operation
@@ -646,7 +642,7 @@ feature {NONE} -- Parameters operation
 			Result_not_void: Result /= Void
 		end
 
-	dotnet_parameters: ARRAY [DUMP_VALUE]
+	dotnet_parameters: detachable ARRAY [DUMP_VALUE]
 
 	dotnet_parameters_index: INTEGER
 
@@ -1041,7 +1037,7 @@ feature {NONE} -- Debug purpose only
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

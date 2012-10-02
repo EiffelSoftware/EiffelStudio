@@ -224,8 +224,8 @@ feature -- Events
 	refresh
 			-- Class has changed in `development_window'.
 		do
-			if viewers_manager /= Void then
-				viewers_manager.refresh
+			if attached viewers_manager as mngr then
+				mngr.refresh
 			end
 		end
 

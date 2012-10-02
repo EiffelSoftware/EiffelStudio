@@ -144,7 +144,9 @@ feature -- Generation
 
 					-- Sign assembly only if we are allowed to.
 				if {EIFFEL_ENV}.has_signable_generation then
-					l_key_file_name := System.msil_key_file_name
+					if attached System.msil_key_file_name as l_system_msil_key_file_name then
+						l_key_file_name := l_system_msil_key_file_name
+					end
 				end
 
 				if l_key_file_name /= Void then

@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 		do
 			io.readline
 			temp := io.laststring
-			if temp /= Void then
+			if temp /= Void and not temp.is_empty then
 				if temp.is_equal ("bye") then
 					over := True
 				end

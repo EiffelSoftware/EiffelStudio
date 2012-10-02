@@ -180,7 +180,7 @@ feature {NONE} -- Basic operations
 			l_filename: STRING
 			l_class_name: STRING
 			l_retry: BOOLEAN
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 			l_cluster := cluster
 			if l_cluster /= Void then

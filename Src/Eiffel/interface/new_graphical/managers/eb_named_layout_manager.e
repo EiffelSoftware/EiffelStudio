@@ -93,7 +93,7 @@ feature -- Command
 			not_empty: not a_name.as_string_8.is_equal ("")
 		local
 			l_fn: FILE_NAME
-			l_file_utils: FILE_UTILITIES
+			l_file_utils: GOBO_FILE_UTILITIES
 		do
 			if layouts.has (a_name) then
 				l_fn := layouts.item (a_name).file_path
@@ -101,7 +101,6 @@ feature -- Command
 				-- FIXIT: When `a_name' is non-English, file name is not correct
 				l_fn := layout_file_name (a_name.as_string_8, is_normal_mode)
 			end
-			create l_file_utils
 			l_file_utils.create_directory_for_file (l_fn.string.as_attached)
 			Result := development_window.docking_manager.save_tools_data_with_name (l_fn, a_name)
 		end

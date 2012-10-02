@@ -114,7 +114,7 @@ feature {NONE} -- Query
 			l_mapper: ES_EIFFEL_TO_C_FUNCTION_MAPPER
 			l_class_c: CLASS_C
 			l_ctrl: BOOLEAN
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 				-- Should the generated F_code information be shown?
 			l_ctrl := ev_application.ctrl_pressed
@@ -506,7 +506,7 @@ feature {NONE} -- Action handlers
 						l_expr.compile (l_file_name)
 						if l_expr.is_compiled then
 								-- Perform scan...
-							l_files := (create {FILE_UTILITIES}).scan_for_files (l_compilation_folder, 2, l_expr, Void)
+							l_files := (create {GOBO_FILE_UTILITIES}).scan_for_files (l_compilation_folder, 2, l_expr, Void)
 							if not l_files.is_empty then
 								create l_full_file_name.make_from_string (l_files.first)
 							end

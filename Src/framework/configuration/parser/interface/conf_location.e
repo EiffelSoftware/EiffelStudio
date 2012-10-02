@@ -121,7 +121,7 @@ feature -- Access queries
 		local
 			l_dir: like original_path
 			l_cluster_separator: CHARACTER_8
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 			l_cluster_separator := '\'
 			Result := evaluated_directory

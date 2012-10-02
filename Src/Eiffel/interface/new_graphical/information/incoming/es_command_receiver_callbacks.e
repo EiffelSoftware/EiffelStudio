@@ -208,7 +208,7 @@ feature {NONE} -- EIS implementation
 			l_chosen_target: STRING
 			l_window: EV_WINDOW
 			l_uuid: UUID
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 			eis_component_found_table.search (system_id)
 			if eis_component_found_table.found and then attached eis_component_found_table.found_item as lt_string then

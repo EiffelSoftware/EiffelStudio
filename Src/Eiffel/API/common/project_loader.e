@@ -82,7 +82,7 @@ feature -- Loading
 			l_load_ace: CONF_LOAD_LACE
 			l_load_config: CONF_LOAD
 			l_factory: CONF_COMP_FACTORY
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 			create l_factory
 			reset
@@ -271,7 +271,7 @@ feature -- Loading
 			l_system: CONF_SYSTEM
 			l_target: CONF_TARGET
 			l_load: CONF_LOAD
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 				-- First split the class name into components. A possible classname is 'path/to/file/hello_world.e'
 				-- This will be split into:
@@ -542,7 +542,7 @@ feature {NONE} -- Settings
 		local
 			l_load: CONF_LOAD_LACE
 			l_factory: CONF_COMP_FACTORY
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 				-- load config from ace
 			create l_factory

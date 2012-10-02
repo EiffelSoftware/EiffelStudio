@@ -276,7 +276,7 @@ feature -- Action
 			l_system: CONF_SYSTEM
 			l_lace_class: like lace_class
 			l_error_level: NATURAL_32
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 			file := u.make_binary_input_file (file_name)
 			file.open_read
@@ -2209,7 +2209,7 @@ feature {NONE} -- Backup implementation
 			l_fname: FILE_NAME_32
 			l_dir: DIRECTORY_32
 			l_over: ARRAYED_LIST [CONF_CLASS]
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 				-- create cluster directory if necessary
 			create l_dir_name.make_from_string (a_location)

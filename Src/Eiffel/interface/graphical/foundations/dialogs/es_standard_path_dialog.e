@@ -187,7 +187,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Helpers
 
-	file_utilities: attached FILE_UTILITIES
+	file_utilities: attached GOBO_FILE_UTILITIES
 			-- File utilities
 		once
 			create Result

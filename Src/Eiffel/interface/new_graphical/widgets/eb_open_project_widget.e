@@ -583,7 +583,7 @@ feature {NONE} -- Implementation
 			l_last_target: STRING
 			l_targets: DS_ARRAYED_LIST [STRING]
 			l_force_clean: BOOLEAN
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 			ln ?= a_row.item (name_column_index)
 			lt ?= a_row.item (target_column_index)
@@ -810,7 +810,7 @@ feature {NONE} -- Implementation
 			l_item: EV_LIST_ITEM
 			l_eifgens: like {TARGET_USER_OPTIONS}.locations
 			l_target_options: TARGET_USER_OPTIONS
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 			location_combo.change_actions.block
 			location_combo.set_foreground_color (default_color)

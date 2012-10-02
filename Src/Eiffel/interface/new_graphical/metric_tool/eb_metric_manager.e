@@ -563,7 +563,7 @@ feature -- Metric management
 			-- Store user-defined metrics.
 		local
 			l_retried: BOOLEAN
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 			if not l_retried then
 				workbench.create_data_directory
@@ -699,7 +699,7 @@ feature -- Metric management
 			archive_history_loaded: has_archive_been_loaded
 		local
 			l_retried: BOOLEAN
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 			if not l_retried then
 				if archive_history.count > 0 then

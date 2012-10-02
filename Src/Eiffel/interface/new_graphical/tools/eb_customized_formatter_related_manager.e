@@ -104,7 +104,7 @@ feature{NONE} -- Implementation
 			l_file: RAW_FILE
 			l_retried: BOOLEAN
 			l_file_name: READABLE_STRING_GENERAL
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 			if not l_retried then
 				l_file_name := absolute_file_name (a_path, a_file_name)

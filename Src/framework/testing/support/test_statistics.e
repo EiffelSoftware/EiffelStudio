@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 		local
 			l_retried: BOOLEAN
 			l_raw_file: detachable RAW_FILE
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 			if not l_retried then
 				u.create_directory (eiffel_project.project_directory.testing_results_path)

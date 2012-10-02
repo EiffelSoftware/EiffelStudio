@@ -32,11 +32,10 @@ feature -- Query
 		require
 			a_file_path_attached: a_file_path /= Void
 			not_a_file_path_is_empty: not a_file_path.is_empty
-		local
-			l_uuid: STRING_32
 		do
-			l_uuid := mapping.item (a_file_path)
-			if l_uuid /= Void and then not l_uuid.is_empty then
+			-- FIXME: check if this is compliant with unicode
+			-- mapping might need to handle unicode ... STRING_32
+			if attached mapping.item (a_file_path.as_string_8) as l_uuid and then not l_uuid.is_empty then
 				create Result.make_from_string (l_uuid)
 			end
 		ensure

@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 			temp: detachable STRING
 		do
 			std_input.initialize
-			input_poll.execute (1, 15000)
+			input_poll.execute (1, 1000)
 			if std_input.is_waiting then
 				io.readline
 				temp := io.laststring
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			l_received: like received
 		do
 			connection.initialize
-			poll.execute (max_to_poll, 15000)
+			poll.execute (max_to_poll, 1000)
 			if connection.is_waiting then
 				receive
 				l_received := received

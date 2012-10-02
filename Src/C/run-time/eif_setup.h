@@ -194,6 +194,16 @@ extern void egc_init_plug (void);		/* Defined in E1/eplug.c, and
 
 /* Lazy initialization of per thread data for a thread that was not
  * created by the Eiffel runtime. */
+#ifdef WORKBENCH
+#define EIF_INITIALIZE_AUX_THREAD \
+	GTCX; \
+	if (!eif_globals) { \
+		eif_thr_register(1); \
+		eif_set_thr_context ();\
+		initstk(); \
+		xinitint(); \
+	}
+#else
 #define EIF_INITIALIZE_AUX_THREAD \
 	GTCX; \
 	if (!eif_globals) { \
@@ -201,6 +211,7 @@ extern void egc_init_plug (void);		/* Defined in E1/eplug.c, and
 		eif_set_thr_context ();\
 		initstk(); \
 	}
+#endif
 
 #else
 

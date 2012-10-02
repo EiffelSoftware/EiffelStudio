@@ -32,7 +32,8 @@ feature
 			datagram: DATAGRAM_PACKET
 			i: INTEGER
 		do
-			rec_pack := active_medium.received (10, 0)
+				-- We are ready 10 bytes + 4 bytes for the packet number.
+			rec_pack := active_medium.received (14, 0)
 			create datagram.make_from_managed_pointer (rec_pack.data)
 			io.putint (datagram.packet_number)
 			io.new_line

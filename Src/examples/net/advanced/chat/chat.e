@@ -153,19 +153,18 @@ feature
 		end
 
 	receive
-		local
-			l_flow: like outflow
 		do
 			in.accept
-			l_flow ?= in.accepted
-			outflow := l_flow
-			if l_flow /= Void then
-				l_flow.set_blocking
-				send_already_connected
-				new_client
+			if attached {like outflow} in.accepted as l_outflow then
+				outflow := l_outflow
+				l_outflow.set_blocking
+				send_already_connected (l_outflow)
+				new_client (l_outflow)
+			else
+				outflow := Void
 			end
 			initialize_for_polling
-			poll.execute (max_to_poll, 15000)
+			poll.execute (max_to_poll, 1000)
 		end
 
 	initialize_for_polling
@@ -180,25 +179,21 @@ feature
 			end
 		end
 
-	new_client
+	new_client (a_flow: attached like outflow)
 		local
 			new_connection: CONNECTION
-			l_flow: like outflow
 		do
-			l_flow := outflow
-			check l_flow_attached: l_flow /= Void end
-			if max_to_poll <= l_flow.descriptor then
-				max_to_poll := l_flow.descriptor + 1
+			if max_to_poll <= a_flow.descriptor then
+				max_to_poll := a_flow.descriptor + 1
 			end
-			create new_connection.make (l_flow)
+			create new_connection.make (a_flow)
 			connections.extend (new_connection)
 			poll.put_read_command (new_connection)
 		end
 
-	send_already_connected
+	send_already_connected (a_flow: attached like outflow)
 		local
 			l_name: detachable STRING
-			l_flow: like outflow
 		do
 			create message_out.make
 			if connections.count > 0 then
@@ -219,9 +214,7 @@ feature
 			else
 				message_out.extend ("Nobody is connected%N")
 			end
-			l_flow := outflow
-			check l_flow_attached: l_flow /= Void end
-			message_out.independent_store (l_flow)
+			message_out.independent_store (a_flow)
 		end
 
 note

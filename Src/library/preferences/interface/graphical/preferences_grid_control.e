@@ -1221,14 +1221,18 @@ feature {NONE} -- Implementation
 		local
 			col: EV_GRID_COLUMN
 			p: like grid
+			n: INTEGER
 		do
 			p := grid
-			col := grid.column (1)
-			col.set_width (col.required_width_of_item_span (1, p.row_count) + column_border_space)
-			col := grid.column (2)
-			col.set_width (col.required_width_of_item_span (1, p.row_count) + column_border_space)
-			col := grid.column (3)
-			col.set_width (col.required_width_of_item_span (1, p.row_count) + column_border_space)
+			n := p.row_count
+			if n > 0 then
+				col := grid.column (1)
+				col.set_width (col.required_width_of_item_span (1, n) + column_border_space)
+				col := grid.column (2)
+				col.set_width (col.required_width_of_item_span (1, n) + column_border_space)
+				col := grid.column (3)
+				col.set_width (col.required_width_of_item_span (1, n) + column_border_space)
+			end
 		end
 
 feature {NONE} -- Implementation

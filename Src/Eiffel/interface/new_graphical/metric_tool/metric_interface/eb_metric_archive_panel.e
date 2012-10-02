@@ -675,7 +675,7 @@ feature {NONE} -- Implementation
 			file_name: READABLE_STRING_GENERAL
 			target_file: STRING_32
 			file: PLAIN_TEXT_FILE
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 			u.create_directory (metric_manager.userdefined_metrics_path)
 			file := u.make_text_file_in (a_target_file_name, metric_manager.userdefined_metrics_path)

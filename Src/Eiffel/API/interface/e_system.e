@@ -54,7 +54,7 @@ feature -- Access
 	context_diagram_path: like {PROJECT_DIRECTORY}.path
 			-- Path where context diagrams should be stored.
 		local
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 			create Result.make_from_string (project_location.target_path)
 			Result.extend ("Diagrams")

@@ -105,7 +105,7 @@ feature -- Query
 			-- Retrieves the name of the Eiffel generated C file name's containing folder.
 			-- Note: The result may not exist.
 		local
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 			if attached c_class_file_name as l_file_name then
 				create Result.make_from_string (u.file_directory_path (l_file_name).as_string_32)

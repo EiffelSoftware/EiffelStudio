@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Helpers
 
-	file_utils: attached FILE_UTILITIES
+	file_utils: attached GOBO_FILE_UTILITIES
 			-- Access to file utilies
 		once
 			create Result

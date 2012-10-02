@@ -404,7 +404,7 @@ feature -- Removal
 
 feature {NONE} -- Helpers
 
-	file_utilities: FILE_UTILITIES
+	file_utilities: GOBO_FILE_UTILITIES
 			-- Shared access to file utilities.
 		once
 			create Result

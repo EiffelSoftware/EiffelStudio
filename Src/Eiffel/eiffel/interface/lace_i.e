@@ -204,7 +204,7 @@ feature -- Status setting
 		require
 			s_not_void: s /= Void
 		local
-			f: FILE_UTILITIES
+			f: GOBO_FILE_UTILITIES
 			u: UTF_CONVERTER
 		do
 			file_name := f.absolute_path (s, True)
@@ -320,7 +320,7 @@ feature -- Status setting
 			l_changed: BOOLEAN
 			l_user_factory: USER_OPTIONS_FACTORY
 			l_target_options: TARGET_USER_OPTIONS
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 			if a_user_file_enabled then
 				create l_user_factory

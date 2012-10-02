@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 			interpreter_root_class_attached: interpreter_root_class /= Void
 		local
 			l_itp_class: CLASS_C
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 			make_event_producer
 			create variable_table.make (a_system)

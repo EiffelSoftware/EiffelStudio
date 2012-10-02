@@ -45,7 +45,7 @@ feature -- Validation
 			l_ast: detachable CLASS_AS
 			l_file: KL_BINARY_INPUT_FILE
 			b: BOOLEAN
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 			validate_feature_name (a_feature_name)
 			if is_valid then

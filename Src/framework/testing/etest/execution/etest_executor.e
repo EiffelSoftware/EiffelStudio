@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 			a_name_attached: a_name /= Void
 		local
 			l_retried: BOOLEAN
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 			if not l_retried then
 				u.create_directory (a_name)

@@ -115,14 +115,12 @@ feature {NONE} -- Implemetation
 			a_path_not_empty: not a_path.is_empty
 			search_needed: search_needed
 		local
-			l_file_uti: FILE_UTILITIES
 			l_files: attached ARRAYED_LIST [STRING]
 			l_file: detachable STRING
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 			if u.directory_exists (a_path) then
-				create l_file_uti
-				l_files := l_file_uti.scan_for_files (a_path, -1, file_matcher, Void)
+				l_files := u.scan_for_files (a_path, -1, file_matcher, Void)
 				from
 					l_files.start
 				until

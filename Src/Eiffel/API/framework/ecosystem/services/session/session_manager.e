@@ -204,7 +204,7 @@ feature {NONE} -- Helpers
 			end
 		end
 
-	file_utilities: attached FILE_UTILITIES
+	file_utilities: attached GOBO_FILE_UTILITIES
 			-- Access to file utilities
 		once
 			create Result

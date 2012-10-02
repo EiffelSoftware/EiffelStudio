@@ -87,7 +87,7 @@ feature -- Generation
 			absolute_pathname: STRING
 			executable_filename: like {E_SYSTEM}.application_name
 			l_new: like last_interpreter
-			u: FILE_UTILITIES
+			u: GOBO_FILE_UTILITIES
 		do
 			u.create_directory (a_log_dirname)
 			executable_filename := system.eiffel_system.application_name (True)

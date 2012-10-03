@@ -52,7 +52,7 @@ feature -- warnings
 	w_Cannot_launch_system: STRING_32
 		do Result := locale.translation ("Could not launch system.") end
 
-	w_Cannot_find_valid_ecdbgd_non_vms (a_ecdbgd_path, a_env_var_name: STRING_GENERAL): STRING_32
+	w_Cannot_find_valid_ecdbgd_non_vms (a_ecdbgd_path, a_env_var_name: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation (
 					"The Eiffel debugger is not found or not executable%N%
@@ -63,7 +63,7 @@ feature -- warnings
 				)
 		end
 
-	w_Cannot_find_valid_ecdbgd_vms (a_ecdbgd_path, a_env_var_name: STRING_GENERAL): STRING_32
+	w_Cannot_find_valid_ecdbgd_vms (a_ecdbgd_path, a_env_var_name: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation (
 					"The Eiffel debugger is not found or not executable%N%
@@ -74,7 +74,7 @@ feature -- warnings
 				)
 		end
 
-	w_Cannot_launch_in_allotted_time_non_vms (a_timeout: INTEGER_32; a_env_var_name: STRING_GENERAL): STRING_32
+	w_Cannot_launch_in_allotted_time_non_vms (a_timeout: INTEGER_32; a_env_var_name: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation (
 					"The system could not be launched in allotted time:%N%
@@ -85,7 +85,7 @@ feature -- warnings
 				)
 		end
 
-	w_Cannot_launch_in_allotted_time_vms (a_timeout: INTEGER_32; a_env_var_name: STRING_GENERAL): STRING_32
+	w_Cannot_launch_in_allotted_time_vms (a_timeout: INTEGER_32; a_env_var_name: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation (
 					"The system could not be launched in allotted time:%N%
@@ -95,7 +95,7 @@ feature -- warnings
 					[a_timeout, a_env_var_name]
 				)
 		end
-	w_Cannot_attach_in_allotted_time_non_vms (a_timeout: INTEGER_32; a_env_var_name: STRING_GENERAL; a_port: INTEGER): STRING_32
+	w_Cannot_attach_in_allotted_time_non_vms (a_timeout: INTEGER_32; a_env_var_name: READABLE_STRING_GENERAL; a_port: INTEGER): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation (
 					"The application could not be attached using port $3 in allotted time:%N%
@@ -106,7 +106,7 @@ feature -- warnings
 				)
 		end
 
-	w_Cannot_attach_in_allotted_time_vms (a_timeout: INTEGER_32; a_env_var_name: STRING_GENERAL; a_port: INTEGER): STRING_32
+	w_Cannot_attach_in_allotted_time_vms (a_timeout: INTEGER_32; a_env_var_name: READABLE_STRING_GENERAL; a_port: INTEGER): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation (
 					"The application could not be attached using port $3 in allotted time:%N%
@@ -128,7 +128,7 @@ feature -- Messages
 	m_Could_not_retrieve_once_information: STRING_32
 			do Result := locale.translation ("Could not retrieve information (do is being called or do failed)") end
 
-	m_n_breakpoints (a_n: STRING_GENERAL): STRING_32
+	m_n_breakpoints (a_n: READABLE_STRING_GENERAL): STRING_32
 			do Result := locale.formatted_string (locale.translation ("*** $1 Breakpoints *** %N"), [a_n]) end
 	m_zero_cancel: STRING_32
 			do Result := locale.translation (" [0] Cancel %N") end
@@ -138,25 +138,25 @@ feature -- Messages
 			do Result := locale.translation ("Error occurred...") end
 	m_class_name: STRING_32
 			do Result := locale.translation (" -> class name: ") end
-	m_could_not_find_class (a_c: STRING_GENERAL): STRING_32
+	m_could_not_find_class (a_c: READABLE_STRING_GENERAL): STRING_32
 			do Result := locale.formatted_string (locale.translation (" => Could not find class {$1}. %N"), [a_c]) end
 	m_feature_name: STRING_32
 			do Result := locale.translation (" -> feature name: (*=all feature)") end
-	m_added_breakpoints_in_class (a_c: STRING_GENERAL): STRING_32
+	m_added_breakpoints_in_class (a_c: READABLE_STRING_GENERAL): STRING_32
 			do Result := locale.formatted_string (" => Added breakpoints in class {$1}. %N", [a_c]) end
-	m_could_not_find_feature (a_c, a_f: STRING_GENERAL): STRING_32
+	m_could_not_find_feature (a_c, a_f: READABLE_STRING_GENERAL): STRING_32
 			do Result := locale.formatted_string (locale.translation (" => Could not find feature {$1}.$2 %N"), [a_c, a_f]) end
 	m_break_index: STRING_32
 			do Result := locale.translation (" -> break index: ") end
-	m_added_breakpoint_detailed (a_c, a_f, a_index: STRING_GENERAL): STRING_32
+	m_added_breakpoint_detailed (a_c, a_f, a_index: READABLE_STRING_GENERAL): STRING_32
 			do Result := locale.formatted_string (locale.translation (" => Added breakpoint {$1}.$2@$3 %N"), [a_c, a_f, a_index]) end
 	m_no_breakpoint_addition: STRING_32
 			do Result := locale.translation (" => No breakpoint addition%N") end
-	m_modify_breakpoint (a_s: STRING_GENERAL): STRING_32
+	m_modify_breakpoint (a_s: READABLE_STRING_GENERAL): STRING_32
 			do Result := locale.formatted_string (locale.translation ("*** Modify breakpoint $1 ***"), [a_s]) end
-	m_current_condition (a_s: STRING_GENERAL): STRING_32
+	m_current_condition (a_s: READABLE_STRING_GENERAL): STRING_32
 			do Result := locale.formatted_string (locale.translation (" -> Current condition: %"$1%" %N"), [a_s]) end
-	m_current_bp_message (a_s: STRING_GENERAL): STRING_32
+	m_current_bp_message (a_s: READABLE_STRING_GENERAL): STRING_32
 			do Result := locale.formatted_string (locale.translation (" -> Current message: %"$1%" %N"), [a_s]) end
 	m_edit_new_condition: STRING_32
 			do Result := locale.translation (" -> Enter new condition (empty to cancel) :") end
@@ -167,9 +167,9 @@ feature -- Messages
 	m_continue_when_bp_hit_question: STRING_32
 			do Result := locale.translation("Continue when breakpoint hits ?") end
 
-	m_condition_is_true_or_has_changed_question (a_it,a_hc: STRING_GENERAL): STRING_32
+	m_condition_is_true_or_has_changed_question (a_it,a_hc: READABLE_STRING_GENERAL): STRING_32
 			do Result := locale.formatted_string (locale.translation("Condition is [$1:Is True] or [$2:Has Changed] ?"), [a_it, a_hc])	end
-	m_remove_or_use_current_bp_message_question (a_1,a_2: STRING_GENERAL): STRING_32
+	m_remove_or_use_current_bp_message_question (a_1,a_2: READABLE_STRING_GENERAL): STRING_32
 			do Result := locale.formatted_string (locale.translation("Do you want to [$1:remove] or [$2:use] current print message ?"), [a_1, a_2])	end
 
 	m_not_a_valid_boolean_condition: STRING_32
@@ -207,17 +207,17 @@ feature -- Messages
 			do Result := locale.translation (" -> Enter name: ") end
 	m_enter_value: STRING_32
 			do Result := locale.translation (" -> Enter value: ") end
-	m_env_variable_already_set (a_vn, a_vv: STRING_GENERAL): STRING_32
+	m_env_variable_already_set (a_vn, a_vv: READABLE_STRING_GENERAL): STRING_32
 			do Result := locale.formatted_string (locale.translation (" (!) This variable already has a value [$1=$2].%N"), [a_vn, a_vv]) end
 
 	m_confirm_entry_deletion_question: STRING_32
 			do Result := locale.translation (" (!) Do you want to delete this entry ?") end
 	m_confirm_entry_overwrite_question: STRING_32
 			do Result := locale.translation (" (!) Do you want to overwrite the value ?") end
-	m_confirm_use_this_directory_question (a_d: STRING_GENERAL): STRING_32
+	m_confirm_use_this_directory_question (a_d: READABLE_STRING_GENERAL): STRING_32
 			do Result := locale.formatted_string (locale.translation (" -> Use this directory [$1] ?"), [a_d]) end
 
-	m_error_invalid_value (a_s: detachable STRING_GENERAL): STRING_32
+	m_error_invalid_value (a_s: detachable READABLE_STRING_GENERAL): STRING_32
 			do
 				if a_s /= Void then
 					Result := locale.formatted_string (locale.translation (" (!) Please enter a valid value [$1]"), [a_s])
@@ -342,26 +342,26 @@ feature -- Thread tool
 	t_no_information_when_not_stopped: STRING_32
 			do Result := locale.translation ("Sorry no information when application is not stopped") end
 
-	t_scoop_processors_title (a_nb: INTEGER): STRING_32 
+	t_scoop_processors_title (a_nb: INTEGER): STRING_32
 			do Result := locale.formatted_string (locale.plural_translation ("One SCOOP Processor", "$1 SCOOP Processors", a_nb), [a_nb]) end
-				
-	t_threads_title (a_nb: INTEGER): STRING_32 
+
+	t_threads_title (a_nb: INTEGER): STRING_32
 			do Result := locale.formatted_string (locale.plural_translation ("One Thread", "$1 Threads", a_nb), [a_nb]) end
 
 feature -- Expression evaluation messages
 
-	msg_error_call_on_void_target (fname: STRING_GENERAL): STRING_32
+	msg_error_call_on_void_target (fname: READABLE_STRING_GENERAL): STRING_32
 		require
 			fname /= Void
 		do Result := locale.formatted_string (locale.translation ("Error: Call on void target for `$1'."), [fname]) end
 
-	msg_error_vst1_on_class_context (clname, fname: STRING_GENERAL): STRING_32
+	msg_error_vst1_on_class_context (clname, fname: READABLE_STRING_GENERAL): STRING_32
 		require
 			clname_not_void: clname /= Void
 			fname_not_void: fname /= Void
 		do Result := locale.formatted_string (locale.translation ("Error: Can not evaluate `{$1}.$2'.%NOnly once, constant and static call can be evaluated on 'Class' context.%N"), [clname, fname]) end
 
-	msg_error_during_context_preparation (s: STRING_GENERAL): STRING_32
+	msg_error_during_context_preparation (s: READABLE_STRING_GENERAL): STRING_32
 		require
 			s_not_void: s /= Void
 		do Result := locale.formatted_string (locale.translation ("$1%N$2"), [cst_error_during_context_preparation, s]) end
@@ -371,13 +371,13 @@ feature -- Expression evaluation messages
 			a_not_void: a /= Void
 		do Result := locale.formatted_string (locale.translation ("[$1] is not supported."), [a.generator]) end
 
-	msg_error_not_yet_ready (a: ANY; s: STRING_GENERAL): STRING_32
+	msg_error_not_yet_ready (a: ANY; s: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_not_void: a /= Void
 			s_not_void: s /= Void
 		do Result := locale.formatted_string (locale.translation ("$1$2 : sorry not yet ready."), [a.generator, s]) end
 
-	msg_error_not_yet_ready_for (a: ANY; s, f: STRING_GENERAL): STRING_32
+	msg_error_not_yet_ready_for (a: ANY; s, f: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_not_void: a /= Void
 			s_not_void: s /= Void
@@ -389,7 +389,7 @@ feature -- Expression evaluation messages
 			a_not_void: a /= Void
 		do Result := locale.formatted_string (locale.translation ("$1 => this should not occur during expression evaluation."), [a.generator]) end
 
-	msg_error_unable_to_evaluate_creation_expression (tn: detachable STRING_GENERAL): STRING_32
+	msg_error_unable_to_evaluate_creation_expression (tn: detachable READABLE_STRING_GENERAL): STRING_32
 		require
 			tn_attached: tn /= Void
 		do
@@ -405,34 +405,34 @@ feature -- Expression evaluation messages
 			a_not_void: a /= Void
 		do Result := locale.formatted_string (locale.translation ("$1 => An error occurred during the evaluation of parameter(s)"), [a.generator]) end
 
-	msg_error_unknown_constant_type_for (fname: STRING_GENERAL): STRING_32
+	msg_error_unknown_constant_type_for (fname: READABLE_STRING_GENERAL): STRING_32
 		require
 			fname_not_void: fname /= Void
 		do Result := locale.formatted_string (locale.translation ("Unknown constant type for `$1'"), [fname]) end
 
-	msg_error_during_evaluation_of_call (a: ANY; fname: STRING_GENERAL): STRING_32
+	msg_error_during_evaluation_of_call (a: ANY; fname: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_not_void: a /= Void
 			fname_not_void: fname /= Void
 		do Result := locale.formatted_string (locale.translation ("$1 => An error occurred during the evaluation of call : `$2'"), [a.generator, fname]) end
 
-	msg_error_unable_to_get_valid_target_for (add: STRING_GENERAL): STRING_32
+	msg_error_unable_to_get_valid_target_for (add: READABLE_STRING_GENERAL): STRING_32
 		require
 			add_not_void: add /= Void
 		do Result := locale.formatted_string (locale.translation ("Unable to get valid target object for $1"), [add]) end
 
-	msg_error_can_not_instantiate_type (tname, s: STRING_GENERAL): STRING_32
+	msg_error_can_not_instantiate_type (tname, s: READABLE_STRING_GENERAL): STRING_32
 		require
 			tname_not_void: tname /= Void
 			s_not_void: s /= Void
 		do Result := locale.formatted_string (locale.translation ("Cannot instantiate type {$1} : $2."), [tname, s]) end
 
-	msg_error_instantiation_of_type_raised_error (tname: STRING_GENERAL): STRING_32
+	msg_error_instantiation_of_type_raised_error (tname: READABLE_STRING_GENERAL): STRING_32
 		require
 			tname_not_void: tname /= Void
 		do Result := locale.formatted_string (locale.translation ("Creation of type {$1} raised an error."), [tname]) end
 
-	msg_error_with_retrieving_attribute (aname: STRING_GENERAL): STRING_32
+	msg_error_with_retrieving_attribute (aname: READABLE_STRING_GENERAL): STRING_32
 		require
 			aname_not_void: aname /= Void
 		do Result := locale.formatted_string (locale.translation ("Error: issue with attribute `$1'."), [aname]) end
@@ -506,7 +506,7 @@ feature -- Expression evaluation messages
 	Cst_error_cannot_find_complete_dynamic_type_of_expanded_type: STRING_32
 		do Result := locale.translation ("Cannot find complete dynamic type of an expanded type.") end
 
-	msg_error_native_array_partially_supported (fname: detachable STRING_GENERAL): STRING_32
+	msg_error_native_array_partially_supported (fname: detachable READABLE_STRING_GENERAL): STRING_32
 		do
 			if fname = Void then
 				Result := locale.translation ("NATIVE_ARRAY is not yet fully supported.")
@@ -515,7 +515,7 @@ feature -- Expression evaluation messages
 			end
 		end
 
-	msg_error_unable_to_evaluate_call (cname,fname: STRING_GENERAL; addr: detachable STRING_GENERAL; desc: detachable STRING_GENERAL): STRING_32
+	msg_error_unable_to_evaluate_call (cname,fname: READABLE_STRING_GENERAL; addr: detachable READABLE_STRING_GENERAL; desc: detachable READABLE_STRING_GENERAL): STRING_32
 		require
 			cname_not_void: cname /= Void
 			fname_not_void: fname /= Void
@@ -540,30 +540,30 @@ feature -- Expression evaluation messages
 			Result := locale.formatted_string (locale.translation ("Wrong number of argument: $2 instead of $1 ."), [fnb, pnb])
 		end
 
-	msg_error_evaluation_aborted (cname,fname: STRING_GENERAL): STRING_32
+	msg_error_evaluation_aborted (cname,fname: READABLE_STRING_GENERAL): STRING_32
 		require
 			cname_not_void: cname /= Void
 			fname_not_void: fname /= Void
 		do Result := locale.formatted_string (locale.translation ("Evaluation aborted: {$1}.$2"), [cname, fname]) end
 
-	msg_error_unable_to_evaluate_once_call (cname,fname: STRING_GENERAL): STRING_32
+	msg_error_unable_to_evaluate_once_call (cname,fname: READABLE_STRING_GENERAL): STRING_32
 		require
 			cname_not_void: cname /= Void
 			fname_not_void: fname /= Void
 		do Result := locale.formatted_string (locale.translation ("Unable to evaluate once routine {$1}.$2"), [cname, fname]) end
 
-	msg_error_unable_to_evaluate_non_once_call_with_any_object (cname,fname: STRING_GENERAL): STRING_32
+	msg_error_unable_to_evaluate_non_once_call_with_any_object (cname,fname: READABLE_STRING_GENERAL): STRING_32
 		require
 			cname_not_void: cname /= Void
 			fname_not_void: fname /= Void
 		do Result := locale.formatted_string (locale.translation ("Unable to evaluate (non once) routine {$1}.$2 on Void object or type name"), [cname, fname]) end
 
-	msg_error_exception_occurred_during_evaluation (cname, fname: STRING_GENERAL; a_trace: detachable STRING_GENERAL): STRING_32
+	msg_error_exception_occurred_during_evaluation (cname, fname: READABLE_STRING_GENERAL; a_trace: detachable READABLE_STRING_GENERAL): STRING_32
 		require
 			cname_not_void: cname /= Void
 			fname_not_void: fname /= Void
 		local
-			l_trace: detachable STRING_GENERAL
+			l_trace: detachable READABLE_STRING_GENERAL
 		do
 			l_trace := a_trace
 			if l_trace = Void then
@@ -572,7 +572,7 @@ feature -- Expression evaluation messages
 			Result := locale.formatted_string (locale.translation ("Exception occurred during evaluation of {$1}.$2:%N$3"), [cname, fname, l_trace])
 		end
 
-	msg_error_once_evaluation_failed (fname: STRING_GENERAL; msg: detachable STRING_GENERAL): STRING_32
+	msg_error_once_evaluation_failed (fname: READABLE_STRING_GENERAL; msg: detachable READABLE_STRING_GENERAL): STRING_32
 		require
 			fname_not_void: fname /= Void
 		do
@@ -583,47 +583,47 @@ feature -- Expression evaluation messages
 			end
 		end
 
-	msg_error_once_routine_not_yet_called (fname: STRING_GENERAL): STRING_32
+	msg_error_once_routine_not_yet_called (fname: READABLE_STRING_GENERAL): STRING_32
 		require
 			fname_not_void: fname /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("Once routine `$1': not yet called."), [fname])
 		end
 
-	msg_error_once_procedure_evaluation_not_yet_available (fname: STRING_GENERAL): STRING_32
+	msg_error_once_procedure_evaluation_not_yet_available (fname: READABLE_STRING_GENERAL): STRING_32
 		require
 			fname_not_void: fname /= Void
 		do
 			Result := locale.formatted_string (locale.translation ("Once procedure `$1': once procedure evaluation is not yet available."), [fname])
 		end
 
-	msg_error_unable_to_evaluate_deferred_call (cname,fname: STRING_GENERAL): STRING_32
+	msg_error_unable_to_evaluate_deferred_call (cname,fname: READABLE_STRING_GENERAL): STRING_32
 		require
 			cname_not_void: cname /= Void
 			fname_not_void: fname /= Void
 		do Result := locale.formatted_string (locale.translation ("Unable to evaluate deferred routine {$1}.$2"), [cname, fname]) end
 
-	msg_error_cannot_find_attribute (aname: STRING_GENERAL): STRING_32
+	msg_error_cannot_find_attribute (aname: READABLE_STRING_GENERAL): STRING_32
 		require
 			aname_not_void: aname /= Void
 		do Result := locale.formatted_string (locale.translation ("Could not find attribute value for `$1'"), [aname]) end
 
-	msg_error_cannot_evaluate_attribute_of_expanded (aname: STRING_GENERAL): STRING_32
+	msg_error_cannot_evaluate_attribute_of_expanded (aname: READABLE_STRING_GENERAL): STRING_32
 		require
 			aname_not_void: aname /= Void
 		do Result := locale.formatted_string (locale.translation ("Cannot evaluate attribute `$1' of an expanded value."), [aname]) end
 
-	msg_error_cannot_evaluate_attribute_of_manifest_string (aname: STRING_GENERAL): STRING_32
+	msg_error_cannot_evaluate_attribute_of_manifest_string (aname: READABLE_STRING_GENERAL): STRING_32
 		require
 			aname_not_void: aname /= Void
 		do Result := locale.formatted_string (locale.translation ("Cannot evaluate attribute `$1' of a manisfest string declared in expression."), [aname]) end
 
-	msg_error_cannot_find_context_object (addr: STRING_GENERAL): STRING_32
+	msg_error_cannot_find_context_object (addr: READABLE_STRING_GENERAL): STRING_32
 		require
 			addr_not_void: addr /= Void
 		do Result := locale.formatted_string (locale.translation ("Error occurred: unable to find the context object <$1>."), [addr]) end
 
-	msg_error_type_not_compiled (tname: STRING_GENERAL): STRING_32
+	msg_error_type_not_compiled (tname: READABLE_STRING_GENERAL): STRING_32
 		require
 			tname_not_void: tname /= Void
 		do Result := locale.formatted_string (locale.translation ("Type {$1} is not compiled."), [tname]) end
@@ -632,7 +632,7 @@ feature -- Expression evaluation messages
 
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

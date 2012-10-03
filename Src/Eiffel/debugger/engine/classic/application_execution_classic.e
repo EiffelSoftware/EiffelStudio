@@ -617,14 +617,14 @@ feature {APPLICATION_EXECUTION} -- Launching status
 				if ipc_engine.is_vms then
 					Result.append_string_general (
 							debugger_names.w_Cannot_find_valid_ecdbgd_vms (
-									ipc_engine.ise_ecdbgd_path,
+									ipc_engine.ise_ecdbgd_path.to_string_32,
 									ipc_engine.ise_ecdbgd_varname
 								)
 						)
 				else
 					Result.append_string_general (
 							debugger_names.w_Cannot_find_valid_ecdbgd_non_vms (
-									ipc_engine.ise_ecdbgd_path,
+									ipc_engine.ise_ecdbgd_path.to_string_32,
 									ipc_engine.ise_ecdbgd_varname
 								)
 						)
@@ -657,14 +657,14 @@ feature {APPLICATION_EXECUTION} -- Launching status
 				if ipc_engine.is_vms then
 					Result.append_string_general (
 							debugger_names.w_Cannot_find_valid_ecdbgd_vms (
-									ipc_engine.ise_ecdbgd_path,
+									ipc_engine.ise_ecdbgd_path.to_string_32,
 									ipc_engine.ise_ecdbgd_varname
 								)
 						)
 				else
 					Result.append_string_general (
 							debugger_names.w_Cannot_find_valid_ecdbgd_non_vms (
-									ipc_engine.ise_ecdbgd_path,
+									ipc_engine.ise_ecdbgd_path.to_string_32,
 									ipc_engine.ise_ecdbgd_varname
 								)
 						)

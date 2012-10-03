@@ -98,6 +98,12 @@
 			<file_rule>
 				<exclude>/kernel/exceptions/ise_exception_manager.e$</exclude>
 				<exclude>/kernel/exceptions/io_failure.e$</exclude>
+				<exclude>/kernel/directory_32.e$</exclude>
+				<exclude>/kernel/execution_environment_32.e$</exclude>
+				<exclude>/kernel/file_32.e$</exclude>
+				<exclude>/kernel/plain_text_file_32.e$</exclude>
+				<exclude>/kernel/raw_file_32.e$</exclude>
+				<exclude>/kernel/unix_file_info_32.e$</exclude>
 				<exclude>/classic$</exclude>
 				<condition>
 					<dotnet value="true"/>

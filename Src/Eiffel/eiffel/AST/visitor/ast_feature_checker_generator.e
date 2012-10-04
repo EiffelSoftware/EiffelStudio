@@ -866,7 +866,7 @@ feature {NONE} -- Roundtrip
 						if not l_as.value.is_character_8 then
 								-- Report error when the type is CHARACTER_8, but the value is not.
 							error_handler.insert_error (create {VWMQ}.make (last_type, <<wide_char_type>>, context, l_as))
-							last_type := Void
+							reset_types
 						end
 					else
 						-- Do nothing for CHARACTER_32, since all characters are valid.
@@ -874,7 +874,7 @@ feature {NONE} -- Roundtrip
 				else
 						-- The type is unexpected.
 					error_handler.insert_error (create {VWMQ}.make (last_type, <<character_type, wide_char_type>>, context, l_as))
-					last_type := Void
+					reset_types
 				end
 				if last_type /= Void and then is_byte_node_enabled then
 					create {CHAR_CONST_B} last_byte_node.make (l_as.value, last_type)
@@ -1152,7 +1152,7 @@ feature {NONE} -- Implementation
 
 	process_integer_as (l_as: INTEGER_CONSTANT)
 		do
-			last_type := l_as.manifest_type
+			set_type (l_as.manifest_type, l_as)
 			if is_byte_node_enabled then
 				last_byte_node := l_as
 			end
@@ -1465,7 +1465,7 @@ feature {NONE} -- Implementation
 						if l_named_tuple /= Void then
 							l_label_pos := l_named_tuple.label_position_by_id (l_feature_name.name_id)
 							if l_label_pos > 0 then
-								last_type := l_named_tuple.generics.item (l_label_pos)
+								set_type (l_named_tuple.generics.item (l_label_pos), a_name)
 								l_is_last_access_tuple_access := True
 								last_feature_name_id := l_feature_name.name_id
 									-- No renaming possible (from RENAMED_TYPE_A), they are the same
@@ -1829,9 +1829,9 @@ feature {NONE} -- Implementation
 								-- the anchors from the result type which do not make sense in
 								-- the current context.
 							if is_qualified_call then
-								last_type := l_result_type.deep_actual_type
+								set_type (l_result_type.deep_actual_type, a_name)
 							else
-								last_type := l_result_type
+								set_type (l_result_type, a_name)
 							end
 							last_calls_target_type := l_last_constrained
 							last_access_writable := l_feature.is_attribute
@@ -1851,7 +1851,7 @@ feature {NONE} -- Implementation
 								elseif context.is_attribute_attached (l_feature.feature_name_id) then
 										-- Attribute may be of a detachable type, but it's safe to use it as an attached one.
 									l_result_type := l_result_type.as_attached_in (context.current_class)
-									last_type := l_result_type
+									set_type (l_result_type, a_name)
 								end
 							end
 
@@ -1859,7 +1859,7 @@ feature {NONE} -- Implementation
 							is_controlled := l_is_controlled
 							if is_qualified and then attached last_type then
 									-- Adapt separateness and controlled status of the result to target type.
-								adapt_last_type_to_target (a_type, l_is_controlled)
+								adapt_type_to_target (last_type, a_type, l_is_controlled, a_name)
 									-- Verify that if result type of a separate feature call is expanded it has no non-separate reference attributes.
 								if
 									error_level = l_error_level and then
@@ -1998,7 +1998,7 @@ feature {NONE} -- Implementation
 				l_tuple_type := l_tuple_type.as_attached_in (context.current_class)
 				instantiator.dispatch (l_tuple_type, context.current_class)
 				last_tuple_type := l_tuple_type
-				last_type := l_tuple_type
+				set_type (l_tuple_type, l_as)
 
 				if is_byte_node_enabled then
 					l_list ?= last_byte_node
@@ -2015,7 +2015,7 @@ feature {NONE} -- Implementation
 	process_real_as (l_as: REAL_AS)
 		do
 			if l_as.constant_type = Void then
-				last_type := manifest_real_type
+				set_type (manifest_real_type, l_as)
 			else
 				fixme ("We should check that `constant_type' matches the real `value' and%
 					%possibly remove `constant_type' from REAL_AS.")
@@ -2028,7 +2028,7 @@ feature {NONE} -- Implementation
 
 	process_bool_as (l_as: BOOL_AS)
 		do
-			last_type := Boolean_type
+			set_type (Boolean_type, l_as)
 			if is_byte_node_enabled then
 				create {BOOL_CONST_B} last_byte_node.make (l_as.value)
 			end
@@ -2237,7 +2237,7 @@ feature {NONE} -- Implementation
 
 				if not l_has_error then
 						-- Update type stack
-					last_type := l_array_type
+					set_type (l_array_type, l_as)
 					l_as.set_array_type (last_type)
 					if is_byte_node_enabled then
 						create {ARRAY_CONST_B} last_byte_node.make (l_list, l_array_type)
@@ -2254,9 +2254,9 @@ feature {NONE} -- Implementation
 	process_char_as (l_as: CHAR_AS)
 		do
 			if l_as.value.is_character_8 then
-				last_type := character_type
+				set_type (character_type, l_as)
 			else
-				last_type := Wide_char_type
+				set_type (Wide_char_type, l_as)
 			end
 			if is_byte_node_enabled then
 				create {CHAR_CONST_B} last_byte_node.make (l_as.value, last_type)
@@ -2274,14 +2274,14 @@ feature {NONE} -- Implementation
 		do
 			if l_as.type = Void then
 					-- Default to STRING_8, if not specified in the code.
-				last_type := string_type
+				set_type (string_type, l_as)
 			else
 				check_type (l_as.type)
 			end
 			if last_type /= Void then
 					-- Constants are always of an attached type.
 				t := last_type.as_attached_in (context.current_class)
-				last_type := t
+				set_type (t, l_as)
 				class_id := t.base_class.class_id
 				if attached system.string_8_class as c then
 					s8 := c.compiled_class
@@ -2304,7 +2304,7 @@ feature {NONE} -- Implementation
 							t32 := s32.actual_type
 						end
 						error_handler.insert_error (create {VWMQ}.make (t, <<t32>>, context, l_as))
-						last_type := Void
+						reset_types
 					end
 				elseif attached s32 and then s32.class_id = class_id then
 						-- Constant is of type "STRING_32".
@@ -2322,7 +2322,7 @@ feature {NONE} -- Implementation
 						t32 := s32.actual_type
 					end
 					error_handler.insert_error (create {VWMQ}.make (t, <<t8, t32>>, context, l_as))
-					last_type := Void
+					reset_types
 				end
 				if attached l_value then
 					if l_as.is_once_string then
@@ -2432,14 +2432,14 @@ feature {NONE} -- Implementation
 						context.add_result_instruction_scope
 						context.set_result
 					end
-					last_type := l_feat_type
+					set_type (l_feat_type, l_as)
 				end
 			end
 		end
 
 	process_current_as (l_as: CURRENT_AS)
 		do
-			last_type := context.current_class_type
+			set_type (context.current_class_type, l_as)
 			if is_byte_node_enabled then
 				create {CURRENT_B} last_byte_node
 			end
@@ -2485,7 +2485,7 @@ feature {NONE} -- Implementation
 								l_is_not_call := True
 								is_last_access_tuple_access := True
 								is_assigner_call := False
-								last_type := l_tuple_type.generics.item (l_as.label_position)
+								set_type (l_tuple_type.generics.item (l_as.label_position), l_as)
 							else
 								check
 									False
@@ -2628,7 +2628,7 @@ feature {NONE} -- Implementation
 					l_as.enable_object_test_local
 					l_as.set_class_id (class_id_of (l_type))
 				end
-				last_type := l_type
+				set_type (l_type, l_as)
 			else
 				if is_inherited then
 					l_feature := l_type.base_class.feature_of_rout_id (l_as.routine_ids.first)
@@ -2801,7 +2801,7 @@ feature {NONE} -- Implementation
 				error_handler.insert_error (l_vuar1)
 				reset_types
 			else
-				last_type := l_type
+				set_type (l_type, l_as)
 			end
 		end
 
@@ -2842,7 +2842,11 @@ feature {NONE} -- Implementation
 				is_controlled := True
 				l_arg_type := l_feature.arguments.i_th (l_arg_pos)
 
-				last_type := l_arg_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
+				l_arg_type := l_arg_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
+				if context.is_argument_attached (l_as.feature_name.name_id) then
+					l_arg_type := l_arg_type.as_attached_in (context.current_class)
+				end
+				set_type (l_arg_type, l_as)
 				if l_as.parameters /= Void then
 					create l_vuar1
 					context.init_error (l_vuar1)
@@ -2860,9 +2864,6 @@ feature {NONE} -- Implementation
 						l_as.enable_argument
 						l_as.set_argument_position (l_arg_pos)
 						l_as.set_class_id (class_id_of (last_type))
-					end
-					if context.is_argument_attached (l_as.feature_name.name_id) then
-						last_type := last_type.as_attached_in (context.current_class)
 					end
 				end
 			else
@@ -2899,7 +2900,7 @@ feature {NONE} -- Implementation
 							l_as.enable_object_test_local
 							l_as.set_class_id (class_id_of (l_type))
 						end
-						last_type := l_type
+						set_type (l_type, l_as)
 					else
 							-- Look for a feature
 						l_feature := Void
@@ -3054,7 +3055,8 @@ feature {NONE} -- Implementation
 
 					-- Now `last_type' is the type we got from the processing of `Precursor'. We have to adapt
 					-- it to the current class, but instead of using the malformed `last_type' we use `l_orig_result_type'.
-				last_type := l_orig_result_type.evaluated_type_in_descendant (l_parent_type.base_class, context.current_class, context.current_feature)
+				set_type (l_orig_result_type.evaluated_type_in_descendant
+					(l_parent_type.base_class, context.current_class, context.current_feature), l_as)
 			else
 				reset_types
 			end
@@ -3433,7 +3435,7 @@ feature {NONE} -- Implementation
 					-- We rely on `current_target_type' to provide us the right type for ?,
 					-- i.e. the current type in `agent ?.something', or the type of the formal argument
 					-- of `f' in the current context.
-				last_type := current_target_type
+				set_type (current_target_type, l_as)
 				if is_byte_node_enabled then
 					create {OPERAND_B} last_byte_node
 				end
@@ -3572,7 +3574,7 @@ feature {NONE} -- Implementation
 				l_as.id_list.forth
 			end
 				-- Type of strip expression is always attached.
-			last_type := strip_type.as_attached_in (context.current_class)
+			set_type (strip_type.as_attached_in (context.current_class), l_as)
 			if l_needs_byte_node then
 				last_byte_node := l_strip
 			end
@@ -3596,8 +3598,8 @@ feature {NONE} -- Implementation
 				if l_info.is_from_conversion then
 						-- For a from conversion, we just need to adapt the creation type to the
 						-- descendant class (case of formal generics that might need to be instantiated).
-					last_type := l_info.creation_type.evaluated_type_in_descendant (context.written_class,
-						context.current_class, context.current_feature)
+					set_type (l_info.creation_type.evaluated_type_in_descendant (context.written_class,
+						context.current_class, context.current_feature), l_as)
 				else
 						-- For a to conversion, we need to take the descendant version of the routine
 						-- orginally taken and check that its return type still make sense.
@@ -3612,7 +3614,7 @@ feature {NONE} -- Implementation
 					else
 							-- We should not get there, but just in case we generate an internal
 							-- error message.
-						last_type := Void
+						reset_types
 						error_handler.insert_error (create {INTERNAL_ERROR}.make (
 							"In {AST_FEATURE_CHECKER_GENERATOR}.process_converted_expr_as could%N%
 							%not find routine of a given routine ID in an inherited conversion"))
@@ -3666,7 +3668,7 @@ feature {NONE} -- Implementation
 			l_as.expr.process (Current)
 				-- Eventhough there might be an error in `l_as.expr' we can continue
 				-- and do as if there was none.
-			last_type := pointer_type
+			set_type (pointer_type, l_as)
 			if is_byte_node_enabled then
 				l_expr ?= last_byte_node
 				create {EXPR_ADDRESS_B} last_byte_node.make (l_expr)
@@ -3843,7 +3845,7 @@ feature {NONE} -- Implementation
 								l_type := l_feature.type.actual_type
 								create {TYPED_POINTER_A} last_type.make_typed (l_type)
 							else
-								last_type := Pointer_type
+								set_type (Pointer_type, l_as)
 							end
 
 							if error_level = l_error_level then
@@ -3888,7 +3890,7 @@ feature {NONE} -- Implementation
 					-- The type is always attached.
 				l_type_type := l_type_type.as_attached_in (context.current_class)
 				instantiator.dispatch (l_type_type, context.current_class)
-				last_type := l_type_type
+				set_type (l_type_type, l_as)
 				if is_byte_node_enabled then
 					create {TYPE_EXPR_B} last_byte_node.make (l_type_type)
 				end
@@ -4097,7 +4099,7 @@ feature {NONE} -- Implementation
 				if l_needs_byte_node then
 					l_expr ?= last_byte_node
 				end
-				last_type := l_target_type.actual_type
+				set_type (l_target_type.actual_type, l_as)
 				l_formal ?= last_type
 				if l_formal /= Void then
 					if not l_formal.is_single_constraint_without_renaming (l_context_current_class) then
@@ -4268,8 +4270,7 @@ feature {NONE} -- Implementation
 								process_assigner_command (last_type, l_last_constrained, l_prefix_feature)
 							end
 
-							last_type := l_prefix_feature_type
-							adapt_last_type_to_target (l_target_type, l_is_controlled)
+							adapt_type_to_target (l_prefix_feature_type, l_target_type, l_is_controlled, l_as)
 								-- Verify that if result type of a separate feature call is expanded it has no non-separate reference attributes.
 							if
 								error_level = l_error_level and then
@@ -4662,8 +4663,7 @@ feature {NONE} -- Implementation
 								process_assigner_command (l_target_type, l_left_constrained, last_alias_feature)
 							end
 
-							last_type := l_infix_type
-							adapt_last_type_to_target (l_target_type, l_is_controlled)
+							adapt_type_to_target (l_infix_type, l_target_type, l_is_controlled, l_as)
 								-- Verify that if result type of a separate feature call is expanded it has no non-separate reference attributes.
 							if
 								error_level = l_error_level and then
@@ -4939,7 +4939,7 @@ feature {NONE} -- Implementation
 				-- Regardless of a failure in either expressions, we can still assume the return
 				-- type to be a BOOLEAN, that way we can detect all the other errors in the englobing
 				-- expressions if any.
-			last_type := boolean_type
+			set_type (boolean_type, l_as)
 		end
 
 	process_bin_ne_as (l_as: BIN_NE_AS)
@@ -5214,7 +5214,7 @@ feature {NONE} -- Implementation
 					-- Generate a stub.
 				create {BOOL_CONST_B} last_byte_node.make (False)
 			end
-			last_type := boolean_type
+			set_type (boolean_type, l_as)
 		end
 
 	process_external_lang_as (l_as: EXTERNAL_LANG_AS)
@@ -5996,7 +5996,7 @@ feature {NONE} -- Implementation
 									end
 									l_creation_type := l_renamed_creation_type.type
 									l_creation_class := l_creation_type.base_class
-									last_type := l_creation_type
+									set_type (l_creation_type, a_call)
 								end
 								l_constraint_creation_list.forth
 							end
@@ -6136,7 +6136,7 @@ feature {NONE} -- Implementation
 
 								-- We need to reset `last_type' as it now `VOID_A' after checking the call
 								-- which a procedure.
-							last_type := a_creation_type
+							set_type (a_creation_type, a_call)
 							if l_needs_byte_node and then l_orig_call /= Void then
 								l_call_access ?= last_byte_node
 								if l_is_multi_constraint_case and then l_is_default_creation then
@@ -6356,7 +6356,7 @@ feature {NONE} -- Implementation
 						if l_explicit_type /= Void then
 								-- Creation type is always attached
 							l_explicit_type := l_explicit_type.as_attached_in (context.current_class)
-							last_type := l_explicit_type
+							set_type (l_explicit_type, l_as)
 						end
 					end
 
@@ -6401,7 +6401,7 @@ feature {NONE} -- Implementation
 							else
 									-- Creation type is always attached.
 								l_creation_type := l_target_type.as_attached_in (context.current_class)
-								last_type := l_creation_type
+								set_type (l_creation_type, l_as)
 							end
 
 								-- Check call validity for creation.
@@ -6462,7 +6462,7 @@ feature {NONE} -- Implementation
 				else
 						-- Type of a creation expression is always attached.
 					l_creation_type := l_creation_type.as_attached_in (context.current_class)
-					last_type := l_creation_type
+					set_type (l_creation_type, l_as)
 					instantiator.dispatch (l_creation_type, context.current_class)
 
 						-- Check call validity for creation.
@@ -6484,7 +6484,7 @@ feature {NONE} -- Implementation
 
 						last_byte_node := l_creation_expr
 					end
-					last_type := l_creation_type
+					set_type (l_creation_type, l_as)
 				end
 			end
 			if error_level /= l_error_level then
@@ -6675,6 +6675,7 @@ feature {NONE} -- Implementation
 			l_list: BYTE_LIST [BYTE_NODE]
 			l_constraint_type: TYPE_A
 			l_formal: FORMAL_A
+			l_type: TYPE_A
 		do
 			break_point_slot_count := break_point_slot_count + 1
 
@@ -6689,14 +6690,14 @@ feature {NONE} -- Implementation
 
 					-- Type check if it is an expression conform either to
 					-- and integer or to a character
-				last_type := last_type.actual_type
-				if last_type.is_formal then
-					l_formal ?= last_type
+				l_type := last_type.actual_type
+				if l_type.is_formal then
+					l_formal ?= l_type
 					if not l_formal.is_multi_constrained (context.current_class) then
 						l_constraint_type := l_formal.constrained_type (context.current_class)
 					end
 				else
-					l_constraint_type := last_type
+					l_constraint_type := l_type
 				end
 
 				if
@@ -6707,7 +6708,7 @@ feature {NONE} -- Implementation
 						-- Error
 					create l_vomb1
 					context.init_error (l_vomb1)
-					l_vomb1.set_type (last_type)
+					l_vomb1.set_type (l_type)
 					l_vomb1.set_location (l_as.switch.end_location)
 					error_handler.insert_error (l_vomb1)
 				else
@@ -7186,7 +7187,7 @@ feature {NONE} -- Implementation
 				create {BOOL_CONST_B} last_byte_node.make (False)
 			end
 
-			last_type := boolean_type
+			set_type (boolean_type, l_as)
 		end
 
 	process_iteration_as (l_as: ITERATION_AS)
@@ -7239,17 +7240,17 @@ feature {NONE} -- Implementation
 						-- Suitable class ITERABLE is not found.
 					error_handler.insert_error (create {LOOP_ITERATION_NO_CLASS_ERROR}.make (context, "ITERABLE [G]", local_id))
 						-- Clear `last_type' to make sure it is not set when there is an error.
-					last_type := Void
+					reset_types
 				elseif not attached context.iteration_cursor_class as c then
 						-- Suitable class ITERATION_CURSOR is not found.
 					error_handler.insert_error (create {LOOP_ITERATION_NO_CLASS_ERROR}.make (context, "ITERATION_CURSOR [G]", local_id))
 						-- Clear `last_type' to make sure it is not set when there is an error.
-					last_type := Void
+					reset_types
 				elseif not last_type.base_class.conform_to (i) then
 						-- Iteration expression type does not conform to ITERABLE.
 					error_handler.insert_error (create {VOIT1}.make (context, last_type, i.actual_type, local_id))
 						-- Clear `last_type' to make sure it is not set when there is an error.
-					last_type := Void
+					reset_types
 				else
 						-- Save `last_type' for evaluation of `iteration_cursor_type'.
 					iteration_cursor_type := last_type
@@ -7324,7 +7325,7 @@ feature {NONE} -- Implementation
 						end
 							-- Set `last_type' to the type that is used to call
 							-- features in the automatically generated code.
-						last_type := iteration_cursor_type
+						set_type (iteration_cursor_type, l_as)
 					end
 				end
 			end
@@ -7903,7 +7904,7 @@ feature {NONE} -- Implementation
 					error_handler.insert_error (l_vica2)
 				end
 			end
-			last_type := none_type
+			set_type (none_type, l_as)
 			if is_byte_node_enabled then
 				create {VOID_B} last_byte_node
 			end
@@ -9428,7 +9429,7 @@ feature {NONE} -- Agents
 
 				last_byte_node := l_routine_creation
 			end
-			last_type := l_result_type
+			set_type (l_result_type, an_agent)
 		ensure
 			exists: last_type /= Void
 		end
@@ -9948,11 +9949,11 @@ feature {NONE} -- Implementation: type validation
 					-- Check validity of type declaration
 				type_a_checker.check_type_validity (l_type, a_type)
 					-- Update `last_type' with found type.
-				last_type := l_type
+				set_type (l_type, a_type)
 			end
 
 			if error_level /= l_error_level then
-				last_type := Void
+				reset_types
 			end
 		ensure
 			definition:
@@ -10598,24 +10599,51 @@ feature {NONE} -- Separateness
 			end
 		end
 
-	adapt_last_type_to_target (t: TYPE_A; c: BOOLEAN)
-			-- Adapt separateness status of the last message type `last_type'
+	adapt_type_to_target (l: TYPE_A; t: TYPE_A; c: BOOLEAN; n: AST_EIFFEL)
+			-- Adapt separateness status of the last message type `l' of the AST node `n'
 			-- to the target of type `t' which has a controlled status `c'
 			-- and update `is_controlled' accordingly.
 		do
 			if
 				t.is_separate and then
 				attached {ANNOTATED_TYPE_A} t as a and then
-				attached last_type as l and then
+				attached l and then
 				not l.is_separate
 			then
-						-- Separate call is controlled if target is controlled
-						-- and message type is not separate.
-					is_controlled := c
-					last_type := l.to_other_separateness (a)
+					-- Separate call is controlled if target is controlled
+					-- and message type is not separate.
+				is_controlled := c
+				set_type (l.to_other_separateness (a), n)
 			else
 				is_controlled := False
+				set_type (l, n)
 			end
+		end
+
+feature -- Type recording
+
+	type_recorder: detachable PROCEDURE [ANY, TUPLE [t: TYPE_A; a: AST_EIFFEL; w: CLASS_C; f: FEATURE_I; c: CLASS_C]]
+			-- A procedure to record type `t' of AST node `a' written in class `w'
+			-- when evaluated in a feature `f' of class `c'.
+
+	set_type_recorder (r: like type_recorder)
+			-- Set `type_recorder' to `r'.
+		do
+			type_recorder := r
+		ensure
+			type_recorder_set: type_recorder = r
+		end
+
+feature {NONE} -- Type recording
+
+	set_type (t: TYPE_A; a: AST_EIFFEL)
+			-- Associate type `t' with AST node `a'.
+		do
+			if attached type_recorder as r then
+					-- Use index of last token to associate type information with the node.
+				r.call ([t, a, context.written_class, current_feature, context.current_class])
+			end
+			last_type := t
 		end
 
 note

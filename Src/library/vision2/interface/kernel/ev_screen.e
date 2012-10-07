@@ -116,6 +116,28 @@ feature -- Status report
 			Result := implementation.monitor_area_from_window (a_window)
 		end
 
+	pixel_color_relative_to (a_widget: EV_WIDGET; a_x, a_y: INTEGER): EV_COLOR
+			-- Pixel color on screen at relative position (`a_x', `a_y') from top left corner of `a_widget'.
+		require
+			not_destroyed: not is_destroyed
+			not_widget_destroyed: not a_widget.is_destroyed
+			has_area: a_widget.height > 0 and a_widget.width > 0
+			coords_in_area: a_x >= 0 and a_x < a_widget.width and a_y >= 0 and a_y < a_widget.height
+		local
+			l_pixel_buffer: EV_PIXEL_BUFFER
+			l_pixel_iterator: like {EV_PIXEL_BUFFER}.pixel_iterator
+			l_pixel: EV_PIXEL_BUFFER_PIXEL
+		do
+			create l_pixel_buffer.make_with_pixmap (sub_pixmap (create {EV_RECTANGLE}.make (a_widget.screen_x + a_x, a_widget.screen_y + a_y, 1, 1)))
+			l_pixel_buffer.lock
+			l_pixel_iterator := l_pixel_buffer.pixel_iterator
+			l_pixel_iterator.set_column (1)
+			l_pixel_iterator.set_row (1)
+			l_pixel := l_pixel_iterator.item
+			create Result.make_with_8_bit_rgb (l_pixel.red, l_pixel.green, l_pixel.blue)
+			l_pixel_buffer.unlock
+		end
+
 -- To uncomment when GTK's implementation is working
 --
 --	working_area_from_position (a_x, a_y: INTEGER): EV_RECTANGLE
@@ -281,14 +303,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

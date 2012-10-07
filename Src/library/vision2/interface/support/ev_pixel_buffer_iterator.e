@@ -89,7 +89,7 @@ feature
 	set_column (a_column: NATURAL_32)
 			-- Set iterator to column `a_column' of `pixel_buffer'.
 		require
-			a_column_valid: a_column >= 1 and then a_column <= max_column_value
+			a_column_valid: a_column >= 1 and then a_column - 1 <= max_column_value
 		do
 			column_value := a_column - 1
 		end
@@ -105,7 +105,7 @@ feature
 	set_row (a_row: NATURAL_32)
 			-- Set iterator to row `a_row' of `pixel_buffer'.
 		require
-			a_row_valid: a_row >= 1 and then a_row <= max_row_value
+			a_row_valid: a_row >= 1 and then a_row - 1 <= max_row_value
 		do
 			row_value := a_row - 1
 		end
@@ -135,8 +135,8 @@ feature
 	update_pixel (a_column, a_row: NATURAL_32; a_pixel: EV_PIXEL_BUFFER_PIXEL)
 			-- Update `a_pixel' with pixel value at `a_column', `a_row' of `Current'
 		require
-			a_column_valid: a_column >= 1 and then a_column <= max_column_value
-			a_row_valid: a_row >= 1 and then a_row <= max_row_value
+			a_column_valid: a_column >= 1 and then a_column - 1 <= max_column_value
+			a_row_valid: a_row >= 1 and then a_row - 1 <= max_row_value
 		do
 			if pixel_buffer.is_locked then
 				a_pixel.set_pixel_buffer (pixel_buffer)
@@ -169,4 +169,14 @@ feature {NONE} -- Implementation
 	row_value: NATURAL_32
 		-- Current row being iterated (zero based)
 
+;note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

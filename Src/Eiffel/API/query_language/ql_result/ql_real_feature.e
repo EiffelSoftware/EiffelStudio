@@ -72,7 +72,7 @@ feature -- Access
 			good_result: Result /= Void and then Result.is_equal (e_feature.name_32.as_string_8)
 		end
 
-	description: STRING
+	description: STRING_32
 			-- Description of current item
 		local
 			l_comments: EIFFEL_COMMENTS
@@ -85,12 +85,11 @@ feature -- Access
 				until
 					l_comments.after
 				loop
-						-- |FIXME: QL should be adapted to accept Unicode.
-					Result.append (l_comments.item.content_32.as_string_8)
+					Result.append (l_comments.item.content_32)
 					l_comments.forth
 				end
 			else
-				Result := ""
+				Result := {STRING_32} ""
 			end
 		end
 

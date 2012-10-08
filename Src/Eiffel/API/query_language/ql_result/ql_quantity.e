@@ -55,12 +55,12 @@ feature -- Access
 			good_result: Result /= Void and then not Result.is_empty
 		end
 
-	description: STRING
+	description: STRING_32
 			-- Description of current item
 		do
-			Result := ""
+			Result := {STRING_32} ""
 		ensure then
-			no_description_attached_to_quantity: Result.is_equal ("")
+			no_description_attached_to_quantity: Result.is_empty
 		end
 
 	hash_code: INTEGER

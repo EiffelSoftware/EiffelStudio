@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 			if current_target.description /= Void then
 				l_mls_prop.set_value (current_target.description)
 			end
-			l_mls_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent current_target.set_description))
+			l_mls_prop.change_value_actions.extend (agent current_target.set_description)
 			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_mls_prop)
 

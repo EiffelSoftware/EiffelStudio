@@ -765,13 +765,12 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	tooltip_text: STRING
+	tooltip_text: STRING_32
 			-- Generate tooltip text for `data' and `path'.
 		local
 			l_as: CONF_ASSEMBLY
 			l_phys_as: CONF_PHYSICAL_ASSEMBLY
 			l_lib: CONF_LIBRARY
-			l_tmp: STRING
 		do
 			create Result.make_empty
 			if data.is_assembly then
@@ -794,18 +793,18 @@ feature {NONE} -- Implementation
 				end
 				Result.append (data.actual_group.location.evaluated_path)
 			elseif data.is_cluster then
-				l_tmp := data.actual_group.name.twin
+				Result.append (data.actual_group.name)
 				if not path.is_empty then
-					l_tmp.append (path)
+					Result.append (path)
 				end
-				Result.append (l_tmp+"%N")
+				Result.append_character ('%N')
 				Result.append (data.actual_group.location.build_path (path, ""))
 			else
 				check should_not_reach: False end
 			end
-			l_tmp := data.actual_group.description
-			if l_tmp /= Void then
-				Result.append ("%N"+l_tmp)
+			if attached data.actual_group.description as d then
+				Result.append_character ('%N')
+				Result.append_string (d)
 			end
 		ensure
 			Result_not_void: Result /= Void

@@ -223,7 +223,7 @@ feature -- Access, stored in configuration file
 	is_strictly_void_safe: BOOLEAN
 			-- Are the most strict rules applied for void safety?
 
-	description: STRING
+	description: STRING_32
 			-- A description about the options.
 
 feature -- Access: syntax

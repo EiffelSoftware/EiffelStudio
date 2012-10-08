@@ -68,7 +68,7 @@ feature -- Access, stored in configuration file
 	name: STRING
 			-- Name of the target.
 
-	description: STRING
+	description: STRING_32
 			-- A description about the target.
 
 	extends: CONF_TARGET
@@ -601,7 +601,7 @@ feature -- Access queries for settings
 			end
 		end
 
-	setting_msil_clr_version: STRING
+	setting_msil_clr_version: STRING_32
 			-- Value for the msil_clr_version setting.
 		do
 			Result := settings.item (s_msil_clr_version)
@@ -612,7 +612,7 @@ feature -- Access queries for settings
 			Result_not_void: Result /= Void
 		end
 
-	setting_msil_culture: STRING
+	setting_msil_culture: STRING_32
 			-- Value for the msil_culture setting.
 		do
 			Result := settings.item (s_msil_culture)
@@ -629,7 +629,7 @@ feature -- Access queries for settings
 			Result := setting_boolean (s_msil_generation)
 		end
 
-	setting_msil_generation_type: STRING
+	setting_msil_generation_type: STRING_32
 			-- Value for the msil_generation_type setting.
 		local
 			l_settings: like settings
@@ -644,7 +644,7 @@ feature -- Access queries for settings
 			end
 		end
 
-	setting_msil_key_file_name: STRING
+	setting_msil_key_file_name: STRING_32
 			-- Value for the msil_key_file_name setting.
 		do
 			Result := settings.item (s_msil_key_file_name)

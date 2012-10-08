@@ -2040,7 +2040,7 @@ feature {NONE} -- Implementation
 	current_option: CONF_OPTION
 	current_external: CONF_EXTERNAL
 	current_action: CONF_ACTION
-	current_content: STRING
+	current_content: STRING_32
 	current_condition: CONF_CONDITION
 
 	uses_list: HASH_TABLE [ARRAYED_LIST [CONF_CLUSTER], STRING]

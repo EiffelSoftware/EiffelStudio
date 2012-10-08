@@ -41,7 +41,7 @@ feature -- Access, stored in configuration file
 	must_succeed: BOOLEAN
 			-- Does the command have to be successful to continue?
 
-	description: STRING
+	description: STRING_32
 			-- A description about the command.
 
 feature {CONF_ACCESS} -- Update, stored in configuration file

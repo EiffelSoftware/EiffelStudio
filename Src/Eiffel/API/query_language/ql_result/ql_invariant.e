@@ -70,12 +70,12 @@ feature -- Access
 			good_result: Result /= Void and then Result.is_equal ("invariant")
 		end
 
-	description: STRING
+	description: STRING_32
 			-- Description of current item
 		do
-			Result := ""
+			Result := {STRING_32} ""
 		ensure then
-			no_description_attached_to_invariant: Result.is_equal ("")
+			no_description_attached_to_invariant: Result.is_empty
 		end
 
 	class_i: CLASS_I

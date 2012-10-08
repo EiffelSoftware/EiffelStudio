@@ -34,18 +34,18 @@ feature -- Status
 
 feature -- Access, stored in configuration file
 
-	exclude: SEARCH_TABLE [STRING]
+	exclude: SEARCH_TABLE [STRING_32]
 			-- Exclude patterns
 
-	include: SEARCH_TABLE [STRING]
+	include: SEARCH_TABLE [STRING_32]
 			-- Include patterns
 
-	description: STRING
+	description: STRING_32
 			-- A description about the rules.
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
-	add_exclude (a_pattern: STRING)
+	add_exclude (a_pattern: STRING_32)
 			-- Add an exclude pattern.
 		require
 			a_pattern_ok: valid_regexp (a_pattern)
@@ -57,7 +57,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			compile
 		end
 
-	add_include (a_pattern: STRING)
+	add_include (a_pattern: STRING_32)
 			-- Add an include pattern.
 		require
 			a_pattern_ok: valid_regexp (a_pattern)
@@ -69,7 +69,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			compile
 		end
 
-	del_exclude (a_pattern: STRING)
+	del_exclude (a_pattern: STRING_32)
 			-- Delete an exclude pattern.
 		require
 			a_pattern_ok: exclude /= Void and then exclude.has (a_pattern)
@@ -81,7 +81,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			compile
 		end
 
-	del_include (a_pattern: STRING)
+	del_include (a_pattern: STRING_32)
 			-- Delete an include pattern.
 		require
 			a_pattern_ok: include /= Void and then include.has (a_pattern)
@@ -172,13 +172,16 @@ feature {NONE} -- Implementation
 			include_regexp := compile_list (include)
 		end
 
-	compile_list (a_list: SEARCH_TABLE [STRING]): REGULAR_EXPRESSION
+	compile_list (a_list: like include): REGULAR_EXPRESSION
 			-- Compile `a_list' into a regular expression.
 		local
 			l_regexp_str: STRING
 			l_left_paren, l_right_paren_and_bar: STRING
 		do
 			if a_list /= Void and then not a_list.is_empty then
+				debug ("fixme")
+					(create {REFACTORING_HELPER}).fixme ("Support regular expressions with Unicode.")
+				end
 				create l_regexp_str.make (50)
 				from
 					l_left_paren := "("

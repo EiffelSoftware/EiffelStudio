@@ -574,7 +574,7 @@ feature {NONE} -- Basic operation
 			l_name_width: INTEGER
 			l_path: STRING
 			l_key: STRING
-			l_description: STRING
+			l_description: STRING_32
 			l_void_safe_check: like void_safe_check
 			l_show_void_safe_only: BOOLEAN
 			l_filter: detachable STRING

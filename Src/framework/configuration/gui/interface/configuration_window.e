@@ -1124,7 +1124,7 @@ feature {NONE} -- Implementation
 			if conf_system.description /= Void then
 				l_mls_prop.set_value (conf_system.description)
 			end
-			l_mls_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent conf_system.set_description))
+			l_mls_prop.change_value_actions.extend (agent conf_system.set_description)
 			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_mls_prop)
 
@@ -1240,7 +1240,7 @@ feature {NONE} -- Implementation
 			if an_external.description /= Void then
 				l_mls_prop.set_value (an_external.description)
 			end
-			l_mls_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent an_external.set_description))
+			l_mls_prop.change_value_actions.extend (agent an_external.set_description)
 			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_mls_prop)
 
@@ -1299,7 +1299,7 @@ feature {NONE} -- Implementation
 			if a_task.description /= Void then
 				l_mls_prop.set_value (a_task.description)
 			end
-			l_mls_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent a_task.set_description))
+			l_mls_prop.change_value_actions.extend (agent a_task.set_description)
 			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_mls_prop)
 

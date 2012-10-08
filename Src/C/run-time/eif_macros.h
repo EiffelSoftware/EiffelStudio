@@ -1482,7 +1482,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 	{                                                         \
 		((call_data*)(a)) -> result = &(r);               \
 		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-		eif_log_call (s, f, RTS_PID(Current), a);         \
+		eif_log_call (s, f, RTS_PID(Current), (call_data*) a);         \
 	}
 #define RTS_CFP(s,f,n,t,a,r) \
 	{                                                         \
@@ -1490,11 +1490,11 @@ RT_LNK void eif_exit_eiffel_code(void);
 		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
 		eif_log_callp (s, f, RTS_PID(Current), a);        \
 	}
-#define RTS_CP(s,f,n,t,a)  eif_log_call  (s, f, RTS_PID(Current), a);
-#define RTS_CPP(s,f,n,t,a) eif_log_callp (s, f, RTS_PID(Current), a);
+#define RTS_CP(s,f,n,t,a)  eif_log_call  (s, f, RTS_PID(Current), (call_data*) a);
+#define RTS_CPP(s,f,n,t,a) eif_log_callp (s, f, RTS_PID(Current), (call_data*) a);
 
-#define RTS_CC(s,f,d,a)  eif_log_call  (s, f, RTS_PID(Current), a);
-#define RTS_CCP(s,f,d,a) eif_log_callp  (s, f, RTS_PID(Current), a);
+#define RTS_CC(s,f,d,a)  eif_log_call  (s, f, RTS_PID(Current), (call_data*) a);
+#define RTS_CCP(s,f,d,a) eif_log_callp  (s, f, RTS_PID(Current), (call_data*) a);
 #else /* WORKBENCH */
 #define RTS_CF(f,p,t,a,r) \
 	{                                                         \
@@ -1502,13 +1502,13 @@ RT_LNK void eif_exit_eiffel_code(void);
 		((call_data*)(a)) -> pattern = p;                 \
 		((call_data*)(a)) -> result = &(r);               \
 		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-		eif_log_call (((call_data*)(a))->sync_pid, a);    \
+		eif_log_call (((call_data*)(a))->sync_pid, (call_data*) a);    \
 	}
 #define RTS_CP(f,p,t,a) \
 	{                                                         \
 		((call_data*)(a)) -> feature.address = (fnptr) f; \
 		((call_data*)(a)) -> pattern = p;                 \
-		eif_log_call (RTS_PID(Current), a);               \
+		eif_log_call (RTS_PID(Current), (call_data*) a);               \
 	}
 #define RTS_CC(f,p,t,a) RTS_CP(f,p,t,a)
 #define RTS_CA(o,p,t,a,r) \
@@ -1517,13 +1517,13 @@ RT_LNK void eif_exit_eiffel_code(void);
 		((call_data*)(a)) -> pattern = p;                 \
 		((call_data*)(a)) -> result = &(r);               \
 		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-		eif_log_call (((call_data*)(a))->sync_pid, a);    \
+		eif_log_call (((call_data*)(a))->sync_pid, (call_data*) a);    \
 	}
 #define RTS_CS(t,a) \
 	{                                                         \
 		((call_data*)(a)) -> pattern = eif_call_const;    \
 		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-		eif_log_call (((call_data*)(a))->sync_pid, a);    \
+		eif_log_call (((call_data*)(a))->sync_pid, (call_data*) a);    \
 	}
 #endif /* WORKBENCH */
 

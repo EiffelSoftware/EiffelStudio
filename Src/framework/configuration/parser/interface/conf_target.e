@@ -94,12 +94,11 @@ feature -- Access, in compiled only, not stored to configuration file
 			l_target: CONF_TARGET
 			l_dir: CONF_DIRECTORY_LOCATION
 		do
-			Result := settings.item (s_library_root)
-			if Result /= Void then
+			if attached settings.item (s_library_root) as l_item then
 					-- create a new target instead of using Current because we could end in an infinite recursion otherwise.
 				create l_fac
 				l_target := l_fac.new_target ("dummy", system)
-				create l_dir.make (Result, l_target)
+				create l_dir.make (l_item, l_target)
 				Result := l_dir.evaluated_path
 			else
 				Result := system.directory
@@ -499,8 +498,9 @@ feature -- Access queries for settings
 	setting_executable_name: STRING_32
 			-- Value for the executable_name setting.
 		do
-			Result := settings.item (s_executable_name)
-			if Result = Void then
+			if attached settings.item (s_executable_name) as l_item then
+				Result := l_item
+			else
 				create Result.make_empty
 			end
 		ensure
@@ -564,22 +564,24 @@ feature -- Access queries for settings
 			Result := setting_boolean (s_line_generation)
 		end
 
-	setting_metadata_cache_path: STRING
+	setting_metadata_cache_path: STRING_32
 			-- Value for the metadata_cache_path setting.
 		do
-			Result := settings.item (s_metadata_cache_path)
-			if Result = Void then
+			if attached settings.item (s_metadata_cache_path) as l_item then
+				Result := l_item
+			else
 				create Result.make_empty
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	setting_msil_assembly_compatibility: STRING
+	setting_msil_assembly_compatibility: STRING_32
 			-- Value for the msil_assembly_compatibility setting.
 		do
-			Result := settings.item (s_msil_assembly_compatibility)
-			if Result = Void then
+			if attached settings.item (s_msil_assembly_compatibility) as l_item then
+				Result := l_item
+			else
 				create Result.make_empty
 			end
 		ensure
@@ -604,8 +606,9 @@ feature -- Access queries for settings
 	setting_msil_clr_version: STRING_32
 			-- Value for the msil_clr_version setting.
 		do
-			Result := settings.item (s_msil_clr_version)
-			if Result = Void then
+			if attached settings.item (s_msil_clr_version) as l_item then
+				Result := l_item
+			else
 				create Result.make_empty
 			end
 		ensure
@@ -615,8 +618,9 @@ feature -- Access queries for settings
 	setting_msil_culture: STRING_32
 			-- Value for the msil_culture setting.
 		do
-			Result := settings.item (s_msil_culture)
-			if Result = Void then
+			if attached settings.item (s_msil_culture) as l_item then
+				Result := l_item
+			else
 				create Result.make_empty
 			end
 		ensure
@@ -642,13 +646,16 @@ feature -- Access queries for settings
 			else
 				Result := "exe"
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	setting_msil_key_file_name: STRING_32
 			-- Value for the msil_key_file_name setting.
 		do
-			Result := settings.item (s_msil_key_file_name)
-			if Result = Void then
+			if attached settings.item (s_msil_key_file_name) as l_item then
+				Result := l_item
+			else
 				create Result.make_empty
 			end
 		ensure
@@ -661,7 +668,7 @@ feature -- Access queries for settings
 			Result := setting_boolean (s_msil_use_optimized_precompile)
 		end
 
-	setting_platform: STRING
+	setting_platform: STRING_32
 			-- Value for the platform setting.
 		local
 			l_settings: like settings
@@ -674,24 +681,28 @@ feature -- Access queries for settings
 			else
 				Result := ""
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	setting_external_runtime: STRING
+	setting_external_runtime: STRING_32
 			-- Value for the external_runtime setting.
 		do
-			Result := settings.item (s_external_runtime)
-			if Result = Void then
+			if attached settings.item (s_external_runtime) as l_item then
+				Result := l_item
+			else
 				create Result.make_empty
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	setting_shared_library_definition: STRING
+	setting_shared_library_definition: STRING_32
 			-- Value for the shared_library_definition setting.
 		do
-			Result := settings.item (s_shared_library_definition)
-			if Result = Void then
+			if attached settings.item (s_shared_library_definition) as l_item then
+				Result := l_item
+			else
 				create Result.make_empty
 			end
 		ensure

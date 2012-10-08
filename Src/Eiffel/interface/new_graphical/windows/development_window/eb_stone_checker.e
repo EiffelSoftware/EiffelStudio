@@ -588,7 +588,7 @@ feature {NONE} -- Implementation functions
 			l_cl_c: CLASS_C
 			l_assert_level: ASSERTION_I
 			l_format_context: TEXT_FORMATTER_DECORATOR
-			l_description: STRING
+			l_description: STRING_32
 		do
 			create l_format_context.make_for_case (current_editor.text_displayed)
 			current_editor.handle_before_processing (False)

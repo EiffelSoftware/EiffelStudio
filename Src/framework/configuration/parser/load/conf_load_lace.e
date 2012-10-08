@@ -99,7 +99,7 @@ feature -- Basic operation
 		local
 			l_parser: LACE_PARSER
 			l_error: CONF_ERROR_PARSE
-			l_desc: STRING
+			l_desc: STRING_32
 		do
 			create l_parser.make
 			l_parser.parse_file (a_file, False)
@@ -116,10 +116,9 @@ feature -- Basic operation
 				process_defaults (l_ast.defaults)
 				if not l_parser.comments.is_empty then
 
-					if current_target.description /= Void then
-						l_desc := l_parser.comments + current_target.description
-					else
-						l_desc := l_parser.comments
+					l_desc := l_parser.comments
+					if attached current_target.description as d then
+						l_desc := l_desc + d
 					end
 					l_desc.replace_substring_all ("<", "&lt;")
 					l_desc.replace_substring_all (">", "&gt;")
@@ -527,7 +526,7 @@ feature {NONE} -- Implementation of data retrieval
 					l_name := l_option.option_name
 					l_value := l_d_opt.value
 					if l_name.is_case_insensitive_equal ("description") then
-						current_target.set_description (l_value.value)
+						current_target.set_description (l_value.value.as_string_32)
 					elseif l_option.is_debug then
 						l_debug ?= l_option
 						if current_options = Void then

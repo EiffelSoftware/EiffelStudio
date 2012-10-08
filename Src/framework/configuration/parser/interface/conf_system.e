@@ -109,7 +109,7 @@ feature -- Access, stored in configuration file
 	name: STRING
 			-- Name of the system.
 
-	description: STRING
+	description: STRING_32
 			-- A description about the system.
 
 	uuid: UUID

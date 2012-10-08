@@ -57,8 +57,8 @@ feature {NONE} -- Initialization
 			vb: EV_VERTICAL_BOX
 			hb_main, hb: EV_HORIZONTAL_BOX
 			l_label: EV_LABEL
-			l_list: ARRAYED_LIST [STRING]
-			l_hs: SEARCH_TABLE [STRING]
+			l_list: ARRAYED_LIST [STRING_32]
+			l_hs: like {CONF_FILE_RULE}.include
 		do
 			default_create
 			data := a_file_rule
@@ -236,9 +236,9 @@ feature {NONE} -- Actions
 	add_exclude
 			-- Add a new exclude pattern.
 		local
-			l_pattern: STRING
+			l_pattern: STRING_32
 		do
-			l_pattern := new_exclude.text.to_string_8
+			l_pattern := new_exclude.text
 			if not l_pattern.is_empty and (data.exclude = Void or else not data.exclude.has (l_pattern)) then
 				data.add_exclude (l_pattern)
 				exclude_pattern.force (create {EV_LIST_ITEM}.make_with_text (l_pattern))
@@ -248,9 +248,9 @@ feature {NONE} -- Actions
 	add_include
 			-- Add a new include pattern.
 		local
-			l_pattern: STRING
+			l_pattern: STRING_32
 		do
-			l_pattern := new_include.text.to_string_8
+			l_pattern := new_include.text
 			if not l_pattern.is_empty and (data.include = Void or else not data.include.has (l_pattern)) then
 				data.add_include (l_pattern)
 				include_pattern.force (create {EV_LIST_ITEM}.make_with_text (l_pattern))
@@ -261,7 +261,7 @@ feature {NONE} -- Actions
 			-- Remove current selected exclude pattern.
 		do
 			if exclude_pattern.selected_item /= Void then
-				data.del_exclude (exclude_pattern.selected_item.text.to_string_8)
+				data.del_exclude (exclude_pattern.selected_item.text)
 				exclude_pattern.start
 				exclude_pattern.search (exclude_pattern.selected_item)
 				exclude_pattern.remove
@@ -272,7 +272,7 @@ feature {NONE} -- Actions
 			-- Remove current selected include pattern.
 		do
 			if include_pattern.selected_item /= Void then
-				data.del_include (include_pattern.selected_item.text.to_string_8)
+				data.del_include (include_pattern.selected_item.text)
 				include_pattern.start
 				include_pattern.search (include_pattern.selected_item)
 				include_pattern.remove
@@ -282,7 +282,7 @@ feature {NONE} -- Actions
 	update_description
 			-- Update description.
 		do
-			data.set_description (description.text.to_string_8)
+			data.set_description (description.text)
 		end
 
 	edit_condition
@@ -308,7 +308,7 @@ invariant
 	gui_elements_created: is_initialized implies exclude_pattern /= Void and new_exclude /= Void and include_pattern /= Void and new_include /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

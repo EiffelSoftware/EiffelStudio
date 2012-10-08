@@ -137,7 +137,7 @@ feature -- Access, stored in configuration file
 	name: STRING
 			-- The name of the group.
 
-	description: STRING
+	description: STRING_32
 			-- A description about the group.
 
 	location: CONF_LOCATION
@@ -697,7 +697,7 @@ invariant
 	target_not_void: target /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

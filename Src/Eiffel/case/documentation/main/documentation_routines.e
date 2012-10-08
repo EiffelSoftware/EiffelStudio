@@ -169,7 +169,7 @@ feature -- Access
 		local
 			l_name: STRING
 			l_group_type: STRING
-			l_desc: detachable STRING
+			l_desc: detachable STRING_32
 		do
 			l_group_type := type_of_group (group)
 			l_name := group_name_presentation ({STRING_32}".", {STRING_32}"", group)
@@ -733,7 +733,7 @@ feature {NONE} -- Indexing clauses
 		local
 			content, t: STRING
 			exc: like excluded_indexing_items
-			l_description: detachable STRING
+			l_description: detachable STRING_32
 		do
 			create Result.make (20)
 			exc := excluded_indexing_items

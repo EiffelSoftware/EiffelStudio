@@ -145,7 +145,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	description: STRING
+	description: STRING_32
 			-- Description of current item
 		require
 			valid_item: is_valid_domain_item

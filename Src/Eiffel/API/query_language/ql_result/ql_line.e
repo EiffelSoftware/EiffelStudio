@@ -80,12 +80,12 @@ feature -- Access
 			good_result: Result = internal_hash_code
 		end
 
-	description: STRING
+	description: STRING_32
 			-- Description of current item
 		do
-			Result := ""
+			Result := {STRING_32} ""
 		ensure then
-			no_description_attached_to_a_line: Result.is_equal ("")
+			no_description_attached_to_a_line: Result.is_empty
 		end
 
 	wrapped_domain: QL_LINE_DOMAIN

@@ -136,12 +136,11 @@ feature -- Access
 			good_result: Result = internal_hash_code and internal_hash_code = conf_class.hash_code
 		end
 
-	description: STRING
+	description: STRING_32
 			-- Description of current item
 			--| Note: This is slow.
 		local
 			l_indexing: INDEXING_CLAUSE_AS
-			l_string: STRING
 			l_index_item: INDEX_AS
 			done: BOOLEAN
 		do
@@ -154,13 +153,12 @@ feature -- Access
 						l_indexing.after or done
 					loop
 						l_index_item := l_indexing.item
-						l_string := l_index_item.tag.name
-						if l_string.is_case_insensitive_equal (description_string) then
-							if not l_index_item.index_list.is_empty then
-								l_string := l_index_item.index_list.first.string_value
-								if l_string /= Void then
-									create Result.make_from_string (l_string)
-								end
+						if l_index_item.tag.name.is_case_insensitive_equal (description_string) then
+							if
+								not l_index_item.index_list.is_empty and then
+								attached l_index_item.index_list.first.string_value_32 as d
+							then
+								create Result.make_from_string (d)
 							end
 							done := True
 						end
@@ -168,10 +166,10 @@ feature -- Access
 					end
 				end
 				if Result = Void then
-					Result := ""
+					Result := {STRING_32} ""
 				end
 			else
-				Result := ""
+				Result := {STRING_32} ""
 			end
 		end
 

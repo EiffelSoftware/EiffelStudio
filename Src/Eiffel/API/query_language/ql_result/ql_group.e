@@ -76,7 +76,7 @@ feature -- Access
 	group: CONF_GROUP
 			-- Group
 
-	description: STRING
+	description: STRING_32
 			-- Description of current item
 		do
 			Result := group.description
@@ -84,8 +84,8 @@ feature -- Access
 				Result := ""
 			end
 		ensure then
-			good_result: (group.description = Void implies Result.is_equal ("")) and
-						 (group.description /= Void implies Result.is_equal (group.description))
+			good_result: (group.description = Void implies Result.is_empty) and
+						 (attached group.description as d implies Result ~ d)
 		end
 
 	hash_code: INTEGER

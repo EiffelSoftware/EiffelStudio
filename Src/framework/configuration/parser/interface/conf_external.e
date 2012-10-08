@@ -86,7 +86,7 @@ feature -- Access, stored in configuration file
 			Result_not_void: Result /= Void
 		end
 
-	description: STRING
+	description: STRING_32
 			-- A description about the external.
 
 	target: CONF_TARGET

@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 			if a_group.description /= Void then
 				l_mls_prop.set_value (a_group.description)
 			end
-			l_mls_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent a_group.set_description))
+			l_mls_prop.change_value_actions.extend (agent a_group.set_description)
 			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_mls_prop)
 

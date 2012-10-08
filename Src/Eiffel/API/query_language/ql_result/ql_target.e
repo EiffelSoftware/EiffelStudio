@@ -58,16 +58,16 @@ feature -- Access
 			good_result: Result.is_equal (target.name.as_lower)
 		end
 
-	description: STRING
+	description: STRING_32
 			-- Description of current item
 		do
 			Result := target.description
 			if Result = Void then
-				Result := ""
+				Result := {STRING_32} ""
 			end
 		ensure then
-			good_result: (target.description = Void implies Result.is_equal ("")) and
-						 (target.description /= Void implies Result.is_equal (target.description))
+			good_result: (target.description = Void implies Result.is_empty) and
+						 (attached target.description as d implies Result ~ d)
 		end
 
 	target: CONF_TARGET

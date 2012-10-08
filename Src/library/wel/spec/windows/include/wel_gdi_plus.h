@@ -218,9 +218,8 @@ typedef struct
 #ifdef __cplusplus
 }
 
-class MetafileHeader
+typedef struct
 {
-public:
     MetafileType        Type;
     UINT                Size;               // Size of the metafile (in bytes)
     UINT                Version;            // EMF+, EMF, or WMF version
@@ -239,11 +238,10 @@ public:
     INT                 EmfPlusHeaderSize;  // size of the EMF+ header in file
     INT                 LogicalDpiX;        // Logical Dpi of reference Hdc
     INT                 LogicalDpiY;        // usually valid only for EMF+
-};
+} MetafileHeader;
 
 extern "C" {
 #endif
-
 
 #endif // !_GDIPLUS_H
 

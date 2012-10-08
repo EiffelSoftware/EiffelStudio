@@ -93,13 +93,13 @@ feature {NONE} -- Externals
 				}	
 				
 				if (GdipGetMetafileHeaderFromMetafile) {
-					MetafileHeader * l_header = new MetafileHeader();
+					MetafileHeader l_header;
+					memset(&l_header, 0, sizeof(MetafileHeader));
 					*(EIF_INTEGER *)$a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpMetafile *, MetafileHeader *)) GdipGetMetafileHeaderFromMetafile)
-								((GpMetafile *) $a_metafile, l_header);
+								((GpMetafile *) $a_metafile, &l_header);
 
 						/* Let's copy the structure */								
-					*(ENHMETAHEADER3 *) $a_metafile_header = l_header->EmfHeader;
-					delete l_header;
+					*(ENHMETAHEADER3 *) $a_metafile_header = l_header.EmfHeader;
 				}				
 			}
 			]"

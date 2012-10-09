@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	current_working_directory: detachable STRING_32
+	current_working_directory: STRING_32
 			-- Directory of current execution.
 		local
 			u: UTF_CONVERTER

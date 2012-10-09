@@ -927,6 +927,8 @@ feature -- Generation
 				end
 				buffer.end_c_specific_code
 
+					-- Delete the file "finished" to force C recompilation.
+				force_c_compilation_in_sub_dir (final_mode, packet_name (C_prefix, packet_number))
 				if not final_mode then
 						-- Give the information status in Workbench mode only on the
 						-- C generate file type (either .c/.x or .cpp/.xpp)
@@ -1006,17 +1008,29 @@ feature -- Generation
 			Workbench_mode: not byte_context.final_mode
 		local
 			l_file_name: like full_file_name
+			l_sub_dir: STRING
 		do
-			l_file_name := full_file_name (System.in_final_mode, packet_name (C_prefix, packet_number), base_file_name, Void)
+			l_sub_dir := packet_name (C_prefix, packet_number)
+			l_file_name := full_file_name (System.in_final_mode, l_sub_dir, base_file_name, Void)
 			l_file_name.append_character (Descriptor_file_suffix)
 			l_file_name.append (Dot_c)
 			create Result.make_c_code_file (l_file_name)
+
+				-- Side effect
+			force_c_compilation_in_sub_dir (System.in_final_mode, l_sub_dir)
 		end
 
 	extern_declaration_filename: like full_file_name
 			-- File name for external declarations in final mode
+		local
+			l_sub_dir: STRING
 		do
-			Result := full_file_name (System.in_final_mode, packet_name (C_prefix, packet_number), base_file_name, Void)
+			l_sub_dir := packet_name (C_prefix, packet_number)
+			Result := full_file_name (System.in_final_mode, l_sub_dir, base_file_name, Void)
+
+				-- Side effect
+			force_c_compilation_in_sub_dir (System.in_final_mode, l_sub_dir)
+
 			Result.append (Dot_h)
 		end
 

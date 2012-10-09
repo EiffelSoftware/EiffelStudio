@@ -265,6 +265,8 @@ feature {NONE} -- Implementation
 			buffer.put_in_file (external_file)
 			external_file.close
 
+			force_c_compilation_in_sub_dir (final_mode, Void)
+
 				-- Clean allocated data.
 			extern_declarations.wipe_out
 			buffer.clear_all
@@ -328,7 +330,7 @@ feature {NONE} -- Previous version
 			-- Old version of Current.
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

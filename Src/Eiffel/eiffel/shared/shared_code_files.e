@@ -23,6 +23,26 @@ feature -- Makefile generation
 			is_open_write: Result.is_open_write
 		end
 
+feature -- Action
+
+	force_c_compilation_in_sub_dir (final_mode: BOOLEAN; sub_dir: detachable STRING)
+			-- Delete file `finished'.
+		local
+			finished_file: PLAIN_TEXT_FILE_32
+			finished_file_name: FILE_NAME_32
+			dir_name: DIRECTORY_NAME_32
+		do
+				-- Has side effect: creating a folder
+			dir_name := validated_dir_name (final_mode, sub_dir)
+
+			create finished_file_name.make_from_string (dir_name)
+			finished_file_name.set_file_name (Finished_file_for_make)
+			create finished_file.make (finished_file_name)
+			if finished_file.exists and then finished_file.is_writable then
+				finished_file.delete
+			end
+		end
+
 feature -- C code generation
 
 	gen_file_name (final_mode: BOOLEAN; base_name: STRING): STRING_32
@@ -77,7 +97,7 @@ feature -- C code generation
 			result_not_void: Result /= Void
 		end
 
-	full_file_name (final_mode: BOOLEAN; sub_dir: STRING; file_name, extension: STRING): STRING_32
+	full_file_name (final_mode: BOOLEAN; sub_dir: detachable STRING; file_name: STRING; extension: detachable STRING): STRING_32
 			-- Generated file name for `final_mode' creating a subdirectory
 			-- if `sub_dir' is not Void or empty, using `file_name'+`extension' as filename.
 			-- Side effect: Create the corresponding subdirectory if it
@@ -85,30 +105,12 @@ feature -- C code generation
 		require
 			file_name_not_void: file_name /= Void
 		local
-			dir: DIRECTORY_32
 			f_name: FILE_NAME_32
 			dir_name: DIRECTORY_NAME_32
-			finished_file: PLAIN_TEXT_FILE_32
-			finished_file_name: FILE_NAME_32
 			l_name: STRING_32
 		do
-			if final_mode then
-				Result := project_location.final_path
-			else
-				Result := project_location.workbench_path
-			end
-			create dir_name.make_from_string (Result)
-
-			if sub_dir /= Void and then not sub_dir.is_empty then
-				dir_name.extend (sub_dir)
-			end
-
-				-- Side effect here, we create a new subdirectory if it does
-				-- not exist yet.
-			create dir.make (dir_name)
-			if not dir.exists then
-				dir.create_dir
-			end
+				-- Has side effect: creating a folder
+			dir_name := validated_dir_name (final_mode, sub_dir)
 
 			create f_name.make_from_string (dir_name)
 			if extension /= Void then
@@ -120,16 +122,6 @@ feature -- C code generation
 			end
 			f_name.set_file_name (l_name)
 			Result := f_name
-
-				-- Other side effect here so that we let our makefiles
-				-- know that something needs to be recompiled in the `dir'
-				-- directory.
-			create finished_file_name.make_from_string (dir_name)
-			finished_file_name.set_file_name (Finished_file_for_make)
-			create finished_file.make (finished_file_name)
-			if finished_file.exists and then finished_file.is_writable then
-				finished_file.delete
-			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -144,6 +136,34 @@ feature -- C code generation
 			Result.append_integer (a_packet_number)
 		ensure
 			packet_name_not_void: Result /= Void
+		end
+
+feature {NONE} -- Implementation
+
+	validated_dir_name (final_mode: BOOLEAN; sub_dir: detachable STRING): DIRECTORY_NAME_32
+			-- Validated dir, create it if not exist.
+		local
+			l_path: STRING
+			dir: DIRECTORY_32
+		do
+			if final_mode then
+				create Result.make_from_string (project_location.final_path)
+			else
+				create Result.make_from_string (project_location.workbench_path)
+			end
+
+			if sub_dir /= Void and then not sub_dir.is_empty then
+				Result.extend (sub_dir)
+			end
+
+				-- Side effect here, we create a new subdirectory if it does
+				-- not exist yet.
+			create dir.make (Result)
+			if not dir.exists then
+				dir.create_dir
+			end
+		ensure
+			Result_attached: Result /= Void
 		end
 
 note

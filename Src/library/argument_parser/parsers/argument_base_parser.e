@@ -474,7 +474,7 @@ feature -- Status Setting
 
 feature {NONE} -- Query
 
-	option_of_name (a_name: READABLE_STRING_8): ARGUMENT_OPTION
+	option_of_name (a_name: READABLE_STRING_8): detachable ARGUMENT_OPTION
 			-- Retrieves the first switch-qualified option, passed by user, by switch name.
 			--
 			-- `a_name': The switch names to retrieve an options for.
@@ -483,15 +483,9 @@ feature {NONE} -- Query
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 			has_parsed: has_parsed
-			has_option_a_name: has_option (a_name)
 		do
 			if attached internal_option_of_name (a_name) as l_result then
 				Result := l_result
-			else
-				check
-					result_attached: False
-				end
-				Result := switch_of_name (a_name).new_option
 			end
 		end
 
@@ -504,7 +498,6 @@ feature {NONE} -- Query
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 			has_parsed: has_parsed
-			has_option_a_name: has_option (a_name)
 		local
 			l_options: like option_values
 			l_cursor: CURSOR
@@ -533,9 +526,6 @@ feature {NONE} -- Query
 				end
 				l_options.go_to (l_cursor)
 			else
-				check
-					option_values_not_empty: False
-				end
 				create l_result.make (0)
 			end
 			Result := l_result

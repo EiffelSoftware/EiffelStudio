@@ -77,6 +77,24 @@ feature {NONE} -- Initialization
 				upper_code := to_natural (l_list.i_th (13))
 				lower_code := to_natural (l_list.i_th (14))
 				title_code := to_natural (l_list.i_th (15))
+					-- Let's setup our flags
+				is_lower := general_category.same_string ("Ll")
+				is_upper := general_category.same_string ("Lu")
+				is_title := general_category.same_string ("Lt")
+				is_digit := general_category.same_string ("Nd")
+				if not is_digit and code.is_valid_character_8_code then
+					inspect code.to_character_8
+					when 'a' .. 'f', 'A' .. 'F' then
+						is_hexa_digit := True
+					else
+						is_hexa_digit := False
+					end
+				end
+				is_punctuation := not general_category.is_empty and then general_category.item (1) = 'P'
+				is_control := general_category.same_string ("Cc")
+				is_space := (not general_category.is_empty and then general_category.item (1) = 'Z') or
+					bidirectional_category.same_string ("WS") or bidirectional_category.same_string ("B") or
+					bidirectional_category.same_string ("S")
 			else
 				code := 0
 				name := ""
@@ -145,28 +163,99 @@ feature -- Access
 feature -- Status report
 
 	is_valid: BOOLEAN
-			-- Is Unicode data valid for Current?
+			-- Is Unicode data valid for Current?7
+
+	is_lower: BOOLEAN
+			-- Is current character an upper character?
+
+	is_upper: BOOLEAN
+			-- Is current character an upper character?
+
+	is_title: BOOLEAN
+			-- Is current character an upper character?
+
+	is_digit: BOOLEAN
+			-- Is current character a digit?
+
+	is_hexa_digit: BOOLEAN
+			-- Is current an hexadecimal digit?
+
+	is_punctuation: BOOLEAN
+			-- Is current character a punctuation?
+
+	is_control: BOOLEAN
+			-- Is current a control character?
+
+	is_space: BOOLEAN
+			-- Is current a space of some sort?
+
+	has_property: BOOLEAN
+			-- Does current have one property setup?
+		require
+			is_valid: is_valid
+		do
+			Result := is_upper or is_lower or is_title or is_digit or is_hexa_digit or
+				is_punctuation or is_control or is_space
+		end
+
+	property_flags: NATURAL_32
+		require
+			is_valid: is_valid
+		do
+			if is_lower then
+				Result := Result | is_lower_flag
+			end
+			if is_upper then
+				Result := Result | is_upper_flag
+			end
+			if is_title then
+				Result := Result | is_title_flag
+			end
+			if is_digit then
+				Result := Result | is_digit_flag
+			end
+			if is_hexa_digit then
+				Result := Result | is_hexa_digit_flag
+			end
+			if is_punctuation then
+				Result := Result | is_punctuation_flag
+			end
+			if is_control then
+				Result := Result | is_control_flag
+			end
+			if is_space then
+				Result := Result | is_space_flag
+			end
+		end
 
 	has_case: BOOLEAN
 			-- Is current character a character with a case?
+		require
+			is_valid: is_valid
 		do
-			Result := upper_code /= 0 or lower_code /= 0 or title_code /= 0
+			Result := has_lower_code or has_upper_code or has_title_code
 		end
 
 	has_lower_code: BOOLEAN
 			-- Does current character have a corresponding lower character code associated with it?
+		require
+			is_valid: is_valid
 		do
 			Result := lower_code /= 0 and lower_code /= code
 		end
 
 	has_upper_code: BOOLEAN
 			-- Does current character have a corresponding upper character code associated with it?
+		require
+			is_valid: is_valid
 		do
 			Result := upper_code /= 0 and upper_code /= code
 		end
 
 	has_title_code: BOOLEAN
 			-- Does current character have a corresponding title character code associated with it?
+		require
+			is_valid: is_valid
 		do
 			Result := title_code /= 0 and title_code /= code
 		end
@@ -209,5 +298,15 @@ feature {NONE} -- Implementation
 		ensure
 			ctoi_convertor_not_void: Result /= Void
 		end
+
+	is_upper_flag: NATURAL_8 = 0x01
+	is_lower_flag: NATURAL_8 = 0x02
+	is_title_flag: NATURAL_8 = 0x4
+	is_digit_flag: NATURAL_8 = 0x08
+	is_punctuation_flag: NATURAL_8 = 0x10
+	is_control_flag: NATURAL_8 = 0x20
+	is_hexa_digit_flag: NATURAL_8 = 0x40
+	is_space_flag: NATURAL_8 = 0x80
+			-- Various flags
 
 end

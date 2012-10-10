@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Formatter to display the text a class with no analysis."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -44,9 +44,7 @@ feature -- Properties
 	symbol: ARRAY [EV_PIXMAP]
 			-- Graphical representation of the command.
 		once
-			create Result.make (1, 2)
-			Result.put (pixmaps.icon_pixmaps.view_editor_icon, 1)
-			Result.put (pixmaps.icon_pixmaps.view_editor_icon, 2)
+			create Result.make_filled (pixmaps.icon_pixmaps.view_editor_icon, 1, 2)
 		end
 
 	pixel_buffer: EV_PIXEL_BUFFER
@@ -96,7 +94,7 @@ feature -- Formatting
 					if f_name = Void or else f_name.is_empty then
 						f_name := classi.file_name
 					end
-					editor.display_message (Warning_messages.w_Cannot_read_file (f_name).out)
+					editor.display_message (Warning_messages.w_Cannot_read_file (f_name))
 				end
 				is_editable :=	not classi.is_read_only and not editor.load_file_error
 				editor.set_read_only (not is_editable)
@@ -161,12 +159,9 @@ feature -- Status setting
 
 	force_stone (a_stone: STONE)
 			-- Directly set `stone' with `a_stone'
-		local
-			l_stone: CLASSI_STONE
 		do
 			Precursor (a_stone)
-			l_stone ?= a_stone
-			if l_stone /= Void then
+			if attached {CLASSI_STONE} a_stone as l_stone then
 				set_classi (l_stone.class_i)
 			end
 		end
@@ -210,7 +205,7 @@ feature {NONE} -- Implementation
 		-- Does it make sense to show line numbers in Current?
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

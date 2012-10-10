@@ -6,6 +6,7 @@
 			<assertions/>
 		</option>
 		<setting name="automatic_backup" value="true"/>
+		<setting name="check_for_void_target" value="false"/>
 		<setting name="console_application" value="true"/>
 		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser-safe.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>

@@ -16,6 +16,11 @@ inherit
 			on_start
 		end
 
+	CONF_INTERFACE_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	CONF_NAMESPACE_TESTER
 		rename
 			namespace as current_namespace
@@ -67,7 +72,7 @@ feature -- Setting
 			l_error: CONF_ERROR_PARSE
 		do
 			create l_error
-			l_error.set_message ({CONF_INTERFACE_NAMES}.e_internal_parse_error)
+			l_error.set_message (conf_interface_names.e_internal_parse_error)
 			l_error.set_xml_parse_mode
 			is_error := True
 			last_error := l_error

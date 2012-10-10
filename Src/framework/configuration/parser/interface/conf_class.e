@@ -111,7 +111,7 @@ feature -- Access, in compiled only, not stored to configuration file
 	is_read_only: BOOLEAN
 			-- Is the class read only?
 		local
-			l_file: RAW_FILE
+			l_file: RAW_FILE_32
 		do
 			Result := is_partial or group.is_readonly
 			if not Result then
@@ -429,9 +429,10 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 		local
 			l_file: KL_BINARY_INPUT_FILE
 			l_classname_finder: like classname_finder
+			u: GOBO_FILE_UTILITIES
 		do
 			reset_error
-			create l_file.make (full_file_name)
+			l_file := u.make_binary_input_file (full_file_name)
 			if l_file.exists then
 				l_classname_finder := classname_finder
 				l_file.open_read

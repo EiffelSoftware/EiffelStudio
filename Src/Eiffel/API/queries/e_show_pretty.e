@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_in_filename, a_out_filename: STRING_32)
+	make (a_in_filename, a_out_filename: like {E_SHOW_PRETTY}.in_filename)
 			-- Initialization
 		require
 			a_in_filename_not_void: a_in_filename /= Void
@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	in_filename: STRING
+	in_filename: STRING_32
 			-- Input filename
 
-	out_filename: STRING
+	out_filename: STRING_32
 			-- Output filename
 
 	parser: EIFFEL_PARSER
@@ -51,13 +51,14 @@ feature -- Access
 			no_error_happened: not error
 			output_file_set: out_filename /= Void and then out_filename /= ""
 		local
-			l_out_file: PLAIN_TEXT_FILE
+			l_out_file: PLAIN_TEXT_FILE_32
 		do
 			create l_out_file.make (out_filename)
 			l_out_file.open_read
 			if l_out_file.is_open_read then
 				l_out_file.read_stream (l_out_file.count)
 				Result := l_out_file.last_string
+				l_out_file.close
 			else
 				error := True
 			end
@@ -85,9 +86,10 @@ feature {NONE} -- Implementation
 			-- Parses the input file.
 		local
 			l_in_file: KL_BINARY_INPUT_FILE
+			u: GOBO_FILE_UTILITIES
 		do
 				-- Open the input file
-			create l_in_file.make (in_filename)
+			l_in_file := u.make_binary_input_file (in_filename)
 			l_in_file.open_read
 
 			if l_in_file.is_open_read then
@@ -113,6 +115,7 @@ feature {NONE} -- Implementation
 		local
 			l_printer: PRETTY_PRINTER
 			l_out_file: KL_TEXT_OUTPUT_FILE
+			u: GOBO_FILE_UTILITIES
 		do
 			if out_filename.same_string ("-") then
 				create l_printer.make (std.output)
@@ -120,7 +123,7 @@ feature {NONE} -- Implementation
 				l_printer.set_match_list (parser.match_list)
 				parser.root_node.process (l_printer)
 			else
-				create l_out_file.make (out_filename)
+				l_out_file := u.make_text_output_file (out_filename)
 				l_out_file.recursive_open_write
 
 				if l_out_file.is_open_write then

@@ -1,0 +1,233 @@
+note
+	description: "[
+		Helper functions to provide property of a Unicode character of type CHARACTER_32.
+		This includes finding out if a character is lower, upper, title case, or if it is a digit.
+		]"
+	generator: "unicode_helper_generator"
+	date: "$Date: $"
+	revision: "$Revision: $"
+
+class CHARACTER_32_PROPERTY
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make
+		do
+		end
+
+feature -- Status report
+
+	is_alpha (a_char: CHARACTER_32): BOOLEAN
+			-- Is `a_char' an alphabetic character?
+		do
+			if a_char.natural_32_code <= max_ascii_value then 
+					-- Fast implementation for ASCII character.
+				if ('a' <= a_char and a_char <= 'z') or ('A' <= a_char and a_char <= 'Z') then
+						-- Fast implementation for ASCII character
+					Result := True
+				end
+			else
+				Result := (property (a_char) & (is_lower_flag | is_upper_flag | is_title_flag)) /= 0
+			end
+		ensure
+			definition: Result = (is_lower (a_char) or is_upper (a_char))
+		end
+
+	is_lower (a_char: CHARACTER_32): BOOLEAN
+			-- Is `a_char' a lower character?
+		do
+			if a_char.natural_32_code <= max_ascii_value then 
+					-- Fast implementation for ASCII character.
+				if 'a' <= a_char and a_char <= 'z' then
+						-- Fast implementation for ASCII character.
+					Result := True
+				end
+			else
+				Result := (property (a_char) & is_lower_flag) /= 0
+			end
+		end
+
+	is_upper (a_char: CHARACTER_32): BOOLEAN
+			-- Is `a_char' an upper character?
+		do
+			if a_char.natural_32_code <= max_ascii_value then 
+					-- Fast implementation for ASCII character.
+				if 'A' <= a_char and a_char <= 'Z' then
+						-- Fast implementation for ASCII character.
+					Result := True
+				end
+			else
+				Result := (property (a_char) & is_upper_flag) /= 0
+			end
+		end
+
+	is_title (a_char: CHARACTER_32): BOOLEAN
+			-- Is `a_char' a title character?
+		do
+			if a_char.natural_32_code <= max_ascii_value then 
+					-- Fast implementation for ASCII character.
+				if 'A' <= a_char and a_char <= 'Z' then
+						-- Fast implementation for ASCII character.
+					Result := True
+				end
+			else
+				Result := (property (a_char) & is_title_flag) /= 0
+			end
+		end
+
+	is_digit (a_char: CHARACTER_32): BOOLEAN
+			-- Is `a_char' a digit character?
+		do
+			if a_char.natural_32_code <= max_ascii_value then 
+					-- Fast implementation for ASCII character.
+				if '0' <= a_char and a_char <= '9' then
+						-- Fast implementation for ASCII character.
+					Result := True
+				end
+			else
+				Result := (property (a_char) & is_digit_flag) /= 0
+			end
+		end
+
+	is_punctuation (a_char: CHARACTER_32): BOOLEAN
+			-- Is `a_char' a punctuation character?
+		do
+			if a_char.natural_32_code <= max_ascii_value then
+					-- Fast implementation for ASCII character.
+				Result := a_char.to_character_8.is_punctuation
+			else
+				Result := (property (a_char) & is_punctuation_flag) /= 0
+			end
+		end
+
+	is_control (a_char: CHARACTER_32): BOOLEAN
+			-- Is `a_char' a control character?
+		do
+			if a_char.natural_32_code <= max_ascii_value then
+					-- Fast implementation for ASCII character.
+				Result := a_char.to_character_8.is_control
+			else
+				Result := (property (a_char) & is_control_flag) /= 0
+			end
+		end
+
+	is_hexa_digit (a_char: CHARACTER_32): BOOLEAN
+			-- Is `a_char' an hexadecimal character?
+		do
+			if a_char.natural_32_code <= max_ascii_value then
+					-- Fast implementation for ASCII character.
+				Result := a_char.to_character_8.is_hexa_digit
+			else
+				Result := (property (a_char) & is_hexa_digit_flag) /= 0
+			end
+		end
+
+	is_space (a_char: CHARACTER_32): BOOLEAN
+			-- Is `a_char' a space character?
+		do
+			if a_char.natural_32_code <= max_ascii_value then
+					-- Fast implementation for ASCII character.
+				Result := a_char.to_character_8.is_space
+			else
+				Result := (property (a_char) & is_space_flag) /= 0
+			end
+		end
+
+	max_ascii_value: NATURAL_32 = 0x7F--MAX_ASCII
+	max_latin1_value: NATURAL_32 = 0xFF--MAX_LATIN1
+	max_unicode_value: NATURAL_32 = 0x10FFFF--MAX_UNICODE
+	min_high_table_value: NATURAL_32 = 0x10400--MAX_HIGH_TABLE_VALUE
+			-- Various maximal value for character range.
+
+feature -- Conversion
+
+	to_lower (a_char: CHARACTER_32): CHARACTER_32
+			-- Convert `a_char' to lower case.
+		local
+			l_code: NATURAL_32
+		do
+				-- Most of the time the character remains unchanged.
+			Result := a_char
+				-- Fast implementation for ASCII character.			
+			l_code := a_char.natural_32_code
+			if l_code <= max_ascii_value then
+				if 'A' <= a_char and a_char <= 'Z' then
+					check
+						valid_assumption: (('a').code - ('A').code) = 32
+					end
+					Result := a_char + 32
+				end
+			else
+--$TO_LOWER_HELPER
+			end
+		end
+
+	to_upper (a_char: CHARACTER_32): CHARACTER_32
+			-- Convert `a_char' to upper case.
+		local
+			l_code: NATURAL_32
+		do
+				-- Most of the time the character remains unchanged.
+			Result := a_char
+				-- Fast implementation for ASCII character.			
+			l_code := a_char.natural_32_code
+			if l_code <= max_ascii_value then
+				if 'a' <= a_char and a_char <= 'z' then
+					check
+						valid_assumption: (('a').code - ('A').code) = 32
+					end
+					Result := (a_char.code - 32).to_character_32
+				end
+			else
+--$TO_UPPER_HELPER
+			end
+		end
+
+	to_title (a_char: CHARACTER_32): CHARACTER_32
+			-- Convert `a_char' to title case.
+		local
+			l_code: NATURAL_32
+		do
+				-- Most of the time the character remains unchanged.
+			Result := a_char
+				-- Fast implementation for ASCII character.			
+			l_code := a_char.natural_32_code
+			if l_code <= max_ascii_value then
+				if 'a' <= a_char and a_char <= 'z' then
+					check
+						valid_assumption: (('a').code - ('A').code) = 32
+					end
+					Result := (a_char.code - 32).to_character_32
+				end
+			else
+				Result := to_upper (a_char)
+--$TO_TITLE_HELPER
+			end
+		end
+
+	property (a_char: CHARACTER_32): NATURAL_8
+			-- Provides the various flags describing `a_char'.
+		local
+			l_code: NATURAL_32
+		do
+			l_code := a_char.natural_32_code
+--$PROPERTY_HELPER
+		end
+
+feature {NONE} -- Implementation
+
+	is_upper_flag: NATURAL_8 = 0x01
+	is_lower_flag: NATURAL_8 = 0x02
+	is_title_flag: NATURAL_8 = 0x4
+	is_digit_flag: NATURAL_8 = 0x08
+	is_punctuation_flag: NATURAL_8 = 0x10
+	is_control_flag: NATURAL_8 = 0x20
+	is_hexa_digit_flag: NATURAL_8 = 0x40
+	is_space_flag: NATURAL_8 = 0x80
+			-- Various flags for character properties used in `property_table'.
+
+--$TABLES
+end

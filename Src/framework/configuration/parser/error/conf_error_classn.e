@@ -11,26 +11,31 @@ class
 inherit
 	CONF_ERROR
 
+	SHARED_LOCALE
+		undefine
+			out
+		end
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_file, a_config: STRING)
+	make (a_file, a_config: READABLE_STRING_32)
 			-- Create.
 		require
 			a_file_not_void: a_file /= Void
 		do
-			text := "Classfile without a class in "+a_file+"%NConfiguration: "+a_config
+			text := locale.formatted_string (locale.translation ("Classfile without a class in $1%NConfiguration: $2"), [a_file, a_config])
 		end
 
 feature -- Access
 
-	text: READABLE_STRING_32;
+	text: READABLE_STRING_32
 		-- Error text.
 
-note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+;note
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

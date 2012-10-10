@@ -473,20 +473,22 @@ feature -- Basic operations
 			across a_diffs as l_entry loop
 				write_tab (a_output, a_nb_tab)
 				if l_entry.is_first then
-					a_output.append ("if l_code = ")
+					a_output.append ("if ")
 				else
-					a_output.append ("elseif l_code = ")
+					a_output.append ("elseif ")
 				end
-				a_output.append_natural_32 (l_entry.key)
+				across l_entry.item as l_codes loop
+					a_output.append (" l_code = ")
+					a_output.append_natural_32 (l_codes.item)
+					if not l_codes.is_last then
+						a_output.append (" or")
+					end
+				end
 				a_output.append (" then")
 				a_output.append_character ('%N')
 				write_tab (a_output, a_nb_tab + 1)
 				a_output.append ("Result := (")
-				if l_entry.item /= 0 then
-					a_output.append_natural_32 (l_entry.item)
-				else
-					a_output.append_natural_32 (l_entry.key)
-				end
+				a_output.append_natural_32 (l_entry.key)
 				a_output.append (").to_character_32")
 				a_output.append_character ('%N')
 			end
@@ -496,18 +498,22 @@ feature -- Basic operations
 
 feature {NONE} -- Helpers
 
-	mismatches (l_table1, l_table2: like extract_case_ranges): detachable HASH_TABLE [NATURAL_32, NATURAL_32]
+	mismatches (l_table1, l_table2: like extract_case_ranges): detachable HASH_TABLE [ARRAYED_LIST [NATURAL_32], NATURAL_32]
 			-- Compute the differences between two sets `l_table1' and `l_table2', and return the necessary information
 			-- required to patch `l_table1' to get to `l_table2'.
 			-- If blocks are different we return nothing as they are too many differences
+		local
+			l_diffs: detachable HASH_TABLE [NATURAL_32, NATURAL_32]
+			l_matches: detachable ARRAYED_LIST [NATURAL_32]
 		do
-			create Result.make (1)
+				-- We use `l_diffs' to collect all the mismatches between the two lists.
+			create l_diffs.make (1)
 			if l_table1.count = l_table2.count then
 				from
 					l_table1.start
 					l_table2.start
 				until
-					l_table1.after or Result = Void
+					l_table1.after or l_diffs = Void
 				loop
 					if l_table1.item.count = l_table2.item.count then
 						from
@@ -521,17 +527,30 @@ feature {NONE} -- Helpers
 									-- When overriding a value in `l_table1' we use `put'
 									-- as if we have previously entered a value for `l_table2'
 									-- we don't want to loose it.
-								Result.put (0, l_table1.item.item.key)
-								Result.force (l_table2.item.item.value, l_table2.item.item.key)
+								l_diffs.put (l_table1.item.item.key, l_table1.item.item.key)
+								l_diffs.force (l_table2.item.item.value, l_table2.item.item.key)
 							end
 							l_table1.item.forth
 							l_table2.item.forth
 						end
 					else
-						Result := Void
+						l_diffs := Void
 					end
 					l_table1.forth
 					l_table2.forth
+				end
+			end
+				-- Now that we have the list, we are going to merge the values with the same output
+				-- in `l_table2' to create a list that will more compact.
+			if l_diffs /= Void then
+				create Result.make (l_diffs.count)
+				across l_diffs as l_entry loop
+					l_matches := Result.item (l_entry.item)
+					if l_matches = Void then
+						create l_matches.make (3)
+						Result.extend (l_matches, l_entry.item)
+					end
+					l_matches.extend (l_entry.key)
 				end
 			end
 		end

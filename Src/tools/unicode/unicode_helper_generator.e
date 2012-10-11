@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 			l_parser.execute (agent do_nothing)
 			if l_parser.is_successful and attached l_parser.input_file as l_file then
 				density := l_parser.density
+				output_path := l_parser.output_path
 				is_statistic_requested := l_parser.has_statistic
 				read_unicode_data (l_file)
 				if unicode_data /= Void or has_error then
@@ -37,6 +38,9 @@ feature -- Access
 
 	density: REAL_64
 			-- Density of the table we generate.
+
+	output_path: detachable STRING_32
+			-- Path where files will be generated.
 
 	unicode_data: detachable ARRAYED_LIST [UNICODE_CHARACTER_DATA] note option: stable attribute end
 			-- List collecting all the unicode characters and their properties.
@@ -105,6 +109,7 @@ feature -- Basic operations
 			l_properties: like extract_case_ranges
 			l_diffs, l_simplified_diffs: like mismatches
 			l_tables, l_class, l_filter: STRING
+			l_filename: FILE_NAME_32
 		do
 				-- We generate the various mapping. Those mappings are sparse.
 			l_lowers := extract_case_ranges ("lower", unicode_data, agent {UNICODE_CHARACTER_DATA}.has_lower_code, agent {UNICODE_CHARACTER_DATA}.lower_code)
@@ -136,7 +141,13 @@ feature -- Basic operations
 			l_class := l_input.last_string
 			l_input.close
 
-			create l_output.make (character_32_property_filename)
+			if attached output_path as l_path and then not l_path.is_empty then
+				create l_filename.make_from_string (l_path)
+				l_filename.set_file_name (character_32_property_filename)
+				create l_output.make (l_filename)
+			else
+				create l_output.make (character_32_property_filename)
+			end
 			l_output.open_write
 
 			l_class.replace_substring_all (tables_marker, l_tables)

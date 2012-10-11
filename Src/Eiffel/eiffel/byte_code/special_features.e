@@ -28,10 +28,14 @@ feature -- Access
 				c_type_table.search (feature_name_id)
 				if c_type_table.found then
 					function_type := c_type_table.found_item
-					if function_type = out_type and then target_type.is_character_32 then
-							-- Do not inline `out' on CHARACTER 32 because the code is only
+					if target_type.is_character_32 then
+							-- Do not inline `out', `lower', `upper' on CHARACTER 32 because the code is only
 							-- provided in the Eiffel code.
-						check not Result end
+						inspect function_type
+						when out_type, lower_type, upper_type then
+						else
+							Result := True
+						end
 					else
 						Result := True
 					end

@@ -451,6 +451,12 @@ feature -- Basic operations
 				write_tab (a_output, a_nb_tab)
 				a_output.append ("if l_code >= ")
 				a_output.append_natural_32 (a_ranges.i_th (a_lower_bound).first.key)
+					-- Special case to generate the leaf node that check for all values greater than
+					-- can be handled by the last range.
+				if a_ranges.upper = a_lower_bound then
+					a_output.append (" and l_code <= ")
+					a_output.append_natural_32 (a_ranges.i_th (a_lower_bound).last.key)
+				end
 				a_output.append (" then")
 				write_tab (a_output, a_nb_tab)
 				a_output.append_character ('%N')

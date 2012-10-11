@@ -186,13 +186,14 @@ feature -- Query
 		require
 			not_void: a_file /= Void
 		local
-			l_file: detachable RAW_FILE
+			l_file: detachable FILE
 			l_facility: SED_STORABLE_FACILITIES
 			l_reader: SED_MEDIUM_READER_WRITER
 			retried: BOOLEAN
+			u: FILE_UTILITIES
 		do
 			if not retried then
-				create l_file.make (a_file.as_string_8)
+				l_file := u.make_raw_file (a_file)
 				if l_file.exists then
 					l_file.open_read
 					create l_reader.make (l_file)

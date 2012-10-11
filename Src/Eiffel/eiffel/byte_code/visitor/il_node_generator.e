@@ -2718,7 +2718,7 @@ feature {NONE} -- Visitors
 				l_target_class_type.base_class.is_typed_pointer and then not
 				l_source_type.same_as (l_target_type)
 			then
-					-- Objcet test for TYPED_POINTER fails
+					-- Object test for TYPED_POINTER fails
 					-- if the source is not of the same type as the target.
 					-- Remove expression value because it is not used.
 				il_generator.pop

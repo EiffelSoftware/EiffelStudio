@@ -24,7 +24,7 @@ feature -- Status report
 	is_alpha (a_char: CHARACTER_32): BOOLEAN
 			-- Is `a_char' an alphabetic character?
 		do
-			if a_char.natural_32_code <= max_ascii_value then 
+			if a_char.natural_32_code <= max_ascii_value then
 					-- Fast implementation for ASCII character.
 				if ('a' <= a_char and a_char <= 'z') or ('A' <= a_char and a_char <= 'Z') then
 						-- Fast implementation for ASCII character
@@ -40,7 +40,7 @@ feature -- Status report
 	is_lower (a_char: CHARACTER_32): BOOLEAN
 			-- Is `a_char' a lower character?
 		do
-			if a_char.natural_32_code <= max_ascii_value then 
+			if a_char.natural_32_code <= max_ascii_value then
 					-- Fast implementation for ASCII character.
 				if 'a' <= a_char and a_char <= 'z' then
 						-- Fast implementation for ASCII character.
@@ -54,7 +54,7 @@ feature -- Status report
 	is_upper (a_char: CHARACTER_32): BOOLEAN
 			-- Is `a_char' an upper character?
 		do
-			if a_char.natural_32_code <= max_ascii_value then 
+			if a_char.natural_32_code <= max_ascii_value then
 					-- Fast implementation for ASCII character.
 				if 'A' <= a_char and a_char <= 'Z' then
 						-- Fast implementation for ASCII character.
@@ -68,7 +68,7 @@ feature -- Status report
 	is_title (a_char: CHARACTER_32): BOOLEAN
 			-- Is `a_char' a title character?
 		do
-			if a_char.natural_32_code <= max_ascii_value then 
+			if a_char.natural_32_code <= max_ascii_value then
 					-- Fast implementation for ASCII character.
 				if 'A' <= a_char and a_char <= 'Z' then
 						-- Fast implementation for ASCII character.
@@ -82,7 +82,7 @@ feature -- Status report
 	is_digit (a_char: CHARACTER_32): BOOLEAN
 			-- Is `a_char' a digit character?
 		do
-			if a_char.natural_32_code <= max_ascii_value then 
+			if a_char.natural_32_code <= max_ascii_value then
 					-- Fast implementation for ASCII character.
 				if '0' <= a_char and a_char <= '9' then
 						-- Fast implementation for ASCII character.
@@ -234,4 +234,15 @@ feature {NONE} -- Flags
 feature {NONE} -- Property tables
 
 --$TABLES
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+
 end

@@ -157,7 +157,7 @@ feature -- Basic operations
 				if l_simplified_diffs = l_diffs then
 					generate_override (l_filter, l_diffs, "l_code", 4)
 				else
-					generate_override (l_filter, l_simplified_diffs, "Result", 4)
+					generate_override (l_filter, l_simplified_diffs, "Result.natural_32_code", 4)
 				end
 			else
 				create l_filter.make (10)

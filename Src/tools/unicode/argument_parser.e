@@ -59,6 +59,16 @@ feature -- Access
 			end
 		end
 
+	output_path: STRING
+			-- Path where files will be generated. By default in current directory.
+		do
+			if attached {ARGUMENT_OPTION} option_of_name (output_switch) as l_value then
+				Result := l_value.value
+			else
+				Result := ""
+			end
+		end
+
 feature -- Status report
 
 	has_statistic: BOOLEAN
@@ -87,6 +97,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (input_file_switch, "UnicodeData.txt file", False, False, "file", "Name of UnicodeData.txt file", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (density_switch, "Density for tables", True, False, "density", "Density of table as a ratio", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (property_template_switch, "Template used for generation of character properties", True, False, "template", "Template file", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (output_switch, "Directory where files will be generated", True, False, "dir", "Directory for outputs", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (stat_switch, "Display statistics", True, False))
 		end
 
@@ -102,6 +113,7 @@ feature {NONE} -- Switches
 	input_file_switch: STRING = "i|input"
 	stat_switch: STRING = "s|statistics"
 	property_template_switch: STRING = "p|property_template"
+	output_switch: STRING = "o|output_directory"
 			-- Argument switches
 
 end

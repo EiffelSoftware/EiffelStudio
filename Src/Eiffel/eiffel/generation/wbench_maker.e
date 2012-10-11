@@ -266,7 +266,7 @@ feature
 		local
 			precomp: like Precompilation_directories
 			dir: REMOTE_PROJECT_DIRECTORY
-			l_path: STRING
+			l_path: STRING_32
 			l_first: BOOLEAN
 			u: UTF_CONVERTER
 		do
@@ -288,10 +288,11 @@ feature
 						else
 							l_first := False
 						end
-							-- Use UTF-8 encoding in the generated Makefile.
-						l_path := u.string_32_to_utf_8_string_8 (dir.precompiled_preobj)
+						l_path := dir.precompiled_preobj
+							-- Add double quotes if required.
 						safe_external_path (l_path)
-						Make_file.put_string (l_path)
+							-- Use UTF-8 encoding in the generated Makefile.
+						Make_file.put_string (u.string_32_to_utf_8_string_8 (l_path))
 					end
 					precomp.forth
 				end

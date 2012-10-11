@@ -455,7 +455,7 @@ feature -- Status setting
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	save_to_named_file (a_filename: FILE_NAME)
+	save_to_named_file (a_filename: READABLE_STRING_GENERAL)
 			-- Save `text' and formatting of `Current' to file `a_filename' in RTF format.
 		require
 			not_destroyed: not is_destroyed
@@ -469,7 +469,7 @@ feature -- Status setting
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	set_with_named_file (a_filename: FILE_NAME)
+	set_with_named_file (a_filename: READABLE_STRING_GENERAL)
 			-- Set `text' and formatting of `Current' from file `a_filename' in RTF format.
 		require
 			not_destroyed: not is_destroyed

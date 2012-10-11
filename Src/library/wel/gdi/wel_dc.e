@@ -513,6 +513,12 @@ feature -- Status report
 	mask_blt_supported: BOOLEAN = True
 			-- It is since we only support Windows NT or greater.
 
+	is_valid_file_name (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `a_file_name' valid?
+		do
+			Result := (create {FILE_NAME_32}.make_from_string (a_file_name.as_string_32)).is_valid
+		end
+
 feature -- Status setting
 
 	set_text_alignment (an_alignment: INTEGER)
@@ -1675,14 +1681,14 @@ feature -- Basic operations
 				a_width, a_height, raster_operation)
 		end
 
-	save_bitmap (a_bitmap: WEL_BITMAP; file: FILE_NAME)
+	save_bitmap (a_bitmap: WEL_BITMAP; file: READABLE_STRING_GENERAL)
 			-- Save `a_bitmap' in `file'.
 		require
 			exists: exists
 			a_bitmap_not_void: a_bitmap /= Void
 			a_bitmap_exists: a_bitmap.exists
 			file_not_void: file /= Void
-			file_is_valid: file.is_valid
+			file_is_valid: is_valid_file_name (file)
 		local
 			bmi, bmi2: WEL_BITMAP_INFO
 			bfh: WEL_BITMAP_FILE_HEADER
@@ -1717,7 +1723,8 @@ feature -- Basic operations
 			bfh.set_off_bits (bfh.structure_size + size)
 
 			-- Create the file
-			create rf.make_create_read_write (file)
+			create {RAW_FILE_32} rf.make (file.as_string_32)
+			rf.create_read_write
 
 			-- Write the file header
 			create l_ptr.share_from_pointer (bfh.item, bfh.structure_size)
@@ -1894,7 +1901,7 @@ feature -- Obsolete
 			polyline (points)
 		end
 
-	save (a_bitmap: WEL_BITMAP; file: FILE_NAME)
+	save (a_bitmap: WEL_BITMAP; file: READABLE_STRING_GENERAL)
 		obsolete
 			"Use ``save_bitmap''"
 		require
@@ -1902,7 +1909,7 @@ feature -- Obsolete
 			a_bitmap_not_void: a_bitmap /= Void
 			a_bitmap_exists: a_bitmap.exists
 			file_not_void: file /= Void
-			file_is_valid: file.is_valid
+			file_is_valid: is_valid_file_name (file)
 		do
 			save_bitmap (a_bitmap, file)
 		end
@@ -2600,14 +2607,14 @@ invariant
 	valid_background_mode: exists implies is_opaque /= is_transparent
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

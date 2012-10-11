@@ -104,7 +104,7 @@ feature -- Initialization
 
 feature -- Command
 
-	set_with_named_file (a_file_name: STRING)
+	set_with_named_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Load pixel data from a file.
 		local
 			l_gdip_bitmap: like gdip_bitmap
@@ -231,10 +231,9 @@ feature -- Command
 			end
 		end
 
-	save_to_named_file (a_file_name: STRING)
+	save_to_named_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Save pixel data to `a_file_name'
 		local
-			l_file_name: FILE_NAME
 			l_gdip_bitmap: like gdip_bitmap
 			l_pixmap: like pixmap
 		do
@@ -243,11 +242,10 @@ feature -- Command
 				check l_gdip_bitmap /= Void end
 				l_gdip_bitmap.save_image_to_file (a_file_name)
 			else
-				create l_file_name.make_from_string (a_file_name)
 				-- FIXIT: How to know the orignal format of `pixmap'? It's BMP or PNG.
 				l_pixmap := pixmap
 				check l_pixmap /= Void end
-				l_pixmap.save_to_named_file (create {EV_PNG_FORMAT}, l_file_name)
+				l_pixmap.save_to_named_file (create {EV_PNG_FORMAT}, a_file_name)
 			end
 		end
 

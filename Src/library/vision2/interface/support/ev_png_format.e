@@ -20,7 +20,7 @@ feature {EV_PIXMAP_I} -- Access
 			Result := "png"
 		end
 
-	save (raw_image_data: EV_RAW_IMAGE_DATA; a_filename: FILE_NAME)
+	save (raw_image_data: EV_RAW_IMAGE_DATA; a_filename: READABLE_STRING_GENERAL)
 			-- Save `raw_image_data' to file `a_filename' in PNG format.
 		do
 			-- Implemented in pixmap implementation

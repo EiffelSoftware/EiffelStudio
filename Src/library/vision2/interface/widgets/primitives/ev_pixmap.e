@@ -236,7 +236,7 @@ feature -- Status setting
 
 feature -- Duplication
 
-	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME)
+	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: READABLE_STRING_GENERAL)
 			-- Save `Current' to `a_filename' in format `a_format'.
 		require
 			not_destroyed: not is_destroyed

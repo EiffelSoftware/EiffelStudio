@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	set_with_named_file (a_file_name: STRING)
+	set_with_named_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Load pixel data from file `a_file_name'
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
@@ -64,7 +64,7 @@ feature -- Command
 			implementation.set_with_pointer (a_pointer, a_size)
 		end
 
-	save_to_named_file (a_file_name: STRING)
+	save_to_named_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Save pixel data to file `a_file_name'.
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
@@ -209,14 +209,14 @@ feature -- Obsolete
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

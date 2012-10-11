@@ -417,7 +417,7 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_PIXEL_BUFFER_IMP} -- Implem
 
 feature {NONE} -- Implementation
 
-	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME)
+	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: READABLE_STRING_GENERAL)
 			-- Save `Current' in `a_format' to `a_filename'
 		local
 			a_gdkpixbuf, stretched_pixbuf: POINTER
@@ -427,7 +427,7 @@ feature {NONE} -- Implementation
 			if app_implementation.writeable_pixbuf_formats.has (a_format.file_extension.as_upper) then
 					-- Perform custom saving with GdkPixbuf
 				a_gdkpixbuf := pixbuf_from_drawable
-				a_handle := a_filename.string
+				a_handle := a_filename
 				a_filetype := a_format.file_extension
 				if a_format.scale_width > 0 and then a_format.scale_height > 0 then
 					stretched_pixbuf := {GTK2}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_format.scale_width, a_format.scale_height, {GTK2}.gdk_interp_bilinear)

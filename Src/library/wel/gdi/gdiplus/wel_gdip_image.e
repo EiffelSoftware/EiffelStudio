@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	load_image_from_file (a_file_name: STRING)
+	load_image_from_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Load datas from a file.
 		require
 			not_void: a_file_name /= Void
@@ -83,7 +83,7 @@ feature -- Command
 			load_image_from_stream (l_stream)
 		end
 
-	save_image_to_file (a_file_name: STRING)
+	save_image_to_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Save data to a file.
 		require
 			not_void: a_file_name /= Void
@@ -109,7 +109,7 @@ feature -- Command
 			save_image_to_file_with_encoder_and_parameters (a_file_name, l_format, a_parameters)
 		end
 
-	save_image_to_file_with_encoder (a_file_name: STRING; a_format: WEL_GDIP_IMAGE_ENCODER)
+	save_image_to_file_with_encoder (a_file_name: READABLE_STRING_GENERAL; a_format: WEL_GDIP_IMAGE_ENCODER)
 			-- Save data to a file with image encoder parameter
 		require
 			not_void: a_file_name /= Void
@@ -119,7 +119,7 @@ feature -- Command
 			save_image_to_file_with_encoder_and_parameters (a_file_name, a_format, Void)
 		end
 
-	save_image_to_file_with_encoder_and_parameters (a_file_name: STRING; a_format: WEL_GDIP_IMAGE_ENCODER; a_parameters: detachable WEL_GDIP_IMAGE_ENCODER_PARAMETERS)
+	save_image_to_file_with_encoder_and_parameters (a_file_name: READABLE_STRING_GENERAL; a_format: WEL_GDIP_IMAGE_ENCODER; a_parameters: detachable WEL_GDIP_IMAGE_ENCODER_PARAMETERS)
 			-- Save data to a file with image encoder and parameters
 		require
 			not_void: a_file_name /= Void
@@ -367,7 +367,7 @@ feature {WEL_GDIP_IMAGE} -- Implementation
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	load_image_from_file_original (a_file_name: STRING)
+	load_image_from_file_original (a_file_name: READABLE_STRING_GENERAL)
 			-- Load datas from a file. Orignal Gdi+ implementation.
 		require
 			not_void: a_file_name /= Void
@@ -776,7 +776,7 @@ feature -- Obsolete
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -172,7 +172,7 @@ feature -- Command
 			make_from_icon (a_icon)
 		end
 
-	load_image_from_file (a_file_name: STRING)
+	load_image_from_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Redefine
 		local
 			l_temp: WEL_GDIP_BITMAP
@@ -599,7 +599,7 @@ feature -- C externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

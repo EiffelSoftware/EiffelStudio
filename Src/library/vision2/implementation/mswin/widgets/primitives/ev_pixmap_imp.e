@@ -178,7 +178,7 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 
 feature {NONE} -- Saving
 
-	save_with_format (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME; a_raw_image_data: like raw_image_data)
+	save_with_format (a_format: EV_GRAPHICAL_FORMAT; a_filename: READABLE_STRING_GENERAL; a_raw_image_data: like raw_image_data)
 			-- Call `save' on `a_format'. Implemented in descendant of EV_PIXMAP_IMP_STATE
 			-- since `save' from EV_GRAPHICAL_FORMAT is only exported to EV_PIXMAP_I.
 		do

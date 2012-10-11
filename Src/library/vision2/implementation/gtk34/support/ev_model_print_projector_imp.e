@@ -27,7 +27,7 @@ inherit
 			project
 		end
 
-	EXECUTION_ENVIRONMENT
+	EXECUTION_ENVIRONMENT_32
 
 create
 	make_with_context
@@ -42,10 +42,10 @@ feature {NONE} -- Initialization
 	make_with_context (a_world: EV_MODEL_WORLD; a_context: EV_PRINT_CONTEXT)
 		do
 			if a_context.output_to_file then
-				create filename.make_from_string (a_context.file_name.as_string_8)
+				create {STRING_32} filename.make_from_string (a_context.file_name)
 			else -- Printing via lpr
 				-- Printing directly using lpr spooler
-				create filename.make_from_string (tmp_print_job_name)
+				create {STRING_32} filename.make_from_string (tmp_print_job_name)
 			end
 			make_with_filename (a_world, filename)
 			make
@@ -72,7 +72,7 @@ feature {EV_ANY_I} -- Access
 				-- Create the named pipe
 				create a_cs.make (filename)
 				i := mkfifo (a_cs.item, S_IRWXU)
-				system ("lpr < " + filename + " &")
+				system ({STRING_32} "lpr < " + filename.as_string_32 + {STRING_32} " &")
 			end
 				-- Print the file using the postscript projector.
 			Precursor {EV_MODEL_POSTSCRIPT_PROJECTOR}
@@ -113,14 +113,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MODEL_PRINT_PROJECTOR note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_MODEL_PRINT_PROJECTOR_IMP

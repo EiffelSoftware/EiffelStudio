@@ -354,7 +354,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	save_to_named_file (a_filename: FILE_NAME)
+	save_to_named_file (a_filename: READABLE_STRING_GENERAL)
 			-- Save `text' and formatting of `Current' to file `a_filename' in RTF format.
 		require
 			filename_not_void: a_filename /= Void
@@ -364,7 +364,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			l_text: like text
 			current_format: EV_CHARACTER_FORMAT_I
 			buffer: EV_RICH_TEXT_BUFFERING_STRUCTURES_I
-			text_file: PLAIN_TEXT_FILE
+			text_file: PLAIN_TEXT_FILE_32
 			paragraph_indexes: detachable ARRAYED_LIST [INTEGER]
 			paragraph_formats: detachable ARRAYED_LIST [STRING_32]
 			paragraphs_exhausted: BOOLEAN
@@ -457,7 +457,8 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			end
 			buffer.generate_complete_rtf_from_buffering
 			complete_saving
-			create text_file.make_open_write (a_filename)
+			create text_file.make (a_filename.as_string_32)
+			text_file.open_write
 			text_file.put_string (buffer.internal_text.as_string_8)
 			text_file.close
 		ensure
@@ -467,17 +468,18 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	set_with_named_file (a_filename: FILE_NAME)
+	set_with_named_file (a_filename: READABLE_STRING_GENERAL)
 			-- Set `text' and formatting of `Current' from file `a_filename' in RTF format.
 		require
 			filename_not_void: a_filename /= Void
 		local
-			text_file: RAW_FILE
+			text_file: RAW_FILE_32
 			l_text: detachable STRING
 			buffer: EV_RICH_TEXT_BUFFERING_STRUCTURES_I
 		do
 			initialize_for_loading
-			create text_file.make_open_read (a_filename)
+			create text_file.make (a_filename.as_string_32)
+			text_file.open_read
 			text_file.read_stream (text_file.count)
 			l_text := text_file.last_string
 			check l_text /= Void end
@@ -630,14 +632,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_RICH_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_RICH_TEXT_I

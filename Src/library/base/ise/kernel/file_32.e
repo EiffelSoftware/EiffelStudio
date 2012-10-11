@@ -29,6 +29,7 @@ inherit
 				is_device,
 				is_closed,
 				is_deep_equal,
+				is_device,
 				is_directory,
 				is_equal,
 				is_empty,

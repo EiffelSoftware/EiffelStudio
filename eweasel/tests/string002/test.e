@@ -7,18 +7,17 @@ feature
 	
 	make
 		local
-			i: INTEGER
-			c: CHARACTER_32
+			c, i: CHARACTER_32
 		do
 			io.put_string ("To lower:%N")
 			from
-				i := 0
+				i := '%U'
 			until
-				i > 65535
+				i > {CHARACTER_32}.max_unicode_value.to_character_32
 			loop
-				c := i.to_character_32.as_lower
-				if (c /= i.to_character_32) then
-					io.put_integer (i)
+				c := i.as_lower
+				if (c /= i) then
+					io.put_natural_32 (i.natural_32_code)
 					io.put_character (' ')
 					io.put_natural_32 (c.natural_32_code)
 					io.put_character ('%N')
@@ -28,13 +27,13 @@ feature
 
 			io.put_string ("%NTo upper:%N")
 			from
-				i := 0
+				i := '%U'
 			until
-				i > 65535
+				i > {CHARACTER_32}.max_unicode_value.to_character_32
 			loop
-				c := i.to_character_32.as_upper
-				if (c /= i.to_character_32) then
-					io.put_integer (i)
+				c := i.as_upper
+				if (c /= i) then
+					io.put_natural_32 (i.natural_32_code)
 					io.put_character (' ')
 					io.put_natural_32 (c.natural_32_code)
 					io.put_character ('%N')

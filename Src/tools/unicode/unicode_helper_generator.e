@@ -426,11 +426,9 @@ feature -- Basic operations
 			if a_lower_bound = a_upper_bound then
 					-- We generate the if statement for the current range of values.
 				write_tab (a_output, a_nb_tab)
-				a_output.append ("if (")
+				a_output.append ("if l_code >= ")
 				a_output.append_natural_32 (a_ranges.i_th (a_lower_bound).first.key)
-				a_output.append (" <= l_code) and (l_code <= ")
-				a_output.append_natural_32 (a_ranges.i_th (a_lower_bound).last.key)
-				a_output.append (") then")
+				a_output.append (" then")
 				write_tab (a_output, a_nb_tab)
 				a_output.append_character ('%N')
 				write_tab (a_output, a_nb_tab + 1)
@@ -453,7 +451,7 @@ feature -- Basic operations
 					-- We generate the if statement for the current range of values.
 				write_tab (a_output, a_nb_tab)
 				a_output.append ("if l_code <= ")
-				a_output.append_natural_32 (a_ranges.i_th (l_middle).first.key)
+				a_output.append_natural_32 (a_ranges.i_th (l_middle).last.key)
 				a_output.append (" then")
 				a_output.append_character ('%N')
 				generate_binary_search_filter (a_output, a_ranges, a_lower_bound, l_middle, a_table_name, a_nb_tab + 1, is_converted_to_char)

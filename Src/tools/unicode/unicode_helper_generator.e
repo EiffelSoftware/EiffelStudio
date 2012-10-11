@@ -468,28 +468,26 @@ feature -- Basic operations
 	generate_override (a_output: STRING; a_diffs: attached like mismatches; a_nb_tab: INTEGER)
 			-- Generate code in `a_output' to select the new values
 		do
+			write_tab (a_output, a_nb_tab)
+			a_output.append ("inspect l_code%N")
 			across a_diffs as l_entry loop
 				write_tab (a_output, a_nb_tab)
-				if l_entry.is_first then
-					a_output.append ("if ")
-				else
-					a_output.append ("elseif ")
-				end
+				a_output.append ("when ")
 				across l_entry.item as l_codes loop
-					a_output.append (" l_code = ")
 					a_output.append_natural_32 (l_codes.item)
 					if not l_codes.is_last then
-						a_output.append (" or")
+						a_output.append (", ")
 					end
 				end
-				a_output.append (" then")
-				a_output.append_character ('%N')
+				a_output.append (" then%N")
 				write_tab (a_output, a_nb_tab + 1)
 				a_output.append ("Result := (")
 				a_output.append_natural_32 (l_entry.key)
 				a_output.append (").to_character_32")
 				a_output.append_character ('%N')
 			end
+			write_tab (a_output, a_nb_tab)
+			a_output.append ("else%N")
 			write_tab (a_output, a_nb_tab)
 			a_output.append ("end")
 		end

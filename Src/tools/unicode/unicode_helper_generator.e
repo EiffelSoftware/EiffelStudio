@@ -41,6 +41,9 @@ feature -- Access
 	unicode_data: detachable ARRAYED_LIST [UNICODE_CHARACTER_DATA] note option: stable attribute end
 			-- List collecting all the unicode characters and their properties.
 
+	unicode_table: detachable HASH_TABLE [UNICODE_CHARACTER_DATA, NATURAL_32] note option: stable attribute end
+			-- Same as `unicode_data' but indexed by the Unicode code.
+
 feature -- Status Report
 
 	is_statistic_requested: BOOLEAN
@@ -56,6 +59,7 @@ feature -- Basic operations
 		local
 			l_input: PLAIN_TEXT_FILE_32
 			l_list: like unicode_data
+			l_table: like unicode_table
 			l_data: UNICODE_CHARACTER_DATA
 			retried: BOOLEAN
 		do
@@ -65,6 +69,7 @@ feature -- Basic operations
 				create l_input.make (a_file)
 				l_input.open_read
 				create l_list.make (2000)
+				create l_table.make (2000)
 				from
 					l_input.read_line
 				until
@@ -73,11 +78,13 @@ feature -- Basic operations
 					if attached l_input.last_string as l_line and then not l_line.is_empty and then l_line.item (1) /= '#' then
 						create l_data.make (l_line)
 						l_list.extend (l_data)
+						l_table.put (l_data, l_data.code)
 					end
 					l_input.read_line
 				end
 				l_input.close
 				unicode_data := l_list
+				unicode_table := l_table
 			else
 				has_error := True
 			end
@@ -96,7 +103,7 @@ feature -- Basic operations
 			l_input, l_output: PLAIN_TEXT_FILE_32
 			l_lowers, l_uppers, l_titles: like extract_case_ranges
 			l_properties: like extract_case_ranges
-			l_diffs: like mismatches
+			l_diffs, l_simplified_diffs: like mismatches
 			l_tables, l_class, l_filter: STRING
 		do
 				-- We generate the various mapping. Those mappings are sparse.
@@ -146,7 +153,12 @@ feature -- Basic operations
 				-- differences we simply generate an override.it de
 			if l_diffs /= Void then
 				create l_filter.make (10)
-				generate_override (l_filter, l_diffs, 4)
+				l_simplified_diffs := title_fix_up (l_diffs)
+				if l_simplified_diffs = l_diffs then
+					generate_override (l_filter, l_diffs, "l_code", 4)
+				else
+					generate_override (l_filter, l_simplified_diffs, "Result", 4)
+				end
 			else
 				create l_filter.make (10)
 				generate_filter (l_filter, l_titles, to_title_table_name, 4, True)
@@ -465,11 +477,13 @@ feature -- Basic operations
 			end
 		end
 
-	generate_override (a_output: STRING; a_diffs: attached like mismatches; a_nb_tab: INTEGER)
+	generate_override (a_output: STRING; a_diffs: attached like mismatches; a_variable: STRING; a_nb_tab: INTEGER)
 			-- Generate code in `a_output' to select the new values
 		do
 			write_tab (a_output, a_nb_tab)
-			a_output.append ("inspect l_code%N")
+			a_output.append ("inspect ")
+			a_output.append (a_variable)
+			a_output.append_character ('%N')
 			across a_diffs as l_entry loop
 				write_tab (a_output, a_nb_tab)
 				a_output.append ("when ")
@@ -493,6 +507,51 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Helpers
+
+	title_fix_up (a_table: attached like mismatches): attached like mismatches
+			-- Special case of simplifying mismatch based on our knowledge that we are trying to compute
+			-- the title case using first the upper case conversion and then patching what needs to.
+		require
+			unicode_table_set: unicode_table /= Void
+			a_table_has_no_empty_list: across a_table as l_entry all not l_entry.item.is_empty end
+		local
+			l_list: ARRAYED_LIST [NATURAL_32]
+			l_same: BOOLEAN
+			l_upper_char: NATURAL_32
+		do
+			create Result.make (a_table.count)
+			l_same := True
+			across a_table as l_entry until not l_same loop
+					-- Compute the upper character for the set
+				if attached unicode_table.item (l_entry.item.first) as l_char then
+					if l_char.has_upper_code then
+						l_upper_char := l_char.upper_code
+					else
+						l_upper_char := l_char.code
+					end
+				end
+				l_same := True
+				across l_entry.item as l_codes until not l_same loop
+					if attached unicode_table.item (l_codes.item) as l_char then
+						if l_char.has_upper_code then
+							l_same := l_char.upper_code = l_upper_char
+						else
+							l_same := l_char.code = l_upper_char
+						end
+					else
+						l_same := False
+					end
+				end
+				if l_same then
+					create l_list.make (1)
+					l_list.extend (l_upper_char)
+					Result.extend (l_list, l_entry.key)
+				else
+						-- We could not optimized, keep the original set.
+					Result.extend (l_entry.item, l_entry.key)
+				end
+			end
+		end
 
 	mismatches (l_table1, l_table2: like extract_case_ranges): detachable HASH_TABLE [ARRAYED_LIST [NATURAL_32], NATURAL_32]
 			-- Compute the differences between two sets `l_table1' and `l_table2', and return the necessary information

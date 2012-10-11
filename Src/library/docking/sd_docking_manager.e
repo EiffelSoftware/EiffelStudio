@@ -297,18 +297,17 @@ feature -- Query
 			Result := property.docker_mediator
 		end
 
-	is_config_data_valid (a_file_name: STRING): BOOLEAN
+	is_config_data_valid (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
 			 -- Is config data in `a_file_name' valid?
 		local
-			l_data: detachable SD_CONFIG_DATA
-			l_file: RAW_FILE
+			l_file: FILE
 			l_config_mediator: SD_OPEN_CONFIG_MEDIATOR
+			u: FILE_UTILITIES
 		do
-			create l_file.make (a_file_name)
+			l_file := u.make_raw_file (a_file_name)
 			if l_file.exists then
 				create l_config_mediator.make (Current)
-				l_data := l_config_mediator.config_data_from_file (a_file_name)
-				if l_data /= Void then
+				if attached l_config_mediator.config_data_from_file (a_file_name) as l_data then
 					Result := True
 				end
 			end
@@ -854,7 +853,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -110,7 +110,7 @@ feature -- Basic operations
 			l_lowers := extract_case_ranges ("lower", unicode_data, agent {UNICODE_CHARACTER_DATA}.has_lower_code, agent {UNICODE_CHARACTER_DATA}.lower_code)
 			l_uppers := extract_case_ranges ("upper", unicode_data, agent {UNICODE_CHARACTER_DATA}.has_upper_code, agent {UNICODE_CHARACTER_DATA}.upper_code)
 			l_titles := extract_case_ranges ("title", unicode_data, agent {UNICODE_CHARACTER_DATA}.has_title_code, agent {UNICODE_CHARACTER_DATA}.title_code)
-			l_properties := extract_case_ranges ("has_property", unicode_data, agent {UNICODE_CHARACTER_DATA}.has_property, agent {UNICODE_CHARACTER_DATA}.property_flags)
+			l_properties := extract_case_ranges ("property", unicode_data, agent {UNICODE_CHARACTER_DATA}.has_property, agent {UNICODE_CHARACTER_DATA}.property_flags)
 
 				-- We have noticed that the table for upper and title cases are very similar.
 				-- As of Unicode 6.2.0, there were really 9 differences (i.e. 3 characters) that

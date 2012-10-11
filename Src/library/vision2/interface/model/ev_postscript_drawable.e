@@ -63,7 +63,7 @@ feature -- Element change
 
 feature -- Commands
 
-	save_to_named_file (a_filename: FILE_NAME)
+	save_to_named_file (a_filename: READABLE_STRING_GENERAL)
 			-- Save `Current' to `a_filename'.
 		do
 			implementation.save_to_named_file (a_filename)

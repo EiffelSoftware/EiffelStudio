@@ -22,29 +22,25 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_filename (a_world: EV_FIGURE_WORLD; a_filename: FILE_NAME)
+	make_with_filename (a_world: EV_FIGURE_WORLD; a_filename: READABLE_STRING_GENERAL)
 			-- Create with `a_world' and `a_filename'.
 		require
 			a_world_not_void: a_world /= Void
 			a_filename_not_void: a_filename /= Void
-		local
-			l_filename: like filename
 		do
 			create draw_routines.make_filled (Void, 0, 20)
 			make_with_world (a_world)
 			set_margins (Default_left_margin, Default_bottom_margin)
 			set_page_size (Letter, False)
 			register_basic_figures
-			create l_filename.make
-			l_filename.set_file_name (a_filename)
-			filename := l_filename
+			create filename.make_from_string (a_filename.as_string_32)
 		end
 
 feature {NONE} -- Implementation
 
-	filename: detachable FILE_NAME
+	filename: detachable FILE_NAME_32
 
-	file: detachable PLAIN_TEXT_FILE
+	file: detachable PLAIN_TEXT_FILE_32
 
 	output_to_postscript
 			-- Output standard projection to postscript.
@@ -141,7 +137,8 @@ feature -- Basic operations
 				output_to_postscript
 				l_filename := filename
 				check l_filename /= Void end
-				create l_file.make_open_write (l_filename)
+				create l_file.make (l_filename)
+				l_file.open_write
 				file := l_file
 				l_postscript_result := postscript_result
 				check l_postscript_result /= Void end
@@ -154,14 +151,14 @@ feature -- Basic operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

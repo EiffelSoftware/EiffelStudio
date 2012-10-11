@@ -65,12 +65,12 @@ feature -- Initialization
 		deferred
 		end
 
-	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME)
+	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: READABLE_STRING_GENERAL)
 			-- Save `Current' to `a_filename' in `a_format' format.
 		require
 			a_format_not_void: a_format /= Void
 			a_filename_not_void: a_filename /= Void
-			a_filename_valid: a_filename.is_valid
+			a_filename_valid: is_file_name_valid (a_filename)
 		do
 			a_format.save (raw_image_data, a_filename)
 		end
@@ -95,6 +95,14 @@ feature -- Initialization
 		require
 			not_void: a_pixel_buffer /= Void
 		deferred
+		end
+
+feature -- Query
+
+	is_file_name_valid (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `a_file_name' valid?
+		do
+			Result := (create {FILE_NAME_32}.make_from_string (a_file_name.as_string_32)).is_valid
 		end
 
 feature -- Access
@@ -124,14 +132,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PIXMAP note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -83,7 +83,7 @@ feature -- Initialization
 
 feature -- Command
 
-	set_with_named_file (a_file_name: STRING)
+	set_with_named_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Load pixel data file `a_file_name'.
 		local
 			l_cs: EV_GTK_C_STRING
@@ -122,7 +122,7 @@ feature -- Command
 			end
 		end
 
-	save_to_named_file (a_file_name: STRING)
+	save_to_named_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Save pixel data to file `a_file_name'.
 		local
 			l_cs, l_file_type: EV_GTK_C_STRING
@@ -136,7 +136,7 @@ feature -- Command
 			l_app_imp ?= (create {EV_ENVIRONMENT}).implementation.application_i
 			check l_app_imp /= Void end
 			l_writeable_formats := l_app_imp.writeable_pixbuf_formats
-			l_extension := a_file_name.split ('.').last.as_upper
+			l_extension := a_file_name.as_string_32.split ('.').last.as_upper
 			if l_extension.is_equal ("JPEG") then
 				l_extension := "JPG"
 			end
@@ -164,7 +164,7 @@ feature -- Command
 					end
 				else
 					if ("PNG").is_equal (l_format) and then attached internal_pixmap as l_internal_pixmap then
-						l_internal_pixmap.save_to_named_file (create {EV_PNG_FORMAT}, create {FILE_NAME}.make_from_string (a_file_name))
+						l_internal_pixmap.save_to_named_file (create {EV_PNG_FORMAT}, a_file_name)
 					else
 						(create {EXCEPTIONS}).raise ("Could not save image file.")
 					end
@@ -521,14 +521,14 @@ feature {NONE} -- Obsolete
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

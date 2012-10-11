@@ -278,14 +278,14 @@ feature -- Clearing and drawing operations
 			add_ps ("grestore")
 		end
 
-	save_to_named_file (a_file_name: FILE_NAME)
+	save_to_named_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Save `Current' to the file with `a_file_name'.
 		require
 			a_file_name_not_void: a_file_name /= Void
 		local
 			file_with_header: STRING
 			clip_rectangle, page_rectangle, page_clip_rectangle: EV_RECTANGLE
-			file: PLAIN_TEXT_FILE
+			file: PLAIN_TEXT_FILE_32
 			nb_of_h_pages, nb_of_v_pages, h, v, cur_page: INTEGER
 		do
 			create file_with_header.make (0)
@@ -366,7 +366,8 @@ feature -- Clearing and drawing operations
 
 			file_with_header.append ("%%%%EOF%N")
 
-			create file.make_open_write (a_file_name)
+			create file.make (a_file_name.as_string_32)
+			file.open_write
 			file.put_string (file_with_header)
 			file.close
 		end
@@ -804,14 +805,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

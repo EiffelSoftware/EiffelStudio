@@ -137,7 +137,7 @@ feature -- Status report
 			end
 		end
 
-feature -- Maximal value of a character range
+feature -- Constants
 
 	max_ascii_value: NATURAL_32 = 0x7F
 	max_latin1_value: NATURAL_32 = 0xFF
@@ -209,6 +209,8 @@ feature -- Conversion
 --$TO_TITLE_HELPER
 			end
 		end
+
+feature {NONE} -- Helper
 
 	property (a_char: CHARACTER_32): NATURAL_8
 			-- Provides the various flags describing `a_char'.

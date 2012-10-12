@@ -16,4 +16,18 @@ compile_result 	validity_error TEST2 VLEC
 resume_compile
 compile_result 	validity_error TEST2 VLEC
 
+-- Try again without the precompiled library
+abort_compile
+cleanup_compile
+copy_sub 	Ace_without_precomp $TEST Ace
+
+compile_melted
+compile_result 	validity_error TEST2 VLEC
+
+resume_compile
+compile_result 	validity_error TEST2 VLEC
+
+resume_compile
+compile_result 	validity_error TEST2 VLEC
+
 test_end

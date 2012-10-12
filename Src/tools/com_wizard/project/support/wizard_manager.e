@@ -179,11 +179,12 @@ feature {NONE} -- Implementation
 			l_content, l_value: STRING
 			l_index, l_index2: INTEGER
 			l_finish_freezing_layout: FINISH_FREEZING_EIFFEL_LAYOUT
+			u: FILE_UTILITIES
 		do
 			Result := True
 			create l_finish_freezing_layout
 			l_finish_freezing_layout.check_environment_variable
-			create l_file.make (l_finish_freezing_layout.config_eif_file_name.string)
+			l_file := u.make_text_file (l_finish_freezing_layout.config_eif_file_name)
 			if l_file.exists then
 				l_file.open_read
 				l_file.read_stream (l_file.count)
@@ -208,7 +209,7 @@ feature {NONE} -- Implementation
 			-- Agent used to raise events
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

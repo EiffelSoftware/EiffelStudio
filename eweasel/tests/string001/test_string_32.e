@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 		local
 			s, t: STRING_32
 		do
-			create s.make_from_string ("ABcd EF gh I 123 ;ü")
+			create s.make_from_string ("ABcd EF gh I 123 ;Ü")
 			t := s.as_lower
 			check_string_equality ("as_lower", t, "abcd ef gh i 123 ;ü")
 			check_boolean ("as_lower", t /= s)

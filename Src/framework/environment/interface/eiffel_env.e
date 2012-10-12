@@ -464,6 +464,38 @@ feature -- Query
 			result_exists: (Result /= Void and a_must_exist) implies (create {RAW_FILE}.make (Result)).exists
 		end
 
+	user_priority_file_name_32 (a_file_name: READABLE_STRING_32; a_must_exist: BOOLEAN): detachable FILE_NAME_32
+			-- Retrieve a Eiffel installation file, taking a user replacement as priority
+		require
+			a_file_name_attached: a_file_name /= Void
+			not_a_file_is_empty: not a_file_name.is_empty
+		local
+			l_install: STRING_32
+			l_file: STRING_32
+			l_extension: STRING_32
+			l_actual_file: RAW_FILE_32
+		do
+			l_install := install_path_32.to_string_32
+			if l_install.count < a_file_name.count then
+				l_file := a_file_name.as_string_32
+				if l_file.substring (1, l_install.count).is_equal (l_install) then
+					l_extension := l_file.substring (l_install.count + 1, l_file.count)
+					l_extension.prune_all_leading (operating_environment.directory_separator)
+					create Result.make_from_string (user_files_path_32)
+					Result.extend (l_extension)
+
+					create l_actual_file.make (Result)
+					if a_must_exist and then (not l_actual_file.exists or else (l_actual_file.is_device or l_actual_file.is_directory)) then
+							-- The file does not exist or is not actually a file.
+						Result := Void
+					end
+				end
+			end
+		ensure
+			not_result_is_empty: Result /= Void implies not Result.is_empty
+			result_exists: (Result /= Void and a_must_exist) implies (create {RAW_FILE_32}.make (Result)).exists
+		end
+
 	platform_priority_file_name (a_file_name: READABLE_STRING_GENERAL; a_use_simple: BOOLEAN; a_must_exist: BOOLEAN): detachable FILE_NAME
 			-- Retrieve a Eiffel installation path, taking a platform specific path as a priority
 			--
@@ -810,6 +842,17 @@ feature -- Directories (distribution)
 			not_result_is_empty: not Result.is_empty
 		end
 
+	config_path_32: DIRECTORY_NAME_32
+			-- Path containing the Eiffel compiler configuration files.
+		require
+			is_valid_environment: is_valid_environment
+		once
+			create Result.make_from_string (shared_application_path_32)
+			Result.extend ("config")
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
 	generation_templates_path: DIRECTORY_NAME
 			-- Path containing the Eiffel compiler code generation template files.
 		require
@@ -827,6 +870,17 @@ feature -- Directories (distribution)
 			is_valid_environment: is_valid_environment
 		once
 			create Result.make_from_string (shared_application_path)
+			Result.extend ("eifinit")
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	eifinit_path_32: DIRECTORY_NAME_32
+			-- Path containing the Eiffel initialization configuration files.
+		require
+			is_valid_environment: is_valid_environment
+		once
+			create Result.make_from_string (shared_application_path_32)
 			Result.extend ("eifinit")
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -1470,18 +1524,18 @@ feature -- Files
 			not_result_is_empty: not Result.is_empty
 		end
 
-	compiler_configuration: FILE_NAME
+	compiler_configuration: FILE_NAME_32
 			-- Platform specific system level resource specification file
 			-- ($ISE_EIFFEL/eifinit/application_name/spec/$ISE_PLATFORM)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_from_string (eifinit_path)
+			create Result.make_from_string (eifinit_path_32)
 			Result.set_file_name ("general")
 			Result.add_extension ("cfg")
 			if is_user_files_supported then
 					-- Check user override file.
-				if attached user_priority_file_name (Result, True) as l_user then
+				if attached user_priority_file_name_32 (Result, True) as l_user then
 					Result := l_user
 				end
 			end
@@ -1917,13 +1971,13 @@ feature -- Files (commands)
 			not_result_is_empty: not Result.is_empty
 		end
 
-	compile_library_command_name: FILE_NAME
+	compile_library_command_name: FILE_NAME_32
 			-- Complete path to `compile_library.bat'.
 		require
 			is_valid_environment: is_valid_environment
 			is_windows: {PLATFORM}.is_windows
 		once
-			create Result.make_from_string (bin_path)
+			create Result.make_from_string (bin_path_32)
 			Result.set_file_name ("compile_library")
 			Result.add_extension ("bat")
 		ensure

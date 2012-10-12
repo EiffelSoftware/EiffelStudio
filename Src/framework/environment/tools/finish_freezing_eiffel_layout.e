@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "finish freezing layout"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,13 +21,13 @@ feature -- Access
 
 feature -- Directories
 
-	config_eif_path: DIRECTORY_NAME
+	config_eif_path: DIRECTORY_NAME_32
 			-- Path to directory containing `config.eif'.
 		require
 			is_valid_environment: is_valid_environment
 			windows: {PLATFORM}.is_windows
 		once
-			Result := config_path.twin
+			Result := config_path_32.twin
 			Result.extend_from_array (<<eiffel_platform, eiffel_c_compiler>>)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -35,7 +35,7 @@ feature -- Directories
 
 feature -- Files
 
-	config_eif_file_name: FILE_NAME
+	config_eif_file_name: FILE_NAME_32
 			-- Location of `config.eif' file.
 		require
 			is_valid_environment: is_valid_environment
@@ -44,11 +44,11 @@ feature -- Files
 			create Result.make_from_string (config_eif_path)
 			Result.set_file_name ("config")
 			Result.add_extension ("eif")
-
-			if is_user_files_supported then
-				if attached user_priority_file_name (Result, True) as l_user then
-					Result := l_user
-				end
+			if
+				is_user_files_supported and then
+				attached user_priority_file_name_32 (Result, True) as l_user
+			then
+				Result := l_user
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty

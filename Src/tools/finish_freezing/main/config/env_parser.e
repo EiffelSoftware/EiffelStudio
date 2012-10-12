@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		require
 			a_batch_file_attached: a_batch_file /= Void
 			not_a_batch_file_is_empty: not a_batch_file.is_empty
-			a_batch_file_exists: (create {PLAIN_TEXT_FILE}.make (a_batch_file)).exists
+			a_batch_file_exists: (create {PLAIN_TEXT_FILE_32}.make (a_batch_file)).exists
 			not_a_args_is_empty: a_args /= Void implies not a_args.is_empty
 			a_options_not_void: a_options /= Void
 		do
@@ -67,10 +67,10 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	batch_file_name: STRING
+	batch_file_name: STRING_32
 			-- Location of a configuration batch script.
 
-	batch_arguments: detachable STRING
+	batch_arguments: detachable STRING_32
 			-- Arguments for `batch_file_name' or Void if none.
 
 	batch_options: STRING
@@ -109,10 +109,10 @@ feature {NONE} -- Basic operations
 			-- Using a batch file provided by `vsvars_batch_file'
 		local
 			l_result: like internal_variables_via_evaluation
-			l_file_name, l_eval_file_name: STRING
+			l_eval_file_name: STRING
 			l_file: detachable PLAIN_TEXT_FILE
 			l_com_spec: detachable STRING
-			l_cmd: STRING
+			l_cmd: STRING_32
 			l_launcher: WEL_PROCESS_LAUNCHER
 			l_pair: like parse_variable_name_value_pair
 			l_appliable: like applicable_variables
@@ -127,14 +127,7 @@ feature {NONE} -- Basic operations
 				l_result.compare_objects
 
 				if retry_count < 2 then
-					l_file_name := new_temp_file (temp_batch_file_name)
 					l_eval_file_name := new_temp_file (env_eval_tmp_file_name)
-
-						-- Create batch file for environment variable evaluation
-					create l_file.make_open_write (l_file_name)
-					l_file.put_string (batch_file_content (l_eval_file_name))
-					l_file.flush
-					l_file.close
 
 					l_com_spec := Void
 					if retry_count = 0 then
@@ -147,20 +140,16 @@ feature {NONE} -- Basic operations
 
 					if l_com_spec /= Void and then not l_com_spec.is_empty then
 							-- Execute batch file using command executable
-						create l_cmd.make (l_com_spec.count + 4 + l_file_name.count)
+						create l_cmd.make (l_com_spec.count + 80)
 						l_cmd.append (l_com_spec)
 						l_cmd.append_character (' ')
 						l_cmd.append (batch_options)
 						l_cmd.append (" /c ")
-						l_cmd.append (l_file_name)
+						l_cmd.append (save_variables_command (l_eval_file_name))
 
 						create l_launcher
 						l_launcher.run_hidden
 						l_launcher.launch (l_cmd, Void, Void)
-
-						check l_file_is_closed: l_file.is_closed end
-						l_file.delete
-						l_file := Void
 
 						if l_launcher.last_process_result = 0 then
 							create l_file.make (l_eval_file_name)
@@ -249,31 +238,28 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	batch_file_content (a_out: STRING): STRING
-			-- Generates content for a batch file, used to executed and extract env vars from.
+	save_variables_command (a_out: STRING): STRING_32
+			-- Command to write environment variables to the file `a_out'.
 		require
 			a_out_attached: a_out /= Void
 			not_a_out_is_empty: not a_out.is_empty
-		local
-			l_args: like batch_arguments
 		do
-			l_args := batch_arguments
-
 			create Result.make (256)
-			Result.append ("@ECHO OFF%N")
-			Result.append ("CALL %"")
+			Result.append ("%"CALL %"")
 			Result.append (batch_file_name)
 			Result.append ("%" ")
-			if l_args /= Void then
+			if attached batch_arguments as l_args then
 				Result.append (l_args)
 			end
 			Result.append (" > ")
 			Result.append (a_out)
-			Result.append ("%NSET > ")
+			Result.append (" && SET > ")
 			Result.append (a_out)
+			Result.append_character ('"')
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
+			one_line_command: not Result.has ('%N')
 		end
 
 	applicable_variables: ARRAYED_LIST [STRING]
@@ -305,7 +291,7 @@ feature {NONE} -- Basic operations
 			else
 					-- We could not create our temporary file,
 					-- let's create one in the temporary directory of the OS.
-				Result := (create {FILE_NAME}.make_temporary_name).out + "_" + a_temp_name
+				Result := (create {FILE_NAME}.make_temporary_name).string + "_" + a_temp_name
 				create l_file.make_open_write (Result)
 				l_file.close
 			end
@@ -316,9 +302,6 @@ feature {NONE} -- Basic operations
 				retry
 			end
 		end
-
-	temp_batch_file_name: STRING = "tmp_espawn.bat"
-			-- File name of evaluated environment variables.
 
 	env_eval_tmp_file_name: STRING = "tmp_espawn.tmp"
 			-- File name of evaluated environment variables.
@@ -394,12 +377,12 @@ feature {NONE} -- Implementation: Internal cache
 invariant
 	batch_file_name_attached: batch_file_name /= Void
 	not_batch_file_name_is_empty: not batch_file_name.is_empty
-	batch_file_name_exists: (create {RAW_FILE}.make (batch_file_name)).exists
+	batch_file_name_exists: (create {RAW_FILE_32}.make (batch_file_name)).exists
 	not_batch_arguments_is_empty: attached batch_arguments as l_args implies not l_args.is_empty
 	batch_options_attached: batch_options /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

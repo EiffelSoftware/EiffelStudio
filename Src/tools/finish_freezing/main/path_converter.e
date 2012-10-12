@@ -14,7 +14,7 @@ feature -- Access
 			-- Maximum path length (in characters)
 			--| Windows limit.
 
-	short_path (long_path: STRING): STRING
+	short_path (long_path: STRING_32): STRING
 			-- Short path name corresponding to `long_path'.
 		require
 			non_void_long_path: long_path /= Void
@@ -47,7 +47,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

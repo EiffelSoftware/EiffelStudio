@@ -91,7 +91,7 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	install_path: STRING
+	install_path: STRING_32
 			-- Location of Visual Studio install base
 		require
 			exists: exists
@@ -240,7 +240,7 @@ invariant
 	variable_table_attached: variable_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

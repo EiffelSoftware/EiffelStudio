@@ -18,27 +18,24 @@ create
 
 feature {NONE} -- Access
 
-	batch_file_name: STRING
+	batch_file_name: STRING_32
 			-- <Precursor>
 		do
-			create Result.make (256)
-			Result.append (install_path)
-			Result.append ("vcvarsall.bat")
+			Result := install_path + "vcvarsall.bat"
 		end
 
-	batch_file_arguments: detachable STRING
+	batch_file_arguments: detachable STRING_32
 			-- <Precursor>
 		do
-			create Result.make (5)
 			if use_32bit then
-				Result.append ("x86")
+				Result := "x86"
 			else
-				Result.append ("x64")
+				Result := "x64"
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

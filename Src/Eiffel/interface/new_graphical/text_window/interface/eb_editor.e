@@ -373,8 +373,7 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} 
 			-- Prettify class text if possible.
 		local
 			l_show_pretty: E_SHOW_PRETTY
-			n: STRING_32
-			f: RAW_FILE_32
+			s: STRING_32
 		do
 			if is_read_only and then not allow_edition then
 					-- Don't prettify class text if we are in a read-only view.
@@ -382,17 +381,15 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} 
 			elseif text_displayed.is_modified then
 				save_class_before_prettifying
 			else
-					-- Name a temporary file by adding an extension ".pretty" to the original name.
-				n := file_name.to_string_32 + ".pretty"
-				create l_show_pretty.make (file_name, n)
-
-					-- Try to prettify the class
-				l_show_pretty.execute
-
+					-- Create a string to write prettified text.
+				create s.make_empty
+					-- Prettify code.
+				create l_show_pretty.make_string (file_name, s)
+					-- Check if formatting is successful.
 				if not l_show_pretty.error then
 						-- Replace current class text with the prettified text.
 					text_displayed.select_all
-					text_displayed.replace_selection (l_show_pretty.prettified)
+					text_displayed.replace_selection (s)
 
 						-- Refresh the editor and go to the beginning of the class text.
 					refresh_now
@@ -402,9 +399,6 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} 
 					text_displayed.cursor.go_start_line
 					text_displayed.cursor.go_to_position (1)
 				end
-					-- Remove temporary file.
-				create f.make (n)
-				f.delete
 			end
 		end
 

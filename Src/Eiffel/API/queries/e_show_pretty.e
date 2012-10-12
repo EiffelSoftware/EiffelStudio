@@ -13,83 +13,59 @@ inherit
 	SHARED_ERROR_HANDLER
 
 create
-	make
+	make_file,
+	make_string
 
 feature {NONE} -- Initialization
 
-	make (a_in_filename, a_out_filename: like {E_SHOW_PRETTY}.in_filename)
-			-- Initialization
+	make_file (input, output: READABLE_STRING_32)
+			-- Prettify code from the file `input' and write it to the file `output'.
 		require
-			a_in_filename_not_void: a_in_filename /= Void
-			a_out_filename_not_void: a_out_filename /= Void
+			input_attached: attached input
+			output_attached: attached output
 		do
-			in_filename := a_in_filename
-			out_filename := a_out_filename
 			error := False
-		ensure
-			a_in_filename_set: in_filename = a_in_filename
-			a_out_filename_set: out_filename = a_out_filename
+				-- Parse the input file.
+			parse_input_file (input)
+				-- Print the output file.
+			if not error then
+				print_output_file (output)
+			end
+		end
+
+	make_string (input: READABLE_STRING_32; output: STRING_32)
+			-- Prettify code from the file `input' and write it to the string `output'.
+		require
+			input_attached: attached input
+			output_attached: attached output
+		do
+			error := False
+				-- Parse the input file
+			parse_input_file (input)
+				-- Print the output file
+			if not error then
+				generate_output (create {PRETTY_PRINTER_OUTPUT_STREAM}.make_string (output))
+			end
 		end
 
 feature -- Access
 
-	in_filename: STRING_32
-			-- Input filename
-
-	out_filename: STRING_32
-			-- Output filename
-
 	parser: EIFFEL_PARSER
-			-- Parser
+			-- Source code parser.
 
 	error: BOOLEAN
-			-- Set to `True' if an error occured.
-
-	prettified: STRING
-			-- Returns the prettified class text.
-		require
-			no_error_happened: not error
-			output_file_set: out_filename /= Void and then out_filename /= ""
-		local
-			l_out_file: PLAIN_TEXT_FILE_32
-		do
-			create l_out_file.make (out_filename)
-			l_out_file.open_read
-			if l_out_file.is_open_read then
-				l_out_file.read_stream (l_out_file.count)
-				Result := l_out_file.last_string
-				l_out_file.close
-			else
-				error := True
-			end
-		ensure
-			error_reported: error = (Result = Void)
-		end
-
-feature -- Execution
-
-	execute
-			-- Execute the pretty-printing command.
-		do
-				-- Parse the input file
-			parse_input_file
-
-				-- Print the output file
-			if not error then
-				print_output_file
-			end
-		end
+			-- Is error detected?
 
 feature {NONE} -- Implementation
 
-	parse_input_file
-			-- Parses the input file.
+	parse_input_file (input: READABLE_STRING_32)
+			-- Parses the input file `input'.
 		local
 			l_in_file: KL_BINARY_INPUT_FILE
 			u: GOBO_FILE_UTILITIES
 		do
 				-- Open the input file
-			l_in_file := u.make_binary_input_file (in_filename)
+			l_in_file := u.make_binary_input_file (input)
 			l_in_file.open_read
 
 			if l_in_file.is_open_read then
@@ -99,51 +75,60 @@ feature {NONE} -- Implementation
 				parser.parse (l_in_file)
 				l_in_file.close
 
-				Error_handler.force_display
-				error := parser.error_count > 0 or parser.root_node = Void or Error_handler.has_error
+				error_handler.force_display
+				error := parser.error_count > 0 or parser.root_node = Void or error_handler.has_error
 			else
-				Error := True
+				error := True
 			end
 		ensure
 			output_set: not error implies parser.root_node /= Void
 		end
 
-	print_output_file
-			-- Pretty-prints the output file.
+	print_output_file (output: READABLE_STRING_32)
+			-- Pretty-print to the output file named `output'.
 		require
 			is_parsed: not error and parser /= Void and then parser.root_node /= Void
 		local
-			l_printer: PRETTY_PRINTER
-			l_out_file: KL_TEXT_OUTPUT_FILE
-			u: GOBO_FILE_UTILITIES
+			f: detachable PLAIN_TEXT_FILE_32
 		do
-			if out_filename.same_string ("-") then
-				create l_printer.make (std.output)
-				l_printer.set_parsed_class (parser.root_node)
-				l_printer.set_match_list (parser.match_list)
-				parser.root_node.process (l_printer)
-			else
-				l_out_file := u.make_text_output_file (out_filename)
-				l_out_file.recursive_open_write
-
-				if l_out_file.is_open_write then
-					create l_printer.make (l_out_file)
-					l_printer.set_parsed_class (parser.root_node)
-					l_printer.set_match_list (parser.match_list)
-					parser.root_node.process (l_printer)
-					l_out_file.close
+			if not error then
+				if output.is_empty then
+					generate_output (create {PRETTY_PRINTER_OUTPUT_STREAM}.make_standard_output)
 				else
-					error := True
+					create f.make (output)
+					f.open_write
+					if f.is_open_write then
+						if attached parser.detected_bom as bom then
+								-- Write BOM at the beginning of the file.
+							f.put_string (bom)
+						end
+						generate_output (create {PRETTY_PRINTER_OUTPUT_STREAM}.make_file (f, parser.detected_encoding))
+						f.close
+					else
+						error := True
+					end
 				end
 			end
+		rescue
+			error := True
+			retry
 		end
 
-invariant
-	in_filename_not_void: in_filename /= Void
-	out_filename_not_void: out_filename /= Void
+	generate_output (s: PRETTY_PRINTER_OUTPUT_STREAM)
+			-- Generate output to stream `s'.
+		require
+			is_parsed: not error and parser /= Void and then parser.root_node /= Void
+		local
+			p: PRETTY_PRINTER
+		do
+			create p.make (s)
+			p.set_parsed_class (parser.root_node)
+			p.set_match_list (parser.match_list)
+			parser.root_node.process (p)
+		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

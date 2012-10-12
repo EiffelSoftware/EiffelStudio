@@ -23,23 +23,26 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_in_filename, a_out_filename: like {E_SHOW_PRETTY}.in_filename)
+	make (a_in_filename, a_out_filename: like in_filename)
 			-- Initialization
 		require
 			a_in_filename_not_void: a_in_filename /= Void
 			a_out_filename_not_void: a_out_filename /= Void
 		do
-			create show_pretty.make (a_in_filename, a_out_filename)
+			in_filename := a_in_filename
+			out_filename := a_out_filename
 		ensure
-			show_pretty_not_void: show_pretty /= Void
-			in_filename_set: show_pretty.in_filename = a_in_filename
-			out_filename_set: show_pretty.out_filename = a_out_filename
+			in_filename_set: in_filename = a_in_filename
+			out_filename_set: out_filename = a_out_filename
 		end
 
 feature -- Properties
 
-	show_pretty: E_SHOW_PRETTY
-			-- Show pretty printed form of a class file
+	in_filename: STRING_32
+			-- Input filename
+
+	out_filename: STRING_32
+			-- Output filename
 
 feature {NONE} -- Execution
 
@@ -48,10 +51,10 @@ feature {NONE} -- Execution
 		require else
 			True -- We don't need a compiled workbench!
 		local
+			show_pretty: E_SHOW_PRETTY
 			e: ERROR
 		do
-			show_pretty.execute
-
+			create show_pretty.make_file (in_filename, out_filename)
 			if show_pretty.error then
 				io.error.put_string ("Prettifyer: Unable to prettify.%N")
 				from
@@ -63,15 +66,11 @@ feature {NONE} -- Execution
 					io.error.put_string ("- Syntax error at line " + e.line.out + "%N")
 					error_handler.error_list.forth
 				end
-
 			end
 		end
 
-invariant
-	show_pretty_not_void: show_pretty /= Void
-
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

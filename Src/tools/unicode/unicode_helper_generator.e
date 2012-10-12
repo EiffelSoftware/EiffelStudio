@@ -64,7 +64,7 @@ feature -- Basic operations
 			l_input: PLAIN_TEXT_FILE_32
 			l_list: like unicode_data
 			l_table: like unicode_table
-			l_data: UNICODE_CHARACTER_DATA
+			l_data: detachable UNICODE_CHARACTER_DATA
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -87,6 +87,40 @@ feature -- Basic operations
 					l_input.read_line
 				end
 				l_input.close
+
+					-- Patch the following values for charcter to lower.
+				l_data := l_table.item (978)
+				if l_data /= Void and then not l_data.has_lower_code then
+					l_data.set_lower_code (965)
+				end
+				l_data := l_table.item (979)
+				if l_data /= Void and then not l_data.has_lower_code then
+					l_data.set_lower_code (973)
+				end
+				l_data := l_table.item (980)
+				if l_data /= Void and then not l_data.has_lower_code then
+					l_data.set_lower_code (971)
+				end
+
+					-- Patch the following values for charcter to upper/title.
+				l_data := l_table.item (912)
+				if l_data /= Void then
+					if not l_data.has_upper_code then
+						l_data.set_upper_code (938)
+					end
+					if not l_data.has_title_code then
+						l_data.set_title_code (938)
+					end
+				end
+				l_data := l_table.item (944)
+				if l_data /= Void then
+					if not l_data.has_upper_code then
+						l_data.set_upper_code (939)
+					end
+					if not l_data.has_title_code then
+						l_data.set_title_code (939)
+					end
+				end
 
 				unicode_data := l_list
 				unicode_table := l_table

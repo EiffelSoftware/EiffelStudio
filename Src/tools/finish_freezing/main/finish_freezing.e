@@ -54,8 +54,8 @@ feature -- Initialization
 		do
 			if not retried then
 					-- if location has been specified, update it
-				if a_parser.has_location then
-					l_location := a_parser.location
+				if attached a_parser.location as l_loc then
+					l_location := l_loc
 				else
 						-- Location defaults to the current directory
 					l_location := current_working_directory

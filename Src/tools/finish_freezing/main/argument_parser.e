@@ -27,20 +27,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	location: STRING
+	location: detachable STRING
 			-- Location specified by user, via command line
 		require
 			is_successful: is_successful
-			has_location: has_location
-		local
-			l_opt: ARGUMENT_OPTION
 		once
-			l_opt := option_of_name (location_switch)
-			check l_opt_attached: l_opt /= Void end
-			Result := l_opt.value
-		ensure
-			result_attached: Result /= Void
-			not_result_is_empty: not Result.is_empty
+			if attached option_of_name (location_switch) as l_opt then
+				Result := l_opt.value
+			end
 		end
 
 	generate_only: BOOLEAN
@@ -152,7 +146,7 @@ feature {NONE} -- Switches
 			-- Obsolete switch be kept for backward compatibility
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

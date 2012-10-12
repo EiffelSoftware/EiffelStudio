@@ -157,9 +157,9 @@ create
 feature {NONE} -- Initialization
 
 	make (a_out_stream: like out_stream)
-			-- Initialization
+			-- Initialization.
 		require
-			out_stream_ready: a_out_stream /= Void and then a_out_stream.is_open_write
+			out_stream_ready: a_out_stream /= Void
 		do
 			out_stream := a_out_stream
 			indent := ""
@@ -172,15 +172,15 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	out_stream: KI_TEXT_OUTPUT_STREAM
+	out_stream: PRETTY_PRINTER_OUTPUT_STREAM
 			-- Output stream.
 
-	indent: STRING
+	indent: STRING_32
 			-- Indentation string.
 
 feature {NONE} -- Internal access
 
-	last_printed: CHARACTER
+	last_printed: CHARACTER_32
 			-- Last printed character.
 
 	is_expr_iteration: BOOLEAN
@@ -191,7 +191,7 @@ feature {NONE} -- Internal access
 
 feature {NONE} -- Output
 
-	print_string (s: STRING)
+	print_string (s: READABLE_STRING_32)
 			-- Print `s' to the output stream.
 		local
 			i: INTEGER
@@ -233,7 +233,7 @@ feature {NONE} -- Output
 			print_string (indent)
 		end
 
-	safe_process_and_print (l_as: AST_EIFFEL; pre, post: STRING)
+	safe_process_and_print (l_as: AST_EIFFEL; pre, post: READABLE_STRING_32)
 			-- Process `l_as' safely while printing `pre' before and `post' after processing.
 		do
 			if l_as /= Void then
@@ -1820,7 +1820,7 @@ feature {NONE} -- Comments
 	change_indent: PROCEDURE [ANY, TUPLE]
 			-- Procedure to change `indent'.
 
-	print_comment (s: STRING)
+	print_comment (s: READABLE_STRING_32)
 			-- Print the comment string `s'.
 		require
 			has_comment: s.has_substring ("--")
@@ -1829,8 +1829,8 @@ feature {NONE} -- Comments
 			n: INTEGER
 			l_start_idx: INTEGER
 			inline_comment: BOOLEAN
-			c: CHARACTER
-			line: STRING
+			c: CHARACTER_32
+			line: STRING_32
 		do
 				-- The string can hold multiple comments, starting with '--'.
 				-- Remove all '%N' and '%R' characters before and after each comment line.
@@ -1935,10 +1935,10 @@ feature {NONE} -- Comments
 			end
 		end
 
-	white_space_chars: STRING = " %T"
+	white_space_chars: STRING_32 = " %T"
 			-- Characters that can be safely removed when they appear at end of a line.
 
-	new_line_chars: STRING = "%N%R"
+	new_line_chars: STRING_32 = "%N%R"
 			-- Characters that denote an end of a line.
 
 invariant
@@ -1946,7 +1946,7 @@ invariant
 	indent_attached: attached indent
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

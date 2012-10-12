@@ -957,7 +957,7 @@ feature -- Update
 				elseif current_option < argument_count then
 						-- Only input filename given (use STDOUT for output)
 					in_filename := argument (current_option + 1)
-					out_filename := "-"
+					out_filename := ""
 					current_option := current_option + 1
 
 				else

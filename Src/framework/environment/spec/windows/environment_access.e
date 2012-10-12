@@ -21,7 +21,6 @@ feature -- Access
 		local
 			l_reg: WEL_REGISTRY
 			l_key: detachable WEL_REGISTRY_KEY_VALUE
-			l_s32: STRING_32
 			l_eiffel: STRING
 		do
 			Result := get (a_var)
@@ -29,24 +28,21 @@ feature -- Access
 				l_eiffel := "\Software\ISE\Eiffel" + {EIFFEL_CONSTANTS}.major_version.out + {EIFFEL_CONSTANTS}.minor_version.out
 				create l_reg
 				if a_app /= Void then
+						-- Lookup application-specific setting.
 					l_key := l_reg.open_key_value ("hkey_current_user"+l_eiffel+"\" + a_app, a_var.as_lower)
-				end
-				if l_key = Void then
-					if a_app /= Void then
+					if l_key = Void then
 						l_key := l_reg.open_key_value ("hkey_local_machine"+l_eiffel+"\" + a_app, a_var.as_lower)
 					end
+				end
+				if l_key = Void then
+						-- Lookup general setting.
+					l_key := l_reg.open_key_value ("hkey_current_user"+l_eiffel, a_var.as_lower)
 					if l_key = Void then
-						l_key := l_reg.open_key_value ("hkey_current_user"+l_eiffel, a_var.as_lower)
-						if l_key = Void then
-							l_key := l_reg.open_key_value ("hkey_local_machine"+l_eiffel, a_var.as_lower)
-						end
+						l_key := l_reg.open_key_value ("hkey_local_machine"+l_eiffel, a_var.as_lower)
 					end
 				end
 				if l_key /= Void then
-					l_s32 := l_key.string_value
-					if l_s32 /= Void then
-						Result := l_s32.as_string_8
-					end
+					Result := l_key.string_value
 				end
 			end
 		end

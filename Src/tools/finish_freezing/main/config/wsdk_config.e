@@ -29,10 +29,10 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	batch_file_name: STRING
+	batch_file_name: STRING_32
 			-- <Precursor>
 		local
-			l_result: detachable STRING
+			l_result: detachable STRING_32
 		do
 			if is_eiffel_layout_defined and then attached {FINISH_FREEZING_EIFFEL_LAYOUT} eiffel_layout as l_layout and then l_layout.is_valid_environment then
 				create l_result.make (256)
@@ -62,7 +62,7 @@ feature {NONE} -- Access
 			Result := l_result
 		end
 
-	batch_file_arguments: STRING
+	batch_file_arguments: STRING_32
 			-- <Precursor>
 		do
 			create Result.make (10)
@@ -77,7 +77,10 @@ feature {NONE} -- Access
 						-- Need to do the same check as in `batch_file_name' to ensure we do
 						-- not pass the install path as an argument when we are using the config library
 						-- in an environment that has no install-base (like an installation program)
-					Result.append ("%"" + install_path + "%" ")
+					Result.append_character ('"')
+					Result.append_string (install_path)
+					Result.append_character ('"')
+					Result.append_character (' ')
 				end
 			end
 			Result.append ("/Release ")
@@ -109,7 +112,7 @@ feature {NONE} -- Access
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

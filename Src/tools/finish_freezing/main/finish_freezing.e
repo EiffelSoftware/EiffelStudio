@@ -4,7 +4,7 @@ note
 class FINISH_FREEZING
 
 inherit
-	EXECUTION_ENVIRONMENT
+	EXECUTION_ENVIRONMENT_32
 		rename
 			command_line as non_used_command_line
 		export
@@ -40,15 +40,14 @@ feature -- Initialization
 		local
 			retried: BOOLEAN -- did an error occur?
 			c_error: BOOLEAN -- did an error occur during C compilation?
-			l_msg, make_util: STRING -- the C make utility for this platform
-			l_location: STRING
+			l_location: STRING_32
 			l_location_index: INTEGER
 			l_unc_mapper: detachable UNC_PATH_MAPPER
 			l_mapped_path: BOOLEAN
 			l_exception: EXCEPTIONS
 			l_processors: NATURAL_8
 			l_gen_only: BOOLEAN
-			l_library_cmd: STRING
+			l_library_cmd: STRING_32
 			l_c_setup: COMPILER_SETUP
 			l_options: RESOURCE_TABLE
 			l_translator: MAKEFILE_TRANSLATOR
@@ -98,7 +97,7 @@ feature -- Initialization
 					l_library_cmd.append (eiffel_layout.compile_library_command_name)
 					l_library_cmd.append_character ('"')
 					l_library_cmd.append_character ('"')
-					env.system (l_library_cmd)
+					system (l_library_cmd)
 				else
 					create l_translator.make (l_options, l_mapped_path, a_parser.force_32bit_code_generation, l_processors)
 
@@ -116,10 +115,12 @@ feature -- Initialization
 						end
 
 						if l_translator = Void then
-							l_msg := "Internal error during Makefile translation preparation.%N%N%
-									%Please report this problem to Eiffel Software at:%N%
-									%http://support.eiffel.com"
-							io.put_string (l_msg)
+							io.put_string ("[
+								Internal error during Makefile translation preparation.
+								
+								Please report this problem to Eiffel Software at:
+								http://support.eiffel.com
+							]")
 							io.standard_default.flush
 						else
 							if l_translator.has_makefile_sh then
@@ -159,11 +160,6 @@ feature -- Initialization
 		end
 
 feature -- Access
-
-	env: EXECUTION_ENVIRONMENT
-		once
-			create Result
-		end
 
 	c_compilation_error: BOOLEAN
 			-- check if the c-compilation went ok
@@ -236,7 +232,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

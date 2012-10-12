@@ -52,11 +52,12 @@ feature {NONE} -- Initalization
 		local
 			l_file_name: like batch_file_name
 			l_parser: ENV_PARSER
+			u: FILE_UTILITIES
 		do
 			open_key
 			if exists then
 				l_file_name := batch_file_name
-				if (create {RAW_FILE}.make (l_file_name)).exists then
+				if u.file_exists (l_file_name) then
 					create l_parser.make (l_file_name, batch_file_arguments, batch_file_options)
 					extend_variable (path_var_name, l_parser.path)
 					extend_variable (include_var_name, l_parser.include)
@@ -97,11 +98,11 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	install_path: STRING
+	install_path: STRING_32
 			-- <Precursor>
 		local
 			l_value: detachable WEL_REGISTRY_KEY_VALUE
-			l_result: detachable STRING
+			l_result: detachable STRING_32
 		do
 			initialize
 			l_value := registry.key_value (internal_reg_key, install_path_value_name)
@@ -128,7 +129,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	batch_file_name: STRING
+	batch_file_name: STRING_32
 			-- Absolute path to an environment configuration batch script
 		require
 			exists: exists
@@ -138,7 +139,7 @@ feature {NONE} -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	batch_file_arguments: detachable STRING
+	batch_file_arguments: detachable STRING_32
 			-- Arguments for `batch_file_name' execution
 		require
 			exists: exists
@@ -219,7 +220,7 @@ invariant
 	internal_reg_key_not_null: exists implies internal_reg_key /= default_pointer
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

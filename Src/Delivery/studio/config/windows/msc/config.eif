@@ -80,6 +80,7 @@ make: "nmake -s -nologo"
 make_utility: "nmake"
 make_flags: "-s -nologo"
 command_makefile: "%"for %%i in ($(EXTERNAL_MAKEFILES)) do $(MAKE) -e ISE_EIFFEL=%"$(ISE_EIFFEL)%" -f %%i%""
+makefile_bom: True
 
 dpflags: ""
 
@@ -96,8 +97,9 @@ appl_make: "$appl.exe: $appl.lnk $appl.res%N%
 %%Trc -r -fo$appl.res ..\..\..\$appl.rc%N%
 %%N%
 %$appl.lnk: $(OBJECTS) e1\emain.obj $appl.res Makefile%N%
-%%Tif exist $@ $(RM) $@%N%
-%%T@echo $(LDFLAGS) $(CCLDFLAGS) -OUT:$appl.exe > $@%N%
+%%T@chcp 65001 > nul%N%
+%%T@echo ﻿ > $@%N%
+%%T@echo $(LDFLAGS) $(CCLDFLAGS) -OUT:$appl.exe >> $@%N%
 %%T@echo e1\emain.obj >> $@%N%
 %%T@echo $(EIFLIB) $(EXTERNALS) >> $@%N%
 %%T@echo $sharedlibs $(PRECOMP_OBJECTS) >> $@%N%
@@ -126,12 +128,14 @@ precompile: "driver.exe: driver.lnk driver.rc precomp.lib%N%
 %%Tlib -nologo -OUT:precomp.lib $(C_OBJECTS) $(EXTERNALS)%N%
 %%N%
 %driver.lnk: e1\emain.obj $(OBJECTS) driver.res %N%
-%%Techo $(LDFLAGS) $(CCLDFLAGS) -OUT:driver.exe > $@%N%
-%%Techo e1\emain.obj >> $@%N%
-%%Techo $sharedlibs $(PRECOMP_OBJECTS) >> $@%N%
+%%T@chcp 65001 > nul%N%
+%%T@echo ﻿ > $@%N%
+%%T@echo $(LDFLAGS) $(CCLDFLAGS) -OUT:driver.exe >> $@%N%
+%%T@echo e1\emain.obj >> $@%N%
+%%T@echo $sharedlibs $(PRECOMP_OBJECTS) >> $@%N%
 %$objects_redirection%N%
-%%Techo $(EXTERNALS) $(EIFLIB) >> $@%N%
-%%Techo driver.res >> $@"
+%%T@echo $(EXTERNALS) $(EIFLIB) >> $@%N%
+%%T@echo driver.res >> $@"
 
 -- cecil
 cecil_make: "$(STATIC_CECIL): $(OBJECTS) $(EIFLIB) %N%

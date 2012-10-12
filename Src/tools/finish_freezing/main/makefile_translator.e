@@ -166,8 +166,13 @@ feature -- Execution
 			l_success: BOOLEAN
 			l_flags: LIST [STRING_32]
 			l_file: RAW_FILE
+			input_code_page: NATURAL_32
+			output_code_page: NATURAL_32
 		do
-				-- the command to execute the make utility on this platform
+				-- Record current code page.
+			input_code_page := {WEL_API}.console_input_code_page
+			output_code_page := {WEL_API}.console_output_code_page
+				-- The command to execute the make utility on this platform
 			command := options.get_string_or_default ("make_utility", "")
 			subst_eiffel (command)
 			subst_platform (command)
@@ -223,6 +228,9 @@ feature -- Execution
 			if l_success then
 				l_process.wait_for_exit
 			end
+				-- Restore original code page in case it has been changed.
+			{WEL_API}.set_console_input_code_page (input_code_page).do_nothing
+			{WEL_API}.set_console_output_code_page (output_code_page).do_nothing
 		end
 
 feature {NONE} -- Translation
@@ -1709,6 +1717,10 @@ feature {NONE} -- Implementation
 					has_makefile_sh := True
 					out_file := True
 					create makefile.make_open_write ("Makefile")
+					if options.get_boolean ("makefile_bom", False) then
+							-- Start makefile with a BOM.
+						makefile.put_string ({UTF_CONVERTER}.utf_8_bom_to_string_8)
+					end
 				else
 					has_makefile_sh := False
 				end

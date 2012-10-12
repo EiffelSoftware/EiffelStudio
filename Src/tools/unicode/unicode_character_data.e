@@ -160,6 +160,38 @@ feature -- Access
 			-- Upper, lower and title case mapping. Mapping is always one to one.
 			-- If `0' then it is the character itself.
 
+feature {UNICODE_HELPER_GENERATOR} -- Element change
+
+	set_lower_code (a_code: like lower_code)
+			-- Set `lower_code' with `a_code'.
+		require
+			not_has_lower_code: not has_lower_code
+		do
+			lower_code := a_code
+		ensure
+			lower_code_set: lower_code = a_code
+		end
+
+	set_upper_code (a_code: like upper_code)
+			-- Set `upper_code' with `a_code'.
+		require
+			not_has_upper_code: not has_upper_code
+		do
+			upper_code := a_code
+		ensure
+			upper_code_set: upper_code = a_code
+		end
+
+	set_title_code (a_code: like title_code)
+			-- Set `title_code' with `a_code'.
+		require
+			not_has_title_code: not has_title_code
+		do
+			title_code := a_code
+		ensure
+			title_code_set: title_code = a_code
+		end
+
 feature -- Status report
 
 	is_valid: BOOLEAN

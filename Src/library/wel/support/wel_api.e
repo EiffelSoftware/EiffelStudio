@@ -525,6 +525,44 @@ feature -- Threads
 			"return (EIF_INTEGER_32) ResumeThread((HANDLE) $a_thread);"
 		end
 
+feature -- Code pages
+
+	console_input_code_page: NATURAL_32
+			-- Input code page of the console.
+		external
+			"C inline use <windows.h>"
+		alias
+			"return (EIF_NATURAL_32) GetConsoleCP ();"
+		end
+
+	console_output_code_page: NATURAL_32
+			-- Output code page of the console.
+		external
+			"C inline use <windows.h>"
+		alias
+			"return (EIF_NATURAL_32) GetConsoleOutputCP ();"
+		end
+
+	set_console_input_code_page (cp: NATURAL_32): BOOLEAN
+			-- Set input code page of the console to `cp'.
+			-- Return True on success and False on error.
+			-- Use `get_last_error' to get extended error information.
+		external
+			"C inline use <windows.h>"
+		alias
+			"return EIF_TEST (SetConsoleCP ((UINT) $cp));"
+		end
+
+	set_console_output_code_page (cp: NATURAL_32): BOOLEAN
+			-- Set output code page of the console to `cp'.
+			-- Return True on success and False on error.
+			-- Use `get_last_error' to get extended error information.
+		external
+			"C inline use <windows.h>"
+		alias
+			"return EIF_TEST (SetConsoleOutputCP ((UINT) $cp));"
+		end
+
 feature -- Scrolling
 
 	set_control_scroll_info (hwnd: POINTER; info: POINTER; redraw: BOOLEAN): INTEGER
@@ -641,7 +679,6 @@ feature -- Error
 
 	get_last_error: INTEGER
 			-- SDK GetLastError
-
 		external
 			"C inline use <windows.h>"
 		alias

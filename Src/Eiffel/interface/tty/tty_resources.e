@@ -1,7 +1,7 @@
 note
 
 	description:
-		"All resouorces for the application."
+		"All resources for the application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			-- for file general and for platform specific files).
 		local
 			resource_parser: RESOURCE_PARSER
-			test_file: RAW_FILE
+			test_file: RAW_FILE_32
 			retried: BOOLEAN
 			error_msg: STRING_32
 		once

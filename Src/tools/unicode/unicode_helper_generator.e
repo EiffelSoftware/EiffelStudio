@@ -87,6 +87,7 @@ feature -- Basic operations
 					l_input.read_line
 				end
 				l_input.close
+
 				unicode_data := l_list
 				unicode_table := l_table
 			else
@@ -241,7 +242,7 @@ feature -- Basic operations
 				across a_list as l_char_data loop
 						-- Only care if the Unicode character has some case transformation, but
 						-- since we optimized ASCII value, we ignore them.
-					if l_char_data.item.code > {CHARACTER_8}.max_ascii_value.to_natural_32 and l_char_data.item.has_case then
+					if l_char_data.item.code > {CHARACTER_8}.max_ascii_value.to_natural_32 then
 							-- Only care about our particular case transformation
 						if a_filter.item ([l_char_data.item]) then
 							if l_upper_group_code = 0 then

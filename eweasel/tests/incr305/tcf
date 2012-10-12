@@ -26,4 +26,23 @@ copy_sub 	test.e $CLUSTER test.e
 resume_compile
 compile_result 	ok
 
+-- We now try without a precompiled library
+cleanup_compile
+define ACTUAL_GENERIC "DOUBLE"
+copy_sub 	Ace_without_precomp $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+define ACTUAL_GENERIC "TEST2 [DOUBLE]"
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	validity_error TEST VLEC
+
+define ACTUAL_GENERIC "DOUBLE"
+copy_sub 	test.e $CLUSTER test.e
+resume_compile
+compile_result 	ok
+
 test_end

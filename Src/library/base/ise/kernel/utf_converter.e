@@ -378,6 +378,23 @@ feature -- UTF-8 to UTF-16
 			Result := Result.aliased_resized_area_with_default (0, Result.count + 1)
 		end
 
+feature -- Byte Order Mark (BOM)
+
+	utf_8_bom_to_string_8: STRING_8 = "%/239/%/187/%/191/"
+			-- UTF-8 BOM sequence.
+
+	utf_16be_bom_to_string_8: STRING_8 = "%/254/%/255/"
+			-- UTF-16BE BOM sequence.
+
+	utf_16le_bom_to_string_8: STRING_8 = "%/255/%/254/"
+			-- UTF-16LE BOM sequence.
+
+	utf_32be_bom_to_string_8: STRING_8 = "%U%U%/254/%/255/"
+			-- UTF-32BE BOM sequence.
+
+	utf_32le_bom_to_string_8: STRING_8 = "%/255/%/254/%U%U"
+			-- UTF-32LE BOM sequence.
+
 note
 	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

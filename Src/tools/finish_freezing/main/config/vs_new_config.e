@@ -30,7 +30,7 @@ feature {NONE} -- Access
 			if use_32bit then
 				Result := "x86"
 			else
-				Result := "x64"
+				Result := "x86_amd64"
 			end
 		end
 

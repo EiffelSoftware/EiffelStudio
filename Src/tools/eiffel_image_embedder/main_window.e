@@ -132,12 +132,12 @@ feature {NONE} -- Implementation
 			create class_name_field
 			class_name_field.return_actions.extend (agent
 					local
-						t: STRING
+						t: STRING_32
 					do
 						if class_name /= Void then
 							t := class_name_field.text
 							if t /= Void and then not t.is_equal (class_name) then
-								class_name := t.as_string_8.as_upper
+								class_name := t.as_upper
 								build_file (origin_pixmap)
 								text_panel.set_text (class_file)
 							end
@@ -202,6 +202,7 @@ feature {NONE} -- Implementation
 			-- Dialog for saving classes
 
 	class_name_field: EV_TEXT_FIELD
+			-- Text field for class name
 
 	text_panel: EV_TEXT
 			-- Text panel to present generated class.
@@ -221,7 +222,7 @@ feature {NONE} -- Implementation
 	on_file_dropped (fns: LIST [STRING_32])
 		do
 			if fns.count = 1 then
-				open_image_file (Void, fns.first.to_string_8)
+				open_image_file (Void, fns.first)
 			end
 		end
 
@@ -241,7 +242,7 @@ feature {NONE} -- Implementation
 	save
 			-- Execute when push save button.
 		local
-			l_file: PLAIN_TEXT_FILE
+			l_file: PLAIN_TEXT_FILE_32
 		do
 			if file_path /= Void then
 				if not saved then
@@ -253,7 +254,8 @@ feature {NONE} -- Implementation
 					save_file_dialog.show_modal_to_window (Current)
 				else
 					if changed then
-						create l_file.make_open_write (file_path)
+						create l_file.make (file_path)
+						l_file.open_write
 						l_file.put_string (class_file)
 						l_file.close
 						set_change (False)
@@ -274,12 +276,12 @@ feature {NONE} -- Implementation
 			open_image_file (open_file_dialog.file_title, open_file_dialog.file_name)
 		end
 
-	open_image_file	(sfn: STRING; fn: STRING)
+	open_image_file	(sfn: STRING_32; fn: STRING_32)
 			-- Execute when an image is opened
 			-- if `sfn' is Void retrieve the short file name from `fn'.
 		local
 			prompt: EV_WARNING_DIALOG
-			subfix: STRING
+			subfix: STRING_32
 		do
 			if sfn = Void then
 				create file_name.make_from_string (fn.substring (fn.last_index_of (Operating_environment.directory_separator, fn.count) + 1, fn.count))
@@ -295,8 +297,8 @@ feature {NONE} -- Implementation
 				origin_pixmap.set_with_named_file (fn)
 
 				pixmap_window.set_title (file_name)
-				class_name := file_name.as_upper
-				class_name.keep_head (class_name.last_index_of ('.', class_name.count) - 1)
+
+				build_class_name (file_name)
 				class_name_field.set_text (class_name)
 
 				build_file (origin_pixmap)
@@ -321,9 +323,10 @@ feature {NONE} -- Implementation
 	save_file
 			-- Excute when saving in save dialog.
 		local
-			l_file: PLAIN_TEXT_FILE
+			l_file: PLAIN_TEXT_FILE_32
 		do
-			create l_file.make_open_write (save_file_dialog.file_name)
+			create l_file.make (save_file_dialog.file_name)
+			l_file.open_write
 			l_file.put_string (class_file)
 			l_file.close
 			set_change (False)
@@ -335,6 +338,21 @@ feature {NONE} -- Implementation
 			-- Select all text in `text_panel'.
 		do
 			text_panel.select_all
+		end
+
+	build_class_name (a_file_name: STRING_32)
+			-- Build class name from `a_file_name'
+		local
+			l_index: INTEGER
+		do
+			class_name := file_name.as_upper
+			l_index := class_name.last_index_of ('.', class_name.count)
+			if l_index > 0 then
+				class_name.keep_head (l_index - 1)
+			end
+			if not class_name.is_valid_as_string_8 or else not (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (class_name.as_string_8) then
+				class_name := {STRING_32} "NEW_CLASS"
+			end
 		end
 
 feature {NONE} -- Implementation / Constants
@@ -433,18 +451,19 @@ feature {NONE} -- Implementation / Constants
 			class_file.append ("end -- " + class_name +"%N")
 		end
 
-	class_file: STRING
+	class_file: STRING_8
 			-- String to contain class text to be generated
 
-	class_name: STRING
+	class_name: STRING_32
+			-- Name of the class
 
-	file_name: STRING
+	file_name: STRING_32
 			-- File name of the image
 
-	file_path: STRING
+	file_path: STRING_32
 			-- File path of the class generated
 
-	default_title: STRING
+	default_title: STRING_32
 			-- Current window title
 
 	code_producer: CODE_PRODUCER;
@@ -454,7 +473,7 @@ feature {NONE} -- Implementation / Constants
 			-- Original pixmap.
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -478,11 +497,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class MAIN_WINDOW

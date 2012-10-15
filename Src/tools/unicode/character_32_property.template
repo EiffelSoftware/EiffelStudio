@@ -158,7 +158,7 @@ feature -- Conversion
 			if l_code <= max_ascii_value then
 				if 'A' <= a_char and a_char <= 'Z' then
 					check
-						valid_assumption: (('a').natural_32_code = ('A').natural_32_code) + 32
+						valid_assumption: ('a').natural_32_code = ('A').natural_32_code + 32
 					end
 					Result := a_char + 32
 				end
@@ -179,7 +179,7 @@ feature -- Conversion
 			if l_code <= max_ascii_value then
 				if 'a' <= a_char and a_char <= 'z' then
 					check
-						valid_assumption: (('a').natural_32_code = ('A').natural_32_code) + 32
+						valid_assumption: ('a').natural_32_code = ('A').natural_32_code + 32
 					end
 					Result := (a_char.natural_32_code - 32).to_character_32
 				end
@@ -200,7 +200,7 @@ feature -- Conversion
 			if l_code <= max_ascii_value then
 				if 'a' <= a_char and a_char <= 'z' then
 					check
-						valid_assumption: (('a').natural_32_code = ('A').natural_32_code) + 32
+						valid_assumption: ('a').natural_32_code = ('A').natural_32_code + 32
 					end
 					Result := (a_char.natural_32_code - 32).to_character_32
 				end

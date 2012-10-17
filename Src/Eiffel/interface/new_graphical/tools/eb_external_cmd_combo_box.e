@@ -235,14 +235,14 @@ feature{NONE} -- Implementation
 		do
 			if not universe.platform_constants.is_unix then
 				if caret_position > 1 then
-					if is_same_key (a_key, text.item_code (caret_position - 1)) then
+					if is_same_key (a_key, text.item (caret_position - 1)) then
 						back_delete_char
 					end
 				end
 			end
 		end
 
-	is_same_key (a_key: EV_KEY; a_char_code: INTEGER): BOOLEAN
+	is_same_key (a_key: EV_KEY; a_char_code: CHARACTER_32): BOOLEAN
 			-- Is `a_key' a `a_char_code' character?
 		require
 			a_key_not_void: a_key /= Void
@@ -254,13 +254,13 @@ feature{NONE} -- Implementation
 			l_string := l_keys.key_strings.item (a_key.code)
 			if l_string /= Void then
 				if l_string.count = 1 then
-					if l_string.item_code (1) = a_char_code and then a_char_code /= ('.').code then
+					if l_string.item (1) = a_char_code and then a_char_code /= '.' then
 						Result := True
 					end
-				elseif l_string.is_equal ("Space") then
+				elseif l_string.same_string ({STRING_32} "Space") then
 					Result := True
 				elseif a_key.is_numpad then
-					if l_string.item_code (l_string.count) = a_char_code then
+					if l_string.item (l_string.count) = a_char_code then
 						Result := True
 					end
 				end

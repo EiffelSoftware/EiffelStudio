@@ -143,7 +143,6 @@ feature {NONE} -- Implementation
 	validated_dir_name (final_mode: BOOLEAN; sub_dir: detachable STRING): DIRECTORY_NAME_32
 			-- Validated dir, create it if not exist.
 		local
-			l_path: STRING
 			dir: DIRECTORY_32
 		do
 			if final_mode then

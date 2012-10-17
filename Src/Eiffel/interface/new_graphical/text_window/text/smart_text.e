@@ -302,7 +302,7 @@ feature -- Search
 						else
 							low2 := tok.wide_image
 						end
-						found_feature := same_feature_name (low, low2)
+						found_feature := low.is_case_insensitive_equal (low2)
 						if found_feature then
 							cursor.set_from_relative_pos (ln, tok, 1, Current)
 						end
@@ -886,44 +886,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	same_feature_name (a_name, a_other_name: STRING_32): BOOLEAN
-			-- Are the names represent the same feature?
-			-- Caseless comparison for Unicode under 256.
-		require
-			a_name_not_void: a_name /= Void
-			a_other_name_not_void: a_other_name /= Void
-		local
-			i, nb: INTEGER_32
-			c1, c2: CHARACTER_32
-		do
-			nb := a_other_name.count
-			if nb = a_name.count then
-				from
-					Result := True
-					i := 1
-				until
-					i > nb
-				loop
-					c1 := a_other_name.item (i)
-					c2 := a_name.item (i)
-					if c1.is_character_8 and c2.is_character_8 then
-						if c1.as_lower /= c2.as_lower then
-							Result := False
-							i := nb
-						end
-					else
-						if c1 /= c2 then
-							Result := False
-							i := nb
-						end
-					end
-					i := i + 1
-				end
-			end
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

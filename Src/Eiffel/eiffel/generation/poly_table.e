@@ -753,7 +753,7 @@ feature {NONE} -- Implementation
 				loop
 					m := (i + j) // 2 + 1
 					if array_item (m).type_id > type_id then
-						j := j - 1
+						j := m - 1
 					else
 						i := m
 					end

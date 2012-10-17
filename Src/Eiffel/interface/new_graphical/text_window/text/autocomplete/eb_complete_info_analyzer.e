@@ -1209,7 +1209,7 @@ feature {NONE} -- Implementation
 								l_redefining.after or l_continue
 							loop
 								l_feat_name := l_redefining.item
-								l_continue := string_32_is_caseless_equal (l_name, l_feat_name.visual_name_32)
+								l_continue := l_name.is_case_insensitive_equal (l_feat_name.visual_name_32)
 								if l_continue then
 											-- Found a precursor match
 									if l_parent.type /= Void then

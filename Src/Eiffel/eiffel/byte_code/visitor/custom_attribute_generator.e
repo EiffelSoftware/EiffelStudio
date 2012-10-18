@@ -267,7 +267,7 @@ feature {BYTE_NODE} -- Visitors
 			elseif l_value.is_string then
 				l_string ?= l_value
 				check l_string_not_void: l_string /= Void end
-				ca_blob.put_string (l_string.string_value)
+				ca_blob.put_string (l_string.string_value_32)
 			elseif l_value.is_boolean then
 				l_bool ?= l_value
 				check l_bool_not_void: l_bool /= Void end
@@ -374,7 +374,7 @@ feature {BYTE_NODE} -- Visitors
 					-- still considered as being an Eiffel string.
 				ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_string)
 			end
-			ca_blob.put_string (a_node.value)
+			ca_blob.put_string (a_node.value_32)
 		end
 
 	process_type_expr_b (a_node: TYPE_EXPR_B)

@@ -22,6 +22,27 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
+	new_exception_error (a_exception: EXCEPTION): SED_ERROR
+			-- Generic error message when something fails internally
+		require
+			a_exception_not_void: a_exception /= Void
+		local
+			l_msg: STRING
+		do
+			create l_msg.make_from_string ("An exception of type {")
+			l_msg.append (a_exception.generating_type)
+			if attached a_exception.message as l_message then
+				l_msg.append ("} with message %"")
+				l_msg.append (l_message)
+				l_msg.append ("%" occurred.")
+			else
+				l_msg.append ("} occurred.")
+			end
+			create Result.make_with_string (l_msg)
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	new_invalid_object_error (a_obj: ANY): SED_ERROR
 			-- Object `a_obj' was retrieved but is not valid.
 		do

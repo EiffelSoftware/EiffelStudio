@@ -11,7 +11,7 @@ class
 inherit
 	SED_UTILITIES
 
-	REFACTORING_HELPER
+	EXCEPTION_MANAGER
 
 create
 	make
@@ -85,10 +85,6 @@ feature -- Basic operations
 			if not retried then
 				reset_errors
 
-					-- Read number of objects we are retrieving
-				l_count := deserializer.read_compressed_natural_32
-				create object_references.make_filled (Void, l_count.to_integer_32 + 1)
-
 					-- Disable GC as only new memory will be allocated.
 				if not a_is_gc_enabled then
 					l_mem := memory
@@ -96,12 +92,25 @@ feature -- Basic operations
 					l_mem.collection_off
 				end
 
+					-- Read number of objects we are retrieving
+				l_count := deserializer.read_compressed_natural_32
+				create object_references.make_filled (Void, l_count.to_integer_32 + 1)
+
+
 					-- Read header of serialized data.
 				read_header (l_count)
 
 				if not has_error then
 						-- Read data from `deserializer' in store it in `object_references'.
 					decode_objects (l_count)
+				end
+			else
+					-- An exception occurred, let's create an error so that the exception
+					-- is not silenced.
+				if attached last_exception as l_exception then
+					add_error (error_factory.new_exception_error (l_exception))
+				else
+					add_error (error_factory.new_internal_error ("An Unknown exception occurred in `decode'."))
 				end
 			end
 				-- Restore GC status
@@ -214,6 +223,7 @@ feature {NONE} -- Cleaning
 			l: like list_stack
 			t: like tuple_stack
 		do
+			last_decoded_object := Void
 			missing_references := Void
 			create object_references.make_empty (0)
 			t := tuple_stack
@@ -1222,14 +1232,14 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

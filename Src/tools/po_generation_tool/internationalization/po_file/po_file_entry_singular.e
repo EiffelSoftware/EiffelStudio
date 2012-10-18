@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_msgid:STRING_GENERAL)
+	make (a_msgid: READABLE_STRING_GENERAL)
 			-- Initialize singular entry with `a_msgid' as message ID.
 			--
 			-- `a_msgid': Message ID for new entry
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	set_msgstr (a_msgstr: STRING_GENERAL)
+	set_msgstr (a_msgstr: READABLE_STRING_GENERAL)
 			-- Set translated value of entry to `a_msgstr'.
 			--
 			-- `a_msgstr': Translation corresponding to entry
@@ -66,16 +66,16 @@ feature -- Output
 			-- Entry as a unicode string
 		do
 			Result := Precursor
-				--add the msgstr
-			Result.append_string(prepare_string ("msgstr", msgstr_lines))
+				-- Add the msgstr
+			Result.append_string (prepare_string ("msgstr", msgstr_lines))
 		end
 
 feature {NONE} -- Implementation
 
-	msgstr_lines: LINKED_LIST[STRING_32];
+	msgstr_lines: LINKED_LIST [STRING_32];
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -99,11 +99,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

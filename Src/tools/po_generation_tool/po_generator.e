@@ -36,7 +36,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_source_file_name (a_str: STRING)
+	set_source_file_name (a_str: like source_file_name)
 			-- Set `source_file_name' to `a_str'.
 		require
 			a_str_not_void: a_str /= Void
@@ -54,7 +54,7 @@ feature -- Access
 	text: STRING_GENERAL
 			-- Eiffel source text which is parsed for messages
 
-	source_file_name: STRING
+	source_file_name: STRING_32
 			-- File name of Eiffel source file
 			-- This is used to generate references from the messages to their source file.
 
@@ -121,23 +121,24 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	name_of_translation: STRING = "translation"
+	name_of_translation: STRING_32 = "translation"
 			-- Name of translate feature
 			-- Arguments from this feature are taken as translateable messages.
 
-	name_of_plural_translation: STRING = "plural_translation"
+	name_of_plural_translation: STRING_32 = "plural_translation"
 			-- Name of translate feature for plurals
 			-- Arguments from this feature are taken as translateable plural messages.
 
-	name_of_translation_in_context: STRING = "translation_in_context"
+	name_of_translation_in_context: STRING_32 = "translation_in_context"
 			-- Name of translation in context feature
 			-- Arguments from this feature are taken as translateable messages.
 
-	name_of_plural_translation_in_context: STRING = "plural_translation_in_context"
+	name_of_plural_translation_in_context: STRING_32 = "plural_translation_in_context"
 			-- Name of plural translation in context feature
 			-- Arguments from this feature are taken as translateable messages.
 
-	name_of_feature_clause: STRING = "Internationalization"
+	name_of_feature_clause: STRING_32 = "Internationalization"
+			-- Name of the feature clause under which we are going to extract info.
 
 invariant
 	text_not_void: text /= Void

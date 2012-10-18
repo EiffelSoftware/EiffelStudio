@@ -5,7 +5,7 @@ feature -- Access
 	code: INTEGER
 			-- Associated integer value
 		do
-			Result := Precursor
+			Result := natural_32_code.as_integer_32
 		end
 
 	natural_32_code: NATURAL_32

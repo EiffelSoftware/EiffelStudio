@@ -6607,7 +6607,7 @@ feature -- Constants generation
 		local
 			l_string_token: INTEGER
 		do
-			uni_string.set_string_16 (encoding_converter.utf8_to_utf16 (s))
+			uni_string.set_string (encoding_converter.utf8_to_utf16 (s))
 			l_string_token := md_emit.define_string (uni_string)
 			method_body.put_string (l_string_token)
 		end

@@ -6,10 +6,57 @@ note
 expanded class
 	UTF_CONVERTER
 
+feature -- Status report
+
+	is_valid_utf_8_string_8 (s: READABLE_STRING_8): BOOLEAN
+			-- Is `s' a valid UTF-8 Unicode sequence?
+		local
+			c: NATURAL_32
+			i, nb: INTEGER
+		do
+			from
+				nb := s.count
+				Result := True
+			until
+				i >= nb
+			loop
+				i := i + 1
+				c := s.code (i)
+				if c <= 127 then
+						-- Form 0xxxxxxx.
+				elseif (c & 0xE0) = 0xC0 and then i < nb then
+						-- Form 110xxxxx 10xxxxxx.
+					Result := (s.code (i + 1) & 0xC0) = 0x80
+					i := i + 1
+				elseif (c & 0xF0) = 0xE0 and then i + 1 < nb then
+					-- Form 1110xxxx 10xxxxxx 10xxxxxx.
+					Result := (s.code (i + 1) & 0xC0) = 0x80  and
+						(s.code (i + 2) & 0xC0) = 0x80
+					i := i + 2
+				elseif (c & 0xF8) = 0xF0 and then i + 2 < nb then
+					-- Form 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx.
+					Result := (s.code (i + 1) & 0xC0) = 0x80  and
+						(s.code (i + 2) & 0xC0) = 0x80 and
+						(s.code (i + 3) & 0xC0) = 0x80
+					i := i + 3
+				else
+						-- Anything else is not a valid UTF-8 sequence that would yield a valid Unicode character.
+					i := nb
+					Result := False
+				end
+			end
+		end
+
 feature -- UTF-32 to UTF-8
 
 	string_32_to_utf_8_string_8 (s: READABLE_STRING_32): STRING_8
 			-- UTF-8 sequence corresponding to `s'.
+		do
+			Result := utf_32_string_to_utf_8_string_8 (s)
+		end
+
+	utf_32_string_to_utf_8_string_8 (s: READABLE_STRING_GENERAL): STRING_8
+			-- UTF-8 sequence corresponding to `s' interpreted as a UTF-32 sequence
 		local
 			i: like {STRING_32}.count
 			n: like {STRING_32}.count
@@ -44,6 +91,92 @@ feature -- UTF-32 to UTF-8
 					Result.extend (((c & 0x3F) | 0x80).to_character_8)
 				end
 			end
+		end
+
+	string_32_to_utf_8_0_pointer (s: READABLE_STRING_32; p: MANAGED_POINTER)
+			-- Write UTF-8 sequence corresponding to `s' with terminating zero
+			-- to address `p' and update the size of `p' to the number of written bytes.
+			-- The sequence is zero-terminated.
+		do
+			utf_32_string_to_utf_8_0_pointer (s, p)
+		end
+
+	utf_32_string_to_utf_8_0_pointer (s: READABLE_STRING_GENERAL; p: MANAGED_POINTER)
+			-- Write UTF-8 sequence corresponding to `s', interpreted as a UTF-32 sequence,
+			-- with terminating zero to address `p' and update the size of `p' to the
+			-- number of written bytes.
+			-- The sequence is zero-terminated.
+		local
+			m: INTEGER
+			i, n: like {STRING_32}.count
+			c: NATURAL_32
+		do
+			n := s.count
+
+				-- First compute how many bytes we need to convert `s' to UTF-8.
+			from
+				i := n
+				m := 0
+			until
+				i = 0
+			loop
+				c := s.code (i)
+				if c <= 0x7F then
+						-- 0xxxxxxx.
+					m := m + 1
+				elseif c <= 0x7FF then
+						-- 110xxxxx 10xxxxxx
+					m := m + 2
+				elseif c <= 0xFFFF then
+						-- 1110xxxx 10xxxxxx 10xxxxxx
+					m := m + 3
+				else
+						-- c <= 1FFFFF - there are no higher code points
+						-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+					m := m + 4
+				end
+				i := i - 1
+			end
+
+				-- Fill `utf_ptr8' with the converted data.
+			from
+				i := 0
+				if p.count < m then
+						-- Reserve more memory as we need more than what was given to us.
+					p.resize (m + 1)
+				end
+				m := 0
+			until
+				i >= n
+			loop
+				i := i + 1
+				c := s.code (i)
+				if c <= 0x7F then
+						-- 0xxxxxxx.
+					p.put_natural_8 (c.to_natural_8, m)
+					m := m + 1
+				elseif c <= 0x7FF then
+						-- 110xxxxx 10xxxxxx.
+					p.put_natural_8 (((c |>> 6) | 0xC0).to_natural_8, m)
+					p.put_natural_8 (((c & 0x3F) | 0x80).to_natural_8, m + 1)
+					m := m + 2
+				elseif c <= 0xFFFF then
+						-- 1110xxxx 10xxxxxx 10xxxxxx
+					p.put_natural_8 (((c |>> 12) | 0xE0).to_natural_8, m)
+					p.put_natural_8 ((((c |>> 6) & 0x3F) | 0x80).to_natural_8, m + 1)
+					p.put_natural_8 (((c & 0x3F) | 0x80).to_natural_8, m + 2)
+					m := m + 3
+				else
+						-- c <= 1FFFFF - there are no higher code points
+						-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+					p.put_natural_8 (((c |>> 18) | 0xF0).to_natural_8, m)
+					p.put_natural_8 ((((c |>> 12) & 0x3F) | 0x80).to_natural_8, m + 1)
+					p.put_natural_8 ((((c |>> 6) & 0x3F) | 0x80).to_natural_8, m + 2)
+					p.put_natural_8 (((c & 0x3F) | 0x80).to_natural_8, m + 3)
+					m := m + 4
+				end
+			end
+			p.put_natural_8 (0, m)
 		end
 
 feature -- UTF-8 to UTF-32
@@ -105,6 +238,13 @@ feature -- UTF-32 to UTF-16
 	string_32_to_utf_16 (s: READABLE_STRING_32): SPECIAL [NATURAL_16]
 			-- UTF-16 sequence corresponding to `s'.
 			-- The sequence is not zero-terminated.
+		do
+			Result := utf_32_to_utf_16 (s)
+		end
+
+	utf_32_to_utf_16 (s: READABLE_STRING_GENERAL): SPECIAL [NATURAL_16]
+			-- UTF-16 sequence corresponding to `s' interpreted as a UTF-32 sequence.
+			-- The sequence is not zero-terminated.
 		local
 			i: like {STRING_32}.count
 			n: like {STRING_32}.count
@@ -146,7 +286,15 @@ feature -- UTF-32 to UTF-16
 	string_32_to_utf_16_0 (s: READABLE_STRING_32): SPECIAL [NATURAL_16]
 			-- UTF-16 sequence corresponding to `s' with terminating zero.
 		do
-			Result := string_32_to_utf_16 (s)
+			Result := utf_32_to_utf_16 (s)
+			Result := Result.aliased_resized_area_with_default (0, Result.count + 1)
+		end
+
+	utf_32_to_utf_16_0 (s: READABLE_STRING_GENERAL): SPECIAL [NATURAL_16]
+			-- UTF-16 sequence corresponding to `s', interpreted as a UTF-32 sequence,
+			-- with terminating zero.
+		do
+			Result := utf_32_to_utf_16 (s)
 			Result := Result.aliased_resized_area_with_default (0, Result.count + 1)
 		end
 
@@ -161,7 +309,7 @@ feature -- UTF-32 to UTF-16
 	string_32_to_utf_16_0_pointer (s: READABLE_STRING_32; p: MANAGED_POINTER)
 			-- Write UTF-16 sequence corresponding to `s' with terminating zero
 			-- to address `p' and update the size of `p' to the number of written bytes.
-			-- The sequence is not zero-terminated.
+			-- The sequence is zero-terminated.
 		do
 			utf_32_substring_to_utf_16_0_pointer (s, 1, s.count, p)
 		end
@@ -170,10 +318,10 @@ feature -- UTF-32 to UTF-16
 			(s: READABLE_STRING_GENERAL;
 			start_pos, end_pos: like {READABLE_STRING_32}.count;
 			p: MANAGED_POINTER)
-			-- Write UTF-16 sequence corresponding to the substring of `s'
-			-- starting at index `start_pos' and ending at index `end_pos'
-			-- to address `p' and update the size of `p' to the number of
-			-- written bytes.
+			-- Write UTF-16 sequence corresponding to the substring of `s',
+			-- interpreted as a UTF-32 sequence, starting at index `start_pos'
+			-- and ending at index `end_pos' to address `p' and update the
+			-- size of `p' to the number of written bytes.
 			-- The sequence is not zero-terminated.
 		require
 			start_position_big_enough: start_pos >= 1
@@ -226,10 +374,10 @@ feature -- UTF-32 to UTF-16
 			(s: READABLE_STRING_GENERAL;
 			start_pos, end_pos: like {READABLE_STRING_32}.count;
 			p: MANAGED_POINTER)
-			-- Write UTF-16 sequence corresponding to the substring of `s'
-			-- starting at index `start_pos' and ending at index `end_pos'
-			-- to address `p' and update the size of `p' to the number of
-			-- written bytes.
+			-- Write UTF-16 sequence corresponding to the substring of `s',
+			-- interpreted as a UTF-32 sequence, starting at index `start_pos'
+			-- and ending at index `end_pos' to address `p' and update the
+			-- size of `p' to the number of written bytes.
 			-- The sequence is zero-terminated.
 		require
 			start_position_big_enough: start_pos >= 1
@@ -286,6 +434,39 @@ feature -- UTF-32 to UTF-16
 		end
 
 feature -- UTF-16 to UTF-32
+
+	utf_16_0_pointer_to_string_32 (p: MANAGED_POINTER): STRING_32
+			-- {STRING_32} object corresponding to UTF-16 sequence `p' which is zero-terminated.
+		local
+			i, n: INTEGER
+			c: NATURAL_32
+		do
+			from
+					-- Allocate Result with the same number of bytes as `p'.
+				n := p.count
+				create Result.make (n)
+			until
+				i >= n
+			loop
+				c := p.read_natural_16 (i * 2)
+				if c = 0 then
+					-- We hit our null terminating character, we can stop
+					i := n
+				else
+					i := i + 1
+					if c < 0xD800 or else c >= 0xE000 then
+							-- Codepoint from Basic Multilingual Plane: one 16-bit code unit.
+						Result.extend (c.to_character_32)
+					else
+							-- Supplementary Planes: surrogate pair with lead and trail surrogates.
+						if i < n then
+							Result.extend (((c.as_natural_32 |<< 10) + p.read_natural_16 (i * 2) - 0x35FDC00).to_character_32)
+							i := i + 1
+						end
+					end
+				end
+			end
+		end
 
 	utf_16_to_string_32 (s: SPECIAL [NATURAL_16]): STRING_32
 			-- {STRING_32} object corresponding to UTF-16 sequence `s'.

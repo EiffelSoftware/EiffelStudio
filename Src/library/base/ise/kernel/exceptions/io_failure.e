@@ -41,7 +41,7 @@ feature {EXCEPTION_MANAGER} -- Status setting
 	set_code (a_code: like code)
 			-- Set `code' with `a_code'.
 		do
-			internal_code := code
+			internal_code := a_code
 		end
 
 feature {NONE} -- Accesss

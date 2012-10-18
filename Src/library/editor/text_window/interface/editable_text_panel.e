@@ -653,13 +653,9 @@ feature -- Edition Operations on text
 				else
 					l_char := text_displayed.current_char
 					if lower then
-						if l_char.is_character_8 then
-							l_char := l_char.as_lower
-						end
+						l_char := l_char.as_lower
 					else
-						if l_char.is_character_8 then
-							l_char := l_char.as_upper
-						end
+						l_char := l_char.as_upper
 					end
 					text_displayed.replace_char_including_new_line (l_char)
 				end

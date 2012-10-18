@@ -102,7 +102,7 @@ feature -- Output
 			-- Prints whole .po file as a string_32
 		do
 			create Result.make_empty
-			Result.append_string(headers.to_string)
+			Result.append_string (headers.to_string)
 			Result.append ("%N")
 			from
 				entries.start

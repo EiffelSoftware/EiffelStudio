@@ -26,29 +26,34 @@ inherit
 
 	CHARACTER_ROUTINES
 
-	INTERNAL_COMPILER_STRING_EXPORTER
+	UNICODE_CONVERSION
+		rename
+			reset as u_reset
+		end
+
+	LOCALIZED_PRINTER
 
 feature -- Access
 
 	po_file: PO_FILE
 		-- Po file to generate entries in.
 
-	translation_feature: STRING
+	translation_feature: STRING_32
 		-- Name of translate feature in i18n
 
-	plural_translation_feature: STRING
+	plural_translation_feature: STRING_32
 		-- Name of plural_translate feature in i18n
 
-	translation_in_context_feature: STRING
+	translation_in_context_feature: STRING_32
 		-- Name of translation in context feature in context in i18n
 
-	plural_translation_in_context_feature: STRING
+	plural_translation_in_context_feature: STRING_32
 		-- Name of plural translation in context feature in i18n
 
-	feature_clause_name: STRING
+	feature_clause_name: STRING_32
 		-- Feature clause name to extract translations from
 
-	source_file_name: STRING
+	source_file_name: STRING_32
 		-- Source file name.
 
 	source_text: STRING
@@ -63,7 +68,7 @@ feature -- Element change
 		do
 			translation_feature := a
 		ensure
-			a_set: a.is_equal (translation_feature)
+			a_set: a = translation_feature
 		end
 
 	set_plural_translation_feature (a: like plural_translation_feature)
@@ -73,7 +78,7 @@ feature -- Element change
 		do
 			plural_translation_feature := a
 		ensure
-			a_set: a.is_equal (plural_translation_feature)
+			a_set: a = plural_translation_feature
 		end
 
 	set_translation_in_context_feature (a: like translation_in_context_feature)
@@ -83,7 +88,7 @@ feature -- Element change
 		do
 			translation_in_context_feature := a
 		ensure
-			a_set: a.is_equal (translation_in_context_feature)
+			a_set: a = translation_in_context_feature
 		end
 
 	set_plural_translation_in_context_feature (a: like plural_translation_in_context_feature)
@@ -93,7 +98,7 @@ feature -- Element change
 		do
 			plural_translation_in_context_feature := a
 		ensure
-			a_set: a.is_equal (plural_translation_in_context_feature)
+			a_set: a = plural_translation_in_context_feature
 		end
 
 	set_feature_clause_name (a: like feature_clause_name)
@@ -103,7 +108,7 @@ feature -- Element change
 		do
 			feature_clause_name := a
 		ensure
-			a_set: a.is_equal (feature_clause_name)
+			a_set: a = feature_clause_name
 		end
 
 	set_po_file (po: PO_FILE)
@@ -116,7 +121,7 @@ feature -- Element change
 			po_file_set: po_file = po
 		end
 
-	set_source_file_name (a_str: STRING)
+	set_source_file_name (a_str: like source_file_name)
 			-- Set `source_file_name' to `a_str'.
 		require
 			a_str_not_void: a_str /= Void
@@ -148,10 +153,10 @@ feature {NONE} -- Implementation
 			--
 			-- `node': AST node of a feature call which is analyzed
 		local
-			l_feature_name: STRING
+			l_feature_name: STRING_32
 		do
 			last_analysis_found_entry := False
-			l_feature_name := node.access_name
+			l_feature_name := node.access_name_32
 			if l_feature_name /= Void and then l_feature_name.is_case_insensitive_equal (translation_feature) then
 				if node.parameters /= Void then
 					if attached {STRING_AS} node.parameters.first as l_singular then
@@ -190,14 +195,14 @@ feature {NONE} -- Implementation
 		local
 			l_comment: EIFFEL_COMMENTS
 			l_line: EIFFEL_COMMENT_LINE
-			l_string: STRING
+			l_string: STRING_32
 			i, l_count: INTEGER
 		do
 			l_comment := node.comment (match_list)
 			if l_comment /= Void and then not l_comment.is_empty then
 				l_line := l_comment.first
 				if l_line /= Void then
-					l_string := l_line.content
+					l_string := l_line.content_32
 					if l_string /= Void then
 						l_string.left_adjust
 						l_string.right_adjust
@@ -231,12 +236,12 @@ feature {NONE} -- Implementation
 			--
 			-- `node': AST node of a agent routine creation
 		local
-			l_feature_name: STRING
+			l_feature_name: STRING_32
 		do
 			last_analysis_found_entry := False
 				-- Case: agent translation ("Name")) and agent target.translation ("Name"))
 			if attached node.feature_name as l_f then
-				l_feature_name := l_f.name
+				l_feature_name := l_f.name_32
 				if attached node.operands as l_operands then
 					if l_feature_name.is_case_insensitive_equal (translation_feature) then
 						if l_operands.count = 1 and then attached {STRING_AS} l_operands.first.expression as l_singular then
@@ -342,34 +347,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	utf8: UC_UTF8_ROUTINES
-			-- UTF8 routines
-		once
-			create Result
-		end
-
-	utf8_string (a_string: STRING_32): STRING
-			-- Convert `a_string' to UTF-8 encoding
-			-- This function also writes 5 and 6-bytes characters, which are not part of the UTF-8 standard
-		require
-			string_not_void: a_string /= Void
-		local
-			i: INTEGER
-		do
-			check
-				a_string_is_valid_string_8: a_string.is_valid_as_string_8
-			end
-			create Result.make (a_string.count)
-			from
-				i := 1
-			until
-				i > a_string.count
-			loop
-				utf8.append_code_to_utf8 (Result, a_string.item_code (i))
-				i := i + 1
-			end
-		end
-
 	current_line (a_pos: INTEGER; a_text: STRING): STRING
 			-- Line text at `a_pos'
 		require
@@ -387,11 +364,15 @@ feature {NONE} -- Implementation
 			else
 				Result := a_text.substring (l_start + 1, l_end - 1)
 			end
-				-- We need to do this for the moment, because the source comes from the file directly.
-				-- Nothing guarentee UTF-8 encoding. There can be source converted into wrong character
-				-- because of encoding mismatching. But it is not that important in comment for now.
-				-- And it is much better than producing invalid text. (non-utf-8)
-			Result := utf8_string (Result)
+				-- If `Result' is not a valid UTF-8 sequence, then we simply convert Result
+				-- into a valid UTF-8 sequence assuming Result is UTF-32 compatible encoding.
+				-- This is bound to happen because there are no strict rules that guarantees
+				-- that a file is properly encoded into UTF-8.
+				-- In any case it does not matter for what we are doing because the source code
+				-- extracted will be part of comments as translator helper in the .pot file.
+			if not is_valid_utf8 (Result) then
+				Result := utf32_to_utf8 (Result.as_string_32)
+			end
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -423,12 +404,12 @@ feature {NONE} -- Implementation
 			l_as_not_void: attached l_as
 		local
 			singular_entry: PO_FILE_ENTRY_SINGULAR
-			l_msgid, l_msgctxt: STRING -- utf8
+			l_msgid, l_msgctxt: STRING_32
 		do
-			l_msgid := l_as.value
+			l_msgid := l_as.value_32
 			handle_special_chars (l_msgid)
-			if attached a_context as l_ctxt and then not l_ctxt.value.is_empty then
-				l_msgctxt := l_ctxt.value
+			if attached a_context as l_ctxt and then not l_ctxt.value_32.is_empty then
+				l_msgctxt := l_ctxt.value_32
 				handle_special_chars (l_msgctxt)
 			end
 			if (not po_file.has_entry (l_msgid, l_msgctxt)) then
@@ -441,13 +422,13 @@ feature {NONE} -- Implementation
 				po_file.add_entry (singular_entry)
 			else
 				if attached l_msgctxt as l_c then
-					io.put_string ("WARNING: Replicate found: %"" + l_msgid + "%" in context %"" + l_c + "%"%N")
+					localized_print ({STRING_32} "WARNING: Replicate found: %"" + l_msgid + "%" in context %"" + l_c + "%"%N")
 				else
-					io.put_string ("WARNING: Same message found: %"" + l_msgid + "%"%N")
+					localized_print ({STRING_32} "WARNING: Same message found: %"" + l_msgid + "%"%N")
 				end
 				if attached po_file.entry (l_msgid, l_msgctxt) as l_entry then
 					if attached l_entry.source_name as l_name then
-						print ("%TExising entry: " + l_name + "%N")
+						localized_print ({STRING_32} "%TExising entry: " + l_name + "%N")
 					end
 				end
 			end
@@ -459,18 +440,18 @@ feature {NONE} -- Implementation
 			l_as_not_void: attached l_as_1 and attached l_as_2
 		local
 			plural_entry: PO_FILE_ENTRY_PLURAL
-			l_msgid, l_msgctxt: STRING -- utf8
+			l_msgid, l_msgctxt: STRING_32
 		do
-			l_msgid := l_as_1.value
+			l_msgid := l_as_1.value_32
 			handle_special_chars (l_msgid)
-			if attached a_context as l_ctxt and then not l_ctxt.value.is_empty then
-				l_msgctxt := l_ctxt.value
+			if attached a_context as l_ctxt and then not l_ctxt.value_32.is_empty then
+				l_msgctxt := l_ctxt.value_32
 				handle_special_chars (l_msgctxt)
 			end
 			if (not po_file.has_entry (l_msgid, l_msgctxt)) then
 				create plural_entry.make (l_msgid)
 				plural_entry.set_msgctxt (l_msgctxt)
-				l_msgid := l_as_2.value
+				l_msgid := l_as_2.value_32
 				handle_special_chars (l_msgid)
 				plural_entry.set_msgid_plural (l_msgid)
 				append_comments (l_as_1, plural_entry)
@@ -480,29 +461,29 @@ feature {NONE} -- Implementation
 				po_file.add_entry (plural_entry)
 			else
 				if attached l_msgctxt as l_c then
-					io.put_string ("WARNING: Same message found: %"" + l_msgid + "%" in context %"" + l_c + "%"%N")
+					localized_print ({STRING_32} "WARNING: Same message found: %"" + l_msgid + "%" in context %"" + l_c + "%"%N")
 				else
-					io.put_string ("WARNING: Same message found: %"" + l_msgid + "%"%N")
+					localized_print ({STRING_32} "WARNING: Same message found: %"" + l_msgid + "%"%N")
 				end
 				if attached po_file.entry (l_msgid, l_msgctxt) as l_entry then
 					if attached l_entry.source_name as l_name then
-						print ("%TExising entry: " + l_name + "%N")
+						localized_print ({STRING_32} "%TExising entry: " + l_name + "%N")
 					end
 				end
 			end
 		end
 
-	handle_special_chars (a_s: STRING)
+	handle_special_chars (a_s: STRING_32)
 			-- Replace "%"" with "\%"".
 			-- Replace "\" with "\\".
 			-- Replace "%N" with "\n".
 		require
 			a_s_not_void: a_s /= Void
 		do
-			a_s.replace_substring_all ("\", "\\")
-			a_s.replace_substring_all ("%"", "\%"")
-			a_s.replace_substring_all ("%N", "\n")
-			a_s.replace_substring_all ("%T", "\t")
+			a_s.replace_substring_all ({STRING_32} "\", {STRING_32} "\\")
+			a_s.replace_substring_all ({STRING_32} "%"", {STRING_32} "\%"")
+			a_s.replace_substring_all ({STRING_32} "%N", {STRING_32} "\n")
+			a_s.replace_substring_all ({STRING_32} "%T", {STRING_32} "\t")
 		end
 
 	last_analysis_found_entry: BOOLEAN;

@@ -11,7 +11,7 @@ class
 inherit
 	ARGUMENTS
 
-	KL_SHARED_FILE_SYSTEM
+	LOCALIZED_PRINTER
 
 create
 	make
@@ -41,13 +41,13 @@ feature -- Access
 	option: STRING
 			-- Current option
 
-	file_names: ARRAYED_LIST [STRING]
+	file_names: ARRAYED_LIST [STRING_32]
 			-- Files need to generate
 
-	search_directories: ARRAYED_LIST [STRING]
+	search_directories: ARRAYED_LIST [STRING_32]
 			-- Directories need to search
 
-	output_file_name: STRING
+	output_file_name: STRING_32
 			-- Name for output file
 
 feature -- Status report
@@ -59,7 +59,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	file_suffix: STRING = ".e"
+	file_suffix: STRING_32 = ".e"
 			-- Suffix for files which are parsed
 			-- This is the file suffix for Eiffel source files
 
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 			-- File name of output file if no specific name is given
 			-- through commandline options
 
-	output_name_for_standard: STRING = "-"
+	output_name_for_standard: STRING_32 = "-"
 			-- If this file name is given as a command line option
 			-- then the output is put on the standard output
 
@@ -80,11 +80,11 @@ feature {NONE} -- Implementation
 			-- The input directories and input files will be parsed for localizable messages
 			-- and they will be added to `po_file'.
 		local
-			l_dir: KL_DIRECTORY
+			l_dir: STRING_32
 			l_directorys: like search_directories
 			l_file_names: like file_names
-			l_s: STRING
-			l_short_name: STRING_8
+			l_s: STRING_32
+			l_short_name: STRING_32
 		do
 			create po_file.make_empty
 			l_file_names := file_names
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 				l_s.replace_substring_all ("/", "\")
 				l_short_name := l_s.substring (l_s.last_index_of ('\', l_s.count) + 1, l_s.count)
 				debug
-					print (l_s + "%N")
+					localized_print (l_s + "%N")
 				end
 				generate_file (l_s, l_short_name)
 				l_file_names.forth
@@ -109,22 +109,21 @@ feature {NONE} -- Implementation
 			until
 				l_directorys.after
 			loop
-				l_s := l_directorys.item.twin
-				l_s.replace_substring_all ("/", "\")
+				l_dir := l_directorys.item.twin
+				l_dir.replace_substring_all ("/", "\")
 				debug
-					print (l_s + "%N")
+					localized_print (l_dir + "%N")
 				end
-				create l_dir.make (file_system.pathname_from_file_system (l_s, windows_file_system))
 				generate_directory (l_dir)
 				l_directorys.forth
 			end
 			debug
-				print (po_file.to_string.as_string_8)
+				 localized_print (po_file.to_string)
 			end
 			write_to_file
 		end
 
-	generate_directory (a_dir: KL_DIRECTORY)
+	generate_directory (a_dir: READABLE_STRING_32)
 			-- Generate messages from `a_dir'.
 			--
 			-- Read all files (recursively) in `a_dir' which macht `file_suffix' and parse
@@ -135,49 +134,49 @@ feature {NONE} -- Implementation
 			po_file_not_void: po_file /= Void
 			a_dir_not_void: a_dir /= Void
 		local
-			l_dirs: ARRAY [STRING]
-			l_files: ARRAY [STRING]
-			i: INTEGER
-			l_dir: KL_DIRECTORY
-			l_name, l_short_name: STRING
+			l_dirs: LIST [STRING_32]
+			l_files: LIST [STRING_32]
+			l_dir: READABLE_STRING_32
+			l_name, l_short_name: STRING_32
+			l_u: FILE_UTILITIES
 		do
-			l_dirs := a_dir.directory_names
+			l_dirs := l_u.directory_names (a_dir)
 			if l_dirs /= Void then
 				from
-					i := l_dirs.lower
+					l_dirs.start
 				until
-					i > l_dirs.upper
+					l_dirs.after
 				loop
 					debug
-						print (l_dirs.item (i) + "%N")
+						 localized_print (l_dirs.item + "%N")
 					end
-					create l_dir.make (a_dir.name + operating_environment.directory_separator.out + l_dirs.item (i))
+					l_dir := (a_dir + operating_environment.directory_separator.out + l_dirs.item)
 					generate_directory (l_dir)
-					i := i + 1
+					l_dirs.forth
 				end
 			end
 
-			l_files := a_dir.filenames
+			l_files := l_u.file_names (a_dir)
 			if l_files /= Void then
 				from
-					i := l_files.lower
+					l_files.start
 				until
-					i > l_files.upper
+					l_files.after
 				loop
-					l_short_name := l_files.item (i)
-					if l_short_name.substring (l_short_name.count - 1, l_short_name.count).is_equal (file_suffix) then
-						l_name := a_dir.name + operating_environment.directory_separator.out + l_short_name
+					l_short_name := l_files.item
+					if l_short_name.substring (l_short_name.count - 1, l_short_name.count).same_string (file_suffix) then
+						l_name := a_dir + operating_environment.directory_separator.out + l_short_name
 						generate_file (l_name, l_short_name)
 						debug
-							print (l_name + "%N")
+							 localized_print (l_name + "%N")
 						end
 					end
-					i := i + 1
+					l_files.forth
 				end
 			end
 		end
 
-	generate_file (a_name, a_short_name: STRING)
+	generate_file (a_name, a_short_name: STRING_32)
 			-- Generate messages from `a_file'.
 			--
 			-- The file is parsed for messages which will be added to `po_file'.
@@ -191,25 +190,34 @@ feature {NONE} -- Implementation
 			a_short_name_not_void: a_short_name /= Void
 		local
 			l_generator: PO_GENERATOR
-			l_file: KL_TEXT_INPUT_FILE
+			l_u: FILE_UTILITIES
+			l_file: PLAIN_TEXT_FILE
+			l_retried: BOOLEAN
 		do
-			create l_file.make (a_name)
-			l_file.open_read
-			if l_file.is_readable then
-				l_file.read_string (l_file.count)
-				create l_generator.make (po_file, l_file.last_string)
-				l_generator.set_source_file_name (a_short_name)
-				l_generator.generate
-				if l_generator.has_error then
-					print ("Error: parsing failed: entries in %"" + a_name + "%" not generated.%N")
-				else
-					print_analyze_file (a_name)
+			if not l_retried then
+				l_file := l_u.make_text_file (a_name)
+				l_file.open_read
+				if l_file.is_readable then
+					l_file.read_stream (l_file.count)
+					create l_generator.make (po_file, l_file.last_string)
+					l_generator.set_source_file_name (a_short_name)
+					l_generator.generate
+					if l_generator.has_error then
+						 localized_print ({STRING_32} "Error: parsing failed: entries in %"" + a_name + "%" not generated.%N")
+					else
+						print_analyze_file (a_name)
+					end
 				end
+				l_file.close
+			else
+				 localized_print ({STRING_32} "Error: File reading failed: entries in %"" + a_name + "%" not generated.%N")
 			end
-			check
-				l_file_closable: l_file.is_closable
+		rescue
+			l_retried := True
+			if attached l_file as l_f and then not l_f.is_closed then
+				l_f.close
 			end
-			l_file.close
+			retry
 		end
 
 	analyze_options
@@ -292,8 +300,9 @@ feature {NONE} -- Implementation
 		local
 			l_file_names: like file_names
 			l_search_directories: like search_directories
-			l_name: STRING
-			l_file: RAW_FILE
+			l_name: STRING_32
+			l_file: RAW_FILE_32
+			l_u: FILE_UTILITIES
 		do
 			l_file_names := file_names
 			l_search_directories := search_directories
@@ -305,10 +314,8 @@ feature {NONE} -- Implementation
 				l_file_names.after
 			loop
 				l_name := l_file_names.item
-				if l_name.count > 2 and then l_name.substring (l_name.count - 1, l_name.count).is_equal (file_suffix) then
-					create l_file.make (l_name)
-					if l_file.exists and then not l_file.is_directory then
-					else
+				if l_name.count > 2 and then l_name.substring (l_name.count - 1, l_name.count).same_string (file_suffix) then
+					if not l_u.file_exists (l_name) then
 						print_file_not_exist (l_name)
 						Result := False
 					end
@@ -327,9 +334,7 @@ feature {NONE} -- Implementation
 					l_search_directories.after
 				loop
 					l_name := l_search_directories.item
-					create l_file.make (l_name)
-					if l_file.exists and then l_file.is_directory then
-					else
+					if not l_u.directory_exists (l_name) then
 						print_directory_not_exist (l_name)
 						Result := False
 					end
@@ -356,22 +361,23 @@ feature {NONE} -- Implementation
 		require
 			po_file_not_void: po_file /= Void
 		local
-			l_file_name: FILE_NAME
-			l_file: PLAIN_TEXT_FILE
+			l_file_name: FILE_NAME_32
+			l_file: PLAIN_TEXT_FILE_32
+			u: UTF_CONVERTER
 		do
 			if output_file_name = Void then
 				output_file_name := default_output_name
 			end
-			if output_file_name.is_equal (output_name_for_standard) then
-				io.put_string (po_file.to_string.as_string_8)
-				io.put_new_line
+			if output_file_name.same_string (output_name_for_standard) then
+				localized_print (po_file.to_string)
+				localized_print ("%N")
 			else
 				create l_file_name.make_from_string (output_file_name)
 				if l_file_name.is_valid then
 					create l_file.make (output_file_name)
 					l_file.open_write
 					if l_file.is_writable then
-						l_file.put_string (po_file.to_string)
+						l_file.put_string (u.string_32_to_utf_8_string_8 (po_file.to_string))
 						print_file_generated
 					else
 						print_file_not_writable
@@ -388,73 +394,73 @@ feature {NONE} -- Output
 	print_option_error
 			-- Print the error and correct usage.
 		do
-			io.put_string (argument (0))
-			io.put_string (": incorrect option%N")
+			localized_print (argument (0))
+			localized_print (": incorrect option%N")
 			print_usage
 		end
 
-	print_file_not_exist (a_file: STRING)
+	print_file_not_exist (a_file: STRING_32)
 			-- Print error that `a_file' does not exist.
 		require
 			a_file_not_void: a_file /= Void
 		do
-			io.put_string (a_file + ": file does not exist%N")
+			localized_print (a_file + ": file does not exist%N")
 		end
 
-	print_directory_not_exist (a_directory: STRING)
+	print_directory_not_exist (a_directory: STRING_32)
 			-- Print error that `a_directory' does not exist.
 		require
 			a_directory_not_void: a_directory /= Void
 		do
-			io.put_string (a_directory + ": directory does not exist%N")
+			localized_print (a_directory + ": directory does not exist%N")
 		end
 
-	print_file_name_invalid (a_file: STRING)
+	print_file_name_invalid (a_file: STRING_32)
 			-- Print error that `a_file' is invalid.
 		require
 			a_file_not_void: a_file /= Void
 		do
-			io.put_string (a_file + ": invalid%N")
+			localized_print (a_file + ": invalid%N")
 		end
 
 	print_invalid_output_file
 			-- Print error that `output_file_name' is invalid.
 		do
-			io.put_string ("%"" + output_file_name + "%" is invalid.%N")
-			io.put_string ("File not generated.%N")
+			localized_print ({STRING_32} "%"" + output_file_name + "%" is invalid.%N")
+			localized_print ("File not generated.%N")
 		end
 
 	print_file_not_writable
 			-- Print error that `output_file_name' is not writable.
 		do
-			io.put_string ("%"" + output_file_name + "%" is not writable.%N")
-			io.put_string ("File not generated.%N")
+			localized_print ({STRING_32} "%"" + output_file_name + "%" is not writable.%N")
+			localized_print ("File not generated.%N")
 		end
 
 	print_file_generated
 			-- Print status message that `output_file_name' has been generated.
 		do
-			io.put_string ("%"" + output_file_name + "%" has been generated.%N")
+			localized_print ({STRING_32} "%"" + output_file_name + "%" has been generated.%N")
 		end
 
-	print_analyze_file (a_file: STRING)
+	print_analyze_file (a_file: STRING_32)
 			-- Print status message that file `a_file' is currently being analyzed.
 		require
 			a_file_not_void: a_file /= Void
 		do
-			io.put_string ("Analyzing: ")
-			io.put_string (a_file)
-			io.put_new_line
+			localized_print ("Analyzing: ")
+			localized_print (a_file)
+			localized_print ("%N")
 		end
 
 	print_usage
 			-- Print usage.
 		do
-			io.put_string ("Usage:%N%T")
-			io.put_string (argument (0))
-			io.put_string (" [OPTION] [INPUTFILE]...%N%N")
-			io.put_string ("Extract translatable strings from given input Eiffel class files (*.e).%N%N")
-			io.put_string ("[
+			localized_print ("Usage:%N%T")
+			localized_print (argument (0))
+			localized_print (" [OPTION] [INPUTFILE]...%N%N")
+			localized_print ("Extract translatable strings from given input Eiffel class files (*.e).%N%N")
+			localized_print ("[
 					INPUTFILE ...	input files
 					-f		add list of input files
 					-D		add list of directories to list for input files search
@@ -467,7 +473,7 @@ feature {NONE} -- Output
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

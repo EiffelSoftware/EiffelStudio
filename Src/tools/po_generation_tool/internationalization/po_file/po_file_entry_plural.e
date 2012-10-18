@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_msgid:STRING_GENERAL)
+	make (a_msgid: READABLE_STRING_GENERAL)
 			-- Initialize plural entry with `a_msgid' as message ID.
 			--
 			-- `a_msgid': Message ID for new entry
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	set_msgid_plural (a_plural:STRING_GENERAL)
+	set_msgid_plural (a_plural: READABLE_STRING_GENERAL)
 			-- Set untranslated plural string to `a_plural'.
 		require
 			a_plural_not_void: a_plural /= Void
@@ -50,7 +50,7 @@ feature -- Element change
 			msgid_plural_set: msgid_plural.is_equal(a_plural.as_string_32)
 		end
 
-	set_msgstr_n (n:INTEGER; translation:STRING_GENERAL)
+	set_msgstr_n (n:INTEGER; translation: READABLE_STRING_GENERAL)
 			-- Set nth plural form translation to `translation'.
 		require
 			n_correct: n >= 0
@@ -58,7 +58,7 @@ feature -- Element change
 		do
 			msgstr_n_lines.force (break_line (translation.as_string_32), n)
 		ensure
-			nth_plural_set: msgstr_n (n).is_equal(translation.as_string_32)
+			nth_plural_set: msgstr_n (n).is_equal (translation.as_string_32)
 		end
 
 feature -- Access
@@ -102,7 +102,7 @@ feature -- Output
 			counter: INTEGER
 		do
 			Result := Precursor
-			Result.append_string(prepare_string ("msgid_plural", msgid_plural_lines))
+			Result.append_string (prepare_string ("msgid_plural", msgid_plural_lines))
 
 			from
 				counter := msgstr_n_lines.lower
@@ -123,11 +123,11 @@ feature {NONE} -- Implementation
 	msgstr_n_lines: ARRAY [LINKED_LIST [STRING_32]]
 			-- List of translations for plural forms
 
-	msgid_plural_lines: LINKED_LIST[STRING_32];
+	msgid_plural_lines: LINKED_LIST [STRING_32];
 			-- List of message ID lines of plural form
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

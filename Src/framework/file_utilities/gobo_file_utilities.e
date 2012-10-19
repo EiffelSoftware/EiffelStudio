@@ -13,6 +13,9 @@ expanded class
 inherit
 
 	FILE_UTILITIES
+		redefine
+			create_directory
+		end
 
 	KL_SHARED_FILE_SYSTEM
 		export
@@ -22,7 +25,7 @@ inherit
 
 feature -- Status report
 
-	frozen is_path_applicable (a_path: attached READABLE_STRING_GENERAL; a_include: detachable RX_PCRE_MATCHER; a_exclude: detachable RX_PCRE_MATCHER): BOOLEAN
+	frozen is_path_applicable (a_path: READABLE_STRING_GENERAL; a_include: detachable RX_PCRE_MATCHER; a_exclude: detachable RX_PCRE_MATCHER): BOOLEAN
 			-- Determines if a path is applicable given inclusion/exclusion expressions.
 			--
 			-- `a_path': Path to determine inclusion.
@@ -50,7 +53,7 @@ feature -- Status report
 
 feature -- Query
 
-	frozen indexed_path (a_base_path: attached READABLE_STRING_GENERAL; a_separator: detachable READABLE_STRING_GENERAL; a_index_first: BOOLEAN): attached STRING
+	frozen indexed_path (a_base_path: READABLE_STRING_GENERAL; a_separator: detachable READABLE_STRING_GENERAL; a_index_first: BOOLEAN): STRING
 			-- Retrieves an indexed path for a file or directory, given a base path.
 			--
 			-- For instance, using the base path "new_file", if "new_file" or "new_file1" exists then
@@ -78,7 +81,7 @@ feature -- Query
 		do
 			l_index := 1
 
-			l_base_path := a_base_path.as_string_8.as_attached
+			l_base_path := a_base_path.as_string_8
 			l_parent_path := file_directory_path (l_base_path)
 			if l_parent_path /= Void and then not l_parent_path.is_empty and then directory_exists (l_parent_path) then
 					-- A file/folder is potentially in the directory.
@@ -163,13 +166,13 @@ feature -- Query
 				check l_index_positive: l_index > 0 end
 				Result := internal_indexed_path (a_base_path, a_separator, l_index)
 			else
-				Result := a_base_path.as_string_8.as_attached
+				Result := a_base_path.as_string_8
 			end
 		ensure
 			result_count_is_bigger: Result.count >= a_base_path.count
 		end
 
-	frozen absolute_path (a_path: attached READABLE_STRING_GENERAL; a_compact: BOOLEAN): attached STRING_32
+	frozen absolute_path (a_path: READABLE_STRING_GENERAL; a_compact: BOOLEAN): STRING_32
 			-- Creates an absolute compacted path (provided the path could be compacted).
 			--
 			-- `a_path': The source path to convert to an absolute path.
@@ -197,7 +200,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	frozen scan_for_folders (a_folder: attached READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_include: detachable RX_PCRE_MATCHER; a_exclude: detachable RX_PCRE_MATCHER): attached ARRAYED_LIST [attached STRING]
+	frozen scan_for_folders (a_folder: READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_include: detachable RX_PCRE_MATCHER; a_exclude: detachable RX_PCRE_MATCHER): ARRAYED_LIST [STRING]
 			-- Scans a folder for matching folders.
 			--
 			-- `a_folder': Folder location to scan.
@@ -213,13 +216,13 @@ feature -- Basic operations
 		do
 			Result := internal_scan_for_folders (a_folder, a_levels, a_include, a_exclude, False)
 		ensure
-			result_contains_included_items: Result.for_all (agent (a_ia_item: attached STRING; a_ia_include: detachable RX_PCRE_MATCHER; a_ia_exclude: detachable RX_PCRE_MATCHER): BOOLEAN
+			result_contains_included_items: Result.for_all (agent (a_ia_item: STRING; a_ia_include: detachable RX_PCRE_MATCHER; a_ia_exclude: detachable RX_PCRE_MATCHER): BOOLEAN
 				do
 					Result := is_path_applicable (a_ia_item, a_ia_include, a_ia_exclude)
 				end (?, a_include, a_exclude))
 		end
 
-	frozen scan_for_files (a_folder: attached READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_include: detachable RX_PCRE_MATCHER; a_exclude: detachable RX_PCRE_MATCHER): attached ARRAYED_LIST [attached STRING]
+	frozen scan_for_files (a_folder: READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_include: detachable RX_PCRE_MATCHER; a_exclude: detachable RX_PCRE_MATCHER): ARRAYED_LIST [STRING]
 			-- Scans a folder for matching files.
 			--
 			-- `a_folder': Folder location to scan.
@@ -235,7 +238,7 @@ feature -- Basic operations
 		do
 			Result := internal_scan_for_files (a_folder, a_levels, a_include, a_exclude, False)
 		ensure
-			result_contains_included_items: Result.for_all (agent (a_ia_item: attached STRING; a_ia_include: detachable RX_PCRE_MATCHER; a_ia_exclude: detachable RX_PCRE_MATCHER): BOOLEAN
+			result_contains_included_items: Result.for_all (agent (a_ia_item: STRING; a_ia_include: detachable RX_PCRE_MATCHER; a_ia_exclude: detachable RX_PCRE_MATCHER): BOOLEAN
 				do
 					Result := is_path_applicable (a_ia_item, a_ia_include, a_ia_exclude)
 				end (?, a_include, a_exclude))
@@ -243,7 +246,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	frozen internal_scan_for_folders (a_folder: attached READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_include: detachable RX_PCRE_MATCHER; a_exclude: detachable RX_PCRE_MATCHER; a_recursive: BOOLEAN): attached ARRAYED_LIST [attached STRING]
+	frozen internal_scan_for_folders (a_folder: READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_include: detachable RX_PCRE_MATCHER; a_exclude: detachable RX_PCRE_MATCHER; a_recursive: BOOLEAN): ARRAYED_LIST [STRING]
 			-- Scans a folder for matching folders.
 			--
 			-- `a_folder': Folder location to scan.
@@ -260,7 +263,7 @@ feature {NONE} -- Basic operations
 			l_dn: STRING
 			l_dir: KL_DIRECTORY
 			l_count, i: INTEGER
-			l_sub_results: attached ARRAYED_LIST [attached STRING]
+			l_sub_results: ARRAYED_LIST [STRING]
 			l_path_name: DIRECTORY_NAME
 		do
 			if a_recursive then
@@ -304,13 +307,13 @@ feature {NONE} -- Basic operations
 				create Result.make (0)
 			end
 		ensure
-			result_contains_included_items: Result.for_all (agent (a_ia_item: attached STRING; a_ia_include: detachable RX_PCRE_MATCHER; a_ia_exclude: detachable RX_PCRE_MATCHER): BOOLEAN
+			result_contains_included_items: Result.for_all (agent (a_ia_item: STRING; a_ia_include: detachable RX_PCRE_MATCHER; a_ia_exclude: detachable RX_PCRE_MATCHER): BOOLEAN
 				do
 					Result := is_path_applicable (a_ia_item, a_ia_include, a_ia_exclude)
 				end (?, a_include, a_exclude))
 		end
 
-	frozen internal_scan_for_files (a_folder: attached READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_include: RX_PCRE_MATCHER; a_exclude: RX_PCRE_MATCHER; a_recursive: BOOLEAN): attached ARRAYED_LIST [attached STRING]
+	frozen internal_scan_for_files (a_folder: READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_include: RX_PCRE_MATCHER; a_exclude: RX_PCRE_MATCHER; a_recursive: BOOLEAN): ARRAYED_LIST [STRING]
 			-- Scans a folder for matching files.
 			--
 			-- `a_folder': Folder location to scan.
@@ -377,7 +380,7 @@ feature {NONE} -- Basic operations
 				create Result.make (0)
 			end
 		ensure
-			result_contains_included_items: Result.for_all (agent (a_ia_item: attached STRING; a_ia_include: detachable RX_PCRE_MATCHER; a_ia_exclude: detachable RX_PCRE_MATCHER): BOOLEAN
+			result_contains_included_items: Result.for_all (agent (a_ia_item: STRING; a_ia_include: detachable RX_PCRE_MATCHER; a_ia_exclude: detachable RX_PCRE_MATCHER): BOOLEAN
 				do
 					Result := is_path_applicable (a_ia_item, a_ia_include, a_ia_exclude)
 				end (?, a_include, a_exclude))
@@ -407,13 +410,10 @@ feature -- File name operations
 
 feature -- Directory operations
 
-	frozen create_directory (a_path: attached READABLE_STRING_GENERAL)
+	frozen create_directory (a_path: READABLE_STRING_GENERAL)
 			-- Creates a directory and any parent directories if they do not exist.
 			--
 			-- `a_path': The directory to create.
-		require
-			a_path_attached: a_path /= Void
-			not_a_path_is_empty: not a_path.is_empty
 		local
 			l_path: STRING_8
 			d: DIRECTORY
@@ -444,7 +444,7 @@ feature -- Directory operations
 			retry
 		end
 
-	frozen create_directory_for_file (a_file_name: attached READABLE_STRING_GENERAL)
+	frozen create_directory_for_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Creates a directory and any parent directories if they do not exist, for a file path
 			--
 			-- `a_file_name': The suggested file name requiring a directory to exist.

@@ -12,7 +12,7 @@ expanded class
 
 feature -- Query
 
-	frozen compact_path (a_path: attached READABLE_STRING_32): detachable STRING_32
+	frozen compact_path (a_path: READABLE_STRING_32): detachable STRING_32
 			-- Compacts a file path, removing . and ..
 			--
 			-- `a_path': A path to compact.
@@ -26,16 +26,16 @@ feature -- Query
 			l_part: STRING_32
 			l_error: BOOLEAN
 		do
-			l_sep := (create {OPERATING_ENVIRONMENT}).directory_separator
+			l_sep := operating_environment.directory_separator
 
 				-- Separate path
 			l_parts := a_path.split (l_sep)
 			from l_parts.start until l_parts.after or l_error loop
 				l_part := l_parts.item
-				if l_part.is_equal (".") then
+				if l_part.is_equal ({STRING_32} ".") then
 						-- Current directory, simple remove
 					l_parts.remove
-				elseif l_part.is_equal ("..") then
+				elseif l_part.is_equal ({STRING_32} "..") then
 						-- Remove parent
 					l_parts.remove
 					if not l_parts.is_empty then
@@ -64,7 +64,7 @@ feature -- Query
 			end
 		end
 
-	frozen file_extension (a_file_name: attached READABLE_STRING_GENERAL): attached STRING
+	frozen file_extension (a_file_name: READABLE_STRING_GENERAL): STRING
 			-- Extracts a real file extension from a file, taking into consideration Unix file names
 			-- and directories beginning starting with a '.'.
 			--
@@ -98,7 +98,7 @@ feature -- Query
 				l_separator_i := l_file_name.last_index_of ('.', l_count)
 				if l_separator_i > l_non_dot_i and then l_separator_i < l_count then
 						-- Not a . at the beginning of the file name, so we have an extension
-					l_extension := l_file_name.substring (l_separator_i + 1, l_count).as_attached
+					l_extension := l_file_name.substring (l_separator_i + 1, l_count)
 				end
 			end
 			if l_extension = Void then
@@ -111,7 +111,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	frozen internal_indexed_path (a_base_path: attached READABLE_STRING_GENERAL; a_separator: detachable READABLE_STRING_GENERAL; a_index: NATURAL): attached STRING
+	frozen internal_indexed_path (a_base_path: READABLE_STRING_GENERAL; a_separator: detachable READABLE_STRING_GENERAL; a_index: NATURAL): STRING
 			-- Suffixes an index to an existing file name.
 			--
 			-- `a_base_path': The original path to index.
@@ -126,7 +126,7 @@ feature {NONE} -- Query
 			l_extension: like file_extension
 			l_count: INTEGER
 		do
-			Result := a_base_path.as_string_8.as_attached
+			Result := a_base_path.as_string_8
 			if Result = a_base_path then
 				Result := Result.twin
 			end
@@ -220,8 +220,8 @@ feature -- Directory operations
 				d.open_read
 				if not d.is_closed then
 					from
-						create f.make (".")
-						create fn.make_from_string (".")
+						create f.make ({STRING_32} ".")
+						create fn.make_from_string ({STRING_32} ".")
 						create l.make (0)
 						d.readentry
 					until
@@ -261,7 +261,7 @@ feature -- Directory operations
 				d.open_read
 				if not d.is_closed then
 					from
-						create fn.make_from_string (".")
+						create fn.make_from_string ({STRING_32} ".")
 						create l.make (0)
 						d.readentry
 					until
@@ -287,6 +287,28 @@ feature -- Directory operations
 				d.close
 			elseif attached d and then not d.is_closed then
 				d.close
+			end
+		rescue
+			is_retried := True
+			retry
+		end
+
+	create_directory (a_path: READABLE_STRING_GENERAL)
+			-- Creates a directory and any parent directories if they do not exist.
+			--
+			-- `a_path': The directory to create.
+		require
+			a_path_attached: a_path /= Void
+			not_a_path_is_empty: not a_path.is_empty
+		local
+			d: DIRECTORY
+			is_retried: BOOLEAN
+		do
+			if not is_retried then
+				d := make_directory (a_path)
+				if not d.exists then
+					d.recursive_create_dir
+				end
 			end
 		rescue
 			is_retried := True

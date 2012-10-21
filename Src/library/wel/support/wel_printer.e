@@ -39,7 +39,7 @@ feature
 		end
 
 
-	make_with_name (a_name: STRING)
+	make_with_name (a_name: READABLE_STRING_GENERAL)
 			-- Initialize Current with printer `a_name'.
 		local
 			l_name: WEL_STRING

@@ -6,7 +6,7 @@ class
 
 inherit
 	WEL_SW_CONSTANTS
-	
+
 	WIZARD_SHARED
 
 feature -- Access
@@ -36,17 +36,17 @@ feature -- Basic Operations
 			valid_chm_url: is_valid_chm_url (a_chm_url)
 		local
 			returned_value: INTEGER
-		do	
+		do
 			returned_value := cwin_shell_execute (cwin_desktop_window, (create {WEL_STRING}.make ("open")).item, (create {WEL_STRING}.make (Chm_url)).item, default_pointer, default_pointer, sw_shownormal)
 			--help_window_handle := cwin_html_help (cwin_desktop_window, (create {WEL_STRING}.make (a_chm_url)).item, Hh_display_topic, 0)
 		end
 
 feature {NONE} -- Implementation
 
-	Chm_url: STRING 
+	Chm_url: STRING_32
 			-- Path to `wizard.chm' (relatively to $ISE_EIFFEL value)
 		once
-			Result := wizard_source + "\wizard.chm"
+			Result := wizard_source_32 + {STRING_32} "\wizard.chm"
 		ensure
 			non_void_path: Result /= Void
 			not_empty_path: not Result.is_empty
@@ -61,7 +61,7 @@ feature {NONE} -- Externals
 		alias
 			"GetDesktopWindow()"
 		end
-	
+
 	cwin_shell_execute (hwnd, verb, file, parameters, directory: POINTER; show_cmd:INTEGER): INTEGER
 			-- Shell API `ShellExecute' function
 		external
@@ -69,7 +69,7 @@ feature {NONE} -- Externals
 		alias
 			"ShellExecute"
 		end
-		
+
 	cwin_html_help (hwnd, pszFile: POINTER; command: INTEGER; data: INTEGER): INTEGER
 			-- Help Workshop `HtmlHelp' API.
 		external
@@ -87,14 +87,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

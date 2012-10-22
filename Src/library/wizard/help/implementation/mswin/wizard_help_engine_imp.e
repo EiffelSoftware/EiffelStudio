@@ -8,12 +8,12 @@ class
 
 inherit
 	WIZARD_HELP_ENGINE_I
-	
+
 	WIZARD_SHARED
 
-create 
+create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make
@@ -32,13 +32,13 @@ feature -- Status Report
 		do
 			Result := internal_show_successful
 		end
-	
+
 	last_error_message: STRING
 			-- Last error message, if any
 		do
 			Result := internal_error_message
 		end
-			
+
 feature -- Basic Operations
 
 	show (a_help_context: WIZARD_HELP_CONTEXT)
@@ -51,15 +51,12 @@ feature -- Basic Operations
 			end
 		end
 
-feature -- Access
+feature {NONE} -- Access
 
-	Eiffel_key: STRING = "ISE_EIFFEL"
-			-- Environment variable for Eiffel delivery
-	
-	Url_prefix: STRING 
-			-- Path to `wizard.chm' (relatively to $ISE_EIFFEL value)
+	Url_prefix: STRING_32
+			-- Path to `wizard.chm' (relative to $ISE_EIFFEL value)
 		once
-			Result := wizard_source + "\wizard.chm::"
+			Result := wizard_source_32 + {STRING_32} "\wizard.chm::"
 		ensure
 			non_void_path: Result /= Void
 			not_empty_path: not Result.is_empty
@@ -80,14 +77,14 @@ feature {NONE} -- Implementation
 			-- Error message displayed when topic could not be displayed
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

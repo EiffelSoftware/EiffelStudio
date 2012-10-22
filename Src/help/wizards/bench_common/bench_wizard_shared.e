@@ -22,10 +22,11 @@ feature -- Shared variables
 	callback_content: STRING
 			-- Content of the filename used as callback.
 		local
-			file: PLAIN_TEXT_FILE
+			file: PLAIN_TEXT_FILE_32
 		once
 			if callback_filename /= Void then
-				create file.make_open_read (callback_filename)
+				create file.make (callback_filename)
+				file.open_read
 
 					-- Read the file.
 				create Result.make (0)
@@ -40,12 +41,11 @@ feature -- Shared variables
 			end
 		end
 
-	callback_filename: STRING
+	callback_filename: STRING_32
 			-- Filename used as callback.
 		once
-			Result := separate_word_option_value ("callback")
-			if Result /= Void and then Result.is_empty then
-				Result := Void
+			if attached separate_word_option_value ("callback") as s and then not s.is_empty then
+				Result := s.as_string_32
 			end
 		ensure
 			Result_void_or_not_empty: Result = Void or else not Result.is_empty
@@ -54,7 +54,7 @@ feature -- Shared variables
 	write_bench_notification_cancel
 			-- Write onto the file given as argument that the wizard has been aborded.
 		local
-			file: PLAIN_TEXT_FILE
+			file: PLAIN_TEXT_FILE_32
 			rescued: BOOLEAN
 		do
 			if not rescued then
@@ -63,7 +63,8 @@ feature -- Shared variables
 					callback_content.replace_substring_all ("<SUCCESS>", "no")
 
 					if callback_filename /= Void then
-						create file.make_open_write (callback_filename)
+						create file.make (callback_filename)
+						file.open_write
 						file.put_string (callback_content)
 						file.close
 					end
@@ -78,15 +79,16 @@ feature -- Shared variables
 			-- Write onto the file given as argument the project ace file, directory, ...
 			-- found in `information'.
 		local
-			file: PLAIN_TEXT_FILE
+			file: PLAIN_TEXT_FILE_32
 			rescued: BOOLEAN
+			u: UTF_CONVERTER
 		do
 			if not rescued then
 				if callback_content /= Void then
 						-- Modify the fields
 					callback_content.replace_substring_all ("<SUCCESS>", "yes")
-					callback_content.replace_substring_all ("<ACE>", wizard_information.ace_location)
-					callback_content.replace_substring_all ("<DIRECTORY>", wizard_information.project_location)
+					callback_content.replace_substring_all ("<ACE>", u.string_32_to_utf_8_string_8 (wizard_information.ace_location))
+					callback_content.replace_substring_all ("<DIRECTORY>", u.string_32_to_utf_8_string_8 (wizard_information.project_location))
 					if wizard_information.compile_project then
 						callback_content.replace_substring_all ("<COMPILATION>", "yes")
 					else
@@ -99,7 +101,8 @@ feature -- Shared variables
 					end
 
 					if callback_filename /= Void then
-						create file.make_open_write (callback_filename)
+						create file.make (callback_filename)
+						file.open_write
 						file.put_string (callback_content)
 						file.close
 					end

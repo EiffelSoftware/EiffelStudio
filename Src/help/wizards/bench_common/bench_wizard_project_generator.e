@@ -37,10 +37,9 @@ feature -- Status report
 			target_files.do_all (
 				agent (n: STRING_GENERAL; s: SEQUENCE [STRING_GENERAL])
 					local
-						e: FILE
+						u: FILE_UTILITIES
 					do
-						create {PLAIN_TEXT_FILE} e.make (wizard_information.project_location + "\" + n.as_string_8)
-						if e.exists then
+						if u.file_exists (wizard_information.project_location + "\" + n) then
 							s.extend (n)
 						end
 					end
@@ -68,48 +67,52 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	copy_file (name, extension, destination: STRING)
+	copy_file (name, extension, destination: STRING_32)
 			-- Copy Class whose name is 'name'
 		require
 			name /= Void
 			is_target_file: target_files.has (name + "." + extension)
 		local
-			f1,f_name: FILE_NAME
-			fi: RAW_FILE
+			f1,f_name: FILE_NAME_32
+			fi: RAW_FILE_32
 			s: STRING
 		do
-			create f1.make_from_string (wizard_resources_path)
+			create f1.make_from_string (wizard_resources_path_32)
 			f_name := f1.twin
 			f_name.extend (name)
 			f_name.add_extension (extension)
-			create fi.make_open_read (f_name)
+			create fi.make (f_name.to_string_32)
+			fi.open_read
 			fi.read_stream (fi.count)
 			s := fi.last_string
 			fi.close
 			create f_name.make_from_string (destination)
 			f_name.extend (name)
 			f_name.add_extension (extension)
-			create fi.make_open_write (f_name)
+			create fi.make (f_name.to_string_32)
+			fi.open_write
 			fi.put_string (s)
 			fi.close
 		end
 
-	from_template_to_project (template_path, template_name, resource_path, resource_name: STRING; map_list: LINKED_LIST [TUPLE [STRING, STRING]])
+	from_template_to_project (template_path, template_name, resource_path, resource_name: STRING_32; map_list: LINKED_LIST [TUPLE [STRING, STRING_32]])
 			-- Take a template_name (name of the file) and its template_path
 			-- Then change the FL Tag with strings according to the map_list
 			-- Copy the modified template in a new file resource_name in the resource_path.
 		require
 			is_target_file: target_files.has (resource_name)
 		local
-			tup: TUPLE [STRING, STRING]
-			s, s1, s2: STRING
-			fi: PLAIN_TEXT_FILE
-			f_name: FILE_NAME
-			f_n1: FILE_NAME
+			tup: TUPLE [s1: STRING; s2: STRING_32]
+			s: STRING
+			fi: PLAIN_TEXT_FILE_32
+			f_name: FILE_NAME_32
+			f_n1: FILE_NAME_32
+			u: UTF_CONVERTER
 		do
 			create f_n1.make_from_string (template_path)
 			f_n1.set_file_name (template_name)
-			create fi.make_open_read (f_n1)
+			create fi.make (f_n1.to_string_32)
+			fi.open_read
 			fi.read_stream (fi.count)
 			s:= fi.last_string.twin
 			if map_list /= Void then
@@ -119,30 +122,27 @@ feature {NONE} -- Implementation
 					map_list.after
 				loop
 					tup:= map_list.item
-					s1 ?= tup.item (1)
-					s2 ?= tup.item (2)
-					if s1 /= Void and s2 /= Void then
-						s.replace_substring_all (s1, s2)
-					end
+					s.replace_substring_all (tup.s1, u.string_32_to_utf_8_string_8 (tup.s2))
 					map_list.forth
 				end
 			end
 			fi.close
 			create f_name.make_from_string (resource_path)
 			f_name.set_file_name (resource_name)
-			create fi.make_open_write (f_name)
+			create fi.make (f_name.to_string_32)
+			fi.open_write
 			fi.put_string (s)
 			fi.close
 		end
 
-	add_common_parameters (map_list: LINKED_LIST [TUPLE [STRING, STRING]])
+	add_common_parameters (map_list: LINKED_LIST [TUPLE [STRING, STRING_32]])
 			-- Add the common parameters to the replacement pattern.
 		local
 			current_time: DATE_TIME
-			tuple: TUPLE [STRING, STRING]
-			project_name: STRING
-			project_name_lowercase: STRING
-			project_name_uppercase: STRING
+			tuple: TUPLE [STRING, STRING_32]
+			project_name: STRING_32
+			project_name_lowercase: STRING_32
+			project_name_uppercase: STRING_32
 			l_uuid: UUID_GENERATOR
 		do
 				-- Add the project name.
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 			create l_uuid
 			create tuple
 			tuple.put ("${FL_UUID}", 1)
-			tuple.put (l_uuid.generate_uuid.out, 2)
+			tuple.put (l_uuid.generate_uuid.out.as_string_32, 2)
 			map_list.extend (tuple)
 
 				-- Add the date for indexing clause.
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			create tuple
 			tuple.put ("${FL_DATE}", 1)
 			tuple.put (
-				"$Date: "+current_time.year.out+"/"+current_time.month.out+"/"+current_time.day.out+" "+
+				{STRING_32} "$Date: "+current_time.year.out+"/"+current_time.month.out+"/"+current_time.day.out+" "+
 				current_time.hour.out+":"+current_time.minute.out+":"+current_time.second.out+" $", 2)
 			map_list.extend (tuple)
 		end

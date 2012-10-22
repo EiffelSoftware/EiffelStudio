@@ -7,7 +7,7 @@ class
 	WIZARD_HELP_CONTEXT_BASES
 
 feature -- Access
-			
+
 	Root_index: STRING = "index.html"
 			-- Default help file for a given base
 
@@ -16,7 +16,7 @@ feature -- Access
 
 feature -- Status Report
 
-	is_valid_url (a_url: STRING): BOOLEAN
+	is_valid_url (a_url: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does `a_url' have a valid URL syntax?
 		local
 		--	i: INTEGER
@@ -33,16 +33,16 @@ feature -- Status Report
 		--	end
 		--	Result := Result and then (a_url.substring (a_url.count - url_extension.count + 1, a_url.count).is_equal (url_extension) or (a_url.has ('#') and a_url.substring (a_url.index_of ('#', 1) - url_extension.count, a_url.index_of ('#', 1) - 1 ).is_equal (url_extension)))
 		end
-			
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

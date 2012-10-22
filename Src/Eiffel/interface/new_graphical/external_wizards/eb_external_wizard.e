@@ -11,11 +11,6 @@ deferred class
 inherit
 	ANY
 
-	EXECUTION_ENVIRONMENT
-		export
-			{NONE} all
-		end
-
 	EB_ERROR_MANAGER
 		export
 			{NONE} all
@@ -86,6 +81,8 @@ feature {NONE} -- Implementation
 			wizard_exec_filename: FILE_NAME_32
 			wizard_exec_file: RAW_FILE_32
 			wizard_command: STRING_32
+			f: PROCESS_FACTORY
+			p: PROCESS
 		do
 			create wizard_exec_filename.make_from_string (location)
 			wizard_exec_filename.extend ("spec")
@@ -103,16 +100,15 @@ feature {NONE} -- Implementation
 
 			create wizard_command.make_empty
 			wizard_command.append_string (wizard_exec_filename)
-			wizard_command.append_character (' ')
-			wizard_command.append_character ('"')
-			wizard_command.append_string (location)
-			wizard_command.append_character ('"')
-			wizard_command.append_character (' ')
+				-- Use current directory as a source one to avoid issues with Unicode paths.
+			wizard_command.append_string ({STRING_32} " . ")
 			wizard_command.append_string (locale.info.id.name)
 			wizard_command.append_string ({STRING_32} " -callback %"")
 			wizard_command.append_string (callback_filename)
 			wizard_command.append_character ('"')
-			launch (wizard_command)
+			create f
+			p := f.process_launcher_with_command_line (wizard_command, location)
+			p.launch
 			wait_for_finish (callback_filename)
 		end
 
@@ -123,6 +119,7 @@ feature {NONE} -- Implementation
 			finished: BOOLEAN
 			callback_file: PLAIN_TEXT_FILE_32
 			analysed_line: TUPLE[name: STRING_32; value: STRING_32]
+			u: UTF_CONVERTER
 		do
 			from
 				create callback_file.make (callback_filename)
@@ -138,7 +135,8 @@ feature {NONE} -- Implementation
 				loop
 					callback_file.read_line
 					if not callback_file.last_string.is_empty and then callback_file.last_string.index_of ('=', 1) /= 0 then
-						analysed_line := analyse_line (callback_file.last_string)
+							-- The file uses UTF-8 encoding.
+						analysed_line := analyse_line (u.utf_8_string_8_to_string_32 (callback_file.last_string))
 						result_parameters.extend (analysed_line)
 						if analysed_line.name.is_equal ("success") and then
 							not analysed_line.value.is_equal ("<SUCCESS>")
@@ -195,7 +193,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	adjust_string (a_string: STRING): STRING
+	adjust_string (a_string: STRING_32): STRING_32
 			-- Remove any blank character and quote at beginning and
 			-- and of the string.
 		do
@@ -217,7 +215,7 @@ feature {NONE} -- Private attributes
 			-- Location of this wizard.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

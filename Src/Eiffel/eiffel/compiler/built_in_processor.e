@@ -98,17 +98,17 @@ feature {NONE} -- Implementation
 			-- Get AST from `built_in_code_path'. If Void, it means that it is
 			-- not a recognized built_in.
 		local
-			l_file: KL_BINARY_INPUT_FILE
+			l_file: KL_BINARY_INPUT_FILE_32
 			retried: BOOLEAN
 			l_class_as: CLASS_AS
-			l_code_path_neutral, l_code_path_dependent: STRING
+			l_code_path_neutral, l_code_path_dependent: STRING_32
 			l_reuse_previous_as: BOOLEAN
-			l_empty_str: STRING
+			l_empty_path: STRING_32
 			l_str: STRING
 			l_count: INTEGER
 		do
 			if not retried then
-				l_empty_str := once ""
+				l_empty_path := once {STRING_32} ""
 					-- First search for platform specific implementation.
 				l_code_path_neutral := built_in_code_path (False)
 				l_reuse_previous_as :=  l_code_path_neutral.is_equal (previous_built_in_code_path)
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 						l_file.open_read
 						if not l_file.is_open_read then
 							l_file := Void
-							previous_built_in_code_path := l_empty_str
+							previous_built_in_code_path := l_empty_path
 						else
 							previous_built_in_code_path := l_code_path_dependent
 						end
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 				if l_class_as /= Void then
 					Result := l_class_as
 				else
-					previous_built_in_code_path := l_empty_str
+					previous_built_in_code_path := l_empty_path
 				end
 				class_as := l_class_as
 			else
@@ -170,21 +170,21 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	built_in_code_path (a_neutral: BOOLEAN): STRING
+	built_in_code_path (a_neutral: BOOLEAN): STRING_32
 			-- Location where code for current built_in is_located.
 		local
-			l_path: FILE_NAME
+			l_path: FILE_NAME_32
 		do
 			create l_path.make_from_string (eiffel_layout.built_ins_path (a_neutral, is_dotnet))
 			l_path.set_file_name (current_class.name)
 			l_path.add_extension (eiffel_extension)
-			Result := l_path.string
+			Result := l_path.to_string_32
 		ensure
 			built_in_code_path_not_void: Result /= Void
 		end
 
-	previous_built_in_code_path: STRING
-		-- Location where code of previous parse was located.
+	previous_built_in_code_path: STRING_32
+			-- Location where code of previous parse was located.
 
 	shared_eiffel_parser: SHARED_EIFFEL_PARSER
 			-- Shared Eiffel Parser used for querying 'il_parsing'.
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -151,12 +151,13 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 			--            "Unable to retrieve icon information",
 			--            "Unable to load the file".
 		local
-			pixmap_file: RAW_FILE
+			pixmap_file: RAW_FILE_32
 			l_pixmap_filename: like pixmap_filename
 		do
-			l_pixmap_filename := file_name.as_string_8.string
+			l_pixmap_filename := file_name.as_string_32
 			pixmap_filename := l_pixmap_filename
-			create pixmap_file.make_open_read (l_pixmap_filename)
+			create pixmap_file.make (l_pixmap_filename)
+			pixmap_file.open_read
 			pixmap_file.close
 
 			reset_bitmap_content
@@ -1338,7 +1339,7 @@ feature {EV_PIXMAP_I, EV_PIXMAP_IMP_STATE} -- Duplication
 
 feature {EV_PIXMAP_IMP, EV_IMAGE_LIST_IMP} -- Pixmap Filename
 
-	pixmap_filename: detachable STRING
+	pixmap_filename: detachable STRING_32
 			-- Filename for the pixmap.
 			--  * Void if no file is associated with Current.
 			--  * Empty string for the default pixmap.

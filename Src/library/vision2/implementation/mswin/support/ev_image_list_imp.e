@@ -79,7 +79,7 @@ feature -- Status report
 			a_pixmap_not_void: a_pixmap /= Void
 		local
 			pixmap_imp: detachable EV_PIXMAP_IMP
-			pixmap_filename: detachable STRING
+			pixmap_filename: detachable STRING_32
 		do
 				-- Initialize `last_position' to "not found".
 			last_position := -1
@@ -114,7 +114,7 @@ feature -- Element change
 			-- `last_position' is updated.
 		local
 			pixmap_imp: detachable EV_PIXMAP_IMP
-			pixmap_filename: detachable STRING
+			pixmap_filename: detachable STRING_32
 			private_bitmap: detachable WEL_BITMAP
 			l_id: INTEGER
 		do
@@ -165,7 +165,7 @@ feature -- Element change
 			-- `last_position' is updated.
 		local
 			pixmap_imp: detachable EV_PIXMAP_IMP
-			pixmap_filename: detachable STRING
+			pixmap_filename: detachable STRING_32
 			private_bitmap: detachable WEL_BITMAP
 		do
 			pixmap_imp ?= a_pixmap.implementation
@@ -379,7 +379,7 @@ feature {NONE} -- Implementation (Private features)
 
 feature {EV_ANY_I} -- Implementation
 
-	filenames_index: HASH_TABLE [INTEGER, STRING]
+	filenames_index: HASH_TABLE [INTEGER, STRING_32]
 			-- Table indexing image indexes in imagelist with the image name.
 
 	bitmap_ids_index: HASH_TABLE [INTEGER, INTEGER]
@@ -402,14 +402,14 @@ feature {NONE} -- Implementation (Attributes, Constants, ...)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

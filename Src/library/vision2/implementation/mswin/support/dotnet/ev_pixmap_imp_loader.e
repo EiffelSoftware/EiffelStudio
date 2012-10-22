@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 		local
 			l_c_string: C_STRING
 			load_pixmap_delegate: EV_PIXMAP_IMP_DELEGATE
-			l_pixmap_filename: like pixmap_filename
+			l_pixmap_filename: STRING_8
 		do
 				-- Disable invariant checking.
 			disable_initialized

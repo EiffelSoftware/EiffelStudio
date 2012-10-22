@@ -19,7 +19,7 @@ cpp: "cl"
 sharedlink: "link"
 
 -- optimization flags
-wkoptimize: "-Od -Zi -MT"
+wkoptimize: "-Od -MT"
 optimize: "-Ox -MT"
 
 -- compiler flags

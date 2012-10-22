@@ -69,18 +69,18 @@ feature -- Basic Operations
 	display_pixmap
 			-- Draw pixmap
 		local
-			fi: FILE_NAME
+			fi: FILE_NAME_32
 			retried: BOOLEAN
 			info_dialog: EV_INFORMATION_DIALOG
 		do
 			if not retried then
-				create fi.make_from_string (wizard_pixmaps_path)
-				fi.extend (pixmap_location)
+				create fi.make_from_string (wizard_pixmaps_path_32)
+				fi.extend (pixmap_file_name)
 				pixmap.set_with_named_file (fi)
 			end
 		rescue
 			if not retried then
-				create info_dialog.make_with_text ("Unable to open the pixmap named%N%""+fi+"%"")
+				create info_dialog.make_with_text ({STRING_32} "Unable to open the pixmap named%N%""+fi+"%"")
 				info_dialog.show_modal_to_window (first_window)
 				retried := True
 				retry
@@ -190,9 +190,18 @@ feature -- Access
 	pixmap_location: STRING
 			-- Path in which can be found the pixmap associated with
 			-- the current state.
+			-- Use `pixmap_file_name' instead.
 		deferred
 		ensure
 			exists: Result /= Void
+		end
+
+	pixmap_file_name: STRING_32
+			-- Name of a file with a pixmap associated with the current state.
+		do
+			Result := pixmap_location.as_string_32
+		ensure
+			result_attached: attached Result
 		end
 
 	message: EV_LABEL
@@ -216,14 +225,14 @@ feature -- Tools
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

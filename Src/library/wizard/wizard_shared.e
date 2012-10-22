@@ -54,26 +54,51 @@ feature -- Access
 		end
 
 	wizard_source: STRING
+			-- Wizard sources.
+		obsolete "Use `wizard_source_32' instead."
+		require
+			not argument (1).is_empty
+		once
+			Result := wizard_source_32.as_string_8
+		ensure
+			exists: Result /= Void
+		end
+
+	wizard_source_32: STRING_32
 			-- Wizard sources
 		require
-			argument(1).count>0
+			not argument (1).is_empty
 		once
-			Result := argument(1)
+			Result := argument (1)
 		ensure
 			exists: Result /= Void
 		end
 
 	wizard_pixmaps_path: FILE_NAME
-			-- Bitmaps location
+			-- Bitmaps location.
+		obsolete "Use `wizard_pixmaps_path_32' instead."
 		once
-			create Result.make_from_string (wizard_source)
+			create Result.make_from_string (wizard_resources_path_32.to_string_32.as_string_8)
+		end
+
+	wizard_pixmaps_path_32: FILE_NAME_32
+			-- Bitmaps location.
+		once
+			create Result.make_from_string (wizard_source_32)
 			Result.extend ("pixmaps")
 		end
 
 	wizard_resources_path: FILE_NAME
 			-- Resource location.
+		obsolete "Use `wizard_resources_path_32' instead."
 		once
-			create Result.make_from_string (wizard_source)
+			create Result.make_from_string (wizard_resources_path_32.to_string_32.as_string_8)
+		end
+
+	wizard_resources_path_32: FILE_NAME_32
+			-- Resource location.
+		once
+			create Result.make_from_string (wizard_source_32)
 			Result.extend ("resources")
 		end
 
@@ -271,25 +296,19 @@ feature {NONE} -- Implementation
 
 invariant
 	memory_for_pixmap_allocated: pixmap /= Void
-	wizard_resource_path_exists: wizard_resources_path /= Void
-	wizard_pixmaps_path_exists: wizard_pixmaps_path /= Void
-	wizard_source_exists: wizard_source /= Void
+	wizard_resource_path_exists: wizard_resources_path_32 /= Void
+	wizard_pixmaps_path_exists: wizard_pixmaps_path_32 /= Void
 	history_exists: history /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WIZARD_SHARED
-
-
+end

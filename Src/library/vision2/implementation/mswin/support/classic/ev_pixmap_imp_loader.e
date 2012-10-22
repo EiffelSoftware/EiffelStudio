@@ -25,7 +25,7 @@ inherit
 
 feature -- Status report
 
-	pixmap_filename: detachable STRING
+	pixmap_filename: detachable STRING_32
 			-- Filename for the pixmap.
 			--  * Void if no file is associated with Current.
 			--  * Empty string for the default pixmap.
@@ -45,13 +45,13 @@ feature {NONE} -- Implementation
 			filename_exists: pixmap_filename /= Void
 		local
 			filename_ptr: ANY
-			l_pixmap_filename: like pixmap_filename
+			l_pixmap_filename: STRING_8
 		do
 				-- Disable invariant checking.
 			disable_initialized
 
+			check pixmap_filename /= Void end
 			l_pixmap_filename := pixmap_filename
-			check l_pixmap_filename /= Void end
 
 			if l_pixmap_filename.is_empty then
 				c_ev_load_pixmap ($Current, Default_pointer, $update_fields)
@@ -92,14 +92,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

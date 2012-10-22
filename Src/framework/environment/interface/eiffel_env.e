@@ -101,16 +101,16 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	required_environment_variables: ARRAYED_LIST [TUPLE [var: STRING_8; is_directory: BOOLEAN]]
+	required_environment_variables: ARRAYED_LIST [TUPLE [var: STRING_32; is_directory: BOOLEAN]]
 			-- List of required environment variables.
 		once
 			create Result.make (4)
 			if not is_unix_layout then
-				Result.extend ([{EIFFEL_CONSTANTS}.ise_eiffel_env, True])
-				Result.extend ([{EIFFEL_CONSTANTS}.ise_platform_env, False])
+				Result.extend ([{EIFFEL_CONSTANTS}.ise_eiffel_env.as_string_32, True])
+				Result.extend ([{EIFFEL_CONSTANTS}.ise_platform_env.as_string_32, False])
 			end
 			if {PLATFORM}.is_windows then
-				Result.extend ([{EIFFEL_CONSTANTS}.ise_c_compiler_env, False])
+				Result.extend ([{EIFFEL_CONSTANTS}.ise_c_compiler_env.as_string_32, False])
 			end
 		end
 
@@ -151,9 +151,9 @@ feature -- Status update
 			l_product_names: PRODUCT_NAMES
 			l_op_env: like operating_environment
 			l_ise_library, l_eiffel_library,
-			l_value: detachable STRING_8
+			l_value: detachable STRING_32
 			l_variables: like required_environment_variables
-			l_variable: TUPLE [var: STRING_8; is_directory: BOOLEAN]
+			l_variable: TUPLE [var: STRING_32; is_directory: BOOLEAN]
 			l_is_valid: like is_valid_environment
 			u: FILE_UTILITIES
 		do
@@ -163,7 +163,7 @@ feature -- Status update
 
 			if {PLATFORM_CONSTANTS}.is_unix then
 					-- On Unix platforms, if not ISE_EIFFEL is defined then it's probably the unix layout.
-				l_value := get_environment ({EIFFEL_CONSTANTS}.ise_eiffel_env)
+				l_value := get_environment_32 ({EIFFEL_CONSTANTS}.ise_eiffel_env)
 				is_unix_layout := (l_value = Void) or else l_value.is_empty
 			end
 
@@ -173,7 +173,7 @@ feature -- Status update
 			l_variables := required_environment_variables
 			from l_variables.start until l_variables.after loop
 				l_variable := l_variables.item
-				l_value := get_environment (l_variable.var)
+				l_value := get_environment_32 (l_variable.var)
 
 				if
 					l_value /= Void and then l_value.item (l_value.count) = l_op_env.directory_separator and then
@@ -187,13 +187,13 @@ feature -- Status update
 					io.error.put_string (l_product_names.workbench_name)
 					io.error.put_string (": the environment variable " + l_variable.var + " has not been set!%N")
 					l_is_valid := False
-				elseif l_variable.is_directory and then not (create {DIRECTORY}.make (l_value)).exists then
+				elseif l_variable.is_directory and then not (create {DIRECTORY_32}.make (l_value)).exists then
 					io.error.put_string (l_product_names.workbench_name)
 					io.error.put_string (": the environment variable " + {EIFFEL_CONSTANTS}.ise_eiffel_env + " points to a non-existing directory.%N")
 					l_is_valid := False
 				else
 						-- Set the environment variable, as it may have come from the Windows registry.
-					set_environment (l_value, l_variable.var)
+					set_environment_32 (l_value, l_variable.var)
 				end
 				l_variables.forth
 			end
@@ -207,12 +207,12 @@ feature -- Status update
 					-- Set new ISE_EIFFEL variable. This is done to ensure that the workbench path is
 					-- set correctly, or if in unix layout that ISE_EIFFEL is set
 				if not is_unix_layout then
-					set_environment (shared_path, {EIFFEL_CONSTANTS}.ise_eiffel_env)
+					set_environment_32 (shared_path_32, {EIFFEL_CONSTANTS}.ise_eiffel_env)
 				end
 
 					-- Set Unix platform
 				if is_unix_layout then
-					l_value := get_environment ({EIFFEL_CONSTANTS}.ise_platform_env)
+					l_value := get_environment_32 ({EIFFEL_CONSTANTS}.ise_platform_env)
 					if l_value = Void or else l_value.is_empty then
 							-- Set platform for Unix
 						set_environment (unix_layout_platform, {EIFFEL_CONSTANTS}.ise_platform_env)
@@ -241,8 +241,8 @@ feature -- Status update
 				--
 				-- Note: if a value is set, we never change it (apart from "compatible" support))
 
-			l_eiffel_library := get_environment ({EIFFEL_CONSTANTS}.eiffel_library_env)
-			l_ise_library := get_environment ({EIFFEL_CONSTANTS}.ise_library_env)
+			l_eiffel_library := get_environment_32 ({EIFFEL_CONSTANTS}.eiffel_library_env)
+			l_ise_library := get_environment_32 ({EIFFEL_CONSTANTS}.ise_library_env)
 
 				-- If ISE_LIBRARY is not defined, use EIFFEL_LIBRARY's value (if any)
 			if l_ise_library = Void or else l_ise_library.is_empty then
@@ -270,8 +270,8 @@ feature -- Status update
 			check eiffel_library_set: l_eiffel_library /= Void end
 
 				-- Ensure environment variables are set
-			set_environment (l_ise_library, {EIFFEL_CONSTANTS}.ise_library_env)
-			set_environment (l_eiffel_library, {EIFFEL_CONSTANTS}.eiffel_library_env)
+			set_environment_32 (l_ise_library, {EIFFEL_CONSTANTS}.ise_library_env)
+			set_environment_32 (l_eiffel_library, {EIFFEL_CONSTANTS}.eiffel_library_env)
 
 				-- Continue checking and initializing the environement
 			if is_valid_environment then
@@ -1060,7 +1060,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_from_string (lib_application_path.string)
+			create Result.make_from_string (lib_application_path_32)
 			Result.extend (wizards_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -1735,16 +1735,16 @@ feature -- Directories (platform independent)
 			not_result_is_empty: not Result.is_empty
 		end
 
-	lib_path: DIRECTORY_NAME
+	lib_path: DIRECTORY_NAME_32
 			-- Location of libs files (platform dependent).
 		require
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				Result := unix_layout_lib_path.twin
+				Result := unix_layout_lib_path_32.twin
 				Result.extend (unix_product_version_name)
 			else
-				Result := install_path.twin
+				Result := install_path_32.twin
 			end
 			if is_experimental_mode then
 				Result.extend ("experimental")
@@ -2290,7 +2290,7 @@ feature -- Environment variables
 	eiffel_install_32: STRING_32
 			-- ISE_EIFFEL name
 		do
-			if attached get_environment ({EIFFEL_CONSTANTS}.ise_eiffel_env) as l_result then
+			if attached get_environment_32 ({EIFFEL_CONSTANTS}.ise_eiffel_env) as l_result then
 				Result := l_result
 				remove_trailing_dir_separator_32 (Result)
 			else

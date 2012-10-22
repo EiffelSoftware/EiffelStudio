@@ -90,6 +90,15 @@ feature -- Initialization
 feature -- Access
 
 	text: STRING
+			-- Text of the textfield.
+		obsolete "Use `text_32' instead."
+		do
+			if attached text_32 as t then
+				Result := t.as_string_8
+			end
+		end
+
+	text_32: STRING_32
 			-- Text of the textfield
 		do
 			if generated then
@@ -139,13 +148,13 @@ feature -- Status report
 
 feature -- Settings
 
-	set_text, set_textfield_string (a_string: STRING)
+	set_text, set_textfield_string (a_string: READABLE_STRING_GENERAL)
 			-- Set the text of the text field to `txt'.
 		do
 			if generated then
-				textfield.set_text (a_string)
+				textfield.set_text (a_string.as_string_32)
 			else
-				textfield_string := a_string
+				textfield_string := a_string.as_string_32
 			end
 		end
 
@@ -266,8 +275,8 @@ feature {NONE} -- Implementation
 			-- Launch a computer directory Browser.
 		local
 			dir_selector: EV_DIRECTORY_DIALOG
-			start_directory: STRING
-			end_char: CHARACTER
+			start_directory: STRING_32
+			end_char: CHARACTER_32
 		do
 			create dir_selector
 			dir_selector.set_title (t_choose_directory)
@@ -276,12 +285,12 @@ feature {NONE} -- Implementation
 			start_directory := textfield.text.twin
 
 			if not start_directory.is_empty then
-				end_char := start_directory @ start_directory.count
+				end_char := start_directory [start_directory.count]
 				if end_char = '\' or end_char = '/' then
 					start_directory.keep_head (start_directory.count - 1)
 				end
 				if not start_directory.is_empty and then
-					(create {DIRECTORY}.make (start_directory)).exists
+					(create {DIRECTORY_32}.make (start_directory)).exists
 				then
 					dir_selector.set_start_directory (start_directory)
 				end

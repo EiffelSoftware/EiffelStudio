@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 	make
 			-- Assign default values
 		local
-			l_dir: DIRECTORY
+			l_dir: DIRECTORY_32
 			l_count: INTEGER
 			l_layout: WIZARD_EIFFEL_LAYOUT
 		do
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			freeze_required := False
 			ace_location := ""
 
-			project_location := eiffel_layout.user_projects_path
+			project_location := eiffel_layout.user_projects_path_32
 			from
 				l_count := 1
 				project_name := Default_project_name + "_" + l_count.out
@@ -57,13 +57,13 @@ feature {NONE} -- Initialization
 
 feature -- Setting
 
-	set_project_location (a_location: STRING)
+	set_project_location (a_location: like project_location)
 			-- Set the project location to `a_location'.
 		do
 			project_location := a_location
 		end
 
-	set_project_name (a_project_name: STRING)
+	set_project_name (a_project_name: like project_name)
 			-- Set the project name to `a_project_name'.
 		do
 			project_name := a_project_name
@@ -84,7 +84,7 @@ feature -- Setting
 			freeze_required_set: freeze_required = v
 		end
 
-	set_ace_location (an_ace_location: STRING)
+	set_ace_location (an_ace_location: like ace_location)
 			-- Set the location of the ace file to `an_ace_location'.
 		do
 			ace_location := an_ace_location
@@ -92,13 +92,13 @@ feature -- Setting
 
 feature -- Access
 
-	project_location: STRING
+	project_location: STRING_32
 			-- Location of the generated code.
 
-	ace_location: STRING
+	ace_location: STRING_32
 			-- Location of the ace file.
 
-	project_name: STRING
+	project_name: STRING_32
 			-- Name of the project.
 
 	compile_project: BOOLEAN
@@ -109,7 +109,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	project_path: STRING
+	project_path: STRING_32
 			-- project path
 		do
 			create Result.make (project_location.count + project_name.count + 2)

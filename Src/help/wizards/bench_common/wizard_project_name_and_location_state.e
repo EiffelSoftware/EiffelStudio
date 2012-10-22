@@ -68,15 +68,15 @@ feature -- Basic Operation
 		local
 			next_window: WIZARD_STATE_WINDOW
 			rescued: BOOLEAN
-			a_project_location: DIRECTORY_NAME
-			a_directory: DIRECTORY
+			a_project_location: DIRECTORY_NAME_32
+			a_directory: DIRECTORY_32
 		do
 			if not rescued then
-				if not is_project_name_valid (project_name.text) then
+				if not is_project_name_valid (project_name.text_32) then
 						-- Ask for a valid project name
 					create {WIZARD_ERROR_PROJECT_NAME} next_window.make (wizard_information)
 				else
-					a_project_location := validate_directory_string (project_location.text)
+					a_project_location := validate_directory_string (project_location.text_32)
 					if a_project_location.is_empty then
 						create {WIZARD_ERROR_LOCATION} next_window.make (wizard_information)
 					else
@@ -108,11 +108,11 @@ feature -- Basic Operation
 	update_state_information
 			-- Check User Entries
 		local
-			a_project_location: DIRECTORY_NAME
+			a_project_location: DIRECTORY_NAME_32
 		do
-			a_project_location := validate_directory_string (project_location.text)
+			a_project_location := validate_directory_string (project_location.text_32)
 			wizard_information.set_project_location (a_project_location)
-			wizard_information.set_project_name (project_name.text)
+			wizard_information.set_project_name (project_name.text_32)
 			wizard_information.set_compile_project (to_compile_b.is_selected)
 			Precursor
 		end
@@ -122,67 +122,50 @@ feature {NONE} -- Implementation
 	on_change_name
 			-- The user has changed the project name, update the project location
 		local
-			curr_project_location: STRING
-			curr_project_name: STRING
+			curr_project_location: STRING_32
+			curr_project_name: STRING_32
 			sep_index: INTEGER
 		do
-			curr_project_location := project_location.text
-			curr_project_name := project_name.text
+			curr_project_location := project_location.text_32
+			curr_project_name := project_name.text_32
 			if curr_project_location /= Void then
 				sep_index := curr_project_location.last_index_of (Operating_environment.Directory_separator, curr_project_location.count)
 				curr_project_location.keep_head (sep_index)
 				if curr_project_name /= Void then
 					curr_project_location.append (curr_project_name)
 				end
-
 				project_location.set_text (curr_project_location)
 			end
 		end
 
-	validate_directory_string (a_directory: STRING): DIRECTORY_NAME
+	validate_directory_string (a_directory: STRING_32): DIRECTORY_NAME_32
 			-- Validate the directory `a_directory' and return the
 			-- validated version of `a_directory'.
 		local
 			a_directory_name: DIRECTORY_NAME
 		do
 			if a_directory /= Void then
-				create a_directory_name.make_from_string (a_directory)
---				a_directory_name := validate_directory_name (a_directory_name)
---				if a_directory_name /= Void then
-					Result := a_directory_name
---				end
-			end
-			if Result = Void then
+				create Result.make_from_string (a_directory)
+			else
 				create Result.make_from_string("")
 			end
 		ensure
 			valid_Result: Result /= Void
 		end
 
-	is_project_name_valid (a_project_name: STRING): BOOLEAN
+	is_project_name_valid (a_project_name: STRING_32): BOOLEAN
 			-- Is `a_project_name' valid as project name?
-		local
-			curr_index: INTEGER
-			curr_character: CHARACTER
 		do
-			if a_project_name = Void or else a_project_name.is_empty then
-				Result := False
-			else
-				from
-					Result := True
-					curr_index := 1
-				until
-					not Result or (curr_index > a_project_name.count)
-				loop
-					curr_character := a_project_name @ curr_index
-					if curr_index = 1 then
-						Result := curr_character.is_alpha
-					else
-						Result := curr_character.is_alpha or curr_character.is_digit or
-							curr_character = '_' or curr_character = '.'
+			if
+				attached a_project_name and then
+				not a_project_name.is_empty and then
+				a_project_name.is_valid_as_string_8 and then
+				a_project_name [1].is_alpha
+			then
+				Result := across a_project_name as c
+					all
+						c.item.is_alpha or c.item.is_digit or c.item = '_' or c.item ='.'
 					end
-					curr_index := curr_index + 1
-				end
 			end
 		end
 

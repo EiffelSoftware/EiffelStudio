@@ -173,37 +173,32 @@ feature -- Basic Operation
 
 	proceed_with_current_info
 		local
-			root_class_name_text: STRING
 			next_window: WIZARD_STATE_WINDOW
 			retried, com_problem: BOOLEAN
 			existing_target_files: TRAVERSABLE [STRING_GENERAL]
 		do
 			if not retried then
-				if root_class_name.text /= Void and then not root_class_name.text.is_empty then
-					root_class_name_text := clone (root_class_name.text)
-					root_class_name_text.to_lower
-					if is_valid_identifier (root_class_name.text) then
-						if creation_routine_name.text /= Void and then not creation_routine_name.text.is_empty then
-							if is_valid_identifier (creation_routine_name.text) then
-								existing_target_files := (create {WIZARD_PROJECT_GENERATOR}.make (wizard_information)).existing_target_files
-								if existing_target_files.is_empty then
-										-- Go to code generation step.
-									create {WIZARD_FINAL_STATE} next_window.make (wizard_information)
-								else
-										-- Warn that there are files to be overwritten.
-									create {WIZARD_WARNING_FILE_PRESENCE} next_window.make_with_names (existing_target_files, wizard_information)
-								end
-							else
-									-- Ask for a valid creation routine name (in the sense of an Eiffel valid identifier).
-								create {WIZARD_ERROR_VALID_CREATION_ROUTINE_NAME} next_window.make (wizard_information)
-							end
+				if
+					attached root_class_name.text_32 as r and then
+					not r.is_empty and then
+					is_valid_identifier (r)
+				then
+					if
+						attached creation_routine_name.text_32 as c and then
+						not c.is_empty and then
+						is_valid_identifier (c)
+					then
+						existing_target_files := (create {WIZARD_PROJECT_GENERATOR}.make (wizard_information)).existing_target_files
+						if existing_target_files.is_empty then
+								-- Go to code generation step.
+							create {WIZARD_FINAL_STATE} next_window.make (wizard_information)
 						else
-								-- Ask for a valid creation routine name.
-							create {WIZARD_ERROR_VALID_CREATION_ROUTINE_NAME} next_window.make (wizard_information)
+								-- Warn that there are files to be overwritten.
+							create {WIZARD_WARNING_FILE_PRESENCE} next_window.make_with_names (existing_target_files, wizard_information)
 						end
 					else
-							-- Ask for a valid root class name (in the sense of an Eiffel valid identifier).
-						create {WIZARD_ERROR_VALID_ROOT_CLASS_NAME} next_window.make (wizard_information)
+							-- Ask for a valid creation routine name.
+						create {WIZARD_ERROR_VALID_CREATION_ROUTINE_NAME} next_window.make (wizard_information)
 					end
 				else
 						-- Ask for a valid root class name.
@@ -232,8 +227,8 @@ feature -- Basic Operation
 			-- Check User Entries
 		do
 			wizard_information.set_generate_dll (rb_project_type_dll.is_selected)
-			wizard_information.set_root_class_name (root_class_name.text)
-			wizard_information.set_creation_routine_name (creation_routine_name.text)
+			wizard_information.set_root_class_name (root_class_name.text_32)
+			wizard_information.set_creation_routine_name (creation_routine_name.text_32)
 			if rb_project_type_dll.is_selected then
 				wizard_information.set_console_application (False)
 			else
@@ -242,7 +237,7 @@ feature -- Basic Operation
 			if clr_version_check.is_selected then
 				wizard_information.set_clr_version (most_recent_clr_version)
 			else
-				wizard_information.set_clr_version (clr_version_cb.text)
+				wizard_information.set_clr_version (clr_version_cb.text.as_string_8)
 			end
 			Precursor
 		end
@@ -265,42 +260,25 @@ feature {NONE} -- Implementation
 	root_class_name: WIZARD_SMART_TEXT_FIELD
 	creation_routine_name: WIZARD_SMART_TEXT_FIELD
 
-	is_valid_identifier (a_name: STRING): BOOLEAN
+	is_valid_identifier (a_name: STRING_32): BOOLEAN
 			-- Is `a_name' a valid Eiffel identifier?
 		require
 			non_void_name: a_name /= Void
 			not_empty_name: not a_name.is_empty
-		local
-			first_character: CHARACTER
-			i: INTEGER
-			a_character: CHARACTER
 		do
-			first_character := a_name.item (1)
-			if not first_character.is_alpha then
-				Result := False
-			else
-				from
-					i := 2
-					Result := True
-				until
-					i > a_name.count or not Result
-				loop
-					a_character := a_name.item (i)
-					Result := a_character.is_alpha or a_character.is_digit or a_character.is_equal ('_')
-					i := i + 1
-				end
+			if
+				a_name.is_valid_as_string_8 and then
+				a_name [1].is_alpha
+			then
+				Result := across a_name as c all c.item.is_alpha or c.item.is_digit or c.item = '_' end
 			end
 		end
 
 	on_change_root_class_name
 			-- Action performed when the user changes the root class name of the application
-		local
-			lower_case_root_class_name: STRING
 		do
-			lower_case_root_class_name := clone (root_class_name.text)
-			if lower_case_root_class_name /= Void then
-				lower_case_root_class_name.to_lower
-				if lower_case_root_class_name.is_equal (interface_names.l_none_class) then
+			if attached root_class_name.text_32 as n then
+				if n.is_case_insensitive_equal_general (interface_names.l_none_class) then
 					creation_routine_name.widget.disable_sensitive
 				else
 					creation_routine_name.widget.enable_sensitive

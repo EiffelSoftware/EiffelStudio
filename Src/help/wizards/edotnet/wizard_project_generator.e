@@ -19,11 +19,11 @@ feature -- Basic Operations
 	generate_code
 			-- Generate the code for a new vision2-application project
 		local
-			map_list: LINKED_LIST [TUPLE [STRING, STRING]]
-			tuple: TUPLE [STRING, STRING]
-			project_name_lowercase: STRING
-			project_location: STRING
-			ace_location: STRING
+			map_list: LINKED_LIST [TUPLE [STRING, STRING_32]]
+			tuple: TUPLE [STRING, STRING_32]
+			project_name_lowercase: STRING_32
+			project_location: STRING_32
+			ace_location: STRING_32
 			root_class_name_lowercase: STRING
 		do
 				-- cached variables
@@ -41,7 +41,7 @@ feature -- Basic Operations
 				-- Add the project type
 			create tuple
 			tuple.put (Application_type_template, 1)
-			tuple.put (wizard_information.application_type, 2)
+			tuple.put (wizard_information.application_type.as_string_32, 2)
 			map_list.extend (tuple)
 
 				-- Add the root class name
@@ -49,35 +49,35 @@ feature -- Basic Operations
 			if not root_class_name_lowercase.is_equal (None_class) then
 				create tuple
 				tuple.put (Root_class_name_template, 1)
-				tuple.put (wizard_information.root_class_name, 2)
+				tuple.put (wizard_information.root_class_name.as_string_32, 2)
 				map_list.extend (tuple)
 
 					-- Add the creation routine name
 				create tuple
 				tuple.put (Creation_routine_name_template, 1)
-				tuple.put (wizard_information.creation_routine_name, 2)
+				tuple.put (wizard_information.creation_routine_name.as_string_32, 2)
 				map_list.extend (tuple)
 
 				create tuple
 				tuple.put (all_classes_template, 1)
-				tuple.put ("", 2)
+				tuple.put ({STRING_32} "", 2)
 				map_list.extend (tuple)
 			else
 				create tuple
 				tuple.put (Root_class_name_template, 1)
-				tuple.put ("ROOT_CLASS", 2)
+				tuple.put ({STRING_32} "ROOT_CLASS", 2)
 				map_list.extend (tuple)
 
 					-- Add the creation routine name
 				create tuple
 				tuple.put (Creation_routine_name_template, 1)
-				tuple.put ("make", 2)
+				tuple.put ({STRING_32} "make", 2)
 				map_list.extend (tuple)
 
 
 				create tuple
 				tuple.put (all_classes_template, 1)
-				tuple.put ("all_classes=%"true%"", 2)
+				tuple.put ({STRING_32} "all_classes=%"true%"", 2)
 				map_list.extend (tuple)
 			end
 
@@ -85,9 +85,9 @@ feature -- Basic Operations
 			create tuple
 			tuple.put (Console_application, 1)
 			if wizard_information.console_application then
-				tuple.put ("true", 2)
+				tuple.put ({STRING_32} "true", 2)
 			else
-				tuple.put ("false", 2)
+				tuple.put ({STRING_32} "false", 2)
 			end
 			map_list.extend (tuple)
 
@@ -95,46 +95,17 @@ feature -- Basic Operations
 			create tuple
 			tuple.put (clr_version_template, 1)
 			if not wizard_information.is_most_recent_clr_version then
-				tuple.put ("<setting name=%"msil_clr_version%" value=%"" + wizard_information.clr_version + "%"/>", 2)
+				tuple.put ({STRING_32} "<setting name=%"msil_clr_version%" value=%"" + wizard_information.clr_version + "%"/>", 2)
 			else
-				tuple.put ("", 2)
+				tuple.put ({STRING_32} "", 2)
 			end
 			map_list.extend (tuple)
 
 				-- Generation
 			if not root_class_name_lowercase.is_equal (None_class) then
-				from_template_to_project (wizard_resources_path, Application_template_filename,	project_location, root_class_name_lowercase + Eiffel_extension, map_list)
+				from_template_to_project (wizard_resources_path_32, Application_template_filename,	project_location, root_class_name_lowercase + Eiffel_extension, map_list)
 			end
-			from_template_to_project (wizard_resources_path, Ace_template_filename, project_location, project_name_lowercase + Config_extension, map_list)
-		end
-
-	tuple_from_file_content (an_index: STRING; a_content_file: STRING): TUPLE [STRING, STRING]
-		local
-			file_content: STRING
-			file: RAW_FILE
-			file_name: FILE_NAME
-		do
-			create file_name.make_from_string (wizard_resources_path)
-			file_name.set_file_name (a_content_file)
-
-			create file.make_open_read (file_name)
-			file.read_stream (file.count)
-
-			file_content := file.last_string.twin
-			file_content.replace_substring_all (Windows_new_line, New_line)
-
-			create Result
-			Result.put (an_index, 1)
-			Result.put (file_content, 2)
-
-			file.close
-		end
-
-	empty_tuple (an_index: STRING): TUPLE [STRING, STRING]
-		do
-			create Result
-			Result.put (an_index, 1)
-			Result.put (Empty_string, 2)
+			from_template_to_project (wizard_resources_path_32, Ace_template_filename, project_location, project_name_lowercase + Config_extension, map_list)
 		end
 
 feature {NONE} -- Access
@@ -184,7 +155,7 @@ feature {NONE} -- Constants
 	Ace_template_filename: STRING = "template_config.ecf"
 			-- Filename of the Ace file template used to automatically generate Ace files for .NET applications
 
-	Application_template_filename: STRING = "template_application.e"
+	Application_template_filename: STRING_32 = "template_application.e"
 			-- Filename of the template used to automatically generate a root class for .NET applications
 
 	None_class: STRING = "none"

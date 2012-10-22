@@ -21,8 +21,6 @@ feature  -- Initialization
 			-- Assign default values
 		do
 			Precursor
-			icon_location := wizard_resources_path
-			icon_location := icon_location + Icon_relative_filename
 			generate_dll := False
 			root_class_name := Default_root_class_name
 			creation_routine_name := Default_creation_routine_name
@@ -31,32 +29,30 @@ feature  -- Initialization
 
 feature -- Setting
 
-	set_icon_location (new_value: STRING)
-			-- Set `icon_location' to `new_value'
-		do
-			icon_location := new_value
-		end
-		
 	set_generate_dll (new_value: BOOLEAN)
 			-- Set `generate_dll' to `new_value'
 		do
 			generate_dll := new_value
 		end
 
-	set_root_class_name (a_name: like root_class_name)
+	set_root_class_name (a_name: STRING_32)
 			-- Set `root_class_name' with `a_name'.
-		local
-			upper_case_name: STRING
 		do
-			upper_case_name := clone (a_name)
-			upper_case_name.to_upper
-			root_class_name := upper_case_name
+			if attached a_name then
+				root_class_name := a_name.as_upper.as_string_8
+			else
+				root_class_name := Void
+			end
 		end
 
-	set_creation_routine_name (a_name: like creation_routine_name)
+	set_creation_routine_name (a_name: STRING_32)
 			-- Set `creation_routine_name' with `a_name'.
 		do
-			creation_routine_name := a_name
+			if attached a_name then
+				creation_routine_name := a_name.as_string_8
+			else
+				creation_routine_name := Void
+			end
 		ensure
 			creation_routine_name_set: creation_routine_name = a_name
 		end
@@ -68,7 +64,7 @@ feature -- Setting
 		ensure
 			console_application_set: console_application = a_bool
 		end
-		
+
 	set_clr_version (a_version: like clr_version)
 			-- set `clr_version' with `a_version'
 		require
@@ -86,12 +82,9 @@ feature -- Setting
 			is_most_recent_clr_version := a_flag
 		ensure
 			set: is_most_recent_clr_version = a_flag
-		end		
+		end
 
 feature -- Access
-
-	icon_location: STRING
-			-- Location of the icon choose by the user
 
 	generate_dll: BOOLEAN
 			-- Should the compiler generate a DLL?
@@ -115,13 +108,13 @@ feature -- Access
 
 	console_application: BOOLEAN
 			-- Is it a console application system?
-			
+
 	is_most_recent_clr_version: BOOLEAN
 			-- Should we target the most recent CLR version available on the users system?
-			
+
 	clr_version: STRING
 			-- version of clr to target
-			
+
 	is_valid_clr_version (a_version: STRING): BOOLEAN
 			-- is `a_version' a valid clr version?
 		require
@@ -129,10 +122,10 @@ feature -- Access
 		do
 			Result := not a_version.is_empty and then a_version.is_equal (clr_version_10) or a_version.is_equal (clr_version_11)
 		end
-		
+
 	clr_version_10: STRING = "v1.0.3705"
 			-- version 1.0 of CLR
-			
+
 	clr_version_11: STRING = "v1.1.4322"
 			-- version 1.1 of CLR
 

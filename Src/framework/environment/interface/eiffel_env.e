@@ -897,18 +897,18 @@ feature -- Directories (distribution)
 			not_result_is_empty: not Result.is_empty
 		end
 
-	help_path: DIRECTORY_NAME
+	help_path: DIRECTORY_NAME_32
 			-- Path containing the help files.
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := shared_application_path.twin
+			Result := shared_application_path_32.twin
 			Result.extend (help_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
 
-	error_path: DIRECTORY_NAME
+	error_path: DIRECTORY_NAME_32
 			-- Path containing the compiler error description files.
 		require
 			is_valid_environment: is_valid_environment
@@ -919,7 +919,7 @@ feature -- Directories (distribution)
 			not_result_is_empty: not Result.is_empty
 		end
 
-	default_templates_path: DIRECTORY_NAME
+	default_templates_path: DIRECTORY_NAME_32
 			-- Path containing the default templates.
 		require
 			is_valid_environment: is_valid_environment
@@ -1490,7 +1490,7 @@ feature -- User Directories
 
 feature -- Files
 
-	default_config_file_name: FILE_NAME
+	default_config_file_name: FILE_NAME_32
 			-- Default Eiffel confiration file name location
 		require
 			is_valid_environment: is_valid_environment
@@ -1499,7 +1499,7 @@ feature -- Files
 			Result.set_file_name (default_config_file)
 			if is_user_files_supported then
 					-- Check user override file.
-				if attached user_priority_file_name (Result, True) as l_user then
+				if attached user_priority_file_name_32 (Result, True) as l_user then
 					Result := l_user
 				end
 			end
@@ -2443,7 +2443,7 @@ feature -- Directory constants (distribution)
 	defaults_name: STRING_8 = "defaults"
 			-- Default templates folder name.
 
-	errors_name: STRING_8 = "errors"
+	errors_name: STRING_32 = "errors"
 			-- Error file descriptions folder name.
 
 	etc_name: STRING_8 = "etc"
@@ -2452,7 +2452,7 @@ feature -- Directory constants (distribution)
 	filters_name: STRING_8 = "filters"
 			-- Documentation filters folder name.
 
-	help_name: STRING_8 = "help"
+	help_name: STRING_32 = "help"
 			-- Help files folder name.
 
 	include_name: STRING_8 = "include"

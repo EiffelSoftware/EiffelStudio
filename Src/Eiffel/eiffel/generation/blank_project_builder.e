@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 	default_config_file_contents: STRING
 			-- Contents of the default ace file
 		local
-			a_file: RAW_FILE
+			a_file: RAW_FILE_32
 		do
 			create a_file.make (eiffel_layout.default_config_file_name)
 			a_file.open_read
@@ -150,7 +150,9 @@ feature {NONE} -- Implementation
 			Result := a_file.last_string
 		rescue
 			add_error_message (
-				"Unable to read the template ace file '"+eiffel_layout.default_config_file_name+"'%N%
+				{STRING_32} "Unable to read the template ace file '" +
+				eiffel_layout.default_config_file_name +
+				{STRING_32}"'%N%
 				%Check that the file exists and that you are allowed to read it.")
 		end
 

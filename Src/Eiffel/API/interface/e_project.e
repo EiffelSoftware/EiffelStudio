@@ -561,28 +561,9 @@ feature -- Update
 	call_finish_freezing (workbench_mode: BOOLEAN)
 			-- Call `finish_freezing' after freezing
 			-- an eiffel project in W_code or F_wode
-			-- depending on the value `workbench_mode'
-		local
-			path: STRING_32
-			l_cmd: STRING
-			l_processors: INTEGER
+			-- depending on the value `workbench_mode'.
 		do
-			if workbench_mode then
-				path := project_directory.workbench_path
-			else
-				path := project_directory.final_path
-			end
-			create l_cmd.make_from_string ("%"" + eiffel_layout.freeze_command_name + "%"")
-			if comp_system.il_generation and (not {PLATFORM_CONSTANTS}.is_64_bits or Comp_system.force_32bits) then
-					-- Force 32bit compilation
-				l_cmd.append (" -x86")
-			end
-			l_processors := compiler_objects.preferences.maximum_processor_usage
-			if l_processors > 0 then
-				l_cmd.append (" -nproc ")
-				l_cmd.append_integer (l_processors)
-			end
-			compiler_objects.command_executor.invoke_finish_freezing (path, l_cmd, True, workbench_mode)
+			call_finish_freezing_with_mode (workbench_mode, True)
 		end
 
 	call_finish_freezing_and_wait (workbench_mode: BOOLEAN)
@@ -590,29 +571,8 @@ feature -- Update
 			-- an eiffel project in W_code or F_wode
 			-- depending on the value `workbench_mode'.
 			-- Wait until C compilation is done.
-		local
-			path: STRING_32
-			l_cmd: STRING
-			l_processors: INTEGER
 		do
-			if workbench_mode then
-				path := project_directory.workbench_path
-			else
-				path := project_directory.final_path
-			end
-			create l_cmd.make_from_string ("%"" + eiffel_layout.Freeze_command_name + "%"")
-			if comp_system.il_generation and (not {PLATFORM_CONSTANTS}.is_64_bits or Comp_system.force_32bits) then
-					-- Force 32bit compilation
-				l_cmd.append (" -x86")
-			end
-			l_processors := compiler_objects.preferences.maximum_processor_usage
-			if l_processors > 0 then
-				l_cmd.append (" -nproc ")
-				l_cmd.append_integer (l_processors)
-			end
-				-- Set below normal priority.
-			l_cmd.append (" -low")
-			compiler_objects.command_executor.invoke_finish_freezing (path, l_cmd, False, workbench_mode)
+			call_finish_freezing_with_mode (workbench_mode, False)
 		end
 
 	terminate_c_compilation
@@ -737,6 +697,42 @@ feature -- Update
 			exit_agent := ag
 			error_handler.insert_error (create {INTERRUPT_ERROR}.make (True))
 			error_handler.raise_error
+		end
+
+feature {NONE} -- C compilation
+
+	call_finish_freezing_with_mode (workbench_mode: BOOLEAN; is_asynchronous: BOOLEAN)
+			-- Call `finish_freezing' after freezing
+			-- an eiffel project in W_code or F_wode
+			-- depending on the value `workbench_mode'.
+			-- Run it asynchroniously if `is_async' and synchronously otherwise.
+		local
+			path: STRING_32
+			l_cmd: STRING_32
+			l_processors: INTEGER
+		do
+			if workbench_mode then
+				path := project_directory.workbench_path
+			else
+				path := project_directory.final_path
+			end
+			l_cmd := {STRING_32} "%""
+			l_cmd.append_string (eiffel_layout.freeze_command_name)
+			l_cmd.append_character ('"')
+			if comp_system.il_generation and (not {PLATFORM_CONSTANTS}.is_64_bits or Comp_system.force_32bits) then
+					-- Force 32bit compilation
+				l_cmd.append_string ({STRING_32} " -x86")
+			end
+			l_processors := compiler_objects.preferences.maximum_processor_usage
+			if l_processors > 0 then
+				l_cmd.append_string ({STRING_32} " -nproc ")
+				l_cmd.append_integer (l_processors)
+			end
+			if is_asynchronous then
+					-- Set below normal priority.
+				l_cmd.append ({STRING_32} " -low")
+			end
+			compiler_objects.command_executor.invoke_finish_freezing (path, l_cmd, is_asynchronous, workbench_mode)
 		end
 
 feature -- Output

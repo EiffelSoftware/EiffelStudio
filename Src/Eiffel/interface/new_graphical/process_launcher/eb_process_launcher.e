@@ -27,7 +27,7 @@ inherit
 
 feature -- Launching parameters setting
 
-	prepare_command_line (cmd: STRING; args: LIST [STRING]; a_working_directory: STRING)
+	prepare_command_line (cmd: STRING_32; args: LIST [STRING]; a_working_directory: STRING_32)
 			-- Prepare command line for process launching.
 			-- `cmd' is the process command to launch, `args' are possible arguments and
 			-- `a_working_directory' is the path where process will be launched.
@@ -259,8 +259,6 @@ feature -- Control
 			buffer_size_positive: buffer_size > 0
 		local
 			prc_ftry: PROCESS_FACTORY
-			ee: EXECUTION_ENVIRONMENT
-			dir: STRING
 			pt: PROCESS_TIMER
 		do
 			create prc_ftry
@@ -305,19 +303,8 @@ feature -- Control
 
 			prc.set_buffer_size (buffer_size)
 
-			ee := Void
-
-			if not working_directory.is_empty then
-				create ee
-				dir := ee.current_working_directory
-				ee.change_working_directory (working_directory)
-			end
 			data_storage.wipe_out
 			prc.launch
-
-			if ee /= Void then
-				ee.change_working_directory (dir)
-			end
 		end
 
 	wait_for_exit
@@ -506,13 +493,13 @@ feature -- Status reporting
 	error_handler:	PROCEDURE [ANY, TUPLE [STRING]]
 			-- Handlers of output or error from process	
 
-	command_line: STRING
+	command_line: STRING_32
 			-- Command line (with arguments) of child process
 
 	arguments: ARRAYED_LIST [STRING]
 			-- Arguments for process
 
-	working_directory: STRING
+	working_directory: STRING_32
 			-- Working directory of child process.
 
 	time_interval: INTEGER

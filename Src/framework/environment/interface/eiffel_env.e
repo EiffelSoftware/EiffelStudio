@@ -401,16 +401,16 @@ feature -- Status setting
 
 feature {NONE} -- Helpers
 
-	path_under_compiler_profile (a_path: STRING_8): STRING_8
+	path_under_compiler_profile (a_path: STRING_32): STRING_32
 			-- To avoid editing value of variable (like ISE_LIBRARY) when compiling against specific compiler profile
 			-- modify the value of the related environment variable.
 		local
-			l_dir_name: DIRECTORY_NAME
+			l_dir_name: DIRECTORY_NAME_32
 		do
 			if is_compatible_mode and a_path.substring_index ("compatible", 1) = 0 then
 				create l_dir_name.make_from_string (a_path)
 				l_dir_name.extend ("compatible")
-				Result := l_dir_name.string
+				Result := l_dir_name
 			else
 				Result := a_path
 			end

@@ -87,15 +87,13 @@ feature -- Compiler specific calls
 			end
 		end
 
-	invoke_finish_freezing (c_code_dir, freeze_command: STRING; asynchronous: BOOLEAN; workbench_mode: BOOLEAN)
+	invoke_finish_freezing (c_code_dir, freeze_command: STRING_32; asynchronous: BOOLEAN; workbench_mode: BOOLEAN)
 			-- Invoke the `finish_freezing' script.
 		local
-			cwd: STRING
-			f_cmd: STRING
+			cwd: STRING_32
 		do
 				-- Store current working directory
 			cwd := Execution_environment.current_working_directory
-			create f_cmd.make_from_string (freeze_command)
 
 			Execution_environment.change_working_directory (c_code_dir)
 

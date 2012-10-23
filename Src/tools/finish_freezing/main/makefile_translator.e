@@ -77,15 +77,15 @@ feature -- Quick compile
 	launch_quick_compilation
 			-- Launch the `quick_finalize' program with the correct options.
 		local
-			quick_prg: STRING
+			quick_prg: STRING_32
 		do
-			quick_prg := "%"" + eiffel_layout.Quick_finalize_command_name + "%""
-
-			quick_prg.append (" . " + options.get_string_or_default ("obj_file_ext", "obj"))
-
+			quick_prg := {STRING_32} "%""
+			quick_prg.append_string (eiffel_layout.Quick_finalize_command_name)
+			quick_prg.append_string ({STRING_32} "%" . ")
+			quick_prg.append_string_general (options.get_string_or_default ("obj_file_ext", "obj"))
 				-- On Windows, we need to surround the command with " since it is executed
 				-- by COMSPEC.
-			env.system ("%"" + quick_prg + "%"")
+			env.system ({STRING_32} "%"" + quick_prg + {STRING_32} "%"")
 		end
 
 feature -- Status report
@@ -1349,13 +1349,14 @@ feature {NONE}	-- substitutions
 			-- Replace all occurrences of `Eiffel_dir' environment variable in `line'
 		local
 			l_eiffel_dir: STRING
+			u: UTF_CONVERTER
 		do
 			debug ("subst")
 				io.put_string("%Tsubst_eiffel%N")
 			end
 
 			if eiffel_layout.is_valid_environment then
-				l_eiffel_dir := eiffel_layout.shared_path
+				l_eiffel_dir := u.string_32_to_utf_8_string_8 (eiffel_layout.shared_path_32)
 			else
 				l_eiffel_dir := empty_string
 			end
@@ -1591,6 +1592,7 @@ feature {NONE} -- Implementation
 			-- find a replacement for `word' in options or environment
 		local
 			replacement: STRING
+			u: UTF_CONVERTER
 		do
 			debug ("implementation")
 				io.put_string("%Tget_replacement%N")
@@ -1606,9 +1608,9 @@ feature {NONE} -- Implementation
 						search_and_replace (replacement)
 					end
 					Result := replacement
-				elseif attached eiffel_layout.get_environment (word) as l_env then
+				elseif attached eiffel_layout.get_environment_32 (word) as l_env then
 						-- Note: Before we were taking the short path (rev#66961)
-					Result := l_env
+					Result := u.string_32_to_utf_8_string_8 (l_env)
 				else
 					Result := Void
 				end

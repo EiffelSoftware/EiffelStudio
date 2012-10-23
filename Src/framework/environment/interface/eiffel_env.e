@@ -811,12 +811,12 @@ feature -- Directories (distribution)
 			not_result_is_empty: not Result.is_empty
 		end
 
-	built_ins_path (a_is_platform_neutral, a_is_dotnet: BOOLEAN): DIRECTORY_NAME
+	built_ins_path (a_is_platform_neutral, a_is_dotnet: BOOLEAN): DIRECTORY_NAME_32
 			-- Path where implementation for `built_ins' are found.
 		require
 			is_valid_environment: is_valid_environment
 		do
-			create Result.make_from_string (shared_application_path)
+			create Result.make_from_string (shared_application_path_32)
 			Result.extend (built_ins_name)
 			if a_is_platform_neutral then
 				Result.extend (neutral_name)
@@ -1869,11 +1869,11 @@ feature -- Files (commands)
 			end
 		end
 
-	freeze_command_name: FILE_NAME
+	freeze_command_name: FILE_NAME_32
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_from_string (bin_path)
+			create Result.make_from_string (bin_path_32)
 			Result.set_file_name (finish_freezing_script)
 			if not executable_suffix.is_empty then
 				Result.add_extension (executable_suffix)
@@ -1882,15 +1882,15 @@ feature -- Files (commands)
 			not_result_is_empty: not Result.is_empty
 		end
 
-	emake_command_name: FILE_NAME
+	emake_command_name: FILE_NAME_32
 			-- Complete path to `emake'.
 		require
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				create Result.make_from_string (lib_application_path)
+				create Result.make_from_string (lib_application_path_32)
 			else
-				create Result.make_from_string (bin_path)
+				create Result.make_from_string (bin_path_32)
 			end
 			Result.set_file_name (emake_name)
 			if not executable_suffix.is_empty then
@@ -1900,15 +1900,15 @@ feature -- Files (commands)
 			not_result_is_empty: not Result.is_empty
 		end
 
-	quick_finalize_command_name: FILE_NAME
+	quick_finalize_command_name: FILE_NAME_32
 			-- Complete path to `quick_finalize'.
 		require
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				create Result.make_from_string (lib_application_path)
+				create Result.make_from_string (lib_application_path_32)
 			else
-				create Result.make_from_string (bin_path)
+				create Result.make_from_string (bin_path_32)
 			end
 			Result.set_file_name (quick_finalize_name)
 			if not executable_suffix.is_empty then
@@ -2028,22 +2028,22 @@ feature -- Executable names
 			not_result_is_empty: not Result.is_empty
 		end
 
-	finish_freezing_script: STRING_8
+	finish_freezing_script: STRING_32
 			-- Name of post-eiffel compilation processing to launch C code.
 		once
-			create Result.make_from_string ("finish_freezing")
-			Result.append (release_suffix)
+			Result := {STRING_32} "finish_freezing"
+			Result.append_string_general (release_suffix)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
 
-	quick_finalize_name: STRING_8 = "quick_finalize"
+	quick_finalize_name: STRING_32 = "quick_finalize"
 			-- Name of estudio command
 
 	x2c_name: STRING_8 = "x2c"
 			-- Complete path to `x2c'.
 
-	emake_name: STRING_8 = "emake"
+	emake_name: STRING_32 = "emake"
 			-- Name of emake command.
 
 	prelink_name: STRING_8 = "prelink"
@@ -2382,13 +2382,13 @@ feature -- File constants
 
 feature -- Directory constants (platform)
 
-	dotnet_name: STRING = "dotnet"
+	dotnet_name: STRING_32 = "dotnet"
 			-- .NET folder name.
 
-	neutral_name: STRING_8 = "neutral"
+	neutral_name: STRING_32 = "neutral"
 			-- Neutral platform folder name.
 
-	classic_name: STRING_8 = "classic"
+	classic_name: STRING_32 = "classic"
 			-- Classic Eiffel folder name.
 
 	windows_name: STRING_8 = "windows"
@@ -2437,7 +2437,7 @@ feature -- Directory constants (distribution)
 	borland_name: STRING_8 = "BCC55"
 			-- Borland C compiler folder name.
 
-	built_ins_name: STRING_8 = "built_ins"
+	built_ins_name: STRING_32 = "built_ins"
 			-- Built-in code classes folder name.
 
 	defaults_name: STRING_8 = "defaults"

@@ -74,14 +74,14 @@ feature -- Access
 			Result.append_string (header.as_string_32)
 		end
 
-	file_name: STRING
+	file_name: STRING_32
 			-- File where the help is
 		local
-			l_file_name: FILE_NAME
+			l_file_name: FILE_NAME_32
 		do
 			create l_file_name.make_from_string (eiffel_layout.error_path)
 			l_file_name.set_file_name (error_i.help_file_name)
-			Result := l_file_name.string
+			Result := l_file_name
 		end
 
 	stone_signature: STRING_32 do Result := code end

@@ -454,21 +454,21 @@ feature {NONE} -- Implementation
 			valid_st: a_text_formatter /= Void
 			error_not_void: a_error /= Void
 		local
-			l_path: STRING;
-			l_file_name: FILE_NAME;
-			l_file: PLAIN_TEXT_FILE;
+			l_path: STRING_32
+			l_file_name: FILE_NAME_32
+			l_file: PLAIN_TEXT_FILE_32
 			l_text, l_line: STRING
 			l_stop: BOOLEAN
 			i: INTEGER
 		do
-			create l_file_name.make_from_string (eiffel_layout.error_path);
-			l_file_name.extend ("short");
-			l_file_name.set_file_name (a_error.help_file_name);
-			l_path := l_file_name.string
+			create l_file_name.make_from_string (eiffel_layout.error_path)
+			l_file_name.extend ("short")
+			l_file_name.set_file_name (a_error.help_file_name)
+			l_path := l_file_name
 			if a_error.subcode /= 0 then
 				l_path.append_integer (a_error.subcode)
-			end;
-			create l_file.make (l_path);
+			end
+			create l_file.make (l_path)
 			if l_file.exists then
 				create l_text.make (255)
 				from
@@ -542,45 +542,45 @@ feature {NONE} -- Implementation
 			valid_st: a_text_formatter /= Void
 			error_not_void: a_error /= Void
 		local
-			l_file_name: STRING;
-			f_name: FILE_NAME;
-			file: PLAIN_TEXT_FILE;
+			l_file_name: STRING_32
+			f_name: FILE_NAME_32
+			file: PLAIN_TEXT_FILE_32
 		do
-			create f_name.make_from_string (eiffel_layout.error_path);
-			f_name.extend ("short");
-			f_name.set_file_name (a_error.help_file_name);
+			create f_name.make_from_string (eiffel_layout.error_path)
+			f_name.extend ("short")
+			f_name.set_file_name (a_error.help_file_name)
 			l_file_name := f_name
 			if a_error.subcode /= 0 then
 				l_file_name.append_integer (a_error.subcode)
-			end;
-			create file.make (l_file_name);
+			end
+			create file.make (l_file_name)
 			if file.exists then
 				from
-					file.open_read;
+					file.open_read
 				until
 					file.end_of_file
 				loop
-					file.read_line;
+					file.read_line
 					a_text_formatter.add (file.last_string.twin)
-					a_text_formatter.add_new_line;
-				end;
-				file.close;
+					a_text_formatter.add_new_line
+				end
+				file.close
 			else
-				a_text_formatter.add_new_line;
-				a_text_formatter.add ("No help available for this error");
-				a_text_formatter.add_new_line;
-				a_text_formatter.add ("(cannot read file: ");
-				a_text_formatter.add (l_file_name);
-				a_text_formatter.add (")");
-				a_text_formatter.add_new_line;
-				a_text_formatter.add_new_line;
-				a_text_formatter.add ("An error message should always be available.");
-				a_text_formatter.add_new_line;
-				a_text_formatter.add ("Please contact ISE.");
-				a_text_formatter.add_new_line;
 				a_text_formatter.add_new_line
-			end;
-		end;
+				a_text_formatter.add ("No help available for this error")
+				a_text_formatter.add_new_line
+				a_text_formatter.add ("(cannot read file: ")
+				a_text_formatter.add (l_file_name)
+				a_text_formatter.add (")")
+				a_text_formatter.add_new_line
+				a_text_formatter.add_new_line
+				a_text_formatter.add ("An error message should always be available.")
+				a_text_formatter.add_new_line
+				a_text_formatter.add ("Please contact ISE.")
+				a_text_formatter.add_new_line
+				a_text_formatter.add_new_line
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -629,7 +629,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -106,10 +106,11 @@ feature {NONE} -- Update
 		require
 			no_lace_file: Eiffel_ace.file_name = Void
 		local
-			file_name, cmd: STRING;
-			option: CHARACTER;
-			exit: BOOLEAN;
-			file, dest: PLAIN_TEXT_FILE;
+			file_name, cmd: STRING
+			option: CHARACTER
+			exit: BOOLEAN
+			u: FILE_UTILITIES
+			file: PLAIN_TEXT_FILE
 		do
 			from
 			until
@@ -150,25 +151,21 @@ feature {NONE} -- Update
 					check_ace_file (Eiffel_ace.file_name);
 				when 't' then
 					localized_print (ewb_names.file_name)
-					io.read_line;
-					file_name := io.last_string;
+					io.read_line
+					file_name := io.last_string
 					if file_name.is_empty then
-						exit := True;
+						exit := True
 					else
-						create file.make_open_read (eiffel_layout.default_config_file_name)
-						create dest.make_open_write (file_name)
-						file.copy_to (dest)
-						file.close
-						dest.close
-						Eiffel_ace.set_file_name (file_name.twin);
-						edit (Eiffel_ace.file_name);
-					end;
+						u.copy_file (eiffel_layout.default_config_file_name, file_name)
+						Eiffel_ace.set_file_name (file_name.twin)
+						edit (Eiffel_ace.file_name)
+					end
 				else
 					localized_print (ewb_names.invalid_choices)
-					exit := False;
-				end;
-			end;
-		end;
+					exit := False
+				end
+			end
+		end
 
 	compile
 			-- Melt system.

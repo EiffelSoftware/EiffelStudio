@@ -510,7 +510,8 @@ feature{NONE} -- Actions
 	on_run_process
 			-- Agent called when launching a process
 		local
-			str ,wd: STRING
+			str: STRING
+			wd: STRING_32
 			e_cmd: EB_EXTERNAL_COMMAND
 			temp_cmd: EB_EXTERNAL_COMMAND
 		do
@@ -527,7 +528,7 @@ feature{NONE} -- Actions
 					create temp_cmd.make_and_run_only (e_cmd.external_command, wd)
 					print_command_name (e_cmd.external_command)
 				else
-					create temp_cmd.make_and_run_only (str, "")
+					create temp_cmd.make_and_run_only (str, {STRING_32} "")
 					print_command_name (str)
 				end
 			end

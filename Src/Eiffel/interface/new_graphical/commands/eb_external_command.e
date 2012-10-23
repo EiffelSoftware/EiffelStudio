@@ -116,6 +116,7 @@ feature {NONE} -- Initialization
 		local
 			tok: STRING
 			i, i1 ,i2: INTEGER
+			u: UTF_CONVERTER
 		do
 			editor := a_editor
 
@@ -130,11 +131,11 @@ feature {NONE} -- Initialization
 			end
 			i2 := a_command.index_of (separator, i1 + 1)
 
-			external_command := a_command.substring (i1 + 1, i2 - 1)--a_command.count)
+			external_command := a_command.substring (i1 + 1, i2 - 1)
 			if i2 = a_command.count then
-				working_directory := ""
+				working_directory := {STRING_32} ""
 			else
-				working_directory := a_command.substring (i2 + 1, a_command.count)
+				working_directory := u.utf_8_string_8_to_string_32 (a_command.substring (i2 + 1, a_command.count))
 			end
 				-- Check validity before inserting.
 				-- This is a bit redundant with the precondition, but
@@ -148,7 +149,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_and_run_only (cmd: STRING; dir: STRING)
+	make_and_run_only (cmd: STRING; dir: STRING_32)
 			-- Create for running `cmd' in directory `dir'.
 			-- Do not save external command and its working directory to preference.
 		require
@@ -185,11 +186,10 @@ feature -- Execution
 	execute
 			-- Launch the external command that is linked to `Current', if possible.
 		local
-			cl: STRING
-			od: STRING
-			exec: EXECUTION_ENVIRONMENT
-			cmdexe: STRING
-			wd: STRING
+			cl: STRING_32
+			od: STRING_32
+			cmdexe: STRING_32
+			wd: STRING_32
 			args: LIST [STRING]
 			use_argument: BOOLEAN
 			msg: STRING_32
@@ -237,11 +237,10 @@ feature -- Execution
 				l_replacer.prepare_replacement
 				wd := l_replacer.new_text (wd)
 
-				create exec
 				if working_directory /= Void and then not working_directory.is_empty then
-					od := exec.current_working_directory
-					exec.change_working_directory (working_directory)
-					if exec.return_code /= 0 then
+					od := execution_environment.current_working_directory
+					execution_environment.change_working_directory (working_directory)
+					if execution_environment.return_code /= 0 then
 						create msg.make (100)
 						msg.append (interface_names.e_working_directory_invalid (working_directory))
 						msg.append ("%N")
@@ -249,7 +248,7 @@ feature -- Execution
 						show_warning_dialog (msg)
 						ok := False
 					end
-					exec.change_working_directory (od)
+					execution_environment.change_working_directory (od)
 				end
 				if ok then
 					if platform_constants.is_windows then
@@ -266,7 +265,7 @@ feature -- Execution
 						create {ARRAYED_LIST [STRING]}args.make (2)
 						args.extend ("-c")
 						args.extend ("%'%'"+cl+"%'%'")
-						external_launcher.prepare_command_line ("/bin/sh", args, wd)
+						external_launcher.prepare_command_line ({STRING_32} "/bin/sh", args, wd)
 						use_argument := True
 					end
 					external_launcher.set_hidden (True)
@@ -294,10 +293,10 @@ feature -- Properties
 	index: INTEGER
 			-- Index of `Current' in the global list of known external commands.
 
-	external_command: STRING
+	external_command: STRING_32
 			-- Command line that is invoked when `Current' is executed.
 
-	working_directory: STRING
+	working_directory: STRING_32
 			-- Working director where the corresponding external command is invoked.
 
 feature -- Status setting
@@ -359,7 +358,7 @@ feature{ES_CONSOLE_TOOL_PANEL} -- Status setting
 			external_command_set: external_command.is_equal (cmd)
 		end
 
-	set_working_directory (dir: STRING)
+	set_working_directory (dir: STRING_32)
 			-- Set `working_directory' with `dir'.
 		do
 			if dir /= Void then
@@ -383,6 +382,8 @@ feature -- Status report
 
 	resource: STRING
 			-- Save `Current's information to a string representation.
+		local
+			u: UTF_CONVERTER
 		do
 			create Result.make (menu_name.count + external_command.count + 10)
 			Result.append (name)
@@ -393,7 +394,7 @@ feature -- Status report
 				-- Store `working_directory' to preference.
 			Result.append_character (separator)
 			if working_directory /= Void then
-				Result.append (working_directory)
+				Result.append (u.string_32_to_utf_8_string_8 (working_directory))
 			else
 				Result.append ("")
 			end

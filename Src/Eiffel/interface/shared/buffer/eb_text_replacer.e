@@ -9,7 +9,7 @@ class
 
 feature -- Text replacement
 
-	new_text (a_text: STRING): STRING
+	new_text (a_text: STRING_32): STRING_32
 			-- New text for `a_text' with all replacements defined in `text_fragments' applied
 		require
 			a_text_attached: a_text /= Void

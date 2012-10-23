@@ -116,7 +116,7 @@ feature {NONE} -- Usage
 			Result.append_integer ({EIFFEL_CONSTANTS}.minor_version)
 		end
 
-	copyright: STRING = "Copyright Eiffel Software 1996-2011. All Rights Reserved."
+	copyright: STRING = "Copyright Eiffel Software 1996-2012. All Rights Reserved."
 			-- <Precursor>
 
 	switches: attached ARRAYED_LIST [attached ARGUMENT_SWITCH]

@@ -196,12 +196,14 @@ feature {NONE} -- Implementation
 			a_path_not_void: a_path /= Void
 		local
 			l_net_share: BOOLEAN
+			u: UTF_CONVERTER
 		do
 			a_path.left_adjust
 			a_path.right_adjust
 			l_net_share := a_path.count >= 2 and then (a_path.item (1) = '/' and a_path.item (2) = '/')
 				-- always works, even if a_path is already in windows file format
-			Result := windows_file_system.pathname_from_file_system (a_path, unix_file_system)
+			Result := u.utf_8_string_8_to_string_32 (windows_file_system.pathname_from_file_system
+				(u.string_32_to_utf_8_string_8 (a_path), unix_file_system))
 			if l_net_share then
 				Result.precede ('\')
 			end

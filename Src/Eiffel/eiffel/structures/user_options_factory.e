@@ -33,9 +33,7 @@ feature -- Query
 			a_file_path_attached: a_file_path /= Void
 			not_a_file_path_is_empty: not a_file_path.is_empty
 		do
-			-- FIXME: check if this is compliant with unicode
-			-- mapping might need to handle unicode ... STRING_32
-			if attached mapping.item (a_file_path.as_string_8) as l_uuid and then not l_uuid.is_empty then
+			if attached mapping.item (a_file_path.as_string_32) as l_uuid and then not l_uuid.is_empty then
 				create Result.make_from_string (l_uuid)
 			end
 		ensure
@@ -148,7 +146,7 @@ feature -- Store/Retrieve
 
 feature {NONE} -- Implementation
 
-	mapping: HASH_TABLE [STRING, STRING]
+	mapping: HASH_TABLE [STRING_32, STRING_32]
 			-- Mapping between path to a config file and its associated user option file.
 		local
 			l_file: RAW_FILE_32

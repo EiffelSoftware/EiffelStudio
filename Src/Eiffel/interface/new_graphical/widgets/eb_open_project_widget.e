@@ -254,7 +254,7 @@ feature {NONE} -- State information
 
 	last_state: TUPLE [system: CONF_SYSTEM; options: USER_OPTIONS; target_name: STRING
 		has_system_error: BOOLEAN; has_missing_target_error: BOOLEAN;
-		last_error_message: STRING]
+		last_error_message: STRING_32]
 			-- Information about last project we have selected.
 
 	last_selected_row: EV_GRID_ROW
@@ -578,7 +578,7 @@ feature {NONE} -- Implementation
 			l_project_file: PROJECT_EIFFEL_FILE
 			l_options: USER_OPTIONS
 			l_pixmap: EV_PIXMAP
-			l_tooltip: STRING_GENERAL
+			l_tooltip: READABLE_STRING_32
 			l_last_location: STRING_32
 			l_last_target: STRING
 			l_targets: DS_ARRAYED_LIST [STRING]
@@ -853,7 +853,7 @@ feature {NONE} -- Implementation
 			location_combo.change_actions.resume
 		end
 
-	read_user_options (a_file_path: STRING)
+	read_user_options (a_file_path: STRING_32)
 			-- Read user data for project of path `a_file_path'.
 		require
 			a_file_path_not_void: a_file_path /= Void
@@ -1289,7 +1289,7 @@ invariant
 	post_project_selected_actions_not_void: post_project_selected_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

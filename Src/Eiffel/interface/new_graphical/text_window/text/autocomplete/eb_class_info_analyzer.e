@@ -1358,7 +1358,7 @@ feature {NONE}-- Implementation
 			l_type_set: TYPE_SET_A
 			type: TYPE_A
 			par_cnt: INTEGER
-			name: STRING
+			name: STRING_32
 			l_processed_class: CLASS_C
 			processed_feature: E_FEATURE
 			formal: FORMAL_A
@@ -1507,7 +1507,7 @@ feature {NONE}-- Implementation
 			group_not_void: group /= Void
 			group_is_valid: group.is_valid
 		local
-			image: STRING
+			image: STRING_32
 			l_token: EDITOR_TOKEN
 			l_feat: E_FEATURE
 			l_end_match: like scan_for_type
@@ -1524,7 +1524,7 @@ feature {NONE}-- Implementation
 				l_type_text := token_range_text (current_token, current_line, l_end_match.token)
 				if not l_type_text.is_empty then
 						-- Prepend "type" for the type parser.
-					l_type_text.prepend ("type ")
+					l_type_text.prepend ({STRING_32} "type ")
 					create l_wrapper
 					l_wrapper.parse_32 (type_parser, l_type_text, True, current_class_c)
 					if not l_wrapper.has_error and attached {TYPE_AS} l_wrapper.ast_node as l_node then
@@ -1561,25 +1561,25 @@ feature {NONE}-- Implementation
 	found_class: CLASS_C
 
 	type_returned_by_infix (a_type: TYPE_A; a_name: STRING_32): TYPE_A
-			-- type returned by operator named `name' applied on type `a_type'
+			-- type returned by operator named `a_name' applied on type `a_type'
 		require
 			a_type_not_void: a_type /= Void
 			a_name_not_void: a_name /= Void
 			current_class_c_not_void: current_class_c /= Void
 		local
-			name: STRING_32
 			feat: E_FEATURE
 			cls_c: CLASS_C
 			formal: FORMAL_A
+			l_name: STRING_32
 		do
-			name := string_32_to_lower_copy_optimized (a_name)
-			if name.same_string_general (Equal_sign) or name.same_string_general (Different_sign) then
+			if a_name.is_case_insensitive_equal (equal_sign) or a_name.is_case_insensitive_equal (different_sign) then
 				Result := boolean_type
 			else
 				cls_c := a_type.base_class
 				if cls_c /= Void and then cls_c.has_feature_table then
 					written_class := cls_c
-					feat := cls_c.feature_with_name_32 (infix_feature_name_with_symbol_32 (name))
+					l_name := string_32_to_lower_copy_optimized (a_name)
+					feat := cls_c.feature_with_name_32 (infix_feature_name_with_symbol_32 (l_name))
 					if feat /= Void and then feat.type /= Void then
 						Result := feat.type
 						if Result.is_formal then
@@ -1593,8 +1593,8 @@ feature {NONE}-- Implementation
 			end
 		end
 
-	type_of_local_entity_named (a_name: STRING): TYPE_A
-			-- return type of argument or local variable named `name' found in `current_feature_as'
+	type_of_local_entity_named (a_name: STRING_32): TYPE_A
+			-- return type of argument or local variable named `a_name' found in `current_feature_as'
 			-- Void if there is none
 		require
 			current_class_c_not_void: current_class_c /= Void

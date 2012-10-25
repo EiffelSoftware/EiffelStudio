@@ -258,7 +258,7 @@ feature -- Basic operations
 				create l_error_file.make_open_write (l_name)
 			end
 			if attached input_file_name as l_name then
-				create l_input_file.make (l_name)
+				create l_input_file.make_with_name (l_name)
 				assert ("input_file_exists", l_input_file.exists)
 				assert ("input_file_readable", l_input_file.readable)
 				l_input_file.open_read
@@ -401,7 +401,7 @@ invariant
 
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

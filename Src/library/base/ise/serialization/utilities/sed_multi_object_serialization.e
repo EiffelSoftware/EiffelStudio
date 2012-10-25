@@ -46,11 +46,11 @@ feature -- Status report
 
 feature -- Basic Operations
 
-	deserialize (path: STRING; a_pos: INTEGER)
+	deserialize (path: READABLE_STRING_GENERAL; a_pos: INTEGER)
 			-- Deserialize object previously serialized in `path' at position `a_pos'.
 		require
 			non_void_path: path /= Void
-			valid_path: (create {RAW_FILE}.make (path)).exists
+			valid_path: (create {RAW_FILE}.make_with_name (path)).exists
 		local
 			retried: BOOLEAN
 			l_raw_file: detachable RAW_FILE
@@ -132,14 +132,14 @@ feature {NONE} -- Logging
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

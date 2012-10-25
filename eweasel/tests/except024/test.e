@@ -28,7 +28,7 @@ feature -- Initialization
 		local
 			l_file: RAW_FILE
 		do
-			create l_file.make ("bad name")
+			create l_file.make_with_name ("bad name")
 			l_file.open_read
 		end
 

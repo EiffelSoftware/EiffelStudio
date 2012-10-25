@@ -824,7 +824,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Implementation
 
-	build_displayed_list (name: STRING_8)
+	build_displayed_list (name: STRING_32)
 			-- <Precursor>
 		do
 			comment_preview.set_text ("")

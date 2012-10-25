@@ -470,7 +470,7 @@ feature {NONE} -- Implementation
 						j := i
 						ref := 0
 					until
-						i > nb or else (a_replacement.item_code (i) < 48 or a_replacement.item_code (i) > 57)
+						i > nb or else (a_replacement.code (i) < 48 or a_replacement.code (i) > 57)
 					loop
 						c := a_replacement.item (i)
 						ref := ref * 10 + c.code - 48

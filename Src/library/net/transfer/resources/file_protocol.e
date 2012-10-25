@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 	initialize
 			-- Initialize file protocol.
 		do
-			create file.make (address.name)
+			create file.make_with_name (address.name)
 			create buffer.make_filled ('%/000/', Default_buffer_size)
 			read_buffer_size := Default_buffer_size
 			set_overwrite_mode

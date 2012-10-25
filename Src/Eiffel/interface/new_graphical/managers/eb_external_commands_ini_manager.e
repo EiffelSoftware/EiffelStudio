@@ -172,7 +172,7 @@ feature {INI_FAST_PARSER} -- Actions
 			-- <Precursor>
 		local
 			l_command: EB_EXTERNAL_COMMAND
-			l_string: STRING
+			l_string: STRING_32
 		do
 			if a_name.is_integer then
 				create l_string.make_from_string (a_value)
@@ -186,7 +186,7 @@ feature {INI_FAST_PARSER} -- Actions
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

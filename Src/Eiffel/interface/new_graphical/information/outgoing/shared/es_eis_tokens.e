@@ -33,9 +33,9 @@ feature -- Access
 	void_string: STRING = "@@@"
 			-- Used to hold the place of value of single identifier in storage table
 
-	attribute_seperator: CHARACTER = ','
+	attribute_seperator: CHARACTER_32 = ','
 
-	tag_seperator: CHARACTER = ','
+	tag_seperator: CHARACTER_32 = ','
 
 	space: CHARACTER = ' '
 
@@ -43,11 +43,11 @@ feature -- Access
 
 	empty_string: STRING = "%"%""
 
-	variable_start: CHARACTER = '$'
+	variable_start: CHARACTER_32 = '$'
 
-	left_paranthsis: CHARACTER = '('
+	left_paranthsis: CHARACTER_32 = '('
 
-	right_paranthsis: CHARACTER = ')'
+	right_paranthsis: CHARACTER_32 = ')'
 
 feature -- Built in variables
 

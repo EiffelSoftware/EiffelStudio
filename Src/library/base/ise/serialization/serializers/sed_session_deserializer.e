@@ -112,6 +112,8 @@ feature -- Basic operations
 				else
 					add_error (error_factory.new_internal_error ("An Unknown exception occurred in `decode'."))
 				end
+
+				last_decoded_object := Void
 			end
 				-- Restore GC status
 			if l_is_collecting and then l_mem /= Void then
@@ -223,7 +225,6 @@ feature {NONE} -- Cleaning
 			l: like list_stack
 			t: like tuple_stack
 		do
-			last_decoded_object := Void
 			missing_references := Void
 			create object_references.make_empty (0)
 			t := tuple_stack

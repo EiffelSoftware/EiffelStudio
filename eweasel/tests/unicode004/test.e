@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			until
 				i > a_string.count
 			loop
-				s := a_string.item_code (i).to_hex_string
+				s := a_string.code (i).to_hex_string
 				s.keep_tail (2)
 				print (s)
 				print (" ")

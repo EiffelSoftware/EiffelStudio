@@ -76,7 +76,7 @@ feature -- Loading
 	open_project_file (a_file_name: READABLE_STRING_32; a_target_name: STRING; a_project_path: STRING_32; from_scratch: BOOLEAN)
 			-- Initialize current project using `a_file_name'.
 		local
-			l_ext: STRING_8
+			l_ext: READABLE_STRING_32
 			l_pos: INTEGER
 			l_default_file_name: FILE_NAME
 			l_load_ace: CONF_LOAD_LACE
@@ -130,12 +130,12 @@ feature -- Loading
 					-- on its value try different loading approach.
 				l_pos := a_file_name.last_index_of ('.', a_file_name.count)
 				if l_pos > 0 and then l_pos < a_file_name.count then
-					create l_ext.make_from_string (a_file_name.substring (l_pos + 1, a_file_name.count))
-					if l_ext.is_equal (project_extension) then
+					l_ext := a_file_name.substring (l_pos + 1, a_file_name.count)
+					if l_ext.is_case_insensitive_equal_general (project_extension) then
 						convert_epr (a_file_name)
-					elseif l_ext.is_case_insensitive_equal ({EIFFEL_CONSTANTS}.ace_extension) then
+					elseif l_ext.is_case_insensitive_equal_general ({EIFFEL_CONSTANTS}.ace_extension) then
 						convert_ace (a_file_name)
-					elseif l_ext.is_case_insensitive_equal ({EIFFEL_CONSTANTS}.config_extension) then
+					elseif l_ext.is_case_insensitive_equal_general ({EIFFEL_CONSTANTS}.config_extension) then
 							-- Case where it is a `ecf' extension. or another one.
 						config_file_name := a_file_name.twin
 					else

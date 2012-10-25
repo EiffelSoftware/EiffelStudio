@@ -30,7 +30,7 @@ inherit
 
 feature -- Access
 
-	backup_directory: DIRECTORY_NAME
+	backup_directory: READABLE_STRING_32
 			-- Location of the backup.
 
 	is_il_generation: BOOLEAN
@@ -114,7 +114,8 @@ feature -- Visit nodes
 		local
 			l_as, l_new_as: STRING
 			l_loc: CONF_FILE_LOCATION
-			l_file: FILE_NAME
+			l_file: FILE_NAME_32
+			f: FILE_UTILITIES
 		do
 				-- If we are in IL code generation and that we do not handle assemblies specified by their name, version, public token, culture
 				-- we need to copy the assembly.
@@ -130,13 +131,13 @@ feature -- Visit nodes
 						create l_file.make_from_string (backup_directory)
 						l_file.set_file_name (l_new_as)
 							-- copy assembly
-						file_system.copy_file (l_as, l_file)
+						f.copy_file (l_as, l_file)
 					end
 				end
 			end
 		end
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

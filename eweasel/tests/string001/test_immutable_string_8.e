@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			test_infix_plus
 			test_item
 			test_code
-			test_item_code
 			test_last_index_of
 			test_linear_representation
 			test_make
@@ -573,23 +572,6 @@ feature {NONE} -- Implementation
 			check_boolean ("item", s.item (1) = '2')
 			check_boolean ("item", s.item (2) = '3')
 			check_boolean ("item", s.item (3) = '4')
-		end
-
-	test_item_code
-		local
-			s: IMMUTABLE_STRING_8
-		do
-			s := "12345"
-			check_boolean ("item_code", s.item_code (1) = 49)
-			check_boolean ("item_code", s.item_code (2) = 50)
-			check_boolean ("item_code", s.item_code (3) = 51)
-			check_boolean ("item_code", s.item_code (4) = 52)
-			check_boolean ("item_code", s.item_code (5) = 53)
-
-			s := s.shared_substring (2, 4)
-			check_boolean ("item_code", s.item_code (1) = 50)
-			check_boolean ("item_code", s.item_code (2) = 51)
-			check_boolean ("item_code", s.item_code (3) = 52)
 		end
 
 	test_code

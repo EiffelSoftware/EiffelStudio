@@ -14,7 +14,9 @@ feature {NONE} -- Initialization
 	make
 			-- Creation procedure.
 		do
-			test_c_storable
+			test_c_basic_storable
+			test_c_general_storable
+			test_c_independent_storable
 			test_sed_storable
 		end
 
@@ -112,7 +114,7 @@ feature {NONE} -- Initialization
 			l_file.close
 		end
 
-	test_c_storable
+	test_c_independent_storable
 		local
 			a: A
 			l_any: ANY

@@ -150,11 +150,11 @@ feature -- Query: Content
 			a_string_attached: a_string /= Void
 		local
 			l_filename: like build_target_path
-			l_file: FILE
+			l_file: PLAIN_TEXT_FILE
 			i, l_count: INTEGER
 		do
 			l_filename := build_target_path (a_path)
-			create {PLAIN_TEXT_FILE} l_file.make (l_filename)
+			create l_file.make_with_name (l_filename)
 			assert ("file_exists", l_file.exists)
 			assert ("file_readable", l_file.is_readable)
 			l_file.open_read
@@ -192,12 +192,12 @@ feature -- Query: Content
 			a_second_path_not_empty: not a_second_path.is_empty
 		local
 			l_filename1, l_filename2: like build_target_path
-			l_file1, l_file2: FILE
+			l_file1, l_file2: PLAIN_TEXT_FILE
 		do
 			l_filename1 := build_target_path (a_first_path)
 			l_filename2 := build_target_path (a_second_path)
-			create {PLAIN_TEXT_FILE} l_file1.make (l_filename1)
-			create {PLAIN_TEXT_FILE} l_file2.make (l_filename2)
+			create l_file1.make_with_name (l_filename1)
+			create l_file2.make_with_name (l_filename2)
 			assert ("file1_exists", l_file1.exists)
 			assert ("file2_exists", l_file2.exists)
 			assert ("file1_readable", l_file1.readable)
@@ -235,7 +235,7 @@ feature -- Query: Content
 			else
 				l_fname := "(Void file name)"
 			end
-			create f.make (l_fname)
+			create f.make_with_name (l_fname)
 			if not f.exists then
 				Result := "file " + l_fname + " not found"
 			elseif not f.is_plain then
@@ -314,7 +314,7 @@ feature -- Constants
 	target_directory_key: STRING = "EQA_TARGET_DIRECTORY"
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

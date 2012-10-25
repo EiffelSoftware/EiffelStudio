@@ -14,7 +14,7 @@ feature
 		do
 			create dir.make ("$DIR_NAME")
 			dir.create_dir
-			create file.make ("$FILE_NAME")
+			create file.make_with_name ("$FILE_NAME")
 			file.open_write
 			file.close
 			old_name := ("$FILE_NAME").to_c

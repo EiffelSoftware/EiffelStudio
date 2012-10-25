@@ -623,7 +623,7 @@ feature -- Input
 			until
 				done
 			loop
-				count := write (fildes, buf.item + pos, size_left)
+				count := write (fildes, buf + pos, size_left)
 				if count <= 0 then
 					if retried_count = 0 then
 						retried_count := retried_count + 1
@@ -715,7 +715,7 @@ invariant
 	current_platform_not_void: current_platform /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

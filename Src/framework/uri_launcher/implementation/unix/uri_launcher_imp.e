@@ -18,10 +18,10 @@ inherit
 
 feature -- Basic operations
 
-	launch (a_uri: READABLE_STRING_8): BOOLEAN
+	launch (a_uri: READABLE_STRING_32): BOOLEAN
 			-- <Precursor>
 		local
-			l_app: STRING
+			l_app: STRING_32
 		do
 			check is_unix: {PLATFORM}.is_unix end
 
@@ -39,15 +39,15 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	launch_with_app (a_uri: READABLE_STRING_8; a_app: READABLE_STRING_8): BOOLEAN
+	launch_with_app (a_uri: READABLE_STRING_32; a_app: READABLE_STRING_32): BOOLEAN
 			-- <Precursor>
 		local
-			l_cmd: STRING
+			l_cmd: STRING_32
 		do
 				-- Wrap the execution using sh because the calling app may be a shell script.
 			create l_cmd.make (a_app.count + 13)
 			l_cmd.append ("/bin/sh -c %'")
-			l_cmd.append_string_general (a_app)
+			l_cmd.append (a_app)
 			l_cmd.append (" %"$url%"%'")
 			Result := Precursor (a_uri, l_cmd)
 		end

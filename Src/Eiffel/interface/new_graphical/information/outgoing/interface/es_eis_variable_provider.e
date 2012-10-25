@@ -40,7 +40,7 @@ feature -- Access
 		local
 			l_variables: like eis_variables.all_supported_variables_from_entry
 			i: INTEGER
-			l_string: STRING
+			l_string: STRING_32
 			l_name: like name_type
 		do
 			if attached eis_entry as l_entry then

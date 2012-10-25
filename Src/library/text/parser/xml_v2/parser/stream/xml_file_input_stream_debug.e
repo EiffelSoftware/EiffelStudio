@@ -90,6 +90,11 @@ feature -- Access
 
 	last_character: CHARACTER
 
+	last_character_code: NATURAL_32
+		do
+			Result := last_character.natural_32_code
+		end
+
 feature -- Debug purpose
 
 	previous_n_character (n: INTEGER): STRING
@@ -184,6 +189,11 @@ feature -- Basic operation
 			chunk_source_lower := -1
 			create previous_chunk.make_empty
 			current_chunk := previous_chunk
+		end
+
+	read_character_code
+		do
+			read_character
 		end
 
 	read_character

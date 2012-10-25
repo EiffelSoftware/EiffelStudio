@@ -31,17 +31,22 @@ feature -- Processing
 	process_element (e: XML_ELEMENT)
 			-- Process element `e'.
 		local
-			s: STRING
+			s: STRING_32
 		do
 			create s.make_empty
 			if attached e.ns_prefix as nsp and then not nsp.is_empty then
-				s.append_string (nsp + ":")
+				s.append_string (nsp)
+				s.append_character (':')
 			end
 			s.append_string (e.name)
 			if attached e.namespace as ns and then not ns.uri.is_empty then
-				s.append_string (" (" + ns.uri + ")")
+				s.append_character (' ')
+				s.append_character ('(')
+				s.append_string (ns.uri)
+				s.append_character (')')
 			end
-			print (offset (e.level) + "element: " + s + "%N")
+			-- FIXME: use localized console			
+			print (offset (e.level) + "element: " + s.to_string_8 + "%N")
 			process_nodes (e)
 		end
 
@@ -49,26 +54,42 @@ feature -- Processing
 			-- Process character data `c'.
 		do
 			if not is_blank_content (c.content) then
-				print (offset (c.level) + "content: " + single_line (c.content) + "%N")
+				-- FIXME: use localized console
+				print (offset (c.level) + "content: " + single_line (c.content).as_string_8 + "%N")
 			end
+		end
+
+	process_xml_declaration (a_decl: XML_DECLARATION)
+			-- Process xml declaration `a_decl'
+		do
+			print ("<?xml version=%"" + a_decl.version.as_string_8 + "%"")
+			if attached a_decl.encoding as enc then
+				print (" encoding=%"" + enc + "%"")
+			end
+			if a_decl.standalone then
+				print (" standalone=%"yes%"")
+			end
+			print ("?>%N")
 		end
 
 	process_processing_instruction (a_pi: XML_PROCESSING_INSTRUCTION)
 			-- Process processing instruction `a_pi'.
 		do
+			-- FIXME: use localized console
+			print ("<?" + a_pi.target.as_string_8 + " " + a_pi.data.as_string_8 + "?>%N")
 		end
 
 	process_document (doc: XML_DOCUMENT)
 			-- Process document `doc'.
 		do
---			doc.process_children (Current)
 			process_nodes (doc)
 		end
 
 	process_comment (com: XML_COMMENT)
 			-- Process comment `com'.
 		do
-			print (offset (com.level) + "comment: " + single_line (com.data) + "%N")
+			-- FIXME: use localized console
+			print (offset (com.level) + "comment: " + single_line (com.data).as_string_8 + "%N")
 		end
 
 	process_attributes (e: XML_ELEMENT)
@@ -80,17 +101,22 @@ feature -- Processing
 	process_attribute (att: XML_ATTRIBUTE)
 			-- Process attribute `att'.
 		local
-			s: STRING
+			s: STRING_32
 		do
 			create s.make_empty
 			if attached att.ns_prefix as nsp and then not nsp.is_empty then
-				s.append_string (nsp + ":")
+				s.append_string (nsp)
+				s.append_character (':')
 			end
-			s.append_string (xml_utilities.escaped_xml (att.name_32))
+			s.append_string_general (xml_utilities.escaped_xml (att.name))
 			if attached att.namespace as ns and then not ns.uri.is_empty then
-				s.append_string (" (" + ns.uri + ")")
+				s.append_character (' ')
+				s.append_character ('(')
+				s.append_string (ns.uri)
+				s.append_character (')')
 			end
-			print (offset (att.level) + "+ attribute: " + s + "=%"" + xml_utilities.escaped_xml (att.value_32) + "%"%N")
+			-- FIXME: use localized console
+			print (offset (att.level) + "+ attribute: " + s.to_string_8 + "=%"" + xml_utilities.escaped_xml (att.value) + "%"%N")
 		end
 
 feature {NONE} -- Formatter
@@ -118,14 +144,14 @@ feature {NONE} -- Formatter
 			end
 		end
 
-	single_line (s: STRING): STRING
+	single_line (s: STRING_32): STRING_32
 		do
 			create Result.make_from_string (s)
-			Result.replace_substring_all ("%R%N", "%%N")
-			Result.replace_substring_all ("%N", "%%N")
+			Result.replace_substring_all ({STRING_32} "%R%N", {STRING_32} "%%N")
+			Result.replace_substring_all ({STRING_32} "%N", {STRING_32} "%%N")
 		end
 
-	offset (n: INTEGER): STRING
+	offset (n: INTEGER): STRING_8
 		local
 			lev: STRING
 		do

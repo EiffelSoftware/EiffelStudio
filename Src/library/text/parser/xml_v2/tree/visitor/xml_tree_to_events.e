@@ -10,8 +10,6 @@ class XML_TREE_TO_EVENTS
 inherit
 	XML_NODE_VISITOR
 
-	XML_EXPORTER
-
 create
 	make
 
@@ -45,13 +43,13 @@ feature -- Node processor
 		do
 			process_start_tag_finish
 
-			events.on_start_tag (an_element.namespace.internal_uri, an_element.namespace.internal_ns_prefix, an_element.internal_name)
+			events.on_start_tag (an_element.namespace.uri, an_element.namespace.ns_prefix, an_element.name)
 			in_attributes := True
 
 			an_element.process_children (Current)
 
 			process_start_tag_finish
-			events.on_end_tag (an_element.namespace.internal_uri, an_element.namespace.internal_ns_prefix, an_element.internal_name)
+			events.on_end_tag (an_element.namespace.uri, an_element.namespace.ns_prefix, an_element.name)
 		end
 
 	process_attributes (e: XML_ELEMENT)
@@ -62,28 +60,35 @@ feature -- Node processor
 	process_attribute (an_attribute: XML_ATTRIBUTE)
 		do
 			check in_attributes: in_attributes end
-			events.on_attribute (an_attribute.namespace.internal_uri, an_attribute.namespace.internal_ns_prefix,
-					an_attribute.internal_name, an_attribute.internal_value)
+			events.on_attribute (an_attribute.namespace.uri, an_attribute.namespace.ns_prefix,
+					an_attribute.name, an_attribute.value)
 		end
 
 	process_character_data (a_data: XML_CHARACTER_DATA)
 			-- Process character data .
 		do
 			process_start_tag_finish
-			events.on_content (a_data.internal_content)
+			events.on_content (a_data.content)
+		end
+
+	process_xml_declaration (a_decl: XML_DECLARATION)
+			-- Process xml declaration `a_decl'
+		do
+			process_start_tag_finish
+			events.on_xml_declaration (a_decl.version, a_decl.encoding, a_decl.standalone)
 		end
 
 	process_processing_instruction (a_pi: XML_PROCESSING_INSTRUCTION)
 			-- Process processing instruction `a_pi'.
 		do
 			process_start_tag_finish
-			events.on_processing_instruction (a_pi.internal_target, a_pi.internal_data)
+			events.on_processing_instruction (a_pi.target, a_pi.data)
 		end
 
 	process_comment (a_comment: XML_COMMENT)
 		do
 			process_start_tag_finish
-			events.on_comment (a_comment.internal_data)
+			events.on_comment (a_comment.data)
 		end
 
 feature {NONE} -- Implementation

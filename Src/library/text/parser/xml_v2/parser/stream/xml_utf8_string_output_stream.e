@@ -1,35 +1,50 @@
 note
-	description: "Summary description for {XML_NULL_OUTPUT_STREAM}."
+	description: "Summary description for {XML_STRING_32_OUTPUT_STREAM}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XML_NULL_OUTPUT_STREAM
+	XML_UTF8_STRING_OUTPUT_STREAM
 
 inherit
 	XML_OUTPUT_STREAM
 
 create
-	make
+	make, make_empty
 
 feature {NONE} -- Initialization
 
-	make
-			-- Create null stream
+	make_empty
+			-- Create a blank stream.
 		do
+			make ({STRING_32} "")
+		end
+
+	make (a_string: like string)
+			-- Create current stream for file `a_string'
+		require
+			a_string_attached: a_string /= Void
+		do
+			string := a_string
+		ensure
+			shared: string = a_string
 		end
 
 feature -- Status report
+
+	string: STRING_32
+			-- Target for the stream
 
 	name_is_valid_as_string_8: BOOLEAN = True
 			-- Is associated name a valid string_8 value?
 
 feature -- Access
 
-	name: STRING_8 = "null"
+	name: STRING_8 = "STRING_32"
 			-- Name of current stream
 
-	name_32: STRING_32 = "null"
+	name_32: STRING_32 = "STRING_32"
+			-- Name of current stream
 
 feature -- Status report
 
@@ -38,7 +53,7 @@ feature -- Status report
 feature -- Basic operation
 
 	flush
-			-- Flush buffered data to stream.
+			-- Flush buffered data to disk.
 		do
 		end
 
@@ -46,21 +61,28 @@ feature -- Output
 
 	put_character_8 (c: CHARACTER_8)
 		do
+			string.append_character (c)
+		end
+
+	put_character_32 (c: CHARACTER_32)
+		do
+			string.append_character (c)
 		end
 
 	put_string_8 (a_string: READABLE_STRING_8)
 			-- Write `a_string' to output stream.
 		do
-		end
-
-	put_character_32 (c: CHARACTER_32)
-		do
+			string.append_string_general (a_string)
 		end
 
 	put_string_32 (a_string: READABLE_STRING_32)
 			-- Write `a_string' to output stream.
 		do
+			string.append (a_string)
 		end
+
+invariant
+	string_attached: string /= Void
 
 note
 	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"

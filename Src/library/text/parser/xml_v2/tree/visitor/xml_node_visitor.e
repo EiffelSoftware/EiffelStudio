@@ -25,6 +25,13 @@ feature -- Processing
 		deferred
 		end
 
+	process_xml_declaration (a_decl: XML_DECLARATION)
+			-- Process xml declaration `a_decl'
+		require
+			a_decl_not_void: a_decl /= Void
+		deferred
+		end
+
 	process_processing_instruction (a_pi: XML_PROCESSING_INSTRUCTION)
 			-- Process processing instruction `a_pi'.
 		require
@@ -61,7 +68,7 @@ feature -- Processing
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

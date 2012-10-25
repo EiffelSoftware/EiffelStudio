@@ -22,7 +22,10 @@ inherit
 			on_attribute,
 			on_start_tag_finish,
 			on_end_tag,
-			on_content
+			on_content,
+			on_start_tag_resolved,
+			on_end_tag_resolved,
+			on_attribute_resolved
 		end
 
 	XML_CALLBACKS_DOCUMENT
@@ -39,7 +42,10 @@ inherit
 			on_attribute,
 			on_start_tag_finish,
 			on_end_tag,
-			on_content
+			on_content,
+			on_start_tag_resolved,
+			on_end_tag_resolved,
+			on_attribute_resolved
 		end
 
 create
@@ -70,7 +76,7 @@ feature -- Document
 			Precursor {XML_CALLBACKS_FILTER}
 		end
 
-	on_xml_declaration (a_version: READABLE_STRING_GENERAL; an_encoding: detachable READABLE_STRING_GENERAL; a_standalone: BOOLEAN)
+	on_xml_declaration (a_version: READABLE_STRING_8; an_encoding: detachable READABLE_STRING_8; a_standalone: BOOLEAN)
 			-- XML declaration.
 		do
 			Precursor {XML_CALLBACKS_DOCUMENT} (a_version, an_encoding, a_standalone)
@@ -79,7 +85,7 @@ feature -- Document
 
 feature -- Errors
 
-	on_error (a_message: READABLE_STRING_GENERAL)
+	on_error (a_message: READABLE_STRING_32)
 			-- Event producer detected an error.
 		do
 			Precursor {XML_CALLBACKS_DOCUMENT} (a_message)
@@ -88,14 +94,14 @@ feature -- Errors
 
 feature -- Meta
 
-	on_processing_instruction (a_name: READABLE_STRING_GENERAL; a_content: READABLE_STRING_GENERAL)
+	on_processing_instruction (a_name: READABLE_STRING_32; a_content: READABLE_STRING_32)
 			-- Processing instruction.
 		do
 			Precursor {XML_CALLBACKS_DOCUMENT} (a_name, a_content)
 			Precursor {XML_CALLBACKS_FILTER} (a_name, a_content)
 		end
 
-	on_comment (a_content: READABLE_STRING_GENERAL)
+	on_comment (a_content: READABLE_STRING_32)
 			-- Processing a comment.
 			-- Atomic: single comment produces single event
 		do
@@ -105,14 +111,14 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: detachable READABLE_STRING_GENERAL; a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL)
+	on_start_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- Start of start tag.
 		do
 			Precursor {XML_CALLBACKS_DOCUMENT} (a_namespace, a_prefix, a_local_part)
 			Precursor {XML_CALLBACKS_FILTER} (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace: detachable READABLE_STRING_GENERAL; a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL; a_value: READABLE_STRING_GENERAL)
+	on_attribute (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
 			-- Start of attribute.
 		do
 			Precursor {XML_CALLBACKS_DOCUMENT} (a_namespace, a_prefix, a_local_part, a_value)
@@ -126,7 +132,30 @@ feature -- Tag
 			Precursor {XML_CALLBACKS_FILTER}
 		end
 
-	on_end_tag (a_namespace: detachable READABLE_STRING_GENERAL; a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL)
+	on_end_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
+			-- End tag.
+		do
+			Precursor {XML_CALLBACKS_DOCUMENT} (a_namespace, a_prefix, a_local_part)
+			Precursor {XML_CALLBACKS_FILTER} (a_namespace, a_prefix, a_local_part)
+		end
+
+feature -- Tag, ns resolved
+
+	on_start_tag_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
+			-- Start of start tag.
+		do
+			Precursor {XML_CALLBACKS_DOCUMENT} (a_namespace, a_prefix, a_local_part)
+			Precursor {XML_CALLBACKS_FILTER} (a_namespace, a_prefix, a_local_part)
+		end
+
+	on_attribute_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
+			-- Start of attribute.
+		do
+			Precursor {XML_CALLBACKS_DOCUMENT} (a_namespace, a_prefix, a_local_part, a_value)
+			Precursor {XML_CALLBACKS_FILTER} (a_namespace, a_prefix, a_local_part, a_value)
+		end
+
+	on_end_tag_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- End tag.
 		do
 			Precursor {XML_CALLBACKS_DOCUMENT} (a_namespace, a_prefix, a_local_part)
@@ -135,7 +164,7 @@ feature -- Tag
 
 feature -- Content
 
-	on_content (a_content: READABLE_STRING_GENERAL)
+	on_content (a_content: READABLE_STRING_32)
 			-- Text content.
 		do
 			Precursor {XML_CALLBACKS_DOCUMENT} (a_content)

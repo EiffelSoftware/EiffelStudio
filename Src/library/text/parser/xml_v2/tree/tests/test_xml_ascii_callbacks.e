@@ -5,12 +5,10 @@ note
 	revision: "$Revision$"
 
 class
-	TEST_STRING_8_XML_CALLBACKS
+	TEST_XML_ASCII_CALLBACKS
 
 inherit
-	XML_CALLBACKS_SOURCE
-
-	XML_CALLBACKS
+	XML_ASCII_CALLBACKS
 
 create
 	make,
@@ -26,12 +24,12 @@ feature {NONE} -- Initialization
 
 	make_null
 		do
-			set_callbacks (create {XML_CALLBACKS_NULL}.make)
+			set_callbacks (create {XML_ASCII_CALLBACKS_NULL}.make)
 		end
 
 feature -- Access
 
-	callbacks: XML_CALLBACKS
+	callbacks: XML_ASCII_CALLBACKS
 			-- Callbacks event interface to which events are forwarded;
 
 feature -- Setting

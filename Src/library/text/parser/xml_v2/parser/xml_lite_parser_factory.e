@@ -19,22 +19,8 @@ feature -- Access
 
 	new_parser, new_lite_parser: XML_LITE_PARSER
 			-- New XML parser
-		obsolete
-			"Use either new_ascii_*_parser or new_unicode_*_parser [2012-oct]"
 		do
 			create Result.make
-		end
-
-	new_ascii_parser, new_lite_ascii_parser: XML_LITE_PARSER
-			-- New XML parser
-		do
-			create Result.make_ascii
-		end
-
-	new_unicode_parser, new_lite_unicode_parser: XML_LITE_PARSER
-			-- New XML parser
-		do
-			create Result.make_unicode
 		end
 
 note

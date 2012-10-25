@@ -53,7 +53,7 @@ feature {NONE} -- Document
 			callbacks.on_finish
 		end
 
-	on_xml_declaration (a_version: READABLE_STRING_GENERAL; an_encoding: detachable READABLE_STRING_GENERAL; a_standalone: BOOLEAN)
+	on_xml_declaration (a_version: READABLE_STRING_8; an_encoding: detachable READABLE_STRING_8; a_standalone: BOOLEAN)
 			-- XML declaration.
 		do
 			callbacks.on_xml_declaration (a_version, an_encoding, a_standalone)
@@ -61,7 +61,7 @@ feature {NONE} -- Document
 
 feature {NONE} -- Errors
 
-	on_error (a_message: READABLE_STRING_GENERAL)
+	on_error (a_message: READABLE_STRING_32)
 			-- Event producer detected an error.
 		do
 			callbacks.on_error (a_message)
@@ -69,13 +69,13 @@ feature {NONE} -- Errors
 
 feature {NONE} -- Meta
 
-	on_processing_instruction (a_name, a_content: READABLE_STRING_GENERAL)
+	on_processing_instruction (a_name, a_content: READABLE_STRING_32)
 			-- Forward PI.
 		do
 			callbacks.on_processing_instruction (a_name, a_content)
 		end
 
-	on_comment (a_content: READABLE_STRING_GENERAL)
+	on_comment (a_content: READABLE_STRING_32)
 			-- Forward comment.
 		do
 			callbacks.on_comment (a_content)
@@ -83,13 +83,13 @@ feature {NONE} -- Meta
 
 feature {NONE} -- Tag
 
-	on_start_tag (a_namespace: detachable READABLE_STRING_GENERAL; a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL)
+	on_start_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- Start of start tag.
 		do
 			callbacks.on_start_tag (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace: detachable READABLE_STRING_GENERAL; a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL; a_value: READABLE_STRING_GENERAL)
+	on_attribute (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
 			-- Process attribute.
 		do
 			callbacks.on_attribute (a_namespace, a_prefix, a_local_part, a_value)
@@ -101,15 +101,35 @@ feature {NONE} -- Tag
 			callbacks.on_start_tag_finish
 		end
 
-	on_end_tag (a_namespace: detachable READABLE_STRING_GENERAL; a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL)
+	on_end_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- End tag.
 		do
 			callbacks.on_end_tag (a_namespace, a_prefix, a_local_part)
 		end
 
+feature {NONE} -- Tag, ns resolved
+
+	on_start_tag_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
+			-- Start of start tag.
+		do
+			callbacks.on_start_tag_resolved (a_namespace, a_prefix, a_local_part)
+		end
+
+	on_attribute_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
+			-- Process attribute.
+		do
+			callbacks.on_attribute_resolved (a_namespace, a_prefix, a_local_part, a_value)
+		end
+
+	on_end_tag_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
+			-- End tag.
+		do
+			callbacks.on_end_tag_resolved (a_namespace, a_prefix, a_local_part)
+		end
+
 feature {NONE} -- Content
 
-	on_content (a_content: READABLE_STRING_GENERAL)
+	on_content (a_content: READABLE_STRING_32)
 			-- Forward content.
 		do
 			callbacks.on_content (a_content)

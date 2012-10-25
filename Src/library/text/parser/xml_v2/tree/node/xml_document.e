@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			make_with_root_named_and_count (Default_name, Default_ns, a_count)
 		end
 
-	make_with_root_named (a_name: READABLE_STRING_GENERAL; a_ns: XML_NAMESPACE)
+	make_with_root_named (a_name: READABLE_STRING_32; a_ns: XML_NAMESPACE)
 			-- Create root node, with a root_element
 			-- with given name.
 		require
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			root_element_name_set: root_element.has_same_name (a_name)
 		end
 
-	make_with_root_named_and_count (a_name: READABLE_STRING_GENERAL; a_ns: XML_NAMESPACE; a_count: INTEGER)
+	make_with_root_named_and_count (a_name: READABLE_STRING_32; a_ns: XML_NAMESPACE; a_count: INTEGER)
 			-- Create root node, with a root_element with given name,
 			-- and initialize for `a_count' childrens
 		require
@@ -59,38 +59,41 @@ feature {NONE} -- Initialization
 			root_element_name_set: root_element.has_same_name (a_name)
 		end
 
-	Default_name: STRING = "root"
+	Default_name: STRING_32 = "root"
 
 feature -- Access
 
 	root_element: XML_ELEMENT
-			-- Root element of current document
+			-- Root element of current document.
+
+	xml_declaration: detachable XML_DECLARATION
+			-- Optional <?xml declaration
 
 feature -- Access
 
-	element_by_name (a_name: READABLE_STRING_GENERAL): detachable XML_ELEMENT
+	element_by_name (a_name: READABLE_STRING_32): detachable XML_ELEMENT
 			-- Direct child element with name `a_name';
 			-- If there are more than one element with that name, anyone may be returned.
 			-- Return Void if no element with that name is a child of current node.
 		do
 			if has_element_by_name (a_name) then
-				Result := root_element
+				Result := root_element.element_by_name (a_name)
 			end
 		ensure then
 			root_element: has_element_by_name (a_name) implies Result = root_element
 		end
 
-	element_by_qualified_name (a_uri: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): detachable XML_ELEMENT
+	element_by_qualified_name (a_uri: READABLE_STRING_32; a_name: READABLE_STRING_32): detachable XML_ELEMENT
 			-- Root element, if name matches, Void otherwise.
 		do
 			if has_element_by_qualified_name (a_uri, a_name) then
-				Result := root_element
+				Result := root_element.element_by_qualified_name (a_uri, a_name)
 			end
 		ensure then
 			root_element: has_element_by_qualified_name (a_uri, a_name) implies Result = root_element
 		end
 
-	has_element_by_name (a_name: READABLE_STRING_GENERAL): BOOLEAN
+	has_element_by_name (a_name: READABLE_STRING_32): BOOLEAN
 			-- Has current node at least one direct child
 			-- element with the name `a_name'?
 			-- (Namespace is ignored on the root node because the
@@ -101,7 +104,7 @@ feature -- Access
 			definition: Result = root_element.has_same_name (a_name)
 		end
 
-	has_element_by_qualified_name (a_uri: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
+	has_element_by_qualified_name (a_uri: READABLE_STRING_32; a_name: READABLE_STRING_32): BOOLEAN
 			-- Is this the qualified name of the root element?
 		do
 			Result := root_element.has_qualified_name (a_uri, a_name)
@@ -123,6 +126,15 @@ feature -- Setting
 			root_element_parent: root_element.parent = Current
 			root_element_set: root_element = an_element
 			last_set: last = root_element
+		end
+
+	set_xml_declaration (xml: like xml_declaration)
+			-- Set `xml_declaration' to `xml'
+		do
+			xml_declaration := xml
+			if xml /= Void then
+				xml.set_parent (Current)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -168,6 +180,9 @@ feature -- Visitor processing
 			a_source: XML_TREE_TO_EVENTS
 		do
 			create a_source.make (a_filter)
+			if attached xml_declaration as decl then
+				decl.process (a_source)
+			end
 			process (a_source)
 		end
 

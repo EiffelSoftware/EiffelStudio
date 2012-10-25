@@ -23,7 +23,14 @@ feature -- Parsing
 		deferred
 		end
 
-	parse_from_string (a_string: STRING)
+	parse_from_string_8 (a_string: STRING_8)
+			-- Parse string `a_string'
+		require
+			a_string_attached: a_string /= Void
+		deferred
+		end
+
+	parse_from_string_32 (a_string: STRING_32)
 			-- Parse string `a_string'
 		require
 			a_string_attached: a_string /= Void
@@ -69,57 +76,15 @@ feature -- Status
 			end
 		end
 
-feature -- Settings
-
-	string_8_compatibility_enabled: BOOLEAN
-			-- Is string_8_callbacks enabled?
-			-- i.e: instance of STRING_8 are passed to callbacks instead of STRING_32
-		deferred
-		end
-
-	enable_string_8_compatibility
-			-- Enable `string_8_callbacks'
-		require
-			string_8_compatibility_disabled: not string_8_compatibility_enabled
-		deferred
-		ensure
-			string_8_compatibility_set: string_8_compatibility_enabled
-		end
-
-	disable_string_8_compatibility
-			-- Disable `string_8_callbacks'
-		require
-			string_8_compatibility_enabled: string_8_compatibility_enabled
-		deferred
-		ensure
-			string_8_compatibility_disabled: not string_8_compatibility_enabled
-		end
-
 feature -- Access
 
-	frozen last_error_description: detachable STRING_8
+	frozen last_error_description: detachable STRING_32
 			-- Last error message
 		do
 			Result := error_message
 		end
 
-	error_message: detachable STRING_8
-			-- Error message
-		do
-			if attached error_message_32 as err then
-				Result := err.as_string_8
-			end
-		ensure
-			result_attached_implies_error: Result /= Void implies error_occurred
-		end
-
-	frozen last_error_description_32: detachable STRING_32
-			-- Last error message
-		do
-			Result := error_message_32
-		end
-
-	error_message_32: detachable STRING_32
+	error_message: detachable STRING_32
 			-- Error message
 		deferred
 		ensure

@@ -69,7 +69,7 @@ feature -- Initialization
 			if attached {STRING_32} a_string as s32 then
 				create {XML_STRING_32_OUTPUT_STREAM} output_stream.make (s32)
 			elseif attached {STRING_8} a_string as s8 then
-				create {XML_STRING_OUTPUT_STREAM} output_stream.make (s8)
+				create {XML_STRING_8_OUTPUT_STREAM} output_stream.make (s8)
 			else
 				check is_string_8_or_32: False end
 				create {XML_NULL_OUTPUT_STREAM} output_stream.make
@@ -170,9 +170,8 @@ feature -- Output, interface to descendants
 			-- convenient redefinition.
 		require
 			a_string_not_void: a_string /= Void
-			is_string_8: attached {READABLE_STRING_8} a_string
 		do
-			output_stream.put_string_8 (a_string.as_string_8)
+			output_stream.put_string_general (a_string)
 		end
 
 invariant

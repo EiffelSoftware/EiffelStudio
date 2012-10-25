@@ -17,19 +17,17 @@ class
 inherit
 	XML_LITE_STOPPABLE_PARSER
 		redefine
-			make_unicode,
+			make,
 			resolved_entity,
 			internal_read_character
 		end
 
 create
-	make,
-	make_ascii,
-	make_unicode
+	make
 
 feature {NONE} -- Initialization
 
-	make_unicode
+	make
 			-- Instanciate Current
 		do
 			Precursor
@@ -92,19 +90,26 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Query
 
-	internal_read_character (buf: like buffer): CHARACTER
+	internal_read_character (buf: like buffer): like last_character
+		local
+			c: NATURAL_32
+			cr_code: NATURAL_32
 		do
-			buf.read_character
-			Result := buf.last_character
-			if carriage_return_character_ignored and Result = '%R' then
-				from
-				until
-					Result /= '%R' or buf.end_of_input
-				loop
-					buf.read_character
-					Result := buf.last_character
+			buf.read_character_code
+			if carriage_return_character_ignored then
+				c := buf.last_character_code
+				cr_code := ('%R').natural_32_code
+				if c = cr_code then
+					from
+					until
+						c /= cr_code or buf.end_of_input
+					loop
+						buf.read_character_code
+						c := buf.last_character_code
+					end
 				end
 			end
+			Result := c.to_character_32
 		end
 
 note

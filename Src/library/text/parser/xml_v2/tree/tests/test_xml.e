@@ -40,8 +40,25 @@ feature -- Test routines
 			s32.append_code (22909)
 			s32.append_code (21527)
 			create c.make_last (e, s32)
-			create e.make_last (Result.root_element, "xhtml:test", def_ns)
 
+			create e.make_last (Result.root_element, "xhtml:test", def_ns)
+		end
+
+	new_doc_with_unicode_tag: XML_DOCUMENT
+		local
+			e: XML_ELEMENT
+			s32: STRING_32
+			def_ns: XML_NAMESPACE
+		do
+			create def_ns.make_default
+
+			Result := new_doc
+			create s32.make (3)
+			s32.append_code (20320)
+			s32.append_code (22909)
+			s32.append_code (21527)
+
+			create e.make_last (Result.root_element, {STRING_32} "unicode-" + s32, def_ns)
 		end
 
 	generate_xml (fn: STRING_32; d: XML_DOCUMENT)
@@ -56,6 +73,40 @@ feature -- Test routines
 			vis.set_output_file (f)
 			vis.process_document (d)
 			f.close
+		end
+
+	doc_to_string_32 (d: XML_DOCUMENT): STRING_32
+		local
+			vis: XML_FORMATTER
+			o: XML_STRING_32_OUTPUT_STREAM
+		do
+			create Result.make_empty
+			create o.make (Result)
+			create vis.make
+			vis.set_output (o)
+			vis.process_document (d)
+		end
+
+	doc_to_utf8 (d: XML_DOCUMENT): STRING_8
+		local
+			vis: XML_FORMATTER
+			f: XML_CHARACTER_8_OUTPUT_STREAM_UTF8_FILTER
+			o: XML_STRING_8_OUTPUT_STREAM
+			u: UTF_CONVERTER
+			decl: XML_DECLARATION
+		do
+			create Result.make_empty
+			Result.append (u.utf_8_bom_to_string_8)
+			if attached d.xml_declaration as x_decl then
+				x_decl.set_encoding ("UTF-8")
+			else
+				create decl.make_in_document (d, "1.0", "UTF-8", False)
+			end
+			create o.make (Result)
+			create f.make (o)
+			create vis.make
+			vis.set_output (f)
+			vis.process_document (d)
 		end
 
 	generate_ecf (fn: STRING_32)
@@ -131,47 +182,7 @@ feature -- Test routines
 			Result := fact.standard_callbacks_pipe (<<endtags>>)
 		end
 
-	test_xml_parser_string_8
-			-- New test routine
-		local
-			p: XML_LITE_PARSER
-			d: like new_doc
-			s: STRING
-			doc_cb: XML_CALLBACKS_DOCUMENT
-			test_cbs: TEST_STRING_8_XML_CALLBACKS
-			vis_uc: XML_HAS_UNICODE_NODE_VISITOR
-		do
-			create p.make_ascii
-
-			create s.make_empty
-			create doc_cb.make_null
-			create test_cbs.make (doc_cb)
-			p.set_callbacks (new_callbacks_pipe (s, Void, test_cbs))
-
-			create vis_uc
-
-			d := new_doc
-			generate_xml (xml_file_name ("test.xml"), d)
-			p.parse_from_filename (xml_file_name ("test.xml"))
-			assert ("parsed", p.is_correct)
-			assert ("succeed", not p.error_occurred)
-
-			vis_uc.reset
-			vis_uc.process_document (doc_cb.document)
-			assert ("has no unicode", not vis_uc.has_unicode)
-
-			generate_ecf (xml_file_name ("ecf.xml"))
-			p.parse_from_filename (xml_file_name ("ecf.xml"))
-			assert ("parsed", p.is_correct)
-			assert ("succeed", not p.error_occurred)
-
-			vis_uc.reset
-			vis_uc.process_document (doc_cb.document)
-			assert ("has no unicode", not vis_uc.has_unicode)
-
-		end
-
-	test_xml_parser_unicode
+	test_xml_parser
 			-- New test routine
 		local
 			p: XML_LITE_PARSER
@@ -180,7 +191,7 @@ feature -- Test routines
 			doc_cb: XML_CALLBACKS_DOCUMENT
 			vis_uc: XML_HAS_UNICODE_NODE_VISITOR
 		do
-			create p.make_unicode
+			create p.make
 
 			create s.make_empty
 
@@ -200,15 +211,43 @@ feature -- Test routines
 			assert ("has unicode", vis_uc.has_unicode)
 		end
 
-	test_xml_parser_unicode_ecf
+	test_xml_parser_with_unicode_tag
 			-- New test routine
 		local
 			p: XML_LITE_PARSER
-			s: STRING
+			d: like new_doc_with_unicode_tag
+			s: STRING_32
 			doc_cb: XML_CALLBACKS_DOCUMENT
 			vis_uc: XML_HAS_UNICODE_NODE_VISITOR
 		do
-			create p.make_unicode
+			create p.make
+
+			create s.make_empty
+
+--			p.set_callbacks (ns_cb)
+			create doc_cb.make_null
+			p.set_callbacks (new_callbacks_pipe (s, Void, doc_cb))
+			create vis_uc
+
+			d := new_doc_with_unicode_tag
+			p.parse_from_string_32 (doc_to_string_32 (d))
+			assert ("parsed", p.is_correct)
+			assert ("succeed", not p.error_occurred)
+
+			vis_uc.reset
+			vis_uc.process_document (doc_cb.document)
+			assert ("has unicode", vis_uc.has_unicode)
+		end
+
+	test_xml_parser_ecf
+			-- New test routine
+		local
+			p: XML_LITE_PARSER
+			s: STRING_32
+			doc_cb: XML_CALLBACKS_DOCUMENT
+			vis_uc: XML_HAS_UNICODE_NODE_VISITOR
+		do
+			create p.make
 			create s.make_empty
 			create doc_cb.make_null
 			p.set_callbacks (new_callbacks_pipe (s, Void, doc_cb))
@@ -221,6 +260,119 @@ feature -- Test routines
 
 			vis_uc.reset
 			vis_uc.process_document (doc_cb.document)
+		end
+
+	test_xml_parser_with_unicode_tag_and_utf8
+			-- New test routine
+		local
+			p: XML_LITE_PARSER
+			d: like new_doc_with_unicode_tag
+			s: STRING_32
+			s8: STRING_8
+			doc_cb: XML_CALLBACKS_DOCUMENT
+			vis_uc: XML_HAS_UNICODE_NODE_VISITOR
+			u: UTF_CONVERTER
+		do
+			create p.make
+
+			create s.make_empty
+
+--			p.set_callbacks (ns_cb)
+			create doc_cb.make_null
+			p.set_callbacks (new_callbacks_pipe (s, Void, doc_cb))
+			create vis_uc
+
+			d := new_doc_with_unicode_tag
+			s8 := doc_to_utf8 (d)
+			if attached u.utf_8_string_8_to_string_32 (s8) as s32 then
+
+			end
+			p.parse_from_string_8 (s8)
+			assert ("parsed", p.is_correct)
+			assert ("succeed", not p.error_occurred)
+
+			vis_uc.reset
+			vis_uc.process_document (doc_cb.document)
+			assert ("has unicode", vis_uc.has_unicode)
+		end
+
+	test_xml_parser_with_unicode_tag_and_utf8_detection
+			-- New test routine
+		local
+			p: XML_LITE_PARSER
+			d: like new_doc_with_unicode_tag
+			s: STRING_32
+			s8: STRING_8
+			doc_cb: XML_CALLBACKS_DOCUMENT
+			vis_uc: XML_HAS_UNICODE_NODE_VISITOR
+			u: UTF_CONVERTER
+		do
+			create p.make
+
+			create s.make_empty
+
+--			p.set_callbacks (ns_cb)
+			create doc_cb.make_null
+			p.set_callbacks (new_callbacks_pipe (s, Void, doc_cb))
+			create vis_uc
+
+			d := new_doc_with_unicode_tag
+			s8 := doc_to_utf8 (d)
+			if attached u.utf_8_string_8_to_string_32 (s8) as s32 then
+
+			end
+
+			p.parse_from_string_8 (s8)
+			assert ("parsed", p.is_correct)
+			assert ("succeed", not p.error_occurred)
+
+			vis_uc.reset
+			vis_uc.process_document (doc_cb.document)
+			assert ("has unicode", vis_uc.has_unicode)
+		end
+
+feature -- ASCII
+
+	test_xml_parser_ascii
+			-- New test routine
+		local
+			p: XML_LITE_PARSER
+			d: like new_doc
+			s: STRING
+			doc_cb: XML_CALLBACKS_DOCUMENT
+			test_cbs: TEST_XML_ASCII_CALLBACKS
+			vis_uc: XML_HAS_UNICODE_NODE_VISITOR
+			ascii_fwd: XML_FORWARD_TO_ASCII_CALLBACKS
+		do
+			create p.make
+
+			create s.make_empty
+			create doc_cb.make_null
+			create test_cbs.make_null
+			create ascii_fwd.make (test_cbs)
+			p.set_callbacks (new_callbacks_pipe (s, Void, ascii_fwd))
+
+			create vis_uc
+
+			d := new_doc
+			generate_xml (xml_file_name ("test.xml"), d)
+			p.parse_from_filename (xml_file_name ("test.xml"))
+			assert ("parsed", p.is_correct)
+			assert ("succeed", not p.error_occurred)
+
+			vis_uc.reset
+			vis_uc.process_document (doc_cb.document)
+			assert ("has no unicode", not vis_uc.has_unicode)
+
+			generate_ecf (xml_file_name ("ecf.xml"))
+			p.parse_from_filename (xml_file_name ("ecf.xml"))
+			assert ("parsed", p.is_correct)
+			assert ("succeed", not p.error_occurred)
+
+			vis_uc.reset
+			vis_uc.process_document (doc_cb.document)
+			assert ("has no unicode", not vis_uc.has_unicode)
+
 		end
 
 end

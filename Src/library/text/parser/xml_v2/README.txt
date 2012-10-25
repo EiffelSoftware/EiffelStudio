@@ -22,9 +22,7 @@ In addition, it does not make sense to restrict XML to ASCII, and the XML specif
 - check any implicit conversion from STRING_32 to STRING_8 that might truncate and break the semantic of your XML data.
 
 = Future changes =
-- update the XML_LITE_PARSER implementation to support encoding, and thus manipulate stream of CHARACTER_32
-- update the output classes, to support encoding as well.
 
 = Misc =
 
--- Date: 2012/oct/24
+-- Date: 2012/oct/25

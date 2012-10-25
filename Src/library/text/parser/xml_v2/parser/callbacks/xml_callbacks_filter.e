@@ -13,7 +13,10 @@ class
 inherit
 	XML_CALLBACKS
 		undefine
-			default_create
+			default_create,
+			on_start_tag_resolved,
+			on_attribute_resolved ,
+			on_end_tag_resolved
 		end
 
 	XML_CALLBACKS_SOURCE
@@ -39,7 +42,7 @@ invariant
 	next_not_void: next /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -7,7 +7,7 @@ class
 	XML_FILE_OUTPUT_STREAM
 
 inherit
-	XML_OUTPUT_STREAM
+	XML_CHARACTER_8_OUTPUT_STREAM
 
 create
 	make
@@ -106,7 +106,7 @@ feature -- Basic operation
 
 feature -- Output
 
-	put_character (c: CHARACTER)
+	put_character_8 (c: CHARACTER_8)
 		local
 			cn: INTEGER
 		do
@@ -117,7 +117,7 @@ feature -- Output
 			current_chunk.append_character (c)
 		end
 
-	put_string (a_string: READABLE_STRING_8)
+	put_string_8 (a_string: READABLE_STRING_8)
 			-- Write `a_string' to output stream.
 		local
 			n: INTEGER

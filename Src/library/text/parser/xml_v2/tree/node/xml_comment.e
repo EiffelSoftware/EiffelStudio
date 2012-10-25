@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: like parent; a_data: READABLE_STRING_GENERAL)
+	make (a_parent: like parent; a_data: READABLE_STRING_32)
 			-- Create a new comment node.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -28,10 +28,10 @@ feature {NONE} -- Initialization
 			set_data (a_data)
 		ensure
 			parent_set: parent = a_parent
-			data_set: a_data.same_string (internal_data)
+			data_set: a_data.same_string (data)
 		end
 
-	make_last (a_parent: XML_ELEMENT; a_data: READABLE_STRING_GENERAL)
+	make_last (a_parent: XML_ELEMENT; a_data: READABLE_STRING_32)
 			-- Create a new comment node.
 			-- and add it to parent.
 		require
@@ -43,10 +43,10 @@ feature {NONE} -- Initialization
 		ensure
 			parent_set: parent = a_parent
 			in_parent: a_parent.last = Current
-			data_set: a_data.same_string (internal_data)
+			data_set: a_data.same_string (data)
 		end
 
-	make_last_in_document (a_parent: XML_DOCUMENT; a_data: READABLE_STRING_GENERAL)
+	make_last_in_document (a_parent: XML_DOCUMENT; a_data: READABLE_STRING_32)
 			-- Create a new comment node,
 			-- and add it to parent.
 		require
@@ -58,47 +58,24 @@ feature {NONE} -- Initialization
 		ensure
 			parent_set: parent = a_parent
 			in_parent: a_parent.last = Current
-			data_set: a_data.same_string (internal_data)
-		end
-
-feature -- Status report
-
-	data_is_valid_as_string_8: BOOLEAN
-			-- Is the associated data a valid string_8 string?	
-		do
-			Result := internal_data.is_valid_as_string_8
+			data_set: a_data.same_string (data)
 		end
 
 feature -- Access		
 
-	data_8, data: STRING_8
+	data: READABLE_STRING_32
 			-- Comment's character data	
-		require
-			data_is_valid_as_string_8: data_is_valid_as_string_8
-		do
-			Result := internal_data.as_string_8
-		end
-
-	data_32: READABLE_STRING_32
-			-- Comment's character data	
-		do
-			Result := to_readable_string_32 (internal_data)
-		end
-
-feature {XML_EXPORTER} -- Access
-
-	internal_data: READABLE_STRING_GENERAL
 
 feature -- Setting
 
-	set_data (a_data: READABLE_STRING_GENERAL)
+	set_data (a_data: READABLE_STRING_32)
 			-- Set comment's data.
 		require
 			a_data_not_void: a_data /= Void
 		do
-			internal_data := a_data
+			data := a_data
 		ensure
-			set: a_data.same_string (internal_data)
+			set: a_data.same_string (data)
 		end
 
 feature -- Visitor processing
@@ -110,7 +87,7 @@ feature -- Visitor processing
 		end
 
 invariant
-	data_not_void: internal_data /= Void
+	data_not_void: data /= Void
 
 note
 	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"

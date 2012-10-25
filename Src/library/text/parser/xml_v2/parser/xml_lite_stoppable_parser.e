@@ -22,9 +22,7 @@ inherit
 		end
 
 create
-	make,
-	make_ascii,
-	make_unicode
+	make
 
 feature -- Settings
 
@@ -71,7 +69,7 @@ feature {NONE} -- Implementation
 	checkpoint_position: detachable XML_POSITION
 		do
 			if checkpoint_position_line > 0 then
-				create Result.make (buffer.name, checkpoint_position_byte_index, checkpoint_position_column, checkpoint_position_line)
+				create Result.make (buffer.name_32, checkpoint_position_byte_index, checkpoint_position_column, checkpoint_position_line)
 			end
 		end
 
@@ -95,7 +93,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation: parse
 
-	report_error (a_message: READABLE_STRING_GENERAL)
+	report_error (a_message: READABLE_STRING_32)
 			-- Report error with message `a_message'
 		do
 			Precursor (a_message)

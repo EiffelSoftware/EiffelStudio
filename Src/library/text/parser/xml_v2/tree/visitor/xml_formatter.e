@@ -17,9 +17,6 @@ inherit
 			process_document
 		end
 
-	XML_MARKUP_CONSTANTS
-		export {NONE} all end
-
 create
 
 	make
@@ -73,7 +70,7 @@ invariant
 	last_output_not_void: last_output /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

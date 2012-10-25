@@ -35,7 +35,18 @@ feature -- Status report
 
 feature -- Output character
 
-	put_character (c: CHARACTER)
+	put_code (c: NATURAL_32)
+		require
+			is_open_write: is_open_write
+		do
+			if c.is_valid_character_8_code then
+				put_character_8 (c.to_character_8)
+			else
+				put_character_32 (c.to_character_32)
+			end
+		end
+
+	put_character_8 (c: CHARACTER_8)
 		require
 			is_open_write: is_open_write
 		deferred
@@ -44,20 +55,12 @@ feature -- Output character
 	put_character_32 (c: CHARACTER_32)
 		require
 			is_open_write: is_open_write
-		do
-			if c.is_character_8 then
-				put_character (c.to_character_8)
-			else
-				put_character ('&')
-				put_character ('#')
-				put_string_8 (c.natural_32_code.out)
-				put_character (';')
-			end
+		deferred
 		end
 
 feature -- Output string		
 
-	put_string (a_string: READABLE_STRING_8)
+	put_string_8 (a_string: READABLE_STRING_8)
 			-- Write `a_string' to output stream.
 		require
 			is_open_write: is_open_write
@@ -80,22 +83,12 @@ feature -- Output string
 			end
 		end
 
-	put_string_8 (a_string_8: READABLE_STRING_8)
-			-- Write `a_string_8' to ouput stream
-		require
-			is_open_write: is_open_write
-			a_string_not_void: a_string_8 /= Void
-		do
-			put_string (a_string_8)
-		end
-
 	put_string_32 (a_string_32: READABLE_STRING_32)
 			-- Write `a_string_32' to ouput stream
 		require
 			is_open_write: is_open_write
 			a_string_not_void: a_string_32 /= Void
-		do
-			put_string_32_escaped (a_string_32)
+		deferred
 		end
 
 feature -- Output escaped string
@@ -130,10 +123,10 @@ feature -- Output escaped string
 			is_open_write: is_open_write
 			a_string_not_void: a_string_32 /= Void
 		do
-			put_string_8 (xml_escaped_string (a_string_32))
+			put_string_32 (xml_escaped_unicode_string (a_string_32))
 		end
 
-	put_substring (a_string: READABLE_STRING_8; s, e: INTEGER)
+	put_substring_general (a_string: READABLE_STRING_GENERAL; s, e: INTEGER)
 			-- Write substring of `a_string' between indexes
 			-- `s' and `e' to output stream.
 		require
@@ -144,10 +137,39 @@ feature -- Output escaped string
 			valid_interval: s <= e + 1
 		do
 			if s <= e then
-				put_string (a_string.substring (s, e))
+				put_string_general (a_string.substring (s, e))
 			end
 		end
 
+	put_substring_8 (a_string: READABLE_STRING_8; s, e: INTEGER)
+			-- Write substring of `a_string' between indexes
+			-- `s' and `e' to output stream.
+		require
+			is_open_write: is_open_write
+			a_string_not_void: a_string /= Void
+			s_large_enough: s >= 1
+			e_small_enough: e <= a_string.count
+			valid_interval: s <= e + 1
+		do
+			if s <= e then
+				put_string_8 (a_string.substring (s, e))
+			end
+		end
+
+	put_substring_32 (a_string: READABLE_STRING_32; s, e: INTEGER)
+			-- Write substring of `a_string' between indexes
+			-- `s' and `e' to output stream.
+		require
+			is_open_write: is_open_write
+			a_string_not_void: a_string /= Void
+			s_large_enough: s >= 1
+			e_small_enough: e <= a_string.count
+			valid_interval: s <= e + 1
+		do
+			if s <= e then
+				put_string_32 (a_string.substring (s, e))
+			end
+		end
 
 feature -- Output others		
 
@@ -201,9 +223,9 @@ feature -- Output others
 			k, j: INTEGER_64
 		do
 			if i = 0 then
-				put_character ('0')
+				put_character_8 ('0')
 			elseif i < 0 then
-				put_character ('-')
+				put_character_8 ('-')
 					-- Avoid overflow.
 				k := -(i + 1)
 				j := k // 10
@@ -212,50 +234,50 @@ feature -- Output others
 					if j /= 0 then
 						put_integer_64 (j)
 					end
-					put_character ('1')
+					put_character_8 ('1')
 				when 1 then
 					if j /= 0 then
 						put_integer_64 (j)
 					end
-					put_character ('2')
+					put_character_8 ('2')
 				when 2 then
 					if j /= 0 then
 						put_integer_64 (j)
 					end
-					put_character ('3')
+					put_character_8 ('3')
 				when 3 then
 					if j /= 0 then
 						put_integer_64 (j)
 					end
-					put_character ('4')
+					put_character_8 ('4')
 				when 4 then
 					if j /= 0 then
 						put_integer_64 (j)
 					end
-					put_character ('5')
+					put_character_8 ('5')
 				when 5 then
 					if j /= 0 then
 						put_integer_64 (j)
 					end
-					put_character ('6')
+					put_character_8 ('6')
 				when 6 then
 					if j /= 0 then
 						put_integer_64 (j)
 					end
-					put_character ('7')
+					put_character_8 ('7')
 				when 7 then
 					if j /= 0 then
 						put_integer_64 (j)
 					end
-					put_character ('8')
+					put_character_8 ('8')
 				when 8 then
 					if j /= 0 then
 						put_integer_64 (j)
 					end
-					put_character ('9')
+					put_character_8 ('9')
 				when 9 then
 					put_integer_64 (j + 1)
-					put_character ('0')
+					put_character_8 ('0')
 				end
 			else
 				k := i
@@ -265,25 +287,25 @@ feature -- Output others
 				end
 				inspect k \\ 10
 				when 0 then
-					put_character ('0')
+					put_character_8 ('0')
 				when 1 then
-					put_character ('1')
+					put_character_8 ('1')
 				when 2 then
-					put_character ('2')
+					put_character_8 ('2')
 				when 3 then
-					put_character ('3')
+					put_character_8 ('3')
 				when 4 then
-					put_character ('4')
+					put_character_8 ('4')
 				when 5 then
-					put_character ('5')
+					put_character_8 ('5')
 				when 6 then
-					put_character ('6')
+					put_character_8 ('6')
 				when 7 then
-					put_character ('7')
+					put_character_8 ('7')
 				when 8 then
-					put_character ('8')
+					put_character_8 ('8')
 				when 9 then
-					put_character ('9')
+					put_character_8 ('9')
 				end
 			end
 		end
@@ -328,7 +350,7 @@ feature -- Output others
 			k, j: NATURAL_64
 		do
 			if i = 0 then
-				put_character ('0')
+				put_character_8 ('0')
 			else
 				k := i
 				j := k // 10
@@ -337,25 +359,25 @@ feature -- Output others
 				end
 				inspect k \\ 10
 				when 0 then
-					put_character ('0')
+					put_character_8 ('0')
 				when 1 then
-					put_character ('1')
+					put_character_8 ('1')
 				when 2 then
-					put_character ('2')
+					put_character_8 ('2')
 				when 3 then
-					put_character ('3')
+					put_character_8 ('3')
 				when 4 then
-					put_character ('4')
+					put_character_8 ('4')
 				when 5 then
-					put_character ('5')
+					put_character_8 ('5')
 				when 6 then
-					put_character ('6')
+					put_character_8 ('6')
 				when 7 then
-					put_character ('7')
+					put_character_8 ('7')
 				when 8 then
-					put_character ('8')
+					put_character_8 ('8')
 				when 9 then
-					put_character ('9')
+					put_character_8 ('9')
 				end
 			end
 		end
@@ -382,13 +404,13 @@ feature -- Output content of input stream
 		do
 			from
 				if not a_input_stream.end_of_input then
-					a_input_stream.read_character
+					a_input_stream.read_character_code
 				end
 			until
 				a_input_stream.end_of_input
 			loop
-				put_character (a_input_stream.last_character)
-				a_input_stream.read_character
+				put_code (a_input_stream.last_character_code)
+				a_input_stream.read_character_code
 			end
 		end
 

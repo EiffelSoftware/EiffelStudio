@@ -25,7 +25,10 @@ inherit
 			on_start_tag_finish,
 			on_end_tag,
 			on_attribute,
-			has_resolved_namespaces
+			has_resolved_namespaces,
+			on_start_tag_resolved,
+			on_end_tag_resolved,
+			on_attribute_resolved
 		redefine
 			make_null
 		end
@@ -48,7 +51,7 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

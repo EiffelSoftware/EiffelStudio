@@ -8,11 +8,6 @@ class
 
 inherit
 	XML_OUTPUT_STREAM
-		redefine
-			put_string_32,
-			put_character_32,
-			put_string_32_escaped
-		end
 
 create
 	make, make_empty
@@ -64,7 +59,7 @@ feature -- Basic operation
 
 feature -- Output
 
-	put_character (c: CHARACTER)
+	put_character_8 (c: CHARACTER_8)
 		do
 			string.append_character (c)
 		end
@@ -74,7 +69,7 @@ feature -- Output
 			string.append_character (c)
 		end
 
-	put_string (a_string: READABLE_STRING_8)
+	put_string_8 (a_string: READABLE_STRING_8)
 			-- Write `a_string' to output stream.
 		do
 			string.append_string_general (a_string)
@@ -84,13 +79,6 @@ feature -- Output
 			-- Write `a_string' to output stream.
 		do
 			string.append (a_string)
-		end
-
-	put_string_32_escaped (a_string_32: READABLE_STRING_32)
-			-- Write escaped `a_string_32' to ouput stream
-		do
-			-- FIXME: if unicode is supported, only escape <, >, ", ' ...
-			put_string_32 (xml_escaped_unicode_string (a_string_32))
 		end
 
 invariant

@@ -50,9 +50,9 @@ feature -- Processing
 			t: STRING_32
 			n: INTEGER
 		do
-			output.put_character ('<')
-			create t.make_from_string (e.name_32)
-			if attached e.ns_prefix_32 as p and then not p.is_empty then
+			output.put_character_8 ('<')
+			create t.make_from_string (e.name)
+			if attached e.ns_prefix as p and then not p.is_empty then
 				t.prepend_character (':')
 				t.prepend_string (p)
 			end
@@ -63,34 +63,34 @@ feature -- Processing
 				process_nodes (attrs)
 			end
 			if n = 0 then
-				output.put_character ('/')
-				output.put_character ('>')
+				output.put_character_8 ('/')
+				output.put_character_8 ('>')
 			else
-				output.put_character ('>')
+				output.put_character_8 ('>')
 				process_non_attribute_nodes (e)
-				output.put_character ('<')
-				output.put_character ('/')
+				output.put_character_8 ('<')
+				output.put_character_8 ('/')
 				output.put_string_32 (t)
-				output.put_character ('>')
+				output.put_character_8 ('>')
 			end
 		end
 
 	process_character_data (c: XML_CHARACTER_DATA)
 			-- Process character data `c'.
 		do
-			output.put_string_32_escaped (c.content_32)
+			output.put_string_32_escaped (c.content)
 		end
 
 	process_processing_instruction (a_pi: XML_PROCESSING_INSTRUCTION)
 			-- Process processing instruction `a_pi'.
 		do
-			output.put_character ('<')
-			output.put_character ('?')
-			output.put_string_32 (a_pi.target_32)
-			output.put_character (' ')
-			output.put_string_32 (a_pi.data_32)
-			output.put_character ('?')
-			output.put_character ('>')
+			output.put_character_8 ('<')
+			output.put_character_8 ('?')
+			output.put_string_32 (a_pi.target)
+			output.put_character_8 (' ')
+			output.put_string_32 (a_pi.data)
+			output.put_character_8 ('?')
+			output.put_character_8 ('>')
 		end
 
 	process_document (doc: XML_DOCUMENT)
@@ -103,14 +103,14 @@ feature -- Processing
 	process_comment (com: XML_COMMENT)
 			-- Process comment `com'.
 		do
-			output.put_character ('<')
-			output.put_character ('!')
-			output.put_character ('-')
-			output.put_character ('-')
-			output.put_string_32_escaped (com.data_32)
-			output.put_character ('-')
-			output.put_character ('-')
-			output.put_character ('>')
+			output.put_character_8 ('<')
+			output.put_character_8 ('!')
+			output.put_character_8 ('-')
+			output.put_character_8 ('-')
+			output.put_string_32_escaped (com.data)
+			output.put_character_8 ('-')
+			output.put_character_8 ('-')
+			output.put_character_8 ('>')
 		end
 
 	process_attribute (att: XML_ATTRIBUTE)
@@ -118,17 +118,17 @@ feature -- Processing
 		local
 			t: STRING_32
 		do
-			create t.make_from_string (att.name_32)
-			if attached att.ns_prefix_32 as p and then not p.is_empty then
+			create t.make_from_string (att.name)
+			if attached att.ns_prefix as p and then not p.is_empty then
 				t.prepend_character (':')
 				t.prepend (p)
 			end
-			output.put_character (' ')
+			output.put_character_8 (' ')
 			output.put_string_32 (t)
-			output.put_character ('=')
-			output.put_character ('%"')
-			output.put_string_32_escaped (att.value_32)
-			output.put_character ('%"')
+			output.put_character_8 ('=')
+			output.put_character_8 ('%"')
+			output.put_string_32_escaped (att.value)
+			output.put_character_8 ('%"')
 		end
 
 invariant

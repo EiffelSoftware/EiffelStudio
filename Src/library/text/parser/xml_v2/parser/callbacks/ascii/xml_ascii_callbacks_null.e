@@ -4,10 +4,10 @@ note
 	revision: "$Revision$"
 
 class
-	XML_CALLBACKS_NULL
+	XML_ASCII_CALLBACKS_NULL
 
 inherit
-	XML_CALLBACKS
+	XML_ASCII_CALLBACKS
 
 create
 	make
@@ -38,19 +38,19 @@ feature -- Document
 
 feature -- Errors
 
-	on_error (a_message: READABLE_STRING_32)
+	on_error (a_message: READABLE_STRING_8)
 			-- Event producer detected an error.
 		do
 		end
 
 feature -- Meta
 
-	on_processing_instruction (a_name: READABLE_STRING_32; a_content: READABLE_STRING_32)
+	on_processing_instruction (a_name: READABLE_STRING_8; a_content: READABLE_STRING_8)
 			-- Processing instruction.
 		do
 		end
 
-	on_comment (a_content: READABLE_STRING_32)
+	on_comment (a_content: READABLE_STRING_8)
 			-- Processing a comment.
 			-- Atomic: single comment produces single event
 		do
@@ -58,12 +58,12 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
+	on_start_tag (a_namespace: detachable READABLE_STRING_8; a_prefix: detachable READABLE_STRING_8; a_local_part: READABLE_STRING_8)
 			-- Start of start tag.
 		do
 		end
 
-	on_attribute (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
+	on_attribute (a_namespace: detachable READABLE_STRING_8; a_prefix: detachable READABLE_STRING_8; a_local_part: READABLE_STRING_8; a_value: READABLE_STRING_8)
 			-- Start of attribute.
 		do
 		end
@@ -73,14 +73,14 @@ feature -- Tag
 		do
 		end
 
-	on_end_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
+	on_end_tag (a_namespace: detachable READABLE_STRING_8; a_prefix: detachable READABLE_STRING_8; a_local_part: READABLE_STRING_8)
 			-- End tag.
 		do
 		end
 
 feature -- Content
 
-	on_content (a_content: READABLE_STRING_32)
+	on_content (a_content: READABLE_STRING_8)
 			-- Text content.
 		do
 		end

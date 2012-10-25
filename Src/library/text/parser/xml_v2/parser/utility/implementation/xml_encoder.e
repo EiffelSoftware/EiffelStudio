@@ -79,11 +79,11 @@ feature -- Encoder
 				if uc.is_character_8 then
 					c := uc.to_character_8
 					inspect c
-					when '%"' then Result.append_string ("&quot;")
-					when '&' then Result.append_string ("&amp;")
-					when '%'' then Result.append_string ("&apos;")
-					when '<' then Result.append_string ("&lt;")
-					when '>' then Result.append_string ("&gt;")
+					when '%"' then Result.append_string ({STRING_32} "&quot;")
+					when '&' then Result.append_string ({STRING_32} "&amp;")
+					when '%'' then Result.append_string ({STRING_32} "&apos;")
+					when '<' then Result.append_string ({STRING_32} "&lt;")
+					when '>' then Result.append_string ({STRING_32} "&gt;")
 					else
 						Result.append_character (c)
 					end

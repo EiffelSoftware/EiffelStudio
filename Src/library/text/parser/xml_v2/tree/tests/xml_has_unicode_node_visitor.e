@@ -10,6 +10,7 @@ class
 inherit
 	XML_NODE_ITERATOR
 		redefine
+			process_element,
 			process_character_data,
 			process_comment,
 			process_attribute
@@ -31,22 +32,31 @@ feature -- Visitor
 
 feature -- Visitor
 
+	process_element (e: XML_ELEMENT)
+			-- Process character data `e'.
+		do
+			has_unicode := has_unicode or string_has_unicode (e.name)
+			if not has_unicode then
+				Precursor (e)
+			end
+		end
+
 	process_character_data (c: XML_CHARACTER_DATA)
 			-- Process character data `c'.
 		do
-			has_unicode := has_unicode or string_has_unicode (c.content_32)
+			has_unicode := has_unicode or string_has_unicode (c.content)
 		end
 
 	process_comment (com: XML_COMMENT)
 			-- Process comment `com'.
 		do
-			has_unicode := has_unicode or string_has_unicode (com.data_32)
+			has_unicode := has_unicode or string_has_unicode (com.data)
 		end
 
 	process_attribute (att: XML_ATTRIBUTE)
 			-- Process attribute `att'.
 		do
-			has_unicode := has_unicode or string_has_unicode (att.value_32)
+			has_unicode := has_unicode or string_has_unicode (att.name) or string_has_unicode (att.value)
 		end
 
 

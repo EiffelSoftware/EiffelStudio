@@ -15,7 +15,7 @@ inherit
 
 feature -- Basic operations
 
-	launch (a_uri: READABLE_STRING_8): BOOLEAN
+	launch (a_uri: READABLE_STRING_32): BOOLEAN
 			-- Launches a URI in the system's default web-browser.
 			--
 			-- `a_uri' : The URI to launch.
@@ -27,7 +27,7 @@ feature -- Basic operations
 			Result := bridge.launch (a_uri)
 		end
 
-	launch_with_default_app (a_uri: READABLE_STRING_8; a_default_app: READABLE_STRING_8): BOOLEAN
+	launch_with_default_app (a_uri: READABLE_STRING_32; a_default_app: READABLE_STRING_32): BOOLEAN
 			-- Launches a URI in the system's default web-browser, or if that fails, then the supplied
 			-- default application.
 			--
@@ -52,7 +52,7 @@ feature {NONE} -- Factory
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

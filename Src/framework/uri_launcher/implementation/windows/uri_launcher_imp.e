@@ -15,10 +15,10 @@ inherit
 
 feature -- Basic operations
 
-	launch (a_uri: READABLE_STRING_8): BOOLEAN
+	launch (a_uri: READABLE_STRING_32): BOOLEAN
 			-- <Precursor>
 		local
-			l_uri: C_STRING
+			l_uri: WEL_STRING
 			l_null: POINTER
 		do
 			check is_windows: {PLATFORM}.is_windows end
@@ -35,7 +35,7 @@ feature {NONE} -- Externals
 		external
 			"C inline use <shellapi.h>"
 		alias
-			"return (EIF_INTEGER) ShellExecuteA ((HWND) $a_hwnd, (LPCSTR) $a_operation, (LPCSTR) $a_file, (LPCSTR) $a_params, (LPCSTR) $a_directory, (int) $a_show_cmd);"
+			"return (EIF_INTEGER) ShellExecuteW ((HWND) $a_hwnd, (LPCSTR) $a_operation, (LPCSTR) $a_file, (LPCSTR) $a_params, (LPCSTR) $a_directory, (int) $a_show_cmd);"
 		end
 
 	cwin_sw_shownormal: INTEGER
@@ -49,7 +49,7 @@ feature {NONE} -- Externals
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

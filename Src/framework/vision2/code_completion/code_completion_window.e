@@ -656,7 +656,7 @@ feature {NONE} -- Cursor movement
 
 feature {NONE} -- Implementation
 
-	buffered_input: detachable STRING note option: stable attribute end
+	buffered_input: detachable STRING_32 note option: stable attribute end
 			-- Buffered user input
 
 	character_to_append: CHARACTER
@@ -681,7 +681,7 @@ feature {NONE} -- Implementation
 			Result := True
 		end
 
-	build_displayed_list (name: detachable STRING)
+	build_displayed_list (name: detachable STRING_32)
 			-- Build the list based on matches with `name'
 		require
 			full_list_not_void: full_list /= Void
@@ -1338,7 +1338,7 @@ feature {NONE} -- String matching
 			end
 		end
 
-	matches_based_on_name (a_name: detachable STRING): SORTABLE_ARRAY [like name_type]
+	matches_based_on_name (a_name: detachable STRING_32): SORTABLE_ARRAY [like name_type]
 			-- Array of matches based on `a_name'.
 			-- Always use this function before building lists to get correct matches.
 		require

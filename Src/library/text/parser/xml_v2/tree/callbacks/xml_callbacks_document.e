@@ -55,14 +55,18 @@ feature -- Document
 		do
 		end
 
-	on_xml_declaration (a_version: READABLE_STRING_GENERAL; an_encoding: detachable READABLE_STRING_GENERAL; a_standalone: BOOLEAN)
+	on_xml_declaration (a_version: READABLE_STRING_8; an_encoding: detachable READABLE_STRING_8; a_standalone: BOOLEAN)
 			-- XML declaration.
+		local
+			decl: XML_DECLARATION
 		do
+			create decl.make_in_document (document, a_version, an_encoding, a_standalone)
+			handle_position (decl)
 		end
 
 feature -- Errors
 
-	on_error (a_message: READABLE_STRING_GENERAL)
+	on_error (a_message: READABLE_STRING_32)
 			-- Event producer detected an error.
 		do
 		end
@@ -76,20 +80,20 @@ feature -- Tag
 
 feature -- Meta
 
-	on_processing_instruction (a_name: READABLE_STRING_GENERAL; a_content: READABLE_STRING_GENERAL)
+	on_processing_instruction (a_name: READABLE_STRING_32; a_content: READABLE_STRING_32)
 			-- Processing instruction.
 		local
-			xml: XML_PROCESSING_INSTRUCTION
+			pi: XML_PROCESSING_INSTRUCTION
 		do
 			if attached current_element as curr then
-				create xml.make_last (curr, a_name, a_content)
+				create pi.make_last (curr, a_name, a_content)
 			else
-				create xml.make_last_in_document (document, a_name, a_content)
+				create pi.make_last_in_document (document, a_name, a_content)
 			end
-			handle_position (xml)
+			handle_position (pi)
 		end
 
-	on_comment (a_content: READABLE_STRING_GENERAL)
+	on_comment (a_content: READABLE_STRING_32)
 			-- Processing a comment.
 		local
 			xml: XML_COMMENT
@@ -104,7 +108,7 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: detachable READABLE_STRING_GENERAL; a_ns_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL)
+	on_start_tag (a_namespace: detachable READABLE_STRING_32; a_ns_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- Start of start tag.
 		local
 			l_element: XML_ELEMENT
@@ -122,7 +126,7 @@ feature -- Tag
 			element_not_void: current_element /= Void
 		end
 
-	on_attribute (a_namespace: detachable READABLE_STRING_GENERAL; a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL; a_value: READABLE_STRING_GENERAL)
+	on_attribute (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
 			-- Start of attribute.
 		local
 			xml: XML_ATTRIBUTE
@@ -137,11 +141,11 @@ feature -- Tag
 				create xml.make_last (a_local_part, new_namespace (a_namespace, a_prefix), a_value, curr)
 				handle_position (xml)
 			else
-				report_error ("on_attribute::missing current_element in " + generator)
+				report_error ({STRING_32} "on_attribute::missing current_element in " + generator.to_string_32)
 			end
 		end
 
-	on_end_tag (a_namespace: detachable READABLE_STRING_GENERAL; a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL)
+	on_end_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- End tag.
 		do
 			if attached current_element as curr then
@@ -151,13 +155,13 @@ feature -- Tag
 					current_element := curr.parent_element
 				end
 			else
-				report_error ("on_end_tag::missing current_element in " + generator)
+				report_error ({STRING_32} "on_end_tag::missing current_element in " + generator.to_string_32)
 			end
 		end
 
 feature -- Content
 
-	on_content (a_content: READABLE_STRING_GENERAL)
+	on_content (a_content: READABLE_STRING_32)
 			-- Text content.
 			-- NOT atomic: two on_content events may follow each other
 			-- without a markup event in between.
@@ -194,7 +198,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	report_error (a_msg: READABLE_STRING_GENERAL)
+	report_error (a_msg: READABLE_STRING_32)
 			-- Report error `a_msg' to the `source_parser'
 		do
 			if attached source_parser as parser then
@@ -209,14 +213,14 @@ feature {NONE} -- Implementation
 			-- Not Yet Implemented
 		end
 
-	new_namespace (a_uri, a_prefix: detachable READABLE_STRING_GENERAL): XML_NAMESPACE
+	new_namespace (a_uri, a_prefix: detachable READABLE_STRING_32): XML_NAMESPACE
 			-- Create namespace object.	
 		do
 			if a_uri /= Void then
 				create Result.make (a_prefix, a_uri)
 			elseif a_prefix /= Void then
 				--| Should not occur since `has_resolved_namespaces' is True
-				create Result.make (a_prefix, "")
+				create Result.make (a_prefix, {XML_XMLNS_CONSTANTS}.default_namespace)
 			else
 					-- We have no set uri or prefix so we use the `default_namespace'.				
 				Result := default_namespace

@@ -13,6 +13,7 @@ class XML_PRETTY_PRINT_FILTER
 inherit
 	XML_CALLBACKS_FILTER
 		redefine
+			on_xml_declaration,
 			on_comment,
 			on_processing_instruction,
 			on_start_tag,
@@ -22,7 +23,7 @@ inherit
 			on_content,
 			on_finish,
 			default_create,
-			set_next
+			make_null
 		end
 
 	XML_OUTPUT
@@ -39,7 +40,7 @@ inherit
 
 create
 	make_null,
-	set_next
+	make_with_next
 
 feature {NONE} -- Initialization
 
@@ -49,12 +50,15 @@ feature {NONE} -- Initialization
 			Precursor {XML_OUTPUT}
 		end
 
-feature -- Settings
+	make_null
+		do
+			make_with_next (create {XML_CALLBACKS_NULL}.make)
+		end
 
-	set_next (a_callbacks: like next)
+	make_with_next (a_callbacks: like next)
 		do
 			default_create
-			Precursor (a_callbacks)
+			set_next (a_callbacks)
 		end
 
 feature {NONE} -- Document
@@ -68,7 +72,32 @@ feature {NONE} -- Document
 
 feature -- Meta
 
-	on_processing_instruction (a_name: READABLE_STRING_GENERAL; a_content: READABLE_STRING_GENERAL)
+	on_xml_declaration (a_version: READABLE_STRING_8; an_encoding: detachable READABLE_STRING_8; a_standalone: BOOLEAN)
+			-- XML declaration.
+		do
+			output_constant (Pi_start)
+			output_constant (xml_prefix)
+			output_constant (Space_s)
+			output_constant ("version=%"")
+			output_constant (a_version)
+			output_constant ("%"")
+			if an_encoding /= Void then
+				output_constant (Space_s)
+				output_constant ("encoding=%"")
+				output_constant (an_encoding)
+				output_constant ("%"")
+			end
+			if a_standalone then
+				output_constant (Space_s)
+				output_constant ("standalone=%"yes%"")
+			end
+			output_constant (Pi_end)
+			output_constant ("%N")
+
+			Precursor (a_version, an_encoding, a_standalone)
+		end
+
+	on_processing_instruction (a_name: READABLE_STRING_32; a_content: READABLE_STRING_32)
 			-- Print processing instruction.
 		do
 			output_constant (Pi_start)
@@ -76,10 +105,11 @@ feature -- Meta
 			output_constant (Space_s)
 			output_escaped (a_content)
 			output_constant (Pi_end)
+			output_constant ("%N")
 			Precursor (a_name, a_content)
 		end
 
-	on_comment (a_content: READABLE_STRING_GENERAL)
+	on_comment (a_content: READABLE_STRING_32)
 			-- Print comment.
 		do
 			output_constant (Comment_start)
@@ -90,7 +120,7 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: detachable READABLE_STRING_GENERAL; a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL)
+	on_start_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- Print start of start tag.
 		do
 			output_constant (Stag_start)
@@ -98,7 +128,7 @@ feature -- Tag
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace: detachable READABLE_STRING_GENERAL; a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL; a_value: READABLE_STRING_GENERAL)
+	on_attribute (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
 			-- Print attribute.
 		do
 			output_constant (Space_s)
@@ -117,7 +147,7 @@ feature -- Tag
 			Precursor
 		end
 
-	on_end_tag (a_namespace: detachable READABLE_STRING_GENERAL; a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL)
+	on_end_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- Print end tag.
 		do
 			output_constant (Etag_start)
@@ -128,7 +158,7 @@ feature -- Tag
 
 feature -- Content
 
-	on_content (a_content: READABLE_STRING_GENERAL)
+	on_content (a_content: READABLE_STRING_32)
 			-- Text content.
 			-- NOT atomic: successive content may be different.
 			-- Default: forward event to 'next'.
@@ -137,50 +167,9 @@ feature -- Content
 			Precursor (a_content)
 		end
 
-feature {NONE} -- Escaped
-
-	is_output_escaped (a_code: NATURAL_32): BOOLEAN
-			-- Is this an escapable character?
-			-- in the context of `output'
-			-- which means any content output, except attribute's value
-		do
-			if a_code >= 128 then
-				Result := True
-			else
-				Result := a_code = Lt_char.natural_32_code or
-							a_code = Gt_char.natural_32_code or
-							a_code = Amp_char.natural_32_code
-			end
-		end
-
-	output_escaped_char (a_code: NATURAL_32): STRING_8
-			-- Escape char in the context of `output'.
-			-- which means any content output, except attribute's value
-		require
-			is_output_escaped: is_output_escaped (a_code)
-		do
-			if a_code < 128 then
-				if a_code = Lt_char.natural_32_code then
-					Result := Lt_entity
-				elseif a_code = Gt_char.natural_32_code then
-					Result := Gt_entity
-				elseif a_code = Amp_char.natural_32_code then
-					Result := Amp_entity
-				else
-					check is_escaped: False end
-					create Result.make_empty
-					Result.append_code (a_code)
-				end
-			else
-				create Result.make_from_string ("&#")
-				Result.append_natural_32 (a_code)
-				Result.append_character (';')
-			end
-		end
-
 feature {NONE} -- Output
 
-	output_constant (a_string: STRING)
+	output_constant (a_string: READABLE_STRING_GENERAL)
 			-- Output constant string.
 			--| It is know to be without any escapable character.
 		require
@@ -189,7 +178,7 @@ feature {NONE} -- Output
 			output (a_string)
 		end
 
-	output_attribute_value (a_string: READABLE_STRING_GENERAL)
+	output_attribute_value (a_string: READABLE_STRING_32)
 			-- Like output escaped and also escape quote for attribute values.
 		require
 			a_string_not_void: a_string /= Void
@@ -226,60 +215,24 @@ feature {NONE} -- Output
 			end
 		end
 
-	output_escaped (a_string: READABLE_STRING_GENERAL)
+	output_escaped (a_string: READABLE_STRING_32)
 			-- Escape and output content string.
 		require
 			a_string_not_void: a_string /= Void
-		local
-			last_escaped: INTEGER
-			i: INTEGER
-			cnt: INTEGER
-			l_code: NATURAL_32
-			s: READABLE_STRING_GENERAL
 		do
-			from
-				last_escaped := 0
-				i := 1
-				cnt := a_string.count
-			invariant
-				last_escaped <= i
-			until
-				i > cnt
-			loop
-				l_code := a_string.code (i)
-				if is_output_escaped (l_code) then
-					if last_escaped < i - 1 then
-						s := a_string.substring (last_escaped + 1, i - 1)
-						--| is_escaped and use of last_escaped implies there should not be any non char_8
-						check is_valid_as_string_8: s.is_valid_as_string_8 end
-						output (s.to_string_8)
-					end
-					output_constant (output_escaped_char (l_code))
-					last_escaped := i
-				end
-				i := i + 1
-			end
-				-- At exit.
-			if last_escaped = 0 then
-				check is_valid_as_string_8: a_string.is_valid_as_string_8 end
-				output (a_string.to_string_8)
-			elseif last_escaped < i - 1 then
-				s := a_string.substring (last_escaped + 1, i - 1)
-				check is_valid_as_string_8: s.is_valid_as_string_8 end
-				output (s.to_string_8)
-			end
+			output_stream.put_string_32_escaped (a_string)
 		end
 
-	output_name (a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL)
+	output_name (a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- Output prefix:name.
 		require
 			a_local_part_not_void: a_local_part /= Void
 		do
 			if a_prefix /= Void and has_prefix (a_prefix) then
-				output_escaped (a_prefix)
+				output (a_prefix)
 				output_constant (Prefix_separator)
 			end
-			output_escaped (a_local_part)
+			output (a_local_part)
 		end
 
 note

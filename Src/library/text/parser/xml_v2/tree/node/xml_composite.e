@@ -150,7 +150,7 @@ feature -- Access
 
 feature -- Text
 
-	text: detachable STRING_8
+	text: detachable STRING_32
 			-- Concatenation of all texts directly found in
 			-- current element; Void if no text found
 			-- (Return a new string at each call.)
@@ -167,36 +167,9 @@ feature -- Text
 			loop
 				if attached {XML_CHARACTER_DATA} lst.item as l_cdata then
 					if Result = Void then
-						create {STRING_8} Result.make_from_string (l_cdata.content)
+						create Result.make_from_string (l_cdata.content)
 					else
 						Result.append_string (l_cdata.content)
-					end
-				end
-				lst.forth
-			end
-			lst.go_to (c)
-		end
-
-	text_32: detachable STRING_32
-			-- Concatenation of all texts directly found in
-			-- current element; Void if no text found
-			-- (Return a new string at each call.)
-		local
-			c: CURSOR
-			lst: like internal_nodes
-		do
-			lst := internal_nodes
-			c := lst.cursor
-			from
-				lst.start
-			until
-				lst.after
-			loop
-				if attached {XML_CHARACTER_DATA} lst.item as l_cdata then
-					if Result = Void then
-						create {STRING_32} Result.make_from_string (l_cdata.content_32)
-					else
-						Result.append_string (l_cdata.content_32)
 					end
 				end
 				lst.forth

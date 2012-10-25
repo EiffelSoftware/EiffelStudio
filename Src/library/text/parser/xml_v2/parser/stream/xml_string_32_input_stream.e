@@ -1,13 +1,13 @@
 note
-	description: "Summary description for {XML_STRING_INPUT_STREAM}."
+	description: "Summary description for {XML_STRING_32_INPUT_STREAM}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XML_STRING_INPUT_STREAM
+	XML_STRING_32_INPUT_STREAM
 
 inherit
-	XML_CHARACTER_8_INPUT_STREAM
+	XML_INPUT_STREAM
 
 create
 	make,
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_string: READABLE_STRING_8)
+	make (a_string: READABLE_STRING_32)
 		do
 			source := a_string
 			count := a_string.count
@@ -63,13 +63,23 @@ feature -- Access
 
 	column: INTEGER
 
-	last_character: CHARACTER
+	last_character_code: NATURAL_32
+		do
+			Result := last_character.natural_32_code
+		end
+
+	last_character: CHARACTER_32
 
 feature -- Basic operation
 
+	read_character_code
+		do
+			read_character
+		end
+
 	read_character
 		local
-			c: CHARACTER
+			c: like last_character
 		do
 			c := source.item (source_index)
 			source_index := source_index + 1
@@ -102,7 +112,7 @@ feature {NONE} -- Implementation
 
 	source_index: INTEGER
 
-	source: STRING
+	source: STRING_32
 
 invariant
 	source_attached: source /= Void

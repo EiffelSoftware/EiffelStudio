@@ -31,17 +31,17 @@ feature {NONE} -- Creation
 			element_prefixes.compare_objects
 			last_item := Void
 			create default_namespaces.make
-			default_namespaces.force (Default_namespace)
+			default_namespaces.force ({XML_XMLNS_CONSTANTS}.Default_namespace)
 		end
 
 feature {NONE} -- Default context
 
-	default_namespaces: LINKED_STACK [READABLE_STRING_GENERAL]
+	default_namespaces: LINKED_STACK [READABLE_STRING_32]
 			-- Default namespace URI stack.
 
 feature -- Default
 
-	is_same_as_default (a_namespace: READABLE_STRING_GENERAL): BOOLEAN
+	is_same_as_default (a_namespace: READABLE_STRING_32): BOOLEAN
 			-- Is namespace the same as the default one for the current element?
 		require
 			a_namespace_not_void: a_namespace /= Void
@@ -49,7 +49,7 @@ feature -- Default
 			Result := same_string (a_namespace, default_namespaces.item)
 		end
 
-	set_default (a_namespace: READABLE_STRING_GENERAL)
+	set_default (a_namespace: READABLE_STRING_32)
 			-- Set default namespace URI.
 		require
 			a_namespace_not_void: a_namespace /= Void
@@ -62,18 +62,18 @@ feature -- Default
 
 feature {NONE} -- Prefixed context
 
-	prefixes: LINKED_LIST [HASH_TABLE [READABLE_STRING_GENERAL, STRING_32]]
+	prefixes: LINKED_LIST [HASH_TABLE [READABLE_STRING_32, STRING_32]]
 			-- Prefixes by namespace
 
-	element_prefixes: HASH_TABLE [READABLE_STRING_GENERAL, STRING_32] -- HASH_SET ?
+	element_prefixes: HASH_TABLE [READABLE_STRING_32, STRING_32] -- HASH_SET ?
 			-- Prefixes in use (not only declared) in top element.
 
-	last_item: detachable READABLE_STRING_GENERAL
+	last_item: detachable READABLE_STRING_32
 			-- Cache for lookup
 
 feature -- Status
 
-	has (a_namespace: READABLE_STRING_GENERAL): BOOLEAN
+	has (a_namespace: READABLE_STRING_32): BOOLEAN
 			-- Is namespace known to prefixes table?
 			-- If found, set `last_item' to the related item
 		require
@@ -103,7 +103,7 @@ feature -- Status
 			end
 		end
 
-	item (a_namespace: READABLE_STRING_GENERAL): detachable READABLE_STRING_GENERAL
+	item (a_namespace: READABLE_STRING_32): detachable READABLE_STRING_32
 			-- Find prefix for namespace
 		require
 			a_namespace_not_void: a_namespace /= Void
@@ -116,7 +116,7 @@ feature -- Status
 			result_not_empty: Result /= Void implies not Result.is_empty
 		end
 
-	new_element_cursor: HASH_TABLE_ITERATION_CURSOR [READABLE_STRING_GENERAL, STRING_32]
+	new_element_cursor: HASH_TABLE_ITERATION_CURSOR [READABLE_STRING_32, STRING_32]
 			-- New element cursor.
 		do
 			check in_element: not prefixes.is_empty end
@@ -127,7 +127,7 @@ feature -- Status
 
 feature -- Setting
 
-	force (a_prefix: READABLE_STRING_GENERAL; a_namespace: READABLE_STRING_GENERAL)
+	force (a_prefix: READABLE_STRING_32; a_namespace: READABLE_STRING_32)
 			-- Add namespace, prefix to context.
 		require
 			a_namespace_not_void: a_namespace /= Void
@@ -143,7 +143,7 @@ feature -- Setting
 
 feature -- Status
 
-	element_has_prefix (a_prefix: READABLE_STRING_GENERAL): BOOLEAN
+	element_has_prefix (a_prefix: READABLE_STRING_32): BOOLEAN
 			-- Is this prefix used in the top element?
 		require
 			a_prefix_not_void: a_prefix /= Void
@@ -152,7 +152,7 @@ feature -- Status
 			Result := element_prefixes.has (a_prefix.to_string_32)
 		end
 
-	element_prefix (a_prefix: READABLE_STRING_GENERAL)
+	element_prefix (a_prefix: READABLE_STRING_32)
 			-- Declare prefix in use in top element.
 		require
 			a_prefix_not_void: a_prefix /= Void
@@ -189,7 +189,7 @@ feature -- Elements
 
 feature {NONE} -- Implementation
 
-	same_string (a,b: detachable READABLE_STRING_GENERAL): BOOLEAN
+	same_string (a,b: detachable READABLE_STRING_32): BOOLEAN
 			-- Are `a' and `b' the same string?
 		do
 			if a = b then

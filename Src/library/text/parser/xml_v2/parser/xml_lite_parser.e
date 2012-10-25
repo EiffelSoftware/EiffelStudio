@@ -22,33 +22,15 @@ inherit
 	XML_PARSER
 
 create
-	make,
-	make_ascii,
-	make_unicode
+	make
 
 feature {NONE} -- Initialization
 
 	make
 			-- Instanciate Current
-		obsolete
-			"Use make_ascii or make_unicode [2012-oct]"
-		do
-			make_ascii
-		end
-
-	make_ascii
-			-- Instanciate Current
-		do
-			make_unicode
-			enable_string_8_compatibility
-		end
-
-	make_unicode
-			-- Instanciate Current with unicode support
-			-- i.e: passing instance of STRING_32 in callbacks	
 		do
 			create {XML_CALLBACKS_NULL} callbacks.make
-			buffer := empty_buffer
+			set_buffer (empty_buffer)
 		end
 
 feature -- Parsing
@@ -56,18 +38,27 @@ feature -- Parsing
 	parse_from_stream (a_stream: XML_INPUT_STREAM)
 			-- Parse stream `a_stream'
 		do
-			buffer := a_stream
+			set_buffer (a_stream)
 			parse
-			buffer := empty_buffer
+			set_buffer (empty_buffer)
 		end
 
-	parse_from_string (a_string: STRING)
+	parse_from_string_8 (a_string: STRING_8)
 			-- Parse string `a_string'
 		local
 			s: XML_STRING_INPUT_STREAM
 		do
 			create s.make (a_string)
-			s.start
+			parse_from_stream (s)
+			s.close
+		end
+
+	parse_from_string_32 (a_string: STRING_32)
+			-- Parse string `a_string'
+		local
+			s: XML_STRING_32_INPUT_STREAM
+		do
+			create s.make (a_string)
 			parse_from_stream (s)
 			s.close
 		end
@@ -118,50 +109,14 @@ feature -- Access
 	callbacks: XML_CALLBACKS
 			-- Callbacks event interface to which events are forwarded
 
-feature -- Settings
-
-	string_8_compatibility_enabled: BOOLEAN
-			-- Is string_8_callbacks enabled?
-			-- i.e: instance of STRING_8 are passed to callbacks instead of STRING_32
-
-	enable_string_8_compatibility
-			-- Enable `string_8_callbacks'
-		local
-			cb: XML_STRING_8_FORWARD_CALLBACKS
-		do
-			create cb.make (callbacks)
-			callbacks := cb
-			string_8_compatibility_enabled := True
-		end
-
-	disable_string_8_compatibility
-			-- Disable `string_8_callbacks'
-		do
-			if attached {XML_STRING_8_FORWARD_CALLBACKS} callbacks as cb8 then
-				callbacks := cb8.callbacks
-			else
-				check string_8_compatibility_enabled: False end
-			end
-			string_8_compatibility_enabled := False
-		end
-
 feature -- Element change
 
 	set_callbacks (a_callbacks: like callbacks)
 			-- Set `callbacks' to `a_callbacks'.
 		do
-			if string_8_compatibility_enabled then
-				if attached {XML_STRING_8_FORWARD_CALLBACKS} callbacks as cb8 then
-					cb8.set_callbacks (a_callbacks)
-				else
-					check string_8_compatibility_enabled: False end
-				end
-			else
-				callbacks := a_callbacks
-			end
+			callbacks := a_callbacks
 		ensure then
-			callbacks_set: (string_8_compatibility_enabled implies (attached {XML_STRING_8_FORWARD_CALLBACKS} callbacks as cb8 and then cb8.callbacks = a_callbacks)) or
-					callbacks = a_callbacks
+			callbacks_set: callbacks = a_callbacks
 		end
 
 feature -- Parsing status
@@ -178,7 +133,10 @@ feature -- Parsing status
 
 feature -- Status		
 
-	error_message_32: detachable STRING_32
+	warning_message: detachable STRING_32
+			-- Warning message
+
+	error_message: detachable STRING_32
 			-- Error message
 
 	error_position: detachable XML_POSITION
@@ -197,7 +155,7 @@ feature -- Status
 	buffer_position: XML_POSITION
 			-- XML position in buffer
 		do
-			create Result.make (buffer.name, byte_index, column, line)
+			create Result.make (buffer.name_32, byte_index, column, line)
 		end
 
 	byte_index: INTEGER
@@ -227,9 +185,9 @@ feature -- Element change
 			rewinded_character := '%U'
 			parsing_stopped := False
 			error_position := Void
-			error_message_32 := Void
+			error_message := Void
 		ensure
-			error_message_void: error_message_32 = Void
+			error_message_void: error_message = Void
 			error_position_void: error_position = Void
 			error_occurred_unset: not error_occurred
 		end
@@ -238,6 +196,12 @@ feature {NONE} -- Access
 
 	buffer: XML_INPUT_STREAM
 			-- Internal buffer
+
+	set_buffer (buf: like buffer)
+			-- Set `buffer' to `buf'
+		do
+			buffer := buf
+		end
 
 feature {NONE} -- Implementation
 
@@ -260,20 +224,20 @@ feature {NONE} -- Implementation: parse
 	parse
 			-- Parse `buffer'
 		local
-			c: CHARACTER
+			c: like last_character
 			l_content: STRING_32
 			l_in_prolog: BOOLEAN
+			l_bom_detection: BOOLEAN
 			buf: like buffer
 			l_callbacks: like callbacks
-			l_ignore_non_printable_char: BOOLEAN
 		do
 			reset
 			buf := buffer
 			l_callbacks := callbacks
-			l_ignore_non_printable_char := True
 
 			l_callbacks.on_start
 			from
+				l_bom_detection := True
 				l_in_prolog := True
 				create l_content.make_empty
 			until
@@ -284,7 +248,13 @@ feature {NONE} -- Implementation: parse
 					c
 				when '<' then
 					if l_in_prolog then
-						l_ignore_non_printable_char := False
+						if l_bom_detection then
+							if attached bom (l_content) as l_bom then
+								set_encoding_from_bom (l_bom)
+								l_content.remove_head (l_bom.count)
+							end
+							l_bom_detection := False
+						end
 						if not is_blank (l_content) then
 							report_unexpected_content_in_prolog (l_content)
 						end
@@ -314,7 +284,7 @@ feature {NONE} -- Implementation: parse
 							rewind_character
 							parse_doctype
 						else
-							report_error ("syntax error")
+							report_error ({STRING_32} "syntax error")
 						end
 					else
 						rewind_character
@@ -324,15 +294,7 @@ feature {NONE} -- Implementation: parse
 				when '&' then
 					l_content.append_string (next_entity)
 				else
-						-- Ignore non printable character on top of XML document.
-					if
-						l_in_prolog and then
-						l_ignore_non_printable_char and not c.is_printable
-					then
-						-- Ignore non printable char in prolog
-					else
-						l_content.append_character (c)
-					end
+					l_content.append_character (c)
 				end
 			end
 			if not parsing_stopped then
@@ -373,7 +335,7 @@ feature {NONE} -- Implementation: parse
 					l_callbacks.on_start_tag_finish
 					l_callbacks.on_end_tag (Void, t.prefix_part, t.local_part)
 				else
-					report_error ("unexpected character '" + character_output (c) + "' after closing / in start tag")
+					report_error ({STRING_32} "unexpected character '" + character_output (c) + {STRING_32} "' after closing / in start tag")
 				end
 			else
 				rewind_character
@@ -399,10 +361,10 @@ feature {NONE} -- Implementation: parse
 								l_callbacks.on_start_tag_finish
 								l_callbacks.on_end_tag (Void, t.prefix_part, t.local_part)
 							else
-								report_error ("unexpected character '" + character_output (c) + "' after closing / in start tag")
+								report_error ({STRING_32} "unexpected character '" + character_output (c) + {STRING_32} "' after closing / in start tag")
 							end
 						else
-							report_error ("unexpected character '" + character_output (c) + "' in start tag")
+							report_error ({STRING_32} "unexpected character '" + character_output (c) + {STRING_32} "' in start tag")
 						end
 						done := True
 					end
@@ -424,7 +386,7 @@ feature {NONE} -- Implementation: parse
 			if c = '>' then
 				callbacks.on_end_tag (Void, t.prefix_part, t.local_part)
 			else
-				report_error ("unexpected character '" + character_output (c) + "' in end tag")
+				report_error ({STRING_32} "unexpected character '" + character_output (c) + {STRING_32} "' in end tag")
 			end
 		end
 
@@ -432,9 +394,9 @@ feature {NONE} -- Implementation: parse
 			-- Parse for xml declaration
 		local
 			c: like last_character
-			l_version, l_encoding: detachable READABLE_STRING_GENERAL
+			l_version, l_encoding: detachable READABLE_STRING_32
 			l_standalone: BOOLEAN
-			l_name: READABLE_STRING_GENERAL
+			l_name: READABLE_STRING_32
 			done: BOOLEAN
 			att: like next_attribute_data
 		do
@@ -451,12 +413,12 @@ feature {NONE} -- Implementation: parse
 					c := next_character
 					if c = '>' then
 						if l_version /= Void then
-							callbacks.on_xml_declaration (l_version, l_encoding, l_standalone)
+							on_xml_declaration (l_version, l_encoding, l_standalone)
 						else
-							report_error ("missing version in xml declaration")
+							report_error ({STRING_32} "missing version in xml declaration")
 						end
 					else
-						report_error ("unexpected character '" + character_output (c) + "' after closing ? in xml declaration")
+						report_error ({STRING_32} "unexpected character '" + character_output (c) + {STRING_32} "' after closing ? in xml declaration")
 					end
 				else
 					rewind_character
@@ -468,36 +430,30 @@ feature {NONE} -- Implementation: parse
 						att := next_attribute_data
 						if att /= Void then
 							l_name := att.local_part
-							if l_name.is_valid_as_string_8 and then attached l_name.to_string_8 as l_name_8 then
-								if case_insensitive_same_string_8 (l_name_8, str_version) then
-									l_version := att.value
-								elseif case_insensitive_same_string_8 (l_name_8, str_encoding) then
-									l_encoding := att.value
-								elseif case_insensitive_same_string_8 (l_name_8, str_standalone) then
-									l_standalone := True
-								else
-									report_error ("unknown xml declaration attribute [" + l_name_8 + "]")
-								end
+							if l_name.is_case_insensitive_equal (str_version) then
+								l_version := att.value
+							elseif l_name.is_case_insensitive_equal (str_encoding) then
+								l_encoding := att.value
+							elseif l_name.is_case_insensitive_equal (str_standalone) then
+								l_standalone := True
 							else
 								report_error ({STRING_32} "unknown xml declaration attribute [" + l_name.to_string_32 + {STRING_32} "]")
 							end
 							rewind_character
 						else
 							c := current_character
-							inspect c
-							when '?' then
+							if c = '?' then
 								c := next_non_space_character
 								if c = '>' then
 									done := True
 									if l_version /= Void then
-										callbacks.on_xml_declaration (l_version, l_encoding, l_standalone)
+										on_xml_declaration (l_version, l_encoding, l_standalone)
 									else
-										report_error ("missing version in xml declaration")
+										report_error ({STRING_32} "missing version in xml declaration")
 									end
 								else
-									report_error ("unexpected character '" + character_output (c) + "' after closing ? in xml declaration")
+									report_error ({STRING_32} "unexpected character '" + character_output (c) + {STRING_32} "' after closing ? in xml declaration")
 								end
-							else
 							end
 							done := True
 						end
@@ -509,7 +465,7 @@ feature {NONE} -- Implementation: parse
 	parse_processing_instruction
 			-- Parse for  <?pi .... ?>
 		local
-			c: CHARACTER
+			c: like last_character
 			n, s: STRING_32
 			done: BOOLEAN
 		do
@@ -524,7 +480,7 @@ feature {NONE} -- Implementation: parse
 			end
 			if n.is_empty then
 				rewind_character
-				report_error ("Invalid processing instruction syntax <?" + c.out)
+				report_error ({STRING_32} "Invalid processing instruction syntax <?" + c.out.to_string_32)
 			elseif n.is_case_insensitive_equal (str_xml) then
 				parse_declaration
 			else
@@ -551,7 +507,7 @@ feature {NONE} -- Implementation: parse
 					end
 				end
 				if parsing_stopped then
-					report_error ("could not find end of Processing Instruction")
+					report_error ({STRING_32} "could not find end of Processing Instruction")
 				else
 					callbacks.on_processing_instruction (n, s)
 				end
@@ -567,7 +523,7 @@ feature {NONE} -- Implementation: parse
 		do
 			c := next_character
 			if c /= '[' then
-				report_error ("invalid syntax <!" + c.out)
+				report_error ({STRING_32} "invalid syntax <!" + c.out.to_string_32)
 			else
 				c := next_character
 				from
@@ -611,7 +567,7 @@ feature {NONE} -- Implementation: parse
 						end
 					end
 					if parsing_stopped then
-						report_error ("could not find end of CDATA content")
+						report_error ({STRING_32} "could not find end of CDATA content")
 					else
 						callbacks.on_content (s)
 					end
@@ -624,17 +580,17 @@ feature {NONE} -- Implementation: parse
 	parse_comment
 			-- Parse for comment
 		local
-			c: CHARACTER
+			c: like last_character
 			s: like new_string_comment_value
 			done: BOOLEAN
 		do
 			c := next_character
 			if c /= '-' then
-				report_error ("invalid comment syntax")
+				report_error ({STRING_32} "invalid comment syntax")
 			else
 				c := next_character
 				if c /= '-' then
-					report_error ("invalid comment syntax")
+					report_error ({STRING_32} "invalid comment syntax")
 				else
 						-- Start comment
 					create s.make_empty
@@ -670,7 +626,7 @@ feature {NONE} -- Implementation: parse
 						end
 					end
 					if parsing_stopped then
-						report_error ("could not find end of comment")
+						report_error ({STRING_32} "could not find end of comment")
 					else
 						callbacks.on_comment (s)
 					end
@@ -689,7 +645,7 @@ feature {NONE} -- Implementation: parse
 			--|		  <!ELEMENT body    (#PCDATA)>
 			--|		]>
 		local
-			c: CHARACTER
+			c: like last_character
 			s: STRING_32
 			l_depth: INTEGER
 			in_double_quote: BOOLEAN
@@ -697,7 +653,7 @@ feature {NONE} -- Implementation: parse
 		do
 			c := next_character
 			if c /= 'D' then
-				report_error ("invalid syntax <!" + c.out)
+				report_error ({STRING_32} "invalid syntax <!" + c.out.to_string_32)
 			else
 				from
 					create s.make (6)
@@ -747,7 +703,7 @@ feature {NONE} -- Implementation: parse
 						end
 					end
 					if parsing_stopped then
-						report_error ("could not find end of DOCTYPE content")
+						report_error ({STRING_32} "could not find end of DOCTYPE content")
 					else
 						register_doctype (s)
 					end
@@ -757,7 +713,7 @@ feature {NONE} -- Implementation: parse
 			end
 		end
 
-	report_error (a_message: READABLE_STRING_GENERAL)
+	report_error (a_message: READABLE_STRING_32)
 			-- Report error with message `a_message'
 		require
 			a_message_attached: a_message /= Void
@@ -771,7 +727,7 @@ feature {NONE} -- Implementation: parse
 			create s.make (a_message.count)
 			s.append_string_general (a_message)
 
-			error_message_32 := s.twin
+			error_message := s.twin
 
 			s.append_character (' ')
 			s.append_character ('(')
@@ -794,21 +750,186 @@ feature {NONE} -- Implementation: parse
 			error_occurred: error_occurred
 		end
 
+	report_warning (a_message: READABLE_STRING_32)
+			-- Report warning with message `a_message'
+		require
+			a_message_attached: a_message /= Void
+		local
+			s: STRING_32
+			p: like position
+		do
+			p := position
+
+			create s.make (a_message.count)
+			s.append_string_general (a_message)
+
+			warning_message := s.twin
+
+			s.append_character (' ')
+			s.append_character ('(')
+			s.append_string ({STRING_32} "position=")
+			s.append_string (p.to_string_32)
+
+			debug ("xml_parser")
+				io.put_string (s.as_string_8) -- FIXME: unicode
+				io.put_new_line
+			end
+		end
+
 	report_unexpected_content (a_content: STRING)
 			-- Report unexpected content `a_content'
 		do
-			report_error ("Unexpected content (not well-formed XML)")
+			report_error ({STRING_32} "Unexpected content (not well-formed XML)")
 		end
 
-	report_unexpected_content_in_prolog (a_content: READABLE_STRING_GENERAL)
+	report_unexpected_content_in_prolog (a_content: READABLE_STRING_32)
 			-- Report unexpected content `a_content' in prolog
 		do
-			report_error ("Unexpected content in prolog (not well-formed XML)")
+			report_error ({STRING_32} "Unexpected content in prolog (not well-formed XML)")
+		end
+
+	on_xml_declaration (a_version: READABLE_STRING_32; a_encoding: detachable READABLE_STRING_32; a_standalone: BOOLEAN)
+			-- XML declaration.
+		require
+			a_version_not_void: a_version /= Void
+			a_version_not_empty: a_version.count > 0
+		local
+			ver: detachable READABLE_STRING_8
+			enc: detachable READABLE_STRING_8
+		do
+			if a_version.is_valid_as_string_8 then
+				-- See http://www.w3.org/TR/REC-xml/#NT-VersionInfo
+				ver := a_version.as_string_8
+				if ver.count >= 3 then
+					if
+						ver.item (1).is_digit and
+						ver.item (2) = '.' and
+						ver.substring (3, ver.count).is_integer
+					then
+						-- Valid version
+						if ver.item (1) /= '1' then
+							report_error ({STRING_32} "Unsupported xml version info: %"" + a_version + {STRING_32} "%".")
+						end
+					else
+						ver := Void
+					end
+				else
+					ver := Void
+				end
+			end
+			if ver = Void then
+				report_error ({STRING_32} "Invalid xml version info: %"" + a_version + {STRING_32} "%".")
+			else
+				if a_encoding /= Void then
+					if a_encoding.is_valid_as_string_8 then
+						enc := a_encoding.as_string_8
+						if enc.is_empty then
+							enc := Void
+						end
+					else
+						report_error ({STRING_32} "Invalid xml encoding: %"" + a_encoding + {STRING_32} "%".")
+					end
+				end
+
+				if enc /= Void then
+					set_encoding (enc)
+				end
+				callbacks.on_xml_declaration (ver, enc, a_standalone)
+			end
+		end
+
+feature {NONE} -- Encoding
+
+	set_encoding_from_bom (a_bom: READABLE_STRING_8)
+		local
+			u: UTF_CONVERTER
+		do
+			if a_bom.same_string (u.utf_8_bom_to_string_8) then
+				set_encoding ("UTF-8")
+			else
+				report_error ({STRING_32} "Unsupported BOM value %"" + a_bom.to_string_32 + {STRING_32} "%".")
+			end
+		end
+
+	set_encoding (a_encoding: READABLE_STRING_8)
+			-- Set encoding to `a_encoding'.
+			--| Can be redefine ...
+		require
+			a_encoding_not_empty: a_encoding /= Void and then not a_encoding.is_empty
+		local
+			char_buffer: detachable XML_CHARACTER_8_INPUT_STREAM
+		do
+			if attached {XML_CHARACTER_8_INPUT_STREAM} buffer as b then
+				char_buffer := b
+			elseif attached {XML_CHARACTER_8_INPUT_STREAM_FILTER} buffer as f then
+				char_buffer := f.source
+			end
+			if char_buffer = Void then
+				report_error ({STRING_32} "Internal error: unable to use encoding %"" + a_encoding.to_string_32 + {STRING_32} "%".")
+			elseif attached new_encoded_buffer (a_encoding, char_buffer) as l_enc_buffer then
+				-- Safe to update it, since for each new parsing, we reset the original buffer
+				buffer := l_enc_buffer
+			else
+				--| FIXME: report error? or just use current buffer without encoding
+				report_warning ({STRING_32} "Unsupported encoding %"" + a_encoding.to_string_32 + {STRING_32} "%".")
+			end
+		end
+
+feature {NONE} -- Implementation: Byte Order Mark
+
+	bom (s: READABLE_STRING_32): detachable STRING_8
+			-- Byte Order Mark at the start of `s'.
+		local
+			i,n: INTEGER
+			s32: READABLE_STRING_32
+		do
+			n := s.count
+			if n = 0 then
+			else
+				from
+					i := 1
+				until
+					i > n or not is_bom_character (s[i])
+				loop
+					i := i + 1
+				end
+				if i > 1 then
+					s32 := s.substring (1, i - 1)
+					if s32.is_valid_as_string_8 then
+						Result := s32.as_string_8
+					end
+				end
+			end
+		end
+
+	is_bom_character (c: CHARACTER_32): BOOLEAN
+		do
+			if c.is_character_8 and then c.to_character_8.is_printable then
+				Result := False
+			else
+				Result := True
+			end
+		end
+
+feature {NONE} -- Implementation: Encoding factory
+
+	new_encoded_buffer (a_encoding: READABLE_STRING_8; a_char_buffer: XML_CHARACTER_8_INPUT_STREAM): detachable like buffer
+			-- Create a new `a_encoding' encoded buffer for `a_char_buffer'.
+			-- Could be redefined
+		require
+			a_encoding_not_empty: a_encoding /= Void and then not a_encoding.is_empty
+			a_char_buffer_attached: a_char_buffer /= Void
+		do
+			if a_encoding.is_case_insensitive_equal ("UTF-8") then
+				create {XML_CHARACTER_8_INPUT_STREAM_UTF8_FILTER} Result.make (a_char_buffer)
+			elseif a_encoding.is_case_insensitive_equal ("ISO-8859-1") then
+				Result := a_char_buffer
+			end
 		end
 
 feature {NONE} -- Doctype
 
-	register_doctype (s: READABLE_STRING_GENERAL)
+	register_doctype (s: READABLE_STRING_32)
 			-- DOCTYPE declaration
 		do
 			--| Do nothing in this simple XML parser
@@ -816,7 +937,7 @@ feature {NONE} -- Doctype
 
 feature {XML_CALLBACKS} -- Error
 
-	report_error_from_callback (a_msg: READABLE_STRING_GENERAL)
+	report_error_from_callback (a_msg: READABLE_STRING_32)
 			-- Report error from callbacks
 		do
 			report_error (a_msg)
@@ -824,7 +945,7 @@ feature {XML_CALLBACKS} -- Error
 
 feature {NONE} -- Query
 
-	last_character: CHARACTER
+	last_character: CHARACTER_32
 			-- Last read character
 
 	rewinded_character: like last_character
@@ -861,7 +982,7 @@ feature {NONE} -- Query
 				if not buf.end_of_input then
 					Result := internal_read_character (buf)
 				else
-					report_error ("no more characters")
+					report_error ({STRING_32} "no more characters")
 				end
 			else
 				rewinded_character := '%U'
@@ -875,18 +996,23 @@ feature {NONE} -- Query
 		require
 			buf_attached: buf /= Void
 			buf_not_end_of_input: not buf.end_of_input
+		local
+			c: NATURAL_32
+			cr_code: NATURAL_32
 		do
-			buf.read_character
-			Result := buf.last_character
-			if Result = '%R' then
+			buf.read_character_code
+			cr_code := ('%R').natural_32_code
+			c := buf.last_character_code
+			if c = cr_code then
 				from
 				until
-					Result /= '%R' or buf.end_of_input
+					c /= cr_code or buf.end_of_input
 				loop
-					buf.read_character
-					Result := buf.last_character
+					buf.read_character_code
+					c := buf.last_character_code
 				end
 			end
+			Result := c.to_character_32
 		end
 
 	next_non_space_character: like last_character
@@ -913,19 +1039,20 @@ feature {NONE} -- Query
 			s: like new_string_tag
 		do
 			s := new_string_tag
-
-			from
-				c := next_non_space_character
-			until
-				not valid_tag_character (c)
-			loop
-				if c = ':' and p = Void then
-					p := s.string
-					s.wipe_out
-				else
-					s.append_character (c)
+			c := next_non_space_character
+			if is_valid_tag_start_character (c) then
+				from
+				until
+					not is_valid_tag_character (c)
+				loop
+					if c = ':' and p = Void then
+						p := s.string
+						s.wipe_out
+					else
+						s.append_character (c)
+					end
+					c := next_character
 				end
-				c := next_character
 			end
 			Result := [p, s.string]
 			s.wipe_out
@@ -937,10 +1064,10 @@ feature {NONE} -- Query
 			-- Return next entity value
 			-- move index
 		local
-			c: CHARACTER
+			c: like last_character
 			is_char: BOOLEAN
 			is_hexa: BOOLEAN
-			s: STRING_8
+			s: STRING_32
 		do
 			create s.make_empty
 			c := next_character
@@ -973,7 +1100,7 @@ feature {NONE} -- Query
 			else
 				from
 				until
-					not valid_entity_character (c) or c = ';'
+					not is_valid_entity_character (c) or c = ';'
 				loop
 					s.append_character (c)
 					c := next_character
@@ -990,7 +1117,7 @@ feature {NONE} -- Query
 					else
 						create Result.make (s.count + 2)
 						Result.append_character ('&')
-						Result.append_string_general (s)
+						Result.append_string (s)
 						Result.append_character (';')
 					end
 				else
@@ -1000,12 +1127,12 @@ feature {NONE} -- Query
 				rewind_character
 				create Result.make (s.count + 2)
 				Result.append_character ('&')
-				Result.append_string_general (s)
-				report_error ("Invalid entity syntax " + s)
+				Result.append_string (s)
+				report_error ({STRING_32} "Invalid entity syntax " + s)
 			end
 		end
 
-	next_attribute_name: TUPLE [prefix_part: detachable READABLE_STRING_GENERAL; local_part: READABLE_STRING_GENERAL]
+	next_attribute_name: TUPLE [prefix_part: detachable READABLE_STRING_32; local_part: READABLE_STRING_32]
 			-- Return next attribute prefix and local part.
 			-- move index
 		local
@@ -1014,14 +1141,17 @@ feature {NONE} -- Query
 			p: INTEGER
 		do
 			n := new_string_attribute_name
-
-			from
-				c := next_non_space_character
-			until
-				not valid_name_character (c)
-			loop
-				n.append_character (c)
-				c := next_character
+			c := next_non_space_character
+			if is_valid_name_start_character (c) then
+				from
+					n.append_character (c)
+					c := next_character
+				until
+					not is_valid_name_character (c)
+				loop
+					n.append_character (c)
+					c := next_character
+				end
 			end
 			p := n.index_of (':', 1)
 			if p > 1 then
@@ -1034,11 +1164,11 @@ feature {NONE} -- Query
 			new_string_attribute_name_is_empty: new_string_attribute_name.is_empty
 		end
 
-	next_attribute_value: READABLE_STRING_GENERAL
+	next_attribute_value: READABLE_STRING_32
 			-- Return next attribute's value
 			-- move index
 		local
-			c: CHARACTER
+			c: like last_character
 			l_in_double_quote: BOOLEAN
 			l_in_single_quote: BOOLEAN
 			done: BOOLEAN
@@ -1054,7 +1184,7 @@ feature {NONE} -- Query
 				l_in_single_quote := True
 				c := next_character
 			elseif c.is_space then
-				report_error ("unexpected space after = in attribute declaration")
+				report_error ({STRING_32} "unexpected space after = in attribute declaration")
 			else
 				--| We could be more strict, but let's allow attrib=value .. in addition to attrib="value"
 			end
@@ -1077,7 +1207,7 @@ feature {NONE} -- Query
 							elseif l_in_single_quote then
 								s.append_character (c)
 							else
-								report_error ("unexpected %" in attribute value")
+								report_error ({STRING_32} "unexpected %" in attribute value")
 							end
 						when '%'' then
 							if l_in_single_quote then
@@ -1085,7 +1215,7 @@ feature {NONE} -- Query
 							elseif l_in_double_quote then
 								s.append_character (c)
 							else
-								report_error ("unexpected %' in attribute value")
+								report_error ({STRING_32} "unexpected %' in attribute value")
 							end
 						else
 							s.append_character (c)
@@ -1104,13 +1234,13 @@ feature {NONE} -- Query
 			new_string_attribute_value_is_empty: new_string_attribute_value.is_empty
 		end
 
-	next_attribute_data: detachable TUPLE [prefix_part: detachable READABLE_STRING_GENERAL; local_part: READABLE_STRING_GENERAL; value: READABLE_STRING_GENERAL]
+	next_attribute_data: detachable TUPLE [prefix_part: detachable READABLE_STRING_32; local_part: READABLE_STRING_32; value: READABLE_STRING_32]
 			-- Return next attribute's data (prefix,local and value)
 			-- move index
 		local
 			c: like last_character
-			n: READABLE_STRING_GENERAL
-			p, v: detachable READABLE_STRING_GENERAL
+			n: READABLE_STRING_32
+			p, v: detachable READABLE_STRING_32
 			l_was_space: BOOLEAN
 			att_name: like next_attribute_name
 		do
@@ -1130,10 +1260,10 @@ feature {NONE} -- Query
 				elseif l_was_space then
 					-- no value FIXME: strict?
 					-- we do not allow attribute without value
-					report_error ("Attributes without any value are forbidden")
-					Result := [p, n, ""]
+					report_error ({STRING_32} "Attributes without any value are forbidden")
+					Result := [p, n, {STRING_32} ""]
 				else -- not l_was_space
-					report_error ("unexpected character '" + character_output (c) + "' in attribute name")
+					report_error ({STRING_32} "unexpected character '" + character_output (c) + {STRING_32} "' in attribute name")
 				end
 				if Result = Void and not parsing_stopped then
 					check
@@ -1158,7 +1288,7 @@ feature {NONE} -- Query
 						-- expected character
 					else
 						-- STRICT: foo="val"bar="foobar"  is not valid, we expect a white space
-						report_error ("unexpected character '" + current_character.out + "' after attribute declaration (expecting white space or '>' or '/' or '?' )")
+						report_error ({STRING_32} "unexpected character '" + character_output (current_character) + {STRING_32} "' after attribute declaration (expecting white space or '>' or '/' or '?' )")
 					end
 				end
 			end
@@ -1168,21 +1298,25 @@ feature {NONE} -- Query
 
 feature {NONE} -- Implementation
 
-	character_output (c: CHARACTER): STRING
+	character_output (c: like last_character): STRING_32
 			-- String representation of `c'
+			-- Mainly for error reporting purpose.
 		do
 			inspect c
 			when '%U' then
-				Result := "%%U"
+				Result := {STRING_32} "%%U"
 			when '%T' then
-				Result := "%%T"
+				Result := {STRING_32} "%%T"
 			when '%N' then
-				Result := "%%N"
+				Result := {STRING_32} "%%N"
 			else
-				if c.is_printable then
-					Result := c.out
+				if is_printable (c) then
+					create Result.make_empty
+					Result.append_character (c)
 				else
-					Result := "char#" + c.code.out
+					Result := {STRING_32} "&#"
+					Result.append_natural_32 (c.natural_32_code)
+					Result.append_character (';')
 				end
 			end
 		end
@@ -1245,7 +1379,7 @@ feature {NONE} -- Implementation
 			Result := s32
 		end
 
-	hexa_string_to_natural_32 (a_string: STRING): NATURAL_32
+	hexa_string_to_natural_32 (a_string: READABLE_STRING_GENERAL): NATURAL_32
 			-- Convert `a_string' to a NATURAL_32.
 			-- If `a_string' is empty, then 0 as a signaling value that nothing was specified.
 		do
@@ -1270,40 +1404,101 @@ feature {NONE} -- Implementation
 			ctoi_convertor_not_void: Result /= Void
 		end
 
-	valid_name_character, valid_tag_character (c: CHARACTER): BOOLEAN
-			-- Is `c' a valid character for name or tag value?
+	is_valid_tag_start_character (c: like last_character): BOOLEAN
 		do
-			inspect
-				c
-			when 'a'..'z' then
-				Result := True
-			when 'A'..'Z' then
-				Result := True
-			when '0'..'9' then
-				Result := True
-			when '-', '_', '.', ':' then
-				Result := True
-			else
-			end
+			Result := is_valid_name_start_character (c)
 		end
 
-	valid_entity_character	(c: CHARACTER): BOOLEAN
+	is_valid_tag_character (c: like last_character): BOOLEAN
+		do
+			Result := is_valid_name_character (c)
+		end
+
+	is_valid_entity_character	(c: like last_character): BOOLEAN
 			-- Is `c' a valid character in html entity value?
 			--| such as &amp;	
 		do
-			inspect
-				c
-			when 'a'..'z' then
-				Result := True
-			when 'A'..'Z' then
-				Result := True
-			when '0'..'9' then
+			Result := is_valid_name_character (c)
+		end
+
+	is_valid_name_start_character (c: like last_character): BOOLEAN
+			-- Is `c' a valid character for name or tag value?
+			-- NameStartChar ::= ":" | [A-Z] | "_" | [a-z] | [#xC0-#xD6] | [#xD8-#xF6] | [#xF8-#x2FF]
+			--					     | [#x370-#x37D] | [#x37F-#x1FFF] | [#x200C-#x200D] | [#x2070-#x218F]
+			--						 | [#x2C00-#x2FEF] | [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD]
+			--						 | [#x10000-#xEFFFF]
+		local
+			n: NATURAL_32
+		do
+			if
+				('a' <= c and c <= 'z')
+			 	or ('A' <= c and c <= 'Z')
+			 	or c = ':'
+			 	or c = '_'
+			then
 				Result := True
 			else
+				n := c.natural_32_code
+				if
+					   (0xC0    <= n and n <= 0xD6)
+					or (0xD8    <= n and n <= 0xF6)
+					or (0xF8    <= n and n <= 0x2FF)
+					or (0x370   <= n and n <= 0x37D)
+					or (0x37F   <= n and n <= 0x1FFF)
+					or (0x200C  <= n and n <= 0x200D)
+					or (0x2070  <= n and n <= 0x218F)
+					or (0x2C00  <= n and n <= 0x2FEF)
+					or (0x3001  <= n and n <= 0xD7FF)
+					or (0xF900  <= n and n <= 0xFDCF)
+					or (0xFDF0  <= n and n <= 0xFFFD)
+					or (0x10000 <= n and n <= 0xEFFFF)
+				then
+					Result := True
+				end
 			end
 		end
 
+	is_valid_name_character (c: like last_character): BOOLEAN
+			-- Is `c' a valid character for name or tag value?
+			-- NameChar ::= NameStartChar | "-" | "." | [0-9] | #xB7 | [#x0300-#x036F] | [#x203F-#x2040]
+		local
+			n: NATURAL_32
+		do
+			Result := is_valid_name_start_character (c)
+			if not Result then
+				if
+					c = '-'
+					or c = '.'
+					or ('0' <= c and c <= '9')
+				then
+					Result := True
+				else
+					n := c.natural_32_code
+					if
+						n = 0xB7
+						or (0x0300 <= n and n <= 0x036F)
+						or (0x203F <= n and n <= 0x2040)
+					then
+						Result := True
+					end
+				end
+			end
+		end
+
+
 feature {NONE} -- Factory
+
+	is_printable (c: like last_character): BOOLEAN
+		do
+			-- FIXME: remove when migrated to use CHARACTER_32
+			if attached {CHARACTER_8} c as c8 then
+				Result := c8.is_printable
+			else
+				if attached {CHARACTER_32} c as c32 and then c32.is_character_8 then
+					Result := c32.to_character_8.is_printable
+				end
+			end
+		end
 
 	is_blank (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is string `s' composed only by space/blank characters?
@@ -1313,7 +1508,6 @@ feature {NONE} -- Factory
 			-- i.e. space, tab, CR, LF.			
 		local
 			i, n: INTEGER
-			c: CHARACTER_32
 		do
 			from
 				Result := True
@@ -1388,12 +1582,12 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Constants
 
-	str_version: STRING = "version"
-	str_encoding: STRING = "encoding"
-	str_standalone: STRING = "standalone"
+	str_version: STRING_32 = "version"
+	str_encoding: STRING_32 = "encoding"
+	str_standalone: STRING_32 = "standalone"
 	str_cdata: STRING_32 = "CDATA"
 	str_doctype: STRING_32 = "DOCTYPE"
-	str_pi: STRING = "pi"
+	str_pi: STRING_32 = "pi"
 	str_xml: STRING_32 = "xml"
 
 feature {NONE} -- Factory: cache

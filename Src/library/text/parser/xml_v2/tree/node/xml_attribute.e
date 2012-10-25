@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: READABLE_STRING_GENERAL; a_ns: like namespace; a_value: READABLE_STRING_GENERAL; a_parent: XML_ELEMENT)
+	make (a_name: READABLE_STRING_32; a_ns: like namespace; a_value: READABLE_STRING_32; a_parent: XML_ELEMENT)
 			-- Create a new attribute.
 		require
 			a_name_not_void: a_name /= Void
@@ -31,12 +31,12 @@ feature {NONE} -- Initialization
 			parent := a_parent
 		ensure
 			parent_set: parent = a_parent
-			name_set: a_name.same_string (internal_name)
+			name_set: a_name.same_string (name)
 			namespace_set: namespace = a_ns
-			value_set: a_value.same_string (internal_value)
+			value_set: a_value.same_string (value)
 		end
 
-	make_last (a_name: READABLE_STRING_GENERAL; a_ns: like namespace; a_value: READABLE_STRING_GENERAL; a_parent: XML_ELEMENT)
+	make_last (a_name: READABLE_STRING_32; a_ns: like namespace; a_value: READABLE_STRING_32; a_parent: XML_ELEMENT)
 			-- Create a new attribute,
 			-- and add it to parent..
 		require
@@ -53,9 +53,9 @@ feature {NONE} -- Initialization
 		ensure
 			parent_set: parent = a_parent
 			in_parent: a_parent.last = Current
-			name_set: a_name.same_string (internal_name)
+			name_set: a_name.same_string (name)
 			ns_prefix_set: namespace = a_ns
-			value_set: a_value.same_string (internal_value)
+			value_set: a_value.same_string (value)
 		end
 
 feature -- Status report
@@ -78,57 +78,34 @@ feature -- Access
 		require
 			is_namespace_declaration: is_namespace_declaration
 		local
-			a_prefix: READABLE_STRING_GENERAL
+			a_prefix: READABLE_STRING_32
 		do
 			if has_prefix then
-				a_prefix := internal_name
+				a_prefix := name
 			else
 					-- New empty string with the same dynamic type as `name'.
 				create {STRING_32} a_prefix.make_empty
 			end
-			create Result.make (a_prefix, internal_value)
+			create Result.make (a_prefix, value)
 		ensure
 			namespace_not_void: Result /= Void
 		end
 
-feature -- Status report
-
-	value_is_valid_as_string_8: BOOLEAN
-			-- Is the associated value a valid string_8 string?
-		do
-			Result := internal_value.is_valid_as_string_8
-		end
-
 feature -- Access		
 
-	value_8, value: STRING_8
-		require
-			value_is_valid_as_string_8: value_is_valid_as_string_8
-		do
-			Result := internal_value.as_string_8
-		end
-
-	value_32: READABLE_STRING_32
+	value: READABLE_STRING_32
 			-- Value
-		do
-			Result := to_readable_string_32 (internal_value)
-		end
-
-feature {XML_EXPORTER} -- Access
-
-	internal_value: READABLE_STRING_GENERAL
-			-- Internal value
 
 feature -- Setting
 
-	set_value (a_value: READABLE_STRING_GENERAL)
+	set_value (a_value: READABLE_STRING_32)
 			-- Set `a_value' to `value'.
 		require
 			a_value_not_void: a_value /= Void
 		do
-			internal_value := a_value
+			value := a_value
 		ensure
-			value_set: a_value.same_string (internal_value)
+			value_set: a_value.same_string (value)
 		end
 
 feature -- Visitor processing
@@ -140,7 +117,7 @@ feature -- Visitor processing
 		end
 
 invariant
-	value_not_void: internal_value /= Void
+	value_not_void: value /= Void
 
 note
 	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"

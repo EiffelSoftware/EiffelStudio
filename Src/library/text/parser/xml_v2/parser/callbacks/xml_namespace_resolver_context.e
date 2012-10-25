@@ -31,7 +31,7 @@ feature -- Recyling
 
 feature -- Element change
 
-	add_default (a_namespace: READABLE_STRING_GENERAL)
+	add_default (a_namespace: READABLE_STRING_32)
 			-- Add default namespace to context.
 		require
 			a_namespace_not_void: a_namespace /= Void
@@ -40,7 +40,7 @@ feature -- Element change
 			add (a_namespace, Default_pseudo_prefix)
 		end
 
-	add (a_namespace: READABLE_STRING_GENERAL; a_prefix: READABLE_STRING_GENERAL)
+	add (a_namespace: READABLE_STRING_32; a_prefix: READABLE_STRING_32)
 			-- Add namespace to context.
 		require
 			a_namespace_not_void: a_namespace /= Void
@@ -61,7 +61,7 @@ feature -- Status report
 			definition: Result = context.is_empty
 		end
 
-	shallow_has (a_prefix: READABLE_STRING_GENERAL): BOOLEAN
+	shallow_has (a_prefix: READABLE_STRING_32): BOOLEAN
 			-- Is this prefix known at the current level?
 			-- (for duplicate declaration checks)
 		require
@@ -70,7 +70,7 @@ feature -- Status report
 			Result := context.count > 0 and then context.first.has (to_context_key (a_prefix))
 		end
 
-	has (a_prefix: READABLE_STRING_GENERAL): BOOLEAN
+	has (a_prefix: READABLE_STRING_32): BOOLEAN
 			-- Is this prefix known?
 		require
 			a_prefix_not_void: a_prefix /= Void
@@ -83,7 +83,7 @@ feature -- Status report
 
 feature -- Access
 
-	resolve_default: READABLE_STRING_GENERAL
+	resolve_default: READABLE_STRING_32
 			-- Resolve default namespace.
 		do
 			Result := resolve (Default_pseudo_prefix)
@@ -91,7 +91,7 @@ feature -- Access
 			resoled_not_void: Result /= Void
 		end
 
-	resolve (a_prefix: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
+	resolve (a_prefix: READABLE_STRING_32): READABLE_STRING_32
 			-- Resolve a prefix.
 		require
 			a_prefix_not_void: a_prefix /= Void
@@ -139,7 +139,7 @@ feature -- Stack
 
 feature {NONE} -- Implementation
 
-	to_context_key (s: READABLE_STRING_GENERAL): like context.item.key_for_iteration
+	to_context_key (s: READABLE_STRING_32): like context.item.key_for_iteration
 			-- Return the adapted key associated with `s'.
 		do
 			Result := s.to_string_32
@@ -148,17 +148,17 @@ feature {NONE} -- Implementation
 	context: LINKED_LIST [like new_string_string_table]
 			-- Really a STACK but we need to see the content
 
-	new_string_string_table: HASH_TABLE [READABLE_STRING_GENERAL, STRING_32]
+	new_string_string_table: HASH_TABLE [READABLE_STRING_32, STRING_32]
 		do
 			create Result.make (5)
 		end
 
 feature {NONE} -- Constants
 
-	Default_pseudo_prefix: STRING = ""
+	Default_pseudo_prefix: STRING_32 = ""
 			-- Default pseudo prefix
 
-	Default_namespace: STRING = ""
+	Default_namespace: STRING_32 = ""
 			-- Default namespace (empty)
 
 invariant

@@ -38,7 +38,7 @@ feature -- Action(s)
 			last_stream := s
 			s.open_read
 			if not s.is_open_read then
-				create e.make_from_string ("cannot open input file: ")
+				create e.make_from_string ({STRING_32} "cannot open input file: ")
 				e.append_string_general (a_system_name)
 				last_error := e
 				last_stream := Void

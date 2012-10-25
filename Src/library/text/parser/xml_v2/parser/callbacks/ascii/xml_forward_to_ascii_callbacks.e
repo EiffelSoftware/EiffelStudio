@@ -4,18 +4,16 @@ note
 			with instance of STRING_8 instead of potential STRING_32
 			
 			This is mainly a compatibility layer for code using the "STRING" in the signature
-			instead of current "READABLE_STRING_GENERAL"
+			instead of current "READABLE_STRING_32"
 
 			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XML_STRING_8_FORWARD_CALLBACKS
+	XML_FORWARD_TO_ASCII_CALLBACKS
 
 inherit
-	XML_CALLBACKS_SOURCE
-
 	XML_CALLBACKS
 
 create
@@ -31,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	callbacks: XML_CALLBACKS
+	callbacks: XML_ASCII_CALLBACKS
 			-- Callbacks event interface to which events are forwarded;
 
 feature -- Setting
@@ -46,11 +44,11 @@ feature -- Setting
 
 feature {NONE} -- Conversion
 
-	to_string_8 (s: READABLE_STRING_GENERAL): STRING_8
+	to_string_8 (s: READABLE_STRING_32): STRING_8
 			-- `s' as compatible STRING_8
 		local
 			i, nb: INTEGER_32
-			l_code: like {READABLE_STRING_GENERAL}.code
+			l_code: like {READABLE_STRING_32}.code
 			h: STRING
 		do
 			if attached {READABLE_STRING_8} s as s8 then
@@ -85,7 +83,7 @@ feature {NONE} -- Conversion
 			end
 		end
 
-	to_detachable_string_8 (s: detachable READABLE_STRING_GENERAL): detachable STRING_8
+	to_detachable_string_8 (s: detachable READABLE_STRING_32): detachable STRING_8
 		do
 			if s /= Void then
 				Result := to_string_8 (s)
@@ -106,15 +104,15 @@ feature {NONE} -- Document
 			callbacks.on_finish
 		end
 
-	on_xml_declaration (a_version: READABLE_STRING_GENERAL; an_encoding: detachable READABLE_STRING_GENERAL; a_standalone: BOOLEAN)
+	on_xml_declaration (a_version: READABLE_STRING_8; an_encoding: detachable READABLE_STRING_8; a_standalone: BOOLEAN)
 			-- XML declaration.
 		do
-			callbacks.on_xml_declaration (to_string_8 (a_version), to_detachable_string_8 (an_encoding), a_standalone)
+			callbacks.on_xml_declaration (a_version, an_encoding, a_standalone)
 		end
 
 feature {NONE} -- Errors
 
-	on_error (a_message: READABLE_STRING_GENERAL)
+	on_error (a_message: READABLE_STRING_32)
 			-- Event producer detected an error.
 		do
 			callbacks.on_error (to_string_8 (a_message))
@@ -122,13 +120,13 @@ feature {NONE} -- Errors
 
 feature {NONE} -- Meta
 
-	on_processing_instruction (a_name, a_content: READABLE_STRING_GENERAL)
+	on_processing_instruction (a_name, a_content: READABLE_STRING_32)
 			-- Forward PI.
 		do
 			callbacks.on_processing_instruction (to_string_8 (a_name), to_string_8 (a_content))
 		end
 
-	on_comment (a_content: READABLE_STRING_GENERAL)
+	on_comment (a_content: READABLE_STRING_32)
 			-- Forward comment.
 		do
 			callbacks.on_comment (to_string_8 (a_content))
@@ -136,13 +134,13 @@ feature {NONE} -- Meta
 
 feature {NONE} -- Tag
 
-	on_start_tag (a_namespace: detachable READABLE_STRING_GENERAL; a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL)
+	on_start_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- Start of start tag.
 		do
 			callbacks.on_start_tag (to_detachable_string_8 (a_namespace), to_detachable_string_8 (a_prefix), to_string_8 (a_local_part))
 		end
 
-	on_attribute (a_namespace: detachable READABLE_STRING_GENERAL; a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL; a_value: READABLE_STRING_GENERAL)
+	on_attribute (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
 			-- Process attribute.
 		do
 			callbacks.on_attribute (to_detachable_string_8 (a_namespace), to_detachable_string_8 (a_prefix), to_string_8 (a_local_part), to_string_8 (a_value))
@@ -154,7 +152,7 @@ feature {NONE} -- Tag
 			callbacks.on_start_tag_finish
 		end
 
-	on_end_tag (a_namespace: detachable READABLE_STRING_GENERAL; a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL)
+	on_end_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- End tag.
 		do
 			callbacks.on_end_tag (to_detachable_string_8 (a_namespace), to_detachable_string_8 (a_prefix), to_string_8 (a_local_part))
@@ -162,7 +160,7 @@ feature {NONE} -- Tag
 
 feature {NONE} -- Content
 
-	on_content (a_content: READABLE_STRING_GENERAL)
+	on_content (a_content: READABLE_STRING_32)
 			-- Forward content.
 		do
 			callbacks.on_content (to_string_8 (a_content))

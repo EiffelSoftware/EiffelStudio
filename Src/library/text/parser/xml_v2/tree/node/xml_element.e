@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: like parent; a_name: READABLE_STRING_GENERAL; a_ns: like namespace)
+	make (a_parent: like parent; a_name: READABLE_STRING_32; a_ns: like namespace)
 			-- Create a new child element, without attaching to parent.
 		require
 			a_name_not_void: a_name /= Void
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			namespace_set: namespace = a_ns
 		end
 
-	make_with_count	(a_parent: like parent; a_name: READABLE_STRING_GENERAL; a_ns: like namespace; a_count: INTEGER)
+	make_with_count	(a_parent: like parent; a_name: READABLE_STRING_32; a_ns: like namespace; a_count: INTEGER)
 			-- Create a new child element, without attaching to parent,
 			-- and initialize for `a_count' childrens
 		require
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			namespace_set: namespace = a_ns
 		end
 
-	make_last (a_parent: XML_ELEMENT; a_name: READABLE_STRING_GENERAL; a_ns: like namespace)
+	make_last (a_parent: XML_ELEMENT; a_name: READABLE_STRING_32; a_ns: like namespace)
 			-- Create a new child element, and add it to the parent.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 			namespace_set: namespace = a_ns
 		end
 
-	make_root (a_parent: XML_DOCUMENT; a_name: READABLE_STRING_GENERAL; a_ns: like namespace)
+	make_root (a_parent: XML_DOCUMENT; a_name: READABLE_STRING_32; a_ns: like namespace)
 			-- Create a new root element, and add it to the document parent.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -98,7 +98,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has_attribute_by_qualified_name (a_uri: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
+	has_attribute_by_qualified_name (a_uri: READABLE_STRING_32; a_name: READABLE_STRING_32): BOOLEAN
 			-- Does current element contain an attribute with
 			-- this qualified name?
 		require
@@ -126,7 +126,7 @@ feature -- Status report
 			elts.go_to (c)
 		end
 
-	has_attribute_by_name (a_name: READABLE_STRING_GENERAL): BOOLEAN
+	has_attribute_by_name (a_name: READABLE_STRING_32): BOOLEAN
 			-- Does current element contain an attribute named `a_name'?
 			-- element?
 		require
@@ -155,7 +155,7 @@ feature -- Status report
 
 feature {NONE} -- Name comparison with namespace.
 
-	attribute_same_name (a_named: XML_ATTRIBUTE; a_name: READABLE_STRING_GENERAL): BOOLEAN
+	attribute_same_name (a_named: XML_ATTRIBUTE; a_name: READABLE_STRING_32): BOOLEAN
 			-- Has 'a_named' attribute the same name as `a_name',
 			-- either because of same namespace or within the
 			-- default namespace.
@@ -168,7 +168,7 @@ feature {NONE} -- Name comparison with namespace.
 			default_ns: (a_named.namespace.uri_is_empty) implies (Result = has_same_name (a_name))
 		end
 
-	named_same_name (a_named: XML_NAMED_NODE; a_name: READABLE_STRING_GENERAL): BOOLEAN
+	named_same_name (a_named: XML_NAMED_NODE; a_name: READABLE_STRING_32): BOOLEAN
 			-- Has 'a_named' same name as 'a_name' and
 			-- same namespace as current node?
 		require
@@ -182,7 +182,7 @@ feature {NONE} -- Name comparison with namespace.
 
 feature -- Access (from XM_COMPOSITE)
 
-	has_element_by_name (a_name: READABLE_STRING_GENERAL): BOOLEAN
+	has_element_by_name (a_name: READABLE_STRING_32): BOOLEAN
 			-- Has current node at least one direct child
 			-- element with the name `a_name'?
 		local
@@ -207,7 +207,7 @@ feature -- Access (from XM_COMPOSITE)
 			elts.go_to (c)
 		end
 
-	has_element_by_qualified_name (a_uri: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
+	has_element_by_qualified_name (a_uri: READABLE_STRING_32; a_name: READABLE_STRING_32): BOOLEAN
 			-- Has current node at least one direct child
 			-- element with this qualified name ?
 		local
@@ -232,7 +232,7 @@ feature -- Access (from XM_COMPOSITE)
 			elts.go_to (c)
 		end
 
-	element_by_name (a_name: READABLE_STRING_GENERAL): detachable XML_ELEMENT
+	element_by_name (a_name: READABLE_STRING_32): detachable XML_ELEMENT
 			-- Direct child element with name `a_name';
 			-- If there are more than one element with that name, anyone may be returned.
 			-- Return Void if no element with that name is a child of current node.
@@ -258,7 +258,7 @@ feature -- Access (from XM_COMPOSITE)
 			elts.go_to (c)
 		end
 
-	elements_by_name (a_name: READABLE_STRING_GENERAL): detachable LIST [XML_ELEMENT]
+	elements_by_name (a_name: READABLE_STRING_32): detachable LIST [XML_ELEMENT]
 			-- Direct child elements with name `a_name';
 			-- Return Void if no element with that name is a child of current node.
 		local
@@ -284,7 +284,7 @@ feature -- Access (from XM_COMPOSITE)
 		end
 
 
-	element_by_qualified_name (a_uri: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): detachable XML_ELEMENT
+	element_by_qualified_name (a_uri: READABLE_STRING_32; a_name: READABLE_STRING_32): detachable XML_ELEMENT
 			-- Direct child element with given qualified name;
 			-- If there are more than one element with that name, anyone may be returned.
 			-- Return Void if no element with that name is a child of current node.
@@ -312,7 +312,7 @@ feature -- Access (from XM_COMPOSITE)
 
 feature -- Access
 
-	attribute_by_name (a_name: READABLE_STRING_GENERAL): detachable XML_ATTRIBUTE
+	attribute_by_name (a_name: READABLE_STRING_32): detachable XML_ATTRIBUTE
 			-- Attribute named `a_name' in current element;
 			-- Return Void if no such attribute was found.
 		require
@@ -342,7 +342,7 @@ feature -- Access
 			namespace: Result /= Void implies (not Result.has_prefix)
 		end
 
-	attribute_by_qualified_name (a_uri: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): detachable XML_ATTRIBUTE
+	attribute_by_qualified_name (a_uri: READABLE_STRING_32; a_name: READABLE_STRING_32): detachable XML_ATTRIBUTE
 			-- Attribute named `a_name' in current element;
 			-- Return Void if no such attribute was found.
 		require
@@ -429,26 +429,26 @@ feature -- Access
 
 feature -- Query
 
---	joined_content: STRING
---		local
---			c: CURSOR
---			elts: like elements
---		do
---			create Result.make_empty
---			elts := elements
---			c := elts.cursor
---			from
---				elts.start
---			until
---				elts.after
---			loop
---				if attached {XML_CHARACTER_DATA} elts.item as l_data then
---					Result.append_string (l_data.content)
---				end
---				elts.forth
---			end
---			elts.go_to (c)
---		end
+	joined_content: STRING_32
+		local
+			c: CURSOR
+			elts: like elements
+		do
+			create Result.make_empty
+			elts := elements
+			c := elts.cursor
+			from
+				elts.start
+			until
+				elts.after
+			loop
+				if attached {XML_CHARACTER_DATA} elts.item as l_data then
+					Result.append_string (l_data.content)
+				end
+				elts.forth
+			end
+			elts.go_to (c)
+		end
 
 	contents: LIST [XML_CHARACTER_DATA]
 			-- List of all XML_CHARACTER_DATA in current element
@@ -475,7 +475,7 @@ feature -- Query
 
 feature -- Element change
 
-	add_unqualified_attribute (a_name: READABLE_STRING_GENERAL; a_value: READABLE_STRING_GENERAL)
+	add_unqualified_attribute (a_name: READABLE_STRING_32; a_value: READABLE_STRING_32)
 			-- Add an attribute without a specific namespace.
 		require
 			a_name_not_empty: a_name /= Void and then not a_name.is_empty
@@ -486,7 +486,7 @@ feature -- Element change
 			attribute_added: has_attribute_by_name (a_name)
 		end
 
-	add_attribute (a_name: READABLE_STRING_GENERAL; a_ns: XML_NAMESPACE; a_value: READABLE_STRING_GENERAL)
+	add_attribute (a_name: READABLE_STRING_32; a_ns: XML_NAMESPACE; a_value: READABLE_STRING_32)
 			-- Add an attribute to current element.
 			-- (at end if last is an attribute, at beginning otherwise)
 		require
@@ -507,12 +507,12 @@ feature -- Element change
 				end
 			end
 		ensure
-			attribute_added: has_attribute_by_qualified_name (a_ns.internal_uri, a_name)
+			attribute_added: has_attribute_by_qualified_name (a_ns.uri, a_name)
 		end
 
 feature -- Removal
 
-	remove_attribute_by_name (a_name: READABLE_STRING_GENERAL)
+	remove_attribute_by_name (a_name: READABLE_STRING_32)
 			-- Remove attribute named `a_name' from current element.
 		require
 			a_name_not_void: a_name /= Void
@@ -539,7 +539,7 @@ feature -- Removal
 			elts.go_to (c)
 		end
 
-	remove_attribute_by_qualified_name (a_uri: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL)
+	remove_attribute_by_qualified_name (a_uri: READABLE_STRING_32; a_name: READABLE_STRING_32)
 			-- Remove attribute named `a_name' from current element.
 		require
 			a_uri_not_void: a_uri /= Void

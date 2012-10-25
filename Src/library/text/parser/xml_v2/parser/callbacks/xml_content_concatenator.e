@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Content
 
-	last_content: detachable STRING_GENERAL
+	last_content: detachable STRING_32
 			-- Current content
 
 	flush_content
@@ -42,7 +42,7 @@ feature {NONE} -- Content
 
 feature -- Content
 
-	on_content (a_content: READABLE_STRING_GENERAL)
+	on_content (a_content: READABLE_STRING_32)
 			-- Aggregate content events so that two content events
 			-- never follow each other.
 		local
@@ -51,18 +51,13 @@ feature -- Content
 			if attached last_content as s then
 				s.append (a_content)
 			else
-				-- Preserve the STRING_8 compatibility
-				if attached {READABLE_STRING_8} a_content as s8 then
-					create {STRING_8} last_content.make_from_string (s8)
-				else
-					create s32.make (a_content.count)
-					s32.append_string_general (a_content)
-					last_content := s32
-				end
+				create s32.make (a_content.count)
+				s32.append_string_general (a_content)
+				last_content := s32
 			end
 		end
 
-	on_comment (a_comment: READABLE_STRING_GENERAL)
+	on_comment (a_comment: READABLE_STRING_32)
 			-- Eat comment when in content, otherwise the event would be
 			-- out of order.
 		do
@@ -72,28 +67,28 @@ feature -- Content
 
 feature -- Events
 
-	on_processing_instruction (a_name: READABLE_STRING_GENERAL; a_content: READABLE_STRING_GENERAL)
+	on_processing_instruction (a_name: READABLE_STRING_32; a_content: READABLE_STRING_32)
 			-- Flush content and forward.
 		do
 			flush_content
 			Precursor (a_name, a_content)
 		end
 
-	on_start_tag (a_namespace: detachable READABLE_STRING_GENERAL; a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL)
+	on_start_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- Flush content and forward.
 		do
 			flush_content
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace: detachable READABLE_STRING_GENERAL; a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL; a_value: READABLE_STRING_GENERAL)
+	on_attribute (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
 			-- Flush content and forward.
 		do
 			flush_content
 			Precursor (a_namespace, a_prefix, a_local_part, a_value)
 		end
 
-	on_end_tag (a_namespace: detachable READABLE_STRING_GENERAL; a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL)
+	on_end_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- Flush content and forward.
 		do
 			flush_content

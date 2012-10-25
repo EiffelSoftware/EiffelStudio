@@ -7,7 +7,7 @@ class
 	XML_FILE_INPUT_STREAM
 
 inherit
-	XML_INPUT_STREAM
+	XML_CHARACTER_8_INPUT_STREAM
 
 create
 	make,

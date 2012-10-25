@@ -103,9 +103,9 @@ feature {NONE} -- Implementation
 			definition: Result.uri_is_empty
 		end
 
-	Xmlns: STRING = "xmlns"
+	Xmlns: STRING_32 = "xmlns"
 
-	Xml_prefix: STRING = "xml"
+	Xml_prefix: STRING_32 = "xml"
 
 	same_string (a,b: READABLE_STRING_GENERAL): BOOLEAN
 		do
@@ -114,22 +114,35 @@ feature {NONE} -- Implementation
 
 feature -- Status report
 
+	debug_output_representation (s: READABLE_STRING_32): STRING_8
+		local
+			i,n: INTEGER
+			c: CHARACTER_32
+		do
+			n := s.count
+			from
+				i := 1
+				create Result.make (n)
+			until
+				i > n
+			loop
+				c := s.item (i)
+				if c.is_character_8 then
+					Result.append_character (c.to_character_8)
+				else
+					Result.append_character ('&')
+					Result.append_character ('#')
+					Result.append_natural_32 (c.natural_32_code)
+					Result.append_character (';')
+				end
+				i := i + 1
+			end
+		end
+
 	debug_output: STRING
 		do
 			create Result.make_empty
 			Result.append_integer (level)
-		end
-
-feature {NONE} -- Conversion
-
-	to_readable_string_32 (s: READABLE_STRING_GENERAL): READABLE_STRING_32
-			-- String `s' converted as {READABLE_STRING_32}
-		do
-			if attached {READABLE_STRING_32} s as s32 then
-				Result := s32
-			else
-				Result := s.to_string_32
-			end
 		end
 
 feature -- Processing

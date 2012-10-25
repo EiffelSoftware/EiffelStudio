@@ -1,13 +1,13 @@
 note
-	description: "Summary description for {XML_STRING_OUTPUT_STREAM}."
+	description: "Summary description for {XML_STRING_8_OUTPUT_STREAM}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	XML_STRING_OUTPUT_STREAM
+	XML_STRING_8_OUTPUT_STREAM
 
 inherit
-	XML_OUTPUT_STREAM
+	XML_CHARACTER_8_OUTPUT_STREAM
 
 create
 	make, make_empty
@@ -59,12 +59,12 @@ feature -- Basic operation
 
 feature -- Output
 
-	put_character (c: CHARACTER)
+	put_character_8 (c: CHARACTER_8)
 		do
 			string.append_character (c)
 		end
 
-	put_string (a_string: READABLE_STRING_8)
+	put_string_8 (a_string: READABLE_STRING_8)
 			-- Write `a_string' to output stream.
 		do
 			string.append (a_string)

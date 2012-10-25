@@ -9,7 +9,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	XML_CALLBACKS
+	XML_ASCII_CALLBACKS
 
 feature -- Document
 
@@ -33,7 +33,7 @@ feature -- Document
 
 feature -- Errors
 
-	on_error (a_message: READABLE_STRING_32)
+	on_error (a_message: READABLE_STRING_8)
 			-- Event producer detected an error.
 		require
 			not_void: a_message /= Void
@@ -42,8 +42,9 @@ feature -- Errors
 
 feature -- Meta
 
-	on_processing_instruction (a_name: READABLE_STRING_32; a_content: READABLE_STRING_32)
+	on_processing_instruction (a_name: READABLE_STRING_8; a_content: READABLE_STRING_8)
 			-- Processing instruction.
+			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 			--| See http://en.wikipedia.org/wiki/Processing_instruction
 		require
 			name_not_void: a_name /= Void
@@ -51,7 +52,7 @@ feature -- Meta
 		deferred
 		end
 
-	on_comment (a_content: READABLE_STRING_32)
+	on_comment (a_content: READABLE_STRING_8)
 			-- Processing a comment.
 			-- Atomic: single comment produces single event
 		require
@@ -61,7 +62,7 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
+	on_start_tag (a_namespace: detachable READABLE_STRING_8; a_prefix: detachable READABLE_STRING_8; a_local_part: READABLE_STRING_8)
 			-- Start of start tag.
 		require
 			unresolved_namespace_is_void: has_resolved_namespaces implies a_namespace /= Void
@@ -69,7 +70,7 @@ feature -- Tag
 		deferred
 		end
 
-	on_attribute (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
+	on_attribute (a_namespace: detachable READABLE_STRING_8; a_prefix: detachable READABLE_STRING_8; a_local_part: READABLE_STRING_8; a_value: READABLE_STRING_8)
 			-- Start of attribute.
 		require
 			unresolved_namespace_is_void: has_resolved_namespaces implies a_namespace /= Void
@@ -83,7 +84,7 @@ feature -- Tag
 		deferred
 		end
 
-	on_end_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
+	on_end_tag (a_namespace: detachable READABLE_STRING_8; a_prefix: detachable READABLE_STRING_8; a_local_part: READABLE_STRING_8)
 			-- End tag.
 		require
 			unresolved_namespace_is_void: has_resolved_namespaces implies a_namespace /= Void
@@ -91,36 +92,9 @@ feature -- Tag
 		deferred
 		end
 
-feature -- Resolved namespace
-
-	on_start_tag_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
-			-- Start of start tag.
-		require
-			local_part: is_local_part (a_local_part)
-		do
-			on_start_tag (a_namespace, a_prefix, a_local_part)
-		end
-
-	on_attribute_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
-			-- Start of attribute.
-		require
-			local_part: is_local_part (a_local_part)
-			a_value_not_void: a_value /= Void
-		do
-			on_attribute (a_namespace, a_prefix, a_local_part, a_value)
-		end
-
-	on_end_tag_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
-			-- End tag.
-		require
-			local_part: is_local_part (a_local_part)
-		do
-			on_end_tag (a_namespace, a_prefix, a_local_part)
-		end
-
 feature -- Content
 
-	on_content (a_content: READABLE_STRING_32)
+	on_content (a_content: READABLE_STRING_8)
 			-- Text content.
 			-- NOT atomic: two on_content events may follow each other
 			-- without a markup event in between.
@@ -133,19 +107,19 @@ feature -- Content
 
 feature -- Support
 
-	has_prefix (a: detachable READABLE_STRING_32): BOOLEAN
+	has_prefix (a: detachable READABLE_STRING_8): BOOLEAN
 			-- Is prefix in use?
 		do
 			Result := a /= Void and then a.count > 0
 		end
 
-	has_namespace (a: detachable READABLE_STRING_32): BOOLEAN
+	has_namespace (a: detachable READABLE_STRING_8): BOOLEAN
 			-- Is namespace resolved?
 		do
 			Result := a /= Void
 		end
 
-	is_local_part (a: detachable READABLE_STRING_32): BOOLEAN
+	is_local_part (a: detachable READABLE_STRING_8): BOOLEAN
 			-- Is this a valid local part string?
 		do
 			Result := a /= Void and then a.count > 0

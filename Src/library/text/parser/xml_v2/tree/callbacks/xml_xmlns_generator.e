@@ -19,12 +19,13 @@ inherit
 			on_start_tag,
 			on_attribute,
 			on_start_tag_finish,
+			on_start_tag_resolved,
 			on_end_tag,
 			on_finish,
 			set_next
 		end
 
-	XML_MARKUP_CONSTANTS
+	XML_XMLNS_CONSTANTS
 		export {NONE} all end
 
 create
@@ -42,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Default element namespace handling
 
-	on_default (a_namespace: READABLE_STRING_GENERAL)
+	on_default (a_namespace: READABLE_STRING_32)
 			-- Process default namespace declaration.
 		require
 			not_void: a_namespace /= Void
@@ -59,11 +60,11 @@ feature {NONE} -- Unique prefix
 	last_unique_prefix: INTEGER
 			-- Number used to make unique numeric prefix
 
-	unique_prefix: STRING
+	unique_prefix: STRING_32
 			-- Unique prefix.
 		do
 			create Result.make_empty
-			Result.append ("ns")
+			Result.append ({STRING_32} "ns")
 			Result.append_integer (last_unique_prefix)
 		ensure
 			result_not_void: Result /= Void
@@ -87,7 +88,7 @@ feature {NONE} -- Prefix handling
 	context: XML_XMLNS_GENERATOR_CONTEXT
 			-- xmlns context
 
-	handle_prefix (a_namespace: READABLE_STRING_GENERAL; a_prefix: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
+	handle_prefix (a_namespace: READABLE_STRING_32; a_prefix: READABLE_STRING_32): READABLE_STRING_32
 			-- Handle prefix.
 		require
 			a_namespace_not_void: a_namespace /= Void
@@ -125,10 +126,10 @@ feature {NONE} -- Prefix handling
 			not_implicit: not is_implicit (Result)
 		end
 
-	is_implicit (a_prefix: detachable READABLE_STRING_GENERAL): BOOLEAN
+	is_implicit (a_prefix: detachable READABLE_STRING_32): BOOLEAN
 			-- Is this an implicit prefix? eg xml:
 		do
-			Result := same_string (a_prefix, Xml_prefix)
+			Result := same_string (a_prefix, {XML_MARKUP_CONSTANTS}.Xml_prefix)
 		end
 
 feature -- Events
@@ -142,7 +143,7 @@ feature -- Events
 			next.on_start
 		end
 
-	on_start_tag (a_namespace: detachable READABLE_STRING_GENERAL; a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL)
+	on_start_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- Start tag, handle default namespace.
 		do
 			if a_namespace /= Void then
@@ -156,21 +157,7 @@ feature -- Events
 			end
 		end
 
-	on_start_tag_resolved (a_namespace: READABLE_STRING_GENERAL; a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL)
-			-- Start tag, handle default namespace.
-		do
-			context.on_start_element
-			if a_prefix = Void or else a_prefix.is_empty then
-				next.on_start_tag (a_namespace, a_prefix, a_local_part)
-				on_default (a_namespace)
-			else
-				next.on_start_tag (a_namespace,
-					handle_prefix (a_namespace, a_prefix),
-					a_local_part)
-			end
-		end
-
-	on_attribute (a_namespace: detachable READABLE_STRING_GENERAL; a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL; a_value: READABLE_STRING_GENERAL)
+	on_attribute (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
 			-- Process attribute's prefix.
 		do
 			if same_string (a_namespace, Xmlns_namespace) then
@@ -208,7 +195,7 @@ feature -- Events
 			next.on_start_tag_finish
 		end
 
-	on_end_tag (a_namespace: detachable READABLE_STRING_GENERAL; a_prefix: detachable READABLE_STRING_GENERAL; a_local_part: READABLE_STRING_GENERAL)
+	on_end_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- End tag, reset context.
 		do
 			context.on_end_element
@@ -222,6 +209,35 @@ feature -- Events
 			next.on_finish
 		end
 
+feature -- resolved events
+
+
+	on_start_tag_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
+			-- Start tag, handle default namespace.
+		do
+			context.on_start_element
+			if a_prefix = Void or else a_prefix.is_empty then
+				next.on_start_tag (a_namespace, a_prefix, a_local_part)
+				on_default (a_namespace)
+			else
+				next.on_start_tag (a_namespace,
+					handle_prefix (a_namespace, a_prefix),
+					a_local_part)
+			end
+		end
+
+--	on_attribute_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
+--			-- Start of attribute.
+--		do
+--			on_attribute (a_namespace, a_prefix, a_local_part, a_value)
+--		end
+--
+--	on_end_tag_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
+--			-- End tag.
+--		do
+--			on_end_tag (a_namespace, a_prefix, a_local_part)
+--		end
+		
 feature -- Events mode
 
 	has_resolved_namespaces: BOOLEAN
@@ -232,7 +248,7 @@ feature -- Events mode
 
 feature {NONE} -- Implementation
 
-	same_string (a,b: detachable READABLE_STRING_GENERAL): BOOLEAN
+	same_string (a,b: detachable READABLE_STRING_32): BOOLEAN
 			-- Are `a' and `b' the same string?
 		do
 			if a = b then

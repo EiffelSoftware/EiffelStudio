@@ -65,7 +65,7 @@ feature -- basic operations
 			Result := token_image_is_in_array (token, unary_operators)
 		end
 
-	token_equal (a_token: EDITOR_TOKEN; a_str: STRING): BOOLEAN
+	token_equal (a_token: EDITOR_TOKEN; a_str: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is image of `a_token' the same as `a_str'?
 		require
 			a_token_not_void: a_token /= Void
@@ -74,17 +74,17 @@ feature -- basic operations
 			Result := a_token.wide_image.same_string_general (a_str)
 		end
 
-	token_image_is_same_as_word (token: EDITOR_TOKEN; word: STRING_32): BOOLEAN
+	token_image_is_same_as_word (token: EDITOR_TOKEN; word: READABLE_STRING_GENERAL): BOOLEAN
 			-- Are the token image (except comments) and the word equal (case has no importance)?
 		require
 			word_not_void: word /= Void
 		do
 			if token /= Void and then not attached {EDITOR_TOKEN_COMMENT} token then
-				Result := token.wide_image.is_case_insensitive_equal (word)
+				Result := token.wide_image.is_case_insensitive_equal_general (word)
 			end
 		end
 
-	token_image_is_in_array (token: EDITOR_TOKEN; words: ARRAY [STRING]): BOOLEAN
+	token_image_is_in_array (token: EDITOR_TOKEN; words: ARRAY [READABLE_STRING_GENERAL]): BOOLEAN
 			-- Does the token image belong to the list `words' ?
 		require
 			word_not_void: words /= Void
@@ -93,15 +93,13 @@ feature -- basic operations
 			i: INTEGER
 		do
 			if token /= Void then
-					-- Here because `words' are ACSII strings,
-					-- so it is safe to convert to lower case before comparison.
-				image := string_32_to_lower_copy_optimized (token.wide_image)
+				image := token.wide_image
 				from
 					i := words.lower
 				until
 					Result or else i > words.upper
 				loop
-					Result := image.same_string_general (words @ i)
+					Result := image.is_case_insensitive_equal_general (words @ i)
 					i:= i + 1
 				end
 			end
@@ -133,39 +131,13 @@ feature -- basic operations
 			end
 		end
 
-	string_32_to_lower (a_str: detachable STRING_32): STRING_32
-			-- Make all possible char in `a_str' to lower.
-			-- |FIXME: We need real Unicode as lower.
-			-- |For the moment, only ANSII code are concerned.
-		require
-			a_str_not_void: a_str /= Void
-		local
-			i, nb: INTEGER_32
-		do
-			create Result.make_from_string (a_str)
-			from
-				i := 1
-				nb := a_str.count
-			until
-				i > nb
-			loop
-				if a_str.item (i).code <= {CHARACTER_8}.max_value then
-					Result.put (a_str.item (i).to_character_8.as_lower, i)
-				else
-					Result.put (a_str.item (i), i)
-				end
-				i := i + 1
-			end
-		end
-
 	string_32_to_lower_copy_optimized (a_str: STRING_32): STRING_32
 			-- Make all possible char in `a_str' to lower.
-			-- |FIXME: We need real Unicode as lower.
-			-- |For the moment, only ANSII code are concerned.
 			-- Return `a_str' if all characters are lower case, else return a new string.
 		local
 			i, nb: INTEGER_32
-			l_char_8: CHARACTER_8
+			l_char, l_lower: CHARACTER_32
+			l_props: like character_properties
 		do
 			Result := a_str
 			from
@@ -174,39 +146,13 @@ feature -- basic operations
 			until
 				i > nb
 			loop
-				if a_str.item_code (i) <= {CHARACTER_8}.max_value then
-					l_char_8 := a_str.item (i).to_character_8
-					if l_char_8.is_upper then
-						if Result = a_str then
-							create Result.make_from_string (a_str)
-						end
-						Result.put (l_char_8.as_lower, i)
+				l_char := a_str.item (i)
+				l_lower := l_props.to_lower (l_char)
+				if l_lower /= l_char then
+					if Result = a_str then
+						create Result.make_from_string (a_str)
 					end
-				end
-				i := i + 1
-			end
-		end
-
-	string_32_to_upper (a_str: detachable STRING_32): STRING_32
-			-- Make all possible char in `a_str' to upper.
-			-- |FIXME: We need real Unicode as upper.
-			-- |For the moment, only ANSII code are concerned.
-		require
-			a_str_not_void: a_str /= Void
-		local
-			i, nb: INTEGER_32
-		do
-			create Result.make_from_string (a_str)
-			from
-				i := 1
-				nb := a_str.count
-			until
-				i > nb
-			loop
-				if a_str.item (i).code <= {CHARACTER_8}.max_value then
-					Result.put (a_str.item (i).to_character_8.as_upper, i)
-				else
-					Result.put (a_str.item (i), i)
+					Result.put (l_lower, i)
 				end
 				i := i + 1
 			end
@@ -216,19 +162,21 @@ feature -- Query
 
 	char_32_is_alpha (a_char: CHARACTER_32): BOOLEAN
 		do
-			if a_char.is_character_8 then
-				Result := a_char.to_character_8.is_alpha
-			end
+			Result := character_properties.is_alpha (a_char)
 		end
 
 	char_32_is_digit (a_char: CHARACTER_32): BOOLEAN
 		do
-			if a_char.is_character_8 then
-				Result := a_char.to_character_8.is_digit
-			end
+			Result := character_properties.is_digit (a_char)
 		end
 
 feature {NONE} -- Constants
+
+	character_properties: CHARACTER_32_PROPERTY
+			-- For efficient operation on characters
+		once
+			create Result.make
+		end
 
 	binary_operators: ARRAY [STRING]
 		once
@@ -257,35 +205,17 @@ feature {NONE} -- Constants
 
 	closing_parenthesis: STRING = ")"
 
-	semi_colon: STRING = ";"
-
 	colon: STRING = ":"
 
-	comma: STRING = ","
+	equal_sign: STRING_32 = "="
 
-	period: STRING = "."
+	different_sign: STRING_32 = "/="
 
-	equal_sign: STRING = "="
+	current_word: STRING_32 = "current"
 
-	different_sign: STRING = "/="
+	create_word: STRING_32 = "create"
 
-	feature_word: STRING = "feature"
-
-	end_word: STRING = "end"
-
-	like_word: STRING = "like"
-
-	is_word: STRING = "is"
-
-	current_word: STRING = "current"
-
-	local_word: STRING = "local"
-
-	create_word: STRING = "create"
-
-	result_word: STRING = "result"
-
-	precursor_word: STRING = "precursor";
+	result_word: STRING_32 = "result"
 
 note
 	copyright:	"Copyright (c) 1984-2012, Eiffel Software"

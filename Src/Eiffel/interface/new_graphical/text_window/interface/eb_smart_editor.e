@@ -42,7 +42,6 @@ inherit
 
 	EB_TAB_CODE_COMPLETABLE
 		rename
-			is_word as is_word_token,
 			is_keyword as is_keyword_token,
 			on_char as on_char_completable
 		export

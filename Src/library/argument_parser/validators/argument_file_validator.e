@@ -20,7 +20,7 @@ feature {NONE} -- Validation
 			retried: BOOLEAN
 		do
 			if not retried then
-				create l_file.make (a_value)
+				create l_file.make_with_name (a_value)
 				if l_file.exists then
 					if l_file.is_directory or else l_file.is_device then
 						invalidate_option (e_file_is_not_file)
@@ -32,9 +32,9 @@ feature {NONE} -- Validation
 				invalidate_option (e_invalid_file_name)
 			end
 		ensure then
-			a_value_exists: is_option_valid implies (create {RAW_FILE}.make (a_value)).exists
-			a_value_exists: is_option_valid implies not (create {RAW_FILE}.make (a_value)).is_directory
-			a_value_exists: is_option_valid implies not (create {RAW_FILE}.make (a_value)).is_device
+			a_value_exists: is_option_valid implies (create {RAW_FILE}.make_with_name (a_value)).exists
+			a_value_exists: is_option_valid implies not (create {RAW_FILE}.make_with_name (a_value)).is_directory
+			a_value_exists: is_option_valid implies not (create {RAW_FILE}.make_with_name (a_value)).is_device
 		rescue
 			retried := True
 			retry

@@ -81,7 +81,7 @@ feature -- Initialization
 
 				-- Set the default project path to the current working directory.
 				-- This may be overriden via user settings.
-			project_path :=(create {EXECUTION_ENVIRONMENT}).current_working_directory
+			project_path :=(create {EXECUTION_ENVIRONMENT_32}).current_working_directory
 
 				--| Initialization of the run-time, so that at the end of a store/retrieve
 				--| operation (like retrieving or storing the project, creating the CASEGEN
@@ -1457,7 +1457,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -26,7 +26,7 @@ feature -- Status report
 		local
 			l_file: RAW_FILE
 		do
-			create l_file.make (value)
+			create l_file.make_with_name (value)
 			if l_file.exists then
 				Result := not l_file.is_directory and not l_file.is_device
 			end
@@ -45,7 +45,7 @@ feature -- Status report
 		end
 
 invariant
-	value_exists: has_value implies (create {RAW_FILE}.make (value)).exists
+	value_exists: has_value implies (create {RAW_FILE}.make_with_name (value)).exists
 
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"

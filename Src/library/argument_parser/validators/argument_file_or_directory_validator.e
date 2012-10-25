@@ -19,14 +19,14 @@ feature {NONE} -- Validation
 			retried: BOOLEAN
 		do
 			if not retried then
-				if not (create {RAW_FILE}.make (a_value)).exists then
+				if not (create {RAW_FILE}.make_with_name (a_value)).exists then
 					invalidate_option (e_file_or_directory_does_not_exist)
 				end
 			else
 				invalidate_option (e_invalid_file_or_directory_name)
 			end
 		ensure then
-			a_value_exists: is_option_valid implies (create {RAW_FILE}.make (a_value)).exists
+			a_value_exists: is_option_valid implies (create {RAW_FILE}.make_with_name (a_value)).exists
 		rescue
 			retried := True
 			retry

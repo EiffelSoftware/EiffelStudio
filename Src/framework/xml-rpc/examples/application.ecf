@@ -5,7 +5,7 @@
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="xml-rpc" location="$EIFFEL_SRC\framework\xml-rpc\xml-rpc.ecf" readonly="false"/>
-		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser.ecf" readonly="false"/>
+		<library name="xml_parser" location="$ISE_LIBRARY\library\obsolete\xml\parser\xml_parser.ecf" readonly="false"/>
 		<cluster name="application" location=".\"/>
 	</target>
 </system>

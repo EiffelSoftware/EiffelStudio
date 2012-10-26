@@ -21,7 +21,7 @@ feature -- Access
 			att: detachable XML_ATTRIBUTE
 			elt: XML_ELEMENT
 			resolver: XML_NAMESPACE_RESOLVER
-			parser: XML_LITE_CUSTOM_PARSER
+			parser: XML_CUSTOM_PARSER
 		do
 			if not retried then
 				if s /= Void then
@@ -34,7 +34,7 @@ feature -- Access
 					resolver.set_forward_xmlns (True)
 					parser.set_callbacks (resolver)
 
-					parser.parse_from_string (s)
+					parser.parse_from_string_8 (s)
 
 					if parser.error_occurred then
 						Result := Void
@@ -103,7 +103,7 @@ feature -- Access
 			att: detachable XML_ATTRIBUTE
 			elt: detachable XML_ELEMENT
 			resolver: XML_NAMESPACE_RESOLVER
-			parser: XML_LITE_PARSER
+			parser: XML_CUSTOM_PARSER
 		do
 			if not retried then
 				if s /= Void then
@@ -115,7 +115,7 @@ feature -- Access
 					resolver.set_forward_xmlns (True)
 					parser.set_callbacks (resolver)
 
-					parser.parse_from_string (s)
+					parser.parse_from_string_8 (s)
 
 					if parser.error_occurred then
 						Result := Void
@@ -205,7 +205,7 @@ feature -- Access
 			att: detachable XML_ATTRIBUTE
 			elt: XML_ELEMENT
 			resolver: XML_NAMESPACE_RESOLVER
-			parser: XML_LITE_CUSTOM_PARSER
+			parser: XML_CUSTOM_PARSER
 		do
 			if not retried then
 				if s /= Void then
@@ -218,7 +218,7 @@ feature -- Access
 					resolver.set_forward_xmlns (True)
 					parser.set_callbacks (resolver)
 
-					parser.parse_from_string (s)
+					parser.parse_from_string_8 (s)
 
 					if parser.error_occurred then
 						Result := Void

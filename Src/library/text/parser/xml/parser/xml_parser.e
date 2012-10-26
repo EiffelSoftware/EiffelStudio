@@ -23,15 +23,30 @@ feature -- Parsing
 		deferred
 		end
 
+	parse_from_string (a_string: READABLE_STRING_GENERAL)
+			-- Parse string general `a_string'
+		require
+			a_string_attached: a_string /= Void
+		do
+			if attached {READABLE_STRING_8} a_string as s8 then
+				parse_from_string_8 (s8)
+			elseif attached {READABLE_STRING_32} a_string as s32 then
+				parse_from_string_32 (s32)
+			else
+				check is_string_32: a_string.is_string_32 end
+				parse_from_string_32 (a_string.to_string_32)
+			end
+		end
+
 	parse_from_string_8 (a_string: STRING_8)
-			-- Parse string `a_string'
+			-- Parse string_8 `a_string'
 		require
 			a_string_attached: a_string /= Void
 		deferred
 		end
 
 	parse_from_string_32 (a_string: STRING_32)
-			-- Parse string `a_string'
+			-- Parse string_32 `a_string'
 		require
 			a_string_attached: a_string /= Void
 		deferred

@@ -1318,7 +1318,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	resolved_entity (s: STRING_8): STRING_32
+	resolved_entity (s: READABLE_STRING_32): STRING_32
 			-- Resolve `s' as an entity
 			--| Hardcoding the xml entities &quot; &amp; &apos; &lt; and &gt;
 		require

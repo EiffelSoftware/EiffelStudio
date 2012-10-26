@@ -40,11 +40,11 @@ feature {NONE} -- Initialization
 		do
 			create map.make (5)
 				-- entities in XML
-			map.force ('"',  "quot")  -- 34
-			map.force ('&',  "amp")   -- 38
-			map.force ('%'', "apos")  -- 39
-			map.force ('<',  "lt")    -- 60
-			map.force ('>',  "gt")    -- 62
+			map.force ('"',  {STRING_32} "quot")  -- 34
+			map.force ('&',  {STRING_32} "amp")   -- 38
+			map.force ('%'', {STRING_32} "apos")  -- 39
+			map.force ('<',  {STRING_32} "lt")    -- 60
+			map.force ('>',  {STRING_32} "gt")    -- 62
 
 			entity_mapping := map
 		end
@@ -56,7 +56,7 @@ feature -- Settings
 			-- occurring with dos format with CR+LF as end of line.
 			-- By default: True
 
-	entity_mapping: HASH_TABLE [CHARACTER_32, STRING]
+	entity_mapping: HASH_TABLE [CHARACTER_32, STRING_32]
 			-- Entities mapping
 			-- You can provide your own extended mapping with `set_entity_mapping'
 			--| such as &amp; &gt; &lt; &quot; ...
@@ -71,10 +71,10 @@ feature -- Settings change
 
 feature {NONE} -- Implementation
 
-	resolved_entity (s: STRING_8): STRING_32
+	resolved_entity (s: READABLE_STRING_32): STRING_32
 			-- Resolve `s' as an entity
 		do
-			if entity_mapping.has_key (s) then
+			if entity_mapping.has_key (s.to_string_32) then
 				create Result.make (1)
 				Result.append_character (entity_mapping.found_item)
 			else

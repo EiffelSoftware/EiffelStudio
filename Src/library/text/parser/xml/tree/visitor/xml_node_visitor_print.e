@@ -62,7 +62,7 @@ feature -- Processing
 	process_xml_declaration (a_decl: XML_DECLARATION)
 			-- Process xml declaration `a_decl'
 		do
-			print ("<?xml version=%"" + a_decl.version.as_string_8 + "%"")
+			print ("<?xml version=%"" + a_decl.version + "%"")
 			if attached a_decl.encoding as enc then
 				print (" encoding=%"" + enc + "%"")
 			end

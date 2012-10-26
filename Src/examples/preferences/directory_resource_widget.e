@@ -30,7 +30,7 @@ feature -- Access
 		end
 
 
-	last_selected_value: detachable DIRECTORY_NAME
+	last_selected_value: detachable like {DIRECTORY_RESOURCE}.value
 
 feature -- Basic operations
 
@@ -65,7 +65,7 @@ feature {NONE} -- Commands
 	update_changes
 			-- Update the changes made in `change_item_widget' to `preference'.		
 		local
-			directory: STRING
+			directory: STRING_32
 			l_last_selected_value: like last_selected_value
 		do
 			if attached directory_tool as d then
@@ -75,13 +75,6 @@ feature {NONE} -- Commands
 				preference.set_value (l_last_selected_value)
 			end
 			Precursor {PREFERENCE_WIDGET}
-		end
-
-	update_preference
-		do
-			if attached last_selected_value as v then
-				preference.set_value (v)
-			end
 		end
 
 feature {PREFERENCE_VIEW} -- Implementation

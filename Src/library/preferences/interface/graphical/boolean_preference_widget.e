@@ -65,11 +65,6 @@ feature -- Status Setting
 
 feature {NONE} -- Implementation
 
-	update_preference
-			-- Updates preference.
-		do
-		end
-
 	build_change_item_widget
 			-- Create and setup `change_item_widget'.
 		do
@@ -138,7 +133,7 @@ feature {NONE} -- Implementation
 	last_displayed_true, last_displayed_false: detachable STRING_32;
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

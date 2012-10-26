@@ -81,14 +81,6 @@ feature {NONE} -- Commands
 			Precursor {PREFERENCE_WIDGET}
 		end
 
-	update_preference
-			-- Updates preference.
-		do
-			if attached last_selected_value as v then
-				preference.set_value (v)
-			end
-		end
-
 	show
 			-- Show the widget in its editable state.
 		do
@@ -143,12 +135,12 @@ feature {NONE} -- Implementation
 				area.set_foreground_color (g.focused_selection_color)
 				area.fill_rectangle (0, 0, l_change_item_widget.width, l_change_item_widget.height)
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
-				area.draw_text_top_left (20, 1, preference.string_value)
+				area.draw_text_top_left (20, 1, preference.text_value)
 			else
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
 				area.fill_rectangle (0, 0, l_change_item_widget.width, l_change_item_widget.height)
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
-				area.draw_text_top_left (20, 1, preference.string_value)
+				area.draw_text_top_left (20, 1, preference.text_value)
 			end
 
 				-- Draw the little color box border
@@ -173,7 +165,7 @@ feature {NONE} -- Implementation
 			-- Color Palette from which we can select a color.
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -76,11 +76,6 @@ feature -- Basic operations
 			change_actions.call ([preference])
 		end
 
-	update_preference
-			-- Update the changes made in `change_item_widget' to `preference'.
-		deferred
-		end
-
 	refresh
 			-- Refresh preference widget to current value
 		do
@@ -109,7 +104,7 @@ invariant
 	has_widget: preference /= Void implies change_item_widget /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

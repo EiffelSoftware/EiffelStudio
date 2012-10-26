@@ -73,7 +73,7 @@ feature -- Access
 			Result := "The changes you have made to the following resources%Nwill be taken into account after you restart.%N%N"
 		end
 
-	Pixmaps_path_cell: CELL [STRING]
+	Pixmaps_path_cell: CELL [STRING_32]
 			-- Path where pixmaps for the preference window should be looked for.
 			-- By default it looks in pixmaps in the current directory, but
 			-- it is possible to change the contents of this cell to change this path.
@@ -91,7 +91,7 @@ feature -- Access
 		-- Base name of the file that contains the icon of the preferences window.
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

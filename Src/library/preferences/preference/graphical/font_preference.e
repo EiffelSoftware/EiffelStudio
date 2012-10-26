@@ -22,9 +22,9 @@ inherit
 create {PREFERENCE_FACTORY}
 	make, make_from_string_value
 
-feature -- Access
+feature {PREFERENCE, PREFERENCE_WIDGET, PREFERENCES_STORAGE_I, PREFERENCE_VIEW} -- Access
 
-	string_value: STRING
+	text_value: STRING_32
 			-- String representation of `value'.		
 		do
 			Result := generated_value
@@ -38,7 +38,7 @@ feature -- Status Setting
 			valid_font: a_value /= Void and then not a_value.is_destroyed
 		do
 			Precursor {TYPED_PREFERENCE} (a_value)
-			face := a_value.name
+			set_face (a_value.name)
 			shape := a_value.shape
 			weight := a_value.weight
 			height := a_value.height_in_points
@@ -53,14 +53,11 @@ feature -- Status Setting
 
 feature -- Query
 
-	valid_value_string (a_string: STRING): BOOLEAN
+	valid_value_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_string' valid for this preference type to convert into a value?
 			-- An valid string takes the form "faces-shape-weight-height-family".
-		local
-			s: STRING
 		do
-			s := a_string.twin
-			Result := s.occurrences ('-') = 4
+			Result := a_string.to_string_32.occurrences ('-') = 4
 		end
 
 feature {PREFERENCES} -- Access
@@ -73,7 +70,7 @@ feature {PREFERENCES} -- Access
 
 feature {NONE} -- Implementation
 
-	face: detachable STRING
+	face: detachable STRING_32
 			-- Font faces
 	shape,
 	weight,
@@ -81,17 +78,17 @@ feature {NONE} -- Implementation
 	family: INTEGER
 		-- Attributes
 
-	set_value_from_string (a_value: STRING)
+	set_value_from_string (a_value: READABLE_STRING_GENERAL)
 			-- Parse the string value `a_value' and set `value'.
 		local
-			s: STRING
+			s: STRING_32
 			i: INTEGER
 			l_value: like value
 		do
-			s := a_value.twin
+			s := a_value.to_string_32
 			i := s.index_of('-', 1)
 			if i > 0 then
-				face := s.substring (1, i - 1)
+				set_face (s.substring (1, i - 1))
 				s := s.substring (i + 1, s.count)
 				i := s.index_of ('-',1)
 				if i > 0 then
@@ -120,12 +117,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generated_value: STRING
+	generated_value: STRING_32
 			-- String generated value for display and saving purposes.
 		require
 			has_value: value /= Void
 		local
-			v: STRING
+			v: STRING_32
 			l_value: like value
 		do
 			l_value := value
@@ -138,14 +135,14 @@ feature {NONE} -- Implementation
 				check has_face: False end
 			end
 
-			v.append ("-")
+			v.append_character ('-')
 			inspect l_value.shape
 			when shape_italic then
-				v.append ("i")
+				v.append_character ('i')
 			when shape_regular then
-				v.append ("r")
+				v.append_character ('r')
 			end
-			v.append ("-")
+			v.append_character ('-')
 			inspect l_value.weight
 			when weight_black then
 				v.append ("black")
@@ -156,9 +153,9 @@ feature {NONE} -- Implementation
 			when weight_bold then
 				v.append ("bold")
 			end
-			v.append ("-")
-			v.append (height.out)
-			v.append ("-")
+			v.append_character ('-')
+			v.append_integer (height)
+			v.append_character ('-')
 
 			inspect l_value.family
 			when family_roman then
@@ -175,6 +172,14 @@ feature {NONE} -- Implementation
 			Result := v
 		end
 
+	set_face (s: READABLE_STRING_GENERAL)
+			-- Set shape according to `s'.
+		require
+			not_void: s /= Void
+		do
+			face := s.as_string_32
+		end
+
 	set_shape (s: STRING)
 			-- Set shape according to `s'.
 		require
@@ -183,9 +188,9 @@ feature {NONE} -- Implementation
 			s1: STRING
 		do
 			s1 := s.as_lower
-			if s1.is_equal ("i") or s1.is_equal ("italic") then
+			if s1.same_string ("i") or s1.same_string ("italic") then
 				shape := shape_italic
-			elseif s1.is_equal ("r") or s1.is_equal ("regular") then
+			elseif s1.same_string ("r") or s1.same_string ("regular") then
 				shape := shape_regular
 			end
 		end
@@ -198,13 +203,13 @@ feature {NONE} -- Implementation
 			s1: STRING
 		do
 			s1 := s.as_lower
-			if s1.is_equal ("thin") then
+			if s1.same_string ("thin") then
 				weight := weight_thin
-			elseif s1.is_equal ("regular") then
+			elseif s1.same_string ("regular") then
 				weight := weight_regular
-			elseif s1.is_equal ("bold") then
+			elseif s1.same_string ("bold") then
 				weight := weight_bold
-			elseif s1.is_equal ("black") then
+			elseif s1.same_string ("black") then
 				weight := weight_black
 			end
 		end
@@ -217,15 +222,15 @@ feature {NONE} -- Implementation
 			s1: STRING
 		do
 			s1 := s.as_lower
-			if s1.is_equal ("screen") then
+			if s1.same_string ("screen") then
 				family := family_screen
-			elseif s1.is_equal ("roman") then
+			elseif s1.same_string ("roman") then
 				family := family_roman
-			elseif s1.is_equal ("sans") then
+			elseif s1.same_string ("sans") then
 				family := family_sans
-			elseif s1.is_equal ("typewriter") then
+			elseif s1.same_string ("typewriter") then
 				family := family_typewriter
-			elseif s1.is_equal ("modern") then
+			elseif s1.same_string ("modern") then
 				family := family_modern
 			end
 		end
@@ -247,7 +252,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

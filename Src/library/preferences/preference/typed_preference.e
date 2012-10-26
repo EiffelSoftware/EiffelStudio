@@ -32,7 +32,7 @@ feature {NONE} --Initialization
 			has_change_action: change_actions /= Void
 		end
 
-	make_from_string_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_value: STRING)
+	make_from_string_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_value: READABLE_STRING_GENERAL)
 			-- Create preference and set value based on string value `a_value'.
 		require
 			manager_not_void: a_manager /= Void
@@ -51,7 +51,7 @@ feature {NONE} --Initialization
 			has_change_action: change_actions /= Void
 		end
 
-	init_value_from_string (a_value: STRING)
+	init_value_from_string (a_value: READABLE_STRING_GENERAL)
 			-- Set initial value from String `a_value'
 		require
 			a_value_attached: a_value /= Void
@@ -188,7 +188,7 @@ invariant
 	attached_auto_preference_has_value: (attached auto_preference as l_auto_preference) implies l_auto_preference.has_value
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

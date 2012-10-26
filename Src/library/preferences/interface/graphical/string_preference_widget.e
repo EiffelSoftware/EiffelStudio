@@ -50,26 +50,14 @@ feature {NONE} -- Command
 			Precursor {PREFERENCE_WIDGET}
 		end
 
-	update_preference
-			-- Updates preference.
-		do
-			if attached {INTEGER_PREFERENCE} preference as int then
-				if not change_item_widget.text.is_empty and then change_item_widget.text.is_integer then
-					int.set_value (change_item_widget.text.to_integer)
-				else
-					int.set_value (0)
-				end
-			elseif attached {STRING_PREFERENCE} preference as str then
-				str.set_value (change_item_widget.text)
-			elseif attached {ARRAY_PREFERENCE} preference as list then
-				list.set_value_from_string (change_item_widget.text)
-			end
-		end
-
 	refresh
 			-- Refresh
 		do
-			change_item_widget.set_text (preference.string_value)
+			if attached {STRING_32_PREFERENCE} preference as p32 then
+				change_item_widget.set_text (p32.value)
+			else
+				change_item_widget.set_text (preference.text_value)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -79,7 +67,7 @@ feature {NONE} -- Implementation
 		do
 			create change_item_widget
 			change_item_widget.deactivate_actions.extend (agent update_changes)
-			change_item_widget.set_text (preference.string_value)
+			change_item_widget.set_text (preference.text_value)
 			change_item_widget.pointer_button_press_actions.force_extend (agent activate)
 		end
 
@@ -101,7 +89,7 @@ feature {NONE} -- Implementation
         end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

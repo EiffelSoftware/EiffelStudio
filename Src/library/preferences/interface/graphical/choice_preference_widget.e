@@ -50,11 +50,22 @@ feature -- Status Setting
 			activate_combo
 		end
 
-	set_displayed_value (a_mapping: like value_mapping)
+	set_displayed_value (a_mapping: HASH_TABLE [STRING_32, READABLE_STRING_GENERAL])
 			-- Set values for display.
 			-- If values are not found, original ones are displayed.
+		local
+			ht: like value_mapping
 		do
-			value_mapping := a_mapping
+			if attached {like value_mapping} a_mapping as vmap then
+				value_mapping := vmap
+			else
+				create ht.make (a_mapping.count)
+				across
+					a_mapping as c
+				loop
+					ht.force (c.item, c.key.to_string_32)
+				end
+			end
 			change_item_widget.set_item_strings (displayed_values)
 			change_item_widget.set_text (displayed_selected_value)
 		end
@@ -65,14 +76,12 @@ feature {NONE} -- Command
 			-- Update the changes made in `change_item_widget' to `preference'.
 		local
 			l_value,
-			l_item: STRING
 			l_displayed_value: detachable STRING_32
 			l_cnt, nb_values: INTEGER
-			l_pref_value: detachable ARRAY [STRING]
 			l_value_mapping: like value_mapping
+			s32: STRING_32
 		do
-			l_pref_value := preference.value
-			if l_pref_value /= Void and change_item_widget /= Void then
+			if attached preference.value as l_pref_value and change_item_widget /= Void then
 				l_value_mapping := value_mapping
 				from
 					create l_value.make_empty
@@ -81,27 +90,29 @@ feature {NONE} -- Command
 				until
 					l_cnt > nb_values
 				loop
-					l_item := l_pref_value.item (l_cnt)
-					if 
-						l_value_mapping /= Void and then 
-						not l_item.is_empty and then
-						attached {STRING_32} l_value_mapping.item (l_item) as s32 
-					then
-						l_displayed_value := s32
-					else
-						l_displayed_value := l_item
-					end
-					if change_item_widget.text.same_string_general (l_displayed_value) then
-						l_value.append_character ('[')
-						l_value.append (l_item)
-						l_value.append_character (']')
-						preference.set_selected_index (l_cnt)
-					else
-						l_value.append (l_item)
-					end
-					l_cnt := l_cnt + 1
-					if l_cnt <= nb_values then
-						l_value.append_character (';')
+					if attached l_pref_value.item (l_cnt) as l_item then
+						s32 := l_item.to_string_32
+						if
+							l_value_mapping /= Void and then
+							not s32.is_empty and then
+							attached {STRING_32} l_value_mapping.item (s32) as m_str32
+						then
+							l_displayed_value := m_str32
+						else
+							l_displayed_value := s32
+						end
+						if change_item_widget.text.same_string_general (l_displayed_value) then
+							l_value.append_character ('[')
+							l_value.append_string_general (l_item)
+							l_value.append_character (']')
+							preference.set_selected_index (l_cnt)
+						else
+							l_value.append_string_general (l_item)
+						end
+						l_cnt := l_cnt + 1
+						if l_cnt <= nb_values then
+							l_value.append_character (';')
+						end
 					end
 				end
 				preference.set_value_from_string (l_value)
@@ -109,23 +120,16 @@ feature {NONE} -- Command
 			Precursor {PREFERENCE_WIDGET}
 		end
 
-	update_preference
-			--	Update preference.	
-		do
-		end
-
 	refresh
 			-- Reset.
 		do
 			Precursor {PREFERENCE_WIDGET}
-			if change_item_widget /= Void then
-				change_item_widget.set_text (displayed_selected_value)
-			end
+			change_item_widget.set_text (displayed_selected_value)
 		end
 
 feature {NONE} -- Implementation
 
-	preference: ARRAY_PREFERENCE
+	preference: ABSTRACT_ARRAY_PREFERENCE [READABLE_STRING_GENERAL]
 			-- Actual preference.
 
 	build_change_item_widget
@@ -153,23 +157,30 @@ feature {NONE} -- Implementation
 			-- Displayed values
 			-- If `value_mapping' is Void or empty, original values are used.
 		local
-			l_array: ARRAY [STRING]
 			i: INTEGER
+			s32: STRING_32
 		do
 			if attached value_mapping as vmap and then not vmap.is_empty then
-				l_array := preference.value
-				create Result.make (l_array.lower, l_array.upper)
-				from
-					i := l_array.lower
-				until
-					i > l_array.upper
-				loop
-					if vmap.has_key (l_array.item (i)) and then attached vmap.found_item as l_item then
-						Result.put (l_item, i)
-					else
-						Result.put (l_array.item (i), i)
+				if attached preference.value as l_array then
+					create Result.make (l_array.lower, l_array.upper)
+					from
+						i := l_array.lower
+					until
+						i > l_array.upper
+					loop
+						if attached l_array.item (i) as s then
+							s32 := s.to_string_32
+							if vmap.has_key (s32) and then attached vmap.found_item as l_item then
+								Result.put (l_item, i)
+							else
+								Result.put (s, i)
+							end
+						end
+						i := i + 1
 					end
-					i := i + 1
+				else
+					check has_array_value: False end
+					Result := preference.value
 				end
 			else
 				Result := preference.value
@@ -178,21 +189,24 @@ feature {NONE} -- Implementation
 
 	displayed_selected_value: STRING_32
 			-- Displayed value
+		local
+			s32: STRING_32
 		do
 			if attached preference.selected_value as l_selected then
-				if attached value_mapping as v and then attached v.item (l_selected) as l_found_item then
+				s32 := l_selected.to_string_32
+				if attached value_mapping as v and then attached v.item (s32) as l_found_item then
 					Result := l_found_item
 				else
-					Result := l_selected
+					Result := s32
 				end
 			else
-				Result := ""
+				Result := {STRING_32} ""
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	value_mapping: detachable HASH_TABLE [STRING_32, STRING];
+	value_mapping: detachable HASH_TABLE [STRING_32, STRING_32];
 			-- Key: values
 			-- Item: strings displayed
 

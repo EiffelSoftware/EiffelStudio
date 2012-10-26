@@ -13,7 +13,6 @@ class
 	PREFERENCES_GRID_CONTROL
 
 inherit
-
 	PREFERENCE_VIEW
 		redefine
 			make
@@ -1073,7 +1072,7 @@ feature {NONE} -- Implementation
 				Result := l_edit_widget.change_item_widget
 				Result.set_data (l_edit_widget)
 			elseif a_pref.generating_preference_type.is_equal ("COMBO") and then
-				attached {ARRAY_PREFERENCE} a_pref as l_array
+				attached {ABSTRACT_ARRAY_PREFERENCE [READABLE_STRING_GENERAL]} a_pref as l_array
 			then
 				l_choice_widget := new_choice_widget (l_array)
 				l_choice_widget.change_actions.extend (agent on_preference_changed (?, l_choice_widget))
@@ -1274,7 +1273,7 @@ feature {NONE} -- Implementation
 			end
 
 			if a_preference.restart_required then
-				description_text.set_text (l_text.as_string_32 + l_request_restart)
+				description_text.set_text (l_text + l_request_restart)
 			else
 				description_text.set_text (l_text)
 			end
@@ -1386,7 +1385,7 @@ feature {NONE} -- Widgets initialization
 			Result_not_void: Result /= Void
 		end
 
-	new_choice_widget (a_pref: ARRAY_PREFERENCE): CHOICE_PREFERENCE_WIDGET
+	new_choice_widget (a_pref: ABSTRACT_ARRAY_PREFERENCE [READABLE_STRING_GENERAL]): CHOICE_PREFERENCE_WIDGET
 		require
 			a_pref_not_void: a_pref /= Void
 		do
@@ -1494,7 +1493,7 @@ feature {NONE} -- Filtering
 								l_matched := l_filter_engine.pattern_matches
 							end
 							if not l_matched and l_filter_also_value then
-								s := l_preference.string_value
+								s := l_preference.text_value
 								if not s.is_empty then
 									l_filter_engine.set_text (s)
 									l_matched := l_filter_engine.pattern_matches

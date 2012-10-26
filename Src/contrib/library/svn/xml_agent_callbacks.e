@@ -32,17 +32,17 @@ feature -- Access
 
 feature -- Impl
 
-	on_attribute_callback: detachable PROCEDURE [ANY, TUPLE [STRING, STRING, STRING, STRING]]
-	on_comment_callback: detachable PROCEDURE [ANY, TUPLE [STRING]]
-	on_content_callback: detachable PROCEDURE [ANY, TUPLE [STRING]]
-	on_end_tag_callback: detachable PROCEDURE [ANY, TUPLE [STRING, STRING, STRING]]
-	on_error_callback: detachable PROCEDURE [ANY, TUPLE [STRING]]
+	on_attribute_callback: detachable PROCEDURE [ANY, TUPLE [detachable READABLE_STRING_32, detachable READABLE_STRING_32, READABLE_STRING_32, READABLE_STRING_32]]
+	on_comment_callback: detachable PROCEDURE [ANY, TUPLE [READABLE_STRING_32]]
+	on_content_callback: detachable PROCEDURE [ANY, TUPLE [READABLE_STRING_32]]
+	on_end_tag_callback: detachable PROCEDURE [ANY, TUPLE [detachable READABLE_STRING_32, detachable READABLE_STRING_32, READABLE_STRING_32]]
+	on_error_callback: detachable PROCEDURE [ANY, TUPLE [READABLE_STRING_32]]
 	on_finish_callback: detachable PROCEDURE [ANY, TUPLE]
-	on_processing_instruction_callback: detachable PROCEDURE [ANY, TUPLE [STRING, STRING]]
+	on_processing_instruction_callback: detachable PROCEDURE [ANY, TUPLE [READABLE_STRING_32, READABLE_STRING_32]]
 	on_start_callback: detachable PROCEDURE [ANY, TUPLE]
-	on_start_tag_callback: detachable PROCEDURE [ANY, TUPLE [STRING, STRING, STRING]]
+	on_start_tag_callback: detachable PROCEDURE [ANY, TUPLE [detachable READABLE_STRING_32, detachable READABLE_STRING_32, READABLE_STRING_32]]
 	on_start_tag_finish_callback: detachable PROCEDURE [ANY, TUPLE]
-	on_xml_declaration_callback: detachable PROCEDURE [ANY, TUPLE [STRING, STRING, BOOLEAN]]
+	on_xml_declaration_callback: detachable PROCEDURE [ANY, TUPLE [READABLE_STRING_8, detachable READABLE_STRING_8, BOOLEAN]]
 
 feature -- Setting
 
@@ -109,7 +109,7 @@ feature {NONE} -- Document
 			end
 		end
 
-	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN)
+	on_xml_declaration (a_version: READABLE_STRING_8; an_encoding: detachable READABLE_STRING_8; a_standalone: BOOLEAN)
 			-- XML declaration.
 		do
 			if attached on_xml_declaration_callback as cb then
@@ -119,7 +119,7 @@ feature {NONE} -- Document
 
 feature {NONE} -- Errors
 
-	on_error (a_message: STRING)
+	on_error (a_message: READABLE_STRING_32)
 			-- Event producer detected an error.
 		do
 			if attached on_error_callback as cb then
@@ -129,7 +129,7 @@ feature {NONE} -- Errors
 
 feature {NONE} -- Meta
 
-	on_processing_instruction (a_name, a_content: STRING)
+	on_processing_instruction (a_name, a_content: READABLE_STRING_32)
 			-- Forward PI.
 		do
 			if attached on_processing_instruction_callback as cb then
@@ -137,7 +137,7 @@ feature {NONE} -- Meta
 			end
 		end
 
-	on_comment (a_content: STRING)
+	on_comment (a_content: READABLE_STRING_32)
 			-- Forward comment.
 		do
 			if attached on_comment_callback as cb then
@@ -147,7 +147,7 @@ feature {NONE} -- Meta
 
 feature {NONE} -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- Start of start tag.
 		do
 			if attached on_start_tag_callback as cb then
@@ -155,7 +155,7 @@ feature {NONE} -- Tag
 			end
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
 			-- Process attribute.
 		do
 			if attached on_attribute_callback as cb then
@@ -171,7 +171,7 @@ feature {NONE} -- Tag
 			end
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- End tag.
 		do
 			if attached on_end_tag_callback as cb then
@@ -181,7 +181,7 @@ feature {NONE} -- Tag
 
 feature {NONE} -- Content
 
-	on_content (a_content: STRING)
+	on_content (a_content: READABLE_STRING_32)
 			-- Forward content.
 		do
 			if attached on_content_callback as cb then

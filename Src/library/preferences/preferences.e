@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 			default_values_not_void: default_values /= Void
 		end
 
-	make_with_defaults_and_storage (a_defaults: ARRAY [STRING]; a_storage: PREFERENCES_STORAGE_I)
+	make_with_defaults_and_storage (a_defaults: ARRAY [READABLE_STRING_GENERAL]; a_storage: PREFERENCES_STORAGE_I)
 			-- Create preferences and initialize values from those in `a_defaults',
 			-- using `a_storage' as preferences underlying storage engine.
 		require
@@ -122,7 +122,7 @@ feature {NONE} -- Initialization
 			make_with_storage (create {PREFERENCES_STORAGE_DEFAULT}.make_empty)
 		end
 
-	make_with_location (a_location: STRING)
+	make_with_location (a_location: READABLE_STRING_32)
 			-- Create preferences and store them in the location `a_location' between sessions.
 			-- -- `a_location' is the path to either:
 			--		* the root registry key where preferences will be stored,
@@ -135,7 +135,7 @@ feature {NONE} -- Initialization
 			make_with_storage (create {PREFERENCES_STORAGE_DEFAULT}.make_with_location (a_location))
 		end
 
-	make_with_defaults_and_location (a_defaults: ARRAY [STRING]; a_location: STRING)
+	make_with_defaults_and_location (a_defaults: ARRAY [READABLE_STRING_GENERAL]; a_location: READABLE_STRING_32)
 			-- Create preferences and initialize values from those in `a_defaults',
 			-- which is the path of one or more files that contain the default values.
 			-- Preferences will be stored in `a_location' between sessions, which is the
@@ -152,27 +152,17 @@ feature {NONE} -- Initialization
 			load_defaults (a_defaults)
 		end
 
-	load_defaults (a_defaults: ARRAY [STRING])
+	load_defaults (a_defaults: ARRAY [READABLE_STRING_GENERAL])
 			-- Initialize values from those in `a_defaults'.
 		require
 			default_not_void: a_defaults /= Void
-		local
-			l_defaults: ARRAY [STRING]
-			i, nb: INTEGER
-			def: STRING
 		do
-			from
-				l_defaults := a_defaults
-				i := l_defaults.lower
-				nb := l_defaults.upper + 1
-			until
-				i = nb
+			across
+				a_defaults as c
 			loop
-				def := l_defaults.item (i)
-				if def /= Void and then not def.is_empty then
+				if attached c.item as def and then not def.is_empty then
 					extract_default_values (def)
 				end
-				i := i + 1
 			end
 		end
 
@@ -184,7 +174,8 @@ feature -- Importation
 			a_storage_not_void: a_storage /= Void
 		local
 			vals: like session_values
-			k,v: STRING
+			k: STRING_8
+			v: STRING_32
 			p: detachable PREFERENCE
 		do
 			a_storage.initialize_with_preferences (Current)
@@ -214,18 +205,55 @@ feature -- Importation
 			save_preferences_using_storage (a_storage, a_save_modified_values_only)
 		end
 
+feature -- Status report
+
+	error_message_is_valid_as_string_8: BOOLEAN
+			-- Is associated error message a valid string_8 value?
+		do
+			if attached error_message_32 as err then
+				Result := err.is_valid_as_string_8
+			end
+		end
+
 feature -- Access
 
-	error_message: detachable STRING
+	error_message: detachable STRING_8
+			-- Message explaining why `Current' could not be initialized.	
+		require
+			error_message_is_valid_as_string_8: error_message_is_valid_as_string_8
+		do
+			if attached error_message_32 as err then
+				Result := err.as_string_8
+			end
+		end
+
+	error_message_32: detachable STRING_32
 			-- Message explaining why `Current' could not be initialized.	
 
 	save_defaults_to_store: BOOLEAN
 			-- Should preferences with default values be saved to the underlying data store when saving?
 
-	location: STRING
+	location: READABLE_STRING_GENERAL
 			-- Storage's location
 		do
 			Result := preferences_storage.location
+		end
+
+feature -- Change
+
+	report_error (m: READABLE_STRING_GENERAL)
+		local
+			err: like error_message_32
+		do
+			err := error_message_32
+			if err = Void then
+				create err.make (m.count)
+				err.append_string_general (m)
+				error_message_32 := err
+			else
+				err.append_character ('%N')
+				err.append_string_general (m)
+			end
 		end
 
 feature -- Status Setting
@@ -316,7 +344,7 @@ feature -- Preference
 			Result := get_preference (a_name)
 		end
 
-	get_preference_value_direct (a_name: STRING): detachable STRING
+	get_preference_value_direct (a_name: READABLE_STRING_GENERAL): detachable STRING_32
 			-- Fetch the preference string value with `a_name' directly from the underlying datastore.
 			-- Ignore values currently in `session_values' and `preferences'.  Use this if the
 			-- preference value has been changed externally and you need the updated value.
@@ -329,7 +357,7 @@ feature -- Preference
 			Result := preferences_storage.get_preference_value (a_name)
 		end
 
-	get_resource_value_direct (a_name: STRING): like get_preference_value_direct
+	get_resource_value_direct (a_name: READABLE_STRING_GENERAL): like get_preference_value_direct
 		obsolete "[060113] use get_preference_value_direct instead of get_resource_value_direct"
 		do
 			Result := get_preference_value_direct (a_name)
@@ -430,10 +458,10 @@ feature -- Storage access
 
 feature {PREFERENCE_FACTORY, PREFERENCE_MANAGER, PREFERENCE_VIEW, PREFERENCES_STORAGE_I} -- Implementation
 
-	default_values: HASH_TABLE [TUPLE [description, value: detachable STRING; hidden: BOOLEAN; restart: BOOLEAN], STRING]
+	default_values: HASH_TABLE [TUPLE [description: detachable STRING_32; value: detachable STRING_32; hidden: BOOLEAN; restart: BOOLEAN], STRING]
 			-- Hash table of known preference default values.  [[Description, Value, Hidden, Restart], Name].
 
-	session_values: HASH_TABLE [STRING, STRING]
+	session_values: HASH_TABLE [STRING_32, STRING_8]
 			-- Hash table of user-defined values retrieved from the underlying data store.
 			-- Depending upon the chosen implementation this will be the Windows registry or an XML file.
 
@@ -454,7 +482,7 @@ feature {NONE} -- Implementation
 	preferences_storage: PREFERENCES_STORAGE_I
 			-- Underlying preference storage.
 
-	extract_default_values (a_default_file_name: STRING)
+	extract_default_values (a_default_file_name: READABLE_STRING_GENERAL)
 			-- Extract from the default file the default values.  If a preference however exists in `preferences'
 			-- (i.e. saved in a previous session), then take this one instead.  Therefore the resulting list of
 			-- known preferences is a combination of defaults and user defined values.
@@ -462,20 +490,21 @@ feature {NONE} -- Implementation
 			default_file_name_not_void: a_default_file_name /= Void
 			default_file_name_not_empty: not a_default_file_name.is_empty
 		local
-			parser: XML_LITE_STOPPABLE_PARSER
+			parser: XML_STOPPABLE_PARSER
 			ns: XML_NAMESPACE_RESOLVER
-			l_file: PLAIN_TEXT_FILE
+			l_file: FILE
 			l_tree: XML_CALLBACKS_DOCUMENT
 			xml_data: detachable XML_ELEMENT
 			l_document: detachable XML_DOCUMENT
 			has_error: BOOLEAN
+			u: FILE_UTILITIES
 		do
 			create parser.make
 			create l_tree.make_null
 			create ns.set_next (l_tree)
 			parser.set_callbacks (ns)
 
-			create l_file.make (a_default_file_name)
+			l_file := u.make_text_file (a_default_file_name)
 			if l_file.exists and then l_file.is_readable then
 				l_file.open_read
 				if l_file.is_open_read then
@@ -489,9 +518,9 @@ feature {NONE} -- Implementation
 			end
 
     		if has_error then
-    			error_message := "%"" + a_default_file_name + "%" does not exist."
+    			report_error ({STRING_32} "%"" + a_default_file_name.to_string_32 + {STRING_32} "%" does not exist.")
     		elseif parser.error_occurred then
-    			error_message := a_default_file_name + "is not a valid preference file%N"
+    			report_error ({STRING_32} "%"" + a_default_file_name.to_string_32 + {STRING_32} "%" is not a valid preference file.")
     		else
     			l_document := l_tree.document
     			check l_document /= Void end -- implied by `not parser.error_occurred'
@@ -507,10 +536,10 @@ feature {NONE} -- Implementation
 		local
 			sub_node: detachable XML_ELEMENT
 			l_attribute: detachable XML_ATTRIBUTE
-			pref_name,
+			pref_name: detachable READABLE_STRING_32
 			pref_description,
 			pref_value,
-			att_pref_value: detachable STRING
+			att_pref_value: detachable STRING_32
 			pref_hidden,
 			pref_restart,
 			retried: BOOLEAN
@@ -522,7 +551,7 @@ feature {NONE} -- Implementation
 					xml_elem.after
 				loop
 					if attached {XML_ELEMENT} xml_elem.item_for_iteration as node then
-						if node.name.is_equal (once "PREF") then
+						if node.has_same_name (once "PREF") then
 							if attached node.elements as elts and then not elts.is_empty then
 								sub_node := elts.i_th (1)
 							end
@@ -530,69 +559,76 @@ feature {NONE} -- Implementation
 								-- Found preference
 							l_attribute := node.attribute_by_name (once "NAME")
 							if l_attribute /= Void then
+								-- TODO [2012-oct]: add unicode support for preference name
 								pref_name := l_attribute.value
-								l_attribute := node.attribute_by_name (once "DESCRIPTION")
-								if l_attribute /= Void then
-									pref_description := l_attribute.value
-									pref_description.replace_substring_all ("%%N", "%N")
-								else
-										-- No description specified
-									pref_description := ""
-								end
+								if pref_name.is_valid_as_string_8 then
 
-								l_attribute := node.attribute_by_name (once "HIDDEN")
-								if l_attribute /= Void then
-									pref_hidden := l_attribute.value.is_case_insensitive_equal (once "true")
-								else
-									pref_hidden := False
-								end
-
-								l_attribute := node.attribute_by_name (once "RESTART")
-								if l_attribute /= Void then
-									pref_restart := l_attribute.value.is_case_insensitive_equal (once "true")
-								else
-									pref_restart := False
-								end
-
-								if sub_node /= Void then
-
-									if sub_node.name.is_equal (once "SHORTCUT") then
-										create att_pref_value.make_empty
-
-											-- Check attributes for shortcut preferences
-										l_attribute := sub_node.attribute_by_name (once "Alt")
-										if l_attribute /= Void then
-											att_pref_value.append (l_attribute.value.as_lower + "+")
-										else
-											att_pref_value.append ("false+")
-										end
-
-										l_attribute := sub_node.attribute_by_name (once "Ctrl")
-										if l_attribute /= Void then
-											att_pref_value.append (l_attribute.value.as_lower + "+")
-										else
-											att_pref_value.append ("false+")
-										end
-
-										l_attribute := sub_node.attribute_by_name (once "Shift")
-										if l_attribute /= Void then
-											att_pref_value.append (l_attribute.value.as_lower  + "+")
-										else
-											att_pref_value.append ("false+")
-										end
+									l_attribute := node.attribute_by_name (once "DESCRIPTION")
+									if l_attribute /= Void then
+										pref_description := l_attribute.value.to_string_32
+										pref_description.replace_substring_all ({STRING_32} "%%N", {STRING_32} "%N")
 									else
-										att_pref_value := Void
+											-- No description specified
+										pref_description := ""
 									end
 
-										-- Found preference default value
-									pref_value := sub_node.text
-									if pref_value = Void then
-										create pref_value.make_empty
+									l_attribute := node.attribute_by_name (once "HIDDEN")
+									if l_attribute /= Void then
+										pref_hidden := l_attribute.value.is_case_insensitive_equal (once "true")
+									else
+										pref_hidden := False
 									end
-									if att_pref_value /= Void and then not att_pref_value.is_empty then
-										pref_value.prepend (att_pref_value)
+
+									l_attribute := node.attribute_by_name (once "RESTART")
+									if l_attribute /= Void then
+										pref_restart := l_attribute.value.is_case_insensitive_equal (once "true")
+									else
+										pref_restart := False
 									end
-									default_values.force ([pref_description, pref_value, pref_hidden, pref_restart], pref_name)
+
+									if sub_node /= Void then
+
+										if sub_node.name.is_equal (once "SHORTCUT") then
+											create att_pref_value.make_empty
+
+												-- Check attributes for shortcut preferences
+											l_attribute := sub_node.attribute_by_name (once "Alt")
+											if l_attribute /= Void then
+												att_pref_value.append (l_attribute.value.as_lower + "+")
+											else
+												att_pref_value.append ("false+")
+											end
+
+											l_attribute := sub_node.attribute_by_name (once "Ctrl")
+											if l_attribute /= Void then
+												att_pref_value.append (l_attribute.value.as_lower + "+")
+											else
+												att_pref_value.append ("false+")
+											end
+
+											l_attribute := sub_node.attribute_by_name (once "Shift")
+											if l_attribute /= Void then
+												att_pref_value.append (l_attribute.value.as_lower  + "+")
+											else
+												att_pref_value.append ("false+")
+											end
+										else
+											att_pref_value := Void
+										end
+
+											-- Found preference default value
+										pref_value := sub_node.text
+										if pref_value = Void then
+											create pref_value.make_empty
+										end
+										if att_pref_value /= Void and then not att_pref_value.is_empty then
+											pref_value.prepend (att_pref_value)
+										end
+										default_values.force ([pref_description, pref_value, pref_hidden, pref_restart], pref_name.to_string_8)
+									end
+								else
+									pref_name := Void
+									report_error ({STRING_32} "ERROR: Non ascii preference name: %"" + l_attribute.value + {STRING_32} "%"")
 								end
 							end
 						end

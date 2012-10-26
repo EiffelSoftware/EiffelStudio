@@ -180,10 +180,10 @@ feature {NONE} -- Events
 			if l_item /= Void then
 				if attached {EV_GRID_EDITABLE_ITEM} l_item as l_text_item then
 						-- Editable text item
-					l_text_item.set_text (a_pref.string_value)
+					l_text_item.set_text (a_pref.text_value)
 				elseif attached {EV_GRID_CHOICE_ITEM} l_item as l_combo_item then
 						-- Combo selectable item
-					l_combo_item.set_text (a_pref.string_value)
+					l_combo_item.set_text (a_pref.text_value)
 				elseif attached {EV_GRID_DRAWABLE_ITEM} l_item as l_color_item then
 						-- Color drawable item
 					l_color_item.redraw
@@ -194,7 +194,7 @@ feature {NONE} -- Events
 							attached {EV_GRID_LABEL_ITEM} l_item as l_font_item and
 							attached {FONT_PREFERENCE} a_pref as l_font
 						then
-							l_font_item.set_text (l_font.string_value)
+							l_font_item.set_text (l_font.text_value)
 							l_font_item.set_font (l_font.value)
 						end
 					end
@@ -592,7 +592,7 @@ feature {NONE} -- Implementation
 				end
 				l_grid_item := grid.row (curr_row).item (4)
 				if attached {EV_GRID_LABEL_ITEM} l_grid_item as grid_value_label_item then
-					grid_value_label_item.set_text (l_preference.string_value)
+					grid_value_label_item.set_text (l_preference.text_value)
 				elseif attached {EV_GRID_DRAWABLE_ITEM} l_grid_item as grid_value_drawable_item then
 					grid_value_drawable_item.redraw
 				end

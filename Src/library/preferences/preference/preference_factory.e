@@ -25,8 +25,9 @@ feature -- Commands
 			name_not_empty: not a_name.is_empty
 			value_not_void: a_fallback_value /= Void
 		local
-			l_fullname: STRING
-			l_value, l_desc: detachable STRING
+			l_fullname: STRING_8
+			l_value: detachable STRING_32
+			l_desc: detachable STRING_32
 		do
 			l_fullname := a_name
 			l_value := preferences.session_values.item (l_fullname)
@@ -41,7 +42,7 @@ feature -- Commands
 					-- Retrieve from default values.
 				l_value := l_dft_value.value
 				if l_value = Void then
-					l_value := ""
+					l_value := {STRING_32} ""
 				end
 				create Result.make_from_string_value (a_manager, a_name, l_value)
 				Result.set_hidden (l_dft_value.hidden)
@@ -68,7 +69,7 @@ feature -- Commands
 			preferences.preferences.put (Result, l_fullname)
 		ensure
 			has_result: Result /= Void
-			preference_name_set: Result.name.is_equal (a_name)
+			preference_name_set: Result.name.same_string (a_name)
 			preference_added: preferences.has_preference (a_name)
 		end
 
@@ -79,7 +80,7 @@ feature -- Commands
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

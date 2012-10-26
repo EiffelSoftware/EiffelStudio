@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 			has_location: location /= Void
 		end
 
-	make_with_location (a_location: STRING)
+	make_with_location (a_location: READABLE_STRING_GENERAL)
 			-- Create preference storage in the at location `a_location'.
 			-- Try to read preference at `a_location' if it exists, if not create new one.
 
@@ -59,16 +59,17 @@ feature {PREFERENCES} -- Initialization
 
 feature {PREFERENCES} -- Query
 
-	has_preference (a_name: STRING): BOOLEAN
+	has_preference (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does the underlying store contain a preference with `a_name'?
 		require
 			initialized: initialized
 			name_not_void: a_name /= Void
 			name_not_empty: not a_name.is_empty
+			name_is_valid_string_8: a_name.is_valid_as_string_8
 		deferred
 		end
 
-	get_preference_value (a_name: STRING): detachable STRING
+	get_preference_value (a_name: READABLE_STRING_GENERAL): detachable STRING_32
 			-- Retrieve the preference string value from the underlying store.
 		require
 			initialized: initialized
@@ -84,10 +85,10 @@ feature {PREFERENCES} -- Query
 
 feature {PREFERENCES} -- Access
 
-	location: STRING
+	location: READABLE_STRING_GENERAL
 			-- The actual location of the underlying preference (filename, registry key, etc).
 
-	session_values: HASH_TABLE [STRING, STRING]
+	session_values: HASH_TABLE [STRING_32, STRING_8]
 			-- Hash of user-defined values which have been loaded.
 
 	preferences: detachable PREFERENCES
@@ -141,7 +142,7 @@ invariant
 	preferences_not_void_when_initialized: initialized implies preferences /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

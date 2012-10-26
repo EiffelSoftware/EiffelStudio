@@ -72,16 +72,6 @@ feature {NONE} -- Command
 			Precursor {PREFERENCE_WIDGET}
 		end
 
-	update_preference
-			-- Updates preference.
-		do
-			if attached {SHORTCUT_PREFERENCE} preference as sc then
-				if not change_item_widget.text.is_empty then
-					sc.set_value_from_string (change_item_widget.text)
-				end
-			end
-		end
-
 	refresh
 			-- Refresh
 		do
@@ -269,7 +259,7 @@ invariant
 	preference_attached: preference /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

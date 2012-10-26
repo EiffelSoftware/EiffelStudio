@@ -1,4 +1,4 @@
-note
+﻿note
 	description	: "Main window for this application"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,9 @@ feature -- Preference Testing
 			br: BOOLEAN_PREFERENCE
 			ir: INTEGER_PREFERENCE
 			ar: ARRAY_PREFERENCE
+			ar32: ARRAY_32_PREFERENCE
 			sr: STRING_PREFERENCE
+			sr32: STRING_32_PREFERENCE
 			fr: FONT_PREFERENCE
 			cr: COLOR_PREFERENCE
 			df: EV_FONT
@@ -58,9 +60,19 @@ feature -- Preference Testing
 			l_manager := l_basic_preferences.new_manager ("examples")
 			ir := l_factory.new_integer_preference_value (l_manager, "examples.my_integer_preference", 10)
 			ar := l_factory.new_array_preference_value (l_manager, "examples.my_list_preference", <<"1","2","3">>)
+			ar := l_factory.new_array_preference_value (l_manager, "examples.my_list_preference_as_choice", <<"1","2","3">>)
+			ar.set_is_choice (True)
+			ar.set_selected_index (2)
 			fr := l_factory.new_font_preference_value (l_manager, "examples.my_font_preference", df)
 			sr := l_factory.new_string_preference_value (l_manager, "examples.my_string_preference", "a string")
 			sr := l_factory.new_string_preference_value (l_manager, "examples.driver_location", (create {DIRECTORY_NAME}.make_from_string ("C:\My Directory Location")).string)
+
+			ar32 := l_factory.new_array_32_preference_value (l_manager, "examples.my_unicode_list_preference", <<{STRING_32} "你", {STRING_32} "好", {STRING_32} "吗">>)
+			ar32 := l_factory.new_array_32_preference_value (l_manager, "examples.my_unicode_list_preference_as_choice", <<{STRING_32} "你", {STRING_32} "好", {STRING_32} "吗">>)
+			ar32.set_is_choice (True)
+			ar32.set_selected_index (2)
+
+			sr32 := l_factory.new_string_32_preference_value (l_manager, "examples.my_unicode_preference", {STRING_32} "a unicode string 你好吗")
 
 			l_manager := l_basic_preferences.new_manager ("display")
 			br := l_factory.new_boolean_preference_value (l_manager, "display.fullscreen_at_startup", True)
@@ -90,7 +102,7 @@ feature -- Preference Testing
 			create l_manager.make (l_custom_preferences, "display")
 			br := l_manager.new_boolean_preference_value (l_manager, "display.fullscreen_at_startup", True)
 			cr := l_manager.new_color_preference_value (l_manager, "display.background_color", create {EV_COLOR}.make_with_8_bit_rgb (128, 128, 0))
-			dr := l_manager.new_directory_preference_value ("display.driver_location", create {DIRECTORY_NAME}.make_from_string ("C:\A Directory Location"))
+			dr := l_manager.new_directory_preference_value ("display.driver_location", "C:\A Directory Location")
 
 			create l_manager.make (l_custom_preferences, "graphics")
 			br := l_manager.new_boolean_preference_value (l_manager, "graphics.use_maximum_resolution", True)

@@ -1,15 +1,15 @@
 note
-	description	: "Array preference."
+	description	: "Array of string_32 preference."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date		: "$Date:"
 	revision	: "$Revision$"
 
 class
-	ARRAY_PREFERENCE
+	ARRAY_32_PREFERENCE
 
 inherit
-	ABSTRACT_ARRAY_PREFERENCE [STRING]
+	ABSTRACT_ARRAY_PREFERENCE [STRING_32]
 
 create {PREFERENCE_FACTORY}
 	make, make_from_string_value
@@ -19,21 +19,21 @@ feature -- Access
 	string_type: STRING
 			-- String description of this preference type.
 		once
-			Result := "LIST"
+			Result := "LIST32"
 		end
-
+	
 feature -- Status Setting
 
 	set_value_from_string (a_value: READABLE_STRING_GENERAL)
 			-- Parse the string value `a_value' and set `value'.
 		local
 			cnt: INTEGER
-			s: STRING
-			values: LIST [STRING]
+			s: STRING_32
+			values: LIST [STRING_32]
 			l_value: like value
 		do
 			create internal_value.make_empty
-			values := a_value.as_string_8.split (';')
+			values := a_value.as_string_32.split (';')
 			if values.count > 1 or not values.first.is_empty then
 				from
 					l_value := value
@@ -59,10 +59,10 @@ feature -- Status Setting
 
 feature {NONE} -- Implementation
 
-	auto_default_value: ARRAY [STRING]
+	auto_default_value: ARRAY [STRING_32]
 			-- Value to use when Current is using auto by default (until real auto is set)
 		once
-			create Result.make_filled ("", 0, 1)
+			create Result.make_filled ({STRING_32} "", 0, 1)
 		end
 
 note

@@ -79,14 +79,6 @@ feature {NONE} -- Commands
 			last_selected_value := Void
 		end
 
-	update_preference
-			-- Update preference to reflect recently chosen value
-		do
-			if attached last_selected_value as v then
-				preference.set_value (v)
-			end
-		end
-
 	show
 			-- Show the widget in its editable state
 		do
@@ -102,7 +94,7 @@ feature {NONE} -- Commands
 			l_font.set_height_in_points (default_font_height)
 			if change_item_widget /= Void then
 				change_item_widget.set_font (l_font)
-				change_item_widget.set_text (preference.string_value)
+				change_item_widget.set_text (preference.text_value)
 			end
 		end
 
@@ -130,7 +122,7 @@ feature {NONE} -- Implementation
 
 note
 
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

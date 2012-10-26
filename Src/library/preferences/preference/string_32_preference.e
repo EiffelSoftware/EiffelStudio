@@ -1,15 +1,15 @@
 note
-	description	: "String preference."
+	description	: "String 32 preference."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"
 
 class
-	STRING_PREFERENCE
+	STRING_32_PREFERENCE
 
 inherit
-	ABSTRACT_STRING_PREFERENCE [STRING]
+	ABSTRACT_STRING_PREFERENCE [STRING_32]
 
 create {PREFERENCE_FACTORY}
 	make, make_from_string_value
@@ -26,16 +26,16 @@ feature {NONE} -- Implementation
 
 	is_value_compatible (a_value: READABLE_STRING_GENERAL): BOOLEAN
 		do
-			Result := a_value.is_valid_as_string_8
+			Result := True
 		end
 
-	to_value (a_value: READABLE_STRING_GENERAL): STRING
+	to_value (a_value: READABLE_STRING_GENERAL): STRING_32
 			-- `a_value' to type of `value'.
 		do
-			Result := a_value.as_string_8
+			Result := a_value.as_string_32
 		end
 
-	auto_default_value: STRING
+	auto_default_value: STRING_32
 			-- Value to use when Current is using auto by default (until real auto is set)
 		once
 			create Result.make_empty
@@ -55,4 +55,4 @@ note
 
 
 
-end -- class STRING_PREFERENCE
+end -- class STRING_32_PREFERENCE

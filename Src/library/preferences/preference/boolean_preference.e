@@ -17,13 +17,16 @@ inherit
 create {PREFERENCE_FACTORY}
 	make, make_from_string_value
 
-feature -- Access
+feature {PREFERENCE, PREFERENCE_WIDGET, PREFERENCES_STORAGE_I, PREFERENCE_VIEW} -- Access
 
-	string_value: STRING
+	text_value: STRING_32
 			-- String representation of `value'.		
 		do
-			Result := value.out
+			create Result.make_empty
+			Result.append_boolean (value)
 		end
+
+feature -- Access
 
 	string_type: STRING
 			-- String description of this preference type.
@@ -33,10 +36,15 @@ feature -- Access
 
 feature -- Query
 
-	valid_value_string (a_string: STRING): BOOLEAN
+	valid_value_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_string' valid for this preference type to convert into a value?
+		local
+			s: STRING_8
 		do
-			Result := a_string.is_case_insensitive_equal ("true") or a_string.is_case_insensitive_equal ("false")
+			if a_string.is_valid_as_string_8 then
+				s := a_string.as_string_8.as_lower
+				Result := s.same_string ("true") or s.same_string ("false")
+			end
 		end
 
 feature -- settings
@@ -59,10 +67,10 @@ feature {PREFERENCES} -- Access
 
 feature -- Status Setting
 
-	set_value_from_string (a_value: STRING)
+	set_value_from_string (a_value: READABLE_STRING_GENERAL)
 			-- Parse the string value `a_value' and set `value'.
 		do
-			set_value (a_value.is_case_insensitive_equal ("true"))
+			set_value (a_value.as_string_8.is_case_insensitive_equal ("true"))
 		end
 
 feature {NONE} -- Implementation
@@ -71,7 +79,7 @@ feature {NONE} -- Implementation
 			-- Value to use when Current is using auto by default (until real auto is set)
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

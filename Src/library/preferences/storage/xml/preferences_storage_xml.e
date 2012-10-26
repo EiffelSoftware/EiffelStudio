@@ -34,15 +34,13 @@ feature {NONE} -- Initialization
 			-- For operating systems which support it it will stored in the users home directory.  For operating
 			-- systems that do not support home directories it will be stored in the current working directory.
 		local
-			l_loc: detachable STRING
-			l_exec: EXECUTION_ENVIRONMENT
-			l_op: OPERATING_ENVIRONMENT
-			fn: FILE_NAME
+			l_loc: detachable STRING_32
+			l_exec: EXECUTION_ENVIRONMENT_32
+			fn: FILE_NAME_32
 		do
 			create l_exec
-			l_op := l_exec.operating_environment
 
-			if l_op.home_directory_supported then
+			if operating_environment.home_directory_supported then
 				l_loc := l_exec.home_directory_name
 				check l_loc /= Void end -- implied by `home_directory_supported'
 			else
@@ -50,10 +48,10 @@ feature {NONE} -- Initialization
 			end
 			create fn.make_from_string (l_loc)
 			fn.set_file_name ("stored_preferences.xml")
-			make_with_location (fn.string)
+			make_with_location (fn.to_string_32)
 		end
 
-	make_with_location (a_location: STRING)
+	make_with_location (a_location: READABLE_STRING_GENERAL)
 			-- Create preference storage in the XML file at location `a_location'.
 			-- If file does not exist create new one.
 		do
@@ -74,22 +72,23 @@ feature {PREFERENCES} -- Resource Management
 	exists: BOOLEAN
 			-- Does storage exists ?
 		local
-			f: RAW_FILE
+			u: FILE_UTILITIES
 		do
-			create f.make (location)
-			Result := f.exists
+			Result := u.file_exists (location)
 		end
 
-	has_preference (a_name: STRING): BOOLEAN
+	has_preference (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does the underlying store contain a preference with `a_name'?
 		do
-			Result := session_values.has (a_name)
+			-- FIXME: preference does not support unicode pref name			
+			Result := session_values.has (a_name.as_string_8)
 		end
 
-	get_preference_value (a_name: STRING): detachable STRING
+	get_preference_value (a_name: READABLE_STRING_GENERAL): detachable STRING_32
 			-- Retrieve the preference string value from the underlying store.
 		do
-			Result := session_values.item (a_name)
+			-- FIXME: preference does not support unicode pref name			
+			Result := session_values.item (a_name.as_string_8)
 		end
 
 	save_preference (a_preference: PREFERENCE)
@@ -111,11 +110,12 @@ feature {PREFERENCES} -- Resource Management
 			l_preference: PREFERENCE
 			l_file: PLAIN_TEXT_FILE
 			pref_string1, pref_string2, pref_string3: STRING
+			u: FILE_UTILITIES
 		do
 			pref_string1 := "%N%T<PREFERENCE NAME=%""
 			pref_string2 := "%" VALUE=%""
 			pref_string3 := "%"/>"
-			create l_file.make (location)
+			l_file := u.make_text_file (location)
 			safe_open_write (l_file)
 			if l_file.is_open_write then
 				l_file.put_string ("<EIFFEL_DOCUMENT>")
@@ -129,7 +129,7 @@ feature {PREFERENCES} -- Resource Management
 						l_file.put_string (pref_string1)
 						l_file.put_string (escape_xml (l_preference.name))
 						l_file.put_string (pref_string2)
-						l_file.put_string (escape_xml (l_preference.string_value))
+						l_file.put_string (escape_xml (l_preference.text_value))
 						l_file.put_string (pref_string3)
 					else
 						-- nothing to do to remove them from file.
@@ -160,20 +160,21 @@ feature {NONE} -- Implementation
 		require
 			location_not_void: location /= Void
 		local
-			parser: XML_LITE_STOPPABLE_PARSER
+			parser: XML_STOPPABLE_PARSER
 			l_file: PLAIN_TEXT_FILE
 			l_tree: XML_CALLBACKS_DOCUMENT
 			l_attrib: detachable XML_ATTRIBUTE
-			pref_name,
-			pref_value: detachable STRING
+			pref_name: detachable READABLE_STRING_32
+			pref_value: detachable READABLE_STRING_32
 			l_root_element: XML_ELEMENT
 			t_preference, t_name, t_value: STRING
+			u: FILE_UTILITIES
 		do
 			create parser.make
 			create l_tree.make_null
 			parser.set_callbacks (l_tree)
 
-			create l_file.make (location)
+			l_file := u.make_text_file (location)
 			if l_file.exists and then l_file.is_readable then
 				safe_open_read (l_file)
 				if l_file.is_open_read then
@@ -194,20 +195,27 @@ feature {NONE} -- Implementation
 							l_root_element.after
 						loop
 							if attached {XML_ELEMENT} l_root_element.item_for_iteration as node then
-								if node.name ~ t_preference then
+								if node.has_same_name (t_preference) then
 										-- Found preference
 									l_attrib := node.attribute_by_name (t_name)
 									if l_attrib /= Void then
+										-- FIXME: preference does not support unicode pref name
 										pref_name := l_attrib.value
-										l_attrib := node.attribute_by_name (t_value)
-										if l_attrib /= Void then
-											pref_value := l_attrib.value
+										if pref_name.is_valid_as_string_8 then
+
+											l_attrib := node.attribute_by_name (t_value)
+											if l_attrib /= Void then
+												pref_value := l_attrib.value
+											end
+											if pref_value = Void then
+												check xml_contain_value: False end
+												create {STRING_32} pref_value.make_empty
+											end
+											session_values.put (pref_value, pref_name.to_string_8)
+										else
+											--| Entry ignored.
+											pref_name := Void
 										end
-										if pref_value = Void then
-											check xml_contain_value: False end
-											create pref_value.make_empty
-										end
-										session_values.put (pref_value, pref_name)
 									end
 								end
 							end
@@ -230,16 +238,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	escape_xml (a_string: STRING): STRING
+	escape_xml (a_string: READABLE_STRING_GENERAL): STRING
 			-- Escape xml entities in `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 		do
-			create Result.make_from_string (a_string)
-			Result.replace_substring_all (Amp_string, amp_entity)
-			Result.replace_substring_all (Lt_string, Lt_entity)
-			Result.replace_substring_all (Gt_string, Gt_entity)
-			Result.replace_substring_all (Quot_string, quot_entity)
+			Result := xml_utilities.escaped_xml (a_string)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -320,12 +324,18 @@ feature {NONE} -- XML markup and entities constants
 	Amp_entity: STRING = "&amp;"
 	Quot_entity: STRING = "&quot;"
 
+	xml_utilities: XML_UTILITIES
+			-- XML utilities
+		once
+			create Result
+		end
+
 invariant
 	has_session_values: session_values /= Void
 	has_xml_structure: xml_structure /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

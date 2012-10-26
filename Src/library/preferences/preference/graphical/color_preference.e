@@ -19,16 +19,16 @@ create {PREFERENCE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	 init_value_from_string (a_value: STRING)
+	 init_value_from_string (a_value: READABLE_STRING_GENERAL)
 			-- Set initial value from String `a_value'
 		do
 			create internal_value.make_with_8_bit_rgb (0, 0, 0)
 			Precursor (a_value)
 		end
 
-feature -- Access
+feature {PREFERENCE, PREFERENCE_WIDGET, PREFERENCES_STORAGE_I, PREFERENCE_VIEW} -- Access
 
-	string_value: STRING
+	text_value: STRING_32
 			-- String representation of `value'.		
 		local
 			l_auto_preference: like auto_preference
@@ -36,7 +36,7 @@ feature -- Access
 			if is_auto then
 				l_auto_preference := auto_preference
 				check attached l_auto_preference end -- implied by `is_auto' and code from `update_is_auto'
-				Result := l_auto_preference.string_value
+				Result := l_auto_preference.text_value
 			else
 				create Result.make (11)
 				Result.append_integer (internal_value.red_8_bit)
@@ -47,6 +47,8 @@ feature -- Access
 			end
 		end
 
+feature -- Access
+
 	string_type: STRING
 			-- String description of this preference type.
 		once
@@ -55,15 +57,16 @@ feature -- Access
 
 feature -- Query
 
-	valid_value_string (a_string: STRING): BOOLEAN
+	valid_value_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_string' valid for this preference type to convert into a value?
 			-- String must conform to the following structure: "xxx;xxx;xxx" where xxx represents
 			-- an integer value between 0 and 255.
 		local
-			s, rgbval: STRING
+			s,
+			rgbval: STRING_32
 			i: INTEGER
 		do
-			s := a_string.string
+			s := a_string.to_string_32
 			if s.occurrences (';') = 2 then
 				i := s.index_of (';', 1)
 				rgbval := s.substring (1, i - 1)
@@ -79,7 +82,7 @@ feature -- Query
 						Result := not rgbval.is_empty and then rgbval.count < 4 and then rgbval.is_integer
 					end
 				end
-			elseif s ~ auto_string then
+			elseif s.same_string (auto_string) then
 				Result := True
 			end
 		end
@@ -94,16 +97,17 @@ feature {PREFERENCES} -- Access
 
 feature {NONE} -- Implementation
 
-	set_value_from_string (a_value: STRING)
+	set_value_from_string (a_value: READABLE_STRING_GENERAL)
 			-- Parse the string value `a_value' and set `value'.
 		local
-			s, rgbval: STRING
+			s, rgbval: STRING_32
 			i, r, g, b: INTEGER
 		do
-			s := a_value.string
-			if s ~ auto_string then
+			if a_value.same_string (auto_string) then
 				set_value (auto_default_value)
 			else
+				s := a_value.to_string_32
+
 					-- Red value
 				i := s.index_of (';', 1)
 				rgbval := s.substring (1, i - 1)
@@ -131,7 +135,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

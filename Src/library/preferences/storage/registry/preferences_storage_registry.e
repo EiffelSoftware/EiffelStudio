@@ -44,22 +44,22 @@ feature {PREFERENCES} -- Initialization
 	initialize_with_preferences (a_preferences: PREFERENCES)
 	   	local
 			l_keyp: POINTER
-			l_name: STRING
-			l_value: detachable STRING
-			l_key_values: LINKED_LIST [STRING]
+			l_name: STRING_32
+			l_value: detachable STRING_32
+			l_key_values: LINKED_LIST [STRING_32]
 		do
 			Precursor (a_preferences)
 
 			l_keyp := open_key_with_access (location, key_read)
 			if l_keyp /= default_pointer then
-				l_key_values := enumerate_values_as_string_8 (l_keyp)
+				l_key_values := enumerate_values (l_keyp)
 				if not l_key_values.is_empty then
 					from
 						l_key_values.start
 					until
 						l_key_values.after
 					loop
-						l_name := l_key_values.item
+						l_name := l_key_values.item.to_string_8 -- FIXME: preference does not support unicode pref name
 						if attached key_value (l_keyp, l_name) as l_key_value then
 							l_value := l_key_value.string_value
 							if l_name.has ('_') then
@@ -89,13 +89,13 @@ feature {PREFERENCES} -- Resource Management
 				--|   `initialize_with_preferences' created it anyway
 		end
 
-	has_preference (a_name: STRING): BOOLEAN
+	has_preference (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does the underlying store contain a preference with `a_name'?
 		do
 			Result := get_preference_value (a_name) /= Void
 		end
 
-	get_preference_value (a_name: STRING): detachable STRING
+	get_preference_value (a_name: READABLE_STRING_GENERAL): detachable STRING_32
 			-- Retrieve the preference string value from the underlying store.
 		local
 			l_handle: POINTER
@@ -124,7 +124,7 @@ feature {PREFERENCES} -- Resource Management
 			end
 			if valid_value_for_hkey (l_parent_key) then
 				l_registry_preference_name := a_preference.string_type + "_" + a_preference.name
-				create l_new_value.make ({WEL_REGISTRY_KEY_VALUE_TYPE}.reg_sz, a_preference.string_value)
+				create l_new_value.make ({WEL_REGISTRY_KEY_VALUE_TYPE}.reg_sz, a_preference.text_value)
 				set_key_value (l_parent_key, l_registry_preference_name, l_new_value)
 				close_key (l_parent_key)
 			end
@@ -152,7 +152,7 @@ invariant
 	has_session_values: session_values /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

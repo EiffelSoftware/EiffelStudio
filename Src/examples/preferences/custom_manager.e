@@ -10,7 +10,7 @@ class
 
 inherit
 	PREFERENCE_MANAGER
-	
+
 	GRAPHICAL_PREFERENCE_FACTORY
 
 create
@@ -18,21 +18,20 @@ create
 
 feature -- Access
 
-	new_directory_preference_value (a_name: STRING; a_value: DIRECTORY_NAME): DIRECTORY_RESOURCE
+	new_directory_preference_value (a_name: STRING; a_value: STRING_32): DIRECTORY_RESOURCE
 			-- Add a new directory path preference with name `a_name' and `a_value'.
 		require
 			name_valid: a_name /= Void and not a_name.is_empty
 			value_not_void: a_value /= Void
 			not_has_preference: not known_preference (a_name)
 		do
-			Result := (create {PREFERENCE_FACTORY [DIRECTORY_NAME, DIRECTORY_RESOURCE]}).
+			Result := (create {PREFERENCE_FACTORY [STRING_32, DIRECTORY_RESOURCE]}).
 				new_preference (preferences, Current, a_name, a_value)
 		ensure
 			has_result: Result /= Void
-			preference_name_set: Result.name.is_equal (a_name)
-			preference_value_set: Result.value.is_equal (a_value)
-			preference_added: preferences.has_preference (namespace + "." + a_name)
-		end		
+			preference_name_set: Result.name.same_string (a_name)
+			preference_added: preferences.has_preference (a_name)
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

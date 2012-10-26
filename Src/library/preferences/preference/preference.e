@@ -21,15 +21,15 @@ feature -- Status setting
 			name_set: name = new_name
 		end
 
-	set_description (new_description: STRING)
+	set_description (new_description: READABLE_STRING_GENERAL)
 			-- Set `description' to `new_description'.
 		require
 			new_description_exists: new_description /= Void
 			new_description_not_empty: not new_description.is_empty
 		do
-			description := new_description
+			description := new_description.to_string_32
 		ensure
-			description_set: description = new_description
+			description_set: attached description as d and then d.same_string_general (new_description)
 		end
 
 	set_hidden (a_flag: BOOLEAN)
@@ -54,7 +54,7 @@ feature -- Status setting
 			default_value_set: internal_default_value = a_value
 		end
 
-	set_value_from_string (a_value: STRING)
+	set_value_from_string (a_value: READABLE_STRING_GENERAL)
 			-- Parse the string value `a_value' and set `value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -70,7 +70,7 @@ feature -- Status setting
 			l_default_value: like default_value
 		do
 			if attached auto_preference as l_auto_preference then
-				set_value_from_string (l_auto_preference.string_value)
+				set_value_from_string (l_auto_preference.text_value)
 			else
 				l_default_value := default_value
 				check attached l_default_value end -- implied by precondition `has_default_value' and `auto_preference = Void'
@@ -93,24 +93,27 @@ feature -- Access
 	name: STRING
 			-- Name of the preference as it appears in the preference file.
 
-	description: detachable STRING
+	description: detachable STRING_32
 			-- Description of what the preference is all about.
 
-	default_value: detachable STRING
+	default_value: detachable STRING_32
 			-- Value to be used for default.
 		do
 			if attached auto_preference as l_auto_preference then
-				Result := l_auto_preference.string_value
+				Result := l_auto_preference.text_value
 			else
 				Result := internal_default_value
 			end
 		end
 
-	string_value: STRING
+	string_value: STRING_8
 			-- String value for this preference.
+		obsolete
+			"Use `value' instead of accessing implementation function [2012-oct]"
 		require
 			has_value: has_value
-		deferred
+		do
+			Result := text_value.to_string_8
 		ensure
 			not_void: Result /= Void
 		end
@@ -120,6 +123,7 @@ feature -- Access
 		deferred
 		ensure
 			string_type_not_void: Result /= Void
+			no_underscore: not Result.has ('_')
 		end
 
 	generating_preference_type: STRING
@@ -134,6 +138,17 @@ feature -- Access
 
 	auto_preference: detachable like Current
 			-- Preference to use for auto color.
+
+feature {PREFERENCE, PREFERENCE_WIDGET, PREFERENCES_STORAGE_I, PREFERENCE_VIEW} -- Access
+
+	text_value: STRING_32
+			-- String value for this preference.
+		require
+			has_value: has_value
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
 
 feature -- Query
 
@@ -152,7 +167,7 @@ feature -- Query
 			-- Is this preference value the same as the default value?
 		do
 			if attached default_value as l_default_value then
-				Result := string_value.is_case_insensitive_equal (l_default_value)
+				Result := text_value.is_case_insensitive_equal (l_default_value)
 			else
 				check has_no_default_value: not has_default_value end
 			end
@@ -161,7 +176,7 @@ feature -- Query
 	is_hidden: BOOLEAN
 			-- Should Current be hidden from user view?
 
-	valid_value_string (a_string: STRING): BOOLEAN
+	valid_value_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_string' valid for this preference type to convert into a value?
 		require
 			string_not_void: a_string /= Void
@@ -199,7 +214,7 @@ feature {NONE} -- Implementation
 	auto_string: STRING = "auto"
 			-- Auto
 
-	internal_default_value: detachable STRING
+	internal_default_value: detachable STRING_32
 			-- Internal default value
 
 invariant
@@ -208,7 +223,7 @@ invariant
 	has_change_actions: change_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

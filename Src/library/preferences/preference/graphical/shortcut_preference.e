@@ -26,16 +26,16 @@ create {PREFERENCE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	init_value_from_string (a_value: STRING)
+	init_value_from_string (a_value: READABLE_STRING_GENERAL)
 			-- Set initial value from String `a_value'
 		do
 			internal_value := [False, False, False, ""]
 			Precursor (a_value)
 		end
 
-feature -- Access
+feature {PREFERENCE, PREFERENCE_WIDGET, PREFERENCES_STORAGE_I, PREFERENCE_VIEW} -- Access
 
-	string_value: STRING
+	text_value: STRING_32
 			-- String representation of `value'.
 		do
 			create Result.make_empty
@@ -46,6 +46,8 @@ feature -- Access
 				Result.append (key.out)
 			end
 		end
+
+feature -- Access		
 
 	string_type: STRING
 			-- String description of this preference type.
@@ -170,10 +172,11 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_value_from_string (a_value: STRING)
+	set_value_from_string (a_value: READABLE_STRING_GENERAL)
 			-- Parse the string value `a_value' and set `value'.
 			-- String format: "Alt+Ctrl+Shift+KeyString"		
 		local
+			s: STRING
 			l_string: STRING
 			l_value: like value
 			l_cnt: INTEGER
@@ -184,17 +187,19 @@ feature -- Status Setting
 		do
 			l_value := [False, False, False, ""]
 
+			create s.make_from_string (a_value.as_string_8)
+
 			from
 				l_cnt := 1
 				l_start_index := 1
 			until
 				l_cnt > 4
 			loop
-				l_end_index := a_value.index_of ('+', l_start_index)
+				l_end_index := s.index_of ('+', l_start_index)
 				if l_cnt /= 4 and l_end_index /= 0 then
-					l_string := a_value.substring (l_start_index, l_end_index - 1)
+					l_string := s.substring (l_start_index, l_end_index - 1)
 				else
-					l_string := a_value.substring (l_start_index, a_value.count)
+					l_string := s.substring (l_start_index, s.count)
 				end
 				if l_string.is_case_insensitive_equal (str_true) then
 					l_value.put_boolean (True, l_cnt)
@@ -244,10 +249,10 @@ feature -- Query
 			Result := attached value as l_value and then l_value.shift
 		end
 
-	valid_value_string (a_string: STRING): BOOLEAN
+	valid_value_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_string' valid for this preference type to convert into a value?		
 		do
-			Result := a_string.split ('+').count >= 4
+			Result := a_string.as_string_8.split ('+').count >= 4
 		end
 
 	is_default_value: BOOLEAN
@@ -278,7 +283,7 @@ feature {NONE} -- Implementation
 	str_false: STRING = "False";
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

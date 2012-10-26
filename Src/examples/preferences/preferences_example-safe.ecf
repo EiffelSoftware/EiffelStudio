@@ -17,7 +17,7 @@
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>
 	</target>
 	<target name="xml" extends="common">
-		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml-safe.ecf" readonly="false"/>
+		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml-safe.ecf"/>
 		<cluster name="root_cluster" location=".\">
 			<cluster name="storage_factory" location="$|spec\xml\"/>
 		</cluster>

@@ -14,13 +14,16 @@ inherit
 create {PREFERENCE_FACTORY}
 	make, make_from_string_value
 
-feature -- Access
+feature {PREFERENCE, PREFERENCE_WIDGET, PREFERENCES_STORAGE_I, PREFERENCE_VIEW} -- Access
 
-	string_value: STRING
+	text_value: STRING_32
 			-- String representation of `value'.		
 		do
-			Result := value.out
+			create Result.make_empty
+			Result.append_integer (value)
 		end
+
+feature -- Access
 
 	string_type: STRING
 			-- String description of this preference type.
@@ -30,7 +33,7 @@ feature -- Access
 
 feature -- Query
 
-	valid_value_string (a_string: STRING): BOOLEAN
+	valid_value_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_string' valid for this preference type to convert into a value?
 		do
 			Result := a_string.is_integer
@@ -46,7 +49,7 @@ feature {PREFERENCES} -- Access
 
 feature {NONE} -- Implementation
 
-	set_value_from_string (a_value: STRING)
+	set_value_from_string (a_value: READABLE_STRING_GENERAL)
 			-- Parse the string value `a_value' and set `value'.
 		require else
 			string_valid: valid_value_string (a_value)
@@ -58,7 +61,7 @@ feature {NONE} -- Implementation
 			-- Value to use when Current is using auto by default (until real auto is set)
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

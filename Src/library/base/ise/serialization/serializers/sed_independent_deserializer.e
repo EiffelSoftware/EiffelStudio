@@ -153,6 +153,8 @@ feature {NONE} -- Implementation
 				attached attributes_mapping as l_map and then l_map.valid_index (a_dtype) and then
 				attached l_map.item (a_dtype) as l_entry
 			then
+					-- We substract -1 because the SPECIAL have a dummy entry at position 0 since
+					-- positions in INTERNAL always start at one.
 				Result := l_entry.count - 1
 			else
 				raise_fatal_error (error_factory.new_internal_error ("Cannot retrieve stored count"))
@@ -173,7 +175,6 @@ feature {NONE} -- Implementation
 			l_old_dtype, l_dtype: INTEGER
 			i, nb: INTEGER
 			a: like attributes_mapping
-			l_item: detachable TUPLE [position, dtype: INTEGER]
 			l_attribute_type: INTEGER
 		do
 			l_deser := deserializer
@@ -200,16 +201,12 @@ feature {NONE} -- Implementation
 						-- Read attribute name
 					l_name := l_deser.read_string_8
 					if l_dtype >= 0 then
-						l_map.search (l_name)
-						if l_map.found then
-							l_item := l_map.found_item
-							if l_item /= Void then
-								l_attribute_type := l_item.dtype
-								if l_attribute_type /= l_dtype then
-									add_error (error_factory.new_attribute_mismatch (a_dtype, l_name, l_attribute_type, l_dtype))
-								else
-									l_mapping.extend (l_item.position)
-								end
+						if attached l_map.item (l_name) as l_item then
+							l_attribute_type := l_item.dtype
+							if l_attribute_type /= l_dtype then
+								add_error (error_factory.new_attribute_mismatch (a_dtype, l_name, l_attribute_type, l_dtype))
+							else
+								l_mapping.extend (l_item.position)
 							end
 						else
 							add_error (error_factory.new_missing_attribute_error (a_dtype, l_name))

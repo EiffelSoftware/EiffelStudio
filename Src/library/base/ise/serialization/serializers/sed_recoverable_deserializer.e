@@ -382,13 +382,16 @@ feature {NONE} -- Implementation
 								end
 							end
 						end
-							--- Regardless of the mismatch status, we record the mapping.
+							-- Regardless of the mismatch status, we record the mapping.
 						l_mapping.extend (l_item.position)
 					else
 						l_not_founds := l_not_founds + 1
 						if not is_attribute_removal_allowed then
 							associated_mismatch (a_dtype).add_removed_attribute (l_dtype, l_old_name, l_new_name, i)
 						end
+							-- We store a non-existent mapping, so that `l_mapping' does store the actual number of attributes
+							-- that were originally stored.
+						l_mapping.extend (-1)
 					end
 				else
 					add_error (error_factory.new_unknown_attribute_type_error (a_dtype, l_new_name))
@@ -399,6 +402,7 @@ feature {NONE} -- Implementation
 			if l_old_count - l_not_founds < l_new_count then
 				associated_mismatch (a_dtype).add_new_attribute_mismatch (l_new_count - (l_old_count - l_not_founds))
 			end
+
 			check attached attributes_mapping as l_a then
 				if not l_a.valid_index (a_dtype) then
 					a := l_a.aliased_resized_area_with_default (Void, (a_dtype + 1).max (l_a.count * 2))
@@ -558,6 +562,7 @@ feature {NONE} -- Implementation
 				l_deser := deserializer
 				from
 					i := 1
+						-- We read only as many attributes as stored.
 					nb := read_persistent_field_count (a_dtype) + 1
 				until
 					i = nb
@@ -694,14 +699,14 @@ feature {NONE} -- Cleaning
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

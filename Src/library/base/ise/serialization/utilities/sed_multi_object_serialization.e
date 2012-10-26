@@ -46,7 +46,7 @@ feature -- Status report
 
 feature -- Basic Operations
 
-	deserialize (path: READABLE_STRING_GENERAL; a_pos: INTEGER)
+	deserialize (path: STRING; a_pos: INTEGER)
 			-- Deserialize object previously serialized in `path' at position `a_pos'.
 		require
 			non_void_path: path /= Void

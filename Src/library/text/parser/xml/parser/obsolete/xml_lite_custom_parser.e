@@ -1,11 +1,6 @@
 note
 	description : "[
-			Stoppable XML parser with settings
-				- carriage_return_character_ignored
-				- entity_mapping
-
-			It does not perform any strict verification, and does not handle the encoding.
-			This is really a simple xml parser which might answer basic XML parsing.
+				Use XML_CUSTOM_PARSER [2012-oct]
 		]"
 	author: "Jocelyn Fiat"
 	date: "$Date$"
@@ -13,6 +8,8 @@ note
 
 class
 	XML_LITE_CUSTOM_PARSER
+
+obsolete "Use XML_CUSTOM_PARSER [2012-oct]"
 
 inherit
 	XML_LITE_STOPPABLE_PARSER

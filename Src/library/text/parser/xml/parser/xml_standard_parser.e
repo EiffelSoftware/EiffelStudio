@@ -1,10 +1,7 @@
 note
 	description : "[
-			Simple XML parser
+			XML v1.0 parser
 
-			It does not perform any strict verification, and does not handle the encoding.
-			This is really a simple xml parser which might answer basic XML parsing.
-			
 			check: http://www.w3.org/TR/REC-xml/
 		]"
 	warning: "[
@@ -16,7 +13,7 @@ note
 	revision: "$Revision$"
 
 class
-	XML_LITE_PARSER
+	XML_STANDARD_PARSER
 
 inherit
 	XML_PARSER

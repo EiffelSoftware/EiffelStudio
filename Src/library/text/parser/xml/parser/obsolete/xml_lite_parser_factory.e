@@ -1,19 +1,20 @@
 note
-	description : "Objects that ..."
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description: "[
+				Use XML_STANDARD_PARSER
+			]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	XML_LITE_PARSER_FACTORY
 
+obsolete "Use {XML_PARSER_FACTORY} [2012-oct]"
+
 inherit
 	XML_PARSER_FACTORY
-
-feature -- Status report
-
-	is_parser_available: BOOLEAN = True
-			-- Is XML parser available?
+		redefine
+			new_parser
+		end
 
 feature -- Access
 

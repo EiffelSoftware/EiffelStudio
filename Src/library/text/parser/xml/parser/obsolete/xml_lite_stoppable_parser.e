@@ -1,11 +1,6 @@
 note
 	description : "[
-			Simple XML parser with settings
-				- error_ignored
-				- allow to stop the parser
-
-			It does not perform any strict verification, and does not handle the encoding.
-			This is really a simple xml parser which might answer basic XML parsing.
+			Use {XML_STOPPABLE_PARSER}
 		]"
 	author: "Jocelyn Fiat"
 	date: "$Date$"
@@ -13,6 +8,8 @@ note
 
 class
 	XML_LITE_STOPPABLE_PARSER
+
+obsolete "Use {XML_STOPPABLE_PARSER} [2012-oct]"
 
 inherit
 	XML_LITE_PARSER

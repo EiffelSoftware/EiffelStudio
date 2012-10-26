@@ -20,6 +20,11 @@ inherit
 
 feature -- Test routines
 
+	factory: XML_PARSER_FACTORY
+		once
+			create Result
+		end
+
 	new_doc: XML_DOCUMENT
 		local
 			e: XML_ELEMENT
@@ -185,13 +190,13 @@ feature -- Test routines
 	test_xml_parser
 			-- New test routine
 		local
-			p: XML_LITE_PARSER
+			p: XML_PARSER
 			d: like new_doc
 			s: STRING
 			doc_cb: XML_CALLBACKS_DOCUMENT
 			vis_uc: XML_HAS_UNICODE_NODE_VISITOR
 		do
-			create p.make
+			p := factory.new_parser
 
 			create s.make_empty
 
@@ -214,13 +219,13 @@ feature -- Test routines
 	test_xml_parser_with_unicode_tag
 			-- New test routine
 		local
-			p: XML_LITE_PARSER
+			p: XML_PARSER
 			d: like new_doc_with_unicode_tag
 			s: STRING_32
 			doc_cb: XML_CALLBACKS_DOCUMENT
 			vis_uc: XML_HAS_UNICODE_NODE_VISITOR
 		do
-			create p.make
+			p := factory.new_parser
 
 			create s.make_empty
 
@@ -242,12 +247,12 @@ feature -- Test routines
 	test_xml_parser_ecf
 			-- New test routine
 		local
-			p: XML_LITE_PARSER
+			p: XML_PARSER
 			s: STRING_32
 			doc_cb: XML_CALLBACKS_DOCUMENT
 			vis_uc: XML_HAS_UNICODE_NODE_VISITOR
 		do
-			create p.make
+			p := factory.new_parser
 			create s.make_empty
 			create doc_cb.make_null
 			p.set_callbacks (new_callbacks_pipe (s, Void, doc_cb))
@@ -265,7 +270,7 @@ feature -- Test routines
 	test_xml_parser_with_unicode_tag_and_utf8
 			-- New test routine
 		local
-			p: XML_LITE_PARSER
+			p: XML_PARSER
 			d: like new_doc_with_unicode_tag
 			s: STRING_32
 			s8: STRING_8
@@ -273,7 +278,7 @@ feature -- Test routines
 			vis_uc: XML_HAS_UNICODE_NODE_VISITOR
 			u: UTF_CONVERTER
 		do
-			create p.make
+			p := factory.new_parser
 
 			create s.make_empty
 
@@ -299,7 +304,7 @@ feature -- Test routines
 	test_xml_parser_with_unicode_tag_and_utf8_detection
 			-- New test routine
 		local
-			p: XML_LITE_PARSER
+			p: XML_PARSER
 			d: like new_doc_with_unicode_tag
 			s: STRING_32
 			s8: STRING_8
@@ -307,7 +312,7 @@ feature -- Test routines
 			vis_uc: XML_HAS_UNICODE_NODE_VISITOR
 			u: UTF_CONVERTER
 		do
-			create p.make
+			p := factory.new_parser
 
 			create s.make_empty
 
@@ -336,7 +341,7 @@ feature -- ASCII
 	test_xml_parser_ascii
 			-- New test routine
 		local
-			p: XML_LITE_PARSER
+			p: XML_PARSER
 			d: like new_doc
 			s: STRING
 			doc_cb: XML_CALLBACKS_DOCUMENT
@@ -344,7 +349,7 @@ feature -- ASCII
 			vis_uc: XML_HAS_UNICODE_NODE_VISITOR
 			ascii_fwd: XML_FORWARD_TO_ASCII_CALLBACKS
 		do
-			create p.make
+			p := factory.new_parser
 
 			create s.make_empty
 			create doc_cb.make_null

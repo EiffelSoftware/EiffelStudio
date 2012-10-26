@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	version: READABLE_STRING_32
+	version: READABLE_STRING_8
 
 	encoding: detachable READABLE_STRING_8
 

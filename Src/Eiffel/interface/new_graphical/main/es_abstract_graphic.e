@@ -104,7 +104,7 @@ feature {NONE} -- Initialization
 			pref_strs.Pixmaps_extension_cell.put ("png")
 			create fn.make_from_string (eiffel_layout.Bitmaps_path)
 			fn.extend ("png")
-			pref_strs.Pixmaps_path_cell.put (fn)
+			pref_strs.Pixmaps_path_cell.put (fn.string)
 
 			if not new_resources.error_occurred then
 				-- One has to quit there.

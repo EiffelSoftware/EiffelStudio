@@ -1331,6 +1331,8 @@ feature {NONE} -- Implementation
 			a_path_not_void: a_path /= Void
 			a_path_not_empty: not a_path.is_empty
 		do
+			a_path.left_adjust
+			a_path.right_adjust
 				-- Add the double quotes around path so that
 				-- it will work in case the path has white spaces.
 				-- Do it if no double quotes are already present.

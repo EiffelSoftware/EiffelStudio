@@ -29,7 +29,7 @@ create {PREFERENCE_FACTORY}
 
 feature -- Access
 
-	string_value: STRING
+	text_value: STRING_32
 			-- String representation of `value'.		
 		do
 			Result := generated_value
@@ -53,19 +53,16 @@ feature -- Status Setting
 	string_type: STRING
 			-- String description of this resource type.
 		once
-			Result := "IDENTIFIED_FONT"
+			Result := "IDENTIFIEDFONT"
 		end
 
 feature -- Query
 
-	valid_value_string (a_string: STRING): BOOLEAN
+	valid_value_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_string' valid for this preference type to convert into a value?
 			-- An valid string takes the form "faces-shape-weight-height-family".
-		local
-			s: STRING
 		do
-			s := a_string.twin
-			Result := s.occurrences ('-') = 4
+			Result := a_string.as_string_32.occurrences ('-') = 4
 		end
 
 feature {PREFERENCES} -- Access
@@ -78,7 +75,7 @@ feature {PREFERENCES} -- Access
 
 feature {NONE} -- Implementation
 
-	face: STRING
+	face: STRING_32
 		-- Font faces
 	shape,
 	weight,
@@ -86,14 +83,16 @@ feature {NONE} -- Implementation
 	family: INTEGER
 		-- Attributes
 
-	set_value_from_string (a_value: STRING)
+	set_value_from_string (a_value: READABLE_STRING_GENERAL)
 			-- Parse the string value `a_value' and set `value'.
 		local
-			s: STRING
+			s: STRING_32
 			i: INTEGER
 		do
-			s := a_value.twin
-			i := s.index_of('-', 1)
+			create s.make (a_value.count)
+			s.append_string_general (a_value)
+
+			i := s.index_of ('-', 1)
 			if i > 0 then
 				face := s.substring (1, i - 1)
 				s := s.substring (i + 1, s.count)
@@ -119,65 +118,71 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generated_value: STRING
+	generated_value: STRING_32
 			-- String generated value for display and saving purposes.
 		require
 			has_value: value /= Void
 		local
-			v: STRING
+			v: STRING_32
 			l_font: EV_FONT
 		do
 			create v.make (50)
 			v.append (face)
-			v.append ("-")
+			v.append_character ('-')
 			l_font := value.font
 			inspect l_font.shape
 			when shape_italic then
-				v.append ("i")
+				v.append_character ('i')
 			when shape_regular then
-				v.append ("r")
+				v.append_character ('r')
 			end
-			v.append ("-")
+			v.append_character ('-')
 			inspect l_font.weight
 			when weight_black then
-				v.append ("black")
+				v.append ({STRING_32} "black")
 			when weight_thin then
-				v.append ("thin")
+				v.append ({STRING_32} "thin")
 			when weight_regular then
-				v.append ("regular")
+				v.append ({STRING_32} "regular")
 			when weight_bold then
-				v.append ("bold")
+				v.append ({STRING_32} "bold")
 			end
-			v.append ("-")
+			v.append_character ('-')
 			v.append (height.out)
-			v.append ("-")
+			v.append_character ('-')
 			inspect l_font.family
 			when family_roman then
-				v.append ("roman")
+				v.append ({STRING_32} "roman")
 			when family_screen then
-				v.append ("screen")
+				v.append ({STRING_32} "screen")
 			when family_sans then
-				v.append ("sans")
+				v.append ({STRING_32} "sans")
 			when family_modern then
-				v.append ("modern")
+				v.append ({STRING_32} "modern")
 			when family_typewriter then
-				v.append ("typewriter")
+				v.append ({STRING_32} "typewriter")
 			end
 			Result := v
 		end
 
-	set_shape (s: STRING)
+	set_shape (a_shape: STRING)
 			-- Set shape according to `s'.
 		require
-			not_void: s /= Void
+			not_void: a_shape /= Void
 		local
-			s1: STRING
+			s: STRING
 		do
-			s1 := s
-			s1.to_lower
-			if s1.is_equal ("i") or s1.is_equal ("italic") then
+			s := a_shape.string
+			s.to_lower
+			if
+				s.same_string ("i") or
+				s.same_string ("italic")
+			then
 				shape := shape_italic
-			elseif s1.is_equal ("r") or s1.is_equal ("regular") then
+			elseif
+				s.same_string ("r") or
+				s.same_string ("regular")
+			then
 				shape := shape_regular
 			end
 		end
@@ -189,15 +194,15 @@ feature {NONE} -- Implementation
 		local
 			s1: STRING
 		do
-			s1 := s
+			s1 := s.string
 			s1.to_lower
-			if s1.is_equal ("thin") then
+			if s1.same_string ("thin") then
 				weight := weight_thin
-			elseif s1.is_equal ("regular") then
+			elseif s1.same_string ("regular") then
 				weight := weight_regular
-			elseif s1.is_equal ("bold") then
+			elseif s1.same_string ("bold") then
 				weight := weight_bold
-			elseif s1.is_equal ("black") then
+			elseif s1.same_string ("black") then
 				weight := weight_black
 			end
 		end
@@ -209,17 +214,17 @@ feature {NONE} -- Implementation
 		local
 			s1: STRING
 		do
-			s1 := s
+			s1 := s.string
 			s1.to_lower
-			if s1.is_equal ("screen") then
+			if s1.same_string ("screen") then
 				family := family_screen
-			elseif s1.is_equal ("roman") then
+			elseif s1.same_string ("roman") then
 				family := family_roman
-			elseif s1.is_equal ("sans") then
+			elseif s1.same_string ("sans") then
 				family := family_sans
-			elseif s1.is_equal ("typewriter") then
+			elseif s1.same_string ("typewriter") then
 				family := family_typewriter
-			elseif s1.is_equal ("modern") then
+			elseif s1.same_string ("modern") then
 				family := family_modern
 			end
 		end
@@ -241,7 +246,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -254,22 +259,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class IDENTIFIED_FONT_PREFERENCE

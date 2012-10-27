@@ -81,8 +81,8 @@ feature {NONE} -- Commands
 	update_preference
 			-- Update preference to reflect recently chosen value
 		do
-			if last_selected_value /= Void then
-				preference.set_value (last_selected_value)
+			if attached last_selected_value as v then
+				preference.set_value (v)
 			end
 		end
 
@@ -100,7 +100,7 @@ feature {NONE} -- Commands
 			l_font := preference.value.font.twin
 			l_font.set_height_in_points (default_font_height)
 			change_item_widget.set_font (l_font)
-			change_item_widget.set_text (preference.string_value)
+			change_item_widget.set_text (preference.text_value)
 		end
 
 feature {NONE} -- Implementation
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 			-- Default font height in points (for display only)
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

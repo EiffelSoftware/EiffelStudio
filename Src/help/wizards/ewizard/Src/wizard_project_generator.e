@@ -22,16 +22,16 @@ feature -- Basic Operations
 	generate_code
 			-- Generate code for the project.
 		local
-			dir: DIRECTORY
-			l: LINKED_LIST [TUPLE [STRING, STRING]]
-			l_tuple: TUPLE [STRING, STRING]
+			dir: DIRECTORY_32
+			l: LINKED_LIST [TUPLE [STRING, STRING_32]]
+			l_tuple: TUPLE [STRING, STRING_32]
 			class_name: STRING
 			i: INTEGER
 			next_state: STRING
-			project_location: FILE_NAME
-			src_location: FILE_NAME
-			pixmap_location: FILE_NAME
-			rsc_location: FILE_NAME
+			project_location: FILE_NAME_32
+			src_location: FILE_NAME_32
+			pixmap_location: FILE_NAME_32
+			rsc_location: FILE_NAME_32
 			project_name: STRING
 			l_uuid: UUID_GENERATOR
 		do
@@ -69,7 +69,7 @@ feature -- Basic Operations
 			l_tuple.put ("${FL_UUID}", 1)
 			l_tuple.put (l_uuid.generate_uuid.out, 2)
 			l.extend (l_tuple)
-			from_template_to_project (wizard_resources_path, "template_config.ecf", project_location, project_name.as_lower + ".ecf", l)
+			from_template_to_project (wizard_resources_path_32, "template_config.ecf", project_location, project_name.as_lower + ".ecf", l)
 
 			from
 				i := 1
@@ -113,7 +113,7 @@ feature -- Basic Operations
 				l_tuple.put (next_state, 2)
 				l.extend (l_tuple)
 
-				from_template_to_project (wizard_resources_path, "template_wizard_state.e", src_location, class_name + ".e", l)
+				from_template_to_project (wizard_resources_path_32, "template_wizard_state.e", src_location, class_name + ".e", l)
 			end
 
 			create l_tuple
@@ -121,10 +121,10 @@ feature -- Basic Operations
 			l_tuple.put (project_name, 2)
 			create l.make
 			l.extend (l_tuple)
-			from_template_to_project (wizard_resources_path, "template_wizard_initial_state.e", src_location, "wizard_initial_state.e", l)
-			from_template_to_project (wizard_resources_path, "template_wizard_final_state.e",   src_location, "wizard_final_state.e", l)
-			from_template_to_project (wizard_resources_path, "application_factory.e",   src_location, "application_factory.e", l)
-			from_template_to_project (wizard_resources_path, "application.e",   src_location, "application.e", l)
+			from_template_to_project (wizard_resources_path_32, "template_wizard_initial_state.e", src_location, "wizard_initial_state.e", l)
+			from_template_to_project (wizard_resources_path_32, "template_wizard_final_state.e",   src_location, "wizard_final_state.e", l)
+			from_template_to_project (wizard_resources_path_32, "application_factory.e",   src_location, "application_factory.e", l)
+			from_template_to_project (wizard_resources_path_32, "application.e",   src_location, "application.e", l)
 
 			copy_file ("wizard_information", 	"e",   src_location)
 			copy_file ("wizard_project_shared",	"e",   src_location)

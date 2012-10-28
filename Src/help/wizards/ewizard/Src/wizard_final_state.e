@@ -27,7 +27,7 @@ feature -- Basic Operations
 
 	proceed_with_current_info
 		local
-			ace_location: FILE_NAME
+			ace_location: FILE_NAME_32
 		do
 			create ace_location.make_from_string (wizard_information.project_location)
 			ace_location.set_file_name (wizard_information.project_name.as_lower)

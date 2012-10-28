@@ -24,7 +24,7 @@ feature  -- Initialization
 			-- Assign default values
 		do
 			Precursor
-			icon_location := wizard_resources_path.twin
+			icon_location := wizard_resources_path_32.twin
 			icon_location.extend ("eiffel.ico")
 			dialog_application := False
 			has_status_bar := False
@@ -83,7 +83,7 @@ feature -- Access
 	has_about_dialog: BOOLEAN
 			-- Does the generated application include an "About" dialog box?
 
-	icon_location: FILE_NAME
+	icon_location: FILE_NAME_32
 			-- Location of the icon choose by the user
 
 	dialog_application: BOOLEAN

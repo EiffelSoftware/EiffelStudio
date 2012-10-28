@@ -94,11 +94,11 @@ feature -- Basic Operation
 	change_preview
 			-- Change the pixmap used to preview the application.
 		local
-			fn: FILE_NAME
+			fn: FILE_NAME_32
 			bn: STRING
 			index: INTEGER
 		do
-			create fn.make_from_string (wizard_pixmaps_path)
+			create fn.make_from_string (wizard_pixmaps_path_32)
 			bn := "Image0000"
 				--| Number of characters in "Image"
 			index := 5

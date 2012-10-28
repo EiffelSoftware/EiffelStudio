@@ -141,8 +141,6 @@ feature {NONE} -- Implementation
 	validate_directory_string (a_directory: STRING_32): DIRECTORY_NAME_32
 			-- Validate the directory `a_directory' and return the
 			-- validated version of `a_directory'.
-		local
-			a_directory_name: DIRECTORY_NAME
 		do
 			if a_directory /= Void then
 				create Result.make_from_string (a_directory)

@@ -45,19 +45,21 @@ feature {NONE} -- Implementation
 			filename_exists: pixmap_filename /= Void
 		local
 			filename_ptr: ANY
-			l_pixmap_filename: STRING_8
+			l_pixmap_filename: detachable STRING_8
 		do
 				-- Disable invariant checking.
 			disable_initialized
 
-			check pixmap_filename /= Void end
-			l_pixmap_filename := pixmap_filename
-
-			if l_pixmap_filename.is_empty then
-				c_ev_load_pixmap ($Current, Default_pointer, $update_fields)
+			if attached pixmap_filename as l_name then
+				l_pixmap_filename := l_name
+				if l_pixmap_filename.is_empty then
+					c_ev_load_pixmap ($Current, Default_pointer, $update_fields)
+				else
+					filename_ptr := l_pixmap_filename.to_c
+					c_ev_load_pixmap ($Current, $filename_ptr, $update_fields)
+				end
 			else
-				filename_ptr := l_pixmap_filename.to_c
-				c_ev_load_pixmap ($Current, $filename_ptr, $update_fields)
+				last_pixmap_loading_had_error := True
 			end
 			if last_pixmap_loading_had_error then
 					-- An error occurred while loading the file

@@ -20,12 +20,12 @@ feature -- Basic Operations
 	generate_code
 			-- Generate the code for a new vision2-application project
 		local
-			map_list: LINKED_LIST [TUPLE [STRING, STRING]]
-			tuple: TUPLE [STRING, STRING]
+			map_list: LINKED_LIST [TUPLE [STRING, STRING_32]]
+			tuple: TUPLE [STRING, STRING_32]
 			project_name_lowercase: STRING
-			project_location: FILE_NAME
-			ace_location: FILE_NAME
-			tuple2: TUPLE [STRING, STRING]
+			project_location: FILE_NAME_32
+			ace_location: FILE_NAME_32
+			tuple2: TUPLE [STRING, STRING_32]
 			a_string: STRING
 			a_string2: STRING
 		do
@@ -80,11 +80,11 @@ feature -- Basic Operations
 				map_list.extend (empty_tuple ("${FL_ABOUTDIALOG_INIT}"))
 			end
 
-			from_template_to_project (wizard_resources_path, "template_main_window.e", 	project_location, "main_window.e", map_list)
-			from_template_to_project (wizard_resources_path, "interface_names.e", 		project_location, "interface_names.e", map_list)
-			from_template_to_project (wizard_resources_path, "about_dialog.e",	 		project_location, "about_dialog.e", map_list)
-			from_template_to_project (wizard_resources_path, "template_config.ecf", 		project_location, project_name_lowercase + ".ecf", map_list)
-			from_template_to_project (wizard_resources_path, "application.e",			project_location, "application.e", map_list)
+			from_template_to_project (wizard_resources_path_32, "template_main_window.e", 	project_location, "main_window.e", map_list)
+			from_template_to_project (wizard_resources_path_32, "interface_names.e", 		project_location, "interface_names.e", map_list)
+			from_template_to_project (wizard_resources_path_32, "about_dialog.e",	 		project_location, "about_dialog.e", map_list)
+			from_template_to_project (wizard_resources_path_32, "template_config.ecf", 		project_location, project_name_lowercase + ".ecf", map_list)
+			from_template_to_project (wizard_resources_path_32, "application.e",			project_location, "application.e", map_list)
 
 			if wizard_information.has_tool_bar then
 				copy_file ("new", "png", project_location)
@@ -93,16 +93,17 @@ feature -- Basic Operations
 			end
 		end
 
-	tuple_from_file_content (an_index: STRING; a_content_file: STRING): TUPLE [STRING, STRING]
+	tuple_from_file_content (an_index: STRING; a_content_file: STRING_32): TUPLE [STRING, STRING_32]
 		local
 			file_content: STRING
-			file: RAW_FILE
-			file_name: FILE_NAME
+			file: RAW_FILE_32
+			file_name: FILE_NAME_32
 		do
-			create file_name.make_from_string (wizard_resources_path)
+			create file_name.make_from_string (wizard_resources_path_32)
 			file_name.set_file_name (a_content_file)
 
-			create file.make_open_read (file_name)
+			create file.make (file_name)
+			file.open_read
 			file.read_stream (file.count)
 
 			file_content := file.last_string.twin
@@ -115,7 +116,7 @@ feature -- Basic Operations
 			file.close
 		end
 
-	empty_tuple (an_index: STRING): TUPLE [STRING, STRING]
+	empty_tuple (an_index: STRING): TUPLE [STRING, STRING_32]
 		do
 			create Result
 			Result.put (an_index, 1)

@@ -20,7 +20,7 @@ feature -- Basic Operations
 	generate_code
 			-- Generate code for the project.
 		local
-			map_list: LINKED_LIST [TUPLE [STRING, STRING]]
+			map_list: LINKED_LIST [TUPLE [STRING, STRING_32]]
 			project_name_lowercase: STRING
 			project_location: STRING
 			source_prefix: STRING
@@ -32,18 +32,18 @@ feature -- Basic Operations
 				map_list := map_for_frame
 				source_prefix := "frame"
 			end
-			map_list.extend (["${FL_MAIN_CLASS}", "MAIN_WINDOW"])
+			map_list.extend (["${FL_MAIN_CLASS}", {STRING_32} "MAIN_WINDOW"])
 			add_common_parameters (map_list)
 				-- Cached variables
 			project_name_lowercase := wizard_information.project_name.as_lower
 			project_location := wizard_information.project_location
 
-			from_template_to_project (wizard_resources_path, "template_config.ecf", 					project_location, project_name_lowercase + ".ecf", map_list)
-			from_template_to_project (wizard_resources_path, "root_template.e", 			project_location, "root_class.e", map_list)
-			from_template_to_project (wizard_resources_path, source_prefix + "_main_window.e", 		project_location, "main_window.e", map_list)
-			from_template_to_project (wizard_resources_path, source_prefix + "_template.rc", 			project_location, project_name_lowercase + ".rc", map_list)
-			from_template_to_project (wizard_resources_path, source_prefix + "_resource.h", 			project_location, "resource.h", map_list)
-			from_template_to_project (wizard_resources_path, source_prefix + "_application_ids.e", 	project_location, "application_ids.e", map_list)
+			from_template_to_project (wizard_resources_path_32, "template_config.ecf", 					project_location, project_name_lowercase + ".ecf", map_list)
+			from_template_to_project (wizard_resources_path_32, "root_template.e", 			project_location, "root_class.e", map_list)
+			from_template_to_project (wizard_resources_path_32, source_prefix + "_main_window.e", 		project_location, "main_window.e", map_list)
+			from_template_to_project (wizard_resources_path_32, source_prefix + "_template.rc", 			project_location, project_name_lowercase + ".rc", map_list)
+			from_template_to_project (wizard_resources_path_32, source_prefix + "_resource.h", 			project_location, "resource.h", map_list)
+			from_template_to_project (wizard_resources_path_32, source_prefix + "_application_ids.e", 	project_location, "application_ids.e", map_list)
 			copy_icon
 			wizard_information.set_ace_location (project_location + "\" + project_name_lowercase + ".ecf")
 		end
@@ -69,30 +69,30 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	map_for_dialog: LINKED_LIST [TUPLE [STRING, STRING]]
+	map_for_dialog: LINKED_LIST [TUPLE [STRING, STRING_32]]
 			-- Mapping for a new dialog-application project
 		local
 			main_dialog_id: STRING
 		do
 			create Result.make
-			Result.extend (["${FL_APPLICATION_TYPE}", "WEL_MAIN_DIALOG"])
+			Result.extend (["${FL_APPLICATION_TYPE}", {STRING_32} "WEL_MAIN_DIALOG"])
 
 			create main_dialog_id.make (0)
 			main_dialog_id.append (wizard_information.project_name)
 			main_dialog_id.to_lower
 			main_dialog_id.prepend ("Idd_")
 			main_dialog_id.append ("_dialog")
-			Result.extend (["${FL_CREATION}", "make_by_id (" + main_dialog_id + ")"])
+			Result.extend (["${FL_CREATION}", {STRING_32} "make_by_id (" + main_dialog_id + ")"])
 		end
 
 
-	map_for_frame: LINKED_LIST [TUPLE [STRING, STRING]]
+	map_for_frame: LINKED_LIST [TUPLE [STRING, STRING_32]]
 			-- Mapping for a new frame-application project
 		do
 				-- Create the replacement strings.
 			create Result.make
 			Result.extend (["${FL_ICON_NAME}", wizard_information.project_name.as_lower + ".ico"])
-			Result.extend (["${FL_APPLICATION_TYPE}", "WEL_FRAME_WINDOW"])
+			Result.extend (["${FL_APPLICATION_TYPE}", {STRING_32} "WEL_FRAME_WINDOW"])
 		end
 
 	copy_icon

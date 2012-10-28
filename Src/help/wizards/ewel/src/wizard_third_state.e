@@ -61,12 +61,12 @@ feature -- Basic Operation
 	update_state_information
 			-- Check User Entries
 		local
-			icon_path: FILE_NAME
+			icon_path: FILE_NAME_32
 		do
-			if not icon_location.text.is_equal ("") then
-				wizard_information.set_icon_location (icon_location.text)
+			if not icon_location.text_32.is_empty then
+				wizard_information.set_icon_location (icon_location.text_32)
 			else
-				create icon_path.make_from_string (wizard_resources_path)
+				create icon_path.make_from_string (wizard_resources_path_32)
 				icon_path.set_file_name ("eiffel")
 				icon_path.add_extension ("ico")
 				wizard_information.set_icon_location (icon_path)

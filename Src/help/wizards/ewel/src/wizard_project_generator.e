@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 		local
 			fi: RAW_FILE
 			s: STRING
-			project_name_lowercase: STRING
+			project_name_lowercase: STRING_32
 		do
 			project_name_lowercase := wizard_information.project_name.as_lower
 

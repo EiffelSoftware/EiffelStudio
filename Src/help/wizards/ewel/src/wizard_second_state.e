@@ -115,18 +115,18 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Preview_dialog_pixmap: FILE_NAME
+	Preview_dialog_pixmap: FILE_NAME_32
 			-- Filename for the pixmap representing a dialog-based application
 		once
-			create Result.make_from_string (wizard_pixmaps_path)
+			create Result.make_from_string (wizard_pixmaps_path_32)
 			Result.set_file_name ("dialog_application")
 			Result.add_extension (pixmap_extension)
 		end
 
-	Preview_frame_pixmap: FILE_NAME
+	Preview_frame_pixmap: FILE_NAME_32
 			-- Filename for the pixmap representing a frame-based application
 		once
-			create Result.make_from_string (wizard_pixmaps_path)
+			create Result.make_from_string (wizard_pixmaps_path_32)
 			Result.set_file_name ("frame_application")
 			Result.add_extension (pixmap_extension)
 		end

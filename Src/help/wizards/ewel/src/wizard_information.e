@@ -23,12 +23,12 @@ feature  -- Initialization
 	make
 			-- Assign default values
 		local
-			icon_path: FILE_NAME
+			icon_path: FILE_NAME_32
 		do
 			Precursor
 			freeze_required := True
 
-			create icon_path.make_from_string (wizard_resources_path)
+			create icon_path.make_from_string (wizard_resources_path_32)
 			icon_path.set_file_name ("eiffel")
 			icon_path.add_extension ("ico")
 			set_icon_location (icon_path)
@@ -43,14 +43,14 @@ feature -- Setting
 			dialog_application := b
 		end
 
-	set_icon_location (s: STRING)
+	set_icon_location (s: like icon_location)
 		do
 			icon_location := s
 		end
 
 feature -- Access
 
-	icon_location: STRING
+	icon_location: STRING_32
 			-- Location of the icon choose by the user
 
 	dialog_application: BOOLEAN

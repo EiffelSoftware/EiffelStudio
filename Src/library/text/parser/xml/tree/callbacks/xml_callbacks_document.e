@@ -55,7 +55,7 @@ feature -- Document
 		do
 		end
 
-	on_xml_declaration (a_version: READABLE_STRING_8; an_encoding: detachable READABLE_STRING_8; a_standalone: BOOLEAN)
+	on_xml_declaration (a_version: READABLE_STRING_32; an_encoding: detachable READABLE_STRING_32; a_standalone: BOOLEAN)
 			-- XML declaration.
 		local
 			decl: XML_DECLARATION

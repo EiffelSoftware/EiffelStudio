@@ -53,7 +53,7 @@ feature {NONE} -- Document
 			callbacks.on_finish
 		end
 
-	on_xml_declaration (a_version: READABLE_STRING_8; an_encoding: detachable READABLE_STRING_8; a_standalone: BOOLEAN)
+	on_xml_declaration (a_version: READABLE_STRING_32; an_encoding: detachable READABLE_STRING_32; a_standalone: BOOLEAN)
 			-- XML declaration.
 		do
 			callbacks.on_xml_declaration (a_version, an_encoding, a_standalone)

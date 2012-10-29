@@ -49,7 +49,7 @@ feature -- Agents
 
 	on_start_tag_finish_action: detachable PROCEDURE [ANY, TUPLE] assign set_on_start_tag_finish_action
 
-	on_xml_declaration_action: detachable PROCEDURE [ANY, TUPLE [READABLE_STRING_8, detachable READABLE_STRING_8, BOOLEAN]] assign set_on_xml_declaration_action
+	on_xml_declaration_action: detachable PROCEDURE [ANY, TUPLE [READABLE_STRING_32, detachable READABLE_STRING_32, BOOLEAN]] assign set_on_xml_declaration_action
 
 
 feature -- Setting
@@ -127,7 +127,7 @@ feature {NONE} -- Document
 			end
 		end
 
-	on_xml_declaration (a_version: READABLE_STRING_8; an_encoding: detachable READABLE_STRING_8; a_standalone: BOOLEAN)
+	on_xml_declaration (a_version: READABLE_STRING_32; an_encoding: detachable READABLE_STRING_32; a_standalone: BOOLEAN)
 			-- XML declaration.
 		do
 			if attached on_xml_declaration_action as act then

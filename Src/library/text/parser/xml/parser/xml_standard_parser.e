@@ -791,12 +791,12 @@ feature {NONE} -- Implementation: parse
 			a_version_not_void: a_version /= Void
 			a_version_not_empty: a_version.count > 0
 		local
-			ver: detachable READABLE_STRING_8
-			enc: detachable READABLE_STRING_8
+			ver: detachable READABLE_STRING_32
+			enc: detachable READABLE_STRING_32
 		do
 			if a_version.is_valid_as_string_8 then
 				-- See http://www.w3.org/TR/REC-xml/#NT-VersionInfo
-				ver := a_version.as_string_8
+				ver := a_version
 				if ver.count >= 3 then
 					if
 						ver.item (1).is_digit and
@@ -819,7 +819,7 @@ feature {NONE} -- Implementation: parse
 			else
 				if a_encoding /= Void then
 					if a_encoding.is_valid_as_string_8 then
-						enc := a_encoding.as_string_8
+						enc := a_encoding
 						if enc.is_empty then
 							enc := Void
 						end
@@ -837,7 +837,7 @@ feature {NONE} -- Implementation: parse
 
 feature {NONE} -- Encoding
 
-	set_encoding_from_bom (a_bom: READABLE_STRING_8)
+	set_encoding_from_bom (a_bom: READABLE_STRING_GENERAL)
 		local
 			u: UTF_CONVERTER
 		do
@@ -848,11 +848,11 @@ feature {NONE} -- Encoding
 			end
 		end
 
-	set_encoding (a_encoding: READABLE_STRING_8)
+	set_encoding (a_encoding: READABLE_STRING_GENERAL)
 			-- Set encoding to `a_encoding'.
 			--| Can be redefine ...
 		require
-			a_encoding_not_empty: a_encoding /= Void and then not a_encoding.is_empty
+			a_encoding_not_empty: a_encoding /= Void and then (not a_encoding.is_empty and a_encoding.is_valid_as_string_8)
 		local
 			char_buffer: detachable XML_CHARACTER_8_INPUT_STREAM
 		do
@@ -910,11 +910,11 @@ feature {NONE} -- Implementation: Byte Order Mark
 
 feature {NONE} -- Implementation: Encoding factory
 
-	new_encoded_buffer (a_encoding: READABLE_STRING_8; a_char_buffer: XML_CHARACTER_8_INPUT_STREAM): detachable like buffer
+	new_encoded_buffer (a_encoding: READABLE_STRING_GENERAL; a_char_buffer: XML_CHARACTER_8_INPUT_STREAM): detachable like buffer
 			-- Create a new `a_encoding' encoded buffer for `a_char_buffer'.
 			-- Could be redefined
 		require
-			a_encoding_not_empty: a_encoding /= Void and then not a_encoding.is_empty
+			a_encoding_not_empty: a_encoding /= Void and then (not a_encoding.is_empty and a_encoding.is_valid_as_string_8)
 			a_char_buffer_attached: a_char_buffer /= Void
 		do
 			if a_encoding.is_case_insensitive_equal ("UTF-8") then

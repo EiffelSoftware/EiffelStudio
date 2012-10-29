@@ -62,9 +62,9 @@ feature -- Processing
 	process_xml_declaration (a_decl: XML_DECLARATION)
 			-- Process xml declaration `a_decl'
 		do
-			print ("<?xml version=%"" + a_decl.version + "%"")
+			print ("<?xml version=%"" + a_decl.version.to_string_8 + "%"")
 			if attached a_decl.encoding as enc then
-				print (" encoding=%"" + enc + "%"")
+				print (" encoding=%"" + enc.to_string_8 + "%"")
 			end
 			if a_decl.standalone then
 				print (" standalone=%"yes%"")

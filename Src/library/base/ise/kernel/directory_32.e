@@ -63,7 +63,7 @@ feature {DIRECTORY_32} -- Creation
 				-- Use UTF-8 versions of the features by default.
 			make_8 (u.string_32_to_utf_8_string_8 (dn))
 		ensure
-			name_set: name ~ dn
+			name_set: name.same_string (dn)
 		end
 
 	make_open_read (dn: READABLE_STRING_32)
@@ -75,7 +75,7 @@ feature {DIRECTORY_32} -- Creation
 			make (dn)
 			open_read
 		ensure
-			name_set: name ~ dn
+			name_set: name.same_string (dn)
 		end
 
 feature -- Basic operations

@@ -32,10 +32,10 @@ feature -- Query
 			l_parts := a_path.split (l_sep)
 			from l_parts.start until l_parts.after or l_error loop
 				l_part := l_parts.item
-				if l_part.is_equal ({STRING_32} ".") then
+				if l_part.same_string_general (".") then
 						-- Current directory, simple remove
 					l_parts.remove
-				elseif l_part.is_equal ({STRING_32} "..") then
+				elseif l_part.same_string_general ("..") then
 						-- Remove parent
 					l_parts.remove
 					if not l_parts.is_empty then

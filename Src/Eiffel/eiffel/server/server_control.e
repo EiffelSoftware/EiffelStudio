@@ -116,15 +116,14 @@ feature -- File operations
 			-- Remove all empty files from disk
 		do
 				-- Delete files from disk which are already not used
-			files.do_all (agent (a_file: SERVER_FILE)
-				do
-					if
-						a_file /= Void and then a_file.exists and then
-						not a_file.precompiled and a_file.occurrence = 0
-					then
-						remove_file (a_file)
-					end
-				end)
+			across files as l_files loop
+				if
+					attached l_files.item as l_server_file and then l_server_file.exists and then
+					not l_server_file.precompiled and then l_server_file.occurrence = 0
+				then
+					remove_file (l_server_file)
+				end
+			end
 		end
 
 	file_of_id (i: INTEGER): SERVER_FILE
@@ -192,37 +191,31 @@ feature -- Status report
 	is_readable: BOOLEAN
 			-- Are the server files readable?
 		do
-			Result := files.for_all (agent (a_file: SERVER_FILE): BOOLEAN
-				do
-					Result := a_file = Void or else
-						(a_file.exists and then a_file.is_readable)
-				end)
+			Result := across files as l_files all
+					not attached l_files.item as l_server_file or else
+					(l_server_file.exists and then l_server_file.is_readable)
+				end
 		end
 
 	is_writable: BOOLEAN
 			-- Are the server files readable and writable?
 		do
-			Result := files.for_all (agent (a_file: SERVER_FILE): BOOLEAN
-				do
-					if a_file /= Void and then a_file.exists then
-						if a_file.precompiled then
-							Result := a_file.is_readable
-						else
-							Result := a_file.is_readable and a_file.is_writable
-						end
+			Result := True
+			across files as l_files until not Result loop
+				if attached l_files.item as l_server_file and then l_server_file.exists then
+					if l_server_file.precompiled then
+						Result := l_server_file.is_readable
 					else
-						Result := True
+						Result := l_server_file.is_readable and l_server_file.is_writable
 					end
-				end)
+				end
+			end
 		end
 
 	exists: BOOLEAN
 			-- Do the server files exist?
 		do
-			Result := files.for_all (agent (a_file: SERVER_FILE): BOOLEAN
-				do
-					Result := a_file = Void or else a_file.exists
-				end)
+			Result := across files as l_files all not attached l_files.item as l_server_file or else l_server_file.exists end
 		end
 
 feature -- Initialization
@@ -230,29 +223,11 @@ feature -- Initialization
 	init
 			-- Update the path names of the various server files.
 		do
-			files.do_all (agent (a_file: SERVER_FILE)
-				do
-					if a_file /= Void then
-						a_file.update_path
-					end
-				end)
-		end
-
-feature -- Merging
-
-	append (other: like Current)
-			-- Append `other' to `Current'.
-			-- Used when merging precompilations.
-		require
-			other_not_void: other /= Void
-		do
-			file_counter.append (other.file_counter)
-			other.files.do_all_with_index (agent (a_file: SERVER_FILE; a_index: INTEGER)
-				do
-					if a_file /= Void then
-						files.force (a_file, a_index)
-					end
-				end)
+			across files as l_files loop
+				if attached l_files.item as l_server_file then
+					l_server_file.update_path
+				end
+			end
 		end
 
 feature -- SERVER_FILE sizes
@@ -270,7 +245,7 @@ invariant
 	file_counter_not_void: file_counter /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -283,22 +258,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class SERVER_CONTROL

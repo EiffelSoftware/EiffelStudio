@@ -192,7 +192,7 @@ feature -- Counters
 			feature_as_counter.append (feature_as_counter)
 			routine_id_counter.append (routine_id_counter)
 			static_type_id_counter.append (static_type_id_counter)
-			server_controler.append (server_controler)
+			server_controler.file_counter.append (server_controler.file_counter)
 		end
 
 feature -- Properties

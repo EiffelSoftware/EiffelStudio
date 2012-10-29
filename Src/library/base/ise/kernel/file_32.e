@@ -25,6 +25,7 @@ inherit
 				descriptor_available,
 				end_of_file,
 				extendible,
+				exhausted,
 				go,
 				is_closed,
 				is_deep_equal,
@@ -77,7 +78,7 @@ inherit
 
 feature {NONE} -- Creation
 
-	make (fn: STRING_32)
+	make (fn: READABLE_STRING_32)
 			-- Create file object with `fn' as file name.
 		require
 			string_exists: fn /= Void

@@ -116,6 +116,29 @@ feature -- Element change
 			callbacks_set: callbacks = a_callbacks
 		end
 
+	set_encoding (a_encoding: READABLE_STRING_GENERAL)
+			-- Set encoding to `a_encoding'.
+			--| Can be redefine ...
+		local
+			char_buffer: detachable XML_CHARACTER_8_INPUT_STREAM
+		do
+			if attached {XML_CHARACTER_8_INPUT_STREAM} buffer as b then
+				char_buffer := b
+			elseif attached {XML_CHARACTER_8_INPUT_STREAM_FILTER} buffer as f then
+				char_buffer := f.source
+			end
+			if char_buffer = Void then
+				report_warning ({STRING_32} "Internal error: unable to use encoding %"" + a_encoding.to_string_32 + {STRING_32} "%".")
+			elseif attached new_encoded_buffer (a_encoding, char_buffer) as l_enc_buffer then
+				-- Safe to update it, since for each new parsing, we reset the original buffer
+				buffer := l_enc_buffer
+			else
+				-- Default is UTF-8, see http://www.w3.org/TR/2008/REC-xml-20081126/#sec-guessing
+				report_warning ({STRING_32} "Unsupported encoding %"" + a_encoding.to_string_32 + {STRING_32} "%".")
+				create {XML_CHARACTER_8_INPUT_STREAM_UTF8_FILTER} buffer.make (char_buffer)
+			end
+		end
+
 feature -- Parsing status
 
 	parsing_stopped: BOOLEAN
@@ -257,6 +280,8 @@ feature {NONE} -- Implementation: parse
 						end
 						l_content.wipe_out
 					else
+						-- If not <?xml declaration was found, the XML is not well formed.
+						-- Should be reported by a validating callbacks component.
 						if not l_content.is_empty then
 							l_callbacks.on_content (l_content.string)
 							l_content.wipe_out
@@ -827,13 +852,16 @@ feature {NONE} -- Implementation: parse
 						report_error ({STRING_32} "Invalid xml encoding: %"" + a_encoding + {STRING_32} "%".")
 					end
 				end
-
-				if enc /= Void then
-					set_encoding (enc)
-				end
-				callbacks.on_xml_declaration (ver, enc, a_standalone)
 			end
+			if enc = Void then
+				-- Default is UTF-8, see http://www.w3.org/TR/2008/REC-xml-20081126/#sec-guessing
+				set_encoding (default_encoding)
+			else
+				set_encoding (enc)
+			end
+			callbacks.on_xml_declaration (a_version, a_encoding, a_standalone)
 		end
+
 
 feature {NONE} -- Encoding
 
@@ -848,29 +876,7 @@ feature {NONE} -- Encoding
 			end
 		end
 
-	set_encoding (a_encoding: READABLE_STRING_GENERAL)
-			-- Set encoding to `a_encoding'.
-			--| Can be redefine ...
-		require
-			a_encoding_not_empty: a_encoding /= Void and then (not a_encoding.is_empty and a_encoding.is_valid_as_string_8)
-		local
-			char_buffer: detachable XML_CHARACTER_8_INPUT_STREAM
-		do
-			if attached {XML_CHARACTER_8_INPUT_STREAM} buffer as b then
-				char_buffer := b
-			elseif attached {XML_CHARACTER_8_INPUT_STREAM_FILTER} buffer as f then
-				char_buffer := f.source
-			end
-			if char_buffer = Void then
-				report_error ({STRING_32} "Internal error: unable to use encoding %"" + a_encoding.to_string_32 + {STRING_32} "%".")
-			elseif attached new_encoded_buffer (a_encoding, char_buffer) as l_enc_buffer then
-				-- Safe to update it, since for each new parsing, we reset the original buffer
-				buffer := l_enc_buffer
-			else
-				--| FIXME: report error? or just use current buffer without encoding
-				report_warning ({STRING_32} "Unsupported encoding %"" + a_encoding.to_string_32 + {STRING_32} "%".")
-			end
-		end
+	default_encoding: STRING_32 = "UTF-8"
 
 feature {NONE} -- Implementation: Byte Order Mark
 

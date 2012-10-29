@@ -187,7 +187,7 @@ feature -- Access
 			-- Did the user entries changed since last time ?
 			-- This boolean is used in order to do a smart "next".
 
-	pixmap_location: STRING
+	pixmap_location: FILE_NAME_32
 			-- Path in which can be found the pixmap associated with
 			-- the current state.
 			-- Use `pixmap_file_name' instead.
@@ -199,7 +199,7 @@ feature -- Access
 	pixmap_file_name: STRING_32
 			-- Name of a file with a pixmap associated with the current state.
 		do
-			Result := pixmap_location.as_string_32
+			Result := pixmap_location.to_string_32
 		ensure
 			result_attached: attached Result
 		end

@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	pixmap_location: FILE_NAME
+	pixmap_location: FILE_NAME_32
 			-- Pixmap location
 		once
 			create Result.make_from_string ("eiffel_wizard")

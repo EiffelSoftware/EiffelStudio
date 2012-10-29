@@ -55,14 +55,14 @@ feature -- Evaluation helper
 
 feature -- Object storage Access
 
-	saved_object_to (r: detachable ANY; fn: STRING): detachable ANY
+	saved_object_to (r: detachable ANY; fn: READABLE_STRING_GENERAL): detachable ANY
 			-- Save object `r' into file `fn'
 		require
 			fn_attached: fn /= Void
 		local
 			file: RAW_FILE
 		do
-			create file.make (fn)
+			create file.make_with_name (fn)
 			if r /= Void and then (not file.exists or else file.is_writable) then
 				file.create_read_write
 				file.independent_store (r)
@@ -73,7 +73,7 @@ feature -- Object storage Access
 			end
 		end
 
-	object_loaded_from (r: detachable ANY; fn: STRING): detachable ANY
+	object_loaded_from (r: detachable ANY; fn: READABLE_STRING_GENERAL): detachable ANY
 			-- Loaded object from file `fn'.
 			-- if `r' is Void return a new object
 			-- else load into `r'
@@ -86,7 +86,7 @@ feature -- Object storage Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				create file.make (fn)
+				create file.make_with_name (fn)
 				if file.exists and then file.is_readable then
 					file.open_read
 					o := file.retrieved

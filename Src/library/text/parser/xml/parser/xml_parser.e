@@ -120,6 +120,15 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+feature -- Element change
+
+	set_encoding (a_encoding: READABLE_STRING_GENERAL)
+			-- Set encoding to `a_encoding'.
+		require
+			a_encoding_not_empty: a_encoding /= Void and then (not a_encoding.is_empty and a_encoding.is_valid_as_string_8)
+		deferred
+		end
+
 feature {XML_CALLBACKS} -- Error
 
 	report_error_from_callback (a_msg: READABLE_STRING_GENERAL)

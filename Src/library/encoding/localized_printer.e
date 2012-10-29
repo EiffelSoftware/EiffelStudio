@@ -16,7 +16,7 @@ inherit
 
 feature -- Output
 
-	localized_print (a_str: READABLE_STRING_GENERAL)
+	localized_print (a_str: detachable READABLE_STRING_GENERAL)
 			-- Print `a_str' as localized encoding.
 			-- `a_str' is taken as a UTF-32 string.
 		do
@@ -29,7 +29,7 @@ feature -- Output
 			end
 		end
 
-	localized_print_error (a_str: READABLE_STRING_GENERAL)
+	localized_print_error (a_str: detachable READABLE_STRING_GENERAL)
 			-- Print an error, `a_str', as localized encoding.
 			-- `a_str' is taken as a UTF-32 string.
 		do
@@ -116,7 +116,7 @@ feature -- Conversion
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

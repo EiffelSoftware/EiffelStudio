@@ -160,7 +160,7 @@ feature {NONE} -- Basic Operations
 			main_box_has_at_least_one_element: main_box.count > 0
 		end
 
-	pixmap_location: FILE_NAME
+	pixmap_location: FILE_NAME_32
 			-- Pixmap location
 		once
 			create Result.make_from_string ("eiffel_wizard_icon")

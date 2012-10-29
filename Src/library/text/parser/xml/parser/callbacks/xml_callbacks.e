@@ -23,11 +23,13 @@ feature -- Document
 		deferred
 		end
 
-	on_xml_declaration (a_version: READABLE_STRING_8; an_encoding: detachable READABLE_STRING_8; a_standalone: BOOLEAN)
+	on_xml_declaration (a_version: READABLE_STRING_32; an_encoding: detachable READABLE_STRING_32; a_standalone: BOOLEAN)
 			-- XML declaration.
 		require
 			a_version_not_void: a_version /= Void
 			a_version_not_empty: a_version.count > 0
+			a_version_is_valid: a_version.is_valid_as_string_8
+			an_encoding_is_valid: an_encoding /= Void implies an_encoding.is_valid_as_string_8
 		deferred
 		end
 

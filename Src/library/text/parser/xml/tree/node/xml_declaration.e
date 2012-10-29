@@ -14,12 +14,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make_in_document (a_parent: XML_DOCUMENT; a_version: READABLE_STRING_8; a_encoding: detachable READABLE_STRING_8; a_standalone: BOOLEAN)
+	make_in_document (a_parent: XML_DOCUMENT; a_version: like version; a_encoding: detachable like encoding; a_standalone: BOOLEAN)
 			-- Create a new xml declaration node.
 			-- and add it to parent.
 		require
 			a_parent_not_void: a_parent /= Void
 			a_version_not_void: a_version /= Void
+			valid_version: a_version.is_valid_as_string_8
+			valid_encoding: a_encoding /= Void implies a_encoding.is_valid_as_string_8
 		do
 			set_version (a_version)
 			set_encoding (a_encoding)
@@ -34,9 +36,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	version: READABLE_STRING_8
+	version: READABLE_STRING_32
 
-	encoding: detachable READABLE_STRING_8
+	encoding: detachable READABLE_STRING_32
 
 	standalone: BOOLEAN
 
@@ -46,6 +48,7 @@ feature -- Setting
 			-- Set version.
 		require
 			a_version_not_void: a_version /= Void
+			valid_version: a_version.is_valid_as_string_8
 		do
 			version := a_version
 		ensure
@@ -54,6 +57,8 @@ feature -- Setting
 
 	set_encoding (a_encoding: like encoding)
 			-- Set encoding.
+		require
+			valid_encoding: a_encoding /= Void implies a_encoding.is_valid_as_string_8
 		do
 			encoding := a_encoding
 		end

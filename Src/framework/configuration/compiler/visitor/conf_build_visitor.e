@@ -478,7 +478,7 @@ feature -- Visit nodes
 			a_cluster.set_classes (l_current_classes)
 			a_cluster.set_classes_by_filename (current_classes_by_filename)
 
-			process_cluster_recursive ("", a_cluster, a_cluster.active_file_rule (state))
+			process_cluster_recursive ({STRING_32} "", a_cluster, a_cluster.active_file_rule (state))
 
 			if partial_classes /= Void then
 				process_partial_classes

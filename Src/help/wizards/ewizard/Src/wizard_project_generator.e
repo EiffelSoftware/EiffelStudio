@@ -22,7 +22,7 @@ feature -- Basic Operations
 	generate_code
 			-- Generate code for the project.
 		local
-			dir: DIRECTORY_32
+			dir: DIRECTORY
 			l: LINKED_LIST [TUPLE [STRING, STRING_32]]
 			l_tuple: TUPLE [STRING, STRING_32]
 			class_name: STRING

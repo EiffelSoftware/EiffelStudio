@@ -69,7 +69,7 @@ feature -- Basic Operation
 			next_window: WIZARD_STATE_WINDOW
 			rescued: BOOLEAN
 			a_project_location: DIRECTORY_NAME_32
-			a_directory: DIRECTORY_32
+			a_directory: DIRECTORY
 		do
 			if not rescued then
 				if not is_project_name_valid (project_name.text_32) then

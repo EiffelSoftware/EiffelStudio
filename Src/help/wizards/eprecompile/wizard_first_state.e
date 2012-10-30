@@ -205,7 +205,7 @@ feature {NONE} -- Tools
 			-- called
 		local
 			it: EV_MULTI_COLUMN_LIST_ROW
-			eiffel_directory: DIRECTORY_32
+			eiffel_directory: DIRECTORY
 			list_of_preprecompilable_libraries: ARRAYED_LIST [STRING_32]
 			current_lib: STRING_32
 			current_precomp: FILE_NAME_32
@@ -213,7 +213,7 @@ feature {NONE} -- Tools
 				-- NOTE: for now `a_is_dotnet' is set to False, in future
 				-- the wizard should support dotnet precompiles
 			eiffel_layout.set_precompile (False)
-			create eiffel_directory.make (eiffel_layout.precompilation_path_32 (False))
+			create eiffel_directory.make_with_path (eiffel_layout.precompilation_path (False))
 			if eiffel_directory.exists then
 				list_of_preprecompilable_libraries:= eiffel_directory.linear_representation_32
 

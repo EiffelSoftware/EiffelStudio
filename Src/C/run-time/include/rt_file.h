@@ -110,22 +110,23 @@ extern "C" {
 /* Let's define the stat function for our platforms. */
 #ifdef EIF_WINDOWS
 #	ifdef EIF_64_BITS
-#		define rt_stat		_stat64
-#		define rt_wstat		_wstat64
+#		define rt_stat		_wstat64
 #		define rt_fstat		_fstat64
 #	else
-#		define rt_stat		_stat64i32
-#		define rt_wstat		_wstat64i32
+#		define rt_stat		_wstat64i32
 #		define rt_fstat		_fstat64i32
 #	endif
+#	define rt_access		_waccess
 #else
 #	define rt_stat			stat
 #	define rt_lstat			lstat
 #	define rt_fstat			fstat
+#	define rt_access		access
 #endif
 
-#ifdef EIF_WINDOWS
-extern void rt_file_stat_16(EIF_NATURAL_16 *path, rt_stat_buf *buf);
+extern void rt_file_stat (EIF_FILENAME path, rt_stat_buf *buf);
+#ifdef HAS_GETGROUPS
+extern EIF_BOOLEAN eif_group_in_list(gid_t gid);
 #endif
 
 #ifdef __cplusplus

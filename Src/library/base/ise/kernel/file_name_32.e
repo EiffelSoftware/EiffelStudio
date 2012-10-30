@@ -21,12 +21,12 @@ convert
 
 feature -- Creation
 
-	make_from_string (s: READABLE_STRING_32)
+	make_from_string (s: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			u: UTF_CONVERTER
 		do
-			create path_name.make_from_string (u.string_32_to_utf_8_string_8 (s))
+			create path_name.make_from_string (u.utf_32_string_to_utf_8_string_8 (s))
 		end
 
 	make_temporary_name

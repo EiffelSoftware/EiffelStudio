@@ -1640,7 +1640,52 @@ rt_shared EIF_REFERENCE rt_nmake(long int objectCount)
 
 		if (nb_byte > 0) {
 				/* Read the object's body */
-			buffer_read(newadd, nb_byte);
+			if (flags & EO_SPEC) {
+				buffer_read(newadd, nb_byte);
+			} else {
+					/* Normal object */
+				char l_has_transient = 0;
+				buffer_read(&l_has_transient, sizeof(char));
+				if (!l_has_transient) {
+					buffer_read (newadd, nb_byte);
+				} else {
+					rt_uint_ptr i, count, elem_size;
+					rt_uint_ptr attrib_offset;
+
+					count = System(dtype).cn_nbattr;
+
+					for (i = 0; i < count; i++) {
+						if (!EIF_IS_TRANSIENT_ATTRIBUTE(System(dtype), i)) {
+							attrib_offset = get_offset(dtype, i);
+							switch (*(System(dtype).cn_types + i) & SK_HEAD) {
+								case SK_UINT8: elem_size = sizeof(EIF_NATURAL_8); break;
+								case SK_UINT16: elem_size = sizeof(EIF_NATURAL_16); break;
+								case SK_UINT32: elem_size = sizeof(EIF_NATURAL_32); break;
+								case SK_UINT64: elem_size = sizeof(EIF_NATURAL_64); break;
+								case SK_INT8: elem_size = sizeof(EIF_INTEGER_8); break;
+								case SK_INT16: elem_size = sizeof(EIF_INTEGER_16); break;
+								case SK_INT32: elem_size = sizeof(EIF_INTEGER_32); break;
+								case SK_INT64: elem_size = sizeof(EIF_INTEGER_64); break;
+								case SK_CHAR32: elem_size = sizeof(EIF_CHARACTER_32); break;
+								case SK_BOOL: elem_size = sizeof(EIF_BOOLEAN); break;
+								case SK_CHAR8: elem_size = sizeof(EIF_CHARACTER_8); break;
+								case SK_REAL32: elem_size = sizeof(EIF_REAL_32); break;
+								case SK_REAL64: elem_size = sizeof(EIF_REAL_64); break;
+								case SK_REF:
+								case SK_BIT:
+								case SK_POINTER: elem_size = sizeof(EIF_REFERENCE); break;
+								case SK_EXP:
+										elem_size = HEADER(newadd + attrib_offset)->ov_size & B_SIZE;
+									break;
+								default:
+									elem_size = 0;
+									eise_io("Basic retrieve: not an Eiffel object.");
+							}
+							buffer_read (newadd + attrib_offset, elem_size);
+						}
+					}
+				}
+			}
 			CHECK("Special attributes preserved", !RT_IS_SPECIAL(newadd) || (((uint32) RT_SPECIAL_COUNT(newadd) == spec_count) && ((uint32)RT_SPECIAL_ELEM_SIZE(newadd) == spec_elem_size) && ((uint32)RT_SPECIAL_CAPACITY(newadd) == spec_capacity)));
 		}
 
@@ -3988,72 +4033,73 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uin
 	if (num_attrib > 0) {
 		for (; num_attrib > 0;) {
 			uint32 types_cn;
-
 			num_attrib--;
-			attrib_offset = get_alpha_offset(dtype, num_attrib);
-			types_cn = *(System(dtype).cn_types + num_attrib);
+			if (!EIF_IS_TRANSIENT_ATTRIBUTE(System(dtype), num_attrib)) {
+				attrib_offset = get_alpha_offset(dtype, num_attrib);
+				types_cn = *(System(dtype).cn_types + num_attrib);
 
-			switch (types_cn & SK_HEAD) {
-				case SK_UINT8: buffer_read(object + attrib_offset, sizeof(EIF_NATURAL_8)); break;
-				case SK_UINT16: buffer_read(object + attrib_offset, sizeof(EIF_NATURAL_16)); break;
-				case SK_UINT32: buffer_read(object + attrib_offset, sizeof(EIF_NATURAL_32)); break;
-				case SK_UINT64: buffer_read(object + attrib_offset, sizeof(EIF_NATURAL_64)); break;
-				case SK_INT8: buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_8)); break;
-				case SK_INT16: buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_16)); break;
-				case SK_INT32: buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_32)); break;
-				case SK_INT64: buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_64)); break;
-				case SK_CHAR32: buffer_read(object + attrib_offset, sizeof(EIF_CHARACTER_32)); break;
-				case SK_REAL32: buffer_read(object + attrib_offset, sizeof(EIF_REAL_32)); break;
-				case SK_REAL64: buffer_read(object + attrib_offset, sizeof(EIF_REAL_64)); break;
-				case SK_BOOL:
-				case SK_CHAR8:
-					buffer_read(object + attrib_offset, sizeof(EIF_CHARACTER_8));
-					break;
-				case SK_BIT:
-						{
-							uint16 hflags;
-							EIF_TYPE_INDEX hdtype, hdftype;
-							struct bit *bptr = (struct bit *)(object + attrib_offset);
-							buffer_read((char *)&store_flags, sizeof(uint32));
-							Split_flags_dtype(hflags,hdtype,store_flags);
-							hdftype = rt_read_cid(hdtype);
-							HEADER(bptr)->ov_dftype = hdftype;
-							HEADER(bptr)->ov_dtype = To_dtype(hdftype);
-							HEADER(bptr)->ov_flags = hflags & (EO_COMP | EO_REF);
+				switch (types_cn & SK_HEAD) {
+					case SK_UINT8: buffer_read(object + attrib_offset, sizeof(EIF_NATURAL_8)); break;
+					case SK_UINT16: buffer_read(object + attrib_offset, sizeof(EIF_NATURAL_16)); break;
+					case SK_UINT32: buffer_read(object + attrib_offset, sizeof(EIF_NATURAL_32)); break;
+					case SK_UINT64: buffer_read(object + attrib_offset, sizeof(EIF_NATURAL_64)); break;
+					case SK_INT8: buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_8)); break;
+					case SK_INT16: buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_16)); break;
+					case SK_INT32: buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_32)); break;
+					case SK_INT64: buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_64)); break;
+					case SK_CHAR32: buffer_read(object + attrib_offset, sizeof(EIF_CHARACTER_32)); break;
+					case SK_REAL32: buffer_read(object + attrib_offset, sizeof(EIF_REAL_32)); break;
+					case SK_REAL64: buffer_read(object + attrib_offset, sizeof(EIF_REAL_64)); break;
+					case SK_BOOL:
+					case SK_CHAR8:
+						buffer_read(object + attrib_offset, sizeof(EIF_CHARACTER_8));
+						break;
+					case SK_BIT:
+							{
+								uint16 hflags;
+								EIF_TYPE_INDEX hdtype, hdftype;
+								struct bit *bptr = (struct bit *)(object + attrib_offset);
+								buffer_read((char *)&store_flags, sizeof(uint32));
+								Split_flags_dtype(hflags,hdtype,store_flags);
+								hdftype = rt_read_cid(hdtype);
+								HEADER(bptr)->ov_dftype = hdftype;
+								HEADER(bptr)->ov_dtype = To_dtype(hdftype);
+								HEADER(bptr)->ov_flags = hflags & (EO_COMP | EO_REF);
 
-							buffer_read((char *) bptr, bptr->b_length);
-							if ((types_cn & SK_DTYPE) != LENGTH(bptr))
-								eise_io("General retrieve: mismatch size for BIT object.");
+								buffer_read((char *) bptr, bptr->b_length);
+								if ((types_cn & SK_DTYPE) != LENGTH(bptr))
+									eise_io("General retrieve: mismatch size for BIT object.");
+							}
+
+						break;
+					case SK_EXP: {
+						uint16 hflags;
+						EIF_TYPE_INDEX hdtype, hdftype;
+						EIF_REFERENCE l_buffer [1];
+
+						buffer_read((char *) l_buffer, sizeof(EIF_REFERENCE));
+						buffer_read((char *) &store_flags, sizeof(uint32));
+						Split_flags_dtype(hflags,hdtype,store_flags);
+						hdftype = rt_read_cid (hdtype);
+						hdtype = To_dtype(hdftype);	/* Update hdtype to new system. */
+
+							/* No need to set `ov_size' or `ov_flags' as it is done while creating
+							 * the object */
+						gen_object_read (object + attrib_offset, parent, hflags, hdtype);
 						}
-
-					break;
-				case SK_EXP: {
-					uint16 hflags;
-					EIF_TYPE_INDEX hdtype, hdftype;
-					EIF_REFERENCE l_buffer [1];
-
-					buffer_read((char *) l_buffer, sizeof(EIF_REFERENCE));
-					buffer_read((char *) &store_flags, sizeof(uint32));
-					Split_flags_dtype(hflags,hdtype,store_flags);
-					hdftype = rt_read_cid (hdtype);
-					hdtype = To_dtype(hdftype);	/* Update hdtype to new system. */
-
-						/* No need to set `ov_size' or `ov_flags' as it is done while creating
-						 * the object */
-					gen_object_read (object + attrib_offset, parent, hflags, hdtype);
-					}
-					break;
-				case SK_REF:
-					buffer_read(object + attrib_offset, sizeof(EIF_REFERENCE));
-					break;
-				case SK_POINTER:
-					buffer_read(object + attrib_offset, sizeof(EIF_REFERENCE));
-					if (eif_discard_pointer_values) {
-						*(EIF_POINTER *) (object + attrib_offset) = NULL;
-					}
-					break;
-				default:
-					eise_io("General retrieve: not an Eiffel object.");
+						break;
+					case SK_REF:
+						buffer_read(object + attrib_offset, sizeof(EIF_REFERENCE));
+						break;
+					case SK_POINTER:
+						buffer_read(object + attrib_offset, sizeof(EIF_REFERENCE));
+						if (eif_discard_pointer_values) {
+							*(EIF_POINTER *) (object + attrib_offset) = NULL;
+						}
+						break;
+					default:
+						eise_io("General retrieve: not an Eiffel object.");
+				}
 			}
 		}
 	} else {

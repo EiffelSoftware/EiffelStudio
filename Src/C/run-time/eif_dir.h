@@ -41,33 +41,25 @@
 #endif
 
 #include "eif_eiffel.h"
+#include "eif_file.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-RT_LNK EIF_POINTER dir_open(char *name);
-RT_LNK EIF_REFERENCE dir_current(void);
+/* New Unicode compliant API. */
+RT_LNK EIF_POINTER eif_dir_open(EIF_FILENAME name);
+RT_LNK EIF_INTEGER eif_dir_current (EIF_FILENAME a_buffer, EIF_INTEGER a_count);
 RT_LNK EIF_CHARACTER_8 eif_dir_separator (void);
-RT_LNK EIF_INTEGER eif_chdir (char * path);
-RT_LNK EIF_BOOLEAN eif_dir_exists (char *name);
-RT_LNK EIF_BOOLEAN eif_dir_is_readable (char *name);
-RT_LNK EIF_BOOLEAN eif_dir_is_writable (char *name);
-RT_LNK EIF_BOOLEAN eif_dir_is_executable (char *name);
-RT_LNK EIF_BOOLEAN eif_dir_is_deletable (char *name);
-RT_LNK void eif_dir_delete (char *name);
-RT_LNK void dir_rewind(EIF_POINTER dirp);
-RT_LNK EIF_REFERENCE dir_next(EIF_POINTER dirp);
-RT_LNK void dir_close(EIF_POINTER dirp);
-
-RT_LNK EIF_REFERENCE eif_dir_current_16 (void);
-RT_LNK EIF_POINTER eif_dir_open_16 (EIF_NATURAL_16 *name);
-RT_LNK EIF_INTEGER eif_chdir_16 (EIF_NATURAL_16 * path);
-RT_LNK EIF_BOOLEAN eif_dir_exists_16 (EIF_NATURAL_16 *name);
-RT_LNK EIF_BOOLEAN eif_dir_is_readable_16 (EIF_NATURAL_16 *name);
-RT_LNK EIF_BOOLEAN eif_dir_is_writable_16 (EIF_NATURAL_16 *name);
-RT_LNK EIF_BOOLEAN eif_dir_is_executable_16 (EIF_NATURAL_16 *name);
-RT_LNK void eif_dir_delete_16 (EIF_NATURAL_16 *name);
+RT_LNK EIF_INTEGER eif_chdir (EIF_FILENAME path);
+RT_LNK EIF_BOOLEAN eif_dir_exists (EIF_FILENAME name);
+RT_LNK EIF_BOOLEAN eif_dir_is_readable (EIF_FILENAME name);
+RT_LNK EIF_BOOLEAN eif_dir_is_writable (EIF_FILENAME name);
+RT_LNK EIF_BOOLEAN eif_dir_is_executable (EIF_FILENAME name);
+RT_LNK EIF_BOOLEAN eif_dir_is_deletable (EIF_FILENAME name);
+RT_LNK EIF_POINTER eif_dir_rewind (EIF_POINTER d, EIF_FILENAME dir_name);
+RT_LNK EIF_POINTER eif_dir_next(EIF_POINTER d);
+RT_LNK void eif_dir_close(EIF_POINTER dirp);
 
 #ifdef __cplusplus
 }

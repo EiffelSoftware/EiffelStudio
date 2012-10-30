@@ -74,6 +74,12 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#ifdef EIF_WINDOWS
+typedef wchar_t * EIF_FILENAME;
+#else
+typedef char * EIF_FILENAME;
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -94,101 +100,66 @@ extern "C" {
  * Functions declaration.
  */
 
-RT_LNK char *file_open_mode(int how, char mode);
-RT_LNK EIF_POINTER file_open(char *name, int how);
-RT_LNK EIF_POINTER file_dopen(int fd, int how);
-RT_LNK EIF_POINTER file_reopen(char *name, int how, FILE *old);
-RT_LNK EIF_POINTER file_binary_open(char *name, int how);
-RT_LNK EIF_POINTER file_binary_dopen(int fd, int how);
-RT_LNK EIF_POINTER file_binary_reopen(char *name, int how, FILE *old);
-RT_LNK void file_close(FILE *fp);
-RT_LNK void file_flush(FILE *fp);
+RT_LNK EIF_POINTER eif_file_open(EIF_FILENAME name, int how);
+RT_LNK EIF_POINTER eif_file_dopen(int fd, int how);
+RT_LNK EIF_POINTER eif_file_reopen(EIF_FILENAME name, int how, FILE *old);
+RT_LNK EIF_POINTER eif_file_binary_open(EIF_FILENAME name, int how);
+RT_LNK EIF_POINTER eif_file_binary_dopen(int fd, int how);
+RT_LNK EIF_POINTER eif_file_binary_reopen(EIF_FILENAME name, int how, FILE *old);
+RT_LNK void eif_file_close(FILE *fp);
+RT_LNK void eif_file_flush(FILE *fp);
 RT_LNK EIF_INTEGER eif_file_size (FILE *fp);
-RT_LNK EIF_BOOLEAN file_feof(FILE *fp);
-RT_LNK void file_pi(FILE *f, EIF_INTEGER number);
-RT_LNK void file_pr(FILE *f, EIF_REAL_32 number);
-RT_LNK void file_pib(FILE *f, EIF_INTEGER number);
-RT_LNK void file_prb(FILE *f, EIF_REAL_32 number);
-RT_LNK void file_ps(FILE *f, char *str, EIF_INTEGER len);
-RT_LNK void file_pc(FILE *f, char c);
-RT_LNK void file_pd(FILE *f, EIF_REAL_64 val);
-RT_LNK void file_pdb(FILE *f, EIF_REAL_64 val);
-RT_LNK void file_tnwl(FILE *f);
-RT_LNK void file_append(FILE *f, FILE *other, EIF_INTEGER l);
-RT_LNK void file_tnil(FILE *f);
-RT_LNK EIF_INTEGER file_gi(FILE *f);
-RT_LNK EIF_REAL_32 file_gr(FILE *f);
-RT_LNK EIF_REAL_64 file_gd(FILE *f);
-RT_LNK EIF_INTEGER file_gib(FILE *f);
-RT_LNK EIF_REAL_32 file_grb(FILE *f);
-RT_LNK EIF_REAL_64 file_gdb(FILE *f);
-RT_LNK EIF_CHARACTER_8 file_gc(FILE *f);
-RT_LNK EIF_INTEGER file_gs(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start);
-RT_LNK EIF_INTEGER file_gss(FILE *f, char *s, EIF_INTEGER bound);
-RT_LNK EIF_INTEGER file_gw(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start);
-RT_LNK EIF_CHARACTER_8 file_lh(FILE *f);
-RT_LNK void file_chown(char *name, int uid);
-RT_LNK void file_chgrp(char *name, int gid);
-RT_LNK void file_stat(char *path, rt_stat_buf *buf);
-RT_LNK int eif_file_stat(char *path, rt_stat_buf *buf, int follow);
-RT_LNK EIF_INTEGER file_info(rt_stat_buf *buf, int op);
-RT_LNK EIF_BOOLEAN file_eaccess(rt_stat_buf *buf, int op);
-RT_LNK EIF_BOOLEAN file_access(char *name, EIF_INTEGER op);
-RT_LNK EIF_BOOLEAN file_exists(char *name);
-RT_LNK EIF_BOOLEAN file_path_exists(char *name);
-RT_LNK void file_rename(char *from, char *to);
-RT_LNK void file_link(char *from, char *to);
-RT_LNK void file_mkdir(char *path);
-RT_LNK void file_unlink(char *name);
-RT_LNK void file_touch(char *name);
-RT_LNK void file_utime(char *name, time_t stamp, int how);
-RT_LNK void file_perm(char *name, char *who, char *what, int flag);
-RT_LNK void file_chmod(char *path, int mode);
-RT_LNK EIF_INTEGER file_tell(FILE *f);
-RT_LNK void file_go(FILE *f, EIF_INTEGER pos);
-RT_LNK void file_recede(FILE *f, EIF_INTEGER pos);
-RT_LNK void file_move(FILE *f, EIF_INTEGER pos);
+RT_LNK EIF_BOOLEAN eif_file_feof(FILE *fp);
+RT_LNK void eif_file_pi(FILE *f, EIF_INTEGER number);
+RT_LNK void eif_file_pr(FILE *f, EIF_REAL_32 number);
+RT_LNK void eif_file_pib(FILE *f, EIF_INTEGER number);
+RT_LNK void eif_file_prb(FILE *f, EIF_REAL_32 number);
+RT_LNK void eif_file_ps(FILE *f, char *str, EIF_INTEGER len);
+RT_LNK void eif_file_pc(FILE *f, char c);
+RT_LNK void eif_file_pd(FILE *f, EIF_REAL_64 val);
+RT_LNK void eif_file_pdb(FILE *f, EIF_REAL_64 val);
+RT_LNK void eif_file_tnwl(FILE *f);
+RT_LNK void eif_file_append(FILE *f, FILE *other, EIF_INTEGER l);
+RT_LNK void eif_file_tnil(FILE *f);
+RT_LNK EIF_INTEGER eif_file_gi(FILE *f);
+RT_LNK EIF_REAL_32 eif_file_gr(FILE *f);
+RT_LNK EIF_REAL_64 eif_file_gd(FILE *f);
+RT_LNK EIF_INTEGER eif_file_gib(FILE *f);
+RT_LNK EIF_REAL_32 eif_file_grb(FILE *f);
+RT_LNK EIF_REAL_64 eif_file_gdb(FILE *f);
+RT_LNK EIF_CHARACTER_8 eif_file_gc(FILE *f);
+RT_LNK EIF_INTEGER eif_file_gs(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start);
+RT_LNK EIF_INTEGER eif_file_gss(FILE *f, char *s, EIF_INTEGER bound);
+RT_LNK EIF_INTEGER eif_file_gw(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start);
+RT_LNK EIF_CHARACTER_8 eif_file_lh(FILE *f);
+RT_LNK void eif_file_chown(EIF_FILENAME name, int uid);
+RT_LNK void eif_file_chgrp(EIF_FILENAME name, int gid);
+RT_LNK int eif_file_stat(EIF_FILENAME path, rt_stat_buf *buf, int follow);
+RT_LNK EIF_INTEGER eif_file_info(rt_stat_buf *buf, int op);
+RT_LNK EIF_BOOLEAN eif_file_eaccess(rt_stat_buf *buf, int op);
+RT_LNK EIF_BOOLEAN eif_file_access(EIF_FILENAME name, EIF_INTEGER op);
+RT_LNK EIF_BOOLEAN eif_file_exists(EIF_FILENAME name);
+RT_LNK EIF_BOOLEAN eif_file_path_exists(EIF_FILENAME name);
+RT_LNK void eif_file_rename(EIF_FILENAME from, EIF_FILENAME to);
+RT_LNK void eif_file_link(EIF_FILENAME from, EIF_FILENAME to);
+RT_LNK void eif_file_mkdir(EIF_FILENAME path);
+RT_LNK void eif_file_unlink(EIF_FILENAME name);
+RT_LNK void eif_file_touch(EIF_FILENAME name);
+RT_LNK void eif_file_utime(EIF_FILENAME name, time_t stamp, int how);
+RT_LNK void eif_file_perm(EIF_FILENAME name, char *who, char *what, int flag);
+RT_LNK void eif_file_chmod(EIF_FILENAME path, int mode);
+RT_LNK EIF_INTEGER eif_file_tell(FILE *f);
+RT_LNK void eif_file_go(FILE *f, EIF_INTEGER pos);
+RT_LNK void eif_file_recede(FILE *f, EIF_INTEGER pos);
+RT_LNK void eif_file_move(FILE *f, EIF_INTEGER pos);
 RT_LNK EIF_INTEGER stat_size(void);
-RT_LNK EIF_BOOLEAN file_creatable(char *path, EIF_INTEGER length);
-RT_LNK EIF_INTEGER file_fd(FILE *f);
-RT_LNK EIF_REFERENCE file_owner(int uid);
-RT_LNK EIF_REFERENCE file_group(int gid);
+RT_LNK EIF_BOOLEAN eif_file_creatable(EIF_FILENAME path, EIF_INTEGER length);
+RT_LNK EIF_INTEGER eif_file_fd(FILE *f);
+RT_LNK EIF_REFERENCE eif_file_owner(int uid);
+RT_LNK EIF_REFERENCE eif_file_group(int gid);
 
-RT_LNK EIF_POINTER eif_file_open_16(EIF_NATURAL_16 *name, int how);
-RT_LNK EIF_POINTER eif_file_binary_open_16(EIF_NATURAL_16 *name, int how);
-RT_LNK EIF_BOOLEAN eif_file_exists_16(EIF_NATURAL_16 *name);
-RT_LNK EIF_BOOLEAN eif_file_path_exists_16(EIF_NATURAL_16 *name);
-RT_LNK EIF_BOOLEAN eif_file_creatable_16(EIF_NATURAL_16 *path, EIF_INTEGER length);
-#ifdef EIF_WINDOWS
-RT_LNK int eif_file_stat_16(EIF_NATURAL_16 *path, rt_stat_buf *buf, int follow);
-#endif
-RT_LNK void eif_file_unlink_16(EIF_NATURAL_16 *name);
-RT_LNK void eif_file_mkdir_16(EIF_NATURAL_16 *path);
-RT_LNK void eif_file_rename_16(EIF_NATURAL_16 *from, EIF_NATURAL_16 *to);
-
-RT_LNK EIF_INTEGER eif_file_date (char * name);
-RT_LNK EIF_INTEGER eif_file_access_date (char * name);
-RT_LNK EIF_INTEGER eif_file_date_16 (EIF_NATURAL_16 * name);
-RT_LNK EIF_INTEGER eif_file_access_date_16 (EIF_NATURAL_16 * name);
-
-#ifdef HAS_GETGROUPS
-/* Does the list of groups the user belongs to include `gid'? */
-extern EIF_BOOLEAN eif_group_in_list(int gid);
-#endif
-
-	/* FIXME: include the correct header files!!! */
-
-#ifndef HAS_RENAME	/* %%zs added */
-extern int rename(const char *from, const char *to);
-#endif
-
-#ifndef HAS_RMDIR
-extern int rmdir(const char *path);
-#endif
-
-#ifndef HAS_MKDIR
-extern int mkdir(char *path);
-#endif
+RT_LNK EIF_INTEGER eif_file_date (EIF_FILENAME  name);
+RT_LNK EIF_INTEGER eif_file_access_date (EIF_FILENAME  name);
 
 #ifdef __cplusplus
 }

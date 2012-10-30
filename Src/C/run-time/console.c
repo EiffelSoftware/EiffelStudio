@@ -114,7 +114,7 @@ doc:	</routine>
 rt_private void flush_buffer (FILE *fp)
 {
 	if (compiler_need_flush) {
-		file_flush(fp);
+		eif_file_flush(fp);
 	}
 }
 
@@ -123,7 +123,7 @@ rt_public EIF_BOOLEAN console_eof(FILE *fp)
 #ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
-	return file_feof(fp);
+	return eif_file_feof(fp);
 }            
 
 /*
@@ -135,7 +135,7 @@ rt_public void console_pi(FILE *f, EIF_INTEGER number)
 #ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
-	file_pi (f, number);
+	eif_file_pi (f, number);
 	flush_buffer(f);
 }
 
@@ -144,7 +144,7 @@ rt_public void console_pr(FILE *f, EIF_REAL_32 number)
 #ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
-	file_pr (f, number);	
+	eif_file_pr (f, number);	
 	flush_buffer(f);
 }
 
@@ -153,7 +153,7 @@ rt_public void console_ps(FILE *f, char *str, EIF_INTEGER len)
 #ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
-	file_ps (f, str, len);
+	eif_file_ps (f, str, len);
 	flush_buffer(f);
 }
 
@@ -162,7 +162,7 @@ rt_public void console_pc(FILE *f, EIF_CHARACTER_8 c)
 #ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
-	file_pc (f, c);
+	eif_file_pc (f, c);
 }
 
 rt_public void console_pd(FILE *f, EIF_REAL_64 val)
@@ -170,7 +170,7 @@ rt_public void console_pd(FILE *f, EIF_REAL_64 val)
 #ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
-	file_pd (f, val);
+	eif_file_pd (f, val);
 	flush_buffer(f);
 }
 
@@ -188,7 +188,7 @@ rt_public void console_next_line(FILE *f)
 #ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
-	file_tnil (f);
+	eif_file_tnil (f);
 	flush_buffer(f);
 }
 
@@ -197,7 +197,7 @@ rt_public EIF_INTEGER console_readint(FILE *f)
 #ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
-	return file_gi (f);
+	return eif_file_gi (f);
 }
 
 rt_public EIF_REAL_32 console_readreal(FILE *f)
@@ -205,7 +205,7 @@ rt_public EIF_REAL_32 console_readreal(FILE *f)
 #ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
-	return file_gr (f);
+	return eif_file_gr (f);
 }
 
 rt_public EIF_REAL_64 console_readdouble(FILE *f)
@@ -213,7 +213,7 @@ rt_public EIF_REAL_64 console_readdouble(FILE *f)
 #ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
-	return file_gd(f);
+	return eif_file_gd(f);
 }
 rt_public EIF_CHARACTER_8 console_readchar(FILE *f)
 {
@@ -223,7 +223,7 @@ rt_public EIF_CHARACTER_8 console_readchar(FILE *f)
 	eif_show_console ();
 #endif
 
-		/* The code of `file_gc' is duplicated here because of the special
+		/* The code of `eif_file_gc' is duplicated here because of the special
 		 * handling for Solaris. */
 	errno = 0;
 	c = getc(f);
@@ -252,7 +252,7 @@ rt_public EIF_INTEGER console_readline(FILE *f, char *s, EIF_INTEGER bound, EIF_
 #ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
-	return file_gs (f, s, bound, start);
+	return eif_file_gs (f, s, bound, start);
 }
 
 rt_public EIF_INTEGER console_readstream(FILE *f, char *s, EIF_INTEGER bound)
@@ -263,7 +263,7 @@ rt_public EIF_INTEGER console_readstream(FILE *f, char *s, EIF_INTEGER bound)
 #ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
-	return file_gss (f, s, bound);
+	return eif_file_gss (f, s, bound);
 }
 
 rt_public EIF_INTEGER console_readword(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start)
@@ -275,7 +275,7 @@ rt_public EIF_INTEGER console_readword(FILE *f, char *s, EIF_INTEGER bound, EIF_
 #ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
-	return file_gw (f, s, bound, start);
+	return eif_file_gw (f, s, bound, start);
 }
 
 rt_public EIF_CHARACTER_8 console_separator(FILE *f)
@@ -283,7 +283,7 @@ rt_public EIF_CHARACTER_8 console_separator(FILE *f)
 #ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
-	return file_lh (f);
+	return eif_file_lh (f);
 }
 
 rt_public void console_file_close (FILE *f)
@@ -291,7 +291,7 @@ rt_public void console_file_close (FILE *f)
 #ifdef EIF_WINDOWS
 	eif_show_console ();
 #endif
-	file_close (f);
+	eif_file_close (f);
 }
 
 /*

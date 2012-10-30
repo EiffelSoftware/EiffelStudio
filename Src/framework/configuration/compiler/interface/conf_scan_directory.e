@@ -36,9 +36,9 @@ feature -- Processing
 			l_full_path: STRING_32
 			u: FILE_UTILITIES
 		do
-			l_cluster_separator := "/"
+			l_cluster_separator := {STRING_32} "/"
 			on_process_directory (a_cluster, a_path)
-			l_path := a_cluster.location.build_path (a_path, "")
+			l_path := a_cluster.location.build_path (a_path, {STRING_32} "")
 			create l_full_path.make (128)
 
 			if not attached u.file_names (l_path) as l_files then

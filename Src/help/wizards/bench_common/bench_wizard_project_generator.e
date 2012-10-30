@@ -104,14 +104,14 @@ feature {NONE} -- Implementation
 		local
 			tup: TUPLE [s1: STRING; s2: STRING_32]
 			s: STRING
-			fi: PLAIN_TEXT_FILE_32
+			fi: PLAIN_TEXT_FILE
 			f_name: FILE_NAME_32
 			f_n1: FILE_NAME_32
 			u: UTF_CONVERTER
 		do
 			create f_n1.make_from_string (template_path)
 			f_n1.set_file_name (template_name)
-			create fi.make (f_n1.to_string_32)
+			create fi.make_with_name (f_n1)
 			fi.open_read
 			fi.read_stream (fi.count)
 			s:= fi.last_string.twin
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 			fi.close
 			create f_name.make_from_string (resource_path)
 			f_name.set_file_name (resource_name)
-			create fi.make (f_name.to_string_32)
+			create fi.make_with_name (f_name)
 			fi.open_write
 			fi.put_string (s)
 			fi.close

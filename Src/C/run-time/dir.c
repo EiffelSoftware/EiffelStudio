@@ -246,7 +246,7 @@ rt_public EIF_INTEGER eif_dir_current (EIF_FILENAME a_buffer, EIF_INTEGER a_coun
 		/* First calculate the length of the buffer we need to hold the current working directory. */
 	l_nbytes = (GetFullPathNameW (drive, 0, NULL, &subpart) + 1) * sizeof(wchar_t) ;
 
-	if (l_nbytes = 0) {
+	if (l_nbytes == 0) {
 			/* Failure: we cannot retrieve our current directory. */
 		l_nbytes = -1;
 	} else {

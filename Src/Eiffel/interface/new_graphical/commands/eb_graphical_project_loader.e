@@ -609,7 +609,7 @@ feature {NONE} -- Actions
 	choose_again: BOOLEAN
 			-- We need to choose again the file
 
-	on_delete_directory (deleted_files: LIST [READABLE_STRING_32])
+	on_delete_directory (deleted_files: LIST [READABLE_STRING_GENERAL])
 			-- The files in `deleted_files' have just been deleted.
 			-- Display
 		local
@@ -717,7 +717,7 @@ invariant
 	parent_window_not_destroyed: not parent_window.is_destroyed
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

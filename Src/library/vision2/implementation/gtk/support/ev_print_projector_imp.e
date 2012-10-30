@@ -86,7 +86,7 @@ feature {EV_ANY_I} -- Access
 				system ({STRING_32} "lpr < " + l_filename + {STRING_32} " &")
 			end
 
-			create l_file.make (l_filename)
+			create l_file.make_with_name (l_filename)
 			l_file.open_write
 			file := l_file
 			output_to_postscript

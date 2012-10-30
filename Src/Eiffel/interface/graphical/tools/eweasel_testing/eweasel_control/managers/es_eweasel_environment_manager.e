@@ -197,8 +197,6 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 			-- eweasel temporary output directory
 		local
 			l_dir_name: DIRECTORY_NAME_32
-			l_final_dir_name: STRING_GENERAL
-
 			l_dir: DIRECTORY
 			l_short_name_helper: ES_FILE_NAME_HELPER
 		do

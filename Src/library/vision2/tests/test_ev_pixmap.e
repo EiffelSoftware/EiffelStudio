@@ -61,7 +61,6 @@ feature {NONE} -- Actual Test
 	test_unicode_load_and_save
 		local
 			pixmap: EV_PIXMAP
-			window: EV_WINDOW
 			l_u: FILE_UTILITIES
 			l_file: RAW_FILE
 		do

@@ -28,16 +28,16 @@ feature -- Creation
 feature -- Access
 
 	found_pattern_length: INTEGER
-			-- length of the found pattern in text
+			-- Length of the found pattern in text.
 		do
 			Result := pattern.count
 		end
 
 	matching_indices: detachable ARRAYED_LIST [INTEGER]
-			-- indices of found pattern in text
+			-- Indices of found pattern in text.
 
 	lengths: detachable ARRAYED_LIST [INTEGER]
-			-- lengths of found patterns in text
+			-- Lengths of found patterns in text.
 		local
 			i, fpl: INTEGER
 		do
@@ -58,25 +58,25 @@ feature -- Access
 feature -- Status Report
 
 	is_not_case_sensitive: BOOLEAN
-			-- Is the search case insensitive ?
+			-- Is the search case insensitive?
 
 feature -- Status setting
 
-	set_pattern (new_pattern: STRING)
+	set_pattern (new_pattern: READABLE_STRING_GENERAL)
 			-- Set `pattern' to new `pattern'.
 		do
-			pattern := new_pattern;
+			pattern := new_pattern.as_string_32
 			-- init_arrays -- to add case sensitivity
-		end;
+		end
 
 	enable_case_sensitive
-			-- Set `is_not_case_sensitive' to False
+			-- Set `is_not_case_sensitive' to `False'.
 		do
 			is_not_case_sensitive := False
 		end
 
 	disable_case_sensitive
-			-- Set `is_not_case_sensitive' to True
+			-- Set `is_not_case_sensitive' to `True'.
 		do
 			is_not_case_sensitive := True
 		end
@@ -90,7 +90,7 @@ feature -- Search
 			text_count, pattern_count, i: INTEGER
 			old_pattern: like pattern
 			old_text: like text
-			text_area, pattern_area: SPECIAL [CHARACTER]
+			text_area, pattern_area: SPECIAL [CHARACTER_32]
 			l_table: SPECIAL [INTEGER]
 			j: INTEGER
 		do
@@ -135,7 +135,7 @@ feature -- Search
 			-- very next occurrence of `pattern'.
 		local
 			text_count, pattern_count, i: INTEGER
-			text_area, pattern_area: SPECIAL [CHARACTER]
+			text_area, pattern_area: SPECIAL [CHARACTER_32]
 			l_table: SPECIAL [INTEGER]
 			old_pattern: like pattern
 			old_text: like text
@@ -189,7 +189,7 @@ feature {NONE} -- Initialization
 			-- Initializes arrays for pattern.
 		local
 			l_table: SPECIAL [INTEGER]
-			pattern_area: SPECIAL [CHARACTER]
+			pattern_area: SPECIAL [CHARACTER_32]
 			pattern_count: INTEGER
 			l,k: INTEGER
 		do
@@ -221,11 +221,11 @@ feature {NONE} -- Initialization
 feature {NONE} -- Attributes
 
 	table: SPECIAL [INTEGER];
-		-- Pattern automaton
+		-- Pattern automaton.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -248,12 +248,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class KMP_MATCHER
-
+end

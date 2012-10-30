@@ -58,7 +58,7 @@ feature -- Basic Operations
 					url.set_file_name ("index")
 					url.add_extension ("html")
 				end
-				exists := (create {RAW_FILE_32}.make (url)).exists
+				exists := (create {RAW_FILE}.make_with_name (url)).exists
 				if exists then
 					cmd.replace_substring_all ("$url", url)
 					(create {EXECUTION_ENVIRONMENT_32}).launch (cmd)

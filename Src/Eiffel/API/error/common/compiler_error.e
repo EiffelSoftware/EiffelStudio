@@ -48,7 +48,7 @@ feature {NONE} -- Access
 					-- No data has been cached, load the text from disk.
 				create l_file_path.make_from_path (eiffel_layout.error_path)
 				l_file_path.extend ("short");
-				l_file_path.set_file_name (l_file_name);
+				l_file_path.extend (l_file_name);
 				if attached eiffel_layout.user_priority_file_name (l_file_path, True) as l_user_file_path then
 					l_file_path := l_user_file_path
 				end

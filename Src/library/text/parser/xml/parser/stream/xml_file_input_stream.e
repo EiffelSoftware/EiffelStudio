@@ -11,6 +11,7 @@ inherit
 
 create
 	make,
+	make_with_path,
 	make_with_filename
 
 feature {NONE} -- Initialization
@@ -22,58 +23,48 @@ feature {NONE} -- Initialization
 		local
 			u: FILE_UTILITIES
 		do
-			set_name (u.file_name (a_file))
+			set_name (a_file.name_32)
 			create current_chunk.make_empty
 			chunk_size := default_chunk_size
 			count := a_file.count
 			source := a_file
 		end
 
+	make_with_path (a_path: PATH)
+		require
+			a_path_not_empty: a_path /= Void and then not a_path.is_empty
+		local
+			f: RAW_FILE
+		do
+			set_inner_source (True)
+			create f.make_with_path (a_path)
+			make (f)
+		end
+
 	make_with_filename (a_filename: READABLE_STRING_GENERAL)
 		require
 			a_filename_not_empty: a_filename /= Void and then not a_filename.is_empty
 		local
-			u: FILE_UTILITIES
+			f: RAW_FILE
 		do
 			set_inner_source (True)
-			make (u.make_raw_file (a_filename))
-		end
-
-feature -- Status report
-
-	name_is_valid_as_string_8: BOOLEAN
-			-- Is associated name a valid string_8 value?
-		do
-			Result := internal_name.is_valid_as_string_8
+			create f.make_with_name (a_filename)
+			make (f)
 		end
 
 feature -- Access
 
-	name: STRING_8
-			-- Name of current stream
-		do
-			Result := internal_name.as_string_8
-		end
-
-	name_32: READABLE_STRING_32
-		do
-			Result := internal_name.to_string_32
-		end
+	name: READABLE_STRING_32
 
 feature -- Change
 
-	set_name (v: READABLE_STRING_GENERAL)
+	set_name (v: READABLE_STRING_32)
 			-- Set associated name to `v'
 		do
-			internal_name := v
+			name := v
 		ensure
-			v.same_string (internal_name)
+			v.same_string (name)
 		end
-
-feature {NONE} -- Access
-
-	internal_name: READABLE_STRING_GENERAL
-			-- Internal value of `name(_32)'
 
 feature -- Status report
 

@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 	checkpoint_position: detachable XML_POSITION
 		do
 			if checkpoint_position_line > 0 then
-				create Result.make (buffer.name_32, checkpoint_position_byte_index, checkpoint_position_column, checkpoint_position_line)
+				create Result.make (buffer.name, checkpoint_position_byte_index, checkpoint_position_column, checkpoint_position_line)
 			end
 		end
 

@@ -27,17 +27,9 @@ feature {NONE} -- Initialization
 			make ("")
 		end
 
-feature -- Status report
-
-	name_is_valid_as_string_8: BOOLEAN = True
-			-- Is associated name a valid string_8 value?
-
 feature -- Access
 
-	name: STRING_8 = "STRING"
-			-- Name of current stream
-
-	name_32: STRING_32 = "STRING"
+	name: STRING_32 = "STRING"
 			-- Name of current stream
 
 feature -- Status report

@@ -29,23 +29,9 @@ feature {NONE} -- Initialization
 			source := a_file
 		end
 
-feature -- Status report
-
-	name_is_valid_as_string_8: BOOLEAN
-			-- Is associated name a valid string_8 value?
-		do
-			Result := internal_name.is_valid_as_string_8
-		end
-
 feature -- Access
 
-	name: STRING_8
-			-- Name of current stream
-		do
-			Result := internal_name.as_string_8
-		end
-
-	name_32: READABLE_STRING_32
+	name: READABLE_STRING_32
 		do
 			Result := internal_name.to_string_32
 		end

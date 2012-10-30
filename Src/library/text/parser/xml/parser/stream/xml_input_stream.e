@@ -6,23 +6,9 @@ note
 deferred class
 	XML_INPUT_STREAM
 
-feature -- Status report
-
-	name_is_valid_as_string_8: BOOLEAN
-			-- Is associated name a valid string_8 value?
-		deferred
-		end
-
 feature -- Access		
 
-	name: STRING_8
-			-- Name of current stream
-		require
-			name_is_valid_as_string_8: name_is_valid_as_string_8
-		deferred
-		end
-
-	name_32: READABLE_STRING_32
+	name: READABLE_STRING_32
 		deferred
 		end
 

@@ -16,7 +16,7 @@ feature
 			arg := args.item (1).to_integer
 			print ("Weasels%N")
 			if arg = 1 then
-				create f.make (profinfo_name)
+				create f.make_with_name (profinfo_name)
 				if not f.exists then
 					print ("File " + profinfo_name + " not found%N")
 				end

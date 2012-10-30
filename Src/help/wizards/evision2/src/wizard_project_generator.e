@@ -22,7 +22,7 @@ feature -- Basic Operations
 		local
 			map_list: LINKED_LIST [TUPLE [STRING, STRING_32]]
 			tuple: TUPLE [STRING, STRING_32]
-			project_name_lowercase: STRING
+			project_name_lowercase: STRING_32
 			project_location: FILE_NAME_32
 			ace_location: FILE_NAME_32
 			tuple2: TUPLE [STRING, STRING_32]

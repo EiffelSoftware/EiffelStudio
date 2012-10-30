@@ -176,8 +176,7 @@ feature {NONE} -- Implementation
 			l_path: PATH
 		do
 			create l_path.make_from_path (eiffel_layout.built_ins_path (a_neutral, is_dotnet))
-			l_path.set_file_name (current_class.name)
-			l_path.add_extension (eiffel_extension)
+			l_path.extend (current_class.name + "." + eiffel_extension)
 			Result := l_path.string_representation
 		ensure
 			built_in_code_path_not_void: Result /= Void

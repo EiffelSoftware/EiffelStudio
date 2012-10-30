@@ -600,6 +600,35 @@ rt_public EIF_INTEGER eif_home_directory_name_ptr(EIF_FILENAME a_buffer, EIF_INT
 #endif
 }
 
+/*
+doc:	<routine name="eif_user_directory_name_ptr" return_type="EIF_INTEGER" export="public">
+doc:		<summary>Store the representation of the user directory in `a_buffer' as a null-terminated path in UTF-16 encoding on Windows and a byte sequence otherwise.</summary>
+doc:		<return>Size in bytes actually required in `a_buffer' including the terminating null character. If `a_count' is less than the returned value or if `a_buffer' is NULL, nothing is done to `a_buffer'.</return>
+doc:		<param name="a_buffer" type="EIF_POINTER">Pointer to a buffer that will hold the current working directory, or NULL if lengþh of buffer is required.</param>
+doc:		<param name="a_count" type="EIF_INTEGER">Length of `a_buffer' in bytes.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_INTEGER eif_user_directory_name_ptr(EIF_FILENAME a_buffer, EIF_INTEGER a_count)
+{
+#ifdef EIF_WINDOWS
+	if (a_buffer && (a_count >= (MAX_PATH * sizeof(wchar_t)))) {
+			/* Buffer is large enough for the call to SHGetFolderPathW. */
+		if (SHGetSpecialFolderPathW (NULL, a_buffer, CSIDL_PERSONAL, TRUE) == S_OK) {
+			return wcslen(a_buffer) * sizeof (wchar_t);
+		} else {
+			return 0;
+		}
+	} else {
+			/* Buffer is NULL or not large enough we ask for more. */
+		return MAX_PATH * sizeof(wchar_t);
+	}
+#else
+	return 0;
+#endif
+}
+
 rt_public EIF_REFERENCE eif_root_directory_name(void)
 {
 		/* String representation of the root directory */

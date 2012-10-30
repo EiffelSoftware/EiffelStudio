@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Tests for EV_PIXMAP"
 	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
@@ -33,6 +33,14 @@ feature -- Test routines
 			run_test (agent test_clear)
 		end
 
+	load_save
+			-- Load and save
+		note
+			testing: "execution/isolated"
+		do
+			test_unicode_load_and_save
+		end
+
 feature {NONE} -- Actual Test
 
 	test_clear
@@ -50,12 +58,38 @@ feature {NONE} -- Actual Test
 			window.show
 		end
 
-feature -- Helpers
+	test_unicode_load_and_save
+		local
+			pixmap: EV_PIXMAP
+			window: EV_WINDOW
+			l_u: FILE_UTILITIES
+			l_file: RAW_FILE
+		do
+			if l_u.file_exists (image_path) then
+				l_file := l_u.make_raw_file (image_path)
+				l_file.delete
+			end
+
+			create pixmap
+			pixmap.set_size (10, 10)
+			pixmap.save_to_named_file (create {EV_PNG_FORMAT}, image_path)
+
+			assert ("File saved.", l_u.file_exists (image_path))
+
+			create pixmap
+			pixmap.set_with_named_file (image_path)
+
+			assert ("File loaded.", pixmap.width = 10 and then pixmap.height = 10)
+		end
+
+feature {NONE} -- Helpers
 
     red: EV_COLOR
     	once
     		create Result.make_with_rgb ({REAL_32}1.0, {REAL_32}0.0, {REAL_32}0.0)
     	end
+
+    image_path: STRING_32 = "测试图片.png";
 
 note
 	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"

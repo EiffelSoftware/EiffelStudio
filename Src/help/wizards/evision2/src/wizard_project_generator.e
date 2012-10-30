@@ -96,13 +96,13 @@ feature -- Basic Operations
 	tuple_from_file_content (an_index: STRING; a_content_file: STRING_32): TUPLE [STRING, STRING_32]
 		local
 			file_content: STRING
-			file: RAW_FILE_32
+			file: RAW_FILE
 			file_name: FILE_NAME_32
 		do
 			create file_name.make_from_string (wizard_resources_path_32)
 			file_name.set_file_name (a_content_file)
 
-			create file.make (file_name)
+			create file.make_with_name (file_name)
 			file.open_read
 			file.read_stream (file.count)
 

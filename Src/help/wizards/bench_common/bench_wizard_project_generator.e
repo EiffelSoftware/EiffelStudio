@@ -74,14 +74,14 @@ feature {NONE} -- Implementation
 			is_target_file: target_files.has (name + "." + extension)
 		local
 			f1,f_name: FILE_NAME_32
-			fi: RAW_FILE_32
+			fi: RAW_FILE
 			s: STRING
 		do
 			create f1.make_from_string (wizard_resources_path_32)
 			f_name := f1.twin
 			f_name.extend (name)
 			f_name.add_extension (extension)
-			create fi.make (f_name.to_string_32)
+			create fi.make_with_name (f_name)
 			fi.open_read
 			fi.read_stream (fi.count)
 			s := fi.last_string
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 			create f_name.make_from_string (destination)
 			f_name.extend (name)
 			f_name.add_extension (extension)
-			create fi.make (f_name.to_string_32)
+			create fi.make_with_name (f_name)
 			fi.open_write
 			fi.put_string (s)
 			fi.close

@@ -180,7 +180,7 @@ rt_public EIF_POINTER eif_dir_next(EIF_POINTER d)
 #ifdef EIF_WINDOWS
 	HANDLE h;
 	BOOL r;
-	site_t a_name_length;
+	size_t a_name_length;
 	wchar_t * wname;
 
 	if (dirp->handle) {
@@ -208,7 +208,7 @@ rt_public EIF_POINTER eif_dir_next(EIF_POINTER d)
 		}
 	}
 	if (r) {
-		return dirp>last_entry.cFileName;
+		return dirp->last_entry.cFileName;
 	} else {
 		return NULL;
 	}
@@ -248,13 +248,13 @@ rt_public EIF_INTEGER eif_dir_current (EIF_FILENAME a_buffer, EIF_INTEGER a_coun
 
 	if (l_nbytes = 0) {
 			/* Failure: we cannot retrieve our current directory. */
-		return -1;
+		l_nbytes = -1;
 	} else {
-		if (a_buffer && (a_count >= nb)) {
-			nb = (GetFullPathNameW (drive, 0, a_buffer, &subpart) + 1) * sizeof(wchar_t);
+		if (a_buffer && (a_count >= l_nbytes)) {
+			l_nbytes = (GetFullPathNameW (drive, 0, a_buffer, &subpart) + 1) * sizeof(wchar_t);
 		}
-		return nb + 1;
 	}
+	return l_nbytes;
 
 #else
 	char *cwd;
@@ -361,7 +361,7 @@ rt_public EIF_BOOLEAN eif_dir_is_readable(EIF_FILENAME name)
 
 #elif defined EIF_WINDOWS
 
-	return (EIF_BOOLEAN) (_waccess (name, R_OK != -1);
+	return (EIF_BOOLEAN) (_waccess (name, R_OK != -1));
 
 #else
 #ifdef HAS_GETEUID

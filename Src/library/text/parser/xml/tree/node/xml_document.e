@@ -77,7 +77,7 @@ feature -- Access
 			-- Return Void if no element with that name is a child of current node.
 		do
 			if has_element_by_name (a_name) then
-				Result := root_element.element_by_name (a_name)
+				Result := root_element
 			end
 		ensure then
 			root_element: has_element_by_name (a_name) implies Result = root_element
@@ -87,7 +87,7 @@ feature -- Access
 			-- Root element, if name matches, Void otherwise.
 		do
 			if has_element_by_qualified_name (a_uri, a_name) then
-				Result := root_element.element_by_qualified_name (a_uri, a_name)
+				Result := root_element
 			end
 		ensure then
 			root_element: has_element_by_qualified_name (a_uri, a_name) implies Result = root_element

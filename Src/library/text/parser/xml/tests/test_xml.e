@@ -46,7 +46,9 @@ feature -- Test routines
 			s32.append_code (21527)
 			create c.make_last (e, s32)
 
-			create e.make_last (Result.root_element, "xhtml:test", def_ns)
+			create e.make_last (Result.root_element, "fo:root", def_ns)
+			e.add_attribute ("xmlns:fo", def_ns, "http://www.w3.org/1999/XSL/Format")
+			create e.make_last (e, "fo:test", def_ns)
 		end
 
 	new_doc_with_unicode_tag: XML_DOCUMENT
@@ -165,17 +167,22 @@ feature -- Test routines
 	new_callbacks_pipe (a_output: STRING_GENERAL; cbs: detachable ARRAY [XML_CALLBACKS_FILTER]; cb: detachable XML_CALLBACKS): XML_CALLBACKS
 		local
 			pretty: XML_PRETTY_PRINT_FILTER
---			pretty: XML_INDENT_PRETTY_PRINT_FILTER
 			endtags: XML_END_TAG_CHECKER
 			fact: XML_CALLBACKS_FILTER_FACTORY
 			l_last: XML_CALLBACKS_FILTER
+			l_end: XML_CALLBACKS_FILTER
 		do
 			create fact
+			create l_last.make_null
+			l_end := l_last
 
-			create pretty.make_null
-			l_last := pretty
+			create pretty.make_with_next (l_last)
 			pretty.set_output_string (a_output)
-			create endtags.set_next (pretty)
+			l_end := pretty
+
+			create endtags.set_next (l_end)
+			l_end := endtags
+
 			if cbs /= Void and then not cbs.is_empty then
 				l_last.set_next (fact.callbacks_pipe (cbs))
 				l_last := cbs.item (cbs.upper)
@@ -184,7 +191,7 @@ feature -- Test routines
 				l_last.set_next (cb)
 			end
 
-			Result := fact.standard_callbacks_pipe (<<endtags>>)
+			Result := fact.standard_callbacks_pipe (<<l_end>>)
 		end
 
 	test_xml_parser
@@ -277,6 +284,7 @@ feature -- Test routines
 			doc_cb: XML_CALLBACKS_DOCUMENT
 			vis_uc: XML_HAS_UNICODE_NODE_VISITOR
 			u: UTF_CONVERTER
+			vis_tester: XML_NODE_TESTER
 		do
 			p := factory.new_parser
 
@@ -285,7 +293,6 @@ feature -- Test routines
 --			p.set_callbacks (ns_cb)
 			create doc_cb.make_null
 			p.set_callbacks (new_callbacks_pipe (s, Void, doc_cb))
-			create vis_uc
 
 			d := new_doc_with_unicode_tag
 			s8 := doc_to_utf8 (d)
@@ -296,9 +303,16 @@ feature -- Test routines
 			assert ("parsed", p.is_correct)
 			assert ("succeed", not p.error_occurred)
 
+			create vis_uc
 			vis_uc.reset
 			vis_uc.process_document (doc_cb.document)
 			assert ("has unicode", vis_uc.has_unicode)
+
+			create vis_tester
+			vis_tester.reset
+			vis_tester.process_document (doc_cb.document)
+			assert ("has no error", not vis_tester.has_error)
+
 		end
 
 	test_xml_parser_with_unicode_tag_and_utf8_detection

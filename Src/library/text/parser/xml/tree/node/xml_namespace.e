@@ -13,6 +13,12 @@ inherit
 			out
 		end
 
+	DEBUG_OUTPUT
+		redefine
+			is_equal,
+			out
+		end
+
 create
 	make,
 	make_default
@@ -95,6 +101,18 @@ feature -- Status report
 			-- Out
 		do
 			Result := uri.as_string_8 -- FIXME: truncated...
+		end
+
+	debug_output: STRING
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			create Result.make_empty
+			if attached ns_prefix as p then
+				Result.append ("xmlns:")
+				Result.append (p)
+				Result.append_character ('=')
+			end
+			Result.append (uri)
 		end
 
 feature -- Status report

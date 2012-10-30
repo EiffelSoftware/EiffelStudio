@@ -454,7 +454,7 @@ feature {NONE} -- File contents
 			l_file: RAW_FILE
 			l_uuid: UUID_GENERATOR
 		do
-			create l_file.make (ecf_content_file_name)
+			create l_file.make_with_name (ecf_content_file_name.to_string_32)
 			create Result.make_empty
 			if l_file.exists then
 				l_file.open_read
@@ -488,7 +488,7 @@ feature {NONE} -- File contents
 		local
 			l_file: PLAIN_TEXT_FILE
 		do
-			create l_file.make (tcf_content_file_name)
+			create l_file.make_with_name (tcf_content_file_name.to_string_32)
 			create Result.make_empty
 			if l_file.exists then
 				l_file.open_read
@@ -515,7 +515,7 @@ feature {NONE} -- File contents
 			l_file: PLAIN_TEXT_FILE
 			l_date_time: DATE_TIME
 		do
-			create l_file.make (class_content_file_name)
+			create l_file.make_with_name (class_content_file_name.to_string_32)
 			create Result.make_empty
 			if l_file.exists then
 				l_file.open_read
@@ -543,35 +543,31 @@ feature {NONE} -- File contents
 			not_void: Result /= Void
 		end
 
-	class_content_file_name: attached FILE_NAME
+	class_content_file_name: attached FILE_NAME_32
 			-- Class file content file name
 		do
-			create Result.make
-			Result.set_directory (eiffel_layout.default_templates_path)
+			create Result.make_from_string (eiffel_layout.default_templates_path.to_string_32)
 			Result.set_file_name ("eiffel_unit_test_class_template.e")
 		end
 
-	ecf_content_file_name: attached FILE_NAME
+	ecf_content_file_name: attached FILE_NAME_32
 			-- Ecf content file name
 		do
-			create Result.make
-			Result.set_directory (eiffel_layout.default_templates_path)
+			create Result.make_from_string (eiffel_layout.default_templates_path.to_string_32)
 			Result.set_file_name ("eiffel_unit_test_ecf_template.ecf")
 		end
 
-	notes_content_file_name: attached FILE_NAME
+	notes_content_file_name: attached FILE_NAME_32
 			-- Default note file name.
 		do
-			create Result.make
-			Result.set_directory (eiffel_layout.default_templates_path)
+			create Result.make_from_string (eiffel_layout.default_templates_path.to_string_32)
 			Result.set_file_name ("eiffel_unit_test_note_template.txt")
 		end
 
-	tcf_content_file_name: attached FILE_NAME
+	tcf_content_file_name: attached FILE_NAME_32
 			-- Default eweasel tcf file name
 		do
-			create Result.make
-			Result.set_directory (eiffel_layout.default_templates_path)
+			create Result.make_from_string (eiffel_layout.default_templates_path.to_string_32)
 			Result.set_file_name ("eiffel_unit_test_tcf_template.txt")
 		end
 
@@ -668,7 +664,7 @@ feature {NONE} -- Utility
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -454,7 +454,7 @@ feature {NONE} -- Implementation
 				create available_wizards.make
 
 				create new_project_directory.make (eiffel_layout.new_project_wizards_path)
-				entries := new_project_directory.linear_representation
+				entries := new_project_directory.linear_representation_32
 				from
 					entries.start
 				until

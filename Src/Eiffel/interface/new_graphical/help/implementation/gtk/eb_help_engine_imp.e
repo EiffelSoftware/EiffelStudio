@@ -54,7 +54,7 @@ feature -- Basic Operations
 				cmd.append_character (' ')
 				create url.make_from_path (eiffel_layout.docs_path)
 				url.set_file_name (a_help_context.url)
-				if (create {DIRECTORY_32}.make (url)).exists then
+				if (create {DIRECTORY}.make (url)).exists then
 					url.set_file_name ("index")
 					url.add_extension ("html")
 				end

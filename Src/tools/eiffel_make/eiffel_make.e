@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 		local
 			l_nb_cpu, l_make, l_make_flags, l_target: STRING
 			l_has_error: BOOLEAN
-			l_dir: DIRECTORY_32
+			l_dir: DIRECTORY
 			l_help: STRING
 			l_index: INTEGER
 		do
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			l_dirs: ARRAYED_LIST [STRING_32]
 			l_dir_name: STRING_32
 			l_name: like target
-			l_dir: DIRECTORY_32
+			l_dir: DIRECTORY
 			l_worker_thread: WORKER_THREAD
 			i, l_min: INTEGER
 			l_file: RAW_FILE

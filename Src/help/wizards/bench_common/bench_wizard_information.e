@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 	make
 			-- Assign default values
 		local
-			l_dir: DIRECTORY_32
+			l_dir: DIRECTORY
 			l_count: INTEGER
 		do
 			compile_project := True

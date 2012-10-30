@@ -213,8 +213,8 @@ feature -- Directory operations
 		do
 			if not is_retried then
 				create d.make (n)
-				d.open_read
-				if not d.is_closed then
+				if d.exists and then d.is_readable then
+					d.open_read
 					from
 						create f.make ({STRING_32} ".")
 						create fn.make_from_string ({STRING_32} ".")
@@ -232,8 +232,8 @@ feature -- Directory operations
 						d.readentry
 					end
 					Result := l
+					d.close
 				end
-				d.close
 			elseif attached d and then not d.is_closed then
 				d.close
 			end
@@ -254,8 +254,8 @@ feature -- Directory operations
 		do
 			if not is_retried then
 				create d.make (n)
-				d.open_read
-				if not d.is_closed then
+				if d.exists and then d.is_readable then
+					d.open_read
 					from
 						create fn.make_from_string ({STRING_32} ".")
 						create l.make (0)
@@ -279,8 +279,8 @@ feature -- Directory operations
 						d.readentry
 					end
 					Result := l
+					d.close
 				end
-				d.close
 			elseif attached d and then not d.is_closed then
 				d.close
 			end

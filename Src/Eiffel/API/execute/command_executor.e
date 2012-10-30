@@ -14,7 +14,7 @@ inherit
 
 feature -- Command Execution
 
-	execute (command: STRING)
+	execute (command: READABLE_STRING_GENERAL)
 			-- Execute external `command'.
 		require
 			valid_command: command /= Void

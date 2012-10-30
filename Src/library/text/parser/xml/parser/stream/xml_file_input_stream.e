@@ -20,8 +20,6 @@ feature {NONE} -- Initialization
 			-- Create current stream for file `a_file'
 		require
 			a_file_attached: a_file /= Void
-		local
-			u: FILE_UTILITIES
 		do
 			set_name (a_file.name_32)
 			create current_chunk.make_empty

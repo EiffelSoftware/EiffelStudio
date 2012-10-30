@@ -14,7 +14,7 @@ feature -- Initialization
 		local
 			l_file: like file
 		do
-			create file.make (filename)
+			create file.make_with_name (filename)
 			create l_file.make_create_read_write ("dummy.txt")
 			l_file.put_string ("abcdefgh123456789")	
 			l_file.flush

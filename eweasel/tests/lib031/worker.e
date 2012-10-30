@@ -35,7 +35,7 @@ feature
 			src_file.put_string (s)
 			src_file.close
 
-			create dest_file.make (dest_file_name)
+			create dest_file.make_with_name (dest_file_name)
 			from
 				k := 1
 			until

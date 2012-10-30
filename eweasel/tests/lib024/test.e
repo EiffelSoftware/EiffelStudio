@@ -28,8 +28,8 @@ feature -- Initialization
 			end
 
 				-- Check that renaming `filename' into itself does not change anything to its content.
-			create l_file.make (filename)			
-			l_file.change_name (filename)
+			create l_file.make_with_name (filename)			
+			l_file.rename_file (filename)
 			
 			l_file.open_read
 			l_file.read_stream (l_file.count)
@@ -44,8 +44,8 @@ feature -- Initialization
 			end
 
 				-- Check that renaming `filename' into `file2.txt' does not change anything to its content.
-			create l_file.make (filename)			
-			l_file.change_name ("file2.txt")
+			create l_file.make_with_name (filename)			
+			l_file.rename_file ("file2.txt")
 			
 			l_file.open_read
 			l_file.read_stream (l_file.count)

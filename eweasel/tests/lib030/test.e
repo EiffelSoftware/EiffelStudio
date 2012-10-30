@@ -11,13 +11,15 @@ feature
 			f.close
 			show (f)
 			f.link ("my_link")
-			create f.make ("my_link")
+			create f.make_with_name ("my_link")
 			show (f)
 		end
 
 	show (f: FILE)
+		local
+			u: UTF_CONVERTER
 		do
-			print ("File name: " + f.name + "%N")
+			print ("File name: " + u.utf_32_string_to_utf_8_string_8 (f.name_32) + "%N")
 			print ("Regular file: " + f.is_plain.out + "%N")
 			print ("Device: " + f.is_device.out + "%N")
 			print ("Directory: " + f.is_directory.out + "%N")
@@ -30,4 +32,3 @@ feature
 		end
 
 end
-

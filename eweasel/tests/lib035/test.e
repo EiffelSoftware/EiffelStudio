@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 			tried, started, done: BOOLEAN
 		do
 			if not tried then
-				file_make ("test.txt")
+				make_with_name ("test.txt")
 				open_write
 				close
 				mode := Write_file

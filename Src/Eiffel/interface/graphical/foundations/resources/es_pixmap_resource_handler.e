@@ -59,7 +59,7 @@ feature -- Query
 		local
 			l_file_name: FILE_NAME
 		do
-			create l_file_name.make_from_string (eiffel_layout.bitmaps_path)
+			create l_file_name.make_from_string (eiffel_layout.bitmaps_path_8)
 			l_file_name.extend (pixmap_file_extension)
 			l_file_name.set_file_name (a_name)
 			l_file_name.add_extension (pixmap_file_extension)
@@ -90,7 +90,7 @@ feature -- Query
 			if not attached Result then
 					-- Load the pixmap file from disk, if it exists
 				l_file_name := matrix_file_name (a_name)
-				if attached eiffel_layout.user_priority_file_name (l_file_name, True) as l_user_file_name then
+				if attached eiffel_layout.user_priority_file_name_8 (l_file_name, True) as l_user_file_name then
 						-- The user has replaced the pixmaps.
 					l_file_name := l_user_file_name
 				end
@@ -112,7 +112,7 @@ invariant
 	matrices_attached: attached matrices
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

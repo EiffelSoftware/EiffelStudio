@@ -69,8 +69,8 @@ feature {NONE} -- Initalization
 
 				if is_eiffel_layout_defined and then eiffel_layout.is_valid_environment then
 						-- Added runtime include and lib paths
-					extend_variable (include_var_name, eiffel_layout.runtime_include_path)
-					extend_variable (lib_var_name, eiffel_layout.runtime_lib_path)
+					extend_variable (include_var_name, eiffel_layout.runtime_include_path_8)
+					extend_variable (lib_var_name, eiffel_layout.runtime_lib_path_8)
 				end
 			end
 		end

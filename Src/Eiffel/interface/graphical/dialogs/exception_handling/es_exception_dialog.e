@@ -274,7 +274,7 @@ feature {NONE} -- Action handlers
 			if not retried then
 				l_pref := preferences.dialog_data.last_saved_exception_directory_preference
 				if l_pref.value = Void or else l_pref.value.is_empty then
-					l_pref.set_value ((create {EIFFEL_LAYOUT}).eiffel_layout.user_projects_path)
+					l_pref.set_value ((create {EIFFEL_LAYOUT}).eiffel_layout.user_projects_path.string_representation) -- FIXME: use STRING_32_PREFERENCE
 				end
 				create l_save_dialog.make_with_preference (l_pref)
 				create l_constants
@@ -390,7 +390,7 @@ invariant
 	support_login_attached: is_interface_usable implies support_login /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

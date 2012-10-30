@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 		do
 			l_path := env.get ("PATH")
 			l_path.append (";")
-			l_path.append (eiffel_layout.bin_path)
+			l_path.append (eiffel_layout.bin_path_8)
 			env.put (l_path, "PATH")
 			if smart_checking then
 				if attached eiffel_layout.eiffel_c_compiler_version as l_version and then not l_version.is_empty then
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			Result := True
 			create l_finish_freezing_layout
 			l_finish_freezing_layout.check_environment_variable
-			l_file := u.make_text_file (l_finish_freezing_layout.config_eif_file_name)
+			l_file := u.make_text_file (l_finish_freezing_layout.config_eif_file_name.string_representation)
 			if l_file.exists then
 				l_file.open_read
 				l_file.read_stream (l_file.count)

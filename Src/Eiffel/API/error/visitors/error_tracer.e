@@ -461,7 +461,7 @@ feature {NONE} -- Implementation
 			l_stop: BOOLEAN
 			i: INTEGER
 		do
-			create l_file_name.make_from_string (eiffel_layout.error_path)
+			create l_file_name.make_from_path (eiffel_layout.error_path)
 			l_file_name.extend ("short")
 			l_file_name.set_file_name (a_error.help_file_name)
 			l_path := l_file_name
@@ -546,7 +546,7 @@ feature {NONE} -- Implementation
 			f_name: FILE_NAME_32
 			file: PLAIN_TEXT_FILE_32
 		do
-			create f_name.make_from_string (eiffel_layout.error_path)
+			create f_name.make_from_path (eiffel_layout.error_path)
 			f_name.extend ("short")
 			f_name.set_file_name (a_error.help_file_name)
 			l_file_name := f_name

@@ -154,7 +154,7 @@ feature -- Launching
 				end
 			end
 			if s = Void or else s.is_empty then
-				s := eiffel_layout.Ecdbgd_command_name
+				s := eiffel_layout.ecdbgd_command_name.string_representation
 			end
 			create ise_ecdbgd_path.make_from_string (s)
 		end

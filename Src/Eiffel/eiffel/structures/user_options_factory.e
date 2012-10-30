@@ -56,7 +56,7 @@ feature -- Store/Retrieve
 			l_uuid_str: STRING
 		do
 			if not retried then
-				create last_file_name.make_from_string (eiffel_layout.projects_data_path)
+				create last_file_name.make_from_path (eiffel_layout.projects_data_path)
 					-- Find associated file mapping, otherwise create a new one.
 					-- The mapped name is always a UUID.
 				l_mapping := mapping
@@ -105,7 +105,7 @@ feature -- Store/Retrieve
 		do
 			if not retried then
 				last_options := Void
-				create last_file_name.make_from_string (eiffel_layout.projects_data_path)
+				create last_file_name.make_from_path (eiffel_layout.projects_data_path)
 					-- Even if we could not create `eiffel_home', or find the user option
 					-- file, we simply handle it as if they were not user file.
 					-- This is why `successful' is set to `True' in all cases.
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 			r: detachable ANY
 		do
 			if not retried then
-				create l_file_name.make_from_string (eiffel_layout.projects_data_path)
+				create l_file_name.make_from_path (eiffel_layout.projects_data_path)
 				l_file_name.extend (mapping_file_name)
 					-- Even if we could not create `eiffel_home', we simply handle
 					-- it as if they were not mapping file.
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 			l_file_name: FILE_NAME_32
 		do
 			if not retried then
-				create l_file_name.make_from_string (eiffel_layout.projects_data_path)
+				create l_file_name.make_from_path (eiffel_layout.projects_data_path)
 				l_file_name.extend (mapping_file_name)
 				if eiffel_layout.is_hidden_files_path_available then
 					create l_file.make (l_file_name)

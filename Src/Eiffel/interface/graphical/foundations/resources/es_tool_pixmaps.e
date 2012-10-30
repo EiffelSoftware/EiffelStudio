@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 				-- Create icon file name
 			create l_matrix.make_from_string (tool_utilities.tool_associated_path (a_tool))
 			l_matrix.set_file_name (a_name)
-			if attached {FILE_NAME} eiffel_layout.user_priority_file_name (l_matrix, True) as l_user_matrix then
+			if attached {FILE_NAME} eiffel_layout.user_priority_file_name_8 (l_matrix, True) as l_user_matrix then
 					-- The user has replaced the icons.
 				l_matrix := l_user_matrix
 			end
@@ -72,7 +72,7 @@ feature {NONE} -- Internationalization
 	w_could_not_load_tool_icons_1: STRING = "Cannot read pixmap icon file for $1.%N%NPlease make sure the installation is not corrupted."
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

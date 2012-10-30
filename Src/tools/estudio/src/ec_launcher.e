@@ -126,7 +126,7 @@ feature -- Launching
 						io.output.put_new_line
 					end
 				end
-				start_process (eiffel_layout.ec_command_name, ec_arguments, Void)
+				start_process (eiffel_layout.ec_command_name_8, ec_arguments, Void)
 			else
 				do_exit_launcher
 			end
@@ -254,7 +254,7 @@ feature -- Splash
 				create s.make_empty
 				splasher := new_splasher (s)
 
-				create fn.make_from_string (eiffel_layout.bitmaps_path)
+				create fn.make_from_string (eiffel_layout.bitmaps_path_8)
 				fn.extend ("png")
 				if {PLATFORM}.is_windows then
 					fn.set_file_name ("splash_shadow.png")

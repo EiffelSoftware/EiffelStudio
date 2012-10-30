@@ -9,7 +9,8 @@ inherit
 	PATH_NAME_32
 
 create
-	make_from_string
+	make_from_string,
+	make_from_path
 
 convert
 	to_string_32: {STRING_32, READABLE_STRING_GENERAL, READABLE_STRING_32}

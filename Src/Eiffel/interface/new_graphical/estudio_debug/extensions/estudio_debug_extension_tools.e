@@ -52,9 +52,9 @@ feature -- Execution
 				--| Show logger tool
 			create l_menu_item.make_with_text_and_action ("Show Logger Tool", agent on_show_logger_tool)
 			a_menu.extend (l_menu_item)
-			
+
 			a_menu.extend (create {EV_MENU_SEPARATOR})
-			
+
 				--| Recenter all floating tools
 			create l_menu_item.make_with_text_and_action ("Force Show All Tools", agent on_force_show_tools)
 			a_menu.extend (l_menu_item)
@@ -73,7 +73,7 @@ feature {NONE} -- Actions
 			l_dir: DIRECTORY_NAME
 		do
 			if ma_window = Void or ma_window.is_destroyed then
-				create l_dir.make_from_string (eiffel_layout.library_path)
+				create l_dir.make_from_string (eiffel_layout.library_path_8)
 				l_dir.extend ("memory_analyzer")
 				create ma_window.make (l_dir)
 				ma_window.close_request_actions.extend (agent ma_window.hide)
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

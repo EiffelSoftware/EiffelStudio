@@ -14,7 +14,8 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_with_path
 
 note
 	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"

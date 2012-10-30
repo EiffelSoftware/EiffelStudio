@@ -156,7 +156,7 @@ feature {NONE} -- Update
 					if file_name.is_empty then
 						exit := True
 					else
-						u.copy_file (eiffel_layout.default_config_file_name, file_name)
+						u.copy_file (eiffel_layout.default_config_file_name.string_representation, file_name)
 						Eiffel_ace.set_file_name (file_name.twin)
 						edit (Eiffel_ace.file_name)
 					end
@@ -282,7 +282,7 @@ feature {NONE} -- Compilation
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -61,7 +61,7 @@ feature -- Basic operations
 				if error = 0 then
 					l_pref := preferences.dialog_data.last_saved_diagram_postscript_directory_preference
 					if l_pref.value = Void or else l_pref.value.is_empty then
-						l_pref.set_value (eiffel_layout.user_projects_path)
+						l_pref.set_value (eiffel_layout.user_projects_path_8)
 					end
 					create dial.make_with_preference (l_pref)
 					set_dialog_filters_and_add_all (dial, <<Png_files_filter>>)
@@ -137,7 +137,7 @@ feature -- Basic operations
 			-- preferences.
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

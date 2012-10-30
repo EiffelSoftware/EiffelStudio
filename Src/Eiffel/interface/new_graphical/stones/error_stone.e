@@ -79,7 +79,7 @@ feature -- Access
 		local
 			l_file_name: FILE_NAME_32
 		do
-			create l_file_name.make_from_string (eiffel_layout.error_path)
+			create l_file_name.make_from_path (eiffel_layout.error_path)
 			l_file_name.set_file_name (error_i.help_file_name)
 			Result := l_file_name
 		end

@@ -501,7 +501,7 @@ feature {NONE} -- Implementation
 		local
 			l_project_location: STRING_32
 		do
-			l_project_location := eiffel_layout.user_projects_path_32.twin
+			l_project_location := eiffel_layout.user_projects_path.string_representation
 			if l_project_location @ l_project_location.count /= Operating_environment.Directory_separator then
 				l_project_location.append_character (Operating_environment.Directory_separator)
 			end
@@ -647,15 +647,15 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
 			Eiffel Software

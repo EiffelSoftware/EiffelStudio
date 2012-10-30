@@ -152,10 +152,10 @@ feature {NONE} -- Basic operations
 			l_name: STRING
 		do
 			if not l_retried then
-				create l_template.make_from_string (eiffel_layout.templates_path)
+				create l_template.make_from_string (eiffel_layout.templates_path_8)
 				l_template.extend ("defaults")
 				l_template.set_file_name ("test.e.tpl")
-				l_user_template := eiffel_layout.user_priority_file_name (l_template, True)
+				l_user_template := eiffel_layout.user_priority_file_name_8 (l_template, True)
 				if l_user_template /= Void then
 					l_template := l_user_template
 				end
@@ -301,7 +301,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

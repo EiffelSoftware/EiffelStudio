@@ -47,7 +47,7 @@ feature {NONE} -- Settings
 		do
 			if {PLATFORM}.is_thread_capable then
 				create l_prc_factory
-				l_prc_launcher := l_prc_factory.process_launcher (eiffel_layout.ec_command_name, a_arguments, Void)
+				l_prc_launcher := l_prc_factory.process_launcher (eiffel_layout.ec_command_name.string_representation, a_arguments, Void)
 				l_prc_launcher.set_separate_console (False)
 				l_prc_launcher.launch
 				if l_prc_launcher.launched then
@@ -56,7 +56,7 @@ feature {NONE} -- Settings
 				end
 			else
 				create l_cmd_line.make (512)
-				l_cmd_line.append_string (eiffel_layout.ec_command_name.string)
+				l_cmd_line.append_string (eiffel_layout.ec_command_name.string_representation)
 				across a_arguments as l_args loop
 					l_cmd_line.append_character (' ')
 					if not l_args.item.is_empty and then l_args.item [1] /= '-' then
@@ -446,7 +446,7 @@ feature {NONE} -- User interaction
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

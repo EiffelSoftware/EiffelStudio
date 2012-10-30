@@ -132,11 +132,11 @@ feature {NONE} -- Registering: Code templates
 			l_contracts: attached DIRECTORY_NAME
 		do
 				-- Top level catalog
-			l_contracts := eiffel_layout.templates_path.twin
+			l_contracts := eiffel_layout.templates_path_8.twin
 			a_service.extend_catalog (l_contracts.string.as_attached)
 
 				-- User templates catalog
-			a_service.extend_catalog (eiffel_layout.user_templates_path.string.as_attached)
+			a_service.extend_catalog (eiffel_layout.user_templates_path_8.string)
 
 				-- Should add user-preference paths here.
 			-- ...
@@ -225,7 +225,7 @@ feature {NONE} -- Internationalization
 	lb_external_compilation: STRING = "External Compilation"
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

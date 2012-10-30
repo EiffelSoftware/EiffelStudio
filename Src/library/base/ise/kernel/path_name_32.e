@@ -23,6 +23,14 @@ feature {NONE} -- Creation
 		deferred
 		end
 
+	make_from_path (a_path: PATH)
+			-- Create a path name from `a_path'.
+			-- This is a temporary method to ease migration to PATH
+		obsolete "Use directly the class PATH [2012-oct]"
+		do
+			make_from_string (a_path.string_representation)
+		end
+
 feature -- Conversion
 
 	to_string_32: STRING_32

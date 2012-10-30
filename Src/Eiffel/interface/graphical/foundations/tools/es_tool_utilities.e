@@ -135,27 +135,29 @@ feature -- Query
 			result_consistent: Result.is_equal (tool_associated_name (a_tool))
 		end
 
-	tool_associated_path (a_tool: attached ES_TOOL [EB_TOOL]): attached DIRECTORY_NAME
+	tool_associated_path (a_tool: attached ES_TOOL [EB_TOOL]): DIRECTORY_NAME
 			-- The tool's associated folder, used for modularizing development of a tool.
 			--
 			-- `a_tool': A tool descriptor to retrieve a type identifier for.
 			-- `Result': A directory name, which may or may not exist.
 		require
 			a_tool_is_interface_usable: a_tool.is_interface_usable
+		local
+			u: FILE_UTILITIES
 		do
-			Result := eiffel_layout.tools_path.twin
-			file_utils.create_directory (Result)
+			create Result.make_from_path (eiffel_layout.tools_path)
+			u.create_directory (Result.string)
 
 				-- Build folder and create it
 			Result.extend (a_tool.name)
-			file_utils.create_directory (Result)
+			u.create_directory (Result.string)
 		ensure
 			not_result_is_empty: not Result.is_empty
-			result_consistent: Result.is_equal (tool_associated_path (a_tool))
+			result_consistent: Result.string.same_string (tool_associated_path (a_tool))
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

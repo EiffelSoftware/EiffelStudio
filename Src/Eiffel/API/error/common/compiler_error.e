@@ -31,8 +31,7 @@ feature {NONE} -- Access
 		local
 			l_cache: like help_text_cache
 			l_file_name: STRING;
-			l_file_path: FILE_NAME_32
-			l_user_file_path: FILE_NAME_32
+			l_file_path: PATH
 			l_file: PLAIN_TEXT_FILE_32
 			l_line: STRING
 			l_result: detachable ARRAYED_LIST [STRING]
@@ -47,15 +46,14 @@ feature {NONE} -- Access
 				Result := l_result
 			else
 					-- No data has been cached, load the text from disk.
-				create l_file_path.make_from_string (eiffel_layout.error_path)
+				create l_file_path.make_from_path (eiffel_layout.error_path)
 				l_file_path.extend ("short");
 				l_file_path.set_file_name (l_file_name);
-				l_user_file_path := eiffel_layout.user_priority_file_name_32 (l_file_path, True)
-				if attached l_user_file_path then
+				if attached eiffel_layout.user_priority_file_name (l_file_path, True) as l_user_file_path then
 					l_file_path := l_user_file_path
 				end
 
-				create l_file.make (l_file_path)
+				create l_file.make_with_path (l_file_path)
 				if l_file.exists then
 					create l_result.make (10)
 					from l_file.open_read until l_file.end_of_file loop

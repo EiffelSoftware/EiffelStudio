@@ -250,7 +250,7 @@ feature -- Basic operations: Standard persona
 						-- If directly exiting Eiffel Studio from EB_DEBUGGER_MANAGER, then we don't save the tools
 						-- layout, because current widgets layout is debug mode layout (not normal mode layout),
 						-- and the debug mode widgets layout is saved by EB_DEBUGGER_MANAGER already -- larrym
-					l_fn := eiffel_layout.user_docking_standard_file_name (development_window.window_id)
+					l_fn := eiffel_layout.user_docking_standard_file_name_8 (development_window.window_id)
 					if not docking_manager.save_tools_data (l_fn.string) then
 						show_last_exception_with_template ("Unable to store the editor layout information.%N%N  Reason: $1")
 					end
@@ -290,7 +290,7 @@ feature -- Basic operations: Standard persona
 						l_dev_window.unregister_action (l_window.maximize_actions, agent restore_standard_tools_layout)
 
 							-- Attempt to load
-						l_fn := eiffel_layout.user_docking_standard_file_name (l_dev_window.window_id)
+						l_fn := eiffel_layout.user_docking_standard_file_name_8 (l_dev_window.window_id)
 						if (create {RAW_FILE}.make (l_fn.string)).exists then
 							l_opened := development_window.docking_manager.open_tools_config (l_fn.string)
 							if not l_opened then
@@ -344,7 +344,7 @@ feature -- Basic operations: Debugger persona
 			retried: BOOLEAN
 		do
 			if not retried then
-				l_fn := eiffel_layout.user_docking_debug_file_name (development_window.window_id)
+				l_fn := eiffel_layout.user_docking_debug_file_name_8 (development_window.window_id)
 				if not docking_manager.save_tools_data (l_fn.string) then
 					show_last_exception_with_template ("Unable to store the standard layout information.%N%N  Reason: $1")
 				end
@@ -383,7 +383,7 @@ feature -- Basic operations: Debugger persona
 						l_dev_window.unregister_action (l_window.maximize_actions, agent restore_standard_tools_layout)
 
 							-- Attempt to load
-						l_fn := eiffel_layout.user_docking_debug_file_name (l_dev_window.window_id)
+						l_fn := eiffel_layout.user_docking_debug_file_name_8 (l_dev_window.window_id)
 						if (create {RAW_FILE}.make (l_fn.string)).exists then
 							l_opened := development_window.docking_manager.open_tools_config (l_fn.string)
 							if not l_opened then
@@ -464,10 +464,10 @@ feature {NONE} -- Basic operations
 			l_fn: attached FILE_NAME
 			l_user_fn: detachable FILE_NAME
 		do
-			create l_fn.make_from_string (eiffel_layout.eifinit_path.string)
+			create l_fn.make_from_string (eiffel_layout.eifinit_path_8.string)
 			l_fn.set_file_name (a_name)
 			l_fn.add_extension ("lay")
-			l_user_fn := eiffel_layout.user_priority_file_name (l_fn, True)
+			l_user_fn := eiffel_layout.user_priority_file_name_8 (l_fn, True)
 			if l_user_fn /= Void then
 				l_fn := l_user_fn
 			end
@@ -529,7 +529,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

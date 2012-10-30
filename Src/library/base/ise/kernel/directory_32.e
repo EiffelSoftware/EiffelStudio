@@ -10,7 +10,8 @@ inherit
 	DIRECTORY
 
 create
-	make, make_open_read
+	make, make_with_path,
+	make_open_read
 
 note
 	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"

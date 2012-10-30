@@ -14,6 +14,7 @@ inherit
 
 create
 	make_from_string,
+	make_from_path,
 	make_temporary_name
 
 convert

@@ -27,7 +27,7 @@ feature {NONE} -- Implementation
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				create l_file.make (storage_file_name)
+				create l_file.make_with_name (storage_file_name)
 				if l_file.exists then
 					l_file.open_read
 					create l_reader.make (l_file)

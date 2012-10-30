@@ -69,9 +69,9 @@ feature {NONE} -- Implementation
 			create l_serializer
 
 			if {PLATFORM}.is_dotnet then
-				create l_file.make ("output.session.dotnet.data")
+				create l_file.make_with_name ("output.session.dotnet.data")
 			else
-				create l_file.make ("output.session.data")
+				create l_file.make_with_name ("output.session.data")
 			end
 			create l_med.make (l_file)
 
@@ -109,9 +109,9 @@ feature {NONE} -- Implementation
 			create l_serializer
 
 			if {PLATFORM}.is_dotnet then
-				create l_file.make ("output.basic.dotnet.data")
+				create l_file.make_with_name ("output.basic.dotnet.data")
 			else
-				create l_file.make ("output.basic.data")
+				create l_file.make_with_name ("output.basic.data")
 			end
 			create l_med.make (l_file)
 
@@ -149,9 +149,9 @@ feature {NONE} -- Implementation
 			create l_serializer
 
 			if {PLATFORM}.is_dotnet then
-				create l_file.make ("output.independent.dotnet.data")
+				create l_file.make_with_name ("output.independent.dotnet.data")
 			else
-				create l_file.make ("output.independent.data")
+				create l_file.make_with_name ("output.independent.data")
 			end
 			create l_med.make (l_file)
 
@@ -185,9 +185,9 @@ feature {NONE} -- Implementation
 			date1, date2: DATE_TIME
 		do
 			if {PLATFORM}.is_dotnet then
-				create l_file.make ("output.basic.old.dotnet.data")
+				create l_file.make_with_name ("output.basic.old.dotnet.data")
 			else
-				create l_file.make ("output.basic.old.data")
+				create l_file.make_with_name ("output.basic.old.data")
 			end
 
 			l_file.open_write
@@ -218,11 +218,11 @@ feature {NONE} -- Implementation
 			l_storable: STORABLE
 		do
 			if {PLATFORM}.is_dotnet then
-				create l_file.make ("output.independent.old.dotnet.data")
+				create l_file.make_with_name ("output.independent.old.dotnet.data")
 			else
 				create l_storable
 				l_storable.set_discard_pointers (False)
-				create l_file.make ("output.independent.old.data")
+				create l_file.make_with_name ("output.independent.old.data")
 			end
 
 			l_file.open_write

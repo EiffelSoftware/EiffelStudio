@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Creation
 
-	make_from_string (s: READABLE_STRING_32)
+	make_from_string (s: READABLE_STRING_GENERAL)
 			-- Create a path name from `s'.
 		deferred
 		end
@@ -43,14 +43,14 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_directory_name_valid (dir_name: STRING_32): BOOLEAN
+	is_directory_name_valid (dir_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `dir_name' a valid subdirectory part for the operating system?
 		require
 			exists: dir_name /= Void
 		local
 			u: UTF_CONVERTER
 		do
-			Result := path_name.is_directory_name_valid (u.string_32_to_utf_8_string_8 (dir_name))
+			Result := path_name.is_directory_name_valid (u.utf_32_string_to_utf_8_string_8 (dir_name))
 		end
 
 	is_valid: BOOLEAN
@@ -67,17 +67,17 @@ feature -- Status report
 
 feature -- Status setting
 
-	reset (a_name: STRING_32)
+	reset (a_name: READABLE_STRING_GENERAL)
 			-- Reset content with a path starting with `a_name'
 		require
 			a_name_attached: a_name /= Void
 		local
 			u: UTF_CONVERTER
 		do
-			path_name.reset (u.string_32_to_utf_8_string_8 (a_name))
+			path_name.reset (u.utf_32_string_to_utf_8_string_8 (a_name))
 		end
 
-	extend (directory_name: STRING_32)
+	extend (directory_name: READABLE_STRING_GENERAL)
 			-- Append the subdirectory `directory_name' to the path name.
 		require
 			string_exists: directory_name /= Void
@@ -85,7 +85,7 @@ feature -- Status setting
 		local
 			u: UTF_CONVERTER
 		do
-			path_name.extend (u.string_32_to_utf_8_string_8 (directory_name))
+			path_name.extend (u.utf_32_string_to_utf_8_string_8 (directory_name))
 		ensure
 			valid_file_name: is_valid
 		end

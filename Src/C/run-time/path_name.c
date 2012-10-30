@@ -154,16 +154,16 @@ rt_public EIF_BOOLEAN eif_is_directory_valid(EIF_CHARACTER_8 *p)
 	EIF_BOOLEAN result = EIF_FALSE;
 
 	if (p && *p) {
-	    EIF_CHARACTER_8 last = p[strlen((char*)p)-1];
-	    /* first check to see if p includes a ] */
-	    /* in fact, the last character should be ] */
-	    if (last != ']')		/* end with ]; what about > ? */
-		    return EIF_FALSE;
-	    if ( strchr( (char *)p,'[') == NULL)	/* has a opening bracket */
-		    return EIF_FALSE;
-	    if ( strchr( (char *)p,'/') != NULL)	/* no slash allowed */
-		    return EIF_FALSE;
-	    return EIF_TRUE;
+		EIF_CHARACTER_8 last = p[strlen((char*)p)-1];
+		/* first check to see if p includes a ] */
+		/* in fact, the last character should be ] */
+		if (last != ']')		/* end with ]; what about > ? */
+			return EIF_FALSE;
+		if ( strchr( (char *)p,'[') == NULL)	/* has a opening bracket */
+			return EIF_FALSE;
+		if ( strchr( (char *)p,'/') != NULL)	/* no slash allowed */
+			return EIF_FALSE;
+		return EIF_TRUE;
 	}
 	result = EIF_TRUE;
 	return result;
@@ -527,48 +527,49 @@ rt_public EIF_BOOLEAN eif_root_dir_supported(void)
 #endif
 }
 
-rt_public EIF_REFERENCE eif_home_directory_name(void)
+/*
+doc:	<routine name="eif_home_directory_name_ptr" return_type="EIF_INTEGER" export="public">
+doc:		<summary>Store the representation of the home directory in `a_buffer' as a null-terminated path in UTF-16 encoding on Windows and a byte sequence otherwise.</summary>
+doc:		<return>Size in bytes actually required in `a_buffer' including the terminating null character. If `a_count' is less than the returned value or if `a_buffer' is NULL, nothing is done to `a_buffer'.</return>
+doc:		<param name="a_buffer" type="EIF_POINTER">Pointer to a buffer that will hold the current working directory, or NULL if lengþh of buffer is required.</param>
+doc:		<param name="a_count" type="EIF_INTEGER">Length of `a_buffer' in bytes.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_INTEGER eif_home_directory_name_ptr(EIF_FILENAME a_buffer, EIF_INTEGER a_count)
 {
 		/* String representation of $HOME */
 #ifdef EIF_WINDOWS
-#if (_WIN32_IE < 0x0500)
-#ifndef CSIDL_LOCAL_APPDATA
-#define CSIDL_LOCAL_APPDATA             0x001C      /* non roaming, user\Local Settings\Application Data */
-#endif
-#ifndef CSIDL_FLAG_CREATE
-#define CSIDL_FLAG_CREATE               0x8000      /* new for Win2K, or this in to force creation of folder */
-#endif
-#define SHGFP_TYPE_CURRENT				0
-#endif
-
-
-		/* Not All versions of the C compiler supports `SHGetFolderPath' this is why we do a dynamic call. */
-	char l_path[MAX_PATH + 1];
 	HRESULT hr = S_FALSE;
-	FARPROC sh_get_folder_path = NULL;
-	HMODULE shell32_module = LoadLibrary ("shell32.dll");
-
-	if (shell32_module) {
-		sh_get_folder_path = GetProcAddress (shell32_module, "SHGetFolderPathA");
-		if (sh_get_folder_path) {
-			hr = (FUNCTION_CAST_TYPE(HRESULT,WINAPI,(HWND, int, HANDLE, DWORD, LPSTR)) sh_get_folder_path) (
-				NULL, CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE, NULL, SHGFP_TYPE_CURRENT, l_path);
-		}
-		FreeLibrary(shell32_module);
-	}
-
-	if (hr == S_OK) {
-		return RTMS(l_path);
-	} else {
-		char *l_env_value = getenv ("APPDATA");
-		if (l_env_value) {
-			return RTMS(l_env_value);
+	EIF_INTEGER l_nbytes;
+	if (a_buffer && (a_count >= (MAX_PATH * sizeof(wchar_t)))) {
+			/* Buffer is large enough for the call to SHGetFolderPathW. */
+		if (SHGetFolderPathW (NULL, CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE, NULL, SHGFP_TYPE_CURRENT, a_buffer) == S_OK) {
+			return (wcslen(a_buffer) + 1) * sizeof (wchar_t);
 		} else {
-			return NULL;
+			wchar_t *l_env_value = _wgetenv (L"APPDATA");
+			if (l_env_value) {
+				l_nbytes = (wcslen(l_env_value) + 1) * sizeof (wchar_t);
+				if (a_count >= l_nbytes) {
+					memcpy (a_buffer, l_env_value, l_nbytes);
+				} 
+				return l_nbytes;
+			} else {
+				return 0;
+			}
 		}
+	} else {
+			/* Buffer is NULL or not large enough we ask for more. */
+		return MAX_PATH * sizeof(wchar_t);
 	}
-#elif defined EIF_VMS_EIF56
-	return RTMS(getenv("SYS$LOGIN"));
+#else
+	char *l_env_value;
+	char l_home [2] = "~";
+	EIF_INTEGER l_nbytes;
+
+#if defined EIF_VMS_EIF56
+	l_env_value = getenv("SYS$LOGIN");
 #elif defined EIF_VMS
 	/* Yet another VMS hack: Eiffel 5.7 wants to create a subdirectory named .ec	*/
 	/* under the user's home directory ($HOME/.ec) On VMS, this requires the home	*/
@@ -578,66 +579,25 @@ rt_public EIF_REFERENCE eif_home_directory_name(void)
 	/* and rely on the VMS jackets to replace the leading "." with an underscore	*/
 	/* if invalid.									*/
 	{
-	    char *p = getenv("SYS$LOGIN");
-	    char *q = getenv ("HOME");
-	    char *r = eif_getenv_native ("SYS$LOGIN");
-	    char *s = eif_getenv_native ("HOME");
-	    return RTMS(decc$translate_vms(eif_getenv_native ("SYS$LOGIN")));
+		char *p = getenv("SYS$LOGIN");
+		char *q = getenv ("HOME");
+		char *r = eif_getenv_native ("SYS$LOGIN");
+		char *s = eif_getenv_native ("HOME");
+		l_env_value = wdecc$translate_vms(eif_getenv_native ("SYS$LOGIN"));
 	}
 #else
-	char *l_env_value = getenv("HOME");
-	if (l_env_value) {
-		return RTMS(l_env_value);
-	} else {
-		return RTMS("~");
+	l_env_value = getenv("HOME");
+	if (!l_env_value) {
+		l_env_value = l_home;
 	}
 #endif
-}
 
-rt_public EIF_REFERENCE eif_home_directory_name_16(void)
-{
-		/* String representation of $HOME */
-#ifndef EIF_WINDOWS
-	REQUIRE("Platform is Windows", EIF_FALSE);
-	return 0;
-#else
-#	if (_WIN32_IE < 0x0500)
-#		ifndef CSIDL_LOCAL_APPDATA
-#			define CSIDL_LOCAL_APPDATA             0x001C      /* non roaming, user\Local Settings\Application Data */
-#		endif
-#		ifndef CSIDL_FLAG_CREATE
-#			define CSIDL_FLAG_CREATE               0x8000      /* new for Win2K, or this in to force creation of folder */
-#		endif
-#		define SHGFP_TYPE_CURRENT				0
-#	endif
-
-
-		/* Not All versions of the C compiler supports `SHGetFolderPath' this is why we do a dynamic call. */
-	wchar_t l_path[MAX_PATH + 1];
-	HRESULT hr = S_FALSE;
-	FARPROC sh_get_folder_path = NULL;
-	HMODULE shell32_module = LoadLibrary ("shell32.dll");
-
-	if (shell32_module) {
-		sh_get_folder_path = GetProcAddress (shell32_module, "SHGetFolderPathW");
-		if (sh_get_folder_path) {
-			hr = (FUNCTION_CAST_TYPE(HRESULT,WINAPI,(HWND, int, HANDLE, DWORD, LPWSTR)) sh_get_folder_path) (
-				NULL, CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE, NULL, SHGFP_TYPE_CURRENT, l_path);
-		}
-		FreeLibrary(shell32_module);
+	l_nbytes = (strlen(l_env_value) + 1) * sizeof(char);
+	if (a_buffer && (a_count >= l_nbytes)) {
+		memcpy (a_buffer, l_env_value, l_nbytes);
 	}
-
-	if (hr == S_OK) {
-		return RTMS_EX((char *) l_path, wcslen (l_path) * sizeof (wchar_t));
-	} else {
-		wchar_t *l_env_value = _wgetenv (L"APPDATA");
-		if (l_env_value) {
-			return RTMS_EX((char *) l_env_value, wcslen (l_env_value) * sizeof (wchar_t));
-		} else {
-			return NULL;
-		}
-	}
-#endif /* (platform) */
+	return l_nbytes;
+#endif
 }
 
 rt_public EIF_REFERENCE eif_root_directory_name(void)

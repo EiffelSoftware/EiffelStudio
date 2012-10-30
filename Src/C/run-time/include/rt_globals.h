@@ -246,7 +246,11 @@ typedef struct tag_rt_globals
 	EIF_INTEGER m_largest_cx;
 
 		/* file.c */
+#ifdef EIF_WINDOWS
+	wchar_t file_type_cx [FILE_TYPE_MAX];
+#else
 	char file_type_cx [FILE_TYPE_MAX];
+#endif
 
 		/* eif_type_id.c */
 	int eif_pre_ecma_mapping_status_cx;

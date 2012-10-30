@@ -9,10 +9,10 @@ class
 inherit
 	EXECUTION_ENVIRONMENT
 		rename
-			change_working_directory as change_working_directory_8,
 			current_working_directory as current_working_directory_8,
 			get as get_8,
 			home_directory_name as home_directory_name_8,
+			user_directory_name as user_directory_name_8,
 			launch as launch_8,
 			put as put_8,
 			system as system_8
@@ -21,15 +21,38 @@ inherit
 feature -- Access
 
 	current_working_directory: STRING_32
-			-- Directory of current execution.
+			-- Directory of current execution
+			-- Execution of this query on concurrent threads will result in
+			-- an unspecified behavior.
 		local
-			u: UTF_CONVERTER
+			l_count, l_nbytes: INTEGER
+			l_managed: MANAGED_POINTER
 		do
-			if {PLATFORM}.is_windows then
-				Result := u.utf_16le_string_8_to_string_32 (eif_dir_current_16)
+			l_count := 50
+			create l_managed.make (l_count)
+			l_nbytes := eif_dir_current (l_managed.item, l_count)
+			if l_nbytes = -1 then
+					-- The underlying OS could not retrieve the current working directory. Most likely
+					-- a case where it has been deleted under our feet. We simply return that the current
+					-- directory is `.' the symbol for the current working directory.
+				Result := "."
 			else
-				Result := u.utf_8_string_8_to_string_32 (current_working_directory_8)
+				if l_nbytes > l_count then
+						-- We need more space.
+					l_count := l_nbytes
+					l_managed.resize (l_count)
+					l_nbytes := eif_dir_current (l_managed.item, l_count)
+				end
+				if l_nbytes > 0 and l_nbytes <= l_count then
+					Result := file_info.pointer_to_file_name_32 (l_managed.item)
+				else
+						-- Something went wrong.
+					Result := "."
+					check False end
+				end
 			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	home_directory_name: detachable STRING_32
@@ -37,18 +60,53 @@ feature -- Access
 		require
 			home_directory_supported: Operating_environment.home_directory_supported
 		local
-			u: UTF_CONVERTER
-		do
-			if {PLATFORM}.is_windows then
-					-- Assume that if Unicode version does not return anything,
-					-- the ANSI version does not return anything either.
-				if attached eif_home_directory_name_16 as n then
-					Result := u.utf_16le_string_8_to_string_32 (n)
-				end
+			l_count, l_nbytes: INTEGER
+			l_managed: MANAGED_POINTER
+		once
+			l_count := 50
+			create l_managed.make (l_count)
+			l_nbytes := eif_home_directory_name_ptr (l_managed.item, l_count)
+			if l_nbytes > l_count then
+				l_count := l_nbytes
+				l_managed.resize (l_count)
+				l_nbytes := eif_home_directory_name_ptr (l_managed.item, l_count)
+			end
+			if l_nbytes > 0 and l_nbytes <= l_count then
+				Result := file_info.pointer_to_file_name_32 (l_managed.item)
+			end
+		end
+
+	user_directory_name: detachable STRING
+			-- Directory name corresponding to the user directory
+			-- On Windows: C:\Users\manus\Documents
+			-- On Unix & Mac: $HOME
+			-- Otherwise Void
+		local
+			l_count, l_nbytes: INTEGER
+			l_managed: MANAGED_POINTER
+		once
+			l_count := 50
+			create l_managed.make (50)
+			l_nbytes := eif_user_directory_name (l_managed.item, l_count)
+			if l_nbytes > l_count then
+				l_count := l_nbytes
+				l_managed.resize (l_count)
+				l_nbytes := eif_user_directory_name (l_managed.item, l_count)
+			end
+			if l_nbytes > 0 and l_nbytes <= l_count then
+				Result := file_info.pointer_to_file_name_32 (l_managed.item)
+			end
+			if Result /= Void and then not Result.is_empty then
+					-- Nothing to do here, we take what we got from the OS.
+			elseif
+				operating_environment.home_directory_supported and then
+				attached (create {EXECUTION_ENVIRONMENT}).home_directory_name as l_home
+			then
+					-- We use $HOME.
+				Result := l_home
 			else
-				if attached home_directory_name_8 as n then
-					Result := u.utf_8_string_8_to_string_32 (n)
-				end
+					-- No possibility of a user directory, we let the caller handle that.
+				Result := Void
 			end
 		end
 
@@ -75,24 +133,6 @@ feature -- Access
 		end
 
 feature -- Modification
-
-	change_working_directory (path: READABLE_STRING_GENERAL)
-			-- Set the current directory to `path'
-		local
-			n: SPECIAL [NATURAL_16]
-			u: UTF_CONVERTER
-		do
-			if attached {READABLE_STRING_32} path as p then
-				if {PLATFORM}.is_windows then
-					n := u.string_32_to_utf_16_0 (p)
-					return_code := eif_chdir_16 ($n)
-				else
-					change_working_directory_8 (u.string_32_to_utf_8_string_8 (p))
-				end
-			else
-				change_working_directory_8 (path.as_string_8)
-			end
-		end
 
 	put (value, key: READABLE_STRING_GENERAL)
 			-- Set the environment variable `key' to `value'.
@@ -208,30 +248,6 @@ feature {NONE} -- Execution
 			"C blocking use %"eif_misc.h%""
 		alias
 			"eif_system_asynchronous_16"
-		end
-
-	eif_chdir_16 (path: POINTER): INTEGER
-			-- Set the current directory to `path' in UTF-16 encoding.
-		require
-			{PLATFORM}.is_windows
-		external
-			"C use %"eif_dir.h%""
-		end
-
-	eif_dir_current_16: STRING_8
-			-- Directory of current execution in UTF-16LE encoding.
-		require
-			{PLATFORM}.is_windows
-		external
-			"C use %"eif_dir.h%""
-		end
-
-	eif_home_directory_name_16: detachable STRING_8
-			-- Directory name corresponding to the home directory in UTF-16LE encoding.
-		require
-			{PLATFORM}.is_windows
-		external
-			"C use %"eif_path_name.h%""
 		end
 
 	eif_getenv_16 (s: POINTER): detachable STRING_8

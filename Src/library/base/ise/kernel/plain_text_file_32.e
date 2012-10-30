@@ -7,37 +7,10 @@ class
 	PLAIN_TEXT_FILE_32
 
 inherit
-
-	FILE_32
-		rename
-			index as position
-		undefine
-			is_plain_text
-		end
-
 	PLAIN_TEXT_FILE
 		rename
-			change_name as change_name_8,
-			make as make_8,
-			name as name_8,
-			reset as reset_8
-		export
-			{NONE} all
-		undefine
-			access_date,
-			buffered_file_info,
-			create_read_write,
-			date,
-			delete,
-			exists,
-			is_creatable,
-			open_append,
-			open_read,
-			open_read_append,
-			open_read_write,
-			open_write,
-			path_exists,
-			set_buffer
+			make as old_make,
+			make_with_name as make
 		end
 
 create

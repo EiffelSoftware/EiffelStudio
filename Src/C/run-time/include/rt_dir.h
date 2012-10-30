@@ -45,16 +45,20 @@
 #ifdef I_DIRENT
 #include <dirent.h>
 #define DIRENTRY struct dirent
+
 #elif defined(I_SYS_DIR)
 #include <sys/dir.h>
 #define DIRENTRY struct direct
+
 #elif defined(I_SYS_NDIR)
 #include <sys/ndir.h>
 #define DIRENTRY struct direct
+
 #elif defined(EIF_VMS_V6_ONLY)
 #include <descrip.h>
 #include "eif_vmsdirent.h"		/* local to run-time */
 #define DIRENTRY struct dirent
+
 #elif defined EIF_WINDOWS
 #else
 	Sorry! You have to find a directory package...

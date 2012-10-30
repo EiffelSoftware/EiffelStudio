@@ -192,11 +192,7 @@ feature -- Directory operations
 	make_directory (n: READABLE_STRING_GENERAL): DIRECTORY
 			-- New {DIRECTORY} for directory name `n'.
 		do
-			if attached {READABLE_STRING_32} n as s then
-				create {DIRECTORY_32} Result.make (s)
-			else
-				create Result.make (n.as_string_8)
-			end
+			create Result.make (n)
 		end
 
 	directory_exists (n: READABLE_STRING_GENERAL): BOOLEAN
@@ -265,11 +261,11 @@ feature -- Directory operations
 						create l.make (0)
 						d.readentry
 					until
-						not attached d.lastentry as e
+						not attached d.last_entry_32 as e
 					loop
 						if
 							(e.count = 1 and then e [1] = '.') or else
-							(e.count = 2 and then e [1] ='.' and then e [2] = '.')
+							(e.count = 2 and then e [1] = '.' and then e [2] = '.')
 						then
 								-- This is a reference to the current or to the parent directory.
 						else
@@ -323,7 +319,7 @@ feature -- File operations
 			if attached {READABLE_STRING_32} n as s then
 				create {RAW_FILE_32} Result.make (s)
 			else
-				create Result.make (n.as_string_8)
+				create Result.make_with_name (n)
 			end
 		end
 
@@ -339,7 +335,7 @@ feature -- File operations
 			if attached {READABLE_STRING_32} n as s then
 				create {PLAIN_TEXT_FILE_32} Result.make (s)
 			else
-				create Result.make (n.as_string_8)
+				create Result.make_with_name (n)
 			end
 		end
 
@@ -383,15 +379,9 @@ feature -- File operations
 			-- Rename file named `old_name' to `new_name'.
 		local
 			f: RAW_FILE
-			f32: RAW_FILE_32
 		do
-			if attached {READABLE_STRING_32} old_name or else attached {READABLE_STRING_32} new_name then
-				create f32.make (old_name.as_string_32)
-				f32.change_name (new_name.as_string_32)
-			else
-				create f.make (old_name.as_string_8)
-				f.change_name (new_name.as_string_8)
-			end
+			create f.make_with_name (old_name)
+			f.rename_file (new_name)
 		end
 
 	open_read_raw_file (n: READABLE_STRING_GENERAL): RAW_FILE
@@ -433,11 +423,7 @@ feature -- File operations
 	file_name (f: FILE): READABLE_STRING_GENERAL
 			-- Name associated with `f'.
 		do
-			if attached {FILE_32} f as f32 then
-				Result := f32.name
-			else
-				Result := f.name
-			end
+			Result := f.name_32
 		end
 
 	file_exists (n: READABLE_STRING_GENERAL): BOOLEAN

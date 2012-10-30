@@ -849,7 +849,7 @@ rt_private void st_store(EIF_REFERENCE object)
 	long i, nb_references;
 	union overhead *zone = HEADER(object);
 	uint16 flags;
-	int is_expanded, has_volatile_attributes = 0;
+	int is_expanded, has_transient_attributes = 0;
 
 	flags = zone->ov_flags;
 	is_expanded = eif_is_nested_expanded(flags);
@@ -909,18 +909,18 @@ rt_private void st_store(EIF_REFERENCE object)
 				if (!EIF_IS_TRANSIENT_ATTRIBUTE(System(zone->ov_dtype), i)) {
 					st_store(o_ref);
 				} else {
-					has_volatile_attributes = 1;
+					has_transient_attributes = 1;
 				}
 			}
 		}
 	}
 
 	if (!is_expanded) {
-		st_write_func(object, has_volatile_attributes);		/* write the object */
+		st_write_func(object, has_transient_attributes);		/* write the object */
 	}
 }
 
-rt_public void st_write(EIF_REFERENCE object, int has_volatile_attributes)
+rt_public void st_write(EIF_REFERENCE object, int has_transient_attributes)
 {
 	/* Write an object'.
 	 * Use for basic and general (before 3.3) store
@@ -932,7 +932,6 @@ rt_public void st_write(EIF_REFERENCE object, int has_volatile_attributes)
 	uint16 flags;
 	EIF_TYPE_INDEX dtype;
 	rt_uint_ptr nb_char;
-	EIF_VALUE val;
 
 	zone = HEADER(object);
 	flags = zone->ov_flags;
@@ -971,44 +970,44 @@ rt_public void st_write(EIF_REFERENCE object, int has_volatile_attributes)
 		/* Evaluation of the size of a normal object */
 		nb_char = EIF_Size(dtype);
 		if (nb_char > 0) {
-			if (!has_volatile_attributes) {
-					/* Write the body of the object */
+				/* To speed up retrieval we store if the object has some transient attribute. */
+			char l_transient = (char) has_transient_attributes;
+			buffer_write(&l_transient, sizeof(char));
+			if (!has_transient_attributes) {
+					/* No transient attribute, we write the complete memory of the object. */
 				buffer_write(object, (sizeof(char) * nb_char));
 			} else {
 					/* Normal object */
 				count = System(dtype).cn_nbattr;
-				memset(&val, 0, sizeof(EIF_VALUE));
 
 				for (i = 0; i < count; i++) {
 					attrib_offset = get_offset(dtype, i);
-					switch (*(System(dtype).cn_types + i) & SK_HEAD) {
-						case SK_UINT8: elem_size = sizeof(EIF_NATURAL_8); break;
-						case SK_UINT16: elem_size = sizeof(EIF_NATURAL_16); break;
-						case SK_UINT32: elem_size = sizeof(EIF_NATURAL_32); break;
-						case SK_UINT64: elem_size = sizeof(EIF_NATURAL_64); break;
-						case SK_INT8: elem_size = sizeof(EIF_INTEGER_8); break;
-						case SK_INT16: elem_size = sizeof(EIF_INTEGER_16); break;
-						case SK_INT32: elem_size = sizeof(EIF_INTEGER_32); break;
-						case SK_INT64: elem_size = sizeof(EIF_INTEGER_64); break;
-						case SK_CHAR32: elem_size = sizeof(EIF_CHARACTER_32); break;
-						case SK_BOOL: elem_size = sizeof(EIF_BOOLEAN); break;
-						case SK_CHAR8: elem_size = sizeof(EIF_CHARACTER_8); break;
-						case SK_REAL32: elem_size = sizeof(EIF_REAL_32); break;
-						case SK_REAL64: elem_size = sizeof(EIF_REAL_64); break;
-						case SK_REF:
-						case SK_BIT:
-						case SK_POINTER: elem_size = sizeof(EIF_REFERENCE); break;
-						case SK_EXP:
-								elem_size = HEADER(object + attrib_offset)->ov_size & B_SIZE;
-							break;
-						default:
-							elem_size = 0;
-							eise_io("General store: not an Eiffel object.");
-					}
 					if (!EIF_IS_TRANSIENT_ATTRIBUTE(System(dtype), i)) {
+						switch (*(System(dtype).cn_types + i) & SK_HEAD) {
+							case SK_UINT8: elem_size = sizeof(EIF_NATURAL_8); break;
+							case SK_UINT16: elem_size = sizeof(EIF_NATURAL_16); break;
+							case SK_UINT32: elem_size = sizeof(EIF_NATURAL_32); break;
+							case SK_UINT64: elem_size = sizeof(EIF_NATURAL_64); break;
+							case SK_INT8: elem_size = sizeof(EIF_INTEGER_8); break;
+							case SK_INT16: elem_size = sizeof(EIF_INTEGER_16); break;
+							case SK_INT32: elem_size = sizeof(EIF_INTEGER_32); break;
+							case SK_INT64: elem_size = sizeof(EIF_INTEGER_64); break;
+							case SK_CHAR32: elem_size = sizeof(EIF_CHARACTER_32); break;
+							case SK_BOOL: elem_size = sizeof(EIF_BOOLEAN); break;
+							case SK_CHAR8: elem_size = sizeof(EIF_CHARACTER_8); break;
+							case SK_REAL32: elem_size = sizeof(EIF_REAL_32); break;
+							case SK_REAL64: elem_size = sizeof(EIF_REAL_64); break;
+							case SK_REF:
+							case SK_BIT:
+							case SK_POINTER: elem_size = sizeof(EIF_REFERENCE); break;
+							case SK_EXP:
+									elem_size = HEADER(object + attrib_offset)->ov_size & B_SIZE;
+								break;
+							default:
+								elem_size = 0;
+								eise_io("Basic store: not an Eiffel object.");
+						}
 						buffer_write (object + attrib_offset, elem_size);
-					} else {
-						buffer_write ((char*) &val, elem_size);
 					}
 				}
 			}
@@ -1028,7 +1027,7 @@ rt_public void st_write(EIF_REFERENCE object, int has_volatile_attributes)
 
 }
 
-rt_public void gst_write(EIF_REFERENCE object, int has_volatile_attributes)
+rt_public void gst_write(EIF_REFERENCE object, int has_transient_attributes)
 {
 	/* Write an object.
 	 * used for general store
@@ -1076,7 +1075,7 @@ rt_public void gst_write(EIF_REFERENCE object, int has_volatile_attributes)
 
 }
 
-rt_public void ist_write(EIF_REFERENCE object, int has_volatile_attributes)
+rt_public void ist_write(EIF_REFERENCE object, int has_transient_attributes)
 {
 	/* Write an object.
 	 * used for independent store
@@ -1189,41 +1188,40 @@ rt_private void gen_object_write(char *object, uint16 flags, EIF_TYPE_INDEX dfty
 	EIF_TYPE_INDEX exp_dftype;
 	rt_uint_ptr num_attrib;
 	uint32 store_flags;
-	EIF_VALUE val;
 	uint32 sk_type;
 
 	num_attrib = System(dtype).cn_nbattr;
 
 	if (num_attrib > 0) {
-		memset(&val, 0, sizeof(EIF_VALUE));
 		for (; num_attrib > 0;) {
-			attrib_offset = get_alpha_offset(dtype, --num_attrib);
-			sk_type = *(System(dtype).cn_types + num_attrib) & SK_HEAD;
-			switch (sk_type) {
-				case SK_UINT8: elem_size = sizeof(EIF_NATURAL_8); break;
-				case SK_UINT16: elem_size = sizeof(EIF_NATURAL_16); break;
-				case SK_UINT32: elem_size = sizeof(EIF_NATURAL_32); break;
-				case SK_UINT64: elem_size = sizeof(EIF_NATURAL_64); break;
-				case SK_INT8: elem_size = sizeof(EIF_INTEGER_8); break;
-				case SK_INT16: elem_size = sizeof(EIF_INTEGER_16); break;
-				case SK_INT32: elem_size = sizeof(EIF_INTEGER_32); break;
-				case SK_INT64: elem_size = sizeof(EIF_INTEGER_64); break;
-				case SK_CHAR32: elem_size = sizeof(EIF_CHARACTER_32); break;
-				case SK_BOOL: elem_size = sizeof(EIF_BOOLEAN); break;
-				case SK_CHAR8: elem_size = sizeof(EIF_CHARACTER_8); break;
-				case SK_REAL32: elem_size = sizeof(EIF_REAL_32); break;
-				case SK_REAL64: elem_size = sizeof(EIF_REAL_64); break;
-				case SK_REF:
-				case SK_POINTER: elem_size = sizeof(EIF_REFERENCE); break;
-				case SK_BIT:
-				case SK_EXP:
-							/* We don't actually need the size because per the validity rules they cannot be volatile. */
-						elem_size = 0; break;
-				default:
-					elem_size = 0;
-					eise_io("General store: not an Eiffel object.");
-			}
+			num_attrib--;
 			if (!EIF_IS_TRANSIENT_ATTRIBUTE(System(dtype), num_attrib)) {
+				attrib_offset = get_alpha_offset(dtype, num_attrib);
+				sk_type = *(System(dtype).cn_types + num_attrib) & SK_HEAD;
+				switch (sk_type) {
+					case SK_UINT8: elem_size = sizeof(EIF_NATURAL_8); break;
+					case SK_UINT16: elem_size = sizeof(EIF_NATURAL_16); break;
+					case SK_UINT32: elem_size = sizeof(EIF_NATURAL_32); break;
+					case SK_UINT64: elem_size = sizeof(EIF_NATURAL_64); break;
+					case SK_INT8: elem_size = sizeof(EIF_INTEGER_8); break;
+					case SK_INT16: elem_size = sizeof(EIF_INTEGER_16); break;
+					case SK_INT32: elem_size = sizeof(EIF_INTEGER_32); break;
+					case SK_INT64: elem_size = sizeof(EIF_INTEGER_64); break;
+					case SK_CHAR32: elem_size = sizeof(EIF_CHARACTER_32); break;
+					case SK_BOOL: elem_size = sizeof(EIF_BOOLEAN); break;
+					case SK_CHAR8: elem_size = sizeof(EIF_CHARACTER_8); break;
+					case SK_REAL32: elem_size = sizeof(EIF_REAL_32); break;
+					case SK_REAL64: elem_size = sizeof(EIF_REAL_64); break;
+					case SK_REF:
+					case SK_POINTER: elem_size = sizeof(EIF_REFERENCE); break;
+					case SK_BIT:
+					case SK_EXP:
+								/* We don't actually need the size because per the validity rules they cannot be volatile. */
+							elem_size = 0; break;
+					default:
+						elem_size = 0;
+						eise_io("General store: not an Eiffel object.");
+				}
 				if (sk_type == SK_BIT) {
 					struct bit *bptr = (struct bit *)(object + attrib_offset);
 					store_flags = Merged_flags_dtype(HEADER(bptr)->ov_flags, HEADER(bptr)->ov_dtype);
@@ -1238,8 +1236,6 @@ rt_private void gen_object_write(char *object, uint16 flags, EIF_TYPE_INDEX dfty
 				} else {
 					buffer_write (object + attrib_offset, elem_size);
 				}
-			} else {
-				buffer_write ((char*) &val, elem_size);
 			}
 		}
 	} else {
@@ -1464,7 +1460,7 @@ rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 
 						break;
 					default:
-						eise_io("Basic store: not an Eiffel object.");
+						eise_io("Independent store: not an Eiffel object.");
 				}
 			}
 		}

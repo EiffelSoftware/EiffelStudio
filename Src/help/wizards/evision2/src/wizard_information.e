@@ -59,7 +59,7 @@ feature -- Setting
 			has_about_dialog := b
 		end
 
-	set_icon_location (s: STRING)
+	set_icon_location (s: like icon_location)
 		do
 			create icon_location.make_from_string (s)
 		end

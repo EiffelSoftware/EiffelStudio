@@ -21,8 +21,8 @@ feature -- Basic Operations
 			-- Generate code for the project.
 		local
 			map_list: LINKED_LIST [TUPLE [STRING, STRING_32]]
-			project_name_lowercase: STRING
-			project_location: STRING
+			project_name_lowercase: STRING_32
+			project_location: STRING_32
 			source_prefix: STRING
 		do
 			if wizard_information.dialog_application then
@@ -53,7 +53,7 @@ feature {NONE} -- Access
 	target_files: TRAVERSABLE [STRING_GENERAL]
 			-- <Precursor>
 		local
-			project_name_lowercase: STRING
+			project_name_lowercase: STRING_32
 		do
 			project_name_lowercase := wizard_information.project_name.as_lower
 			create {ARRAYED_LIST [STRING_GENERAL]} Result.make_from_array (<<
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 	map_for_dialog: LINKED_LIST [TUPLE [STRING, STRING_32]]
 			-- Mapping for a new dialog-application project
 		local
-			main_dialog_id: STRING
+			main_dialog_id: STRING_32
 		do
 			create Result.make
 			Result.extend (["${FL_APPLICATION_TYPE}", {STRING_32} "WEL_MAIN_DIALOG"])

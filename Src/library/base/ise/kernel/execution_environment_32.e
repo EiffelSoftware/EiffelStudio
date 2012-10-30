@@ -76,7 +76,7 @@ feature -- Access
 			end
 		end
 
-	user_directory_name: detachable STRING
+	user_directory_name: detachable STRING_32
 			-- Directory name corresponding to the user directory
 			-- On Windows: C:\Users\manus\Documents
 			-- On Unix & Mac: $HOME

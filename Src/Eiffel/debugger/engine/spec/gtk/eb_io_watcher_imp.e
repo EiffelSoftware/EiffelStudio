@@ -163,19 +163,23 @@ feature {NONE} -- Externals
 		external
 			"C signature (int, int): EIF_POINTER use %"eif_file.h%""
 		alias
-			"file_binary_dopen"
+			"eif_file_binary_dopen"
 		end
 
 	file_close (file: POINTER)
 			-- Close `file'.
 		external
 			"C (FILE *) | %"eif_file.h%""
+		alias
+			"eif_file_close"
 		end
 
 	file_fd (file: POINTER): INTEGER
 			-- Operating system's file descriptor
 		external
 			"C (FILE *): EIF_INTEGER | %"eif_file.h%""
+		alias
+			"eif_file_fd"
 		end
 
 	listen_to_pipe_fd: INTEGER
@@ -186,7 +190,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

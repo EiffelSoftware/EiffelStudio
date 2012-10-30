@@ -98,7 +98,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has_attribute_by_qualified_name (a_uri: READABLE_STRING_32; a_name: READABLE_STRING_32): BOOLEAN
+	has_attribute_by_qualified_name (a_uri: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does current element contain an attribute with
 			-- this qualified name?
 		require
@@ -126,7 +126,7 @@ feature -- Status report
 			elts.go_to (c)
 		end
 
-	has_attribute_by_name (a_name: READABLE_STRING_32): BOOLEAN
+	has_attribute_by_name (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does current element contain an attribute named `a_name'?
 			-- element?
 		require
@@ -155,34 +155,34 @@ feature -- Status report
 
 feature {NONE} -- Name comparison with namespace.
 
-	attribute_same_name (a_named: XML_ATTRIBUTE; a_name: READABLE_STRING_32): BOOLEAN
+	attribute_same_name (a_named: XML_ATTRIBUTE; a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Has 'a_named' attribute the same name as `a_name',
 			-- either because of same namespace or within the
 			-- default namespace.
 		require
 			named_not_void: a_named /= Void
 		do
-			Result := has_same_name (a_name) and (a_named.namespace.uri_is_empty)
+			Result := a_named.has_same_name (a_name) and (a_named.namespace.uri_is_empty)
 		ensure
 			same_name: Result implies has_same_name (a_name)
 			default_ns: (a_named.namespace.uri_is_empty) implies (Result = has_same_name (a_name))
 		end
 
-	named_same_name (a_named: XML_NAMED_NODE; a_name: READABLE_STRING_32): BOOLEAN
+	named_same_name (a_named: XML_NAMED_NODE; a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Has 'a_named' same name as 'a_name' and
 			-- same namespace as current node?
 		require
 			a_named_not_void: a_named /= Void
 			a_name_not_void: a_name /= Void
 		do
-			Result := has_same_name (a_name) and same_namespace (a_named)
+			Result := a_named.has_same_name (a_name) and same_namespace (a_named)
 		ensure
 			same_name: Result implies has_same_name (a_name)
 		end
 
 feature -- Access (from XM_COMPOSITE)
 
-	has_element_by_name (a_name: READABLE_STRING_32): BOOLEAN
+	has_element_by_name (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Has current node at least one direct child
 			-- element with the name `a_name'?
 		local
@@ -207,7 +207,7 @@ feature -- Access (from XM_COMPOSITE)
 			elts.go_to (c)
 		end
 
-	has_element_by_qualified_name (a_uri: READABLE_STRING_32; a_name: READABLE_STRING_32): BOOLEAN
+	has_element_by_qualified_name (a_uri: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Has current node at least one direct child
 			-- element with this qualified name ?
 		local
@@ -232,7 +232,7 @@ feature -- Access (from XM_COMPOSITE)
 			elts.go_to (c)
 		end
 
-	element_by_name (a_name: READABLE_STRING_32): detachable XML_ELEMENT
+	element_by_name (a_name: READABLE_STRING_GENERAL): detachable XML_ELEMENT
 			-- Direct child element with name `a_name';
 			-- If there are more than one element with that name, anyone may be returned.
 			-- Return Void if no element with that name is a child of current node.
@@ -258,7 +258,7 @@ feature -- Access (from XM_COMPOSITE)
 			elts.go_to (c)
 		end
 
-	elements_by_name (a_name: READABLE_STRING_32): detachable LIST [XML_ELEMENT]
+	elements_by_name (a_name: READABLE_STRING_GENERAL): detachable LIST [XML_ELEMENT]
 			-- Direct child elements with name `a_name';
 			-- Return Void if no element with that name is a child of current node.
 		local
@@ -284,7 +284,7 @@ feature -- Access (from XM_COMPOSITE)
 		end
 
 
-	element_by_qualified_name (a_uri: READABLE_STRING_32; a_name: READABLE_STRING_32): detachable XML_ELEMENT
+	element_by_qualified_name (a_uri: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): detachable XML_ELEMENT
 			-- Direct child element with given qualified name;
 			-- If there are more than one element with that name, anyone may be returned.
 			-- Return Void if no element with that name is a child of current node.
@@ -312,7 +312,7 @@ feature -- Access (from XM_COMPOSITE)
 
 feature -- Access
 
-	attribute_by_name (a_name: READABLE_STRING_32): detachable XML_ATTRIBUTE
+	attribute_by_name (a_name: READABLE_STRING_GENERAL): detachable XML_ATTRIBUTE
 			-- Attribute named `a_name' in current element;
 			-- Return Void if no such attribute was found.
 		require
@@ -342,7 +342,7 @@ feature -- Access
 			namespace: Result /= Void implies (not Result.has_prefix)
 		end
 
-	attribute_by_qualified_name (a_uri: READABLE_STRING_32; a_name: READABLE_STRING_32): detachable XML_ATTRIBUTE
+	attribute_by_qualified_name (a_uri: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): detachable XML_ATTRIBUTE
 			-- Attribute named `a_name' in current element;
 			-- Return Void if no such attribute was found.
 		require

@@ -99,22 +99,22 @@ feature -- Status report
 
 feature -- Status report
 
-	has_same_uri (a_uri: like uri): BOOLEAN
+	has_same_uri (a_uri: READABLE_STRING_GENERAL): BOOLEAN
 			-- Current uri is same as `a_uri' ?
 		local
 			v: like uri
 		do
 			v := uri
-			Result := (v = a_uri) or else v.same_string (a_uri)
+			Result := (v = a_uri) or else a_uri.same_string (v)
 		end
 
-	has_same_ns_prefix (a_ns_prefix: like ns_prefix): BOOLEAN
+	has_same_ns_prefix (a_ns_prefix: detachable READABLE_STRING_GENERAL): BOOLEAN
 			-- Current uri is same as `a_uri' ?
 		local
 			v: like ns_prefix
 		do
 			v := ns_prefix
-			Result := (v = a_ns_prefix) or else (v /= Void and a_ns_prefix /= Void) and then v.same_string (a_ns_prefix)
+			Result := (v = a_ns_prefix) or else (v /= Void and a_ns_prefix /= Void) and then a_ns_prefix.same_string (v)
 		end
 
 	same_prefix (other: XML_NAMESPACE): BOOLEAN

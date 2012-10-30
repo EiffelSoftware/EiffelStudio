@@ -87,11 +87,11 @@ feature -- Access
 		once
 			l_count := 50
 			create l_managed.make (50)
-			l_nbytes := eif_user_directory_name (l_managed.item, l_count)
+			l_nbytes := eif_user_directory_name_ptr (l_managed.item, l_count)
 			if l_nbytes > l_count then
 				l_count := l_nbytes
 				l_managed.resize (l_count)
-				l_nbytes := eif_user_directory_name (l_managed.item, l_count)
+				l_nbytes := eif_user_directory_name_ptr (l_managed.item, l_count)
 			end
 			if l_nbytes > 0 and l_nbytes <= l_count then
 				Result := file_info.pointer_to_file_name_32 (l_managed.item)

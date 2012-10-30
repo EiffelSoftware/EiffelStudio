@@ -19,50 +19,9 @@ feature {NONE} -- Initialization
 		require
 			a_file_attached: a_file /= Void
 		do
-			if attached {FILE_32} a_file as f32 then
-				set_name (f32.name)
-			else
-				set_name (a_file.name)
-			end
 			set_chunk_size (Default_chunk_size)
 			target := a_file
 		end
-
-feature -- Status report
-
-	name_is_valid_as_string_8: BOOLEAN
-			-- Is associated name a valid string_8 value?
-		do
-			Result := internal_name.is_valid_as_string_8
-		end
-
-feature -- Access
-
-	name: STRING_8
-			-- Name of current stream
-		do
-			Result := internal_name.as_string_8
-		end
-
-	name_32: READABLE_STRING_32
-		do
-			Result := internal_name.to_string_32
-		end
-
-feature -- Change
-
-	set_name (v: READABLE_STRING_GENERAL)
-			-- Set associated name to `v'
-		do
-			internal_name := v
-		ensure
-			v.same_string (internal_name)
-		end
-
-feature {NONE} -- Access
-
-	internal_name: READABLE_STRING_GENERAL
-			-- Internal value of `name(_32)'
 
 feature -- Status report
 

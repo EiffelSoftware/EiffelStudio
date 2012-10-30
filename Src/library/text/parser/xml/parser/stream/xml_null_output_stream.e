@@ -21,18 +21,6 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	name_is_valid_as_string_8: BOOLEAN = True
-			-- Is associated name a valid string_8 value?
-
-feature -- Access
-
-	name: STRING_8 = "null"
-			-- Name of current stream
-
-	name_32: STRING_32 = "null"
-
-feature -- Status report
-
 	is_open_write: BOOLEAN = True
 
 feature -- Basic operation

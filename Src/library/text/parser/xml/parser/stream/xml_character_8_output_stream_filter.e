@@ -22,27 +22,6 @@ feature -- Access
 
 feature -- Status report
 
-	name_is_valid_as_string_8: BOOLEAN
-			-- Is associated name a valid string_8 value?
-		do
-			Result := target.name_is_valid_as_string_8
-		end
-
-feature -- Access		
-
-	name: STRING_8
-			-- Name of current stream
-		do
-			Result := target.name
-		end
-
-	name_32: READABLE_STRING_32
-		do
-			Result := target.name_32
-		end
-
-feature -- Status report
-
 	is_open_write: BOOLEAN
 			-- Can items be write into output stream?
 		do

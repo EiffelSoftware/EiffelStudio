@@ -2057,8 +2057,7 @@ feature {NONE} -- Configuration of layout
 	unix_layout_base_path: DIRECTORY_NAME
 			-- Base for the unix layout. e.g. "/usr".
 		once
-			create Result.make
-			Result.set_directory ("usr")
+			create Result.make_from_string ("/usr")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -2066,7 +2065,7 @@ feature {NONE} -- Configuration of layout
 	unix_layout_base_path_32: DIRECTORY_NAME_32
 			-- Base for the unix layout. e.g. "/usr".
 		once
-			create Result.make_from_string ("usr")
+			create Result.make_from_string ("/usr")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end

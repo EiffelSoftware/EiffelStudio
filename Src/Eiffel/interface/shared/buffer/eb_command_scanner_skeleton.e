@@ -10,7 +10,8 @@ deferred class
 inherit
 	YY_COMPRESSED_SCANNER_SKELETON
 		rename
-			make as old_make
+			make as old_make,
+			text as text_8
 		end
 
 feature{NONE} -- Initialization
@@ -44,6 +45,17 @@ feature -- Access
 
 	last_text_fragment: EB_TEXT_FRAGMENT
 			-- Last scanned text fragment
+
+	text: STRING_32
+			-- Text of last token read
+			-- (New string at each call.)
+		local
+			u: UTF_CONVERTER
+		do
+				-- Convert back to {STRING_32} from UTF-8.
+				-- See `{EB_METRIC_EXTERNAL_COMMAND_TESTER}.text_fragments_from_text'.
+			Result := u.utf_8_string_8_to_string_32 (text_8)
+		end
 
 feature -- Setting
 

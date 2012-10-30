@@ -2,7 +2,6 @@ note
 	description: "Criterion to test whether or not a class is from a given folder or recursively in its subfolders"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -28,7 +27,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_name: STRING)
+	make (a_name: STRING_32)
 			-- Initialize `name' with `a_name'.
 			-- Set `is_recursive' to True by default.
 		do
@@ -38,7 +37,7 @@ feature{NONE} -- Initialization
 			is_recursive_set: is_recursive
 		end
 
-	make_with_flag (a_name: STRING; a_recursive: BOOLEAN)
+	make_with_flag (a_name: STRING_32; a_recursive: BOOLEAN)
 			-- Initialize `name' with `a_name' and `is_recursive' with `a_recursive'.
 		do
 			make (a_name)
@@ -52,7 +51,7 @@ feature -- Evaluate
 	is_satisfied_by (a_item: QL_CLASS): BOOLEAN
 			-- Evaluate `a_item'.
 		local
-			l_path: STRING
+			l_path: STRING_32
 		do
 			l_path := a_item.conf_class.path
 			if name.is_empty then

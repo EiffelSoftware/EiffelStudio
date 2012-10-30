@@ -46,7 +46,7 @@ feature -- Setting
 	load_criterion (a_criterion: EB_METRIC_PATH_CRITERION)
 			-- Load `a_criterion' into Current.
 		do
-			set_value (a_criterion.path.as_string_32)
+			set_value (a_criterion.path)
 		end
 
 	store_criterion (a_criterion: EB_METRIC_PATH_CRITERION)
@@ -58,7 +58,7 @@ feature -- Setting
 			if l_value = Void then
 				l_value := ("").as_string_32
 			end
-			a_criterion.set_path (l_value.as_string_8)
+			a_criterion.set_path (l_value)
 		end
 
 end

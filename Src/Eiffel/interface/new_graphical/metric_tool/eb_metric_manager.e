@@ -699,7 +699,7 @@ feature -- Metric management
 			archive_history_loaded: has_archive_been_loaded
 		local
 			l_retried: BOOLEAN
-			u: GOBO_FILE_UTILITIES
+			u: FILE_UTILITIES
 		do
 			if not l_retried then
 				if archive_history.count > 0 then
@@ -732,7 +732,7 @@ feature -- Metric management
 
 feature -- Metric archive
 
-	load_metric_archive (a_file_name: STRING)
+	load_metric_archive (a_file_name: STRING_32)
 			-- Load metric archive from file named `a_file_name'.
 			-- Store result in `last_loaded_metric_archive'.
 			-- Set `last_loaded_metric_archive' to Void if error occurs.
@@ -753,7 +753,7 @@ feature -- Metric archive
 			end
 		end
 
-	store_metric_archive (a_file_name: STRING; a_archive: LIST [EB_METRIC_ARCHIVE_NODE])
+	store_metric_archive (a_file_name: STRING_32; a_archive: LIST [EB_METRIC_ARCHIVE_NODE])
 			-- Store metric archive `a_archive' into file named `a_file_name'.
 		require
 			a_file_name_attached: a_file_name /= Void

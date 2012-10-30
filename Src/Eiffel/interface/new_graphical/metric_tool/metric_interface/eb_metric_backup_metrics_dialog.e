@@ -124,7 +124,7 @@ feature{NONE} -- Actions
 
 feature {NONE} -- Implementation
 
-	last_selected: STRING
+	last_selected: STRING_32
 			-- Last selected position to backup
 
 	file_open_dialog: EV_FILE_SAVE_DIALOG

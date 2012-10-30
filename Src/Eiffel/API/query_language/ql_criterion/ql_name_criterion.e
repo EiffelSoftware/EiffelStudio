@@ -17,7 +17,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_name: STRING)
+	make (a_name: like name)
 			-- Initialize `name' with `a_name'.
 		require
 			a_name_valid: a_name /= Void
@@ -27,7 +27,7 @@ feature{NONE} -- Initialization
 			set_name (a_name)
 		end
 
-	make_with_setting (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER)
+	make_with_setting (a_name: like name; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER)
 			-- Initialize `name' with `a_name', `is_case_sensitive' with `a_case_sensitive' and `matching_strategy' with `a_matching_strategy'.
 		require
 			a_name_valid: a_name /= Void
@@ -44,10 +44,10 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING
+	name: STRING_32
 			-- Name used to compare with an item's name
 
-	lower_name: STRING
+	lower_name: like name
 			-- `name' in lower case
 
 	is_case_sensitive: BOOLEAN
@@ -88,7 +88,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_name (a_name: STRING)
+	set_name (a_name: like name)
 			-- Set `name' with `a_name'.
 		require
 			a_name_valid: a_name /= Void
@@ -132,7 +132,7 @@ feature -- Setting
 
 feature -- Evaluate
 
-	is_name_same_as (a_name: STRING): BOOLEAN
+	is_name_same_as (a_name: STRING_32): BOOLEAN
 			-- Is `a_name' same as `name'?
 			-- If `is_case_sensitive' is True, compare names case-sensitively.
 		require
@@ -179,7 +179,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Matchers
 
-	identity_matcher (a_string: STRING): BOOLEAN
+	identity_matcher (a_string: STRING_32): BOOLEAN
 			-- Identity matcher
 		require
 			a_string_attached: a_string /= Void
@@ -195,7 +195,7 @@ feature{NONE} -- Matchers
 			end
 		end
 
-	containing_matcher (a_string: STRING): BOOLEAN
+	containing_matcher (a_string: STRING_32): BOOLEAN
 			-- Containing matcher
 		require
 			a_string_attached: a_string /= Void
@@ -211,7 +211,7 @@ feature{NONE} -- Matchers
 			end
 		end
 
-	wildcard_matcher (a_string: STRING): BOOLEAN
+	wildcard_matcher (a_string: STRING_32): BOOLEAN
 			-- Wildcard matcher
 		require
 			a_string_attached: a_string /= Void
@@ -224,7 +224,7 @@ feature{NONE} -- Matchers
 			end
 		end
 
-	regexp_matcher (a_string: STRING): BOOLEAN
+	regexp_matcher (a_string: STRING_32): BOOLEAN
 			-- Wildcard matcher
 		require
 			a_string_attached: a_string /= Void
@@ -266,7 +266,7 @@ feature{NONE} -- Matchers
 			string_matcher_set: string_matcher /= Void
 		end
 
-	string_matcher: FUNCTION [ANY, TUPLE [a_string: STRING], BOOLEAN]
+	string_matcher: FUNCTION [ANY, TUPLE [a_string: STRING_32], BOOLEAN]
 			-- String matcher used to match `a_string'
 
 	set_string_matcher (a_matcher: like string_matcher)

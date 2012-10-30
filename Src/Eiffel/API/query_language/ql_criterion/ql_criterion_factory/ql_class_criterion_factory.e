@@ -395,7 +395,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_path_in_criterion (a_path: STRING): QL_CLASS_PATH_IN_CRI
+	new_path_in_criterion (a_path: STRING_32): QL_CLASS_PATH_IN_CRI
 			-- New {QL_CLASS_PATH_IN_CRI} criterion.
 		require
 			a_path_attached: a_path /= Void
@@ -405,7 +405,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_path_is_criterion (a_path: STRING): QL_CLASS_PATH_IN_CRI
+	new_path_is_criterion (a_path: STRING_32): QL_CLASS_PATH_IN_CRI
 			-- New {QL_CLASS_PATH_IS_CRI} criterion.
 		require
 			a_path_attached: a_path /= Void

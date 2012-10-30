@@ -296,7 +296,7 @@ feature -- Actions
 		local
 			l_selected_metrics: LIST [STRING]
 			l_msg: STRING_GENERAL
-			l_file_name: STRING
+			l_file_name: STRING_32
 			l_archive: LIST [EB_METRIC_ARCHIVE_NODE]
 			l_archive_tbl: HASH_TABLE [EB_METRIC_ARCHIVE_NODE, STRING]
 		do
@@ -408,8 +408,8 @@ feature -- Actions
 	on_compare_archives
 			-- Action to be performed when user wants to compare selected archives
 		local
-			l_cur_archive: STRING
-			l_ref_archive: STRING
+			l_cur_archive: STRING_32
+			l_ref_archive: STRING_32
 			l_ref_arc: LIST [EB_METRIC_ARCHIVE_NODE]
 			l_cur_arc: LIST [EB_METRIC_ARCHIVE_NODE]
 			l_is_ref_ok: BOOLEAN
@@ -517,9 +517,9 @@ feature {NONE} -- Implementation
 			a_action_attached: a_action /= Void
 			a_timer_attached: a_timer /= Void
 		local
-			l_dir: DIRECTORY
-			l_file: RAW_FILE
-			l_file_name: STRING
+			l_dir: DIRECTORY_32
+			l_file: RAW_FILE_32
+			l_file_name: STRING_32
 			l_archive: LIST [EB_METRIC_ARCHIVE_NODE]
 		do
 			l_file_name := a_text_field.text
@@ -561,7 +561,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	metric_archive_from_file (a_file_name: STRING): HASH_TABLE [EB_METRIC_ARCHIVE_NODE, STRING]
+	metric_archive_from_file (a_file_name: STRING_32): HASH_TABLE [EB_METRIC_ARCHIVE_NODE, STRING]
 			-- Metric archive from file `a_file_name'.
 			-- Key is metric name, value is the metric archive for that metric.
 			-- Void if error occurs.
@@ -634,7 +634,7 @@ feature {NONE} -- Implementation
 		require
 			a_text_field_attached: a_text_field /= Void
 		local
-			url_address, http, ftp, file: STRING
+			url_address, http, ftp, file: STRING_32
 			l_is_file: BOOLEAN
 		do
 			url_address := a_text_field.text.twin
@@ -666,20 +666,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	save_file_from_url (a_url_address: STRING; a_target_file_name: STRING): READABLE_STRING_GENERAL
+	save_file_from_url (a_url_address: STRING_32; a_target_file_name: STRING_32): STRING_32
 			-- Save file from url address `a_url_address' and return the saved file name in local machine.
 		require
 			a_url_address_attached: a_url_address /= Void
 			a_target_file_name_attached: a_target_file_name /= Void
 		local
-			file_name: READABLE_STRING_GENERAL
+			file_name: STRING_32
 			target_file: STRING_32
 			file: PLAIN_TEXT_FILE
-			u: GOBO_FILE_UTILITIES
+			u: FILE_UTILITIES
 		do
 			u.create_directory (metric_manager.userdefined_metrics_path)
 			file := u.make_text_file_in (a_target_file_name, metric_manager.userdefined_metrics_path)
-			file_name := u.file_name (file)
+			file_name := u.file_name (file).as_string_32
 
 			if file.exists then
 				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt_with_cancel (
@@ -753,7 +753,7 @@ feature -- Overwritting
 			overwrite := False
 		end
 
-	load_archive (a_file_name: STRING): LIST [EB_METRIC_ARCHIVE_NODE]
+	load_archive (a_file_name: STRING_32): LIST [EB_METRIC_ARCHIVE_NODE]
 			-- Load archive from file `a_file_name'.
 		require
 			a_file_name_attached: a_file_name /= Void

@@ -26,7 +26,7 @@ feature{NONE} -- Initialization
 			-- Initialize `scope' with `a_scope' and `name' with `a_name'.
 		do
 			Precursor (a_scope, a_name)
-			text := ""
+			text := {STRING_32} ""
 			set_matching_strategy ({QL_NAME_CRITERION}.identity_matching_strategy)
 		ensure then
 			name_text_attached: text /= Void
@@ -44,7 +44,7 @@ feature -- Access
 			end
 		end
 
-	text: STRING
+	text: STRING_32
 			-- Name text used in criterion
 
 	is_case_sensitive: BOOLEAN
@@ -72,7 +72,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_text (a_name_text: STRING)
+	set_text (a_name_text: STRING_32)
 			-- Set `text' with `a_name_text'.
 		require
 			a_name_text_attached: a_name_text /= Void

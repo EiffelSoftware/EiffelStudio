@@ -187,7 +187,7 @@ feature {NONE} -- Actions
 	on_check_metric_definition_file
 			-- Action to be performed to check the availability of selected metric definition file
 		local
-			l_file: RAW_FILE
+			l_file: RAW_FILE_32
 		do
 			create l_file.make (file_name_combo.text)
 			if l_file.exists and then l_file.is_readable and then not l_file.is_directory then

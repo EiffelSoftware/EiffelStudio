@@ -50,23 +50,23 @@ feature -- Access
 			Result := metric_names.l_external_command_tester
 		end
 
-	command: STRING
+	command: STRING_32
 			-- Command to execute
 			-- May contain placeholders such as $file_name, $directory_name
 
-	working_directory: STRING
+	working_directory: STRING_32
 			-- Directory to launch `command'
 			-- May contain placeholders such as $file_name, $directory_name
 
-	input: STRING
+	input: STRING_32
 			-- Input for `command'
 			-- May contain placeholders such as $file_name, $directory_name
 
-	output: STRING
+	output: STRING_32
 			-- Output from `command'
 			-- May contain placeholders such as $file_name, $directory_name
 
-	error: STRING
+	error: STRING_32
 			-- Error from `command'
 			-- May contain placeholders such as $file_name, $directory_name
 
@@ -245,11 +245,11 @@ feature{EB_METRIC_EXTERNAL_COMMAND_CRITERION} -- External command evaluation
 			l_process_factory: PROCESS_FACTORY
 			l_replacer: EB_TEXT_REPLACER
 			l_fragments: LINKED_LIST [EB_TEXT_FRAGMENT]
-			l_cmd: STRING
-			l_dir: STRING
-			l_input: STRING
-			l_output: STRING
-			l_error: STRING
+			l_cmd: STRING_32
+			l_dir: STRING_32
+			l_input: STRING_32
+			l_output: STRING_32
+			l_error: STRING_32
 			l_generator: QL_DOMAIN_GENERATOR
 			l_content: STRING
 			l_command_output: like command_output
@@ -399,19 +399,21 @@ feature{EB_METRIC_EXTERNAL_COMMAND_CRITERION} -- External command evaluation
 
 feature{NONE} -- Implementation
 
-	file_content (a_file: STRING): STRING
+	file_content (a_file: STRING_32): STRING
 			-- Content of file `a_file'
 		require
 			a_file_attached: a_file /= Void
 		local
-			l_file: RAW_FILE
-			l_file_name: STRING
+			l_file: RAW_FILE_32
+			l_file_name: STRING_32
 		do
 			l_file_name := a_file.twin
 			remove_new_line_characters (l_file_name)
-			create l_file.make_open_read (l_file_name)
+			create l_file.make (l_file_name)
+			l_file.open_read
 			l_file.read_stream (l_file.count)
-			Result := l_file.last_string.twin
+			Result := l_file.last_string
+			l_file.close
 		rescue
 			if l_file /= Void and then l_file.is_open_read then
 				l_file.close
@@ -440,7 +442,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	replaced_text (a_text: STRING; a_replacer: EB_TEXT_REPLACER; a_fragment_list: LIST [EB_TEXT_FRAGMENT]): STRING
+	replaced_text (a_text: STRING_32; a_replacer: EB_TEXT_REPLACER; a_fragment_list: LIST [EB_TEXT_FRAGMENT]): STRING_32
 			-- Return replaced text (using `a_replacer') from `a_text', and store found text fragments into `a_fragment_list'.
 		require
 			a_text_attached: a_text /= Void
@@ -460,17 +462,20 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	text_fragments_from_text (a_text: STRING): LIST [EB_TEXT_FRAGMENT]
+	text_fragments_from_text (a_text: STRING_32): LIST [EB_TEXT_FRAGMENT]
 			-- Text fragments from `a_text'
 		require
 			a_text_attached: a_text /= Void
 		local
 			l_scanner: like command_scanner
+			u: UTF_CONVERTER
 		do
 			l_scanner := command_scanner
 			l_scanner.reset
 			l_scanner.wipe_text_fragments
-			l_scanner.set_input_buffer (create {YY_BUFFER}.make (a_text))
+				-- Convert text to UTF-8 so that scanner can handle that.
+				-- See `{EB_COMMAND_SCANNER_SKELETON}.text'.
+			l_scanner.set_input_buffer (create {YY_BUFFER}.make (u.string_32_to_utf_8_string_8 (a_text)))
 			l_scanner.scan
 			Result := l_scanner.text_fragments.twin
 		ensure

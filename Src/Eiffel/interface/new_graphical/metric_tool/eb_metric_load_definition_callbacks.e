@@ -710,7 +710,7 @@ feature{NONE} -- Process
 			process_command_related_finish (t_error, agent (external_command_tester_stack.item).set_error)
 		end
 
-	process_command_related_finish (a_tag: INTEGER; a_agent: PROCEDURE [ANY, TUPLE [STRING]])
+	process_command_related_finish (a_tag: INTEGER; a_agent: PROCEDURE [ANY, TUPLE [STRING_32]])
 			-- Process.
 		require
 			a_agent_attached: a_agent /= Void
@@ -724,7 +724,7 @@ feature{NONE} -- Process
 
 feature{NONE} -- Implementation
 
-	current_content: STRING
+	current_content: STRING_32
 			-- Content of last node
 
 	current_metric: EB_METRIC

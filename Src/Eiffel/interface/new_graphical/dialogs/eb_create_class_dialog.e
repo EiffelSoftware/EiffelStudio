@@ -358,7 +358,7 @@ feature {NONE} -- Basic operations
 			if not retried then
 				create l_wizard
 				if l_wizard.is_service_available then
-					create l_source_file.make_from_string (eiffel_layout.templates_path)
+					create l_source_file.make_from_string (eiffel_layout.templates_path_8)
 					l_source_file.extend ("defaults")
 					if not empty_check.is_selected then
 						l_source_file.set_file_name ("empty")
@@ -368,7 +368,7 @@ feature {NONE} -- Basic operations
 					l_source_file.add_extension ("e")
 					l_source_file.add_extension ("tpl")
 						-- Check for user priority file.
-					l_user_file := eiffel_layout.user_priority_file_name (l_source_file, True)
+					l_user_file := eiffel_layout.user_priority_file_name_8 (l_source_file, True)
 					if l_user_file /= Void then
 							-- The user has their own template file, use it.
 						l_source_file := l_user_file

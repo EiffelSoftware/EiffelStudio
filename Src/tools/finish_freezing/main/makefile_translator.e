@@ -80,7 +80,7 @@ feature -- Quick compile
 			quick_prg: STRING_32
 		do
 			quick_prg := {STRING_32} "%""
-			quick_prg.append_string (eiffel_layout.Quick_finalize_command_name)
+			quick_prg.append_string (eiffel_layout.quick_finalize_command_name.string_representation)
 			quick_prg.append_string ({STRING_32} "%" . ")
 			quick_prg.append_string_general (options.get_string_or_default ("obj_file_ext", "obj"))
 				-- On Windows, we need to surround the command with " since it is executed
@@ -222,7 +222,7 @@ feature -- Execution
 				l_flags.extend (l_make_flags)
 			end
 
-			l_process := process_launcher (eiffel_layout.Emake_command_name, l_flags, env.current_working_directory)
+			l_process := process_launcher (eiffel_layout.emake_command_name.string_representation, l_flags, env.current_working_directory)
 			l_process.launch
 			l_success := l_process.launched
 			if l_success then
@@ -1356,7 +1356,7 @@ feature {NONE}	-- substitutions
 			end
 
 			if eiffel_layout.is_valid_environment then
-				l_eiffel_dir := u.string_32_to_utf_8_string_8 (eiffel_layout.shared_path_32)
+				l_eiffel_dir := u.string_32_to_utf_8_string_8 (eiffel_layout.shared_path.string_representation)
 			else
 				l_eiffel_dir := empty_string
 			end

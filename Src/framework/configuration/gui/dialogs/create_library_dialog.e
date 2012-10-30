@@ -367,13 +367,13 @@ feature {NONE} -- Access
 		do
 			create Result.make (10)
 
-			l_filename := eiffel_layout.libraries_config_name
+			l_filename := eiffel_layout.libraries_config_name_8
 			create l_file.make (l_filename)
 			if l_file.exists then
 				add_lookup_directories (l_filename, Result)
 			end
 			if eiffel_layout.is_user_files_supported then
-				l_filename := eiffel_layout.user_priority_file_name (l_filename.string, True)
+				l_filename := eiffel_layout.user_priority_file_name_8 (l_filename.string, True)
 				if l_filename /= Void then
 					l_file.reset (l_filename)
 					if l_file.exists then
@@ -384,7 +384,7 @@ feature {NONE} -- Access
 
 			if Result.is_empty then
 					-- Extend the default library path
-				Result.extend ([eiffel_layout.library_path.string.as_attached, 2])
+				Result.extend ([eiffel_layout.library_path_8.string, 2])
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty

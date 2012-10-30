@@ -91,7 +91,7 @@ feature{NONE} -- Implementation
 	image_file_name: FILE_NAME
 			-- Image file name.
 		do
-			create Result.make_from_string (eiffel_layout.bitmaps_path)
+			create Result.make_from_string (eiffel_layout.bitmaps_path_8)
 			Result.extend ("png")
 			Result.set_file_name ("splash_shadow.png")
 		end

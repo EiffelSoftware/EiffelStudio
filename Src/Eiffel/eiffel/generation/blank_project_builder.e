@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 		local
 			a_file: RAW_FILE_32
 		do
-			create a_file.make (eiffel_layout.default_config_file_name)
+			create a_file.make_with_path (eiffel_layout.default_config_file_name)
 			a_file.open_read
 			a_file.read_stream (a_file.count)
 			a_file.close
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 		rescue
 			add_error_message (
 				{STRING_32} "Unable to read the template ace file '" +
-				eiffel_layout.default_config_file_name +
+				eiffel_layout.default_config_file_name.string_representation +
 				{STRING_32}"'%N%
 				%Check that the file exists and that you are allowed to read it.")
 		end

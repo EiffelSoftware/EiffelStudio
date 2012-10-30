@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 				-- Setup `open_file_dialog'.
 			l_pref := preferences.dialog_data.last_opened_metric_browse_archive_directory_preference
 			if l_pref.value = Void or else l_pref.value.is_empty then
-				l_pref.set_value (eiffel_layout.user_projects_path)
+				l_pref.set_value (eiffel_layout.user_projects_path_8)
 			end
 			create open_file_dialog.make_with_preference (l_pref)
 			open_file_dialog.set_title (metric_names.t_select_archive)
@@ -966,7 +966,7 @@ invariant
 	calculator_attached: calculator /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -990,11 +990,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_METRIC_ARCHIVE_PANEL

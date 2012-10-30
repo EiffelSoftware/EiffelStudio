@@ -352,7 +352,7 @@ feature {NONE} -- Implementation
 			-- Eiffel compiler command line to precompile
 		do
 			create Result.make (100)
-			Result.append (eiffel_layout.ec_command_name)
+			Result.append (eiffel_layout.ec_command_name_8)
 			Result.append (" -precompile -c_compile -batch -config ")
 			Result.append (environment.ecf_file_name)
 		end
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 			-- Eiffel compiler command line to freeze
 		do
 			create Result.make (100)
-			Result.append (eiffel_layout.ec_command_name)
+			Result.append (eiffel_layout.ec_command_name_8)
 			Result.append (" -batch -clean -c_compile -config %"")
 			Result.append (environment.ecf_file_name)
 			Result.append ("%"")

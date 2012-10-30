@@ -333,7 +333,7 @@ feature -- Generation
 
 					-- Copy configuration file to be able to load up local assembly.
 				if l_has_local then
-					create l_source_name.make_from_string (eiffel_layout.Generation_templates_path)
+					create l_source_name.make_from_string (eiffel_layout.generation_templates_path_8)
 					l_source_name.set_file_name ("assembly_config.xml")
 
 					if is_finalizing then

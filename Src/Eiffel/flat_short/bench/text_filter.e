@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			full_pathname: FILE_NAME
 		do
 			if not filtername.is_empty then
-				create full_pathname.make_from_string (eiffel_layout.filter_path)
+				create full_pathname.make_from_string (eiffel_layout.filter_path_8)
 				full_pathname.extend (filtername)
 				full_pathname.add_extension ("fil")
 				make_from_filename (full_pathname)
@@ -1248,7 +1248,7 @@ invariant
 	image_not_void: image /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

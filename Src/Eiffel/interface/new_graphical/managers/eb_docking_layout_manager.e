@@ -40,7 +40,7 @@ feature -- Normal mode command
 			-- because current widgets layout is debug mode layout (not normal mode layout),
 			-- and the debug mode widgets layout is saved by EB_DEBUGGER_MANAGER already.
 			if l_eb_debugger_manager /= Void and then not l_eb_debugger_manager.is_exiting_eiffel_studio then
-				l_result := develop_window.docking_manager.save_tools_data (eiffel_layout.user_docking_standard_file_name (develop_window.window_id))
+				l_result := develop_window.docking_manager.save_tools_data (eiffel_layout.user_docking_standard_file_name_8 (develop_window.window_id))
 				if not l_result then
 					show_last_error
 				end
@@ -80,7 +80,7 @@ feature -- Normal mode command
 			retried: BOOLEAN
 		do
 			if not retried then
-				l_file_name := eiffel_layout.user_docking_standard_file_name (develop_window.window_id)
+				l_file_name := eiffel_layout.user_docking_standard_file_name_8 (develop_window.window_id)
 				create l_file.make (l_file_name)
 				if l_file.exists then
 					l_result := develop_window.docking_manager.open_tools_config (l_file_name)
@@ -110,9 +110,9 @@ feature -- Debug mode command
 			l_result: BOOLEAN
 			l_file: RAW_FILE
 		do
-			create l_file.make (eiffel_layout.user_docking_debug_file_name (develop_window.window_id))
+			create l_file.make (eiffel_layout.user_docking_debug_file_name_8 (develop_window.window_id))
 			if l_file.exists then
-				l_result := develop_window.docking_manager.open_tools_config (eiffel_layout.user_docking_debug_file_name (develop_window.window_id))
+				l_result := develop_window.docking_manager.open_tools_config (eiffel_layout.user_docking_debug_file_name_8 (develop_window.window_id))
 			end
 			if not l_result then
 				restore_standard_debug_docking_layout
@@ -321,7 +321,7 @@ feature -- Debug mode command
 			l_result: BOOLEAN
 		do
 			if develop_window /= Void then
-				l_result := develop_window.docking_manager.save_tools_data (eiffel_layout.user_docking_debug_file_name (develop_window.window_id))
+				l_result := develop_window.docking_manager.save_tools_data (eiffel_layout.user_docking_debug_file_name_8 (develop_window.window_id))
 				if not l_result then
 					show_last_error
 				end
@@ -335,7 +335,7 @@ feature -- Debug mode command
 			l_file: RAW_FILE
 			l_fn: STRING_8
 		do
-			l_fn := eiffel_layout.user_docking_debug_file_name (develop_window.window_id).string
+			l_fn := eiffel_layout.user_docking_debug_file_name_8 (develop_window.window_id).string
 			create l_file.make (l_fn)
 			if l_file.exists then
 				l_result := develop_window.docking_manager.open_tools_config (l_fn)
@@ -399,7 +399,7 @@ feature {NONE} -- Implementation
 				restore_agent_for_restore_action := Void
 			end
 
-			l_file_name := eiffel_layout.user_docking_standard_file_name (develop_window.window_id)
+			l_file_name := eiffel_layout.user_docking_standard_file_name_8 (develop_window.window_id)
 			create l_raw_file.make (l_file_name)
 			if l_raw_file.exists then
 				l_result := develop_window.docking_manager.open_tools_config (l_file_name)
@@ -546,7 +546,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -484,7 +484,7 @@ feature{NONE} -- Implementation
 		local
 			l_file_name: FILE_NAME
 		do
-			create l_file_name.make_from_string (eiffel_layout.temporary_path)
+			create l_file_name.make_from_string (eiffel_layout.temporary_path_8)
 			l_file_name.set_file_name ("~" + a_base_name)
 			Result := l_file_name
 		ensure
@@ -518,7 +518,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

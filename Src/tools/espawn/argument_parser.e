@@ -59,7 +59,11 @@ feature -- Access
 			is_successful: is_successful
 			use_specific_compiler: use_specific_compiler
 		do
-			Result := option_of_name (use_compiler_switch).value
+			if attached option_of_name (use_compiler_switch) as l_option then
+				Result := l_option.value
+			else
+				Result := ""
+			end
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty

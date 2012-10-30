@@ -32,7 +32,7 @@ feature -- Access
 			-- Locale manager
 		once
 			if is_eiffel_layout_defined and then eiffel_layout.is_valid_environment then
-				create Result.make (eiffel_layout.language_path)
+				create Result.make (eiffel_layout.language_path_8)
 			else
 				create Result.make (".")
 			end

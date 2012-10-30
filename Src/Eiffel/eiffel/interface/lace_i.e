@@ -1040,7 +1040,7 @@ feature {NONE} -- Implementation
 				-- new system without precompile, set value
 			elseif a_target.precompile = Void and not workbench.has_compilation_started then
 				if l_s = Void then
-					l_s := eiffel_layout.assemblies_path
+					l_s := eiffel_layout.assemblies_path.string_representation
 				end
 				system.set_metadata_cache_path (l_s)
 			end

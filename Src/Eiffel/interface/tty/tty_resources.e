@@ -42,14 +42,14 @@ feature {NONE} -- Initialization
 			error_msg: STRING_32
 		once
 			if retried then
-				error_msg := warning_messages.w_cannot_read_file (eiffel_layout.compiler_configuration)
+				error_msg := warning_messages.w_cannot_read_file (eiffel_layout.compiler_configuration.string_representation)
 			else
-				create test_file.make (eiffel_layout.compiler_configuration)
+				create test_file.make_with_path (eiffel_layout.compiler_configuration)
 				if test_file.exists and test_file.is_readable then
 					create resource_parser
-					resource_parser.parse_file (eiffel_layout.compiler_configuration, configure_resources)
+					resource_parser.parse_file (eiffel_layout.compiler_configuration.string_representation, configure_resources)
 				else
-					error_msg := Warning_messages.w_file_does_not_exist_execution_impossible (eiffel_layout.compiler_configuration.twin)
+					error_msg := Warning_messages.w_file_does_not_exist_execution_impossible (eiffel_layout.compiler_configuration.string_representation)
 				end
 			end
 			if error_msg /= Void then
@@ -69,7 +69,7 @@ feature -- Status report
 			-- Did an error occur while reading the default preferences file ?
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -82,22 +82,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class TTY_RESOURCES

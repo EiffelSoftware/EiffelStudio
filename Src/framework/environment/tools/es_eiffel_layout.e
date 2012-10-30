@@ -23,11 +23,11 @@ feature -- Access
 		once
 			Result := Precursor {EC_EIFFEL_LAYOUT}
 			if is_user_files_supported then
-				Result.extend (user_templates_path.string)
-				Result.extend (docking_data_path.string)
-				Result.extend (temporary_path.string)
+				Result.extend (user_templates_path)
+				Result.extend (docking_data_path)
+				Result.extend (temporary_path)
 			end
-			Result.extend (user_projects_path.string)
+			Result.extend (user_projects_path)
 		end
 
 ;note

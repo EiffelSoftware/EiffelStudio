@@ -398,7 +398,7 @@ feature {NONE} -- Implementation
 			l_file: STRING
 		do
 			create Result.make (100)
-			Result.append (eiffel_layout.estudio_command_name + " ")
+			Result.append (eiffel_layout.estudio_command_name_8 + " ")
 			create l_directory.make (a_folder)
 			if l_directory.exists then
 				from
@@ -441,7 +441,7 @@ feature {NONE} -- Private Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

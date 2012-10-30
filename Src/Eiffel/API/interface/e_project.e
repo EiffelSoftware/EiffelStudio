@@ -717,7 +717,7 @@ feature {NONE} -- C compilation
 				path := project_directory.final_path
 			end
 			l_cmd := {STRING_32} "%""
-			l_cmd.append_string (eiffel_layout.freeze_command_name)
+			l_cmd.append_string (eiffel_layout.freeze_command_name.string_representation)
 			l_cmd.append_character ('"')
 			if comp_system.il_generation and (not {PLATFORM_CONSTANTS}.is_64_bits or Comp_system.force_32bits) then
 					-- Force 32bit compilation
@@ -1043,7 +1043,7 @@ feature {NONE} -- Implementation
 					if uf.exists and then uf.is_readable then
 						compiler_objects.command_executor.link_eiffel_driver (project_directory.workbench_path,
 							system.name,
-							eiffel_layout.Prelink_command_name,
+							eiffel_layout.prelink_command_name_8,
 							Precompilation_driver)
 					end
 				end

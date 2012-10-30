@@ -15,7 +15,7 @@ inherit
 
 feature -- Parsing
 
-	parse_file (filename: FILE_NAME_32; table: RESOURCE_TABLE)
+	parse_file (filename: READABLE_STRING_32; table: RESOURCE_TABLE)
 			-- Parse the resource file `filename' and store the
 			-- information in the resource table `table'.
 		require
@@ -68,7 +68,7 @@ feature -- Parsing
 				l_resource_file.close
 			else
 				io.error.put_string ("Warning: Cannot read resource file %"");
-				io.error.put_string (filename.to_string_32);
+				io.error.put_string (filename);
 				io.error.put_string ("%".");
 				io.error.put_new_line
 			end
@@ -98,7 +98,7 @@ feature -- Errors
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

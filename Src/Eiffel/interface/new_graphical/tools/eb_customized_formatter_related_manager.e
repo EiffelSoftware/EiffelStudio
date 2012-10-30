@@ -141,14 +141,17 @@ feature{NONE} -- Implementation/Data
 
 	global_file_path: READABLE_STRING_GENERAL
 			-- Path to store global formatter related file
+		local
+			dn32: like {PROJECT_DIRECTORY}.path
 		do
-			Result := formatter_file_path (eiffel_layout.hidden_files_path_32)
+			create dn32.make_from_path (eiffel_layout.hidden_files_path)
+			Result := formatter_file_path (dn32)
 		ensure
 			result_attached: Result /= Void
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

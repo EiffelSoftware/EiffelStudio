@@ -48,7 +48,7 @@ feature -- Directory names
 			-- then the ${AUTO_TEST} environment variable will be used.
 			-- If no other information is available, the current directly will be assumed.
 		once
-			Result := eiffel_layout.auto_test_path
+			Result := eiffel_layout.auto_test_path_8
 --			if registry.is_available then
 --				Result := registry.string_value (auto_test_key_name + "\AUTO_TEST")
 --			end
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 			-- Name of AutoTest key
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

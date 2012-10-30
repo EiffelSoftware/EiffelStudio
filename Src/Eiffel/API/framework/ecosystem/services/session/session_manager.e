@@ -177,7 +177,7 @@ feature {NONE} -- Query
 				l_fn := l_formatter.format (l_fn, [l_ver, l_target, l_window_id, l_extension])
 
 					-- Create full path
-				create l_path.make_from_string (eiffel_layout.session_data_path.string)
+				create l_path.make_from_string (eiffel_layout.session_data_path_8.string)
 				l_path.set_file_name (l_fn)
 				Result := l_path.out.as_attached
 			end
@@ -632,7 +632,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -326,7 +326,7 @@ feature -- Actions
 			fi: FILE_NAME
 			rf, wf: PLAIN_TEXT_FILE
 		do
-			create fi.make_from_string (eiffel_layout.filter_path)
+			create fi.make_from_string (eiffel_layout.filter_path_8)
 			fi.extend (fn)
 			create rf.make_open_read (fi)
 			rf.read_stream (rf.count)
@@ -918,7 +918,7 @@ feature {NONE} -- Menu bars
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

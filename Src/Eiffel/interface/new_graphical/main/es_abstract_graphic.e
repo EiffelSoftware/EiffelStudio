@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 			create pref_strs
 				-- Initialize pixmaps
 			pref_strs.Pixmaps_extension_cell.put ("png")
-			create fn.make_from_string (eiffel_layout.Bitmaps_path)
+			create fn.make_from_string (eiffel_layout.bitmaps_path_8)
 			fn.extend ("png")
 			pref_strs.Pixmaps_path_cell.put (fn.string)
 
@@ -112,7 +112,7 @@ feature {NONE} -- Initialization
 
 				-- Initialization of compiler resources.
 			create preference_access.make_with_defaults_and_location (
-				<<eiffel_layout.general_preferences, eiffel_layout.platform_preferences>>, eiffel_layout.eiffel_preferences)
+				<<eiffel_layout.general_preferences_8, eiffel_layout.platform_preferences_8>>, eiffel_layout.eiffel_preferences_8)
 			create l_studio_preferences.make (preference_access, True, True)
 			l_compiler_setting.set_preferences (l_studio_preferences)
 

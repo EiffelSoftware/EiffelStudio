@@ -469,7 +469,7 @@ feature -- Locking
 				l_file := u.open_write_text_file (lock_file_name)
 				l_file.put_string ({EIFFEL_CONSTANTS}.ise_eiffel_env)
 				l_file.put_character ('=')
-				l_file.put_string (eiffel_layout.ec_command_name)
+				l_file.put_string (eiffel_layout.ec_command_name_8)
 				l_file.put_new_line
 				l_file.put_string ("version=")
 				l_file.put_string (compiler_version_number.version)

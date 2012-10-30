@@ -292,13 +292,13 @@ feature {NONE} -- Basic operation
 			retried: BOOLEAN
 		do
 			if not retried then
-				create l_fn.make_from_string (eiffel_layout.templates_path.string)
+				create l_fn.make_from_string (eiffel_layout.templates_path_8.string)
 				l_fn.extend ("licenses")
 				l_fn.set_file_name (a_name)
 				l_fn.add_extension (license_extension)
 
 					-- Check user file
-				l_user_fn := eiffel_layout.user_priority_file_name (l_fn, True)
+				l_user_fn := eiffel_layout.user_priority_file_name_8 (l_fn, True)
 				if l_user_fn /= Void then
 					l_fn := l_user_fn
 				end
@@ -335,7 +335,7 @@ feature {NONE} -- Internationalization
 			-- Default invalid license.
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

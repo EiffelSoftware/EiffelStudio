@@ -1,5 +1,4 @@
 note
-
 	description:	"Pattern match algorithm to match a pattern%
 			% containing wild cards.%
 			% Done through the Knuth, Morris, Pratt%
@@ -48,49 +47,49 @@ feature -- Access
 
 feature -- Status setting
 
-	set_pattern (new_pattern: STRING)
-			-- Set the `pattern' to `new_pattern'
+	set_pattern (new_pattern: READABLE_STRING_GENERAL)
+			-- Set the `pattern' to `new_pattern'.
 		do
-			pattern := new_pattern;
-		end;
+			pattern := new_pattern.as_string_32
+		end
 
-	set_string_representation (new_str_rep: CHARACTER)
+	set_string_representation (new_str_rep: CHARACTER_32)
 			-- Set `string_representation' to
 			-- `new_str_rep'.
 		require
-			new_str_rep_not_nul_char: new_str_rep /= '%U';
+			new_str_rep_not_nul_char: new_str_rep /= '%U'
 			new_str_rep_different: new_str_rep /= character_representation
 		do
 			string_representation := new_str_rep
 		ensure
 			string_representation_is_new_str_rep: string_representation = new_str_rep
-		end;
+		end
 
-	set_character_representation (new_char_rep: CHARACTER)
+	set_character_representation (new_char_rep: CHARACTER_32)
 			-- Set `character_representation' to
 			-- `new_char_rep'.
 		require
-			new_char_rep_not_nul_char: new_char_rep /= '%U';
+			new_char_rep_not_nul_char: new_char_rep /= '%U'
 			new_char_rep_different: new_char_rep /= string_representation
 		do
 			character_representation := new_char_rep
 		ensure
 			character_representation_is_new_char_rep: character_representation = new_char_rep
-		end;
+		end
 
 feature -- Status report
 
-	found_at: INTEGER;
-		-- Index in `text' where `pattern' was found
+	found_at: INTEGER
+		-- Index in `text' where `pattern' was found.
 
-	character_representation: CHARACTER;
+	character_representation: CHARACTER_32
 			-- The character that represents any single
-			-- character in `text'
-			--|Default: '?'
+			-- character in `text'.
+			--| Default: '?'
 
-	string_representation: CHARACTER
+	string_representation: CHARACTER_32
 			-- The character that represents any string
-			-- in `text'
+			-- in `text'.
 			--| Default: '*'
 
 	has_wild_cards: BOOLEAN
@@ -100,20 +99,20 @@ feature -- Status report
 			pattern_set: pattern /= Void
 		do
 			Result := pattern.has (string_representation) or else
-				  pattern.has (character_representation);
+				  pattern.has (character_representation)
 		end
 
 feature -- Search
 
 	pattern_matches: BOOLEAN
-			-- does `text' exactly match `pattern' ?
+			-- Does `text' exactly match `pattern'?
 		local
-			lsi: STRING;
+			lsi: STRING_32
 			as_star: BOOLEAN
 			offset: INTEGER
 			ls: like string_list
 			txt: like text
-			c: CHARACTER
+			c: CHARACTER_32
 		do
 			if
 				search_for_pattern and then
@@ -129,9 +128,9 @@ feature -- Search
 					ls.before or as_star or not Result
 				loop
 					lsi := ls.item
-					check 
+					check
 							-- Implied by invariant
-						lsi_not_empty: not lsi.is_empty 
+						lsi_not_empty: not lsi.is_empty
 					end
 					c := lsi @ 1
 					if c = string_representation then
@@ -152,14 +151,14 @@ feature -- Search
 
 	search_for_pattern: BOOLEAN
 			-- Search in the text to find the very next
-			-- occurrence of `pattern'
+			-- occurrence of `pattern'.
 		local
 			ls: like string_list
-			lsi: STRING;
-			fa, i, tc, pc, tcmpc, i_before_loop: INTEGER;
-			sr, cr: STRING;
+			lsi: STRING_32
+			fa, i, tc, pc, tcmpc, i_before_loop: INTEGER
+			sr, cr: STRING_32
 			kmp_matcher: KMP_MATCHER
-			str_without_wild: STRING
+			str_without_wild: STRING_32
 			is_star: BOOLEAN
 			old_pattern: like pattern
 			old_text: like text
@@ -171,19 +170,19 @@ feature -- Search
 				text := text.as_lower
 			end
 			init_list
-			create sr.make (1);
-			sr.extend (string_representation);
-			create cr.make (1);
-			cr.extend (character_representation);
-			tc := text.count;
-			pc := pattern.count;
-			tcmpc := tc - pc;
+			create sr.make (1)
+			sr.extend (string_representation)
+			create cr.make (1)
+			cr.extend (character_representation)
+			tc := text.count
+			pc := pattern.count
+			tcmpc := tc - pc
 			if tcmpc = -1 and then pattern.item (pc) = string_representation then
 				Result := imp_same_substring (pattern, 1, tc, text)
 				if Result then
 					fa := 1
 				end
-			end;
+			end
 
 			create kmp_matcher.make (pattern, text)
 
@@ -223,7 +222,7 @@ feature -- Search
 							if i > tc then
 								Result := False
 							else
-								kmp_matcher.set_pattern (lsi);
+								kmp_matcher.set_pattern (lsi)
 								kmp_matcher.start_at (i)
 								Result := kmp_matcher.search_for_pattern and then
 									(not is_star implies kmp_matcher.found_at = i)
@@ -237,7 +236,6 @@ feature -- Search
 							is_star := False
 							ls.forth
 						end
-						--Result := Result and then (not ls.after or else (is_star or i > tc))
 						Result := Result and then ((i <= tc + 1) or else ls.after)
 					end
 				end
@@ -257,15 +255,15 @@ feature -- Search
 
 	find_matching_indices
 			-- All indices in `text' which matches the
-			-- very next occurrence of `pattern'
+			-- very next occurrence of `pattern'.
 		local
 			ls: like string_list
-			lsi: STRING;
-			fa, i, tc, pc, tcmpc: INTEGER;
-			sr, cr: STRING;
+			lsi: STRING_32
+			fa, i, tc, pc, tcmpc: INTEGER
+			sr, cr: STRING_32
 			found_one: BOOLEAN
 			kmp_matcher: KMP_MATCHER
-			str_without_wild: STRING
+			str_without_wild: STRING_32
 			is_star: BOOLEAN
 			offset, next_i: INTEGER
 			old_pattern: like pattern
@@ -285,11 +283,11 @@ feature -- Search
 
 			create {ARRAYED_LIST [INTEGER]} l_lengths.make (10)
 			lengths := l_lengths
-			create sr.make (1);
-			sr.extend (string_representation);
-			create cr.make (1);
-			cr.extend (character_representation);
-			tc := text.count;
+			create sr.make (1)
+			sr.extend (string_representation)
+			create cr.make (1)
+			cr.extend (character_representation)
+			tc := text.count
 			pc := pattern.count
 			tcmpc := tc - pc
 			create kmp_matcher.make (pattern, text)
@@ -355,7 +353,6 @@ feature -- Search
 								is_star := False
 								ls.forth
 							end
-							--found_one := found_one and then (not ls.after or else (is_star or i > tc))
 							found_one := found_one and then (i <= tc + 1 or else ls.after)
 						end
 						if found_one then
@@ -381,57 +378,57 @@ feature {NONE} -- Implementation
 
 	init_list
 			-- Initializes the list for the wild carded
-			-- pattern
+			-- pattern.
 		local
 			ls: like string_list
-			str: STRING;
-			i, pc: INTEGER;
-			pa: SPECIAL [CHARACTER];
-			sr, cr: STRING
-			c: CHARACTER
+			str: STRING_32
+			i, pc: INTEGER
+			pa: SPECIAL [CHARACTER_32]
+			sr, cr: STRING_32
+			c: CHARACTER_32
 		do
 			from
-				create ls.make;
+				create ls.make
 				string_list := ls
-				create str.make (0);
-				create sr.make (1);
-				sr.extend (string_representation);
-				create cr.make (1);
-				cr.extend (character_representation);
-				pa := pattern.area;
-				pc := pattern.count;
-				i := 0;
+				create str.make (0)
+				create sr.make (1)
+				sr.extend (string_representation)
+				create cr.make (1)
+				cr.extend (character_representation)
+				pa := pattern.area
+				pc := pattern.count
+				i := 0
 			until
 				i = pc
 			loop
-				c := pa.item (i) 
+				c := pa.item (i)
 				if c = string_representation then
 					if str.count > 0 then
-						ls.extend (str);
+						ls.extend (str)
 					end
-					ls.extend (sr);
-					create str.make (0);
+					ls.extend (sr)
+					create str.make (0)
 				elseif c = character_representation then
 					if str.count > 0 then
-						ls.extend (str);
+						ls.extend (str)
 					end
-					ls.extend (cr);
-					create str.make (0);
+					ls.extend (cr)
+					create str.make (0)
 				else
-					str.extend (pa.item (i));
+					str.extend (pa.item (i))
 				end
 				i := i + 1
 			end;
 			if str.count > 0 then
 				ls.extend (str)
 			end
-		end;
+		end
 
 	last_string_matches: BOOLEAN
 		local
 			i: INTEGER
 			ls: like string_list
-			lsi: STRING
+			lsi: STRING_32
 			txt: like text
 			txt_count: INTEGER
 		do
@@ -463,17 +460,17 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Attributes
 
-	string_list: LINKED_LIST [STRING]
-			-- List of strings
+	string_list: LINKED_LIST [STRING_32]
+			-- List of strings.
 			--| Parts not containing `string_representation' and
 			--| `character_representation' are held as items
 
 feature {NONE} -- Implementation
 
-	imp_same_substring (a_text: STRING; a_text_start, a_text_end: INTEGER; a_string: STRING): BOOLEAN
-			-- Optimized code for `a_text.substring (a_text_start, a_text_end).is_equal (a_string)' ?
+	imp_same_substring (a_text: STRING_32; a_text_start, a_text_end: INTEGER; a_string: STRING_32): BOOLEAN
+			-- Optimized code for `a_text.substring (a_text_start, a_text_end).is_equal (a_string)'?
 		require
-			a_text_not_empty: a_text /= Void 
+			a_text_not_empty: a_text /= Void
 			a_string_attached: a_string /= Void
 		local
 			i, j, m, n: INTEGER
@@ -481,7 +478,7 @@ feature {NONE} -- Implementation
 			m := a_text.count
 			n := a_string.count
 			if m >= n then
-				if 
+				if
 					1 <= a_text_start and
 					a_text_start <= a_text_end and
 					a_text_end <= m
@@ -508,12 +505,12 @@ feature {NONE} -- Implementation
 invariant
 
 	attached_string_list: string_list /= Void
-	string_list_contains_non_empty_item: string_list.for_all (agent (s: STRING): BOOLEAN do Result := s /= Void and then not s.is_empty end)
+	string_list_contains_non_empty_item: string_list.for_all (agent (s: STRING_32): BOOLEAN do Result := s /= Void and then not s.is_empty end)
 	different_character_and_string_representation: string_representation /= character_representation
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -536,12 +533,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class KMP_WILD
-
+end

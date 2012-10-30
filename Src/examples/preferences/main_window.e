@@ -62,7 +62,10 @@ feature -- Preference Testing
 			ar := l_factory.new_array_preference_value (l_manager, "examples.my_list_preference", <<"1","2","3">>)
 			ar := l_factory.new_array_preference_value (l_manager, "examples.my_list_preference_as_choice", <<"1","2","3">>)
 			ar.set_is_choice (True)
-			ar.set_selected_index (2)
+			if ar.selected_index = 0 then
+				ar.set_selected_index (2)
+			end
+
 			fr := l_factory.new_font_preference_value (l_manager, "examples.my_font_preference", df)
 			sr := l_factory.new_string_preference_value (l_manager, "examples.my_string_preference", "a string")
 			sr := l_factory.new_string_preference_value (l_manager, "examples.driver_location", (create {DIRECTORY_NAME}.make_from_string ("C:\My Directory Location")).string)
@@ -70,7 +73,9 @@ feature -- Preference Testing
 			ar32 := l_factory.new_array_32_preference_value (l_manager, "examples.my_unicode_list_preference", <<{STRING_32} "你", {STRING_32} "好", {STRING_32} "吗">>)
 			ar32 := l_factory.new_array_32_preference_value (l_manager, "examples.my_unicode_list_preference_as_choice", <<{STRING_32} "你", {STRING_32} "好", {STRING_32} "吗">>)
 			ar32.set_is_choice (True)
-			ar32.set_selected_index (2)
+			if ar32.selected_index = 0 then
+				ar32.set_selected_index (2)
+			end
 
 			sr32 := l_factory.new_string_32_preference_value (l_manager, "examples.my_unicode_preference", {STRING_32} "a unicode string 你好吗")
 

@@ -26,7 +26,7 @@ feature -- Initialization
 			l_reader_writer: SED_MEDIUM_READER_WRITER
 		do
 			create a.make
-			create l_file.make ("output.data")
+			create l_file.make_with_name ("output.data")
 			create l_reader_writer.make (l_file)
 
 				-- Session store
@@ -85,7 +85,7 @@ feature -- Initialization
 			l_any: ANY
 			l_file: RAW_FILE
 		do
-			create l_file.make ("output.data")
+			create l_file.make_with_name ("output.data")
 			create a.make
 
 				-- Basic store

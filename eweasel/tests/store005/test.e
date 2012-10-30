@@ -16,7 +16,7 @@ feature
 			l_file: RAW_FILE
 		do
 			tuple_int := [32]
-			create l_file.make ("test.store")
+			create l_file.make_with_name ("test.store")
 			l_file.open_write
 			l_file.independent_store (Current)
 			l_file.close

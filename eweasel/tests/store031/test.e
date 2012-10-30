@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			l_is_storing: BOOLEAN
 		do
 			create a.make
-			create l_file.make ("output.data")
+			create l_file.make_with_name ("output.data")
 			create l_reader_writer.make (l_file)
 
 			if argument_count >= 1 and then argument (1).is_integer then
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			create a.make
 
 				-- Independent store
-			l_file.make ("output.data.sed.independent")
+			l_file.make_with_name ("output.data.sed.independent")
 			if l_is_storing then
 				l_file.open_write
 				l_reader_writer.set_for_writing
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			create a.make
 
 				-- Independent store
-			create l_file.make ("output.data.independent")
+			create l_file.make_with_name ("output.data.independent")
 			if l_is_storing then
 				l_file.open_write
 				l_file.independent_store (a)

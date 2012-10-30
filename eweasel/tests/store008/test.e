@@ -13,7 +13,7 @@ feature -- Initialization
 			l_obj: like Current
 		do
 			$CREATE
-			create l_file.make ("titi")
+			create l_file.make_with_name ("titi")
 			if l_file.exists then
 				l_file.open_read
 				l_obj ?= l_file.retrieved

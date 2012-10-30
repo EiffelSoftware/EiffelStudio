@@ -205,10 +205,10 @@ feature -- Directory operations
 			-- List of file names in directory with name `n'.
 			-- Or void if directory is not readable (does not exist, cannot be accessed, etc.).
 		local
-			d: detachable DIRECTORY_32
+			d: detachable DIRECTORY
 			l: ARRAYED_LIST [STRING_32]
 			is_retried: BOOLEAN
-			f: RAW_FILE_32
+			f: RAW_FILE
 			fn: FILE_NAME_32
 		do
 			if not is_retried then
@@ -216,12 +216,12 @@ feature -- Directory operations
 				if d.exists and then d.is_readable then
 					d.open_read
 					from
-						create f.make ({STRING_32} ".")
+						create f.make_with_name ({STRING_32} ".")
 						create fn.make_from_string ({STRING_32} ".")
 						create l.make (0)
 						d.readentry
 					until
-						not attached d.lastentry as e
+						not attached d.last_entry_32 as e
 					loop
 						fn.reset (n)
 						fn.set_file_name (e)
@@ -246,10 +246,10 @@ feature -- Directory operations
 			-- List of directory names (excluding current and parent directory) in directory with name `n'.
 			-- Or void if directory is not readable (does not exist, cannot be accessed, etc.).
 		local
-			d: detachable DIRECTORY_32
+			d: detachable DIRECTORY
 			l: ARRAYED_LIST [STRING_32]
 			is_retried: BOOLEAN
-			f: DIRECTORY_32
+			f: DIRECTORY
 			fn: DIRECTORY_NAME_32
 		do
 			if not is_retried then
@@ -316,11 +316,7 @@ feature -- File operations
 	make_raw_file (n: READABLE_STRING_GENERAL): RAW_FILE
 			-- New {RAW_FILE} for file name `n'.
 		do
-			if attached {READABLE_STRING_32} n as s then
-				create {RAW_FILE_32} Result.make (s)
-			else
-				create Result.make_with_name (n)
-			end
+			create Result.make_with_name (n)
 		end
 
 	make_raw_file_in (name: READABLE_STRING_GENERAL; location: READABLE_STRING_GENERAL): RAW_FILE
@@ -332,11 +328,7 @@ feature -- File operations
 	make_text_file (n: READABLE_STRING_GENERAL): PLAIN_TEXT_FILE
 			-- New {PLAIN_TEXT_FILE} for file name `n'.
 		do
-			if attached {READABLE_STRING_32} n as s then
-				create {PLAIN_TEXT_FILE_32} Result.make (s)
-			else
-				create Result.make_with_name (n)
-			end
+			create Result.make_with_name (n)
 		end
 
 	make_text_file_in (name: READABLE_STRING_GENERAL; location: READABLE_STRING_GENERAL): PLAIN_TEXT_FILE

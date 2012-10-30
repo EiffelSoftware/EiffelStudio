@@ -3846,9 +3846,9 @@ feature -- Server Access
 	file_is_readable: BOOLEAN
 			-- Is file with `file_name' readable?
 		local
-			f: PLAIN_TEXT_FILE_32
+			f: PLAIN_TEXT_FILE
 		do
-			create f.make (file_name)
+			create f.make_with_name (file_name)
 			Result := f.exists and f.is_readable
 		end
 

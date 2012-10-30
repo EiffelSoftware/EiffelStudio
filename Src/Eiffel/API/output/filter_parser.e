@@ -34,7 +34,7 @@ feature {NONE} -- Formats
 			escape_char: CHARACTER_32;
 			escape: STRING_32
 		do
-			create filter_file.make (filename);
+			create filter_file.make_with_name (filename);
 			if filter_file.exists and then filter_file.is_readable then
 				filter_file.open_read;
 				if filter_file.readable then
@@ -303,7 +303,7 @@ invariant
 	escape_characters_capacity_valid: escape_characters.capacity > {CHARACTER}.max_value
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -702,7 +702,7 @@ feature {NONE} -- Implementation
 			conv_class: EB_CLASSES_TREE_CLASS_ITEM
 			conv_cluster: EB_CLASSES_TREE_FOLDER_ITEM
 			titem: EV_TREE_NODE
-			testfile: RAW_FILE_32
+			testfile: RAW_FILE
 		do
 			titem := selected_item
 			if
@@ -712,7 +712,7 @@ feature {NONE} -- Implementation
 			then
 				conv_class ?= titem
 				if conv_class /= Void then
-					create testfile.make (conv_class.data.file_name)
+					create testfile.make_with_name (conv_class.data.file_name)
 					if testfile.exists and then testfile.is_readable then
 						window.set_stone (conv_class.stone)
 					else

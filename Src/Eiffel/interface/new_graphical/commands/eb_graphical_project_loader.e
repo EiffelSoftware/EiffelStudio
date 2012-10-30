@@ -462,13 +462,13 @@ feature {NONE} -- User interaction
 			a_dlg_not_void: a_dlg /= Void
 			a_action_not_void: a_action /= Void
 		local
-			file_name: STRING
+			file_name: STRING_32
 			file: RAW_FILE
 		do
 				-- This is a callback from the name chooser when user click OK.
 			file_name := a_dlg.file_name
 			check file_name_not_empty: not file_name.is_empty end
-			create file.make (file_name)
+			create file.make_with_name (file_name)
 			if file.exists then
 				prompts.show_warning_prompt_with_cancel (Warning_messages.w_file_exists (file_name), parent_window, agent a_action.call ([file_name]), agent a_dlg.show_modal_to_window (parent_window))
 			else

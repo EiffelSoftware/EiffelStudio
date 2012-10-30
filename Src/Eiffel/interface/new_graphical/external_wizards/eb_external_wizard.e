@@ -42,11 +42,11 @@ feature -- Execution
 			-- Execute the wizard
 		local
 			temp_filename: FILE_NAME_32
-			temp_file: PLAIN_TEXT_FILE_32
+			temp_file: PLAIN_TEXT_FILE
 			wizard_launched: BOOLEAN
 		do
 			create temp_filename.make_temporary_name
-			create temp_file.make (temp_filename)
+			create temp_file.make_with_name (temp_filename)
 			temp_file.open_write
 			temp_file.put_string ("Success=%"<SUCCESS>%"%N")
 			if Additional_parameters /= Void then
@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 			-- Launch the wizard using the file `callback_filename' as callback.
 		local
 			wizard_exec_filename: FILE_NAME_32
-			wizard_exec_file: RAW_FILE_32
+			wizard_exec_file: RAW_FILE
 			wizard_command: STRING_32
 			f: PROCESS_FACTORY
 			p: PROCESS
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 				wizard_exec_filename.add_extension (eiffel_layout.Executable_suffix)
 			end
 
-			create wizard_exec_file.make (wizard_exec_filename)
+			create wizard_exec_file.make_with_name (wizard_exec_filename.to_string_32)
 			if not (wizard_exec_file.exists and then wizard_exec_file.is_executable) then
 				set_error_message (Warning_messages.w_Unable_to_execute_wizard (wizard_exec_filename))
 				(create {EXCEPTIONS}).raise (Interface_names.Workbench_name+" Exception")
@@ -117,12 +117,12 @@ feature {NONE} -- Implementation
 		local
 			retry_count: INTEGER
 			finished: BOOLEAN
-			callback_file: PLAIN_TEXT_FILE_32
+			callback_file: PLAIN_TEXT_FILE
 			analysed_line: TUPLE[name: STRING_32; value: STRING_32]
 			u: UTF_CONVERTER
 		do
 			from
-				create callback_file.make (callback_filename)
+				create callback_file.make_with_name (callback_filename)
 			until
 				finished
 			loop
@@ -228,22 +228,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_EXTERNAL_WIZARD

@@ -65,7 +65,7 @@ feature {NONE} -- Action handlers
 			Result := Precursor
 			l_file_path := file_path
 			if Result then
-				create l_file.make (l_file_path)
+				create l_file.make_with_name (l_file_path)
 				Result := not l_file.exists
 				if not Result then
 					if l_file.is_access_writable then
@@ -94,7 +94,7 @@ feature {NONE} -- Internationalization
 	q_file_already_exists: STRING = "The selected file '$1' already exists.%NDo you want to contiue and overwrite this file?"
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 
 	filename: detachable FILE_NAME_32
 
-	file: detachable PLAIN_TEXT_FILE_32
+	file: detachable PLAIN_TEXT_FILE
 
 	output_to_postscript
 			-- Output standard projection to postscript.
@@ -137,7 +137,7 @@ feature -- Basic operations
 				output_to_postscript
 				l_filename := filename
 				check l_filename /= Void end
-				create l_file.make (l_filename)
+				create l_file.make_with_name (l_filename)
 				l_file.open_write
 				file := l_file
 				l_postscript_result := postscript_result

@@ -290,7 +290,7 @@ feature {NONE} -- Actions
 	browse_dialog: EV_FILE_OPEN_DIALOG
 			-- Dialog to browse to a library
 		local
-			l_dir: DIRECTORY_32
+			l_dir: DIRECTORY
 		once
 			create Result
 			create l_dir.make (target.system.directory)

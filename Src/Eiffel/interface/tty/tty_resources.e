@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			-- for file general and for platform specific files).
 		local
 			resource_parser: RESOURCE_PARSER
-			test_file: RAW_FILE_32
+			test_file: RAW_FILE
 			retried: BOOLEAN
 			error_msg: STRING_32
 		once

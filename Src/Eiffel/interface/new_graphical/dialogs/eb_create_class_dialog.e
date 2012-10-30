@@ -339,7 +339,7 @@ feature {NONE} -- Basic operations
 			show_modal_to_window (target.window)
 		end
 
-	render_class_template (a_dest_file_name: attached STRING)
+	render_class_template (a_dest_file_name: STRING_32)
 			-- Renders a class name into a choose destination file
 			--
 			-- `a_dest_file_name': The destination file to render the default class template file into.
@@ -453,7 +453,7 @@ feature {NONE} -- Basic operations
 						if not deferred_check.is_selected and then creation_check.is_selected and then not l_creation_routine.is_empty then
 							l_buffer.append ({EIFFEL_KEYWORD_CONSTANTS}.create_keyword)
 							l_buffer.append ("%N%T")
-							if expanded_check.is_selected and then not ("default_create").is_case_insensitive_equal (l_creation_routine) then
+							if expanded_check.is_selected and then not l_creation_routine.is_case_insensitive_equal_general ("default_create") then
 									-- Is expanded and the creation routine is not default_creation, so add it.
 								l_buffer.append ("default_create,%N%T")
 							end
@@ -467,7 +467,7 @@ feature {NONE} -- Basic operations
 						if
 							not deferred_check.is_selected and then creation_check.is_selected and then
 							not l_creation_routine.is_empty and then
-							not ("default_create").is_case_insensitive_equal (l_creation_routine)
+							not l_creation_routine.is_case_insensitive_equal_general ("default_create")
 						then
 								-- No need to add default_create for expanded classes.
 							l_buffer.append ({EIFFEL_KEYWORD_CONSTANTS}.feature_keyword)
@@ -542,10 +542,10 @@ feature {NONE} -- Implementation
 			class_name_not_void: class_name /= Void
 		end
 
-	file_name: FILE_NAME
+	file_name: FILE_NAME_32
 			-- File name of the class chosen by the user.
 		local
-			str: STRING
+			str: STRING_32
 			dotpos: INTEGER
 		do
 			str := file_entry.text
@@ -589,9 +589,9 @@ feature {NONE} -- Implementation
 	create_new_class
 			-- Create a new class
 		local
-			f_name: attached FILE_NAME
+			f_name: FILE_NAME_32
 			file: RAW_FILE -- Windows specific
-			base_name: STRING
+			base_name: STRING_32
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -610,7 +610,7 @@ feature {NONE} -- Implementation
 					create f_name.make_from_string (cluster.location.build_path (path, ""))
 					f_name.set_file_name (file_name)
 					base_name := file_name
-					create file.make (f_name)
+					create file.make_with_name (f_name)
 					if file.exists then
 						prompts.show_error_prompt (Warning_messages.w_class_already_in_cluster (base_name), target.window, Void)
 						class_entry.set_focus

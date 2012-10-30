@@ -28,7 +28,7 @@ feature -- Access
 			-- Library path computed under current conditions.
 		local
 			extension: STRING_32
-			file: RAW_FILE_32
+			file: RAW_FILE
 		do
 			Result := path
 				-- Check if "-safe" may need to be added.
@@ -36,7 +36,7 @@ feature -- Access
 				extension := path.substring (path.count - 3, path.count)
 					-- Apply translation only for "*.ecf" files.
 				if extension.is_case_insensitive_equal (".ecf") then
-					create file.make (path)
+					create file.make_with_name (path)
 						-- Check if the original file really exists.
 					if file.exists and then file.is_readable then
 						Result := path.substring (1, path.count - 4)

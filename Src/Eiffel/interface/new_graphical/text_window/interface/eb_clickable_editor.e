@@ -648,13 +648,13 @@ feature -- Update
 			-- Update the editor as the text has been saved.
 		local
 			fn: STRING_32
-			backup_file: RAW_FILE_32
-			file: RAW_FILE_32
+			backup_file: RAW_FILE
+			file: RAW_FILE
 		do
 			text_displayed.set_changed (False, True)
 			if open_backup then
 				fn := file_name.twin
-				create backup_file.make (file_name)
+				create backup_file.make_with_name (file_name)
 				if backup_file.exists then
 					backup_file.delete
 				end
@@ -663,7 +663,7 @@ feature -- Update
 				open_backup := False
 			end
 			if file_name /= Void then
-				create file.make (file_name)
+				create file.make_with_name (file_name)
 				if file.exists then
 					date_of_file_when_loaded := file.date
 					size_of_file_when_loaded := file_size
@@ -816,7 +816,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

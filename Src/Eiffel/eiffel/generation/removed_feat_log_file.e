@@ -4,10 +4,10 @@ note
 class REMOVED_FEAT_LOG_FILE
 
 inherit
-	PLAIN_TEXT_FILE_32
+	PLAIN_TEXT_FILE
 
 create
-	make
+	make_with_name
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Element change
 

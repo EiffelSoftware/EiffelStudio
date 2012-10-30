@@ -32,7 +32,7 @@ feature {NONE} -- Access
 			l_cache: like help_text_cache
 			l_file_name: STRING;
 			l_file_path: PATH
-			l_file: PLAIN_TEXT_FILE_32
+			l_file: PLAIN_TEXT_FILE
 			l_line: STRING
 			l_result: detachable ARRAYED_LIST [STRING]
 		do

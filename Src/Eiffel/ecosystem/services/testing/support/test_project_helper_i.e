@@ -93,7 +93,7 @@ feature -- Element change
 			usable: is_interface_usable
 			a_file_name_not_empty: not a_file_name.is_empty
 			a_class_name_not_empty: not a_class_name.is_empty
-			a_path_valid: (create {RAW_FILE}.make (a_cluster.location.build_path (a_path, a_file_name))).exists
+			a_path_valid: (create {RAW_FILE}.make_with_name (a_cluster.location.build_path (a_path, a_file_name))).exists
 		deferred
 		ensure
 			succeeded_xor_error: is_class_added xor has_error
@@ -150,7 +150,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

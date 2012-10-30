@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 		require
 			a_directory_not_void: a_directory /= Void
 		local
-			d: DIRECTORY_32
+			d: DIRECTORY
 			vd42: VD42
 		do
 			if is_valid then

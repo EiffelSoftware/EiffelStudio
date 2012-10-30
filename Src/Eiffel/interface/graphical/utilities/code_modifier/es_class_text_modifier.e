@@ -436,7 +436,7 @@ feature -- Basic operations
 
 			if not l_set_in_editor or not l_was_modified then
 					-- Save only if the text wasn't set in the editor or the editor was not modified before applying the modifications.
-				if (create {RAW_FILE_32}.make (context_class.file_name)).exists and then original_file_date /= context_class.file_date then
+				if (create {RAW_FILE}.make_with_name (context_class.file_name)).exists and then original_file_date /= context_class.file_date then
 						-- Need to use merge
 					l_new_text := context_class.text_32.as_attached
 					l_new_text.prune_all ('%R')
@@ -745,7 +745,7 @@ invariant
 	modified_data_attached: attached modified_data
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

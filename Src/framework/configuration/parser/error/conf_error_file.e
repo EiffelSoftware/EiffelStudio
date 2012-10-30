@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file: STRING)
+	make (a_file: like file)
 			-- Create.
 		require
 			a_file_not_void: a_file /= Void

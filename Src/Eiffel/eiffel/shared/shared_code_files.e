@@ -28,7 +28,7 @@ feature -- Action
 	force_c_compilation_in_sub_dir (final_mode: BOOLEAN; sub_dir: detachable STRING)
 			-- Delete file `finished'.
 		local
-			finished_file: PLAIN_TEXT_FILE_32
+			finished_file: PLAIN_TEXT_FILE
 			finished_file_name: FILE_NAME_32
 			dir_name: DIRECTORY_NAME_32
 		do
@@ -37,7 +37,7 @@ feature -- Action
 
 			create finished_file_name.make_from_string (dir_name)
 			finished_file_name.set_file_name (Finished_file_for_make)
-			create finished_file.make (finished_file_name)
+			create finished_file.make_with_name (finished_file_name)
 			if finished_file.exists and then finished_file.is_writable then
 				finished_file.delete
 			end
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 	validated_dir_name (final_mode: BOOLEAN; sub_dir: detachable STRING): DIRECTORY_NAME_32
 			-- Validated dir, create it if not exist.
 		local
-			dir: DIRECTORY_32
+			dir: DIRECTORY
 		do
 			if final_mode then
 				create Result.make_from_string (project_location.final_path)

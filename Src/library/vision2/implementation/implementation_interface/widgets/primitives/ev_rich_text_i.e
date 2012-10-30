@@ -364,7 +364,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			l_text: like text
 			current_format: EV_CHARACTER_FORMAT_I
 			buffer: EV_RICH_TEXT_BUFFERING_STRUCTURES_I
-			text_file: PLAIN_TEXT_FILE_32
+			text_file: PLAIN_TEXT_FILE
 			paragraph_indexes: detachable ARRAYED_LIST [INTEGER]
 			paragraph_formats: detachable ARRAYED_LIST [STRING_32]
 			paragraphs_exhausted: BOOLEAN
@@ -457,7 +457,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			end
 			buffer.generate_complete_rtf_from_buffering
 			complete_saving
-			create text_file.make (a_filename.as_string_32)
+			create text_file.make_with_name (a_filename)
 			text_file.open_write
 			text_file.put_string (buffer.internal_text.as_string_8)
 			text_file.close
@@ -473,12 +473,12 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 		require
 			filename_not_void: a_filename /= Void
 		local
-			text_file: RAW_FILE_32
+			text_file: RAW_FILE
 			l_text: detachable STRING
 			buffer: EV_RICH_TEXT_BUFFERING_STRUCTURES_I
 		do
 			initialize_for_loading
-			create text_file.make (a_filename.as_string_32)
+			create text_file.make_with_name (a_filename)
 			text_file.open_read
 			text_file.read_stream (text_file.count)
 			l_text := text_file.last_string

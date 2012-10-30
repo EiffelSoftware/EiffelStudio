@@ -106,8 +106,8 @@ feature -- Basic operations
 			is_path_set: is_path_set
 		local
 			i:INTEGER
-			l_directory: DIRECTORY_32
-			l_file: RAW_FILE_32
+			l_directory: DIRECTORY
+			l_file: RAW_FILE
 		do
 			create item_matched_internal.make (0)
 			create l_directory.make (path)
@@ -122,7 +122,7 @@ feature -- Basic operations
 					i > l_directory.count
 				loop
 					if not(l_directory.lastentry.is_equal (".") or l_directory.lastentry.is_equal("..")) then
-						create l_file.make (string_formatter.extend_file_path (path, l_directory.lastentry).to_string_32)
+						create l_file.make_with_name (string_formatter.extend_file_path (path, l_directory.lastentry).to_string_32)
 						if l_file.exists then
 							if l_file.is_directory and then is_subdirectory_searched then
 								create directory_strategy.make (keyword, surrounding_text_range_internal, string_formatter.extend_file_path (path, l_directory.lastentry))
@@ -198,22 +198,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

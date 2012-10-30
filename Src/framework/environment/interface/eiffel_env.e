@@ -457,7 +457,7 @@ feature -- Query
 					l_extension := l_file_name.substring (l_install.count + 1, l_file_name.count)
 					l_extension.prune_all_leading (operating_environment.directory_separator)
 					create Result.make_nested (user_files_path, l_extension)
-					create l_actual_file.make (Result.string_representation)
+					create l_actual_file.make_with_name (Result.string_representation)
 					if a_must_exist and then (not l_actual_file.exists or else (l_actual_file.is_device or l_actual_file.is_directory)) then
 							-- The file does not exist or is not actually a file.
 						Result := Void

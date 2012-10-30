@@ -304,7 +304,7 @@ feature -- Update
 					end
 					command_line_io.get_last_input
 					if not command_line_io.last_input.is_empty then
-						create file_w.make (command_line_io.last_input)
+						create file_w.make_with_name (command_line_io.last_input)
 						if file_w.exists then
 							localized_print (ewb_names.file_already_exists)
 						else
@@ -426,7 +426,7 @@ feature -- Update
 
 							-- Since {EWB_STRING} are also commands, we execute them before displaying the menu.
 						main_menu_option.loop_action
-						
+
 						menu_command_list := main_menu_option.sub_menu
 						display_commands
 					else
@@ -499,7 +499,7 @@ feature -- Command loop
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

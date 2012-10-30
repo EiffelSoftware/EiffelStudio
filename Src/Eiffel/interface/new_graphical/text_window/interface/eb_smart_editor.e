@@ -1216,7 +1216,7 @@ feature {NONE} -- Implementation
 			syn_error: SYNTAX_ERROR
 			txt: STRING_32
 			retried: BOOLEAN
-			fl: RAW_FILE_32
+			fl: RAW_FILE
 		do
 			if text_is_fully_loaded then
 				if retried then
@@ -1226,7 +1226,7 @@ feature {NONE} -- Implementation
 					syn_error := text_displayed.last_syntax_error
 					text_displayed.clear_syntax_error
 					if file_name /= Void and syn_error /= Void then
-						create fl.make (file_name)
+						create fl.make_with_name (file_name)
 						fl.open_read
 						fl.read_stream (fl.count)
 						fl.close

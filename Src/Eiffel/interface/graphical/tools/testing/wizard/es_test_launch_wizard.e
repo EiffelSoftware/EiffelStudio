@@ -300,7 +300,7 @@ feature {NONE} -- Implementation
 	create_eifgens_cluster (a_project: E_PROJECT)
 			-- Create internal EIFGENs Cluster directory.
 		local
-			l_dir: DIRECTORY_32
+			l_dir: DIRECTORY
 			l_retried: BOOLEAN
 		do
 			if not l_retried then

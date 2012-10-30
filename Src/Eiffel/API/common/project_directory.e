@@ -383,7 +383,7 @@ feature -- Access
 	is_path_readable: BOOLEAN
 			-- Is `path' readable?
 		local
-			l_dir: DIRECTORY_32
+			l_dir: DIRECTORY
 		do
 			create l_dir.make (path)
 			Result := l_dir.exists and then l_dir.is_readable
@@ -392,7 +392,7 @@ feature -- Access
 	is_path_writable: BOOLEAN
 			-- Is `path' writable?
 		local
-			l_dir: DIRECTORY_32
+			l_dir: DIRECTORY
 		do
 			create l_dir.make (path)
 			Result := l_dir.exists and then l_dir.is_writable
@@ -401,7 +401,7 @@ feature -- Access
 	path_exists: BOOLEAN
 			-- Does `path' exist?
 		local
-			l_dir: DIRECTORY_32
+			l_dir: DIRECTORY
 		do
 			create l_dir.make (path)
 			Result := l_dir.exists
@@ -410,7 +410,7 @@ feature -- Access
 	is_project_readable: BOOLEAN
 			-- May the project be used for browsing and debugging?
 		local
-			w_code_dir, f_code_dir, comp_dir: DIRECTORY_32
+			w_code_dir, f_code_dir, comp_dir: DIRECTORY
 		do
 			create w_code_dir.make (workbench_path)
 			create f_code_dir.make (final_path)
@@ -423,7 +423,7 @@ feature -- Access
 	is_project_writable: BOOLEAN
 			-- May the project be both compiled and used for browsing?
 		local
-			w_code_dir, f_code_dir, comp_dir: DIRECTORY_32
+			w_code_dir, f_code_dir, comp_dir: DIRECTORY
 		do
 			create w_code_dir.make (workbench_path)
 			create f_code_dir.make (final_path)
@@ -436,9 +436,9 @@ feature -- Access
 	is_lock_file_present: BOOLEAN
 			-- Is `lock_file_name' present?
 		local
-			l_file: PLAIN_TEXT_FILE_32
+			l_file: PLAIN_TEXT_FILE
 		do
-			create l_file.make (lock_file_name)
+			create l_file.make_with_name (lock_file_name)
 			Result := l_file.exists
 		end
 
@@ -446,7 +446,7 @@ feature -- Access
 			-- Does the project exist?
 			--| Ie, Comp, F_code, W_code and project file exist?
 		local
-			w_code_dir, f_code_dir, comp_dir: DIRECTORY_32
+			w_code_dir, f_code_dir, comp_dir: DIRECTORY
 		do
 			create w_code_dir.make (workbench_path)
 			create f_code_dir.make (final_path)
@@ -489,11 +489,11 @@ feature -- Locking
 	delete_lock_file
 			-- Delete `lock_file_name'.
 		local
-			l_file: PLAIN_TEXT_FILE_32
+			l_file: PLAIN_TEXT_FILE
 			retried: BOOLEAN
 		do
 			if not retried and then is_lock_file_present then
-				create l_file.make (lock_file_name)
+				create l_file.make_with_name (lock_file_name)
 				l_file.delete
 			end
 		rescue
@@ -534,7 +534,7 @@ feature -- Directory creation
 		require
 			a_dir_attached: a_dir /= Void
 		local
-			d: DIRECTORY_32
+			d: DIRECTORY
 		do
 			create d.make (a_dir)
 			if not d.exists then

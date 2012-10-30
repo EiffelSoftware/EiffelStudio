@@ -99,14 +99,15 @@ feature -- Basic operations
 			text_set: text /= Void
 			options_set: context /= Void
 			valid_options: context.output_to_file implies (context.file_name /= Void and then
-						(create {RAW_FILE}.make (context.file_name)).is_creatable)
+						(create {RAW_FILE}.make_with_name (context.file_name)).is_creatable)
 		local
-			f: FILE
+			f: RAW_FILE
 			retried: BOOLEAN
 		do
 			if not retried then
 				if context.output_to_file then
-					create {RAW_FILE} f.make_create_read_write (context.file_name)
+					create f.make_with_name (context.file_name)
+					f.create_read_write
 					f.put_string (text)
 					f.close
 				else
@@ -197,7 +198,7 @@ feature {NONE} -- Implementation: graphical interface
 			text_set: text /= Void
 			window_set: window /= Void
 		local
-			fn: FILE_NAME
+			fn: FILE_NAME_32
 			f: FILE
 		do
 			context := d.print_context
@@ -206,7 +207,7 @@ feature {NONE} -- Implementation: graphical interface
 				if fn = Void then
 					prompts.show_error_prompt (Warning_messages.w_Cannot_create_file (""), window, Void)
 				else
-					create {RAW_FILE} f.make (fn)
+					create {RAW_FILE} f.make_with_name (fn)
 					if f.exists or not f.is_creatable then
 						prompts.show_error_prompt (Warning_messages.w_Cannot_create_file (fn), window, Void)
 					else
@@ -219,7 +220,7 @@ feature {NONE} -- Implementation: graphical interface
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -232,22 +233,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_PRINTER

@@ -33,7 +33,7 @@ feature -- Access
 				Result := l_icon
 			else
 				l_path := icon_file_path
-				if l_path /= Void and (create {RAW_FILE}.make (l_path)).exists then
+				if l_path /= Void and (create {RAW_FILE}.make_with_name (l_path)).exists then
 					create Result
 					Result.set_with_named_file (l_path)
 				else
@@ -56,7 +56,7 @@ feature -- Access
 				Result := l_icon
 			else
 				l_path := icon_file_path
-				if l_path /= Void and (create {RAW_FILE}.make (l_path)).exists then
+				if l_path /= Void and (create {RAW_FILE}.make_with_name (l_path)).exists then
 					create Result
 					Result.set_with_named_file (icon_file_path)
 				else
@@ -152,7 +152,7 @@ invariant
 	not_icon_file_path_is_empty: icon_file_path /= Void not icon_file_path.is_empty
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -456,10 +456,10 @@ feature{NONE} -- Implementation
 			a_file_name_attached: a_file_name /= Void
 		local
 			l_retried: BOOLEAN
-			l_file: PLAIN_TEXT_FILE_32
+			l_file: PLAIN_TEXT_FILE
 		do
 			if not l_retried then
-				create l_file.make (a_file_name)
+				create l_file.make_with_name (a_file_name)
 				l_file.open_read
 				l_file.read_stream (l_file.count)
 				Result := l_file.last_string

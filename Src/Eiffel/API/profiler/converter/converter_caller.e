@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 	check_profile_file (profile_name: STRING; comp_type: STRING)
 			-- Checks if the file exists.
 		local
-			file: PLAIN_TEXT_FILE_32
+			file: PLAIN_TEXT_FILE
 		do
 			if comp_type.is_equal ("workbench") then
 				create profile_out_file.make_from_string (project_location.workbench_path)
@@ -79,14 +79,14 @@ feature {NONE} -- Implementation
 				is_finalized_profile := True
 			end;
 			profile_out_file.set_file_name (profile_name);
-			create file.make (profile_out_file);
+			create file.make_with_name (profile_out_file);
 			exists := file.exists
 		end -- check_profile_file
 
 	check_project_directory (comp_type: STRING)
 			-- Checks wether the project directory exists.
 		local
-			file: PLAIN_TEXT_FILE_32
+			file: PLAIN_TEXT_FILE
 		do
 			if comp_type.is_equal ("workbench") then
 				create translat_file.make_from_string (project_location.workbench_path)
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 				create translat_file.make_from_string (project_location.final_path)
 			end;
 			translat_file.set_file_name (Translation_log_file_name);
-			create file.make (translat_file);
+			create file.make_with_name (translat_file);
 			exists := file.exists
 		end -- check_project_directory
 
@@ -150,7 +150,7 @@ feature {NONE} -- attributes
 			-- Object to hold the configuration values.
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

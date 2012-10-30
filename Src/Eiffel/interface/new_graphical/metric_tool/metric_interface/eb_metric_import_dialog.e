@@ -187,9 +187,9 @@ feature {NONE} -- Actions
 	on_check_metric_definition_file
 			-- Action to be performed to check the availability of selected metric definition file
 		local
-			l_file: RAW_FILE_32
+			l_file: RAW_FILE
 		do
-			create l_file.make (file_name_combo.text)
+			create l_file.make_with_name (file_name_combo.text)
 			if l_file.exists and then l_file.is_readable and then not l_file.is_directory then
 				load_btn.enable_sensitive
 			else
@@ -1115,7 +1115,7 @@ invariant
 	backup_metrics_dialog_attached: backup_metrics_dialog /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

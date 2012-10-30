@@ -99,7 +99,7 @@ feature -- Status
 			l_file: PLAIN_TEXT_FILE
 		do
 			if is_location_set then
-				create l_file.make (file_name)
+				create l_file.make_with_name (file_name)
 				Result := (l_file.exists and then l_file.is_writable) or else l_file.is_creatable
 			end
 		end
@@ -256,13 +256,13 @@ feature -- Store to disk
 			is_location_set: is_location_set
 		local
 			l_print: CONF_PRINT_VISITOR
-			l_file: PLAIN_TEXT_FILE_32
+			l_file: PLAIN_TEXT_FILE
 		do
 			store_successful := False
 			create l_print.make
 			process (l_print)
 			if not l_print.is_error then
-				create l_file.make (file_name)
+				create l_file.make_with_name (file_name)
 				if (l_file.exists and then l_file.is_writable) or else l_file.is_creatable then
 					l_file.open_write
 					l_file.put_string (l_print.text)

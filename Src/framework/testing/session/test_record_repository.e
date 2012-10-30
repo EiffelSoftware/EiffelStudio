@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			not_retrieved_records: not has_retrieved_records
 		local
 			l_path: like path
-			l_directory: DIRECTORY_32
+			l_directory: DIRECTORY
 			l_done: BOOLEAN
 			l_filename: FILE_NAME
 			l_existing: like record_storage
@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 						l_done
 					loop
 						l_directory.readentry
-						if attached l_directory.lastentry as l_entry then
+						if attached l_directory.last_entry_32 as l_entry then
 							retrieve_record (u.make_raw_file_in (l_entry, l_path))
 						else
 							l_done := True

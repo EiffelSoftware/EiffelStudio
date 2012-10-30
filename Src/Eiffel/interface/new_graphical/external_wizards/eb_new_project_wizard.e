@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 		require
 			valid_filename: a_filename /= Void and then not a_filename.is_empty
 		local
-			file: PLAIN_TEXT_FILE_32
+			file: PLAIN_TEXT_FILE
 			entry: TUPLE [name: STRING_32; value: STRING_32]
 		do
-			create file.make (a_filename)
+			create file.make_with_name (a_filename)
 			from
 				file.open_read
 			until

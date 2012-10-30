@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 	delete_class
 			-- Remove `class_i' from the system.
 		local
-			file: PLAIN_TEXT_FILE_32
+			file: PLAIN_TEXT_FILE
 			retried: BOOLEAN
 			es_class: ES_CLASS
 			es_classes: ARRAYED_LIST [ES_CLASS]
@@ -294,7 +294,7 @@ feature {NONE} -- Implementation
 					Debugger_manager.application.kill
 				end
 				Debugger_manager.disable_debug
-				create file.make (class_i.file_name)
+				create file.make_with_name (class_i.file_name)
 				if
 					file.exists and then
 					file.is_writable
@@ -464,7 +464,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

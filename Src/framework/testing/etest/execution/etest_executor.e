@@ -394,7 +394,7 @@ feature {NONE} -- Implementation
 			l_service: SERVICE_CONSUMER [SESSION_MANAGER_S]
 			l_session: SESSION_I
 			l_key: STRING
-			l_dir: DIRECTORY_32
+			l_dir: DIRECTORY
 		do
 			if not l_retried then
 				create l_service

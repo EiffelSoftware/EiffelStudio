@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 			--
 			-- Return Void if not found.
 		local
-			dir: DIRECTORY_32
+			dir: DIRECTORY
 			path: STRING_32
 			files: ARRAYED_LIST [STRING_32]
 			file: STRING_32

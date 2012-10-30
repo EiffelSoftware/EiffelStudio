@@ -125,7 +125,7 @@ end
 			-- Reports end of analization and writes information to
 			-- disk.
 		local
-			out_file_name: FILE_NAME
+			out_file_name: FILE_NAME_32
 			file: RAW_FILE
 			io_except: IO_FAILURE
 		do
@@ -143,7 +143,7 @@ end
 
 			create out_file_name.make_from_string (profilename)
 			out_file_name.add_extension (Dot_profile_information)
-			create file.make (out_file_name)
+			create file.make_with_name (out_file_name)
 			if
 				(file.exists and then file.is_writable)
 				or else file.is_creatable
@@ -675,9 +675,9 @@ feature {NONE} -- Commands
 			-- reads the `TRANSLAT' file into memory
 		local
 			retried: BOOLEAN
-			file: PLAIN_TEXT_FILE_32
-			table_file: PLAIN_TEXT_FILE_32
-			binary_file: RAW_FILE_32
+			file: PLAIN_TEXT_FILE
+			table_file: PLAIN_TEXT_FILE
+			binary_file: RAW_FILE
 			table_name: FILE_NAME_32
 		do
 			if not config.configuration_name.is_equal ("eiffel") then
@@ -689,10 +689,10 @@ feature {NONE} -- Commands
 						-- a FIX.
 						-- ***** FIXME *****
 
-				create file.make (filename)
+				create file.make_with_name (filename)
 				create table_name.make_from_string (filename)
 				table_name.add_extension (Table_extension)
-				create table_file.make (table_name)
+				create table_file.make_with_name (table_name)
 
 					-- Both files should exist. Existence of TRANSLAT
 					-- is already checked in the root class
@@ -704,7 +704,7 @@ feature {NONE} -- Commands
 						file.close
 						make_function_table (table_name)
 					else
-						create binary_file.make (table_name)
+						create binary_file.make_with_name (table_name)
 						if binary_file.exists and then binary_file.is_readable then
 							binary_file.open_read
 							functions ?= binary_file.retrieved
@@ -881,7 +881,7 @@ feature {NONE} -- Constants
 	Error_token: INTEGER = 7;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

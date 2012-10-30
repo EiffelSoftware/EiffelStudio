@@ -248,7 +248,7 @@ feature {NONE} -- Implementation functions
 				end
 
 					-- class stone was dropped
-				create class_file.make (new_class_stone.class_i.file_name)
+				create class_file.make_with_name (new_class_stone.class_i.file_name)
 				class_text_exists := class_file.exists
 				feature_stone ?= a_stone
 					--| We have to create a classi_stone to check whether the stones are really similar.
@@ -1085,7 +1085,7 @@ feature {NONE} -- Implementation attributes
 	error_line: INTEGER
 			-- Line number where has error.
 
-	class_file: RAW_FILE_32
+	class_file: RAW_FILE
 			-- File associate with a class.
 
 	class_text_exists: BOOLEAN
@@ -1164,7 +1164,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

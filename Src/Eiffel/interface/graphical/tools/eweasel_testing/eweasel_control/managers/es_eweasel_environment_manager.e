@@ -24,7 +24,7 @@ create
 
 feature -- Query
 
-	path: attached DIRECTORY_NAME
+	path: PATH
 			-- eweasel root path.
 		do
 			Result := eiffel_layout.shared_path.twin
@@ -48,7 +48,9 @@ feature -- Query
 			l_exe_name: STRING
 		do
 			l_path := path.twin
-			l_path.extend_from_array (<<"spec",ise_platform,"bin">>)
+			l_path.extend ("spec")
+			l_path.extend (ise_platform)
+			l_path.extend ("bin")
 
 			create l_platform
 			if l_platform.is_windows then
@@ -56,8 +58,9 @@ feature -- Query
 			else
 				l_exe_name := "eweasel"
 			end
+			l_path.extend (l_exe_name)
 
-			Result := l_path + Operating_environment.directory_separator.out + l_exe_name
+			Result := l_path.string_representation
 		end
 
 	target_directory: DIRECTORY_NAME_32
@@ -113,7 +116,7 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 	eweasel: attached STRING
 			-- eweasel path
 		do
-			Result := path.twin
+			Result := path.twin.string_representation
 		end
 
 	include: attached STRING
@@ -123,7 +126,7 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 		do
 			l_path := path.twin
 			l_path.extend ("control")
-			create Result.make_from_string (l_path)
+			create Result.make_from_string (l_path.string_representation)
 		end
 
 	init: attached STRING
@@ -135,7 +138,7 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 			l_path.extend ("control")
 			l_path.extend ("init")
 
-			create Result.make_from_string (l_path)
+			create Result.make_from_string (l_path.string_representation)
 		end
 
 	eweasel_platform: attached STRING
@@ -166,21 +169,15 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 	ise_eiffel: STRING_GENERAL
 			-- $ISE_EIFFEL environment variable
 		local
-			l_tmp: DIRECTORY_NAME
+			l_tmp: STRING_32
 			l_layout: EIFFEL_LAYOUT
 			l_name_helper: ES_FILE_NAME_HELPER
 		do
 			create l_layout
-			l_tmp := l_layout.eiffel_layout.Shared_path.twin
+			l_tmp := l_layout.eiffel_layout.Shared_path.string_representation
 
 			create l_name_helper
-			if attached {STRING_GENERAL} l_tmp as lt_string then
-				if attached {STRING_32} lt_string.as_string_32 as lt_string_32 then
-					Result := l_name_helper.short_name_of (lt_string_32)
-				end
-			else
-				check not_possible: False end
-			end
+			Result := l_name_helper.short_name_of (l_tmp)
 		ensure
 			not_void: Result /= Void
 		end
@@ -196,13 +193,13 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 			not_void: Result /= Void
 		end
 
-	output: attached STRING_GENERAL
+	output: STRING_32
 			-- eweasel temporary output directory
 		local
 			l_dir_name: DIRECTORY_NAME_32
 			l_final_dir_name: STRING_GENERAL
 
-			l_dir: DIRECTORY_32
+			l_dir: DIRECTORY
 			l_short_name_helper: ES_FILE_NAME_HELPER
 		do
 			l_dir_name := target_directory
@@ -218,19 +215,13 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 			end
 
 			create l_short_name_helper
-			if attached {STRING_GENERAL} l_dir_name as lt_string then
-				if attached {STRING_32} lt_string.as_string_32 as lt_string_32 then
-					l_final_dir_name := l_short_name_helper.short_name_of (lt_string_32)
-				end
-			end
-
-			create {STRING_32} Result.make_from_string (l_final_dir_name)
+			create Result.make_from_string (l_short_name_helper.short_name_of (l_dir_name))
 		ensure
-			exists: (create {RAW_FILE}.make (Result.as_string_8)).exists
+			exists: (create {RAW_FILE}.make_with_name (Result)).exists
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -254,11 +245,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

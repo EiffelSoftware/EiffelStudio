@@ -950,7 +950,7 @@ rt_public void st_write(EIF_REFERENCE object, int has_transient_attributes)
 #endif
 
 	if (flags & EO_SPEC) {
-			/* We have to send the complete specila information. */
+			/* We have to send the complete special information. */
 		uint32 l_uint32;
 		nb_char = RT_SPECIAL_COUNT(object);
 		l_uint32 = (uint32) nb_char;

@@ -577,12 +577,8 @@ feature {NONE} -- Implementation
 				debug ("to_implement")
 					(create {REFACTORING_HELPER}).to_implement ("Use FILE_UTILITIES to deal with `a_file' when available in a library.")
 				end
-				if attached {READABLE_STRING_8} a_file as f then
-					create l_file.make_create_read_write (f)
-				else
-					create {RAW_FILE_32} l_file.make (a_file.as_string_32)
-					l_file.create_read_write
-				end
+				create l_file.make_with_name (a_file)
+				l_file.create_read_write
 				create l_writer.make (l_file)
 				create l_facility
 				l_facility.store (a_config_data, l_writer)

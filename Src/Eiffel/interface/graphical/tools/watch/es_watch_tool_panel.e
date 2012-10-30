@@ -1386,7 +1386,7 @@ feature -- Grid management
 
 feature -- Expressions storage management
 
-	default_watches_storage_folder: STRING
+	default_watches_storage_folder: STRING_32
 		local
 			retried: BOOLEAN
 		do
@@ -1530,7 +1530,7 @@ feature -- Expressions storage management
 				fn := f_dlg.file_name
 				if fn /= Void and then not fn.is_empty then
 					internal_default_watches_storage_folder := f_dlg.file_path
-					create f.make (fn)
+					create f.make_with_name (fn)
 					if not f.exists or else f.is_writable then
 						f.open_write
 						f.put_string (s)
@@ -1561,7 +1561,7 @@ feature -- Expressions storage management
 			fn := f_dlg.file_name
 			if fn /= Void and then not fn.is_empty then
 				internal_default_watches_storage_folder := f_dlg.file_path
-				create f.make (fn)
+				create f.make_with_name (fn)
 				if f.exists and then f.is_readable then
 					f.open_read
 					from

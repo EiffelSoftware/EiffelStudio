@@ -354,9 +354,9 @@ feature {NONE} -- Implementation (adding relations)
 	on_class_drop (a_stone: CLASSI_FIGURE_STONE)
 			-- `a_stone' was dropped on `Current'.
 		local
-			class_file: PLAIN_TEXT_FILE_32
+			class_file: PLAIN_TEXT_FILE
 		do
-			create class_file.make (a_stone.class_i.file_name)
+			create class_file.make_with_name (a_stone.class_i.file_name)
 			if not class_file.exists then
 				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (
 					interface_names.l_class_is_not_editable.as_string_32 + warning_messages.w_file_not_exist (a_stone.class_i.file_name),

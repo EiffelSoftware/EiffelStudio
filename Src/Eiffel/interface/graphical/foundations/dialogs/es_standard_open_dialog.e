@@ -64,7 +64,7 @@ feature {NONE} -- Action handlers
 			Result := Precursor
 			l_file_path := file_path
 			if Result then
-				create l_file.make (l_file_path)
+				create l_file.make_with_name (l_file_path)
 				Result := l_file.exists
 				if not Result then
 					create l_error.make_standard (locale_formatter.formatted_translation (e_file_does_not_exist, [l_file_path]))
@@ -86,7 +86,7 @@ feature {NONE} -- Internationalization
 	e_file_does_not_exist: STRING = "The selected file '$1' does not exist."
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

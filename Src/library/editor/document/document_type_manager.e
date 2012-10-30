@@ -20,14 +20,10 @@ feature -- Element Change
 
 feature -- Query
 
-	known_document_type (a_type: STRING): BOOLEAN
+	known_document_type (a_type: READABLE_STRING_GENERAL): BOOLEAN
 	        -- Is `a_type' a known document type?
-	   	local
-	   		l_type: STRING
 	   	do
-	   		l_type := a_type.twin
-	   		l_type.to_lower
-			Result := registered_document_types.has (l_type)
+			Result := registered_document_types.has (a_type.as_lower.as_string_32)
 			if not Result then
 				debug ("editor")
 					print ("unknown document type")
@@ -35,17 +31,14 @@ feature -- Query
 			end
 	   	end
 
-	get_class_from_type (a_type: STRING): DOCUMENT_CLASS
+	get_class_from_type (a_type: READABLE_STRING_GENERAL): DOCUMENT_CLASS
 			-- Get the document class from the type
 		require
 			known_type: known_document_type (a_type)
 		local
-			l_type: STRING
 			l_result: detachable DOCUMENT_CLASS
 		do
-			l_type := a_type.twin
-			l_type.to_lower
-			l_result := registered_document_types.item (l_type)
+			l_result := registered_document_types.item (a_type.as_lower.as_string_32)
 			check l_result /= Void end -- Implied by precondition
 			Result := l_result
 		ensure
@@ -90,7 +83,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	registered_document_types: HASH_TABLE [DOCUMENT_CLASS, STRING]
+	registered_document_types: HASH_TABLE [DOCUMENT_CLASS, STRING_32]
 	        -- Hash of registered document class types and associated text scanners
 	  	once
 	  	    create Result.make (2)
@@ -104,14 +97,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

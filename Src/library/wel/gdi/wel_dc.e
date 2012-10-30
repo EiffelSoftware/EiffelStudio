@@ -1723,7 +1723,7 @@ feature -- Basic operations
 			bfh.set_off_bits (bfh.structure_size + size)
 
 			-- Create the file
-			create {RAW_FILE_32} rf.make (file.as_string_32)
+			create rf.make_with_name (file)
 			rf.create_read_write
 
 			-- Write the file header

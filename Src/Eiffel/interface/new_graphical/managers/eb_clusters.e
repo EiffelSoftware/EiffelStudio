@@ -367,12 +367,12 @@ feature -- Element change
 			valid_clusters: old_group /= Void and new_cluster /= Void
 			valid_path: new_path /= Void
 		local
-			old_file: RAW_FILE_32
-			new_file: RAW_FILE_32
+			old_file: RAW_FILE
+			new_file: RAW_FILE
 			input: STRING
 			retried: BOOLEAN
 			fname: FILE_NAME_32
-			tdirsrc, tdirdes: KL_DIRECTORY
+			tdirsrc, tdirdes: DIRECTORY
 			l_lib_usage: ARRAYED_LIST [CONF_LIBRARY]
 			l_src_path, l_dst_path: STRING_32
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
@@ -400,10 +400,10 @@ feature -- Element change
 						if
 							not l_src_path.is_equal (l_dst_path)
 						then
-							create old_file.make (a_class.full_file_name)
+							create old_file.make_with_name (a_class.full_file_name)
 							create fname.make_from_string (l_dst_path)
 							fname.set_file_name (a_class.file_name)
-							create new_file.make (fname)
+							create new_file.make_with_name (fname)
 							if
 								old_file.exists and then
 								old_file.is_readable and then
@@ -948,7 +948,7 @@ invariant
 	assemblies_not_void: assemblies /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

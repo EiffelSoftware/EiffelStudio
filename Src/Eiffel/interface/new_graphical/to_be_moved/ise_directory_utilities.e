@@ -107,7 +107,7 @@ feature -- Basic operations
 				not a_directory_name.is_empty and then
 				a_directory_name.is_valid
 		local
-			a_directory: DIRECTORY_32
+			a_directory: DIRECTORY
 			new_directory_name: DIRECTORY_NAME_32
 			directories_to_build: LINKED_LIST [STRING]
 			built_directory: STRING_32
@@ -155,7 +155,7 @@ feature -- Basic operations
 				end
 			end
 		ensure
-			Result_exists: (create {DIRECTORY_32}.make (a_directory_name)).exists
+			Result_exists: (create {DIRECTORY}.make (a_directory_name)).exists
 		end
 
 	path_ellipsis (a_path: STRING_32; a_max_length: INTEGER): STRING_32

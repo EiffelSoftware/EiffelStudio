@@ -89,13 +89,13 @@ feature {NONE} -- Implementation
 		require
 			is_parsed: not error and parser /= Void and then parser.root_node /= Void
 		local
-			f: detachable PLAIN_TEXT_FILE_32
+			f: detachable PLAIN_TEXT_FILE
 		do
 			if not error then
 				if output.is_empty then
 					generate_output (create {PRETTY_PRINTER_OUTPUT_STREAM}.make_standard_output)
 				else
-					create f.make (output)
+					create f.make_with_name (output)
 					f.open_write
 					if f.is_open_write then
 						if attached parser.detected_bom as bom then

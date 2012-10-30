@@ -105,7 +105,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	open_file_agent: PROCEDURE [ANY, TUPLE [STRING_8, INTEGER_32]]
+	open_file_agent: PROCEDURE [ANY, TUPLE [STRING_32, INTEGER_32]]
 			-- Action to open a file and scroll to a givne line number.
 			-- Arguments: [file name, line number]
 
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	open_file_grid_item (a_file_name: STRING_8): EV_GRID_ITEM
+	open_file_grid_item (a_file_name: STRING_32): EV_GRID_ITEM
 			-- Grid item to display an icon to open external editor
 		require
 			mapper_attached: mapper /= Void
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 	grid_wrapper: EVS_SEARCHABLE_COMPONENT [TUPLE [EV_GRID_ITEM, EV_GRID_ITEM]]
 			-- Grid wrapper for `grid' to enable sorting
 
-	valid_file_table: HASH_TABLE [CLASS_TYPE, STRING_8]
+	valid_file_table: HASH_TABLE [CLASS_TYPE, STRING_32]
 			-- Valid file table
 
 feature {NONE} -- Grid binding
@@ -218,7 +218,7 @@ feature {NONE} -- Grid binding
 			-- Fill rows in `rows'.
 		local
 			l_rows: like rows
-			l_file_table: HASH_TABLE [CLASS_TYPE, STRING_8]
+			l_file_table: HASH_TABLE [CLASS_TYPE, STRING_32]
 			l_mapper: like mapper
 		do
 			l_rows := rows
@@ -266,7 +266,7 @@ feature {NONE} -- Grid binding
 
 feature{NONE} -- Implementation/Actions
 
-	on_open_file (x, y, button: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32; a_file_name: STRING_8)
+	on_open_file (x, y, button: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32; a_file_name: STRING_32)
 			-- Open file `a_file_name' in external editor
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -329,7 +329,7 @@ invariant
 	file_table_valid: mapper /= Void implies valid_file_table /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -112,10 +112,10 @@ feature {NONE} -- Implementation
 		require
 			valid_contents: contents /= Void
 		local
-			new_file: PLAIN_TEXT_FILE_32
+			new_file: PLAIN_TEXT_FILE
 			char: CHARACTER
 		do
-			create new_file.make (ace_filename)
+			create new_file.make_with_name (ace_filename)
 				-- Create the ace file and save the content in it.
 			new_file.open_write
 			if not contents.is_empty then
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 	default_config_file_contents: STRING
 			-- Contents of the default ace file
 		local
-			a_file: RAW_FILE_32
+			a_file: RAW_FILE
 		do
 			create a_file.make_with_path (eiffel_layout.default_config_file_name)
 			a_file.open_read
@@ -160,9 +160,9 @@ feature {NONE} -- Implementation
 			-- Create the file named `root_class_filename' and flush the content
 			-- of the default root class in it.
 		local
-			new_class: PLAIN_TEXT_FILE_32
+			new_class: PLAIN_TEXT_FILE
 		do
-			create new_class.make (root_class_filename)
+			create new_class.make_with_name (root_class_filename)
 			if not new_class.exists then
 				new_class.open_write
 				new_class.put_string (

@@ -275,16 +275,16 @@ feature {NONE} -- Implementation
 	group: CONF_GROUP
 			-- Group where to put newly created cluster.
 
-	path: STRING
+	path: STRING_32
 			-- Selected subfolder path to put newly created cluster.
 
 	is_top_level: BOOLEAN
 			-- Create a new top level cluster.
 
-	chosen_dir: FILE_NAME
+	chosen_dir: FILE_NAME_32
 			-- The path to the created cluster.
 
-	original_path: STRING
+	original_path: STRING_32
 			-- The path with environment variables.
 
 	cluster_name: STRING_32
@@ -396,7 +396,7 @@ feature {NONE} -- Implementation
 				end
 				if aok then
 					create dir.make (chosen_dir)
-					create test_file.make (chosen_dir)
+					create test_file.make_with_name (chosen_dir)
 					if test_file.exists and then not dir.exists then
 						prompts.show_error_prompt (Warning_messages.w_Not_a_directory (chosen_dir), Current, Void)
 					elseif not dir.exists then
@@ -646,7 +646,7 @@ invariant
 	group_implies_path: group /= Void implies path /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

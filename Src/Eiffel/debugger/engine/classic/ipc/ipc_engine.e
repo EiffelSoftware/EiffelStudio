@@ -309,12 +309,12 @@ feature {NONE} -- Implementation
 	valid_executable (fn: FILE_NAME_32): BOOLEAN
 			-- Does `fn' represents a valid executable ?
 		local
-			f: RAW_FILE_32
+			f: RAW_FILE
 			s32: READABLE_STRING_32
 		do
 			s32 := fn.to_string_32
 			if not s32.is_empty then
-				create f.make (s32)
+				create f.make_with_name (s32)
 				Result := f.exists and then (is_windows or else f.is_access_executable)
 			end
 		end

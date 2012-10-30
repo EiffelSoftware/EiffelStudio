@@ -213,7 +213,7 @@ feature {NONE} -- Events: button
 			create l_dialog
 			l_dialog.show_modal_to_window (window)
 			if not l_dialog.file_name.is_empty then
-				create l_file.make (l_dialog.file_name)
+				create l_file.make_with_name (l_dialog.file_name)
 				if l_file.exists then
 					create l_prompt.make_standard (locale.translation (d_file_exists))
 					l_prompt.set_button_action (l_prompt.default_confirm_button, agent export_state (l_dialog.file_name))
@@ -487,7 +487,7 @@ feature {NONE} -- Internationalization
 		]"
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

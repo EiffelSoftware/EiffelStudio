@@ -111,12 +111,12 @@ feature -- Access, in compiled only, not stored to configuration file
 	is_read_only: BOOLEAN
 			-- Is the class read only?
 		local
-			l_file: RAW_FILE_32
+			l_file: RAW_FILE
 		do
 			Result := is_partial or group.is_readonly
 			if not Result then
 					-- check if the file itself is read only
-				create l_file.make (full_file_name)
+				create l_file.make_with_name (full_file_name)
 				Result := not l_file.exists or else not l_file.is_writable
 			end
 		end

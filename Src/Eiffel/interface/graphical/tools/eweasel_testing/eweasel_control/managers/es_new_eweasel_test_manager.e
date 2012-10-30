@@ -454,7 +454,7 @@ feature {NONE} -- File contents
 			l_file: RAW_FILE
 			l_uuid: UUID_GENERATOR
 		do
-			create l_file.make_with_name (ecf_content_file_name.to_string_32)
+			create l_file.make_with_path (ecf_content_file_name)
 			create Result.make_empty
 			if l_file.exists then
 				l_file.open_read
@@ -488,7 +488,7 @@ feature {NONE} -- File contents
 		local
 			l_file: PLAIN_TEXT_FILE
 		do
-			create l_file.make_with_name (tcf_content_file_name.to_string_32)
+			create l_file.make_with_path (tcf_content_file_name)
 			create Result.make_empty
 			if l_file.exists then
 				l_file.open_read
@@ -515,7 +515,7 @@ feature {NONE} -- File contents
 			l_file: PLAIN_TEXT_FILE
 			l_date_time: DATE_TIME
 		do
-			create l_file.make_with_name (class_content_file_name.to_string_32)
+			create l_file.make_with_path (class_content_file_name)
 			create Result.make_empty
 			if l_file.exists then
 				l_file.open_read
@@ -543,32 +543,32 @@ feature {NONE} -- File contents
 			not_void: Result /= Void
 		end
 
-	class_content_file_name: attached FILE_NAME_32
+	class_content_file_name: PATH
 			-- Class file content file name
 		do
-			create Result.make_from_string (eiffel_layout.default_templates_path.to_string_32)
-			Result.set_file_name ("eiffel_unit_test_class_template.e")
+			create Result.make_from_path (eiffel_layout.default_templates_path)
+			Result.extend ("eiffel_unit_test_class_template.e")
 		end
 
-	ecf_content_file_name: attached FILE_NAME_32
+	ecf_content_file_name: PATH
 			-- Ecf content file name
 		do
-			create Result.make_from_string (eiffel_layout.default_templates_path.to_string_32)
-			Result.set_file_name ("eiffel_unit_test_ecf_template.ecf")
+			create Result.make_from_path (eiffel_layout.default_templates_path)
+			Result.extend ("eiffel_unit_test_ecf_template.ecf")
 		end
 
-	notes_content_file_name: attached FILE_NAME_32
+	notes_content_file_name: PATH
 			-- Default note file name.
 		do
-			create Result.make_from_string (eiffel_layout.default_templates_path.to_string_32)
-			Result.set_file_name ("eiffel_unit_test_note_template.txt")
+			create Result.make_from_path (eiffel_layout.default_templates_path)
+			Result.extend ("eiffel_unit_test_note_template.txt")
 		end
 
-	tcf_content_file_name: attached FILE_NAME_32
+	tcf_content_file_name: PATH
 			-- Default eweasel tcf file name
 		do
-			create Result.make_from_string (eiffel_layout.default_templates_path.to_string_32)
-			Result.set_file_name ("eiffel_unit_test_tcf_template.txt")
+			create Result.make_from_path (eiffel_layout.default_templates_path)
+			Result.extend ("eiffel_unit_test_tcf_template.txt")
 		end
 
 	run_before_all_string: attached STRING

@@ -233,11 +233,11 @@ feature -- Change
 			--
 		local
 			f: RAW_FILE
-			s: STRING
+			s: STRING_32
 		do
 			s := path_field.path
 			if not s.is_empty then
-				create f.make (path_field.path)
+				create f.make_with_name (path_field.path)
 			end
 			if
 				save_operation_enabled and then
@@ -260,7 +260,7 @@ feature -- Change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

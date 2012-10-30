@@ -105,7 +105,7 @@ feature -- Access
 			l_runtime_path: detachable STRING_32
 			l_content: ARRAYED_LIST [STRING]
 			l_dir: DIRECTORY
-			l_file_name: FILE_NAME
+			l_file_name: FILE_NAME_32
 			l_file: RAW_FILE
 		do
 			l_runtime_path := dotnet_runtime_path
@@ -132,14 +132,14 @@ feature -- Access
 							create l_file_name.make_from_string (l_runtime_path)
 							l_file_name.extend (l_content.item)
 							l_file_name.set_file_name ("mscorwks.dll")
-							create l_file.make (l_file_name)
+							create l_file.make_with_name (l_file_name)
 							if l_file.exists then
 								Result.put_right (l_content.item)
 							else
 								create l_file_name.make_from_string (l_runtime_path)
 								l_file_name.extend (l_content.item)
 								l_file_name.set_file_name ("clr.dll")
-								l_file.make (l_file_name)
+								l_file.make_with_name (l_file_name)
 								if l_file.exists then
 									Result.put_right (l_content.item)
 								end

@@ -462,13 +462,13 @@ feature -- Status report
 		require
 			valid_file_name: file_name /= Void
 		local
-			a_file: RAW_FILE_32
+			a_file: RAW_FILE
 			retried: BOOLEAN
 			l_stream: STRING
 			l_converter: ENCODING_CONVERTER
 		do
 			if not retried then
-				create a_file.make (file_name)
+				create a_file.make_with_name (file_name)
 				if a_file.exists and then a_file.is_readable then
 					a_file.open_read
 					a_file.read_stream (a_file.count)
@@ -517,13 +517,13 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 		require
 			valid_file_name: file_name /= Void
 		local
-			a_file: RAW_FILE_32
+			a_file: RAW_FILE
 			retried: BOOLEAN
 			l_stream: STRING
 			l_converter: ENCODING_CONVERTER
 		do
 			if not retried then
-				create a_file.make (file_name)
+				create a_file.make_with_name (file_name)
 				if a_file.exists and then a_file.is_readable and then not a_file.is_empty then
 					a_file.open_read
 					a_file.read_stream (a_file.count)

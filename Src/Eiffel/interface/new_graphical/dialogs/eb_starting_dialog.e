@@ -443,7 +443,7 @@ feature {NONE} -- Implementation
 	load_available_wizards
 			-- Enumerate the available wizards.
 		local
-			new_project_directory: DIRECTORY_32
+			new_project_directory: DIRECTORY
 			entries: ARRAYED_LIST [STRING_32]
 			extension: STRING_32
 			wizard: EB_NEW_PROJECT_WIZARD

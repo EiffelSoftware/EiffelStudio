@@ -1312,7 +1312,7 @@ feature {NONE} -- Implementation
 			a_dir_not_empty: not a_dir.is_empty
 		local
 			retried: BOOLEAN
-			l_dir: DIRECTORY_32
+			l_dir: DIRECTORY
 		do
 			if not retried then
 				create l_dir.make (a_dir)

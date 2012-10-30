@@ -456,7 +456,7 @@ feature {NONE} -- Implementation
 		local
 			l_path: STRING_32
 			l_file_name: FILE_NAME_32
-			l_file: PLAIN_TEXT_FILE_32
+			l_file: PLAIN_TEXT_FILE
 			l_text, l_line: STRING
 			l_stop: BOOLEAN
 			i: INTEGER
@@ -468,7 +468,7 @@ feature {NONE} -- Implementation
 			if a_error.subcode /= 0 then
 				l_path.append_integer (a_error.subcode)
 			end
-			create l_file.make (l_path)
+			create l_file.make_with_name (l_path)
 			if l_file.exists then
 				create l_text.make (255)
 				from
@@ -544,7 +544,7 @@ feature {NONE} -- Implementation
 		local
 			l_file_name: STRING_32
 			f_name: FILE_NAME_32
-			file: PLAIN_TEXT_FILE_32
+			file: PLAIN_TEXT_FILE
 		do
 			create f_name.make_from_path (eiffel_layout.error_path)
 			f_name.extend ("short")
@@ -553,7 +553,7 @@ feature {NONE} -- Implementation
 			if a_error.subcode /= 0 then
 				l_file_name.append_integer (a_error.subcode)
 			end
-			create file.make (l_file_name)
+			create file.make_with_name (l_file_name)
 			if file.exists then
 				from
 					file.open_read

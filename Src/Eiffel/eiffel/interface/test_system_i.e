@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 			-- `a_target': Target to which cluster is added if path exists.
 			-- `a_path': Path for which a cluster is added.
 		local
-			l_dir: DIRECTORY_32
+			l_dir: DIRECTORY
 			l_vis: CONF_FIND_LOCATION_VISITOR
 			l_loc: CONF_DIRECTORY_LOCATION
 			l_cluster: CONF_CLUSTER

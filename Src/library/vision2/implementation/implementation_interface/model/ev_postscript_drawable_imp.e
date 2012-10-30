@@ -285,7 +285,7 @@ feature -- Clearing and drawing operations
 		local
 			file_with_header: STRING
 			clip_rectangle, page_rectangle, page_clip_rectangle: EV_RECTANGLE
-			file: PLAIN_TEXT_FILE_32
+			file: PLAIN_TEXT_FILE
 			nb_of_h_pages, nb_of_v_pages, h, v, cur_page: INTEGER
 		do
 			create file_with_header.make (0)
@@ -366,7 +366,7 @@ feature -- Clearing and drawing operations
 
 			file_with_header.append ("%%%%EOF%N")
 
-			create file.make (a_file_name.as_string_32)
+			create file.make_with_name (a_file_name)
 			file.open_write
 			file.put_string (file_with_header)
 			file.close

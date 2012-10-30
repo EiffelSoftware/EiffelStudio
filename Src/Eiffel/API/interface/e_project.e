@@ -98,7 +98,7 @@ feature -- Initialization
 			prev_read_write_error: not read_write_error
 			valid_deletion_agent: deletion_agent /= Void implies deletion_requested
 		local
-			d: DIRECTORY_32
+			d: DIRECTORY
 			new_name: STRING_32
 			l_prev_work: STRING
 		do
@@ -651,7 +651,7 @@ feature -- Update
 			-- files are deleted.
 			-- same for `cancel_agent'. Make it return `True' to cancel the operation.
 		local
-			generation_directory: DIRECTORY_32
+			generation_directory: DIRECTORY
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -1024,7 +1024,7 @@ feature {NONE} -- Implementation
 
 	link_driver
 		local
-			uf: PLAIN_TEXT_FILE_32
+			uf: PLAIN_TEXT_FILE
 			app_name: STRING
 			file_name: FILE_NAME_32
 		do
@@ -1037,9 +1037,9 @@ feature {NONE} -- Implementation
 					file_name.add_extension (app_name)
 				end
 
-				create uf.make (file_name)
+				create uf.make_with_name (file_name)
 				if not uf.exists then
-					create uf.make (Precompilation_driver)
+					create uf.make_with_name (Precompilation_driver)
 					if uf.exists and then uf.is_readable then
 						compiler_objects.command_executor.link_eiffel_driver (project_directory.workbench_path,
 							system.name,

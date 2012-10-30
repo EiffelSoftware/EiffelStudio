@@ -32,7 +32,7 @@ feature -- Initialization
 		local
 			d_name: DIRECTORY_NAME_32
 			temp: STRING_32
-			d: DIRECTORY_32
+			d: DIRECTORY
 		do
 			create d_name.make_from_string (project_location.compilation_path)
 			create temp.make (5)

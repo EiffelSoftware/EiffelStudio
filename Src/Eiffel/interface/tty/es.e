@@ -407,10 +407,10 @@ feature -- Access
 
 feature -- Setting
 
-	set_file (filename: STRING)
+	set_file (filename: READABLE_STRING_GENERAL)
 			-- Set the output_window file to `filename'.
 		do
-			create output_window.make (filename)
+			create output_window.make_with_name (filename)
 			if output_window.exists then
 				localized_print_error (ewb_names.file_exists (filename))
 				file_error := True

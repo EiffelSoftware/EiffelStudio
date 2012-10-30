@@ -242,28 +242,22 @@ feature {NONE} -- Implementation routines
 			-- Full file name (path included) of eweasel catalog file.
 		local
 			l_file_name_helper: ES_FILE_NAME_HELPER
-			l_tmp_name: STRING_32
-			l_file: RAW_FILE_32
+			l_file: RAW_FILE
 		do
 			create Result.make_from_string (manager.environment_manager.target_directory.to_string_32)
 			Result.set_file_name (file_name)
 
-			l_tmp_name := Result.to_string_32
-			create l_file_name_helper
-			if attached l_tmp_name as lt_string then
 				-- File must exists before convert to short name
-				create l_file.make (l_tmp_name)
-				if not l_file.exists then
-					l_file.create_read_write
-				end
-				if not l_file.is_closed then
-					l_file.flush
-					l_file.close
-				end
-				l_tmp_name := l_file_name_helper.short_name_of (lt_string)
+			create l_file.make_with_name (Result)
+			if not l_file.exists then
+				l_file.create_read_write
 			end
-
-			create Result.make_from_string (l_tmp_name)
+			if not l_file.is_closed then
+				l_file.flush
+				l_file.close
+			end
+			create l_file_name_helper
+			create Result.make_from_string (l_file_name_helper.short_name_of (Result))
 		ensure
 			not_void: Result /= Void
 		end
@@ -271,10 +265,10 @@ feature {NONE} -- Implementation routines
 	clear_file_content
 			-- Clear catalog file content
 		local
-			l_file: RAW_FILE_32
+			l_file: RAW_FILE
 		do
 			close_and_clear_file
-			create l_file.make (full_file_name)
+			create l_file.make_with_name (full_file_name)
 			if l_file.exists then
 				l_file.wipe_out
 			end
@@ -286,10 +280,10 @@ feature {NONE} -- Implementation routines
 	file: IO_MEDIUM
 			-- Control file instance
 		local
-			l_file: RAW_FILE_32
+			l_file: RAW_FILE
 		do
 			if internal_file = Void then
-				create l_file.make (full_file_name)
+				create l_file.make_with_name (full_file_name)
 				if not l_file.exists then
 					l_file.create_read_write
 				else
@@ -319,7 +313,7 @@ feature {NONE} -- Implementation attributes
 			-- Used by `file' ONLY.
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

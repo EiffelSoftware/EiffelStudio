@@ -1738,7 +1738,7 @@ feature {NONE} -- Implementation
 		local
 			retried: BOOLEAN
 			tmp_name: FILE_NAME_32
-			tmp_file: RAW_FILE_32
+			tmp_file: RAW_FILE
 			l_encoding: ENCODING
 			l_stream: STRING
 			l_text: STRING_32
@@ -1749,7 +1749,7 @@ feature {NONE} -- Implementation
 					if tmp_name /= Void then
 						tmp_name := tmp_name.twin
 						tmp_name.add_extension ("swp")
-						create tmp_file.make (tmp_name)
+						create tmp_file.make_with_name (tmp_name)
 						if
 							not tmp_file.exists and then
 							tmp_file.is_creatable
@@ -1895,7 +1895,7 @@ feature {NONE} -- Implementation
 			end
 		end
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

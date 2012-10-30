@@ -215,7 +215,7 @@ feature -- Execution
 				ace_file_name := blank_project_builder.ace_filename
 				compile_project := compile_project_check_button.is_selected
 
-				if (create {PLAIN_TEXT_FILE_32}.make (ace_file_name)).exists then
+				if (create {PLAIN_TEXT_FILE}.make_with_name (ace_file_name)).exists then
 						-- Warn that the existing configuration file will be overwritten.
 					prompts.show_warning_prompt_with_cancel (
 						warning_messages.w_file_exists (ace_file_name),

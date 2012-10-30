@@ -72,12 +72,8 @@ feature -- Open inner container data
 			debug ("to_implement")
 				(create {REFACTORING_HELPER}).to_implement ("Use FILE_UTILITIES to deal with `a_file' when available in a library.")
 			end
-			if attached {READABLE_STRING_32} a_file as f then
-				create {RAW_FILE_32} l_file.make (f)
-				l_file.open_read
-			else
-				create l_file.make_open_read (a_file.as_string_8)
-			end
+			create l_file.make_with_name (a_file)
+			l_file.open_read
 			create l_reader.make (l_file)
 			l_reader.set_for_reading
 			create l_facility

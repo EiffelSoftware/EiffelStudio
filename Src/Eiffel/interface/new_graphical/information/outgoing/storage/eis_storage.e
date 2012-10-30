@@ -48,13 +48,13 @@ feature -- Retrieve and save
 	retrieve_from_file
 			-- Retrieve storage from file	
 		local
-			l_file: RAW_FILE_32
+			l_file: RAW_FILE
 			l_facility: SED_STORABLE_FACILITIES
 			l_reader: SED_MEDIUM_READER_WRITER
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				create l_file.make (storage_file_name)
+				create l_file.make_with_name (storage_file_name)
 				if l_file.exists then
 					l_file.open_read
 					create l_reader.make (l_file)

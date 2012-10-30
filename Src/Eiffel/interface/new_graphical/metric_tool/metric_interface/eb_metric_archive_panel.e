@@ -517,14 +517,14 @@ feature {NONE} -- Implementation
 			a_action_attached: a_action /= Void
 			a_timer_attached: a_timer /= Void
 		local
-			l_dir: DIRECTORY_32
-			l_file: RAW_FILE_32
+			l_dir: DIRECTORY
+			l_file: RAW_FILE
 			l_file_name: STRING_32
 			l_archive: LIST [EB_METRIC_ARCHIVE_NODE]
 		do
 			l_file_name := a_text_field.text
 			if not l_file_name.is_empty then
-				create l_file.make (l_file_name)
+				create l_file.make_with_name (l_file_name)
 				create l_dir.make (l_file_name)
 				if l_file.exists and then not l_file.is_directory then
 					metric_tool.show_feedback_dialog (metric_names.t_analysing_archive, agent metric_manager.load_metric_archive (l_file_name), metric_tool.develop_window)

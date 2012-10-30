@@ -694,7 +694,7 @@ feature -- Basic Operations
 		require
 			filename_not_void: a_filename /= Void
 		local
-			l_file: RAW_FILE_32
+			l_file: RAW_FILE
 			l_doc_type: STRING
 			l_date: like date_of_file_when_loaded
 			l_size: like size_of_file_when_loaded
@@ -708,7 +708,7 @@ feature -- Basic Operations
 				set_current_document_class (default_document_class)
 			end
 
-			create l_file.make (a_filename)
+			create l_file.make_with_name (a_filename)
 			if l_file.exists then
 				l_file.open_read
 					-- Record date when opening the file since if the file
@@ -723,7 +723,7 @@ feature -- Basic Operations
 				end
 				l_file.close
 			else
-				load_text ("File: " + a_filename + "%Ndoes not exist.")
+				load_text ({STRING_32} "File: " + a_filename + "%Ndoes not exist.")
 			end
 			create file_name.make_from_string (a_filename)
 			date_of_file_when_loaded := l_date
@@ -1760,14 +1760,12 @@ feature -- Implementation
 			file_loaded: file_loaded
 			file_exists: file_exists
 		local
-			l_file: RAW_FILE_32
-			l_name: detachable STRING_32
+			l_file: RAW_FILE
 		do
-			l_name := file_name
-			check l_name /= Void end -- Implied by precondition
-			l_name := l_name.as_string_32
-			create l_file.make (l_name)
-			Result := l_file.date
+			if attached file_name as l_name then
+				create l_file.make_with_name (l_name)
+				Result := l_file.date
+			end
 		end
 
 	file_size: INTEGER
@@ -1776,14 +1774,12 @@ feature -- Implementation
 			file_loaded: file_loaded
 			file_exists: file_exists
 		local
-			l_file: RAW_FILE_32
-			l_name: detachable STRING_32
+			l_file: RAW_FILE
 		do
-			l_name := file_name
-			check l_name /= Void end -- Implied by precondition
-			l_name := l_name.as_string_32
-			create l_file.make (l_name)
-			Result := l_file.count
+			if attached file_name as l_name then
+				create l_file.make_with_name (l_name)
+				Result := l_file.count
+			end
 		end
 
 	file_exists: BOOLEAN
@@ -1791,14 +1787,12 @@ feature -- Implementation
 		require
 			file_loaded: file_loaded
 		local
-			l_file: RAW_FILE_32
-			l_name: detachable STRING_32
+			l_file: RAW_FILE
 		do
-			l_name := file_name
-			check l_name /= Void end -- Implied by precondition
-			l_name := l_name.as_string_32
-			create l_file.make (l_name)
-			Result := l_file.exists
+			if attached file_name as l_name then
+				create l_file.make_with_name (l_name)
+				Result := l_file.exists
+			end
 		end
 
 	continue_editing

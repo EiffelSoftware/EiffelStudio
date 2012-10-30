@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 
 				-- Check that the filename indicate a valid and readable file
 			if Result then
-				create rtir_file.make (rtir_text)
+				create rtir_file.make_with_name (rtir_text)
 				Result := rtir_file.exists and then rtir_file.is_readable
 			end
 

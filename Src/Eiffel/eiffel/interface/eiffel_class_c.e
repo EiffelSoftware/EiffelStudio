@@ -189,9 +189,9 @@ feature -- Action
 			object_name: STRING
 			generation_dir: DIRECTORY_NAME_32
 			c_file_name: FILE_NAME_32
-			file: PLAIN_TEXT_FILE_32
+			file: PLAIN_TEXT_FILE
 			finished_file_name: FILE_NAME_32
-			finished_file: PLAIN_TEXT_FILE_32
+			finished_file: PLAIN_TEXT_FILE
 		do
 			if not retried and System.makefile_generator /= Void and then has_types then
 				create generation_dir.make_from_string (project_location.workbench_path)
@@ -219,14 +219,14 @@ feature -- Action
 					object_name.append_character (Feature_table_file_suffix)
 					object_name.append (Dot_c)
 					c_file_name.set_file_name (object_name)
-					create file.make (c_file_name)
+					create file.make_with_name (c_file_name)
 					file_exists := file.exists
 					if file_exists and then file.is_writable then
 						file.delete
 					end
 					if file_exists then
 						finished_file_name.set_file_name (Finished_file_for_make)
-						create finished_file.make (finished_file_name)
+						create finished_file.make_with_name (finished_file_name)
 						if finished_file.exists and then finished_file.is_writable then
 							finished_file.delete
 						end
@@ -267,7 +267,7 @@ feature -- Action
 		local
 			parser: like eiffel_parser
 			file: KL_BINARY_INPUT_FILE
-			l_dir: DIRECTORY_32
+			l_dir: DIRECTORY
 			l_dir_name: DIRECTORY_NAME_32
 			vd21: VD21
 			l_options: CONF_OPTION
@@ -1332,9 +1332,9 @@ feature
 			has_types: has_types
 		local
 			subdirectory, base_name: STRING_32
-			dir: DIRECTORY_32
+			dir: DIRECTORY
 			dir_name: DIRECTORY_NAME_32
-			finished_file: PLAIN_TEXT_FILE_32
+			finished_file: PLAIN_TEXT_FILE
 			finished_file_name: FILE_NAME_32
 		do
 			if System.in_final_mode then
@@ -1362,7 +1362,7 @@ feature
 
 			create finished_file_name.make_from_string (dir_name)
 			finished_file_name.set_file_name (Finished_file_for_make)
-			create finished_file.make (finished_file_name)
+			create finished_file.make_with_name (finished_file_name)
 			if finished_file.exists and then finished_file.is_writable then
 				finished_file.delete
 			end
@@ -2207,7 +2207,7 @@ feature {NONE} -- Backup implementation
 		local
 			l_dir_name: DIRECTORY_NAME_32
 			l_fname: FILE_NAME_32
-			l_dir: DIRECTORY_32
+			l_dir: DIRECTORY
 			l_over: ARRAYED_LIST [CONF_CLASS]
 			u: GOBO_FILE_UTILITIES
 		do

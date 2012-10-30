@@ -175,7 +175,7 @@ feature {NONE} -- Basic operations
 		local
 			l_cluster: like cluster
 			l_location: like {PROJECT_DIRECTORY}.path
-			l_directory: DIRECTORY_32
+			l_directory: DIRECTORY
 			l_file: KL_TEXT_OUTPUT_FILE
 			l_filename: STRING
 			l_class_name: STRING

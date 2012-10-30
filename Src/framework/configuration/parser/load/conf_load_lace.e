@@ -333,7 +333,7 @@ feature {NONE} -- Implementation of data retrieval
 			l_cl_opt: LACE_LIST [O_OPTION_SD]
 			l_fr: CONF_FILE_RULE
 			l_str, l_path: STRING
-			l_file_path: FILE_NAME
+			l_file_path: FILE_NAME_32
 			l_file: PLAIN_TEXT_FILE
 			l_opt_map: HASH_TABLE [LACE_LIST [D_OPTION_SD], STRING]
 			l_lst: LACE_LIST [D_OPTION_SD]
@@ -355,7 +355,7 @@ feature {NONE} -- Implementation of data retrieval
 					if l_file_path.is_empty then
 						set_error (create {CONF_ERROR_FILE}.make (l_file_path))
 					else
-						create l_file.make (l_file_path)
+						create l_file.make_with_name (l_file_path)
 						if not l_file.exists or else l_file.is_directory or else not l_file.is_readable then
 							set_error (create {CONF_ERROR_FILE}.make (l_file_path))
 						else
@@ -365,7 +365,7 @@ feature {NONE} -- Implementation of data retrieval
 							if attached {CLUST_PROP_SD} l_parser.ast as l_use_prop then
 								process_cluster_properties (l_use_prop)
 							else
-								set_error (create {CONF_ERROR_PARSE}.make ("Problem in use file:"+l_file_path))
+								set_error (create {CONF_ERROR_PARSE}.make ({STRING_32} "Problem in use file:" + l_file_path))
 							end
 						end
 					end

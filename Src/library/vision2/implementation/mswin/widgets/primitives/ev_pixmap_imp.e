@@ -151,12 +151,10 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 			--            "Unable to retrieve icon information",
 			--            "Unable to load the file".
 		local
-			pixmap_file: RAW_FILE_32
-			l_pixmap_filename: like pixmap_filename
+			pixmap_file: RAW_FILE
 		do
-			l_pixmap_filename := file_name.as_string_32
-			pixmap_filename := l_pixmap_filename
-			create pixmap_file.make (l_pixmap_filename)
+			pixmap_filename := file_name.as_string_32
+			create pixmap_file.make_with_name (file_name)
 			pixmap_file.open_read
 			pixmap_file.close
 

@@ -86,14 +86,14 @@ feature -- Basic operations
 			is_interface_usable: is_interface_usable
 			a_file_name_attached: a_file_name /= Void
 			a_file_name_is_valid_file_name: is_valid_file_name (a_file_name)
-			a_file_name_exists: (create {RAW_FILE}.make (a_file_name.as_string_8)).exists
+			a_file_name_exists: (create {RAW_FILE}.make_with_name (a_file_name)).exists
 			a_destination_file_attached: a_destination_file /= Void
 			a_destination_file_is_valid_file_name: is_valid_file_name (a_destination_file)
 		deferred
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

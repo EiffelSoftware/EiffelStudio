@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			a_context_not_void: a_context /= Void
 			has_printer: not a_context.output_to_file implies (create {EV_ENVIRONMENT}).has_printer
 			output_file_unique: a_context.output_to_file implies
-						not (create {RAW_FILE}.make (a_context.file_name.as_string_8)).exists
+						not (create {RAW_FILE}.make_with_name (a_context.file_name)).exists
 		do
 			world := a_world
 			context := a_context.twin
@@ -73,14 +73,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

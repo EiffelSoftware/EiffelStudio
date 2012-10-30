@@ -207,7 +207,7 @@ feature -- Text Loading
 	load_file (a_filename: STRING_32)
 	        -- Load contents of `a_filename'
 		local
-			l_file: RAW_FILE_32
+			l_file: RAW_FILE
 		    l_filename: FILE_NAME_32
   	   	do
   	   		reset
@@ -216,7 +216,7 @@ feature -- Text Loading
 			set_encoding (Void)
 			bom := Void
 			create l_filename.make_from_string (a_filename)
-			create l_file.make (l_filename)
+			create l_file.make_with_name (l_filename)
 				-- Set `load_file_error' if the file does not exist.
 			if l_file.exists then
 				load_file_error := False

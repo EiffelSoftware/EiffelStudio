@@ -55,7 +55,7 @@ feature -- Execution
 		local
 			byte_context: BYTE_CONTEXT
 			makefile_sh_name: FILE_NAME_32
-			file: PLAIN_TEXT_FILE_32
+			file: PLAIN_TEXT_FILE
 		do
 			byte_context := (create {SHARED_BYTE_CONTEXT}).context
 			if is_workbench then
@@ -66,7 +66,7 @@ feature -- Execution
 				create makefile_sh_name.make_from_string (project_location.final_path)
 			end
 			makefile_sh_name.set_file_name (Makefile_SH)
-			create file.make (makefile_sh_name)
+			create file.make_with_name (makefile_sh_name)
 			if file.exists then
 				Eiffel_project.call_finish_freezing (is_workbench)
 			else
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

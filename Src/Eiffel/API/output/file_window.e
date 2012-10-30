@@ -22,7 +22,7 @@ inherit
 	PLATFORM_CONSTANTS
 
 create
-	make
+	make_with_name
 
 feature -- Element change
 

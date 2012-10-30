@@ -252,7 +252,7 @@ feature -- Status setting
 		require
 			file_name_exists: file_name /= Void
 		local
-			file: PLAIN_TEXT_FILE_32
+			file: PLAIN_TEXT_FILE
 			vd21: VD21
 			d1, d2: DATE_TIME
 		do
@@ -260,7 +260,7 @@ feature -- Status setting
 				create d1.make_now
 			end
 
-			create file.make (file_name)
+			create file.make_with_name (file_name)
 			has_group_changed := False
 			has_changed := False
 			if not file.exists then

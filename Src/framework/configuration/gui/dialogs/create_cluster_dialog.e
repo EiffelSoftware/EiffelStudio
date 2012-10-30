@@ -153,7 +153,7 @@ feature {NONE} -- Actions
 	browser_dialog: EV_DIRECTORY_DIALOG
 			-- Dialog to browse to a directory.
 		local
-			l_dir: DIRECTORY_32
+			l_dir: DIRECTORY
 		once
 			create Result
 			create l_dir.make (target.system.directory)

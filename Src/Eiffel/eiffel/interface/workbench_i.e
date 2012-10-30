@@ -567,7 +567,7 @@ feature -- Directory creation
 	create_data_directory
 			-- Create the subdirectory for data storage.
 		local
-			d: DIRECTORY_32
+			d: DIRECTORY
 		do
 			if universe_defined then
 				create d.make (project_location.data_path)
@@ -582,7 +582,7 @@ feature -- Automatic backup
 	create_backup_directory
 			-- Create the subdirectory for backup `backup_counter'
 		local
-			d: DIRECTORY_32
+			d: DIRECTORY
 		do
 				-- Create the EIFGEN/BACKUP directory
 			create d.make (project_location.backup_path)
@@ -619,9 +619,9 @@ feature -- Automatic backup
 	save_starting_backup_info
 			-- Save the information about this compilation
 		local
-			file: PLAIN_TEXT_FILE_32
+			file: PLAIN_TEXT_FILE
 		do
-			create file.make (backup_info_file_name)
+			create file.make_with_name (backup_info_file_name)
 			if file.is_creatable or else (file.exists and then file.is_writable) then
 				file.open_append
 				file.put_string ("Compiler version: ")
@@ -648,9 +648,9 @@ feature -- Automatic backup
 	save_ending_backup_info
 			-- Save the information about the status of this compilation
 		local
-			file: PLAIN_TEXT_FILE_32
+			file: PLAIN_TEXT_FILE
 		do
-			create file.make (backup_info_file_name)
+			create file.make_with_name (backup_info_file_name)
 			if file.is_creatable or else (file.exists and then file.is_writable) then
 				file.open_append
 				file.put_string ("Compilation status is: ")

@@ -52,14 +52,14 @@ feature -- Access
 	e_feature: E_FEATURE
 			-- Feature whose corresponding C functions are to be retrieved
 
-	valid_c_file_table: HASH_TABLE [CLASS_TYPE, STRING]
+	valid_c_file_table: HASH_TABLE [CLASS_TYPE, STRING_32]
 			-- Table of C files for `class_c'.
 			-- [Generic deriviation type, C file name]
 		local
 			l_types: TYPE_LIST
 			l_cursor: CURSOR
 			l_type: CLASS_TYPE
-			l_file_name: STRING
+			l_file_name: STRING_32
 			l_file: RAW_FILE
 		do
 			create Result.make (10)
@@ -74,7 +74,7 @@ feature -- Access
 					l_type := l_types.item
 					l_file_name := c_file (l_type)
 					if not l_file_name.is_empty then
-						create l_file.make (l_file_name)
+						create l_file.make_with_name (l_file_name)
 						if l_file.exists and then l_file.is_readable then
 							Result.put (l_type, l_file_name)
 						end
@@ -87,7 +87,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	line_number (a_file_name: STRING): INTEGER
+	line_number (a_file_name: STRING_32): INTEGER
 			-- If `e_feature' is set, return the line number for its corresponding C function in `a_file_name'.
 			-- IF `e_feature' is not set or some error occurred when trying to retrieve line number, return 1.
 		require
@@ -167,7 +167,7 @@ feature{NONE} -- Implementation
 			l_package_name: STRING
 			l_dir_name: DIRECTORY_NAME_32
 			l_location: STRING_32
-			l_dir: DIRECTORY_32
+			l_dir: DIRECTORY
 		do
 			l_mode := context.workbench_mode
 			set_context_mode (is_for_workbench)
@@ -208,7 +208,7 @@ invariant
 	status_valid: e_feature /= Void implies class_c /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

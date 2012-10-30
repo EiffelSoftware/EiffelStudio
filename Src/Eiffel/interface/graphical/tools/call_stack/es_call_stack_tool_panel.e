@@ -1124,7 +1124,7 @@ feature {NONE} -- Export call stack
 			valid_dialog: fd /= Void
 		local
 			f: RAW_FILE
-			fn, fp: STRING
+			fn, fp: STRING_32
 			l_prompt: ES_QUESTION_PROMPT
 			retried: BOOLEAN
 		do
@@ -1133,7 +1133,7 @@ feature {NONE} -- Export call stack
 						--| We create a file (or open it).
 					fn := fd.file_name
 					fp := fd.file_path
-					create f.make (fn)
+					create f.make_with_name (fn)
 					if f.exists then
 						create l_prompt.make_standard (interface_names.l_file_exits (fn))
 						l_prompt.set_button_text (l_prompt.dialog_buttons.yes_button, interface_names.b_overwrite)
@@ -1158,7 +1158,7 @@ feature {NONE} -- Export call stack
 			retry
 		end
 
-	save_call_stack_to_filename (a_fp: like {EB_DEBUG_TOOL_DATA}.last_saved_stack_path; a_fn: STRING; is_append: BOOLEAN)
+	save_call_stack_to_filename (a_fp: like {EB_DEBUG_TOOL_DATA}.last_saved_stack_path; a_fn: STRING_32; is_append: BOOLEAN)
 			-- Save call stack into file named `a_fn'.
 			-- if the file already exists and `is_append' is True
 			-- then append the stack in the same file
@@ -1169,7 +1169,7 @@ feature {NONE} -- Export call stack
 		do
 			if not retried then
 					--| We create a file (or open it).
-				create fn.make (a_fn)
+				create fn.make_with_name (a_fn)
 				if fn.exists and is_append then
 					fn.open_append
 				else

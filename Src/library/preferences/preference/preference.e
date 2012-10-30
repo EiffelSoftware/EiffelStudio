@@ -40,13 +40,13 @@ feature -- Status setting
 			value_set: is_hidden = a_flag
 		end
 
-	set_default_value (a_value: STRING)
+	set_default_value (a_value: READABLE_STRING_GENERAL)
 			-- Set the value to be used for default in the event `value' is not set.
 		require
 			a_value_not_void: a_value /= Void
 			a_value_valid: valid_value_string (a_value)
 		do
-			internal_default_value := a_value
+			internal_default_value := a_value.to_string_32
 			if attached internal_change_actions as l_actions then
 				l_actions.call ([Current])
 			end

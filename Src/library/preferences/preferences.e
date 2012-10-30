@@ -588,7 +588,7 @@ feature {NONE} -- Implementation
 
 									if sub_node /= Void then
 
-										if sub_node.name.is_equal (once "SHORTCUT") then
+										if sub_node.has_same_name (once "SHORTCUT") then
 											create att_pref_value.make_empty
 
 												-- Check attributes for shortcut preferences

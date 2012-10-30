@@ -195,19 +195,16 @@ rt_private void parsing_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 
 rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 {
-	/* Second pass of the store mechanism: writing on the disk.
-	 */
-
-	char *o_ref;
-	char *o_ptr;
+	/* Second pass of the store mechanism: writing on the disk. */
+	EIF_REFERENCE o_ref;
+	EIF_REFERENCE o_ptr;
 	long i, nb_references;
 	union overhead *zone = HEADER(object);
-	uint32 flags;
+	uint16 flags;
 	int is_expanded, has_volatile_attributes = 0;
 	EIF_BOOLEAN object_needs_index;
 	long saved_file_pos = 0;
 	long saved_object_count = a_object_count;
-	EIF_TYPE_INDEX dtype;
 
 	REQUIRE ("valid need_index and make_index", (need_index && make_index) || (!need_index && !make_index));
 
@@ -228,8 +225,7 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 
 
 	flags = zone->ov_flags;
-	dtype = zone->ov_dtype;
-	is_expanded = eif_is_nested_expanded(flags) != (uint32) 0;
+	is_expanded = eif_is_nested_expanded(flags);
 	if (!(is_expanded || (flags & EO_STORE)))
 		return a_object_count;		/* Unmarked means already stored */
 	else if (!is_expanded)
@@ -238,7 +234,7 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 	zone->ov_flags &= ~EO_STORE;	/* Unmark it */
 
 #ifdef DEBUG
-		printf("object 0x%" EIF_POINTER_DISPLAY " [%s %" EIF_POINTER_DISPLAY "]\n", (rt_uint_ptr) object, System(dtype).cn_generator, (rt_uint_ptr) zone->ov_flags);
+	printf("object 0x%" EIF_POINTER_DISPLAY " [%s %" EIF_POINTER_DISPLAY "]\n", (rt_uint_ptr) object, System(zone->ov_dtype).cn_generator, (rt_uint_ptr) zone->ov_flags);
 #endif
 	/* Evaluation of the number of references of the object */
 	if (flags & EO_SPEC) {					/* Special object */
@@ -255,18 +251,15 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 				count--;
 				for (; count > 0; count--, l_item++) {
 					if (eif_is_reference_tuple_item(l_item)) {
-						ref = eif_reference_tuple_item(l_item);
-						if (ref) {
-							a_object_count = pst_store (ref, a_object_count);
+						o_ref = eif_reference_tuple_item(l_item);
+						if (o_ref) {
+							a_object_count = pst_store (o_ref, a_object_count);
 						}
 					}
 				}
 			} else if (!(flags & EO_COMP)) {		/* Special of references */
-				for (
-					ref = object;
-					count > 0;
-					count--, ref = (EIF_REFERENCE) ((EIF_REFERENCE *) ref + 1))
-				{
+				for (ref = object; count > 0; count--,
+						ref = (EIF_REFERENCE) ((EIF_REFERENCE *) ref + 1)) {
 					o_ref = *(EIF_REFERENCE *) ref;
 					if (o_ref != (EIF_REFERENCE) 0)
 						a_object_count = pst_store(o_ref,a_object_count);
@@ -280,7 +273,7 @@ rt_private uint32 pst_store(EIF_REFERENCE object, uint32 a_object_count)
 			}
 		}
 	} else {								/* Normal object */
-		nb_references = References(dtype);
+		nb_references = References(zone->ov_dtype);
 
 		/* Traversal of references of `object' */
 		for (

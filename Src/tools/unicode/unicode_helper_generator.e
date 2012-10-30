@@ -61,7 +61,7 @@ feature -- Basic operations
 	read_unicode_data (a_file: READABLE_STRING_32)
 			-- Read the unicode data `a_file' and store it into `
 		local
-			l_input: PLAIN_TEXT_FILE_32
+			l_input: PLAIN_TEXT_FILE
 			l_list: like unicode_data
 			l_table: like unicode_table
 			l_data: detachable UNICODE_CHARACTER_DATA
@@ -70,7 +70,7 @@ feature -- Basic operations
 			if not retried then
 					-- First read the Unicode data file and create a list describing all
 					-- Unicode characters.
-				create l_input.make (a_file)
+				create l_input.make_with_name (a_file)
 				l_input.open_read
 				create l_list.make (2000)
 				create l_table.make (2000)
@@ -139,7 +139,7 @@ feature -- Basic operations
 		require
 			unicode_data_set: unicode_data /= Void
 		local
-			l_input, l_output: PLAIN_TEXT_FILE_32
+			l_input, l_output: PLAIN_TEXT_FILE
 			l_lowers, l_uppers, l_titles: like extract_case_ranges
 			l_properties: like extract_case_ranges
 			l_diffs, l_simplified_diffs: like mismatches
@@ -170,7 +170,7 @@ feature -- Basic operations
 
 
 				-- Let's generate our class now.
-			create l_input.make (a_template_file)
+			create l_input.make_with_name (a_template_file)
 			l_input.open_read
 			l_input.read_stream (l_input.count)
 			l_class := l_input.last_string
@@ -179,9 +179,9 @@ feature -- Basic operations
 			if attached output_path as l_path and then not l_path.is_empty then
 				create l_filename.make_from_string (l_path)
 				l_filename.set_file_name (character_32_property_filename)
-				create l_output.make (l_filename)
+				create l_output.make_with_name (l_filename)
 			else
-				create l_output.make (character_32_property_filename)
+				create l_output.make_with_name (character_32_property_filename)
 			end
 			l_output.open_write
 

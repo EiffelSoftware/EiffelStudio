@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 			l_file_names: like file_names
 			l_search_directories: like search_directories
 			l_name: STRING_32
-			l_file: RAW_FILE_32
+			l_file: RAW_FILE
 			l_u: FILE_UTILITIES
 		do
 			l_file_names := file_names
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 			end
 				-- Check output location
 			if output_file_name /= Void then
-				create l_file.make (output_file_name)
+				create l_file.make_with_name (output_file_name)
 				if
 					not (
 						(l_file.exists and then l_file.is_writable) or else
@@ -362,7 +362,7 @@ feature {NONE} -- Implementation
 			po_file_not_void: po_file /= Void
 		local
 			l_file_name: FILE_NAME_32
-			l_file: PLAIN_TEXT_FILE_32
+			l_file: PLAIN_TEXT_FILE
 			u: UTF_CONVERTER
 		do
 			if output_file_name = Void then
@@ -374,7 +374,7 @@ feature {NONE} -- Implementation
 			else
 				create l_file_name.make_from_string (output_file_name)
 				if l_file_name.is_valid then
-					create l_file.make (output_file_name)
+					create l_file.make_with_name (output_file_name)
 					l_file.open_write
 					if l_file.is_writable then
 						l_file.put_string (u.string_32_to_utf_8_string_8 (po_file.to_string))

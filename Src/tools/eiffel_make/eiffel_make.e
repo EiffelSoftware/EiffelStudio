@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 			l_dir: DIRECTORY_32
 			l_worker_thread: WORKER_THREAD
 			i, l_min: INTEGER
-			l_file: RAW_FILE_32
+			l_file: RAW_FILE
 			l_sorted_list: ARRAYED_LIST [STRING_32]
 			l_sorter: QUICK_SORTER [STRING_32]
 			l_has_e1: BOOLEAN
@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 						if l_dir.exists then
 							l_sorted_list.extend (l_dir_name)
 						else
-							create l_file.make (l_name)
+							create l_file.make_with_name (l_name)
 							if l_file.exists and then l_file.is_directory then
 								l_sorted_list.extend (l_dir_name)
 							end
@@ -351,20 +351,20 @@ feature {NONE} -- Implementation
 		local
 			l_name: DIRECTORY_NAME_32
 			l_makefile, l_finished: FILE_NAME_32
-			l_file: RAW_FILE_32
+			l_file: RAW_FILE
 		do
 			l_name := target.twin
 			l_name.extend (a_dir)
 			create l_makefile.make_from_string (l_name)
 			l_makefile.set_file_name (makefile_name)
-			create l_file.make (l_makefile)
+			create l_file.make_with_name (l_makefile)
 			if l_file.exists then
 					-- Only process directories which have a Makefile.
 				l_name := target.twin
 				l_name.extend (a_dir)
 				create l_finished.make_from_string (l_name)
 				l_finished.set_file_name (finished_name)
-				create l_file.make (l_finished)
+				create l_file.make_with_name (l_finished)
 				if not l_file.exists then
 						-- Only process directories which do not have a `finished' file, which shows
 						-- that the directory needs to be processed.

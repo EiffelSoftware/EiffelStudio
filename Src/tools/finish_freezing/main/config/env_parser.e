@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		require
 			a_batch_file_attached: a_batch_file /= Void
 			not_a_batch_file_is_empty: not a_batch_file.is_empty
-			a_batch_file_exists: (create {PLAIN_TEXT_FILE_32}.make (a_batch_file)).exists
+			a_batch_file_exists: (create {PLAIN_TEXT_FILE}.make_with_name (a_batch_file)).exists
 			not_a_args_is_empty: a_args /= Void implies not a_args.is_empty
 			a_options_not_void: a_options /= Void
 		do
@@ -377,7 +377,7 @@ feature {NONE} -- Implementation: Internal cache
 invariant
 	batch_file_name_attached: batch_file_name /= Void
 	not_batch_file_name_is_empty: not batch_file_name.is_empty
-	batch_file_name_exists: (create {RAW_FILE_32}.make (batch_file_name)).exists
+	batch_file_name_exists: (create {RAW_FILE}.make_with_name (batch_file_name)).exists
 	not_batch_arguments_is_empty: attached batch_arguments as l_args implies not l_args.is_empty
 	batch_options_attached: batch_options /= Void
 

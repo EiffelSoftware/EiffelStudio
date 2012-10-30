@@ -65,7 +65,7 @@ feature -- Initialization
 		base_dir: DIRECTORY;
 		a_project_location: PROJECT_DIRECTORY
 		deletion_requested: BOOLEAN
-		deletion_agent: PROCEDURE [ANY, TUPLE [LIST [READABLE_STRING_32]]]
+		deletion_agent: PROCEDURE [ANY, TUPLE [LIST [READABLE_STRING_GENERAL]]]
 		cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
 	)
 			-- Create an Eiffel Project.
@@ -642,7 +642,7 @@ feature -- Update
 		end
 
 	delete_generation_directory (
-			base_name: READABLE_STRING_32; deletion_agent: PROCEDURE [ANY, TUPLE [LIST [READABLE_STRING_32]]];
+			base_name: READABLE_STRING_32; deletion_agent: PROCEDURE [ANY, TUPLE [LIST [READABLE_STRING_GENERAL]]];
 			cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN])
 
 			-- Delete then EIFFEL generated directory named `base_name'.

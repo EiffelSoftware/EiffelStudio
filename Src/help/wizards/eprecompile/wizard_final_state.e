@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 		require
 			progress_file_path_valid: progress_file_path /= Void and then progress_file_path.is_valid
 		local
-			fi: PLAIN_TEXT_FILE_32
+			fi: PLAIN_TEXT_FILE
 			s: STRING
 			retried: BOOLEAN
 			curr_degree: INTEGER
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 				current_application.sleep (100)
 				current_application.process_events
 
-				create fi.make (progress_file_path)
+				create fi.make_with_name (progress_file_path)
 				if fi.exists then
 					fi.open_read
 				end

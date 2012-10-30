@@ -22,10 +22,10 @@ feature -- Shared variables
 	callback_content: STRING
 			-- Content of the filename used as callback.
 		local
-			file: PLAIN_TEXT_FILE_32
+			file: PLAIN_TEXT_FILE
 		once
 			if callback_filename /= Void then
-				create file.make (callback_filename)
+				create file.make_with_name (callback_filename)
 				file.open_read
 
 					-- Read the file.
@@ -54,7 +54,7 @@ feature -- Shared variables
 	write_bench_notification_cancel
 			-- Write onto the file given as argument that the wizard has been aborded.
 		local
-			file: PLAIN_TEXT_FILE_32
+			file: PLAIN_TEXT_FILE
 			rescued: BOOLEAN
 		do
 			if not rescued then
@@ -63,7 +63,7 @@ feature -- Shared variables
 					callback_content.replace_substring_all ("<SUCCESS>", "no")
 
 					if callback_filename /= Void then
-						create file.make (callback_filename)
+						create file.make_with_name (callback_filename)
 						file.open_write
 						file.put_string (callback_content)
 						file.close
@@ -79,7 +79,7 @@ feature -- Shared variables
 			-- Write onto the file given as argument the project ace file, directory, ...
 			-- found in `information'.
 		local
-			file: PLAIN_TEXT_FILE_32
+			file: PLAIN_TEXT_FILE
 			rescued: BOOLEAN
 			u: UTF_CONVERTER
 		do
@@ -101,7 +101,7 @@ feature -- Shared variables
 					end
 
 					if callback_filename /= Void then
-						create file.make (callback_filename)
+						create file.make_with_name (callback_filename)
 						file.open_write
 						file.put_string (callback_content)
 						file.close

@@ -250,7 +250,7 @@ feature {NONE} -- Tools
 			path_name: FILE_NAME_32
 			l_conf: CONF_LOAD
 			l_factory: CONF_PARSE_FACTORY
-			l_file: RAW_FILE_32
+			l_file: RAW_FILE
 			l_target_name: STRING
 			l_targets: HASH_TABLE [CONF_TARGET, STRING]
 		do
@@ -273,7 +273,7 @@ feature {NONE} -- Tools
 				l_target_name := l_targets.item_for_iteration.name
 				path_name.extend (l_target_name)
 				path_name.extend ("project.epr")
-				create l_file.make (path_name)
+				create l_file.make_with_name (path_name)
 
 				if l_file.exists then
 					info_lib.put (True, 2)

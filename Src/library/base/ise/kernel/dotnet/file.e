@@ -42,6 +42,21 @@ feature -- Initialization
 			file_closed: is_closed
 		end
 
+	make_with_name (fn: READABLE_STRING_GENERAL)
+			-- Create file object with `fn' as file name.
+		require
+			string_exists: fn /= Void
+			string_not_empty: not fn.is_empty
+		do
+			create internal_file.make (fn.to_cil)
+			create last_string.make_empty
+			mode := Closed_file
+			name := fn.as_string_8
+		ensure
+			file_named: name = fn
+			file_closed: is_closed
+		end
+
 	make_open_read (fn: STRING)
 			-- Create file object with `fn' as file name
 			-- and open file in read mode.
@@ -1896,14 +1911,14 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

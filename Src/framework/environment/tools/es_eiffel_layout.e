@@ -22,10 +22,12 @@ feature -- Access
 			-- <Precursor>
 		once
 			Result := Precursor {EC_EIFFEL_LAYOUT}
-			Result.extend (user_templates_path.string)
+			if is_user_files_supported then
+				Result.extend (user_templates_path.string)
+				Result.extend (docking_data_path.string)
+				Result.extend (temporary_path.string)
+			end
 			Result.extend (user_projects_path.string)
-			Result.extend (docking_data_path.string)
-			Result.extend (temporary_path.string)
 		end
 
 ;note

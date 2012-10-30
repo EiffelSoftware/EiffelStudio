@@ -1202,8 +1202,7 @@ feature -- Files
 			is_valid_environment: is_valid_environment
 		once
 			create Result.make_from_path (metrics_path)
-			Result.extend ("predefined_metrics")
-			Result.add_extension ("xml")
+			Result.extend ("predefined_metrics.xml")
 			if is_user_files_supported then
 					-- Check user override file.
 				if attached user_priority_file_name (Result, True) as l_user then
@@ -1221,8 +1220,7 @@ feature -- Files
 			is_valid_environment: is_valid_environment
 		once
 			create Result.make_from_path (eifinit_path)
-			Result.extend ("general")
-			Result.add_extension ("cfg")
+			Result.extend ("general.cfg")
 			if is_user_files_supported then
 					-- Check user override file.
 				if attached user_priority_file_name (Result, True) as l_user then
@@ -1578,8 +1576,7 @@ feature -- Files (commands)
 			is_windows: {PLATFORM}.is_windows
 		once
 			create Result.make_from_path (bin_path)
-			Result.extend ("compile_library")
-			Result.add_extension ("bat")
+			Result.extend ("compile_library.bat")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -2100,8 +2097,7 @@ feature -- Preferences
 			is_valid_environment: is_valid_environment
 		once
 			create Result.make_from_path (eifinit_path)
-			Result.extend ("default")
-			Result.add_extension ("xml")
+			Result.extend ("default.xml")
 			if attached user_priority_file_name (Result, True) as l_fn then
 				Result := l_fn
 			end

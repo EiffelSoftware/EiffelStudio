@@ -97,8 +97,7 @@ feature -- Access
 								l_ext.to_lower
 								if l_ext.is_equal (dll_extension) then
 										-- Must have .dll
-									create l_fn.make
-									l_fn.set_directory (l_folder)
+									create l_fn.make_from_string (l_folder)
 									l_fn.set_file_name (l_item)
 									create l_file.make (l_fn)
 									if l_file.exists and then not l_file.is_directory and then l_pe_info.is_com2_pe_file (l_fn) then
@@ -283,7 +282,7 @@ invariant
 	clr_version_has_v_prefix: (clr_version.item (1)).as_lower = 'v'
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

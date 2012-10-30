@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			buffer_size := a_size
 			create buffer.make (buffer_size)
 			mode := write_file
-			name := "test_output_buffer"
+			set_name ("test_output_buffer")
 			create last_string.make_empty
 		end
 
@@ -282,7 +282,7 @@ invariant
 	truncated_implies_buffer_full: is_truncated implies (buffer.count = buffer_size)
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

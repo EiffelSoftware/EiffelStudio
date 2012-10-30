@@ -361,7 +361,7 @@ rt_public EIF_BOOLEAN eif_dir_is_readable(EIF_FILENAME name)
 
 #elif defined EIF_WINDOWS
 
-	return (EIF_BOOLEAN) (_waccess (name, R_OK != -1));
+	return (EIF_BOOLEAN) (_waccess (name, R_OK) != -1);
 
 #else
 #ifdef HAS_GETEUID

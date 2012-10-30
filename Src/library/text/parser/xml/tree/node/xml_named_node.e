@@ -46,7 +46,7 @@ feature -- Status report
 			definition: Result = (same_namespace (other) and same_name (other))
 		end
 
-	has_qualified_name (a_uri: READABLE_STRING_32; a_name: READABLE_STRING_32): BOOLEAN
+	has_qualified_name (a_uri: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does this node match the qualified name?
 		require
 			a_uri_not_void: a_uri /= Void
@@ -107,21 +107,21 @@ feature -- Element change
 
 feature -- Status report
 
-	has_same_name (a_name: like name): BOOLEAN
+	has_same_name (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Current name is same as `a_name' ?
 		local
 			v: like name
 		do
 			v := name
-			Result := (v = a_name) or else v.same_string (a_name)
+			Result := (v = a_name) or else a_name.same_string (v)
 		end
 
-	has_same_ns_uri (a_uri: READABLE_STRING_32): BOOLEAN
+	has_same_ns_uri (a_uri: READABLE_STRING_GENERAL): BOOLEAN
 		do
 			Result := namespace.has_same_uri (a_uri)
 		end
 
-	has_same_ns_prefix (a_ns_prefix: detachable READABLE_STRING_32): BOOLEAN
+	has_same_ns_prefix (a_ns_prefix: detachable READABLE_STRING_GENERAL): BOOLEAN
 		do
 			Result := namespace.has_same_ns_prefix (a_ns_prefix)
 		end

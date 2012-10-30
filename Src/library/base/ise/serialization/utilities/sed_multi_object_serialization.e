@@ -36,7 +36,7 @@ feature -- Access
 	last_file_position: INTEGER
 			-- Position after last serialization
 
-	error_message: STRING
+	error_message: STRING_32
 			-- Reason for failure
 
 feature -- Status report
@@ -57,13 +57,18 @@ feature -- Basic Operations
 			l_reader: SED_MEDIUM_READER_WRITER
 		do
 			if not retried then
-				create l_raw_file.make_open_read (path)
-				l_raw_file.go (a_pos)
-				create l_reader.make (l_raw_file)
-				l_reader.set_for_reading
-				if l_reader.is_ready_for_reading then
-					deserialized_object := retrieved (l_reader, True)
-					successful := deserialized_object /= Void
+				create l_raw_file.make_with_name (path)
+				if l_raw_file.exists then
+					l_raw_file.open_read
+					l_raw_file.go (a_pos)
+					create l_reader.make (l_raw_file)
+					l_reader.set_for_reading
+					if l_reader.is_ready_for_reading then
+						deserialized_object := retrieved (l_reader, True)
+						successful := deserialized_object /= Void
+					else
+						successful := False
+					end
 				else
 					successful := False
 				end
@@ -85,7 +90,7 @@ feature -- Basic Operations
 
 feature -- Basic Operations
 
-	serialize (a: ANY; path: STRING; is_appending: BOOLEAN)
+	serialize (a: ANY; path: READABLE_STRING_GENERAL; is_appending: BOOLEAN)
 			-- Serialize object `a' at the end of file `path' if `is_appending', otherwise
 			-- reset content of `path'.
 			-- Set `last_file_position' after storing.
@@ -98,10 +103,11 @@ feature -- Basic Operations
 			retried: BOOLEAN
 		do
 			if not retried then
+				create l_raw_file.make_with_name (path)
 				if is_appending then
-					create l_raw_file.make_open_append (path)
+					l_raw_file.open_append
 				else
-					create l_raw_file.make_open_write (path)
+					l_raw_file.open_write
 				end
 				create l_writer.make (l_raw_file)
 				l_writer.set_for_writing
@@ -110,7 +116,9 @@ feature -- Basic Operations
 				successful := True
 			else
 				successful := False
-				error_message := "Cannot store into " + path
+				create error_message.make (100)
+				error_message.append_string_general ("Cannot store into ")
+				error_message.append_string_general (path)
 			end
 			if l_raw_file /= Void and then not l_raw_file.is_closed then
 				l_raw_file.close

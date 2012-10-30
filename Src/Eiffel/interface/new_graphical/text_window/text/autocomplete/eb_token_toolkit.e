@@ -140,6 +140,7 @@ feature -- basic operations
 			l_props: like character_properties
 		do
 			Result := a_str
+			l_props := character_properties
 			from
 				i := 1
 				nb := a_str.count

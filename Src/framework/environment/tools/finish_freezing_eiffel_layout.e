@@ -43,8 +43,7 @@ feature -- Files
 			windows: {PLATFORM}.is_windows
 		once
 			create Result.make_from_path (config_eif_path)
-			Result.set_file_name ("config")
-			Result.add_extension ("eif")
+			Result.extend ("config.eif")
 			if
 				is_user_files_supported and then
 				attached user_priority_file_name (Result, True) as l_user
@@ -56,7 +55,7 @@ feature -- Files
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

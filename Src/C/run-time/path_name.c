@@ -541,16 +541,15 @@ rt_public EIF_INTEGER eif_home_directory_name_ptr(EIF_FILENAME a_buffer, EIF_INT
 {
 		/* String representation of $HOME */
 #ifdef EIF_WINDOWS
-	HRESULT hr = S_FALSE;
 	EIF_INTEGER l_nbytes;
 	if (a_buffer && (a_count >= (MAX_PATH * sizeof(wchar_t)))) {
 			/* Buffer is large enough for the call to SHGetFolderPathW. */
 		if (SHGetFolderPathW (NULL, CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE, NULL, SHGFP_TYPE_CURRENT, a_buffer) == S_OK) {
-			return (wcslen(a_buffer) + 1) * sizeof (wchar_t);
+			return (EIF_INTEGER) ((wcslen(a_buffer) + 1) * sizeof (wchar_t));
 		} else {
 			wchar_t *l_env_value = _wgetenv (L"APPDATA");
 			if (l_env_value) {
-				l_nbytes = (wcslen(l_env_value) + 1) * sizeof (wchar_t);
+				l_nbytes = (EIF_INTEGER) ((wcslen(l_env_value) + 1) * sizeof (wchar_t));
 				if (a_count >= l_nbytes) {
 					memcpy (a_buffer, l_env_value, l_nbytes);
 				} 
@@ -615,8 +614,8 @@ rt_public EIF_INTEGER eif_user_directory_name_ptr(EIF_FILENAME a_buffer, EIF_INT
 #ifdef EIF_WINDOWS
 	if (a_buffer && (a_count >= (MAX_PATH * sizeof(wchar_t)))) {
 			/* Buffer is large enough for the call to SHGetFolderPathW. */
-		if (SHGetSpecialFolderPathW (NULL, a_buffer, CSIDL_PERSONAL, TRUE) == S_OK) {
-			return wcslen(a_buffer) * sizeof (wchar_t);
+		if (SHGetSpecialFolderPathW (NULL, a_buffer, CSIDL_PERSONAL, TRUE)) {
+			return (EIF_INTEGER) ((wcslen(a_buffer) + 1) * sizeof (wchar_t));
 		} else {
 			return 0;
 		}

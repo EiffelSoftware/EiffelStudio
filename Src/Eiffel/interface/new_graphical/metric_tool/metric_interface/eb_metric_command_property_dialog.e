@@ -9,9 +9,9 @@ class
 
 inherit
 	PROPERTY_DIALOG [
-		TUPLE [command: STRING; working_directory: STRING; input: STRING; input_as_file: BOOLEAN;
-			   output: STRING; output_enabled: BOOLEAN; output_as_file: BOOLEAN;
-			   error: STRING; error_enabled: BOOLEAN; error_as_file: BOOLEAN; error_redirected_to_output: BOOLEAN;
+		TUPLE [command: STRING_32; working_directory: STRING_32; input: STRING_32; input_as_file: BOOLEAN;
+			   output: STRING_32; output_enabled: BOOLEAN; output_as_file: BOOLEAN;
+			   error: STRING_32; error_enabled: BOOLEAN; error_as_file: BOOLEAN; error_redirected_to_output: BOOLEAN;
 			   exit_code: INTEGER; exit_code_enabled: BOOLEAN
 		]]
 		redefine
@@ -297,15 +297,15 @@ feature{NONE} -- Actions
 		do
 			l_value := value
 			if l_value = Void then
-				l_value := ["", "", "", False, "", False, False, "", False, False, False, 0, False]
+				l_value := [{STRING_32} "", {STRING_32} "", {STRING_32} "", False, {STRING_32} "", False, False, {STRING_32} "", False, False, False, 0, False]
 			end
 
 			set_is_ui_update_blocked (True)
-			command_field.set_text (l_value.command.as_string_32)
-			working_directory_field.set_text (l_value.working_directory.as_string_32)
-			input_field.set_text (l_value.input.as_string_32)
-			output_field.set_text (l_value.output.as_string_32)
-			error_field.set_text (l_value.error.as_string_32)
+			command_field.set_text (l_value.command)
+			working_directory_field.set_text (l_value.working_directory)
+			input_field.set_text (l_value.input)
+			output_field.set_text (l_value.output)
+			error_field.set_text (l_value.error)
 			exit_code_field.set_text (l_value.exit_code.out.as_string_32)
 
 			update_checkbox_status (output_enabled_check, l_value.output_enabled)
@@ -330,14 +330,14 @@ feature{NONE} -- Actions
 					l_exit_code := exit_code_field.text.to_integer
 				end
 				l_value := [
-						command_field.text.as_string_8,
-						working_directory_field.text.as_string_8,
-						input_field.text.as_string_8,
+						command_field.text,
+						working_directory_field.text,
+						input_field.text,
 						input_as_file_check.is_selected,
-						output_field.text.as_string_8,
+						output_field.text,
 						output_enabled_check.is_selected,
 						output_as_file_check.is_selected,
-						error_field.text.as_string_8,
+						error_field.text,
 						error_enabled_check.is_selected,
 						error_as_file_check.is_selected,
 						error_redirected_check.is_selected,

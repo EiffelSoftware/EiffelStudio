@@ -16,9 +16,9 @@ inherit
 		end
 
 	DIALOG_PROPERTY [
-		TUPLE [command: STRING; working_directory: STRING; input: STRING; input_as_file: BOOLEAN;
-			   output: STRING; output_enabled: BOOLEAN; output_as_file: BOOLEAN;
-			   error: STRING; error_enabled: BOOLEAN; error_as_file: BOOLEAN; error_redirected_to_output: BOOLEAN;
+		TUPLE [command: STRING_32; working_directory: STRING_32; input: STRING_32; input_as_file: BOOLEAN;
+			   output: STRING_32; output_enabled: BOOLEAN; output_as_file: BOOLEAN;
+			   error: STRING_32; error_enabled: BOOLEAN; error_as_file: BOOLEAN; error_redirected_to_output: BOOLEAN;
 			   exit_code: INTEGER; exit_code_enabled: BOOLEAN
 		]]
 		rename
@@ -116,7 +116,7 @@ feature -- Setting
 		do
 			Result := value
 			if Result = Void then
-				Result := ["", "", "", False, "", False, False, "", False, False, False, 0, False]
+				Result := [{STRING_32} "", {STRING_32} "", {STRING_32} "", False, {STRING_32} "", False, False, {STRING_32} "", False, False, False, 0, False]
 			end
 			Result.compare_objects
 		ensure
@@ -133,10 +133,10 @@ feature {NONE} -- Implementation
 			l_value := value
 
 			if l_value = Void then
-				Result := [a_string.as_string_8, "", "", False, "", False, False, "", False, False, False, 0, False]
+				Result := [a_string, {STRING_32} "", {STRING_32} "", False, {STRING_32} "", False, False, {STRING_32} "", False, False, False, 0, False]
 			else
 				Result := [
-					a_string.as_string_8,
+					a_string,
 					l_value.working_directory,
 					l_value.input,
 					l_value.input_as_file,

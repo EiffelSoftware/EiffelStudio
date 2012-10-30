@@ -946,12 +946,12 @@ feature -- Directories (distribution)
 			not_result_is_empty: not Result.is_empty
 		end
 
-	metrics_path: DIRECTORY_NAME
+	metrics_path: DIRECTORY_NAME_32
 			-- Location of the metric configuration files
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_from_string (shared_application_path)
+			create Result.make_from_string (shared_application_path_32)
 			Result.extend (metrics_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -1507,7 +1507,7 @@ feature -- Files
 			not_result_is_empty: not Result.is_empty
 		end
 
-	predefined_metrics_file: FILE_NAME
+	predefined_metrics_file: FILE_NAME_32
 			-- File to store predefined metrics
 		require
 			is_valid_environment: is_valid_environment
@@ -1516,7 +1516,7 @@ feature -- Files
 			Result.set_file_name ("predefined_metrics.xml")
 			if is_user_files_supported then
 					-- Check user override file.
-				if attached user_priority_file_name (Result, True) as l_user then
+				if attached user_priority_file_name_32 (Result, True) as l_user then
 					Result := l_user
 				end
 			end
@@ -2464,7 +2464,7 @@ feature -- Directory constants (distribution)
 	lib_name: STRING_8 = "lib"
 			-- External library folder name
 
-	metrics_name: STRING_8 = "metrics"
+	metrics_name: STRING_32 = "metrics"
 			-- Metrics folder name.
 
 	mo_files_name: STRING_8 = "mo_files"

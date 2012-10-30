@@ -129,6 +129,11 @@ struct utimbuf {
 #include "rt_constants.h"
 #include "rt_assert.h"
 
+#ifdef EIF_WINDOWS
+/* Unfortunately Windows does not provide exactly the same type between utime and _wutime. */
+#define utimbuf _utimbuf
+#endif
+
 #define FS_START	0			/* Beginning of file for `fseek' */
 #define FS_CUR		1			/* Current position for `fseek' */
 #define FS_END		2			/* End of file for `fseek' */
@@ -1844,7 +1849,11 @@ rt_public void eif_file_chmod(EIF_FILENAME path, int mode)
 {
 #ifndef VXWORKS
 	int status;				/* Status from system call */
+#ifdef EIF_WINDOWS
+	EIF_REPEAT_INTERRUPTED_CALL(status, _wchmod(path, mode));
+#else
 	EIF_REPEAT_INTERRUPTED_CALL(status, chmod(path, mode));
+#endif
 #endif
 }
 

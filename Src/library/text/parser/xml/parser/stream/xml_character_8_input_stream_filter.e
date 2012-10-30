@@ -21,25 +21,11 @@ feature -- Access
 
 	source: XML_CHARACTER_8_INPUT_STREAM
 
-feature -- Status report
-
-	name_is_valid_as_string_8: BOOLEAN
-			-- Is associated name a valid string_8 value?
-		do
-			Result := source.name_is_valid_as_string_8
-		end
-
 feature -- Access		
 
-	name: STRING_8
-			-- Name of current stream
+	name: READABLE_STRING_32
 		do
 			Result := source.name
-		end
-
-	name_32: READABLE_STRING_32
-		do
-			Result := source.name_32
 		end
 
 feature -- Status report

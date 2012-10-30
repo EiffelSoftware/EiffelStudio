@@ -60,11 +60,23 @@ feature -- Parsing
 		deferred
 		end
 
+	parse_from_path (a_path: PATH)
+			-- Parse from file named `a_path'
+		require
+			a_path_valid: a_path /= Void and then not a_path.is_empty
+		deferred
+		end
+
 	parse_from_filename (a_filename: READABLE_STRING_GENERAL)
 			-- Parse from file named `a_filename'
+		obsolete "Use parse_from_path [2012-oct]"
 		require
 			a_filename_valid: a_filename /= Void and then not a_filename.is_empty
-		deferred
+		local
+			p: PATH
+		do
+			create p.make_from_string (a_filename)
+			parse_from_path (p)
 		end
 
 feature -- Status

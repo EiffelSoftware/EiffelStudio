@@ -72,24 +72,23 @@ feature -- Parsing
 			s.close
 		end
 
-	parse_from_filename (a_filename: READABLE_STRING_GENERAL)
-			-- Parse from file named `a_filename'
+	parse_from_path (a_path: PATH)
+			-- Parse from file named `a_path'
 		local
-			f: detachable FILE
+			f: detachable RAW_FILE
 			retried: BOOLEAN
-			u: FILE_UTILITIES
 		do
 			if not retried then
-				f := u.make_text_file (a_filename)
+				create f.make_with_path (a_path)
 				if f.exists and f.is_readable then
 					f.open_read
 					parse_from_file (f)
 					f.close
 				else
-					report_error ({STRING_32} "Unable to open file %"" + a_filename.to_string_32 + {STRING_32} "%".")
+					report_error ({STRING_32} "Unable to open file %"" + a_path.string_representation + {STRING_32} "%".")
 				end
 			else
-				report_error ({STRING_32} "Error when trying to open file %"" + a_filename.to_string_32 + {STRING_32} "%".")
+				report_error ({STRING_32} "Error when trying to open file %"" + a_path.string_representation + {STRING_32} "%".")
 				if f /= Void and then not f.is_closed then
 					f.close
 				end
@@ -175,7 +174,7 @@ feature -- Status
 	buffer_position: XML_POSITION
 			-- XML position in buffer
 		do
-			create Result.make (buffer.name_32, byte_index, column, line)
+			create Result.make (buffer.name, byte_index, column, line)
 		end
 
 	byte_index: INTEGER

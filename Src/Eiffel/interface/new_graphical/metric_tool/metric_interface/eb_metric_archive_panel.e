@@ -643,10 +643,10 @@ feature {NONE} -- Implementation
 				http := url_address.substring (1, 7).as_lower
 				ftp := url_address.substring (1, 6).as_lower
 				file := url_address.substring (1, 7).as_lower
-				if equal (file, "file://") then
+				if file.same_string_general ("file://") then
 					l_is_file := True
 					url_address := url_address.substring (8, url_address.count)
-				elseif equal (ftp, "ftp://") or equal (http, "http://") then
+				elseif ftp.same_string_general ("ftp://") or http.same_string_general ("http://") then
 				else
 					l_is_file := True
 				end

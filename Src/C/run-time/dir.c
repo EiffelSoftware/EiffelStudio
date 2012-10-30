@@ -251,7 +251,7 @@ rt_public EIF_INTEGER eif_dir_current (EIF_FILENAME a_buffer, EIF_INTEGER a_coun
 		l_nbytes = -1;
 	} else {
 		if (a_buffer && (a_count >= l_nbytes)) {
-			l_nbytes = (GetFullPathNameW (drive, 0, a_buffer, &subpart) + 1) * sizeof(wchar_t);
+			l_nbytes = (GetFullPathNameW (drive, l_nbytes, a_buffer, &subpart) + 1) * sizeof(wchar_t);
 		}
 	}
 	return l_nbytes;

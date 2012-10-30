@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 	save
 			-- Execute when push save button.
 		local
-			l_file: PLAIN_TEXT_FILE_32
+			l_file: PLAIN_TEXT_FILE
 		do
 			if file_path /= Void then
 				if not saved then
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 					save_file_dialog.show_modal_to_window (Current)
 				else
 					if changed then
-						create l_file.make (file_path)
+						create l_file.make_with_name (file_path)
 						l_file.open_write
 						l_file.put_string (class_file)
 						l_file.close
@@ -323,9 +323,9 @@ feature {NONE} -- Implementation
 	save_file
 			-- Excute when saving in save dialog.
 		local
-			l_file: PLAIN_TEXT_FILE_32
+			l_file: PLAIN_TEXT_FILE
 		do
-			create l_file.make (save_file_dialog.file_name)
+			create l_file.make_with_name (save_file_dialog.file_name)
 			l_file.open_write
 			l_file.put_string (class_file)
 			l_file.close

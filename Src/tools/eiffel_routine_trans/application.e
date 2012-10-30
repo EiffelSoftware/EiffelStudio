@@ -50,12 +50,12 @@ feature -- Basic operations
 	read_translate_data (a_file: READABLE_STRING_32)
 			-- Read translate data from `a_file'
 		local
-			l_input: PLAIN_TEXT_FILE_32
+			l_input: PLAIN_TEXT_FILE
 			l_table: like translat_table
 			retried: BOOLEAN
 		do
 			if not retried then
-				create l_input.make (a_file)
+				create l_input.make_with_name (a_file)
 				l_input.open_read
 				l_table := translat_table
 				from
@@ -91,7 +91,7 @@ feature -- Basic operations
 			l_output_string: STRING
 		do
 			if not retried then
-				create {RAW_FILE_32} l_input.make (a_file)
+				create l_input.make_with_name (a_file)
 				create l_token.make (20)
 				l_input.open_read
 				l_table := translat_table
@@ -124,7 +124,7 @@ feature -- Basic operations
 				l_input.close
 
 				if attached output_path as l_output_path then
-					create {RAW_FILE_32} l_output.make (l_output_path)
+					create l_output.make_with_name (l_output_path)
 					l_output.create_read_write
 					l_output.put_string (l_output_string)
 					l_output.close

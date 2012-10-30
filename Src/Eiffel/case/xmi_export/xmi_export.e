@@ -261,7 +261,7 @@ feature {NONE} -- Cache
 			end
 			tmp_target_file.putstring (string_cache)
 			tmp_target_file.close
-			tmp_target_file.change_name (a_file_name)
+			tmp_target_file.rename_file (a_file_name)
 				-- Reset
 			string_cache.wipe_out
 			tmp_target_file := Void
@@ -1178,7 +1178,7 @@ feature {NONE} -- Implementation
 			-- Name of topmost multiple type
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

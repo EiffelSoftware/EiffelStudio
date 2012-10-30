@@ -2118,8 +2118,8 @@ feature -- Environment access
 			a_var_attached: a_var /= Void
 			not_a_var_is_empty: not a_var.is_empty
 		do
-			if attached environment.get_from_application (a_var, application_name) as s32 then
-				Result := s32
+			if attached environment.get_from_application (a_var, application_name) as l_string then
+				Result := l_string
 			end
 		end
 
@@ -2570,68 +2570,12 @@ feature {NONE} -- Implementation
 			not_result_is_empty: not Result.is_empty
 		end
 
-	user_directory_name: detachable STRING
+	user_directory_name: detachable STRING_32
 			-- Directory name corresponding to the user directory
 			-- On Windows: C:\Users\manus\Documents
 			-- On Unix & Mac: $HOME
-		local
-			l_ptr: like eif_user_directory_name
-			l_dir: C_STRING
 		once
-			l_ptr := eif_user_directory_name
-			if l_ptr /= default_pointer then
-				create l_dir.own_from_pointer (l_ptr)
-				Result := l_dir.string
-			end
-			if Result /= Void and then not Result.is_empty then
-					-- Nothing to do here, we take what we got from the OS.
-			elseif
-				operating_environment.home_directory_supported and then
-				attached (create {EXECUTION_ENVIRONMENT}).home_directory_name as l_home
-			then
-					-- We use $HOME.
-				Result := l_home
-			else
-					-- No possibility of a user directory, we let the caller handle that.
-				Result := Void
-			end
-		end
-
-	eif_user_directory_name: POINTER
-			-- Directory name corresponding to the user directory
-		external
-			"C inline use %"eif_eiffel.h%""
-		alias
-			"[
-				#ifdef EIF_WINDOWS
-				#ifndef CSIDL_PERSONAL
-				#define CSIDL_PERSONAL 0x0005 /* roaming, user\My Documents */
-				#endif
-					char l_path[MAX_PATH + 1];
-					BOOL fResult = FALSE;
-					FARPROC sh_get_folder_path = NULL;
-					HMODULE shell32_module = LoadLibrary (L"shell32.dll");
-
-					if (shell32_module) {
-						sh_get_folder_path = GetProcAddress (shell32_module, "SHGetSpecialFolderPathA");
-						if (sh_get_folder_path) {
-							fResult = (FUNCTION_CAST_TYPE(BOOL, WINAPI, (HWND, LPSTR, DWORD, BOOL)) sh_get_folder_path) (
-								NULL, l_path, CSIDL_PERSONAL, TRUE);
-						}
-						FreeLibrary(shell32_module);
-					}
-
-					if (fResult) {
-						char* result = (char*)malloc (sizeof (char) * (strlen (l_path) + 1));
-						memcpy (result, l_path, strlen (l_path) + 1);
-						return result;
-					} else {
-						return NULL;
-					}
-				#else
-					return NULL;
-				#endif
-			]"
+			Result := (create {EXECUTION_ENVIRONMENT_32}).user_directory_name
 		end
 
 feature -- Preferences

@@ -164,8 +164,8 @@ feature {NONE} -- Name comparison with namespace.
 		do
 			Result := a_named.has_same_name (a_name) and (a_named.namespace.uri_is_empty)
 		ensure
-			same_name: Result implies has_same_name (a_name)
-			default_ns: (a_named.namespace.uri_is_empty) implies (Result = has_same_name (a_name))
+			same_name: Result implies a_named.has_same_name (a_name)
+			default_ns: (a_named.namespace.uri_is_empty) implies (Result = a_named.has_same_name (a_name))
 		end
 
 	named_same_name (a_named: XML_NAMED_NODE; a_name: READABLE_STRING_GENERAL): BOOLEAN
@@ -177,7 +177,7 @@ feature {NONE} -- Name comparison with namespace.
 		do
 			Result := a_named.has_same_name (a_name) and same_namespace (a_named)
 		ensure
-			same_name: Result implies has_same_name (a_name)
+			same_name: Result implies a_named.has_same_name (a_name)
 		end
 
 feature -- Access (from XM_COMPOSITE)
@@ -261,6 +261,8 @@ feature -- Access (from XM_COMPOSITE)
 	elements_by_name (a_name: READABLE_STRING_GENERAL): detachable LIST [XML_ELEMENT]
 			-- Direct child elements with name `a_name';
 			-- Return Void if no element with that name is a child of current node.
+		require
+			a_name_not_void: a_name /= Void
 		local
 			c: CURSOR
 			elts: like internal_nodes
@@ -281,8 +283,9 @@ feature -- Access (from XM_COMPOSITE)
 				elts.forth
 			end
 			elts.go_to (c)
+		ensure
+			elements_not_void: (Result /= Void) = has_element_by_name (a_name)
 		end
-
 
 	element_by_qualified_name (a_uri: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): detachable XML_ELEMENT
 			-- Direct child element with given qualified name;
@@ -308,6 +311,35 @@ feature -- Access (from XM_COMPOSITE)
 				end
 			end
 			elts.go_to (c)
+		end
+
+	elements_by_qualified_name (a_uri: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): detachable LIST [XML_ELEMENT]
+			-- Direct child elements with given qualified name ;
+			-- Return Void if no element with that qualified name is a child of current node.
+		require
+			a_name_not_void: a_name /= Void
+		local
+			c: CURSOR
+			elts: like internal_nodes
+		do
+			elts := internal_nodes
+			c := elts.cursor
+			from
+				create {LINKED_LIST [XML_ELEMENT]} Result.make
+				elts.start
+			until
+				elts.after
+			loop
+				if attached {XML_ELEMENT} elts.item as e and then
+					e.has_qualified_name (a_uri, a_name)
+				then
+					Result.extend (e)
+				end
+				elts.forth
+			end
+			elts.go_to (c)
+		ensure
+			elements_not_void: (Result /= Void) = has_element_by_qualified_name (a_uri, a_name)
 		end
 
 feature -- Access

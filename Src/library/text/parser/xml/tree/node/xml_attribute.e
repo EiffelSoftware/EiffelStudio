@@ -9,6 +9,9 @@ class
 
 inherit
 	XML_NAMED_NODE
+		redefine
+			parent
+		end
 
 create
 	make,
@@ -71,6 +74,9 @@ feature -- Status report
 		end
 
 feature -- Access
+
+	parent: detachable XML_ELEMENT
+			-- Parent of current node;
 
 	namespace_declaration: XML_NAMESPACE
 			-- Namespace corresponding to the declaration

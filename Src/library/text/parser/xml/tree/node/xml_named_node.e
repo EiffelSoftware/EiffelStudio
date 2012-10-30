@@ -54,7 +54,7 @@ feature -- Status report
 		do
 			Result := namespace.has_same_uri (a_uri) and has_same_name (a_name)
 		ensure
-			definition: Result = namespace.has_same_uri (a_uri) and has_same_name (a_name)
+			definition: Result = (namespace.has_same_uri (a_uri) and has_same_name (a_name))
 		end
 
 feature -- Access

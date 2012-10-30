@@ -16,7 +16,7 @@ inherit
 			wizard_information
 		end
 
-	EXECUTION_ENVIRONMENT
+	EXECUTION_ENVIRONMENT_32
 		rename
 			command_line as exec_command_line
 		undefine
@@ -121,9 +121,9 @@ feature {NONE} -- Implementation
 			-- Launch all the choosen precompilations
 		local
 			current_it: EV_MULTI_COLUMN_LIST_ROW
-			lib_info: TUPLE [STRING, BOOLEAN]
-			sys_name: STRING
-			ace_path: STRING
+			lib_info: TUPLE [STRING_32, BOOLEAN]
+			sys_name: STRING_32
+			ace_path: STRING_32
 			already_precompiled: BOOLEAN_REF
 			rescued: BOOLEAN
 			error_dialog: EV_ERROR_DIALOG
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	precompile (lib_name, lib_ace: STRING; lib_compiled: BOOLEAN)
+	precompile (lib_name, lib_ace: STRING_32; lib_compiled: BOOLEAN)
 			-- Launch the precompilation for the library 'lib_name'
 			-- Using the ace file 'lib_ace'
 			-- If the library is already compiled, in 'lib_compiled' then
@@ -169,10 +169,10 @@ feature {NONE} -- Implementation
 			to_end: BOOLEAN
 			time_left, n_dir: INTEGER
 			new_time_left: INTEGER
-			proj_path, command: STRING
+			proj_path, command: STRING_32
 			total_prog: INTEGER
-			progress_file_path: FILE_NAME
-			eifgen_path: DIRECTORY_NAME
+			progress_file_path: FILE_NAME_32
+			eifgen_path: DIRECTORY_NAME_32
 		do
 				-- We need to find the path, the exact name and the full name of the Ace file
 				-- knowing the full name. (Can be fixed .. )
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 				progress_text_2.set_text (interface_names.l_precompiling_library (lib_name))
 				create command.make (50)
 				command.append_character ('"')
-				command.append (eiffel_layout.ec_command_name)
+				command.append (eiffel_layout.ec_command_name_32)
 				command.append ("%" ")
 				command.append (" -precompile -config %"")
 				command.append (lib_ace)
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				progress_2.set_proportion ((time_left / 100).truncated_to_real)
-				progress_text_2.set_text (interface_names.l_precompiling_library (lib_name).as_string_32 + time_left.out + "%%")
+				progress_text_2.set_text (interface_names.l_precompiling_library (lib_name) + time_left.out + "%%")
 
 				total_prog := ((time_left + 100*n_lib_done)/(n_lib_to_precompile)).floor
 				progress.set_proportion (((time_left + 100*n_lib_done)/(100*n_lib_to_precompile)).truncated_to_real)
@@ -228,13 +228,13 @@ feature {NONE} -- Implementation
 			n_lib_done := n_lib_done + 1
 		end
 
-	find_time (progress_file_path: FILE_NAME): INTEGER
+	find_time (progress_file_path: FILE_NAME_32): INTEGER
 			-- Check the progress file to determine the current progress of the precompilation
 			-- The function will check the project file in the directory 'project_path'
 		require
 			progress_file_path_valid: progress_file_path /= Void and then progress_file_path.is_valid
 		local
-			fi: PLAIN_TEXT_FILE
+			fi: PLAIN_TEXT_FILE_32
 			s: STRING
 			retried: BOOLEAN
 			curr_degree: INTEGER

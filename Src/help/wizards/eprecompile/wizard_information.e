@@ -24,9 +24,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	location: STRING
-		-- location of the project
-
 	l_to_precompile: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW]
 		-- list of library to precompile
 
@@ -34,11 +31,6 @@ feature -- Access
 		-- list of library that can be precompile
 
 feature -- Element change
-
-	set_location (s: STRING)
-		do
-			location:= s
-		end
 
 	set_l_to_precompile (l: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW])
 		do

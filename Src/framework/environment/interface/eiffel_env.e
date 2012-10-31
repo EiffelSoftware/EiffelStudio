@@ -1412,7 +1412,9 @@ feature -- Files (commands)
 			is_valid_environment: is_valid_environment
 		once
 			create Result.make_nested (bin_path, estudio_name)
-			Result.add_extension (executable_suffix)
+			if not executable_suffix.is_empty then
+				Result.add_extension (executable_suffix)
+			end
 		ensure
 			not_reuslt_is_empty: not Result.is_empty
 		end
@@ -1431,7 +1433,9 @@ feature -- Files (commands)
 				create Result.make_from_string (l_args.command_name)
 			else
 				create Result.make_nested (bin_path, ec_name)
-				Result.add_extension (executable_suffix)
+				if not executable_suffix.is_empty then
+					Result.add_extension (executable_suffix)
+				end
 			end
 		ensure
 			not_reuslt_is_empty: not Result.is_empty
@@ -1485,7 +1489,9 @@ feature -- Files (commands)
 			is_valid_environment: is_valid_environment
 		once
 			create Result.make_nested (bin_path, finish_freezing_script)
-			Result.add_extension (executable_suffix)
+			if not executable_suffix.is_empty then
+				Result.add_extension (executable_suffix)
+			end
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1500,8 +1506,10 @@ feature -- Files (commands)
 			else
 				create Result.make_from_path (bin_path)
 			end
-			Result.add_extension (emake_name)
-			Result.add_extension (executable_suffix)
+			Result.extend (emake_name)
+			if not executable_suffix.is_empty then
+				Result.add_extension (executable_suffix)
+			end
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1517,7 +1525,9 @@ feature -- Files (commands)
 				create Result.make_from_path (bin_path)
 			end
 			Result.extend (quick_finalize_name)
-			Result.add_extension (executable_suffix)
+			if not executable_suffix.is_empty then
+				Result.add_extension (executable_suffix)
+			end
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1533,7 +1543,9 @@ feature -- Files (commands)
 				create Result.make_from_path (bin_path)
 			end
 			Result.extend (x2c_name)
-			Result.add_extension (executable_suffix)
+			if not executable_suffix.is_empty then
+				Result.add_extension (executable_suffix)
+			end
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1548,7 +1560,9 @@ feature -- Files (commands)
 				create Result.make_from_path (bin_path)
 			end
 			Result.extend (prelink_name)
-			Result.add_extension (executable_suffix)
+			if not executable_suffix.is_empty then
+				Result.add_extension (executable_suffix)
+			end
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1564,7 +1578,9 @@ feature -- Files (commands)
 				create Result.make_from_path (bin_path)
 			end
 			Result.extend (ecdbg_name)
-			Result.add_extension (executable_suffix)
+			if not executable_suffix.is_empty then
+				Result.add_extension (executable_suffix)
+			end
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1590,7 +1606,9 @@ feature -- Files (commands)
 			Result.extend (spec_name)
 			Result.extend (eiffel_platform)
 			Result.extend ("wizard")
-			Result.add_extension (executable_suffix)
+			if not executable_suffix.is_empty then
+				Result.add_extension (executable_suffix)
+			end
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end

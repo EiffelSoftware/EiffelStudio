@@ -185,7 +185,7 @@ feature -- Status update
 
 				if
 					l_value /= Void and then l_value.item (l_value.count) = l_op_env.directory_separator and then
-					({PLATFORM}.is_windows or else not (l_value.is_equal ("/") or l_value.is_equal ("~/")))
+					({PLATFORM}.is_windows or else not (l_value.same_string ("/") or l_value.same_string ("~/")))
 				then
 						-- Remove trailing directory separator
 					l_value.prune_all_trailing (l_op_env.directory_separator)
@@ -453,11 +453,11 @@ feature -- Query
 			l_file_name := a_file_path.string_representation
 			l_install := install_path.string_representation
 			if l_install.count < l_file_name.count then
-				if l_file_name.substring (1, l_install.count).is_equal (l_install) then
+				if l_file_name.substring (1, l_install.count).same_string (l_install) then
 					l_extension := l_file_name.substring (l_install.count + 1, l_file_name.count)
 					l_extension.prune_all_leading (operating_environment.directory_separator)
 					create Result.make_nested (user_files_path, l_extension)
-					create l_actual_file.make_with_name (Result.string_representation)
+					create l_actual_file.make_with_path (Result)
 					if a_must_exist and then (not l_actual_file.exists or else (l_actual_file.is_device or l_actual_file.is_directory)) then
 							-- The file does not exist or is not actually a file.
 						Result := Void

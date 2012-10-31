@@ -10,8 +10,9 @@ note
 class RESOURCE_PARSER
 
 inherit
-
 	RESOURCE_LEX
+
+	LOCALIZED_PRINTER
 
 feature -- Parsing
 
@@ -67,7 +68,7 @@ feature -- Parsing
 				l_resource_file.close
 			else
 				io.error.put_string ("Warning: Cannot read resource file %"");
-				io.error.put_string (filename.string_representation);
+				localized_print_error (filename.string_representation);
 				io.error.put_string ("%".");
 				io.error.put_new_line
 			end

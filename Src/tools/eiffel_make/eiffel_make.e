@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 			l_has_e1: BOOLEAN
 		do
 			create l_dir.make (target)
-			l_dirs := l_dir.linear_representation
+			l_dirs := l_dir.linear_representation_32
 			from
 				l_dirs.start
 				create l_sorted_list.make (10)
@@ -229,8 +229,8 @@ feature {NONE} -- Implementation
 				l_dirs.after
 			loop
 				l_dir_name := l_dirs.item
-				if l_dir_name /= Void and then (not l_dir_name.is_equal (".") and not l_dir_name.is_equal ("..")) then
-					if l_dir_name.is_equal ("E1") then
+				if l_dir_name /= Void and then (not l_dir_name.same_string (".") and not l_dir_name.same_string ("..")) then
+					if l_dir_name.same_string ("E1") then
 						l_has_e1 := True
 					else
 						l_name := target.twin

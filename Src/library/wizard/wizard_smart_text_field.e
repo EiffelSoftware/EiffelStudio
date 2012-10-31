@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 					start_directory.keep_head (start_directory.count - 1)
 				end
 				if not start_directory.is_empty and then
-					(create {DIRECTORY_32}.make (start_directory)).exists
+					(create {DIRECTORY}.make (start_directory)).exists
 				then
 					dir_selector.set_start_directory (start_directory)
 				end

@@ -10,7 +10,7 @@ feature
 
 	make is
 		do
-			create f.make ("file.txt")
+			create f.make_with_name ("file.txt")
 			read_integer
 			read_double
 			read_real

@@ -6,7 +6,7 @@
 		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf" use_application_options="true"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>
 </system>

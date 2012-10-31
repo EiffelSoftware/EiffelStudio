@@ -450,7 +450,7 @@ feature {NONE} -- Action handlers
 			l_comma: INTEGER
 			l_line_string: STRING_32
 			l_line: NATURAL
-			l_full_file_name: FILE_NAME_32
+			l_full_file_name: PATH
 			l_files: ARRAYED_LIST [STRING_8]
 			l_expr: RX_PCRE_MATCHER
 			u: FILE_UTILITIES
@@ -497,8 +497,8 @@ feature {NONE} -- Action handlers
 
 						-- Check for relative paths
 					create l_full_file_name.make_from_string (l_compilation_folder)
-					l_full_file_name.set_file_name (l_file_name)
-					if not u.file_exists (l_full_file_name) then
+					l_full_file_name.extend (l_file_name)
+					if not u.file_path_exists (l_full_file_name) then
 							-- GCC doesn't show the full path name, so try scanning the compilation folder
 						l_file_name.replace_substring_all (".", "\.")
 						l_file_name.append_character ('$')
@@ -512,7 +512,7 @@ feature {NONE} -- Action handlers
 							end
 						end
 					end
-					l_file_name := l_full_file_name
+					l_file_name := l_full_file_name.string_representation
 				end
 
 				if u.file_exists (l_file_name) then
@@ -658,7 +658,7 @@ feature {NONE} -- Internationalization
 	lb_finalized: STRING = "Finalized Compiler Folder"
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

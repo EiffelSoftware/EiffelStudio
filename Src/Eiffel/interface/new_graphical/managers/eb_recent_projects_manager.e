@@ -20,14 +20,12 @@ feature {NONE} -- Initialization
 	make
 			-- Create a project manager.
 		local
-			l_value: STRING
 			l_projects: ARRAY [TUPLE [READABLE_STRING_32, READABLE_STRING_32]]
 			i: INTEGER
 			l_project: TUPLE [READABLE_STRING_32, READABLE_STRING_32]
 		do
 				-- Get values from preferences.
-			l_value := preferences.preferences.get_preference_value_direct ("LIST_" + preferences.recent_projects_data.last_opened_projects_string)
-			if l_value /= Void then
+			if attached preferences.preferences.get_preference_value_direct ("LIST_" + preferences.recent_projects_data.last_opened_projects_string) as l_value then
 				preferences.recent_projects_data.last_opened_projects_preference.set_value_from_string (l_value)
 			end
 			l_projects := preferences.recent_projects_data.last_opened_projects
@@ -160,7 +158,7 @@ invariant
 	recent_projects_compare_objects: recent_projects.object_comparison
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

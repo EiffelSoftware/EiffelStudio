@@ -15,7 +15,7 @@ inherit
 
 feature -- Parsing
 
-	parse_file (filename: READABLE_STRING_32; table: RESOURCE_TABLE)
+	parse_file (filename: PATH; table: RESOURCE_TABLE)
 			-- Parse the resource file `filename' and store the
 			-- information in the resource table `table'.
 		require
@@ -26,9 +26,8 @@ feature -- Parsing
 			resource_name: STRING
 			l_last_token: like last_token
 			l_resource_file: like resource_file
-			u: FILE_UTILITIES
 		do
-			l_resource_file := u.make_text_file (filename)
+			create l_resource_file.make_with_path (filename)
 			resource_file := l_resource_file
 			if not l_resource_file.exists then
 				-- Do nothing (no message) if the resource file does not exist
@@ -68,7 +67,7 @@ feature -- Parsing
 				l_resource_file.close
 			else
 				io.error.put_string ("Warning: Cannot read resource file %"");
-				io.error.put_string (filename);
+				io.error.put_string (filename.string_representation);
 				io.error.put_string ("%".");
 				io.error.put_new_line
 			end

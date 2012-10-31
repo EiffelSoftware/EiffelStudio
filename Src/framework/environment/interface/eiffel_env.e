@@ -2145,7 +2145,7 @@ feature {NONE} -- Helper
 		local
 			u: FILE_UTILITIES
 		do
-			Result := u.directory_exists (p.string_representation)
+			Result := u.directory_path_exists (p)
 		end
 
 	file_path_exists (p: PATH): BOOLEAN
@@ -2153,7 +2153,7 @@ feature {NONE} -- Helper
 		local
 			u: FILE_UTILITIES
 		do
-			Result := u.file_exists (p.string_representation)
+			Result := u.file_path_exists (p)
 		end
 
 feature -- _8 to be replaced functions

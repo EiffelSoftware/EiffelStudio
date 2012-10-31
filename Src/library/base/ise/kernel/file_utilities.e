@@ -189,6 +189,12 @@ feature -- File name operations
 
 feature -- Directory operations
 
+ 	directory_path_exists (p: PATH): BOOLEAN
+			-- Does directory of path `p' exist?
+		do
+			Result := not p.is_empty and then (create {DIRECTORY}.make_with_path (p)).exists
+		end
+
 	make_directory (n: READABLE_STRING_GENERAL): DIRECTORY
 			-- New {DIRECTORY} for directory name `n'.
 		do
@@ -367,6 +373,36 @@ feature -- File operations
 			end
 		end
 
+	copy_file_path (old_path, new_path: PATH)
+			-- Copy file named `old_path' to `new_path'.
+		local
+			f: detachable RAW_FILE
+			t: detachable RAW_FILE
+			is_rescued: BOOLEAN
+		do
+			if is_rescued then
+				if attached f and then f.is_open_read then
+					f.close
+				end
+				if attached t and then t.is_open_write then
+					t.close
+				end
+			else
+				create f.make_with_path (old_path)
+				f.open_read
+				create t.make_with_path (new_path)
+				t.open_write
+				f.copy_to (t)
+				f.close
+				t.close
+			end
+		rescue
+			if not is_rescued then
+				is_rescued := True
+				retry
+			end
+		end
+
 	rename_file (old_name, new_name: READABLE_STRING_GENERAL)
 			-- Rename file named `old_name' to `new_name'.
 		local
@@ -375,6 +411,16 @@ feature -- File operations
 			create f.make_with_name (old_name)
 			f.rename_file (new_name)
 		end
+
+	rename_file_path (old_path, new_path: PATH)
+			-- Rename file named `old_path' to `new_path'.
+		local
+			f: RAW_FILE
+		do
+			create f.make_with_path (old_path)
+			f.rename_file (new_path.string_representation)
+		end
+
 
 	open_read_raw_file (n: READABLE_STRING_GENERAL): RAW_FILE
 			-- Open {RAW_FILE} of name `n' for reading.
@@ -426,6 +472,21 @@ feature -- File operations
 		do
 			if not n.is_empty and then not is_retried then
 				f := make_raw_file (n)
+				Result := f.exists and then f.is_plain
+			end
+		rescue
+			is_retried := True
+			retry
+		end
+
+	file_path_exists (p: PATH): BOOLEAN
+			-- Does file of path `p' exist?
+		local
+			f: RAW_FILE
+			is_retried: BOOLEAN
+		do
+			if not p.is_empty and then not is_retried then
+				create f.make_with_path (p)
 				Result := f.exists and then f.is_plain
 			end
 		rescue

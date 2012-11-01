@@ -25,10 +25,7 @@ inherit
 			on_start_tag_finish,
 			on_end_tag,
 			on_attribute,
-			has_resolved_namespaces,
-			on_start_tag_resolved,
-			on_end_tag_resolved,
-			on_attribute_resolved
+			has_resolved_namespaces
 		redefine
 			make_null
 		end

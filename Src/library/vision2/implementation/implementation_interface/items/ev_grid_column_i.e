@@ -515,14 +515,14 @@ feature -- Element change
 			item_set: item (i) = a_item
 		end
 
-	set_title (a_title: like title)
+	set_title (a_title: READABLE_STRING_GENERAL)
 			-- a_title_not_void: a_title /= Void.
 		require
 			is_parented: parent /= Void
 		do
 			header_item.set_text (a_title)
 		ensure
-			title_set: title.is_equal (a_title)
+			title_set: a_title.same_string (title)
 		end
 
 	set_background_color (a_color: EV_COLOR)
@@ -799,15 +799,15 @@ invariant
 	physical_index_set: parent /= Void implies physical_index >= 0
 
 note
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-		Eiffel Software
-		356 Storke Road, Goleta, CA 93117 USA
-		Telephone 805-685-1006, Fax 805-685-6869
-		Website http://www.eiffel.com
-		Customer support http://support.eiffel.com
-	]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end
 

@@ -743,7 +743,6 @@ feature {NONE} -- Callbacks
 			l_done: BOOLEAN
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached a_item.text as lt_tags then
-					 -- |FIXME: Bad conversion, should not convert to string_8.
 				if attached lt_tags as lt_tags_str then
 					l_tags := parse_tags (lt_tags_str)
 					l_tags.compare_objects

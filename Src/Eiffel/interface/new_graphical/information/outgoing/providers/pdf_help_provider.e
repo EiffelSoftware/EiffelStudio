@@ -39,16 +39,16 @@ feature -- Basic operations
 			-- <precursor>
 		local
 			l_file_type: BOOLEAN
-			l_str: STRING
+			l_str: STRING_32
 		do
 			if attached {HELP_SECTION_EIS_ENTRY} a_section as lt_section then
-				if attached lt_section.entry as lt_entry and then lt_entry.source /= Void and then attached lt_entry.source.as_string_8.twin as lt_src then
+				if attached lt_section.entry as lt_entry and then lt_entry.source /= Void and then attached lt_entry.source.twin as lt_src then
 					last_entry := lt_entry
 					format_uris (lt_src)
 					if attached lt_entry.parameters as lt_parameters then
-						lt_parameters.search (pdf_type_string.as_string_32)
+						lt_parameters.search (pdf_type_string)
 						if lt_parameters.found then
-							if lt_parameters.found_item.is_case_insensitive_equal (pdf_type_file_string.as_string_32) then
+							if lt_parameters.found_item.is_case_insensitive_equal (pdf_type_file_string) then
 								l_file_type := True
 							end
 						end
@@ -73,7 +73,7 @@ feature -- Basic operations
 			end
 		end
 
-	append_acrobat_url_arguments (a_string: STRING; a_entry: EIS_ENTRY)
+	append_acrobat_url_arguments (a_string: STRING_32; a_entry: EIS_ENTRY)
 			-- Append acrobat url arguments to `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -88,7 +88,7 @@ feature -- Basic operations
 			end
 		end
 
-	append_acrobat_command_arguments (a_string: STRING; a_entry: EIS_ENTRY)
+	append_acrobat_command_arguments (a_string: STRING_32; a_entry: EIS_ENTRY)
 			-- Append acrobat command arguments to `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -105,12 +105,12 @@ feature -- Basic operations
 			end
 		end
 
-	pdf_arguments_from_entry (a_entry: EIS_ENTRY): detachable STRING
+	pdf_arguments_from_entry (a_entry: EIS_ENTRY): detachable STRING_32
 			-- PDF arguments from `a_entry'
 		require
 			a_entry_not_void: a_entry /= Void
 		local
-			l_result: STRING
+			l_result: STRING_32
 			l_found: BOOLEAN
 		do
 			if attached a_entry.parameters as lt_parameters then
@@ -138,7 +138,7 @@ feature -- Basic operations
 			end
 		end
 
-	quoted_string (a_string: STRING): STRING
+	quoted_string (a_string: READABLE_STRING_32): STRING_32
 			-- Quoted string of `a_string'
 		require
 			a_string_not_void: a_string /= Void
@@ -150,7 +150,7 @@ feature -- Basic operations
 			Result_not_void: Result /= Void
 		end
 
-	launch_command (a_command: STRING_8)
+	launch_command (a_command: READABLE_STRING_32)
 			-- Launches a commdand
 		require
 			a_command_not_void: a_command /= Void
@@ -163,28 +163,28 @@ feature -- Basic operations
 
 feature {NONE} -- Constants
 
-	pdf_type_string: STRING = "type"
+	pdf_type_string: STRING_32 = "type"
 
-	pdf_type_file_string: STRING = "file"
+	pdf_type_file_string: STRING_32 = "file"
 
-	windows_file_protocol: STRING = "file:///"
+	windows_file_protocol: STRING_32 = "file:///"
 
-	acrobat_url_sep: STRING = "#"
+	acrobat_url_sep: STRING_32 = "#"
 
-	acrobat_sep: STRING = "&"
+	acrobat_sep: STRING_32 = "&"
 
-	acrobat_attri_sep: STRING = "="
+	acrobat_attri_sep: STRING_32 = "="
 
-	acrobat_command_string: STRING = "acrobat "
+	acrobat_command_string: STRING_32 = "acrobat "
 
-	acrobat_action_string: STRING = "/A "
+	acrobat_action_string: STRING_32 = "/A "
 
-	acrobat_page: STRING = "page"
+	acrobat_page: STRING_32 = "page"
 
-	acrobat_nameddest: STRING = "nameddest";
+	acrobat_nameddest: STRING_32 = "nameddest";
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

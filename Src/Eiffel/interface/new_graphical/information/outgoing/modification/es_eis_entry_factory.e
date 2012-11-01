@@ -18,9 +18,9 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	default_protocol: STRING = "URI"
-	default_name: STRING = "Unnamed"
-	default_source: STRING = "http://www.yourwebsite.com"
+	default_protocol: STRING_32 = "URI"
+	default_name: STRING_32 = "Unnamed"
+	default_source: STRING_32 = "http://www.yourwebsite.com"
 			-- Default source
 
 note

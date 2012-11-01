@@ -185,7 +185,7 @@ feature -- Preference
 	file_browser_command_preference: STRING_PREFERENCE
 	locale_id_preference: ARRAY_PREFERENCE
 	pnd_preference: BOOLEAN_PREFERENCE
-	eis_path_preference: STRING_PREFERENCE
+	eis_path_preference: STRING_32_PREFERENCE
 	use_postscript_preference: BOOLEAN_PREFERENCE
 
 feature {NONE} -- Preference Strings
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 		local
 			l_manager: EC_PREFERENCE_MANAGER
 			l_platform: PLATFORM_CONSTANTS
-			l_eis_path: STRING
+			l_eis_path: STRING_32
 		do
 			create l_platform
 			create l_manager.make (preferences, "misc")
@@ -245,10 +245,10 @@ feature {NONE} -- Implementation
 
 			pnd_preference := l_manager.new_boolean_preference_value (l_manager, pnd_preference_string, False)
 
-			l_eis_path := ""
-			eis_path_preference := l_manager.new_string_preference_value (l_manager, eis_path_preference_string, l_eis_path)
+			create l_eis_path.make_empty
+			eis_path_preference := l_manager.new_string_32_preference_value (l_manager, eis_path_preference_string, l_eis_path)
 			if attached eis_path as l_path and then l_path.is_empty then
-				eis_path_preference.set_value (eiffel_layout.user_projects_path.out + ";" + eiffel_layout.library_path.out)
+				eis_path_preference.set_value (eiffel_layout.user_projects_path.string_representation + {STRING_32} ";" + eiffel_layout.library_path.string_representation)
 			end
 
 			use_postscript_preference := l_manager.new_boolean_preference_value (l_manager, use_postscript_preference_string, False)

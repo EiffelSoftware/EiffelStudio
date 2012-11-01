@@ -10,13 +10,15 @@ class
 
 feature -- Searcher
 
-	search_project (a_path: attached STRING; a_system_name, a_system_uuid, a_target_name, a_target_uuid: detachable STRING)
+	search_project (a_path: STRING_32; a_system_name, a_system_uuid, a_target_name, a_target_uuid: detachable STRING)
 			-- Search project
 			-- `a_path' is in the format of "path1; path2; path3"
+		require
+			a_path_attached: a_path /= Void
 		local
-			l_splitted_path: LIST [STRING]
-			l_path: STRING
-			l_sep: CHARACTER
+			l_splitted_path: LIST [STRING_32]
+			l_path: STRING_32
+			l_sep: CHARACTER_32
 		do
 			reset
 			if not a_path.is_empty then
@@ -109,14 +111,15 @@ feature {NONE} -- Implemetation
 			Result := system_name /= Void or system_uuid /= Void or target_name /= Void or target_uuid /= Void
 		end
 
-	search_project_in_directory (a_path: attached STRING)
+	search_project_in_directory (a_path: STRING_32)
 			-- Search project in `a_path'
 		require
+			a_path_attached: a_path /= Void
 			a_path_not_empty: not a_path.is_empty
 			search_needed: search_needed
 		local
-			l_files: attached ARRAYED_LIST [STRING]
-			l_file: detachable STRING
+			l_files: like {GOBO_FILE_UTILITIES}.scan_for_files
+			l_file: STRING_32
 			u: GOBO_FILE_UTILITIES
 		do
 			if u.directory_exists (a_path) then
@@ -127,14 +130,13 @@ feature {NONE} -- Implemetation
 					l_files.after or project_found
 				loop
 					l_file := l_files.item_for_iteration
-					check l_file_not_void: l_file /= Void end
 					check_file (l_file)
 					l_files.forth
 				end
 			end
 		end
 
-	check_file (a_file: attached STRING)
+	check_file (a_file: STRING_32)
 			-- Check file and see if it is the system we need.
 		require
 			search_needed: search_needed
@@ -227,9 +229,8 @@ feature {NONE} -- Implemetation
 			target_uuid := Void
 		end
 
-	read_user_options (a_file_path: STRING_8)
+	read_user_options (a_file_path: STRING_32)
 			-- Read user data for project of path `a_file_path'.
-			-- (export status {NONE})
 		require
 			a_file_path_not_void: a_file_path /= Void
 		local

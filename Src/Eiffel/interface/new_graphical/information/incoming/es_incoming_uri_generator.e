@@ -8,24 +8,28 @@ class
 
 feature -- Generator
 
-	generate_uri_for_stone (a_stone: ANY): detachable STRING
+	generate_uri_for_stone (a_stone: ANY): detachable STRING_32
 			-- Generate URI for `a_stone'.
 		local
-			l_feature_name, l_class_name, l_group_name: detachable STRING
-			l_target_name, l_system_name, l_system_uuid: detachable STRING
+			l_feature_name, l_class_name, l_group_name: detachable STRING_32
+			l_target_name, l_system_name, l_system_uuid: detachable STRING_32
 			l_group: CONF_GROUP
 			l_target: CONF_TARGET
 		do
 			if attached {FEATURE_STONE} a_stone as l_feature_stone then
-				l_feature_name := l_feature_stone.e_feature.name_8
-				l_class_name := l_feature_stone.class_name
+				l_feature_name := l_feature_stone.e_feature.name_32
+				if attached l_feature_stone.class_name as l_n then
+					l_class_name := l_n
+				end
 				l_group := l_feature_stone.class_i.group
 				l_group_name := l_group.name
 				l_target_name := l_group.target.name
 				l_system_name := l_group.target.system.name
 				l_system_uuid := l_group.target.system.uuid.out
 			elseif attached {CLASSI_STONE} a_stone as l_class_stone then
-				l_class_name := l_class_stone.class_name
+				if attached l_class_stone.class_name as l_n then
+					l_class_name := l_n
+				end
 				l_group := l_class_stone.class_i.group
 				l_group_name := l_group.name
 				l_target_name := l_group.target.name
@@ -85,21 +89,21 @@ feature -- Generator
 
 feature {NONE} -- Constants
 
-	eiffel_prefix: STRING = "eiffel:?"
+	eiffel_prefix: STRING_32 = "eiffel:?"
 
-	system_name: STRING = "system="
+	system_name: STRING_32 = "system="
 
-	target_name: STRING = "target="
+	target_name: STRING_32 = "target="
 
-	group_name: STRING = "cluster="
+	group_name: STRING_32 = "cluster="
 
-	class_name: STRING = "class="
+	class_name: STRING_32 = "class="
 
-	feature_name: STRING = "feature="
+	feature_name: STRING_32 = "feature="
 
-	dot: CHARACTER = '.'
+	dot: CHARACTER_32 = '.'
 
-	separator: CHARACTER = '&'
+	separator: CHARACTER_32 = '&'
 
 note
 	copyright: "Copyright (c) 1984-2012, Eiffel Software"

@@ -1256,8 +1256,7 @@ feature -- Files
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (eifinit_path, "libraries")
-			Result.extend ("cfg")
+			create Result.make_nested (eifinit_path, "libraries.cfg")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1267,8 +1266,7 @@ feature -- Files
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (eifinit_path, "precompiles")
-			Result.extend ("cfg")
+			create Result.make_nested (eifinit_path, "precompiles.cfg")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1283,8 +1281,7 @@ feature -- Files (user)
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		do
-			create Result.make_nested (docking_data_path, a_file_name)
-			Result.extend (docking_file_extension)
+			create Result.make_nested (docking_data_path, a_file_name + "." + docking_file_extension)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1321,8 +1318,7 @@ feature -- Files (user)
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		do
-			create Result.make_nested (user_files_path, a_file_name)
-			Result.add_extension ("ini")
+			create Result.make_nested (user_files_path, a_file_name.as_string_32 + ".ini")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end

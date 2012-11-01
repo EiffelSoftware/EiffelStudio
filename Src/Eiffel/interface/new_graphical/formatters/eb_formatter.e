@@ -37,7 +37,7 @@ feature -- Initialization
 			manager := a_manager
 			command_name := capital_command_name.twin
 			interface_names.string_general_left_adjust (command_name)
-			command_name := interface_names.string_general_as_lower (command_name)
+			command_name := command_name.as_lower
 			create post_execution_action
 		ensure
 			valid_capital_command_name: valid_string (capital_command_name)
@@ -684,7 +684,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

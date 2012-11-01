@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 				(a_str = Void and a_other = Void) or else
 				(attached a_str as l_str and then l_str.is_empty and then a_other = Void) or else
 				(attached a_other as l_other and then l_other.is_empty and then a_str = Void) or else
-				(attached a_str as l_str and then attached a_other as l_other and then string_general_is_caseless_equal (l_str, l_other))
+				(attached a_str as l_str and then attached a_other as l_other and then l_str.is_case_insensitive_equal (l_other))
 		end
 
 feature {NONE} -- Hash code

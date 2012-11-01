@@ -664,7 +664,7 @@ feature {NONE} -- Callbacks
 			l_protocol: like {EIS_ENTRY}.protocol
 		do
 			if attached {EIS_ENTRY} a_item.row.data as lt_entry and then attached {READABLE_STRING_GENERAL} a_choice_item.data as lt_protocol then
-				if lt_entry.protocol /= Void and then string_general_is_caseless_equal (lt_entry.protocol, lt_protocol) then
+				if lt_entry.protocol /= Void and then lt_protocol.is_case_insensitive_equal (lt_entry.protocol)  then
 						-- Do nothing when the protocol is not actually changed
 				else
 					l_protocol := lt_protocol.as_string_32

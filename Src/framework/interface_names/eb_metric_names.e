@@ -570,7 +570,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_coefficient_invalid (a_coefficient: STRING_GENERAL): STRING_32
+	err_coefficient_invalid (a_coefficient: READABLE_STRING_GENERAL): STRING_32
 			-- Coefficient invalid error
 		require
 			a_coefficient_attached: a_coefficient /= Void
@@ -596,7 +596,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_case_sensitive_attr_invalid (a_value: STRING_GENERAL): STRING_32
+	err_case_sensitive_attr_invalid (a_value: READABLE_STRING_GENERAL): STRING_32
 			-- Case sensitive attribute value invalid error
 		require
 			a_value_attached: a_value /= Void
@@ -652,7 +652,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_only_current_version_attr_invalid (a_value: STRING_GENERAL): STRING_32
+	err_only_current_version_attr_invalid (a_value: READABLE_STRING_GENERAL): STRING_32
 			-- Only current version attribute value invalid error
 		require
 			a_value_attached: a_value /= Void
@@ -855,7 +855,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_invalid_feature_domain_item (a_feature_name, a_domain_item_id: STRING_GENERAL): STRING_32
+	err_invalid_feature_domain_item (a_feature_name, a_domain_item_id: READABLE_STRING_GENERAL): STRING_32
 			-- Invalid faeture domain item error
 		require
 			a_feature_name_attached: a_feature_name /= Void
@@ -866,7 +866,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_invalid_folder_domain_item (a_folder_name, a_domain_item_id: STRING_GENERAL): STRING_32
+	err_invalid_folder_domain_item (a_folder_name, a_domain_item_id: READABLE_STRING_GENERAL): STRING_32
 			-- Invalid folder domain item error
 		require
 			a_folder_name_attached: a_folder_name /= Void
@@ -877,7 +877,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_invalid_group_domain_item (a_group_name, a_domain_item_id: STRING_GENERAL): STRING_32
+	err_invalid_group_domain_item (a_group_name, a_domain_item_id: READABLE_STRING_GENERAL): STRING_32
 			-- Invalid group domain item error
 		require
 			a_group_name_attached: a_group_name /= Void
@@ -888,7 +888,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_invalid_class_domain_item (a_class_name, a_domain_item_id: STRING_GENERAL): STRING_32
+	err_invalid_class_domain_item (a_class_name, a_domain_item_id: READABLE_STRING_GENERAL): STRING_32
 			-- Invalid class domain item error
 		require
 			a_class_name_attached: a_class_name /= Void
@@ -940,7 +940,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_numerator_coefficient_invalid (a_value: STRING_GENERAL): STRING_32
+	err_numerator_coefficient_invalid (a_value: READABLE_STRING_GENERAL): STRING_32
 			-- Numerator metric coefficient invalid error
 		require
 			a_value_attached: a_value /= Void
@@ -950,7 +950,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_denominator_coefficient_invalid (a_value: STRING_GENERAL): STRING_32
+	err_denominator_coefficient_invalid (a_value: READABLE_STRING_GENERAL): STRING_32
 			-- Numerator metric coefficient invalid error
 		require
 			a_value_attached: a_value /= Void
@@ -962,7 +962,7 @@ feature -- Error/warning message
 
 	err_denominator_coefficient_is_zero: STRING_32 do Result := locale.translation ("Coefficient for denominator metric is zero. A non-zero real number is expected.") end
 
-	err_normal_referenced_class_attr_invalid (a_value: STRING_GENERAL): STRING_32
+	err_normal_referenced_class_attr_invalid (a_value: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_value_attached: a_value /= Void
 		do
@@ -971,7 +971,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_only_syntactically_referenced_class_attr_invalid (a_value: STRING_GENERAL): STRING_32
+	err_only_syntactically_referenced_class_attr_invalid (a_value: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_value_attached: a_value /= Void
 		do
@@ -980,7 +980,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_indirect_referenced_class_attr_invalid (a_value: STRING_GENERAL): STRING_32
+	err_indirect_referenced_class_attr_invalid (a_value: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_value_attached: a_value /= Void
 		do
@@ -1033,7 +1033,7 @@ feature -- Error/warning message
 
 	err_base_value_missing: STRING_32 do Result := locale.translation ("Base value of a value tester is missing.") end
 
-	err_base_value_invalid (a_value: STRING_GENERAL): STRING_32
+	err_base_value_invalid (a_value: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_value_attached: a_value /= Void
 		do
@@ -1052,7 +1052,7 @@ feature -- Error/warning message
 	err_domain_missing: STRING_32 do Result := locale.translation ("Domain is missing.") end
 	err_value_tester_missing: STRING_32 do Result := locale.translation ("Value tester is missing.") end
 	err_value_retriever_missing: STRING_32 do Result := locale.translation ("Value retriever is missing.") end
-	err_use_external_delayed_invalid (a_value: STRING_GENERAL; a_attribute_name: READABLE_STRING_GENERAL): STRING_32
+	err_use_external_delayed_invalid (a_value: READABLE_STRING_GENERAL; a_attribute_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_value_attached: a_value /= Void
 		do
@@ -1099,7 +1099,7 @@ feature -- Error/warning message
 			Result := locale.formatted_string (locale.translation ("Unable to transfer remote file.%NReason: $1"), [a_reason])
 		end
 
-	err_integer_attribute_invalid (a_attribute_name, a_value: STRING_GENERAL): STRING_32
+	err_integer_attribute_invalid (a_attribute_name, a_value: READABLE_STRING_GENERAL): STRING_32
 			-- Integer attribute value invalid
 		require
 			a_attribute_name_attached: a_attribute_name /= Void
@@ -1120,7 +1120,7 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
-	err_boolean_attribute_invalid (a_attribute_name, a_value: STRING_GENERAL): STRING_32
+	err_boolean_attribute_invalid (a_attribute_name, a_value: READABLE_STRING_GENERAL): STRING_32
 			-- Value `a_value' of boolean attribute `a_attribute_name' invalid error
 		require
 			a_attribute_name_attached: a_attribute_name /= Void
@@ -1324,7 +1324,7 @@ feature -- Separator
 
 feature -- Utilities
 
-	concatenated_string (a_str_list: LINEAR [STRING_GENERAL]; a_separator: STRING_GENERAL): STRING_32
+	concatenated_string (a_str_list: LINEAR [READABLE_STRING_GENERAL]; a_separator: READABLE_STRING_GENERAL): STRING_32
 			-- Concatenated string of all strings from `a_str_list' with `a_separactor' separated in between			
 			-- If `a_str_list' is empty, return Void.
 		require
@@ -1338,14 +1338,14 @@ feature -- Utilities
 			from
 				a_str_list.start
 				check a_str_list.item /= Void end
-				l_temp_str.append (a_str_list.item)
+				l_temp_str.append_string_general (a_str_list.item)
 				a_str_list.forth
 			until
 				a_str_list.after
 			loop
-				l_temp_str.append (a_separator)
+				l_temp_str.append_string_general (a_separator)
 				check a_str_list.item /= Void end
-				l_temp_str.append (a_str_list.item)
+				l_temp_str.append_string_general (a_str_list.item)
 				a_str_list.forth
 			end
 			Result := l_temp_str
@@ -1353,7 +1353,7 @@ feature -- Utilities
 			good_result: Result /= Void and then not Result.is_empty
 		end
 
-	location_section (a_section_name, a_section_type: STRING_GENERAL): STRING_32
+	location_section (a_section_name, a_section_type: READABLE_STRING_GENERAL): STRING_32
 			-- Location section.
 			-- For example, if `a_section_name" is "Classes" and `a_section_type' is "basic metric",
 			-- the result will be: basic metric "Classes".
@@ -1361,51 +1361,54 @@ feature -- Utilities
 			a_section_name_attached: a_section_name /= Void
 			a_section_type_attached: a_section_Type /= Void
 		do
-			Result := a_section_type.twin
+			create Result.make (a_section_type.count)
+			Result.append_string_general (a_section_type)
 			Result.append ("(")
-			Result.append (a_section_name)
+			Result.append_string_general (a_section_name)
 			Result.append (")")
 		ensure
 			result_attached: Result /= Void
 		end
 
-	location_string (a_location: STRING_GENERAL): STRING_32
+	location_string (a_location: READABLE_STRING_GENERAL): STRING_32
 			-- Location string
 		require
 			a_location_attached: a_location /= Void
 		do
 			Result := coloned_string (t_location, True)
 			Result.append (space_separator)
-			Result.append (a_location)
+			Result.append_string_general (a_location)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	visitable_name (a_visitable_type: STRING_GENERAL; a_visitable_name: STRING_GENERAL): STRING_32
+	visitable_name (a_visitable_type: READABLE_STRING_GENERAL; a_visitable_name: READABLE_STRING_GENERAL): STRING_32
 			-- Visitable name for a visitable whose type is `a_visitable_type' and name is `a_visitable_name'
 			-- For example, type is "basic metric" and name is "Classes", we will get "basic metric (Classes)".
 		require
 			a_visitable_type_attached: a_visitable_type /= Void
 			a_visitable_name_attached: a_visitable_name /= Void
 		do
-			Result := a_visitable_type.twin
+			create Result.make (a_visitable_type.count)
+			Result.append_string_general (a_visitable_type)
 			Result.append (left_parenthesis)
-			Result.append (a_visitable_name)
+			Result.append_string_general (a_visitable_name)
 			Result.append (right_parenthesis)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	coloned_string (a_string: STRING_GENERAL; a_first_letter_upper: BOOLEAN): STRING_32
+	coloned_string (a_string: READABLE_STRING_GENERAL; a_first_letter_upper: BOOLEAN): STRING_32
 			-- String which is `a_string' suffixed with a colon
 			-- If `a_first_letter_upper' is True, make sure the first letter of returned string is in upper case (if current locale permits).
 		require
 			a_string_attached: a_string /= Void
 		do
 			if a_first_letter_upper then
-				Result := first_character_as_upper (a_string)
+				Result := first_character_as_upper (a_string).to_string_32
 			else
-				Result := a_string.twin
+				create Result.make (a_string.count)
+				Result.append_string_general (a_string)
 			end
 			Result.append (colon)
 		ensure
@@ -1424,7 +1427,7 @@ feature -- Utilities
 			result_attached: Result /= Void
 		end
 
-	xml_location (a_element_type: STRING_GENERAL; a_element_name: STRING_GENERAL): STRING_32
+	xml_location (a_element_type: READABLE_STRING_GENERAL; a_element_name: READABLE_STRING_GENERAL): STRING_32
 			-- Xml location. `a_element_type' is the element name type. `a_element_name' is for better information.
 			-- For example, if `a_element_type' is "basic_metric" and `a_element_name' is Void, Result would be "<basic_metric>",
 			-- if `a_element_name' is "Classes", result would be "<basic_metric(Classes)>"
@@ -1433,10 +1436,10 @@ feature -- Utilities
 			not_a_element_is_empty: not a_element_type.is_empty
 		do
 			Result := left_arrow.twin
-			Result.append (a_element_type)
+			Result.append_string_general (a_element_type)
 			if a_element_name /= Void then
 				Result.append (left_parenthesis)
-				Result.append (a_element_name)
+				Result.append_string_general (a_element_name)
 				Result.append (right_parenthesis)
 			end
 			Result.append (right_arrow)

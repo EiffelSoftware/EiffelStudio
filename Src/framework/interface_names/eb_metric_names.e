@@ -1405,7 +1405,7 @@ feature -- Utilities
 			a_string_attached: a_string /= Void
 		do
 			if a_first_letter_upper then
-				Result := first_character_as_upper (a_string).to_string_32
+				Result := first_character_as_upper (a_string.to_string_32).to_string_32
 			else
 				create Result.make (a_string.count)
 				Result.append_string_general (a_string)

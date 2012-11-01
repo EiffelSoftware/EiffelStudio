@@ -58,7 +58,7 @@ feature -- Value validity testing
 			end
 		end
 
-	test_ommitable_boolean_attribute (a_boolean_str: STRING; a_error_message_agent: FUNCTION [ANY, TUPLE [STRING_GENERAL], STRING_GENERAL]): BOOLEAN
+	test_ommitable_boolean_attribute (a_boolean_str: STRING; a_error_message_agent: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], STRING_GENERAL]): BOOLEAN
 			-- Test if `a_boolean_str' represents a valid boolean value. If so, store the boolean value in `last_tested_boolean' and return True
 			-- If `a_boolean_str' represents an invalid boolean value, fire an error with error message returned by `a_error_message' and return True.
 			-- If `a_boolean_str' is Void, do not set `last_tested_boolean' and return False.			
@@ -71,7 +71,7 @@ feature -- Value validity testing
 			end
 		end
 
-	test_boolean_attribute (a_boolean_str: STRING; a_missing_error_message: STRING_GENERAL; a_invalid_error_message_agent: FUNCTION [ANY, TUPLE [STRING_GENERAL], STRING_GENERAL])
+	test_boolean_attribute (a_boolean_str: STRING; a_missing_error_message: STRING_GENERAL; a_invalid_error_message_agent: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], STRING_GENERAL])
 			-- Test if `a_boolean_str' represents a valid boolean value. If so, store the boolean value in `last_tested_boolean'.
 			-- Otherwise if `a_boolean_str' is Void, fire an error with error message returned by `a_missing_error_message_agent',
 			-- if `a_boolean_str' is non-Void but is not a valid boolean, fire an error with error message given by `a_invalid_error_message'.
@@ -102,7 +102,7 @@ feature -- Value validity testing
 			last_tested_boolean_set: a_boolean_str.is_boolean implies last_tested_boolean = a_boolean_str.to_boolean
 		end
 
-	test_non_void_double_attribute (a_double_str: STRING; a_error_message_agent: FUNCTION [ANY, TUPLE [STRING_GENERAL], STRING_GENERAL])
+	test_non_void_double_attribute (a_double_str: STRING; a_error_message_agent: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], STRING_GENERAL])
 			-- Test if `a_double_str' represents a valid double value. If so, store the boolean value in `last_tested_double'.
 			-- Otherwise fire an error with error message given by `a_error_message_agent'.
 		require
@@ -118,7 +118,7 @@ feature -- Value validity testing
 			last_tested_double_set: a_double_str.is_double implies last_tested_double = a_double_str.to_double
 		end
 
-	test_integer_attribute (a_integer_str: STRING; a_missing_error_message: STRING_GENERAL; a_invalid_error_message_agent: FUNCTION [ANY, TUPLE [STRING_GENERAL], STRING_GENERAL])
+	test_integer_attribute (a_integer_str: STRING; a_missing_error_message: STRING_GENERAL; a_invalid_error_message_agent: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], STRING_GENERAL])
 			-- Test if `a_integer_str' represents a valid integer value. If so, store the integer value in `last_tested_integer'.
 			-- Otherwise if `a_integer_str' is Void, fire an error with error message returned by `a_missing_error_message_agent',
 			-- if `a_integer_str' is non-Void but is not a valid integer, fire an error with error message given by `a_invalid_error_message'.
@@ -150,7 +150,7 @@ feature -- Value validity testing
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -163,22 +163,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -44,7 +44,7 @@ feature -- Basic operation
 				attached lt_section.entry as lt_entry and then
 				lt_entry.source /= Void and then
 				not lt_entry.source.is_empty and then
-				attached lt_entry.source.as_string_8.twin as lt_src	 -- |FIXME: Bad conversion to STRING_8
+				attached lt_entry.source.twin as lt_src
 			then
 				last_entry := lt_entry
 				format_uris (lt_src)

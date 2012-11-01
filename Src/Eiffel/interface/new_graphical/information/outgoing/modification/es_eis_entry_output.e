@@ -31,7 +31,7 @@ feature -- Operation
 				l_output.append ({ES_EIS_TOKENS}.colon)
 				l_count := l_output.count
 				if attached a_entry.name as l_name and then not l_name.is_empty then
-					l_output.append (quoted_string ({ES_EIS_TOKENS}.name_string.as_string_32 + {ES_EIS_TOKENS}.value_assignment + l_name))
+					l_output.append (quoted_string ({ES_EIS_TOKENS}.name_string + {ES_EIS_TOKENS}.value_assignment + l_name))
 					l_comma_needed := True
 				end
 				if attached a_entry.protocol as l_protocol and then not l_protocol.is_empty then
@@ -39,7 +39,7 @@ feature -- Operation
 						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
 						l_output.append_character ({ES_EIS_TOKENS}.space)
 					end
-					l_output.append (quoted_string ({ES_EIS_TOKENS}.protocol_string.as_string_32 + {ES_EIS_TOKENS}.value_assignment + l_protocol))
+					l_output.append (quoted_string ({ES_EIS_TOKENS}.protocol_string + {ES_EIS_TOKENS}.value_assignment + l_protocol))
 					l_comma_needed := True
 				end
 				if attached a_entry.source as l_source and then not l_source.is_empty then
@@ -47,7 +47,7 @@ feature -- Operation
 						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
 						l_output.append_character ({ES_EIS_TOKENS}.space)
 					end
-					l_output.append (quoted_string ({ES_EIS_TOKENS}.source_string.as_string_32 + {ES_EIS_TOKENS}.value_assignment + l_source))
+					l_output.append (quoted_string ({ES_EIS_TOKENS}.source_string + {ES_EIS_TOKENS}.value_assignment + l_source))
 					l_comma_needed := True
 				end
 				if a_entry.tags /= Void and then not a_entry.tags.is_empty then
@@ -55,7 +55,7 @@ feature -- Operation
 						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
 						l_output.append_character ({ES_EIS_TOKENS}.space)
 					end
-					l_output.append (quoted_string ({ES_EIS_TOKENS}.tag_string.as_string_32 + {ES_EIS_TOKENS}.value_assignment + tags_as_code (a_entry)))
+					l_output.append (quoted_string ({ES_EIS_TOKENS}.tag_string + {ES_EIS_TOKENS}.value_assignment + tags_as_code (a_entry)))
 					l_comma_needed := True
 				end
 
@@ -64,7 +64,7 @@ feature -- Operation
 						l_output.append_character ({ES_EIS_TOKENS}.attribute_seperator)
 						l_output.append_character ({ES_EIS_TOKENS}.space)
 					end
-					l_output.append (quoted_string ({ES_EIS_TOKENS}.override_string.as_string_32 + {ES_EIS_TOKENS}.value_assignment + {ES_EIS_TOKENS}.true_string))
+					l_output.append (quoted_string ({ES_EIS_TOKENS}.override_string + {ES_EIS_TOKENS}.value_assignment + {ES_EIS_TOKENS}.true_string))
 					l_comma_needed := True
 				end
 

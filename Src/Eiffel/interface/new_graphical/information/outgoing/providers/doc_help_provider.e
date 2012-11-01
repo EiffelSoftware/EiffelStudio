@@ -39,7 +39,7 @@ feature -- Basic operations
 			-- <precursor>
 		local
 			l_word: COM_OBJECT
-			l_formatted_source: STRING
+			l_formatted_source: STRING_32
 			l_bookmark: STRING_32
 			l_succeed: BOOLEAN
 			l_active_doc: COM_OBJECT
@@ -47,8 +47,7 @@ feature -- Basic operations
 			if attached {HELP_SECTION_EIS_ENTRY} a_section as l_section then
 				if attached l_section.entry as l_entry and then attached l_entry.source as l_source and then not l_source.is_empty then
 					last_entry := l_entry
-						--|FIXME: Unicode is not properly handled
-					l_formatted_source := l_source.as_string_8.twin
+					l_formatted_source := l_source
 					format_uris (l_formatted_source)
 
 					if {PLATFORM}.is_windows then

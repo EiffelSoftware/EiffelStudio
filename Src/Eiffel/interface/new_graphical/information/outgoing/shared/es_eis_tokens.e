@@ -28,18 +28,18 @@ feature -- Access
 
 	auto_string: STRING = "auto"
 
-	value_assignment: STRING = "="
+	value_assignment: STRING_32 = "="
 
-	void_string: STRING = "@@@"
+	void_string: STRING_32 = "@@@"
 			-- Used to hold the place of value of single identifier in storage table
 
 	attribute_seperator: CHARACTER_32 = ','
 
 	tag_seperator: CHARACTER_32 = ','
 
-	space: CHARACTER = ' '
+	space: CHARACTER_32 = ' '
 
-	colon: STRING = ": "
+	colon: STRING_32 = ": "
 
 	empty_string: STRING = "%"%""
 
@@ -51,12 +51,12 @@ feature -- Access
 
 feature -- Built in variables
 
-	target_name_var_name: STRING_8 = "target_name"
-	group_name_var_name: STRING_8 = "group_name"
-	class_name_var_name: STRING_8 = "class_name"
-	feature_name_var_name: STRING_8 = "feature_name"
-	unique_id_var_name: STRING_8 = "unique_id"
-	system_path_var_name: STRING_8 = "system_path"
+	target_name_var_name: STRING_32 = "target_name"
+	group_name_var_name: STRING_32 = "group_name"
+	class_name_var_name: STRING_32 = "class_name"
+	feature_name_var_name: STRING_32 = "feature_name"
+	unique_id_var_name: STRING_32 = "unique_id"
+	system_path_var_name: STRING_32 = "system_path"
 	;
 
 note

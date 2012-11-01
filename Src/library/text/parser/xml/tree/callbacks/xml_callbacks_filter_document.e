@@ -22,10 +22,7 @@ inherit
 			on_attribute,
 			on_start_tag_finish,
 			on_end_tag,
-			on_content,
-			on_start_tag_resolved,
-			on_end_tag_resolved,
-			on_attribute_resolved
+			on_content
 		end
 
 	XML_CALLBACKS_DOCUMENT
@@ -42,10 +39,7 @@ inherit
 			on_attribute,
 			on_start_tag_finish,
 			on_end_tag,
-			on_content,
-			on_start_tag_resolved,
-			on_end_tag_resolved,
-			on_attribute_resolved
+			on_content
 		end
 
 create

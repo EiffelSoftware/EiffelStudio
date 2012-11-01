@@ -19,7 +19,6 @@ inherit
 			on_start_tag,
 			on_attribute,
 			on_start_tag_finish,
-			on_start_tag_resolved,
 			on_end_tag,
 			on_finish,
 			set_next
@@ -211,7 +210,6 @@ feature -- Events
 
 feature -- resolved events
 
-
 	on_start_tag_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- Start tag, handle default namespace.
 		do
@@ -226,18 +224,6 @@ feature -- resolved events
 			end
 		end
 
---	on_attribute_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
---			-- Start of attribute.
---		do
---			on_attribute (a_namespace, a_prefix, a_local_part, a_value)
---		end
---
---	on_end_tag_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
---			-- End tag.
---		do
---			on_end_tag (a_namespace, a_prefix, a_local_part)
---		end
-		
 feature -- Events mode
 
 	has_resolved_namespaces: BOOLEAN

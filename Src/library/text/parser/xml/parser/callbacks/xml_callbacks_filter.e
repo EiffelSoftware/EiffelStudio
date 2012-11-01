@@ -13,10 +13,7 @@ class
 inherit
 	XML_CALLBACKS
 		undefine
-			default_create,
-			on_start_tag_resolved,
-			on_attribute_resolved ,
-			on_end_tag_resolved
+			default_create
 		end
 
 	XML_CALLBACKS_SOURCE

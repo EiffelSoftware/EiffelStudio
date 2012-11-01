@@ -93,33 +93,6 @@ feature -- Tag
 		deferred
 		end
 
-feature -- Resolved namespace
-
-	on_start_tag_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
-			-- Start of start tag.
-		require
-			local_part: is_local_part (a_local_part)
-		do
-			on_start_tag (a_namespace, a_prefix, a_local_part)
-		end
-
-	on_attribute_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
-			-- Start of attribute.
-		require
-			local_part: is_local_part (a_local_part)
-			a_value_not_void: a_value /= Void
-		do
-			on_attribute (a_namespace, a_prefix, a_local_part, a_value)
-		end
-
-	on_end_tag_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
-			-- End tag.
-		require
-			local_part: is_local_part (a_local_part)
-		do
-			on_end_tag (a_namespace, a_prefix, a_local_part)
-		end
-
 feature -- Content
 
 	on_content (a_content: READABLE_STRING_32)

@@ -127,7 +127,7 @@ feature -- Element
 				l_element_prefix := element_prefix
 				if l_element_prefix /= Void and then has_prefix (l_element_prefix) then
 					if context.has (l_element_prefix) then
-						next.on_start_tag_resolved (context.resolve (l_element_prefix),
+						on_start_tag_resolved (context.resolve (l_element_prefix),
 								l_element_prefix, l_element_local_part)
 						on_delayed_attributes
 					else
@@ -141,7 +141,7 @@ feature -- Element
 						on_error (error_msg)
 					end
 				else
-					next.on_start_tag_resolved (context.resolve_default,
+					on_start_tag_resolved (context.resolve_default,
 							l_element_prefix, l_element_local_part)
 					on_delayed_attributes
 				end
@@ -177,18 +177,18 @@ feature {NONE} -- Attribute events
 				if l_att_prefix /= Void and then has_prefix (l_att_prefix) then
 					-- Resolve the attribute's prefix if it has any.
 					if context.has (l_att_prefix) then
-						next.on_attribute_resolved (context.resolve (l_att_prefix),
+						on_attribute_resolved (context.resolve (l_att_prefix),
 							l_att_prefix, attributes_local_part.item,
 							attributes_value.item)
 					elseif is_xml (l_att_prefix) then
 							-- xml: prefix has implicit namespace
-						next.on_attribute_resolved (Xml_prefix_namespace,
+						on_attribute_resolved (Xml_prefix_namespace,
 							l_att_prefix,
 							attributes_local_part.item,
 							attributes_value.item)
 					elseif is_xmlns (l_att_prefix) then
 							-- xmlns: prefix has implicit namespace
-						next.on_attribute_resolved (Xmlns_namespace,
+						on_attribute_resolved (Xmlns_namespace,
 							l_att_prefix,
 							attributes_local_part.item,
 							attributes_value.item)
@@ -196,13 +196,23 @@ feature {NONE} -- Attribute events
 						on_error (Undeclared_namespace_error)
 					end
 				else
-					next.on_attribute_resolved (Unprefixed_attribute_namespace,
+					on_attribute_resolved (Unprefixed_attribute_namespace,
 						l_att_prefix, attributes_local_part.item,
 						attributes_value.item)
 				end
 					-- Forth:
 				attributes_remove
 			end
+		end
+
+	on_start_tag_resolved (a_namespace: READABLE_STRING_32; a_prefix, a_local_part: detachable READABLE_STRING_32)
+		do
+			next.on_start_tag (a_namespace, a_prefix, a_local_part)
+		end
+
+	on_attribute_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
+		do
+			next.on_attribute (a_namespace, a_prefix, a_local_part, a_value)
 		end
 
 feature {NONE} -- Context

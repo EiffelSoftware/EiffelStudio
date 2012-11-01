@@ -107,26 +107,6 @@ feature {NONE} -- Tag
 			callbacks.on_end_tag (a_namespace, a_prefix, a_local_part)
 		end
 
-feature {NONE} -- Tag, ns resolved
-
-	on_start_tag_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
-			-- Start of start tag.
-		do
-			callbacks.on_start_tag_resolved (a_namespace, a_prefix, a_local_part)
-		end
-
-	on_attribute_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
-			-- Process attribute.
-		do
-			callbacks.on_attribute_resolved (a_namespace, a_prefix, a_local_part, a_value)
-		end
-
-	on_end_tag_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
-			-- End tag.
-		do
-			callbacks.on_end_tag_resolved (a_namespace, a_prefix, a_local_part)
-		end
-
 feature {NONE} -- Content
 
 	on_content (a_content: READABLE_STRING_32)

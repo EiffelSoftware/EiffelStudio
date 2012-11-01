@@ -103,7 +103,7 @@ feature -- Basic operations
 			if not l_retry then
 					-- Always assume a saving is successful.
 				last_saving_success := True
-				new_file := u.make_raw_file (a_file_name)
+				create new_file.make_with_name (a_file_name)
 
 				aok := True
 				if not new_file.exists then
@@ -128,7 +128,7 @@ feature -- Basic operations
 
 				-- Create a backup of the file in case there will be a problem during the savings.
 				tmp_name := a_file_name + ".swp"
-				tmp_file := u.make_raw_file (tmp_name)
+				create tmp_file.make_with_name (tmp_name)
 				create_backup := not new_created and not tmp_file.exists and then tmp_file.is_creatable
 				if not create_backup then
 					tmp_file := new_file
@@ -158,10 +158,11 @@ feature -- Basic operations
 					elseif last_saving_success then
 						new_file := u.make_raw_file (tmp_name)
 						if new_file.exists then
+							last_saving_date := new_file.date
 							robust_delete (new_file)
 						end
 					end
-					if last_saving_success then
+					if last_saving_success and tmp_file.exists then
 						last_saving_date := tmp_file.date
 					end
 					workbench.set_changed

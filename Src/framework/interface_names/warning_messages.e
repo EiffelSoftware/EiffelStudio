@@ -359,7 +359,7 @@ feature -- Cluster tree warnings
 			Result := locale.formatted_string (
 				locale.translation (
 					"Cannot delete class $1%Nbecause it is either precompiled or in a library cluster."),
-					[string_general_as_upper (class_name)]
+					[class_name.as_upper]
 				)
 		end
 
@@ -370,7 +370,7 @@ feature -- Cluster tree warnings
 			Result := locale.formatted_string (
 				locale.translation (
 					"Cannot delete cluster $1 because it is read only."),
-					[string_general_as_upper (cluster_name)]
+					[cluster_name.as_upper]
 				)
 		end
 
@@ -381,7 +381,7 @@ feature -- Cluster tree warnings
 			Result := locale.formatted_string (
 				locale.translation (
 					"Cannot delete cluster $1 because cluster is not empty"),
-					[string_general_as_upper (cluster_name)]
+					[cluster_name.as_upper]
 				)
 		end
 
@@ -392,7 +392,7 @@ feature -- Cluster tree warnings
 			Result := locale.formatted_string (
 				locale.translation (
 					"Cannot add a cluster to cluster $1 because it is read only."),
-					[string_general_as_upper (cluster_name)]
+					[cluster_name.as_upper]
 				)
 		end
 
@@ -400,14 +400,14 @@ feature -- Cluster tree warnings
 		require
 			class_name_not_void: class_name /= Void
 		do
-			Result := locale.formatted_string (locale.translation ("Cannot find class $1."), [string_general_as_upper (class_name)])
+			Result := locale.formatted_string (locale.translation ("Cannot find class $1."), [class_name.as_upper])
 		end
 
 	w_Cannot_find_cluster (cluster_name: STRING_GENERAL): STRING_32
 		require
 			cluster_name_not_void: cluster_name /= Void
 		do
-			Result := locale.formatted_string (locale.translation ("Cannot find cluster $1."), [string_general_as_upper (cluster_name)])
+			Result := locale.formatted_string (locale.translation ("Cannot find cluster $1."), [cluster_name.as_upper])
 		end
 
 	w_Choose_class_or_cluster: STRING_32
@@ -500,14 +500,14 @@ feature -- Cluster tree warnings
 		require
 			path_not_void: path /= Void
 		do
-			Result := locale.formatted_string (locale.translation ("Cluster with path $1 already exists in the universe."), [string_general_as_upper (path)])
+			Result := locale.formatted_string (locale.translation ("Cluster with path $1 already exists in the universe."), [path.as_upper])
 		end;
 
 	w_Cluster_name_already_exists (name: STRING_GENERAL): STRING_32
 		require
 			name_not_void: name /= Void
 		do
-			Result := locale.formatted_string (locale.translation ("Cluster with name $1 already exists in the universe."), [string_general_as_upper (name)])
+			Result := locale.formatted_string (locale.translation ("Cluster with name $1 already exists in the universe."), [name.as_upper])
 		end;
 
 	w_Confirm_delete_class (class_name: READABLE_STRING_GENERAL): STRING_32

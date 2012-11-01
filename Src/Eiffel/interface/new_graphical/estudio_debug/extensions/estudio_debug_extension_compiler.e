@@ -72,8 +72,8 @@ feature -- Execution
 						ai_cell.wipe_out
 						ai_cell.extend (g)
 
-						c := string_general_as_upper (ai_tf_c.text)
-						f := string_general_as_lower (ai_tf_f.text)
+						c := ai_tf_c.text.as_upper
+						f := ai_tf_f.text.as_lower
 						ai_tf_c.set_text (c)
 						ai_tf_f.set_text (f)
 						create sh_sys
@@ -480,7 +480,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -2147,6 +2147,9 @@ test	rename-inherited-bad-flat	flat006	 tcf pass flat manual
 
 -- Library class tests
 
+if UNIX test	basic-unix-path-operations	path001 tcf pass library file path
+if not UNIX test	basic-windows-path-operations	path002 tcf pass library file path
+
 test	unix-file-start-precond-error	lib001	 tcf pass library file
 test	string-copy-valid-count		lib002	 tcf pass library file
 test	file-copy-to			lib003	 tcf pass library file

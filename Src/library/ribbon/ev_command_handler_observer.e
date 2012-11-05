@@ -39,15 +39,15 @@ feature -- Command
 					Result := l_resource.ribbon_for_group (l_group)
 				elseif attached {EV_RIBBON_ITEM} Current as l_item then
 					Result := l_resource.ribbon_for_item (l_item)
-					if Result = void then
+					if Result = Void then
 						-- Maybe it's application menu's item
 						Result := l_resource.ribbon_for_application_menu_item (l_item)
 					end
-					if Result = void then
+					if Result = Void then
 						-- Maybe it's Quick Access Toolbar's item
 						Result := l_resource.ribbon_for_qat_item (l_item)
 					end
-					if Result = void then
+					if Result = Void then
 						-- Maybe it's item in Contextual Tab
 						Result := l_resource.ribbon_for_contextual_tab_item (l_item)
 					end

@@ -11,8 +11,16 @@ deferred class
 
 feature -- Access
 
+	last_tested_attribute_name: READABLE_STRING_GENERAL
+			-- Last checked attribute by `test_attribute'
+
 	last_tested_attribute: STRING
 			-- Last checked attribute by `test_attribute'
+		require
+			is_valid_as_string_8: last_tested_attribute_name.is_valid_as_string_8
+		do
+			Result := last_tested_attribute_name.to_string_8
+		end
 
 	last_tested_boolean: BOOLEAN
 			-- Last boolean value successfully tested by `test_non_void_boolean_attribute'		
@@ -25,40 +33,40 @@ feature -- Access
 
 feature -- Error raising
 
-	create_last_error (a_message: STRING_GENERAL)
+	create_last_error (a_message: READABLE_STRING_GENERAL)
 			-- Create `last_error' with `a_message'.
 		deferred
 		end
 
 feature -- Value validity testing
 
-	test_attribute (a_attr_id: INTEGER; a_current_attrs: HASH_TABLE [STRING, INTEGER]; a_error_agent: PROCEDURE [ANY, TUPLE])
+	test_attribute (a_attr_id: INTEGER; a_current_attrs: HASH_TABLE [READABLE_STRING_GENERAL, INTEGER]; a_error_agent: PROCEDURE [ANY, TUPLE])
 			-- Check if attribute whose id is `a_attr_id' exists in `a_current_attrs',
-			-- If True, store its value in `last_tested_attribute', otherwise, raise an error using `a_error_agent'.
+			-- If True, store its value in `last_tested_attribute_name', otherwise, raise an error using `a_error_agent'.
 		require
 			a_current_attrs_attached: a_current_attrs /= Void
 			a_error_agent_attached: a_error_agent /= Void
 		do
-			last_tested_attribute := a_current_attrs.item (a_attr_id)
-			if last_tested_attribute = Void then
+			last_tested_attribute_name := a_current_attrs.item (a_attr_id)
+			if last_tested_attribute_name = Void then
 				a_error_agent.call (Void)
 			end
 		end
 
-	test_ommitable_attribute (a_attr_id: INTEGER; a_current_attrs: HASH_TABLE [STRING, INTEGER]; a_default: like last_tested_attribute)
+	test_ommitable_attribute (a_attr_id: INTEGER; a_current_attrs: HASH_TABLE [READABLE_STRING_GENERAL, INTEGER]; a_default: like last_tested_attribute_name)
 			-- Check if attribute whose id is `a_attr_id' exists in `a_current_attrs',
-			-- If True, store its value in `last_tested_attribute', otherwise, use `a_default' instead.
+			-- If True, store its value in `last_tested_attribute_name', otherwise, use `a_default' instead.
 		require
 			a_current_attrs_attached: a_current_attrs /= Void
 			a_default_attached: a_default /= Void
 		do
-			last_tested_attribute := a_current_attrs.item (a_attr_id)
-			if last_tested_attribute = Void then
-				last_tested_attribute := a_default.twin
+			last_tested_attribute_name := a_current_attrs.item (a_attr_id)
+			if last_tested_attribute_name = Void then
+				last_tested_attribute_name := a_default.twin
 			end
 		end
 
-	test_ommitable_boolean_attribute (a_boolean_str: STRING; a_error_message_agent: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], STRING_GENERAL]): BOOLEAN
+	test_ommitable_boolean_attribute (a_boolean_str: detachable READABLE_STRING_GENERAL; a_error_message_agent: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], READABLE_STRING_GENERAL]): BOOLEAN
 			-- Test if `a_boolean_str' represents a valid boolean value. If so, store the boolean value in `last_tested_boolean' and return True
 			-- If `a_boolean_str' represents an invalid boolean value, fire an error with error message returned by `a_error_message' and return True.
 			-- If `a_boolean_str' is Void, do not set `last_tested_boolean' and return False.			
@@ -71,7 +79,7 @@ feature -- Value validity testing
 			end
 		end
 
-	test_boolean_attribute (a_boolean_str: STRING; a_missing_error_message: STRING_GENERAL; a_invalid_error_message_agent: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], STRING_GENERAL])
+	test_boolean_attribute (a_boolean_str: detachable READABLE_STRING_GENERAL; a_missing_error_message: READABLE_STRING_GENERAL; a_invalid_error_message_agent: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], READABLE_STRING_GENERAL])
 			-- Test if `a_boolean_str' represents a valid boolean value. If so, store the boolean value in `last_tested_boolean'.
 			-- Otherwise if `a_boolean_str' is Void, fire an error with error message returned by `a_missing_error_message_agent',
 			-- if `a_boolean_str' is non-Void but is not a valid boolean, fire an error with error message given by `a_invalid_error_message'.
@@ -86,7 +94,7 @@ feature -- Value validity testing
 			end
 		end
 
-	test_non_void_boolean_attribute (a_boolean_str: STRING; a_error_message: STRING_GENERAL)
+	test_non_void_boolean_attribute (a_boolean_str: READABLE_STRING_GENERAL; a_error_message: READABLE_STRING_GENERAL)
 			-- Test if `a_boolean_str' represents a valid boolean value. If so, store the boolean value in `last_tested_boolean'.
 			-- Otherwise fire an error with error message given by `a_error_message'.
 		require
@@ -102,7 +110,7 @@ feature -- Value validity testing
 			last_tested_boolean_set: a_boolean_str.is_boolean implies last_tested_boolean = a_boolean_str.to_boolean
 		end
 
-	test_non_void_double_attribute (a_double_str: STRING; a_error_message_agent: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], STRING_GENERAL])
+	test_non_void_double_attribute (a_double_str: READABLE_STRING_GENERAL; a_error_message_agent: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], READABLE_STRING_GENERAL])
 			-- Test if `a_double_str' represents a valid double value. If so, store the boolean value in `last_tested_double'.
 			-- Otherwise fire an error with error message given by `a_error_message_agent'.
 		require
@@ -118,7 +126,7 @@ feature -- Value validity testing
 			last_tested_double_set: a_double_str.is_double implies last_tested_double = a_double_str.to_double
 		end
 
-	test_integer_attribute (a_integer_str: STRING; a_missing_error_message: STRING_GENERAL; a_invalid_error_message_agent: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], STRING_GENERAL])
+	test_integer_attribute (a_integer_str: detachable READABLE_STRING_GENERAL; a_missing_error_message: READABLE_STRING_GENERAL; a_invalid_error_message_agent: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], READABLE_STRING_GENERAL])
 			-- Test if `a_integer_str' represents a valid integer value. If so, store the integer value in `last_tested_integer'.
 			-- Otherwise if `a_integer_str' is Void, fire an error with error message returned by `a_missing_error_message_agent',
 			-- if `a_integer_str' is non-Void but is not a valid integer, fire an error with error message given by `a_invalid_error_message'.
@@ -133,7 +141,7 @@ feature -- Value validity testing
 			end
 		end
 
-	test_non_void_integer_attribute (a_integer_str: STRING; a_error_message: STRING_GENERAL)
+	test_non_void_integer_attribute (a_integer_str: READABLE_STRING_GENERAL; a_error_message: READABLE_STRING_GENERAL)
 			-- Test if `a_integer_str' represents a valid integer value. If so, store the integer value in `last_integer_boolean'.
 			-- Otherwise fire an error with error message given by `a_error_message'.
 		require

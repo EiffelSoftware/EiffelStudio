@@ -48,7 +48,7 @@ feature -- Access
 	current_tag: LINKED_STACK [INTEGER]
 			-- The stack of tags we are currently processing
 
-	current_attributes: HASH_TABLE [STRING, INTEGER]
+	current_attributes: detachable HASH_TABLE [STRING_8, INTEGER]
 			-- The values of the current attributes	
 
 	first_parsed_node: EB_METRIC_VISITABLE
@@ -101,17 +101,18 @@ feature -- Setting
 
 feature -- Callbacks
 
-	on_error (a_message: STRING)
+	on_error (a_message: READABLE_STRING_32)
 			-- Event producer detected an error.
 		do
 			create_last_error (a_message)
 		end
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- Start of start tag.
 		local
-			l_trans: HASH_TABLE [INTEGER, STRING]
+			l_trans: like state_transitions_tag.item
 			l_tag: INTEGER
+			k_local: STRING_8
 		do
 			if not has_error then
 				if current_tag.is_empty then
@@ -124,23 +125,24 @@ feature -- Callbacks
 				else
 					l_trans := state_transitions_tag.item (current_tag.item)
 				end
+				k_local := a_local_part.to_string_8
 				if l_trans /= Void then
-					l_tag := l_trans.item (a_local_part)
+					l_tag := l_trans.item (k_local)
 				end
 				if l_tag = 0 then
 					create_last_error (xml_names.err_invalid_tag_position (a_local_part))
 				else
 					current_tag.extend (l_tag)
-					element_stack.extend (a_local_part)
+					element_stack.extend (k_local)
 				end
 			end
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
 			-- Start of attribute.
 		local
-			l_attr: HASH_TABLE [INTEGER, STRING]
 			l_attribute: INTEGER
+			l_current_attributes: like current_attributes
 		do
 			if not has_error then
 				if
@@ -148,18 +150,17 @@ feature -- Callbacks
 					not	a_local_part.is_case_insensitive_equal ("xsi") and
 					not a_local_part.is_case_insensitive_equal ("schemaLocation")
 				then
-					a_local_part.to_lower
-
 						-- check if the attribute is valid for the current state
-					l_attr := tag_attributes.item (current_tag.item)
-					if l_attr /= Void then
-						l_attribute := l_attr.item (a_local_part)
+					if attached tag_attributes.item (current_tag.item) as l_attr then
+						l_attribute := l_attr.item (a_local_part.to_string_8.as_lower)
 					end
-					if current_attributes = Void then
-						create current_attributes.make (1)
+					l_current_attributes := current_attributes
+					if l_current_attributes = Void then
+						create l_current_attributes.make (1)
+						current_attributes := l_current_attributes
 					end
-					if l_attribute /= 0 and then not current_attributes.has (l_attribute) then
-						current_attributes.force (a_value, l_attribute)
+					if l_attribute /= 0 and then not l_current_attributes.has (l_attribute) then
+						l_current_attributes.force (a_value, l_attribute)
 					else
 						create_last_error (xml_names.err_invalid_attribute (a_local_part))
 					end
@@ -177,28 +178,28 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation
 
-	state_transitions_tag: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER]
+	state_transitions_tag: HASH_TABLE [HASH_TABLE [INTEGER, STRING_8], INTEGER]
 			-- Mapping of possible tag state transitions from `current_tag' with the tag name to the new state.
 		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	tag_attributes: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER]
+	tag_attributes: HASH_TABLE [HASH_TABLE [INTEGER, STRING_8], INTEGER]
 			-- Mapping of possible attributes of tags.
 		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	element_index_table: HASH_TABLE [INTEGER, STRING]
+	element_index_table: HASH_TABLE [INTEGER, STRING_8]
 			-- Table of indexes of supported elements indexed by element name.
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-	domain_item_type_table: HASH_TABLE [FUNCTION [ANY, TUPLE[STRING], EB_METRIC_DOMAIN_ITEM], STRING]
+	domain_item_type_table: HASH_TABLE [FUNCTION [ANY, TUPLE [STRING_8], EB_METRIC_DOMAIN_ITEM], STRING_8]
 			-- Domain item type
 		once
 			create Result.make (6)
@@ -212,7 +213,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	check_uuid_validity (a_uuid_str: STRING_GENERAL)
+	check_uuid_validity (a_uuid_str: READABLE_STRING_GENERAL)
 			-- Check validity of `a_uuid_str'.
 			-- `a_location' is where `a_uuid_str' appears.
 		do
@@ -233,13 +234,13 @@ feature{NONE} -- Implementation
 			-- If no UUID has been checked or the last checked UUID is invalid,
 			-- this will be Void
 
-	operator_name_set: DS_HASH_SET [STRING]
+	operator_name_set: DS_HASH_SET [STRING_8]
 			-- Operator name set
 		local
 			l_tbl: like operator_name_table
 		once
 			create Result.make (6)
-			Result.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [STRING]}.make (agent (a_str: STRING; b_str: STRING): BOOLEAN do Result := a_str.is_equal (b_str) end))
+			Result.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [STRING_8]}.make (agent (a_str, b_str: STRING_8): BOOLEAN do Result := a_str.same_string (b_str) end))
 			l_tbl := operator_name_table
 			from
 				l_tbl.start
@@ -275,7 +276,7 @@ feature{NONE} -- Implementation
 			-- `setter' is the setter procedure to set last parsed value retriever.
 			-- `is_called' is a flag to indicate if a value retirever exists. It's used to detect if a needed value retriever is missing.	
 
-	current_tester: EB_METRIC_VALUE_TESTER
+	current_tester: detachable EB_METRIC_VALUE_TESTER
 			-- Current value tester
 
 	current_value_retriever: EB_METRIC_VALUE_RETRIEVER
@@ -290,9 +291,9 @@ feature{NONE} -- Implementation
 	current_tester_item: TUPLE [value_retriever: EB_METRIC_VALUE_RETRIEVER; operator: INTEGER]
 			-- Current value tester item
 
-feature{NONE} -- Status report
+feature {NONE} -- Status report
 
-	is_domain_item_type_valid (a_scope: STRING): BOOLEAN
+	is_domain_item_type_valid (a_scope: STRING_8): BOOLEAN
 			-- Is `a_scope' a valid domain item type?
 		require
 			a_scope_attached: a_scope /= Void
@@ -302,7 +303,7 @@ feature{NONE} -- Status report
 
 feature{NONE} -- Implementation
 
-	remove_receiver_from_stack (a_stack: STACK [TUPLE [a_setter: PROCEDURE [ANY, TUPLE [ANY]]; is_called: BOOLEAN]];  a_error_message: STRING_GENERAL)
+	remove_receiver_from_stack (a_stack: STACK [TUPLE [a_setter: PROCEDURE [ANY, TUPLE [ANY]]; is_called: BOOLEAN]];  a_error_message: READABLE_STRING_GENERAL)
 			-- Test if last registered receiver from `a_stack' has receivered data
 			-- If so, remove that receiver from `a_stack'. If not, fire an error `a_error_message'.
 		require
@@ -330,7 +331,7 @@ feature{NONE} -- Implementation
 			)
 		end
 
-	create_last_error (a_message: STRING_GENERAL)
+	create_last_error (a_message: READABLE_STRING_GENERAL)
 			-- Create `last_error' with `a_message'.
 		do
 			create last_error.make (a_message)
@@ -379,9 +380,9 @@ feature{NONE} -- Process
 	process_domain_item
 			-- Process "domain_item" definition list node.		
 		local
-			l_id: STRING
-			l_type: STRING
-			l_library_target_uuid: STRING
+			l_id,
+			l_type,
+			l_library_target_uuid: like current_attributes.item
 			l_domain_item: EB_METRIC_DOMAIN_ITEM
 		do
 			if not has_error then
@@ -421,7 +422,7 @@ feature{NONE} -- Process
 	process_tester
 			-- Process tester.
 		local
-			l_relation_str: STRING
+			l_relation_str: like current_attributes.item
 			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_TESTER]]; is_called: BOOLEAN]
 		do
 			if not has_error then
@@ -453,7 +454,7 @@ feature{NONE} -- Process
 		require
 			current_tester_attached: current_tester /= Void
 		local
-			l_operator_name: STRING
+			l_operator_name: like current_attributes.item
 			l_operator_name_set: like operator_name_set
 			l_operator_id: INTEGER
 		do
@@ -482,7 +483,6 @@ feature{NONE} -- Process
 	process_constant_value
 			-- Process "constant_value" node.
 		local
-			l_base_value: STRING
 			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_RETRIEVER]]; is_called: BOOLEAN]
 		do
 			if not has_error then
@@ -493,8 +493,7 @@ feature{NONE} -- Process
 						-- only one should presents in a "tester_item" node, so report an error here.
 					create_last_error (metric_names.err_too_many_value_retriever)
 				else
-					l_base_value := current_attributes.item (at_value)
-					if l_base_value /= Void then
+					if attached current_attributes.item (at_value) as l_base_value then
 						test_non_void_double_attribute (
 							l_base_value,
 							agent metric_names.err_base_value_invalid
@@ -514,9 +513,8 @@ feature{NONE} -- Process
 	process_metric_value
 			-- Process "metric_value" node.
 		local
-			l_metric_name: STRING
+			l_metric_name: like current_attributes.item
 			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_RETRIEVER]]; is_called: BOOLEAN]
-			l_use_external: STRING
 			l_boolean_set: BOOLEAN
 		do
 			if not has_error then
@@ -532,9 +530,8 @@ feature{NONE} -- Process
 						create_last_error (metric_names.err_metric_name_missing)
 					end
 					if not has_error then
-						l_use_external := current_attributes.item (at_use_external_delayed)
 						l_boolean_set := test_ommitable_boolean_attribute (
-							l_use_external,
+							current_attributes.item (at_use_external_delayed),
 							agent metric_names.err_use_external_delayed_invalid (?, n_use_external_delayed)
 						)
 					end
@@ -578,7 +575,7 @@ feature{NONE} -- Process
 
 feature -- XML element validity testing
 
-	boolean_attribute_value (a_attribute: INTEGER; a_attribute_name: STRING): BOOLEAN
+	boolean_attribute_value (a_attribute: INTEGER; a_attribute_name: STRING_8): BOOLEAN
 			-- Retrieve boolean value from attribute `a_attribute_name from `current_attributes'.
 			-- If `a_attribute_name' doesnet exist in `current_attribute' or its value is an invalid boolean,
 			-- raise an error.
@@ -593,7 +590,7 @@ feature -- XML element validity testing
 			Result := last_tested_boolean
 		end
 
-	integer_attribute_value (a_attribute: INTEGER; a_attribute_name: STRING): INTEGER
+	integer_attribute_value (a_attribute: INTEGER; a_attribute_name: STRING_8): INTEGER
 			-- Retrieve integer value from attribute `a_attribute_name from `current_attributes'.
 			-- If `a_attribute_name' doesnet exist in `current_attribute' or its value is an invalid integer,
 			-- raise an error.
@@ -615,7 +612,7 @@ invariant
 	value_retriever_stack_attached: value_retriever_stack /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -100,27 +100,6 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	is_white_space_code (n32: NATURAL_32): BOOLEAN
-			-- Is natural32 code `n32' a whitespace?
-		do
-			--| Optimized computation
-			--| should be the same as {NATURAL_32}.to_character_8.is_space
-			inspect n32
-			when 9..13, 32 then
-				--| 9	horizontal tab				'%T'
-				--| 10	NL line feed, new line		'%N'
-				--| 11	vertical tab
-				--| 12	NP form feed, new page
-				--| 13	carriage return=CR			'%R'
-				--| 32 	Space						' '
-				Result := True
-			else
-				-- False
-			end
-		ensure
-			is_space: Result = n32.to_character_8.is_space
-		end
-
 feature -- File saving
 
 	save_string_32_in_file (a_file: FILE; a_str: STRING_32)
@@ -142,106 +121,70 @@ feature -- File saving
 
 feature -- String
 
-	first_character_as_upper (a_s: STRING_GENERAL): STRING_GENERAL
+	as_string_general (s: READABLE_STRING_GENERAL): STRING_GENERAL
+		do
+			if attached {STRING_GENERAL} s as sg then
+				Result := sg
+			else
+				if attached {READABLE_STRING_8} s as s8 then
+					create {STRING_8} Result.make (s.count)
+				else
+					create {STRING_32} Result.make (s.count)
+				end
+				Result.append (s)
+			end
+		end
+
+	as_string_general_twin (s: READABLE_STRING_GENERAL): STRING_GENERAL
+		do
+			if attached {STRING_GENERAL} s as sg then
+				Result := sg.twin
+			else
+				if attached {READABLE_STRING_8} s as s8 then
+					create {STRING_8} Result.make (s.count)
+				else
+					create {STRING_32} Result.make (s.count)
+				end
+				Result.append (s)
+			end
+		end
+
+	first_character_as_upper (a_s: READABLE_STRING_GENERAL): STRING_GENERAL
 			-- First character to upper case if possible.
 			-- Be careful to apply this to a translated word.
 			-- Since translation might result in more than one word from one in English.
 		require
 			a_s_not_void: a_s /= Void
-		local
-			c: NATURAL_32
 		do
-			Result := a_s.twin
+			Result := as_string_general_twin (a_s)
 			if not Result.is_empty then
-				c := Result.code (1)
-				if c <= {CHARACTER_8}.max_value.to_natural_32 then
-					Result.put_code (c.to_character_8.as_upper.natural_32_code, 1)
-				end
+				Result.put_code (a_s.item (1).as_upper.natural_32_code, 1)
 			end
 		ensure
 			Result_not_void: Result /= Void
 			Identity: Result /= a_s
 		end
 
-	string_general_as_lower (a_s: STRING_GENERAL): STRING_GENERAL
+	string_general_as_lower (a_s: READABLE_STRING_GENERAL): STRING_GENERAL
 			-- Make all possible char in `a_str' to lower.
-			--|FIXME: We need real Unicode as lower.
-			--|For the moment, only ASCII code are concerned.
+		obsolete "use {READABLE_STRING_GENERAL}.as_lower [2012-oct]"
 		require
 			a_str_not_void: a_s /= Void
-		local
-			i, nb: INTEGER_32
-			l_result: STRING_GENERAL
-			n32, upper_lower_a_offset: NATURAL_32
-			l_upper_a, l_upper_z: NATURAL_32
 		do
-			if attached {STRING_8} a_s as s8 then
-				Result := s8.as_lower
-			else
-				from
-					l_result := a_s.twin
-					l_upper_a := ('A').natural_32_code
-					l_upper_z := ('Z').natural_32_code
-					upper_lower_a_offset := ('a').natural_32_code - l_upper_a
-
-					i := 1
-					nb := a_s.count
-				until
-					i > nb
-				loop
-					n32 := a_s.code (i)
-					if n32 <= l_upper_z and l_upper_a <= n32 then
-						check is_valid_character_8_code: n32.is_valid_character_8_code end
-						l_result.put_code (n32 + upper_lower_a_offset, i)
-					else
-							--| Keep character as it is							
-					end
-					i := i + 1
-				end
-				Result := l_result
-			end
+			Result := as_string_general (a_s).as_lower
 		ensure
 			Result_not_void: Result /= Void
 			Result_is_lower: is_string_general_lower (Result)
 			Identity: Result /= a_s
 		end
 
-	string_general_as_upper (a_s: STRING_GENERAL): STRING_GENERAL
+	string_general_as_upper (a_s: READABLE_STRING_GENERAL): STRING_GENERAL
 			-- Make all possible char in `a_str' to upper.
-			--|FIXME: We need real Unicode as upper.
-			--|For the moment, only ASCII code are concerned.
+		obsolete "use {READABLE_STRING_GENERAL}.as_upper [2012-oct]"
 		require
 			a_str_not_void: a_s /= Void
-		local
-			i, nb: INTEGER_32
-			l_result: STRING_GENERAL
-			n32, upper_lower_a_offset: NATURAL_32
-			l_lower_a, l_lower_z: NATURAL_32
 		do
-			if attached {STRING_8} a_s as s8 then
-				Result := s8.as_upper
-			else
-				from
-					l_result := a_s.twin
-					l_lower_a := ('a').natural_32_code
-					l_lower_z := ('z').natural_32_code
-					upper_lower_a_offset := l_lower_a - ('A').natural_32_code
-					i := 1
-					nb := a_s.count
-				until
-					i > nb
-				loop
-					n32 := a_s.code (i)
-					if n32 <= l_lower_z and l_lower_a <= n32 then
-						check is_valid_character_8_code: n32.is_valid_character_8_code end
-						l_result.put_code (n32 - upper_lower_a_offset, i)
-					else
-						--| Keep character as it is
-					end
-					i := i + 1
-				end
-				Result := l_result
-			end
+			Result := as_string_general (a_s).as_upper
 		ensure
 			Result_not_void: Result /= Void
 			Result_is_upper: is_string_general_upper (Result)
@@ -250,8 +193,6 @@ feature -- String
 
 	string_general_left_adjust (a_str: STRING_GENERAL)
 			-- Make all possible char in `a_str' to upper.
-			--|FIXME: We need real Unicode as upper.
-			--|For the moment, only ASCII code are concerned.
 		require
 			a_str_not_void: a_str /= Void
 		local
@@ -264,7 +205,7 @@ feature -- String
 					i := 1
 					nb := a_str.count
 				until
-					i > nb or else not is_white_space_code (a_str.code (i))
+					i > nb or else not a_str.item (i).is_space
 				loop
 					i := i + 1
 				end
@@ -276,7 +217,6 @@ feature -- String
 
 	string_general_right_adjust (a_str: STRING_GENERAL)
 			-- Remove leading whitespace.
-			--|FIXME: Only take ASCII into consideration.
 		require
 			a_str_not_void: a_str /= Void
 		local
@@ -289,7 +229,7 @@ feature -- String
 					nb := a_str.count
 					i := nb
 				until
-					i < 1 or else not is_white_space_code (a_str.code (i))
+					i < 1 or else not a_str.item (i).is_space
 				loop
 					i := i - 1
 				end
@@ -299,69 +239,48 @@ feature -- String
 			end
 		end
 
-	is_string_general_lower (a_str: STRING_GENERAL): BOOLEAN
+	is_string_general_lower (a_str: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_str' in lower case?
-			--|FIXME: For the moment, only ASCII code are concerned.
 		require
 			a_str_not_void: a_str /= Void
 		local
 			i, nb: INTEGER_32
-			n32,m: NATURAL_32
-			c: CHARACTER_8
+			c: CHARACTER_32
 		do
-			if attached {STRING_8} a_str as l_str then
-				Result := l_str.as_lower.is_equal (l_str)
-			else
-				Result := True
-				from
-					i := 1
-					nb := a_str.count
-					m := {CHARACTER_8}.max_value.to_natural_32
-				until
-					i > nb or not Result
-				loop
-					n32 := a_str.code (i)
-					if n32 <= m then
-						c := n32.to_character_8
-						if c.as_lower /= c then
-							Result := False
-						end
-					end
-					i := i + 1
+			Result := True
+			from
+				i := 1
+				nb := a_str.count
+			until
+				i > nb or not Result
+			loop
+				c := a_str.item (i)
+				if c.as_lower /= c then
+					Result := False
 				end
+				i := i + 1
 			end
 		end
 
-	is_string_general_upper (a_str: STRING_GENERAL): BOOLEAN
+	is_string_general_upper (a_str: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_str' in upper case?
-			--|FIXME: For the moment, only ASCII code are concerned.
 		require
 			a_str_not_void: a_str /= Void
 		local
 			i, nb: INTEGER_32
-			n32,m: NATURAL_32
-			c: CHARACTER_8
-		do
-			if attached {STRING_8} a_str as l_str then
-				Result := l_str.as_upper.is_equal (l_str)
-			else
-				Result := True
-				from
-					i := 1
-					nb := a_str.count
-					m := {CHARACTER_8}.max_value.to_natural_32
-				until
-					i > nb or not Result
-				loop
-					n32 := a_str.code (i)
-					if n32 <= m then
-						c := n32.to_character_8
-						if c.as_upper /= c then
-							Result := False
-						end
-					end
-					i := i + 1
+			c: CHARACTER_32		do
+			Result := True
+			from
+				i := 1
+				nb := a_str.count
+			until
+				i > nb or not Result
+			loop
+				c := a_str.item (i)
+				if c.as_upper /= c then
+					Result := False
 				end
+				i := i + 1
 			end
 		end
 
@@ -369,36 +288,12 @@ feature -- String
 			-- Is `a_str' case insensitive equal to `a_str_other'?
 			--
 			-- `a_str' and `a_str_other' must be UTF-32 compatible.
-			--|FIXME: For the moment, only ASCII code are concerned.
+		obsolete "use {READABLE_STRING_GENERAL}.is_case_insensitive_equal (..) [2012-oct]"
 		require
 			a_str_32_not_void: a_str /= Void
 			a_str_other_not_void: a_str_other /= Void
-		local
-			i, nb: INTEGER_32
-			l_code, l_code_2: NATURAL_32
 		do
-			if a_str = a_str_other then
-				Result := True
-			else
-				nb := a_str.count
-				if nb = a_str_other.count then
-					from
-						Result := True
-						i := 1
-					until
-						i > nb or not Result
-					loop
-						l_code := a_str.code (i)
-						l_code_2 := a_str_other.code (i)
-						if l_code.is_valid_character_8_code and then l_code_2.is_valid_character_8_code then
-							Result := l_code.to_character_8.as_lower = l_code_2.to_character_8.as_lower
-						else
-							Result := l_code = l_code_2
-						end
-						i := i + 1
-					end
-				end
-			end
+			Result := a_str.is_case_insensitive_equal (a_str_other)
 		end
 
 note

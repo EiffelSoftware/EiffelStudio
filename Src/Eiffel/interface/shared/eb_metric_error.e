@@ -17,7 +17,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_message: like message)
+	make (a_message: READABLE_STRING_GENERAL)
 			-- Initialize `message' with `a_message'.
 		require
 			a_message_attached: a_message /= Void
@@ -27,25 +27,25 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	message: STRING_GENERAL
+	message: READABLE_STRING_GENERAL
 			-- The error message.
 
-	to_do: STRING_GENERAL
+	to_do: detachable READABLE_STRING_GENERAL
 			-- Information about how to do to deal with current error
 
-	location: STRING_GENERAL
+	location: detachable READABLE_STRING_GENERAL
 			-- Location where current error occurs
 
-	file_location: READABLE_STRING_GENERAL
+	file_location: detachable PATH
 			-- File location if Current error occurs in a file
 
-	message_with_location: STRING_GENERAL
+	message_with_location: STRING_32
 			-- `message' with `location' (if any)
 		local
 			l_str: STRING_32
 		do
 			create l_str.make (message.count + 64)
-			l_str.append (message)
+			l_str.append_string_general (message)
 			if location /= Void then
 				l_str.append (metric_names.new_line_separator)
 				l_str.append (metric_names.location_string (location))
@@ -58,14 +58,14 @@ feature -- Access
 				l_str.append (metric_names.new_line_separator)
 				l_str.append (metric_names.coloned_string (names.l_file_location, True))
 				l_str.append (metric_names.space_separator)
-				l_str.append (file_location.as_string_32)
+				l_str.append (file_location.string_representation)
 			end
 			Result := l_str
 		ensure
 			result_attached: Result /= Void
 		end
 
-	xml_location: TUPLE [column: INTEGER; row: INTEGER]
+	xml_location: detachable TUPLE [column: INTEGER; row: INTEGER]
 			-- Location in xml file where Current error happened
 
 	xml_row: INTEGER
@@ -144,12 +144,12 @@ feature -- Setting
 			if a_file_location = Void then
 				file_location := Void
 			else
-				file_location := a_file_location.twin
+				create file_location.make_from_path (a_file_location)
 			end
 		ensure
 			file_location_set:
 				(a_file_location = Void implies file_location = Void) and then
-				(a_file_location /= Void implies (file_location /= Void and then file_location.same_string (a_file_location)))
+				(a_file_location /= Void implies (file_location /= Void and then file_location.is_equal (a_file_location)))
 		end
 
 	set_xml_location (a_location: like xml_location)
@@ -164,7 +164,7 @@ invariant
 	message_attached: message /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

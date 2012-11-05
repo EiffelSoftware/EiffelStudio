@@ -412,10 +412,10 @@ feature {NONE} -- Helpers
 			result_attached: attached Result
 		end
 
-	xml_lite_parser: XML_LITE_STOPPABLE_PARSER
+	xml_parser: XML_STOPPABLE_PARSER
 			-- Xml parser used to parse the code template files.
 		once
-			create {XML_LITE_STOPPABLE_PARSER} Result.make
+			create {XML_STOPPABLE_PARSER} Result.make
 		ensure
 			result_attached: attached Result
 		end
@@ -433,7 +433,7 @@ feature {NONE} -- Basic operations
 			not_a_file_name_is_empty: not a_file_name.is_empty
 			a_file_name_exists: (create {FILE_UTILITIES}).file_exists (a_file_name)
 		local
-			l_parser: like xml_lite_parser
+			l_parser: like xml_parser
 			l_file_name: detachable STRING
 			l_resolver: XML_FILE_EXTERNAL_RESOLVER
 			l_callbacks: CODE_TEMPLATE_LOAD_CALLBACK
@@ -446,7 +446,7 @@ feature {NONE} -- Basic operations
 				l_resolver.resolve (l_file_name)
 				if not l_resolver.has_error then
 						-- File is loaded, create the callbacks and parse the XML.
-					l_parser := xml_lite_parser
+					l_parser := xml_parser
 					create l_callbacks.make (create {CODE_FACTORY}, l_parser)
 					check
 						l_parser_callbacks_set: l_parser.callbacks = l_callbacks
@@ -530,7 +530,7 @@ invariant
 	cataloged_template_definitions_attached: attached cataloged_template_definitions
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

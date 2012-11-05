@@ -55,7 +55,7 @@ feature -- Access
 			good_result: Result = id
 		end
 
-	title: STRING_GENERAL
+	title: READABLE_STRING_GENERAL
 			-- Title of the tool which for show, it maybe not in English.
 		do
 			Result := title_internal
@@ -84,7 +84,7 @@ feature -- Access
 			Result := last_stone
 		end
 
-	pixmap_location: STRING
+	pixmap_location: PATH
 			-- Location of icon file for Currnet tool
 
 	pixmap: EV_PIXMAP
@@ -212,7 +212,7 @@ feature -- Setting
 		require
 			a_location_attached: a_location /= Void
 		do
-			create pixmap_location.make_from_string (a_location)
+			create pixmap_location.make_from_path (a_location)
 			set_is_pixmap_loaded (False)
 		ensure
 			pixmap_location_set: pixmap_location /= Void and then pixmap_location.is_equal (a_location)
@@ -372,7 +372,7 @@ invariant
 	id_attached: id /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

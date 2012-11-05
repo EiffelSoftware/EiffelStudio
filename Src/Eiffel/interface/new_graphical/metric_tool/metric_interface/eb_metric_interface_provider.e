@@ -68,7 +68,7 @@ feature -- Names
 		require
 			a_name_attached: a_name /= Void
 		do
-			Result := string_general_as_lower (a_name)
+			Result := a_name.as_lower
 			if not a_name.is_empty then
 				Result := first_character_as_upper (Result)
 			end
@@ -174,7 +174,7 @@ feature -- Names
 					end
 				end
 			else
-				Result.append (l_validity.message_with_location)
+				Result.append_string_general (l_validity.message_with_location)
 			end
 			if a_go_to_definition then
 				if not Result.is_empty then
@@ -527,7 +527,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-        copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2012, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

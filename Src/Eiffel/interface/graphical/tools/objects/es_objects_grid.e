@@ -119,7 +119,7 @@ feature -- Properties
 	generating_type_evaluation_enabled: BOOLEAN
 			-- Is generating type representation evaluating {ANY}.generating_type ?
 
-	name: STRING_GENERAL
+	name: READABLE_STRING_GENERAL
 			-- associated name to identify the related grid.
 
 	id: STRING
@@ -1019,7 +1019,7 @@ feature -- Graphical look
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

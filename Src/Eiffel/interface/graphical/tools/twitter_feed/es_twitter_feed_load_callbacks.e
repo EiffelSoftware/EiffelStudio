@@ -118,10 +118,10 @@ feature {NONE} -- Process
 
 feature {NONE} -- State transistions
 
-	new_tag_state_transitions: HASH_TABLE [HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_tag_state_transitions: HASH_TABLE [HASH_TABLE [NATURAL_8, STRING_32], NATURAL_8]
 			-- <Precursor>
 		local
-			l_trans: attached HASH_TABLE [NATURAL_8, STRING]
+			l_trans: like new_tag_state_transitions.item
 		do
 			create Result.make (8)
 
@@ -156,7 +156,7 @@ feature {NONE} -- State transistions
 			Result.put (l_trans, t_user)
 		end
 
-	new_attribute_states: detachable HASH_TABLE [HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_attribute_states: detachable HASH_TABLE [HASH_TABLE [NATURAL_8, STRING_32], NATURAL_8]
 			-- <Precursor>
 		do
 		end
@@ -187,7 +187,7 @@ invariant
 	tweet_action_attached: tweet_action /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

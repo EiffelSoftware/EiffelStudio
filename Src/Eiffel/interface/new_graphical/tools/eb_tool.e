@@ -127,7 +127,7 @@ feature -- Access
 		deferred
 		end
 
-	title: STRING_GENERAL
+	title: READABLE_STRING_GENERAL
 			-- Title of the tool which for show, it maybe not in English.
 		do
 			Result := tool_descriptor.edition_title
@@ -417,7 +417,7 @@ invariant
 	--tool_descriptor_attached: not is_recycled implies tool_descriptor /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

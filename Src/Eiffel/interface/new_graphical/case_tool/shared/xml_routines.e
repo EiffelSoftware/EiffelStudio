@@ -196,7 +196,7 @@ feature {SHARED_XML_ROUTINES} -- Processing
 
 feature -- Saving
 
-	save_xml_document (a_file_name: STRING; a_doc: XML_DOCUMENT)
+	save_xml_document (a_file_name: PATH; a_doc: XML_DOCUMENT)
 			-- Save `a_doc' in `ptf'
 		require
 			file_not_void: a_file_name /= Void
@@ -208,7 +208,7 @@ feature -- Saving
 		do
 			if not retried then
 					-- Write document
-				create l_output_file.make (a_file_name)
+				create l_output_file.make_with_path (a_file_name)
 				if not l_output_file.exists or else l_output_file.is_writable then
 					l_output_file.open_write
 					check l_output_file.is_open_write end
@@ -218,30 +218,30 @@ feature -- Saving
 					l_output_file.flush
 					l_output_file.close
 				else
-					display_error_message (warnings.w_unable_to_write_file (a_file_name))
+					display_error_message (warnings.w_unable_to_write_file (a_file_name.string_representation))
 				end
 			end
 		rescue
 			retried := True
-			display_error_message (warnings.w_unable_to_write_file (a_file_name))
+			display_error_message (warnings.w_unable_to_write_file (a_file_name.string_representation))
 			retry
 		end
 
 feature -- Deserialization
 
-	deserialize_document (a_file_path: STRING): XML_DOCUMENT
+	deserialize_document (a_file_path: PATH): XML_DOCUMENT
 			-- Retrieve xml document associated to file
 			-- serialized in `a_file_path'.
 			-- If deserialization fails, return Void.
 		require
 			valid_file_path: a_file_path /= Void and then not a_file_path.is_empty
 		local
-			l_parser: XML_LITE_STOPPABLE_PARSER
+			l_parser: XML_STOPPABLE_PARSER
 			l_tree: XML_CALLBACKS_NULL_FILTER_DOCUMENT
 			l_file: PLAIN_TEXT_FILE
 			l_xm_concatenator: XML_CONTENT_CONCATENATOR
 		do
-			create l_file.make (a_file_path)
+			create l_file.make_with_path (a_file_path)
 			if l_file.exists and then l_file.is_readable then
 				l_file.open_read
 				check l_file.is_open_read end
@@ -254,11 +254,11 @@ feature -- Deserialization
 				if l_parser.is_correct then
 					Result := l_tree.document
 				else
-					display_error_message (warnings.w_file_is_corrupted (a_file_path))
+					display_error_message (warnings.w_file_is_corrupted (a_file_path.string_representation))
 					Result := Void
 				end
 			else
-				display_error_message (warnings.w_file_can_not_be_open (a_file_path))
+				display_error_message (warnings.w_file_can_not_be_open (a_file_path.string_representation))
 			end
 		end
 
@@ -310,7 +310,7 @@ feature {SHARED_XML_ROUTINES} -- Error management
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

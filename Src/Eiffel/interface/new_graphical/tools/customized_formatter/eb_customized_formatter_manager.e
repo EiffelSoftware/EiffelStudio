@@ -108,7 +108,7 @@ feature -- Access
 			l_metric.add_unqualified_attribute (n_filter, a_descriptor.is_filter_enabled.out)
 
 			create l_pixmap.make_last (Result, n_pixmap, l_namespace)
-			l_pixmap.add_unqualified_attribute (n_location, a_descriptor.pixmap_location)
+			l_pixmap.add_unqualified_attribute (n_location, a_descriptor.pixmap_location.string_representation)
 
 			create l_tools.make_last (Result, n_tools, l_namespace)
 			from
@@ -275,7 +275,7 @@ feature{NONE} -- Implementation/Data
 			-- Implementation of `change_actions'
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -288,22 +288,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

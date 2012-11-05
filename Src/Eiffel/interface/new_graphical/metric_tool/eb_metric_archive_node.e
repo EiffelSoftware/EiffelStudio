@@ -21,7 +21,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_metric_name: STRING; a_metric_type: INTEGER; a_time: DATE_TIME; a_value: DOUBLE; a_input: like input_domain; a_uuid: STRING; a_filtered: BOOLEAN)
+	make (a_metric_name: STRING; a_metric_type: INTEGER; a_time: DATE_TIME; a_value: DOUBLE; a_input: like input_domain; a_uuid: UUID; a_filtered: BOOLEAN)
 			-- Initialize `metric_name' with `a_metric_name', `metric_type' with `a_metric_type', `calculated_time' with `a_time',
 			-- `value' with `a_value', `input_domain' with `a_input' and `uuid' with `a_uuid'.
 		require
@@ -30,14 +30,13 @@ feature{NONE} -- Initialization
 			a_time_attached: a_time /= Void
 			a_input_attached: a_input /= Void
 			a_uuid_attached: a_uuid /= Void
-			a_uuid_valid: shared_uuid.is_valid_uuid (a_uuid)
 		do
 			set_metric_name (a_metric_name)
 			set_metric_type (a_metric_type)
 			set_calculated_time (a_time)
 			set_value (a_value)
 			set_input_domain (a_input)
-			set_uuid (create {UUID}.make_from_string (a_uuid))
+			set_uuid (a_uuid)
 			set_is_up_to_date (True)
 			set_is_value_valid (True)
 			set_is_result_filtered (a_filtered)
@@ -330,7 +329,7 @@ invariant
 	value_tester_attached: value_tester /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2012, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

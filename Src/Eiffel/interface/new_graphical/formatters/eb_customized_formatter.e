@@ -93,7 +93,7 @@ feature -- Access
 			end
 		end
 
-	tooltip: STRING_GENERAL
+	tooltip: STRING_32
 			-- Tooltip
 
 	header: STRING_GENERAL
@@ -194,7 +194,7 @@ feature -- Access
 			Result := [displayer_generators.generator_with_name (viewer), viewer]
 		end
 
-	icon_location: STRING
+	icon_location: PATH
 			-- Location of icon file for Current formatter
 
 	sorting_status_preference: STRING_PREFERENCE
@@ -430,7 +430,7 @@ feature -- Setting
 			if a_location = Void then
 				icon_location := Void
 			else
-				create icon_location.make_from_string (a_location)
+				create icon_location.make_from_path (a_location)
 			end
 			set_is_pixmap_loaded (False)
 		end
@@ -602,7 +602,7 @@ invariant
 	menu_name_internal_attached: menu_name_internal /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

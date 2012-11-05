@@ -141,7 +141,7 @@ feature {NONE} -- Callbacks
 			end
 			if metric_manager.has_error then
 					-- Metric error
-				create l_error.make_standard (metric_manager.last_error.message)
+				create l_error.make_standard (metric_manager.last_error.message.to_string_32)
 				l_error.show_on_active_window
 			end
 
@@ -238,7 +238,7 @@ feature {NONE} -- Attributes
 			--| We shouldn't ask again then.
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -237,7 +237,7 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-    frozen title: STRING_GENERAL assign set_title
+    frozen title: READABLE_STRING_GENERAL assign set_title
             -- Title of the tool which for show, it maybe not in English.
         do
             Result := internal_title

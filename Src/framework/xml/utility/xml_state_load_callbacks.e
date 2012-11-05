@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	xml_parser: XML_LITE_STOPPABLE_PARSER
+	xml_parser: XML_STOPPABLE_PARSER
 			-- The XML parser used to in conjunction with Current
 
 	last_error_message: STRING_32
@@ -180,7 +180,7 @@ feature {NONE} -- Basic operations
 			current_content_stack.wipe_out
 
 				-- Required for the xml declaration processing instruction
-			current_attributes_stack.put (create {HASH_TABLE [STRING_32, NATURAL_8]}.make (10))
+			current_attributes_stack.put (create {like current_attributes_stack.item}.make (10))
 
 			internal_last_error_message := Void
 		ensure
@@ -221,7 +221,7 @@ feature {NONE} -- Process
 
 feature {NONE} -- Query
 
-	is_named (a_element_name: STRING; a_name: STRING): BOOLEAN
+	is_named (a_element_name: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Determines if an element has a specific name.
 			--
 			-- `a_element': The XML element to check the name of.
@@ -236,7 +236,7 @@ feature {NONE} -- Query
 			Result := a_element_name.is_case_insensitive_equal (a_name)
 		end
 
-	is_xml_attribute (a_name: STRING): BOOLEAN
+	is_xml_attribute (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Determines if a XML element attribute name is a well known XML attribute name.
 			--
 			-- `a_name': The attribute name.
@@ -249,7 +249,7 @@ feature {NONE} -- Query
 
 feature -- Actions
 
-	frozen error_reported_actions: ACTION_SEQUENCE [TUPLE [msg: attached STRING_32; line: NATURAL; index: NATURAL]]
+	frozen error_reported_actions: ACTION_SEQUENCE [TUPLE [msg: STRING_32; line: NATURAL; index: NATURAL]]
 			-- Actions used to recieve notification of an error
 			--
 			-- 'msg': Message and cause of the error.
@@ -267,7 +267,7 @@ feature -- Actions
 			result_consistent: Result = error_reported_actions
 		end
 
-	frozen warning_reported_actions: ACTION_SEQUENCE [TUPLE [msg: attached STRING_32; line: NATURAL; index: NATURAL]]
+	frozen warning_reported_actions: ACTION_SEQUENCE [TUPLE [msg: STRING_32; line: NATURAL; index: NATURAL]]
 			-- Actions used to recieve notification of an warning
 			--
 			-- 'msg': Message and cause of the warning.
@@ -293,23 +293,23 @@ feature {NONE} -- Action handlers
 			reset
 		end
 
-	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- <Precursor>
 		local
-			l_name: STRING
+			l_name: STRING_32
 			l_tag_transitions: like tag_state_transitions
-			l_transitions: detachable HASH_TABLE [NATURAL_8, STRING]
+			l_transitions: detachable like tag_state_transitions.item
 			l_current_transition_stack: like current_transition_stack
 			l_next_state: NATURAL_8
 		do
 			if not has_error then
 					-- Extend the attribute stack
-				current_attributes_stack.put (create {HASH_TABLE [STRING_32, NATURAL_8]}.make (10))
+				current_attributes_stack.put (create {like current_attributes_stack.item}.make (10))
 
 					-- Set new state
 				l_next_state := t_none
 
-				l_name := a_local_part--.as_lower
+				l_name := to_lower_string_32 (a_local_part)
 
 	--				-- check version
 	--			check_version (a_namespace)
@@ -332,7 +332,7 @@ feature {NONE} -- Action handlers
 
 				if is_strict and then l_next_state = t_none then
 						-- Parse error
-					on_report_xml_error ("Unexpected tag '" + a_local_part + "'!")
+					on_report_xml_error ({STRING_32} "Unexpected tag '" + a_local_part + {STRING_32} "'!")
 				else
 						-- Set next transition.
 					l_current_transition_stack.force (l_next_state)
@@ -353,10 +353,10 @@ feature {NONE} -- Action handlers
 			current_transition_stack_stack_unchanged: current_transition_stack.count = old current_transition_stack.count
 		end
 
-	on_attribute (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
 			-- <Precursor>
 		local
-			l_name: STRING
+			l_name: STRING_32
 			l_cur_attributes: like current_attributes
 			l_attribute_states: like attribute_states
 			l_tag_state: NATURAL_8
@@ -367,7 +367,7 @@ feature {NONE} -- Action handlers
 
 					-- Only process if there is no error
 				if not is_xml_attribute (a_local_part) then
-					l_name := a_local_part--.as_lower
+					l_name := to_lower_string_32 (a_local_part)
 
 						-- Check if the attribute is valid for the current state
 					l_tag_state := current_transition_stack.item
@@ -382,7 +382,7 @@ feature {NONE} -- Action handlers
 						l_cur_attributes := current_attributes
 						if l_cur_attributes.has (l_state) and is_strict then
 								-- Duplication error
-							on_report_xml_error ("Attribute '" + a_local_part + "' appears more than once!")
+							on_report_xml_error ({STRING_32} "Attribute '" + a_local_part + {STRING_32} "' appears more than once!")
 						else
 							if not a_value.is_empty then
 									-- Add value to the attributes table.
@@ -390,24 +390,24 @@ feature {NONE} -- Action handlers
 							else
 								if is_strict then
 										-- Empty value error
-									on_report_xml_error ("Attribute '" + a_local_part + "' is empty!")
+									on_report_xml_error ({STRING_32} "Attribute '" + a_local_part + {STRING_32} "' is empty!")
 								elseif l_cur_attributes.has (l_state) then
 										-- Remove empty attribute value (non-strict operation) because the last occurance is empty.
 									l_cur_attributes.remove (l_state)
 										-- Empty value warning
-									on_report_xml_warning ("Attribute '" + a_local_part + "' is empty.")
+									on_report_xml_warning ({STRING_32} "Attribute '" + a_local_part + {STRING_32} "' is empty.")
 								end
 							end
 						end
 					elseif is_strict then
 							-- Unreconginized attribute error
-						on_report_xml_error ("Unexpected attribute '" + a_local_part + "'!")
+						on_report_xml_error ({STRING_32} "Unexpected attribute '" + a_local_part + {STRING_32} "'!")
 					end
 				end
 			end
 		end
 
-	on_content (a_content: STRING)
+	on_content (a_content: READABLE_STRING_32)
 			-- <Precursor>
 		do
 			if not has_error then
@@ -415,17 +415,17 @@ feature {NONE} -- Action handlers
 					not current_content_stack.is_empty and then
 					attached current_content_stack.item as l_item
 				then
-					l_item.append (a_content.as_string_32)
+					l_item.append (a_content)
 				else
 					xml_parser.report_error_from_callback (e_character_data_not_allowed_outside_element_error)
 				end
 			end
 		end
 
-	on_end_tag (a_namespace, a_prefix: detachable STRING; a_local_part: STRING)
+	on_end_tag (a_namespace, a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- <Precursor>
 		local
-			l_name: STRING
+			l_name: STRING_32
 			l_tag_transitions: like tag_state_transitions
 			l_current_transition_stack: like current_transition_stack
 			l_current_state: like current_state
@@ -435,7 +435,7 @@ feature {NONE} -- Action handlers
 					-- Set new state
 				l_next_state := t_none
 
-				l_name := a_local_part--.as_lower
+				l_name := to_lower_string_32 (a_local_part)
 
 					-- Check if it is a valid tag state transition
 				l_tag_transitions := tag_state_transitions
@@ -466,14 +466,15 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	on_report_xml_error (a_message: STRING)
+	on_report_xml_error (a_message: READABLE_STRING_32)
 			-- <Precursor>
 			--
 			-- `a_message': The XML error to report.
 		local
 			l_message: STRING_32
 		do
-			l_message := a_message.as_string_32
+			create l_message.make (a_message.count)
+			l_message.append_string_general (a_message)
 			internal_last_error_message := l_message
 			on_error (l_message, xml_parser.line.to_natural_32, xml_parser.column.to_natural_32)
 		end
@@ -534,7 +535,7 @@ feature {NONE} -- Reporting
 
 feature {NONE} -- Conversion
 
-	boolean_attribute (a_name: STRING; a_token: NATURAL_8; a_default: BOOLEAN): BOOLEAN
+	boolean_attribute (a_name: READABLE_STRING_GENERAL; a_token: NATURAL_8; a_default: BOOLEAN): BOOLEAN
 			-- Converts an attribute value to a Boolean.
 			--
 			-- `a_name': The name of the attribute or element.
@@ -545,14 +546,14 @@ feature {NONE} -- Conversion
 			not_a_name_is_empty: not a_name.is_empty
 		local
 			l_attributes: like current_attributes
+			l_value: like prune_whitespace
 		do
 			Result := a_default
 
 			l_attributes := current_attributes
 			if l_attributes.has (a_token) then
-				if attached l_attributes.item (a_token) as l_value then
-					l_value.left_adjust
-					l_value.right_adjust
+				if attached l_attributes.item (a_token) as v then
+					l_value := prune_whitespace (v)
 					if l_value.is_boolean then
 						Result := l_value.to_boolean
 					elseif v_bool_one.is_equal (l_value) or else v_bool_yes.is_case_insensitive_equal (l_value) then
@@ -561,13 +562,13 @@ feature {NONE} -- Conversion
 						Result := False
 					else
 							-- Invalid Boolean value.
-						on_report_xml_error ("Invalid Boolean value '" + l_value + "' for entity '" + a_name + "!")
+						on_report_xml_error ({STRING_32} "Invalid Boolean value '" + l_value + {STRING_32} "' for entity '" + a_name.to_string_32 + {STRING_32} "!")
 					end
 				end
 			end
 		end
 
-	integer_attribute (a_name: STRING; a_token: NATURAL_8; a_default: INTEGER_32): INTEGER_32
+	integer_attribute (a_name: READABLE_STRING_GENERAL; a_token: NATURAL_8; a_default: INTEGER_32): INTEGER_32
 			-- Converts an attribute value to a Boolean.
 			--
 			-- `a_name': The name of the attribute or element.
@@ -578,25 +579,25 @@ feature {NONE} -- Conversion
 			not_a_name_is_empty: not a_name.is_empty
 		local
 			l_attributes: like current_attributes
+			l_value: like prune_whitespace
 		do
 			Result := a_default
 
 			l_attributes := current_attributes
 			if l_attributes.has (a_token) then
-				if attached l_attributes.item (a_token) as l_value then
-					l_value.left_adjust
-					l_value.right_adjust
+				if attached l_attributes.item (a_token) as v then
+					l_value := prune_whitespace (v)
 					if l_value.is_integer_32 then
 						Result := l_value.to_integer_32
 					else
 							-- Invalid Integer value.
-						on_report_xml_error ("Invalid Integer value '" + l_value + "' for entity '" + a_name + "!")
+						on_report_xml_error ({STRING_32} "Invalid Integer value '" + l_value + {STRING_32} "' for entity '" + a_name.to_string_32 + {STRING_32} "!")
 					end
 				end
 			end
 		end
 
-	to_boolean (a_name: STRING; a_value: STRING_32; a_default: BOOLEAN): BOOLEAN
+	to_boolean (a_name: READABLE_STRING_GENERAL; a_value: READABLE_STRING_GENERAL; a_default: BOOLEAN): BOOLEAN
 			-- Converts a value to a Boolean.
 			--
 			-- `a_name': The name of the attribute or element.
@@ -620,11 +621,11 @@ feature {NONE} -- Conversion
 				Result := a_default
 
 					-- Invalid Boolean value.
-				on_report_xml_error ("Invalid Boolean value '" + a_value + "' for entity '" + a_name + "!")
+				on_report_xml_error ({STRING_32} "Invalid Boolean value '" + a_value.to_string_32 + {STRING_32} "' for entity '" + a_name.to_string_32 + {STRING_32} "!")
 			end
 		end
 
-	to_integer (a_name: STRING; a_value: STRING_32; a_default: INTEGER_32): INTEGER_32
+	to_integer (a_name: READABLE_STRING_GENERAL; a_value: READABLE_STRING_GENERAL; a_default: INTEGER_32): INTEGER_32
 			-- Converts a value to a Integer.
 			--
 			-- `a_name': The name of the attribute or element.
@@ -645,7 +646,7 @@ feature {NONE} -- Conversion
 				Result := a_default
 
 					-- Invalid Boolean value.
-				on_report_xml_error ("Invalid Integer value '" + a_value + "' for entity '" + a_name + "!")
+				on_report_xml_error ({STRING_32} "Invalid Integer value '" + a_value.to_string_32 + {STRING_32} "' for entity '" + a_name.to_string_32 + {STRING_32} "!")
 			end
 		end
 
@@ -675,9 +676,9 @@ feature {NONE} -- Formatting
 		end
 
 	prune_whitespace (a_value: READABLE_STRING_GENERAL): STRING_32
-			-- Prunes all leading a trailing whitespace from `a_value' and returns the result.
+			-- Prunes all leading and trailing whitespaces from `a_value' and returns the result.
 			--
-			-- `a_value': THe source value to remove leading and trailing whitespace from.
+			-- `a_value': The source value to remove leading and trailing whitespaces from.
 		require
 			a_value_attached: a_value /= Void
 		local
@@ -729,11 +730,11 @@ feature {NONE} -- Formatting
 			-- Character mappings, given a escape string.
 		once
 			create Result.make (5)
-			Result.put (("%"").as_string_32, ("&quote;").as_string_32)
-			Result.put (("%'").as_string_32, ("&apos;").as_string_32)
-			Result.put (("&").as_string_32, ("&amp;").as_string_32)
-			Result.put (("<").as_string_32, ("&lt;").as_string_32)
-			Result.put ((">").as_string_32, ("&gt;").as_string_32)
+			Result.put ({STRING_32} "%"", {STRING_32} "&quote;")
+			Result.put ({STRING_32} "%'", {STRING_32} "&apos;")
+			Result.put ({STRING_32} "&", {STRING_32} "&amp;")
+			Result.put ({STRING_32} "<", {STRING_32} "&lt;")
+			Result.put ({STRING_32} ">", {STRING_32} "&gt;")
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -741,7 +742,7 @@ feature {NONE} -- Formatting
 
 feature {NONE} -- State transistions
 
-	tag_state_transitions: HASH_TABLE [HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	tag_state_transitions: HASH_TABLE [HASH_TABLE [NATURAL_8, STRING_32], NATURAL_8]
 			-- Mapping of possible tag state transitions from `current_tag' with the tag name to the new state.
 		do
 			if attached internal_tag_state_transitions as l_result then
@@ -758,7 +759,7 @@ feature {NONE} -- State transistions
 			result_consistent: Result = tag_state_transitions
 		end
 
-	attribute_states: detachable HASH_TABLE [HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	attribute_states: detachable HASH_TABLE [HASH_TABLE [NATURAL_8, STRING_32], NATURAL_8]
 			-- Mapping of possible attributes of tags.
 		do
 			if attached internal_attribute_states as l_result then
@@ -774,7 +775,7 @@ feature {NONE} -- State transistions
 
 feature {NONE} -- Factory
 
-	new_tag_state_transitions: HASH_TABLE [HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_tag_state_transitions: HASH_TABLE [HASH_TABLE [NATURAL_8, STRING_32], NATURAL_8]
 			-- Mapping of possible tag state transitions from `current_tag' with the tag name to the new state.
 		deferred
 		ensure
@@ -784,7 +785,7 @@ feature {NONE} -- Factory
 			result_t_none_item_attached: attached Result.item (t_none)
 		end
 
-	new_attribute_states: detachable HASH_TABLE [HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_attribute_states: detachable HASH_TABLE [HASH_TABLE [NATURAL_8, STRING_32], NATURAL_8]
 			-- Mapping of possible attributes of tags.
 		deferred
 		ensure
@@ -836,6 +837,16 @@ feature {NONE} -- Constants: Errors
 	e_character_data_not_allowed_outside_element_error: STRING = "Character data is not allowed without wrapping it in a container element"
 
 	e_schema_error: STRING = "Schema error"
+
+feature {NONE} -- Helper
+
+	to_lower_string_32 (s: READABLE_STRING_GENERAL): STRING_32
+			-- Lower STRING_32 version of `s'.
+		do
+			create Result.make (s.count)
+			Result.append_string_general (s)
+			Result.to_lower
+		end
 
 invariant
 	current_transition_stack_attached: current_transition_stack /= Void

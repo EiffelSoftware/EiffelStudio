@@ -312,7 +312,7 @@ feature {NONE} -- Basic operations
 					if tag_list.after then
 						l_comp := 1
 					else
-						l_comp := string_general_as_lower (tag_list.item_for_iteration.text).three_way_comparison (string_general_as_lower (a_tag))
+						l_comp := tag_list.item_for_iteration.text.as_lower.three_way_comparison (a_tag.as_lower)
 						if l_comp = -1 then
 							tag_list.forth
 						end
@@ -353,7 +353,7 @@ feature {NONE} -- Internationalization
 		]"
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

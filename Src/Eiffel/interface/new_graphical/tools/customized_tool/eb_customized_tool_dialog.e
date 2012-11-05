@@ -88,6 +88,21 @@ feature{NONE} -- Actions
 			end
 		end
 
+	on_data_general_change (a_new_data: STRING_32; a_setter: PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]]; a_refresher: PROCEDURE [ANY, TUPLE])
+			-- Action to be performed when `a_new_data' changes.
+			-- Invoke `a_setter' to set this new data.
+			-- After setting, invoke `a_referesh' to refresh Current dialog if `a_refresher' is not Void.
+		require
+			a_new_data_attached: a_new_data /= Void
+			a_setter_attached: a_setter /= Void
+		do
+			set_has_changed (True)
+			a_setter.call ([a_new_data])
+			if a_refresher /= Void then
+				a_refresher.call (Void)
+			end
+		end
+
 	on_handlers_change (a_handlers: HASH_TABLE [STRING, STRING]; a_descriptor: EB_CUSTOMIZED_TOOL_DESP)
 			-- Action to be performed when handlers of `a_descriptor' changes.
 		require
@@ -201,8 +216,8 @@ feature{NONE} -- Implementation
 			l_grid.add_property (l_name)
 
 			create l_pixmap.make (interface_names.l_pixmap_file)
-			l_pixmap.set_value (string_32_from_string_8 (a_descriptor.pixmap_location))
-			l_pixmap.change_value_actions.extend (agent on_data_change (?, agent a_descriptor.set_pixmap_location, Void))
+			l_pixmap.set_value (a_descriptor.pixmap_location.string_representation)
+			l_pixmap.change_value_actions.extend (agent on_data_general_change (?, agent a_descriptor.set_pixmap_location, Void))
 			l_grid.add_property (l_pixmap)
 
 			create l_dialog.make (a_descriptor.name.as_string_32, available_tools, stone_table)
@@ -343,7 +358,7 @@ feature{NONE} -- Implementation
 				l_tool := l_tools.item
 				check l_tool_attached: l_tool /= Void end
 				if l_item_table.has (l_tool.title_for_pre) then
-					Result.extend ([l_tool.title, l_tool.title_for_pre])
+					Result.extend ([l_tool.title.to_string_32, l_tool.title_for_pre])
 					l_item_table.remove (l_tool.title_for_pre)
 				end
 				l_tools.forth
@@ -361,7 +376,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -59,7 +59,7 @@ feature -- Access
 			-- Text for toolbar button.
 		do
 --			Result := tool.content.short_title
-			Result := tool.title
+			Result := tool.title.to_string_32
 		end
 
 	is_tooltext_important: BOOLEAN
@@ -79,7 +79,7 @@ feature -- Access
 			-- Name as it appears in menus.
 		do
 --			Result := tool.content.short_title
-			Result := tool.title
+			Result := tool.title.to_string_32
 		end
 
 	name: STRING
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			-- Are we changing the `is_selected' attribute? (To prevent stack overflows)
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

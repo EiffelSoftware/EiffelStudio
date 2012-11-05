@@ -111,7 +111,7 @@ feature -- File creation
 				end
 				metric_file.wipe_out
 				metric_file.open_read_write
-				Xml_routines.save_xml_document (metric_file.name, file_header)
+				Xml_routines.save_xml_document (create {PATH}.make_from_string (metric_file.name_32), file_header)
 			end
 		rescue
 			retried := True
@@ -355,7 +355,7 @@ feature -- Observer
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

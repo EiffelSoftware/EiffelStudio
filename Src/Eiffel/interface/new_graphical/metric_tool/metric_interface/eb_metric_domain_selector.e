@@ -772,8 +772,8 @@ feature{NONE} -- Implementation/Sorting
 			l_index_a: INTEGER
 			l_index_b: INTEGER
 		do
-			l_name_a := string_general_as_lower (a_scope_a.string_representation)
-			l_name_b := string_general_as_lower (a_scope_b.string_representation)
+			l_name_a := a_scope_a.string_representation.as_lower
+			l_name_b := a_scope_b.string_representation.as_lower
 			if a_order = ascending_order then
 				Result := l_name_a < l_name_b
 			elseif a_order = descending_order then
@@ -795,7 +795,7 @@ invariant
 	grid_support_attached: grid_support /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2012, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

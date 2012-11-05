@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 	cluster_name: STRING_32
 			-- Name of the cluster entered by the user, in lower case.
 		do
-			Result := string_general_as_lower (cluster_entry.text)
+			Result := cluster_entry.text.as_lower
 		ensure
 			cluster_name_not_void: Result /= Void
 		end

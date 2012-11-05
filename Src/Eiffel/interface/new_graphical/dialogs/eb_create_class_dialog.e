@@ -425,7 +425,7 @@ feature {NONE} -- Basic operations
 								from l_parents.start until l_parents.after loop
 									if not l_parents.item.text.has_substring ("{NONE} ") then
 										l_buffer.append_character ('%T')
-										l_buffer.append (string_general_as_upper (l_parents.item.data.out))
+										l_buffer.append (l_parents.item.data.out.as_upper)
 										l_buffer.append ("%N%N")
 									end
 									l_parents.forth
@@ -438,7 +438,7 @@ feature {NONE} -- Basic operations
 								from l_parents.start until l_parents.after loop
 									if l_parents.item.text.has_substring ("{NONE} ") then
 										l_buffer.append_character ('%T')
-										l_buffer.append (string_general_as_upper (l_parents.item.data.out))
+										l_buffer.append (l_parents.item.data.out.as_upper)
 										l_buffer.append ("%N%N")
 									end
 									l_parents.forth

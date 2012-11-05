@@ -79,6 +79,15 @@ feature {NONE} -- Actual Test
 			pixmap.set_with_named_file (image_path)
 
 			assert ("File loaded.", pixmap.width = 10 and then pixmap.height = 10)
+
+			create pixmap
+			pixmap.set_size (10, 10)
+			pixmap.save_to_named_file (create {EV_BMP_FORMAT}, image_path)
+
+			create pixmap
+			pixmap.set_with_named_file (image_path)
+
+			assert ("File loaded.", pixmap.width = 10 and then pixmap.height = 10)
 		end
 
 feature {NONE} -- Helpers

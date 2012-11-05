@@ -465,7 +465,7 @@ feature {NONE} -- Basic operations
 					if type_list.after then
 						l_comp := 1
 					else
-						l_comp := string_general_as_lower (type_list.item_for_iteration.text).three_way_comparison (string_general_as_lower (a_type))
+						l_comp := type_list.item_for_iteration.text.as_lower.three_way_comparison (a_type.as_lower)
 						if l_comp = -1 then
 							type_list.forth
 						end

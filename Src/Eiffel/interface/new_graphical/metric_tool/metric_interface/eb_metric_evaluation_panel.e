@@ -543,7 +543,7 @@ feature -- Actions
 				last_calculation_time /= Void
 			end
 			metric_tool.on_send_metric_value_in_history (
-				create {EB_METRIC_ARCHIVE_NODE}.make (last_metric.name, metric_type_id (last_metric), last_calculation_time, last_value, last_input_domain, uuid_gen.generate_uuid.out, is_result_filtered_for_last_metric),
+				create {EB_METRIC_ARCHIVE_NODE}.make (last_metric.name, metric_type_id (last_metric), last_calculation_time, last_value, last_input_domain, uuid_gen.generate_uuid, is_result_filtered_for_last_metric),
 				Current
 			)
 		end
@@ -1005,7 +1005,7 @@ invariant
 	show_percent_btn_attached: show_percent_btn /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2012, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[
@@ -1029,11 +1029,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
         source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_METRIC_EVALUATION_PANEL

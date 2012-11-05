@@ -208,13 +208,13 @@ feature -- Status report
 	is_history_recalculation_running: BOOLEAN
 			-- Is metric history recalculation running?
 
-	is_metric_name_valid (a_name: STRING): BOOLEAN
+	is_metric_name_valid (a_name: detachable READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_name' a valid metric name?
 		do
 			Result := a_name /= Void and then
 					  (not a_name.is_empty) and then
-					  a_name.item (1).is_graph and then
-					  a_name.item (a_name.count).is_graph
+					  a_name.item (1).is_character_8 and then a_name.item (1).to_character_8.is_graph and then
+					  a_name.item (a_name.count).is_character_8 and then a_name.item (a_name.count).to_character_8.is_graph
 		end
 
 	has_archive_been_loaded: BOOLEAN

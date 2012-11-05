@@ -249,15 +249,15 @@ feature -- Sorting order index
 
 feature -- Setting
 
-	set_library_target_uuid (a_uuid: STRING)
+	set_library_target_uuid (a_uuid: READABLE_STRING_GENERAL)
 			-- Set `library_target_uuid' with `a_uuid'.
 		require
 			a_uuid_attached: a_uuid /= Void
 			a_uuid_valid: uuid.is_valid_uuid (a_uuid)
 		do
-			create library_target_uuid.make_from_string (a_uuid)
+			create library_target_uuid.make_from_string (a_uuid.to_string_8)
 		ensure
-			library_target_uuid_set: library_target_uuid /= Void and then library_target_uuid.is_equal (a_uuid)
+			library_target_uuid_set: library_target_uuid /= Void and then a_uuid.same_string (library_target_uuid)
 		end
 
 	set_id (a_id: like id)
@@ -314,7 +314,7 @@ invariant
 	sorting_order_index_valid: is_sorting_order_index_valid (sorting_order_index)
 
 note
-        copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2012, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

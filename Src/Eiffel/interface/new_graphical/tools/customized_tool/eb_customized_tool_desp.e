@@ -36,7 +36,7 @@ feature -- Access
 	id: STRING
 			-- Id of current tool
 
-	pixmap_location: STRING
+	pixmap_location: PATH
 			-- Location of the icon file for current tool
 
 	handlers: HASH_TABLE [STRING, STRING]
@@ -85,12 +85,20 @@ feature -- Setting
 			id_set: id /= Void and then id.is_equal (a_id)
 		end
 
-	set_pixmap_location (a_pixmap_location: like pixmap_location)
+	set_pixmap_location (a_pixmap_location: READABLE_STRING_GENERAL)
 			-- Set `pixmap_location' with `a_pixmap_location'.
 		require
 			a_pixmap_location_attached: a_pixmap_location /= Void
 		do
-			pixmap_location := a_pixmap_location.twin
+			create pixmap_location.make_from_string (a_pixmap_location)
+		end
+
+	set_pixmap_location_with_path (a_path: like pixmap_location)
+			-- Set `pixmap_location' with `a_path'.
+		require
+			a_path_attached: a_path /= Void
+		do
+			create pixmap_location.make_from_path (a_path)
 		end
 
 	extend_handler (a_tool_id: like id; a_stone_name: STRING)
@@ -109,7 +117,7 @@ invariant
 	handlers_attached: handlers /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

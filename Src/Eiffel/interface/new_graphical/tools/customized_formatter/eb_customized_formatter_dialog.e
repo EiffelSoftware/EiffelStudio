@@ -425,7 +425,7 @@ feature {NONE} -- Implementation/Data
 	helper_label: ES_LABEL
 			-- Label to display help information
 
-	pixmap_from_file (a_file: STRING): EV_PIXMAP
+	pixmap_from_file (a_file: PATH): EV_PIXMAP
 			-- Pixmap from file `a_file'.			
 			-- If file loading failed, we use a default icon for an item.
 		require
@@ -435,7 +435,7 @@ feature {NONE} -- Implementation/Data
 			l_result: TUPLE [a_pixmap: EV_PIXMAP; a_buffer: EV_PIXEL_BUFFER]
 		do
 			create l_pixmap_loader
-			l_result := l_pixmap_loader.loaded_pixmap_from_file (a_file,default_icon_pixmap , Void)
+			l_result := l_pixmap_loader.loaded_pixmap_from_file (a_file, default_icon_pixmap , Void)
 			Result := l_result.a_pixmap
 		ensure
 			result_attached: Result /= Void
@@ -637,7 +637,7 @@ invariant
 	formatter_grid_wrapper_attached: item_grid_wrapper /= Void
 	descriptor_row_table_attached: descriptor_row_table /= Void
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

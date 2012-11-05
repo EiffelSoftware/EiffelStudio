@@ -18,7 +18,7 @@ inherit
 create
 	make
 
-feature{NONE} -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_name: like name)
 			-- Initialize Current.
@@ -28,10 +28,10 @@ feature{NONE} -- Initialization
 			set_name (a_name)
 			create tools.make (2)
 			create sorting_orders.make (2)
-			set_header ("")
-			set_temp_header ("")
+			set_header ({STRING_32} "")
+			set_temp_header ({STRING_32} "")
 			set_pixmap_location ("")
-			set_tooltip ("")
+			set_tooltip ({STRING_32} "")
 			set_metric_name ("")
 		end
 
@@ -46,11 +46,11 @@ feature -- Access
 	temp_header: STRING
 			-- Name of Current formatter
 
-	tooltip: STRING
+	tooltip: STRING_32
 			-- Name of Current formatter
 
-	pixmap_location: STRING
-			-- Name of Current formatter
+	pixmap_location: PATH
+			-- Pixmap location
 
 	metric_name: STRING
 			-- Name of Current formatter
@@ -126,20 +126,20 @@ feature -- Setting
 			name := a_name.twin
 		end
 
-	set_header (a_header: like header)
+	set_header (a_header: READABLE_STRING_32)
 			-- Set `header' with `a_header'.
 		require
 			a_header_attached: a_header /= Void
 		do
-			header := a_header.twin
+			header := a_header.to_string_8
 		end
 
-	set_temp_header (a_temp_header: like temp_header)
+	set_temp_header (a_temp_header: READABLE_STRING_32)
 			-- Set `temp_header' with `a_temp_header'.
 		require
 			a_temp_header_attached: a_temp_header /= Void
 		do
-			temp_header := a_temp_header.twin
+			temp_header := a_temp_header.to_string_8
 		end
 
 	set_tooltip (a_tooltip: like tooltip)
@@ -150,12 +150,20 @@ feature -- Setting
 			tooltip := a_tooltip.twin
 		end
 
-	set_pixmap_location (a_pixmap_location: like pixmap_location)
-			-- Set `pixmap_location' with `a_pixmap_location'.
+	set_pixmap_location	(a_pixmap_location: READABLE_STRING_GENERAL)
+			-- Set `pixmap_location' with path representation `a_pixmap_location'.
 		require
 			a_pixmap_location_attached: a_pixmap_location /= Void
 		do
-			pixmap_location := a_pixmap_location.twin
+			set_pixmap_location_with_path (create {PATH}.make_from_string (a_pixmap_location))
+		end
+
+	set_pixmap_location_with_path (a_path: like pixmap_location)
+			-- Set `pixmap_location' with `a_path'.
+		require
+			a_pixmap_location_attached: a_path /= Void
+		do
+			pixmap_location := a_path
 		end
 
 	set_metric_name (a_metric_name: like metric_name)
@@ -230,7 +238,7 @@ invariant
 	sorting_orders_attached: sorting_orders /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -243,22 +251,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

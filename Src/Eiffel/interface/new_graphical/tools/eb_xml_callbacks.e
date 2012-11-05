@@ -54,30 +54,28 @@ feature -- Status report
 
 feature{NONE} -- Event handlers
 
-	on_error (a_message: STRING)
+	on_error (a_message: READABLE_STRING_32)
 			-- Event producer detected an error.
 		do
 			create_last_error (a_message)
 		end
 
-	on_content (a_content: STRING)
+	on_content (a_content: READABLE_STRING_32)
 			-- Text content.
 		do
 			current_content.append (a_content)
 		end
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- Start of start tag.
 		local
-			l_trans: HASH_TABLE [INTEGER, STRING]
 			l_tag: INTEGER
 		do
 			if current_tag.is_empty then
 				current_tag.extend (t_none)
 			end
-			l_trans := state_transitions_tag.item (current_tag.item)
-			if l_trans /= Void then
-				l_tag := l_trans.item (a_local_part)
+			if attached state_transitions_tag.item (current_tag.item) as l_trans then
+				l_tag := l_trans.item (a_local_part.to_string_32)
 			end
 			if l_tag = 0 then
 				create_last_error (xml_names.err_invalid_tag_position (a_local_part))
@@ -86,29 +84,31 @@ feature{NONE} -- Event handlers
 			end
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
 			-- Start of attribute.
 		local
-			l_attr: HASH_TABLE [INTEGER, STRING]
+			k_local: STRING_32
 			l_attribute: INTEGER
+			l_current_attributes: like current_attributes
 		do
 			if
 				not a_local_part.is_case_insensitive_equal ("xmlns") and
 				not	a_local_part.is_case_insensitive_equal ("xsi") and
 				not a_local_part.is_case_insensitive_equal ("schemaLocation")
 			then
-				a_local_part.to_lower
-
 					-- check if the attribute is valid for the current state
-				l_attr := tag_attributes.item (current_tag.item)
-				if l_attr /= Void then
-					l_attribute := l_attr.item (a_local_part)
+				if attached tag_attributes.item (current_tag.item) as l_attr then
+					k_local := a_local_part.to_string_32
+					k_local.to_lower
+					l_attribute := l_attr.item (k_local)
 				end
-				if current_attributes = Void then
-					create current_attributes.make (1)
+				l_current_attributes := current_attributes
+				if l_current_attributes = Void then
+					create l_current_attributes.make (1)
+					current_attributes := l_current_attributes
 				end
-				if l_attribute /= 0 and then not current_attributes.has (l_attribute) then
-					current_attributes.force (a_value, l_attribute)
+				if l_attribute /= 0 and then not l_current_attributes.has (l_attribute) then
+					l_current_attributes.force (a_value, l_attribute)
 				else
 					create_last_error (xml_names.err_invalid_attribute (a_local_part))
 				end
@@ -126,10 +126,12 @@ feature{NONE} -- Event handlers
 			if l_start_prc.has (l_tag) then
 				l_start_prc.item (l_tag).call (Void)
 			end
-			current_attributes.wipe_out
+			if attached current_attributes as l_current_attributes then
+				l_current_attributes.wipe_out
+			end
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- End tag.
 		local
 			l_tag: INTEGER
@@ -146,7 +148,7 @@ feature{NONE} -- Event handlers
 
 feature{NONE} -- Error handling
 
-	create_last_error (a_message: STRING_GENERAL)
+	create_last_error (a_message: READABLE_STRING_GENERAL)
 			-- Create `last_error' with `a_message'.
 			-- Raise an exception
 		do
@@ -158,19 +160,19 @@ feature{NONE} -- Error handling
 
 feature{NONE} -- Implementation
 
-	current_content: STRING
+	current_content: STRING_32
 			-- Current content
 
 	current_tag: LINKED_STACK [INTEGER]
 			-- The stack of tags we are currently processing
 
-	current_attributes: HASH_TABLE [STRING, INTEGER]
+	current_attributes: detachable HASH_TABLE [READABLE_STRING_32, INTEGER]
 			-- The values of the current attributes	
 
-	state_transitions_tag: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER]
+	state_transitions_tag: HASH_TABLE [HASH_TABLE [INTEGER, STRING_32], INTEGER]
 			-- Mapping of possible tag state transitions from `current_tag' with the tag name to the new state.
 
-	tag_attributes: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER]
+	tag_attributes: HASH_TABLE [HASH_TABLE [INTEGER, STRING_32], INTEGER]
 			-- Mapping of possible attributes of tags.
 
 	tag_start_processors: HASH_TABLE [PROCEDURE [ANY, TUPLE], INTEGER]
@@ -181,7 +183,7 @@ feature{NONE} -- Implementation
 			-- Table of processors to be called when tag finish is met.
 			-- [processor, tag id]
 
-	attribute_name_table: HASH_TABLE [STRING, INTEGER]
+	attribute_name_table: HASH_TABLE [READABLE_STRING_32, INTEGER]
 			-- Table of attributes in form of [attribute_name, attribute_id]
 
 	t_none: INTEGER
@@ -211,7 +213,7 @@ feature{NONE} -- Implementation
 		local
 			l_attrs: like tag_attributes
 			l_table: like attribute_name_table
-			l_attr: HASH_TABLE [INTEGER, STRING]
+			l_attr: like tag_attributes.item
 		do
 			create attribute_name_table.make (10)
 			from
@@ -252,7 +254,7 @@ invariant
 	attribute_name_table_attached: attribute_name_table /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

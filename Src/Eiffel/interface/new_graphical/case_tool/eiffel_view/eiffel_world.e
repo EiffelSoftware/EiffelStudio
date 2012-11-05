@@ -577,8 +577,8 @@ feature -- Store/Retrive
 				loop
 					if
 						attached {like xml_element} a_cursor.item as node and then
-						node.name.is_equal (l_view_str) and then
-						equal (node.attribute_by_name (l_name_str).value, current_view)
+						node.has_same_name (l_view_str) and then
+						current_view.same_string (node.attribute_by_name (l_name_str).value)
 					then
 						diagram_output.root_element.remove_at_cursor (a_cursor)
 					end
@@ -929,8 +929,8 @@ feature {NONE} -- Implementation
 				loop
 					if
 						attached {like xml_element} a_cursor.item as node and then
-						node.name.is_equal (once "VIEW") and then
-						equal (node.attribute_by_name (once "NAME").value, a_name)
+						node.has_same_name (once "VIEW") and then
+						a_name.same_string (node.attribute_by_name (once "NAME").value)
 					then
 						diagram_output.root_element.remove_at_cursor (a_cursor)
 					end
@@ -1457,7 +1457,7 @@ invariant
 	available_views_compare_objects: available_views.object_comparison
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -633,14 +633,14 @@ feature{NONE} -- Process
 					a_item.is_input_as_file and then
 					a_item.input.is_empty
 				then
-					create_last_error (metric_names.err_external_command_file_not_specified (names.string_general_as_lower (external_output_names.l_input)))
+					create_last_error (metric_names.err_external_command_file_not_specified (external_output_names.l_input.as_lower))
 				end
 				if 	not has_error and then
 					a_item.is_output_enabled and then
 					a_item.is_output_as_file and then
 					a_item.output.is_empty
 				then
-					create_last_error (metric_names.err_external_command_file_not_specified (names.string_general_as_lower (external_output_names.l_output)))
+					create_last_error (metric_names.err_external_command_file_not_specified (external_output_names.l_output.as_lower))
 				end
 
 				if  not has_error and then
@@ -649,7 +649,7 @@ feature{NONE} -- Process
 					a_item.is_error_as_file and then
 					a_item.error.is_empty
 				then
-					create_last_error (metric_names.err_external_command_file_not_specified (names.string_general_as_lower (names.l_error)))
+					create_last_error (metric_names.err_external_command_file_not_specified (names.l_error.as_lower))
 				end
 			end
 		end
@@ -747,7 +747,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	create_last_error (a_msg: STRING_GENERAL)
+	create_last_error (a_msg: READABLE_STRING_GENERAL)
 			-- Create `last_error' with message `a_msg' and set `has_error' with True.
 		require
 			a_msg_attached: a_msg /= Void
@@ -759,7 +759,7 @@ feature{NONE} -- Implementation
 			last_error_created: last_error /= Void
 		end
 
-	create_last_error_with_to_do (a_msg: STRING_GENERAL; a_to_do: STRING_GENERAL)
+	create_last_error_with_to_do (a_msg: READABLE_STRING_GENERAL; a_to_do: READABLE_STRING_GENERAL)
 			-- Create `last_error' with message `a_msg', `a_location', `a_to_do'.
 		require
 			a_msg_attached: a_msg /= Void

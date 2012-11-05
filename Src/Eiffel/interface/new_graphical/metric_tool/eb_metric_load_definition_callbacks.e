@@ -1,5 +1,5 @@
 note
-	description: "The callbacks that react on metric definitation xml parsing"
+	description: "The callbacks that react on metric definition xml parsing"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -154,7 +154,7 @@ feature{NONE} -- Callbacks
 			current_attributes.wipe_out
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- End tag.
 		do
 			inspect
@@ -229,7 +229,7 @@ feature{NONE} -- Callbacks
 			element_stack.remove
 		end
 
-	on_content (a_content: STRING)
+	on_content (a_content: READABLE_STRING_32)
 			-- Text content.
 		local
 			l_current_state: INTEGER
@@ -269,7 +269,7 @@ feature{NONE} -- Process
 	process_basic_metric
 			-- Process "basic_metric" definition list node.		
 		local
-			l_id: TUPLE [name: STRING; unit: STRING]
+			l_id: like current_metric_identifier
 		do
 			l_id := current_metric_identifier (basic_metric_type)
 			current_basic_metric := factory.new_basic_metric (l_id.name, unit_table.item (l_id.unit))
@@ -280,7 +280,7 @@ feature{NONE} -- Process
 	process_linear_metric
 			-- Process "linear_metric" definition list node.		
 		local
-			l_id: TUPLE [name: STRING; unit: STRING]
+			l_id: like current_metric_identifier
 		do
 			l_id := current_metric_identifier (linear_metric_type)
 			current_linear_metric := factory.new_linear_metric (l_id.name, unit_table.item (l_id.unit))
@@ -290,11 +290,11 @@ feature{NONE} -- Process
 	process_ratio_metric
 			-- Process "ratio_metric" definition list node.		
 		local
-			l_id: TUPLE [name: STRING; unit: STRING]
-			l_num: STRING
-			l_den: STRING
-			l_num_coefficient_str: STRING
-			l_den_coefficient_str: STRING
+			l_id: like current_metric_identifier
+			l_num,
+			l_den,
+			l_num_coefficient_str,
+			l_den_coefficient_str: like current_attributes.item
 			l_num_coefficient: DOUBLE
 			l_den_coefficient: DOUBLE
 		do
@@ -328,8 +328,8 @@ feature{NONE} -- Process
 		require
 			current_linear_metric_attached: current_linear_metric /= Void
 		local
-			l_coefficient: STRING
-			l_metric: STRING
+			l_coefficient,
+			l_metric: like current_attributes.item
 			l_coefficient_value: DOUBLE
 		do
 			l_coefficient := current_attributes.item (at_coefficient)
@@ -366,25 +366,25 @@ feature{NONE} -- Process
 	process_normal_criterion
 			-- Process "normal_criterion" definition list node.		
 		local
-			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
+			l_id: like current_criterion_identifier
 		do
 			l_id := current_criterion_identifier
 
 			current_normal_criterion := factory.new_normal_criterion (l_id.name, l_id.scope)
 			last_criterion := current_normal_criterion
-			setup_criterion (current_normal_criterion, l_id.negation)
+			setup_criterion (current_normal_criterion, l_id.is_negation_used)
 			register_criterion (current_normal_criterion)
 		end
 
 	process_domain_criterion
 			-- Process "domain_criterion" definition list node.
 		local
-			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
+			l_id: like current_criterion_identifier
 		do
 			l_id := current_criterion_identifier
 			current_domain_criterion := factory.new_domain_criterion (l_id.name, l_id.scope)
 			last_criterion := current_domain_criterion
-			setup_criterion (current_domain_criterion, l_id.negation)
+			setup_criterion (current_domain_criterion, l_id.is_negation_used)
 			register_criterion (current_domain_criterion)
 			domain_receiver_stack.extend ([agent current_domain_criterion.set_domain, False])
 		end
@@ -392,9 +392,9 @@ feature{NONE} -- Process
 	process_text_criterion
 			-- Process "text_criterion" definition list node.		
 		local
-			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
-			l_case_sensitive: STRING
-			l_matching_strategy: STRING
+			l_id: like current_criterion_identifier
+			l_case_sensitive,
+			l_matching_strategy: like current_attributes.item
 			l_strategy: INTEGER
 			l_strategy_table: like matching_strategy_table
 			l_case_sensitive_value: BOOLEAN
@@ -428,7 +428,7 @@ feature{NONE} -- Process
 			end
 
 			current_text_criterion := factory.new_text_criterion (l_id.name, l_id.scope)
-			setup_criterion (current_text_criterion, l_id.negation)
+			setup_criterion (current_text_criterion, l_id.is_negation_used)
 			if l_case_sensitive_value then
 				current_text_criterion.enable_case_sensitive
 			else
@@ -442,35 +442,35 @@ feature{NONE} -- Process
 	process_path_criterion
 			-- Process "path_criterion" definition list node.		
 		local
-			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
+			l_id: like current_criterion_identifier
 		do
 			l_id := current_criterion_identifier
 
 			current_path_criterion := factory.new_path_criterion (l_id.name, l_id.scope)
 			last_criterion := current_path_criterion
-			setup_criterion (current_path_criterion, l_id.negation)
+			setup_criterion (current_path_criterion, l_id.is_negation_used)
 			register_criterion (current_path_criterion)
 		end
 
 	process_caller_callee_criterion
 			-- Process "caller_criterion" definition list node.		
 		local
-			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
-			l_only_current_vertion: STRING
-			l_only_current_vertion_value: BOOLEAN
+			l_id: like current_criterion_identifier
+			l_only_current_version: like current_attributes.item
+			l_only_current_version_value: BOOLEAN
 			l_boolean_set: BOOLEAN
 		do
 			l_id := current_criterion_identifier
 
-			l_only_current_vertion := current_attributes.item (at_only_current_version)
-			l_boolean_set := test_ommitable_boolean_attribute (l_only_current_vertion, agent metric_names.err_only_current_version_attr_invalid)
+			l_only_current_version := current_attributes.item (at_only_current_version)
+			l_boolean_set := test_ommitable_boolean_attribute (l_only_current_version, agent metric_names.err_only_current_version_attr_invalid)
 			if l_boolean_set then
-				l_only_current_vertion_value := last_tested_boolean
+				l_only_current_version_value := last_tested_boolean
 			end
 			current_caller_criterion := factory.new_caller_callee_criterion (l_id.name, l_id.scope)
 			last_criterion := current_caller_criterion
-			setup_criterion (current_caller_criterion, l_id.negation)
-			if l_only_current_vertion_value then
+			setup_criterion (current_caller_criterion, l_id.is_negation_used)
+			if l_only_current_version_value then
 				current_caller_criterion.enable_only_current_version
 			else
 				current_caller_criterion.disable_only_current_version
@@ -482,19 +482,19 @@ feature{NONE} -- Process
 	process_supplier_client_criterion
 			-- Process "client_criterion" definition list node.
 		local
-			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
-			l_only_current_vertion: STRING
-			l_indirect: STRING
-			l_indirect_value: BOOLEAN
-			l_normal: STRING
-			l_normal_value: BOOLEAN
-			l_syntactical: STRING
-			l_syntactical_value: BOOLEAN
+			l_id: like current_criterion_identifier
+			l_only_current_version,
+			l_indirect,
+			l_normal,
+			l_syntactical: like current_attributes.item
+			l_indirect_value,
+			l_normal_value,
+			l_syntactical_value,
 			l_boolean_set: BOOLEAN
 		do
 			l_id := current_criterion_identifier
 
-			l_only_current_vertion := current_attributes.item (at_only_current_version)
+			l_only_current_version := current_attributes.item (at_only_current_version)
 			l_indirect := current_attributes.item (at_indirect)
 			l_normal := current_attributes.item (at_normal)
 			l_syntactical := current_attributes.item (at_only_syntactical)
@@ -530,7 +530,7 @@ feature{NONE} -- Process
 			current_supplier_client_criterion.set_only_syntactically_referencedd_class_retrieved (l_syntactical_value)
 			current_supplier_client_criterion.set_normal_referenced_class_retrieved (l_normal_value)
 			last_criterion := current_supplier_client_criterion
-			setup_criterion (current_supplier_client_criterion, l_id.negation)
+			setup_criterion (current_supplier_client_criterion, l_id.is_negation_used)
 			register_criterion (current_supplier_client_criterion)
 			domain_receiver_stack.extend ([agent current_supplier_client_criterion.set_domain, False])
 
@@ -539,8 +539,8 @@ feature{NONE} -- Process
 	process_value_criterion
 			-- Process value criterion.
 		local
-			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
-			l_metric_name: STRING
+			l_id: like current_criterion_identifier
+			l_metric_name: like current_attributes.item
 			l_use_external_delayed: STRING
 			l_boolean_set: BOOLEAN
 		do
@@ -562,7 +562,7 @@ feature{NONE} -- Process
 				current_value_criterion.set_should_delayed_domain_from_parent_be_used (last_tested_boolean)
 			end
 			last_criterion := current_value_criterion
-			setup_criterion (current_value_criterion, l_id.negation)
+			setup_criterion (current_value_criterion, l_id.is_negation_used)
 			current_value_criterion.set_metric_name (l_metric_name)
 			register_criterion (current_value_criterion)
 			domain_receiver_stack.extend ([agent current_value_criterion.set_domain, False])
@@ -572,12 +572,12 @@ feature{NONE} -- Process
 	process_external_command_criterion
 			-- Proces "command" node.
 		local
-			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
+			l_id: like current_criterion_identifier
 		do
 			l_id := current_criterion_identifier
 			current_command_criterion := factory.new_external_command_criterion (l_id.name, l_id.scope)
 			last_criterion := current_command_criterion
-			setup_criterion (current_command_criterion, l_id.negation)
+			setup_criterion (current_command_criterion, l_id.is_negation_used)
 			register_criterion (current_command_criterion)
 			external_command_tester_stack.extend (current_command_criterion.tester)
 		end
@@ -587,7 +587,7 @@ feature{NONE} -- Process
 			-- If `a_for_and' is True, treat that nary criterion as an "AND" criterion,
 			-- otherwise an "OR" criterion.
 		local
-			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
+			l_id: like current_criterion_identifier
 			l_criterion: EB_METRIC_CRITERION
 		do
 			l_id := current_criterion_identifier
@@ -597,7 +597,7 @@ feature{NONE} -- Process
 				l_criterion := factory.new_or_criterion (l_id.name, l_id.scope)
 			end
 			last_criterion := l_criterion
-			setup_criterion (l_criterion, l_id.negation)
+			setup_criterion (l_criterion, l_id.is_negation_used)
 			register_criterion (l_criterion)
 		end
 
@@ -777,10 +777,10 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation/XML structure
 
-	state_transitions_tag: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER]
+	state_transitions_tag: HASH_TABLE [HASH_TABLE [INTEGER, STRING_8], INTEGER]
 			-- Mapping of possible tag state transitions from `current_tag' with the tag name to the new state.
 		local
-			l_trans: HASH_TABLE [INTEGER, STRING]
+			l_trans: like state_transitions_tag.item
 		once
 			create Result.make (14)
 
@@ -973,10 +973,10 @@ feature{NONE} -- Implementation/XML structure
 			Result.force (l_trans, t_metric_value)
 		end
 
-	tag_attributes: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER]
+	tag_attributes: HASH_TABLE [HASH_TABLE [INTEGER, STRING_8], INTEGER]
 			-- Mapping of possible attributes of tags.
 		local
-			l_attr: HASH_TABLE [INTEGER, STRING]
+			l_attr: like tag_attributes.item
 		once
 			create Result.make (25)
 
@@ -1212,7 +1212,7 @@ feature{NONE} -- Implementation/XML structure
 			Result.force (l_attr, t_exit_code)
 		end
 
-	element_index_table: HASH_TABLE [INTEGER, STRING]
+	element_index_table: HASH_TABLE [INTEGER, STRING_8]
 			-- Table of indexes of supported elements indexed by element name.
 		once
 			create Result.make (20)
@@ -1245,13 +1245,13 @@ feature{NONE} -- Implementation/XML structure
 
 feature{NONE} -- Implementation
 
-	current_metric_identifier (a_metric_type_id: INTEGER) : TUPLE [name: STRING; unit: STRING]
+	current_metric_identifier (a_metric_type_id: INTEGER): TUPLE [name: STRING_8; unit: STRING_8]
 			-- Metric identifier of `current_metric'
 		require
 			a_metric_type_id_valid: is_metric_type_valid (a_metric_type_id)
 		local
-			l_name: STRING
-			l_unit: STRING
+			l_name,
+			l_unit: like current_attributes.item
 		do
 			l_name := current_attributes.item (at_name)
 			l_unit := current_attributes.item (at_unit)
@@ -1271,14 +1271,14 @@ feature{NONE} -- Implementation
 			Result := [l_name, l_unit]
 		end
 
-	current_criterion_identifier: TUPLE [name: STRING; scope: QL_SCOPE; is_negation_used: BOOLEAN]
+	current_criterion_identifier: TUPLE [name: STRING_8; scope: QL_SCOPE; is_negation_used: BOOLEAN]
 			-- Criterion identifier
 			-- `name' is name of the criterion, `scope' is its scope.
 			-- `is_negation_used' decides whether or not a "not" operation is applied when the criterion is evaluated.
 		local
-			l_name: STRING
-			l_scope: STRING
-			l_negation: STRING
+			l_name,
+			l_scope,
+			l_negation: like current_attributes.item
 			l_ql_scope: QL_SCOPE
 			l_negation_used: BOOLEAN
 		do
@@ -1346,7 +1346,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	check_metric_name (a_name: STRING)
+	check_metric_name (a_name: detachable READABLE_STRING_GENERAL)
 			-- Check if `a_name' is a valid metric name.
 		do
 			if a_name = Void or else a_name.is_empty then

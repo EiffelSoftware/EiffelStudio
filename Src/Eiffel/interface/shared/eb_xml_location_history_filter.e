@@ -29,18 +29,18 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	history_item_output_function: FUNCTION [ANY, TUPLE [STRING_GENERAL], STRING_GENERAL]
+	history_item_output_function: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], READABLE_STRING_GENERAL]
 			-- Function to get output representation of a specified item
 			-- For example, for an item "name", we may want to get "<name>"
 
-	history_connector: STRING_GENERAL
+	history_connector: READABLE_STRING_GENERAL
 			-- Connector between every two history item		
 			-- Default is `default_history_connector'
 
 	default_history_connector: STRING = " -> "
 			-- Default `history_connector'
 
-	location: STRING_GENERAL
+	location: READABLE_STRING_GENERAL
 			-- Location extracted from `history'.
 		do
 			Result := partial_location (1, history.count)
@@ -48,7 +48,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	partial_location (a_start, a_end: INTEGER): STRING_GENERAL
+	partial_location (a_start, a_end: INTEGER): READABLE_STRING_GENERAL
 			-- Location extracted from `histroy' between the `a_start'-th and `a_end'-th element
 		local
 			l_history: like history
@@ -65,9 +65,9 @@ feature -- Access
 				until
 					l_history.after or else l_history.index > a_end
 				loop
-					l_location.append (actual_history_item (l_history.item))
+					l_location.append_string_general (actual_history_item (l_history.item))
 					if l_history.index < a_end then
-						l_location.append (history_connector)
+						l_location.append_string_general (history_connector)
 					end
 					l_history.forth
 				end
@@ -100,20 +100,20 @@ feature -- Setting
 
 feature -- History
 
-	history: LINKED_LIST [STRING]
+	history: LINKED_LIST [READABLE_STRING_GENERAL]
 			-- History information
 			-- An item in `history' is a name of the associated tag
 
 feature -- Event handler
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- Start of start tag.
 		do
 			history.extend (a_local_part)
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- End tag.
 		do
 			history.finish
@@ -123,7 +123,7 @@ feature -- Event handler
 
 feature{NONE} -- Implementation
 
-	actual_history_item (a_item: STRING_GENERAL): STRING_GENERAL
+	actual_history_item (a_item: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
 			-- Actual history item for `a_item' (`history_item_output_function' is used when applicable)
 		require
 			a_item_attached: a_item /= Void
@@ -143,7 +143,7 @@ invariant
 	history_connector_attached: history_connector /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

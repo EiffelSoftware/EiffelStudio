@@ -58,8 +58,8 @@ feature -- Access
 			l_descriptor: EB_CUSTOMIZED_FORMATTER_DESP
 		do
 			create l_descriptor.make (next_item_name.as_string_8)
-			l_descriptor.set_header (string_8_from_string_32 (interface_names.l_formatter_default_header (interface_names.l_ellipsis)))
-			l_descriptor.set_temp_header (string_8_from_string_32 (interface_names.l_formatter_default_temp_header (interface_names.l_ellipsis)))
+			l_descriptor.set_header (interface_names.l_formatter_default_header (interface_names.l_ellipsis))
+			l_descriptor.set_temp_header (interface_names.l_formatter_default_temp_header (interface_names.l_ellipsis))
 			l_descriptor.enable_global_scope
 			Result := l_descriptor
 		end
@@ -95,6 +95,36 @@ feature{NONE} -- Actions
 		do
 			set_has_changed (True)
 			a_setter.call ([string_8_from_string_32 (a_new_data)])
+			if a_refresher /= Void then
+				a_refresher.call (Void)
+			end
+		end
+
+	on_data_32_change (a_new_data: STRING_32; a_setter: PROCEDURE [ANY, TUPLE [READABLE_STRING_32]]; a_refresher: PROCEDURE [ANY, TUPLE])
+			-- Action to be performed when `a_new_data' changes.
+			-- Invoke `a_setter' to set this new data.
+			-- After setting, invoke `a_referesh' to refresh Current dialog if `a_refresher' is not Void.
+		require
+			a_new_data_attached: a_new_data /= Void
+			a_setter_attached: a_setter /= Void
+		do
+			set_has_changed (True)
+			a_setter.call ([a_new_data])
+			if a_refresher /= Void then
+				a_refresher.call (Void)
+			end
+		end
+
+	on_data_general_change (a_new_data: STRING_32; a_setter: PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]]; a_refresher: PROCEDURE [ANY, TUPLE])
+			-- Action to be performed when `a_new_data' changes.
+			-- Invoke `a_setter' to set this new data.
+			-- After setting, invoke `a_referesh' to refresh Current dialog if `a_refresher' is not Void.
+		require
+			a_new_data_attached: a_new_data /= Void
+			a_setter_attached: a_setter /= Void
+		do
+			set_has_changed (True)
+			a_setter.call ([a_new_data])
 			if a_refresher /= Void then
 				a_refresher.call (Void)
 			end
@@ -146,7 +176,7 @@ feature{NONE} -- Actions
 				end
 					-- Set temp header.
 				if temp_header_property /= Void and then temp_header_property.text.is_equal (interface_names.l_formatter_default_temp_header (interface_names.l_ellipsis).as_string_32) then
-					temp_header_property.set_value (interface_names.l_formatter_default_temp_header (interface_names.string_general_as_lower (a_metric)))
+					temp_header_property.set_value (interface_names.l_formatter_default_temp_header (a_metric.as_lower))
 				end
 					-- Set default tools.
 				if displayed_in_tools_property /= Void then
@@ -346,27 +376,27 @@ feature{NONE} -- Implementation
 			l_grid.add_property (l_name)
 
 			create l_tooltip.make (interface_names.l_tooltip_lbl)
-			l_tooltip.set_value (string_32_from_string_8 (a_descriptor.tooltip))
-			l_tooltip.change_value_actions.extend (agent on_data_change (?, agent a_descriptor.set_tooltip, Void))
+			l_tooltip.set_value (a_descriptor.tooltip)
+			l_tooltip.change_value_actions.extend (agent on_data_32_change (?, agent a_descriptor.set_tooltip, Void))
 			l_grid.add_property (l_tooltip)
 
 			create l_header.make (interface_names.l_header)
-			l_header.set_value (string_32_from_string_8 (a_descriptor.header))
-			l_header.change_value_actions.extend (agent on_data_change (?, agent a_descriptor.set_header, Void))
+			l_header.set_value (a_descriptor.header)
+			l_header.change_value_actions.extend (agent on_data_32_change (?, agent a_descriptor.set_header, Void))
 			l_header.set_description (metric_names.concatenated_string ((<<interface_names.l_formatter_header_help, interface_names.l_formatter_placeholder>>).linear_representation, "%N"))
 			header_property := l_header
 			l_grid.add_property (l_header)
 
 			create l_temp_header.make (interface_names.l_temp_header)
-			l_temp_header.set_value (string_32_from_string_8 (a_descriptor.temp_header))
-			l_temp_header.change_value_actions.extend (agent on_data_change (?, agent a_descriptor.set_temp_header, Void))
+			l_temp_header.set_value (a_descriptor.temp_header)
+			l_temp_header.change_value_actions.extend (agent on_data_32_change (?, agent a_descriptor.set_temp_header, Void))
 			l_temp_header.set_description (metric_names.concatenated_string ((<<interface_names.l_formatter_temp_header_help, interface_names.l_formatter_placeholder>>).linear_representation, "%N"))
 			temp_header_property := l_temp_header
 			l_grid.add_property (l_temp_header)
 
 			create l_pixmap.make (interface_names.l_pixmap_file)
-			l_pixmap.set_value (string_32_from_string_8 (a_descriptor.pixmap_location))
-			l_pixmap.change_value_actions.extend (agent on_data_change (?, agent a_descriptor.set_pixmap_location, Void))
+			l_pixmap.set_value (a_descriptor.pixmap_location.string_representation)
+			l_pixmap.change_value_actions.extend (agent on_data_general_change (?, agent a_descriptor.set_pixmap_location, Void))
 			l_grid.add_property (l_pixmap)
 
 			l_grid.current_section.expand
@@ -581,7 +611,7 @@ feature{NONE} -- Implementation
 		do
 			l_toolname := a_tool_name.twin
 			l_toolname.append (" ")
-			l_toolname.append (interface_names.string_general_as_lower (interface_names.t_tool_name))
+			l_toolname.append (interface_names.t_tool_name.as_lower)
 			create l_tooltip.make (a_component.pointer_enter_actions, a_component.pointer_leave_actions, Void, agent (a_item.grid_item).is_destroyed, create {EV_LABEL}.make_with_text (l_toolname))
 			l_tooltip.unify_background_color
 			l_tooltip.enable_repeat_tooltip_display
@@ -591,7 +621,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

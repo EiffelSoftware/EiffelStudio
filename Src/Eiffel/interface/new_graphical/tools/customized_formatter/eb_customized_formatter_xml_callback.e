@@ -55,21 +55,21 @@ feature{NONE} -- Node processors
 			-- Action to be performed when start tag of "tooltip" finishes.
 		do
 			check not formatters.is_empty end
-			content_receiver.extend (agent (formatters.last).set_tooltip ({STRING}?))
+			content_receiver.extend (agent (formatters.last).set_tooltip ({STRING_32}?))
 		end
 
 	on_header_start
 			-- Action to be performed when start tag of "header" finishes.
 		do
 			check not formatters.is_empty end
-			content_receiver.extend (agent (formatters.last).set_header ({STRING}?))
+			content_receiver.extend (agent (formatters.last).set_header ({STRING_32}?))
 		end
 
 	on_temp_header_start
 			-- Action to be performed when start tag of "temp_header" finishes.
 		do
 			check not formatters.is_empty end
-			content_receiver.extend (agent (formatters.last).set_temp_header ({STRING}?))
+			content_receiver.extend (agent (formatters.last).set_temp_header ({STRING_32}?))
 		end
 
 	on_pixmap_start
@@ -90,9 +90,9 @@ feature{NONE} -- Node processors
 	on_tool_start
 			-- Action to be performed when start tag of "tool" finishes.
 		local
-			l_name: STRING
-			l_viewer: STRING
-			l_order: STRING
+			l_name,
+			l_viewer,
+			l_order: like last_tested_attribute
 		do
 			check not tool_receiver.is_empty end
 			retrieve_attribute_value (at_name)
@@ -173,10 +173,10 @@ feature{NONE} -- Implementation
 	formatter_receiver: LINKED_STACK [PROCEDURE [ANY, TUPLE [EB_CUSTOMIZED_FORMATTER_DESP]]]
 			-- Stack of receivers to get foramtters
 
-	content_receiver: LINKED_STACK [PROCEDURE [ANY, TUPLE [STRING]]]
+	content_receiver: LINKED_STACK [PROCEDURE [ANY, TUPLE [like current_content]]]
 			-- Stack of receivers for contents
 
-	tool_receiver: LINKED_STACK [PROCEDURE [ANY, TUPLE [STRING, STRING, STRING]]]
+	tool_receiver: LINKED_STACK [PROCEDURE [ANY, TUPLE [STRING_8, STRING_8, STRING_8]]]
 			-- Tool receiver
 
 feature{NONE} -- Implementation
@@ -184,7 +184,7 @@ feature{NONE} -- Implementation
 	initialize_state_transitions_tag
 			-- Initialize `state_transitions_tag'.
 		local
-			l_trans: HASH_TABLE [INTEGER, STRING]
+			l_trans: like state_transitions_tag.item
 			l_states: like state_transitions_tag
 		do
 			create l_states.make (3)
@@ -221,7 +221,7 @@ feature{NONE} -- Implementation
 			-- Initialize `tag_attributes'.
 		local
 			l_tag_attrs: like tag_attributes
-			l_attr: HASH_TABLE [INTEGER, STRING]
+			l_attr: like tag_attributes.item
 		do
 			create l_tag_attrs.make (2)
 
@@ -291,7 +291,7 @@ invariant
 	tool_receiver_attached: tool_receiver /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -304,22 +304,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -486,10 +486,10 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-	new_tag_state_transitions: HASH_TABLE [HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_tag_state_transitions: HASH_TABLE [HASH_TABLE [NATURAL_8, STRING_32], NATURAL_8]
 			-- <Precursor>
 		local
-			l_trans: HASH_TABLE [NATURAL_8, STRING]
+			l_trans: like new_tag_state_transitions.item
 		do
 			create Result.make (8)
 
@@ -559,10 +559,10 @@ feature {NONE} -- Factory
 			Result.force (l_trans, t_templates)
 		end
 
-	new_attribute_states: HASH_TABLE [HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_attribute_states: HASH_TABLE [HASH_TABLE [NATURAL_8, STRING_32], NATURAL_8]
 			-- <Precursor>
 		local
-			l_attr: HASH_TABLE [NATURAL_8, STRING]
+			l_attr: like new_attribute_states.item
 		do
 			create Result.make (4)
 
@@ -632,7 +632,7 @@ invariant
 	last_code_template_definition_attached: attached last_declaration implies attached last_code_template_definition
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

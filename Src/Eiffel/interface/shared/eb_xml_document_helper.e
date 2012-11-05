@@ -26,7 +26,6 @@ feature -- Access
 			l_ns_cb: XML_NAMESPACE_RESOLVER
 			l_content_filter: XML_CONTENT_CONCATENATOR
 			l_history_filter: EB_XML_LOCATION_HISTORY_FILTER
-			l_filters: ARRAY [XML_CALLBACKS_FILTER]
 			l_filter_factory: XML_CALLBACKS_FILTER_FACTORY
 			l_error: EB_METRIC_ERROR
 			l_items:  LIST [G]
@@ -38,14 +37,9 @@ feature -- Access
 				create l_history_filter.make
 				create l_filter_factory
 
-				l_history_filter.set_history_item_output_function (agent metric_names.xml_location ({STRING}?, Void))
-				create l_filters.make (1, 4)
-				l_filters.put (l_ns_cb, 1)
-				l_filters.put (l_content_filter, 2)
-				l_filters.put (l_history_filter, 3)
-				l_filters.put (a_callback, 4)
+				l_history_filter.set_history_item_output_function (agent metric_names.xml_location (?, Void))
 
-				a_parse_agent.call ([l_filter_factory.callbacks_pipe (l_filters)])
+				a_parse_agent.call ([l_filter_factory.callbacks_pipe (<<l_ns_cb, l_content_filter, l_history_filter, a_callback>>)])
 				l_items.append (a_result_retriever.item (Void))
 			else
 				l_error := a_error_retriever.item (Void)
@@ -102,26 +96,42 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	items_from_file_path (a_path: PATH; a_callback: XML_CALLBACKS_FILTER ; a_result_retriever: FUNCTION [ANY, TUPLE, LIST [G]]; a_error_retriever: FUNCTION [ANY, TUPLE, EB_METRIC_ERROR]; a_set_file_error_agent: PROCEDURE [ANY, TUPLE]): like items_from_parsing
+			-- Items from path `a_path' parsed using `a_callback'.
+			-- If error occurred, it will be stored in `error'
+			-- If failed because of file issue, call `a_set_file_error_agent'.
+		require
+			a_file_name_attached: a_path /= Void
+			a_callback_attached: a_callback /= Void
+			a_result_retriever_attached: a_result_retriever /= Void
+			a_error_retriever_attached: a_error_retriever /= Void
+		local
+			l_parser: XML_STOPPABLE_PARSER
+		do
+			create l_parser.make
+			Result := items_from_parsing (agent parse_file_path (a_path, ?, l_parser, a_set_file_error_agent), a_callback, a_result_retriever, a_error_retriever)
+
+				-- Setup error information.
+			if attached Result.error as err then
+				err.set_file_location (a_path)
+				err.set_xml_location ([l_parser.position.column, l_parser.position.row])
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 	items_from_file (a_file_name: READABLE_STRING_GENERAL; a_callback: XML_CALLBACKS_FILTER ; a_result_retriever: FUNCTION [ANY, TUPLE, LIST [G]]; a_error_retriever: FUNCTION [ANY, TUPLE, EB_METRIC_ERROR]; a_set_file_error_agent: PROCEDURE [ANY, TUPLE]): like items_from_parsing
 			-- Items from file named `a_file_name' parsed using `a_callback'.
 			-- If error occurred, it will be stored in `error'
 			-- If failed because of file issue, call `a_set_file_error_agent'.
+		obsolete "use items_from_file_path [2012-nov]"
 		require
 			a_file_name_attached: a_file_name /= Void
 			a_callback_attached: a_callback /= Void
 			a_result_retriever_attached: a_result_retriever /= Void
 			a_error_retriever_attached: a_error_retriever /= Void
-		local
-			l_parser: XML_LITE_STOPPABLE_PARSER
 		do
-			create l_parser.make
-			Result := items_from_parsing (agent parse_file (a_file_name, ?, l_parser, a_set_file_error_agent), a_callback, a_result_retriever, a_error_retriever)
-
-				-- Setup error information.
-			if Result.error /= Void then
-				Result.error.set_file_location (a_file_name)
-				Result.error.set_xml_location ([l_parser.position.column, l_parser.position.row])
-			end
+			Result := items_from_file_path (create {PATH}.make_from_string (a_file_name), a_callback, a_result_retriever, a_error_retriever, a_set_file_error_agent)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -159,9 +169,11 @@ feature -- Access
 			a_path_attached: a_path /= Void
 			a_file_name_attached: a_file_name /= Void
 		local
-			u: FILE_UTILITIES
+			p: PATH
 		do
-			Result := u.make_file_name_in (a_file_name, a_path)
+			create p.make_from_string (a_path)
+			p.extend (a_file_name)
+			Result := p.string_representation
 		ensure
 			result_attached: Result /= Void
 		end
@@ -205,7 +217,7 @@ feature -- Setting
 
 feature -- Parsing
 
-	parse_file (a_file: READABLE_STRING_GENERAL; a_callback: XML_CALLBACKS; a_parser: XML_PARSER; a_set_file_error_agent: PROCEDURE [ANY, TUPLE])
+	parse_file_path (a_file: PATH; a_callback: XML_CALLBACKS; a_parser: XML_PARSER; a_set_file_error_agent: PROCEDURE [ANY, TUPLE])
 			-- Parse `a_file' using `a_parser' with `a_callback'.			
 			-- Raise exception if error occurs.
 			-- If failed because of file issue, invoke `a_set_file_error_agent'.
@@ -215,9 +227,8 @@ feature -- Parsing
 			a_parser_attached: a_parser /= Void
 		local
 			l_file: PLAIN_TEXT_FILE
-			u: FILE_UTILITIES
 		do
-			l_file := u.make_text_file (a_file)
+			create l_file.make_with_path (a_file)
 			if l_file.exists and then l_file.is_readable then
 				l_file.open_read
 				check l_file.is_open_read end
@@ -280,7 +291,7 @@ feature -- Backup
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

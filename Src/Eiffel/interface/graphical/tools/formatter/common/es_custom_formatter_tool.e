@@ -135,7 +135,7 @@ feature {NONE} -- Factory
 			-- Creates the tool for first use on the development `window'
 		do
 				-- Needs to be fixed. Code was added to make the compiler happy.
-			create Result.make (window, "", "", "", Void)
+			create Result.make (window, "", "", create {PATH}.make_from_string (""), Void)
 		end
 
 feature {NONE} -- Internal implementation cache

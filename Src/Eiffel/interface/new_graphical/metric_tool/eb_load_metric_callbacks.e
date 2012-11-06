@@ -575,7 +575,7 @@ feature{NONE} -- Process
 
 feature -- XML element validity testing
 
-	boolean_attribute_value (a_attribute: INTEGER; a_attribute_name: STRING_8): BOOLEAN
+	boolean_attribute_value (a_attribute: INTEGER; a_attribute_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Retrieve boolean value from attribute `a_attribute_name from `current_attributes'.
 			-- If `a_attribute_name' doesnet exist in `current_attribute' or its value is an invalid boolean,
 			-- raise an error.
@@ -590,7 +590,7 @@ feature -- XML element validity testing
 			Result := last_tested_boolean
 		end
 
-	integer_attribute_value (a_attribute: INTEGER; a_attribute_name: STRING_8): INTEGER
+	integer_attribute_value (a_attribute: INTEGER; a_attribute_name: READABLE_STRING_GENERAL): INTEGER
 			-- Retrieve integer value from attribute `a_attribute_name from `current_attributes'.
 			-- If `a_attribute_name' doesnet exist in `current_attribute' or its value is an invalid integer,
 			-- raise an error.
@@ -642,6 +642,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

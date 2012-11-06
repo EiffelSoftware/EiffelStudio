@@ -1358,7 +1358,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	coefficient_for_ratio_metric (a_value: STRING; a_error_message_agent: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], STRING_GENERAL]): DOUBLE
+	coefficient_for_ratio_metric (a_value: READABLE_STRING_GENERAL; a_error_message_agent: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], READABLE_STRING_GENERAL]): DOUBLE
 			-- Coefficient from `a_value' for ratio metric.
 			-- If `a_value' doesn't represent a valid double, file an error with error message retrieved by `a_error_message_agent'.
 		require
@@ -1421,6 +1421,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end
-
-

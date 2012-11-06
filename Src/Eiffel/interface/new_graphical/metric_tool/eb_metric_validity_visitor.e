@@ -921,7 +921,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	last_domain_item_error_retriever: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL, READABLE_STRING_GENERAL], STRING_GENERAL]
+	last_domain_item_error_retriever: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL, READABLE_STRING_GENERAL], READABLE_STRING_GENERAL]
 			-- Last error message retriever
 
 	set_last_domain_item_error_retriever (a_retriever: like last_domain_item_error_retriever)

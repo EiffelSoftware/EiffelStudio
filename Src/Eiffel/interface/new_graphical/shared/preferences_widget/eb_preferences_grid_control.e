@@ -121,6 +121,8 @@ feature -- Access
 					Result.set_pixmap (icon_pixmaps.preference_color_icon)
 				elseif attached {FONT_PREFERENCE} a_pref then
 					Result.set_pixmap (icon_pixmaps.preference_font_icon)
+				elseif attached {PATH_PREFERENCE} a_pref then
+					Result.set_pixmap (icon_pixmaps.preference_string_icon)
 				elseif attached {IDENTIFIED_FONT_PREFERENCE} a_pref then
 					Result.set_pixmap (icon_pixmaps.preference_font_icon)
 				elseif attached {ARRAY_PREFERENCE} a_pref then

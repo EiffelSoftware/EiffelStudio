@@ -76,12 +76,8 @@ feature -- Access
 
 	file_name: STRING_32
 			-- File where the help is
-		local
-			l_file_name: FILE_NAME_32
 		do
-			create l_file_name.make_from_path (eiffel_layout.error_path)
-			l_file_name.set_file_name (error_i.help_file_name)
-			Result := l_file_name
+			Result := eiffel_layout.error_path.extended (error_i.help_file_name).string_representation
 		end
 
 	stone_signature: STRING_32 do Result := code end

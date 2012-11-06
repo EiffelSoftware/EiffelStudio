@@ -14,7 +14,7 @@ feature
 			test_one_character_root
 			test_entry
 			test_one_character_entry
-			test_extend
+			test_extended
 			test_absolute
 			trailing_slashes_removed
 		end
@@ -291,14 +291,14 @@ feature
 			check_equal ("entry", p.entry ~ create {PATH}.make_from_string ("b"))
 		end
 
-	test_extend
+	test_extended
 		local
 			p: PATH
 		do
 			counter := 0
 			create p.make_from_string ("C:")
-			p.extend ("abc.txt")
-			check_equal ("extend", p ~ create {PATH}.make_from_string ("C:\abc.txt"))
+			p := p.extended ("abc.txt")
+			check_equal ("extended", p ~ create {PATH}.make_from_string ("C:\abc.txt"))
 		end
 
 	test_absolute

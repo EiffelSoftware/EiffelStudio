@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 
 			is_initializing := l_init
 		ensure
-			text_set: format_text (a_text).is_equal (text)
+			text_set: format_text (a_text).same_string (text)
 			default_button_set: default_button = a_default
 			buttons_set: buttons = a_buttons
 		end
@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 		do
 			make (a_text, standard_buttons, standard_default_button, standard_default_confirm_button, standard_default_cancel_button)
 		ensure
-			text_set: format_text (a_text).is_equal (text)
+			text_set: format_text (a_text).same_string (text)
 			default_button_set: default_button = standard_default_button
 			buttons_set: buttons = standard_buttons
 		end
@@ -313,7 +313,7 @@ feature -- Element change
 		do
 			set_label_text (prompt_text, a_text)
 		ensure
-			text_set: format_text (a_text).is_equal (text)
+			text_set: format_text (a_text).same_string (text)
 			prompt_text_label_visible_respected: prompt_text.is_show_requested = not a_text.is_empty
 		end
 
@@ -380,7 +380,7 @@ feature -- Element change
 
 feature {NONE} -- Element change
 
-	set_label_text (a_label: EVS_LABEL; a_text: like text)
+	set_label_text (a_label: EVS_LABEL; a_text: READABLE_STRING_GENERAL)
 			-- Sets a wrappable/expandable label's text and adjusts the dialog's position to account for the change
 			-- in position.
 			--
@@ -675,12 +675,13 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Formatting
 
-	format_text (a_text: STRING_32): STRING_32
+	format_text (a_text: READABLE_STRING_GENERAL): STRING_32
 			-- Format text to remove trailing new lines
 		require
 			a_text_attached: a_text /= Void
 		do
-			Result := a_text.twin
+			create Result.make (a_text.count)
+			Result.append_string_general (a_text)
 			if not Result.is_empty then
 				Result.prune_all_trailing ('%N')
 			end

@@ -161,7 +161,7 @@ feature{NONE} -- Process
 			l_value := current_attributes.item (at_value)
 			if l_value = Void then
 				create_last_error (metric_names.err_archive_value_missing)
-			elseif not l_value.is_real then -- FIXME: is_double ?
+			elseif not l_value.is_double then
 				create_last_error (metric_names.err_archive_value_invalid (l_value))
 			end
 

@@ -249,7 +249,7 @@ feature {NONE} -- Query
 
 feature -- Actions
 
-	frozen error_reported_actions: ACTION_SEQUENCE [TUPLE [msg: STRING_32; line: NATURAL; index: NATURAL]]
+	frozen error_reported_actions: ACTION_SEQUENCE [TUPLE [msg: READABLE_STRING_32; line: NATURAL; index: NATURAL]]
 			-- Actions used to recieve notification of an error
 			--
 			-- 'msg': Message and cause of the error.
@@ -267,7 +267,7 @@ feature -- Actions
 			result_consistent: Result = error_reported_actions
 		end
 
-	frozen warning_reported_actions: ACTION_SEQUENCE [TUPLE [msg: STRING_32; line: NATURAL; index: NATURAL]]
+	frozen warning_reported_actions: ACTION_SEQUENCE [TUPLE [msg: READABLE_STRING_32; line: NATURAL; index: NATURAL]]
 			-- Actions used to recieve notification of an warning
 			--
 			-- 'msg': Message and cause of the warning.
@@ -556,9 +556,9 @@ feature {NONE} -- Conversion
 					l_value := prune_whitespace (v)
 					if l_value.is_boolean then
 						Result := l_value.to_boolean
-					elseif v_bool_one.is_equal (l_value) or else v_bool_yes.is_case_insensitive_equal (l_value) then
+					elseif v_bool_one.same_string (l_value) or else v_bool_yes.is_case_insensitive_equal (l_value) then
 						Result := True
-					elseif v_bool_zero.is_equal (l_value) or else v_bool_no.is_case_insensitive_equal (l_value) then
+					elseif v_bool_zero.same_string (l_value) or else v_bool_no.is_case_insensitive_equal (l_value) then
 						Result := False
 					else
 							-- Invalid Boolean value.

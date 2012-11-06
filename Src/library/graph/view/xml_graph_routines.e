@@ -266,7 +266,7 @@ feature -- Saving
 		do
 			if not retried then
 					-- Write document
-				create l_output_file.make_with_name (a_file_name.to_string_32)
+				create l_output_file.make_with_name (a_file_name)
 				if not l_output_file.exists or else l_output_file.is_writable then
 					l_output_file.open_write
 					create l_formatter.make
@@ -297,9 +297,8 @@ feature -- Deserialization
 			l_tree: XML_CALLBACKS_NULL_FILTER_DOCUMENT
 			l_file: PLAIN_TEXT_FILE
 			l_xm_concatenator: XML_CONTENT_CONCATENATOR
-			u: FILE_UTILITIES
 		do
-			create l_file.make_with_name (a_file_path.to_string_32)
+			create l_file.make_with_name (a_file_path)
 			if l_file.exists and l_file.is_readable then
 				l_file.open_read
 				check is_open_read: l_file.is_open_read end

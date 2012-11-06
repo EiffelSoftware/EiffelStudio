@@ -268,7 +268,8 @@ feature -- String
 			a_str_not_void: a_str /= Void
 		local
 			i, nb: INTEGER_32
-			c: CHARACTER_32		do
+			c: CHARACTER_32		
+		do
 			Result := True
 			from
 				i := 1

@@ -43,6 +43,7 @@ feature -- Preference Testing
 			sr32: STRING_32_PREFERENCE
 			fr: FONT_PREFERENCE
 			cr: COLOR_PREFERENCE
+			pp: PATH_PREFERENCE
 			df: EV_FONT
 			psf: PREFERENCES_STORAGE_FACTORY
 			l_basic_preferences: like basic_preferences
@@ -78,6 +79,10 @@ feature -- Preference Testing
 			end
 
 			sr32 := l_factory.new_string_32_preference_value (l_manager, "examples.my_unicode_preference", {STRING_32} "a unicode string 你好吗")
+			pp := l_factory.new_path_preference_value (l_manager, "examples.my_path", create {PATH}.make_from_string ({STRING_32} "C:\unicode\folder\你好吗\here"))
+
+			pp := l_factory.new_path_preference_value (l_manager, "examples.existing_directory", (create {EXECUTION_ENVIRONMENT}).current_working_path)
+			pp.require_existing_directory
 
 			l_manager := l_basic_preferences.new_manager ("display")
 			br := l_factory.new_boolean_preference_value (l_manager, "display.fullscreen_at_startup", True)

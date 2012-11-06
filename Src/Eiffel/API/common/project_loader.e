@@ -1102,7 +1102,7 @@ feature {NONE} -- Implementation
 			l_storage: RAW_FILE
 		do
 			if not retried then
-				create l_storage.make (a_file_name)
+				create l_storage.make_with_name (a_file_name)
 				if l_storage.exists then
 					l_storage.open_read
 					from

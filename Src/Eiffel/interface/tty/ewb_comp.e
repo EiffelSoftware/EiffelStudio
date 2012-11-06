@@ -136,11 +136,11 @@ feature {NONE} -- Update
 					if not file_name.is_empty then
 						Eiffel_ace.set_file_name (file_name.twin);
 					else
-						create file.make ("Ace.ace");
+						create file.make_with_name ("Ace.ace");
 						if file.exists then
 							Eiffel_ace.set_file_name ("Ace.ace");
 						else
-							create file.make ("Ace")
+							create file.make_with_name ("Ace")
 							if file.exists then
 								Eiffel_ace.set_file_name ("Ace")
 							else
@@ -268,7 +268,7 @@ feature {NONE} -- Compilation
 		local
 			f: PLAIN_TEXT_FILE
 		do
-			create f.make (fn);
+			create f.make_with_name (fn);
 			if
 				not (f.exists and then f.is_readable and then f.is_plain)
 			then

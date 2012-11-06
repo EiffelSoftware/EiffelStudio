@@ -683,6 +683,7 @@ feature {NONE} -- Implementation
 			l_font_widget: FONT_PREFERENCE_WIDGET
 			l_color_widget: COLOR_PREFERENCE_WIDGET
 			l_shortcut_widget: SHORTCUT_PREFERENCE_WIDGET
+			l_path_widget: PATH_PREFERENCE_WIDGET
 		do
 			if attached {BOOLEAN_PREFERENCE} a_preference as l_bool then
 					-- Boolean
@@ -692,6 +693,11 @@ feature {NONE} -- Implementation
 				l_bool_widget.change_item_widget.set_data (l_bool_widget)
 			else
 				if a_preference.generating_preference_type.is_equal ("TEXT") then
+					create l_path_widget.make_with_preference (a_preference)
+					l_path_widget.change_actions.extend (agent on_preference_changed)
+					grid.set_item (4, row_index, l_path_widget.change_item_widget)
+					l_path_widget.change_item_widget.set_data (l_path_widget)
+				elseif a_preference.generating_preference_type.is_equal ("PATH") then
 					create l_edit_widget.make_with_preference (a_preference)
 					l_edit_widget.change_actions.extend (agent on_preference_changed)
 					grid.set_item (4, row_index, l_edit_widget.change_item_widget)

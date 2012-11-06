@@ -1,15 +1,14 @@
 note
 	description	: "[
-		Default widget for viewing and editing preferences represented in string
-		format (i.e. STRING, INTEGER and ARRAY preferences).
+		Default widget for viewing and editing preferences represented a PATH preference.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	STRING_PREFERENCE_WIDGET
+	PATH_PREFERENCE_WIDGET
 
 inherit
 	PREFERENCE_WIDGET
@@ -30,7 +29,7 @@ feature -- Access
 	graphical_type: STRING
 			-- Graphical type identfier
 		do
-			Result := "TEXT"
+			Result := "PATH"
 		end
 
 feature -- Status Setting
@@ -53,8 +52,8 @@ feature {NONE} -- Command
 	refresh
 			-- Refresh
 		do
-			if attached {STRING_32_PREFERENCE} preference as p32 then
-				change_item_widget.set_text (p32.value)
+			if attached {PATH_PREFERENCE} preference as p32 then
+				change_item_widget.set_text (p32.value.string_representation)
 			else
 				change_item_widget.set_text (preference.text_value)
 			end
@@ -82,10 +81,9 @@ feature {NONE} -- Implementation
 		end
 
     validate_preference_text (a_text: STRING_32): BOOLEAN
-            -- Validate `a_text'.  Disallow input if text is not an integer and the preference
-            -- is an INTEGER_PREFERENCE.
+            -- Validate `a_text'.  Disallow input if text is not a path
         do
-            Result := preference.valid_value_string (a_text)
+			Result := preference.valid_value_string (a_text)
         end
 
 note

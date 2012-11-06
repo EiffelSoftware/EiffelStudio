@@ -337,7 +337,7 @@ feature -- Status setting
 			l_source_file, l_target_file: detachable RAW_FILE
 			l_path: PATH
 			retried: BOOLEAN
-			l_ecf_name: STRING
+			l_ecf_name: STRING_32
 		do
 			if not retried then
 					-- Get the path for the precompiled libraries
@@ -356,28 +356,30 @@ feature -- Status setting
 					safe_recursive_create_dir (l_precompilation_path)
 					l_installation_precompilation_path := installation_precompilation_path (a_is_dotnet)
 					create l_dir.make_with_path (l_installation_precompilation_path)
-					if l_dir.exists and attached l_dir.linear_representation as l_files then
+					if l_dir.exists and attached l_dir.entries as l_files then
 						from
 							l_files.start
 						until
 							l_files.after
 						loop
-							l_ecf_name := l_files.item
-							if
-								l_ecf_name.count > 3 and then
-								l_ecf_name.substring (l_ecf_name.count - 3,
-									l_ecf_name.count).is_case_insensitive_equal (".ecf")
-							then
-								l_path := l_precompilation_path.extended (l_ecf_name)
-								create l_target_file.make_with_path (l_path)
-								if not l_target_file.exists then
-									l_target_file.open_write
-									l_path := l_installation_precompilation_path.extended (l_ecf_name)
-									create l_source_file.make_with_path (l_path)
-									l_source_file.open_read
-									l_source_file.copy_to (l_target_file)
-									l_source_file.close
-									l_target_file.close
+							if l_files.item.is_representable then
+								l_ecf_name := l_files.item.string_representation
+								if
+									l_ecf_name.count > 3 and then
+									l_ecf_name.substring (l_ecf_name.count - 3,
+										l_ecf_name.count).is_case_insensitive_equal (".ecf")
+								then
+									l_path := l_precompilation_path.extended (l_ecf_name)
+									create l_target_file.make_with_path (l_path)
+									if not l_target_file.exists then
+										l_target_file.open_write
+										l_path := l_installation_precompilation_path.extended (l_ecf_name)
+										create l_source_file.make_with_path (l_path)
+										l_source_file.open_read
+										l_source_file.copy_to (l_target_file)
+										l_source_file.close
+										l_target_file.close
+									end
 								end
 							end
 							l_files.forth
@@ -964,7 +966,7 @@ feature -- Directories (top-level user)
 					-- Attempt to use home location.
 				if
 					operating_environment.home_directory_supported and then
-					attached (create {EXECUTION_ENVIRONMENT}).home_directory_path as l_home
+					attached environment.home_directory_path as l_home
 				then
 					Result := l_home
 					safe_create_dir (Result)
@@ -1149,12 +1151,11 @@ feature -- User Directories
 					Result := l_home
 				else
 						-- FIXME: What path should we put there?
-					create Result.make_from_string (".") -- Invalid path
+					create Result.make_from_string ("\Invalid path")
 				end
 			else
 				create Result.make_from_string (l_var)
 			end
---			remove_trailing_dir_separator (Result) -- useless with PATH
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -2023,7 +2024,7 @@ feature {NONE} -- Implementation
 			-- On Windows: C:\Users\manus\Documents
 			-- On Unix & Mac: $HOME
 		once
-			Result := (create {EXECUTION_ENVIRONMENT}).user_directory_path
+			Result := environment.user_directory_path
 		end
 
 feature -- Preferences

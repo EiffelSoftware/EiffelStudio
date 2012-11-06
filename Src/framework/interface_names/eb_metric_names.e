@@ -1024,7 +1024,7 @@ feature -- Error/warning message
 		require
 			a_relation_attached: a_relation /= Void
 		do
-			Result := locale.formatted_string ("Value tester relation %"$1%" is invalid. An %"and%" or %"or%" relation is expected.", [a_relation])
+			Result := locale.formatted_string (locale.translation ("Value tester relation %"$1%" is invalid. An %"and%" or %"or%" relation is expected."), [a_relation])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -1037,7 +1037,7 @@ feature -- Error/warning message
 		require
 			a_value_attached: a_value /= Void
 		do
-			Result := locale.translation ("Base value %"$1%" of a value tester is invalid. A real number is expected.")
+			Result := locale.formatted_string (locale.translation ("Base value %"$1%" of a value tester is invalid. A real number is expected."), [a_value])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -1257,7 +1257,7 @@ feature -- Separator
 	new_line_separator: STRING_32
 			-- New line separator
 		do
-			Result := "%N"
+			Result := {STRING_32} "%N"
 		ensure
 			result_attached: Result /= Void
 		end
@@ -1265,7 +1265,7 @@ feature -- Separator
 	comma_separator: STRING_32
 			-- Comma separator
 		do
-			Result := ", "
+			Result := {STRING_32} ", "
 		ensure
 			result_attached: Result /= Void
 		end
@@ -1273,7 +1273,7 @@ feature -- Separator
 	space_separator: STRING_32
 			-- Space separator
 		do
-			Result := " "
+			Result := {STRING_32} " "
 		ensure
 			result_attached: Result /= Void
 		end
@@ -1281,7 +1281,7 @@ feature -- Separator
 	colon: STRING_32
 			-- Colon
 		do
-			Result := ":"
+			Result := {STRING_32} ":"
 		ensure
 			result_attached: Result /= Void
 		end
@@ -1289,35 +1289,35 @@ feature -- Separator
 	location_connector: STRING_32
 			-- Location connector
 		do
-			Result := " -> "
+			Result := {STRING_32} " -> "
 		ensure
 			result_attached: Result /= Void
 		end
 
 	left_parenthesis: STRING_32
 		do
-			Result := "("
+			Result := {STRING_32} "("
 		ensure
 			result_attached: Result /= Void
 		end
 
 	right_parenthesis: STRING_32
 		do
-			Result := ")"
+			Result := {STRING_32} ")"
 		ensure
 			result_attached: Result /= Void
 		end
 
 	left_arrow: STRING_32
 		do
-			Result := "<"
+			Result := {STRING_32} "<"
 		ensure
 			result_attached: Result /= Void
 		end
 
 	right_arrow: STRING_32
 		do
-			Result := ">"
+			Result := {STRING_32} ">"
 		ensure
 			result_attached: Result /= Void
 		end
@@ -1334,7 +1334,7 @@ feature -- Utilities
 		local
 			l_temp_str: STRING_32
 		do
-			create l_temp_str.make (128)
+			create Result.make (128)
 			from
 				a_str_list.start
 				check a_str_list.item /= Void end
@@ -1348,7 +1348,6 @@ feature -- Utilities
 				l_temp_str.append_string_general (a_str_list.item)
 				a_str_list.forth
 			end
-			Result := l_temp_str
 		ensure
 			good_result: Result /= Void and then not Result.is_empty
 		end
@@ -1359,13 +1358,13 @@ feature -- Utilities
 			-- the result will be: basic metric "Classes".
 		require
 			a_section_name_attached: a_section_name /= Void
-			a_section_type_attached: a_section_Type /= Void
+			a_section_type_attached: a_section_type /= Void
 		do
-			create Result.make (a_section_type.count)
+			create Result.make (a_section_type.count + a_section_name.count + 2)
 			Result.append_string_general (a_section_type)
-			Result.append ("(")
+			Result.append (left_parenthesis)
 			Result.append_string_general (a_section_name)
-			Result.append (")")
+			Result.append (right_parenthesis)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -1389,7 +1388,7 @@ feature -- Utilities
 			a_visitable_type_attached: a_visitable_type /= Void
 			a_visitable_name_attached: a_visitable_name /= Void
 		do
-			create Result.make (a_visitable_type.count)
+			create Result.make (a_visitable_type.count + a_visitable_name.count + 2)
 			Result.append_string_general (a_visitable_type)
 			Result.append (left_parenthesis)
 			Result.append_string_general (a_visitable_name)

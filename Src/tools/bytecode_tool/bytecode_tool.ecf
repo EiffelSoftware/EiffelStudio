@@ -18,8 +18,4 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="bytecode_tool_dotnet" extends="bytecode_tool">
-		<setting name="dotnet_naming_convention" value="True"/>
-		<setting name="msil_generation" value="true"/>
-	</target>
 </system>

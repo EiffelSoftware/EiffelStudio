@@ -50,6 +50,7 @@ feature {NONE} -- Implementation
 			ensure_remaining_one_object_of_type (({detachable BUTTON_1}).type_id)
 			ensure_remaining_one_object_of_type (({detachable BUTTON_2}).type_id)
 			ensure_remaining_one_object_of_type (({detachable GROUP_1}).type_id)
+			ensure_remaining_one_object_of_type (({detachable EV_RIBBON_TITLED_WINDOW_IMP}).type_id)
 		end
 
 	ensure_remaining_one_object_of_type (a_type: INTEGER)
@@ -86,7 +87,8 @@ feature {NONE} -- Implementation
 			l_main_window.show
 			l_main_window.destroy
 
---			create m.make ("E:\70dev\library\memory_analyzer")
+				-- Location of memory analyzer library.
+--			create m.make ("C:\work\72dev\library\memory_analyzer")
 --			m.show
 		end
 

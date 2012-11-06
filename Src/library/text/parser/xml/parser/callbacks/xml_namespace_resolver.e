@@ -205,7 +205,7 @@ feature {NONE} -- Attribute events
 			end
 		end
 
-	on_start_tag_resolved (a_namespace: READABLE_STRING_32; a_prefix, a_local_part: detachable READABLE_STRING_32)
+	on_start_tag_resolved (a_namespace: READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 		do
 			next.on_start_tag (a_namespace, a_prefix, a_local_part)
 		end

@@ -17,7 +17,7 @@ ever, the full svn repository is huged ...)
   cd trunk.git
 
 Create the git local repository from svn repository
-  svn cat -r 86254 https://svn.eiffel.com/eiffelstudio/trunk/.git-svn/users.txt > users.txt
+  svn cat https://svn.eiffel.com/eiffelstudio/trunk/.git-svn/users.txt > users.txt
   git svn init https://svn.eiffel.com/eiffelstudio/trunk 
   git svn --authors-file=users.txt fetch -r 86254 
 

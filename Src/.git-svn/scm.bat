@@ -48,10 +48,8 @@ echo Stash
 
 echo Rebase
 @call git svn rebase
-echo Update submodules
-@call git submodule update
-@call git submodule foreach git pull
-
+echo Update subtrees
+git pull -s subtree _elks master
 echo Apply Stash
 @call git stash apply
 echo Clear Stash

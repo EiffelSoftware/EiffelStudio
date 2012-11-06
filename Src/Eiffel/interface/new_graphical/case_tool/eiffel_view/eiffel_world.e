@@ -137,7 +137,7 @@ feature -- Access
 			diagram_input := Xml_routines.deserialize_document (file_name)
 			if diagram_input /= Void then
 				check
-					valid_xml: diagram_input.root_element.name.is_equal (xml_node_name)
+					valid_xml: diagram_input.root_element.has_same_name (xml_node_name)
 				end
 				a_cursor := diagram_input.root_element.new_cursor
 				from
@@ -145,10 +145,10 @@ feature -- Access
 				until
 					a_cursor.after
 				loop
-					if attached {like xml_element} a_cursor.item as node then
-						if node.name.is_equal ("VIEW") then
-							view_name := node.attribute_by_name ("NAME").value
-							if node.attribute_by_name ("IS_UML").value.is_equal ("True") then
+					if attached {like xml_element} a_cursor.item as l_node then
+						if l_node.has_same_name ("VIEW") then
+							view_name := l_node.attribute_by_name ("NAME").value
+							if l_node.attribute_by_name ("IS_UML").value.is_equal ("True") then
 								Result.extend (view_name)
 							end
 						end
@@ -171,7 +171,7 @@ feature -- Access
 			diagram_input := Xml_routines.deserialize_document (file_name)
 			if diagram_input /= Void then
 				check
-					valid_xml: diagram_input.root_element.name.is_equal (xml_node_name)
+					valid_xml: diagram_input.root_element.has_same_name (xml_node_name)
 				end
 				a_cursor := diagram_input.root_element.new_cursor
 				from
@@ -179,10 +179,10 @@ feature -- Access
 				until
 					a_cursor.after
 				loop
-					if attached {like xml_element} a_cursor.item as node then
-						if node.name.is_equal (once "VIEW") then
-							view_name := node.attribute_by_name (once "NAME").value
-							if node.attribute_by_name (once "IS_UML").value.is_equal (once "False") then
+					if attached {like xml_element} a_cursor.item as l_node then
+						if l_node.has_same_name (once "VIEW") then
+							view_name := l_node.attribute_by_name (once "NAME").value
+							if l_node.attribute_by_name (once "IS_UML").value.is_equal (once "False") then
 								Result.extend (view_name)
 							end
 						end
@@ -576,9 +576,9 @@ feature -- Store/Retrive
 					a_cursor.after
 				loop
 					if
-						attached {like xml_element} a_cursor.item as node and then
-						node.has_same_name (l_view_str) and then
-						current_view.same_string (node.attribute_by_name (l_name_str).value)
+						attached {like xml_element} a_cursor.item as l_node and then
+						l_node.has_same_name (l_view_str) and then
+						current_view.same_string (l_node.attribute_by_name (l_name_str).value)
 					then
 						diagram_output.root_element.remove_at_cursor (a_cursor)
 					end
@@ -607,7 +607,7 @@ feature -- Store/Retrive
 			diagram_input := Xml_routines.deserialize_document (f.name)
 			if diagram_input /= Void then
 				check
-					valid_xml: diagram_input.root_element.name.is_equal (xml_node_name)
+					valid_xml: diagram_input.root_element.has_same_name (xml_node_name)
 				end
 				a_cursor := diagram_input.root_element.new_cursor
 				from
@@ -615,9 +615,9 @@ feature -- Store/Retrive
 				until
 					a_cursor.after
 				loop
-					if attached {like xml_element} a_cursor.item as node then
-						if node.name.is_equal (once "VIEW") then
-							view_name := node.attribute_by_name (once "NAME").value
+					if attached {like xml_element} a_cursor.item as l_node then
+						if l_node.has_same_name (once "VIEW") then
+							view_name := l_node.attribute_by_name (once "NAME").value
 							available_views.extend (view_name)
 						end
 					end
@@ -642,7 +642,7 @@ feature -- Store/Retrive
 			diagram_input := Xml_routines.deserialize_document (f.name)
 			if diagram_input /= Void then
 				check
-					valid_xml: diagram_input.root_element.name.is_equal (xml_node_name)
+					valid_xml: diagram_input.root_element.has_same_name (xml_node_name)
 				end
 				available_views.wipe_out
 				a_cursor := diagram_input.root_element.new_cursor
@@ -653,12 +653,12 @@ feature -- Store/Retrive
 				until
 					a_cursor.after
 				loop
-					if attached {like xml_element} a_cursor.item as node then
-						if node.name.is_equal (l_view_str) then
-							view_name := node.attribute_by_name (l_name_str).value
+					if attached {like xml_element} a_cursor.item as l_node then
+						if l_node.has_same_name (l_view_str) then
+							view_name := l_node.attribute_by_name (l_name_str).value
 							available_views.extend (view_name)
-							if view_input = Void or else node.attribute_by_name (l_name_str).value.is_equal (current_view) then
-								view_input := node
+							if view_input = Void or else l_node.attribute_by_name (l_name_str).value.is_equal (current_view) then
+								view_input := l_node
 							end
 						end
 					end
@@ -702,70 +702,70 @@ feature -- Store/Retrive
 			Result := once "EIFFEL_WORLD"
 		end
 
-	xml_element (node: like xml_element): XML_ELEMENT
+	xml_element (a_node: like xml_element): XML_ELEMENT
 			-- Xml node representing `Current's state.
 		do
-			node.put_last (Xml_routines.xml_node (node, once "INHERITANCE_LINKS_DISPLAYED", is_inheritance_links_shown.out))
-			node.put_last (Xml_routines.xml_node (node, once "CLIENT_LINKS_DISPLAYED", is_client_supplier_links_shown.out))
-			node.put_last (Xml_routines.xml_node (node, once "LABELS_SHOWN", is_labels_shown.out))
-			node.put_last (Xml_routines.xml_node (node, once "CLUSTER_SHOWN", is_cluster_shown.out))
-			node.put_last (Xml_routines.xml_node (node, once "HIGH_QUALITY", is_high_quality.out))
-			node.put_last (Xml_routines.xml_node (node, once "LEGEND_SHOWN", is_legend_shown.out))
-			node.put_last (Xml_routines.xml_node (node, once "LEGEND_X_POS", cluster_legend.point_x.out))
-			node.put_last (Xml_routines.xml_node (node, once "LEGEND_Y_POS", cluster_legend.point_y.out))
-			node.put_last (xml_routines.xml_node (node, once "IS_RIGHT_ANGLES", is_right_angles.out))
+			a_node.put_last (Xml_routines.xml_node (a_node, once "INHERITANCE_LINKS_DISPLAYED", is_inheritance_links_shown.out))
+			a_node.put_last (Xml_routines.xml_node (a_node, once "CLIENT_LINKS_DISPLAYED", is_client_supplier_links_shown.out))
+			a_node.put_last (Xml_routines.xml_node (a_node, once "LABELS_SHOWN", is_labels_shown.out))
+			a_node.put_last (Xml_routines.xml_node (a_node, once "CLUSTER_SHOWN", is_cluster_shown.out))
+			a_node.put_last (Xml_routines.xml_node (a_node, once "HIGH_QUALITY", is_high_quality.out))
+			a_node.put_last (Xml_routines.xml_node (a_node, once "LEGEND_SHOWN", is_legend_shown.out))
+			a_node.put_last (Xml_routines.xml_node (a_node, once "LEGEND_X_POS", cluster_legend.point_x.out))
+			a_node.put_last (Xml_routines.xml_node (a_node, once "LEGEND_Y_POS", cluster_legend.point_y.out))
+			a_node.put_last (xml_routines.xml_node (a_node, once "IS_RIGHT_ANGLES", is_right_angles.out))
 
-			Result := Precursor {EG_FIGURE_WORLD} (node)
+			Result := Precursor {EG_FIGURE_WORLD} (a_node)
 		end
 
-	set_with_xml_element (node: like xml_element)
-			-- Retrive state from `node'.
+	set_with_xml_element (a_node: like xml_element)
+			-- Retrive state from `a_node'.
 		local
 			ax, ay: INTEGER
 		do
-			if xml_routines.xml_boolean (node, once "INHERITANCE_LINKS_DISPLAYED") then
+			if xml_routines.xml_boolean (a_node, once "INHERITANCE_LINKS_DISPLAYED") then
 				show_inheritance_links
 			else
 				hide_inheritance_links
 			end
-			if xml_routines.xml_boolean (node, once "CLIENT_LINKS_DISPLAYED") then
+			if xml_routines.xml_boolean (a_node, once "CLIENT_LINKS_DISPLAYED") then
 				show_client_supplier_links
 			else
 				hide_client_supplier_links
 			end
-			if xml_routines.xml_boolean (node, once "LABELS_SHOWN") then
+			if xml_routines.xml_boolean (a_node, once "LABELS_SHOWN") then
 				show_labels
 			else
 				hide_labels
 			end
-			if xml_routines.xml_boolean (node, once "CLUSTER_SHOWN") then
+			if xml_routines.xml_boolean (a_node, once "CLUSTER_SHOWN") then
 				show_clusters
 			else
 				hide_clusters
 			end
-			if xml_routines.xml_boolean (node, once "HIGH_QUALITY") then
+			if xml_routines.xml_boolean (a_node, once "HIGH_QUALITY") then
 				enable_high_quality
 			else
 				disable_high_quality
 			end
-			if xml_routines.xml_boolean (node, once "LEGEND_SHOWN") then
+			if xml_routines.xml_boolean (a_node, once "LEGEND_SHOWN") then
 				show_legend
-				ax := xml_routines.xml_integer (node, once "LEGEND_X_POS")
-				ay := xml_routines.xml_integer (node, once "LEGEND_Y_POS")
+				ax := xml_routines.xml_integer (a_node, once "LEGEND_X_POS")
+				ay := xml_routines.xml_integer (a_node, once "LEGEND_Y_POS")
 				cluster_legend.set_point_position (ax, ay)
 			else
 				hide_legend
-				ax := xml_routines.xml_integer (node, once "LEGEND_X_POS")
-				ay := xml_routines.xml_integer (node, once "LEGEND_Y_POS")
+				ax := xml_routines.xml_integer (a_node, once "LEGEND_X_POS")
+				ay := xml_routines.xml_integer (a_node, once "LEGEND_Y_POS")
 				cluster_legend.set_point_position (ax, ay)
 			end
-			if xml_routines.xml_boolean (node, once "IS_RIGHT_ANGLES") then
+			if xml_routines.xml_boolean (a_node, once "IS_RIGHT_ANGLES") then
 				enable_right_angles
 			else
 				disable_right_angles
 			end
 
-			Precursor {EG_FIGURE_WORLD} (node)
+			Precursor {EG_FIGURE_WORLD} (a_node)
 		end
 
 feature {ES_DIAGRAM_TOOL_PANEL} -- Statistic
@@ -919,7 +919,7 @@ feature {NONE} -- Implementation
 			diagram_output := Xml_routines.deserialize_document (ptf.name)
 			if diagram_output /= Void then
 				check
-					valid_xml: diagram_output.root_element.name.is_equal (xml_node_name)
+					valid_xml: diagram_output.root_element.has_same_name (xml_node_name)
 				end
 				a_cursor := diagram_output.root_element.new_cursor
 				from
@@ -928,9 +928,9 @@ feature {NONE} -- Implementation
 					a_cursor.after
 				loop
 					if
-						attached {like xml_element} a_cursor.item as node and then
-						node.has_same_name (once "VIEW") and then
-						a_name.same_string (node.attribute_by_name (once "NAME").value)
+						attached {like xml_element} a_cursor.item as l_node and then
+						l_node.has_same_name (once "VIEW") and then
+						a_name.same_string (l_node.attribute_by_name (once "NAME").value)
 					then
 						diagram_output.root_element.remove_at_cursor (a_cursor)
 					end
@@ -952,7 +952,7 @@ feature {NONE} -- Implementation
 			diagram_input := Xml_routines.deserialize_document (f.name)
 			if diagram_input /= Void then
 				check
-					valid_xml: diagram_input.root_element.name.is_equal (xml_node_name)
+					valid_xml: diagram_input.root_element.has_same_name (xml_node_name)
 				end
 				a_cursor := diagram_input.root_element.new_cursor
 				from
@@ -960,9 +960,9 @@ feature {NONE} -- Implementation
 				until
 					a_cursor.after or else Result
 				loop
-					if attached {like xml_element} a_cursor.item as node then
-						if node.name.is_equal (once "VIEW") then
-							view_name := node.attribute_by_name (once "NAME").value
+					if attached {like xml_element} a_cursor.item as l_node then
+						if l_node.has_same_name (once "VIEW") then
+							view_name := l_node.attribute_by_name (once "NAME").value
 							Result := view_name.is_equal (a_name)
 						end
 					end
@@ -1444,6 +1444,18 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	is_same_string (s1, s2: detachable READABLE_STRING_GENERAL): BOOLEAN
+			-- Is s1 and s2 the same string content?
+		do
+			if s1 = Void then
+				Result := s2 = Void
+			elseif s1 = s2 then
+				Result := True
+			else
+				Result := s1.same_string (s2)
+			end
+		end
 
 	node_type: ES_CLASS
 			-- Type for nodes.

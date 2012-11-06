@@ -263,6 +263,7 @@ feature -- Saving
 			retried: BOOLEAN
 			l_formatter: XML_FORMATTER
 			l_output_file: RAW_FILE
+			u: FILE_UTILITIES
 		do
 			if not retried then
 					-- Write document

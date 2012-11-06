@@ -98,7 +98,7 @@ feature -- Access
 			-- Platform specific executable extension.
 		once
 			if {PLATFORM}.is_windows then
-				Result := "exe"
+				Result := ".exe"
 			else
 				create Result.make_empty
 			end
@@ -368,11 +368,11 @@ feature -- Status setting
 								l_ecf_name.substring (l_ecf_name.count - 3,
 									l_ecf_name.count).is_case_insensitive_equal (".ecf")
 							then
-								create l_path.make_nested (l_precompilation_path, l_ecf_name)
+								l_path := l_precompilation_path.extended (l_ecf_name)
 								create l_target_file.make_with_path (l_path)
 								if not l_target_file.exists then
 									l_target_file.open_write
-									create l_path.make_nested (l_installation_precompilation_path, l_ecf_name)
+									l_path := l_installation_precompilation_path.extended (l_ecf_name)
 									create l_source_file.make_with_path (l_path)
 									l_source_file.open_read
 									l_source_file.copy_to (l_target_file)
@@ -416,8 +416,7 @@ feature {NONE} -- Helpers
 		do
 			if is_compatible_mode and a_path.substring_index ("compatible", 1) = 0 then
 				create p.make_from_string (a_path)
-				p.extend ("compatible")
-				Result := p.string_representation
+				Result := p.extended ("compatible").string_representation
 			else
 				Result := a_path
 			end
@@ -456,7 +455,7 @@ feature -- Query
 				if l_file_name.substring (1, l_install.count).same_string (l_install) then
 					l_extension := l_file_name.substring (l_install.count + 1, l_file_name.count)
 					l_extension.prune_all_leading (operating_environment.directory_separator)
-					create Result.make_nested (user_files_path, l_extension)
+					Result := user_files_path.extended (l_extension)
 					create l_actual_file.make_with_path (Result)
 					if a_must_exist and then (not l_actual_file.exists or else (l_actual_file.is_device or l_actual_file.is_directory)) then
 							-- The file does not exist or is not actually a file.
@@ -489,7 +488,7 @@ feature -- Query
 			if i > 0 then
 				l_path := platform_priority_path (l_file.substring (1, i - 1), a_use_simple, a_must_exist)
 				if l_path /= Void then
-					create Result.make_nested (l_path, l_file.substring (i + 1, l_file.count))
+					Result := l_path.extended (l_file.substring (i + 1, l_file.count))
 					if a_must_exist and then not file_path_exists (Result) then
 							-- The directory does not exist
 						Result := Void
@@ -518,14 +517,14 @@ feature -- Query
 			create Result.make_from_string (a_dir)
 			if a_use_simple then
 				if {PLATFORM}.is_windows then
-					Result.extend (windows_name)
+					Result := Result.extended (windows_name)
 				else
-					Result.extend (unix_name)
+					Result := Result.extended (unix_name)
 				end
 			else
 				l_platform := eiffel_platform
 				if not l_platform.is_empty then
-					Result.extend (l_platform)
+					Result := Result.extended (l_platform)
 				elseif a_must_exist then
 					Result := Void
 				else
@@ -546,10 +545,9 @@ feature -- Query
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				create Result.make_nested (unix_layout_share_path, docs_name)
-				Result.extend (unix_product_version_name)
+				Result := unix_layout_share_path.extended (docs_name).extended (unix_product_version_name)
 			else
-				create Result.make_nested (install_path, docs_name)
+				Result := install_path.extended (docs_name)
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -596,7 +594,7 @@ feature -- Directories (top-level)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (install_path, dotnet_name)
+			Result := install_path.extended (dotnet_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -606,7 +604,7 @@ feature -- Directories (top-level)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (eiffel_library, library_name)
+			Result := eiffel_library.extended (library_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -628,9 +626,7 @@ feature -- Directories (top-level)
 			else
 				l_dn_name := eiffel_platform
 			end
-			create Result.make_nested (shared_path, precomp_name)
-			Result.extend (spec_name)
-			Result.extend (l_dn_name)
+			Result := shared_path.extended (precomp_name).extended (spec_name).extended (l_dn_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -662,9 +658,7 @@ feature -- Directories (top-level)
 					else
 						l_dn_name := eiffel_platform
 					end
-					create Result.make_nested (user_files_path, precomp_name)
-					Result.extend (spec_name)
-					Result.extend (l_dn_name)
+					Result := user_files_path.extended (precomp_name).extended (spec_name).extended (l_dn_name)
 				else
 						-- No user file is specified, we use the installation
 						-- directory and if this is not writable, users will
@@ -685,7 +679,7 @@ feature  -- Directories (dotnet)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (dotnet_path, assemblies_name)
+			Result := dotnet_path.extended (assemblies_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -697,7 +691,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (shared_application_path, bitmaps_name)
+			Result := shared_application_path.extended (bitmaps_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -718,8 +712,7 @@ feature -- Directories (distribution)
 					n := classic_name
 				end
 			end
-			create Result.make_nested (shared_application_path, built_ins_name)
-			Result.extend (n)
+			Result := shared_application_path.extended (built_ins_name).extended (n)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -729,7 +722,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (shared_application_path, "config")
+			Result := shared_application_path.extended ("config")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -739,8 +732,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (config_path, eiffel_platform)
-			Result.extend (templates_name)
+			Result := config_path.extended (eiffel_platform).extended (templates_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -750,7 +742,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (shared_application_path, "eifinit")
+			Result := shared_application_path.extended ("eifinit")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -760,7 +752,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (shared_application_path, filters_name)
+			Result := shared_application_path.extended (filters_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -770,7 +762,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (shared_application_path, help_name)
+			Result := shared_application_path.extended (help_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -780,7 +772,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (help_path, errors_name)
+			Result := help_path.extended (errors_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -790,7 +782,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (help_path, defaults_name)
+			Result := help_path.extended (defaults_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -801,10 +793,9 @@ feature -- Directories (distribution)
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				create Result.make_nested (unix_layout_locale_path, unix_product_version_name)
+				Result := unix_layout_locale_path.extended (unix_product_version_name)
 			else
-				create Result.make_nested (shared_application_path, lang_name)
-				Result.extend (mo_files_name)
+				Result := shared_application_path.extended (lang_name).extended (mo_files_name)
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -815,7 +806,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (shared_application_path, metrics_name)
+			Result := shared_application_path.extended (metrics_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -825,7 +816,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (shared_application_path, profiler_name)
+			Result := shared_application_path.extended (profiler_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -835,7 +826,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (shared_application_path, templates_name)
+			Result := shared_application_path.extended (templates_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -845,7 +836,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (templates_path, defaults_name)
+			Result := templates_path.extended (defaults_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -856,12 +847,11 @@ feature -- Directories (distribution)
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				create Result.make_from_path (unix_layout_base_path)
+				Result := unix_layout_base_path
 			else
-				create Result.make_nested (shared_application_path, spec_name)
-				Result.extend (eiffel_platform)
+				Result := shared_application_path.extended (spec_name).extended (eiffel_platform)
 			end
-			Result.extend (bin_name)
+			Result := Result.extended (bin_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -872,12 +862,9 @@ feature -- Directories (distribution)
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				create Result.make_nested (unix_layout_base_path, include_name)
-				Result.extend (unix_product_version_name)
+				Result := unix_layout_base_path.extended (include_name).extended (unix_product_version_name)
 			else
-				create Result.make_nested (shared_application_path, spec_name)
-				Result.extend (eiffel_platform)
-				Result.extend (include_name)
+				Result := shared_application_path.extended (spec_name).extended (eiffel_platform).extended (include_name)
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -889,11 +876,9 @@ feature -- Directories (distribution)
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				Result := unix_layout_lib_path.twin
+				Result := unix_layout_lib_path
 			else
-				create Result.make_nested (shared_application_path, spec_name)
-				Result.extend (eiffel_platform)
-				Result.extend (lib_name)
+				Result := shared_application_path.extended (spec_name).extended (eiffel_platform).extended (lib_name)
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -904,7 +889,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (lib_application_path, wizards_name)
+			Result := lib_application_path.extended (wizards_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -914,7 +899,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (wizards_path, "new_projects")
+			Result := wizards_path.extended ("new_projects")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -924,8 +909,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (wizards_path, "others")
-			Result.extend ("precompile")
+			Result := wizards_path.extended ("others").extended ("precompile")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -935,7 +919,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (shared_application_path, "tools")
+			Result := shared_application_path.extended ("tools")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -945,7 +929,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (tools_path, "testing")
+			Result := tools_path.extended ("testing")
 		end
 
 	auto_test_path: PATH
@@ -953,7 +937,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (testing_tool_path, "auto_test")
+			Result := testing_tool_path.extended ("auto_test")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -974,36 +958,33 @@ feature -- Directories (top-level user)
 			is_user_files_supported: is_user_files_supported
 		local
 			l_dir: detachable STRING_32
-			p_home: PATH
 		once
 			l_dir := get_environment_32 ({EIFFEL_CONSTANTS}.ise_app_data_env)
 			if l_dir = Void or else l_dir.is_empty then
 					-- Attempt to use home location.
 				if
 					operating_environment.home_directory_supported and then
-					attached (create {EXECUTION_ENVIRONMENT_32}).home_directory_name as l_home
+					attached (create {EXECUTION_ENVIRONMENT}).home_directory_path as l_home
 				then
-					create p_home.make_from_string (l_home)
-					safe_create_dir (p_home)
+					Result := l_home
+					safe_create_dir (Result)
 
 					if {PLATFORM}.is_windows then
-						create Result.make_nested (p_home, eiffel_software_name)
-						Result.extend (hidden_directory_name)
-					else
-						create Result.make_nested (p_home, hidden_directory_name)
+						Result := Result.extended (eiffel_software_name)
 					end
+					Result := Result.extended (hidden_directory_name)
 					safe_create_dir (Result)
 
 					create l_dir.make (4)
 					l_dir.append_integer ({EIFFEL_CONSTANTS}.major_version)
 					l_dir.append_character ('.')
 					l_dir.append_integer ({EIFFEL_CONSTANTS}.minor_version)
-					create Result.make_nested (Result, l_dir)
+					Result := Result.extended (l_dir)
 					safe_create_dir (Result)
 				else
 						-- No user set variable or the home directory is not supported
 					safe_create_dir (user_files_path)
-					create Result.make_nested (user_files_path, settings_name)
+					Result := user_files_path.extended (settings_name)
 					safe_create_dir (Result)
 				end
 			else
@@ -1038,9 +1019,9 @@ feature -- Directories (top-level user)
 						-- On Unix platform only, the files will be located under the hidden directory
 						-- where EiffelStudio stores settings, otherwise it is in the home directory
 						-- of the user (i.e. not hidden).
-					create Result.make_from_string (l_user_directory_name)
+					Result := l_user_directory_name
 					if not {PLATFORM}.is_windows and then not {PLATFORM}.is_mac then
-						Result.extend (hidden_directory_name)
+						Result := Result.extended (hidden_directory_name)
 						safe_create_dir (Result)
 						l_needs_suffix := False
 					else
@@ -1066,7 +1047,7 @@ feature -- Directories (top-level user)
 						l_dir.append (wkbench_suffix)
 						l_dir.append_character (')')
 					end
-					Result.extend (l_dir)
+					Result := Result.extended (l_dir)
 					safe_create_dir (Result)
 
 						-- Per version directory structure to avoid clutter.
@@ -1074,7 +1055,7 @@ feature -- Directories (top-level user)
 					l_dir.append_integer ({EIFFEL_CONSTANTS}.major_version)
 					l_dir.append_character ('.')
 					l_dir.append_integer ({EIFFEL_CONSTANTS}.minor_version)
-					Result.extend (l_dir)
+					Result := Result.extended (l_dir)
 					safe_create_dir (Result)
 				end
 			else
@@ -1096,7 +1077,7 @@ feature -- Private Settings Directories
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
 		once
-			create Result.make_nested (hidden_files_path, projects_name)
+			Result := hidden_files_path.extended (projects_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1108,7 +1089,7 @@ feature -- Private Settings Directories
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
 		once
-			create Result.make_nested (hidden_files_path, docking_name)
+			Result := hidden_files_path.extended (docking_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1120,7 +1101,7 @@ feature -- Private Settings Directories
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
 		once
-			create Result.make_nested (hidden_files_path, session_name)
+			Result := hidden_files_path.extended (session_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1137,7 +1118,7 @@ feature -- Private Settings Directories
 				--| security issues if someone creates a file with the same file name
 				--| as the one that will be used later by EiffelStudio.
 
-			create Result.make_nested (hidden_files_path, "tmp")
+			Result := hidden_files_path.extended ("tmp")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1150,7 +1131,7 @@ feature -- User Directories
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
 		once
-			create Result.make_nested (user_files_path, templates_name)
+			Result := user_files_path.extended (templates_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1163,9 +1144,9 @@ feature -- User Directories
 			l_var := get_environment_32 ({EIFFEL_CONSTANTS}.ise_projects_env)
 			if l_var = Void or else l_var.is_empty then
 				if {PLATFORM}.is_windows or else {PLATFORM}.is_mac then
-					create Result.make_nested (user_files_path, projects_name)
-				elseif operating_environment.home_directory_supported and then attached environment.home_directory_name as l_home then
-					create Result.make_from_string (l_home)
+					Result := user_files_path.extended (projects_name)
+				elseif operating_environment.home_directory_supported and then attached environment.home_directory_path as l_home then
+					Result := l_home
 				else
 						-- FIXME: What path should we put there?
 					create Result.make_from_string (".") -- Invalid path
@@ -1185,7 +1166,7 @@ feature -- Files
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (default_templates_path, default_config_file)
+			Result := default_templates_path.extended (default_config_file)
 			if is_user_files_supported then
 					-- Check user override file.
 				if attached user_priority_file_name (Result, True) as l_user then
@@ -1201,8 +1182,7 @@ feature -- Files
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_from_path (metrics_path)
-			Result.extend ("predefined_metrics.xml")
+			Result := metrics_path.extended ("predefined_metrics.xml")
 			if is_user_files_supported then
 					-- Check user override file.
 				if attached user_priority_file_name (Result, True) as l_user then
@@ -1219,8 +1199,7 @@ feature -- Files
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_from_path (eifinit_path)
-			Result.extend ("general.cfg")
+			Result := eifinit_path.extended ("general.cfg")
 			if is_user_files_supported then
 					-- Check user override file.
 				if attached user_priority_file_name (Result, True) as l_user then
@@ -1237,10 +1216,7 @@ feature -- Files
 			is_valid_environment: is_valid_environment
 			is_windows: {PLATFORM}.is_windows
 		once
-			create Result.make_from_path (eifinit_path)
-			Result.extend (spec_name)
-			Result.extend (Platform_abstraction)
-			Result.extend ("culture")
+			Result := eifinit_path.extended (spec_name).extended (platform_abstraction).extended ("culture")
 			if is_user_files_supported then
 					-- Check user override file.
 				if attached user_priority_file_name (Result, True) as l_user then
@@ -1256,7 +1232,7 @@ feature -- Files
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (eifinit_path, "libraries.cfg")
+			Result := eifinit_path.extended ("libraries.cfg")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1266,7 +1242,7 @@ feature -- Files
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (eifinit_path, "precompiles.cfg")
+			Result := eifinit_path.extended ("precompiles.cfg")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1281,7 +1257,7 @@ feature -- Files (user)
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		do
-			create Result.make_nested (docking_data_path, a_file_name + "." + docking_file_extension)
+			Result := docking_data_path.extended (a_file_name + "." + docking_file_extension)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1318,7 +1294,7 @@ feature -- Files (user)
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		do
-			create Result.make_nested (user_files_path, a_file_name.as_string_32 + ".ini")
+			Result := user_files_path.extended (a_file_name.as_string_32 + ".ini")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1336,7 +1312,7 @@ feature -- Directories (platform independent)
 			u: FILE_UTILITIES
 		once
 			if is_unix_layout then
-				create Result.make_nested (unix_layout_share_path, unix_product_version_name)
+				Result := unix_layout_share_path.extended (unix_product_version_name)
 			else
 				Result := eiffel_install
 			end
@@ -1361,7 +1337,7 @@ feature -- Directories (platform independent)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (shared_path, distribution_name)
+			Result := shared_path.extended (distribution_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1372,14 +1348,14 @@ feature -- Directories (platform independent)
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				create Result.make_nested (unix_layout_lib_path, unix_product_version_name)
+				Result := unix_layout_lib_path.extended (unix_product_version_name)
 			else
 				Result := install_path.twin
 			end
 			if is_experimental_mode then
-				create Result.make_nested (Result, "experimental")
+				Result := Result.extended ("experimental")
 			elseif is_compatible_mode then
-				create Result.make_nested (Result, "compatible")
+				Result := Result.extended ("compatible")
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -1391,11 +1367,11 @@ feature -- Directories (platform independent)
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				create Result.make_nested (unix_layout_lib_path, unix_product_version_name)
+				Result := unix_layout_lib_path.extended (unix_product_version_name)
 			else
-				create Result.make_from_path (install_path)
+				Result := install_path
 			end
-			Result.extend (distribution_name)
+			Result := Result.extended (distribution_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1407,10 +1383,7 @@ feature -- Files (commands)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (bin_path, estudio_name)
-			if not executable_suffix.is_empty then
-				Result.add_extension (executable_suffix)
-			end
+			Result := bin_path.extended (estudio_name + executable_suffix)
 		ensure
 			not_reuslt_is_empty: not Result.is_empty
 		end
@@ -1428,10 +1401,7 @@ feature -- Files (commands)
 				create l_args
 				create Result.make_from_string (l_args.command_name)
 			else
-				create Result.make_nested (bin_path, ec_name)
-				if not executable_suffix.is_empty then
-					Result.add_extension (executable_suffix)
-				end
+				Result := bin_path.extended (ec_name + executable_suffix)
 			end
 		ensure
 			not_reuslt_is_empty: not Result.is_empty
@@ -1484,10 +1454,7 @@ feature -- Files (commands)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_nested (bin_path, finish_freezing_script)
-			if not executable_suffix.is_empty then
-				Result.add_extension (executable_suffix)
-			end
+			Result := bin_path.extended (finish_freezing_script + executable_suffix)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1498,14 +1465,11 @@ feature -- Files (commands)
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				create Result.make_from_path (lib_application_path)
+				Result := lib_application_path
 			else
-				create Result.make_from_path (bin_path)
+				Result := bin_path
 			end
-			Result.extend (emake_name)
-			if not executable_suffix.is_empty then
-				Result.add_extension (executable_suffix)
-			end
+			Result := Result.extended (emake_name + executable_suffix)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1516,14 +1480,11 @@ feature -- Files (commands)
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				create Result.make_from_path (lib_application_path)
+				Result := lib_application_path
 			else
-				create Result.make_from_path (bin_path)
+				Result := bin_path
 			end
-			Result.extend (quick_finalize_name)
-			if not executable_suffix.is_empty then
-				Result.add_extension (executable_suffix)
-			end
+			Result := Result.extended (quick_finalize_name + executable_suffix)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1534,14 +1495,11 @@ feature -- Files (commands)
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				create Result.make_from_path (lib_application_path)
+				Result := lib_application_path
 			else
-				create Result.make_from_path (bin_path)
+				Result := bin_path
 			end
-			Result.extend (x2c_name)
-			if not executable_suffix.is_empty then
-				Result.add_extension (executable_suffix)
-			end
+			Result := Result.extended (x2c_name + executable_suffix)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1551,14 +1509,11 @@ feature -- Files (commands)
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				create Result.make_from_path (lib_application_path)
+				Result := lib_application_path
 			else
-				create Result.make_from_path (bin_path)
+				Result := bin_path
 			end
-			Result.extend (prelink_name)
-			if not executable_suffix.is_empty then
-				Result.add_extension (executable_suffix)
-			end
+			Result := Result.extended (prelink_name + executable_suffix)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1569,14 +1524,11 @@ feature -- Files (commands)
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				create Result.make_from_path (lib_application_path)
+				Result := lib_application_path
 			else
-				create Result.make_from_path (bin_path)
+				Result := bin_path
 			end
-			Result.extend (ecdbg_name)
-			if not executable_suffix.is_empty then
-				Result.add_extension (executable_suffix)
-			end
+			Result := Result.extended (ecdbg_name + executable_suffix)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1587,8 +1539,7 @@ feature -- Files (commands)
 			is_valid_environment: is_valid_environment
 			is_windows: {PLATFORM}.is_windows
 		once
-			create Result.make_from_path (bin_path)
-			Result.extend ("compile_library.bat")
+			Result := bin_path.extended ("compile_library.bat")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1598,13 +1549,7 @@ feature -- Files (commands)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_from_path (precompilation_wizard_resources_path)
-			Result.extend (spec_name)
-			Result.extend (eiffel_platform)
-			Result.extend ("wizard")
-			if not executable_suffix.is_empty then
-				Result.add_extension (executable_suffix)
-			end
+			Result := precompilation_wizard_resources_path.extended (spec_name).extended (eiffel_platform).extended ("wizard" + executable_suffix)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1674,7 +1619,7 @@ feature {NONE} -- Configuration of layout
 	unix_layout_share_path: PATH
 			-- share for the unix layout. e.g. "/usr/share".
 		once
-			create Result.make_nested (unix_layout_base_path, "share")
+			Result := unix_layout_base_path.extended ("share")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1682,7 +1627,7 @@ feature {NONE} -- Configuration of layout
 	unix_layout_lib_path: PATH
 			-- Directory name for lib. e.g. "/usr/lib".
 		once
-			create Result.make_nested (unix_layout_base_path, "lib")
+			Result := unix_layout_base_path.extended ("lib")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1690,7 +1635,7 @@ feature {NONE} -- Configuration of layout
 	unix_layout_locale_path: PATH
 			-- Directory name for lib. e.g. "/usr/share/locale"
 		once
-			create Result.make_nested (unix_layout_share_path, "locale")
+			Result := unix_layout_share_path.extended ("locale")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -2073,12 +2018,12 @@ feature {NONE} -- Implementation
 			not_result_is_empty: not Result.is_empty
 		end
 
-	user_directory_name: detachable STRING_32
+	user_directory_name: detachable PATH
 			-- Directory name corresponding to the user directory
 			-- On Windows: C:\Users\manus\Documents
 			-- On Unix & Mac: $HOME
 		once
-			Result := (create {EXECUTION_ENVIRONMENT_32}).user_directory_name
+			Result := (create {EXECUTION_ENVIRONMENT}).user_directory_path
 		end
 
 feature -- Preferences
@@ -2097,8 +2042,8 @@ feature -- Preferences
 					Result.append (wkbench_suffix)
 				end
 			else
-				create p.make_from_path (hidden_files_path)
-				p.extend (application_name + "rc" + {EIFFEL_CONSTANTS}.major_version.out + {EIFFEL_CONSTANTS}.minor_version.out)
+				p := hidden_files_path
+				p := p.extended (application_name + "rc" + {EIFFEL_CONSTANTS}.major_version.out + {EIFFEL_CONSTANTS}.minor_version.out)
 				Result := p.string_representation
 			end
 		ensure
@@ -2110,8 +2055,7 @@ feature -- Preferences
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_from_path (eifinit_path)
-			Result.extend ("default.xml")
+			Result := eifinit_path.extended ("default.xml")
 			if attached user_priority_file_name (Result, True) as l_fn then
 				Result := l_fn
 			end
@@ -2122,11 +2066,7 @@ feature -- Preferences
 	platform_preferences: PATH
 			-- Platform specific preferences.
 		once
-			create Result.make_from_path (eifinit_path)
-			Result.extend (spec_name)
-			Result.extend (platform_abstraction)
-			Result.extend ("default")
-			Result.add_extension ("xml")
+			Result := eifinit_path.extended (spec_name).extended (platform_abstraction).extended ("default.xml")
 			if attached user_priority_file_name (Result, True) as upf then
 				Result := upf
 			end
@@ -2576,7 +2516,7 @@ feature {NONE} -- Implementation
 	user_directory_name_8: detachable STRING
 		do
 			if attached user_directory_name as v then
-				Result := v
+				Result := v.string_representation
 			end
 		end
 

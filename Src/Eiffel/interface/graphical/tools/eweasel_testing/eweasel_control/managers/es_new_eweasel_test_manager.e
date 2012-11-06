@@ -546,29 +546,25 @@ feature {NONE} -- File contents
 	class_content_file_name: PATH
 			-- Class file content file name
 		do
-			create Result.make_from_path (eiffel_layout.default_templates_path)
-			Result.extend ("eiffel_unit_test_class_template.e")
+			Result := eiffel_layout.default_templates_path.extended ("eiffel_unit_test_class_template.e")
 		end
 
 	ecf_content_file_name: PATH
 			-- Ecf content file name
 		do
-			create Result.make_from_path (eiffel_layout.default_templates_path)
-			Result.extend ("eiffel_unit_test_ecf_template.ecf")
+			Result := eiffel_layout.default_templates_path.extended ("eiffel_unit_test_ecf_template.e")
 		end
 
 	notes_content_file_name: PATH
 			-- Default note file name.
 		do
-			create Result.make_from_path (eiffel_layout.default_templates_path)
-			Result.extend ("eiffel_unit_test_note_template.txt")
+			Result := eiffel_layout.default_templates_path.extended ("eiffel_unit_test_note_template.txt")
 		end
 
 	tcf_content_file_name: PATH
 			-- Default eweasel tcf file name
 		do
-			create Result.make_from_path (eiffel_layout.default_templates_path)
-			Result.extend ("eiffel_unit_test_tcf_template.txt")
+			Result := eiffel_layout.default_templates_path.extended ("eiffel_unit_test_tcf_template.txt")
 		end
 
 	run_before_all_string: attached STRING

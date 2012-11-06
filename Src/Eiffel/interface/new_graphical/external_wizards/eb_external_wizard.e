@@ -87,10 +87,7 @@ feature {NONE} -- Implementation
 			create wizard_exec_filename.make_from_string (location)
 			wizard_exec_filename.extend ("spec")
 			wizard_exec_filename.extend (eiffel_layout.eiffel_platform)
-			wizard_exec_filename.set_file_name ("wizard")
-			if not eiffel_layout.Executable_suffix.is_empty then
-				wizard_exec_filename.add_extension (eiffel_layout.Executable_suffix)
-			end
+			wizard_exec_filename.set_file_name ("wizard" + eiffel_layout.executable_suffix)
 
 			create wizard_exec_file.make_with_name (wizard_exec_filename.to_string_32)
 			if not (wizard_exec_file.exists and then wizard_exec_file.is_executable) then

@@ -34,21 +34,19 @@ feature {NONE} -- Initialization
 			-- For operating systems which support it it will stored in the users home directory.  For operating
 			-- systems that do not support home directories it will be stored in the current working directory.
 		local
-			l_loc: detachable STRING_32
+			l_loc: detachable PATH
 			l_exec: EXECUTION_ENVIRONMENT_32
 			fn: FILE_NAME_32
 		do
 			create l_exec
 
 			if operating_environment.home_directory_supported then
-				l_loc := l_exec.home_directory_name
+				l_loc := l_exec.home_directory_path
 				check l_loc /= Void end -- implied by `home_directory_supported'
 			else
-				l_loc := l_exec.current_working_directory
+				l_loc := l_exec.current_working_path
 			end
-			create fn.make_from_string (l_loc)
-			fn.set_file_name ("stored_preferences.xml")
-			make_with_location (fn.to_string_32)
+			make_with_location (l_loc.extended ("stored_preferences.xml").string_representation)
 		end
 
 	make_with_location (a_location: READABLE_STRING_GENERAL)

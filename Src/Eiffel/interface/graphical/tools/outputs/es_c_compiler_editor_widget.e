@@ -497,7 +497,7 @@ feature {NONE} -- Action handlers
 
 						-- Check for relative paths
 					create l_full_file_name.make_from_string (l_compilation_folder)
-					l_full_file_name.extend (l_file_name)
+					l_full_file_name := l_full_file_name.extended (l_file_name)
 					if not u.file_path_exists (l_full_file_name) then
 							-- GCC doesn't show the full path name, so try scanning the compilation folder
 						l_file_name.replace_substring_all (".", "\.")

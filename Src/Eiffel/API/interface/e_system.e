@@ -163,19 +163,13 @@ feature -- Access
 			-- For workbench-mode application `compile_type' is true
 		require
 			non_void_name: name /= Void
-		local
-			tmp: STRING
 		do
 			if workbench_mode then
 				create Result.make_from_string (project_location.workbench_path)
 			else
 				create Result.make_from_string (project_location.final_path)
 			end
-			Result.set_file_name (name)
-			tmp := eiffel_layout.Executable_suffix
-			if not tmp.is_empty then
-				Result.add_extension (eiffel_layout.Executable_suffix)
-			end
+			Result.set_file_name (name + eiffel_layout.executable_suffix)
 		end;
 
 	is_precompiled: BOOLEAN

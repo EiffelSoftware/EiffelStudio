@@ -24,6 +24,8 @@ feature -- Access
 			-- Directory of current execution
 			-- Execution of this query on concurrent threads will result in
 			-- an unspecified behavior.
+		obsolete
+			"Use `current_working_path' instead."
 		local
 			l_count, l_nbytes: INTEGER
 			l_managed: MANAGED_POINTER
@@ -53,61 +55,6 @@ feature -- Access
 			end
 		ensure
 			result_not_void: Result /= Void
-		end
-
-	home_directory_name: detachable STRING_32
-			-- Directory name corresponding to the home directory.
-		require
-			home_directory_supported: Operating_environment.home_directory_supported
-		local
-			l_count, l_nbytes: INTEGER
-			l_managed: MANAGED_POINTER
-		once
-			l_count := 50
-			create l_managed.make (l_count)
-			l_nbytes := eif_home_directory_name_ptr (l_managed.item, l_count)
-			if l_nbytes > l_count then
-				l_count := l_nbytes
-				l_managed.resize (l_count)
-				l_nbytes := eif_home_directory_name_ptr (l_managed.item, l_count)
-			end
-			if l_nbytes > 0 and l_nbytes <= l_count then
-				Result := file_info.pointer_to_file_name_32 (l_managed.item)
-			end
-		end
-
-	user_directory_name: detachable STRING_32
-			-- Directory name corresponding to the user directory
-			-- On Windows: C:\Users\manus\Documents
-			-- On Unix & Mac: $HOME
-			-- Otherwise Void
-		local
-			l_count, l_nbytes: INTEGER
-			l_managed: MANAGED_POINTER
-		once
-			l_count := 50
-			create l_managed.make (50)
-			l_nbytes := eif_user_directory_name_ptr (l_managed.item, l_count)
-			if l_nbytes > l_count then
-				l_count := l_nbytes
-				l_managed.resize (l_count)
-				l_nbytes := eif_user_directory_name_ptr (l_managed.item, l_count)
-			end
-			if l_nbytes > 0 and l_nbytes <= l_count then
-				Result := file_info.pointer_to_file_name_32 (l_managed.item)
-			end
-			if Result /= Void and then not Result.is_empty then
-					-- Nothing to do here, we take what we got from the OS.
-			elseif
-				operating_environment.home_directory_supported and then
-				attached (create {EXECUTION_ENVIRONMENT}).home_directory_name as l_home
-			then
-					-- We use $HOME.
-				Result := l_home
-			else
-					-- No possibility of a user directory, we let the caller handle that.
-				Result := Void
-			end
 		end
 
 	get (s: READABLE_STRING_GENERAL): detachable STRING_32

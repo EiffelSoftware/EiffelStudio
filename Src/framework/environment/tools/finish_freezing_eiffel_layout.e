@@ -27,9 +27,7 @@ feature -- Directories
 			is_valid_environment: is_valid_environment
 			windows: {PLATFORM}.is_windows
 		once
-			create Result.make_from_path (config_path)
-			Result.extend (eiffel_platform)
-			Result.extend (eiffel_c_compiler)
+			Result := config_path.extended (eiffel_platform).extended (eiffel_c_compiler)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -42,13 +40,12 @@ feature -- Files
 			is_valid_environment: is_valid_environment
 			windows: {PLATFORM}.is_windows
 		once
-			create Result.make_from_path (config_eif_path)
-			Result.extend ("config.eif")
+			Result := config_eif_file_name.extended ("config.eif")
 			if
 				is_user_files_supported and then
 				attached user_priority_file_name (Result, True) as l_user
 			then
-				create Result.make_from_path (l_user)
+				Result := l_user
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty

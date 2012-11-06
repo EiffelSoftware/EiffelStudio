@@ -27,8 +27,7 @@ feature -- Query
 	path: PATH
 			-- eweasel root path.
 		do
-			Result := eiffel_layout.shared_path.twin
-			Result.extend ("eweasel")
+			Result := eiffel_layout.shared_path.extended ("eweasel")
 		end
 
 	test_case_directory: STRING
@@ -43,24 +42,17 @@ feature -- Query
 	eweasel_command: STRING
 			-- Full eweasel command
 		local
-			l_path: like path
 			l_platform: PLATFORM
 			l_exe_name: STRING
 		do
-			l_path := path.twin
-			l_path.extend ("spec")
-			l_path.extend (ise_platform)
-			l_path.extend ("bin")
-
 			create l_platform
 			if l_platform.is_windows then
 				l_exe_name := "eweasel.exe"
 			else
 				l_exe_name := "eweasel"
 			end
-			l_path.extend (l_exe_name)
 
-			Result := l_path.string_representation
+			Result := path.extended ("spec").extended (ise_platform).extended ("bin").extended (l_exe_name).string_representation
 		end
 
 	target_directory: DIRECTORY_NAME_32
@@ -121,24 +113,14 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 
 	include: attached STRING
 			-- eweasel include folder
-		local
-			l_path: like path
 		do
-			l_path := path.twin
-			l_path.extend ("control")
-			create Result.make_from_string (l_path.string_representation)
+			create Result.make_from_string (path.extended ("control").string_representation)
 		end
 
 	init: attached STRING
 			-- eweasel init folder
-		local
-			l_path: like path
 		do
-			l_path := path.twin
-			l_path.extend ("control")
-			l_path.extend ("init")
-
-			create Result.make_from_string (l_path.string_representation)
+			create Result.make_from_string (path.extended ("control").extended ("init").string_representation)
 		end
 
 	eweasel_platform: attached STRING

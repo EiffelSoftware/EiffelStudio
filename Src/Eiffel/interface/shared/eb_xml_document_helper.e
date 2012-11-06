@@ -172,8 +172,7 @@ feature -- Access
 			p: PATH
 		do
 			create p.make_from_string (a_path)
-			p.extend (a_file_name)
-			Result := p.string_representation
+			Result := p.extended (a_file_name).string_representation
 		ensure
 			result_attached: Result /= Void
 		end

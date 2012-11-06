@@ -1025,17 +1025,12 @@ feature {NONE} -- Implementation
 	link_driver
 		local
 			uf: PLAIN_TEXT_FILE
-			app_name: STRING
 			file_name: FILE_NAME_32
 		do
 			if Comp_system.uses_precompiled then
 					-- Target
 				create file_name.make_from_string (project_directory.workbench_path)
-				file_name.set_file_name (System.name)
-				app_name := eiffel_layout.Executable_suffix
-				if not app_name.is_empty then
-					file_name.add_extension (app_name)
-				end
+				file_name.set_file_name (System.name + eiffel_layout.executable_suffix)
 
 				create uf.make_with_name (file_name)
 				if not uf.exists then

@@ -95,7 +95,7 @@ feature -- Basic operation
 			file: RAW_FILE
 		do
 			create Result
-			create file_name.make_from_string (eiffel_layout.bitmaps_path)
+			create file_name.make_from_string (eiffel_layout.bitmaps_path_8)
 			file_name.extend ("png")
 			file_name.extend (a_name + "." + "png")
 			create file.make (file_name.out)

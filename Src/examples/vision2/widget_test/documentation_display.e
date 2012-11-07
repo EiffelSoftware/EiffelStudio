@@ -60,7 +60,7 @@ feature -- Status setting
 			file_name := class_name (widget)
 			file_name.to_lower
 			file_name.append ("_flatshort.rtf")
-			create directory_name.make_from_string (eiffel_layout.shared_application_path)
+			create directory_name.make_from_string (eiffel_layout.shared_application_path_8)
 			directory_name.extend ("flatshort")
 			create full_filename.make_from_string (directory_name.out)
 			full_filename.extend (file_name)

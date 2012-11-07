@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 			filename: FILE_NAME
 			ace_text: STRING
 		do
-			create filename.make_from_string (eiffel_layout.shared_application_path)
+			create filename.make_from_string (eiffel_layout.shared_application_path_8)
 			filename.extend ("templates")
 			filename.extend ("template.ecf")
 			create ace_template_file.make_open_read (filename)
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 			filename: FILE_NAME
 			application_text: STRING
 		do
-			create filename.make_from_string (eiffel_layout.shared_application_path)
+			create filename.make_from_string (eiffel_layout.shared_application_path_8)
 			filename.extend ("templates")
 			filename.extend ("application_template.e")
 			create application_template_file.make_open_read (filename)
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			filename: FILE_NAME
 			common_text: STRING
 		do
-			create filename.make_from_string (eiffel_layout.shared_application_path)
+			create filename.make_from_string (eiffel_layout.shared_application_path_8)
 			filename.extend ("templates")
 			filename.extend ("generation_only")
 			filename.extend (Common_test_file_name)
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 			filename: FILE_NAME
 			test_text: STRING
 		do
-			create filename.make_from_string (eiffel_layout.shared_application_path)
+			create filename.make_from_string (eiffel_layout.shared_application_path_8)
 			filename.extend ("tests")
 			filename.extend (widget_type.as_lower)
 			filename.extend (test_name + ".e")
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 						current_image_number := (string_to_process.substring (1, index_of_comma - 1)).to_integer
 						string_to_process := string_to_process.substring (index_of_comma + 1, string_to_process.count)
 					end
-					create file_name.make_from_string (eiffel_layout.bitmaps_path)
+					create file_name.make_from_string (eiffel_layout.bitmaps_path_8)
 					file_name.extend ("png")
 					file_name.extend ("image" + current_image_number.out + ".png")
 					create file.make (file_name)

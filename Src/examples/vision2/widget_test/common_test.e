@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 			if all_loaded_pixmaps = Void then
 				create all_loaded_pixmaps.make (2)
 			end
-			create filename.make_from_string (eiffel_layout.bitmaps_path)
+			create filename.make_from_string (eiffel_layout.bitmaps_path_8)
 			filename.extend ("png")
 			filename.extend ("image" + a_number.out + ".png")
 			if all_loaded_pixmaps @ filename /= Void then

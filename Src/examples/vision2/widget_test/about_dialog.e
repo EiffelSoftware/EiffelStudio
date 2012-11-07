@@ -60,7 +60,7 @@ feature -- Initialization
 
 				-- Create controls.
 			create eiffel_image
-			create file_name.make_from_string (eiffel_layout.bitmaps_path)
+			create file_name.make_from_string (eiffel_layout.bitmaps_path_8)
 			file_name.extend ("png")
 			file_name.extend ("bm_about.png")
 			create file.make (file_name)

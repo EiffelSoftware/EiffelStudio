@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 			l_type: STRING
 		do
 			l_type := type_to_retrieve
-			create directory_name.make_from_string (eiffel_layout.shared_application_path)
+			create directory_name.make_from_string (eiffel_layout.shared_application_path_8)
 			directory_name.extend ("tests")
 			directory_string := l_type.substring (4, l_type.count)
 			directory_string.to_lower

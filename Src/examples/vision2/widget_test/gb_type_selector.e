@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			file: RAW_FILE
 		do
 			extension := "png"
-			create filename.make_from_string (eiffel_layout.bitmaps_path)
+			create filename.make_from_string (eiffel_layout.bitmaps_path_8)
 			filename.extend (extension)
 			filename.extend (a_type.as_lower + "." + extension)
 			create file.make (filename.out)

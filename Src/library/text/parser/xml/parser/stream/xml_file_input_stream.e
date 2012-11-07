@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 		require
 			a_file_attached: a_file /= Void
 		do
-			set_name (a_file.name_32)
+			set_name (a_file.entry.string_representation)
 			create current_chunk.make_empty
 			chunk_size := default_chunk_size
 			count := a_file.count

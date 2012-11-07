@@ -26,7 +26,7 @@ feature -- Pngs
 		local
 			file_name: FILE_NAME
 		once
-			create file_name.make_from_string (eiffel_layout.bitmaps_path)
+			create file_name.make_from_string (eiffel_layout.bitmaps_path_8)
 			file_name.extend ("png")
 			file_name.extend ("bm_about.png")
 			create Result
@@ -329,7 +329,7 @@ feature {NONE} -- Update
 	Bitmap_path: DIRECTORY_NAME
 			-- Path for Bmp/Xpm for Windows/Unix.
 		once
-			create Result.make_from_string (eiffel_layout.bitmaps_path)
+			create Result.make_from_string (eiffel_layout.bitmaps_path_8)
 			Result.extend (Pixmap_suffix)
 		end
 

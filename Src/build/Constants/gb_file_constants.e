@@ -21,7 +21,7 @@ feature -- Generation constants
 	Default_component_filename: FILE_NAME
 			-- Location of component file.
 		once
-			create Result.make_from_string (eiffel_layout.shared_application_path)
+			create Result.make_from_string (eiffel_layout.shared_application_path_8)
 			Result.extend ("components")
 			Result.set_file_name ("components")
 			Result.add_extension ("xml")
@@ -32,7 +32,7 @@ feature -- Generation constants
 	Component_filename: FILE_NAME
 			-- Location of component file.
 		once
-			create Result.make_from_string (eiffel_layout.hidden_files_path)
+			create Result.make_from_string (eiffel_layout.hidden_files_path_8)
 			Result.set_file_name ("esbuilder_components")
 			Result.add_extension ("xml")
 		ensure
@@ -42,7 +42,7 @@ feature -- Generation constants
 	template_file_location: FILE_NAME
 			-- Location of templates.
 		do
-			create Result.make_from_string (eiffel_layout.shared_application_path)
+			create Result.make_from_string (eiffel_layout.shared_application_path_8)
 			Result.extend ("templates")
 		end
 
@@ -124,7 +124,7 @@ feature -- Preferences
 	default_xml_file: FILE_NAME
 			-- General system level resource specification XML file.			
 		do
-			create Result.make_from_string (eiffel_layout.shared_application_path)
+			create Result.make_from_string (eiffel_layout.shared_application_path_8)
 			Result.extend ("config")
 			Result.extend ("default.xml")
 		ensure

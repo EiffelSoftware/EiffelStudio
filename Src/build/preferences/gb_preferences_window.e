@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 		local
 			l_filename: FILE_NAME
 		do
-			create l_filename.make_from_string (eiffel_layout.bitmaps_path.twin)
+			create l_filename.make_from_string (eiffel_layout.bitmaps_path_8)
 			l_filename.extend ("png")
 			l_filename.extend ("icon_preferences_root.png")
 			create Result
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 		local
 			l_filename: FILE_NAME
 		do
-			create l_filename.make_from_string (eiffel_layout.bitmaps_path.twin)
+			create l_filename.make_from_string (eiffel_layout.bitmaps_path_8)
 			l_filename.extend ("png")
 			l_filename.extend ("icon_preferences_folder.png")
 			create Result

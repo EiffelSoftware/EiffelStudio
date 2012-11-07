@@ -35,7 +35,7 @@ feature -- Status report
 			Result := is_valid_identifier (cn) and then not keywords.has (cn.as_lower)
 		end
 
-	is_valid_group_name (cn: STRING): BOOLEAN
+	is_valid_group_name (cn: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `cn' a valid group name?
 		do
 			Result := is_valid_config_identifier (cn)
@@ -47,23 +47,23 @@ feature -- Status report
 			Result := is_valid_feature_name (encoding_converter.utf32_to_utf8 (fn))
 		end
 
-	is_valid_target_name (tn: STRING): BOOLEAN
+	is_valid_target_name (tn: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `tn' a valid target name?
 		do
 			Result := is_valid_config_identifier (tn)
 		end
 
-	is_valid_system_name (cn: STRING): BOOLEAN
+	is_valid_system_name (cn: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `cn' a valid system name?
 		do
 			Result := is_valid_config_identifier (cn)
 		end
 
-	is_valid_identifier (s: STRING): BOOLEAN
+	is_valid_identifier (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `s' a valid Eiffel identifier?
 		local
 			i: INTEGER
-			cc: CHARACTER
+			cc: CHARACTER_32
 		do
 			Result := s /= Void and then not s.is_empty and then s.item (1).is_alpha
 			from
@@ -77,11 +77,11 @@ feature -- Status report
 			end
 		end
 
-	is_valid_config_identifier (s: STRING): BOOLEAN
+	is_valid_config_identifier (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `s' a valid config identifier which is similar to `is_valid_identifier' but also allows the '.' and '-'?
 		local
 			i: INTEGER
-			cc: CHARACTER
+			cc: CHARACTER_32
 		do
 			Result := s /= Void and then not s.is_empty and then s.item (1).is_alpha
 			from
@@ -143,13 +143,13 @@ feature -- Status report
 			Result implies not basic_operators.has (op);
 		end
 
-	is_bracket_alias_name (s: STRING): BOOLEAN
+	is_bracket_alias_name (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `s' a bracket alias name?
 		do
-			Result := s /= Void and then s.is_equal (bracket_str)
+			Result := s /= Void and then s.same_string (bracket_str)
 		end
 
-	is_constant (s: STRING): BOOLEAN
+	is_constant (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `s' a valid Eiffel constant?
 		do
 			Result := 	is_integer_constant (s) or
@@ -158,25 +158,25 @@ feature -- Status report
 						is_boolean_constant (s)
 		end
 
-	is_integer_constant (s: STRING): BOOLEAN
+	is_integer_constant (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `s' a valid Eiffel constant?
 		do
 			Result := s.is_integer
 		end
 
-	is_double_constant (s: STRING): BOOLEAN
+	is_double_constant (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `s' a valid Eiffel constant?
 		do
 			Result := s.is_double
 		end
 
-	is_string_constant (s: STRING): BOOLEAN
+	is_string_constant (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `s' a valid Eiffel constant?
 		do
 			Result := s.count >= 2 and then (s.item (1) = '%"' and s.item (s.count) = '%"')
 		end
 
-	is_boolean_constant (s: STRING): BOOLEAN
+	is_boolean_constant (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `s' a valid Eiffel constant?
 		do
 			Result := s.is_boolean
@@ -201,7 +201,7 @@ feature {NONE} -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

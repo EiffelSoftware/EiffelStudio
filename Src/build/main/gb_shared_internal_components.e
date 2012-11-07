@@ -45,7 +45,7 @@ feature -- Access
 			directory_name: DIRECTORY_NAME
 		do
 				-- Initialize `pixmap_location' constant.
-			create directory_name.make_from_string (eiffel_layout.bitmaps_path)
+			create directory_name.make_from_string (eiffel_layout.bitmaps_path_8)
 			directory_name.extend ("png")
 			pixmap_location_cell.put (directory_name)
 				-- Initialization of preferences.

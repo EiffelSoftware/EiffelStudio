@@ -693,7 +693,7 @@ feature {NONE} -- Basic operation
 				across l_items as l_files loop
 					l_lib_file := l_files.item
 					if valid_config_extension (l_lib_file) then
-						l_file_name := a_dir.entry.extended (l_lib_file)
+						l_file_name := a_dir.path.extended (l_lib_file)
 						create l_file.make_with_path (l_file_name)
 						if l_file.exists and then l_file.is_plain then
 							l_file_string := l_file_name.string_representation
@@ -712,7 +712,7 @@ feature {NONE} -- Basic operation
 					across l_subdirs as l_dirs loop
 						s32 := l_dirs.item.string_representation
 						if not s32.same_string (".") and not s32.same_string ("..") then -- FIXME: use upcoming PATH.is_dot, and related
-							l_dir_name := a_dir.entry.extended_path (l_dirs.item)
+							l_dir_name := a_dir.path.extended_path (l_dirs.item)
 							create l_file.make_with_path (l_dir_name)
 							if l_file.exists and then l_file.is_directory then
 								add_configs_in_directory (create {DIRECTORY}.make_with_path (l_dir_name), (a_depth - 1).max (-1), a_libraries)

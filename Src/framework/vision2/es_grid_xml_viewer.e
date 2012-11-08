@@ -89,7 +89,7 @@ feature -- Change
 
 feature -- Loading
 
-	load_xml_string (s: STRING)
+	load_xml_string (s: READABLE_STRING_GENERAL)
 		do
 			grid.set_row_count_to (0)
 			if s /= Void and then not s.is_empty then
@@ -103,14 +103,13 @@ feature -- Loading
 			update_columns
 		end
 
-	load_xml_file (fn: STRING)
+	load_xml_file (fn: READABLE_STRING_GENERAL)
 			--
 		local
 			f: RAW_FILE
-			st: PLAIN_TEXT_FILE
 		do
 			grid.set_row_count_to (0)
-			create f.make (fn)
+			create f.make_with_name (fn)
 			if f.exists and then f.is_readable then
 				build_xml_parser
 				if attached xml_parser as p then
@@ -143,13 +142,13 @@ feature {NONE} -- Xml parser implementation
 	build_xml_parser
 			-- Build `xml_parser'
 		local
-			l_fact: XML_LITE_PARSER_FACTORY
+			l_fact: XML_PARSER_FACTORY
 			p: like xml_parser
 		do
 			p := xml_parser
 			if p = Void then
 				create l_fact
-				p := l_fact.new_lite_parser
+				p := l_fact.new_parser
 				p.set_callbacks (Current)
 				xml_parser := p
 			end
@@ -161,7 +160,7 @@ feature {NONE} -- xml callbacks
 
 	tags_row_index: LINKED_STACK [INTEGER]
 
-	log (a_message: STRING)
+	log (a_message: READABLE_STRING_GENERAL)
 		do
 			status_label.set_text (a_message)
 			status_label.refresh_now
@@ -203,7 +202,7 @@ feature {NONE} -- xml callbacks
 			end
 		end
 
-	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN)
+	on_xml_declaration (a_version: READABLE_STRING_32; an_encoding: detachable READABLE_STRING_32; a_standalone: BOOLEAN)
 		local
 			r: EV_GRID_ROW
 			lab: EV_GRID_LABEL_ITEM
@@ -234,12 +233,12 @@ feature {NONE} -- xml callbacks
 			current_depth := current_depth - 1
 		end
 
-	on_error (a_message: STRING)
+	on_error (a_message: READABLE_STRING_32)
 		local
 			r: EV_GRID_ROW
 			lab: EV_GRID_LABEL_ITEM
 		do
-			log ("XML Error: " + a_message)
+			log ({STRING_32} "XML Error: " + a_message)
 			current_depth := current_depth + 1
 			r := next_row
 			lab := new_error_label ("Error")
@@ -251,9 +250,9 @@ feature {NONE} -- xml callbacks
 			current_depth := current_depth - 1
 		end
 
-	on_processing_instruction (a_name: STRING; a_content: STRING)
+	on_processing_instruction (a_name: READABLE_STRING_32; a_content: READABLE_STRING_32)
 		local
-			s: STRING
+			s: STRING_32
 			r: EV_GRID_ROW
 			lab: EV_GRID_LABEL_ITEM
 		do
@@ -261,14 +260,17 @@ feature {NONE} -- xml callbacks
 			r := next_row
 			lab := new_info_label ("Instruction")
 			r.set_item (1, lab)
-			s := a_name + "=%"" + a_content + "%""
+			create s.make_from_string (a_name)
+			s.append_string_general ("=%"")
+			s.append_string_general (a_content)
+			s.append_string_general ("%"")
 			create lab.make_with_text (s)
 			r.set_item (2, lab)
 
 			current_depth := current_depth - 1
 		end
 
-	on_comment (a_content: STRING)
+	on_comment (a_content: READABLE_STRING_32)
 		local
 			r: EV_GRID_ROW
 			lab: EV_GRID_LABEL_ITEM
@@ -282,9 +284,9 @@ feature {NONE} -- xml callbacks
 			current_depth := current_depth - 1
 		end
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 		local
-			s: STRING
+			s: STRING_32
 			lab: EV_GRID_LABEL_ITEM
 			r: EV_GRID_ROW
 		do
@@ -294,14 +296,12 @@ feature {NONE} -- xml callbacks
 				s.append_string (a_namespace)
 				s.append_character (':')
 			end
-			if a_local_part /= Void then
-				s.append_string (a_local_part)
-			end
+			s.append_string (a_local_part)
 			if a_prefix /= Void then
 				s.prepend_character ('-')
 				s.prepend_string (a_prefix)
 			end
-			log ("XML Tag: " + s)
+			log ({STRING_32} "XML Tag: " + s)
 			lab := new_tag_label (s)
 
 			r := next_row
@@ -311,9 +311,9 @@ feature {NONE} -- xml callbacks
 			tags_row_index.put (grid.row_count)
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
 		local
-			s: STRING
+			s: STRING_32
 			r: EV_GRID_ROW
 			lab: EV_GRID_LABEL_ITEM
 		do
@@ -323,14 +323,12 @@ feature {NONE} -- xml callbacks
 				s.append_string (a_namespace)
 				s.append_character (':')
 			end
-			if a_local_part /= Void then
-				s.append_string (a_local_part)
-			end
+			s.append_string (a_local_part)
 			if a_prefix /= Void then
 				s.prepend_character ('-')
 				s.prepend_string (a_prefix)
 			end
-			log ("XML Attribute: " + s)
+			log ({STRING_32} "XML Attribute: " + s)
 			s.append_character ('=')
 			r := next_row
 			create lab.make_with_text (s)
@@ -354,7 +352,7 @@ feature {NONE} -- xml callbacks
 			last_content := Void
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 		local
 			r: EV_GRID_ROW
 			lab: EV_GRID_LABEL_ITEM
@@ -380,9 +378,9 @@ feature {NONE} -- xml callbacks
 			tags_row_index.remove
 		end
 
-	last_content: detachable STRING
+	last_content: detachable STRING_32
 
-	on_content (a_content: STRING)
+	on_content (a_content: READABLE_STRING_32)
 		do
 			if attached last_content as t then
 				t.append_string (a_content)
@@ -527,7 +525,7 @@ feature {NONE} -- Grid event
 
 feature {NONE} -- Row management
 
-	new_tag_label (t: STRING): EV_GRID_LABEL_ITEM
+	new_tag_label (t: READABLE_STRING_GENERAL): EV_GRID_LABEL_ITEM
 			--
 		do
 			create Result.make_with_text (t)
@@ -538,7 +536,7 @@ feature {NONE} -- Row management
 			Result.set_font (tag_font)
 		end
 
-	new_attribute_label (t: STRING): EV_GRID_LABEL_ITEM
+	new_attribute_label (t: READABLE_STRING_GENERAL): EV_GRID_LABEL_ITEM
 			--
 		do
 			create Result.make_with_text (t)
@@ -548,7 +546,7 @@ feature {NONE} -- Row management
 			end
 		end
 
-	new_info_label (t: STRING): EV_GRID_LABEL_ITEM
+	new_info_label (t: READABLE_STRING_GENERAL): EV_GRID_LABEL_ITEM
 			--
 		do
 			create Result.make_with_text (t)
@@ -558,7 +556,7 @@ feature {NONE} -- Row management
 			end
 		end
 
-	new_content_label (t: STRING): EV_GRID_LABEL_ITEM
+	new_content_label (t: READABLE_STRING_GENERAL): EV_GRID_LABEL_ITEM
 			--
 		do
 			create Result.make_with_text (t)
@@ -568,14 +566,14 @@ feature {NONE} -- Row management
 			end
 		end
 
-	new_value_label (t: STRING): EV_GRID_LABEL_ITEM
+	new_value_label (t: READABLE_STRING_GENERAL): EV_GRID_LABEL_ITEM
 			--
 		do
 			create Result.make_with_text (t)
 			Result.set_font (value_font)
 		end
 
-	new_error_label (t: STRING): EV_GRID_LABEL_ITEM
+	new_error_label (t: READABLE_STRING_GENERAL): EV_GRID_LABEL_ITEM
 			--
 		do
 			create Result.make_with_text (t)
@@ -775,8 +773,8 @@ invariant
 	value_font_not_void: value_font /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

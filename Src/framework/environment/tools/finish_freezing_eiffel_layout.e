@@ -40,7 +40,7 @@ feature -- Files
 			is_valid_environment: is_valid_environment
 			windows: {PLATFORM}.is_windows
 		once
-			Result := config_eif_file_name.extended ("config.eif")
+			Result := config_eif_path.extended ("config.eif")
 			if
 				is_user_files_supported and then
 				attached user_priority_file_name (Result, True) as l_user

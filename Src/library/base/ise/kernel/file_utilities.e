@@ -382,7 +382,7 @@ feature -- File operations
 			f: RAW_FILE
 		do
 			create f.make_with_path (old_path)
-			f.rename_file (new_path.string_representation)
+			f.rename_path (new_path)
 		end
 
 

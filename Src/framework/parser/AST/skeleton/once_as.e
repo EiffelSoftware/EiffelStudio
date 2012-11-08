@@ -62,6 +62,12 @@ feature -- Roundtrip
 	internal_keys: detachable KEY_LIST_AS
 			-- Internal once keys, in which "(" and ")" are stored
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := once_keyword_index
+		end
+
 feature -- Properties
 
 	is_once: BOOLEAN = True

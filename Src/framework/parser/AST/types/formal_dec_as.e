@@ -107,6 +107,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := formal.index
+		end
+
 feature -- Convenience
 
 	name: ID_AS

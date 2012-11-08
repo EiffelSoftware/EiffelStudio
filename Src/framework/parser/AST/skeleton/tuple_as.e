@@ -106,6 +106,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := lbracket_symbol_index
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN

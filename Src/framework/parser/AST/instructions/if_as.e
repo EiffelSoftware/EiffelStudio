@@ -100,6 +100,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := if_keyword_index
+		end
+
 feature -- Attributes
 
 	condition: EXPR_AS

@@ -95,6 +95,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := address_symbol_index
+		end
+
 feature -- Properties
 
 	expr: EXPR_AS

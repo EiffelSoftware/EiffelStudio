@@ -51,6 +51,16 @@ feature -- Attributes
 	source: EXPR_AS
 			-- Source of the assignment
 
+feature -- Roundtrip
+
+	index: INTEGER
+			-- <Precursor>
+		do
+			if attached assignment_symbol as s then
+				Result := s.index
+			end
+		end
+
 feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS

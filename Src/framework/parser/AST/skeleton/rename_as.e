@@ -62,6 +62,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := as_keyword_index
+		end
+
 feature -- Attributes
 
 	old_name: FEATURE_NAME

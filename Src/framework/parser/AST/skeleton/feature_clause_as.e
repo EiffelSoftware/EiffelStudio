@@ -47,6 +47,12 @@ feature -- Roundtrip
 
 	feature_clause_end_position: INTEGER
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := feature_keyword.index
+		end
+
 feature -- Attributes
 
 	feature_keyword: KEYWORD_AS

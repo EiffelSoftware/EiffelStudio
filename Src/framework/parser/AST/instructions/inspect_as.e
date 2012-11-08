@@ -80,6 +80,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := inspect_keyword_index
+		end
+
 feature -- Attributes
 
 	switch: EXPR_AS

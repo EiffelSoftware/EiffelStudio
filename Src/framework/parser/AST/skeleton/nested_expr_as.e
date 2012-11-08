@@ -100,6 +100,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := dot_symbol_index
+		end
+
 feature -- Status report
 
 	has_lparan: BOOLEAN

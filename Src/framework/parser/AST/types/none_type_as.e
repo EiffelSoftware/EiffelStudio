@@ -40,6 +40,12 @@ feature -- Roundtrip
 	class_name_literal: ID_AS
 			-- Class name literal
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := class_name_literal.index
+		end
+
 feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS

@@ -59,6 +59,14 @@ feature -- Status Report
 			Result := expr.is_detachable_expression
 		end
 
+feature -- Roundtrip
+
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := expr.index
+		end
+
 feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS

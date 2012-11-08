@@ -78,6 +78,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := when_keyword_index
+		end
+
 feature -- Attributes
 
 	interval: EIFFEL_LIST [INTERVAL_AS]

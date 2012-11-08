@@ -81,12 +81,12 @@ feature -- Access
 			end
 		end
 
-	set_first_breakpoint_slot_index (index: INTEGER)
-			-- Set `first_first_breakpoint_slot_index' to `index'
+	set_first_breakpoint_slot_index (slot_index: INTEGER)
+			-- Set `first_first_breakpoint_slot_index' to `slot_index'.
 		do
-			first_breakpoint_slot_index := index
+			first_breakpoint_slot_index := slot_index
 		ensure
-			first_breakpoint_slot_index_set: first_breakpoint_slot_index = index
+			first_breakpoint_slot_index_set: first_breakpoint_slot_index = slot_index
 		end
 
 feature {INTERNAL_AS} -- Replication

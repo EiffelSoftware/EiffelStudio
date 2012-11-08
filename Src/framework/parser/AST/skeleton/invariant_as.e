@@ -73,6 +73,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := invariant_keyword_index
+		end
+
 feature -- Attribute
 
 	assertion_list: detachable EIFFEL_LIST [TAGGED_AS]

@@ -67,6 +67,12 @@ feature -- Roundtrip
 	current_keyword: KEYWORD_AS
 			-- Keyword "current" associated with this structure		
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := like_keyword_index
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN

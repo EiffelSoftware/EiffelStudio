@@ -296,6 +296,12 @@ feature -- Roundtrip
 			replicated_features := a_replicated_features_list
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := class_keyword_index
+		end
+
 feature -- Roundtrip
 
 	internal_bottom_indexes: detachable INDEXING_CLAUSE_AS

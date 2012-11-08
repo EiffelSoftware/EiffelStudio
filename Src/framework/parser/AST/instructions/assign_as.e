@@ -58,6 +58,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := assignment_symbol_index
+		end
+
 feature -- Attributes
 
 	target: ACCESS_AS

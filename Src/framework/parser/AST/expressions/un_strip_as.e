@@ -129,6 +129,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := strip_keyword_index
+		end
+
 invariant
 	id_list_not_void: id_list /= Void
 

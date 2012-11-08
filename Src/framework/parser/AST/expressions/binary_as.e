@@ -75,6 +75,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := operator_index
+		end
+
 feature -- Status report
 
 	is_detachable_expression: BOOLEAN = True

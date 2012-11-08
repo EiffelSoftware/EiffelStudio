@@ -48,6 +48,16 @@ feature -- Roundtrip
 	dotdot_symbol: detachable SYMBOL_AS
 			-- Symbol ".." associated with this structure
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			if attached dotdot_symbol as s then
+				Result := s.index
+			else
+				Result := lower.index
+			end
+		end
+
 feature -- Attributes
 
 	lower: ATOMIC_AS

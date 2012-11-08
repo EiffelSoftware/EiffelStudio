@@ -92,6 +92,12 @@ feature -- Roundtrip
 	alias_name_literal: detachable STRING_AS
 			-- String literal of alias name in this structure
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := external_keyword_index
+		end
+
 feature -- Attributes
 
 	language_name: EXTERNAL_LANG_AS

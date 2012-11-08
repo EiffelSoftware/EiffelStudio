@@ -65,6 +65,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := colon_symbol_index
+		end
+
 feature -- Access
 
 	id_list: IDENTIFIER_LIST

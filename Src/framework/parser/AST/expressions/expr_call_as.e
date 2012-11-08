@@ -52,6 +52,14 @@ feature -- Status report
 			Result := not attached {CREATION_EXPR_AS} call
 		end
 
+feature -- Roundtrip
+
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := call.index
+		end
+
 feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS

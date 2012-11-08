@@ -172,6 +172,15 @@ feature -- Roundtrip
 	internal_selecting: detachable SELECT_CLAUSE_AS
 			-- Internal select clause
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := end_keyword_index
+			if Result <= 0 then
+				Result := type.index
+			end
+		end
+
 feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS

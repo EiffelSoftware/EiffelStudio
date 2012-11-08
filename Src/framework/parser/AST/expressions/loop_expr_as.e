@@ -110,6 +110,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := qualifier_keyword_index
+		end
+
 feature -- Attributes
 
 	iteration: ITERATION_AS

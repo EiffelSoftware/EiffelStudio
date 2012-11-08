@@ -129,6 +129,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := loop_keyword_index
+		end
+
 feature -- Attributes
 
 	iteration: detachable ITERATION_AS

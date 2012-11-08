@@ -79,6 +79,14 @@ feature -- Location
 			-- Position for the following construct after current.
 			-- Useful to extract comments of an attribute
 
+feature -- Roundtrip
+
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := body.index
+		end
+
 feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS

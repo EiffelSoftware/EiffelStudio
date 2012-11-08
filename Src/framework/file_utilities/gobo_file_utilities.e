@@ -13,9 +13,6 @@ expanded class
 inherit
 
 	FILE_UTILITIES
-		redefine
-			create_directory
-		end
 
 	KL_SHARED_FILE_SYSTEM
 		export
@@ -181,7 +178,7 @@ feature -- Query
 		require
 			a_path_attached: a_path /= Void
 			not_a_path_is_empty: not a_path.is_empty
-			a_path_exists: make_raw_file (a_path).exists or make_directory (a_path).exists
+			a_path_exists: make_raw_file (a_path).exists or directory_exists (a_path)
 		local
 			u: UTF_CONVERTER
 		do
@@ -194,7 +191,7 @@ feature -- Query
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
-			result_exists: make_raw_file (Result).exists or make_directory (Result).exists
+			result_exists: make_raw_file (Result).exists or directory_exists (Result)
 			result_is_absolute: file_system.is_absolute_pathname (Result)
 		end
 
@@ -264,7 +261,6 @@ feature {NONE} -- Basic operations
 			l_dir: KL_DIRECTORY
 			l_count, i: INTEGER
 			l_sub_results: ARRAYED_LIST [STRING]
-			l_path_name: DIRECTORY_NAME
 		do
 			if a_recursive then
 				l_dn := a_folder.as_string_8
@@ -282,9 +278,10 @@ feature {NONE} -- Basic operations
 				until
 					i > l_count
 				loop
-					create l_path_name.make_from_string (l_dn)
-					l_path_name.extend (l_directories.item (i))
-					if attached {STRING} l_path_name.string as l_path and then is_path_applicable (l_path, a_include, a_exclude) then
+					if
+						attached (create {PATH}.make_from_string (l_dn)).extended (l_directories.item (i)).string_representation as l_path and then
+						is_path_applicable (l_path, a_include, a_exclude)
+					then
 						Result.extend (l_path)
 					end
 					i := i + 1
@@ -331,7 +328,6 @@ feature {NONE} -- Basic operations
 			l_dir: KL_DIRECTORY
 			l_files: ARRAY [STRING]
 			l_count, i: INTEGER
-			l_path_name: DIRECTORY_NAME
 		do
 			if a_recursive then
 				l_dn := a_folder.as_string_8
@@ -350,9 +346,10 @@ feature {NONE} -- Basic operations
 				until
 					i > l_count
 				loop
-					create l_path_name.make_from_string (l_dn)
-					l_path_name.extend (l_files.item (i))
-					if attached {STRING} l_path_name.string as l_file and then is_path_applicable (l_file, a_include, a_exclude) then
+					if
+						attached (create {PATH}.make_from_string (l_dn)).extended (l_files.item (i)).string_representation as l_file and then
+						is_path_applicable (l_file, a_include, a_exclude)
+					then
 						Result.extend (l_file)
 					end
 					i := i + 1
@@ -366,9 +363,10 @@ feature {NONE} -- Basic operations
 					until
 						i > l_count
 					loop
-						create l_path_name.make_from_string (l_dn)
-						l_path_name.extend (l_directories.item (i))
-						if attached {STRING} l_path_name.string as l_path and then is_path_applicable (l_path, Void, a_exclude) then
+						if
+							attached (create {PATH}.make_from_string (l_dn)).extended (l_directories.item (i)).string_representation as l_path and then
+							is_path_applicable (l_path, Void, a_exclude)
+						then
 								-- Note: checking applicablity of the path does not check the include expression. This is because
 								--       directories can be excluded but not included. Files can be included.
 							Result.append (internal_scan_for_files (l_path, (a_levels - 1).max (-1), a_include, a_exclude, True))
@@ -409,40 +407,6 @@ feature -- File name operations
 		end
 
 feature -- Directory operations
-
-	frozen create_directory (a_path: READABLE_STRING_GENERAL)
-			-- Creates a directory and any parent directories if they do not exist.
-			--
-			-- `a_path': The directory to create.
-		local
-			l_path: STRING_8
-			d: DIRECTORY
-			u: UTF_CONVERTER
-			is_retried: BOOLEAN
-		do
-			if not is_retried then
-				d := make_directory (a_path)
-				if not d.exists then
-					if attached {READABLE_STRING_32} a_path as p then
-						l_path := u.string_32_to_utf_8_string_8 (p)
-						if not file_system.is_root_directory (l_path) and then attached file_system.dirname (l_path) as l_parent_path then
-								-- Create parent directory
-							create_directory (u.utf_8_string_8_to_string_32 (l_parent_path))
-						end
-					else
-						l_path := a_path.as_string_8
-						if not file_system.is_root_directory (l_path) and then attached file_system.dirname (l_path) as l_parent_path then
-								-- Create parent directory
-							create_directory (l_parent_path)
-						end
-					end
-					d.create_dir
-				end
-			end
-		rescue
-			is_retried := True
-			retry
-		end
 
 	frozen create_directory_for_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Creates a directory and any parent directories if they do not exist, for a file path

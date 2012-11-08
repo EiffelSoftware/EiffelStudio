@@ -82,17 +82,21 @@ feature -- Visit nodes
 			-- Visit `a_system'.
 		local
 			l_target: CONF_TARGET
+			utf: UTF_CONVERTER
 		do
 			create text.make_from_string (header)
 			if not text.is_empty then
 				append_text ("%N")
 			end
 			append_text_indent ("<system")
-			append_text (" xmlns=%""+Namespace+"%"")
+			append_text (" xmlns=%"")
+			append_text_escaped (Namespace)
+--Alternative:	append_text (utf.string_32_to_utf_8_string_8 (Namespace)) -- FIXME: maybe add utf-8 BOM ...
+			append_text ("%"")
 			append_text (" xmlns:xsi=%"http://www.w3.org/2001/XMLSchema-instance%"")
-			append_text (" xsi:schemaLocation=%""+Schema+"%"")
+			append_text (" xsi:schemaLocation=%"" + Schema + "%"")
 			append_text_attribute ("name", a_system.name)
-			append_text (" uuid=%""+a_system.uuid.out+"%"")
+			append_text (" uuid=%"" + a_system.uuid.out + "%"")
 			if not a_system.is_readonly then
 				append_text (" readonly=%"false%"")
 			end
@@ -471,7 +475,7 @@ feature {NONE} -- Implementation
 			text.append (a_text)
 		end
 
-	append_text_escaped (v: READABLE_STRING_32)
+	append_text_escaped (v: READABLE_STRING_GENERAL)
 			-- Append `v' replacing special characters by character references.
 		require
 			attached_v: v /= Void
@@ -1151,7 +1155,7 @@ feature {NONE} -- Implementation
 			a_note_not_void: a_note /= Void
 		local
 			l_name, l_value: STRING
-			l_attr: HASH_TABLE [STRING, STRING]
+			l_attr: like {CONF_NOTE_ELEMENT}.attributes
 		do
 			if not a_note.element_name.is_empty then
 				append_text_indent ("<")

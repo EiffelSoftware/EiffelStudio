@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 			src_not_void: src /= Void
 		local
 			l_note, l_notes, l_auto_note: detachable CONF_NOTE_ELEMENT
-			l_attributes: HASH_TABLE [STRING, STRING]
+			l_attributes: like {CONF_NOTE_ELEMENT}.attributes
 			l_auto_value: STRING
 		do
 			if enabled then

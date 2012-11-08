@@ -23,7 +23,7 @@ inherit
 
 feature -- Factory
 
-	new_class (a_file_name: STRING; a_group: CLUSTER_I; a_path: STRING; a_classname: STRING): EIFFEL_CLASS_I
+	new_class (a_file_name: STRING_32; a_group: CLUSTER_I; a_path: STRING_32; a_classname: STRING_8): EIFFEL_CLASS_I
 			-- Create a `CONF_CLASS' object.
 		do
 			create Result.make (a_file_name, a_group, a_path, a_classname, Current)
@@ -41,7 +41,7 @@ feature -- Factory
 			create Result.make_from_partial (a_partial_classes, a_group, a_base_location, Current)
 		end
 
-	new_cluster (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CLUSTER_I
+	new_cluster (a_name: STRING_8; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CLUSTER_I
 			-- Create a `CONF_CLUSTER' object.
 		do
 			create Result.make (a_name, a_directory, a_target)
@@ -72,7 +72,7 @@ feature -- Factory
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

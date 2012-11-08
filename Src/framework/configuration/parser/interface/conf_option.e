@@ -298,7 +298,7 @@ feature -- Access queries
 		require
 			a_warning_valid: is_warning_known (a_warning)
 		do
-			Result := is_warning and then (warnings = Void or else (not warnings.has_key (a_warning) or else warnings.found_item))
+			Result := is_warning and then (not attached warnings as w or else (not w.has_key (a_warning) or else w.found_item))
 		end
 
 feature {CONF_ACCESS} -- Update, stored in configuration file.
@@ -325,17 +325,21 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			added: debugs.has (a_name) and then debugs.item (a_name) = an_enabled
 		end
 
-	add_warning (a_name: STRING; an_enabled: BOOLEAN)
+	add_warning (a_name: STRING_8; an_enabled: BOOLEAN)
 			-- Add a warning.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 			a_name_lower: a_name.is_equal (a_name.as_lower)
 			known_warning: is_warning_known (a_name)
+		local
+			w: like warnings
 		do
-			if warnings = Void then
-				create warnings.make (1)
+			w := warnings
+			if w = Void then
+				create w.make (1)
+				warnings := w
 			end
-			warnings.force (an_enabled, a_name)
+			w.force (an_enabled, a_name)
 		ensure
 			added: warnings.has (a_name) and then warnings.item (a_name) = an_enabled
 		end

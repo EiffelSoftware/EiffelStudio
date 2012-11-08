@@ -117,37 +117,44 @@ feature {NONE} -- Constants
 
 feature -- Status report
 
-	is_namespace_known (n: like latest_namespace): BOOLEAN
+	is_namespace_known (n: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is namespace `n' known?
 		require
 			n_attached: attached n
 		do
-			Result := namespace_order.has (n)
+			Result := n.is_valid_as_string_8 and then namespace_order.has (n.as_string_8)
 		ensure
-			consistency: Result = namespace_order.has (n)
+			consistency: Result = n.is_valid_as_string_8 and then namespace_order.has (n.as_string_8)
 		end
 
 feature -- Normalization
 
-	normalized_namespace (n: like latest_namespace): like latest_namespace
+	normalized_namespace (n: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
 			-- A namespace constant that matches `n' or
 			-- the original value if there are no matches.
 		require
-			n_attached: attached n
+			n_attached: n /= Void
+		local
+			n8: STRING_8
 		do
-			if n.is_equal (namespace_1_0_0) then Result := namespace_1_0_0
-			elseif n.is_equal (namespace_1_2_0) then Result := namespace_1_2_0
-			elseif n.is_equal (namespace_1_3_0) then Result := namespace_1_3_0
-			elseif n.is_equal (namespace_1_4_0) then Result := namespace_1_4_0
-			elseif n.is_equal (namespace_1_5_0) then Result := namespace_1_5_0
-			elseif n.is_equal (namespace_1_6_0) then Result := namespace_1_6_0
-			elseif n.is_equal (namespace_1_7_0) then Result := namespace_1_7_0
-			elseif n.is_equal (namespace_1_8_0) then Result := namespace_1_8_0
-			elseif n.is_equal (namespace_1_9_0) then Result := namespace_1_9_0
-			elseif n.is_equal (namespace_1_10_0) then Result := namespace_1_10_0
-			elseif n.is_equal (latest_namespace) then Result := latest_namespace
+			if n.is_valid_as_string_8 then
+				n8 := n.as_string_8
+				if n.same_string (namespace_1_0_0) then Result := namespace_1_0_0
+				elseif n.same_string (namespace_1_2_0) then Result := namespace_1_2_0
+				elseif n.same_string (namespace_1_3_0) then Result := namespace_1_3_0
+				elseif n.same_string (namespace_1_4_0) then Result := namespace_1_4_0
+				elseif n.same_string (namespace_1_5_0) then Result := namespace_1_5_0
+				elseif n.same_string (namespace_1_6_0) then Result := namespace_1_6_0
+				elseif n.same_string (namespace_1_7_0) then Result := namespace_1_7_0
+				elseif n.same_string (namespace_1_8_0) then Result := namespace_1_8_0
+				elseif n.same_string (namespace_1_9_0) then Result := namespace_1_9_0
+				elseif n.same_string (namespace_1_10_0) then Result := namespace_1_10_0
+				elseif n.same_string (latest_namespace) then Result := latest_namespace
+				else
+						-- Unknown namespace.
+					Result := n
+				end
 			else
-					-- Unknown namespace.
 				Result := n
 			end
 		ensure
@@ -156,7 +163,7 @@ feature -- Normalization
 
 feature -- Comparison
 
-	is_before_or_equal (a, b: like latest_namespace): BOOLEAN
+	is_before_or_equal (a: detachable READABLE_STRING_GENERAL; b: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is namespace `a' less or equal to `b'?
 			-- (True if `a' is unknown.)
 		require
@@ -164,12 +171,12 @@ feature -- Comparison
 			b_known: is_namespace_known (b)
 		do
 				-- Namespace strings cannot be compared directly because they are not lexicographically ordered.
-			Result := not attached a or else not namespace_order.has (a) or else namespace_order.item (a) <= namespace_order.item (b)
+			Result := a = Void or else (attached namespace_order.item (a.to_string_8) as ns_a implies ns_a <= namespace_order.item (b.to_string_8))
 		ensure
-			definition: Result = (not attached a or else not namespace_order.has (a) or else namespace_order.item (a) <= namespace_order.item (b))
+			definition: Result = (a = Void or else (attached namespace_order.item (a.to_string_8) as ns_a implies ns_a <= namespace_order.item (b.to_string_8)))
 		end
 
-	is_after_or_equal (a, b: like latest_namespace): BOOLEAN
+	is_after_or_equal (a: detachable READABLE_STRING_GENERAL; b: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is namespace `a' greater or equal to `b'?
 			-- (True if `a' is unknown.)
 		require
@@ -177,9 +184,9 @@ feature -- Comparison
 			b_known: is_namespace_known (b)
 		do
 				-- Namespace strings cannot be compared directly because they are not lexicographically ordered.
-			Result := not attached a or else not namespace_order.has (a) or else namespace_order.item (a) >= namespace_order.item (b)
+			Result := a = Void or else (attached namespace_order.item (a.to_string_8) as ns_a implies ns_a >= namespace_order.item (b.to_string_8))
 		ensure
-			definition: Result = (not attached a or else not namespace_order.has (a) or else namespace_order.item (a) >= namespace_order.item (b))
+			definition: Result = (a = Void or else (attached namespace_order.item (a.to_string_8) as ns_a implies ns_a >= namespace_order.item (b.to_string_8)))
 		end
 
 feature {NONE} -- Ordering

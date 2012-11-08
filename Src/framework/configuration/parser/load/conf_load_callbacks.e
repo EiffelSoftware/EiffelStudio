@@ -50,7 +50,7 @@ feature -- Status
 
 feature -- Callbacks
 
-	on_error (a_message: STRING)
+	on_error (a_message: READABLE_STRING_32)
 			-- Event producer detected an error.
 		do
 			is_invalid_xml := True
@@ -80,17 +80,17 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	check_uuid (a_value: STRING): BOOLEAN
+	is_valid_uuid (a_value: READABLE_STRING_GENERAL): BOOLEAN
 			-- Check that `a_value' is a valid uuid.
 		require
 			a_value_not_void: a_value /= Void
 		local
 			l_regexp: REGULAR_EXPRESSION
 		do
-			if not a_value.is_empty then
+			if not a_value.is_empty and then a_value.is_valid_as_string_8 then
 				create l_regexp
 				l_regexp.compile ("^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$")
-				l_regexp.match (a_value)
+				l_regexp.match (a_value.to_string_8)
 				if l_regexp.has_matched then
 					Result := True
 				else
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			no_error_implies_result: not is_error implies Result
 		end
 
-	check_version (a_value: STRING)
+	check_version (a_value: detachable READABLE_STRING_GENERAL)
 			-- Check that `a_value' is the correct version.
 		do
 			if a_value = Void then
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 					-- This is a top-level element, its namespace will be used
 					-- to process the complete configuration file.
 				current_namespace := normalized_namespace (a_value)
-			elseif n /~ a_value then
+			elseif not a_value.same_string (n) then
 					-- Nested element has some different namespace.
 					-- Instead of reporting an error it's possible to skip the elements from a
 					-- different namespace.
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 			last_warning.force (an_error)
 		end
 
-	set_parse_error_message (a_message: STRING)
+	set_parse_error_message (a_message: READABLE_STRING_GENERAL)
 			-- Report a parse error with a message `a_message' if the current namespace is known.
 			-- Report a parse warning with a message `a_message' otherwise.
 		local

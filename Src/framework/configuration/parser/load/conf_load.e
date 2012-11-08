@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 					is_error := True
 					last_error := create {CONF_ERROR_FILE}.make (a_file)
 				else
-					create {XML_LITE_STOPPABLE_PARSER} l_parser.make
+					create {XML_STOPPABLE_PARSER} l_parser.make
 					a_callback.set_associated_parser (l_parser)
 					create l_end_tag_checker.set_next (a_callback)
 					l_end_tag_checker.set_associated_parser (l_parser)

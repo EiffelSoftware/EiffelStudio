@@ -1,9 +1,10 @@
 note
-	description	: "Object that encapsulates all the clusters and the classes of the project%
-				  %The favorites are project-wide."
+	description	: "[
+				Object that encapsulates all the clusters and the classes of the project
+				The favorites are project-wide.
+			]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Xavier Rousselot"
 	date		: "$Date$"
 	revision	: "$Revision$"
 
@@ -21,7 +22,7 @@ inherit
 			default_create
 		end
 
-	SHARED_EXEC_ENVIRONMENT
+	SHARED_EXECUTION_ENVIRONMENT
 		undefine
 			default_create
 		end
@@ -476,7 +477,7 @@ feature -- Element change
 			retry
 		end
 
-	add_class_to_cluster (a_class: STRING; a_cluster: CONF_CLUSTER; a_path: STRING; a_class_name: STRING; a_perform_quickmelt: BOOLEAN)
+	add_class_to_cluster (a_class: READABLE_STRING_GENERAL; a_cluster: CONF_CLUSTER; a_path: READABLE_STRING_GENERAL; a_class_name: STRING; a_perform_quickmelt: BOOLEAN)
 			-- Add class with file name `a_class' to `a_cluster' under `a_path' and notify observers.
 		require
 			a_class_not_void: a_class /= Void
@@ -488,21 +489,18 @@ feature -- Element change
 			l_folder: EB_SORTED_CLUSTER
 			l_new_class: EIFFEL_CLASS_I
 			l_clu: CLUSTER_I
-			l_classes: HASH_TABLE [EIFFEL_CLASS_I, STRING]
 			l_fact: CONF_COMP_FACTORY
 		do
 			create l_fact
 			l_clu ?= a_cluster
 			check cluster_i: l_clu /= Void end
-			l_new_class := l_fact.new_class (a_class, l_clu, a_path, a_class_name)
+			l_new_class := l_fact.new_class (a_class.to_string_32, l_clu, a_path.to_string_32, a_class_name)
 			if not l_clu.classes_set then
-				create l_classes.make (1)
-				l_clu.set_classes (l_classes)
-				create l_classes.make (1)
-				l_clu.set_classes_by_filename (l_classes)
+				l_clu.set_classes (create {like {CLUSTER_I}.classes}.make (1))
+				l_clu.set_classes_by_filename (create {like {CLUSTER_I}.classes_by_filename}.make (1))
 			end
 			l_clu.classes.force (l_new_class, l_new_class.name)
-			l_clu.classes_by_filename.force (l_new_class, a_path + "/" + l_new_class.base_name)
+			l_clu.classes_by_filename.force (l_new_class, a_path.to_string_32 + {STRING_32} "/" + l_new_class.base_name)
 
 				-- update folder
 			l_folder := folder_from_cluster (a_cluster)
@@ -585,8 +583,8 @@ feature -- Element change
 				end
 			end
 				-- create empty class list, so that the folder can be displayed
-			last_added_cluster.set_classes (create {HASH_TABLE [EIFFEL_CLASS_I, STRING]}.make (0))
-			last_added_cluster.set_classes_by_filename (create {HASH_TABLE [EIFFEL_CLASS_I, STRING]}.make (0))
+			last_added_cluster.set_classes (create {like last_added_cluster.classes}.make (0))
+			last_added_cluster.set_classes_by_filename (create {like last_added_cluster.classes_by_filename}.make (0))
 
 			if a_parent /= Void and then a_parent.is_cluster then
 				if a_parent.is_override then

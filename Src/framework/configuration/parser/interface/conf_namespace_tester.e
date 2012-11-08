@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Access
 
-	namespace: like latest_namespace
+	namespace: READABLE_STRING_GENERAL
 			-- Associated namespace.
 			-- Used by `includes_this_or_before' and `includes_this_or_after'.
 

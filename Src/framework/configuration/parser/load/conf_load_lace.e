@@ -131,7 +131,7 @@ feature -- Basic operation
 					-- disable some warnings by default
 				current_options.add_warning (w_vjrv, False)
 				current_options.add_warning (w_export_class_missing, False)
-				if current_options.warnings /= Void and then not current_options.warnings.has (w_syntax) then
+				if attached current_options.warnings as l_warnings and then not l_warnings.has (w_syntax) then
 					current_options.add_warning (w_syntax, False)
 				end
 

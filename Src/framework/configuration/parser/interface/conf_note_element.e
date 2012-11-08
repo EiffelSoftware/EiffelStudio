@@ -22,17 +22,17 @@ create {CONF_NOTE_ELEMENT}
 
 feature {NONE} -- Initialization
 
-	make (a_element_name: like element_name)
+	make (a_element_name: READABLE_STRING_GENERAL)
 			-- Initialization
 		require
 			a_element_name_not_void:  a_element_name /= Void
 		do
 			make_list (0)
-			element_name := a_element_name
+			element_name := a_element_name.to_string_32
 			create attributes.make (0)
 			create content.make_empty
 		ensure
-			element_name_set: element_name = a_element_name
+			element_name_set: a_element_name.same_string (element_name)
 		end
 
 feature {CONF_ACCESS} -- Element Change
@@ -47,12 +47,12 @@ feature {CONF_ACCESS} -- Element Change
 			attributes_set: attributes = a_attri
 		end
 
-	set_content (a_content: like content)
+	set_content (a_content: READABLE_STRING_GENERAL)
 			-- Set `content' with `a_content'.
 		require
 			a_content_not_void: a_content /= Void
 		do
-			content := a_content
+			content := a_content.to_string_32
 		ensure
 			content_set: content = a_content
 		end
@@ -65,21 +65,21 @@ feature {CONF_ACCESS} -- Element Change
 			parent_set: parent = a_parent
 		end
 
-	add_attribute (a_name, a_value: STRING)
+	add_attribute (a_name, a_value: READABLE_STRING_GENERAL)
 			-- Add attribute with `a_name' and `a_value'.
 		do
-			attributes.force (a_value, a_name.as_lower)
+			attributes.force (a_value.to_string_32, a_name.as_string_8.as_lower)
 		end
 
 feature -- Access
 
-	element_name: STRING
+	element_name: STRING_32
 			-- Name of the element
 
-	attributes: HASH_TABLE [STRING, STRING]
+	attributes: HASH_TABLE [STRING_32, STRING_8]
 			-- Attributes
 
-	content: STRING
+	content: STRING_32
 			-- Content
 
 	parent: detachable CONF_NOTE_ELEMENT
@@ -91,7 +91,7 @@ invariant
 	content_not_void: content /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -10,18 +10,18 @@ note
 class E_ACE
 
 inherit
-
 	SHARED_WORKBENCH
 
 feature -- Properties
 
-	file_name: STRING
+	file_name: STRING_32
 			-- Path to the universe/system description
 		do
 			Result := Lace.file_name
 		end
 
 feature -- Access
+
 	date_has_changed: BOOLEAN
 			-- Has the date changed for the lace file
 		do
@@ -42,7 +42,7 @@ feature -- Access
 		local
 			a_file: RAW_FILE
 		do
-			create a_file.make (file_name)
+			create a_file.make_with_name (file_name)
 			if a_file.exists and then a_file.is_readable then
 				a_file.open_read
 				a_file.read_stream (a_file.count)
@@ -51,7 +51,7 @@ feature -- Access
 			end
 		end
 
-	valid_file_name (f_name: STRING): BOOLEAN
+	valid_file_name (f_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `f_name' a valid file name (i.e
 			-- does it exist and is it readable)?
 		require
@@ -59,24 +59,24 @@ feature -- Access
 		local
 			f: PLAIN_TEXT_FILE
 		do
-			create f.make (f_name);
+			create f.make_with_name (f_name)
 			Result := f.exists and then f.is_readable
 		end
 
 feature -- Setting
 
-	set_file_name (f_name: STRING)
+	set_file_name (f_name: detachable READABLE_STRING_GENERAL)
 			-- Set lace_file_name to `f_name'.
 		do
 			if f_name /= Void then
-				Lace.set_file_name (f_name)
+				Lace.set_file_name (f_name.to_string_32)
 			end
 		ensure
-			file_name_set: f_name /= Void implies equal (f_name, file_name)
+			file_name_set: f_name /= Void implies f_name.same_string (file_name)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -89,22 +89,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class E_ACE

@@ -449,7 +449,7 @@ feature -- Status report
 	file_name: FILE_NAME_32
 			-- Full file name of the class
 		do
-			create Result.make_from_string (group.location.build_path (path, ""))
+			create Result.make_from_string (group.location.build_path (path, {STRING_32} ""))
 			Result.set_file_name (base_name)
 		ensure
 			file_name_not_void: Result /= Void

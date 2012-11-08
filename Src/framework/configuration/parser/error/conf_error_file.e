@@ -25,16 +25,16 @@ feature {NONE} -- Initialization
 			file := a_file
 		end
 
-	make_with_config (a_file, a_orig_file, a_config: STRING)
+	make_with_config (a_file, a_orig_file, a_config: READABLE_STRING_GENERAL)
 			-- Create.
 		require
 			a_file_not_void: a_file /= Void
 			a_orig_file_not_void: a_orig_file /= Void
 			a_config_not_void: a_config /= Void
 		do
-			file := a_file
-			orig_file := a_orig_file
-			config := a_config
+			file := a_file.to_string_32
+			set_original_file (a_orig_file)
+			set_config (a_config)
 		end
 
 feature -- Access
@@ -52,30 +52,30 @@ feature -- Access
 				file_not_void: file /= Void
 			end
 			Result := {STRING_32} "Could not open file: " + file
-			if orig_file /= Void then
-				Result.append ({STRING_32} "%N" + orig_file)
+			if attached orig_file as l_orig_file then
+				Result.append ({STRING_32} "%N" + l_orig_file)
 			end
-			if config /= Void then
-				Result.append ({STRING_32} "%NConfiguration: " + config)
+			if attached config as l_config then
+				Result.append ({STRING_32} "%NConfiguration: " + l_config)
 			end
 		end
 
 feature -- Update
 
-	set_config (a_config: like config)
+	set_config (a_config: READABLE_STRING_GENERAL)
 			-- Set `config' to `a_config'.
 		require
 			a_config_not_void: a_config /= Void
 		do
-			config := a_config
+			config := a_config.to_string_32
 		end
 
-	set_original_file (a_file: like orig_file)
+	set_original_file (a_file: READABLE_STRING_GENERAL)
 			-- Set `orig_file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
 		do
-			orig_file := a_file
+			orig_file := a_file.to_string_32
 		ensure
 			orig_file_set: orig_file = a_file
 		end

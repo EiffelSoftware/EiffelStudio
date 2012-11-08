@@ -106,7 +106,8 @@ feature {NONE} -- Update
 		require
 			no_lace_file: Eiffel_ace.file_name = Void
 		local
-			file_name, cmd: STRING
+			file_name: STRING_32
+			s, cmd: STRING
 			option: CHARACTER
 			exit: BOOLEAN
 			u: FILE_UTILITIES
@@ -132,9 +133,11 @@ feature {NONE} -- Update
 				when 's' then
 					localized_print (ewb_names.file_name_with_default)
 					io.read_line;
-					file_name := io.last_string;
-					if not file_name.is_empty then
-						Eiffel_ace.set_file_name (file_name.twin);
+					s := io.last_string;
+					if not s.is_empty then
+						create file_name.make (s.count)
+						file_name.append (s)
+						Eiffel_ace.set_file_name (file_name);
 					else
 						create file.make_with_name ("Ace.ace");
 						if file.exists then
@@ -152,10 +155,12 @@ feature {NONE} -- Update
 				when 't' then
 					localized_print (ewb_names.file_name)
 					io.read_line
-					file_name := io.last_string
-					if file_name.is_empty then
+					s := io.last_string
+					if s.is_empty then
 						exit := True
 					else
+						create file_name.make (s.count)
+						file_name.append (s)
 						u.copy_file (eiffel_layout.default_config_file_name.string_representation, file_name)
 						Eiffel_ace.set_file_name (file_name.twin)
 						edit (Eiffel_ace.file_name)
@@ -263,7 +268,7 @@ feature {NONE} -- Compilation
 			end
 		end
 
-	check_ace_file (fn: STRING)
+	check_ace_file (fn: READABLE_STRING_GENERAL)
 			-- Check that the Ace file exists and is readable and plain
 		local
 			f: PLAIN_TEXT_FILE

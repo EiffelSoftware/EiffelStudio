@@ -568,14 +568,13 @@ feature {NONE} -- Implementation
 			a_config_data_not_void: a_config_data /= Void
 			a_file_not_void: a_file /= Void
 		local
-			l_file: RAW_FILE
-			l_u: FILE_UTILITIES
+			l_file: detachable RAW_FILE
 			l_facility: SED_STORABLE_FACILITIES
 			l_writer: SED_MEDIUM_READER_WRITER
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				l_file := l_u.make_raw_file (a_file)
+				create l_file.make_with_name (a_file)
 				l_file.create_read_write
 				create l_writer.make (l_file)
 				create l_facility

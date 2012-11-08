@@ -195,7 +195,7 @@ feature -- Implementation
 		do
 			create reader
 			if attached {FINISH_FREEZING_EIFFEL_LAYOUT} eiffel_layout as l_layout then
-				reader.parse_file (l_layout.config_eif_file_name.string_representation, a_options)
+				reader.parse_file (l_layout.config_eif_file_name, a_options)
 			else
 				check not_correctly_initialized: False end
 			end

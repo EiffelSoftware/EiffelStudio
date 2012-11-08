@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "[
 					Abstract representation of a button in a ribbon.
 					The Button is a control the user can click to provide input to an application.
@@ -53,19 +53,19 @@ feature -- Access
 	is_enabled: BOOLEAN
 			-- If current has been checked?
 		require
-			has_ribbon: attached ribbon
-			ribbon_exists: attached ribbon as l_ribbon and then l_ribbon.exists
+			ribbon_exists: attached ribbon as l_ribbon implies l_ribbon.exists
 		local
 			l_key: EV_PROPERTY_KEY
 			l_value: EV_PROPERTY_VARIANT
 			l_command_id: NATURAL_32
 		do
-			l_command_id := command_list.item (command_list.lower)
-			check command_id_valid: l_command_id /= 0 end
-
-			if attached ribbon as l_ribbon then
+			if is_enabled_delayed then
+				Result := internal_is_enabled
+			elseif attached ribbon as l_ribbon then
 				create l_key.make_enabled
 				create l_value.make_empty
+				l_command_id := command_list.item (command_list.lower)
+				check command_id_valid: l_command_id /= 0 end
 				l_ribbon.get_command_property (l_command_id, l_key, l_value)
 				Result := l_value.boolean_value
 				l_value.destroy
@@ -77,34 +77,28 @@ feature -- Command
 	set_enabled (a_bool: BOOLEAN)
 			-- Set `is_enabled' with `a_bool'
 		require
-			has_ribbon: attached ribbon
-			ribbon_exists: attached ribbon as l_ribbon and then l_ribbon.exists
+			ribbon_exists: attached ribbon as l_ribbon implies l_ribbon.exists
 		local
 			l_key: EV_PROPERTY_KEY
 			l_value: EV_PROPERTY_VARIANT
 			l_command_id: NATURAL_32
 			l_result: BOOLEAN
 		do
-			l_command_id := command_list.item (command_list.lower)
-			check command_id_valid: l_command_id /= 0 end
-
 			if attached ribbon as l_ribbon then
+					-- Ribbon was created. Regardless of the value of `is_enabled_delayed'
+					-- we should now always go through the ribbon.
+				is_enabled_delayed := False
+				l_command_id := command_list.item (command_list.lower)
+				check command_id_valid: l_command_id /= 0 end
 				create l_key.make_enabled
 				create l_value.make_empty
 				l_value.set_boolean_value (a_bool)
 				l_result := l_ribbon.set_command_property (l_command_id, l_key, l_value)
 				l_value.destroy
 			end
-
 			if not l_result then
-				if not a_bool then
-					-- Setting value to False failed
-					-- Set it later
-					delay_set_enabled_to_false := True
-				else
-					-- Do not need to set it since it's default value
-					delay_set_enabled_to_false := False
-				end
+				is_enabled_delayed := True
+				internal_is_enabled := a_bool
 			end
 		end
 
@@ -143,10 +137,10 @@ feature {EV_RIBBON} -- Command
 				elseif l_key.is_small_image or l_key.is_large_image then
 					Result := update_property_for_image (a_command_id, a_property_key, a_property_current_value, a_property_new_value)
 				elseif l_key.is_enabled then
-					if delay_set_enabled_to_false then
+					if is_enabled_delayed then
 						create l_value.share_from_pointer (a_property_new_value)
-						l_value.set_boolean_value (False)
-						delay_set_enabled_to_false := False
+						l_value.set_boolean_value (internal_is_enabled)
+						is_enabled_delayed := False
 					end
 				end
 			end
@@ -157,7 +151,10 @@ feature {NONE} -- Implementation
 	command_list: ARRAY [NATURAL_32]
 			-- Command ids handled by current
 
-	delay_set_enabled_to_false: BOOLEAN
+	is_enabled_delayed: BOOLEAN
+			-- Is setting of `is_enabled' delayed?
+
+	internal_is_enabled: BOOLEAN
 			-- Before Application menu's button visible on screen, `set_enabled' will not work
 			-- Setting it when showing the button for first time
 
@@ -171,5 +168,6 @@ feature {NONE} -- Implementation
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end
 

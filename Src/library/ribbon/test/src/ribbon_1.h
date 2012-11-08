@@ -13,4 +13,8 @@
 #define button_1_LabelTitle_RESID 60003
 #define button_2 5 
 #define button_2_LabelTitle_RESID 60004
-#define InternalCmd2_LabelTitle_RESID 60005
+#define application_menu_1 6 
+#define menu_group_1 7 
+#define button_3 8 
+#define button_3_LabelTitle_RESID 60005
+#define InternalCmd2_LabelTitle_RESID 60006

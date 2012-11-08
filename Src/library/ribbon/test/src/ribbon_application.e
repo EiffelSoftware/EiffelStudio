@@ -81,6 +81,10 @@ feature {NONE} -- Implementation
 			l_main_window: MAIN_WINDOW
 		do
 			main_window.set_title ("Do not close me, close the other one.")
+
+				-- Test `enabled' and `set_enabled', when the window is not shown.
+			test_set_enabled
+
 			main_window.show
 
 			create l_main_window
@@ -97,6 +101,17 @@ feature {NONE} -- Implementation
 	application: EV_APPLICATION
 
 --	m: detachable MA_WINDOW
+
+feature -- Test
+
+	test_set_enabled
+			-- Test `enabled' and `set_enabled'
+		do
+			main_window.application_menu.menu_group_1.button_3.set_enabled (True)
+			check enabled: main_window.application_menu.menu_group_1.button_3.is_enabled end
+			main_window.application_menu.menu_group_1.button_3.set_enabled (False)
+			check not_enabled: not main_window.application_menu.menu_group_1.button_3.is_enabled end
+		end
 
 feature -- Exception
 

@@ -13,7 +13,7 @@
 		<setting name="concurrency" value="thread"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
 		<library name="memory_analyzer" location="$ISE_LIBRARY\library\memory_analyzer\memory_analyzer-safe.ecf"/>
-		<library name="ribbon" location="$ISE_LIBRARY\library\ribbon\ribbon-safe.ecf" readonly="false"/>
+		<library name="ribbon" location="$ISE_LIBRARY\library\ribbon\ribbon-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf" readonly="false"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>

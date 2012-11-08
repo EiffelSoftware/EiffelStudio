@@ -67,7 +67,7 @@ feature -- Status report
 
 feature {NONE} -- Helpers
 
-	parser: XML_LITE_STOPPABLE_PARSER
+	parser: XML_STOPPABLE_PARSER
 			-- Parser used to parse XML-RPC requests.
 		once
 			create Result.make

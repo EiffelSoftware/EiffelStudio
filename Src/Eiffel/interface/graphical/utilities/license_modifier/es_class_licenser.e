@@ -72,7 +72,7 @@ feature -- Basic operatons
 		local
 			l_mod: ES_CLASS_LICENSE_MODIFIER
 			l_name: detachable STRING_32
-			l_fn: detachable FILE_NAME_32
+			l_fn: detachable PATH
 			l_path: STRING_32
 			l_index: INTEGER
 			l_license: detachable like load_license
@@ -106,12 +106,12 @@ feature -- Basic operatons
 								if not l_libraries.is_empty then
 										-- Create the path to the license file.
 									l_library := l_libraries.first
-									l_path := l_library.path.as_string_32
+									create l_path.make_from_string (l_library.path)
 								end
 							end
 						else
 							check system_defined: a_class.workbench.system_defined end
-							l_path := a_class.workbench.eiffel_ace.file_name.as_string_32
+							create l_path.make_from_string (a_class.workbench.eiffel_ace.file_name)
 						end
 
 						l_load_default := True
@@ -119,33 +119,26 @@ feature -- Basic operatons
 							l_index := l_path.last_index_of ('.', l_path.count)
 							if l_index > 1 then
 								l_path.keep_head (l_index - 1)
-								create l_fn.make_from_string (l_path)
-								l_fn.add_extension (license_extension)
+								create l_fn.make_from_string (l_path + {STRING_32} "." + license_extension)
 
 									-- Try to load the license
-								l_path := l_fn.to_string_32
-								if (create {RAW_FILE}.make_with_name (l_path)).exists then
-									l_license := load_license (l_path, l_use_old_syntax)
+								if (create {RAW_FILE}.make_with_path (l_fn)).exists then
+									l_license := load_license (l_fn, l_use_old_syntax)
 									l_load_default := False
 								else
+									l_path := l_fn.string_representation
 										-- Try the default license file
 									l_index := l_path.last_index_of (operating_environment.directory_separator, l_path.count)
 									if l_index > 1 then
 										l_path.keep_head (l_index - 1)
-										create l_fn.make_from_string (l_path)
-										l_fn.set_file_name (default_license_filename)
-										l_fn.add_extension (license_extension)
-										l_path := l_fn.to_string_32
-										if (create {RAW_FILE}.make_with_name (l_path)).exists then
-											l_license := load_license (l_path, l_use_old_syntax)
+										l_fn := l_fn.extended (default_license_filename + {STRING_32} "." + license_extension)
+										if (create {RAW_FILE}.make_with_path (l_fn)).exists then
+											l_license := load_license (l_fn, l_use_old_syntax)
 											l_load_default := False
 										else
-											create l_fn.make_from_string (l_path)
-											l_fn.set_file_name (alternative_default_license_filename)
-											l_fn.add_extension (license_extension)
-											l_path := l_fn.to_string_32
-											if (create {RAW_FILE}.make_with_name (l_path)).exists then
-												l_license := load_license (l_path, l_use_old_syntax)
+											l_fn := l_fn.extended (alternative_default_license_filename + {STRING_32} "." + license_extension)
+											if (create {RAW_FILE}.make_with_path (l_fn)).exists then
+												l_license := load_license (l_fn, l_use_old_syntax)
 												l_load_default := False
 											end
 										end
@@ -219,7 +212,7 @@ feature -- Basic operatons
 
 feature {NONE} -- Basic operation
 
-	load_license (a_file_name: attached STRING_32; a_use_old_syntax: BOOLEAN): detachable STRING_32
+	load_license (a_file_name: PATH; a_use_old_syntax: BOOLEAN): detachable STRING_32
 			-- Attempt to load a license file
 			--
 			-- `a_file_name': The file name of the license file to load.
@@ -234,7 +227,7 @@ feature {NONE} -- Basic operation
 			retried: BOOLEAN
 		do
 			if not retried then
-				if (create {RAW_FILE}.make_with_name (a_file_name)).exists then
+				if (create {RAW_FILE}.make_with_path (a_file_name)).exists then
 					if wizard_enginer.is_service_available then
 							-- Set up wizard parameters
 						create l_parameters.make (2)
@@ -246,7 +239,7 @@ feature {NONE} -- Basic operation
 						end
 
 							-- Render template
-						Result := wizard_enginer.service.render_template_from_file (a_file_name, l_parameters)
+						Result := wizard_enginer.service.render_template_from_file (a_file_name.string_representation, l_parameters)
 						if Result /= Void then
 							Result.right_adjust
 							Result.left_adjust
@@ -286,26 +279,20 @@ feature {NONE} -- Basic operation
 		require
 			not_a_name_is_empty: not a_name.is_empty
 		local
-			l_fn: attached FILE_NAME
-			l_user_fn: detachable FILE_NAME
-			l_path: detachable STRING_32
+			l_fn: PATH
+			l_user_fn: detachable PATH
 			retried: BOOLEAN
 		do
 			if not retried then
-				create l_fn.make_from_string (eiffel_layout.templates_path_8.string)
-				l_fn.extend ("licenses")
-				l_fn.set_file_name (a_name)
-				l_fn.add_extension (license_extension)
+				l_fn := eiffel_layout.templates_path.extended ("licenses").extended (a_name + {STRING_32} "." + license_extension)
 
 					-- Check user file
-				l_user_fn := eiffel_layout.user_priority_file_name_8 (l_fn, True)
+				l_user_fn := eiffel_layout.user_priority_file_name (l_fn, True)
 				if l_user_fn /= Void then
 					l_fn := l_user_fn
 				end
-
-				l_path := l_fn.string.as_string_32
-				if l_path /= Void then
-					Result := load_license (l_path, a_use_old_syntax)
+				if l_fn /= Void then
+					Result := load_license (l_fn, a_use_old_syntax)
 				end
 			end
 		ensure
@@ -314,11 +301,11 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Constants: Symbols
 
-	default_license_filename: STRING = "license"
+	default_license_filename: STRING_32 = "license"
 
-	alternative_default_license_filename: STRING = "licence"
+	alternative_default_license_filename: STRING_32 = "licence"
 
-	license_extension: STRING = "lic"
+	license_extension: STRING_32 = "lic"
 
 	note_keyword_symbol: STRING = "NOTE_KEYWORD"
 			-- Keyword symbol in the template license file.

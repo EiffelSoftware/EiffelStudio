@@ -246,7 +246,7 @@ feature -- Modification
 			qualifier_set: qualifier = q
 		end
 
-feature {TYPE_A_CHECKER, EXPRESSION_CONTEXT} -- Modification
+feature {TYPE_A_CHECKER} -- Modification
 
 	set_chain (n: like chain; c: CLASS_C)
 			-- Set `chain' to the value relative to class `c'.

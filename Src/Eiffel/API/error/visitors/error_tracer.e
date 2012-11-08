@@ -454,21 +454,19 @@ feature {NONE} -- Implementation
 			valid_st: a_text_formatter /= Void
 			error_not_void: a_error /= Void
 		local
-			l_path: STRING_32
-			l_file_name: FILE_NAME_32
+			l_file_name: PATH
 			l_file: PLAIN_TEXT_FILE
 			l_text, l_line: STRING
 			l_stop: BOOLEAN
 			i: INTEGER
 		do
-			create l_file_name.make_from_path (eiffel_layout.error_path)
-			l_file_name.extend ("short")
-			l_file_name.set_file_name (a_error.help_file_name)
-			l_path := l_file_name
+			l_file_name := eiffel_layout.error_path.extended ("short")
 			if a_error.subcode /= 0 then
-				l_path.append_integer (a_error.subcode)
+				l_file_name := l_file_name.extended (a_error.help_file_name + a_error.subcode.out)
+			else
+				l_file_name := l_file_name.extended (a_error.help_file_name)
 			end
-			create l_file.make_with_name (l_path)
+			create l_file.make_with_path (l_file_name)
 			if l_file.exists then
 				create l_text.make (255)
 				from
@@ -542,18 +540,16 @@ feature {NONE} -- Implementation
 			valid_st: a_text_formatter /= Void
 			error_not_void: a_error /= Void
 		local
-			l_file_name: STRING_32
-			f_name: FILE_NAME_32
+			f_name: PATH
 			file: PLAIN_TEXT_FILE
 		do
-			create f_name.make_from_path (eiffel_layout.error_path)
-			f_name.extend ("short")
-			f_name.set_file_name (a_error.help_file_name)
-			l_file_name := f_name
+			f_name := eiffel_layout.error_path.extended ("short")
 			if a_error.subcode /= 0 then
-				l_file_name.append_integer (a_error.subcode)
+				f_name := f_name.extended (a_error.help_file_name + a_error.subcode.out)
+			else
+				f_name := f_name.extended (a_error.help_file_name)
 			end
-			create file.make_with_name (l_file_name)
+			create file.make_with_path (f_name)
 			if file.exists then
 				from
 					file.open_read
@@ -570,7 +566,7 @@ feature {NONE} -- Implementation
 				a_text_formatter.add ("No help available for this error")
 				a_text_formatter.add_new_line
 				a_text_formatter.add ("(cannot read file: ")
-				a_text_formatter.add (l_file_name)
+				a_text_formatter.add (f_name.string_representation)
 				a_text_formatter.add (")")
 				a_text_formatter.add_new_line
 				a_text_formatter.add_new_line

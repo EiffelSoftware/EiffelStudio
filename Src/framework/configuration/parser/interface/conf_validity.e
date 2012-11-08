@@ -37,20 +37,20 @@ feature -- Basic validity queries
 			Result := concurrency_names.has (a_concurrency)
 		end
 
-	is_warning_known (a_warning: STRING): BOOLEAN
+	is_warning_known (a_warning: STRING_8): BOOLEAN
 			-- Is `a_warning' known?
 		require
 			a_warning_not_void: a_warning /= Void
-			a_warning_lower: a_warning.is_equal (a_warning.as_lower)
+			a_warning_lower: a_warning.same_string (a_warning.as_lower)
 		do
 			Result := known_warnings.has (a_warning)
 		end
 
-	valid_warning (a_warning: STRING; a_namespace: like namespace_1_0_0): BOOLEAN
+	valid_warning (a_warning: STRING_8; a_namespace: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_warning' a valid warning in `a_namespace'?
 		require
 			a_warning_not_void: a_warning /= Void
-			a_warning_lower: a_warning.is_equal (a_warning.as_lower)
+			a_warning_lower: a_warning.same_string (a_warning.as_lower)
 		local
 			w: like valid_warnings_default
 		do
@@ -74,22 +74,22 @@ feature -- Basic validity queries
 			end
 		end
 
-	valid_setting (a_setting: STRING): BOOLEAN
+	valid_setting (a_setting: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_setting' a valid setting?
 		do
-			Result := a_setting /= Void and then valid_settings.has (a_setting)
+			Result := a_setting /= Void and then (a_setting.is_valid_as_string_8 and then valid_settings.has (a_setting.as_string_8))
 		end
 
-	valid_version_type (a_version_type: STRING): BOOLEAN
+	valid_version_type (a_version_type: STRING_8): BOOLEAN
 			-- Is `a_version_type' valid?
 		do
 			Result := a_version_type /= Void and then valid_version_types.has (a_version_type)
 		end
 
-	valid_eiffel_extension (a_file: STRING): BOOLEAN
+	valid_eiffel_extension (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does `a_file' have a correct eiffel file extension?
 		local
-			l_ext: CHARACTER
+			l_ext: CHARACTER_32
 			l_file_count: INTEGER
 		do
 			l_file_count := a_file.count
@@ -99,17 +99,15 @@ feature -- Basic validity queries
 			end
 		end
 
-	valid_config_extension (a_file: STRING): BOOLEAN
+	valid_config_extension (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does `a_file' have a correct eiffel config file extension?
 		local
-			l_ext: STRING
 			sep, cnt: INTEGER
 		do
 			cnt := a_file.count
-			sep := a_file.last_index_of ('.', cnt)
+			sep := a_file.last_index_of_code (('.').natural_32_code, cnt)
 			if sep /= 0 then
-				l_ext := a_file.substring (sep+1, cnt)
-				Result := l_ext.is_case_insensitive_equal ("ecf")
+				Result := a_file.substring (sep + 1, cnt).is_case_insensitive_equal ("ecf")
 			end
 		end
 
@@ -145,7 +143,7 @@ feature {NONE} -- Basic operation
 			result_not_void: Result /= Void
 		end
 
-	get_platform (a_name: STRING): INTEGER
+	get_platform (a_name: READABLE_STRING_GENERAL): INTEGER
 			-- Get the platform with `a_name', otherwise return 0.
 		do
 			if a_name /= Void then
@@ -154,7 +152,7 @@ feature {NONE} -- Basic operation
 				until
 					Result /= 0 or platform_names.after
 				loop
-					if platform_names.item_for_iteration.is_case_insensitive_equal (a_name) then
+					if a_name.is_case_insensitive_equal (platform_names.item_for_iteration) then
 						Result := platform_names.key_for_iteration
 					end
 					platform_names.forth
@@ -164,7 +162,7 @@ feature {NONE} -- Basic operation
 			Result_valid: Result = 0 or else valid_platform (Result)
 		end
 
-	get_build (a_name: STRING): INTEGER
+	get_build (a_name: READABLE_STRING_GENERAL): INTEGER
 			-- Get the build with `a_name', otherwise return 0.
 		do
 			if a_name /= Void then
@@ -173,7 +171,7 @@ feature {NONE} -- Basic operation
 				until
 					Result /= 0 or build_names.after
 				loop
-					if build_names.item_for_iteration.is_case_insensitive_equal (a_name) then
+					if a_name.is_case_insensitive_equal (build_names.item_for_iteration) then
 						Result := build_names.key_for_iteration
 					end
 					build_names.forth
@@ -183,7 +181,7 @@ feature {NONE} -- Basic operation
 			Result_valid: Result = 0 or else valid_build (Result)
 		end
 
-	get_concurrency (a_name: STRING): INTEGER
+	get_concurrency (a_name: READABLE_STRING_GENERAL): INTEGER
 			-- Get the concurrency value with `a_name', otherwise return 0.
 		do
 			if a_name /= Void then
@@ -192,7 +190,7 @@ feature {NONE} -- Basic operation
 				until
 					Result /= 0 or concurrency_names.after
 				loop
-					if concurrency_names.item_for_iteration.is_case_insensitive_equal (a_name) then
+					if a_name.is_case_insensitive_equal (concurrency_names.item_for_iteration) then
 						Result := concurrency_names.key_for_iteration
 					end
 					concurrency_names.forth

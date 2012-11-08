@@ -41,35 +41,30 @@ feature {NONE} -- Implementation
 	read_config_file (prof: STRING)
 			-- Reads the values from the configuration file
 		local
-			file_name: FILE_NAME;
+			file_name: PATH
 			retried: BOOLEAN
 		do
 			if not retried then
-				create file_name.make_from_path (eiffel_layout.profile_path)
-				file_name.extend (prof);
+				file_name := eiffel_layout.profile_path.extended (prof)
 
-				if not file_name.is_valid then
-					error_occurred := true;
-					error_code := Invalid_profiler_type
-				else
-					create config_file.make_open_read (file_name);
-					config_file.read_stream (config_file.count);
-					file_contents := config_file.last_string;
-					config_file.close;
-					get_number_of_columns;
-					get_index_column;
-					get_function_time_column;
-					get_descendant_time_column;
-					get_number_of_calls_column;
-					get_function_name_column;
-					get_percentage_column;
-					get_leading_underscore;
-				end;
+				create config_file.make_with_path (file_name)
+				config_file.open_read
+				config_file.read_stream (config_file.count);
+				file_contents := config_file.last_string;
+				config_file.close;
+				get_number_of_columns;
+				get_index_column;
+				get_function_time_column;
+				get_descendant_time_column;
+				get_number_of_calls_column;
+				get_function_name_column;
+				get_percentage_column;
+				get_leading_underscore;
 			else
-				error_occurred := true;
+				error_occurred := True;
 			end;
 		rescue
-			retried := true;
+			retried := True;
 			retry;
 		end;
 
@@ -82,7 +77,7 @@ feature {NONE} -- Implementation
 		do
 			i := get_integer_value (NOC_string);
 			if i = -1 then
-				error_occurred := true;
+				error_occurred := True;
 			else
 				shared_prof_config.set_number_of_columns (i);
 			end;
@@ -95,7 +90,7 @@ feature {NONE} -- Implementation
 		do
 			i := get_integer_value (IC_string);
 			if i = -1 then
-				error_occurred := true;
+				error_occurred := True;
 			else
 				shared_prof_config.set_index_column (i);
 			end;
@@ -108,7 +103,7 @@ feature {NONE} -- Implementation
 		do
 			i := get_integer_value (FTC_string);
 			if i = -1 then
-				error_occurred := true;
+				error_occurred := True;
 			else
 				shared_prof_config.set_function_time_column (i);
 			end;
@@ -121,7 +116,7 @@ feature {NONE} -- Implementation
 		do
 			i := get_integer_value (DTC_string);
 			if i = -1 then
-				error_occurred := true;
+				error_occurred := True;
 			else
 				shared_prof_config.set_descendant_time_column (i);
 			end;
@@ -134,7 +129,7 @@ feature {NONE} -- Implementation
 		do
 			i := get_integer_value (NOCC_string);
 			if i = -1 then
-				error_occurred := true;
+				error_occurred := True;
 			else
 				shared_prof_config.set_number_of_calls_column (i);
 			end;
@@ -147,7 +142,7 @@ feature {NONE} -- Implementation
 		do
 			i := get_integer_value (FNC_string);
 			if i = -1 then
-				error_occurred := true;
+				error_occurred := True;
 			else
 				shared_prof_config.set_function_name_column (i);
 			end;
@@ -160,7 +155,7 @@ feature {NONE} -- Implementation
 		do
 			i := get_integer_value (PC_string);
 			if i = -1 then
-				error_occurred := true;
+				error_occurred := True;
 			else
 				shared_prof_config.set_percentage_column (i);
 			end;
@@ -174,15 +169,15 @@ feature {NONE} -- Implementation
 		do
 			s := get_string_value (GLU_string);
 			if s = Void then
-				error_occurred := true;
+				error_occurred := True;
 			else
 				s.to_lower;
 				if s.is_equal ("yes") then
-					shared_prof_config.set_leading_underscore (true);
+					shared_prof_config.set_leading_underscore (True);
 				elseif s.is_equal ("no") then
-					shared_prof_config.set_leading_underscore (false);
+					shared_prof_config.set_leading_underscore (False);
 				else
-					error_occurred := true;
+					error_occurred := True;
 				end;
 			end;
 		end

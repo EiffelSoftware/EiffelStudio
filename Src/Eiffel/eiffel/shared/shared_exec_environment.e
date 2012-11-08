@@ -5,12 +5,10 @@ note
 
 class SHARED_EXEC_ENVIRONMENT
 
-feature {NONE}
+obsolete "Use SHARED_EXECUTION_ENVIRONMENT [2012-oct]"
 
-	Execution_environment: EXECUTION_ENVIRONMENT_32
-		once
-			create Result
-		end
+inherit
+	SHARED_EXECUTION_ENVIRONMENT
 
 note
 	copyright:	"Copyright (c) 1984-2012, Eiffel Software"

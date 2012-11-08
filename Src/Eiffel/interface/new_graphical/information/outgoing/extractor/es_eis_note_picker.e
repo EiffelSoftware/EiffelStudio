@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 		require
 			l_id_not_void: l_id /= Void
 		local
-			l_attributes: HASH_TABLE [STRING, STRING]
+			l_attributes: like {CONF_NOTE_ELEMENT}.attributes
 			l_parameters: HASH_TABLE [STRING_32, STRING_32]
 			l_tags: ARRAYED_LIST [STRING_32]
 			l_entry_tuple: TUPLE [
@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 			a_target_not_void: a_target /= Void
 		local
 			l_note, l_notes: detachable CONF_NOTE_ELEMENT
-			l_attributes: HASH_TABLE [STRING, STRING]
+			l_attributes: like {CONF_NOTE_ELEMENT}.attributes
 			l_src: STRING_32
 			l_enabled: BOOLEAN
 		do

@@ -146,9 +146,9 @@ feature -- Callbacks
 		do
 			if not has_error then
 				if
-					not a_local_part.is_case_insensitive_equal ("xmlns") and
-					not	a_local_part.is_case_insensitive_equal ("xsi") and
-					not a_local_part.is_case_insensitive_equal ("schemaLocation")
+					not a_local_part.is_case_insensitive_equal ({STRING_32} "xmlns") and
+					not	a_local_part.is_case_insensitive_equal ({STRING_32} "xsi") and
+					not a_local_part.is_case_insensitive_equal ({STRING_32} "schemaLocation")
 				then
 						-- check if the attribute is valid for the current state
 					if attached tag_attributes.item (current_tag.item) as l_attr then
@@ -160,7 +160,7 @@ feature -- Callbacks
 						current_attributes := l_current_attributes
 					end
 					if l_attribute /= 0 and then not l_current_attributes.has (l_attribute) then
-						l_current_attributes.force (a_value, l_attribute)
+						l_current_attributes.force (a_value.to_string_8, l_attribute)
 					else
 						create_last_error (xml_names.err_invalid_attribute (a_local_part))
 					end

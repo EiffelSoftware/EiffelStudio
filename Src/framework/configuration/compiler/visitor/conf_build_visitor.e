@@ -618,7 +618,7 @@ feature {NONE} -- Implementation
 	current_classes: HASH_TABLE [CONF_CLASS, STRING]
 			-- The classes of the group we are currently processing.
 
-	current_classes_by_filename: HASH_TABLE [CONF_CLASS, STRING]
+	current_classes_by_filename: HASH_TABLE [CONF_CLASS, STRING_32]
 			-- Classes of the group we are currently processing indexed by filename.
 
 	current_cluster: CONF_CLUSTER
@@ -639,21 +639,22 @@ feature {NONE} -- Implementation
 	partial_location: CONF_DIRECTORY_LOCATION
 			-- Location where the merged partial classes will be stored (normally somewhere inside eifgen)
 
-	handle_class (a_file, a_path: STRING; a_cluster: CONF_CLUSTER)
+	handle_class (a_file, a_path: READABLE_STRING_32; a_cluster: CONF_CLUSTER)
 			-- Put the class in `a_path' `a_file' into `current_classes'.
 		local
 			l_file: KL_BINARY_INPUT_FILE
 			l_class: CONF_CLASS
 			l_name: STRING
-			l_full_file: STRING
+			l_full_file: STRING_32
 			l_pc: ARRAYED_LIST [STRING]
-			l_file_name: STRING
+			l_file_name: STRING_32
 			l_done: BOOLEAN
-			l_suggested_filename: STRING
+			l_suggested_filename: STRING_32
 			l_current_classes: like current_classes
 			l_old_group: like old_group
-			l_old_group_classes_by_filename: HASH_TABLE [CONF_CLASS, STRING_8]
+			l_old_group_classes_by_filename: like old_group.classes_by_filename
 			l_classname_finder: like classname_finder
+			gobo: GOBO_FILE_UTILITIES
 		do
 			l_current_classes := current_classes
 			l_old_group := old_group
@@ -666,9 +667,9 @@ feature {NONE} -- Implementation
 			end
 			if valid_eiffel_extension (a_file) then
 				create l_file_name.make (a_path.count + 1 + a_file.count)
-				l_file_name.append (a_path)
+				l_file_name.append_string_general (a_path)
 				l_file_name.append (once "/")
-				l_file_name.append (a_file)
+				l_file_name.append_string_general (a_file)
 					-- try to get it directly from old_group by filename
 				if
 					l_old_group /= Void and then l_old_group_classes_by_filename.has_key (l_file_name)
@@ -722,7 +723,7 @@ feature {NONE} -- Implementation
 					if is_full_class_name_analysis or a_cluster.is_override then
 						l_full_file := a_cluster.location.evaluated_directory
 						l_full_file.append (l_file_name)
-						create l_file.make (l_full_file)
+						l_file := gobo.make_binary_input_file (l_full_file)
 						l_file.open_read
 						if not l_file.is_open_read then
 							add_and_raise_error (create {CONF_ERROR_FILE}.make (l_full_file))

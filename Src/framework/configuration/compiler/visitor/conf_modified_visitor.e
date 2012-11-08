@@ -86,7 +86,7 @@ feature -- Visit nodes
 		do
 			on_process_group (an_override)
 				-- Check if any classes have been added and force a rebuild if this is the case.
-			process_cluster_recursive ("", an_override, an_override.active_file_rule (state))
+			process_cluster_recursive ({STRING_32} "", an_override, an_override.active_file_rule (state))
 			find_modified (an_override)
 		end
 
@@ -193,10 +193,18 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	handle_class (a_file, a_path: STRING_8; a_cluster: CONF_CLUSTER)
+	handle_class (a_file, a_path: READABLE_STRING_32; a_cluster: CONF_CLUSTER)
 			-- Handle class in `a_file' with `a_path' in `a_cluster'
+		local
+			s32: STRING_32
 		do
-			is_force_rebuild := is_force_rebuild or else (valid_eiffel_extension (a_file) and then not a_cluster.classes_by_filename.has (a_path + "/" + a_file))
+			if not is_force_rebuild then
+				is_force_rebuild := valid_eiffel_extension (a_file)
+				if is_force_rebuild then
+					s32 := a_path + {STRING_32} "/" + a_file
+					is_force_rebuild := not a_cluster.classes_by_filename.has (s32)
+				end
+			end
 		end
 
 invariant
@@ -204,7 +212,7 @@ invariant
 	process_group_observer_not_void: process_group_observer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

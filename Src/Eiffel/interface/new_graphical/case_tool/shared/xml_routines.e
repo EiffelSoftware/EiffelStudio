@@ -89,7 +89,7 @@ feature {SHARED_XML_ROUTINES} -- Processing
 	xml_boolean (elem: like xml_node; a_name: STRING): BOOLEAN
 			-- Find in sub-elememt of `elem' boolean item with tag `a_name'.
 		local
-			bool_str: STRING
+			bool_str: READABLE_STRING_GENERAL
 		do
 			if attached {like xml_node} elem.element_by_name (a_name) as e then
 				bool_str := e.text

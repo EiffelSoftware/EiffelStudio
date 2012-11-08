@@ -22,9 +22,10 @@ feature -- Parsing
 			-- Parse file named `file_name' and make built ast node
 			-- (void if failure) available through `ast'.
 		local
-			file: KL_BINARY_INPUT_FILE_32
+			file: KL_BINARY_INPUT_FILE
+			gobo: GOBO_FILE_UTILITIES
 		do
-			create file.make (file_name)
+			file := gobo.make_binary_input_file (file_name)
 			file.open_read
 
 			if not file.is_open_read then

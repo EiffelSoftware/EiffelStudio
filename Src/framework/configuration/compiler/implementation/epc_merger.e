@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 	default_create
 			-- Create.
 		do
-			error_message := "No error."
+			error_message := {STRING_32} "No error."
 		end
 
 feature -- Access
@@ -32,7 +32,7 @@ feature -- Access
 	class_text: STRING
 			-- Resulting class text
 
-	error_message: STRING
+	error_message: STRING_32
 			-- Error message if any
 
 feature -- Status Report
@@ -40,7 +40,7 @@ feature -- Status Report
 	successful: BOOLEAN
 			-- Was last call to `merge' successful?
 
-	ast_from_file (a_file: STRING): CLASS_AS
+	ast_from_file (a_file: READABLE_STRING_GENERAL): CLASS_AS
 			-- AST from text in file `a_file' if syntactically correct
 			-- Otherwise set `successful' to False and initialize `error_message'
 		require
@@ -53,9 +53,10 @@ feature -- Status Report
 			l_match_list: LEAF_AS_LIST
 			l_retried: BOOLEAN
 			l_file: KL_BINARY_INPUT_FILE
+			gobo: GOBO_FILE_UTILITIES
 		do
 			if not l_retried then
-				create l_file.make (a_file)
+				l_file := gobo.make_binary_input_file (a_file)
 				l_file.open_read
 				roundtrip_eiffel_parser.parse (l_file)
 				l_file.close
@@ -67,17 +68,17 @@ feature -- Status Report
 						l_syntax_error ?= l_errors.first
 						if l_syntax_error /= Void then
 							create error_message.make (256)
-							error_message.append ("Syntax error at line ")
-							error_message.append (l_syntax_error.line.out)
+							error_message.append ({STRING_32} "Syntax error at line ")
+							error_message.append_string_general (l_syntax_error.line.out)
 							if not l_syntax_error.error_message.is_empty then
-								error_message.append (": ")
-								error_message.append (l_syntax_error.error_message)
+								error_message.append ({STRING_32} ": ")
+								error_message.append_string_general (l_syntax_error.error_message)
 							end
 						else
-							error_message := "Syntax error"
+							error_message := {STRING_32} "Syntax error"
 						end
 					else
-						error_message := "Syntax error"
+						error_message := {STRING_32} "Syntax error"
 					end
 				else
 					analyze_file (a_file)
@@ -98,7 +99,7 @@ feature -- Status Report
 				end
 			else
 				successful := False
-				error_message := "Could not open file " + a_file
+				error_message := {STRING_32} "Could not open file " + a_file.to_string_32
 			end
 		rescue
 			l_retried := True
@@ -364,7 +365,7 @@ feature {NONE} -- Implementation
 			Definition: (Result > 0) implies ((a_creators.i_th (Result).clients = Void and a_creator.clients = Void) or a_creators.i_th (Result).clients.is_equiv (a_creator.clients))
 		end
 
-	analyze_file (a_file_path: STRING)
+	analyze_file (a_file_path: READABLE_STRING_GENERAL)
 			-- Analyze file located at `a_file_path'.
 			-- Set `line_return' accordingly.
 			-- Set `first_line_pragma' accodingly.
@@ -379,7 +380,7 @@ feature {NONE} -- Implementation
 			line_return := Default_line_return
 			first_line_pragma := Void
 			if not l_retried then
-				create l_file.make (a_file_path)
+				create l_file.make_with_name (a_file_path)
 				if l_file.exists then
 					l_file.open_read
 					if l_file.count > 8 then
@@ -450,7 +451,7 @@ invariant
 	valid_first_line_pragma: first_line_pragma /= Void implies first_line_pragma.substring (1, 8).is_equal ("--#line ")
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

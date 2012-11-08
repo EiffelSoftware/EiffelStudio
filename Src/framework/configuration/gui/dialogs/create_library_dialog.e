@@ -294,22 +294,22 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	libraries: SEARCH_TABLE [STRING]
+	libraries: SEARCH_TABLE [STRING_32]
 			-- A set of libraries to display in the dialog
 		require
 			is_eiffel_layout_defined: is_eiffel_layout_defined
 		local
 			l_dirs: like lookup_directories
-			l_libraries: SEARCH_TABLE [STRING]
+			l_libraries: SEARCH_TABLE [STRING_32]
 			l_dir: DIRECTORY
-			l_path: STRING
+			l_path: READABLE_STRING_32
 			l_location: CONF_DIRECTORY_LOCATION
 		do
 			l_dirs := lookup_directories
 			create Result.make (l_dirs.count)
 			from l_dirs.start until l_dirs.after loop
 				create l_location.make (l_dirs.item_for_iteration.path, target)
-				l_path := l_location.evaluated_path.as_string_8
+				l_path := l_location.evaluated_path
 				create l_dir.make (l_path)
 				if l_dir.is_readable then
 					create l_libraries.make (10)
@@ -357,34 +357,34 @@ feature {NONE} -- Access
 			result_attached: attached Result
 		end
 
-	lookup_directories: ARRAYED_LIST [TUPLE [path: STRING; depth: INTEGER]]
+	lookup_directories: ARRAYED_LIST [TUPLE [path: STRING_32; depth: INTEGER]]
 			-- A list of lookup directories
 		require
 			is_eiffel_layout_defined: is_eiffel_layout_defined
 		local
-			l_filename: FILE_NAME
+			l_filename: detachable PATH
 			l_file: RAW_FILE
 		do
 			create Result.make (10)
 
-			l_filename := eiffel_layout.libraries_config_name_8
-			create l_file.make (l_filename)
+			l_filename := eiffel_layout.libraries_config_name
+			create l_file.make_with_path (l_filename)
 			if l_file.exists then
-				add_lookup_directories (l_filename, Result)
+				add_lookup_directories (l_filename.string_representation, Result)
 			end
 			if eiffel_layout.is_user_files_supported then
-				l_filename := eiffel_layout.user_priority_file_name_8 (l_filename.string, True)
+				l_filename := eiffel_layout.user_priority_file_name (l_filename, True)
 				if l_filename /= Void then
-					l_file.reset (l_filename)
+					l_file.reset_path (l_filename)
 					if l_file.exists then
-						add_lookup_directories (l_filename, Result)
+						add_lookup_directories (l_filename.string_representation, Result)
 					end
 				end
 			end
 
 			if Result.is_empty then
 					-- Extend the default library path
-				Result.extend ([eiffel_layout.library_path_8.string, 2])
+				Result.extend ([eiffel_layout.library_path.string_representation, 2])
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -673,7 +673,7 @@ feature {NONE} -- Basic operation
 			end
 		end
 
-	add_configs_in_directory (a_dir: DIRECTORY; a_depth: INTEGER; a_libraries: SEARCH_TABLE [STRING])
+	add_configs_in_directory (a_dir: DIRECTORY; a_depth: INTEGER; a_libraries: SEARCH_TABLE [STRING_32])
 			-- Add config files in `a_path' to `a_libraries'.
 		require
 			a_dir_attached: attached a_dir
@@ -681,25 +681,24 @@ feature {NONE} -- Basic operation
 			a_depth_big_enough: a_depth >= -1
 			a_libraries_attached: attached a_libraries
 		local
-			l_dir_name: DIRECTORY_NAME
+			l_dir_name: PATH
 			l_count, i: INTEGER
-			l_lib_file: STRING
-			l_file_name: FILE_NAME
+			l_lib_file: STRING_32
+			l_file_name: PATH
 			l_file_string: STRING
 			l_file: RAW_FILE
+			s32: STRING_32
 		do
 			if attached a_dir.linear_representation as l_items then
 				across l_items as l_files loop
 					l_lib_file := l_files.item
 					if valid_config_extension (l_lib_file) then
-						create l_file_name.make_from_string (a_dir.name)
-						l_file_name.extend (l_lib_file)
-						create l_file.make (l_file_name)
+						l_file_name := a_dir.entry.extended (l_lib_file)
+						create l_file.make_with_path (l_file_name)
 						if l_file.exists and then l_file.is_plain then
+							l_file_string := l_file_name.string_representation
 							if {PLATFORM_CONSTANTS}.is_windows then
-								l_file_string := l_file_name.string.as_lower
-							else
-								l_file_string := l_file_name.string
+								l_file_string := l_file_string.as_lower
 							end
 							if not a_libraries.has (l_file_string) then
 								a_libraries.force (l_file_string)
@@ -708,15 +707,15 @@ feature {NONE} -- Basic operation
 					end
 				end
 
-				if (a_depth = -1 or a_depth > 0) and then attached a_dir.linear_representation as l_subdirs then
+				if (a_depth = -1 or a_depth > 0) and then attached a_dir.entries as l_subdirs then
 						-- Perform recursion
 					across l_subdirs as l_dirs loop
-						if l_dirs.item /~ "." and l_dirs.item /~ ".." then
-							create l_dir_name.make_from_string (a_dir.name)
-							l_dir_name.extend (l_dirs.item)
-							create l_file.make (l_dir_name)
+						s32 := l_dirs.item.string_representation
+						if not s32.same_string (".") and not s32.same_string ("..") then -- FIXME: use upcoming PATH.is_dot, and related
+							l_dir_name := a_dir.entry.extended_path (l_dirs.item)
+							create l_file.make_with_path (l_dir_name)
 							if l_file.exists and then l_file.is_directory then
-								add_configs_in_directory (create {DIRECTORY}.make (l_dir_name), (a_depth - 1).max (-1), a_libraries)
+								add_configs_in_directory (create {DIRECTORY}.make_with_path (l_dir_name), (a_depth - 1).max (-1), a_libraries)
 							end
 						end
 					end
@@ -724,12 +723,12 @@ feature {NONE} -- Basic operation
 			end
 		end
 
-	add_lookup_directories (a_path: FILE_NAME; a_list: ARRAYED_LIST [TUPLE [path: STRING; depth: INTEGER]])
+	add_lookup_directories (a_path: STRING_32; a_list: ARRAYED_LIST [TUPLE [path: READABLE_STRING_32; depth: INTEGER]])
 			-- Adds look up directories from a file located at `a_path' into `a_list'
 		require
 			a_path_attached: attached a_path
 			not_a_path_is_empty: not a_path.is_empty
-			a_path_exists: (create {RAW_FILE}.make (a_path)).exists
+			a_path_exists: (create {RAW_FILE}.make_with_name (a_path)).exists
 			a_list_attached: attached a_list
 		local
 			l_file: RAW_FILE
@@ -739,9 +738,8 @@ feature {NONE} -- Basic operation
 			l_depth_string: STRING
 			l_depth: INTEGER
 		do
-			create l_file.make (a_path)
-
-			if l_file /= Void and then l_file.is_readable then
+			create l_file.make_with_name (a_path)
+			if l_file.is_readable then
 				from l_file.open_read until l_file.end_of_file loop
 					l_file.read_line
 					l_line := l_file.last_string
@@ -764,7 +762,9 @@ feature {NONE} -- Basic operation
 						else
 							l_depth := 1
 						end
-						a_list.extend ([l_location.as_attached, l_depth])
+						--| FIXME: UNICODE content of the file, does not provide unicode file name
+						--| unless it is UTF-8 encoded ...
+						a_list.extend ([l_location.as_string_32, l_depth])
 					end
 				end
 			end

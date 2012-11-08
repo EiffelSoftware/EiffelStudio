@@ -20,7 +20,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_system (a_name: STRING an_uuid: UUID): CONF_SYSTEM
+	new_system (a_name: STRING; an_uuid: UUID): CONF_SYSTEM
 			-- Create a `CONF_SYSTEM' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty

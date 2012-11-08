@@ -39,7 +39,7 @@ inherit
 			{SYSTEM_I} names_heap
 		end
 
-	SHARED_EXEC_ENVIRONMENT
+	SHARED_EXECUTION_ENVIRONMENT
 
 feature -- Status
 

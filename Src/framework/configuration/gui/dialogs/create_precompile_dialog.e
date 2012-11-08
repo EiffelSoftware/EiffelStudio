@@ -38,32 +38,32 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	lookup_directories: attached ARRAYED_LIST [attached TUPLE [path: attached STRING; depth: INTEGER]]
+	lookup_directories: ARRAYED_LIST [TUPLE [path: STRING_32; depth: INTEGER]]
 			-- A list of lookup directories
 		local
-			l_filename: FILE_NAME
+			l_filename: detachable PATH
 			l_file: RAW_FILE
 		do
 			create Result.make (10)
 
-			l_filename := eiffel_layout.precompiles_config_name_8
-			create l_file.make (l_filename)
+			l_filename := eiffel_layout.precompiles_config_name
+			create l_file.make_with_path (l_filename)
 			if l_file.exists then
-				add_lookup_directories (l_filename, Result)
+				add_lookup_directories (l_filename.string_representation, Result)
 			end
 			if eiffel_layout.is_user_files_supported then
-				l_filename := eiffel_layout.user_priority_file_name_8 (l_filename.string, True)
+				l_filename := eiffel_layout.user_priority_file_name (l_filename, True)
 				if l_filename /= Void then
-					l_file.reset (l_filename)
+					l_file.reset_path (l_filename)
 					if l_file.exists then
-						add_lookup_directories (l_filename, Result)
+						add_lookup_directories (l_filename.string_representation, Result)
 					end
 				end
 			end
 
 			if Result.is_empty then
 					-- Extend the default library path
-				Result.extend ([eiffel_layout.precompilation_path_8 (target.setting_msil_generation), 0])
+				Result.extend ([eiffel_layout.precompilation_path (target.setting_msil_generation).string_representation, 0])
 			end
 		end
 

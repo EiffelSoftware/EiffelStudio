@@ -73,14 +73,14 @@ feature -- Processing
 						l_full_path.append (d.item)
 						if a_file_rule.is_included (l_full_path) then
 								-- We need a copy of the string as it is stored as a reference indirectly from this routine.
-							process_cluster_recursive (l_full_path, a_cluster, a_file_rule)
+							process_cluster_recursive (l_full_path.twin, a_cluster, a_file_rule)
 						end
 					end
 				end
 			end
 		end
 
-	handle_class (a_file, a_path: STRING_8; a_cluster: CONF_CLUSTER)
+	handle_class (a_file, a_path: READABLE_STRING_32; a_cluster: CONF_CLUSTER)
 			-- Handle class in `a_file' with `a_path' in `a_cluster'
 		require
 			a_file_not_void: a_file /= Void

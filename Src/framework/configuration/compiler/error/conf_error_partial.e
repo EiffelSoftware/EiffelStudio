@@ -16,22 +16,25 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_error: STRING)
+	make (an_error: READABLE_STRING_GENERAL)
 			-- Create.
+		local
+			s32: STRING_32
 		do
-			text := "Error during merging of partial classes: "
+			create s32.make_from_string ({STRING_32} "Error during merging of partial classes: ")
 			if an_error /= Void then
-				text.append (an_error)
+				s32.append_string_general (an_error)
 			end
+			text := s32
 		end
 
 feature -- Access
 
-	text: STRING_32;
+	text: READABLE_STRING_32;
 		-- Error text.
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

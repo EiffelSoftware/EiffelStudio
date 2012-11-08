@@ -30,7 +30,7 @@ feature {NONE} -- Access
 			-- Full help text loaded from disk.
 		local
 			l_cache: like help_text_cache
-			l_file_name: STRING;
+			l_file_name: STRING_32
 			l_file_path: PATH
 			l_file: PLAIN_TEXT_FILE
 			l_line: STRING
@@ -83,7 +83,7 @@ feature {NONE} -- Access
 			-- Help text for single line error messages.
 		local
 			l_cache: like single_line_help_text_cache
-			l_file_name: STRING
+			l_file_name: STRING_32
 			l_help_text: like help_text
 			l_line: STRING
 			l_text: STRING
@@ -148,13 +148,13 @@ feature {NONE} -- Access
 			result_is_consistent: Result = single_line_help_text
 		end
 
-	help_text_cache: attached HASH_TABLE [ARRAYED_LIST [STRING], STRING]
+	help_text_cache: attached HASH_TABLE [ARRAYED_LIST [STRING], STRING_32]
 			-- Cached short help text messages, loaded from disk.
 		once
 			create Result.make (13)
 		end
 
-	single_line_help_text_cache: attached HASH_TABLE [STRING, STRING]
+	single_line_help_text_cache: attached HASH_TABLE [STRING, STRING_32]
 			-- Cached short help text messages, loaded from disk.
 		once
 			create Result.make (13)

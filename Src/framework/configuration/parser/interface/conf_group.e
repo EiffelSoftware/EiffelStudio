@@ -665,7 +665,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes stored in conf
 
 feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, not stored in configuration fi
 
-	classes_by_filename: HASH_TABLE [like class_type, STRING]
+	classes_by_filename: HASH_TABLE [like class_type, STRING_32]
 			-- Classes index by filename
 
 feature {NONE} -- Type anchors

@@ -104,7 +104,6 @@ feature -- Execution
 		local
 			doc: DOCUMENTATION
 			retried, l_dir_created: BOOLEAN
-			u: FILE_UTILITIES
 		do
 			if eiffel_layout.has_documentation_generation and not retried then
 				create doc.make
@@ -120,7 +119,7 @@ feature -- Execution
 				)
 
 				doc.set_all_universe
-				doc.set_directory (u.make_directory (Eiffel_system.document_path))
+				doc.set_directory (create {DIRECTORY}.make (Eiffel_system.document_path))
 				l_dir_created := True
 				doc.set_cluster_formats (True, False)
 				doc.set_system_formats (True, True, True)

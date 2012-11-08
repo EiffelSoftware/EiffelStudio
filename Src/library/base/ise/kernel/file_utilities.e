@@ -173,16 +173,10 @@ feature -- Directory operations
 			Result := not p.is_empty and then (create {DIRECTORY}.make_with_path (p)).exists
 		end
 
-	make_directory (n: READABLE_STRING_GENERAL): DIRECTORY
-			-- New {DIRECTORY} for directory name `n'.
-		do
-			create Result.make (n)
-		end
-
 	directory_exists (n: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does directory of name `n' exist?
 		do
-			Result := not n.is_empty and then make_directory (n).exists
+			Result := not n.is_empty and then (create {DIRECTORY}.make (n)).exists
 		end
 
 	file_names (n: READABLE_STRING_32): detachable LIST [STRING_32]
@@ -273,11 +267,11 @@ feature -- Directory operations
 			a_path_attached: a_path /= Void
 			not_a_path_is_empty: not a_path.is_empty
 		local
-			d: DIRECTORY
 			is_retried: BOOLEAN
+			d: DIRECTORY
 		do
 			if not is_retried then
-				d := make_directory (a_path)
+				create d.make (a_path)
 				if not d.exists then
 					d.recursive_create_dir
 				end

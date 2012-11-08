@@ -59,6 +59,12 @@ feature -- Roundtrip
 	current_keyword: KEYWORD_AS
 			-- Keyword "current" associated with this structure
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := address_symbol_index
+		end
+
 feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS

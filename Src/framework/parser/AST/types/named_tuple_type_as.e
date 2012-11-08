@@ -80,6 +80,13 @@ feature -- Attributes
 
 	is_class: BOOLEAN = True
 			-- Does the Current AST represent a class?
+feature -- Roundtrip
+
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := class_name.index
+		end
 
 feature -- Status report
 

@@ -83,6 +83,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := larray_symbol_index
+		end
+
 feature -- Attributes
 
 	expressions: EIFFEL_LIST [EXPR_AS]

@@ -101,6 +101,14 @@ feature -- Roundtrip/Token
 			end
 		end
 
+feature -- Roundtrip
+
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := name.index
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN

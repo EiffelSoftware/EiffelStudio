@@ -61,6 +61,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := check_keyword_index
+		end
+
 feature -- Attributes
 
 	check_list: detachable EIFFEL_LIST [TAGGED_AS]

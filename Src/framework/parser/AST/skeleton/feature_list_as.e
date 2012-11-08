@@ -38,6 +38,14 @@ feature -- Attributes
 	features: EIFFEL_LIST [FEATURE_NAME]
 			-- List of feature names
 
+feature -- Roundtrip
+
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := features.index
+		end
+
 feature -- Roundtrip/Location
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS

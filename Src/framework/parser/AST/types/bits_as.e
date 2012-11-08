@@ -58,6 +58,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := bit_keyword_index
+		end
+
 feature -- Attributes
 
 	bits_value: INTEGER_AS

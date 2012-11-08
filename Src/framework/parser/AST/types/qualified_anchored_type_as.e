@@ -107,6 +107,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := like_keyword_index
+		end
+
 feature -- Attributes
 
 	qualifier: TYPE_AS

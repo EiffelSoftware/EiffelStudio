@@ -51,6 +51,14 @@ feature -- Roundtrip
 	lbracket_symbol, rbracket_symbol: detachable SYMBOL_AS
 			-- Symbol "[" and "]" associated with this structure
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			if attached lbracket_symbol as s then
+				Result := s.index
+			end
+		end
+
 feature -- Access
 
 	target: EXPR_AS

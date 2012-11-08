@@ -149,6 +149,12 @@ feature -- Roundtrip
 	indexing_clause: detachable INDEXING_CLAUSE_AS
 			-- Indexing clause in this structure
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := content.index
+		end
+
 feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS

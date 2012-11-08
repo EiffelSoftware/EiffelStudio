@@ -59,6 +59,12 @@ feature -- Roundtrip
 	result_keyword: KEYWORD_AS
 			-- Keyword "result" associated with this structure
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := address_symbol_index
+		end
+
 feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS

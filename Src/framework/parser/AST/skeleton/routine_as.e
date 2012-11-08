@@ -103,6 +103,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := routine_body.index
+		end
+
 feature -- Roundtrip
 
 	internal_locals: detachable LOCAL_DEC_LIST_AS

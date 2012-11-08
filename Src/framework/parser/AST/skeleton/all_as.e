@@ -51,6 +51,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := all_keyword_index
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN

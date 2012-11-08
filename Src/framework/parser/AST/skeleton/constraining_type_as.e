@@ -102,7 +102,16 @@ feature -- Roundtrip
 			end
 		end
 
-feature --Comparison
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := end_keyword_index
+			if Result <= 0 then
+				Result := type.index
+			end
+		end
+
+feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object?

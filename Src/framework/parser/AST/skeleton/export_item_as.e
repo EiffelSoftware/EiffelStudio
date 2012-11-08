@@ -66,6 +66,18 @@ feature -- Roundtrip/Token
 			end
 		end
 
+feature -- Roundtrip
+
+	index: INTEGER
+			-- <Precursor>
+		do
+			if attached clients as c then
+				Result := c.index
+			elseif attached features as f then
+				Result := f.index
+			end
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN

@@ -54,6 +54,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := create_creation_keyword_index
+		end
+
 feature -- Attributes
 
 	clients: detachable CLIENT_AS

@@ -51,6 +51,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := create_keyword_index
+		end
+
 feature -- Visitor
 
 	process (v: AST_VISITOR)

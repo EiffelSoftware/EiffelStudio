@@ -228,6 +228,12 @@ feature -- Roundtrip/Token
 			end
 		end
 
+	index: INTEGER
+			-- Index of the construct in a structure to store all tokens (including breaks and comments)
+			-- that can be used to associate unambigously any information with this construct.
+		deferred
+		end
+
 feature -- Roundtrip/Text modification
 
 	can_append_text (a_list: LEAF_AS_LIST): BOOLEAN

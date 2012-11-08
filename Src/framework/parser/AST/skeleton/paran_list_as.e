@@ -63,6 +63,12 @@ feature -- Access: roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := lparan_symbol_index
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN

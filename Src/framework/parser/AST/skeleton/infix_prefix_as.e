@@ -58,6 +58,14 @@ feature -- Roundtrip
 	infix_prefix_keyword: detachable KEYWORD_AS
 		-- Keyword "infix" or "prefix" associated with this structure.
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			if attached infix_prefix_keyword as k then
+				Result := k.index
+			end
+		end
+
 feature -- Properties
 
 	is_infix: BOOLEAN

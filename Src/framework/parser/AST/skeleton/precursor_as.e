@@ -109,6 +109,14 @@ feature -- Roundtrip
 	internal_parameters: detachable PARAMETER_LIST_AS
 			-- Internal list of parameters			
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			if attached precursor_keyword as k then
+				Result := k.index
+			end
+		end
+
 feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS

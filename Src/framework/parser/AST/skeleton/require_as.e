@@ -55,6 +55,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := require_keyword_index
+		end
+
 feature -- Properties
 
 	is_else: BOOLEAN

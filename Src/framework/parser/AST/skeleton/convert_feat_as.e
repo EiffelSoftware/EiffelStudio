@@ -139,6 +139,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := colon_symbol_index
+		end
+
 feature -- Access
 
 	is_creation_procedure: BOOLEAN

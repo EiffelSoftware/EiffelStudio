@@ -60,6 +60,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := creation_expr.index
+		end
+
 feature -- Access
 
 	creation_expr: CREATION_EXPR_AS

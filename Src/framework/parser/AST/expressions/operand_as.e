@@ -68,6 +68,16 @@ feature -- Roundtrip
 			question_mark_symbol_set: s_as /= Void implies question_mark_symbol_index = s_as.index
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			if attached expression as e then
+				Result := e.index
+			else
+				Result := question_mark_symbol_index
+			end
+		end
+
 feature -- Attributes
 
 	class_type: detachable TYPE_AS

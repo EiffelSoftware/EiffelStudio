@@ -60,6 +60,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := colon_symbol_index
+		end
+
 feature -- Attributes
 
 	tag: detachable ID_AS

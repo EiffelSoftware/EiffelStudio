@@ -59,6 +59,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := debug_keyword_index
+		end
+
 feature -- Attributes
 
 	compound: detachable EIFFEL_LIST [INSTRUCTION_AS]

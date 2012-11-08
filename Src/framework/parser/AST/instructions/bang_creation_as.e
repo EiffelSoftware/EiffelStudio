@@ -38,6 +38,14 @@ feature -- Roundtrip
 	lbang_symbol, rbang_symbol: detachable SYMBOL_AS
 			-- Symbol "!" associated with this structure
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			if attached lbang_symbol as s then
+				Result := s.index
+			end
+		end
+
 feature -- Visitor
 
 	process (v: AST_VISITOR)

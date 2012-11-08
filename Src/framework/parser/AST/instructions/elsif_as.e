@@ -79,6 +79,12 @@ feature -- Roundtrip
 			end
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := elseif_keyword_index
+		end
+
 feature -- Attributes
 
 	expr: EXPR_AS

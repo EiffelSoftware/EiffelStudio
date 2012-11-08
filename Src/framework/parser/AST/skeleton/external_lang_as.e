@@ -37,6 +37,14 @@ feature -- Visitor
 			v.process_external_lang_as (Current)
 		end
 
+feature -- Roundtrip
+
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := language_name.index
+		end
+
 feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS

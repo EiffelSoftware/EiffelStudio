@@ -43,7 +43,6 @@ feature -- Command
 	destroy
 		do
 			Precursor
-			application_menu := Void
 			context_menus.wipe_out
 			contextual_tabs.wipe_out
 			data := Void

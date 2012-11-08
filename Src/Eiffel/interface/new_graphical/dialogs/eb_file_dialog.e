@@ -27,7 +27,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_preference (a_preference: STRING_PREFERENCE)
+	make_with_preference (a_preference: like preference)
 			-- Create `Current' and assign `a_preference' to `preference'.
 		require
 			a_preference_not_void: a_preference /= Void
@@ -47,7 +47,7 @@ feature -- Status setting
 	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show `Current' modal to window `a_window'.
 		local
-			last_directory: STRING_8
+			last_directory: like preference.value
 			dir: DIRECTORY
 		do
 			last_directory := preference.value

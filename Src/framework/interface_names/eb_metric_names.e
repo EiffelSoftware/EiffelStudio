@@ -1331,21 +1331,19 @@ feature -- Utilities
 			a_str_list_attached: a_str_list /= Void
 			a_str_list_not_empty: not a_str_list.is_empty
 			a_separator_attached: a_separator /= Void
-		local
-			l_temp_str: STRING_32
 		do
 			create Result.make (128)
 			from
 				a_str_list.start
 				check a_str_list.item /= Void end
-				l_temp_str.append_string_general (a_str_list.item)
+				Result.append_string_general (a_str_list.item)
 				a_str_list.forth
 			until
 				a_str_list.after
 			loop
-				l_temp_str.append_string_general (a_separator)
+				Result.append_string_general (a_separator)
 				check a_str_list.item /= Void end
-				l_temp_str.append_string_general (a_str_list.item)
+				Result.append_string_general (a_str_list.item)
 				a_str_list.forth
 			end
 		ensure

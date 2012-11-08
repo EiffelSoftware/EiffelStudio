@@ -14,7 +14,8 @@ inherit
 			create_interface_objects,
 			implementation,
 			create_implementation,
-			initialize
+			initialize,
+			destroy
 		end
 
 feature {NONE} -- Initialization
@@ -35,6 +36,21 @@ feature {NONE} -- Initialization
 			create mini_toolbars.make (5)
 			create context_menus.make (5)
 			create contextual_tabs.make (5)
+		end
+
+feature -- Command
+
+	destroy
+		do
+			Precursor
+			context_menus.wipe_out
+			contextual_tabs.wipe_out
+			data := Void
+			help_button := Void
+			internal_name := Void
+			internal_pixmap_path := Void
+			mini_toolbars.wipe_out
+			quick_access_toolbar := Void
 		end
 
 feature -- Access
@@ -85,4 +101,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

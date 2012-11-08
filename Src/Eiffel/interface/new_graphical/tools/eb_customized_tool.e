@@ -212,7 +212,7 @@ feature -- Setting
 		require
 			a_location_attached: a_location /= Void
 		do
-			create pixmap_location.make_from_path (a_location)
+			pixmap_location := a_location
 			set_is_pixmap_loaded (False)
 		ensure
 			pixmap_location_set: pixmap_location /= Void and then pixmap_location.is_equal (a_location)

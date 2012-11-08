@@ -130,10 +130,10 @@ feature {NONE} -- Process
 
 feature {NONE} -- State transistions
 
-	new_tag_state_transitions: HASH_TABLE [HASH_TABLE [NATURAL_8, STRING], NATURAL_8]
+	new_tag_state_transitions: HASH_TABLE [HASH_TABLE [NATURAL_8, STRING_32], NATURAL_8]
 			-- <Precursor>
 		local
-			l_table: HASH_TABLE [NATURAL_8, STRING]
+			l_table: like new_tag_state_transitions.item
 		do
 			Result := Precursor.twin
 

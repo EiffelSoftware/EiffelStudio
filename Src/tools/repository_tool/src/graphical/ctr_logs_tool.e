@@ -756,7 +756,7 @@ feature {CTR_WINDOW} -- Implementation
 			glab_buts: EV_GRID_PIXMAPS_ON_RIGHT_LABEL_ITEM
 			gdate_time: EV_GRID_LABEL_ITEM
 			glab: EV_GRID_LABEL_ITEM
-			c: INTEGER
+			i, c: INTEGER
 			stats: like {REPOSITORY_LOG_REVIEW}.stats
 		do
 			if a_log.has_review and then attached a_log.review as l_review then
@@ -803,11 +803,17 @@ feature {CTR_WINDOW} -- Implementation
 			else
 				a_row.set_item (cst_revision_column, create {EV_GRID_LABEL_ITEM}.make_with_text (a_log.id))
 			end
-			if attached smart_token_pixmap (a_log) as p then
+			if attached smart_token_pixmaps (a_log) as p_lst then
 				create glab_buts.make_with_text (a_log.single_line_message)
 				glab := glab_buts
-				glab_buts.set_pixmaps_on_right_count (1)
-				glab_buts.put_pixmap_on_right (p, 1)
+				glab_buts.set_pixmaps_on_right_count (p_lst.count)
+				i := 0
+				across
+					p_lst as p
+				loop
+					i := i + 1
+					glab_buts.put_pixmap_on_right (p.item, i)
+				end
 			else
 				create glab.make_with_text (a_log.single_line_message)
 			end
@@ -1414,10 +1420,11 @@ feature {NONE} -- Implementation: smart token
 	smart_token_handler: detachable CTR_SMART_TOKEN_HANDLER
 			-- Smart token handler
 
-	smart_token_pixmap (a_log: REPOSITORY_LOG): detachable EV_PIXMAP
+	smart_token_pixmaps (a_log: REPOSITORY_LOG): detachable LIST [EV_PIXMAP]
 		local
 			hdl: like smart_token_handler
 		do
+			create {ARRAYED_LIST [EV_PIXMAP]} Result.make (2)
 			hdl := smart_token_handler
 			if hdl = Void then
 				create hdl
@@ -1428,10 +1435,23 @@ feature {NONE} -- Implementation: smart token
 				ht.has_key ("bug") and then attached ht.found_item as l_items
 			then
 				if l_items.count = 1 then
-					Result := token_pixmap ("bug", l_items.first)
+					Result.extend (token_pixmap ("bug", l_items.first))
 				elseif l_items.count > 1 then
-					Result := token_pixmap ("bug", l_items.first + "..")
+					Result.extend (token_pixmap ("bug", l_items.first + ".."))
 				end
+			end
+			if
+				attached hdl.smart_token_occurrences (a_log, "review", a_log.parent.tokens_keys) as ht and then
+				ht.has_key ("review") and then attached ht.found_item as l_items
+			then
+				if l_items.count = 1 then
+					Result.extend (token_pixmap ("review", l_items.first))
+				elseif l_items.count > 1 then
+					Result.extend (token_pixmap ("review", l_items.first + ".."))
+				end
+			end
+			if Result.is_empty then
+				Result := Void
 			end
 		end
 

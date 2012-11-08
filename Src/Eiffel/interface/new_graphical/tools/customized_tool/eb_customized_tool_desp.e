@@ -98,7 +98,7 @@ feature -- Setting
 		require
 			a_path_attached: a_path /= Void
 		do
-			create pixmap_location.make_from_path (a_path)
+			pixmap_location := a_path
 		end
 
 	extend_handler (a_tool_id: like id; a_stone_name: STRING)

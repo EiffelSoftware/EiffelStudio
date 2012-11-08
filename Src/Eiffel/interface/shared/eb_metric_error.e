@@ -141,11 +141,7 @@ feature -- Setting
 	set_file_location (a_file_location: like file_location)
 			-- Set `file_location' with `a_file_location'.
 		do
-			if a_file_location = Void then
-				file_location := Void
-			else
-				create file_location.make_from_path (a_file_location)
-			end
+			file_location := a_file_location
 		ensure
 			file_location_set:
 				(a_file_location = Void implies file_location = Void) and then

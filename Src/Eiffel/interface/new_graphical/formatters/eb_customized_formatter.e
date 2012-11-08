@@ -427,11 +427,7 @@ feature -- Setting
 	set_icon_location (a_location: like icon_location)
 			-- Set `icon_location' with `a_location'.
 		do
-			if a_location = Void then
-				icon_location := Void
-			else
-				create icon_location.make_from_path (a_location)
-			end
+			icon_location := a_location
 			set_is_pixmap_loaded (False)
 		end
 

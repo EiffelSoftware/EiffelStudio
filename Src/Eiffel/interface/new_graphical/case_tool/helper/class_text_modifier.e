@@ -1124,7 +1124,7 @@ feature {NONE} -- Implementation
 			l_comments: EIFFEL_COMMENTS
 		do
 			l_match_list := match_list
-			exp := string_general_as_lower (a_export)
+			exp := a_export.as_lower
 			insertion_position := 0
 
 				-- Check if specified clause is present.

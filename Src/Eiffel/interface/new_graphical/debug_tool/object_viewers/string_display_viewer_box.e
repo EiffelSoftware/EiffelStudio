@@ -72,6 +72,9 @@ feature {NONE} -- Implementation
 			editor.drop_actions.set_veto_pebble_function (agent is_valid_stone)
 			vb.extend (editor)
 
+				-- By default, make a tab be the width of 8 spaces.
+			editor.set_tab_width (text_format.font.string_width ("        "))
+
  			set_title (name)
 		end
 
@@ -548,7 +551,7 @@ feature {NONE} -- Event handling
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -277,7 +277,7 @@ feature{NONE} -- Implementation
 		do
 			l_class_i := class_i_from_editor
 			if l_class_i /= Void then
-				Result := l_class_i.file_name.twin
+				Result := l_class_i.file_name.string_representation
 			else
 				Result := a_text.twin
 			end
@@ -450,7 +450,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	file_content (a_file_name: STRING_32): STRING
+	file_content (a_file_name: PATH): STRING
 			-- Content of file specified by `a_file_name'
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -459,7 +459,7 @@ feature{NONE} -- Implementation
 			l_file: PLAIN_TEXT_FILE
 		do
 			if not l_retried then
-				create l_file.make_with_name (a_file_name)
+				create l_file.make_with_path (a_file_name)
 				l_file.open_read
 				l_file.read_stream (l_file.count)
 				Result := l_file.last_string
@@ -498,7 +498,8 @@ feature{NONE} -- Implementation
 			a_class_i_attached: a_class_i /= Void
 		do
 			if workbench.system_defined and then workbench.is_already_compiled then
-				Result := window_manager.last_focused_development_window.editors_manager.editor_with_class (a_class_i.file_name)
+				Result := window_manager.last_focused_development_window.editors_manager.editor_with_class
+					(a_class_i.file_name)
 			end
 		end
 

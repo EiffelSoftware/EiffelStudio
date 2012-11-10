@@ -114,7 +114,6 @@ feature -- Visit nodes
 		local
 			l_as, l_new_as: STRING
 			l_loc: CONF_FILE_LOCATION
-			l_file: FILE_NAME_32
 			f: FILE_UTILITIES
 		do
 				-- If we are in IL code generation and that we do not handle assemblies specified by their name, version, public token, culture
@@ -126,12 +125,10 @@ feature -- Visit nodes
 					l_as := an_assembly.location.evaluated_path
 					if not l_as.is_empty then
 						l_new_as := an_assembly.location.evaluated_file
-						create l_loc.make ("..\"+l_new_as, an_assembly.target)
+						create l_loc.make ("..\" + l_new_as, an_assembly.target)
 						an_assembly.set_location (l_loc)
-						create l_file.make_from_string (backup_directory)
-						l_file.set_file_name (l_new_as)
 							-- copy assembly
-						f.copy_file (l_as, l_file)
+						f.copy_file (l_as, (create {PATH}.make_from_string (backup_directory)).extended (l_new_as).string_representation)
 					end
 				end
 			end

@@ -71,7 +71,7 @@ feature -- Formatting
 	format
 			-- Refresh `widget'.
 		local
-			f_name: STRING_32
+			f_name: PATH
 		do
 			if
 				classi /= Void and then
@@ -94,7 +94,7 @@ feature -- Formatting
 					if f_name = Void or else f_name.is_empty then
 						f_name := classi.file_name
 					end
-					editor.display_message (Warning_messages.w_Cannot_read_file (f_name))
+					editor.display_message (Warning_messages.w_Cannot_read_file (f_name.string_representation))
 				end
 				is_editable :=	not classi.is_read_only and not editor.load_file_error
 				editor.set_read_only (not is_editable)

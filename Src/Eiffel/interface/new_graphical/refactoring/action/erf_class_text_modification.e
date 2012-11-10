@@ -387,7 +387,7 @@ feature -- Load/Save file
 				-- We use `actual_class' because we want the class on which the user
 				-- is working on, not the one that he is overridding.
 			l_encoding ?= class_i.actual_class.encoding
-			save (class_i.actual_class.file_name, utf8_to_utf32 (text), l_encoding, class_i.actual_class.bom)
+			save (class_i.actual_class.file_name.string_representation, utf8_to_utf32 (text), l_encoding, class_i.actual_class.bom)
 		end
 
 	discard_text

@@ -712,7 +712,7 @@ feature {NONE} -- Implementation
 			then
 				conv_class ?= titem
 				if conv_class /= Void then
-					create testfile.make_with_name (conv_class.data.file_name)
+					create testfile.make_with_path (conv_class.data.file_name)
 					if testfile.exists and then testfile.is_readable then
 						window.set_stone (conv_class.stone)
 					else

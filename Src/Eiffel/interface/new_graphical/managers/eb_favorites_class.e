@@ -129,13 +129,10 @@ feature -- Convert
 			end
 		end
 
-	associated_file_name: detachable FILE_NAME_32
+	associated_file_name: detachable PATH
 			-- Full file name of this favorite class.
-		local
-			class_i: CLASS_I
 		do
-			class_i := associated_class_i
-			if class_i /= Void then
+			if attached associated_class_i as class_i then
 				Result := class_i.file_name
 			end
 		end

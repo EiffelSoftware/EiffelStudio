@@ -91,7 +91,7 @@ feature -- Access
 																eiffel_universe.target_name,
 																c.group.name,
 																stone_signature,
-																c.lace_class.file_name)
+																c.lace_class.file_name.string_representation)
 				end
 			end
 		end

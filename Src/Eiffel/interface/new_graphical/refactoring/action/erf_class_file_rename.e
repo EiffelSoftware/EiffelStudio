@@ -30,16 +30,14 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_new_name_not_void: a_new_name /= Void
 		local
-			new_file_name: FILE_NAME_32
+			new_file_name: PATH
 		do
 			class_i := a_class
 			create new_file_name.make_from_string (a_class.cluster.location.build_path (a_class.path, ""))
-			new_file_name.set_file_name (a_new_name)
-			new_file_name.add_extension ("e")
+			new_file_name := new_file_name.extended (a_new_name + ".e")
 			create old_name_ext.make_from_string (a_class.base_name)
 			create new_name_ext.make_from_string (a_new_name)
 			new_name_ext.append (".e")
-
 			make_file_rename (a_class.file_name, new_file_name)
 		end
 

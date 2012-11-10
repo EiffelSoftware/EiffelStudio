@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 					debugger_manager.application.kill
 				end
 				debugger_manager.disable_debug
-				create file.make_with_name (class_i.file_name)
+				create file.make_with_path (class_i.file_name)
 				if
 					file.exists and then
 					file.is_writable
@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 			end
 			if could_not_delete then
 					-- We were not able to delete the file.
-				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Not_writable (class_i.file_name), window.window, Void)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (Warning_messages.w_Not_writable (class_i.file_name.string_representation), window.window, Void)
 			end
 		rescue
 			retried := True

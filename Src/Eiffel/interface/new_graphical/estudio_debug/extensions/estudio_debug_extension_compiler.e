@@ -96,7 +96,7 @@ feature -- Execution
 								cli := cl_i_lst.item
 								l_row := g.grid_extended_new_row (g)
 								l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (cli.name))
-								l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (cli.file_name))
+								l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (cli.file_name.string_representation))
 								if attached cli.compiled_representation as cl then
 									r := l_row
 									l_row := g.grid_extended_new_subrow (r)

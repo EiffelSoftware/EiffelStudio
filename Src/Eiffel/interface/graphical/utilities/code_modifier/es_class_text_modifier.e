@@ -436,7 +436,7 @@ feature -- Basic operations
 
 			if not l_set_in_editor or not l_was_modified then
 					-- Save only if the text wasn't set in the editor or the editor was not modified before applying the modifications.
-				if (create {RAW_FILE}.make_with_name (context_class.file_name)).exists and then original_file_date /= context_class.file_date then
+				if (create {RAW_FILE}.make_with_path (context_class.file_name)).exists and then original_file_date /= context_class.file_date then
 						-- Need to use merge
 					l_new_text := context_class.text_32.as_attached
 					l_new_text.prune_all ('%R')
@@ -451,7 +451,7 @@ feature -- Basic operations
 
 						-- Save directly to disk.
 					create l_save
-					l_save.save (context_class.file_name, l_new_text, original_encoding, original_bom)
+					l_save.save (context_class.file_name.string_representation, l_new_text, original_encoding, original_bom)
 					from l_editors.start until l_editors.after loop
 						l_editor := l_editors.item
 						l_editor.continue_editing

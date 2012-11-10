@@ -341,7 +341,7 @@ feature -- Access
 	file_date: INTEGER
 			-- Date of last modification date of Current.
 		do
-			Result := file_modified_date (file_name)
+			Result := file_modified_date (file_name.string_representation)
 		ensure
 			file_date_valid: Result >= -1
 		end
@@ -446,11 +446,11 @@ feature -- Status report
 			l_name := actual_namespace
 		end
 
-	file_name: FILE_NAME_32
-			-- Full file name of the class
+	file_name: PATH
+			-- Full file name of the class.
 		do
 			create Result.make_from_string (group.location.build_path (path, {STRING_32} ""))
-			Result.set_file_name (base_name)
+			Result := Result.extended (base_name)
 		ensure
 			file_name_not_void: Result /= Void
 		end
@@ -468,7 +468,7 @@ feature -- Status report
 			l_converter: ENCODING_CONVERTER
 		do
 			if not retried then
-				create a_file.make_with_name (file_name)
+				create a_file.make_with_path (file_name)
 				if a_file.exists and then a_file.is_readable then
 					a_file.open_read
 					a_file.read_stream (a_file.count)
@@ -523,7 +523,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 			l_converter: ENCODING_CONVERTER
 		do
 			if not retried then
-				create a_file.make_with_name (file_name)
+				create a_file.make_with_path (file_name)
 				if a_file.exists and then a_file.is_readable and then not a_file.is_empty then
 					a_file.open_read
 					a_file.read_stream (a_file.count)

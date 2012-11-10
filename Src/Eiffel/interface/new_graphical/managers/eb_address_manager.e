@@ -1059,7 +1059,7 @@ feature {NONE} -- Execution
 			-- Open a new tab if Ctrl pressed and editor with current class/feature not exists
 		local
 			l_env: EV_ENVIRONMENT
-			l_file_name: detachable FILE_NAME_32
+			l_file_name: detachable PATH
 			l_class_c: detachable CLASS_C
 		do
 			create l_env

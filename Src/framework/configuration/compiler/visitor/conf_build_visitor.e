@@ -98,12 +98,12 @@ feature -- Access
 
 feature -- Update
 
-	set_assembly_cach_folder (a_location: STRING)
+	set_assembly_cach_folder (a_location: STRING_32)
 			-- Set `assembly_cache_folder'.
 		require
 			a_location_not_void: a_location /= Void
 		do
-			assembly_cache_folder := create {FILE_NAME}.make_from_string (a_location)
+			create assembly_cache_folder.make_from_string (a_location)
 		end
 
 	set_il_version (a_version: like il_version)
@@ -597,7 +597,7 @@ feature {NONE} -- Implementation
 	handled_groups: SEARCH_TABLE [CONF_GROUP]
 			-- List of groups that have been handled (and therefore don't need to be checked for removed classes).
 
-	assembly_cache_folder: PATH_NAME
+	assembly_cache_folder: PATH
 			-- Assembly cache folder.
 
 	il_version: STRING

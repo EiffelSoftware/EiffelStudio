@@ -188,9 +188,8 @@ feature -- dragging
 			-- Name for the stone.
 		local
 			l_feature_name: STRING_32
-			l_file_name: FILE_NAME_32
+			l_file_name: PATH
 		do
-
 			create l_feature_name.make (20)
 			l_feature_name.append ("{")
 			l_feature_name.append (e_class.name_in_upper)
@@ -205,14 +204,13 @@ feature -- dragging
 															eiffel_universe.target_name,
 															e_class.group.name,
 															l_feature_name,
-															l_file_name.to_string_32)
+															l_file_name.string_representation)
 			else
 				Result := interface_names.l_feature_header_precompiled (eiffel_system.name,
 															eiffel_universe.target_name,
 															e_class.group.name,
 															l_feature_name)
 			end
-
 		end
 
 	stone_cursor: EV_POINTER_STYLE

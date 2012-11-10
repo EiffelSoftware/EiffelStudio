@@ -1661,7 +1661,7 @@ feature {NONE} -- Implementation
 					l_assemblies.forth
 				end
 				if not l_path.is_empty then
-					create l_man.make (create {CONF_COMP_FACTORY}, system.metadata_cache_path, system.clr_runtime_version, assembly.target,  create {SEARCH_TABLE [CONF_CLASS]}.make (0), create {SEARCH_TABLE [CONF_CLASS]}.make (0), create {SEARCH_TABLE [CONF_CLASS]}.make (0))
+					create l_man.make (create {CONF_COMP_FACTORY}, create {PATH}.make_from_string (system.metadata_cache_path), system.clr_runtime_version, assembly.target,  create {SEARCH_TABLE [CONF_CLASS]}.make (0), create {SEARCH_TABLE [CONF_CLASS]}.make (0), create {SEARCH_TABLE [CONF_CLASS]}.make (0))
 					l_emitter := new_emitter (l_man)
 					if l_emitter.exists and then l_emitter.is_initialized then
 						l_emitter.consume_assembly_from_path (assembly.consumed_assembly.location, False, l_path)

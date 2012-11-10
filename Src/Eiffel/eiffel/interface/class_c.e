@@ -3840,7 +3840,7 @@ feature -- Server Access
 	file_name: STRING_32
 			-- File name of the class
 		do
-			Result := lace_class.file_name
+			Result := lace_class.file_name.string_representation
 		end
 
 	file_is_readable: BOOLEAN

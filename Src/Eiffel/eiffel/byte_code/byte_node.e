@@ -71,7 +71,7 @@ feature -- Eiffel source line information
 				l_buffer.put_integer (line_number)
 				l_buffer.put_character (' ')
 				l_buffer.put_indivisible_string_literal
-					(u.string_32_to_utf_8_string_8 (context.associated_class.lace_class.file_name))
+					(u.string_32_to_utf_8_string_8 (context.associated_class.lace_class.file_name.string_representation))
 			end
 		end
 

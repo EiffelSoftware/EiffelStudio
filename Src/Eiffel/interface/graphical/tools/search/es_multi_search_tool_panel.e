@@ -1115,7 +1115,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 		local
 			incremental_search_strategy: MSR_SEARCH_INCREMENTAL_STRATEGY
 			class_i: CLASS_I
-			file_name: FILE_NAME_32
+			file_name: PATH
 			class_name: STRING
 			class_stone: CLASSI_STONE
 			l_text: STRING_32
@@ -1187,7 +1187,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 		local
 			text_strategy: MSR_SEARCH_TEXT_STRATEGY
 			class_i: CLASS_I
-			file_name: FILE_NAME_32
+			file_name: PATH
 			class_name: STRING
 			class_stone: CLASSI_STONE
 		do
@@ -1237,7 +1237,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 		local
 			text_strategy: MSR_SEARCH_TEXT_STRATEGY
 			class_i: CLASS_I
-			file_name: FILE_NAME_32
+			file_name: PATH
 			class_name: STRING
 			class_stone: CLASSI_STONE
 		do
@@ -1722,7 +1722,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation, Q
 			l: LIST [EB_DEVELOPMENT_WINDOW]
 			l_editor: EB_SMART_EDITOR
 		do
-			l := window_manager.development_windows_with_class (a_class.file_name)
+			l := window_manager.development_windows_with_class (a_class.file_name.string_representation)
 			if not l.is_empty then
 				from
 					l.start

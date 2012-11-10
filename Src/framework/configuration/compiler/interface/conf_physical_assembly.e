@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			internal_conditions.force (default_condition)
 		end
 
-	make_from_consumed (a_consumed: CONSUMED_ASSEMBLY; a_cache_path: DIRECTORY_NAME; a_target: CONF_TARGET)
+	make_from_consumed (a_consumed: CONSUMED_ASSEMBLY; a_cache_path: PATH; a_target: CONF_TARGET)
 			-- Create
 		require
 			a_consumed_not_void: a_consumed /= Void
@@ -110,7 +110,7 @@ feature -- Status
 
 feature -- Access, in compiled only
 
-	cache_path: DIRECTORY_NAME
+	cache_path: PATH
 			-- Path to the metadata cache.
 
 	dotnet_classes: HASH_TABLE [like class_type, STRING]
@@ -125,11 +125,10 @@ feature -- Access, in compiled only
 			Result := consumed_assembly.unique_id
 		end
 
-	consumed_path: DIRECTORY_NAME
+	consumed_path: PATH
 			-- The path to the consumed assembly.
 		do
-			create Result.make_from_string (cache_path)
-			Result.extend (consumed_assembly.folder_name)
+			Result := cache_path.extended (consumed_assembly.folder_name)
 		end
 
 	date: INTEGER
@@ -183,13 +182,12 @@ feature -- Access queries
 			result_ok: Result /= Void
 		end
 
-	types_info_file_location: FILE_NAME
+	types_info_file_location: PATH
 			-- Types info file.
 		require
 			consumed_path_not_void: consumed_path /= Void
 		do
-			create Result.make_from_string (consumed_path)
-			Result.set_file_name (types_info_file)
+			Result := consumed_path.extended (types_info_file)
 		end
 
 	has_date_changed: BOOLEAN
@@ -197,7 +195,7 @@ feature -- Access queries
 		local
 			l_date: INTEGER
 		do
-			l_date := file_modified_date (types_info_file_location)
+			l_date := file_modified_date (types_info_file_location.string_representation)
 			Result := (l_date = -1) or (l_date /= date)
 		end
 
@@ -360,7 +358,7 @@ feature {CONF_ACCESS} -- Update, in compiled only
 	set_date
 			-- Set `date' to the last modification timestamp.
 		do
-			date := file_modified_date (types_info_file_location)
+			date := file_modified_date (types_info_file_location.string_representation)
 		ensure
 			not_date_changed: not has_date_changed
 		end
@@ -434,7 +432,7 @@ invariant
 	assemblies_not_void: assemblies /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

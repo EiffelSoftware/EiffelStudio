@@ -333,7 +333,7 @@ feature {NONE} -- Implementation of data retrieval
 			l_cl_opt: LACE_LIST [O_OPTION_SD]
 			l_fr: CONF_FILE_RULE
 			l_str, l_path: STRING
-			l_file_path: FILE_NAME_32
+			l_file_path: PATH
 			l_file: PLAIN_TEXT_FILE
 			l_opt_map: HASH_TABLE [LACE_LIST [D_OPTION_SD], STRING]
 			l_lst: LACE_LIST [D_OPTION_SD]
@@ -350,22 +350,21 @@ feature {NONE} -- Implementation of data retrieval
 				l_str := a_properties.use_name
 				if l_str /= Void then
 					l_path := execution_environment.interpreted_string (l_str)
-					create l_file_path.make_from_string (l_location.evaluated_directory)
-					l_file_path.set_file_name (l_path)
-					if l_file_path.is_empty then
-						set_error (create {CONF_ERROR_FILE}.make (l_file_path))
+					if l_path.is_empty then
+						set_error (create {CONF_ERROR_FILE}.make (l_path))
 					else
-						create l_file.make_with_name (l_file_path)
+						create l_file_path.make_from_string (l_location.evaluated_directory)
+						l_file_path := l_file_path.extended (l_path)
+						create l_file.make_with_path (l_file_path)
 						if not l_file.exists or else l_file.is_directory or else not l_file.is_readable then
-							set_error (create {CONF_ERROR_FILE}.make (l_file_path))
+							set_error (create {CONF_ERROR_FILE}.make (l_file_path.string_representation))
 						else
-							l_file.open_read
 							create l_parser.make
-							l_parser.parse_file (l_file_path, True)
+							l_parser.parse_file (l_file_path.string_representation, True)
 							if attached {CLUST_PROP_SD} l_parser.ast as l_use_prop then
 								process_cluster_properties (l_use_prop)
 							else
-								set_error (create {CONF_ERROR_PARSE}.make ({STRING_32} "Problem in use file:" + l_file_path))
+								set_error (create {CONF_ERROR_PARSE}.make ({STRING_32} "Problem in use file:" + l_file_path.string_representation))
 							end
 						end
 					end
@@ -500,9 +499,7 @@ feature {NONE} -- Implementation of data retrieval
 			current_target_not_void: current_target /= Void
 		local
 			l_d_opt: D_OPTION_SD
-			l_precomp: D_PRECOMPILED_SD
 			l_option: OPTION_SD
-			l_debug: DEBUG_SD
 			l_value: OPT_VAL_SD
 			l_name: STRING
 			l_conf_vers: CONF_VERSION
@@ -527,8 +524,7 @@ feature {NONE} -- Implementation of data retrieval
 					l_value := l_d_opt.value
 					if l_name.is_case_insensitive_equal ("description") then
 						current_target.set_description (l_value.value.as_string_32)
-					elseif l_option.is_debug then
-						l_debug ?= l_option
+					elseif attached {DEBUG_SD} l_option as l_debug then
 						if current_options = Void then
 							create current_options
 						end
@@ -605,8 +601,7 @@ feature {NONE} -- Implementation of data retrieval
 							end
 						end
 					elseif l_option.is_precompiled then
-						l_precomp ?= l_d_opt
-						if l_precomp.value = Void then
+						if not attached {D_PRECOMPILED_SD} l_d_opt as l_precomp or else l_precomp.value = Void then
 							set_error (create {CONF_ERROR_PARSE}.make ("Incorrect precompile."))
 						else
 								-- we try to guess the correct configuration location, may not always work

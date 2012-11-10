@@ -237,7 +237,7 @@ feature -- Status setting
 			l_prev_date: like date
 		do
 			l_prev_date := date
-			create class_file.make_with_name (class_i.file_name)
+			create class_file.make_with_path (class_i.file_name)
 			if class_file.exists then
 				date := class_file.date
 			end
@@ -338,7 +338,7 @@ feature -- Modification (Add/Remove feature)
 			p: PARENT_AS
 			class_file: PLAIN_TEXT_FILE
 		do
-			create class_file.make_with_name (class_i.file_name)
+			create class_file.make_with_path (class_i.file_name)
 			check class_file.exists end
 			if class_file.date /= date then
 				put_class_modified_outside_diagram_warning
@@ -387,7 +387,7 @@ feature -- Modification (Add/Remove feature)
 		local
 			class_file: PLAIN_TEXT_FILE
 		do
-			create class_file.make_with_name (class_i.file_name)
+			create class_file.make_with_path (class_i.file_name)
 			check class_file.exists end
 			if class_file.date /= date then
 				put_class_modified_outside_diagram_warning
@@ -435,7 +435,7 @@ feature -- Modification (Add/Remove feature)
 			names: EIFFEL_LIST [FEATURE_NAME]
 			name_index, name_start_position, name_end_position, tmp: INTEGER
 		do
-			create class_file.make_with_name (class_i.file_name)
+			create class_file.make_with_path (class_i.file_name)
 			check class_file.exists end
 			if class_file.date /= date then
 				put_class_modified_outside_diagram_warning
@@ -514,7 +514,7 @@ feature -- Modification (Add/Remove feature)
 			l_item: TUPLE [str: STRING; pos: INTEGER]
 			str: STRING
 		do
-			create class_file.make_with_name (class_i.file_name)
+			create class_file.make_with_path (class_i.file_name)
 			check class_file.exists end
 			if class_file.date /= date then
 				put_class_modified_outside_diagram_warning
@@ -549,7 +549,7 @@ feature -- Modification (Add/Remove feature)
 			str: STRING
 			pos: INTEGER
 		do
-			create class_file.make_with_name (class_i.file_name)
+			create class_file.make_with_path (class_i.file_name)
 			check class_file.exists end
 			if class_file.date /= date then
 				put_class_modified_outside_diagram_warning
@@ -1349,7 +1349,7 @@ feature {NONE} -- Implementation
 				end
 			end
 
-			create class_file.make_with_name (class_i.file_name)
+			create class_file.make_with_path (class_i.file_name)
 			check class_file.exists end
 			if class_file.date /= date then
 				put_class_modified_outside_diagram_warning

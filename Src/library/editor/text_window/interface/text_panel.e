@@ -210,7 +210,7 @@ feature -- Access
 	text_displayed: TEXT
 			-- Text currently displayed on the screen.
 
-	file_name: detachable FILE_NAME_32
+	file_name: detachable PATH
 			-- Name of the currently opened file, if any.
 
 	size_of_file_when_loaded: INTEGER
@@ -689,26 +689,28 @@ feature -- Basic Operations
 			set_first_line_displayed (first_line_displayed, True)
 		end
 
-	load_file (a_filename: STRING_32)
+	load_file (a_filename: PATH)
 			-- Load contents of `a_filename'
 		require
 			filename_not_void: a_filename /= Void
 		local
 			l_file: RAW_FILE
-			l_doc_type: STRING
+			l_doc_type: STRING_32
 			l_date: like date_of_file_when_loaded
 			l_size: like size_of_file_when_loaded
+			s: STRING_32
 		do
 			editor_drawing_area.disable_sensitive
 				-- Check the document type of the file to load.
-			l_doc_type := a_filename.substring (a_filename.last_index_of ('.', a_filename.count) + 1, a_filename.count)
+			s := a_filename.string_representation
+			l_doc_type := s.substring (s.last_index_of ('.', s.count) + 1, s.count)
 			if l_doc_type /= Void and then known_document_type (l_doc_type) then
 				set_current_document_class (get_class_from_type (l_doc_type))
 			else
 				set_current_document_class (default_document_class)
 			end
 
-			create l_file.make_with_name (a_filename)
+			create l_file.make_with_path (a_filename)
 			if l_file.exists then
 				l_file.open_read
 					-- Record date when opening the file since if the file
@@ -723,9 +725,9 @@ feature -- Basic Operations
 				end
 				l_file.close
 			else
-				load_text ({STRING_32} "File: " + a_filename + "%Ndoes not exist.")
+				load_text ({STRING_32} "File: " + a_filename.string_representation + "%Ndoes not exist.")
 			end
-			create file_name.make_from_string (a_filename)
+			create file_name.make_from_string (a_filename.string_representation)
 			date_of_file_when_loaded := l_date
 			size_of_file_when_loaded := l_size
 		end
@@ -1763,7 +1765,7 @@ feature -- Implementation
 			l_file: RAW_FILE
 		do
 			if attached file_name as l_name then
-				create l_file.make_with_name (l_name)
+				create l_file.make_with_path (l_name)
 				Result := l_file.date
 			end
 		end
@@ -1777,7 +1779,7 @@ feature -- Implementation
 			l_file: RAW_FILE
 		do
 			if attached file_name as l_name then
-				create l_file.make_with_name (l_name)
+				create l_file.make_with_path (l_name)
 				Result := l_file.count
 			end
 		end
@@ -1790,7 +1792,7 @@ feature -- Implementation
 			l_file: RAW_FILE
 		do
 			if attached file_name as l_name then
-				create l_file.make_with_name (l_name)
+				create l_file.make_with_path (l_name)
 				Result := l_file.exists
 			end
 		end

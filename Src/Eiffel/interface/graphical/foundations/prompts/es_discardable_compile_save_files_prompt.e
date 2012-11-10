@@ -100,7 +100,7 @@ feature {NONE} -- User interface initialization
 				-- Class
 			create l_item.make_with_text (a_class.name)
 			l_item.set_pixmap (pixmap_factory.pixmap_from_class_i (a_class))
-			l_item.set_tooltip (a_class.file_name)
+			l_item.set_tooltip (a_class.file_name.string_representation)
 			l_item.set_font (fonts.prompt_text_font)
 			l_item.set_foreground_color (colors.prompt_text_foreground_color)
 			l_item.set_left_border (25)

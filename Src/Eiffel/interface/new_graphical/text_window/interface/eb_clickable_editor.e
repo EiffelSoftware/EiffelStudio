@@ -653,8 +653,8 @@ feature -- Update
 		do
 			text_displayed.set_changed (False, True)
 			if open_backup then
-				fn := file_name.twin
-				create backup_file.make_with_name (file_name)
+				fn := file_name.string_representation
+				create backup_file.make_with_path (file_name)
 				if backup_file.exists then
 					backup_file.delete
 				end
@@ -663,7 +663,7 @@ feature -- Update
 				open_backup := False
 			end
 			if file_name /= Void then
-				create file.make_with_name (file_name)
+				create file.make_with_path (file_name)
 				if file.exists then
 					date_of_file_when_loaded := file.date
 					size_of_file_when_loaded := file_size

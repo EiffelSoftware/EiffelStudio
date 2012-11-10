@@ -248,7 +248,7 @@ feature {NONE} -- Implementation functions
 				end
 
 					-- class stone was dropped
-				create class_file.make_with_name (new_class_stone.class_i.file_name)
+				create class_file.make_with_path (new_class_stone.class_i.file_name)
 				class_text_exists := class_file.exists
 				feature_stone ?= a_stone
 					--| We have to create a classi_stone to check whether the stones are really similar.
@@ -477,7 +477,7 @@ feature {NONE} -- Implementation functions
 					current_editor.clear_window
 					current_editor.display_message (
 						develop_window.Warning_messages.w_file_not_exist (
-							new_class_stone.class_i.file_name))
+							new_class_stone.class_i.file_name.string_representation))
 				end
 			end
 		end

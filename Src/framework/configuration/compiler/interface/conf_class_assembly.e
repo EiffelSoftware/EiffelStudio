@@ -110,14 +110,12 @@ feature {NONE} -- Implementation
 	type_position: INTEGER
 			-- Position of class type description.
 
-	type_file: STRING
+	type_file: STRING_32
 			-- File of class type description.
 		require
 			consumed_path: group.consumed_path /= Void
 		do
-			Result := group.consumed_path.twin
-			Result.append_character (operating_environment.directory_separator)
-			Result.append (classes_file_name)
+			Result := group.consumed_path.extended (classes_file_name).string_representation
 		end
 
 	classes_file_name: STRING = "classes.info"

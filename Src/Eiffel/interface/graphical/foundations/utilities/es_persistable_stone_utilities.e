@@ -281,7 +281,7 @@ feature {NONE} -- Specifics
 							l_class := universe.class_named (l_class_name, l_group)
 							if l_class /= Void then
 								l_file_name ?= a_session.value (session_id (a_base_id, location_session_id))
-								if l_file_name /= Void and then l_class.file_name.to_string_32.is_equal (l_file_name) then
+								if l_file_name /= Void and then l_class.file_name.string_representation.is_equal (l_file_name) then
 									create Result.make (l_class)
 								end
 							end

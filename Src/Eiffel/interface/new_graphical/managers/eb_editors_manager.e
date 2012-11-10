@@ -184,7 +184,7 @@ feature -- Access
 			end
 		end
 
-	editor_with_class (a_file_name: FILE_NAME_32) : like current_editor
+	editor_with_class (a_file_name: PATH) : like current_editor
 			-- Editor editing a class with `a_file_name'
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -202,11 +202,11 @@ feature -- Access
 				l_classi_stone ?= l_editors.item.stone
 				l_external_file_stone ?= l_editors.item.stone
 				if l_classi_stone /= Void then
-					if l_classi_stone.file_name.is_equal (a_file_name) then
+					if l_classi_stone.file_name.is_equal (a_file_name.string_representation) then
 						Result := l_editors.item
 					end
 				elseif l_external_file_stone /= Void then
-					if l_external_file_stone.file_name.is_equal (a_file_name) then
+					if l_external_file_stone.file_name.is_equal (a_file_name.string_representation) then
 						Result := l_editors.item
 					end
 				end
@@ -1737,7 +1737,7 @@ feature {NONE} -- Implementation
 			a_editor_not_void: a_editor /= Void
 		local
 			retried: BOOLEAN
-			tmp_name: FILE_NAME_32
+			tmp_name: PATH
 			tmp_file: RAW_FILE
 			l_encoding: ENCODING
 			l_stream: STRING
@@ -1749,7 +1749,7 @@ feature {NONE} -- Implementation
 					if tmp_name /= Void then
 						tmp_name := tmp_name.twin
 						tmp_name.add_extension ("swp")
-						create tmp_file.make_with_name (tmp_name)
+						create tmp_file.make_with_path (tmp_name)
 						if
 							not tmp_file.exists and then
 							tmp_file.is_creatable

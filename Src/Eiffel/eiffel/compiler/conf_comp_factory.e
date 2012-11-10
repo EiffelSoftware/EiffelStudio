@@ -59,7 +59,7 @@ feature -- Factory
 			create Result.make (a_name, a_directory, a_target)
 		end
 
-	new_physical_assembly (a_consumed: CONSUMED_ASSEMBLY; a_cache_path: DIRECTORY_NAME; a_target: CONF_TARGET): ASSEMBLY_I
+	new_physical_assembly (a_consumed: CONSUMED_ASSEMBLY; a_cache_path: PATH; a_target: CONF_TARGET): ASSEMBLY_I
 			-- Create a `CONF_PHYSICAL_ASSEMBLY' object.
 		do
 			create Result.make_from_consumed (a_consumed, a_cache_path, a_target)

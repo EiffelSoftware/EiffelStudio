@@ -53,7 +53,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_physical_assembly (a_consumed: CONSUMED_ASSEMBLY; a_cache_path: DIRECTORY_NAME; a_target: CONF_TARGET): CONF_PHYSICAL_ASSEMBLY
+	new_physical_assembly (a_consumed: CONSUMED_ASSEMBLY; a_cache_path: PATH; a_target: CONF_TARGET): CONF_PHYSICAL_ASSEMBLY
 			-- Create a `CONF_PHYSICAL_ASSEMBLY' object.
 		require
 			a_consumed_not_void: a_consumed /= Void

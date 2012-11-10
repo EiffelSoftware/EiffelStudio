@@ -15,10 +15,11 @@ feature -- Access
 		require
 			a_path_set: a_path /= Void and then not a_path.is_empty
 		local
-			u: FILE_UTILITIES
+			f: RAW_FILE
 		do
-			if attached u.make_raw_file (a_path) as l_file and then l_file.exists then
-				Result := l_file.date
+			create f.make_with_name (a_path)
+			if f.exists then
+				Result := f.date
 			else
 				Result := -1
 			end

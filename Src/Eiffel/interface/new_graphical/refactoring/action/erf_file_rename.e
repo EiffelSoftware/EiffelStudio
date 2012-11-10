@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_original_name: STRING_32; a_new_name: STRING_32)
+	make (an_original_name: PATH; a_new_name: PATH)
 			-- Rename `an_original_name' into `a_new_name'
 		require
 			an_original_name_not_void: an_original_name /= void
@@ -44,18 +44,18 @@ feature -- Basic operations
 			l_file, l_dst_file: RAW_FILE
 		do
 				-- don't rename if destination file exists
-			create l_dst_file.make (original_name)
+			create l_dst_file.make_with_path (original_name)
 			if not l_dst_file.exists then
-				create l_file.make (new_name)
+				create l_file.make_with_path (new_name)
 				if l_file.exists then
 						-- fix for bad change_name behaviour on windows (if new_name and old_name are equal the file is removed)
 					if not original_name.is_equal (new_name) then
-						l_file.change_name (original_name)
+						l_file.rename_path (original_name)
 					end
 				end
 			else
 				is_error := True
-				error_message := warning_messages.w_not_rename (new_name, original_name)
+				error_message := warning_messages.w_not_rename (new_name.string_representation, original_name.string_representation)
 			end
 		end
 
@@ -65,27 +65,27 @@ feature -- Basic operations
 			l_file, l_dst_file: RAW_FILE
 		do
 				-- don't rename if destination file exists
-			create l_dst_file.make (new_name)
+			create l_dst_file.make_with_path (new_name)
 			if not l_dst_file.exists then
-				create l_file.make (original_name)
+				create l_file.make_with_path (original_name)
 				if l_file.exists then
 						-- fix for bad change_name behaviour on windows (if new_name and old_name are equal the file is removed)
 					if not original_name.is_equal (new_name) then
-						l_file.change_name (new_name)
+						l_file.rename_path (new_name)
 					end
 				end
 			else
 				is_error := True
-				error_message := warning_messages.w_not_rename (original_name, new_name)
+				error_message := warning_messages.w_not_rename (original_name.string_representation, new_name.string_representation)
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	original_name: STRING
+	original_name: PATH
 			-- Original file name
 
-	new_name: STRING
+	new_name: PATH
 			-- New file name
 
 invariant

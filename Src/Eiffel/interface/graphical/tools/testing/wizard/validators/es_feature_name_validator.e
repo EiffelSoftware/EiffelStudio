@@ -58,7 +58,7 @@ feature -- Validation
 						error_handler_empty: error_handler.error_list.is_empty and
 								error_handler.warning_list.is_empty
 					end
-					l_file := u.make_binary_input_file (a_class.file_name)
+					l_file := u.make_binary_input_file (a_class.file_name.string_representation)
 					l_file.open_read
 					if l_file.is_open_read then
 						entity_feature_parser.parse (l_file)

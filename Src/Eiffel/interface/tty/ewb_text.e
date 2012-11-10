@@ -77,7 +77,7 @@ feature {NONE} -- Execution
 				output_window.put_string (text);
 				output_window.put_new_line;
 			else
-				output_window.put_string (ewb_names.cannot_open (class_i.file_name))
+				output_window.put_string (ewb_names.cannot_open (class_i.file_name.string_representation))
 				output_window.put_new_line;
 			end;
 		end;

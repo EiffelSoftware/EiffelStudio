@@ -477,7 +477,7 @@ feature {NONE} -- Basic operations
 				if
 					file_notifier.is_service_available and then
 					attached context.context_class.file_name as l_file_name and then
-					attached l_file_name.to_string_32 as l_fn
+					attached l_file_name.string_representation as l_fn
 				then
 						-- Poll for modifications, which will call `on_file_modified' if have occurred.
 					file_notifier.service.poll_modifications (l_fn).do_nothing

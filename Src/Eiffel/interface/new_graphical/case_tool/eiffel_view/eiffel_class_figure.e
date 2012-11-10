@@ -356,10 +356,10 @@ feature {NONE} -- Implementation (adding relations)
 		local
 			class_file: PLAIN_TEXT_FILE
 		do
-			create class_file.make_with_name (a_stone.class_i.file_name)
+			create class_file.make_with_path (a_stone.class_i.file_name)
 			if not class_file.exists then
 				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (
-					interface_names.l_class_is_not_editable.as_string_32 + warning_messages.w_file_not_exist (a_stone.class_i.file_name),
+					interface_names.l_class_is_not_editable.as_string_32 + warning_messages.w_file_not_exist (class_file.path.string_representation),
 					world.context_editor.develop_window.window, Void)
 			elseif class_file.is_writable and then not a_stone.class_i.group.is_readonly then
 				if world.context_editor.is_link_client then

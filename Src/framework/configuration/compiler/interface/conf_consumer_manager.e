@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_factory: like factory; a_metadata_cache_path: STRING; an_il_version: like il_version; a_application_target: like application_target; an_added_classes, a_removed_classes, a_modified_classes: SEARCH_TABLE [CONF_CLASS])
+	make (a_factory: like factory; a_metadata_cache_path: PATH; an_il_version: like il_version; a_application_target: like application_target; an_added_classes, a_removed_classes, a_modified_classes: SEARCH_TABLE [CONF_CLASS])
 			-- Create.
 		require
 			a_factory_ok: a_factory /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			a_modified_classes_ok: a_modified_classes /= Void
 		do
 			factory := a_factory
-			create metadata_cache_path.make_from_string (a_metadata_cache_path)
+			metadata_cache_path := a_metadata_cache_path
 			il_version := an_il_version
 			application_target := a_application_target
 
@@ -59,6 +59,7 @@ feature {NONE} -- Initialization
 			create linear_assemblies.make (0)
 		ensure
 			factory_set: factory = a_factory
+			metadata_cache_path_set: metadata_cache_path = a_metadata_cache_path
 			il_version_set: an_il_version /= Void implies il_version = an_il_version
 			application_target_set: application_target = a_application_target
 			added_classes_set: added_classes = an_added_classes
@@ -85,16 +86,13 @@ feature -- Access
 	il_version: STRING
 			-- IL version to use.
 
-	metadata_cache_path: DIRECTORY_NAME
+	metadata_cache_path: PATH
 			-- Location of the metadata cache.
 
-	full_cache_path: DIRECTORY_NAME
+	full_cache_path: PATH
 			-- Final location where the metadata realy is stored.
-		require
-			metadata_cache_path_set: metadata_cache_path /= Void
 		do
-			Result := metadata_cache_path.twin
-			Result.extend_from_array (<<short_cache_name, cache_bit_platform, il_version>>)
+			Result := metadata_cache_path.extended (short_cache_name).extended (cache_bit_platform).extended (il_version)
 		end
 
 	assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, STRING]
@@ -324,7 +322,6 @@ feature {NONE} -- Implementation
 		local
 			l_guid, l_dep_guid: STRING
 			l_reader: EIFFEL_DESERIALIZER
-			l_reference_file: FILE_NAME
 			l_referenced_assemblies_mapping: CONSUMED_ASSEMBLY_MAPPING
 			l_referenced_assemblies: ARRAYED_LIST [CONSUMED_ASSEMBLY]
 			i, cnt: INTEGER
@@ -334,9 +331,8 @@ feature {NONE} -- Implementation
 
 				-- we have to get the dependencies from the reference file
 			create l_reader
-			create l_reference_file.make_from_string (an_assembly.consumed_path)
-			l_reference_file.set_file_name (referenced_assemblies_info_file)
-			l_reader.deserialize (l_reference_file, 0)
+			l_reader.deserialize (an_assembly.consumed_path.extended
+				(referenced_assemblies_info_file).string_representation, 0)
 			if not l_reader.successful then
 				add_error (create {CONF_METADATA_CORRUPT})
 			end
@@ -372,7 +368,6 @@ feature {NONE} -- Implementation
 			l_old_dotnet_classes: HASH_TABLE [CONF_CLASS, STRING]
 			l_reader: EIFFEL_DESERIALIZER
 			l_types: CONSUMED_ASSEMBLY_TYPES
-			l_types_file: FILE_NAME
 			i, cnt: INTEGER
 			l_name, l_dotnet_name: STRING
 			l_pos: INTEGER
@@ -381,17 +376,15 @@ feature {NONE} -- Implementation
 		do
 			create l_reader
 
-				-- twin old classes because we will remove reused classes
+				-- Twin old classes because we will remove reused classes.
 			if a_assembly.classes_set then
 				l_old_dotnet_classes := a_assembly.dotnet_classes.twin
 			else
 				create l_old_dotnet_classes.make (0)
 			end
 
-				-- get classes
-			create l_types_file.make_from_string (a_assembly.consumed_path)
-			l_types_file.set_file_name (types_info_file)
-			l_reader.deserialize (l_types_file, 0)
+				-- Get classes.
+			l_reader.deserialize (a_assembly.consumed_path.extended (types_info_file).string_representation, 0)
 			if not l_reader.successful then
 				add_error (create {CONF_METADATA_CORRUPT})
 			end
@@ -401,7 +394,7 @@ feature {NONE} -- Implementation
 			end
 			a_assembly.set_date
 
-				-- add classes
+				-- Add classes.
 			create l_new_classes.make (l_old_dotnet_classes.count)
 			create l_new_dotnet_classes.make (l_old_dotnet_classes.count)
 			from
@@ -437,7 +430,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 
-				-- classes in l_old_dotnet_classes are not used any more, mark them as removed
+				-- Classes in l_old_dotnet_classes are not used any more, mark them as removed.
 			if l_old_dotnet_classes /= Void then
 				from
 					l_old_dotnet_classes.start
@@ -739,18 +732,16 @@ feature {NONE} -- helpers
 			-- Try to retrieve the information from the metadata cache.
 		local
 			l_reader: EIFFEL_DESERIALIZER
-			l_eac_file: FILE_NAME
+			l_eac_file: PATH
 			l_file: RAW_FILE
 		do
 				-- Reset cached cache content
 			cache_content := Void
-
-			create l_eac_file.make_from_string (full_cache_path)
-			l_eac_file.set_file_name (cache_info_file)
-			create l_file.make (l_eac_file)
+			l_eac_file := full_cache_path.extended (cache_info_file)
+			create l_file.make_with_path (l_eac_file)
 			if l_file.exists and then l_file.is_readable then
 				create l_reader
-				l_reader.deserialize (l_eac_file, 0)
+				l_reader.deserialize (l_eac_file.string_representation, 0)
 				if l_reader.successful then
 					cache_content ?= l_reader.deserialized_object
 					check
@@ -800,7 +791,6 @@ feature {NONE} -- helpers
 			an_assembly_not_void: an_assembly /= Void
 		local
 			l_cache_mod_date, l_mod_date: INTEGER
-			l_cache_loc: FILE_NAME
 		do
 			if an_assembly.is_consumed then
 					-- date of last modification to the assembly
@@ -809,10 +799,8 @@ feature {NONE} -- helpers
 					l_mod_date := file_modified_date (an_assembly.gac_path)
 				end
 					-- date of the cached information
-				create l_cache_loc.make_from_string (full_cache_path)
-				l_cache_loc.extend (an_assembly.folder_name)
-				l_cache_loc.set_file_name (types_info_file)
-				l_cache_mod_date := file_modified_date (l_cache_loc)
+				l_cache_mod_date := file_modified_date (full_cache_path.extended
+					(an_assembly.folder_name).extended (types_info_file).string_representation)
 
 				Result := l_mod_date /= -1 and then l_cache_mod_date > l_mod_date
 			end
@@ -877,7 +865,7 @@ invariant
 	consume_assembly_observer_not_void: consume_assembly_observer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

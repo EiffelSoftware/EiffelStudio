@@ -204,19 +204,17 @@ feature -- Status setting
 
 feature -- Text Loading
 
-	load_file (a_filename: STRING_32)
-	        -- Load contents of `a_filename'
+	load_file (a_filename: PATH)
+	        -- Load contents of `a_filename'.
 		local
 			l_file: RAW_FILE
-		    l_filename: FILE_NAME_32
   	   	do
   	   		reset
 
 				-- Reset encoding.
 			set_encoding (Void)
 			bom := Void
-			create l_filename.make_from_string (a_filename)
-			create l_file.make_with_name (l_filename)
+			create l_file.make_with_path (a_filename)
 				-- Set `load_file_error' if the file does not exist.
 			if l_file.exists then
 				load_file_error := False
@@ -238,7 +236,7 @@ feature -- Text Loading
 				load_file_error := True
 			end
 
-			Precursor (l_filename)
+			Precursor (a_filename)
 				-- The following code is broken. See bug#13171 and bug#13082. For the 6.0 release,
 				-- we are simply disabling this code and never load the backup (see the above two lines)
 --  	   	create l_filename.make_from_string (a_filename)
@@ -384,7 +382,7 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} 
 					-- Create a string to write prettified text.
 				create s.make_empty
 					-- Prettify code.
-				create l_show_pretty.make_string (file_name, s)
+				create l_show_pretty.make_string (file_name.string_representation, s)
 					-- Check if formatting is successful.
 				if not l_show_pretty.error then
 						-- Replace current class text with the prettified text.

@@ -42,11 +42,11 @@ feature -- Access
 	cluster: CLUSTER_I
 			-- Cluster to which the class belongs to.
 
-	file_name: FILE_NAME_32
+	file_name: PATH
 			-- Full file name of the class.
 		do
 			create Result.make_from_string (base_location.build_path (path, ""))
-			Result.set_file_name (base_name)
+			Result := Result.extended (base_name)
 		end
 
 feature {NONE} -- Type anchor

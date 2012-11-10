@@ -1320,6 +1320,7 @@ test	profile-crash-on-override		final116 tcf fail finalizing profile
 test	tight-loop-integer-constant-infinite-loop final117 tcf fail finalizing manual
 test	finalize-once-strings-in-invariant	final118 tcf fail finalizing
 test	equation-evaluation-sequence	final119 tcf fail finalizing
+test	comparison-involving-allocation	final120 tcf fail finalizing
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

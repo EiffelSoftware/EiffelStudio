@@ -76,7 +76,8 @@ inherit
 			text as wel_text,
 			has_capture as wel_has_capture,
 			text_length as wel_text_length,
-			line_count as wel_line_count
+			line_count as wel_line_count,
+			first_visible_line as wel_first_visible_line
 		undefine
 			set_width,
 			set_height,
@@ -233,6 +234,12 @@ feature -- Access
 			-- Number of lines of text in `Current'.
 		do
 			Result := wel_line_count
+		end
+
+	first_visible_line: INTEGER
+			-- <Precursor>
+		do
+			Result := wel_first_visible_line + 1
 		end
 
 	caret_position: INTEGER
@@ -432,7 +439,6 @@ feature -- Status Settings
 					set_selection (a_start_pos + l_new_lines_to_end + l_new_lines_to_start - 1, a_end_pos + l_new_lines_to_end - 1)
 				end
 			end
-
 		end
 
 feature -- Basic operation
@@ -440,7 +446,7 @@ feature -- Basic operation
 	scroll_to_line (i: INTEGER)
 			-- Ensure that line `i' is visible in `Current'.
 		do
-			scroll (0, i - first_visible_line - 1)
+			scroll (0, i - wel_first_visible_line - 1)
 		end
 
 	scroll_to_end

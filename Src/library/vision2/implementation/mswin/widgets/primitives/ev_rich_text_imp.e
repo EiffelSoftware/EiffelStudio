@@ -106,7 +106,8 @@ inherit
 			line_number_from_position as wel_line_number_from_position,
 			item as wel_item,
 			selection_start as wel_selection_start,
-			selection_end as wel_selection_end
+			selection_end as wel_selection_end,
+			first_visible_line as wel_first_visible_line
 		undefine
 			hide,
 			line_count,

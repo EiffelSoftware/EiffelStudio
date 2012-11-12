@@ -107,6 +107,30 @@ feature -- Status report
 			Result := Result.max (1)
 		end
 
+	first_visible_line: INTEGER
+			-- <Precursor>
+		local
+			l_buffer_x, l_buffer_y: INTEGER
+			l_iter: EV_GTK_TEXT_ITER_STRUCT
+		do
+				-- Convert coordinates from the top left of the text view window to the portion of the
+				-- text buffer it represents.
+			{GTK2}.gtk_text_view_window_to_buffer_coords (text_view, 1, 0, 0, $l_buffer_x, $l_buffer_y)
+
+				-- Retrieve the GtkTextIter corresponding to the buffer location.
+			create l_iter.make
+			{GTK2}.gtk_text_view_get_iter_at_location (text_view, l_iter.item, l_buffer_x, l_buffer_y)
+			from
+					-- Iterate from the GtkTextIter and count the number of display lines until the start of
+					-- the document is reached (ie: if word wrapped then the visible number of lines)
+				Result := 1
+			until
+				not {GTK2}.gtk_text_view_backward_display_line (text_view, l_iter.item)
+			loop
+				Result := Result + 1
+			end
+		end
+
 	is_editable: BOOLEAN
 			-- Is the text editable by the user?
 
@@ -655,14 +679,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_TEXT_IMP

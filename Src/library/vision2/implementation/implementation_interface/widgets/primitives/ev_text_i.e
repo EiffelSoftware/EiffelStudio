@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Status report
 
-		has_word_wrapping: BOOLEAN
+	has_word_wrapping: BOOLEAN
 			-- Is word wrapping enabled?
 			-- If enabled, lines that are too long to be displayed
 			-- in `Current' will be wrapped onto new lines.
@@ -56,6 +56,13 @@ feature -- Status report
 		deferred
 		ensure
 			result_greater_zero: Result > 0
+		end
+
+	first_visible_line: INTEGER
+			-- First visible line current being displayed.
+		deferred
+		ensure
+			valid_line_index: valid_line_index (Result)
 		end
 
 	first_position_from_line_number (i: INTEGER): INTEGER
@@ -136,14 +143,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

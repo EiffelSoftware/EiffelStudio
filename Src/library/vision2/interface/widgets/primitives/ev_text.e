@@ -69,6 +69,16 @@ feature -- Status report
 			valid_line_index: valid_line_index (Result)
 		end
 
+	first_visible_line: INTEGER
+			-- First visible line current being displayed.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.first_visible_line
+		ensure
+			valid_line_index: valid_line_index (Result)
+		end
+
 	line_count: INTEGER
 			-- Number of lines in `Current'.
 		require
@@ -151,6 +161,22 @@ feature -- Basic operation
 			implementation.scroll_to_end
 		end
 
+	scroll_up (i: INTEGER)
+			-- Scroll up `i' lines from current visible position.
+		require
+			i_positive: i > 0
+		do
+			scroll_to_line  ((first_visible_line - i).max (1).min (line_count))
+		end
+
+	scroll_down (i: INTEGER)
+			-- Scroll down `i' lines from current visible position.
+		require
+			i_positive: i > 0
+		do
+			scroll_to_line ((first_visible_line + i).max (1).min (line_count))
+		end
+
 	search (str: READABLE_STRING_GENERAL; start: INTEGER): INTEGER
 			-- Position of first occurrence of `str' at or after `start';
 			-- 0 if none.
@@ -210,14 +236,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -2708,6 +2708,11 @@ feature -- Externals
 			"C signature (GtkTextView*): GtkTextBuffer* use <ev_gtk.h>"
 		end
 
+	frozen gtk_text_view_window_to_buffer_coords (a_text_view: POINTER; a_window_type: NATURAL_8; a_window_x, a_window_y: INTEGER; a_buffer_x, a_buffer_y: TYPED_POINTER [INTEGER])
+		external
+			"C signature (GtkTextView*, GtkTextWindowType, gint, gint, gint*, gint*) use <ev_gtk.h>"
+		end
+
 	frozen gtk_text_view_set_buffer (a_text_view: POINTER; a_text_buffer: POINTER)
 		external
 			"C signature (GtkTextView*, GtkTextBuffer*) use <ev_gtk.h>"
@@ -2962,6 +2967,11 @@ feature -- Externals
 	frozen gtk_text_view_get_iter_location (a_text_view, a_text_iter, a_rectangle: POINTER)
 		external
 			"C signature (GtkTextView*, GtkTextIter*, GdkRectangle*) use <ev_gtk.h>"
+		end
+
+	frozen gtk_text_view_get_iter_at_location (a_text_view, a_text_iter: POINTER; a_x, a_y: INTEGER)
+		external
+			"C signature (GtkTextView*, GtkTextIter*, gint, gint) use <ev_gtk.h>"
 		end
 
 	frozen gtk_text_iter_copy (a_text_iter: POINTER): POINTER

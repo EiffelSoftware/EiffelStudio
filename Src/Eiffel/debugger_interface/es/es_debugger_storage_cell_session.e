@@ -29,70 +29,53 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	breakpoints_data_from_storage: BREAK_LIST
+	breakpoints_data_from_storage: detachable BREAK_LIST
 			-- Breakpoints data from storage
 		local
 			dbg_session: SESSION_I
+			l_value: detachable ANY
 		do
 			dbg_session := session_data
-			if attached {CELL_SESSION_DATA [like breakpoints_data_from_storage]} dbg_session.value (Breakpoints_session_data_id) as c then
+			l_value := dbg_session.value (Breakpoints_session_data_id)
+			if attached {CELL_SESSION_DATA [like breakpoints_data_from_storage]} l_value as c then
 				data_cells.force (c, Breakpoints_session_data_id)
 				Result := c.item
-			else
-				Result ?= dbg_session.value (Breakpoints_session_data_id)
+			elseif attached {like breakpoints_data_from_storage} l_value as v then
+				Result := v
 			end
 		end
 
-	exceptions_handler_data_from_storage: DBG_EXCEPTION_HANDLER
+	exceptions_handler_data_from_storage: detachable DBG_EXCEPTION_HANDLER
 			-- <Precursor>
 		local
 			dbg_session: SESSION_I
+			l_value: detachable ANY
 		do
 			dbg_session := session_data
-			if attached {CELL_SESSION_DATA [like exceptions_handler_data_from_storage]} dbg_session.value (Exception_handler_session_data_id) as c then
+			l_value := dbg_session.value (Exception_handler_session_data_id)
+			if attached {CELL_SESSION_DATA [like exceptions_handler_data_from_storage]} l_value as c then
 				data_cells.force (c, Exception_handler_session_data_id)
 				Result := c.item
-			else
-				Result ?= dbg_session.value (Exception_handler_session_data_id)
+			elseif attached {like exceptions_handler_data_from_storage} l_value as v then
+				Result := v
 			end
 		end
 
-	profiles_data_from_storage: DEBUGGER_PROFILE_MANAGER
+	profiles_data_from_storage: detachable DEBUGGER_PROFILE_MANAGER
 			-- <Precursor>
 		local
 			dbg_session: SESSION_I
 			l_value: detachable ANY
 		do
 			dbg_session := profiles_session_data
-			if attached old_profiles_data_from_storage as old_profiles then
-				Result := old_profiles.to_profile_provider
-			else
-				l_value := dbg_session.value (Profiles_session_data_id)
-				if attached {CELL_SESSION_DATA [like profiles_data_from_storage]} l_value as dpp then
-					data_cells.force (dpp, Profiles_session_data_id)
-					Result := dpp.item
-				else
-					Result ?= l_value
-				end
-			end
-		end
-
-	old_profiles_data_from_storage: detachable DEBUGGER_PROFILES
-			-- old profile storage, to avoid loosing profiles.
-		local
-			dbg_session: SESSION_I
-			l_value: ANY
-		do
-			dbg_session := profiles_session_data
 			l_value := dbg_session.value (Profiles_session_data_id)
-			if attached {CELL_SESSION_DATA [like old_profiles_data_from_storage]} l_value as old_profs then
-				data_cells.force (old_profs, Profiles_session_data_id)
-				Result := old_profs.item
-			else
-				Result ?= l_value
+			if attached {CELL_SESSION_DATA [like profiles_data_from_storage]} l_value as c then
+				data_cells.force (c, Profiles_session_data_id)
+				Result := c.item
+			elseif attached {like profiles_data_from_storage} l_value as v then
+				Result := v
 			end
 		end
-
 
 feature {NONE} -- Persistence
 
@@ -106,7 +89,9 @@ feature {NONE} -- Persistence
 			dbg_session := session_data
 
 				--| Set breakpoints (this is a copy, thus new object, and then it will be stored)
-			c ?= data_cells.item (Breakpoints_session_data_id)
+			if attached {CELL_SESSION_DATA [like breakpoints_data_from_storage]} data_cells.item (Breakpoints_session_data_id) as cl then
+				c := cl
+			end
 			if c = Void then
 				create c.put (a_data)
 				data_cells.force (c, Breakpoints_session_data_id)
@@ -127,7 +112,9 @@ feature {NONE} -- Persistence
 			c: CELL_SESSION_DATA [like exceptions_handler_data_from_storage]
 		do
 			dbg_session := session_data
-			c ?= data_cells.item (Exception_handler_session_data_id)
+			if attached {CELL_SESSION_DATA [like exceptions_handler_data_from_storage]} data_cells.item (Exception_handler_session_data_id) as cl then
+				c := cl
+			end
 			if c = Void then
 				create c.put (a_data)
 				data_cells.force (c, Exception_handler_session_data_id)
@@ -146,7 +133,9 @@ feature {NONE} -- Persistence
 			c: CELL_SESSION_DATA [like profiles_data_from_storage]
 		do
 			dbg_session := profiles_session_data
-			c ?= data_cells.item (Profiles_session_data_id)
+			if attached {CELL_SESSION_DATA [like profiles_data_from_storage]} data_cells.item (Profiles_session_data_id) as cl then
+				c := cl
+			end
 			if c = Void then
 				create c.put (a_data)
 				data_cells.force (c, Profiles_session_data_id)
@@ -236,7 +225,7 @@ feature {NONE} -- Implementation
 			-- Cached cell session data.
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

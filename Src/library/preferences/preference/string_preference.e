@@ -19,7 +19,7 @@ feature -- Access
 	string_type: STRING
 			-- String description of this preference type.
 		once
-			Result := "STRING32"
+			Result := "STRING"
 		end
 
 feature {NONE} -- Implementation
@@ -32,7 +32,17 @@ feature {NONE} -- Implementation
 	to_value (a_value: READABLE_STRING_GENERAL): STRING
 			-- `a_value' to type of `value'.
 		do
-			Result := a_value.as_string_8
+			Result := a_value.to_string_8
+		end
+
+	to_adapted_value (a_value: READABLE_STRING_GENERAL): STRING
+			-- Adapted conversion of `a_value' to type of `value'.
+			-- In this case, convert to UTF-8
+			--| This exists only for backward compatibility
+		local
+			utf: UTF_CONVERTER
+		do
+			Result := utf.string_32_to_utf_8_string_8 (a_value.to_string_32)
 		end
 
 	auto_default_value: STRING
@@ -51,8 +61,6 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 
 end -- class STRING_PREFERENCE

@@ -29,7 +29,7 @@ create
 
 feature -- Preference Testing
 
-	initialize_basic_preferences
+	initialize_standard_preferences
 			-- Initialize preferences using standard manager, factory and preference types.
 		local
 				-- Standard
@@ -38,60 +38,87 @@ feature -- Preference Testing
 			br: BOOLEAN_PREFERENCE
 			ir: INTEGER_PREFERENCE
 			ar: ARRAY_PREFERENCE
-			ar32: ARRAY_32_PREFERENCE
+			ar32: ARRAY_STRING_32_PREFERENCE
 			sr: STRING_PREFERENCE
 			sr32: STRING_32_PREFERENCE
 			fr: FONT_PREFERENCE
 			cr: COLOR_PREFERENCE
 			pp: PATH_PREFERENCE
+			lst_s: STRING_LIST_PREFERENCE
+			lst_p: PATH_LIST_PREFERENCE
+			choice_s: STRING_CHOICE_PREFERENCE
+			choice_p: PATH_CHOICE_PREFERENCE
 			df: EV_FONT
 			psf: PREFERENCES_STORAGE_FACTORY
-			l_basic_preferences: like basic_preferences
+			l_standard_preferences: like standard_preferences
 		do
 			create l_factory
 			create psf
-			create l_basic_preferences.make_with_defaults_and_storage (<<"default.conf">>, psf.storage_for_basic)
-			basic_preferences := l_basic_preferences
+
+			--| Use file default.conf to load default values
+			create l_standard_preferences.make_with_defaults_and_storage (<<"default.conf">>, psf.storage_for_basic)
+			standard_preferences := l_standard_preferences
 
 			create df.make_with_values (1, 6, 10, 8)
 			df.preferred_families.extend ("verdana")
 			df.preferred_families.extend ("arial")
 			df.preferred_families.extend ("helvetica")
 
-			l_manager := l_basic_preferences.new_manager ("examples")
-			ir := l_factory.new_integer_preference_value (l_manager, "examples.my_integer_preference", 10)
-			ar := l_factory.new_array_preference_value (l_manager, "examples.my_list_preference", <<"1","2","3">>)
-			ar := l_factory.new_array_preference_value (l_manager, "examples.my_list_preference_as_choice", <<"1","2","3">>)
+			--| Basic preferences under "examples"
+
+			l_manager := l_standard_preferences.new_manager ("examples")
+			ir := l_factory.new_integer_preference_value (l_manager, "examples.my_integer", 10)
+			ar := l_factory.new_array_preference_value (l_manager, "examples.my_list", <<"1","2","3">>)
+			ar := l_factory.new_array_preference_value (l_manager, "examples.my_list_as_choice", <<"1","2","3">>)
 			ar.set_is_choice (True)
 			if ar.selected_index = 0 then
 				ar.set_selected_index (2)
 			end
 
+			--| Graphical preferences under "examples"
+
 			fr := l_factory.new_font_preference_value (l_manager, "examples.my_font_preference", df)
 			sr := l_factory.new_string_preference_value (l_manager, "examples.my_string_preference", "a string")
 			sr := l_factory.new_string_preference_value (l_manager, "examples.driver_location", (create {DIRECTORY_NAME}.make_from_string ("C:\My Directory Location")).string)
 
-			ar32 := l_factory.new_array_32_preference_value (l_manager, "examples.my_unicode_list_preference", <<{STRING_32} "你", {STRING_32} "好", {STRING_32} "吗">>)
-			ar32 := l_factory.new_array_32_preference_value (l_manager, "examples.my_unicode_list_preference_as_choice", <<{STRING_32} "你", {STRING_32} "好", {STRING_32} "吗">>)
-			ar32.set_is_choice (True)
-			if ar32.selected_index = 0 then
-				ar32.set_selected_index (2)
+
+			--| List and Choice of strings preferences under "examples"
+			lst_s := l_factory.new_string_list_preference_value (l_manager, "examples.list.strings", <<{STRING_32} "你", {STRING_32} "好", {STRING_32} "吗">>)
+			choice_s := l_factory.new_string_choice_preference_value (l_manager, "examples.choice.strings", lst_s.value)
+			if choice_s.selected_index = 0 then
+				choice_s.set_selected_index (2)
 			end
 
-			sr32 := l_factory.new_string_32_preference_value (l_manager, "examples.my_unicode_preference", {STRING_32} "a unicode string 你好吗")
+			--| List and Choice of Paths preferences under "examples"
+			lst_p := l_factory.new_path_list_preference_value (l_manager,
+					"examples.list.paths",
+					<<	create {PATH}.make_from_string ({STRING_32} "dir/你"),
+						create {PATH}.make_from_string ({STRING_32} "dir/好"),
+						create {PATH}.make_from_string ({STRING_32} "dir/吗")
+					>>
+				)
+			choice_p := l_factory.new_path_choice_preference_value (l_manager, "examples.choice.paths", lst_p.value)
+			if choice_p.selected_index = 0 then
+				choice_p.set_selected_index (2)
+			end
+
+			--| Unicode,Path, ... value preferences under "examples"
+			sr32 := l_factory.new_string_32_preference_value (l_manager, "examples.unicode.string_32", {STRING_32} "a unicode string 你好吗")
 			pp := l_factory.new_path_preference_value (l_manager, "examples.my_path", create {PATH}.make_from_string ({STRING_32} "C:\unicode\folder\你好吗\here"))
 
-			pp := l_factory.new_path_preference_value (l_manager, "examples.existing_directory", (create {EXECUTION_ENVIRONMENT}).current_working_path)
+			pp := l_factory.new_path_preference_value (l_manager, "examples.valid.existing_directory", (create {EXECUTION_ENVIRONMENT}).current_working_path)
 			pp.require_existing_directory
 
-			l_manager := l_basic_preferences.new_manager ("display")
+			-- preference under "display"
+
+			l_manager := l_standard_preferences.new_manager ("display")
 			br := l_factory.new_boolean_preference_value (l_manager, "display.fullscreen_at_startup", True)
 			cr := l_factory.new_color_preference_value (l_manager, "display.background_color", create {EV_COLOR}.make_with_8_bit_rgb (128, 2, 136))
 
-			l_manager := l_basic_preferences.new_manager ("graphics")
+			l_manager := l_standard_preferences.new_manager ("graphics")
 			br := l_factory.new_boolean_preference_value (l_manager, "graphics.use_maximum_resolution", True)
 
---			l_basic_preferences.export_to_storage (create {PREFERENCES_STORAGE_XML}.make_with_location ("backup.conf"), False)
+--			l_standard_preferences.export_to_storage (create {PREFERENCES_STORAGE_XML}.make_with_location ("backup.conf"), False)
 		end
 
 	initialize_custom_preferences
@@ -126,7 +153,7 @@ feature -- Preference Testing
 
 feature {NONE} -- Initialization
 
-	basic_preferences: detachable PREFERENCES
+	standard_preferences: detachable PREFERENCES
 
 	custom_preferences: detachable PREFERENCES
 
@@ -220,13 +247,13 @@ feature {NONE} -- Implementation
 		local
 			w: like preference_window
 		do
-			initialize_basic_preferences
-			if attached basic_preferences as p then
+			initialize_standard_preferences
+			if attached standard_preferences as p then
 				create w.make (p)
 				preference_window := w
 				w.show
 			else
-				check basic_preferences_exists: False end
+				check standard_preferences_exists: False end
 			end
 		end
 

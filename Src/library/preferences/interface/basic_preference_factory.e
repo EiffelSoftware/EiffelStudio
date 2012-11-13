@@ -23,7 +23,7 @@ note
 class
 	BASIC_PREFERENCE_FACTORY
 
-feature -- Access
+feature -- Access: Basic type
 
 	new_boolean_preference_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: BOOLEAN): BOOLEAN_PREFERENCE
 			-- Add a new boolean preference with name `a_name'.  If preference cannot be found in
@@ -56,6 +56,8 @@ feature -- Access
 			preference_name_set: Result.name.is_equal (a_name)
 			preference_added: a_manager.preferences.has_preference (a_name)
 		end
+
+feature -- Access: Strings
 
 	new_string_preference_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: STRING): STRING_PREFERENCE
 			-- Add a new string preference with name `a_name'.  If preference cannot be found in
@@ -108,6 +110,128 @@ feature -- Access
 			preference_added: a_manager.preferences.has_preference (a_name)
 		end
 
+feature -- Access: Lists
+
+	new_string_list_preference_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: ITERABLE [STRING_32]): STRING_LIST_PREFERENCE
+			-- Add a new `list of strings' preference with name `a_name'.  If preference cannot be found in
+			-- underlying datastore or in a default values then `a_fallback_value' is used for the value.
+		require
+			name_valid: a_name /= Void
+			name_not_empty: not a_name.is_empty
+			value_not_void: a_fallback_value /= Void
+			not_has_preference: not a_manager.known_preference (a_name)
+		local
+			lst: LIST [STRING_32]
+		do
+			if attached {LIST [STRING_32]} a_fallback_value as l_fb then
+				lst := l_fb
+			else
+				create {ARRAYED_LIST [STRING_32]} lst.make (0)
+				across
+					lst as c
+				loop
+					lst.extend (c.item)
+				end
+			end
+			Result := (create {PREFERENCE_FACTORY [like {STRING_LIST_PREFERENCE}.value, STRING_LIST_PREFERENCE]}).
+				new_preference (a_manager.preferences, a_manager, a_name, lst)
+		ensure
+			has_result: Result /= Void
+			preference_name_set: Result.name.is_equal (a_name)
+			preference_added: a_manager.preferences.has_preference (a_name)
+		end
+
+	new_path_list_preference_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: ITERABLE [PATH]): PATH_LIST_PREFERENCE
+			-- Add a new `list of paths' preference with name `a_name'.  If preference cannot be found in
+			-- underlying datastore or in a default values then `a_fallback_value' is used for the value.
+		require
+			name_valid: a_name /= Void
+			name_not_empty: not a_name.is_empty
+			value_not_void: a_fallback_value /= Void
+			not_has_preference: not a_manager.known_preference (a_name)
+		local
+			lst: LIST [PATH]
+		do
+			if attached {LIST [PATH]} a_fallback_value as l_fb then
+				lst := l_fb
+			else
+				create {ARRAYED_LIST [PATH]} lst.make (0)
+				across
+					lst as c
+				loop
+					lst.extend (c.item)
+				end
+			end
+			Result := (create {PREFERENCE_FACTORY [like {PATH_LIST_PREFERENCE}.value, PATH_LIST_PREFERENCE]}).
+				new_preference (a_manager.preferences, a_manager, a_name, lst)
+		ensure
+			has_result: Result /= Void
+			preference_name_set: Result.name.is_equal (a_name)
+			preference_added: a_manager.preferences.has_preference (a_name)
+		end
+
+feature -- Access: Choices
+
+	new_string_choice_preference_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: ITERABLE [STRING_32]): STRING_CHOICE_PREFERENCE
+			-- Add a new `list of strings' preference with name `a_name'.  If preference cannot be found in
+			-- underlying datastore or in a default values then `a_fallback_value' is used for the value.
+		require
+			name_valid: a_name /= Void
+			name_not_empty: not a_name.is_empty
+			value_not_void: a_fallback_value /= Void
+			not_has_preference: not a_manager.known_preference (a_name)
+		local
+			lst: LIST [STRING_32]
+		do
+			if attached {LIST [STRING_32]} a_fallback_value as l_fb then
+				lst := l_fb
+			else
+				create {ARRAYED_LIST [STRING_32]} lst.make (0)
+				across
+					lst as c
+				loop
+					lst.extend (c.item)
+				end
+			end
+			Result := (create {PREFERENCE_FACTORY [like {STRING_CHOICE_PREFERENCE}.value, STRING_CHOICE_PREFERENCE]}).
+				new_preference (a_manager.preferences, a_manager, a_name, lst)
+		ensure
+			has_result: Result /= Void
+			preference_name_set: Result.name.is_equal (a_name)
+			preference_added: a_manager.preferences.has_preference (a_name)
+		end
+
+	new_path_choice_preference_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: ITERABLE [PATH]): PATH_CHOICE_PREFERENCE
+			-- Add a new `list of paths' preference with name `a_name'.  If preference cannot be found in
+			-- underlying datastore or in a default values then `a_fallback_value' is used for the value.
+		require
+			name_valid: a_name /= Void
+			name_not_empty: not a_name.is_empty
+			value_not_void: a_fallback_value /= Void
+			not_has_preference: not a_manager.known_preference (a_name)
+		local
+			lst: LIST [PATH]
+		do
+			if attached {LIST [PATH]} a_fallback_value as l_fb then
+				lst := l_fb
+			else
+				create {ARRAYED_LIST [PATH]} lst.make (0)
+				across
+					lst as c
+				loop
+					lst.extend (c.item)
+				end
+			end
+			Result := (create {PREFERENCE_FACTORY [like {PATH_CHOICE_PREFERENCE}.value, PATH_CHOICE_PREFERENCE]}).
+				new_preference (a_manager.preferences, a_manager, a_name, lst)
+		ensure
+			has_result: Result /= Void
+			preference_name_set: Result.name.is_equal (a_name)
+			preference_added: a_manager.preferences.has_preference (a_name)
+		end
+
+feature -- Access: Arrays
+
 	new_array_preference_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: ARRAY [STRING]): ARRAY_PREFERENCE
 			-- Add a new array preference with name `a_name'.  If preference cannot be found in
 			-- underlying datastore or in a default values then `a_fallback_value' is used for the value.
@@ -125,16 +249,17 @@ feature -- Access
 			preference_added: a_manager.preferences.has_preference (a_name)
 		end
 
-	new_array_32_preference_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: ARRAY [STRING_32]): ARRAY_32_PREFERENCE
+	new_array_string_32_preference_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: ARRAY [STRING_32]): ARRAY_STRING_32_PREFERENCE
 			-- Add a new array preference with name `a_name'.  If preference cannot be found in
 			-- underlying datastore or in a default values then `a_fallback_value' is used for the value.
+		obsolete "Use new_string_list_preference_value [2012-nov]"
 		require
 			name_valid: a_name /= Void
 			name_not_empty: not a_name.is_empty
 			value_not_void: a_fallback_value /= Void
 			not_has_preference: not a_manager.known_preference (a_name)
 		do
-			Result := (create {PREFERENCE_FACTORY [ARRAY [STRING_32], ARRAY_32_PREFERENCE]}).
+			Result := (create {PREFERENCE_FACTORY [ARRAY [STRING_32], ARRAY_STRING_32_PREFERENCE]}).
 				new_preference (a_manager.preferences, a_manager, a_name, a_fallback_value)
 		ensure
 			has_result: Result /= Void
@@ -142,27 +267,31 @@ feature -- Access
 			preference_added: a_manager.preferences.has_preference (a_name)
 		end
 
+feature -- Obsolete		
+
 	new_boolean_resource_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: BOOLEAN): BOOLEAN_PREFERENCE
 		obsolete "[060113] use new_boolean_preference_value."
 		do
 			Result := new_boolean_preference_value (a_manager, a_name, a_fallback_value)
 		end
+
 	new_integer_resource_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: INTEGER): INTEGER_PREFERENCE
 		obsolete "[060113] use new_integer_preference_value."
 		do
 			Result := new_integer_preference_value (a_manager, a_name, a_fallback_value)
 		end
+
 	new_string_resource_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: STRING): STRING_PREFERENCE
 		obsolete "[060113] use new_string_preference_value."
 		do
 			Result := new_string_preference_value (a_manager, a_name, a_fallback_value)
 		end
+
 	new_array_resource_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: ARRAY [STRING]): ARRAY_PREFERENCE
 		obsolete "[060113] use new_array_preference_value."
 		do
 			Result := new_array_preference_value (a_manager, a_name, a_fallback_value)
 		end
-
 
 note
 	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"

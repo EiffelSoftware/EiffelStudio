@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
             -- Validate `a_text'.  Disallow input if text is not an integer and the preference
             -- is an INTEGER_PREFERENCE.
         do
-            Result := preference.valid_value_string (a_text)
+            Result := preference.is_string_value_validated (a_text)
         end
 
 note

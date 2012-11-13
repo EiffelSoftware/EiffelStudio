@@ -21,7 +21,11 @@ feature {NONE} -- Initialization
 		local
 			v: G
 		do
-			v := to_value (a_value)
+			if is_value_compatible (a_value) then
+				v := to_value (a_value)
+			else
+				v := to_adapted_value (a_value)
+			end
 			internal_value := v
 			Precursor {TYPED_PREFERENCE} (v)
 		end
@@ -77,6 +81,12 @@ feature {NONE} -- Implementation
 			-- `a_value' to type of `value'.
 		require
 			is_value_compatible: is_value_compatible (a_value)
+		deferred
+		end
+
+	to_adapted_value (a_value: READABLE_STRING_GENERAL): G
+			-- Adapted conversion of `a_value' to type of `value'.
+			--| This exists only for backward compatibility
 		deferred
 		end
 

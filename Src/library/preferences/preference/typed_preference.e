@@ -39,7 +39,7 @@ feature {NONE} --Initialization
 			name_not_void: a_name /= Void
 			name_not_empty: not a_name.is_empty
 			value_not_void: a_value /= Void
-			value_valid: valid_value_string (a_value)
+			value_valid: is_string_value_validated (a_value)
 		do
 			manager := a_manager
 			name := a_name

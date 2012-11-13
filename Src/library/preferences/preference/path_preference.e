@@ -42,35 +42,13 @@ feature -- Access
 			Result := "PATH"
 		end
 
-	validation_agent: detachable FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], BOOLEAN]
-			-- Validation agent to test if a READABLE_STRING_GENERAL is a valid text value for Current
-			--| This can be used to validate only existing path, or existing directory, ...
-
-feature -- Query
-
 	valid_value_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_string' valid for this preference type to convert into a value?
 		do
-			if attached validation_agent as agt then
-				Result := agt.item ([a_string])
-			else
-				-- True.  A string preference may be empty and precondition ensures it is not void.
-				Result := True
-			end
+			Result := True
 		end
 
-	has_validation_agent: BOOLEAN
-		do
-			Result := validation_agent /= Void
-		end
-
-feature -- Change
-
-	set_validation_agent (agt: like validation_agent)
-			-- Set `validation_agent' to `agt'.
-		do
-			validation_agent := agt
-		end
+feature -- Change		
 
 	require_existing_file
 		require
@@ -109,15 +87,10 @@ feature {PREFERENCES} -- Access
 	generating_preference_type: STRING
 			-- The generating type of the preference for graphical representation.
 		once
-			Result := "PATH"
+			Result := "TEXT"
 		end
 
 feature {NONE} -- Implementation
-
-	is_value_compatible (a_value: READABLE_STRING_GENERAL): BOOLEAN
-		do
-			Result := True
-		end
 
 	to_value (a_value: READABLE_STRING_GENERAL): PATH
 			-- `a_value' to type of `value'.

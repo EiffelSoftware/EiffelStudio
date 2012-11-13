@@ -110,7 +110,7 @@ feature {EG_XML_STORABLE} -- Processing
 		local
 			int_str: detachable STRING_32
 		do
-			if attached {like xml_node} elem.item_for_iteration as e and then a_name.same_string (e.name) then
+			if attached {like xml_node} elem.item_for_iteration as e and then e.has_same_name (a_name) then
 				int_str := e.text
 				if int_str /= Void and then int_str.is_integer then
 					Result := int_str.to_integer
@@ -129,7 +129,7 @@ feature {EG_XML_STORABLE} -- Processing
 		local
 			bool_str: detachable STRING_32
 		do
-			if attached {like xml_node} elem.item_for_iteration as e and then a_name.same_string (e.name) then
+			if attached {like xml_node} elem.item_for_iteration as e and then e.has_same_name (a_name) then
 				bool_str := e.text
 				if bool_str /= Void and then bool_str.is_boolean then
 					Result := bool_str.to_boolean
@@ -148,7 +148,7 @@ feature {EG_XML_STORABLE} -- Processing
 		local
 			double_str: detachable STRING_32
 		do
-			if attached {like xml_node} elem.item_for_iteration as e and then a_name.same_string (e.name) then
+			if attached {like xml_node} elem.item_for_iteration as e and then e.has_same_name (a_name) then
 				double_str := e.text
 				if double_str /= Void and then double_str.is_double then
 					Result := double_str.to_double
@@ -259,15 +259,23 @@ feature -- Saving
 		require
 			file_not_void: a_file_name /= Void
 			file_exists: not a_file_name.is_empty
+		do
+			save_xml_document_with_path (create {PATH}.make_from_string (a_file_name), a_doc)
+		end
+
+	save_xml_document_with_path (a_file_name: PATH; a_doc: XML_DOCUMENT)
+			-- Save `a_doc' in `ptf'
+		require
+			file_not_void: a_file_name /= Void
+			file_exists: not a_file_name.is_empty
 		local
 			retried: BOOLEAN
 			l_formatter: XML_FORMATTER
 			l_output_file: RAW_FILE
-			u: FILE_UTILITIES
 		do
 			if not retried then
 					-- Write document
-				create l_output_file.make_with_name (a_file_name)
+				create l_output_file.make_with_path (a_file_name)
 				if not l_output_file.exists or else l_output_file.is_writable then
 					l_output_file.open_write
 					create l_formatter.make
@@ -276,12 +284,12 @@ feature -- Saving
 					l_output_file.flush
 					l_output_file.close
 				else
-					display_error_message ({STRING_32} "Unable to write file: " + a_file_name.to_string_32)
+					display_error_message ({STRING_32} "Unable to write file: " + a_file_name.string_representation)
 				end
 			end
 		rescue
 			retried := True
-			display_error_message ({STRING_32} "Unable to write file: " + a_file_name.to_string_32)
+			display_error_message ({STRING_32} "Unable to write file: " + a_file_name.string_representation)
 			retry
 		end
 
@@ -293,13 +301,23 @@ feature -- Deserialization
 			-- If deserialization fails, return Void.
 		require
 			valid_file_path: a_file_path /= Void and then not a_file_path.is_empty
+		do
+			Result := deserialize_document_with_path (create {PATH}.make_from_string (a_file_path))
+		end
+
+	deserialize_document_with_path (a_file_path: PATH): detachable XML_DOCUMENT
+			-- Retrieve xml document associated to file
+			-- serialized in `a_file_path'.
+			-- If deserialization fails, return Void.
+		require
+			valid_file_path: a_file_path /= Void and then not a_file_path.is_empty
 		local
 			l_parser: XML_STOPPABLE_PARSER
 			l_tree: XML_CALLBACKS_NULL_FILTER_DOCUMENT
 			l_file: PLAIN_TEXT_FILE
 			l_xm_concatenator: XML_CONTENT_CONCATENATOR
 		do
-			create l_file.make_with_name (a_file_path)
+			create l_file.make_with_path (a_file_path)
 			if l_file.exists and l_file.is_readable then
 				l_file.open_read
 				check is_open_read: l_file.is_open_read end
@@ -312,11 +330,11 @@ feature -- Deserialization
 				if l_parser.is_correct then
 					Result := l_tree.document
 				else
-					display_error_message ({STRING_32} "File " + a_file_path.to_string_32 + {STRING_32} " is corrupted")
+					display_error_message ({STRING_32} "File " + a_file_path.string_representation + {STRING_32} " is corrupted")
 					Result := Void
 				end
 			else
-				display_error_message ({STRING_32} "File " + a_file_path.to_string_32 + {STRING_32} " cannot not be open")
+				display_error_message ({STRING_32} "File " + a_file_path.string_representation + {STRING_32} " cannot not be open")
 			end
 		end
 

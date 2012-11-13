@@ -761,10 +761,10 @@ feature -- Save/Restore
 		local
 			diagram_input: detachable XML_DOCUMENT
 		do
-			diagram_input := Xml_routines.deserialize_document (f.name)
+			diagram_input := Xml_routines.deserialize_document_with_path (f.path)
 			if diagram_input /= Void then
 				check
-					valid_xml: diagram_input.root_element.name.is_equal (xml_node_name)
+					valid_xml: diagram_input.root_element.has_same_name (xml_node_name)
 				end
 				if attached {like xml_element} diagram_input.root_element.first as view_input then
 					xml_routines.valid_tags_read

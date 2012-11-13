@@ -35,17 +35,31 @@ feature -- Status
 			-- Is the extended dialog open?
 
 	start_directory: detachable READABLE_STRING_GENERAL
+		do
+			if attached start_path as p then
+				Result := p.string_representation
+			end
+		end
+
+	start_path: detachable PATH
+			-- Starting directory path
 
 feature -- Change
 
 	set_start_directory (v: like start_directory)
 		do
 			if v /= Void then
-				start_directory := v.as_string_8
+				set_start_path (create {PATH}.make_from_string (v))
 			else
-				start_directory := Void
+				set_start_path (Void)
 			end
 		end
+
+	set_start_path (a_path: like start_path)
+		do
+			start_path := a_path
+		end
+
 
 feature {NONE} -- Agents
 
@@ -59,7 +73,7 @@ feature {NONE} -- Agents
 			l_parent: detachable EV_WINDOW
 			l_dial: EV_DIRECTORY_DIALOG
 			l_dir: detachable DIRECTORY
-			t: STRING_GENERAL
+			t: STRING_32
 			tf: like text_field
 		do
 			is_dialog_open := True
@@ -73,13 +87,13 @@ feature {NONE} -- Agents
 
 				--| Find the start directory
 			if t /= Void and then not t.is_empty then
-				create l_dir.make (t.as_string_8)
+				create l_dir.make (t)
 				if not l_dir.exists then
 					l_dir := Void
 				end
 			end
-			if l_dir = Void and attached start_directory as s_dir then
-				create l_dir.make (s_dir.as_string_8)
+			if l_dir = Void and attached start_path as s_path then
+				create l_dir.make_with_path (s_path)
 				if not l_dir.exists then
 					l_dir := Void
 				end

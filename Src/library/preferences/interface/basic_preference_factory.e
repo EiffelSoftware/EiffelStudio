@@ -112,7 +112,7 @@ feature -- Access: Strings
 
 feature -- Access: Lists
 
-	new_string_list_preference_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: ITERABLE [STRING_32]): STRING_LIST_PREFERENCE
+	new_string_list_preference_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: ITERABLE [READABLE_STRING_GENERAL]): STRING_LIST_PREFERENCE
 			-- Add a new `list of strings' preference with name `a_name'.  If preference cannot be found in
 			-- underlying datastore or in a default values then `a_fallback_value' is used for the value.
 		require
@@ -130,7 +130,7 @@ feature -- Access: Lists
 				across
 					lst as c
 				loop
-					lst.extend (c.item)
+					lst.extend (c.item.to_string_32)
 				end
 			end
 			Result := (create {PREFERENCE_FACTORY [like {STRING_LIST_PREFERENCE}.value, STRING_LIST_PREFERENCE]}).
@@ -172,7 +172,7 @@ feature -- Access: Lists
 
 feature -- Access: Choices
 
-	new_string_choice_preference_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: ITERABLE [STRING_32]): STRING_CHOICE_PREFERENCE
+	new_string_choice_preference_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: ITERABLE [READABLE_STRING_GENERAL]): STRING_CHOICE_PREFERENCE
 			-- Add a new `list of strings' preference with name `a_name'.  If preference cannot be found in
 			-- underlying datastore or in a default values then `a_fallback_value' is used for the value.
 		require
@@ -190,7 +190,7 @@ feature -- Access: Choices
 				across
 					lst as c
 				loop
-					lst.extend (c.item)
+					lst.extend (c.item.to_string_32)
 				end
 			end
 			Result := (create {PREFERENCE_FACTORY [like {STRING_CHOICE_PREFERENCE}.value, STRING_CHOICE_PREFERENCE]}).

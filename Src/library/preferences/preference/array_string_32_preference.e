@@ -1,15 +1,17 @@
 note
-	description	: "Array preference."
+	description	: "Array of string_32 preference."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date:"
-	revision	: "$Revision$"
+	date: "$Date:"
+	revision: "$Revision$"
 
 class
-	ARRAY_PREFERENCE
+	ARRAY_STRING_32_PREFERENCE
+
+obsolete "Use STRING_LIST_PREFERENCE [2012-nov]"
 
 inherit
-	ABSTRACT_ARRAY_PREFERENCE [STRING]
+	ABSTRACT_ARRAY_PREFERENCE [STRING_32]
 
 create {PREFERENCE_FACTORY}
 	make, make_from_string_value
@@ -49,7 +51,7 @@ feature -- Status Setting
 						is_choice := True
 						set_selected_index (cnt)
 					end
-					l_value.force (unescaped_string (s).to_string_8, cnt)
+					l_value.force (s, cnt)
 					values.forth
 					cnt := cnt + 1
 				end
@@ -59,10 +61,10 @@ feature -- Status Setting
 
 feature {NONE} -- Implementation
 
-	auto_default_value: ARRAY [STRING]
+	auto_default_value: ARRAY [STRING_32]
 			-- Value to use when Current is using auto by default (until real auto is set)
 		once
-			create Result.make_filled ("", 0, 1)
+			create Result.make_filled ({STRING_32} "", 0, 1)
 		end
 
 note
@@ -79,4 +81,4 @@ note
 
 
 
-end -- class ARRAY_PREFERENCE
+end

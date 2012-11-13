@@ -19,7 +19,7 @@ feature -- Access
 	string_type: STRING
 			-- String description of this preference type.
 		once
-			Result := "STRING32"
+			Result := "STRING"
 		end
 
 feature {NONE} -- Implementation
@@ -32,7 +32,15 @@ feature {NONE} -- Implementation
 	to_value (a_value: READABLE_STRING_GENERAL): STRING_32
 			-- `a_value' to type of `value'.
 		do
-			Result := a_value.as_string_32
+			Result := a_value.to_string_32
+		end
+
+	to_adapted_value (a_value: READABLE_STRING_GENERAL): STRING_32
+			-- Adapted conversion of `a_value' to type of `value'.
+			-- In this case, convert to UTF-8
+		do
+			check should_not_occur: False end
+			Result := a_value.to_string_32
 		end
 
 	auto_default_value: STRING_32

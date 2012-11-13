@@ -51,8 +51,6 @@ feature {NONE} -- Implementation
 
 	set_value_from_string (a_value: READABLE_STRING_GENERAL)
 			-- Parse the string value `a_value' and set `value'.
-		require else
-			string_valid: valid_value_string (a_value)
 		do
 			set_value (a_value.to_integer)
 		end

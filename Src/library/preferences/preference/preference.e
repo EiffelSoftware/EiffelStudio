@@ -44,7 +44,7 @@ feature -- Status setting
 			-- Set the value to be used for default in the event `value' is not set.
 		require
 			a_value_not_void: a_value /= Void
-			a_value_valid: valid_value_string (a_value)
+			a_value_valid: is_string_value_validated (a_value)
 		do
 			internal_default_value := a_value.to_string_32
 			if attached internal_change_actions as l_actions then
@@ -58,7 +58,7 @@ feature -- Status setting
 			-- Parse the string value `a_value' and set `value'.
 		require
 			a_value_not_void: a_value /= Void
-			a_value_valid: valid_value_string (a_value)
+			a_value_valid: is_string_value_validated (a_value)
 		deferred
 		end
 
@@ -176,18 +176,52 @@ feature -- Query
 	is_hidden: BOOLEAN
 			-- Should Current be hidden from user view?
 
-	valid_value_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
-			-- Is `a_string' valid for this preference type to convert into a value?
-		require
-			string_not_void: a_string /= Void
-		deferred
-		end
-
 	restart_required: BOOLEAN
 			-- Is a restart required to apply the preference when changed? (Default: False)
 
 	is_auto: BOOLEAN
 			-- Is Current using auto value?
+
+feature -- Validation		
+
+	validation_agent: detachable FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], BOOLEAN]
+			-- Validation agent to test if a READABLE_STRING_GENERAL is a valid text value for Current
+			--| This can be used to validate only existing path, or existing directory, ...
+
+feature -- Query
+
+	valid_value_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `a_string' valid for this preference type to convert into a value?
+			-- note: this ignores the `validation_agent'
+		require
+			string_not_void: a_string /= Void
+		deferred
+		end
+
+	is_string_value_validated (a_string: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `a_string' valid for this preference type to convert into a value?
+		require
+			string_not_void: a_string /= Void
+		do
+			if attached validation_agent as agt then
+				Result := agt.item ([a_string])
+			else
+				Result := valid_value_string (a_string)
+			end
+		end
+
+	has_validation_agent: BOOLEAN
+		do
+			Result := validation_agent /= Void
+		end
+
+feature -- Change
+
+	set_validation_agent (agt: like validation_agent)
+			-- Set `validation_agent' to `agt'.
+		do
+			validation_agent := agt
+		end
 
 feature -- Actions
 

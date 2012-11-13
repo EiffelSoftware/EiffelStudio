@@ -10,6 +10,8 @@ deferred class
 inherit
 	TYPED_PREFERENCE [ARRAY [G]]
 
+	ABSTRACT_CHOICE_PREFERENCE [G]
+
 feature {PREFERENCE, PREFERENCE_WIDGET, PREFERENCES_STORAGE_I, PREFERENCE_VIEW} -- Access
 
 	text_value: STRING_32
@@ -27,10 +29,10 @@ feature {PREFERENCE, PREFERENCE_WIDGET, PREFERENCES_STORAGE_I, PREFERENCE_VIEW} 
 					if attached l_array.item (index) as l_item then
 						if is_choice and then index = selected_index then
 							Result.append_character ('[')
-							Result.append_string_general (l_item)
+							Result.append (escaped_string (l_item.to_string_32))
 							Result.append_character (']')
 						else
-							Result.append_string_general (l_item)
+							Result.append (escaped_string (l_item.to_string_32))
 						end
 						if not (index = l_array.count) then
 							Result.append (";")
@@ -51,6 +53,19 @@ feature -- Access
 		deferred
 		end
 
+	value_as_list_of_text: LIST [STRING_32]
+		local
+			l_value: like value
+		do
+			l_value := value
+			create {ARRAYED_LIST [STRING_32]} Result.make (l_value.count)
+			across
+				l_value as c
+			loop
+				Result.force (c.item.to_string_32)
+			end
+		end
+
 	selected_value: detachable G
 			-- Value of the selected index.
 		do
@@ -59,6 +74,13 @@ feature -- Access
 				l_value.valid_index (selected_index)
 			then
 				Result := l_value.item (selected_index)
+			end
+		end
+
+	selected_value_as_text: detachable STRING_32
+		do
+			if attached selected_value as v then
+				Result := v.to_string_32
 			end
 		end
 
@@ -78,13 +100,14 @@ feature -- Status Setting
 
 	set_selected_index (a_index: INTEGER)
 			-- Set `selected_index'
-		require
-			index_valie: a_index > 0
-			is_choice: is_choice
+--		require
+--			index_valie: a_index > 0
+--			is_choice: is_choice
 		do
+			check is_choice: is_choice end
 			selected_index := a_index
-		ensure
-			index_set: selected_index = a_index
+--		ensure
+--			index_set: selected_index = a_index
 		end
 
 feature -- Query
@@ -96,6 +119,74 @@ feature -- Query
 			-- Is `a_string' valid for this preference type to convert into a value?		
 		do
 			Result := True
+		end
+
+feature {NONE} -- Formatting
+
+	item_separator: CHARACTER_32 = ';'
+
+	escape_character: CHARACTER_32 = '%%'
+
+	escaped_characters: LIST [CHARACTER_32]
+			-- Escaped characters to avoid issue with item separator, and selection markers.
+		once
+			create {ARRAYED_LIST [CHARACTER_32]} Result.make (2)
+			Result.extend (item_separator)
+			Result.extend (escape_character)
+			Result.extend ('[')
+			Result.extend (']')
+		end
+
+feature -- Formatting
+
+	escaped_string (s: STRING_32): STRING_32
+			-- Escaped string `s' to avoid issue with `item_separator' (i.e  ';')
+		local
+			i,n: INTEGER
+			c: CHARACTER_32
+			l_escaped_characters: like escaped_characters
+		do
+			from
+				i := 1
+				n := s.count
+				create Result.make (n)
+				l_escaped_characters := escaped_characters
+			until
+				i > n
+			loop
+				c := s[i]
+				if i < n then
+					if l_escaped_characters.has (c) then
+						Result.append_character (escape_character)
+					end
+				end
+				Result.append_character (c)
+				i := i + 1
+			end
+		end
+
+	unescaped_string (s: STRING_32): STRING_32
+		local
+			i,n: INTEGER
+			c: CHARACTER_32
+		do
+			from
+				i := 1
+				n := s.count
+				create Result.make (n)
+			until
+				i > n
+			loop
+				c := s[i]
+				if c = escape_character and i < n then
+					if escaped_characters.has (s[i+1]) then
+						i := i + 1
+						c := s[i]
+					end
+				end
+				Result.append_character (c)
+				i := i + 1
+			end
 		end
 
 feature {PREFERENCES} -- Access
@@ -115,6 +206,33 @@ feature {NONE} -- Implementation
 	auto_default_value: ARRAY [G]
 			-- Value to use when Current is using auto by default (until real auto is set)
 		deferred
+		end
+
+	splitted_strings (s: STRING_32): ARRAYED_LIST [STRING_32]
+		local
+			i, p, n: INTEGER
+			c: CHARACTER_32
+		do
+			create Result.make (0)
+			from
+				i := 1
+				p := 1
+				n := s.count
+			until
+				i > n
+			loop
+				c := s[i]
+				if c = escape_character then -- escape character
+					i := i + 1
+				elseif c = item_separator then
+					Result.extend (s.substring (p, i - 1))
+					p := i + 1
+				end
+				i := i + 1
+			end
+			if i > p then
+				Result.extend (s.substring (p, i - 1))
+			end
 		end
 
 note

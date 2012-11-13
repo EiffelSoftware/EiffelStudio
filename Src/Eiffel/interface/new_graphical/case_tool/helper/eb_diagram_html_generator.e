@@ -118,7 +118,7 @@ feature {EB_DOCUMENTATION_WIZARD} -- Basic operations
 				if l_parser.is_correct then
 					diagram_input := l_tree.document.root_element
 					check
-						valid_file: diagram_input.name.same_string_general ("EIFFEL_CLUSTER_DIAGRAM")
+						valid_file: diagram_input.has_same_name ("EIFFEL_CLUSTER_DIAGRAM")
 					end
 					a_cursor := diagram_input.new_cursor
 					from

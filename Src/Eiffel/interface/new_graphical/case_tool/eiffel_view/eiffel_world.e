@@ -158,7 +158,7 @@ feature -- Access
 			end
 		end
 
-	bon_views (file_name: STRING): LIST [STRING]
+	bon_views (file_name: PATH): LIST [STRING]
 			-- All views in `file_name' which are bon views.
 		require
 			file_name_not_void: file_name /= Void
@@ -168,7 +168,7 @@ feature -- Access
 			view_name: STRING
 		do
 			create {ARRAYED_LIST [STRING]} Result.make (0)
-			diagram_input := Xml_routines.deserialize_document (file_name)
+			diagram_input := Xml_routines.deserialize_document_with_path (file_name)
 			if diagram_input /= Void then
 				check
 					valid_xml: diagram_input.root_element.has_same_name (xml_node_name)
@@ -560,7 +560,7 @@ feature -- Store/Retrive
 		do
 			if ptf.is_open_read then
 					-- Remove any previous save of `current_view'.
-				diagram_output := Xml_routines.deserialize_document (ptf.name)
+				diagram_output := Xml_routines.deserialize_document_with_path (ptf.path)
 			else
 					-- Create a new view.
 				create diagram_output.make_with_root_named (xml_node_name,
@@ -590,7 +590,7 @@ feature -- Store/Retrive
 				root.add_attribute ("IS_UML", xml_namespace, is_uml.out)
 				view_output := xml_element (root)
 				diagram_output.root_element.force_first (view_output)
-				Xml_routines.save_xml_document (ptf.name, diagram_output)
+				Xml_routines.save_xml_document_with_path (ptf.path, diagram_output)
 			end
 		end
 
@@ -604,7 +604,7 @@ feature -- Store/Retrive
 			view_name: STRING
 		do
 			available_views.wipe_out
-			diagram_input := Xml_routines.deserialize_document (f.name)
+			diagram_input := Xml_routines.deserialize_document_with_path (f.path)
 			if diagram_input /= Void then
 				check
 					valid_xml: diagram_input.root_element.has_same_name (xml_node_name)
@@ -639,7 +639,7 @@ feature -- Store/Retrive
 			view_name: STRING
 			l_name_str, l_view_str: STRING
 		do
-			diagram_input := Xml_routines.deserialize_document (f.name)
+			diagram_input := Xml_routines.deserialize_document_with_path (f.path)
 			if diagram_input /= Void then
 				check
 					valid_xml: diagram_input.root_element.has_same_name (xml_node_name)
@@ -916,7 +916,7 @@ feature {NONE} -- Implementation
 			diagram_output: XML_DOCUMENT
 			a_cursor: XML_COMPOSITE_CURSOR
 		do
-			diagram_output := Xml_routines.deserialize_document (ptf.name)
+			diagram_output := Xml_routines.deserialize_document_with_path (ptf.path)
 			if diagram_output /= Void then
 				check
 					valid_xml: diagram_output.root_element.has_same_name (xml_node_name)
@@ -938,7 +938,7 @@ feature {NONE} -- Implementation
 						a_cursor.forth
 					end
 				end
-				Xml_routines.save_xml_document (ptf.name, diagram_output)
+				Xml_routines.save_xml_document_with_path (ptf.path, diagram_output)
 			end
 		end
 
@@ -949,7 +949,7 @@ feature {NONE} -- Implementation
 			a_cursor: XML_COMPOSITE_CURSOR
 			view_name: STRING
 		do
-			diagram_input := Xml_routines.deserialize_document (f.name)
+			diagram_input := Xml_routines.deserialize_document_with_path (f.path)
 			if diagram_input /= Void then
 				check
 					valid_xml: diagram_input.root_element.has_same_name (xml_node_name)

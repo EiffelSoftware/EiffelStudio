@@ -71,7 +71,7 @@ feature -- Access
 			l_world := world
 			l_universe := universe
 			node_name := node.name
-			if node_name.is_equal (xml_class_figure_node_name) then
+			if node_name.same_string (xml_class_figure_node_name) then
 				class_name := node.attribute_by_name (name_string).value
 				class_id := node.attribute_by_name (class_id_string).value
 				if class_name /= Void and class_id /= Void then
@@ -97,7 +97,7 @@ feature -- Access
 				else
 					xml_routines.display_error_message (warnings.w_class_attributes_expected (name_string, class_id_string))
 				end
-			elseif node_name.is_equal (xml_cluster_figure_node_name) then
+			elseif node_name.same_string (xml_cluster_figure_node_name) then
 				group_id := node.attribute_by_name (group_id_string).value
 				cluster_id := node.attribute_by_name (cluster_id_string).value
 				if group_id /= Void and then cluster_id /= Void then
@@ -110,7 +110,7 @@ feature -- Access
 				else
 					xml_routines.display_error_message (warnings.w_cluster_attribute_expected (group_id_string, cluster_id_string))
 				end
-			elseif node_name.is_equal (xml_client_supplier_figure_node_name) or else node_name.is_equal (xml_inheritance_figure_node_name) then
+			elseif node_name.same_string (xml_client_supplier_figure_node_name) or else node_name.same_string (xml_inheritance_figure_node_name) then
 				source_name := node.attribute_by_name (source_string).value
 				if source_name /= Void then
 					target_name := node.attribute_by_name (target_string).value
@@ -118,7 +118,7 @@ feature -- Access
 						source := l_world.model.class_of_id (source_name)
 						target := l_world.model.class_of_id (target_name)
 						if source /= Void and target /= Void then
-							if node_name.is_equal (xml_client_supplier_figure_node_name) then
+							if node_name.same_string (xml_client_supplier_figure_node_name) then
 								if source.has_supplier (target) then
 									create {ES_CLIENT_SUPPLIER_LINK} Result.make (source, target)
 								end
@@ -209,7 +209,7 @@ feature {NONE} -- Constants
 		-- Xml string constants
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

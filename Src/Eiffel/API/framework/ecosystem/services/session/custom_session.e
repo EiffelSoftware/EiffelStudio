@@ -25,7 +25,7 @@ create {SESSION_MANAGER_S}
 
 feature {NONE} -- Initialization
 
-	make (a_file_name: READABLE_STRING_8; a_manager: like manager)
+	make (a_file_name: PATH; a_manager: like manager)
 			-- Initialize a custom file name session
 			--
 			-- `a_file_name': File name to persist/retrieve a session object from.
@@ -36,16 +36,16 @@ feature {NONE} -- Initialization
 			a_manager_attached: attached a_manager
 			a_manager_is_interface_usable: a_manager.is_interface_usable
 		do
-			create file_name.make_from_string (a_file_name)
+			file_name := a_file_name
 			make_session (False, a_manager)
 		ensure
-			a_file_name_set: file_name.same_string (a_file_name)
+			a_file_name_set: file_name ~ a_file_name
 			manager_set: manager = a_manager
 		end
 
 feature -- Access
 
-	file_name: IMMUTABLE_STRING_8
+	file_name: PATH
 			-- <Precursor>
 
 invariant
@@ -53,7 +53,7 @@ invariant
 	not_file_name_is_empty: not file_name.is_empty
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

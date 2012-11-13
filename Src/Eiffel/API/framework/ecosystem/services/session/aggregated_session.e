@@ -124,7 +124,7 @@ feature {SESSION_MANAGER_S} -- Element change
 
 feature -- Query
 
-	value alias "[]" (a_id: STRING_8): ANY assign set_value
+	value alias "[]" (a_id: STRING_8): detachable ANY assign set_value
 			-- <Precursor>
 		do
 			if data.has (a_id) then
@@ -184,7 +184,7 @@ invariant
 	extension_name_set: not (is_actively_disposing or is_disposed) implies (attached inner_session as l_session and then extension_name ~ l_session.extension_name)
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -21,7 +21,7 @@ feature -- Access
 			Result := (create {SESSION_KINDS}).custom
 		end
 
-	file_name: IMMUTABLE_STRING_8
+	file_name: PATH
 			-- File name for the custom session
 		deferred
 		ensure
@@ -34,7 +34,7 @@ invariant
 	not_file_name_is_empty: not file_name.is_empty
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

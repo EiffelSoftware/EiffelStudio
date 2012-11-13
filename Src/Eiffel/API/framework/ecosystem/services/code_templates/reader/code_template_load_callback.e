@@ -477,7 +477,7 @@ feature {NONE} -- Production processing
 
 feature {NONE} -- Action handlers
 
-	on_error (a_msg: STRING_32; a_line: NATURAL; a_char: NATURAL)
+	on_error (a_msg: READABLE_STRING_32; a_line: NATURAL; a_char: NATURAL)
 			-- <Precursor>
 		do
 			Precursor (a_msg, a_line, a_char)

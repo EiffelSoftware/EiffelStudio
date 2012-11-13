@@ -125,9 +125,9 @@ feature -- Access
 					Result.set_pixmap (icon_pixmaps.preference_string_icon)
 				elseif attached {IDENTIFIED_FONT_PREFERENCE} a_pref then
 					Result.set_pixmap (icon_pixmaps.preference_font_icon)
-				elseif attached {ARRAY_PREFERENCE} a_pref then
+				elseif attached {ABSTRACT_ARRAY_PREFERENCE [READABLE_STRING_GENERAL]} a_pref then
 					Result.set_pixmap (icon_pixmaps.preference_list_icon)
-				elseif attached {ARRAY_32_PREFERENCE} a_pref then
+				elseif attached {LIST_PREFERENCE [ANY]} a_pref then
 					Result.set_pixmap (icon_pixmaps.preference_list_icon)
 				elseif attached {SHORTCUT_PREFERENCE} a_pref then
 					Result.set_pixmap (icon_pixmaps.preference_shortcut_icon)

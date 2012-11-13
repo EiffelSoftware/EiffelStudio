@@ -476,11 +476,10 @@ feature {NONE} -- Basic operations
 			if has_stone and then context.has_stone then
 				if
 					file_notifier.is_service_available and then
-					attached context.context_class.file_name as l_file_name and then
-					attached l_file_name.string_representation as l_fn
+					attached context.context_class.file_name as l_file_name
 				then
 						-- Poll for modifications, which will call `on_file_modified' if have occurred.
-					file_notifier.service.poll_modifications (l_fn).do_nothing
+					file_notifier.service.poll_modifications (l_file_name).do_nothing
 				end
 
 				if not is_dirty then
@@ -722,13 +721,10 @@ feature {SESSION_I} -- Event handlers
 
 	on_session_value_changed (a_session: SESSION_I; a_id: STRING_8)
 			-- <Precursor>
-		local
-			l_mode: NATURAL_8_REF
 		do
 			Precursor {SESSION_EVENT_OBSERVER} (a_session, a_id)
 			if a_id.is_equal (contract_mode_session_id) then
-				l_mode ?= project_window_session_data.value (contract_mode_session_id)
-				if l_mode /= Void then
+				if attached {NATURAL_8_REF} project_window_session_data.value (contract_mode_session_id) as l_mode then
 					set_contract_mode (l_mode.item)
 				end
 			end
@@ -816,14 +812,14 @@ feature {NONE} -- Tool action handlers
 		do
 			if file_notifier.is_service_available then
 				l_service := file_notifier.service
-				if a_old_stone /= Void and then attached {CLASSI_STONE} a_old_stone as l_old_cs and then attached {STRING_32} l_old_cs.class_i.file_name as l_old_fn then
+				if a_old_stone /= Void and then attached {CLASSI_STONE} a_old_stone as l_old_cs and then attached l_old_cs.class_i.file_name as l_old_fn then
 						-- Remove old monitor
 					if l_service.is_monitoring (l_old_fn) then
 						l_service.uncheck_modifications_with_callback (l_old_fn, agent on_file_modified)
 					end
 				end
 
-				if stone /= Void and then attached {CLASSI_STONE} stone as l_new_cs and then attached {STRING_32} l_new_cs.class_i.file_name as l_new_fn then
+				if stone /= Void and then attached {CLASSI_STONE} stone as l_new_cs and then attached l_new_cs.class_i.file_name as l_new_fn then
 						-- Add monitor
 					l_service.check_modifications_with_callback (l_new_fn, agent on_file_modified)
 				end
@@ -1536,30 +1532,27 @@ feature {NONE} -- Factory
 			Result.extend (l_button)
 		end
 
-	contract_mode_label (a_mode: like contract_mode): attached STRING_32
+	contract_mode_label (a_mode: like contract_mode): STRING_32
 			-- Retrieve the edit label for a given an edit mode.
 			--
 			-- `a_mode': An edit mode. See {ES_CONTRACT_TOOL_EDIT_MODE} for possible values.
 			-- `Result': A label for the given edit mode.
 		require
 			a_mode_is_valid: (create {ES_CONTRACT_TOOL_EDIT_MODE}).is_valid_mode (a_mode)
-		local
-			l_result: STRING_32
 		do
 			inspect a_mode
 			when {ES_CONTRACT_TOOL_EDIT_MODE}.preconditions then
-				l_result := interface_names.m_edit_preconditions
+				Result := interface_names.m_edit_preconditions
 			when {ES_CONTRACT_TOOL_EDIT_MODE}.postconditions then
-				l_result := interface_names.m_edit_postconditions
+				Result := interface_names.m_edit_postconditions
 			when {ES_CONTRACT_TOOL_EDIT_MODE}.invariants then
-				l_result := interface_names.m_edit_invariants
+				Result := interface_names.m_edit_invariants
 			else
-				l_result := interface_names.unknown_string
+				Result := interface_names.unknown_string
 			end
 				-- Remove ampersand from menu name.
-			l_result ?= l_result.twin
-			l_result.replace_substring_all ("&", "")
-			create Result.make_from_string (l_result.as_string_32)
+			Result := Result.twin
+			Result.replace_substring_all ({STRING_32} "&", {STRING_32} "")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end

@@ -28,7 +28,7 @@ inherit
 
 feature -- Query
 
-	is_valid_file_name (a_file_name: STRING_32): BOOLEAN
+	is_valid_file_name (a_file_name: PATH): BOOLEAN
 			-- Determines if a file name is valid
 		require
 			is_interface_usable: is_interface_usable
@@ -39,7 +39,7 @@ feature -- Query
 			not_a_file_name_is_empty: Result implies not a_file_name.is_empty
 		end
 
-	is_monitoring (a_file_name: STRING_32): BOOLEAN
+	is_monitoring (a_file_name: PATH): BOOLEAN
 			-- Determines if a file is being monitored.
 			--
 			-- `a_file_name': The file name to determine if change notifications are being published for.
@@ -52,7 +52,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	check_modifications (a_file_name: STRING_32)
+	check_modifications (a_file_name: PATH)
 			-- Checks a file for any modifications.
 			-- Note: This must be called everytime a client wants to determine if a file has changed. The appropriate modification
 			--       event will be fired based on the file state. There is no real automatic solution because of the last of file
@@ -72,7 +72,7 @@ feature -- Basic operations
 			is_monitoring_a_file_name: is_monitoring (a_file_name)
 		end
 
-	check_modifications_with_callback (a_file_name: STRING_32; a_callback: PROCEDURE [ANY, TUPLE [modification_type: NATURAL_8]])
+	check_modifications_with_callback (a_file_name: PATH; a_callback: PROCEDURE [ANY, TUPLE [modification_type: NATURAL_8]])
 			-- Checks a file for any modifications.
 			-- Note: This must be called everytime a client wants to determine if a file has changed. The appropriate modification
 			--       event will be fired based on the file state. There is no real automatic solution because of the last of file
@@ -94,7 +94,7 @@ feature -- Basic operations
 			is_monitoring_a_file_name: is_monitoring (a_file_name)
 		end
 
-	uncheck_modifications (a_file_name: STRING_32)
+	uncheck_modifications (a_file_name: PATH)
 			-- Indicates to the service that the file no longer needs to be monitored.
 			-- Note: Unchecking a file does not necessarly mean that it is no longer monitored. Other parts of the
 			--       system could be moniroting the same file. However, it is somewhat important that for every check call
@@ -108,7 +108,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	uncheck_modifications_with_callback (a_file_name: STRING_32; a_callback: PROCEDURE [ANY, TUPLE [modification_type: NATURAL_8]])
+	uncheck_modifications_with_callback (a_file_name: PATH; a_callback: PROCEDURE [ANY, TUPLE [modification_type: NATURAL_8]])
 			-- Indicates to the service that the file no longer needs to be monitored.
 			-- Note: Unchecking a file does not necessarly mean that it is no longer monitored. Other parts of the
 			--       system could be moniroting the same file. However, it is (very* important that for every check call
@@ -125,7 +125,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	poll_modifications (a_file_name: STRING_32): NATURAL_8
+	poll_modifications (a_file_name: PATH): NATURAL_8
 			-- Polls the modification state of a file and returns the modified state.
 			-- Note: Calling this will also update any monitors.
 			--
@@ -140,7 +140,7 @@ feature -- Basic operations
 
 feature -- Events
 
-	file_modified_events: EVENT_TYPE [TUPLE [file_name: STRING_32; modification_type: NATURAL_8]]
+	file_modified_events: EVENT_TYPE [TUPLE [file_name: PATH; modification_type: NATURAL_8]]
 			-- Events fired after check a file and discovering there have been modifications.
 			--
 			-- `file_name': The name of the file modified.
@@ -180,7 +180,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

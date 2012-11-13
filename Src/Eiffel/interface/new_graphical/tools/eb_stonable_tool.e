@@ -42,7 +42,7 @@ feature {NONE} -- Clean up
 						attached last_monitored_stone as l_stone2 and then
 						attached l_stone2.file_name as l_stone2_filename
 					then
-						l_notifier.service.uncheck_modifications_with_callback (l_stone2_filename.as_string_32, agent on_file_changed)
+						l_notifier.service.uncheck_modifications_with_callback (create {PATH}.make_from_string (l_stone2_filename), agent on_file_changed)
 						last_monitored_stone := Void
 					end
 				end
@@ -128,17 +128,18 @@ feature {NONE} -- Implementation
 			-- Set `last_stone' with `a_stone'.
 		local
 			l_notifier: SERVICE_CONSUMER [FILE_NOTIFIER_S]
+			p: PATH
 		do
 			create l_notifier
 			if l_notifier.is_service_available then
 					-- Unregister existing file check modification
 				if
 					attached last_monitored_stone as l_stone and then
-					attached l_stone.file_name as l_stone_filename and then
-					attached l_stone_filename.as_string_32 as l_fn
+					attached l_stone.file_name as l_stone_filename
 				then
-					if l_notifier.service.is_monitoring (l_fn) then
-						l_notifier.service.uncheck_modifications_with_callback (l_fn, agent on_file_changed)
+					create p.make_from_string (l_stone_filename)
+					if l_notifier.service.is_monitoring (p) then
+						l_notifier.service.uncheck_modifications_with_callback (p, agent on_file_changed)
 					end
 				end
 			end
@@ -153,7 +154,8 @@ feature {NONE} -- Implementation
 					attached {FILED_STONE} a_stone as l_stone2 and then
 					attached l_stone2.file_name as l_stone2_filename
 				then
-					l_notifier.service.check_modifications_with_callback (l_stone2_filename.as_string_32, agent on_file_changed)
+					create p.make_from_string (l_stone2_filename)
+					l_notifier.service.check_modifications_with_callback (p, agent on_file_changed)
 					last_monitored_stone := l_stone2
 				end
 			end
@@ -173,7 +175,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

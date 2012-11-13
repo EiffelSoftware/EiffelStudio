@@ -137,7 +137,8 @@ feature {NONE} -- Implementation functions
 			elseif ef_stone /= Void then
 				if not text_loaded and then current_editor /= Void then
 					f := ef_stone.file
-					f.make_open_read (f.name)
+					f.make_with_path (f.path)
+					f.open_read
 					f.read_stream (f.count)
 					f.close
 					prevent_duplicated_editor (a_stone)

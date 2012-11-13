@@ -415,7 +415,7 @@ feature {NONE} -- Helpers
 	xml_parser: XML_STOPPABLE_PARSER
 			-- Xml parser used to parse the code template files.
 		once
-			create {XML_STOPPABLE_PARSER} Result.make
+			create Result.make
 		ensure
 			result_attached: attached Result
 		end
@@ -434,16 +434,14 @@ feature {NONE} -- Basic operations
 			a_file_name_exists: (create {FILE_UTILITIES}).file_exists (a_file_name)
 		local
 			l_parser: like xml_parser
-			l_file_name: detachable STRING
 			l_resolver: XML_FILE_EXTERNAL_RESOLVER
 			l_callbacks: CODE_TEMPLATE_LOAD_CALLBACK
 			retried: BOOLEAN
 		do
 			if not retried then
-				l_file_name := a_file_name.as_string_8
 
 				create l_resolver.make
-				l_resolver.resolve (l_file_name)
+				l_resolver.resolve (a_file_name)
 				if not l_resolver.has_error then
 						-- File is loaded, create the callbacks and parse the XML.
 					l_parser := xml_parser
@@ -463,15 +461,13 @@ feature {NONE} -- Basic operations
 							-- Log parse error
 						if logger_service.is_service_available then
 							logger_service.service.put_message_with_severity (
-								(create {ERROR_MESSAGES}).e_code_template_parse (l_callbacks.last_error_message, l_file_name),
+								(create {ERROR_MESSAGES}).e_code_template_parse (l_callbacks.last_error_message, a_file_name),
 								{ENVIRONMENT_CATEGORIES}.internal_event,
 								{PRIORITY_LEVELS}.high)
 						end
 					end
 				end
 			else
-				check l_file_name_attached: attached l_file_name end
-
 				if attached l_resolver.last_stream as l_stream then
 					l_stream.close
 				end
@@ -479,7 +475,7 @@ feature {NONE} -- Basic operations
 					-- Log failed load error
 				if logger_service.is_service_available then
 					logger_service.service.put_message_with_severity (
-						(create {ERROR_MESSAGES}).e_code_template_read (l_file_name),
+						(create {ERROR_MESSAGES}).e_code_template_read (a_file_name),
 						{ENVIRONMENT_CATEGORIES}.internal_event,
 						{PRIORITY_LEVELS}.high)
 				end

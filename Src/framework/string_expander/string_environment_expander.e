@@ -43,15 +43,13 @@ feature {NONE} -- Query
 			-- <Precursor>
 		do
 			check is_eiffel_layout_defined: is_eiffel_layout_defined end
-			if use_environment_variables and then is_eiffel_layout_defined and then a_id.is_string_8 then
-				if attached eiffel_layout.get_environment (a_id.as_string_8) as l_env_value then
-					Result := l_env_value
-				end
+			if use_environment_variables and then is_eiffel_layout_defined then
+				Result := eiffel_layout.get_environment_32 (a_id)
 			end
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

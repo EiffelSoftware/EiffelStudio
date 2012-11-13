@@ -26,14 +26,14 @@ feature -- Query
 			a_string_attached: a_string /= Void
 		local
 			c: CHARACTER
-			c2, c3: CHARACTER
+			c2: CHARACTER
 			l_count, i: INTEGER
 			l_buffer: STRING
 			l_id: STRING
 			l_cont: BOOLEAN
 			l_escape: BOOLEAN
 			l_match_para: BOOLEAN
-			l_id_table: HASH_TABLE [STRING, STRING]
+			l_id_table: HASH_TABLE [attached like variable, STRING_8]
 		do
 			create Result.make (a_string.count)
 			create l_id_table.make (13)
@@ -70,8 +70,7 @@ feature -- Query
 								if l_match_para then
 									l_cont := not (c2 = '{' and c = '}' or c2 = '(' and c = ')')
 								else
-									c3 := c.to_character_8
-									l_cont := c3.is_alpha or c3.is_digit or c3 = '_'
+									l_cont := c.is_alpha or c.is_digit or c = '_'
 								end
 								if l_cont then
 									l_buffer.append_character (c)
@@ -131,7 +130,7 @@ feature -- Query
 			result_attached: Result /= Void
 		end
 
-	expand_string_32 (a_string: READABLE_STRING_32; a_keep: BOOLEAN): STRING_32
+	expand_string_32 (a_string: READABLE_STRING_GENERAL; a_keep: BOOLEAN): STRING_32
 			-- Expands a 32-bit string and replaces any variable values.
 			--
 			-- `a_string': The string to expand.
@@ -141,14 +140,14 @@ feature -- Query
 			a_string_attached: a_string /= Void
 		local
 			c: CHARACTER_32
-			c2, c3: CHARACTER_8
+			c2: CHARACTER_32
 			l_count, i: INTEGER
 			l_buffer: STRING_32
-			l_id: STRING
+			l_id: STRING_32
 			l_cont: BOOLEAN
 			l_escape: BOOLEAN
 			l_match_para: BOOLEAN
-			l_id_table: HASH_TABLE [STRING_32, STRING]
+			l_id_table: HASH_TABLE [attached like variable_32, STRING_32]
 		do
 			create Result.make (a_string.count)
 			create l_id_table.make (13)
@@ -163,13 +162,8 @@ feature -- Query
 				if not l_escape and then c = id_specifier_char then
 					i := i + 1
 					if i <= l_count then
-						if a_string.item (i).is_character_8 then
-							c2 := a_string.item (i).to_character_8
-						else
-								-- Wipe out, so the next test fails.
-							create c2
-						end
-						if c2.is_alpha or c2 = '{' or c2 = '(' then
+						c2 := a_string.item (i)
+						if c2.is_alpha or c2 = {CHARACTER_32} '{' or c2 = {CHARACTER_32} '(' then
 								-- The start of the indentifier has been located
 							if not l_buffer.is_empty then
 									-- Create a new text token for anything left in the buffer
@@ -190,11 +184,7 @@ feature -- Query
 								if l_match_para then
 									l_cont := not (c2 = '{' and c = '}' or c2 = '(' and c = ')')
 								else
-									l_cont := c.is_character_8
-									if l_cont then
-										c3 := c.to_character_8
-										l_cont := c3.is_alpha or c3.is_digit or c3 = '_'
-									end
+									l_cont := c.is_alpha or c.is_digit or c = '_'
 								end
 								if l_cont then
 									l_buffer.append_character (c)
@@ -207,22 +197,15 @@ feature -- Query
 
 							if not l_buffer.is_empty then
 									-- Replace the variable
-								if l_buffer.is_string_8 then
-									l_id := l_buffer.as_string_8
-									if l_id_table.has (l_id) and then attached l_id_table.item (l_id) as l_value then
-										Result.append (l_value)
-									elseif attached variable_32 (l_id) as l_value then
-										Result.append (l_value)
-										l_id_table.put (l_value, l_id)
-									elseif a_keep then
-											-- No variable found, preserve the variable.
-										Result.append_character (id_specifier_char)
-										Result.append_character ('{')
-										Result.append (l_buffer)
-										Result.append_character ('}')
-									end
+
+								l_id := l_buffer
+								if l_id_table.has (l_id) and then attached l_id_table.item (l_id) as l_value then
+									Result.append (l_value)
+								elseif attached variable_32 (l_id) as l_value then
+									Result.append (l_value)
+									l_id_table.put (l_value, l_id)
 								elseif a_keep then
-										-- The variable is invalid, preserve the variable.
+										-- No variable found, preserve the variable.
 									Result.append_character (id_specifier_char)
 									Result.append_character ('{')
 									Result.append (l_buffer)
@@ -301,7 +284,7 @@ feature {NONE} -- Constants
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

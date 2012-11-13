@@ -29,8 +29,11 @@ inherit
 
 feature {NONE} -- Access
 
-	table: detachable HASH_TABLE [READABLE_STRING_GENERAL, READABLE_STRING_GENERAL]
-			-- Table of variable names to value mappings.
+	table_8: detachable HASH_TABLE [READABLE_STRING_8, STRING_8]
+			-- Table of variable names to value mappings for `expand_string'.
+
+	table_32: detachable HASH_TABLE [READABLE_STRING_32, STRING_32]
+			-- Table of variable names to value mappings for `expand_string_32'.
 
 feature {NONE} -- Status report
 
@@ -39,7 +42,7 @@ feature {NONE} -- Status report
 
 feature -- Query
 
-	expand_string (a_string: READABLE_STRING_8; a_table: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]; a_use_env: BOOLEAN; a_keep: BOOLEAN): STRING
+	expand_string (a_string: READABLE_STRING_8; a_table: HASH_TABLE [READABLE_STRING_8, STRING_8]; a_use_env: BOOLEAN; a_keep: BOOLEAN): STRING
 			-- Expands a 8-bit string and replaces any variable values.
 			--
 			-- `a_string' : The string to expand.
@@ -58,17 +61,18 @@ feature -- Query
 			if not l_compare_objects then
 				a_table.compare_objects
 			end
-			table := a_table
+			table_8 := a_table
 			use_environment_variables := a_use_env
 			Result := expand_string_internal (a_string, a_keep)
 			if not l_compare_objects then
 				a_table.compare_references
 			end
+			table_8 := Void
 		ensure
-			table_detached: table = Void
+			table_detached: table_8 = Void
 		end
 
-	expand_string_32 (a_string: READABLE_STRING_32; a_table: HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]; a_use_env: BOOLEAN; a_keep: BOOLEAN): STRING_32
+	expand_string_32 (a_string: READABLE_STRING_32; a_table: HASH_TABLE [READABLE_STRING_32, STRING_32]; a_use_env: BOOLEAN; a_keep: BOOLEAN): STRING_32
 			-- Expands a 32-bit string and replaces any variable values.
 			--
 			-- `a_string' : The string to expand.
@@ -87,30 +91,30 @@ feature -- Query
 			if not l_compare_objects then
 				a_table.compare_objects
 			end
-			table := a_table
+			table_32 := a_table
 			use_environment_variables := a_use_env
 			Result := expand_string_32_internal (a_string, a_keep)
 			if not l_compare_objects then
 				a_table.compare_references
 			end
+			table_32 := Void
 		ensure
-			table_detached: table = Void
+			table_detached: table_32 = Void
 		end
 
 feature {NONE} -- Query
 
-	variable (a_id: READABLE_STRING_8): detachable STRING
+	variable (a_id: READABLE_STRING_8): detachable STRING_8
 			-- <Precursor>
-		local
-			l_value: detachable READABLE_STRING_8
 		do
-			if (attached {HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]} table as l_table) then
-				l_value := l_table.item (a_id)
-				if l_value /= Void then
-					Result := l_value.as_string_8
+			if attached table_8 as l_table then
+				if attached l_table.item (a_id) as l_value then
+					check is_valid_as_string_8: l_value.is_valid_as_string_8 end
+					create Result.make (l_value.count)
+					Result.append (l_value)
 				end
 			else
-				check table_set: False end
+				check compatible_table_set: False end
 			end
 
 			if not attached Result then
@@ -120,16 +124,14 @@ feature {NONE} -- Query
 
 	variable_32 (a_id: READABLE_STRING_32): detachable STRING_32
 			-- <Precursor>
-		local
-			l_value: detachable READABLE_STRING_32
 		do
-			if (attached {HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]} table as l_table) then
-				l_value := l_table.item (a_id)
-				if l_value /= Void then
-					Result := l_value.as_string_32
+			if attached table_32 as l_table then
+				if attached l_table.item (a_id) as l_value then
+					create Result.make (l_value.count)
+					Result.append (l_value)
 				end
 			else
-				check table_set: False end
+				check compatible_table_set: False end
 			end
 
 			if not attached Result then
@@ -138,10 +140,11 @@ feature {NONE} -- Query
 		end
 
 invariant
-	table_compares_objects: (attached table as l_table) implies l_table.object_comparison
+	table_8_compares_objects: (attached table_8 as l_table_8) implies l_table_8.object_comparison
+	table_32_compares_objects: (attached table_32 as l_table_32) implies l_table_32.object_comparison
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

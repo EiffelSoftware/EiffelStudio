@@ -67,7 +67,7 @@ feature {SESSION_MANAGER_S} -- Access
 
 feature -- Element change
 
-	set_value (a_value: ANY; a_id: STRING_8)
+	set_value (a_value: detachable ANY; a_id: STRING_8)
 			-- Sets a piece of sessions data
 			--
 			-- `a_value': Data to set in sessions, or Void to remove it.
@@ -113,7 +113,7 @@ feature {SESSION_MANAGER_S, SESSION_I} -- Element change
 
 feature -- Query
 
-	value alias "[]" (a_id: STRING_8): ANY assign set_value
+	value alias "[]" (a_id: STRING_8): detachable ANY assign set_value
 			-- Retrieve a piece of sessions data, indexed by an ID.
 			--
 			-- `a_id': An id to retrieve session data for
@@ -163,7 +163,7 @@ feature -- Status report
 			Result := window_id > 0
 		end
 
-	is_valid_session_value (a_value: ANY): BOOLEAN
+	is_valid_session_value (a_value: detachable ANY): BOOLEAN
 			-- Determines if `a_valud' is a valid session value
 		require
 			is_interface_usable: is_interface_usable
@@ -278,7 +278,7 @@ invariant
 	window_id_positive: is_per_window implies window_id > 0
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -142,7 +142,7 @@ feature -- Retrieval
 			result_is_interface_usable: attached Result implies Result.is_interface_usable
 		end
 
-	retrieve_from_disk (a_file_name: READABLE_STRING_8): detachable SESSION_I
+	retrieve_from_disk (a_file_name: PATH): detachable SESSION_I
 			-- Retrieves a session object from disk, if it exists.
 			-- If no file exists then a new session is created.
 			--
@@ -170,7 +170,7 @@ feature -- Retrieval
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

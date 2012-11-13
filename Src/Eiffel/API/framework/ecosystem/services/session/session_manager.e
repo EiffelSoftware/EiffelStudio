@@ -97,7 +97,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Query
 
-	session_file_path (a_session: SESSION_I): attached STRING_8
+	session_file_path (a_session: SESSION_I): PATH
 			-- <Precursor>
 		require
 			is_interface_usable: is_interface_usable
@@ -109,7 +109,7 @@ feature {NONE} -- Query
 			l_kinds: SESSION_KINDS
 			l_kind: UUID
 			l_fn: detachable STRING_8
-			l_path: FILE_NAME
+			l_path: PATH
 			l_conf_target: CONF_TARGET
 			l_ver: STRING_8
 			l_target: STRING_8
@@ -177,9 +177,7 @@ feature {NONE} -- Query
 				l_fn := l_formatter.format (l_fn, [l_ver, l_target, l_window_id, l_extension])
 
 					-- Create full path
-				create l_path.make_from_string (eiffel_layout.session_data_path_8.string)
-				l_path.set_file_name (l_fn)
-				Result := l_path.out.as_attached
+				Result := eiffel_layout.session_data_path.extended (l_fn)
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -220,18 +218,20 @@ feature -- Storage
 			l_file: detachable RAW_FILE
 			l_sed_util: SED_STORABLE_FACILITIES
 			l_writer: SED_MEDIUM_READER_WRITER
-			l_message: attached STRING_32
+			l_message: STRING_32
 			retried: BOOLEAN
+			u: FILE_UTILITIES
 		do
 			if not retried then
 				if a_session.is_dirty and then (not a_session.is_per_project or else (create {SHARED_WORKBENCH}).workbench.system_defined) then
 						-- Retrieve file name and ensure the directory exists.
 					l_file_name := session_file_path (a_session)
-					file_utilities.create_directory_for_file (l_file_name)
+					u.create_directory (l_file_name.string_representation)
 
 						-- Ensure the project is loaded for project sessions.
 					create l_sed_util
-					create l_file.make_open_write (l_file_name)
+					create l_file.make_with_path (l_file_name)
+					l_file.open_write
 					create l_writer.make (l_file)
 					l_writer.set_for_writing
 
@@ -253,7 +253,7 @@ feature -- Storage
 						-- Log deserialization error.
 					create l_message.make_from_string ("Unable to store the session data file: ")
 					if not a_session.is_per_project or else (create {SHARED_WORKBENCH}).workbench.system_defined then
-						l_message.append (session_file_path (a_session))
+						l_message.append (session_file_path (a_session).string_representation)
 					else
 						l_message.append ("<unloaded project>")
 					end
@@ -399,7 +399,7 @@ feature -- Retrieval
 			result_is_interface_usable: attached Result implies Result.is_interface_usable
 		end
 
-	retrieve_from_disk (a_file_name: attached STRING_8): detachable SESSION_I
+	retrieve_from_disk (a_file_name: PATH): detachable SESSION_I
 			-- <Precursor>
 		do
 				-- Create a new custom session
@@ -444,7 +444,7 @@ feature {NONE} -- Basic operation
 		do
 			if not retried then
 				create l_sed_util
-				create l_file.make (session_file_path (a_session))
+				create l_file.make_with_path (session_file_path (a_session))
 				if l_file.exists then
 					l_file.open_read
 
@@ -596,7 +596,7 @@ feature {NONE} -- Factory
 			result_extension_set: (attached Result and attached a_extension) implies a_extension.same_string (Result.extension_name)
 		end
 
-	new_custom_session (a_file_name: READABLE_STRING_8): detachable CUSTOM_SESSION_I
+	new_custom_session (a_file_name: PATH): detachable CUSTOM_SESSION_I
 			-- Creates a new session object
 			--
 			-- `a_file_name': The full path to a file on disk to retrieve session data from.
@@ -611,7 +611,7 @@ feature {NONE} -- Factory
 		ensure
 			result_is_interface_usable: attached Result implies Result.is_interface_usable
 			result_is_clean: attached Result implies not Result.is_dirty
-			result_file_name_set: attached Result implies a_file_name.same_string (Result.file_name)
+			result_file_name_set: attached Result implies (a_file_name ~ Result.file_name)
 		end
 
 feature {NONE} -- Constants

@@ -134,7 +134,7 @@ feature {NONE} -- Access
 
 feature -- Element change
 
-	set_value (a_value: ANY; a_id: STRING_8)
+	set_value (a_value: detachable ANY; a_id: STRING_8)
 			-- <Precursor>
 		local
 			l_old_value: ANY
@@ -243,14 +243,14 @@ feature {SESSION_MANAGER_S} -- Element change
 
 feature -- Query
 
-	value alias "[]" (a_id: STRING_8): ANY assign set_value
+	value alias "[]" (a_id: STRING_8): detachable ANY assign set_value
 			-- <Precursor>
 		local
 			l_data: like data
 		do
 			l_data := data
 			if l_data.has (a_id) then
-				Result := unbox_value (l_data[a_id])
+				Result := unbox_value (l_data [a_id])
 			end
 		end
 
@@ -277,15 +277,16 @@ feature -- Status report
 	is_per_project: BOOLEAN
 			-- <Precursor>
 
-	is_valid_session_value (a_value: ANY): BOOLEAN
+	is_valid_session_value (a_value: detachable ANY): BOOLEAN
 			-- <Precursor>
 		local
 			l_internal: like internal
 			l_codes: like type_codes
 			l_id: INTEGER
 		do
-			Result := a_value = Void
-			if not Result then
+			if a_value = Void then
+				Result := True
+			else
 				l_codes := type_codes
 				l_internal := internal
 				l_id := l_internal.dynamic_type (a_value)
@@ -512,7 +513,7 @@ invariant
 	data_compared_objects: data.object_comparison
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -34,7 +34,7 @@ feature -- Status Setting
 		do
 			create internal_value.make_empty
 			values := splitted_strings (a_value.to_string_32)
-			if values.count > 1 or not values.first.is_empty then
+			if not values.is_empty and then (values.count > 1 or else not values.first.is_empty) then
 				from
 					l_value := value
 					check has_value: l_value /= Void end -- implied by `internal_value /= Void'

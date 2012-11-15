@@ -162,7 +162,7 @@ feature -- File name operations
 	make_file_name_in (name: READABLE_STRING_GENERAL; location: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
 			-- A file name for file `name' in directory `location'.
 		do
-			Result := (create {PATH}.make_from_string (location)).extended (name).string_representation
+			Result := (create {PATH}.make_from_string (location)).extended (name).name
 		end
 
 feature -- Directory operations
@@ -424,8 +424,10 @@ feature -- File operations
 
 	file_name (f: FILE): READABLE_STRING_GENERAL
 			-- Name associated with `f'.
+		obsolete
+			"Try to store the name used to create the file `f' rather than trying to retrieve it."
 		do
-			Result := f.name_32
+			Result := f.path.name
 		end
 
 	file_exists (n: READABLE_STRING_GENERAL): BOOLEAN

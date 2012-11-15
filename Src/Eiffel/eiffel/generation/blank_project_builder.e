@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make (a_system_name, a_root_class_name, a_root_cluster_name, a_root_feature_name: STRING; a_project_directory: STRING_32)
+	make (a_system_name, a_root_class_name, a_root_cluster_name, a_root_feature_name: STRING; a_project_directory: PATH)
 			-- Set up the blank ace builder to work with a system named
 			-- `a_system_name' and a project located in `a_project_directory'.
 			-- `a_root_class_name', `a_root_cluster_name' and `a_root_feature_name' are the root attribute names.
@@ -42,9 +42,7 @@ feature {NONE} -- Implementation
 			project_directory := a_project_directory
 
 				-- Create the pathname of the ace file
-			create ace_filename.make_from_string (project_directory)
-			ace_filename.set_file_name (system_name.as_lower)
-			ace_filename.add_extension ({EIFFEL_CONSTANTS}.config_extension)
+			ace_filename := project_directory.extended (system_name.as_lower + "." + {EIFFEL_CONSTANTS}.config_extension)
 
 				-- Create the pathname of the root class.
 			create l_rexp.make
@@ -58,17 +56,15 @@ feature {NONE} -- Implementation
 			l_root_class_file_name := create {STRING}.make_empty
 
 			l_rexp.append_captured_substring_to_string (l_root_class_file_name, 1)
-			create root_class_filename.make_from_string (project_directory)
-			root_class_filename.set_file_name (l_root_class_file_name)
-			root_class_filename.add_extension (eiffel_extension)
+			root_class_filename := project_directory.extended (l_root_class_file_name + "." + eiffel_extension)
 		end
 
 feature -- Access
 
-	ace_filename: FILE_NAME_32
+	ace_filename: PATH
 			-- Filename of the ace file for this project.
 
-	root_class_filename: FILE_NAME_32
+	root_class_filename: PATH
 			-- Filename of the root class file for this project.
 
 feature -- Basic operations.
@@ -104,7 +100,7 @@ feature {NONE} -- Implementation
 			contents.replace_substring_all ("$root_class_name", root_class_name)
 			contents.replace_substring_all ("$root_class_feature", root_feature_name)
 			contents.replace_substring_all ("$root_cluster_name", root_cluster_name)
-			contents.replace_substring_all ("$root_cluster_location", project_directory)
+			contents.replace_substring_all ("$root_cluster_location", project_directory.string_representation)
 		end
 
 	save_ace_file_content (contents: STRING)
@@ -115,7 +111,7 @@ feature {NONE} -- Implementation
 			new_file: PLAIN_TEXT_FILE
 			char: CHARACTER
 		do
-			create new_file.make_with_name (ace_filename)
+			create new_file.make_with_path (ace_filename)
 				-- Create the ace file and save the content in it.
 			new_file.open_write
 			if not contents.is_empty then
@@ -134,7 +130,7 @@ feature {NONE} -- Implementation
 			new_file.close
 		rescue
 			add_error_message (
-				{STRING_32} "Unable to create or overwrite the ace file '"+ace_filename+"'%N%
+				{STRING_32} "Unable to create or overwrite the ace file '"+ace_filename.string_representation+"'%N%
 				%Check your write permissions in this directory")
 		end
 
@@ -162,7 +158,7 @@ feature {NONE} -- Implementation
 		local
 			new_class: PLAIN_TEXT_FILE
 		do
-			create new_class.make_with_name (root_class_filename)
+			create new_class.make_with_path (root_class_filename)
 			if not new_class.exists then
 				new_class.open_write
 				new_class.put_string (
@@ -194,7 +190,7 @@ feature {NONE} -- Implementation
 			end
 		rescue
 			add_error_message (
-				{STRING_32} "Unable to create the root class file '"+ root_class_filename +"'%N%
+				{STRING_32} "Unable to create the root class file '"+ root_class_filename.string_representation +"'%N%
 				%Check your write permissions on this file and on this directory")
 		end
 
@@ -212,7 +208,7 @@ feature {NONE} -- Private attributes
 	root_feature_name: STRING
 			-- Name of the system of the project to build.
 
-	project_directory: STRING_32;
+	project_directory: PATH;
 			-- Location of the project to build.
 
 note

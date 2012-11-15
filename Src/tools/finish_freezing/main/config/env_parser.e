@@ -280,7 +280,6 @@ feature {NONE} -- Basic operations
 			-- Create a temporary file.
 		local
 			retried: BOOLEAN
-			l_file_name: FILE_NAME
 			l_file: PLAIN_TEXT_FILE
 		do
 			if not retried then

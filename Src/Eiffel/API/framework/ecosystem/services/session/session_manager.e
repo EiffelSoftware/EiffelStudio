@@ -226,7 +226,9 @@ feature -- Storage
 				if a_session.is_dirty and then (not a_session.is_per_project or else (create {SHARED_WORKBENCH}).workbench.system_defined) then
 						-- Retrieve file name and ensure the directory exists.
 					l_file_name := session_file_path (a_session)
-					u.create_directory (l_file_name.string_representation)
+					if attached l_file_name.parent as l_parent then
+						u.create_directory (l_parent.string_representation)
+					end
 
 						-- Ensure the project is loaded for project sessions.
 					create l_sed_util

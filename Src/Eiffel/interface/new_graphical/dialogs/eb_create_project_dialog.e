@@ -127,7 +127,7 @@ feature {NONE} -- Initialization
 			valid_parent_window: a_parent_window /= Void
 		do
 			parent_window := a_parent_window
-			ace_file_name := ace_name
+			create ace_file_name.make_from_string (ace_name)
 			if not a_suggested_directory_name.is_empty then
 				suggested_directory_name := a_suggested_directory_name
 			else
@@ -215,10 +215,10 @@ feature -- Execution
 				ace_file_name := blank_project_builder.ace_filename
 				compile_project := compile_project_check_button.is_selected
 
-				if (create {PLAIN_TEXT_FILE}.make_with_name (ace_file_name)).exists then
+				if (create {PLAIN_TEXT_FILE}.make_with_path (ace_file_name)).exists then
 						-- Warn that the existing configuration file will be overwritten.
 					prompts.show_warning_prompt_with_cancel (
-						warning_messages.w_file_exists (ace_file_name),
+						warning_messages.w_file_exists (ace_file_name.string_representation),
 						Current,
 						agent do success := True end,
 						Void
@@ -240,7 +240,7 @@ feature -- Execution
 					if l_project_initialized then
 						l_project_loader.enable_project_creation_or_opening_not_requested
 					end
-					l_project_loader.open_project_file (ace_file_name, Void, directory_name, True)
+					l_project_loader.open_project_file (ace_file_name.string_representation, Void, directory_name.string_representation, True)
 					if not l_project_loader.has_error then
 						if compile_project then
 							l_project_loader.set_is_compilation_requested (True)
@@ -365,7 +365,7 @@ feature {NONE} -- Implementation
 				system_name_frame.extend (main_vb)
 			else
 					-- Ace file Name
-				create label.make_with_text (ace_file_name)
+				create label.make_with_text (ace_file_name.string_representation)
 				create system_name_frame.make_with_text (Interface_names.l_Ace_file_for_frame)
 				create hb
 				hb.set_border_width (layout_constants.small_border_size)
@@ -468,32 +468,28 @@ feature {NONE} -- Implementation
 			dd.set_title (Interface_names.t_select_a_directory)
 			if directory_field /= Void then
 				start_directory := directory_field.text
-				if not start_directory.is_empty then
-					start_directory := validate_directory_name_32 (start_directory)
-					if (create {DIRECTORY}.make (start_directory)).exists then
-						dd.set_start_directory (start_directory)
-					end
+				if not start_directory.is_empty and then (create {DIRECTORY}.make (start_directory)).exists then
+					dd.set_start_directory (start_directory)
 				end
 			end
 			dd.ok_actions.extend (agent retrieve_directory (dd))
 			dd.show_modal_to_window (Current)
 		end
 
-	check_and_create_directory (a_directory_name: DIRECTORY_NAME_32)
+	check_and_create_directory (a_directory_name: PATH)
 			-- Check that the directory `a_directory_name' is valid and exists and MODIFY IT if needed.
 			-- If `a_directory_name' is not valid or does not exits, a developper exception is raised.
 		local
-			new_directory_name: DIRECTORY_NAME_32
+			d: DIRECTORY
 		do
-			new_directory_name := validate_directory_name_32 (a_directory_name)
-			if new_directory_name = Void then
-				raise_exception (Invalid_directory_exception)
-			else
-					-- Try to create the directory
-				recursive_create_directory (new_directory_name)
+				-- Try to create the directory.
+			create d.make_with_path (a_directory_name)
+			d.recursive_create_dir
+			if not d.exists then
+				raise_exception ("Cannot create a directory.")
 			end
 		rescue
-			add_error_message (Warning_messages.w_Invalid_directory_or_cannot_be_created (a_directory_name))
+			add_error_message (Warning_messages.w_Invalid_directory_or_cannot_be_created (a_directory_name.string_representation))
 		end
 
 	create_default_directory_name (project_name: STRING_32): STRING_32
@@ -581,10 +577,10 @@ feature {NONE} -- Private attributes
 	parent_window: EV_WINDOW
 			-- Parent window
 
-	ace_file_name: STRING_32
+	ace_file_name: PATH
 			-- Name of the ace file to create the project with.
 
-	directory_name: DIRECTORY_NAME_32
+	directory_name: PATH
 			-- Directory to create the project in.
 
 	system_name: STRING_32

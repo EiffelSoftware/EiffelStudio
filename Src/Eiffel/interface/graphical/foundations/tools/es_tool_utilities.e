@@ -135,7 +135,7 @@ feature -- Query
 			result_consistent: Result.is_equal (tool_associated_name (a_tool))
 		end
 
-	tool_associated_path (a_tool: attached ES_TOOL [EB_TOOL]): DIRECTORY_NAME
+	tool_associated_path (a_tool: ES_TOOL [EB_TOOL]): PATH
 			-- The tool's associated folder, used for modularizing development of a tool.
 			--
 			-- `a_tool': A tool descriptor to retrieve a type identifier for.
@@ -145,15 +145,15 @@ feature -- Query
 		local
 			u: FILE_UTILITIES
 		do
-			create Result.make_from_path (eiffel_layout.tools_path)
-			u.create_directory (Result.string)
+			Result := eiffel_layout.tools_path
+			u.create_directory (Result.string_representation)
 
 				-- Build folder and create it
-			Result.extend (a_tool.name)
-			u.create_directory (Result.string)
+			Result := Result.extended (a_tool.name)
+			u.create_directory (Result.string_representation)
 		ensure
 			not_result_is_empty: not Result.is_empty
-			result_consistent: Result.string.same_string (tool_associated_path (a_tool))
+			result_consistent: Result.is_equal (tool_associated_path (a_tool))
 		end
 
 ;note

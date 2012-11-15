@@ -29,16 +29,15 @@ feature {NONE} -- Initialization
 			a_tool_is_interface_usable: a_tool.is_interface_usable
 			not_a_name_is_empty: not a_name.is_empty
 		local
-			l_matrix: attached FILE_NAME
+			l_matrix: PATH
 		do
 				-- Create icon file name
-			create l_matrix.make_from_string (tool_utilities.tool_associated_path (a_tool))
-			l_matrix.set_file_name (a_name)
-			if attached {FILE_NAME} eiffel_layout.user_priority_file_name_8 (l_matrix, True) as l_user_matrix then
+			l_matrix := tool_utilities.tool_associated_path (a_tool).extended (a_name)
+			if attached eiffel_layout.user_priority_file_name (l_matrix, True) as l_user_matrix then
 					-- The user has replaced the icons.
 				l_matrix := l_user_matrix
 			end
-			if attached {EV_PIXEL_BUFFER} resource_handler.retrieve_matrix (l_matrix) as l_buffer then
+			if attached {EV_PIXEL_BUFFER} resource_handler.retrieve_matrix (l_matrix.string_representation) as l_buffer then
 				make_from_buffer (l_buffer)
 			else
 				if logger.is_service_available then

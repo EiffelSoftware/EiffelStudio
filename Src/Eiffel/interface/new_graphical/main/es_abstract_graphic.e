@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			l_layout: ES_EIFFEL_LAYOUT
 			l_ui_executor: EB_COMMAND_EXECUTOR
 			pref_strs: PREFERENCE_CONSTANTS
-			fn: FILE_NAME
+			fn: PATH
 			new_resources: TTY_RESOURCES
 			eifgen_init: INIT_SERVERS
 			l_external_output_manager: EB_EXTERNAL_OUTPUT_MANAGER
@@ -102,9 +102,8 @@ feature {NONE} -- Initialization
 			create pref_strs
 				-- Initialize pixmaps
 			pref_strs.Pixmaps_extension_cell.put ("png")
-			create fn.make_from_string (eiffel_layout.bitmaps_path_8)
-			fn.extend ("png")
-			pref_strs.Pixmaps_path_cell.put (fn.string)
+			fn := eiffel_layout.bitmaps_path.extended ("png")
+			pref_strs.Pixmaps_path_cell.put (fn)
 
 			if not new_resources.error_occurred then
 				-- One has to quit there.
@@ -112,7 +111,7 @@ feature {NONE} -- Initialization
 
 				-- Initialization of compiler resources.
 			create preference_access.make_with_defaults_and_location (
-				<<eiffel_layout.general_preferences_8, eiffel_layout.platform_preferences_8>>, eiffel_layout.eiffel_preferences_8)
+				<<eiffel_layout.general_preferences.string_representation, eiffel_layout.platform_preferences.string_representation>>, eiffel_layout.eiffel_preferences)
 			create l_studio_preferences.make (preference_access, True, True)
 			l_compiler_setting.set_preferences (l_studio_preferences)
 

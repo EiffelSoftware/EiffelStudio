@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	matrices: DS_HASH_TABLE [EV_PIXEL_BUFFER, STRING]
+	matrices: DS_HASH_TABLE [EV_PIXEL_BUFFER, STRING_32]
 			-- Table of loaded matrices.
 			--
 			-- Key: Matrix file name, sans extension.
@@ -48,28 +48,22 @@ feature {NONE} -- Access
 
 feature -- Query
 
-	matrix_file_name (a_name: STRING): STRING
+	matrix_file_name (a_name: READABLE_STRING_GENERAL): PATH
 			-- Retrieves the actual file name for a moniker name.
 			--
 			-- `a_name': A moniker or a file name sans extension.
 			-- `Result': A generated file name to a matrix image file.
 		require
-			a_name_attached: attached a_name
-			not_a_name_is_empty: not a_name.is_empty
-		local
-			l_file_name: FILE_NAME
+			not_a_name_is_empty: a_name /= Void and then not a_name.is_empty
 		do
-			create l_file_name.make_from_string (eiffel_layout.bitmaps_path_8)
-			l_file_name.extend (pixmap_file_extension)
-			l_file_name.set_file_name (a_name)
-			l_file_name.add_extension (pixmap_file_extension)
-			Result := l_file_name.string.as_attached
+			create Result.make_from_path (eiffel_layout.bitmaps_path)
+			Result.extend (pixmap_file_extension)
+			Result.extend (a_name.as_string_32 + "." + pixmap_file_extension)
 		ensure
-			result_attached: attached Result
-			not_result_is_empty: not Result.is_empty
+			not_result_is_empty: Result /= Void and then not Result.is_empty
 		end
 
-	retrieve_matrix (a_name: STRING): detachable EV_PIXEL_BUFFER
+	retrieve_matrix (a_name: READABLE_STRING_GENERAL): detachable EV_PIXEL_BUFFER
 			-- Attempts to retrieve a matrix from a given file name or other moniker.
 			--
 			-- `a_name': A file name, sans extension, or another moniker used to load a pixmap file.
@@ -77,35 +71,37 @@ feature -- Query
 		require
 			not_a_name_is_empty: not a_name.is_empty
 		local
+			n: STRING_32
 			l_matrices: like matrices
-			l_file_name: STRING
+			l_file_name: like matrix_file_name
 			l_buffer: EV_PIXEL_BUFFER
 			u: FILE_UTILITIES
 		do
+			n := a_name.as_string_32
 			l_matrices := matrices
-			if l_matrices.has (a_name) then
-				Result := l_matrices.item (a_name)
+			if l_matrices.has (n) then
+				Result := l_matrices.item (n)
 			end
 
-			if not attached Result then
+			if Result = Void then
 					-- Load the pixmap file from disk, if it exists
-				l_file_name := matrix_file_name (a_name)
-				if attached eiffel_layout.user_priority_file_name_8 (l_file_name, True) as l_user_file_name then
+				l_file_name := matrix_file_name (n)
+				if attached eiffel_layout.user_priority_file_name (l_file_name, True) as l_user_file_name then
 						-- The user has replaced the pixmaps.
 					l_file_name := l_user_file_name
 				end
-				if u.file_exists (l_file_name) then
+				if u.file_path_exists (l_file_name) then
 					create l_buffer
-					l_buffer.set_with_named_file (l_file_name)
+					l_buffer.set_with_named_file (l_file_name.string_representation)
 
 						-- Ensure only successful loads are cached!
-					l_matrices.force_last (l_buffer, a_name)
+					l_matrices.force_last (l_buffer, n)
 					Result := l_buffer
 				end
 			end
 		ensure
 			not_result_is_destroyed: attached Result implies not Result.is_destroyed
-			matrices_has_a_name: attached Result implies matrices.has (a_name)
+			matrices_has_a_name: attached Result implies matrices.has (a_name.as_string_32)
 		end
 
 invariant
@@ -144,4 +140,3 @@ invariant
 		]"
 
 end
-

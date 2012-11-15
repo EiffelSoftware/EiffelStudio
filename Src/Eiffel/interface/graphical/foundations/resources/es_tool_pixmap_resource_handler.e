@@ -21,14 +21,10 @@ create
 
 feature -- Query
 
-	matrix_file_name (a_name: STRING): STRING
+	matrix_file_name (a_name: READABLE_STRING_GENERAL): PATH
 			-- <Precursor>
-		local
-			l_file_name: FILE_NAME
 		do
-			create l_file_name.make_from_string (a_name)
-			l_file_name.add_extension (pixmap_file_extension)
-			Result := l_file_name.string.as_attached
+			create Result.make_from_string (a_name.to_string_32 + {STRING_32} "." + pixmap_file_extension)
 		end
 
 ;note

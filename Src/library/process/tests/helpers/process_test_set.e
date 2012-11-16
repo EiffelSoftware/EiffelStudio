@@ -113,39 +113,32 @@ feature {NONE} -- Status setting
 
 feature {NONE} -- Query
 
-	echo_executable: STRING
+	echo_executable: PATH
 			-- Path to `eiffel_echo' executable
 			--
 			-- Note: by default this is $ISE_EIFFEL/studio/tools/spec/$ISE_PLATFORM/bin/eiffel_echo, if
 			--       environment variables are missing we check for a unix layout. Otherwise we assume
 			--       `eiffel_echo' is reachable from $PATH.
 		local
-			l_env: EXECUTION_ENVIRONMENT
-			l_ise_eiffel, l_ise_platform: detachable STRING
-			l_filename: FILE_NAME
-			l_cached: like echo_executable_cache
+			l_env: EXECUTION_ENVIRONMENT_32
+			l_ise_eiffel, l_ise_platform: detachable STRING_32
+			l_filename: PATH
 		do
 			l_cached := echo_executable_cache
 			if l_cached = Void then
 				create l_env
 				l_ise_eiffel := l_env.get (ise_eiffel_env)
 				l_ise_platform := l_env.get (ise_platform_env)
-				create l_filename.make
+				create l_filename.make_empty
 				if l_ise_eiffel = Void or l_ise_platform = Void then
 					if {PLATFORM}.is_unix then
-						l_filename.extend ("usr")
-						l_filename.extend ("bin")
+						l_filename := l_filename.extended ("usr").extended ("bin")
 					end
 				else
-					l_filename.extend (l_ise_eiffel)
-					l_filename.extend ("tools")
-					l_filename.extend ("spec")
-					l_filename.extend (l_ise_platform)
-					l_filename.extend ("bin")
+					l_filename := l_filename.extended (l_ise_eiffel).extended ("tools").extended ("spec").extended (l_ise_platform).expended ("bin")
 				end
-				l_filename.extend (eiffel_echo_name)
-				l_cached := l_filename
-				echo_executable_cache := l_cached
+				l_filename := l_filename.extended (eiffel_echo_name)
+				echo_executable_cache := l_filename
 			end
 			Result := l_cached
 		ensure

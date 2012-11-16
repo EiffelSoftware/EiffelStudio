@@ -56,9 +56,8 @@ feature -- Query
 		require
 			not_a_name_is_empty: a_name /= Void and then not a_name.is_empty
 		do
-			create Result.make_from_path (eiffel_layout.bitmaps_path)
-			Result.extend (pixmap_file_extension)
-			Result.extend (a_name.as_string_32 + "." + pixmap_file_extension)
+			Result := eiffel_layout.bitmaps_path.extended (pixmap_file_extension)
+			Result := Result.extended (a_name.as_string_32 + "." + pixmap_file_extension)
 		ensure
 			not_result_is_empty: Result /= Void and then not Result.is_empty
 		end

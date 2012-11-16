@@ -27,28 +27,28 @@ feature {NONE} -- Initialization
 			check_equal ("is_simple", not p.is_simple)
 
 			check attached p.entry as l_entry then
-				check_equal ("entry1", l_entry.string_representation.same_string_general ("manus"))
+				check_equal ("entry1", l_entry.name.same_string_general ("manus"))
 			end
 			check attached p.parent as l_parent then
-				check_equal ("parent1", l_parent.string_representation.same_string_general ("/usr/local/home"))
+				check_equal ("parent1", l_parent.name.same_string_general ("/usr/local/home"))
 				check attached l_parent.entry as l_entry then
-					check_equal ("entry", l_entry.string_representation.same_string_general ("home"))
+					check_equal ("entry", l_entry.name.same_string_general ("home"))
 				end
 				check attached l_parent.parent as l_parent2 then
-					check_equal ("parent2", l_parent2.string_representation.same_string_general ("/usr/local"))
+					check_equal ("parent2", l_parent2.name.same_string_general ("/usr/local"))
 					check attached l_parent2.entry as l_entry then
-						check_equal ("entry", l_entry.string_representation.same_string_general ("local"))
+						check_equal ("entry", l_entry.name.same_string_general ("local"))
 					end
 					check attached l_parent2.parent as l_parent3 then
-						check_equal ("parent3", l_parent3.string_representation.same_string_general ("/usr"))
+						check_equal ("parent3", l_parent3.name.same_string_general ("/usr"))
 						check attached l_parent3.entry as l_entry then
-							check_equal ("entry", l_entry.string_representation.same_string_general ("usr"))
+							check_equal ("entry", l_entry.name.same_string_general ("usr"))
 						end
 						check attached l_parent3.parent as l_parent4 then
-							check_equal ("parent4", l_parent4.string_representation.same_string_general ("/"))
+							check_equal ("parent4", l_parent4.name.same_string_general ("/"))
 							check_equal ("entry", l_parent4.entry = Void)
 							check attached l_parent4.parent as l_parent5 then
-								check_equal ("parent5", l_parent5.string_representation.same_string_general ("/"))
+								check_equal ("parent5", l_parent5.name.same_string_general ("/"))
 								check_equal ("entry", l_parent5.entry = Void)
 							end
 						end
@@ -56,14 +56,14 @@ feature {NONE} -- Initialization
 				end
 			end
 			check attached p.root as l_root then
-				check_equal ("root1", l_root.string_representation.same_string_general ("/"))
+				check_equal ("root1", l_root.name.same_string_general ("/"))
 			end
 
 			l_components := p.components
-			check_equal ("components", l_components.i_th (1).string_representation.same_string_general ("/"))
-			check_equal ("components", l_components.i_th (2).string_representation.same_string_general ("usr"))
-			check_equal ("components", l_components.i_th (3).string_representation.same_string_general ("local"))
-			check_equal ("components", l_components.i_th (4).string_representation.same_string_general ("home"))
+			check_equal ("components", l_components.i_th (1).name.same_string_general ("/"))
+			check_equal ("components", l_components.i_th (2).name.same_string_general ("usr"))
+			check_equal ("components", l_components.i_th (3).name.same_string_general ("local"))
+			check_equal ("components", l_components.i_th (4).name.same_string_general ("home"))
 
 
 			create p.make_from_string ("/usr//////local////////home/manus")
@@ -72,28 +72,28 @@ feature {NONE} -- Initialization
 			check_equal ("is_empty", not p.is_empty)
 			check_equal ("is_simple", not p.is_simple)
 			check attached p.entry as l_entry then
-				check_equal ("entry1", l_entry.string_representation.same_string_general ("manus"))
+				check_equal ("entry1", l_entry.name.same_string_general ("manus"))
 			end
 			check attached p.parent as l_parent then
-				check_equal ("parent1", l_parent.string_representation.same_string_general ("/usr//////local////////home"))
+				check_equal ("parent1", l_parent.name.same_string_general ("/usr//////local////////home"))
 				check attached l_parent.entry as l_entry then
-					check_equal ("entry", l_entry.string_representation.same_string_general ("home"))
+					check_equal ("entry", l_entry.name.same_string_general ("home"))
 				end
 				check attached l_parent.parent as l_parent2 then
-					check_equal ("parent2", l_parent2.string_representation.same_string_general ("/usr//////local"))
+					check_equal ("parent2", l_parent2.name.same_string_general ("/usr//////local"))
 					check attached l_parent2.entry as l_entry then
-						check_equal ("entry", l_entry.string_representation.same_string_general ("local"))
+						check_equal ("entry", l_entry.name.same_string_general ("local"))
 					end
 					check attached l_parent2.parent as l_parent3 then
-						check_equal ("parent3", l_parent3.string_representation.same_string_general ("/usr"))
+						check_equal ("parent3", l_parent3.name.same_string_general ("/usr"))
 						check attached l_parent3.entry as l_entry then
-							check_equal ("entry", l_entry.string_representation.same_string_general ("usr"))
+							check_equal ("entry", l_entry.name.same_string_general ("usr"))
 						end
 						check attached l_parent3.parent as l_parent4 then
-							check_equal ("parent4", l_parent4.string_representation.same_string_general ("/"))
+							check_equal ("parent4", l_parent4.name.same_string_general ("/"))
 							check_equal ("entry", l_parent4.entry = Void)
 							check attached l_parent4.parent as l_parent5 then
-								check_equal ("parent5", l_parent5.string_representation.same_string_general ("/"))
+								check_equal ("parent5", l_parent5.name.same_string_general ("/"))
 								check_equal ("entry", l_parent5.entry = Void)
 							end
 						end
@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 				end
 			end
 			check attached p.root as l_root then
-				check_equal ("root1", l_root.string_representation.same_string_general ("/"))
+				check_equal ("root1", l_root.name.same_string_general ("/"))
 			end
 
 			create p.make_from_string("abc")
@@ -126,7 +126,7 @@ feature {NONE} -- Initialization
 
 
 			create p.make_from_string ("/abc/./toto/titi/tutu/../../tata")
-			check_equal ("canonical", p.canonical_path.string_representation.same_string_general ("/abc/toto/tata"))
+			check_equal ("canonical", p.canonical_path.name.same_string_general ("/abc/toto/tata"))
 		end
 
 	check_equal (tag: STRING; b: BOOLEAN)

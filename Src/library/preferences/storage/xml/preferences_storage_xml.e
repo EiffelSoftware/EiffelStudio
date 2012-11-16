@@ -36,7 +36,6 @@ feature {NONE} -- Initialization
 		local
 			l_loc: detachable PATH
 			l_exec: EXECUTION_ENVIRONMENT_32
-			fn: FILE_NAME_32
 		do
 			create l_exec
 

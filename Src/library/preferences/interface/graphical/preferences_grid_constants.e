@@ -74,12 +74,12 @@ feature -- Access
 			Result := "The changes you have made to the following resources%Nwill be taken into account after you restart.%N%N"
 		end
 
-	Pixmaps_path_cell: CELL [STRING]
+	Pixmaps_path_cell: CELL [PATH]
 			-- Path where pixmaps for the preference window should be looked for.
 			-- By default it looks in pixmaps in the current directory, but
 			-- it is possible to change the contents of this cell to change this path.
 		once
-			create Result.put ("pixmaps")
+			create Result.put (create {PATH}.make_from_string ("pixmaps"))
 		end
 
 	Pixmaps_extension_cell: CELL [STRING]

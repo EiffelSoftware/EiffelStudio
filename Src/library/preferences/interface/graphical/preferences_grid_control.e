@@ -1236,20 +1236,18 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	pixmap_file_contents (pn: STRING): EV_PIXMAP
+	pixmap_file_contents (pn: READABLE_STRING_GENERAL): EV_PIXMAP
 			-- Load a pixmap in file named `pn'.
 		require
 			valid_file_name: pn /= Void
 		local
 			retried: BOOLEAN
-			fullp: FILE_NAME
+			fullp: PATH
 		do
 			create Result
 			if not retried then
-				create fullp.make_from_string (pixmaps_path_cell.item)
-				fullp.set_file_name (pn)
-				fullp.add_extension (pixmaps_extension_cell.item)
-				Result.set_with_named_file (fullp)
+				fullp := pixmaps_path_cell.item.extended (pn.to_string_32 + {STRING_32} "." + pixmaps_extension_cell.item)
+				Result.set_with_named_file (fullp.string_representation)
 			end
 		rescue
 			retried := True

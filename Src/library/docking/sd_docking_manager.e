@@ -297,17 +297,16 @@ feature -- Query
 			Result := property.docker_mediator
 		end
 
-	is_config_data_valid (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
+	is_config_data_path_valid (a_file_name: PATH): BOOLEAN
 			 -- Is config data in `a_file_name' valid?
 		local
-			l_file: FILE
+			l_file: RAW_FILE
 			l_config_mediator: SD_OPEN_CONFIG_MEDIATOR
-			u: FILE_UTILITIES
 		do
-			l_file := u.make_raw_file (a_file_name)
+			create l_file.make_with_path (a_file_name)
 			if l_file.exists then
 				create l_config_mediator.make (Current)
-				if attached l_config_mediator.config_data_from_file (a_file_name) as l_data then
+				if attached l_config_mediator.config_data_from_path (a_file_name) as l_data then
 					Result := True
 				end
 			end
@@ -318,7 +317,7 @@ feature -- Query
 
 feature -- Command
 
-	save_data (a_file: READABLE_STRING_GENERAL): BOOLEAN
+	save_data_with_path (a_file: PATH): BOOLEAN
 			-- Save current docking config data (including tools' data and editors' data) into `a_file'
 		require
 			a_file_not_void: a_file /= Void
@@ -327,10 +326,10 @@ feature -- Command
 			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
 			create l_config.make (Current)
-			Result := l_config.save_config (a_file)
+			Result := l_config.save_config_with_path (a_file)
 		end
 
-	save_editors_data (a_file: READABLE_STRING_GENERAL): BOOLEAN
+	save_editors_data_with_path (a_file: PATH): BOOLEAN
 			-- Save main window's editor layout configuration data into `a_file'
 		require
 			not_void: a_file /= Void
@@ -339,10 +338,10 @@ feature -- Command
 			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
 			create l_config.make (Current)
-			Result := l_config.save_editors_config (a_file)
+			Result := l_config.save_editors_config_with_path (a_file)
 		end
 
-	save_tools_data (a_file: READABLE_STRING_GENERAL): BOOLEAN
+	save_tools_data_with_path (a_file: PATH): BOOLEAN
 			-- Save tools' layout configuration data into `a_file'
 		require
 			not_void: a_file /= Void
@@ -351,10 +350,10 @@ feature -- Command
 			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
 			create l_config.make (Current)
-			Result := l_config.save_tools_config (a_file)
+			Result := l_config.save_tools_config_with_path (a_file)
 		end
 
-	save_tools_data_with_name (a_file: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
+	save_tools_data_with_name_and_path (a_file: PATH; a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save tools' layout configuration data into a file named `a_file' and store `a_name' into the data
 		require
 			not_void: a_file /= Void
@@ -363,26 +362,26 @@ feature -- Command
 			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
 			create l_config.make (Current)
-			Result := l_config.save_tools_config_with_name (a_file, a_name)
+			Result := l_config.save_tools_config_with_name_and_path (a_file, a_name)
 		end
 
-	open_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
+	open_config_with_path (a_file: PATH): BOOLEAN
 			-- Open all docking layout configuration data previously stored in `a_file'
 			-- Result True means restore docking layout operation executed successfully.
 			-- Result False means the operation failed, maybe due to `a_file' not exist, or
 			-- data in `a_file' corrupted.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_readable: is_file_readable (a_file)
+			a_file_readable: is_file_path_readable (a_file)
 			not_destroyed: not is_destroyed
 		local
 			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
 			create l_config.make (Current)
-			Result := l_config.open_config (a_file)
+			Result := l_config.open_config_with_path (a_file)
 		end
 
-	open_editors_config (a_file: READABLE_STRING_GENERAL)
+	open_editors_config_with_path (a_file: PATH)
 			-- Open main window editors' layout configuration data previously stored in `a_file'
 		require
 			not_destroyed: not is_destroyed
@@ -390,10 +389,10 @@ feature -- Command
 			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
 			create l_config.make (Current)
-			l_config.open_editors_config (a_file)
+			l_config.open_editors_config_with_path (a_file)
 		end
 
-	open_tools_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
+	open_tools_config_with_path (a_file: PATH): BOOLEAN
 			-- Open tool type contents' layout configuration data previously stored in `a_file'
 			-- When editor area available, open all tools' layout except all editor area panels'
 			-- It means, when no editor area avaliable, open_tools_config doesn't make sense
@@ -405,10 +404,10 @@ feature -- Command
 			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
 			create l_config.make (Current)
-			Result := l_config.open_tools_config (a_file)
+			Result := l_config.open_tools_config_with_path (a_file)
 		end
 
-	open_maximized_tool_config (a_file: READABLE_STRING_GENERAL)
+	open_maximized_tool_config_with_path (a_file: PATH)
 			-- Open tool's maximization statues configuration data previously stored in `a_file'
 		require
 			not_destroyed: not is_destroyed
@@ -416,10 +415,10 @@ feature -- Command
 			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
 			create l_config.make (Current)
-			l_config.open_maximized_tool_data (a_file)
+			l_config.open_maximized_tool_data_with_path (a_file)
 		end
 
-	open_tool_bar_item_config (a_file: READABLE_STRING_GENERAL)
+	open_tool_bar_item_config_with_path (a_file: PATH)
 			-- Open tool bar items' layout configuration data previously stored in `a_file'
 		require
 			not_destroyed: not is_destroyed
@@ -427,7 +426,7 @@ feature -- Command
 			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
 			create l_config.make (Current)
-			l_config.open_tool_bar_item_data (a_file)
+			l_config.open_tool_bar_item_data_with_path (a_file)
 		end
 
 	set_main_area_background_color (a_color: EV_COLOR)
@@ -687,12 +686,12 @@ feature -- Command
 
 feature -- Contract support
 
-	is_file_readable (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
+	is_file_path_readable (a_file_name: PATH): BOOLEAN
 			-- Does `a_file_name' exist and readable?
 		local
 			l_file: RAW_FILE
 		do
-			create l_file.make_with_name (a_file_name)
+			create l_file.make_with_path (a_file_name)
 			Result := l_file.exists and then l_file.is_readable
 		end
 
@@ -840,6 +839,125 @@ feature -- Obsolete
 			not_destroyed: not is_destroyed
 		do
 			Result := is_unique_title_free_to_use (a_title)
+		end
+
+	save_data (a_file: READABLE_STRING_GENERAL): BOOLEAN
+			-- Save current docking config data (including tools' data and editors' data) into `a_file'
+		obsolete
+			"Use save_data_with_path instead"
+		require
+			a_file_not_void: a_file /= Void
+			not_destroyed: not is_destroyed
+		do
+			Result := save_data_with_path (create {PATH}.make_from_string (a_file))
+		end
+
+	save_editors_data (a_file: READABLE_STRING_GENERAL): BOOLEAN
+			-- Save main window's editor layout configuration data into `a_file'
+		obsolete
+			"Use save_editors_data_with_path instead"
+		require
+			not_void: a_file /= Void
+			not_destroyed: not is_destroyed
+		do
+			Result := save_editors_data_with_path (create {PATH}.make_from_string (a_file))
+		end
+
+	save_tools_data (a_file: READABLE_STRING_GENERAL): BOOLEAN
+			-- Save tools' layout configuration data into `a_file'
+		obsolete
+			"Use save_tools_data_with_path instead"
+		require
+			not_void: a_file /= Void
+			not_destroyed: not is_destroyed
+		do
+			Result := save_tools_data_with_path (create {PATH}.make_from_string (a_file))
+		end
+
+	save_tools_data_with_name (a_file: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Save tools' layout configuration data into a file named `a_file' and store `a_name' into the data
+		obsolete
+			"Use save_tools_data_with_name_and_path instead"
+		require
+			not_void: a_file /= Void
+			not_destroyed: not is_destroyed
+		do
+			Result := save_tools_data_with_name_and_path (create {PATH}.make_from_string (a_file), a_name)
+		end
+
+	open_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
+			-- Open all docking layout configuration data previously stored in `a_file'
+			-- Result True means restore docking layout operation executed successfully.
+			-- Result False means the operation failed, maybe due to `a_file' not exist, or
+			-- data in `a_file' corrupted.
+		obsolete
+			"Use open_config_with_path instead"
+		require
+			a_file_not_void: a_file /= Void
+			a_file_readable: is_file_readable (a_file)
+			not_destroyed: not is_destroyed
+		do
+			Result := open_config_with_path (create {PATH}.make_from_string (a_file))
+		end
+
+	open_editors_config (a_file: READABLE_STRING_GENERAL)
+			-- Open main window editors' layout configuration data previously stored in `a_file'
+		obsolete
+			"Use open_editors_config_with_path instead"
+		require
+			not_destroyed: not is_destroyed
+		do
+			open_editors_config_with_path (create {PATH}.make_from_string (a_file))
+		end
+
+	open_tools_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
+			-- Open tool type contents' layout configuration data previously stored in `a_file'
+			-- When editor area available, open all tools' layout except all editor area panels'
+			-- It means, when no editor area avaliable, open_tools_config doesn't make sense
+			-- Note: If window is minimized, EV_SPLIT_AREA split bar position can't be restored correctly
+			-- See bug#14309
+		obsolete
+			"Use open_tools_config_with_path instead"
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := open_tools_config_with_path (create {PATH}.make_from_string (a_file))
+		end
+
+	open_maximized_tool_config (a_file: READABLE_STRING_GENERAL)
+			-- Open tool's maximization statues configuration data previously stored in `a_file'
+		obsolete
+			"Use open_maximized_tool_config_with_path instead"
+		require
+			not_destroyed: not is_destroyed
+		do
+			open_maximized_tool_config_with_path (create {PATH}.make_from_string (a_file))
+		end
+
+	open_tool_bar_item_config (a_file: READABLE_STRING_GENERAL)
+			-- Open tool bar items' layout configuration data previously stored in `a_file'
+		obsolete
+			"Use open_tool_bar_item_config_with_path instead"
+		require
+			not_destroyed: not is_destroyed
+		do
+			open_tool_bar_item_config_with_path (create {PATH}.make_from_string (a_file))
+		end
+
+	is_file_readable (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Does `a_file_name' exist and readable?
+		obsolete
+			"Use is_file_path_readable instead"
+		do
+			Result := is_file_path_readable (create {PATH}.make_from_string (a_file_name))
+		end
+
+	is_config_data_valid (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
+			 -- Is config data in `a_file_name' valid?
+		obsolete
+			"Use is_config_data_path_valid instead"
+		do
+			Result := is_config_data_path_valid (create {PATH}.make_from_string (a_file_name))
 		end
 
 invariant

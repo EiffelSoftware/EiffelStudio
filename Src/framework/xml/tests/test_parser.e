@@ -265,7 +265,7 @@ feature -- Files
 	xml_files (n: STRING): ARRAYED_LIST [STRING]
 		local
 			d: DIRECTORY
-			fn: FILE_NAME
+			fn: PATH
 		do
 			create d.make (n)
 			if d.exists then
@@ -283,8 +283,8 @@ feature -- Files
 						i.item (1) /= '.'
 					then
 						create fn.make_from_string (n)
-						fn.set_file_name (i)
-						Result.append (xml_files (fn.string))
+						fn := fn.extended (i)
+						Result.append (xml_files (fn.name))
 					end
 					d.readentry
 				end

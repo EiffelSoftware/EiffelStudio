@@ -68,14 +68,13 @@ feature -- Test routines
 			create e.make_last (Result.root_element, {STRING_32} "unicode-" + s32, def_ns)
 		end
 
-	generate_xml (fn: STRING_32; d: XML_DOCUMENT)
+	generate_xml (fn: PATH; d: XML_DOCUMENT)
 		local
 			vis: XML_FORMATTER
-			u: FILE_UTILITIES
-			f: FILE
+			f: RAW_FILE
 		do
 			create vis.make
-			f := u.make_raw_file (fn)
+			create f.make_with_path (fn)
 			f.open_write
 			vis.set_output_file (f)
 			vis.process_document (d)
@@ -116,11 +115,10 @@ feature -- Test routines
 			vis.process_document (d)
 		end
 
-	generate_ecf (fn: STRING_32)
+	generate_ecf (fn: PATH)
 		local
 			s: STRING_32
-			u: FILE_UTILITIES
-			f: FILE
+			f: RAW_FILE
 		do
 			s :=
 "[
@@ -147,21 +145,20 @@ feature -- Test routines
 </system>
 ]"
 
-			f := u.make_raw_file (fn)
+			create f.make_with_path (fn)
 			f.open_write
 			f.put_string (s)
 			f.close
 		end
 
-	xml_file_name (a_name: STRING_32): STRING_32
+	xml_file_name (a_name: STRING_32): PATH
 		local
-			fn: FILE_NAME_32
+			fn: PATH
 		do
-			create fn.make_from_string (execution_environment.current_working_directory)
---			across 1 |..| 5 as c loop fn.extend ("..") end
+			Result := execution_environment.current_working_path
+--			across 1 |..| 5 as c loop Result := Result.extended ("..") end
 
-			fn.set_file_name (a_name)
-			Result := fn.to_string_32
+			Result := Result.extended (a_name).name
 		end
 
 	new_callbacks_pipe (a_output: STRING_GENERAL; cbs: detachable ARRAY [XML_CALLBACKS_FILTER]; cb: detachable XML_CALLBACKS): XML_CALLBACKS
@@ -214,7 +211,7 @@ feature -- Test routines
 
 			d := new_doc
 			generate_xml (xml_file_name ("test.xml"), d)
-			p.parse_from_filename (xml_file_name ("test.xml"))
+			p.parse_from_path (xml_file_name ("test.xml"))
 			assert ("parsed", p.is_correct)
 			assert ("succeed", not p.error_occurred)
 
@@ -266,7 +263,7 @@ feature -- Test routines
 			create vis_uc
 
 			generate_ecf (xml_file_name ("ecf.xml"))
-			p.parse_from_filename (xml_file_name ("ecf.xml"))
+			p.parse_from_path (xml_file_name ("ecf.xml"))
 			assert ("parsed", p.is_correct)
 			assert ("succeed", not p.error_occurred)
 
@@ -375,7 +372,7 @@ feature -- ASCII
 
 			d := new_doc
 			generate_xml (xml_file_name ("test.xml"), d)
-			p.parse_from_filename (xml_file_name ("test.xml"))
+			p.parse_from_path (xml_file_name ("test.xml"))
 			assert ("parsed", p.is_correct)
 			assert ("succeed", not p.error_occurred)
 
@@ -384,7 +381,7 @@ feature -- ASCII
 			assert ("has no unicode", not vis_uc.has_unicode)
 
 			generate_ecf (xml_file_name ("ecf.xml"))
-			p.parse_from_filename (xml_file_name ("ecf.xml"))
+			p.parse_from_path (xml_file_name ("ecf.xml"))
 			assert ("parsed", p.is_correct)
 			assert ("succeed", not p.error_occurred)
 

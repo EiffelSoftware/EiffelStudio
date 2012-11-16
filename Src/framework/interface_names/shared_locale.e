@@ -32,7 +32,7 @@ feature -- Access
 			-- Locale manager
 		once
 			if is_eiffel_layout_defined and then eiffel_layout.is_valid_environment then
-				create Result.make (eiffel_layout.language_path_8)
+				create Result.make (eiffel_layout.language_path.name)
 			else
 				create Result.make (".")
 			end
@@ -268,7 +268,7 @@ feature -- String
 			a_str_not_void: a_str /= Void
 		local
 			i, nb: INTEGER_32
-			c: CHARACTER_32		
+			c: CHARACTER_32
 		do
 			Result := True
 			from

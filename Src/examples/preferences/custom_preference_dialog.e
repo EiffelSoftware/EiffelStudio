@@ -231,8 +231,8 @@ feature {NONE} -- Implementation
 			l_root_pixmap: EV_PIXMAP
 			l_hbox: EV_HORIZONTAL_BOX
 			l_row_index: INTEGER
-			l_exec: EXECUTION_ENVIRONMENT
-			l_filename: FILE_NAME
+			l_exec: EXECUTION_ENVIRONMENT_32
+			l_filename: PATH
 		do
 				-- Retrieve known preferences
 			l_known_pref_hash := preferences.preferences
@@ -254,10 +254,8 @@ feature {NONE} -- Implementation
 						if not l_pref_hash.has (l_pref_parent_short_name) then
 							create l_root_pixmap
 							create l_hbox
-							create l_filename.make_from_string (l_exec.current_working_directory)
-							l_filename.extend (l_pref_parent_short_name)
-							l_filename.add_extension ("png")
-							l_root_pixmap.set_with_named_file (l_filename.string)
+							l_filename := l_exec.current_working_path.extended (l_pref_parent_short_name.to_string_32 + {STRING_32} ".png")
+							l_root_pixmap.set_with_named_file (l_filename.string_representation)
 							l_root_pixmap.pointer_button_press_actions.force_extend (agent (a_pre: attached like selected_preference_name)
 										require
 											a_pre_attached: a_pre /= Void

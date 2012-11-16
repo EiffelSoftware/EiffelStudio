@@ -27,11 +27,11 @@ feature
 			create o.make_from_string ("abc")
 			create p.make_from_path (o)
 			check_equal ("make_from_path", p ~ o)
-			check_equal ("make_from_path", p.string_representation ~ o.string_representation)
+			check_equal ("make_from_path", p.name ~ o.name)
 
 			create p.make_from_path (env.current_working_path)
 			check_equal ("make_from_path", p ~ env.current_working_path)
-			check_equal ("make_from_path", p.string_representation ~ env.current_working_path.string_representation)
+			check_equal ("make_from_path", p.name ~ env.current_working_path.name)
 
 		end
 
@@ -309,7 +309,7 @@ feature
 			counter := 0
 			current_path := env.current_working_path
 			create p.make_from_string ("abc.txt")
-			check_equal ("absolute", p.absolute_path.string_representation.same_string (current_path.string_representation + "\" + p.string_representation))
+			check_equal ("absolute", p.absolute_path.name.same_string (current_path.name + "\" + p.name))
 		end
 
 	trailing_slashes_removed
@@ -319,7 +319,7 @@ feature
 		do
 			counter := 0
 			create p.make_from_string ("abc\")
-			check_equal ("slashes", p.string_representation ~ {STRING_32} "abc")
+			check_equal ("slashes", p.name ~ {STRING_32} "abc")
 		end
 
 	env: EXECUTION_ENVIRONMENT

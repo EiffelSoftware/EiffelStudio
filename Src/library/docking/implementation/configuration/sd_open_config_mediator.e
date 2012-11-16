@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Open inner container data
 
-	open_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
+	open_config_with_path (a_file: PATH): BOOLEAN
 			-- Open all docking library data from `a_file'
 		require
 			a_file_not_void: a_file /= Void
@@ -42,7 +42,7 @@ feature -- Open inner container data
 		do
 			Result := open_all_config (a_file)
 			if Result then
-				l_config_data := config_data_from_file (a_file)
+				l_config_data := config_data_from_path (a_file)
 				if l_config_data /= Void then
 					internal_open_maximized_tool_data (l_config_data)
 					internal_docking_manager.command.resize (True)
@@ -52,7 +52,7 @@ feature -- Open inner container data
 			end
 		end
 
-	open_editors_config (a_file: READABLE_STRING_GENERAL)
+	open_editors_config_with_path (a_file: PATH)
 			-- Open main window eidtor config data
 		require
 			not_void: a_file /= Void
@@ -72,7 +72,7 @@ feature -- Open inner container data
 			debug ("to_implement")
 				(create {REFACTORING_HELPER}).to_implement ("Use FILE_UTILITIES to deal with `a_file' when available in a library.")
 			end
-			create l_file.make_with_name (a_file)
+			create l_file.make_with_path (a_file)
 			l_file.open_read
 			create l_reader.make (l_file)
 			l_reader.set_for_reading
@@ -137,59 +137,109 @@ feature -- Open inner container data
 			call_show_actions
 		end
 
-	open_tools_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
+	open_tools_config_with_path (a_file: PATH): BOOLEAN
 			-- Open tools config, except all editors
 			-- Not same as normal `open_config', it doesn't clear editors related things.
 		local
 			l_config_data: detachable SD_CONFIG_DATA
 		do
-			l_config_data := config_data_from_file (a_file)
+			l_config_data := config_data_from_path (a_file)
 			if l_config_data /= Void then
 				Result := open_tools_config_imp (l_config_data, agent open_all_config (a_file))
 			end
 		end
 
-	open_maximized_tool_data (a_file: READABLE_STRING_GENERAL)
+	open_maximized_tool_data_with_path (a_file: PATH)
 			-- Open maximized tool data.
 		require
 			a_file_not_void: a_file /= Void
 		local
 			l_data: detachable SD_CONFIG_DATA
 		do
-			l_data := config_data_from_file (a_file)
+			l_data := config_data_from_path (a_file)
 			if l_data /= Void then
 				internal_open_maximized_tool_data (l_data)
 			end
 		end
 
-	open_tool_bar_item_data (a_file: READABLE_STRING_GENERAL)
+	open_tool_bar_item_data_with_path (a_file: PATH)
 			-- Restore SD_TOOL_BAR_RESIZABLE_ITEM's width.
 		require
 			a_file_not_void: a_file /= Void
 		local
 			l_data: detachable SD_CONFIG_DATA
 		do
-			l_data := config_data_from_file (a_file)
+			l_data := config_data_from_path (a_file)
 			if l_data /= Void then
 				internal_open_tool_bar_item_data (l_data)
 			end
 		end
 
+feature -- Obsolete
+
+	open_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
+			-- Open all docking library data from `a_file'
+		obsolete
+			"Use open_config_with_path instead"
+		require
+			a_file_not_void: a_file /= Void
+		do
+			Result := open_config_with_path (create {PATH}.make_from_string (a_file))
+		end
+
+	open_editors_config (a_file: READABLE_STRING_GENERAL)
+			-- Open main window eidtor config data
+		obsolete
+			"Use open_editors_config_with_path instead"
+		require
+			not_void: a_file /= Void
+		do
+			open_editors_config_with_path (create {PATH}.make_from_string (a_file))
+		end
+
+	open_tools_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
+			-- Open tools config, except all editors
+			-- Not same as normal `open_config', it doesn't clear editors related things.
+		obsolete
+			"Use open_tools_config_with_path instead"
+		do
+			Result := open_tools_config_with_path (create {PATH}.make_from_string (a_file))
+		end
+
+	open_maximized_tool_data (a_file: READABLE_STRING_GENERAL)
+			-- Open maximized tool data.
+		obsolete
+			"Use open_maximized_tool_data_with_path instead"
+		require
+			a_file_not_void: a_file /= Void
+		do
+			open_maximized_tool_data_with_path (create {PATH}.make_from_string (a_file))
+		end
+
+	open_tool_bar_item_data (a_file: READABLE_STRING_GENERAL)
+			-- Restore SD_TOOL_BAR_RESIZABLE_ITEM's width.
+		obsolete
+			"Use open_tool_bar_item_data_with_path instead"
+		require
+			a_file_not_void: a_file /= Void
+		do
+			open_tool_bar_item_data_with_path (create {PATH}.make_from_string (a_file))
+		end
+
 feature -- Query
 
-	config_data_from_file (a_file: READABLE_STRING_GENERAL): detachable SD_CONFIG_DATA
+	config_data_from_path (a_file: PATH): detachable SD_CONFIG_DATA
 			-- Config data readed from `a_file'
 		require
 			not_void: a_file /= Void
 		local
-			l_file: detachable FILE
+			l_file: detachable RAW_FILE
 			l_facility: SED_STORABLE_FACILITIES
 			l_reader: SED_MEDIUM_READER_WRITER
 			retried: BOOLEAN
-			u: FILE_UTILITIES
 		do
 			if not retried then
-				l_file := u.make_raw_file (a_file)
+				create l_file.make_with_path (a_file)
 				if l_file.exists then
 					l_file.open_read
 					create l_reader.make (l_file)
@@ -208,12 +258,22 @@ feature -- Query
 			retry
 		end
 
+	config_data_from_file (a_file: READABLE_STRING_GENERAL): detachable SD_CONFIG_DATA
+			-- Config data readed from `a_file'
+		obsolete
+			"Use config_data_from_path instead"
+		require
+			not_void: a_file /= Void
+		do
+			Result := config_data_from_path (create {PATH}.make_from_string (a_file))
+		end
+
 	editor_helper: SD_EDITOR_CONFIG_HELPER
 			-- Editor config helper
 
 feature {NONE} -- Implementation
 
-	open_all_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
+	open_all_config (a_file: PATH): BOOLEAN
 			-- Open all docking library data from `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -228,7 +288,7 @@ feature {NONE} -- Implementation
 			found_place_holder_already := False
 			internal_docking_manager.property.set_is_opening_config (True)
 			if not l_retried then
-				l_config_data := config_data_from_file (a_file)
+				l_config_data := config_data_from_path (a_file)
 				if l_config_data /= Void then
 					internal_docking_manager.command.lock_update (Void, True)
 					l_called := True

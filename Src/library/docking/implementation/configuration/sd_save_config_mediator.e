@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Save inner container data.
 
-	save_config_with_name (a_file: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
+	save_config_with_name_and_path (a_file: PATH; a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save all docking library data to `a_file' with `a_name'
 		require
 			a_file_not_void: a_file /= Void
@@ -77,15 +77,15 @@ feature -- Save inner container data.
 			cleared: top_container = Void
 		end
 
-	save_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
+	save_config_with_path (a_file: PATH): BOOLEAN
 			-- Save all docking library data to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
 		do
-			Result := save_config_with_name (a_file, "")
+			Result := save_config_with_name_and_path (a_file, "")
 		end
 
-	save_editors_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
+	save_editors_config_with_path (a_file: PATH): BOOLEAN
 			-- Save main window editor config data.
 		require
 			not_void: a_file /= Void
@@ -132,15 +132,15 @@ feature -- Save inner container data.
 			cleared: top_container = Void
 		end
 
-	save_tools_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
+	save_tools_config_with_path (a_file: PATH): BOOLEAN
 			-- Save tools config, except all editors.
 		require
 			not_void: a_file /= Void
 		do
-			Result := save_tools_config_with_name (a_file, "")
+			Result := save_tools_config_with_name_and_path (a_file, "")
 		end
 
-	save_tools_config_with_name (a_file: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
+	save_tools_config_with_name_and_path (a_file: PATH; a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save tools config to `a_file' with `a_name'
 		require
 			not_called: top_container = Void
@@ -189,6 +189,65 @@ feature -- Save inner container data.
 
 	top_container: detachable EV_WIDGET
 		-- When only save tools config, and zone place holder not in, this is top contianer of all editors.	
+
+feature -- Obsolete
+
+	save_config_with_name (a_file: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Save all docking library data to `a_file' with `a_name'
+		obsolete
+			"Use save_config_with_name_and_path instead"
+		require
+			a_file_not_void: a_file /= Void
+			a_file_not_void: a_name /= Void
+		do
+			Result := save_config_with_name_and_path (create {PATH}.make_from_string (a_file), a_name)
+		end
+
+	save_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
+			-- Save all docking library data to `a_file'.
+		obsolete
+			"Use save_config_with_path instead"
+		require
+			a_file_not_void: a_file /= Void
+		do
+			Result := save_config_with_path (create {PATH}.make_from_string (a_file))
+		end
+
+	save_editors_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
+			-- Save main window editor config data.
+		obsolete
+			"Use save_editors_config_with_path instead"
+		require
+			not_void: a_file /= Void
+		do
+			Result := save_editors_config_with_path (create {PATH}.make_from_string (a_file))
+		ensure
+			cleared: top_container = Void
+		end
+
+	save_tools_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
+			-- Save tools config, except all editors.
+		obsolete
+			"Use save_tools_config_with_path instead"
+		require
+			not_void: a_file /= Void
+		do
+			Result := save_tools_config_with_path (create {PATH}.make_from_string (a_file))
+		end
+
+	save_tools_config_with_name (a_file: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Save tools config to `a_file' with `a_name'
+		obsolete
+			"Use save_tools_config_with_name_and_path instead"
+		require
+			not_called: top_container = Void
+			a_file_not_void: a_file /= Void
+			a_name_not_void: a_name /= Void
+		do
+			Result := save_tools_config_with_name_and_path (create {PATH}.make_from_string (a_file), a_name)
+		ensure
+			cleared: top_container = Void
+		end
 
 feature {NONE} -- Implementation
 
@@ -560,7 +619,7 @@ feature {NONE} -- Implementation
 			a_config_data.set_resizable_items_data (internal_docking_manager.property.resizable_items_data)
 		end
 
-	save_config_data_to_file (a_config_data: ANY; a_file: READABLE_STRING_GENERAL): BOOLEAN
+	save_config_data_to_file (a_config_data: ANY; a_file: PATH): BOOLEAN
 			-- Save `a_config_data' to `a_file'
 			-- Result true means saving successed
 			-- Result false means saving failed
@@ -574,7 +633,7 @@ feature {NONE} -- Implementation
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				create l_file.make_with_name (a_file)
+				create l_file.make_with_path (a_file)
 				l_file.create_read_write
 				create l_writer.make (l_file)
 				create l_facility

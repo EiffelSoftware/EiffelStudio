@@ -237,10 +237,14 @@ feature -- Conversion
 	update_row (a_row: EV_GRID_ROW; a_suggestion: SUGGESTION_ITEM)
 			-- Convert `a_suggestion' to a graphical representation in `a_row'.
 			-- If `update_row_agent' is not set, default implementation create
-			-- an EV_GRID_LABEL_ITEM with the `a_suggestion.text' as textual
+			-- an EV_GRID_LABEL_ITEM with the `a_suggestion.displayed_text' as textual
 			-- representation in the first column of `a_row'.
 		do
-			a_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (a_suggestion.displayed_text))
+			if attached update_row_agent as l_agent then
+				l_agent.call ([a_ro, a_suggestion])
+			else
+				a_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (a_suggestion.displayed_text))
+			end
 		end
 
 feature -- Settings

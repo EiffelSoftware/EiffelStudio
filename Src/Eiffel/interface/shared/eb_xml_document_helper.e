@@ -179,7 +179,7 @@ feature -- Access
 
 feature -- Setting
 
-	store_xml (a_doc: XML_DOCUMENT; a_file: READABLE_STRING_GENERAL; a_error_agent: PROCEDURE [ANY, TUPLE])
+	store_xml (a_doc: XML_DOCUMENT; a_file: PATH; a_error_agent: PROCEDURE [ANY, TUPLE])
 			-- Store xml defined in `a_doc' in file named `a_file'.
 			-- When error occurs, `a_error_agent' will be invoked.
 		require
@@ -190,10 +190,10 @@ feature -- Setting
 			l_retried: BOOLEAN
 			l_printer: XML_INDENT_PRETTY_PRINT_FILTER
 			l_filter_factory: XML_CALLBACKS_FILTER_FACTORY
-			u: FILE_UTILITIES
 		do
 			if not l_retried then
-				l_file := u.open_write_raw_file (a_file)
+				create l_file.make_with_path (a_file)
+				l_file.open_write
 				create l_filter_factory
 				create l_printer.make_null
 				l_printer.set_indent ("%T")
@@ -246,45 +246,24 @@ feature -- Parsing
 
 feature -- Backup
 
-	backup_file (a_file: READABLE_STRING_GENERAL)
+	backup_file (a_file: PATH)
 			-- Backup file `a_file'.
 			-- `a_file' is not guaranteed to be backuped maybe because `a_file' doesn't exists or is not readable, or
 			-- the chosen backup file name is not writable.
 		require
 			a_file_attached: a_file /= Void
 		local
-			l_file: RAW_FILE
-			l_backup_file: RAW_FILE
-			l_retried: BOOLEAN
 			u: FILE_UTILITIES
 		do
-			if not l_retried then
-				l_file := u.make_raw_file (a_file)
-				if l_file.exists and then l_file.is_readable then
-					l_file.open_read
-					l_backup_file := u.open_write_raw_file (backup_file_name (a_file))
-					l_file.copy_to (l_backup_file)
-					l_backup_file.close
-					l_file.close
-				end
-			end
-		rescue
-			l_retried := True
-			if l_file /= Void and then l_file.is_open_read then
-				l_file.close
-			end
-			if l_backup_file /= Void and then l_backup_file.is_open_write then
-				l_file.close
-			end
-			retry
+			u.copy_file_path (a_file, backup_file_name (a_file))
 		end
 
-	backup_file_name (a_file: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
+	backup_file_name (a_file: PATH): PATH
 			-- Backup file name for `a_file'.
 		require
 			a_file_attached: a_file /= Void
 		do
-			Result := a_file + ".bak"
+			create Result.make_from_string (a_file.string_representation + ".bak")
 		ensure
 			result_attached: Result /= Void
 		end

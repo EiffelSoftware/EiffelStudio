@@ -213,7 +213,7 @@ feature {NONE} -- Actions
 			-- Action to be performed to load metrics file specified file
 		do
 			record_loaded_metric_file (file_name_combo.text)
-			loaded_metrics := metrics_from_file (file_name_combo.text)
+			loaded_metrics := metrics_from_file (create {PATH}.make_from_string (file_name_combo.text))
 			metric_rows_internal := Void
 			if is_metrics_loaded then
 				has_grid_resized := False
@@ -541,7 +541,7 @@ feature{NONE} -- Implementation
 	delayed_check_import_file_timer: ES_DELAYED_ACTION
 			-- Dealyed timer to check if a file has been entered in `file_name_combo'
 
-	metrics_from_file (a_file_name: STRING): LIST [EB_METRIC]
+	metrics_from_file (a_file_name: PATH): LIST [EB_METRIC]
 			-- Load metrics from file `a_file_name'.
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty

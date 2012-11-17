@@ -259,7 +259,7 @@ feature -- Directory operations
 			retry
 		end
 
-	create_path (a_path: PATH)
+	create_directory_path (a_path: PATH)
 			-- Creates a directory and any parent directories if they do not exist.
 			--
 			-- `a_path': The path to create.

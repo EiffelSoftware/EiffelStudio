@@ -385,7 +385,7 @@ feature -- Actions
 		do
 			if metric_manager.is_userdefined_metric_file_exist then
 				create l_cmd_exec
-				l_cmd_exec.execute (preferences.misc_data.external_editor_cli (metric_manager.userdefined_metrics_file, 1))
+				l_cmd_exec.execute (preferences.misc_data.external_editor_cli (metric_manager.userdefined_metrics_file.string_representation, 1))
 			end
 		end
 

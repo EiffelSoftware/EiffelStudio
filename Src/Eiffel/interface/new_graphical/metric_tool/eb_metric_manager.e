@@ -173,7 +173,7 @@ feature -- Status report
 		local
 			u: FILE_UTILITIES
 		do
-			Result := u.file_exists (userdefined_metrics_file)
+			Result := u.file_path_exists (userdefined_metrics_file)
 		end
 
 	is_metric_name_equal (a_metric_name, b_metric_name: STRING): BOOLEAN
@@ -231,37 +231,33 @@ feature -- Status report
 
 feature -- Access
 
-	userdefined_metrics_file: READABLE_STRING_GENERAL
+	userdefined_metrics_file: PATH
 			-- File to store user-defined metrics
 		require
 			system_defined: workbench.system_defined and then workbench.is_already_compiled
-		local
-			u: FILE_UTILITIES
 		do
-			Result := u.file_name (u.make_raw_file_in ("userdefined_metrics.xml", userdefined_metrics_path))
+			Result := userdefined_metrics_path.extended ("userdefined_metrics.xml")
 		ensure
 			good_result: Result /= Void and then not Result.is_empty
 		end
 
-	archive_history_file: READABLE_STRING_GENERAL
+	archive_history_file: PATH
 			-- File to store metric history
 		require
 			system_defined: workbench.system_defined and then workbench.is_already_compiled
-		local
-			u: FILE_UTILITIES
 		do
-			Result := u.file_name (u.make_raw_file_in ("history.xml", userdefined_metrics_path))
+			Result := userdefined_metrics_path.extended ("history.xml")
 		ensure
 			good_result: Result /= Void and then not Result.is_empty
 		end
 
-	userdefined_metrics_path: like {PROJECT_DIRECTORY}.path
-			-- File path where `userdefined_metric_file' is located, not including the trailing directory separator
+	userdefined_metrics_path: PATH
+			-- File path where `userdefined_metric_file' is located, not including the trailing directory separator.
 		require
 			system_defined: workbench.system_defined and then workbench.is_already_compiled
 		do
 			create Result.make_from_string (project_location.data_path)
-			Result.extend ("metrics")
+			Result := Result.extended ("metrics")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -409,8 +405,8 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	last_loaded_metric_archive: LIST [EB_METRIC_ARCHIVE_NODE]
-			-- Last loaded metric archive by `load_metric_archive'
+	last_loaded_metric_archive: detachable LIST [EB_METRIC_ARCHIVE_NODE]
+			-- Last metric archive (if any) loaded by `load_metric_archive'.
 
 	uuid_generator: UUID_GENERATOR
 			-- UUID generator
@@ -420,7 +416,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	metrics_from_file (a_file_name: READABLE_STRING_GENERAL): LIST [EB_METRIC]
+	metrics_from_file (a_file_name: PATH): LIST [EB_METRIC]
 			-- Metrics defined in file named `a_file_name'
 			-- If error occurs when opening the file or loading metric definitions,
 			-- result will be Void and the actual error will be in `last_error'.
@@ -433,7 +429,7 @@ feature -- Access
 		do
 			clear_last_error
 			create l_callback.make_with_factory (create{EB_LOAD_METRIC_DEFINITION_FACTORY})
-			l_tuple := items_from_file (a_file_name, l_callback, agent (l_callback.metrics).linear_representation, agent l_callback.last_error, agent create_last_error (metric_names.err_file_not_readable (a_file_name)))
+			l_tuple := items_from_file_path (a_file_name, l_callback, agent (l_callback.metrics).linear_representation, agent l_callback.last_error, agent create_last_error (metric_names.err_file_not_readable (a_file_name.string_representation)))
 			if not has_error then
 				last_error := l_tuple.l_error
 				if not has_error then
@@ -481,7 +477,7 @@ feature -- Metric management
 				metrics.wipe_out
 				metrics_validity.wipe_out
 					-- Load predefined metrics.
-				load_metric_definitions (eiffel_layout.predefined_metrics_file.string_representation, True)
+				load_metric_definitions (eiffel_layout.predefined_metrics_file, True)
 				l_err_loading_predefined := last_error
 
 					-- Load user-defined metrics.
@@ -510,7 +506,7 @@ feature -- Metric management
 			end
 		end
 
-	load_metric_definitions (a_file_name: READABLE_STRING_GENERAL; a_predefined: BOOLEAN)
+	load_metric_definitions (a_file_name: PATH; a_predefined: BOOLEAN)
 			-- Load metric definitions in `a_file_name'.
 			-- If some error occurs when parsing `a_file_name', no metric will be registered in `metrics'.
 			-- If `a_predefined' is True, mark loaded metrics predefined.
@@ -520,9 +516,8 @@ feature -- Metric management
 		local
 			l_loaded_metrics: like metrics
 			l_file: RAW_FILE
-			u: FILE_UTILITIES
 		do
-			l_file := u.make_raw_file (a_file_name)
+			create l_file.make_with_path (a_file_name)
 			if l_file.exists then
 				if l_file.is_readable then
 					l_loaded_metrics := metrics_from_file (a_file_name)
@@ -538,12 +533,12 @@ feature -- Metric management
 						end
 					end
 				else
-					create last_error.make (metric_names.err_file_not_readable (a_file_name))
+					create last_error.make (metric_names.err_file_not_readable (a_file_name.string_representation))
 				end
 			end
 		end
 
-	store_metric_definitions (a_file_name: READABLE_STRING_GENERAL)
+	store_metric_definitions (a_file_name: PATH)
 			-- Store non-predefined `metrics' in `a_file_name'.
 			-- Note: Always create new file when store.
 		require
@@ -556,7 +551,7 @@ feature -- Metric management
 			create l_xml_generator.make
 			create l_userdefined_metrics.make
 			metrics.do_if (agent l_userdefined_metrics.extend, agent (a_metric: EB_METRIC): BOOLEAN do Result := not a_metric.is_predefined end)
-			store_xml (xml_document_for_items (n_metric, l_userdefined_metrics, agent l_xml_generator.xml_element), a_file_name, agent create_last_error (metric_names.err_file_not_writable (a_file_name)))
+			store_xml (xml_document_for_items (n_metric, l_userdefined_metrics, agent l_xml_generator.xml_element), a_file_name, agent create_last_error (metric_names.err_file_not_writable (a_file_name.string_representation)))
 		end
 
 	store_userdefined_metrics
@@ -567,12 +562,12 @@ feature -- Metric management
 		do
 			if not l_retried then
 				workbench.create_data_directory
-				u.create_directory (userdefined_metrics_path)
+				u.create_directory_path (userdefined_metrics_path)
 				store_metric_definitions (userdefined_metrics_file)
 			end
 		rescue
 			l_retried := True
-			create last_error.make (metric_names.err_directory_creation_fail (userdefined_metrics_path))
+			create last_error.make (metric_names.err_directory_creation_fail (userdefined_metrics_path.string_representation))
 			retry
 		end
 
@@ -677,11 +672,10 @@ feature -- Metric management
 			-- Load archive history from `archive_history_file' into `archive_history'.
 		local
 			l_file: RAW_FILE
-			u: FILE_UTILITIES
 		do
 			clear_last_error
 			create archive_history.make
-			l_file := u.make_raw_file (archive_history_file)
+			create l_file.make_with_path (archive_history_file)
 			if l_file.exists and then l_file.is_readable then
 				archive_history.load_archive (archive_history_file)
 				archive_history.mark_archive_as_old
@@ -704,10 +698,10 @@ feature -- Metric management
 			if not l_retried then
 				if archive_history.count > 0 then
 					workbench.create_data_directory
-					u.create_directory (userdefined_metrics_path)
+					u.create_directory_path (userdefined_metrics_path)
 					clear_last_error
 					archive_history.clear_last_error
-					archive_history.store_archive (archive_history_file, agent archive_history.create_last_error (metric_names.err_file_not_writable (archive_history_file)))
+					archive_history.store_archive (archive_history_file, agent archive_history.create_last_error (metric_names.err_file_not_writable (archive_history_file.string_representation)))
 					if archive_history.has_error then
 						last_error := archive_history.last_error
 					end
@@ -715,7 +709,7 @@ feature -- Metric management
 			end
 		rescue
 			l_retried := True
-			create last_error.make (metric_names.err_directory_creation_fail (userdefined_metrics_path))
+			create last_error.make (metric_names.err_directory_creation_fail (userdefined_metrics_path.string_representation))
 			retry
 		end
 
@@ -732,7 +726,7 @@ feature -- Metric management
 
 feature -- Metric archive
 
-	load_metric_archive (a_file_name: STRING_32)
+	load_metric_archive (a_file_name: READABLE_STRING_GENERAL)
 			-- Load metric archive from file named `a_file_name'.
 			-- Store result in `last_loaded_metric_archive'.
 			-- Set `last_loaded_metric_archive' to Void if error occurs.
@@ -744,7 +738,7 @@ feature -- Metric archive
 		do
 			clear_last_error
 			create l_archive.make
-			l_archive.load_archive (a_file_name)
+			l_archive.load_archive (create {PATH}.make_from_string (a_file_name))
 			last_error := l_archive.last_error
 			if not has_error then
 				last_loaded_metric_archive := l_archive.archive
@@ -765,7 +759,7 @@ feature -- Metric archive
 			clear_last_error
 			create l_archive.make
 			a_archive.do_all (agent l_archive.insert_archive_node)
-			l_archive.store_archive (a_file_name, agent l_archive.create_last_error (metric_names.err_file_not_writable (a_file_name)))
+			l_archive.store_archive (create {PATH}.make_from_string (a_file_name), agent l_archive.create_last_error (metric_names.err_file_not_writable (a_file_name)))
 			last_error := l_archive.last_error
 		end
 

@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 				if l_name.is_empty then
 					c_ev_load_pixmap ($Current, Default_pointer, $update_fields)
 				else
-					filename_ptr := l_name.to_pointer (Void)
+					filename_ptr := l_name.to_pointer
 					c_ev_load_pixmap ($Current, filename_ptr.item, $update_fields)
 				end
 			else

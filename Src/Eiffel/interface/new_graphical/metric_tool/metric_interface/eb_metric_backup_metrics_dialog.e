@@ -98,7 +98,7 @@ feature{NONE} -- Actions
 			-- Action to be performed to backup user-defined metrics to selected file
 		do
 			metric_manager.clear_last_error
-			metric_manager.store_metric_definitions (file_name_area.text)
+			metric_manager.store_metric_definitions (create {PATH}.make_from_string (file_name_area.text))
 			if metric_manager.has_error then
 				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (metric_manager.last_error.message_with_location, Current, Void)
 			else

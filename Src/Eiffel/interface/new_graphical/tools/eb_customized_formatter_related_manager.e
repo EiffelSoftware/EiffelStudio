@@ -115,7 +115,7 @@ feature{NONE} -- Implementation
 					end
 				else
 					u.create_directory (a_path)
-					store_xml (xml_document_for_items (a_root_name, a_descriptors, a_xml_generator), l_file_name, agent set_last_error (create {EB_METRIC_ERROR}.make (metric_names.err_file_not_writable (l_file_name))))
+					store_xml (xml_document_for_items (a_root_name, a_descriptors, a_xml_generator), create {PATH}.make_from_string (l_file_name), agent set_last_error (create {EB_METRIC_ERROR}.make (metric_names.err_file_not_writable (l_file_name))))
 				end
 			end
 		rescue

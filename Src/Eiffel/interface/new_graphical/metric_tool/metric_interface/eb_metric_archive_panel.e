@@ -406,51 +406,23 @@ feature -- Actions
 		end
 
 	on_compare_archives
-			-- Action to be performed when user wants to compare selected archives
+			-- Action to be performed when user wants to compare selected archives.
 		local
-			l_cur_archive: STRING_32
-			l_ref_archive: STRING_32
-			l_ref_arc: LIST [EB_METRIC_ARCHIVE_NODE]
-			l_cur_arc: LIST [EB_METRIC_ARCHIVE_NODE]
-			l_is_ref_ok: BOOLEAN
-			l_is_cur_ok: BOOLEAN
-			l_error: BOOLEAN
+			l_ref_arc: detachable LIST [EB_METRIC_ARCHIVE_NODE]
+			l_cur_arc: detachable LIST [EB_METRIC_ARCHIVE_NODE]
 		do
-			prepare_file_name (reference_metric_archive_text)
-			l_ref_archive ?= reference_metric_archive_text.data
-			if l_ref_archive /= Void then
-				l_ref_archive.left_adjust
-				l_ref_archive.right_adjust
-				if not l_ref_archive.is_empty then
-					l_ref_arc := load_archive (l_ref_archive)
-					l_error := not is_last_load_successful
-					l_is_ref_ok := is_last_load_successful
-				end
+			l_ref_arc := load_archive (reference_metric_archive_text)
+			if is_last_load_successful then
+				l_cur_arc := load_archive (current_metric_archive_text)
+			end
+			if
+				is_last_load_successful and then
+				attached l_ref_arc or else attached l_cur_arc
+			then
+				metric_tool.register_archive_result_for_display (l_ref_arc, l_cur_arc)
+				metric_tool.go_to_result
 			else
-				l_error := True
-			end
-			if not l_error then
-				prepare_file_name (current_metric_archive_text)
-				l_cur_archive ?= current_metric_archive_text.data
-				if l_cur_archive /= Void then
-					l_cur_archive.left_adjust
-					l_cur_archive.right_adjust
-					if not l_cur_archive.is_empty then
-						l_cur_arc := load_archive (l_cur_archive)
-						l_error := not is_last_load_successful
-						l_is_cur_ok := is_last_load_successful
-					end
-				else
-					l_error := True
-				end
-			end
-			if not l_error then
-				if l_is_ref_ok or l_is_cur_ok then
-					metric_tool.register_archive_result_for_display (l_ref_arc, l_cur_arc)
-					metric_tool.go_to_result
-				else
-					display_message (metric_names.t_no_archive_selected)
-				end
+				display_message (metric_names.t_no_archive_selected)
 			end
 		end
 
@@ -629,43 +601,6 @@ feature {NONE} -- Implementation
 			Result := metric_names.f_metrics_in_archive (a_archive.count)
 		end
 
-	prepare_file_name (a_text_field: EV_TEXT_FIELD)
-			-- Prepare file name specified in `a_text_field'.
-		require
-			a_text_field_attached: a_text_field /= Void
-		local
-			url_address, http, ftp, file: STRING_32
-			l_is_file: BOOLEAN
-		do
-			url_address := a_text_field.text.twin
-			a_text_field.set_data (Void)
-			if url_address /= Void and then not url_address.is_empty then
-				http := url_address.substring (1, 7).as_lower
-				ftp := url_address.substring (1, 6).as_lower
-				file := url_address.substring (1, 7).as_lower
-				if file.same_string_general ("file://") then
-					l_is_file := True
-					url_address := url_address.substring (8, url_address.count)
-				elseif ftp.same_string_general ("ftp://") or http.same_string_general ("http://") then
-				else
-					l_is_file := True
-				end
-			else
-				l_is_file := True
-			end
-			if l_is_file then
-					-- It is a local file.
-				a_text_field.set_data (url_address)
-			else
-					-- It is a network address.
-				if a_text_field = current_metric_archive_text then
-					a_text_field.set_data (save_file_from_url (url_address, "transferred_current_archive.xml"))
-				elseif a_text_field = reference_metric_archive_text then
-					a_text_field.set_data (save_file_from_url (url_address, "transferred_reference_archive.xml"))
-				end
-			end
-		end
-
 	save_file_from_url (a_url_address: STRING_32; a_target_file_name: STRING_32): STRING_32
 			-- Save file from url address `a_url_address' and return the saved file name in local machine.
 		require
@@ -677,9 +612,9 @@ feature {NONE} -- Implementation
 			file: PLAIN_TEXT_FILE
 			u: FILE_UTILITIES
 		do
-			u.create_directory (metric_manager.userdefined_metrics_path)
-			file := u.make_text_file_in (a_target_file_name, metric_manager.userdefined_metrics_path)
-			file_name := u.file_name (file).as_string_32
+			u.create_directory_path (metric_manager.userdefined_metrics_path)
+			create file.make_with_path (metric_manager.userdefined_metrics_path.extended (a_target_file_name))
+			file_name := file.path.string_representation
 
 			if file.exists then
 				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt_with_cancel (
@@ -753,17 +688,45 @@ feature -- Overwritting
 			overwrite := False
 		end
 
-	load_archive (a_file_name: STRING_32): LIST [EB_METRIC_ARCHIVE_NODE]
-			-- Load archive from file `a_file_name'.
+	load_archive (a_text_field: EV_TEXT_FIELD): detachable LIST [EB_METRIC_ARCHIVE_NODE]
+			-- Load archive from file with the name taken from `a_text_field' if possible.
 		require
-			a_file_name_attached: a_file_name /= Void
+			a_text_field_attached: attached a_text_field
+		local
+			url_address, http, ftp, file: STRING_32
+			l_is_file: BOOLEAN
 		do
-			metric_manager.clear_last_error
-			metric_manager.load_metric_archive (a_file_name)
-			Result := metric_manager.last_loaded_metric_archive
-			is_last_load_successful := not metric_manager.has_error
-			if not is_last_load_successful then
-				display_error_message
+				-- Prepare for successful loading.
+			is_last_load_successful := True
+				-- Compute archive address.
+			url_address := a_text_field.text.twin
+			a_text_field.set_data (Void)
+			if url_address /= Void and then not url_address.is_empty then
+				http := url_address.substring (1, 7).as_lower
+				ftp := url_address.substring (1, 6).as_lower
+				file := url_address.substring (1, 7).as_lower
+				if file.same_string_general ("file://") then
+					url_address := url_address.substring (8, url_address.count)
+				elseif ftp.same_string_general ("ftp://") or http.same_string_general ("http://") then
+						-- It is a network address.
+					if a_text_field = current_metric_archive_text then
+						url_address := save_file_from_url (url_address, "transferred_current_archive.xml")
+					elseif a_text_field = reference_metric_archive_text then
+						url_address := save_file_from_url (url_address, "transferred_reference_archive.xml")
+					end
+				end
+			end
+			url_address.left_adjust
+			url_address.right_adjust
+				-- Load data from archive.
+			if not url_address.is_empty then
+				metric_manager.clear_last_error
+				metric_manager.load_metric_archive (url_address)
+				Result := metric_manager.last_loaded_metric_archive
+				if metric_manager.has_error then
+					display_error_message
+					is_last_load_successful := False
+				end
 			end
 		end
 
@@ -832,12 +795,9 @@ feature{NONE} -- Actions
 	on_archive_calculation_start (a_data: ANY)
 			-- Action to be performed when metric archive calculation starts
 			-- `a_data' can be the metric tool panel from which metric archive calculation starts.
-		local
-			l_panel: like Current
 		do
 			set_is_up_to_date (False)
-			l_panel ?= a_data
-			set_is_original_starter (l_panel /= Void and then (l_panel = Current))
+			set_is_original_starter (a_data = Current)
 			update_ui
 		end
 

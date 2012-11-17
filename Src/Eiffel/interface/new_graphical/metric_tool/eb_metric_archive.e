@@ -176,7 +176,7 @@ feature -- Status report
 
 feature -- Archive manipulation
 
-	load_archive (a_file_name: READABLE_STRING_GENERAL)
+	load_archive (a_file_name: PATH)
 			-- Load metric archive from file named `a_file_name'.
 			-- Store result in `last_loaded_metric_archive'.
 			-- Set `last_loaded_metric_archive' to Void if error occurs.
@@ -192,7 +192,7 @@ feature -- Archive manipulation
 			clear_last_error
 			create l_callback.make_with_factory (create{EB_LOAD_METRIC_DEFINITION_FACTORY})
 
-			l_tuple := items_from_file (a_file_name, l_callback, agent l_callback.archive, agent l_callback.last_error, agent create_last_error (metric_names.err_file_not_readable (a_file_name)))
+			l_tuple := items_from_file_path (a_file_name, l_callback, agent l_callback.archive, agent l_callback.last_error, agent create_last_error (metric_names.err_file_not_readable (a_file_name.string_representation)))
 			if not has_error then
 				last_error := l_tuple.l_error
 				if not has_error then
@@ -204,7 +204,7 @@ feature -- Archive manipulation
 			end
 		end
 
-	store_archive (a_file_name: READABLE_STRING_GENERAL; a_error_agent: PROCEDURE [ANY, TUPLE])
+	store_archive (a_file_name: PATH; a_error_agent: PROCEDURE [ANY, TUPLE])
 			-- Write `archive' into file `a_file_name'.
 			-- Clear content of `a_file_name' if file already exists.
 			-- `a_error_agent' will be invoked when error occurs.

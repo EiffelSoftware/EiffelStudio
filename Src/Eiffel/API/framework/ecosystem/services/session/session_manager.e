@@ -220,7 +220,7 @@ feature -- Storage
 						-- Retrieve file name and ensure the directory exists.
 					l_file_name := session_file_path (a_session)
 					if attached l_file_name.canonical_path.parent as l_parent then
-						u.create_path (l_parent)
+						u.create_directory_path (l_parent)
 					else
 						-- `l_file_name' has no parent, i.e. it will be created in the current working directory.
 					end

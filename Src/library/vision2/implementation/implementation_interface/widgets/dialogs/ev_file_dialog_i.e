@@ -13,8 +13,8 @@ inherit
 
 feature -- Access
 
-	file_name: STRING_32
-			-- Full name of currently selected file including path.
+	full_file_path: PATH
+			-- Full path of currently selected file including path.
 		deferred
 		end
 
@@ -29,22 +29,12 @@ feature -- Access
 			-- Second element represents the displayed text
 			-- e.g. "Text files (*.txt)".
 
-	start_directory: STRING_32
+	start_path: PATH
 			-- Base directory where browsing will start.
 		deferred
 		end
 
 feature -- Status report
-
-	file_title: STRING_32
-			-- `file_name' without its path.
-		deferred
-		end
-
-	file_path: STRING_32
-			-- Path of `file_name'.
-		deferred
-		end
 
 	selected_filter_index: INTEGER
 			-- One based index of selected filter within `filters', or
@@ -66,22 +56,22 @@ feature -- Element change
 			assigned: filter.same_string_general (a_filter)
 		end
 
-	set_file_name (a_name: READABLE_STRING_GENERAL)
-			-- Make `a_name' the selected file.
+	set_full_file_path (a_path: PATH)
+			-- Make `a_path' the selected file.
 		require
-			a_name_not_void: a_name /= Void
+			a_path_not_void: a_path /= Void
 		deferred
 		ensure
-			assigned: not file_name.is_empty implies file_name.same_string_general (a_name)
+			assigned: full_file_path ~ a_path
 		end
 
-	set_start_directory (a_path: READABLE_STRING_GENERAL)
+	set_start_path (a_path: PATH)
 			-- Make `a_path' the base directory.
 		require
 			a_path_not_void: a_path /= Void
 		deferred
 		ensure
-			assigned: start_directory.same_string_general (a_path)
+			assigned: start_path ~ a_path
 		end
 
 feature {EV_FILE_DIALOG} -- Contract support
@@ -100,14 +90,14 @@ invariant
 	filters_not_void: filters /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

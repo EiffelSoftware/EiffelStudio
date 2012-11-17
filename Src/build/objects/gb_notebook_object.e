@@ -34,7 +34,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJ
 			counter: INTEGER
 			context: GB_CONSTANT_CONTEXT
 			original_key: STRING
-			pixmap_paths: HASH_TABLE [STRING_32, INTEGER]
+			pixmap_paths: HASH_TABLE [PATH, INTEGER]
 		do
 			-- Must perform special handling of item text constants,
 			-- as each one is referenced by an offset into the notebook.
@@ -82,7 +82,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJ
 			counter: INTEGER
 			original_key: STRING
 			context: GB_CONSTANT_CONTEXT
-			pixmap_paths: HASH_TABLE [STRING_32, INTEGER]
+			pixmap_paths: HASH_TABLE [PATH, INTEGER]
 		do
 			position := children.index_of (an_object, 1)
 

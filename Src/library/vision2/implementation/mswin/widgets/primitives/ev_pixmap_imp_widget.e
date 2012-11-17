@@ -31,7 +31,7 @@ inherit
 			disable_tabable_from, disable_tabable_to
 		redefine
 			interface, make,
-			read_from_named_file,
+			read_from_named_path,
 			clear, stretch, set_size, clear_rectangle, draw_point,
 			draw_text, draw_segment, draw_straight_line, draw_arc,
 			draw_pixmap, draw_rectangle, draw_ellipse, draw_polyline,
@@ -194,8 +194,8 @@ feature {NONE} -- Initialization
 
 feature -- Loading/Saving
 
-	read_from_named_file (file_name: READABLE_STRING_GENERAL)
-			-- Load the pixmap described in 'file_name'.
+	read_from_named_path (file_path: PATH)
+			-- Load the pixmap described in `file_path'.
 			--
 			-- Exceptions "Unable to retrieve icon information",
 			--            "Unable to load the file"
@@ -203,14 +203,14 @@ feature -- Loading/Saving
 				-- If we have already loaded, an icon, then
 				-- we need to remove `internal_mask_bitmap' as it is
 				-- only required for icons. Problem occurs, if you call
-				-- `set_with_named_file' twice, firstly with an icon, and
+				-- `set_with_named_path' twice, firstly with an icon, and
 				-- then a png file, without the following line, then the
 				-- png would be corrupted/system crash.
 			if attached internal_mask_bitmap as l_internal_mask_bitmap then
 				l_internal_mask_bitmap.decrement_reference
 				internal_mask_bitmap := Void
 			end
-			Precursor {EV_PIXMAP_IMP_DRAWABLE} (file_name)
+			Precursor {EV_PIXMAP_IMP_DRAWABLE} (file_path)
 			update_display
 		end
 
@@ -685,14 +685,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Interface for the bridge pattern.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_PIXMAP_IMP_WIDGET

@@ -35,24 +35,22 @@ feature {NONE} -- Implementation
 	numbered_pixmap (a_number: INTEGER): EV_PIXMAP
 			-- `Result' is pixmap named "image" + a_number.out.
 		local
-			filename: FILE_NAME
+			filename: PATH
 		do
 			if all_loaded_pixmaps = Void then
 				create all_loaded_pixmaps.make (2)
 			end
-			create filename.make_from_string (eiffel_layout.bitmaps_path_8)
-			filename.extend ("png")
-			filename.extend ("image" + a_number.out + ".png")
+			filename := eiffel_layout.bitmaps_path.extended ("png").extended ("image" + a_number.out + ".png")
 			if all_loaded_pixmaps @ filename /= Void then
 				Result := all_loaded_pixmaps @ filename
 			else
 				create Result
-				Result.set_with_named_file (filename)
+				Result.set_with_named_path (filename)
 				all_loaded_pixmaps.put (Result, filename)
 			end
 		end
 
-	all_loaded_pixmaps: HASH_TABLE [EV_PIXMAP, STRING]
+	all_loaded_pixmaps: HASH_TABLE [EV_PIXMAP, PATH]
 			-- All pixmaps already loaded, referenced by their names.
 			-- For quick access.
 

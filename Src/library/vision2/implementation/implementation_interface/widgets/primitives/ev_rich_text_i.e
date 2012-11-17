@@ -354,7 +354,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	save_to_named_file (a_filename: READABLE_STRING_GENERAL)
+	save_to_named_path (a_filename: PATH)
 			-- Save `text' and formatting of `Current' to file `a_filename' in RTF format.
 		require
 			filename_not_void: a_filename /= Void
@@ -457,7 +457,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			end
 			buffer.generate_complete_rtf_from_buffering
 			complete_saving
-			create text_file.make_with_name (a_filename)
+			create text_file.make_with_path (a_filename)
 			text_file.open_write
 			text_file.put_string (buffer.internal_text.as_string_8)
 			text_file.close
@@ -468,7 +468,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-	set_with_named_file (a_filename: READABLE_STRING_GENERAL)
+	set_with_named_path (a_filename: PATH)
 			-- Set `text' and formatting of `Current' from file `a_filename' in RTF format.
 		require
 			filename_not_void: a_filename /= Void
@@ -478,7 +478,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			buffer: EV_RICH_TEXT_BUFFERING_STRUCTURES_I
 		do
 			initialize_for_loading
-			create text_file.make_with_name (a_filename)
+			create text_file.make_with_path (a_filename)
 			text_file.open_read
 			text_file.read_stream (text_file.count)
 			l_text := text_file.last_string

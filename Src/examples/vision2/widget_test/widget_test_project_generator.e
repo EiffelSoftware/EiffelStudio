@@ -43,23 +43,22 @@ feature {NONE} -- Implementation
 			-- `project_name'.
 		local
 			ace_template_file: PLAIN_TEXT_FILE
-			filename: FILE_NAME
+			filename: PATH
 			ace_text: STRING
 		do
-			create filename.make_from_string (eiffel_layout.shared_application_path_8)
-			filename.extend ("templates")
-			filename.extend ("template.ecf")
-			create ace_template_file.make_open_read (filename)
+			filename := eiffel_layout.shared_application_path.extended ("templates").extended ("template.ecf")
+			create ace_template_file.make_with_path (filename)
+			ace_template_file.open_read
 			ace_template_file.start
 			ace_template_file.read_stream (ace_template_file.count)
 			ace_text := ace_template_file.last_string
 			ace_template_file.close
 			add_generated_string (ace_text, project_name, "<PROJECT_NAME>")
-			add_generated_string (ace_text, current_generation_directory.name, "<PROJECT_LOCATION>")
+			add_generated_string (ace_text, current_generation_directory.path.name, "<PROJECT_LOCATION>")
 			add_generated_string (ace_text, (create {UUID_GENERATOR}).generate_uuid.out, "<UUID>")
-			create filename.make_from_string (current_generation_directory.name)
-			filename.extend (ace_file_name)
-			create ace_template_file.make (filename.out)
+
+			filename := current_generation_directory.path.extended (ace_file_name)
+			create ace_template_file.make_with_path (filename)
 			ace_template_file.open_write
 			ace_template_file.start
 			ace_template_file.putstring (ace_text)
@@ -70,21 +69,20 @@ feature {NONE} -- Implementation
 			-- Generate an application file for thsi project.
 		local
 			application_template_file: PLAIN_TEXT_FILE
-			filename: FILE_NAME
+			filename: PATH
 			application_text: STRING
 		do
-			create filename.make_from_string (eiffel_layout.shared_application_path_8)
-			filename.extend ("templates")
-			filename.extend ("application_template.e")
-			create application_template_file.make_open_read (filename)
+			filename := eiffel_layout.shared_application_path.extended ("templates").extended ("application_template.e")
+			create application_template_file.make_with_path (filename)
+			application_template_file.open_read
 			application_template_file.start
 			application_template_file.read_stream (application_template_file.count)
 			application_text := application_template_file.last_string
 			application_template_file.close
 			add_generated_string (application_text, test_name, "<TEST_NAME>")
-			create filename.make_from_string (current_generation_directory.name)
-			filename.extend (Application_file_name)
-			create application_template_file.make (filename.out)
+
+			filename := current_generation_directory.path.extended (Application_file_name)
+			create application_template_file.make_with_path (filename)
 			application_template_file.open_write
 			application_template_file.start
 			application_template_file.putstring (application_text)
@@ -95,21 +93,19 @@ feature {NONE} -- Implementation
 			-- Generate the common test file.
 		local
 			common_template_file: PLAIN_TEXT_FILE
-			filename: FILE_NAME
+			filename: PATH
 			common_text: STRING
 		do
-			create filename.make_from_string (eiffel_layout.shared_application_path_8)
-			filename.extend ("templates")
-			filename.extend ("generation_only")
-			filename.extend (Common_test_file_name)
-			create common_template_file.make_open_read (filename)
+			filename := eiffel_layout.shared_application_path.extended ("templates").extended ("generation_only").extended (Common_test_file_name)
+			create common_template_file.make_with_path (filename)
+			common_template_file.open_read
 			common_template_file.start
 			common_template_file.read_stream (common_template_file.count)
 			common_text := common_template_file.last_string
 			common_template_file.close
-			create filename.make_from_string (current_generation_directory.name)
-			filename.extend (common_test_file_name)
-			create common_template_file.make (filename.out)
+
+			filename := current_generation_directory.path.extended (common_test_file_name)
+			create common_template_file.make_with_path (filename)
 			common_template_file.open_write
 			common_template_file.start
 			common_template_file.putstring (common_text)
@@ -120,21 +116,19 @@ feature {NONE} -- Implementation
 			-- generate the file containing the test.
 		local
 			test_template_file: PLAIN_TEXT_FILE
-			filename: FILE_NAME
+			filename: PATH
 			test_text: STRING
 		do
-			create filename.make_from_string (eiffel_layout.shared_application_path_8)
-			filename.extend ("tests")
-			filename.extend (widget_type.as_lower)
-			filename.extend (test_name + ".e")
-			create test_template_file.make_open_read (filename)
+			filename := eiffel_layout.shared_application_path.extended ("tests").extended (widget_type.as_lower).extended (test_name + ".e")
+			create test_template_file.make_with_path (filename)
+			test_template_file.open_read
 			test_template_file.start
 			test_template_file.read_stream (test_template_file.count)
 			test_text := test_template_file.last_string
 			test_template_file.close
-			create filename.make_from_string (current_generation_directory.name)
-			filename.extend (test_name + ".e")
-			create test_template_file.make (filename.out)
+
+			filename := current_generation_directory.path.extended (test_name + ".e")
+			create test_template_file.make_with_path (filename)
 			test_template_file.open_write
 			test_template_file.start
 			test_template_file.putstring (test_text)
@@ -151,7 +145,7 @@ feature {NONE} -- Implementation
 			index_of_start_quote, index_of_end_quote: INTEGER
 			string_to_process: STRING
 			index_of_comma: INTEGER
-			file_name: FILE_NAME
+			file_name: PATH
 			file: RAW_FILE
 			file_contents: STRING
 		do
@@ -177,18 +171,15 @@ feature {NONE} -- Implementation
 						current_image_number := (string_to_process.substring (1, index_of_comma - 1)).to_integer
 						string_to_process := string_to_process.substring (index_of_comma + 1, string_to_process.count)
 					end
-					create file_name.make_from_string (eiffel_layout.bitmaps_path_8)
-					file_name.extend ("png")
-					file_name.extend ("image" + current_image_number.out + ".png")
-					create file.make (file_name)
+					file_name := eiffel_layout.bitmaps_path.extended ("png").extended ("image" + current_image_number.out + ".png")
+					create file.make_with_path (file_name)
 					file.open_read
 					file.read_stream (file.count)
 					file_contents := file.last_string
 					file.close
 
-					create file_name.make_from_string (current_generation_directory.name)
-					file_name.extend ("image" + current_image_number.out + ".png")
-					create file.make (file_name.out)
+					file_name := current_generation_directory.path.extended ("image" + current_image_number.out + ".png")
+					create file.make_with_path (file_name)
 					file.open_write
 					file.start
 					file.putstring (file_contents)

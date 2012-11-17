@@ -23,9 +23,11 @@ inherit
 			{NONE} all
 		end
 
+	PATH_HANDLER
+
 feature -- Status report
 
-	pixmap_filename: detachable STRING_32
+	pixmap_filename: detachable PATH
 			-- Filename for the pixmap.
 			--  * Void if no file is associated with Current.
 			--  * Empty string for the default pixmap.
@@ -44,19 +46,17 @@ feature {NONE} -- Implementation
 		require
 			filename_exists: pixmap_filename /= Void
 		local
-			filename_ptr: ANY
-			l_pixmap_filename: detachable STRING_8
+			filename_ptr: MANAGED_POINTER
 		do
 				-- Disable invariant checking.
 			disable_initialized
 
 			if attached pixmap_filename as l_name then
-				l_pixmap_filename := l_name
-				if l_pixmap_filename.is_empty then
+				if l_name.is_empty then
 					c_ev_load_pixmap ($Current, Default_pointer, $update_fields)
 				else
-					filename_ptr := l_pixmap_filename.to_c
-					c_ev_load_pixmap ($Current, $filename_ptr, $update_fields)
+					filename_ptr := l_name.to_pointer (Void)
+					c_ev_load_pixmap ($Current, filename_ptr.item, $update_fields)
 				end
 			else
 				last_pixmap_loading_had_error := True

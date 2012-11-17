@@ -16,7 +16,7 @@ class
 inherit
 	WEL_GDIP_IMAGE
 		redefine
-			load_image_from_file,
+			load_image_from_path,
 			raw_format
 		end
 
@@ -172,7 +172,7 @@ feature -- Command
 			make_from_icon (a_icon)
 		end
 
-	load_image_from_file (a_file_name: READABLE_STRING_GENERAL)
+	load_image_from_path (a_file_name: PATH)
 			-- Redefine
 		local
 			l_temp: WEL_GDIP_BITMAP

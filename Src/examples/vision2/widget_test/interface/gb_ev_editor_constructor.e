@@ -77,12 +77,12 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	for_all_objects (p: Procedure [EV_ANY, TUPLE])
+	for_all_objects (p: PROCEDURE [EV_ANY, TUPLE])
 			-- Call `p' on every item in `objects'.
 		deferred
 		end
 
-	for_first_object (p: Procedure [EV_ANY, TUPLE])
+	for_first_object (p: PROCEDURE [EV_ANY, TUPLE])
 			-- Call `p' on the first_item in `objects'.
 		deferred
 		end

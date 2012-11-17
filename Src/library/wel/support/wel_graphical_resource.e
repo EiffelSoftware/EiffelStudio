@@ -34,13 +34,23 @@ feature {NONE} -- Initialization
 
 	make_by_file (file_name: READABLE_STRING_GENERAL)
 			-- Load an icon file named `file_name'.
+		obsolete
+			"Use `make_by_path' instead."
 		require
 			file_name_not_void: file_name /= Void
+		do
+			make_by_path (create {PATH}.make_from_string (file_name))
+		end
+
+	make_by_path (a_path: PATH)
+			-- Load an icon file named `a_path'.
+		require
+			a_path_not_void: a_path /= Void
 		local
 			a_wel_string: WEL_STRING
 			a_default_pointer: POINTER
 		do
-			create a_wel_string.make (file_name)
+			create a_wel_string.make_from_path (a_path)
 			item := cwin_load_image (
 				a_default_pointer,
 				a_wel_string.item,
@@ -189,14 +199,14 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

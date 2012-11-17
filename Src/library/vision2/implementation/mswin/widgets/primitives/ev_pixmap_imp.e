@@ -13,7 +13,7 @@ class
 inherit
 	EV_PIXMAP_I
 		undefine
-			save_to_named_file
+			save_to_named_path
 		redefine
 			interface,
 			on_parented,
@@ -131,7 +131,7 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 			reset_bitmap_content
 			reset_resource_content
 
-			pixmap_filename := ""
+			create pixmap_filename.make_empty
 			update_needed := True
 		end
 
@@ -145,16 +145,16 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 			set_foreground_color (a_default_colors.default_foreground_color)
 		end
 
-	read_from_named_file (file_name: READABLE_STRING_GENERAL)
-			-- Load the pixmap described in 'file_name'.
+	read_from_named_path (file_path: PATH)
+			-- Load the pixmap described in `file_path'.
 			-- Exceptions "No such file or directory",
 			--            "Unable to retrieve icon information",
 			--            "Unable to load the file".
 		local
 			pixmap_file: RAW_FILE
 		do
-			pixmap_filename := file_name.as_string_32
-			create pixmap_file.make_with_name (file_name)
+			pixmap_filename := file_path
+			create pixmap_file.make_with_path (file_path)
 			pixmap_file.open_read
 			pixmap_file.close
 
@@ -177,7 +177,7 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 
 feature {NONE} -- Saving
 
-	save_with_format (a_format: EV_GRAPHICAL_FORMAT; a_filename: READABLE_STRING_GENERAL; a_raw_image_data: like raw_image_data)
+	save_with_format (a_format: EV_GRAPHICAL_FORMAT; a_filename: PATH; a_raw_image_data: like raw_image_data)
 			-- Call `save' on `a_format'. Implemented in descendant of EV_PIXMAP_IMP_STATE
 			-- since `save' from EV_GRAPHICAL_FORMAT is only exported to EV_PIXMAP_I.
 		do
@@ -1337,7 +1337,7 @@ feature {EV_PIXMAP_I, EV_PIXMAP_IMP_STATE} -- Duplication
 
 feature {EV_PIXMAP_IMP, EV_IMAGE_LIST_IMP} -- Pixmap Filename
 
-	pixmap_filename: detachable STRING_32
+	pixmap_filename: detachable PATH
 			-- Filename for the pixmap.
 			--  * Void if no file is associated with Current.
 			--  * Empty string for the default pixmap.

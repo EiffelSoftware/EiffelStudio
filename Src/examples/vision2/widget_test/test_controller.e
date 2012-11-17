@@ -63,7 +63,7 @@ feature -- Status setting
 				-- Future modification would be to expand `class_texts' to hold all
 				-- classes loaded, so if we return to a previous widget, we do not have to
 				-- reload.
-			class_texts.clear_all
+			class_texts.wipe_out
 				-- Remove existing tabs from `test_notebook', and perform all other
 				-- resetting ready for next set of tests.
 				-- We must block `select_actions' as they may be fired during a wipeout.
@@ -211,23 +211,23 @@ feature {NONE} -- Implementation
 			class_text_output.set_text (retrieved_text)
 		end
 
-	store_text (filename: STRING; directory: DIRECTORY)
-			-- For a filename `filename' in the directory `directory'
+	store_text (a_filename: PATH; a_directory: DIRECTORY)
+			-- For a filename `a_filename' in the directory `a_directory'
 			-- load the file, read the contents, and place in `class_texts'
 			-- and `class_names'.
 		require
-			filename_not_void: filename /= Void
-			directory_not_void: directory /= Void
+			filename_not_void: a_filename /= Void
+			directory_not_void: a_directory /= Void
 		local
-			full_filename: FILE_NAME
+			l_file_name: STRING_32
 			file: PLAIN_TEXT_FILE
 		do
-			create full_filename.make_from_string (directory.name)
-			full_filename.extend (filename)
-			create file.make_open_read (full_filename)
+			create file.make_with_path (a_directory.path.extended_path (a_filename))
+			file.open_read
 			file.readstream (file.count)
-			class_texts.extend (file.last_string, filename.substring (1, filename.count - 2))
-			class_names.extend (filename.substring (1, filename.count - 2))
+			l_file_name := a_filename.name
+			class_texts.extend (file.last_string, l_file_name.substring (1, l_file_name.count - 2))
+			class_names.extend (l_file_name.substring (1, l_file_name.count - 2))
 			file.close
 		ensure
 			class_texts_increased: class_texts.count = old class_texts.count + 1
@@ -256,29 +256,26 @@ feature {NONE} -- Implementation
 			-- Actually perform the loading of the file.
 		local
 			directory: DIRECTORY
-			directory_name: DIRECTORY_NAME
-			directory_string: STRING
-			filenames: ARRAYED_LIST [STRING]
-			current_file_name:  STRING
+			directory_name: PATH
+			dir_str: STRING
+			filenames: ARRAYED_LIST [PATH]
+			current_file_name:  PATH
 			l_type: STRING
 		do
 			l_type := type_to_retrieve
-			create directory_name.make_from_string (eiffel_layout.shared_application_path_8)
-			directory_name.extend ("tests")
-			directory_string := l_type.substring (4, l_type.count)
-			directory_string.to_lower
-			directory_name.extend (directory_string)
-			create directory.make_open_read (directory_name)
-			filenames := directory.linear_representation
+			dir_str := l_type.substring (4, l_type.count)
+			dir_str.to_lower
+			directory_name := eiffel_layout.shared_application_path.extended ("tests").extended (dir_str)
+			create directory.make_with_path (directory_name)
+			directory.open_read
+			filenames := directory.entries
 			from
 				filenames.start
 			until
 				filenames.off
 			loop
 				current_file_name := filenames.item
-					-- 5 is an arbitary value to ensure that we ignore "." and ".." files.
-					-- No valid test will have a name that is shorter than 5 characters.
-				if current_file_name.count > 5 then
+				if not current_file_name.is_current_symbol and not current_file_name.is_parent_symbol then
 					store_text (current_file_name, directory)
 				end
 				filenames.forth
@@ -295,7 +292,6 @@ feature {NONE} -- Implementation
 				hide_interface
 			end
 		end
-
 
 	class_texts: HASH_TABLE [STRING, STRING]
 		-- All texts of classes associated with each class filename.

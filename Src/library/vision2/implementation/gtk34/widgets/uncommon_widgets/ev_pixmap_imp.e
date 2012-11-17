@@ -14,7 +14,7 @@ inherit
 		redefine
 			interface,
 			flush,
-			save_to_named_file
+			save_to_named_path
 		end
 
 	EV_DRAWABLE_IMP
@@ -183,14 +183,14 @@ feature -- Measurement
 
 feature -- Element change
 
-	read_from_named_file (file_name: READABLE_STRING_GENERAL)
+	read_from_named_path (file_path: PATH)
 			-- Attempt to load pixmap data from a file specified by `file_name'.
 		local
 			a_cs: EV_GTK_C_STRING
 			g_error: POINTER
 			filepixbuf: POINTER
 		do
-			a_cs := file_name
+			create a_cs.make_from_path (file_path)
 			filepixbuf := {GTK}.gdk_pixbuf_new_from_file (a_cs.item, $g_error)
 			if g_error /= default_pointer then
 				-- We could not load the image so raise an exception
@@ -417,8 +417,8 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_PIXEL_BUFFER_IMP} -- Implem
 
 feature {NONE} -- Implementation
 
-	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: READABLE_STRING_GENERAL)
-			-- Save `Current' in `a_format' to `a_filename'
+	save_to_named_path (a_format: EV_GRAPHICAL_FORMAT; a_file_path: PATH)
+			-- Save `Current' in `a_format' to `a_file_path'
 		local
 			a_gdkpixbuf, stretched_pixbuf: POINTER
 			a_gerror: POINTER
@@ -427,7 +427,7 @@ feature {NONE} -- Implementation
 			if app_implementation.writeable_pixbuf_formats.has (a_format.file_extension.as_upper) then
 					-- Perform custom saving with GdkPixbuf
 				a_gdkpixbuf := pixbuf_from_drawable
-				a_handle := a_filename
+				create a_handle.make_from_path (a_file_path)
 				a_filetype := a_format.file_extension
 				if a_format.scale_width > 0 and then a_format.scale_height > 0 then
 					stretched_pixbuf := {GTK2}.gdk_pixbuf_scale_simple (a_gdkpixbuf, a_format.scale_width, a_format.scale_height, {GTK2}.gdk_interp_bilinear)
@@ -444,7 +444,7 @@ feature {NONE} -- Implementation
 				{GTK2}.g_object_unref (a_gdkpixbuf)
 			else
 				-- If Gtk cannot save the file then the default is called
-				Precursor {EV_PIXMAP_I} (a_format, a_filename)
+				Precursor {EV_PIXMAP_I} (a_format, a_file_path)
 			end
 		end
 

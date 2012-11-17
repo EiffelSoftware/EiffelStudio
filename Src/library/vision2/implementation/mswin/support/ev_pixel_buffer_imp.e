@@ -104,7 +104,7 @@ feature -- Initialization
 
 feature -- Command
 
-	set_with_named_file (a_file_name: READABLE_STRING_GENERAL)
+	set_with_named_path (a_file_name: PATH)
 			-- Load pixel data from a file.
 		local
 			l_gdip_bitmap: like gdip_bitmap
@@ -113,11 +113,11 @@ feature -- Command
 			if is_gdi_plus_installed then
 				l_gdip_bitmap := gdip_bitmap
 				check l_gdip_bitmap /= Void end
-				l_gdip_bitmap.load_image_from_file (a_file_name)
+				l_gdip_bitmap.load_image_from_path (a_file_name)
 			else
 				l_pixmap := pixmap
 				check l_pixmap /= Void end
-				l_pixmap.set_with_named_file (a_file_name)
+				l_pixmap.set_with_named_path (a_file_name)
 			end
 		end
 
@@ -231,7 +231,7 @@ feature -- Command
 			end
 		end
 
-	save_to_named_file (a_file_name: READABLE_STRING_GENERAL)
+	save_to_named_path (a_file_name: PATH)
 			-- Save pixel data to `a_file_name'
 		local
 			l_gdip_bitmap: like gdip_bitmap
@@ -240,12 +240,12 @@ feature -- Command
 			if is_gdi_plus_installed then
 				l_gdip_bitmap := gdip_bitmap
 				check l_gdip_bitmap /= Void end
-				l_gdip_bitmap.save_image_to_file (a_file_name)
+				l_gdip_bitmap.save_image_to_path (a_file_name)
 			else
 				-- FIXIT: How to know the orignal format of `pixmap'? It's BMP or PNG.
 				l_pixmap := pixmap
 				check l_pixmap /= Void end
-				l_pixmap.save_to_named_file (create {EV_PNG_FORMAT}, a_file_name)
+				l_pixmap.save_to_named_path (create {EV_PNG_FORMAT}, a_file_name)
 			end
 		end
 

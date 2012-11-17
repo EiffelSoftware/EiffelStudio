@@ -37,9 +37,9 @@ extern "C" {
 /*---------------------------------------------------------------------------*/
 void c_ev_load_pixmap(
 #ifndef EIF_IL_DLL
-		void *pCurrObject, 
+		void *pCurrObject,
 #endif
-		char *pszFileName, 
+		EIF_FILENAME pszFileName,
 		void *fnptr
 	);
 

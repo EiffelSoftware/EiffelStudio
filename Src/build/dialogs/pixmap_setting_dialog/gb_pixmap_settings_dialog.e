@@ -632,7 +632,7 @@ feature {NONE} -- Implementation
 			dialog: EV_DIRECTORY_DIALOG
 			directory: DIRECTORY
 			supported_types: LINEAR [STRING_32]
-			files: ARRAYED_LIST [STRING]
+			files: ARRAYED_LIST [PATH]
 			current_filename: STRING
 			filename_ext: STRING
 			pixmap: EV_PIXMAP
@@ -651,13 +651,13 @@ feature {NONE} -- Implementation
 					reset_labels
 				end
 			end
-			if not dialog.directory.is_empty or not dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
+			if not dialog.path.is_empty or not dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
 				if not rescued then
 					pixmap_list.check_actions.block
 					file_path := dialog.directory
-					create directory.make (dialog.directory)
+					create directory.make_with_path (dialog.path)
 					supported_types := (create {EV_ENVIRONMENT}).supported_image_formats
-					files := directory.linear_representation
+					files := directory.entries
 				end
 				from
 					if not rescued then
@@ -668,7 +668,7 @@ feature {NONE} -- Implementation
 				until
 					files.off
 				loop
-					current_filename := files.item
+					current_filename := files.item.name
 					filename_ext := current_filename.substring (current_filename.substring_index (".", 1) + 1, current_filename.count)
 					if supported_types.has (filename_ext.as_upper) then
 						create pixmap
@@ -746,8 +746,8 @@ feature {NONE} -- Implementation
 			if pixmap_constant.directory.is_empty then
 				relative_directory_combo.remove_text
 			end
-			if components.constants.matching_directory_constant_name (file_path) /= Void then
-				directory_constant ?= components.constants.all_constants.item (components.constants.matching_directory_constant_name (file_path))
+			if attached components.constants.matching_directory_constant_name (file_path) as l_constant_name then
+				directory_constant ?= components.constants.all_constants.item (l_constant_name)
 				check
 					directory_constant_exists: directory_constant /= Void
 				end

@@ -40,10 +40,16 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	load_image_from_file (a_file_name: READABLE_STRING_GENERAL)
-			-- Load datas from a file.
-		require
-			not_void: a_file_name /= Void
+	frozen load_image_from_file (a_file_name: READABLE_STRING_GENERAL)
+			-- Redefine
+		obsolete
+			"Use `load_image_from_path' instead."
+		do
+			load_image_from_path (create {PATH}.make_from_string (a_file_name))
+		end
+
+	load_image_from_path (a_file_name: PATH)
+			-- Redefine
 		do
 			load_image_from_file_original (a_file_name)
 		end
@@ -83,44 +89,89 @@ feature -- Command
 			load_image_from_stream (l_stream)
 		end
 
-	save_image_to_file (a_file_name: READABLE_STRING_GENERAL)
+	frozen save_image_to_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Save data to a file.
+		obsolete
+			"Use `save_image_to_path' instead."
 		require
 			not_void: a_file_name /= Void
 			exists: exists
-		local
-			l_format: WEL_GDIP_IMAGE_ENCODER
 		do
-			l_format := format_for_save_file
-
-			save_image_to_file_with_encoder (a_file_name, l_format)
+			save_image_to_path (create {PATH}.make_from_string (a_file_name))
 		end
 
-	save_image_to_file_with_parameters (a_file_name: STRING; a_parameters: detachable WEL_GDIP_IMAGE_ENCODER_PARAMETERS)
+	frozen save_image_to_file_with_parameters (a_file_name: READABLE_STRING_GENERAL; a_parameters: detachable WEL_GDIP_IMAGE_ENCODER_PARAMETERS)
 			-- Save data to a file with `a_parameters' options
+		obsolete
+			"Use `save_image_to_path_with_parameters' instead."
 		require
 			not_void: a_file_name /= Void
 			exists: exists
-		local
-			l_format: WEL_GDIP_IMAGE_ENCODER
 		do
-			l_format := format_for_save_file
-
-			save_image_to_file_with_encoder_and_parameters (a_file_name, l_format, a_parameters)
+			save_image_to_path_with_parameters (create {PATH}.make_from_string (a_file_name), a_parameters)
 		end
 
-	save_image_to_file_with_encoder (a_file_name: READABLE_STRING_GENERAL; a_format: WEL_GDIP_IMAGE_ENCODER)
+	frozen save_image_to_file_with_encoder (a_file_name: READABLE_STRING_GENERAL; a_format: WEL_GDIP_IMAGE_ENCODER)
 			-- Save data to a file with image encoder parameter
+		obsolete
+			"Use `save_image_to_path_with_encoder' instead."
 		require
 			not_void: a_file_name /= Void
 			not_void: a_format /= Void
 			exists: exists
 		do
-			save_image_to_file_with_encoder_and_parameters (a_file_name, a_format, Void)
+			save_image_to_path_with_encoder (create {PATH}.make_from_string (a_file_name), a_format)
 		end
 
-	save_image_to_file_with_encoder_and_parameters (a_file_name: READABLE_STRING_GENERAL; a_format: WEL_GDIP_IMAGE_ENCODER; a_parameters: detachable WEL_GDIP_IMAGE_ENCODER_PARAMETERS)
+	frozen save_image_to_file_with_encoder_and_parameters (a_file_name: READABLE_STRING_GENERAL; a_format: WEL_GDIP_IMAGE_ENCODER; a_parameters: detachable WEL_GDIP_IMAGE_ENCODER_PARAMETERS)
 			-- Save data to a file with image encoder and parameters
+		obsolete
+			"Use `save_image_to_path_with_encoder_and_parameters' instead."
+		require
+			not_void: a_file_name /= Void
+			not_void: a_format /= Void
+			exists: exists
+		do
+			save_image_to_path_with_encoder_and_parameters (create {PATH}.make_from_string (a_file_name), a_format, a_parameters)
+		end
+
+	save_image_to_path (a_file_name: PATH)
+			-- Save data to a file `a_file_name'.
+		require
+			not_void: a_file_name /= Void
+			exists: exists
+		local
+			l_format: WEL_GDIP_IMAGE_ENCODER
+		do
+			l_format := format_for_save_file
+			save_image_to_path_with_encoder_and_parameters (a_file_name, l_format, Void)
+		end
+
+	save_image_to_path_with_parameters (a_file_name: PATH; a_parameters: detachable WEL_GDIP_IMAGE_ENCODER_PARAMETERS)
+			-- Save data to a file `a_file_name' with `a_parameters' options
+		require
+			not_void: a_file_name /= Void
+			exists: exists
+		local
+			l_format: WEL_GDIP_IMAGE_ENCODER
+		do
+			l_format := format_for_save_file
+
+			save_image_to_path_with_encoder_and_parameters (a_file_name, l_format, a_parameters)
+		end
+
+	save_image_to_path_with_encoder (a_file_name: PATH; a_format: WEL_GDIP_IMAGE_ENCODER)
+			-- Save data to a file `a_file_name' with image encoder parameter
+		require
+			not_void: a_file_name /= Void
+			not_void: a_format /= Void
+			exists: exists
+		do
+			save_image_to_path_with_encoder_and_parameters (a_file_name, a_format, Void)
+		end
+
+	save_image_to_path_with_encoder_and_parameters (a_file_name: PATH; a_format: WEL_GDIP_IMAGE_ENCODER; a_parameters: detachable WEL_GDIP_IMAGE_ENCODER_PARAMETERS)
+			-- Save data to a file `a_file_name' with image encoder and parameters
 		require
 			not_void: a_file_name /= Void
 			not_void: a_format /= Void
@@ -131,7 +182,7 @@ feature -- Command
 			l_parameters: POINTER
 			l_encoder_info: detachable WEL_GDIP_IMAGE_CODEC_INFO
 		do
-			create l_wel_string.make (a_file_name)
+			create l_wel_string.make_from_path (a_file_name)
 			if a_parameters /= Void then
 				l_parameters := a_parameters.item.item
 			end
@@ -367,7 +418,7 @@ feature {WEL_GDIP_IMAGE} -- Implementation
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	load_image_from_file_original (a_file_name: READABLE_STRING_GENERAL)
+	load_image_from_file_original (a_file_name: PATH)
 			-- Load datas from a file. Orignal Gdi+ implementation.
 		require
 			not_void: a_file_name /= Void
@@ -376,7 +427,7 @@ feature {WEL_GDIP_IMAGE} -- Implementation
 			l_result: INTEGER
 		do
 			destroy_item
-			create l_wel_string.make (a_file_name)
+			create l_wel_string.make_from_path (a_file_name)
 			item := c_gdip_load_image_from_file (gdi_plus_handle, l_wel_string.item, $l_result)
 		end
 

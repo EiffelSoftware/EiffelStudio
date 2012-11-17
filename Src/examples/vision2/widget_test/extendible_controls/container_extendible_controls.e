@@ -76,7 +76,7 @@ feature -- Status setting
 					-- Need to perform special processing here as the notebook keeps
 					-- a list of its pixmap paths associated with the tabs which must
 					-- also be reset.
-				notebook.pixmap_paths.clear_all
+				notebook.pixmap_paths.wipe_out
 			end
 		end
 

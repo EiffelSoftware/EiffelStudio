@@ -65,7 +65,7 @@ feature {GB_XML_STORE} -- Output
 					first.off
 				loop
 					if first.pixmap_paths.item (first.index) /= Void or uses_constant (Item_pixmap_string + first.index.out)  then
-						add_string_element (item_pixmap_element, Item_pixmap_string + first.index.out, first.pixmap_paths.item (first.index))
+						add_string_element (item_pixmap_element, Item_pixmap_string + first.index.out, first.pixmap_paths.item (first.index).name)
 					end
 					first.forth
 				end
@@ -99,7 +99,7 @@ feature {GB_XML_STORE} -- Output
 			new_pixmap: EV_PIXMAP
 			pixmap_constant: GB_PIXMAP_CONSTANT
 			constant_context: GB_CONSTANT_CONTEXT
-			a_file_name: FILE_NAME
+			a_file_name: PATH
 			file: RAW_FILE
 		do
 			full_information := get_unique_full_info (element)
@@ -159,14 +159,14 @@ feature {GB_XML_STORE} -- Output
 									set_pixmap (new_pixmap, Void, counter)
 								else
 									create new_pixmap
-									create a_file_name.make_from_string (element_info.data)
-									create file.make (a_file_name)
+									create a_file_name.make_from_string (element_info.data.as_string_32)
+									create file.make_with_path (a_file_name)
 									if file.exists then
-										new_pixmap.set_with_named_file (element_info.data)
-										set_pixmap (new_pixmap, element_info.data, counter)
+										new_pixmap.set_with_named_path (a_file_name)
+										set_pixmap (new_pixmap, a_file_name, counter)
 									else
 											-- Must set the path even though the pixmap is Void.
-										set_pixmap (Void, element_info.data, counter)
+										set_pixmap (Void, a_file_name, counter)
 								--		for_all_objects (agent {EV_PIXMAP}.disable_pixmap_exists)
 									end
 								end

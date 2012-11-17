@@ -116,7 +116,7 @@ feature {NONE} -- Behaviors
 		do
 			open_header_file_dialog.activate (Current)
 			if open_header_file_dialog.selected then
-				h_file_edit.set_text (open_header_file_dialog.file_name)
+				h_file_edit.set_text (open_header_file_dialog.file_path.string_representation)
 			end
 		end
 
@@ -126,11 +126,11 @@ feature {NONE} -- Behaviors
 		do
 			open_eiffel_file_dialog.activate (Current)
 			if open_eiffel_file_dialog.selected then
-				eiffel_file_edit.set_text (open_eiffel_file_dialog.file_name)
-				if file_exists (open_eiffel_file_dialog.file_name.to_string_8) then
+				eiffel_file_edit.set_text (open_eiffel_file_dialog.file_path.string_representation)
+				if file_exists (open_eiffel_file_dialog.file_path) then
 					create c.make_by_predefined_id (Idc_wait)
 					c.set
-					scan_file_for_classname (open_eiffel_file_dialog.file_name.to_string_8)
+					scan_file_for_classname (open_eiffel_file_dialog.file_path)
 					c.restore_previous
 				end
 			end
@@ -143,7 +143,7 @@ feature {NONE} -- Behaviors
 			previous_text: STRING
 			msg_box: WEL_MSG_BOX
 		do
-			if file_exists (h_file_edit.text.to_string_8) then
+			if file_exists (create {PATH}.make_from_string (h_file_edit.text)) then
 				create c.make_by_predefined_id (Idc_wait)
 				c.set
 				previous_text := translate_button.text.to_string_8
@@ -151,7 +151,7 @@ feature {NONE} -- Behaviors
 				create conv.make (class_name_edit.text.to_string_8,
 					eiffel_file_edit.text.to_string_8,
 					h_file_edit.text.to_string_8)
-				conv.extract_definition (h_file_edit.text.to_string_8)
+				conv.extract_definition (h_file_edit.text)
 				conv.close_file
 				translate_button.set_text (previous_text)
 				c.restore_previous
@@ -178,7 +178,7 @@ feature {NONE} -- Behaviors
 
 feature {NONE} -- Implementation
 
-	scan_file_for_classname (a_file_name: STRING)
+	scan_file_for_classname (a_file_name: PATH)
 		require
 			a_file_name_not_void: a_file_name /= Void
 			file_exists: file_exists (a_file_name)
@@ -186,7 +186,8 @@ feature {NONE} -- Implementation
 			a_file: PLAIN_TEXT_FILE
 			break: BOOLEAN
 		do
-			create a_file.make_open_read (a_file_name)
+			create a_file.make_with_path (a_file_name)
+			a_file.open_read
 			from
 				a_file.start
 			until
@@ -281,14 +282,14 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	file_exists (filename: STRING): BOOLEAN
+	file_exists (filename: PATH): BOOLEAN
 			-- Does `filename' exist?
 		require
 			filename_not_void: filename /= Void
 		local
 			a_file: PLAIN_TEXT_FILE
 		do
-			create a_file.make (filename)
+			create a_file.make_with_path (filename)
 			Result := a_file.exists
 		end
 
@@ -309,14 +310,14 @@ invariant
 	internal_translate_button_attached: internal_translate_button /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -1316,13 +1316,27 @@ feature -- Basic operations
 			-- `a_command' specifies the type of help requested. See
 			-- class WEL_HELP_CONSTANTS for `a_command' values.
 			-- 'data' is depandant on 'a_command'.  Check MSDN for more details.
+		obsolete
+			"Use `win_help_from_path' instead."
 		require
 			exists: exists
 			help_file_not_void: help_file /= Void
+		do
+			win_help_from_path (create {PATH}.make_from_string (help_file), a_command, data)
+		end
+
+	win_help_from_path (help_path: PATH; a_command, data: INTEGER)
+			-- Start the Windows Help program with `help_path'.
+			-- `a_command' specifies the type of help requested. See
+			-- class WEL_HELP_CONSTANTS for `a_command' values.
+			-- 'data' is depandant on 'a_command'.  Check MSDN for more details.
+		require
+			exists: exists
+			help_file_not_void: help_path /= Void
 		local
 			 a_wel_string: WEL_STRING
 		do
-			create a_wel_string.make (help_file)
+			create a_wel_string.make_from_path (help_path)
 			cwin_win_help (item, a_wel_string.item, a_command, data)
 		end
 
@@ -2746,7 +2760,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -10,14 +10,14 @@ class
 	GB_XML_UTILITIES
 
 inherit
-	
+
 	ANY
-	
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	BASIC_ROUTINES
 
 feature -- Access
@@ -46,7 +46,7 @@ feature -- Access
 			create l_attribute.make (a_name, create {XM_NAMESPACE}.make_default, a_value, element)
 			element.force_last (l_attribute)
 		end
-	
+
 	add_element_containing_integer (element: XM_ELEMENT; element_name: STRING; value: INTEGER)
 			-- Add an element named `element' containing integer data `value' to `element'.
 		require
@@ -60,7 +60,7 @@ feature -- Access
 			element.force_last (new_element)
 			add_string_data (new_element, value.out)
 		end
-		
+
 	add_element_containing_integer_constant (element: XM_ELEMENT; element_name: STRING; constant: STRING)
 			-- 	Add an element named `element' marked `constant', containing another element named `element_name' with
 			-- constant named `constant'. This is the format used to store integer constants.
@@ -78,7 +78,7 @@ feature -- Access
 			add_string_data (new_element, constant)
 		end
 
-	add_element_containing_string (element: XM_ELEMENT; element_name, value: STRING)
+	add_element_containing_string (element: XM_ELEMENT; element_name: STRING; value: READABLE_STRING_GENERAL)
 			-- Add an element named `element' containing string data `value' to `element'.
 		require
 			element_not_void: element /= Void
@@ -122,15 +122,17 @@ feature -- Access
 			add_string_data (element, string_data)
 		end
 
-	add_string_data (element: XM_ELEMENT; content: STRING)
+	add_string_data (element: XM_ELEMENT; content: READABLE_STRING_GENERAL)
 			-- Add string character data with content `content' to `element'
 		require
 			element_not_void: element /= Void
 			content_not_void: content /= Void
-		local	
+		local
 			new_element: XM_CHARACTER_DATA
+			l_uc_string: UC_STRING
 		do
-			create new_element.make (element, content)
+			create l_uc_string.make_from_string_general (content.as_string_32)
+			create new_element.make (element, l_uc_string)
 			element.force_last (new_element)
 		end
 
@@ -142,12 +144,12 @@ feature -- Access
 			widget_name_not_empty: widget_name.count >= 1
 		do
 			Result := new_child_element (element, Item_string, "")
-			
+
 			add_attribute_to_element (Result, "type", "xsi", widget_name)
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	get_unique_full_info (element: XM_ELEMENT): HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			-- `Result' provides access to all child_elements and XML character
 			-- data of `Current' referenced by their unique names.
@@ -217,7 +219,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	all_child_element_names (element: XM_ELEMENT): ARRAYED_LIST [STRING]
 			-- `Result' is a list of all names of the child elements of `element'
 		require
@@ -238,12 +240,12 @@ feature -- Access
 				element.forth
 			end
 		end
-		
+
 	child_element_by_name (element: XM_ELEMENT; a_name: STRING): XM_ELEMENT
 			-- `Result' is child element of `element' with name equal to `a_name'.
 		require
 			element_not_void: element /= Void
-			name_not_void_or_empty: a_name /= Void and then a_name.count > 0 
+			name_not_void_or_empty: a_name /= Void and then a_name.count > 0
 		local
 			current_element: XM_ELEMENT
 			found: BOOLEAN
@@ -266,7 +268,7 @@ feature -- Access
 		ensure
 			cursor_not_moved: old element.index = element.index
 		end
-		
+
 	string_from_xm_document (a_document: XM_DOCUMENT): STRING
 			-- Return a string representation of XM document `a_document'.
 		require
@@ -282,10 +284,10 @@ feature -- Access
 			create xmlns_generator.set_next (pretty_print)
 			a_document.process_to_events (xmlns_generator)
 			Result := output_stream.string
-		ensure	
+		ensure
 			result_not_void: Result /= Void
-		end		
-		
+		end
+
 	add_tabs (a_string: STRING; index, count: INTEGER)
 			-- Add `count' tab characters to `a_string' at index `index'.
 		local
@@ -305,7 +307,7 @@ feature -- Access
 		ensure
 			new_count_correct: a_string.count = old a_string.count + count
 		end
-		
+
 	show_element (element: XM_ELEMENT; window: EV_TITLED_WINDOW)
 			-- Show contents of `element' in a dialog displayed modally to `window'.
 		require
@@ -320,14 +322,14 @@ feature -- Access
 			namespace: XM_NAMESPACE
 			document: XM_DOCUMENT
 			l_string: STRING
-		do		
+		do
 			create namespace.make_default
 			create document.make
 				-- If we do not twin the element, the parent is changed which
 				-- is a side effect that we do not wish.
 			document.set_root_element (element.deep_twin)
 			l_string := string_from_xm_document (document)
-			
+
 			create dialog
 			dialog.set_minimum_size (400, 600)
 			create vertical_box
@@ -342,7 +344,7 @@ feature -- Access
 			text.set_text (l_string)
 			dialog.show_modal_to_window (window)
 		end
-		
+
 	remove_nodes_recursive (element: XM_ELEMENT; node_name: STRING)
 			-- Recursively remove all nodes named `node_name' from `element'.
 		require
@@ -369,7 +371,7 @@ feature -- Access
 				element.forth
 			end
 		end
-		
+
 	all_elements_by_name (element: XM_ELEMENT; node_name: STRING): ARRAYED_LIST [XM_ELEMENT]
 			-- Recursively remove all nodes named `node_name' from `element'.
 		require
@@ -379,7 +381,7 @@ feature -- Access
 			create Result.make (10)
 			all_elements_by_name_internal (element, node_name, Result)
 		end
-		
+
 	all_elements_by_name_internal (element: XM_ELEMENT; node_name: STRING; elements: ARRAYED_LIST [XM_ELEMENT])
 			-- Recursively remove all nodes named `node_name' from `element'.
 		require
@@ -406,7 +408,7 @@ feature -- Access
 				element.forth
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	data_valid (current_data: STRING):BOOLEAN

@@ -27,12 +27,12 @@ feature -- Status setting
 		local
 			modal_to: detachable WEL_COMPOSITE_WINDOW
 			l_env: EXECUTION_ENVIRONMENT
-			l_dir: STRING
+			l_dir: PATH
 		do
 				-- Because on Windows, standard dialog may change the current
 				-- working directory, we prevent it.
 			create l_env
-			l_dir := l_env.current_working_directory
+			l_dir := l_env.current_working_path
 
 			set_blocking_window (a_window)
 			modal_to ?= a_window.implementation
@@ -41,7 +41,7 @@ feature -- Status setting
 			set_blocking_window (Void)
 
 				-- After closing the dialog, we restore the current working directory.
-			l_env.change_working_directory (l_dir)
+			l_env.change_working_path (l_dir)
 
 			if selected then
 				selected_button := internal_accept
@@ -81,14 +81,14 @@ feature -- Deferred
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

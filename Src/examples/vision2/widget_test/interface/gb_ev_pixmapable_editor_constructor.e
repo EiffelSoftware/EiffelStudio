@@ -78,7 +78,7 @@ feature -- Access
 				filler_label.remove_tooltip
 				if first.internal_pixmap_path /= Void then
 					create error_label.make_with_text ("Error - named pixmap missing.")
-					error_label.set_tooltip (first.internal_pixmap_path)
+					error_label.set_tooltip (first.internal_pixmap_path.name)
 					pixmap_container.extend (error_label)
 					modify_button.set_text (Remove_string)
 					modify_button.set_tooltip (Remove_tooltip)
@@ -102,29 +102,34 @@ feature {NONE} -- Implementation
 			new_pixmap: EV_PIXMAP
 			shown_once, opened_file: BOOLEAN
 			error_dialog: EV_WARNING_DIALOG
+			l_extension: STRING_32
 		do
 			if first.pixmap = Void and first.internal_pixmap_path = Void then
 				from
 					create dialog
 				until
-					(dialog.file_name.is_empty and shown_once) or opened_file
+					(dialog.full_file_path.is_empty and shown_once) or opened_file
 				loop
 					shown_once := True
 					dialog.show_modal_to_window (parent_window (parent_editor))
-					if not dialog.file_name.is_empty and then valid_file_extension (dialog.file_name.substring (dialog.file_name.count -2, dialog.file_name.count)) then
-						create new_pixmap
-						new_pixmap.set_with_named_file (dialog.file_name)
-							-- Must set the pixmap before the stretch takes place.
-						for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (new_pixmap))
-						for_all_objects (agent {EV_PIXMAPABLE}.set_internal_pixmap_path (dialog.file_name))
-						add_pixmap_to_pixmap_container (new_pixmap.twin)
-						modify_button.set_text (Remove_string)
-						modify_button.set_tooltip (Remove_tooltip)
-						opened_file := True
-					elseif not dialog.file_name.is_empty then
-						create error_dialog
-						error_dialog.set_text (invalid_type_warning)
-						error_dialog.show_modal_to_window (parent_window (parent_editor))
+					if not dialog.full_file_path.is_empty then
+						l_extension := dialog.full_file_path.name
+						l_extension := l_extension.substring (l_extension.count - 2, l_extension.count)
+						if valid_file_extension (l_extension) then
+							create new_pixmap
+							new_pixmap.set_with_named_path (dialog.full_file_path)
+								-- Must set the pixmap before the stretch takes place.
+							for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (new_pixmap))
+							for_all_objects (agent {EV_PIXMAPABLE}.set_internal_pixmap_path (dialog.full_file_path))
+							add_pixmap_to_pixmap_container (new_pixmap.twin)
+							modify_button.set_text (Remove_string)
+							modify_button.set_tooltip (Remove_tooltip)
+							opened_file := True
+						else
+							create error_dialog
+							error_dialog.set_text (invalid_type_warning)
+							error_dialog.show_modal_to_window (parent_window (parent_editor))
+						end
 					end
 				end
 			else
@@ -148,10 +153,10 @@ feature {NONE} -- Implementation
 			new_x, new_y: INTEGER
 			biggest_ratio: REAL_64
 		do
-			pixmap.set_tooltip (first.internal_pixmap_path)
+			pixmap.set_tooltip (first.internal_pixmap_path.name)
 				-- We also add a tooltip to the space to the right
 				-- of the buttom, through `filler_label'.
-			filler_label.set_tooltip (first.internal_pixmap_path)
+			filler_label.set_tooltip (first.internal_pixmap_path.name)
 			x_ratio := pixmap.width / minimum_width_of_object_editor
 			y_ratio := pixmap.height / minimum_width_of_object_editor
 			if x_ratio > 1 and y_ratio < 1 then

@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	make_with_text (t: detachable READABLE_STRING_GENERAL)
 			-- Create a widget that is made to browse for directory.
 		do
-			default_start_directory := ""
+			create default_start_path.make_empty
 			default_create
 			build_widget (t)
 		end
@@ -74,11 +74,21 @@ feature -- Access
 
 	default_start_directory: STRING_32
 			-- Default start directory for browsing dialog.
+		obsolete
+			"Use `default_start_path' instead."
+		do
+			Result := default_start_path.string_representation
+		end
+
+	default_start_path: PATH
+			-- Default start directory for browsing dialog.
 
 feature -- Status
 
 	text, path: STRING_32
 			-- Current path set by user.
+		obsolete
+			"Use `file_path' instead."
 		require
 			not_destroyed: not is_destroyed
 		local
@@ -87,6 +97,20 @@ feature -- Status
 			l_field := field
 			check l_field /= Void end
 			Result := l_field.text
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	file_path: PATH
+			-- Current path set by user.
+		require
+			not_destroyed: not is_destroyed
+		local
+			l_field: like field
+		do
+			l_field := field
+			check l_field /= Void end
+			create Result.make_from_string (l_field.text)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -101,6 +125,8 @@ feature -- Settings
 
 	set_text, set_path (p: READABLE_STRING_GENERAL)
 			-- Assign `p' to `path'.
+		obsolete
+			"Use `set_file_path' instead."
 		require
 			not_destroyed: not is_destroyed
 			p_not_void: p /= Void
@@ -112,6 +138,21 @@ feature -- Settings
 			l_field.set_text (p)
 		ensure
 			path_set: path.same_string_general (p)
+		end
+
+	set_file_path (p: PATH)
+			-- Assign `p' to `file_path'.
+		require
+			not_destroyed: not is_destroyed
+			p_not_void: p /= Void
+		local
+			l_field: like field
+		do
+			l_field := field
+			check l_field /= Void end
+			l_field.set_text (p.string_representation)
+		ensure
+			path_set: file_path.string_representation ~ p.string_representation
 		end
 
 	set_browse_for_file (filter: READABLE_STRING_GENERAL)
@@ -160,8 +201,18 @@ feature -- Settings
 
 	set_default_start_directory (t: STRING_32)
 			-- Set Default start directory for browsing dialog
+		obsolete
+			"Use `set_default_start_path' instead."
 		do
-			default_start_directory := t
+			create default_start_path.make_from_string (t)
+		end
+
+	set_default_start_path (a_path: PATH)
+			-- Set Default start directory for browsing dialog
+		do
+			default_start_path := a_path
+		ensure
+			default_start_path_set: default_start_path = a_path
 		end
 
 feature -- Removal
@@ -173,7 +224,7 @@ feature -- Removal
 				l_field.remove_text
 			end
 		ensure
-			path_cleared: path.is_empty
+			path_cleared: file_path.is_empty
 		end
 
 feature {NONE} -- GUI building
@@ -216,21 +267,21 @@ feature {NONE} -- GUI building
 			-- Popup a "select directory" dialog.
 		local
 			dd: EV_DIRECTORY_DIALOG
-			l_start_directory: STRING_32
+			l_start_path: like start_path
 		do
 			create dd
 			dd.set_title (Label_select_directory)
-			l_start_directory := start_directory
+			l_start_path := start_path
 			if
-				not l_start_directory.is_empty and then
-				(create {DIRECTORY}.make (l_start_directory.as_string_8)).exists
+				not l_start_path.is_empty and then
+				(create {DIRECTORY}.make_with_path (l_start_path)).exists
 			then
-				dd.set_start_directory (l_start_directory)
+				dd.set_start_path (l_start_path)
 			end
 
 			dd.show_modal_to_window (parent_window)
-			if dd.directory /= Void and then not dd.directory.is_empty and then attached field as l_field then
-				l_field.set_text (dd.directory)
+			if dd.path /= Void and then not dd.path.is_empty and then attached field as l_field then
+				l_field.set_text (dd.path.string_representation)
 			end
 		end
 
@@ -250,7 +301,7 @@ feature {NONE} -- GUI building
 			-- Popup a open or save "select file" dialog according to `allow_new' value
 		local
 			fd: EV_FILE_DIALOG
-			l_start_directory: STRING_32
+			l_start_path: like start_path
 		do
 			if allow_new then
 				create {EV_FILE_SAVE_DIALOG} fd
@@ -262,30 +313,30 @@ feature {NONE} -- GUI building
 				fd.filters.extend ([("*.*").as_string_32, Label_all_files.as_string_32])
 			end
 			fd.set_title (Label_select_file)
-			l_start_directory := start_directory
+			l_start_path := start_path
 			if
-				l_start_directory /= Void and then
-				not l_start_directory.is_empty and then
-				(create {DIRECTORY}.make (l_start_directory.as_string_8)).exists
+				l_start_path /= Void and then
+				not l_start_path.is_empty and then
+				(create {DIRECTORY}.make_with_path (l_start_path)).exists
 			then
-				fd.set_start_directory (l_start_directory)
+				fd.set_start_path (l_start_path)
 			end
 			fd.show_modal_to_window (parent_window)
-			if fd.file_name /= Void and then not fd.file_name.is_empty and then attached field as l_field then
-				l_field.set_text (fd.file_name)
+			if not fd.full_file_path.is_empty and then attached field as l_field then
+				l_field.set_text (fd.full_file_path.string_representation)
 			end
 		end
 
-	start_directory: STRING_32
+	start_path: PATH
 			-- Start directory for browsing dialog.
 		local
 			l_field: like field
 		do
 			l_field := field
 			check l_field /= Void end
-			Result := l_field.text
+			create Result.make_from_string (l_field.text)
 			if Result.is_empty then
-				Result := default_start_directory
+				Result := default_start_path
 			end
 		end
 
@@ -325,14 +376,14 @@ invariant
 	browse_button_not_void: browse_button /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_PATH_FIELD

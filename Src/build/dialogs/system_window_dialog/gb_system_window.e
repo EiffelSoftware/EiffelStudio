@@ -155,7 +155,7 @@ feature {NONE} -- Events
 			create directory_dialog
 			directory_dialog.show_modal_to_window (Current)
 			if directory_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
-				generation_location_display.set_text (directory_dialog.directory)
+				generation_location_display.set_text (directory_dialog.path.name)
 				generation_location_display.set_tooltip (generation_location_display.text)
 			end
 		end

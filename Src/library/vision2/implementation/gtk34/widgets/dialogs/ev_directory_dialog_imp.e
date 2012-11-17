@@ -20,6 +20,8 @@ inherit
 			make
 		end
 
+	PATH_HANDLER
+
 create
 	make
 
@@ -62,52 +64,45 @@ feature {NONE} -- Initialization
 				Void
 			)
 			enable_closeable
-			set_start_directory (App_implementation.current_working_directory)
+			set_start_path (App_implementation.current_working_path)
 			set_is_initialized (True)
 		end
 
 feature -- Access
 
-	directory: STRING_32
+	path: PATH
 			-- Path of the current selected file
 		local
 			a_filename: POINTER
-			a_cs: EV_GTK_C_STRING
 		do
 			if
 				attached selected_button as l_selected_button and then l_selected_button.is_equal (internal_accept)
 			then
-				Result := ""
 				a_filename := {GTK2}.gtk_file_chooser_get_filename (c_object)
 				if a_filename /= NULL then
-					create a_cs.share_from_pointer (a_filename)
-					Result := a_cs.string
-					if Result.item (Result.count) /= '/' then
-						Result.append ("/")
-					end
+					create Result.make_from_pointer (a_filename)
 					{GTK}.g_free (a_filename)
+				else
+					create Result.make_empty
 				end
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		end
 
-	start_directory: STRING_32
+	start_path: PATH
 			-- Base directory where browsing will start.
 
 feature -- Element change
 
-	set_start_directory (a_path: READABLE_STRING_GENERAL)
+	set_start_path (a_path: PATH)
 			-- Make `a_path' the base directory.
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			start_directory := a_path.as_string_32.twin
-			a_cs := start_directory + "/."
-			{GTK2}.gtk_file_chooser_set_filename (
-				c_object,
-				a_cs.item
-			)
+			start_path := a_path
+			create a_cs.make_from_path (a_path)
+			{GTK2}.gtk_file_chooser_set_filename (c_object, a_cs.item)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
@@ -115,14 +110,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_DIRECTORY_DIALOG note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_DIRECTORY_DIALOG_IMP

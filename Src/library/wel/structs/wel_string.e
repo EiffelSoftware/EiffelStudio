@@ -14,9 +14,15 @@ inherit
 			is_equal
 		end
 
+	PATH_HANDLER
+		redefine
+			is_equal
+		end
+
 create
 	make,
 	make_empty,
+	make_from_path,
 	make_by_pointer,
 	make_by_pointer_and_count,
 	make_with_newline_conversion,
@@ -32,6 +38,13 @@ feature --{NONE} -- Initialization
 		do
 			make_empty (a_string.count)
 			set_string (a_string)
+		end
+
+	make_from_path (a_path: PATH)
+			-- Make a C string from `a_path'.
+		do
+			managed_data := a_path.to_pointer
+			count := (managed_data.count - character_size) // character_size
 		end
 
 	make_empty (a_length: INTEGER)
@@ -242,6 +255,31 @@ feature -- Access
 				current_pos := current_pos + (current_string.count + 1) * character_size
 				l_str.set_shared_from_pointer (current_pos)
 				current_string := l_str.string
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	null_separated_paths: ARRAYED_LIST [PATH]
+			-- Retrieve all paths contained in `item'. Strings are
+			-- NULL separared inside `item'.
+		local
+			l_path: PATH
+			l_ptr: POINTER
+			l_count: INTEGER
+		do
+			from
+				create Result.make (5)
+				l_ptr := item
+				create l_path.make_from_pointer (l_ptr)
+				l_count := buffer_length (l_ptr)
+			until
+				l_path.is_empty
+			loop
+				Result.extend (l_path)
+				l_ptr := l_ptr + (l_count + 1) * character_size
+				create l_path.make_from_pointer (l_ptr)
+				l_count := buffer_length (l_ptr)
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -522,7 +560,7 @@ feature -- Status report
 feature {NONE} -- Implementation
 
 	buffer_length (a_ptr: POINTER): INTEGER
-			-- Size in bytes pointed by `a_ptr'.
+			-- Size in bytes pointed by `a_ptr', not including the null-terminating character.
 		require
 			exists: exists
 		local

@@ -14,8 +14,10 @@ inherit
 
 	STRING_HANDLER
 
+	PATH_HANDLER
+
 create
-	set_with_eiffel_string, share_from_pointer, make_from_pointer
+	set_with_eiffel_string, share_from_pointer, make_from_pointer, make_from_path
 
 convert
 	set_with_eiffel_string ({READABLE_STRING_GENERAL, STRING, STRING_32})
@@ -28,6 +30,20 @@ feature {NONE} -- Initialization
 			a_utf8_ptr_not_null: a_utf8_ptr /= default_pointer
 		do
 			set_from_pointer (a_utf8_ptr, c_strlen (a_utf8_ptr) + 1,  False)
+		end
+
+	make_from_path (a_path: PATH)
+			-- Set `item' to the content of `a_path'.
+		require
+			a_path_not_void: a_path /= Void
+		local
+			l_ptr: MANAGED_POINTER
+		do
+			l_ptr := a_path.to_pointer (Void)
+			string_length := l_ptr.count - 1
+			item := {GTK}.g_malloc (l_ptr.count)
+			item.memory_copy (l_ptr.item, l_ptr.count)
+			is_shared := False
 		end
 
 feature -- Access
@@ -278,14 +294,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

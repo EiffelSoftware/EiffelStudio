@@ -13,7 +13,7 @@ feature -- Access
 
 	scale_width: INTEGER
 		-- Width to scale graphic to, 0 means no scaling.
-	
+
 	scale_height: INTEGER
 		-- Height to scale graphic to, 0 means no scaling.
 
@@ -46,12 +46,12 @@ feature -- Status Setting
 		ensure
 			scale_height_set: scale_height = a_height
 		end
-		
+
 	set_truecolor
 			-- Set `color_mode' to truecolor.
 		do
 		end
-	
+
 	set_greyscale
 			-- Set `color_mode' to grayscale.
 		do
@@ -61,23 +61,23 @@ feature -- Status Setting
 			-- Set `color_mode' to paletted mode.
 		do
 		end
-		
+
 feature {EV_PIXMAP_I} -- Access
 
-	save (raw_image_data: EV_RAW_IMAGE_DATA; a_filename: READABLE_STRING_GENERAL)
-			-- Save `raw_image_data' in `Current' format to `a_filename'.
+	save (raw_image_data: EV_RAW_IMAGE_DATA; a_filepath: PATH)
+			-- Save `raw_image_data' in `Current' format to `a_filepath'.
 		deferred
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

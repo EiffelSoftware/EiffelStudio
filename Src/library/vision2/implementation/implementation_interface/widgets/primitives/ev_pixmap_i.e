@@ -24,12 +24,12 @@ inherit
 
 feature -- Initialization
 
-	read_from_named_file (file_name: READABLE_STRING_GENERAL)
-			-- Load pixmap data from the file named `file_name'.
+	read_from_named_path (file_path: PATH)
+			-- Load pixmap data from the file named `file_path'.
 			-- Exceptions: "Unable to retrieve icon information"
 		require
-			file_name_not_void: file_name /= Void
-			file_name_not_empty: not file_name.is_empty
+			file_path_not_void: file_path /= Void
+			file_path_not_empty: not file_path.is_empty
 		deferred
 		end
 
@@ -65,14 +65,13 @@ feature -- Initialization
 		deferred
 		end
 
-	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: READABLE_STRING_GENERAL)
-			-- Save `Current' to `a_filename' in `a_format' format.
+	save_to_named_path (a_format: EV_GRAPHICAL_FORMAT; a_filepath: PATH)
+			-- Save `Current' to `a_filepath' in `a_format' format.
 		require
 			a_format_not_void: a_format /= Void
-			a_filename_not_void: a_filename /= Void
-			a_filename_valid: is_file_name_valid (a_filename)
+			a_filepath_not_void: a_filepath /= Void
 		do
-			a_format.save (raw_image_data, a_filename)
+			a_format.save (raw_image_data, a_filepath)
 		end
 
 	set_mask (a_mask: EV_BITMAP)

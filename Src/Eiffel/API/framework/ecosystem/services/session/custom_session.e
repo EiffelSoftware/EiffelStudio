@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			file_name := a_file_name
 			make_session (False, a_manager)
 		ensure
-			a_file_name_set: file_name ~ a_file_name
+			a_file_name_set: file_name = a_file_name
 			manager_set: manager = a_manager
 		end
 

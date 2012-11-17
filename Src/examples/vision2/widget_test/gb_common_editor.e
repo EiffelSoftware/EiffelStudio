@@ -177,6 +177,8 @@ feature -- Basic operations
 				l_tuple := p.empty_operands
 				if l_tuple.count = 1 then
 					l_tuple.put (objects.item, 1)
+				else
+					check l_tuple.count = 0 end
 				end
 				p.call (l_tuple)
 				objects.forth
@@ -192,6 +194,8 @@ feature -- Basic operations
 			l_tuple := p.empty_operands
 			if l_tuple.count = 1 then
 				l_tuple.put (objects.item, 1)
+			else
+				check l_tuple.count = 0 end
 			end
 			p.call (l_tuple)
 		end

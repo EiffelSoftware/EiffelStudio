@@ -241,7 +241,7 @@ feature -- Conversion
 			-- representation in the first column of `a_row'.
 		do
 			if attached update_row_agent as l_agent then
-				l_agent.call ([a_ro, a_suggestion])
+				l_agent.call ([a_row, a_suggestion])
 			else
 				a_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (a_suggestion.displayed_text))
 			end

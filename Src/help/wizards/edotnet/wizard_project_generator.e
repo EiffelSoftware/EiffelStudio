@@ -22,8 +22,8 @@ feature -- Basic Operations
 			map_list: LINKED_LIST [TUPLE [STRING, STRING_32]]
 			tuple: TUPLE [STRING, STRING_32]
 			project_name_lowercase: STRING_32
-			project_location: STRING_32
-			ace_location: STRING_32
+			project_location: PATH
+			ace_location: PATH
 			root_class_name_lowercase: STRING
 		do
 				-- cached variables
@@ -31,10 +31,8 @@ feature -- Basic Operations
 			project_location := wizard_information.project_location
 
 				-- Update the ace file location.
-			create ace_location.make_from_string (project_location)
-			ace_location.append_character ((create {OPERATING_ENVIRONMENT}.default_create).Directory_separator)
-			ace_location.append (project_name_lowercase + Config_extension)
-			wizard_information.set_ace_location (ace_location)
+			ace_location := project_location.extended (project_name_lowercase + Config_extension)
+			wizard_information.set_ace_location (ace_location.string_representation)
 
 			create map_list.make
 			add_common_parameters (map_list)
@@ -103,9 +101,9 @@ feature -- Basic Operations
 
 				-- Generation
 			if not root_class_name_lowercase.is_equal (None_class) then
-				from_template_to_project (wizard_resources_path_32, Application_template_filename,	project_location, root_class_name_lowercase + Eiffel_extension, map_list)
+				from_template_to_project (wizard_resource_path, Application_template_filename,	project_location, root_class_name_lowercase + Eiffel_extension, map_list)
 			end
-			from_template_to_project (wizard_resources_path_32, Ace_template_filename, project_location, project_name_lowercase + Config_extension, map_list)
+			from_template_to_project (wizard_resource_path, Ace_template_filename, project_location, project_name_lowercase + Config_extension, map_list)
 		end
 
 feature {NONE} -- Access
@@ -165,7 +163,7 @@ feature {NONE} -- Constants
 			-- Comma
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -196,4 +194,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class WIZARD_PROJECT_GENERATOR
+end

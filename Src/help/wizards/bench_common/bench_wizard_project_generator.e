@@ -39,7 +39,7 @@ feature -- Status report
 					local
 						u: FILE_UTILITIES
 					do
-						if u.file_exists (wizard_information.project_location + "\" + n) then
+						if u.file_path_exists (wizard_information.project_location.extended (n)) then
 							s.extend (n)
 						end
 					end
@@ -73,29 +73,23 @@ feature {NONE} -- Implementation
 			name /= Void
 			is_target_file: target_files.has (name + "." + extension)
 		local
-			f1,f_name: FILE_NAME_32
+			f_name: PATH
 			fi: RAW_FILE
 			s: STRING
 		do
-			create f1.make_from_string (wizard_resources_path_32)
-			f_name := f1.twin
-			f_name.extend (name)
-			f_name.add_extension (extension)
-			create fi.make_with_name (f_name)
+			create fi.make_with_path (wizard_resource_path.extended (name + {STRING_32} "." + extension))
 			fi.open_read
 			fi.read_stream (fi.count)
 			s := fi.last_string
 			fi.close
 			create f_name.make_from_string (destination)
-			f_name.extend (name)
-			f_name.add_extension (extension)
-			create fi.make_with_name (f_name)
+			create fi.make_with_path (f_name.extended (name + {STRING_32} "." + extension))
 			fi.open_write
 			fi.put_string (s)
 			fi.close
 		end
 
-	from_template_to_project (template_path, template_name, resource_path, resource_name: STRING_32; map_list: LINKED_LIST [TUPLE [STRING, STRING_32]])
+	from_template_to_project (template_path: PATH; template_name: STRING_32; resource_path: PATH; resource_name: STRING_32; map_list: LINKED_LIST [TUPLE [STRING, STRING_32]])
 			-- Take a template_name (name of the file) and its template_path
 			-- Then change the FL Tag with strings according to the map_list
 			-- Copy the modified template in a new file resource_name in the resource_path.
@@ -105,13 +99,9 @@ feature {NONE} -- Implementation
 			tup: TUPLE [s1: STRING; s2: STRING_32]
 			s: STRING
 			fi: PLAIN_TEXT_FILE
-			f_name: FILE_NAME_32
-			f_n1: FILE_NAME_32
 			u: UTF_CONVERTER
 		do
-			create f_n1.make_from_string (template_path)
-			f_n1.set_file_name (template_name)
-			create fi.make_with_name (f_n1)
+			create fi.make_with_path (template_path.extended (template_name))
 			fi.open_read
 			fi.read_stream (fi.count)
 			s:= fi.last_string.twin
@@ -127,9 +117,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			fi.close
-			create f_name.make_from_string (resource_path)
-			f_name.set_file_name (resource_name)
-			create fi.make_with_name (f_name)
+			create fi.make_with_path (resource_path.extended (resource_name))
 			fi.open_write
 			fi.put_string (s)
 			fi.close
@@ -195,7 +183,7 @@ feature {NONE} -- Implementation / private attributes
 			-- Information about the project to generate.
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -225,4 +213,6 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_PROJECT_GENERATOR
+
+
+end

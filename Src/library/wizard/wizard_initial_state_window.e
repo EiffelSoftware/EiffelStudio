@@ -110,16 +110,14 @@ feature {NONE} -- Implementation
 	display_pixmap
 			-- Draw pixmap
 		local
-			fi: FILE_NAME_32
+			fi: STRING_32
 			retried: BOOLEAN
 			info_dialog: EV_INFORMATION_DIALOG
 			info_message: STRING_32
 		do
 			if not retried then
 				Precursor {WIZARD_STATE_WINDOW}
-
-				create fi.make_from_string (wizard_pixmaps_path_32)
-				fi.extend (pixmap_icon_location.string.as_string_32)
+				fi := wizard_pixmap_path.extended (pixmap_icon_location.string.as_string_32).string_representation
 				pixmap_icon.set_with_named_file (fi)
 			end
 		rescue
@@ -167,6 +165,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class WIZARD_INITIAL_STATE_WINDOW
-
-
+end

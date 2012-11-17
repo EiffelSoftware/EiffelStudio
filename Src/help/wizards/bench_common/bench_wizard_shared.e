@@ -88,7 +88,7 @@ feature -- Shared variables
 						-- Modify the fields
 					callback_content.replace_substring_all ("<SUCCESS>", "yes")
 					callback_content.replace_substring_all ("<ACE>", u.string_32_to_utf_8_string_8 (wizard_information.ace_location))
-					callback_content.replace_substring_all ("<DIRECTORY>", u.string_32_to_utf_8_string_8 (wizard_information.project_location))
+					callback_content.replace_substring_all ("<DIRECTORY>", u.string_32_to_utf_8_string_8 (wizard_information.project_location.string_representation))
 					if wizard_information.compile_project then
 						callback_content.replace_substring_all ("<COMPILATION>", "yes")
 					else
@@ -114,7 +114,7 @@ feature -- Shared variables
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -144,4 +144,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class BENCH_WIZARD_SHARED
+
+end

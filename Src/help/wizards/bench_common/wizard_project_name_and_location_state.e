@@ -38,7 +38,7 @@ feature -- Basic Operation
 
 			create project_location.make (Current)
 			project_location.set_label_string_and_size (Bench_interface_names.l_Project_location, 10)
-			project_location.set_textfield_string (wizard_information.project_location)
+			project_location.set_textfield_string (wizard_information.project_location.string_representation)
 			project_location.enable_directory_browse_button
 			project_location.generate
 
@@ -68,7 +68,7 @@ feature -- Basic Operation
 		local
 			next_window: WIZARD_STATE_WINDOW
 			rescued: BOOLEAN
-			a_project_location: DIRECTORY_NAME_32
+			a_project_location: PATH
 			a_directory: DIRECTORY
 		do
 			if not rescued then
@@ -80,10 +80,10 @@ feature -- Basic Operation
 					if a_project_location.is_empty then
 						create {WIZARD_ERROR_LOCATION} next_window.make (wizard_information)
 					else
-							-- create the directory
-						create a_directory.make (a_project_location)
+							-- Create the directory
+						create a_directory.make_with_path (a_project_location)
 						if not a_directory.exists then
-							a_directory.create_dir
+							a_directory.recursive_create_dir
 						end
 						if a_directory.has_entry ("EIFGENs") then
 							create {WIZARD_WARNING_PROJECT_EXIST} next_window.make (wizard_information)
@@ -106,12 +106,9 @@ feature -- Basic Operation
 		end
 
 	update_state_information
-			-- Check User Entries
-		local
-			a_project_location: DIRECTORY_NAME_32
+			-- Check user's entries.
 		do
-			a_project_location := validate_directory_string (project_location.text_32)
-			wizard_information.set_project_location (a_project_location)
+			wizard_information.set_project_location (validate_directory_string (project_location.text_32))
 			wizard_information.set_project_name (project_name.text_32)
 			wizard_information.set_compile_project (to_compile_b.is_selected)
 			Precursor
@@ -138,14 +135,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	validate_directory_string (a_directory: STRING_32): DIRECTORY_NAME_32
+	validate_directory_string (a_directory: STRING_32): PATH
 			-- Validate the directory `a_directory' and return the
 			-- validated version of `a_directory'.
 		do
 			if a_directory /= Void then
 				create Result.make_from_string (a_directory)
 			else
-				create Result.make_from_string("")
+				create Result.make_empty
 			end
 		ensure
 			valid_Result: Result /= Void
@@ -185,7 +182,7 @@ feature {NONE} -- Implementation
 			-- Should compilation be launched?.
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -215,4 +212,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_PROJECT_NAME_AND_LOCATION_STATE
+
+end

@@ -33,25 +33,21 @@ feature {NONE} -- Initialization
 			freeze_required := False
 			ace_location := ""
 
-			project_location := eiffel_layout.user_projects_path_32
 			from
 				l_count := 1
 				project_name := Default_project_name + "_" + l_count.out
-				create l_dir.make (project_path)
+				create l_dir.make_with_path (project_path)
 			until
 				not l_dir.exists or else
 				l_count = 100
 			loop
-				create l_dir.make (project_path)
+				create l_dir.make_with_path (project_path)
 				if l_dir.exists then
 					project_name := default_project_name + "_" + l_count.out
 				end
 				l_count := l_count + 1
 			end
-			if project_location @ project_location.count /= Operating_environment.Directory_separator then
-				project_location.append_character (Operating_environment.Directory_separator)
-			end
-			project_location.append (project_name)
+			project_location := eiffel_layout.user_projects_path.extended (project_name)
 		end
 
 feature -- Setting
@@ -91,7 +87,7 @@ feature -- Setting
 
 feature -- Access
 
-	project_location: STRING_32
+	project_location: PATH
 			-- Location of the generated code.
 
 	ace_location: STRING_32
@@ -108,13 +104,10 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	project_path: STRING_32
-			-- project path
+	project_path: PATH
+			-- Project path.
 		do
-			create Result.make (project_location.count + project_name.count + 2)
-			Result.append (project_location)
-			Result.append_character ((create {OPERATING_ENVIRONMENT}.default_create).Directory_separator)
-			Result.append (project_name)
+			Result := project_location.extended (project_name)
 		ensure
 			non_void_project_path: Result /= Void
 		end
@@ -127,7 +120,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -157,4 +150,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class BENCH_WIZARD_INFORMATION
+
+end

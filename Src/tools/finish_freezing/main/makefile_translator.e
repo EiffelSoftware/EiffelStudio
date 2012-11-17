@@ -300,13 +300,11 @@ feature {NONE} -- Translation
 				io.put_string ("Translate sub makefiles%N")
 			end
 
-			from
-				dependent_directories.start
-				old_dir := ""
-			until
-				dependent_directories.after
+			old_dir := ""
+			across
+				dependent_directories as d
 			loop
-				dir := dependent_directories.item.directory
+				dir := d.item.directory
 
 				if not dir.is_equal(old_dir) then
 					debug ("progress")
@@ -314,17 +312,11 @@ feature {NONE} -- Translation
 						io.put_string (dir)
 						io.put_string (".%N")
 					end
-
 					env.change_working_directory (dir)
-
 					translate_makefile (False)
-
 					env.change_working_directory (options.get_string_or_default ("updir", ".."))
-
 					old_dir := dir.twin
 				end
-
-				dependent_directories.forth
 			end
 		end
 
@@ -778,46 +770,34 @@ feature {NONE} -- Translation
 			--read_next
 
 				-- Generate the `OBJECTS = ' line
-			from
-				dependent_directories.start
-				makefile.put_string (options.get_string_or_default ("objects_text", empty_string))
-			until
-				dependent_directories.after
+			makefile.put_string (options.get_string_or_default ("objects_text", empty_string))
+			across
+				dependent_directories as d
 			loop
-				dir := dependent_directories.item.file
-				makefile.put_string (dir)
+				makefile.put_string (d.item.file)
 				makefile.put_character (' ')
-				dependent_directories.forth
 			end
 
 				-- Generate the `x_OBJECTS = ' lines
-			from
-				object_dependent_directories.start
-				makefile.put_string ("%N%N");
-				makefile.put_string (options.get_string_or_default ("c_objects_text", empty_string))
-			until
-				object_dependent_directories.after
+			makefile.put_string ("%N%N")
+			makefile.put_string (options.get_string_or_default ("c_objects_text", empty_string))
+			across
+				object_dependent_directories as d
 			loop
-				dir := object_dependent_directories.item.file
-				makefile.put_string (dir)
+				makefile.put_string (d.item.file)
 				makefile.put_character (' ')
-				object_dependent_directories.forth
 			end
 			if object_dependent_directories.is_empty then
 				makefile.put_string (" %"%" %N")
 			end
 
-			from
-				makefile.put_string ("%N%N")
-				makefile.put_string (options.get_string_or_default ("eobjects_text", empty_string))
-				system_dependent_directories.start
-			until
-				system_dependent_directories.after
+			makefile.put_string ("%N%N")
+			makefile.put_string (options.get_string_or_default ("eobjects_text", empty_string))
+			across
+				system_dependent_directories as d
 			loop
-				dir := system_dependent_directories.item.file
-				makefile.put_string (dir)
+				makefile.put_string (d.item.file)
 				makefile.put_character (' ')
-				system_dependent_directories.forth
 			end
 
 			makefile.put_string ("%N%N")
@@ -902,7 +882,6 @@ feature {NONE} -- Translation
 		local
 			lastline: STRING
 			replacement: STRING -- what to replace with
-			dir: STRING -- what directory it should be in (e.g. E1, F1)
 		do
 			debug ("progress")
 				io.put_string ("%Tchange%N")
@@ -960,8 +939,6 @@ feature {NONE} -- Translation
 						io.put_new_line
 					end
 				end
-
-				dir := dependent_directories.item.directory
 			end
 
 
@@ -1370,31 +1347,27 @@ feature {NONE}	-- substitutions
 	subst_objects_redirection (line: STRING)
 			-- Replace all occurences of $objects_redirection with list of objects
 		local
-			l_string, l_dir: STRING
+			l_string: STRING
 			i: INTEGER
 			l_new_line_inserted: BOOLEAN
 		do
 			if line.substring_index ("$objects_redirection", 1) > 0 then
+				across
+					dependent_directories as d
 				from
 					create l_string.make (dependent_directories.count * 10)
-					dependent_directories.start
 					i := 0
-				until
-					dependent_directories.after
 				loop
 					if i \\ 5 = 0 then
 						l_string.append_string ("%Techo ")
 						l_new_line_inserted := True
 					end
-					l_dir := dependent_directories.item.file
-					l_string.append (l_dir)
+					l_string.append (d.item.file)
 					l_string.append_character (' ')
 					if (i + 1) \\ 5 = 0 then
 						l_string.append (" >> $@ %N")
 						l_new_line_inserted := False
 					end
-
-					dependent_directories.forth
 					i := i + 1
 				end
 				if l_new_line_inserted then

@@ -34,7 +34,7 @@ feature -- Initialization
 
 feature -- Command
 
-	set_with_named_file (a_file_name: READABLE_STRING_GENERAL)
+	set_with_named_path (a_file_name: PATH)
 			-- Load pixel data from `a_file_name'.
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
@@ -48,7 +48,7 @@ feature -- Command
 		deferred
 		end
 
-	save_to_named_file (a_file_name: READABLE_STRING_GENERAL)
+	save_to_named_path (a_file_name: PATH)
 			-- Save pixel data to file `a_file_name'.
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty

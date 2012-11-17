@@ -91,16 +91,14 @@ feature -- Basic operation
 		require
 			name_not_void: a_name /= Void
 		local
-			file_name: FILE_NAME
+			file_name: PATH
 			file: RAW_FILE
 		do
 			create Result
-			create file_name.make_from_string (eiffel_layout.bitmaps_path_8)
-			file_name.extend ("png")
-			file_name.extend (a_name + "." + "png")
-			create file.make (file_name.out)
+			file_name := eiffel_layout.bitmaps_path.extended ("png").extended (a_name + "." + "png")
+			create file.make_with_path (file_name)
 			if file.exists then
-				Result.set_with_named_file (file_name.out)
+				Result.set_with_named_path (file_name)
 			else
 				Missing_files.extend (a_name + "." + "png")
 			end

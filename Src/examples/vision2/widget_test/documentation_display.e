@@ -51,8 +51,7 @@ feature -- Status setting
 			-- Actually perform the update of the text.
 		local
 			file_name: STRING
-			directory_name: DIRECTORY_NAME
-			full_filename: FILE_NAME
+			full_filename: PATH
 			file: PLAIN_TEXT_FILE
 			widget: EV_WIDGET
 		do
@@ -60,13 +59,10 @@ feature -- Status setting
 			file_name := class_name (widget)
 			file_name.to_lower
 			file_name.append ("_flatshort.rtf")
-			create directory_name.make_from_string (eiffel_layout.shared_application_path_8)
-			directory_name.extend ("flatshort")
-			create full_filename.make_from_string (directory_name.out)
-			full_filename.extend (file_name)
-			create file.make (full_filename)
+			full_filename := eiffel_layout.shared_application_path.extended ("flatshort").extended (file_name)
+			create file.make_with_path (full_filename)
 			if file.exists then
-				text.set_with_named_file (full_filename)
+				text.set_with_named_path (full_filename)
 			else
 				text.set_text ("Unable to locate the documentation for " + test_widget_type + ".%N%N" + location_error_message)
 			end

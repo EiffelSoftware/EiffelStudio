@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	extract_definition (input_file: STRING)
+	extract_definition (input_file: STRING_32)
 			-- Scans input_file for "#define id integer" and puts them in output_file
 		require
 			input_file_not_void: input_file /= Void
@@ -80,14 +80,14 @@ feature -- Basic operations
 
 feature -- Status report
 
-	file_exists (filename: STRING): BOOLEAN
+	file_exists (filename: STRING_32): BOOLEAN
 			-- Check if a file with filename exists
 		require
 			filename_not_void: filename /= Void
 		local
 			a_file: PLAIN_TEXT_FILE
 		do
-			create a_file.make (filename)
+			create a_file.make_with_name (filename)
 			Result := a_file.exists
 		end
 
@@ -189,14 +189,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

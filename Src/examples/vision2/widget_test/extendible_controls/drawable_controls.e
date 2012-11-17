@@ -13,7 +13,7 @@ inherit
 			initialize,
 			is_in_default_state
 		end
-		
+
 	COMMON_TEST
 		undefine
 			default_create, copy, is_equal
@@ -36,10 +36,12 @@ feature {NONE} -- Initialization
 			if pixmap /= Void then
 				pixmap.set_size (300, 300)
 				pixmap.pointer_button_press_actions.force_extend (agent perform_drawing)
+				widget := pixmap
 			else
 				drawing_area ?= drawable
 				if drawing_area /= Void then
 					drawing_area.pointer_button_press_actions.force_extend (agent perform_drawing)
+					widget := drawing_area
 				else
 					check
 						False
@@ -48,7 +50,7 @@ feature {NONE} -- Initialization
 			end
 			object_editor := editor
 		end
-		
+
 	initialize
 			-- Initialize `Current' and build interface.
 		local
@@ -59,13 +61,13 @@ feature {NONE} -- Initialization
 			list_item: EV_LIST_ITEM
 			label: EV_LABEL
 			cell: EV_CELL
-		do	
+		do
 			set_text ("Drawing operations")
 			create main_vertical_box
 			extend (main_vertical_box)
 			main_vertical_box.set_padding_width (5)
 			main_vertical_box.set_border_width (5)
-			
+
 				-- Add basic controls.
 			create clear_button.make_with_text ("Clear")
 			create horizontal_box
@@ -104,7 +106,7 @@ feature {NONE} -- Initialization
 			horizontal_box.set_padding (5)
 			horizontal_box.disable_item_expand (horizontal_box.i_th (1))
 			horizontal_box.extend (mode_combo)
-			
+
 				-- Add control for line width
 			create line_width.make_with_value_range (create {INTEGER_INTERVAL}.make (1, 40))
 			create horizontal_box
@@ -118,10 +120,10 @@ feature {NONE} -- Initialization
 			horizontal_box.disable_item_expand (horizontal_box.first)
 			line_width.change_actions.force_extend (agent update_line_width)
 			main_vertical_box.extend (horizontal_box)
-			
+
 			update_labels_minimum_width (main_vertical_box)
-			
-			
+
+
 				-- Add drawing operation controls.
 			create operation_frame.make_with_text ("Drawing operation")
 			main_vertical_box.extend (operation_frame)
@@ -159,12 +161,12 @@ feature {NONE} -- Initialization
 			create draw_pie_slice_radio_button.make_with_text ("Draw pie slice")
 			radio_parent.extend (draw_pie_slice_radio_button)
 			draw_pie_slice_radio_button.select_actions.extend (agent setup_draw_pie_slice)
-			
+
 			Precursor {EV_FRAME}
 		end
-		
+
 feature {NONE} -- Implementation
-		
+
 	perform_drawing (x, y: INTEGER)
 			-- A button press has been received by `drawable', so draw appropriate
 			-- figure.
@@ -207,7 +209,7 @@ feature {NONE} -- Implementation
 				select_bad_field
 			end
 		end
-		
+
 	parent_argument_holder (a_radio_button: EV_RADIO_BUTTON)
 			-- Ensure `argument_holder' is parented in the same parent as `a_radio_button',
 			-- at the following position. Also perform adjustment of all labels, so they have the same width:
@@ -225,7 +227,7 @@ feature {NONE} -- Implementation
 			a_parent.put_right (argument_holder)
 			parent_window (Current).unlock_update
 		end
-		
+
 	update_labels_minimum_width (vertical_box: EV_VERTICAL_BOX )
 			-- Update all labels parented at the second level in `box'.
 		local
@@ -261,27 +263,27 @@ feature {NONE} -- Implementation
 					end
 				end
 				vertical_box.forth
-			end	
+			end
 		end
-		
+
 	unparent_argument_holder
 			-- Ensure `argument' holder is not parented and
 			-- remove all items.
 		do
 			parent_window (Current).lock_update
 			if argument_holder.parent /= Void then
-				argument_holder.parent.prune (argument_holder)	
+				argument_holder.parent.prune (argument_holder)
 			end
 			argument_holder.wipe_out
 		end
-		
+
 	setup_draw_pixmap
 			-- initialize controls for drawing pixmaps.
 		do
 			unparent_argument_holder
 			parent_window (Current).unlock_update
 		end
-		
+
 
 	setup_draw_point
 			-- Initialize controls for drawing points.
@@ -289,8 +291,8 @@ feature {NONE} -- Implementation
 			unparent_argument_holder
 			parent_window (Current).unlock_update
 		end
-		
-		
+
+
 	setup_draw_text
 			-- Initialize controls for drawing text.
 		do
@@ -298,7 +300,7 @@ feature {NONE} -- Implementation
 			add_text_entry_with_label ("text : ")
 			parent_argument_holder (text_radio_button)
 		end
-		
+
 	setup_draw_text_top_left
 			-- Initialize controls for drawing text top left.
 		do
@@ -306,7 +308,7 @@ feature {NONE} -- Implementation
 			add_text_entry_with_label ("text : ")
 			parent_argument_holder (text_top_left_radio_button)
 		end
-		
+
 	setup_draw_segment
 			-- Initialize controls for drawing segments.
 		do
@@ -315,7 +317,7 @@ feature {NONE} -- Implementation
 			add_integer_entry_with_label ("y2 pos : ", 2)
 			parent_argument_holder (segment_radio_button)
 		end
-		
+
 	setup_draw_straight_line
 			-- Initialize controls for drawing lines.
 		do
@@ -324,18 +326,18 @@ feature {NONE} -- Implementation
 			add_integer_entry_with_label ("y2 pos : ", 2)
 			parent_argument_holder (straight_line_radio_button)
 		end
-		
+
 	setup_draw_arc
 			-- Initialize controls for drawing arcs.
 		do
 			unparent_argument_holder
 			add_integer_entry_with_label ("Width : ", 1)
-			add_integer_entry_with_label ("Height : ", 2)	
+			add_integer_entry_with_label ("Height : ", 2)
 			add_real_entry_with_label ("Start angle : ", 1)
 			add_real_entry_with_label ("Aperture : ", 2)
 			parent_argument_holder (draw_arc_radio_button)
 		end
-		
+
 	setup_draw_rectangle
 			-- Initialize controls for drawing rectangles.
 		do
@@ -345,7 +347,7 @@ feature {NONE} -- Implementation
 			add_fill_button
 			parent_argument_holder (draw_rectangle_radio_button)
 		end
-		
+
 	setup_draw_ellipse
 			-- Initialize controls for drawing ellipses.
 		do
@@ -355,14 +357,14 @@ feature {NONE} -- Implementation
 			add_fill_button
 			parent_argument_holder (draw_ellipse_radio_button)
 		end
-		
-		
+
+
 	setup_draw_pie_slice
 			-- Initialize controls for drawing pie slices.
-		do	
+		do
 			unparent_argument_holder
 			add_integer_entry_with_label ("Width : ", 1)
-			add_integer_entry_with_label ("Height : ", 2)	
+			add_integer_entry_with_label ("Height : ", 2)
 			add_real_entry_with_label ("Start angle : ", 1)
 			add_real_entry_with_label ("Aperture : ", 2)
 			add_fill_button
@@ -374,28 +376,28 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_with_text ("Sample Text")
 		end
-		
+
 	integer1: EV_TEXT_FIELD
 			-- Once access to a text field for inputting INTEGER values.
 		once
 			create Result.make_with_text (default_integer_value.out)
 			Result.change_actions.extend (agent validate_integer (Result))
 		end
-		
+
 	integer2: EV_TEXT_FIELD
 			-- Once access to a text field for inputting INTEGER values.
 		once
 			create Result.make_with_text (default_integer_value.out)
 			Result.change_actions.extend (agent validate_integer (Result))
 		end
-		
+
 	real1: EV_TEXT_FIELD
 			-- Once access to a text field for inputting REAL values.
 		once
 			create Result.make_with_text (default_real_value.out)
 			Result.change_actions.extend (agent validate_real (Result))
 		end
-		
+
 	real2: EV_TEXT_FIELD
 			-- Once access to a text field for inputting REAL values.
 		once
@@ -411,7 +413,7 @@ feature {NONE} -- Implementation
 			Result.select_actions.extend (agent update_tiled_button)
 			Result.remove_text
 		end
-		
+
 	tiled_check_button: EV_CHECK_BUTTON
 			-- Once access to a check button control filled status
 			-- for drawing operations.
@@ -421,7 +423,7 @@ feature {NONE} -- Implementation
 			Result.select_actions.extend (agent update_tiled_status)
 			Result.remove_text
 		end
-		
+
 	fields_valid: BOOLEAN
 			-- Are all input fields holding valid information?
 		do
@@ -439,19 +441,19 @@ feature {NONE} -- Implementation
 				Result := False
 			end
 		end
-		
+
 	red: EV_COLOR
 			-- Once access to red EV_COLOR.
 		once
 			Result := (create {EV_STOCK_COLORS}).red
 		end
-		
+
 	black: EV_COLOR
 			-- Once access to black EV_COLOR.
 		once
 			Result := (create {EV_STOCK_COLORS}).black
 		end
-		
+
 	validate_real (text_field: EV_TEXT_FIELD)
 			--
 		do
@@ -461,7 +463,7 @@ feature {NONE} -- Implementation
 				text_field.set_foreground_color (red)
 			end
 		end
-		
+
 	validate_integer (text_field: EV_TEXT_FIELD)
 			--
 		do
@@ -488,8 +490,8 @@ feature {NONE} -- Implementation
 				real2.set_focus
 			end
 		end
-		
-	
+
+
 feature -- Status report
 
 	help: STRING
@@ -504,7 +506,7 @@ feature {NONE} -- Contract support
 			-- Is `Current' in its default state?
 			-- (export status {NONE})
 		do
-			Result := True	
+			Result := True
 		end
 
 feature {NONE} -- Implementation
@@ -517,13 +519,13 @@ feature {NONE} -- Implementation
 			create information_dialog.make_with_text (help)
 			information_dialog.show_modal_to_window (parent_window (Current))
 		end
-		
+
 	update_line_width
 			-- Update width of line used on `drawable' to value of `line_width'.
 		do
 			drawable.set_line_width (line_width.value)
 		end
-		
+
 
 	update_tiled_status
 			-- Update `drawable' to use tiling dependent on state
@@ -535,7 +537,7 @@ feature {NONE} -- Implementation
 				drawable.remove_tile
 			end
 		end
-		
+
 	update_tiled_button
 			-- Update status of `tiled_check_button' to reflect usability, dependent
 			-- on state of `filled_check_button'.
@@ -567,7 +569,7 @@ feature {NONE} -- Implementation
 			end
 			argument_holder.extend (horizontal_box)
 		end
-		
+
 	add_integer_entry_with_label (a_text: STRING; entry_number: INTEGER)
 			-- Add an integer entry field based on `entry_number' and label marked `a_text'
 			-- to `argument_holder'.
@@ -596,7 +598,7 @@ feature {NONE} -- Implementation
 			end
 			argument_holder.extend (horizontal_box)
 		end
-		
+
 	add_real_entry_with_label (a_text: STRING; entry_number: INTEGER)
 			-- Add a real entry field based on `entry_number' and label marked `a_text'
 			-- to `argument_holder'.
@@ -625,7 +627,7 @@ feature {NONE} -- Implementation
 			end
 			argument_holder.extend (horizontal_box)
 		end
-		
+
 	add_fill_button
 			-- Add `filled_check_button' to `argument_holder',
 			-- at first position.
@@ -645,7 +647,7 @@ feature {NONE} -- Implementation
 			horizontal_box.disable_item_expand (horizontal_box.first)
 			horizontal_box.extend (filled_check_button)
 			argument_holder.put_left (horizontal_box)
-			
+
 			if tiled_check_button.parent /= Void then
 				tiled_check_button.parent.prune (tiled_check_button)
 			end
@@ -658,35 +660,35 @@ feature {NONE} -- Implementation
 			horizontal_box.disable_item_expand (horizontal_box.first)
 			horizontal_box.extend (tiled_check_button)
 			argument_holder.put_right (horizontal_box)
-		end	
+		end
 
 	point_radio_button, text_radio_button, text_top_left_radio_button,
 	segment_radio_button, straight_line_radio_button, draw_arc_radio_button,
 	draw_rectangle_radio_button, draw_ellipse_radio_button,
 	draw_pie_slice_radio_button, pixmap_radio_button: EV_RADIO_BUTTON
-	
+
 	help_button: EV_BUTTON
-	
+
 	argument_holder: EV_VERTICAL_BOX
-	
+
 	radio_parent: EV_VERTICAL_BOX
-	
+
 	mode_combo: EV_COMBO_BOX
-	
+
 	line_width: EV_SPIN_BUTTON
 		-- A control to determine the width of lines used on `drawable'.
 
 	drawable: EV_DRAWABLE
 		-- The item on which operations must take place.
-		
+
 	object_editor: GB_OBJECT_EDITOR
 		-- An object editor currently holding `current_type'. This
 		-- must be updated to account for any changes.
-		
+
 	default_integer_value: INTEGER = 100
-	
+
 	default_real_value: REAL = 3.0
-	
+
 	test_pixmap: EV_PIXMAP
 			-- Pixmap for drawing operations.
 		once

@@ -30,52 +30,30 @@ feature {NONE} -- Initialization
 		do
 			wel_make
 			set_filter ("*.*")
-			start_directory := "."
+			create start_path.make_current
 			create filters.make (1)
 			set_is_initialized (True)
 		end
 
 feature -- Access
 
-	file_name: STRING_32
-			-- Full name of currently selected file including path.
+	full_file_path: PATH
+			-- Full path name of currently selected file including path.
 		do
 			if selected then
-				Result := wel_file_name
+				Result := wel_file_path
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		end
 
 	filter: STRING_32
 			-- Filter currently applied to file list.
 
-	start_directory: STRING_32
+	start_path: PATH
 			-- Base directory where browsing will start.
 
 feature -- Status report
-
-	file_title: STRING_32
-			-- `file_name' without its path.
-		do
-			Result := file_name
-			if not Result.is_empty then
-				Result := Result.substring (
-					Result.last_index_of ('\', Result.count) + 1,
-					Result.count)
-			end
-		end
-
-	file_path: STRING_32
-			-- Path of `file_name'.
-		do
-			Result := file_name
-			if not Result.is_empty then
-				Result := Result.substring (
-					1,
-					Result.last_index_of ('\', Result.count) - 1)
-			end
-		end
 
 	selected_filter_index: INTEGER
 			-- One based index of selected filter within `filters', or
@@ -119,17 +97,16 @@ feature -- Element change
 			wel_set_filter_index (0)
 		end
 
-	set_file_name (a_name: READABLE_STRING_GENERAL)
-			-- Make `a_name' the selected file.
+	set_full_file_path (a_path: PATH)
 		do
-			wel_set_file_name (a_name)
+			wel_set_file_path (a_path)
 		end
 
-	set_start_directory (a_path: READABLE_STRING_GENERAL)
+	set_start_path (a_path: PATH)
 			-- Make `a_path' the base directory.
 		do
-			start_directory := a_path.as_string_32.twin
-			wel_set_initial_directory (a_path)
+			start_path := a_path
+			wel_set_initial_path (a_path)
 		end
 
 feature {NONE} -- Implementation
@@ -204,11 +181,11 @@ feature -- Deferred
 		deferred
 		end
 
-	wel_file_name: STRING_32
+	wel_file_path: PATH
 		deferred
 		end
 
-	wel_set_file_name (a_file_name: READABLE_STRING_GENERAL)
+	wel_set_file_path (a_filepath: PATH)
 		deferred
 		end
 
@@ -220,7 +197,7 @@ feature -- Deferred
 		deferred
 		end
 
-	wel_set_initial_directory (a_directory: READABLE_STRING_GENERAL)
+	wel_set_initial_path (a_directory: PATH)
 		deferred
 		end
 
@@ -229,14 +206,14 @@ feature -- Deferred
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

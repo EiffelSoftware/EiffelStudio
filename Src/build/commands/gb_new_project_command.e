@@ -74,7 +74,7 @@ feature -- Basic operations
 				settings: GB_PROJECT_SETTINGS
 				dialog: EV_DIRECTORY_DIALOG
 				raw_file: RAW_FILE
-				file_name: FILE_NAME
+				file_name: PATH
 				created_project: BOOLEAN
 				conf_dialog, directory_conf: EV_CONFIRMATION_DIALOG
 				create_project, cancelled: BOOLEAN
@@ -92,9 +92,8 @@ feature -- Basic operations
 					end
 						-- If a directory was chosen.
 					if not cancelled then
-						create file_name.make_from_string (dialog.directory)
-						file_name.extend (Project_filename)
-						create raw_file.make (file_name)
+						file_name := dialog.path.extended (Project_filename)
+						create raw_file.make_with_path (file_name)
 						if raw_file.exists then
 							create conf_dialog.make_with_text (Project_exists_warning)
 							conf_dialog.set_icon_pixmap (Icon_build_window @ 1)
@@ -104,7 +103,7 @@ feature -- Basic operations
 							end
 						end
 						if create_project then
-							create directory.make (dialog.directory)
+							create directory.make_with_path (dialog.path)
 							if not directory.exists then
 								create directory_conf.make_with_text (Directory_exists_warning)
 								directory_conf.set_icon_pixmap (Icon_build_window @ 1)

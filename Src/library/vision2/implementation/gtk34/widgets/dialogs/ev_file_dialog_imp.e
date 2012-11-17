@@ -22,6 +22,8 @@ inherit
 			show_modal_to_window
 		end
 
+	PATH_HANDLER
+
 feature {NONE} -- Initialization
 
 	old_make (an_interface: like interface)
@@ -64,24 +66,29 @@ feature {NONE} -- Initialization
 				Void
 			)
 			enable_closeable
-			set_start_directory (App_implementation.current_working_directory)
+			set_start_path (App_implementation.current_working_path)
 			set_is_initialized (True)
 		end
 
 feature -- Access
 
-	file_name: STRING_32
+	full_file_path: PATH
 			-- Full name of currently selected file including path.
 		local
-			a_cs: EV_GTK_C_STRING
+			l_filename: POINTER
 		do
 			if
 				attached selected_button as l_selected_button and then l_selected_button.is_equal (internal_accept)
 			then
-				create a_cs.share_from_pointer ({GTK2}.gtk_file_chooser_get_filename (c_object))
-				Result := a_cs.string
+				l_filename := {GTK2}.gtk_file_chooser_get_filename (c_object)
+				if l_filename /= default_pointer then
+					create Result.make_from_pointer (l_filename)
+					{GTK}.g_free (l_filename)
+				else
+					create Result.make_empty
+				end
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		end
 
@@ -111,33 +118,8 @@ feature -- Access
 
 		end
 
-	start_directory: STRING_32
+	start_path: PATH
 			-- Base directory where browsing will start.
-
-feature -- Status report
-
-	file_title: STRING_32
-			-- `file_name' without its path.
-		do
-			if not file_name.is_empty then
-				Result := file_name.mirrored
-				Result.keep_head (Result.index_of ('/', 1) - 1)
-				Result.mirror
-			else
-				Result := ""
-			end
-		end
-
-	file_path: STRING_32
-			-- Path of `file_name'.
-		do
-			if not file_name.is_empty then
-				Result := file_name.twin
-				Result.keep_head (Result.count - Result.mirrored.index_of ('/', 1) + 1)
-			else
-				Result := ""
-			end
-		end
 
 feature -- Element change
 
@@ -183,26 +165,23 @@ feature -- Element change
 			{GTK2}.gtk_file_chooser_add_filter (c_object, a_filter_ptr)
 		end
 
-	set_file_name (a_name: READABLE_STRING_GENERAL)
+	set_full_file_path (a_path: PATH)
 			-- Make `a_name' the selected file.
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			a_cs := a_name
+			create a_cs.make_from_path (a_path)
 			{GTK2}.gtk_file_chooser_set_filename (c_object, a_cs.item)
 		end
 
-	set_start_directory (a_path: READABLE_STRING_GENERAL)
+	set_start_path (a_path: PATH)
 			-- Make `a_path' the base directory.
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			start_directory := a_path.as_string_32.twin
-			a_cs := start_directory + "/"
-			{GTK2}.gtk_file_chooser_set_current_folder (
-				c_object,
-				a_cs.item
-			)
+			start_path := a_path
+			create a_cs.make_from_path (a_path)
+			{GTK2}.gtk_file_chooser_set_current_folder (c_object, a_cs.item)
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -210,21 +189,18 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 	on_ok
 			-- The user has requested that the dialog be activated.
 		local
-			temp_filename: STRING_32
+			temp_filename: PATH
 			temp_file: RAW_FILE
 			a_filename: POINTER
-			a_cs: EV_GTK_C_STRING
 		do
-			create temp_filename.make (0)
 			a_filename := {GTK2}.gtk_file_chooser_get_filename (c_object)
 			if a_filename /= NULL then
-				create a_cs.share_from_pointer (a_filename)
-				temp_filename := a_cs.string
-				create temp_file.make (temp_filename.as_string_8)
-				if (not temp_file.exists or else not temp_file.is_directory) and not
-						temp_filename.item (temp_filename.count).is_equal ('/') then
+				create temp_filename.make_from_pointer (a_filename)
+				create temp_file.make_with_path (temp_filename)
+				if (not temp_file.exists or else not temp_file.is_directory) then
 					Precursor {EV_STANDARD_DIALOG_IMP}
 				end
+				{GTK}.g_free (a_filename)
 			end
 		end
 
@@ -313,14 +289,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_FILE_DIALOG note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_FILE_DIALOG_IMP

@@ -64,7 +64,7 @@ feature {NONE} -- Implementation
 				valid_directory or cancelled
 			loop
 				directory_dialog.show_modal_to_window (Current)
-				create directory.make (directory_dialog.directory)
+				create directory.make_with_path (directory_dialog.path)
 				if directory.exists then
 					valid_directory := True
 				elseif Directory_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			if not cancelled then
-				directory_display.set_text (Directory_dialog.directory)
+				directory_display.set_text (Directory_dialog.path.name)
 				ok_button.enable_sensitive
 			else
 				directory_display.remove_text
@@ -88,30 +88,30 @@ feature {NONE} -- Implementation
 			-- Called by `select_actions' of `ok_button'.
 		local
 			directory: DIRECTORY
-			contents: ARRAYED_LIST [STRING]
+			contents: ARRAYED_LIST [PATH]
 			clashing_files: STRING
 			warning_dialog: WARNING_DIALOG
 			supress_generation: BOOLEAN
 		do
 			create directory.make (directory_display.text)
-			contents := directory.linear_representation
+			contents := directory.entries
 			contents.compare_objects
 			clashing_files := ""
-			if contents.has (Ace_file_name) then
+			if contents.has (create {PATH}.make_from_string (Ace_file_name)) then
 				clashing_files := Ace_file_name + "%N"
 			end
-			if contents.has (Application_file_name) then
+			if contents.has (create {PATH}.make_from_string (Application_file_name)) then
 				clashing_files := clashing_files + Application_file_name + "%N"
 			end
-			if contents.has (Common_test_file_name) then
+			if contents.has (create {PATH}.make_from_string (Common_test_file_name)) then
 				clashing_files := clashing_files + Common_test_file_name + "%N"
 			end
-			if contents.has (Test_controller.selected_test_name + ".e") then
+			if contents.has (create {PATH}.make_from_string (Test_controller.selected_test_name + ".e")) then
 				clashing_files := clashing_files + Test_controller.selected_test_name + ".e" + "%N"
 			end
 
 			if not clashing_files.is_empty then
-				clashing_files := "Conflict found in directory " + directory.name +
+				clashing_files := "Conflict found in directory " + directory.path.name +
 				"%NThe following files already exist:%N%N" + clashing_files +
 				"%N%NDo you wish to overwrite these files?"
 				create warning_dialog.make_with_text (clashing_files)

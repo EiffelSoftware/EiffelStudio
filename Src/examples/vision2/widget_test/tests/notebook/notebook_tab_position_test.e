@@ -7,13 +7,13 @@ note
 
 class
 	NOTEBOOK_TAB_POSITION_TEST
-	
+
 inherit
 	COMMON_TEST
 		redefine
 			default_create
 		end
-		
+
 feature {NONE} -- Initialization
 
 	default_create
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 				create button.make_with_text ("Button : " + item_counter.out)
 				notebook.extend (button)
 				notebook.set_item_text (button, item_counter.out)
-					
+
 					-- Create an EV_LIST_ITEM and add to `combo_box'
 				create list_item.make_with_text (item_texts @ item_counter)
 				combo_box.extend (list_item)
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 				item_counter := item_counter + 1
 			end
-			
+
 			create vertical_box
 			vertical_box.extend (notebook)
 			vertical_box.extend (combo_box)
@@ -53,20 +53,20 @@ feature {NONE} -- Initialization
 
 			widget := vertical_box
 		end
-	
+
 feature {NONE} -- Implementation
 
 	item_texts: ARRAY [STRING]
 			-- Access to all strings for combo box entries.
 		once
-			create Result.make (1, 4)
+			create Result.make_filled ("", 1, 4)
 			Result := <<"Tab_position_top", "Tab_position_bottom", "Tab_position_left", "Tab_position_right">>
 		end
-		
+
 	tab_position_constants: ARRAY [INTEGER]
 			-- Tab position constants, matching `item_texts'.
 		once
-			create Result.make (1, 4)
+			create Result.make_filled (0, 1, 4)
 			Result.put (notebook.Tab_top, 1)
 			Result.put (notebook.Tab_bottom, 2)
 			Result.put (notebook.Tab_left, 3)

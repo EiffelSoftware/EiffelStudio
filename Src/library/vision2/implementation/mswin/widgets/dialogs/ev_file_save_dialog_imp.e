@@ -25,10 +25,12 @@ inherit
 		rename
 			make as wel_make,
 			file_name as wel_file_name,
+			file_path as wel_file_path,
 			set_file_name as wel_set_file_name,
+			set_file_path as wel_set_file_path,
 			set_filter as wel_set_filter,
 			set_filter_index as wel_set_filter_index,
-			set_initial_directory as wel_set_initial_directory,
+			set_initial_path as wel_set_initial_path,
 			file_title as wel_file_title,
 			dispose as destroy
 		end
@@ -140,14 +142,14 @@ feature {EV_ANY_I}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

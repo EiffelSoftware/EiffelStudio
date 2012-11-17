@@ -51,7 +51,7 @@ feature -- Initialization
 			hsep: EV_HORIZONTAL_SEPARATOR
 			ok_button: EV_BUTTON
 			white_cell: EV_CELL
-			file_name: FILE_NAME
+			file_name: PATH
 			file: RAW_FILE
 		do
 			default_create
@@ -60,12 +60,10 @@ feature -- Initialization
 
 				-- Create controls.
 			create eiffel_image
-			create file_name.make_from_string (eiffel_layout.bitmaps_path_8)
-			file_name.extend ("png")
-			file_name.extend ("bm_about.png")
-			create file.make (file_name)
+			file_name := eiffel_layout.bitmaps_path.extended ("png").extended ("bm_about.png")
+			create file.make_with_path (file_name)
 			if file.exists then
-				eiffel_image.set_with_named_file (file_name.out)
+				eiffel_image.set_with_named_path (file_name)
 				eiffel_image.set_minimum_size (eiffel_image.width, eiffel_image.height)
 				eiffel_image.set_background_color (White)
 			end

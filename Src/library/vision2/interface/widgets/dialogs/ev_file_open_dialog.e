@@ -49,10 +49,23 @@ feature -- Status report
 	file_names: ARRAYED_LIST [STRING_32]
 			-- Full names of currently selected files including path.
 			-- No particular order is guaranteed.
+		obsolete
+			"Use `file_paths' instead."
 		require
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.file_names
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	file_paths: ARRAYED_LIST [PATH]
+			-- Full paths of currently selected files.
+			-- No particular order is guaranteed.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.file_paths
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -93,25 +106,16 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	file_name_consistent_with_file_names: not file_names.is_empty implies file_names.first.is_equal (file_name)
+	full_file_path_consistent_with_file_paths: not file_paths.is_empty implies file_paths.first.is_equal (full_file_path)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-end -- class EV_FILE_OPEN_DIALOG
-
-
-
-
-
+end

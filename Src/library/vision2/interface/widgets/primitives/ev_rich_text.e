@@ -457,11 +457,13 @@ feature -- Status setting
 
 	save_to_named_file (a_filename: READABLE_STRING_GENERAL)
 			-- Save `text' and formatting of `Current' to file `a_filename' in RTF format.
+		obsolete
+			"Use `save_to_named_path' instead."
 		require
 			not_destroyed: not is_destroyed
 			filename_not_void: a_filename /= Void
 		do
-			implementation.save_to_named_file (a_filename)
+			save_to_named_path (create {PATH}.make_from_string (a_filename))
 		ensure
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position
@@ -471,11 +473,43 @@ feature -- Status setting
 
 	set_with_named_file (a_filename: READABLE_STRING_GENERAL)
 			-- Set `text' and formatting of `Current' from file `a_filename' in RTF format.
+		obsolete
+			"Use `set_with_named_path' instead."
 		require
 			not_destroyed: not is_destroyed
 			filename_not_void: a_filename /= Void
 		do
-			implementation.set_with_named_file (a_filename)
+			set_with_named_path (create {PATH}.make_from_string (a_filename))
+		ensure
+			caret_reset_if_successful: last_load_successful implies caret_position = 1
+			unselected_if_successful: last_load_successful implies not has_selection
+			text_not_changed_if_failed: not last_load_successful implies old text.is_equal (text)
+			caret_not_moved_if_failed: not last_load_successful implies caret_position = old caret_position
+			selection_not_changed_if_failed: not last_load_successful implies (old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end)
+		end
+
+	save_to_named_path (a_pathname: PATH)
+			-- Save `text' and formatting of `Current' to path `a_pathname' in RTF format.
+		require
+			not_destroyed: not is_destroyed
+			pathname_not_void: a_pathname /= Void
+		do
+			implementation.save_to_named_path (a_pathname)
+		ensure
+			text_not_changed: text.is_equal (old text)
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
+		end
+
+	set_with_named_path (a_pathname: PATH)
+			-- Set `text' and formatting of `Current' from path `a_pathname' in RTF format.
+		require
+			not_destroyed: not is_destroyed
+			pathname_not_void: a_pathname /= Void
+		do
+			implementation.set_with_named_path (a_pathname)
 		ensure
 			caret_reset_if_successful: last_load_successful implies caret_position = 1
 			unselected_if_successful: last_load_successful implies not has_selection
@@ -511,14 +545,14 @@ invariant
 	buffer_locked_in_a_single_mode: not (buffer_locked_in_append_mode and buffer_locked_in_format_mode)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

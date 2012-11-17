@@ -20,14 +20,26 @@ feature -- Access
 	file_name: STRING_32
 			-- Full name of currently selected file including path.
 			-- `empty' if user did not click "OK".
+		obsolete
+			"Use `full_file_path' instead."
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.file_name
+			Result := full_file_path.name
 		ensure
 			file_name_not_void: Result /= Void
-			bridge_ok: not Result.is_empty implies
-				Result.is_equal (implementation.file_name)
+		end
+
+	full_file_path: PATH
+			-- Full path of currently selected file including path.
+			-- `empty' is used did not click "OK".
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.full_file_path
+		ensure
+			full_file_path_not_void: Result /= Void
+			bridge_ok: not Result.is_empty implies Result ~ implementation.full_file_path
 		end
 
 	filter: STRING_32
@@ -59,12 +71,22 @@ feature -- Access
 
 	start_directory: STRING_32
 			-- Base directory where browsing will start.
+		obsolete
+			"Use `start_path' instead."
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.start_directory
+			Result := start_path.name
+		end
+
+	start_path: PATH
+			-- Base directory where browsing will start.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.start_path
 		ensure
-			bridge_ok: Result.is_equal (implementation.start_directory)
+			bridge_ok: Result.is_equal (implementation.start_path)
 		end
 
 feature -- Status report
@@ -72,27 +94,35 @@ feature -- Status report
 	file_title: STRING_32
 			-- `file_name' without its path.
 			-- is_empty if user did not click "OK".
+		obsolete
+			"Use `full_file_path.entry' instead."
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.file_title
+			if attached full_file_path.entry as l_entry then
+				Result := l_entry.name
+			else
+				Result := ""
+			end
 		ensure
 			file_title_not_void: Result /= Void
-			bridge_ok: not Result.is_empty implies
-				Result.is_equal (implementation.file_title)
 		end
 
 	file_path: STRING_32
 			-- Path of `file_name'.
 			-- is_empty if user did not click "OK".
+		obsolete
+			"Use `full_file_path.parent' instead."
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.file_path
+			if attached full_file_path.parent as l_parent then
+				Result := l_parent.name
+			else
+				Result := ""
+			end
 		ensure
 			file_path_not_void: Result /= Void
-			bridge_ok: not Result.is_empty implies
-				Result.is_equal (implementation.file_path)
 		end
 
 	selected_filter_index: INTEGER
@@ -123,25 +153,51 @@ feature -- Element change
 
 	set_file_name (a_name: READABLE_STRING_GENERAL)
 			-- Make `a_name' the selected file.
+		obsolete
+			"Use `set_full_file_path' instead."
 		require
 			not_destroyed: not is_destroyed
 			a_name_not_void: a_name /= Void
 			valid_file_name: valid_file_name (a_name)
 		do
-			implementation.set_file_name (a_name)
+			set_full_file_path (create {PATH}.make_from_string (a_name))
 		ensure
 			assigned: not file_name.is_empty implies file_name.same_string_general (a_name)
 		end
 
+	set_full_file_path (a_path: PATH)
+			-- Make `a_path' the selected file.
+		require
+			not_destroyed: not is_destroyed
+			a_path_not_void: a_path /= Void
+		do
+			implementation.set_full_file_path (a_path)
+		ensure
+			assigned: full_file_path ~ a_path
+		end
+
 	set_start_directory (a_path: READABLE_STRING_GENERAL)
+			-- Make `a_path' the base directory.
+		obsolete
+			"Use `set_start_path' instead."
+		require
+			not_destroyed: not is_destroyed
+			a_path_not_void: a_path /= Void
+		do
+			set_start_path (create {PATH}.make_from_string (a_path))
+		ensure
+			assigned: start_directory.same_string_general (a_path)
+		end
+
+	set_start_path (a_path: PATH)
 			-- Make `a_path' the base directory.
 		require
 			not_destroyed: not is_destroyed
 			a_path_not_void: a_path /= Void
 		do
-			implementation.set_start_directory (a_path)
+			implementation.set_start_path (a_path)
 		ensure
-			assigned: start_directory.same_string_general (a_path)
+			assigned: start_path ~ a_path
 		end
 
 feature -- Contract Support
@@ -178,21 +234,19 @@ feature {EV_ANY, EV_ANY_I} -- implementation
 
 invariant
 	filters_not_void: filters /= Void
-	start_directory_not_void: start_directory /= Void
-	file_name_not_void_implies_path_and_title_not_void: file_name /= Void
-		implies (file_title /= Void and then file_path /= Void)
-	valid_file_name: file_name /= Void implies valid_file_name (file_name)
-	valid_file_title: file_title /= Void implies valid_file_title (file_title)
+	start_directory_not_void: start_path /= Void
+	full_file_path_not_void_implies_path_and_title_not_void: full_file_path /= Void
+		implies (full_file_path.entry /= Void and then full_file_path.parent /= Void)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

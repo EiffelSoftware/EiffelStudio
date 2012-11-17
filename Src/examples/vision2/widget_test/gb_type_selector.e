@@ -91,18 +91,16 @@ feature {NONE} -- Implementation
 		require
 			a_type_not_void: a_type /= Void
 		local
-			filename: FILE_NAME
+			filename: PATH
 			extension: STRING
 			file: RAW_FILE
 		do
 			extension := "png"
-			create filename.make_from_string (eiffel_layout.bitmaps_path_8)
-			filename.extend (extension)
-			filename.extend (a_type.as_lower + "." + extension)
-			create file.make (filename.out)
+			filename := eiffel_layout.bitmaps_path.extended (extension).extended (a_type.as_lower + "." + extension)
+			create file.make_with_path (filename)
 			if file.exists then
 				create Result
-				Result.set_with_named_file (filename.out)
+				Result.set_with_named_path (filename)
 			else
 			Missing_files.extend (a_type.as_lower + "." + extension)
 			end

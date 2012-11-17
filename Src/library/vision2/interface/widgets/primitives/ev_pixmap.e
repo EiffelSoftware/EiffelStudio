@@ -131,7 +131,7 @@ feature {EV_ANY} -- Contract support
 
 feature {EV_BUILDER} -- Access
 
-	pixmap_path: detachable STRING_32
+	pixmap_path: detachable PATH
 		-- Path of `pixmap'.
 
 	pixmap_exists: BOOLEAN
@@ -155,31 +155,42 @@ feature {EV_BUILDER} -- Status setting
 			pixmap_exists_set: not pixmap_exists
 		end
 
-	set_pixmap_path (a_path: detachable READABLE_STRING_GENERAL)
+	set_pixmap_path (a_path: like pixmap_path)
 			-- Assign `a_path' to `pixmap_path'.
 		do
-			if a_path = Void then
-				pixmap_path := Void
-			else
-				pixmap_path := a_path.as_string_32
-			end
+			pixmap_path := a_path
 		ensure
-			pixmap_path_set: a_path /= Void implies (attached pixmap_path as l_pixmap_path and then l_pixmap_path.same_string_general (a_path))
+			pixmap_path_set: pixmap_path = a_path
 		end
 
 feature -- Status setting
 
-	set_with_named_file (file_name: READABLE_STRING_GENERAL)
+	set_with_named_path (a_path: PATH)
 			-- Attempt to load pixmap data from a file specified by `file_name'.
 			-- May raise `Ev_unknown_image_format' or `Ev_corrupt_image_data'
 			-- exceptions.
 			-- See `supported_image_formats' in EV_ENVIRONMENT for valid file formats.
 		require
 			not_destroyed: not is_destroyed
+			a_path_not_void: a_path /= Void
+			a_pathnot_empty: not a_path.is_empty
+		do
+			implementation.read_from_named_path (a_path)
+		end
+
+	set_with_named_file (file_name: READABLE_STRING_GENERAL)
+			-- Attempt to load pixmap data from a file specified by `file_name'.
+			-- May raise `Ev_unknown_image_format' or `Ev_corrupt_image_data'
+			-- exceptions.
+			-- See `supported_image_formats' in EV_ENVIRONMENT for valid file formats.
+		obsolete
+			"Use `set_with_named_path' instead."
+		require
+			not_destroyed: not is_destroyed
 			file_name_not_void: file_name /= Void
 			file_name_not_empty: not file_name.is_empty
 		do
-			implementation.read_from_named_file (file_name)
+			set_with_named_path (create {PATH}.make_from_string (file_name))
 		end
 
 	set_size (a_width, a_height: INTEGER)
@@ -236,14 +247,26 @@ feature -- Status setting
 
 feature -- Duplication
 
+	save_to_named_path (a_format: EV_GRAPHICAL_FORMAT; a_filepath: PATH)
+			-- Save `Current' to `a_filepath' in format `a_format'.
+		require
+			not_destroyed: not is_destroyed
+			a_format_not_void: a_format /= Void
+			a_filepath_not_void: a_filepath /= Void
+		do
+			implementation.save_to_named_path (a_format, a_filepath)
+		end
+
 	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: READABLE_STRING_GENERAL)
 			-- Save `Current' to `a_filename' in format `a_format'.
+		obsolete
+			"Use `save_to_named_path' instead."
 		require
 			not_destroyed: not is_destroyed
 			a_format_not_void: a_format /= Void
 			a_filename_not_void: a_filename /= Void
 		do
-			implementation.save_to_named_file (a_format, a_filename)
+			save_to_named_path (a_format, create {PATH}.make_from_string (a_filename))
 		end
 
 	copy (other: like Current)
@@ -276,14 +299,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

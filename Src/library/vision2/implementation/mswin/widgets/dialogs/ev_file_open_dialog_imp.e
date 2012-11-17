@@ -23,17 +23,19 @@ inherit
 			copy, is_equal
 		redefine
 			interface,
-			file_name
+			full_file_path
 		end
 
 	WEL_OPEN_FILE_DIALOG
 		rename
 			make as wel_make,
 			file_name as wel_file_name,
+			file_path as wel_file_path,
 			set_file_name as wel_set_file_name,
+			set_file_path as wel_set_file_path,
 			set_filter as wel_set_filter,
 			set_filter_index as wel_set_filter_index,
-			set_initial_directory as wel_set_initial_directory,
+			set_initial_path as wel_set_initial_path,
 			file_title as wel_file_title,
 			dispose as destroy
 		end
@@ -43,14 +45,14 @@ create
 
 feature -- Status report
 
-	file_name: STRING_32
+	full_file_path: PATH
 			-- Full name of currently selected file including path.
 		do
-			if multiple_selection_enabled and then not file_names.is_empty then
-					-- It appears that if multiple files are selected, `file_name'
+			if multiple_selection_enabled and then not file_paths.is_empty then
+					-- It appears that if multiple files are selected, `full_file_path'
 					-- returns the path of the files. Therefore, we must retrieve the
 					-- first of the file names.
-				Result := file_names.first
+				Result := file_paths.first
 			else
 				Result := Precursor {EV_FILE_DIALOG_IMP}
 			end
@@ -64,6 +66,8 @@ feature -- Status report
 
 	file_names: ARRAYED_LIST [STRING_32]
 			-- Full names of currently selected files including path.
+		obsolete
+			"Use `file_paths' instead."
 		local
 			l_result: detachable ARRAYED_LIST [STRING_32]
 		do
@@ -72,9 +76,28 @@ feature -- Status report
 			else
 					-- If there is no multiple selection, simply copy `file_name' into `Result'.
 				create l_result.make (1)
-				if not file_name.is_empty then
+				if not full_file_path.is_empty then
 						-- if `file_name' is empty then cancel was selected and `Result' must be empty.
-					l_result.extend (file_name.twin)
+					l_result.extend (full_file_path.string_representation)
+				end
+			end
+			check l_result /= Void end
+			Result := l_result
+		end
+
+	file_paths: ARRAYED_LIST [PATH]
+			-- Full names of currently selected files including path.
+		local
+			l_result: detachable ARRAYED_LIST [PATH]
+		do
+			if multiple_selection_enabled then
+				l_result := multiple_file_paths
+			else
+					-- If there is no multiple selection, simply copy `file_name' into `Result'.
+				create l_result.make (1)
+				if not full_file_path.is_empty then
+						-- if `file_name' is empty then cancel was selected and `Result' must be empty.
+					l_result.extend (full_file_path.twin)
 				end
 			end
 			check l_result /= Void end
@@ -203,14 +226,14 @@ feature {EV_ANY, EV_ANY_I}
 	interface: detachable EV_FILE_OPEN_DIALOG note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

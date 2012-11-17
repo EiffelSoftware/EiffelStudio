@@ -8,7 +8,7 @@ note
 
 class
 	GB_EV_PIXMAPABLE
-	
+
 	-- The following properties from EV_PIXMAPABLE are manipulated by `Current'.
 	-- Pixmap - Performed on the real object and the display_object.
 
@@ -21,12 +21,12 @@ inherit
 		end
 
 	GB_EV_PIXMAPABLE_EDITOR_CONSTRUCTOR
-		
+
 	GB_SHARED_DEFERRED_BUILDER
 		undefine
 			default_create
 		end
-		
+
 feature {GB_XML_STORE} -- Output
 
 	generate_xml (element: XM_ELEMENT)
@@ -38,11 +38,11 @@ feature {GB_XML_STORE} -- Output
 				if objects.first.internal_pixmap_path = Void then
 					add_string_element (element, pixmap_path_string, Void)
 				else
-					add_string_element (element, pixmap_path_string, objects.first.internal_pixmap_path.to_string_8)
+					add_string_element (element, pixmap_path_string, objects.first.internal_pixmap_path.name)
 				end
 			end
 		end
-		
+
 	modify_from_xml (element: XM_ELEMENT)
 			-- Update all items in `objects' based on information held in `element'.
 		do
@@ -58,14 +58,14 @@ feature {GB_XML_STORE} -- Output
 		local
 			element_info: ELEMENT_INFORMATION
 			new_pixmap: EV_PIXMAP
-			a_file_name: FILE_NAME
+			a_file_name: PATH
 			file: RAW_FILE
-			data: STRING
+			data: STRING_32
 			pixmap_constant: GB_PIXMAP_CONSTANT
 			constant_context: GB_CONSTANT_CONTEXT
 		do
 			full_information := get_unique_full_info (element)
-			element_info := full_information @ (pixmap_path_string)	
+			element_info := full_information @ (pixmap_path_string)
 			if element_info /= Void then
 				if element_info.is_constant then
 					pixmap_constant ?= components.constants.all_constants.item (element_info.data)
@@ -77,11 +77,11 @@ feature {GB_XML_STORE} -- Output
 					for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (new_pixmap))
 				else
 					create new_pixmap
-					data := element_info.data
+					data := element_info.data.as_string_32
 					create a_file_name.make_from_string (data)
-					create file.make (a_file_name)
+					create file.make_with_path (a_file_name)
 					if file.exists then
-						new_pixmap.set_with_named_file (data)
+						new_pixmap.set_with_named_path (a_file_name)
 						for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (new_pixmap))
 					end
 					for_all_objects (agent {EV_PIXMAPABLE}.set_internal_pixmap_path (a_file_name))
@@ -119,7 +119,7 @@ feature {GB_CODE_GENERATOR} -- Output
 					a_pixmap_string := pixmap_name
 					Result.extend (info.actual_name_for_feature_call + set_string + a_pixmap_string + ")")
 				end
-				
+
 			end
 		end
 

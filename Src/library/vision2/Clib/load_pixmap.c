@@ -28,6 +28,7 @@ indexing
 #include <png.h>
 
 #include "eif_config.h"
+#include "eif_file.h"
 
 #ifdef EIF_WINDOWS
 #include <windows.h>
@@ -108,7 +109,7 @@ typedef void
 /* Bufferred File definition */
 struct TLoadPixmapCtx {
 		void *pCurrObject;		/* Current Eiffel Object executed */
-		char *pszFileName;		/* File name */
+		EIF_FILENAME pszFileName;		/* File name */
 		FILE *pFile;			/* File Pointer */
 		load_pixmap_ftn LoadPixmapUpdateObject;	/* Callback to Eiffel */
 };
@@ -120,7 +121,7 @@ void c_ev_load_pixmap(
 #ifndef EIF_IL_DLL
 		void *pCurrObject,
 #endif
-		char *pszFileName,
+		EIF_FILENAME pszFileName,
 		void *fnptr
 		);
 
@@ -518,7 +519,7 @@ void c_ev_save_png (char image[], char *path, int array_width, int array_height,
 
 	/* Create a new file handle */
 
-	fp = fopen (path, "wb");
+	fp = eif_file_open ((EIF_FILENAME) path, 11);
 	if (fp == NULL) {
 		/* Raise Eiffel exception */
 		printf ("File could not be created\n");
@@ -589,7 +590,7 @@ void c_ev_load_pixmap(
 #ifndef EIF_IL_DLL
 		void *pCurrObject,
 #endif
-		char *pszFileName,
+		EIF_FILENAME pszFileName,
 		void *fnptr
 		)
 {
@@ -607,36 +608,36 @@ void c_ev_load_pixmap(
 	if (pszFileName == NULL) {
 			/* Load the default Vision2 icon */
 #ifdef EIF_WINDOWS
-		char szTempDir[TEMP_PATH_MAX_LENGTH];
-		char szPrefix[TEMP_PATH_MAX_LENGTH];
-		if (GetTempPath(TEMP_PATH_MAX_LENGTH, szTempDir) == 0) {
+		wchar_t szTempDir[TEMP_PATH_MAX_LENGTH];
+		wchar_t szPrefix[TEMP_PATH_MAX_LENGTH];
+		if (GetTempPathW(TEMP_PATH_MAX_LENGTH, szTempDir) == 0) {
 				/* Function failed, Set szTempDir to Current directory. */
-			strcpy (szTempDir, ".");
+			wcscpy (szTempDir, L".");
 		}
 			/* We got the path, now get the filename */
-		strcpy (szPrefix, "vision2_");
-		pszFileName = (char *) malloc (MAX_PATH);
+		wcscpy (szPrefix, L"vision2_");
+		pszFileName = (EIF_FILENAME) malloc (MAX_PATH * sizeof (wchar_t));
 		bFreeFileName = TRUE;
-		if (GetTempFileName(szTempDir, szPrefix, 0, pszFileName)==0) {
+		if (GetTempFileNameW(szTempDir, szPrefix, 0, pszFileName)==0) {
 			free(pszFileName);
 			bFreeFileName = FALSE;
 
 				/* Function failed, use "tmpnam" instead */
-			pszFileName = tmpnam(NULL);
+			pszFileName = _wtmpnam(NULL);
 		}
 
 		/* Open the temporary file */
-		pFile = fopen ((const char *)pszFileName, "w+b");
+		pFile = eif_file_open (pszFileName, 14);
 		if (pFile==NULL && bFreeFileName==TRUE) {
 				/* Unable to open temporary file created with GetTempFileName, try "tmpnam" */
 			free(pszFileName);
 			bFreeFileName = FALSE;
 
 				/* Function failed, use "tmpnam" instead */
-			pszFileName = tmpnam(NULL);
+			pszFileName = _wtmpnam(NULL);
 
 				/* Open the temporary file */
-			pFile = fopen ((const char *)pszFileName, "w+b");
+			pFile = eif_file_open (pszFileName, 14);
 		}
 
 		if (pFile == NULL) {
@@ -663,7 +664,7 @@ void c_ev_load_pixmap(
 		fseek (pFile, 0, SEEK_SET);
 	} else {
 			/* Open the file */
-		pFile = fopen ((const char *)pszFileName, "rb");
+		pFile = eif_file_open (pszFileName, 10);
 		if (pFile == NULL) {
 				/* Unable to open the file, return NULL */
 			LoadPixmapUpdateObject(
@@ -735,7 +736,7 @@ void c_ev_load_pixmap(
 			);
 #endif
 			if (bFileToBeDeleted)
-				unlink(pszFileName);
+				eif_file_unlink(pszFileName);
 			if (bFreeFileName)
 				free(pszFileName);
 			return;
@@ -766,7 +767,7 @@ void c_ev_load_pixmap(
 			);
 #endif
 			if (bFileToBeDeleted)
-				unlink(pszFileName);
+				eif_file_unlink(pszFileName);
 			if (bFreeFileName)
 				free(pszFileName);
 			return;
@@ -784,7 +785,7 @@ void c_ev_load_pixmap(
 				/* close the graphical file or the temporary file */
 			fclose (pFile);
 			if (bFileToBeDeleted)
-				unlink(pszFileName);
+				eif_file_unlink(pszFileName);
 			if (bFreeFileName)
 				free(pszFileName);
 			return;
@@ -805,7 +806,7 @@ void c_ev_load_pixmap(
 			/* close the graphical file or the temporary file */
 			fclose (pFile);
 			if (bFileToBeDeleted)
-				unlink(pszFileName);
+				eif_file_unlink(pszFileName);
 			if (bFreeFileName)
 				free(pszFileName);
 			return;
@@ -870,7 +871,7 @@ void c_ev_load_windows_file(unsigned int nWindowsType, LoadPixmapCtx *pCtx)
 	HGDIOBJ handle;
 	unsigned int nErrorCode = LOADPIXMAP_ERROR_NOERROR;
 
-	handle = (void *) LoadImage(
+	handle = (void *) LoadImageW(
 		NULL,				/* handle to instance */
 		pCtx->pszFileName,	/* name or identifier of the image */
 		nWindowsType,		/* image type */

@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 			execution_agents.put (agent execute, pixmap_path_string)
 		end
 
-	execute (a_pixmap: EV_PIXMAP;  pixmap_path: STRING_GENERAL)
+	execute (a_pixmap: EV_PIXMAP;  pixmap_path: PATH)
 			-- Asssign `a_pixmap' located at `pixmap_path' to all representations of `Current'.
 			-- If `a_pixmap' is Void, remove pixmap and path.
 		do
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	validate (a_pixmap: EV_PIXMAP; pixmap_path: STRING_GENERAL): BOOLEAN
+	validate (a_pixmap: EV_PIXMAP; pixmap_path: PATH): BOOLEAN
 			-- Validate pixmap `a_pixmap' with path `pixmap_path'.
 		do
 			--| No validation is currently performed on pixmaps, so return True
@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 			Result := objects.first.pixmap
 		end
 
-	return_pixmap_path: STRING_GENERAL
+	return_pixmap_path: PATH
 			-- `Result' is path used to retrieve pixmap.
 		do
 				-- Test is required because `internal_pixmap_path' is of type STRING_32

@@ -1683,12 +1683,25 @@ feature -- Basic operations
 
 	save_bitmap (a_bitmap: WEL_BITMAP; file: READABLE_STRING_GENERAL)
 			-- Save `a_bitmap' in `file'.
+		obsolete
+			"Use `save_bitmap_into' instead."
 		require
 			exists: exists
 			a_bitmap_not_void: a_bitmap /= Void
 			a_bitmap_exists: a_bitmap.exists
 			file_not_void: file /= Void
 			file_is_valid: is_valid_file_name (file)
+		do
+			save_bitmap_into (a_bitmap, create {PATH}.make_from_string (file))
+		end
+
+	save_bitmap_into (a_bitmap: WEL_BITMAP; file: PATH)
+			-- Save `a_bitmap' at the `file' location.
+		require
+			exists: exists
+			a_bitmap_not_void: a_bitmap /= Void
+			a_bitmap_exists: a_bitmap.exists
+			file_not_void: file /= Void
 		local
 			bmi, bmi2: WEL_BITMAP_INFO
 			bfh: WEL_BITMAP_FILE_HEADER
@@ -1723,7 +1736,7 @@ feature -- Basic operations
 			bfh.set_off_bits (bfh.structure_size + size)
 
 			-- Create the file
-			create rf.make_with_name (file)
+			create rf.make_with_path (file)
 			rf.create_read_write
 
 			-- Write the file header
@@ -1903,7 +1916,7 @@ feature -- Obsolete
 
 	save (a_bitmap: WEL_BITMAP; file: READABLE_STRING_GENERAL)
 		obsolete
-			"Use ``save_bitmap''"
+			"Use `save_bitmap_into' instead."
 		require
 			exists: exists
 			a_bitmap_not_void: a_bitmap /= Void
@@ -1911,7 +1924,7 @@ feature -- Obsolete
 			file_not_void: file /= Void
 			file_is_valid: is_valid_file_name (file)
 		do
-			save_bitmap (a_bitmap, file)
+			save_bitmap_into (a_bitmap, create {PATH}.make_from_string (file))
 		end
 
 feature {NONE} -- Externals

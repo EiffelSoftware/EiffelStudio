@@ -12,7 +12,7 @@ class
 inherit
 	EV_PIXMAP_I
 		undefine
-			save_to_named_file
+			save_to_named_path
 		redefine
 			interface,
 			on_parented,
@@ -182,8 +182,8 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	read_from_named_file (file_name: READABLE_STRING_GENERAL)
-			-- Load the pixmap described in 'file_name'.
+	read_from_named_path (file_path: PATH)
+			-- Load the pixmap described in `file_path'.
 			--
 			-- Exceptions "Unable to retrieve icon information",
 			--            "Unable to load the file"
@@ -192,7 +192,7 @@ feature {NONE} -- Initialization
 		do
 				-- Create a simple pixmap
 			simple_pixmap := create_simple_pixmap
-			simple_pixmap.read_from_named_file (file_name)
+			simple_pixmap.read_from_named_path (file_path)
 
 				-- Adapt the current object to the simple
 				-- pixmap just created
@@ -247,7 +247,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Saving
 
-	save_with_format (a_format: EV_GRAPHICAL_FORMAT; a_filename: READABLE_STRING_GENERAL; a_raw_image_data: like raw_image_data)
+	save_with_format (a_format: EV_GRAPHICAL_FORMAT; a_filename: PATH; a_raw_image_data: like raw_image_data)
 			-- Call `save' on `a_format'. Implemented in descendant of EV_PIXMAP_IMP_STATE
 			-- since `save' from EV_GRAPHICAL_FORMAT is only exported to EV_PIXMAP_I.
 		do
@@ -1153,14 +1153,14 @@ invariant
 		attached mask_dc as l_mask_dc implies l_mask_dc.reference_tracked;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

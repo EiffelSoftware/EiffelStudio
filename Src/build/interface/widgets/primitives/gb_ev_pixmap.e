@@ -9,7 +9,7 @@ note
 class
 	GB_EV_PIXMAP
 
-	
+
 	-- The following properties from EV_PIXMAPABLE are manipulated by `Current'.
 	-- Pixmap - Performed on the real object and the display_object.
 
@@ -22,33 +22,27 @@ inherit
 			ev_type,
 			modify_from_xml_after_build
 		end
-		
+
 	GB_EV_PIXMAP_EDITOR_CONSTRUCTOR
 		undefine
 			default_create
 		end
-		
+
 	GB_SHARED_DEFERRED_BUILDER
 		undefine
 			default_create
 		end
-		
+
 feature {GB_XML_STORE} -- Output
 
 	generate_xml (element: XM_ELEMENT)
 			-- Generate an XML representation of `Current' in `element'.
 		do
 			if first.pixmap_path /= Void or uses_constant (pixmap_path_string) then
-					-- Special handling here of Void, because we cannot convert a Void STRING_32 into
-					-- a Void STRING_8.
-				if objects.first.pixmap_path = Void then
-					add_string_element (element, pixmap_path_string, Void)
-				else
-					add_string_element (element, pixmap_path_string, objects.first.pixmap_path)
-				end
+				add_string_element (element, pixmap_path_string, first.pixmap_path.name)
 			end
 		end
-		
+
 	modify_from_xml (element: XM_ELEMENT)
 			-- Update all items in `objects' based on information held in `element'.
 		do
@@ -65,13 +59,13 @@ feature {GB_XML_STORE} -- Output
 		local
 			element_info: ELEMENT_INFORMATION
 			new_pixmap: EV_PIXMAP
-			a_file_name: FILE_NAME
+			a_file_name: PATH
 			pixmap_constant: GB_PIXMAP_CONSTANT
 			constant_context: GB_CONSTANT_CONTEXT
 			file: RAW_FILE
 		do
 			full_information := get_unique_full_info (element)
-			element_info := full_information @ (pixmap_path_string)	
+			element_info := full_information @ (pixmap_path_string)
 			if element_info /= Void then
 				if element_info.is_constant then
 					pixmap_constant ?= components.constants.all_constants.item (element_info.data)
@@ -82,13 +76,13 @@ feature {GB_XML_STORE} -- Output
 					new_pixmap := pixmap_constant.pixmap
 					for_all_objects (agent {EV_PIXMAP}.copy (new_pixmap))
 				else
-				
+
 					create new_pixmap
-					create a_file_name.make_from_string (element_info.data)
-					create file.make (a_file_name)	
+					create a_file_name.make_from_string (element_info.data.as_string_32)
+					create file.make_with_path (a_file_name)
 					if file.exists then
-						new_pixmap.set_with_named_file (element_info.data)
-						for_all_objects (agent {EV_PIXMAP}.set_with_named_file (a_file_name))
+						new_pixmap.set_with_named_path (a_file_name)
+						for_all_objects (agent {EV_PIXMAP}.set_with_named_path (a_file_name))
 						for_all_objects (agent {EV_PIXMAP}.enable_pixmap_exists)
 					else
 						for_all_objects (agent {EV_PIXMAP}.disable_pixmap_exists)

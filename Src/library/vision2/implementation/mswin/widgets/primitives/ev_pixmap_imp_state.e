@@ -10,7 +10,6 @@ deferred class
 	EV_PIXMAP_IMP_STATE
 
 inherit
-
 	EV_WIDGET_ACTION_SEQUENCES_IMP
 		export
 			{EV_PIXMAP_IMP_STATE}
@@ -83,18 +82,17 @@ feature -- Access
 
 feature -- Saving
 
-	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: READABLE_STRING_GENERAL)
-			-- Save `Current' to `a_filename' in `a_format' format.
+	save_to_named_path (a_format: EV_GRAPHICAL_FORMAT; a_file_path: PATH)
+			-- Save `Current' to `a_file_path' in `a_format' format.
 		require
 			a_format_not_void: a_format /= Void
-			a_filename_not_void: a_filename /= Void
-			a_filename_valid: is_file_name_valid (a_filename)
+			a_filename_not_void: a_file_path /= Void
 		local
 			bmp_format: detachable EV_BMP_FORMAT
 			png_format: detachable EV_PNG_FORMAT
 			mem_dc: WEL_MEMORY_DC
 			a_wel_bitmap: WEL_BITMAP
-			a_fn: C_STRING
+			a_fn: WEL_STRING
 			l_area: ANY
 			a_width, a_height: INTEGER
 			l_raw_image_data: like raw_image_data
@@ -109,12 +107,12 @@ feature -- Saving
 					--| FIXME. Add code for dealing with cursors & icons.
 				a_wel_bitmap := get_bitmap
 				mem_dc.select_bitmap (a_wel_bitmap)
-				mem_dc.save_bitmap (a_wel_bitmap, a_filename)
+				mem_dc.save_bitmap_into (a_wel_bitmap, a_file_path)
 				mem_dc.unselect_bitmap
 				mem_dc.delete
 				a_wel_bitmap.decrement_reference
 			elseif png_format /= Void then
-				create a_fn.make (a_filename)
+				create a_fn.make_from_path (a_file_path)
 				if png_format.scale_height /= 0 then
 					a_height := png_format.scale_height
 				else
@@ -136,7 +134,7 @@ feature -- Saving
 				c_ev_save_png (l_area_ptr, a_fn.item, l_raw_image_data.width,
 					l_raw_image_data.height, a_width, a_height, png_format.color_mode)
 			end
-			save_with_format (a_format, a_filename, l_raw_image_data)
+			save_with_format (a_format, a_file_path, l_raw_image_data)
 		end
 
 feature -- Query
@@ -148,13 +146,12 @@ feature -- Query
 
 feature {NONE} -- Savings
 
-	save_with_format (a_format: EV_GRAPHICAL_FORMAT; a_filename: READABLE_STRING_GENERAL; a_raw_image_data: like raw_image_data)
+	save_with_format (a_format: EV_GRAPHICAL_FORMAT; a_file_path: PATH; a_raw_image_data: like raw_image_data)
 			-- Call `save' on `a_format'. Implemented in descendant since `save' from
 			-- EV_GRAPHICAL_FORMAT is only exported to EV_PIXMAP_I.
 		require
 			a_format_not_void: a_format /= Void
-			a_filename_not_void: a_filename /= Void
-			a_filename_valid: is_file_name_valid (a_filename)
+			a_filename_not_void: a_file_path /= Void
 			a_raw_image_data_not_void: a_raw_image_data /= Void
 		deferred
 		end

@@ -47,11 +47,22 @@ feature -- Command
 
 	set_with_named_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Load pixel data from file `a_file_name'
+		obsolete
+			"Use `set_with_named_path' instead."
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
 			not_locked: not is_locked
 		do
-			implementation.set_with_named_file (a_file_name)
+			set_with_named_path (create {PATH}.make_from_string (a_file_name))
+		end
+
+	set_with_named_path (a_file_name: PATH)
+			-- Load pixel data from file `a_file_name'
+		require
+			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
+			not_locked: not is_locked
+		do
+			implementation.set_with_named_path (a_file_name)
 		end
 
 	set_with_pointer (a_pointer: POINTER; a_size: INTEGER)
@@ -66,11 +77,22 @@ feature -- Command
 
 	save_to_named_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Save pixel data to file `a_file_name'.
+		obsolete
+			"Use `save_to_named_path' instead."
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
 			not_locked: not is_locked
 		do
-			implementation.save_to_named_file (a_file_name)
+			save_to_named_path (create {PATH}.make_from_string (a_file_name))
+		end
+
+	save_to_named_path (a_file_name: PATH)
+			-- Save pixel data to file `a_file_name'.
+		require
+			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
+			not_locked: not is_locked
+		do
+			implementation.save_to_named_path (a_file_name)
 		end
 
 	save_to_pointer: detachable MANAGED_POINTER

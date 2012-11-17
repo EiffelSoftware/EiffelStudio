@@ -33,7 +33,7 @@ feature -- Access
 
 feature {EV_BUILDER} -- Access
 
-	internal_pixmap_path: detachable STRING_32
+	internal_pixmap_path: detachable PATH
 			-- Path of `pixmap'.
 
 feature -- Element change
@@ -64,16 +64,12 @@ feature -- Element change
 
 feature {EV_BUILDER} -- Element change
 
-	set_internal_pixmap_path (a_path: READABLE_STRING_GENERAL)
+	set_internal_pixmap_path (a_path: like internal_pixmap_path)
 			-- Assign `a_path' to `internal_pixmap_path'.
 		do
-			if a_path = Void then
-				internal_pixmap_path := Void
-			else
-				internal_pixmap_path := a_path.as_string_32
-			end
+			internal_pixmap_path := a_path
 		ensure
-			path_set: a_path /= Void implies (attached internal_pixmap_path as l_internal_pixmap_path and then a_path.same_string (l_internal_pixmap_path))
+			path_set: internal_pixmap_path = a_path
 		end
 
 feature {NONE} -- Contract support
@@ -96,14 +92,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Responsible for interaction with native graphics toolkit.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -9,7 +9,7 @@ note
 deferred class
 	GB_COMMON_EDITOR
 
-inherit	
+inherit
 	DEFAULT_OBJECT_STATE_CHECKER
 
 feature -- Access
@@ -24,14 +24,14 @@ feature -- Access
 			-- String representation of object_type modifyable by `Current'.
 		deferred
 		end
-		
+
 	ev_type: EV_ANY
 		-- Vision2 type represented by `Current'.
 		-- Only used with `like' in descendents.
 		-- Always `Void'.
 		deferred
 		end
-		
+
 	first: like ev_type
 			-- First entry in `objects'. This corresponds to
 			-- the display component.
@@ -42,7 +42,7 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	parent_window (widget: EV_WIDGET): EV_WINDOW
 			-- `Result' is window parent of `widget'.
 			-- `Void' if none.
@@ -53,12 +53,12 @@ feature -- Access
 			if window = Void then
 				if widget.parent /= Void then
 					Result := parent_window (widget.parent)
-				end	
+				end
 			else
 				Result := window
-			end	
+			end
 		end
-		
+
 	parent_dialog (widget: EV_WIDGET): EV_DIALOG
 			-- `Result' is dialog parent of `widget'.
 			-- `Void' if none.
@@ -69,15 +69,15 @@ feature -- Access
 			if dialog = Void then
 				if widget.parent /= Void then
 					Result := parent_dialog (widget.parent)
-				end	
+				end
 			else
 				Result := dialog
-			end	
+			end
 		end
-		
+
 	parent_editor: EV_VERTICAL_BOX
 			-- Object editor containing `Current'.
-			
+
 	set_parent_editor (parent: EV_VERTICAL_BOX)
 			-- Assign `parent' to `parent_editor'.
 		require
@@ -88,13 +88,13 @@ feature -- Access
 		ensure
 			parent_set: parent_editor = parent
 		end
-		
-		
+
+
 	objects: ARRAYED_LIST [like ev_type]
 		-- All objects to which `Current' represents.
 		-- Modifications must be made to all items
 		-- identically.
-		
+
 	set_main_object (an_object: like ev_type)
 			-- Add `object' to `objects'.
 		require
@@ -110,7 +110,7 @@ feature -- Access
 			--
 		deferred
 		end
-		
+
 
 feature -- Status setting
 
@@ -133,7 +133,7 @@ feature -- Status setting
 				b.forth
 			end
 		end
-	
+
 	disable_all_items (b: EV_BOX)
 			-- Call `disable_item_expand' on all items in `b'.
 		require
@@ -148,7 +148,7 @@ feature -- Status setting
 				b.forth
 			end
 		end
-		
+
 	named_list_item_from_object (container: EV_CONTAINER): EV_LIST_ITEM
 			-- `Result' is list item with text matching class name of `container'.
 		require
@@ -164,54 +164,66 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	for_all_objects (p: Procedure [EV_ANY, TUPLE])
+	for_all_objects (p: PROCEDURE [EV_ANY, TUPLE])
 			-- Call `p' on every item in `objects'.
+		local
+			l_tuple: TUPLE
 		do
 			from
 				objects.start
 			until
 				objects.off
 			loop
-				p.call ([objects.item])
+				l_tuple := p.empty_operands
+				if l_tuple.count = 1 then
+					l_tuple.put (objects.item, 1)
+				end
+				p.call (l_tuple)
 				objects.forth
 			end
 		end
 
-	for_first_object (p: Procedure [EV_ANY, TUPLE])
+	for_first_object (p: PROCEDURE [EV_ANY, TUPLE])
 			-- Call `p' on the first_item in `objects'.
+		local
+			l_tuple: TUPLE
 		do
 			objects.start
-			p.call ([objects.item])
+			l_tuple := p.empty_operands
+			if l_tuple.count = 1 then
+				l_tuple.put (objects.item, 1)
+			end
+			p.call (l_tuple)
 		end
-		
+
 feature {NONE} -- Implementation
 
 		-- All the features in this section do not require any implementation, but
 		-- are available as the object editor classes from Build, will call them, as they
 		-- are required by Build. For this widget test, they do not need to perform anything.
-		
+
 	update_editors
 			-- Short version for calling everywhere.
 		do
 		end
-		
+
 	initialize_attribute_editor (editor: GB_OBJECT_EDITOR_ITEM)
 			-- Initialize `editor'.
 		do
 		end
-		
-		
+
+
 	enable_project_modified
 			-- Call enable_project_modified on `system_status' and
 			-- update commands to reflect this.
 		do
 		end
-		
+
 	new_object_editor (an_object: GB_OBJECT)
 			-- Generate a new object editor containing `object'.
 		do
 		end
-		
+
 	set_default_icon_pixmap (dialog: EV_DIALOG)
 			-- Set the default icon pixmap to `dialog'.
 		do

@@ -43,7 +43,6 @@ feature -- Status setting
 		local
 			list_item: EVENT_LIST_ITEM
 			i, nb: INTEGER
-			names: ARRAYED_LIST [STRING]
 			l_name: STRING
 			action_sequences: GB_EV_ACTION_SEQUENCES
 		do
@@ -111,7 +110,7 @@ feature -- Status setting
 			end
 			event_list_item.uncheck_event.call ([])
 		end
-		
+
 feature {NONE} -- Implementation
 
 	list: EV_CHECKABLE_LIST

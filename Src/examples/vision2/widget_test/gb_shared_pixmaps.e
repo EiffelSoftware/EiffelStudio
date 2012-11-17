@@ -11,7 +11,7 @@ note
 
 class
 	GB_SHARED_PIXMAPS
-	
+
 inherit
 	EV_STOCK_PIXMAPS
 		rename
@@ -25,15 +25,13 @@ feature -- Access
 			-- for compilation of the CONSTANTS file.
 		do
 		end
-		
+
 	icon_build_window: ARRAY [EV_PIXMAP]
 			-- Used in the tour, but only by the pixmap and table
 			-- children positioners, and not actually visible.
 		do
-			create Result.make (1, 1)
-			Result.put (Default_window_icon, 1)
+			create Result.make_filled (default_window_icon, 1, 1)
 		end
-		
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

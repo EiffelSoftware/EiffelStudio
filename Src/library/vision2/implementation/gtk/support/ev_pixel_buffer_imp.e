@@ -83,7 +83,7 @@ feature -- Initialization
 
 feature -- Command
 
-	set_with_named_file (a_file_name: READABLE_STRING_GENERAL)
+	set_with_named_path (a_file_name: PATH)
 			-- Load pixel data file `a_file_name'.
 		local
 			l_cs: EV_GTK_C_STRING
@@ -91,7 +91,7 @@ feature -- Command
 			filepixbuf: POINTER
 		do
 			if {GTK}.gtk_maj_ver >= 2 then
-				l_cs := a_file_name
+				create l_cs.make_from_path (a_file_name)
 				filepixbuf := {GTK}.gdk_pixbuf_new_from_file (l_cs.item, $g_error)
 				if g_error /= default_pointer then
 						-- GdkPixbuf could not load the image so we raise an exception.
@@ -100,7 +100,7 @@ feature -- Command
 					set_gdkpixbuf (filepixbuf)
 				end
 			elseif attached internal_pixmap as l_internal_pixmap then
-				l_internal_pixmap.set_with_named_file (a_file_name)
+				l_internal_pixmap.set_with_named_path (a_file_name)
 			end
 		end
 
@@ -122,7 +122,7 @@ feature -- Command
 			end
 		end
 
-	save_to_named_file (a_file_name: READABLE_STRING_GENERAL)
+	save_to_named_path (a_file_name: PATH)
 			-- Save pixel data to file `a_file_name'.
 		local
 			l_cs, l_file_type: EV_GTK_C_STRING
@@ -136,9 +136,16 @@ feature -- Command
 			l_app_imp ?= (create {EV_ENVIRONMENT}).implementation.application_i
 			check l_app_imp /= Void end
 			l_writeable_formats := l_app_imp.writeable_pixbuf_formats
-			l_extension := a_file_name.as_string_32.split ('.').last.as_upper
-			if l_extension.is_equal ("JPEG") then
-				l_extension := "JPG"
+			if
+				attached a_file_name.name.split ('.') as l_list and then
+				not l_list.is_empty
+			then
+				l_extension := l_list.last.as_upper
+				if l_extension.is_equal ({STRING_32} "JPEG") then
+					l_extension := {STRING_32} "JPG"
+				end
+			else
+				l_extension := {STRING_32} "PNG"
 			end
 			from
 				i := 1
@@ -151,11 +158,11 @@ feature -- Command
 				i := i + 1
 			end
 			if l_format /= Void then
-				if ("JPG").is_equal (l_format)  then
-					l_format := "jpeg"
+				if l_format.is_equal ({STRING_32} "JPG") then
+					l_format := {STRING_32} "jpeg"
 				end
 				if {GTK}.gtk_maj_ver >= 2 then
-					l_cs := a_file_name
+					create l_cs.make_from_path (a_file_name)
 					l_file_type := l_format
 					{GTK2}.gdk_pixbuf_save (gdk_pixbuf, l_cs.item, l_file_type.item, $g_error)
 					if g_error /= default_pointer then
@@ -163,8 +170,8 @@ feature -- Command
 						(create {EXCEPTIONS}).raise ("Could not save image file.")
 					end
 				else
-					if ("PNG").is_equal (l_format) and then attached internal_pixmap as l_internal_pixmap then
-						l_internal_pixmap.save_to_named_file (create {EV_PNG_FORMAT}, a_file_name)
+					if l_format.is_equal ({STRING_32} "PNG") and then attached internal_pixmap as l_internal_pixmap then
+						l_internal_pixmap.save_to_named_path (create {EV_PNG_FORMAT}, a_file_name)
 					else
 						(create {EXCEPTIONS}).raise ("Could not save image file.")
 					end
@@ -174,8 +181,6 @@ feature -- Command
 				(create {EXCEPTIONS}).raise ("Could not save image file.")
 			end
 		end
-
-
 
 	save_to_pointer: detachable MANAGED_POINTER
 			-- <Precursor>

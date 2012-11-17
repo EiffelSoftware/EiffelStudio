@@ -28,6 +28,11 @@ inherit
 			copy, is_equal
 		end
 
+	PATH_HANDLER
+		undefine
+			copy, is_equal
+		end
+
 create
 	make
 
@@ -52,15 +57,28 @@ feature -- Access
 	folder_name: STRING_32
 			-- Selected folder name
 			-- Empty if no folder was selected.
+		obsolete
+			"Use `folder_path' instead."
 		do
 			Result := str_folder_name.string
+		end
+
+	folder_path: PATH
+			-- Selected folder path
+			-- Empty if no folder was selected.
+		do
+			if selected then
+				create Result.make_from_pointer (str_folder_name.item)
+			else
+				create Result.make_empty
+			end
 		end
 
 	display_name: STRING_32
 			-- Display name of selected folder
 			-- Empty if no folder was selected.
 		obsolete
-			"Use folder_name instead"
+			"Use `folder_path' instead."
 		do
 			Result := folder_name
 		end
@@ -73,8 +91,16 @@ feature -- Access
 
 	starting_folder: STRING_32
 			-- Initial folder name
+		obsolete
+			"Use `starting_path' instead."
 		do
 			Result := str_starting_folder.string
+		end
+
+	starting_path: PATH
+			-- Initial folder name
+		do
+			create Result.make_from_pointer (str_starting_folder.item)
 		end
 
 	flags: INTEGER
@@ -112,12 +138,24 @@ feature -- Element Change
 
 	set_starting_folder (a_folder_name: READABLE_STRING_GENERAL)
 			-- Set the initial folder name
+		obsolete
+			"Use `set_starting_path' instead."
 		require
 			valid_folder_name: a_folder_name /= Void and then not a_folder_name.is_empty
 		do
 			str_starting_folder.set_string (a_folder_name)
 		ensure
 			starting_folder_set: starting_folder.same_string_general (a_folder_name)
+		end
+
+	set_starting_path (a_path: PATH)
+			-- Set the initial folder name
+		require
+			valid_folder_name: a_path /= Void and then not a_path.is_empty
+		do
+			create str_starting_folder.make_from_path (a_path)
+		ensure
+			starting_path_set: starting_path ~ a_path
 		end
 
 	set_flags (a_flags: INTEGER)
@@ -262,7 +300,7 @@ feature {NONE} -- External
 			end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

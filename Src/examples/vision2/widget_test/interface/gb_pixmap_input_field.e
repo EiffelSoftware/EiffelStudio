@@ -62,10 +62,10 @@ create
 feature {NONE} -- Initialization
 
 	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING;
-		an_execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP, STRING_GENERAL]];
-		a_validate_agent: FUNCTION [ANY, TUPLE [EV_PIXMAP, STRING_GENERAL], BOOLEAN];
+		an_execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP, PATH]];
+		a_validate_agent: FUNCTION [ANY, TUPLE [EV_PIXMAP, PATH], BOOLEAN];
 		a_pixmap_agent: FUNCTION [ANY, TUPLE [], EV_PIXMAP];
-		a_pixmap_path_agent: FUNCTION [ANY, TUPLE [], STRING_GENERAL];
+		a_pixmap_path_agent: FUNCTION [ANY, TUPLE [], PATH];
 		a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
@@ -119,7 +119,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 		local
 			has_pixmap: BOOLEAN
 			pixmap: EV_PIXMAP
-			l_pixmap_path: STRING_GENERAL
+			l_pixmap_path: PATH
 			error_label: EV_LABEL
 		do
 			l_pixmap_path := pixmap_path_agent.item (Void)
@@ -137,7 +137,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 				modify_button.set_tooltip (Select_tooltip)
 				if l_pixmap_path /= Void then
 					create error_label.make_with_text (Pixmap_missing_string)
-					error_label.set_tooltip (l_pixmap_path)
+					error_label.set_tooltip (l_pixmap_path.name)
 					pixmap_container.extend (error_label)
 					modify_button.set_text (clear_text)
 					modify_button.set_tooltip (clear_tooltip)
@@ -186,15 +186,15 @@ feature {NONE} -- Implementation
 	pixmap_container: EV_CELL
 		-- Holds a representation of the loaded pixmap.
 
-	execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP, STRING_GENERAL]]
+	execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP, PATH]]
 		-- Agent to execute command associated with value entered into `Current'.
 
-	validate_agent: FUNCTION [ANY, TUPLE [EV_PIXMAP, STRING_GENERAL], BOOLEAN]
+	validate_agent: FUNCTION [ANY, TUPLE [EV_PIXMAP, PATH], BOOLEAN]
 		-- Is integer a valid integer for `execution_agent'.
 
 	return_pixmap_agent: FUNCTION [ANY, TUPLE, EV_PIXMAP]
 
-	pixmap_path_agent: FUNCTION [ANY, TUPLE, STRING_GENERAL]
+	pixmap_path_agent: FUNCTION [ANY, TUPLE, PATH]
 
 	frame: EV_FRAME
 		-- Frame used for displaying title around `Current'.
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			biggest_ratio: REAL_64
 			a_pixmap: EV_PIXMAP
 			a_pixmapable: EV_PIXMAPABLE
-			a_path: STRING
+			a_path: PATH
 		do
 			a_pixmap ?= first
 			if a_pixmap /= Void then
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			if a_path /= Void then
-				pixmap.set_tooltip (a_path)
+				pixmap.set_tooltip (a_path.name)
 			end
 			x_ratio := pixmap.width / minimum_width_of_object_editor
 			y_ratio := pixmap.height / minimum_width_of_object_editor
@@ -263,29 +263,34 @@ feature {NONE} -- Implementation
 			shown_once, opened_file: BOOLEAN
 			error_dialog: EV_WARNING_DIALOG
 			must_add_pixmap: BOOLEAN
+			l_extension: STRING_32
 		do
 			must_add_pixmap := pixmap_path_agent.item (Void) = Void
 			if must_add_pixmap then
 				from
 					create dialog
 				until
-					(dialog.file_name.is_empty and shown_once) or opened_file
+					(dialog.full_file_path.is_empty and shown_once) or opened_file
 				loop
 					shown_once := True
 					dialog.show_modal_to_window (parent_window (Current))
-					if not dialog.file_name.is_empty and then valid_file_extension (dialog.file_name.substring (dialog.file_name.count -2, dialog.file_name.count)) then
-						create new_pixmap
-						new_pixmap.set_with_named_file (dialog.file_name)
-						execute_agent (new_pixmap, dialog.file_name)
-							-- Must set the pixmap before the stretch takes place.
-						add_pixmap_to_pixmap_container (new_pixmap.twin)
-						modify_button.set_text (Remove_button_text)
-						modify_button.set_tooltip (Remove_tooltip)
-						opened_file := True
-					elseif not dialog.file_name.is_empty then
-						create error_dialog
-						error_dialog.set_text (invalid_type_warning)
-						error_dialog.show_modal_to_window (parent_window (Current))
+					if not dialog.full_file_path.is_empty then
+						l_extension := dialog.full_file_path.name
+						l_extension := l_extension.substring (l_extension.count - 2, l_extension.count)
+						if valid_file_extension (l_extension) then
+							create new_pixmap
+							new_pixmap.set_with_named_path (dialog.full_file_path)
+							execute_agent (new_pixmap, dialog.full_file_path)
+								-- Must set the pixmap before the stretch takes place.
+							add_pixmap_to_pixmap_container (new_pixmap.twin)
+							modify_button.set_text (Remove_button_text)
+							modify_button.set_tooltip (Remove_tooltip)
+							opened_file := True
+						else
+							create error_dialog
+							error_dialog.set_text (invalid_type_warning)
+							error_dialog.show_modal_to_window (parent_window (Current))
+						end
 					end
 				end
 			else
@@ -297,7 +302,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	execute_agent (new_value: EV_PIXMAP; new_path: STRING_GENERAL)
+	execute_agent (new_value: EV_PIXMAP; new_path: PATH)
 			-- call `execution_agent'. `new_value' may be Void
 			-- in the case where we must remove the pixmap.
 		do

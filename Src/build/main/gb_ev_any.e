@@ -598,7 +598,7 @@ feature {NONE} -- Implementation
 				add_element_containing_integer_constant (element, name, object.constants.item (type + name).constant.name)
 			else
 				check current_value /= Void end
-				add_element_containing_string (element, name, current_value.as_string_8)
+				add_element_containing_string (element, name, current_value)
 			end
 		end
 

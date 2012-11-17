@@ -79,7 +79,7 @@ feature -- Status report
 			a_pixmap_not_void: a_pixmap /= Void
 		local
 			pixmap_imp: detachable EV_PIXMAP_IMP
-			pixmap_filename: detachable STRING_32
+			pixmap_filename: detachable PATH
 		do
 				-- Initialize `last_position' to "not found".
 			last_position := -1
@@ -114,7 +114,7 @@ feature -- Element change
 			-- `last_position' is updated.
 		local
 			pixmap_imp: detachable EV_PIXMAP_IMP
-			pixmap_filename: detachable STRING_32
+			pixmap_filename: detachable PATH
 			private_bitmap: detachable WEL_BITMAP
 			l_id: INTEGER
 		do
@@ -165,7 +165,7 @@ feature -- Element change
 			-- `last_position' is updated.
 		local
 			pixmap_imp: detachable EV_PIXMAP_IMP
-			pixmap_filename: detachable STRING_32
+			pixmap_filename: detachable PATH
 			private_bitmap: detachable WEL_BITMAP
 		do
 			pixmap_imp ?= a_pixmap.implementation
@@ -379,7 +379,7 @@ feature {NONE} -- Implementation (Private features)
 
 feature {EV_ANY_I} -- Implementation
 
-	filenames_index: HASH_TABLE [INTEGER, STRING_32]
+	filenames_index: HASH_TABLE [INTEGER, PATH]
 			-- Table indexing image indexes in imagelist with the image name.
 
 	bitmap_ids_index: HASH_TABLE [INTEGER, INTEGER]

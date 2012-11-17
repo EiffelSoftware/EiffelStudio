@@ -22,6 +22,10 @@ inherit
 			copy, is_equal
 		end
 
+	PATH_HANDLER
+		undefine
+			copy, is_equal
+		end
 
 feature {NONE} -- Initialization
 
@@ -53,6 +57,8 @@ feature -- Access
 
 	file_name: STRING_32
 			-- File name selected (including path).
+		obsolete
+			"Use `file_path' instead."
 		require
 			selected: selected
 		do
@@ -61,8 +67,20 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
+	file_path: PATH
+			-- Full file path of selected file.
+		require
+			selected: selected
+		do
+			create Result.make_from_pointer (str_file_name.item)
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	multiple_file_names: LIST [STRING_32]
 			-- return the full path name of all selected files.
+		obsolete
+			"Use `multiple_file_paths' instead."
 		require
 			multiple_files_flag_set: has_flag ({WEL_OFN_CONSTANTS}.Ofn_allowmultiselect)
 		local
@@ -101,6 +119,45 @@ feature -- Access
 				loop
 						-- prepend the directory to the filename
 					Result.item.prepend(directory_name)
+					Result.forth
+				end
+					-- Remove the directory from the string list.
+				Result.start
+				Result.remove
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	multiple_file_paths: ARRAYED_LIST [PATH]
+			-- return the full path name of all selected files.
+		require
+			multiple_files_flag_set: has_flag ({WEL_OFN_CONSTANTS}.Ofn_allowmultiselect)
+			has_explorer_flag: has_flag ({WEL_OFN_CONSTANTS}.Ofn_explorer)
+		local
+			directory_name: PATH
+		do
+				-- Explorer-like dialog returns a buffer where
+				-- filename are NULL separated.
+			Result := str_file_name.null_separated_paths
+
+				-- If the user has selected only one file, Windows returns
+				-- this only file, otherwise...(see below)
+			if Result.count > 1 then
+					-- The first string of `Result' is the selected
+					-- directory, the following strings are the name
+					-- of the selected files
+				from
+					Result.start
+					directory_name := Result.item
+					if not Result.after then
+						Result.forth
+					end
+				until
+					Result.after
+				loop
+						-- prepend the directory to the filename
+					Result.replace (directory_name.extended_path (Result.item))
 					Result.forth
 				end
 					-- Remove the directory from the string list.
@@ -196,6 +253,8 @@ feature -- Element change
 	set_file_name (a_file_name: READABLE_STRING_GENERAL)
 			-- Set `file_name' with `a_file' and initialize
 			-- the file name edit control.
+		obsolete
+			"Use `set_file_path' instead."
 		require
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_count_ok: a_file_name.count <= Max_file_name_length
@@ -207,6 +266,17 @@ feature -- Element change
 			file_name_set: file_name.same_string_general (a_file_name)
 		end
 
+	set_file_path (a_file_path: PATH)
+			-- Set `file_path' with `a_file_path' and initialize
+			-- the file name edit control.
+		require
+			a_file_path_not_void: a_file_path /= Void
+		do
+			create str_file_name.make_from_path (a_file_path)
+			cwel_open_file_name_set_lpstrfile (item, str_file_name.item)
+		ensure
+			file_name_set: file_path ~ a_file_path
+		end
 	set_title (a_title: READABLE_STRING_GENERAL)
 			-- Set `title' with `a_title' and use this string to
 			-- display the title.
@@ -287,22 +357,39 @@ feature -- Element change
 
 	set_initial_directory (directory: READABLE_STRING_GENERAL)
 			-- Set the initial directory with `directory'.
+		obsolete
+			"Use `set_initialial_path' instead."
+		require
+			directory_not_void: directory /= Void
+		do
+			set_initial_path (create {PATH}.make_from_string (directory))
+		end
+
+	set_initial_path (directory: PATH)
+			-- Set the initial directory with `directory'.
 		require
 			directory_not_void: directory /= Void
 		local
-			l_directory: like str_initial_directory
+			l_str: like str_initial_path
 		do
-			create l_directory.make (directory)
+			create l_str.make_from_path (directory)
 				-- For GC reference
-			str_initial_directory := l_directory
-			cwel_open_file_name_set_lpstrinitialdir (item, l_directory.item)
+			str_initial_path := l_str
+			cwel_open_file_name_set_lpstrinitialdir (item, l_str.item)
 		end
 
 	set_initial_directory_as_current
 			-- Set the initial directory as the current one.
+		obsolete
+			"Use `set_initial_path_as_current' instead."
 		do
-			cwel_open_file_name_set_lpstrinitialdir (item,
-				default_pointer)
+			cwel_open_file_name_set_lpstrinitialdir (item, default_pointer)
+		end
+
+	set_initial_path_as_current
+			-- Set the initial directory as the current one.
+		do
+			cwel_open_file_name_set_lpstrinitialdir (item, default_pointer)
 		end
 
 	set_default_extension (extension: READABLE_STRING_GENERAL)
@@ -352,7 +439,7 @@ feature {NONE} -- Implementation
 	str_title: WEL_STRING
 			-- C string to save the title
 
-	str_initial_directory: detachable WEL_STRING
+	str_initial_path: detachable WEL_STRING
 			-- C string to save the initial directory
 
 	str_default_extension: detachable WEL_STRING
@@ -521,7 +608,7 @@ invariant
 	str_title_exists: str_title.exists
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

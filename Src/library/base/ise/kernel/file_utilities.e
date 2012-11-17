@@ -259,6 +259,28 @@ feature -- Directory operations
 			retry
 		end
 
+	create_path (a_path: PATH)
+			-- Creates a directory and any parent directories if they do not exist.
+			--
+			-- `a_path': The path to create.
+		require
+			a_path_attached: a_path /= Void
+			not_a_path_is_empty: not a_path.is_empty
+		local
+			is_retried: BOOLEAN
+			d: DIRECTORY
+		do
+			if not is_retried then
+				create d.make_with_path (a_path)
+				if not d.exists then
+					d.recursive_create_dir
+				end
+			end
+		rescue
+			is_retried := True
+			retry
+		end
+
 	create_directory (a_path: READABLE_STRING_GENERAL)
 			-- Creates a directory and any parent directories if they do not exist.
 			--

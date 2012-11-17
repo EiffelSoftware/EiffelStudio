@@ -166,7 +166,7 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	pick_item (a_item: EV_GRID_LABEL_ITEM): MA_STONE
+	pick_item (a_item: EV_GRID_ITEM): MA_STONE
 			-- User pick one item from the grid.
 		require
 			set: attached a_item
@@ -179,8 +179,12 @@ feature {NONE} -- Implementation
 					object_grid.set_accept_cursor (accept_node)
 					object_grid.set_deny_cursor (deny_node)
 				else
-				-- If is an item represent a class.
-					create {MA_CLASS_STONE} Result.make (a_item.text)
+						-- If is an item represent a class.
+					if attached {EV_GRID_LABEL_ITEM} a_item as l_item then
+						create {MA_CLASS_STONE} Result.make (l_item.text)
+					else
+						create {MA_CLASS_STONE} Result.make ("Unknown grid item")
+					end
 					object_grid.set_accept_cursor (accept_node_class)
 					object_grid.set_deny_cursor (deny_node_class)
 				end

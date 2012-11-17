@@ -109,7 +109,6 @@ feature {NONE} -- Query
 			l_kinds: SESSION_KINDS
 			l_kind: UUID
 			l_fn: detachable STRING_8
-			l_path: PATH
 			l_conf_target: CONF_TARGET
 			l_ver: STRING_8
 			l_target: STRING_8
@@ -202,12 +201,6 @@ feature {NONE} -- Helpers
 			end
 		end
 
-	file_utilities: attached GOBO_FILE_UTILITIES
-			-- Access to file utilities
-		once
-			create Result
-		end
-
 feature -- Storage
 
 	store (a_session: SESSION_I)
@@ -226,8 +219,10 @@ feature -- Storage
 				if a_session.is_dirty and then (not a_session.is_per_project or else (create {SHARED_WORKBENCH}).workbench.system_defined) then
 						-- Retrieve file name and ensure the directory exists.
 					l_file_name := session_file_path (a_session)
-					if attached l_file_name.parent as l_parent then
-						u.create_directory (l_parent.string_representation)
+					if attached l_file_name.canonical_path.parent as l_parent then
+						u.create_path (l_parent)
+					else
+						-- `l_file_name' has no parent, i.e. it will be created in the current working directory.
 					end
 
 						-- Ensure the project is loaded for project sessions.
@@ -462,7 +457,7 @@ feature {NONE} -- Basic operation
 						l_logger := logger_service
 						if l_logger.is_service_available then
 								-- Log deserialization error.
-							create l_message.make_from_string ("Unable to deserialize the session data file: " + l_file.name)
+							create l_message.make_from_string ({STRING_32} "Unable to deserialize the session data file: " + l_file.path.name)
 							l_logger.service.put_message_with_severity (l_message, {ENVIRONMENT_CATEGORIES}.internal_event, {PRIORITY_LEVELS}.high)
 						end
 					end

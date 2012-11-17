@@ -105,7 +105,7 @@ feature {NONE} -- Constants
 			create Result.make (3000)
 			Result.append (interface_names.l_you_have_specified_following_settings.as_string_32 + New_line + New_line +
 					 bench_interface_names.l_Project_name.as_string_32 + ": " + New_line + Tab + wizard_information.project_name + New_line +
-					 bench_interface_names.l_project_location.as_string_32 + ": " + New_line + Tab + wizard_information.project_location + New_line +
+					 bench_interface_names.l_project_location.as_string_32 + ": " + New_line + Tab + wizard_information.project_location.string_representation + New_line +
 					interface_names.l_application_type.as_string_32 + ": " + New_line + Tab)
 			if wizard_information.generate_dll then
 				Result.append (interface_names.l_Dll_type)
@@ -145,7 +145,7 @@ feature {NONE} -- Constants
 			-- Space
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -175,4 +175,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_FINAL_STATE
+
+end

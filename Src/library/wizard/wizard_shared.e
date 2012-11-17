@@ -55,51 +55,49 @@ feature -- Access
 
 	wizard_source: STRING
 			-- Wizard sources.
-		obsolete "Use `wizard_source_32' instead."
+		obsolete "Use `wizard_source_path' instead."
 		require
 			not argument (1).is_empty
 		once
-			Result := wizard_source_32.as_string_8
+			Result := wizard_source_path.string_representation.as_string_8
 		ensure
 			exists: Result /= Void
 		end
 
-	wizard_source_32: STRING_32
-			-- Wizard sources
+	wizard_source_path: PATH
+			-- Wizard sources.
 		require
 			not argument (1).is_empty
 		once
-			Result := argument (1)
+			create Result.make_from_string (argument (1))
 		ensure
 			exists: Result /= Void
 		end
 
 	wizard_pixmaps_path: FILE_NAME
 			-- Bitmaps location.
-		obsolete "Use `wizard_pixmaps_path_32' instead."
+		obsolete "Use `wizard_pixmap_path' instead."
 		once
-			create Result.make_from_string (wizard_resources_path_32.to_string_32.as_string_8)
+			create Result.make_from_string (wizard_pixmap_path.string_representation.as_string_8)
 		end
 
-	wizard_pixmaps_path_32: FILE_NAME_32
+	wizard_pixmap_path: PATH
 			-- Bitmaps location.
 		once
-			create Result.make_from_string (wizard_source_32)
-			Result.extend ("pixmaps")
+			Result := wizard_source_path.extended ("pixmaps")
 		end
 
 	wizard_resources_path: FILE_NAME
 			-- Resource location.
-		obsolete "Use `wizard_resources_path_32' instead."
+		obsolete "Use `wizard_resource_path' instead."
 		once
-			create Result.make_from_string (wizard_resources_path_32.to_string_32.as_string_8)
+			create Result.make_from_string (wizard_resource_path.string_representation.as_string_8)
 		end
 
-	wizard_resources_path_32: FILE_NAME_32
+	wizard_resource_path: PATH
 			-- Resource location.
 		once
-			create Result.make_from_string (wizard_source_32)
-			Result.extend ("resources")
+			Result := wizard_source_path.extended ("resources")
 		end
 
 	pixmap_extension: STRING
@@ -296,8 +294,8 @@ feature {NONE} -- Implementation
 
 invariant
 	memory_for_pixmap_allocated: pixmap /= Void
-	wizard_resource_path_exists: wizard_resources_path_32 /= Void
-	wizard_pixmaps_path_exists: wizard_pixmaps_path_32 /= Void
+	wizard_resource_path_exists: wizard_resource_path /= Void
+	wizard_pixmaps_path_exists: wizard_pixmap_path /= Void
 	history_exists: history /= Void
 
 note

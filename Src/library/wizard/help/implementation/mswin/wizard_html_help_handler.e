@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 	Chm_url: STRING_32
 			-- Path to `wizard.chm' (relatively to $ISE_EIFFEL value)
 		once
-			Result := wizard_source_32 + {STRING_32} "\wizard.chm"
+			Result := wizard_source_path.extended ({STRING_32} "wizard.chm").string_representation
 		ensure
 			non_void_path: Result /= Void
 			not_empty_path: not Result.is_empty
@@ -97,8 +97,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WIZARD_HTML_HELP_HANDLER
-
+end

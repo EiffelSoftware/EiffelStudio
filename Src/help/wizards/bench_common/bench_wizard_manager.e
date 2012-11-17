@@ -51,18 +51,13 @@ feature {NONE} -- Initialization
 			-- Prepare the first window to be displayed.
 		local
 			icon_pixmap: EV_PIXMAP
-			wizard_icon_filename: FILE_NAME_32
 			retried: BOOLEAN
 		do
 			if not retried then
 				setup_locale
 				Precursor
-
 				create icon_pixmap
-				wizard_icon_filename := wizard_pixmaps_path_32.twin
-				wizard_icon_filename.set_file_name ("wizard")
-				wizard_icon_filename.add_extension ("png")
-				icon_pixmap.set_with_named_file (wizard_icon_filename)
+				icon_pixmap.set_with_named_file (wizard_pixmap_path.extended ("wizard.png").string_representation)
 				first_window.set_icon_pixmap (icon_pixmap)
 			end
 		rescue
@@ -71,13 +66,13 @@ feature {NONE} -- Initialization
 		end
 
 	setup_locale
-			-- Setup locale
+			-- Setup locale.
 		local
 			l_manager: I18N_LOCALE_MANAGER
 			l_arg: STRING
 			l_locale: like locale
 		do
-			create l_manager.make (eiffel_layout.language_path)
+			create l_manager.make (eiffel_layout.language_path.string_representation)
 			if argument_count >= 2 then
 				l_arg := argument (2)
 				l_locale := l_manager.locale (create {I18N_LOCALE_ID}.make_from_string (l_arg))
@@ -86,7 +81,7 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -116,4 +111,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_MANAGER
+
+end

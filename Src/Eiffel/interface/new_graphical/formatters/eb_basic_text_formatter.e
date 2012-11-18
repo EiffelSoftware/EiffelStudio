@@ -83,13 +83,13 @@ feature -- Formatting
 			then
 				display_temp_header
 				setup_viewpoint
-				if not equal (classi.file_name, editor.file_name) then
+				if not equal (classi.file_name, editor.file_path) then
 					editor.set_stone (stone)
-					editor.load_file (classi.file_name)
+					editor.load_file_path (classi.file_name)
 					go_to_position
 				end
 				if editor.load_file_error then
-					f_name := editor.file_name
+					f_name := editor.file_path
 					editor.clear_window
 					if f_name = Void or else f_name.is_empty then
 						f_name := classi.file_name

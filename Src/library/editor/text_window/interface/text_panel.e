@@ -210,7 +210,17 @@ feature -- Access
 	text_displayed: TEXT
 			-- Text currently displayed on the screen.
 
-	file_name: detachable PATH
+	file_name: detachable STRING_32
+			-- Name of the currently opened file, if any.
+		obsolete
+			"Use `file_path' instead."
+		do
+			if attached file_path as l_path then
+				Result := l_path.name
+			end
+		end
+
+	file_path: detachable PATH
 			-- Name of the currently opened file, if any.
 
 	size_of_file_when_loaded: INTEGER
@@ -286,7 +296,7 @@ feature -- Status Setting
 			a_text.cursor_observer_list.append (text_displayed.cursor_observer_list)
 
 			text_displayed := a_text
-			create file_name.make_from_string (a_filename)
+			create file_path.make_from_string (a_filename)
 		end
 
 	set_encoding (a_encoding: like user_encoding)
@@ -409,7 +419,7 @@ feature -- Query
 	file_loaded: BOOLEAN
 			-- Has a file been loaded into the text panel?
 		do
-			Result := attached file_name as l_name and then not l_name.is_empty
+			Result := attached file_path as l_name and then not l_name.is_empty
 		end
 
 	editor_x: INTEGER
@@ -689,7 +699,17 @@ feature -- Basic Operations
 			set_first_line_displayed (first_line_displayed, True)
 		end
 
-	load_file (a_filename: PATH)
+	load_file (a_filename: STRING_32)
+			-- Load contents of `a_filename'.
+		obsolete
+			"Use `load_file_path' instead."
+		require
+			a_filename_not_void: a_filename /= Void
+		do
+			load_file_path (create {PATH}.make_from_string (a_filename))
+		end
+
+	load_file_path (a_filename: PATH)
 			-- Load contents of `a_filename'
 		require
 			filename_not_void: a_filename /= Void
@@ -727,7 +747,7 @@ feature -- Basic Operations
 			else
 				load_text ({STRING_32} "File: " + a_filename.string_representation + "%Ndoes not exist.")
 			end
-			create file_name.make_from_string (a_filename.string_representation)
+			create file_path.make_from_string (a_filename.string_representation)
 			date_of_file_when_loaded := l_date
 			size_of_file_when_loaded := l_size
 		end
@@ -1567,8 +1587,8 @@ feature {NONE} -- Text loading
 	reload
 			-- Reload the opened file from disk.
 		do
-			if attached file_name as l_name and then not l_name.is_empty then
-				load_file (l_name)
+			if attached file_path as l_name and then not l_name.is_empty then
+				load_file_path (l_name)
 			end
 		end
 
@@ -1764,7 +1784,7 @@ feature -- Implementation
 		local
 			l_file: RAW_FILE
 		do
-			if attached file_name as l_name then
+			if attached file_path as l_name then
 				create l_file.make_with_path (l_name)
 				Result := l_file.date
 			end
@@ -1778,7 +1798,7 @@ feature -- Implementation
 		local
 			l_file: RAW_FILE
 		do
-			if attached file_name as l_name then
+			if attached file_path as l_name then
 				create l_file.make_with_path (l_name)
 				Result := l_file.count
 			end
@@ -1791,7 +1811,7 @@ feature -- Implementation
 		local
 			l_file: RAW_FILE
 		do
-			if attached file_name as l_name then
+			if attached file_path as l_name then
 				create l_file.make_with_path (l_name)
 				Result := l_file.exists
 			end

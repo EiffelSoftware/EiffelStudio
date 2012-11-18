@@ -653,17 +653,17 @@ feature -- Update
 		do
 			text_displayed.set_changed (False, True)
 			if open_backup then
-				fn := file_name.string_representation
-				create backup_file.make_with_path (file_name)
+				fn := file_path.string_representation
+				create backup_file.make_with_path (file_path)
 				if backup_file.exists then
 					backup_file.delete
 				end
 				fn.keep_head (fn.count - 4)
-				create file_name.make_from_string (fn)
+				create file_path.make_from_string (fn)
 				open_backup := False
 			end
-			if file_name /= Void then
-				create file.make_with_path (file_name)
+			if file_path /= Void then
+				create file.make_with_path (file_path)
 				if file.exists then
 					date_of_file_when_loaded := file.date
 					size_of_file_when_loaded := file_size

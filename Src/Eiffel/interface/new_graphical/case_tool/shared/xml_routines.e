@@ -218,12 +218,12 @@ feature -- Saving
 					l_output_file.flush
 					l_output_file.close
 				else
-					display_error_message (warnings.w_unable_to_write_file (a_file_name.string_representation))
+					display_error_message (warnings.w_unable_to_write_file (a_file_name.name))
 				end
 			end
 		rescue
 			retried := True
-			display_error_message (warnings.w_unable_to_write_file (a_file_name.string_representation))
+			display_error_message (warnings.w_unable_to_write_file (a_file_name.name))
 			retry
 		end
 
@@ -254,11 +254,11 @@ feature -- Deserialization
 				if l_parser.is_correct then
 					Result := l_tree.document
 				else
-					display_error_message (warnings.w_file_is_corrupted (a_file_path.string_representation))
+					display_error_message (warnings.w_file_is_corrupted (a_file_path.name))
 					Result := Void
 				end
 			else
-				display_error_message (warnings.w_file_can_not_be_open (a_file_path.string_representation))
+				display_error_message (warnings.w_file_can_not_be_open (a_file_path.name))
 			end
 		end
 

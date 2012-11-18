@@ -185,7 +185,7 @@ feature {EB_FAVORITES_ITEM_LIST, EB_FAVORITES_ITEM} -- Load/Save
 				until
 					after
 				loop
-					Result := Result + ":" + item.string_representation
+					Result := Result + ":" + item.name
 					forth
 				end
 			end

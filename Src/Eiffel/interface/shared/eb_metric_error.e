@@ -58,7 +58,7 @@ feature -- Access
 				l_str.append (metric_names.new_line_separator)
 				l_str.append (metric_names.coloned_string (names.l_file_location, True))
 				l_str.append (metric_names.space_separator)
-				l_str.append (file_location.string_representation)
+				l_str.append (file_location.name)
 			end
 			Result := l_str
 		ensure

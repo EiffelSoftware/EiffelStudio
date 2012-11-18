@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 					-- The user has replaced the icons.
 				l_matrix := l_user_matrix
 			end
-			if attached {EV_PIXEL_BUFFER} resource_handler.retrieve_matrix (l_matrix.string_representation) as l_buffer then
+			if attached {EV_PIXEL_BUFFER} resource_handler.retrieve_matrix (l_matrix.name) as l_buffer then
 				make_from_buffer (l_buffer)
 			else
 				if logger.is_service_available then

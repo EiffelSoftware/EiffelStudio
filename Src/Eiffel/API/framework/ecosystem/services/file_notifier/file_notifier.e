@@ -241,9 +241,9 @@ feature {NONE} -- Formatting
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		do
 			if {PLATFORM}.is_windows then
-				Result := a_file_name.string_representation.as_lower
+				Result := a_file_name.name.as_lower
 			else
-				Result := a_file_name.string_representation
+				Result := a_file_name.name
 			end
 		ensure
 			result_attached: attached Result

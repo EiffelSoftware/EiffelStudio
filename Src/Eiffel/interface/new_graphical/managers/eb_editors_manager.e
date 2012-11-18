@@ -202,11 +202,11 @@ feature -- Access
 				l_classi_stone ?= l_editors.item.stone
 				l_external_file_stone ?= l_editors.item.stone
 				if l_classi_stone /= Void then
-					if l_classi_stone.file_name.is_equal (a_file_name.string_representation) then
+					if l_classi_stone.file_name.is_equal (a_file_name.name) then
 						Result := l_editors.item
 					end
 				elseif l_external_file_stone /= Void then
-					if l_external_file_stone.file_name.is_equal (a_file_name.string_representation) then
+					if l_external_file_stone.file_name.is_equal (a_file_name.name) then
 						Result := l_editors.item
 					end
 				end

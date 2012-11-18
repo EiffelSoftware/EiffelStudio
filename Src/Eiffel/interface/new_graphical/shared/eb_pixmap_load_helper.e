@@ -25,7 +25,7 @@ feature -- Loading
 				create l_buffer
 				create l_file.make_with_path (a_file)
 				if l_file.exists and then l_file.is_readable then
-					l_buffer.set_with_named_file (a_file.string_representation)
+					l_buffer.set_with_named_file (a_file.name)
 					l_pixmap := l_buffer.sub_pixmap (create {EV_RECTANGLE}.make (0, 0, l_buffer.width, l_buffer.height))
 				end
 			end

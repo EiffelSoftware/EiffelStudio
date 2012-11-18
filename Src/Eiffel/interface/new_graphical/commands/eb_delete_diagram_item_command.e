@@ -308,7 +308,7 @@ feature {NONE} -- Implementation
 			end
 			if could_not_delete then
 					-- We were not able to delete the file.
-				prompts.show_error_prompt (Warning_messages.w_Not_writable (class_i.file_name.string_representation), window.window, Void)
+				prompts.show_error_prompt (Warning_messages.w_Not_writable (class_i.file_name.name), window.window, Void)
 			else
 				es_classes := tool.graph.class_from_interface (class_i)
 				from

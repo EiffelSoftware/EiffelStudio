@@ -41,7 +41,7 @@ feature -- Access
 			editor: ARRAYED_LIST [EB_SMART_EDITOR]
 			l_app: like ev_application
 		do
-			l := Window_manager.development_windows_with_class (a_class.file_name.string_representation)
+			l := Window_manager.development_windows_with_class (a_class.file_name.name)
 			if not l.is_empty then
 				from
 					l_app := ev_application
@@ -100,7 +100,7 @@ feature -- Element change
 			l_editors: ARRAYED_LIST [EB_SMART_EDITOR]
 			l_encoding: ENCODING
 		do
-			l := Window_manager.development_windows_with_class (a_class.file_name.string_representation)
+			l := Window_manager.development_windows_with_class (a_class.file_name.name)
 			from
 				l.start
 			until
@@ -128,7 +128,7 @@ feature -- Element change
 			end
 			if not in_tool then
 				l_encoding ?= a_class.encoding
-				save (a_class.file_name.string_representation, a_text, l_encoding, a_class.bom)
+				save (a_class.file_name.name, a_text, l_encoding, a_class.bom)
 			end
 		end
 

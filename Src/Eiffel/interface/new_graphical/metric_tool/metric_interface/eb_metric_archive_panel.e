@@ -614,7 +614,7 @@ feature {NONE} -- Implementation
 		do
 			u.create_directory_path (metric_manager.userdefined_metrics_path)
 			create file.make_with_path (metric_manager.userdefined_metrics_path.extended (a_target_file_name))
-			file_name := file.path.string_representation
+			file_name := file.path.name
 
 			if file.exists then
 				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt_with_cancel (

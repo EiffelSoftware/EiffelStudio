@@ -1220,7 +1220,7 @@ feature {NONE} -- Implementation
 		do
 			if text_is_fully_loaded then
 				if retried then
-					show_warning_message (Warning_messages.w_Cannot_read_file (file_path.string_representation))
+					show_warning_message (Warning_messages.w_Cannot_read_file (file_path.name))
 				else
 					deselect_all
 					syn_error := text_displayed.last_syntax_error

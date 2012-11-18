@@ -451,7 +451,7 @@ feature -- Basic operations
 
 						-- Save directly to disk.
 					create l_save
-					l_save.save (context_class.file_name.string_representation, l_new_text, original_encoding, original_bom)
+					l_save.save (context_class.file_name.name, l_new_text, original_encoding, original_bom)
 					from l_editors.start until l_editors.after loop
 						l_editor := l_editors.item
 						l_editor.continue_editing

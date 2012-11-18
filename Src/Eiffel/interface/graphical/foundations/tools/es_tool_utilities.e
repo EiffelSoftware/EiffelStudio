@@ -146,11 +146,11 @@ feature -- Query
 			u: FILE_UTILITIES
 		do
 			Result := eiffel_layout.tools_path
-			u.create_directory (Result.string_representation)
+			u.create_directory (Result.name)
 
 				-- Build folder and create it
 			Result := Result.extended (a_tool.name)
-			u.create_directory (Result.string_representation)
+			u.create_directory (Result.name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 			result_consistent: Result.is_equal (tool_associated_path (a_tool))

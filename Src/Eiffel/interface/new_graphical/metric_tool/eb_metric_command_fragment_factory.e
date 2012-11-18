@@ -136,12 +136,12 @@ feature{NONE} -- Implementation
 		do
 			if a_item.is_code_structure then
 				l_code_item ?= a_item
-				Result := l_code_item.class_i.file_name.string_representation
+				Result := l_code_item.class_i.file_name.name
 			elseif a_item.is_line then
 				l_line ?= a_item
 				l_code_item ?= l_line.parent
 				if l_code_item /= Void then
-					Result := l_code_item.class_i.file_name.string_representation
+					Result := l_code_item.class_i.file_name.name
 				end
 			elseif a_item.is_group then
 				l_group ?= a_item

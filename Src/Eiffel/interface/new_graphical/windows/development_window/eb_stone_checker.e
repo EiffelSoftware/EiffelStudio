@@ -478,7 +478,7 @@ feature {NONE} -- Implementation functions
 					current_editor.clear_window
 					current_editor.display_message (
 						develop_window.Warning_messages.w_file_not_exist (
-							new_class_stone.class_i.file_name.string_representation))
+							new_class_stone.class_i.file_name.name))
 				end
 			end
 		end

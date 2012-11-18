@@ -204,7 +204,7 @@ feature -- dragging
 															eiffel_universe.target_name,
 															e_class.group.name,
 															l_feature_name,
-															l_file_name.string_representation)
+															l_file_name.name)
 			else
 				Result := interface_names.l_feature_header_precompiled (eiffel_system.name,
 															eiffel_universe.target_name,

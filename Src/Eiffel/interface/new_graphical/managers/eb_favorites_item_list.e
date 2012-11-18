@@ -557,7 +557,7 @@ feature {EB_FAVORITES_ITEM_LIST, EB_FAVORITES_ITEM} -- Load/Save
 				after
 			loop
 				Result := Result
-				Result.append (item.string_representation)
+				Result.append (item.name)
 				forth
 				if not after then
 					Result.append (";")

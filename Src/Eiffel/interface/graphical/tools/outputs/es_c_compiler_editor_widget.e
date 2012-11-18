@@ -512,7 +512,7 @@ feature {NONE} -- Action handlers
 							end
 						end
 					end
-					l_file_name := l_full_file_name.string_representation
+					l_file_name := l_full_file_name.name
 				end
 
 				if u.file_exists (l_file_name) then

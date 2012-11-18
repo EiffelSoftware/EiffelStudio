@@ -566,7 +566,7 @@ feature {NONE} -- Implementation
 				a_text_formatter.add ("No help available for this error")
 				a_text_formatter.add_new_line
 				a_text_formatter.add ("(cannot read file: ")
-				a_text_formatter.add (f_name.string_representation)
+				a_text_formatter.add (f_name.name)
 				a_text_formatter.add (")")
 				a_text_formatter.add_new_line
 				a_text_formatter.add_new_line

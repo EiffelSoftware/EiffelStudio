@@ -210,7 +210,7 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Redraw
 													new_label_item (once "-"))
 						set_item (4,
 													l_row_count,
-													new_label_item (l_item.path.string_representation))
+													new_label_item (l_item.path.name))
 						k := 0
 					else
 						l_text_item ?= l_item
@@ -238,7 +238,7 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Redraw
 							set_item (3, l_row_count, l_grid_drawable_item)
 							l_grid_drawable_item.expose_actions.extend (agent expose_drawable_action (?, l_item, row (l_row_count)))
 							l_grid_drawable_item.set_required_width (font.string_width (l_text_item.context_text))
-							set_item (4, l_row_count, new_label_item (l_item.path.string_representation))
+							set_item (4, l_row_count, new_label_item (l_item.path.name))
 							extend_pointer_actions (l_new_row)
 							if not l_text_item.captured_submatches.is_empty then
 								submatch_parent := l_row_count

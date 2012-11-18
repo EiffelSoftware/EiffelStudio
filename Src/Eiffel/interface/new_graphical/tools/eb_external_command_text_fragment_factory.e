@@ -277,7 +277,7 @@ feature{NONE} -- Implementation
 		do
 			l_class_i := class_i_from_editor
 			if l_class_i /= Void then
-				Result := l_class_i.file_name.string_representation
+				Result := l_class_i.file_name.name
 			else
 				Result := a_text.twin
 			end

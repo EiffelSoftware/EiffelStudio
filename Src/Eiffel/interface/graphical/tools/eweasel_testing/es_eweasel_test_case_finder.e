@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 				-- If class not compiled, we parse it
 				create l_testing_factory
 				create l_parser.make_with_factory (l_testing_factory)
-				create l_file.make (a_class.file_name.to_string_32)
+				create l_file.make (a_class.file_name.name)
 				l_file.open_read
 				l_parser.parse (l_file)
 				l_top_indexes := l_testing_factory.top_indexing
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

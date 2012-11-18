@@ -137,7 +137,7 @@ feature -- Command
 			check l_app_imp /= Void end
 			l_writeable_formats := l_app_imp.writeable_pixbuf_formats
 			if
-				attached a_file_name.string_representation.split ('.') as l_list and then
+				attached a_file_name.name.split ('.') as l_list and then
 				not l_list.is_empty
 			then
 				l_extension := l_list.last.as_upper

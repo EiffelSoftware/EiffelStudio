@@ -116,7 +116,7 @@ feature {NONE} -- Behaviors
 		do
 			open_header_file_dialog.activate (Current)
 			if open_header_file_dialog.selected then
-				h_file_edit.set_text (open_header_file_dialog.file_path.string_representation)
+				h_file_edit.set_text (open_header_file_dialog.file_path.name)
 			end
 		end
 
@@ -126,7 +126,7 @@ feature {NONE} -- Behaviors
 		do
 			open_eiffel_file_dialog.activate (Current)
 			if open_eiffel_file_dialog.selected then
-				eiffel_file_edit.set_text (open_eiffel_file_dialog.file_path.string_representation)
+				eiffel_file_edit.set_text (open_eiffel_file_dialog.file_path.name)
 				if file_exists (open_eiffel_file_dialog.file_path) then
 					create c.make_by_predefined_id (Idc_wait)
 					c.set

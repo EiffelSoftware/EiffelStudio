@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "Path name abstraction based on {STRING_32}."
 	implementation: "[
 			{PATH_NAME} based on {STRING_8} is used
@@ -28,7 +28,7 @@ feature {NONE} -- Creation
 			-- This is a temporary method to ease migration to PATH
 		obsolete "Use directly the class PATH [2012-oct]"
 		do
-			make_from_string (a_path.string_representation)
+			make_from_string (a_path.name)
 		end
 
 feature -- Conversion

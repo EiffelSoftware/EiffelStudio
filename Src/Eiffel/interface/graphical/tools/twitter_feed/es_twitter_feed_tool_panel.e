@@ -38,10 +38,10 @@ feature {NONE} -- Initialization: User interface
 			l_feed: like twitter_feed
 			l_icon: EV_PIXMAP
 			l_spacer: EV_CELL
-			l_tool_path: PATH_NAME
-			l_logo_file: FILE_NAME
-			l_bird_file: FILE_NAME
-			l_spacer_file: FILE_NAME
+			l_tool_path: PATH
+			l_logo_file: PATH
+			l_bird_file: PATH
+			l_spacer_file: PATH
 		do
 			create l_utilities
 			a_widget.set_padding (0)
@@ -62,16 +62,13 @@ feature {NONE} -- Initialization: User interface
 
 				-- Bottom logo
 			l_tool_path := l_utilities.tool_associated_path (tool_descriptor)
-			create l_logo_file.make_from_string (l_tool_path)
-			l_logo_file.set_file_name (logo_file_name)
-			create l_bird_file.make_from_string (l_tool_path)
-			l_bird_file.set_file_name (bird_file_name)
-			create l_spacer_file.make_from_string (l_tool_path)
-			l_spacer_file.set_file_name (spacer_file_name)
+			l_logo_file := l_tool_path.extended (logo_file_name)
+			l_bird_file := l_tool_path.extended (bird_file_name)
+			l_spacer_file := l_tool_path.extended (spacer_file_name)
 			if
-				(create {RAW_FILE}.make (l_logo_file.string)).exists and then
-				(create {RAW_FILE}.make (l_bird_file.string)).exists and then
-				(create {RAW_FILE}.make (l_spacer_file.string)).exists
+				(create {RAW_FILE}.make_with_path (l_logo_file)).exists and then
+				(create {RAW_FILE}.make_with_path (l_bird_file)).exists and then
+				(create {RAW_FILE}.make_with_path (l_spacer_file)).exists
 			then
 				create l_hbox
 				l_hbox.set_background_color (colors.stock_colors.white)
@@ -79,7 +76,7 @@ feature {NONE} -- Initialization: User interface
 				l_hbox.set_padding (0)
 
 				create l_icon.default_create
-				l_icon.set_with_named_file (l_spacer_file.string)
+				l_icon.set_with_named_path (l_spacer_file)
 				create l_spacer
 				l_spacer.set_background_pixmap (l_icon)
 				l_spacer.set_minimum_width ({ES_UI_CONSTANTS}.frame_border)
@@ -87,7 +84,7 @@ feature {NONE} -- Initialization: User interface
 				l_hbox.disable_item_expand (l_spacer)
 
 				create l_icon.default_create
-				l_icon.set_with_named_file (l_logo_file.string)
+				l_icon.set_with_named_path (l_logo_file)
 				l_hbox.extend (l_icon)
 				l_hbox.disable_item_expand (l_icon)
 
@@ -108,13 +105,13 @@ feature {NONE} -- Initialization: User interface
 					end)
 
 				create l_icon.default_create
-				l_icon.set_with_named_file (l_spacer_file.string)
+				l_icon.set_with_named_path (l_spacer_file)
 				create l_spacer
 				l_spacer.set_background_pixmap (l_icon)
 				l_hbox.extend (l_spacer)
 
 				create l_icon.default_create
-				l_icon.set_with_named_file (l_bird_file.string)
+				l_icon.set_with_named_path (l_bird_file)
 				l_hbox.extend (l_icon)
 				l_hbox.disable_item_expand (l_icon)
 

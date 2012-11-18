@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			else
 				l_loc := l_exec.current_working_path
 			end
-			make_with_location (l_loc.extended ("stored_preferences.xml").string_representation)
+			make_with_location (l_loc.extended ("stored_preferences.xml").name)
 		end
 
 	make_with_location (a_location: READABLE_STRING_GENERAL)

@@ -53,7 +53,7 @@ feature {NONE} -- Command
 			-- Refresh
 		do
 			if attached {PATH_PREFERENCE} preference as p32 then
-				change_item_widget.set_text (p32.value.string_representation)
+				change_item_widget.set_text (p32.value.name)
 			else
 				change_item_widget.set_text (preference.text_value)
 			end

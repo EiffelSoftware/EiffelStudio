@@ -30,7 +30,7 @@ feature {NONE} -- Implementation
 	item_to_string_representation (obj: PATH): STRING_32
 			-- String representation of `obj'.
 		do
-			Result := obj.string_representation
+			Result := obj.name
 		end
 
 	item_from_string_representation (s: STRING_32): PATH

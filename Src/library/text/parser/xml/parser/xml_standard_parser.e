@@ -85,10 +85,10 @@ feature -- Parsing
 					parse_from_file (f)
 					f.close
 				else
-					report_error ({STRING_32} "Unable to open file %"" + a_path.string_representation + {STRING_32} "%".")
+					report_error ({STRING_32} "Unable to open file %"" + a_path.name + {STRING_32} "%".")
 				end
 			else
-				report_error ({STRING_32} "Error when trying to open file %"" + a_path.string_representation + {STRING_32} "%".")
+				report_error ({STRING_32} "Error when trying to open file %"" + a_path.name + {STRING_32} "%".")
 				if f /= Void and then not f.is_closed then
 					f.close
 				end

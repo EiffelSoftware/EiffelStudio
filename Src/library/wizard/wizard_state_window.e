@@ -74,7 +74,7 @@ feature -- Basic Operations
 			info_dialog: EV_INFORMATION_DIALOG
 		do
 			if not retried then
-				fi := wizard_pixmap_path.extended (pixmap_file_name).string_representation
+				fi := wizard_pixmap_path.extended (pixmap_file_name).name
 				pixmap.set_with_named_file (fi)
 			end
 		rescue

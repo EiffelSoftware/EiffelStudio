@@ -722,7 +722,7 @@ feature -- Basic Operations
 		do
 			editor_drawing_area.disable_sensitive
 				-- Check the document type of the file to load.
-			s := a_filename.string_representation
+			s := a_filename.name
 			l_doc_type := s.substring (s.last_index_of ('.', s.count) + 1, s.count)
 			if l_doc_type /= Void and then known_document_type (l_doc_type) then
 				set_current_document_class (get_class_from_type (l_doc_type))
@@ -745,9 +745,9 @@ feature -- Basic Operations
 				end
 				l_file.close
 			else
-				load_text ({STRING_32} "File: " + a_filename.string_representation + "%Ndoes not exist.")
+				load_text ({STRING_32} "File: " + a_filename.name + "%Ndoes not exist.")
 			end
-			create file_path.make_from_string (a_filename.string_representation)
+			create file_path.make_from_string (a_filename.name)
 			date_of_file_when_loaded := l_date
 			size_of_file_when_loaded := l_size
 		end

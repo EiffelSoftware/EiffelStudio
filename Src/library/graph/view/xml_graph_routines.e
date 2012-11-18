@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "[
 			Common routines for XML extraction, saving and deserialization
 		]"
@@ -284,12 +284,12 @@ feature -- Saving
 					l_output_file.flush
 					l_output_file.close
 				else
-					display_error_message ({STRING_32} "Unable to write file: " + a_file_name.string_representation)
+					display_error_message ({STRING_32} "Unable to write file: " + a_file_name.name)
 				end
 			end
 		rescue
 			retried := True
-			display_error_message ({STRING_32} "Unable to write file: " + a_file_name.string_representation)
+			display_error_message ({STRING_32} "Unable to write file: " + a_file_name.name)
 			retry
 		end
 
@@ -330,11 +330,11 @@ feature -- Deserialization
 				if l_parser.is_correct then
 					Result := l_tree.document
 				else
-					display_error_message ({STRING_32} "File " + a_file_path.string_representation + {STRING_32} " is corrupted")
+					display_error_message ({STRING_32} "File " + a_file_path.name + {STRING_32} " is corrupted")
 					Result := Void
 				end
 			else
-				display_error_message ({STRING_32} "File " + a_file_path.string_representation + {STRING_32} " cannot not be open")
+				display_error_message ({STRING_32} "File " + a_file_path.name + {STRING_32} " cannot not be open")
 			end
 		end
 

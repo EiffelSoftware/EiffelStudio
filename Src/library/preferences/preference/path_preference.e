@@ -31,7 +31,7 @@ feature {PREFERENCE, PREFERENCE_WIDGET, PREFERENCES_STORAGE_I, PREFERENCE_VIEW} 
 	text_value: STRING_32
 			-- String representation of `value'.
 		do
-			Result := value.string_representation
+			Result := value.name
 		end
 
 feature -- Access	

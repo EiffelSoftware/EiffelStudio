@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				Precursor {WIZARD_STATE_WINDOW}
-				fi := wizard_pixmap_path.extended (pixmap_icon_location.string.as_string_32).string_representation
+				fi := wizard_pixmap_path.extended (pixmap_icon_location.string.as_string_32).name
 				pixmap_icon.set_with_named_file (fi)
 			end
 		rescue

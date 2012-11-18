@@ -59,7 +59,7 @@ feature -- Access
 		require
 			not argument (1).is_empty
 		once
-			Result := wizard_source_path.string_representation.as_string_8
+			Result := wizard_source_path.name.as_string_8
 		ensure
 			exists: Result /= Void
 		end
@@ -78,7 +78,7 @@ feature -- Access
 			-- Bitmaps location.
 		obsolete "Use `wizard_pixmap_path' instead."
 		once
-			create Result.make_from_string (wizard_pixmap_path.string_representation.as_string_8)
+			create Result.make_from_string (wizard_pixmap_path.name.as_string_8)
 		end
 
 	wizard_pixmap_path: PATH
@@ -91,7 +91,7 @@ feature -- Access
 			-- Resource location.
 		obsolete "Use `wizard_resource_path' instead."
 		once
-			create Result.make_from_string (wizard_resource_path.string_representation.as_string_8)
+			create Result.make_from_string (wizard_resource_path.name.as_string_8)
 		end
 
 	wizard_resource_path: PATH

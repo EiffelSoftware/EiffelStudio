@@ -30,8 +30,8 @@ feature -- Basic operations
 		do
 			create item_matched_internal.make (0)
 			text := ""
-			create file.make_with_name (path)
-			if path.to_string_32.ends_with (".e") then
+			create file.make_with_path (path)
+			if path.name.ends_with (".e") then
 				if file.exists then
 					file.open_read
 					if file.is_readable then

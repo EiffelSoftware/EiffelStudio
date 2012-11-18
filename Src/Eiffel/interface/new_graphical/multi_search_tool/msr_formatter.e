@@ -39,21 +39,6 @@ note
 class
 	MSR_FORMATTER
 
-feature -- Path building
-
-	extend_file_path (a_path: FILE_NAME_32; file_name: STRING): FILE_NAME_32
-			-- Make new file path, if no diretory seperator at the end of a_path, add one.
-		local
-			s: STRING_32
-		do
-			s := a_path.to_string_32
-			if s.item (s.count) /= operating_environment.directory_separator then
-				s.append_character (operating_environment.directory_separator)
-			end
-			s.append (file_name)
-			create Result.make_from_string (s)
-		end
-
 feature -- Muter action
 
 	mute_escape_characters (string: STRING_32): STRING_32

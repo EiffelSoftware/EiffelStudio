@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	path: FILE_NAME_32
+	path: PATH
 			-- Directory that is searching
 		require else
 			path_not_void: is_path_set
@@ -68,7 +68,7 @@ feature -- Status setting
 			is_path_set: is_path_set
 		end
 
-	set_one_file_searched_action (action: PROCEDURE [ANY, TUPLE [STRING_32]])
+	set_one_file_searched_action (action: PROCEDURE [ANY, TUPLE [PATH]])
 			-- Set action for invokation one a file searched
 		require
 			action_not_void: action /= Void
@@ -107,25 +107,23 @@ feature -- Basic operations
 		local
 			i:INTEGER
 			l_directory: DIRECTORY
+			l_entries: ARRAYED_LIST [PATH]
 			l_file: RAW_FILE
 		do
 			create item_matched_internal.make (0)
-			create l_directory.make (path)
+			create l_directory.make_with_path (path)
 			if l_directory.exists then
-				l_directory.open_read
 					 -- Recursively retrieve the directory tree.
 				from
-					l_directory.start
-					l_directory.readentry
-					i := 1
+					l_entries := l_directory.entries
 				until
-					i > l_directory.count
+					l_entries.after
 				loop
-					if not(l_directory.lastentry.is_equal (".") or l_directory.lastentry.is_equal("..")) then
-						create l_file.make_with_name (string_formatter.extend_file_path (path, l_directory.lastentry).to_string_32)
+					if not (l_entries.item.is_current_symbol or l_entries.item.is_parent_symbol) then
+						create l_file.make_with_path (path.extended_path (l_entries.item))
 						if l_file.exists then
 							if l_file.is_directory and then is_subdirectory_searched then
-								create directory_strategy.make (keyword, surrounding_text_range_internal, string_formatter.extend_file_path (path, l_directory.lastentry))
+								create directory_strategy.make (keyword, surrounding_text_range_internal, path.extended_path (l_entries.item))
 								if case_sensitive then
 									directory_strategy.set_case_sensitive
 								else
@@ -139,7 +137,7 @@ feature -- Basic operations
 									item_matched_internal.merge_right (directory_strategy.item_matched)
 								end
 							else
-								create file_strategy.make (keyword, surrounding_text_range_internal, string_formatter.extend_file_path (path, l_directory.lastentry))
+								create file_strategy.make (keyword, surrounding_text_range_internal, path.extended_path (l_entries.item))
 								if case_sensitive then
 									file_strategy.set_case_sensitive
 								else
@@ -154,14 +152,13 @@ feature -- Basic operations
 								end
 							end
 							if one_file_searched_internal /= Void then
-								one_file_searched_internal.call ([string_formatter.extend_file_path (path, l_directory.lastentry).to_string_32])
+								one_file_searched_internal.call ([path.extended_path (l_entries.item)])
 							end
 						end
 					end
-					l_directory.readentry
+					l_entries.forth
 					i := i + 1
 				end
-			l_directory.close
 			end
 			launched := True
 			item_matched_internal.start
@@ -178,7 +175,7 @@ feature {NONE} -- Implementation
 	directory_strategy: MSR_SEARCH_DIRECTORY_STRATEGY
 			-- Directory strategy used for directory recursively searching
 
-	one_file_searched_internal: PROCEDURE [ANY, TUPLE [STRING_32]]
+	one_file_searched_internal: PROCEDURE [ANY, TUPLE [PATH]]
 			-- Invokes once one file searched
 
 invariant

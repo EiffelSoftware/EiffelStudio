@@ -77,7 +77,7 @@ feature -- Access
 		obsolete
 			"Use `default_start_path' instead."
 		do
-			Result := default_start_path.string_representation
+			Result := default_start_path.name
 		end
 
 	default_start_path: PATH
@@ -150,9 +150,9 @@ feature -- Settings
 		do
 			l_field := field
 			check l_field /= Void end
-			l_field.set_text (p.string_representation)
+			l_field.set_text (p.name)
 		ensure
-			path_set: file_path.string_representation ~ p.string_representation
+			path_set: file_path.name ~ p.name
 		end
 
 	set_browse_for_file (filter: READABLE_STRING_GENERAL)
@@ -281,7 +281,7 @@ feature {NONE} -- GUI building
 
 			dd.show_modal_to_window (parent_window)
 			if dd.path /= Void and then not dd.path.is_empty and then attached field as l_field then
-				l_field.set_text (dd.path.string_representation)
+				l_field.set_text (dd.path.name)
 			end
 		end
 
@@ -323,7 +323,7 @@ feature {NONE} -- GUI building
 			end
 			fd.show_modal_to_window (parent_window)
 			if not fd.full_file_path.is_empty and then attached field as l_field then
-				l_field.set_text (fd.full_file_path.string_representation)
+				l_field.set_text (fd.full_file_path.name)
 			end
 		end
 

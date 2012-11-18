@@ -77,7 +77,7 @@ feature -- Access
 	file_name: STRING_32
 			-- File where the help is
 		do
-			Result := eiffel_layout.error_path.extended (error_i.help_file_name).string_representation
+			Result := eiffel_layout.error_path.extended (error_i.help_file_name).name
 		end
 
 	stone_signature: STRING_32 do Result := code end

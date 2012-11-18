@@ -395,7 +395,7 @@ feature{NONE} -- Implementation
 			l_grid.add_property (l_temp_header)
 
 			create l_pixmap.make (interface_names.l_pixmap_file)
-			l_pixmap.set_value (a_descriptor.pixmap_location.string_representation)
+			l_pixmap.set_value (a_descriptor.pixmap_location.name)
 			l_pixmap.change_value_actions.extend (agent on_data_general_change (?, agent a_descriptor.set_pixmap_location, Void))
 			l_grid.add_property (l_pixmap)
 

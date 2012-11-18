@@ -653,7 +653,7 @@ feature -- Update
 		do
 			text_displayed.set_changed (False, True)
 			if open_backup then
-				fn := file_path.string_representation
+				fn := file_path.name
 				create backup_file.make_with_path (file_path)
 				if backup_file.exists then
 					backup_file.delete

@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 				-- feature text area
 			create req
 			req.execute (preferences.misc_data.external_editor_cli (
-				fs.class_i.file_name.string_representation, fs.line_number))
+				fs.class_i.file_name.name, fs.line_number))
 		end
 
 note

@@ -108,7 +108,7 @@ feature -- Access
 			l_metric.add_unqualified_attribute (n_filter, a_descriptor.is_filter_enabled.out)
 
 			create l_pixmap.make_last (Result, n_pixmap, l_namespace)
-			l_pixmap.add_unqualified_attribute (n_location, a_descriptor.pixmap_location.string_representation)
+			l_pixmap.add_unqualified_attribute (n_location, a_descriptor.pixmap_location.name)
 
 			create l_tools.make_last (Result, n_tools, l_namespace)
 			from

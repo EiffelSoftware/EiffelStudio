@@ -42,14 +42,14 @@ feature {NONE} -- Initialization
 			error_msg: STRING_32
 		once
 			if retried then
-				error_msg := warning_messages.w_cannot_read_file (eiffel_layout.compiler_configuration.string_representation)
+				error_msg := warning_messages.w_cannot_read_file (eiffel_layout.compiler_configuration.name)
 			else
 				create test_file.make_with_path (eiffel_layout.compiler_configuration)
 				if test_file.exists and test_file.is_readable then
 					create resource_parser
 					resource_parser.parse_file (eiffel_layout.compiler_configuration, configure_resources)
 				else
-					error_msg := Warning_messages.w_file_does_not_exist_execution_impossible (eiffel_layout.compiler_configuration.string_representation)
+					error_msg := Warning_messages.w_file_does_not_exist_execution_impossible (eiffel_layout.compiler_configuration.name)
 				end
 			end
 			if error_msg /= Void then

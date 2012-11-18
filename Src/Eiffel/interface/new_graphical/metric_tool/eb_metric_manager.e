@@ -429,7 +429,7 @@ feature -- Access
 		do
 			clear_last_error
 			create l_callback.make_with_factory (create{EB_LOAD_METRIC_DEFINITION_FACTORY})
-			l_tuple := items_from_file_path (a_file_name, l_callback, agent (l_callback.metrics).linear_representation, agent l_callback.last_error, agent create_last_error (metric_names.err_file_not_readable (a_file_name.string_representation)))
+			l_tuple := items_from_file_path (a_file_name, l_callback, agent (l_callback.metrics).linear_representation, agent l_callback.last_error, agent create_last_error (metric_names.err_file_not_readable (a_file_name.name)))
 			if not has_error then
 				last_error := l_tuple.l_error
 				if not has_error then
@@ -533,7 +533,7 @@ feature -- Metric management
 						end
 					end
 				else
-					create last_error.make (metric_names.err_file_not_readable (a_file_name.string_representation))
+					create last_error.make (metric_names.err_file_not_readable (a_file_name.name))
 				end
 			end
 		end
@@ -551,7 +551,7 @@ feature -- Metric management
 			create l_xml_generator.make
 			create l_userdefined_metrics.make
 			metrics.do_if (agent l_userdefined_metrics.extend, agent (a_metric: EB_METRIC): BOOLEAN do Result := not a_metric.is_predefined end)
-			store_xml (xml_document_for_items (n_metric, l_userdefined_metrics, agent l_xml_generator.xml_element), a_file_name, agent create_last_error (metric_names.err_file_not_writable (a_file_name.string_representation)))
+			store_xml (xml_document_for_items (n_metric, l_userdefined_metrics, agent l_xml_generator.xml_element), a_file_name, agent create_last_error (metric_names.err_file_not_writable (a_file_name.name)))
 		end
 
 	store_userdefined_metrics
@@ -567,7 +567,7 @@ feature -- Metric management
 			end
 		rescue
 			l_retried := True
-			create last_error.make (metric_names.err_directory_creation_fail (userdefined_metrics_path.string_representation))
+			create last_error.make (metric_names.err_directory_creation_fail (userdefined_metrics_path.name))
 			retry
 		end
 
@@ -701,7 +701,7 @@ feature -- Metric management
 					u.create_directory_path (userdefined_metrics_path)
 					clear_last_error
 					archive_history.clear_last_error
-					archive_history.store_archive (archive_history_file, agent archive_history.create_last_error (metric_names.err_file_not_writable (archive_history_file.string_representation)))
+					archive_history.store_archive (archive_history_file, agent archive_history.create_last_error (metric_names.err_file_not_writable (archive_history_file.name)))
 					if archive_history.has_error then
 						last_error := archive_history.last_error
 					end
@@ -709,7 +709,7 @@ feature -- Metric management
 			end
 		rescue
 			l_retried := True
-			create last_error.make (metric_names.err_directory_creation_fail (userdefined_metrics_path.string_representation))
+			create last_error.make (metric_names.err_directory_creation_fail (userdefined_metrics_path.name))
 			retry
 		end
 

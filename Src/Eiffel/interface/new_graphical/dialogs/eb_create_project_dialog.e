@@ -1,4 +1,4 @@
-﻿note
+note
 	description	: "Command to create a new project"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -218,7 +218,7 @@ feature -- Execution
 				if (create {PLAIN_TEXT_FILE}.make_with_path (ace_file_name)).exists then
 						-- Warn that the existing configuration file will be overwritten.
 					prompts.show_warning_prompt_with_cancel (
-						warning_messages.w_file_exists (ace_file_name.string_representation),
+						warning_messages.w_file_exists (ace_file_name.name),
 						Current,
 						agent do success := True end,
 						Void
@@ -240,7 +240,7 @@ feature -- Execution
 					if l_project_initialized then
 						l_project_loader.enable_project_creation_or_opening_not_requested
 					end
-					l_project_loader.open_project_file (ace_file_name.string_representation, Void, directory_name.string_representation, True)
+					l_project_loader.open_project_file (ace_file_name.name, Void, directory_name.name, True)
 					if not l_project_loader.has_error then
 						if compile_project then
 							l_project_loader.set_is_compilation_requested (True)
@@ -365,7 +365,7 @@ feature {NONE} -- Implementation
 				system_name_frame.extend (main_vb)
 			else
 					-- Ace file Name
-				create label.make_with_text (ace_file_name.string_representation)
+				create label.make_with_text (ace_file_name.name)
 				create system_name_frame.make_with_text (Interface_names.l_Ace_file_for_frame)
 				create hb
 				hb.set_border_width (layout_constants.small_border_size)
@@ -489,7 +489,7 @@ feature {NONE} -- Implementation
 				raise_exception ("Cannot create a directory.")
 			end
 		rescue
-			add_error_message (Warning_messages.w_Invalid_directory_or_cannot_be_created (a_directory_name.string_representation))
+			add_error_message (Warning_messages.w_Invalid_directory_or_cannot_be_created (a_directory_name.name))
 		end
 
 	create_default_directory_name (project_name: STRING_32): STRING_32
@@ -497,7 +497,7 @@ feature {NONE} -- Implementation
 		local
 			l_project_location: STRING_32
 		do
-			l_project_location := eiffel_layout.user_projects_path.string_representation
+			l_project_location := eiffel_layout.user_projects_path.name
 			if l_project_location @ l_project_location.count /= Operating_environment.Directory_separator then
 				l_project_location.append_character (Operating_environment.Directory_separator)
 			end

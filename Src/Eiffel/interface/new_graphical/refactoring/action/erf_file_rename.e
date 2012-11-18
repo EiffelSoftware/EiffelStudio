@@ -55,7 +55,7 @@ feature -- Basic operations
 				end
 			else
 				is_error := True
-				error_message := warning_messages.w_not_rename (new_name.string_representation, original_name.string_representation)
+				error_message := warning_messages.w_not_rename (new_name.name, original_name.name)
 			end
 		end
 
@@ -76,7 +76,7 @@ feature -- Basic operations
 				end
 			else
 				is_error := True
-				error_message := warning_messages.w_not_rename (original_name.string_representation, new_name.string_representation)
+				error_message := warning_messages.w_not_rename (original_name.name, new_name.name)
 			end
 		end
 

@@ -36,7 +36,7 @@ feature {NONE} -- Execution
 	process_uncompiled_class (class_i: CLASS_I)
 			-- Edit class `class_i'.
 		do
-			edit (class_i.file_name.string_representation)
+			edit (class_i.file_name.name)
 		end
 
 note

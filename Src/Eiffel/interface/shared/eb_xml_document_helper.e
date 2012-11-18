@@ -172,7 +172,7 @@ feature -- Access
 			p: PATH
 		do
 			create p.make_from_string (a_path)
-			Result := p.extended (a_file_name).string_representation
+			Result := p.extended (a_file_name).name
 		ensure
 			result_attached: Result /= Void
 		end
@@ -263,7 +263,7 @@ feature -- Backup
 		require
 			a_file_attached: a_file /= Void
 		do
-			create Result.make_from_string (a_file.string_representation + ".bak")
+			create Result.make_from_string (a_file.name + ".bak")
 		ensure
 			result_attached: Result /= Void
 		end

@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 			create l_eis_path.make_empty
 			eis_path_preference := l_manager.new_string_32_preference_value (l_manager, eis_path_preference_string, l_eis_path)
 			if attached eis_path as l_path and then l_path.is_empty then
-				eis_path_preference.set_value (eiffel_layout.user_projects_path.string_representation + {STRING_32} ";" + eiffel_layout.library_path.string_representation)
+				eis_path_preference.set_value (eiffel_layout.user_projects_path.name + {STRING_32} ";" + eiffel_layout.library_path.name)
 			end
 
 			use_postscript_preference := l_manager.new_boolean_preference_value (l_manager, use_postscript_preference_string, False)

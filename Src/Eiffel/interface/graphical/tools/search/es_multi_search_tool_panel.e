@@ -1722,7 +1722,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation, Q
 			l: LIST [EB_DEVELOPMENT_WINDOW]
 			l_editor: EB_SMART_EDITOR
 		do
-			l := window_manager.development_windows_with_class (a_class.file_name.string_representation)
+			l := window_manager.development_windows_with_class (a_class.file_name.name)
 			if not l.is_empty then
 				from
 					l.start

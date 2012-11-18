@@ -111,7 +111,7 @@ feature {NONE} -- Initialization
 
 				-- Initialization of compiler resources.
 			create preference_access.make_with_defaults_and_location (
-				<<eiffel_layout.general_preferences.string_representation, eiffel_layout.platform_preferences.string_representation>>, eiffel_layout.eiffel_preferences)
+				<<eiffel_layout.general_preferences.name, eiffel_layout.platform_preferences.name>>, eiffel_layout.eiffel_preferences)
 			create l_studio_preferences.make (preference_access, True, True)
 			l_compiler_setting.set_preferences (l_studio_preferences)
 

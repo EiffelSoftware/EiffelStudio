@@ -382,7 +382,7 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} 
 					-- Create a string to write prettified text.
 				create s.make_empty
 					-- Prettify code.
-				create l_show_pretty.make_string (file_path.string_representation, s)
+				create l_show_pretty.make_string (file_path.name, s)
 					-- Check if formatting is successful.
 				if not l_show_pretty.error then
 						-- Replace current class text with the prettified text.

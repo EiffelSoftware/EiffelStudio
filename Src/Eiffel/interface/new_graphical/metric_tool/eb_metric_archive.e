@@ -192,7 +192,7 @@ feature -- Archive manipulation
 			clear_last_error
 			create l_callback.make_with_factory (create{EB_LOAD_METRIC_DEFINITION_FACTORY})
 
-			l_tuple := items_from_file_path (a_file_name, l_callback, agent l_callback.archive, agent l_callback.last_error, agent create_last_error (metric_names.err_file_not_readable (a_file_name.string_representation)))
+			l_tuple := items_from_file_path (a_file_name, l_callback, agent l_callback.archive, agent l_callback.last_error, agent create_last_error (metric_names.err_file_not_readable (a_file_name.name)))
 			if not has_error then
 				last_error := l_tuple.l_error
 				if not has_error then

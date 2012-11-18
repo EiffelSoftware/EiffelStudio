@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 			contents.replace_substring_all ("$root_class_name", root_class_name)
 			contents.replace_substring_all ("$root_class_feature", root_feature_name)
 			contents.replace_substring_all ("$root_cluster_name", root_cluster_name)
-			contents.replace_substring_all ("$root_cluster_location", project_directory.string_representation)
+			contents.replace_substring_all ("$root_cluster_location", project_directory.name)
 		end
 
 	save_ace_file_content (contents: STRING)
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			new_file.close
 		rescue
 			add_error_message (
-				{STRING_32} "Unable to create or overwrite the ace file '"+ace_filename.string_representation+"'%N%
+				{STRING_32} "Unable to create or overwrite the ace file '"+ace_filename.name+"'%N%
 				%Check your write permissions in this directory")
 		end
 
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 		rescue
 			add_error_message (
 				{STRING_32} "Unable to read the template ace file '" +
-				eiffel_layout.default_config_file_name.string_representation +
+				eiffel_layout.default_config_file_name.name +
 				{STRING_32}"'%N%
 				%Check that the file exists and that you are allowed to read it.")
 		end
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			end
 		rescue
 			add_error_message (
-				{STRING_32} "Unable to create the root class file '"+ root_class_filename.string_representation +"'%N%
+				{STRING_32} "Unable to create the root class file '"+ root_class_filename.name +"'%N%
 				%Check your write permissions on this file and on this directory")
 		end
 

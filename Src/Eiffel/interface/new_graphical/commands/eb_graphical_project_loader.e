@@ -135,7 +135,7 @@ feature -- Settings
 			l_dialog: EB_EXTERNAL_OUTPUT_DIALOG
 		do
 			create l_prc_factory
-			l_prc_launcher := l_prc_factory.process_launcher (eiffel_layout.ec_command_name.string_representation, a_arguments, Void)
+			l_prc_launcher := l_prc_factory.process_launcher (eiffel_layout.ec_command_name.name, a_arguments, Void)
 			l_prc_launcher.set_separate_console (False)
 			l_prc_launcher.set_hidden (True)
 			create l_dialog

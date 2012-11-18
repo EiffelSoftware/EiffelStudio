@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 			l_path: PATH
 		do
 			l_path := eiffel_layout.built_ins_path (a_neutral, is_dotnet).extended (current_class.name + "." + eiffel_extension)
-			Result := l_path.string_representation
+			Result := l_path.name
 		ensure
 			built_in_code_path_not_void: Result /= Void
 		end

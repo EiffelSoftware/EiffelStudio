@@ -41,11 +41,11 @@ feature -- Execution
 		do
 			create command.make (50)
 			command.append_character ('"')
-			command.append_string (eiffel_layout.precompilation_wizard_command_name.string_representation)
+			command.append_string (eiffel_layout.precompilation_wizard_command_name.name)
 			command.append_character ('"')
 			command.append_character (' ')
 			command.append_character ('"')
-			command.append_string (eiffel_layout.precompilation_wizard_resources_path.string_representation)
+			command.append_string (eiffel_layout.precompilation_wizard_resources_path.name)
 			command.append_character ('"')
 			command.append_character (' ')
 			command.append_string (locale.info.id.name)

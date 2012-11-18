@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "Formatter to display the text a class with no analysis."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -94,7 +94,7 @@ feature -- Formatting
 					if f_name = Void or else f_name.is_empty then
 						f_name := classi.file_name
 					end
-					editor.display_message (Warning_messages.w_Cannot_read_file (f_name.string_representation))
+					editor.display_message (Warning_messages.w_Cannot_read_file (f_name.name))
 				end
 				is_editable :=	not classi.is_read_only and not editor.load_file_error
 				editor.set_read_only (not is_editable)

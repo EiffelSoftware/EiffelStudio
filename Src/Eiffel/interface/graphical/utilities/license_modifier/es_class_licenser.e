@@ -126,7 +126,7 @@ feature -- Basic operatons
 									l_license := load_license (l_fn, l_use_old_syntax)
 									l_load_default := False
 								else
-									l_path := l_fn.string_representation
+									l_path := l_fn.name
 										-- Try the default license file
 									l_index := l_path.last_index_of (operating_environment.directory_separator, l_path.count)
 									if l_index > 1 then
@@ -239,7 +239,7 @@ feature {NONE} -- Basic operation
 						end
 
 							-- Render template
-						Result := wizard_enginer.service.render_template_from_file (a_file_name.string_representation, l_parameters)
+						Result := wizard_enginer.service.render_template_from_file (a_file_name.name, l_parameters)
 						if Result /= Void then
 							Result.right_adjust
 							Result.left_adjust

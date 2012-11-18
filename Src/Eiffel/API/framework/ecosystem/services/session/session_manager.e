@@ -250,7 +250,7 @@ feature -- Storage
 						-- Log deserialization error.
 					create l_message.make_from_string ("Unable to store the session data file: ")
 					if not a_session.is_per_project or else (create {SHARED_WORKBENCH}).workbench.system_defined then
-						l_message.append (session_file_path (a_session).string_representation)
+						l_message.append (session_file_path (a_session).name)
 					else
 						l_message.append ("<unloaded project>")
 					end

@@ -156,7 +156,7 @@ feature -- Access
 			Result.add_unqualified_attribute (n_id, a_descriptor.id)
 
 			create l_pixmap.make_last (Result, n_pixmap, l_namespace)
-			l_pixmap.add_unqualified_attribute (n_location, a_descriptor.pixmap_location.string_representation)
+			l_pixmap.add_unqualified_attribute (n_location, a_descriptor.pixmap_location.name)
 
 			create l_handlers.make_last (Result, n_handlers, l_namespace)
 			from

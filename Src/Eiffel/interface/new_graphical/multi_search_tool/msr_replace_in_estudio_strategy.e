@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 		do
 			class_i ?= a_item.data
 			if class_i /= Void then
-				Result := not (search_tool.develop_window.editors_manager.is_class_editing (class_i.file_name.string_representation))
+				Result := not (search_tool.develop_window.editors_manager.is_class_editing (class_i.file_name.name))
 			end
 		end
 

@@ -73,7 +73,7 @@ feature -- Properties
 	file_name: like {ERROR}.file_name
 			-- File associated with `class_i'.
 		do
-			Result := class_i.file_name.string_representation
+			Result := class_i.file_name.name
 		end
 
 	stone_signature: STRING_32
@@ -95,7 +95,7 @@ feature -- Properties
 														 eiffel_universe.target_name,
 														 class_i.group.name,
 														 stone_signature,
-														 class_i.file_name.string_representation)
+														 class_i.file_name.name)
 		end
 
 	synchronized_stone: CLASSI_STONE

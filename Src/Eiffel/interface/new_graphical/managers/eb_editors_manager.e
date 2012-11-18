@@ -1745,7 +1745,7 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				if a_editor.changed then
-					tmp_name := a_editor.file_name
+					tmp_name := a_editor.file_path
 					if tmp_name /= Void then
 						tmp_name := tmp_name.appended (".swp")
 						create tmp_file.make_with_path (tmp_name)

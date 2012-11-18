@@ -21,7 +21,7 @@ inherit
 			handle_extended_key,
 			handle_extended_ctrled_key,
 			handle_character,
-			load_file,
+			load_file_path,
 			load_text, reload,
 			initialize_customizable_commands,
 			basic_cursor_move,
@@ -168,13 +168,13 @@ feature -- Content change
 			f_n: PATH
 			f_d, f_d_c, f_s: INTEGER
 		do
-			f_n := file_name
+			f_n := file_path
 			f_d := date_of_file_when_loaded
 			f_s := size_of_file_when_loaded
 			f_d_c := date_when_checked
 			load_text (s)
 			text_displayed.set_changed (True, False)
-			file_name := f_n
+			file_path := f_n
 			date_of_file_when_loaded := f_d
 			size_of_file_when_loaded := f_s
 			date_when_checked := f_d_c
@@ -1220,13 +1220,13 @@ feature {NONE} -- Implementation
 		do
 			if text_is_fully_loaded then
 				if retried then
-					show_warning_message (Warning_messages.w_Cannot_read_file (file_name.string_representation))
+					show_warning_message (Warning_messages.w_Cannot_read_file (file_path.string_representation))
 				else
 					deselect_all
 					syn_error := text_displayed.last_syntax_error
 					text_displayed.clear_syntax_error
-					if file_name /= Void and syn_error /= Void then
-						create fl.make_with_path (file_name)
+					if file_path /= Void and syn_error /= Void then
+						create fl.make_with_path (file_path)
 						fl.open_read
 						fl.read_stream (fl.count)
 						fl.close
@@ -1271,12 +1271,12 @@ feature {NONE} -- Implementation
 
 feature -- Text Loading	
 
-	load_file (a_file_name: PATH)
+	load_file_path (a_file_name: PATH)
 			-- Load file named `a_file_name' in the editor.
 		do
 			if (not load_without_save) and then changed then
 				load_without_save := True
-				dev_window.save_and (agent load_file (a_file_name))
+				dev_window.save_and (agent load_file_path (a_file_name))
 			else
 				Precursor {EB_CLICKABLE_EDITOR} (a_file_name)
 			end

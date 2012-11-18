@@ -103,7 +103,7 @@ feature -- Basic Operations
 				l_text := panel.new_text_displayed
 				l_text.add_edition_observer (Current)
 				panel.set_text (l_text, a_doc.name)
-				panel.load_file (item.name)
+				panel.load_file_path (create {PATH}.make_from_string (item.name))
 				item.set_data (l_text)
 			end
 			on_text_loaded
@@ -536,14 +536,14 @@ invariant
 	has_panel: panel /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -16,7 +16,7 @@ inherit
 			recycle as internal_recycle
 		redefine
 			display_not_editable_warning_message,
-			load_file,
+			load_file_path,
 			load_text,
 			initialize_editor_context,
 			reference_window,
@@ -204,7 +204,7 @@ feature -- Status setting
 
 feature -- Text Loading
 
-	load_file (a_filename: PATH)
+	load_file_path (a_filename: PATH)
 	        -- Load contents of `a_filename'.
 		local
 			l_file: RAW_FILE
@@ -301,8 +301,8 @@ feature -- Text Loading
 				-- and file name is possibly changed.
 			l_class_stone ?= stone
 			if l_class_stone /= Void then
-				if not file_name.is_equal (l_class_stone.class_i.file_name) then
-					file_name := l_class_stone.class_i.file_name
+				if not file_path.is_equal (l_class_stone.class_i.file_name) then
+					file_path := l_class_stone.class_i.file_name
 				end
 			end
 
@@ -382,7 +382,7 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} 
 					-- Create a string to write prettified text.
 				create s.make_empty
 					-- Prettify code.
-				create l_show_pretty.make_string (file_name.string_representation, s)
+				create l_show_pretty.make_string (file_path.string_representation, s)
 					-- Check if formatting is successful.
 				if not l_show_pretty.error then
 						-- Replace current class text with the prettified text.

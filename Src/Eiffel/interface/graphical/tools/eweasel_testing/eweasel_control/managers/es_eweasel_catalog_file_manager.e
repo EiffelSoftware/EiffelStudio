@@ -23,8 +23,7 @@ feature -- Command
 			-- Result false means catalog file generating failed
 		local
 			l_catalog_content: like catalog_file_content
-			l_last_test_cases_folder: STRING
-			l_short_name: STRING_32
+			l_last_test_cases_folder: PATH
 		do
 			Result := generate_catalog_file_from_test_case_grid (a_failed_first)
 			if Result then
@@ -40,20 +39,9 @@ feature -- Command
 
 					l_catalog_content.after
 				loop
-					if l_last_test_cases_folder = Void or else not l_last_test_cases_folder.same_string (l_catalog_content.item.a_test_cases_folder) then
+					if l_last_test_cases_folder = Void or else not l_last_test_cases_folder.same_as (l_catalog_content.item.a_test_cases_folder) then
 						l_last_test_cases_folder := l_catalog_content.item.a_test_cases_folder
-
-						-- Convert to short name, otherwise eweasel will not recognize the long names.
-						if attached l_last_test_cases_folder.as_string_32 as lt_string then
-							l_short_name := short_name_of (lt_string)
-							check not_void: l_short_name /= Void end
-							if l_short_name.last_index_of ('\', l_short_name.count) = l_short_name.count then
-								l_short_name.remove (l_short_name.count) -- Remove last '\' if exists
-							end
-						end
-
-						manager.environment_manager.set_test_case_directory (create {DIRECTORY_NAME}.make_from_string (l_short_name.as_string_8))
-
+						manager.environment_manager.set_test_case_directory (l_last_test_cases_folder)
 						append_init_lines (not catalog_file_content.isfirst)
 					end
 
@@ -84,7 +72,7 @@ feature -- Command
 
 feature -- Query
 
-	test_case_source_folder: STRING
+	test_case_source_folder: PATH
 			-- Directory which contain all test cases
 		do
 			Result := manager.environment_manager.test_case_directory
@@ -136,10 +124,9 @@ feature {NONE} -- Implementation routines
 		require
 			ready: test_case_source_folder /= Void
 					and then not test_case_source_folder.is_empty
---					and then test_case_source_folder.is_valid
 		local
-			l_platform: PLATFORM
-			l_source_path: STRING
+			l_source_path: STRING_32
+			u: UTF_CONVERTER
 		do
 			if a_new_line then
 				file.put_string ("%N")
@@ -147,14 +134,13 @@ feature {NONE} -- Implementation routines
 
 			l_source_path := "source_path	"
 
-			create l_platform
-			if not l_platform.is_windows then
-				-- Add '/' for Linux, otherwise directory not found
+			if not {PLATFORM}.is_windows then
+					-- Add '/' for Linux, otherwise directory not found
 				l_source_path.append (Operating_environment.directory_separator.out)
 			end
-			l_source_path.append (test_case_source_folder)
+			l_source_path.append (test_case_source_folder.name)
 
-			file.put_string (l_source_path)
+			file.put_string (u.utf_32_string_to_utf_8_string_8 (l_source_path))
 			file.put_string ("%N")
 		end
 
@@ -189,10 +175,11 @@ feature {NONE} -- Implementation routines
 		require
 			not_void: a_test_case_item /= Void
 		local
-
-			l_test_case_folder_name, l_test_case_name: STRING_32
-			l_file_name_list: LIST [STRING_32]
-			l_dir: DIRECTORY_NAME_32
+			l_test_case_folder_name: STRING_32
+			l_test_case_name: PATH
+			l_file_name_list: LIST [PATH]
+			l_dir: PATH
+			l_name: STRING_32
 			l_class_i: CLASS_I
 		do
 			if attached {ES_EWEASEL_TEST_CASE_ITEM} a_test_case_item.data as l_test_case_item then
@@ -200,7 +187,7 @@ feature {NONE} -- Implementation routines
 				l_class_i := l_test_case_item.class_i
 				l_test_case_name := l_class_i.file_name
 
-				l_file_name_list := l_test_case_name.split (operating_environment.directory_separator)
+				l_file_name_list := l_test_case_name.components
 
 				-- At least a folder name and a class file name
 				check at_lease_three_level: l_file_name_list.count > 2 end
@@ -209,28 +196,28 @@ feature {NONE} -- Implementation routines
 				-- test case class file name same as test case name for the moment
 				-- See {NEW_UNIT_TEST_MANAGER}.test_name
 
-				-- Removed ".e" file name extension
-				check l_test_case_name.substring_index (".e", 1) = l_test_case_name.count - 1 end
-				l_test_case_name.remove_substring (l_test_case_name.count - 1, l_test_case_name.count)
-
-				l_test_case_folder_name := l_file_name_list.i_th (l_file_name_list.count - 1)
+				l_test_case_folder_name := l_file_name_list.i_th (l_file_name_list.count - 1).name
 
 				from
 					l_file_name_list.start
 					if l_file_name_list.count > 2 then
-						create l_dir.make_from_string (l_file_name_list.item)
+						l_dir := l_file_name_list.item
 						l_file_name_list.forth
 					else
-						create l_dir.make_from_string ("")
+						create l_dir.make_empty
 					end
 				until
 					l_file_name_list.index > l_file_name_list.count - 2
 				loop
-					l_dir.extend (l_file_name_list.item)
+					l_dir := l_dir.extended_path (l_file_name_list.item)
 					l_file_name_list.forth
 				end
 
-				a_catalog_content.extend ([l_dir.to_string_32, l_test_case_folder_name, l_test_case_name])
+				-- Removed ".e" file name extension
+				l_name := l_test_case_name.name
+				check l_name.substring_index (".e", 1) = l_name.count - 1 end
+				l_name.remove_tail (2)
+				a_catalog_content.extend ([l_dir, l_test_case_folder_name.to_string_8, l_name.to_string_8])
 			else
 				check not_possible: False end
 			end
@@ -299,7 +286,7 @@ feature {NONE} -- Implementation routines
 
 feature {NONE} -- Implementation attributes
 
-	catalog_file_content: ARRAYED_LIST [TUPLE [a_test_cases_folder, a_test_case_directory, a_test_case_name: STRING_32]]
+	catalog_file_content: ARRAYED_LIST [TUPLE [a_test_cases_folder: PATH; a_test_case_directory, a_test_case_name: STRING]]
 			-- Catalog file content generated by `test_informaion_of'
 
 	folder_name: STRING = "control"

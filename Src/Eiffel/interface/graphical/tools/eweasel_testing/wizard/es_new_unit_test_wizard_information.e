@@ -72,7 +72,7 @@ feature -- Query
 			end
 		end
 
-	cluster_directory: DIRECTORY_NAME
+	cluster_directory: PATH
 			-- Cluster directory name
 		require
 			valid: is_valid
@@ -81,7 +81,7 @@ feature -- Query
 		do
 			create l_helper
 			if internal_cluster_id /= Void then
-				Result := l_helper.cluster_path_by_id_and_sub_path (internal_cluster_id, internal_cluster_sub_path)
+				create Result.make_from_string (l_helper.cluster_path_by_id_and_sub_path (internal_cluster_id, internal_cluster_sub_path))
 			end
 		ensure
 			not_void: Result /= Void
@@ -243,7 +243,7 @@ invariant
 	not_void: features_to_test /= Void
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -267,11 +267,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -362,7 +362,7 @@ feature {NONE} -- Implementation
 			init_parameter_manager.append_init_parameter (l_list)
 
 			create l_factory
-			Result := l_factory.process_launcher (environment_manager.eweasel_command, l_list, environment_manager.path.string_representation)
+			Result := l_factory.process_launcher (environment_manager.eweasel_command, l_list, environment_manager.path.name)
 		ensure
 			not_void: Result /= Void
 		end
@@ -479,7 +479,7 @@ feature {NONE} -- Implementation
 			l_project_file: PROJECT_EIFFEL_FILE
 		do
 			is_missing_error := False
-			create l_project_dir.make (eiffel_layout.precompilation_path (False).string_representation, a_library_target_name)
+			create l_project_dir.make (eiffel_layout.precompilation_path (False).name, a_library_target_name)
 			create l_remote_project_dir.make (l_project_dir)
 			l_remote_project_dir.check_version_number (1)
 			l_project_file := l_remote_project_dir.precomp_eif_file

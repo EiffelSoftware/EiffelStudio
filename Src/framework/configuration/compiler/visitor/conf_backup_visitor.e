@@ -128,7 +128,7 @@ feature -- Visit nodes
 						create l_loc.make ("..\" + l_new_as, an_assembly.target)
 						an_assembly.set_location (l_loc)
 							-- copy assembly
-						f.copy_file (l_as, (create {PATH}.make_from_string (backup_directory)).extended (l_new_as).string_representation)
+						f.copy_file (l_as, (create {PATH}.make_from_string (backup_directory)).extended (l_new_as).name)
 					end
 				end
 			end

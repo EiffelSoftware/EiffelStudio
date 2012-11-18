@@ -69,13 +69,13 @@ feature -- Access
 			create Result.make (100)
 			if is_unix_layout then
 				Result.append_string_general ("Base Path = ")
-				Result.append (unix_layout_base_path.string_representation)
+				Result.append (unix_layout_base_path.name)
 			else
 				Result.append_string_general ("$ISE_EIFFEL = ")
-				Result.append (install_path.string_representation)
+				Result.append (install_path.name)
 				Result.append_string_general ("%N")
 				Result.append_string_general ("$ISE_LIBRARY = ")
-				Result.append (eiffel_library.string_representation)
+				Result.append (eiffel_library.name)
 				Result.append_string_general ("%N")
 				Result.append_string_general ("$ISE_PLATFORM = ")
 				Result.append_string_general (eiffel_platform)
@@ -215,7 +215,7 @@ feature -- Status update
 					-- Set new ISE_EIFFEL variable. This is done to ensure that the workbench path is
 					-- set correctly, or if in unix layout that ISE_EIFFEL is set
 				if not is_unix_layout then
-					set_environment_32 (shared_path.string_representation, {EIFFEL_CONSTANTS}.ise_eiffel_env)
+					set_environment_32 (shared_path.name, {EIFFEL_CONSTANTS}.ise_eiffel_env)
 				end
 
 					-- Set Unix platform
@@ -259,7 +259,7 @@ feature -- Status update
 
 				-- If ISE_LIBRARY is not defined, use the `lib_path'
 			if l_ise_library = Void or else l_ise_library.is_empty then
-				l_ise_library := lib_path.string_representation
+				l_ise_library := lib_path.name
 			else
 					-- To avoid editing value of ISE_LIBRARY when compiling against specific compiler profile
 					-- modify the value of the ISE_LIBRARY environment variable.
@@ -345,12 +345,12 @@ feature -- Status setting
 
 					-- Now we set the ISE_PRECOMP environment variable with that path.
 					-- Note that if it was already set, the value stays the same.
-				set_environment_32 (l_precompilation_path.string_representation, {EIFFEL_CONSTANTS}.ise_precomp_env)
+				set_environment_32 (l_precompilation_path.name, {EIFFEL_CONSTANTS}.ise_precomp_env)
 				is_valid_precompile_environment := True
 
 					-- Now if `l_precompilation_path' does not exist, we copy the content from
 					-- the installation directory.
-				create l_dir.make (l_precompilation_path.string_representation)
+				create l_dir.make (l_precompilation_path.name)
 				if not l_dir.exists then
 						-- Directory does not exist
 					safe_recursive_create_dir (l_precompilation_path)
@@ -363,7 +363,7 @@ feature -- Status setting
 							l_files.after
 						loop
 							if l_files.item.is_representable then
-								l_ecf_name := l_files.item.string_representation
+								l_ecf_name := l_files.item.name
 								if
 									l_ecf_name.count > 3 and then
 									l_ecf_name.substring (l_ecf_name.count - 3,
@@ -418,7 +418,7 @@ feature {NONE} -- Helpers
 		do
 			if is_compatible_mode and a_path.substring_index ("compatible", 1) = 0 then
 				create p.make_from_string (a_path)
-				Result := p.extended ("compatible").string_representation
+				Result := p.extended ("compatible").name
 			else
 				Result := a_path
 			end
@@ -451,8 +451,8 @@ feature -- Query
 			l_actual_file: RAW_FILE
 			l_file_name: STRING_32
 		do
-			l_file_name := a_file_path.string_representation
-			l_install := install_path.string_representation
+			l_file_name := a_file_path.name
+			l_install := install_path.name
 			if l_install.count < l_file_name.count then
 				if l_file_name.substring (1, l_install.count).same_string (l_install) then
 					l_extension := l_file_name.substring (l_install.count + 1, l_file_name.count)
@@ -575,7 +575,7 @@ feature -- Directories (top-level)
 			end
 			check result_attached: Result /= Void end
 			if is_workbench then
-				l_name_wb := Result.string_representation
+				l_name_wb := Result.name
 				l_name_wb.append_character ('_')
 				l_name_wb.append (wkbench_suffix)
 				if u.directory_exists (l_name_wb) then
@@ -1318,7 +1318,7 @@ feature -- Directories (platform independent)
 				Result := eiffel_install
 			end
 			if is_workbench then
-				l_name_wb := Result.string_representation
+				l_name_wb := Result.name
 				l_name_wb.append_character ('_')
 				l_name_wb.append (wkbench_suffix)
 				if u.directory_exists (l_name_wb) then
@@ -1421,9 +1421,9 @@ feature -- Files (commands)
 			if a_is_gui then
 					-- Because on Windows we have a console if launching `ec' we use the
 					-- wrapper `estudio', but this is not needed in theory.
-				Result.append (estudio_command_name.string_representation)
+				Result.append (estudio_command_name.name)
 			else
-				Result.append (ec_command_name.string_representation)
+				Result.append (ec_command_name.name)
 			end
 			Result.append_character ('%"')
 			l_profile := command_line_profile_option
@@ -1737,7 +1737,7 @@ feature {NONE} -- Basic operations
 		local
 			u: FILE_UTILITIES
 		do
-			u.create_directory (a_dir.string_representation)
+			u.create_directory (a_dir.name)
 		end
 
 	safe_recursive_create_dir (a_dir: PATH)
@@ -1747,7 +1747,7 @@ feature {NONE} -- Basic operations
 		local
 			u: FILE_UTILITIES
 		do
-			u.create_directory (a_dir.string_representation)
+			u.create_directory (a_dir.name)
 		end
 
 feature -- Environment variables
@@ -2045,7 +2045,7 @@ feature -- Preferences
 			else
 				p := hidden_files_path
 				p := p.extended (application_name + "rc" + {EIFFEL_CONSTANTS}.major_version.out + {EIFFEL_CONSTANTS}.minor_version.out)
-				Result := p.string_representation
+				Result := p.name
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -2517,7 +2517,7 @@ feature {NONE} -- Implementation
 	user_directory_name_8: detachable STRING
 		do
 			if attached user_directory_name as v then
-				Result := v.string_representation
+				Result := v.name
 			end
 		end
 

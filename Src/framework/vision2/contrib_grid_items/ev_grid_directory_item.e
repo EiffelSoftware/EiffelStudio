@@ -37,7 +37,7 @@ feature -- Status
 	start_directory: detachable READABLE_STRING_GENERAL
 		do
 			if attached start_path as p then
-				Result := p.string_representation
+				Result := p.name
 			end
 		end
 

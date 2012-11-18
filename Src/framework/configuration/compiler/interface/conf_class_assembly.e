@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 		require
 			consumed_path: group.consumed_path /= Void
 		do
-			Result := group.consumed_path.extended (classes_file_name).string_representation
+			Result := group.consumed_path.extended (classes_file_name).name
 		end
 
 	classes_file_name: STRING = "classes.info"

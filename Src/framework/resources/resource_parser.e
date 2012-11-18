@@ -68,7 +68,7 @@ feature -- Parsing
 				l_resource_file.close
 			else
 				io.error.put_string ("Warning: Cannot read resource file %"");
-				localized_print_error (filename.string_representation);
+				localized_print_error (filename.name);
 				io.error.put_string ("%".");
 				io.error.put_new_line
 			end

@@ -195,7 +195,7 @@ feature -- Access queries
 		local
 			l_date: INTEGER
 		do
-			l_date := file_modified_date (types_info_file_location.string_representation)
+			l_date := file_modified_date (types_info_file_location.name)
 			Result := (l_date = -1) or (l_date /= date)
 		end
 
@@ -358,7 +358,7 @@ feature {CONF_ACCESS} -- Update, in compiled only
 	set_date
 			-- Set `date' to the last modification timestamp.
 		do
-			date := file_modified_date (types_info_file_location.string_representation)
+			date := file_modified_date (types_info_file_location.name)
 		ensure
 			not_date_changed: not has_date_changed
 		end

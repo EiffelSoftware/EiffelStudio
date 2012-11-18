@@ -357,14 +357,14 @@ feature {NONE} -- Implementation of data retrieval
 						l_file_path := l_file_path.extended (l_path)
 						create l_file.make_with_path (l_file_path)
 						if not l_file.exists or else l_file.is_directory or else not l_file.is_readable then
-							set_error (create {CONF_ERROR_FILE}.make (l_file_path.string_representation))
+							set_error (create {CONF_ERROR_FILE}.make (l_file_path.name))
 						else
 							create l_parser.make
-							l_parser.parse_file (l_file_path.string_representation, True)
+							l_parser.parse_file (l_file_path.name, True)
 							if attached {CLUST_PROP_SD} l_parser.ast as l_use_prop then
 								process_cluster_properties (l_use_prop)
 							else
-								set_error (create {CONF_ERROR_PARSE}.make ({STRING_32} "Problem in use file:" + l_file_path.string_representation))
+								set_error (create {CONF_ERROR_PARSE}.make ({STRING_32} "Problem in use file:" + l_file_path.name))
 							end
 						end
 					end

@@ -30,7 +30,7 @@ feature -- Query
 			Result := eiffel_layout.shared_path.extended ("eweasel")
 		end
 
-	test_case_directory: STRING
+	test_case_directory: PATH
 			-- Directory where new eweasel test case exists and new test case will be created.
 
 	tcf_file_name: STRING = "tcf"

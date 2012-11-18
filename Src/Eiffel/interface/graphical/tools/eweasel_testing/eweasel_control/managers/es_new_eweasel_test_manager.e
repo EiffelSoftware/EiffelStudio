@@ -79,13 +79,12 @@ feature -- Query
 	wizard_information: ES_NEW_UNIT_TEST_WIZARD_INFORMATION
 			-- Wizard information
 
-	full_target_test_case_folder: DIRECTORY_NAME
+	full_target_test_case_folder: PATH
 			-- `folder_name' and full path included
 		require
 			not_void: folder_name /= Void and then not folder_name.is_empty
 		do
-			create Result.make_from_string (manager.environment_manager.test_case_directory.twin)
-			Result.extend (folder_name)
+			Result := manager.environment_manager.test_case_directory.extended (folder_name)
 		end
 
 	test_case_root_class_name: STRING
@@ -116,7 +115,7 @@ feature {NONE} -- Implementation
 			l_count: INTEGER
 		do
 			from
-				create l_dir.make (full_target_test_case_folder)
+				create l_dir.make_with_path (full_target_test_case_folder)
 				l_orignal_folder := folder_name
 				l_count := 1
 			until
@@ -128,12 +127,12 @@ feature {NONE} -- Implementation
 					l_created := True
 				else
 					set_target_test_case_folder (l_orignal_folder + "_" + l_count.out)
-					create l_dir.make (full_target_test_case_folder)
+					create l_dir.make_with_path (full_target_test_case_folder)
 				end
 				l_count :=  l_count + 1
 			end
 		ensure
-			exists: (create {DIRECTORY}.make (full_target_test_case_folder)).exists
+			exists: (create {DIRECTORY}.make_with_path (full_target_test_case_folder)).exists
 		end
 
 	add_files
@@ -165,17 +164,16 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	create_file (a_file_name: FILE_NAME): IO_MEDIUM
+	create_file (a_file_name: PATH): IO_MEDIUM
 			-- Create a new {IO_MEDIUM} which file name is `a_file_name'
 			-- Callers have to close `Result' themselves
 		require
 			not_void: a_file_name /= Void
-			valid: a_file_name.is_valid
-			not_exists: not (create {RAW_FILE}.make (a_file_name)).exists
+			not_exists: not (create {RAW_FILE}.make_with_path (a_file_name)).exists
 		local
 			l_file: RAW_FILE
 		do
-			create l_file.make (a_file_name)
+			create l_file.make_with_path (a_file_name)
 			check not_exits: not l_file.exists end
 
 			l_file.create_read_write
@@ -183,19 +181,16 @@ feature {NONE} -- Implementation
 			Result := l_file
 		ensure
 			not_void: Result /= Void
-			created: (create {RAW_FILE}.make (a_file_name)).exists
+			created: (create {RAW_FILE}.make_with_path (a_file_name)).exists
 		end
 
 	add_file_ecf
 			-- Add Eiffel project config file for test case
 		local
 			l_io: IO_MEDIUM
-			l_file_name: FILE_NAME
+			l_file_name: PATH
 		do
-			create l_file_name.make
-			l_file_name.set_directory (full_target_test_case_folder)
-			l_file_name.set_file_name ("Ecf")
-
+			l_file_name := full_target_test_case_folder.extended ("Ecf")
 			l_io := create_file (l_file_name)
 			l_io.put_string (ecf_content)
 			l_io.close
@@ -207,12 +202,9 @@ feature {NONE} -- Implementation
 			-- Add eweasel test control file
 		local
 			l_io: IO_MEDIUM
-			l_file_name: FILE_NAME
+			l_file_name: PATH
 		do
-			create l_file_name.make
-			l_file_name.set_directory (full_target_test_case_folder)
-			l_file_name.set_file_name (manager.environment_manager.tcf_file_name)
-
+			l_file_name := full_target_test_case_folder.extended (manager.environment_manager.tcf_file_name)
 			l_io := create_file (l_file_name)
 			l_io.put_string (tcf_content)
 			l_io.close
@@ -226,13 +218,10 @@ feature {NONE} -- Implementation
 			not_void: wizard_information /= Void
 		local
 			l_io: IO_MEDIUM
-			l_file_name: FILE_NAME
+			l_file_name: PATH
 			l_content: STRING
 		do
-			create l_file_name.make
-			l_file_name.set_directory (full_target_test_case_folder)
-			l_file_name.set_file_name (test_case_root_class_file_name)
-
+			l_file_name := full_target_test_case_folder.extended (test_case_root_class_file_name)
 			l_io := create_file (l_file_name)
 			l_content := eiffel_test_case_class_content
 			if l_content /= Void then
@@ -470,7 +459,7 @@ feature {NONE} -- File contents
 				Result.replace_substring_all ("$UUID", l_uuid.generate_uuid.out)
 			else
 				Result := ""
-				prompts.show_error_prompt (Warning_messages.w_cannot_read_file (l_file.name), Void, Void)
+				prompts.show_error_prompt (Warning_messages.w_cannot_read_file (l_file.path.name), Void, Void)
 			end
 		ensure
 			not_void: Result /= Void
@@ -501,7 +490,7 @@ feature {NONE} -- File contents
 				-- Set test root class name
 				Result.replace_substring_all ("$ROOT_CLASS_FILE_NAME", test_case_root_class_file_name)
 			else
-				prompts.show_error_prompt (Warning_messages.w_cannot_read_file (l_file.name), Void, Void)
+				prompts.show_error_prompt (Warning_messages.w_cannot_read_file (l_file.path.name), Void, Void)
 				Result := ""
 			end
 		ensure
@@ -530,7 +519,7 @@ feature {NONE} -- File contents
 				create l_date_time.make_now
 				Result.replace_substring_all ("$DATE", l_date_time.out)
 			else
-				prompts.show_error_prompt (Warning_messages.w_cannot_read_file (l_file.name), Void, Void)
+				prompts.show_error_prompt (Warning_messages.w_cannot_read_file (l_file.path.name), Void, Void)
 				Result := ""
 				Result.append ("class")
 				Result.append ("%N%T" + manager.environment_manager.test_case_root_eiffel_class_name.as_upper)

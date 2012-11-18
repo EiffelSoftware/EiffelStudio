@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "[
 		File utilities, for retrieving files and folders and formatting paths.
 	]"
@@ -279,7 +279,7 @@ feature {NONE} -- Basic operations
 					i > l_count
 				loop
 					if
-						attached (create {PATH}.make_from_string (l_dn)).extended (l_directories.item (i)).string_representation as l_path and then
+						attached (create {PATH}.make_from_string (l_dn)).extended (l_directories.item (i)).name as l_path and then
 						is_path_applicable (l_path, a_include, a_exclude)
 					then
 						Result.extend (l_path)
@@ -347,7 +347,7 @@ feature {NONE} -- Basic operations
 					i > l_count
 				loop
 					if
-						attached (create {PATH}.make_from_string (l_dn)).extended (l_files.item (i)).string_representation as l_file and then
+						attached (create {PATH}.make_from_string (l_dn)).extended (l_files.item (i)).name as l_file and then
 						is_path_applicable (l_file, a_include, a_exclude)
 					then
 						Result.extend (l_file)
@@ -364,7 +364,7 @@ feature {NONE} -- Basic operations
 						i > l_count
 					loop
 						if
-							attached (create {PATH}.make_from_string (l_dn)).extended (l_directories.item (i)).string_representation as l_path and then
+							attached (create {PATH}.make_from_string (l_dn)).extended (l_directories.item (i)).name as l_path and then
 							is_path_applicable (l_path, Void, a_exclude)
 						then
 								-- Note: checking applicablity of the path does not check the include expression. This is because

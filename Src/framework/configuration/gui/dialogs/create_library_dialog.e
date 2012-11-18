@@ -370,21 +370,21 @@ feature {NONE} -- Access
 			l_filename := eiffel_layout.libraries_config_name
 			create l_file.make_with_path (l_filename)
 			if l_file.exists then
-				add_lookup_directories (l_filename.string_representation, Result)
+				add_lookup_directories (l_filename.name, Result)
 			end
 			if eiffel_layout.is_user_files_supported then
 				l_filename := eiffel_layout.user_priority_file_name (l_filename, True)
 				if l_filename /= Void then
 					l_file.reset_path (l_filename)
 					if l_file.exists then
-						add_lookup_directories (l_filename.string_representation, Result)
+						add_lookup_directories (l_filename.name, Result)
 					end
 				end
 			end
 
 			if Result.is_empty then
 					-- Extend the default library path
-				Result.extend ([eiffel_layout.library_path.string_representation, 2])
+				Result.extend ([eiffel_layout.library_path.name, 2])
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -696,7 +696,7 @@ feature {NONE} -- Basic operation
 						l_file_name := a_dir.path.extended (l_lib_file)
 						create l_file.make_with_path (l_file_name)
 						if l_file.exists and then l_file.is_plain then
-							l_file_string := l_file_name.string_representation
+							l_file_string := l_file_name.name
 							if {PLATFORM_CONSTANTS}.is_windows then
 								l_file_string := l_file_string.as_lower
 							end
@@ -710,7 +710,7 @@ feature {NONE} -- Basic operation
 				if (a_depth = -1 or a_depth > 0) and then attached a_dir.entries as l_subdirs then
 						-- Perform recursion
 					across l_subdirs as l_dirs loop
-						s32 := l_dirs.item.string_representation
+						s32 := l_dirs.item.name
 						if not s32.same_string (".") and not s32.same_string ("..") then -- FIXME: use upcoming PATH.is_dot, and related
 							l_dir_name := a_dir.path.extended_path (l_dirs.item)
 							create l_file.make_with_path (l_dir_name)

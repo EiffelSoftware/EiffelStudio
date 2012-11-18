@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			l_impl := (create {EMITTER_FACTORY}).new_emitter (a_runtime_version)
 			if l_impl /= Void then
 				implementation := l_impl
-				implementation.initialize_with_path (create {UNI_STRING}.make (a_path.string_representation))
+				implementation.initialize_with_path (create {UNI_STRING}.make (a_path.name))
 			end
 		end
 

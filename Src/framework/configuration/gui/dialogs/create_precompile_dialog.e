@@ -49,21 +49,21 @@ feature {NONE} -- Access
 			l_filename := eiffel_layout.precompiles_config_name
 			create l_file.make_with_path (l_filename)
 			if l_file.exists then
-				add_lookup_directories (l_filename.string_representation, Result)
+				add_lookup_directories (l_filename.name, Result)
 			end
 			if eiffel_layout.is_user_files_supported then
 				l_filename := eiffel_layout.user_priority_file_name (l_filename, True)
 				if l_filename /= Void then
 					l_file.reset_path (l_filename)
 					if l_file.exists then
-						add_lookup_directories (l_filename.string_representation, Result)
+						add_lookup_directories (l_filename.name, Result)
 					end
 				end
 			end
 
 			if Result.is_empty then
 					-- Extend the default library path
-				Result.extend ([eiffel_layout.precompilation_path (target.setting_msil_generation).string_representation, 0])
+				Result.extend ([eiffel_layout.precompilation_path (target.setting_msil_generation).name, 0])
 			end
 		end
 

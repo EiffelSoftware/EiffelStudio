@@ -332,7 +332,7 @@ feature {NONE} -- Implementation
 				-- we have to get the dependencies from the reference file
 			create l_reader
 			l_reader.deserialize (an_assembly.consumed_path.extended
-				(referenced_assemblies_info_file).string_representation, 0)
+				(referenced_assemblies_info_file).name, 0)
 			if not l_reader.successful then
 				add_error (create {CONF_METADATA_CORRUPT})
 			end
@@ -384,7 +384,7 @@ feature {NONE} -- Implementation
 			end
 
 				-- Get classes.
-			l_reader.deserialize (a_assembly.consumed_path.extended (types_info_file).string_representation, 0)
+			l_reader.deserialize (a_assembly.consumed_path.extended (types_info_file).name, 0)
 			if not l_reader.successful then
 				add_error (create {CONF_METADATA_CORRUPT})
 			end
@@ -741,7 +741,7 @@ feature {NONE} -- helpers
 			create l_file.make_with_path (l_eac_file)
 			if l_file.exists and then l_file.is_readable then
 				create l_reader
-				l_reader.deserialize (l_eac_file.string_representation, 0)
+				l_reader.deserialize (l_eac_file.name, 0)
 				if l_reader.successful then
 					cache_content ?= l_reader.deserialized_object
 					check
@@ -800,7 +800,7 @@ feature {NONE} -- helpers
 				end
 					-- date of the cached information
 				l_cache_mod_date := file_modified_date (full_cache_path.extended
-					(an_assembly.folder_name).extended (types_info_file).string_representation)
+					(an_assembly.folder_name).extended (types_info_file).name)
 
 				Result := l_mod_date /= -1 and then l_cache_mod_date > l_mod_date
 			end

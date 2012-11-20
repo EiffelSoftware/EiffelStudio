@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_cataloged (a_folder: READABLE_STRING_GENERAL): BOOLEAN
+	is_cataloged (a_folder: PATH): BOOLEAN
 			-- Determines if a folder is currently cataloged
 		require
 			is_interface_usable: is_interface_usable
@@ -47,7 +47,7 @@ feature -- Status report
 
 feature -- Query
 
-	template_by_file_name (a_file_name: READABLE_STRING_GENERAL): detachable CODE_TEMPLATE_DEFINITION
+	template_by_file_name (a_file_name: PATH): detachable CODE_TEMPLATE_DEFINITION
 			-- Retrieves the first code template defintion match by a specified file name.
 			--
 			-- `a_file_name': The full path to a code template definition file.
@@ -116,7 +116,7 @@ feature -- Events
 
 feature -- Basic operations
 
-	rescan (a_folder: READABLE_STRING_GENERAL)
+	rescan (a_folder: PATH)
 			-- Rescans an existing catalog and update the templates associated with the cataloged folder.
 			--
 			-- `a_folder': The cataloged folder to rescan and update the templates
@@ -166,7 +166,7 @@ feature {NONE} -- Basic operation
 
 feature -- Extension
 
-	extend_catalog (a_folder: READABLE_STRING_GENERAL)
+	extend_catalog (a_folder: PATH)
 			-- Extends the code template catalog with a folder full of templates.
 			--
 			-- `a_folder': The folder to add to the catalog.
@@ -182,7 +182,7 @@ feature -- Extension
 
 feature -- Removal
 
-	remove_catalog (a_folder: READABLE_STRING_GENERAL)
+	remove_catalog (a_folder: PATH)
 			-- Removes a folder from the code template catalog, removing all templates.
 			--
 			-- `a_folder': The folder to remove from the catalog and all it's contained templates.
@@ -197,7 +197,7 @@ feature -- Removal
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

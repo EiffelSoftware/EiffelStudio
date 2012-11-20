@@ -96,13 +96,6 @@ feature {NONE} -- Access
 
 	system_name, system_uuid, target_name, target_uuid: detachable STRING
 
-	file_matcher: RX_PCRE_MATCHER
-			-- Config file matcher
-		once
-			create Result.make
-			Result.compile ("^.*\.ecf$")
-		end
-
 feature {NONE} -- Implemetation
 
 	search_needed: BOOLEAN
@@ -118,18 +111,18 @@ feature {NONE} -- Implemetation
 			a_path_not_empty: not a_path.is_empty
 			search_needed: search_needed
 		local
-			l_files: like {GOBO_FILE_UTILITIES}.scan_for_files
+			l_files: like {FILE_UTILITIES}.ends_with
 			l_file: STRING_32
-			u: GOBO_FILE_UTILITIES
+			u: FILE_UTILITIES
 		do
 			if u.directory_exists (a_path) then
-				l_files := u.scan_for_files (a_path, -1, file_matcher, Void)
+				l_files := u.ends_with (create {PATH}.make_from_string (a_path), ".ecf", -1)
 				from
 					l_files.start
 				until
 					l_files.after or project_found
 				loop
-					l_file := l_files.item_for_iteration
+					l_file := l_files.item_for_iteration.name
 					check_file (l_file)
 					l_files.forth
 				end

@@ -100,7 +100,7 @@ feature {NONE} -- Constants
 	schema_1_10_0: STRING
 			-- Schema of the 7.1 release.
 		once
-			Result := namespace_1_10_0 +" http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd"
+			Result := namespace_1_10_0 + " http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd"
 		end
 
 	Latest_namespace: STRING
@@ -124,7 +124,7 @@ feature -- Status report
 		do
 			Result := n.is_valid_as_string_8 and then namespace_order.has (n.as_string_8)
 		ensure
-			consistency: Result = n.is_valid_as_string_8 and then namespace_order.has (n.as_string_8)
+			consistency: Result = (n.is_valid_as_string_8 and then namespace_order.has (n.as_string_8))
 		end
 
 feature -- Normalization
@@ -169,11 +169,23 @@ feature -- Comparison
 		require
 			b_attached: attached b
 			b_known: is_namespace_known (b)
+		local
+			o_a, o_b: NATURAL_32
 		do
+			if a = Void then
+				Result := True
+			else
 				-- Namespace strings cannot be compared directly because they are not lexicographically ordered.
-			Result := a = Void or else (attached namespace_order.item (a.to_string_8) as ns_a implies ns_a <= namespace_order.item (b.to_string_8))
+				if namespace_order.has_key (a.to_string_8) then
+					o_a := namespace_order.found_item
+					o_b := namespace_order.item (b.to_string_8) -- See precondition: `b_known'
+					Result := o_a <= o_b
+				else
+					Result := True
+				end
+			end
 		ensure
-			definition: Result = (a = Void or else (attached namespace_order.item (a.to_string_8) as ns_a implies ns_a <= namespace_order.item (b.to_string_8)))
+			definition: Result = (a = Void or else not namespace_order.has (a.to_string_8) or else (attached namespace_order.item (a.to_string_8) as ns_a_order implies ns_a_order <= namespace_order.item (b.to_string_8)))
 		end
 
 	is_after_or_equal (a: detachable READABLE_STRING_GENERAL; b: READABLE_STRING_GENERAL): BOOLEAN
@@ -182,14 +194,32 @@ feature -- Comparison
 		require
 			b_attached: attached b
 			b_known: is_namespace_known (b)
+		local
+			o_a, o_b: NATURAL_32
 		do
+			if a = Void then
+				Result := True
+			else
 				-- Namespace strings cannot be compared directly because they are not lexicographically ordered.
-			Result := a = Void or else (attached namespace_order.item (a.to_string_8) as ns_a implies ns_a >= namespace_order.item (b.to_string_8))
+				if namespace_order.has_key (a.to_string_8) then
+					o_a := namespace_order.found_item
+					o_b := namespace_order.item (b.to_string_8) -- See precondition: `b_known'
+					Result := o_a >= o_b
+				else
+					Result := True
+				end
+			end
 		ensure
-			definition: Result = (a = Void or else (attached namespace_order.item (a.to_string_8) as ns_a implies ns_a >= namespace_order.item (b.to_string_8)))
+			definition: Result = (a = Void or else not namespace_order.has (a.to_string_8) or else (attached namespace_order.item (a.to_string_8) as ns_a_order implies ns_a_order >= namespace_order.item (b.to_string_8)))
 		end
 
 feature {NONE} -- Ordering
+
+	namespace_configuration_values: HASH_TABLE [TUPLE [x,y,z: NATURAL_32], STRING_32]
+		once
+			create Result.make (0)
+			Result.compare_objects
+		end
 
 	namespace_order: HASH_TABLE [NATURAL, STRING]
 			-- Order numbers associated with namespaces.

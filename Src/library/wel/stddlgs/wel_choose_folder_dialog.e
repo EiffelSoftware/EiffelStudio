@@ -28,7 +28,7 @@ inherit
 			copy, is_equal
 		end
 
-	PATH_HANDLER
+	NATIVE_STRING_HANDLER
 		undefine
 			copy, is_equal
 		end

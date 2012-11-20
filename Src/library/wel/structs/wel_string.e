@@ -14,7 +14,7 @@ inherit
 			is_equal
 		end
 
-	PATH_HANDLER
+	NATIVE_STRING_HANDLER
 		redefine
 			is_equal
 		end

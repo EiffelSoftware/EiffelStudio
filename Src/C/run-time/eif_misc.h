@@ -82,13 +82,8 @@ RT_LNK EIF_INTEGER upintdiv(EIF_INTEGER n1, EIF_INTEGER n2);
 
 
 RT_LNK void eif_sleep(EIF_INTEGER_64);
-RT_LNK EIF_INTEGER eif_system (char *s);
-RT_LNK EIF_INTEGER eif_system_16 (EIF_NATURAL_16 *s);
-RT_LNK void eif_system_asynchronous (char *s);
-RT_LNK void eif_system_asynchronous_16 (EIF_NATURAL_16 *cmd);
-RT_LNK char * eif_getenv(char * k); 
-RT_LNK char * eif_getenv_native(char * k); 
-
+RT_LNK EIF_INTEGER eif_system (EIF_NATIVE_CHAR *s);
+RT_LNK void eif_system_asynchronous (EIF_NATIVE_CHAR *s);
 RT_LNK EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER k);
 
 #ifdef EIF_WINDOWS

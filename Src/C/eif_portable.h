@@ -261,6 +261,13 @@ typedef uint32 ONCE_INDEX;
 typedef EIF_NATURAL_64	rt_uint64;
 typedef EIF_INTEGER_64	rt_int64;
 
+/* Native strings */
+#ifdef EIF_WINDOWS
+typedef wchar_t EIF_NATIVE_CHAR;
+#else
+typedef char EIF_NATIVE_CHAR;
+#endif
+
 	/* previously in eif_globals.h */
 #define MTC_NOARG           
 #define MTC                 /* MTC_NOARG, */

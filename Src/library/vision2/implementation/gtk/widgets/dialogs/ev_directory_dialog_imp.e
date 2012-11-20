@@ -20,7 +20,7 @@ inherit
 			make
 		end
 
-	PATH_HANDLER
+	NATIVE_STRING_HANDLER
 
 create
 	make

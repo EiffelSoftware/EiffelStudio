@@ -22,7 +22,7 @@ inherit
 			show_modal_to_window
 		end
 
-	PATH_HANDLER
+	NATIVE_STRING_HANDLER
 
 feature {NONE} -- Initialization
 

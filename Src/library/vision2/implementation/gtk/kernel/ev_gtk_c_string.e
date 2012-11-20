@@ -14,7 +14,7 @@ inherit
 
 	STRING_HANDLER
 
-	PATH_HANDLER
+	NATIVE_STRING_HANDLER
 
 create
 	set_with_eiffel_string, share_from_pointer, make_from_pointer, make_from_path

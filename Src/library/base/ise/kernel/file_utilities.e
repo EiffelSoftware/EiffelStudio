@@ -109,6 +109,19 @@ feature -- Query
 			result_contains_no_extension_qualifier: not Result.has ('.')
 		end
 
+	ends_with (a_folder: PATH; a_end_with: READABLE_STRING_GENERAL a_levels: INTEGER_32): ARRAYED_LIST [PATH]
+			-- Scans a folder for matching files.
+			--
+			-- `a_folder': Folder location to scan.
+			-- `a_levels': Number of levels to recursively scan. 0 to scan the specified folder only, -1 to scan all folders.
+			-- `a_end_with': A string results end with, ignoring cases.
+		require
+			a_folder_exists: directory_path_exists (a_folder)
+			a_levels_is_valid: a_levels >= -1
+		do
+			Result := internal_files_end_with (a_folder, a_end_with, a_levels, True)
+		end
+
 feature {NONE} -- Query
 
 	frozen internal_indexed_path (a_base_path: READABLE_STRING_GENERAL; a_separator: detachable READABLE_STRING_GENERAL; a_index: NATURAL): STRING
@@ -149,6 +162,73 @@ feature {NONE} -- Query
 			end
 		ensure
 			result_count_is_bigger: Result.count > a_base_path.count
+		end
+
+	frozen internal_files_end_with (a_folder: PATH; a_end_with: READABLE_STRING_GENERAL; a_levels: INTEGER_32; a_recursive: BOOLEAN): ARRAYED_LIST [PATH]
+			-- Scans a folder for matching files.
+			--
+			-- `a_folder': Folder location to scan.
+			-- `a_levels': Number of levels to recursively scan. 0 to scan the specified folder only, -1 to scan all folders.
+			-- `a_end_with': A string results end with, ignoring cases
+		require
+			a_folder_exists: directory_path_exists (a_folder)
+			a_levels_is_valid: a_levels >= -1
+		local
+			l_dn: PATH
+			l_dir: DIRECTORY
+			l_retried: BOOLEAN
+			l_path: PATH
+			f: RAW_FILE
+			d: DIRECTORY
+		do
+			if not l_retried then
+				if a_recursive then
+					l_dn := a_folder.absolute_path
+				else
+					l_dn := a_folder
+				end
+
+				create l_dir.make_with_path (l_dn)
+				if l_dir.exists and then l_dir.is_readable then
+					l_dir.open_read
+					from
+						create Result.make (l_dir.count)
+						l_dir.readentry
+					until
+						not attached l_dir.last_entry_32 as e
+					loop
+						l_path := l_dn.extended (e)
+						create f.make_with_path (l_path)
+						if f.exists and then f.is_readable and then f.is_plain and then e.as_lower.ends_with (a_end_with.as_lower.as_string_32) then
+							Result.extend (l_path)
+						else
+							if
+								(e.count = 1 and then e [1] = '.') or else
+								(e.count = 2 and then e [1] = '.' and then e [2] = '.')
+							then
+									-- This is a reference to the current or to the parent directory.
+							else
+								create d.make_with_path (l_path)
+								if d.exists and then d.is_readable then
+									Result.append (internal_files_end_with (l_path, a_end_with, (a_levels - 1).max (-1), False))
+								end
+							end
+						end
+						l_dir.readentry
+					end
+					l_dir.close
+				else
+					create Result.make (0)
+				end
+			elseif attached l_dir and then not l_dir.is_closed then
+				l_dir.close
+				create Result.make (0)
+			else
+				create Result.make (0)
+			end
+		rescue
+			l_retried := True
+			retry
 		end
 
 feature -- File name operations

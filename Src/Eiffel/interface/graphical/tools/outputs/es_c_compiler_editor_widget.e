@@ -451,8 +451,7 @@ feature {NONE} -- Action handlers
 			l_line_string: STRING_32
 			l_line: NATURAL
 			l_full_file_name: PATH
-			l_files: ARRAYED_LIST [STRING_8]
-			l_expr: RX_PCRE_MATCHER
+			l_files: ARRAYED_LIST [PATH]
 			u: FILE_UTILITIES
 		do
 			l_selected := editor.text_displayed.selected_wide_string
@@ -500,16 +499,9 @@ feature {NONE} -- Action handlers
 					l_full_file_name := l_full_file_name.extended (l_file_name)
 					if not u.file_path_exists (l_full_file_name) then
 							-- GCC doesn't show the full path name, so try scanning the compilation folder
-						l_file_name.replace_substring_all (".", "\.")
-						l_file_name.append_character ('$')
-						create l_expr.make
-						l_expr.compile (l_file_name)
-						if l_expr.is_compiled then
-								-- Perform scan...
-							l_files := (create {GOBO_FILE_UTILITIES}).scan_for_files (l_compilation_folder, 2, l_expr, Void)
-							if not l_files.is_empty then
-								create l_full_file_name.make_from_string (l_files.first)
-							end
+						l_files := (create {FILE_UTILITIES}).ends_with (create {PATH}.make_from_string (l_compilation_folder), l_file_name, 2)
+						if not l_files.is_empty then
+							l_full_file_name := l_files.first
 						end
 					end
 					l_file_name := l_full_file_name.name

@@ -128,15 +128,12 @@ feature {NONE} -- Registering: Code templates
 		require
 			a_service_attached: a_service /= Void
 			a_service_is_interface_usable: a_service.is_interface_usable
-		local
-			l_contracts: attached DIRECTORY_NAME
 		do
 				-- Top level catalog
-			l_contracts := eiffel_layout.templates_path_8.twin
-			a_service.extend_catalog (l_contracts.string.as_attached)
+			a_service.extend_catalog (eiffel_layout.templates_path)
 
 				-- User templates catalog
-			a_service.extend_catalog (eiffel_layout.user_templates_path_8.string)
+			a_service.extend_catalog (eiffel_layout.user_templates_path)
 
 				-- Should add user-preference paths here.
 			-- ...

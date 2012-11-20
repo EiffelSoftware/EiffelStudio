@@ -23,15 +23,11 @@ feature {NONE} -- Initialization
 	make
 			-- Initializes the code template catalog.
 		local
-			l_tester: KL_EQUALITY_TESTER [STRING]
+			l_tester: KL_EQUALITY_TESTER [PATH]
 		do
 			create cataloged_folder_files.make_default
 			create cataloged_template_definitions.make_default
-			if {PLATFORM}.is_windows then
-				create {KL_CASE_INSENSITIVE_STRING_EQUALITY_TESTER} l_tester
-			else
-				create {KL_STRING_EQUALITY_TESTER} l_tester
-			end
+			create l_tester
 			cataloged_folder_files.set_key_equality_tester (l_tester)
 			cataloged_template_definitions.set_key_equality_tester (l_tester)
 		end
@@ -57,7 +53,7 @@ feature -- Access
 			-- <Precursor>
 		local
 			l_templates: DS_ARRAYED_LIST [CODE_TEMPLATE_DEFINITION]
-			l_cursor: DS_HASH_TABLE_CURSOR [TUPLE [definition: detachable CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], STRING]
+			l_cursor: DS_HASH_TABLE_CURSOR [TUPLE [definition: detachable CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], PATH]
 		do
 			if attached internal_code_templates as l_results then
 				Result := l_results
@@ -77,37 +73,35 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	cataloged_folder_files: DS_HASH_TABLE [ARRAYED_LIST [READABLE_STRING_GENERAL], STRING]
+	cataloged_folder_files: DS_HASH_TABLE [ARRAYED_LIST [PATH], PATH]
 			-- Cataloged folders, where template files are extracted from.
 			-- Key: Folder path
 			-- Value: List of file names
 
-	cataloged_template_definitions: DS_HASH_TABLE [TUPLE [definition: detachable CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], STRING]
+	cataloged_template_definitions: DS_HASH_TABLE [TUPLE [definition: detachable CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], PATH]
 			-- Cataloged code template definitions, with reference count.
 			-- Key: Code template definition file name
 			-- Value: A code template definition with a cataloged reference count.
 
 feature -- Status report
 
-	is_cataloged (a_folder: READABLE_STRING_GENERAL): BOOLEAN
+	is_cataloged (a_folder: PATH): BOOLEAN
 			-- <Precursor>
 		do
-			Result := cataloged_folder_files.has (a_folder.as_string_8)
+			Result := cataloged_folder_files.has (a_folder)
 		ensure then
-			cataloged_folder_files_has_a_folder: Result implies cataloged_folder_files.has (a_folder.as_string_8)
+			cataloged_folder_files_has_a_folder: Result implies cataloged_folder_files.has (a_folder)
 		end
 
 feature -- Query
 
-	template_by_file_name (a_file_name: READABLE_STRING_GENERAL): detachable CODE_TEMPLATE_DEFINITION
+	template_by_file_name (a_file_name: PATH): detachable CODE_TEMPLATE_DEFINITION
 			-- <Precursor>
 		local
-			l_fn: STRING
 			l_templates: like cataloged_template_definitions
 		do
-			l_fn := a_file_name.as_string_8
 			l_templates := cataloged_template_definitions
-			if l_templates.has (l_fn) and then attached l_templates.item (l_fn) as l_item then
+			if l_templates.has (a_file_name) and then attached l_templates.item (a_file_name) as l_item then
 				Result := l_item.definition
 			end
 		end
@@ -151,7 +145,7 @@ feature -- Query
 		local
 			l_categories: CODE_CATEGORY_COLLECTION
 			l_cat_cursor: DS_BILINEAR_CURSOR [READABLE_STRING_GENERAL]
-			l_cursor: DS_HASH_TABLE_CURSOR [TUPLE [definition: detachable CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], READABLE_STRING_8]
+			l_cursor: DS_HASH_TABLE_CURSOR [TUPLE [definition: detachable CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8], PATH]
 			l_continue: BOOLEAN
 		do
 			create Result.make_default
@@ -242,7 +236,7 @@ feature {NONE} -- Helpers
 
 feature -- Basic operations
 
-	rescan (a_folder: READABLE_STRING_GENERAL)
+	rescan (a_folder: PATH)
 			-- <Precursor>
 		local
 			l_empty: BOOLEAN
@@ -266,8 +260,8 @@ feature -- Basic operations
 	rescan_catalog
 			-- <Precursor>
 		local
-			l_keys: DS_BILINEAR [STRING]
-			l_key: STRING
+			l_keys: DS_BILINEAR [PATH]
+			l_key: PATH
 			l_empty: BOOLEAN
 		do
 			if attached internal_catalog_changed_event as l_events and then not l_events.is_suspended then
@@ -300,15 +294,15 @@ feature -- Basic operations
 
 feature -- Extension
 
-	extend_catalog (a_folder: READABLE_STRING_GENERAL)
+	extend_catalog (a_folder: PATH)
 			-- <Precursor>
 		local
 			l_definitions: like cataloged_template_definitions
 			l_definition: detachable TUPLE [definition: detachable CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
-			l_files: ARRAYED_LIST [STRING]
+			l_files: ARRAYED_LIST [PATH]
 			l_changed: BOOLEAN
 		do
-			l_files := file_utilities.scan_for_files (a_folder, -1, code_file_regex, Void)
+			l_files := file_utilities.ends_with (a_folder, ".code", -1)
 			if not l_files.is_empty then
 				l_definitions := cataloged_template_definitions
 				from l_files.start until l_files.after loop
@@ -340,7 +334,7 @@ feature -- Extension
 			end
 
 				-- Extends the folder catalog
-			cataloged_folder_files.put (l_files, a_folder.as_string_8)
+			cataloged_folder_files.put (l_files, a_folder)
 
 			if l_changed and then (attached internal_catalog_changed_event as l_events) then
 				l_events.publish (Void)
@@ -349,25 +343,25 @@ feature -- Extension
 
 feature -- Removal
 
-	remove_catalog (a_folder: READABLE_STRING_GENERAL)
+	remove_catalog (a_folder: PATH)
 			-- <Precursor>
 		local
 			l_catalog: like cataloged_folder_files
-			l_folder: STRING
-			l_files: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			l_folder: PATH
+			l_files: ARRAYED_LIST [PATH]
 			l_definitions: like cataloged_template_definitions
 			l_definition: TUPLE [definition: detachable CODE_TEMPLATE_DEFINITION; ref_count: NATURAL_8]
-			l_file: STRING
+			l_file: PATH
 			l_changed: BOOLEAN
 		do
 			l_catalog := cataloged_folder_files
-			l_folder := a_folder.as_string_8
+			l_folder := a_folder
 			l_files := l_catalog.item (l_folder)
 			if attached l_files and then not l_files.is_empty then
 				l_definitions := cataloged_template_definitions
 				from l_files.start until l_files.after loop
 					if attached l_files.item_for_iteration as l_file_item then
-						l_file := l_file_item.as_string_8
+						l_file := l_file_item
 						if l_definitions.has (l_file) then
 								-- Decrement reference count
 							l_definition := l_definitions.item (l_file)
@@ -422,7 +416,7 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Basic operations
 
-	build_template (a_file_name: READABLE_STRING_GENERAL): detachable CODE_TEMPLATE_DEFINITION
+	build_template (a_file_name: PATH): detachable CODE_TEMPLATE_DEFINITION
 			-- Builds a code template definition model from a file.
 			--
 			-- `a_file_name': Path to the code template file.
@@ -431,7 +425,7 @@ feature {NONE} -- Basic operations
 			is_interface_usable: is_interface_usable
 			a_file_name_attached: attached a_file_name
 			not_a_file_name_is_empty: not a_file_name.is_empty
-			a_file_name_exists: (create {FILE_UTILITIES}).file_exists (a_file_name)
+			a_file_name_exists: (create {FILE_UTILITIES}).file_path_exists (a_file_name)
 		local
 			l_parser: like xml_parser
 			l_resolver: XML_FILE_EXTERNAL_RESOLVER
@@ -441,7 +435,7 @@ feature {NONE} -- Basic operations
 			if not retried then
 
 				create l_resolver.make
-				l_resolver.resolve (a_file_name)
+				l_resolver.resolve (a_file_name.name)
 				if not l_resolver.has_error then
 						-- File is loaded, create the callbacks and parse the XML.
 					l_parser := xml_parser
@@ -461,7 +455,7 @@ feature {NONE} -- Basic operations
 							-- Log parse error
 						if logger_service.is_service_available then
 							logger_service.service.put_message_with_severity (
-								(create {ERROR_MESSAGES}).e_code_template_parse (l_callbacks.last_error_message, a_file_name),
+								(create {ERROR_MESSAGES}).e_code_template_parse (l_callbacks.last_error_message, a_file_name.name),
 								{ENVIRONMENT_CATEGORIES}.internal_event,
 								{PRIORITY_LEVELS}.high)
 						end
@@ -475,7 +469,7 @@ feature {NONE} -- Basic operations
 					-- Log failed load error
 				if logger_service.is_service_available then
 					logger_service.service.put_message_with_severity (
-						(create {ERROR_MESSAGES}).e_code_template_read (a_file_name),
+						(create {ERROR_MESSAGES}).e_code_template_read (a_file_name.name),
 						{ENVIRONMENT_CATEGORIES}.internal_event,
 						{PRIORITY_LEVELS}.high)
 				end
@@ -487,20 +481,6 @@ feature {NONE} -- Basic operations
 				retried := True
 				retry
 			end
-		end
-
-feature {NONE} -- Regular expressions
-
-	frozen code_file_regex: RX_PCRE_MATCHER
-			-- Regular expression for match code template file names.
-		once
-			create Result.make
-			Result.set_caseless (True)
-			Result.compile ("\.code$")
-		ensure
-			result_attached: attached Result
-			result_is_compiled: Result.is_compiled
-			result_is_caseless: Result.is_caseless
 		end
 
 feature {NONE} -- Implementation: Internal cached

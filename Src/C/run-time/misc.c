@@ -218,7 +218,15 @@ rt_public void eif_sleep(EIF_INTEGER_64 nanoseconds)
  * Protected call to system
  */
 
-rt_public EIF_INTEGER eif_system (char *s)
+/*
+doc:	<routine name="eif_system" return_type="EIF_INTEGER" export="public">
+doc:		<summary>Execute a command using system shell.</>
+doc:		<param name="s" type="EIF_NATIVE_CHAR *">Null-terminated path in UTF-16 encoding on Windows and a byte sequence otherwise.</param>
+doc:		<return>0 if it succeeds, -1 otherwise. Upon failure `errno' is set with the reason code.</return>
+doc:		<thread_safety>Re-entrant</thread_safety>
+doc:	</routine>
+*/
+rt_public EIF_INTEGER eif_system (EIF_NATIVE_CHAR *s)
 {
 	EIF_INTEGER result;
 
@@ -242,6 +250,8 @@ rt_public EIF_INTEGER eif_system (char *s)
 #elif defined EIF_VMS
 	result = eifrt_vms_spawn (s, EIFRT_VMS_SPAWN_FLAG_TRANSLATE);	    /* synchronous spawn */
 
+#elif defined EIF_WINDOWS
+	result = (EIF_INTEGER) _wsystem (s);
 #else
 	result = (EIF_INTEGER) system (s);
 #endif
@@ -250,24 +260,13 @@ rt_public EIF_INTEGER eif_system (char *s)
 }
 
 /*
-doc:	<routine name="eif_system_16" return_type="EIF_INTEGER" export="public">
+doc:	<routine name="eif_system_asynchronous" return_type="void" export="public">
 doc:		<summary>Execute a command using system shell.</>
-doc:		<param name="s" type="EIF_NATURAL_16 *">Command line in UTF-16 encoding.</param>
-doc:		<return>0 if it succeeds, -1 otherwise. Upon failure `errno' is set with the reason code.</return>
-doc:		<thread_safety>Re-entrant</thread_safety>
+doc:		<param name="cmd" type="EIF_NATIVE_CHAR *">Null-terminated path in UTF-16 encoding on Windows and a byte sequence otherwise.</param>
+doc:		<thread_safety>Safe</thread_safety>
 doc:	</routine>
 */
-rt_public EIF_INTEGER eif_system_16 (EIF_NATURAL_16 *s)
-{
-#ifndef EIF_WINDOWS
-	REQUIRE ("Platform is Windows", EIF_FALSE);
-	return 0;
-#else
-	return (EIF_INTEGER) _wsystem (s);
-#endif
-}
-
-rt_public void eif_system_asynchronous (char *cmd)
+rt_public void eif_system_asynchronous (EIF_NATIVE_CHAR *cmd)
 {
 	/* Run a command asynchronously, that is to say in background. The command
 	 * is identified by the client via a "job number", which is inserted in
@@ -278,9 +277,9 @@ rt_public void eif_system_asynchronous (char *cmd)
 	 */
 
 #ifdef EIF_WINDOWS
-	STARTUPINFO				siStartInfo;
+	STARTUPINFOW			siStartInfo;
 	PROCESS_INFORMATION		procinfo;
-	char 					*current_dir;
+	wchar_t					*current_dir;
 	EIF_INTEGER result;
 #else
 	int status;			/* Command status, as returned by system() */
@@ -288,9 +287,9 @@ rt_public void eif_system_asynchronous (char *cmd)
 #endif
 
 #ifdef EIF_WINDOWS
-	current_dir = (char *) getcwd(NULL, PATH_MAX);
+	current_dir = (wchar_t *) _wgetcwd(NULL, PATH_MAX);
 
-	memset (&siStartInfo, 0, sizeof(STARTUPINFO));
+	memset (&siStartInfo, 0, sizeof siStartInfo);
 	siStartInfo.cb = sizeof(STARTUPINFO);
 	siStartInfo.lpTitle = NULL;
 	siStartInfo.lpReserved = NULL;
@@ -301,7 +300,7 @@ rt_public void eif_system_asynchronous (char *cmd)
 
 		/* We do not used DETACHED_PROCESS below because it won't work when
 		 * launching interactive console application such as `cmd.exe'. */
-	result = CreateProcess (
+	result = CreateProcessW (
 		NULL,
 		cmd,
 		NULL,
@@ -316,9 +315,8 @@ rt_public void eif_system_asynchronous (char *cmd)
 		CloseHandle (procinfo.hProcess);
 		CloseHandle (procinfo.hThread);
 	}
-	chdir(current_dir);
+	_wchdir(current_dir);
 	free(current_dir);
-
 #else /* (not) EIF_WINDOWS */
 
 #if !defined(EIF_VMS) && !defined(VXWORKS)	/* VMS needs a higher level abstraction for async system() */
@@ -392,94 +390,6 @@ rt_public void eif_system_asynchronous (char *cmd)
 	/* NOTREACHED */
 
 }
-
-/*
-doc:	<routine name="eif_system_asynchronous_16" return_type="void" export="public">
-doc:		<summary>Execute a command using system shell.</>
-doc:		<param name="cmd" type="EIF_NATURAL_16 *">Command line in UTF-16 encoding.</param>
-doc:		<thread_safety>Safe</thread_safety>
-doc:	</routine>
-*/
-rt_public void eif_system_asynchronous_16 (EIF_NATURAL_16 *cmd)
-{
-	/* Run a command asynchronously, that is to say in background. The command
-	 * is identified by the client via a "job number", which is inserted in
-	 * the request itself.
-	 * The daemon forks a copy of itself which will be in charge of running
-	 * the command and sending the acknowledgment back, tagged with the command
-	 * number.
-	 */
-
-#ifdef EIF_WINDOWS
-	STARTUPINFOW		siStartInfo;
-	PROCESS_INFORMATION	procinfo;
-	wchar_t			*current_dir;
-	EIF_INTEGER result;
-
-	current_dir = (wchar_t *) _wgetcwd(NULL, PATH_MAX);
-
-	memset (&siStartInfo, 0, sizeof siStartInfo);
-	siStartInfo.cb = sizeof(STARTUPINFO);
-	siStartInfo.lpTitle = NULL;
-	siStartInfo.lpReserved = NULL;
-	siStartInfo.lpReserved2 = NULL;
-	siStartInfo.cbReserved2 = 0;
-	siStartInfo.lpDesktop = NULL;
-	siStartInfo.dwFlags = STARTF_FORCEONFEEDBACK;
-
-		/* We do not used DETACHED_PROCESS below because it won't work when
-		 * launching interactive console application such as `cmd.exe'. */
-	result = CreateProcessW (
-		NULL,
-		cmd,
-		NULL,
-		NULL,
-		FALSE,
-		CREATE_NEW_CONSOLE,
-		NULL,
-		current_dir,
-		&siStartInfo,
-		&procinfo);
-	if (result) {
-		CloseHandle (procinfo.hProcess);
-		CloseHandle (procinfo.hThread);
-	}
-	_wchdir(current_dir);
-	free(current_dir);
-#else
-	REQUIRE ("Platform is Windows", EIF_FALSE);
-#endif /* EIF_WINDOWS */
-	/* NOTREACHED */
-
-}
-
-/* Obsolete but kept for backward compatibility. To remove in 6.x where x > 1 */
-/* **VMS** Required for Eiffel compiler to run on VMS -- davids. */
-extern char *eif_getenv (char * k);
-rt_public char * eif_getenv (char * k)
-{
-#if defined EIF_VMS
-	return eifrt_vms_getenv (k);
-#else
-	return (char *) getenv (k);
-#endif
-}
-
-/* Variant of eif_getenv() that bypasses the VMS-specific hack in	    */
-/* eifrt_vms_getenv(). This is intended to be used for programs that	    */
-/* require the real value of the environment variable (logical name) for    */
-/* reporting purposes. It is called by a variant of get in a VMS-specific   */
-/* descendant of EXECUTION_ENVIRONMENT.					    */
-/* For non-VMS platforms, it is the same as eif_getenv().		    */
-extern char *eif_getenv_native (char *name);
-rt_public char* eif_getenv_native (char* nam)
-{
-#ifdef EIF_VMS
-#undef getenv
-#define getenv DECC$GETENV
-#endif
-	return getenv (nam);
-} /* end eif_getenv_native() */
 
 extern union overhead *eif_header (EIF_REFERENCE);
 rt_shared union overhead * eif_header (EIF_REFERENCE object) {

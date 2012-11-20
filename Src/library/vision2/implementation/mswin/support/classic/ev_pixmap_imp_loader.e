@@ -23,7 +23,7 @@ inherit
 			{NONE} all
 		end
 
-	PATH_HANDLER
+	NATIVE_STRING_HANDLER
 
 feature -- Status report
 

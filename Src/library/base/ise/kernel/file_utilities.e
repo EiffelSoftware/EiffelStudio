@@ -175,7 +175,7 @@ feature {NONE} -- Query
 			a_levels_is_valid: a_levels >= -1
 		local
 			l_dn: PATH
-			l_dir: DIRECTORY
+			l_dir: detachable DIRECTORY
 			l_retried: BOOLEAN
 			l_path: PATH
 			f: RAW_FILE
@@ -220,7 +220,7 @@ feature {NONE} -- Query
 				else
 					create Result.make (0)
 				end
-			elseif attached l_dir and then not l_dir.is_closed then
+			elseif l_dir /= Void and then not l_dir.is_closed then
 				l_dir.close
 				create Result.make (0)
 			else

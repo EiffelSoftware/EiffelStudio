@@ -86,6 +86,7 @@ feature -- Store/Retrieval
 			l_writer: SED_MEDIUM_READER_WRITER
 			l_serializer: SED_INDEPENDENT_SERIALIZER
 			retried: BOOLEAN
+			utf: UTF_CONVERTER
 		do
 			if not retried then
 				storage.open_write
@@ -99,7 +100,7 @@ feature -- Store/Retrieval
 					-- The following information is not used on retrieval, but may help
 					-- users finding out which version of the Eiffel compiler and from where
 					-- this Eiffel compiler was coming from.
-				l_writer.write_string_8 (eiffel_layout.ec_command_name_8)
+				l_writer.write_string_8 (utf.string_32_to_utf_8_string_8 (eiffel_layout.ec_command_name.name))
 				l_writer.write_string_8 (compiler_version_number.version.out)
 
 				if is_c_storable then
@@ -340,7 +341,9 @@ feature {NONE} -- Implementation
 				a_reader.read_header
 				project_version_number := a_reader.read_string_8
 				precompilation_id := a_reader.read_integer_32
+					-- Compiler command name
 				l_str := a_reader.read_string_8
+					-- Compiler version number
 				l_str := a_reader.read_string_8
 			else
 				error_value := corrupt_value

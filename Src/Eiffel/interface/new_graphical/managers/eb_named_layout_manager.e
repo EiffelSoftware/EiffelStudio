@@ -40,43 +40,44 @@ feature {NONE} -- Initlization
 			init_existing_layouts_imp (layout_file_path (is_normal_mode), is_normal_mode)
 		end
 
-	init_existing_layouts_imp (a_dir: attached DIRECTORY_NAME; a_from_normal_mode: BOOLEAN)
+	init_existing_layouts_imp (a_dir: PATH; a_from_normal_mode: BOOLEAN)
 			-- Used by `init_eixisting_layouts'.
 		require
+			a_dir_not_void: a_dir /= Void
 			dir_not_empty: not a_dir.is_empty
 		local
 			l_dir: DIRECTORY
-			l_files: ARRAYED_LIST [STRING]
+			l_files: ARRAYED_LIST [PATH]
 			l_file: RAW_FILE
-			l_config_data: SD_CONFIG_DATA
 			l_facility: SED_STORABLE_FACILITIES
 			l_reader: SED_MEDIUM_READER_WRITER
-			l_fn: FILE_NAME
+			l_fn: PATH
 		do
-			create l_dir.make (a_dir)
+			create l_dir.make_with_path (a_dir)
 			if l_dir.exists then
 				from
-					l_files := l_dir.linear_representation
+					l_files := l_dir.entries
 					l_files.start
 				until
 					l_files.after
 				loop
-					if l_files.item.item (1) /= '.' then
-						create l_fn.make_from_string (l_dir.name.twin)
-						l_fn.set_file_name (l_files.item)
-						create l_file.make_open_read (l_fn)
-						check exist: l_file.exists end
-						create l_reader.make (l_file)
-						l_reader.set_for_reading
-						create l_facility
-						l_config_data ?= l_facility.retrieved (l_reader, True)
+					l_fn := l_files.item
+					if not l_fn.is_current_symbol and then not l_fn.is_parent_symbol then
+						l_fn := a_dir.extended_path (l_fn)
+						create l_file.make_with_path (l_fn)
+						if l_file.exists and then l_file.is_plain then
+							l_file.open_read
+							create l_reader.make (l_file)
+							l_reader.set_for_reading
+							create l_facility
 
-						-- Maybe it's corrupted data, we ignore it.
-						if l_config_data /= Void then
-							check not_already_has: not layouts.has (l_config_data.name) end
-							layouts.force ([l_fn, a_from_normal_mode], l_config_data.name)
+							-- Maybe it's corrupted data, we ignore it.
+							if attached {SD_CONFIG_DATA} l_facility.retrieved (l_reader, True) as l_config_data then
+								check not_already_has: not layouts.has (l_config_data.name) end
+								layouts.force ([l_fn, a_from_normal_mode], l_config_data.name)
+							end
+							l_file.close
 						end
-						l_file.close
 					end
 					l_files.forth
 				end
@@ -85,44 +86,47 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	add_layout (a_name: STRING_GENERAL): BOOLEAN
+	add_layout (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Add a new layout which name is `a_name if not exist.
 			-- Otherwise overwrite the exsiting one.
 		require
 			not_void: a_name /= Void
-			not_empty: not a_name.as_string_8.is_equal ("")
+			not_empty: not a_name.is_empty
 		local
-			l_fn: FILE_NAME
+			l_fn: PATH
 			l_file_utils: GOBO_FILE_UTILITIES
+			l_name: READABLE_STRING_32
 		do
-			if layouts.has (a_name) then
-				l_fn := layouts.item (a_name).file_path
+			l_name := a_name.as_string_32
+			if layouts.has (l_name) then
+				l_fn := layouts.item (l_name).file_path
 			else
-				-- FIXIT: When `a_name' is non-English, file name is not correct
-				l_fn := layout_file_name (a_name.as_string_8, is_normal_mode)
+				l_fn := layout_file_name (l_name, is_normal_mode)
 			end
-			l_file_utils.create_directory_for_file (l_fn.string.as_attached)
-			Result := development_window.docking_manager.save_tools_data_with_name (l_fn, a_name)
+			if attached l_fn.parent as l_p then
+				l_file_utils.create_directory_path (l_p)
+			end
+			Result := development_window.docking_manager.save_tools_data_with_name_and_path (l_fn, l_name)
 		end
 
-	delete_layout (a_name: STRING_GENERAL): BOOLEAN
+	delete_layout (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Delete a layout which name is `a_name'
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
 		local
 			l_retired: BOOLEAN
-			l_item: TUPLE [file_path: FILE_NAME; is_normal_mode: BOOLEAN]
+			l_item: TUPLE [file_path: PATH; is_normal_mode: BOOLEAN]
 			l_file: RAW_FILE
 		do
 			if not l_retired then
-				l_item := layouts.item (a_name)
+				l_item := layouts.item (a_name.as_string_32)
 				if l_item /= Void then
-					create l_file.make (l_item.file_path)
+					create l_file.make_with_path (l_item.file_path)
 					l_file.open_read_write
 
 					l_file.delete
-					layouts.remove (a_name)
+					layouts.remove (a_name.as_string_32)
 
 					Result := True
 				end
@@ -132,23 +136,24 @@ feature -- Command
 			retry
 		end
 
-	open_layout (a_name: STRING_GENERAL)
+	open_layout (a_name: READABLE_STRING_GENERAL)
 			-- Open a named layout
 			-- `a_win' is the window which show modal to.
 		require
-			has: layouts.has (a_name)
+			a_name_not_void: a_name /= Void
+			has: layouts.has (a_name.as_string_32)
 		local
-			l_fn: FILE_NAME
+			l_fn: PATH
 			l_r: BOOLEAN
 			l_pointer_style: EV_POINTER_STYLE
 			l_stock_pixmaps: EV_STOCK_PIXMAPS
 			l_dialog: ES_ERROR_PROMPT
 			l_debugger: EB_SHARED_DEBUGGER_MANAGER
-			l_info: TUPLE [file_name: FILE_NAME; is_normal_mode: BOOLEAN]
+			l_info: TUPLE [file_name: PATH; is_normal_mode: BOOLEAN]
 			l_ok_to_open: BOOLEAN
 			l_cmd: EB_COMMAND
 		do
-			l_info := layouts.item (a_name)
+			l_info := layouts.item (a_name.as_string_32)
 
 			if l_info.is_normal_mode /= is_normal_mode then
 				-- Layout saved in different mode. We need swtich mode now.
@@ -181,7 +186,7 @@ feature -- Command
 				development_window.window.set_pointer_style (l_stock_pixmaps.busy_cursor)
 
 				l_fn := l_info.file_name
-				l_r := development_window.docking_manager.open_tools_config (l_fn)
+				l_r := development_window.docking_manager.open_tools_config_with_path (l_fn)
 				if not l_r then
 					-- If opening failed, we open orignal layout before opening.
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (interface_names.l_open_layout_error, development_window.window, Void)
@@ -198,35 +203,36 @@ feature -- Command
 
 feature -- Query
 
-	layouts: HASH_TABLE [TUPLE [file_path: FILE_NAME; is_normal_mode: BOOLEAN], STRING_GENERAL]
+	layouts: HASH_TABLE [TUPLE [file_path: PATH; is_normal_mode: BOOLEAN], READABLE_STRING_32]
 			-- All names of layouts.
 			-- Key is name of a layout.
 
 feature {NONE} -- Query
 
-	layout_file_name (a_file_name: STRING; a_normal_mode: BOOLEAN): attached FILE_NAME
+	layout_file_name (a_file_name: READABLE_STRING_32; a_normal_mode: BOOLEAN): PATH
 			-- Retrieve a full path for a docking layout file name
 		require
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		do
-			create Result.make_from_string (layout_file_path (a_normal_mode).string)
-			Result.set_file_name (a_file_name)
-			Result.add_extension (eiffel_layout.docking_file_extension)
+			Result := layout_file_path (a_normal_mode)
+			Result := Result.extended (a_file_name + {STRING_32} "." + eiffel_layout.docking_file_extension)
 		ensure
+			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 
-	layout_file_path (a_normal_mode: BOOLEAN): attached DIRECTORY_NAME
+	layout_file_path (a_normal_mode: BOOLEAN): PATH
 			-- Retrieve a full path for a docking layout file name
 		do
-			Result := eiffel_layout.docking_data_path_8.twin
+			Result := eiffel_layout.docking_data_path
 			if a_normal_mode then
-				Result.extend (user_layout_prefix + eiffel_layout.docking_standard_file)
+				Result := Result.extended (user_layout_prefix + eiffel_layout.docking_standard_file)
 			else
-				Result.extend (user_layout_prefix + eiffel_layout.docking_debug_file)
+				Result := Result.extended (user_layout_prefix + eiffel_layout.docking_debug_file)
 			end
 		ensure
+			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 

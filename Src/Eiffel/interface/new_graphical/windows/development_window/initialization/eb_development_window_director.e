@@ -50,7 +50,7 @@ feature -- Command
 			if
 				not develop_window.development_window_data.is_force_debug_mode or
 				l_debugger_manager = Void or
-				not develop_window.docking_manager.is_config_data_valid (eiffel_layout.user_docking_standard_file_name_8 (develop_window.window_id)) or else
+				not develop_window.docking_manager.is_config_data_path_valid (eiffel_layout.user_docking_standard_file_name (develop_window.window_id)) or else
 				l_debugger_manager.debug_mode_forced -- There is already a window forced debug mode. We open an normal window.
 			then
 				develop_window.docking_layout_manager.restore_tools_docking_layout
@@ -166,9 +166,9 @@ feature -- Command
 				develop_window.editors_manager.show_editors_possible
 				l_debugger_manager ?= develop_window.debugger_manager
 				if not l_debugger_manager.raised then
-					develop_window.docking_manager.open_maximized_tool_config (eiffel_layout.user_docking_standard_file_name_8 (develop_window.window_id))
+					develop_window.docking_manager.open_maximized_tool_config_with_path (eiffel_layout.user_docking_standard_file_name (develop_window.window_id))
 				else
-					develop_window.docking_manager.open_maximized_tool_config (eiffel_layout.user_docking_debug_file_name_8 (develop_window.window_id))
+					develop_window.docking_manager.open_maximized_tool_config_with_path (eiffel_layout.user_docking_debug_file_name (develop_window.window_id))
 				end
 			end
 				-- Attempt to reload last edited class of `Current'.

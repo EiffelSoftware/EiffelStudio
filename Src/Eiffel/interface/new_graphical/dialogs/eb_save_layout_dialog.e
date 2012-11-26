@@ -109,7 +109,7 @@ feature {NONE} -- Initlization
 			-- Initlialize layout list items.
 		local
 			l_item: EV_LIST_ITEM
-			l_names:  HASH_TABLE [TUPLE [FILE_NAME, BOOLEAN], STRING_GENERAL]
+			l_names:  like manager.layouts
 		do
 			from
 				l_names := manager.layouts
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation functions
 			l_str: STRING_GENERAL
 		do
 			l_str := text_for_name.text
-			if l_str /= Void and then not l_str.as_string_8.is_equal ("") then
+			if l_str /= Void and then not l_str.is_empty then
 				if manager.layouts.has (l_str) then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (interface_names.l_overwrite_layout (l_str), dialog, agent on_overwirte_and_destroy (l_str), agent veto_close)
 				else
@@ -348,7 +348,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

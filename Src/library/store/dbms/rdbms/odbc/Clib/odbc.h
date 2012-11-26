@@ -55,11 +55,7 @@ extern "C" {
 #define UNKNOWN_TYPE            0
 
 /* the following are some lengthes' definitions */
-#define ERROR_MESSAGE_SIZE    450 /* the max length of error message */
-#define WARN_MESSAGE_SIZE     450 /* the max length of warning message */
-#define MAX_ERROR_MSG         200 /* the max length of tempory error message */
 #define MAX_DESCRIPTOR        10  /* Max descriptor available simultaneously */
-
 
 #define NO_MORE_ROWS          100 /* No more row is fetched by FETCH operation */
 
@@ -71,9 +67,7 @@ extern "C" {
 #define DB_TOO_MANY_COL                 	5
 
 /* the following are lengthes of some data types in EiffelStore on ODBC */
-#define DB_DATE_LEN                             26
 #define DB_MAX_NAME_LEN                 	40
-#define DB_MAX_TABLE_LEN			50
 #define DB_MAX_COLS                             300
 // Added by David
 //#define DB_MAX_STRING_LEN			254
@@ -124,6 +118,15 @@ extern "C" {
 #define GetDbColPtr(daptr,i) ((((daptr)->sqlvar)[i]).sqldata)
 #define SetDbColPtr(daptr,i,ptr) ((((daptr)->sqlvar)[i]).sqldata = (ptr))
 
+/* 
+ * String type with count
+ */
+typedef struct countable_string_ {
+	SQLTCHAR *string;
+	size_t char_count;	/* Size in character */
+	size_t capacity;	/* Capacity in character */
+} COUNTABLE_STRING;
+
 /*
 **  Description:
 **      The SQLDA is a structure for holding data descriptions, used by
@@ -145,10 +148,7 @@ typedef struct sqlvar_ {
 	SQLSMALLINT c_type;
 	SQLULEN	sqllen;
 	char    *sqldata;
-	struct {
-	    size_t sqlnamel;
-	    SQLTCHAR sqlnamec[DB_MAX_NAME_LEN+1];
-	} sqlname;
+	COUNTABLE_STRING sqlname;
 } IISQLVAR;
 
 /*
@@ -228,7 +228,7 @@ extern void odbc_terminate_order (void *con, int no_des);
 extern void odbc_close_cursor (void *con, int no_des);
 extern int odbc_next_row (void *con, int no_des);
 extern int odbc_support_proc();
-extern int odbc_support_create_proc();
+extern SQLTCHAR *odbc_procedure_term (void *con);
 extern int odbc_support_information_schema();
 extern SQLTCHAR * odbc_driver_name();
 extern int odbc_insensitive_upper();
@@ -243,8 +243,8 @@ extern SQLTCHAR *odbc_hide_qualifier(SQLTCHAR *buf, int char_count);
 extern void odbc_unhide_qualifier(SQLTCHAR *buf, int char_count);
 extern SQLTCHAR *odbc_identifier_quoter();
 extern SQLTCHAR *odbc_qualifier_seperator();
-extern void odbc_set_qualifier(SQLTCHAR *qfy, int len);
-extern void odbc_set_owner(SQLTCHAR *owner, int len);
+extern void odbc_set_qualifier(void *con, SQLTCHAR *qfy, int len);
+extern void odbc_set_owner(void *con, SQLTCHAR *owner, int len);
 extern void odbc_unset_catalog_flag(void *con, int no_desc);
 extern void odbc_connect (void *con, SQLTCHAR *name, int name_count, SQLTCHAR *passwd, int passwd_count, SQLTCHAR *dsn, int dsn_count);
 extern void odbc_connect_by_connection_string (void *con, SQLTCHAR *a_string, int str_count);
@@ -253,9 +253,9 @@ extern void odbc_rollback (void *con);
 extern void odbc_commit (void *con);
 extern void odbc_begin (void *con);
 extern int odbc_trancount (void *con);
-extern size_t cut_tail_blank(SQLTCHAR *buf, size_t char_count);
 extern int odbc_get_count (void *con, int no_des);
-extern size_t odbc_put_col_name (void *con, int no_des, int index, SQLTCHAR *result);
+extern SQLTCHAR *odbc_col_name (void *con, int no_des, int index);
+extern size_t odbc_col_name_len (void *con, int no_des, int index);
 extern SQLULEN odbc_get_col_len (void *con, int no_des, int index);
 extern SQLULEN odbc_get_data_len (void *con, int no_des, int index);
 extern int odbc_conv_type (int typeCode);

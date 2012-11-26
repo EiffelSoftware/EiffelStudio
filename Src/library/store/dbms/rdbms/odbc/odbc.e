@@ -443,7 +443,7 @@ feature -- For DATABASE_PROC
 
 	support_stored_proc: BOOLEAN
 		do
-			Result := odbc_support_create_proc = 1
+			Result := support_drop_proc
 		end
 
 	sql_adapt_db (sql: STRING): STRING
@@ -497,8 +497,14 @@ feature -- For DATABASE_PROC
 		end
 
 	support_drop_proc: BOOLEAN
+		local
+			l_sql_string: SQL_STRING
+			l_string: STRING
 		do
-			Result := odbc_support_create_proc = 1
+			create l_sql_string.make_by_pointer (odbc_procedure_term (con_context_pointer))
+			l_string := l_sql_string.string.as_string_8
+			Result :=
+				l_string.is_case_insensitive_equal (once "stored procedure")
 		end
 
 	drop_proc_not_supported
@@ -570,9 +576,9 @@ feature -- For DATABASE_REPOSITORY
 			c_tmp: SQL_STRING
 		do
 			create c_tmp.make (rep_qualifier)
-			odbc_set_qualifier (c_tmp.item, c_tmp.count)
+			odbc_set_qualifier (con_context_pointer, c_tmp.item, c_tmp.count)
 			create c_tmp.make (rep_owner)
-			odbc_set_owner (c_tmp.item, c_tmp.count)
+			odbc_set_owner (con_context_pointer, c_tmp.item, c_tmp.count)
 			create Result.make (1)
 			Result.append ("SQLColumns (")
 			Result.append (repository_name)
@@ -690,25 +696,17 @@ feature -- External
 	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len: INTEGER): INTEGER
 			-- <Precursor>
 		local
-			l_area: MANAGED_POINTER
 			l_str: SQL_STRING
 		do
-			create l_area.make (max_len)
-			Result := odbc_put_col_name (con_context_pointer, no_descriptor, index, l_area.item)
+			Result := odbc_col_name_len (con_context_pointer, no_descriptor, index)
 
 			l_str := temporary_reusable_sql_string
-			l_str.set_shared_from_pointer_and_count (l_area.item, Result * {SQL_STRING}.character_size)
+			l_str.set_shared_from_pointer_and_count (odbc_col_name (con_context_pointer, no_descriptor, index), Result * {SQL_STRING}.character_size)
 
-			check
-				Result <= max_len
-			end
 			ar.grow (Result)
 			ar.set_count (Result)
 
 			l_str.read_substring_into (ar, 1, Result)
-
-				-- Free buffer immediately.
-			l_area.resize (0)
 		end
 
 	put_data (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len: INTEGER): INTEGER
@@ -1111,7 +1109,12 @@ feature {NONE} -- External features
 			"C use %"odbc.h%""
 		end
 
-	odbc_put_col_name (a_con: POINTER; no_descriptor: INTEGER; index: INTEGER; ar: POINTER): INTEGER
+	odbc_col_name (a_con: POINTER; no_descriptor: INTEGER; index: INTEGER): POINTER
+		external
+			"C use %"odbc.h%""
+		end
+
+	odbc_col_name_len (a_con: POINTER; no_descriptor: INTEGER; index: INTEGER): INTEGER
 		external
 			"C use %"odbc.h%""
 		end
@@ -1369,7 +1372,7 @@ feature {NONE} -- External features
 			"C use %"odbc.h%""
 		end
 
-	odbc_support_create_proc: INTEGER
+	odbc_procedure_term (a_con: POINTER): POINTER
 		external
 			"C use %"odbc.h%""
 		end
@@ -1779,12 +1782,12 @@ feature {NONE} -- External features
 --			Result := test /= Void
 --		end
 
-	odbc_set_qualifier (qlf: POINTER; char_count: INTEGER)
+	odbc_set_qualifier (a_con: POINTER; qlf: POINTER; char_count: INTEGER)
 		external
 			"C use %"odbc.h%""
 		end
 
-	odbc_set_owner (owner: POINTER; char_count: INTEGER)
+	odbc_set_owner (a_con: POINTER; owner: POINTER; char_count: INTEGER)
 		external
 			"C use %"odbc.h%""
 		end

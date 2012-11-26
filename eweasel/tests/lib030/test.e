@@ -7,7 +7,8 @@ feature
 		local
 			f: PLAIN_TEXT_FILE
 		do
-			create f.make_open_write ("my_file")
+			create f.make_with_name ("my_file")
+			f.open_write
 			f.close
 			show (f)
 			f.link ("my_link")
@@ -19,7 +20,7 @@ feature
 		local
 			u: UTF_CONVERTER
 		do
-			print ("File name: " + u.utf_32_string_to_utf_8_string_8 (f.name_32) + "%N")
+			print ("File name: " + u.utf_32_string_to_utf_8_string_8 (f.path.name) + "%N")
 			print ("Regular file: " + f.is_plain.out + "%N")
 			print ("Device: " + f.is_device.out + "%N")
 			print ("Directory: " + f.is_directory.out + "%N")

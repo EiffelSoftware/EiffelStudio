@@ -1813,10 +1813,10 @@ feature {NONE} -- Implementation attribute processing
 				elseif l_value = Void and l_excluded_value = Void then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_custom_none (l_name))
 				elseif l_value /= Void then
-					current_condition.add_custom (l_name, l_value)
+					current_condition.add_custom (l_name, l_value, False)
 				else
 					check l_excluded_value /= Void end
-					current_condition.exclude_custom (l_name, l_excluded_value)
+					current_condition.add_custom (l_name, l_excluded_value, True)
 				end
 			end
 		end

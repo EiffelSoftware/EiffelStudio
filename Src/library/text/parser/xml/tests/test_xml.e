@@ -151,14 +151,14 @@ feature -- Test routines
 			f.close
 		end
 
-	xml_file_name (a_name: STRING_32): PATH
+	xml_file_name (a_name: READABLE_STRING_GENERAL): PATH
 		local
 			fn: PATH
 		do
 			Result := execution_environment.current_working_path
 --			across 1 |..| 5 as c loop Result := Result.extended ("..") end
 
-			Result := Result.extended (a_name).name
+			Result := Result.extended (a_name)
 		end
 
 	new_callbacks_pipe (a_output: STRING_GENERAL; cbs: detachable ARRAY [XML_CALLBACKS_FILTER]; cb: detachable XML_CALLBACKS): XML_CALLBACKS

@@ -30,7 +30,8 @@ inherit
 
 	EXECUTION_ENVIRONMENT
 		rename
-			put as execution_environment_put
+			put as execution_environment_put,
+			item as execution_environment_item
 		undefine
 			copy, default_create, is_equal
 		end

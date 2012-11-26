@@ -437,7 +437,7 @@ feature -- Condition dialog
 	dial_cond_version: STRING_32 do Result := locale.translation ("Version")	end
 	dial_cond_version_compiler: STRING_32 do Result := locale.translation ("<= compiler version <= ")	end
 	dial_cond_version_clr: STRING_32 do Result := locale.translation ("<= MSIL CLR version <= ")	end
-	dial_cond_custom: STRING_32 do Result := locale.translation ("Custom")	end
+	dial_cond_custom: STRING_32 do Result := locale.translation ("Custom (Intersection)")	end
 	dial_cond_new_custom: STRING_32 do Result := locale.translation ("new")	end
 	dial_cond_new_custom_value: STRING_32 do Result := locale.translation ("new_value")	end
 	dial_cond_custom_variable: STRING_32 do Result := locale.translation ("Variable")	end

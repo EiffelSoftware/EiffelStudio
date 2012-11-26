@@ -540,36 +540,47 @@ feature {NONE} -- Actions
 			end
 		end
 
-	update_variable (a_new_key: READABLE_STRING_32; an_old_key: READABLE_STRING_32)
-			-- Update variable name from `an_old_key' to `a_new_key'.
+	update_variable (a_new_key: READABLE_STRING_32; a_old_key: READABLE_STRING_32; a_old_value: READABLE_STRING_32)
+			-- Update variable name from `a_old_key' to `a_new_key'.
 		require
-			an_old_key_ok: an_old_key /= Void and then data.custom /= Void and then data.custom.has (an_old_key)
-			a_new_key_ok: a_new_key /= Void and then (data.custom = Void  or else not data.custom.has (a_new_key))
+			a_old_key_ok: a_old_key /= Void and then data.custom /= Void and then data.custom.has (a_old_key)
+			a_old_value_ok: a_old_value /= Void and then attached data.custom.item (a_old_key) as l_item and then l_item.has (a_old_value)
+		local
+			l_invert: BOOLEAN
 		do
-			if not a_new_key.is_empty then
-				data.custom.replace_key (a_new_key, an_old_key)
+			if not a_new_key.is_empty and then not a_new_key.same_string (a_old_key) then
+				l_invert := data.exclusion_value (a_old_key, a_old_value)
+				data.remove_custom (a_old_key, a_old_value)
+				data.add_custom (a_new_key, a_old_value, l_invert)
 			end
 			fill_custom
 		end
 
-	update_invert (a_value: READABLE_STRING_32; a_key: READABLE_STRING_32)
+	update_invert (a_invert_value: READABLE_STRING_32; a_value: READABLE_STRING_32; a_key: READABLE_STRING_32)
 			-- Update inversion status of custom condition of `a_key'.
 		require
 			a_key_ok: a_key /= Void and then data.custom /= Void and then data.custom.has (a_key)
-			a_value_ok: a_value /= Void and then (a_value.same_string_general ("=") or a_value.same_string_general ("/="))
+			a_value_ok: a_value /= Void and then attached data.custom.item (a_key) as l_item and then l_item.has (a_value)
+			a_invert_value_ok: a_invert_value /= Void and then (a_invert_value.same_string_general ("=") or a_invert_value.same_string_general ("/="))
 		do
-			data.custom.item (a_key).item.invert := not a_value.same_string_general ("=")
+			data.remove_custom (a_key, a_value)
+			data.add_custom (a_key, a_value, a_invert_value.same_string_general ("/="))
 		end
 
-	update_value (a_value: READABLE_STRING_32; a_key: READABLE_STRING_32)
+	update_value (a_value: READABLE_STRING_32; a_old_value: READABLE_STRING_32; a_key: READABLE_STRING_32)
 			-- Update value of custom condition of `a_key'.
 		require
-			a_key_ok: a_key /= Void and then data.custom /= Void and then data.custom.has (a_key)
+			a_key_ok: a_key /= Void and then data.custom /= Void and then data.custom.has (a_key.as_lower)
+			a_old_value_ok: a_old_value /= Void and then attached data.custom.item (a_key.as_lower) as l_item and then l_item.has (a_old_value)
 			a_value_not_void: a_value /= Void
+		local
+			l_invert: BOOLEAN
 		do
 			if not a_value.is_empty then
-				data.custom.item (a_key).item.value := a_value
-			else
+				l_invert := data.exclusion_value (a_key, a_old_value)
+				data.remove_custom (a_key, a_old_value)
+				data.add_custom (a_key, a_value, l_invert)
+					-- We need to update closed arguments of updating routines.
 				fill_custom
 			end
 		end
@@ -579,24 +590,20 @@ feature {NONE} -- Actions
 		local
 			v: TUPLE [READABLE_STRING_32, BOOLEAN]
 		do
-			if not data.custom.has (conf_interface_names.dial_cond_new_custom) then
-				v := [conf_interface_names.dial_cond_new_custom_value, False]
-				data.custom.force (v, conf_interface_names.dial_cond_new_custom)
-			end
+			data.add_custom (conf_interface_names.dial_cond_new_custom, Conf_interface_names.dial_cond_new_custom_value, False)
 			fill_custom
 		end
 
 	remove_custom
 			-- Remove a custom condition.
-		local
-			l_item: TEXT_PROPERTY [STRING_GENERAL]
 		do
 			if not custom.selected_rows.is_empty then
-				l_item ?= custom.selected_rows.first.item (1)
-				check
-					text_property: l_item /= Void
+				if
+					attached {TEXT_PROPERTY [STRING_GENERAL]} custom.selected_rows.first.item (1) as l_key and then
+					attached {TEXT_PROPERTY [STRING_GENERAL]} custom.selected_rows.first.item (3) as l_value
+				then
+					data.remove_custom (l_key.value, l_value.value)
 				end
-				data.custom.remove (l_item.value)
 				fill_custom
 			end
 		end
@@ -662,12 +669,13 @@ feature {NONE} -- Implementation
 	fill_custom
 			-- Fill custom conditions.
 		local
-			l_cust: HASH_TABLE [EQUALITY_TUPLE [TUPLE [value: READABLE_STRING_32; invert: BOOLEAN]], READABLE_STRING_32]
+			l_cust: like data.custom
 			l_text: STRING_PROPERTY
 			l_choice: STRING_CHOICE_PROPERTY
 			i: INTEGER
 			l_key: READABLE_STRING_32
 			l_list: ARRAYED_LIST [STRING]
+			l_values: HASH_TABLE [BOOLEAN, READABLE_STRING_32]
 		do
 			custom.wipe_out
 			custom.enable_last_column_use_all_width
@@ -685,28 +693,35 @@ feature {NONE} -- Implementation
 					l_cust.after
 				loop
 					l_key := l_cust.key_for_iteration
-					create l_text.make ("")
-					l_text.pointer_button_press_actions.wipe_out
-					l_text.pointer_double_press_actions.force_extend (agent l_text.activate)
-					l_text.set_value (l_key)
-					l_text.change_value_actions.extend (agent update_variable ({STRING_32} ?, l_key))
-					custom.set_item (1, i, l_text)
-					create l_choice.make_with_choices ("", create {ARRAYED_LIST [STRING_32]}.make_from_array (<<"=", "/=">>))
-					if l_cust.item_for_iteration.item.invert then
-						l_choice.set_value ("/=")
-					else
-						l_choice.set_value ("=")
+					l_values := l_cust.item_for_iteration
+					from
+						l_values.start
+					until
+						l_values.after
+					loop
+						create l_text.make ("")
+						l_text.pointer_button_press_actions.wipe_out
+						l_text.pointer_double_press_actions.force_extend (agent l_text.activate)
+						l_text.set_value (l_key)
+						l_text.change_value_actions.extend (agent update_variable ({STRING_32} ?, l_key, l_values.key_for_iteration))
+						custom.set_item (1, i, l_text)
+						create l_choice.make_with_choices ("", create {ARRAYED_LIST [STRING_32]}.make_from_array (<<"=", "/=">>))
+						if l_values.item_for_iteration then
+							l_choice.set_value ("/=")
+						else
+							l_choice.set_value ("=")
+						end
+						l_choice.change_value_actions.extend (agent update_invert ({STRING_32} ?, l_values.key_for_iteration, l_key))
+						custom.set_item (2, i, l_choice)
+						create l_text.make ("")
+						l_text.pointer_button_press_actions.wipe_out
+						l_text.pointer_double_press_actions.force_extend (agent l_text.activate)
+						l_text.set_value (l_values.key_for_iteration)
+						l_text.change_value_actions.extend (agent update_value ({STRING_32} ?, l_values.key_for_iteration , l_key))
+						custom.set_item (3, i, l_text)
+						i := i + 1
+						l_values.forth
 					end
-					l_choice.change_value_actions.extend (agent update_invert ({STRING_32} ?, l_key))
-					custom.set_item (2, i, l_choice)
-					create l_text.make ("")
-					l_text.pointer_button_press_actions.wipe_out
-					l_text.pointer_double_press_actions.force_extend (agent l_text.activate)
-					l_text.set_value (l_cust.item_for_iteration.item.value)
-					l_text.change_value_actions.extend (agent update_value ({STRING_32} ?, l_key))
-					custom.set_item (3, i, l_text)
-
-					i := i + 1
 					l_cust.forth
 				end
 			end

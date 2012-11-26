@@ -21,6 +21,12 @@ inherit
 			is_equal
 		end
 
+	SHARED_LOCALE
+		undefine
+			out,
+			is_equal
+		end
+
 create
 	make
 
@@ -53,8 +59,10 @@ feature -- Access
 	version: HASH_TABLE [EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]], STRING]
 			-- Enabled for a certain version number? Indexed by the type of the version number.
 
-	custom: HASH_TABLE [EQUALITY_TUPLE [TUPLE [value: READABLE_STRING_32; invert: BOOLEAN]], READABLE_STRING_32]
+	custom: HASH_TABLE [HASH_TABLE [BOOLEAN, READABLE_STRING_32], READABLE_STRING_32]
 			-- Custom variables that have to be fullfilled indexed by the variable name.
+			-- Values having the same name are indexed by the value.
+			-- [[invert, value], key]
 
 feature -- Queries
 
@@ -63,12 +71,12 @@ feature -- Queries
 		require
 			a_state_not_void: a_state /= Void
 		local
-			l_cust_cond: EQUALITY_TUPLE [TUPLE [value: READABLE_STRING_32; invert: BOOLEAN]]
 			l_vars: EQUALITY_HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]
 			l_version: HASH_TABLE [CONF_VERSION, STRING]
 			l_ver_cond: EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]
 			l_ver_state: CONF_VERSION
 			l_var_key, l_var_val: READABLE_STRING_32
+			l_values: HASH_TABLE [BOOLEAN, READABLE_STRING_32]
 		do
 			Result := True
 
@@ -121,16 +129,31 @@ feature -- Queries
 				until
 					not Result or custom.after
 				loop
-					l_cust_cond := custom.item_for_iteration
+					l_values := custom.item_for_iteration
 					l_var_key := custom.key_for_iteration
 					l_var_val := l_vars.item (l_var_key)
 					if l_var_val = Void then
 						l_var_val := execution_environment.get (l_var_key)
 					end
-					Result := equal (l_var_val, l_cust_cond.item.value) xor l_cust_cond.item.invert
+					from
+						l_values.start
+					until
+						l_values.after or not Result
+					loop
+						Result := (l_var_val /= Void and then l_values.key_for_iteration.same_string (l_var_val)) xor l_values.item_for_iteration
+						l_values.forth
+					end
 					custom.forth
 				end
 			end
+		end
+
+	exclusion_value (a_key, a_value: READABLE_STRING_32): BOOLEAN
+			-- Exclusion value of `a_key' and `a_value' pair
+		require
+			a_key_ok: a_key /= Void and then custom.has (a_key.as_lower)
+		do
+			Result := attached custom.item (a_key.as_lower) as l_item and then l_item.item (a_value)
 		end
 
 feature -- Update
@@ -264,22 +287,46 @@ feature -- Update
 			dynamic_runtime := Void
 		end
 
-	add_custom (a_name, a_value: READABLE_STRING_32)
+	add_custom (a_name, a_value: READABLE_STRING_32; a_exclude: BOOLEAN)
 			-- Add requirement that `a_name'=`a_value'.
 		require
 			a_name_not_void: a_name /= Void
 			a_value_not_void: a_value /= Void
+		local
+			l_values: HASH_TABLE [BOOLEAN, READABLE_STRING_32]
+			l_name: READABLE_STRING_32
 		do
-			custom.force (create {EQUALITY_TUPLE [TUPLE [READABLE_STRING_32, BOOLEAN]]}.make ([a_value, False]), a_name.as_lower)
+			l_name := a_name.as_lower
+			custom.search (l_name)
+			if not custom.found then
+				create l_values.make (1)
+				l_values.force (a_exclude, a_value)
+				custom.force (l_values, l_name)
+			else
+				l_values := custom.found_item
+				l_values.force (a_exclude, a_value)
+			end
 		end
 
-	exclude_custom (a_name, a_value: READABLE_STRING_32)
-			-- Add exclude requirement that `a_name'=`a_value'.
+	remove_custom (a_name, a_value: READABLE_STRING_32)
+			-- Remove custom attribute `a_name'=`a_value'.
 		require
 			a_name_not_void: a_name /= Void
 			a_value_not_void: a_value /= Void
+		local
+			l_name: READABLE_STRING_32
 		do
-			custom.force (create {EQUALITY_TUPLE [TUPLE [READABLE_STRING_32, BOOLEAN]]}.make ([a_value, True]), a_name.as_lower)
+			l_name := a_name.as_lower
+			custom.search (l_name)
+			if custom.found then
+				check attached custom.found_item as l_values then
+					l_values.remove (a_value)
+					if l_values.is_empty then
+							-- Remove the empty one
+						custom.remove (l_name)
+					end
+				end
+			end
 		end
 
 	wipe_out_custom
@@ -377,15 +424,21 @@ feature -- Output
 			loop
 				check
 					is_valid_as_string_8: custom.key_for_iteration.is_valid_as_string_8
-					is_valid_as_string_8: custom.item_for_iteration.item.value.is_valid_as_string_8
 				end
-				Result.append (custom.key_for_iteration.as_string_8)
-				if custom.item_for_iteration.item.invert then
-					Result.append (" /= ")
-				else
-					Result.append (" = ")
+				across
+					custom.item_for_iteration as l_c
+				loop
+					check
+						is_valid_as_string_8: l_c.key.is_valid_as_string_8
+					end
+					Result.append (custom.key_for_iteration.as_string_8)
+					if l_c.item then
+						Result.append (" /= ")
+					else
+						Result.append (" = ")
+					end
+					Result.append (l_c.key.as_string_8 + " and ")
 				end
-				Result.append (custom.item_for_iteration.item.value.as_string_8 + " and ")
 				custom.forth
 			end
 

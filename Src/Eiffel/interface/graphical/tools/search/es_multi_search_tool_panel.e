@@ -1132,11 +1132,11 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 					class_stone ?= editor.stone
 					if class_stone /= Void then
 						class_i := class_stone.class_i
-						file_name:= class_i.file_name
+						file_name := class_i.file_name
 						class_name := class_i.name
 					else
 						class_name := ""
-						create file_name.make_from_string ("")
+						create file_name.make_empty
 					end
 
 					create incremental_search_strategy.make_with_start (currently_searched,
@@ -1198,9 +1198,10 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 			end
 			if class_stone /= Void then
 				class_i := class_stone.class_i
-				file_name := class_i.file_name
 				if not is_main_editor then
 					create file_name.make_from_string ("-")
+				else
+					file_name := class_i.file_name
 				end
 				class_name := class_i.name
 			else
@@ -2100,7 +2101,7 @@ invariant
 	multi_search_performer_not_void: multi_search_performer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

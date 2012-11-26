@@ -24,7 +24,7 @@ feature
 			r, s: RANDOM;
 			gc: INTEGER;
 			env: EXECUTION_ENVIRONMENT
-			val: STRING
+			val: STRING_32
 			selected_chunk_size: INTEGER
 		do
 			gc :=  args.item (1).to_integer;
@@ -33,7 +33,7 @@ feature
 			seed1 :=  args.item (4).to_integer;
 			seed2 :=  args.item (5).to_integer;
 			create env
-			val := env.get ("EIF_MEMORY_CHUNK")
+			val := env.item ("EIF_MEMORY_CHUNK")
 			if val /= Void and then val.is_integer then
 			   selected_chunk_size := val.to_integer
 			end

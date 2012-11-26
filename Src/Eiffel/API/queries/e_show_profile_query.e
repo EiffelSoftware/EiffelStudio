@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			-- Retrieves an object from storage.
 		local
 			retried: BOOLEAN;
-			current_item: STRING;
+			current_item: STRING_32;
 			profile_file: RAW_FILE;
 			line_str: STRING
 		do
@@ -125,12 +125,12 @@ debug("SHOW_PROF_QUERY")
 	io.error.put_string (current_item);
 	io.error.put_new_line
 end;
-				if not current_item.is_equal ("last_output") then
+				if not current_item.same_string_general ("last_output") then
 debug("SHOW_PROF_QUERY")
 	io.error.put_string ("current_item /= last_output");
 	io.error.put_new_line
 end;
-					create profile_file.make (current_item)
+					create profile_file.make_with_name (current_item)
 					if profile_file.exists and then profile_file.is_readable then
 						profile_file.open_read
 						profile_information ?= profile_file.retrieved
@@ -195,10 +195,10 @@ end;
 			-- Expands wildcarded filenames to non-wildcarded filenames
 		local
 			i: INTEGER;
-			dir_name, wc_name, name, entries_name: STRING;
+			dir_name, wc_name, name, entries_name: STRING_32;
 			directory: DIRECTORY;
 			wildcard_matcher: KMP_WILD;
-			entries: ARRAYED_LIST [STRING];
+			entries: ARRAYED_LIST [PATH];
 			empty_array: like {PROFILER_OPTIONS}.filenames
 		do
 			from
@@ -215,21 +215,21 @@ end;
 				i > prof_options.filenames.upper
 			loop
 				name := prof_options.filenames.item (i);
-				if has_wildcards(name) then
+				if has_wildcards (name) then
 					dir_name := extract_directory_name (name)
 					if dir_name.count = 0 then
 						dir_name := "."
 					end;
-					wc_name := extract_filename(name);
+					wc_name := extract_filename (name);
 					wc_name.to_lower
 					create directory.make (dir_name);
 					if directory.exists then;
 						from
-							entries := directory.linear_representation;
+							entries := directory.entries;
 							entries.start;
 							entries.forth;
 							entries.forth
-							entries_name := entries.item
+							entries_name := entries.item.name
 							entries_name.to_lower
 							create wildcard_matcher.make (wc_name, entries_name);
 						until
@@ -237,13 +237,13 @@ end;
 						loop
 debug("SHOW_PROF_QUERY")
 	io.error.put_string ("Entry from the directory: ");
-	io.error.put_string (entries.item);
+	io.error.put_string (entries.item.name.as_string_8);
 	io.error.put_new_line;
 	io.error.put_string ("Wildcarded name: ");
 	io.error.put_string (wc_name);
 	io.error.put_new_line;
 end;
-							entries_name := entries.item
+							entries_name := entries.item.string_representation
 							entries_name.to_lower
 							wildcard_matcher.set_text (entries_name);
 debug("SHOW_PROF_QUERY")
@@ -254,7 +254,7 @@ end;
 							if wildcard_matcher.pattern_matches then
 								entries_name := dir_name.twin
 								-- entries_name.append_character (Operating_environment.Directory_separator)
-								entries_name.append (entries.item)
+								entries_name.append (entries.item.string_representation)
 								--| Guillaume - 09/16/97
 								expanded_filenames.extend (entries_name)
 							end;
@@ -301,13 +301,13 @@ debug("SHOW_PROF_QUERY")
 end;
 		end;
 
-	has_wildcards(name: STRING): BOOLEAN
+	has_wildcards(name: STRING_32): BOOLEAN
 		do
 			Result := (name.index_of ('*', 1) > 0) or else
 						(name.index_of ('?', 1) > 0)
 		end
 
-	extract_directory_name(name: STRING): STRING
+	extract_directory_name(name: STRING_32): STRING_32
 		local
 			new_index, old_index: INTEGER
 		do
@@ -331,7 +331,7 @@ end;
 			end
 		end;
 
-	extract_filename (name: STRING): STRING
+	extract_filename (name: STRING_32): STRING_32
 		local
 			i: INTEGER
 		do
@@ -760,7 +760,7 @@ end;
 
 feature {NONE} -- Attributes
 
-	expanded_filenames: LINKED_LIST [STRING];
+	expanded_filenames: LINKED_LIST [STRING_32];
 		-- unwildcarded filenames
 
 	profile_information: PROFILE_INFORMATION;
@@ -793,7 +793,7 @@ feature {NONE} -- Attributes
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -806,22 +806,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class E_SHOW_PROFILE_QUERY

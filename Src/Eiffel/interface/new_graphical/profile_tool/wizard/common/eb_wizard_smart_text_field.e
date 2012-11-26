@@ -65,7 +65,7 @@ feature -- Initialization
 				browse_button.select_actions.extend (browse_button_action)
 
 				create textfield_box
-				textfield_box.set_padding (dialog_unit_to_pixels(5))
+				textfield_box.set_padding (dialog_unit_to_pixels (5))
 				textfield_box.extend (textfield)
 				textfield_box.extend (browse_button)
 				textfield_box.disable_item_expand (browse_button)
@@ -84,7 +84,7 @@ feature -- Initialization
 			textfield.set_capacity (textfield_capacity)
 
 			create internal_widget
-			internal_widget.set_padding (dialog_unit_to_pixels(2))
+			internal_widget.set_padding (dialog_unit_to_pixels (2))
 			if label /= Void then
 				internal_widget.extend (label)
 			end
@@ -104,7 +104,7 @@ feature -- Initialization
 
 feature -- Access
 
-	text: STRING
+	text: STRING_32
 			-- Text of the textfield
 		do
 			if generated then
@@ -160,7 +160,7 @@ feature -- Status report
 			Result := widget.is_sensitive
 		end
 
-	starting_directory: STRING
+	starting_directory: STRING_32
 			-- Starting directory
 		require
 			has_browse_button: has_browse_button
@@ -192,7 +192,7 @@ feature -- Status setting
 
 feature -- Settings
 
-	set_text, set_textfield_string (a_string: STRING)
+	set_text, set_textfield_string (a_string: READABLE_STRING_GENERAL)
 			-- Set the text of the text field to `txt'.
 		require
 			valid_string: a_string /= Void and then not a_string.is_empty
@@ -200,11 +200,11 @@ feature -- Settings
 			if generated then
 				textfield.set_text (a_string)
 			else
-				textfield_string := a_string
+				textfield_string := a_string.as_string_32
 			end
 		end
 
-	set_label_string_and_size (a_string: STRING_GENERAL; a_size: INTEGER)
+	set_label_string_and_size (a_string: READABLE_STRING_GENERAL; a_size: INTEGER)
 			-- Set the label text to `a_string' and the minimum width for
 			-- the label to `a_size'.
 		require
@@ -238,7 +238,7 @@ feature -- Settings
 			end
 		end
 
-	set_label_string (a_string: STRING_GENERAL)
+	set_label_string (a_string: READABLE_STRING_GENERAL)
 			-- Set the label text to `a_string'.
 		require
 			valid_string: a_string /= Void and then not a_string.is_empty
@@ -246,7 +246,7 @@ feature -- Settings
 			set_label_string_and_size (a_string, 0)
 		end
 
-	set_textfield_string_and_capacity (a_string: STRING; a_capacity: INTEGER)
+	set_textfield_string_and_capacity (a_string: READABLE_STRING_GENERAL; a_capacity: INTEGER)
 			-- Set the textfield text to `a_string' and the capacity (max
 			-- number of characters) for the textfield to `a_capacity'.
 		do
@@ -254,7 +254,7 @@ feature -- Settings
 				textfield.set_text (a_string)
 				textfield.set_capacity (a_capacity)
 			else
-				textfield_string := a_string
+				textfield_string := a_string.as_string_32
 				textfield_capacity := a_capacity
 			end
 		end
@@ -273,18 +273,18 @@ feature -- Settings
 			has_browse_button: has_browse_button
 		end
 
-	enable_file_browse_button (a_filter: STRING)
+	enable_file_browse_button (a_filter: READABLE_STRING_GENERAL)
 			-- Add a browse button near the right of the text field,
 			-- clicking on the browse button will display a dialog to
 			-- choose a file among `a_filter'.
 		require
 			not_yet_generated: not generated
 			not_has_browse_button: not has_browse_button
-			valid_filter: a_filter /= Void and then not a_filter.is_empty and supported_filters.has (a_filter)
+			valid_filter: a_filter /= Void and then not a_filter.is_empty and supported_filters.has (a_filter.as_string_32)
 		do
 			has_browse_button := True
 			browse_button_action := agent browse_file
-			browse_file_filter := a_filter
+			browse_file_filter := a_filter.as_string_32
 		ensure
 			has_browse_button: has_browse_button
 		end
@@ -323,7 +323,7 @@ feature -- Settings
 			not_password: not is_password
 		end
 
-	set_starting_directory (a_directory: STRING)
+	set_starting_directory (a_directory: STRING_32)
 			-- Set the starting directory
 		require
 			has_browse_button: has_browse_button
@@ -355,8 +355,9 @@ feature {NONE} -- Implementation
 			-- Launch a computer directory Browser.
 		local
 			dir_selector: EV_DIRECTORY_DIALOG
-			start_directory: STRING
-			end_char: CHARACTER
+			start_directory: STRING_32
+			end_char: CHARACTER_32
+			u: FILE_UTILITIES
 		do
 			create dir_selector
 
@@ -375,13 +376,13 @@ feature {NONE} -- Implementation
 				end
 			end
 
-			if not start_directory.is_empty and then
+			if
 				not start_directory.is_empty and then
-				(create {DIRECTORY}.make (start_directory)).exists
+				u.directory_exists (start_directory)
 			then
 				dir_selector.set_start_directory (start_directory)
 			end
-			dir_selector.ok_actions.extend(agent directory_selected(dir_selector))
+			dir_selector.ok_actions.extend (agent directory_selected (dir_selector))
 			dir_selector.show_modal_to_window (caller.first_window)
 		end
 
@@ -406,10 +407,10 @@ feature {NONE} -- Implementation
 	internal_widget: EV_VERTICAL_BOX
 			-- Widget representing current
 
-	internal_starting_directory: STRING
+	internal_starting_directory: STRING_32
 			-- Starting directory
 
-	browse_file_filter: STRING
+	browse_file_filter: STRING_32
 			-- File filter. Void if there is no browse button.
 
 	textfield: EV_TEXT_FIELD
@@ -427,7 +428,7 @@ feature {NONE} -- Implementation
 	textfield_capacity: INTEGER
 			-- Requested capacity for the text field.
 
-	textfield_string: STRING
+	textfield_string: STRING_32
 			-- Requested text for the text field.
 
 	browse_button: EV_BUTTON
@@ -444,7 +445,7 @@ feature {NONE} -- Implementation
 			-- Action for the browse button.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -457,22 +458,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_WIZARD_SMART_TEXT_FIELD

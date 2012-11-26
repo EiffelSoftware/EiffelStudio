@@ -21,13 +21,13 @@ create
 
 feature -- Initialization
 
-	make (p: STRING; a: STRING; f: STRING; m: STRING)
+	make (p: like profiler_type; a: like arguments; f: like output_file; m: like compile_type)
 			-- The used profiler is `p'.
 			-- The application must be invoked with 'a'.
 			-- The output should be written into `f'.
 			-- Application was compiled in mode `m'.
 		require
-			m_is_valid: m.is_equal ("workbench") or else m.is_equal ("final")
+			m_is_valid: m.same_string_general ("workbench") or else m.same_string_general ("final")
 		do
 			profiler_type := p;
 			profiler_type.to_lower;
@@ -42,8 +42,8 @@ feature -- Status report
 			-- Must the profiler be invoked in order to convert its
 			-- output?
 		do
-			if profiler_type.is_equal ("gprof") or else
-			   profiler_type.is_equal ("win32_ms") then
+			if profiler_type.same_string_general ("gprof") or else
+			   profiler_type.same_string_general ("win32_ms") then
 				Result := true;
 			end;
 		end;
@@ -56,26 +56,26 @@ feature -- Execution
 		require
 			must_invoke_profiler: must_invoke_profiler
 		do
-			if profiler_type.is_equal ("gprof") then
+			if profiler_type.same_string_general ("gprof") then
 				invoke_gprof;
-			elseif profiler_type.is_equal ("win32_ms") then
+			elseif profiler_type.same_string_general ("win32_ms") then
 				invoke_win32_ms;
 			end;
 		end;
 
 feature {NONE} -- Attributes
 
-	profiler_type: STRING
+	profiler_type: STRING_32
 		-- The profiler used.
 
-	arguments: STRING
+	arguments: STRING_32
 		-- The arguments for the application.
 
-	output_file: STRING
+	output_file: STRING_32
 		-- Filename of the file where the profiler's output should
 		-- be written into.
 
-	compile_type: STRING
+	compile_type: STRING_32
 		-- Type of compilation used to generate the application.
 		-- Can be `workbench' or `final'.
 
@@ -85,14 +85,14 @@ feature {NONE} -- Implementation
 			-- Invokes gprof in order to generate the text file.
 		local
 			exec_string: STRING_32
-			old_dir: STRING
+			old_dir: STRING_32
 			cm_bool: BOOLEAN
 		do
-			cm_bool := compile_type.is_equal ("workbench")
-			exec_string := "gprof -b "
+			cm_bool := compile_type.same_string_general ("workbench")
+			exec_string := {STRING_32} "gprof -b "
 			if attached Eiffel_system.application_name (cm_bool) as app_name then
 				exec_string.append (app_name)
-				exec_string.append (" > ")
+				exec_string.append ({STRING_32} " > ")
 				exec_string.append (output_file)
 				old_dir := Execution_environment.current_working_directory
 				if cm_bool then
@@ -110,10 +110,10 @@ feature {NONE} -- Implementation
 			-- generate the text file.
 		local
 			exec_string: STRING_32
-			old_dir: STRING
+			old_dir: STRING_32
 			cm_bool: BOOLEAN
 		do
-			cm_bool := compile_type.is_equal ("workbench")
+			cm_bool := compile_type.same_string_general ("workbench")
 			if attached Eiffel_system.application_name (cm_bool) as app_name then
 				old_dir := Execution_environment.current_working_directory
 				if cm_bool then
@@ -121,20 +121,20 @@ feature {NONE} -- Implementation
 				else
 					Execution_environment.change_working_directory (project_location.final_path)
 				end
-				exec_string := "prep /nologo /om /ft "
+				exec_string := {STRING_32} "prep /nologo /om /ft "
 				exec_string.append (app_name)
 				Execution_environment.system (exec_string)
-				exec_string := "profile /nologo "
+				exec_string := {STRING_32} "profile /nologo "
 				exec_string.append (app_name)
 				exec_string.extend (' ')
 				exec_string.append (arguments)
 				Execution_environment.system (exec_string)
-				exec_string := "prep /nologo /m "
+				exec_string := {STRING_32} "prep /nologo /m "
 				exec_string.append (app_name)
 				Execution_environment.system (exec_string)
-				exec_string := "plist /nologo "
+				exec_string := {STRING_32} "plist /nologo "
 				exec_string.append (app_name)
-				exec_string.append (" > ")
+				exec_string.append ({STRING_32} " > ")
 				exec_string.append (output_file)
 				Execution_environment.system (exec_string)
 				Execution_environment.change_working_directory (old_dir)

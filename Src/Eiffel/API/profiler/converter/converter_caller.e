@@ -78,8 +78,8 @@ feature {NONE} -- Implementation
 				create profile_out_file.make_from_string (project_location.final_path)
 				is_finalized_profile := True
 			end;
-			profile_out_file.set_file_name (profile_name);
-			create file.make_with_name (profile_out_file);
+			profile_out_file := profile_out_file.extended (profile_name);
+			create file.make_with_path (profile_out_file);
 			exists := file.exists
 		end -- check_profile_file
 
@@ -93,8 +93,8 @@ feature {NONE} -- Implementation
 			else
 				create translat_file.make_from_string (project_location.final_path)
 			end;
-			translat_file.set_file_name (Translation_log_file_name);
-			create file.make_with_name (translat_file);
+			translat_file := translat_file.extended (Translation_log_file_name);
+			create file.make_with_path (translat_file);
 			exists := file.exists
 		end -- check_project_directory
 
@@ -139,10 +139,10 @@ feature {NONE} -- attributes
 	exists : BOOLEAN
 			-- Does the file passed as argument exist?
 
-	profile_out_file: FILE_NAME_32
+	profile_out_file: PATH
 			-- File name where the output file is written
 
-	translat_file: FILE_NAME_32
+	translat_file: PATH
 			-- File name where TRANSLAT really is; is based upon
 			-- commandline argument (2).
 

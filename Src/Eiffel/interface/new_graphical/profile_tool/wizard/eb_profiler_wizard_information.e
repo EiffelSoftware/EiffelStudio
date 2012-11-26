@@ -30,7 +30,7 @@ feature  {NONE} -- Initialization
 	make
 			-- Assign default values
 		local
-			filename: like runtime_information_record
+			filename: PATH
 		do
 			set_workbench_mode
 
@@ -40,11 +40,11 @@ feature  {NONE} -- Initialization
 			wkb_generate_execution_profile := (wkb_existing_profile = Void)
 			flz_generate_execution_profile := (flz_existing_profile = Void)
 
-			create filename.make_from_string (project_location.workbench_path.to_string_32)
-			filename.set_file_name ("profinfo")
+			create filename.make_from_string (project_location.workbench_path)
+			filename := filename.extended ("profinfo")
 			wkb_runtime_information_record := filename
-			create filename.make_from_string (project_location.final_path.to_string_32)
-			filename.set_file_name ("profinfo")
+			create filename.make_from_string (project_location.final_path)
+			filename := filename.extended ("profinfo")
 			flz_runtime_information_record := filename
 
 			wkb_runtime_information_type := "eiffel"
@@ -84,7 +84,7 @@ feature -- Access
 			Result := not generate_execution_profile
 		end
 
-	existing_profile: FILE_NAME_32
+	existing_profile: PATH
 			-- Existing profile to use, Void if none
 		do
 			if workbench_mode then
@@ -94,7 +94,7 @@ feature -- Access
 			end
 		end
 
-	runtime_information_record: FILE_NAME_32
+	runtime_information_record: PATH
 			-- Runtime information record to use when generating the execution profile
 		do
 			if workbench_mode then
@@ -210,11 +210,12 @@ feature -- Element change
 			profile_set: existing_profile.is_equal (an_existing_profile)
 		end
 
-	set_runtime_information_record (a_record: FILE_NAME_32)
+	set_runtime_information_record (a_record: PATH)
 			-- Set the Runtime information record to use when generating
 			-- the execution profile to `a_record'.
 		require
 			valid_record: a_record /= Void
+			a_record_has_entry: attached a_record.entry
 		do
 			if workbench_mode then
 				wkb_runtime_information_record := a_record
@@ -286,17 +287,17 @@ feature {NONE} -- Implementation
 	flz_generate_execution_profile: BOOLEAN
 			-- Generate the execution profile from a Run-time information record?
 
-	wkb_existing_profile: FILE_NAME_32
+	wkb_existing_profile: PATH
 			-- Existing profile to use (Workbench mode)
 
-	flz_existing_profile: FILE_NAME_32
+	flz_existing_profile: PATH
 			-- Existing profile to use (Finalized mode)
 
-	wkb_runtime_information_record: FILE_NAME_32
+	wkb_runtime_information_record: PATH
 			-- Runtime information record to use when generating the
 			-- execution profile (Workbench mode)
 
-	flz_runtime_information_record: FILE_NAME_32
+	flz_runtime_information_record: PATH
 			-- Runtime information record to use when generating the
 			-- execution profile (Finalized mode)
 
@@ -308,43 +309,32 @@ feature {NONE} -- Implementation
 			-- Type of profiler used to produce `runtime_information_record'
 			-- (gcc profiler, eiffel profiler, ...)
 
-	find_execution_profile (is_workbench_mode: BOOLEAN) : FILE_NAME_32
+	find_execution_profile (is_workbench_mode: BOOLEAN) : PATH
 			-- Find an existing execution profile for the workbench
 			-- compilation mode if `workbench_mode' is set, for the
 			-- finalized mode otherwise.
 			--
 			-- Return Void if not found.
 		local
-			dir: DIRECTORY
-			path: STRING_32
-			files: ARRAYED_LIST [STRING_32]
-			file: STRING_32
-			substring: STRING_32
+			path: PATH
+			files: ARRAYED_LIST [PATH]
+			l_u: FILE_UTILITIES
 		do
 			if is_workbench_mode then
-				path := project_location.workbench_path
+				create path.make_from_string (project_location.workbench_path)
 			else
-				path := project_location.final_path
+				create path.make_from_string (project_location.final_path)
 			end
-			create dir.make (path)
-			files := dir.linear_representation_32
+			files := l_u.ends_with (path, "." + Dot_profile_information, 0)
 
-			from
-				files.start
-			until
-				files.after or Result /= Void
-			loop
-				file := files.item
-				if file.count > 4 then
-					substring := file.substring (file.count - 3, file.count)
-					if substring.is_equal ("."+Dot_profile_information) then
-						create Result.make_from_string (path)
-						Result.set_file_name (file)
-					end
-				end
-				files.forth
+			if not files.is_empty then
+				Result := files.first
 			end
 		end
+
+invariant
+	wkb_runtime_information_record_has_entry: attached wkb_runtime_information_record as l_wrecord and then attached l_wrecord.entry
+	flz_runtime_information_record_has_entry: attached flz_runtime_information_record as l_frecord and then attached l_frecord.entry
 
 note
 	copyright:	"Copyright (c) 1984-2012, Eiffel Software"

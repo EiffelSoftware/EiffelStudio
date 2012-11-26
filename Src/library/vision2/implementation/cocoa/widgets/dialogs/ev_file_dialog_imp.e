@@ -27,15 +27,15 @@ feature {NONE} -- Initialization
 
 			filter := "*.*"
 			create filters.make (5)
-			internal_filename := ""
-			create start_directory.make_empty
+			create internal_filename.make_empty
+			create start_path.make_empty
 
 			set_is_initialized (True)
 		end
 
 feature -- Access
 
-	file_name: STRING_32
+	full_file_path: PATH
 			-- Full name of currently selected file including path.
 		do
 			Result := internal_filename
@@ -50,31 +50,28 @@ feature -- Access
 		do
 		end
 
-	start_directory: STRING_32
+	start_path: PATH
 			-- Base directory where browsing will start.
 
 feature -- Status report
 
-	file_title: STRING_32
+	file_title: PATH
 			-- `file_name' without its path.
 		do
-			if not file_name.is_empty then
-				Result := file_name.mirrored
-				Result.keep_head (Result.index_of ('/', 1) - 1)
-				Result.mirror
+			if not full_file_path.is_empty and then attached full_file_path.entry as l_entry then
+				Result := l_entry
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		end
 
-	file_path: STRING_32
+	file_path: PATH
 			-- Path of `file_name'.
 		do
-			if not file_name.is_empty then
-				Result := file_name.twin
-				Result.keep_head (Result.count - Result.mirrored.index_of ('/', 1) + 1)
+			if not full_file_path.is_empty and then attached full_file_path.parent as l_parent then
+				Result := l_parent
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		end
 
@@ -105,17 +102,17 @@ feature -- Element change
 
 		end
 
-	set_file_name (a_name: READABLE_STRING_GENERAL)
-			-- Make `a_name' the selected file.
-		do
-			internal_filename := a_name.twin.as_string_32
-		end
-
-	set_start_directory (a_path: READABLE_STRING_GENERAL)
+	set_start_path (a_path: like start_path)
 			-- Make `a_path' the base directory.
 		do
-			start_directory := a_path.as_string_32.twin
-			save_panel.set_directory (create {NS_STRING}.make_with_string (a_path))
+			start_path := a_path
+			save_panel.set_directory_path (start_path)
+		end
+
+	set_full_file_path (a_path: PATH)
+			-- Make `a_path' the selected file.
+		do
+			internal_filename := a_path
 		end
 
 feature {NONE} -- Implementation
@@ -128,7 +125,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_filename: STRING
+	internal_filename: PATH
 
 	save_panel: NS_SAVE_PANEL
 
@@ -136,4 +133,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_FILE_DIALOG note option: stable attribute end;
 
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EV_FILE_DIALOG_IMP

@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	EV_DYNAMIC_LIST_IMP [reference G -> detachable EV_CONTAINABLE, reference G_IMP -> EV_ANY_I]
+	EV_DYNAMIC_LIST_IMP [G -> EV_CONTAINABLE, G_IMP -> EV_ANY_I]
 
 inherit
 	EV_DYNAMIC_LIST_I [G]
@@ -21,7 +21,7 @@ feature -- Initialization
 
 feature -- Access
 
-	i_th (i: INTEGER): detachable like item
+	i_th (i: INTEGER): like item
 			-- Item at `i'-th position.
 		local
 			l_item: detachable G_IMP
@@ -69,4 +69,14 @@ feature {NONE} -- Implementation
 
 invariant
 	ev_children_not_void: is_usable implies ev_children /= Void
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EV_DYNAMIC_LIST_IMP

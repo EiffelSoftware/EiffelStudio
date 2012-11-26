@@ -278,7 +278,7 @@ feature -- Clearing and drawing operations
 			add_ps ("grestore")
 		end
 
-	save_to_named_file (a_file_name: READABLE_STRING_GENERAL)
+	save_to_named_path (a_file_name: PATH)
 			-- Save `Current' to the file with `a_file_name'.
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -366,7 +366,7 @@ feature -- Clearing and drawing operations
 
 			file_with_header.append ("%%%%EOF%N")
 
-			create file.make_with_name (a_file_name)
+			create file.make_with_path (a_file_name)
 			file.open_write
 			file.put_string (file_with_header)
 			file.close

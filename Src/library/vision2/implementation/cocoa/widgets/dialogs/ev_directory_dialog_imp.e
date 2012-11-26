@@ -9,6 +9,9 @@ class
 
 inherit
 	EV_DIRECTORY_DIALOG_I
+		rename
+			set_start_path as set_start_directory,
+			start_path as start_directory
 		redefine
 			interface
 		select
@@ -34,7 +37,8 @@ inherit
 			background_color as cocoa_background_color,
 			screen as cocoa_screen,
 			set_title as cocoa_set_title,
-			directory as cocoa_directory
+			directory as cocoa_directory,
+			directory_path as cocoa_directory_path
 		undefine
 			is_equal
 		redefine
@@ -62,26 +66,26 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	directory: STRING_32
+	directory: PATH
 			-- Path of the current selected directory
 		do
 			if selected_button.is_equal (internal_accept) then
-				Result := filename
+				Result := path
 			else
 				create Result.make_empty
 			end
 		end
 
-	start_directory: STRING_32
+	start_directory: PATH
 			-- Base directory where browsing will start.
 
 feature -- Element change
 
-	set_start_directory (a_path: READABLE_STRING_GENERAL)
+	set_start_directory (a_path: PATH)
 			-- Make `a_path' the base directory.
 		do
-			start_directory := a_path.as_string_32.twin
-			set_directory (create {NS_STRING}.make_with_string (a_path))
+			start_directory := a_path
+			set_directory_path (a_path)
 		end
 
 feature {NONE} -- Implementation
@@ -121,4 +125,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_DIRECTORY_DIALOG;
 
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EV_DIRECTORY_DIALOG_IMP

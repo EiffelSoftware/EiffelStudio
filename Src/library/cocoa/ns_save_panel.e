@@ -13,6 +13,12 @@ inherit
 			make as make_window
 		end
 
+	NATIVE_STRING_HANDLER
+		undefine
+			is_equal,
+			copy
+		end
+
 create
 	make
 
@@ -54,9 +60,24 @@ feature -- Running Panels
 			create Result.share_from_pointer ({NS_SAVE_PANEL_API}.directory (item))
 		end
 
+	path: PATH
+		do
+			create Result.make_from_pointer ({NS_SAVE_PANEL_API}.filename (item))
+		end
+
+	directory_path: PATH
+		do
+			create Result.make_from_pointer ({NS_SAVE_PANEL_API}.directory (item))
+		end
+
 	set_directory (a_path: NS_STRING)
 		do
 			{NS_SAVE_PANEL_API}.set_directory (item, a_path.item)
+		end
+
+	set_directory_path (a_path: PATH)
+		do
+			{NS_SAVE_PANEL_API}.set_directory (item, a_path.native_string.item)
 		end
 
 	required_file_type : NS_STRING
@@ -214,4 +235,14 @@ feature -- Running Panels
 			Result := {NS_SAVE_PANEL_API}.run_modal (item)
 		end
 
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

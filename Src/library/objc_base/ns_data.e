@@ -127,6 +127,13 @@ feature -- Storing Data
 			Result := {NS_DATA_API}.write_to_file_atomically (item, a_path.item, a_use_auxiliary_file)
 		end
 
+	write_to_file_path_atomically (a_path: PATH; a_use_auxiliary_file: BOOLEAN): BOOLEAN
+			-- Writes the bytes in the receiver to the file specified by a given path.
+			-- Returns True if the operation succeeds.
+		do
+			Result := {NS_DATA_API}.write_to_file_atomically (item, a_path.native_string.item, a_use_auxiliary_file)
+		end
+
 --	write_to_url_atomically (a_url: NS_URL; a_atomically: BOOLEAN): BOOLEAN
 --		do
 --			Result := {NS_DATA_API}.write_to_url_atomically (item, a_url.item, a_atomically)
@@ -200,7 +207,7 @@ feature -- Storing Data
 --		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

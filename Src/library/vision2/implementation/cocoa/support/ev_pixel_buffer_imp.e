@@ -52,13 +52,13 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	set_with_named_file (a_path: STRING)
+	set_with_named_path (a_path: PATH)
 			-- Load pixel data file `a_file_name'.
 		local
 			l_image: NS_IMAGE
 			l_image_rep: detachable NS_IMAGE_REP
 		do
-			create l_image.make_with_referencing_file (a_path)
+			create l_image.make_with_referencing_file_path (a_path)
 			if l_image.representations.count > 0 then
 				-- File found, representation loaded
 				l_image_rep := l_image.representations.item (0)
@@ -78,17 +78,17 @@ feature -- Command
 			(create {EXCEPTIONS}).raise ("Not implemented.")
 		end
 
-	save_to_named_file (a_filename: STRING)
+	save_to_named_path (a_filename: PATH)
 			-- Save pixel data to file `a_filename'.
 			-- NOTE Why there are different implementations to save a pixel_buffer and a pixmap is a mistery to me
 		local
 			l_image_rep: NS_BITMAP_IMAGE_REP
 			l_data: NS_DATA
 			l_success: BOOLEAN
-			l_extension: STRING
+			l_extension: STRING_32
 			l_format: INTEGER
 		do
-			l_extension := a_filename.split ('.').last.as_upper
+			l_extension := a_filename.name.split ('.').last.as_upper
 			if l_extension.is_equal ("JPEG") or l_extension.is_equal ("JPG") then
 				l_format := {NS_BITMAP_IMAGE_REP}.JPEG_file_type
 			elseif l_extension.is_equal ("TIFF") or l_extension.is_equal ("TIF") then
@@ -105,7 +105,7 @@ feature -- Command
 
 			create l_image_rep.make_with_data (image.tiff_representation)
 			l_data := l_image_rep.representation_using_type (l_format, Void)
-			l_success := l_data.write_to_file_atomically (a_filename.string, False)
+			l_success := l_data.write_to_file_path_atomically (a_filename, False)
 			if not l_success then
 				(create {EXCEPTIONS}).raise ("Could not save image file.")
 			end
@@ -227,4 +227,14 @@ feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_PIXMAP_IMP} -- Implementa
 			set_is_destroyed (True)
 		end
 
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

@@ -26,20 +26,32 @@ inherit
 	EV_POSTSCRIPT_PAGE_CONSTANTS
 
 create
-	make_with_filename
+	make_with_filename,
+	make_with_path
 
 feature {NONE} -- Initialization
 
 	make_with_filename (a_world: EV_MODEL_WORLD; a_filename: READABLE_STRING_GENERAL)
 			-- Create with `a_world' and `a_filename'.
+		obsolete
+			"Use `make_with_path' instead."
 		require
 			a_world_not_void: a_world /= Void
 			a_filename_not_void: a_filename /= Void
 		do
+			make_with_path (a_world, create {PATH}.make_from_string (a_filename))
+		end
+
+	make_with_path (a_world: EV_MODEL_WORLD; a_path: PATH)
+			-- Create with `a_world' and `a_path'.
+		require
+			a_world_not_void: a_world /= Void
+			a_path_not_void: a_path /= Void
+		do
 			create draw_routines.make_filled (Void, 0, 20)
 			make_with_world (a_world)
 			register_basic_figures
-			filename := a_filename
+			filename := a_path
 			create drawable
 			drawable.set_margins (default_left_margin, default_bottom_margin)
 			drawable.set_page_size (Letter, False)
@@ -76,14 +88,14 @@ feature -- Basic operations
 				if world.is_show_requested then
 					project_figure_group_full (world)
 				end
-				drawable.save_to_named_file (filename)
+				drawable.save_to_named_path (filename)
 			end
 			is_projecting := False
 		end
 
 feature {NONE} -- Implementation
 
-	filename: READABLE_STRING_GENERAL
+	filename: PATH
 
 	drawable: EV_POSTSCRIPT_DRAWABLE
 			-- Drawable used to draw the figures.

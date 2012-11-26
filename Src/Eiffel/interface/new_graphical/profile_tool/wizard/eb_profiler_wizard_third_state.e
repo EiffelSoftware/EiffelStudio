@@ -74,7 +74,7 @@ feature -- Basic Operation
 
 				-- Update controls to reflect `information'
 			select_profiler (information.runtime_information_type)
-			runtime_information_record_textfield.set_text (information.runtime_information_record.to_string_32)
+			runtime_information_record_textfield.set_text (information.runtime_information_record.name)
 		end
 
 	proceed_with_current_info
@@ -88,14 +88,11 @@ feature -- Basic Operation
 
 	update_state_information
 			-- Check User Entries
-		local
-			record_filename: FILE_NAME_32
 		do
 			Precursor
 
 			if not runtime_information_record_textfield.text.is_empty then
-				create record_filename.make_from_string (runtime_information_record_textfield.text)
-				information.set_runtime_information_record (record_filename)
+				information.set_runtime_information_record (create {PATH}.make_from_string (runtime_information_record_textfield.text))
 			end
 
 			information.set_runtime_information_type (profiler_list.text)
@@ -118,23 +115,19 @@ feature {NONE} -- Implementation
 		require
 			profiler_list_not_void: profiler_list /= Void
 		local
-			profdir: DIRECTORY
 			list_string: EV_LIST_ITEM
-			lastentry: STRING
+			u: FILE_UTILITIES
+			l_files: LIST [STRING_32]
 		do
-			create profdir.make_open_read (eiffel_layout.profile_path_8)
+			l_files := u.file_names (eiffel_layout.profile_path.name)
 			from
-				profdir.start
-				profdir.readentry
+				l_files.start
 			until
-				profdir.lastentry = Void
+				l_files.after
 			loop
-				lastentry := profdir.lastentry
-				if not lastentry.is_equal (".") and not lastentry.is_equal ("..") then
-					create list_string.make_with_text (lastentry)
-					profiler_list.extend (list_string)
-				end
-				profdir.readentry
+				create list_string.make_with_text (l_files.item)
+				profiler_list.extend (list_string)
+				l_files.forth
 			end
 		end
 
@@ -168,9 +161,9 @@ feature {NONE} -- Implementation
 			-- Is the supplied Runtime information record a valid file?
 		local
 			rtir_file: RAW_FILE
-			rtir_text: STRING
+			rtir_text: STRING_32
 			index_sep: INTEGER
-			rtir_path: STRING
+			rtir_path: STRING_32
 		do
 			rtir_text := runtime_information_record_textfield.text
 			Result := True

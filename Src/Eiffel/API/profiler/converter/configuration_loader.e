@@ -24,8 +24,9 @@ create
 
 feature -- Initialization
 
-	make_and_load (prof: STRING)
+	make_and_load (prof: like profiler_type)
 			-- Load the specific profiler-configuration file.
+			-- `prof' is the profiler type
 		do
 			create shared_prof_config;
 			profiler_type := prof;
@@ -286,7 +287,7 @@ feature -- Error handling
 	shared_prof_config: SHARED_PROF_CONFIG
 		-- Shared configuration values
 
-	profiler_type: STRING
+	profiler_type: STRING_32
 		-- The profile tool used for profiling.
 
 feature {NONE} -- Implementation: Access

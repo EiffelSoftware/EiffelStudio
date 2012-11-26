@@ -65,16 +65,20 @@ feature -- Basic operations
 			--
 			-- Raise an exception if an error occurs.
 		local
-			profinfo: STRING
-			compile: STRING
+			profinfo: STRING_32
+			compile: STRING_32
 			l_profiler: STRING
 			prof_converter: CONVERTER_CALLER
 			conf_load: CONFIGURATION_LOADER
 			prof_invoker: PROFILER_INVOKER
-			error_msg: STRING
+			error_msg: STRING_32
 		do
 			last_operation_successful := True
-			profinfo := strip_path (information.runtime_information_record)
+			if attached information.runtime_information_record.entry as l_entry then
+				profinfo := l_entry.name
+			else
+				create profinfo.make_empty
+			end
 			if information.workbench_mode then
 				compile := "workbench"
 			else
@@ -93,9 +97,9 @@ feature -- Basic operations
 				create prof_converter.make (<<profinfo, compile>>, conf_load.shared_prof_config)
 				if not prof_converter.is_last_conversion_ok then
 					if prof_converter.conf_load_error then
-						error_msg := "Error while generating the execution profile.%N" + profinfo + ": file does not exist"
+						error_msg := {STRING_32} "Error while generating the execution profile.%N" + profinfo + ": file does not exist"
 					else
-						error_msg := "An unknown error has occurred while generating%Nthe execution profile."
+						error_msg := {STRING_32} "An unknown error has occurred while generating%Nthe execution profile."
 					end
 					add_error_message (error_msg)
 					last_operation_successful := False
@@ -155,8 +159,8 @@ feature {NONE} -- Implementation
 				shared_values.filenames /= Void
 		local
 			parser: EB_QUERY_PARSER
-			filename: STRING_32
-			file_name: FILE_NAME_32
+			filename: PATH
+			file_name: PATH
 			result_language: BOOLEAN
 			result_output_switches: BOOLEAN
 		do
@@ -167,8 +171,7 @@ feature {NONE} -- Implementation
 			if Result then
 					--| Copy the filename
 				if information.generate_execution_profile then
-					create file_name.make_from_string (information.runtime_information_record)
-					file_name.add_extension (Dot_profile_information)
+					file_name := information.runtime_information_record.appended ("." + Dot_profile_information)
 					filename := file_name
 				else
 					filename := information.existing_profile
@@ -176,7 +179,7 @@ feature {NONE} -- Implementation
 						filename := filename.twin
 					end
 				end
-				shared_values.filenames.force (filename, shared_values.filenames.lower)
+				shared_values.filenames.force (filename.name, shared_values.filenames.lower)
 
 					--| Copy the subqueries
 				if information.query /= Void and then not information.query.is_empty then
@@ -279,29 +282,13 @@ feature {NONE} -- Implementation
 			new_window.raise
 		end
 
-	strip_path (a_full_pathname: STRING_32): STRING_32
-			-- Return the base filename of a full qualified pathname
-			-- Ex: strip_path ("c:\temp\test.pfi") = "test.pfi"
-		local
-			index_sep: INTEGER
-		do
-			index_sep := a_full_pathname.last_index_of (Operating_environment.Directory_separator, a_full_pathname.count)
-			if index_sep = 0 then
-				Result := a_full_pathname
-			elseif index_sep = a_full_pathname.count then
-				Result := ""
-			else
-				Result := a_full_pathname.substring (index_sep + 1, a_full_pathname.count)
-			end
-		end
-
 feature {NONE} -- Implementation / Attributes
 
 	information: EB_PROFILER_WIZARD_INFORMATION;
 			-- Options for generation
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -314,22 +301,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_PROFILER_WIZARD_GENERATOR

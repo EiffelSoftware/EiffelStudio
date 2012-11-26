@@ -254,7 +254,7 @@ feature {EB_SAVE_RESULT_CMD} -- Save commands
 			i: INTEGER
 			current_row: EV_GRID_ROW
 		do
-			a_string := ""
+			create a_string.make_empty
 			ptf.create_read_write
 			from
 				i := 1
@@ -2001,7 +2001,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

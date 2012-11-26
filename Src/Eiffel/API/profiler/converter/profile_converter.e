@@ -22,7 +22,7 @@ create
 
 feature -- Creation
 
-	make (profile, translat: STRING_32; s_p_config: SHARED_PROF_CONFIG; a_is_final: BOOLEAN)
+	make (profile: like profilename; translat: PATH; s_p_config: SHARED_PROF_CONFIG; a_is_final: BOOLEAN)
 			-- Create the converter.
 			-- `profile' is the output file from the profile-tool,
 			-- `translat' is the name of the TRANSLAT file for this
@@ -125,7 +125,7 @@ end
 			-- Reports end of analization and writes information to
 			-- disk.
 		local
-			out_file_name: FILE_NAME_32
+			out_file_name: PATH
 			file: RAW_FILE
 			io_except: IO_FAILURE
 		do
@@ -141,9 +141,8 @@ debug("PROFILE_CONVERT")
 	io.error.put_new_line
 end
 
-			create out_file_name.make_from_string (profilename)
-			out_file_name.add_extension (Dot_profile_information)
-			create file.make_with_name (out_file_name)
+			out_file_name := profilename.appended ("." + Dot_profile_information)
+			create file.make_with_path (out_file_name)
 			if
 				(file.exists and then file.is_writable)
 				or else file.is_creatable
@@ -158,7 +157,7 @@ end
 				file.independent_store (profile_information)
 debug("PROFILE_CONVERT")
 	io.error.put_string ("`")
-	io.error.put_string (profilename)
+	io.error.put_string (profilename.out)
 	io.error.put_string ("' successfully stored on disk.")
 	io.error.put_new_line
 end
@@ -665,20 +664,22 @@ feature {NONE} -- Commands
 		local
 			file : PLAIN_TEXT_FILE
 		do
-			create file.make_open_read (profilename)
+			create file.make_with_path (profilename)
+			file.open_read
 			file.read_stream (file.count)
 			profile_string := file.last_string
 			file.close
 		end
 
-	read_translat_file (filename: STRING_32)
+	read_translat_file (filename: PATH)
 			-- reads the `TRANSLAT' file into memory
 		local
 			retried: BOOLEAN
 			file: PLAIN_TEXT_FILE
 			table_file: PLAIN_TEXT_FILE
 			binary_file: RAW_FILE
-			table_name: FILE_NAME_32
+			table_name: PATH
+			u: FILE_UTILITIES
 		do
 			if not config.configuration_name.is_equal ("eiffel") then
 
@@ -689,10 +690,9 @@ feature {NONE} -- Commands
 						-- a FIX.
 						-- ***** FIXME *****
 
-				create file.make_with_name (filename)
-				create table_name.make_from_string (filename)
-				table_name.add_extension (Table_extension)
-				create table_file.make_with_name (table_name)
+				create file.make_with_path (filename)
+				create table_name.make_from_string (filename.string_representation + "." + Table_extension)
+				create table_file.make_with_path (table_name)
 
 					-- Both files should exist. Existence of TRANSLAT
 					-- is already checked in the root class
@@ -704,7 +704,7 @@ feature {NONE} -- Commands
 						file.close
 						make_function_table (table_name)
 					else
-						create binary_file.make_with_name (table_name)
+						create binary_file.make_with_path (table_name)
 						if binary_file.exists and then binary_file.is_readable then
 							binary_file.open_read
 							functions ?= binary_file.retrieved
@@ -735,7 +735,7 @@ feature {NONE} -- Commands
 			retry
 		end
 
-	make_function_table (filename: READABLE_STRING_GENERAL)
+	make_function_table (filename: PATH)
 			-- creates the function table
 			-- and stores it on disk in file `filename'.
 			--| This will only be called when needed.
@@ -744,7 +744,6 @@ feature {NONE} -- Commands
 			first_tab, second_tab: INTEGER
 			new_function: EIFFEL_FUNCTION
 			object_file: RAW_FILE
-			u: FILE_UTILITIES
 		do
 			from
 				create functions.make (20)
@@ -783,7 +782,8 @@ feature {NONE} -- Commands
 				create new_function.make (cluster_name, cl_name, feature_name)
 				functions.put (new_function, c_name)
 			end
-			object_file := u.open_write_raw_file (filename)
+			create object_file.make_with_path (filename)
+			object_file.open_write
 			object_file.independent_store (functions)
 			object_file.close
 		end
@@ -808,7 +808,7 @@ feature {NONE} -- Attributes
 	is_finalized_profile: BOOLEAN
 			-- Is converter done on the finalized profile?
 
-	profilename: STRING_32
+	profilename: PATH
 
 	profile_information: PROFILE_INFORMATION
 		-- Information about the profiled application

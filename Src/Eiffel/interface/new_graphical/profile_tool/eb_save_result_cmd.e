@@ -60,7 +60,7 @@ feature -- Access
 		require
 			dialog_exists: dialog /= Void
 		local
-			file_name: STRING
+			file_name: STRING_32
 			file_opener: EB_FILE_OPENER
 		do
 			file_name := dialog.file_name.twin

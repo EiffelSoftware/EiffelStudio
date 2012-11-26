@@ -11,7 +11,7 @@ class SHARED_PROF_CONFIG
 
 feature {CONFIGURATION_LOADER} -- Status setting
 
-	set_config_name (s: STRING)
+	set_config_name (s: like configuration_name)
 			-- Set the config_name to `s'.
 		do
 			configuration_name := s;
@@ -93,7 +93,7 @@ feature -- Status report
 
 feature -- Access
 
-	configuration_name: STRING
+	configuration_name: STRING_32
 		-- Name of the profiler.
 
 	number_of_columns: INTEGER
@@ -173,7 +173,7 @@ feature {PROFILE_CONVERTER} -- Spit Information (for debugging)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -56,10 +56,11 @@ feature -- Access
 			pw, ph,
 			x,y,w: INTEGER
 			f: EV_FONT
+			l_u: FILE_UTILITIES
 		do
-			if splash_pixmap_filename /= Void and then (create {RAW_FILE}.make (splash_pixmap_filename)).exists then
+			if attached splash_pixmap_filename as l_fn and then l_u.file_path_exists (l_fn) then
 				create Result
-				Result.set_with_named_file (splash_pixmap_filename)
+				Result.set_with_named_path (l_fn)
 				print_year (Result, eiffel_layout.copyright_year)
 			else
 				create f.default_create

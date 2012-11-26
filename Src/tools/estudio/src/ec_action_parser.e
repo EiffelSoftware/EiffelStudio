@@ -10,23 +10,25 @@ class
 
 feature -- Action
 
-	parse (a_string: attached STRING)
+	parse (a_string: READABLE_STRING_GENERAL)
 			-- Parse `a_string' to produce `last_command'
 			--| Incoming example:
 			--| eisi:eiffel://project=base.6D7FF712-BBA5-4AC0-AABF-2D9880493A01&target=base&cluster=ise&class=exception&feature=raise
 			--| result command example:	
 			--| <com.eiffel.compiler><project_ready><com.eiffel.eis_incoming>
 			--| <eiffel://project=base.6D7FF712-BBA5-4AC0-AABF-2D9880493A01&target=base&cluster=ise&class=exception&feature=raise>
+		require
+			a_string_not_void: a_string /= Void
 		local
-			l_string: attached STRING
-			l_cmd, l_dcmd: detachable STRING
+			l_string: STRING_32
+			l_cmd, l_dcmd: detachable STRING_32
 			l_prefix_count: INTEGER
 		do
 			last_command := Void
 			last_direct_command := Void
 			l_prefix_count := eis_incoming.count
 			if a_string.count > l_prefix_count and then a_string.substring (1, l_prefix_count).is_case_insensitive_equal (eis_incoming) then
-				l_string := a_string.twin
+				create l_string.make_from_string (a_string.as_string_32)
 					-- Remove "eisi:"
 				l_string.remove_head (l_prefix_count)
 
@@ -44,15 +46,15 @@ feature -- Action
 
 feature -- Access
 
-	last_command: detachable STRING
+	last_command: detachable STRING_32
 			-- Last commans string for EiffelStudio
 
-	last_direct_command: detachable STRING
+	last_direct_command: detachable STRING_32
 			-- Last direct command without condition
 
 feature {NONE} -- Implementation
 
-	label (a_content: attached STRING): attached STRING
+	label (a_content: STRING_32): STRING_32
 			-- A label: <a_content>
 		do
 			Result := a_content.twin
@@ -62,14 +64,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	eis_incoming: attached STRING = "eisi:"
+	eis_incoming: STRING_32 = "eisi:"
 
-	left_angle_bracket: CHARACTER = '<'
+	left_angle_bracket: CHARACTER_32 = '<'
 
-	right_angle_bracket: CHARACTER = '>';
+	right_angle_bracket: CHARACTER_32 = '>';
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -93,11 +95,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

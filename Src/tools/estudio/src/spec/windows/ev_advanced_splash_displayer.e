@@ -30,7 +30,7 @@ feature -- Command
 			l_screen: EV_SCREEN
 		do
 			create l_pixel_buffer
-			l_pixel_buffer.set_with_named_file (image_file_name)
+			l_pixel_buffer.set_with_named_path (image_file_name)
 			print_year (l_pixel_buffer, eiffel_layout.copyright_year)
 			create layered_window.make_for_splash (l_pixel_buffer)
 
@@ -69,16 +69,13 @@ feature -- Query
 		local
 			l_win_ver: WEL_WINDOWS_VERSION
 			l_gdip_starter: WEL_GDIP_STARTER
-			l_file: RAW_FILE
+			l_u: FILE_UTILITIES
 		do
 			create l_win_ver
 			if l_win_ver.is_windows_2000_compatible then
 				create l_gdip_starter
 				if l_gdip_starter.is_gdi_plus_installed then
-					create l_file.make (image_file_name)
-					if l_file.exists then
-						Result := True
-					end
+					Result := l_u.file_path_exists (image_file_name)
 				end
 			end
 		end
@@ -88,12 +85,10 @@ feature{NONE} -- Implementation
 	layered_window: SD_FEEDBACK_INDICATOR
 			-- Windows which show the splash
 
-	image_file_name: FILE_NAME
+	image_file_name: PATH
 			-- Image file name.
 		do
-			create Result.make_from_string (eiffel_layout.bitmaps_path_8)
-			Result.extend ("png")
-			Result.set_file_name ("splash_shadow.png")
+			Result := eiffel_layout.bitmaps_path.extended ("png").extended ("splash_shadow.png")
 		end
 
 note

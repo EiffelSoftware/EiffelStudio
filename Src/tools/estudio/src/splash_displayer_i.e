@@ -36,19 +36,22 @@ feature -- Access
 
 feature -- Change
 
-	set_splash_pixmap_filename (fn: STRING)
+	set_splash_pixmap_filename (fn: like splash_pixmap_filename)
+			-- Set splash pixmap with `fn'
 		require
-			file_exists: (create {RAW_FILE}.make (fn)).exists
+			file_exists: (create {FILE_UTILITIES}).file_path_exists (fn)
 		do
 			splash_pixmap_filename := fn
 		end
 
 	set_verbose_text (s: STRING_GENERAL)
+			-- Set `verbose_text' with `s'.
 		do
 			verbose_text := s
 		end
 
 	output_text (s: STRING_GENERAL)
+			-- Output `s'.
 		require
 			s /= Void
 		do
@@ -57,11 +60,11 @@ feature -- Change
 
 feature {NONE} -- Properties
 
-	splash_pixmap_filename: STRING
+	splash_pixmap_filename: PATH
 			-- File name of the splash pixmap
 
 	text: STRING_GENERAL;
-			-- bottom text to display
+			-- Bottom text to display
 
 note
 	copyright:	"Copyright (c) 1984-2012, Eiffel Software"

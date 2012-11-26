@@ -82,7 +82,6 @@ feature -- Visit nodes
 			-- Visit `a_system'.
 		local
 			l_target: CONF_TARGET
-			utf: UTF_CONVERTER
 		do
 			create text.make_from_string (header)
 			if not text.is_empty then

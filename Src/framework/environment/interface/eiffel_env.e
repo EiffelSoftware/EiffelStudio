@@ -362,24 +362,23 @@ feature -- Status setting
 						until
 							l_files.after
 						loop
-							if l_files.item.is_representable then
-								l_ecf_name := l_files.item.name
-								if
-									l_ecf_name.count > 3 and then
-									l_ecf_name.substring (l_ecf_name.count - 3,
-										l_ecf_name.count).is_case_insensitive_equal (".ecf")
-								then
-									l_path := l_precompilation_path.extended (l_ecf_name)
-									create l_target_file.make_with_path (l_path)
-									if not l_target_file.exists then
-										l_target_file.open_write
-										l_path := l_installation_precompilation_path.extended (l_ecf_name)
-										create l_source_file.make_with_path (l_path)
-										l_source_file.open_read
-										l_source_file.copy_to (l_target_file)
-										l_source_file.close
-										l_target_file.close
-									end
+								-- Only pickup properly formatted ECF project name.
+							l_ecf_name := l_files.item.name
+							if
+								l_ecf_name.count > 3 and then
+								l_ecf_name.substring (l_ecf_name.count - 3,
+									l_ecf_name.count).is_case_insensitive_equal ({STRING_32} ".ecf")
+							then
+								l_path := l_precompilation_path.extended_path (l_files.item)
+								create l_target_file.make_with_path (l_path)
+								if not l_target_file.exists then
+									l_target_file.open_write
+									l_path := l_installation_precompilation_path.extended_path (l_files.item)
+									create l_source_file.make_with_path (l_path)
+									l_source_file.open_read
+									l_source_file.copy_to (l_target_file)
+									l_source_file.close
+									l_target_file.close
 								end
 							end
 							l_files.forth

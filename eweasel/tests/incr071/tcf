@@ -29,6 +29,7 @@ copy_raw	c_string.e $CLUSTER c_string.e
 copy_raw	debug_output.e $CLUSTER debug_output.e
 copy_raw	dynamic_chain.e $CLUSTER dynamic_chain.e 
 copy_raw	dynamic_list.e $CLUSTER dynamic_list.e 
+copy_raw	execution_environment.e $CLUSTER execution_environment.e 
 copy_raw	file_comparer.e $CLUSTER file_comparer.e 
 copy_raw	finite.e $CLUSTER finite.e 
 copy_raw	hash_table.e $CLUSTER hash_table.e 
@@ -60,6 +61,7 @@ copy_raw	traversable.e $CLUSTER traversable.e
 copy_raw	unbounded.e $CLUSTER unbounded.e 
 copy_raw	operating_environment.e $CLUSTER operating_environment.e 
 copy_raw	ise_exception_manager.e $CLUSTER ise_exception_manager.e 
+copy_raw	utf_converter.e $CLUSTER utf_converter.e 
 if not DOTNET copy_raw	exception.e $CLUSTER exception.e
 if DOTNET copy_raw	exception.e-dotnet $CLUSTER exception.e
 compile_melted

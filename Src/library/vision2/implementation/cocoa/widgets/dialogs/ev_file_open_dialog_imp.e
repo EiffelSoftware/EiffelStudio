@@ -20,6 +20,8 @@ inherit
 			show_modal_to_window
 		end
 
+	NATIVE_STRING_HANDLER
+
 create
 	make
 
@@ -56,11 +58,11 @@ feature {NONE} -- Initialization
 			button := open_panel.run_modal
 
 			if button =  {NS_PANEL}.ok_button then
-				set_file_name (open_panel.filename.as_string_32)
+				set_full_file_path (open_panel.path)
 				selected_button := internal_accept
 				attached_interface.open_actions.call (Void)
 			elseif button = {NS_PANEL}.cancel_button then
-				set_file_name ("")
+				set_full_file_path (create {PATH}.make_empty)
 				selected_button := ev_cancel
 				attached_interface.cancel_actions.call (Void)
 			end
@@ -76,6 +78,25 @@ feature {NONE} -- Access
 
 	file_names: ARRAYED_LIST [STRING_32]
 			-- List of filenames selected by user
+		obsolete
+			"Use `file_paths' instead."
+		local
+			l_paths: like file_paths
+		do
+			l_paths := file_paths
+			create Result.make (l_paths.count)
+			from
+				l_paths.start
+			until
+				l_paths.after
+			loop
+				Result.extend (l_paths.item.name)
+				l_paths.forth
+			end
+		end
+
+	file_paths: ARRAYED_LIST [PATH]
+			-- List of filenames selected by user
 		local
 			l_filenames: NS_ARRAY [NS_STRING]
 			l_item: detachable NS_STRING
@@ -90,7 +111,7 @@ feature {NONE} -- Access
 			loop
 				l_item := l_filenames.item (i)
 				check l_item /= Void end
-				Result.extend (l_item)
+				Result.extend (create {PATH}.make_from_pointer (l_item.item))
 				i := i + 1
 			end
 		end
@@ -117,4 +138,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_FILE_OPEN_DIALOG note option: stable attribute end;
 
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EV_FILE_OPEN_DIALOG_IMP

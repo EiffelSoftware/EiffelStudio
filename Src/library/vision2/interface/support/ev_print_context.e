@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			selection_type := all_pages
 			copies := 1
 			output_to_file := False
-			file_name := ""
+			create file_path.make_empty
 			printer_name := "Default"
 			portrait := True
 			horizontal_resolution := 575
@@ -71,8 +71,16 @@ feature -- Access
 			-- Vertical resolution in points (1/72 of an inch), equating to full height
 			-- of printed page.
 
+	file_path: PATH
+			-- Path of output file
+
 	file_name: STRING_32
-			-- Name of output file.
+			-- Name of output file
+		obsolete
+			"Use `file_path' instead."
+		do
+			Result := file_path.name
+		end
 
 	portrait: BOOLEAN
 			-- Will print output be portrait?
@@ -141,12 +149,24 @@ feature {EV_PRINT_DIALOG_I} -- Status setting
 
 	set_file_name (a_string: READABLE_STRING_GENERAL)
 			-- Set "file_name" to "a_string".
+		obsolete
+			"Use `set_file_path' instead."
 		require
 			a_string_not_empty: a_string.count > 0
 		do
-			file_name := a_string.as_string_32
+			create file_path.make_from_string (a_string)
 		ensure
 			file_name_set: file_name.same_string_general (a_string)
+		end
+
+	set_file_path (a_path: PATH)
+			-- Set `file_path' to `a_path'.
+		require
+			a_path_not_empty: not a_path.is_empty
+		do
+			file_path := a_path
+		ensure
+			a_path_set: file_path = a_path
 		end
 
 	set_horizontal_resolution (resolution: INTEGER)

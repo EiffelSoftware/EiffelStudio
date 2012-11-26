@@ -21,6 +21,7 @@ inherit
 		end
 
 create
+	make_with_referencing_file_path,
 	make_with_referencing_file,
 	make_with_size,
 	make_named
@@ -30,8 +31,17 @@ create {NS_OBJECT}
 
 feature {NONE} -- Creation
 
+	make_with_referencing_file_path (a_path: PATH)
+			-- Initializes and returns an NS_IMAGE instance and associates it with the specified file.
+		do
+			make_from_pointer ({NS_IMAGE_API}.alloc)
+			item := {NS_IMAGE_API}.init_by_referencing_file (item, a_path.native_string.item)
+		end
+
 	make_with_referencing_file (a_path: READABLE_STRING_GENERAL)
 			-- Initializes and returns an NS_IMAGE instance and associates it with the specified file.
+		obsolete
+			"Use `make_with_referencing_file_path' instead."
 		do
 			make_from_pointer ({NS_IMAGE_API}.alloc)
 			item := {NS_IMAGE_API}.init_by_referencing_file (item, (create {NS_STRING}.make_with_string(a_path)).item)
@@ -324,4 +334,14 @@ feature {NS_IMAGE_CONSTANTS} -- Named Images
 			"NSImageNameInfo"
 		end
 
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

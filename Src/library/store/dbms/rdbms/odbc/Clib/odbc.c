@@ -29,22 +29,45 @@
 #define UNIX
 #endif
 
+#ifdef EIF_WINDOWS
+#define snprintf _snprintf
+#endif
+
 #include <stdio.h>
 #include <string.h>
 #include "odbc.h"
 #include <ctype.h>
 
-/* 
- * String type with count
- */
-typedef struct countable_string_ {
-	SQLTCHAR *string;
-	size_t char_count;
-} COUNTABLE_STRING;
+/* Allocate string in characters */
+#define ALLOC_STRING(s,c) \
+	ODBC_SAFE_ALLOC((s)->string, (SQLTCHAR *) calloc ((c),sizeof (SQLTCHAR)));	\
+	(s)->capacity = (c);	\
+	(s)->char_count = 0
 
+/* Reallocate string in characters */
+#define REALLOC_STRING(s,c) \
+	if ((s)->string == NULL) {	\
+		ALLOC_STRING ((s), (c));	\
+	} else if ((c) > (s)->capacity) {	\
+		ODBC_SAFE_ALLOC((s)->string, (SQLTCHAR *) realloc ((s)->string, sizeof (SQLTCHAR) * (c)));	\
+		(s)->capacity = (c); \
+	}
+
+/* Reallocate string to ensure space for given remaining character number */
+#define ENSURE_STRING_REMAINING_SIZE(s,remaining) \
+	REALLOC_STRING((s),(sizeof (SQLTCHAR) * ((s)->char_count+remaining)))
+
+/* Reset string if the string is allocated */
 #define RESET_STRING(s) \
-	s.string[0] = (SQLTCHAR)0;	\
-	s.char_count = 0
+	if ((s)->string != NULL && (s)->char_count > 0) {	\
+		(s)->string[0] = (SQLTCHAR)0;	\
+		(s)->char_count = 0;	\
+	}
+	
+/* Free string */
+#define FREE_STRING(s)	\
+	ODBC_C_FREE((s)->string);	\
+	memset(s, 0, sizeof(COUNTABLE_STRING))
 
 /*
 ** Data used by a single connection
@@ -70,9 +93,11 @@ typedef struct con_context_ {
 	short odbc_tranNumber; /* number of transaction opened at present */
 	int default_precision;
 	int default_scale;
+	COUNTABLE_STRING odbc_qualifier;
+	COUNTABLE_STRING odbc_owner;
 } CON_CONTEXT;
 
-void odbc_error_handler (CON_CONTEXT *con, HSTMT,int);
+rt_private void odbc_error_handler (CON_CONTEXT *con, HSTMT,int);
 void odbc_clear_error (void *);
 void odbc_unhide_qualifier(SQLTCHAR *buf, int char_count);
 SQLSMALLINT	 odbc_c_type(SQLSMALLINT odbc_type);
@@ -80,11 +105,13 @@ SQLSMALLINT	 odbc_c_type(SQLSMALLINT odbc_type);
 EIF_NATURAL_64 strhextoval(SQL_NUMERIC_STRUCT *NumStr);
 rt_private SQLTCHAR *sqlstrcpy(SQLTCHAR *strDestination, int pos, const char *strSource);
 rt_private int find_name (SQLTCHAR *buf, int buf_count, SQLTCHAR * sqlStat, int sqlStat_count);
-void setup_result_space (void *con, int no_desc);
-void free_sqldata (ODBCSQLDA *dap);
-int odbc_first_descriptor_available (void *con);
+rt_private void setup_result_space (void *con, int no_desc);
+rt_private void free_sqldata (ODBCSQLDA *dap);
+rt_private int odbc_first_descriptor_available (void *con);
 rt_private void change_to_low(SQLTCHAR *buf, size_t length);
-void odbc_fetch_connection_info (void *con);
+rt_private void odbc_fetch_connection_info (void *con);
+rt_private void odbc_retrieve_error_message (CON_CONTEXT *con, HSTMT h_err_stmt, COUNTABLE_STRING *error_string);
+rt_private void string_right_adjust(COUNTABLE_STRING *buf);
 
 /* Safe allocation and memory reset */\
 #define ODBC_SAFE_CLEAN_ALLOC(p,function,size) \
@@ -110,14 +137,20 @@ CSTXTCAT	- countable string cat
 #define ATSTXTCAT(s1,len_s1,s2)	(sqlstrcpy(s1, (int)(len_s1), s2))
 
 #define SQLTCSCAT(s1,s2,len_s2)	\
+	ENSURE_STRING_REMAINING_SIZE((s1), len_s2);	\
 	(SQLTXTCAT(((s1)->string), ((s1)->char_count), s2, len_s2));	\
 	(s1)->char_count += len_s2;
 
 #define ATCSTXTCAT(s1,s2)  \
-	(sqlstrcpy(((s1).string), (int)((s1).char_count), (s2))); \
-	(s1).char_count += strlen(s2)
+	{	\
+		size_t len = strlen(s2);	\
+		ENSURE_STRING_REMAINING_SIZE((s1), len);	\
+		(sqlstrcpy(((s1)->string), (int)((s1)->char_count), (s2))); \
+		(s1)->char_count += len;	\
+	}
 
 #define CSTXTCAT(s1,s2)	\
+	ENSURE_STRING_REMAINING_SIZE((s1), (s2)->char_count);	\
 	(SQLTXTCAT(((s1)->string), ((s1)->char_count), ((s2)->string), ((s2)->char_count))); \
 	(s1)->char_count += (s2)->char_count;
 
@@ -131,10 +164,6 @@ CSTXTCAT	- countable string cat
 HENV    henv = NULL; 
 short number_connection;
 
-SQLTCHAR odbc_qualifier[DB_MAX_QUALIFIER_LEN];
-int odbc_qualifier_len;
-SQLTCHAR odbc_owner[DB_MAX_USER_NAME_LEN];
-int odbc_owner_len;
 SQLTCHAR idQuoter[DB_QUOTER_LEN];
 SQLTCHAR quaNameSep[DB_NAME_SEP_LEN];
 long odbc_case;
@@ -156,15 +185,8 @@ void *c_odbc_make (int m_size)
 	CON_CONTEXT *l_res;
 	int count;
 
-	ODBC_SAFE_ALLOC(l_res, (CON_CONTEXT *) malloc (sizeof (CON_CONTEXT)));
-	memset (l_res, 0, sizeof (CON_CONTEXT));
+	ODBC_SAFE_ALLOC(l_res, (CON_CONTEXT *) calloc (1, sizeof (CON_CONTEXT)));
 	number_connection++;
-
-	/* Allocate memory for error and warning message */
-	ODBC_SAFE_ALLOC(l_res->error_message.string, (SQLTCHAR *) malloc (sizeof (SQLTCHAR) * (m_size + ERROR_MESSAGE_SIZE)));
-	RESET_STRING(l_res->error_message);
-	ODBC_SAFE_ALLOC(l_res->warn_message.string, (SQLTCHAR *) malloc (sizeof (SQLTCHAR) * (m_size + WARN_MESSAGE_SIZE)));
-	RESET_STRING(l_res->warn_message);
 
 	if (!henv)
 	{
@@ -173,6 +195,7 @@ void *c_odbc_make (int m_size)
 		 * We still store the message in it due to the way on Eiffel side of 
 		 * retrieving error message.
 		 */
+
 		l_res->rc = SQLAllocHandle(SQL_HANDLE_ENV,SQL_NULL_HANDLE,&henv);
 		if (l_res->rc) {
 			odbc_error_handler(l_res, NULL,10);
@@ -241,8 +264,8 @@ int odbc_new_descriptor (void *con)
 	}
 	else {
 		odbc_error_handler(con, NULL, 201);
-		RESET_STRING(l_con->error_message);
-		ATCSTXTCAT(l_con->error_message, " No available descriptor\n");
+		RESET_STRING(&l_con->error_message);
+		ATCSTXTCAT(&l_con->error_message, " No available descriptor\n");
 	}
 	return result;
 }
@@ -338,7 +361,7 @@ void odbc_pre_immediate(void *con, int no_desc, int argNum)
 
 	if (no_desc < 0 || no_desc > MAX_DESCRIPTOR) {
 		odbc_error_handler(con, NULL, 202);
-		ATCSTXTCAT(l_con->error_message, "\nInvalid Descriptor Number!");
+		ATCSTXTCAT(&l_con->error_message, "\nInvalid Descriptor Number!");
 		return;
 	}
 	if (argNum > 0) {
@@ -368,7 +391,7 @@ void odbc_exec_immediate (void *con, int no_desc, SQLTCHAR *order, int order_cou
 
 	odbc_unhide_qualifier(order, order_count);
 	l_con->odbc_tranNumber = 1;
-	RESET_STRING(l_con->warn_message);
+	RESET_STRING(&l_con->warn_message);
 
 	l_con->rc = SQLExecDirect(l_con->hstmt[no_desc], order, order_count);
 	free_sqldata (l_con->odbc_descriptor[no_desc]);
@@ -411,9 +434,11 @@ void odbc_init_order (void *con, int no_desc, SQLTCHAR *order, int order_count, 
 	int is_as_primary = 0;
 	int buf_count, found_byte_count;
 	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	COUNTABLE_STRING *l_qualifier, *l_owner;
 
 #define COMPARED_BTYES	(9 * sizeof (SQLTCHAR))
 #define COMPARED_LENGTH	(9)
+#define DB_MAX_TABLE_LEN (50)
 
 	SQLTCHAR tmpBuf[DB_MAX_TABLE_LEN];
 	SQLTCHAR sqltab[30];
@@ -433,13 +458,13 @@ void odbc_init_order (void *con, int no_desc, SQLTCHAR *order, int order_count, 
 
 	if (no_desc < 0 || no_desc > MAX_DESCRIPTOR) {
 		odbc_error_handler(con, NULL, 203);
-		ATCSTXTCAT(l_con->error_message, "\nInvalid Descriptor Number!");
+		ATCSTXTCAT(&l_con->error_message, "\nInvalid Descriptor Number!");
 		return;
 	}
 	odbc_unhide_qualifier(order, order_count);
 	l_con->odbc_tranNumber = 1;
 	odbc_clear_error(con);
-	RESET_STRING(l_con->warn_message);
+	RESET_STRING(&l_con->warn_message);
 
 	l_con->flag[no_desc] = ODBC_SQL;
 	buf_count = (DB_MAX_TABLE_LEN > order_count ? order_count : DB_MAX_TABLE_LEN);
@@ -452,24 +477,25 @@ void odbc_init_order (void *con, int no_desc, SQLTCHAR *order, int order_count, 
 		{
 			l_con->flag[no_desc] = ODBC_CATALOG_TAB;
 			found_byte_count = find_name (tmpBuf, buf_count, order, order_count);
+			
+			l_qualifier = &l_con->odbc_qualifier;
+			l_owner = &l_con->odbc_owner;
 			if (found_byte_count)
 			{
-				if (odbc_qualifier_len > 0 && odbc_owner_len > 0)
-					l_con->rc = SQLTables(l_con->hstmt[no_desc], odbc_qualifier, (SQLSMALLINT)odbc_qualifier_len, odbc_owner, (SQLSMALLINT)odbc_owner_len, tmpBuf, (SQLSMALLINT)found_byte_count, NULL, 0);
-				if (odbc_qualifier_len == 0 && odbc_owner_len > 0)
-					l_con->rc = SQLTables(l_con->hstmt[no_desc], NULL, 0, odbc_owner, (SQLSMALLINT)odbc_owner_len, tmpBuf, (SQLSMALLINT)found_byte_count, NULL, 0);
-				if (odbc_qualifier_len > 0 && odbc_owner_len == 0)
-					l_con->rc = SQLTables(l_con->hstmt[no_desc], odbc_qualifier, (SQLSMALLINT)odbc_qualifier_len, NULL, 0, tmpBuf, (SQLSMALLINT)found_byte_count, NULL, 0);
-				if (odbc_qualifier_len == 0 && odbc_owner_len == 0)
+				if (l_qualifier->char_count > 0 && l_owner->char_count > 0)
+					l_con->rc = SQLTables(l_con->hstmt[no_desc], l_qualifier->string, (SQLSMALLINT)l_qualifier->char_count, l_owner->string, (SQLSMALLINT)l_owner->char_count, tmpBuf, (SQLSMALLINT)found_byte_count, NULL, 0);
+				if (l_qualifier->char_count == 0 && l_owner->char_count > 0)
+					l_con->rc = SQLTables(l_con->hstmt[no_desc], NULL, 0, l_owner->string, (SQLSMALLINT)l_owner->char_count, tmpBuf, (SQLSMALLINT)found_byte_count, NULL, 0);
+				if (l_qualifier->char_count > 0 && l_owner->char_count == 0)
+					l_con->rc = SQLTables(l_con->hstmt[no_desc], l_qualifier->string, (SQLSMALLINT)l_qualifier->char_count, NULL, 0, tmpBuf, (SQLSMALLINT)found_byte_count, NULL, 0);
+				if (l_qualifier->char_count == 0 && l_owner->char_count == 0)
 					l_con->rc = SQLTables(l_con->hstmt[no_desc], NULL, 0, NULL, 0, tmpBuf, (SQLSMALLINT)found_byte_count, NULL, 0);
 			}
 			else
 			{
 				l_con->rc = SQLTables(l_con->hstmt[no_desc], NULL, 0, NULL, 0, NULL, 0, NULL, 0);
-				odbc_qualifier[0] = (SQLTCHAR)0;
-				odbc_qualifier_len = 0;
-				odbc_owner[0] =(SQLTCHAR)0;
-				odbc_owner_len = 0;
+				RESET_STRING (l_qualifier);
+				RESET_STRING (l_owner);
 			}
 		}
 		else
@@ -608,7 +634,7 @@ void odbc_start_order (void *con, int no_desc)
 			SQLBindCol(l_con->hstmt, 9, SQL_C_SSHORT, &DecimalDigits, 0, &cbDecimalDigits);
 			SQLBindCol(l_con->hstmt, 10, SQL_C_SSHORT, &NumPrecRadix, 0, &cbNumPrecRadix);
 			SQLBindCol(l_con->hstmt, 11, SQL_C_SSHORT, &Nullable, 0, &cbNullable);
-			while(1) {
+  			while(1) {
 				l_con->rc = SQLFetch(l_con->hstmt);
 				if (l_con->rc == SQL_ERROR || l_con->rc == SQL_SUCCESS_WITH_INFO) {
 					odbc_error_handler(con, l_con->hstmt[no_desc],7);
@@ -718,11 +744,11 @@ void setup_result_space (void *con, int no_desc)
 
 	if (colNum > DB_MAX_COLS) {
 		if (l_con->error_number) {
-			ATCSTXTCAT(l_con->error_message, "\n Number of selected columns exceed max number(300) ");
+			ATCSTXTCAT(&l_con->error_message, "\n Number of selected columns exceed max number(300) ");
 		}
 		else {
-			RESET_STRING(l_con->error_message);
-			ATCSTXTCAT(l_con->error_message, "\n Number of selected columns exceed max number(300) ");
+			RESET_STRING(&l_con->error_message);
+			ATCSTXTCAT(&l_con->error_message, "\n Number of selected columns exceed max number(300) ");
 			l_con->error_number = -DB_TOO_MANY_COL;
 		}
 		free_sqldata (l_con->odbc_descriptor[no_desc]);
@@ -754,23 +780,28 @@ void setup_result_space (void *con, int no_desc)
 	SQLGetStmtAttr(l_con->hstmt[no_desc], SQL_ATTR_APP_ROW_DESC, &hdesc, 0, NULL);
 
 	for (i=0; i < colNum && !l_con->error_number; i++) {
-	/* fill in the describing information for each column, and calculate */
-	/* the total length of the data buffer                               */
+		/* Get column name length */
+		l_con->rc = SQLDescribeCol(l_con->hstmt[no_desc], (SQLSMALLINT) i+1, NULL, 0, &indColName, NULL, NULL, NULL, NULL);
+		/* Allocate string for column name, extra character for null character */
+		ALLOC_STRING(&((dap->sqlvar)[i].sqlname),indColName+1);
+		
+		/* fill in the describing information for each column, and calculate */
+		/* the total length of the data buffer                               */
 		l_con->rc = SQLDescribeCol(
 					l_con->hstmt[no_desc],
 					(SQLSMALLINT) i+1,
-					(dap->sqlvar)[i].sqlname.sqlnamec,
-					DB_MAX_NAME_LEN,
+					(dap->sqlvar)[i].sqlname.string,
+					(dap->sqlvar)[i].sqlname.capacity,
 					&indColName,
 					&((dap->sqlvar)[i].sqltype),
 					&((dap->sqlvar)[i].sqllen),
 					&tmpScale,
 					&tmpNullable);
+		(dap->sqlvar)[i].sqlname.char_count = indColName;
+		string_right_adjust (&((dap->sqlvar)[i].sqlname));
 		if (l_con->rc)
 			odbc_error_handler(con, l_con->hstmt[no_desc],6);
 		if (l_con->error_number == 0) {
-			(dap->sqlvar)[i].sqlname.sqlnamec[indColName] = (SQLTCHAR)0;
-			(dap->sqlvar)[i].sqlname.sqlnamel = indColName;
 			dap->sqlvar[i].c_type = odbc_c_type(dap->sqlvar[i].sqltype);
 			type = dap->sqlvar[i].c_type;
 			switch(type) {
@@ -911,6 +942,7 @@ void free_sqldata (ODBCSQLDA *dap)
 			for (i=0; i < colNum; i++) {
 				data_buffer = GetDbColPtr(dap,i);
 				ODBC_C_FREE(data_buffer);
+				FREE_STRING(&(((dap->sqlvar)[i]).sqlname));
 			}
 		}
 		ODBC_C_FREE(dap);
@@ -1101,28 +1133,14 @@ int odbc_support_proc() {
 /*                                                               */
 /*                    ROUTINE DESCRIPTION                        */
 /*                                                               */
-/* NAME: odbc_support_create_proc()                              */
+/* NAME: odbc_procedure_term()                              	 */
 /* DESCRIPTION:                                                  */
-/*  to determine if the current ODBC Data Source/Driver support  */
-/* stored procedure creation: 1-- yes, 0-- no                    */
+/* Return the value of SQL_PROCEDURE_TERM, queried by SQLGetInfo */
 /*                                                               */
 /*****************************************************************/
 
-int odbc_support_create_proc() {
-	int i;
-	int j;
-	SQLTCHAR tmpStr[DB_MAX_NAME_LEN];
-	size_t len;
-
-	len = 16; /* Length of the string "stored procedure" used below for comparison purposes. */
-	ATSTXTCPY(tmpStr, "stored procedure");
-	i = SQLTXTCMP(CreateStoredProc, tmpStr, len);
-	ATSTXTCPY(tmpStr, "Stored Procedure");
-	j = SQLTXTCMP(CreateStoredProc, tmpStr, len);
-	if (i==0||j==0)
-		return 1;
-	else
-		return 0;
+SQLTCHAR *odbc_procedure_term (void *con) {
+	return CreateStoredProc;
 }
 
 /*****************************************************************/
@@ -1245,7 +1263,7 @@ void odbc_set_parameter(void *con, int no_desc, int seri, int dir, int eifType, 
 			break;
 		default:
 			odbc_error_handler(con, NULL, 204);
-			ATCSTXTCAT(l_con->error_message, "\nInvalid Data Type in odbc_set_parameter");
+			ATCSTXTCAT(&l_con->error_message, "\nInvalid Data Type in odbc_set_parameter");
 			odbc_error_handler(con, NULL, 110);
 			return;
 	}
@@ -1392,13 +1410,11 @@ SQLTCHAR *odbc_qualifier_seperator() {
 /* to implement command "SQLTable(tanle_name)" conviently.       */
 /*                                                               */
 /*****************************************************************/
-void odbc_set_qualifier(SQLTCHAR *qfy, int len) {
-	if (qfy == NULL) {
-		odbc_qualifier[0] = (SQLTCHAR)0;
-		odbc_qualifier_len = 0;
-	} else {
-		SQLTXTCPY(odbc_qualifier, qfy, len);
-		odbc_qualifier_len = len;
+void odbc_set_qualifier(void *con, SQLTCHAR *qfy, int len) {
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	RESET_STRING (&l_con->odbc_qualifier);
+	if (qfy != NULL) {
+		SQLTCSCAT(&l_con->odbc_qualifier, qfy, len);
 	}
 }
 
@@ -1413,15 +1429,12 @@ void odbc_set_qualifier(SQLTCHAR *qfy, int len) {
 /* to implement command "SQLTable(tanle_name)" conviently.       */
 /*                                                               */
 /*****************************************************************/
-void odbc_set_owner(SQLTCHAR *owner, int len) {
-	if (owner == NULL) {
-		odbc_owner[0] = (SQLTCHAR)0;
-		odbc_owner_len = 0;
-	} else {
-		SQLTXTCPY(odbc_owner, owner, len);
-		odbc_owner_len = len;
+void odbc_set_owner(void *con, SQLTCHAR *owner, int len) {
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	RESET_STRING (&l_con->odbc_owner);
+	if (owner != NULL) {
+		SQLTCSCAT(&l_con->odbc_owner, owner, len);
 	}
-
 }
 
 /*****************************************************************/
@@ -1628,8 +1641,10 @@ void odbc_free_connection (void *con)
 	SQLFreeHandle (SQL_HANDLE_DBC, l_con->hdbc);
 	number_connection--;
 
-	ODBC_C_FREE(l_con->error_message.string);
-	ODBC_C_FREE(l_con->warn_message.string);
+	FREE_STRING (&l_con->error_message);
+	FREE_STRING (&l_con->warn_message);
+	FREE_STRING (&l_con->odbc_qualifier);
+	FREE_STRING (&l_con->odbc_owner);
 	ODBC_C_FREE(l_con);
 
 	/* When there is no connection any more, we free the environment handle */
@@ -1741,21 +1756,16 @@ int odbc_trancount (void *con)
 }
 
 /*****************************************************************/
-/* The following functions are used to get data from structure   */
-/* ODBCSQLDA  filled  by FETCH clause.                           */
+/* Remove trailing spaces				                         */
 /*****************************************************************/
 /*                                                               */
-size_t cut_tail_blank(SQLTCHAR *buf, size_t char_count) {
+void string_right_adjust (COUNTABLE_STRING *buf) {
 	size_t j;
 
 	if (buf != NULL) {
-		for(j=char_count-1;j>=0 && buf[j]==TXTC(' '); j--);
+		for(j=buf->char_count-1;j>=0 && (buf->string)[j]==TXTC(' '); j--);
 		j++;
-		buf[j] = (SQLTCHAR)0;
-		return j;
-	} else
-	{
-		return 0;
+		buf->char_count = j;
 	}
 }
 
@@ -1779,19 +1789,18 @@ int odbc_get_count (void *con, int no_des)
 	return GetColNum(l_con->odbc_descriptor[no_des]);
 }
 
-size_t odbc_put_col_name (void *con, int no_des, int index, SQLTCHAR *result)
+SQLTCHAR *odbc_col_name (void *con, int no_des, int index)
 {
-	size_t size;
-	int i = index - 1;
-	SQLTCHAR buf[DB_MAX_NAME_LEN+1];
 	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	int i = index - 1;
+	return (((l_con->odbc_descriptor[no_des])->sqlvar)[i]).sqlname.string;
+}
 
-	size = (((l_con->odbc_descriptor[no_des])->sqlvar)[i]).sqlname.sqlnamel;
-	memcpy(buf, (((l_con->odbc_descriptor[no_des])->sqlvar)[i]).sqlname.sqlnamec, size * sizeof (SQLTCHAR));
-	buf[size] = (SQLTCHAR)0;
-	size = cut_tail_blank(buf, size);
-	memcpy(result, buf, size * sizeof (SQLTCHAR));
-	return(size);
+size_t odbc_col_name_len (void *con, int no_des, int index)
+{
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	int i = index - 1;
+	return (((l_con->odbc_descriptor[no_des])->sqlvar)[i]).sqlname.char_count;
 }
 
 SQLULEN odbc_get_col_len (void *con, int no_des, int index)
@@ -1898,9 +1907,9 @@ SQLULEN odbc_put_data (void *con, int no_des, int index, char **result)
   switch (data_type) {
 		case SQL_C_GUID:
 			g = (SQLGUID *)GetDbColPtr(dap, i);
-				/* We allocate 37 because `sprintf' will add a null terminating character. */
+				/* We allocate 37 because `snprintf' will add a null terminating character. */
 			*result = (char *)malloc(37);
-			sprintf (*result,
+			snprintf (*result, 36,
 				"%08lX-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X",
 				(unsigned long) g->Data1,
 				g->Data2, g->Data3,
@@ -1936,7 +1945,7 @@ SQLINTEGER odbc_get_integer_data (void *con, int no_des, int index)
 			result = lint;
 			return result;
 		default:
-			ATCSTXTCAT(l_con->error_message, "\nError INTEGER type or data length in odbc_get_integer_data. ");
+			ATCSTXTCAT(&l_con->error_message, "\nError INTEGER type or data length in odbc_get_integer_data. ");
 			if (l_con->error_number) {
 				return 0;
 			}
@@ -1972,7 +1981,7 @@ SQLSMALLINT odbc_get_integer_16_data (void *con, int no_des, int index)
 			result = sint;
 			return result;
 		default:
-			ATCSTXTCAT(l_con->error_message, "\nError INTEGER_16 type or data length in odbc_get_integer_data. ");
+			ATCSTXTCAT(&l_con->error_message, "\nError INTEGER_16 type or data length in odbc_get_integer_data. ");
 			if (l_con->error_number) {
 				return 0;
 			}
@@ -2005,7 +2014,7 @@ EIF_INTEGER_64 odbc_get_integer_64_data (void *con, int no_des, int index)
 			result = bint;
 			return result;
 		default:
-			ATCSTXTCAT(l_con->error_message, "\nError INTEGER_64 type or data length in odbc_get_integer_data. ");
+			ATCSTXTCAT(&l_con->error_message, "\nError INTEGER_64 type or data length in odbc_get_integer_data. ");
 			if (l_con->error_number) {
 				return 0;
 			}
@@ -2030,7 +2039,7 @@ int odbc_get_boolean_data (void *con, int no_des, int index)
 	}
 	return *((char *)(GetDbColPtr(dbp, i))) != 0;
     }
-  ATCSTXTCAT(l_con->error_message, "\nError BOOLEAN type in odbc_get_boolean_data. ");
+  ATCSTXTCAT(&l_con->error_message, "\nError BOOLEAN type in odbc_get_boolean_data. ");
   if (l_con->error_number) {
 		return 0;
   }
@@ -2082,7 +2091,7 @@ double odbc_get_float_data (void *con, int no_des, int index)
 		final_val *= sign;
 		return final_val;
 	}
-	ATCSTXTCAT(l_con->error_message, "\nError  FLOAT  type in odbc_get_float_data. ");
+	ATCSTXTCAT(&l_con->error_message, "\nError  FLOAT  type in odbc_get_float_data. ");
 	if (l_con->error_number) {
 		return 0.0;
 	}
@@ -2110,7 +2119,7 @@ float odbc_get_real_data (void *con, int no_des, int index)
 	/* result_real = *(float *)(dbp->sqlvar)[i].sqldata; */
 	return   result_real;
   }
-  ATCSTXTCAT(l_con->error_message, "\nError  REAL   type in odbc_get_real_data. ");
+  ATCSTXTCAT(&l_con->error_message, "\nError  REAL   type in odbc_get_real_data. ");
   if (l_con->error_number) {
 		return 0.0;
   }
@@ -2191,7 +2200,7 @@ int odbc_get_date_data (void *con, int no_des, int index)
 	}
 
     }
-  ATCSTXTCAT(l_con->error_message, "\nError DATE type in odbc_get_date_data. ");
+  ATCSTXTCAT(&l_con->error_message, "\nError DATE type in odbc_get_date_data. ");
   if (l_con->error_number) {
 		return 0;
   }
@@ -2214,7 +2223,7 @@ int odbc_get_decimal (void *con, int no_des, int index, void *p)
 		return 1;
 	}
 
-	ATCSTXTCAT(l_con->error_message, "\nError DECIMAL type in odbc_get_decimal. ");
+	ATCSTXTCAT(&l_con->error_message, "\nError DECIMAL type in odbc_get_decimal. ");
 	if (l_con->error_number) {
 		return 0;
 	}
@@ -2288,34 +2297,22 @@ void odbc_clear_error (void *con)
 {
 	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
 	l_con->error_number = 0;
-	l_con->error_message.string[0] = (SQLTCHAR)0;
-	l_con->warn_message.string[0] = (SQLTCHAR)0;
-	RESET_STRING(l_con->error_message);
-	RESET_STRING(l_con->warn_message);
+	RESET_STRING(&l_con->error_message);
+	RESET_STRING(&l_con->warn_message);
 }
 
 void odbc_error_handler(CON_CONTEXT *con, HSTMT h_err_stmt, int code) {
-	SQLINTEGER nErr;
-	SQLTCHAR msg[MAX_ERROR_MSG +1];
-	SQLTCHAR _tmpMsg[2 * MAX_ERROR_MSG];
-	COUNTABLE_STRING tmpMsg;
-	SQLSMALLINT cbMsg;
-	SQLTCHAR tmpSQLSTATE[6];
-	SQLSMALLINT msg_number;
 	CON_CONTEXT *l_con = con;
 	char charBuf[255];
 
-	tmpMsg.string = _tmpMsg;
-	tmpMsg.char_count = 0;
 	if (h_err_stmt == NULL) {
 		l_con->error_number = DB_ERROR;
-		sprintf(charBuf, "ODBC ERROR: <%d>, Inter code: <%d>\n", l_con->error_number, code);
-		ATSTXTCPY(msg, charBuf);
-		SQLTCSCAT(&l_con->error_message, msg, TXTLEN(msg)); /* msg does not contain %U character, TXTLEN is safe */
+		snprintf(charBuf, sizeof(charBuf), "ODBC ERROR: <%d>, Inter code: <%d>\n", l_con->error_number, code);
+		ATCSTXTCAT(&l_con->error_message, charBuf);
 
 		if (code == 12) {
-			ATCSTXTCAT(l_con->error_message, "\n Can't Connect to the assigned Data Source!");
-			ATCSTXTCAT(l_con->error_message, "\n The name may be misspelled or \n The data source is being used by someone else exclusively!");
+			ATCSTXTCAT(&l_con->error_message, "\n Can't Connect to the assigned Data Source!");
+			ATCSTXTCAT(&l_con->error_message, "\n The name may be misspelled or \n The data source is being used by someone else exclusively!");
 		}
 		return;
 	}
@@ -2323,69 +2320,59 @@ void odbc_error_handler(CON_CONTEXT *con, HSTMT h_err_stmt, int code) {
 	switch(l_con->rc) {
 	case SQL_INVALID_HANDLE:
 		l_con->error_number = DB_SQL_INVALID_HANDLE;
-		sprintf(charBuf, "ODBC ERROR: <%d>, Inter code: <%d>", l_con->error_number, code);
-		ATSTXTCPY(msg, charBuf);
-		SQLTCSCAT(&l_con->error_message, msg, TXTLEN(msg)); /* msg does not contain %U character, TXTLEN is safe */
-		ATCSTXTCAT(l_con->error_message, "\n An Application programming error occurred: maybe passed ");
-		ATCSTXTCAT(l_con->error_message, "\n invalid environment, connection or statement handle to ");
-		ATCSTXTCAT(l_con->error_message, "\n Driver Manager of ODBC. \n");
+		snprintf(charBuf, sizeof(charBuf), "ODBC ERROR: <%d>, Inter code: <%d>", l_con->error_number, code);
+		ATCSTXTCAT(&l_con->error_message, charBuf);
+
+		ATCSTXTCAT(&l_con->error_message, "\n An Application programming error occurred: maybe passed ");
+		ATCSTXTCAT(&l_con->error_message, "\n invalid environment, connection or statement handle to ");
+		ATCSTXTCAT(&l_con->error_message, "\n Driver Manager of ODBC. \n");
 
 		break;
 	case SQL_ERROR:
 		l_con->error_number = DB_SQL_ERROR;
-		sprintf(charBuf, "ODBC ERROR: <%d>, Inter code: <%d>", l_con->error_number, code);
-		ATSTXTCPY(msg, charBuf);
-		SQLTCSCAT(&l_con->error_message, msg, TXTLEN(msg)); /* msg does not contain %U character, TXTLEN is safe */
-		msg_number = 1;
-		while (SQLGetDiagRec(SQL_HANDLE_STMT, h_err_stmt, msg_number++, tmpSQLSTATE, &nErr, msg, sizeof(msg), &cbMsg) != SQL_NO_DATA) {
-			sprintf (charBuf, "\n Native Err#=%d , SQLSTATE=", (int) nErr);
-			ATCSTXTCAT(tmpMsg, charBuf);
-			SQLTCSCAT(&tmpMsg, tmpSQLSTATE, TXTLEN(tmpSQLSTATE)); /* tmpSQLSTATE does not contain %U character, TXTLEN is safe */
-			ATCSTXTCAT(tmpMsg, ", Error_Info='");
-			SQLTCSCAT(&tmpMsg, msg, cbMsg);
-			ATCSTXTCAT(tmpMsg, "'");
-	
-			if (l_con->error_message.char_count + tmpMsg.char_count + 8 > ERROR_MESSAGE_SIZE) {
-				if (l_con->error_message.char_count + 8 <= ERROR_MESSAGE_SIZE) {
-					ATCSTXTCAT(l_con->error_message, "......");
-				}
-			}
-			else {
-				CSTXTCAT(&l_con->error_message, &tmpMsg);
-			}
-		}
-		ATCSTXTCAT(l_con->error_message, "\n");
+		snprintf(charBuf, sizeof(charBuf), "ODBC ERROR: <%d>, Inter code: <%d>", l_con->error_number, code);
+		ATCSTXTCAT(&l_con->error_message, charBuf);
+		odbc_retrieve_error_message (con, h_err_stmt, &l_con->error_message);
 		break;
 	case SQL_SUCCESS_WITH_INFO:
-		sprintf (charBuf, "\nODBC WARNING Inter code: <%d>", code);
-		ATSTXTCPY(msg, charBuf);
-		SQLTCSCAT(&l_con->warn_message, msg, TXTLEN(msg)); /* msg does not contain %U character, TXTLEN is safe */
-		msg_number = 1;
-		while (SQLGetDiagRec(SQL_HANDLE_STMT, h_err_stmt, msg_number++, tmpSQLSTATE, &nErr, msg, sizeof(msg), &cbMsg) != SQL_NO_DATA) {
-			sprintf (charBuf, "\n Native Err#=%d , SQLSTATE=", (int) nErr);
-			ATCSTXTCAT(tmpMsg, charBuf);
-			SQLTCSCAT(&tmpMsg, tmpSQLSTATE, TXTLEN(tmpSQLSTATE)); /* tmpSQLSTATE does not contain %U character, TXTLEN is safe */
-			ATCSTXTCAT(tmpMsg, ", Error_Info='");
-			SQLTCSCAT(&tmpMsg, msg, cbMsg);
-			ATCSTXTCAT(tmpMsg, "'");
-
-			if (l_con->warn_message.char_count + tmpMsg.char_count + 8 > WARN_MESSAGE_SIZE) {
-				if (l_con->warn_message.char_count + 8 <= WARN_MESSAGE_SIZE) {
-					ATCSTXTCAT(l_con->warn_message, "......");
-				}
-			}
-			else {
-				CSTXTCAT(&l_con->warn_message, &tmpMsg);
-			}
-		}
-		ATCSTXTCAT(l_con->warn_message, "\n");
+		snprintf(charBuf, sizeof(charBuf), "\nODBC WARNING Inter code: <%d>", code);
+		ATCSTXTCAT(&l_con->warn_message, charBuf);
+		odbc_retrieve_error_message (con, h_err_stmt, &l_con->warn_message);
 		break;
 	default:
-		sprintf (charBuf, "\nODBC WARNING Inter code: <%d>", code);
-		ATSTXTCPY(msg, charBuf);
-		SQLTCSCAT(&l_con->warn_message, msg, TXTLEN(msg)); /* msg does not contain %U character, TXTLEN is safe */
+		snprintf(charBuf, sizeof(charBuf), "\nODBC WARNING Inter code: <%d>", code);
+		RESET_STRING(&l_con->warn_message);
+		ATCSTXTCAT(&l_con->warn_message, charBuf);
 		break;
 	}
+}
+
+/* Retrieve message into `error', by calling `SQLGetDiagRec', when there is an error or a warning */
+void odbc_retrieve_error_message (CON_CONTEXT *con, HSTMT h_err_stmt, COUNTABLE_STRING *error_string)
+{
+	SQLSMALLINT msg_number = 1;
+	SQLINTEGER nErr;
+	COUNTABLE_STRING msg_buf;
+	SQLSMALLINT cbMsg;
+	SQLTCHAR tmpSQLSTATE[6]; /* five-character SQLSTATE */
+	char charBuf[255];
+
+	memset(&msg_buf, 0, sizeof(COUNTABLE_STRING));
+	while (SQLGetDiagRec(SQL_HANDLE_STMT, h_err_stmt, msg_number, tmpSQLSTATE, &nErr, NULL, 0, &cbMsg) != SQL_NO_DATA) {
+		ENSURE_STRING_REMAINING_SIZE (&msg_buf, cbMsg);
+		SQLGetDiagRec(SQL_HANDLE_STMT, h_err_stmt, msg_number, tmpSQLSTATE, &nErr, msg_buf.string, (SQLSMALLINT)msg_buf.capacity, &cbMsg);
+		msg_buf.char_count = cbMsg;
+		snprintf(charBuf, sizeof(charBuf), "\n Native Err#=%d , SQLSTATE=", (int) nErr);
+		ATCSTXTCAT(error_string, charBuf);
+		SQLTCSCAT(error_string, tmpSQLSTATE, TXTLEN(tmpSQLSTATE)); /* tmpSQLSTATE does not contain %U character, TXTLEN is safe */
+		ATCSTXTCAT(error_string, ", Error_Info='");
+
+		CSTXTCAT(error_string, &msg_buf);
+		ATCSTXTCAT(error_string, "'");
+		msg_number++;
+	}
+	ATCSTXTCAT(error_string, "\n");
+	FREE_STRING (&msg_buf);
 }
 
 SQLSMALLINT odbc_c_type(SQLSMALLINT odbc_type) {

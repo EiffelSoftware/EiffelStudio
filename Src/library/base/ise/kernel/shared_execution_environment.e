@@ -5,16 +5,16 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	SHARED_EXECUTION_ENVIRONMENT
 
-feature {NONE} 
+feature {NONE}
 
-	Execution_environment: EXECUTION_ENVIRONMENT_32
+	Execution_environment: EXECUTION_ENVIRONMENT
 		once
 			create Result
 		end
-	
+
 note
 	copyright: "Copyright (c) 2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

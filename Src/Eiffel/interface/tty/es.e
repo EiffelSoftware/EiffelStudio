@@ -81,7 +81,7 @@ feature -- Initialization
 
 				-- Set the default project path to the current working directory.
 				-- This may be overriden via user settings.
-			project_path :=(create {EXECUTION_ENVIRONMENT_32}).current_working_directory
+			project_path :=(create {EXECUTION_ENVIRONMENT}).current_working_path.name
 
 				--| Initialization of the run-time, so that at the end of a store/retrieve
 				--| operation (like retrieving or storing the project, creating the CASEGEN

@@ -270,9 +270,9 @@ feature {NONE} -- Implementation
 				if l_key /= Void then
 					l_value := target.variables.item (l_key.as_lower)
 					if l_value = Void then
-						l_value := execution_environment.get (l_key)
+						l_value := execution_environment.item (l_key)
 						if l_value = Void then
-							l_value := once ""
+							l_value := once {STRING_32} ""
 						end
 							-- we don't want to update stored values, this is done when the project is loaded
 						target.environ_variables.put (l_value, l_key)

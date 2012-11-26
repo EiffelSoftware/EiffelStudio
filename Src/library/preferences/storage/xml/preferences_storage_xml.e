@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			-- systems that do not support home directories it will be stored in the current working directory.
 		local
 			l_loc: detachable PATH
-			l_exec: EXECUTION_ENVIRONMENT_32
+			l_exec: EXECUTION_ENVIRONMENT
 		do
 			create l_exec
 

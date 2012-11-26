@@ -35,10 +35,10 @@ feature -- Splash displayer
 			image_view: NS_IMAGE_VIEW
 			window_rect: NS_RECT
 		do
-			create icon.make_with_referencing_file (icon_file_name)
+			create icon.make_with_referencing_file_path (icon_file_name)
 			app_implementation.set_application_icon_image (icon)
 
-			create splash_image.make_with_referencing_file (splash_image_file_name)
+			create splash_image.make_with_referencing_file_path (icon_file_name)
 
 			create window_rect.make_rect (0, 0, splash_image.size.width, splash_image.size.height)
 			window_rect.origin.x := main_screen.frame.size.width / 2 - splash_image.size.width / 2
@@ -67,26 +67,22 @@ feature -- Splash displayer
 
 feature {NONE} -- Implementation
 
-	splash_image_file_name: FILE_NAME
+	splash_image_file_name: PATH
 			-- Image file name.
 		do
-			create Result.make_from_string (eiffel_layout.bitmaps_path)
-			Result.extend ("png")
-			Result.set_file_name ("splash_shadow.png")
+			Result := eiffel_layout.bitmaps_path.extended ("png").extended ("splash_shadow.png")
 		end
 
-	icon_file_name: FILE_NAME
+	icon_file_name: PATH
 			-- Icon file name.
 		do
-			create Result.make_from_string (eiffel_layout.bitmaps_path)
-			Result.extend ("png")
-			Result.set_file_name ("estudio.png")
+			Result := eiffel_layout.bitmaps_path.extended ("png").extended ("estudio.png")
 		end
 
 	window: NS_WINDOW;
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

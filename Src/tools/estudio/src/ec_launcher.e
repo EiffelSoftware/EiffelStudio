@@ -99,7 +99,7 @@ feature -- Launching
 		require
 			is_environment_valid: is_environment_valid
 		local
-			s: STRING
+			s: STRING_32
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -107,9 +107,9 @@ feature -- Launching
 				if is_verbose then
 					create s.make_empty
 
-					s.append_string ("*** estudio is using the following data : %N")
+					s.append_string ({STRING_32} "*** estudio is using the following data : %N")
 					s.append_string (eiffel_layout.environment_info)
-					s.append_string (" Arguments: ")
+					s.append_string ({STRING_32} " Arguments: ")
 					from
 						ec_arguments.start
 					until
@@ -135,7 +135,7 @@ feature -- Launching
 			retry
 		end
 
-	start_process (cmd: STRING; args: LIST [STRING]; dir: STRING)
+	start_process (cmd: READABLE_STRING_GENERAL; args: LIST [READABLE_STRING_GENERAL]; dir: READABLE_STRING_GENERAL)
 			-- Start process using command `cmd' and arguments `args'
 			-- in the working directory `dir'
 		require
@@ -243,8 +243,9 @@ feature -- Splash
 			is_environment_valid: is_environment_valid
 		local
 			s: STRING_32
-			fn: FILE_NAME
+			fn: PATH
 			retried: BOOLEAN
+			l_u: FILE_UTILITIES
 		do
 			debug ("LAUNCHER")
 				print (generator + ".display_splasher %N")
@@ -254,15 +255,14 @@ feature -- Splash
 				create s.make_empty
 				splasher := new_splasher (s)
 
-				create fn.make_from_string (eiffel_layout.bitmaps_path_8)
-				fn.extend ("png")
+				fn := eiffel_layout.bitmaps_path.extended ("png")
 				if {PLATFORM}.is_windows then
-					fn.set_file_name ("splash_shadow.png")
+					fn := fn.extended ("splash_shadow.png")
 				else
-					fn.set_file_name ("splash.png")
+					fn := fn.extended ("splash.png")
 				end
 
-				if file_exists (fn) then
+				if l_u.file_path_exists (fn) then
 					splasher.set_splash_pixmap_filename (fn)
 				end
 
@@ -303,7 +303,7 @@ feature -- Properties
 	is_verbose: BOOLEAN
 			-- Display details ?
 
-	argument_variables: HASH_TABLE [STRING, STRING]
+	argument_variables: HASH_TABLE [READABLE_STRING_GENERAL, READABLE_STRING_GENERAL]
 
 feature {NONE} -- Command sender
 
@@ -314,7 +314,7 @@ feature {NONE} -- Command sender
 			command_sender_not_void: command_sender /= Void
 		do
 			last_command_handled := False
-			if attached {STRING} direct_action as lt_action then
+			if attached direct_action as lt_action then
 				command_sender.send_command (lt_action, {COMMAND_PROTOCOL_NAMES}.eiffel_studio_key)
 				last_command_handled := command_sender.last_command_handled
 			end
@@ -331,7 +331,7 @@ feature {NONE} -- Command sender
 				print ("Launched process ID: " + last_launched_ec_pid.out + "%N")
 			end
 				-- We send `ec_action' rather than `direct_action' trying to conduct the explicit target of ES.
-			if attached {STRING} ec_action as lt_action and then last_launched_ec_pid > 0 then
+			if attached ec_action as lt_action and then last_launched_ec_pid > 0 then
 				command_sender.send_command_process (lt_action, {COMMAND_PROTOCOL_NAMES}.eiffel_studio_key, last_launched_ec_pid)
 				command_sent_trial := command_sent_trial + 1
 				last_command_handled := command_sender.last_command_handled
@@ -365,10 +365,10 @@ feature {NONE} -- Command sender
 	is_ec_action: BOOLEAN
 			-- Is "/ec_action" specified?
 
-	ec_action: STRING
+	ec_action: STRING_32
 			-- Command with condition, for the openning ec.
 
-	direct_action: STRING
+	direct_action: STRING_32
 			-- Command without condition, for broadcasting.
 
 	command_sent_trial: INTEGER
@@ -379,7 +379,7 @@ feature {NONE} -- Command sender
 
 	send_command_interval: INTEGER = 3_000
 
-	ec_action_string: STRING = "ECACTION"
+	ec_action_string: STRING_32 = "ECACTION"
 
 	command_send_timeout: EV_TIMEOUT
 
@@ -403,18 +403,18 @@ feature -- Environment
 			cmdline_arguments_count := cmdline_arguments.argument_count
 		end
 
-	cmdline_argument (i: INTEGER): STRING
+	cmdline_argument (i: INTEGER): STRING_32
 		require
 			cmdline_arguments /= Void
 		do
 			Result := cmdline_arguments.argument (i + cmdline_arguments_offset)
 		end
 
-	ec_arguments: LIST [STRING]
+	ec_arguments: LIST [STRING_32]
 
 	get_parameters
 		local
-			s: STRING
+			s: STRING_32
 		do
 			get_cmdline_arguments
 			create argument_variables.make (3)
@@ -447,7 +447,7 @@ feature -- Environment
 						cmdline_remove_head (1)
 						if cmdline_arguments_count > 0 then
 							argument_variables.put (cmdline_argument (1), ec_action_string)
-							if attached {STRING} cmdline_argument (1) as lt_string then
+							if attached cmdline_argument (1) as lt_string then
 								ec_action_parser.parse (lt_string)
 								ec_action := ec_action_parser.last_command
 								direct_action := ec_action_parser.last_direct_command
@@ -466,11 +466,11 @@ feature -- Environment
 			is_environment_valid: is_environment_valid
 		local
 			i: INTEGER
-			l_single_arg: STRING
+			l_single_arg: STRING_32
 		do
 				--| Compute command line, args, and working directory
-			create {ARRAYED_LIST [STRING]} ec_arguments.make (cmdline_arguments_count + 1)
-			ec_arguments.extend ("-gui")
+			create {ARRAYED_LIST [STRING_32]} ec_arguments.make (cmdline_arguments_count + 1)
+			ec_arguments.extend ({STRING_32} "-gui")
 
 			if cmdline_arguments_count > 0 then
 					--| And now we get the parameters for EiffelStudio
@@ -481,7 +481,7 @@ feature -- Environment
 						-- Add the required -config argument, we assume that
 						-- argument is the config file. This is for compatibility reason
 						-- with the old version of estudio.
-					ec_arguments.extend ("-config")
+					ec_arguments.extend ({STRING_32} "-config")
 				end
 				from
 					i := 1
@@ -491,18 +491,6 @@ feature -- Environment
 					ec_arguments.extend (cmdline_argument (i))
 					i := i + 1
 				end
-			end
-		end
-
-	get_environment_value (v: STRING; dft: STRING): STRING
-		do
-			if argument_variables.has (v) then
-				Result := argument_variables.item (v)
-			else
-				Result := Execution_environment.get (v)
-			end
-			if Result = Void then
-				Result := dft
 			end
 		end
 
@@ -563,16 +551,6 @@ feature {NONE} -- Implementations
 	ec_action_parser: EC_ACTION_PARSER
 		once
 			create Result
-		end
-
-feature {NONE} -- File system helpers
-
-	file_exists (fn: STRING): BOOLEAN
-		local
-			f: RAW_FILE
-		do
-			create f.make (fn)
-			Result := f.exists
 		end
 
 note

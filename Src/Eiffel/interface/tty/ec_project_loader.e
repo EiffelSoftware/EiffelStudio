@@ -43,7 +43,7 @@ feature {NONE} -- Settings
 			l_prc_factory: PROCESS_FACTORY
 			l_prc_launcher: PROCESS
 			l_cmd_line: STRING_32
-			l_exec: EXECUTION_ENVIRONMENT_32
+			l_exec: EXECUTION_ENVIRONMENT
 		do
 			if {PLATFORM}.is_thread_capable then
 				create l_prc_factory

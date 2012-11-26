@@ -133,7 +133,7 @@ feature -- Queries
 					l_var_key := custom.key_for_iteration
 					l_var_val := l_vars.item (l_var_key)
 					if l_var_val = Void then
-						l_var_val := execution_environment.get (l_var_key)
+						l_var_val := execution_environment.item (l_var_key)
 					end
 					from
 						l_values.start

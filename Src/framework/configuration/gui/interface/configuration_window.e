@@ -1051,7 +1051,7 @@ feature {NONE} -- Implementation
 			-- Open editor to edit the configuration file by hand.
 		local
 			l_cmd_string: like external_editor_command.item
-			l_env: EXECUTION_ENVIRONMENT_32
+			l_env: EXECUTION_ENVIRONMENT
 		do
 			l_cmd_string := external_editor_command.item ([conf_system.file_name, 1])
 			if l_cmd_string /= Void and then not l_cmd_string.is_empty then

@@ -9,7 +9,7 @@ class
 	ENVIRONMENT_ACCESS
 
 inherit
-	EXECUTION_ENVIRONMENT_32
+	EXECUTION_ENVIRONMENT
 
 feature -- Access
 
@@ -23,7 +23,7 @@ feature -- Access
 			l_key: detachable WEL_REGISTRY_KEY_VALUE
 			l_eiffel: STRING
 		do
-			Result := get (a_var)
+			Result := item (a_var)
 			if Result = Void then
 				l_eiffel := "\Software\ISE\Eiffel" + {EIFFEL_CONSTANTS}.major_version.out + {EIFFEL_CONSTANTS}.minor_version.out
 				create l_reg

@@ -6,17 +6,27 @@ note
 class
 	EXECUTION_ENVIRONMENT_32
 
+obsolete "Use the non obsolete features from {EXECUTION_ENVIRONMENT} [2012-Nov]"
+
 inherit
 	EXECUTION_ENVIRONMENT
 		rename
 			current_working_directory as current_working_directory_8,
 			get as get_8,
-			item as get,
 			home_directory_name as home_directory_name_8,
 			user_directory_name as user_directory_name_8
 		end
 
 feature -- Access
+
+	get (s: READABLE_STRING_GENERAL): detachable STRING_32
+			-- Value of `s' if it is an environment variable and has been set;
+			-- void otherwise.
+		obsolete
+			"Use `item' instead to retrieve Unicode environment variables."
+		do
+			Result := item (s)
+		end
 
 	current_working_directory: STRING_32
 			-- Directory of current execution

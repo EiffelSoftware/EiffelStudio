@@ -5,6 +5,8 @@
 
 class DIRECTORY_NAME_32
 
+obsolete "Use PATH instead [2012-Nov]"	
+
 inherit
 	PATH_NAME_32
 

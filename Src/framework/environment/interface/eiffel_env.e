@@ -2360,36 +2360,6 @@ feature -- Files
 			end
 		end
 
-feature -- Files (user)
-
-	user_docking_file_name_8 (a_file_name: STRING): FILE_NAME
-		do
-			check attached user_docking_file_name (a_file_name) as v then
-				create Result.make_from_string (v.string_representation_8)
-			end
-		end
-
-	user_docking_standard_file_name_8 (a_window_id: NATURAL_32): FILE_NAME
-		do
-			check attached user_docking_standard_file_name (a_window_id) as v then
-				create Result.make_from_string (v.string_representation_8)
-			end
-		end
-
-	user_docking_debug_file_name_8 (a_window_id: NATURAL_32): FILE_NAME
-		do
-			check attached user_docking_debug_file_name (a_window_id) as v then
-				create Result.make_from_string (v.string_representation_8)
-			end
-		end
-
-	user_external_command_file_name_8 (a_file_name: STRING): FILE_NAME
-		do
-			check attached user_external_command_file_name (a_file_name) as v then
-				create Result.make_from_string (v.string_representation_8)
-			end
-		end
-
 feature -- Directories (platform independent)
 
 	shared_path_8: DIRECTORY_NAME

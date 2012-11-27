@@ -11,26 +11,26 @@ class
 
 feature -- Access
 
-	freezing_storage: EB_PROCESS_IO_STORAGE
+	freezing_storage: separate EB_PROCESS_IO_STORAGE
 			-- Storage for IO redirection from launched c compiler in freezing period
 		once ("PROCESS")
 			create Result.make
 		end
 
-	finalizing_storage: EB_PROCESS_IO_STORAGE
+	finalizing_storage: separate EB_PROCESS_IO_STORAGE
 			-- Storeage for IO redirection from launched c compiler in finalizing period
 		once ("PROCESS")
 			create Result.make
 		end
 
-	external_storage: EB_PROCESS_IO_STORAGE
+	external_storage: separate EB_PROCESS_IO_STORAGE
 			-- Storage for IO redirection from launched external process
 		once ("PROCESS")
 			create Result.make
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

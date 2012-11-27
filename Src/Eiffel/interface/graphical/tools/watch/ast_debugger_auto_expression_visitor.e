@@ -716,7 +716,7 @@ feature -- Conversion
 						i_text: STRING]
 
 			-- A null TextSpan
-		once ("PROCESS")
+		once
 			Result := [0,0,0,0, Void]
 		ensure
 			result_set: Result.i_start_line = 0 and Result.i_start_index = 0 and
@@ -750,7 +750,7 @@ feature {NONE} -- Implementation
 	leaf_as_list: LEAF_AS_LIST;
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

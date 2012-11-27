@@ -1,5 +1,5 @@
 note
-	description: "A low-level string class to convert Eiffel strings to Win32 unicode strings."
+	description: "A low-level string class to convert Eiffel strings to UTF-16 Unicode strings used by the Windows API."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -214,8 +214,7 @@ feature -- Access
 		end
 
 	read_string_into (a_string: STRING_GENERAL)
-			-- Copy of substring containing all characters at indices
-			-- between `start_pos' and `end_pos' into `a_string' replacing any
+			-- Copy of all characters of Current `a_string' replacing any
 			-- existing characters.
 		require
 			a_string_not_void: a_string /= Void
@@ -387,7 +386,7 @@ feature -- Element change
 			u: UTF_CONVERTER
 		do
 				-- Convert substring to UTF-16 with a terminating zero.
-			u.utf_32_substring_to_utf_16_0_pointer (a_string, start_pos, end_pos, managed_data)
+			u.utf_32_substring_into_utf_16_0_pointer (a_string, start_pos, end_pos, managed_data)
 			count := end_pos - start_pos + 1
 		end
 

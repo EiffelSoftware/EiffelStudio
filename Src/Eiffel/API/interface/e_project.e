@@ -45,10 +45,10 @@ feature -- Initialization
 			is_writable: a_project_location.is_path_writable
 			prev_read_write_error: not read_write_error
 		local
-			l_prev_work: STRING
+			l_prev_work: PATH
 		do
 			project_directory := a_project_location
-			l_prev_work := Execution_environment.current_working_directory
+			l_prev_work := Execution_environment.current_working_path
  			Execution_environment.change_working_directory (a_project_location.path)
 			retrieve
 			if not error_occurred then
@@ -56,7 +56,7 @@ feature -- Initialization
 				manager.on_project_create
 				manager.on_project_loaded
 			end
-			Execution_environment.change_working_directory (l_prev_work)
+			Execution_environment.change_working_path (l_prev_work)
 		ensure
   			initialized_if_no_error: not error_occurred implies initialized
 		end

@@ -691,7 +691,7 @@ feature {NONE} -- Commands
 						-- ***** FIXME *****
 
 				create file.make_with_path (filename)
-				create table_name.make_from_string (filename.string_representation + "." + Table_extension)
+				create table_name.make_from_string (filename.name + "." + Table_extension)
 				create table_file.make_with_path (table_name)
 
 					-- Both files should exist. Existence of TRANSLAT

@@ -149,7 +149,7 @@ feature -- Element change
 			create l_text.make (a_text)
 			internal_text := l_text
 			cwel_hd_item_set_psz_text (item, l_text.item)
-			cwel_hd_item_set_cch_text_max (item, l_text.length)
+			cwel_hd_item_set_cch_text_max (item, l_text.count)
 			set_mask (set_flag (mask, {WEL_HDI_CONSTANTS}.Hdi_text))
 			internal_add_format (hdf_string)
 			set_format (clear_flag (format, hdf_bitmap))
@@ -356,7 +356,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

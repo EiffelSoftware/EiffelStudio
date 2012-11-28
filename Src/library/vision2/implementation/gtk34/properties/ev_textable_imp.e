@@ -101,8 +101,7 @@ feature -- Element change
 				{GTK}.gtk_label_set_text (text_label, a_cs.item)
 			end
 				-- Hide label if there is no text to display so it doesn't interfere with sizing calculations as happens to be the case with pixmap only buttons.
-				-- A `string_length' of 1 means just the null character is available after the conversion.
-			if a_cs.string_length = 1 then
+			if a_cs.string_length = 0 then
 				{GTK}.gtk_widget_hide (text_label)
 			else
 				{GTK}.gtk_widget_show (text_label)

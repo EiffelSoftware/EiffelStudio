@@ -5,8 +5,7 @@ TMP_OP=$1
 if [ "$TMP_OP" = "update_all" ]; then
   git stash
   git svn rebase
-  git submodule update
-  git submodule foreach git pull
+  git pull -X subtree=library/base/elks _elks master
   git stash apply
   git stash clear
   exit
@@ -40,7 +39,7 @@ if [ "$TMP_OP" = "commit" ]; then
 fi
 echo Usage:
 echo  - update: stash handle and svn rebase, and apply recorded stash
-echo  - update_all: same as 'update', but also update submodules
+echo  - update_all: same as 'update', but also update subtrees
 echo  - commit: stash, svn dcommit, and apply recorded stash
 
 exit 1

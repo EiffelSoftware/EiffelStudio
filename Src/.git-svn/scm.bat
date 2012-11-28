@@ -49,7 +49,7 @@ echo Stash
 echo Rebase
 @call git svn rebase
 echo Update subtrees
-git pull -s subtree _elks master
+git pull -X subtree=library/base/elks _elks master
 echo Apply Stash
 @call git stash apply
 echo Clear Stash
@@ -81,7 +81,7 @@ goto END
 :HELP
 echo Usage:
 echo  - update: stash handle and svn rebase, and apply recorded stash
-echo  - update_all: same as 'update', but also update submodules
+echo  - update_all: same as 'update', but also update subtrees
 echo  - commit: stash, svn dcommit, and apply recorded stash
 goto END
 

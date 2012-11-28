@@ -7,6 +7,9 @@ note
 class
 	DUMP_VALUE_FACTORY
 
+inherit
+	REFACTORING_HELPER
+
 create
 	make
 
@@ -260,9 +263,13 @@ feature -- Access
 
 	new_manifest_string_32_value  (value: STRING; dtype: CLASS_C): DUMP_VALUE
 			-- make a string item initialized to `value'
+			-- FIXME: this should use STRING_32 !!!
 		require
 			value_attached: value /= Void
 		do
+			debug ("refactor_fixme")
+				fixme (generator + "new_manifest_string_32_value: should be using STRING_32")
+			end
 			create Result.make_empty (debugger_manager)
 			Result.set_manifest_string_32_value (value, dtype)
 			init_value (Result)
@@ -331,7 +338,7 @@ invariant
 	debugger_manager_not_void: debugger_manager /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

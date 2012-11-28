@@ -144,6 +144,9 @@ feature -- Remote Invocation: Object Storage
 			else
 				params.extend (dv_fact.new_object_value (a_addr, Void))
 			end
+			debug ("refactor_fixme")
+				fixme (generator + ".loaded_object: unicode, this should use new_manifest_string_32_value and STRING_32 class")
+			end
 			params.extend (dv_fact.new_manifest_string_value (fn, compiler_data.string_8_class_c))
 
 			Result := query_evaluation_on ("object_loaded_from", params)

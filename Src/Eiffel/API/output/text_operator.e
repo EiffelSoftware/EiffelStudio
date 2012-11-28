@@ -43,7 +43,7 @@ feature -- Operation
 		deferred
 		end
 
-	add_manifest_string (s: STRING_GENERAL)
+	add_manifest_string (s: READABLE_STRING_GENERAL)
 			-- Put `s' at current position as a manifest string.
 			-- Break `s' up in multiple tokens, if a link is
 			-- present.
@@ -54,7 +54,7 @@ feature -- Operation
 			add_string (s)
 		end
 
-	add_multiline_string (a_s: STRING_GENERAL; indent: INTEGER)
+	add_multiline_string (a_s: READABLE_STRING_GENERAL; indent: INTEGER)
 			-- Put string `s' at current position.
 			-- Break `s' up in multiple lines, if it has new line character(s).
 			-- Indent each line `indent' times in the latter case.
@@ -96,7 +96,7 @@ feature -- Operation
 			end
 		end
 
-	add_indexing_string (s: STRING_GENERAL)
+	add_indexing_string (s: READABLE_STRING_GENERAL)
 			-- Put string `s' at current position.
 			-- Break `s' up in multiple processings, see `separate_string'.
 		require
@@ -120,14 +120,14 @@ feature -- Operation
 		deferred
 		end
 
-	add_local (s: STRING_GENERAL)
+	add_local (s: READABLE_STRING_GENERAL)
 			-- Put `s' at current position as local symbol.
 		require
 			s_not_void: s /= Void
 		deferred
 		end
 
-	add_group (e_cluster: CONF_GROUP; str: STRING_GENERAL)
+	add_group (e_cluster: CONF_GROUP; str: READABLE_STRING_GENERAL)
 			-- Put `e_cluster' with strring representation
 			-- `str' at current position.
 		require
@@ -149,7 +149,7 @@ feature -- Operation
 		deferred
 		end
 
-	add_classi (class_i: CLASS_I; str: STRING_GENERAL)
+	add_classi (class_i: CLASS_I; str: READABLE_STRING_GENERAL)
 			-- Put `class_i' with string representation
 			-- `str' at current position.
 		require
@@ -164,7 +164,7 @@ feature -- Operation
 		deferred
 		end
 
-	add_error (error: ERROR; str: STRING_GENERAL)
+	add_error (error: ERROR; str: READABLE_STRING_GENERAL)
 			-- Put `error' with string representation
 			-- `str' at current position.
 		require
@@ -173,7 +173,7 @@ feature -- Operation
 		deferred
 		end
 
-	add_feature (feat: E_FEATURE; str: STRING_GENERAL)
+	add_feature (feat: E_FEATURE; str: READABLE_STRING_GENERAL)
 			-- Put feature `feat' with string
 			-- representation `str' at current position.
 		require
@@ -188,7 +188,7 @@ feature -- Operation
 		deferred
 		end
 
-	add_feature_name (f_name: STRING_GENERAL; e_class: CLASS_C)
+	add_feature_name (f_name: READABLE_STRING_GENERAL; e_class: CLASS_C)
 			-- Put feature name `f_name' defined in `e_class'.
 		require
 			f_name_not_void: f_name /= Void
@@ -203,21 +203,21 @@ feature -- Operation
 		deferred
 		end
 
-	add_quoted_text (s: STRING_GENERAL)
+	add_quoted_text (s: READABLE_STRING_GENERAL)
 			-- Put `s' at current position.
 		require
 			s_not_void: s /= Void
 		deferred
 		end
 
-	add_comment (s: STRING_GENERAL)
+	add_comment (s: READABLE_STRING_GENERAL)
 			-- Add simple comment `s'.
 		require
 			s_not_void: s /= Void
 		deferred
 		end
 
-	add_comment_text (s: STRING_GENERAL)
+	add_comment_text (s: READABLE_STRING_GENERAL)
 			-- Put `s' at current position.
 			-- Break `s' up in multiple processings, if a link is
 			-- present.
@@ -228,7 +228,7 @@ feature -- Operation
 			separate_string (s, True)
 		end
 
-	add_address (address: STRING_GENERAL; a_name: STRING_GENERAL; e_class: CLASS_C)
+	add_address (address: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL; e_class: CLASS_C)
 			-- Put `address' for `e_class'.
 		require
 			valid_address: address /= Void
@@ -245,7 +245,7 @@ feature -- Operation
 		deferred
 		end
 
-	add_class_syntax (syn: ERROR; e_class: CLASS_C; str: STRING_GENERAL)
+	add_class_syntax (syn: ERROR; e_class: CLASS_C; str: READABLE_STRING_GENERAL)
 			-- Put `syn' for `e_class'.
 		require
 			valid_syn: syn /= Void
@@ -260,7 +260,7 @@ feature -- Operation
 		deferred
 		end
 
-	add_feature_error (feat: E_FEATURE; str: STRING_GENERAL; a_line: INTEGER)
+	add_feature_error (feat: E_FEATURE; str: READABLE_STRING_GENERAL; a_line: INTEGER)
 			-- Put `address' for `e_class'.
 		require
 			valid_str: str /= Void
@@ -270,19 +270,19 @@ feature -- Operation
 
 feature -- Status report
 
-	has_new_line (a_s: STRING_GENERAL): BOOLEAN
+	has_new_line (a_s: READABLE_STRING_GENERAL): BOOLEAN
 		do
 			Result := a_s.as_string_32.has ('%N')
 		end
 
 feature {NONE} -- Implementation
 
-	separate_string (s: STRING_GENERAL; for_comment: BOOLEAN)
+	separate_string (s: READABLE_STRING_GENERAL; for_comment: BOOLEAN)
 			-- Separate `s' into parts and add them to `Current'.
 		deferred
 		end
 
-	process_character_text (text: STRING_GENERAL)
+	process_character_text (text: READABLE_STRING_GENERAL)
 			-- Add a char.
 		require
 			text_not_void: text /= Void

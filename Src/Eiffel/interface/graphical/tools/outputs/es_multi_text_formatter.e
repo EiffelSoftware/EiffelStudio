@@ -241,7 +241,7 @@ feature -- Process
 			end
 		end
 
-	process_character_text (a_text: STRING_GENERAL)
+	process_character_text (a_text: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -256,7 +256,7 @@ feature -- Process
 			end
 		end
 
-	process_generic_text (a_text: STRING_GENERAL)
+	process_generic_text (a_text: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -271,7 +271,7 @@ feature -- Process
 			end
 		end
 
-	process_indexing_tag_text (a_text: STRING_GENERAL)
+	process_indexing_tag_text (a_text: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -286,7 +286,7 @@ feature -- Process
 			end
 		end
 
-	process_local_text (a_text: STRING_GENERAL)
+	process_local_text (a_text: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -301,7 +301,7 @@ feature -- Process
 			end
 		end
 
-	process_number_text (a_text: STRING_GENERAL)
+	process_number_text (a_text: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -316,7 +316,7 @@ feature -- Process
 			end
 		end
 
-	process_quoted_text (a_text: STRING_GENERAL)
+	process_quoted_text (a_text: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -331,7 +331,7 @@ feature -- Process
 			end
 		end
 
-	process_assertion_tag_text (a_text: STRING_GENERAL)
+	process_assertion_tag_text (a_text: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -346,7 +346,7 @@ feature -- Process
 			end
 		end
 
-	process_string_text (a_text: STRING_GENERAL; a_link: STRING_GENERAL)
+	process_string_text (a_text: READABLE_STRING_GENERAL; a_link: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -361,7 +361,7 @@ feature -- Process
 			end
 		end
 
-	process_reserved_word_text (a_text: STRING_GENERAL)
+	process_reserved_word_text (a_text: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -376,7 +376,7 @@ feature -- Process
 			end
 		end
 
-	process_comment_text (a_text: STRING_GENERAL; a_url: STRING_GENERAL)
+	process_comment_text (a_text: READABLE_STRING_GENERAL; a_url: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -391,7 +391,7 @@ feature -- Process
 			end
 		end
 
-	process_difference_text_item (a_text: STRING_GENERAL)
+	process_difference_text_item (a_text: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -406,7 +406,7 @@ feature -- Process
 			end
 		end
 
-	process_class_name_text (a_text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN)
+	process_class_name_text (a_text: READABLE_STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -421,7 +421,7 @@ feature -- Process
 			end
 		end
 
-	process_cluster_name_text (a_text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
+	process_cluster_name_text (a_text: READABLE_STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -436,7 +436,7 @@ feature -- Process
 			end
 		end
 
-	process_target_name_text (a_text: STRING_GENERAL; a_target: CONF_TARGET)
+	process_target_name_text (a_text: READABLE_STRING_GENERAL; a_target: CONF_TARGET)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -451,7 +451,7 @@ feature -- Process
 			end
 		end
 
-	process_feature_name_text (a_text: STRING_GENERAL; a_class: CLASS_C)
+	process_feature_name_text (a_text: READABLE_STRING_GENERAL; a_class: CLASS_C)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -466,7 +466,7 @@ feature -- Process
 			end
 		end
 
-	process_feature_error (a_text: STRING_GENERAL; a_feature: E_FEATURE; a_line: INTEGER)
+	process_feature_error (a_text: READABLE_STRING_GENERAL; a_feature: E_FEATURE; a_line: INTEGER)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -481,7 +481,7 @@ feature -- Process
 			end
 		end
 
-	process_feature_text (a_text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN)
+	process_feature_text (a_text: READABLE_STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -597,7 +597,7 @@ feature -- Process
 			end
 		end
 
-	process_filter_item (a_text: STRING_GENERAL; a_is_before: BOOLEAN)
+	process_filter_item (a_text: READABLE_STRING_GENERAL; a_is_before: BOOLEAN)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -612,7 +612,7 @@ feature -- Process
 			end
 		end
 
-	process_tooltip_item (a_tooltip: STRING_GENERAL; a_is_before: BOOLEAN)
+	process_tooltip_item (a_tooltip: READABLE_STRING_GENERAL; a_is_before: BOOLEAN)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -627,7 +627,7 @@ feature -- Process
 			end
 		end
 
-	process_feature_dec_item (a_feature_name: STRING_GENERAL; a_is_before: BOOLEAN)
+	process_feature_dec_item (a_feature_name: READABLE_STRING_GENERAL; a_is_before: BOOLEAN)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -642,7 +642,7 @@ feature -- Process
 			end
 		end
 
-	process_symbol_text (a_text: STRING_GENERAL)
+	process_symbol_text (a_text: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -657,7 +657,7 @@ feature -- Process
 			end
 		end
 
-	process_keyword_text (a_text: STRING_GENERAL; a_feature: E_FEATURE)
+	process_keyword_text (a_text: READABLE_STRING_GENERAL; a_feature: E_FEATURE)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -672,7 +672,7 @@ feature -- Process
 			end
 		end
 
-	process_operator_text (a_text: STRING_GENERAL; a_feature: E_FEATURE)
+	process_operator_text (a_text: READABLE_STRING_GENERAL; a_feature: E_FEATURE)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -687,7 +687,7 @@ feature -- Process
 			end
 		end
 
-	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C)
+	process_address_text (a_address, a_name: READABLE_STRING_GENERAL; a_class: CLASS_C)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -702,7 +702,7 @@ feature -- Process
 			end
 		end
 
-	process_error_text (a_text: STRING_GENERAL; a_error: ERROR)
+	process_error_text (a_text: READABLE_STRING_GENERAL; a_error: ERROR)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -717,7 +717,7 @@ feature -- Process
 			end
 		end
 
-	process_cl_syntax (a_text: STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C)
+	process_cl_syntax (a_text: READABLE_STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -762,7 +762,7 @@ feature -- Process
 			end
 		end
 
-	process_menu_text (a_text, a_link: STRING_GENERAL)
+	process_menu_text (a_text, a_link: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -777,7 +777,7 @@ feature -- Process
 			end
 		end
 
-	process_class_menu_text (a_text, a_link: STRING_GENERAL)
+	process_class_menu_text (a_text, a_link: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters

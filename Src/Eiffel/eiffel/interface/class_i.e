@@ -341,7 +341,7 @@ feature -- Access
 	file_date: INTEGER
 			-- Date of last modification date of Current.
 		do
-			Result := file_modified_date (file_name.string_representation)
+			Result := file_modified_date (file_name.name)
 		ensure
 			file_date_valid: Result >= -1
 		end

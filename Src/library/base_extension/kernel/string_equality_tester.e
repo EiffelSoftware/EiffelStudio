@@ -14,13 +14,10 @@ inherit
 			test
 		end
 
-feature
-
 feature -- Status report
 
 	test (v, u: detachable READABLE_STRING_GENERAL): BOOLEAN
 			-- Are `v' and `u' considered equal?
-			-- (Use '~' by default.)
 		do
 			if v = u then
 				Result := True

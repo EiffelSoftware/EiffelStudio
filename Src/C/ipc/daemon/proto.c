@@ -67,6 +67,7 @@
 #include <stdlib.h>
 #include "rt_dir.h"
 #include "rt_assert.h"
+#include "rt_native_string.h" /* Macro to manipulate EIF_NATIVE_CHAR * */
 
 
 #ifdef EIF_VMS

@@ -12,8 +12,11 @@ test_description A system whose Ace specifies `profile (yes)' is melted.  When t
 define_file	PROFINFO_NAME $EXEC_WORK profinfo
 copy_sub 	Ace $TEST Ace
 copy_sub 	test.e $CLUSTER test.e
-compile_melted
+compile_frozen
 compile_result 	ok
+
+c_compile_work
+c_compile_result ok
 
 execute_work 	NONE 	exec_output1 0
 execute_result 	ok

@@ -101,8 +101,7 @@ feature -- Element change
 				{GTK}.gtk_label_set_text (text_label, a_cs.item)
 			end
 				-- Hide label if there is no text to display so it doesn't interfere with sizing calculations as happens to be the case with pixmap only buttons.
-				-- A `string_length' of 1 means just the null character is available after the conversion.
-			if a_cs.string_length = 1 then
+			if a_cs.string_length = 0 then
 				{GTK}.gtk_widget_hide (text_label)
 			else
 				{GTK}.gtk_widget_show (text_label)
@@ -177,14 +176,14 @@ invariant
 	text_label_not_void: is_usable implies text_label /= default_pointer
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_TEXTABLE_IMP

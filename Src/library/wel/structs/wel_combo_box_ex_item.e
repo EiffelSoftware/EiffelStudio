@@ -145,7 +145,7 @@ feature -- Element change
 			set_mask (set_flag (mask, Cbeif_text))
 			create l_text.make (txt)
 			str_text := l_text
-			cwel_comboboxex_item_set_cchtextmax (item, l_text.length)
+			cwel_comboboxex_item_set_cchtextmax (item, l_text.count)
 			cwel_comboboxex_item_set_psztext (item, l_text.item)
 		ensure
 			text_set: text.same_string_general (txt)
@@ -336,7 +336,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

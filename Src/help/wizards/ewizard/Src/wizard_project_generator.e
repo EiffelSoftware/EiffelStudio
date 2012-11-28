@@ -28,31 +28,27 @@ feature -- Basic Operations
 			class_name: STRING
 			i: INTEGER
 			next_state: STRING
-			project_location: FILE_NAME_32
-			src_location: FILE_NAME_32
-			pixmap_location: FILE_NAME_32
-			rsc_location: FILE_NAME_32
-			project_name: STRING
+			project_location: PATH
+			pixmap_location: PATH
+			rsc_location: PATH
+			project_name: like {BENCH_WIZARD_INFORMATION}.project_name
 			l_uuid: UUID_GENERATOR
 		do
 				-- Cached variables.
-			create project_location.make_from_string (wizard_information.project_location)
+			project_location := wizard_information.project_location
 			project_name := wizard_information.project_name
 
-			create dir.make (project_location)
+			create dir.make_with_path (project_location)
 			if dir.exists then
 				dir.delete_content
 			else
 				dir.create_dir
 			end
-			create pixmap_location.make_from_string (project_location)
-			pixmap_location.extend ("pixmaps")
-			create dir.make (pixmap_location)
+			pixmap_location := project_location.extended ("pixmaps")
+			create dir.make_with_path (pixmap_location)
 			dir.create_dir
-			create src_location.make_from_string (project_location)
-			create rsc_location.make_from_string (project_location)
-			rsc_location.extend ("resources")
-			create dir.make (rsc_location)
+			rsc_location := project_location.extended ("resources")
+			create dir.make_with_path (rsc_location)
 			dir.create_dir
 
 			create l.make
@@ -69,7 +65,7 @@ feature -- Basic Operations
 			l_tuple.put ("${FL_UUID}", 1)
 			l_tuple.put (l_uuid.generate_uuid.out, 2)
 			l.extend (l_tuple)
-			from_template_to_project (wizard_resources_path_32, "template_config.ecf", project_location, project_name.as_lower + ".ecf", l)
+			from_template_to_project (wizard_resources_path, "template_config.ecf", project_location, project_name.as_lower + ".ecf", l)
 
 			from
 				i := 1
@@ -113,7 +109,7 @@ feature -- Basic Operations
 				l_tuple.put (next_state, 2)
 				l.extend (l_tuple)
 
-				from_template_to_project (wizard_resources_path_32, "template_wizard_state.e", src_location, class_name + ".e", l)
+				from_template_to_project (wizard_resources_path, "template_wizard_state.e", project_location, class_name + ".e", l)
 			end
 
 			create l_tuple
@@ -121,15 +117,15 @@ feature -- Basic Operations
 			l_tuple.put (project_name, 2)
 			create l.make
 			l.extend (l_tuple)
-			from_template_to_project (wizard_resources_path_32, "template_wizard_initial_state.e", src_location, "wizard_initial_state.e", l)
-			from_template_to_project (wizard_resources_path_32, "template_wizard_final_state.e",   src_location, "wizard_final_state.e", l)
-			from_template_to_project (wizard_resources_path_32, "application_factory.e",   src_location, "application_factory.e", l)
-			from_template_to_project (wizard_resources_path_32, "application.e",   src_location, "application.e", l)
+			from_template_to_project (wizard_resources_path, "template_wizard_initial_state.e", project_location, "wizard_initial_state.e", l)
+			from_template_to_project (wizard_resources_path, "template_wizard_final_state.e",   project_location, "wizard_final_state.e", l)
+			from_template_to_project (wizard_resources_path, "application_factory.e",   project_location, "application_factory.e", l)
+			from_template_to_project (wizard_resources_path, "application.e",   project_location, "application.e", l)
 
-			copy_file ("wizard_information", 	"e",   src_location)
-			copy_file ("wizard_project_shared",	"e",   src_location)
-			copy_file ("eiffel_wizard_icon", 	pixmap_extension, pixmap_location)
-			copy_file ("eiffel_wizard", 		pixmap_extension, pixmap_location)
+			copy_file ("wizard_information.e",   project_location)
+			copy_file ("wizard_project_shared.e",   project_location)
+			copy_file ("eiffel_wizard_icon" + pixmap_extension, pixmap_location)
+			copy_file ("eiffel_wizard" + pixmap_extension, pixmap_location)
 		end
 
 feature {NONE} -- Access
@@ -184,7 +180,7 @@ feature {NONE} -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -215,4 +211,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class WIZARD_PROJECT_GENERATOR
+end

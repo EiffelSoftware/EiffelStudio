@@ -38,7 +38,7 @@ feature -- Basic Operation
 
 			create project_location.make (Current)
 			project_location.set_label_string_and_size (Bench_interface_names.l_Project_location, 10)
-			project_location.set_textfield_string (wizard_information.project_location.string_representation)
+			project_location.set_textfield_string (wizard_information.project_location.name)
 			project_location.enable_directory_browse_button
 			project_location.generate
 

@@ -45,15 +45,14 @@ feature -- basic Operations
 
 feature {WIZARD_STATE_WINDOW}
 
-	pixmap_icon_location: FILE_NAME
-			-- Icon for the Eiffel Wizard
+	pixmap_icon_location: PATH
+			-- Icon for the Eiffel Wizard.
 		once
-			create Result.make_from_string (Wizard_icon_name)
-			Result.add_extension (pixmap_extension)
+			create Result.make_from_string (Wizard_icon_name + pixmap_extension)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -83,5 +82,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_ERROR_INVALID_DATA
 
+end

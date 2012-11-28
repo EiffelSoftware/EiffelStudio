@@ -160,11 +160,10 @@ feature {NONE} -- Basic Operations
 			main_box_has_at_least_one_element: main_box.count > 0
 		end
 
-	pixmap_location: FILE_NAME_32
-			-- Pixmap location
+	pixmap_location: PATH
+			-- Pixmap location.
 		once
-			create Result.make_from_string ("eiffel_wizard_icon")
-			Result.add_extension (pixmap_extension)
+			create Result.make_from_string ("eiffel_wizard_icon" + pixmap_extension)
 		end
 
 feature {WIZARD_INTERMEDIARY_STATE_WINDOW} -- Implementation
@@ -196,9 +195,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class INTERMEDIARY_STATE_WINDOW
-
-
+end

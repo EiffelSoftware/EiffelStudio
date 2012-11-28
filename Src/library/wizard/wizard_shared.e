@@ -53,18 +53,7 @@ feature -- Access
 			Result_exists: Result /= Void
 		end
 
-	wizard_source: STRING
-			-- Wizard sources.
-		obsolete "Use `wizard_source_path' instead."
-		require
-			not argument (1).is_empty
-		once
-			Result := wizard_source_path.name.as_string_8
-		ensure
-			exists: Result /= Void
-		end
-
-	wizard_source_path: PATH
+	wizard_source: PATH
 			-- Wizard sources.
 		require
 			not argument (1).is_empty
@@ -74,36 +63,22 @@ feature -- Access
 			exists: Result /= Void
 		end
 
-	wizard_pixmaps_path: FILE_NAME
-			-- Bitmaps location.
-		obsolete "Use `wizard_pixmap_path' instead."
-		once
-			create Result.make_from_string (wizard_pixmap_path.name.as_string_8)
-		end
-
-	wizard_pixmap_path: PATH
+	wizard_pixmaps_path: PATH
 			-- Bitmaps location.
 		once
-			Result := wizard_source_path.extended ("pixmaps")
+			Result := wizard_source.extended ("pixmaps")
 		end
 
-	wizard_resources_path: FILE_NAME
-			-- Resource location.
-		obsolete "Use `wizard_resource_path' instead."
-		once
-			create Result.make_from_string (wizard_resource_path.name.as_string_8)
-		end
-
-	wizard_resource_path: PATH
+	wizard_resources_path: PATH
 			-- Resource location.
 		once
-			Result := wizard_source_path.extended ("resources")
+			Result := wizard_source.extended ("resources")
 		end
 
 	pixmap_extension: STRING
 			-- Extension used for pixmaps.
 		once
-			Result := "png"
+			Result := ".png"
 		end
 
 	platform_is_unix: BOOLEAN
@@ -294,8 +269,8 @@ feature {NONE} -- Implementation
 
 invariant
 	memory_for_pixmap_allocated: pixmap /= Void
-	wizard_resource_path_exists: wizard_resource_path /= Void
-	wizard_pixmaps_path_exists: wizard_pixmap_path /= Void
+	wizard_resource_path_exists: wizard_resources_path /= Void
+	wizard_pixmaps_path_exists: wizard_pixmaps_path /= Void
 	history_exists: history /= Void
 
 note

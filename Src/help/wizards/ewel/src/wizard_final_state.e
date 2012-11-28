@@ -42,7 +42,7 @@ feature -- Access
 			title.set_text (interface_names.t_completing_wizard)
 			message.set_text (
 				interface_names.m_you_have_specified_the_following_setting (wizard_information.project_name,
-																	wizard_information.project_location).as_string_32
+						wizard_information.project_location.name)
 				+ "%N%N"
 				+ interface_names.m_click_finish_to (wizard_information.compile_project)
 			)
@@ -54,15 +54,14 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	pixmap_icon_location: FILE_NAME
-			-- Icon for the Eiffel Wel Wizard
+	pixmap_icon_location: PATH
+			-- Icon for the Eiffel Wel Wizard.
 		do
-			create Result.make_from_string ("eiffel_wizard_icon")
-			Result.add_extension (pixmap_extension)
+			create Result.make_from_string ("eiffel_wizard_icon" + pixmap_extension)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -92,4 +91,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_FINAL_STATE
+
+end

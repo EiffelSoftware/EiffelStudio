@@ -26,13 +26,9 @@ create
 feature -- Basic Operations
 
 	proceed_with_current_info
-		local
-			ace_location: FILE_NAME_32
 		do
-			create ace_location.make_from_string (wizard_information.project_location)
-			ace_location.set_file_name (wizard_information.project_name.as_lower)
-			ace_location.add_extension ("ecf")
-			wizard_information.set_ace_location (ace_location)
+			wizard_information.set_ace_location (wizard_information.project_location.extended
+				(wizard_information.project_name.as_lower + ".ecf"))
 
 			project_generator.generate_code
 			write_bench_notification_ok (wizard_information)
@@ -47,22 +43,21 @@ feature {NONE} -- Implementation
 		do
 			title.set_text (Interface_names.t_Final_state)
 			message.set_text (Interface_names.m_Final_state(wizard_information.compile_project,
-					wizard_information.project_name, wizard_information.project_location))
+					wizard_information.project_name, wizard_information.project_location.name))
 		end
 
 	final_message: STRING_32
 		do
 		end
 
-	pixmap_icon_location: FILE_NAME
-			-- Icon for the Eiffel Store Wizard
+	pixmap_icon_location: PATH
+			-- Icon for the Eiffel Store Wizard.
 		once
-			create Result.make_from_string ("eiffel_wizard_icon")
-			Result.add_extension (pixmap_extension)
+			create Result.make_from_string ("eiffel_wizard_icon" + pixmap_extension)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -92,4 +87,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_FINAL_STATE
+
+end

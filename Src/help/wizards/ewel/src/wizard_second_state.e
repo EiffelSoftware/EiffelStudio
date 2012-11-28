@@ -44,10 +44,10 @@ feature -- Basic Operation
 				-- Set the right pixmap depending on `dialog_information' and
 				-- select the right radio button
 			if wizard_information.dialog_application then
-				preview_pixmap.set_with_named_file (Preview_dialog_pixmap)
+				preview_pixmap.set_with_named_path (Preview_dialog_pixmap)
 				dialog_application.enable_select
 			else
-				preview_pixmap.set_with_named_file (Preview_frame_pixmap)
+				preview_pixmap.set_with_named_path (Preview_frame_pixmap)
 				win_application.enable_select
 			end
 			preview_pixmap.set_minimum_size (preview_pixmap.width, preview_pixmap.height)
@@ -69,9 +69,9 @@ feature -- Basic Operation
 			-- Change the pixmap used to preview the application.
 		do
 			if dialog_application.is_selected then
-				preview_pixmap.set_with_named_file (Preview_dialog_pixmap)
+				preview_pixmap.set_with_named_path (Preview_dialog_pixmap)
 			else
-				preview_pixmap.set_with_named_file (Preview_frame_pixmap)
+				preview_pixmap.set_with_named_path (Preview_frame_pixmap)
 			end
 		end
 
@@ -115,20 +115,16 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Preview_dialog_pixmap: FILE_NAME_32
-			-- Filename for the pixmap representing a dialog-based application
+	Preview_dialog_pixmap: PATH
+			-- Filename for the pixmap representing a dialog-based application.
 		once
-			create Result.make_from_string (wizard_pixmaps_path_32)
-			Result.set_file_name ("dialog_application")
-			Result.add_extension (pixmap_extension)
+			Result := wizard_pixmaps_path.extended ("dialog_application" + pixmap_extension)
 		end
 
-	Preview_frame_pixmap: FILE_NAME_32
-			-- Filename for the pixmap representing a frame-based application
+	Preview_frame_pixmap: PATH
+			-- Filename for the pixmap representing a frame-based application.
 		once
-			create Result.make_from_string (wizard_pixmaps_path_32)
-			Result.set_file_name ("frame_application")
-			Result.add_extension (pixmap_extension)
+			Result := wizard_pixmaps_path.extended ("frame_application" + pixmap_extension)
 		end
 
 feature {NONE} -- Vision2 layout
@@ -146,7 +142,7 @@ feature {NONE} -- Vision2 layout
 			-- Pixmap used to preview the application.
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -176,4 +172,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_FIRST_STATE
+
+end

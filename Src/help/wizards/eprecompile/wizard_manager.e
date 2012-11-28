@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 			l_arg: STRING
 			l_locale: like locale
 		do
-			create l_manager.make (eiffel_layout.language_path)
+			create l_manager.make (eiffel_layout.language_path.name)
 			if argument_count >= 2 then
 				l_arg := argument (2)
 				l_locale := l_manager.locale (create {I18N_LOCALE_ID}.make_from_string (l_arg))
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -108,4 +108,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_MANAGER
+
+end

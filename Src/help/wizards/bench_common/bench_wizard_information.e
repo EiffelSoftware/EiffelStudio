@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		do
 			compile_project := True
 			freeze_required := False
-			ace_location := ""
+			create ace_location.make_empty
 
 			from
 				l_count := 1
@@ -90,7 +90,7 @@ feature -- Access
 	project_location: PATH
 			-- Location of the generated code.
 
-	ace_location: STRING_32
+	ace_location: PATH
 			-- Location of the ace file.
 
 	project_name: STRING_32

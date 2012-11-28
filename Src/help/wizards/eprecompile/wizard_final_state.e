@@ -2,8 +2,8 @@ note
 	description	: "Final state for the precompilation wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "David Solal / Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
+	author: "David Solal / Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	date: "$Date$"
 	revision	: "$Revision$"
 
 class
@@ -171,8 +171,8 @@ feature {NONE} -- Implementation
 			new_time_left: INTEGER
 			proj_path, command: STRING_32
 			total_prog: INTEGER
-			progress_file_path: FILE_NAME_32
-			eifgen_path: DIRECTORY_NAME_32
+			progress_file_path: PATH
+			eifgen_path: PATH
 		do
 				-- We need to find the path, the exact name and the full name of the Ace file
 				-- knowing the full name. (Can be fixed .. )
@@ -184,9 +184,8 @@ feature {NONE} -- Implementation
 
 				-- Create the callback file
 			create eifgen_path.make_from_string (proj_path)
-			eifgen_path.extend ("EIFGENs")
-			create progress_file_path.make_from_string (eifgen_path)
-			progress_file_path.set_file_name (Progress_filename)
+			eifgen_path := eifgen_path.extended ("EIFGENs")
+			progress_file_path := eifgen_path.extended (Progress_filename)
 
 				-- Launch the precompilation and update the progress bars.
 			from
@@ -196,14 +195,14 @@ feature {NONE} -- Implementation
 				progress_text_2.set_text (interface_names.l_precompiling_library (lib_name))
 				create command.make (50)
 				command.append_character ('"')
-				command.append (eiffel_layout.ec_command_name_32)
+				command.append (eiffel_layout.ec_command_name.name)
 				command.append ("%" ")
 				command.append (" -precompile -config %"")
 				command.append (lib_ace)
 				command.append ("%" -project_path %"")
 				command.append (proj_path)
 				command.append ("%" -output_file %"")
-				command.append (progress_file_path)
+				command.append (progress_file_path.name)
 				command.append ("%" -c_compile -clean")
 				launch (command)
 			until
@@ -228,11 +227,11 @@ feature {NONE} -- Implementation
 			n_lib_done := n_lib_done + 1
 		end
 
-	find_time (progress_file_path: FILE_NAME_32): INTEGER
+	find_time (progress_file_path: PATH): INTEGER
 			-- Check the progress file to determine the current progress of the precompilation
 			-- The function will check the project file in the directory 'project_path'
 		require
-			progress_file_path_valid: progress_file_path /= Void and then progress_file_path.is_valid
+			progress_file_path_valid: progress_file_path /= Void
 		local
 			fi: PLAIN_TEXT_FILE
 			s: STRING
@@ -244,7 +243,7 @@ feature {NONE} -- Implementation
 				current_application.sleep (100)
 				current_application.process_events
 
-				create fi.make_with_name (progress_file_path)
+				create fi.make_with_path (progress_file_path)
 				if fi.exists then
 					fi.open_read
 				end
@@ -323,11 +322,10 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	pixmap_icon_location: FILE_NAME
+	pixmap_icon_location: PATH
 			-- Icon for the Eiffel Precompile Wizard.
 		once
-			create Result.make_from_string ("eiffel_wizard_icon")
-			Result.add_extension (pixmap_extension)
+			create Result.make_from_string ("eiffel_wizard_icon" + pixmap_extension)
 		end
 
 	Progress_filename: STRING = "progress.eif"
@@ -348,7 +346,7 @@ feature -- Access
 			-- Used to test .. unuseful if the progress file is used
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -378,4 +376,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_FINAL_STATE
+
+end

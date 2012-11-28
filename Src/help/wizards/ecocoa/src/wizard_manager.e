@@ -1,8 +1,8 @@
 note
 	description	: "Class which is launching the application."
-	author		: "Daniel Furrer <danie.furrer@gmail.com>"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Daniel Furrer <danie.furrer@gmail.com>"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WIZARD_MANAGER
@@ -36,19 +36,10 @@ create
 feature -- Initialization
 
 	prepare
-		local
-			original, link: FILE_NAME
 		do
-			-- The path to the icon is fixed so we make a link to the system icon we want to use
-			create original.make
-			original.set_directory ("/System/Library/Frameworks/AppKit.framework/Resources")
-			original.set_file_name ("NSDefaultApplicationIcon")
-			original.add_extension ("tiff")
-			create link.make
-			link.set_directory (wizard_pixmaps_path)
-			link.set_file_name ("eiffel_wizard_icon")
-			link.add_extension ("png")
-			system ("ln -s " + original + " " + link)
+				-- The path to the icon is fixed so we make a link to the system icon we want to use.
+			system ({STRING_32} "ln -s /System/Library/Frameworks/AppKit.framework/Resources/NSDefaultApplicationIcon.tiff " +
+				wizard_pixmaps_path.extended ("eiffel_wizard_icon.png").name)
 			Precursor
 		end
 
@@ -65,7 +56,7 @@ feature -- Initialization
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -95,4 +86,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_MANAGER
+
+end

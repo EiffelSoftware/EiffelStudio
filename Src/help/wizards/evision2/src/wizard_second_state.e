@@ -2,8 +2,8 @@ note
 	description	: "Page in which the user choose..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
+	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	date: "$Date$"
 	revision	: "$Revision$"
 
 class
@@ -94,11 +94,9 @@ feature -- Basic Operation
 	change_preview
 			-- Change the pixmap used to preview the application.
 		local
-			fn: FILE_NAME_32
 			bn: STRING
 			index: INTEGER
 		do
-			create fn.make_from_string (wizard_pixmaps_path_32)
 			bn := "Image0000"
 				--| Number of characters in "Image"
 			index := 5
@@ -114,9 +112,7 @@ feature -- Basic Operation
 			if add_about_dialog.is_selected then
 				bn.put ('1', index + 4)
 			end
-			fn.set_file_name (bn)
-			fn.add_extension (pixmap_extension)
-			preview_pixmap.set_with_named_file (fn)
+			preview_pixmap.set_with_named_path (wizard_pixmaps_path.extended (bn + pixmap_extension))
 		end
 
 	proceed_with_current_info
@@ -175,7 +171,7 @@ feature {NONE} -- Implementation
 			-- Pixmap used to preview the application.
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -205,4 +201,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_FIRST_STATE
+
+end

@@ -13,22 +13,22 @@ inherit
 
 feature -- Labels names
 
-	l_menu_bar: STRING_GENERAL do Result := locale.translation ("Menu Bar") end
-	l_tool_bar: STRING_GENERAL do Result := locale.translation ("Tool Bar") end
-	l_status_bar: STRING_GENERAL do Result := locale.translation ("Status Bar") end
-	l_about_dialogbox: STRING_GENERAL do Result := locale.translation ("About DialogBox") end
+	l_menu_bar: STRING_32 do Result := locale.translation ("Menu Bar") end
+	l_tool_bar: STRING_32 do Result := locale.translation ("Tool Bar") end
+	l_status_bar: STRING_32 do Result := locale.translation ("Status Bar") end
+	l_about_dialogbox: STRING_32 do Result := locale.translation ("About DialogBox") end
 
 feature -- Title
 
-	t_new_vision2_wizard: STRING_GENERAL	do Result := locale.translation ("New Vision2 Application Wizard") end
-	t_welcome_to_the_wizard: STRING_GENERAL	do Result := locale.translation ("Welcome to the New Vision2%NApplication Wizard") end
-	t_completing_wizard: STRING_GENERAL	do Result := locale.translation ("Completing the New Vision2%NApplication Wizard") end
-	t_vision2_application_appearance: STRING_GENERAL do Result := locale.translation ("Vision2 Application Appearance") end
-	t_subtitle: STRING_GENERAL do Result := locale.translation ("You can choose the appearance of your application.") end
+	t_new_vision2_wizard: STRING_32	do Result := locale.translation ("New Vision2 Application Wizard") end
+	t_welcome_to_the_wizard: STRING_32 	do Result := locale.translation ("Welcome to the New Vision2%NApplication Wizard") end
+	t_completing_wizard: STRING_32	do Result := locale.translation ("Completing the New Vision2%NApplication Wizard") end
+	t_vision2_application_appearance: STRING_32 do Result := locale.translation ("Vision2 Application Appearance") end
+	t_subtitle: STRING_32 do Result := locale.translation ("You can choose the appearance of your application.") end
 
 feature -- Message
 
-	m_you_have_specified_the_following_setting (a_project_name, a_project_location: STRING_GENERAL): STRING_GENERAL
+	m_you_have_specified_the_following_setting (a_project_name, a_project_location: STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation (
 			"You have specified the following settings:%N%
@@ -38,7 +38,7 @@ feature -- Message
 			), [a_project_name, a_project_location])
 		end
 
-	m_click_finish_to (a_compile: BOOLEAN): STRING_GENERAL
+	m_click_finish_to (a_compile: BOOLEAN): STRING_32
 		do
 			if a_compile then
 				Result := locale.translation ("Click Finish to generate and compile this project")
@@ -47,7 +47,7 @@ feature -- Message
 			end
 		end
 
-	m_wizard_introduction: STRING_GENERAL
+	m_wizard_introduction: STRING_32
 		do
 			Result := locale.translation (
 				"Using this wizard you can create a graphical application%N%
@@ -60,10 +60,10 @@ feature -- Message
 				%To continue, click Next.")
 		end
 
-	m_click_checkboxes_to: STRING_GENERAL do Result := locale.translation ("Click the checkboxes to change the appearance.") end
+	m_click_checkboxes_to: STRING_32 do Result := locale.translation ("Click the checkboxes to change the appearance.") end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -94,4 +94,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class INTERFACE_NAMES
+end

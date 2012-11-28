@@ -5,7 +5,7 @@ TMP_OP=$1
 if [ "$TMP_OP" = "update_all" ]; then
   git stash
   git svn rebase
-  git pull -X subtree=library/base/elks _elks master
+  git pull -X subtree=library/base/elks _elks master:void_safe/library
   git stash apply
   git stash clear
   exit

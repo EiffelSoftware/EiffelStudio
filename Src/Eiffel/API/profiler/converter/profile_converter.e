@@ -679,7 +679,6 @@ feature {NONE} -- Commands
 			table_file: PLAIN_TEXT_FILE
 			binary_file: RAW_FILE
 			table_name: PATH
-			u: FILE_UTILITIES
 		do
 			if not config.configuration_name.is_equal ("eiffel") then
 

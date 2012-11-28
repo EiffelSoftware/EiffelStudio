@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 				l_buffer.set_from_pointer (l_buffer.item, 0)
 			else
 					-- Because `shared_from_pointer_and_count' assumes an additional character
-					-- for the nyll character, and that the call to `set_substring' always adds
+					-- for the null character, and that the call to `set_substring' always adds
 					-- a null character at the end of the string, it caused a memory corruption.
 					-- Removing one character from the given `l_buffer' seems to do the trick
 					-- until both `shared_from_pointer_and_count' and `set_substring' don't assume
@@ -88,14 +88,14 @@ invariant
 	positive_last_position: last_position > 0
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

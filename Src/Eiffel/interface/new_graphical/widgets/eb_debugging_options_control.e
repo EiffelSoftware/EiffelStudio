@@ -465,12 +465,9 @@ feature {NONE} -- Grid events
 	set_row_root_as_selected (a_is_selected: BOOLEAN; a_row: EV_GRID_ROW)
 		require
 			a_row /= Void implies a_row.parent_row_root = a_row
-		local
-			gi: EV_GRID_SPAN_LABEL_ITEM
 		do
 			if a_row /= Void and then a_row.count > 0 then
-				gi ?= a_row.item (1)
-				if gi /= Void then
+				if attached {EV_GRID_SPAN_LABEL_ITEM} a_row.item (1) as gi then
 					if a_is_selected then
 						gi.set_pixmap (mini_stock_pixmaps.general_next_icon)
 					else
@@ -484,7 +481,6 @@ feature {NONE} -- Grid events
 	on_row_unselected (a_row: EV_GRID_ROW)
 			-- `a_row' has been unselected
 		local
-			gi: EV_GRID_SPAN_LABEL_ITEM
 			r: EV_GRID_ROW
 		do
 			if not inside_row_operation then
@@ -497,8 +493,7 @@ feature {NONE} -- Grid events
 						r.set_foreground_color (profiles_grid.foreground_color)
 					end
 					if r.count > 0 then
-						gi ?= r.item (1)
-						if gi /= Void then
+						if attached {EV_GRID_SPAN_LABEL_ITEM} r.item (1) as gi then
 							gi.remove_pixmap
 							profiles_grid.safe_resize_column_to_content (gi.column, False, False)
 						end
@@ -510,12 +505,9 @@ feature {NONE} -- Grid events
 
 	on_item_double_clicked (ax, ay, ab: INTEGER; gi: EV_GRID_ITEM)
 			-- `gi' has been double clicked
-		local
-			gei: EV_GRID_EDITABLE_ITEM
 		do
 			if ab = 1 then
-				gei ?= gi
-				if gei /= Void then
+				if attached {EV_GRID_EDITABLE_ITEM} gi as gei then
 					gei.activate
 				end
 			end
@@ -535,7 +527,7 @@ feature -- Status Setting
 				has_changed := b
 				if has_changed then
 					if p /= Void then
-						p.incremente_version
+						p.increment_version
 					end
 
 					if apply_button /= Void then
@@ -587,7 +579,7 @@ feature -- Data change
 			p_not_void: p /= Void
 		local
 			s32, s: STRING_32
-			args: STRING
+			args: READABLE_STRING_GENERAL
 			i: INTEGER
 		do
 			if p.title = Void or else p.title.is_empty then
@@ -629,7 +621,7 @@ feature -- Data change
 			title_not_empty: p.title /= Void and then not p.title.is_empty
 		end
 
-	same_string_value (s1, s2: STRING_GENERAL): BOOLEAN
+	same_string_value (s1, s2: READABLE_STRING_GENERAL): BOOLEAN
 			-- is `s1' and `s2' the same text ?
 		require
 			same_type: (s1 /= Void and s2 /= Void) implies s1.same_type (s2)
@@ -643,18 +635,18 @@ feature -- Data change
 			end
 		end
 
-	change_title_on (v: STRING_32; p: like profile_from_row)
+	change_title_on (v: READABLE_STRING_GENERAL; p: like profile_from_row)
 		require
 			v /= Void
 		local
-			s: STRING_32
-			old_title: STRING_32
+			s: READABLE_STRING_GENERAL
+			old_title: READABLE_STRING_GENERAL
 		do
 			old_title := p.title
 			if v.is_empty then
 				s := Void
 			else
-				s := v.as_string_32
+				s := v
 			end
 			p.set_title (s)
 			update_title (p)
@@ -665,31 +657,33 @@ feature -- Data change
 			end
 		end
 
-	change_cwd_on (v: STRING; p: like profile_from_row)
+	change_wd_on (v: READABLE_STRING_GENERAL; p: like profile_from_row)
 		require
 			v /= Void
 			p /= Void
 		local
-			s: STRING
+			s: detachable READABLE_STRING_GENERAL
+			wd: detachable PATH
 		do
 			if v.is_empty then
 				s := Void
 			else
 				s := v
 			end
-			if not same_string_value (p.working_directory, s) then
-				p.set_working_directory (s)
+			wd := p.working_directory
+			if wd = Void or else not same_string_value (wd.name, s) then
+				p.set_working_directory (create {PATH}.make_from_string (s))
 				update_title_row_of (p)
 				set_changed (p, True)
 			end
 		end
 
-	change_args_on (v: STRING; p: like profile_from_row)
+	change_args_on (v: READABLE_STRING_GENERAL; p: like profile_from_row)
 		require
 			v /= Void
 			p /= Void
 		local
-			s: STRING
+			s: detachable READABLE_STRING_GENERAL
 		do
 			if v.is_empty then
 				s := Void
@@ -931,15 +925,15 @@ feature {NONE} -- Profile actions
 			gi: EV_GRID_LABEL_ITEM
 			srow: EV_GRID_ROW
 			l_title: STRING_32
-			l_args: STRING
-			l_cwd: STRING
+			l_args: STRING_32
+			l_wd: PATH
 			l_env: HASH_TABLE [STRING_32, STRING_32]
 			gdi: EV_GRID_DIRECTORY_ITEM
 			gti: EV_GRID_TEXT_ITEM
 			gli: EV_GRID_LABEL_ITEM
 			ctrler: ES_GRID_ROW_CONTROLLER
 			was_expanded: BOOLEAN
-			s: STRING
+			s: STRING_32
 			was_changed: BOOLEAN
 			retried: BOOLEAN
 		do
@@ -947,7 +941,7 @@ feature {NONE} -- Profile actions
 				was_changed := has_changed
 				p := profile_from_row (a_row)
 				l_title := p.title
-				l_cwd := p.working_directory
+				l_wd := p.working_directory
 				l_args := p.arguments
 				l_env := p.environment_variables
 
@@ -985,18 +979,20 @@ feature {NONE} -- Profile actions
 				srow := a_row.subrow (a_row.subrow_count)
 				create gi.make_with_text (interface_names.l_working_directory)
 				srow.set_item (1, gi)
-				s := l_cwd
-				if s = Void then
+				if l_wd /= Void and then not l_wd.is_empty then
+					s := l_wd.name
+				else
 					create s.make_empty
 				end
+
 				create gdi.make_with_text (s)
 				gdi.change_actions.extend (agent
 						(a_prof: like profile_from_row; a_gi: EV_GRID_LABEL_ITEM)
 								do
-									change_cwd_on (a_gi.text, a_prof)
+									change_wd_on (a_gi.text, a_prof)
 								end (p, gdi)
 					)
-				gdi.set_start_directory (default_working_directory)
+				gdi.set_start_path (default_working_path)
 				srow.set_item (2, gdi)
 
 					--| Environment
@@ -1124,7 +1120,9 @@ feature {NONE} -- Profile actions
 		require
 			a_row_not_void: a_row /= Void
 		do
-			Result ?= a_row.parent_row_root.data
+			if attached {like profile_from_row} a_row.parent_row_root.data as p then
+				Result := p
+			end
 		end
 
 	grid_row_with_profile (a_profile: like profile_from_row): EV_GRID_ROW
@@ -1167,11 +1165,16 @@ feature {NONE} -- Environment queries
 			-- Environment variable name related to `a_row'.
 		require
 			a_row /= Void
+		local
+			d: detachable ANY
 		do
 			if attached {ES_GRID_ROW_CONTROLLER} a_row.data as ctrler then
-				Result ?= ctrler.data
+				d := ctrler.data
 			else
-				Result ?= a_row.data
+				d := a_row.data
+			end
+			if attached {STRING_32} d as s32 then
+				Result := s32
 			end
 		end
 
@@ -1209,7 +1212,6 @@ feature {NONE} -- Environment actions
 			gei: EV_GRID_EDITABLE_ITEM
 			gti: EV_GRID_TEXT_ITEM
 			ctrler: ES_GRID_ROW_CONTROLLER
-			s: STRING
 		do
 			a_row.insert_subrow (a_row.subrow_count + 1)
 			srow := a_row.subrow (a_row.subrow_count)
@@ -1232,8 +1234,7 @@ feature {NONE} -- Environment actions
 			if v /= Void then
 				gti.set_text (v)
 			elseif k /= Void and then not k.is_empty then
-				s := execution_env.get (k)
-				if s /= Void then
+				if attached execution_env.item (k) as s then
 					gti.set_text (s)
 				end
 			end
@@ -1291,24 +1292,24 @@ feature {NONE} -- Environment actions
 		require
 			a_row /= Void and then a_row.item(1) /= Void
 		local
-			gei: EV_GRID_EDITABLE_ITEM
-			gti: EV_GRID_TEXT_ITEM
 			old_k, k: STRING_32
-			s, sv: STRING
-			ctrler: ES_GRID_ROW_CONTROLLER
+			sv: STRING_32
 		do
-			gei ?= a_row.item (1)
-			if gei /= Void then
-					--| Embedded data				
-				ctrler ?= a_row.data
-				check ctrler /= Void end
-
-				old_k ?= ctrler.data
-
+			if attached {EV_GRID_EDITABLE_ITEM} a_row.item (1) as gei then
 				k := gei.text
 				k.left_adjust
 				k.right_adjust
-				ctrler.set_data (k)
+
+					--| Embedded data				
+				if attached {ES_GRID_ROW_CONTROLLER} a_row.data as ctrler then
+					if attached {STRING_32} ctrler.data as s32 then
+						old_k := s32
+					end
+					ctrler.set_data (k)
+				else
+					check data_is_controller: False end
+				end
+
 
 					--| Check if it is "inherited" variable
 					--| And update the graphical look
@@ -1324,23 +1325,23 @@ feature {NONE} -- Environment actions
 					gei.set_tooltip (Void)
 					a_row.set_foreground_color (Void)
 				else
-					s := Execution_env.get (k)
-					if s = Void then
-						a_row.set_background_color (Void)
-						gei.set_pixmap (stock_pixmaps.debugger_object_watched_disabled_icon)
-						gei.set_tooltip (Void)
-						a_row.set_foreground_color (Void)
-					else
-						gti ?= a_row.item (2)
-						sv := gti.text
-						if s.is_equal (sv) then
-							a_row.set_background_color (inherit_color)
-						else
-							a_row.set_background_color (override_color)
+					if attached Execution_env.item (k) as s then
+						if attached {EV_GRID_TEXT_ITEM} a_row.item (2) as gti then
+							sv := gti.text
+							if s.same_string (sv) then
+								a_row.set_background_color (inherit_color)
+							else
+								a_row.set_background_color (override_color)
+							end
 						end
 
 						gei.set_pixmap (stock_pixmaps.debugger_object_watched_icon)
 						gei.set_tooltip (interface_names.f_original_value_is (k, s))
+					else
+						a_row.set_background_color (Void)
+						gei.set_pixmap (stock_pixmaps.debugger_object_watched_disabled_icon)
+						gei.set_tooltip (Void)
+						a_row.set_foreground_color (Void)
 					end
 				end
 			end
@@ -1402,10 +1403,7 @@ feature {NONE} -- Environment actions
 			a_row /= Void
 			a_row.parent /= Void
 		local
-			gei: EV_GRID_EDITABLE_ITEM
-			gti: EV_GRID_TEXT_ITEM
 			k: STRING_32
-			s: STRING
 			m, mmi: EV_MENU
 			mi: EV_MENU_ITEM
 			cmi: EV_CHECK_MENU_ITEM
@@ -1420,41 +1418,45 @@ feature {NONE} -- Environment actions
 --				a_row.enable_select
 
 				create m.make_with_text (interface_names.m_environment_variables)
-				gei ?= a_row.item (1)
-				k := gei.text
-				if k.is_empty then
-					create mi.make_with_text (interface_names.b_delete_command)
-					mi.select_actions.extend (agent safe_remove_env_row (a_row))
-					m.extend (mi)
-				else
-					if k.substring (1, 2).same_string ({DEBUGGER_CONTROLLER}.environment_variable_unset_prefix) then
-						k := k.substring (3, k.count)
-						k_is_unset := True
-					end
-					create mmi.make_with_text (k)
-					s := execution_env.get (k)
-					if s /= Void then
-						gti ?= a_row.item (2)
-						check gti /= Void end
-						create mi.make_with_text_and_action (interface_names.m_use_current_environment_value, agent gti.set_text (s))
-						mmi.extend (mi)
-					end
-
-					if k_is_unset then
-						create cmi.make_with_text (interface_names.b_unset_command)
-						cmi.enable_select
-						cmi.select_actions.extend (agent gei.set_text (k))
+				if attached {EV_GRID_EDITABLE_ITEM} a_row.item (1) as gei then
+					k := gei.text
+					if k.is_empty then
+						create mi.make_with_text (interface_names.b_delete_command)
+						mi.select_actions.extend (agent safe_remove_env_row (a_row))
+						m.extend (mi)
 					else
-						create cmi.make_with_text (interface_names.b_unset_command)
-						cmi.select_actions.extend (agent gei.set_text ({DEBUGGER_CONTROLLER}.environment_variable_unset_prefix + k))
+						if k.substring (1, 2).same_string ({DEBUGGER_CONTROLLER}.environment_variable_unset_prefix) then
+							k := k.substring (3, k.count)
+							k_is_unset := True
+						end
+						create mmi.make_with_text (k)
+						if attached execution_env.item (k) as s then
+							if attached {EV_GRID_TEXT_ITEM} a_row.item (2) as gti then
+								create mi.make_with_text_and_action (interface_names.m_use_current_environment_value, agent gti.set_text (s))
+								mmi.extend (mi)
+							else
+								check is_text_item: False end
+							end
+						end
+
+						if k_is_unset then
+							create cmi.make_with_text (interface_names.b_unset_command)
+							cmi.enable_select
+							cmi.select_actions.extend (agent gei.set_text (k))
+						else
+							create cmi.make_with_text (interface_names.b_unset_command)
+							cmi.select_actions.extend (agent gei.set_text ({DEBUGGER_CONTROLLER}.environment_variable_unset_prefix + k))
+						end
+						mmi.extend (cmi)
+
+						create mi.make_with_text (interface_names.b_delete_command)
+						mi.select_actions.extend (agent safe_remove_env_row (a_row))
+						mmi.extend (mi)
+
+						m.extend (mmi)
 					end
-					mmi.extend (cmi)
-
-					create mi.make_with_text (interface_names.b_delete_command)
-					mi.select_actions.extend (agent safe_remove_env_row (a_row))
-					mmi.extend (mi)
-
-					m.extend (mmi)
+				else
+					check item_1_is_editable: False end
 				end
 
 				m.extend (create {EV_MENU_SEPARATOR})
@@ -1475,9 +1477,8 @@ feature {NONE} -- Environment actions
 		local
 			p: like profile_from_row
 			env: like environment_from_row
-			gli: EV_GRID_LABEL_ITEM
-			k,v: STRING_32
-			old_k: STRING_32
+			k,v: detachable STRING_32
+			old_k: detachable STRING_32
 			c: BOOLEAN
 		do
 			if safe_grid_operation or else not inside_row_operation then
@@ -1489,16 +1490,20 @@ feature {NONE} -- Environment actions
 					create env.make (3)
 				end
 					--| Get Key
-				gli ?= a_row.item (1)
-				check gli /= Void end
-				k := gli.text
-				k.left_adjust
-				k.right_adjust
+				if attached {EV_GRID_LABEL_ITEM} a_row.item (1) as gli then
+					k := gli.text
+					k.left_adjust
+					k.right_adjust
+				else
+					check item_1_is_label_item: False end
+				end
 
 					--| Get Value
-				gli ?= a_row.item (2)
-				check gli /= Void end
-				v := gli.text
+				if attached {EV_GRID_LABEL_ITEM} a_row.item (2) as gli then
+					v := gli.text
+				else
+					check item_1_is_label_item: False end
+				end
 
 				if k /= Void and then not k.is_empty then
 					if old_k = Void then
@@ -1622,15 +1627,16 @@ feature {NONE} -- Environment implementation
 
 feature {NONE} -- Implementation
 
-	default_working_directory: STRING
+	default_working_path: PATH
 		local
-			u: FILE_UTILITIES
+			d: DIRECTORY
 		do
-			Result := Eiffel_system.lace.directory_name
-			if not u.directory_exists (Result) then
+			create Result.make_from_string (Eiffel_system.lace.directory_name)
+			create d.make_with_path (Result)
+			if not d.exists then
 					--| If lace.directory_name does not exist,
 					--| let's use the project's location
-				Result := eiffel_system.project_location.location
+				create Result.make_from_string (Eiffel_system.project_location.location)
 			end
 		end
 
@@ -1691,7 +1697,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1113,17 +1113,17 @@ feature -- Interaction with .Net Debugger
 			eif_debug_display ("[EIFDBG] " + a_title)
 		end
 
-	do_create_process (cmd: READABLE_STRING_GENERAL; cwd, args: STRING; env: detachable STRING_GENERAL)
+	do_create_process (cmd: READABLE_STRING_32; a_working_dir: PATH; args: READABLE_STRING_32; env: detachable NATIVE_STRING)
 			-- Create Process
 		require
 			cmd_attached: cmd /= Void
-			cwd_attached: cwd /= Void
+			a_working_dir_attached: a_working_dir /= Void
 			args_attached: args /= Void
 		local
 			l_icd_process: POINTER
 			n: INTEGER
 		do
-			l_icd_process := icor_debug.create_process (cmd + " " + args, cwd, env)
+			l_icd_process := icor_debug.create_process (cmd + {STRING_32} " " + args, a_working_dir, env.string)
 			if icor_debug.last_call_succeed then
 				n := {CLI_COM}.add_ref (l_icd_process)
 				set_last_controller_by_pointer (l_icd_process)
@@ -1135,7 +1135,7 @@ feature -- Interaction with .Net Debugger
 			end
 		end
 
-	do_run (cmd: READABLE_STRING_GENERAL; cwd, args: STRING; env: detachable STRING_GENERAL)
+	do_run (cmd: READABLE_STRING_32; cwd: PATH; args: READABLE_STRING_32; env: detachable NATIVE_STRING)
 			-- Start the process to debug
 		require
 			cmd_attached: cmd /= Void

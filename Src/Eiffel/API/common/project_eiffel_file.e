@@ -86,7 +86,6 @@ feature -- Store/Retrieval
 			l_writer: SED_MEDIUM_READER_WRITER
 			l_serializer: SED_INDEPENDENT_SERIALIZER
 			retried: BOOLEAN
-			utf: UTF_CONVERTER
 		do
 			if not retried then
 				storage.open_write
@@ -100,7 +99,7 @@ feature -- Store/Retrieval
 					-- The following information is not used on retrieval, but may help
 					-- users finding out which version of the Eiffel compiler and from where
 					-- this Eiffel compiler was coming from.
-				l_writer.write_string_8 (utf.string_32_to_utf_8_string_8 (eiffel_layout.ec_command_name.name))
+				l_writer.write_string_8 (eiffel_layout.ec_command_name.name.as_string_8) --FIXME: issue in Finalized mode -- utf.string_32_to_utf_8_string_8 (eiffel_layout.ec_command_name.name))
 				l_writer.write_string_8 (compiler_version_number.version.out)
 
 				if is_c_storable then
@@ -167,6 +166,29 @@ feature -- Status report
 		do
 			Result := error_value /= ok_value
 		end;
+
+	error_description: detachable STRING
+			-- Error's description if any.
+		do
+			if has_error then
+				Result := "Error [" + error.out + "] "
+				inspect error_value
+				when corrupt_value then
+					Result.append ("corrupt_value")
+				when invalid_precompilation_value then
+					Result.append ("invalid_precompilation_value")
+				when incompatible_value then
+					Result.append ("incompatible_value")
+				when interrupt_value then
+					Result.append ("interrupt_value")
+				when cannot_store_value then
+					Result.append ("cannot_store_value")
+				else
+				end
+			end
+		ensure
+			has_error implies Result /= Void
+		end
 
 	exists: BOOLEAN
 			-- Does `storage' exist?

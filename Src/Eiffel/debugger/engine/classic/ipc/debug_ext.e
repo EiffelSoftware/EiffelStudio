@@ -164,8 +164,29 @@ feature -- Object (Reference) transfert
 
 feature -- Text transfert to daemon
 
-	send_string_content (s: READABLE_STRING_GENERAL)
+	send_native_string_content (ns: NATIVE_STRING)
+			-- Used by the debugger to send the native text `s' to the daemon  (ecdbgd)
+			--| Warning: ecdbgd should cast it back to (EIF_NATIVE_CHAR *)
+			--| so the receiver should know about that
+		do
+			c_send_sized_str (ns.managed_data.item, ns.managed_data.count)
+		end
+
+	send_string_32_content (s: READABLE_STRING_32)
 			-- Used by the debugger to send the text `s' to the daemon  (ecdbgd)
+			--| Warning: send as native string
+			--| so the receiver should know about that
+		local
+			ns: NATIVE_STRING
+		do
+			create ns.make (s)
+			send_native_string_content (ns)
+		end
+
+	send_string_8_content (s: READABLE_STRING_8)
+			-- Used by the debugger to send the text `s' to the daemon  (ecdbgd)
+			--| Warning: send as char* string   (i.e: ASCII)
+			--| so the receiver should know about that
 		local
 			c_string: C_STRING
 		do
@@ -173,7 +194,7 @@ feature -- Text transfert to daemon
 			c_send_str (c_string.item)
 		end
 
-	send_string_content_with_size (s: READABLE_STRING_GENERAL; a_size: INTEGER)
+	send_string_8_content_with_size (s: READABLE_STRING_8; a_size: INTEGER)
 			-- Used by the debugger to send the text `s' to the daemon  (ecdbgd)
 			-- with size `a_size'
 			--| Indeed it might contain '%U' character,

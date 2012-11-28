@@ -133,9 +133,9 @@ feature {NONE} -- Initialization
 
 			external_command := a_command.substring (i1 + 1, i2 - 1)
 			if i2 = a_command.count then
-				working_directory := {STRING_32} ""
+				create working_directory.make_empty
 			else
-				working_directory := u.utf_8_string_8_to_string_32 (a_command.substring (i2 + 1, a_command.count))
+				create working_directory.make_from_string (u.utf_8_string_8_to_string_32 (a_command.substring (i2 + 1, a_command.count)))
 			end
 				-- Check validity before inserting.
 				-- This is a bit redundant with the precondition, but
@@ -149,7 +149,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_and_run_only (cmd: STRING; dir: STRING_32)
+	make_and_run_only (cmd: STRING; dir: detachable PATH)
 			-- Create for running `cmd' in directory `dir'.
 			-- Do not save external command and its working directory to preference.
 		require
@@ -187,10 +187,11 @@ feature -- Execution
 			-- Launch the external command that is linked to `Current', if possible.
 		local
 			cl: STRING_32
-			od: STRING_32
+			od: PATH
 			cmdexe: STRING_32
-			wd: STRING_32
-			args: LIST [STRING]
+			wd: detachable STRING_32
+			wpath: PATH
+			args: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			use_argument: BOOLEAN
 			msg: STRING_32
 			ok: BOOLEAN
@@ -205,11 +206,11 @@ feature -- Execution
 			else
 				ok := True
 				create cl.make (external_command.count + 20)
-				if working_directory /= Void then
-					create wd.make (working_directory.count + 20)
-					wd.append (working_directory)
+
+				if attached working_directory as wd_path then
+					wd := wd_path.name
 				else
-					wd := ""
+					create wd.make_empty
 				end
 				cl.append (external_command)
 				external_launcher.set_original_command_name (cl)
@@ -237,35 +238,36 @@ feature -- Execution
 				l_replacer.prepare_replacement
 				wd := l_replacer.new_text (wd)
 
-				if working_directory /= Void and then not working_directory.is_empty then
-					od := execution_environment.current_working_directory
-					execution_environment.change_working_directory (working_directory)
+				if attached working_directory as wd_path and then not wd_path.is_empty then
+					od := execution_environment.current_working_path
+					execution_environment.change_working_path (wd_path)
 					if execution_environment.return_code /= 0 then
 						create msg.make (100)
-						msg.append (interface_names.e_working_directory_invalid (working_directory))
+						msg.append (interface_names.e_working_directory_invalid (wd_path.name))
 						msg.append ("%N")
 						msg.append (interface_names.e_external_command_not_launched)
 						show_warning_dialog (msg)
 						ok := False
 					end
-					execution_environment.change_working_directory (od)
+					execution_environment.change_working_path (od)
 				end
 				if ok then
+					create wpath.make_from_string (wd)
 					if platform_constants.is_windows then
-						cmdexe := Execution_environment.get ("COMSPEC")
+						cmdexe := Execution_environment.item ("COMSPEC")
 						if cmdexe /= Void then
 								-- This allows the use of `dir' etc.
-							external_launcher.prepare_command_line (cmdexe + " /c %""+cl+"%"", Void, wd)
+							external_launcher.prepare_command_line (cmdexe + {STRING_32} " /c %"" + cl + {STRING_32} "%"", Void, wpath)
 							use_argument := False
 						else
-							external_launcher.prepare_command_line (cl, Void, wd)
+							external_launcher.prepare_command_line (cl, Void, wpath)
 							use_argument := False
 						end
 					else
-						create {ARRAYED_LIST [STRING]}args.make (2)
+						create args.make (2)
 						args.extend ("-c")
-						args.extend ("%'%'"+cl+"%'%'")
-						external_launcher.prepare_command_line ({STRING_32} "/bin/sh", args, wd)
+						args.extend ({STRING_32} "%'%'" + cl + {STRING_32} "%'%'")
+						external_launcher.prepare_command_line ({STRING_32} "/bin/sh", args, wpath)
 						use_argument := True
 					end
 					external_launcher.set_hidden (True)
@@ -296,7 +298,7 @@ feature -- Properties
 	external_command: STRING_32
 			-- Command line that is invoked when `Current' is executed.
 
-	working_directory: STRING_32
+	working_directory: detachable PATH
 			-- Working director where the corresponding external command is invoked.
 
 feature -- Status setting
@@ -305,7 +307,7 @@ feature -- Status setting
 			-- Pop up a dialog, modal to `w', that lets the user
 			-- edit the properties of `Current' (menu name, called command and index)
 		require
-			w_not_void: w /= void
+			w_not_void: w /= Void
 		do
 			create_dialog
 			if name /= Void then
@@ -315,8 +317,8 @@ feature -- Status setting
 			if external_command /= Void then
 				command_field.set_text (external_command)
 			end
-			if working_directory /= Void then
-				working_directory_field.set_text (working_directory)
+			if attached working_directory as wd then
+				working_directory_field.set_text (wd.name)
 			end
 			old_index := index
 			dialog.show_modal_to_window (w)
@@ -358,17 +360,13 @@ feature{ES_CONSOLE_TOOL_PANEL} -- Status setting
 			external_command_set: external_command.is_equal (cmd)
 		end
 
-	set_working_directory (dir: STRING_32)
+	set_working_directory (dir: detachable PATH)
 			-- Set `working_directory' with `dir'.
 		do
-			if dir /= Void then
-				create working_directory.make_from_string (dir)
-			else
-				working_directory := Void
-			end
+			working_directory := dir
 		ensure
 			working_directory_set:
-				((dir /= Void) implies working_directory.is_equal (dir)) and
+				((dir /= Void) implies working_directory.is_same_file_as (dir)) and
 				((dir = Void) implies working_directory = Void)
 		end
 
@@ -393,10 +391,8 @@ feature -- Status report
 			Result.append (external_command)
 				-- Store `working_directory' to preference.
 			Result.append_character (separator)
-			if working_directory /= Void then
-				Result.append (u.string_32_to_utf_8_string_8 (working_directory))
-			else
-				Result.append ("")
+			if attached working_directory as wd then
+				Result.append (u.string_32_to_utf_8_string_8 (wd.name))
 			end
 		ensure
 			not_void: Result /= Void
@@ -459,14 +455,15 @@ feature {NONE} -- Implementation
 		end
 
 	on_directory_dialog_ok
-			--
+		local
+			l_path: PATH
 		do
 			if dir_dlg /= Void then
-				working_directory := dir_dlg.directory
-				working_directory_field.set_text (working_directory)
+				l_path := dir_dlg.path
+				working_directory := l_path
+				working_directory_field.set_text (l_path.name)
 				dir_dlg.destroy
 			end
-
 		end
 
 	create_dialog
@@ -581,7 +578,7 @@ feature {NONE} -- Implementation
 				else
 					name := name_field.text
 					external_command := command_field.text
-					working_directory := working_directory_field.text
+					create working_directory.make_from_string (working_directory_field.text)
 					index := index_field.value
 					destroy_dialog
 				end

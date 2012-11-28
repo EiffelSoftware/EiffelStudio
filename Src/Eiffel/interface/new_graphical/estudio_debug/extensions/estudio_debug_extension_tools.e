@@ -69,13 +69,9 @@ feature {NONE} -- Actions
 
 	on_launch_memory_analyzer
 			-- Launch Memory Analyzer.
-		local
-			l_dir: DIRECTORY_NAME
 		do
 			if ma_window = Void or ma_window.is_destroyed then
-				create l_dir.make_from_string (eiffel_layout.library_path_8)
-				l_dir.extend ("memory_analyzer")
-				create ma_window.make (l_dir)
+				create ma_window.make (eiffel_layout.library_path.extended ("memory_analyzer").name)
 				ma_window.close_request_actions.extend (agent ma_window.hide)
 				ma_window.show
 			else

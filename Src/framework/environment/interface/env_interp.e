@@ -11,12 +11,35 @@ feature -- Access
 		require
 			good_argument: s /= Void
 		do
-			Result := processed_string (s, True)
+			Result := interpreted_string_32 (s).to_string_8
 		ensure
 			good_result: Result /= Void
 		end
 
 	translated_string (s: STRING): STRING
+			-- Interpretation of string `s' where the environment variables
+			-- are replaced by "$(VARIABLE)"
+			--| Useful when writing makefiles.
+		require
+			good_argument: s /= Void
+		do
+			Result := translated_string_32 (s).to_string_8
+		ensure
+			good_result: Result /= Void
+		end
+
+	interpreted_string_32 (s: READABLE_STRING_32): STRING_32
+			-- Interpretation of string `s' where the environment variables
+			-- are interpreted
+		require
+			good_argument: s /= Void
+		do
+			Result := processed_string (s, True)
+		ensure
+			good_result: Result /= Void
+		end
+
+	translated_string_32 (s: READABLE_STRING_32): STRING_32
 			-- Interpretation of string `s' where the environment variables
 			-- are replaced by "$(VARIABLE)"
 			--| Useful when writing makefiles.
@@ -35,7 +58,7 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-	processed_string (s: STRING; interpreted: BOOLEAN): STRING
+	processed_string (s: READABLE_STRING_GENERAL; interpreted: BOOLEAN): STRING_32
 			-- Interpretation of string `s' where the environment variables
 			-- are either replaced by their values (`interpreted' = True)
 			-- or replaced by "$(VARIABLE)" in order to be written in
@@ -43,22 +66,21 @@ feature {NONE} -- Implementation
 		require
 			good_argument: s /= Void
 		local
-			current_character, last_character: CHARACTER;
-			s1: STRING
-			s2: detachable STRING;
-			i, j: INTEGER;
-			stop : BOOLEAN;
+			current_character, last_character: CHARACTER_32
+			s1: STRING_32
+			s2: detachable STRING_32
+			i, j: INTEGER
+			stop: BOOLEAN
 		do
 			from
-				Result := s;
-				i := 1;
+				create Result.make (s.count)
+				Result.append_string_general (s)
+				i := 1
 			until
 				i > Result.count
 			loop
-				current_character := Result.item (i);
-				if 	current_character = '$'
-					and then
-					last_character /= '%%'
+				current_character := Result.item (i)
+				if current_character = '$' and then	last_character /= '%%'
 				then
 						-- Found beginning of a environment variable
 						-- It is either ${VAR} or $VAR
@@ -108,7 +130,7 @@ feature {NONE} -- Implementation
 								s2 := variable_value (Result.substring (i, j - 1));
 							else
 								create s2.make (15);
-								s2.append ("$(");
+								s2.append ({STRING_32} "$(");
 								s2.append (Result.substring (i, j - 1));
 								s2.extend (')')
 							end
@@ -121,7 +143,7 @@ feature {NONE} -- Implementation
 								s2 := variable_value (Result.substring (i, j));
 							else
 								create s2.make (15);
-								s2.append ("$(");
+								s2.append ({STRING_32} "$(");
 								s2.append (Result.substring (i, j));
 								s2.extend (')')
 							end
@@ -135,8 +157,7 @@ feature {NONE} -- Implementation
 					s1.append (s2);
 					i := s1.count + 1;
 					if j < Result.count then
-						s1.append
-							(Result.substring (j + 1, Result.count));
+						s1.append (Result.substring (j + 1, Result.count));
 					end;
 					Result := s1;
 				end;
@@ -146,16 +167,16 @@ feature {NONE} -- Implementation
 			good_result: Result /= Void;
 		end;
 
-	variable_value (a_name: STRING): detachable STRING
+	variable_value (a_name: READABLE_STRING_GENERAL): detachable STRING_32
 			-- Value of variable `a_name', if any.
 		require
 			attached_name: a_name /= Void
 		do
-			Result := Execution_environment.get (a_name)
+			Result := Execution_environment.item (a_name)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

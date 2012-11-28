@@ -140,8 +140,6 @@ rt_public EIF_REFERENCE request_dispatch (Request rqst)
 	EIF_REFERENCE eif_string;
 
 	switch (rqst.rq_type) {
-		case ASYNACK:
-			return (char *) 0;
 		case ACKNLGE:
 			return (char *) 0;
 		case DEAD:

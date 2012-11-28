@@ -18,13 +18,13 @@ feature {NONE} -- Ancestor facade
 	build_status do end
 	impl_check_assert (b: BOOLEAN): BOOLEAN do end
 	impl_ignore_current_assertion_violation (b: BOOLEAN) do end
-	run_with_env_string (app: READABLE_STRING_GENERAL; args, cwd: STRING; env: STRING_GENERAL) do end
+	run_with_env_string (app: PATH; args: READABLE_STRING_32; wd: detachable PATH; env: detachable NATIVE_STRING) do end
 	continue_ignoring_kept_objects do end
 	interrupt do end
 	notify_breakpoints_change do end
 	kill do end
 	detach do end
-	attach_using_port (app: READABLE_STRING_GENERAL; a_port: INTEGER) do end
+	attach_using_port (app: PATH; a_port: INTEGER) do end
 	keep_only_objects (kept_objects: LIST [DBG_ADDRESS]) do end
 
 	dump_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): DUMP_VALUE do end

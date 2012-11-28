@@ -92,8 +92,6 @@ rt_public void dbg_send_packet(EIF_PSTREAM sp, Request *dans);				/* Send an asn
 rt_private void dprocess_request(EIF_PSTREAM sp, Request *rqst);			/* General processing of requests */
 rt_private void transfer(EIF_PSTREAM sp, Request *rqst);					/* Handle transfer requests */
 rt_private void commute(EIF_PSTREAM from, EIF_PSTREAM to, int size);		/* Commute data from one file to another */
-rt_private void run_command(EIF_PSTREAM sp);						/* Run specified command */
-rt_private void run_asynchronous(EIF_PSTREAM sp);	/* Run command in background */
 rt_private void set_ipc_ewb_pid(int pid);						/* Set IPC ewb pid value */
 rt_private void set_ipc_timeout(unsigned int t);				/* Set IPC TIMEOUT value */
 rt_private void start_app(EIF_PSTREAM sp);						/* Start Eiffel application */
@@ -114,8 +112,8 @@ rt_private void detach_app(void);	/* Detach Eiffel application */
 rt_private IDRF dbg_idrf;			/* IDR filters used for serializing */
 rt_private char dbg_idrf_initialized = (char) 0;	/* IDR filter already initialized ? */
 rt_private int interrupted;			/* Has application been asked to be interrupted */
-rt_private char *current_directory = NULL;	/* Directory where application is launched */
-rt_private char *current_app_env = NULL;	/* Environment in which application is launched */
+rt_private EIF_NATIVE_CHAR *current_directory = NULL;	/* Directory where application is launched */
+rt_private EIF_NATIVE_CHAR *current_app_env = NULL;	/* Environment in which application is launched */
 
 /*
  * IDR protocol initialization.
@@ -185,12 +183,6 @@ rt_private void dprocess_request(EIF_PSTREAM sp, Request *rqst)
 		break;
 	case TRANSFER:			/* Data transfer via daemon */
 		transfer(sp, rqst);
-		break;
-	case CMD:				/* Run a forthcoming command */
-		run_command(sp);
-		break;
-	case ASYNCMD:			/* Run a command asynchronously */
-		run_asynchronous(sp);
 		break;
 	case APPLICATION_CWD:	/* Current directory where application will be launched */
 		get_application_cwd(sp);	
@@ -512,294 +504,18 @@ rt_private void commute(EIF_PSTREAM from, EIF_PSTREAM to, int size)
 	}
 }
 
-rt_private void run_command(EIF_PSTREAM sp)
-{
-	/* Run a command, which is sent to us as a string, which should be passed
-	 * unparsed to "/bin/sh -c" for execution.
-	 */
-
-	char *cmd;			/* Command to be run */
-	int status;			/* Command status, as returned by system() */
-	char *meltpath, *appname, *envstring;	/* set MELT_PATH */
-#ifdef EIF_WINDOWS
-	STARTUPINFO				siStartInfo;
-	PROCESS_INFORMATION		procinfo;
-	char 					*current_dir;
-#else
-#ifdef EIF_VMS
-	size_t dirname_size;
-#endif
-#endif
-
-	cmd = recv_str(sp, NULL);		/* Get command */
-	if (!cmd) {
-		daemon_exit(1);
-	}
-	meltpath = (char *) (strdup (cmd));
-	if (meltpath == (char *)0){
-#ifdef USE_ADD_LOG
-		add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
-#endif
-		daemon_exit (1);
-	}
-
-#ifdef EIF_VMS_V6_ONLY
-	appname = strrchr (meltpath, ']');
-	if (!appname)
-		strcpy (meltpath, "[]");
-#elif defined EIF_VMS
-	dirname_size = eifrt_vms_dirname_len (meltpath);
-	if (!dirname_size)
-		strcpy (meltpath, "[]");
-#else
-	appname = strrchr (meltpath, '/');
-	if (!appname)
-		strcpy (meltpath, ".");
-#endif
-	envstring = (char *)malloc (strlen (meltpath) + strlen ("MELT_PATH=") + 1);
-	if (!envstring){
-#ifdef USE_ADD_LOG
-		add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
-#endif
-		daemon_exit (1);
-	 }
-	sprintf (envstring, "MELT_PATH=%s", meltpath);
-	putenv (envstring);
-#ifdef SIGCHLD
-	signal (SIGCHLD, SIG_DFL);
-#elif defined (SIGCLD)
-	signal (SIGCLD, SIG_DFL);
-#endif
-
-#ifdef EIF_WINDOWS
-	current_dir = (char *) getcwd(NULL, PATH_MAX);
-
-	memset (&siStartInfo, 0, sizeof(STARTUPINFO));
-	siStartInfo.cb = sizeof(STARTUPINFO);
-	siStartInfo.lpTitle = NULL;
-	siStartInfo.lpReserved = NULL;
-	siStartInfo.lpReserved2 = NULL;
-	siStartInfo.cbReserved2 = 0;
-	siStartInfo.lpDesktop = NULL;
-	siStartInfo.dwFlags = 0;
-	siStartInfo.hStdOutput = GetStdHandle (STD_OUTPUT_HANDLE);
-	siStartInfo.hStdInput = GetStdHandle (STD_INPUT_HANDLE);
-	siStartInfo.hStdError = GetStdHandle (STD_ERROR_HANDLE);
-
-	status = -1;
-	if (CreateProcess (
-		NULL,
-		cmd,
-		NULL,
-		NULL,
-		TRUE,
-		DETACHED_PROCESS,
-		NULL,
-		current_dir,
-		&siStartInfo,
-		&procinfo))
-	{
-		CloseHandle (procinfo.hProcess);
-		CloseHandle (procinfo.hThread);
-		procinfo.hProcess = NULL;
-		procinfo.hThread = NULL;
-		status = 0;
-	}
-	chdir(current_dir);
-	free(current_dir);
-#else
-	status = system(cmd);				/* Run command via /bin/sh */
-#endif
-
-#ifdef SIGCHLD
-	signal (SIGCHLD, SIG_IGN);
-#elif defined (SIGCLD)
-	signal (SIGCLD, SIG_IGN);
-#endif
-
-	free(cmd);
-
-#ifdef EIF_WINDOWS
-	if (status == 0)
-		send_ack(sp, AK_OK);		/* Command completed sucessfully */
-	else
-		send_ack(sp, AK_ERROR);	/* Command failed */
-#else
-	if (status == 0)
-		send_ack(sp, AK_OK);		/* Command completed sucessfully */
-	else
-		send_ack(sp, AK_ERROR);	/* Command failed */
-#endif
-}
-
-rt_private void run_asynchronous(EIF_PSTREAM sp)
-{
-	/* Run a command asynchronously, that is to say in background. The command
-	 * is identified by the client via a "job number", which is inserted in
-	 * the request itself.
-	 * The daemon forks a copy of itself which will be in charge of running
-	 * the command and sending the acknowledgment back, tagged with the command
-	 * number.
-	 */
-
-	char *cmd;			/* Command to be run */
-#ifdef EIF_WINDOWS
-	STARTUPINFO				siStartInfo;
-	PROCESS_INFORMATION		procinfo;
-	char 					*current_dir;
-#else
-	int status;			/* Command status, as returned by system() */
-	char *meltpath, *appname, *envstring;	/* set MELT_PATH */
-#ifdef EIF_VMS
-	size_t dirname_size;
-#endif
-#endif
-
-	cmd = recv_str(sp, NULL);		/* Get command */
-	if (!cmd) {
-		daemon_exit (1);
-	}
-
-#ifdef EIF_WINDOWS
-	current_dir = (char *) getcwd(NULL, PATH_MAX);
-
-	memset (&siStartInfo, 0, sizeof(STARTUPINFO));
-	siStartInfo.cb = sizeof(STARTUPINFO);
-	siStartInfo.lpTitle = NULL;
-	siStartInfo.lpReserved = NULL;
-	siStartInfo.lpReserved2 = NULL;
-	siStartInfo.cbReserved2 = 0;
-	siStartInfo.lpDesktop = NULL;
-	siStartInfo.dwFlags = 0;
-	siStartInfo.hStdOutput = GetStdHandle (STD_OUTPUT_HANDLE);
-	siStartInfo.hStdInput = GetStdHandle (STD_INPUT_HANDLE);
-	siStartInfo.hStdError = GetStdHandle (STD_ERROR_HANDLE);
-
-	if (CreateProcess (
-		NULL,
-		cmd,
-		NULL,
-		NULL,
-		TRUE,
-		DETACHED_PROCESS,
-		NULL,
-		current_dir,
-		&siStartInfo,
-		&procinfo))
-	{
-		CloseHandle (procinfo.hProcess);
-		CloseHandle (procinfo.hThread);
-		procinfo.hProcess = NULL;
-		procinfo.hThread = NULL;
-	}
-	chdir(current_dir);
-	free(current_dir);
-
-#else
-
-#ifndef EIF_VMS	/* VMS needs a higher level abstraction for async system() */
-	switch (fork()) {
-	case -1:				/* Cannot fork */
-#ifdef USE_ADD_LOG
-		add_log(1, "SYSERR fork: %m (%e)");
-		add_log(2, "ERROR cannot run asynchronous command");
-#endif
-		break;
-	case 0:					/* Child is performing the command */
-#ifdef USE_ADD_LOG
-		progpid = getpid();
-		close_log();		/* Closing and reopening to avoid share of file */
-		reopen_log();
-#endif
-		break;
-	default:
-		free(cmd);
-		return;				/* Parent returns immediately */
-	}
-#endif /* not VMS (skip fork/parent code if VMS) */
-
-/* child */
-	meltpath = (char *) (strdup (cmd));
-	if (meltpath == (char *)0){
-#ifdef USE_ADD_LOG
-		add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
-#endif
-		daemon_exit (1);
-	}
-
-#ifdef EIF_VMS_V6_ONLY
-	appname = strrchr (meltpath, ']');
-	if (appname)
-		*appname = 0;
-	else
-		strcpy (meltpath, "[]");
-#elif defined EIF_VMS
-	dirname_size = eifrt_vms_dirname_len (meltpath);
-	if (dirname_size)
-		meltpath[--dirname_size] = '\0';
-	else
-		strcpy (meltpath, "[]");
-#else
-	appname = strrchr (meltpath, '/');
-	if (appname)
-		*appname = 0;
-	else
-		strcpy (meltpath, ".");
-#endif
-	envstring = (char *)malloc (strlen (meltpath) + strlen ("MELT_PATH=") + 1);
-	if (!envstring){
-#ifdef USE_ADD_LOG
-		add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
-#endif
-		daemon_exit (1);
-	}
-	sprintf (envstring, "MELT_PATH=%s", meltpath);
-	putenv (envstring);
-#ifdef SIGCHLD
-	signal (SIGCHLD, SIG_DFL);
-#elif defined (SIGCLD)
-	signal (SIGCLD, SIG_DFL);
-#endif
-
-#ifndef EIF_VMS
-	status = system(cmd);				/* Run command via /bin/sh */
-#else	/* VMS */
-	status = eifrt_vms_spawn(cmd, 1);
-#endif	/* EIF_VMS */
-
-
-#ifdef EIF_VMS
-	if (status) {	/* command failed */
-		const char *pgmname = eifrt_vms_get_progname (NULL,0);
-		fprintf (stderr, "%s: %s: \n-- error from system() call: %d\n"
-		"-- failed cmd: \"%s\" -- %s\n", 
-		pgmname, __FILE__, errno, cmd, strerror(errno));
-	}
-	return;
-#else /* not VMS */
-	if (status) {
-		fprintf (stderr, "Cannot launch command: %s\n", cmd);
-	}
-
-	free(cmd);
-
-#ifdef USE_ADD_LOG
-	add_log(12, "child exiting");
-#endif
-	exit(0);							/* Child is exiting properly */
-#endif /* EIF_VMS */
-#endif /* EIF_WINDOWS */
-	/* NOTREACHED */
-}
-
 rt_private void get_application_cwd (EIF_PSTREAM sp)
 {
-	current_directory = recv_str(sp, NULL);		/* Get command */
+	current_directory = (EIF_NATIVE_CHAR *) recv_natstr(sp, NULL);		/* Get command */
 
 	if (current_directory) {
 			/* If current directory is `.' we reset the value to NULL,
 			 * meaning that we won't look at the value of `current_directory' */
-		if ((strlen (current_directory) == 1) && (current_directory[0] == '.')) {
+#ifdef EIF_WINDOWS		
+		if ((rt_nstrlen (current_directory) == 1) && (current_directory[0] == L'.')) {
+#else
+		if ((rt_nstrlen (current_directory) == 1) && (current_directory[0] == '.')) {
+#endif
 			free(current_directory);
 			current_directory = NULL;
 		}
@@ -808,10 +524,10 @@ rt_private void get_application_cwd (EIF_PSTREAM sp)
 
 rt_private void get_application_env (EIF_PSTREAM sp)
 {
-	current_app_env = recv_str(sp, NULL);		/* Get command */
+	current_app_env = (EIF_NATIVE_CHAR *) recv_natstr(sp, NULL);		/* Get command */
 		/* If current app env is '' we reset the value to NULL,
 		 * meaning that we won't look at the value of `current_app_env' */
-	if (current_app_env && (strlen (current_app_env) == 0)) {
+	if (current_app_env && (rt_nstrlen (current_app_env) == 0)) {
 		free(current_app_env);
 		current_app_env = NULL;
 	}
@@ -840,8 +556,8 @@ rt_private void start_app(EIF_PSTREAM sp)
 	 * A positive acknowledgment is sent back if the process starts correctly.
 	 */
 
-	char *exe_path;			/* Application to be run */
-	char *exe_args;			/* Arguments to use for application execution */
+	EIF_NATIVE_CHAR *exe_path;			/* Application to be run */
+	EIF_NATIVE_CHAR *exe_args;			/* Arguments to use for application execution */
 	STREAM *cp;			/* Child stream */
 #ifdef EIF_WINDOWS
 	HANDLE process_handle;	/* Child process handle */
@@ -851,10 +567,10 @@ rt_private void start_app(EIF_PSTREAM sp)
 #endif
 
 	/* Get Application executable path */
-	exe_path = recv_str(sp, NULL);		
+	exe_path = (EIF_NATIVE_CHAR *) recv_natstr(sp, NULL);		
 
 	/* Get Application arguments */
-	exe_args = recv_str(sp, NULL);
+	exe_args = (EIF_NATIVE_CHAR *) recv_natstr(sp, NULL);
 
 #ifdef USE_ADD_LOG
 	add_log(12, "starting app \n");
@@ -863,9 +579,9 @@ rt_private void start_app(EIF_PSTREAM sp)
 #ifdef EIF_WINDOWS
 		/* First argument is 0 because we are not launching the compiler, but
 		 * an application being debugged by the Eiffel debugger. */
-	cp = spawn_child("app", 0, exe_path, exe_args, current_directory, (char*)current_app_env, 1, &process_handle, &process_id);	/* Start up children */
+	cp = spawn_child("app", exe_path, exe_args, current_directory, current_app_env, 1, &process_id, &process_handle, 0);	/* Start up children */
 #else
-	cp = spawn_child("app", exe_path, exe_args, current_directory, (char*)current_app_env, 1, &pid);	/* Start up children */
+	cp = spawn_child("app", exe_path, exe_args, current_directory, current_app_env, 1, &pid);	/* Start up children */
 #endif
 
 	free(exe_path);
@@ -940,7 +656,7 @@ rt_private void attach_app(EIF_PSTREAM sp)
 	 * A positive acknowledgment is sent back if the process starts correctly.
 	 */
 
-	char *exe_path;			/* Application to be run */
+	EIF_NATIVE_CHAR *exe_path;			/* Application to be run */
 	unsigned int exe_port_number;	/* Port number to use to attach application */
 	STREAM *cp;				/* Child stream */
 	unsigned int debuggee_pid; /* debuggee's process id */
@@ -950,10 +666,10 @@ rt_private void attach_app(EIF_PSTREAM sp)
 #endif
 
 	/* Get Application executable path */
-	exe_path = recv_str(sp, NULL);		
+	exe_path = (EIF_NATIVE_CHAR *) recv_natstr(sp, NULL);		
 
 	/* Get port number */
-	exe_port_number = (unsigned int) atoi(recv_str(sp, NULL));
+	exe_port_number = (unsigned int) atoi((char *)recv_str(sp, NULL));
 	if (exe_port_number <= 0) {
 		send_ack(sp, AK_ERROR);	/* invalid port number */		
 		return;

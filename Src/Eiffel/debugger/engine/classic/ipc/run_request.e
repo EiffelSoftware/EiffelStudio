@@ -20,16 +20,16 @@ create
 
 feature -- Status report
 
-	application_name: READABLE_STRING_GENERAL
+	application_path: PATH
 			-- Path to executable of application
 
-	arguments: STRING
+	arguments: READABLE_STRING_32
 			-- Arguments for application execution
 
-	working_directory: STRING
+	working_directory: detachable PATH
 			-- Directory in which `application_name' will be launched.
 
-	environment_variables: STRING
+	environment_variables: NATIVE_STRING
 			-- Environment in which `application_name' will be launched.
 
 	ipc_timeout: INTEGER
@@ -37,17 +37,17 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_application_name (s: like application_name)
-			-- Assign `s' to `application_name'.
+	set_application_path (a_path: like application_path)
+			-- Assign `a_path' to `application_path'.
 		require
-			s_not_void: s /= Void
+			a_path_not_void: a_path /= Void
 		do
-			application_name := s
+			application_path := a_path
 		ensure
-			application_name_set: application_name = s
+			application_path_set: application_path.is_same_file_as (a_path)
 		end
 
-	set_arguments (s: STRING)
+	set_arguments (s: like arguments)
 			-- Assign `s' to `arguments'.
 		do
 			arguments := s
@@ -55,17 +55,15 @@ feature -- Status setting
 			arguments_set: arguments = s
 		end
 
-	set_working_directory (s: STRING)
-			-- Assign `s' to `working_directory'.
-		require
-			s_not_void: s /= Void
+	set_working_directory (p: like working_directory)
+			-- Assign `p' to `working_directory'.
 		do
-			working_directory := s
+			working_directory := p
 		ensure
-			working_directory_set: working_directory = s
+			working_directory_set: working_directory = p
 		end
 
-	set_environment_variables (s: STRING)
+	set_environment_variables (s: like environment_variables)
 			-- Assign `s' to `environment_variables'.
 		do
 			environment_variables := s
@@ -121,28 +119,29 @@ feature {NONE} -- Implementation
 			if attached working_directory as w then
 				send_rqst_0 (Rqst_application_cwd)
 					-- Send working directory of application
-				send_string_content (w)
+				send_native_string_content (w.native_string)
 			end
 
 				-- Initialize sending of environment
-			if attached environment_variables as envs and then envs.count > 0 then
+			if attached environment_variables as envs then
+				check envs.managed_data.count > 0 end
 				send_rqst_0 (Rqst_application_env)
 				-- Send environment of application
-				send_string_content_with_size (envs, envs.count)
+				send_native_string_content (envs)
 			end
 
 				-- Start the application (in debug mode).
 			send_rqst_0 (Rqst_application)
 
 				-- Send the name of the application.
-			send_string_content	(application_name)
+			send_native_string_content	(application_path.native_string)
 
 				-- Send the arguments.
 
 			if attached arguments as l_args then
-				send_string_content	(l_args)
+				send_string_32_content	(l_args)
 			else
-				send_string_content	("")
+				send_string_32_content	({STRING_32} "")
 			end
 
 			Result := recv_ack

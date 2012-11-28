@@ -300,6 +300,20 @@ rt_public int send_str(EIF_PSTREAM sp, char *buffer)
 	return send_sized_str (sp, buffer, (int) size);
 }
 
+rt_public EIF_NATIVE_CHAR *recv_natstr(EIF_PSTREAM sp, size_t *sizeptr)
+           		/* The STREAM pointer */
+             	/* Set to the size of the string if non null pointer */
+{
+	/* Receive a Native string from socket. We return the address of the malloc'ed
+	 * zone where string was stored and optionnally we set the size to the
+	 * variable pointed to by 'sizeptr', if it is not a null pointer. If we
+	 * cannot receive the string, a null pointer is returned.
+	 *
+	 * See NATIVE_STRING on the Eiffel side
+	 */
+	return (EIF_NATIVE_CHAR *) recv_str (sp, sizeptr);
+}
+
 rt_public char *recv_str(EIF_PSTREAM sp, size_t *sizeptr)
            		/* The STREAM pointer */
              	/* Set to the size of the string if non null pointer */

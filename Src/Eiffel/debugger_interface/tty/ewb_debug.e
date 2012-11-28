@@ -55,26 +55,27 @@ feature {NONE} -- Implementation
 		end
 
 	param_args: STRING
-	param_working_directory: STRING
+	param_working_path: PATH
 	param_env_variables: HASH_TABLE [STRING_32, STRING_32]
 
 	execute
 			-- This command is available only for the `loop' mode
 		local
-			dbg: TTY_DEBUGGER_MANAGER
 			shared_eiffel: SHARED_EIFFEL_PROJECT
+			dbg: TTY_DEBUGGER_MANAGER
 		do
 			localized_print (debugger_names.m_experimental_warning)
-			dbg ?= debugger_manager
-			if dbg = Void then
+			if attached {TTY_DEBUGGER_MANAGER} debugger_manager as tty_dbg then
+				dbg := tty_dbg
+			else
 				create dbg.make
 				dbg.set_events_handler (create {TTY_DEBUGGER_EVENTS_HANDLER}.make)
 				dbg.register
 				dbg.load_all_debugger_data
 
-				if param_working_directory = Void or else param_working_directory.is_empty then
+				if not attached param_working_path as wp or else wp.is_empty then
 					create shared_eiffel
-					param_working_directory := Execution_environment.current_working_directory
+					param_working_path := Execution_environment.current_working_path
 				end
 			end
 
@@ -85,32 +86,32 @@ feature {NONE} -- Implementation
 		do
 			localized_print (debugger_names.m_parameters);
 			localized_print (debugger_names.m_arguments);
-			if param_args /= Void then
-				localized_print (param_args)
+			if attached param_args as l_args then
+				localized_print (l_args)
 			else
 				localized_print (debugger_names.m_none)
 			end
 			io.put_new_line
 			localized_print (debugger_names.m_environment_variables);
-			if param_env_variables /= Void then
+			if attached param_env_variables as l_param_env_variables then
 				from
-					param_env_variables.start
+					l_param_env_variables.start
 				until
-					param_env_variables.after
+					l_param_env_variables.after
 				loop
 					io.put_string ("%N%T")
-					localized_print (param_env_variables.key_for_iteration)
+					localized_print (l_param_env_variables.key_for_iteration)
 					io.put_string ("=")
-					localized_print (param_env_variables.item_for_iteration)
-					param_env_variables.forth
+					localized_print (l_param_env_variables.item_for_iteration)
+					l_param_env_variables.forth
 				end
 			else
 				localized_print (debugger_names.m_none)
 			end
 			io.put_new_line
 			localized_print (debugger_names.m_working_directory);
-			if param_working_directory /= Void then
-				localized_print (param_working_directory)
+			if attached param_working_path as wp then
+				localized_print (wp.name)
 			else
 				localized_print (debugger_names.m_none)
 			end
@@ -182,33 +183,35 @@ feature {NONE} -- Implementation
 
 	get_working_directory
 		local
-			d: like param_working_directory
+			wp: like param_working_path
 		do
 			localized_print (debugger_names.m_working_directory);
-			if param_working_directory /= Void and then not param_working_directory.is_empty then
-				localized_print ("[" + param_working_directory + "] ")
+			wp := param_working_path
+			if wp /= Void and then not wp.is_empty then
+				localized_print ({STRING_32} "[" + wp.name + {STRING_32} "] ")
 			else
 				localized_print ("[...] ")
 			end
 			io.read_line
 			if io.last_string.is_empty then
-				if param_working_directory /= Void and then not param_working_directory.is_empty then
+				wp := param_working_path
+				if wp /= Void and then not wp.is_empty then
 					if command_line_io.confirmed (debugger_names.m_remove_current_value) then
-						param_working_directory := Void
+						param_working_path := Void
 					end
 				else
-					d := Eiffel_project.lace.directory_name
-					if command_line_io.confirmed (debugger_names.m_confirm_use_this_directory_question (d)) then
-						param_working_directory := d
-					elseif not d.is_equal (Execution_environment.current_working_directory) then
-						d := Execution_environment.current_working_directory
-						if command_line_io.confirmed (debugger_names.m_confirm_use_this_directory_question (d)) then
-							param_working_directory := d
+					create wp.make_from_string (Eiffel_project.lace.directory_name)
+					if command_line_io.confirmed (debugger_names.m_confirm_use_this_directory_question (wp)) then
+						param_working_path := wp
+					elseif not wp.is_equal (Execution_environment.current_working_path) then
+						wp := Execution_environment.current_working_path
+						if command_line_io.confirmed (debugger_names.m_confirm_use_this_directory_question (wp)) then
+							param_working_path := wp
 						end
 					end
 				end
 			else
-				param_working_directory := io.last_string.twin
+				create param_working_path.make_from_string (io.last_string) -- FIXME: unicode .. should we consider it as UTF-8 ?
 			end
 		end
 
@@ -217,13 +220,13 @@ feature {NONE} -- Implementation
 			debugger_manager /= Void
 		local
 			ctlr: DEBUGGER_CONTROLLER
-			wdir: STRING
+			wdir: PATH
 			prof: DEBUGGER_EXECUTION_PROFILE
 			param: DEBUGGER_EXECUTION_RESOLVED_PROFILE
 		do
-			wdir := param_working_directory
+			wdir := param_working_path
 			if wdir = Void or else wdir.is_empty then
-				wdir := Eiffel_project.lace.directory_name
+				create wdir.make_from_string (Eiffel_project.lace.directory_name)
 						--Execution_environment.current_working_directory
 			end
 			ctlr := debugger_manager.controller

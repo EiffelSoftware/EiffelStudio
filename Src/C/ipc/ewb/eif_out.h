@@ -73,6 +73,4 @@ extern void c_send_str (char *s);
 extern void c_twrite (char *s, long int l);
 extern EIF_REFERENCE c_tread (void);
 
-extern int async_shell(char *cmd);
-
 #endif /* _eif_out_h_ */

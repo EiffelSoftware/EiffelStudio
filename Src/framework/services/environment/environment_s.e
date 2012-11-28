@@ -34,7 +34,29 @@ feature -- Access
 			result_consistent: Result = variables
 		end
 
-	variable (a_name: READABLE_STRING_GENERAL): detachable STRING assign set_variable
+	variable (a_name: READABLE_STRING_GENERAL): detachable STRING assign set_variable_8
+			-- Retrieves an associated values given a variable name.
+			--
+			-- `a_name': A variable name to retrieve an associated value for.
+			-- `Result': An associated value or Void if the variable has not been set.
+		require
+			is_interface_usable: is_interface_usable
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+		deferred
+		end
+
+	variables_32: LINEAR [READABLE_STRING_32]
+			-- A complete list of registered environment variables.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			result_attached: Result /= Void
+			result_consistent: Result = variables
+		end
+
+	variable_32 (a_name: READABLE_STRING_GENERAL): detachable STRING_32 assign set_variable_32
 			-- Retrieves an associated values given a variable name.
 			--
 			-- `a_name': A variable name to retrieve an associated value for.
@@ -48,7 +70,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_variable (a_value: detachable STRING; a_name: READABLE_STRING_GENERAL)
+	set_variable (a_value: detachable READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL)
 			-- Sets a variable in the Current environment.
 			-- Note: This does not effect the environment variables themselves. To change the environment
 			--       and any associated environment variable use `set_environment_variable'
@@ -64,10 +86,56 @@ feature -- Element change
 		ensure
 			a_name_is_set: (attached a_value) and then is_set (a_name)
 			not_a_name_is_set: (not attached a_value) implies not is_set (a_name)
-			a_name_set: is_set (a_name) and then ((attached variable (a_name) as l_value) and then l_value ~ a_value)
+			a_name_set: is_set (a_name) and then
+						attached variable (a_name) as l_value and then
+						a_value /= Void and then l_value.same_string_general (a_value)
 		end
 
-	set_environment_variable (a_value: detachable STRING; a_name: READABLE_STRING_GENERAL)
+	set_variable_8 (a_value: detachable STRING_8; a_name: READABLE_STRING_GENERAL)
+			-- Sets a variable in the Current environment.
+			-- Note: This does not effect the environment variables themselves. To change the environment
+			--       and any associated environment variable use `set_environment_variable'
+			--
+			-- `a_value': An associated value to bind to a given variable name.
+			-- `a_name' : The name of the variable to set.
+		require
+			is_interface_usable: is_interface_usable
+			not_a_value_is_empty: a_value /= Void and then not a_value.is_empty
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+		do
+			set_variable (a_value, a_name)
+		ensure
+			a_name_is_set: (attached a_value) and then is_set (a_name)
+			not_a_name_is_set: (not attached a_value) implies not is_set (a_name)
+			a_name_set: is_set (a_name) and then
+						attached variable (a_name) as l_value and then
+						a_value /= Void and then l_value.same_string (a_value)
+		end
+
+	set_variable_32 (a_value: detachable STRING_32; a_name: READABLE_STRING_GENERAL)
+			-- Sets a variable in the Current environment.
+			-- Note: This does not effect the environment variables themselves. To change the environment
+			--       and any associated environment variable use `set_environment_variable'
+			--
+			-- `a_value': An associated value to bind to a given variable name.
+			-- `a_name' : The name of the variable to set.
+		require
+			is_interface_usable: is_interface_usable
+			not_a_value_is_empty: a_value /= Void and then not a_value.is_empty
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+		do
+			set_variable (a_value, a_name)
+		ensure
+			a_name_is_set: (attached a_value) and then is_set (a_name)
+			not_a_name_is_set: (not attached a_value) implies not is_set (a_name)
+			a_name_set: is_set (a_name) and then
+						attached variable_32 (a_name) as l_value and then
+						a_value /= Void and then l_value.same_string (a_value)
+		end
+
+	set_environment_variable (a_value: detachable READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL)
 			-- Like `set_variable' but will force the setting of an environment varable also.
 			--
 			-- `a_value': An associated value to bind to a given variable name.
@@ -80,7 +148,9 @@ feature -- Element change
 		ensure
 			a_name_is_set: (attached a_value) and then is_set (a_name)
 			not_a_name_is_set: (not attached a_value) implies not is_set (a_name)
-			a_name_set: is_set (a_name) and then ((attached variable (a_name) as l_value) and then l_value ~ a_value)
+			a_name_set: is_set (a_name) and then
+						attached variable_32 (a_name) as l_value and then
+						a_value /= Void and then a_value.same_string (l_value)
 		end
 
 feature -- Status report
@@ -94,7 +164,7 @@ feature -- Status report
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 		do
-			Result := attached variable (a_name)
+			Result := variable_32 (a_name) /= Void
 		end
 
 feature -- Query
@@ -113,19 +183,19 @@ feature -- Query
 			result_attached: Result /= Void
 		end
 
---	expand_string_32 (a_string: READABLE_STRING_32; a_keep: BOOLEAN): STRING_32
---			-- Expands a 32-bit string and replaces any variables with those found with a match value
---			-- in `variable'.
---			--
---			-- `a_string': The string to expand.
---			-- `a_keep'  : True to retain any unmatched variables in the result; False otherwise.
---			-- `Result'  : An expanded string.
---		require
---			a_string_attached: a_string /= Void
---		deferred
---		ensure
---			result_attached: Result /= Void
---		end
+	expand_string_32 (a_string: READABLE_STRING_32; a_keep: BOOLEAN): STRING_32
+			-- Expands a 32-bit string and replaces any variables with those found with a match value
+			-- in `variable'.
+			--
+			-- `a_string': The string to expand.
+			-- `a_keep'  : True to retain any unmatched variables in the result; False otherwise.
+			-- `Result'  : An expanded string.
+		require
+			a_string_attached: a_string /= Void
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
 
 feature -- Events
 
@@ -143,7 +213,7 @@ feature -- Events
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

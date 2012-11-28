@@ -143,8 +143,9 @@ rt_public int is_ecdbgd_alive (void)
 	return (ewb_active_check(ewb_data.d_cs, ewb_data.d_ecdbgd) == 0);
 }
 
-rt_public int launch_ecdbgd (char* progn, char* cmd, int eif_timeout) 
+rt_public int launch_ecdbgd (EIF_NATIVE_CHAR* progn, EIF_NATIVE_CHAR* cmd, int eif_timeout) 
 {
+	/* note: program is not used for now */
 	STREAM *sp;			/* Stream used to talk to the child "ecdbgd" */
 #ifdef EIF_WINDOWS
 	HANDLE pid;			/* Pid of the spawned child */

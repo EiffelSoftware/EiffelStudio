@@ -27,7 +27,7 @@ inherit
 
 feature -- Launching parameters setting
 
-	prepare_command_line (cmd: STRING_32; args: LIST [STRING]; a_working_directory: STRING_32)
+	prepare_command_line (cmd: STRING_32; args: LIST [READABLE_STRING_GENERAL]; a_working_directory: PATH)
 			-- Prepare command line for process launching.
 			-- `cmd' is the process command to launch, `args' are possible arguments and
 			-- `a_working_directory' is the path where process will be launched.
@@ -36,14 +36,12 @@ feature -- Launching parameters setting
 			cmd_not_void: cmd /= Void
 			cmd_not_empty: not cmd.is_empty
 			a_working_dir_not_null: a_working_directory /= Void
-		local
-			s: STRING
 		do
 			create command_line.make_from_string (cmd)
 			if a_working_directory = Void then
 				working_directory := Void
 			else
-				create working_directory.make_from_string (a_working_directory)
+				working_directory := a_working_directory
 			end
 
 			if args = Void then
@@ -55,14 +53,13 @@ feature -- Launching parameters setting
 				until
 					args.after
 				loop
-					create s.make_from_string (args.item)
-					arguments.extend (s)
+					arguments.extend (args.item.twin) -- Probably safer to twin
 					args.forth
 				end
 			end
 		ensure
-			command_line_set: command_line.is_equal (cmd)
-			working_directory_set: (working_directory /= Void) implies working_directory.is_equal (a_working_directory)
+			command_line_set: command_line.same_string (cmd)
+			working_directory_set: (working_directory /= Void) implies working_directory.same_as (a_working_directory)
 			arguments_set:
 				((args = Void) implies arguments = Void) or
 				((args /= Void) implies arguments.count = args.count)
@@ -263,9 +260,9 @@ feature -- Control
 		do
 			create prc_ftry
 			if use_argument then
-				prc := prc_ftry.process_launcher (command_line, arguments, working_directory)
+				prc := prc_ftry.process_launcher (command_line, arguments, working_directory.name)
 			else
-				prc := prc_ftry.process_launcher_with_command_line (command_line, working_directory)
+				prc := prc_ftry.process_launcher_with_command_line (command_line, working_directory.name)
 			end
 
 			prc.redirect_input_to_stream
@@ -346,7 +343,7 @@ feature -- Unmanaged process launch
 		require
 			dir_not_void: dir /= VOid
 		local
-			cmdexe: STRING
+			cmdexe: detachable STRING_32
 			cl: STRING_32
 			console_shell: STRING
 		do
@@ -357,15 +354,15 @@ feature -- Unmanaged process launch
 			end
 			if console_shell.is_empty then
 				if platform_constants.is_windows then
-					cmdexe := Execution_environment.get ("COMSPEC")
+					cmdexe := Execution_environment.item ("COMSPEC")
 					if cmdexe /= Void then
 							-- This allows the use of `dir' etc.
 						cl.append (cmdexe)
 					else
-						cl.append ("CMD")
+						cl.append ({STRING_32} "CMD")
 					end
 				else
-					cl.append (once "/bin/sh -c xterm -geometry 80x40")
+					cl.append (once {STRING_32} "/bin/sh -c xterm -geometry 80x40")
 				end
 			end
 
@@ -496,10 +493,10 @@ feature -- Status reporting
 	command_line: STRING_32
 			-- Command line (with arguments) of child process
 
-	arguments: ARRAYED_LIST [STRING]
+	arguments: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			-- Arguments for process
 
-	working_directory: STRING_32
+	working_directory: PATH
 			-- Working directory of child process.
 
 	time_interval: INTEGER

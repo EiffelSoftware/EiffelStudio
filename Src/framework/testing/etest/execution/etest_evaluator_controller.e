@@ -86,7 +86,7 @@ feature {NONE} -- Access
 	internal_connection: detachable like connection
 			-- Connection to evaluator
 
-	testing_directory: STRING_32
+	testing_directory: PATH
 			-- Directory in which tests should be executed
 
 feature -- Status report
@@ -160,7 +160,7 @@ feature -- Status setting
 				create l_args.make (100)
 				l_args.append_integer (l_connection.current_port)
 				l_args.append (" %"")
-				l_args.append_string (u.string_32_to_utf_8_string_8 (testing_directory))
+				l_args.append_string (u.string_32_to_utf_8_string_8 (testing_directory.name))
 				l_args.append_character ('"')
 				l_args.append (" -eif_root ")
 				l_args.append ({TEST_SYSTEM_I}.eqa_evaluator_name)

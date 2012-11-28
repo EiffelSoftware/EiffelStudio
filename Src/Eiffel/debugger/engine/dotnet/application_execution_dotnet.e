@@ -242,7 +242,7 @@ feature -- Bridge to Debugger
 
 feature -- Execution
 
-	run_with_env_string (app: STRING_32; args, cwd: STRING; env: detachable STRING_GENERAL)
+	run_with_env_string (app: PATH; args: READABLE_STRING_32; cwd: PATH; env: detachable NATIVE_STRING)
 			-- <Precursor>
 		do
 			reload_dotnet_debug_info_if_needed
@@ -253,7 +253,7 @@ feature -- Execution
 				if Eifnet_debugger.is_debugging then
 					process_before_resuming
 
-					Eifnet_debugger.do_run (safe_path (app), cwd, args, env)
+					Eifnet_debugger.do_run (safe_path (app.name), cwd, args, env)
 
 					if not Eifnet_debugger.last_dbg_call_succeed then
 							-- This means we had issue creating process
@@ -272,7 +272,7 @@ feature -- Execution
 			end
 		end
 
-	attach_using_port (app: READABLE_STRING_GENERAL; a_port: INTEGER)
+	attach_using_port (app: PATH; a_port: INTEGER)
 		do
 			check not_supported: False end
 		end

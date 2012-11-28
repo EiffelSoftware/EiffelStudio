@@ -20,7 +20,7 @@ create
 
 feature -- Status report
 
-	application_name: READABLE_STRING_GENERAL
+	application_path: PATH
 			-- Path to executable of application
 
 	port_number: INTEGER
@@ -31,14 +31,14 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_application_name (s: like application_name)
-			-- Assign `s' to `application_name'.
+	set_application_path (a_path: like application_path)
+			-- Assign `a_path' to `application_path'.
 		require
-			s_not_void: s /= Void
+			a_path_not_void: a_path /= Void
 		do
-			application_name := s
+			application_path := a_path
 		ensure
-			application_name_set: application_name = s
+			application_path_set: application_path.is_same_file_as (a_path)
 		end
 
 	set_port_number (p: like port_number)
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 
 	attach_application: BOOLEAN
 			-- Send a request to the Ised daemon to
-			-- attach application `application_name' using port `port_number',
+			-- attach application `application_path' using port `port_number',
 			-- and perform a handshake with the
 			-- application to check that it is alive.
 			-- Return False if something went wrong
@@ -97,10 +97,10 @@ feature {NONE} -- Implementation
 			send_rqst_0 (Rqst_attach)
 
 				-- Send the name of the application.
-			send_string_content (application_name)
+			send_native_string_content (application_path.native_string)
 
 				-- Send the port_number
-			send_string_content (port_number.out)
+			send_string_8_content (port_number.out)
 
 			Result := recv_ack
 			debug("DEBUGGER")

@@ -313,15 +313,13 @@ feature -- Debugger data change
 	load_profiles_data
 			-- Load profiles
 		local
-			prof: like profiles
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				prof := dbg_storage.profiles_data_from_storage
-				if prof /= Void then
+				if attached dbg_storage.profiles_data_from_storage as prof then
 					profiles := prof
 				else
-					check profiles /= Void end
+					check has_profiles: profiles /= Void end
 				end
 			else
 				-- Issue !
@@ -923,7 +921,7 @@ feature -- Settings
 			Result := 0 --| Use default settings in runtime
 		end
 
-	classic_debugger_location: detachable STRING
+	classic_debugger_location: detachable PATH
 			-- Path to ecdbgd executable
 			-- If Void use the default executable located in ISE_EIFFEL ... bin
 		do
@@ -951,10 +949,14 @@ feature -- Settings
 			Result := False
 		end
 
-	dotnet_debugger_entries: ARRAY [STRING]
+	dotnet_debugger_entries: ITERABLE [READABLE_STRING_32]
 			-- Which dotnet debugger is used?
 		do
-			Result := <<>>
+			create {ARRAY [STRING_32]} Result.make_empty
+		end
+
+	dotnet_debugger: detachable READABLE_STRING_32
+		do
 		end
 
 	is_true_boolean_value (a_string: STRING): BOOLEAN

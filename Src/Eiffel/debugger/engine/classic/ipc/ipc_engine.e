@@ -8,15 +8,12 @@ class
 	IPC_ENGINE
 
 inherit
-
 	ISED_X_SLAVE
 		export
 			{NONE} all
 		end
 
 	IPC_REQUEST
-
-	EXECUTION_ENVIRONMENT
 
 	SHARED_EIFFEL_PROJECT
 		export
@@ -70,7 +67,6 @@ feature -- Launching
 			ecdbgd_launched_only_if_not_closed: ec_dbg_launched implies not close_ecdbgd_on_end_of_debugging
 		local
 			cmd: like safe_path
-			cs_pname, cs_cmd: C_STRING
 			r: INTEGER
 		do
 			if ec_dbg_launched and then not is_ecdbgd_alive then
@@ -84,15 +80,12 @@ feature -- Launching
 			if not ec_dbg_launched then
 				get_environment
 				if valid_ise_ecdbgd_executable then
-					cmd := safe_path (ise_ecdbgd_path.to_string_32)
-					create cs_cmd.make (cmd.as_string_8) --FIXME: [2012-oct-02] this should use unicode, but first have a quick fix to fix the debugger (in non unicode folder)
-					create cs_pname.make ("ecdbgd") -- Unused for now in C implementation of `c_launch_ecdbgd'
+					cmd := safe_path (ise_ecdbgd_path.name)
 
 					debug ("ipc")
 						io.put_string ("Launching ecdbgd : " + cmd.as_string_8 + " (timeout=" + ise_timeout.out + ") %N")
 					end
-
-					r := c_launch_ecdbgd (cs_pname.item, cs_cmd.item, ise_timeout)
+					r := launch_ec_daemon (ise_ecdbgd_path, "ecdbgd")
 					ec_dbg_launched := (r = 1)
 				else
 					ec_dbg_launched := False
@@ -113,6 +106,16 @@ feature -- Launching
 			end
 		end
 
+
+	launch_ec_daemon (cmd: PATH; a_name: READABLE_STRING_8): INTEGER
+		local
+			cs_pname, cs_cmd: NATIVE_STRING
+		do
+			create cs_pname.make (a_name) -- Unused for now in C implementation of `c_launch_ecdbgd'
+			cs_cmd := cmd.native_string
+			Result := c_launch_ecdbgd (cs_pname.item, cs_cmd.item, ise_timeout)
+		end
+
 	prepare_ec_dbg_launching
 			-- Prepare ec before starting Eiffel debugger daemon
 			--| Mainly optimization
@@ -125,12 +128,13 @@ feature -- Launching
 	get_environment
 			-- Get environment needed to start the debugger
 		local
+			p: detachable PATH
 			s: detachable READABLE_STRING_32
 		do
 			ise_timeout := Debugger_manager.classic_debugger_timeout
 			if ise_timeout <= 0 then
 				if
-					attached Execution_environment.get (Ise_timeout_varname) as s_timeout and then
+					attached Execution_environment.item (Ise_timeout_varname) as s_timeout and then
 					s_timeout.is_integer
 				then
 					ise_timeout := s_timeout.to_integer
@@ -145,18 +149,16 @@ feature -- Launching
 				ise_ending_timeout := 100
 			end
 
-			if attached Debugger_manager.classic_debugger_location as p_dbg_location then
-				s := p_dbg_location.to_string_32
-			end
-			if s = Void or else s.is_empty then
-				if attached Execution_environment.get (Ise_ecdbgd_varname) as s_ecdbgd then
-					s := s_ecdbgd
+			p := Debugger_manager.classic_debugger_location
+			if p = Void or else p.is_empty then
+				s := Execution_environment.item (Ise_ecdbgd_varname)
+				if s = Void or else s.is_empty then
+					p := eiffel_layout.ecdbgd_command_name
+				else
+					create p.make_from_string (s)
 				end
 			end
-			if s = Void or else s.is_empty then
-				s := eiffel_layout.ecdbgd_command_name.name
-			end
-			create ise_ecdbgd_path.make_from_string (s)
+			ise_ecdbgd_path := p
 		end
 
 	end_of_debugging
@@ -183,7 +185,7 @@ feature -- Launching
 					until
 						not is_ecdbgd_alive or n > ise_ending_timeout
 					loop
-						sleep (1_000_000) -- i.e: 1 ms
+						execution_environment.sleep (1_000_000) -- i.e: 1 ms
 						n := n + 1
 					end
 					check
@@ -214,7 +216,7 @@ feature -- Status
 			Result := (c_is_ecdbgd_alive = 1)
 		end
 
-	ise_ecdbgd_path: FILE_NAME_32
+	ise_ecdbgd_path: PATH
 			-- Path to the debugger daemon (i.e ecdbgd) executable
 
 	ise_timeout: INTEGER
@@ -306,15 +308,13 @@ feature {NONE} -- Implementation
 			-- Keep this for compatibility with old EiffelStudio
 		end
 
-	valid_executable (fn: FILE_NAME_32): BOOLEAN
+	valid_executable (fn: PATH): BOOLEAN
 			-- Does `fn' represents a valid executable ?
 		local
 			f: RAW_FILE
-			s32: READABLE_STRING_32
 		do
-			s32 := fn.to_string_32
-			if not s32.is_empty then
-				create f.make_with_name (s32)
+			if not fn.is_empty then
+				create f.make_with_path (fn)
 				Result := f.exists and then (is_windows or else f.is_access_executable)
 			end
 		end
@@ -330,7 +330,7 @@ feature {NONE} -- Externals
 	c_launch_ecdbgd (pprogn: POINTER; pcmd: POINTER; timeout: INTEGER): INTEGER
 			-- launch classic Eiffel debugger component
 		external
-			"C signature (char* , char* , int ): int"
+			"C signature (EIF_NATIVE_CHAR* , EIF_NATIVE_CHAR* , int): int"
 		alias
 			"launch_ecdbgd"
 		end

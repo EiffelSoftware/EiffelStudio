@@ -236,15 +236,15 @@ feature -- UTF-32 to UTF-8
 			end
 		end
 
-	string_32_to_utf_8_0_pointer (s: READABLE_STRING_32; p: MANAGED_POINTER)
+	string_32_into_utf_8_0_pointer (s: READABLE_STRING_32; p: MANAGED_POINTER)
 			-- Write UTF-8 sequence corresponding to `s' with terminating zero
 			-- to address `p' and update the size of `p' to the number of written bytes.
 			-- The sequence is zero-terminated.
 		do
-			utf_32_string_to_utf_8_0_pointer (s, p)
+			utf_32_string_into_utf_8_0_pointer (s, p)
 		end
 
-	utf_32_string_to_utf_8_0_pointer (s: READABLE_STRING_GENERAL; p: MANAGED_POINTER)
+	utf_32_string_into_utf_8_0_pointer (s: READABLE_STRING_GENERAL; p: MANAGED_POINTER)
 			-- Write UTF-8 sequence corresponding to `s', interpreted as a UTF-32 sequence,
 			-- with terminating zero to address `p' and update the size of `p' to the
 			-- number of written bytes.
@@ -617,23 +617,23 @@ feature -- UTF-32 to UTF-16
 			Result.extend (0)
 		end
 
-	string_32_to_utf_16_pointer (s: READABLE_STRING_32; p: MANAGED_POINTER)
+	string_32_into_utf_16_pointer (s: READABLE_STRING_32; p: MANAGED_POINTER)
 			-- Write UTF-16 sequence corresponding to `s' to address `p'
 			-- and update the size of `p' to the number of written bytes.
 			-- The sequence is not zero-terminated.
 		do
-			utf_32_substring_to_utf_16_pointer (s, 1, s.count, p)
+			utf_32_substring_into_utf_16_pointer (s, 1, s.count, p)
 		end
 
-	string_32_to_utf_16_0_pointer (s: READABLE_STRING_32; p: MANAGED_POINTER)
+	string_32_into_utf_16_0_pointer (s: READABLE_STRING_32; p: MANAGED_POINTER)
 			-- Write UTF-16 sequence corresponding to `s' with terminating zero
 			-- to address `p' and update the size of `p' to the number of written bytes.
 			-- The sequence is zero-terminated.
 		do
-			utf_32_substring_to_utf_16_0_pointer (s, 1, s.count, p)
+			utf_32_substring_into_utf_16_0_pointer (s, 1, s.count, p)
 		end
 
-	utf_32_substring_to_utf_16_pointer
+	utf_32_substring_into_utf_16_pointer
 			(s: READABLE_STRING_GENERAL;
 			start_pos, end_pos: like {READABLE_STRING_32}.count;
 			p: MANAGED_POINTER)
@@ -689,7 +689,7 @@ feature -- UTF-32 to UTF-16
 			p_count_may_increase: p.count >= old p.count
 		end
 
-	utf_32_substring_to_utf_16_0_pointer
+	utf_32_substring_into_utf_16_0_pointer
 			(s: READABLE_STRING_GENERAL;
 			start_pos, end_pos: like {READABLE_STRING_32}.count;
 			p: MANAGED_POINTER)

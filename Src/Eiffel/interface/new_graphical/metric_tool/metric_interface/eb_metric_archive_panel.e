@@ -694,7 +694,6 @@ feature -- Overwritting
 			a_text_field_attached: attached a_text_field
 		local
 			url_address, http, ftp, file: STRING_32
-			l_is_file: BOOLEAN
 		do
 				-- Prepare for successful loading.
 			is_last_load_successful := True

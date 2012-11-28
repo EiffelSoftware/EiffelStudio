@@ -111,9 +111,8 @@ feature -- Application status
 					tf.add_new_line
 				end
 				tf.add_comment ("  - directory = ")
-				s := params.working_directory
-				if s /= Void then
-					tf.add_quoted_text (s)
+				if attached params.working_directory as wp then
+					tf.add_quoted_text (wp.name)
 				else
 					tf.add_string ("<Empty>")
 				end
@@ -840,7 +839,7 @@ feature {NONE} -- Constants
 	Bit_label: STRING = "BIT ";
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

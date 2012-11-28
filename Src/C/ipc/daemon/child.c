@@ -39,6 +39,7 @@
 
 #include "rt_err_msg.h"
 #include "rt_assert.h"
+#include "rt_native_string.h" /* Macro to manipulate EIF_NATIVE_CHAR * */
 
 #include <sys/types.h>
 #include "eif_logfile.h"
@@ -172,33 +173,33 @@ rt_private char** envstr_to_envp (char* aenvir)
 }
 #endif
 
-rt_private char* safe_unquoted_path (char* a_path) 
+rt_private EIF_NATIVE_CHAR* safe_unquoted_path (EIF_NATIVE_CHAR* a_path) 
 {
-	char* res = NULL;
+	EIF_NATIVE_CHAR* res = NULL;
 	if (a_path) {
-		int n = (int) strlen(a_path);
+		int n = (int) rt_nstrlen(a_path);
 		if (a_path[0] == '"' && a_path[n - 1] == '"') {
-			res = (char*) malloc (n - 1);
+			res = (EIF_NATIVE_CHAR*) malloc ((n - 1) * sizeof (EIF_NATIVE_CHAR));
 			if (res) {
-				strncpy (res, a_path + 1, n - 2);
+				rt_nstrncpy (res, a_path + 1, n - 2);
 				res[n - 2] = '\0';
 			}
 		} else if (a_path[0] == '"') {
-			res = (char*)malloc (n - 0);
+			res = (EIF_NATIVE_CHAR*) malloc ((n - 0) * sizeof (EIF_NATIVE_CHAR));
 			if (res) {
-				strncpy (res, a_path + 1, n - 1);
+				rt_nstrncpy (res, a_path + 1, n - 1);
 				res[n - 1] = '\0';
 			}
 		} else if (a_path[n - 1] == '"') {
-			res = (char*)malloc (n - 0);
+			res = (EIF_NATIVE_CHAR*) malloc ((n - 0) * sizeof (EIF_NATIVE_CHAR));
 			if (res) {
-				strncpy (res, a_path, n - 1);
+				rt_nstrncpy (res, a_path, n - 1);
 				res[n - 1] = '\0';
 			}
 		} else {
-			res = (char*)malloc (n + 1);
+			res = (EIF_NATIVE_CHAR*) malloc ((n + 1) * sizeof (EIF_NATIVE_CHAR));
 			if (res) {
-				strcpy (res, a_path);
+				rt_nstrncpy (res, a_path, n);
 				res[n] = '\0';
 			}
 		}
@@ -206,37 +207,37 @@ rt_private char* safe_unquoted_path (char* a_path)
 	return res;
 }
 
-rt_private char* safe_quoted_path (char* a_path) 
+rt_private EIF_NATIVE_CHAR* safe_quoted_path (EIF_NATIVE_CHAR* a_path) 
 {
-	char* res = NULL;
+	EIF_NATIVE_CHAR* res = NULL;
 	if (a_path) {
-		int n = (int) strlen(a_path);
+		int n = (int) rt_nstrlen(a_path);
 		if (a_path[0] == '"' && a_path[n - 1] == '"') {
-			res = (char*) malloc (n + 1);
+			res = (EIF_NATIVE_CHAR*) malloc ((n + 1) * sizeof (EIF_NATIVE_CHAR));
 			if (res) {
-				strcpy (res, a_path);
+				rt_nstrcpy (res, a_path);
 				res[n] = '\0';
 			}
 		} else if (a_path[0] == '"') {
-			res = (char*) malloc (n + 3);
+			res = (EIF_NATIVE_CHAR*) malloc ((n + 3) * sizeof (EIF_NATIVE_CHAR));
 			if (res) {
-				strcpy (res, a_path);
-				strcat (res, "\"");
+				rt_nstrcpy (res, a_path);
+				rt_nstrcat (res, rt_nmakestr("\""));
 				res[n + 2] = '\0';
 			}
 		} else if (a_path[n - 1] == '"') {
-			res = (char*) malloc (n + 3);
+			res = (EIF_NATIVE_CHAR*) malloc ((n + 3) * sizeof (EIF_NATIVE_CHAR));
 			if (res) {
-				strcpy (res, "\"");
-				strcat (res, a_path);
+				rt_nstrcpy (res, rt_nmakestr("\""));
+				rt_nstrcat (res, a_path);
 				res[n + 2] = '\0';
 			}
 		} else {
-			res = (char*) malloc (n + 4);
+			res = (EIF_NATIVE_CHAR*) malloc ((n + 4) * sizeof (EIF_NATIVE_CHAR));
 			if (res) {
-				strcpy (res, "\"");
-				strcat (res, a_path);
-				strcat (res, "\"");
+				rt_nstrcpy (res, rt_nmakestr("\""));
+				rt_nstrcat (res, a_path);
+				rt_nstrcat (res, rt_nmakestr("\""));
 				res[n + 3] = '\0';
 			}
 		}
@@ -244,17 +245,17 @@ rt_private char* safe_quoted_path (char* a_path)
 	return res;
 }
 
-rt_private void set_meltpath_environment (char* exe_path) 
+rt_private void set_meltpath_environment (EIF_NATIVE_CHAR* exe_path) 
 {
-	char *meltpath, *appname;
-	static char *envstring = NULL;	/* set MELT_PATH */
+	EIF_NATIVE_CHAR *meltpath, *appname;
+	static EIF_NATIVE_CHAR *envstring = NULL;	/* set MELT_PATH */
 #ifdef EIF_VMS
 	size_t dirname_size;
 #endif
 
 	meltpath = safe_unquoted_path (exe_path);
 
-	if (meltpath == (char *)0){
+	if (!meltpath){
 		SPAWN_CHILD_FAILED(1);
 	} else {
 
@@ -273,11 +274,11 @@ rt_private void set_meltpath_environment (char* exe_path)
 			strcpy (meltpath, "[]");
 		}
 #elif defined(EIF_WINDOWS)
-		appname = strrchr (meltpath, '\\');
+		appname = wcsrchr (meltpath, (wchar_t) '\\');
 		if (appname) {
 			*appname = 0;
 		} else {
-			strcpy (meltpath, ".");
+			wcscpy (meltpath, L".");
 		}
 #else
 		appname = strrchr (meltpath, '/');
@@ -289,15 +290,20 @@ rt_private void set_meltpath_environment (char* exe_path)
 #endif /* platform */
 
 		if (!envstring) {
-			envstring = (char *) malloc (strlen (meltpath) + strlen ("MELT_PATH=") + 1);
+			envstring = (EIF_NATIVE_CHAR *) malloc ((rt_nstrlen (meltpath) + rt_nstrlen (rt_nmakestr("MELT_PATH=")) + 1) * sizeof (EIF_NATIVE_CHAR));
 		} else {
-			envstring = (char *) realloc (envstring, strlen (meltpath) + strlen("MELT_PATH=") + 1);
+			envstring = (EIF_NATIVE_CHAR *) realloc (envstring, (rt_nstrlen (meltpath) + rt_nstrlen(rt_nmakestr("MELT_PATH=")) + 1) * sizeof (EIF_NATIVE_CHAR));
 		}
 		if (!envstring){
 			SPAWN_CHILD_FAILED(1);
 		} else {
+#ifdef EIF_WINDOWS			
+			swprintf (envstring, rt_nstrlen (meltpath) + rt_nstrlen (rt_nmakestr("MELT_PATH=")) + 1, rt_nmakestr("MELT_PATH=%s"), meltpath);
+			_wputenv (envstring);
+#else
 			sprintf (envstring, "MELT_PATH=%s", meltpath);
 			putenv (envstring);
+#endif
 		}
 	
 			/* Set working directory to where project is located. We look
@@ -306,9 +312,9 @@ rt_private void set_meltpath_environment (char* exe_path)
 /* FIXME JOCELYN new EIFGENs/target/W_code... 17 ???
 		CHECK("Valid melted path", strlen (meltpath) >= 17);
 				
-		appname = strstr (meltpath + strlen (meltpath) - 17, "EIFGENs");
+		appname = rt_nstrstr (meltpath + rt_nstrlen (meltpath) - 17, rt_nmakestr("EIFGENs"));
 		if (appname) {
-			*(appname - 1) = (char) 0;
+			*(appname - 1) = (EIF_NATIVE_CHAR) 0;
 		}
 */
 		free (meltpath);
@@ -316,13 +322,16 @@ rt_private void set_meltpath_environment (char* exe_path)
 }
 
 #ifdef EIF_WINDOWS
-rt_public STREAM *spawn_child(char* id, int is_new_console_requested, char *a_exe_path, char* exe_args, char *cwd, char *envir, int handle_meltpath, HANDLE *child_process_handle, DWORD *child_process_id)
+rt_public STREAM *spawn_child(char* id, EIF_NATIVE_CHAR *a_exe_path, EIF_NATIVE_CHAR* exe_args, EIF_NATIVE_CHAR *cwd, EIF_NATIVE_CHAR *envir, int handle_meltpath,
+		DWORD *child_process_id, HANDLE *child_process_handle, int is_new_console_requested)
 #else
-rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *cwd, char *envir, int handle_meltpath, Pid_t *child_pid)
+rt_public STREAM *spawn_child(char* id, EIF_NATIVE_CHAR *a_exe_path, EIF_NATIVE_CHAR* exe_args, EIF_NATIVE_CHAR *cwd, EIF_NATIVE_CHAR *envir, int handle_meltpath,
+		Pid_t *child_pid)
 #endif
           			/* The child command process */
                  	/* Where pid of the child is written */
 					/* Where ProcessId is written (can be NULL if you don't need it) */
+					/* Note: a_exe_path, exe_args, cwd, and envir are utf-8 encoded string */
 {
 	/* Launch the child process 'exe_path' and return the stream structure which can
 	 * be used to communicate with the child. Note that this function only
@@ -339,27 +348,29 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 
 	BOOL	fSuccess;					/* Did CreateProcess succeed? */
 	PROCESS_INFORMATION	piProcInfo;
-	STARTUPINFO		siStartInfo;
+	STARTUPINFOW		siStartInfo;
 	SECURITY_ATTRIBUTES	saAttr;
 	DWORD l_startup_flags;
 
 	HANDLE uu_str [2];		/* Field to UUEncode  */
 	char *t_uu;				/* Result of UUEncode */
+	int i;					/* local variable for loop index */
+	size_t t_uu_len, cmdline_len;				/* local vars to store length of processed string */
 	int uu_buffer_size;		/* Size of buffer needed for UUEncoding. */
 
-	char *startpath = NULL;	/* Paths for directory to start in */
-	char error_msg[128] = "";								/* Error message displayed when we cannot lauch the program */
+	wchar_t *startpath = NULL;	/* Paths for directory to start in */
+	wchar_t *error_msg = NULL;	/* Error message displayed when we cannot launch the program */
 #else
 	int pp2c[2];				/* The opened downwards file descriptors : parent to child */
 	int pc2p[2];				/* The opened upwards file descriptors : child to parent */
 	int new;					/* Duped file descriptor */
 	Pid_t pid;					/* Pid of the child */
 	char **argv;				/* Argument vector */
-	char** envp=NULL;
+	char **envp=NULL;
 #endif
 	STREAM *sp;							/* Stream used for communications with ewb */
-	char* quoted_exe_path;
-	char* exe_path, *cmdline;
+	EIF_NATIVE_CHAR* quoted_exe_path;
+	EIF_NATIVE_CHAR* exe_path, *cmdline;
 
 	exe_path = safe_unquoted_path (a_exe_path);
 	if (!exe_path) {
@@ -373,26 +384,26 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 #ifdef EIF_WINDOWS
 		/* We encode 2 pointers, plus '"?' and '?"' plus a space and a null terminating character. */
 	uu_buffer_size = uuencode_buffer_size(2) + 6; /* 6 = "? + space + ?" + \0 */
-	if ((exe_args != NULL) && strlen(exe_args) > 0) {
-		cmdline = malloc (strlen (quoted_exe_path) + 1 + strlen (exe_args) + uu_buffer_size);
+	if ((exe_args != NULL) && wcslen(exe_args) > 0) {
+		cmdline = (EIF_NATIVE_CHAR *) malloc ((wcslen (quoted_exe_path) + 1 + wcslen (exe_args) + uu_buffer_size) * sizeof (EIF_NATIVE_CHAR));
 		if (!cmdline) {
 			SPAWN_CHILD_FAILED(1);
 		} else {
-			strcpy (cmdline, quoted_exe_path);
-			strcat (cmdline, " ");
-			strcat (cmdline, exe_args);
+			wcscpy (cmdline, quoted_exe_path);
+			wcscat (cmdline, L" ");
+			wcscat (cmdline, exe_args);
 		}
 	} else {
-		cmdline = malloc (strlen (quoted_exe_path) + uu_buffer_size);
+		cmdline = (EIF_NATIVE_CHAR *) malloc ((wcslen (quoted_exe_path) + uu_buffer_size) * sizeof (EIF_NATIVE_CHAR));
 		if (!cmdline) {
 			SPAWN_CHILD_FAILED(1);
 		} else {
-			strcpy (cmdline, quoted_exe_path);
+			wcscpy (cmdline, quoted_exe_path);
 		}
 	}
 #else
 	if ((exe_args != NULL) && strlen(exe_args) > 0) {
-		cmdline = malloc (strlen (quoted_exe_path) + 1 + strlen (exe_args) + 1);
+		cmdline = (EIF_NATIVE_CHAR*) malloc (strlen (quoted_exe_path) + 1 + strlen (exe_args) + 1);
 		if (!cmdline) {
 			SPAWN_CHILD_FAILED(1);
 		} else {
@@ -401,7 +412,7 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 			strcat (cmdline, exe_args);
 		}
 	} else {
-		cmdline = malloc (strlen (quoted_exe_path) + 1);
+		cmdline = (EIF_NATIVE_CHAR*) malloc (strlen (quoted_exe_path) + 1);
 		if (!cmdline) {
 			SPAWN_CHILD_FAILED(1);
 		} else {
@@ -496,13 +507,13 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 
 		/* Working directory */
 	if (cwd) {
-		(void) chdir (cwd);
+		(void) _wchdir (cwd);
 		free (startpath);
-		startpath = getcwd (NULL, PATH_MAX);
+		startpath = _wgetcwd (NULL, PATH_MAX);
 	} else if (!handle_meltpath) {
-		startpath = malloc (strlen (exe_path) + 1);
-		strcpy (startpath, exe_path);
-		*(strrchr (startpath, '\\')) = '\0';
+		startpath = (EIF_NATIVE_CHAR *) malloc ((wcslen (exe_path) + 1) * sizeof (EIF_NATIVE_CHAR));
+		wcscpy (startpath, exe_path);
+		*(wcsrchr (startpath, '\\')) = '\0';
 	}
 
 	/* Encode the pipes to start the child */
@@ -510,20 +521,24 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 
 	uu_str [0] = pc2p [PIPE_WRITE];
 	uu_str [1] = pp2c [PIPE_READ];
-	strcat (cmdline, " \"?");
+	wcscat (cmdline, L" \"?");
 	t_uu = uuencode_str ((char *) uu_str, 2 * sizeof (HANDLE));
-	strcat (cmdline, t_uu);
+	t_uu_len = strlen (t_uu);
+	cmdline_len = wcslen (cmdline);
+	for (i = 0; i < t_uu_len; i++) {
+		cmdline[cmdline_len + i] = (EIF_NATIVE_CHAR) t_uu[i];
+	}
 	free (t_uu);
-	strcat (cmdline, "?\"");
+	wcscat (cmdline, L"?\"");
 
 
 #ifdef USE_ADD_LOG
 		add_log(20, "Command line: %s %s", exe_path, cmdline);
 #endif
 
-	/* Set up members of STARTUPINFO structure. */
+	/* Set up members of STARTUPINFOW structure. */
 
-	siStartInfo.cb = sizeof(STARTUPINFO);
+	siStartInfo.cb = sizeof(STARTUPINFOW);
 	siStartInfo.lpTitle = NULL;
 	siStartInfo.lpReserved = NULL;
 	siStartInfo.lpReserved2 = NULL;
@@ -542,29 +557,36 @@ rt_public STREAM *spawn_child(char* id, char *a_exe_path, char* exe_args, char *
 	} else {
 		l_startup_flags = CREATE_NEW_CONSOLE;
 	}
-	/* if ever we pass Unicode envir: l_startup_flags = l_startup_flags | CREATE_UNICODE_ENVIRONMENT; */
-	fSuccess = CreateProcess (
-			exe_path,			/* Command 	*/
-			cmdline,			/* Command line */
-			NULL,				/* Process security attribute */
-			NULL,				/* Primary thread security attributes */
-			TRUE,				/* Handles are inherited */
-			l_startup_flags,	/* Creation flags */
-			envir,				/* Use parent's environment */
-			startpath,			/* Use cmd's current directory */
-			&siStartInfo,		/* STARTUPINFO pointer */
-			&piProcInfo			/* for PROCESS_INFORMATION */
-		);
+
+	l_startup_flags = l_startup_flags | CREATE_UNICODE_ENVIRONMENT;
+
+	fSuccess = CreateProcessW (
+		exe_path,			/* Command 	*/
+		cmdline,			/* Command line */
+		NULL,				/* Process security attribute */
+		NULL,				/* Primary thread security attributes */
+		TRUE,				/* Handles are inherited */
+		l_startup_flags,	/* Creation flags */
+		envir,				/* Use parent's environment */
+		startpath,			/* Use cmd's current directory */
+		&siStartInfo,		/* STARTUPINFO pointer */
+		&piProcInfo			/* for PROCESS_INFORMATION */
+	);
 
 	if (!fSuccess) {
 #ifdef USE_ADD_LOG
 		add_log(20, "ERROR cannot create process %d", GetLastError());
 		add_log(20, "Error code %d", GetLastError());
 #endif
-		strcat (error_msg, "Cannot Launch the program [");
-		strcat (error_msg, exe_path);
-		strcat (error_msg, "]\nMake sure you have correctly set up your installation.");
-		MessageBox (NULL, error_msg, "Execution terminated",
+		error_msg = (EIF_NATIVE_CHAR*) malloc ((wcslen (exe_path) + wcslen (cmdline) + wcslen (startpath) + 128) * sizeof(EIF_NATIVE_CHAR));
+		wcscat (error_msg, L"Cannot Launch the program \n\n");
+		wcscat (error_msg, exe_path);
+		wcscat (error_msg, L"\n\nMake sure you have correctly set up your installation.\n");
+		wcscat (error_msg, cmdline);
+		wcscat (error_msg, L"\n\n");
+		wcscat (error_msg, startpath);
+
+		MessageBoxW (NULL, error_msg,   L"Execution terminated",
 					MB_OK + MB_ICONERROR + MB_TASKMODAL + MB_TOPMOST);
 		InvalidateRect (NULL, NULL, FALSE);
 	}

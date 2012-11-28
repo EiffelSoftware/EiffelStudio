@@ -42,14 +42,12 @@ feature {NONE} -- Initialization
 			end
 
 				--| Working copy
-			if attached a_profile.working_directory as cwd then
-				working_directory := cwd
+			if attached a_profile.working_directory as wd then
+				working_directory := wd
+			elseif p /= Void and then attached p.working_directory as p_wd then
+				working_directory := p_wd
 			else
-				if p /= Void and then attached p.working_directory as p_cwd then
-					working_directory := p_cwd
-				else
-					create working_directory.make_empty
-				end
+				create working_directory.make_empty --| Fake value that will be updated by `resolve'
 			end
 
 				--| Environment_variables
@@ -65,11 +63,9 @@ feature {NONE} -- Initialization
 	resolve
 			-- Resolve parameters
 		local
-			envi: ENV_INTERP
+			envi: STRING_ENVIRONMENT_EXPANDER
 			shared_eiffel: SHARED_EIFFEL_PROJECT
-			wd: like working_directory
-			l_dir: DIRECTORY
-			l_dir_sep: CHARACTER
+			d: STRING_32
 		do
 				--| Resolution
 			create envi
@@ -77,36 +73,20 @@ feature {NONE} -- Initialization
 
 				--| Argument
 			if not arguments.is_empty then
-				arguments := envi.interpreted_string (arguments)
+				arguments := envi.expand_string_32 (arguments, True)
 			end
 
 				--| Working_directory
 			if
-				working_directory.is_empty
+				not attached working_directory as wd or else
+				wd.is_empty
 			then
-				wd := shared_eiffel.Eiffel_project.lace.directory_name
+				d := shared_eiffel.Eiffel_project.lace.directory_name
 			else
-				wd := envi.interpreted_string (working_directory)
+				d := envi.expand_string_32 (wd.name, True)
 			end
-			wd := wd.twin; wd.left_adjust; wd.right_adjust
-			if wd.count > 1 then
-					-- Check if directory exists? If it does not, it might be because of
-					-- an extra directory separator at the end of the name which could cause
-					-- some problem. Therefore we remove it.
-					-- We only do it if there is at least one character in the directory name,
-					-- otherwise it does not make sense.
-				create l_dir.make (wd)
-				l_dir_sep := (create {OPERATING_ENVIRONMENT}).directory_separator
-				if not l_dir.exists and then wd.item (wd.count) = l_dir_sep then
-					wd.remove_tail (1)
-					create l_dir.make (wd)
-					if not l_dir.exists then
-							-- Revert back to the original string.
-						wd.extend (l_dir_sep)
-					end
-				end
-			end
-			working_directory := wd
+			d := d.twin; d.left_adjust; d.right_adjust
+			create working_directory.make_from_string (d)
 		end
 
 feature -- Properties
@@ -117,11 +97,11 @@ feature -- Properties
 	title: detachable STRING_32
 			-- Optional title
 
-	arguments: STRING
+	arguments: STRING_32
 			-- Command line arguments (not Void)
 
-	working_directory: STRING
-			-- Working directory for execution (not Void)
+	working_directory: PATH
+			-- Working directory for execution
 
 	environment_variables: detachable HASH_TABLE [STRING_32, STRING_32]
 			-- Modified environment variables
@@ -181,7 +161,7 @@ invariant
 	parent_set_if_not_void: parent_uuid /= Void implies parent_version > 0
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

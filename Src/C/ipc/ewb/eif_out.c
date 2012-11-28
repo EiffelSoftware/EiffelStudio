@@ -537,13 +537,3 @@ rt_public void send_simple_request(long code)
 	ewb_send_packet(ewb_sp, &rqst);
 }
 #endif
-
-rt_public int async_shell(char *cmd)
-{
-	/* Send a shell command to be performed in the background and return the
-	 * job number of the request. The daemon will fork and execute the command,
-	 * then send the command status.
-	 */
-
-	return background(cmd);
-}

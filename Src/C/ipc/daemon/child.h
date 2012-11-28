@@ -46,9 +46,11 @@ extern "C" {
 extern unsigned int TIMEOUT;		/* Time out for interprocess communications */
 
 #ifdef EIF_WINDOWS
-extern STREAM *spawn_child(char *id, int is_ec, char *exe_path, char *exe_args, char *cwd, char *envir, int handle_meltpath, HANDLE *child_process_handle, DWORD *child_process_id);
+extern STREAM *spawn_child(char *id, EIF_NATIVE_CHAR *exe_path, EIF_NATIVE_CHAR *exe_args, EIF_NATIVE_CHAR *cwd, EIF_NATIVE_CHAR *envir, int handle_meltpath, 
+		DWORD *child_process_id, HANDLE *child_process_handle, int is_ec);
 #else
-extern STREAM *spawn_child(char *id, char *exe_path, char *exe_args, char *cwd, char *envir, int handle_meltpath, Pid_t *child_pid);
+extern STREAM *spawn_child(char *id, EIF_NATIVE_CHAR *exe_path, EIF_NATIVE_CHAR *exe_args, EIF_NATIVE_CHAR *cwd, EIF_NATIVE_CHAR *envir, int handle_meltpath, 
+		Pid_t *child_pid);
 #endif
 extern STREAM *new_stream_on_debuggee(unsigned int port_number, unsigned int* p_debuggee_pid);
 

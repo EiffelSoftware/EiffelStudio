@@ -50,13 +50,13 @@ feature -- Basic operations
 			degree_output.request_abort
 		end
 
-	run (a_working_directory: detachable STRING; a_arguments: detachable STRING; a_env: detachable HASH_TABLE [STRING_32, STRING_32])
+	run (a_working_directory: detachable PATH; a_arguments: detachable STRING; a_env: detachable HASH_TABLE [STRING_32, STRING_32])
 			-- <Precursor>
 		do
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

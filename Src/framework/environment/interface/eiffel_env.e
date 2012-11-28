@@ -1385,7 +1385,7 @@ feature -- Files (commands)
 		once
 			Result := bin_path.extended (estudio_name + executable_suffix)
 		ensure
-			not_reuslt_is_empty: not Result.is_empty
+			not_result_is_empty: not Result.is_empty
 		end
 
 	ec_command_name: PATH
@@ -1404,7 +1404,7 @@ feature -- Files (commands)
 				Result := bin_path.extended (ec_name + executable_suffix)
 			end
 		ensure
-			not_reuslt_is_empty: not Result.is_empty
+			not_result_is_empty: not Result.is_empty
 		end
 
 	studio_command_line (a_ecf, a_target, a_project_path: detachable READABLE_STRING_GENERAL; a_is_gui, a_is_clean: BOOLEAN): STRING_32
@@ -1565,18 +1565,18 @@ feature -- Executable names
 			not_result_is_empty: not Result.is_empty
 		end
 
-	ec_name: STRING_8
+	ec_name: STRING_32
 			-- Full executable name of ec.
 		local
 			l_var: like get_environment
 		once
-			l_var := get_environment ({EIFFEL_CONSTANTS}.ec_name_env)
+			l_var := get_environment_32 ({EIFFEL_CONSTANTS}.ec_name_env)
 			if l_var /= Void then
 				Result := l_var
 			else
 				create Result.make (6)
-				Result.append ("ec")
-				Result.append (release_suffix)
+				Result.append ({STRING_32} "ec")
+				Result.append_string_general (release_suffix)
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -1671,24 +1671,24 @@ feature -- Environment access
 
 feature -- Environment update
 
-	set_environment (a_value, a_var: STRING_8)
-			-- Update environment variable `a_key' to be `a_value'.
-		require
-			a_var_ok: a_var /= Void and then not a_var.is_empty and then not a_var.has ('%U')
-			a_value_ok: a_value /= Void and then not a_value.has ('%U')
-		do
-			environment.put (a_value.string, a_var)
-		ensure
-			value_updated: get_environment (a_var) /= Void implies get_environment (a_var) ~ a_value.string
-		end
-
-	set_environment_32 (a_value, a_var: READABLE_STRING_32)
+	set_environment (a_value, a_var: READABLE_STRING_GENERAL)
 			-- Update environment variable `a_key' to be `a_value'.
 		require
 			a_var_ok: a_var /= Void and then not a_var.is_empty and then not a_var.has ('%U')
 			a_value_ok: a_value /= Void and then not a_value.has ('%U')
 		do
 			environment.put (a_value, a_var)
+		ensure
+			value_updated: (attached get_environment_32 (a_var) as v) implies (v.same_string_general (a_value))
+		end
+
+	set_environment_32 (a_value, a_var: READABLE_STRING_GENERAL)
+			-- Update environment variable `a_key' to be `a_value'.
+		require
+			a_var_ok: a_var /= Void and then not a_var.is_empty and then not a_var.has ('%U')
+			a_value_ok: a_value /= Void and then not a_value.has ('%U')
+		do
+			set_environment (a_value, a_var)
 		ensure
 			value_updated: attached get_environment_32 (a_var) as e implies e.same_string_general (a_value)
 		end
@@ -1769,10 +1769,10 @@ feature -- Environment variables
 		require
 			windows: {PLATFORM}.is_windows
 		do
-			if attached get_environment ({EIFFEL_CONSTANTS}.ise_c_compiler_env) as l_result then
-				Result := l_result
+			if attached get_environment_32 ({EIFFEL_CONSTANTS}.ise_c_compiler_env) as l_result then
+				Result := l_result.to_string_8
 			else
-				Result := {STRING_32} ""
+				Result := ""
 			end
 		ensure
 			not_result_is_empty: is_valid_environment implies not Result.is_empty
@@ -1783,20 +1783,20 @@ feature -- Environment variables
 		require
 			windows: {PLATFORM}.is_windows
 		do
-			if attached get_environment ({EIFFEL_CONSTANTS}.ise_c_compiler_ver_env) as l_result then
-				Result := l_result
+			if attached get_environment_32 ({EIFFEL_CONSTANTS}.ise_c_compiler_ver_env) as l_result then
+				Result := l_result.to_string_8
 			else
-				Result := {STRING_32} ""
+				Result := ""
 			end
 		end
 
 	eiffel_platform: STRING_8
 			-- ISE_PLATFORM name.
 		do
-			if attached get_environment ({EIFFEL_CONSTANTS}.ise_platform_env) as l_result then
-				Result := l_result
+			if attached get_environment_32 ({EIFFEL_CONSTANTS}.ise_platform_env) as l_result then
+				Result := l_result.to_string_8
 			else
-				Result := {STRING_32} ""
+				Result := ""
 			end
 		ensure
 			not_result_is_empty: is_valid_environment implies not Result.is_empty

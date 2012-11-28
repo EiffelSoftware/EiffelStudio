@@ -732,7 +732,7 @@ feature {NONE} -- C compilation
 					-- Set below normal priority.
 				l_cmd.append ({STRING_32} " -low")
 			end
-			compiler_objects.command_executor.invoke_finish_freezing (path, l_cmd, is_asynchronous, workbench_mode)
+			compiler_objects.command_executor.invoke_finish_freezing (create {PATH}.make_from_string (path), l_cmd, is_asynchronous, workbench_mode)
 		end
 
 feature -- Output
@@ -755,6 +755,14 @@ feature -- Output
 			l_epr_file.store (Current, comp_system.compilation_id)
 
 			if l_epr_file.has_error then
+				debug
+					io.error.put_string ("Error while saving " + l_epr_file.name.to_string_8)
+					if attached l_epr_file.error_description  as d then
+						io.error.put_string (": ")
+						io.error.put_string (d)
+					end
+					io.error.put_new_line
+				end
 				set_error_status (Save_error_status)
 			end
 			saved_workbench := Void

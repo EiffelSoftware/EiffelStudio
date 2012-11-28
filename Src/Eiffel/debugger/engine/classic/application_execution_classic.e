@@ -114,26 +114,16 @@ feature -- Properties
 
 feature -- Execution
 
-	run_with_env_string (app: READABLE_STRING_GENERAL; args, cwd: STRING; env: detachable STRING_GENERAL)
+	run_with_env_string (app: PATH; args: READABLE_STRING_32; wd: detachable PATH; env: detachable NATIVE_STRING)
 			-- <Precursor>
-		local
-			l_env_s8: STRING_8
 		do
 			ipc_engine.launch_ec_dbg
 			if ipc_engine.ec_dbg_launched then
-				run_request.set_application_name (app)
+				run_request.set_application_path (app)
 				run_request.set_arguments (args)
-				run_request.set_working_directory (cwd)
-				if env /= Void then
-					debug ("refactor_fixme")
-						fixme ("[
-							Try to use UNICODE for environment variables in debugger. 
-							But for now the classic debugger would not allow that.
-							]")
-					end
-					l_env_s8 := env.as_string_8
-				end
-				run_request.set_environment_variables (l_env_s8)
+				run_request.set_working_directory (wd)
+
+				run_request.set_environment_variables (env)
 				run_request.set_ipc_timeout (ipc_engine.ise_timeout)
 				run_request.send
 				if attached status as l_status then
@@ -143,12 +133,12 @@ feature -- Execution
 			end
 		end
 
-	attach_using_port (app: READABLE_STRING_GENERAL; a_port: INTEGER)
+	attach_using_port (app: PATH; a_port: INTEGER)
 			-- <Precursor/>
 		do
 			ipc_engine.launch_ec_dbg
 			if ipc_engine.ec_dbg_launched then
-				attach_request.set_application_name (app)
+				attach_request.set_application_path (app)
 				attach_request.set_port_number (a_port)
 				attach_request.set_ipc_timeout (ipc_engine.ise_timeout)
 				attach_request.send
@@ -617,14 +607,14 @@ feature {APPLICATION_EXECUTION} -- Launching status
 				if ipc_engine.is_vms then
 					Result.append_string_general (
 							debugger_names.w_Cannot_find_valid_ecdbgd_vms (
-									ipc_engine.ise_ecdbgd_path.to_string_32,
+									ipc_engine.ise_ecdbgd_path,
 									ipc_engine.ise_ecdbgd_varname
 								)
 						)
 				else
 					Result.append_string_general (
 							debugger_names.w_Cannot_find_valid_ecdbgd_non_vms (
-									ipc_engine.ise_ecdbgd_path.to_string_32,
+									ipc_engine.ise_ecdbgd_path,
 									ipc_engine.ise_ecdbgd_varname
 								)
 						)
@@ -657,14 +647,14 @@ feature {APPLICATION_EXECUTION} -- Launching status
 				if ipc_engine.is_vms then
 					Result.append_string_general (
 							debugger_names.w_Cannot_find_valid_ecdbgd_vms (
-									ipc_engine.ise_ecdbgd_path.to_string_32,
+									ipc_engine.ise_ecdbgd_path,
 									ipc_engine.ise_ecdbgd_varname
 								)
 						)
 				else
 					Result.append_string_general (
 							debugger_names.w_Cannot_find_valid_ecdbgd_non_vms (
-									ipc_engine.ise_ecdbgd_path.to_string_32,
+									ipc_engine.ise_ecdbgd_path,
 									ipc_engine.ise_ecdbgd_varname
 								)
 						)

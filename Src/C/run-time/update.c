@@ -43,6 +43,7 @@ doc:<file name="update.c" header="rt_update.h" version="$Id$" summary="Update ru
 #include "eif_portable.h"
 #include "eif_project.h"
 #include "rt_dir.h"
+#include "rt_native_string.h"
 #include "eif_console.h"
 
 #include <string.h>
@@ -118,16 +119,16 @@ rt_private FILE *melted_file;
 rt_public void update(char ignore_updt, char *argv0)
 {
 	/* Update internal structures before execution */
-	char *app_path;	/*command line of this eiffel system, path included*/
-	char *app_name;	/*name of this eiffel system*/
+	EIF_NATIVE_CHAR *app_path;	/*command line of this eiffel system, path included*/
+	EIF_NATIVE_CHAR *app_name;	/*name of this eiffel system*/
 	int melted_exists;	/*flag indicating whether we have found melted file*/
 	EIF_TYPE_INDEX count;					/* New size for `esystem' */
 	BODY_INDEX body_id, once_body_id;		/* Last body id */
 	unsigned char *bcode;					/* Last byte code */
 	long bsize;								/* Last byte code size */
 	char c;
-	char *meltpath = (char *) 0;			/* directory of .UPDT */
-	char *filename;							/* .UPDT complet path */
+	EIF_NATIVE_CHAR *meltpath = (EIF_NATIVE_CHAR *) 0;			/* directory of .UPDT */
+	EIF_NATIVE_CHAR *filename;							/* .UPDT complet path */
 	long pattern_id;
 	fnptr *tmp_frozen;						/* Update of `egc_frozen' */
 /* %%ss bloc moved below*/
@@ -144,42 +145,46 @@ rt_public void update(char ignore_updt, char *argv0)
 #define MELTED_FILE_NEXISTS 0
 	melted_exists = MELTED_FILE_NEXISTS;
 
+#ifdef EIF_WINDOWS
+	meltpath = _wgetenv (L"MELT_PATH");
+#else
 	meltpath = getenv ("MELT_PATH");
+#endif
 
 		/* We add 10 to the length of `filename' which corresponds to the size of
 		 * ".melted" (7) plus an extra 3 characters needed for the different platform
 		 * directory separators and a nul terminator */
 	if (meltpath) {
-		SAFE_ALLOC(filename, char, strlen(meltpath) + strlen (egc_system_name) +10);
+		SAFE_ALLOC(filename, EIF_NATIVE_CHAR, rt_nstrlen(meltpath) + strlen (egc_system_name) + 10);
 	} else {
 #ifdef EIF_WINDOWS
-		SAFE_ALLOC(filename, char, MAX_PATH);
+		SAFE_ALLOC(filename, EIF_NATIVE_CHAR, MAX_PATH);
 #else
-		SAFE_ALLOC(filename, char, UPDTLEN + 10);
+		SAFE_ALLOC(filename, EIF_NATIVE_CHAR, UPDTLEN + 10);
 #endif
- 	}
+	}
 
-	if (filename == (char *)0){
+	if (!filename) {
 		enomem(MTC_NOARG);
 		exit (1);
 	}
 
 	if (meltpath) {
 #ifdef EIF_VMS
-			strcpy (filename, "MELT_PATH:");
+		strcpy (filename, "MELT_PATH:");
 #else
-			strcpy (filename, meltpath);
+		rt_nstrcpy (filename, meltpath);
 #endif
 	} else {
 #ifdef EIF_VMS
 		strcpy (filename, "[]");
 #else
-		strcpy (filename, ".");
+		rt_nstrcpy (filename, rt_nmakestr("."));
 #endif
 	}
 
 #ifdef EIF_WINDOWS
-	strcat(filename, "\\");
+	wcscat(filename, L"\\");
 #elif defined EIF_VMS	/* append path separator only if necessary */
 	if (!eifrt_vms_has_path_terminator (filename))
 		strcat(filename, "/");
@@ -187,39 +192,39 @@ rt_public void update(char ignore_updt, char *argv0)
 	strcat(filename, "/");
 #endif
 
-	strcat (filename, egc_system_name);
-	strcat (filename, ".melted");
+	rt_nstr_cat_ascii(filename, egc_system_name);
+	rt_nstrcat (filename, rt_nmakestr(".melted"));
 
 #ifdef DEBUG
 	dprintf(1)("Reading .UPDT in: %s\n", filename);
 #endif
 
-	if ((melted_file = fopen(filename, "rb")) != (FILE *) 0) {
+	if ((melted_file = rt_nstr_fopen (filename, rt_nmakestr("rb"))) != (FILE *) 0) {
 		melted_exists = MELTED_FILE_EXISTS;
 	}
 #ifdef EIF_WINDOWS					
 				/* For windows, we search for melted file in directory where 
 				 * the application is launched.*/
 	if (melted_exists != MELTED_FILE_EXISTS) {
-		SAFE_ALLOC(app_path, char, MAX_PATH);
-		if (app_path == (char *)0){
+		SAFE_ALLOC(app_path, EIF_NATIVE_CHAR, MAX_PATH);
+		if (app_path == (EIF_NATIVE_CHAR *)0){
 			enomem(MTC_NOARG);
 			exit (1);
 		}
-		if (GetModuleFileName( NULL, app_path, MAX_PATH)) {
-			app_name = strrchr (app_path, '\\');
+		if (GetModuleFileNameW(NULL, app_path, MAX_PATH)) {
+			app_name = wcsrchr (app_path, '\\');
 			if (app_name != NULL) {
 				eif_rt_xfree (filename);
-				SAFE_ALLOC(filename, char, MAX_PATH);
-				if (filename == (char *)0){
+				SAFE_ALLOC(filename, EIF_NATIVE_CHAR, MAX_PATH);
+				if (!filename) {
 					enomem(MTC_NOARG);
 					exit (1);
 				}
-				strncpy (filename, app_path, app_name-app_path+1);
-				filename[app_name-app_path+1] = 0;
-				strcat (filename, egc_system_name);
-				strcat (filename, ".melted");
-				if ((melted_file = fopen(filename, "rb")) != (FILE *) 0) {
+				wcsncpy (filename, app_path, app_name - app_path + 1);
+				filename[app_name-app_path + 1] = 0;
+				rt_nstr_cat_ascii(filename, egc_system_name);
+				rt_nstrcat (filename, rt_nmakestr(".melted"));
+				if ((melted_file = _wfopen(filename, L"rb")) != (FILE *) 0) {
 					melted_exists = MELTED_FILE_EXISTS;
 				}
 			}
@@ -256,23 +261,26 @@ rt_public void update(char ignore_updt, char *argv0)
 	if (melted_exists != MELTED_FILE_EXISTS) {
 		eif_rt_xfree (filename);
 #ifdef EIF_WINDOWS
-		SAFE_ALLOC(filename, char, MAX_PATH);
+		SAFE_ALLOC(filename, EIF_NATIVE_CHAR, MAX_PATH);
 #else
-		SAFE_ALLOC(filename, char, UPDTLEN + 10);
+		SAFE_ALLOC(filename, EIF_NATIVE_CHAR, UPDTLEN + 10);
 #endif
-		if (filename == (char *)0){
+
+		if (filename == (EIF_NATIVE_CHAR *)0){
 			enomem(MTC_NOARG);
 			exit (1);
 		}
-		strcpy (filename, egc_system_location);
+
+		rt_nstr_cat_ascii(filename, egc_system_location);
 #ifdef EIF_WINDOWS
-		strcat (filename, "\\");
+		rt_nstrcat (filename, rt_nmakestr("\\"));
 #else
-		strcat (filename, "/");
+		rt_nstrcat (filename, rt_nmakestr("/"));
 #endif
-		strcat (filename, egc_system_name);
-		strcat (filename, ".melted");
-		if ((melted_file = fopen(filename, "rb")) != (FILE *) 0) {
+		rt_nstr_cat_ascii(filename, egc_system_name);
+		rt_nstrcat (filename, rt_nmakestr(".melted"));
+
+		if ((melted_file = rt_nstr_fopen (filename, rt_nmakestr("rb"))) != (FILE *) 0) {
 			melted_exists = MELTED_FILE_EXISTS;
 		}
 	}
@@ -285,7 +293,7 @@ rt_public void update(char ignore_updt, char *argv0)
 			err = vaxc$errno;
 		}
 #endif
-		print_err_msg(stderr, "Error could not open Eiffel update file %s\n", filename);
+		print_err_msg(stderr, "Error could not open Eiffel update file %s\n", filename); /* FIXME: unicode output */
 		print_err_msg(stderr, "From directory %s\n", getcwd(NULL, PATH_MAX));
 		print_err_msg(stderr, "Error %d: %s\n", err, error_tag(err));
 #ifdef EIF_WINDOWS

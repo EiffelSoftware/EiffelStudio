@@ -1112,8 +1112,7 @@ feature {NONE} -- Export call stack
 				f := u.make_raw_file_in (Interface_names.default_stack_file_name + i.out + ".txt", standard_path)
 				i := i + 1
 			end
-				--| OK, now `u.file_name (f)' represents a file that does not exist.
-			fd.set_file_name (u.file_name (f))
+			fd.set_full_file_path (f.path)
 			fd.save_actions.extend (agent save_call_stack_to_file (fd))
 			fd.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
 		end

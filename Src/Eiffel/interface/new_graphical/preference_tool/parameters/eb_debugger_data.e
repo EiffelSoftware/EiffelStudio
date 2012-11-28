@@ -96,7 +96,7 @@ feature {SHARED_COMPILER_PREFERENCES} -- Classic specific
 			Result := classic_debugger_ending_timeout_preference.value
 		end
 
-	classic_debugger_location: STRING
+	classic_debugger_location: PATH
 		do
 			Result := classic_debugger_location_preference.value
 		end
@@ -109,23 +109,17 @@ feature {SHARED_COMPILER_PREFERENCES} -- Dotnet specific
 			Result := keep_stepping_info_dotnet_feature_preference.value
 		end
 
-	dotnet_debugger: ARRAY [STRING]
-			-- .NET debugger to launch
-		do
-			Result := dotnet_debugger_preference.value
-		end
-
 feature {SHARED_COMPILER_PREFERENCES, EB_TOOL, ES_DIALOG} -- Preference
 
 	default_maximum_stack_depth_preference: INTEGER_PREFERENCE
 	critical_stack_depth_preference: INTEGER_PREFERENCE
 	interrupt_every_n_instructions_preference: INTEGER_PREFERENCE
 	keep_stepping_info_dotnet_feature_preference: BOOLEAN_PREFERENCE
-	dotnet_debugger_preference: ARRAY_PREFERENCE
+	dotnet_debugger_preference: STRING_CHOICE_PREFERENCE
 	close_classic_dbg_daemon_on_end_of_debugging_preference: BOOLEAN_PREFERENCE
 	classic_debugger_timeout_preference: INTEGER_PREFERENCE
 	classic_debugger_ending_timeout_preference: INTEGER_PREFERENCE
-	classic_debugger_location_preference: STRING_PREFERENCE
+	classic_debugger_location_preference: PATH_PREFERENCE
 	debug_output_evaluation_enabled_preference: BOOLEAN_PREFERENCE
 	generating_type_evaluation_enabled_preference: BOOLEAN_PREFERENCE
 	default_displayed_string_size_preference: INTEGER_PREFERENCE
@@ -172,12 +166,14 @@ feature {NONE} -- Implementation
 			max_slice_preference := l_manager.new_integer_preference_value (l_manager, max_slice_string, 50)
 			max_evaluation_duration_preference := l_manager.new_integer_preference_value (l_manager, max_evaluation_duration_preference_string, 5)
 			keep_stepping_info_dotnet_feature_preference := l_manager.new_boolean_preference_value (l_manager, keep_stepping_info_dotnet_feature_string, False)
-			dotnet_debugger_preference := l_manager.new_array_preference_value (l_manager, dotnet_debugger_string, <<"[EiffelStudio Dbg];MDbg;cordbg;DbgCLR">>)
-			dotnet_debugger_preference.set_is_choice (True)
+			dotnet_debugger_preference := l_manager.new_string_choice_preference_value (l_manager, dotnet_debugger_string, <<"EiffelStudio Dbg", "MDbg", "cordbg", "DbgCLR">>)
+			if dotnet_debugger_preference.selected_index = 0 then
+				dotnet_debugger_preference.set_selected_index (1)
+			end
 			close_classic_dbg_daemon_on_end_of_debugging_preference := l_manager.new_boolean_preference_value (l_manager, close_classic_dbg_daemon_on_end_of_debugging_string, True)
 			classic_debugger_timeout_preference := l_manager.new_integer_preference_value (l_manager, classic_debugger_timeout_string, 0)
 			classic_debugger_ending_timeout_preference := l_manager.new_integer_preference_value (l_manager, classic_debugger_ending_timeout_string, 0)
-			classic_debugger_location_preference := l_manager.new_string_preference_value (l_manager, classic_debugger_location_string, "")
+			classic_debugger_location_preference := l_manager.new_path_preference_value (l_manager, classic_debugger_location_string, create {PATH}.make_empty)
 		end
 
 invariant
@@ -198,7 +194,7 @@ invariant
 --	_preference_not_void: _preference /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

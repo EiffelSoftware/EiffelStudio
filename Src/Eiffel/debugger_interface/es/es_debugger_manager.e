@@ -19,7 +19,7 @@ inherit
 			classic_debugger_location,
 			classic_close_dbg_daemon_on_end_of_debugging,
 			dotnet_keep_stepping_info_non_eiffel_feature,
-			dotnet_debugger_entries,
+			dotnet_debugger_entries, dotnet_debugger,
 			is_true_boolean_value,
 			log_message
 		end
@@ -99,7 +99,7 @@ feature -- Settings
 			end
 		end
 
-	classic_debugger_location: STRING
+	classic_debugger_location: detachable PATH
 			-- <Precursor>
 		do
 			if attached debugger_data as prefs then
@@ -131,14 +131,18 @@ feature -- Settings
 			end
 		end
 
-	dotnet_debugger_entries: ARRAY [STRING]
+	dotnet_debugger_entries: ITERABLE [READABLE_STRING_32]
 			-- <Precursor>
-		local
-			prefs: EB_DEBUGGER_DATA
 		do
-			prefs := debugger_data
-			if prefs /= Void then
-				Result := prefs.dotnet_debugger
+			if attached debugger_data as prefs then
+				Result := prefs.dotnet_debugger_preference.value
+			end
+		end
+
+	dotnet_debugger: detachable READABLE_STRING_32
+		do
+			if attached debugger_data as prefs then
+				Result := prefs.dotnet_debugger_preference.selected_value
 			end
 		end
 
@@ -181,7 +185,7 @@ feature {NONE} -- Logger
 			-- Note: Do not use directly!	
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

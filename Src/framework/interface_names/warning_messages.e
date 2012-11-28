@@ -295,12 +295,12 @@ feature -- Debug warnings
 				%may lead to inconsistent information, or exhibit unexpected behavior.")
 		end
 
-	w_Invalid_working_directory (wd: READABLE_STRING_GENERAL): STRING_32
+	w_Invalid_working_directory (wd: PATH): STRING_32
 			-- Message when working directory is incorrect.
 		require
 			wd_not_void: wd /= Void
 		do
-			Result := locale.formatted_string (locale.translation ("Could not launch system in %"$1%"."), [wd])
+			Result := locale.formatted_string (locale.translation ("Could not launch system in %"$1%"."), [wd.name])
 		end
 
 	w_Not_a_condition (expr: READABLE_STRING_GENERAL): STRING_32

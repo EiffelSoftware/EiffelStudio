@@ -33,7 +33,7 @@ feature {NONE} -- Helpers
 
 feature -- Environment: Update
 
-	set_environment (a_value: STRING; a_var: STRING)
+	set_environment (a_value: READABLE_STRING_GENERAL; a_var: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_env: like environment
@@ -47,7 +47,7 @@ feature -- Environment: Update
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

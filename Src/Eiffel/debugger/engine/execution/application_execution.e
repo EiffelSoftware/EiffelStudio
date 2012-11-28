@@ -247,16 +247,17 @@ feature -- Execution
 			application_exists: exists
 			non_negative_interrupt: debugger_manager.interrupt_number >= 0
 		local
-			l_envstr: STRING_32
+			l_envstr: NATIVE_STRING
 			env: HASH_TABLE [STRING_32, STRING_32]
 			ctlr: DEBUGGER_CONTROLLER
 		do
 			parameters := params
 			ctlr := debugger_manager.controller
 			env := ctlr.environment_variables_updated_with (params.environment_variables, True)
-			l_envstr := environment_variables_to_string (env)
+			l_envstr := environment_variables_to_native_string (env)
 
-			run_with_env_string (Eiffel_system.application_name (True), params.arguments, params.working_directory, l_envstr)
+			-- FIXME: update if/when Eiffel_system.application_name becomes a PATH
+			run_with_env_string (create {PATH}.make_from_string (Eiffel_system.application_name (True).to_string_32), params.arguments, params.working_directory, l_envstr)
 		ensure
 			successful_app_is_not_stopped: is_running implies not is_stopped
 		end
@@ -278,7 +279,8 @@ feature -- Execution
 		do
 			parameters := Void
 			ctlr := debugger_manager.controller
-			attach_using_port (Eiffel_system.application_name (True), a_port)
+			-- FIXME: update if/when Eiffel_system.application_name becomes a PATH
+			attach_using_port (create {PATH}.make_from_string (Eiffel_system.application_name (True).to_string_32), a_port)
 		ensure
 			successful_app_is_not_stopped: is_running implies not is_stopped
 		end
@@ -1268,16 +1270,17 @@ feature -- Setting
 
 feature -- Environment related
 
-	environment_variables_to_string (env: detachable HASH_TABLE [STRING_32, STRING_32]): detachable STRING_32
+	environment_variables_to_native_string (env: detachable HASH_TABLE [STRING_32, STRING_32]): detachable NATIVE_STRING
 			-- String representation of the Environment variables
 		local
+			s32: STRING_32
 			k,v: STRING_32
 			lst: LIST [STRING_32]
 		do
 			if env /= Void then
 				lst := Debugger_manager.sorted_comparable_string32_keys_from (env)
 
-				create Result.make (512)
+				create s32.make (512)
 				from
 					lst.start
 				until
@@ -1286,14 +1289,15 @@ feature -- Environment related
 					k := lst.item_for_iteration
 					v := env.item (k)
 					if k /= Void and then v /= Void then
-						Result.append (k)
-						Result.append_character ('=')
-						Result.append (v)
-						Result.append_character ('%U')
+						s32.append (k)
+						s32.append_character ('=')
+						s32.append (v)
+						s32.append_character ('%U')
 					end
 					lst.forth
 				end
-				Result.append_character ('%U')
+				s32.append_character ('%U')
+				create Result.make (s32)
 			end
 		ensure
 			Result = Void implies (env = Void or else env.is_empty)
@@ -1331,8 +1335,8 @@ feature {NONE} -- fake
 			last_assertion_check_stack.wipe_out
 		end
 
-	run_with_env_string (app: READABLE_STRING_GENERAL; args, cwd: STRING; env: detachable STRING_GENERAL)
-			-- Run application with arguments `args' in directory `cwd'.
+	run_with_env_string (app: PATH; args: READABLE_STRING_32; wd: detachable PATH; env: detachable NATIVE_STRING)
+			-- Run application with arguments `args' in directory `wd'.
 			-- If `is_running' is false after the
 			-- execution of this routine, it means that
 			-- the application was unable to be launched
@@ -1342,7 +1346,6 @@ feature {NONE} -- fake
 		require
 			app_not_void: app /= Void
 			args_attached: args /= Void
-			cwd_attached: cwd /= Void
 			application_not_running: not is_running
 			application_exists: exists
 			non_negative_interrupt: debugger_manager.interrupt_number >= 0
@@ -1351,7 +1354,7 @@ feature {NONE} -- fake
 			successful_app_is_not_stopped: is_running implies not is_stopped
 		end
 
-	attach_using_port (app: READABLE_STRING_GENERAL; a_port: INTEGER)
+	attach_using_port (app: PATH; a_port: INTEGER)
 		require
 			app_not_void: app /= Void
 			application_not_running: not is_running

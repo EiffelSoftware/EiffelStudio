@@ -116,11 +116,11 @@ feature {NONE} -- Access
 	max_controller_count: NATURAL
 			-- Maximum number of controllers the can be launched in parallel
 
-	testing_directory: like {PROJECT_DIRECTORY}.path
+	testing_directory: PATH
 			-- Directory in which tests should be executed
 		do
 			create Result.make_from_string (etest_suite.project_access.project.project_directory.testing_results_path)
-			Result.extend (testing_directory_name)
+			Result := Result.extended (testing_directory_name)
 		end
 
 	start_time: DATE_TIME
@@ -364,18 +364,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_directory_safe (a_name: READABLE_STRING_GENERAL)
+	create_directory_safe (a_path: PATH)
 			-- Try to recursively create directory of given name.
 			--
-			-- `a_name': Name of directory to be created.
+			-- `a_path': Name of directory to be created.
 		require
-			a_name_attached: a_name /= Void
+			a_name_attached: a_path /= Void
 		local
 			l_retried: BOOLEAN
 			u: GOBO_FILE_UTILITIES
+			d: DIRECTORY
 		do
 			if not l_retried then
-				u.create_directory (a_name)
+				create d.make_with_path (a_path)
+				d.recursive_create_dir
 			end
 		rescue
 			l_retried := True
@@ -419,22 +421,20 @@ feature {NONE} -- Implementation
 					l_keep := False
 				end
 
-				l_testing_dir := testing_directory
-				l_testing_dir.extend (a_test.name)
+				l_testing_dir := testing_directory.extended (a_test.name)
 				if l_keep then
-					l_target_dir := testing_directory
-					l_target_dir.extend (start_time.formatted_out (file_name_format_string))
-					create l_dir.make (l_target_dir)
+					l_target_dir := testing_directory.extended (start_time.formatted_out (file_name_format_string))
+					create l_dir.make_with_path (l_target_dir)
 					if not l_dir.exists then
 						l_dir.recursive_create_dir
 					end
-					l_target_dir.extend (a_test.name)
+					l_target_dir := l_target_dir.extended (a_test.name)
 					if l_dir.exists then
-						create l_dir.make (l_testing_dir)
-						l_dir.change_name (l_target_dir)
+						create l_dir.make_with_path (l_testing_dir)
+						l_dir.change_name (l_target_dir.name)
 					end
 				else
-					create l_dir.make (l_testing_dir)
+					create l_dir.make_with_path (l_testing_dir)
 					if l_dir.exists then
 						l_dir.recursive_delete
 					end

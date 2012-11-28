@@ -1224,8 +1224,8 @@ feature -- Label texts
 		do Result := locale.translation("A C Compilation is currently running.%N%
 								%It needs to be terminated before EiffelStudio can exit.%N%N%
 								%Cancel C compilation and exit?%N")	end
-	l_cwd (a_working_directory: READABLE_STRING_GENERAL): STRING_32
-		do Result := locale.formatted_string (locale.translation ("cwd=%"$1%""), [a_working_directory]) end
+	l_cwd (a_working_directory: PATH): STRING_32
+		do Result := locale.formatted_string (locale.translation ("cwd=%"$1%""), [a_working_directory.name]) end
 
 	l_external_command_running: STRING_32
 		do Result := locale.translation("An external command is currently running.%N%

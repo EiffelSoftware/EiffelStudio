@@ -511,7 +511,6 @@ feature{NONE} -- Actions
 			-- Agent called when launching a process
 		local
 			str: STRING
-			wd: STRING_32
 			e_cmd: EB_EXTERNAL_COMMAND
 			temp_cmd: EB_EXTERNAL_COMMAND
 		do
@@ -521,14 +520,10 @@ feature{NONE} -- Actions
 			if not str.is_empty then
 				e_cmd := corresponding_external_command
 				if e_cmd /= Void then
-					wd := e_cmd.working_directory
-					if wd = Void then
-						wd := ""
-					end
-					create temp_cmd.make_and_run_only (e_cmd.external_command, wd)
+					create temp_cmd.make_and_run_only (e_cmd.external_command, e_cmd.working_directory)
 					print_command_name (e_cmd.external_command)
 				else
-					create temp_cmd.make_and_run_only (str, {STRING_32} "")
+					create temp_cmd.make_and_run_only (str, Void)
 					print_command_name (str)
 				end
 			end
@@ -884,7 +879,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

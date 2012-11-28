@@ -44,10 +44,10 @@ extern "C" {
 #endif
 
 #ifdef EIF_WINDOWS
-extern STREAM *spawn_ecdbgd(char *id, char *ecdbgd_path, HANDLE *child_process_handle);
+extern STREAM *spawn_ecdbgd(char *id, EIF_NATIVE_CHAR *ecdbgd_path, HANDLE *child_process_handle);
 extern int ewb_active_check(STREAM *sp, HANDLE pid);
 #else
-extern STREAM *spawn_ecdbgd(char *id, char *ecdbgd_path, Pid_t *child_pid);
+extern STREAM *spawn_ecdbgd(char *id, EIF_NATIVE_CHAR *ecdbgd_path, Pid_t *child_pid);
 extern int ewb_active_check(STREAM *sp, int pid);
 #endif
 

@@ -39,6 +39,7 @@
 
 #include "rt_err_msg.h"
 #include "rt_assert.h"
+#include "rt_native_string.h" /* For EIF_NATIVE_CHAR* manipulation */
 
 #include <sys/types.h>
 #include "eif_logfile.h"
@@ -105,11 +106,11 @@ rt_private void create_dummy_window (void);
 #endif
 
 #ifdef EIF_WINDOWS
-rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, HANDLE *child_process_handle)
+rt_public STREAM *spawn_ecdbgd(char*id, EIF_NATIVE_CHAR *ecdbgd_path, HANDLE *child_process_handle)
 #else
-rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, Pid_t *child_pid)
+rt_public STREAM *spawn_ecdbgd(char*id, EIF_NATIVE_CHAR *ecdbgd_path, Pid_t *child_pid)
 #endif
-          			/* The child command process */
+          			/* The child command process: ecdbgd_path */
                  	/* Where pid of the child is written */
 					/* Where ProcessId is written (can be NULL if you don't need it) */
 {
@@ -128,15 +129,15 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, Pid_t *child_pid)
 
 	BOOL	fSuccess;					/* Did CreateProcess succeed? */
 	PROCESS_INFORMATION	piProcInfo;
-	STARTUPINFO		siStartInfo;
+	STARTUPINFOW		siStartInfo;
 	SECURITY_ATTRIBUTES	saAttr;
 
 	HANDLE uu_str [2];		/* Field to UUEncode  */
 	char *t_uu;				/* Result of UUEncode */
 	int uu_buffer_size;		/* Size of buffer needed for UUEncoding. */
 
-	char *cmdline;			/* Duplicate of command line since we need to add some special arguments. */
-	char error_msg[128] = "";								/* Error message displayed when we cannot lauch the program */
+	EIF_NATIVE_CHAR *cmdline;	/* Duplicate of command line since we need to add some special arguments. */
+	EIF_NATIVE_CHAR *error_msg;	/* Error message displayed when we cannot lauch the program */
 #else
 	int r;
 	int pp2c[2];				/* The opened downwards file descriptors : parent to child */
@@ -151,10 +152,11 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, Pid_t *child_pid)
 		/* We encode 2 pointers, plus '"?' and '?"' plus a space and a null terminating character. */
 	uu_buffer_size = uuencode_buffer_size(2) + 6; /* 6 = "? + space + ?" + \0 */
 
-	cmdline = malloc (strlen (ecdbgd_path) + uu_buffer_size);
-	strcpy (cmdline, ecdbgd_path);
+
+	cmdline = (EIF_NATIVE_CHAR*) malloc ((rt_nstrlen (ecdbgd_path) + uu_buffer_size) * sizeof(EIF_NATIVE_CHAR));
+	rt_nstrcpy (cmdline, ecdbgd_path);
 #else
-	argv = ipc_shword(ecdbgd_path);					/* Split command into words */
+	argv = ipc_shword(ecdbgd_path);	/* Split command into words */
 #endif
 
 	/* Set up pipes and fork, then exec the workbench. Two pairs of pipes are
@@ -237,28 +239,28 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, Pid_t *child_pid)
 
 	uu_str [0] = pc2p [PIPE_WRITE];
 	uu_str [1] = pp2c [PIPE_READ];
-	strcat (cmdline, " \"?");
+	rt_nstrcat (cmdline, rt_nmakestr(" \"?"));
 	t_uu = uuencode_str ((char *) uu_str, 2 * sizeof (HANDLE));
-	strcat (cmdline, t_uu);
+	rt_nstr_cat_ascii(cmdline, t_uu);
 	free (t_uu);
-	strcat (cmdline, "?\"");
+	rt_nstrcat (cmdline, rt_nmakestr("?\""));
 
 
 #ifdef USE_ADD_LOG
-	add_log(20, "Command line: %s", cmdline);
+	add_log(20, "Command line: %s", cmdline); /* FIXME */
 #endif
 
-	/* Set up members of STARTUPINFO structure. */
+	/* Set up members of STARTUPINFOW structure. */
 
-	siStartInfo.cb = sizeof(STARTUPINFO);
+	siStartInfo.cb = sizeof(STARTUPINFOW);
 	siStartInfo.lpTitle = NULL;
 	siStartInfo.lpReserved = NULL;
 	siStartInfo.lpReserved2 = NULL;
 	siStartInfo.cbReserved2 = 0;
 	siStartInfo.lpDesktop = NULL;
 	siStartInfo.dwFlags = STARTF_FORCEONFEEDBACK;
-
-	fSuccess = CreateProcess (
+	
+	fSuccess = CreateProcessW (
 		NULL,				/* Application's name */
 		cmdline,			/* Command line */
 		NULL,				/* Process security attribute */
@@ -268,17 +270,19 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, Pid_t *child_pid)
 		NULL,				/* Use parent's environment */
 		NULL,				/* Use parent's current directory */
 		&siStartInfo,		/* STARTUPINFO pointer */
-		&piProcInfo);		/* for PROCESS_INFORMATION */
+		&piProcInfo			/* for PROCESS_INFORMATION */
+	);
 
 	if (!fSuccess) {
 #ifdef USE_ADD_LOG
 		add_log(20, "ERROR cannot create process %d", GetLastError());
 		add_log(20, "Error code %d", GetLastError());
 #endif
-		strcat (error_msg, "Cannot Launch the program \"");
-		strcat (error_msg, cmdline);
-		strcat (error_msg, "\"\nMake sure you have correctly set up your installation.");
-		MessageBox (NULL, error_msg, "Execution terminated",
+		error_msg = (EIF_NATIVE_CHAR*) malloc ((rt_nstrlen (cmdline) + 128) * sizeof(EIF_NATIVE_CHAR));
+		rt_nstrcat (error_msg, rt_nmakestr("Cannot Launch the program \""));
+		rt_nstrcat (error_msg, cmdline); 
+		rt_nstrcat (error_msg, rt_nmakestr("\"\nMake sure you have correctly set up your installation.\0"));
+		MessageBoxW (NULL, error_msg, rt_nmakestr("Execution terminated"),
 					MB_OK + MB_ICONERROR + MB_TASKMODAL + MB_TOPMOST);
 		InvalidateRect (NULL, NULL, FALSE);
 	}
@@ -445,8 +449,9 @@ rt_public STREAM *spawn_ecdbgd(char*id, char *ecdbgd_path, Pid_t *child_pid)
 #endif
 		}
 #ifdef USE_ADD_LOG
-		else
+		else {
 			add_log(2, "ERROR out of memory: cannot exec '%s'", ecdbgd_path);
+		}
 #endif
 		SPAWN_CHILD_FAILED(1);
 

@@ -38,9 +38,16 @@ feature {NONE} -- Initialization
 
 	build_table
 			-- Builds the defaults for the variable table.
+		local
+			tb: like table
 		do
 				-- Add the starting environment variables to the list of known variables.
-			table.merge (execution_environment.starting_environment_variables)
+			tb := table
+			across
+				execution_environment.starting_environment_variables as c
+			loop
+				tb.force (c.item.to_string_32, c.key.to_string_32) -- FIXME: missing unicode version of execution_environment.starting_environment_variables
+			end
 		end
 
 feature {NONE} -- Clean up
@@ -62,7 +69,35 @@ feature -- Access
 		local
 			l_list: ARRAYED_LIST [READABLE_STRING_8]
 		do
-			if attached internal_variables as l_result then
+			if attached internal_variables_8 as l_result then
+				Result := l_result
+			else
+				create l_list.make (table.count)
+				across
+					table as l_c
+				loop
+					l_list.extend (l_c.key.to_string_8)
+				end
+
+				Result := l_list
+				internal_variables_8 := Result
+			end
+		end
+
+	variable (a_name: READABLE_STRING_GENERAL): detachable STRING assign set_variable_8
+			-- <Precursor>
+		do
+			if attached variable_32 (a_name) as v then
+				Result := v.to_string_8
+			end
+		end
+
+	variables_32: LINEAR [READABLE_STRING_32]
+			-- <Precursor>
+		local
+			l_list: ARRAYED_LIST [READABLE_STRING_32]
+		do
+			if attached internal_variables_32 as l_result then
 				Result := l_result
 			else
 				create l_list.make (table.count)
@@ -73,77 +108,89 @@ feature -- Access
 				end
 
 				Result := l_list
-				internal_variables := Result
+				internal_variables_32 := Result
 			end
 		end
 
-	variable (a_name: READABLE_STRING_GENERAL): detachable STRING assign set_variable
+	variable_32 (a_name: READABLE_STRING_GENERAL): detachable STRING_32 assign set_variable_32
 			-- <Precursor>
 		local
-			l_name: STRING
+			l_name: STRING_32
 			l_table: like table
 		do
-			l_name := a_name.as_string_8
+			l_name := a_name.to_string_32
 			l_table := table
 			if l_table.has (l_name) then
 				Result := l_table.item (l_name)
 			else
-				Result := execution_environment.get (l_name)
+				Result := execution_environment.item (a_name)
 			end
 			if (not attached Result) and then is_eiffel_layout_defined then
-				Result := eiffel_layout.get_environment (l_name)
+				Result := eiffel_layout.get_environment_32 (l_name)
 			end
 		end
 
 feature {NONE} -- Access
 
-	table: HASH_TABLE [STRING, STRING]
+	table: HASH_TABLE [STRING_32, STRING_32]
 			-- Table of variables.
+
+	table_8: HASH_TABLE [STRING_8, STRING_8]
+		local
+			tb: like table
+		do
+			tb := table
+			create Result.make (tb.count)
+			across
+				tb as c
+			loop
+				Result.force (c.item.to_string_8, c.key.to_string_8)
+			end
+		end
 
 feature -- Element change
 
-	set_variable (a_value: detachable STRING; a_name: READABLE_STRING_GENERAL)
+	set_variable (a_value: detachable READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_changed: BOOLEAN
-			l_name: STRING
+			l_name: STRING_32
 		do
-			l_name := a_name.as_string_8
+			l_name := a_name.to_string_32
 			l_changed := set_variable_internal (a_value, l_name)
 
 				-- Publish events.
 			if l_changed and then (attached internal_value_changed_event as l_events) then
-				l_events.publish ([Current, l_name])
+				l_events.publish ([Current, a_name])
 			end
 		end
 
-	set_environment_variable (a_value: detachable STRING; a_name: READABLE_STRING_GENERAL)
+	set_environment_variable (a_value: detachable READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_changed: BOOLEAN
 			l_name: STRING
 		do
-			l_name := a_name.as_string_8
-			l_changed := set_variable_internal (a_value, l_name)
+			l_changed := set_variable_internal (a_value, a_name)
 
 			if l_changed then
 					-- Set the environment variable.
-				if attached a_value then
-					execution_environment.put (a_value, l_name)
+				if a_value /= Void then
+					execution_environment.put (a_value, a_name)
 				else
-					execution_environment.put (once "", l_name)
+					execution_environment.put (once "", a_name)
 				end
 
 					-- Publish events.
 				if (attached internal_value_changed_event as l_events) then
-					l_events.publish ([Current, l_name])
+					l_events.publish ([Current, a_name])
 				end
 			end
 		end
 
 feature {NONE} -- Element change
 
-	set_variable_internal (a_value: detachable STRING; a_name: READABLE_STRING_GENERAL): BOOLEAN
+	set_variable_internal (a_value: detachable READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Sets a variable in the Current environment but will not publish any events.
 			--
 			-- `a_value': An associated value to bind to a given variable name.
@@ -154,20 +201,24 @@ feature {NONE} -- Element change
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 		local
-			l_old_value: like variable
-			l_name: STRING
+			l_old_value: STRING_32
+			l_name: STRING_32
+			l_value: detachable STRING_32
 		do
-			l_name := a_name.as_string_8
-			l_old_value := variable (l_name)
+			l_name := a_name.to_string_32
+			l_old_value := variable_32 (l_name)
+			if a_value /= Void then
+				l_value := a_value.to_string_32
+			end
 
-			if a_value /~ l_old_value then
-				if attached a_value then
+			if l_value /~ l_old_value then
+				if l_value /= Void then
 						-- Set the variable
 					if l_name = a_name then
 							-- Same reference, twin value
 						l_name := l_name.twin
 					end
-					table.force (a_value.twin, l_name)
+					table.force (l_value.twin, l_name)
 				else
 						-- Clean the variable
 					table.remove (l_name)
@@ -177,7 +228,10 @@ feature {NONE} -- Element change
 				Result := True
 			end
 		ensure
-			change_made: (a_value /~ old variable (a_name)) implies Result
+			change_made: (
+							(a_value = Void and (old variable_32 (a_name) /= Void)) or
+							(a_value /= Void and then a_value.to_string_32 /~ old variable_32 (a_name))
+						) implies Result
 		end
 
 feature -- Status report
@@ -185,17 +239,17 @@ feature -- Status report
 	is_set (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- <Precursor>
 		local
-			l_name: STRING
-			l_value: detachable STRING
+			l_name: STRING_32
+			l_value: detachable STRING_32
 		do
-			l_name := a_name.as_string_8
+			l_name := a_name.to_string_32
 			Result := table.has (l_name)
 			if not Result then
-				l_value := execution_environment.get (l_name)
+				l_value := execution_environment.item (a_name)
 				if l_value = Void and then is_eiffel_layout_defined then
-					l_value := eiffel_layout.get_environment (l_name)
+					l_value := eiffel_layout.get_environment_32 (a_name)
 				end
-				Result := attached l_value
+				Result := l_value /= Void
 			end
 		end
 
@@ -204,7 +258,13 @@ feature -- Query
 	expand_string (a_string: READABLE_STRING_8; a_keep: BOOLEAN): STRING
 			-- <Precursor>
 		do
-			Result := expander.expand_string (a_string, table, True, a_keep)
+			Result := expander.expand_string (a_string, table_8, True, a_keep)
+		end
+
+	expand_string_32 (a_string: READABLE_STRING_32; a_keep: BOOLEAN): STRING_32
+			-- <Precursor>
+		do
+			Result := expander.expand_string_32 (a_string, table, True, a_keep)
 		end
 
 feature {NONE} -- Helpers
@@ -227,7 +287,7 @@ feature {NONE} -- Helpers
 
 feature -- Events
 
-	value_changed_event: EVENT_TYPE [TUPLE [sender: ENVIRONMENT_S; name: READABLE_STRING_8]]
+	value_changed_event: EVENT_TYPE [TUPLE [sender: ENVIRONMENT_S; name: READABLE_STRING_GENERAL]]
 			-- <Precursor>
 		do
 			if attached internal_value_changed_event as l_result then
@@ -258,8 +318,12 @@ feature -- Events: Connection point
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_variables: detachable like variables
+	internal_variables_8: detachable like variables
 			-- Cached version of `variables'.
+			-- Note: Do not use directly!
+
+	internal_variables_32: detachable like variables_32
+			-- Cached version of `variables_32'.
 			-- Note: Do not use directly!
 
 	internal_value_changed_event: detachable like value_changed_event

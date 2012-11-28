@@ -53,8 +53,10 @@ feature -- Aspects
 			debugger_formatter.add_string ("Launching system :")
 			if param /= Void then
 				debugger_formatter.add_new_line
-				debugger_formatter.add_comment ("  - directory = ")
-				debugger_formatter.add_quoted_text (param.working_directory)
+				if attached param.working_directory as wd then
+					debugger_formatter.add_comment ("  - directory = ")
+					debugger_formatter.add_quoted_text (wd.name)
+				end
 				if not param.arguments.is_empty then
 					debugger_formatter.add_new_line
 					debugger_formatter.add_comment_text ("  - arguments = ")
@@ -131,7 +133,7 @@ feature -- {DEBUGGER_MANAGER, SHARED_DEBUGGER_MANAGER} -- Implementation
 	manager: EB_DEBUGGER_MANAGER;
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

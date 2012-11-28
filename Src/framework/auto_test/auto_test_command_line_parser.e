@@ -194,7 +194,7 @@ feature {NONE} -- Initialization
 
 			if not error_handler.has_error then
 				if output_dir_option.was_found then
-					output_dirname := output_dir_option.parameter
+					create output_dirname.make_from_string (output_dir_option.parameter)
 				end
 
 				if time_out_option.was_found and then time_out_option.parameter >= 0 then
@@ -274,10 +274,10 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	output_dirname: STRING
+	output_dirname: PATH
 			-- Name of output directory
 
-	ecf_filename: STRING
+	ecf_filename: PATH
 			-- Name of ecf file of input system
 
 --	ecf_target: STRING
@@ -355,7 +355,7 @@ invariant
 	minimization_is_either_slicing_or_ddmin: is_minimization_enabled implies (is_slicing_enabled xor is_ddmin_enabled)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -208,7 +208,7 @@ feature -- Basic operations
 			end
 		end
 
-	run (a_working_directory: detachable STRING; a_arguments: detachable STRING; a_env: detachable HASH_TABLE [STRING_32, STRING_32])
+	run (a_working_directory: detachable PATH; a_arguments: detachable STRING; a_env: detachable HASH_TABLE [STRING_32, STRING_32])
 			-- <Precursor>
 		local
 			l_params: DEBUGGER_EXECUTION_PROFILE

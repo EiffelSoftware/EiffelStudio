@@ -23,8 +23,7 @@ feature {NONE} -- Initialization
 			uuidg: UUID_GENERATOR
 		do
 			create uuidg
-			uuid := uuidg.generate_uuid
-			make_with_uuid (uuid)
+			make_with_uuid (uuidg.generate_uuid)
 		end
 
 	make_with_uuid (a_uuid: like uuid)
@@ -44,10 +43,10 @@ feature -- Properties
 			-- Associated title
 			--| not required, just for information
 
-	arguments: detachable STRING
+	arguments: STRING_32
 			-- Command line arguments
 
-	working_directory: detachable STRING
+	working_directory: detachable PATH
 			-- Working directory for execution
 
 	environment_variables: detachable HASH_TABLE [STRING_32, STRING_32]
@@ -88,12 +87,8 @@ feature -- Duplication
 			if attached title as l_title then
 				Result.set_title (l_title.twin)
 			end
-			if attached arguments as args then
-				Result.set_arguments (args.twin)
-			end
-			if attached working_directory as wcpy then
-				Result.set_working_directory (wcpy.twin)
-			end
+			Result.set_arguments (arguments.twin)
+			Result.set_working_directory (working_directory)
 			if attached environment_variables as envs and then not envs.is_empty then
 				Result.set_environment_variables (envs.deep_twin)
 			end
@@ -126,8 +121,8 @@ feature {DEBUGGER_EXECUTION_PROFILE} -- Element change: protected
 
 feature -- Element change
 
-	incremente_version
-			-- Incremente the value of `version'
+	increment_version
+			-- Increment the value of `version'
 		do
 			if version < {NATURAL_32}.Max_value then
 				version := version + 1
@@ -136,22 +131,24 @@ feature -- Element change
 			end
 		end
 
-	set_title (v: like title)
+	set_title (v: READABLE_STRING_GENERAL)
 			-- Set `title'
 		do
-			title := v
+			title := v.to_string_32
 		end
 
-	set_arguments (v: like arguments)
+	set_arguments (v: READABLE_STRING_GENERAL)
 			-- Set `arguments'
+		require
+			v_attached: v /= Void
 		do
-			arguments := v
+			arguments := v.to_string_32
 		end
 
-	set_working_directory (v: like working_directory)
+	set_working_directory (a_path: like working_directory)
 			-- Set `working_directory'
 		do
-			working_directory := v
+			working_directory := a_path
 		end
 
 	set_environment_variables (v: like environment_variables)
@@ -175,9 +172,11 @@ feature -- debug output
 
 invariant
 	uuid_set: uuid /= Void
+	working_directory_attached: working_directory /= Void
+	arguments_attached: arguments /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

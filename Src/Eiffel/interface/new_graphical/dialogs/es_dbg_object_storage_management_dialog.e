@@ -93,9 +93,9 @@ feature -- Actions
 			then
 				if debugger_manager.safe_application_is_stopped then
 					if object_stone /= Void then
-						object_value := debugger_manager.application.remotely_loaded_object (object_stone.object_address, path_field.path)
+						object_value := debugger_manager.application.remotely_loaded_object (object_stone.object_address, path_field.file_path.name)
 					else
-						object_value := debugger_manager.application.remotely_loaded_object (Void, path_field.path)
+						object_value := debugger_manager.application.remotely_loaded_object (Void, path_field.file_path.name)
 					end
 					if object_value /= Void then
 						display_success_message
@@ -232,12 +232,13 @@ feature -- Change
 	check_fields
 			--
 		local
-			f: RAW_FILE
-			s: STRING_32
+			f: detachable RAW_FILE
+			p: PATH
 		do
-			s := path_field.path
-			if not s.is_empty then
-				create f.make_with_name (path_field.path)
+
+			p := path_field.file_path
+			if not p.is_empty then
+				create f.make_with_path (p)
 			end
 			if
 				save_operation_enabled and then

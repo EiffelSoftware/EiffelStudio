@@ -28,10 +28,10 @@ feature -- Command Execution
 			appl_name_not_void: appl_name /= Void
 			args_not_void: args /= Void
 		do
-			execute_with_args_and_working_directory (appl_name, args, Execution_environment.current_working_directory)
+			execute_with_args_and_working_directory (appl_name, args, Execution_environment.current_working_path)
 		end
 
-	execute_with_args_and_working_directory (appl_name: READABLE_STRING_GENERAL; args: READABLE_STRING_GENERAL; working_directory: STRING)
+	execute_with_args_and_working_directory (appl_name: READABLE_STRING_GENERAL; args: READABLE_STRING_GENERAL; working_directory: PATH)
 			-- Execute external command `appl_name' with following arguments and working_directory.
 		require
 			appl_name_not_void: appl_name /= Void
@@ -41,7 +41,7 @@ feature -- Command Execution
 			execute_with_args_and_working_directory_and_environment (appl_name, args, working_directory, Void)
 		end
 
-	execute_with_args_and_working_directory_and_environment (appl_name: READABLE_STRING_GENERAL; args: READABLE_STRING_GENERAL; working_directory: STRING;
+	execute_with_args_and_working_directory_and_environment (appl_name: READABLE_STRING_GENERAL; args: READABLE_STRING_GENERAL; working_directory: detachable PATH;
 				envir: HASH_TABLE [STRING, STRING])
 			-- Execute external command `appl_name' with following arguments and working_directory.
 		require
@@ -49,13 +49,20 @@ feature -- Command Execution
 			args_not_void: args /= Void
 			working_directory_not_void: working_directory /= Void
 		local
-			command: READABLE_STRING_GENERAL
+			command: STRING_32
 			l_prc_factory: PROCESS_FACTORY
 			l_prc_launcher: PROCESS
+			wd: detachable STRING_32
 		do
-			command := appl_name + " " + args
+			create command.make_empty
+			command.append_string_general (appl_name)
+			command.append_character (' ')
+			command.append_string_general (args)
 			create l_prc_factory
-			l_prc_launcher := l_prc_factory.process_launcher_with_command_line (command, working_directory)
+			if working_directory /= Void then
+				wd := working_directory.name
+			end
+			l_prc_launcher := l_prc_factory.process_launcher_with_command_line (command, wd)
 			if envir /= Void then
 				l_prc_launcher.set_environment_variable_table (envir)
 			end
@@ -65,10 +72,9 @@ feature -- Command Execution
 
 feature -- Compiler specific calls
 
-	link_eiffel_driver
-		(c_code_dir: READABLE_STRING_32;
-		system_name, prelink_cmd_name: READABLE_STRING_GENERAL;
-		driver_name: READABLE_STRING_32)
+	link_eiffel_driver (c_code_dir: READABLE_STRING_32;
+			system_name, prelink_cmd_name: READABLE_STRING_GENERAL;
+			driver_name: READABLE_STRING_32)
 			-- Link the driver of the precompilation to
 			-- the eiffel project.
 		local
@@ -87,15 +93,15 @@ feature -- Compiler specific calls
 			end
 		end
 
-	invoke_finish_freezing (c_code_dir, freeze_command: STRING_32; asynchronous: BOOLEAN; workbench_mode: BOOLEAN)
+	invoke_finish_freezing (c_code_dir: PATH; freeze_command: STRING_32; asynchronous: BOOLEAN; workbench_mode: BOOLEAN)
 			-- Invoke the `finish_freezing' script.
 		local
-			cwd: STRING_32
+			cwd: PATH
 		do
 				-- Store current working directory
-			cwd := Execution_environment.current_working_directory
+			cwd := Execution_environment.current_working_path
 
-			Execution_environment.change_working_directory (c_code_dir)
+			Execution_environment.change_working_path (c_code_dir)
 
 			if asynchronous then
 				Execution_environment.launch (freeze_command)
@@ -103,7 +109,7 @@ feature -- Compiler specific calls
 				Execution_environment.system (freeze_command)
 			end
 
-			Execution_environment.change_working_directory (cwd)
+			Execution_environment.change_working_path (cwd)
 		end
 
 	terminate_c_compilation

@@ -54,11 +54,11 @@
 #define BREAK				13		/* Add/delete breakpoint */
 #define RESUME				14		/* Resume execution */
 #define QUIT				15		/* Application must die immediately */
-#define CMD					16		/* Run a shell command (for ised) */
+#define REMOVED__CMD		16		/* REMOVED !!! Run a shell command (for ised) */
 #define APPLICATION			17		/* Start up application (for ised) */
 #define KPALIVE				18		/* Dummy request to keep connection alive */
-#define ASYNCMD				19		/* Run command asynchronously */
-#define ASYNACK				20		/* Status of the asynchronous job */
+#define REMOVED__ASYNCMD	19		/* REMOVED !!! Run command asynchronously */
+#define REMOVED__ASYNACK	20		/* REMOVED !!! Status of the asynchronous job */
 #define DEAD				21		/* Application is dead */
 #define LOAD				22		/* Load byte code information */
 #define BYTECODE			23		/* Byte code transfer */

@@ -128,7 +128,7 @@ feature -- Element change
 			u: UTF_CONVERTER
 		do
 				-- Convert `a_string' to UTF-16 with a terminating zero.
-			u.string_32_to_utf_16_0_pointer (a_string.as_string_32, managed_data)
+			u.string_32_into_utf_16_0_pointer (a_string.as_string_32, managed_data)
 			count := a_string.count
 		end
 

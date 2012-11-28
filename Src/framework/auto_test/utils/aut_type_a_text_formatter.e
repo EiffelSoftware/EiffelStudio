@@ -38,34 +38,34 @@ feature -- Basic operation
 
 feature -- Process
 
-	process_comment_text (text: STRING_GENERAL; url: STRING_GENERAL)
+	process_comment_text (text: READABLE_STRING_GENERAL; url: READABLE_STRING_GENERAL)
 			-- Process comment text.
 			-- `url' is possible url, which can be void if none.
 		do
 		end
 
-	process_class_name_text (text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN)
+	process_class_name_text (text: READABLE_STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN)
 			-- Process class name of `a_class'.
 		do
 			type_name.append (text.as_string_8)
 		end
 
-	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
+	process_cluster_name_text (text: READABLE_STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
 			-- Process cluster name of `a_cluster'.
 		do
 		end
 
-	process_target_name_text (text: STRING_GENERAL; a_target: CONF_TARGET)
+	process_target_name_text (text: READABLE_STRING_GENERAL; a_target: CONF_TARGET)
 			-- Process target name text `text'.
 		do
 		end
 
-	process_feature_name_text (text: STRING_GENERAL; a_class: CLASS_C)
+	process_feature_name_text (text: READABLE_STRING_GENERAL; a_class: CLASS_C)
 			-- Process feature name text `text'.
 		do
 		end
 
-	process_feature_text (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN)
+	process_feature_text (text: READABLE_STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN)
 			-- Process feature text `text'.
 		do
 		end
@@ -105,41 +105,41 @@ feature -- Process
 		do
 		end
 
-	process_filter_item (text: STRING_GENERAL; is_before: BOOLEAN)
+	process_filter_item (text: READABLE_STRING_GENERAL; is_before: BOOLEAN)
 			-- Process filter text `text'.
 		do
 		end
 
-	process_symbol_text (text: STRING_GENERAL)
+	process_symbol_text (text: READABLE_STRING_GENERAL)
 			-- Process symbol text.
 		do
 			type_name.append (text.as_string_8)
 		end
 
-	process_keyword_text (text: STRING_GENERAL; a_feature: E_FEATURE)
+	process_keyword_text (text: READABLE_STRING_GENERAL; a_feature: E_FEATURE)
 			-- Process keyword text.
 			-- `a_feature' is possible feature.
 		do
 			type_name.append (text.as_string_8)
 		end
 
-	process_operator_text (text: STRING_GENERAL; a_feature: E_FEATURE)
+	process_operator_text (text: READABLE_STRING_GENERAL; a_feature: E_FEATURE)
 			-- Process operator text.
 			-- `a_feature' can be void.
 		do
 		end
 
-	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C)
+	process_address_text (a_address, a_name: READABLE_STRING_GENERAL; a_class: CLASS_C)
 			-- Process address text.
 		do
 		end
 
-	process_error_text (text: STRING_GENERAL; a_error: ERROR)
+	process_error_text (text: READABLE_STRING_GENERAL; a_error: ERROR)
 			-- Process error text.
 		do
 		end
 
-	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C)
+	process_cl_syntax (text: READABLE_STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C)
 			-- Process class syntax text.
 		do
 		end
@@ -150,7 +150,7 @@ feature -- Process
 			type_name.append (text.as_string_8)
 		end
 
-	process_quoted_text (text: STRING_GENERAL)
+	process_quoted_text (text: READABLE_STRING_GENERAL)
 			-- Process the quoted `text' within a comment.
 		do
 		end

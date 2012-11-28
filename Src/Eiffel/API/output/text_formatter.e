@@ -59,21 +59,13 @@ feature -- Process
 		deferred
 		end
 
-	process_character_text (text: STRING_GENERAL)
+	process_character_text (text: READABLE_STRING_GENERAL)
 			-- Process string text `t'.
 		do
 			process_basic_text (text)
 		end
 
-	process_generic_text (text: STRING_GENERAL)
-			-- Process string text `t'.
-		require
-			text_not_void: text /= Void
-		do
-			process_basic_text (text)
-		end
-
-	process_indexing_tag_text (text: STRING_GENERAL)
+	process_generic_text (text: READABLE_STRING_GENERAL)
 			-- Process string text `t'.
 		require
 			text_not_void: text /= Void
@@ -81,7 +73,7 @@ feature -- Process
 			process_basic_text (text)
 		end
 
-	process_local_text (text: STRING_GENERAL)
+	process_indexing_tag_text (text: READABLE_STRING_GENERAL)
 			-- Process string text `t'.
 		require
 			text_not_void: text /= Void
@@ -89,7 +81,7 @@ feature -- Process
 			process_basic_text (text)
 		end
 
-	process_number_text (text: STRING_GENERAL)
+	process_local_text (text: READABLE_STRING_GENERAL)
 			-- Process string text `t'.
 		require
 			text_not_void: text /= Void
@@ -97,14 +89,22 @@ feature -- Process
 			process_basic_text (text)
 		end
 
-	process_quoted_text (text: STRING_GENERAL)
+	process_number_text (text: READABLE_STRING_GENERAL)
+			-- Process string text `t'.
+		require
+			text_not_void: text /= Void
+		do
+			process_basic_text (text)
+		end
+
+	process_quoted_text (text: READABLE_STRING_GENERAL)
 			-- Process the quoted `text' within a comment.
 		require
 			text_not_void: text /= Void
 		deferred
 		end
 
-	process_assertion_tag_text (text: STRING_GENERAL)
+	process_assertion_tag_text (text: READABLE_STRING_GENERAL)
 			-- Process string text `t'.
 		require
 			text_not_void: text /= Void
@@ -112,7 +112,7 @@ feature -- Process
 			process_basic_text (text)
 		end
 
-	process_string_text (text: READABLE_STRING_GENERAL; link: STRING_GENERAL)
+	process_string_text (text: READABLE_STRING_GENERAL; link: READABLE_STRING_GENERAL)
 			-- Process string text `text'.
 			-- possible `link', can be void.
 		require
@@ -121,7 +121,7 @@ feature -- Process
 			process_basic_text (text)
 		end
 
-	process_reserved_word_text (text: STRING_GENERAL)
+	process_reserved_word_text (text: READABLE_STRING_GENERAL)
 			-- Process string text `t'.
 		require
 			text_not_void: text /= Void
@@ -129,7 +129,7 @@ feature -- Process
 			process_basic_text (text)
 		end
 
-	process_comment_text (text: STRING_GENERAL; url: STRING_GENERAL)
+	process_comment_text (text: READABLE_STRING_GENERAL; url: READABLE_STRING_GENERAL)
 			-- Process comment text.
 			-- `url' is possible url, which can be void if none.
 		require
@@ -137,21 +137,21 @@ feature -- Process
 		deferred
 		end
 
-	process_difference_text_item (text: STRING_GENERAL)
+	process_difference_text_item (text: READABLE_STRING_GENERAL)
 			-- Process difference text text.
 		require
 			text_not_void: text /= Void
 		do
 		end
 
-	process_class_name_text (text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN)
+	process_class_name_text (text: READABLE_STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN)
 			-- Process class name of `a_class'.
 		require
 			a_class_not_void: a_class /= Void
 		deferred
 		end
 
-	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
+	process_cluster_name_text (text: READABLE_STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
 			-- Process cluster name of `a_cluster'.
 		require
 			text_not_void: text /= Void
@@ -159,7 +159,7 @@ feature -- Process
 		deferred
 		end
 
-	process_target_name_text (text: STRING_GENERAL; a_target: CONF_TARGET)
+	process_target_name_text (text: READABLE_STRING_GENERAL; a_target: CONF_TARGET)
 			-- Process target name text `text'.
 		require
 			text_not_void: text /= Void
@@ -167,14 +167,14 @@ feature -- Process
 		deferred
 		end
 
-	process_feature_name_text (text: STRING_GENERAL; a_class: CLASS_C)
+	process_feature_name_text (text: READABLE_STRING_GENERAL; a_class: CLASS_C)
 			-- Process feature name text `text'.
 		require
 			text_not_void: text /= Void
 		deferred
 		end
 
-	process_feature_error (text: STRING_GENERAL; a_feature: E_FEATURE; a_line: INTEGER)
+	process_feature_error (text: READABLE_STRING_GENERAL; a_feature: E_FEATURE; a_line: INTEGER)
 			-- Process error feature text.
 		require
 			text_not_void: text /= Void
@@ -183,7 +183,7 @@ feature -- Process
 			process_feature_text (text, a_feature, false)
 		end
 
-	process_feature_text (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN)
+	process_feature_text (text: READABLE_STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN)
 			-- Process feature text `text'.
 		require
 			text_not_void: text /= Void
@@ -234,14 +234,14 @@ feature -- Process
 		deferred
 		end
 
-	process_filter_item (text: STRING_GENERAL; is_before: BOOLEAN)
+	process_filter_item (text: READABLE_STRING_GENERAL; is_before: BOOLEAN)
 			-- Process filter text `text'.
 		require
 			text_not_void: text /= Void
 		deferred
 		end
 
-	process_tooltip_item (a_tooltip: STRING_GENERAL; is_before: BOOLEAN)
+	process_tooltip_item (a_tooltip: READABLE_STRING_GENERAL; is_before: BOOLEAN)
 			-- Process tooltip text `a_tooltip'.
 		require
 			a_tooltip_not_void: a_tooltip /= Void
@@ -249,7 +249,7 @@ feature -- Process
 			process_filter_item (a_tooltip, is_before)
 		end
 
-	process_feature_dec_item (a_feature_name: STRING_GENERAL; is_before: BOOLEAN)
+	process_feature_dec_item (a_feature_name: READABLE_STRING_GENERAL; is_before: BOOLEAN)
 			-- Process feature dec.
 		require
 			a_feature_name_not_void: a_feature_name /= Void
@@ -257,14 +257,14 @@ feature -- Process
 			process_filter_item (a_feature_name, is_before)
 		end
 
-	process_symbol_text (text: STRING_GENERAL)
+	process_symbol_text (text: READABLE_STRING_GENERAL)
 			-- Process symbol text.
 		require
 			text_not_void: text /= Void
 		deferred
 		end
 
-	process_keyword_text (text: STRING_GENERAL; a_feature: E_FEATURE)
+	process_keyword_text (text: READABLE_STRING_GENERAL; a_feature: E_FEATURE)
 			-- Process keyword text.
 			-- `a_feature' is possible feature.
 		require
@@ -272,7 +272,7 @@ feature -- Process
 		deferred
 		end
 
-	process_operator_text (text: STRING_GENERAL; a_feature: E_FEATURE)
+	process_operator_text (text: READABLE_STRING_GENERAL; a_feature: E_FEATURE)
 			-- Process operator text.
 			-- `a_feature' can be void.
 		require
@@ -280,14 +280,14 @@ feature -- Process
 		deferred
 		end
 
-	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C)
+	process_address_text (a_address, a_name: READABLE_STRING_GENERAL; a_class: CLASS_C)
 			-- Process address text.
 		require
 			a_address_attached: a_address /= Void
 		deferred
 		end
 
-	process_error_text (text: STRING_GENERAL; a_error: ERROR)
+	process_error_text (text: READABLE_STRING_GENERAL; a_error: ERROR)
 			-- Process error text.
 		require
 			text_not_void: text /= Void
@@ -295,7 +295,7 @@ feature -- Process
 		deferred
 		end
 
-	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C)
+	process_cl_syntax (text: READABLE_STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C)
 			-- Process class syntax text.
 		require
 			text_not_void: text /= Void
@@ -314,13 +314,13 @@ feature -- Process
 		do
 		end
 
-	process_menu_text (text, link: STRING_GENERAL)
+	process_menu_text (text, link: READABLE_STRING_GENERAL)
 			-- Process menu item. This is only useful for generation to
 			-- formats that support hyperlinking.
 		do
 		end
 
-	process_class_menu_text (text, link: STRING_GENERAL)
+	process_class_menu_text (text, link: READABLE_STRING_GENERAL)
 			-- Process class menu item. This is only useful for generation to
 			-- formats that support hyperlinking.
 		do
@@ -345,20 +345,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	text_quoted (text: STRING_GENERAL): STRING_GENERAL
+	text_quoted (text: READABLE_STRING_GENERAL): STRING_32
 			-- Quote `text'.
 		require
 			text_not_void: text /= Void
 		do
-			create {STRING_32}Result.make (text.count + 2)
-			Result.append ("`")
-			Result.append (text)
-			Result.append ("%'")
+			create Result.make (text.count + 2)
+			Result.append_character ('`')
+			Result.append_string_general (text)
+			Result.append_character ('%'')
 		ensure
 			text_quoted_not_void: Result /= Void
 		end
 
-	is_keyword (text: STRING_GENERAL): BOOLEAN
+	is_keyword (text: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `text' a keyword?
 		require
 			valid_text: text /= Void and then not text.is_empty
@@ -369,7 +369,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	is_symbol (text: STRING_GENERAL): BOOLEAN
+	is_symbol (text: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `text' a symbol?
 		require
 			valid_text: text /= Void and then not text.is_empty
@@ -402,7 +402,7 @@ feature -- Text operator
 			process_basic_text (s)
 		end
 
-	add_local (s: STRING_GENERAL)
+	add_local (s: READABLE_STRING_GENERAL)
 			-- Add `s' as a local.
 		do
 			process_local_text (s)
@@ -420,7 +420,7 @@ feature -- Text operator
 			process_number_text (i.out)
 		end
 
-	add_group (e_cluster: CONF_GROUP; str: STRING_GENERAL)
+	add_group (e_cluster: CONF_GROUP; str: READABLE_STRING_GENERAL)
 			-- Put `e_cluster' with string representation
 			-- `str' at current position.
 		do
@@ -439,7 +439,7 @@ feature -- Text operator
 			process_after_class (e_class)
 		end
 
-	add_classi (class_i: CLASS_I; str: STRING_GENERAL)
+	add_classi (class_i: CLASS_I; str: READABLE_STRING_GENERAL)
 			-- Put `class_i' with string representation
 			-- `str' at current position.
 		do
@@ -464,14 +464,14 @@ feature -- Text operator
 			process_class_name_text (l_name, class_i, false)
 		end
 
-	add_error (error: ERROR; str: STRING_GENERAL)
+	add_error (error: ERROR; str: READABLE_STRING_GENERAL)
 			-- Put `error' with string representation
 			-- `str' at current position.
 		do
 			process_error_text (str, error)
 		end
 
-	add_feature (feat: E_FEATURE; str: STRING_GENERAL)
+	add_feature (feat: E_FEATURE; str: READABLE_STRING_GENERAL)
 			-- Put feature `feat' with string
 			-- representation `str' at current position.
 		do
@@ -485,7 +485,7 @@ feature -- Text operator
 			process_breakpoint_index (feat, indx, has_cond)
 		end
 
-	add_feature_name (f_name: STRING_GENERAL; e_class: CLASS_C)
+	add_feature_name (f_name: READABLE_STRING_GENERAL; e_class: CLASS_C)
 			-- Put feature name `f_name' defined in `e_class'.
 		do
 			process_feature_name_text (f_name, e_class)
@@ -520,19 +520,19 @@ feature -- Text operator
 			end
 		end
 
-	add_quoted_text (s: STRING_GENERAL)
+	add_quoted_text (s: READABLE_STRING_GENERAL)
 			-- Put `s' at current position.
 		do
 			process_quoted_text (s)
 		end
 
-	add_comment (s: STRING_GENERAL)
+	add_comment (s: READABLE_STRING_GENERAL)
 			-- Add simple comment `s'.
 		do
 			process_comment_text (s, Void)
 		end
 
-	add_address (address: STRING_GENERAL; a_name: STRING_GENERAL; e_class: CLASS_C)
+	add_address (address: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL; e_class: CLASS_C)
 			-- Put `address' for `e_class'.
 		do
 			process_address_text (address, a_name, e_class)
@@ -550,7 +550,7 @@ feature -- Text operator
 			process_indentation (nr)
 		end
 
-	add_class_syntax (syn: ERROR; e_class: CLASS_C; str: STRING_GENERAL)
+	add_class_syntax (syn: ERROR; e_class: CLASS_C; str: READABLE_STRING_GENERAL)
 			-- Put `syn' for `e_class'.
 		do
 			process_cl_syntax (str, syn, e_class)
@@ -562,7 +562,7 @@ feature -- Text operator
 			process_column_text (column_num)
 		end
 
-	add_feature_error (feat: E_FEATURE; str: STRING_GENERAL; a_line: INTEGER)
+	add_feature_error (feat: E_FEATURE; str: READABLE_STRING_GENERAL; a_line: INTEGER)
 			-- Put error of feature `feat', named `str' and located at `a_line'.
 		do
 			process_feature_error (str, feat, a_line)
@@ -570,14 +570,14 @@ feature -- Text operator
 
 feature {NONE} -- Implementation
 
-	separate_string (s: STRING_GENERAL; for_comment: BOOLEAN)
+	separate_string (s: READABLE_STRING_GENERAL; for_comment: BOOLEAN)
 			-- Separate `s' into parts and add them to `Current'.
 			-- Mostly for manifest strings and comments.
 		local
 			l_scanner: like comment_scanner
 		do
 			l_scanner := comment_scanner
-			l_scanner.set_input_buffer (create {YY_BUFFER}.make (encoding_converter.utf32_to_utf8 (s)))
+			l_scanner.set_input_buffer (create {YY_BUFFER}.make (encoding_converter.utf32_to_utf8 (s.to_string_32)))
 			l_scanner.set_text_formatter (Current)
 			l_scanner.set_for_comment (for_comment)
 			l_scanner.set_seperate (seperate_comment)
@@ -594,7 +594,7 @@ feature {NONE} -- Implementation
 	seperate_comment: BOOLEAN
 			-- Seperate comment into words?
 
-	reset_phrase (p: STRING_GENERAL; for_comment: BOOLEAN)
+	reset_phrase (p: READABLE_STRING_GENERAL; for_comment: BOOLEAN)
 			-- Add comment `p' and wipe out `p'.
 		require
 			p_not_void: p /= Void
@@ -622,7 +622,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_quoted_item (text: STRING_GENERAL; quote: BOOLEAN)
+	process_quoted_item (text: READABLE_STRING_GENERAL; quote: BOOLEAN)
 			-- Process quoted `s' according to its type.
 		local
 			l_feature: E_FEATURE
@@ -666,7 +666,7 @@ feature {NONE} -- Implementation
 			-- Internal context group
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

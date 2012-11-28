@@ -391,7 +391,7 @@ feature -- Setting
 	set_without_tabs
 			-- Set next insertion without tabs.
 		do
-			without_tabs := true
+			without_tabs := True
 		end
 
 	set_for_documentation (a_doc: DOCUMENTATION_ROUTINES)
@@ -550,7 +550,7 @@ feature -- Element change
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.add_class (c)
 		end
 
@@ -647,7 +647,7 @@ feature -- Output
 			text_formatter.add_space
 		end
 
-	put_manifest_string (s: STRING_GENERAL)
+	put_manifest_string (s: READABLE_STRING_GENERAL)
 			-- Append `s' to `text_formatter'.
 		require
 			s_exists: s /= Void
@@ -725,7 +725,7 @@ feature -- Output
 			end
 		end
 
-	put_comment_text (c: STRING_GENERAL)
+	put_comment_text (c: READABLE_STRING_GENERAL)
 			-- Separate `c'
 			-- and append it to `text_formatter'.
 			-- We do not use it if not necessary, as it slow.
@@ -735,7 +735,7 @@ feature -- Output
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			if not c.is_empty then
 				text_formatter.add_comment_text (c)
 			end
@@ -749,61 +749,61 @@ feature -- Text formatter decorator
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_basic_text (text)
 		end
 
-	process_character_text (text: STRING_GENERAL)
+	process_character_text (text: READABLE_STRING_GENERAL)
 			-- Process string text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_character_text (text)
 		end
 
-	process_generic_text (text: STRING_GENERAL)
+	process_generic_text (text: READABLE_STRING_GENERAL)
 			-- Process string text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_generic_text (text)
 		end
 
-	process_indexing_tag_text (text: STRING_GENERAL)
+	process_indexing_tag_text (text: READABLE_STRING_GENERAL)
 			-- Process string text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_indexing_tag_text (text)
 		end
 
-	process_local_text (text: STRING_GENERAL)
+	process_local_text (text: READABLE_STRING_GENERAL)
 			-- Process string text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_local_text (text)
 		end
 
-	process_number_text (text: STRING_GENERAL)
+	process_number_text (text: READABLE_STRING_GENERAL)
 			-- Process string text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_number_text (text)
 		end
 
-	process_quoted_text (text: STRING_GENERAL)
+	process_quoted_text (text: READABLE_STRING_GENERAL)
 			-- Process the quoted `text' within a comment.
 		do
 			if not tabs_emitted then
@@ -812,115 +812,115 @@ feature -- Text formatter decorator
 			text_formatter.process_quoted_text (text)
 		end
 
-	process_assertion_tag_text (text: STRING_GENERAL)
+	process_assertion_tag_text (text: READABLE_STRING_GENERAL)
 			-- Process string text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_assertion_tag_text (text)
 		end
 
-	process_string_text (text, link: STRING_GENERAL)
+	process_string_text (text, link: READABLE_STRING_GENERAL)
 			-- Process string text `text'.
 			-- possible `link', can be void.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_string_text (text, link)
 		end
 
-	process_reserved_word_text (text: STRING_GENERAL)
+	process_reserved_word_text (text: READABLE_STRING_GENERAL)
 			-- Process string text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_reserved_word_text (text)
 		end
 
-	process_comment_text (text, url: STRING_GENERAL)
+	process_comment_text (text, url: READABLE_STRING_GENERAL)
 			-- Process comment text.
 			-- `url' is possible url, which can be void if none.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_comment_text (text, url)
 		end
 
-	process_difference_text_item (text: STRING_GENERAL)
+	process_difference_text_item (text: READABLE_STRING_GENERAL)
 			-- Process difference text text.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_difference_text_item (text)
 		end
 
-	process_class_name_text (text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN)
+	process_class_name_text (text: READABLE_STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN)
 			-- Process class name of `a_class'.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_class_name_text (text, a_class, a_quote)
 		end
 
-	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
+	process_cluster_name_text (text: READABLE_STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
 			-- Process cluster name of `a_cluster'.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_cluster_name_text (text, a_cluster, a_quote)
 		end
 
-	process_target_name_text (text: STRING_GENERAL; a_target: CONF_TARGET)
+	process_target_name_text (text: READABLE_STRING_GENERAL; a_target: CONF_TARGET)
 			-- Process target name text `text'.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_target_name_text (text, a_target)
 		end
 
-	process_feature_name_text (text: STRING_GENERAL; a_class: CLASS_C)
+	process_feature_name_text (text: READABLE_STRING_GENERAL; a_class: CLASS_C)
 			-- Process feature name text `text'.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_feature_name_text (text, a_class)
 		end
 
-	process_feature_error (text: STRING_GENERAL; a_feature: E_FEATURE; a_line: INTEGER)
+	process_feature_error (text: READABLE_STRING_GENERAL; a_feature: E_FEATURE; a_line: INTEGER)
 			-- Process error feature text.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_feature_error (text, a_feature, a_line)
 		end
 
-	process_feature_text (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN)
+	process_feature_text (text: READABLE_STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN)
 			-- Process feature text `text'.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_feature_text (text, a_feature, a_quote)
 		end
 
@@ -930,7 +930,7 @@ feature -- Text formatter decorator
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_breakpoint_index (a_feature, a_index, a_cond)
 		end
 
@@ -940,7 +940,7 @@ feature -- Text formatter decorator
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_breakpoint (a_feature, a_index)
 		end
 
@@ -950,7 +950,7 @@ feature -- Text formatter decorator
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_padded
 		end
 
@@ -960,7 +960,7 @@ feature -- Text formatter decorator
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_new_line
 		end
 
@@ -970,7 +970,7 @@ feature -- Text formatter decorator
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_indentation (a_indent_depth)
 		end
 
@@ -980,7 +980,7 @@ feature -- Text formatter decorator
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_after_class (a_class)
 		end
 
@@ -990,99 +990,99 @@ feature -- Text formatter decorator
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_before_class (a_class)
 		end
 
-	process_filter_item (text: STRING_GENERAL; is_before: BOOLEAN)
+	process_filter_item (text: READABLE_STRING_GENERAL; is_before: BOOLEAN)
 			-- Process filter text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_filter_item (text, is_before)
 		end
 
-	process_tooltip_item (a_tooltip: STRING_GENERAL; is_before: BOOLEAN)
+	process_tooltip_item (a_tooltip: READABLE_STRING_GENERAL; is_before: BOOLEAN)
 			-- Process tooltip text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_tooltip_item (a_tooltip, is_before)
 		end
 
-	process_feature_dec_item (a_feature_name: STRING_GENERAL; is_before: BOOLEAN)
+	process_feature_dec_item (a_feature_name: READABLE_STRING_GENERAL; is_before: BOOLEAN)
 			-- Process feature dec.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_feature_dec_item (a_feature_name, is_before)
 		end
 
-	process_symbol_text (text: STRING_GENERAL)
+	process_symbol_text (text: READABLE_STRING_GENERAL)
 			-- Process symbol text.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_symbol_text (text)
 		end
 
-	process_keyword_text (text: STRING_GENERAL; a_feature: E_FEATURE)
+	process_keyword_text (text: READABLE_STRING_GENERAL; a_feature: E_FEATURE)
 			-- Process keyword text.
 			-- `a_feature' is possible feature.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_keyword_text (text, a_feature)
 		end
 
-	process_operator_text (text: STRING_GENERAL; a_feature: E_FEATURE)
+	process_operator_text (text: READABLE_STRING_GENERAL; a_feature: E_FEATURE)
 			-- Process operator text.
 			-- `a_feature' can be void.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_operator_text (text, a_feature)
 		end
 
-	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C)
+	process_address_text (a_address, a_name: READABLE_STRING_GENERAL; a_class: CLASS_C)
 			-- Process address text.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_address_text (a_address, a_name, a_class)
 		end
 
-	process_error_text (text: STRING_GENERAL; a_error: ERROR)
+	process_error_text (text: READABLE_STRING_GENERAL; a_error: ERROR)
 			-- Process error text.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_error_text (text, a_error)
 		end
 
-	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C)
+	process_cl_syntax (text: READABLE_STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C)
 			-- Process class syntax text.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_cl_syntax (text, a_syntax_message, a_class)
 		end
 
@@ -1092,7 +1092,7 @@ feature -- Text formatter decorator
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_column_text (a_column_number)
 		end
 
@@ -1102,29 +1102,29 @@ feature -- Text formatter decorator
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_call_stack_item (level_number, display)
 		end
 
-	process_menu_text (text, link: STRING_GENERAL)
+	process_menu_text (text, link: READABLE_STRING_GENERAL)
 			-- Process menu item. This is only useful for generation to
 			-- formats that support hyperlinking.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_menu_text (text, link)
 		end
 
-	process_class_menu_text (text, link: STRING_GENERAL)
+	process_class_menu_text (text, link: READABLE_STRING_GENERAL)
 			-- Process class menu item. This is only useful for generation to
 			-- formats that support hyperlinking.
 		do
 			if not without_tabs and then not tabs_emitted then
 				emit_tabs
 			end
-			without_tabs := false
+			without_tabs := False
 			text_formatter.process_class_menu_text (text, link)
 		end
 

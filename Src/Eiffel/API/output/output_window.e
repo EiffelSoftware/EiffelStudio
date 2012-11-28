@@ -23,24 +23,24 @@ feature -- Text processing
 			put_string (text)
 		end
 
-	process_string_text (text, link: STRING_GENERAL)
+	process_string_text (text, link: READABLE_STRING_GENERAL)
 		do
 			put_string (text)
 		end
 
-	process_comment_text (text: STRING_GENERAL; url: STRING_GENERAL)
+	process_comment_text (text: READABLE_STRING_GENERAL; url: READABLE_STRING_GENERAL)
 			-- Process comment text.
 		do
 			put_comment (text)
 		end
 
-	process_quoted_text (text: STRING_GENERAL)
+	process_quoted_text (text: READABLE_STRING_GENERAL)
 			-- Process the quoted `text' within a comment.
 		do
 			put_quoted_comment (text)
 		end
 
-	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
+	process_cluster_name_text (text: READABLE_STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
 			-- Process class name text `t'.
 		do
 			if a_quote then
@@ -50,13 +50,13 @@ feature -- Text processing
 			end
 		end
 
-	process_target_name_text (text: STRING_GENERAL; a_target: CONF_TARGET)
+	process_target_name_text (text: READABLE_STRING_GENERAL; a_target: CONF_TARGET)
 			-- Process target name text `text'.
 		do
 			put_string (text)
 		end
 
-	process_class_name_text (text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN)
+	process_class_name_text (text: READABLE_STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN)
 			-- Process class name text `t'.
 		local
 			e_class: CLASS_C
@@ -66,7 +66,7 @@ feature -- Text processing
 			if a_quote then
 				l_text := text_quoted (text)
 			else
-				l_text := text
+				l_text := text.to_string_32
 			end
 			class_i := a_class
 			e_class := class_i.compiled_class
@@ -77,13 +77,13 @@ feature -- Text processing
 			end
 		end
 
-	process_feature_name_text (text: STRING_GENERAL; a_class: CLASS_C)
+	process_feature_name_text (text: READABLE_STRING_GENERAL; a_class: CLASS_C)
 			-- Process feature name text `t'.
 		do
 			put_feature_name (text, a_class)
 		end
 
-	process_feature_text (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN)
+	process_feature_text (text: READABLE_STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN)
 			-- Process feature text `text'.
 		do
 			if a_quote then
@@ -135,61 +135,61 @@ feature -- Text processing
 		do
 		end
 
-	process_filter_item (text: STRING_GENERAL; is_before: BOOLEAN)
+	process_filter_item (text: READABLE_STRING_GENERAL; is_before: BOOLEAN)
 			-- Process filter text `t'.
 		do
 			put_filter_item (text, is_before)
 		end
 
-	process_symbol_text (text: STRING_GENERAL)
+	process_symbol_text (text: READABLE_STRING_GENERAL)
 			-- Process symbol text.
 		do
 			put_symbol (text)
 		end
 
-	process_keyword_text (text: STRING_GENERAL; a_feature: E_FEATURE)
+	process_keyword_text (text: READABLE_STRING_GENERAL; a_feature: E_FEATURE)
 			-- Process keyword text.
 		do
 			put_keyword (text)
 		end
 
-	process_operator_text (text: STRING_GENERAL; a_feature: E_FEATURE)
+	process_operator_text (text: READABLE_STRING_GENERAL; a_feature: E_FEATURE)
 			-- Process operator text.
 		do
 			put_operator (text, a_feature, is_keyword (text))
 		end
 
-	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C)
+	process_address_text (a_address, a_name: READABLE_STRING_GENERAL; a_class: CLASS_C)
 			-- Process address text.
 		do
 			put_address (a_address, a_name, a_class)
 		end
 
-	process_error_text (text:STRING_GENERAL; a_error: ERROR)
+	process_error_text (text:READABLE_STRING_GENERAL; a_error: ERROR)
 			-- Process error text.
 		do
 			put_error (a_error, text)
 		end
 
-	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C)
+	process_cl_syntax (text: READABLE_STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C)
 			-- Process class syntax text.
 		do
 			put_class_syntax (a_syntax_message, a_class, text)
 		end
 
-	process_ace_syntax (text: STRING_GENERAL; a_error: SYNTAX_ERROR)
+	process_ace_syntax (text: READABLE_STRING_GENERAL; a_error: SYNTAX_ERROR)
 			-- Process Ace syntax text.
 		do
 			put_ace_syntax (a_error, text)
 		end
 
-	process_difference_text_item (text: STRING_GENERAL)
+	process_difference_text_item (text: READABLE_STRING_GENERAL)
 			-- Process difference text.
 		do
 			put_string (text)
 		end
 
-	process_feature_error (text: STRING_GENERAL; a_feature: E_FEATURE; a_line: INTEGER)
+	process_feature_error (text: READABLE_STRING_GENERAL; a_feature: E_FEATURE; a_line: INTEGER)
 			-- Process error feature text.
 		do
 			put_feature_error (a_feature, text, a_line)
@@ -239,7 +239,7 @@ feature -- Output
 			put_string (str)
 		end
 
-	put_cluster (e_cluster: CONF_GROUP; str: STRING_GENERAL)
+	put_cluster (e_cluster: CONF_GROUP; str: READABLE_STRING_GENERAL)
 			-- Put `e_cluster' with string representation
 			-- `str' at current position.
 		require
@@ -248,7 +248,7 @@ feature -- Output
 			put_string (str)
 		end
 
-	put_class (e_class: CLASS_C; str: STRING_GENERAL)
+	put_class (e_class: CLASS_C; str: READABLE_STRING_GENERAL)
 			-- Put `e_class' with string representation
 			-- `str' at current position.
 		require
@@ -257,7 +257,7 @@ feature -- Output
 			put_string (str)
 		end
 
-	put_classi (class_i: CLASS_I; str: STRING_GENERAL)
+	put_classi (class_i: CLASS_I; str: READABLE_STRING_GENERAL)
 			-- Put `class_i' with string representation
 			-- `str' at current position.
 		require
@@ -266,7 +266,7 @@ feature -- Output
 			put_string (str)
 		end
 
-	put_error (error: ERROR; str: STRING_GENERAL)
+	put_error (error: ERROR; str: READABLE_STRING_GENERAL)
 			-- Put `error' with string representation
 			-- `str' at current position.
 		require
@@ -276,7 +276,7 @@ feature -- Output
 			put_string (str)
 		end
 
-	put_feature (feat: E_FEATURE; str: STRING_GENERAL)
+	put_feature (feat: E_FEATURE; str: READABLE_STRING_GENERAL)
 			-- Put feature `feat' with string
 			-- representation `str' at current position.
 		require
@@ -285,7 +285,7 @@ feature -- Output
 			put_string (str)
 		end
 
-	put_feature_name (f_name: STRING_GENERAL; e_class: CLASS_C)
+	put_feature_name (f_name: READABLE_STRING_GENERAL; e_class: CLASS_C)
 			-- Put feature name `f_name' defined in `e_class'.
 		require
 			valid_f_name: f_name /= Void
@@ -293,14 +293,14 @@ feature -- Output
 			put_string (f_name)
 		end
 
-	put_exported_feature_name (f_name: STRING_GENERAL; class_c: CLASS_C; alias_name: STRING_GENERAL)
+	put_exported_feature_name (f_name: READABLE_STRING_GENERAL; class_c: CLASS_C; alias_name: READABLE_STRING_GENERAL)
 		require
 			valid_f_name: f_name /= Void
 		do
 			put_string (f_name)
 		end
 
-	put_feature_error (feat: E_FEATURE; str: STRING_GENERAL; pos: INTEGER)
+	put_feature_error (feat: E_FEATURE; str: READABLE_STRING_GENERAL; pos: INTEGER)
 			-- Put feature `feat' with error at charcter
 			-- position `pos'
 		require
@@ -310,7 +310,7 @@ feature -- Output
 			put_feature (feat, str)
 		end
 
-	put_address (address: STRING_GENERAL; a_name: STRING_GENERAL; e_class: CLASS_C)
+	put_address (address: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL; e_class: CLASS_C)
 			-- Put `address' with `a_name' for `e_class'.
 		require
 			valid_address: address /= Void
@@ -319,7 +319,7 @@ feature -- Output
 			put_string (address)
 		end
 
-	put_class_syntax (syn: ERROR; eclass: CLASS_C; str: STRING_GENERAL)
+	put_class_syntax (syn: ERROR; eclass: CLASS_C; str: READABLE_STRING_GENERAL)
 			-- Put `syn' for `e_class' with `str' as representation.
 		require
 			valid_syn: syn /= Void
@@ -328,7 +328,7 @@ feature -- Output
 			put_string (str)
 		end
 
-	put_ace_syntax (syn: SYNTAX_ERROR; str: STRING_GENERAL)
+	put_ace_syntax (syn: SYNTAX_ERROR; str: READABLE_STRING_GENERAL)
 			-- Put `syn' with `str' as representation.
 		require
 			valid_syn: syn /= Void
@@ -337,7 +337,7 @@ feature -- Output
 			put_string (str)
 		end
 
-	put_comment (str: STRING_GENERAL)
+	put_comment (str: READABLE_STRING_GENERAL)
 			-- Put `str' as representation of a comment.
 		require
 			valid_str: str /= Void
@@ -345,7 +345,7 @@ feature -- Output
 			put_string (str)
 		end
 
-	put_quoted_comment (str: STRING_GENERAL)
+	put_quoted_comment (str: READABLE_STRING_GENERAL)
 			-- Put `str' as representation of quoted text.
 		require
 			valid_str: str /= Void
@@ -353,7 +353,7 @@ feature -- Output
 			put_string (text_quoted (str))
 		end;
 
-	put_after_class (e_class: CLASS_C; str: STRING_GENERAL)
+	put_after_class (e_class: CLASS_C; str: READABLE_STRING_GENERAL)
 			-- Put `str' as representation of quoted text.
 		require
 			valid_str: str /= Void
@@ -368,14 +368,14 @@ feature -- Output
 		do
 		end
 
-	put_filter_item (construct: STRING_GENERAL; is_before: BOOLEAN)
+	put_filter_item (construct: READABLE_STRING_GENERAL; is_before: BOOLEAN)
 			-- Put `str' as representation of quoted text.
 		require
 			valid_construct: construct /= Void
 		do
 		end
 
-	put_symbol (str: STRING_GENERAL)
+	put_symbol (str: READABLE_STRING_GENERAL)
 			-- Put `str' as representation of quoted text.
 		require
 			valid_str: str /= Void
@@ -383,7 +383,7 @@ feature -- Output
 			put_string (str)
 		end
 
-	put_keyword (str: STRING_GENERAL)
+	put_keyword (str: READABLE_STRING_GENERAL)
 			-- Put `str' as representation of quoted text.
 		require
 			valid_str: str /= Void
@@ -391,7 +391,7 @@ feature -- Output
 			put_string (str)
 		end
 
-	put_operator (str: STRING_GENERAL; e_feature: E_FEATURE; a_is_keyword: BOOLEAN)
+	put_operator (str: READABLE_STRING_GENERAL; e_feature: E_FEATURE; a_is_keyword: BOOLEAN)
 			-- Put `str' as representation of quoted text.
 		require
 			valid_str: str /= Void
@@ -401,7 +401,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -243,7 +243,7 @@ debug("SHOW_PROF_QUERY")
 	io.error.put_string (wc_name);
 	io.error.put_new_line;
 end;
-							entries_name := entries.item.string_representation
+							entries_name := entries.item.name
 							entries_name.to_lower
 							wildcard_matcher.set_text (entries_name);
 debug("SHOW_PROF_QUERY")
@@ -254,7 +254,7 @@ end;
 							if wildcard_matcher.pattern_matches then
 								entries_name := dir_name.twin
 								-- entries_name.append_character (Operating_environment.Directory_separator)
-								entries_name.append (entries.item.string_representation)
+								entries_name.append (entries.item.name)
 								--| Guillaume - 09/16/97
 								expanded_filenames.extend (entries_name)
 							end;

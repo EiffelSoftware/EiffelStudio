@@ -49,7 +49,7 @@ echo Stash
 echo Rebase
 @call git svn rebase
 echo Update subtrees
-git pull -X subtree=library/base/elks _elks master
+git pull -X subtree=library/base/elks _elks master:void_safe/library
 echo Apply Stash
 @call git stash apply
 echo Clear Stash

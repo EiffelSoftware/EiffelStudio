@@ -67,19 +67,19 @@ feature -- Basic Operations
 		end
 
 	display_pixmap
-			-- Draw pixmap
+			-- Draw pixmap.
 		local
-			fi: STRING_32
+			p: PATH
 			retried: BOOLEAN
 			info_dialog: EV_INFORMATION_DIALOG
 		do
 			if not retried then
-				fi := wizard_pixmap_path.extended (pixmap_file_name).name
-				pixmap.set_with_named_file (fi)
+				p := wizard_pixmaps_path.extended_path (pixmap_location)
+				pixmap.set_with_named_path (p)
 			end
 		rescue
 			if not retried then
-				create info_dialog.make_with_text ({STRING_32} "Unable to open the pixmap named%N%""+fi+"%"")
+				create info_dialog.make_with_text ({STRING_32} "Unable to open the pixmap named%N%""+p.name+"%"")
 				info_dialog.show_modal_to_window (first_window)
 				retried := True
 				retry
@@ -186,21 +186,12 @@ feature -- Access
 			-- Did the user entries changed since last time ?
 			-- This boolean is used in order to do a smart "next".
 
-	pixmap_location: FILE_NAME_32
+	pixmap_location: PATH
 			-- Path in which can be found the pixmap associated with
 			-- the current state.
-			-- Use `pixmap_file_name' instead.
 		deferred
 		ensure
 			exists: Result /= Void
-		end
-
-	pixmap_file_name: STRING_32
-			-- Name of a file with a pixmap associated with the current state.
-		do
-			Result := pixmap_location.to_string_32
-		ensure
-			result_attached: attached Result
 		end
 
 	message: EV_LABEL

@@ -32,7 +32,7 @@ feature -- Label
 
 feature -- Message
 
-	m_Final_state (compile_project: BOOLEAN; project_name: STRING_GENERAL; project_location: STRING_GENERAL): STRING_GENERAL
+	m_Final_state (compile_project: BOOLEAN; project_name: READABLE_STRING_GENERAL; project_location: READABLE_STRING_GENERAL): STRING_GENERAL
 		local
 			word: STRING_32
 		do
@@ -65,7 +65,7 @@ feature -- Message
 	m_Second_state: STRING_GENERAL do Result := locale.translation ("The number of states is limited to 10.") end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -95,4 +95,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_WIZARD_INTERFACE_NAMES
+
+end

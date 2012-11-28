@@ -24,8 +24,7 @@ feature  -- Initialization
 			-- Assign default values
 		do
 			Precursor
-			icon_location := wizard_resources_path_32.twin
-			icon_location.extend ("eiffel.ico")
+			icon_location := wizard_resources_path.extended ("eiffel.ico")
 			dialog_application := False
 			has_status_bar := False
 			has_tool_bar := False
@@ -61,7 +60,7 @@ feature -- Setting
 
 	set_icon_location (s: like icon_location)
 		do
-			create icon_location.make_from_string (s)
+			icon_location := s
 		end
 
 	set_dialog_application (b: BOOLEAN)
@@ -83,7 +82,7 @@ feature -- Access
 	has_about_dialog: BOOLEAN
 			-- Does the generated application include an "About" dialog box?
 
-	icon_location: FILE_NAME_32
+	icon_location: PATH
 			-- Location of the icon choose by the user
 
 	dialog_application: BOOLEAN
@@ -98,7 +97,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -128,4 +127,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_INFORMATION
+
+end

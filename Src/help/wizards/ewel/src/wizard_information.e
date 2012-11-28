@@ -22,17 +22,10 @@ feature  -- Initialization
 
 	make
 			-- Assign default values
-		local
-			icon_path: FILE_NAME_32
 		do
 			Precursor
 			freeze_required := True
-
-			create icon_path.make_from_string (wizard_resources_path_32)
-			icon_path.set_file_name ("eiffel")
-			icon_path.add_extension ("ico")
-			set_icon_location (icon_path)
-
+			set_icon_location (wizard_resources_path.extended ("eiffel.ico").name)
 			set_dialog_application (False)
 		end
 
@@ -51,10 +44,10 @@ feature -- Setting
 feature -- Access
 
 	icon_location: STRING_32
-			-- Location of the icon choose by the user
+			-- Location of the icon choose by the user.
 
 	dialog_application: BOOLEAN
-			-- Does the user want to generate a dialog application
+			-- Does the user want to generate a dialog application.
 
 feature {NONE} -- Implementation
 
@@ -68,7 +61,7 @@ invariant
 	freeze_required: freeze_required
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -98,4 +91,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_INFORMATION
+
+end

@@ -2,8 +2,8 @@ note
 	description	: "Error state when the user has not choosen to precompile at least one library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
+	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	date: "$Date$"
 	revision	: "$Revision$"
 
 class
@@ -43,15 +43,14 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	pixmap_icon_location: FILE_NAME
+	pixmap_icon_location: PATH
 			-- Icon for the Eiffel Precompile Wizard.
 		once
-			create Result.make_from_string ("eiffel_wizard_icon")
-			Result.add_extension (pixmap_extension)
+			create Result.make_from_string ("eiffel_wizard_icon" + pixmap_extension)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -81,4 +80,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_CHOOSE_ONE_ERROR_STATE
+
+end

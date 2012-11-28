@@ -110,22 +110,22 @@ feature {NONE} -- Implementation
 	display_pixmap
 			-- Draw pixmap
 		local
-			fi: STRING_32
+			p: PATH
 			retried: BOOLEAN
 			info_dialog: EV_INFORMATION_DIALOG
 			info_message: STRING_32
 		do
 			if not retried then
 				Precursor {WIZARD_STATE_WINDOW}
-				fi := wizard_pixmap_path.extended (pixmap_icon_location.string.as_string_32).name
-				pixmap_icon.set_with_named_file (fi)
+				p := wizard_pixmaps_path.extended_path (pixmap_icon_location)
+				pixmap_icon.set_with_named_path (p)
 			end
 		rescue
 			if not retried then
 				create info_message.make (30)
 				info_message.append ("Unable to open the pixmap named%N%"")
-				if fi /= Void then
-					info_message.append (fi)
+				if p /= Void then
+					info_message.append (p.name)
 				else
 					info_message.append ("UNKNOWN FILE")
 				end
@@ -139,14 +139,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	pixmap_location: FILE_NAME_32
-			-- Pixmap location
+	pixmap_location: PATH
+			-- Pixmap location.
 		once
-			create Result.make_from_string ("eiffel_wizard")
-			Result.add_extension (pixmap_extension)
+			create Result.make_from_string ("eiffel_wizard" + pixmap_extension)
 		end
 
-	pixmap_icon_location: FILE_NAME
+	pixmap_icon_location: PATH
 			-- Path in which can be found the pixmap icon associated with
 			-- the current state.
 		deferred

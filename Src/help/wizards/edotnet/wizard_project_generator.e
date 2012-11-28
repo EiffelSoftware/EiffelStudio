@@ -32,7 +32,7 @@ feature -- Basic Operations
 
 				-- Update the ace file location.
 			ace_location := project_location.extended (project_name_lowercase + Config_extension)
-			wizard_information.set_ace_location (ace_location.string_representation)
+			wizard_information.set_ace_location (ace_location)
 
 			create map_list.make
 			add_common_parameters (map_list)
@@ -101,9 +101,9 @@ feature -- Basic Operations
 
 				-- Generation
 			if not root_class_name_lowercase.is_equal (None_class) then
-				from_template_to_project (wizard_resource_path, Application_template_filename,	project_location, root_class_name_lowercase + Eiffel_extension, map_list)
+				from_template_to_project (wizard_resources_path, Application_template_filename,	project_location, root_class_name_lowercase + Eiffel_extension, map_list)
 			end
-			from_template_to_project (wizard_resource_path, Ace_template_filename, project_location, project_name_lowercase + Config_extension, map_list)
+			from_template_to_project (wizard_resources_path, Ace_template_filename, project_location, project_name_lowercase + Config_extension, map_list)
 		end
 
 feature {NONE} -- Access

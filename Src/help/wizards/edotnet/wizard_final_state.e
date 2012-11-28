@@ -84,11 +84,10 @@ feature {NONE} -- Implementation
 			message_and_title_box.disable_item_expand (message)
 		end
 
-	pixmap_icon_location: FILE_NAME
+	pixmap_icon_location: PATH
 			-- Icon for the Eiffel Dotnet Wizard.
 		once
-			 create Result.make_from_string (Wizard_icon_name)
-			 Result.add_extension (pixmap_extension)
+			 create Result.make_from_string (Wizard_icon_name + pixmap_extension)
 		end
 
 feature {NONE} -- Constants

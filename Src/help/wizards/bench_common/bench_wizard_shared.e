@@ -87,8 +87,8 @@ feature -- Shared variables
 				if callback_content /= Void then
 						-- Modify the fields
 					callback_content.replace_substring_all ("<SUCCESS>", "yes")
-					callback_content.replace_substring_all ("<ACE>", u.string_32_to_utf_8_string_8 (wizard_information.ace_location))
-					callback_content.replace_substring_all ("<DIRECTORY>", u.string_32_to_utf_8_string_8 (wizard_information.project_location.string_representation))
+					callback_content.replace_substring_all ("<ACE>", u.string_32_to_utf_8_string_8 (wizard_information.ace_location.name))
+					callback_content.replace_substring_all ("<DIRECTORY>", u.string_32_to_utf_8_string_8 (wizard_information.project_location.name))
 					if wizard_information.compile_project then
 						callback_content.replace_substring_all ("<COMPILATION>", "yes")
 					else

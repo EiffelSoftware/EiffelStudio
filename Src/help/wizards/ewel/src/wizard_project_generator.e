@@ -22,7 +22,7 @@ feature -- Basic Operations
 		local
 			map_list: LINKED_LIST [TUPLE [STRING, STRING_32]]
 			project_name_lowercase: STRING_32
-			project_location: STRING_32
+			project_location: PATH
 			source_prefix: STRING
 		do
 			if wizard_information.dialog_application then
@@ -38,14 +38,14 @@ feature -- Basic Operations
 			project_name_lowercase := wizard_information.project_name.as_lower
 			project_location := wizard_information.project_location
 
-			from_template_to_project (wizard_resources_path_32, "template_config.ecf", 					project_location, project_name_lowercase + ".ecf", map_list)
-			from_template_to_project (wizard_resources_path_32, "root_template.e", 			project_location, "root_class.e", map_list)
-			from_template_to_project (wizard_resources_path_32, source_prefix + "_main_window.e", 		project_location, "main_window.e", map_list)
-			from_template_to_project (wizard_resources_path_32, source_prefix + "_template.rc", 			project_location, project_name_lowercase + ".rc", map_list)
-			from_template_to_project (wizard_resources_path_32, source_prefix + "_resource.h", 			project_location, "resource.h", map_list)
-			from_template_to_project (wizard_resources_path_32, source_prefix + "_application_ids.e", 	project_location, "application_ids.e", map_list)
+			from_template_to_project (wizard_resources_path, "template_config.ecf", 					project_location, project_name_lowercase + ".ecf", map_list)
+			from_template_to_project (wizard_resources_path, "root_template.e", 			project_location, "root_class.e", map_list)
+			from_template_to_project (wizard_resources_path, source_prefix + "_main_window.e", 		project_location, "main_window.e", map_list)
+			from_template_to_project (wizard_resources_path, source_prefix + "_template.rc", 			project_location, project_name_lowercase + ".rc", map_list)
+			from_template_to_project (wizard_resources_path, source_prefix + "_resource.h", 			project_location, "resource.h", map_list)
+			from_template_to_project (wizard_resources_path, source_prefix + "_application_ids.e", 	project_location, "application_ids.e", map_list)
 			copy_icon
-			wizard_information.set_ace_location (project_location + "\" + project_name_lowercase + ".ecf")
+			wizard_information.set_ace_location (project_location.extended (project_name_lowercase + ".ecf"))
 		end
 
 feature {NONE} -- Access
@@ -96,26 +96,17 @@ feature {NONE} -- Implementation
 		end
 
 	copy_icon
-			-- Copy the icon
+			-- Copy the icon.
 		local
-			fi: RAW_FILE
-			s: STRING
-			project_name_lowercase: STRING_32
+			u: FILE_UTILITIES
 		do
-			project_name_lowercase := wizard_information.project_name.as_lower
-
-			create fi.make_open_read (wizard_information.icon_location)
-			fi.read_stream (fi.count)
-			s := fi.last_string
-			fi.close
-
-			create fi.make_open_write (wizard_information.project_location + "\" + project_name_lowercase + ".ico")
-			fi.put_string (s)
-			fi.close
+			u.copy_file_path
+				(create {PATH}.make_from_string (wizard_information.icon_location),
+				wizard_information.project_location.extended (wizard_information.project_name.as_lower + ".ico"))
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -145,4 +136,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_PROJECT_GENERATOR
+
+end

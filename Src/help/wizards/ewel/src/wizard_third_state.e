@@ -60,16 +60,11 @@ feature -- Basic Operation
 
 	update_state_information
 			-- Check User Entries
-		local
-			icon_path: FILE_NAME_32
 		do
 			if not icon_location.text_32.is_empty then
 				wizard_information.set_icon_location (icon_location.text_32)
 			else
-				create icon_path.make_from_string (wizard_resources_path_32)
-				icon_path.set_file_name ("eiffel")
-				icon_path.add_extension ("ico")
-				wizard_information.set_icon_location (icon_path)
+				wizard_information.set_icon_location (wizard_resources_path.extended ("eiffel.ico").name)
 			end
 			Precursor
 		end
@@ -88,7 +83,7 @@ feature {NONE} -- Implementation
 			-- Label and Textfield for the icon location.
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -118,4 +113,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_SECOND_STATE
+
+end

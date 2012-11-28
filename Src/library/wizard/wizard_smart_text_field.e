@@ -292,7 +292,7 @@ feature {NONE} -- Implementation
 				if not start_directory.is_empty and then
 					(create {DIRECTORY}.make (start_directory)).exists
 				then
-					dir_selector.set_start_directory (start_directory)
+					dir_selector.set_start_path (create {PATH}.make_from_string (start_directory))
 				end
 			end
 			dir_selector.ok_actions.extend (agent directory_selected(dir_selector))
@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 		require
 			selector_exists: dir_selector /= Void
 		do
-			textfield.set_text (dir_selector.directory)
+			textfield.set_text (dir_selector.path.name)
 		end
 
 	file_selected (file_selector: EV_FILE_OPEN_DIALOG)
@@ -314,7 +314,7 @@ feature {NONE} -- Implementation
 		require
 			selector_exists: file_selector /= Void
 		do
-			textfield.set_text (file_selector.file_name)
+			textfield.set_text (file_selector.full_file_path.name)
 		end
 
 	internal_widget: EV_VERTICAL_BOX
@@ -364,9 +364,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WIZARD_SMART_TEXT_FIELD
-
-
+end

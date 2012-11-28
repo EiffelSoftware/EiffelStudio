@@ -1,8 +1,6 @@
 note
-	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -33,11 +31,10 @@ feature -- Access
 			Result.append (interface_names.m_fix_and_restart)
 		end
 
-	pixmap_icon_location: FILE_NAME
+	pixmap_icon_location: PATH
 			-- Icon for the Eiffel Precompile Wizard.
 		once
-			create Result.make_from_string ("eiffel_wizard_icon")
-			Result.add_extension (pixmap_extension)
+			create Result.make_from_string ("eiffel_wizard_icon" + pixmap_extension)
 		end
 
 feature {NONE} -- Implementation
@@ -49,7 +46,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -79,4 +76,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_ERROR_ENV_VAR_STATE
+
+end

@@ -16,42 +16,35 @@ create
 feature -- Basic Operations
 
 	generate_code
-			-- Generate the code for a new cocoa-application project
+			-- Generate the code for a new cocoa-application project.
 		local
-			map_list: LINKED_LIST [TUPLE [STRING, STRING]]
+			map_list: LINKED_LIST [TUPLE [STRING, STRING_32]]
 			tuple: TUPLE [STRING, STRING]
 			project_name_lowercase: STRING
-			project_location: FILE_NAME
-			ace_location: FILE_NAME
+			project_location: PATH
 			tuple2: TUPLE [STRING, STRING]
 			a_string: STRING
 			a_string2: STRING
 		do
 				-- cached variables
-			project_name_lowercase := wizard_information.project_name.as_lower
-			create project_location.make_from_string (wizard_information.project_location)
+			project_location := wizard_information.project_location
 
 				-- Update the ace file location.
-			create ace_location.make_from_string (wizard_information.project_location)
-			ace_location.set_file_name (project_name_lowercase + ".ecf")
-			wizard_information.set_ace_location (ace_location)
+			wizard_information.set_ace_location (project_location.extended (wizard_information.project_name.as_lower + ".ecf"))
 
 			create map_list.make
 			add_common_parameters (map_list)
 
-			from_template_to_project (wizard_resources_path, "application.e",			project_location, "application.e", map_list)
+			from_template_to_project (wizard_resources_path, "application.e", project_location, "application.e", map_list)
 		end
 
 	tuple_from_file_content (an_index: STRING; a_content_file: STRING): TUPLE [STRING, STRING]
 		local
 			file_content: STRING
 			file: RAW_FILE
-			file_name: FILE_NAME
 		do
-			create file_name.make_from_string (wizard_resources_path)
-			file_name.set_file_name (a_content_file)
-
-			create file.make_open_read (file_name)
+			create file.make_with_path (wizard_resources_path.extended (a_content_file))
+			file.open_read
 			file.read_stream (file.count)
 
 			file_content := file.last_string.twin
@@ -85,7 +78,7 @@ feature {NONE} -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 2009, Daniel Furrer"
+	copyright:	"Copyright (c) 2009-2012, Daniel Furrer"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -116,4 +109,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class WIZARD_PROJECT_GENERATOR
+end

@@ -1,9 +1,9 @@
 note
-	description	: "Names for buttons, labels, ..."
+	description: "Names for buttons, labels, ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	INTERFACE_NAMES
@@ -29,7 +29,7 @@ feature -- Title
 
 feature -- Message
 
-	m_you_have_specified_the_following_setting (a_project_name, a_project_location: STRING_GENERAL): STRING_GENERAL
+	m_you_have_specified_the_following_setting (a_project_name, a_project_location: STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation (
 			"You have specified the following settings:%N%
@@ -76,7 +76,7 @@ feature -- Message
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -107,4 +107,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class INTERFACE_NAMES
+end

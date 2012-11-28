@@ -206,16 +206,16 @@ feature {NONE} -- Tools
 		local
 			it: EV_MULTI_COLUMN_LIST_ROW
 			eiffel_directory: DIRECTORY
-			list_of_preprecompilable_libraries: ARRAYED_LIST [STRING_32]
-			current_lib: STRING_32
-			current_precomp: FILE_NAME_32
+			list_of_preprecompilable_libraries: like {DIRECTORY}.entries
+			current_lib: PATH
+			current_lib_name: STRING_32
 		do
 				-- NOTE: for now `a_is_dotnet' is set to False, in future
 				-- the wizard should support dotnet precompiles
 			eiffel_layout.set_precompile (False)
 			create eiffel_directory.make_with_path (eiffel_layout.precompilation_path (False))
 			if eiffel_directory.exists then
-				list_of_preprecompilable_libraries:= eiffel_directory.linear_representation_32
+				list_of_preprecompilable_libraries:= eiffel_directory.entries
 
 				from
 					list_of_preprecompilable_libraries.start
@@ -223,13 +223,13 @@ feature {NONE} -- Tools
 					list_of_preprecompilable_libraries.after
 				loop
 					current_lib:= list_of_preprecompilable_libraries.item
-					if not (current_lib.is_equal (".") or current_lib.is_equal ("..")) then
+					if not (current_lib.is_current_symbol or current_lib.is_parent_symbol) then
+						current_lib_name := current_lib.name
 						if
-							current_lib.count >= 4 and then
-							current_lib.substring_index (".ecf", 1) = current_lib.count - 3
+							current_lib_name.count >= 4 and then
+							current_lib_name.substring (current_lib_name.count - 3, current_lib_name.count).same_string_general (".ecf")
 						then
-							create current_precomp.make_from_string (eiffel_directory.name)
-							it:= fill_ev_list_items (current_precomp, current_lib)
+							it:= fill_ev_list_items (eiffel_directory.path.name, current_lib_name)
 							if it /= Void then
 								precompilable_libraries.extend (it)
 							end
@@ -247,7 +247,7 @@ feature {NONE} -- Tools
 			-- for the ISE precompile libraries
 		local
 			info_lib: TUPLE [STRING_32, BOOLEAN]
-			path_name: FILE_NAME_32
+			path_name: PATH
 			l_conf: CONF_LOAD
 			l_factory: CONF_PARSE_FACTORY
 			l_file: RAW_FILE
@@ -255,25 +255,23 @@ feature {NONE} -- Tools
 			l_targets: HASH_TABLE [CONF_TARGET, STRING]
 		do
 			create path_name.make_from_string (path_lib)
-			path_name.set_file_name (ace_name)
+			path_name := path_name.extended (ace_name)
 			create l_factory
 			create l_conf.make (l_factory)
-			l_conf.retrieve_configuration (path_name)
+			l_conf.retrieve_configuration (path_name.name)
 			if not l_conf.is_error then
 				l_targets := l_conf.last_system.compilable_targets
 			end
 			if l_targets /= Void and l_targets.count = 1 then
 				create Result
 				create info_lib
-				info_lib.put (path_name.to_string_32, 1)
+				info_lib.put (path_name.name, 1)
 
-				create path_name.make_from_string (path_lib)
-				path_name.extend ("EIFGENs")
 				l_targets.start
 				l_target_name := l_targets.item_for_iteration.name
-				path_name.extend (l_target_name)
-				path_name.extend ("project.epr")
-				create l_file.make_with_name (path_name)
+				create path_name.make_from_string (path_lib)
+				path_name := path_name.extended ("EIFGENs").extended (l_target_name).extended ("project.epr")
+				create l_file.make_with_path (path_name)
 
 				if l_file.exists then
 					info_lib.put (True, 2)
@@ -427,8 +425,8 @@ feature {NONE} -- Tools
 			file_open_dialog.filters.extend (["*.ecf", interface_names.l_eiffel_conf_file])
 			file_open_dialog.show_modal_to_window (first_window)
 
-			file_path := file_open_dialog.file_path
-			file_title := file_open_dialog.file_title
+			file_path := file_open_dialog.full_file_path.parent.name
+			file_title := file_open_dialog.full_file_path.entry.name
 			if not file_path.is_empty and then not file_title.is_empty then
 					-- User has selected "OK"
 				it := fill_ev_list_items (file_path, file_title)
@@ -553,7 +551,7 @@ feature {NONE} -- Implementation
 			-- button to let the user add his own library
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -583,4 +581,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class wizard_first_state
+
+end

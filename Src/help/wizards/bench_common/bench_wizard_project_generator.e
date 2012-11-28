@@ -67,26 +67,15 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	copy_file (name, extension, destination: STRING_32)
-			-- Copy Class whose name is 'name'
+	copy_file (name: STRING_32; destination: PATH)
+			-- Copy Class with file name 'name' to `destination'.
 		require
 			name /= Void
-			is_target_file: target_files.has (name + "." + extension)
+			is_target_file: target_files.has (name)
 		local
-			f_name: PATH
-			fi: RAW_FILE
-			s: STRING
+			u: FILE_UTILITIES
 		do
-			create fi.make_with_path (wizard_resource_path.extended (name + {STRING_32} "." + extension))
-			fi.open_read
-			fi.read_stream (fi.count)
-			s := fi.last_string
-			fi.close
-			create f_name.make_from_string (destination)
-			create fi.make_with_path (f_name.extended (name + {STRING_32} "." + extension))
-			fi.open_write
-			fi.put_string (s)
-			fi.close
+			u.copy_file_path (wizard_resources_path.extended (name), destination.extended (name))
 		end
 
 	from_template_to_project (template_path: PATH; template_name: STRING_32; resource_path: PATH; resource_name: STRING_32; map_list: LINKED_LIST [TUPLE [STRING, STRING_32]])

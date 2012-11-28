@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 				setup_locale
 				Precursor
 				create icon_pixmap
-				icon_pixmap.set_with_named_file (wizard_pixmap_path.extended ("wizard.png").string_representation)
+				icon_pixmap.set_with_named_path (wizard_pixmaps_path.extended ("wizard.png"))
 				first_window.set_icon_pixmap (icon_pixmap)
 			end
 		rescue
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			l_arg: STRING
 			l_locale: like locale
 		do
-			create l_manager.make (eiffel_layout.language_path.string_representation)
+			create l_manager.make (eiffel_layout.language_path.name)
 			if argument_count >= 2 then
 				l_arg := argument (2)
 				l_locale := l_manager.locale (create {I18N_LOCALE_ID}.make_from_string (l_arg))

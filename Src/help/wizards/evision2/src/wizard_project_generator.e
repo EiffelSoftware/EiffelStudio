@@ -2,8 +2,8 @@ note
 	description	: "Object to generate a project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
+	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	date: "$Date$"
 	revision	: "$Revision$"
 
 class
@@ -23,20 +23,17 @@ feature -- Basic Operations
 			map_list: LINKED_LIST [TUPLE [STRING, STRING_32]]
 			tuple: TUPLE [STRING, STRING_32]
 			project_name_lowercase: STRING_32
-			project_location: FILE_NAME_32
-			ace_location: FILE_NAME_32
+			project_location: PATH
 			tuple2: TUPLE [STRING, STRING_32]
 			a_string: STRING
 			a_string2: STRING
 		do
 				-- cached variables
 			project_name_lowercase := wizard_information.project_name.as_lower
-			create project_location.make_from_string (wizard_information.project_location)
+			project_location := wizard_information.project_location
 
 				-- Update the ace file location.
-			create ace_location.make_from_string (wizard_information.project_location)
-			ace_location.set_file_name (project_name_lowercase + ".ecf")
-			wizard_information.set_ace_location (ace_location)
+			wizard_information.set_ace_location (wizard_information.project_location.extended (project_name_lowercase + ".ecf"))
 
 			create map_list.make
 			add_common_parameters (map_list)
@@ -80,16 +77,16 @@ feature -- Basic Operations
 				map_list.extend (empty_tuple ("${FL_ABOUTDIALOG_INIT}"))
 			end
 
-			from_template_to_project (wizard_resources_path_32, "template_main_window.e", 	project_location, "main_window.e", map_list)
-			from_template_to_project (wizard_resources_path_32, "interface_names.e", 		project_location, "interface_names.e", map_list)
-			from_template_to_project (wizard_resources_path_32, "about_dialog.e",	 		project_location, "about_dialog.e", map_list)
-			from_template_to_project (wizard_resources_path_32, "template_config.ecf", 		project_location, project_name_lowercase + ".ecf", map_list)
-			from_template_to_project (wizard_resources_path_32, "application.e",			project_location, "application.e", map_list)
+			from_template_to_project (wizard_resources_path, "template_main_window.e", 	project_location, "main_window.e", map_list)
+			from_template_to_project (wizard_resources_path, "interface_names.e", 		project_location, "interface_names.e", map_list)
+			from_template_to_project (wizard_resources_path, "about_dialog.e",	 		project_location, "about_dialog.e", map_list)
+			from_template_to_project (wizard_resources_path, "template_config.ecf", 		project_location, project_name_lowercase + ".ecf", map_list)
+			from_template_to_project (wizard_resources_path, "application.e",			project_location, "application.e", map_list)
 
 			if wizard_information.has_tool_bar then
-				copy_file ("new", "png", project_location)
-				copy_file ("open", "png", project_location)
-				copy_file ("save", "png", project_location)
+				copy_file ("new.png", project_location)
+				copy_file ("open.png", project_location)
+				copy_file ("save.png", project_location)
 			end
 		end
 
@@ -97,12 +94,8 @@ feature -- Basic Operations
 		local
 			file_content: STRING
 			file: RAW_FILE
-			file_name: FILE_NAME_32
 		do
-			create file_name.make_from_string (wizard_resources_path_32)
-			file_name.set_file_name (a_content_file)
-
-			create file.make_with_name (file_name)
+			create file.make_with_path (wizard_resources_path.extended (a_content_file))
 			file.open_read
 			file.read_stream (file.count)
 
@@ -146,7 +139,7 @@ feature {NONE} -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -177,4 +170,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class WIZARD_PROJECT_GENERATOR
+end

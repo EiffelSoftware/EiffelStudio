@@ -25,5 +25,11 @@ feature -- Access
 
 	random: RANDOM
 			-- Random sequence
+		local
+			l_seed: INTEGER
+		once
+			l_seed := ((create {TIME}.make_now).fine_seconds * 1000).truncated_to_integer
+			create Result.set_seed (l_seed)
+		end
 
 end

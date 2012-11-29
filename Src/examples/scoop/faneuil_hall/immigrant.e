@@ -9,30 +9,63 @@ class
 	IMMIGRANT
 
 inherit
-	ACTOR
+	SHARED_RANDOM
+		redefine
+			out
+		end
 
 create {FANEUIL_HALL}
 
-	make_with_hall
+	make
 
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
-	type: STRING = "Immigrant"
-			-- Actor type
-
-	step
-			-- Do a process step.
+	make (a_id: INTEGER; a_hall: separate HALL)
+			-- Initialize with identity and hall.
+		require
+			a_id_positive: a_id > 0
+			a_hall_not_void: a_hall /= Void
 		do
+			id := a_id
+			hall := a_hall
+		ensure
+			id_set: id = a_id
+			hall_set: hall = a_hall
+		end
+
+feature -- Access
+
+	id: INTEGER
+			-- Id of the actor
+
+feature -- Basic operations
+
+	act
+			-- Become a citizen.
+		do
+			(create {EXECUTION_ENVIRONMENT}).sleep ({INTEGER_64} 1_000_000 * random_integer (500, 2_000))
 			enter (hall)
 			random.forth;
-			(create {EXECUTION_ENVIRONMENT}).sleep (1000000 * random_integer (250, 500))
+			(create {EXECUTION_ENVIRONMENT}).sleep ({INTEGER_64} 1_000_000 * random_integer (250, 500))
 			check_in (hall)
 			sit_down (hall)
 			take_oath (hall)
 			get_certificate (hall)
 			leave (hall)
-			over := True
 		end
+
+feature -- Output
+
+	out: STRING
+			-- Printable representation
+		once
+			Result := "IMMIGRANT-" + id.out
+		end
+
+feature {NONE} -- Implementation
+
+	hall: separate HALL
+			-- Faneuil Hall
 
 	enter (a_hall: separate HALL)
 			-- Enter the hall.
@@ -81,5 +114,10 @@ feature {NONE} -- Implementation
 			print (out + " leaving%N")
 			a_hall.leave_immigrant
 		end
+
+
+invariant
+
+	id_positive: id > 0
 
 end

@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 			u: FILE_UTILITIES
 		do
 			u.copy_file_path
-				(create {PATH}.make_from_string (wizard_information.icon_location),
+				(wizard_information.icon_location,
 				wizard_information.project_location.extended (wizard_information.project_name.as_lower + ".ico"))
 		end
 

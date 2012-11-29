@@ -28,7 +28,7 @@ feature -- Basic Operation
 			-- Build entries.
 		do
 			create icon_location.make (Current)
-			icon_location.set_textfield_string (wizard_information.icon_location)
+			icon_location.set_textfield_string (wizard_information.icon_location.name)
 			icon_location.set_label_string_and_size (interface_names.l_project_icon, 10)
 			icon_location.enable_file_browse_button ("*.ico")
 			icon_location.generate
@@ -62,9 +62,9 @@ feature -- Basic Operation
 			-- Check User Entries
 		do
 			if not icon_location.text_32.is_empty then
-				wizard_information.set_icon_location (icon_location.text_32)
+				wizard_information.set_icon_location (create {PATH}.make_from_string (icon_location.text_32))
 			else
-				wizard_information.set_icon_location (wizard_resources_path.extended ("eiffel.ico").name)
+				wizard_information.set_icon_location (wizard_resources_path.extended ("eiffel.ico"))
 			end
 			Precursor
 		end

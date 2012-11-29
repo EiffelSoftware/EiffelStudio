@@ -502,6 +502,8 @@ feature {NONE} -- Implementation
 			Result.put ("SYSTEM_STACK", "System.Collections.Stack")
 			Result.put ("SYSTEM_DIRECTORY", "System.IO.Directory")
 			Result.put ("SYSTEM_FILE", "System.IO.File")
+			Result.put ("SYSTEM_FILE_INFO", "System.IO.FileInfo")
+			Result.put ("SYSTEM_PATH", "System.IO.Path")
 			Result.put ("SYSTEM_DATE_TIME", "System.DateTime")
 			Result.put ("SYSTEM_SORTED_LIST", "System.Collections.SortedList")
 			Result.put ("SYSTEM_RANDOM", "System.Random")

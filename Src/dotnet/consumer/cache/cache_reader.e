@@ -85,7 +85,7 @@ feature -- Access
 				l_assembly := l_consumed_assemblies.item
 				if l_path = Void then
 					l_path := l_assembly.format_path (a_path)
-					if attached {PATH}.get_full_path (l_path) as l_full_path then
+					if attached {SYSTEM_PATH}.get_full_path (l_path) as l_full_path then
 						l_path := l_full_path
 					end
 				end
@@ -264,7 +264,7 @@ feature -- Status Report
 		local
 			l_ca: detachable CONSUMED_ASSEMBLY
 			l_consume_path: STRING
-			l_file_info: FILE_INFO
+			l_file_info: SYSTEM_FILE_INFO
 			l_dir_info: DIRECTORY_INFO
 			l_so: detachable SYSTEM_OBJECT
 			l_reason: detachable STRING

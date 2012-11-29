@@ -17,7 +17,7 @@ feature -- Factory Functions
 			a_path_attached: a_path /= Void
 			not_a_path_is_empty: not a_path.is_empty
 		local
-			l_file: FILE_INFO
+			l_file: SYSTEM_FILE_INFO
 			l_dir: detachable DIRECTORY_INFO
 		do
 			create l_file.make (a_path)
@@ -30,7 +30,7 @@ feature -- Factory Functions
 				(create {EIFFEL_SERIALIZER}).serialize (Current, a_path, False)
 			end
 		ensure
-			a_path_exists: (create {FILE_INFO}.make (a_path)).exists
+			a_path_exists: (create {SYSTEM_FILE_INFO}.make (a_path)).exists
 		end
 
 end -- class {CACHE_INFO_FACTORY}

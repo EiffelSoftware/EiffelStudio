@@ -132,7 +132,7 @@ feature -- Basic Operations
 					l_ca := l_reader.consumed_assembly_from_path (a_path)
 				end
 				if l_ca = Void then
-					l_lower_path := {PATH}.get_full_path (a_path.as_lower)
+					l_lower_path := {SYSTEM_PATH}.get_full_path (a_path.as_lower)
 				else
 					l_lower_path := l_ca.location
 					if l_ca.has_info_only and not a_info_only then
@@ -558,7 +558,7 @@ feature -- Basic Operations
 		do
 			if not retried then
 				guard.lock
-				l_path := {PATH}.get_full_path (a_path)
+				l_path := {SYSTEM_PATH}.get_full_path (a_path)
 				if l_path /= Void then
 					if cache_reader.is_initialized then
 						Result := cache_reader.consumed_assembly_from_path (l_path)

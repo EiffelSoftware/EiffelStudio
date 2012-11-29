@@ -197,7 +197,7 @@ feature {CACHE_READER} -- Access
 		local
 			retried: BOOLEAN
 			l_dir_sep: CHARACTER
-			l_result: detachable STRING
+			l_result: detachable PATH
 		once
 			if not retried then
 				l_dir_sep := (create {OPERATING_ENVIRONMENT}).Directory_separator
@@ -208,11 +208,9 @@ feature {CACHE_READER} -- Access
 						l_result := eiffel_layout.install_path
 					end
 					if l_result = Void then
-						l_result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
-					else
-						l_result := l_result.twin
+						l_result := (create {EXECUTION_ENVIRONMENT}).current_working_path
 					end
-					Result := l_result
+					Result := l_result.name
 					if Result.item (Result.count) /= l_dir_sep then
 						Result.append_character (l_dir_sep)
 					end

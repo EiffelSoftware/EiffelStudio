@@ -416,7 +416,7 @@ feature {NONE} -- Implementation
 			else
 				l_path := a_file_name
 			end
-			l_location := {PATH}.get_directory_name (l_path)
+			l_location := {SYSTEM_PATH}.get_directory_name (l_path)
 			if l_location /= Void and then l_location.length > 0 then
 				Result := l_location
 				if l_is_network_path then
@@ -564,7 +564,7 @@ feature {NONE} -- Implementation
 	add_current_assembly_path
 			-- Adds `Cuurent's contained assembly path to `resolver_paths'
 		local
-			l_file: FILE_INFO
+			l_file: SYSTEM_FILE_INFO
 			l_type: SYSTEM_TYPE
 		do
 			l_type := {AR_RESOLVER}

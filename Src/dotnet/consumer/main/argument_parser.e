@@ -74,7 +74,11 @@ feature -- Access
 			successful: is_successful
 			use_specified_cache: use_specified_cache
 		do
-			Result := option_of_name (output_switch).value
+			if attached option_of_name (output_switch) as l_name then
+				Result := l_name.value
+			else
+				Result := "."
+			end
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty

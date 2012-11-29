@@ -129,7 +129,7 @@ feature
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("c:\a")
-			check_equal ("root", p.root ~ create {PATH}.make_from_string ("c:\"))
+			check_equal ("root", p.root ~ create {PATH}.make_from_string ("c:"))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("c:a\b")
@@ -137,7 +137,7 @@ feature
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("c:\a\b")
-			check_equal ("root", p.root ~ create {PATH}.make_from_string ("c:\"))
+			check_equal ("root", p.root ~ create {PATH}.make_from_string ("c:"))
 			check_equal ("root", p.has_root)
 		end
 

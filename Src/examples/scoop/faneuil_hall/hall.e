@@ -8,7 +8,7 @@ note
 class
 	HALL
 
-feature {ACTOR} -- Status report
+feature  -- Status report
 
 	judge_present: BOOLEAN
 			-- Is judge present?
@@ -18,7 +18,7 @@ feature {JUDGE} -- Status report
 	immigrants_ready: BOOLEAN
 			-- Are immigrants ready?
 		do
-			Result := immigrant_count = ready_immigrant_count
+			Result := present_immigrant_count = ready_immigrant_count
 		end
 
 	all_immigrants_sworn: BOOLEAN
@@ -33,10 +33,13 @@ feature {JUDGE} -- Status report
 			Result := sworn_immigrant_count > 0
 		end
 
-feature {JUDGE} -- Access
+feature -- Access
 
-	immigrant_count: INTEGER
-			-- How many immigrants present?
+	expected_immigrant_count: INTEGER
+			-- Total immigrants expected for today.
+
+	present_immigrant_count: INTEGER
+			-- Immigrants currently in hall for swearing in.
 
 feature {JUDGE} -- Status setting
 
@@ -70,14 +73,20 @@ feature {IMMIGRANT} -- Status report
 	judge_ready: BOOLEAN
 			-- Is judge ready?
 
-feature {IMMIGRANT} -- Basic operations
+feature -- Basic operations
+
+	set_expected_immigrant_count (a_count: INTEGER)
+			-- Set expected immigrant count to `a_count'.
+		do
+			expected_immigrant_count := a_count
+		end
 
 	enter_immigrant
 			-- Enter immigrant.
 		do
-			immigrant_count := immigrant_count + 1
+			present_immigrant_count := present_immigrant_count + 1
 		ensure
-			immigrants_incremented: immigrant_count = old immigrant_count + 1
+			immigrants_incremented: present_immigrant_count = old present_immigrant_count + 1
 		end
 
 	check_in
@@ -99,10 +108,10 @@ feature {IMMIGRANT} -- Basic operations
 	leave_immigrant
 			-- Leave immigrant.
 		do
-			immigrant_count := immigrant_count - 1
+			present_immigrant_count := present_immigrant_count - 1
 			sworn_immigrant_count := sworn_immigrant_count - 1
 		ensure
-			immigrants_decremented: immigrant_count = old immigrant_count - 1
+			immigrants_decremented: present_immigrant_count = old present_immigrant_count - 1
 			sworn_immigrant_count = old sworn_immigrant_count - 1
 		end
 
@@ -116,8 +125,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	ready_immigrants_bounds: ready_immigrant_count >= 0 and ready_immigrant_count <= immigrant_count
-	immigrants_ready: immigrants_ready = (immigrant_count = ready_immigrant_count)
-	judge_present: judge_present implies immigrant_count > 0
+	ready_immigrants_bounds: ready_immigrant_count >= 0 and ready_immigrant_count <= present_immigrant_count
+	immigrants_ready: immigrants_ready = (present_immigrant_count = ready_immigrant_count)
+	judge_present: judge_present implies present_immigrant_count > 0
 
 end

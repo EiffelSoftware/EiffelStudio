@@ -9,24 +9,57 @@ class
 	SPECTATOR
 
 inherit
-	ACTOR
+	SHARED_RANDOM
+		redefine
+			out
+		end
 
 create
-	make_with_hall
+	make
 
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
-	type: STRING = "Spectator"
-			-- Actor type
-
-	step
-			-- Do a process step.
+	make (a_id: INTEGER; a_hall: separate HALL)
+			-- Initialize with identity and hall.
+		require
+			a_id_positive: a_id > 0
+			a_hall_not_void: a_hall /= Void
 		do
+			id := a_id
+			hall := a_hall
+		ensure
+			id_set: id = a_id
+			hall_set: hall = a_hall
+		end
+
+feature -- Access
+
+	id: INTEGER
+			-- Id of the actor
+
+feature -- Basic operations
+
+	act
+			-- Observe citizenship procedure.
+		do
+			(create {EXECUTION_ENVIRONMENT}).sleep ({INTEGER_64} 1_000_000 * random_integer (500, 2_000))
 			enter (hall)
 			spectate
 			leave (hall)
-			over := True
 		end
+
+feature -- Output
+
+	out: STRING
+			-- Printable representation
+		once
+			Result := "SPECTATOR-" + id.out
+		end
+
+feature {NONE} -- Implementation
+
+	hall: separate HALL
+			-- Faneuil Hall
 
 	enter (a_hall: separate HALL)
 			-- Enter the hall.
@@ -40,10 +73,10 @@ feature {NONE} -- Implementation
 			-- Spectate.
 		do
 			random.forth;
-			(create {EXECUTION_ENVIRONMENT}).sleep (1000000 * random_integer (500, 1000))
+			(create {EXECUTION_ENVIRONMENT}).sleep ({INTEGER_64} 1_000_000 * random_integer (500, 1_000))
 			print (out + " spectating%N")
 			random.forth;
-			(create {EXECUTION_ENVIRONMENT}).sleep (1000000 * random_integer (500, 1000))
+			(create {EXECUTION_ENVIRONMENT}).sleep ({INTEGER_64} 1_000_000 * random_integer (500, 1_000))
 		end
 
 	leave (a_hall: separate HALL)
@@ -51,5 +84,9 @@ feature {NONE} -- Implementation
 		do
 			print (out + " leaving%N")
 		end
+
+invariant
+
+	id_positive: id > 0
 
 end

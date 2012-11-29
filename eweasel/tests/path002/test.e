@@ -25,11 +25,11 @@ feature
 		do
 			counter := 0
 			create o.make_from_string ("abc")
-			create p.make_from_path (o)
+			p := o.twin
 			check_equal ("make_from_path", p ~ o)
 			check_equal ("make_from_path", p.name ~ o.name)
 
-			create p.make_from_path (env.current_working_path)
+			p := env.current_working_path.twin
 			check_equal ("make_from_path", p ~ env.current_working_path)
 			check_equal ("make_from_path", p.name ~ env.current_working_path.name)
 
@@ -76,7 +76,7 @@ feature
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("c:\abc")
-			check_equal ("root", p.root ~ create {PATH}.make_from_string ("c:\"))
+			check_equal ("root", p.root ~ create {PATH}.make_from_string ("c:"))
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("c:abc\def")
@@ -84,7 +84,7 @@ feature
 			check_equal ("root", p.has_root)
 
 			create p.make_from_string ("c:\abc\def")
-			check_equal ("root", p.root ~ create {PATH}.make_from_string ("c:\"))
+			check_equal ("root", p.root ~ create {PATH}.make_from_string ("c:"))
 			check_equal ("root", p.has_root)
 		end
 

@@ -1568,7 +1568,7 @@ feature -- Executable names
 	ec_name: STRING_32
 			-- Full executable name of ec.
 		local
-			l_var: like get_environment
+			l_var: like get_environment_32
 		once
 			l_var := get_environment_32 ({EIFFEL_CONSTANTS}.ec_name_env)
 			if l_var /= Void then

@@ -25,7 +25,7 @@ feature  -- Initialization
 		do
 			Precursor
 			freeze_required := True
-			set_icon_location (wizard_resources_path.extended ("eiffel.ico").name)
+			set_icon_location (wizard_resources_path.extended ("eiffel.ico"))
 			set_dialog_application (False)
 		end
 
@@ -43,7 +43,7 @@ feature -- Setting
 
 feature -- Access
 
-	icon_location: STRING_32
+	icon_location: PATH
 			-- Location of the icon choose by the user.
 
 	dialog_application: BOOLEAN

@@ -595,12 +595,12 @@ feature -- Remote: Store/Load object on RT_
 			end
 		end
 
-	remotely_loaded_object (oa: DBG_ADDRESS; fn: STRING): detachable DUMP_VALUE
+	remotely_loaded_object (oa: DBG_ADDRESS; fn: READABLE_STRING_GENERAL): detachable DUMP_VALUE
 			-- Debug value related to remote loaded object from file `fn'.
 			-- and if `oa' is not Void, copy the value inside object addressed by `oa'.
 		do
 			if attached remote_rt_object as rto then
-				Result := rto.loaded_object (oa, fn)
+				Result := rto.loaded_object (oa, fn.as_string_8) -- FIXME: Unicode
 			end
 		end
 

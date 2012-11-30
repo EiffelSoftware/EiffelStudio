@@ -4,7 +4,11 @@ create
 feature
 	make
 		do
+			d := c	
 			if a /= b then
+				io.put_string ("We have a serious problem here%N")
+			end
+			if d /= b then
 				io.put_string ("We have a serious problem here%N")
 			end
 		end
@@ -24,5 +28,7 @@ feature
 		end
 
 	c: STRING = "ABC"
+
+	d: STRING
 
 end

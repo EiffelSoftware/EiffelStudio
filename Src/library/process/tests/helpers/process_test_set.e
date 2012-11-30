@@ -120,15 +120,15 @@ feature {NONE} -- Query
 			--       environment variables are missing we check for a unix layout. Otherwise we assume
 			--       `eiffel_echo' is reachable from $PATH.
 		local
-			l_env: EXECUTION_ENVIRONMENT_32
+			l_env: EXECUTION_ENVIRONMENT
 			l_ise_eiffel, l_ise_platform: detachable STRING_32
 			l_filename: PATH
 		do
 			l_cached := echo_executable_cache
 			if l_cached = Void then
 				create l_env
-				l_ise_eiffel := l_env.get (ise_eiffel_env)
-				l_ise_platform := l_env.get (ise_platform_env)
+				l_ise_eiffel := l_env.item (ise_eiffel_env)
+				l_ise_platform := l_env.item (ise_platform_env)
 				create l_filename.make_empty
 				if l_ise_eiffel = Void or l_ise_platform = Void then
 					if {PLATFORM}.is_unix then

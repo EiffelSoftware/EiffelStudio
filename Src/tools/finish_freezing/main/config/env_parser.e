@@ -111,7 +111,7 @@ feature {NONE} -- Basic operations
 			l_result: like internal_variables_via_evaluation
 			l_eval_file_name: STRING
 			l_file: detachable PLAIN_TEXT_FILE
-			l_com_spec: detachable STRING
+			l_com_spec: detachable STRING_32
 			l_cmd: STRING_32
 			l_launcher: WEL_PROCESS_LAUNCHER
 			l_pair: like parse_variable_name_value_pair
@@ -131,11 +131,11 @@ feature {NONE} -- Basic operations
 
 					l_com_spec := Void
 					if retry_count = 0 then
-						l_com_spec := cmd_exe_file_name
+						l_com_spec := cmd_exe_file_name.name
 					elseif retry_count = 1 then
 							-- CMD did not work out, try ComSpec
 							-- Retrieve command executable file name
-						l_com_spec := environment.get ("ComSpec")
+						l_com_spec := environment.item ("ComSpec")
 					end
 
 					if l_com_spec /= Void and then not l_com_spec.is_empty then
@@ -152,7 +152,7 @@ feature {NONE} -- Basic operations
 						l_launcher.launch (l_cmd, Void, Void)
 
 						if l_launcher.last_process_result = 0 then
-							create l_file.make (l_eval_file_name)
+							create l_file.make_with_name (l_eval_file_name)
 							if l_file.exists then
 								l_file.open_read
 								if l_file.count > 0 then
@@ -305,28 +305,29 @@ feature {NONE} -- Basic operations
 	env_eval_tmp_file_name: STRING = "tmp_espawn.tmp"
 			-- File name of evaluated environment variables.
 
-	cmd_exe_file_name: STRING
+	cmd_exe_file_name: PATH
 			-- File name of Command exe.
 		local
-			l_root: detachable STRING
 			l_system: detachable STRING
 		once
-			create Result.make (256)
 			l_system := system_folder
 			if l_system /= Void and then not l_system.is_empty then
-				Result.append (l_system)
+				create Result.make_from_string (l_system)
 			else
 					-- Failed to retrieve folder, use fall back
-				l_root := environment.get ("SystemRoot")
-				check l_root_attached: l_root /= Void end
-				Result.append (l_root)
-				Result.append ("\system32")
+				if attached environment.item ("SystemRoot") as l_value then
+					create Result.make_from_string (l_value)
+				else
+						-- No environment variable, we hardcode to `C:\Windows'.
+					create Result.make_from_string ("C:\Windows")
+				end
+				Result := Result.extended ("system32")
 			end
-			Result.append ("\cmd.exe")
+			Result := Result.extended ("cmd.exe")
 
-			if not (create {RAW_FILE}.make (Result)).exists then
+			if not (create {RAW_FILE}.make_with_path (Result)).exists then
 					-- Try a command shell locatable in the user PATH variable.
-				Result := "cmd.exe"
+				create Result.make_from_string ("cmd.exe")
 			end
 		ensure
 			result_attached: Result /= Void

@@ -37,8 +37,7 @@ copy_raw	hash_table_cursor.e $CLUSTER hash_table_cursor.e
 copy_raw	indexable.e $CLUSTER indexable.e 
 copy_raw	indexable_iteration_cursor.e $CLUSTER indexable_iteration_cursor.e 
 copy_raw	infinite.e $CLUSTER infinite.e 
-if not DOTNET copy_raw	internal.e $CLUSTER internal.e 
-if DOTNET copy_raw	internal.e-dotnet $CLUSTER internal.e 
+copy_raw	internal.e $CLUSTER internal.e 
 copy_raw	iterable.e $CLUSTER iterable.e 
 copy_raw	iteration_cursor.e $CLUSTER iteration_cursor.e 
 copy_raw	linear.e $CLUSTER linear.e 
@@ -62,8 +61,7 @@ copy_raw	unbounded.e $CLUSTER unbounded.e
 copy_raw	operating_environment.e $CLUSTER operating_environment.e 
 copy_raw	ise_exception_manager.e $CLUSTER ise_exception_manager.e 
 copy_raw	utf_converter.e $CLUSTER utf_converter.e 
-if not DOTNET copy_raw	exception.e $CLUSTER exception.e
-if DOTNET copy_raw	exception.e-dotnet $CLUSTER exception.e
+copy_raw	exception.e $CLUSTER exception.e
 compile_melted
 compile_result 	 ok
 

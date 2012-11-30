@@ -38,8 +38,8 @@ feature {NONE} -- Initialization
 			create system_dependent_directories.make (5)
 			create object_dependent_directories.make (50)
 			create dependent_directories.make (55)
-			create makefile.make ("Makefile")
-			create makefile_sh.make ("Makefile.SH")
+			create makefile.make_with_name ("Makefile")
+			create makefile_sh.make_with_name ("Makefile.SH")
 			create appl.make_empty
 			create missing_options.make (2)
 			missing_options.compare_objects
@@ -80,7 +80,7 @@ feature -- Quick compile
 			quick_prg: STRING_32
 		do
 			quick_prg := {STRING_32} "%""
-			quick_prg.append_string (eiffel_layout.quick_finalize_command_name.string_representation)
+			quick_prg.append_string (eiffel_layout.quick_finalize_command_name.name)
 			quick_prg.append_string ({STRING_32} "%" . ")
 			quick_prg.append_string_general (options.get_string_or_default ("obj_file_ext", "obj"))
 				-- On Windows, we need to surround the command with " since it is executed
@@ -105,7 +105,7 @@ feature -- Access
 			-- Options read from config.eif
 
 	dependent_directories, system_dependent_directories,
-	object_dependent_directories: ARRAYED_LIST [TUPLE [directory, file:STRING]]
+	object_dependent_directories: ARRAYED_LIST [TUPLE [directory, file: STRING]]
 			-- Subdirs for this compilation
 
 	quick_compilation: BOOLEAN
@@ -161,7 +161,6 @@ feature -- Execution
 		local
 			command: STRING
 			l_make_flags: STRING_32
-			eiffel_make: STRING
 			l_process: PROCESS
 			l_success: BOOLEAN
 			l_flags: LIST [STRING_32]
@@ -184,7 +183,7 @@ feature -- Execution
 				-- Launch building of `E1\estructure.h' and `E1\eoffsets.h' in case it is not built and we are not
 				-- in .NET mode
 			if not is_il_code then
-				create l_file.make ("E1" + directory_separator + "estructure.x")
+				create l_file.make_with_name ("E1" + directory_separator + "estructure.x")
 				if l_file.exists then
 					l_flags := l_make_flags.split (' ')
 					l_flags.extend ("E1" + directory_separator + "estructure.h")
@@ -196,7 +195,7 @@ feature -- Execution
 					end
 				end
 
-				create l_file.make ("E1" + directory_separator + "eoffsets.x")
+				create l_file.make_with_name ("E1" + directory_separator + "eoffsets.x")
 				if l_file.exists then
 					l_flags := l_make_flags.split (' ')
 					l_flags.extend ("E1" + directory_separator + "eoffsets.h")
@@ -222,7 +221,7 @@ feature -- Execution
 				l_flags.extend (l_make_flags)
 			end
 
-			l_process := process_launcher (eiffel_layout.emake_command_name.string_representation, l_flags, env.current_working_directory)
+			l_process := process_launcher (eiffel_layout.emake_command_name.name, l_flags, env.current_working_path.name)
 			l_process.launch
 			l_success := l_process.launched
 			if l_success then
@@ -312,9 +311,9 @@ feature {NONE} -- Translation
 						io.put_string (dir)
 						io.put_string (".%N")
 					end
-					env.change_working_directory (dir)
+					env.change_working_path (create {PATH}.make_from_string (dir))
 					translate_makefile (False)
-					env.change_working_directory (options.get_string_or_default ("updir", ".."))
+					env.change_working_path (create {PATH}.make_from_string (options.get_string_or_default ("updir", "..")))
 					old_dir := dir.twin
 				end
 			end
@@ -580,7 +579,6 @@ feature {NONE} -- Translation
 			-- Translate application section.
 		local
 			lastline: STRING
-			extension: STRING -- the extension of the filename (e.g. '.exe')
 			appl_exe: STRING -- the executable for the application
 			shared_library_pos: INTEGER
 		do
@@ -1333,7 +1331,7 @@ feature {NONE}	-- substitutions
 			end
 
 			if eiffel_layout.is_valid_environment then
-				l_eiffel_dir := u.string_32_to_utf_8_string_8 (eiffel_layout.shared_path.string_representation)
+				l_eiffel_dir := u.string_32_to_utf_8_string_8 (eiffel_layout.shared_path.name)
 			else
 				l_eiffel_dir := empty_string
 			end
@@ -1461,7 +1459,7 @@ feature {NONE}	-- substitutions
 
 feature {NONE} -- Implementation
 
-	env: EXECUTION_ENVIRONMENT_32
+	env: EXECUTION_ENVIRONMENT
 			-- Execution environment
 		once
 			 create Result
@@ -1686,7 +1684,7 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				out_file := False
-				create makefile_sh.make ("Makefile.SH")
+				create makefile_sh.make_with_name ("Makefile.SH")
 				if makefile_sh.exists then
 					makefile_sh.open_read
 					has_makefile_sh := True

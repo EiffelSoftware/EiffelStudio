@@ -4,7 +4,7 @@ note
 class FINISH_FREEZING
 
 inherit
-	EXECUTION_ENVIRONMENT_32
+	EXECUTION_ENVIRONMENT
 		rename
 			command_line as non_used_command_line
 		export
@@ -40,8 +40,7 @@ feature -- Initialization
 		local
 			retried: BOOLEAN -- did an error occur?
 			c_error: BOOLEAN -- did an error occur during C compilation?
-			l_location: STRING_32
-			l_location_index: INTEGER
+			l_location: PATH
 			l_unc_mapper: detachable UNC_PATH_MAPPER
 			l_mapped_path: BOOLEAN
 			l_exception: EXCEPTIONS
@@ -55,27 +54,27 @@ feature -- Initialization
 			if not retried then
 					-- if location has been specified, update it
 				if attached a_parser.location as l_loc then
-					l_location := l_loc
+					create l_location.make_from_string (l_loc)
 				else
 						-- Location defaults to the current directory
-					l_location := current_working_directory
+					l_location := current_working_path
 				end
 
 					-- if generate_only is specified then only generate makefile
 				l_gen_only := a_parser.generate_only
 
 					-- Map `location' if it is a network path if needed
-				if l_location.substring (1, 2) ~ "\\" then
-					create l_unc_mapper.make (l_location)
+				if attached l_location.root as l_root and then l_root.name.substring (1, 2).same_string_general ("\\") then
+					create l_unc_mapper.make (l_location.name)
 					if attached l_unc_mapper.access_name as l_access_name then
 						l_mapped_path := True
-						l_location := l_access_name + "\"
+						create l_location.make_from_string (l_access_name)
 					end
 				end
 
 					-- Change the working directory if needed
-				if l_location /~ current_working_directory then
-					change_working_directory (l_location)
+				if not l_location.same_as (current_working_path) then
+					change_working_path (l_location)
 				end
 
 				if a_parser.has_max_processors then
@@ -166,7 +165,7 @@ feature -- Access
 		local
 			completed: PLAIN_TEXT_FILE
 		do
-			create completed.make("completed.eif")
+			create completed.make_with_name ("completed.eif")
 			if not completed.exists then
 				Result := True
 			else

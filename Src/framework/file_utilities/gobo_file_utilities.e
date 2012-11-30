@@ -282,7 +282,7 @@ feature {NONE} -- Basic operations
 						attached (create {PATH}.make_from_string (l_dn)).extended (l_directories.item (i)).name as l_path and then
 						is_path_applicable (l_path, a_include, a_exclude)
 					then
-						Result.extend (l_path)
+						Result.extend (l_path.as_string_8)
 					end
 					i := i + 1
 				end
@@ -350,7 +350,7 @@ feature {NONE} -- Basic operations
 						attached (create {PATH}.make_from_string (l_dn)).extended (l_files.item (i)).name as l_file and then
 						is_path_applicable (l_file, a_include, a_exclude)
 					then
-						Result.extend (l_file)
+						Result.extend (l_file.as_string_8)
 					end
 					i := i + 1
 				end

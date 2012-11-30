@@ -12,26 +12,30 @@ class
 	DIRECTORY_SORTER
 
 inherit
-	PART_COMPARATOR [STRING_32]
+	PART_COMPARATOR [PATH]
 
 feature -- Comparison
 
-	less_than (u, v: STRING_32): BOOLEAN
+	less_than (u, v: PATH): BOOLEAN
 			-- Is `u' considered less than `v'?
+		local
+			l_u, l_v: like {PATH}.name
 		do
-			if u.valid_index (1) and v.valid_index (1) then
-				Result := u.item (1) = v.item (1)
+			if not u.is_empty and not v.is_empty then
+				l_u := u.name
+				l_v := v.name
+				Result := l_u.item (1) = l_v.item (1)
 				if Result then
 						-- Same letter, we ensure that smaller strings
 						-- are smaller than larger ones. If they have
 						-- the same count, then we use the string comparison.
-					if u.count = v.count then
-						Result := u <= v
+					if l_u.count = l_v.count then
+						Result := l_u <= l_v
 					else
-						Result := u.count <= v.count
+						Result := l_u.count <= l_v.count
 					end
 				else
-					Result := u.item (1) <= v.item (1)
+					Result := l_u.item (1) <= l_v.item (1)
 				end
 			else
 				Result := u <= v

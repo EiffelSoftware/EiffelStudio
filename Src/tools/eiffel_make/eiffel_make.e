@@ -53,7 +53,7 @@ feature -- Status report
 	has_error: BOOLEAN
 			-- Did we encountered an error?
 
-	target: DIRECTORY_NAME_32
+	target: PATH
 			-- Directory were processing will be done.
 
 	number_of_cpu: INTEGER
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 						l_has_error := True
 					else
 						create target.make_from_string (l_target)
-						create l_dir.make (target)
+						create l_dir.make_with_path (target)
 						if not l_dir.exists then
 							io.error.put_string ("Error: '" + l_target + "' directory does not exist.%N")
 							print_usage
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 
 				if not l_has_error then
 					if l_target = Void then
-						create target.make_from_string ((create {EXECUTION_ENVIRONMENT_32}).current_working_directory)
+						target := (create {EXECUTION_ENVIRONMENT}).current_working_path
 					end
 					if l_make = Void then
 						if (create {PLATFORM}).is_windows then
@@ -209,19 +209,19 @@ feature {NONE} -- Implementation
 			make_utility_not_void: make_utility /= Void
 			make_utility_not_empty: not make_utility.is_empty
 		local
-			l_dirs: ARRAYED_LIST [STRING_32]
-			l_dir_name: STRING_32
+			l_dirs: ARRAYED_LIST [PATH]
+			l_dir_name: PATH
 			l_name: like target
 			l_dir: DIRECTORY
 			l_worker_thread: WORKER_THREAD
 			i, l_min: INTEGER
 			l_file: RAW_FILE
-			l_sorted_list: ARRAYED_LIST [STRING_32]
-			l_sorter: QUICK_SORTER [STRING_32]
+			l_sorted_list: ARRAYED_LIST [PATH]
+			l_sorter: QUICK_SORTER [PATH]
 			l_has_e1: BOOLEAN
 		do
-			create l_dir.make (target)
-			l_dirs := l_dir.linear_representation_32
+			create l_dir.make_with_path (target)
+			l_dirs := l_dir.entries
 			from
 				l_dirs.start
 				create l_sorted_list.make (10)
@@ -229,20 +229,19 @@ feature {NONE} -- Implementation
 				l_dirs.after
 			loop
 				l_dir_name := l_dirs.item
-				if l_dir_name /= Void and then (not l_dir_name.same_string (".") and not l_dir_name.same_string ("..")) then
-					if l_dir_name.same_string ("E1") then
+				if not l_dir_name.is_current_symbol and not l_dir_name.is_parent_symbol then
+					if l_dir_name.name.same_string_general ("E1") then
 						l_has_e1 := True
 					else
-						l_name := target.twin
-						l_name.extend (l_dir_name)
-						create l_dir.make (l_name)
+						l_name := target.extended_path (l_dir_name)
+						create l_dir.make_with_path (l_name)
 							-- Strange way of checking if we are handling a directory, but
 							-- this is necessary on Windows where depending on wether or not
 							-- you had a final directory separator the results are bogus.
 						if l_dir.exists then
 							l_sorted_list.extend (l_dir_name)
 						else
-							create l_file.make_with_name (l_name)
+							create l_file.make_with_path (l_name)
 							if l_file.exists and then l_file.is_directory then
 								l_sorted_list.extend (l_dir_name)
 							end
@@ -267,7 +266,7 @@ feature {NONE} -- Implementation
 
 			if l_has_e1 then
 					-- We excluded E1 from `l_sorted_list' to ensure it would be last in the list.
-				insert_directory ("E1")
+				insert_directory (create {PATH}.make_from_string ("E1"))
 			end
 
 			l_min := number_of_cpu.min (actions.count)
@@ -318,7 +317,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compile_directory (a_dir: DIRECTORY_NAME_32; l_flags: LIST [STRING]): BOOLEAN
+	compile_directory (a_dir: PATH; l_flags: LIST [STRING]): BOOLEAN
 			-- Compile in `a_dir'.
 		require
 			target_not_void: target /= Void
@@ -330,7 +329,7 @@ feature {NONE} -- Implementation
 		local
 			l_process: PROCESS
 		do
-			l_process := process_launcher (make_utility, l_flags, a_dir)
+			l_process := process_launcher (make_utility, l_flags, a_dir.name)
 			l_process.launch
 			Result := l_process.launched
 			if Result then
@@ -339,7 +338,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_directory (a_dir: STRING_32)
+	insert_directory (a_dir: PATH)
 			-- Insert processing of `a_dir' subdirectory of `target' into `actions'
 			-- if it has a `Makefile' and no `finished' file showing that it has not yet
 			-- been processed.
@@ -349,22 +348,17 @@ feature {NONE} -- Implementation
 			make_utility_not_void: make_utility /= Void
 			make_utility_not_empty: not make_utility.is_empty
 		local
-			l_name: DIRECTORY_NAME_32
-			l_makefile, l_finished: FILE_NAME_32
+			l_name: like target
+			l_makefile, l_finished: PATH
 			l_file: RAW_FILE
 		do
-			l_name := target.twin
-			l_name.extend (a_dir)
-			create l_makefile.make_from_string (l_name)
-			l_makefile.set_file_name (makefile_name)
-			create l_file.make_with_name (l_makefile)
+			l_name := target.extended_path (a_dir)
+			l_makefile := l_name.extended (makefile_name)
+			create l_file.make_with_path (l_makefile)
 			if l_file.exists then
 					-- Only process directories which have a Makefile.
-				l_name := target.twin
-				l_name.extend (a_dir)
-				create l_finished.make_from_string (l_name)
-				l_finished.set_file_name (finished_name)
-				create l_file.make_with_name (l_finished)
+				l_finished := l_name.extended (finished_name)
+				create l_file.make_with_path (l_finished)
 				if not l_file.exists then
 						-- Only process directories which do not have a `finished' file, which shows
 						-- that the directory needs to be processed.

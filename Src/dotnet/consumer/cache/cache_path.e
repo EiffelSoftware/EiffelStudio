@@ -210,11 +210,8 @@ feature {CACHE_READER} -- Access
 					if l_result = Void then
 						l_result := (create {EXECUTION_ENVIRONMENT}).current_working_path
 					end
-					Result := l_result.name
-					if Result.item (Result.count) /= l_dir_sep then
-						Result.append_character (l_dir_sep)
-					end
-					Result.append (eac_path)
+					l_result := l_result.extended (eac_path)
+					Result := l_result.name.as_string_8
 
 						-- set internal EAC path to registry key
 					internal_eiffel_cache_path.put (Result)

@@ -21,7 +21,7 @@ inherit
 
 feature -- Status setting
 
-	set_excluded_indexing_items (l: LINEAR [STRING])
+	set_excluded_indexing_items (l: like excluded_indexing_items)
 			-- Assign `l' to `excluded_indexing_items'.
 		do
 			excluded_indexing_items := l
@@ -32,7 +32,7 @@ feature -- Access
 	current_class: CLASS_C
 			-- Class currently being processed.
 
-	excluded_indexing_items: LINEAR [STRING]
+	excluded_indexing_items: LINEAR [STRING_32]
 			-- Indexing items not to include in HTML meta clause.
 
 	index_text (a_text_formatter: TEXT_FORMATTER)
@@ -167,8 +167,8 @@ feature -- Access
 			group_not_void: group /= Void
 			a_text_formatter_not_void: a_text_formatter /= Void
 		local
-			l_name: STRING
-			l_group_type: STRING
+			l_name: STRING_32
+			l_group_type: STRING_32
 			l_desc: detachable STRING_32
 		do
 			l_group_type := type_of_group (group)
@@ -362,7 +362,7 @@ feature -- Routines
 			-- Append "General" item for class charts.
 		local
 			creators: HASH_TABLE [EXPORT_I, STRING]
-			s: STRING
+			s: STRING_32
 			class_c: CLASS_C
 			l_external_class: EXTERNAL_CLASS_I
 			l_group: CONF_GROUP
@@ -486,7 +486,7 @@ feature -- Routines
 			-- Append list of feature with signatures to `ctxt'.
 		local
 			f: E_FEATURE
-			t: STRING
+			t: STRING_32
 			wc: CLASS_C
 		do
 			from
@@ -550,7 +550,7 @@ feature {NONE} -- Implementation
 			-- Append to `ctxt.text', formatted `class_list'.
 			-- Depending on `desc', include descriptions.
 		local
-			s: detachable STRING
+			s: detachable STRING_32
 			ci: CLASS_I
 		do
 			from
@@ -605,10 +605,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_string_multilined (text: TEXT_FORMATTER; s: STRING)
+	add_string_multilined (text: TEXT_FORMATTER; s: STRING_32)
 			-- Append `s' to `text' using the multilined formatting.
 		local
-			sb: STRING
+			sb: STRING_32
 			n, ind: INTEGER
 		do
 			if s.substring_index ("%%N", 1) > 0 then
@@ -648,7 +648,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_info_item (text: TEXT_FORMATTER; tag: STRING)
+	append_info_item (text: TEXT_FORMATTER; tag: STRING_32)
 			-- Append `tag': `content' to `text'.
 		do
 			text.add_indent
@@ -657,7 +657,7 @@ feature {NONE} -- Implementation
 			text.add_space
 		end
 
-	append_feature_chart_item (text: TEXT_FORMATTER; fl: LIST [E_FEATURE]; a_title: STRING)
+	append_feature_chart_item (text: TEXT_FORMATTER; fl: LIST [E_FEATURE]; a_title: STRING_32)
 			-- Append class ancestors for `class_c' to `text'.
 		do
 			if not fl.is_empty then
@@ -668,7 +668,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_comment (text: TEXT_FORMATTER; comment: STRING)
+	append_comment (text: TEXT_FORMATTER; comment: STRING_32)
 			-- Append `comment' to `text'.
 		local
 			n, prev: INTEGER
@@ -685,10 +685,10 @@ feature {NONE} -- Implementation
 				text.add_indent
 				text.add_comment_text (ti_Dashdash)
 				if n > 0 then
-					text.add_comment_text (" " + comment.substring (prev, n - 1))
+					text.add_comment_text ({STRING_32} " " + comment.substring (prev, n - 1))
 					prev := n + 2
 				else
-					text.add_comment_text (" " + comment.substring (prev, comment.count))
+					text.add_comment_text ({STRING_32} " " + comment.substring (prev, comment.count))
 				end
 				text.add_new_line
 			end
@@ -696,7 +696,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Indexing clauses
 
-	html_meta_for_class (a_class: CONF_CLASS): STRING
+	html_meta_for_class (a_class: CONF_CLASS): STRING_32
 			-- Generate string with list of HTML META tags
 			-- describing the indexing clause of `a_class'.
 		require
@@ -714,7 +714,7 @@ feature {NONE} -- Indexing clauses
 			Result.append (indexes_to_html_meta (cl.ast.bottom_indexes, "Eiffel class"))
 		end
 
-	html_meta_for_cluster (cluster_i: CONF_GROUP): STRING
+	html_meta_for_cluster (cluster_i: CONF_GROUP): STRING_32
 			-- Generate strings of HTML meta data.
 		require
 			cluster_i_not_void: cluster_i /= Void
@@ -722,16 +722,16 @@ feature {NONE} -- Indexing clauses
 			Result := indexes_to_html_meta_group (cluster_i, "Eiffel cluster")
 		end
 
-	html_meta_for_system: STRING
+	html_meta_for_system: STRING_32
 			-- Generate strings of HTML meta data.
 		do
 			Result := indexing_tuple_to_string ("keywords", "Eiffel system")
 		end
 
-	indexes_to_html_meta_group (a_group: CONF_GROUP; added_keywords: STRING): STRING
+	indexes_to_html_meta_group (a_group: CONF_GROUP; added_keywords: STRING_32): STRING_32
 			-- Convert `a_group' to a big string of HTML meta data.
 		local
-			content, t: STRING
+			content, t: STRING_32
 			exc: like excluded_indexing_items
 			l_description: detachable STRING_32
 		do
@@ -766,16 +766,16 @@ feature {NONE} -- Indexing clauses
 				Result.append (indexing_tuple_to_string (t, content))
 			end
 
-			if not exc.has ("keywords") and added_keywords /= Void then
+			if not exc.has ({STRING_32} "keywords") and added_keywords /= Void then
 				Result.append (indexing_tuple_to_string ("keywords", added_keywords))
 			end
 		end
 
-	indexes_to_html_meta (indexes: EIFFEL_LIST [INDEX_AS]; added_keywords: STRING): STRING
+	indexes_to_html_meta (indexes: EIFFEL_LIST [INDEX_AS]; added_keywords: STRING_32): STRING_32
 			-- Convert `indexes' to a big string of HTML meta data.
 		local
-			content, t: STRING
-			ic: HASH_TABLE [STRING, STRING]
+			content, t: STRING_32
+			ic: HASH_TABLE [STRING_32, STRING_32]
 			exc: like excluded_indexing_items
 		do
 			create Result.make (20)
@@ -799,19 +799,19 @@ feature {NONE} -- Indexing clauses
 				content.replace_substring_all ("%%N", " ")
 				content.prune_all ('%%')
 				content.prune_all ('"')
-				if t.is_equal ("keywords") and added_keywords /= Void then
+				if t.same_string_general ("keywords") and added_keywords /= Void then
 					content.prepend (", ")
 					content.prepend (added_keywords)
 				end
 				Result.append (indexing_tuple_to_string (t, content))
 				ic.forth
 			end
-			if not ic.has ("keywords") and not exc.has ("keywords") and added_keywords /= Void then
+			if not ic.has ({STRING_32} "keywords") and not exc.has ({STRING_32} "keywords") and added_keywords /= Void then
 				Result.append (indexing_tuple_to_string ("keywords", added_keywords))
 			end
 		end
 
-	indexing_tuple_to_string (tag, content: STRING): STRING
+	indexing_tuple_to_string (tag, content: STRING_32): STRING_32
 			-- Create HTML meta string.
 		do
 			create Result.make (20)
@@ -822,10 +822,10 @@ feature {NONE} -- Indexing clauses
 			Result.append ("%"/>%N")
 		end
 
-	indexes_to_table (indexes: detachable EIFFEL_LIST [INDEX_AS]): HASH_TABLE [STRING, STRING]
+	indexes_to_table (indexes: detachable EIFFEL_LIST [INDEX_AS]): HASH_TABLE [STRING_32, STRING_32]
 			-- Table of [content, tag].
 		local
-			t: STRING
+			t: STRING_32
 			ii: INDEX_AS
 		do
 			create Result.make (5)
@@ -837,23 +837,23 @@ feature {NONE} -- Indexing clauses
 				loop
 					ii := indexes.item
 					if attached ii.tag as l_tag then
-						t := l_tag.name
+						t := l_tag.name_32
 					end
 					if t = Void then
-						t := "description"
+						t := {STRING_32} "description"
 							-- It is legal Eiffel syntax to omit first tag
 							-- of the indexing clause.
 							-- We will assume this is the description clause.
 					end
-					Result.put (ii.content_as_string, t)
+					Result.put (ii.content_as_string_32, t)
 					indexes.forth
 				end
 			end
 		end
 
-	indexing_item_as_string (c: CLASS_I; s: STRING): STRING
+	indexing_item_as_string (c: CLASS_I; s: STRING_32): STRING_32
 		local
-			ic: HASH_TABLE [STRING, STRING]
+			ic: HASH_TABLE [STRING_32, STRING_32]
 		do
 			ic := indexes_to_table (c.compiled_class.ast.top_indexes)
 			if ic.has_key (s) then
@@ -917,31 +917,31 @@ feature  -- Menu bars
 		deferred
 		end
 
-	insert_class_menu_bar (text: TEXT_FORMATTER; class_name: STRING)
+	insert_class_menu_bar (text: TEXT_FORMATTER; class_name: STRING_32)
 			-- Append a menu bar to `text'.
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	type_of_group (a_group: CONF_GROUP): STRING
+	type_of_group (a_group: CONF_GROUP): STRING_32
 			-- String representation of type of `a_group'
 		require
 			a_group_not_void: a_group /= Void
 		do
 			if a_group.is_library then
-				Result := "Library"
+				Result := {STRING_32} "Library"
 			elseif a_group.is_assembly or a_group.is_physical_assembly then
-				Result := "Assembly"
+				Result := {STRING_32} "Assembly"
 			else
-				Result := "Cluster"
+				Result := {STRING_32} "Cluster"
 			end
 		ensure
 			result_not_void: Result /= Void
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

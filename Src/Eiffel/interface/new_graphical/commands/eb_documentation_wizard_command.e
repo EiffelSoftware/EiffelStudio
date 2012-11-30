@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 		local
 			doc: DOCUMENTATION
 			retried, l_dir_created: BOOLEAN
-			l_str: STRING
+			l_str: STRING_32
 			l_formatter: like compiler_formatter
 		do
 			if not retried then
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 				l_formatter := compiler_formatter
 
 				window_manager.display_message ("")
-				l_str := "Documentation Generated in " + wizard.directory.name
+				l_str := interface_names.l_documentation_generated_in (wizard.directory.path.name)
 				doc.generate (Degree_output)
 				l_formatter.add_string (l_str)
 				l_formatter.add_new_line
@@ -112,9 +112,9 @@ feature {NONE} -- Implementation
 			end
 		rescue
 			if not l_dir_created then
-				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt ((create {WARNING_MESSAGES}).w_invalid_directory_or_cannot_be_created (wizard.directory.name), Void, Void)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt ((create {WARNING_MESSAGES}).w_invalid_directory_or_cannot_be_created (wizard.directory.path.name), Void, Void)
 			elseif doc.target_file_name /= Void then
-				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt ((create {WARNING_MESSAGES}).w_Cannot_create_file (doc.target_file_name), Void, Void)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt ((create {WARNING_MESSAGES}).w_Cannot_create_file (doc.target_file_name.name), Void, Void)
 			end
 			Error_handler.error_list.wipe_out
 			retried := True
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 		-- Documentation option dialog.
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

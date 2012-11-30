@@ -46,7 +46,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_for_documentation (a_cluster: CONF_GROUP; a_view: STRING; doc: DOCUMENTATION)
+	make_for_documentation (a_cluster: CONF_GROUP; a_view: detachable STRING_32; doc: DOCUMENTATION)
 			-- Initialize for `a_cluster' and `doc'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -57,12 +57,11 @@ feature {NONE} -- Initialization
 			view_name := a_view
 			cluster_path := doc.relative_path (cluster)
 			base_path := doc.base_relative_path (cluster)
-			create target_file_name.make_from_string (doc.root_directory.name)
+			target_file_name := doc.root_directory.path
 			if cluster_path /= Void then
-				target_file_name.extend (cluster_path)
+				target_file_name := target_file_name.extended_path (cluster_path)
 			end
-			target_file_name.extend ("diagram")
-			target_file_name.add_extension ("html")
+			target_file_name := target_file_name.extended ("diagram.html")
 			initialize
 		end
 
@@ -94,7 +93,7 @@ feature {NONE} -- Access
 
 feature {EB_DOCUMENTATION_WIZARD} -- Basic operations
 
-	available_views: LINKED_LIST [STRING]
+	available_views: LINKED_LIST [STRING_32]
 			-- Names of available views of `cluster'.
 		local
 			l_parser: XML_STOPPABLE_PARSER
@@ -130,7 +129,7 @@ feature {EB_DOCUMENTATION_WIZARD} -- Basic operations
 							check
 								valid_node: node.has_attribute_by_name ("NAME")
 							end
-							Result.extend (node.attribute_by_name ("NAME").value.to_string_8)
+							Result.extend (node.attribute_by_name ("NAME").value)
 						else
 							check node_is_element: False end
 						end
@@ -147,8 +146,8 @@ feature {DOCUMENTATION} -- Basic operations
 		local
 			l_diagram: like diagram
 			png_format: EV_PNG_FORMAT
-			png_file: FILE_NAME
-			str: STRING
+			png_file: PATH
+			str: STRING_32
 			ptf: PLAIN_TEXT_FILE
 			minimum_pixmap: EV_PIXMAP
 			l_layout: EIFFEL_INHERITANCE_LAYOUT
@@ -172,12 +171,11 @@ feature {DOCUMENTATION} -- Basic operations
 			end
 			world_cell.crop
 			create png_format
-			create png_file.make_from_string (documentation.root_directory.name)
+			png_file := documentation.root_directory.path
 			if attached cluster_path as l_cluster_path then
-				png_file.extend (l_cluster_path)
+				png_file := png_file.extended_path (l_cluster_path)
 			end
-			png_file.extend ("diagram")
-			png_file.add_extension ("png")
+			png_file := png_file.extended ("diagram.png")
 
 			l_filter_name := documentation.filter_name
 			l_is_html_stylesheet := l_filter_name.same_string ("html-stylesheet")
@@ -185,11 +183,12 @@ feature {DOCUMENTATION} -- Basic operations
 
 			l_cluster_name := cluster.name
 
-			create ptf.make_open_write (target_file_name)
+			create ptf.make_with_path (target_file_name)
+			ptf.open_write
 			str := "<html><head>%N<title>Cluster " + l_cluster_name + "</title>%N"
 
 			if l_is_html_stylesheet then
-				str.append ("<link rel=%"stylesheet%" href=%"" + base_path + "/default.css%" type=%"text/css%">%N%
+				str.append ({STRING_32} "<link rel=%"stylesheet%" href=%"" + base_path + {STRING_32} "/default.css%" type=%"text/css%">%N%
 								%<script type=%"text/javascript%" src=%"" + base_path + "/goto.html%"></script>%N")
 			end
 			str.append ("</head>%N%
@@ -220,7 +219,7 @@ feature {DOCUMENTATION} -- Basic operations
 					prompts.show_warning_prompt (Warning_messages.W_cannot_generate_png + " " + l_cluster_name, Void, Void)
 					create minimum_pixmap.make_with_size (1, 1)
 				end
-				minimum_pixmap.save_to_named_file (png_format, png_file)
+				minimum_pixmap.save_to_named_path (png_format, png_file)
 					-- Remove references.
 				minimum_pixmap.destroy
 			end
@@ -246,16 +245,16 @@ feature {NONE} -- Implementation
 	documentation: DOCUMENTATION
 			-- Associated documentation generator.
 
-	view_name: STRING
+	view_name: detachable STRING_32
 			-- Name of view to use to generate `diagram'.
 
-	cluster_path: FILE_NAME
+	cluster_path: PATH
 			-- `cluster' path relative to `documentation.root_directory'.
 
-	base_path: FILE_NAME
+	base_path: STRING_32
 			-- Path from `cluster' to documentation root directory.
 
-	target_file_name: FILE_NAME
+	target_file_name: PATH
 			-- Output file for generated diagram.
 
 	diagram_file: RAW_FILE
@@ -266,7 +265,7 @@ feature {NONE} -- Implementation
 			Result := u.make_raw_file_in (id_of_group (cluster) + ".xml", Eiffel_system.context_diagram_path)
 		end
 
-	form_code: STRING
+	form_code: STRING_32
 			-- For html-stylesheet format.
 		local
 			l_base_path: like base_path
@@ -281,7 +280,7 @@ feature {NONE} -- Implementation
 				%</tr></table></form>%N")
 		end
 
-	table_code: STRING
+	table_code: STRING_32
 			-- For html format.
 		local
 			l_base_path: like base_path
@@ -294,7 +293,7 @@ feature {NONE} -- Implementation
 				%</tr></table>%N")
 		end
 
-	image_map (cd: EIFFEL_CLUSTER_DIAGRAM): STRING
+	image_map (cd: EIFFEL_CLUSTER_DIAGRAM): STRING_32
 			-- HTML image map for `cd'.
 			-- Class bubbles are links to html class charts.
 			-- Empty space inside clusters are links to html cluster charts.
@@ -305,8 +304,8 @@ feature {NONE} -- Implementation
 			class_figures: LIST [EG_LINKABLE_FIGURE]
 			cluster_figures: ARRAYED_LIST [EG_CLUSTER_FIGURE]
 			local_cluster_figures: ARRAYED_LIST [EG_CLUSTER_FIGURE]
-			item_file: STRING
-			path: FILE_NAME
+			item_file: STRING_32
+			path: STRING_32
 			only_leaf_clusters: BOOLEAN
 			bounds, bbox: EV_RECTANGLE
 			l_base_path: like base_path
@@ -337,8 +336,8 @@ feature {NONE} -- Implementation
 				if attached {EIFFEL_CLASS_FIGURE} class_figures.item as cf then
 					l_class_i := cf.model.class_i
 					if l_class_i.is_compiled and l_doc_universe.is_class_generated (l_class_i) then
-						create item_file.make_from_string (l_base_path)
-						path := l_documentation.relative_path (l_class_i.group)
+						item_file := l_base_path.twin
+						path := l_documentation.relative_path_using_sep (l_class_i.group, "/")
 						if path /= Void then
 							item_file.append_character ('/')
 							item_file.append (path)
@@ -408,8 +407,8 @@ feature {NONE} -- Implementation
 					if attached {EIFFEL_CLUSTER_FIGURE} local_cluster_figures.item as clf then
 						l_group := clf.model.group
 						if l_doc_universe.is_group_generated (l_group) then
-							create item_file.make_from_string (l_base_path)
-							path := l_documentation.relative_path (l_group)
+							item_file := l_base_path.twin
+							path := l_documentation.relative_path_using_sep (l_group, "/")
 							if path /= Void then
 								item_file.append_character ('/')
 								item_file.append (path)

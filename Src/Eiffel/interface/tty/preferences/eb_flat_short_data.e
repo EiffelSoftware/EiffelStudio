@@ -27,33 +27,21 @@ feature {NONE} -- Initialization
 feature -- Value
 
 	feature_clause_order: ARRAY [STRING_32]
-		local
-			l_order: ARRAY [STRING]
-			i: INTEGER
+			-- Feature clause order
 		do
-				-- |FIXME: When the preference library support Unicode,
-				-- |FIXME: the following code should be adapted.
-			l_order := feature_clause_order_preference.value
-			create Result.make (l_order.lower, l_order.upper)
-			from
-				i := l_order.lower
-			until
-				i > l_order.upper
-			loop
-				Result.put (l_order.item (i).as_string_32, i)
-				i := i + 1
-			end
+			Result := feature_clause_order_preference.value_as_array
 		end
 
-	excluded_indexing_items: ARRAY [STRING]
+	excluded_indexing_items: ARRAY [STRING_32]
+			-- Excluded indexing items
 		do
-			Result := excluded_indexing_items_preference.value
+			Result := excluded_indexing_items_preference.value_as_array
 		end
 
 feature {NONE} -- Preference
 
-	feature_clause_order_preference: ARRAY_PREFERENCE
-	excluded_indexing_items_preference: ARRAY_PREFERENCE
+	feature_clause_order_preference: STRING_LIST_PREFERENCE
+	excluded_indexing_items_preference: STRING_LIST_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -77,8 +65,8 @@ feature {NONE} -- Implementation
 		do
 			create l_manager.make (preferences, "flat_short")
 
-			feature_clause_order_preference := l_manager.new_array_preference_value (l_manager, feature_clause_order_string, default_feature_clause_order)
-			excluded_indexing_items_preference := l_manager.new_array_preference_value (l_manager, excluded_indexing_items_string, <<"revision", "date", "status">>)
+			feature_clause_order_preference := l_manager.new_string_list_preference_value (l_manager, feature_clause_order_string, default_feature_clause_order)
+			excluded_indexing_items_preference := l_manager.new_string_list_preference_value (l_manager, excluded_indexing_items_string, <<"revision", "date", "status">>)
 		end
 
 	preferences: PREFERENCES
@@ -90,7 +78,7 @@ invariant
 	excluded_indexing_items_preferencenot_void: excluded_indexing_items_preference /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

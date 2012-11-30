@@ -1284,6 +1284,12 @@ feature -- Label texts
 	l_Display_call_stack_warning: STRING_32	do Result := locale.translation("Display a warning when the call stack depth reaches:")	end
 	l_Displayed_buttons_text: STRING_32 do Result := locale.translation("Displayed buttons")	end
 	l_display_window: STRING_32			do Result := "Display window" end
+	l_documentation_generated_in (a_folder: READABLE_STRING_GENERAL): STRING_32
+		require
+			a_folder_not_void: a_folder /= Void
+		do
+			Result := locale.formatted_string (locale.translation("Documentation Generated in $1"), [a_folder])
+		end
 	l_Dont_ask_me_again: STRING_32		do Result := locale.translation("Do not ask me again")	end
 	l_Do_not_detect_stack_overflows: STRING_32 do Result := locale.translation("Do not detect stack overflows")	end
 	l_Do_not_show_again: STRING_32		do Result := locale.translation("Do not show again")	end

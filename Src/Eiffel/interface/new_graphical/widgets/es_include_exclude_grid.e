@@ -84,7 +84,7 @@ feature -- Access
 	selection_grid: ES_GRID
 			-- Selection grid.
 
-	excluded_items_string_8: LIST [STRING]
+	excluded_items: ARRAYED_LIST [STRING_32]
 		local
 			g: like selection_grid
 			r,n: INTEGER
@@ -93,7 +93,7 @@ feature -- Access
 			from
 				r := 1
 				n := selection_grid.row_count
-				create {ARRAYED_LIST [STRING]} Result.make (n)
+				create Result.make (n)
 			until
 				r > n
 			loop
@@ -107,7 +107,7 @@ feature -- Access
 			end
 		end
 
-	included_items_string_8: LIST [STRING]
+	included_items: ARRAYED_LIST [STRING_32]
 		local
 			g: like selection_grid
 			r,n: INTEGER
@@ -116,7 +116,7 @@ feature -- Access
 			from
 				r := 1
 				n := selection_grid.row_count
-				create {ARRAYED_LIST [STRING]} Result.make (n)
+				create Result.make (n)
 			until
 				r > n
 			loop
@@ -395,7 +395,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -20,8 +20,7 @@ compile_result ok
 define PREFIX "prefix="TEST_""
 copy_sub	Ace $TEST Ace
 compile_quick_melted
-if DOTNET compile_result validity_error TEST VTCT VTCT
-if not DOTNET compile_result validity_error TEST VTCT
+compile_result validity_error TEST VTCT
 
 define PREFIX ""
 copy_sub	Ace $TEST Ace

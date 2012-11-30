@@ -102,20 +102,20 @@ feature -- Access
 	installed_runtimes: ARRAYED_LIST [STRING]
 			-- List all installed version of the runtime.
 		local
-			l_runtime_path: detachable STRING_32
-			l_content: ARRAYED_LIST [STRING]
+			l_runtime_path: detachable like dotnet_runtime_path
+			l_content: ARRAYED_LIST [PATH]
 			l_dir: DIRECTORY
-			l_file_name: FILE_NAME_32
+			l_file_name: PATH
+			l_entry: PATH
 			l_file: RAW_FILE
 		do
 			l_runtime_path := dotnet_runtime_path
 			create Result.make (5)
 			Result.compare_objects
 			if l_runtime_path /= Void then
-				create l_dir.make (l_runtime_path)
+				create l_dir.make_with_path (l_runtime_path)
 				if l_dir.exists then
-					l_dir.open_read
-					l_content := l_dir.linear_representation
+					l_content := l_dir.entries
 					from
 						l_content.start
 					until
@@ -124,30 +124,26 @@ feature -- Access
 							-- Insert in `Result' all files/directories
 							-- starting with letter `v' as it is most likely
 							-- to be an occurrence of an installed .NET runtime.
-						if l_content.item.item (1) = 'v' then
+						l_entry := l_content.item
+						if not l_entry.is_empty and then l_entry.name.item (1) = 'v' then
 								-- Now we check that in this directory there is a file called
 								-- `mscorwks.dll' which is the Microsoft .NET engine. If there
 								-- is no such file, then it might be a remaining of an old
 								-- installed runtime.
-							create l_file_name.make_from_string (l_runtime_path)
-							l_file_name.extend (l_content.item)
-							l_file_name.set_file_name ("mscorwks.dll")
-							create l_file.make_with_name (l_file_name)
+							l_file_name := l_runtime_path.extended_path (l_entry).extended ("mscorwks.dll")
+							create l_file.make_with_path (l_file_name)
 							if l_file.exists then
-								Result.put_right (l_content.item)
+								Result.put_right (l_entry.name.as_string_8)
 							else
-								create l_file_name.make_from_string (l_runtime_path)
-								l_file_name.extend (l_content.item)
-								l_file_name.set_file_name ("clr.dll")
-								l_file.make_with_name (l_file_name)
+								l_file_name := l_runtime_path.extended_path (l_entry).extended ("clr.dll")
+								l_file.make_with_path (l_file_name)
 								if l_file.exists then
-									Result.put_right (l_content.item)
+									Result.put_right (l_entry.name.as_string_8)
 								end
 							end
 						end
 						l_content.forth
 					end
-					l_dir.close
 				end
 			end
 		ensure
@@ -158,13 +154,9 @@ feature -- Access
 			-- Path to .NET Framework of version `version'.
 		require
 			is_dotnet_installed: is_dotnet_installed
-		local
-			l_file_name: FILE_NAME
 		do
 			if attached dotnet_runtime_path as l_path then
-				create l_file_name.make_from_string (l_path)
-				l_file_name.extend (version)
-				Result := l_file_name
+				Result := l_path.extended (version).name.as_string_8
 			end
 		end
 
@@ -327,7 +319,7 @@ feature {NONE} -- Implementation
 			Result.extend (l_path)
 		end
 
-	dotnet_runtime_path: detachable STRING_32
+	dotnet_runtime_path: detachable PATH
 			-- Path to where .NET runtimes are installed. It can be a once since this value is
 			-- not dependent on `version'.
 		local
@@ -341,15 +333,10 @@ feature {NONE} -- Implementation
 			if p /= default_pointer then
 				key := reg.key_value (p, runtime_root_key)
 				if key /= Void then
-					Result := key.string_value
-					if Result.item (Result.count) = Directory_separator then
-						Result.remove (Result.count)
-					end
+					create Result.make_from_string (key.string_value)
 				end
 				reg.close_key (p)
 			end
-		ensure
-			no_ending_separator: Result /= Void implies Result.item (Result.count) /= Directory_separator
 		end
 
 feature -- Constants

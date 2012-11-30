@@ -1005,7 +1005,7 @@ feature -- Warning messages
 			Result := locale.formatted_string (locale.translation ("No feature named $1 could be found in class $2."), [feature_name, class_name])
 		end
 
-	w_No_system_generated (a_system_name: STRING): STRING_32
+	w_No_system_generated (a_system_name: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation (
 				"Could not find $1.%NPlease make sure the C compilation ended correctly."), [a_system_name])

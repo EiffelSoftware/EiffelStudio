@@ -27,7 +27,7 @@ inherit
 			project
 		end
 
-	EXECUTION_ENVIRONMENT_32
+	EXECUTION_ENVIRONMENT
 
 create
 	make_with_context

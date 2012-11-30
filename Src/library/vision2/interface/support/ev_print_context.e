@@ -155,8 +155,6 @@ feature {EV_PRINT_DIALOG_I} -- Status setting
 			a_string_not_empty: a_string.count > 0
 		do
 			create file_path.make_from_string (a_string)
-		ensure
-			file_name_set: file_name.same_string_general (a_string)
 		end
 
 	set_file_path (a_path: PATH)

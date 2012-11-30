@@ -28,17 +28,26 @@ feature {NONE} -- Initialization
 			a_world_not_void: a_world /= Void
 			a_filename_not_void: a_filename /= Void
 		do
+			make_with_filepath (a_world, create {PATH}.make_from_string (a_filename))
+		end
+
+	make_with_filepath (a_world: EV_FIGURE_WORLD; a_filename: PATH)
+			-- Create with `a_world' and `a_filename'.
+		require
+			a_world_not_void: a_world /= Void
+			a_filename_not_void: a_filename /= Void
+		do
 			create draw_routines.make_filled (Void, 0, 20)
 			make_with_world (a_world)
 			set_margins (Default_left_margin, Default_bottom_margin)
 			set_page_size (Letter, False)
 			register_basic_figures
-			create filename.make_from_string (a_filename.as_string_32)
+			filename := a_filename
 		end
 
 feature {NONE} -- Implementation
 
-	filename: detachable FILE_NAME_32
+	filename: detachable PATH
 
 	file: detachable PLAIN_TEXT_FILE
 
@@ -137,7 +146,7 @@ feature -- Basic operations
 				output_to_postscript
 				l_filename := filename
 				check l_filename /= Void end
-				create l_file.make_with_name (l_filename)
+				create l_file.make_with_path (l_filename)
 				l_file.open_write
 				file := l_file
 				l_postscript_result := postscript_result

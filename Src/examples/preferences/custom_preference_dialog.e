@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 			l_root_pixmap: EV_PIXMAP
 			l_hbox: EV_HORIZONTAL_BOX
 			l_row_index: INTEGER
-			l_exec: EXECUTION_ENVIRONMENT_32
+			l_exec: EXECUTION_ENVIRONMENT
 			l_filename: PATH
 		do
 				-- Retrieve known preferences

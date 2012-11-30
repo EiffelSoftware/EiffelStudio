@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			create l_directory.make (l_target_path)
 				-- We cannot assume that the directory does not already exist which sometimes
 				-- happen since EiffelStudio let users keep their testing directory via a preference.
-				-- This is why we do not assert its non-existence anymore, we will create it only if 
+				-- This is why we do not assert its non-existence anymore, we will create it only if
 				-- it does not exist.
 			if not l_directory.exists then
 				l_directory.recursive_create_dir
@@ -90,7 +90,7 @@ feature -- Access
 
 feature -- Access
 
-	current_test_name: READABLE_STRING_8
+	current_test_name: IMMUTABLE_STRING_32
 			-- Name of test currently being executed
 		obsolete
 			"Use {EQA_EVALUATION_INFO}.test_name"
@@ -208,7 +208,7 @@ invariant
 	internal_file_system_valid: file_system.asserter = asserter
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

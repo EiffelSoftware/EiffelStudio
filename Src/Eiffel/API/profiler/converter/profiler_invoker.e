@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			-- Invokes gprof in order to generate the text file.
 		local
 			exec_string: STRING_32
-			old_dir: STRING_32
+			l_old_path, l_path: PATH
 			cm_bool: BOOLEAN
 		do
 			cm_bool := compile_type.same_string_general ("workbench")
@@ -94,14 +94,15 @@ feature {NONE} -- Implementation
 				exec_string.append (app_name)
 				exec_string.append ({STRING_32} " > ")
 				exec_string.append (output_file)
-				old_dir := Execution_environment.current_working_directory
+				l_old_path := Execution_environment.current_working_path
 				if cm_bool then
-					Execution_environment.change_working_directory (project_location.workbench_path)
+					create l_path.make_from_string (project_location.workbench_path)
 				else
-					Execution_environment.change_working_directory (project_location.final_path)
+					create l_path.make_from_string (project_location.final_path)
 				end
+				Execution_environment.change_working_path (l_path)
 				Execution_environment.system (exec_string)
-				Execution_environment.change_working_directory (old_dir)
+				Execution_environment.change_working_path (l_old_path)
 			end
 		end
 
@@ -110,17 +111,18 @@ feature {NONE} -- Implementation
 			-- generate the text file.
 		local
 			exec_string: STRING_32
-			old_dir: STRING_32
+			l_old_path, l_path: PATH
 			cm_bool: BOOLEAN
 		do
 			cm_bool := compile_type.same_string_general ("workbench")
 			if attached Eiffel_system.application_name (cm_bool) as app_name then
-				old_dir := Execution_environment.current_working_directory
+				l_old_path := Execution_environment.current_working_path
 				if cm_bool then
-					Execution_environment.change_working_directory (project_location.workbench_path)
+					create l_path.make_from_string (project_location.workbench_path)
 				else
-					Execution_environment.change_working_directory (project_location.final_path)
+					create l_path.make_from_string (project_location.final_path)
 				end
+				Execution_environment.change_working_path (l_path)
 				exec_string := {STRING_32} "prep /nologo /om /ft "
 				exec_string.append (app_name)
 				Execution_environment.system (exec_string)
@@ -137,7 +139,7 @@ feature {NONE} -- Implementation
 				exec_string.append ({STRING_32} " > ")
 				exec_string.append (output_file)
 				Execution_environment.system (exec_string)
-				Execution_environment.change_working_directory (old_dir)
+				Execution_environment.change_working_path (l_old_path)
 			end
 		end
 

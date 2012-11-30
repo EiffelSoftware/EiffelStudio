@@ -36,7 +36,7 @@ feature {NONE} -- Access
 		do
 			if is_eiffel_layout_defined and then attached {FINISH_FREEZING_EIFFEL_LAYOUT} eiffel_layout as l_layout and then l_layout.is_valid_environment then
 				create l_result.make (256)
-				l_result.append (l_layout.config_eif_path.string_representation)
+				l_result.append (l_layout.config_eif_path.name)
 				if code.is_equal (wsdk_60) then
 					l_result.append ("\windows_sdk_v6.0.bat")
 				elseif code.is_equal (wsdk_61) then

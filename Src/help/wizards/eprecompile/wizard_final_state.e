@@ -16,7 +16,7 @@ inherit
 			wizard_information
 		end
 
-	EXECUTION_ENVIRONMENT_32
+	EXECUTION_ENVIRONMENT
 		rename
 			command_line as exec_command_line
 		undefine

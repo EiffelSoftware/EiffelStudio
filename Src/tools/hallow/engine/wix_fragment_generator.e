@@ -201,7 +201,7 @@ feature {NONE} -- Element generation
 			a_dir_exists: a_dir.exists
 			not_a_dir_id_empty: not {SYSTEM_STRING}.is_null_or_empty (a_dir_id)
 		local
-			l_files: NATIVE_ARRAY [FILE_INFO]
+			l_files: NATIVE_ARRAY [SYSTEM_FILE_INFO]
 			l_dirs: NATIVE_ARRAY [DIRECTORY_INFO]
 			l_add_files: BOOLEAN
 			l_count, i: INTEGER
@@ -317,7 +317,7 @@ feature {NONE} -- Element generation
 			a_writer.write_end_element
 		end
 
-	generate_files (a_files: NATIVE_ARRAY [FILE_INFO]; a_root: BOOLEAN; a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER)
+	generate_files (a_files: NATIVE_ARRAY [SYSTEM_FILE_INFO]; a_root: BOOLEAN; a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER)
 			-- Generates WiX File elements.
 			--
 			-- `a_files': An array of files to generate File elements for
@@ -331,7 +331,7 @@ feature {NONE} -- Element generation
 			a_files_attached: a_files /= Void
 			not_a_files_is_empty: a_files.count > 0
 		local
-			l_fi: FILE_INFO
+			l_fi: SYSTEM_FILE_INFO
 			l_count, i: INTEGER
 		do
 			l_count := a_files.count
@@ -344,7 +344,7 @@ feature {NONE} -- Element generation
 			end
 		end
 
-	generate_file (a_file: FILE_INFO; a_root: BOOLEAN; a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER)
+	generate_file (a_file: SYSTEM_FILE_INFO; a_root: BOOLEAN; a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER)
 			-- Generates a single WiX File element.
 			--
 			-- `a_file': File to generate an element for.
@@ -435,12 +435,12 @@ feature {NONE} -- Attribute generation
 					end
 
 					create l_sb.make (l_path)
-					l_sb := l_sb.replace ({PATH}.directory_separator_char, '.')
-					l_sb := l_sb.replace ({PATH}.alt_directory_separator_char, '.')
-					l_sb := l_sb.replace ({PATH}.volume_separator_char, '.')
+					l_sb := l_sb.replace ({SYSTEM_PATH}.directory_separator_char, '.')
+					l_sb := l_sb.replace ({SYSTEM_PATH}.alt_directory_separator_char, '.')
+					l_sb := l_sb.replace ({SYSTEM_PATH}.volume_separator_char, '.')
 					l_name := l_sb.to_string
 				else
-					l_name := {PATH}.get_file_name (a_path)
+					l_name := {SYSTEM_PATH}.get_file_name (a_path)
 				end
 
 					-- Ensure we have a default prefix
@@ -550,7 +550,7 @@ feature {NONE} -- Attribute generation
 
 feature {NONE} --
 
-	files_for_options (a_files: NATIVE_ARRAY [FILE_INFO]; a_options: I_OPTIONS): NATIVE_ARRAY [FILE_INFO]
+	files_for_options (a_files: NATIVE_ARRAY [SYSTEM_FILE_INFO]; a_options: I_OPTIONS): NATIVE_ARRAY [SYSTEM_FILE_INFO]
 			-- Processes files based on expression in the passed options to remove an invalid files.
 			--
 			-- `a_files': Files to process
@@ -563,9 +563,9 @@ feature {NONE} --
 			l_inc, l_ex: BOOLEAN
 			l_ep_priority: BOOLEAN
 			l_iexp, l_eexp: REGEX
-			l_fi: FILE_INFO
+			l_fi: SYSTEM_FILE_INFO
 			l_name: SYSTEM_STRING
-			l_result: ARRAYED_LIST [FILE_INFO]
+			l_result: ARRAYED_LIST [SYSTEM_FILE_INFO]
 			l_add: BOOLEAN
 			l_count, i: INTEGER
 		do
@@ -750,7 +750,7 @@ feature {NONE} -- Path utilities
 			a_options_attached: a_options /= Void
 			can_read_options_a_options: a_options.can_read_options
 		do
-			Result := {PATH}.get_file_name (internal_get_short_path (a_path, a_options))
+			Result := {SYSTEM_PATH}.get_file_name (internal_get_short_path (a_path, a_options))
 		ensure
 			not_result_is_empty: not {SYSTEM_STRING}.is_null_or_empty (Result)
 		end
@@ -822,7 +822,7 @@ feature {NONE} -- Constants
 			-- Maximum length allowed for WiX identifiers
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

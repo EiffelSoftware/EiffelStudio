@@ -19,7 +19,7 @@ feature {NONE} -- Formats
 	escape_characters: ARRAY [STRING];
 			-- User-specified escape characters
 
-	read_formats (filename: STRING)
+	read_formats (filename: PATH)
 			-- Parse `filename' and fill `format_table' with
 			-- the user-specified format.
 		require
@@ -34,7 +34,7 @@ feature {NONE} -- Formats
 			escape_char: CHARACTER_32;
 			escape: STRING_32
 		do
-			create filter_file.make_with_name (filename);
+			create filter_file.make_with_path (filename);
 			if filter_file.exists and then filter_file.is_readable then
 				filter_file.open_read;
 				if filter_file.readable then
@@ -163,7 +163,7 @@ end
 				filter_file.close
 			else
 				io.error.put_string ("Warning: Cannot read filter ");
-				io.error.put_string (filename);
+				io.error.put_string (filename.out);
 				io.error.put_new_line
 			end
 		end;
@@ -278,7 +278,7 @@ end
 			message_not_void: message /= Void
 		do
 			io.error.put_string ("Warning: filter ");
-			io.error.put_string (filter_file.name);
+			io.error.put_string (filter_file.path.out);
 			io.error.put_string ("%N%TSyntax error, line ");
 			if last_char_read = '%N' then
 				io.error.put_integer (line_nb - 1);

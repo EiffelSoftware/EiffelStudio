@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	set_filter (a_filter: STRING)
+	set_filter (a_filter: like filter_name)
 			-- Change text filter to `a_filter'.
 		require
 			a_filter_not_void: a_filter /= Void
@@ -66,7 +66,7 @@ feature -- Status setting
 
 feature -- Access
 
-	filter_name: STRING
+	filter_name: STRING_32
 			-- Text filter used for output.
 
 	doc_universe: DOCUMENTATION_UNIVERSE
@@ -77,7 +77,7 @@ feature -- Actions
 	generate (deg: DEGREE_OUTPUT)
 			-- Generate documentation, according to the user selection.
 		local
-			cl_name: STRING
+			cl_name: STRING_32
 			cf: CLASS_FORMAT
 			af: LINEAR [INTEGER]
 			cancelled: BOOLEAN
@@ -118,7 +118,7 @@ feature -- Actions
 					generate_index
 
 					if filter_name.same_string_general ("html-stylesheet") then
-						copy_additional_file ("default.css")
+						copy_additional_file (create {PATH}.make_from_string ("default.css"))
 						generate_goto_html
 					end
 
@@ -154,7 +154,7 @@ feature -- Actions
 							deg.put_string ({STRING_32}"Building cluster chart for " + group_name_presentation ({STRING_32}".", {STRING_32}"", l_group))
 							deg.flush_output
 							if l_filter.is_html then
-								l_filter.set_keyword ({STRING_32}"html_meta", html_meta_for_cluster (l_group).as_string_32)
+								l_filter.set_keyword ({STRING_32}"html_meta", html_meta_for_cluster (l_group))
 							end
 							set_base_cluster (l_group)
 							prepare_for_file (relative_path (l_group), "index")
@@ -179,7 +179,7 @@ feature -- Actions
 					end
 
 					if any_class_format_generated then
-						deg.put_start_documentation (doc_universe.classes.count, generated_class_formats_string.as_string_8)
+						deg.put_start_documentation (doc_universe.classes.count, generated_class_formats_string)
 						l_context_group := l_filter.context_group
 						from
 							l_groups.start
@@ -205,7 +205,7 @@ feature -- Actions
 										cl_name := l_class.name.as_lower
 										set_class_name (cl_name)
 										if l_filter.is_html then
-											l_filter.set_keyword ({STRING_32}"html_meta", html_meta_for_class (l_classes.item_for_iteration).as_string_32)
+											l_filter.set_keyword ({STRING_32}"html_meta", html_meta_for_class (l_classes.item_for_iteration))
 										end
 										af := all_class_formats.linear_representation
 										from af.start until af.after loop
@@ -213,7 +213,7 @@ feature -- Actions
 											af.forth
 											if cf.is_generated then
 												prepare_for_file (
-													create {FILE_NAME}.make_from_string (relative_path (l_group)),
+													relative_path (l_group),
 													cl_name + cf.file_extension
 												)
 												set_document_title (cl_name + " " + cf.description)
@@ -306,37 +306,34 @@ feature -- Actions
 			root_directory /= Void
 		local
 			d: DIRECTORY
-			fi: DIRECTORY_NAME
-			l_string: STRING
+			fi: PATH
 		do
-			l_string := relative_path (a_group).out
-			create fi.make_from_string (root_directory.name)
-			fi.extend (l_string)
-			create d.make (fi)
+			fi := root_directory.path.extended_path (relative_path (a_group))
+			create d.make_with_path (fi)
 			if not d.exists then
 				d.recursive_create_dir
 			end
 		end
 
-	copy_additional_file (fn: STRING)
+	copy_additional_file (fn: PATH)
 			-- Copy `fn' to directory where documentation is to be generated.
 		require
 			fn_not_void: fn /= Void
 		local
-			fi: FILE_NAME
+			fi: PATH
 			rf, wf: PLAIN_TEXT_FILE
 		do
-			create fi.make_from_string (eiffel_layout.filter_path_8)
-			fi.extend (fn)
-			create rf.make_open_read (fi)
+			fi := eiffel_layout.filter_path.extended_path (fn)
+			create rf.make_with_path (fi)
+			rf.open_read
 			rf.read_stream (rf.count)
 
-			create fi.make_from_string (root_directory.name)
-			fi.extend (fn)
-			create wf.make_open_write (fi)
+			fi := root_directory.path.extended_path (fn)
+			create wf.make_with_path (fi)
+			wf.open_write
 			wf.put_string (rf.last_string)
 		rescue
-			io.put_string (fn + " not found in filters directory.%N")
+			io.put_string (fn.out + " not found in filters directory.%N")
 		end
 
 feature -- Settings
@@ -398,7 +395,7 @@ feature -- Settings
 			cluster_hierarchy_generated := a_cluster_hierarchy
 		end
 
-	set_diagram_views (views: HASH_TABLE [STRING, STRING])
+	set_diagram_views (views: like diagram_views)
 			-- Assign `views' to `diagram_views'.
 		do
 			diagram_views := views
@@ -460,7 +457,7 @@ feature {NONE} -- Implementation
 			Result := doc_universe.groups
 		end
 
-	diagram_views: HASH_TABLE [STRING, STRING]
+	diagram_views: HASH_TABLE [STRING_32, STRING_32]
 			-- (View name, cluster name) couples for `clusters'.
 			-- Void if not `cluster_diagrams_generated'.
 
@@ -472,9 +469,9 @@ feature {NONE} -- Implementation
 			-- preferred class view. Creates the file in the documentation root
 			-- directory. An example file is given at the bottom.
 		local
-			s, class_array, location_array, goto_text: STRING
+			s, class_array, location_array, goto_text: STRING_32
 			textfile: PLAIN_TEXT_FILE
-			fn: FILE_NAME
+			fn: PATH
 			l_add: BOOLEAN
 			l_index: INTEGER
 			l_classes: like classes
@@ -492,11 +489,11 @@ feature {NONE} -- Implementation
 				l_class := l_classes.item_for_iteration
 				if l_class.is_compiled then
 					s := l_class.name.as_upper
-					class_array.append ("%T%T%"" + s + "%"")
+					class_array.append ({STRING_32} "%T%T%"" + s + "%"")
 					s.to_lower
-					s := "" + relative_path (l_class.group) +
+					s := relative_path_using_sep (l_class.group, "/") +
 						"/" + s + class_links + ".html"
-					location_array.append ("%T%T%"" + s + "%"")
+					location_array.append ({STRING_32} "%T%T%"" + s + "%"")
 					l_add := True
 				end
 				l_classes.forth
@@ -508,7 +505,7 @@ feature {NONE} -- Implementation
 			end
 			l_classes.go_i_th (l_index)
 
-			goto_text := "<!--%N%
+			goto_text := {STRING_32} "<!--%N%
 				%	classList = new Array (%N%
 				%" + class_array + "%N%
 				%	);%N%
@@ -534,10 +531,10 @@ feature {NONE} -- Implementation
 				%	}%N%
 				%// -->%N"
 
-			create fn.make_from_string (root_directory.name)
-			fn.extend ("goto.html")
-			create textfile.make_open_write (fn)
-			textfile.put_string (goto_text)
+			fn := root_directory.path.extended ("goto.html")
+			create textfile.make_with_path (fn)
+			textfile.open_write
+			save_string_32_in_file (textfile, goto_text)
 			textfile.close
 		end
 
@@ -574,19 +571,19 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Filtered generation
 
-	set_target_file_name (f: FILE_NAME)
+	set_target_file_name (f: like target_file_name)
+			-- Set `target_file_name' with `f'
 		do
-			target_file_name := f
-			target_file_name.add_extension (filter.file_suffix)
+			target_file_name := f.appended ({STRING_32} "." + filter.file_suffix)
 		end
 
 	set_base_cluster (c: CONF_GROUP)
 		do
-			base_path := base_relative_path (c).out
+			base_path := base_relative_path (c)
 			filter.set_base_path (base_path)
 		end
 
-	set_default_class_redirect (p: STRING)
+	set_default_class_redirect (p: STRING_32)
 			-- In case of a class link outside a class format,
 			-- link to format `p'.
 		do
@@ -594,7 +591,7 @@ feature {NONE} -- Filtered generation
 			filter.prepend_to_file_suffix (class_links)
 		end
 
-	set_default_feature_redirect (p: STRING)
+	set_default_feature_redirect (p: STRING_32)
 			-- In case of a feature link outside a feature format,
 			-- link to format `p'.
 		do
@@ -602,13 +599,13 @@ feature {NONE} -- Filtered generation
 			filter.set_feature_redirect (feature_links)
 		end
 
-	set_document_title (a_title: STRING)
+	set_document_title (a_title: STRING_32)
 			-- Set "$title$" keyword in `filter'.
 		do
 			filter.set_keyword (kw_Title, a_title)
 		end
 
-	set_class_name (a_class: STRING)
+	set_class_name (a_class: STRING_32)
 			-- Set "$class$" keyword in `filter'.
 		do
 			filter.set_keyword (kw_Class, a_class)
@@ -619,19 +616,19 @@ feature -- Access
 	filter: TEXT_FILTER
 			-- Filter to process formatted text.
 
-	target_file_name: FILE_NAME
+	target_file_name: PATH
 			-- Location.
 
-	base_path: STRING
+	base_path: STRING_32
 			-- Relative path to documentation root dir.
 
-	class_links: STRING
+	class_links: STRING_32
 			-- Class format linked to by class links.
 
-	feature_links: STRING
+	feature_links: STRING_32
 			-- Class format linked to by feature links.
 
-	relative_to_base (rel_filename: STRING): STRING
+	relative_to_base (rel_filename: STRING_32): STRING_32
 			-- Path of `rel_filename' relative to documentation root dir.
 		local
 			l_filter: like filter
@@ -644,29 +641,38 @@ feature -- Access
 
 			l_filter := filter
 			if l_filter.file_separator /= Void and then not l_filter.file_separator.is_equal ("%U") then
-				Result.replace_substring_all (operating_environment.directory_separator.out, l_filter.file_separator.as_string_8)
+				Result.replace_substring_all (operating_environment.directory_separator.out, l_filter.file_separator)
 			end
 		end
 
 feature {EB_DIAGRAM_HTML_GENERATOR, DOCUMENTATION_ROUTINES} -- Access
 
-	relative_path (a_cluster: CONF_GROUP): FILE_NAME
+	relative_path (a_cluster: CONF_GROUP): PATH
 			-- Path of `a_cluster' relative to `root_directory'.
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
-			l_string: STRING
+			l_string: STRING_32
 		do
 			l_string := path_representation (operating_environment.directory_separator.out, a_cluster.name, a_cluster, False)
 			create Result.make_from_string (l_string)
 		end
 
-	base_relative_path (a_cluster: CONF_GROUP): FILE_NAME
+	relative_path_using_sep (a_cluster: CONF_GROUP; a_sep: STRING_32): STRING_32
+			-- Path of `a_cluster' relative to `root_directory'.
+		require
+			a_cluster_not_void: a_cluster /= Void
+		do
+			Result := path_representation (a_sep, a_cluster.name, a_cluster, False)
+		end
+
+	base_relative_path (a_cluster: CONF_GROUP): STRING_32
 			-- Path from `a_cluster' to `root_directory'.
+			-- To be generated in files, taking `filter.file_separator' into account.
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
-			l_string: STRING
+			l_string: STRING_32
 			l_sep: detachable STRING_32
 		do
 			l_sep := filter.file_separator
@@ -679,16 +685,16 @@ feature {EB_DIAGRAM_HTML_GENERATOR, DOCUMENTATION_ROUTINES} -- Access
 
 feature -- Specific Generation
 
-	prepare_for_file (base_dir: FILE_NAME; file_name: STRING)
+	prepare_for_file (base_dir: PATH; file_name: STRING_32)
 			-- Set `target_file_name' to relative `base_dir' and `file_name'.
 		local
-			final_name: FILE_NAME
+			final_name: PATH
 		do
-			create final_name.make_from_string (root_directory.name)
+			final_name := root_directory.path
 			if base_dir /= Void then
-				final_name.extend (base_dir)
+				final_name := final_name.extended_path (base_dir)
 			end
-			final_name.extend (file_name)
+			final_name := final_name.extended (file_name)
 			set_target_file_name (final_name)
 		end
 
@@ -696,9 +702,8 @@ feature -- Specific Generation
 			-- Output `ctxt.text' using `filter' to `target_file_name'.
 		local
 			fi: PLAIN_TEXT_FILE
-			u: UTF_CONVERTER
 		do
-			create fi.make_with_name (target_file_name)
+			create fi.make_with_path (target_file_name)
 			if not fi.exists then
 				fi.create_read_write
 			elseif fi.is_writable then
@@ -707,8 +712,7 @@ feature -- Specific Generation
 				check file_writable: False end
 			end
 			if fi.is_open_write then
-					-- FIXME 2012/10/29: Shouldn't we put some kind of BOM in the file?
-				fi.put_string (u.utf_32_string_to_utf_8_string_8 (text.image))
+				save_string_32_in_file (fi, filter.image)
 				fi.close
 			end
 			filter.wipe_out_image
@@ -787,7 +791,7 @@ feature -- Specific Generation
 			check
 				views_exist: diagram_views /= Void
 			end
-			if attached diagram_views.item (id_of_group (cluster)) as view_name then
+			if attached diagram_views.item (id_of_group (cluster).as_string_32) as view_name then
 				create g.make_for_documentation (cluster, view_name, Current)
 			else
 				create g.make_for_documentation (cluster, Void, Current)
@@ -877,7 +881,7 @@ feature {NONE} -- Menu bars
 			insert_menu_item (text, "cluster_hierarchy", "Cluster hierarchy", h, cluster_hierarchy_generated)
 		end
 
-	insert_class_menu_bar (text: TEXT_FORMATTER; class_name: STRING)
+	insert_class_menu_bar (text: TEXT_FORMATTER; class_name: STRING_32)
 			-- Append a menu bar to `text'.
 		local
 			af: LINEAR [INTEGER]
@@ -890,12 +894,12 @@ feature {NONE} -- Menu bars
 			end
 		end
 
-	insert_menu_item (text: TEXT_FORMATTER; link, label: STRING; enabled, generated: BOOLEAN)
+	insert_menu_item (text: TEXT_FORMATTER; link, label: STRING_32; enabled, generated: BOOLEAN)
 			-- Insert in `text', a menu item `label' with `link', if `generated' `True'.
 			-- Insert as disabled if not `enabled'.
 			-- `link' is a file relative to root dir without extension.
 		local
-			path: STRING
+			path: STRING_32
 		do
 			if enabled then
 				path := relative_to_base (link)
@@ -905,10 +909,10 @@ feature {NONE} -- Menu bars
 			end
 		end
 
-	insert_class_menu_item (text: TEXT_FORMATTER; class_name: STRING; a_format, class_format: CLASS_FORMAT)
+	insert_class_menu_item (text: TEXT_FORMATTER; class_name: STRING_32; a_format, class_format: CLASS_FORMAT)
 			-- Insert in `text', a menu item for `class_name' for `format'.
 		local
-			path: STRING
+			path: STRING_32
 		do
 			if a_format.type /= class_format.type then
 				path := class_name + a_format.file_extension

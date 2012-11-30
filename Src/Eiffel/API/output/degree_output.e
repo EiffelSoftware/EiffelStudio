@@ -284,7 +284,7 @@ feature -- Basic operations
 		do
 		end
 
-	put_start_documentation (a_total_files: INTEGER; a_type: STRING)
+	put_start_documentation (a_total_files: INTEGER; a_type: READABLE_STRING_32)
 			-- Puts information indicating an documentation generation has begun.
 			--
 			-- `a_total_files': Total number of files to process.

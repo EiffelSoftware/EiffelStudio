@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	filter: STRING
+	filter: STRING_32
 			-- User selection.
 		local
 			si: DYNAMIC_LIST [EV_LIST_ITEM]
@@ -200,13 +200,13 @@ feature -- Access
 			end
 		end
 
-	excluded_indexing_items: LIST [STRING]
+	excluded_indexing_items: ARRAYED_LIST [STRING_32]
 			-- Indexing items user does not want generated in HTML meta clauses.
 		do
-			Result := indexing_include.excluded_items_string_8
+			Result := indexing_include.excluded_items
 		end
 
-	diagram_views: HASH_TABLE [STRING, STRING]
+	diagram_views: HASH_TABLE [STRING_32, STRING_32]
 			-- Contains (view_name, cluster_name) couples for every included cluster.
 
 	class_list_selected: BOOLEAN
@@ -242,7 +242,7 @@ feature -- Access
 	directory: DIRECTORY
 			-- Location where documentation should be generated.
 		local
-			dir_name: STRING
+			dir_name: STRING_32
 		do
 			dir_name := directory_field.text
 			create Result.make (dir_name)
@@ -540,13 +540,14 @@ feature {NONE} -- Implementation
 	fill_filter_box (list: like filter_combo_box)
 		local
 			filter_dir: DIRECTORY
-			file_name, file_suffix: STRING
-			name_count: INTEGER
-			filter_names: SORTED_TWO_WAY_LIST [STRING]
+			file_name: detachable STRING_32
+			filter_entries: ARRAYED_LIST [PATH]
+			filter_names: SORTED_TWO_WAY_LIST [STRING_32]
 			str_element: EV_LIST_ITEM
 			selected: INTEGER
+			u: FILE_UTILITIES
 		do
-			create filter_dir.make (eiffel_layout.filter_path_8)
+			create filter_dir.make_with_path (eiffel_layout.filter_path)
 			if not filter_dir.exists then
 				list.wipe_out
 				create str_element
@@ -557,27 +558,17 @@ feature {NONE} -- Implementation
 				list.extend (str_element)
 			else
 				create filter_names.make
-				filter_dir.open_read
-				from
-					filter_dir.start
-					filter_dir.readentry
-					file_name := filter_dir.lastentry
-				until
-					file_name = Void
+				filter_entries := u.ends_with (eiffel_layout.filter_path, ".fil", 0)
+				across
+					filter_entries as l_c
 				loop
-					name_count := file_name.count
-					if name_count > 4 then
-						file_suffix := file_name.substring (name_count - 3, name_count)
-						file_suffix.to_lower
-						if file_suffix.is_equal (".fil") then
-							file_name.keep_head (name_count - 4)
-							filter_names.extend (file_name)
-						end
+					if attached l_c.item.entry as l_e then
+						file_name := l_e.name
+						file_name.keep_head (file_name.count - 4)
+						filter_names.extend (file_name)
 					end
-					filter_dir.readentry
-					file_name := filter_dir.lastentry
 				end
-				filter_dir.close
+
 				list.wipe_out
 				selected := 1
 				if filter_names.is_empty then
@@ -589,11 +580,12 @@ feature {NONE} -- Implementation
 					until
 						filter_names.after
 					loop
-						create str_element.make_with_text (filter_names.item)
+						file_name := filter_names.item
+						create str_element.make_with_text (file_name)
 						list.extend (str_element)
 						str_element.pointer_double_press_actions.force_extend (agent str_element.enable_select)
 						str_element.pointer_double_press_actions.force_extend (agent next)
-						if filter_names.item.is_equal (html_css_filter_name) then
+						if file_name.same_string_general (html_css_filter_name) then
 							selected := list.count
 						end
 						filter_names.forth
@@ -609,15 +601,15 @@ feature {NONE} -- Implementation
 			-- Fill `ie.include_list' with all groups in system.
 			-- We assume that new added groups go into the "include" part.
 		local
-			old_exclude: LIST [STRING]
+			old_exclude: ARRAYED_LIST [STRING_32]
 		do
-			old_exclude := ie.excluded_items_string_8
+			old_exclude := ie.excluded_items
 			old_exclude.compare_objects
 			ie.clear_all
 			add_groups_to_cluster_grid (ie, Eiffel_universe.groups, old_exclude, Void, True)
 		end
 
-	add_groups_to_cluster_grid (ie: like cluster_include; cg: LIST [CONF_GROUP]; a_exclusion: LIST [STRING]; a_parent: detachable CONF_GROUP; rec: BOOLEAN)
+	add_groups_to_cluster_grid (ie: like cluster_include; cg: LIST [CONF_GROUP]; a_exclusion: LIST [STRING_32]; a_parent: detachable CONF_GROUP; rec: BOOLEAN)
 		local
 			cg_name: STRING
 			g: detachable CONF_GROUP
@@ -659,11 +651,11 @@ feature {NONE} -- Implementation
 			-- Except the ones in `exclude_indexing_items'.
 		local
 			classes: CLASS_C_SERVER
-			all_tags: LINKED_LIST [STRING]
-			old_exclude: LIST [STRING]
+			all_tags: LINKED_LIST [STRING_32]
+			old_exclude: ARRAYED_LIST [STRING_32]
 			l_class: CLASS_C
 			i: INTEGER
-			s: STRING
+			s: STRING_32
 		do
 			create all_tags.make
 			all_tags.extend ("keywords")
@@ -687,7 +679,7 @@ feature {NONE} -- Implementation
 				end
 			end
 
-			old_exclude := ie.excluded_items_string_8
+			old_exclude := ie.excluded_items
 			old_exclude.compare_objects
 			ie.clear_all
 			from all_tags.start until all_tags.after loop
@@ -701,7 +693,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_indexes_to (i: EIFFEL_LIST [INDEX_AS]; l: LINKED_LIST [STRING])
+	add_indexes_to (i: EIFFEL_LIST [INDEX_AS]; l: LINKED_LIST [STRING_32])
 		local
 			t: STRING_32
 		do
@@ -710,8 +702,7 @@ feature {NONE} -- Implementation
 					if i.item.tag /= Void then
 						t := i.item.tag.name_32
 					end
-						--|FIXME: Handle unicode
-					if t /= Void and then not l.has (t.as_string_8) then
+					if t /= Void and then not l.has (t) then
 						l.extend (t.twin)
 					end
 					i.forth
@@ -774,8 +765,8 @@ feature {NONE} -- Implementation
 			right_vb: EV_VERTICAL_BOX
 			main_hb, button_hb: EV_HORIZONTAL_BOX
 			g: EB_DIAGRAM_HTML_GENERATOR
-			views: LINKED_LIST [STRING]
-			l_data: TUPLE [STRING, LINKED_LIST [STRING]]
+			views: LINKED_LIST [STRING_32]
+			l_data: TUPLE [STRING_32, LINKED_LIST [STRING_32]]
 		do
 			vb.wipe_out
 			create diagram_views.make (10)
@@ -799,13 +790,13 @@ feature {NONE} -- Implementation
 						cluster_row.extend (ci.name)
 						cluster_row.extend ("DEFAULT")
 						views := g.available_views
-						l_data := [id_of_group (ci), views]
+						l_data := [id_of_group (ci).as_string_32, views]
 						cluster_row.set_data (l_data)
 						cluster_row.select_actions.extend (agent on_cluster_selected (cluster_row))
 						view_mcl.extend (cluster_row)
 
 						if not views.is_empty then
-							diagram_views.put ("DEFAULT", id_of_group (ci))
+							diagram_views.put ({STRING_32} "DEFAULT", id_of_group (ci).as_string_32)
 						end
 					end
 					cluster_list.forth
@@ -834,9 +825,9 @@ feature {NONE} -- Implementation
 			-- Display available views for corresponding cluster in `view_list'.
 			-- Update `view_label'.
 		local
-			l_data: TUPLE [group_id: STRING; views: LINKED_LIST [STRING]]
-			views: LINKED_LIST [STRING]
-			view_name: STRING
+			l_data: TUPLE [group_id: STRING_32; views: LINKED_LIST [STRING_32]]
+			views: LINKED_LIST [STRING_32]
+			view_name: STRING_32
 		do
 			l_data ?= row.data
 			views := l_data.views
@@ -865,9 +856,9 @@ feature {NONE} -- Implementation
 			-- `set_view_button' was pressed.
 			-- Update `view_mcl'.
 		local
-			l_data: TUPLE [group_id: STRING; views: LINKED_LIST [STRING]]
+			l_data: TUPLE [group_id: STRING_32; views: LINKED_LIST [STRING_32]]
 			selected_row: EV_MULTI_COLUMN_LIST_ROW
-			l_group_id: STRING
+			l_group_id: STRING_32
 		do
 			if view_list.selected_item /= Void then
 				selected_row := view_mcl.selected_item
@@ -897,23 +888,24 @@ feature {NONE} -- Implementation
 			-- User pressed "browse" button.
 		local
 			d: EV_DIRECTORY_DIALOG
-			path: STRING
+			path: PATH
+			u: FILE_UTILITIES
 		do
 			create d
 			d.ok_actions.extend (agent on_directory_change (d))
-			path := directory_field.text
-			if not path.is_empty and then (create {DIRECTORY}.make (path)).exists then
-				d.set_start_directory (path)
+			create path.make_from_string (directory_field.text)
+			if not path.is_empty and then u.directory_path_exists (path) then
+				d.set_start_path (path)
 			end
 			d.show_modal_to_window (Current)
 		end
 
 	on_directory_change (d: EV_DIRECTORY_DIALOG)
 		do
-			if d.directory.is_empty then
+			if d.path.is_empty then
 				directory_field.remove_text
 			else
-				directory_field.set_text (d.directory)
+				directory_field.set_text (d.path.name)
 			end
 		end
 

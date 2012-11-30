@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	start_path: attached STRING_32 assign set_start_path
+	start_path: STRING_32 assign set_start_path
 			-- Initial path nagivated to when showing the dialog
 		require
 			is_interface_usable: is_interface_usable
@@ -84,7 +84,7 @@ feature -- Access
 						l_result := workbench.project_location.path
 					else
 							-- Use the working directory
-						l_result := (create {EXECUTION_ENVIRONMENT}).current_working_directory.as_string_32
+						l_result := (create {EXECUTION_ENVIRONMENT}).current_working_path.name.as_string_32
 					end
 				end
 				check l_result_attached: l_result /= Void end
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -50,10 +50,10 @@ feature -- Execution
 			l_creator: FUNCTION [like Current, TUPLE, EQA_TEST_SET]
 			l_prepare, l_test, l_clean: like execute_test_stage
 			l_old: detachable PLAIN_TEXT_FILE
-			l_old_work_dir: STRING
+			l_old_work_dir: PATH
 			l_operands: TUPLE [EQA_TEST_SET]
 		do
-			l_old_work_dir := current_working_directory
+			l_old_work_dir := current_working_path
 			l_old := io.default_output
 			io.set_file_default (buffer)
 			l_creator := agent: G do create Result end
@@ -83,7 +83,7 @@ feature -- Execution
 			else
 				io.set_file_default (l_old)
 			end
-			change_working_directory (l_old_work_dir)
+			change_working_path (l_old_work_dir)
 			buffer.wipe_out
 		ensure
 			result_attached: Result /= Void
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

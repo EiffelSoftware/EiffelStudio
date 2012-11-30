@@ -13,7 +13,7 @@ inherit
 
 feature -- Set
 
-	set_pixmap_directory (a_dir: STRING)
+	set_pixmap_directory (a_dir: READABLE_STRING_GENERAL)
 			-- Set `internal_pixmap_path'.
 		local
 			l_set_once: like pixmap_path
@@ -21,7 +21,7 @@ feature -- Set
 			create internal_pixmap_path.make_from_string (a_dir)
 			l_set_once := pixmap_path
 		ensure then
-			path_valid: attached internal_pixmap_path as le_path and then le_path.is_valid
+			path_valid: internal_pixmap_path /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -32,7 +32,7 @@ feature {NONE} -- Implementation
 	pixmap_height: INTEGER = 16
 			-- The height of the icons
 
-	pixmap_path: DIRECTORY_NAME
+	pixmap_path: PATH
 			-- Path containing all of the Memory Analyzer icons
 		local
 			l_result: like internal_pixmap_path
@@ -263,14 +263,14 @@ feature {NONE} -- Icons' Names
 			-- Icon names
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

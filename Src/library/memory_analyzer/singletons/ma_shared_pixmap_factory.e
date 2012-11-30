@@ -14,7 +14,7 @@ feature
 	pixmap_file_content (fn: STRING): EV_PIXMAP
 			-- Load a pixmap with name `fn'
 		local
-			full_path: detachable FILE_NAME
+			full_path: detachable PATH
 			retried: BOOLEAN
 			warning_dialog: EV_WARNING_DIALOG
 			a_coord: detachable TUPLE [x: INTEGER; y: INTEGER]
@@ -33,17 +33,15 @@ feature
 				else
 						-- Initialize the pathname & load the file
 					create Result
-					create full_path.make_from_string (pixmap_path)
-					full_path.set_file_name (fn)
-					full_path.add_extension (Pixmap_suffix)
-					Result.set_with_named_file (full_path)
+					full_path := pixmap_path.extended (fn + Pixmap_suffix)
+					Result.set_with_named_path (full_path)
 				end
 			else
 				if not attached full_path then
-					create full_path.make_from_string ("")
+					create full_path.make_from_string ("<no file name available>")
 				end
 				create warning_dialog.make_with_text (
-					"Cannot read pixmap file:%N" + full_path + ".%N%
+					{STRING_32} "Cannot read pixmap file:%N" + full_path.name + ".%N%
 					%Please make sure the installation is not corrupted.")
 				warning_dialog.show
 				create Result.make_with_size (pixmap_width, pixmap_height) -- Default pixmap size
@@ -74,12 +72,12 @@ feature {NONE} -- Implementation
 	Pixmap_suffix: STRING
 			-- Suffix for pixmaps.
 		do
-			Result := "png"
+			Result := ".png"
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	pixmap_path: DIRECTORY_NAME
+	pixmap_path: PATH
 			-- Path containing all of the Studio pixmaps
 		deferred
 		ensure
@@ -103,14 +101,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

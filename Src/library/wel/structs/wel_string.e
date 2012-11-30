@@ -9,13 +9,17 @@ class
 	WEL_STRING
 
 inherit
-	STRING_HANDLER
+	NATIVE_STRING
+		rename
+			make_from_pointer as make_by_pointer,
+			unit_size as character_size,
+			unit_count as count
 		redefine
-			is_equal
+			character_size
 		end
 
-	NATIVE_STRING_HANDLER
-		redefine
+	STRING_HANDLER
+		undefine
 			is_equal
 		end
 
@@ -31,38 +35,11 @@ create
 
 feature --{NONE} -- Initialization
 
-	make (a_string: READABLE_STRING_GENERAL)
-			-- Make a C string from `a_string'.
-		require
-			a_string_not_void: a_string /= Void
-		do
-			make_empty (a_string.count)
-			set_string (a_string)
-		end
-
 	make_from_path (a_path: PATH)
 			-- Make a C string from `a_path'.
 		do
 			managed_data := a_path.to_pointer
 			count := (managed_data.count - character_size) // character_size
-		end
-
-	make_empty (a_length: INTEGER)
-			-- Make an empty C string of `a_length' characters.
-			-- C memory area is not initialized.
-		require
-			a_length_positive: a_length >= 0
-		do
-			create managed_data.make ((a_length + 1) * character_size)
-			count := 0
-		end
-
-	make_by_pointer (a_ptr: POINTER)
-			-- Make a copy of string pointed by `a_ptr'.
-		require
-			a_ptr_not_null: a_ptr /= default_pointer
-		do
-			make_by_pointer_and_count (a_ptr, buffer_length (a_ptr))
 		end
 
 	make_by_pointer_and_count (a_ptr: POINTER; a_length: INTEGER)
@@ -108,55 +85,28 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	substring (start_pos, end_pos: INTEGER): STRING_32
-			-- Copy of substring containing all characters at indices
-			-- between `start_pos' and `end_pos'.
-		require
-			start_position_big_enough: start_pos >= 1
-			end_position_big_enough: start_pos <= end_pos + 1
-			end_position_not_too_big: end_pos <= (capacity // character_size)
-		local
-			l_count: INTEGER
-		do
-			l_count := end_pos - start_pos + 1
-			create Result.make (l_count)
-			Result.set_count (l_count)
-			read_substring_into (Result, start_pos, end_pos)
-		ensure
-			susbstring_not_void: Result /= Void
-		end
-
 	substring_8 (start_pos, end_pos: INTEGER): STRING_8
 			-- Copy of substring containing all characters at indices
 			-- between `start_pos' and `end_pos'. Truncated to STRING_8.
+		obsolete
+			"Use `substring' and then convert to STRING_8."
 		require
 			start_position_big_enough: start_pos >= 1
 			end_position_big_enough: start_pos <= end_pos + 1
 			end_position_not_too_big: end_pos <= (capacity // character_size)
-		local
-			l_count: INTEGER
 		do
-			l_count := end_pos - start_pos + 1
-			create Result.make (l_count)
-			Result.set_count (l_count)
-			read_substring_into (Result, start_pos, end_pos)
+			Result := substring (start_pos, end_pos).as_string_8
 		ensure
 			susbstring_not_void: Result /= Void
-		end
-
-	string: STRING_32
-			-- Eiffel string, ignoring `count'. Reads until a null character is being read.
-		do
-			Result := substring (1, string_length (item))
-		ensure
-			string_not_void: Result /= Void
 		end
 
 	string_8: STRING_8
 			-- Eiffel string, ignoring `count'. Reads until a null character is being read.
 			-- Truncated to STRING_8.
+		obsolete
+			"Use `string' and then convert to STRING_8."
 		do
-			Result := substring_8 (1, string_length (item))
+			Result := string.as_string_8
 		ensure
 			string_not_void: Result /= Void
 		end
@@ -165,32 +115,36 @@ feature -- Access
 			-- Eiffel string, ignoring `count' and discarding carriage return '%R' characters. Reads until a null character is read.
 		local
 			l_data: like managed_data
-			i, j, nb: INTEGER
+			i, j, nb, l_start: INTEGER
 			l_code, l_carriage_return_code: NATURAL_32
+			u: UTF_CONVERTER
 		do
 			from
 				j := 1
+				l_start := 0
 				nb := string_length (item)
 				l_data := managed_data
 				l_carriage_return_code := ('%R').natural_32_code
 				create Result.make (nb)
-				Result.set_count (nb)
 			until
 				i = nb
 			loop
 				l_code := l_data.read_natural_16 (i * character_size)
-				if l_code /= l_carriage_return_code then
-					Result.put_code (l_code, j)
+				if l_code = l_carriage_return_code then
+					u.utf_16_0_subpointer_into_escaped_string_32 (l_data, l_start, i - 1, False, Result)
+					l_start := i + 1
 					j := j + 1
 				end
 				i := i + 1
 			end
-			Result.set_count (j - 1)
+			if l_start < nb then
+				u.utf_16_0_subpointer_into_escaped_string_32 (l_data, l_start, nb - 1, False, Result)
+			end
 		end
 
-	read_substring_into (a_string: STRING_GENERAL; start_pos, end_pos: INTEGER)
+	read_substring_into (a_string: STRING_32; start_pos, end_pos: INTEGER)
 			-- Copy of substring containing all characters at indices
-			-- between `start_pos' and `end_pos' into `a_string'.
+			-- between `start_pos' and `end_pos' appended into `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 			start_position_big_enough: start_pos >= 1
@@ -198,41 +152,29 @@ feature -- Access
 			end_position_not_too_big: end_pos <= (capacity // character_size)
 			a_string_large_enough: a_string.count >= end_pos - start_pos + 1
 		local
-			l_data: like managed_data
-			i, nb: INTEGER
+			u: UTF_CONVERTER
 		do
-			from
-				i := start_pos - 1
-				nb := end_pos
-				l_data := managed_data
-			until
-				i = nb
-			loop
-				a_string.put_code (l_data.read_natural_16 (i * character_size), i + 1)
-				i := i + 1
-			end
+			u.utf_16_0_subpointer_into_escaped_string_32 (managed_data,
+				start_pos - 1, end_pos - 1, False, a_string)
 		end
 
 	read_string_into (a_string: STRING_GENERAL)
-			-- Copy of all characters of Current `a_string' replacing any
-			-- existing characters.
+			-- Append of all characters of Current to `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 			a_string_large_enough: a_string.count >= count
+		local
+			l_str: STRING_32
 		do
-			read_substring_into (a_string, 1, count)
+			if attached {STRING_32} a_string as l_string then
+				read_substring_into (l_string, 1, count)
+			else
+					-- Broken implementation as most likely data will be truncated
+				create l_str.make (count)
+				read_substring_into (l_str, 1, count)
+				a_string.append (l_str.as_string_8)
+			end
 		end
-
-	item: POINTER
-			-- Get pointer to allocated area.
-		do
-			Result := managed_data.item
-		ensure
-			item_not_null: Result /= default_pointer
-		end
-
-	managed_data: MANAGED_POINTER
-			-- Hold data of Current.
 
 	null_separated_strings: LIST [STRING_32]
 			-- Retrieve all string contained in `item'. Strings are
@@ -295,100 +237,26 @@ feature -- Access
 
 feature -- Measurement
 
-	capacity: INTEGER
-			-- Number of bytes in Current.
-		do
-			Result := managed_data.count
-		end
-
 	character_capacity: INTEGER
 			-- Number of characters in Current.
 		do
 			Result := managed_data.count // character_size
 		end
 
-	bytes_count: INTEGER
-			-- Number of bytes which makes up Current.
-		do
-			Result := count * character_size
-		ensure
-			bytes_count_non_negative: Result >= 0
-		end
-
-	count: INTEGER
-			-- Number of characters in Current.
-
 	length: INTEGER
 			-- Synonym for `count'.
+		obsolete
+			"Use `count' instead."
 		do
 			Result := count
 		ensure
 			length_not_negative: Result >= 0
 		end
 
-	frozen character_size: INTEGER
-			-- Number of bytes occupied by a TCHAR.
-		external
-			"C macro use <tchar.h>"
-		alias
-			"sizeof(TCHAR)"
-		end
-
-feature -- Comparison
-
-	is_equal (other: like Current): BOOLEAN
-			-- Is content of string identical to content of string `other'?
-		do
-			Result := item.is_equal (other.item)
-		end
+	character_size: INTEGER = 2
+			-- Size of a code unit.
 
 feature -- Element change
-
-	set_shared_from_pointer (a_ptr: POINTER)
-			-- New instance sharing `a_ptr'.
-		require
-			a_ptr_not_null: a_ptr /= default_pointer
-		do
-			set_shared_from_pointer_and_count (a_ptr, buffer_length (a_ptr))
-		end
-
-	set_shared_from_pointer_and_count (a_ptr: POINTER; a_length: INTEGER)
-			-- New instance sharing `a_ptr' of `a_length' byte.
-		require
-			a_ptr_not_null: a_ptr /= default_pointer
-			a_length_non_negative: a_length >= 0
-			a_length_valid: (a_length \\ {WEL_STRING}.character_size) = 0
-		do
-			count := a_length // character_size
-			if not managed_data.is_shared then
-				create managed_data.share_from_pointer (a_ptr, a_length + character_size)
-			else
-				managed_data.set_from_pointer (a_ptr, a_length + character_size)
-			end
-		end
-
-	set_string (a_string: READABLE_STRING_GENERAL)
-			-- Set `string' with `a_string'.
-		require
-			a_string_not_void: a_string /= Void
-		do
-			set_substring (a_string, 1, a_string.count)
-		end
-
-	set_substring (a_string: READABLE_STRING_GENERAL; start_pos, end_pos: INTEGER)
-			-- Set `string' with `a_string'.
-		require
-			a_string_not_void: a_string /= Void
-			start_position_big_enough: start_pos >= 1
-			end_position_big_enough: start_pos <= end_pos + 1
-			end_pos_small_enough: end_pos <= a_string.count
-		local
-			u: UTF_CONVERTER
-		do
-				-- Convert substring to UTF-16 with a terminating zero.
-			u.utf_32_substring_into_utf_16_0_pointer (a_string, start_pos, end_pos, managed_data)
-			count := end_pos - start_pos + 1
-		end
 
 	set_string_with_newline_conversion (a_string: READABLE_STRING_GENERAL)
 			-- Make a C string from `a_string' guaranteeing that all newline (linefeed) characters '%N'
@@ -396,8 +264,9 @@ feature -- Element change
 		require
 			a_string_not_void: a_string /= Void
 		local
-			i, j, nb, l_count, l_new_size, l_character_size: INTEGER
+			i, j, nb, l_count, l_new_size, l_start: INTEGER
 			l_managed_data: like managed_data
+			u: UTF_CONVERTER
 		do
 				-- Count how many occurrences of `%N' not preceded by '%R' we have in `a_string'.
 			from
@@ -421,10 +290,8 @@ feature -- Element change
 			l_managed_data := managed_data
 			count := nb + l_count
 
-			l_character_size := character_size
-
 				-- Create managed pointer and set count.
-			l_new_size := (nb + l_count + 1) * l_character_size
+			l_new_size := (nb + l_count + 1) * character_size
 			if l_managed_data.count < l_new_size then
 				l_managed_data.resize (l_new_size)
 			end
@@ -432,40 +299,49 @@ feature -- Element change
 			if l_count > 0 then
 					-- Replace all found occurrences with '%R%N'.
 				from
-					i := 2
+						-- `i' will be used to iterate over `a_string'.
+					i := 1
+						-- `l_start' is the index where substring starts in `a_string'.
+					l_start := 1
+						-- `j' will be used to let us know where in `l_managed_data' we are.
 					j := 0
 						-- Handle case if %N is at first index.
-					if a_string.code (1) = ('%N').natural_32_code then
-						l_managed_data.put_natural_16 (('%R').code.to_natural_16, j * l_character_size)
-						j := j + 1
+					if a_string.code (i) = ('%N').natural_32_code then
+						l_managed_data.put_natural_16 (('%R').natural_32_code.to_natural_16, j)
+						j := j + character_size
+						l_managed_data.put_natural_16 (('%N').natural_32_code.to_natural_16, j)
+						j := j + character_size
+						l_start := l_start + 1
+						i := i + 1
 					end
-					l_managed_data.put_natural_16 (a_string.code (1).to_natural_16, j * l_character_size)
 				until
 					i > nb
 				loop
 					if
 						a_string.code (i) = ('%N').natural_32_code and then a_string.code (i - 1) /= ('%R').natural_32_code
 					then
-						j := j + 1
-						l_managed_data.put_natural_16 (('%R').code.to_natural_16, j * l_character_size)
+						u.escaped_utf_32_substring_into_utf_16_0_pointer (a_string, l_start, i - 1, l_managed_data, j, upper_cell)
+						j := upper_cell.item
+							-- Add %R%N.
+						l_managed_data.put_natural_16 (('%R').natural_32_code.to_natural_16, j)
+						j := j + character_size
+						l_managed_data.put_natural_16 (('%N').natural_32_code.to_natural_16, j)
+						j := j + character_size
+						l_start := i + 1
 					end
-					j := j + 1
-					l_managed_data.put_natural_16 (a_string.code (i).to_natural_16, j * l_character_size)
 					i := i + 1
+				end
+				if l_start < nb then
+						-- We need to store the last remaining chunk.
+					u.escaped_utf_32_substring_into_utf_16_0_pointer (a_string, l_start, nb, l_managed_data, j, upper_cell)
+					j := upper_cell.item + character_size
+				else
+						-- Set null character at the end.
+					l_managed_data.put_natural_16 (0, j)
 				end
 			else
-					-- No conversion necessary so we copy the data straight in to the buffer.
-				from
-					i := 0
-				until
-					i = nb
-				loop
-					l_managed_data.put_natural_16 (a_string.code (i + 1).to_natural_16, i * l_character_size)
-					i := i + 1
-				end
+				set_string (a_string)
 			end
-				-- Set null character at the end.
-			l_managed_data.put_natural_16 (0, l_new_size - l_character_size)
 		end
 
 	set_count (a_count: INTEGER)
@@ -577,15 +453,8 @@ feature {NONE} -- Implementation
 			-- Size in characters pointed by `a_ptr'.
 		require
 			exists: exists
-		local
-			l_length: NATURAL_64
 		do
-			l_length := c_strlen (a_ptr)
-			if l_length <= {INTEGER_32}.max_value.to_natural_64 then
-				Result := l_length.to_integer_32
-			else
-				Result := {INTEGER_32}.max_value
-			end
+			Result := buffer_length (a_ptr) // character_size
 		end
 
 	c_strlen (ptr: POINTER): NATURAL_64

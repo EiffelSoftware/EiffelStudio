@@ -384,7 +384,7 @@ feature {NONE} -- Access
 
 			if Result.is_empty then
 					-- Extend the default library path
-				Result.extend ([eiffel_layout.library_path.name, 2])
+				Result.extend ([eiffel_layout.library_path.name.as_string_32, 2])
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -696,7 +696,7 @@ feature {NONE} -- Basic operation
 						l_file_name := a_dir.path.extended (l_lib_file)
 						create l_file.make_with_path (l_file_name)
 						if l_file.exists and then l_file.is_plain then
-							l_file_string := l_file_name.name
+							l_file_string := l_file_name.name.as_string_32
 							if {PLATFORM_CONSTANTS}.is_windows then
 								l_file_string := l_file_string.as_lower
 							end

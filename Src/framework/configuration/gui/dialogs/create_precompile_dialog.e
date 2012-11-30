@@ -63,7 +63,7 @@ feature {NONE} -- Access
 
 			if Result.is_empty then
 					-- Extend the default library path
-				Result.extend ([eiffel_layout.precompilation_path (target.setting_msil_generation).name, 0])
+				Result.extend ([eiffel_layout.precompilation_path (target.setting_msil_generation).name.as_string_32, 0])
 			end
 		end
 

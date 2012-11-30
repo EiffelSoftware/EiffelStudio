@@ -100,9 +100,9 @@ feature -- Initialization
 		local
 			d: DIRECTORY
 			new_name: STRING_32
-			l_prev_work: STRING
+			l_prev_work: PATH
 		do
-			l_prev_work := Execution_environment.current_working_directory
+			l_prev_work := Execution_environment.current_working_path
 			create d.make (a_project_location.eifgens_path)
 			if d.exists then
 				create d.make (a_project_location.target_path)
@@ -137,7 +137,7 @@ feature -- Initialization
  				Execution_environment.change_working_directory (project_directory.path)
 				manager.on_project_create
 			end
-			Execution_environment.change_working_directory (l_prev_work)
+			Execution_environment.change_working_path (l_prev_work)
 		end
 
 	create_dynamic_lib

@@ -298,7 +298,7 @@ feature {NONE} -- Interface
 			set_minimum_width (100)
 		end
 
-	new_label_item (a_string: STRING_GENERAL): EV_GRID_LABEL_ITEM
+	new_label_item (a_string: READABLE_STRING_GENERAL): EV_GRID_LABEL_ITEM
 			-- Create uniformed label item
 		require
 			string_attached: a_string /= Void

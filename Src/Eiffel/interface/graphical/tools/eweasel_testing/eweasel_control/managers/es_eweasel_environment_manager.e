@@ -52,7 +52,7 @@ feature -- Query
 				l_exe_name := "eweasel"
 			end
 
-			Result := path.extended ("spec").extended (ise_platform).extended ("bin").extended (l_exe_name).name
+			Result := path.extended ("spec").extended (ise_platform).extended ("bin").extended (l_exe_name).name.as_string_8
 		end
 
 	target_directory: DIRECTORY_NAME_32
@@ -108,19 +108,19 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 	eweasel: attached STRING
 			-- eweasel path
 		do
-			Result := path.twin.name
+			Result := path.twin.name.as_string_8
 		end
 
 	include: attached STRING
 			-- eweasel include folder
 		do
-			create Result.make_from_string (path.extended ("control").name)
+			create Result.make_from_string (path.extended ("control").name.as_string_8)
 		end
 
 	init: attached STRING
 			-- eweasel init folder
 		do
-			create Result.make_from_string (path.extended ("control").extended ("init").name)
+			create Result.make_from_string (path.extended ("control").extended ("init").name.as_string_8)
 		end
 
 	eweasel_platform: attached STRING

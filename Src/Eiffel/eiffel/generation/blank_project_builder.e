@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 			contents.replace_substring_all ("$root_class_name", root_class_name)
 			contents.replace_substring_all ("$root_class_feature", root_feature_name)
 			contents.replace_substring_all ("$root_cluster_name", root_cluster_name)
-			contents.replace_substring_all ("$root_cluster_location", project_directory.name)
+			contents.replace_substring_all ("$root_cluster_location", project_directory.name.as_string_8) -- FIXME: Unicode
 		end
 
 	save_ace_file_content (contents: STRING)

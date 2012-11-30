@@ -94,7 +94,7 @@ feature -- Initialization
 						-- The double quote twice are there because the command is executed through COMSPEC.
 					l_library_cmd.append_character ('"')
 					l_library_cmd.append_character ('"')
-					l_library_cmd.append (eiffel_layout.compile_library_command_name.string_representation)
+					l_library_cmd.append (eiffel_layout.compile_library_command_name.name)
 					l_library_cmd.append_character ('"')
 					l_library_cmd.append_character ('"')
 					system (l_library_cmd)

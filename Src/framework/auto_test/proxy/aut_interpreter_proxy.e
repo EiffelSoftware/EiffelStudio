@@ -38,7 +38,7 @@ inherit
 	UNIX_SIGNALS
 		export {NONE} all end
 
-	EXECUTION_ENVIRONMENT_32
+	EXECUTION_ENVIRONMENT
 		rename
 			system as execution_system
 		export

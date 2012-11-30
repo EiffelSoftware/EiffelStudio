@@ -2486,7 +2486,7 @@ feature {NONE} -- Implementation
 	user_directory_name_8: detachable STRING
 		do
 			if attached user_directory_name as v then
-				Result := v.name
+				Result := v.name.as_string_8
 			end
 		end
 

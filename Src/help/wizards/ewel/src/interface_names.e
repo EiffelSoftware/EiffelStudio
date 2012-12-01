@@ -29,7 +29,7 @@ feature -- Title
 
 feature -- Message
 
-	m_you_have_specified_the_following_setting (a_project_name, a_project_location: STRING_GENERAL): STRING_32
+	m_you_have_specified_the_following_setting (a_project_name, a_project_location: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation (
 			"You have specified the following settings:%N%

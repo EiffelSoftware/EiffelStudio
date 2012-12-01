@@ -70,7 +70,7 @@ feature -- Files warning
 
 	t_Files_already_exist: STRING_GENERAL do Result := locale.translation ("Files already exist") end
 
-	m_Files_already_exist (n: STRING_GENERAL): STRING_GENERAL
+	m_Files_already_exist (n: READABLE_STRING_GENERAL): STRING_GENERAL
 		do
 			Result := locale.formatted_string (
 				"[

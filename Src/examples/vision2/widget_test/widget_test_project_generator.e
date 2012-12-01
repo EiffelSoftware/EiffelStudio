@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 			ace_text := ace_template_file.last_string
 			ace_template_file.close
 			add_generated_string (ace_text, project_name, "<PROJECT_NAME>")
-			add_generated_string (ace_text, current_generation_directory.path.name, "<PROJECT_LOCATION>")
+			add_generated_string (ace_text, current_generation_directory.path.name.as_string_8, "<PROJECT_LOCATION>")
 			add_generated_string (ace_text, (create {UUID_GENERATOR}).generate_uuid.out, "<UUID>")
 
 			filename := current_generation_directory.path.extended (ace_file_name)

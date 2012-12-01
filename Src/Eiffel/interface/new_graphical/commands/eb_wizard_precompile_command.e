@@ -17,7 +17,7 @@ inherit
 			{NONE} all
 		end
 
-	EXECUTION_ENVIRONMENT_32
+	EXECUTION_ENVIRONMENT
 		export
 			{NONE} all
 		end
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
 		do
-			Result := Interface_names.m_Wizard_precompile
+			Result := Interface_names.m_wizard_precompile
 		end
 
 note

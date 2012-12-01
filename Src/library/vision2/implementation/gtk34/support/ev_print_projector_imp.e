@@ -29,7 +29,7 @@ inherit
 			add_footer
 		end
 
-	EXECUTION_ENVIRONMENT_32
+	EXECUTION_ENVIRONMENT
 
 create
 	make_with_context
@@ -48,13 +48,13 @@ feature {NONE} -- Initialization
 			set_c_object ({GTK}.gtk_label_new (NULL))
 
 			if a_context.output_to_file then
-				create l_filename.make_from_string (a_context.file_name)
+				l_filename := a_context.file_path
 			else -- Printing via lpr
 				-- Printing directly using lpr spooler
 				create l_filename.make_from_string (tmp_print_job_name)
 			end
 			filename := l_filename
-			make_with_filename (a_world, l_filename)
+			make_with_filepath (a_world, l_filename)
 				-- World needs resetting on project
 
 					-- Set up our page size based on context size resolution.
@@ -73,20 +73,20 @@ feature {EV_ANY_I} -- Access
 	project
 		local
 			i: INTEGER
-			a_cs: C_STRING
+			a_cs: NATIVE_STRING
 			l_file: like file
 			l_filename: like filename
 		do
 			l_filename := filename
 			check l_filename /= Void end
 			if not attached_interface.context.output_to_file then
-				-- Create the named pipe
-				create a_cs.make (l_filename)
+					-- Create the named pipe
+				a_cs := l_filename.native_string
 				i := mkfifo (a_cs.item, S_IRWXU)
-				system ({STRING_32} "lpr < " + l_filename + {STRING_32} " &")
+				system ({STRING_32} "lpr < " + l_filename.name + {STRING_32} " &")
 			end
 
-			create l_file.make (l_filename)
+			create l_file.make_with_path (l_filename)
 			l_file.open_write
 			file := l_file
 			output_to_postscript

@@ -17,12 +17,12 @@ feature -- Access
 			name_not_void: name /= Void
 		end
 
-	file_name: STRING_32
+	file_name: IMMUTABLE_STRING_32
 			-- File name of the class.
 		deferred
 		ensure
 			file_name_not_void: Result /= Void
-			file_name_is_string: Result.same_type ({STRING_32} "")
+			file_name_is_string: Result.same_type (create {IMMUTABLE_STRING_32}.make_empty)
 		end
 
 	has_text: BOOLEAN

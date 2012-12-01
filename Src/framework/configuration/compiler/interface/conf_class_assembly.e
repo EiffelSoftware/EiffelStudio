@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 	type_position: INTEGER
 			-- Position of class type description.
 
-	type_file: STRING_32
+	type_file: IMMUTABLE_STRING_32
 			-- File of class type description.
 		require
 			consumed_path: group.consumed_path /= Void

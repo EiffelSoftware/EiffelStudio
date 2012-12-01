@@ -3837,7 +3837,7 @@ feature -- Server Access
 			group_not_void: Result /= Void
 		end
 
-	file_name: STRING_32
+	file_name: IMMUTABLE_STRING_32
 			-- File name of the class
 		do
 			Result := lace_class.file_name.name

@@ -61,7 +61,7 @@ feature -- Basic Operations
 				exists := (create {RAW_FILE}.make_with_name (url)).exists
 				if exists then
 					cmd.replace_substring_all ("$url", url)
-					(create {EXECUTION_ENVIRONMENT_32}).launch (cmd)
+					(create {EXECUTION_ENVIRONMENT}).launch (cmd)
 					last_show_successful := True
 				else
 					last_show_successful := False

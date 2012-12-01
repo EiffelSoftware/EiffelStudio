@@ -98,15 +98,15 @@ feature -- Basic operations
 		require
 			text_set: text /= Void
 			options_set: context /= Void
-			valid_options: context.output_to_file implies (context.file_name /= Void and then
-						(create {RAW_FILE}.make_with_name (context.file_name)).is_creatable)
+			valid_options: context.output_to_file implies (context.file_path /= Void and then
+						(create {RAW_FILE}.make_with_path (context.file_path)).is_creatable)
 		local
 			f: RAW_FILE
 			retried: BOOLEAN
 		do
 			if not retried then
 				if context.output_to_file then
-					create f.make_with_name (context.file_name)
+					create f.make_with_path (context.file_path)
 					f.create_read_write
 					f.put_string (text)
 					f.close
@@ -198,18 +198,18 @@ feature {NONE} -- Implementation: graphical interface
 			text_set: text /= Void
 			window_set: window /= Void
 		local
-			fn: FILE_NAME_32
+			fn: PATH
 			f: FILE
 		do
 			context := d.print_context
-			create fn.make_from_string (context.file_name)
+			fn := context.file_path
 			if context.output_to_file then
 				if fn = Void then
 					prompts.show_error_prompt (Warning_messages.w_Cannot_create_file (""), window, Void)
 				else
-					create {RAW_FILE} f.make_with_name (fn)
+					create {RAW_FILE} f.make_with_path (fn)
 					if f.exists or not f.is_creatable then
-						prompts.show_error_prompt (Warning_messages.w_Cannot_create_file (fn), window, Void)
+						prompts.show_error_prompt (Warning_messages.w_Cannot_create_file (fn.name), window, Void)
 					else
 						print_text
 					end

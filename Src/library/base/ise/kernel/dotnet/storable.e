@@ -50,7 +50,7 @@ feature -- Access
 		local
 			file: RAW_FILE
 		do
-			create file.make (file_name)
+			create file.make_with_name (file_name)
 			if file.exists and then file.is_readable then
 				file.open_read
 				Result := file.retrieved
@@ -146,7 +146,7 @@ feature -- Element change
 			file: RAW_FILE
 			a: SYSTEM_STRING
 		do
-			create file.make (file_name)
+			create file.make_with_name (file_name)
 			if (file.exists and then file.is_writable) or else
 				(file.is_creatable) then
 				file.open_write
@@ -160,14 +160,14 @@ feature -- Element change
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

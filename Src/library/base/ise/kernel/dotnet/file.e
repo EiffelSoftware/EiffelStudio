@@ -16,7 +16,7 @@ deferred class FILE inherit
 		undefine
 			prune
 		redefine
-			off, append
+			off, append, replaceable
 		end
 
 	IO_MEDIUM
@@ -29,16 +29,17 @@ feature -- Initialization
 
 	make (fn: STRING)
 			-- Create file object with `fn' as file name.
+		obsolete
+			"Use `make_with_path' instead."
 		require
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			create internal_file.make (fn.to_cil)
 			create last_string.make_empty
 			mode := Closed_file
-			name := fn
+			set_name (fn)
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
 			file_closed: is_closed
 		end
 
@@ -48,32 +49,44 @@ feature -- Initialization
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			create internal_file.make (fn.to_cil)
 			create last_string.make_empty
 			mode := Closed_file
-			name := fn.as_string_8
+			set_name (fn)
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
 			file_closed: is_closed
 		end
 
-	make_open_read (fn: STRING)
+	make_with_path (a_path: PATH)
+			-- Create file object with `a_path' as path.
+		require
+			a_path_attached: a_path /= Void
+			a_path_not_empty: not a_path.is_empty
+		do
+			create last_string.make_empty
+			mode := Closed_file
+			set_path (a_path)
+		ensure
+			path_set: path.same_as (a_path)
+			file_closed: is_closed
+		end
+
+	make_open_read (fn: READABLE_STRING_GENERAL)
 			-- Create file object with `fn' as file name
 			-- and open file in read mode.
 		require
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			make (fn)
+			make_with_name (fn)
 			open_read
-			name := fn
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
 			exists: exists
 			open_read: is_open_read
 		end
 
-	make_open_write (fn: STRING)
+	make_open_write (fn: READABLE_STRING_GENERAL)
 			-- Create file object with `fn' as file name
 			-- and open file for writing;
 			-- create it if it does not exist.
@@ -81,49 +94,46 @@ feature -- Initialization
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			make (fn)
+			make_with_name (fn)
 			open_write
-			name := fn
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
 			exists: exists
 			open_write: is_open_write
 		end
 
-	make_open_append (fn: STRING)
+	make_open_append (fn: READABLE_STRING_GENERAL)
 			-- Create file object with `fn' as file name
 			-- and open file in append-only mode.
 		require
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			make (fn)
+			make_with_name (fn)
 			open_append
-			name := fn
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
 			exists: exists
 			open_append: is_open_append
 		end
 
-	make_open_read_write (fn: STRING)
+	make_open_read_write (fn: READABLE_STRING_GENERAL)
 			-- Create file object with `fn' as file name
 			-- and open file for both reading and writing.
 		require
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			make (fn)
+			make_with_name (fn)
 			open_read_write
-			name := fn
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
 			exists: exists
 			open_read: is_open_read
 			open_write: is_open_write
 		end
 
-	make_create_read_write (fn: STRING)
+	make_create_read_write (fn: READABLE_STRING_GENERAL)
 			-- Create file object with `fn' as file name
 			-- and open file for both reading and writing;
 			-- create it if it does not exist.
@@ -131,17 +141,16 @@ feature -- Initialization
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			make (fn)
+			make_with_name (fn)
 			create_read_write
-			name := fn
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
 			exists: exists
 			open_read: is_open_read
 			open_write: is_open_write
 		end
 
-	make_open_read_append (fn: STRING)
+	make_open_read_append (fn: READABLE_STRING_GENERAL)
 			-- Create file object with `fn' as file name
 			-- and open file for reading anywhere
 			-- but writing at the end only.
@@ -150,11 +159,10 @@ feature -- Initialization
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			make (fn)
+			make_with_name (fn)
 			open_read_append
-			name := fn
 		ensure
-			file_named: name = fn
+			file_named: internal_name = fn
 			exists: exists
 			open_read: is_open_read
 			open_append: is_open_append
@@ -162,8 +170,24 @@ feature -- Initialization
 
 feature -- Access
 
+	path: PATH
+			-- Associated path of Current.
+		do
+			create Result.make_from_string (create {STRING_32}.make_from_cil (internal_file.name))
+		ensure
+			entry_not_empty: not Result.is_empty
+		end
+
 	name: STRING
-			-- File name
+			-- File name as a STRING_8 instance. The value might be truncated
+			-- from the original name used to create the current FILE instance.
+		obsolete
+			"Use `path' to ensure that Unicode filenames are not truncated."
+		do
+			create Result.make_from_cil (internal_file.name)
+		ensure then
+			name_not_empty: not Result.is_empty
+		end
 
 	item: CHARACTER
 			-- Current item
@@ -218,7 +242,7 @@ feature -- Access
 			end
 		end
 
-	file_info: UNIX_FILE_INFO
+	file_info: FILE_INFO
 			-- Collected information about the file.
 		do
 			set_buffer
@@ -287,8 +311,8 @@ feature -- Access
 		require
 			file_exists: exists
 		do
-			internal_file.refresh
-			Result := eiffel_file_date_time (internal_file.last_write_time.to_universal_time)
+			set_buffer
+			Result := buffered_file_info.date
 		end
 
 	access_date: INTEGER
@@ -296,8 +320,8 @@ feature -- Access
 		require
 			file_exists: exists
 		do
-			internal_file.refresh
-			Result := eiffel_file_date_time (internal_file.last_access_time.to_universal_time)
+			set_buffer
+			Result := buffered_file_info.access_date
 		end
 
 	retrieved: detachable ANY
@@ -320,10 +344,8 @@ feature -- Measurement
 		do
 			if exists then
 				if not is_open_write then
-					internal_file.refresh
-					if not is_directory then
-						Result := internal_file.length.to_integer
-					end
+					set_buffer
+					Result := buffered_file_info.size
 				elseif attached internal_stream as l_stream then
 					Result := l_stream.length.to_integer
 				end
@@ -362,12 +384,12 @@ feature -- Status report
 			-- Does physical file exist?
 			-- (Uses effective UID.)
 		local
-			l_directory: DIRECTORY
+			l_directory: DIRECTORY_INFO
 		do
 			internal_file.refresh
 			Result := internal_file.exists
 			if not Result then -- May return `False' on directories
-				create l_directory.make (name)
+				create l_directory.make (internal_file.name)
 				Result := l_directory.exists
 			end
 		ensure then
@@ -382,42 +404,31 @@ feature -- Status report
 			Result := internal_file.exists
 		end
 
+	path_exists: BOOLEAN
+			-- Does physical file `name' exist without resolving
+			-- symbolic links?
+		do
+				-- On .NET and Windows there is no symbolic link.
+			internal_file.refresh
+			Result := internal_file.exists
+		ensure then
+			unchanged_mode: mode = old mode
+		end
+
 	is_readable: BOOLEAN
 			-- Is file readable?
 			-- (Checks permission for effective UID.)
-		local
-			perm: FILE_IO_PERMISSION
-			retried: BOOLEAN
 		do
-			if not retried then
-				internal_file.refresh
-				create perm.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.read,
-					internal_file.full_name)
-				perm.demand
-			end
-			Result := not retried
-		rescue
-			retried := True
-			retry
+			set_buffer
+			Result := buffered_file_info.is_readable
 		end
 
 	is_writable: BOOLEAN
 			-- Is file writable?
 			-- (Checks write permission for effective UID.)
-		local
-			perm: FILE_IO_PERMISSION
-			retried: BOOLEAN
 		do
-			if not retried then
-				internal_file.refresh
-				create perm.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.write,
-					internal_file.full_name)
-				perm.demand
-			end
-			Result := not retried
-		rescue
-			retried := True
-			retry
+			set_buffer
+			Result := buffered_file_info.is_writable
 		end
 
 	is_executable: BOOLEAN
@@ -473,9 +484,8 @@ feature -- Status report
 		require
 			file_exists: exists
 		do
-			internal_file.refresh
-			Result := (internal_file.attributes & {FILE_ATTRIBUTES}.directory) =
-				{FILE_ATTRIBUTES}.directory
+			set_buffer
+			Result := buffered_file_info.is_directory
 		end
 
 	is_symlink: BOOLEAN
@@ -631,8 +641,16 @@ feature -- Status report
 			Result := mode >= Write_file
 		end
 
+	replaceable: BOOLEAN
+			-- <Precursor>
+		do
+			Result := False
+		end
+
 	file_prunable: BOOLEAN
 			-- May items be removed?
+		obsolete
+			"Use `prunable' instead."
 		do
 			Result := mode >= Write_file and prunable
 		end
@@ -647,16 +665,13 @@ feature -- Status report
 
 feature -- Comparison
 
-	same_file (fn: STRING): BOOLEAN
+	same_file (fn: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is current file the same as `a_filename'?
 		require
 			fn_not_void: fn /= Void
 			fn_not_empty: not fn.is_empty
-		local
-			l_comparer: FILE_COMPARER
 		do
-			create l_comparer
-			Result := l_comparer.same_files (name, fn)
+			Result := path.is_same_file_as (create {PATH}.make_from_string (fn))
 		end
 
 feature -- Status setting
@@ -815,7 +830,7 @@ feature -- Status setting
 			open_append: is_open_append
 		end
 
-	reopen_read (fname: STRING)
+	reopen_read (fname: READABLE_STRING_GENERAL)
 			-- Reopen in read-only mode with file of name `fname';
 			-- create file if it does not exist.
 		require
@@ -830,7 +845,7 @@ feature -- Status setting
 			open_read: is_open_read
 		end
 
-	reopen_write (fname: STRING)
+	reopen_write (fname: READABLE_STRING_GENERAL)
 			-- Reopen in write-only mode with file of name `fname';
 			-- create file if it does not exist.
 		require
@@ -845,7 +860,7 @@ feature -- Status setting
 			open_write: is_open_write
 		end
 
-	reopen_append (fname: STRING)
+	reopen_append (fname: READABLE_STRING_GENERAL)
 			-- Reopen in append mode with file of name `fname';
 			-- create file if it does not exist.
 		require
@@ -860,7 +875,7 @@ feature -- Status setting
 			open_append: is_open_append
 		end
 
-	reopen_read_write (fname: STRING)
+	reopen_read_write (fname: READABLE_STRING_GENERAL)
 			-- Reopen in read-write mode with file of name `fname'.
 		require
 			is_open: not is_closed
@@ -875,7 +890,7 @@ feature -- Status setting
 			open_write: is_open_write
 		end
 
-	recreate_read_write (fname: STRING)
+	recreate_read_write (fname: READABLE_STRING_GENERAL)
 			-- Reopen in read-write mode with file of name `fname';
 			-- create file if it does not exist.
 		require
@@ -891,7 +906,7 @@ feature -- Status setting
 			open_write: is_open_write
 		end
 
-	reopen_read_append (fname: STRING)
+	reopen_read_append (fname: READABLE_STRING_GENERAL)
 			-- Reopen in read and write-at-end mode with file
 			-- of name `fname'; create file if it does not exist.
 		require
@@ -1056,7 +1071,7 @@ feature -- Element change
 			end
 		end
 
-	link (fn: STRING)
+	link (fn: READABLE_STRING_GENERAL)
 			-- Link current file to `fn'.
 			-- `fn' must not already exist.
 		require
@@ -1221,12 +1236,26 @@ feature -- Element change
 
 	change_name (new_name: STRING)
 			-- Change file name to `new_name'
+		obsolete
+			"Use `rename_file' instead."
+		require
+			new_name_not_void: new_name /= Void
+			new_name_not_empty: not new_name.is_empty
+			file_exists: exists
+		do
+			rename_file (new_name)
+		ensure
+			name_changed: internal_name = new_name
+		end
+
+	rename_file (new_name: READABLE_STRING_GENERAL)
+			-- Change file name to `new_name'
 		require
 			new_name_not_void: new_name /= Void
 			new_name_not_empty: not new_name.is_empty
 			file_exists: exists
 		local
-			l_info: FILE_INFO
+			l_info: SYSTEM_FILE_INFO
 		do
 			create l_info.make (new_name.to_cil)
 			if l_info.exists and not same_file (new_name) then
@@ -1234,9 +1263,27 @@ feature -- Element change
 			end
 			internal_file.refresh
 			internal_file.move_to (new_name.to_cil)
-			name := new_name
-		ensure
-			name_changed: name.is_equal (new_name)
+			set_name (new_name)
+		end
+
+	rename_path (new_name: PATH)
+			-- Change file name to `new_name'
+		require
+			new_name_not_void: new_name /= Void
+			new_name_not_empty: not new_name.is_empty
+			file_exists: exists
+		local
+			l_info: SYSTEM_FILE_INFO
+			l_new_name: STRING_32
+		do
+			l_new_name := new_name.name
+			create l_info.make (l_new_name.to_cil)
+			if l_info.exists and not same_file (l_new_name) then
+				l_info.delete
+			end
+			internal_file.refresh
+			internal_file.move_to (l_new_name.to_cil)
+			set_path (new_name)
 		end
 
 	add_permission (who, what: STRING)
@@ -1294,8 +1341,8 @@ feature -- Element change
 		require
 			file_exists: exists
 		do
-			internal_file.refresh
-			Result := eiffel_file_date_time (internal_file.last_write_time.to_universal_time)
+			set_buffer
+			Result := buffered_file_info.change_date
 		end
 
 	touch
@@ -1369,7 +1416,7 @@ feature -- Removal
 			internal_file.refresh
 		end
 
-	reset (fn: STRING)
+	reset (fn: READABLE_STRING_GENERAL)
 			-- Change file name to `fn' and reset
 			-- file descriptor and all information.
 		require
@@ -1378,14 +1425,33 @@ feature -- Removal
 			if mode /= Closed_file then
 				close
 			end
-			make (fn)
+			make_with_name (fn)
 			last_integer := 0
 			last_string.wipe_out
 			last_real := 0.0
 			last_character := '%U'
 			last_double := 0.0
 		ensure
-			file_renamed: name = fn
+			file_renamed: internal_name = fn
+			file_closed: is_closed
+		end
+
+	reset_path (fp: PATH)
+			-- Change file name to `fp' and reset
+			-- file descriptor and all information.
+		require
+			valid_file_name: fp /= Void
+		do
+			set_path (fp)
+			if mode /= Closed_file then
+				close
+			end
+			last_integer := 0
+			last_real := 0.0
+			last_double := 0.0
+			last_character := '%U'
+			last_string.wipe_out
+		ensure
 			file_closed: is_closed
 		end
 
@@ -1651,7 +1717,11 @@ feature -- Convenience
 
 feature {FILE} -- Implementation
 
-	internal_file: FILE_INFO
+	internal_name: READABLE_STRING_GENERAL
+			-- Store the name of the file as it was given to us by the user
+			-- to avoid conversion on storing as it is not necessary.
+
+	internal_file: SYSTEM_FILE_INFO
 			-- File data concerning `Current'
 
 	internal_stream: detachable SYSTEM_STREAM
@@ -1661,6 +1731,28 @@ feature {FILE} -- Implementation
 			-- Did last call to `reader.read' reach end of file?
 
 feature {NONE} -- Implementation
+
+	set_name (a_name: READABLE_STRING_GENERAL)
+			-- Set `name' with `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+		do
+			create internal_file.make (a_name.to_cil)
+			internal_name := a_name
+		ensure
+			name_set: internal_name = a_name
+		end
+
+	set_path (a_path: PATH)
+			-- Set `internal_name_pointer' with a content matching `a_path'.
+		require
+			a_path_not_void: a_path /= Void
+		do
+			internal_name := a_path.name
+			create internal_file.make (internal_name.to_cil)
+		ensure
+			path_set: path.same_as (a_path)
+		end
 
 	create_last_string (a_min_size: INTEGER)
 			-- Create new instance of `last_string' with a least `a_min_size'
@@ -1721,7 +1813,7 @@ feature {NONE} -- Implementation
 		require
 			file_exists: exists
 		do
-			buffered_file_info.update (name)
+			buffered_file_info.fast_update (internal_name, internal_file)
 		end
 
 feature {NONE} -- Inapplicable
@@ -1743,30 +1835,17 @@ feature {NONE} -- Inapplicable
 
 	remove
 			-- Remove current item.
-		require else
-			file_prunable: file_prunable
 		do
 		end
 
 	prune (v: like item)
 			-- Remove an occurrence of `v' if any.
-		require else
-			prunable: file_prunable
 		do
 		ensure then
 			count <= old count
 		end
 
 feature {FILE} -- Implementation
-
-	dot_net_base_file_time: INTEGER_64
-			-- nano-seconds between 01/01/0001:00:00:00:00 and 01/01/1601:00:00:00:00
-		local
-			t: SYSTEM_DATE_TIME
-		once
-			t.make_with_year_and_month_and_day (1601 ,1 ,1 ,0 ,0 ,0 ,0)
-			Result := t.ticks
-		end
 
 	eiffel_base_file_time: INTEGER_64
 			-- nano-seconds between 01/01/0001:00:00:00:00 and 01/01/1970:00:00:00:00
@@ -1775,12 +1854,6 @@ feature {FILE} -- Implementation
 		once
 			t.make_with_year_and_month (1970 ,1 ,1 ,0 ,0 ,0)
 			Result := t.ticks
-		end
-
-	dot_net_time_offset: INTEGER_64
-			-- the offset in nano-seconds between 01/01/1601:00:00:00:00 and 01/01/1970:00:00:00:00
-		do
-			Result := eiffel_base_file_time - dot_net_base_file_time
 		end
 
 	dot_net_file_date_time (time: INTEGER): SYSTEM_DATE_TIME
@@ -1792,17 +1865,6 @@ feature {FILE} -- Implementation
 		do
 			t.make_from_ticks (eiffel_base_file_time + (time.to_integer_64 * 10000000))
 			Result := t
-		end
-
-	eiffel_file_date_time (dot_net_date: SYSTEM_DATE_TIME): INTEGER
-			-- convert a .NET file date time to an eiffel date
-			-- 'dot_net_date' must be the nano-seconds from 01/01/1601:00:00:00:00
-			-- (file system time) returns seconds since 01/01/1970:00:00:00:00
-		local
-			i64: INTEGER_64
-		do
-			i64 := ((dot_net_date.ticks - eiffel_base_file_time) / 10000000).floor
-			Result := i64.to_integer
 		end
 
 	mode: INTEGER
@@ -1906,8 +1968,8 @@ feature {NONE} -- Implementation
 invariant
 
 	valid_mode: Closed_file <= mode and mode <= Append_read_file
-	name_exists: name /= Void
-	name_not_empty: not name.is_empty
+	name_exists: internal_name /= Void
+	name_not_empty: not internal_name.is_empty
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."

@@ -79,7 +79,7 @@
 				<exclude>/kernel/string/system_string_factory.e$</exclude>
 				<exclude>/kernel/type.e$</exclude>
 				<exclude>/kernel/tuple.e$</exclude>
-				<exclude>/kernel/unix_file_info.e$</exclude>
+				<exclude>/kernel/file_info.e$</exclude>
 				<exclude>/kernel/unix_signals.e$</exclude>
 				<exclude>/support/class_name_translations.e$</exclude>
 				<exclude>/support/double_math.e$</exclude>
@@ -106,12 +106,7 @@
 			<file_rule>
 				<exclude>/kernel/exceptions/ise_exception_manager.e$</exclude>
 				<exclude>/kernel/exceptions/io_failure.e$</exclude>
-				<exclude>/kernel/directory_32.e$</exclude>
 				<exclude>/kernel/execution_environment_32.e$</exclude>
-				<exclude>/kernel/file_32.e$</exclude>
-				<exclude>/kernel/plain_text_file_32.e$</exclude>
-				<exclude>/kernel/raw_file_32.e$</exclude>
-				<exclude>/kernel/unix_file_info_32.e$</exclude>
 				<exclude>/classic$</exclude>
 				<condition>
 					<dotnet value="true"/>

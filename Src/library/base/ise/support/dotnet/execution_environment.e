@@ -18,8 +18,22 @@ feature -- Access
 			create Result
 		end
 
+	current_working_path: PATH
+			-- Directory of current execution.
+		do
+			if attached {ENVIRONMENT}.current_directory as l_dir then
+				create Result.make_from_string (create {STRING_32}.make_from_cil (l_dir))
+			else
+				create Result.make_current
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	current_working_directory: STRING
 			-- Directory of current execution
+		obsolete
+			"Use `current_working_path' instead to support Unicode path."
 		do
 			if attached {ENVIRONMENT}.current_directory as l_dir then
 				Result := l_dir
@@ -28,22 +42,21 @@ feature -- Access
 			end
 		end
 
-	default_shell: STRING
+	default_shell: STRING_32
 			-- Default shell
-		local
-			l_result: detachable STRING
 		once
-			l_result := get ("SHELL")
-			if l_result = Void then
-				create {STRING} Result.make (0)
+			if attached item ("SHELL") as l_shell then
+				Result := l_shell
 			else
-				Result := l_result
+				create Result.make_empty
 			end
 		end
 
 	get (s: STRING): detachable STRING
 			-- Value of `s' if it is an environment variable and has been set;
 			-- void otherwise.
+		obsolete
+			"Use `item' instead to retrieve Unicode environment variables."
 		require
 			s_exists: s /= Void
 		do
@@ -52,8 +65,56 @@ feature -- Access
 			end
 		end
 
+	item (s: READABLE_STRING_GENERAL): detachable STRING_32
+			-- Value of `s' if it is an environment variable and has been set;
+			-- void otherwise.
+		require
+			s_exists: s /= Void
+			not_has_null_character: not s.has ('%U')
+		do
+			if attached {ENVIRONMENT}.get_environment_variable (s.to_cil) as cs then
+				create Result.make_from_cil (cs)
+			end
+		end
+
+	home_directory_path: detachable PATH
+			-- Directory name corresponding to the home directory.
+		require
+			home_directory_supported: Operating_environment.home_directory_supported
+		do
+			if attached {ENVIRONMENT}.get_folder_path ({SPECIAL_FOLDER_IN_ENVIRONMENT}.local_application_data) as l_home then
+				create Result.make_from_string (create {STRING_32}.make_from_cil (l_home))
+			elseif attached item ("HOMEPATH") as l_home then
+				create Result.make_from_string (l_home)
+			else
+				create Result.make_empty
+			end
+		end
+
+	user_directory_path: detachable PATH
+			-- Directory name corresponding to the user directory
+			-- On Windows: C:\Users\manus\Documents
+			-- On Unix & Mac: $HOME
+			-- Otherwise Void
+		once
+			if attached {ENVIRONMENT}.get_folder_path ({SPECIAL_FOLDER_IN_ENVIRONMENT}.personal) as l_home then
+				create Result.make_from_string (create {STRING_32}.make_from_cil (l_home))
+			elseif
+				operating_environment.home_directory_supported and then
+				attached home_directory_path as l_home
+			then
+					-- We use $HOME.
+				Result := l_home
+			else
+					-- No possibility of a user directory, we let the caller handle that.
+				Result := Void
+			end
+		end
+
 	home_directory_name: STRING
 			-- Directory name corresponding to the home directory.
+		obsolete
+			"Use `home_directory_path' instead to support Unicode path."
 		require
 			home_directory_supported: Operating_environment.home_directory_supported
 		do
@@ -70,13 +131,19 @@ feature -- Access
 			-- Directory name corresponding to the root directory.
 		require
 			root_directory_supported: Operating_environment.root_directory_supported
-		do
-			Result := "/"
+		once
+			if {PLATFORM}.is_windows then
+				Result := "\"
+			elseif {PLATFORM}.is_vms then
+				Result := "[000000]"
+			else
+				Result := "/"
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	environment_variables: HASH_TABLE [STRING, STRING]
+	starting_environment_variables: HASH_TABLE [STRING, STRING]
 			-- Table of environment variables associated with current process,
 			-- indexed by variable name
 		do
@@ -108,11 +175,19 @@ feature -- Status setting
 
 	change_working_directory (path: STRING)
 			-- Set the current directory to `path'
+		obsolete
+			"Use `change_working_path' instead to support Unicode path."
 		do
 			{ENVIRONMENT}.set_current_directory (path)
 		end
 
-	put (value, key: STRING)
+	change_working_path (path: PATH)
+			-- Set the current directory to `path'
+		do
+			{ENVIRONMENT}.set_current_directory (path.name)
+		end
+
+	put (value, key: READABLE_STRING_GENERAL)
 			-- Set the environment variable `key' to `value'.
 		require
 			key_exists: key /= Void
@@ -121,30 +196,31 @@ feature -- Status setting
 			value_exists: value /= Void
 			not_value_has_null_character: not value.has ('%U')
 		do
-			{ENVIRONMENT}.set_environment_variable (key, value)
+			{ENVIRONMENT}.set_environment_variable (key.to_cil, value.to_cil)
 			return_code := 0
 		ensure
-			variable_set: (return_code = 0) implies
-				(equal (value, get (key)) or else (value.is_empty and then (get (key) = Void)))
+			variable_set: return_code = 0 implies
+				((value.is_empty and then item (key) = Void) or else
+				not value.is_empty and then attached item (key) as k and then k.same_string_general (value))
 		end
 
-	system (s: STRING)
+	system (s: READABLE_STRING_GENERAL)
 			-- Pass to the operating system a request to execute `s'.
 			-- If `s' is empty, use the default shell as command.
 		require
 			s_exists: s /= Void
 		do
-			internal_launch (s, True)
+			internal_launch (s.to_string_32, True)
 		end
 
-	launch (s: STRING)
+	launch (s: READABLE_STRING_GENERAL)
 			-- Pass to the operating system an asynchronous request to
 			-- execute `s'.
 			-- If `s' is empty, use the default shell as command.
 		require
 			s_not_void: s /= Void
 		do
-			internal_launch (s, False)
+			internal_launch (s.to_string_32, False)
 		end
 
 	sleep (nanoseconds: INTEGER_64)
@@ -162,7 +238,7 @@ feature {NONE} -- Implementation
 			-- Handle to last launched process through `launch'. Used by `system'
 			-- to wait until process is finished.
 
-	internal_launch (s: STRING; should_wait: BOOLEAN)
+	internal_launch (s: STRING_32; should_wait: BOOLEAN)
 			-- Pass to the operating system an asynchronous request to
 			-- execute `s'.
 			-- If the current directory is a volume, then use the old
@@ -175,11 +251,11 @@ feature {NONE} -- Implementation
 		require
 			s_not_void: s /= Void
 		local
-			l_cmd, l_args: detachable STRING
+			l_cmd, l_args: detachable STRING_32
 			l_si: SYSTEM_DLL_PROCESS_START_INFO
 			l_pos: INTEGER
 		do
-			if (current_working_directory @ 2) = ':' then -- assume a volume
+			if (current_working_path.name @ 2) = ':' then -- assume a volume
 				internal_launch_from_local_volume (s, should_wait)
 			else
 				l_pos := s.index_of (' ', 1)
@@ -188,7 +264,7 @@ feature {NONE} -- Implementation
 					l_args := s.substring (l_pos + 1, s.count)
 				else
 					l_cmd := s
-					l_args := ""
+					l_args := {STRING_32} ""
 				end
 				l_cmd := fully_qualified_program_name (l_cmd)
 				if l_cmd = Void then
@@ -213,7 +289,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_launch_from_local_volume (s: STRING; should_wait: BOOLEAN)
+	internal_launch_from_local_volume (s: READABLE_STRING_GENERAL; should_wait: BOOLEAN)
 			-- Pass to the operating system an asynchronous request to
 			-- execute `s'.
 			-- If `s' is empty, use the default shell as command.
@@ -222,23 +298,23 @@ feature {NONE} -- Implementation
 		require
 			s_not_void: s /= Void
 		local
-			l_comspec: detachable STRING
+			l_comspec: detachable STRING_32
 			l_si: SYSTEM_DLL_PROCESS_START_INFO
 			l_pos: INTEGER
 		do
 			if should_wait then
-				l_comspec := get ("COMSPEC")
+				l_comspec := item ("COMSPEC")
 				if l_comspec = Void then
 					l_comspec := "cmd.exe"
 				end
 				if s.is_empty then
 					create l_si.make_from_file_name (l_comspec.to_cil)
 				else
-					create l_si.make_from_file_name_and_arguments (l_comspec.to_cil, ("/c " + s).to_cil)
+					create l_si.make_from_file_name_and_arguments (l_comspec.to_cil, ({STRING_32} "/c " + s.to_string_32).to_cil)
 				end
 			else
 					-- Let's split up the argument into `executable' and `arguments'.
-				l_comspec := s.twin
+				l_comspec := s.to_string_32.twin
 				l_comspec.left_adjust
 				l_pos := l_comspec.index_of (' ', 1)
 				if l_pos > 0 then
@@ -258,16 +334,16 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fully_qualified_program_name (a_cmd: STRING): detachable STRING
+	fully_qualified_program_name (a_cmd: STRING_32): detachable STRING_32
 			-- If `a_cmd' can be found, then return a fully qualified
 			-- path to it. Otherwise returns a Void string
 		require
 			a_cmd_not_void: a_cmd /= Void
 		local
-			l_ext, l_paths: ARRAYED_LIST [STRING]
-			l_program_name: STRING
+			l_ext, l_paths: ARRAYED_LIST [STRING_32]
+			l_program_name: STRING_32
 		do
-			if {SYSTEM_FILE}.exists (a_cmd) and then attached {PATH}.get_full_path (a_cmd) as l_path then
+			if {SYSTEM_FILE}.exists (a_cmd) and then attached {SYSTEM_PATH}.get_full_path (a_cmd) as l_path then
 				Result := l_path
 			else
 				l_ext := executable_extensions
@@ -283,7 +359,7 @@ feature {NONE} -- Implementation
 						Result /= Void or l_paths.off
 					loop
 						l_program_name := l_paths.item.twin
-						l_program_name.extend ({PATH}.directory_separator_char)
+						l_program_name.extend ({SYSTEM_PATH}.directory_separator_char)
 						l_program_name.append (a_cmd + l_ext.item)
 						if {SYSTEM_FILE}.exists (l_program_name) then
 							Result := l_program_name
@@ -295,14 +371,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	executable_extensions: ARRAYED_LIST [STRING]
+	executable_extensions: ARRAYED_LIST [STRING_32]
 			-- List of legal executable extensions
 		local
-			l_extensions: detachable STRING
+			l_extensions: detachable STRING_32
 		do
-			l_extensions := get ("PATHEXT")
+			l_extensions := item ("PATHEXT")
 			if l_extensions = Void then
-				l_extensions := ".COM;.EXE;.BAT;.CMD"
+				l_extensions := {STRING_32} ".COM;.EXE;.BAT;.CMD"
 			end
 			create Result.make (10)
 			Result.append (l_extensions.split (';'))
@@ -310,7 +386,7 @@ feature {NONE} -- Implementation
 			executable_extensions_not_void: Result /= Void
 		end
 
-	search_directories: ARRAYED_LIST [STRING]
+	search_directories: ARRAYED_LIST [STRING_32]
 			-- While it would be more efficient to make this a
 			-- "once" feature, it's also possible that the caller
 			-- could manually modify environment variables between
@@ -320,12 +396,12 @@ feature {NONE} -- Implementation
 			create Result.make (100)
 			if
 				attached {ASSEMBLY}.get_entry_assembly as l_assembly and then
-				attached {PATH}.get_directory_name (l_assembly.location) as l_location
+				attached {SYSTEM_PATH}.get_directory_name (l_assembly.location) as l_location
 			then
 				Result.extend (l_location)
 			end
-			Result.extend (current_working_directory)
-			if attached get ("PATH") as l_path then
+			Result.extend (current_working_path.name)
+			if attached item ("PATH") as l_path then
 				Result.append (l_path.split (';'))
 			end
 		end

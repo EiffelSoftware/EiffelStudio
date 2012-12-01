@@ -13,30 +13,45 @@ inherit
 	DISPOSABLE
 
 create
-
-	make, make_open_read
+	make, make_with_path,
+	make_open_read
 
 feature -- Initialization
 
-	make (dn: STRING)
-			-- Create directory object for the directory
+	make (dn: READABLE_STRING_GENERAL)
+			-- Create directory object for directory
 			-- of name `dn'.
 		require
 			string_exists: dn /= Void
 		do
-			name := dn
+			set_name (dn)
 			mode := Close_directory
+		ensure
+			name_set: internal_name = dn
 		end
 
-	make_open_read (dn: STRING)
-			-- Create directory object for the directory
+	make_with_path (a_path: PATH)
+			-- Create file object with `a_path' as path.
+		require
+			a_path_attached: a_path /= Void
+		do
+			-- NOTE: this is a temporary implementation
+			make (a_path.name)
+		end
+
+	make_open_read (dn: READABLE_STRING_GENERAL)
+			-- Create directory object for directory
 			-- of name `dn' and open it for reading.
 		require
 			string_exists: dn /= Void
 		do
 			make (dn)
 			open_read
+		ensure
+			name_set: internal_name = dn
 		end
+
+feature -- Creation
 
 	create_dir
 			-- Create a physical directory.
@@ -48,9 +63,9 @@ feature -- Initialization
 			l_sep_index: INTEGER
 			l_full_path: STRING
 		do
-			create di.make (name.to_cil)
+			create di.make (internal_name.to_cil)
 			create l_full_path.make_from_cil (di.full_name)
-			l_sep_index := l_full_path.last_index_of ({PATH}.directory_separator_char,
+			l_sep_index := l_full_path.last_index_of ({SYSTEM_PATH}.directory_separator_char,
 				(1).max (l_full_path.count - 1))
 			if l_sep_index = 0 then
 				di := {SYSTEM_DIRECTORY}.create_directory (l_full_path.to_cil)
@@ -67,63 +82,62 @@ feature -- Initialization
 		end
 
 	recursive_create_dir
-			-- Create the directory `a_directory_name' recursively.
+			-- Create the directory recursively.
 			--
-			-- Ex: if /temp/ exists but not /temp/test, calling
-			--     `recursive_create_directory ("/temp/test/toto")'
-			--     will create /temp/test and then /temp/test/toto.
-		require
-			physical_not_exists: not exists
+			-- Ex: if /temp/ exists but not /temp/test, then trying
+			--  to create /temp/test/toto will create /temp/test
+			--  and then /temp/test/toto.
 		local
 			l_directory: DIRECTORY
-			l_new_directory_name: DIRECTORY_NAME
-			l_directories_to_build: ARRAYED_LIST [STRING]
-			l_built_directory: STRING
-			l_loc_directory_name: STRING
-			l_separator_index: INTEGER
+			l_directories_to_build: ARRAYED_LIST [PATH]
+			l_path: PATH
+			l_parent, l_entry: detachable PATH
 			l_io_exception: IO_FAILURE
+			u: UTF_CONVERTER
 		do
-			create l_directories_to_build.make (10)
 
 				-- Find the first existing directory in the path name
 			from
-				l_built_directory := name.twin
-				l_separator_index := l_built_directory.count
-				create l_directory.make (l_built_directory)
+				create l_directories_to_build.make (10)
+				l_path := path
+				create l_directory.make_with_path (l_path)
 			until
-				l_directory.exists
+				l_directory.exists or l_path = Void
 			loop
-				l_separator_index := l_built_directory.last_index_of (Operating_environment.Directory_separator, l_built_directory.count)
-				if l_separator_index = 0 then
+				l_parent := l_path.parent
+				l_entry := l_path.entry
+				if l_parent = Void or l_entry = Void then
 					create l_io_exception
-					l_io_exception.set_message ("Invalid directory: " + l_built_directory)
+						-- Directory name is converted to UTF-8
+					l_io_exception.set_message ("Invalid directory: " + u.utf_32_string_to_utf_8_string_8 (l_path.name))
 					l_io_exception.raise
-				end
-				l_directories_to_build.extend (l_built_directory.substring (l_separator_index + 1, l_built_directory.count))
-				if l_built_directory @ (l_separator_index - 1) = ':' then
-					l_loc_directory_name := l_built_directory.substring (1, l_separator_index)
 				else
-					l_loc_directory_name := l_built_directory.substring (1, l_separator_index - 1)
+					l_directories_to_build.extend (l_entry)
+					create l_directory.make_with_path (l_parent)
+					l_path := l_parent
 				end
-				l_built_directory := l_built_directory.substring (1, l_separator_index - 1)
-				create l_directory.make (l_loc_directory_name)
 			end
 
 				-- Recursively create the directory.
+			l_directories_to_build.finish
 			from
-				l_directories_to_build.finish
-				create l_new_directory_name.make_from_string (l_built_directory)
+					-- Make sure we start from somewhere. If `l_path' is Void,
+					-- it means we were trying to create a path without a root such as "abc/def".
+				if l_path = Void then
+					create l_path.make_empty
+				end
 			until
 				l_directories_to_build.before
 			loop
-				l_new_directory_name.extend (l_directories_to_build.item)
+				l_path := l_path.extended_path (l_directories_to_build.item)
 				l_directories_to_build.back
 
-				create l_directory.make (l_new_directory_name)
+				create l_directory.make_with_path (l_path)
 				l_directory.create_dir
 				if not l_directory.exists then
 					create l_io_exception
-					l_io_exception.set_message ("Cannot create: " + l_new_directory_name)
+						-- Use UTF-8 to display directory we cannot create.
+					l_io_exception.set_message ("Cannot create: " + u.utf_32_string_to_utf_8_string_8 (l_path.name))
 					l_io_exception.raise
 				end
 			end
@@ -131,42 +145,56 @@ feature -- Initialization
 			physical_exists: exists
 		end
 
+
+
 feature -- Access
+
+	path: PATH
+			-- Associated path of Current.
+		do
+			create Result.make_from_string (internal_name)
+		ensure
+			entry_not_empty: not Result.is_empty
+		end
 
 	readentry
 			-- Read next directory entry
 			-- make result available in `lastentry'.
-			-- Make result void if all entries have been read.
+			-- Make result Void if all entries have been read.
 		require
 			is_opened: not is_closed
 		local
-			l_name: SYSTEM_STRING
 			l_entry: like lastentry
 		do
-			l_name := name.to_cil
-			check attached {SYSTEM_DIRECTORY}.get_file_system_entries (l_name) as ent then
-				if search_index >= ent.count then
-					lastentry := Void
-				else
-					create l_entry.make_from_cil (ent.item (search_index))
-						-- Because .NET will return something like `Current_dir\found_entry'
-						-- we need to get rid of `Current_dir\' to be consistent with
-						-- classic EiffelBase.
-					l_entry.remove_head (name.count + 1)
-					lastentry := l_entry
-					search_index := search_index + 1
-				end
+			if not attached directory_listing as l_listing or else search_index >= l_listing.count then
+				lastentry := Void
+			else
+				create l_entry.make_from_cil (l_listing.item (search_index))
+					-- Because .NET will return something like `Current_dir\found_entry'
+					-- we need to get rid of `Current_dir\' to be consistent with
+					-- classic EiffelBase.
+				l_entry.remove_head (internal_name.count + 1)
+				lastentry := l_entry
+				search_index := search_index + 1
 			end
 		end
 
-	name: STRING
-			-- Directory name
+	name: STRING_8
+			-- File name as a STRING_8 instance. The value might be truncated
+			-- from the original name used to create the current FILE instance.
+		obsolete
+			"Use `path' to ensure you can retrieve a all kind of names."
+		do
+			Result := internal_name.as_string_8
+		ensure then
+			name_not_empty: not Result.is_empty
+		end
 
-	has_entry (entry_name: STRING): BOOLEAN
+	has_entry (entry_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Has directory the entry `entry_name'?
-			-- The use of `dir_temp' is required not
-			-- to change the position in the current
-			-- directory entries list.
+			--| The use of `dir_temp' is required not
+			--| to change the position in the current
+			--| directory entries list.
 		require
 			string_exists: entry_name /= Void
 		local
@@ -175,7 +203,7 @@ feature -- Access
 			i: INTEGER
 			c: INTEGER
 		do
-			l_name := name.to_cil
+			l_name := internal_name.to_cil
 			check attached {SYSTEM_DIRECTORY}.get_file_system_entries (l_name) as ent then
 				en := entry_name.to_cil
 				c := ent.count
@@ -191,9 +219,10 @@ feature -- Access
 		end
 
 	open_read
-			-- Open directory `name' for reading.
+			-- Open directory for reading.
 		do
 			mode := Read_directory
+			directory_listing := Void
 			search_index := 0
 		end
 
@@ -203,6 +232,7 @@ feature -- Access
 			is_open: not is_closed
 		do
 			mode := Close_directory
+			directory_listing := Void
 		end
 
 	start
@@ -210,25 +240,26 @@ feature -- Access
 		require
 			is_opened: not is_closed
 		do
+			directory_listing := {SYSTEM_DIRECTORY}.get_file_system_entries (internal_name.to_cil)
 			search_index := 0
 		end
 
-	change_name (new_name: STRING)
-			-- Change file name to `new_name'
+	change_name (new_name: READABLE_STRING_GENERAL)
+			-- Change directory name to `new_name'.
 		require
-			not_new_name_void: new_name /= Void
-			file_exists: exists
+			new_name_not_void: new_name /= Void
+			directory_exists: exists
 		local
-			l_info: FILE_INFO
+			l_info: SYSTEM_FILE_INFO
 		do
 			create l_info.make (new_name.to_cil)
 			if l_info.exists then
 				l_info.delete
 			end
-			{SYSTEM_DIRECTORY}.move (name.to_cil, new_name.to_cil)
-			name := new_name
+			{SYSTEM_DIRECTORY}.move (internal_name.to_cil, new_name.to_cil)
+			set_name (new_name)
 		ensure
-			name_changed: name.is_equal (new_name)
+			name_changed: internal_name = new_name
 		end
 
 feature -- Measurement
@@ -238,23 +269,54 @@ feature -- Measurement
 		require
 			directory_exists: exists
 		do
-			if attached {SYSTEM_DIRECTORY}.get_file_system_entries ( name.to_cil) as ent then
+			if attached {SYSTEM_DIRECTORY}.get_file_system_entries (internal_name.to_cil) as ent then
 				Result := ent.count
 			end
 		end
 
 feature -- Conversion
 
-	linear_representation: ARRAYED_LIST [STRING]
-			-- The entries, in sequential format.
+	entries: ARRAYED_LIST [PATH]
+			-- The entries, in sequential format, in a platform specific order.
 		local
 			i, c, dc: INTEGER
 			l_string: detachable SYSTEM_STRING
 		do
-			check attached {SYSTEM_DIRECTORY}.get_file_system_entries (name.to_cil) as ent then
+			check attached {SYSTEM_DIRECTORY}.get_file_system_entries (internal_name.to_cil) as ent then
 				c := ent.count
-				dc := name.count
-				if name.item (name.count) = (create {OPERATING_ENVIRONMENT}).directory_separator then
+				dc := internal_name.count
+				if internal_name.item (internal_name.count) = (create {OPERATING_ENVIRONMENT}).directory_separator then
+					dc := dc - 1
+				end
+				from
+					create Result.make (c)
+				until
+					i = c
+				loop
+					l_string := ent.item (i)
+					if l_string /= Void then
+						Result.extend (create {PATH}.make_from_string (
+							create {STRING_32}.make_from_cil (l_string.remove (0, dc + 1))))
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	linear_representation: ARRAYED_LIST [STRING_8]
+			-- The entries, in sequential format. Entries that can be
+			-- expressed in Unicode are excluded and one has to use
+			-- `linear_representation' to get them.
+		obsolete
+			"Use `entries' instead if your application is using Unicode file names."
+		local
+			i, c, dc: INTEGER
+			l_string: detachable SYSTEM_STRING
+		do
+			check attached {SYSTEM_DIRECTORY}.get_file_system_entries (internal_name.to_cil) as ent then
+				c := ent.count
+				dc := internal_name.count
+				if internal_name.item (internal_name.count) = (create {OPERATING_ENVIRONMENT}).directory_separator then
 					dc := dc - 1
 				end
 				create Result.make (c)
@@ -272,10 +334,71 @@ feature -- Conversion
 			end
 		end
 
+	linear_representation_32: ARRAYED_LIST [STRING_32]
+			-- The entries, in sequential format. Entries
+			-- that cannot be expressed in UTF-32 are excluded from
+			-- the list and one has to use `entries' to get them.
+		obsolete
+			"Use `entries' instead."
+		local
+			i, c, dc: INTEGER
+			l_string: detachable SYSTEM_STRING
+		do
+			check attached {SYSTEM_DIRECTORY}.get_file_system_entries (internal_name.to_cil) as ent then
+				c := ent.count
+				dc := internal_name.count
+				if internal_name.item (internal_name.count) = (create {OPERATING_ENVIRONMENT}).directory_separator then
+					dc := dc - 1
+				end
+				create Result.make (c)
+				from
+
+				until
+					i = c
+				loop
+					l_string := ent.item (i)
+					if l_string /= Void then
+						Result.extend (create {STRING_32}.make_from_cil (l_string.remove (0, dc + 1)))
+					end
+					i := i + 1
+				end
+			end
+		end
+
 feature -- Status report
 
-	lastentry: detachable STRING
-			-- Last entry read by `readentry'
+	last_entry_32: detachable STRING_32
+			-- Last Unicode entry read by `readentry' if any.
+		do
+			if attached directory_listing as l_listing and then search_index < l_listing.count then
+				create Result.make_from_cil (l_listing.item (search_index))
+					-- Because .NET will return something like `Current_dir\found_entry'
+					-- we need to get rid of `Current_dir\' to be consistent with
+					-- classic EiffelBase.
+				Result.remove_head (internal_name.count + 1)
+			end
+		end
+
+	last_entry_8: detachable STRING_8
+			-- Raw byte sequence of the last found entry if this entry cannot be
+			-- expressed with Unicode characters. This is useful
+			-- when handeling a file that is not a valid UTF-8 sequence on Unix.
+		do
+			if attached directory_listing as l_listing and then search_index < l_listing.count then
+				create Result.make_from_cil (l_listing.item (search_index))
+					-- Because .NET will return something like `Current_dir\found_entry'
+					-- we need to get rid of `Current_dir\' to be consistent with
+					-- classic EiffelBase.
+				Result.remove_head (internal_name.count + 1)
+			end
+		end
+
+	lastentry: detachable STRING_8
+			-- Last entry read by `readentry'.
+		obsolete
+			"Use `last_entry_32' for Unicode file names, or `last_entry_8' otherwise."
+		attribute
+		end
 
 	is_closed: BOOLEAN
 			-- Is current directory closed?
@@ -293,21 +416,13 @@ feature -- Status report
 			Result := (count = 0)
 		end
 
-	empty: BOOLEAN
-			-- Is directory empty?
-		obsolete
-			"Use `is_empty' instead"
-		do
-			Result := is_empty
-		end
-
 	exists: BOOLEAN
 			-- Does the directory exist?
 		local
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := {SYSTEM_DIRECTORY}.exists (name.to_cil)
+				Result := {SYSTEM_DIRECTORY}.exists (internal_name.to_cil)
 			end
 		rescue
 			retried := True
@@ -324,7 +439,7 @@ feature -- Status report
 			retried: BOOLEAN
 		do
 			if not retried then
-				create di.make (name.to_cil)
+				create di.make (internal_name.to_cil)
 				create pa.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.Read,
 					di.full_name)
 				pa.demand
@@ -345,7 +460,7 @@ feature -- Status report
 			retried: BOOLEAN
 		do
 			if not retried then
-				create di.make (name.to_cil)
+				create di.make (internal_name.to_cil)
 				create pa.make_from_access_and_path (
 					{FILE_IO_PERMISSION_ACCESS}.path_discovery,
 					di.full_name)
@@ -367,7 +482,7 @@ feature -- Status report
 			retried: BOOLEAN
 		do
 			if not retried then
-				create di.make (name.to_cil)
+				create di.make (internal_name.to_cil)
 				create pa.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.write,
 					di.full_name)
 				pa.demand
@@ -381,12 +496,12 @@ feature -- Status report
 feature -- Removal
 
 	delete
-			-- Delete directory if empty
+			-- Delete directory if empty.
 		require
 			directory_exists: exists
 			empty_directory: is_empty
 		do
-			{SYSTEM_DIRECTORY}.delete (name.to_cil)
+			{SYSTEM_DIRECTORY}.delete (internal_name.to_cil)
 		end
 
 	delete_content
@@ -394,41 +509,8 @@ feature -- Removal
 			-- subdirectories.
 		require
 			directory_exists: exists
-		local
-			l: LINEAR [STRING]
-			file_name: FILE_NAME
-			file: RAW_FILE
-			dir: DIRECTORY
 		do
-			l := linear_representation
-			from
-				l.start
-			until
-				l.after
-			loop
-				if
-					not l.item.is_equal (".") and
-					not l.item.is_equal ("..")
-				then
-					create file_name.make_from_string (name)
-					file_name.set_file_name (l.item)
-					create file.make (file_name)
-					if
-						file.exists and then
-						not file.is_symlink and then
-						file.is_directory
-					then
-							-- Start the recursion
-						create dir.make (file_name)
-						dir.recursive_delete
-					else
-						if file.exists and then file.is_writable then
-							file.delete
-						end
-					end
-				end
-				l.forth
-			end
+			delete_content_with_action (Void, Void, 0)
 		end
 
 	recursive_delete
@@ -436,14 +518,13 @@ feature -- Removal
 		require
 			directory_exists: exists
 		do
-			{SYSTEM_DIRECTORY}.delete_string_boolean (name.to_cil, True)
+			{SYSTEM_DIRECTORY}.delete_string_boolean (internal_name.to_cil, True)
 		end
 
 	delete_content_with_action (
-			action: PROCEDURE [ANY, TUPLE]
-			is_cancel_requested: FUNCTION [ANY, TUPLE, BOOLEAN]
+			action: detachable PROCEDURE [ANY, TUPLE [LIST [READABLE_STRING_GENERAL]]]
+			is_cancel_requested: detachable FUNCTION [ANY, TUPLE, BOOLEAN]
 			file_number: INTEGER)
-
 			-- Delete all files located in current directory and its
 			-- subdirectories.
 			--
@@ -458,84 +539,79 @@ feature -- Removal
 			directory_exists: exists
 			valid_file_number: file_number > 0
 		local
-			l: LINEAR [STRING]
-			file_name: FILE_NAME
-			file: RAW_FILE
-			dir: DIRECTORY
+			l_path, l_file_name: PATH
+			file: detachable RAW_FILE
+			dir: detachable DIRECTORY
+			dir_temp: DIRECTORY
+			l_name: detachable STRING_32
 			file_count: INTEGER
-			deleted_files: ARRAYED_LIST [STRING]
-			deleted_files_tuple: TUPLE [ARRAYED_LIST [STRING]]
-			current_directory: STRING
-			parent_directory: STRING
+			deleted_files: ARRAYED_LIST [READABLE_STRING_32]
 			requested_cancel: BOOLEAN
 		do
 			file_count := 1
 			create deleted_files.make (file_number)
-			create deleted_files_tuple
 
-			l := linear_representation
-			current_directory := "."
-			parent_directory := ".."
 			from
-				l.start
+					-- Create a new directory that we will use to list all of its content.
+				create dir_temp.make_open_read (internal_name)
+				dir_temp.start
+				dir_temp.readentry
+				l_name := dir_temp.last_entry_32
+				l_path := path
 			until
-				l.after or requested_cancel
+				l_name = Void or requested_cancel
 			loop
-				if
-					not l.item.is_equal (current_directory) and
-					not l.item.is_equal (parent_directory)
-				then
-					create file_name.make_from_string (name)
-					file_name.set_file_name (l.item)
-					create file.make (file_name)
-					if
-						file.exists and then
-						not file.is_symlink and then
-						file.is_directory
-					then
-							-- Start the recursion
-						create dir.make (file_name)
-						dir.recursive_delete_with_action (action, is_cancel_requested, file_number)
-					else
-						if file.exists and then file.is_writable then
+					-- Ignore current and parent directories.
+				if (not l_name.same_string (current_directory_string) and not l_name.same_string (parent_directory_string)) then
+						-- Avoid creating too many objects.
+					l_file_name := l_path.extended (l_name)
+					create file.make_with_path (l_file_name)
+					if file.exists then
+						if not file.is_symlink and then file.is_directory then
+								-- Start the recursion for true directory, we do not follow links to delete their content.
+							if dir /= Void then
+								dir.make_with_path (l_file_name)
+							else
+								create dir.make_with_path (l_file_name)
+							end
+							dir.recursive_delete_with_action (action, is_cancel_requested, file_number)
+						elseif file.is_writable then
 							file.delete
 						end
-					end
-						-- Add the name of the deleted file to our array
-						-- of deleted files.
-					deleted_files.extend (file_name)
-					file_count := file_count + 1
 
-						-- If `file_number' has been reached, call `action'.
-					if file_count > file_number then
-						if action /= Void then
-							deleted_files_tuple.put (deleted_files, 1)
-							action.call (deleted_files_tuple)
+							-- Add the name of the deleted file to our array
+							-- of deleted files.
+						deleted_files.extend (l_file_name.name)
+						file_count := file_count + 1
+
+							-- If `file_number' has been reached, call `action'.
+						if file_count > file_number then
+							if action /= Void then
+								action.call ([deleted_files])
+							end
+							if is_cancel_requested /= Void then
+								requested_cancel := is_cancel_requested.item (Void)
+							end
+							deleted_files.wipe_out
+							file_count := 1
 						end
-						if is_cancel_requested /= Void then
-							requested_cancel := is_cancel_requested.item ([])
-						end
-						deleted_files.wipe_out
-						file_count := 1
 					end
 				end
-				l.forth
+				dir_temp.readentry
+				l_name := dir_temp.last_entry_32
 			end
+			dir_temp.close
+
 				-- If there is more than one deleted file and no
 				-- agent has been called, call one now.
-			if file_count > 1 then
-				if action /= Void then
-					deleted_files_tuple.put (deleted_files, 1)
-					action.call (deleted_files_tuple)
-				end
-				deleted_files.wipe_out
-				file_count := 1
+			if file_count > 1 and action /= Void then
+				action.call ([deleted_files])
 			end
 		end
 
 	recursive_delete_with_action (
-			action: PROCEDURE [ANY, TUPLE]
-			is_cancel_requested: FUNCTION [ANY, TUPLE, BOOLEAN]
+			action: detachable PROCEDURE [ANY, TUPLE [LIST [READABLE_STRING_GENERAL]]]
+			is_cancel_requested: detachable FUNCTION [ANY, TUPLE, BOOLEAN]
 			file_number: INTEGER)
 
 			-- Delete directory, its files and its subdirectories.
@@ -545,16 +621,16 @@ feature -- Removal
 		require
 			directory_exists: exists
 		local
-			deleted_files: ARRAYED_LIST [STRING]
+			deleted_files: ARRAYED_LIST [READABLE_STRING_GENERAL]
 		do
 			delete_content_with_action (action, is_cancel_requested, file_number)
-			if (is_cancel_requested = Void) or else (not is_cancel_requested.item ([])) then
+			if (is_cancel_requested = Void) or else (not is_cancel_requested.item (Void)) then
 				delete
 
 					-- Call the agent with the name of the directory
 				if action /= Void then
 					create deleted_files.make (1)
-					deleted_files.extend (name)
+					deleted_files.extend (internal_name)
 					action.call ([deleted_files])
 				end
 			end
@@ -570,10 +646,25 @@ feature -- Removal
 
 feature {DIRECTORY} -- Implementation
 
+	directory_listing: detachable NATIVE_ARRAY [detachable SYSTEM_STRING]
+			-- Directory pointer as required in C
+
 	search_index: INTEGER
 			-- Position in the list of entries
 
 feature {NONE} -- Implementation
+
+	set_name (a_name: READABLE_STRING_GENERAL)
+			-- Set `name' with `a_name'.
+		do
+			internal_name := a_name
+		ensure
+			name_set: internal_name = a_name
+		end
+
+	internal_name: READABLE_STRING_GENERAL
+			-- Store the name of the file as it was given to us by the user
+			-- to avoid conversion on storing as it is not necessary.
 
 	mode: INTEGER
 			-- Status mode of the directory.
@@ -581,18 +672,25 @@ feature {NONE} -- Implementation
 
 	Close_directory: INTEGER = 1
 
-	Read_directory: INTEGER = 2;
+	Read_directory: INTEGER = 2
+
+	current_directory_string: STRING = "."
+	parent_directory_string: STRING = ".."
+			-- Constants to represent current (".") and parent ("..") directory.
+
+invariant
+	name_attached: attached internal_name
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

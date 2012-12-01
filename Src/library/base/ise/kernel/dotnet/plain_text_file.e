@@ -21,8 +21,8 @@ inherit
 		end
 
 create
-
-	make, make_with_name, make_open_read, make_open_write, make_open_append,
+	make, make_with_path,
+	make_with_name, make_open_read, make_open_write, make_open_append,
 	make_open_read_write, make_create_read_write,
 	make_open_read_append
 

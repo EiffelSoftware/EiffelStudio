@@ -53,26 +53,26 @@ create {STD_FILES}
 
 feature -- Initialization
 
-	make_open_stdin (fn: STRING)
+	make_open_stdin (fn: READABLE_STRING_GENERAL)
 			-- Create an unix standard input file.
 		do
-			make (fn)
+			make_with_name (fn)
 			internal_stream := {SYSTEM_CONSOLE}.open_standard_input
 			set_read_mode
 		end
 
-	make_open_stdout (fn: STRING)
+	make_open_stdout (fn: READABLE_STRING_GENERAL)
 			-- Create an unix standard output file.
 		do
-			make (fn)
+			make_with_name (fn)
 			internal_stream := {SYSTEM_CONSOLE}.open_standard_output
 			set_write_mode
 		end
 
-	make_open_stderr (fn: STRING)
+	make_open_stderr (fn: READABLE_STRING_GENERAL)
 			-- Create an unix standard error file.
 		do
-			make (fn)
+			make_with_name (fn)
 			internal_stream := {SYSTEM_CONSOLE}.open_standard_error
 			set_write_mode
 		end
@@ -251,14 +251,14 @@ feature {NONE} -- Inapplicable
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

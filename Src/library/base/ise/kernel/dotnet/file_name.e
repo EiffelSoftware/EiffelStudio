@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	make_temporary_name
 			-- Create a temporary filename.
 		do
-			make_from_cil ({PATH}.get_temp_file_name)
+			make_from_cil ({SYSTEM_PATH}.get_temp_file_name)
 		end
 
 feature -- Status report
@@ -55,7 +55,7 @@ feature -- Status setting
 			ch: CHARACTER
 		do
 			if not is_empty then
-				ch := {PATH}.directory_separator_char
+				ch := {SYSTEM_PATH}.directory_separator_char
 				if item (count) /= ch then
 					append_character (ch)
 				end
@@ -86,14 +86,14 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

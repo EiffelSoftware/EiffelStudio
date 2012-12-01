@@ -97,6 +97,7 @@ appl_make: "$appl.exe: $appl.lnk $appl.res%N%
 %%Trc -r -fo$appl.res ..\..\..\$appl.rc%N%
 %%N%
 %$appl.lnk: $(OBJECTS) e1\emain.obj $appl.res Makefile%N%
+%%Tif exist $@ $(RM) $@%N%
 %%T@chcp 65001 > nul%N%
 %%T@echo ﻿ > $@%N%
 %%T@echo $(LDFLAGS) $(CCLDFLAGS) -OUT:$appl.exe >> $@%N%

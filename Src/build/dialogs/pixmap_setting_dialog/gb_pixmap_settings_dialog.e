@@ -668,7 +668,7 @@ feature {NONE} -- Implementation
 				until
 					files.off
 				loop
-					current_filename := files.item.name
+					current_filename := files.item.name.as_string_8
 					filename_ext := current_filename.substring (current_filename.substring_index (".", 1) + 1, current_filename.count)
 					if supported_types.has (filename_ext.as_upper) then
 						create pixmap

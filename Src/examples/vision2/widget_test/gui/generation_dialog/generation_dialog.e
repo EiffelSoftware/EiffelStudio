@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 		local
 			directory: DIRECTORY
 			contents: ARRAYED_LIST [PATH]
-			clashing_files: STRING
+			clashing_files: STRING_32
 			warning_dialog: WARNING_DIALOG
 			supress_generation: BOOLEAN
 		do
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			end
 
 			if not clashing_files.is_empty then
-				clashing_files := "Conflict found in directory " + directory.path.name +
+				clashing_files := {STRING_32} "Conflict found in directory " + directory.path.name +
 				"%NThe following files already exist:%N%N" + clashing_files +
 				"%N%NDo you wish to overwrite these files?"
 				create warning_dialog.make_with_text (clashing_files)

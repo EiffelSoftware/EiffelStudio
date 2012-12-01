@@ -27,7 +27,7 @@ inherit
 			project
 		end
 
-	EXECUTION_ENVIRONMENT_32
+	EXECUTION_ENVIRONMENT
 
 create
 	make_with_context
@@ -42,12 +42,12 @@ feature {NONE} -- Initialization
 	make_with_context (a_world: EV_MODEL_WORLD; a_context: EV_PRINT_CONTEXT)
 		do
 			if a_context.output_to_file then
-				create {STRING_32} filename.make_from_string (a_context.file_name)
+				filename := a_context.file_path
 			else -- Printing via lpr
 				-- Printing directly using lpr spooler
-				create {STRING_32} filename.make_from_string (tmp_print_job_name)
+				create filename.make_from_string (tmp_print_job_name)
 			end
-			make_with_filename (a_world, filename)
+			make_with_path (a_world, filename)
 			make
 		end
 
@@ -66,13 +66,13 @@ feature {EV_ANY_I} -- Access
 			-- Make a standard projection of the world on the device.
 		local
 			i: INTEGER
-			a_cs: C_STRING
+			a_cs: MANAGED_POINTER
 		do
 			if not attached_interface.context.output_to_file then
 				-- Create the named pipe
-				create a_cs.make (filename)
+				a_cs := filename.to_pointer
 				i := mkfifo (a_cs.item, S_IRWXU)
-				system ({STRING_32} "lpr < " + filename.as_string_32 + {STRING_32} " &")
+				system ({STRING_32} "lpr < " + filename.name + {STRING_32} " &")
 			end
 				-- Print the file using the postscript projector.
 			Precursor {EV_MODEL_POSTSCRIPT_PROJECTOR}

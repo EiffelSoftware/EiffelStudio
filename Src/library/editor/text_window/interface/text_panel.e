@@ -210,13 +210,13 @@ feature -- Access
 	text_displayed: TEXT
 			-- Text currently displayed on the screen.
 
-	file_name: detachable STRING_32
+	file_name: detachable FILE_NAME
 			-- Name of the currently opened file, if any.
 		obsolete
-			"Use `file_path' instead."
+			"Use `file_path' instead as content could be truncated for Unicode paths."
 		do
 			if attached file_path as l_path then
-				Result := l_path.name
+				create Result.make_from_string (l_path.name.as_string_8)
 			end
 		end
 

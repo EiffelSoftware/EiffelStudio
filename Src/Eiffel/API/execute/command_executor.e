@@ -52,7 +52,7 @@ feature -- Command Execution
 			command: STRING_32
 			l_prc_factory: PROCESS_FACTORY
 			l_prc_launcher: PROCESS
-			wd: detachable STRING_32
+			wd: detachable READABLE_STRING_GENERAL
 		do
 			create command.make_empty
 			command.append_string_general (appl_name)

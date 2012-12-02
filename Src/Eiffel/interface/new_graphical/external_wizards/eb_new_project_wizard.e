@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_file (a_filename: FILE_NAME_32)
+	make_with_file (a_filename: PATH)
 			-- Load the command from the description file named
 			-- `a_filename'.
 			--
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			file: PLAIN_TEXT_FILE
 			entry: TUPLE [name: STRING_32; value: STRING_32]
 		do
-			create file.make_with_name (a_filename)
+			create file.make_with_path (a_filename)
 			from
 				file.open_read
 			until
@@ -50,8 +50,7 @@ feature {NONE} -- Initialization
 					elseif entry.name.is_equal ("description") then
 						set_description (wrap_word (entry.value, 70))
 					elseif entry.name.is_equal ("location") then
-						create location.make_from_path (eiffel_layout.new_project_wizards_path)
-						location.extend (entry.value)
+						location := eiffel_layout.new_project_wizards_path.extended (entry.value)
 					elseif entry.name.is_equal ("platform") then
 						target_platform := entry.value.as_lower
 					end

@@ -333,7 +333,7 @@ feature -- Status setting
 					end
 				else
 					create vd21
-					vd21.set_file_name (l_user_factory.last_file_name)
+					vd21.set_file_name (l_user_factory.last_file_name.name)
 					Error_handler.insert_error (vd21)
 					Error_handler.raise_error
 				end

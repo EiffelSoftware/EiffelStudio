@@ -202,7 +202,7 @@ feature -- Storage
 			tool_descriptors.wipe_out
 			create l_callback.make
 			clear_last_error
-			l_desp_tuple := items_from_file (tool_file, l_callback, agent l_callback.tools, agent l_callback.last_error, agent set_last_error (create{EB_METRIC_ERROR}.make (metric_names.err_file_not_readable (tool_file))))
+			l_desp_tuple := items_from_file_path (tool_file, l_callback, agent l_callback.tools, agent l_callback.last_error, agent set_last_error (create{EB_METRIC_ERROR}.make (metric_names.err_file_not_readable (tool_file.name))))
 			if last_error = Void then
 				set_last_error (l_desp_tuple.error)
 			end
@@ -251,10 +251,10 @@ feature{NONE} -- Implementation
 	tool_file_name: STRING = "tools.xml"
 			-- File name of customized tool definition xml
 
-	tool_file: READABLE_STRING_GENERAL
+	tool_file: PATH
 			-- File including path of customized tool definition xml
 		do
-			Result := absolute_file_name (global_file_path, tool_file_name)
+			Result := global_file_path.extended (tool_file_name)
 		end
 
 	change_actions_internal: like change_actions

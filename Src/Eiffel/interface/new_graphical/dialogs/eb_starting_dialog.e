@@ -447,7 +447,7 @@ feature {NONE} -- Implementation
 			entries: ARRAYED_LIST [STRING_32]
 			extension: STRING_32
 			wizard: EB_NEW_PROJECT_WIZARD
-			filename: FILE_NAME_32
+			filename: PATH
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -463,9 +463,8 @@ feature {NONE} -- Implementation
 					extension := entries.item.twin
 					extension.keep_tail(4)
 
-					if extension.is_equal ({STRING_32} ".dsc") then
-						create filename.make_from_path (eiffel_layout.new_project_wizards_path)
-						filename.extend (entries.item)
+					if extension.same_string (".dsc") then
+						filename := eiffel_layout.new_project_wizards_path.extended (entries.item)
 						create wizard.make_with_file (filename)
 						if wizard.target_platform_supported then
 							available_wizards.extend (wizard)

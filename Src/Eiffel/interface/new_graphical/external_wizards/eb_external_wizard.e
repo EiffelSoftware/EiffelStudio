@@ -41,7 +41,7 @@ feature -- Execution
 	execute
 			-- Execute the wizard
 		local
-			temp_filename: FILE_NAME_32
+			temp_filename: FILE_NAME
 			temp_file: PLAIN_TEXT_FILE
 			wizard_launched: BOOLEAN
 		do
@@ -75,41 +75,38 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	launch_wizard (callback_filename: STRING_32)
+	launch_wizard (callback_filename: READABLE_STRING_GENERAL)
 			-- Launch the wizard using the file `callback_filename' as callback.
 		local
-			wizard_exec_filename: FILE_NAME_32
+			wizard_exec_filename: PATH
 			wizard_exec_file: RAW_FILE
 			wizard_command: STRING_32
 			f: PROCESS_FACTORY
 			p: PROCESS
 		do
-			create wizard_exec_filename.make_from_string (location)
-			wizard_exec_filename.extend ("spec")
-			wizard_exec_filename.extend (eiffel_layout.eiffel_platform)
-			wizard_exec_filename.set_file_name ("wizard" + eiffel_layout.executable_suffix)
+			wizard_exec_filename := location.extended ("spec").extended (eiffel_layout.eiffel_platform).extended ("wizard" + eiffel_layout.executable_suffix)
 
-			create wizard_exec_file.make_with_name (wizard_exec_filename.to_string_32)
+			create wizard_exec_file.make_with_path (wizard_exec_filename)
 			if not (wizard_exec_file.exists and then wizard_exec_file.is_executable) then
-				set_error_message (Warning_messages.w_Unable_to_execute_wizard (wizard_exec_filename))
+				set_error_message (Warning_messages.w_Unable_to_execute_wizard (wizard_exec_filename.name))
 				(create {EXCEPTIONS}).raise (Interface_names.Workbench_name+" Exception")
 			end
 
 			create wizard_command.make_empty
-			wizard_command.append_string (wizard_exec_filename)
+			wizard_command.append_string (wizard_exec_filename.name)
 				-- Use current directory as a source one to avoid issues with Unicode paths.
 			wizard_command.append_string ({STRING_32} " . ")
 			wizard_command.append_string (locale.info.id.name)
 			wizard_command.append_string ({STRING_32} " -callback %"")
-			wizard_command.append_string (callback_filename)
+			wizard_command.append_string_general (callback_filename)
 			wizard_command.append_character ('"')
 			create f
-			p := f.process_launcher_with_command_line (wizard_command, location)
+			p := f.process_launcher_with_command_line (wizard_command, location.name)
 			p.launch
 			wait_for_finish (callback_filename)
 		end
 
-	wait_for_finish (callback_filename: STRING_32)
+	wait_for_finish (callback_filename: READABLE_STRING_GENERAL)
 			-- Wait for the end of the Wizard, and collect the results.
 		local
 			retry_count: INTEGER
@@ -208,7 +205,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Private attributes
 
-	location: DIRECTORY_NAME_32;
+	location: PATH;
 			-- Location of this wizard.
 
 note

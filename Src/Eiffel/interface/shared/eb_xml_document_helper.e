@@ -163,20 +163,6 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	absolute_file_name (a_path: READABLE_STRING_GENERAL; a_file_name: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
-			-- File name (with absolute path) whose relative path is `a_path' (`a_path' has the "formatters" sub-path part) and `file_name' part specified by `a_file_name'
-		require
-			a_path_attached: a_path /= Void
-			a_file_name_attached: a_file_name /= Void
-		local
-			p: PATH
-		do
-			create p.make_from_string (a_path)
-			Result := p.extended (a_file_name).name
-		ensure
-			result_attached: Result /= Void
-		end
-
 feature -- Setting
 
 	store_xml (a_doc: XML_DOCUMENT; a_file: PATH; a_error_agent: PROCEDURE [ANY, TUPLE])

@@ -169,7 +169,6 @@ feature -- Element change
 			-- <Precursor>
 		local
 			l_changed: BOOLEAN
-			l_name: STRING
 		do
 			l_changed := set_variable_internal (a_value, a_name)
 

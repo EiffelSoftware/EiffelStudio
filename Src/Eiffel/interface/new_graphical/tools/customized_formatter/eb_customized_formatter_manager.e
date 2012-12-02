@@ -160,13 +160,12 @@ feature -- Setting
 			-- `a_error_agent' is the agent invoked when error occurs during loading.
 		local
 			l_file: RAW_FILE
-			u: FILE_UTILITIES
 		do
 			formatter_descriptors.wipe_out
 
 			load_formatters (global_formatter_file, True, a_error_agent)
 			if workbench.universe_defined then
-				l_file := u.make_raw_file (target_formatter_file)
+				create l_file.make_with_path (target_formatter_file)
 				if l_file.exists then
 					load_formatters (target_formatter_file, False, a_error_agent)
 				end
@@ -196,9 +195,9 @@ feature -- Setting
 			end
 		end
 
-feature{NONE} -- Implementation
+feature {NONE} -- Implementation
 
-	load_formatters (a_file: READABLE_STRING_GENERAL; a_global: BOOLEAN; a_error_agent: PROCEDURE [ANY, TUPLE])
+	load_formatters (a_file: PATH; a_global: BOOLEAN; a_error_agent: PROCEDURE [ANY, TUPLE])
 			-- Load formatters contained in file `a_file' and mark loaded formatters as of global scope if `a_global' is True,
 			-- otherwise as of target scope.
 			-- If error occurs, call `a_error_agent'.
@@ -212,7 +211,7 @@ feature{NONE} -- Implementation
 			create l_callback.make
 			set_is_file_readable (True)
 			clear_last_error
-			l_desp_tuple := items_from_file (a_file, l_callback, agent l_callback.formatters, agent l_callback.last_error, agent set_last_error (create{EB_METRIC_ERROR}.make (metric_names.err_file_not_readable (a_file))))
+			l_desp_tuple := items_from_file_path (a_file, l_callback, agent l_callback.formatters, agent l_callback.last_error, agent set_last_error (create{EB_METRIC_ERROR}.make (metric_names.err_file_not_readable (a_file.name))))
 			l_descriptors := l_desp_tuple.items
 			if not has_error then
 				set_last_error (l_desp_tuple.error)
@@ -247,28 +246,28 @@ feature{NONE} -- Implementation/Data
 	formatter_file_name: STRING = "formatters.xml"
 			-- File name of formatter definition
 
-	target_formatter_file_path: READABLE_STRING_GENERAL
+	target_formatter_file_path: PATH
 			-- Path to store target formatter file
 		require
 			system_defined: workbench.universe_defined
 		do
-			Result := formatter_file_path (project_location.data_path)
+			Result := formatter_file_path (create {PATH}.make_from_string (project_location.data_path))
 		ensure
 			result_attached: Result /= Void
 		end
 
-	global_formatter_file: READABLE_STRING_GENERAL
+	global_formatter_file: PATH
 			-- File to store global customized formatters information
 		do
-			Result := absolute_file_name (global_file_path, formatter_file_name)
+			Result := global_file_path.extended (formatter_file_name)
 		end
 
-	target_formatter_file: READABLE_STRING_GENERAL
+	target_formatter_file: PATH
 			-- File to store target customized formatters information
 		require
 			system_defined: workbench.universe_defined
 		do
-			Result := absolute_file_name (target_formatter_file_path, formatter_file_name)
+			Result := target_formatter_file_path.extended (formatter_file_name)
 		end
 
 	change_actions_internal: like change_actions;

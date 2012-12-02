@@ -42,7 +42,7 @@ feature -- Basic Operations
 			-- Show help with context `a_help_context'.
 		local
 			cmd: STRING_32
-			url: FILE_NAME_32
+			url: PATH
 			exists: BOOLEAN
 		do
 			cmd := preferences.misc_data.internet_browser_preference.string_value
@@ -52,20 +52,17 @@ feature -- Basic Operations
 				last_show_successful := False
 			else
 				cmd.append_character (' ')
-				create url.make_from_path (eiffel_layout.docs_path)
-				url.set_file_name (a_help_context.url)
-				if (create {DIRECTORY}.make (url)).exists then
-					url.set_file_name ("index")
-					url.add_extension ("html")
+				url := eiffel_layout.docs_path.extended (a_help_context.url)
+				if (create {DIRECTORY}.make_with_path (url)).exists then
+					url := url.extended ("index.html")
 				end
-				exists := (create {RAW_FILE}.make_with_name (url)).exists
+				exists := (create {RAW_FILE}.make_with_path (url)).exists
 				if exists then
-					cmd.replace_substring_all ("$url", url)
+					cmd.replace_substring_all ("$url", url.name)
 					(create {EXECUTION_ENVIRONMENT}).launch (cmd)
 					last_show_successful := True
 				else
 					last_show_successful := False
-
 				end
 			end
 			if last_show_successful then

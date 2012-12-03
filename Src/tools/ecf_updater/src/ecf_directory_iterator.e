@@ -1,6 +1,8 @@
 note
-	description: "Summary description for {REGEXP_DIRECTORY_ITERATOR}."
-	author: ""
+	description: "[
+				Iterator on .ecf files
+				It iterates recursively on directory and process .ecf files
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,6 +12,7 @@ class
 inherit
 	DIRECTORY_ITERATOR
 		redefine
+			path_excluded,
 			directory_excluded,
 			file_excluded,
 			process_file
@@ -25,26 +28,40 @@ feature {NONE} -- Initialization
 			action := a_action
 		end
 
-	action: PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]]
+	action: PROCEDURE [ANY, TUPLE [PATH]]
 
 feature -- Visitor
 
-	process_file (fn: READABLE_STRING_GENERAL)
+	process_file (fn: PATH)
 		do
 			action.call ([fn])
 		end
 
 feature -- Status
 
-	directory_excluded (dn: READABLE_STRING_GENERAL): BOOLEAN
+	path_excluded (a_path: PATH): BOOLEAN
 		do
-			Result := dn.starts_with (".") or dn.same_string ("EIFGENs")
+			Result := a_path.name.starts_with ({STRING_32} ".")
 		end
 
-	file_excluded (fn: READABLE_STRING_GENERAL): BOOLEAN
+	directory_excluded (dn: PATH): BOOLEAN
+		local
+			s: STRING_32
 		do
-			Result := not fn.ends_with (".ecf")
+			s := dn.name
+			Result := s.starts_with ({STRING_32} ".") or s.same_string (eifgens_string)
 		end
+
+	file_excluded (fn: PATH): BOOLEAN
+		do
+			Result := not fn.name.ends_with (dot_ecf_string)
+		end
+
+feature {NONE} -- Constants
+
+	eifgens_string: STRING_32 = "EIFGENs"
+
+	dot_ecf_string: STRING_32 = ".ecf"
 
 note
 	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"

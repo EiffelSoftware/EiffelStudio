@@ -9,20 +9,20 @@ deferred class
 
 feature -- Access	
 
-	files: LIST [STRING]
+	files: LIST [PATH]
 			-- List of libraries
 		deferred
 		end
 
-	directories: LIST [STRING]
+	directories: LIST [PATH]
 		deferred
 		end
 
-	replacements: detachable LIST [STRING]
+	replacements: detachable LIST [STRING_32]
 		deferred
 		end
 
-	variable_expansions: detachable LIST [STRING]
+	variable_expansions: detachable LIST [STRING_32]
 		deferred
 		end
 
@@ -42,11 +42,11 @@ feature -- Access
 		deferred
 		end
 
-	root_directory: STRING
+	root_directory: PATH
 		deferred
 		end
 
-	base_name: detachable STRING
+	base_name: detachable STRING_32
 		deferred
 		end
 

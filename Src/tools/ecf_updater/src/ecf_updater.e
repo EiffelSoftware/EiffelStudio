@@ -16,6 +16,8 @@ class
 inherit
 	SHARED_FILE_SYSTEM
 
+	LOCALIZED_PRINTER
+
 create
 	make
 
@@ -54,16 +56,24 @@ feature {NONE} -- Initialization
 			diff_enabled := args.diff_enabled
 			verbose := args.verbose
 
-			io.output.put_string ("Root=" + root_directory.as_string_8 + "%N")
+			io.output.put_string ("Root=" )
+			localized_print (root_directory.name)
+			io.output.put_string ("%N")
 			if attached root_base_name as l_base then
-				io.output.put_string ("Base=" + l_base.as_string_8 + "%N")
+				io.output.put_string ("Base=")
+				localized_print (l_base)
+				io.output.put_string ("%N")
 			end
 			if attached replacements as l_replacements then
 				io.output.put_string ("Replacements=")
 				across
 					l_replacements as rpl
 				loop
-					io.output.put_string (" [" + rpl.item.src.as_string_8 + "=" + rpl.item.new.as_string_8 + "]")
+					io.output.put_string (" [")
+					localized_print (rpl.item.src)
+					io.output.put_string ("=")
+					localized_print (rpl.item.new)
+					io.output.put_string ("]")
 				end
 				io.output.put_string ("%N")
 			end
@@ -95,7 +105,7 @@ feature {NONE} -- Initialization
 			if confirmed then
 				create dv.make (agent analyze_ecf)
 				if verbose then
-					report_progress ("Scanning %"" + root_directory.as_string_8 + "%" for .ecf files ...")
+					report_progress ({STRING_32} "Scanning %"" + root_directory.name + {STRING_32} "%" for .ecf files ...")
 				end
 				dv.process_directory (absolute_directory_path (root_directory))
 				if verbose then
@@ -131,7 +141,7 @@ feature {NONE} -- Initialization
 					across
 						warnings as warn
 					loop
-						io.error.put_string (warn.item.as_string_8)
+						localized_print_error (warn.item)
 						io.error.put_new_line
 					end
 				end
@@ -142,7 +152,7 @@ feature {NONE} -- Initialization
 					across
 						errors as err
 					loop
-						io.error.put_string (err.item.as_string_8)
+						localized_print_error (err.item)
 						io.error.put_new_line
 					end
 				end
@@ -153,11 +163,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	root_directory: READABLE_STRING_GENERAL
+	root_directory: PATH
 			-- Root directory of the collection of lib
 			-- or as reference for an environment variable
 
-	root_base_name: detachable READABLE_STRING_GENERAL
+	root_base_name: detachable STRING_32
 			-- Optional name/path to replace the `root_directory' in .ecf
 
 	ecf_table: HASH_TABLE_EX [attached like path_details, READABLE_STRING_GENERAL]
@@ -197,23 +207,23 @@ feature -- Variable expansions
 			end
 		end
 
-	apply_variable_expansions (s: STRING_8)
+	apply_variable_expansions (s: STRING_32)
 		do
 			if attached variable_expansions as l_variable_expansions then
 				across
 					l_variable_expansions as rpl
 				loop
-					s.replace_substring_all ("$" + rpl.item.src.as_string_8, rpl.item.new.as_string_8)
+					s.replace_substring_all ({STRING_32} "$" + rpl.item.src.to_string_32, rpl.item.new.to_string_32)
 				end
 			end
 		end
 
 feature -- Substitutions	
 
-	replacements: detachable LIST [TUPLE [src,new: READABLE_STRING_GENERAL]]
+	replacements: detachable LIST [TUPLE [src, new: STRING_32]]
 			-- Optional replacements
 
-	add_replacement	(s: READABLE_STRING_GENERAL)
+	add_replacement	(s: STRING_32)
 		local
 			l_replacements: like replacements
 			p: INTEGER
@@ -232,26 +242,25 @@ feature -- Substitutions
 			end
 		end
 
-	apply_replacements (s: STRING_8)
+	apply_replacements (s: STRING_32)
 		do
 			if attached replacements as l_replacements then
 				across
 					l_replacements as rpl
 				loop
-					s.replace_substring_all (rpl.item.src.as_string_8, rpl.item.new.as_string_8)
+					s.replace_substring_all (rpl.item.src, rpl.item.new)
 				end
 			end
 		end
 
 feature -- Basic operation	
 
-	analyze_ecf (a_fn: READABLE_STRING_GENERAL)
+	analyze_ecf (a_fn: PATH)
 		local
 			fn: STRING_GENERAL
 			--lst: like segments_from_string
 		do
-			create {STRING_32} fn.make (a_fn.count)
-			fn := reduced_path (a_fn, 0)
+			fn := reduced_path (a_fn.name, 0)
 			--lst := segments_from_string (a_fn)
 			--append_segments_to_string (lst, fn)
 
@@ -260,23 +269,24 @@ feature -- Basic operation
 			end
 		end
 
-	update_ecf (fn: READABLE_STRING_GENERAL)
+	update_ecf (fn: PATH)
 		local
 			f,bf: detachable RAW_FILE
 			l_line: STRING_8
 			l_new_path: READABLE_STRING_GENERAL
 			p,q: INTEGER
 			l_rn: STRING_32
-			l_ecf: STRING_8
+			l_ecf: STRING_32
 			l_old_content, l_new_content: STRING_32
 		do
-			if attached path_details (fn) as l_info then
-				create l_rn.make_from_string (root_directory.as_string_32)
+			if attached path_details (fn.name) as l_info then
+				l_rn := root_directory.name
 				l_rn.replace_substring_all ("\", "/")
 
-				create f.make (fn.as_string_8)
+				create f.make_with_path (fn)
 				debug
-					print (f.name + "%N")
+					localized_print (f.path.name)
+					print ("%N")
 				end
 				if f.exists and f.is_readable then
 					f.open_read
@@ -293,7 +303,7 @@ feature -- Basic operation
 						if p > 0 and l_line[p + 4] = '"' then
 							q := l_line.last_index_of ('"', p)
 							if q > 0 then
-								l_ecf := l_line.substring (q + 1, p + 3)
+								l_ecf := l_line.substring (q + 1, p + 3).to_string_32
 								if l_line [q + 1] = '$' then
 									if root_base_name /= Void then
 										apply_variable_expansions (l_ecf)
@@ -303,23 +313,25 @@ feature -- Basic operation
 									-- FIXME: check the first segment related to `l_ecf' exists ...
 								else
 									apply_variable_expansions (l_ecf)
-									l_ecf := l_info.dir.as_string_8 + l_ecf
+									l_ecf := l_info.dir.to_string_32 + l_ecf
 								end
 								if l_ecf [1] = '$' then
 --									l_line.replace_substring_all ("\", "/")
 								else
 									if attached ecf_location (l_ecf) as l_location then
-										l_new_path := relative_path (l_location, fn, l_rn, root_base_name)
+										l_new_path := relative_path (l_location, fn.name, l_rn, root_base_name)
 									else
-										l_new_path := relative_path (l_ecf, fn, l_rn, root_base_name)
+										l_new_path := relative_path (l_ecf, fn.name, l_rn, root_base_name)
 									end
 									debug
-										print ("%T" + l_new_path.as_string_8 + "%N")
+										print ("%T")
+										localized_print (l_new_path)
+										print ("%N")
 									end
 									if same_path (l_line.substring (q + 1, p + 3), l_new_path) then
 
 									elseif not l_new_path.is_empty then
-										l_line.replace_substring (l_new_path.as_string_8, q+1, p+3)
+										l_line.replace_substring (l_new_path.to_string_8, q+1, p+3)
 									end
 								end
 
@@ -333,11 +345,11 @@ feature -- Basic operation
 
 					if l_old_content.same_string (l_new_content) then
 						if verbose then
-							report_progress ("No diff for %"" + f.name + "%"")
+							report_progress ({STRING_32} "No diff for %"" + f.path.name + {STRING_32} "%"")
 						end
 					else
 						if backup_enabled then
-							create bf.make (f.name + ".bak")
+							create bf.make_with_path (f.path.appended (".bak"))
 							if not bf.exists or else bf.is_writable then
 								if not is_simulation then
 									bf.create_read_write
@@ -346,9 +358,9 @@ feature -- Basic operation
 									f.close
 									bf.close
 								end
-								report_progress ("Backup %"" + f.name + "%" into %"" + bf.name + "%"")
+								report_progress ({STRING_32} "Backup %"" + f.path.name + {STRING_32} "%" into %"" + bf.path.name + {STRING_32} "%"")
 							else
-								report_error ("could not backup %"" + f.name + "%" into %"" + bf.name + "%"")
+								report_error ({STRING_32} "could not backup %"" + f.path.name + {STRING_32} "%" into %"" + bf.path.name + {STRING_32} "%"")
 								io.error.put_new_line
 								bf := Void
 							end
@@ -357,7 +369,7 @@ feature -- Basic operation
 						if f.is_writable then
 							if not is_simulation or else verbose then
 								if backup_enabled and bf = Void then
-									report_error ("could not backup %"" + f.name + "%".")
+									report_error ({STRING_32} "could not backup %"" + f.path.name + {STRING_32} "%".")
 									-- Skip this file
 								else
 									if not is_simulation then
@@ -365,11 +377,11 @@ feature -- Basic operation
 										f.put_string (l_new_content.as_string_8)
 										f.close
 									end
-									report_progress ("Updated %"" + f.name + "%"")
+									report_progress ({STRING_32} "Updated %"" + f.path.name + {STRING_32} "%"")
 								end
 							end
 						else
-							report_error ("could not update %"" + f.name + "%" (not writable)")
+							report_error ({STRING_32} "could not update %"" + f.path.name + {STRING_32} "%" (not writable)")
 						end
 
 						if
@@ -377,7 +389,7 @@ feature -- Basic operation
 							attached diff (l_old_content, l_new_content) as l_diff
 						then
 							if is_simulation and not verbose then
-								report_progress ("Updated %"" + f.name + "%"")
+								report_progress ("Updated %"" + f.path.name + "%"")
 							end
 							io.output.put_string (l_diff.as_string_8)
 							io.output.put_new_line
@@ -406,8 +418,8 @@ feature -- Basic operation
 		do
 			create s1.make_from_string (p1.as_string_32)
 			create s2.make_from_string (p2.as_string_32)
-			s1.replace_substring_all ("\", "/")
-			s2.replace_substring_all ("\", "/")
+			s1.replace_substring_all ({STRING_32} "\", {STRING_32} "/")
+			s2.replace_substring_all ({STRING_32} "\", {STRING_32} "/")
 			Result := s1.same_string (s2)
 		end
 
@@ -416,20 +428,20 @@ feature {NONE} -- Implementation
 	report_warning (m: READABLE_STRING_GENERAL)
 		do
 			warnings.extend (m)
-			io.error.put_string ("[Warning] " + m.as_string_8)
+			localized_print ({STRING_32} "[Warning] " + m.to_string_32)
 			io.error.put_new_line
 		end
 
 	report_progress (m: READABLE_STRING_GENERAL)
 		do
-			io.output.put_string (m.as_string_8)
+			localized_print (m)
 			io.output.put_new_line
 		end
 
 	report_error (m: READABLE_STRING_GENERAL)
 		do
 			errors.extend (m)
-			io.error.put_string ("[Error] " + m.as_string_8)
+			localized_print_error ({STRING_32} "[Error] " + m.to_string_32)
 			io.error.put_new_line
 		end
 
@@ -487,7 +499,7 @@ feature {NONE} -- Implementation
 			end
 			if Result = Void then
 				if not file_system.file_exists (l_ecf) then
-					report_warning ("Unable to find %"" + a_ecf.as_string_8 + "%"")
+					report_warning ({STRING_32} "Unable to find %"" + a_ecf.to_string_32 + {STRING_32} "%"")
 				end
 			end
 		end
@@ -570,7 +582,7 @@ feature {NONE} -- Implementation
 				l_dir := ""
 			end
 			if l_file /= Void then
-				create f.make (fn.as_string_8)
+				create f.make_with_name (fn)
 				if f.exists and then f.is_readable then
 					f.open_read
 					from
@@ -592,7 +604,7 @@ feature {NONE} -- Implementation
 					f.close
 					if verbose and l_uuid = Void then
 --						check has_uuid: l_uuid /= Void end
-						report_warning ("No UUID in %"" + fn.as_string_8 + "%"")
+						report_warning ("No UUID in %"" + fn.to_string_8 + "%"")
 					end
 				end
 				Result := [l_uuid, segments_from_string (l_dir), l_dir, l_file]
@@ -705,9 +717,9 @@ feature {NONE} -- Path manipulation
 			Result := lst
 		end
 
-	absolute_directory_path (dn: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
+	absolute_directory_path (dn: PATH): PATH
 		do
-			Result := reduced_path (file_system.absolute_directory_path (dn), 0)
+			create Result.make_from_string (reduced_path (dn.absolute_path.name, 0))
 		end
 
 note

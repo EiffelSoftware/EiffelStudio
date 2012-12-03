@@ -1407,13 +1407,14 @@ feature -- Expressions storage management
 	internal_default_watches_storage_folder: like default_watches_storage_folder
 			-- Cached value of `default_watches_storage_folder'
 
-	default_watches_storage_filename: STRING
+	default_watches_storage_filename: detachable PATH
 		local
 			retried: BOOLEAN
 		do
 			if not retried then
-				if attached system.eiffel_project.project_location.location as d then
-					Result := system.eiffel_project.project_location.target + "-watch#" + watch_id.out + ".txt"
+				if attached system.eiffel_project.project_location as ploc then
+					create Result.make_from_string (ploc.location)
+					Result := Result.extended (ploc.target + "-watch#" + watch_id.out + ".txt")
 				end
 			end
 		rescue
@@ -1523,7 +1524,7 @@ feature -- Expressions storage management
 				if attached default_watches_storage_folder as d then
 					f_dlg.set_start_directory (d)
 					if attached default_watches_storage_filename as n then
-						f_dlg.set_file_name (n)
+						f_dlg.set_full_file_path (n)
 					end
 				end
 				f_dlg.show_modal_to_window (parent_window)
@@ -1552,7 +1553,7 @@ feature -- Expressions storage management
 			if attached default_watches_storage_folder as d then
 				f_dlg.set_start_directory (d)
 				if attached default_watches_storage_filename as n then
-					f_dlg.set_file_name (n)
+					f_dlg.set_full_file_path (n)
 				end
 			end
 

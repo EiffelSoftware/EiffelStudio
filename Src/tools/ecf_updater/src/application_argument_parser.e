@@ -38,11 +38,10 @@ feature -- Access
 			Result := "Copyright Eiffel Software 2011-2012. All Rights Reserved."
 		end
 
-	files: LIST [STRING]
+	files: LIST [PATH]
 			-- List of files to resave
 		local
 			l_options: like values
-			l_result: ARRAYED_LIST [attached STRING]
 		once
 			l_options := values.twin
 			from l_options.start until l_options.after loop
@@ -52,16 +51,17 @@ feature -- Access
 					l_options.forth
 				end
 			end
-			create l_result.make (l_options.count)
-			l_options.do_all (agent l_result.force)
-			Result := l_result
+			create {ARRAYED_LIST [PATH]} Result.make (l_options.count)
+			l_options.do_all (agent (s: STRING_8; res: LIST [PATH])
+					do
+						res.force (create {PATH}.make_from_string (s))
+					end (?, Result))
 		end
 
-	directories: LIST [STRING]
+	directories: LIST [PATH]
 			-- List of directories to locate ecfs in
 		local
 			l_options: like values
-			l_result: ARRAYED_LIST [attached STRING]
 		once
 			l_options := values.twin
 			from l_options.start until l_options.after loop
@@ -71,42 +71,44 @@ feature -- Access
 					l_options.forth
 				end
 			end
-			create l_result.make (l_options.count)
-			l_options.do_all (agent l_result.force)
-			Result := l_result
+			create {ARRAYED_LIST [PATH]} Result.make (l_options.count)
+			l_options.do_all (agent (s: STRING_8; res: LIST [PATH])
+					do
+						res.force (create {PATH}.make_from_string (s))
+					end (?, Result))
 		end
 
-	replacements: detachable LIST [STRING]
+	replacements: detachable LIST [STRING_32]
 			-- List of replacements
 		once
 			if
 				has_option (replace_switch) and then
 				attached options_of_name (replace_switch) as opts and then not opts.is_empty
 			then
-				create {ARRAYED_LIST [STRING]} Result.make (opts.count)
+				create {ARRAYED_LIST [STRING_32]} Result.make (opts.count)
 				across
 					opts as c
 				loop
 					if c.item.has_value then
-						Result.force (c.item.value)
+						Result.force (c.item.value.to_string_32)
 					end
 				end
 			end
 		end
 
-	variable_expansions: detachable LIST [STRING]
+	variable_expansions: detachable LIST [STRING_32]
 			-- List of variable expansions
 		once
 			if
 				has_option (variable_expansions_switch) and then
 				attached options_of_name (variable_expansions_switch) as opts and then not opts.is_empty
 			then
-				create {ARRAYED_LIST [STRING]} Result.make (opts.count)
+				create {ARRAYED_LIST [STRING_32]} Result.make (opts.count)
 				across
 					opts as c
 				loop
 					if c.item.has_value then
-						Result.force (c.item.value)
+						Result.force (c.item.value.to_string_32)
 					end
 				end
 			end
@@ -144,16 +146,16 @@ feature -- Access
 			Result := has_option (verbose_switch)
 		end
 
-	root_directory: STRING
+	root_directory: PATH
 		once
 			if has_option (root_switch) and then attached option_of_name (root_switch) as o and then o.has_value then
-				Result := o.value
+				create Result.make_from_string (o.value)
 			else
-				Result := current_working_directory -- Current working directory
+				Result := current_working_path -- Current working directory
 			end
 		end
 
-	base_name: detachable STRING
+	base_name: detachable STRING_32
 		once
 			if has_option (eiffel_library_switch) then
 				Result := "$EIFFEL_LIBRARY"
@@ -182,7 +184,7 @@ feature {NONE} -- Usage
 			Result := {APPLICATION_CONSTANTS}.executable_name
 		end
 
-	version: attached STRING
+	version: STRING
 			--  <Precursor>
 		once
 			create Result.make (5)
@@ -193,7 +195,7 @@ feature {NONE} -- Usage
 
 feature {NONE} -- Switches
 
-	switches: attached ARRAYED_LIST [attached ARGUMENT_SWITCH]
+	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
 		once
 			create Result.make (12)
@@ -235,9 +237,9 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-	current_working_directory: STRING
+	current_working_path: PATH
 		do
-			Result := exec_env.current_working_directory
+			Result := exec_env.current_working_path
 		end
 
 ;note

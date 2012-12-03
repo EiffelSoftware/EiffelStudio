@@ -1,6 +1,7 @@
 note
-	description: "Summary description for {DIRECTORY_VISITOR}."
-	author: ""
+	description: "[
+				Directory and File visitor
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,11 +10,17 @@ deferred class
 
 feature -- Visitor
 
-	process_directory (dn: READABLE_STRING_GENERAL)
+	process_directory (dn: PATH)
+			-- Visit directory `dn'	
+		require
+			dn_exists: (create {DIRECTORY}.make_with_path (dn)).exists
 		deferred
 		end
 
-	process_file (fn: READABLE_STRING_GENERAL)
+	process_file (fn: PATH)
+			-- Visit file `fn'
+		require
+			fn_exists: (create {RAW_FILE}.make_with_path (fn)).exists
 		deferred
 		end
 

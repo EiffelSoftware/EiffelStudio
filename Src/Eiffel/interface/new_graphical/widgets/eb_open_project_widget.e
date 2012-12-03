@@ -1104,11 +1104,9 @@ feature {NONE} -- Actions
 	on_location_changed
 			-- Perform location validation.
 		local
-			l_location: STRING
 			l_dir: DIRECTORY
 		do
-			l_location := location_combo.text
-			create l_dir.make (l_location)
+			create l_dir.make_with_path (create {PATH}.make_from_string (location_combo.text))
 			if not l_dir.exists then
 				location_combo.set_foreground_color (red_color)
 			else

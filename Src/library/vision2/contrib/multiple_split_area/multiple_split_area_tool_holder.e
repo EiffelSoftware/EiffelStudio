@@ -355,7 +355,7 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 			end
 			parent_area.all_holders.prune_all (Current)
 			dialog.destroy
-			locked_in_here := attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
+			locked_in_here := attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
 			if locked_in_here then
 				original_parent_window := parent_window (parent_area)
 				if original_parent_window /= Void then
@@ -445,7 +445,7 @@ feature {NONE} -- Implementation
 			l_data: detachable ANY
 		do
 			original_position := parent_area.linear_representation.index_of (tool, 1)
-			locked_in_here := attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
+			locked_in_here := attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
 			if locked_in_here then
 				original_parent_window := parent_window (parent_area)
 				if original_parent_window /= Void then
@@ -722,14 +722,14 @@ invariant
 	minimum_size_cell_empty: minimum_size_cell.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

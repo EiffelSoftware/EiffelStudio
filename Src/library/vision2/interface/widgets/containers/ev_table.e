@@ -21,14 +21,13 @@ inherit
 			implementation,
 			create_implementation,
 			is_in_default_state
-		select
-			extend
 		end
 
 	CHAIN [EV_WIDGET]
 		rename
 			sequence_put as cl_put,
-			prune as cl_prune
+			prune as cl_prune,
+			extend as cl_extend
 		export
 			{EV_ANY_HANDLER} default_create
 		undefine
@@ -612,7 +611,7 @@ invariant
 	rows_positive: rows >= 1
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

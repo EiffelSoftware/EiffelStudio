@@ -28,26 +28,28 @@ feature {NONE} -- Initialization
 		local
 			l_dir: DIRECTORY
 			l_count: INTEGER
+			p: PATH
 		do
 			compile_project := True
 			freeze_required := False
 			create ace_location.make_empty
+			p := eiffel_layout.user_projects_path
 
 			from
 				l_count := 1
 				project_name := Default_project_name + "_" + l_count.out
-				create l_dir.make_with_path (project_path)
+				create l_dir.make_with_path (p.extended (project_name))
 			until
 				not l_dir.exists or else
 				l_count = 100
 			loop
-				create l_dir.make_with_path (project_path)
+				create l_dir.make_with_path (p.extended (project_name))
 				if l_dir.exists then
 					project_name := default_project_name + "_" + l_count.out
 				end
 				l_count := l_count + 1
 			end
-			project_location := eiffel_layout.user_projects_path.extended (project_name)
+			project_location := p.extended (project_name)
 		end
 
 feature -- Setting
@@ -103,14 +105,6 @@ feature -- Access
 			-- Should we freeze the project if compiled?
 
 feature {NONE} -- Implementation
-
-	project_path: PATH
-			-- Project path.
-		do
-			Result := project_location.extended (project_name)
-		ensure
-			non_void_project_path: Result /= Void
-		end
 
 	Default_project_name: STRING
 			-- Default project name

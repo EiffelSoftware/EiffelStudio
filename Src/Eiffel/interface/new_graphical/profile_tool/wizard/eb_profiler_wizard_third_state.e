@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 				index_sep := rtir_text.last_index_of (Operating_environment.Directory_separator, rtir_text.count)
 				if index_sep /= 0 then
 					rtir_path := rtir_text.substring (1, index_sep - 1)
-					Result := rtir_path.is_equal (information.generation_path)
+					Result := rtir_path.same_string (information.generation_path.name)
 				end
 			end
 		end

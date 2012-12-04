@@ -176,7 +176,7 @@ feature {NONE} -- Basic operations
 			l_cluster: like cluster
 			l_location: like {PROJECT_DIRECTORY}.path
 			l_directory: DIRECTORY
-			l_file: KL_TEXT_OUTPUT_FILE
+			l_file: KL_TEXT_OUTPUT_FILE_32
 			l_filename: STRING
 			l_class_name: STRING
 			l_retry: BOOLEAN
@@ -188,7 +188,7 @@ feature {NONE} -- Basic operations
 			else
 				l_location := etest_suite.project_access.project.project_directory.eifgens_cluster_path
 			end
-			create l_directory.make (l_location)
+			create l_directory.make_with_path (l_location)
 			if not l_directory.exists then
 				l_directory.recursive_create_dir
 			end
@@ -213,7 +213,7 @@ feature {NONE} -- Basic operations
 						l_filename := l_class_name
 					end
 					l_filename.append (".e")
-					l_file := u.make_text_output_file_in (l_filename, l_location)
+					create l_file.make_with_path (l_location.extended (l_filename))
 					if l_file.exists then
 						class_name_counter := class_name_counter + 1
 						if class_name_counter <= 999 then

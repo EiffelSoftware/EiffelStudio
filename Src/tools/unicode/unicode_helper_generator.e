@@ -144,7 +144,7 @@ feature -- Basic operations
 			l_properties: like extract_case_ranges
 			l_diffs, l_simplified_diffs: like mismatches
 			l_tables, l_class, l_filter: STRING
-			l_filename: FILE_NAME_32
+			l_filename: PATH
 		do
 				-- We generate the various mapping. Those mappings are sparse.
 			l_lowers := extract_case_ranges ("lower", unicode_data, agent {UNICODE_CHARACTER_DATA}.has_lower_code, agent {UNICODE_CHARACTER_DATA}.lower_code)
@@ -178,8 +178,7 @@ feature -- Basic operations
 
 			if attached output_path as l_path and then not l_path.is_empty then
 				create l_filename.make_from_string (l_path)
-				l_filename.set_file_name (character_32_property_filename)
-				create l_output.make_with_name (l_filename)
+				create l_output.make_with_path (l_filename.extended (character_32_property_filename))
 			else
 				create l_output.make_with_name (character_32_property_filename)
 			end

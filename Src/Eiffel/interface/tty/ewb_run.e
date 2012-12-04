@@ -33,19 +33,18 @@ feature {NONE} -- Implementation
 			make_f: RAW_FILE
 			error: BOOLEAN
 			cmd_exec: COMMAND_EXECUTOR
-			u: FILE_UTILITIES
 		do
 			if Eiffel_system = Void or else Eiffel_system.name = Void then
 				output_window.put_string (Warning_messages.W_must_compile_first)
 				output_window.put_new_line
 			else
 				appl_name := Eiffel_system.application_name (True)
-				f := u.make_raw_file (appl_name)
+				create f.make_with_path (appl_name)
 				if not f.exists then
-					output_window.put_string (Warning_messages.w_file_not_exist (appl_name))
+					output_window.put_string (Warning_messages.w_file_not_exist (appl_name.name))
 					output_window.put_new_line
 				else
-					make_f := u.make_raw_file_in (Makefile_SH, project_location.workbench_path)
+					create make_f.make_with_path (project_location.workbench_path.extended (makefile_sh))
 					if make_f.exists and then make_f.date > f.date then
 						output_window.put_string (Warning_messages.w_MakefileSH_more_recent)
 						output_window.put_new_line
@@ -53,7 +52,7 @@ feature {NONE} -- Implementation
 					end;
 					if not error then
 						create cmd_exec
-						cmd_exec.execute_with_args (appl_name, arguments)
+						cmd_exec.execute_with_args (appl_name.name, arguments)
 					end
 				end
 			end

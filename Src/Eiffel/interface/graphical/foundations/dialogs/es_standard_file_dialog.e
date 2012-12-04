@@ -69,39 +69,29 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	file_path: attached STRING_32
+	file_path: PATH
 			-- Full path to the file.
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 			is_confirmed: is_confirmed
 		do
-			create Result.make_from_string (path)
-			Result.append_character (operating_environment.directory_separator)
-			Result.append (file_name)
+			Result := path.extended (file_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
 
-	path: attached STRING_32
+	path: PATH
 			-- <Precursor>
-		local
-			l_result: detachable STRING_32
-			l_separator: CHARACTER
 		do
 			if is_confirmed then
-				l_result := dialog.file_path
-			else
-				l_result := start_path
-			end
-			if l_result /= Void and then not l_result.is_empty then
-				Result := l_result
-				l_separator := operating_environment.directory_separator
-				if not Result.is_empty and then Result.item (Result.count) = l_separator then
-					Result.keep_head (Result.count - 1)
+				if attached dialog.full_file_path.parent as l_parent then
+					Result := l_parent
+				else
+					create Result.make_empty
 				end
 			else
-				create Result.make_empty
+				Result := start_path
 			end
 		end
 
@@ -128,7 +118,7 @@ feature -- Access
 			end
 		end
 
-	start_file_name: detachable STRING_32 assign set_start_file_name
+	start_file_name: detachable PATH assign set_start_file_name
 			-- Initial file name used when showing the dialog.
 
 feature {NONE} -- Access
@@ -149,38 +139,9 @@ feature -- Element change
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 			not_a_file_name_is_empty: not a_file_name.is_empty
-		local
-			l_file_path: STRING_32
-			l_file: FILE_NAME
 		do
-			l_file_path := start_path
-			if not l_file_path.is_empty then
-					-- The full path has to be used because
-				create l_file.make_from_string (l_file_path)
-				l_file.set_file_name (a_file_name)
-				l_file_path := l_file.string.as_string_32
-			else
-				l_file_path := a_file_name
-			end
-			start_file_name := l_file_path
-			dialog.set_file_name (l_file_path)
-		end
-
-	set_start_file_name_indexed (a_file_name: like start_file_name; a_separator: detachable READABLE_STRING_GENERAL)
-			-- Set a start file name on the dialog using a index prefix so it does not conflict with an
-			-- existing file.
-			--
-			-- Note: On *nix platforms this does nothing, Windows will suggest a file name.
-			--
-			-- `a_file_name': The base file name, used to perform indexing.
-			-- `a_separator': An optional separator between the file name and index number.
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-			not_a_file_name_is_empty: not a_file_name.is_empty
-			not_a_separator_is_empty: a_separator /= Void implies not a_separator.is_empty
-		do
-			set_start_file_name (file_utilities.indexed_path (a_file_name.as_attached, a_separator, False).as_string_32)
+			start_file_name := start_path.extended_path (a_file_name)
+			dialog.set_full_file_path (start_file_name)
 		end
 
 feature {NONE} -- Element change
@@ -188,9 +149,9 @@ feature {NONE} -- Element change
 	set_start_path_on_dialog (a_path: like start_path; a_dialog: like dialog)
 			-- <Precursor>
 		do
-			dialog.set_start_directory (a_path)
+			dialog.set_start_path (a_path)
 		ensure then
-			dialog_start_directory_set: dialog.start_directory ~ a_path
+			dialog_start_directory_set: dialog.start_path ~ a_path
 		end
 
 feature -- Status report
@@ -361,7 +322,7 @@ invariant
 	filter_index_is_valid: filter_index = 0 or else filters.valid_index (filter_index)
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

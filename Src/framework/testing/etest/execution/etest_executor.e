@@ -119,8 +119,7 @@ feature {NONE} -- Access
 	testing_directory: PATH
 			-- Directory in which tests should be executed
 		do
-			create Result.make_from_string (etest_suite.project_access.project.project_directory.testing_results_path)
-			Result := Result.extended (testing_directory_name)
+			Result := etest_suite.project_access.project.project_directory.testing_results_path.extended (testing_directory_name)
 		end
 
 	start_time: DATE_TIME

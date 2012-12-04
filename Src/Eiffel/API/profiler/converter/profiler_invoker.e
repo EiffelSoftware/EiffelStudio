@@ -91,14 +91,14 @@ feature {NONE} -- Implementation
 			cm_bool := compile_type.same_string_general ("workbench")
 			exec_string := {STRING_32} "gprof -b "
 			if attached Eiffel_system.application_name (cm_bool) as app_name then
-				exec_string.append (app_name)
+				exec_string.append_string_general (app_name.name)
 				exec_string.append ({STRING_32} " > ")
 				exec_string.append (output_file)
 				l_old_path := Execution_environment.current_working_path
 				if cm_bool then
-					create l_path.make_from_string (project_location.workbench_path)
+					l_path := project_location.workbench_path
 				else
-					create l_path.make_from_string (project_location.final_path)
+					l_path := project_location.final_path
 				end
 				Execution_environment.change_working_path (l_path)
 				Execution_environment.system (exec_string)
@@ -118,24 +118,24 @@ feature {NONE} -- Implementation
 			if attached Eiffel_system.application_name (cm_bool) as app_name then
 				l_old_path := Execution_environment.current_working_path
 				if cm_bool then
-					create l_path.make_from_string (project_location.workbench_path)
+					l_path := project_location.workbench_path
 				else
-					create l_path.make_from_string (project_location.final_path)
+					l_path := project_location.final_path
 				end
 				Execution_environment.change_working_path (l_path)
 				exec_string := {STRING_32} "prep /nologo /om /ft "
-				exec_string.append (app_name)
+				exec_string.append_string_general (app_name.name)
 				Execution_environment.system (exec_string)
 				exec_string := {STRING_32} "profile /nologo "
-				exec_string.append (app_name)
+				exec_string.append_string_general (app_name.name)
 				exec_string.extend (' ')
 				exec_string.append (arguments)
 				Execution_environment.system (exec_string)
 				exec_string := {STRING_32} "prep /nologo /m "
-				exec_string.append (app_name)
+				exec_string.append_string_general (app_name.name)
 				Execution_environment.system (exec_string)
 				exec_string := {STRING_32} "plist /nologo "
-				exec_string.append (app_name)
+				exec_string.append_string_general (app_name.name)
 				exec_string.append ({STRING_32} " > ")
 				exec_string.append (output_file)
 				Execution_environment.system (exec_string)

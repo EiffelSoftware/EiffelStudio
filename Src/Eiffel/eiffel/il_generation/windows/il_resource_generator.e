@@ -50,8 +50,8 @@ feature -- Generation
 	generate
 			-- Generate `resources' in `module'. Compile `resources' items if necessary.
 		local
-			l_name: STRING
-			l_new_name: STRING_32
+			l_name: STRING_32
+			l_new_name: PATH
 			nb: INTEGER
 			l_not_is_resource_generated: BOOLEAN
 			l_res: CONF_EXTERNAL_RESOURCE
@@ -85,10 +85,10 @@ feature -- Generation
 							((nb > 5) and l_name.substring (nb - 4, nb).as_lower.is_equal (".resx")) or
 							((nb > 4) and l_name.substring (nb - 3, nb).as_lower.is_equal (".txt"))
 						if l_not_is_resource_generated then
-							l_new_name := new_compiled_resource_file_name (l_name)
-							generate_resource (l_name, l_new_name)
+							l_new_name := new_compiled_resource_file_name (create {PATH}.make_from_string (l_name))
+							generate_resource (create {PATH}.make_from_string (l_name), l_new_name)
 							if is_file_readable (l_new_name) then
-								l_name := resource_name (l_name, True)
+								l_name := resource_name (create {PATH}.make_from_string (l_name), True)
 								l_name.append_character ('.')
 								l_name.append (resources_extension)
 								define_resource (module, l_new_name, l_name)
@@ -96,10 +96,10 @@ feature -- Generation
 								Error_handler.insert_warning (create {VIRC}.make_failed (l_name))
 							end
 						else
-							if is_file_readable (l_name) then
+							if is_file_readable (create {PATH}.make_from_string (l_name)) then
 									-- It is either a compiled resource or another type of files,
 									-- we simply embed them in the generated assembly.
-								define_resource (module, l_name, resource_name (l_name, False))
+								define_resource (module, create {PATH}.make_from_string (l_name), resource_name (create {PATH}.make_from_string (l_name), False))
 							else
 								error_handler.insert_warning (create {VIRC}.make_resource_file_not_found (l_name))
 							end
@@ -123,18 +123,18 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	generate_resource (a_resource: STRING; a_target: STRING_32)
+	generate_resource (a_resource, a_target: PATH)
 			-- Generate a compiled resource in `a_target' using `a_resource' as resource file.
 		require
 			a_resource_not_void: a_resource /= Void
 			a_target_not_void: a_target /= Void
 		local
 			l_env: IL_ENVIRONMENT
-			l_rc: STRING
-			l_cmd: STRING
+			l_rc: PATH
+			l_cmd: STRING_32
 			l_launch: WEL_PROCESS_LAUNCHER
 			l_exec: EXECUTION_ENVIRONMENT
-			l_dir: STRING
+			l_dir: detachable PATH
 			l_virc: VIRC
 		do
 			create l_env.make (System.clr_runtime_version)
@@ -142,19 +142,23 @@ feature {NONE} -- Implementation
 
 			if l_rc /= Void and then is_file_readable (l_rc) then
 				if not is_file_readable (a_resource) then
-					create l_virc.make_resource_file_not_found (a_resource)
+					create l_virc.make_resource_file_not_found (a_resource.name)
 				else
 					create l_launch
 					create l_exec
-					l_cmd := l_rc + " %"" + a_resource + "%" %"" + a_target + "%""
-					l_dir := (create {KL_WINDOWS_FILE_SYSTEM}.make).dirname (a_resource)
-					l_launch.launch (l_cmd, l_dir, Void)
+					l_cmd := l_rc.name + " %"" + a_resource.name + "%" %"" + a_target.name + "%""
+					if attached a_resource.parent as l_parent then
+						l_dir := l_parent
+					else
+						create l_dir.make_current
+					end
+					l_launch.launch (l_cmd, l_dir.name, Void)
 					if l_launch.last_process_result /= 0 then
-						create l_virc.make_failed (a_resource)
+						create l_virc.make_failed (a_resource.name)
 					end
 				end
 			else
-				create l_virc.make_rc_not_found (l_rc)
+				create l_virc.make_rc_not_found (l_rc.name)
 			end
 
 			if l_virc /= Void then
@@ -162,21 +166,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	resource_name (a_resource: STRING; remove_extension: BOOLEAN): STRING
+	resource_name (a_resource: PATH; remove_extension: BOOLEAN): STRING_32
 			-- Extract name of `a_resource' file without its extension if `remove_extension'.
 		require
 			a_resource_not_void: a_resource /= Void
 		local
-			dir_pos, dot_pos, nb: INTEGER
+			dot_pos, nb: INTEGER
 		do
-			nb := a_resource.count
-			dir_pos := a_resource.last_index_of ('\', nb) + 1
-			if dir_pos = 0 then
-				dir_pos := a_resource.last_index_of ('/', nb) + 1
-			end
-
+			Result := a_resource.entry.name
+			nb := Result.count
 			if remove_extension then
-				dot_pos := a_resource.last_index_of ('.', nb)
+				dot_pos := Result.last_index_of ('.', nb)
 				if dot_pos = 0 then
 					dot_pos := nb
 				else
@@ -186,29 +186,28 @@ feature {NONE} -- Implementation
 				dot_pos := nb
 			end
 
-			Result := a_resource.substring (dir_pos.max (1), dot_pos)
+			Result := Result.substring (1, dot_pos)
 		ensure
 			resource_name_not_void: Result /= Void
 		end
 
-	new_compiled_resource_file_name (a_resource: STRING): FILE_NAME_32
+	new_compiled_resource_file_name (a_resource: PATH): PATH
 			-- Using `a_resource' generates a PATH in which output of compiling resource file
 			-- `a_resource' will be generated.
 		require
 			a_resource_not_void: a_resource /= Void
 		do
 			if System.in_final_mode then
-				create Result.make_from_string (System.project_location.final_path)
+				Result := System.project_location.final_path
 			else
-				create Result.make_from_string (System.project_location.workbench_path)
+				Result := System.project_location.workbench_path
 			end
-			Result.set_file_name (resource_name (a_resource, True))
-			Result.add_extension (resources_extension)
+			Result := Result.extended (resource_name (a_resource, True) + "." + resources_extension)
 		ensure
 			new_compiled_resource_file_name_not_void: Result /= Void
 		end
 
-	define_resource (a_module: IL_MODULE; a_file, a_name: STRING)
+	define_resource (a_module: IL_MODULE; a_file: PATH; a_name: STRING)
 			-- Add resource file `a_file' with name `a_name' to `a_module'.
 		require
 			a_module_not_void: a_module /= Void
@@ -233,7 +232,8 @@ feature {NONE} -- Implementation
 
 				-- Read content of `a_file' and add it to the list of known resources
 				-- of `a_module'.
-			create l_raw_file.make_open_read (a_file)
+			create l_raw_file.make_with_path (a_file)
+			l_raw_file.open_read
 				-- Before putting the resource data in `l_data', we need to insert
 				-- the number of bytes in the first 4 bytes of `l_data' so that
 				-- we know exactly how long is the current resource entry.
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation: constants
 	resources_extension: STRING = "resources"
 			-- Compiled resources extension.
 
-	is_file_readable (a_filename: STRING): BOOLEAN
+	is_file_readable (a_filename: PATH): BOOLEAN
 			-- Is file `a_filename' readable?
 		require
 			a_filename_not_void: a_filename /= Void
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation: constants
 			l_file: RAW_FILE
 		do
 			if not a_filename.is_empty then
-				create l_file.make (a_filename)
+				create l_file.make_with_path (a_filename)
 				Result := l_file.exists and then l_file.is_readable
 			end
 		end

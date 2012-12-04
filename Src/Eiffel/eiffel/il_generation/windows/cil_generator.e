@@ -101,7 +101,6 @@ feature -- Generation
 			l_key_file_name: STRING
 			l_public_key: MD_PUBLIC_KEY
 			l_res: ARRAYED_LIST [CONF_EXTERNAL_RESOURCE]
-			u: FILE_UTILITIES
 		do
 			if not retried then
 					-- At this point the COM component should be properly instantiated.
@@ -164,7 +163,7 @@ feature -- Generation
 					assembly_info.set_public_key_token (l_public_key.public_key_token_string)
 				end
 
-				output_file := u.make_raw_file_in (file_name, location)
+				create output_file.make_with_path (location.extended (file_name))
 				if output_file.exists then
 					output_file.delete
 				end
@@ -266,7 +265,7 @@ feature -- Generation
 			-- Copy local assemblies if needed to `Generation_directory/Assemblies' and
 			-- copy configuration file to load local assemblies.
 		local
-			l_source_name: FILE_NAME
+			l_source_name: PATH
 			l_target_name: like {PROJECT_DIRECTORY}.path
 			l_has_local, retried: BOOLEAN
 			l_precomp: REMOTE_PROJECT_DIRECTORY
@@ -293,7 +292,7 @@ feature -- Generation
 						physical_assembly: l_as /= Void
 					end
 					if l_as.is_enabled (l_state) and then not l_as.is_in_gac then
-						copy_to_local (l_as.location.build_path ("", l_as.location.original_file), assembly_location (is_finalizing), Void)
+						copy_to_local (create {PATH}.make_from_string (l_as.location.build_path ("", l_as.location.original_file)), assembly_location (is_finalizing), Void)
 						l_has_local := True
 					end
 					l_assemblies.forth
@@ -333,8 +332,7 @@ feature -- Generation
 
 					-- Copy configuration file to be able to load up local assembly.
 				if l_has_local then
-					create l_source_name.make_from_string (eiffel_layout.generation_templates_path_8)
-					l_source_name.set_file_name ("assembly_config.xml")
+					l_source_name := eiffel_layout.generation_templates_path.extended ("assembly_config.xml")
 
 					if is_finalizing then
 						l_target_name := project_location.final_path
@@ -1063,7 +1061,7 @@ feature {NONE} -- Sort
 
 feature {NONE} -- File copying
 
-	assembly_location (a_is_finalizing: BOOLEAN): DIRECTORY_NAME_32
+	assembly_location (a_is_finalizing: BOOLEAN): PATH
 			-- Location of `Assemblies' directory in W_code or F_code depending
 			-- on compilation type `a_is_finalizing'.
 		do
@@ -1074,7 +1072,7 @@ feature {NONE} -- File copying
 			end
 		end
 
-	copy_to_local (a_source: READABLE_STRING_GENERAL; a_target_directory: READABLE_STRING_GENERAL; a_destination_name: detachable STRING)
+	copy_to_local (a_source: PATH; a_target_directory: PATH; a_destination_name: detachable READABLE_STRING_GENERAL)
 			-- Copy `a_source' into `a_target_directory' directory under `a_destination_name' if specified,
 			-- or under the same name as `a_source'.
 		require
@@ -1085,46 +1083,15 @@ feature {NONE} -- File copying
 			a_destination_name_valid: a_destination_name /= Void implies not a_destination_name.is_empty
 		local
 			l_source, l_target: RAW_FILE
-			l_pos: INTEGER
 			l_vicf: VICF
 			l_retried: BOOLEAN
-			u: FILE_UTILITIES
-			last_index_of_code: FUNCTION [ANY, TUPLE [NATURAL_32, READABLE_STRING_GENERAL], INTEGER]
 		do
 			if not l_retried then
-				l_source := u.make_raw_file (a_source)
+				create l_source.make_with_path (a_source)
 				if a_destination_name /= Void then
-					l_target := u.make_raw_file_in (a_destination_name, a_target_directory)
+					create l_target.make_with_path (a_target_directory.extended (a_destination_name))
 				else
-					debug ("to_implement")
-						(create {REFACTORING_HELPER}).to_implement ("Implement `last_index_of_code' in {READABLE_STRING_GENERAL}.")
-					end
-					last_index_of_code := agent (c: NATURAL_32; s: READABLE_STRING_GENERAL): INTEGER
-							-- Last index of `c' in `s' or `0' if `s' has no `c' at all.
-						do
-							from
-								Result := s.count
-							until
-								Result <= 0 or else s.code (Result) = c
-							loop
-								Result := Result - 1
-							end
-						end
-						-- Let's find the file name in the source file `a_source'.
-					if platform_constants.is_windows then
-							-- Small trick for Windows were both / and \ are accepted.
-							-- The last one of the / or \ will indicate the start of the
-							-- file name
-						l_pos := last_index_of_code.item ([('\').code.as_natural_32, a_source])
-						l_pos := l_pos.max (last_index_of_code.item ([('/').code.as_natural_32, a_source]))
-					else
-						l_pos := last_index_of_code.item ([operating_environment.directory_separator.code.as_natural_32, a_source])
-					end
-					if l_pos > 0 then
-						l_target := u.make_raw_file_in (a_source.substring (l_pos + 1, a_source.count), a_target_directory)
-					else
-						l_target := u.make_raw_file_in (a_source, a_target_directory)
-					end
+					create l_target.make_with_path (a_target_directory.extended_path (a_source.entry))
 				end
 
 					-- Only copy the file if it is not already there or if the original
@@ -1139,7 +1106,7 @@ feature {NONE} -- File copying
 						l_target.set_date (l_source.date)
 					else
 							-- Source does not exist, report the error.
-						create l_vicf.make (a_source, u.file_name (l_target))
+						create l_vicf.make (a_source.name, l_target.path.name)
 						error_handler.insert_warning (l_vicf)
 					end
 				end
@@ -1152,9 +1119,9 @@ feature {NONE} -- File copying
 					l_target.close
 				end
 				if l_target /= Void then
-					create l_vicf.make (a_source, u.file_name (l_target))
+					create l_vicf.make (a_source.name, l_target.path.name)
 				else
-					create l_vicf.make (a_source, "Target not yet computed")
+					create l_vicf.make (a_source.name, "Target not yet computed")
 				end
 				error_handler.insert_warning (l_vicf)
 			end

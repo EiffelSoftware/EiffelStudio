@@ -165,7 +165,6 @@ feature -- Status setting
 			l_factory: CONF_COMP_FACTORY
 			l_project_location: PROJECT_DIRECTORY
 			l_epr: PROJECT_EIFFEL_FILE
-			l_epr_file: FILE_NAME_32
 		do
 				-- check if the precompile is valid
 			precompile := target.precompile
@@ -183,13 +182,11 @@ feature -- Status setting
 				-- check if it needs to be (re)precompiled
 			if precompile /= Void and then not is_precompile_invalid then
 				if precompile.eifgens_location /= Void then
-					create l_project_location.make (precompile.eifgens_location.evaluated_path, l_load.last_system.library_target.name)
+					create l_project_location.make (create {PATH}.make_from_string (precompile.eifgens_location.evaluated_path), l_load.last_system.library_target.name)
 				else
-					create l_project_location.make (precompile.location.build_path ("", ""), l_load.last_system.library_target.name)
+					create l_project_location.make (create {PATH}.make_from_string (precompile.location.build_path ("", "")), l_load.last_system.library_target.name)
 				end
-				create l_epr_file.make_from_string (l_project_location.target_path)
-				l_epr_file.set_file_name (project_file_name)
-				create l_epr.make (l_epr_file)
+				create l_epr.make (l_project_location.target_path.extended (project_file_name))
 				l_epr.check_version_number (0)
 				is_precompilation_needed := l_epr.has_error
 			end
@@ -1332,9 +1329,9 @@ feature {NONE} -- Implementation
 
 				-- retrieve precompile project (use EIFGENs location if specified, else next to the config file)
 			if l_pre.eifgens_location /= Void then
-				create l_project_location.make (l_pre.eifgens_location.evaluated_path, l_system.library_target.name)
+				create l_project_location.make (create {PATH}.make_from_string (l_pre.eifgens_location.evaluated_path), l_system.library_target.name)
 			else
-				create l_project_location.make (l_pre.location.build_path ("", ""), l_system.library_target.name)
+				create l_project_location.make (create {PATH}.make_from_string (l_pre.location.build_path ("", "")), l_system.library_target.name)
 			end
 			create l_precomp_r
 			l_precomp_r.retrieve_precompiled (l_project_location)

@@ -74,9 +74,7 @@ feature {NONE} -- Initialization
 					no_statistics_yet: test_statistics.count = 0
 				end
 
-				l_file := u.make_raw_file_in
-					(statistics_file_name + "." + statistics_file_extension,
-					eiffel_project.project_directory.testing_results_path)
+				create l_file.make_with_path (eiffel_project.project_directory.testing_results_path.extended (statistics_file_name + "." + statistics_file_extension))
 				if l_file.exists then
 					l_retrieval := agent (a_file: RAW_FILE): detachable ANY
 						local
@@ -310,10 +308,10 @@ feature {NONE} -- Implementation
 			u: GOBO_FILE_UTILITIES
 		do
 			if not l_retried then
-				u.create_directory (eiffel_project.project_directory.testing_results_path)
-				l_raw_file := u.open_write_raw_file_in
-					(statistics_file_name + "." + statistics_file_extension,
-					eiffel_project.project_directory.testing_results_path)
+				u.create_directory_path (eiffel_project.project_directory.testing_results_path)
+				create l_raw_file.make_with_path (
+					eiffel_project.project_directory.testing_results_path.extended (statistics_file_name + "." + statistics_file_extension))
+				l_raw_file.open_write
 				l_raw_file.independent_store (test_statistics)
 			end
 			if l_raw_file /= Void and then not l_raw_file.is_closed then

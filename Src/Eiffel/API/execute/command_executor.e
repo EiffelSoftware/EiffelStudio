@@ -72,9 +72,7 @@ feature -- Command Execution
 
 feature -- Compiler specific calls
 
-	link_eiffel_driver (c_code_dir: READABLE_STRING_32;
-			system_name, prelink_cmd_name: READABLE_STRING_GENERAL;
-			driver_name: READABLE_STRING_32)
+	link_eiffel_driver (c_code_dir: PATH; system_name: READABLE_STRING_GENERAL; prelink_cmd_name, driver_name: PATH)
 			-- Link the driver of the precompilation to
 			-- the eiffel project.
 		local
@@ -82,14 +80,14 @@ feature -- Compiler specific calls
 		do
 				-- Copy precompiled driver to the target directory.
 			if {PLATFORM}.is_windows then
-				u.copy_file (driver_name, u.make_file_name_in (system_name, c_code_dir) + {STRING_32} ".exe")
+				u.copy_file_path (driver_name, c_code_dir.extended (system_name + ".exe"))
 			elseif {PLATFORM}.is_vms then
-				u.copy_file (driver_name, u.make_file_name_in (system_name, c_code_dir))
+				u.copy_file_path (driver_name, c_code_dir.extended (system_name))
 			else
 				execution_environment.system
-					({STRING_32} "%"" + prelink_cmd_name.as_string_32 + {STRING_32} "%" " +
-					driver_name + {STRING_32} " " +
-					u.make_file_name_in (system_name, c_code_dir).as_string_32)
+					({STRING_32} "%"" + prelink_cmd_name.name + {STRING_32} "%" " +
+					driver_name.name + {STRING_32} " " +
+					c_code_dir.extended (system_name).name)
 			end
 		end
 

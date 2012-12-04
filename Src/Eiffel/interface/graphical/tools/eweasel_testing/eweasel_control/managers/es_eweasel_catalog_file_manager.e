@@ -65,7 +65,7 @@ feature -- Command
 			not_void: a_list /= Void
 		do
 			a_list.extend ("-catalog")
-			a_list.extend (full_file_name)
+			a_list.extend (full_file_name.name)
 		ensure
 			added_two: old a_list.count = a_list.count - 2
 		end
@@ -225,17 +225,16 @@ feature {NONE} -- Implementation routines
 			generated: a_catalog_content.count = old catalog_file_content.count + 1
 		end
 
-	full_file_name: FILE_NAME_32
+	full_file_name: PATH
 			-- Full file name (path included) of eweasel catalog file.
 		local
 			l_file_name_helper: ES_FILE_NAME_HELPER
 			l_file: RAW_FILE
 		do
-			create Result.make_from_string (manager.environment_manager.target_directory.to_string_32)
-			Result.set_file_name (file_name)
+			Result := manager.environment_manager.target_directory.extended (file_name)
 
 				-- File must exists before convert to short name
-			create l_file.make_with_name (Result)
+			create l_file.make_with_path (Result)
 			if not l_file.exists then
 				l_file.create_read_write
 			end
@@ -243,8 +242,9 @@ feature {NONE} -- Implementation routines
 				l_file.flush
 				l_file.close
 			end
+				-- Why do we need a short version here?
 			create l_file_name_helper
-			create Result.make_from_string (l_file_name_helper.short_name_of (Result))
+			create Result.make_from_string (l_file_name_helper.short_name_of (Result.name))
 		ensure
 			not_void: Result /= Void
 		end
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation routines
 			l_file: RAW_FILE
 		do
 			close_and_clear_file
-			create l_file.make_with_name (full_file_name)
+			create l_file.make_with_path (full_file_name)
 			if l_file.exists then
 				l_file.wipe_out
 			end
@@ -270,7 +270,7 @@ feature {NONE} -- Implementation routines
 			l_file: RAW_FILE
 		do
 			if internal_file = Void then
-				create l_file.make_with_name (full_file_name)
+				create l_file.make_with_path (full_file_name)
 				if not l_file.exists then
 					l_file.create_read_write
 				else

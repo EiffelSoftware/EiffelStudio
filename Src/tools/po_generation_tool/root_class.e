@@ -361,7 +361,6 @@ feature {NONE} -- Implementation
 		require
 			po_file_not_void: po_file /= Void
 		local
-			l_file_name: FILE_NAME_32
 			l_file: PLAIN_TEXT_FILE
 			u: UTF_CONVERTER
 		do
@@ -372,20 +371,15 @@ feature {NONE} -- Implementation
 				localized_print (po_file.to_string)
 				localized_print ("%N")
 			else
-				create l_file_name.make_from_string (output_file_name)
-				if l_file_name.is_valid then
-					create l_file.make_with_name (output_file_name)
-					l_file.open_write
-					if l_file.is_writable then
-						l_file.put_string (u.string_32_to_utf_8_string_8 (po_file.to_string))
-						print_file_generated
-					else
-						print_file_not_writable
-					end
-					l_file.close
+				create l_file.make_with_name (output_file_name)
+				l_file.open_write
+				if l_file.is_writable then
+					l_file.put_string (u.string_32_to_utf_8_string_8 (po_file.to_string))
+					print_file_generated
 				else
-					print_invalid_output_file
+					print_file_not_writable
 				end
+				l_file.close
 			end
 		end
 

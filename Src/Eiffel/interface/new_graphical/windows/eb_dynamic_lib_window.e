@@ -1063,7 +1063,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 				end
 				create {EB_FILE_SAVE_DIALOG} dd.make_with_preference (l_pref)
 			end
-			dd.set_start_directory (Eiffel_project.name)
+			dd.set_start_path (Eiffel_project.project_directory.path)
 			set_dialog_filters_and_add_all (dd, <<definition_files_filter>>)
 			dd.ok_actions.extend (agent file_was_chosen (dd))
 			dd.show_modal_to_window (window)

@@ -251,7 +251,7 @@ feature{NONE} -- Implementation/Data
 		require
 			system_defined: workbench.universe_defined
 		do
-			Result := formatter_file_path (create {PATH}.make_from_string (project_location.data_path))
+			Result := formatter_file_path (project_location.data_path)
 		ensure
 			result_attached: Result /= Void
 		end

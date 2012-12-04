@@ -1208,7 +1208,7 @@ feature {NONE} -- BreakPoints
 				l_class_type := l_class_type_list.item
 				l_module_name := Il_debug_info_recorder.module_file_name_for_class_type (l_class_type)
 
-				l_class_token := Il_debug_info_recorder.class_token (l_module_name, l_class_type)
+				l_class_token := Il_debug_info_recorder.class_token (l_module_name.name, l_class_type)
 				if l_class_token = 0 then
 						--| Try to find the token, using the Meta Data
 					l_class_token := Eifnet_debugger.class_token (l_module_name, l_class_type)
@@ -1225,9 +1225,9 @@ feature {NONE} -- BreakPoints
 					loop
 						l_il_offset := l_il_offset_set.item (i)
 						if a_state then
-							Eifnet_debugger.request_breakpoint_add (loc, l_module_name, l_class_token, l_feature_token, l_il_offset)
+							Eifnet_debugger.request_breakpoint_add (loc, l_module_name.name, l_class_token, l_feature_token, l_il_offset)
 						else
-							Eifnet_debugger.request_breakpoint_remove (loc, l_module_name, l_class_token, l_feature_token, l_il_offset)
+							Eifnet_debugger.request_breakpoint_remove (loc, l_module_name.name, l_class_token, l_feature_token, l_il_offset)
 						end
 						i := i + 1
 					end
@@ -1277,7 +1277,7 @@ feature {NONE} -- Implementation
 						l_class_type := l_types.item
 						l_module_name := Il_debug_info_recorder.module_file_name_for_class_type (l_class_type)
 
-						l_class_token := Il_debug_info_recorder.class_token (l_module_name, l_class_type)
+						l_class_token := Il_debug_info_recorder.class_token (l_module_name.name, l_class_type)
 						l_str.append_string ("%T" + l_class_token.out)
 						l_str.append_string (" ~ 0x" + l_class_token.to_hex_string)
 						l_types.forth
@@ -1286,7 +1286,7 @@ feature {NONE} -- Implementation
 					l_types := l_class_c.types
 					l_class_type := l_types.first
 					l_module_name := Il_debug_info_recorder.module_file_name_for_class_type (l_class_type)
-					l_class_token := Il_debug_info_recorder.class_token (l_module_name, l_class_type)
+					l_class_token := Il_debug_info_recorder.class_token (l_module_name.name, l_class_type)
 
 					l_str.append_string (":" + l_class_token.out)
 					l_str.append_string (" ~ 0x" + l_class_token.to_hex_string)
@@ -1294,7 +1294,7 @@ feature {NONE} -- Implementation
 				l_str.append_string ("]")
 				l_str.append_string ("%N")
 
-				l_str.append_string ("%T module_name="+Il_debug_info_recorder.module_file_name_for_class (l_class_c).to_string_32.as_string_8)
+				l_str.append_string ("%T module_name="+Il_debug_info_recorder.module_file_name_for_class (l_class_c).name.as_string_8)
 			end
 
 			print (l_str)

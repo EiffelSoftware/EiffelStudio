@@ -7,7 +7,7 @@ inherit
 	PLAIN_TEXT_FILE
 
 create
-	make_with_name
+	make_with_name, make_with_path
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Element change
 

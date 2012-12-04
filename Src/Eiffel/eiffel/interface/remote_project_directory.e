@@ -35,10 +35,10 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	name: STRING
+	name: READABLE_STRING_32
 			-- Name for remote project.
 		do
-			Result := project_location.location
+			Result := project_location.location.name
 		ensure
 			name_not_void: Result /= Void
 		end
@@ -130,76 +130,70 @@ feature -- Access
 			precomp_eif_file_not_void: Result /= Void
 		end
 
-	precomp_il_info_file (a_use_optimized_precompile: BOOLEAN): FILE_NAME_32
+	precomp_il_info_file (a_use_optimized_precompile: BOOLEAN): PATH
 			-- File where the il debug info for the precompiled is stored
 		do
 			if a_use_optimized_precompile then
-				create Result.make_from_string (project_location.final_path)
+				Result := project_location.final_path
 			else
-				create Result.make_from_string (project_location.workbench_path)
+				Result := project_location.workbench_path
 			end
-			Result.set_file_name (Il_info_name)
-			Result.add_extension (Il_info_extension)
+			Result := Result.extended (Il_info_name + "." + il_info_extension)
 		ensure
 			precomp_il_info_file_not_void: Result /= Void
 		end
 
-	precompiled_preobj: FILE_NAME_32
+	precompiled_preobj: PATH
 			-- Full name of `preobj' object file
 		do
-			create Result.make_from_string (project_location.workbench_path)
-			Result.set_file_name (Preobj)
+			Result := project_location.workbench_path.extended (preobj)
 		ensure
 			precompiled_preobj_not_void: Result /= Void
 		end
 
-	precompiled_driver: FILE_NAME_32
+	precompiled_driver: PATH
 			-- Full name of the precompilation driver
 		do
-			create Result.make_from_string (project_location.workbench_path)
-			Result.set_file_name (Driver)
+			Result := project_location.workbench_path.extended (Driver)
 		ensure
 			precompiled_driver_not_void: Result /= Void
 		end
 
-	assembly_driver (a_use_optimized_precompile: BOOLEAN): FILE_NAME_32
+	assembly_driver (a_use_optimized_precompile: BOOLEAN): PATH
 			-- Full name of assembly driver.
 		do
 			if a_use_optimized_precompile then
-				create Result.make_from_string (project_location.final_path)
+				Result := project_location.final_path
 			else
-				create Result.make_from_string (project_location.workbench_path)
+				Result := project_location.workbench_path
 			end
-			Result.set_file_name (system_name)
-			Result.add_extension (msil_generation_type)
+			Result := Result.extended (system_name + "." + msil_generation_type)
 		ensure
 			assembly_driver_not_void: Result /= Void
 		end
 
-	assembly_helper_driver (a_use_optimized_precompile: BOOLEAN): FILE_NAME_32
+	assembly_helper_driver (a_use_optimized_precompile: BOOLEAN): PATH
 			-- Full name of assembly driver.
 		do
 			if a_use_optimized_precompile then
-				create Result.make_from_string (project_location.final_path)
+				Result := project_location.final_path
 			else
-				create Result.make_from_string (project_location.workbench_path)
+				Result := project_location.workbench_path
 			end
-			Result.set_file_name ("lib" + system_name)
-			Result.add_extension ("dll")
+			Result := Result.extended ("lib" + system_name + ".dll")
 		ensure
 			assembly_herlp_driver_not_void: Result /= Void
 		end
 
-	assembly_debug_info (a_use_optimized_precompile: BOOLEAN): FILE_NAME_32
+	assembly_debug_info (a_use_optimized_precompile: BOOLEAN): PATH
 			-- Full name of assembly pdb.
 		do
 			if a_use_optimized_precompile then
-				create Result.make_from_string (project_location.final_path)
+				Result := project_location.final_path
 			else
-				create Result.make_from_string (project_location.workbench_path)
+				Result := project_location.workbench_path
 			end
-			Result.set_file_name (system_name)
-			Result.add_extension ("pdb")
+			Result := Result.extended (system_name + ".pdb")
 		ensure
 			assembly_debug_info_not_void: Result /= Void
 		end
@@ -234,14 +228,14 @@ feature -- Check
 			file.check_version_number (precomp_id);
 			if file.is_incompatible then
 				create vd52;
-				vd52.set_path (compilation_path);
+				vd52.set_path (compilation_path.name);
 				vd52.set_precompiled_version (file.project_version_number);
 				vd52.set_compiler_version (version_number);
 				Error_handler.insert_error (vd52);
 				Error_handler.raise_error
 			elseif file.is_invalid_precompilation then
 				create vd53;
-				vd53.set_path (compilation_path);
+				vd53.set_path (compilation_path.name);
 				if file.precompilation_id = 0 then
 					vd53.set_precompiled_date ("unknown")
 				else
@@ -310,7 +304,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	check_directory (a_directory: STRING_32)
+	check_directory (a_directory: PATH)
 			-- Check readability of directory of name
 			-- `rn' relative to Current.
 		require
@@ -320,21 +314,21 @@ feature {NONE} -- Implementation
 			vd42: VD42
 		do
 			if is_valid then
-				create d.make (a_directory)
+				create d.make_with_path (a_directory)
 				is_valid :=
 					d.exists and then
 					d.is_readable and then
 					d.is_executable
 				if not is_valid and then is_precompile then
 					create vd42
-					vd42.set_path (a_directory)
+					vd42.set_path (a_directory.name)
 					vd42.set_is_directory
 					Error_handler.insert_error (vd42)
 				end
 			end
 		end
 
-	check_file (n: READABLE_STRING_GENERAL)
+	check_file (n: PATH)
 			-- Check readability of file of name
 			-- `rn' relative to Current.
 		require
@@ -342,23 +336,22 @@ feature {NONE} -- Implementation
 		local
 			f: RAW_FILE
 			vd42: VD42
-			u: FILE_UTILITIES
 		do
 			if is_valid then
-				f := u.make_raw_file (n)
+				create f.make_with_path (n)
 				is_valid :=
 					f.exists and then
 					f.is_plain and then
 					f.is_readable
 				if not is_valid and then is_precompile then
 					create vd42
-					vd42.set_path (n)
+					vd42.set_path (n.name)
 					Error_handler.insert_error (vd42)
 				end
 			end
 		end
 
-	check_precompiled_optional (rn: READABLE_STRING_GENERAL)
+	check_precompiled_optional (rn: PATH)
 			-- Check that `rn' is a valid path.
 		require
 			rn_not_void: rn /= Void
@@ -366,17 +359,16 @@ feature {NONE} -- Implementation
 			f: RAW_FILE
 			vd43: VD43
 			ok: BOOLEAN
-			u: FILE_UTILITIES
 		do
 			if is_valid then
-				f := u.make_raw_file (rn)
+				create f.make_with_path (rn)
 				ok :=
 					f.exists and then
 					f.is_plain and then
 					f.is_readable
 				if not ok then
 					create vd43
-					vd43.set_path (rn)
+					vd43.set_path (rn.name)
 					Error_handler.insert_warning (vd43)
 				end
 			end

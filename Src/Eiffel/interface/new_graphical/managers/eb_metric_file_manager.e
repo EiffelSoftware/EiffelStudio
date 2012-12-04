@@ -52,27 +52,26 @@ feature -- Access
 	metric_file: PLAIN_TEXT_FILE
 		-- File containing `file_header'.
 
-	internal_metric_file_name: FILE_NAME
+	internal_metric_file_name: detachable PATH
 		-- Path of `metric_file'.
 
 feature -- File creation
 
-	metric_file_name: FILE_NAME
+	metric_file_name: PATH
 			-- Location of XML file for metric macros.
 		local
 			directory: DIRECTORY
 		do
-			if internal_metric_file_name = Void then
-				create directory.make ("Metrics")
-				create internal_metric_file_name.make_from_string (project_location.location)
+			Result := internal_metric_file_name
+			if Result = Void then
+				Result := project_location.location.extended ("Metrics")
+				create directory.make_with_path (Result)
 				if not directory.exists then
 					directory.create_dir
 				end
-				internal_metric_file_name.set_subdirectory ("Metrics")
-				internal_metric_file_name.extend ("metric_file")
-				internal_metric_file_name.add_extension ("xml")
+				Result := Result.extended ("metric_file.xml")
+				internal_metric_file_name := Result
 			end
-			Result := internal_metric_file_name
 		end
 
 	destroy_file_name

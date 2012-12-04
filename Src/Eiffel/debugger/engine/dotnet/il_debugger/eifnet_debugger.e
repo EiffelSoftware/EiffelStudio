@@ -1643,7 +1643,7 @@ feature -- Easy access
 
 feature -- Bridge to MD_IMPORT
 
-	class_token (a_mod_name: READABLE_STRING_GENERAL; a_class_type: CLASS_TYPE): NATURAL_32
+	class_token (a_mod_name: PATH; a_class_type: CLASS_TYPE): NATURAL_32
 			-- Find class token using Meta Data.
 		local
 			l_icd_module: ICOR_DEBUG_MODULE

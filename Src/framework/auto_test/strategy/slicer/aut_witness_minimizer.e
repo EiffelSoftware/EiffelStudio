@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 		require
 			witness_attached: witness /= Void
 		local
-			file: KL_TEXT_OUTPUT_FILE
+			file: KL_TEXT_OUTPUT_FILE_32
 			last_all_used_vars: like all_used_vars
 			l_witness: like witness
 			l_sliced_witness: AUT_WITNESS
@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 			timer_execution.calculate_duration
 			timer_total.calculate_duration
 			create l_sliced_witness.make_default (slicer.last_slice)
-			create file.make (file_system.nested_pathname (log_dirname, << slice_name_generator.output_string >>))
+			create file.make_with_path (log_dirname.extended (slice_name_generator.output_string))
 			if l_sliced_witness.is_fail and then l_sliced_witness.is_same_bug (l_witness) then
 				last_all_used_vars := all_used_vars (slicer.last_slice)
 				l_sliced_witness.set_used_vars (last_all_used_vars)

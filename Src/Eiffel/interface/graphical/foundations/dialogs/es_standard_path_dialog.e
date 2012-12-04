@@ -58,18 +58,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	start_path: STRING_32 assign set_start_path
+	start_path: PATH assign set_start_path
 			-- Initial path nagivated to when showing the dialog
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		local
-			l_result: like internal_start_path
+			l_result: detachable PATH
 			l_id: like sticky_path_id
-			l_separator: CHARACTER_8
 		do
-			l_result := internal_start_path
-			if l_result = Void then
+			if attached internal_start_path as l_path then
+				Result := l_path
+			else
 				if is_path_sticky then
 					l_id := sticky_path_id
 					check l_id_attached: l_id /= Void end
@@ -84,29 +84,18 @@ feature -- Access
 						l_result := workbench.project_location.path
 					else
 							-- Use the working directory
-						l_result := (create {EXECUTION_ENVIRONMENT}).current_working_path.name.as_string_32
+						l_result := (create {EXECUTION_ENVIRONMENT}).current_working_path
 					end
-				end
-				check l_result_attached: l_result /= Void end
-
-					-- Remove trailing separator.
-				l_separator := operating_environment.directory_separator
-				if not l_result.is_empty and then l_result.item (l_result.count) = l_separator then
-					l_result.keep_head (l_result.count - 1)
 				end
 				Result := l_result
 				internal_start_path := Result
-			else
-				Result := l_result
 			end
 		ensure
 			result_consistent: Result ~ start_path
 			not_result_is_empty: not Result.is_empty
-			not_result_has_trailing_separator: Result /= Void and then
-					 Result.item (Result.count) /= operating_environment.directory_separator
 		end
 
-	path: attached STRING_32
+	path: PATH
 			-- Retrieves the dialog's path, which will be used on next show
 		require
 			is_interface_usable: is_interface_usable
@@ -115,13 +104,11 @@ feature -- Access
 		deferred
 		ensure
 			not_result_is_empty: not Result.is_empty
-			not_result_has_trailing_separator:
-				Result.item (Result.count) /= operating_environment.directory_separator
 		end
 
 feature {NONE} -- Access
 
-	sticky_paths: attached DS_HASH_TABLE [attached STRING_32, STRING]
+	sticky_paths: DS_HASH_TABLE [PATH, STRING]
 			-- Table of sticky path names.
 		once
 			create Result.make_default
@@ -140,9 +127,7 @@ feature {NONE} -- Element change
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 			not_a_path_is_empty: a_path /= Void implies not a_path.is_empty
-			not_a_path_has_trailing_separator: a_path /= Void implies
-				a_path.item (a_path.count) /= operating_environment.directory_separator
-			a_path_exists: a_path /= Void implies (create {DIRECTORY}.make (a_path)).exists
+			a_path_exists: a_path /= Void implies (create {DIRECTORY}.make_with_path (a_path)).exists
 		local
 			l_path: detachable like start_path
 		do
@@ -168,7 +153,7 @@ feature {NONE} -- Element change
 		require
 			is_interface_usable: is_interface_usable
 			not_a_path_is_empty: a_path /= Void implies not a_path.is_empty
-			a_path_exists: a_path /= Void implies (create {DIRECTORY}.make (a_path)).exists
+			a_path_exists: a_path /= Void implies (create {DIRECTORY}.make_with_path (a_path)).exists
 			not_a_dialog_is_destroyed: not a_dialog.is_destroyed
 		deferred
 		end

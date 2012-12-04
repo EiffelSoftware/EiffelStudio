@@ -1087,10 +1087,9 @@ feature {NONE} -- Export call stack
 			-- Saves the current call stack representation in a file.
 		local
 			fd: EB_FILE_SAVE_DIALOG
-			standard_path: READABLE_STRING_GENERAL
+			standard_path: PATH
 			f: RAW_FILE
 			i: INTEGER
-			u: FILE_UTILITIES
 		do
 				--| Get last path from the preferences.
 			if attached preferences.debug_tool_data.last_saved_stack_path as p and then not p.is_empty then
@@ -1101,15 +1100,15 @@ feature {NONE} -- Export call stack
 			end
 			create fd.make_with_preference (preferences.dialog_data.last_saved_call_stack_directory_preference)
 			set_dialog_filters_and_add_all (fd, <<Text_files_filter>>)
-			fd.set_start_directory (standard_path)
+			fd.set_start_path (standard_path)
 				--| We try to find a file_name that does not exist.
-			f := u.make_raw_file_in (Interface_names.default_stack_file_name + ".txt", standard_path)
+			create f.make_with_path (standard_path.extended (Interface_names.default_stack_file_name + ".txt"))
 			from
 				i := 1
 			until
 				not f.exists
 			loop
-				f := u.make_raw_file_in (Interface_names.default_stack_file_name + i.out + ".txt", standard_path)
+				create f.make_with_path (standard_path.extended (Interface_names.default_stack_file_name + i.out + ".txt"))
 				i := i + 1
 			end
 			fd.set_full_file_path (f.path)
@@ -1123,7 +1122,8 @@ feature {NONE} -- Export call stack
 			valid_dialog: fd /= Void
 		local
 			f: RAW_FILE
-			fn, fp: STRING_32
+			fn: STRING_32
+			fp: PATH
 			l_prompt: ES_QUESTION_PROMPT
 			retried: BOOLEAN
 		do
@@ -1131,7 +1131,7 @@ feature {NONE} -- Export call stack
 				if debugger_manager.safe_application_is_stopped then
 						--| We create a file (or open it).
 					fn := fd.file_name
-					fp := fd.file_path
+					fp := fd.full_file_path.parent
 					create f.make_with_name (fn)
 					if f.exists then
 						create l_prompt.make_standard (interface_names.l_file_exits (fn))
@@ -1157,7 +1157,7 @@ feature {NONE} -- Export call stack
 			retry
 		end
 
-	save_call_stack_to_filename (a_fp: like {EB_DEBUG_TOOL_DATA}.last_saved_stack_path; a_fn: STRING_32; is_append: BOOLEAN)
+	save_call_stack_to_filename (a_fp: PATH; a_fn: STRING_32; is_append: BOOLEAN)
 			-- Save call stack into file named `a_fn'.
 			-- if the file already exists and `is_append' is True
 			-- then append the stack in the same file
@@ -1184,7 +1184,7 @@ feature {NONE} -- Export call stack
 					-- Save the path to the preferences.
 					-- Encode it as UTF-8.
 				preferences.debug_tool_data.last_saved_stack_path_preference.set_value
-					(u.string_32_to_utf_8_string_8 (a_fp))
+					(u.string_32_to_utf_8_string_8 (a_fp.name))
 				preferences.preferences.save_preference (preferences.debug_tool_data.last_saved_stack_path_preference)
 			else
 					-- The file name was probably incorrect (not creatable).

@@ -103,7 +103,7 @@ feature -- Setting
 
 feature -- Path
 
-	generation_path: STRING_32
+	generation_path: PATH
 			-- Path on which c compiler will be launched.
 			-- Used when we need to open a console there.
 		deferred
@@ -387,7 +387,7 @@ feature {NONE} -- Internationalization
 	e_could_not_launch: STRING = "Could not launch C/C++ compiler."
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

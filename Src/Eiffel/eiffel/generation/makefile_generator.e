@@ -449,7 +449,7 @@ feature -- Sub makefile generation
 			make_file := old_makefile
 		rescue
 			if f_name /= Void then
-				error_handler.insert_error (create {C_COMPILER_ERROR}.make (messages.w_not_creatable (f_name)))
+				error_handler.insert_error (create {C_COMPILER_ERROR}.make (messages.w_not_creatable (f_name.name)))
 				error_handler.raise_error
 			end
 		end
@@ -460,7 +460,7 @@ feature -- Sub makefile generation
 			baskets_not_void: baskets /= Void
 		local
 			nb, i: INTEGER
-			f_name: FILE_NAME_32
+			f_name: PATH
 			basket: LINKED_LIST [STRING]
 		do
 			from
@@ -472,12 +472,11 @@ feature -- Sub makefile generation
 				basket := baskets.item (i)
 				if basket /= Void and then basket.is_empty then
 					if system.in_final_mode then
-						create f_name.make_from_string (project_location.final_path)
+						f_name := project_location.final_path
 					else
-						create f_name.make_from_string (project_location.workbench_path)
+						f_name := project_location.workbench_path
 					end
-					f_name.extend (packet_name (sub_dir, i))
-					safe_recursive_delete (f_name)
+					safe_recursive_delete (f_name.extended (packet_name (sub_dir, i)))
 				end
 				i := i + 1
 			end
@@ -1306,7 +1305,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	safe_recursive_delete (a_dir: STRING_32)
+	safe_recursive_delete (a_dir: PATH)
 			-- Delete `a_dir' content.
 		require
 			a_dir_not_void: a_dir /= Void
@@ -1316,7 +1315,7 @@ feature {NONE} -- Implementation
 			l_dir: DIRECTORY
 		do
 			if not retried then
-				create l_dir.make (a_dir)
+				create l_dir.make_with_path (a_dir)
 				if l_dir.exists then
 					l_dir.recursive_delete
 				end

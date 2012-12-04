@@ -579,7 +579,7 @@ feature {NONE} -- Implementation
 			l_options: USER_OPTIONS
 			l_pixmap: EV_PIXMAP
 			l_tooltip: READABLE_STRING_32
-			l_last_location: STRING_32
+			l_last_location: PATH
 			l_last_target: STRING
 			l_targets: DS_ARRAYED_LIST [STRING]
 			l_force_clean: BOOLEAN
@@ -621,9 +621,9 @@ feature {NONE} -- Implementation
 			else
 				if is_new_selection or is_initializing then
 					if l_options /= Void and then l_options.target.last_location /= Void then
-						l_last_location := l_options.target.last_location
+						create l_last_location.make_from_string (l_options.target.last_location)
 					else
-						l_last_location := u.file_directory_path (last_state.system.file_name).as_string_32
+						create l_last_location.make_from_string (u.file_directory_path (last_state.system.file_name))
 					end
 					l_targets := available_targets (last_state.system)
 					if l_targets.is_empty then
@@ -640,7 +640,7 @@ feature {NONE} -- Implementation
 						end
 					end
 				else
-					l_last_location := location_combo.text
+					create l_last_location.make_from_string (location_combo.text)
 					l_last_target := selected_target
 				end
 				last_state.target_name := l_last_target
@@ -663,14 +663,14 @@ feature {NONE} -- Implementation
 								action_combo.select_actions.resume
 							end
 							if l_project_file.is_corrupted then
-								l_tooltip := warning_messages.w_project_corrupted (l_project_location.location)
+								l_tooltip := warning_messages.w_project_corrupted (l_project_location.location.name)
 							elseif l_project_file.is_incompatible then
 								l_tooltip := warning_messages.w_project_incompatible (
-									l_project_location.location, version_number,
+									l_project_location.location.name, version_number,
 									l_project_file.project_version_number)
 							else
 									-- We don't really know the cause, we assume it is somewhat corrupted.
-								l_tooltip := warning_messages.w_project_corrupted (l_project_location.location)
+								l_tooltip := warning_messages.w_project_corrupted (l_project_location.location.name)
 							end
 						else
 							if not is_initializing and not is_new_action then

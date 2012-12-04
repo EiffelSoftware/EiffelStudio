@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 			l_cl: CONF_CLUSTER
 			l_excludes: CONF_FILE_RULE
 			l_dir: DIRECTORY_NAME_32
-			l_fn: FILE_NAME_32
+			l_fn: PATH
 			l_dest_dir: DIRECTORY_NAME_32
 			l_libs: HASH_TABLE [CONF_LIBRARY, STRING]
 			l_as: CONF_ASSERTIONS
@@ -151,9 +151,8 @@ feature {NONE} -- Implementation
 
 				-- store it
 			create l_fn.make_from_string (environment.destination_folder)
-			l_fn.extend (l_name)
-			l_fn.set_file_name (environment.ecf_file_name)
-			l_system.set_file_name (l_fn)
+			l_fn := l_fn.extended (l_name).extended (environment.ecf_file_name)
+			l_system.set_file_name (l_fn.name)
 			l_system.store
 		end
 

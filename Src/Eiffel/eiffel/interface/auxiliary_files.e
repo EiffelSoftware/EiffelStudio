@@ -56,7 +56,7 @@ feature -- Dynamic Library file
 			dynamic_lib_exports: HASH_TABLE [LINKED_LIST[DYNAMIC_LIB_EXPORT_FEATURE],INTEGER]
 			dl_exp: DYNAMIC_LIB_EXPORT_FEATURE
 			dynamic_lib_def_file: INDENT_FILE
-			dynamic_lib_def_file_name: FILE_NAME_32
+			dynamic_lib_def_file_name: PATH
 			C_dynamic_lib_file: INDENT_FILE
 			is_dll_generated: BOOLEAN
 			dynamic_lib: E_DYNAMIC_LIB
@@ -363,12 +363,11 @@ feature -- Dynamic Library file
 
 				system_name.append_string(".def")
 				if Context.final_mode then
-					create dynamic_lib_def_file_name.make_from_string (project_location.final_path)
+					dynamic_lib_def_file_name := project_location.final_path
 				else
-					create dynamic_lib_def_file_name.make_from_string (project_location.workbench_path)
+					dynamic_lib_def_file_name := project_location.workbench_path
 				end
-				dynamic_lib_def_file_name.set_file_name (system_name)
-				create dynamic_lib_def_file.make_open_write (dynamic_lib_def_file_name)
+				create dynamic_lib_def_file.make_open_write (dynamic_lib_def_file_name.extended (system_name))
 				def_buffer.put_in_file (dynamic_lib_def_file)
 				dynamic_lib_def_file.close
 
@@ -1041,9 +1040,9 @@ feature -- Plug and Makefile file
 			buffer.put_string (System.name)
 			buffer.put_string ("%";%N%Tegc_system_location = ")
 			if final_mode then
-				buffer.put_string_literal (u.string_32_to_utf_8_string_8 (project_location.final_path))
+				buffer.put_string_literal (u.string_32_to_utf_8_string_8 (project_location.final_path.name))
 			else
-				buffer.put_string_literal (u.string_32_to_utf_8_string_8 (project_location.workbench_path))
+				buffer.put_string_literal (u.string_32_to_utf_8_string_8 (project_location.workbench_path.name))
 			end
 			buffer.put_string (";%N%Tegc_compiler_tag = ")
 			buffer.put_integer (System.version_tag)

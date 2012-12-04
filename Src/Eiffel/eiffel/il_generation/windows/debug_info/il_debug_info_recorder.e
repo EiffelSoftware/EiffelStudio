@@ -296,7 +296,7 @@ feature -- Queries : eStudio data from debugger data
 
 feature -- Access to module name computing
 
-	module_file_name_for_class (a_class_c: CLASS_C): FILE_NAME_32
+	module_file_name_for_class (a_class_c: CLASS_C): PATH
 			-- Computed module file name for `a_class_c'
 		require
 			class_c_not_void: a_class_c /= Void
@@ -328,15 +328,15 @@ feature -- Access to module name computing
 						-- The context is pertinent only in recording context
 					if context.workbench_mode then
 						l_is_single_module := False
-						create Result.make_from_string (workbench_module_directory_path_name)
+						Result := workbench_module_directory_path_name
 					else
 						l_is_single_module := True
-						create Result.make_from_string (finalized_module_directory_path_name)
+						Result := finalized_module_directory_path_name
 					end
 				else
 						--| We assume, we are debugging only Workbench application for now.
 					l_is_single_module := False
-					create Result.make_from_string (workbench_module_directory_path_name)
+					Result := workbench_module_directory_path_name
 				end
 				if l_is_single_module then
 					l_type_id := 1
@@ -346,7 +346,7 @@ feature -- Access to module name computing
 				l_module_filename := "module_" + l_type_id.out + ".dll"
 
 					--| There complete creation of module file name
-				Result.set_file_name (l_module_filename)
+				Result := Result.extended (l_module_filename)
 			end
 		end
 
@@ -383,15 +383,15 @@ feature -- Access to module name computing
 						-- The context is pertinent only in recording context
 					if context.workbench_mode then
 						l_is_single_module := False
-						create Result.make_from_string (workbench_module_directory_path_name)
+						Result := workbench_module_directory_path_name
 					else
 						l_is_single_module := True
-						create Result.make_from_string (finalized_module_directory_path_name)
+						Result := finalized_module_directory_path_name
 					end
 				else
 						--| We assume, we are debugging only Workbench application for now.
 					l_is_single_module := False
-					create Result.make_from_string (workbench_module_directory_path_name)
+					Result := workbench_module_directory_path_name
 				end
 				if l_is_single_module then
 					l_type_id := 1
@@ -401,7 +401,7 @@ feature -- Access to module name computing
 				l_module_filename := "module_" + l_type_id.out + ".dll"
 
 					--| There complete creation of module file name
-				Result.set_file_name (l_module_filename)
+				Result := Result.extended (l_module_filename)
 			end
 		end
 
@@ -421,7 +421,7 @@ feature -- Queries : dotnet data from estudio data
 			Result := internal_requested_class_tokens.item (l_id)
 			if Result = 0 then --| Not yet known, no requested yet
 				if a_module_filename = Void then
-					l_info_from_module := info_from_module_if_exists (module_file_name_for_class_type (a_class_type))
+					l_info_from_module := info_from_module_if_exists (module_file_name_for_class_type (a_class_type).name)
 				else
 					l_info_from_module := info_from_module_if_exists (a_module_filename)
 				end
@@ -1032,10 +1032,10 @@ feature {CIL_CODE_GENERATOR} -- Cleaning
 			 then
 				last_module_info_cleaned := l_module_filename
 				debug ("debugger_il_info_trace")
-					print ("Cleaning : " + l_module_filename.to_string_32.as_string_8 + "%N")
+					print ("Cleaning : " + l_module_filename.name.as_string_8 + "%N")
 				end
 
-				l_info_from_module := info_from_module_if_exists (l_module_filename)
+				l_info_from_module := info_from_module_if_exists (l_module_filename.name)
 				if l_info_from_module /= Void then
 					l_info_from_module.reset (l_info_from_module.module_filename)
 				else
@@ -1214,7 +1214,7 @@ feature {CIL_CODE_GENERATOR, IL_DEBUG_INFO_RECORDER_EXPORTER} -- Persistence
 
 feature {NONE}-- Implementation for save and load task
 
-	save (a_filename_to_save: READABLE_STRING_GENERAL)
+	save (a_filename_to_save: PATH)
 			-- Save info into file.
 		local
 			l_object_to_save: IL_DEBUG_INFO_STORAGE
@@ -1234,7 +1234,7 @@ feature {NONE}-- Implementation for save and load task
 				else
 					l_project_path := finalized_module_directory_path_name
 				end
-				l_object_to_save.set_project_path (direct_module_key (l_project_path))
+				l_object_to_save.set_project_path (direct_module_key (l_project_path.name))
 				l_object_to_save.set_modules_debugger_info (dbg_info_modules)
 				l_object_to_save.set_class_types_debugger_info (dbg_info_class_types)
 
@@ -1242,7 +1242,7 @@ feature {NONE}-- Implementation for save and load task
 			end
 		end
 
-	load (a_il_info_file_name: READABLE_STRING_GENERAL)
+	load (a_il_info_file_name: PATH)
 			-- Load info from saved file.
 		require
 			a_il_info_file_name_not_void: a_il_info_file_name /= Void
@@ -1250,10 +1250,10 @@ feature {NONE}-- Implementation for save and load task
 			l_succeed: BOOLEAN
 			l_precomp_dirs: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
 			l_remote_project_directory: REMOTE_PROJECT_DIRECTORY
-			l_pfn: READABLE_STRING_GENERAL
+			l_pfn: PATH
 		do
 			debug ("debugger_il_info_trace")
-				print (a_il_info_file_name.substring (1, 0) + "Loading IL Info from [" + a_il_info_file_name + "] %N")
+				print ({STRING_32} "Loading IL Info from [" + a_il_info_file_name.name + "] %N")
 			end
 
 			load_successful := True
@@ -1275,7 +1275,7 @@ feature {NONE}-- Implementation for save and load task
 					l_pfn := l_remote_project_directory.precomp_il_info_file (
 						l_remote_project_directory.is_precompile_finalized and system.msil_use_optimized_precompile)
 					debug ("debugger_il_info_trace_extra")
-						print (l_pfn)
+						print (l_pfn.name)
 						io.put_new_line
 					end
 					l_succeed := import_file_data (l_pfn, l_remote_project_directory.system_name, True)
@@ -1299,22 +1299,22 @@ feature {NONE}-- Implementation for save and load task
 	loading_errors: LINKED_LIST [READABLE_STRING_GENERAL]
 			-- Loading error messages.
 
-	save_storable_data (d: IL_DEBUG_INFO_STORAGE; a_filename_to_save: READABLE_STRING_GENERAL)
+	save_storable_data (d: IL_DEBUG_INFO_STORAGE; a_filename_to_save: PATH)
 			-- Save Storable data
 		require
 			data_valid: d /= Void
 			filename_not_empty: a_filename_to_save /= Void
 		local
 			l_il_info_file: RAW_FILE
-			u: FILE_UTILITIES
 		do
 				--| Save into file
-			l_il_info_file := u.open_write_raw_file (a_filename_to_save)
+			create l_il_info_file.make_with_path (a_filename_to_save)
+			l_il_info_file.open_write
 			l_il_info_file.independent_store (d)
 			l_il_info_file.close
 		end
 
-	import_file_data (a_fn: READABLE_STRING_GENERAL; a_system_name: STRING; is_from_precompiled: BOOLEAN): BOOLEAN
+	import_file_data (a_fn: PATH; a_system_name: STRING; is_from_precompiled: BOOLEAN): BOOLEAN
 			-- Add data contained in `a_fn' into current structure
 		local
 			retried: BOOLEAN
@@ -1330,15 +1330,14 @@ feature {NONE}-- Implementation for save and load task
 
 			l_current_project_path: like direct_module_key
 			l_info_module: IL_DEBUG_INFO_FROM_MODULE
-			u: FILE_UTILITIES
 		do
 			if not retried then
 				debug ("debugger_il_info_trace")
-					io.error.put_string ("Importing IL Info from [" + a_fn.as_string_8 + "] %N")
+					io.error.put_string ("Importing IL Info from [" + a_fn.name.as_string_8 + "] %N")
 				end
 				Result := True
 
-				l_il_info_file := u.make_raw_file (a_fn)
+				create l_il_info_file.make_with_path (a_fn)
 				if l_il_info_file.exists then
 					l_il_info_file.open_read
 					l_retrieved := l_il_info_file.retrieved
@@ -1356,12 +1355,12 @@ feature {NONE}-- Implementation for save and load task
 								--| when we load the project, by default we load as workbench
 							if is_recording then
 								if context.workbench_mode then
-									l_current_project_path := direct_module_key (workbench_module_directory_path_name)
+									l_current_project_path := direct_module_key (workbench_module_directory_path_name.name)
 								else
-									l_current_project_path := direct_module_key (finalized_module_directory_path_name)
+									l_current_project_path := direct_module_key (finalized_module_directory_path_name.name)
 								end
 							else
-								l_current_project_path := direct_module_key (workbench_module_directory_path_name)
+								l_current_project_path := direct_module_key (workbench_module_directory_path_name.name)
 							end
 
 								--| First, we check if the project didn't moved to a new location
@@ -1449,7 +1448,7 @@ feature {NONE}-- Implementation for save and load task
 				end
 			else
 				Result := False
-				loading_errors.extend (a_fn.substring (1, 0) + "Unable to load [" + a_fn + "]")
+				loading_errors.extend ({STRING_32} "Unable to load [" + a_fn.name + "]")
 			end
 		rescue
 			retried := True
@@ -1462,9 +1461,9 @@ feature {NONE}-- Implementation for save and load task
 			l_fn: like module_file_name_for_class
 		do
 			create l_fn.make_from_string (a_project_path)
-			l_fn.set_file_name (a_info_module.module_name)
+			l_fn := l_fn.extended (a_info_module.module_name)
 				--| module_name : contains ".dll"
-			a_info_module.update_module_filename (direct_module_key (l_fn))
+			a_info_module.update_module_filename (direct_module_key (l_fn.name))
 		end
 
 	update_imported_precompilation_info_module (a_system_name: STRING; a_info_module: IL_DEBUG_INFO_FROM_MODULE)
@@ -1478,7 +1477,7 @@ feature {NONE}-- Implementation for save and load task
 --			else
 				l_mod_fn := workbench_precompilation_module_filename (a_info_module.system_name)
 --			end
-			a_info_module.update_module_filename (direct_module_key (l_mod_fn))
+			a_info_module.update_module_filename (direct_module_key (l_mod_fn.name))
 		end
 
 feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Module indexer implementation

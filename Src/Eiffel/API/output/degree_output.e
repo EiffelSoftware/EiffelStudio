@@ -445,7 +445,7 @@ feature -- Basic operations
 			put_new_line
 		end
 
-	put_message (a_message: STRING_32)
+	put_message (a_message: READABLE_STRING_GENERAL)
 			-- Puts a message on the output.
 			--
 			-- `a_message': The message to write.

@@ -164,7 +164,7 @@ feature {SYSTEM_I} -- Basic operations
 			-- and everything needed for test execution, otherwise clean up any previously generated
 			-- directory or classes.
 		local
-			l_path: DIRECTORY_NAME_32
+			l_path: PATH
 		do
 				-- Set `suppliers_cache' accordingly as it will define from now on
 				-- whether testing is enabled or not
@@ -313,7 +313,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	adopt_eifgens_cluster (a_target: CONF_TARGET; a_path: READABLE_STRING_32)
+	adopt_eifgens_cluster (a_target: CONF_TARGET; a_path: PATH)
 			-- Add internal {CONF_CLUSTER} to current target if testing is enabled.
 			--
 			-- `a_target': Target to which cluster is added if path exists.
@@ -332,7 +332,7 @@ feature {NONE} -- Implementation
 
 					-- We only perform any actions if the path is not already
 					-- referenced in the configuration				
-				create l_dir.make (a_path)
+				create l_dir.make_with_path (a_path)
 				if is_testing_enabled then
 					if not l_dir.exists then
 						execute_safe (agent l_dir.create_dir)
@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 
 				if l_dir.exists and then (is_testing_enabled or not l_dir.is_empty) then
 					create l_factory
-					l_loc := l_factory.new_location_from_path (a_path, a_target)
+					l_loc := l_factory.new_location_from_path (a_path.name, a_target)
 					l_cluster := l_factory.new_cluster (eifgens_cluster_name, l_loc, a_target)
 					l_cluster.set_recursive (True)
 					l_cluster.set_internal (True)

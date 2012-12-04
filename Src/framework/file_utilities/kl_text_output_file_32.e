@@ -16,7 +16,7 @@ inherit
 		end
 
 create
-	make
+	make, make_with_path
 
 feature {NONE} -- Initialization
 

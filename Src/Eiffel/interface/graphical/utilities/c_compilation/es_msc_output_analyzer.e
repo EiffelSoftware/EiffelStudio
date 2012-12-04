@@ -100,8 +100,7 @@ feature {NONE} -- Basic operations
 							if l_exp.has_matched then
 								l_function_name := l_exp.captured_substring (0)
 							end
-							l_project_location := system.project_location.location
-							l_project_location.prune_all_trailing (operating_environment.directory_separator)
+							l_project_location := system.project_location.location.name
 							l_count := l_project_location.count
 							if l_file_name.count > l_count then
 									-- Attempt to make path relative.
@@ -127,7 +126,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

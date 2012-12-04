@@ -1386,7 +1386,7 @@ feature -- Grid management
 
 feature -- Expressions storage management
 
-	default_watches_storage_folder: STRING_32
+	default_watches_storage_folder: PATH
 		local
 			retried: BOOLEAN
 		do
@@ -1413,8 +1413,7 @@ feature -- Expressions storage management
 		do
 			if not retried then
 				if attached system.eiffel_project.project_location as ploc then
-					create Result.make_from_string (ploc.location)
-					Result := Result.extended (ploc.target + "-watch#" + watch_id.out + ".txt")
+					Result := ploc.location.extended (ploc.target + "-watch#" + watch_id.out + ".txt")
 				end
 			end
 		rescue
@@ -1515,23 +1514,23 @@ feature -- Expressions storage management
 		local
 			s: STRING_32
 			f_dlg: EV_FILE_SAVE_DIALOG
-			fn: STRING_32
+			fn: PATH
 			f: PLAIN_TEXT_FILE
 		do
 			s := expressions_to_text (False)
 			if s /= Void and then not s.is_empty then
 				create f_dlg.make_with_title (interface_names.t_select_a_file)
 				if attached default_watches_storage_folder as d then
-					f_dlg.set_start_directory (d)
+					f_dlg.set_start_path (d)
 					if attached default_watches_storage_filename as n then
 						f_dlg.set_full_file_path (n)
 					end
 				end
 				f_dlg.show_modal_to_window (parent_window)
-				fn := f_dlg.file_name
+				fn := f_dlg.full_file_path
 				if fn /= Void and then not fn.is_empty then
-					internal_default_watches_storage_folder := f_dlg.file_path
-					create f.make_with_name (fn)
+					internal_default_watches_storage_folder := f_dlg.full_file_path.parent
+					create f.make_with_path (fn)
 					if not f.exists or else f.is_writable then
 						f.open_write
 						f.put_string (s)
@@ -1546,12 +1545,12 @@ feature -- Expressions storage management
 		local
 			s: STRING_32
 			f_dlg: EV_FILE_OPEN_DIALOG
-			fn: STRING_32
+			fn: PATH
 			f: PLAIN_TEXT_FILE
 		do
 			create f_dlg.make_with_title (interface_names.t_select_a_file)
 			if attached default_watches_storage_folder as d then
-				f_dlg.set_start_directory (d)
+				f_dlg.set_start_path (d)
 				if attached default_watches_storage_filename as n then
 					f_dlg.set_full_file_path (n)
 				end
@@ -1559,10 +1558,10 @@ feature -- Expressions storage management
 
 			f_dlg.disable_multiple_selection
 			f_dlg.show_modal_to_window (parent_window)
-			fn := f_dlg.file_name
+			fn := f_dlg.full_file_path
 			if fn /= Void and then not fn.is_empty then
-				internal_default_watches_storage_folder := f_dlg.file_path
-				create f.make_with_name (fn)
+				internal_default_watches_storage_folder := f_dlg.full_file_path.parent
+				create f.make_with_path (fn)
 				if f.exists and then f.is_readable then
 					f.open_read
 					from

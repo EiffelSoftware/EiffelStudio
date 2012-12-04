@@ -1020,7 +1020,7 @@ end
 					l_vis_build.set_il_version (clr_runtime_version)
 				end
 				l_vis_build.set_partial_location (
-					l_factory.new_location_from_path (project_location.partial_generation_path, l_target))
+					l_factory.new_location_from_path (project_location.partial_generation_path.name, l_target))
 
 					-- set observers
 				l_vis_build.consume_assembly_observer.extend (agent degree_output.put_consume_assemblies)
@@ -1101,7 +1101,7 @@ end
 
 					-- removed classes
 				if automatic_backup then
-					create l_file.make_with_name (workbench.backup_info_file_name)
+					create l_file.make_with_path (workbench.backup_info_file_name)
 					l_file.open_append
 				end
 				l_classes := l_vis_build.removed_classes
@@ -2566,7 +2566,6 @@ end
 			l_root_rout_info: ROUT_INFO
 			l_root_rout_id: INTEGER
 			l_rcorigin, l_rcoffset: INTEGER
-			u: FILE_UTILITIES
 		do
 debug ("ACTIVITY")
 	io.error.put_string ("Updating name.eif%N")
@@ -2582,7 +2581,8 @@ end
 			else
 				l_name := name
 			end
-			melted_file := u.open_write_raw_file_in (l_name + ".melted", project_location.workbench_path)
+			create melted_file.make_with_path (project_location.workbench_path.extended (l_name + ".melted"))
+			melted_file.open_write
 
 				-- There is something to update
 			melted_file.put_boolean (not empty)
@@ -3993,7 +3993,6 @@ feature -- Generation
 			l_writer: SED_MEDIUM_READER_WRITER
 			l_facility: SED_STORABLE_FACILITIES
 			l_mapping_file: RAW_FILE
-			u: FILE_UTILITIES
 		do
 				-- Build mapping between the new IDs and the old one.
 			from
@@ -4019,7 +4018,8 @@ feature -- Generation
 				i := i + 1
 			end
 
-			l_mapping_file := u.open_write_raw_file_in (finalized_type_mapping, project_location.final_path)
+			create l_mapping_file.make_with_path (project_location.final_path.extended (finalized_type_mapping))
+			l_mapping_file.open_write
 			create l_writer.make (l_mapping_file)
 			l_writer.set_for_writing
 			create l_facility
@@ -4037,12 +4037,11 @@ feature -- Generation
 			l_facility: SED_STORABLE_FACILITIES
 			l_reader: SED_MEDIUM_READER_WRITER
 			retried: BOOLEAN
-			u: FILE_UTILITIES
 		do
 			if not retried then
 				Result := internal_retrieved_finalized_type_mapping
 				if Result = Void then
-					l_file := u.make_raw_file_in (finalized_type_mapping, project_location.final_path)
+					create l_file.make_with_path (project_location.final_path.extended (finalized_type_mapping))
 					if l_file.exists then
 						l_file.open_read
 						create l_reader.make (l_file)
@@ -4811,8 +4810,7 @@ feature -- Generation
 			final_mode: BOOLEAN
 			temp: STRING
 			subdir: DIRECTORY
-			f_name: FILE_NAME_32
-			dir_name: DIRECTORY_NAME_32
+			dir_name: PATH
 			cecil_file, header_file: INDENT_FILE
 			buffer, header_buffer: GENERATION_BUFFER
 			l_has_visible: BOOLEAN
@@ -4861,15 +4859,12 @@ feature -- Generation
 				create temp.make (2)
 				temp.append_character (System_object_prefix)
 				temp.append_integer (1)
-				create dir_name.make_from_string (project_location.final_path)
-				dir_name.extend (temp)
-				create subdir.make (dir_name)
+				dir_name := project_location.final_path.extended (temp)
+				create subdir.make_with_path (dir_name)
 				if not subdir.exists then
 					subdir.create_dir
 				end
-				create f_name.make_from_string (dir_name)
-				f_name.set_file_name ("ececil.h")
-				create header_file.make_open_write (f_name)
+				create header_file.make_open_write (dir_name.extended ("ececil.h"))
 				header_buffer.put_in_file (header_file)
 				header_file.close
 
@@ -6098,26 +6093,19 @@ feature -- Log files
 		-- File where the names of the removed features are generated
 
 	open_log_files
-		local
-			f_name: FILE_NAME_32
 		do
 			if in_final_mode then
 					-- removed_log_file is used only in final mode
-				create f_name.make_from_string (project_location.final_path)
-				f_name.set_file_name (Removed_log_file_name)
-				create removed_log_file.make_with_name (f_name)
-
-				create f_name.make_from_string (project_location.final_path)
-				f_name.set_file_name (Translation_log_file_name)
-				create used_features_log_file.make_with_name (f_name)
+				create removed_log_file.make_with_path (project_location.final_path.extended (removed_log_file_name))
+					-- Translat files
+				create used_features_log_file.make_with_path (project_location.final_path.extended (translation_log_file_name))
 
 					-- Files are open using the `write' mode
 				removed_log_file.open_write
 				used_features_log_file.open_write
 			else
-				create f_name.make_from_string (project_location.workbench_path)
-				f_name.set_file_name (Translation_log_file_name)
-				create used_features_log_file.make_with_name (f_name)
+					-- Translat files
+				create used_features_log_file.make_with_path (project_location.workbench_path.extended (translation_log_file_name))
 
 					-- File is open using the `append' mode
 					-- (refreezing)

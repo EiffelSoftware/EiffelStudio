@@ -24,18 +24,13 @@ feature {NONE} -- Initialization
 		require
 			a_system_not_void: a_system /= Void
 			an_error_handler_not_void: an_error_handler /= Void
-		local
-			l_dirname: DIRECTORY_NAME_32
 		do
 			interpreter := a_interpreter
 			system := a_system
 			error_handler := an_error_handler
 
 				-- TODO: create a AUT_SESSION object and retrieve paths from there...
-			create l_dirname.make_from_string (system.eiffel_project.project_directory.testing_results_path)
-			l_dirname.extend ("auto_test")
-			l_dirname.extend ("log")
-			log_dirname := l_dirname
+			log_dirname := system.eiffel_project.project_directory.testing_results_path.extended ("auto_test").extended ("log")
 		ensure
 			system_set: system = a_system
 			error_handler_set: error_handler = an_error_handler
@@ -51,7 +46,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	log_dirname: STRING_32
+	log_dirname: PATH
 			-- Logging directory
 
 	error_handler: AUT_ERROR_HANDLER

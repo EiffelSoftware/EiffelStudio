@@ -54,23 +54,22 @@ feature -- Execution
 			-- Execute the C compilation.
 		local
 			byte_context: BYTE_CONTEXT
-			makefile_sh_name: FILE_NAME_32
+			makefile_sh_name: PATH
 			file: PLAIN_TEXT_FILE
 		do
 			byte_context := (create {SHARED_BYTE_CONTEXT}).context
 			if is_workbench then
 				byte_context.set_workbench_mode
-				create makefile_sh_name.make_from_string (project_location.workbench_path)
+				makefile_sh_name := project_location.workbench_path
 			else
 				byte_context.set_final_mode
-				create makefile_sh_name.make_from_string (project_location.final_path)
+				makefile_sh_name := project_location.final_path
 			end
-			makefile_sh_name.set_file_name (Makefile_SH)
-			create file.make_with_name (makefile_sh_name)
+			create file.make_with_path (makefile_sh_name.extended (makefile_sh))
 			if file.exists then
 				Eiffel_project.call_finish_freezing (is_workbench)
 			else
-				prompts.show_error_prompt (Warning_messages.w_Makefile_does_not_exist (makefile_sh_name), Void, Void)
+				prompts.show_error_prompt (Warning_messages.w_Makefile_does_not_exist (makefile_sh_name.name), Void, Void)
 			end
 		end
 

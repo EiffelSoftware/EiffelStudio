@@ -271,7 +271,7 @@ feature {NONE} -- Access
 	c_module_name: STRING
 			-- Name of C generated module containing all C externals.
 
-	location_path: READABLE_STRING_GENERAL
+	location_path: PATH
 			-- Path where assemblies are being generated.
 
 	current_feature_token: INTEGER
@@ -542,7 +542,7 @@ feature -- Generation Structure
 	start_assembly_generation (
 			a_assembly_name, a_file_name: STRING;
 			a_public_key: like public_key;
-			location: READABLE_STRING_GENERAL;
+			location: PATH;
 			assembly_info: ASSEMBLY_INFO;
 			debug_mode: BOOLEAN)
 
@@ -557,7 +557,6 @@ feature -- Generation Structure
 		local
 			l_assembly_flags: INTEGER
 			l_host: CLR_HOST
-			u: FILE_UTILITIES
 		do
 				--| Initialize recording of IL Information used for eStudio .NET debugger			
 			Il_debug_info_recorder.start_recording_session (debug_mode)
@@ -611,7 +610,7 @@ feature -- Generation Structure
 			is_debug_info_enabled := debug_mode
 			-- FIXME jfiat [2003/10/10 - 16:41] try without debug_mode, for no pdb info
 
-			output_file_name := u.make_file_name_in (a_file_name, location)
+			output_file_name := location.extended (a_file_name).name
 
 			create main_module.make (
 				a_assembly_name,
@@ -7813,7 +7812,6 @@ feature -- Mapping between Eiffel compiler and generated tokens
 		local
 			l_type_id: INTEGER
 			l_module_name: STRING
-			u: FILE_UTILITIES
 		do
 			if is_single_module then
 				l_type_id := 1
@@ -7825,7 +7823,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 				l_module_name := "module_" + l_type_id.out + ".dll"
 				create Result.make (
 					l_module_name,
-					u.make_file_name_in (l_module_name, location_path),
+					location_path.extended (l_module_name).name,
 					c_module_name,
 					Void,
 					Current,

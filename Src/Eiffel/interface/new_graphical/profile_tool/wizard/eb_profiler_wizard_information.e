@@ -29,8 +29,6 @@ feature  {NONE} -- Initialization
 
 	make
 			-- Assign default values
-		local
-			filename: PATH
 		do
 			set_workbench_mode
 
@@ -40,12 +38,8 @@ feature  {NONE} -- Initialization
 			wkb_generate_execution_profile := (wkb_existing_profile = Void)
 			flz_generate_execution_profile := (flz_existing_profile = Void)
 
-			create filename.make_from_string (project_location.workbench_path)
-			filename := filename.extended ("profinfo")
-			wkb_runtime_information_record := filename
-			create filename.make_from_string (project_location.final_path)
-			filename := filename.extended ("profinfo")
-			flz_runtime_information_record := filename
+			wkb_runtime_information_record := project_location.workbench_path.extended ("profinfo")
+			flz_runtime_information_record := project_location.final_path.extended ("profinfo")
 
 			wkb_runtime_information_type := "eiffel"
 			flz_runtime_information_type := "eiffel"
@@ -152,13 +146,13 @@ feature -- Access
 	default_query: STRING = "calls > 0"
 			-- Default query input
 
-	generation_path: STRING_32
+	generation_path: PATH
 			-- Generation path for "profinfo.pfi"
 		do
 			if workbench_mode then
-				Result := project_location.workbench_path.to_string_32
+				Result := project_location.workbench_path
 			else
-				Result := project_location.final_path.to_string_32
+				Result := project_location.final_path
 			end
 		end
 
@@ -321,9 +315,9 @@ feature {NONE} -- Implementation
 			l_u: FILE_UTILITIES
 		do
 			if is_workbench_mode then
-				create path.make_from_string (project_location.workbench_path)
+				path := project_location.workbench_path
 			else
-				create path.make_from_string (project_location.final_path)
+				path := project_location.final_path
 			end
 			files := l_u.ends_with (path, "." + Dot_profile_information, 0)
 

@@ -72,10 +72,10 @@ feature {NONE} -- Implementation
 			file: PLAIN_TEXT_FILE
 		do
 			if comp_type.is_equal ("workbench") then
-				create profile_out_file.make_from_string (project_location.workbench_path)
+				profile_out_file := project_location.workbench_path
 				is_finalized_profile := False
 			else
-				create profile_out_file.make_from_string (project_location.final_path)
+				profile_out_file := project_location.final_path
 				is_finalized_profile := True
 			end;
 			profile_out_file := profile_out_file.extended (profile_name);
@@ -89,9 +89,9 @@ feature {NONE} -- Implementation
 			file: PLAIN_TEXT_FILE
 		do
 			if comp_type.is_equal ("workbench") then
-				create translat_file.make_from_string (project_location.workbench_path)
+				translat_file := project_location.workbench_path
 			else
-				create translat_file.make_from_string (project_location.final_path)
+				translat_file := project_location.final_path
 			end;
 			translat_file := translat_file.extended (Translation_log_file_name);
 			create file.make_with_path (translat_file);

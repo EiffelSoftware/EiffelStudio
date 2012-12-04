@@ -13,17 +13,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make_open_write, make_c_code_file (fn: READABLE_STRING_GENERAL)
+	make_open_write, make_c_code_file (fn: PATH)
 			-- Create file object with `fn' as file name
 			-- and open file for writing.
 			-- Create it if it does not exist.
 		require
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
-		local
-			u: FILE_UTILITIES
 		do
-			file := u.open_write_text_file (fn)
+			create file.make_with_path (fn)
+			file.open_write
 		end
 
 feature -- Termination

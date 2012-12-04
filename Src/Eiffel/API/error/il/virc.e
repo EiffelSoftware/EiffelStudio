@@ -64,10 +64,10 @@ feature -- Access
 	has_resource_file: BOOLEAN
 			-- Does `resource_file' exist?
 
-	resource_compiler: STRING
+	resource_compiler: READABLE_STRING_GENERAL
 			-- Name of resource compiler.
 
-	resource_file: STRING
+	resource_file: READABLE_STRING_GENERAL
 			-- Name of file being processed.
 
 	file_name: like {ERROR}.file_name

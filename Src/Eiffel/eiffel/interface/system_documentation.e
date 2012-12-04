@@ -13,17 +13,16 @@ inherit
 
 feature -- Document processing
 
-	document_file_name (system_name: STRING): FILE_NAME_32
+	document_file_name (system_name: READABLE_STRING_GENERAL): detachable PATH
 			-- File name specified for the cluster text generation
 			-- Void result implies no document generation
 		do
 			if attached document_path as p then
-				create Result.make_from_string (p)
-				Result.extend (system_name)
+				Result := p.extended (system_name)
 			end
 		end
 
-	document_path: DIRECTORY_NAME_32
+	document_path: PATH
 			-- Path specified for the documents directory for classes.
 			-- Void result implies no document generation
 		do

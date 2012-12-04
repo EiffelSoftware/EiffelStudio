@@ -29,15 +29,12 @@ feature -- Action
 			-- Delete file `finished'.
 		local
 			finished_file: PLAIN_TEXT_FILE
-			finished_file_name: FILE_NAME_32
-			dir_name: DIRECTORY_NAME_32
+			dir_name: PATH
 		do
 				-- Has side effect: creating a folder
 			dir_name := validated_dir_name (final_mode, sub_dir)
 
-			create finished_file_name.make_from_string (dir_name)
-			finished_file_name.set_file_name (Finished_file_for_make)
-			create finished_file.make_with_name (finished_file_name)
+			create finished_file.make_with_path (dir_name.extended (finished_file_for_make))
 			if finished_file.exists and then finished_file.is_writable then
 				finished_file.delete
 			end
@@ -45,7 +42,7 @@ feature -- Action
 
 feature -- C code generation
 
-	gen_file_name (final_mode: BOOLEAN; base_name: STRING): STRING_32
+	gen_file_name (final_mode: BOOLEAN; base_name: STRING): PATH
 			-- Generate a file name either in workbench or final mode with
 			-- a `.c' extension in the E1 directory.
 		require
@@ -56,7 +53,7 @@ feature -- C code generation
 			result_not_void: Result /= Void
 		end
 
-	x_gen_file_name (final_mode: BOOLEAN; base_name: STRING): STRING_32
+	x_gen_file_name (final_mode: BOOLEAN; base_name: STRING): PATH
 			-- Generate a file name either in workbench or final mode with
 			-- a `.x' extension in the E1 directory.
 		require
@@ -71,7 +68,7 @@ feature -- C code generation
 			result_not_void: Result /= Void
 		end
 
-	final_file_name (base_name, extension: STRING; n: INTEGER): STRING_32
+	final_file_name (base_name, extension: STRING; n: INTEGER): PATH
 			-- Generate a file name in final_mode with file `extension'
 			-- in system directory E`n'.
 		require
@@ -84,7 +81,7 @@ feature -- C code generation
 			result_not_void: Result /= Void
 		end
 
-	workbench_file_name (base_name, extension: STRING; n: INTEGER): STRING_32
+	workbench_file_name (base_name, extension: STRING; n: INTEGER): PATH
 			-- Generate a file in workbench_mode with file `extension'
 			-- in system directory E1.
 		require
@@ -97,7 +94,7 @@ feature -- C code generation
 			result_not_void: Result /= Void
 		end
 
-	full_file_name (final_mode: BOOLEAN; sub_dir: detachable STRING; file_name: STRING; extension: detachable STRING): STRING_32
+	full_file_name (final_mode: BOOLEAN; sub_dir: detachable STRING; file_name: STRING; extension: detachable STRING): PATH
 			-- Generated file name for `final_mode' creating a subdirectory
 			-- if `sub_dir' is not Void or empty, using `file_name'+`extension' as filename.
 			-- Side effect: Create the corresponding subdirectory if it
@@ -105,14 +102,10 @@ feature -- C code generation
 		require
 			file_name_not_void: file_name /= Void
 		local
-			f_name: FILE_NAME_32
-			dir_name: DIRECTORY_NAME_32
 			l_name: STRING_32
 		do
 				-- Has side effect: creating a folder
-			dir_name := validated_dir_name (final_mode, sub_dir)
-
-			create f_name.make_from_string (dir_name)
+			Result := validated_dir_name (final_mode, sub_dir)
 			if extension /= Void then
 				create l_name.make (file_name.count + extension.count)
 				l_name.append (file_name)
@@ -120,8 +113,7 @@ feature -- C code generation
 			else
 				l_name := file_name
 			end
-			f_name.set_file_name (l_name)
-			Result := f_name
+			Result := Result.extended (l_name)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -140,24 +132,24 @@ feature -- C code generation
 
 feature {NONE} -- Implementation
 
-	validated_dir_name (final_mode: BOOLEAN; sub_dir: detachable STRING): DIRECTORY_NAME_32
+	validated_dir_name (final_mode: BOOLEAN; sub_dir: detachable STRING): PATH
 			-- Validated dir, create it if not exist.
 		local
 			dir: DIRECTORY
 		do
 			if final_mode then
-				create Result.make_from_string (project_location.final_path)
+				Result := project_location.final_path
 			else
-				create Result.make_from_string (project_location.workbench_path)
+				Result := project_location.workbench_path
 			end
 
 			if sub_dir /= Void and then not sub_dir.is_empty then
-				Result.extend (sub_dir)
+				Result := Result.extended (sub_dir)
 			end
 
 				-- Side effect here, we create a new subdirectory if it does
 				-- not exist yet.
-			create dir.make (Result)
+			create dir.make_with_path (Result)
 			if not dir.exists then
 				dir.create_dir
 			end

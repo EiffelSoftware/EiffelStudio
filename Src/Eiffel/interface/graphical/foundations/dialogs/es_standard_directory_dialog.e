@@ -34,22 +34,10 @@ feature {NONE} -- User interface initialization
 
 feature -- Access
 
-	path: attached STRING_32
+	path: PATH
 			-- <Precursor>
-		local
-			l_result: detachable STRING_32
-			l_separator: CHARACTER_8
 		do
-			l_result := dialog.directory
-			if l_result /= Void then
-				Result := l_result
-				l_separator := operating_environment.directory_separator
-				if not Result.is_empty and then Result.item (Result.count) = l_separator then
-					Result.keep_head (Result.count - 1)
-				end
-			else
-				create Result.make_empty
-			end
+			Result := dialog.path
 		end
 
 	buttons: attached DS_SET [INTEGER]
@@ -63,9 +51,9 @@ feature {NONE} -- Element change
 	set_start_path_on_dialog (a_path: like start_path; a_dialog: like dialog)
 			-- <Precursor>
 		do
-			dialog.set_start_directory (a_path)
+			dialog.set_start_path (a_path)
 		ensure then
-			dialog_start_directory_set: dialog.start_directory ~ a_path
+			dialog_start_directory_set: dialog.start_path ~ a_path
 		end
 
 feature -- Status report
@@ -129,14 +117,14 @@ feature {NONE} -- Action handlers
 				l_path := path
 				Result := Precursor
 				if Result then
-					create l_directory.make (l_path)
+					create l_directory.make_with_path (l_path)
 					Result := l_directory.exists
 					if not Result then
 						if is_path_created_on_confirm then
 							create l_question.make_standard (locale_formatter.formatted_translation (e_create_directory_1, [l_path]))
 							l_question.show_on_active_window
 							if l_question.dialog_result = l_question.dialog_buttons.yes_button then
-								file_utilities.create_directory (l_path)
+								file_utilities.create_directory_path (l_path)
 								Result := True
 							end
 						else
@@ -150,7 +138,7 @@ feature {NONE} -- Action handlers
 				Result := False
 			end
 		ensure then
-			path_exists: (is_path_created_on_confirm and Result) implies (create {DIRECTORY}.make (path)).exists
+			path_exists: (is_path_created_on_confirm and Result) implies (create {DIRECTORY}.make_with_path (path)).exists
 		end
 
 feature {NONE} -- Factory
@@ -167,7 +155,7 @@ feature {NONE} -- Internationalization
 	e_create_directory_1: STRING = "The directory '$1' does not exist.%NDo you want to create it now?"
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

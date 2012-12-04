@@ -288,7 +288,7 @@ feature
 						else
 							l_first := False
 						end
-						l_path := dir.precompiled_preobj
+						l_path := dir.precompiled_preobj.name
 							-- Add double quotes if required.
 						safe_external_path (l_path)
 							-- Use UTF-8 encoding in the generated Makefile.

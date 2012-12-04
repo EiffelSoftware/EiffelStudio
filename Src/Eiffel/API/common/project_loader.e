@@ -599,7 +599,7 @@ feature {NONE} -- Settings
 				--| Define temporary default directory structure for project
 			lace.process_user_file (a_project_path, not ignore_user_configuration_file)
 
-			compiler_project_location.set_location (lace.project_path)
+			compiler_project_location.set_location (create {PATH}.make_from_string (lace.project_path))
 
 				-- If `compiler_project_location.project_file' actually exists we will try to retrieve it.
 				-- Otherwise, it means that we are trying to compile a new project.
@@ -622,16 +622,16 @@ feature {NONE} -- Settings
 							report_incompatible_project (msg)
 						else
 							if Eiffel_project.is_corrupted then
-								msg := Warning_messages.w_project_corrupted (compiler_project_location.path)
+								msg := Warning_messages.w_project_corrupted (compiler_project_location.path.name)
 								report_project_corrupted (msg)
 							elseif Eiffel_project.retrieval_interrupted then
-								msg := Warning_messages.w_project_interrupted (compiler_project_location.path)
+								msg := Warning_messages.w_project_interrupted (compiler_project_location.path.name)
 								report_project_retrieval_interrupted (msg)
 							end
 						end
 
 					elseif Eiffel_project.incomplete_project then
-						msg := Warning_messages.w_project_directory_not_exist (compiler_project_location.project_file_name, compiler_project_location.path)
+						msg := Warning_messages.w_project_directory_not_exist (compiler_project_location.project_file_name.name, compiler_project_location.path.name)
 						report_project_incomplete (msg)
 
 					elseif Eiffel_project.read_write_error then
@@ -716,7 +716,7 @@ feature {NONE} -- Settings
 					ask_for_new_project_location (a_project_path)
 					if not has_error then
 						lace.process_user_file (project_location, not ignore_user_configuration_file)
-						compiler_project_location.set_location (lace.project_path)
+						compiler_project_location.set_location (create {PATH}.make_from_string (lace.project_path))
 					end
 				else
 					project_location := a_project_path

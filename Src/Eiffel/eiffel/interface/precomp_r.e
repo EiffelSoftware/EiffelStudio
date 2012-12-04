@@ -100,8 +100,6 @@ feature
 		local
 			precomp_dirs: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
 		do
-			Precompilation_driver.make_from_string
-					(Workbench.precompiled_driver)
 			precomp_dirs := Workbench.precompiled_directories
 			Precompilation_directories.copy (precomp_dirs)
 		end;
@@ -114,7 +112,6 @@ feature
 		local
 			precomp_dirs: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
 		do
-			Precompilation_driver.make_from_string (Workbench.precompiled_driver)
 			precomp_dirs := Workbench.precompiled_directories;
 			from
 				precomp_dirs.start
@@ -141,8 +138,8 @@ feature {NONE} -- Implementation
 			vd41: VD41;
 			vd45: VD45;
 			vd52: VD52;
-			precomp_ids: HASH_TABLE [INTEGER, READABLE_STRING_GENERAL];
-			dir_name: READABLE_STRING_GENERAL;
+			precomp_ids: HASH_TABLE [INTEGER, PATH];
+			dir_name: PATH;
 			id: INTEGER
 		do
 			create precomp_ids.make (15)
@@ -183,7 +180,7 @@ feature {NONE} -- Implementation
 								-- precompiled libraries.
 							if id /= precomp_ids.found_item then
 								create vd45
-								vd45.set_path (dir_name)
+								vd45.set_path (dir_name.name)
 								Error_handler.insert_error (vd45)
 								Error_handler.raise_error
 							end
@@ -198,7 +195,7 @@ feature {NONE} -- Implementation
 							-- precompiled libraries.
 						if id /= precomp_ids.found_item then
 							create vd45
-							vd45.set_path (a_project_location.target_path)
+							vd45.set_path (a_project_location.target_path.name)
 							Error_handler.insert_error (vd45)
 							Error_handler.raise_error
 						end

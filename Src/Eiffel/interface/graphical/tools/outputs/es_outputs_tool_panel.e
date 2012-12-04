@@ -494,7 +494,7 @@ feature {NONE} -- Basic operations
 			user_widget.extend (l_ev_widget)
 		end
 
-	save_output (a_output: attached ES_OUTPUT_PANE_I; a_file_path: attached STRING_32)
+	save_output (a_output: ES_OUTPUT_PANE_I; a_file_path: PATH)
 			-- Saves the selected output to disk.
 			--
 			-- `a_output': The output to save to disk.
@@ -508,7 +508,8 @@ feature {NONE} -- Basic operations
 			l_file: PLAIN_TEXT_FILE
 			l_text: STRING_32
 		do
-			create l_file.make_open_write (a_file_path)
+			create l_file.make_with_path (a_file_path)
+			l_file.open_write
 			l_text := a_output.text_from_window (develop_window.as_attached)
 			l_file.put_string (l_text)
 			l_file.flush
@@ -645,19 +646,18 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 			output_attached: output /= Void
 		local
-			l_file_name: FILE_NAME
+			l_file_name: PATH
 			l_dialog: ES_STANDARD_SAVE_DIALOG
 		do
 			on_output_modified (output.as_attached)
 
 				-- Create output file name.
-			create l_file_name.make_from_string (output.name.as_string_8)
-			l_file_name.add_extension ("txt")
+			create l_file_name.make_from_string (output.name + ".txt")
 
 				-- Show save dialog.
 			create l_dialog.make_with_sticky_path (locale_formatter.formatted_translation (t_save_1, [output.name]), {ES_STANDARD_DIALOG_STICKY_IDS}.global_sticky_id)
 			l_dialog.is_all_files_filter_supported := True
-			l_dialog.start_file_name := l_file_name.string.as_lower
+			l_dialog.set_start_file_name (l_file_name)
 			l_dialog.show_on_active_window
 			if l_dialog.is_confirmed then
 				save_output (output.as_attached, l_dialog.file_path)

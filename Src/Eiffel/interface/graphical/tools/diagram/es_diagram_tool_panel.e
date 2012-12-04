@@ -2283,7 +2283,6 @@ feature {EIFFEL_WORLD} -- XML Output
 			diagram_exists: esg /= Void
 		local
 			n: like id_of_class
-			u: FILE_UTILITIES
 		do
 			if attached {ES_CLUSTER_GRAPH} esg as clg then
 				n := clg.center_cluster.group_id
@@ -2292,7 +2291,7 @@ feature {EIFFEL_WORLD} -- XML Output
 					n := id_of_class (cg.center_class.class_i.config_class)
 				end
 			end
-			Result := u.make_raw_file_in (n + ".xml", Eiffel_system.context_diagram_path)
+			create Result.make_with_path (eiffel_system.context_diagram_path.extended (n + ".xml"))
 		ensure
 			result_attached: attached Result
 			result_closed: Result.is_closed
@@ -2504,7 +2503,7 @@ invariant
 	shortcut_table_not_void: shortcut_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

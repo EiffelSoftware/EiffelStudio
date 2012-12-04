@@ -269,14 +269,15 @@ feature -- Query
 			end
 		end
 
-	resource_compiler: detachable STRING
+	resource_compiler: detachable PATH
 			-- Path to `resgen' tool from .NET Framework SDK.
 		local
 			l_path: detachable STRING
 		do
 			l_path := dotnet_framework_sdk_bin_path
 			if l_path /= Void then
-				Result := l_path + "resgen.exe"
+				create Result.make_from_string (l_path)
+				Result := Result.extended ("resgen.exe")
 			end
 		end
 

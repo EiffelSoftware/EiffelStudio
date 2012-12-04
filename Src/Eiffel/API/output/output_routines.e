@@ -53,7 +53,7 @@ feature -- Miscellaneous
 			if eiffel_project.system_defined then
 				text.add_indent
 				text.process_indexing_tag_text ("compilation: ")
-				text.process_basic_text (Eiffel_system.project_location.target_path)
+				text.process_basic_text (Eiffel_system.project_location.target_path.name)
 				text.add_new_line
 
 				text.add_indent
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

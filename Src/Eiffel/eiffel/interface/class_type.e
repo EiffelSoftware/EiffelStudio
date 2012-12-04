@@ -982,22 +982,22 @@ feature -- Generation
 					-- If the status of the file has been changed we delete the
 					-- previous version.
 				if has_cpp_status_changed then
-					previous_file_name := l_file_name.twin
+					previous_file_name := l_file_name
 					if has_cpp_externals_calls then
-						previous_file_name.append (Dot_c)
+						previous_file_name := previous_file_name.appended (Dot_c)
 					else
-						previous_file_name.append (Dot_cpp)
+						previous_file_name := previous_file_name.appended (Dot_cpp)
 					end
-					create previous_file.make_with_name (previous_file_name)
+					create previous_file.make_with_path (previous_file_name)
 					if previous_file.exists and then previous_file.is_writable then
 						previous_file.delete
 					end
 				end
 			end
 			if has_cpp_externals_calls then
-				l_file_name.append (Dot_cpp)
+				l_file_name := l_file_name.appended (Dot_cpp)
 			else
-				l_file_name.append (Dot_c)
+				l_file_name := l_file_name.appended (Dot_c)
 			end
 			create Result.make_c_code_file (l_file_name)
 		end
@@ -1012,9 +1012,7 @@ feature -- Generation
 		do
 			l_sub_dir := packet_name (C_prefix, packet_number)
 			l_file_name := full_file_name (System.in_final_mode, l_sub_dir, base_file_name, Void)
-			l_file_name.append_character (Descriptor_file_suffix)
-			l_file_name.append (Dot_c)
-			create Result.make_c_code_file (l_file_name)
+			create Result.make_c_code_file (l_file_name.appended (descriptor_file_suffix.out).appended (Dot_c))
 
 				-- Side effect
 			force_c_compilation_in_sub_dir (System.in_final_mode, l_sub_dir)
@@ -1026,12 +1024,10 @@ feature -- Generation
 			l_sub_dir: STRING
 		do
 			l_sub_dir := packet_name (C_prefix, packet_number)
-			Result := full_file_name (System.in_final_mode, l_sub_dir, base_file_name, Void)
+			Result := full_file_name (System.in_final_mode, l_sub_dir, base_file_name, dot_h)
 
 				-- Side effect
 			force_c_compilation_in_sub_dir (System.in_final_mode, l_sub_dir)
-
-			Result.append (Dot_h)
 		end
 
 	header_filename: INTEGER
@@ -1917,15 +1913,15 @@ feature -- Cleaning
 		local
 			retried, file_exists: BOOLEAN
 			object_name: STRING
-			generation_dir: DIRECTORY_NAME_32
-			c_file_name, cpp_file_name: FILE_NAME_32
+			generation_dir: PATH
+			c_file_name: PATH
 			packet_nb: INTEGER
 			file: PLAIN_TEXT_FILE
-			finished_file_name: FILE_NAME_32
+			finished_file_name: PATH
 			finished_file: PLAIN_TEXT_FILE
 		do
 			if not retried and not is_precompiled and System.makefile_generator /= Void then
-				create generation_dir.make_from_string (project_location.workbench_path)
+				generation_dir := project_location.workbench_path
 
 				packet_nb := packet_number
 
@@ -1933,16 +1929,14 @@ feature -- Cleaning
 				create object_name.make (5)
 				object_name.append_character (C_prefix)
 				object_name.append_integer (packet_nb)
-				create c_file_name.make_from_string (generation_dir)
-				c_file_name.extend (object_name)
+				c_file_name := generation_dir.extended (object_name)
+				finished_file_name := c_file_name.extended (Finished_file_for_make)
 
 				create object_name.make (12)
 				object_name.append (base_file_name)
 				object_name.append_character (Descriptor_file_suffix)
 				object_name.append (Dot_c)
-				finished_file_name := c_file_name.twin
-				c_file_name.set_file_name (object_name)
-				create file.make_with_name (c_file_name)
+				create file.make_with_path (c_file_name.extended (object_name))
 				file_exists := file.exists
 				if file_exists and then file.is_writable then
 					file.delete
@@ -1950,26 +1944,22 @@ feature -- Cleaning
 				if file_exists then
 						-- We delete `finished' only if there was a file to delete
 						-- If there was no file, maybe it was simply a melted class.
-					finished_file_name.set_file_name (Finished_file_for_make)
-					create finished_file.make_with_name (finished_file_name)
+					create finished_file.make_with_path (finished_file_name)
 					if finished_file.exists and then finished_file.is_writable then
 						finished_file.delete
 					end
 				end
 
 					-- C Code file removal
-				create c_file_name.make_from_string (generation_dir)
 				create object_name.make (5)
 				object_name.append_character (C_prefix)
 				object_name.append_integer (packet_nb)
-				c_file_name.extend (object_name)
-				finished_file_name := c_file_name.twin
-				cpp_file_name := c_file_name.twin
+				c_file_name := generation_dir.extended (object_name)
+				finished_file_name := c_file_name.extended (Finished_file_for_make)
 				create object_name.make (12)
 				object_name.append (base_file_name)
 				object_name.append (Dot_c)
-				c_file_name.set_file_name (object_name)
-				create file.make_with_name (c_file_name)
+				create file.make_with_path (c_file_name.extended (object_name))
 				file_exists := file.exists
 				if file_exists and then file.is_writable then
 					file.delete
@@ -1977,8 +1967,7 @@ feature -- Cleaning
 					create object_name.make (12)
 					object_name.append (base_file_name)
 					object_name.append (Dot_cpp)
-					cpp_file_name.set_file_name (object_name)
-					create file.make_with_name (cpp_file_name)
+					create file.make_with_path (c_file_name.extended (object_name))
 					file_exists := file.exists
 					if file_exists and then file.is_writable then
 						file.delete
@@ -1987,8 +1976,7 @@ feature -- Cleaning
 				if file_exists then
 						-- We delete `finished' only if there was a file to delete
 						-- If there was no file, maybe it was simply a melted class.
-					finished_file_name.set_file_name (Finished_file_for_make)
-					create finished_file.make_with_name (finished_file_name)
+					create finished_file.make_with_path (finished_file_name)
 					if finished_file.exists and then finished_file.is_writable then
 						finished_file.delete
 					end

@@ -160,7 +160,7 @@ feature -- Status report
 			Result := widget.is_sensitive
 		end
 
-	starting_directory: STRING_32
+	starting_directory: PATH
 			-- Starting directory
 		require
 			has_browse_button: has_browse_button
@@ -323,7 +323,7 @@ feature -- Settings
 			not_password: not is_password
 		end
 
-	set_starting_directory (a_directory: STRING_32)
+	set_starting_directory (a_directory: PATH)
 			-- Set the starting directory
 		require
 			has_browse_button: has_browse_button
@@ -342,9 +342,9 @@ feature {NONE} -- Implementation
 			create file_selector
 			if starting_directory /= Void and then
 				not starting_directory.is_empty and then
-				(create {DIRECTORY}.make (starting_directory)).exists
+				(create {DIRECTORY}.make_with_path (starting_directory)).exists
 			then
-				file_selector.set_start_directory (starting_directory)
+				file_selector.set_start_path (starting_directory)
 			end
 			set_dialog_filters_and_add_all (file_selector, <<browse_file_filter>>)
 			file_selector.open_actions.extend(agent file_selected(file_selector))
@@ -355,8 +355,7 @@ feature {NONE} -- Implementation
 			-- Launch a computer directory Browser.
 		local
 			dir_selector: EV_DIRECTORY_DIALOG
-			start_directory: STRING_32
-			end_char: CHARACTER_32
+			start_directory: like starting_directory
 			u: FILE_UTILITIES
 		do
 			create dir_selector
@@ -366,21 +365,14 @@ feature {NONE} -- Implementation
 			else
 					-- Retrieve the string from the textfield, and set
 					-- the starting directory with it if it's a directory.
-				start_directory := textfield.text.twin
-
-				if not start_directory.is_empty then
-					end_char := start_directory @ start_directory.count
-					if end_char = '\' or end_char = '/' then
-						start_directory.remove_tail (1)
-					end
-				end
+				create start_directory.make_from_string (textfield.text)
 			end
 
 			if
 				not start_directory.is_empty and then
-				u.directory_exists (start_directory)
+				u.directory_path_exists (start_directory)
 			then
-				dir_selector.set_start_directory (start_directory)
+				dir_selector.set_start_path (start_directory)
 			end
 			dir_selector.ok_actions.extend (agent directory_selected (dir_selector))
 			dir_selector.show_modal_to_window (caller.first_window)
@@ -407,7 +399,7 @@ feature {NONE} -- Implementation
 	internal_widget: EV_VERTICAL_BOX
 			-- Widget representing current
 
-	internal_starting_directory: STRING_32
+	internal_starting_directory: PATH
 			-- Starting directory
 
 	browse_file_filter: STRING_32

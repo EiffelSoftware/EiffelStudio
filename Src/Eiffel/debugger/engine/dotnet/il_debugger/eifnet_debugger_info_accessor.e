@@ -62,10 +62,10 @@ feature {NONE} -- Private info
 
 feature -- Queries
 
-	icor_debug_module (a_mod_name: READABLE_STRING_GENERAL): ICOR_DEBUG_MODULE
+	icor_debug_module (a_mod_name: PATH): ICOR_DEBUG_MODULE
 			-- ICorDebugModule related to `a_mod_name'
 		do
-			Result := eifnet_debugger_info.icor_debug_module (a_mod_name.as_string_32)
+			Result := eifnet_debugger_info.icor_debug_module (a_mod_name.name)
 		end
 
 feature -- Status

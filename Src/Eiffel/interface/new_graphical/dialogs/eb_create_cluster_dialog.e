@@ -281,10 +281,10 @@ feature {NONE} -- Implementation
 	is_top_level: BOOLEAN
 			-- Create a new top level cluster.
 
-	chosen_dir: FILE_NAME_32
+	chosen_dir: PATH
 			-- The path to the created cluster.
 
-	original_path: STRING_32
+	original_path: PATH
 			-- The path with environment variables.
 
 	cluster_name: STRING_32
@@ -395,10 +395,10 @@ feature {NONE} -- Implementation
 					end
 				end
 				if aok then
-					create dir.make (chosen_dir)
-					create test_file.make_with_name (chosen_dir)
+					create dir.make_with_path (chosen_dir)
+					create test_file.make_with_path (chosen_dir)
 					if test_file.exists and then not dir.exists then
-						prompts.show_error_prompt (Warning_messages.w_Not_a_directory (chosen_dir), Current, Void)
+						prompts.show_error_prompt (Warning_messages.w_Not_a_directory (chosen_dir.name), Current, Void)
 					elseif not dir.exists then
 						create_directory (dir)
 						if aok then
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 								real_create_cluster (base_name)
 							end
 						else
-							prompts.show_error_prompt (Warning_messages.w_Cannot_create_directory (chosen_dir), Current, Void)
+							prompts.show_error_prompt (Warning_messages.w_Cannot_create_directory (chosen_dir.name), Current, Void)
 						end
 					else
 							-- if we are in a recursive cluster we don't need to do anything except refreshing
@@ -474,30 +474,30 @@ feature {NONE} -- Implementation
 		require
 			valid_state: aok
 		local
-			cp: STRING
-			icp: STRING
+			cp: PATH
+			icp: PATH
 			l_loc: CONF_DIRECTORY_LOCATION
 		do
-			cp := folder_entry.text
+			create cp.make_from_string (folder_entry.text)
 				-- top level clusters need a path
 			if is_top_level and cp.is_empty then
 				aok := False
 				prompts.show_error_prompt (warning_messages.w_cluster_path_not_valid, target.window, Void)
 			elseif cp.is_empty then
 				create chosen_dir.make_from_string (group.location.build_path (path, ""))
-				chosen_dir.set_file_name (cluster_name)
+				chosen_dir := chosen_dir.extended (cluster_name)
 				original_path := chosen_dir
 			else
-				create l_loc.make (cp, Eiffel_universe.target)
+				create l_loc.make (cp.name, Eiffel_universe.target)
 				if not is_top_level and then group.is_cluster then
 					l_loc.set_parent (group.location)
 				end
-				icp := l_loc.evaluated_directory
+				create icp.make_from_string (l_loc.evaluated_directory)
 				aok := Eiffel_universe.cluster_of_location (icp).is_empty
 				if not aok then
-					prompts.show_error_prompt (Warning_messages.w_cluster_path_already_exists (icp), target.window, Void)
+					prompts.show_error_prompt (Warning_messages.w_cluster_path_already_exists (icp.name), target.window, Void)
 				else
-					create chosen_dir.make_from_string (icp)
+					chosen_dir := icp
 					original_path := cp
 				end
 			end

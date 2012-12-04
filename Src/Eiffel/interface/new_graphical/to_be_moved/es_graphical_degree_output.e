@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 
 feature -- Basic operations
 
-	put_message (a_message: STRING_32)
+	put_message (a_message:READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
 			compiler_formatter.start_processing (True)
@@ -208,7 +208,7 @@ feature {NONE} -- Internationalization
 	lb_removing_dead_features_2: STRING = "Removing unused (dead) code ($1/$2)"
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

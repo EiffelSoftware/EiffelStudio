@@ -105,7 +105,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	open_file_agent: PROCEDURE [ANY, TUPLE [STRING_32, INTEGER_32]]
+	open_file_agent: PROCEDURE [ANY, TUPLE [PATH, INTEGER_32]]
 			-- Action to open a file and scroll to a givne line number.
 			-- Arguments: [file name, line number]
 
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	open_file_grid_item (a_file_name: STRING_32): EV_GRID_ITEM
+	open_file_grid_item (a_file_name: PATH): EV_GRID_ITEM
 			-- Grid item to display an icon to open external editor
 		require
 			mapper_attached: mapper /= Void
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 	grid_wrapper: EVS_SEARCHABLE_COMPONENT [TUPLE [EV_GRID_ITEM, EV_GRID_ITEM]]
 			-- Grid wrapper for `grid' to enable sorting
 
-	valid_file_table: HASH_TABLE [CLASS_TYPE, STRING_32]
+	valid_file_table: HASH_TABLE [CLASS_TYPE, PATH]
 			-- Valid file table
 
 feature {NONE} -- Grid binding
@@ -218,7 +218,7 @@ feature {NONE} -- Grid binding
 			-- Fill rows in `rows'.
 		local
 			l_rows: like rows
-			l_file_table: HASH_TABLE [CLASS_TYPE, STRING_32]
+			l_file_table: like valid_file_table
 			l_mapper: like mapper
 		do
 			l_rows := rows
@@ -264,9 +264,9 @@ feature {NONE} -- Grid binding
 			grid_wrapper.auto_resize_columns (grid, l_table)
 		end
 
-feature{NONE} -- Implementation/Actions
+feature {NONE} -- Implementation/Actions
 
-	on_open_file (x, y, button: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32; a_file_name: STRING_32)
+	on_open_file (x, y, button: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32; a_file_name: PATH)
 			-- Open file `a_file_name' in external editor
 		require
 			a_file_name_attached: a_file_name /= Void

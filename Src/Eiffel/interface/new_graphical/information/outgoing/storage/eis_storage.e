@@ -54,7 +54,7 @@ feature -- Retrieve and save
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				create l_file.make_with_name (storage_file_name)
+				create l_file.make_with_path (storage_file_name)
 				if l_file.exists then
 					l_file.open_read
 					create l_reader.make (l_file)
@@ -87,11 +87,10 @@ feature -- Retrieve and save
 			l_facility: SED_STORABLE_FACILITIES
 			l_writer: SED_MEDIUM_READER_WRITER
 			l_retried: BOOLEAN
-			u: FILE_UTILITIES
 		do
 			if not l_retried and then save_needed then
 				l_tuple := [tag_server, entry_server, date_server]
-				l_file := u.make_raw_file (storage_file_name)
+				create l_file.make_with_path (storage_file_name)
 				l_file.create_read_write
 				create l_writer.make (l_file)
 				create l_facility
@@ -316,11 +315,10 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	storage_file_name: FILE_NAME_32
+	storage_file_name: PATH
 			-- Path to save the storage
 		do
-			create Result.make_from_string (project_location.target_path.to_string_32)
-			Result.set_file_name (eiffel_layout.eis_storage_file)
+			Result := project_location.target_path.extended (eiffel_layout.eis_storage_file)
 		ensure
 			storage_file_name_attached: Result /= Void
 		end

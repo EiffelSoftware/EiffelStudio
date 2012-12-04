@@ -216,6 +216,8 @@ feature {NONE} -- Implementation
 					previous_size.width := l_item.minimum_width
 					previous_size.height := l_item.minimum_height
 					on_resize (x_position, y_position, width, height)
+						-- Make sure y offset is within bound after resize as the item may have shrunk.
+					set_y_offset (y_offset.min (l_item.minimum_height))
 				end
 			end
 		end

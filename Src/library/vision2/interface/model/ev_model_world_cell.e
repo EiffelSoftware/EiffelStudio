@@ -458,7 +458,7 @@ feature {NONE} -- Implementation
 				if projector.is_figure_selected then
 					is_autoscroll_enabled := True
 					is_scroll := True
-				elseif not ev_application.ctrl_pressed then
+				elseif attached {EV_APPLICATION} ev_application as l_app and then not l_app.ctrl_pressed then
 					is_autoscroll_enabled := False
 					is_scroll := False
 					drawing_area.set_pointer_style (default_pixmaps.wait_cursor)
@@ -554,8 +554,10 @@ feature {NONE} -- Implementation
 						vertical_scrollbar.change_actions.resume
 					end
 						-- Scroll on next idle
-					ev_application.do_once_on_idle (update_projector_to_scrollbar_values_agent)
-					ev_application.do_once_on_idle (agent projector.simulate_mouse_move (cursor_x.max (autoscroll_border // 2).min (da_width), cursor_y.max (0).min (da_height - (autoscroll_border // 2))))
+					if attached {EV_APPLICATION} ev_application as l_app then
+						l_app.do_once_on_idle (update_projector_to_scrollbar_values_agent)
+						l_app.do_once_on_idle (agent projector.simulate_mouse_move (cursor_x.max (autoscroll_border // 2).min (da_width), cursor_y.max (0).min (da_height - (autoscroll_border // 2))))
+					end
 					autoscroll.set_interval (scroll_timeout_interval)
 				elseif autoscroll.interval /= normal_timeout_interval then
 					autoscroll.set_interval (normal_timeout_interval)
@@ -580,29 +582,31 @@ feature {NONE} -- Implementation
 		local
 			step: INTEGER
 		do
-			if ev_application.ctrl_pressed then
-				if i <= -1 then
-					world.scale (1.1)
-					projector.full_project
-				else
-					world.scale (0.9)
-					projector.full_project
-					crop
-				end
-			else
-				if ev_application.shift_pressed then
-					step := (0.1 * horizontal_scrollbar.value_range.count).truncated_to_integer
-					if i >= 1 then
-						horizontal_scrollbar.set_value ((horizontal_scrollbar.value - step).max (horizontal_scrollbar.value_range.lower))
+			if attached {EV_APPLICATION} ev_application as l_app then
+				if l_app.ctrl_pressed then
+					if i <= -1 then
+						world.scale (1.1)
+						projector.full_project
 					else
-						horizontal_scrollbar.set_value ((horizontal_scrollbar.value + step).min (horizontal_scrollbar.value_range.upper))
+						world.scale (0.9)
+						projector.full_project
+						crop
 					end
 				else
-					step := (0.1 * vertical_scrollbar.value_range.count).truncated_to_integer
-					if i >= 1 then
-						vertical_scrollbar.set_value ((vertical_scrollbar.value - step).max (vertical_scrollbar.value_range.lower))
+					if l_app.shift_pressed then
+						step := (0.1 * horizontal_scrollbar.value_range.count).truncated_to_integer
+						if i >= 1 then
+							horizontal_scrollbar.set_value ((horizontal_scrollbar.value - step).max (horizontal_scrollbar.value_range.lower))
+						else
+							horizontal_scrollbar.set_value ((horizontal_scrollbar.value + step).min (horizontal_scrollbar.value_range.upper))
+						end
 					else
-						vertical_scrollbar.set_value ((vertical_scrollbar.value + step).min (vertical_scrollbar.value_range.upper))
+						step := (0.1 * vertical_scrollbar.value_range.count).truncated_to_integer
+						if i >= 1 then
+							vertical_scrollbar.set_value ((vertical_scrollbar.value - step).max (vertical_scrollbar.value_range.lower))
+						else
+							vertical_scrollbar.set_value ((vertical_scrollbar.value + step).min (vertical_scrollbar.value_range.upper))
+						end
 					end
 				end
 			end
@@ -622,14 +626,14 @@ invariant
 	scroll_speed_positive: scroll_speed >= 0.0
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

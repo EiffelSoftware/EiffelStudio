@@ -358,7 +358,7 @@ feature {NONE} -- Events
 			-- User pressed pointer button on `Current'.
 		do
 			if attached world as l_world and then l_world.capture_figure = Void then
-				if (attached ev_application as l_ev_app and then not l_ev_app.ctrl_pressed) or else ev_application = Void then
+				if ev_application = Void or else (attached {EV_APPLICATION} ev_application as l_ev_app and then not l_ev_app.ctrl_pressed) then
 
 					if b = move_button and is_moving then
 						-- move
@@ -491,7 +491,7 @@ feature {NONE} -- Events
 			is_move := False
 		end
 
-	ev_application: detachable EV_APPLICATION
+	ev_application: detachable separate EV_APPLICATION
 			-- The application `Current' is part of.
 		do
 			Result := ev_environment.application
@@ -507,14 +507,14 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

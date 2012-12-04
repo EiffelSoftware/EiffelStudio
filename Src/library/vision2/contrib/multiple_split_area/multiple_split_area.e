@@ -305,7 +305,7 @@ feature -- Status setting
 			holder.simulate_minimum_height (a_height + holder_tool_height)--.min (max_size))
 			if Platform_is_windows then
 				holder.remove_simulated_height
-			elseif attached application as l_application then
+			elseif attached {EV_APPLICATION} application as l_application then
 				l_application.do_once_on_idle (agent holder.remove_simulated_height)
 			end
 		end
@@ -378,7 +378,7 @@ feature -- Status setting
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			locked_in_here: BOOLEAN
 		do
-			locked_in_here := attached (create {EV_ENVIRONMENT}).application as l_application and then not attached l_application.locked_window
+			locked_in_here := attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
 			if locked_in_here and attached parent_window (Current) as l_parent_window then
 				l_parent_window.lock_update
 			end
@@ -459,7 +459,7 @@ feature -- Status setting
 			locked_in_here: BOOLEAN
 			original_index: INTEGER
 		do
-			locked_in_here := attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
+			locked_in_here := attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
 			if locked_in_here and attached parent_window (Current) as l_parent_window then
 				l_parent_window.lock_update
 			end
@@ -550,7 +550,7 @@ feature -- Status setting
 			tool_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			locked_in_here: BOOLEAN
 		do
-			locked_in_here := attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
+			locked_in_here := attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
 			if locked_in_here and then attached parent_window (Current) as l_parent_window then
 				l_parent_window.lock_update
 			end
@@ -580,7 +580,7 @@ feature -- Status setting
 			tool_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			locked_in_here: BOOLEAN
 		do
-			locked_in_here := attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
+			locked_in_here := attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
 			if locked_in_here and then attached parent_window (Current) as l_par_wind then
 				l_par_wind.lock_update
 			end
@@ -627,7 +627,7 @@ feature -- Status setting
 			tool_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			locked_in_here: BOOLEAN
 		do
-			locked_in_here := attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
+			locked_in_here := attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
 			if locked_in_here and then attached parent_window (Current) as l_parent_window then
 				l_parent_window.lock_update
 			end
@@ -725,7 +725,7 @@ feature -- Status setting
 		local
 			locked_in_here: BOOLEAN
 		do
-			locked_in_here := attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
+			locked_in_here := attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
 			if locked_in_here and then attached parent_window (Current) as l_parent_window then
 				l_parent_window.lock_update
 			end
@@ -2256,7 +2256,7 @@ feature {NONE} -- Implementation
 			Result := (create {PLATFORM}).is_windows
 		end
 
-	application: detachable EV_APPLICATION
+	application: detachable separate EV_APPLICATION
 			-- Application for `Current'. May not be a Once, as it is
 			-- possible to change the application.
 		do
@@ -2279,14 +2279,14 @@ invariant
 	minimized_states_not_void: minimized_states /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

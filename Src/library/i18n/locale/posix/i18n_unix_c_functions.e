@@ -32,6 +32,15 @@ feature {I18N_LOCALE} -- Initialization
 
 feature -- nl_langinfo
 
+	unix_get_locale_info_managed (a_int: INTEGER): MANAGED_POINTER
+			-- Managed pointer to locale into.
+			-- `unix_get_locale_info' actually allocates a new pointer and it
+			-- is the responsability of the caller to free it and thus
+			-- `own_from_pointer' as it will take ownership of the free.
+		do
+			create Result.own_from_pointer (unix_get_locale_info (a_int), 0)
+		end
+
 	unix_get_locale_info (a_int: INTEGER): POINTER
 			--
 		external
@@ -168,7 +177,7 @@ feature {NONE} -- Implementation: C externals
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

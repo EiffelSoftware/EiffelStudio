@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 			-- Add the common parameters to the replacement pattern.
 		local
 			current_time: DATE_TIME
-			tuple: TUPLE [STRING, STRING_32]
+			tuple: TUPLE [name: STRING; value: STRING_32]
 			project_name: STRING_32
 			project_name_lowercase: STRING_32
 			project_name_uppercase: STRING_32
@@ -125,44 +125,44 @@ feature {NONE} -- Implementation
 				-- Add the project name.
 			project_name := wizard_information.project_name
 			create tuple
-			tuple.put ("${FL_PROJECT_NAME}", 1)
-			tuple.put (project_name, 2)
+			tuple.name := "${FL_PROJECT_NAME}"
+			tuple.value := project_name
 			map_list.extend (tuple)
 
 				-- Add the project name (in uppercase)
 			project_name_uppercase := project_name.as_upper
 			create tuple
-			tuple.put ("${FL_PROJECT_NAME_UPPERCASE}", 1)
-			tuple.put (project_name_uppercase, 2)
+			tuple.name := "${FL_PROJECT_NAME_UPPERCASE}"
+			tuple.value := project_name_uppercase
 			map_list.extend (tuple)
 
 				-- Add the project name (in lowercase)
 			project_name_lowercase := project_name.as_lower
 			create tuple
-			tuple.put ("${FL_PROJECT_NAME_LOWERCASE}", 1)
-			tuple.put (project_name_lowercase, 2)
+			tuple.name := "${FL_PROJECT_NAME_LOWERCASE}"
+			tuple.value := project_name_lowercase
 			map_list.extend (tuple)
 
 				-- Add the project location
 			create tuple
-			tuple.put ("${FL_LOCATION}", 1)
-			tuple.put (wizard_information.project_location, 2)
+			tuple.name := "${FL_LOCATION}"
+			tuple.value := wizard_information.project_location.name
 			map_list.extend (tuple)
 
 				-- Add UUID for project
 			create l_uuid
 			create tuple
-			tuple.put ("${FL_UUID}", 1)
-			tuple.put (l_uuid.generate_uuid.out.as_string_32, 2)
+			tuple.name := "${FL_UUID}"
+			tuple.value := l_uuid.generate_uuid.out.as_string_32
 			map_list.extend (tuple)
 
 				-- Add the date for indexing clause.
 			create current_time.make_now
 			create tuple
-			tuple.put ("${FL_DATE}", 1)
-			tuple.put (
+			tuple.name := "${FL_DATE}"
+			tuple.value :=
 				{STRING_32} "$Date: "+current_time.year.out+"/"+current_time.month.out+"/"+current_time.day.out+" "+
-				current_time.hour.out+":"+current_time.minute.out+":"+current_time.second.out+" $", 2)
+				current_time.hour.out+":"+current_time.minute.out+":"+current_time.second.out+" $"
 			map_list.extend (tuple)
 		end
 

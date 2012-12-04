@@ -46,7 +46,7 @@ feature {ICOR_EXPORTER} -- Access
  			retry
 		end
 
-	create_process (a_command_line: READABLE_STRING_GENERAL; a_working_directory: PATH; a_env: detachable READABLE_STRING_GENERAL): POINTER
+	create_process (a_command_line: READABLE_STRING_GENERAL; a_working_directory: PATH; a_ns_env: detachable NATIVE_STRING): POINTER
 			-- Pointer on the freshly creared ICorDebugProcess
 		require
 			not_empty_command_line: a_command_line /= Void and then not a_command_line.is_empty
@@ -69,11 +69,9 @@ feature {ICOR_EXPORTER} -- Access
 				--| Parameters
 			p_cmd := (create {UNI_STRING}.make (a_command_line)).item
 			p_cwd := (create {UNI_STRING}.make (a_working_directory.name)).item
-			if a_env /= Void and then not a_env.is_empty then
-				if a_env.is_string_32 then
-					create_flags := create_flags | cwin_create_unicode_environment
-				end
-				p_env := (create {C_STRING}.make (a_env)).item
+			if a_ns_env /= Void and then not a_ns_env.is_empty then
+				create_flags := create_flags | cwin_create_unicode_environment
+				p_env := a_ns_env.item
 			end
 
 				--| Call

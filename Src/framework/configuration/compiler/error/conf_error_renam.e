@@ -16,12 +16,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class, a_config: STRING)
+	make (a_class, a_config: READABLE_STRING_GENERAL)
 			-- Create.
 		require
 			a_class_not_void: a_class /= Void
 		do
-			text := "Renaming for a non existing class "+a_class+"%NConfiguration: "+a_config
+			text := {STRING_32} "Renaming for a non existing class " + a_class.as_string_32 + "%NConfiguration: " + a_config.as_string_32
 		end
 
 feature -- Access
@@ -30,7 +30,7 @@ feature -- Access
 		-- Error text.
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -16,12 +16,12 @@ create
 
 feature {NONE} -- Creation
 
-	make (a_file, a_config: STRING)
+	make (a_file, a_config: READABLE_STRING_32)
 			-- Create.
 		require
 			a_file_not_void: a_file /= Void
 		do
-			text := "Class with illegal name NONE in "+a_file+"%NConfiguration "+a_config
+			text := {STRING_32} "Class with illegal name NONE in " + a_file + {STRING_32} "%NConfiguration " + a_config
 		end
 
 feature -- Access
@@ -30,7 +30,7 @@ feature -- Access
 		-- The error message.
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

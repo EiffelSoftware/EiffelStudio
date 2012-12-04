@@ -13,103 +13,103 @@ feature {NONE} -- Constants
 	Header: STRING = "<?xml version=%"1.0%" encoding=%"ISO-8859-1%"?>"
 			-- xml header
 
-	namespace_1_0_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	namespace_1_0_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-0-0"
 			-- Namespace of the 5.7 release
 
-	schema_1_0_0: STRING
+	schema_1_0_0: STRING_32
 			-- Schema of the 5.7 release
 		once
 			Result := namespace_1_0_0 +" http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
 		end
 
-	namespace_1_2_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-2-0"
+	namespace_1_2_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-2-0"
 			-- Namespace of the 6.0 release
 
-	schema_1_2_0: STRING
+	schema_1_2_0: STRING_32
 			-- Schema of the 6.0 release
 		once
 			Result := namespace_1_2_0 +" http://www.eiffel.com/developers/xml/configuration-1-2-0.xsd"
 		end
 
-	namespace_1_3_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-3-0"
+	namespace_1_3_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-3-0"
 			-- Namespace of the 6.1 release
 
-	schema_1_3_0: STRING
+	schema_1_3_0: STRING_32
 			-- Schema of the 6.1 release
 		once
 			Result := namespace_1_3_0 +" http://www.eiffel.com/developers/xml/configuration-1-3-0.xsd"
 		end
 
-	namespace_1_4_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-4-0"
+	namespace_1_4_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-4-0"
 			-- Namespace of the 6.2 release
 
-	schema_1_4_0: STRING
+	schema_1_4_0: STRING_32
 			-- Schema of the 6.2 release
 		once
 			Result := namespace_1_4_0 +" http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd"
 		end
 
-	namespace_1_5_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-5-0"
+	namespace_1_5_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-5-0"
 			-- Namespace of the 6.4 release
 
-	schema_1_5_0: STRING
+	schema_1_5_0: STRING_32
 			-- Schema of the 6.4 release
 		once
 			Result := namespace_1_5_0 +" http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd"
 		end
 
-	namespace_1_6_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-6-0"
+	namespace_1_6_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-6-0"
 			-- Namespace of the 6.6 release
 
-	schema_1_6_0: STRING
+	schema_1_6_0: STRING_32
 			-- Schema of the 6.6 release
 		once
 			Result := namespace_1_6_0 +" http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd"
 		end
 
-	namespace_1_7_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-7-0"
+	namespace_1_7_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-7-0"
 			-- Namespace of the 6.7 release
 
-	schema_1_7_0: STRING
+	schema_1_7_0: STRING_32
 			-- Schema of the 6.7 release
 		once
 			Result := namespace_1_7_0 +" http://www.eiffel.com/developers/xml/configuration-1-7-0.xsd"
 		end
 
-	namespace_1_8_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-8-0"
+	namespace_1_8_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-8-0"
 			-- Namespace of the 6.8 release
 
-	schema_1_8_0: STRING
+	schema_1_8_0: STRING_32
 			-- Schema of the 6.8 release
 		once
 			Result := namespace_1_8_0 +" http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd"
 		end
 
-	namespace_1_9_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-9-0"
+	namespace_1_9_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-9-0"
 			-- Namespace of the 7.0 release
 
-	schema_1_9_0: STRING
+	schema_1_9_0: STRING_32
 			-- Schema of the 7.0 release
 		once
 			Result := namespace_1_9_0 +" http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd"
 		end
 
-	namespace_1_10_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-10-0"
+	namespace_1_10_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-10-0"
 			-- Namespace of the 7.1 release.
 
-	schema_1_10_0: STRING
+	schema_1_10_0: STRING_32
 			-- Schema of the 7.1 release.
 		once
 			Result := namespace_1_10_0 + " http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd"
 		end
 
-	Latest_namespace: STRING
+	Latest_namespace: READABLE_STRING_32
 			-- Latest configuration namespace.
 		once
 			Result := namespace_1_10_0
 		end
 
-	Latest_schema: STRING
+	Latest_schema: STRING_32
 			-- Latest schema location.
 		once
 			Result := schema_1_10_0
@@ -117,44 +117,37 @@ feature {NONE} -- Constants
 
 feature -- Status report
 
-	is_namespace_known (n: READABLE_STRING_GENERAL): BOOLEAN
+	is_namespace_known (n: like latest_namespace): BOOLEAN
 			-- Is namespace `n' known?
 		require
 			n_attached: attached n
 		do
-			Result := n.is_valid_as_string_8 and then namespace_order.has (n.as_string_8)
+			Result := namespace_order.has (n)
 		ensure
-			consistency: Result = (n.is_valid_as_string_8 and then namespace_order.has (n.as_string_8))
+			consistency: Result = namespace_order.has (n)
 		end
 
 feature -- Normalization
 
-	normalized_namespace (n: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
+	normalized_namespace (n: like latest_namespace): like latest_namespace
 			-- A namespace constant that matches `n' or
 			-- the original value if there are no matches.
 		require
 			n_attached: n /= Void
-		local
-			n8: STRING_8
 		do
-			if n.is_valid_as_string_8 then
-				n8 := n.as_string_8
-				if n.same_string (namespace_1_0_0) then Result := namespace_1_0_0
-				elseif n.same_string (namespace_1_2_0) then Result := namespace_1_2_0
-				elseif n.same_string (namespace_1_3_0) then Result := namespace_1_3_0
-				elseif n.same_string (namespace_1_4_0) then Result := namespace_1_4_0
-				elseif n.same_string (namespace_1_5_0) then Result := namespace_1_5_0
-				elseif n.same_string (namespace_1_6_0) then Result := namespace_1_6_0
-				elseif n.same_string (namespace_1_7_0) then Result := namespace_1_7_0
-				elseif n.same_string (namespace_1_8_0) then Result := namespace_1_8_0
-				elseif n.same_string (namespace_1_9_0) then Result := namespace_1_9_0
-				elseif n.same_string (namespace_1_10_0) then Result := namespace_1_10_0
-				elseif n.same_string (latest_namespace) then Result := latest_namespace
-				else
-						-- Unknown namespace.
-					Result := n
-				end
+			if n.same_string (namespace_1_0_0) then Result := namespace_1_0_0
+			elseif n.same_string (namespace_1_2_0) then Result := namespace_1_2_0
+			elseif n.same_string (namespace_1_3_0) then Result := namespace_1_3_0
+			elseif n.same_string (namespace_1_4_0) then Result := namespace_1_4_0
+			elseif n.same_string (namespace_1_5_0) then Result := namespace_1_5_0
+			elseif n.same_string (namespace_1_6_0) then Result := namespace_1_6_0
+			elseif n.same_string (namespace_1_7_0) then Result := namespace_1_7_0
+			elseif n.same_string (namespace_1_8_0) then Result := namespace_1_8_0
+			elseif n.same_string (namespace_1_9_0) then Result := namespace_1_9_0
+			elseif n.same_string (namespace_1_10_0) then Result := namespace_1_10_0
+			elseif n.same_string (latest_namespace) then Result := latest_namespace
 			else
+					-- Unknown namespace.
 				Result := n
 			end
 		ensure
@@ -163,65 +156,35 @@ feature -- Normalization
 
 feature -- Comparison
 
-	is_before_or_equal (a: detachable READABLE_STRING_GENERAL; b: READABLE_STRING_GENERAL): BOOLEAN
+	is_before_or_equal (a: detachable like latest_namespace; b: like latest_namespace): BOOLEAN
 			-- Is namespace `a' less or equal to `b'?
 			-- (True if `a' is unknown.)
 		require
 			b_attached: attached b
 			b_known: is_namespace_known (b)
-		local
-			o_a, o_b: NATURAL_32
 		do
-			if a = Void then
-				Result := True
-			else
 				-- Namespace strings cannot be compared directly because they are not lexicographically ordered.
-				if namespace_order.has_key (a.to_string_8) then
-					o_a := namespace_order.found_item
-					o_b := namespace_order.item (b.to_string_8) -- See precondition: `b_known'
-					Result := o_a <= o_b
-				else
-					Result := True
-				end
-			end
+			Result := not attached a or else not namespace_order.has (a) or else namespace_order.item (a) <= namespace_order.item (b)
 		ensure
-			definition: Result = (a = Void or else not namespace_order.has (a.to_string_8) or else (attached namespace_order.item (a.to_string_8) as ns_a_order implies ns_a_order <= namespace_order.item (b.to_string_8)))
+			definition: Result = (not attached a or else not namespace_order.has (a) or else namespace_order.item (a) <= namespace_order.item (b))
 		end
 
-	is_after_or_equal (a: detachable READABLE_STRING_GENERAL; b: READABLE_STRING_GENERAL): BOOLEAN
+	is_after_or_equal (a: detachable like latest_namespace; b: like latest_namespace): BOOLEAN
 			-- Is namespace `a' greater or equal to `b'?
 			-- (True if `a' is unknown.)
 		require
 			b_attached: attached b
 			b_known: is_namespace_known (b)
-		local
-			o_a, o_b: NATURAL_32
 		do
-			if a = Void then
-				Result := True
-			else
 				-- Namespace strings cannot be compared directly because they are not lexicographically ordered.
-				if namespace_order.has_key (a.to_string_8) then
-					o_a := namespace_order.found_item
-					o_b := namespace_order.item (b.to_string_8) -- See precondition: `b_known'
-					Result := o_a >= o_b
-				else
-					Result := True
-				end
-			end
+			Result := not attached a or else not namespace_order.has (a) or else namespace_order.item (a) >= namespace_order.item (b)
 		ensure
-			definition: Result = (a = Void or else not namespace_order.has (a.to_string_8) or else (attached namespace_order.item (a.to_string_8) as ns_a_order implies ns_a_order >= namespace_order.item (b.to_string_8)))
+			definition: Result = (not attached a or else not namespace_order.has (a) or else namespace_order.item (a) >= namespace_order.item (b))
 		end
 
 feature {NONE} -- Ordering
 
-	namespace_configuration_values: HASH_TABLE [TUPLE [x,y,z: NATURAL_32], STRING_32]
-		once
-			create Result.make (0)
-			Result.compare_objects
-		end
-
-	namespace_order: HASH_TABLE [NATURAL, STRING]
+	namespace_order: HASH_TABLE [NATURAL, STRING_32]
 			-- Order numbers associated with namespaces.
 		once
 			create Result.make (10)

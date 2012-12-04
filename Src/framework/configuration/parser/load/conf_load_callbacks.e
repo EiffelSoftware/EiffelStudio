@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			no_error_implies_result: not is_error implies Result
 		end
 
-	check_version (a_value: detachable READABLE_STRING_GENERAL)
+	check_version (a_value: detachable like current_namespace)
 			-- Check that `a_value' is the correct version.
 		do
 			if a_value = Void then

@@ -1891,7 +1891,7 @@ feature {NONE} -- Implementation content processing
 
 feature {NONE} -- Processing of options
 
-	set_default_options (t: like current_target; namespace: READABLE_STRING_GENERAL)
+	set_default_options (t: like current_target; namespace: like latest_namespace)
 			-- Set default options depending on the supplied schema.
 		require
 			t_attached: t /= Void

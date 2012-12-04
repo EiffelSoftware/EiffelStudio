@@ -30,7 +30,7 @@ feature -- Access
 	message: READABLE_STRING_GENERAL
 			-- Error text.
 
-	file: STRING
+	file: STRING_32
 			-- File with error.
 
 	row: INTEGER
@@ -45,23 +45,23 @@ feature -- Access
 	text: STRING_32
 			-- Error text.
 		do
-			create Result.make_from_string ("Parse error")
+			create Result.make_from_string ({STRING_32} "Parse error")
 			inspect parse_mode
 			when Parse_mode_xml then
-				Result.append (" (XML syntax) ")
+				Result.append ({STRING_32} " (XML syntax) ")
 			when Parse_mode_ace then
-				Result.append (" (ACE syntax) ")
+				Result.append ({STRING_32} " (ACE syntax) ")
 			else
 			end
 			if file /= Void then
-				Result.append (" in " + file + " (line ")
+				Result.append ({STRING_32} " in " + file + {STRING_32} " (line ")
 				Result.append_integer (row)
-				Result.append (", column ")
+				Result.append ({STRING_32} ", column ")
 				Result.append_integer (column)
 				Result.append_character (')')
 			end
 			if attached message as msg then
-				Result.append (": ")
+				Result.append ({STRING_32} ": ")
 				Result.append_string_general (msg)
 			end
 		end

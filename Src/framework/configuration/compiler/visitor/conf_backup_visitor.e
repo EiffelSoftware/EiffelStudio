@@ -62,23 +62,11 @@ feature -- Visit nodes
 			-- Visit `a_cluster'.
 		local
 			l_loc: CONF_DIRECTORY_LOCATION
-			l_dir: KL_DIRECTORY
-			l_path: STRING
+			u: FILE_UTILITIES
 		do
 			create l_loc.make (a_cluster.name, a_cluster.target)
 			a_cluster.set_location (l_loc)
-			l_path := l_loc.evaluated_path
-			check
-				l_path_not_empty: not l_path.is_empty
-			end
-			if {PLATFORM}.is_windows and then l_path.item (l_path.count) = '\' then
-					-- Special handling on windows where a path terminating with a directory separator
-					-- sign would be declared to not exist even if it really exists.
-				l_path := l_path.twin
-				l_path.remove_tail (1)
-			end
-			create l_dir.make (l_path)
-			l_dir.recursive_create_directory
+			u.create_directory (l_loc.evaluated_path)
 		end
 
 	process_override (an_override: CONF_OVERRIDE)
@@ -112,7 +100,7 @@ feature -- Visit nodes
 	process_assembly (an_assembly: CONF_ASSEMBLY)
 			-- Visit `an_assembly'.
 		local
-			l_as, l_new_as: STRING
+			l_as, l_new_as: STRING_32
 			l_loc: CONF_FILE_LOCATION
 			f: FILE_UTILITIES
 		do
@@ -125,7 +113,7 @@ feature -- Visit nodes
 					l_as := an_assembly.location.evaluated_path
 					if not l_as.is_empty then
 						l_new_as := an_assembly.location.evaluated_file
-						create l_loc.make ("..\" + l_new_as, an_assembly.target)
+						create l_loc.make ({STRING_32} "..\" + l_new_as, an_assembly.target)
 						an_assembly.set_location (l_loc)
 							-- copy assembly
 						f.copy_file (l_as, (create {PATH}.make_from_string (backup_directory)).extended (l_new_as).name)

@@ -12,12 +12,12 @@ extern "C" {
 #include "eif_main.h"
 
 extern void emain(int, char **);
-extern int main(int, char **, char **);
+extern int main(int, char **, EIF_NATIVE_CHAR **);
 extern void egc_init_plug (void); 
 extern void egc_rcdt_init (void);
 
 
-int main (int argc, char ** argv, char ** envp)
+int main (int argc, char ** argv, EIF_NATIVE_CHAR ** envp)
 {
 
 #ifdef EIF_THREADS

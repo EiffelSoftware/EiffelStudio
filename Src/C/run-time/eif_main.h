@@ -81,7 +81,7 @@ RT_LNK LPWSTR eif_lpCmdLine;
 RT_LNK int eif_nCmdShow;
 #endif
 
-RT_LNK char **eif_environ;
+RT_LNK EIF_NATIVE_CHAR **eif_environ;
 RT_LNK int is_debug_mode (void);
 RT_LNK void set_debug_mode (int);
 #ifdef WORKBENCH

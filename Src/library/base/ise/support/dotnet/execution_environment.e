@@ -143,7 +143,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	starting_environment_variables: HASH_TABLE [STRING, STRING]
+	starting_environment_variables: HASH_TABLE [STRING_32, STRING_32]
 			-- Table of environment variables associated with current process,
 			-- indexed by variable name
 		do
@@ -158,7 +158,7 @@ feature -- Access
 						attached {SYSTEM_STRING} l_entry.key as l_key and then
 						attached {SYSTEM_STRING} l_entry.value as l_value
 					then
-						Result.force (l_value, l_key)
+						Result.force (create {STRING_32}.make_from_cil (l_value), create {STRING_32}.make_from_cil (l_key))
 					end
 				end
 			else

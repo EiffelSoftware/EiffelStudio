@@ -19,10 +19,6 @@ extern void egc_rcdt_init (void);
 extern void eif_retrieve_root (int *argc, char **argv);
 extern void eif_init_root (void);
 
-#ifndef GetEnvironmentStringsA 
- extern LPVOID WINAPI GetEnvironmentStringsA(void);
-#endif
-
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	return main();
@@ -32,7 +28,7 @@ int main (void)
 {
 	int argc;
 	char **argv;
-	char **envp;
+	EIF_NATIVE_CHAR **envp;
 
 		/* These variables are used by the WEL library */
 	ghInstance = GetModuleHandle(NULL);
@@ -44,7 +40,7 @@ int main (void)
 		/* Initialization of the command line which is going to be passed to eiffel */
 	get_argcargv (&argc, &argv);
 		/* We get ANSI version of environment variables */
-	envp = (char **) GetEnvironmentStringsA();
+	envp = (EIF_NATIVE_CHAR **) GetEnvironmentStringsW();
 
 	eif_alloc_init();
 #ifdef EIF_THREADS
@@ -71,7 +67,7 @@ int main (void)
 		free_argv (&argv);
 		reclaim();
 	}
-	FreeEnvironmentStringsA ((LPSTR) envp);
+	FreeEnvironmentStringsW ((LPWSTR) envp);
 
 	exit(0);
 	return 0;

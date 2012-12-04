@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 							create l_root_pixmap
 							create l_hbox
 							l_filename := l_exec.current_working_path.extended (l_pref_parent_short_name.to_string_32 + {STRING_32} ".png")
-							l_root_pixmap.set_with_named_file (l_filename.string_representation)
+							l_root_pixmap.set_with_named_path (l_filename)
 							l_root_pixmap.pointer_button_press_actions.force_extend (agent (a_pre: attached like selected_preference_name)
 										require
 											a_pre_attached: a_pre /= Void

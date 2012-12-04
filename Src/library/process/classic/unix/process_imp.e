@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			l_exec_name: STRING_32
 			l_args: detachable like separated_words
 		do
-			l_args := separated_words (cmd_line.as_string_32)
+			l_args := separated_words (cmd_line)
 			if l_args.is_empty then
 				l_exec_name := " "
 				l_args := Void
@@ -418,7 +418,8 @@ feature{NONE} -- Initialization
 		local
 			l_cmd_line: STRING_32
 		do
-			create l_cmd_line.make_from_string (a_exec_name.as_string_32)
+			create l_cmd_line.make (a_exec_name.count)
+			l_cmd_line.append_string_general (a_exec_name)
 			executable := l_cmd_line
 
 			initialize_working_directory (a_working_directory)

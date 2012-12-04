@@ -31,7 +31,7 @@ feature{NONE} -- Initialization
 			create input_mutex.make
 
 			arguments := args
-			create c.make_empty
+			create c.make (a_exec_name.count)
 			c.append_string_general (a_exec_name)
 
 			if args /= Void and then not args.is_empty then
@@ -42,7 +42,7 @@ feature{NONE} -- Initialization
 				loop
 					if attached args.item as l_arg and then not l_arg.is_empty then
 						c.append_character (' ')
-						if separated_words (l_arg.as_string_32).count > 1 then
+						if separated_words (l_arg).count > 1 then
 							c.append_character ('"')
 							c.append_string_general (l_arg)
 							c.append_character ('"')
@@ -59,12 +59,16 @@ feature{NONE} -- Initialization
 		end
 
 	make_with_command_line (cmd_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL)
+		local
+			c: STRING_32
 		do
 			create child_process.make
 			create input_buffer.make_empty
 			create input_mutex.make
 
-			create command_line.make_from_string (cmd_line.as_string_32)
+			create c.make (cmd_line.count)
+			c.append_string_general (cmd_line)
+			command_line := c
 			initialize_working_directory (a_working_directory)
 			initialize_parameter
 		end

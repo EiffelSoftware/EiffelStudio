@@ -846,7 +846,7 @@ feature {NONE} -- Implementation
 			Result := a_char = ' '
 		end
 
-	separated_words (a_cmd: STRING_32): ARRAYED_LIST [STRING_32]
+	separated_words (a_cmd: READABLE_STRING_GENERAL): ARRAYED_LIST [STRING_32]
 			-- Break shell command held in 'a_cmd' into words and
 			-- return retrieved word list.
 		require
@@ -870,7 +870,7 @@ feature {NONE} -- Implementation
 					l_length := a_cmd.count
 					l_pos := 1
 					l_pos_all := 1
-					l_char := a_cmd.code (l_pos_all).to_character_32
+					l_char := a_cmd.item (l_pos_all)
 				until
 					l_pos_all > l_length or else l_char = '%U'
 				loop
@@ -915,7 +915,7 @@ feature {NONE} -- Implementation
 							l_was_backslash := True
 							l_current_word.append_character (l_char)
 							l_pos := l_pos + 1
-							l_char := a_cmd.code (l_pos).to_character_32
+							l_char := a_cmd.item (l_pos)
 						when '%'' then
 							l_in_simple := True
 						when '"' then
@@ -958,7 +958,7 @@ feature {NONE} -- Implementation
 					end
 					l_pos_all := l_pos_all + 1
 					if l_pos_all <= l_length then
-						l_char := a_cmd.code (l_pos_all).to_character_32
+						l_char := a_cmd.item (l_pos_all)
 					end
 				end
 				if l_pos > 1 then

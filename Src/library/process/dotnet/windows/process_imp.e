@@ -23,68 +23,83 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_exec_name: STRING; args: detachable LIST [STRING]; a_working_directory: detachable STRING)
+	make (a_exec_name: READABLE_STRING_GENERAL; args: detachable LIST [READABLE_STRING_GENERAL]; a_working_directory: detachable READABLE_STRING_GENERAL)
 		local
-			l_arg: STRING
+			c: STRING_32
+			arg_line: STRING_32
+			e: STRING_32
 		do
 			create child_process.make
 			create input_buffer.make_empty
 			create exit_mutex.make
 			create input_mutex.make
 
-			create arguments.make
-			create command_line.make_from_string (a_exec_name)
-			create argument_line.make (128)
-			executable := a_exec_name.twin
+			arguments := args
+			create c.make (a_exec_name.count)
+			c.append_string_general (a_exec_name)
+
+			create arg_line.make (128)
+			create e.make (a_exec_name.count)
+			e.append_string_general (a_exec_name)
+
 			if args /= Void and then not args.is_empty then
 				from
 					args.start
 				until
 					args.after
 				loop
-					l_arg := args.item
-					if l_arg /= Void and then not l_arg.is_empty then
-						argument_line.append_character (' ')
+					if attached args.item as l_arg and then not l_arg.is_empty then
+						arg_line.append_character (' ')
 						if separated_words (l_arg).count > 1 then
-							argument_line.append_character ('"')
-							argument_line.append (l_arg)
-							argument_line.append_character ('"')
+							arg_line.append_character ('"')
+							arg_line.append_string_general (l_arg)
+							arg_line.append_character ('"')
 						else
-							argument_line.append (l_arg)
+							arg_line.append_string_general (l_arg)
 						end
 					end
 					args.forth
 				end
-				command_line.append (argument_line)
-				argument_line.left_adjust
+				c.append (arg_line)
+				arg_line.left_adjust
 			end
+			executable := e
+			command_line := c
+			argument_line := arg_line
 			initialize_working_directory (a_working_directory)
 			initialize_parameter
 		ensure then
-			executable_set: executable.is_equal (a_exec_name)
+			executable_set: a_exec_name.same_string (executable)
 		end
 
-	make_with_command_line (cmd_line: STRING; a_working_directory: detachable STRING)
+	make_with_command_line (cmd_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL)
 			-- If directory name or file name in `cmd_line' includes space, use double quotes around
 			-- those names.
 		local
-			cmd_arg: LIST [STRING]
+			cmd_arg: LIST [READABLE_STRING_GENERAL]
+			c: STRING_32
+			arg_line: STRING_32
 		do
 			create child_process.make
 			create input_buffer.make_empty
 			create exit_mutex.make
 			create input_mutex.make
 
-			create command_line.make_from_string (cmd_line)
-			cmd_arg := separated_words (cmd_line)
+			create c.make (cmd_line.count)
+			c.append_string_general (cmd_line)
+
+			cmd_arg := separated_words (c)
 			check not cmd_arg.is_empty end
-			create executable.make_from_string (cmd_arg.i_th (1))
+			create executable.make_from_string (cmd_arg.i_th (1).to_string_32)
 			if cmd_arg.count = 1 then
-				create argument_line.make_empty
+				create arg_line.make_empty
 			else
-				create argument_line.make_from_string (cmd_line.substring (executable.count + 1, cmd_line.count))
-				argument_line.left_adjust
+				create arg_line.make_from_string (c.substring (executable.count + 1, c.count))
+				arg_line.left_adjust
 			end
+
+			argument_line := arg_line
+			command_line := c
 			initialize_working_directory (a_working_directory)
 			initialize_parameter
 		end
@@ -509,7 +524,7 @@ feature{NONE} -- Implementation
 				if input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
 					l_input_file_name := input_file_name
 					check l_input_file_name_attached: l_input_file_name /= Void end
-					create input_file.make (l_input_file_name)
+					create input_file.make_with_name (l_input_file_name)
 					check
 						input_file_exists: input_file.exists
 					end
@@ -773,10 +788,10 @@ feature{NONE} -- Implementation
 	child_process: SYSTEM_DLL_PROCESS
 		-- Class used to manipulate a process
 
-	executable: STRING
+	executable: STRING_32
 			-- Program which will be launched
 
-	argument_line: STRING
+	argument_line: STRING_32
 			-- Argument list of `executable'
 
 	out_thread: detachable PROCESS_OUTPUT_LISTENER_THREAD

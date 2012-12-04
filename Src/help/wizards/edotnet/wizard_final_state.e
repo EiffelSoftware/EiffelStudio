@@ -104,7 +104,7 @@ feature {NONE} -- Constants
 			create Result.make (3000)
 			Result.append (interface_names.l_you_have_specified_following_settings.as_string_32 + New_line + New_line +
 					 bench_interface_names.l_Project_name.as_string_32 + ": " + New_line + Tab + wizard_information.project_name + New_line +
-					 bench_interface_names.l_project_location.as_string_32 + ": " + New_line + Tab + wizard_information.project_location.string_representation + New_line +
+					 bench_interface_names.l_project_location.as_string_32 + ": " + New_line + Tab + wizard_information.project_location.name + New_line +
 					interface_names.l_application_type.as_string_32 + ": " + New_line + Tab)
 			if wizard_information.generate_dll then
 				Result.append (interface_names.l_Dll_type)

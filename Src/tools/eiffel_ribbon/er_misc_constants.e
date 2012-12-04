@@ -81,7 +81,9 @@ feature -- Query
 	ise_eiffel: detachable STRING
 			-- $ISE_EIFFEL value if exists
 		do
-			Result := get_environment ({EIFFEL_CONSTANTS}.ise_eiffel_env)
+			if attached get_environment_32 ({EIFFEL_CONSTANTS}.ise_eiffel_env) as v then
+				Result := v.to_string_8 -- FIXME jfiat [2012/12/03] : not Unicode
+			end
 		end
 
 	template: DIRECTORY_NAME

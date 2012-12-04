@@ -35,7 +35,9 @@ feature {NONE} -- Query
 		do
 			check is_eiffel_layout_defined: is_eiffel_layout_defined end
 			if use_environment_variables and then is_eiffel_layout_defined then
-				Result := eiffel_layout.get_environment (a_id.as_string_8)
+				if attached eiffel_layout.get_environment_32 (a_id) as v then
+					Result := v.to_string_8
+				end
 			end
 		end
 

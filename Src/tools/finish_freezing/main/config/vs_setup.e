@@ -66,22 +66,22 @@ feature -- Implementation
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 		local
-			l_process_values: detachable LIST [STRING]
-			l_values: LIST [STRING]
-			l_process_var: detachable STRING
-			l_merged: STRING
+			l_process_values: detachable LIST [STRING_32]
+			l_values: LIST [STRING_32]
+			l_process_var: detachable STRING_32
+			l_merged: STRING_32
 			l_name, l_new_values: WEL_STRING
 			l_success: BOOLEAN
 		do
 			if not a_values.is_empty then
 				create l_name.make (a_name)
 
-				l_values := a_values.split (';')
+				l_values := a_values.to_string_32.split (';')
 				if not l_values.is_empty then
 					l_values.compare_objects
 
 						-- Retrieve existing variable
-					l_process_var := eiffel_layout.get_environment (a_name)
+					l_process_var := eiffel_layout.get_environment_32 (a_name)
 					if l_process_var /= Void then
 						l_process_values := l_process_var.split (';')
 						l_process_values.compare_objects
@@ -98,7 +98,7 @@ feature -- Implementation
 								-- Rebuild variable value string list
 						create l_merged.make (300)
 						from l_values.start until l_values.after loop
-							l_merged.append (l_values.item + ";")
+							l_merged.append (l_values.item + {STRING_32} ";")
 							l_values.forth
 						end
 						create l_new_values.make (l_merged)

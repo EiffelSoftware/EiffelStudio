@@ -38,8 +38,8 @@ feature {NONE} -- Initialization
 				-- Create the analzyer for error output
 			if
 				not {PLATFORM}.is_windows or else (
-				attached eiffel_layout.get_environment (once "ISE_C_COMPILER") as l_var and then
-				l_var.is_case_insensitive_equal (once "gcc"))
+				attached eiffel_layout.get_environment_32 (once "ISE_C_COMPILER") as l_var and then
+				l_var.is_case_insensitive_equal (once {STRING_32} "gcc"))
 			then
 					-- Use GCC.
 				create {ES_GCC_OUTPUT_ANALYZER} analyzer.make (notifier_formatter)
@@ -81,7 +81,7 @@ feature {NONE} -- Factory
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

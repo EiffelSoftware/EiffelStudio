@@ -694,7 +694,7 @@ feature {NONE} -- Settings
 							end
 							system.force_rebuild
 						else
-							eiffel_layout.set_environment_32 (l_old_val, l_key)
+							eiffel_layout.set_environment (l_old_val, l_key)
 						end
 					end
 					l_envs.forth

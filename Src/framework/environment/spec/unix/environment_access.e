@@ -13,12 +13,12 @@ inherit
 
 feature -- Access
 
-	get_from_application (a_var, a_app: STRING): detachable STRING
+	get_from_application (a_var: READABLE_STRING_GENERAL; a_app: detachable READABLE_STRING_GENERAL): detachable STRING_32
 			-- Get `a_var' as if we were `a_app'.
 		require
 			a_var_ok: a_var /= Void and then not a_var.has ('%U')
 		do
-			Result := get (a_var)
+			Result := item (a_var)
 		end
 
 note

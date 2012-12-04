@@ -286,6 +286,9 @@
 	<target name="compile_all_batch_unix" extends="compile_all_batch">
 		<setting name="platform" value="unix"/>
 	</target>
+	<target name="compile_all_bench_windows" extends="compile_all_bench">
+		<setting name="platform" value="windows"/>
+	</target>
 	<target name="compile_all_bench_unix" extends="compile_all_bench">
 		<setting name="platform" value="unix"/>
 	</target>

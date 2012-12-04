@@ -147,12 +147,15 @@ feature -- Access
 	force_32bit: BOOLEAN
 			-- Indiciates if 32bit compilation should be forced
 
+	is_ascii: BOOLEAN
+			-- Does makefile use only ASCII?
+
 feature -- Execution
 
 	translate
 			-- create Makefile from Makefile.SH and options
 		do
-			translate_makefile (True)
+			translate_makefile (True, ".")
 			translate_sub_makefiles
 		end
 
@@ -192,6 +195,8 @@ feature -- Execution
 					l_success := l_process.launched
 					if l_success then
 						l_process.wait_for_exit
+					else
+						io.error.put_string ("ERROR: Cannot start %"" + command.as_string_8 + "%".")
 					end
 				end
 
@@ -204,6 +209,8 @@ feature -- Execution
 					l_success := l_process.launched
 					if l_success then
 						l_process.wait_for_exit
+					else
+						io.error.put_string ("ERROR: Cannot start %"" + command.as_string_8 + "%".")
 					end
 				end
 			end
@@ -226,6 +233,8 @@ feature -- Execution
 			l_success := l_process.launched
 			if l_success then
 				l_process.wait_for_exit
+			else
+				io.error.put_string ("ERROR: Cannot start %"" + eiffel_layout.emake_command_name.name.as_string_8 + "%".")
 			end
 				-- Restore original code page in case it has been changed.
 			{WEL_API}.set_console_input_code_page (input_code_page).do_nothing
@@ -237,7 +246,7 @@ feature {NONE} -- Translation
 	check_for_il
 			-- Read content of first Ace file
 		do
-			open_files
+			open_files (".")
 			if has_makefile_sh then
 				makefile_sh.read_stream (makefile_sh.count)
 				is_il_code := makefile_sh.last_string.substring_index ("$(IL_SYSTEM)", 1) > 0
@@ -247,9 +256,9 @@ feature {NONE} -- Translation
 			end
 		end
 
-	translate_makefile  (master: BOOLEAN)
-			-- translate the Makefile.SH in the current directory
-			-- 	master: is this the master makefile (i.e. the one in the F/W_code directory)?
+	translate_makefile  (master: BOOLEAN; directory: READABLE_STRING_GENERAL)
+			-- Translate the Makefile.SH in the specified `directory'.
+			-- Apply special rules to the top-level makefile flagged by `master'.
 		do
 			debug ("progress")
 				io.put_string ("Translate makefile")
@@ -259,7 +268,7 @@ feature {NONE} -- Translation
 				io.put_new_line
 			end
 
-			open_files
+			open_files (directory)
 
 			if has_makefile_sh then
 				check
@@ -311,9 +320,7 @@ feature {NONE} -- Translation
 						io.put_string (dir)
 						io.put_string (".%N")
 					end
-					env.change_working_path (create {PATH}.make_from_string (dir))
-					translate_makefile (False)
-					env.change_working_path (create {PATH}.make_from_string (options.get_string_or_default ("updir", "..")))
+					translate_makefile (False, dir)
 					old_dir := dir.twin
 				end
 			end
@@ -400,44 +407,46 @@ feature {NONE} -- Translation
 				io.put_string ("Translate spit%N")
 			end
 
-			lastline := makefile_sh.last_string.twin
-
-			check
-				endtag = Void implies lastline.substring (1,10).is_equal ("$spitshell")
-			end
-
-			-- look for ending tag
-			if endtag = Void then
-				strpos := lastline.substring_index ("<<", 1)
-
-				if lastline.item (strpos+2) = ''' then
-					tag := lastline.substring (strpos+3, lastline.index_of (''', strpos+3)-1)
-				else
-					tag := lastline.substring (strpos+2, lastline.count)
-				end
-
-				read_next
-			else
-				tag := endtag
-			end
-
-			-- translate all lines in spit section
-			from
-			until
-				makefile_sh.end_of_file or else lastline.is_equal (tag)
-			loop
-				if do_subst then
-					translate_line_subst
-				else
-					if not lastline.is_empty then
-						translate_line_change
-					else
-						makefile.put_new_line
-					end
-				end
-
-				read_next
+			if not makefile_sh.end_of_file then
 				lastline := makefile_sh.last_string.twin
+
+				check
+					endtag = Void implies lastline.substring (1,10).is_equal ("$spitshell")
+				end
+
+					-- look for ending tag
+				if endtag = Void then
+					strpos := lastline.substring_index ("<<", 1)
+
+					if lastline.item (strpos+2) = ''' then
+						tag := lastline.substring (strpos+3, lastline.index_of (''', strpos+3)-1)
+					else
+						tag := lastline.substring (strpos+2, lastline.count)
+					end
+
+					read_next
+				else
+					tag := endtag
+				end
+
+				-- translate all lines in spit section
+				from
+				until
+					makefile_sh.end_of_file or else lastline.is_equal (tag)
+				loop
+					if do_subst then
+						translate_line_subst
+					else
+						if not lastline.is_empty then
+							translate_line_change
+						else
+							put_new_line
+						end
+					end
+
+					read_next
+					lastline := makefile_sh.last_string.twin
+				end
 			end
 
 			read_next
@@ -472,7 +481,8 @@ feature {NONE} -- Translation
 				lastline := makefile_sh.last_string.twin
 			until
 				lastline ~ options.get_string ("externals_continuation_text") or else
-				lastline.count>4 and then lastline.substring (1,4).is_equal (options.get_string_or_default ("all", empty_string).substring (1,4))
+				lastline.count>4 and then lastline.substring (1,4).is_equal (options.get_string_or_default ("all", empty_string).substring (1,4)) or else
+				makefile_sh.end_of_file
 			loop
 				debug ("translate_translate")
 					debug ("input")
@@ -512,8 +522,8 @@ feature {NONE} -- Translation
 					end
 				end
 
-				makefile.put_string (lastline)
-				makefile.put_new_line
+				put_string (lastline)
+				put_new_line
 
 				read_next
 				lastline := makefile_sh.last_string
@@ -562,15 +572,15 @@ feature {NONE} -- Translation
 					end
 				end
 
-				makefile.put_string (lastline.out)
-				makefile.put_new_line
+				put_string (lastline.out)
+				put_new_line
 
 				read_next
 				lastline := makefile_sh.last_string.twin
 			end
 
 			if not makefile_sh.end_of_file and externals then
-				makefile.put_new_line
+				put_new_line
 				read_next
 			end
 		end
@@ -623,16 +633,16 @@ feature {NONE} -- Translation
 				read_next
 				read_next
 
-				makefile.put_string (options.get_string_or_default ("all", empty_string))
-				makefile.put_string (appl_exe)
+				put_string (options.get_string_or_default ("all", empty_string))
+				put_string (appl_exe)
 
 				if shared_library_pos /= 0 then
-					makefile.put_string (" $(SYSTEM_IN_DYNAMIC_LIB)")
+					put_string (" $(SYSTEM_IN_DYNAMIC_LIB)")
 				end
 
-				makefile.put_new_line
-				makefile.put_string (options.get_string_or_default ("completed", empty_string))
-				makefile.put_string ("%N%N")
+				put_new_line
+				put_string (options.get_string_or_default ("completed", empty_string))
+				put_string ("%N%N")
 			end
 		end
 
@@ -656,8 +666,8 @@ feature {NONE} -- Translation
 			from
 				lastline := makefile_sh.last_string.twin
 			until
-				lastline.count > ("OBJECTS=").count and then lastline.substring (1, ("OBJECTS=").count).is_equal ("OBJECTS=")
-				--lastline.count > appl.count and then lastline.substring (1, appl.count).is_equal (appl)
+				lastline.count > ("OBJECTS=").count and then lastline.substring (1, ("OBJECTS=").count).is_equal ("OBJECTS=") or else
+				makefile_sh.end_of_file
 			loop
 				debug ("translate_dependencies")
 					debug ("input")
@@ -685,18 +695,18 @@ feature {NONE} -- Translation
 
 				if filename ~ options.get_string ("emain_text") then
 					filename.append (options.get_string_or_default ("obj_text", ".obj"))
-					makefile.put_string (dir)
-					makefile.put_string (directory_separator)
+					put_string (dir)
+					put_string (directory_separator)
 					subst_dir_sep (dependency)
-					makefile.put_string (options.get_string_or_default ("emain_obj_text", empty_string))
-					makefile.put_string (": ")
-					makefile.put_string (dependency)
-					makefile.put_new_line
+					put_string (options.get_string_or_default ("emain_obj_text", empty_string))
+					put_string (": ")
+					put_string (dependency)
+					put_new_line
 					read_next
 					lastline := makefile_sh.last_string.twin
 					subst_dir_sep (lastline)
-					makefile.put_string (lastline)
-					makefile.put_new_line
+					put_string (lastline)
+					put_new_line
 				elseif filename.is_equal ("Makefile") and then dir.is_equal ("E1") then
 					is_E1_makefile := True
 				elseif filename.is_equal ("estructure") and then dir.is_equal ("E1") then
@@ -722,41 +732,41 @@ feature {NONE} -- Translation
 					end
 					dependent_directories.put_right ([dir, l_target_file])
 
-					makefile.put_string (l_target_file)
-					makefile.put_string (":")
-					makefile.put_string (dependency)
-					makefile.put_new_line
+					put_string (l_target_file)
+					put_string (":")
+					put_string (dependency)
+					put_new_line
 				end
 
 				if is_E1_makefile then
 					read_next
 				elseif is_E1_structure or is_E1_offsets then
 					subst_dir_sep (lastline)
-					makefile.put_string (lastline)
-					makefile.put_new_line
+					put_string (lastline)
+					put_new_line
 					read_next
 					lastline := makefile_sh.last_string.twin
 					subst_dir_sep (lastline)
-					makefile.put_string (lastline)
-					makefile.put_new_line
-					makefile.put_new_line
+					put_string (lastline)
+					put_new_line
+					put_new_line
 				else
-					makefile.put_string ("%T")
-					makefile.put_string (options.get_string_or_default ("cd", empty_string))
-					makefile.put_string (" ")
-					makefile.put_string (dir)
-					makefile.put_string (options.get_string_or_default ("subcommand_separator", " && "))
-					makefile.put_string ("$(START_TEST) $(MAKE) ")
-					makefile.put_string (filename)
-					makefile.put_string (" $(END_TEST)")
-					makefile.put_string (options.get_string_or_default ("subcommand_separator", " && "))
-					makefile.put_string (options.get_string_or_default ("cd", empty_string))
-					makefile.put_string (" ")
-					makefile.put_string (options.get_string_or_default ("updir", empty_string))
+					put_string ("%T")
+					put_string (options.get_string_or_default ("cd", empty_string))
+					put_string (" ")
+					put_string (dir)
+					put_string (options.get_string_or_default ("subcommand_separator", " && "))
+					put_string ("$(START_TEST) $(MAKE) ")
+					put_string (filename)
+					put_string (" $(END_TEST)")
+					put_string (options.get_string_or_default ("subcommand_separator", " && "))
+					put_string (options.get_string_or_default ("cd", empty_string))
+					put_string (" ")
+					put_string (options.get_string_or_default ("updir", empty_string))
 
 					read_next
 
-					makefile.put_string ("%N%N")
+					put_string ("%N%N")
 				end
 
 				read_next
@@ -768,50 +778,51 @@ feature {NONE} -- Translation
 			--read_next
 
 				-- Generate the `OBJECTS = ' line
-			makefile.put_string (options.get_string_or_default ("objects_text", empty_string))
+			put_string (options.get_string_or_default ("objects_text", empty_string))
 			across
 				dependent_directories as d
 			loop
-				makefile.put_string (d.item.file)
-				makefile.put_character (' ')
+				put_string (d.item.file)
+				put_character (' ')
 			end
 
 				-- Generate the `x_OBJECTS = ' lines
-			makefile.put_string ("%N%N")
-			makefile.put_string (options.get_string_or_default ("c_objects_text", empty_string))
+			put_string ("%N%N")
+			put_string (options.get_string_or_default ("c_objects_text", empty_string))
 			across
 				object_dependent_directories as d
 			loop
-				makefile.put_string (d.item.file)
-				makefile.put_character (' ')
+				put_string (d.item.file)
+				put_character (' ')
 			end
 			if object_dependent_directories.is_empty then
-				makefile.put_string (" %"%" %N")
+				put_string (" %"%" %N")
 			end
 
-			makefile.put_string ("%N%N")
-			makefile.put_string (options.get_string_or_default ("eobjects_text", empty_string))
+			put_string ("%N%N")
+			put_string (options.get_string_or_default ("eobjects_text", empty_string))
 			across
 				system_dependent_directories as d
 			loop
-				makefile.put_string (d.item.file)
-				makefile.put_character (' ')
+				put_string (d.item.file)
+				put_character (' ')
 			end
 
-			makefile.put_string ("%N%N")
+			put_string ("%N%N")
 
 			from
 				lastline := makefile_sh.last_string.twin
 			until
 				lastline.count > ("PRECOMP_OBJECTS=").count and then
-				lastline.substring (1, ("PRECOMP_OBJECTS=").count).is_equal ("PRECOMP_OBJECTS=")
+				lastline.substring (1, ("PRECOMP_OBJECTS=").count).is_equal ("PRECOMP_OBJECTS=") or else
+				makefile_sh.end_of_file
 			loop
 				read_next
 				lastline := makefile_sh.last_string.twin
 			end
 			l_precomps := get_precompile_libs (lastline)
-			makefile.put_string (l_precomps)
-			makefile.put_new_line
+			put_string (l_precomps)
+			put_new_line
 		end
 
 	translate_line_subst
@@ -871,8 +882,8 @@ feature {NONE} -- Translation
 				end
 			end
 
-			makefile.put_string (lastline)
-			makefile.put_new_line
+			put_string (lastline)
+			put_new_line
 		end
 
 	translate_line_change
@@ -975,7 +986,7 @@ feature {NONE} -- Translation
 				subst_eiffel (replacement)
 				subst_platform (replacement)
 				subst_compiler (replacement)
-				makefile.put_string (replacement)
+				put_string (replacement)
 			else
 				debug ("translate_line_change")
 					debug ("output")
@@ -985,10 +996,10 @@ feature {NONE} -- Translation
 					end
 				end
 
-				makefile.put_string (lastline)
+				put_string (lastline)
 			end
 
-			makefile.put_new_line
+			put_new_line
 		end
 
 	translate_appl
@@ -1050,7 +1061,7 @@ feature {NONE} -- Translation
 				end
 			end
 
-			makefile.put_string (lastline)
+			put_string (lastline)
 
 				-- Get rid of what comes after the application rule.
 			from
@@ -1071,16 +1082,16 @@ feature {NONE} -- Translation
 				io.put_string ("%Tcecil%N")
 			end
 
-			makefile.put_string ("%N#STATIC_CECIL PART%N")
+			put_string ("%N#STATIC_CECIL PART%N")
 
 			lastline := makefile_sh.last_string.twin
 			lastline.replace_substring_all (".a", lib_extension)
-			makefile.put_string (lastline)
-			makefile.put_new_line
+			put_string (lastline)
+			put_new_line
 
 			read_next
-			makefile.put_string (makefile_sh.last_string)
-			makefile.put_new_line
+			put_string (makefile_sh.last_string)
+			put_new_line
 
 			if options.has ("cecil_make") and then attached options.get_string ("cecil_make") as l_cecil_make then
 				lastline := l_cecil_make.twin
@@ -1107,8 +1118,8 @@ feature {NONE} -- Translation
 				end
 			end
 
-			makefile.put_string (lastline)
-			makefile.put_new_line
+			put_string (lastline)
+			put_new_line
 
 
 			read_next
@@ -1121,15 +1132,15 @@ feature {NONE} -- Translation
 				lastline := makefile_sh.last_string.twin
 			end
 
-			makefile.put_new_line
-			makefile.put_new_line
+			put_new_line
+			put_new_line
 
-			makefile.put_string ("%N#SHARED_CECIL PART%N")
-			makefile.put_string (lastline)
-			makefile.put_new_line
+			put_string ("%N#SHARED_CECIL PART%N")
+			put_string (lastline)
+			put_new_line
 			read_next
-			makefile.put_string (makefile_sh.last_string)
-			makefile.put_new_line
+			put_string (makefile_sh.last_string)
+			put_new_line
 
 -- DEF_FILE= appl.def
 			if options.has ("cecil_def") then
@@ -1137,15 +1148,15 @@ feature {NONE} -- Translation
 				lastline.replace_substring_all ("$appl", appl)
 				subst_eiffel (lastline)
 				subst_platform (lastline)
-				makefile.put_string (lastline)
+				put_string (lastline)
 			end
-			makefile.put_new_line
+			put_new_line
 
 				-- dynamic_cecil: $(SHARED_CECIL)
-			makefile.put_new_line
+			put_new_line
 			read_next
-			makefile.put_string (makefile_sh.last_string)
-			makefile.put_new_line
+			put_string (makefile_sh.last_string)
+			put_new_line
 
 			from
 			until
@@ -1157,43 +1168,43 @@ feature {NONE} -- Translation
 
 				-- SHARED_CECIL_OBJECT
 			lastline.replace_substring_all (".o", object_extension)
-			makefile.put_string (lastline)
-			makefile.put_new_line
+			put_string (lastline)
+			put_new_line
 			read_next
-			makefile.put_string ("SHAREDFLAGS = $(LDSHAREDFLAGS)")
+			put_string ("SHAREDFLAGS = $(LDSHAREDFLAGS)")
 
 				-- SHAREDFLAGS
 			if options.has ("cecil_dynlib") then
-				makefile.put_string (" \%N")
+				put_string (" \%N")
 				lastline := options.get_string_or_default ("cecil_dynlib", empty_string).twin
 				lastline.replace_substring_all ("$appl", appl)
 				subst_eiffel (lastline)
 				subst_platform (lastline)
 				subst_compiler (lastline)
-				makefile.put_string (lastline)
-				makefile.put_new_line
+				put_string (lastline)
+				put_new_line
 			else
-				makefile.put_new_line
+				put_new_line
 			end
 
 				-- SHARED_CECIL
 			read_next
-			makefile.put_string (makefile_sh.last_string)
-			makefile.put_string (" $(DEF_FILE)")
-			makefile.put_new_line
+			put_string (makefile_sh.last_string)
+			put_string (" $(DEF_FILE)")
+			put_new_line
 
 				-- $(RM) "$(SHARD_CECIL)"
 			read_next
 			lastline := options.get_string_or_default ("safe_rm", "").twin
 			lastline.replace_substring_all ("@", "$(SHARED_CECIL)")
 			lastline.precede ('%T')
-			makefile.put_string (lastline)
-			makefile.put_new_line
+			put_string (lastline)
+			put_new_line
 
 				-- $(SHAREDLINK) $(SHAREDFLAGS) $(SHARED_CECIL_OBJECT) $(SHAREDLIBS)
 			read_next
-			makefile.put_string (makefile_sh.last_string)
-			makefile.put_new_line
+			put_string (makefile_sh.last_string)
+			put_new_line
 
 				-------------------------------------------------
 				-- Search the beginning of the SYSTEM_IN_DYNAMIC_LIB part
@@ -1207,17 +1218,17 @@ feature {NONE} -- Translation
 				lastline := makefile_sh.last_string.twin
 			end
 
-			makefile.put_string ("%N#SYSTEM_IN_DYNAMIC_LIB PART%N%N")
+			put_string ("%N#SYSTEM_IN_DYNAMIC_LIB PART%N%N")
 
 				-- DEF_FILE= appl.def
-			makefile.put_string ("DEF_FILE= ")
-			makefile.put_string (appl)
-			makefile.put_string (".def")
-			makefile.put_new_line
+			put_string ("DEF_FILE= ")
+			put_string (appl)
+			put_string (".def")
+			put_new_line
 
 				-- dynlib: $(SYSTEM_IN_DYNAMIC_LIB)
-			makefile.put_string (makefile_sh.last_string)
-			makefile.put_new_line
+			put_string (makefile_sh.last_string)
+			put_new_line
 
 				-- egc_dynlib.obj
 			read_next
@@ -1227,8 +1238,8 @@ feature {NONE} -- Translation
 			subst_platform (lastline)
 			subst_compiler (lastline)
 			subst_dir_sep (lastline)
-			makefile.put_string (lastline)
-			makefile.put_new_line
+			put_string (lastline)
+			put_new_line
 
 			read_next -- $(MV) $(ISE_EIFFEL....
 			lastline := makefile_sh.last_string.twin
@@ -1236,37 +1247,37 @@ feature {NONE} -- Translation
 			subst_platform (lastline)
 			subst_compiler (lastline)
 			subst_dir_sep (lastline)
-			makefile.put_string (lastline)
-			makefile.put_new_line
+			put_string (lastline)
+			put_new_line
 
 			read_next -- cd E1 ; $(MAKE) ....
 			lastline := makefile_sh.last_string.twin
 			lastline.replace_substring_all (".o", object_extension)
 			lastline.replace_substring_all (" ; ", options.get_string_or_default ("subcommand_separator", " && "))
-			makefile.put_string (lastline)
-			makefile.put_new_line
+			put_string (lastline)
+			put_new_line
 
 				-- edynlib.obj
 			read_next
 			lastline := makefile_sh.last_string.twin
 			lastline.replace_substring_all (".o", object_extension)
 			subst_dir_sep (lastline)
-			makefile.put_string (lastline)
-			makefile.put_new_line
+			put_string (lastline)
+			put_new_line
 
 			read_next -- cd E1 ; $(MAKE) ...
 			lastline := makefile_sh.last_string.twin
 			lastline.replace_substring_all (".o", object_extension)
 			lastline.replace_substring_all (" ; ", options.get_string_or_default ("subcommand_separator", " && "))
-			makefile.put_string (lastline)
-			makefile.put_new_line
+			put_string (lastline)
+			put_new_line
 
 				-- SYSTEM_IN_DYNAMIC_LIB_OBJ
 			read_next
-			makefile.put_new_line
+			put_new_line
 			read_next
-			makefile.put_string (makefile_sh.last_string)
-			makefile.put_new_line
+			put_string (makefile_sh.last_string)
+			put_new_line
 
 			from
 				previous_line := ""
@@ -1280,42 +1291,42 @@ feature {NONE} -- Translation
 
 			previous_line.replace_substring_all (".o", object_extension)
 			subst_dir_sep (previous_line)
-			makefile.put_string (previous_line)
-			makefile.put_new_line
+			put_string (previous_line)
+			put_new_line
 
 				-- DYNLIBSHAREDFLAGS
-			makefile.put_string ("DYNLIBSHAREDFLAGS = $(LDSHAREDFLAGS)")
+			put_string ("DYNLIBSHAREDFLAGS = $(LDSHAREDFLAGS)")
 			if options.has ("system_dynlib") then
-				makefile.put_string (" \%N")
+				put_string (" \%N")
 				lastline := options.get_string_or_default ("system_dynlib", empty_string).twin
 				lastline.replace_substring_all ("$appl", appl)
 				subst_eiffel (lastline)
 				subst_platform (lastline)
 				subst_compiler (lastline)
-				makefile.put_string (lastline)
-				makefile.put_new_line
+				put_string (lastline)
+				put_new_line
 			else
-				makefile.put_new_line
+				put_new_line
 			end
 
 -- SYSTEM_IN_DYNAMIC_LIB
 			read_next
-			makefile.put_string (makefile_sh.last_string)
-			makefile.put_string (" $(DEF_FILE)")
-			makefile.put_new_line
+			put_string (makefile_sh.last_string)
+			put_string (" $(DEF_FILE)")
+			put_new_line
 
 -- $(RM) "$(SYSTEM_IN_DYNAMIC_LIB)"
 			read_next
 			lastline := options.get_string_or_default ("safe_rm", "").twin
 			lastline.replace_substring_all ("@", "$(SYSTEM_IN_DYNAMIC_LIB)")
 			lastline.precede ('%T')
-			makefile.put_string (lastline)
-			makefile.put_new_line
+			put_string (lastline)
+			put_new_line
 
 -- $(SHAREDLINK) $(DYNLIBSHAREDFLAGS) $(SYSTEM_IN_DYNAMIC_LIB_OBJ) $(SHAREDLIBS)
 			read_next
-			makefile.put_string (makefile_sh.last_string)
-			makefile.put_new_line
+			put_string (makefile_sh.last_string)
+			put_new_line
 	end
 
 feature {NONE}	-- substitutions
@@ -1588,6 +1599,47 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {NONE} -- Input/output
+
+	put_character (c: CHARACTER)
+			-- Write `c' to `makefile'.
+		do
+			makefile.put_character (c)
+			if c.natural_32_code > 127 then
+				is_ascii := False
+			end
+		end
+
+	put_string (s: STRING)
+			-- Write `s' to `makefile'.
+		local
+			c: CHARACTER
+			i: like {STRING}.count
+		do
+			makefile.put_string (s)
+			if is_ascii then
+				from
+					i := s.count
+				until
+					i <= 0
+				loop
+					if s [i].natural_32_code > 127 then
+						is_ascii := False
+						i := 1
+					end
+					i := i - 1
+				variant
+					i + 1
+				end
+			end
+		end
+
+	put_new_line
+			-- Write new line to `makefile'.
+		do
+			makefile.put_new_line
+		end
+
 	read_next
 			-- read the next line from Makefile.SH if possible
 		do
@@ -1677,23 +1729,23 @@ feature {NONE} -- Implementation
 			search_and_replace (Result)
 		end
 
-	open_files
-			-- open the Makefile.SH and the Makefile to translate
+	open_files (directory: READABLE_STRING_GENERAL)
+			-- Open the Makefile.SH and the Makefile to translate in `directory'.
 		local
 			out_file, retried: BOOLEAN
+			p: PATH
 		do
 			if not retried then
 				out_file := False
-				create makefile_sh.make_with_name ("Makefile.SH")
+				create p.make_from_string (directory)
+				create makefile_sh.make_with_path (p.extended ("Makefile.SH"))
 				if makefile_sh.exists then
 					makefile_sh.open_read
 					has_makefile_sh := True
 					out_file := True
-					create makefile.make_open_write ("Makefile")
-					if options.get_boolean ("makefile_bom", False) then
-							-- Start makefile with a BOM.
-						makefile.put_string ({UTF_CONVERTER}.utf_8_bom_to_string_8)
-					end
+					create makefile.make_with_path (p.extended ("Makefile"))
+					makefile.open_write
+					is_ascii := True
 				else
 					has_makefile_sh := False
 				end
@@ -1711,7 +1763,10 @@ feature {NONE} -- Implementation
 		end
 
 	close_files
-			-- close the Makefile.SH and the Makefile
+			-- Close the Makefile.SH and the Makefile.
+		local
+			p: PATH
+			f: PLAIN_TEXT_FILE
 		do
 			debug ("implementation")
 				io.put_string("%Tclose_files%N")
@@ -1723,6 +1778,19 @@ feature {NONE} -- Implementation
 
 			if makefile /= Void and then not Makefile.is_closed then
 				makefile.close
+				if not is_ascii and then options.get_boolean ("makefile_bom", False) then
+						-- Start makefile with a BOM.
+					p := makefile.path
+					makefile.rename_path (p.appended (".bak"))
+					makefile.open_read
+					create f.make_with_path (p)
+					f.open_write
+					f.put_string ({UTF_CONVERTER}.utf_8_bom_to_string_8)
+					makefile.copy_to (f)
+					f.close
+					makefile.close
+					makefile.delete
+				end
 			end
 		end
 
@@ -1785,4 +1853,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class MAKEFILE_TRANSLATOR
+end

@@ -51,7 +51,7 @@ feature -- Access
 	text: STRING
 			-- The text output.
 
-	schema: STRING
+	schema: STRING_32
 			-- Schema to use.
 
 feature -- Update
@@ -467,7 +467,7 @@ feature {NONE} -- Implementation
 			text.append (a_text)
 		end
 
-	append_text (a_text: STRING)
+	append_text (a_text: READABLE_STRING_8)
 			-- Append `a_text'.
 		require
 			a_text_not_void: a_text /= Void and then not a_text.is_empty
@@ -495,10 +495,10 @@ feature {NONE} -- Implementation
 					-- Replace special markup characters with character entities
 					-- and control or non-ASCII characters with character references.
 				inspect c
-				when '<' then text.append_string (lt_entity)
-				when '>' then text.append_string (gt_entity)
-				when '&' then text.append_string (amp_entity)
-				when '"' then text.append_string (quot_entity)
+				when '<' then text.append_string_general (lt_entity)
+				when '>' then text.append_string_general (gt_entity)
+				when '&' then text.append_string_general (amp_entity)
+				when '"' then text.append_string_general (quot_entity)
 				else
 					if ' ' <= c and then c <= '%/127/' then
 						text.append_character (c.to_character_8)
@@ -542,6 +542,8 @@ feature {NONE} -- Implementation
 			condition_attached: attached condition
 			get_name_attached: attached get_name
 			name_attached: attached name
+		local
+			space_delimiter: STRING
 		do
 			check attached condition.item as i and then attached i.value as v then
 				append_text_indent ("<")
@@ -552,15 +554,19 @@ feature {NONE} -- Implementation
 					append_text (" value=%"")
 				end
 				from
+						-- The first item is not preceeded with any delimiter.
+						-- The second and next ones are preceeded with a space
+						-- that is assigned to `space_delimiter' in the loop.
+					space_delimiter := ""
 					v.start
 				until
 					v.after
 				loop
-					append_text (get_name.item ([v.item]).as_lower)
-					append_text (" ")
+					append_text (space_delimiter)
+					append_text_escaped (get_name.item ([v.item]).as_lower)
+					space_delimiter := once " "
 					v.forth
 				end
-				text.remove_tail (1)
 				append_text ("%"/>%N")
 			end
 		end
@@ -1158,7 +1164,8 @@ feature {NONE} -- Implementation
 		require
 			a_note_not_void: a_note /= Void
 		local
-			l_name, l_value: STRING
+			l_name: STRING
+			l_value: STRING_32
 			l_attr: like {CONF_NOTE_ELEMENT}.attributes
 		do
 			if not a_note.element_name.is_empty then
@@ -1174,7 +1181,7 @@ feature {NONE} -- Implementation
 					l_name := l_attr.key_for_iteration
 					l_value := l_attr.item_for_iteration
 					if l_value = Void then
-						l_value := once ""
+						l_value := once {STRING_32} ""
 					end
 					if l_name /= Void and then not l_name.is_empty then
 						append_text_attribute (l_name, l_value)

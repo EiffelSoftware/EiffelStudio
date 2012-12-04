@@ -16,15 +16,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file_name: STRING; a_class_name: STRING; a_suggested_file_name: STRING)
+	make (a_file_name: READABLE_STRING_32; a_class_name: STRING; a_suggested_file_name: READABLE_STRING_32)
 			-- Create.
 		require
 			a_file_name_not_void: a_file_name /= Void
 			a_class_name_not_void: a_class_name /= Void
 		do
-			text := "Class: " + a_class_name + "%N"
-			text.append ("File name: " + a_file_name + "%N")
-			text.append ("Expected file name: " + a_suggested_file_name + "%N")
+			text := {STRING_32} "Class: " + a_class_name + {STRING_32} "%N"
+			text.append ({STRING_32} "File name: " + a_file_name + {STRING_32} "%N")
+			text.append ({STRING_32} "Expected file name: " + a_suggested_file_name + {STRING_32} "%N")
 		end
 
 feature -- Access
@@ -33,7 +33,7 @@ feature -- Access
 		-- Error text.
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

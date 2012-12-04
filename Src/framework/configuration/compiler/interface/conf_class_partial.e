@@ -156,9 +156,9 @@ feature {NONE} -- Implementation
 			partial_classes_not_void: partial_classes /= Void
 		local
 			l_lst: ARRAYED_LIST [STRING]
-			l_dir: KL_DIRECTORY
 			l_file: PLAIN_TEXT_FILE
 			l_name: STRING
+			u: FILE_UTILITIES
 		do
 			if not is_error then
 				create l_lst.make_from_array (partial_classes.current_keys)
@@ -170,13 +170,12 @@ feature {NONE} -- Implementation
 					path := ""
 					file_name := ""
 				else
-					path := group.target.system.uuid.out+"/"+group.name
+					path := group.target.system.uuid.out + "/" + group.name
 
-					create l_dir.make (base_location.build_path (path, ""))
-					l_dir.recursive_create_directory
+					u.create_directory (base_location.build_path (path, {STRING_32} ""))
 
 						-- Use temporary file to get name of class.
-					file_name := "tmp.e"
+					file_name := {STRING_32} "tmp.e"
 					create l_file.make_open_write (full_file_name)
 					l_file.put_string (epc_merger.class_text)
 					l_file.close
@@ -188,8 +187,8 @@ feature {NONE} -- Implementation
 					set_name (l_name)
 
 						-- rename file to class name
-					file_name := name.as_lower + ".e"
-					l_file.change_name (full_file_name)
+					file_name := name.as_lower + {STRING_32} ".e"
+					l_file.rename_file (full_file_name)
 				end
 			end
 		ensure

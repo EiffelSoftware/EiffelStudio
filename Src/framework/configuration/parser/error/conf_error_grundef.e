@@ -20,12 +20,12 @@ feature {NONE} -- Initialization
 			-- Error text.
 		do
 			if file /= Void then
-				Result := "Parse error in "+file+": Undefined group"
+				Result := {STRING_32} "Parse error in " + file + {STRING_32} ": Undefined group"
 			else
-				Result := "Parse error: Undefined group"
+				Result := {STRING_32} "Parse error: Undefined group"
 			end
 			if group /= Void then
-				Result.append (": "+group)
+				Result.append ({STRING_32} ": " + group)
 			end
 		end
 
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 		-- Undefined group.
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

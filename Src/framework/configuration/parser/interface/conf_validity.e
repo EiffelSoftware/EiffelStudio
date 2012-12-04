@@ -46,7 +46,7 @@ feature -- Basic validity queries
 			Result := known_warnings.has (a_warning)
 		end
 
-	valid_warning (a_warning: STRING_8; a_namespace: READABLE_STRING_GENERAL): BOOLEAN
+	valid_warning (a_warning: STRING_8; a_namespace: like latest_namespace): BOOLEAN
 			-- Is `a_warning' a valid warning in `a_namespace'?
 		require
 			a_warning_not_void: a_warning /= Void
@@ -332,7 +332,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	boolean_settings: SEARCH_TABLE [STRING]
+	boolean_settings: SEARCH_TABLE [STRING_32]
 			-- Settings that have a boolean value.
 		once
 			create Result.make (23)

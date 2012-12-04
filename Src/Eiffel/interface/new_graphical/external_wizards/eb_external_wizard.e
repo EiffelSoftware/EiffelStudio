@@ -39,26 +39,31 @@ inherit
 feature -- Execution
 
 	execute
-			-- Execute the wizard
+			-- Execute the wizard.
 		local
 			temp_filename: FILE_NAME
 			temp_file: PLAIN_TEXT_FILE
 			wizard_launched: BOOLEAN
 		do
+				-- Create callback file.
 			create temp_filename.make_temporary_name
 			create temp_file.make_with_name (temp_filename)
 			temp_file.open_write
+				-- Fill callback file with input data.
 			temp_file.put_string ("Success=%"<SUCCESS>%"%N")
 			if Additional_parameters /= Void then
 				temp_file.put_string (Additional_parameters)
 			end
 			temp_file.close
-
+				-- Request wizard to fill callback file with output data
+				-- and load the data into memory.
 			launch_wizard (temp_filename)
 			wizard_launched := True
+				-- Remove callback file.
+			temp_file.delete
 		rescue
 			if error_messages.is_empty then
-				set_error_message ("Unable to create the temporary file required to launch the wizard")
+				set_error_message ("Unable to create the temporary file required to launch the wizard.")
 			end
 		end
 
@@ -104,6 +109,7 @@ feature {NONE} -- Implementation
 			p := f.process_launcher_with_command_line (wizard_command, location.name)
 			p.launch
 			wait_for_finish (callback_filename)
+			p.wait_for_exit
 		end
 
 	wait_for_finish (callback_filename: READABLE_STRING_GENERAL)
@@ -240,4 +246,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_EXTERNAL_WIZARD
+end

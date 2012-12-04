@@ -25,6 +25,13 @@ inherit
 			is_equal
 		end
 
+	CHARACTER_32_PROPERTY
+		export
+			{NONE} all
+		redefine
+			is_equal
+		end
+
 create
 	make_from_relative_pos,
 	make_from_character_pos,
@@ -592,15 +599,15 @@ feature -- Cursor movement
 			image: STRING_32
 			index: INTEGER
 		do
-			if char_is_blank (wide_item) then
+			if is_space (wide_item) then
 				from
 					internal_go_left_char
 				until
-					(not char_is_blank (wide_item)) or else bound_reached
+					(not is_space (wide_item)) or else bound_reached
 				loop
 					internal_go_left_char
 				end
-				if not char_is_blank (wide_item) then
+				if not is_space (wide_item) then
 					go_right_char
 				end
 			elseif not char_is_separator (wide_item) then
@@ -632,13 +639,13 @@ feature -- Cursor movement
 			l_next: detachable EDITOR_TOKEN
 		do
 			if token /= line.first_token or else pos_in_token /= 1 then
-				if char_is_blank (wide_item) then
+				if is_space (wide_item) then
 					internal_go_left_char
-					if char_is_blank (wide_item) then
+					if is_space (wide_item) then
 						from
 							internal_go_right_char
 						until
-							(not char_is_blank(wide_item)) or else bound_reached
+							(not is_space (wide_item)) or else bound_reached
 						loop
 							internal_go_right_char
 						end
@@ -725,18 +732,16 @@ feature -- Cursor movement
 	char_is_separator (char: CHARACTER_32): BOOLEAN
 			-- Is `char' considered a word separator?
 		do
-			if char.is_character_8 then
-				Result := char_is_blank (char) or else
-						additional_separators.has (char.to_character_8)
-			end
+			Result := is_space (char) or else
+					(is_punctuation (char) and then char /= {CHARACTER_32} '_')
 		end
 
 	char_is_blank (char: CHARACTER_32): BOOLEAN
 			-- Is `char' a blank space or a tabulation?
+		obsolete
+			"Use {CHARACTER_32}.is_space instead."
 		do
-			if char.is_character_8 then
-				Result := char = ' ' or char = '%T'
-			end
+			Result := is_space (char)
 		end
 
 feature -- Comparison
@@ -835,27 +840,20 @@ feature {NONE} -- Implementation
 	text: SELECTABLE_TEXT
 		-- Whole text displayed.
 
-	additional_separators: ARRAY [CHARACTER]
-			-- separators other than blank spaces and brackets/parenthesis
-			-- for word by word selection
-		once
-			Result := <<'%'', '%"' ,'%Q','%D','%A', '%L', '.', ':', '(', ')', '%%', ',', '\', '?', '<', '>', '/'>>
-		end
-
 invariant
 	y_in_lines_positive_or_null		: y_in_lines >= 0
 	pos_in_token_positive			: pos_in_token > 0
 	text_not_void					: text /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

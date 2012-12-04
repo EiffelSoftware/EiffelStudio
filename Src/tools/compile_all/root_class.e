@@ -586,7 +586,7 @@ feature {NONE} -- Implementation
 				output_action (l_action, a_target)
 
 				create l_prc_factory
-				l_prc_launcher := l_prc_factory.process_launcher (eiffel_layout.ec_command_name.string_representation, l_args, Void)
+				l_prc_launcher := l_prc_factory.process_launcher (eiffel_layout.ec_command_name.name, l_args, Void)
 				if arguments.is_log_verbose then
 					l_file := logs_filename (a_action_mode, a_target)
 					add_data_to_file (l_file, a_target.system.file_name, a_target.name, l_args)

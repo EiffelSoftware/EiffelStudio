@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			Result := True
 			create l_finish_freezing_layout
 			l_finish_freezing_layout.check_environment_variable
-			l_file := u.make_text_file (l_finish_freezing_layout.config_eif_file_name.string_representation)
+			l_file := u.make_text_file (l_finish_freezing_layout.config_eif_file_name.name)
 			if l_file.exists then
 				l_file.open_read
 				l_file.read_stream (l_file.count)

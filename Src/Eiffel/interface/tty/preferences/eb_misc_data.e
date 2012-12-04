@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 		require
 			locale_id_preference_not_void: locale_id_preference /= Void
 		local
-			l_select_lang: STRING
+			l_select_lang: detachable STRING_8
 			l_id: I18N_LOCALE_ID
 			l_available_lang: STRING
 			l_available_locales: LIST [I18N_LOCALE_ID]
@@ -275,12 +275,14 @@ feature {NONE} -- Implementation
 		do
 			if is_gui then
 				l_select_lang := locale_id_preference.selected_value
-				if l_select_lang = Void or else l_select_lang.is_equal (default_string) then
+				if l_select_lang = Void or else l_select_lang.same_string (default_string) then
 					l_is_unselected := True
 
 					if is_eiffel_layout_defined then
-						l_select_lang := eiffel_layout.get_environment ("ISE_LANG")
-						l_is_unselected := l_select_lang = Void or else l_select_lang.is_empty or else l_select_lang.is_equal (default_string)
+						if attached eiffel_layout.get_environment_32 ("ISE_LANG") as l_lang then
+							l_select_lang := l_lang.to_string_8
+						end
+						l_is_unselected := l_select_lang = Void or else l_select_lang.is_empty or else l_select_lang.same_string (default_string)
 					end
 
 					if l_is_unselected then
@@ -340,7 +342,9 @@ feature {NONE} -- Implementation
 				locale_id_preference.set_value_from_string (l_available_lang)
 			else
 				if is_eiffel_layout_defined then
-					l_select_lang := eiffel_layout.get_environment ("ISE_LANG")
+					if attached eiffel_layout.get_environment_32 ("ISE_LANG") as l_lang then
+						l_select_lang := l_lang.to_string_8
+					end
 					if l_select_lang /= Void and then not l_select_lang.is_empty then
 						create l_id.make_from_string (l_select_lang)
 						if locale_manager.has_locale (l_id) then

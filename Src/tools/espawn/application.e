@@ -193,16 +193,16 @@ feature {NONE} -- Basic operations
 			not_a_name_is_empty: not a_name.is_empty
 			a_env_attached: a_env /= Void
 		local
-			l_var: detachable STRING
-			l_new_var: STRING
+			l_var: detachable STRING_32
+			l_new_var: STRING_32
 		do
 			if a_values /= Void and then not a_values.is_empty then
-				l_var := a_env.get_environment (a_name)
+				l_var := a_env.get_environment_32 (a_name)
 				if l_var = Void or else l_var.is_empty then
 					l_new_var := a_values
 				else
 					create l_new_var.make (a_values.count + l_var.count)
-					l_new_var.append (a_values)
+					l_new_var.append_string_general (a_values)
 					l_new_var.append_character (';')
 					l_new_var.append (l_var)
 				end

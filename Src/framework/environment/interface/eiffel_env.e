@@ -201,7 +201,7 @@ feature -- Status update
 					l_is_valid := False
 				else
 						-- Set the environment variable, as it may have come from the Windows registry.
-					set_environment_32 (l_value, l_variable.var)
+					set_environment (l_value, l_variable.var)
 				end
 				l_variables.forth
 			end
@@ -215,7 +215,7 @@ feature -- Status update
 					-- Set new ISE_EIFFEL variable. This is done to ensure that the workbench path is
 					-- set correctly, or if in unix layout that ISE_EIFFEL is set
 				if not is_unix_layout then
-					set_environment_32 (shared_path.name, {EIFFEL_CONSTANTS}.ise_eiffel_env)
+					set_environment (shared_path.name, {EIFFEL_CONSTANTS}.ise_eiffel_env)
 				end
 
 					-- Set Unix platform
@@ -278,8 +278,8 @@ feature -- Status update
 			check eiffel_library_set: l_eiffel_library /= Void end
 
 				-- Ensure environment variables are set
-			set_environment_32 (l_ise_library, {EIFFEL_CONSTANTS}.ise_library_env)
-			set_environment_32 (l_eiffel_library, {EIFFEL_CONSTANTS}.eiffel_library_env)
+			set_environment (l_ise_library, {EIFFEL_CONSTANTS}.ise_library_env)
+			set_environment (l_eiffel_library, {EIFFEL_CONSTANTS}.eiffel_library_env)
 
 				-- Continue checking and initializing the environement
 			if is_valid_environment then
@@ -345,7 +345,7 @@ feature -- Status setting
 
 					-- Now we set the ISE_PRECOMP environment variable with that path.
 					-- Note that if it was already set, the value stays the same.
-				set_environment_32 (l_precompilation_path.name, {EIFFEL_CONSTANTS}.ise_precomp_env)
+				set_environment (l_precompilation_path.name, {EIFFEL_CONSTANTS}.ise_precomp_env)
 				is_valid_precompile_environment := True
 
 					-- Now if `l_precompilation_path' does not exist, we copy the content from
@@ -1645,14 +1645,14 @@ feature {NONE} -- Configuration of layout
 
 feature -- Environment access
 
-	get_environment (a_var: STRING_8): detachable STRING
+	get_environment_8 (a_var: STRING_8): detachable STRING_8
 			-- Get `a_var' from the environment, taking into account the `application_name' to lookup the defaults.
 		require
 			a_var_attached: a_var /= Void
 			not_a_var_is_empty: not a_var.is_empty
 		do
-			if attached environment.get_from_application (a_var, application_name) as l_string then
-				Result := l_string
+			if attached get_environment_32 (a_var) as l_string then
+				Result := l_string.to_string_8
 			end
 		end
 
@@ -1662,11 +1662,7 @@ feature -- Environment access
 			a_var_attached: a_var /= Void
 			not_a_var_is_empty: not a_var.is_empty
 		do
-			if {PLATFORM}.is_windows then
-				Result := environment.get_from_application (a_var.to_string_32, application_name)
-			elseif attached environment.get_from_application (a_var.to_string_8, application_name) as l_val then
-				Result := l_val
-			end
+			Result := environment.get_from_application (a_var, application_name)
 		end
 
 feature -- Environment update
@@ -1679,18 +1675,19 @@ feature -- Environment update
 		do
 			environment.put (a_value, a_var)
 		ensure
-			value_updated: (attached get_environment_32 (a_var) as v) implies (v.same_string_general (a_value))
+			value_updated: attached get_environment_32 (a_var) as v implies v.same_string_general (a_value)
 		end
 
 	set_environment_32 (a_value, a_var: READABLE_STRING_GENERAL)
 			-- Update environment variable `a_key' to be `a_value'.
+		obsolete "use set_environment"
 		require
 			a_var_ok: a_var /= Void and then not a_var.is_empty and then not a_var.has ('%U')
 			a_value_ok: a_value /= Void and then not a_value.has ('%U')
 		do
 			set_environment (a_value, a_var)
 		ensure
-			value_updated: attached get_environment_32 (a_var) as e implies e.same_string_general (a_value)
+			value_updated: attached get_environment_32 (a_var) as v implies v.same_string_general (a_value)
 		end
 
 feature -- Version limitation

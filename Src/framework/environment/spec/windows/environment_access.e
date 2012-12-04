@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	get_from_application (a_var: READABLE_STRING_32; a_app: detachable READABLE_STRING_32): detachable STRING_32
+	get_from_application (a_var: READABLE_STRING_GENERAL; a_app: detachable READABLE_STRING_GENERAL): detachable STRING_32
 			-- Get `a_var' as if we were `a_app'.
 		require
 			a_var_ok: a_var /= Void and then not a_var.has ('%U')
@@ -21,24 +21,26 @@ feature -- Access
 		local
 			l_reg: WEL_REGISTRY
 			l_key: detachable WEL_REGISTRY_KEY_VALUE
-			l_eiffel: STRING
+			l_eiffel: STRING_32
+			l_lowered_var: READABLE_STRING_GENERAL
 		do
 			Result := item (a_var)
 			if Result = Void then
-				l_eiffel := "\Software\ISE\Eiffel" + {EIFFEL_CONSTANTS}.major_version.out + {EIFFEL_CONSTANTS}.minor_version.out
+				l_lowered_var := a_var.as_lower
+				l_eiffel := {STRING_32} "\Software\ISE\Eiffel" + {EIFFEL_CONSTANTS}.major_version.out + {EIFFEL_CONSTANTS}.minor_version.out
 				create l_reg
 				if a_app /= Void then
 						-- Lookup application-specific setting.
-					l_key := l_reg.open_key_value ("hkey_current_user"+l_eiffel+"\" + a_app, a_var.as_lower)
+					l_key := l_reg.open_key_value ({STRING_32} "hkey_current_user" + l_eiffel + {STRING_32} "\" + a_app.to_string_32, l_lowered_var)
 					if l_key = Void then
-						l_key := l_reg.open_key_value ("hkey_local_machine"+l_eiffel+"\" + a_app, a_var.as_lower)
+						l_key := l_reg.open_key_value ({STRING_32} "hkey_local_machine" + l_eiffel + {STRING_32} "\" + a_app.to_string_32, l_lowered_var)
 					end
 				end
 				if l_key = Void then
 						-- Lookup general setting.
-					l_key := l_reg.open_key_value ("hkey_current_user"+l_eiffel, a_var.as_lower)
+					l_key := l_reg.open_key_value ({STRING_32} "hkey_current_user" + l_eiffel, l_lowered_var)
 					if l_key = Void then
-						l_key := l_reg.open_key_value ("hkey_local_machine"+l_eiffel, a_var.as_lower)
+						l_key := l_reg.open_key_value ({STRING_32} "hkey_local_machine" + l_eiffel, l_lowered_var)
 					end
 				end
 				if l_key /= Void then

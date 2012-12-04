@@ -490,7 +490,7 @@ feature -- From EIFFEL_ENV
 			l_file: RAW_FILE
 			l_dir: DIRECTORY
 			l_dir_name: DIRECTORY_NAME
-			l_value: detachable STRING_8
+			l_value: detachable STRING_32
 			l_variables: like required_environment_variables
 			l_variable: TUPLE [var: STRING_8; is_directory: BOOLEAN]
 			l_is_valid: like is_valid_environment
@@ -507,7 +507,7 @@ feature -- From EIFFEL_ENV
 
 				if
 					l_value /= Void and then l_value.item (l_value.count) = l_op_env.directory_separator and then
-					({PLATFORM}.is_windows or else not (l_value.is_equal ("/") or l_value.is_equal ("~/")))
+					({PLATFORM}.is_windows or else not (l_value.same_string ("/") or l_value.same_string ("~/")))
 				then
 						-- Remove trailing directory separator
 					l_value.prune_all_trailing (l_op_env.directory_separator)

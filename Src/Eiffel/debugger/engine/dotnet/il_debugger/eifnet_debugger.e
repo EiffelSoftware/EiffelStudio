@@ -1122,8 +1122,13 @@ feature -- Interaction with .Net Debugger
 		local
 			l_icd_process: POINTER
 			n: INTEGER
+			l_env_string: detachable STRING_32
 		do
-			l_icd_process := icor_debug.create_process (cmd + {STRING_32} " " + args, a_working_dir, env.string)
+			if env /= Void then
+				l_env_string := env.string
+			end
+			l_icd_process := icor_debug.create_process (cmd + {STRING_32} " " + args, a_working_dir, l_env_string)
+
 			if icor_debug.last_call_succeed then
 				n := {CLI_COM}.add_ref (l_icd_process)
 				set_last_controller_by_pointer (l_icd_process)

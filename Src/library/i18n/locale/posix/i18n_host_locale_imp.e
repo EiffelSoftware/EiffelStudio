@@ -205,7 +205,7 @@ feature {NONE} -- Date and time formatting
 			-- get the long date format string
 			-- according the current locale setting
 		do
-			Result := utf8_pointer_to_string (unix_get_locale_info (D_fmt))
+			Result := utf8_pointer_to_string (unix_get_locale_info_managed (D_fmt))
 			Result.replace_substring_all ("%%","&")
 		ensure
 			result_exists: Result /= Void
@@ -215,7 +215,7 @@ feature {NONE} -- Date and time formatting
 			-- get the long time format string
 			-- according the current locale setting
 		do
-			Result := utf8_pointer_to_string (unix_get_locale_info (T_fmt))
+			Result := utf8_pointer_to_string (unix_get_locale_info_managed (T_fmt))
 			Result.replace_substring_all ("%%","&")
 		--	io.put_string(Result)
 		ensure
@@ -226,7 +226,7 @@ feature {NONE} -- Date and time formatting
 			-- get the am suffix
 			-- if the not available: empty_string
 		do
-			Result := utf8_pointer_to_string (unix_get_locale_info (Am_str))
+			Result := utf8_pointer_to_string (unix_get_locale_info_managed (Am_str))
 		ensure
 			result_exists: Result /= Void
 		end
@@ -235,7 +235,7 @@ feature {NONE} -- Date and time formatting
 			-- get the pm suffix
 			-- if the not available: empty_string
 		do
-			Result := utf8_pointer_to_string (unix_get_locale_info (Pm_str))
+			Result := utf8_pointer_to_string (unix_get_locale_info_managed (Pm_str))
 		ensure
 			result_exists: Result /= Void
 		end
@@ -243,7 +243,7 @@ feature {NONE} -- Date and time formatting
 	get_date_time_format: STRING_32
 			-- time and date in a locale-specific way.
 		do
-			Result := utf8_pointer_to_string (unix_get_locale_info (D_t_fmt))
+			Result := utf8_pointer_to_string (unix_get_locale_info_managed (D_t_fmt))
 			Result.replace_substring_all ("%%","&")
 		ensure
 			result_exists: Result /= Void
@@ -267,7 +267,7 @@ feature {NONE} -- day/months names
 			until
 				i > Result.upper
 			loop
-				create l_string.make_from_string( utf8_pointer_to_string (unix_get_locale_info (Day_1 +((i-1)\\upper))))
+				l_string := utf8_pointer_to_string (unix_get_locale_info_managed (Day_1 +((i-1)\\upper)))
 				Result.put (l_string, i)
 				i := i + 1
 			end
@@ -291,7 +291,7 @@ feature {NONE} -- day/months names
 			until
 				i > Result.upper
 			loop
-				create l_string.make_from_string( utf8_pointer_to_string  (unix_get_locale_info (Mon_1 +i-1)))
+				l_string := utf8_pointer_to_string  (unix_get_locale_info_managed (Mon_1 +i-1))
 				Result.put (l_string, i)
 				i := i + 1
 			end
@@ -317,7 +317,7 @@ feature {NONE} -- day/months names
 			until
 				i > Result.upper
 			loop
-				create l_string.make_from_string (utf8_pointer_to_string (unix_get_locale_info (Abday_1 +((i-1)\\upper))))
+				l_string := utf8_pointer_to_string (unix_get_locale_info_managed (Abday_1 +((i-1)\\upper)))
 				Result.put (l_string, i)
 				i := i + 1
 			end
@@ -341,7 +341,7 @@ feature {NONE} -- day/months names
 			until
 				i > Result.upper
 			loop
-				create l_string.make_from_string (utf8_pointer_to_string  (unix_get_locale_info (Abmon_1 +i-1)))
+				l_string := utf8_pointer_to_string  (unix_get_locale_info_managed (Abmon_1 +i-1))
 				Result.put (l_string, i)
 				i := i + 1
 			end
@@ -384,7 +384,7 @@ feature	{NONE} -- currency formatting
 			-- get the currency symbol
 			-- according the current locales setting
 		do
-			Result := utf8_pointer_to_string (unix_get_locale_info (Crncystr))
+			Result := utf8_pointer_to_string (unix_get_locale_info_managed (Crncystr))
 			Result.remove_head (1)
 				-- could use:
 				-- create Result.make_from_c (currency_symbol (localeconv))
@@ -399,7 +399,7 @@ feature	{NONE} -- currency formatting
 		local
 			l_string: STRING_32
 		do
-			create l_string.make_from_string(utf8_pointer_to_string (unix_get_locale_info (Crncystr)))
+			l_string := utf8_pointer_to_string (unix_get_locale_info_managed (Crncystr))
 			if not l_string.is_empty then
 				if	l_string.item (1).is_equal ('-') then
 					Result := {I18N_LOCALE_INFO}.Currency_symbol_prefixed
@@ -479,8 +479,11 @@ feature {NONE} -- Code Page
 
 	get_code_page: STRING_32
 			-- Codeset name
+		local
+			l_str: C_STRING
 		do
-			Result := utf8_pointer_to_string (c_current_codeset)
+			create l_str.make_shared_from_pointer (c_current_codeset)
+			Result := utf8_pointer_to_string (l_str.managed_data)
 		end
 
 feature {NONE} -- International currency formatting
@@ -545,12 +548,12 @@ feature {NONE} --Implementation
 			]"
 		end
 
-	utf8_pointer_to_string (ptr: POINTER): STRING_32
+	utf8_pointer_to_string (ptr: MANAGED_POINTER): STRING_32
 			-- convert a C UTF-8 string
 		local
 			l_cstr: C_STRING
 		do
-			create l_cstr.make_shared_from_pointer (ptr)
+			create l_cstr.make_shared_from_pointer (ptr.item)
 			if l_cstr.count > 0 then
 				Result := utf8_to_utf32 (l_cstr.string)
 			else
@@ -614,7 +617,7 @@ feature {NONE} --Implementation
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

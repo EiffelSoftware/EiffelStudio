@@ -32,7 +32,7 @@ void init_rt (void)
 			if (setjmp(exenv)) 
 				failure(); 
 
-			eif_rtinit(argc, argv, (char **)0);  
+			eif_rtinit(argc, argv, (EIF_NATIVE_CHAR **)0);  
 			if (root_obj == (char *)0) 
 				root_obj = cmalloc(1);
 		}

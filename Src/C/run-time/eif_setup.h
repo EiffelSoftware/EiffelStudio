@@ -64,7 +64,7 @@ extern "C" {
  * NB: Except if you are using VxWorks, the function that calls this macro
  * should have these three variables defined: argc, argv, envp. Typically:
  *
- *     int main(int argc, char **argv, char ** envp) { ...
+ *     int main(int argc, char **argv, EIF_NATIVE_CHAR ** envp) { ...
  *
  * EIF_REGISTER_THREAD(fail_func)
  *    'Registers' a thread spawned outside Eiffel in order to enable

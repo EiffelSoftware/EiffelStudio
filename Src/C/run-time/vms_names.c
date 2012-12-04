@@ -137,7 +137,7 @@ rt_public EIF_REFERENCE MAKESTR (register char *s, register int len)
 
 
 /*** main.c ***/
-rt_public void EIF_RTINIT (int argc, char **argv, char **envp)
+rt_public void EIF_RTINIT (int argc, char **argv, EIF_NATIVE_CHAR **envp)
     { eif_rtinit (argc, argv, envp); }
 
 rt_public void FAILURE (void)

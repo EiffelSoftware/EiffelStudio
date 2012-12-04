@@ -39,7 +39,7 @@ int main (int argc, char ** argv, char ** envp)
 		failure();
 
 	eif_retrieve_root (&eif_argc, argv);
-	eif_rtinit(eif_argc, argv, envp);
+	eif_rtinit(eif_argc, argv, (EIF_NATIVE_CHAR **) envp);
 	eif_init_root();
 	egc_rcdt_init (); 
 	emain(eif_argc, argv);

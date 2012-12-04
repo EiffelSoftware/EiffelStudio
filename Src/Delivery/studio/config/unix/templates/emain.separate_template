@@ -34,7 +34,7 @@ int main (int argc, char ** argv, char ** envp)
 	if (setjmp(exenv))
 		default_rescue();
 
-	eif_rtinit(argc, argv, envp);
+	eif_rtinit(argc, argv, (EIF_NATIVE_CHAR **) envp);
 	egc_rcdt_init();
 	emain(argc, argv);
 	reclaim();

@@ -194,14 +194,14 @@ doc:	</attribute>
 rt_public struct cnode *esystem;			/* Eiffel system */
 
 /*
-doc:	<attribute name="eif_environ" return_type="char **" export="public">
+doc:	<attribute name="eif_environ" return_type="EIF_NATIVE_CHAR **" export="public">
 doc:		<summary>Pointer to environment variable storage.</summary>
 doc:		<access>Read/Write once</access>
 doc:		<thread_safety>NOT safe</thread_safety>
 doc:		<synchronization>Passed in as the third argument in main function and can be modified by environment variable setting functions.</synchronization>
 doc:	</attribute>
 */
-rt_public char **eif_environ;	/* Environment variable pointer */
+rt_public EIF_NATIVE_CHAR **eif_environ;	/* Environment variable pointer */
 
 /*
 doc:	<attribute name="eoption" return_type="struct eif_opt *" export="public">
@@ -842,7 +842,7 @@ rt_public void eif_init_root (void)
 	}
 }
 
-rt_public void eif_rtinit(int argc, char **argv, char **envp)
+rt_public void eif_rtinit(int argc, char **argv, EIF_NATIVE_CHAR **envp)
 {
 	char *eif_timeout;
 

@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			across
 				execution_environment.starting_environment_variables as c
 			loop
-				tb.force (c.item.to_string_32, c.key.to_string_32) -- FIXME: missing unicode version of execution_environment.starting_environment_variables
+				tb.force (c.item, c.key)
 			end
 		end
 

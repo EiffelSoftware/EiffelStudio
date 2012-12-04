@@ -30,19 +30,17 @@ feature {NONE} -- Initialization
 		require
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
-		local
-			u: FILE_UTILITIES
 		do
 			error_value := ok_value
 			name := a_file_name
-			storage := u.make_raw_file (a_file_name)
+			create storage.make_with_path (a_file_name)
 		ensure
 			name_set: name = a_file_name
 		end
 
 feature -- Access
 
-	name: READABLE_STRING_GENERAL
+	name: PATH
 			-- Name of file for `storage'.
 
 	precompilation_id: INTEGER;

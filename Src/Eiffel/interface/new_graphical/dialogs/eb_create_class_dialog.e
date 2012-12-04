@@ -339,7 +339,7 @@ feature {NONE} -- Basic operations
 			show_modal_to_window (target.window)
 		end
 
-	render_class_template (a_dest_file_name: STRING_32)
+	render_class_template (a_dest_file_name: PATH)
 			-- Renders a class name into a choose destination file
 			--
 			-- `a_dest_file_name': The destination file to render the default class template file into.
@@ -481,14 +481,14 @@ feature {NONE} -- Basic operations
 						l_params.put_last (l_buffer.twin, init_clause_symbol)
 
 							-- Render the template using the defined parameters
-						l_wizard.service.render_template_from_file_to_file (l_source_file, l_params, a_dest_file_name)
+						l_wizard.service.render_template_from_file_to_file (l_source_file, l_params, a_dest_file_name.name)
 					else
 						prompts.show_error_prompt (Warning_messages.w_cannot_read_file (l_source_file), target.window, Void)
-						l_wizard.service.render_template_to_file (default_class_template, l_params, a_dest_file_name)
+						l_wizard.service.render_template_to_file (default_class_template, l_params, a_dest_file_name.name)
 					end
 				end
 			else
-				prompts.show_error_prompt (Warning_messages.w_cannot_create_file (a_dest_file_name), target.window, Void)
+				prompts.show_error_prompt (Warning_messages.w_cannot_create_file (a_dest_file_name.name), target.window, Void)
 					-- Not the best status name, refactor when converting to ESF.
 				could_not_load_file := True
 			end
@@ -542,7 +542,7 @@ feature {NONE} -- Implementation
 			class_name_not_void: class_name /= Void
 		end
 
-	file_name: FILE_NAME_32
+	file_name: PATH
 			-- File name of the class chosen by the user.
 		local
 			str: STRING_32
@@ -564,8 +564,7 @@ feature {NONE} -- Implementation
 					if dotpos > 0 then
 						str.keep_head (dotpos)
 					end
-					create Result.make_from_string (str)
-					Result.add_extension ("e")
+					create Result.make_from_string (str + ".e")
 				else
 					create Result.make_from_string (str)
 				end
@@ -589,9 +588,9 @@ feature {NONE} -- Implementation
 	create_new_class
 			-- Create a new class
 		local
-			f_name: FILE_NAME_32
+			f_name: PATH
 			file: RAW_FILE -- Windows specific
-			base_name: STRING_32
+			base_name: PATH
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -608,20 +607,20 @@ feature {NONE} -- Implementation
 				end
 				if aok then
 					create f_name.make_from_string (cluster.location.build_path (path, ""))
-					f_name.set_file_name (file_name)
+					f_name := f_name.extended_path (file_name)
 					base_name := file_name
-					create file.make_with_name (f_name)
+					create file.make_with_path (f_name)
 					if file.exists then
-						prompts.show_error_prompt (Warning_messages.w_class_already_in_cluster (base_name), target.window, Void)
+						prompts.show_error_prompt (Warning_messages.w_class_already_in_cluster (base_name.name), target.window, Void)
 						class_entry.set_focus
 					elseif not file.is_creatable then
-						prompts.show_error_prompt (Warning_messages.w_cannot_create_file (f_name), target.window, Void)
+						prompts.show_error_prompt (Warning_messages.w_cannot_create_file (f_name.name), target.window, Void)
 					else
 						destroy
 						render_class_template (f_name)
 						if not could_not_load_file then
 								-- Add new class to cluster, perform a quick compilation only if previous compilation was successful.
-							manager.add_class_to_cluster (base_name, cluster, path, class_name, manager.workbench.successful)
+							manager.add_class_to_cluster (base_name.name, cluster, path, class_name, manager.workbench.successful)
 							class_i := manager.last_added_class
 							if set_stone and class_i /= Void then
 								target.advanced_set_stone (create {CLASSI_STONE}.make (class_i))

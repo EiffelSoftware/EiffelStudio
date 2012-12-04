@@ -259,10 +259,8 @@ feature {NONE} -- Implementation
 
 	diagram_file: RAW_FILE
 			-- File where views for `diagram' are stored.	
-		local
-			u: FILE_UTILITIES
 		do
-			Result := u.make_raw_file_in (id_of_group (cluster) + ".xml", Eiffel_system.context_diagram_path)
+			create Result.make_with_path (Eiffel_system.context_diagram_path.extended (id_of_group (cluster) + ".xml"))
 		end
 
 	form_code: STRING_32

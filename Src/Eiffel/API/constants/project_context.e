@@ -15,16 +15,10 @@ feature -- Eiffel Project Directories
 			create Result.make (5)
 		end
 
-	Precompilation_driver: FILE_NAME_32
-			-- Full name of the precompilation driver used
-		once
-			create Result.make_from_string ("")
-		end
-
 	project_location: PROJECT_DIRECTORY
 			-- Store various locations for a project.
 		once
-			create Result.make ("Invalid_location", "Invalid_target")
+			create Result.make (create {PATH}.make_from_string ("Invalid_location"), "Invalid_target")
 		ensure
 			project_location_not_void: Result /= Void
 		end

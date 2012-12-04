@@ -128,7 +128,7 @@ feature -- Initialization
 			ewb_loop: EWB_LOOP
 			e_displayer: DEFAULT_ERROR_DISPLAYER
 			l_loader: EC_PROJECT_LOADER
-			l_generated_name: READABLE_STRING_GENERAL
+			l_generated_name: PATH
 			u: FILE_UTILITIES
 		do
 			if not retried then
@@ -207,9 +207,9 @@ feature -- Initialization
 										l_generated_name := l_loader.eiffel_project.project_directory.workbench_executable_file_name
 									end
 										-- Check if generated file exists. If the C compilation fails, the file will not be generated.
-									if u.file_exists (l_generated_name) then
+									if u.file_path_exists (l_generated_name) then
 											-- If generated file exists, copy it to the target location.
-										u.copy_file (l_generated_name, l_loader.eiffel_project.project_directory.single_file_compilation_executable_file_name)
+										u.copy_file_path (l_generated_name, l_loader.eiffel_project.project_directory.single_file_compilation_executable_file_name)
 									end
 								end
 							end

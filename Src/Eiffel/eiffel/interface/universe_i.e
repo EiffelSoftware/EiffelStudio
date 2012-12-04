@@ -482,7 +482,7 @@ feature -- Access
 			cleared: group_visited = Void
 		end
 
-	cluster_of_location (a_directory: STRING): LIST [CONF_CLUSTER]
+	cluster_of_location (a_directory: PATH): LIST [CONF_CLUSTER]
 			-- Find cluster for `a_directory'.
 		require
 			a_directory_valid: a_directory /= Void and then not a_directory.is_empty
@@ -935,7 +935,7 @@ invariant
 	target_in_conf_system: (conf_system /= Void and new_target = Void) implies target.system = conf_system
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

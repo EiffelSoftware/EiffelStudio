@@ -73,13 +73,11 @@ feature {NONE} -- Initialization
 			l_path: like path
 			l_directory: DIRECTORY
 			l_done: BOOLEAN
-			l_filename: FILE_NAME
 			l_existing: like record_storage
-			u: FILE_UTILITIES
 		do
 			l_existing := record_storage.twin
 			l_path := path
-			create l_directory.make (l_path)
+			create l_directory.make_with_path (l_path)
 			if l_directory.exists then
 				l_directory.open_read
 				if not l_directory.is_closed then
@@ -90,7 +88,7 @@ feature {NONE} -- Initialization
 					loop
 						l_directory.readentry
 						if attached l_directory.last_entry_32 as l_entry then
-							retrieve_record (u.make_raw_file_in (l_entry, l_path))
+							retrieve_record (create {RAW_FILE}.make_with_path (l_path.extended (l_entry)))
 						else
 							l_done := True
 						end
@@ -203,13 +201,12 @@ feature {NONE} -- Access
 	property_storage: ARRAYED_LIST [like new_property_tuple]
 			-- List of properties associated with records in `record_storage'
 
-	path: DIRECTORY_NAME_32
+	path: PATH
 			-- Path to record files
 		require
 			project_initialized: is_project_initialized
 		do
-			Result := eiffel_project.project_directory.testing_results_path.twin
-			Result.extend (record_directory_name)
+			Result := eiffel_project.project_directory.testing_results_path.extended (record_directory_name)
 		end
 
 	file (a_record: TEST_SESSION_RECORD): RAW_FILE
@@ -219,10 +216,8 @@ feature {NONE} -- Access
 		require
 			a_record_attached: a_record /= Void
 			project_initialized: is_project_initialized
-		local
-			u: FILE_UTILITIES
 		do
-			Result := u.make_raw_file_in (a_record.creation_date.formatted_out (file_name_format_string), path)
+			create Result.make_with_path (path.extended (a_record.creation_date.formatted_out (file_name_format_string)))
 		ensure
 			result_attached: Result /= Void
 		end

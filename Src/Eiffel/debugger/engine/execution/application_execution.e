@@ -152,7 +152,7 @@ feature -- Status
 		local
 			u: FILE_UTILITIES
 		do
-			Result := u.file_exists (Eiffel_system.application_name (True))
+			Result := u.file_path_exists (Eiffel_system.application_name (True))
 		end
 
 	is_valid_and_known_object_address (addr: DBG_ADDRESS): BOOLEAN
@@ -257,7 +257,7 @@ feature -- Execution
 			l_envstr := environment_variables_to_native_string (env)
 
 			-- FIXME: update if/when Eiffel_system.application_name becomes a PATH
-			run_with_env_string (create {PATH}.make_from_string (Eiffel_system.application_name (True).to_string_32), params.arguments, params.working_directory, l_envstr)
+			run_with_env_string (Eiffel_system.application_name (True), params.arguments, params.working_directory, l_envstr)
 		ensure
 			successful_app_is_not_stopped: is_running implies not is_stopped
 		end
@@ -280,7 +280,7 @@ feature -- Execution
 			parameters := Void
 			ctlr := debugger_manager.controller
 			-- FIXME: update if/when Eiffel_system.application_name becomes a PATH
-			attach_using_port (create {PATH}.make_from_string (Eiffel_system.application_name (True).to_string_32), a_port)
+			attach_using_port (Eiffel_system.application_name (True), a_port)
 		ensure
 			successful_app_is_not_stopped: is_running implies not is_stopped
 		end

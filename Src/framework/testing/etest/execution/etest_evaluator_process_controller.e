@@ -95,7 +95,7 @@ feature {NONE} -- Status setting
 			create l_cmd.make (100)
 			l_project := test_suite.project_access.project
 			l_cmd.append_character ('"')
-			l_cmd.append_string (l_project.system.application_name (True))
+			l_cmd.append_string_general (l_project.system.application_name (True).name)
 			l_cmd.append_character ('"')
 			l_cmd.append_character (' ')
 			l_cmd.append_string (a_argument)

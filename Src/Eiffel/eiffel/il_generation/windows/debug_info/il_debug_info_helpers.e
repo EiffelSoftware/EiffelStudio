@@ -46,7 +46,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- IL info file names
 
-	Il_info_file_name: READABLE_STRING_GENERAL
+	Il_info_file_name: PATH
 			-- Filename for IL info storage used to load data
 			-- in the context, we load workbench information
 			-- in finalized we generate each time all IL code
@@ -59,20 +59,16 @@ feature {NONE} -- IL info file names
 			end
 		end
 
-	Workbench_il_info_file_name: READABLE_STRING_GENERAL
+	Workbench_il_info_file_name: PATH
 			-- Filename for Workbench IL info storage
-		local
-			u: FILE_UTILITIES
 		once
-			Result := u.make_file_name_in (Il_info_name + "." + Il_info_extension, project_location.workbench_path)
+			Result := project_location.workbench_path.extended (Il_info_name + "." + Il_info_extension)
 		end
 
-	Final_il_info_file_name: READABLE_STRING_GENERAL
+	Final_il_info_file_name: PATH
 			-- Filename for Final IL info storage
-		local
-			u: FILE_UTILITIES
 		once
-			Result := u.make_file_name_in (Il_info_name + "." + Il_info_extension, project_location.final_path)
+			Result := project_location.final_path.extended (Il_info_name + "." + Il_info_extension)
 		end
 
 feature {NONE} -- File name data From compiler world
@@ -108,17 +104,15 @@ feature {NONE} -- File name data From compiler world
 			Result := a_system_name + ".dll"
 		end
 
-	workbench_precompilation_module_filename (a_system_name: STRING): FILE_NAME_32
+	workbench_precompilation_module_filename (a_system_name: STRING): PATH
 		do
-			create Result.make_from_string (workbench_assembly_directory_path_name)
-			Result.set_file_name (precompilation_module_name (a_system_name))
+			Result := workbench_assembly_directory_path_name.extended (precompilation_module_name (a_system_name))
 		end
 
-	finalized_precompilation_module_filename (a_system_name: STRING): FILE_NAME_32
+	finalized_precompilation_module_filename (a_system_name: STRING): PATH
 			-- Finalized precompilation module file name for `a_system_name'.
 		do
-			create Result.make_from_string (finalized_assembly_directory_path_name)
-			Result.set_file_name (precompilation_module_name (a_system_name))
+			Result := finalized_assembly_directory_path_name.extended (precompilation_module_name (a_system_name))
 		end
 
 note

@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 			directory_area.extend (create {EV_CELL})
 			directory_area.extend (hb)
 			directory_area.disable_item_expand (hb)
-			create directory_field.make_with_text (Eiffel_system.document_path)
+			create directory_field.make_with_text (Eiffel_system.document_path.name)
 			directory_field.return_actions.extend (agent on_directory_return_pressed)
 			hb.extend (directory_field)
 			create b.make_with_text (interface_names.b_browse)

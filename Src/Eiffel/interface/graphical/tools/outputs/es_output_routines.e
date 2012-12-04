@@ -111,7 +111,7 @@ feature -- Output
 				a_formatter.process_basic_text (create {STRING}.make_filled (' ', l_max_len - l_count))
 			end
 			l_project_location := eiffel_project.project_location
-			a_formatter.process_basic_text (l_project_location.location)
+			a_formatter.process_basic_text (l_project_location.location.name)
 			a_formatter.add_new_line
 
 			a_formatter.add_indent
@@ -121,7 +121,7 @@ feature -- Output
 			if l_count < l_max_len then
 				a_formatter.process_basic_text (create {STRING}.make_filled (' ', l_max_len - l_count))
 			end
-			a_formatter.process_basic_text (l_project_location.target_path)
+			a_formatter.process_basic_text (l_project_location.target_path.name)
 			a_formatter.add_new_line
 
 			a_formatter.add_indent
@@ -262,7 +262,7 @@ feature {NONE} -- Internationalization
 	lb_more_info_on_compile: STRING = "More information available after a compilation!"
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

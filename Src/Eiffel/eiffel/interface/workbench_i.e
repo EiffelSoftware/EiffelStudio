@@ -60,7 +60,7 @@ feature -- Attributes
 	precompiled_directories: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
 			-- Precompilation directories, indexed by precompilation ids
 
-	precompiled_driver: FILE_NAME_32
+	precompiled_driver: PATH
 			-- Full file name of the precompilation driver
 
 	melted_file_name: STRING
@@ -570,7 +570,7 @@ feature -- Directory creation
 			d: DIRECTORY
 		do
 			if universe_defined then
-				create d.make (project_location.data_path)
+				create d.make_with_path (project_location.data_path)
 				if not d.exists then
 					d.create_dir
 				end
@@ -585,35 +585,33 @@ feature -- Automatic backup
 			d: DIRECTORY
 		do
 				-- Create the EIFGEN/BACKUP directory
-			create d.make (project_location.backup_path)
+			create d.make_with_path (project_location.backup_path)
 			if not d.exists then
 				d.create_dir
 			end
 
 				-- Create the EIFGEN/BACKUP/COMP<n> directory
-			create d.make (backup_subdirectory)
+			create d.make_with_path (backup_subdirectory)
 			if not d.exists then
 				d.create_dir
 			end
 		end
 
-	backup_subdirectory: DIRECTORY_NAME_32
+	backup_subdirectory: PATH
 			-- Current backup subdirectory
 		local
 			temp: STRING_32
 		do
-			create Result.make_from_string (project_location.backup_path)
 			create temp.make (9)
 			temp.append (Comp)
 			temp.append_integer (backup_counter)
-			Result.extend (temp)
+			Result := project_location.backup_path.extended (temp)
 		end
 
-	backup_info_file_name: FILE_NAME_32
+	backup_info_file_name: PATH
 			-- File where info about the compilation is saved
 		do
-			create Result.make_from_string (backup_subdirectory)
-			Result.set_file_name (Backup_info)
+			Result := backup_subdirectory.extended (backup_info)
 		end
 
 	save_starting_backup_info
@@ -621,7 +619,7 @@ feature -- Automatic backup
 		local
 			file: PLAIN_TEXT_FILE
 		do
-			create file.make_with_name (backup_info_file_name)
+			create file.make_with_path (backup_info_file_name)
 			if file.is_creatable or else (file.exists and then file.is_writable) then
 				file.open_append
 				file.put_string ("Compiler version: ")
@@ -650,7 +648,7 @@ feature -- Automatic backup
 		local
 			file: PLAIN_TEXT_FILE
 		do
-			create file.make_with_name (backup_info_file_name)
+			create file.make_with_path (backup_info_file_name)
 			if file.is_creatable or else (file.exists and then file.is_writable) then
 				file.open_append
 				file.put_string ("Compilation status is: ")

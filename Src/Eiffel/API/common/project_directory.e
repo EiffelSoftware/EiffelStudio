@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	location: STRING_32
+	location: PATH
 			-- Location of project
 
 	target: STRING
@@ -79,14 +79,10 @@ feature -- Directory creation
 
 feature -- Directories
 
-	path: DIRECTORY_NAME_32
+	path: PATH
 			-- Path for current location.
 		do
-			Result := internal_path
-			if Result = Void then
-				create Result.make_from_string (location)
-				internal_path := Result
-			end
+			Result := location
 		ensure
 			path_not_void: Result /= Void
 		end
@@ -96,8 +92,7 @@ feature -- Directories
 		do
 			Result := internal_backup_path
 			if Result = Void then
-				create Result.make_from_string (target_path)
-				Result.extend (backup)
+				Result := target_path.extended (backup)
 				internal_backup_path := Result
 			end
 		ensure
@@ -109,8 +104,7 @@ feature -- Directories
 		do
 			Result := internal_compilation_path
 			if Result = Void then
-				create Result.make_from_string (target_path)
-				Result.extend (comp)
+				Result := target_path.extended (comp)
 				internal_compilation_path := Result
 			end
 		ensure
@@ -122,8 +116,7 @@ feature -- Directories
 		do
 			Result := internal_documentation_path
 			if Result = Void then
-				create Result.make_from_string (location)
-				Result.extend (documentation)
+				Result := path.extended (documentation)
 				internal_documentation_path := Result
 			end
 		ensure
@@ -135,8 +128,7 @@ feature -- Directories
 		do
 			Result := internal_eifgens_path
 			if Result = Void then
-				create Result.make_from_string (location)
-				Result.extend (eiffelgens)
+				Result := path.extended (eiffelgens)
 				internal_eifgens_path := Result
 			end
 		ensure
@@ -148,8 +140,7 @@ feature -- Directories
 		do
 			Result := internal_final_assemblies_path
 			if Result = Void then
-				create Result.make_from_string (final_path)
-				Result.extend (local_assemblies)
+				Result := final_path.extended (local_assemblies)
 				internal_final_assemblies_path := Result
 			end
 		ensure
@@ -161,8 +152,7 @@ feature -- Directories
 		do
 			Result := internal_final_path
 			if Result = Void then
-				create Result.make_from_string (target_path)
-				Result.extend (f_code)
+				Result := target_path.extended (f_code)
 				internal_final_path := Result
 			end
 		ensure
@@ -174,8 +164,7 @@ feature -- Directories
 		do
 			Result := internal_partial_generation_path
 			if Result = Void then
-				create Result.make_from_string (target_path)
-				Result.extend (partials)
+				Result := target_path.extended (partials)
 				internal_partial_generation_path := Result
 			end
 		ensure
@@ -187,8 +176,7 @@ feature -- Directories
 		do
 			Result := internal_profiler_path
 			if Result = Void then
-				create Result.make_from_string (target_path)
-				Result.extend (profiler)
+				Result := target_path.extended (profiler)
 				internal_profiler_path := Result
 			end
 		ensure
@@ -200,8 +188,7 @@ feature -- Directories
 		do
 			Result := internal_target_path
 			if Result = Void then
-				create Result.make_from_string (eifgens_path)
-				Result.extend (target)
+				Result := eifgens_path.extended (target)
 				internal_target_path := Result
 			end
 		ensure
@@ -213,8 +200,7 @@ feature -- Directories
 		do
 			Result := internal_workbench_assemblies_path
 			if Result = Void then
-				create Result.make_from_string (workbench_path)
-				Result.extend (local_assemblies)
+				Result := workbench_path.extended (local_assemblies)
 				internal_workbench_assemblies_path := Result
 			end
 		ensure
@@ -226,8 +212,7 @@ feature -- Directories
 		do
 			Result := internal_workbench_path
 			if Result = Void then
-				create Result.make_from_string (target_path)
-				Result.extend (w_code)
+				Result := target_path.extended (w_code)
 				internal_workbench_path := Result
 			end
 		ensure
@@ -239,8 +224,7 @@ feature -- Directories
 		do
 			Result := internal_data_path
 			if Result = Void then
-				create Result.make_from_string (target_path)
-				Result.extend (data_directory)
+				Result := target_path.extended (data_directory)
 				internal_data_path := Result
 			end
 		ensure
@@ -252,8 +236,7 @@ feature -- Directories
 		do
 			Result := internal_eifgens_cluster_path
 			if Result = Void then
-				create Result.make_from_string (target_path)
-				Result.extend (eifgens_cluster_directory)
+				Result := target_path.extended (eifgens_cluster_directory)
 				internal_eifgens_cluster_path := Result
 			end
 		ensure
@@ -265,21 +248,19 @@ feature -- Directories
 		do
 			Result := internal_testing_results_path
 			if Result = Void then
-				create Result.make_from_string (target_path)
-				Result.extend (testing_results_directory)
+				Result := target_path.extended (testing_results_directory)
 				internal_testing_results_path := Result
 			end
 		end
 
 feature -- Files
 
-	project_file_name: FILE_NAME_32
+	project_file_name: PATH
 			-- Path to `project.epr'.
 		do
 			Result := internal_project_file_name
 			if Result = Void then
-				create Result.make_from_string (target_path)
-				Result.set_file_name (project_file_name_constant)
+				Result := target_path.extended (project_file_name_constant)
 				internal_project_file_name := Result
 			end
 		ensure
@@ -297,46 +278,42 @@ feature -- Files
 			project_file_not_void: Result /= Void
 		end
 
-	precompilation_file_name: FILE_NAME_32
+	precompilation_file_name: PATH
 			-- Path to `precomp.eif'.
 		do
 			Result := internal_precompilation_file_name
 			if Result = Void then
-				create Result.make_from_string (target_path)
-				Result.set_file_name (precomp_eif)
+				Result := target_path.extended (precomp_eif)
 				internal_precompilation_file_name := Result
 			end
 		ensure
 			precompilation_file_name_not_void: Result /= Void
 		end
 
-	lock_file_name: FILE_NAME_32
+	lock_file_name: PATH
 			-- Path to `ec.lock'.
 		do
 			Result := internal_lock_file_name
 			if Result = Void then
-				create Result.make_from_string (target_path.to_string_32)
-				Result.set_file_name (ec_lock_file_name)
+				Result := target_path.extended (ec_lock_file_name)
 				internal_lock_file_name := Result
 			end
 		ensure
 			lock_file_name_not_void: Result /= Void
 		end
 
-	workbench_executable_file_name: FILE_NAME_32
+	workbench_executable_file_name: PATH
 			-- Path to executable of workbench mode.
 		do
-			create Result.make_from_string (workbench_path)
-			Result.set_file_name (executable_file_name.string)
+			Result := workbench_path.extended_path (executable_file_name)
 		ensure
 			workbench_executable_file_name_not_void: Result /= Void
 		end
 
-	final_executable_file_name: FILE_NAME_32
+	final_executable_file_name: PATH
 			-- Path to executable of finalized mode.
 		do
-			create Result.make_from_string (final_path)
-			Result.set_file_name (executable_file_name.string)
+			Result := final_path.extended_path (executable_file_name)
 		ensure
 			final_executable_file_name_not_void: Result /= Void
 		end
@@ -345,17 +322,16 @@ feature -- Files
 			-- Path to executable location after single file compilation mode.
 		do
 				-- The executable will be copied into the current working directory.
-			create Result.make
-			Result.set_file_name (executable_file_name)
+			Result := executable_file_name
 		ensure
 			single_file_compilation_executable_file_name_not_void: Result /= Void
 		end
 
-	executable_file_name: FILE_NAME
+	executable_file_name: PATH
 			-- File name of executable.
 		do
 			fixme ("'target' is not always the executable filename, check output or system name.")
-			if platform_constants.is_windows then
+			if {PLATFORM}.is_windows then
 				create Result.make_from_string (target + ".exe")
 			else
 				create Result.make_from_string (target)
@@ -385,7 +361,7 @@ feature -- Access
 		local
 			l_dir: DIRECTORY
 		do
-			create l_dir.make (path)
+			create l_dir.make_with_path (path)
 			Result := l_dir.exists and then l_dir.is_readable
 		end
 
@@ -394,7 +370,7 @@ feature -- Access
 		local
 			l_dir: DIRECTORY
 		do
-			create l_dir.make (path)
+			create l_dir.make_with_path (path)
 			Result := l_dir.exists and then l_dir.is_writable
 		end
 
@@ -403,7 +379,7 @@ feature -- Access
 		local
 			l_dir: DIRECTORY
 		do
-			create l_dir.make (path)
+			create l_dir.make_with_path (path)
 			Result := l_dir.exists
 		end
 
@@ -412,9 +388,9 @@ feature -- Access
 		local
 			w_code_dir, f_code_dir, comp_dir: DIRECTORY
 		do
-			create w_code_dir.make (workbench_path)
-			create f_code_dir.make (final_path)
-			create comp_dir.make (compilation_path)
+			create w_code_dir.make_with_path (workbench_path)
+			create f_code_dir.make_with_path (final_path)
+			create comp_dir.make_with_path (compilation_path)
 			Result := is_path_readable and then w_code_dir.is_readable
 					and then f_code_dir.is_readable and then comp_dir.is_readable
 					and then project_file.is_readable
@@ -425,9 +401,9 @@ feature -- Access
 		local
 			w_code_dir, f_code_dir, comp_dir: DIRECTORY
 		do
-			create w_code_dir.make (workbench_path)
-			create f_code_dir.make (final_path)
-			create comp_dir.make (compilation_path)
+			create w_code_dir.make_with_path (workbench_path)
+			create f_code_dir.make_with_path (final_path)
+			create comp_dir.make_with_path (compilation_path)
 			Result := is_path_writable and then w_code_dir.is_writable
 					and then f_code_dir.is_writable and then comp_dir.is_writable
 					and then project_file.is_writable
@@ -438,7 +414,7 @@ feature -- Access
 		local
 			l_file: PLAIN_TEXT_FILE
 		do
-			create l_file.make_with_name (lock_file_name)
+			create l_file.make_with_path (lock_file_name)
 			Result := l_file.exists
 		end
 
@@ -448,9 +424,9 @@ feature -- Access
 		local
 			w_code_dir, f_code_dir, comp_dir: DIRECTORY
 		do
-			create w_code_dir.make (workbench_path)
-			create f_code_dir.make (final_path)
-			create comp_dir.make (compilation_path)
+			create w_code_dir.make_with_path (workbench_path)
+			create f_code_dir.make_with_path (final_path)
+			create comp_dir.make_with_path (compilation_path)
 			Result := path_exists and then w_code_dir.exists
 				and then f_code_dir.exists and then comp_dir.exists
 				and then project_file.exists
@@ -463,11 +439,11 @@ feature -- Locking
 		local
 			l_file: PLAIN_TEXT_FILE
 			retried: BOOLEAN
-			u: FILE_UTILITIES
 			utf: UTF_CONVERTER
 		do
 			if not retried then
-				l_file := u.open_write_text_file (lock_file_name)
+				create l_file.make_with_path (lock_file_name)
+				l_file.open_write
 				l_file.put_string (utf.utf_8_bom_to_string_8)
 				l_file.put_string ({EIFFEL_CONSTANTS}.ise_eiffel_env)
 				l_file.put_character ('=')
@@ -495,7 +471,7 @@ feature -- Locking
 			retried: BOOLEAN
 		do
 			if not retried and then is_lock_file_present then
-				create l_file.make_with_name (lock_file_name)
+				create l_file.make_with_path (lock_file_name)
 				l_file.delete
 			end
 		rescue
@@ -531,14 +507,14 @@ feature -- Settings
 
 feature -- Directory creation
 
-	safe_create_directory (a_dir: DIRECTORY_NAME_32)
+	safe_create_directory (a_dir: PATH)
 			-- Create `a_dir' if it doesn't exist.
 		require
 			a_dir_attached: a_dir /= Void
 		local
 			d: DIRECTORY
 		do
-			create d.make (a_dir)
+			create d.make_with_path (a_dir)
 			if not d.exists then
 				d.create_dir
 			end
@@ -549,7 +525,6 @@ feature {NONE} -- Implementation
 	reset_content
 			-- Reset all paths to Void.
 		do
-			internal_path := Void
 			internal_backup_path := Void
 			internal_compilation_path := Void
 			internal_documentation_path := Void
@@ -570,7 +545,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation: Access
 
-	internal_path: like path
 	internal_backup_path: like backup_path
 	internal_compilation_path: like compilation_path
 	internal_documentation_path: like documentation_path

@@ -86,8 +86,7 @@ feature {NONE} -- Access
 			is_interface_usable: is_interface_usable
 			system_defined: (create {SHARED_WORKBENCH}).workbench.system_defined
 		do
-			create Result.make_from_string (development_window.project_location.target_path)
-			Result := Result.extended ("editors_" + development_window.window_id.out)
+			Result := development_window.project_location.target_path.extended ("editors_" + development_window.window_id.out)
 		end
 
 feature -- Status report

@@ -372,7 +372,7 @@ feature -- Element change
 			new_file: RAW_FILE
 			input: STRING
 			retried: BOOLEAN
-			fname: FILE_NAME_32
+			fname: PATH
 			tdirsrc, tdirdes: DIRECTORY
 			l_lib_usage: ARRAYED_LIST [CONF_LIBRARY]
 			l_src_path, l_dst_path: STRING_32
@@ -403,8 +403,8 @@ feature -- Element change
 						then
 							create old_file.make_with_name (a_class.full_file_name)
 							create fname.make_from_string (l_dst_path)
-							fname.set_file_name (a_class.file_name)
-							create new_file.make_with_name (fname)
+							fname := fname.extended (a_class.file_name)
+							create new_file.make_with_path (fname)
 							if
 								old_file.exists and then
 								old_file.is_readable and then
@@ -545,7 +545,7 @@ feature -- Element change
 			end
 		end
 
-	add_cluster (a_name: STRING; a_parent: CONF_GROUP; a_path: STRING; a_is_tests_cluster: BOOLEAN)
+	add_cluster (a_name: STRING; a_parent: CONF_GROUP; a_path: PATH; a_is_tests_cluster: BOOLEAN)
 			-- Add new cluster with `a_name' optionally `a_parent' and `a_path'.
 			--
 			-- `a_name': Name of new cluster.
@@ -573,13 +573,13 @@ feature -- Element change
 				l_target := a_parent.target
 			end
 			if a_parent /= Void and then a_parent.is_override then
-				l_over := l_fact.new_override (a_name, l_fact.new_location_from_path (a_path, l_target), l_target)
+				l_over := l_fact.new_override (a_name, l_fact.new_location_from_path (a_path.name, l_target), l_target)
 				last_added_cluster := l_over
 			else
 				if a_is_tests_cluster then
-					last_added_cluster := l_fact.new_test_cluster (a_name, l_fact.new_location_from_path (a_path, l_target), l_target)
+					last_added_cluster := l_fact.new_test_cluster (a_name, l_fact.new_location_from_path (a_path.name, l_target), l_target)
 				else
-					last_added_cluster := l_fact.new_cluster (a_name, l_fact.new_location_from_path (a_path, l_target), l_target)
+					last_added_cluster := l_fact.new_cluster (a_name, l_fact.new_location_from_path (a_path.name, l_target), l_target)
 				end
 			end
 				-- create empty class list, so that the folder can be displayed

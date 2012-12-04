@@ -163,6 +163,12 @@ feature -- Access, in compiled only, not stored to configuration file
 			Result := group.location.build_path (path, file_name)
 		end
 
+	full_file_path: PATH
+			-- The full file path of the class (including parent path).
+		do
+			create Result.make_from_string (full_file_name)
+		end
+
 	path: STRING_32
 			-- The path of the class, relative to the group, in unix format.
 

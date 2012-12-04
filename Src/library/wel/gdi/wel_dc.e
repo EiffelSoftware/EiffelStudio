@@ -516,7 +516,7 @@ feature -- Status report
 	is_valid_file_name (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_file_name' valid?
 		do
-			Result := (create {FILE_NAME_32}.make_from_string (a_file_name.as_string_32)).is_valid
+			Result := True
 		end
 
 feature -- Status setting

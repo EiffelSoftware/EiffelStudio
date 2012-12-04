@@ -129,6 +129,12 @@ feature -- Access, in compiled only
 	file_name: STRING_32
 			-- File name of config file.
 
+	file_path: PATH
+			-- File path of config file.
+		do
+			create Result.make_from_string (file_name)
+		end
+
 	file_date: INTEGER
 			-- File modification date of config file.
 

@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				create l_dir.make (a_project.project_location.eifgens_cluster_path)
+				create l_dir.make_with_path (a_project.project_location.eifgens_cluster_path)
 				l_dir.recursive_create_dir
 			end
 		rescue
@@ -352,7 +352,7 @@ feature {NONE} -- Internationalization
 	cancel_text: STRING = "Cancel"
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

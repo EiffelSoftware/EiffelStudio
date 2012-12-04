@@ -49,7 +49,7 @@ feature -- Initialization
 		do
 			project_directory := a_project_location
 			l_prev_work := Execution_environment.current_working_path
- 			Execution_environment.change_working_directory (a_project_location.path)
+ 			Execution_environment.change_working_path (a_project_location.path)
 			retrieve
 			if not error_occurred then
 				Workbench.on_project_loaded
@@ -99,27 +99,19 @@ feature -- Initialization
 			valid_deletion_agent: deletion_agent /= Void implies deletion_requested
 		local
 			d: DIRECTORY
-			new_name: STRING_32
 			l_prev_work: PATH
 		do
 			l_prev_work := Execution_environment.current_working_path
-			create d.make (a_project_location.eifgens_path)
+			create d.make_with_path (a_project_location.eifgens_path)
 			if d.exists then
-				create d.make (a_project_location.target_path)
+				create d.make_with_path (a_project_location.target_path)
 				if d.exists then
-					create new_name.make_from_string (a_project_location.target_path)
-					if new_name.item (new_name.count) = ']' then
-							-- VMS specification. We need to append `_old' before the `]'.
-						new_name.insert_string ("_old", new_name.count - 1)
-					else
-						new_name.append ("_old")
-					end
 						-- Rename the old project
-					d.change_name (new_name)
+					d.rename_path (a_project_location.target_path.appended ("_old"))
 					if deletion_requested then
 							-- Rename the old project to EIFGEN so that we can
 							-- delete it.
-						d.change_name (a_project_location.target_path)
+						d.rename_path (a_project_location.target_path)
 						delete_project_file (a_project_location.project_file_name)
 						delete_generation_directory (a_project_location.backup_path, deletion_agent, cancel_agent)
 						delete_generation_directory (a_project_location.compilation_path, deletion_agent, cancel_agent)
@@ -134,7 +126,7 @@ feature -- Initialization
 				project_directory := a_project_location
 				a_project_location.create_project_directories
 				set_is_initialized
- 				Execution_environment.change_working_directory (project_directory.path)
+ 				Execution_environment.change_working_path (project_directory.path)
 				manager.on_project_create
 			end
 			Execution_environment.change_working_path (l_prev_work)
@@ -162,12 +154,10 @@ feature -- Properties
 	system: E_SYSTEM
 			-- Eiffel system
 
-	name: DIRECTORY_NAME_32
+	name: IMMUTABLE_STRING_32
 			-- Path of eiffel project
 		do
-			Result := project_directory.path
-		ensure
-			is_project_dir: Result = project_directory.path
+			Result := project_directory.path.name
 		end
 
 	error_displayer: ERROR_DISPLAYER
@@ -642,7 +632,7 @@ feature -- Update
 		end
 
 	delete_generation_directory (
-			base_name: READABLE_STRING_32; deletion_agent: PROCEDURE [ANY, TUPLE [LIST [READABLE_STRING_GENERAL]]];
+			base_name: PATH; deletion_agent: PROCEDURE [ANY, TUPLE [LIST [READABLE_STRING_GENERAL]]];
 			cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN])
 
 			-- Delete then EIFFEL generated directory named `base_name'.
@@ -655,7 +645,7 @@ feature -- Update
 			retried: BOOLEAN
 		do
 			if not retried then
-				create generation_directory.make (base_name)
+				create generation_directory.make_with_path (base_name)
 				if generation_directory.exists then
 					if (deletion_agent /= Void) or (cancel_agent /= Void) then
 						generation_directory.delete_content_with_action (deletion_agent,
@@ -670,17 +660,16 @@ feature -- Update
 			retry
 		end
 
-	delete_project_file (a_file_name: READABLE_STRING_GENERAL)
+	delete_project_file (a_file_name: PATH)
 			-- Delete `a_file_name' if possible.
 		require
 			a_file_name_not_void: a_file_name /= Void
 		local
 			l_file: RAW_FILE
 			retried: BOOLEAN
-			u: FILE_UTILITIES
 		do
 			if not retried then
-				l_file := u.make_raw_file (a_file_name)
+				create l_file.make_with_path (a_file_name)
 				if l_file.exists then
 					l_file.delete
 				end
@@ -707,14 +696,14 @@ feature {NONE} -- C compilation
 			-- depending on the value `workbench_mode'.
 			-- Run it asynchroniously if `is_async' and synchronously otherwise.
 		local
-			path: STRING_32
+			l_path: PATH
 			l_cmd: STRING_32
 			l_processors: INTEGER
 		do
 			if workbench_mode then
-				path := project_directory.workbench_path
+				l_path := project_directory.workbench_path
 			else
-				path := project_directory.final_path
+				l_path := project_directory.final_path
 			end
 			l_cmd := {STRING_32} "%""
 			l_cmd.append_string (eiffel_layout.freeze_command_name.name)
@@ -732,7 +721,7 @@ feature {NONE} -- C compilation
 					-- Set below normal priority.
 				l_cmd.append ({STRING_32} " -low")
 			end
-			compiler_objects.command_executor.invoke_finish_freezing (create {PATH}.make_from_string (path), l_cmd, is_asynchronous, workbench_mode)
+			compiler_objects.command_executor.invoke_finish_freezing (l_path, l_cmd, is_asynchronous, workbench_mode)
 		end
 
 feature -- Output
@@ -756,7 +745,7 @@ feature -- Output
 
 			if l_epr_file.has_error then
 				debug
-					io.error.put_string ("Error while saving " + l_epr_file.name.to_string_8)
+					io.error.put_string ("Error while saving " + l_epr_file.name.name.as_string_8)
 					if attached l_epr_file.error_description  as d then
 						io.error.put_string (": ")
 						io.error.put_string (d)
@@ -865,7 +854,7 @@ feature {NONE} -- Retrieval
 
 					if not error_occurred then
 						set_is_initialized
-						Execution_environment.change_working_directory (project_directory.path)
+						Execution_environment.change_working_path (project_directory.path)
 					end
 				end
 			end
@@ -1033,21 +1022,20 @@ feature {NONE} -- Implementation
 	link_driver
 		local
 			uf: PLAIN_TEXT_FILE
-			file_name: FILE_NAME_32
+			file_name: PATH
 		do
 			if Comp_system.uses_precompiled then
 					-- Target
-				create file_name.make_from_string (project_directory.workbench_path)
-				file_name.set_file_name (System.name + eiffel_layout.executable_suffix)
+				file_name := project_directory.workbench_path.extended (System.name + eiffel_layout.executable_suffix)
 
-				create uf.make_with_name (file_name)
+				create uf.make_with_path (file_name)
 				if not uf.exists then
-					create uf.make_with_name (Precompilation_driver)
+					create uf.make_with_path (workbench.precompiled_driver)
 					if uf.exists and then uf.is_readable then
 						compiler_objects.command_executor.link_eiffel_driver (project_directory.workbench_path,
 							system.name,
-							eiffel_layout.prelink_command_name_8,
-							Precompilation_driver)
+							eiffel_layout.prelink_command_name,
+							workbench.precompiled_driver)
 					end
 				end
 			end

@@ -72,7 +72,7 @@ feature -- Status setting
 
 feature -- Query
 
-	c_class_file_name: detachable FILE_NAME_32
+	c_class_file_name: detachable PATH
 			-- Retrieves the name of the Eiffel generated C file name.
 			-- Note: The result may not exist.
 		local
@@ -85,34 +85,32 @@ feature -- Query
 				l_file_name.append (dot_c)
 
 				if is_for_finalized then
-					create Result.make_from_string (project_location.final_path)
+					Result := project_location.final_path
 				else
-					create Result.make_from_string (project_location.workbench_path)
+					Result := project_location.workbench_path
 				end
-				Result.extend (packet_name (c_prefix, class_type.packet_number))
-				Result.set_file_name (l_file_name)
+				Result := Result.extended (packet_name (c_prefix, class_type.packet_number))
+				Result := Result.extended (l_file_name)
 
-				if not u.file_exists (Result) then
+				if not u.file_path_exists (Result) then
 					Result := Void
 				end
 			end
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
-			result_exists: Result /= Void implies (create {FILE_UTILITIES}).file_exists (Result)
+			result_exists: Result /= Void implies (create {FILE_UTILITIES}).file_path_exists (Result)
 		end
 
-	c_class_path: detachable DIRECTORY_NAME_32
+	c_class_path: detachable PATH
 			-- Retrieves the name of the Eiffel generated C file name's containing folder.
 			-- Note: The result may not exist.
-		local
-			u: GOBO_FILE_UTILITIES
 		do
 			if attached c_class_file_name as l_file_name then
-				create Result.make_from_string (u.file_directory_path (l_file_name).as_string_32)
+				Result := l_file_name.parent
 			end
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
-			result_exists: Result /= Void implies (create {FILE_UTILITIES}).directory_exists (Result)
+			result_exists: Result /= Void implies (create {FILE_UTILITIES}).directory_path_exists (Result)
 		end
 
 	c_feature_line (a_feature: E_FEATURE): NATURAL
@@ -128,10 +126,9 @@ feature -- Query
 			l_file: PLAIN_TEXT_FILE
 			l_line: STRING
 			i: NATURAL
-			u: FILE_UTILITIES
 		do
 			if attached c_class_file_name as l_file_name then
-				l_file := u.make_text_file (l_file_name)
+				create l_file.make_with_path (l_file_name)
 				if l_file.exists and then l_file.is_readable then
 						-- Build the search string, identifying the written class and feature name.
 					create l_search_string.make (30)
@@ -172,7 +169,7 @@ invariant
 	class_type_attached: class_type /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

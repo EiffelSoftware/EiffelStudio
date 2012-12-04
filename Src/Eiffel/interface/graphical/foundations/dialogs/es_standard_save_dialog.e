@@ -65,7 +65,7 @@ feature {NONE} -- Action handlers
 			Result := Precursor
 			l_file_path := file_path
 			if Result then
-				create l_file.make_with_name (l_file_path)
+				create l_file.make_with_path (l_file_path)
 				Result := not l_file.exists
 				if not Result then
 					if l_file.is_access_writable then

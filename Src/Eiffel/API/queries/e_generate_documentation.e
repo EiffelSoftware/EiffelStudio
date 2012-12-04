@@ -119,7 +119,7 @@ feature -- Execution
 				)
 
 				doc.set_all_universe
-				doc.set_directory (create {DIRECTORY}.make (Eiffel_system.document_path))
+				doc.set_directory (create {DIRECTORY}.make_with_path (Eiffel_system.document_path))
 				l_dir_created := True
 				doc.set_cluster_formats (True, False)
 				doc.set_system_formats (True, True, True)
@@ -128,7 +128,7 @@ feature -- Execution
 			end
 		rescue
 			if not l_dir_created then
-				error_window.put_string ((create {WARNING_MESSAGES}).w_invalid_directory_or_cannot_be_created (Eiffel_system.document_path))
+				error_window.put_string ((create {WARNING_MESSAGES}).w_invalid_directory_or_cannot_be_created (Eiffel_system.document_path.name))
 			elseif doc /= Void and then doc.target_file_name /= Void then
 				error_window.put_string ((create {WARNING_MESSAGES}).w_Cannot_create_file (doc.target_file_name.name))
 			end

@@ -256,8 +256,7 @@ feature -- Access
 		require
 			system_defined: workbench.system_defined and then workbench.is_already_compiled
 		do
-			create Result.make_from_string (project_location.data_path)
-			Result := Result.extended ("metrics")
+			Result := project_location.data_path.extended ("metrics")
 		ensure
 			result_attached: Result /= Void
 		end

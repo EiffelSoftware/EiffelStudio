@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			set_time_out (3)
 			output_dirname := u.make_file_name_in
 				({STRING_32} "auto_test",
-				etest_suite.project_access.project.project_directory.testing_results_path).as_string_32
+				etest_suite.project_access.project.project_directory.testing_results_path.name).as_string_32
 			set_seed ((create {TIME}.make_now).milli_second.as_natural_32)
 			create error_handler.make (system)
 		end

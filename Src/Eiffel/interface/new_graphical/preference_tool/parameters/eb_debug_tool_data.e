@@ -34,13 +34,13 @@ feature {EB_PREFERENCES} -- Initialization
 
 feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Value
 
-	last_saved_stack_path: STRING_32
+	last_saved_stack_path: PATH
 			-- Last saved stack path.
 		local
 			u: UTF_CONVERTER
 		do
 				-- Decode value from UTF-8.
-			Result := u.utf_8_string_8_to_string_32 (last_saved_stack_path_preference.value)
+			create Result.make_from_string (u.utf_8_string_8_to_string_32 (last_saved_stack_path_preference.value))
 		end
 
 	default_expanded_view_size: INTEGER
@@ -339,7 +339,7 @@ invariant
 	always_show_callstack_tool_when_stopping_preference_not_void: always_show_callstack_tool_when_stopping_preference /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

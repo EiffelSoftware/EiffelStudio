@@ -55,14 +55,14 @@ feature -- Query
 			Result := path.extended ("spec").extended (ise_platform).extended ("bin").extended (l_exe_name).name.as_string_8
 		end
 
-	target_directory: DIRECTORY_NAME_32
+	target_directory: PATH
 			-- target directory under EIFGENs
 			-- Note: Result is long path name
 		local
 			l_shared: SHARED_EIFFEL_PROJECT
 		do
 			create l_shared
-			Result := l_shared.eiffel_project.project_directory.target_path.twin
+			Result := l_shared.eiffel_project.project_directory.target_path
 		end
 
 	test_case_name: STRING
@@ -178,15 +178,14 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 	output: STRING_32
 			-- eweasel temporary output directory
 		local
-			l_dir_name: DIRECTORY_NAME_32
+			l_dir_name: PATH
 			l_dir: DIRECTORY
 			l_short_name_helper: ES_FILE_NAME_HELPER
 		do
-			l_dir_name := target_directory
-			l_dir_name.extend ("testing_tool_tmp")
+			l_dir_name := target_directory.extended ("testing_tool_tmp")
 
 			-- We must first create the dir, then query the short name
-			create l_dir.make (l_dir_name)
+			create l_dir.make_with_path (l_dir_name)
 			if not l_dir.exists then
 				l_dir.create_dir
 			end
@@ -194,8 +193,9 @@ feature {ES_EWEASEL_INIT_PARAMETER_MANAGER} -- Environment variables used by ewe
 				l_dir.close
 			end
 
+				-- Why do we need a short name here?
 			create l_short_name_helper
-			create Result.make_from_string (l_short_name_helper.short_name_of (l_dir_name))
+			create Result.make_from_string (l_short_name_helper.short_name_of (l_dir_name.name))
 		ensure
 			exists: (create {RAW_FILE}.make_with_name (Result)).exists
 		end

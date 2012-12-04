@@ -371,11 +371,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	project_docking_standard_file_name: attached FILE_NAME_32
+	project_docking_standard_file_name: PATH
 			-- Docking config file name.
 		do
-			create Result.make_from_string (develop_window.project_location.target_path)
-			Result.set_file_name (eiffel_layout.docking_standard_file + "_" + develop_window.window_id.out)
+			Result := develop_window.project_location.target_path.extended (eiffel_layout.docking_standard_file + "_" + develop_window.window_id.out)
 		end
 
 	restore_agent_for_restore_action, restore_agent_for_maximize_action:  PROCEDURE [EB_DOCKING_LAYOUT_MANAGER, TUPLE]

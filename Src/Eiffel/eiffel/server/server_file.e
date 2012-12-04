@@ -30,20 +30,19 @@ feature -- Initialization
 		require
 			positive_argument: i /= 0
 		local
-			d_name: DIRECTORY_NAME_32
+			d_name: PATH
 			temp: STRING_32
 			d: DIRECTORY
 		do
-			create d_name.make_from_string (project_location.compilation_path)
 			create temp.make (5)
 			temp.extend ('S')
 			temp.append_integer (packet_number (i))
-			d_name.extend (temp)
-			create d.make (d_name)
+			d_name := project_location.compilation_path.extended (temp)
+			create d.make_with_path (d_name)
 			if not d.exists then
 				d.create_dir
 			end
-			file_make_in (file_name (i), d_name)
+			create file.make_with_path (d_name.extended (file_name (i)))
 			if not Eiffel_project.is_read_only then
 					--| Re-finalization after a crash: the COMP
 					--| directory doesn't grow and grow and grow
@@ -213,15 +212,12 @@ end
 			-- server file. (It might have changed
 			-- between compilations)
 		local
-			d: DIRECTORY_NAME_32
 			temp: STRING
 		do
 			create temp.make (5)
 			temp.extend ('S')
 			temp.append_integer (packet_number (file_id))
-			create d.make_from_string (directory_path (file_id))
-			d.extend (temp)
-			file_make_in (file_name (file_id), d)
+			create file.make_with_path (directory_path (file_id).extended (temp).extended (file_name (file_id)))
 		end
 
 feature -- Status report
@@ -298,7 +294,7 @@ feature {SERVER_CONTROL, SERVER_FILE} -- File access
 			Result.append_integer (an_id)
 		end
 
-	directory_path (an_id: INTEGER): STRING_32
+	directory_path (an_id: INTEGER): PATH
 			-- Server file directory path
 		do
 			if an_id > file_counter.precompiled_offset then

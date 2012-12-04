@@ -1636,7 +1636,7 @@ feature {NONE} -- Implementation
 			if not d.exists then
 					--| If lace.directory_name does not exist,
 					--| let's use the project's location
-				create Result.make_from_string (Eiffel_system.project_location.location)
+				Result := Eiffel_system.project_location.location
 			end
 		end
 

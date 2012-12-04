@@ -216,9 +216,9 @@ feature {NONE} -- Output
 			else
 				localized_print_error (ewb_names.you_must_now_run (eiffel_layout.Finish_freezing_script))
 				if finalized_dir then
-					localized_print_error (project_location.final_path)
+					localized_print_error (project_location.final_path.name)
 				else
-					localized_print_error (project_location.workbench_path)
+					localized_print_error (project_location.workbench_path.name)
 				end;
 				io.error.put_new_line;
 			end
@@ -256,7 +256,7 @@ feature {NONE} -- Compilation
 				finished
 			loop
 				if Eiffel_project.save_error then
-					localized_print_error (ewb_names.error_could_not_write_to (project_location.project_file_name))
+					localized_print_error (ewb_names.error_could_not_write_to (project_location.project_file_name.name))
 					io.error.put_new_line
 					finished := stop_on_error or else command_line_io.termination_requested
 					if finished then

@@ -56,12 +56,11 @@ feature -- Access
 		local
 			u: GOBO_FILE_UTILITIES
 		do
-			create Result.make_from_string (project_location.target_path)
-			Result.extend ("Diagrams")
-			u.create_directory (Result)
+			Result := project_location.target_path.extended ("Diagrams")
+			u.create_directory_path (Result)
 		end
 
-	document_file_name: FILE_NAME_32
+	document_file_name: PATH
 			-- File name specified for the cluster text generation
 			-- Void result implies no document generation
 		do
@@ -158,18 +157,18 @@ feature -- Access
 			Result := System.has_class_of_id (i)
 		end;
 
-	application_name (workbench_mode: BOOLEAN): FILE_NAME_32
+	application_name (workbench_mode: BOOLEAN): PATH
 			-- Get the full qualified name of the application
 			-- For workbench-mode application `compile_type' is true
 		require
 			non_void_name: name /= Void
 		do
 			if workbench_mode then
-				create Result.make_from_string (project_location.workbench_path)
+				Result := project_location.workbench_path
 			else
-				create Result.make_from_string (project_location.final_path)
+				Result := project_location.final_path
 			end
-			Result.set_file_name (name + eiffel_layout.executable_suffix)
+			Result := Result.extended (name + eiffel_layout.executable_suffix)
 		end;
 
 	is_precompiled: BOOLEAN

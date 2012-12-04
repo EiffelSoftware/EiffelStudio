@@ -36,7 +36,7 @@ feature{NONE} -- Data storage
 
 feature{NONE} -- Generation path
 
-	generation_path: STRING_32
+	generation_path: PATH
 			-- Path on which c compiler will be launched.
 			-- Used when we need to open a console there.
 		do
@@ -86,7 +86,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

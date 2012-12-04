@@ -5,7 +5,7 @@ class
 	PRECOMP_INFO
 
 inherit
-	HASH_TABLE [INTEGER, READABLE_STRING_GENERAL]
+	HASH_TABLE [INTEGER, PATH]
 		rename
 			make as ht_make
 		end
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			ht_make (precomp_dirs.count);
 			from precomp_dirs.start until precomp_dirs.after loop
 				force (precomp_dirs.key_for_iteration,
-					precomp_dirs.item_for_iteration.name);
+					precomp_dirs.item_for_iteration.project_location.location);
 				precomp_dirs.forth
 			end
 			compiler_version := Version_number;

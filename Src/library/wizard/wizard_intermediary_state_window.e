@@ -168,13 +168,13 @@ feature {NONE} -- Basic Operations
 
 feature {WIZARD_INTERMEDIARY_STATE_WINDOW} -- Implementation
 
-	current_help_context: WIZARD_HELP_CONTEXT
+	current_help_context: detachable WIZARD_HELP_CONTEXT
 			-- Help context for this window
-		local
-			hc: FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
 		do
-			hc := choice_box.help_context
-			if attached {like current_help_context} hc.item (hc.operands) as l_help_context then
+			if
+				attached choice_box.help_context as hc and then
+				attached {like current_help_context} hc.item (hc.operands) as l_help_context
+			then
 				Result := l_help_context
 			end
 		end

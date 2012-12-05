@@ -67,10 +67,6 @@ feature -- basic Operations
 			proceed_with_new_state(create {WIZARD_FINAL_STATE}.make (wizard_information))
 		end
 
-	final_message: STRING
-		do
-		end
-
 	cancel
 		do
 		end

@@ -75,13 +75,13 @@ feature -- Basic Operations
 			choice_box.set_help_context (agent create_help_context (tuple))
 		end
 
-	current_help_context: WIZARD_HELP_CONTEXT
+	current_help_context: detachable WIZARD_HELP_CONTEXT
 			-- Help context for this window
-		local
-			hc: FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
 		do
-			hc := choice_box.help_context
-			if attached {like current_help_context} hc.item (hc.operands) as l_help_context then
+			if
+				attached choice_box.help_context as hc and then
+				attached {like current_help_context} hc.item (hc.operands) as l_help_context
+			then
 				Result := l_help_context
 			end
 		end
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 	display_pixmap
 			-- Draw pixmap
 		local
-			p: PATH
+			p: detachable PATH
 			retried: BOOLEAN
 			info_dialog: EV_INFORMATION_DIALOG
 			info_message: STRING_32
@@ -121,20 +121,18 @@ feature {NONE} -- Implementation
 				pixmap_icon.set_with_named_path (p)
 			end
 		rescue
-			if not retried then
-				create info_message.make (30)
-				info_message.append ("Unable to open the pixmap named%N%"")
-				if p /= Void then
-					info_message.append (p.name)
-				else
-					info_message.append ("UNKNOWN FILE")
-				end
-				info_message.append ("%"")
-				create info_dialog.make_with_text (info_message)
-				info_dialog.show_modal_to_window (first_window)
-				retried := True
-				retry
+			retried := True
+			create info_message.make (30)
+			info_message.append ("Unable to open the pixmap named%N%"")
+			if attached p then
+				info_message.append (p.name)
+			else
+				info_message.append ("UNKNOWN FILE")
 			end
+			info_message.append ("%"")
+			create info_dialog.make_with_text (info_message)
+			info_dialog.show_modal_to_window (first_window)
+			retry
 		end
 
 feature {NONE} -- Constants

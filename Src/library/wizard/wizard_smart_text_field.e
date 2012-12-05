@@ -31,6 +31,7 @@ feature -- Initialization
 			textfield_widget: EV_WIDGET -- "Textfield" or "Textfield + Browse"
 			textfield_box: EV_HORIZONTAL_BOX
 			empty_space: EV_CELL
+			b: like browse_button
 		do
 			create label.make_with_text(label_string)
 			if is_password then
@@ -38,20 +39,23 @@ feature -- Initialization
 			else
 				create textfield
 			end
-			if textfield_string /= Void and then not textfield_string.is_empty then
-				textfield.set_text (textfield_string)
+			if attached textfield_string as s and then not s.is_empty then
+				textfield.set_text (s)
 			end
 
 			if has_browse_button then
 					-- Create the browse button
-				create browse_button.make_with_text(b_browse)
-				browse_button.select_actions.extend (browse_button_action)
+				create b.make_with_text(b_browse)
+				browse_button := b
+				if attached browse_button_action as a then
+					b.select_actions.extend (a)
+				end
 
 				create textfield_box
 				textfield_box.set_padding (dialog_unit_to_pixels(5))
 				textfield_box.extend (textfield)
-				textfield_box.extend (browse_button)
-				textfield_box.disable_item_expand (browse_button)
+				textfield_box.extend (b)
+				textfield_box.disable_item_expand (b)
 				textfield_widget := textfield_box
 			else
 				textfield_widget := textfield
@@ -59,8 +63,8 @@ feature -- Initialization
 
 			label.set_minimum_width (label_size)
 			label.align_text_left
-			if label_string /= Void then
-				label.set_text ((" ").as_string_32+label_string)
+			if attached label_string as s then
+				label.set_text (({STRING_32} " ") + s)
 			end
 			textfield.set_capacity (textfield_capacity)
 			textfield.return_actions.extend (agent caller.next)
@@ -89,22 +93,15 @@ feature -- Initialization
 
 feature -- Access
 
-	text: STRING
-			-- Text of the textfield.
-		obsolete "Use `text_32' instead."
-		do
-			if attached text_32 as t then
-				Result := t.as_string_8
-			end
-		end
-
 	text_32: STRING_32
 			-- Text of the textfield
 		do
 			if generated then
 				Result := textfield.text
+			elseif attached textfield_string as t then
+				Result := t
 			else
-				Result := textfield_string
+				Result := {STRING_32} ""
 			end
 		end
 
@@ -132,7 +129,9 @@ feature -- Access
 			has_browse_button: has_browse_button
 			generated: generated
 		do
-			Result := browse_button.select_actions
+			check attached browse_button as b then
+				Result := b.select_actions
+			end
 		end
 
 feature -- Status report
@@ -331,26 +330,26 @@ feature {NONE} -- Implementation
 	label_size: INTEGER
 			-- Requested size for the label.
 
-	label_string: STRING_32
+	label_string: detachable STRING_32
 			-- Requested Text for the Label.
 
 	textfield_capacity: INTEGER
 			-- Requested capacity for the text field.
 
-	textfield_string: STRING_32
+	textfield_string: detachable STRING_32
 			-- Requested text for the text field.
 
-	browse_button: EV_BUTTON
+	browse_button: detachable EV_BUTTON
 			-- Browse button (Void if none)
 
-	font: EV_FONT
+	font: detachable EV_FONT
 			-- Requested font for the textfield, the label and - if any -
 			-- the browse button.
 
 	caller: WIZARD_STATE_WINDOW
 			-- Caller of this object.
 
-	browse_button_action: PROCEDURE [ANY, TUPLE];
+	browse_button_action: detachable PROCEDURE [ANY, TUPLE];
 			-- Action for the browse button.
 
 note

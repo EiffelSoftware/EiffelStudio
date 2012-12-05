@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 		local
 			l_manager: I18N_LOCALE_MANAGER
 			l_arg: STRING
-			l_locale: like locale
+			l_locale: detachable like locale
 		do
 			create l_manager.make (eiffel_layout.language_path.name)
 			if argument_count >= 2 then

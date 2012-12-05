@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 				-- Add the starting environment variables to the list of known variables.
 			tb := table
 			across
-				execution_environment.starting_environment_variables as c
+				execution_environment.starting_environment as c
 			loop
 				tb.force (c.item, c.key)
 			end

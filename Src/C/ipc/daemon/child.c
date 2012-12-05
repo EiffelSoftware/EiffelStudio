@@ -525,7 +525,7 @@ rt_public STREAM *spawn_child(char* id, EIF_NATIVE_CHAR *a_exe_path, EIF_NATIVE_
 	t_uu = uuencode_str ((char *) uu_str, 2 * sizeof (HANDLE));
 	t_uu_len = strlen (t_uu);
 	cmdline_len = wcslen (cmdline);
-	for (i = 0; i < t_uu_len; i++) {
+	for (i = 0; i <= t_uu_len; i++) {
 		cmdline[cmdline_len + i] = (EIF_NATIVE_CHAR) t_uu[i];
 	}
 	free (t_uu);

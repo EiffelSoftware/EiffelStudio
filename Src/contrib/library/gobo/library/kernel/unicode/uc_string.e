@@ -60,8 +60,7 @@ inherit
 				-- Redefine version from ANY instead.
 			is_equal as old_is_equal,
 			set_count as old_set_count,
-			is_empty as old_is_empty,
-			make_from_string_general as old_make_from_string_general
+			is_empty as old_is_empty
 		export
 			{STRING}
 				share,
@@ -168,8 +167,7 @@ inherit
 				-- Note: The postcondition of `infix "<"' in ELKS 2001 STRING
 				-- is too constraining and does not allow a redefinition here.
 				-- Redefine version from COMPARABLE instead.
-			is_less as old_infix_less,
-			make_from_string_general as old_make_from_string_general
+			is_less as old_infix_less
 		export
 			{NONE} all
 		undefine
@@ -352,9 +350,9 @@ feature -- Initialization
 			count := 0
 			if suggested_capacity = 0 then
 					-- Make sure that the `area' is not shared.
-				Precursor (1)
+				precursor (1)
 			else
-				Precursor (suggested_capacity)
+				precursor (suggested_capacity)
 			end
 			set_count (byte_capacity)
 			old_set_count (byte_capacity)
@@ -365,7 +363,7 @@ feature -- Initialization
 			byte_capacity_set: byte_capacity >= suggested_capacity
 		end
 
-	make_from_string (a_string: READABLE_STRING_8)
+	make_from_string (a_string: STRING)
 			-- Initialize from the character sequence of `a_string'.
 			-- (ELKS 2001 STRING)
 		do
@@ -383,7 +381,7 @@ feature {NONE} -- Initialization
 			make (0)
 		end
 
-	make_from_string_general (a_string: READABLE_STRING_GENERAL)
+	make_from_string_general (a_string: STRING_GENERAL)
 			-- Initialize from the character sequence of `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -429,7 +427,7 @@ feature {NONE} -- Initialization
 			initialized: same_unicode_string (a_string.substring (start_index, end_index))
 		end
 
-	make_from_substring_general (a_string: READABLE_STRING_GENERAL; start_index, end_index: INTEGER)
+	make_from_substring_general (a_string: STRING_GENERAL; start_index, end_index: INTEGER)
 			-- Initialize from the character sequence of `a_string'
 			-- between `start_index' and `end_index' inclusive.
 		require
@@ -439,7 +437,7 @@ feature {NONE} -- Initialization
 			meaningful_interval: start_index <= end_index + 1
 		local
 			nb: INTEGER
-			str: READABLE_STRING_GENERAL
+			str: STRING_GENERAL
 			l_uc_string: detachable UC_STRING
 		do
 				-- Note that we do nothing if `a_string' is `Current'.
@@ -3498,7 +3496,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	put_substring_at_byte_index (a_string: READABLE_STRING_GENERAL; start_index, end_index, b: INTEGER; i: INTEGER)
+	put_substring_at_byte_index (a_string: STRING_GENERAL; start_index, end_index, b: INTEGER; i: INTEGER)
 			-- Put characters of `a_string' between `start_index'
 			-- and `end_index' at byte index `i'. `b' is the number
 			-- of bytes necessary to encode these characters.

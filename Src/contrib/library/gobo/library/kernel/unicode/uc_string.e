@@ -365,7 +365,7 @@ feature -- Initialization
 			byte_capacity_set: byte_capacity >= suggested_capacity
 		end
 
-	make_from_string (a_string: STRING)
+	make_from_string (a_string: READABLE_STRING_8)
 			-- Initialize from the character sequence of `a_string'.
 			-- (ELKS 2001 STRING)
 		do
@@ -383,7 +383,7 @@ feature {NONE} -- Initialization
 			make (0)
 		end
 
-	make_from_string_general (a_string: STRING_GENERAL)
+	make_from_string_general (a_string: READABLE_STRING_GENERAL)
 			-- Initialize from the character sequence of `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -429,7 +429,7 @@ feature {NONE} -- Initialization
 			initialized: same_unicode_string (a_string.substring (start_index, end_index))
 		end
 
-	make_from_substring_general (a_string: STRING_GENERAL; start_index, end_index: INTEGER)
+	make_from_substring_general (a_string: READABLE_STRING_GENERAL; start_index, end_index: INTEGER)
 			-- Initialize from the character sequence of `a_string'
 			-- between `start_index' and `end_index' inclusive.
 		require
@@ -439,7 +439,7 @@ feature {NONE} -- Initialization
 			meaningful_interval: start_index <= end_index + 1
 		local
 			nb: INTEGER
-			str: STRING_GENERAL
+			str: READABLE_STRING_GENERAL
 			l_uc_string: detachable UC_STRING
 		do
 				-- Note that we do nothing if `a_string' is `Current'.
@@ -3498,7 +3498,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	put_substring_at_byte_index (a_string: STRING_GENERAL; start_index, end_index, b: INTEGER; i: INTEGER)
+	put_substring_at_byte_index (a_string: READABLE_STRING_GENERAL; start_index, end_index, b: INTEGER; i: INTEGER)
 			-- Put characters of `a_string' between `start_index'
 			-- and `end_index' at byte index `i'. `b' is the number
 			-- of bytes necessary to encode these characters.

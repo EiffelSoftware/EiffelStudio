@@ -294,11 +294,11 @@ feature {NONE} -- Implementation of data retrieval
 					current_cluster.set_recursive (True)
 				end
 				if a_cluster.has_parent then
-					if not current_target.clusters.has (a_cluster.parent_name) then
-						set_error (create {CONF_ERROR_PARSE}.make ("Parent not found: "+a_cluster.parent_name))
+					if not current_target.clusters.has (l_parent) then
+						set_error (create {CONF_ERROR_PARSE}.make ("Parent not found: " + l_parent))
 					else
-						current_target.clusters.item (a_cluster.parent_name).add_child (current_cluster)
-						current_cluster.set_parent (current_target.clusters.item (a_cluster.parent_name))
+						current_target.clusters.item (l_parent).add_child (current_cluster)
+						current_cluster.set_parent (current_target.clusters.item (l_parent))
 						l_location.set_parent (current_cluster.parent.location)
 					end
 				end

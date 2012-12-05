@@ -146,6 +146,7 @@ feature -- Status setting
 			is_minimized := True
 			is_maximized := False
 			{GTK2}.gtk_window_iconify (c_object)
+			show
 		end
 
 	maximize
@@ -154,6 +155,7 @@ feature -- Status setting
 			is_maximized := True
 			is_minimized := False
 			{GTK2}.gtk_window_maximize (c_object)
+			show
 		end
 
 	restore

@@ -280,7 +280,7 @@ feature {PROCESS_IMP} -- Process management
 			-- Check `is_last_process_spawn_successful' after to make sure process has been spawned successfully.
         local
             ee: EXECUTION_ENVIRONMENT
-            cur_dir: detachable STRING
+            cur_dir: detachable PATH
             exceptions: EXCEPTIONS
             l_debug_state: like debug_state
             l_working_directory: like working_directory
@@ -291,8 +291,8 @@ feature {PROCESS_IMP} -- Process management
             create ee
             l_working_directory := working_directory
             if l_working_directory /= Void then
-                create cur_dir.make_from_string (ee.current_working_directory)
-                ee.change_working_directory (l_working_directory)
+				cur_dir := ee.current_working_path
+                ee.change_working_path (create {PATH}.make_from_string (l_working_directory))
             end
             l_debug_state := debug_state
             discard_debug
@@ -304,7 +304,7 @@ feature {PROCESS_IMP} -- Process management
                 -- Error ... no fork allowed
                 if l_working_directory /= Void then
                 	check cur_dir /= Void end
-                    ee.change_working_directory (cur_dir)
+                    ee.change_working_path (cur_dir)
                 end
             when 0 then --| Child process
                 collection_off
@@ -325,7 +325,7 @@ feature {PROCESS_IMP} -- Process management
                 set_is_executing (True)
                 if l_working_directory /= Void then
                 	check cur_dir /= Void end
-                    ee.change_working_directory (cur_dir)
+                    ee.change_working_path (cur_dir)
                 end
             end
         rescue

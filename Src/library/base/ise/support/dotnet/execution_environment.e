@@ -143,7 +143,32 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	starting_environment_variables: HASH_TABLE [STRING_32, STRING_32]
+	starting_environment_variables: HASH_TABLE [STRING_8, STRING_8]
+			-- Table of environment variables associated with current process,
+			-- indexed by variable name
+		obsolete
+			"Use starting_environment which support unicode. [dec/2012]"
+		do
+			if attached {IDICTIONARY} {ENVIRONMENT}.get_environment_variables as l_dic and then attached {IENUMERATOR} l_dic.get_enumerator_2 as l_enumerator then
+				create Result.make (l_dic.count)
+				from
+				until
+					not l_enumerator.move_next
+				loop
+					if
+						attached {DICTIONARY_ENTRY} l_enumerator.current_ as l_entry and then
+						attached {SYSTEM_STRING} l_entry.key as l_key and then
+						attached {SYSTEM_STRING} l_entry.value as l_value
+					then
+						Result.force (create {STRING_8}.make_from_cil (l_value), create {STRING_8}.make_from_cil (l_key))
+					end
+				end
+			else
+				create Result.make (0)
+			end
+		end
+
+	starting_environment: HASH_TABLE [STRING_32, STRING_32]
 			-- Table of environment variables associated with current process,
 			-- indexed by variable name
 		do

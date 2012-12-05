@@ -60,7 +60,8 @@ inherit
 				-- Redefine version from ANY instead.
 			is_equal as old_is_equal,
 			set_count as old_set_count,
-			is_empty as old_is_empty
+			is_empty as old_is_empty,
+			make_from_string_general as old_make_from_string_general
 		export
 			{STRING}
 				share,
@@ -167,7 +168,8 @@ inherit
 				-- Note: The postcondition of `infix "<"' in ELKS 2001 STRING
 				-- is too constraining and does not allow a redefinition here.
 				-- Redefine version from COMPARABLE instead.
-			is_less as old_infix_less
+			is_less as old_infix_less,
+			make_from_string_general as old_make_from_string_general
 		export
 			{NONE} all
 		undefine
@@ -350,9 +352,9 @@ feature -- Initialization
 			count := 0
 			if suggested_capacity = 0 then
 					-- Make sure that the `area' is not shared.
-				precursor (1)
+				Precursor (1)
 			else
-				precursor (suggested_capacity)
+				Precursor (suggested_capacity)
 			end
 			set_count (byte_capacity)
 			old_set_count (byte_capacity)

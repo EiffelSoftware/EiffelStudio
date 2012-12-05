@@ -33,7 +33,7 @@ feature -- Status Report
 			Result := internal_show_successful
 		end
 
-	last_error_message: STRING
+	last_error_message: detachable STRING
 			-- Last error message, if any
 		do
 			Result := internal_error_message

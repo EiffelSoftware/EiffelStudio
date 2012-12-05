@@ -29,10 +29,6 @@ feature -- basic Operations
 			message.set_text (Bench_interface_names.m_Location_state)
 		end
 
-	final_message: STRING_32
-		do
-		end
-
 feature {WIZARD_STATE_WINDOW}
 
 	pixmap_icon_location: PATH

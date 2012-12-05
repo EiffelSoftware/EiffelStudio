@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	current_help_context: WIZARD_HELP_CONTEXT
+	current_help_context: detachable WIZARD_HELP_CONTEXT
 			-- Help context for this window
 		deferred
 		end
@@ -69,7 +69,7 @@ feature -- Basic Operations
 	display_pixmap
 			-- Draw pixmap.
 		local
-			p: PATH
+			p: detachable PATH
 			retried: BOOLEAN
 			info_dialog: EV_INFORMATION_DIALOG
 		do
@@ -78,12 +78,12 @@ feature -- Basic Operations
 				pixmap.set_with_named_path (p)
 			end
 		rescue
-			if not retried then
+			retried := True
+			if attached p then
 				create info_dialog.make_with_text ({STRING_32} "Unable to open the pixmap named%N%""+p.name+"%"")
 				info_dialog.show_modal_to_window (first_window)
-				retried := True
-				retry
 			end
+			retry
 		end
 
 	proceed_with_current_info
@@ -121,11 +121,8 @@ feature -- Basic Operations
 
 	display_help
 			-- Show contextual help.
-		local
-			hc: WIZARD_HELP_CONTEXT
 		do
-			hc := current_help_context
-			if hc /= Void then
+			if attached current_help_context as hc then
 				help_engine.show (hc)
 			end
 		end
@@ -205,13 +202,6 @@ feature -- Access
 
 	is_final_state: BOOLEAN
 		do
-		end
-
-feature -- Tools
-
-	string_cleaner: STRING_CLEANER
-		once
-			create Result.make
 		end
 
 note

@@ -53,16 +53,12 @@ feature -- Access
 
 	is_final_state: BOOLEAN = TRUE
 
-	final_message: STRING_32
-		deferred
-		end
-
 	progress_text: EV_LABEL
 
 	progress: EV_HORIZONTAL_PROGRESS_BAR;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source:	"[
 			 Eiffel Software
@@ -72,4 +68,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class WIZARD_FINAL_STATE_WINDOW
+end

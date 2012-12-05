@@ -14,6 +14,7 @@ inherit
 		rename
 			copy as copy_titled_window
 		redefine
+			create_interface_objects,
 			destroy,
 			initialize,
 			is_in_default_state
@@ -42,18 +43,22 @@ feature {NONE} -- Initialization
 			factory_set: factory = a_factory
 		end
 
-	initialize
-			-- Initialize `Current'.
+	create_interface_objects
+			-- <Precursor>
 		local
 			v1: EV_VERTICAL_BOX
 		do
---			disable_user_resize
 			create wizard_page
 			create v1
 			v1.extend (wizard_page)
 			build_navigation_bar (v1)
 			extend (v1)
-			Precursor {EV_TITLED_WINDOW}
+			Precursor
+		end
+
+	initialize
+			-- Initialize `Current'.
+		do
 			set_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
 		end
 
@@ -133,8 +138,10 @@ feature -- Command
 			-- Destroy underlying native toolkit object.
 			-- Render `Current' unusable.
 		do
-			Precursor;
-			(create {EV_ENVIRONMENT}).application.destroy
+			Precursor
+			if attached (create {EV_ENVIRONMENT}).application as a then
+				a.destroy
+			end
 		end
 
 feature -- Access
@@ -154,10 +161,6 @@ feature {NONE} -- Implementation
 
 	navigation_bar: EV_HORIZONTAL_BOX
 			-- Horizontal box containing navigation buttons
-
-	wizard_info_page: EV_VERTICAL_BOX
-			-- Page to be completed by the user
-			-- to give the information about the current state
 
 	is_final: BOOLEAN
 			-- Is it the final state?
@@ -255,16 +258,14 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class WIZARD_WINDOW
-
-
+end

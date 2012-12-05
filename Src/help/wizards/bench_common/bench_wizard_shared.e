@@ -19,15 +19,14 @@ inherit
 
 feature -- Shared variables
 
-	callback_content: STRING
+	callback_content: detachable STRING
 			-- Content of the filename used as callback.
 		local
 			file: PLAIN_TEXT_FILE
 		once
-			if callback_filename /= Void then
-				create file.make_with_name (callback_filename)
+			if attached callback_filename as n then
+				create file.make_with_name (n)
 				file.open_read
-
 					-- Read the file.
 				create Result.make (0)
 				from
@@ -41,7 +40,7 @@ feature -- Shared variables
 			end
 		end
 
-	callback_filename: STRING_32
+	callback_filename: detachable STRING_32
 			-- Filename used as callback.
 		once
 			if attached separate_word_option_value ("callback") as s and then not s.is_empty then
@@ -57,18 +56,17 @@ feature -- Shared variables
 			file: PLAIN_TEXT_FILE
 			rescued: BOOLEAN
 		do
-			if not rescued then
-				if callback_content /= Void then
-						-- Modify the fields
-					callback_content.replace_substring_all ("<SUCCESS>", "no")
-
-					if callback_filename /= Void then
-						create file.make_with_name (callback_filename)
-						file.open_write
-						file.put_string (callback_content)
-						file.close
-					end
-				end
+			if
+				not rescued and then
+				attached callback_content as c and then
+				attached callback_filename as n
+			then
+					-- Modify the fields
+				c.replace_substring_all ("<SUCCESS>", "no")
+				create file.make_with_name (n)
+				file.open_write
+				file.put_string (c)
+				file.close
 			end
 		rescue
 			rescued := True
@@ -83,30 +81,29 @@ feature -- Shared variables
 			rescued: BOOLEAN
 			u: UTF_CONVERTER
 		do
-			if not rescued then
-				if callback_content /= Void then
-						-- Modify the fields
-					callback_content.replace_substring_all ("<SUCCESS>", "yes")
-					callback_content.replace_substring_all ("<ACE>", u.string_32_to_utf_8_string_8 (wizard_information.ace_location.name))
-					callback_content.replace_substring_all ("<DIRECTORY>", u.string_32_to_utf_8_string_8 (wizard_information.project_location.name))
-					if wizard_information.compile_project then
-						callback_content.replace_substring_all ("<COMPILATION>", "yes")
-					else
-						callback_content.replace_substring_all ("<COMPILATION>", "no")
-					end
-					if wizard_information.freeze_required then
-						callback_content.replace_substring_all ("<COMPILATION_TYPE>", "freeze")
-					else
-						callback_content.replace_substring_all ("<COMPILATION_TYPE>", "melt")
-					end
-
-					if callback_filename /= Void then
-						create file.make_with_name (callback_filename)
-						file.open_write
-						file.put_string (callback_content)
-						file.close
-					end
+			if
+				not rescued and then
+				attached callback_content as c and then
+				attached callback_filename as n
+			then
+					-- Modify the fields
+				c.replace_substring_all ("<SUCCESS>", "yes")
+				c.replace_substring_all ("<ACE>", u.string_32_to_utf_8_string_8 (wizard_information.ace_location.name))
+				c.replace_substring_all ("<DIRECTORY>", u.string_32_to_utf_8_string_8 (wizard_information.project_location.name))
+				if wizard_information.compile_project then
+					c.replace_substring_all ("<COMPILATION>", "yes")
+				else
+					c.replace_substring_all ("<COMPILATION>", "no")
 				end
+				if wizard_information.freeze_required then
+					c.replace_substring_all ("<COMPILATION_TYPE>", "freeze")
+				else
+					c.replace_substring_all ("<COMPILATION_TYPE>", "melt")
+				end
+				create file.make_with_name (n)
+				file.open_write
+				file.put_string (c)
+				file.close
 			end
 		rescue
 			rescued := True

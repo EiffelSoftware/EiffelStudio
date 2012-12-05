@@ -48,10 +48,6 @@ feature -- Access
 			)
 		end
 
-	final_message: STRING_32
-		do
-		end
-
 feature {NONE} -- Implementation
 
 	pixmap_icon_location: PATH

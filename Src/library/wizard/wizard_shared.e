@@ -21,7 +21,9 @@ feature -- Access
 		require
 			first_window_cell_not_empty: first_window_cell.item /= Void
 		do
-			Result := first_window_cell.item
+			check attached first_window_cell.item as r then
+				Result := r
+			end
 		ensure
 			first_window_not_void: Result /= Void
 		end
@@ -100,7 +102,7 @@ feature -- Access
 			create Result
 		end
 
-	current_application: EV_APPLICATION
+	current_application: detachable EV_APPLICATION
 		do
 			Result:= app_cell.item
 		end
@@ -128,8 +130,9 @@ feature -- Access
 		local
 			l_manager: I18N_LOCALE_MANAGER
 		do
-			Result := locale_cell.item
-			if Result = Void then
+			if attached locale_cell.item as r then
+				Result := r
+			else
 				create l_manager.make ("")
 				Result := l_manager.system_locale
 				locale_cell.put (Result)

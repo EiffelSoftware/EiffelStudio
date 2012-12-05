@@ -296,13 +296,24 @@ feature {SERVER_CONTROL, SERVER_FILE} -- File access
 
 	directory_path (an_id: INTEGER): PATH
 			-- Server file directory path
+		local
+			l_precomp_id: INTEGER
+			l_dev: DEVELOPER_EXCEPTION
 		do
 			if an_id > file_counter.precompiled_offset then
 				Result := project_location.compilation_path
 			else
-				Result := Precompilation_directories.item
-						(file_counter.compilation_id (an_id)).compilation_path
+				l_precomp_id := file_counter.compilation_id (an_id)
+				if attached precompilation_directories.item (l_precomp_id) as l_project then
+					Result := l_project.compilation_path
+				else
+					create l_dev
+					l_dev.set_message ("Mapping ID(" + an_id.out + ") to precompilation ID(" + l_precomp_id.out + ") not found.")
+					l_dev.raise
+				end
 			end
+		ensure
+			directory_path_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation

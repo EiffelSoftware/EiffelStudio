@@ -216,10 +216,36 @@ feature {NONE} -- Implementation
 					previous_size.width := l_item.minimum_width
 					previous_size.height := l_item.minimum_height
 					on_resize (x_position, y_position, width, height)
-						-- Make sure y offset is within bound after resize as the item may have shrunk.
-					set_y_offset (y_offset.min (l_item.minimum_height))
 				end
 			end
+		end
+
+	update_scrollbar_visibility (a_horizontal_shown, a_vertical_shown: BOOLEAN)
+			-- If `a_horizontal_shown' or `a_vertical_shown' then show the respective scrollbar if not already
+			-- else hide if not already.
+		local
+			l_x_offset, l_y_offset: INTEGER
+		do
+			if a_horizontal_shown then
+				show_horizontal_scroll_bar
+				l_x_offset := x_offset
+			elseif is_horizontal_scroll_bar_visible then
+				hide_horizontal_scroll_bar
+			end
+
+			if a_vertical_shown then
+				show_vertical_scroll_bar
+				l_y_offset := y_offset
+			elseif is_vertical_scroll_bar_visible then
+				hide_vertical_scroll_bar
+			end
+
+				-- Clamp offsets in case item has shrank.
+			if attached item as l_item then
+				l_x_offset := l_item.minimum_width.min (l_x_offset)
+				l_y_offset := l_item.minimum_height.min (l_y_offset)
+			end
+			set_offset (l_x_offset, l_y_offset)
 		end
 
 	on_resize (a_x, a_y, a_width, a_height: INTEGER)
@@ -239,8 +265,7 @@ feature {NONE} -- Implementation
 					if l_item_min_height <= a_height then
 							-- Item is smaller than the available area, we simply resize
 							-- it so that we do not see anymore the scrollbars
-						hide_horizontal_scroll_bar
-						hide_vertical_scroll_bar
+						update_scrollbar_visibility (False, False)
 						cell.set_minimum_size (a_width, a_height)
 						set_item_size (a_width, a_height)
 					else
@@ -249,13 +274,11 @@ feature {NONE} -- Implementation
 						l_width := a_width - scrollbar_width
 						if l_item_min_width > l_width then
 								-- The apparition of the vertical scrollbar forced us to show the horizontal scrollbar as well.
-							show_horizontal_scroll_bar
-							show_vertical_scroll_bar
+							update_scrollbar_visibility (True, True)
 							cell.set_minimum_size (l_item_min_width, l_item_min_height)
 							set_item_size (l_item_min_width, l_item_min_height)
 						else
-							hide_horizontal_scroll_bar
-							show_vertical_scroll_bar
+							update_scrollbar_visibility (False, True)
 							cell.set_minimum_size (l_width, l_item_min_height)
 							set_item_size (l_width, l_item_min_height)
 						end
@@ -267,20 +290,17 @@ feature {NONE} -- Implementation
 						l_height := a_height - scrollbar_width
 						if l_item_min_height > l_height then
 								-- The apparition of the horizontal scrollbar forced us to show the vertical scrollbar as well.
-							show_horizontal_scroll_bar
-							show_vertical_scroll_bar
+							update_scrollbar_visibility (True, True)
 							cell.set_minimum_size (l_item_min_width, l_item_min_height)
 							set_item_size (l_item_min_width, l_item_min_height)
 						else
-							show_horizontal_scroll_bar
-							hide_vertical_scroll_bar
+							update_scrollbar_visibility (True, False)
 							cell.set_minimum_size (l_item_min_width, a_height)
 							set_item_size (l_item_min_width, a_height)
 						end
 					else
 							-- Both scrollbars are present
-						show_horizontal_scroll_bar
-						show_vertical_scroll_bar
+						update_scrollbar_visibility (True, True)
 						cell.set_minimum_size (l_item_min_width, l_item_min_height)
 						set_item_size (l_item_min_width, l_item_min_height)
 					end

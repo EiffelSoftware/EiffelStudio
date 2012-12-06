@@ -45,20 +45,21 @@ feature {NONE} -- Initialization
 
 	create_interface_objects
 			-- <Precursor>
-		local
-			v1: EV_VERTICAL_BOX
 		do
 			create wizard_page
-			create v1
-			v1.extend (wizard_page)
-			build_navigation_bar (v1)
-			extend (v1)
 			Precursor
 		end
 
 	initialize
-			-- Initialize `Current'.
+			-- <Precursor>
+		local
+			v1: EV_VERTICAL_BOX
 		do
+			Precursor
+			create v1
+			v1.extend (wizard_page)
+			build_navigation_bar (v1)
+			extend (v1)
 			set_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
 		end
 

@@ -51,9 +51,9 @@ feature {NONE} -- Implementation
 			l_lib: CONF_LIBRARY
 			l_cl: CONF_CLUSTER
 			l_excludes: CONF_FILE_RULE
-			l_dir: DIRECTORY_NAME_32
+			l_dir: PATH
 			l_fn: PATH
-			l_dest_dir: DIRECTORY_NAME_32
+			l_dest_dir: PATH
 			l_libs: HASH_TABLE [CONF_LIBRARY, STRING]
 			l_as: CONF_ASSERTIONS
 		do
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			end
 
 				-- cluster
-			l_dir_loc := conf_factory.new_location_from_path (l_dest_dir, l_target)
+			l_dir_loc := conf_factory.new_location_from_path (l_dest_dir.name, l_target)
 			l_cl := conf_factory.new_cluster (l_name.as_lower, l_dir_loc, l_target)
 			l_target.add_cluster (l_cl)
 			l_cl.set_recursive (True)
@@ -133,15 +133,12 @@ feature {NONE} -- Implementation
 			end
 
 				-- external includes
-			l_dir := l_dest_dir.twin
-			l_dir.extend_from_array (<<client, include>>)
-			l_target.add_external_include (conf_factory.new_external_include (quote_path (l_dir), l_target))
-			l_dir := l_dest_dir.twin
-			l_dir.extend_from_array (<<common, include>>)
-			l_target.add_external_include (conf_factory.new_external_include (quote_path (l_dir), l_target))
-			l_dir := l_dest_dir.twin
-			l_dir.extend_from_array (<<server, include>>)
-			l_target.add_external_include (conf_factory.new_external_include (quote_path (l_dir), l_target))
+			l_dir := l_dest_dir.extended (client).extended (include)
+			l_target.add_external_include (conf_factory.new_external_include (quote_path (l_dir.name), l_target))
+			l_dir := l_dest_dir.extended (common).extended (include)
+			l_target.add_external_include (conf_factory.new_external_include (quote_path (l_dir.name), l_target))
+			l_dir := l_dest_dir.extended (server).extended (include)
+			l_target.add_external_include (conf_factory.new_external_include (quote_path (l_dir.name), l_target))
 
 				-- external libs
 			add_libs (l_target, client, False)

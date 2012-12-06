@@ -1613,7 +1613,6 @@ feature {NONE} -- Input/output
 	put_string (s: STRING)
 			-- Write `s' to `makefile'.
 		local
-			c: CHARACTER
 			i: like {STRING}.count
 		do
 			makefile.put_string (s)

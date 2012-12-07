@@ -89,7 +89,7 @@ feature -- Basic operations
 						create l_load.make (l_fact)
 						l_load.retrieve_configuration (l_config)
 						if l_load.is_error then
-							(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (l_load.last_error.out, Void, Void)
+							(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (l_load.last_error.text, Void, Void)
 								else
 								-- display warnings
 							if l_load.is_warning then
@@ -178,7 +178,7 @@ feature {NONE} -- Actions
 					create l_load.make (l_fact)
 					l_load.retrieve_configuration (l_config)
 					if l_load.is_error then
-						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (l_load.last_error.out, Void, Void)
+						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (l_load.last_error.text, Void, Void)
 					else
 							-- display warnings
 						if l_load.is_warning then

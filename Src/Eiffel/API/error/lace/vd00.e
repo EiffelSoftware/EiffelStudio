@@ -44,7 +44,7 @@ feature -- Output
 
 	build_explain (st: TEXT_FORMATTER)
 		do
-			st.add (error.out)
+			st.add (error.text)
 			st.add_new_line
 		end;
 

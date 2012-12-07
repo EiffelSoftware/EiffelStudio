@@ -61,9 +61,9 @@ feature -- Basic operations
 				create l_load.make (configuration_window.conf_factory)
 				l_load.retrieve_configuration (l_config)
 				if l_load.is_error then
-					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (l_load.last_error.out, configuration_window, Void)
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (l_load.last_error.text, configuration_window, Void)
 				elseif l_load.last_system.library_target = Void then
-					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt ((create {CONF_ERROR_NOLIB}.make (group.name)).out, configuration_window, Void)
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt ((create {CONF_ERROR_NOLIB}.make (group.name)).text, configuration_window, Void)
 				else
 					if l_load.is_warning then
 							-- add warnings

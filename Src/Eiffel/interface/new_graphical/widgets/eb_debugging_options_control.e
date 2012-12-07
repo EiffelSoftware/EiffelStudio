@@ -682,16 +682,9 @@ feature -- Data change
 		require
 			v /= Void
 			p /= Void
-		local
-			s: detachable READABLE_STRING_GENERAL
 		do
-			if v.is_empty then
-				s := Void
-			else
-				s := v
-			end
-			if not same_string_value (p.arguments, s) then
-				p.set_arguments (s)
+			if not same_string_value (p.arguments, v) then
+				p.set_arguments (v)
 				update_title_row_of (p)
 				set_changed (p, True)
 			end

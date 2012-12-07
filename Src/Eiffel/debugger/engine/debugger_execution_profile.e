@@ -131,10 +131,14 @@ feature -- Element change
 			end
 		end
 
-	set_title (v: READABLE_STRING_GENERAL)
+	set_title (v: detachable READABLE_STRING_GENERAL)
 			-- Set `title'
 		do
-			title := v.to_string_32
+			if v = Void then
+				title := Void
+			else
+				title := v.to_string_32
+			end
 		end
 
 	set_arguments (v: READABLE_STRING_GENERAL)

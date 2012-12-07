@@ -662,17 +662,12 @@ feature -- Data change
 			v /= Void
 			p /= Void
 		local
-			s: detachable READABLE_STRING_GENERAL
 			wd: detachable PATH
 		do
-			if v.is_empty then
-				s := Void
-			else
-				s := v
-			end
 			wd := p.working_directory
-			if wd = Void or else not same_string_value (wd.name, s) then
-				p.set_working_directory (create {PATH}.make_from_string (s))
+			if wd = Void or else not same_string_value (wd.name, v) then
+				create wd.make_from_string (v)
+				p.set_working_directory (wd)
 				update_title_row_of (p)
 				set_changed (p, True)
 			end

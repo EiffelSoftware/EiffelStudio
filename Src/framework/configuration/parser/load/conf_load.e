@@ -43,16 +43,16 @@ feature -- Status
 	last_warnings: ARRAYED_LIST [CONF_ERROR]
 			-- The last warning messages.
 
-	last_warning_messages: STRING
+	last_warning_messages: STRING_32
 			-- Warning messages as a single string.
 		do
 			if last_warnings /= Void then
 				create Result.make (20)
-				last_warnings.do_all (agent (a_warning: CONF_ERROR; a_msg: STRING)
+				last_warnings.do_all (agent (a_warning: CONF_ERROR; a_msg: STRING_32)
 					require
 						a_msg_not_void: a_msg /= Void
 					do
-						a_msg.append (a_warning.out)
+						a_msg.append (a_warning.text)
 						a_msg.append_character ('%N')
 					end (?, Result))
 			end

@@ -953,7 +953,7 @@ feature {NONE} -- Actions
 			create l_load.make (l_fact)
 			l_load.retrieve_configuration (selected_path)
 			if l_load.is_error then
-				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (l_load.last_error.out, parent_window, Void)
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (l_load.last_error.text, parent_window, Void)
 			else
 					-- display warnings
 				if l_load.is_warning then

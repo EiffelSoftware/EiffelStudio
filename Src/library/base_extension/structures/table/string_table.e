@@ -23,40 +23,12 @@ inherit
 create
 	make
 
-feature -- Settings
-
-	is_key_case_insensitive_comparison: BOOLEAN
-			-- Ignoring case when comparing keys?
-			-- (Default: False)
-
-feature -- Settings change
-
-	enable_key_case_insensitive_comparison
-			-- Compare key in case insensitive mode
-		do
-			is_key_case_insensitive_comparison := True
-		ensure
-			is_key_case_insensitive_comparison: is_key_case_insensitive_comparison
-		end
-
-	disable_key_case_insensitive_comparison
-			-- Compare key in case sensitive mode
-		do
-			is_key_case_insensitive_comparison := False
-		ensure
-			is_key_case_sensitive_comparison: not is_key_case_insensitive_comparison
-		end
-
 feature -- Comparison
 
 	same_keys (a_search_key, a_key: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_search_key' the same key as `a_key' ?
 		do
-			if is_key_case_insensitive_comparison then
-				Result := a_search_key.is_case_insensitive_equal (a_key)
-			else
-				Result := a_search_key.same_string (a_key)
-			end
+			Result := a_search_key.same_string (a_key)
 		end
 
 note

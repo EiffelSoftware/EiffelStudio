@@ -637,7 +637,7 @@ feature -- Data change
 
 	change_title_on (v: READABLE_STRING_GENERAL; p: like profile_from_row)
 		require
-			v /= Void
+			v_attached: v /= Void
 		local
 			s: READABLE_STRING_GENERAL
 			old_title: READABLE_STRING_GENERAL
@@ -659,14 +659,24 @@ feature -- Data change
 
 	change_wd_on (v: READABLE_STRING_GENERAL; p: like profile_from_row)
 		require
-			v /= Void
-			p /= Void
+			v_attached: v /= Void
+			p_attached: p /= Void
 		local
+			s: detachable READABLE_STRING_GENERAL
 			wd: detachable PATH
 		do
+			if v.is_empty then
+				s := Void
+			else
+				s := v
+			end
 			wd := p.working_directory
-			if wd = Void or else not same_string_value (wd.name, v) then
-				create wd.make_from_string (v)
+			if wd = Void or else not same_string_value (wd.name, s) then
+				if s = Void then
+					create wd.make_empty
+				else
+					create wd.make_from_string (s)
+				end
 				p.set_working_directory (wd)
 				update_title_row_of (p)
 				set_changed (p, True)
@@ -675,11 +685,18 @@ feature -- Data change
 
 	change_args_on (v: READABLE_STRING_GENERAL; p: like profile_from_row)
 		require
-			v /= Void
-			p /= Void
+			v_attached: v /= Void
+			p_attached: p /= Void
+		local
+			s: detachable READABLE_STRING_GENERAL
 		do
-			if not same_string_value (p.arguments, v) then
-				p.set_arguments (v)
+			if v.is_empty then
+				s := Void
+			else
+				s := v
+			end
+			if not same_string_value (p.arguments, s) then
+				p.set_arguments (v) -- v is attached
 				update_title_row_of (p)
 				set_changed (p, True)
 			end

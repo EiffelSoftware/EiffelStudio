@@ -10,21 +10,21 @@ class
 
 feature -- Query
 
-	item_file: detachable STRING
+	item_file: detachable STRING_32
 			-- Ribbon item file name, such as button, check box or spinner etc...
 
-	item_imp_file: detachable STRING
+	item_imp_file: detachable STRING_32
 			-- Ribbon item implementation file name
 
-	default_item_class_name_prefix: detachable STRING
+	default_item_class_name_prefix: detachable STRING_32
 			-- Ribbon item default name's prefix
 
-	default_item_class_imp_name_prefix: detachable STRING
+	default_item_class_imp_name_prefix: detachable STRING_32
 			-- Ribbon item default implementation name's prefix
 
 feature -- Command
 
-	set_item_file (a_item: STRING)
+	set_item_file (a_item: like item_file)
 			-- Set `item_file' with `a_item'
 		do
 			item_file := a_item
@@ -32,7 +32,7 @@ feature -- Command
 			set: item_file = a_item
 		end
 
-	set_item_imp_file (a_item_imp_file: STRING)
+	set_item_imp_file (a_item_imp_file: like item_imp_file)
 			-- Set `item_imp_file' with `a_item_imp_file'
 		do
 			item_imp_file := a_item_imp_file
@@ -40,7 +40,7 @@ feature -- Command
 			set: item_imp_file = a_item_imp_file
 		end
 
-	set_default_item_class_imp_name_prefix (a_item: STRING)
+	set_default_item_class_imp_name_prefix (a_item: like default_item_class_name_prefix)
 			-- Set `default_item_class_imp_name_prefix' with `a_item'
 		do
 			default_item_class_imp_name_prefix := a_item
@@ -48,7 +48,7 @@ feature -- Command
 			set: default_item_class_imp_name_prefix = a_item
 		end
 
-	set_default_item_class_name_prefix (a_item: STRING)
+	set_default_item_class_name_prefix (a_item: like default_item_class_name_prefix)
 			-- Set `default_item_class_name_prefix' with `a_item'
 		do
 			default_item_class_name_prefix := a_item
@@ -57,7 +57,7 @@ feature -- Command
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

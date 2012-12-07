@@ -35,7 +35,7 @@ feature -- Command
 			-- Restore recent item menu
 		local
 			l_menu_item: EV_MENU_ITEM
-			l_projects: ARRAYED_LIST [STRING]
+			l_projects: like {ER_TOOL_INFO}.recent_projects
 		do
 			if attached shared_singleton.tool_info_cell.item as l_tool_info then
 				if attached main_window as l_win then
@@ -45,7 +45,7 @@ feature -- Command
 					until
 						l_projects.before or l_projects.index > 10
 					loop
-						create l_menu_item.make_with_text_and_action (l_projects.item, agent (l_win.open_project_command).execute_with_file_name (l_projects.item))
+						create l_menu_item.make_with_text_and_action (l_projects.item.name, agent (l_win.open_project_command).execute_with_file_name (l_projects.item))
 						l_win.recent_projects.extend (l_menu_item)
 						l_projects.back
 					end
@@ -68,7 +68,7 @@ feature {NONE}	-- Implementation
 			-- Shared singleton
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

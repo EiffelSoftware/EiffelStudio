@@ -31,7 +31,7 @@ feature -- Command
 			l_index: INTEGER
 			l_stop: BOOLEAN
 			l_constants: ER_MISC_CONSTANTS
-			l_file: RAW_FILE
+			l_u: FILE_UTILITIES
 			l_singleton: ER_SHARED_TOOLS
 			l_max_count: INTEGER
 			l_translator: ER_H_FILE_TRANSLATOR
@@ -49,8 +49,7 @@ feature -- Command
 					l_index > l_max_count or l_stop
 				loop
 					if attached l_constants.xml_full_file_name (l_index) as l_file_name then
-						create l_file.make (l_file_name)
-						if l_file.exists then
+						if l_u.file_path_exists (l_file_name) then
 							uicc_manager.compile (l_index)
 							uicc_manager.convert_rc_to_res_file (l_index)
 							uicc_manager.convert_res_to_dll (l_index)
@@ -89,8 +88,7 @@ feature -- Command
 						l_index > l_max_count or l_stop
 					loop
 						if attached l_constants.header_full_file_name (l_index) as l_header_file_name then
-							create l_file.make (l_header_file_name)
-							if l_file.exists then
+							if l_u.file_path_exists (l_header_file_name) then
 								generate_eiffel_class_for_header_file (l_index, l_translator)
 							else
 								l_stop := True
@@ -118,13 +116,13 @@ feature -- Query
 
 feature {ER_CODE_GENERATOR_FOR_APPLICATION_MENU} -- Command
 
-	generate_group_class (a_group_node: EV_TREE_NODE; a_index: INTEGER; a_file_name, a_imp_file_name: STRING; a_default_name: STRING)
+	generate_group_class (a_group_node: EV_TREE_NODE; a_index: INTEGER; a_file_name, a_imp_file_name, a_default_name: STRING_32)
 			-- <Precursor>
 		local
 			l_button_count: INTEGER
 			l_file, l_dest_file: RAW_FILE
 			l_constants: ER_MISC_CONSTANTS
-			l_file_name, l_dest_file_name: FILE_NAME
+			l_file_name, l_dest_file_name: PATH
 			l_singleton: ER_SHARED_TOOLS
 			l_sub_dir, l_tool_bar_group_file, l_sub_imp_dir, l_tool_bar_group_imp_file: STRING
 			l_last_string: STRING
@@ -147,10 +145,9 @@ feature {ER_CODE_GENERATOR_FOR_APPLICATION_MENU} -- Command
 					create l_constants
 
 					-- Generate tool bar group class
-					create l_file_name.make_from_string (l_constants.template)
-					l_file_name.set_subdirectory (l_sub_dir)
-					l_file_name.set_file_name (l_tool_bar_group_file + ".e")
-					create l_file.make (l_file_name)
+					l_file_name := l_constants.template.extended (l_sub_dir)
+					l_file_name := l_file_name.extended (l_tool_bar_group_file + ".e")
+					create l_file.make_with_path (l_file_name)
 
 					if attached {ER_TREE_NODE_DATA} a_group_node.data as l_data then
 						if attached l_data.command_name as l_command_name  and then not l_command_name.is_empty then
@@ -159,14 +156,15 @@ feature {ER_CODE_GENERATOR_FOR_APPLICATION_MENU} -- Command
 					end
 
 					if l_file.exists and then l_file.is_readable then
-						create l_dest_file_name.make_from_string (l_project_location)
+
 						if l_identifier_name /= Void then
-							l_dest_file_name.set_file_name (l_identifier_name.as_lower + "_imp.e")
+							l_dest_file_name := l_project_location.extended (l_identifier_name.as_lower + "_imp.e")
 						else
-							l_dest_file_name.set_file_name (l_tool_bar_group_file + "_" + a_index.out + ".e")
+							l_dest_file_name := l_project_location.extended (l_tool_bar_group_file + "_" + a_index.out + ".e")
 						end
 
-						create l_dest_file.make_create_read_write (l_dest_file_name)
+						create l_dest_file.make_with_path (l_dest_file_name)
+						l_dest_file.create_read_write
 
 						from
 							l_button_creation_string := button_creation_string (a_group_node)
@@ -197,19 +195,18 @@ feature {ER_CODE_GENERATOR_FOR_APPLICATION_MENU} -- Command
 					end
 
 					-- Generate tool bar group imp class
-					create l_file_name.make_from_string (l_constants.template)
-					l_file_name.set_subdirectory (l_sub_imp_dir)
-					l_file_name.set_file_name (l_tool_bar_group_imp_file + ".e")
-					create l_file.make (l_file_name)
+					l_file_name := l_constants.template.extended (l_sub_imp_dir)
+					l_file_name := l_file_name.extended (l_tool_bar_group_imp_file + ".e")
+					create l_file.make_with_path (l_file_name)
 					if l_file.exists and then l_file.is_readable then
-						create l_dest_file_name.make_from_string (l_project_location)
+
 						if l_identifier_name /= Void then
-							l_dest_file_name.set_file_name (l_identifier_name.as_lower + ".e")
+							l_dest_file_name := l_project_location.extended (l_identifier_name.as_lower + ".e")
 						else
-							l_dest_file_name.set_file_name (l_tool_bar_group_imp_file + "_" + a_index.out + ".e")
+							l_dest_file_name := l_project_location.extended (l_tool_bar_group_imp_file + "_" + a_index.out + ".e")
 						end
 
-						create l_dest_file.make (l_dest_file_name)
+						create l_dest_file.make_with_path (l_dest_file_name)
 						-- Don't replace destination file if exists
 						if not l_dest_file.exists then
 							l_dest_file.create_read_write
@@ -363,7 +360,7 @@ feature {ER_CODE_GENERATOR_FOR_QAT} -- Command
 		local
 			l_file, l_dest_file: RAW_FILE
 			l_constants: ER_MISC_CONSTANTS
-			l_file_name, l_dest_file_name: FILE_NAME
+			l_file_name, l_dest_file_name: PATH
 			l_singleton: ER_SHARED_TOOLS
 			l_sub_dir, l_tool_bar_button_file, l_sub_imp_dir, l_tool_bar_button_imp_file: STRING
 			l_last_string: STRING
@@ -389,24 +386,25 @@ feature {ER_CODE_GENERATOR_FOR_QAT} -- Command
 					create l_constants
 
 					-- Generate tool bar item class
-					create l_file_name.make_from_string (l_constants.template)
-					l_file_name.set_subdirectory (l_sub_dir)
-					l_file_name.set_file_name (l_tool_bar_button_file + ".e")
-					create l_file.make (l_file_name)
+					l_file_name := l_constants.template.extended (l_sub_dir)
+					l_file_name := l_file_name.extended (l_tool_bar_button_file + ".e")
+					create l_file.make_with_path (l_file_name)
 					if l_file.exists and then l_file.is_readable then
-						create l_dest_file_name.make_from_string (l_project_location)
+
 						if attached {ER_TREE_NODE_DATA} a_item_node.data as l_data then
 							if attached l_data.command_name as l_command_name  and then not l_command_name.is_empty then
 								l_identifier_name := l_command_name
 							end
 						end
 						if l_identifier_name /= Void then
-							l_dest_file_name.set_file_name (l_identifier_name.as_lower + "_imp.e")
+							l_dest_file_name := l_project_location.extended (l_identifier_name.as_lower + "_imp.e")
 						else
-							l_dest_file_name.set_file_name (l_tool_bar_button_file + "_" + a_index.out + ".e")
+							l_dest_file_name := l_project_location.extended (l_tool_bar_button_file + "_" + a_index.out + ".e")
 						end
 
-						create l_dest_file.make_create_read_write (l_dest_file_name)
+						create l_dest_file.make_with_path (l_dest_file_name)
+						l_dest_file.create_read_write
+
 						from
 							l_file.open_read
 							l_file.start
@@ -433,19 +431,18 @@ feature {ER_CODE_GENERATOR_FOR_QAT} -- Command
 					end
 
 					-- Generate tool bar toggle button imp class
-					create l_file_name.make_from_string (l_constants.template)
-					l_file_name.set_subdirectory (l_sub_imp_dir)
-					l_file_name.set_file_name (l_tool_bar_button_imp_file + ".e")
-					create l_file.make (l_file_name)
+					l_file_name := l_constants.template.extended (l_sub_imp_dir)
+					l_file_name := l_file_name.extended (l_tool_bar_button_imp_file + ".e")
+					create l_file.make_with_path (l_file_name)
 					if l_file.exists and then l_file.is_readable then
-						create l_dest_file_name.make_from_string (l_project_location)
+
 						if l_identifier_name /= Void then
-							l_dest_file_name.set_file_name (l_identifier_name.as_lower + ".e")
+							l_dest_file_name := l_project_location.extended (l_identifier_name.as_lower + ".e")
 						else
-							l_dest_file_name.set_file_name (l_tool_bar_button_imp_file + "_" + a_index.out + ".e")
+							l_dest_file_name := l_project_location.extended (l_tool_bar_button_imp_file + "_" + a_index.out + ".e")
 						end
 
-						create l_dest_file.make (l_dest_file_name)
+						create l_dest_file.make_with_path (l_dest_file_name)
 						if not l_dest_file.exists then
 							l_dest_file.create_read_write
 							from
@@ -490,7 +487,7 @@ feature {ER_CODE_GENERATOR_FOR_CONTEXTUAL_TABS} -- Command
 		local
 			l_file, l_dest_file: RAW_FILE
 			l_constants: ER_MISC_CONSTANTS
-			l_file_name, l_dest_file_name: FILE_NAME
+			l_file_name, l_dest_file_name: PATH
 			l_singleton: ER_SHARED_TOOLS
 			l_sub_dir, l_tool_bar_tab_file, l_sub_imp_dir, l_tool_bar_tab_imp_file: STRING
 			l_group_creation_string, l_group_registry_string, l_group_declaration_string: STRING
@@ -508,25 +505,24 @@ feature {ER_CODE_GENERATOR_FOR_CONTEXTUAL_TABS} -- Command
 					create l_constants
 
 					-- Generate tool bar tab class
-					create l_file_name.make_from_string (l_constants.template)
-					l_file_name.set_subdirectory (l_sub_dir)
+					l_file_name := l_constants.template.extended (l_sub_dir)
 					if attached {ER_TREE_NODE_TAB_DATA} a_tab_node.data as l_data then
 						if attached l_data.command_name as l_command_name  and then not l_command_name.is_empty then
 							l_identifier_name := l_command_name
 						end
 					end
-					l_file_name.set_file_name (l_tool_bar_tab_file + ".e")
+					l_file_name := l_file_name.extended (l_tool_bar_tab_file + ".e")
 
-					create l_file.make (l_file_name)
+					create l_file.make_with_path (l_file_name)
 					if l_file.exists and then l_file.is_readable then
-						create l_dest_file_name.make_from_string (l_project_location)
+
 						if l_identifier_name /= void  then
-							l_dest_file_name.set_file_name (l_identifier_name.as_lower + "_imp.e")
-							create l_dest_file.make_create_read_write (l_dest_file_name)
+							l_dest_file_name := l_project_location.extended (l_identifier_name.as_lower + "_imp.e")
 						else
-							l_dest_file_name.set_file_name (l_tool_bar_tab_file)
-							create l_dest_file.make_create_read_write (l_dest_file_name + "_" + a_index.out + ".e")
+							l_dest_file_name := l_project_location.extended (l_tool_bar_tab_file + "_" + a_index.out + ".e")
 						end
+						create l_dest_file.make_with_path (l_dest_file_name)
+						l_dest_file.create_read_write
 
 						from
 							l_group_creation_string := group_creation_string (a_tab_node)
@@ -558,20 +554,18 @@ feature {ER_CODE_GENERATOR_FOR_CONTEXTUAL_TABS} -- Command
 					end
 
 					-- Generate tool bar tab imp class
-					create l_file_name.make_from_string (l_constants.template)
-					l_file_name.set_subdirectory (l_sub_imp_dir)
-					l_file_name.set_file_name (l_tool_bar_tab_imp_file + ".e")
+					l_file_name := l_constants.template.extended (l_sub_imp_dir)
+					l_file_name := l_file_name.extended (l_tool_bar_tab_imp_file + ".e")
 
-					create l_file.make (l_file_name)
+					create l_file.make_with_path (l_file_name)
 					if l_file.exists and then l_file.is_readable then
-						create l_dest_file_name.make_from_string (l_project_location)
+
 						if l_identifier_name /= Void then
-							l_dest_file_name.set_file_name (l_identifier_name.as_lower + ".e")
-							create l_dest_file.make (l_dest_file_name)
+							l_dest_file_name := l_project_location.extended (l_identifier_name.as_lower + ".e")
 						else
-							l_dest_file_name.set_file_name (l_tool_bar_tab_imp_file)
-							create l_dest_file.make (l_dest_file_name + "_" + a_index.out + ".e")
+							l_dest_file_name := l_project_location.extended (l_tool_bar_tab_imp_file + "_" + a_index.out + ".e")
 						end
+						create l_dest_file.make_with_path (l_dest_file_name)
 
 						-- Don't replace destination file if exists
 						if not l_dest_file.exists then
@@ -618,16 +612,13 @@ feature {ER_CODE_GENERATOR_FOR_CONTEXTUAL_TABS} -- Command
 
 feature {NONE} -- Implementation
 
-	ecf_template_file_path: STRING
+	ecf_template_file_path: PATH
 			-- ECF template file path
 		local
-			l_file_name: FILE_NAME
 			l_constants: ER_MISC_CONSTANTS
 		once
 			create l_constants
-			create l_file_name.make_from_string (l_constants.template)
-			l_file_name.set_file_name ("eiffelribbon_ecf_template.ecf")
-			Result := l_file_name
+			Result := l_constants.template.extended ("eiffelribbon_ecf_template.ecf")
 		end
 
 	save_project_info
@@ -644,7 +635,7 @@ feature {NONE} -- Implementation
 			if attached l_singleton.project_info_cell.item as l_info then
 				l_info.update_ribbon_names_from_ui
 				if attached l_constants.project_full_file_name as l_project_config then
-					create l_file.make (l_project_config)
+					create l_file.make_with_path (l_project_config)
 					l_file.create_read_write
 					create l_sed.make (l_file)
 					l_sed.set_for_writing
@@ -662,7 +653,7 @@ feature {NONE} -- Implementation
 		local
 			l_file, l_dest_file: RAW_FILE
 			l_singleton: ER_SHARED_TOOLS
-			l_file_name: FILE_NAME
+			l_file_name: PATH
 
 			l_shared: ER_SHARED_TOOLS
 			l_error: EV_ERROR_DIALOG
@@ -670,18 +661,16 @@ feature {NONE} -- Implementation
 			l_misc_constants: ER_MISC_CONSTANTS
 		do
 			-- Copy template ecf
-			create l_file.make (ecf_template_file_path)
+			create l_file.make_with_path (ecf_template_file_path)
 			if l_file.exists then
 				create l_singleton
 				if attached l_singleton.project_info_cell.item as l_info then
 					if attached l_info.project_location as l_location and then not l_location.is_empty then
-						create l_file_name.make_from_string (l_location)
-						l_file_name.set_file_name ("ribbon_project.ecf")
-						create l_dest_file.make (l_file_name)
+						l_file_name := l_location.extended ("ribbon_project.ecf")
+						create l_dest_file.make_with_path (l_file_name)
 						-- Don't replace destination file
 						if not l_dest_file.exists then
 							l_dest_file.create_read_write
-
 							from
 								l_file.open_read
 								l_file.start
@@ -692,6 +681,9 @@ feature {NONE} -- Implementation
 								l_file.read_line
 
 								l_dest_file.put_string (l_file.last_string+ "%N")
+							end
+							if not l_file.is_closed then
+								l_file.close
 							end
 							l_dest_file.close
 						end
@@ -723,8 +715,8 @@ feature {NONE} -- Implementation
 			l_file, l_dest_file: RAW_FILE
 			l_dir: DIRECTORY
 			l_constants: ER_MISC_CONSTANTS
-			l_sub_files: ARRAYED_LIST [STRING_8]
-			l_file_name, l_dest_file_name, l_source_dir: FILE_NAME
+			l_sub_files: ARRAYED_LIST [PATH]
+			l_file_name, l_dest_file_name, l_source_dir: PATH
 			l_singleton: ER_SHARED_TOOLS
 			l_sub_dir: STRING
 		do
@@ -733,28 +725,26 @@ feature {NONE} -- Implementation
 			if attached l_singleton.project_info_cell.item as l_project_info then
 				if attached l_project_info.project_location as l_project_location then
 					create l_constants
-					create l_source_dir.make_from_string (l_constants.template)
-					l_source_dir.set_subdirectory (l_sub_dir)
-					create l_dir.make_open_read (l_source_dir)
+					l_source_dir := l_constants.template.extended (l_sub_dir)
+					create l_dir.make_with_path (l_source_dir)
 
 					from
-						l_sub_files := l_dir.linear_representation
+						l_sub_files := l_dir.entries
 						l_sub_files.start
 					until
 						l_sub_files.after
 					loop
-						create l_file_name.make_from_string (l_constants.template)
-						l_file_name.set_subdirectory (l_sub_dir)
-						l_file_name.set_file_name (l_sub_files.item)
-						create l_file.make (l_file_name)
+						l_file_name := l_constants.template.extended (l_sub_dir)
+						l_file_name := l_file_name.extended_path (l_sub_files.item)
+						create l_file.make_with_path (l_file_name)
 
 						if l_file.exists and then l_file.is_readable
 							and then not l_file.is_directory
-							and then not l_sub_files.item.is_equal (".")
-							and then not l_sub_files.item.is_equal ("..") then
-							create l_dest_file_name.make_from_string (l_project_location)
-							l_dest_file_name.set_file_name (l_sub_files.item)
-							create l_dest_file.make (l_dest_file_name)
+							and then not l_sub_files.item.is_current_symbol
+							and then not l_sub_files.item.is_parent_symbol then
+
+							l_dest_file_name := l_project_location.extended_path (l_sub_files.item)
+							create l_dest_file.make_with_path (l_dest_file_name)
 							-- Don't replace destination files
 							if not l_dest_file.exists then
 								l_dest_file.create_read_write
@@ -780,16 +770,14 @@ feature {NONE} -- Implementation
 			not_void: a_translator /= Void
 		local
 			l_singleton: ER_SHARED_TOOLS
-			l_source_header: FILE_NAME
+			l_source_header: PATH
 			l_constants: ER_MISC_CONSTANTS
 		do
 			create l_singleton
 			if attached l_singleton.project_info_cell.item as l_project_info then
 				if attached l_project_info.project_location as l_project_location then
-					create l_source_header.make_from_string (l_project_location)
 					create l_constants
-					l_source_header.set_file_name (l_constants.header_file_name (a_index))
-
+					l_source_header := l_project_location.extended_path (l_constants.header_file_name (a_index))
 					a_translator.translate (l_source_header)
 				end
 			end
@@ -816,7 +804,7 @@ feature {NONE} -- Implementation
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
 			l_window_file, l_sub_dir, l_last_string: STRING
 			l_constants: ER_MISC_CONSTANTS
-			l_file_name, l_dest_file_name: FILE_NAME
+			l_file_name, l_dest_file_name: PATH
 			l_file, l_dest_file: RAW_FILE
 			l_show_window_string, l_create_window_string, l_register_window_string: STRING
 		do
@@ -849,14 +837,14 @@ feature {NONE} -- Implementation
 					create l_constants
 
 					-- Generate tool bar class
-					create l_file_name.make_from_string (l_constants.template)
-					l_file_name.set_subdirectory (l_sub_dir)
-					l_file_name.set_file_name (l_window_file + ".e")
-					create l_file.make (l_file_name)
+					l_file_name := l_constants.template.extended (l_sub_dir)
+					l_file_name := l_file_name.extended (l_window_file + ".e")
+					create l_file.make_with_path (l_file_name)
 					if l_file.exists and then l_file.is_readable then
-						create l_dest_file_name.make_from_string (l_project_location)
-						l_dest_file_name.set_file_name (l_window_file + ".e")
-						create l_dest_file.make_create_read_write (l_dest_file_name)
+
+						l_dest_file_name := l_project_location.extended (l_window_file + ".e")
+						create l_dest_file.make_with_path (l_dest_file_name)
+						l_dest_file.create_read_write
 						from
 							l_file.open_read
 							l_file.start
@@ -887,7 +875,7 @@ feature {NONE} -- Implementation
 			l_list: ARRAYED_LIST [ER_LAYOUT_CONSTRUCTOR]
 			l_window_file, l_sub_dir, l_last_string: STRING
 			l_constants: ER_MISC_CONSTANTS
-			l_file_name, l_dest_file_name: FILE_NAME
+			l_file_name, l_dest_file_name: PATH
 			l_file, l_dest_file: RAW_FILE
 			l_context_popup_gen: ER_CODE_GENERATOR_FOR_CONTEXT_POPUP
 			l_contextual_tabs_gen: ER_CODE_GENERATOR_FOR_CONTEXTUAL_TABS
@@ -907,19 +895,19 @@ feature {NONE} -- Implementation
 						create l_constants
 
 						-- Generate tool bar class
-						create l_file_name.make_from_string (l_constants.template)
-						l_file_name.set_subdirectory (l_sub_dir)
-						l_file_name.set_file_name (l_window_file + ".e")
-						create l_file.make (l_file_name)
+						l_file_name := l_constants.template.extended (l_sub_dir)
+						l_file_name := l_file_name.extended (l_window_file + ".e")
+						create l_file.make_with_path (l_file_name)
 						if l_file.exists and then l_file.is_readable then
-							create l_dest_file_name.make_from_string (l_project_location)
+
 							if l_list.index /= 1 then
-								l_dest_file_name.set_file_name (l_window_file + "_" + l_list.index.out + ".e")
+								l_dest_file_name := l_project_location.extended (l_window_file + "_" + l_list.index.out + ".e")
 							else
-								l_dest_file_name.set_file_name (l_window_file + ".e")
+								l_dest_file_name := l_project_location.extended (l_window_file + ".e")
 							end
 
-							create l_dest_file.make_create_read_write (l_dest_file_name)
+							create l_dest_file.make_with_path (l_dest_file_name)
+							l_dest_file.create_read_write
 							from
 								create l_context_popup_gen
 								create l_contextual_tabs_gen
@@ -1189,7 +1177,7 @@ feature {NONE} -- Implementation
 		local
 			l_file, l_dest_file: RAW_FILE
 			l_constants: ER_MISC_CONSTANTS
-			l_file_name, l_dest_file_name: FILE_NAME
+			l_file_name, l_dest_file_name: PATH
 			l_singleton: ER_SHARED_TOOLS
 			l_sub_dir, l_tool_bar_file, l_sub_imp_dir: STRING
 			l_last_string: STRING
@@ -1216,19 +1204,18 @@ feature {NONE} -- Implementation
 						end
 
 						-- Generate tool bar class
-						create l_file_name.make_from_string (l_constants.template)
-						l_file_name.set_subdirectory (l_sub_dir)
-						l_file_name.set_file_name (l_tool_bar_file + ".e")
-						create l_file.make (l_file_name)
+						l_file_name := l_constants.template.extended (l_sub_dir)
+						l_file_name := l_file_name.extended (l_tool_bar_file + ".e")
+						create l_file.make_with_path (l_file_name)
 						if l_file.exists and then l_file.is_readable then
-							create l_dest_file_name.make_from_string (l_project_location)
 							if l_identifier_name /= Void then
-								l_dest_file_name.set_file_name (l_identifier_name.as_lower + ".e")
+								l_dest_file_name := l_project_location.extended (l_identifier_name.as_lower + ".e")
 							else
-								l_dest_file_name.set_file_name ("help_button" + ".e")
+								l_dest_file_name := l_project_location.extended ("help_button" + ".e")
 							end
 
-							create l_dest_file.make_create_read_write (l_dest_file_name)
+							create l_dest_file.make_with_path (l_dest_file_name)
+							l_dest_file.create_read_write
 							from
 								l_file.open_read
 								l_file.start
@@ -1441,7 +1428,7 @@ feature {NONE} -- Implementation
 			l_tab_count: INTEGER
 			l_file, l_dest_file: RAW_FILE
 			l_constants: ER_MISC_CONSTANTS
-			l_file_name, l_dest_file_name: FILE_NAME
+			l_file_name, l_dest_file_name: PATH
 			l_singleton: ER_SHARED_TOOLS
 			l_sub_dir, l_tool_bar_file, l_sub_imp_dir: STRING
 			l_last_string, l_set_modes_string: STRING
@@ -1466,23 +1453,22 @@ feature {NONE} -- Implementation
 					end
 
 					-- Generate tool bar class
-					create l_file_name.make_from_string (l_constants.template)
-					l_file_name.set_subdirectory (l_sub_dir)
-					l_file_name.set_file_name (l_tool_bar_file + ".e")
-					create l_file.make (l_file_name)
+					l_file_name := l_constants.template.extended (l_sub_dir)
+					l_file_name := l_file_name.extended (l_tool_bar_file + ".e")
+					create l_file.make_with_path (l_file_name)
 					if l_file.exists and then l_file.is_readable then
-						create l_dest_file_name.make_from_string (l_project_location)
 						if l_identifier_name /= Void then
-							l_dest_file_name.set_file_name (l_identifier_name.as_lower + ".e")
+							l_dest_file_name := l_project_location.extended (l_identifier_name.as_lower + ".e")
 						else
 							if a_index /= 1 then
-								l_dest_file_name.set_file_name (l_tool_bar_file + "_" + a_index.out + ".e")
+								l_dest_file_name := l_project_location.extended (l_tool_bar_file + "_" + a_index.out + ".e")
 							else
-								l_dest_file_name.set_file_name (l_tool_bar_file + ".e")
+								l_dest_file_name := l_project_location.extended (l_tool_bar_file + ".e")
 							end
 						end
 
-						create l_dest_file.make_create_read_write (l_dest_file_name)
+						create l_dest_file.make_with_path (l_dest_file_name)
+						l_dest_file.create_read_write
 						from
 							l_file.open_read
 							l_file.start
@@ -2052,7 +2038,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

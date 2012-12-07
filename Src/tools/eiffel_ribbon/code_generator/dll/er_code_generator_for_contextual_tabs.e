@@ -95,7 +95,7 @@ feature {NONE} -- Implemenation
 			l_tab_count: INTEGER
 			l_file, l_dest_file: RAW_FILE
 			l_constants: ER_MISC_CONSTANTS
-			l_file_name, l_dest_file_name: FILE_NAME
+			l_file_name, l_dest_file_name: PATH
 			l_singleton: ER_SHARED_TOOLS
 			l_sub_dir, l_tool_bar_file, l_sub_imp_dir, l_tool_bar_tab_imp_file: STRING
 			l_last_string: STRING
@@ -123,23 +123,22 @@ feature {NONE} -- Implemenation
 					end
 
 					-- Generate tab group class
-					create l_file_name.make_from_string (l_constants.template)
-					l_file_name.set_subdirectory (l_sub_dir)
-					l_file_name.set_file_name (l_tool_bar_file + ".e")
-					create l_file.make (l_file_name)
+					l_file_name := l_constants.template.extended (l_sub_dir)
+					l_file_name := l_file_name.extended (l_tool_bar_file + ".e")
+					create l_file.make_with_path (l_file_name)
 					if l_file.exists and then l_file.is_readable then
-						create l_dest_file_name.make_from_string (l_project_location)
 						if l_identifier_name /= Void then
-							l_dest_file_name.set_file_name (l_identifier_name.as_lower + "_imp.e")
+							l_dest_file_name := l_project_location.extended (l_identifier_name.as_lower + "_imp.e")
 						else
 							if a_index /= 1 then
-								l_dest_file_name.set_file_name ("tab_group_imp_" + a_index.out + ".e")
+								l_dest_file_name := l_project_location.extended ("tab_group_imp_" + a_index.out + ".e")
 							else
-								l_dest_file_name.set_file_name ("tab_group_imp" + ".e")
+								l_dest_file_name := l_project_location.extended ("tab_group_imp" + ".e")
 							end
 						end
 
-						create l_dest_file.make_create_read_write (l_dest_file_name)
+						create l_dest_file.make_with_path (l_dest_file_name)
+						l_dest_file.create_read_write
 						from
 							l_file.open_read
 							l_file.start
@@ -172,20 +171,17 @@ feature {NONE} -- Implemenation
 					end
 
 					-- Generate tool bar tab imp class
-					create l_file_name.make_from_string (l_constants.template)
-					l_file_name.set_subdirectory (l_sub_imp_dir)
-					l_file_name.set_file_name (l_tool_bar_tab_imp_file + ".e")
+					l_file_name := l_constants.template.extended (l_sub_imp_dir)
+					l_file_name := l_file_name.extended (l_tool_bar_tab_imp_file + ".e")
 
-					create l_file.make (l_file_name)
+					create l_file.make_with_path (l_file_name)
 					if l_file.exists and then l_file.is_readable then
-						create l_dest_file_name.make_from_string (l_project_location)
 						if l_identifier_name /= Void then
-							l_dest_file_name.set_file_name (l_identifier_name.as_lower + ".e")
-							create l_dest_file.make (l_dest_file_name)
+							l_dest_file_name := l_project_location.extended (l_identifier_name.as_lower + ".e")
 						else
-							l_dest_file_name.set_file_name (l_tool_bar_tab_imp_file)
-							create l_dest_file.make (l_dest_file_name + "_" + a_index.out + ".e")
+							l_dest_file_name := l_project_location.extended (l_tool_bar_tab_imp_file + "_" + a_index.out + ".e")
 						end
+						create l_dest_file.make_with_path (l_dest_file_name)
 
 						-- Don't replace destination file if exists
 						if not l_dest_file.exists then
@@ -484,7 +480,7 @@ feature {NONE} -- Implementation for main window
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

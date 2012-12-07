@@ -16,137 +16,132 @@ inherit
 
 feature -- Query
 
-	xml_file_name (a_index: INTEGER): STRING
+	xml_file_name (a_index: INTEGER): PATH
 			-- File name for saving ribbon makrup xml file
 		do
 			if a_index <= 1 then
-				Result := "eiffel_ribbon.xml"
+				create Result.make_from_string ("eiffel_ribbon.xml")
 			else
-				Result := "eiffel_ribbon_" + a_index.out + ".xml"
+				create Result.make_from_string ("eiffel_ribbon_" + a_index.out + ".xml")
 			end
 		end
 
-	bml_file_name(a_index: INTEGER): STRING
+	bml_file_name(a_index: INTEGER): PATH
 			-- Ribbon BML file name
 		do
-			Result := "ribbon_" + a_index.out + ".bml"
+			create Result.make_from_string ("ribbon_" + a_index.out + ".bml")
 		end
 
-	header_file_name(a_index: INTEGER): STRING
+	header_file_name(a_index: INTEGER): PATH
 			-- Header file name
 		do
-			Result := "ribbon_" + a_index.out + ".h"
+			create Result.make_from_string ("ribbon_" + a_index.out + ".h")
 		end
 
-	rc_file_name (a_index: INTEGER): STRING
+	rc_file_name (a_index: INTEGER): PATH
 			-- rc file name
 		do
 			if is_using_application_mode.item then
 				check a_index = 1 end
-				Result := "eiffelribbon.rc"
+				create Result.make_from_string ("eiffelribbon.rc")
 			else
-				Result := "eiffelribbon" + a_index.out + ".rc"
+				create Result.make_from_string ("eiffelribbon" + a_index.out + ".rc")
 			end
-
 		end
 
-	res_file_name (a_index: INTEGER): STRING
+	res_file_name (a_index: INTEGER): PATH
 			-- res file name
 		do
-			Result := "eiffelribbon" + a_index.out + ".res"
+			create Result.make_from_string ("eiffelribbon" + a_index.out + ".res")
 		end
 
-	dll_file_name_prefix: STRING = "eiffel_ribbon_"
+	dll_file_name_prefix: STRING_32 = "eiffel_ribbon_"
 			-- DLL file name prefix
 
-	project_configuration_file_name: STRING = "ribbon_project.er"
+	project_configuration_file_name: PATH
 			-- Project configuration file name
+		once
+			create Result.make_from_string ("ribbon_project.er")
+		end
 
-	tool_info_file_name: STRING = "eiffel_ribbon_info.sed"
+	tool_info_file_name: PATH
 			-- Tool info file name
+		once
+			create Result.make_from_string ("eiffel_ribbon_info.sed")
+		end
 
-	images: DIRECTORY_NAME
+	images: PATH
 			-- Image folder
 		do
-			Result := eiffel_ribbon
-			Result.set_subdirectory ("images")
+			Result := eiffel_ribbon.extended ("images")
 		end
 
-	eiffel_ribbon: DIRECTORY_NAME
+	eiffel_ribbon: PATH
 			-- Eiffel ribbon tool folder
 		do
-			Result := eiffel_ribbon_imp.twin
+			Result := eiffel_ribbon_imp
 		end
 
-	ise_eiffel: detachable STRING
+	ise_eiffel: detachable STRING_32
 			-- $ISE_EIFFEL value if exists
 		do
-			if attached get_environment_32 ({EIFFEL_CONSTANTS}.ise_eiffel_env) as v then
-				Result := v.to_string_8 -- FIXME jfiat [2012/12/03] : not Unicode
-			end
+			Result := get_environment_32 ({EIFFEL_CONSTANTS}.ise_eiffel_env)
 		end
 
-	template: DIRECTORY_NAME
+	template: PATH
 			-- Template folder name
 		do
-			Result := eiffel_ribbon
-			Result.set_subdirectory ("template")
+			Result := eiffel_ribbon.extended ("template")
 		end
 
-	xml_full_file_name (a_ribbon_index: INTEGER): detachable STRING_8
+	xml_full_file_name (a_ribbon_index: INTEGER): detachable PATH
 			-- (export status {NONE})
 		require
 			valid: a_ribbon_index >= 0
 		local
 			l_singleton: ER_SHARED_TOOLS
-			l_file_name: detachable FILE_NAME
 			l_constants: ER_MISC_CONSTANTS
 		do
 			create l_singleton
 			if attached l_singleton.Project_info_cell.item as l_info then
 				if attached l_info.project_location as l_location then
-					create l_file_name.make_from_string (l_location)
 					create l_constants
-					l_file_name.set_file_name (l_constants.Xml_file_name (a_ribbon_index))
-					Result := l_file_name
+					Result := l_location.extended_path (l_constants.Xml_file_name (a_ribbon_index))
 				end
 			end
 		end
 
-	project_full_file_name: detachable STRING
+	project_full_file_name: detachable PATH
 			-- Project file name including full path
 		local
 			l_singleton: ER_SHARED_TOOLS
-			l_file_name: detachable FILE_NAME
 		do
 			create l_singleton
 			if attached l_singleton.project_info_cell.item as l_info then
 				if attached l_info.project_location as l_location and then not l_location.is_empty then
-					create l_file_name.make_from_string (l_location)
-					l_file_name.set_file_name (project_configuration_file_name)
+					Result := l_location.extended_path (project_configuration_file_name)
 				end
 			end
-			Result := l_file_name
 		end
 
-	header_full_file_name (a_index: INTEGER): detachable STRING
+	header_full_file_name (a_index: INTEGER): detachable PATH
 			-- Header file name including full path
 		local
 			l_singleton: ER_SHARED_TOOLS
-			l_file_name: detachable FILE_NAME
 		do
 			create l_singleton
 			if attached l_singleton.project_info_cell.item as l_info then
 				if attached l_info.project_location as l_location and then not l_location.is_empty then
-					create l_file_name.make_from_string (l_location)
-					l_file_name.set_file_name (header_file_name (a_index))
+					Result := l_location.extended_path (header_file_name (a_index))
 				end
 			end
-			Result := l_file_name
 		end
 
-	docking_tools_layout_file_name: STRING = "docking_tools_layout"
+	docking_tools_layout_file_name: PATH
 			-- Docking layout file name
+		once
+			create Result.make_from_string ("docking_tools_layout")
+		end
 
 feature -- Settings query
 
@@ -188,7 +183,7 @@ feature {NONE} -- Implementation
 			(create {EXCEPTIONS}).raise ("Invalid environment")
 		end
 
-	eiffel_ribbon_imp: DIRECTORY_NAME
+	eiffel_ribbon_imp: PATH
 			-- Eiffel ribbon tool folder
 		local
 			l_retried: BOOLEAN
@@ -200,11 +195,9 @@ feature {NONE} -- Implementation
 				if not is_valid_environment then
 					check_environment_variable
 				end
-				create Result.make_from_string (shared_path_8)
-				Result.set_subdirectory ("tools")
-				Result.set_subdirectory ("ribbon")
+				Result := shared_path.extended ("tools").extended ("ribbon")
 			else
-				create Result.make
+				create Result.make_empty
 			end
 		rescue
 			-- `check_environment_variable' may raise exception if environment variable not valid

@@ -22,13 +22,13 @@ feature -- Settings
 			label_title := a_label_title
 		end
 
-	set_small_image (a_small_image: detachable STRING_32)
+	set_small_image (a_small_image: like small_image)
 			-- Set `small_image' with `a_small_image'
 		do
 			small_image := a_small_image
 		end
 
-	set_large_image (a_large_image: detachable STRING_32)
+	set_large_image (a_large_image: like large_image)
 			-- Set `large_image' with `a_large_image'
 		do
 			large_image := a_large_image
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 	xml_constants: STRING
 			-- XML tree constants		
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

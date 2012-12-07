@@ -569,7 +569,7 @@ feature {NONE} -- Figure handling
 	background_pic: EV_PIXMAP
 			-- Background pixmap
 		local
-			l_path: FILE_NAME
+			l_path: PATH
 			l_retried: BOOLEAN
 			l_shared: ER_SHARED_TOOLS
 			l_error: EV_ERROR_DIALOG
@@ -577,10 +577,9 @@ feature {NONE} -- Figure handling
 			l_misc_constants: ER_MISC_CONSTANTS
 		do
 			if not l_retried then
-				create l_path.make_from_string (constants.images)
-				l_path.set_file_name ("ribbon_background.png")
+				l_path := constants.images.extended ("ribbon_background.png")
 				create Result
-				Result.set_with_named_file (l_path)
+				Result.set_with_named_path (l_path)
 			else
 				create Result.make_with_size (10, 10)
 			end
@@ -820,7 +819,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

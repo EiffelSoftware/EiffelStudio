@@ -64,7 +64,7 @@ feature -- Command
 	load_tree (a_ribbon_window_count: INTEGER)
 			-- <Precursor>
 		local
-			l_file: RAW_FILE
+			l_u: FILE_UTILITIES
 			l_index: INTEGER
 			l_constants: ER_MISC_CONSTANTS
 			l_stop: BOOLEAN
@@ -77,8 +77,7 @@ feature -- Command
 				l_index > a_ribbon_window_count or l_stop
 			loop
 				if attached l_constants.xml_full_file_name (l_index) as l_file_name then
-					create l_file.make (l_file_name)
-					if l_file.exists then
+					if l_u.file_path_exists (l_file_name) then
 						load_tree_imp (l_index)
 					else
 						l_stop := True
@@ -154,7 +153,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

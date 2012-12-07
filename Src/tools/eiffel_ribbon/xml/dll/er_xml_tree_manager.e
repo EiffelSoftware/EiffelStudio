@@ -15,8 +15,8 @@ feature -- Command
 			-- Load from Microsoft XML ribbon markup tree
 		local
 			l_callback: ER_XML_CALLBACKS
-			l_factory: XML_LITE_PARSER_FACTORY
-			l_parser: XML_LITE_PARSER
+			l_factory: XML_PARSER_FACTORY
+			l_parser: XML_PARSER
 			l_constants: ER_MISC_CONSTANTS
 		do
 			create l_constants
@@ -26,7 +26,7 @@ feature -- Command
 
 				create l_callback.make
 				l_parser.set_callbacks (l_callback)
-				l_parser.parse_from_filename (l_file_name)
+				l_parser.parse_from_path (l_file_name)
 
 				xml_root := l_callback.xml_root
 				check set: xml_root /= Void end
@@ -38,7 +38,7 @@ feature -- Command
 	xml_root: detachable ER_XML_TREE_ELEMENT
 			-- XML root element
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

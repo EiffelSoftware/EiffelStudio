@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 	calculate_pixmap: EV_PIXMAP
 			-- Calculate pixmap base on current statues
 		local
-			l_path: FILE_NAME
+			l_path: PATH
 			l_retried: BOOLEAN
 			l_shared: ER_SHARED_TOOLS
 			l_error: EV_ERROR_DIALOG
@@ -166,28 +166,28 @@ feature {NONE} -- Implementation
 			l_misc_constants: ER_MISC_CONSTANTS
 		do
 			if not l_retried then
-				create l_path.make_from_string (constants.images)
+				l_path := constants.images
 				create Result
 				if is_large_image_size then
 					if is_highlight then
 						check is_valid_position end
 						if is_label_visible then
-							l_path.set_file_name ("button_with_text_large_highlight.png")
+							l_path := l_path.extended ("button_with_text_large_highlight.png")
 						else
-							l_path.set_file_name ("button_without_text_large_highlight.png")
+							l_path := l_path.extended ("button_without_text_large_highlight.png")
 						end
 					else
 						if not is_valid_position then
 							if is_label_visible then
-								l_path.set_file_name ("button_with_text_large_invalid.png")
+								l_path := l_path.extended ("button_with_text_large_invalid.png")
 							else
-								l_path.set_file_name ("button_without_text_large_invalid.png")
+								l_path := l_path.extended ("button_without_text_large_invalid.png")
 							end
 						else
 							if is_label_visible then
-								l_path.set_file_name ("button_with_text_large.png")
+								l_path := l_path.extended ("button_with_text_large.png")
 							else
-								l_path.set_file_name ("button_without_text_large.png")
+								l_path := l_path.extended ("button_without_text_large.png")
 							end
 						end
 
@@ -196,29 +196,28 @@ feature {NONE} -- Implementation
 					if is_highlight then
 						check is_valid_position end
 						if is_label_visible then
-							l_path.set_file_name ("button_with_text_highlight.png")
+							l_path := l_path.extended ("button_with_text_highlight.png")
 						else
-							l_path.set_file_name ("button_without_text_highlight.png")
+							l_path := l_path.extended ("button_without_text_highlight.png")
 						end
 					else
 						if not is_valid_position then
 							if is_label_visible then
-								l_path.set_file_name ("button_with_text_invalid.png")
+								l_path := l_path.extended ("button_with_text_invalid.png")
 							else
-								l_path.set_file_name ("button_without_text_invalid.png")
+								l_path := l_path.extended ("button_without_text_invalid.png")
 							end
 						else
 							if is_label_visible then
-								l_path.set_file_name ("button_with_text.png")
+								l_path := l_path.extended ("button_with_text.png")
 							else
-								l_path.set_file_name ("button_without_text.png")
+								l_path := l_path.extended ("button_without_text.png")
 							end
 						end
 
 					end
 				end
-
-				Result.set_with_named_file (l_path)
+				Result.set_with_named_path (l_path)
 			else
 				create Result.make_with_size (10, 10)
 			end
@@ -242,7 +241,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

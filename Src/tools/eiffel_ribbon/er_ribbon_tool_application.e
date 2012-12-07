@@ -29,17 +29,15 @@ feature {NONE} -- Initialization
 			-- Create `Current', build and display `main_window',
 			-- then launch the application.
 		local
-			l_file_name: FILE_NAME
+			l_file_name: PATH
 		do
 			default_create
 			if argument_count >= 1 then
 				create l_file_name.make_from_string (argument(1))
-				if l_file_name.is_valid then
-					main_window.show_actions.extend_kamikaze (agent (a_file_name: FILE_NAME)
+				main_window.show_actions.extend_kamikaze (agent (a_file_name: PATH)
 																do
 																	main_window.open_project_command.execute_with_file_name (a_file_name)
 																end (l_file_name))
-				end
 			end
 
 			main_window.show
@@ -58,7 +56,7 @@ feature {NONE} -- Implementation
 		-- Main window of `Current'.
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

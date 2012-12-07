@@ -22,7 +22,7 @@ feature -- Query
 		deferred
 		end
 
-	command_name_constants: STRING = "command_name_constants"
+	command_name_constants: STRING_32 = "command_name_constants"
 			-- Constants for command name file
 
 	group_counter, button_counter: INTEGER
@@ -30,7 +30,7 @@ feature -- Query
 
 feature {ER_CODE_GENERATOR_FOR_APPLICATION_MENU} -- Command
 
-	generate_group_class (a_group_node: EV_TREE_NODE; a_index: INTEGER; a_file_name, a_imp_file_name: STRING; a_default_name: STRING)
+	generate_group_class (a_group_node: EV_TREE_NODE; a_index: INTEGER; a_file_name, a_imp_file_name, a_default_name: STRING_32)
 			-- Generate ribbon group codes
 		require
 			not_void: a_group_node /= void
@@ -58,7 +58,7 @@ feature {ER_CODE_GENERATOR_FOR_QAT} -- Command
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

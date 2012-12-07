@@ -60,7 +60,7 @@ feature -- Document
 			end
 		end
 
-	on_xml_declaration (a_version: STRING; an_encoding: detachable STRING; a_standalone: BOOLEAN)
+	on_xml_declaration (a_version: READABLE_STRING_32; an_encoding: detachable READABLE_STRING_32; a_standalone: BOOLEAN)
 			-- <Precursor>
 		do
 			debug ("Ribbon-xml")
@@ -70,7 +70,7 @@ feature -- Document
 
 feature -- Errors
 
-	on_error (a_message: STRING)
+	on_error (a_message: READABLE_STRING_32)
 			-- <Precursor>
 		do
 			debug ("Ribbon-xml")
@@ -80,7 +80,7 @@ feature -- Errors
 
 feature -- Meta
 
-	on_processing_instruction (a_name: STRING; a_content: STRING)
+	on_processing_instruction (a_name: READABLE_STRING_32; a_content: READABLE_STRING_32)
 			-- <Precursor>
 		do
 			debug ("Ribbon-xml")
@@ -88,7 +88,7 @@ feature -- Meta
 			end
 		end
 
-	on_comment (a_content: STRING)
+	on_comment (a_content: READABLE_STRING_32)
 			-- <Precursor>
 		do
 			debug ("Ribbon-xml")
@@ -98,7 +98,7 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- <Precursor>
 		local
 			l_parent_node: detachable ER_XML_TREE_ELEMENT
@@ -121,7 +121,7 @@ feature -- Tag
 			last_node.extend (l_new_node)
 		end
 
-	on_attribute (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32; a_value: READABLE_STRING_32)
 			-- <Precursor>
 		local
 			l_tree_node: ER_XML_TREE_ELEMENT
@@ -143,7 +143,7 @@ feature -- Tag
 			end
 		end
 
-	on_end_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- <Precursor>
 		do
 			debug ("Ribbon-xml")
@@ -155,7 +155,7 @@ feature -- Tag
 
 feature -- Content
 
-	on_content (a_content: STRING)
+	on_content (a_content: READABLE_STRING_32)
 			-- <Precursor>
 		local
 			l_tree_node: ER_XML_TREE_ELEMENT
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 	constants: ER_XML_CONSTANTS
 			-- XML constants
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

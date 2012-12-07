@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_dest_directory, a_dest_class: STRING)
+	make (a_dest_directory: like dest_directory; a_dest_class: like dest_class_name)
 			-- Creation method
 		require
 			not_void: a_dest_class /= Void
@@ -39,7 +39,7 @@ feature -- Command
 			name_value.wipe_out
 		end
 
-	translate (a_source_file: STRING)
+	translate (a_source_file: like source_file_name)
 			-- Translate C header file into a Eiffel class
 		require
 			not_void: a_source_file /= Void
@@ -54,15 +54,13 @@ feature -- Command
 			-- Save translated result to disk
 		local
 			l_file_content: STRING
-			l_dest_file_name: FILE_NAME
+			l_dest_file_name: PATH
 			l_dest_file: RAW_FILE
 		do
 			l_file_content := generate_eiffel_class
 			if not l_file_content.is_empty then
-				create l_dest_file_name.make_from_string (dest_directory)
-				l_dest_file_name.set_file_name (dest_class_name + ".e")
-
-				create l_dest_file.make (l_dest_file_name)
+				l_dest_file_name := dest_directory.extended (dest_class_name + ".e")
+				create l_dest_file.make_with_path (l_dest_file_name)
 				l_dest_file.create_read_write
 				l_dest_file.put_string (l_file_content)
 				l_dest_file.close
@@ -78,7 +76,7 @@ feature {NONE} -- Implementation
 			l_first_blank, l_second_blank: INTEGER
 			l_name, l_value: STRING
 		do
-			create l_source_file.make (source_file_name)
+			create l_source_file.make_with_path (source_file_name)
 			if l_source_file.exists then
 				from
 					l_source_file.open_read
@@ -132,18 +130,18 @@ feature {NONE} -- Implementation
 	generate_eiffel_class: STRING
 			-- Generate Eiffel class for C header file
 		local
-			l_template: FILE_NAME
+			l_template: PATH
 			l_template_file: RAW_FILE
 			l_last_string: STRING
 			l_class_name: STRING
 			l_eiffel_name_value: STRING
+			u: UTF_CONVERTER
 		do
 			create Result.make_empty
 
-			create l_template.make_from_string ((create {ER_MISC_CONSTANTS}).template)
-			l_template.set_file_name ("header_file_template.e")
+			l_template := ((create {ER_MISC_CONSTANTS}).template).extended ("header_file_template.e")
 
-			create l_template_file.make (l_template)
+			create l_template_file.make_with_path (l_template)
 			if l_template_file.exists then
 				if not name_value.is_empty then
 					l_eiffel_name_value := prepare_name_value_for_eiffel
@@ -159,7 +157,7 @@ feature {NONE} -- Implementation
 						l_template_file.read_line
 						l_last_string := l_template_file.last_string
 
-						l_last_string.replace_substring_all ("$SOURCE_FILE", source_file_name)
+						l_last_string.replace_substring_all ("$SOURCE_FILE", u.utf_32_string_to_utf_8_string_8 (source_file_name.name))
 						l_last_string.replace_substring_all ("$CLASS_NAME", l_class_name)
 						l_last_string.replace_substring_all ("$GENERATED", l_eiffel_name_value)
 
@@ -188,10 +186,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	source_file_name: STRING
+	source_file_name: PATH
 			-- Full path name of source C header file will be translated
 
-	dest_directory: STRING
+	dest_directory: PATH
 			-- Directory path for destination Eiffel Class
 
 	dest_class_name: STRING
@@ -199,8 +197,9 @@ feature {NONE} -- Implementation
 
 	name_value: ARRAYED_LIST [TUPLE [a_name: STRING; a_value: STRING]]
 			-- All names and values parsed from C header file
+
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

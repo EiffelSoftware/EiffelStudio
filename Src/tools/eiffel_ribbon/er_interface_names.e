@@ -13,13 +13,13 @@ feature -- Query
 	cannot_find_images (a_ise_eiffel: STRING_32): STRING_32
 			-- Cannot find images...
 		do
-			Result := "Cannot find images in " + a_ise_eiffel + "\tools\ribbon\images"
+			Result := {STRING_32} "Cannot find images in " + a_ise_eiffel + "\tools\ribbon\images"
 		end
 
 	cannot_find_templates (a_ise_eiffel: STRING_32): STRING_32
 			-- Cannot find templates...
 		do
-			Result := "Cannot find templates in " + a_ise_eiffel + "\tools\ribbon\template"
+			Result := {STRING_32} "Cannot find templates in " + a_ise_eiffel + "\tools\ribbon\template"
 		end
 
 	cannot_find_ribbon_folders (a_ise_eiffel: STRING_32): STRING_32
@@ -27,22 +27,17 @@ feature -- Query
 		require
 			not_void: a_ise_eiffel /= Void
 		do
-			Result := "Cannot find EiffelRibbon folders in " + a_ise_eiffel + "\tools\ribbon"
+			Result := {STRING_32} "Cannot find EiffelRibbon folders in " + a_ise_eiffel + "\tools\ribbon"
 		end
 
-	ise_eiffel_not_defined: STRING_32
+	ise_eiffel_not_defined: STRING_32 = "The $ISE_EIFFEL is not defined"
 			-- ISE_EIFFEL not defined
-		do
-			Result := "The $ISE_EIFFEL is not defined"
-		end
 
-	ok: STRING_32
+	ok: STRING_32 = "OK"
 			-- OK
-		do
-			Result := "OK"
-		end
+
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

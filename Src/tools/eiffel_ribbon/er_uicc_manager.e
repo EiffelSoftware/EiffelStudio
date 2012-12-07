@@ -11,6 +11,8 @@ class
 inherit
 	EIFFEL_LAYOUT
 
+	SYSTEM_ENCODINGS
+
 feature -- Command
 
 	is_uicc_available: BOOLEAN
@@ -38,78 +40,40 @@ feature -- Command
 		local
 			l_process: PROCESS
 			l_process_factory: PROCESS_FACTORY
-			l_list: ARRAYED_LIST [STRING_8]
+			l_list: ARRAYED_LIST [STRING_32]
 			l_constants: ER_MISC_CONSTANTS
 			l_singleton: ER_SHARED_TOOLS
 		do
 			-- prepare command
 			-- uicc eiffel_ribbon.xml eiffel_ribbon.bml /header:eiffel_ribbon.h /res:eiffel_ribbon.rc
 			create l_constants
-			if attached rc_file_name (a_index) as l_rc_file_name
-				and then attached header_file_name (a_index) as l_header_file_name
-				and then attached bml_file_name (a_index) as l_bml_file_name
---				and then attached l_constants.xml_full_file_name as l_full_xml_name then
-				and then attached l_constants.Xml_file_name (a_index) as l_full_xml_name
-			then
-				create l_list.make (4)
-				l_list.extend (l_full_xml_name)
-				l_list.extend (l_bml_file_name)
-				l_list.extend ("/header:" + l_header_file_name)
-				l_list.extend ("/res:" + l_rc_file_name)
-				create l_singleton
-				if attached l_singleton.project_info_cell.item as l_info then
-					create l_process_factory
-					l_process := l_process_factory.process_launcher (uicc_name, l_list, l_info.project_location)
-					l_process.set_separate_console (True)
-					l_process.set_hidden (True)
-					l_process.redirect_output_to_agent (agent on_output (?, True))
-					on_output ("Launching " + uicc_name + "%N", True)
-					l_process.launch
-					l_process.wait_for_exit
-					if not l_process.launched or else l_process.exit_code /= 0 then
-							-- Display error
-						on_output ("%N" + uicc_name + " launched failed%N", False)
-					else
-						on_output ("%N" + uicc_name + " launched successfully%N", False)
-					end
+			create l_list.make (4)
+			l_list.extend (l_constants.Xml_file_name (a_index).name)
+			l_list.extend (bml_file_name (a_index).name)
+			l_list.extend ("/header:" + header_file_name (a_index).name)
+			l_list.extend ("/res:" + rc_file_name (a_index).name)
+			create l_singleton
+			if attached l_singleton.project_info_cell.item as l_info then
+				create l_process_factory
+				if attached l_info.project_location as l_loc then
+					l_process := l_process_factory.process_launcher (uicc_name, l_list, l_loc.name)
+				else
+					l_process := l_process_factory.process_launcher (rc_name, l_list, Void)
+				end
+				l_process.set_separate_console (True)
+				l_process.set_hidden (True)
+				l_process.redirect_output_to_agent (agent on_process_output (?, True))
+				on_output ({STRING_32} "Launching " + uicc_name + "%N", True)
+				l_process.launch
+				l_process.wait_for_exit
+				if not l_process.launched or else l_process.exit_code /= 0 then
+						-- Display error
+					on_output ({STRING_32} "%N" + uicc_name + " launched failed%N", False)
+				else
+					on_output ({STRING_32} "%N" + uicc_name + " launched successfully%N", False)
 				end
 			end
 		end
-
-	set_code_page_to_936
-			-- We need set code page to 936, otherwise `rc_to_res' would complain invalid code page
-			local
-				l_process: PROCESS
-				l_process_factory: PROCESS_FACTORY
-				l_list: ARRAYED_LIST [STRING_8]
-				l_constants: ER_MISC_CONSTANTS
-				l_singleton: ER_SHARED_TOOLS
-			do
-					-- prepare command
-					-- uicc eiffel_ribbon.xml eiffel_ribbon.bml /header:eiffel_ribbon.h /res:eiffel_ribbon.rc
-				create l_constants
-
-				create l_list.make (2)
-				l_list.extend ("936")
-
-				create l_singleton
-				if attached l_singleton.project_info_cell.item as l_info then
-					create l_process_factory
-					l_process := l_process_factory.process_launcher (chcp_name, l_list, l_info.project_location)
-					l_process.set_separate_console (True)
-					l_process.set_hidden (True)
-					l_process.redirect_output_to_agent (agent on_output (?, True))
-					on_output ("Launching " + chcp_name + "%N", True)
-					l_process.launch
-					l_process.wait_for_exit
-					if not l_process.launched or else l_process.exit_code /= 0 then
-							-- Display error
-						on_output ("%N " + chcp_name + " launched failed%N", False)
-					else
-						on_output ("%N " + chcp_name + " launched successfully%N", False)
-					end
-				end
-			end
 
 	convert_rc_to_res_file (a_index: INTEGER)
 			-- Convert Ribbon makrup rc file to res file
@@ -118,36 +82,36 @@ feature -- Command
 		local
 			l_process: PROCESS
 			l_process_factory: PROCESS_FACTORY
-			l_list: ARRAYED_LIST [STRING_8]
+			l_list: ARRAYED_LIST [STRING_32]
 			l_constants: ER_MISC_CONSTANTS
 			l_singleton: ER_SHARED_TOOLS
 		do
---			code_page_to_936
 				-- prepare command
 				-- uicc eiffel_ribbon.xml eiffel_ribbon.bml /header:eiffel_ribbon.h /res:eiffel_ribbon.rc
 			create l_constants
-			if attached rc_file_name (a_index) as l_rc_file_name then
+			create l_list.make (2)
+			l_list.extend ("/v")
+			l_list.extend (rc_file_name (a_index).name)
 
-				create l_list.make (2)
-				l_list.extend ("/v")
-				l_list.extend (l_rc_file_name)
-
-				create l_singleton
-				if attached l_singleton.project_info_cell.item as l_info then
-					create l_process_factory
-					l_process := l_process_factory.process_launcher (rc_name, l_list, l_info.project_location)
-					l_process.set_separate_console (True)
-					l_process.set_hidden (True)
-					l_process.redirect_output_to_agent (agent on_output (?, True))
-					on_output ("Launching " + rc_name + "%N", True)
-					l_process.launch
-					l_process.wait_for_exit
-					if not l_process.launched or else l_process.exit_code /= 0 then
-							-- Display error
-						on_output ("%N" + rc_name + " launched failed%N", False)
-					else
-						on_output ("%N" + rc_name + " launched successfully%N", False)
-					end
+			create l_singleton
+			if attached l_singleton.project_info_cell.item as l_info then
+				create l_process_factory
+				if attached l_info.project_location as l_loc then
+					l_process := l_process_factory.process_launcher (rc_name, l_list, l_loc.name)
+				else
+					l_process := l_process_factory.process_launcher (rc_name, l_list, Void)
+				end
+				l_process.set_separate_console (True)
+				l_process.set_hidden (True)
+				l_process.redirect_output_to_agent (agent on_process_output (?, True))
+				on_output ({STRING_32} "Launching " + rc_name + "%N", True)
+				l_process.launch
+				l_process.wait_for_exit
+				if not l_process.launched or else l_process.exit_code /= 0 then
+						-- Display error
+					on_output ({STRING_32} "%N" + rc_name + " launched failed%N", False)
+				else
+					on_output ({STRING_32} "%N" + rc_name + " launched successfully%N", False)
 				end
 			end
 		end
@@ -159,47 +123,60 @@ feature -- Command
 		local
 			l_process: PROCESS
 			l_process_factory: PROCESS_FACTORY
-			l_list: ARRAYED_LIST [STRING_8]
+			l_list: ARRAYED_LIST [STRING_32]
 			l_constants: ER_MISC_CONSTANTS
 			l_singleton: ER_SHARED_TOOLS
 		do
 				-- prepare command
 				-- uicc eiffel_ribbon.xml eiffel_ribbon.bml /header:eiffel_ribbon.h /res:eiffel_ribbon.rc
 			create l_constants
-			if attached res_file_name (a_index) as l_res_file_name then
-				create l_list.make (6)
-				l_list.extend ("/VERBOSE")
-				l_list.extend ("/NOENTRY")
-				l_list.extend ("/DLL")
-				if {PLATFORM_CONSTANTS}.is_64_bits then
-					l_list.extend ("/MACHINE:X64")
-				else
-					l_list.extend ("/MACHINE:X86")
-				end
-				l_list.extend ("/OUT:%"" + {ER_MISC_CONSTANTS}.dll_file_name_prefix + a_index.out + ".dll%"")
-				l_list.extend (l_res_file_name)
+			create l_list.make (6)
+			l_list.extend ("/VERBOSE")
+			l_list.extend ("/NOENTRY")
+			l_list.extend ("/DLL")
+			if {PLATFORM_CONSTANTS}.is_64_bits then
+				l_list.extend ("/MACHINE:X64")
+			else
+				l_list.extend ("/MACHINE:X86")
+			end
+			l_list.extend ({STRING_32} "/OUT:%"" + {ER_MISC_CONSTANTS}.dll_file_name_prefix + a_index.out + ".dll%"")
+			l_list.extend (res_file_name (a_index).name)
 
-				create l_singleton
-				if attached l_singleton.project_info_cell.item as l_info then
-					create l_process_factory
-					l_process := l_process_factory.process_launcher (link_name, l_list, l_info.project_location)
-					l_process.set_separate_console (True)
-					l_process.set_hidden (True)
-					l_process.redirect_output_to_agent (agent on_output (?, True))
-					on_output ("Launching " + link_name + "%N", True)
-					l_process.launch
-					l_process.wait_for_exit
-					if not l_process.launched or else l_process.exit_code /= 0 then
-							-- Display error
-						on_output ("%N" + link_name + " launched failed%N", False)
-					else
-						on_output ("%N" + link_name + " launched successfully%N", False)
-					end
+			create l_singleton
+			if attached l_singleton.project_info_cell.item as l_info then
+				create l_process_factory
+				if attached l_info.project_location as l_loc then
+					l_process := l_process_factory.process_launcher (link_name, l_list, l_loc.name)
+				else
+					l_process := l_process_factory.process_launcher (link_name, l_list, Void)
+				end
+				l_process.set_separate_console (True)
+				l_process.set_hidden (True)
+				l_process.redirect_output_to_agent (agent on_process_output (?, True))
+				on_output ({STRING_32} "Launching " + link_name + "%N", True)
+				l_process.launch
+				l_process.wait_for_exit
+				if not l_process.launched or else l_process.exit_code /= 0 then
+						-- Display error
+					on_output ({STRING_32} "%N" + link_name + " launched failed%N", False)
+				else
+					on_output ({STRING_32} "%N" + link_name + " launched successfully%N", False)
 				end
 			end
 		end
 
-	on_output (a_string: STRING; a_is_tabbed: BOOLEAN) --FIXME: For non-English characters?
+	on_process_output (a_string: STRING; a_is_tabbed: BOOLEAN)
+			-- Handle output event
+		do
+			system_encoding.convert_to (utf32, a_string)
+			if system_encoding.last_conversion_successful then
+				on_output (system_encoding.last_converted_string_32, a_is_tabbed)
+			else
+				on_output (a_string, a_is_tabbed)
+			end
+		end
+
+	on_output (a_string: STRING_32; a_is_tabbed: BOOLEAN)
 			-- Handle output event
 		local
 			l_singleton: ER_SHARED_TOOLS
@@ -207,8 +184,8 @@ feature -- Command
 			create l_singleton
 			if attached l_singleton.main_window_cell.item as l_main_window then
 				if a_is_tabbed then
-					a_string.replace_substring_all ("%R", "")
-					a_string.replace_substring_all ("%N", "%N%T")
+					a_string.replace_substring_all ({STRING_32} "%R", {STRING_32} "")
+					a_string.replace_substring_all ({STRING_32} "%N", {STRING_32} "%N%T")
 				end
 				l_main_window.output_tool.append_output (a_string)
 			end
@@ -216,7 +193,7 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	res_file_name (a_index: INTEGER): detachable STRING
+	res_file_name (a_index: INTEGER): PATH
 			-- res file name
 		local
 			l_constants: ER_MISC_CONSTANTS
@@ -225,7 +202,7 @@ feature {NONE} -- Implementation
 			Result := l_constants.res_file_name (a_index)
 		end
 
-	rc_file_name (a_index: INTEGER): detachable STRING
+	rc_file_name (a_index: INTEGER): PATH
 			-- rc file name
 		local
 			l_constants: ER_MISC_CONSTANTS
@@ -234,7 +211,7 @@ feature {NONE} -- Implementation
 			Result := l_constants.rc_file_name (a_index)
 		end
 
-	bml_file_name (a_index: INTEGER): detachable STRING
+	bml_file_name (a_index: INTEGER): PATH
 			-- bmp file name
 		local
 			l_constants: ER_MISC_CONSTANTS
@@ -243,7 +220,7 @@ feature {NONE} -- Implementation
 			Result := l_constants.bml_file_name (a_index)
 		end
 
-	header_file_name (a_index: INTEGER): detachable STRING
+	header_file_name (a_index: INTEGER): PATH
 			-- header file name
 		local
 			l_constants: ER_MISC_CONSTANTS
@@ -252,10 +229,10 @@ feature {NONE} -- Implementation
 			Result := l_constants.header_file_name (a_index)
 		end
 
-	uicc_name: STRING = "UICC.exe"
-	rc_name: STRING = "rc.exe"
-	link_name: STRING = "link.exe"
-	chcp_name: STRING = "chcp"
+	uicc_name: STRING_32 = "UICC.exe"
+	rc_name: STRING_32 = "rc.exe"
+	link_name: STRING_32 = "link.exe"
+	chcp_name: STRING_32 = "chcp"
 			-- Name of the various tools used to generate the ribbon code.
 
 feature -- C compiler
@@ -265,7 +242,7 @@ feature -- C compiler
 		local
 			l_manager: C_CONFIG_MANAGER
 			l_codes: LIST [C_CONFIG]
-			l_code, l_ver: STRING
+			l_code, l_ver: STRING_32
 		do
 			on_output ("Checking available C/C++ compilers:%N%N", False)
 			create l_manager.make (a_for_32bits)
@@ -297,7 +274,7 @@ feature -- C compiler
 		local
 			l_manager: C_CONFIG_MANAGER
 			l_codes: LIST [C_CONFIG]
-			l_code, l_ver: STRING
+			l_code, l_ver: STRING_32
 		do
 			on_output ("Checking available C/C++ compilers:%N%N", False)
 			create l_manager.make (a_for_32bits)
@@ -329,7 +306,7 @@ feature -- C compiler
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

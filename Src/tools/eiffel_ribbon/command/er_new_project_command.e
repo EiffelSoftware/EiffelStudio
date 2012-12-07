@@ -37,8 +37,8 @@ feature -- Command
 				l_folder.show_modal_to_window (l_win)
 
 				if attached shared_singleton.project_info_cell.item as l_item then
-					if not l_folder.directory.is_empty then
-						l_item.set_project_location (l_folder.directory)
+					if not l_folder.path.is_empty then
+						l_item.set_project_location (l_folder.path)
 
 						if attached shared_singleton.tool_info_cell.item as l_tool_info then
 							create l_misc
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			-- Shared singleton
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -184,7 +184,7 @@ feature {ER_UICC_MANAGER, ER_GENERATE_CODE_COMMAND} -- Implementation
 			l_result: BOOLEAN
 		do
 			if attached docking_manager as l_manager then
-				l_result := l_manager.open_tools_config ({ER_MISC_CONSTANTS}.docking_tools_layout_file_name)
+				l_result := l_manager.open_tools_config_with_path ((create {ER_MISC_CONSTANTS}).docking_tools_layout_file_name)
 			end
 		end
 
@@ -194,7 +194,7 @@ feature {ER_UICC_MANAGER, ER_GENERATE_CODE_COMMAND} -- Implementation
 			l_result: BOOLEAN
 		do
 			if attached docking_manager as l_manager then
-				l_result := l_manager.save_tools_data ({ER_MISC_CONSTANTS}.docking_tools_layout_file_name)
+				l_result := l_manager.save_tools_data_with_path ((create {ER_MISC_CONSTANTS}).docking_tools_layout_file_name)
 			end
 		end
 
@@ -209,7 +209,7 @@ feature {ER_UICC_MANAGER, ER_GENERATE_CODE_COMMAND} -- Implementation
 			l_constants: ER_MISC_CONSTANTS
 		do
 			create l_constants
-			create l_file.make (l_constants.tool_info_file_name)
+			create l_file.make_with_path (l_constants.tool_info_file_name)
 			if l_file.exists then
 			l_file.open_read
 				create l_reader.make (l_file)
@@ -244,7 +244,7 @@ feature {ER_UICC_MANAGER, ER_GENERATE_CODE_COMMAND} -- Implementation
 		do
 			if attached shared_singleton.tool_info_cell.item as l_tool_info then
 				create l_constants
-				create l_file.make (l_constants.tool_info_file_name)
+				create l_file.make_with_path(l_constants.tool_info_file_name)
 				l_file.create_read_write
 				create l_writer.make (l_file)
 				l_writer.set_for_writing
@@ -301,7 +301,7 @@ feature -- Query
 	docking_manager: detachable SD_DOCKING_MANAGER
 			-- Docking manager
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

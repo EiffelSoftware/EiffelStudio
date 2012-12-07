@@ -17,7 +17,7 @@ feature -- Command
 		local
 			l_file, l_dest_file: RAW_FILE
 			l_constants: ER_MISC_CONSTANTS
-			l_file_name, l_dest_file_name: FILE_NAME
+			l_file_name, l_dest_file_name: PATH
 			l_singleton: ER_SHARED_TOOLS
 			l_sub_dir, l_tool_bar_file, l_sub_imp_dir: STRING
 			l_last_string: STRING
@@ -45,19 +45,18 @@ feature -- Command
 						end
 
 						-- Generate Quick Access Toolbar class
-						create l_file_name.make_from_string (l_constants.template)
-						l_file_name.set_subdirectory (l_sub_dir)
-						l_file_name.set_file_name (l_tool_bar_file + ".e")
-						create l_file.make (l_file_name)
+						l_file_name := l_constants.template.extended (l_sub_dir)
+						l_file_name := l_file_name.extended (l_tool_bar_file + ".e")
+						create l_file.make_with_path (l_file_name)
 						if l_file.exists and then l_file.is_readable then
-							create l_dest_file_name.make_from_string (l_project_location)
 							if l_identifier_name /= Void then
-								l_dest_file_name.set_file_name (l_identifier_name.as_lower + ".e")
+								l_dest_file_name := l_project_location.extended (l_identifier_name.as_lower + ".e")
 							else
-								l_dest_file_name.set_file_name ("quick_access_toolbar" + ".e")
+								l_dest_file_name := l_project_location.extended ("quick_access_toolbar" + ".e")
 							end
 
-							create l_dest_file.make_create_read_write (l_dest_file_name)
+							create l_dest_file.make_with_path (l_dest_file_name)
+							l_dest_file.create_read_write
 							from
 								l_creation_string := creation_string (a_qat_root)
 								l_registry_string := registry_string (a_qat_root)
@@ -246,7 +245,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

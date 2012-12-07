@@ -30,11 +30,11 @@ feature -- Command
 				l_file.filters.extend (["*.*", "All Files"])
 				l_file.show_modal_to_window (l_win)
 
-				execute_with_file_name (l_file.file_name)
+				execute_with_file_name (l_file.full_file_path)
 			end
 		end
 
-	execute_with_file_name (a_project_file: STRING)
+	execute_with_file_name (a_project_file: PATH)
 			-- Execute current command with `a_project_file'
 		local
 			l_warn: EV_WARNING_DIALOG
@@ -64,7 +64,7 @@ feature -- Command
 					end
 				else
 					if attached main_window as l_win then
-						create l_warn.make_with_text ("Cannot open file: " + a_project_file + ". Please select a valid project configuration file.")
+						create l_warn.make_with_text ({STRING_32} "Cannot open file: " + a_project_file.name + {STRING_32} ". Please select a valid project configuration file.")
 						l_warn.show_modal_to_window (l_win)
 					end
 				end
@@ -87,32 +87,16 @@ feature -- Command
 
 feature {NONE}	-- Implementation
 
-	open_project_file (a_eiffel_ribbon_file: STRING)
+	open_project_file (a_eiffel_ribbon_file: PATH)
 			-- Open project file
 		require
 			not_void: a_eiffel_ribbon_file /= Void
 		local
-			l_file_name: FILE_NAME
-			l_env: OPERATING_ENVIRONMENT
-			l_dir: STRING
-			l_index, l_last_index: INTEGER
+			l_dir: detachable PATH
 		do
 			if attached shared_singleton.tool_info_cell.item as l_tool_info then
-				create l_env
-				from
-					l_index := 1 -- Make sure loop run at least once
-				until
-					l_index = 0
-				loop
-					l_index := a_eiffel_ribbon_file.index_of (l_env.directory_separator, (l_last_index + 1))
-					if l_index /= 0 then
-						l_last_index := l_index
-					end
-				end
-				check l_last_index /= 0 end
-				l_dir := a_eiffel_ribbon_file.substring (1, (l_last_index - 1))
+				l_dir := a_eiffel_ribbon_file.parent
 
-				create l_file_name.make_from_string (a_eiffel_ribbon_file)
 				if not l_tool_info.recent_projects.has (a_eiffel_ribbon_file) then
 					l_tool_info.recent_projects.extend (a_eiffel_ribbon_file)
 				end
@@ -144,7 +128,7 @@ feature {NONE}	-- Implementation
 				if attached l_singleton.project_info_cell.item as l_info then
 
 					if attached l_constants.project_full_file_name as l_project_config then
-						create l_file.make (l_project_config)
+						create l_file.make_with_path (l_project_config)
 						l_file.open_read
 						create l_sed.make (l_file)
 						l_sed.set_for_reading
@@ -170,7 +154,7 @@ feature {NONE}	-- Implementation
 			-- Is open project successed?
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

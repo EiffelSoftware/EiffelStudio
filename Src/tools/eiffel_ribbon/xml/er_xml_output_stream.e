@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 		do
 			create l_constants
 			if attached l_constants.xml_full_file_name (a_index) as l_file_name then
-				create l_file.make (l_file_name)
+				create l_file.make_with_path (l_file_name)
 				file := l_file
 				l_file.create_read_write
 			else
@@ -65,7 +65,7 @@ feature -- Basic operation
 
 feature -- Output
 
-	put_character (c: CHARACTER)
+	put_character_8 (c: CHARACTER)
 			-- <Precursor>
 		do
 			if attached file as l_file then
@@ -73,11 +73,33 @@ feature -- Output
 			end
 		end
 
-	put_string (a_string: STRING)
-			-- Write `a_string' to output stream.
+	put_character_32 (c: CHARACTER_32)
+			-- <Precursor>
+		local
+			u: UTF_CONVERTER
 		do
 			if attached file as l_file then
-				l_file.put_string (a_string)
+				l_file.put_string (u.string_32_to_utf_8_string_8 (create {STRING_32}.make_filled (c, 1)))
+			end
+		end
+
+	put_string_32 (a_string: READABLE_STRING_32)
+			-- Write `a_string' to output stream.
+		local
+			u: UTF_CONVERTER
+		do
+			if attached file as l_file then
+				l_file.put_string (u.string_32_to_utf_8_string_8 (a_string))
+			end
+		end
+
+	put_string_8 (a_string: READABLE_STRING_8)
+			-- Write `a_string' to output stream.
+		local
+			u: UTF_CONVERTER
+		do
+			if attached file as l_file then
+				l_file.put_string (u.string_32_to_utf_8_string_8 (a_string))
 			end
 		end
 
@@ -87,7 +109,7 @@ feature {NONE} -- Implementation
 			-- XML file
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

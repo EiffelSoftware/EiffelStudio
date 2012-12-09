@@ -1219,6 +1219,13 @@ feature -- Externals
 			"gtk_file_chooser_set_filename ((GtkFileChooser*) $a_dialog, (gchar*) $a_filename)"
 		end
 
+	frozen gtk_file_chooser_set_current_name (a_dialog: POINTER; a_filename: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"gtk_file_chooser_set_current_name ((GtkFileChooser*) $a_dialog, (gchar*) $a_filename)"
+		end
+
 	frozen gtk_file_chooser_set_local_only (a_dialog: POINTER; a_local_only: BOOLEAN)
 		external
 			"C inline use <ev_gtk.h>"

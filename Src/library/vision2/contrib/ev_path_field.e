@@ -88,15 +88,11 @@ feature -- Status
 	text, path: STRING_32
 			-- Current path set by user.
 		obsolete
-			"Use `file_path' instead."
+			"Use `file_path.name' instead."
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_field: like field
 		do
-			l_field := field
-			check l_field /= Void end
-			Result := l_field.text
+			Result := file_path.name
 		ensure
 			result_not_void: Result /= Void
 		end

@@ -59,8 +59,6 @@ feature -- Access
 			-- File name selected (including path).
 		obsolete
 			"Use `file_path' instead."
-		require
-			selected: selected
 		do
 			Result := str_file_name.string
 		ensure
@@ -69,8 +67,6 @@ feature -- Access
 
 	file_path: PATH
 			-- Full file path of selected file.
-		require
-			selected: selected
 		do
 			create Result.make_from_pointer (str_file_name.item)
 		ensure
@@ -277,6 +273,7 @@ feature -- Element change
 		ensure
 			file_name_set: file_path ~ a_file_path
 		end
+
 	set_title (a_title: READABLE_STRING_GENERAL)
 			-- Set `title' with `a_title' and use this string to
 			-- display the title.

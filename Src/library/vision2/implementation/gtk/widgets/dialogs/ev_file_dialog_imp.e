@@ -77,16 +77,10 @@ feature -- Access
 		local
 			l_filename: POINTER
 		do
-			if
-				attached selected_button as l_selected_button and then l_selected_button.is_equal (internal_accept)
-			then
-				l_filename := {GTK2}.gtk_file_chooser_get_filename (c_object)
-				if l_filename /= default_pointer then
-					create Result.make_from_pointer (l_filename)
-					{GTK}.g_free (l_filename)
-				else
-					create Result.make_empty
-				end
+			l_filename := {GTK2}.gtk_file_chooser_get_filename (c_object)
+			if l_filename /= default_pointer then
+				create Result.make_from_pointer (l_filename)
+				{GTK}.g_free (l_filename)
 			else
 				create Result.make_empty
 			end
@@ -172,6 +166,13 @@ feature -- Element change
 		do
 			create a_cs.make_from_path (a_path)
 			{GTK2}.gtk_file_chooser_set_filename (c_object, a_cs.item)
+				-- Force the `current_name' to be what is specified in `a_path'.
+				-- If we do not do that and `a_path' has no file associated on disk
+				-- GTK won't put the file name user specified in the name entry of the dialog.
+			if attached a_path.entry as l_entry then
+				create a_cs.make_from_path (l_entry)
+				{GTK2}.gtk_file_chooser_set_current_name (c_object, a_cs.item)
+			end
 		end
 
 	set_start_path (a_path: PATH)

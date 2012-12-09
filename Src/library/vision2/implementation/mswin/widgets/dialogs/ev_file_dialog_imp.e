@@ -40,11 +40,7 @@ feature -- Access
 	full_file_path: PATH
 			-- Full path name of currently selected file including path.
 		do
-			if selected then
-				Result := wel_file_path
-			else
-				create Result.make_empty
-			end
+			Result := wel_file_path
 		end
 
 	filter: STRING_32

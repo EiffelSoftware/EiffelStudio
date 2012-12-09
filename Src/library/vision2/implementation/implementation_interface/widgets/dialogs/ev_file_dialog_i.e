@@ -61,8 +61,6 @@ feature -- Element change
 		require
 			a_path_not_void: a_path /= Void
 		deferred
-		ensure
-			assigned: full_file_path ~ a_path
 		end
 
 	set_start_path (a_path: PATH)

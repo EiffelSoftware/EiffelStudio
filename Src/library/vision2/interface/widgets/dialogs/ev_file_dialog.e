@@ -172,8 +172,6 @@ feature -- Element change
 			a_path_not_void: a_path /= Void
 		do
 			implementation.set_full_file_path (a_path)
-		ensure
-			assigned: full_file_path ~ a_path
 		end
 
 	set_start_directory (a_path: READABLE_STRING_GENERAL)
@@ -235,8 +233,6 @@ feature {EV_ANY, EV_ANY_I} -- implementation
 invariant
 	filters_not_void: filters /= Void
 	start_directory_not_void: start_path /= Void
-	full_file_path_not_void_implies_path_and_title_not_void: full_file_path /= Void
-		implies (full_file_path.entry /= Void and then full_file_path.parent /= Void)
 
 note
 	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"

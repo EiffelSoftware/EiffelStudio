@@ -201,13 +201,12 @@ feature -- Status setting
 		require
 			s_not_void: s /= Void
 		local
-			f: GOBO_FILE_UTILITIES
-			u: UTF_CONVERTER
+			p: PATH
 		do
-			file_name := f.absolute_path (s, True)
-			directory_name := u.utf_8_string_8_to_string_32
-				(file_system.absolute_parent_directory
-					(u.string_32_to_utf_8_string_8(file_name)))
+			create p.make_from_string (s)
+			p := p.canonical_path
+			file_name := p.name
+			directory_name := p.parent.name
 		end
 
 	set_target_name (s: STRING)
@@ -318,6 +317,7 @@ feature -- Status setting
 			l_user_factory: USER_OPTIONS_FACTORY
 			l_target_options: TARGET_USER_OPTIONS
 			u: GOBO_FILE_UTILITIES
+			p: PATH
 		do
 			if a_user_file_enabled then
 				create l_user_factory
@@ -350,10 +350,11 @@ feature -- Status setting
 
 				 -- update project path
 			if a_project_path /= Void then
-				project_path := a_project_path.twin
+				project_path := a_project_path
 
 					-- make it into an absolute path
-				project_path := u.absolute_path (project_path, True)
+				create p.make_from_string (project_path)
+				project_path := p.canonical_path.name
 
 				l_changed := project_path /~ l_target_options.last_location
 				l_target_options.set_last_location (project_path)

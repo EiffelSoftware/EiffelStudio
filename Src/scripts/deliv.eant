@@ -73,10 +73,7 @@
 		<global name="_BINARY_DIR" value="${cwd}${path_separator}BIN" unless="$_BINARY_DIR"/>
 
 		<!-- source related -->
-		<!-- we support both location for Delivery, under Src, or under Trunk -->
 		<global name="_DELIVERY_DIR" value="${EIFFEL_SRC}${path_separator}Delivery" unless="${_DELIVERY_DIR}"/>
-		<available resource="${_DELIVERY_DIR}" variable="tmp_delivdir_available"/>
-		<global name="_DELIVERY_DIR" value="${EIFFEL_SRC}${path_separator}Delivery" if="${tmp_delivdir_available}=false"/>
 
 		<global name="_XMLDOC_DIR" value="${EIFFEL_SRC}${path_separator}..${path_separator}Documentation" unless="${_XMLDOC_DIR}"/>
 		<!-- environment related -->
@@ -360,7 +357,7 @@
 		<argument name="a_is_full_delivery" />
 
 		<!-- platform independant -->
-		<geant target="_logv" arguments=" - Copy Delivery structure to ${a_dir}" />
+		<geant target="_logv" arguments=" - Copy Delivery structure from ${_DELIVERY_DIR} to ${a_dir}" />
 		<mkdir directory="$a_dir" />
 
 		<geant target="copy_full_tree" arguments="${_DELIVERY_DIR},${a_dir}" if="$a_is_full_delivery=true" />

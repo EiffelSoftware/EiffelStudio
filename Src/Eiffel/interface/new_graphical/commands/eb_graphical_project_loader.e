@@ -425,12 +425,12 @@ feature {NONE} -- User interaction
 			-- execute `a_action' with chosen file_name, otherwise do nothing.
 		local
 			l_save_as: EV_FILE_SAVE_DIALOG
-			l_file_name: READABLE_STRING_GENERAL
+			l_file_name: PATH
 			l_ev: EV_MESSAGE_DIALOG
 			l_save_as_msg: STRING_32
-			u: FILE_UTILITIES
 		do
-			l_file_name := u.file_name (u.make_raw_file_in (a_file_name, a_dir_name))
+			create l_file_name.make_from_string (a_dir_name)
+			l_file_name := l_file_name.extended (a_file_name)
 
 			create l_ev
 			l_save_as_msg := interface_names.b_Save_as
@@ -449,7 +449,7 @@ feature {NONE} -- User interaction
 
 			l_ev.button (l_save_as_msg).select_actions.extend (agent l_save_as.show_modal_to_window (parent_window))
 			l_ev.button (interface_names.b_cancel).select_actions.extend (agent on_cancelled (l_ev))
-			l_ev.button (interface_names.b_ok).select_actions.extend (agent a_action.call ([l_file_name]))
+			l_ev.button (interface_names.b_ok).select_actions.extend (agent a_action.call ([l_file_name.name]))
 			l_ev.show_modal_to_window (parent_window)
 		end
 

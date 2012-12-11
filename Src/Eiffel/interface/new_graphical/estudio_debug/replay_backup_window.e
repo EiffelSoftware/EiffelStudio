@@ -79,7 +79,7 @@ feature {NONE} -- Preferences
 	ignore_bad_libraries_pref: BOOLEAN_PREFERENCE
 			-- Should we ignore missing libraries?
 
-	backup_path_pref: STRING_PREFERENCE
+	backup_path_pref: PATH_PREFERENCE
 			-- Path to BACKUP directory.
 
 	compilation_counter_pref: INTEGER_PREFERENCE
@@ -96,7 +96,7 @@ feature {NONE} -- Actions
 			-- Reset preferences to their default value.
 		do
 			ignore_bad_libraries_pref.set_value (True)
-			backup_path_pref.set_value ("")
+			backup_path_pref.set_value (create {PATH}.make_empty)
 			compilation_counter_pref.set_value (1)
 			refresh_ui
 		end
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			ignore_bad_libraries_pref := l_pref_factory.new_boolean_preference_value (l_manager, "BACKUP.ignore_bad_libraries", True)
 			ignore_bad_libraries_pref.set_hidden (True)
 
-			backup_path_pref := l_pref_factory.new_string_preference_value (l_manager, "BACKUP.path", "")
+			backup_path_pref := l_pref_factory.new_path_preference_value (l_manager, "BACKUP.path", create {PATH}.make_empty)
 			backup_path_pref.set_hidden (True)
 
 			compilation_counter_pref := l_pref_factory.new_integer_preference_value (l_manager, "BACKUP.counter", 1)
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 			l_vbox1.disable_item_expand (backup_path_text)
 			backup_path_text.field.change_actions.extend (agent
 				do
-					backup_path_pref.set_value (backup_path_text.field.text.as_string_8)
+					backup_path_pref.set_value (backup_path_text.file_path)
 					load_text
 				end)
 
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 
 				-- Backup path
 			backup_path_text.field.change_actions.block
-			backup_path_text.set_text (backup_path_pref.value)
+			backup_path_text.set_file_path (backup_path_pref.value)
 			backup_path_text.field.change_actions.resume
 
 				-- Compilation counter
@@ -312,28 +312,26 @@ feature {NONE} -- Implementation
 			load_text
 		end
 
-	backup_path (i: INTEGER): FILE_NAME
+	backup_path (i: INTEGER): PATH
 			-- Path to thr `i'-th compilation backup.
 		require
 			i_positive: i > 0
 		do
-			create Result.make_from_string (backup_path_text.text.as_string_8)
-			Result.extend ("COMP" + i.out)
+			Result := backup_path_text.file_path.extended ("COMP" + i.out)
 		ensure
 			backup_path_not_void: Result /= Void
 		end
 
-	compilation_info_text_representation (i: INTEGER): STRING
+	compilation_info_text_representation (i: INTEGER): STRING_32
 			-- Text of `compilation_info.txt' file for `i'-th copmpilation.
 		require
 			i_positive: i > 0
 		local
-			l_path: FILE_NAME
+			l_path: PATH
 			l_file: PLAIN_TEXT_FILE
 		do
-			l_path := backup_path (i)
-			l_path.set_file_name (backup_info)
-			create l_file.make (l_path)
+			l_path := backup_path (i).extended (backup_info)
+			create l_file.make_with_path (l_path)
 			if l_file.exists and then l_file.is_readable then
 				l_file.open_read
 				if l_file.readable then
@@ -344,7 +342,7 @@ feature {NONE} -- Implementation
 				end
 				l_file.close
 			else
-				Result := "File `" + l_path + "' does not exist."
+				Result := "File `" + l_path.name + "' does not exist."
 			end
 		ensure
 			compilation_info_text_representation_not_void: Result /= Void
@@ -391,9 +389,7 @@ feature {NONE} -- Implementation
 	copy_files
 			-- Copy files of `counter.value'-th' compilation over to COMP1.
 		local
-			l_comp_first: FILE_NAME
-			l_comp_last: FILE_NAME
-			l_file_name: FILE_NAME
+			l_comp_first, l_comp_last, l_file_name: PATH
 			l_file: PLAIN_TEXT_FILE
 			l_removed_files: ARRAYED_LIST [STRING]
 			l_split: LIST [STRING]
@@ -422,13 +418,10 @@ feature {NONE} -- Implementation
 							l_cluster_id := l_split.i_th (2)
 							l_cluster_name := l_split.i_th (3)
 								-- Remove file from COMP1.
-							l_file_name := l_comp_first.twin
-							l_file_name.extend (l_cluster_id)
-							l_file_name.extend (l_cluster_name)
-							l_file_name.set_file_name (l_class_name + dot_e)
-							create l_file.make (l_file_name)
+							l_file_name := l_comp_first.extended (l_cluster_id).extended (l_class_name).extended (l_class_name + dot_e)
+							create l_file.make_with_path (l_file_name)
 							if l_file.exists and then l_file.is_writable then
-								files_output.append_text (" " + l_file.name + "%N")
+								files_output.append_text ({STRING_32} " " + l_file_name.name + "%N")
 								l_file.delete
 							end
 						end
@@ -443,7 +436,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	smart_recursive_copy (a_source, a_dest: FILE_NAME)
+	smart_recursive_copy (a_source, a_dest: PATH)
 			-- Recursively copy files that have changed from `a_source' into `a_dest'.
 			-- If `a_source' directory does not exist or if `a_dest' directory could
 			-- not be created, do nothing.
@@ -452,16 +445,16 @@ feature {NONE} -- Implementation
 			a_source_not_void: a_source /= Void
 			a_dest_not_void: a_dest /= Void
 		local
-			l_source_name, l_dest_name: FILE_NAME
+			l_source_name, l_dest_name: PATH
 			l_source_file, l_dest_file: RAW_FILE
 			l_dest_dir, l_source_dir: DIRECTORY
-			l_ecf: STRING
+			l_ecf: STRING_32
 			l_copy_content: BOOLEAN
 		do
-			create l_source_dir.make (a_source)
+			create l_source_dir.make_with_path (a_source)
 			if l_source_dir.exists then
-				create l_dest_dir.make (a_dest)
-				create l_dest_file.make (a_dest)
+				create l_dest_dir.make_with_path (a_dest)
+				create l_dest_file.make_with_path (a_dest)
 				if not l_dest_dir.exists and then not l_dest_file.exists then
 						-- Create destination if it does not exist.
 					l_dest_dir.create_dir
@@ -471,24 +464,22 @@ feature {NONE} -- Implementation
 					l_source_dir.start
 					l_source_dir.readentry
 				until
-					l_source_dir.lastentry = Void
+					l_source_dir.last_entry_32 = Void
 				loop
 					if not l_source_dir.lastentry.is_equal (".") and not l_source_dir.lastentry.is_equal ("..") then
-						l_source_name := a_source.twin
-						l_source_name.extend (l_source_dir.lastentry)
-						l_dest_name := a_dest.twin
-						l_dest_name.extend (l_source_dir.lastentry)
-						create l_source_file.make (l_source_name)
+						l_source_name := a_source.extended (l_source_dir.last_entry_32)
+						l_dest_name := a_dest.extended (l_source_dir.last_entry_32)
+						create l_source_file.make_with_path (l_source_name)
 						if l_source_file.exists and then l_source_file.is_directory then
 								-- Recursive copy.
 							smart_recursive_copy (l_source_name, l_dest_name)
 						else
-							create l_dest_file.make (l_dest_name)
+							create l_dest_file.make_with_path (l_dest_name)
 
 								-- Check for ecf files.
-							l_ecf := l_source_name.string
+							l_ecf := l_source_name.name
 							l_ecf.keep_tail (4)
-							if l_ecf.is_equal (".ecf") and then l_dest_file.exists then
+							if l_ecf.is_case_insensitive_equal_general (".ecf") and then l_dest_file.exists then
 								l_source_file.open_read
 								l_source_file.read_stream (l_source_file.count)
 								l_source_file.close
@@ -505,7 +496,7 @@ feature {NONE} -- Implementation
 								l_source_file.copy_to (l_dest_file)
 								l_source_file.close
 								l_dest_file.close
-								files_output.append_text (" " + l_source_file.name + "%N")
+								files_output.append_text ({STRING_32} " " + l_source_name.name + {STRING_32} "%N")
 							end
 						end
 					end

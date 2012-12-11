@@ -477,16 +477,12 @@ feature{NONE} -- Implementation
 			retry
 		end
 
-	temporary_file_name (a_base_name: STRING): STRING
+	temporary_file_name (a_base_name: READABLE_STRING_GENERAL): PATH
 			-- Temporary file name for buffer based on `a_base_name'
 		require
 			a_base_name_attached: a_base_name /= Void
-		local
-			l_file_name: FILE_NAME
 		do
-			create l_file_name.make_from_string (eiffel_layout.temporary_path_8)
-			l_file_name.set_file_name ("~" + a_base_name)
-			Result := l_file_name
+			Result := eiffel_layout.temporary_path.extended ("~").appended (a_base_name)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -503,16 +499,19 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	new_buffer_file_name (a_file_name: STRING_32): STRING_32
+	new_buffer_file_name (a_file_name: READABLE_STRING_GENERAL): STRING_32
 			-- New file name for `a_file_name' used in external command launching,
 			-- If on Windows and `a_file_name' contains space, we srround `a_file_name' with double quotes.
 		require
 			a_file_name_attached: a_file_name /= Void
 		do
-			Result := a_file_name.twin
-			if {PLATFORM}.is_windows and then a_file_name.index_of (' ', 1) > 0 then
-				Result.prepend_character ('%"')
+			if a_file_name.has (' ') then
+				create Result.make (a_file_name.count + 2)
 				Result.append_character ('%"')
+				Result.append_string_general (a_file_name)
+				Result.append_character ('%"')
+			else
+				create Result.make_from_string_general (a_file_name)
 			end
 		ensure
 			result_attached: Result /= Void

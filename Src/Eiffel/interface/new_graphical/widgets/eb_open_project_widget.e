@@ -919,13 +919,13 @@ feature {NONE} -- Actions
 		local
 			fod: EB_FILE_OPEN_DIALOG
 			environment_variable: EXECUTION_ENVIRONMENT
-			last_directory_opened: STRING
+			last_directory_opened: STRING_32
 		do
 				-- User just asked for an open file dialog,
 				-- and we set it on the last opened directory.
 			create environment_variable
 			create fod.make_with_preference (preferences.dialog_data.last_opened_project_directory_preference)
-			last_directory_opened := environment_variable.get (studio_directory_list)
+			last_directory_opened := environment_variable.item (studio_directory_list)
 			if last_directory_opened /= Void then
 				fod.set_start_directory (last_directory_opened.substring (1,
 					last_directory_opened.index_of(';',1) -1 ))
@@ -1213,26 +1213,26 @@ feature {NONE} -- Actions
 		local
 			l_dlg: EV_DIRECTORY_DIALOG
 			l_item: EV_LIST_ITEM
-			l_dir: STRING
+			l_dir: PATH
 			l_has_dir: BOOLEAN
 		do
 			create l_dlg
 			l_dlg.show_modal_to_window (parent_window)
-			if l_dlg.directory /= Void and then not l_dlg.directory.is_empty then
-				l_dir := l_dlg.directory
+			l_dir := l_dlg.path
+			if not l_dir.is_empty then
 				from
 					location_combo.start
 				until
 					location_combo.after
 				loop
-					if location_combo.item.text.is_equal (l_dir) then
+					if location_combo.item.text.same_string (l_dir.name) then
 						l_has_dir := True
 						location_combo.item.enable_select
 					end
 					location_combo.forth
 				end
 				if not l_has_dir then
-					create l_item.make_with_text (l_dlg.directory)
+					create l_item.make_with_text (l_dir.name)
 					location_combo.put_front (l_item)
 					l_item.enable_select
 				end

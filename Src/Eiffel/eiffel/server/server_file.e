@@ -77,10 +77,8 @@ feature -- Access
 
 	name: READABLE_STRING_GENERAL
 			-- File name.
-		local
-			u: FILE_UTILITIES
 		do
-			Result := u.file_name (file)
+			Result := file.path.name
 		end
 
 	occurrence: INTEGER

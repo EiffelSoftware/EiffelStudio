@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	preference: STRING_PREFERENCE
+	preference: PATH_PREFERENCE
 		-- Preference associated with `Current' which
 		-- stores the last selected directory opened
 
@@ -53,10 +53,10 @@ feature -- Status setting
 			last_directory := preference.value
 			if not last_directory.is_empty then
 					-- Nothing to do if the preference is empty.
-				create dir.make (last_directory)
+				create dir.make_with_path (last_directory)
 				if dir.exists and preferences.dialog_data.file_open_and_save_dialogs_remember_last_directory.value then
 						-- Only set the start directory if the directory exists and the remember preference is enabled.
-					set_start_directory (last_directory)
+					set_start_path (last_directory)
 				end
 			end
 			Precursor {EV_FILE_DIALOG} (a_window)
@@ -66,8 +66,8 @@ feature -- Status setting
 	update_preference
 			-- Update value of `preference' from `file_path'.
 		do
-			if not file_path.is_empty then
-				preference.set_value (file_path)
+			if attached full_file_path.parent as l_parent then
+				preference.set_value (l_parent)
 			end
 		end
 

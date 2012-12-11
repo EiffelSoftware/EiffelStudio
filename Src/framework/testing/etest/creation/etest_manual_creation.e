@@ -172,7 +172,7 @@ feature {NONE} -- Basic operations
 						error_event.publish ([Current, locale.translation (w_wizard_service_not_available)])
 					end
 				else
-					error_event.publish ([Current, locale.formatted_string (w_template_file, [l_template])])
+					error_event.publish ([Current, locale.formatted_string (w_template_file, [l_template.name])])
 				end
 			end
 		rescue

@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 		require
 			a_tool_attached: a_tool /= Void
 		local
-			l_pref: STRING_PREFERENCE
+			l_pref: PATH_PREFERENCE
 		do
 			metric_tool := a_tool
 			create calculator
@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 				-- Setup `open_file_dialog'.
 			l_pref := preferences.dialog_data.last_opened_metric_browse_archive_directory_preference
 			if l_pref.value = Void or else l_pref.value.is_empty then
-				l_pref.set_value (eiffel_layout.user_projects_path_8)
+				l_pref.set_value (eiffel_layout.user_projects_path)
 			end
 			create open_file_dialog.make_with_preference (l_pref)
 			open_file_dialog.set_title (metric_names.t_select_archive)

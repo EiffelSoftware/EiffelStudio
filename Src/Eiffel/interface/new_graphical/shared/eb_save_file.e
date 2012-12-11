@@ -98,7 +98,6 @@ feature -- Basic operations
 			l_notifier: SERVICE_CONSUMER [FILE_NOTIFIER_S]
 			l_text: STRING_32
 			l_stream: STRING
-			u: FILE_UTILITIES
 		do
 			if not l_retry then
 					-- Always assume a saving is successful.
@@ -154,9 +153,9 @@ feature -- Basic operations
 					end
 					tmp_file.close
 					if create_backup then
-						robust_rename (u.file_name (tmp_file), a_file_name)
+						robust_rename (tmp_name, a_file_name)
 					elseif last_saving_success then
-						new_file := u.make_raw_file (tmp_name)
+						create new_file.make_with_name (tmp_name)
 						if new_file.exists then
 							last_saving_date := new_file.date
 							robust_delete (new_file)
@@ -258,11 +257,11 @@ feature {NONE} -- Implementation
 			-- Save `a_text' in a file.
 		local
 			fsd: EB_FILE_SAVE_DIALOG
-			l_pref: STRING_PREFERENCE
+			l_pref: PATH_PREFERENCE
 		do
 			l_pref := preferences.dialog_data.last_saved_save_file_as_directory_preference
 			if l_pref.value = Void or else l_pref.value.is_empty then
-				l_pref.set_value (eiffel_layout.user_projects_path_8)
+				l_pref.set_value (eiffel_layout.user_projects_path)
 			end
 			create fsd.make_with_preference (l_pref)
 			fsd.save_actions.extend (agent save_file_with_file_name (fsd, a_text, a_encoding, a_bom))

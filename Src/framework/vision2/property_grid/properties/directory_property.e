@@ -63,7 +63,7 @@ feature {NONE} -- Agents
 	dialog_ok (a_dial: EV_DIRECTORY_DIALOG)
 			-- If dialog is closed with ok.
 		do
-			set_value (a_dial.directory)
+			set_value (a_dial.path.name)
 		end
 
 	location_value: STRING_32

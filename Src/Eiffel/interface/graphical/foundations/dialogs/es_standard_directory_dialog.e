@@ -80,11 +80,8 @@ feature {NONE} -- Query
 
 	button_from_dialog_selected_button (a_dialog: attached EV_DIRECTORY_DIALOG): INTEGER
 			-- <Precursor>
-		local
-			l_directory: detachable STRING_32
 		do
-			l_directory := a_dialog.directory
-			if l_directory = Void or else l_directory.is_empty then
+			if a_dialog.path.is_empty then
 				Result := dialog_buttons.cancel_button
 			else
 				Result := dialog_buttons.ok_button

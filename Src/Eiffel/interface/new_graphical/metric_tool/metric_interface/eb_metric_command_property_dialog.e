@@ -475,7 +475,7 @@ feature{NONE} -- Implementation
 		require
 			a_dir_dlg_attached: a_dir_dlg /= Void
 		do
-			working_directory_field.set_text (a_dir_dlg.directory)
+			working_directory_field.set_text (a_dir_dlg.path.name)
 		end
 
 	show_dialog (a_dialog: EV_STANDARD_DIALOG)

@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	environment_argument_item (i: INTEGER): STRING
+	environment_argument_item (i: INTEGER): STRING_32
 			-- `i'-th argument of environment option
 		require
 			index_large_enough: i > base_arguments.argument_count
@@ -121,18 +121,18 @@ feature {NONE} -- Implementation
 			argument_not_void: Result /= Void
 		end
 
-	environment_arguments: ARRAY [STRING]
+	environment_arguments: ARRAY [STRING_32]
 			-- Arguments array extracted from environment
 		local
 			i,n,r: INTEGER
-			c: CHARACTER
-			l_flags: detachable STRING
-			s: STRING
+			c: CHARACTER_32
+			l_flags: detachable STRING_32
+			s: STRING_32
 			exec: EXECUTION_ENVIRONMENT
 			l_in_quote: BOOLEAN
 		once
 			create exec
-			l_flags := exec.get (arguments_environment_name)
+			l_flags := exec.item (arguments_environment_name)
 			if l_flags /= Void then
 				l_flags.right_adjust --| To exclude flag with only whitespace
 			end

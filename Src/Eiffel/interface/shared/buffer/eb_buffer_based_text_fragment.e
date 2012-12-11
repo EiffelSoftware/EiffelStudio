@@ -36,20 +36,20 @@ feature -- Access
 			-- New text which will replace `text'
 		do
 			if new_text_function /= Void then
-				Result := new_text_function.item ([buffer.temp_file_name])
+				Result := new_text_function.item ([buffer.temp_file_name.name])
 			else
-				Result := buffer.temp_file_name.twin
+				Result := buffer.temp_file_name.name
 			end
 		ensure then
 			good_result:
-				new_text_function /= Void implies Result.is_equal (new_text_function.item ([buffer.temp_file_name])) and then
-				new_text_function = Void implies Result.is_equal (buffer.temp_file_name)
+				new_text_function /= Void implies Result.is_equal (new_text_function.item ([buffer.temp_file_name.name])) and then
+				new_text_function = Void implies Result.is_equal (buffer.temp_file_name.name)
 		end
 
 	buffer: EB_BUFFER
 			-- Buffer attached to Current fragment
 
-	new_text_function: FUNCTION [ANY, TUPLE [a_text: like text], like new_text]
+	new_text_function: FUNCTION [ANY, TUPLE [a_text: READABLE_STRING_GENERAL], like new_text]
 			-- Function to return result for `new_text'
 			-- When called, `text' will be passed as argument.
 
@@ -115,4 +115,35 @@ feature -- Setting
 invariant
 	buffer_attached: buffer /= Void
 
+note
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

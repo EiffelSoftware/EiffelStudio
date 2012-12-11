@@ -332,8 +332,8 @@ feature {NONE} -- HTML Generation
 	copy_static_files
 			-- Copy static files from test studio directory to html directory.
 		do
-			file_system_routines.copy_recursive (pathnames.image_dirname, file_system.pathname (output_dirname, "image"))
-			file_system_routines.copy_recursive (pathnames.misc_html_dirname, output_dirname)
+			file_system_routines.copy_recursive (pathnames.image_dirname.name, file_system.pathname (output_dirname, "image"))
+			file_system_routines.copy_recursive (pathnames.misc_html_dirname.name, output_dirname)
 		end
 
 	generate_summary_page (a_repository: AUT_TEST_CASE_RESULT_REPOSITORY)
@@ -951,7 +951,7 @@ invariant
 	test_case_printer_not_void: test_case_printer /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -72,7 +72,7 @@ feature -- Generation
 			a_pathname_is_absolute: file_system.is_absolute_pathname (a_pathname)
 		do
 			file_system.recursive_create_directory (a_pathname)
-			file_system_routines.copy_recursive (pathnames.runtime_dirname, file_system.pathname (a_pathname, "runtime"))
+			file_system_routines.copy_recursive (pathnames.runtime_dirname.name, file_system.pathname (a_pathname, "runtime"))
 		end
 
 	create_interpreter (a_log_dirname: READABLE_STRING_GENERAL)

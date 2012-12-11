@@ -384,7 +384,7 @@ feature {NONE} -- Implementation
 		require
 			selector_exists: dir_selector /= Void
 		do
-			textfield.set_text (dir_selector.directory)
+			textfield.set_text (dir_selector.path.name)
 		end
 
 	file_selected (file_selector: EV_FILE_OPEN_DIALOG)

@@ -364,7 +364,7 @@ feature {NONE} -- Basic operations
 					else
 						l_source_file := l_source_file.extended ("full")
 					end
-					l_source_file := l_source_file.appended (".e").appended (".tpl")
+					l_source_file := l_source_file.appended (".e.tpl")
 						-- Check for user priority file.
 					l_user_file := eiffel_layout.user_priority_file_name (l_source_file, True)
 					if l_user_file /= Void then

@@ -559,13 +559,13 @@ feature {NONE} -- Callbacks
 	retrieve_directory (dialog: EV_DIRECTORY_DIALOG)
 			-- Get callback information from `dialog', then send it to the directory field.
 		local
-			dir_name: STRING_32
+			l_dir: PATH
 		do
-			dir_name := dialog.directory
-			if dir_name.is_empty then
-				prompts.show_error_prompt (Warning_messages.w_directory_not_exist (dir_name), Current, Void)
+			l_dir := dialog.path
+			if l_dir.is_empty then
+				prompts.show_error_prompt (Warning_messages.w_directory_not_exist (""), Current, Void)
 			else
-				directory_field.set_text (dir_name)
+				directory_field.set_text (l_dir.name)
 			end
 		end
 

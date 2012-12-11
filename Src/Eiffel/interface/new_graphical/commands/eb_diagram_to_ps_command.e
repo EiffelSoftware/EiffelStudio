@@ -55,13 +55,13 @@ feature -- Basic operations
 			dial: EB_FILE_SAVE_DIALOG
 			test_file: RAW_FILE
 			error: INTEGER
-			l_pref: STRING_PREFERENCE
+			l_pref: PATH_PREFERENCE
 		do
 			if is_sensitive then
 				if error = 0 then
 					l_pref := preferences.dialog_data.last_saved_diagram_postscript_directory_preference
 					if l_pref.value = Void or else l_pref.value.is_empty then
-						l_pref.set_value (eiffel_layout.user_projects_path_8)
+						l_pref.set_value (eiffel_layout.user_projects_path)
 					end
 					create dial.make_with_preference (l_pref)
 					set_dialog_filters_and_add_all (dial, <<Png_files_filter>>)

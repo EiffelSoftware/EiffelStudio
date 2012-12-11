@@ -58,7 +58,6 @@ feature {NONE} -- Initialization
 			full_pathname: PATH
 		do
 			if not filtername.is_empty then
-				create full_pathname.make_from_string (eiffel_layout.filter_path_8)
 				full_pathname := eiffel_layout.filter_path.extended (filtername + ".fil")
 				make_from_path (full_pathname)
 			else

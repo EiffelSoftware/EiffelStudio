@@ -107,7 +107,7 @@ feature {NONE} -- Agents
 			end
 			if grid.row_count > 0 then
 				check has_the_first_column: grid.column_count > 1 end
-				if 
+				if
 					attached {STRING_PROPERTY} grid.item (Old_name_column, grid.row_count) as l_item and then
 					l_item.is_parented
 				then
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 			l_string: STRING_32
 			n, r: INTEGER
 		do
-			l_string := conf_interface_names.string_general_as_upper (a_new_key)
+			l_string := a_new_key.as_upper
 			if a_new_key /= Void and then not a_new_key.is_empty and then not value.has (l_string) then
 				value.replace_key (l_string, an_old_key)
 			end
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 		local
 			l_string: STRING_32
 		do
-			l_string := conf_interface_names.string_general_as_upper (a_new_value)
+			l_string := a_new_value.as_upper
 			if a_new_value /= Void and then not a_new_value.is_empty and then not value.has_item (l_string) then
 				value.force (l_string, a_key)
 			end

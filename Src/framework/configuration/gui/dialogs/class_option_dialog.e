@@ -156,7 +156,7 @@ feature {NONE} -- Agents
 		local
 			l_name: STRING_32
 		do
-			l_name := string_general_as_upper (new_class.text)
+			l_name := new_class.text.as_upper
 			if not (l_name.is_empty or (value /= Void and then value.has (l_name))) then
 				if value = Void then
 					create value.make (1)

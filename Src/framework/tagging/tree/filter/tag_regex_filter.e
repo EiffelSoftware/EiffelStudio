@@ -110,7 +110,7 @@ feature -- Query
 			l_matchers: like positive_matchers
 			l_matcher: like new_matcher
 			l_inside, l_check_children: BOOLEAN
-			l_tag: STRING
+			l_tag: STRING_32
 		do
 			if a_node.is_root then
 				l_inside := positive_matchers.is_empty
@@ -163,7 +163,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

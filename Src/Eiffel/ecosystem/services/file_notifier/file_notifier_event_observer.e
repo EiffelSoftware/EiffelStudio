@@ -15,7 +15,7 @@ inherit
 
 feature {FILE_NOTIFIER_S} -- Event handlers
 
-	on_file_modified (a_file_name: STRING_32; a_modification_type: NATURAL_8)
+	on_file_modified (a_file_name: PATH; a_modification_type: NATURAL_8)
 			-- Called when a file has been modifications.
 			--
 			-- `a_file_name': The name of the file modified.
@@ -28,7 +28,7 @@ feature {FILE_NOTIFIER_S} -- Event handlers
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

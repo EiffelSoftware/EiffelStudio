@@ -214,7 +214,7 @@ feature {TEST_SUITE_S} -- Events: test suite
 	on_test_added (a_test_suite: TEST_SUITE_S; a_test: TEST_I)
 			-- <Precursor>
 		local
-			l_name: IMMUTABLE_STRING_8
+			l_name: IMMUTABLE_STRING_32
 			l_stats: like test_statistics
 		do
 			test_count := test_count + 1
@@ -230,7 +230,7 @@ feature {TEST_SUITE_S} -- Events: test suite
 	on_test_removed (a_test_suite: TEST_SUITE_S; a_test: TEST_I)
 			-- <Precursor>
 		local
-			l_name: IMMUTABLE_STRING_8
+			l_name: IMMUTABLE_STRING_32
 			l_stats: like test_statistics
 		do
 			test_count := test_count - 1
@@ -268,7 +268,7 @@ feature {TEST_EXECUTION_I} -- Events: test execution
 	on_test_executed (a_session: TEST_EXECUTION_I; a_test: TEST_I; a_result: TEST_RESULT_I)
 			-- <Precursor>
 		local
-			l_name: IMMUTABLE_STRING_8
+			l_name: IMMUTABLE_STRING_32
 			l_stats: like test_statistics
 			l_data: like new_statistics_data
 		do

@@ -52,12 +52,12 @@ feature -- Access
 
 feature {NONE} -- Events
 
-	test_created_event: EVENT_TYPE [TUPLE [session: TEST_CREATION_I; test: READABLE_STRING_8]]
+	test_created_event: EVENT_TYPE [TUPLE [session: TEST_CREATION_I; test: READABLE_STRING_32]]
 			-- <Precursor>
 
 feature {NONE} -- Basic operations
 
-	publish_test_creation (a_name: IMMUTABLE_STRING_8)
+	publish_test_creation (a_name: IMMUTABLE_STRING_32)
 			-- Notify observers of `Current' and `record' that new test was created.
 			--
 			-- `a_name': Name of new test.
@@ -76,7 +76,7 @@ feature {NONE} -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

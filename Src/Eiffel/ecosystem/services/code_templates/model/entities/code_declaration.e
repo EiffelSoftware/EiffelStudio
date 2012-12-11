@@ -29,10 +29,10 @@ feature {NONE} -- Initialization
 			not_a_id_is_empty: not a_id.is_empty
 			a_parent_attached: attached a_parent
 		do
-			set_id (a_id.as_string_8)
+			set_id (a_id.as_string_32)
 			make_sub_node (a_parent)
 		ensure
-			id_set: id ~ a_id
+			id_set: id.same_string_general (a_id)
 			parent_set: parent = a_parent
 			is_initialized: is_initialized
 		end
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	id: STRING assign set_id
+	id: STRING_32 assign set_id
 			-- Declaration identifier
 
 	description: STRING_32 assign set_description
@@ -63,7 +63,7 @@ feature -- Element change
 		do
 			create id.make_from_string (a_id)
 		ensure
-			id_set: id ~ a_id
+			id_set: id.same_string_general (a_id)
 		end
 
 	set_description (a_description: like description)
@@ -93,7 +93,7 @@ invariant
 	description_attached: attached description
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

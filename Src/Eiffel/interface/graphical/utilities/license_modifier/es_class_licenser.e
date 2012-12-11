@@ -79,7 +79,7 @@ feature -- Basic operatons
 			l_libraries: LIST [CONF_LIBRARY]
 			l_library: CONF_LIBRARY
 			l_uuid: UUID
-			l_parameters: DS_HASH_TABLE [ANY, STRING]
+			l_parameters: DS_HASH_TABLE [ANY, STRING_32]
 			l_use_old_syntax: BOOLEAN
 			l_load_default: BOOLEAN
 			retried: BOOLEAN
@@ -222,7 +222,7 @@ feature {NONE} -- Basic operation
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		local
 			l_name: detachable STRING_32
-			l_parameters: attached DS_HASH_TABLE [attached ANY, attached STRING]
+			l_parameters: DS_HASH_TABLE [ANY, STRING_32]
 			l_index: INTEGER
 			retried: BOOLEAN
 		do
@@ -239,7 +239,7 @@ feature {NONE} -- Basic operation
 						end
 
 							-- Render template
-						Result := wizard_enginer.service.render_template_from_file (a_file_name.name, l_parameters)
+						Result := wizard_enginer.service.render_template_from_file (a_file_name, l_parameters)
 						if Result /= Void then
 							Result.right_adjust
 							Result.left_adjust

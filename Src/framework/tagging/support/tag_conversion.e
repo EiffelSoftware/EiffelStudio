@@ -11,14 +11,14 @@ deferred class
 
 feature -- Conversion
 
-	immutable_string (a_tag: READABLE_STRING_GENERAL): IMMUTABLE_STRING_8
+	immutable_string (a_tag: READABLE_STRING_GENERAL): IMMUTABLE_STRING_32
 		require
 			a_tag_attached: a_tag /= Void
 		do
-			if attached {IMMUTABLE_STRING_8} a_tag as l_result then
+			if attached {IMMUTABLE_STRING_32} a_tag as l_result then
 				Result := l_result
 			else
-				create Result.make_from_string (a_tag.as_string_8)
+				create Result.make_from_string_general (a_tag)
 			end
 		ensure
 			result_attached: Result /= Void
@@ -26,7 +26,7 @@ feature -- Conversion
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

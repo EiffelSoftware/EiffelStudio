@@ -719,11 +719,11 @@ feature {NONE} -- User interface manipulation
 
 feature {SESSION_I} -- Event handlers
 
-	on_session_value_changed (a_session: SESSION_I; a_id: STRING_8)
+	on_session_value_changed (a_session: SESSION_I; a_id: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
 			Precursor {SESSION_EVENT_OBSERVER} (a_session, a_id)
-			if a_id.is_equal (contract_mode_session_id) then
+			if a_id.same_string (contract_mode_session_id) then
 				if attached {NATURAL_8_REF} project_window_session_data.value (contract_mode_session_id) as l_mode then
 					set_contract_mode (l_mode.item)
 				end
@@ -1559,10 +1559,10 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Constants
 
-	contract_mode_session_id: STRING = "com.eiffel.contract_tool.mode"
-	show_all_lines_session_id: STRING = "com.eiffel.contract_tool.show_all_lines"
-	class_name_symbol_id: STRING = "class_name"
-	feature_name_symbol_id: STRING = "feature_name"
+	contract_mode_session_id: STRING_32 = "com.eiffel.contract_tool.mode"
+	show_all_lines_session_id: STRING_32 = "com.eiffel.contract_tool.show_all_lines"
+	class_name_symbol_id: STRING_32 = "class_name"
+	feature_name_symbol_id: STRING_32 = "feature_name"
 
 invariant
 	save_modifications_button_attached: (is_initialized and is_interface_usable) implies save_modifications_button /= Void

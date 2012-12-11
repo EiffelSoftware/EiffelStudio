@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	name: IMMUTABLE_STRING_8
+	name: IMMUTABLE_STRING_32
 			-- <Precursor>
 			--
 			-- Note: this will be replaced by `routine_name'
@@ -32,7 +32,7 @@ feature -- Basic operations
 		require
 			a_formatter_attached: a_formatter /= Void
 		do
-			a_formatter.process_basic_text (name.as_string_8)
+			a_formatter.process_basic_text (name)
 		end
 
 feature {TEST_EXECUTION_I} -- Factory
@@ -52,7 +52,7 @@ feature {TEST_EXECUTION_I} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

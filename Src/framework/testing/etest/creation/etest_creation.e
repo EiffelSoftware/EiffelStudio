@@ -65,7 +65,7 @@ feature -- Access
 			--
 			-- Note: is used as prefix if `creates_multiple_classes' is True.
 
-	tags: ARRAYED_LIST [READABLE_STRING_8]
+	tags: ARRAYED_LIST [READABLE_STRING_32]
 			-- Tags with which new test routine(s) are tagged.
 		do
 			Result := internal_tags.linear_representation
@@ -143,7 +143,7 @@ feature -- Status setting
 			class_name_set: class_name.same_string (a_name)
 		end
 
-	add_tag (a_tag: READABLE_STRING_8)
+	add_tag (a_tag: READABLE_STRING_32)
 			-- Add given tag to `tags'.
 		require
 			a_tag_attached: a_tag /= Void
@@ -152,7 +152,7 @@ feature -- Status setting
 		do
 			internal_tags.force (a_tag.twin)
 		ensure
-			added: tags.there_exists (agent {READABLE_STRING_8}.same_string (a_tag))
+			added: tags.there_exists (agent {READABLE_STRING_32}.same_string (a_tag))
 		end
 
 feature {NONE} -- Status setting
@@ -238,8 +238,8 @@ feature {NONE} -- Basic operations
 							-- and when the previous compilation was successful.
 							etest_suite.project_helper.add_class (
 								l_cluster,
-								path,
-								l_filename,
+								create {PATH}.make_from_string (path),
+								create {PATH}.make_from_string (l_filename),
 								l_class_name,
 								attached {ETEST_MANUAL_CREATION} Current and then etest_suite.project_access.project.successful
 							)

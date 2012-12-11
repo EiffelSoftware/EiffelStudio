@@ -79,7 +79,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_class (a_cluster: CONF_CLUSTER; a_path: STRING; a_file_name: STRING; a_class_name: STRING; a_perform_quickmelt: BOOLEAN)
+	add_class (a_cluster: CONF_CLUSTER; a_path: PATH; a_file_name: PATH; a_class_name: READABLE_STRING_32; a_perform_quickmelt: BOOLEAN)
 			-- Try to create a new {EIFFEL_TEST_I} instance and add it to cluster.
 			--
 			-- Note: if successful, new class instance will be available through `last_added_class',
@@ -93,13 +93,13 @@ feature -- Element change
 			usable: is_interface_usable
 			a_file_name_not_empty: not a_file_name.is_empty
 			a_class_name_not_empty: not a_class_name.is_empty
-			a_path_valid: (create {RAW_FILE}.make_with_name (a_cluster.location.build_path (a_path, a_file_name))).exists
+			a_path_valid: (create {RAW_FILE}.make_with_name (a_cluster.location.build_path (a_path.name, a_file_name.name))).exists
 		deferred
 		ensure
 			succeeded_xor_error: is_class_added xor has_error
 		end
 
-	add_cluster (a_target: CONF_TARGET; a_path: STRING)
+	add_cluster (a_target: CONF_TARGET; a_path: PATH)
 			-- Try to create new {CONF_CLUSTER} instance and add it to target.
 			--
 			-- Note: if successful, new clsuter instance will be available through `last_added_cluster',
@@ -109,7 +109,7 @@ feature -- Element change
 			-- `a_path': Full path of new cluster.
 		require
 			usable: is_interface_usable
-			a_path_valid: (create {DIRECTORY}.make (a_path)).exists
+			a_path_valid: (create {DIRECTORY}.make_with_path (a_path)).exists
 		deferred
 		ensure
 			succeeded_xor_error: is_cluster_added xor has_error
@@ -134,7 +134,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	run (a_working_directory: detachable PATH; a_arguments: detachable STRING; a_env: detachable HASH_TABLE [STRING_32, STRING_32])
+	run (a_working_directory: detachable PATH; a_arguments: detachable READABLE_STRING_GENERAL; a_env: detachable HASH_TABLE [STRING_32, STRING_32])
 			-- Launch compiled application in debugger.
 			--
 			-- Note: this routine will return immediatly.

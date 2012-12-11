@@ -29,11 +29,11 @@ feature -- Query
 		local
 			l_items: like items
 			l_cursor: DS_BILINEAR_CURSOR [CODE_DECLARATION]
-			l_match_id: STRING
+			l_match_id: STRING_32
 		do
 			l_items := items
 			if not l_items.is_empty then
-				l_match_id := a_id.as_string_8
+				l_match_id := a_id.as_string_32
 				l_cursor := l_items.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					if (attached l_cursor.item as l_declaration) and then l_declaration.id.is_case_insensitive_equal (l_match_id) then
@@ -59,7 +59,7 @@ feature -- Visitor
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

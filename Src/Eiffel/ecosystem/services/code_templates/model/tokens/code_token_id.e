@@ -81,9 +81,9 @@ feature -- Basic operations
 			a_table_attached: attached a_table
 		local
 			l_value: CODE_SYMBOL_VALUE
-			l_id: STRING
+			l_id: STRING_32
 		do
-			l_id := text.as_string_8
+			l_id := text
 			if a_table.has_id (l_id) then
 					-- Fetch value from the symbol table
 				l_value := a_table.item (l_id)
@@ -119,7 +119,7 @@ feature {NONE} -- Internal implementation cache
 			-- Mutable version of `printable_text'.	
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

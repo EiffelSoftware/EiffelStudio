@@ -39,7 +39,7 @@ feature -- Access
 	eiffel_class: EIFFEL_CLASS_I
 			-- Class in system carrying tests
 
-	name: IMMUTABLE_STRING_8
+	name: IMMUTABLE_STRING_32
 			-- Immutable name of `eiffel_class'
 			--
 			-- Note: `name' is immutable to asure even if the class name changes `name' remains the same.
@@ -83,7 +83,7 @@ feature {ETEST_CLASS_SYNCHRONIZER} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

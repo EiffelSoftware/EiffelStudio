@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: IMMUTABLE_STRING_8
+	name: IMMUTABLE_STRING_32
 			-- <Precursor>
 
 	eiffel_class: EIFFEL_CLASS_I
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

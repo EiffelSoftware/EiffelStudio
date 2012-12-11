@@ -177,9 +177,9 @@ feature {NONE} -- Events
 		local
 			l_error: detachable STRING_32
 			l_enable, l_valid: BOOLEAN
-			l_tag: STRING
+			l_tag: STRING_32
 		do
-			l_tag := a_tag_32.to_string_8
+			l_tag := a_tag_32
 			check l_tag /= Void end
 			if l_tag.is_empty then
 				l_valid := True

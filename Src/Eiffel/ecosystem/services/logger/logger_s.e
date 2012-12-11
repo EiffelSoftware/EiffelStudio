@@ -51,7 +51,7 @@ feature -- Element change
 
 feature -- Extension
 
-	put_message (a_msg: STRING_GENERAL; a_cat: NATURAL_8)
+	put_message (a_msg: READABLE_STRING_GENERAL; a_cat: NATURAL_8)
 			-- Logs a message.
 			--
 			-- `a_msg': Message text to log.
@@ -65,7 +65,7 @@ feature -- Extension
 			put_message_with_severity (a_msg, a_cat, {PRIORITY_LEVELS}.normal)
 		end
 
-	put_message_format (a_msg: STRING_GENERAL; a_args: TUPLE; a_cat: NATURAL_8)
+	put_message_format (a_msg: READABLE_STRING_GENERAL; a_args: TUPLE; a_cat: NATURAL_8)
 			-- Logs a message using a format string and arguments.
 			--
 			-- `a_msg': Format string message.
@@ -81,7 +81,7 @@ feature -- Extension
 			put_message_format_with_severity (a_msg, a_args, a_cat, {PRIORITY_LEVELS}.normal)
 		end
 
-	put_message_with_severity (a_msg: STRING_GENERAL; a_cat: NATURAL_8; a_level: INTEGER_8)
+	put_message_with_severity (a_msg: READABLE_STRING_GENERAL; a_cat: NATURAL_8; a_level: INTEGER_8)
 			-- Logs a message specifiying a serverity level.
 			--
 			-- `a_msg': Message text to log.
@@ -96,7 +96,7 @@ feature -- Extension
 		deferred
 		end
 
-	put_message_format_with_severity (a_msg: STRING_GENERAL; a_args: TUPLE; a_cat: NATURAL_8; a_level: INTEGER_8)
+	put_message_format_with_severity (a_msg: READABLE_STRING_GENERAL; a_args: TUPLE; a_cat: NATURAL_8; a_level: INTEGER_8)
 			-- Logs a message specifiying a serverity level using a format string and arguments.
 			--
 			-- `a_msg': Format string message.
@@ -154,7 +154,7 @@ invariant
 	reasonable_log_cache_length: log_cache_length >= 10
 
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -167,22 +167,22 @@ invariant
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

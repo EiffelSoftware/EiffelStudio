@@ -34,7 +34,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Events
 
-	test_created_event: EVENT_TYPE_I [TUPLE [session: TEST_CREATION_I; test: READABLE_STRING_8]]
+	test_created_event: EVENT_TYPE_I [TUPLE [session: TEST_CREATION_I; test: READABLE_STRING_32]]
 			-- Events called when a new test has been created
 			--
 			-- session: `Current'.
@@ -53,7 +53,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

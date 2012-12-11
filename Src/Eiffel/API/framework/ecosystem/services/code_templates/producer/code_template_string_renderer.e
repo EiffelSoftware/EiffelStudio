@@ -66,14 +66,14 @@ feature {CODE_TOKEN} -- Processing
 			-- <Precursor>
 		local
 			l_table: like symbol_table
-			l_id: STRING
+			l_id: STRING_32
 			l_code: like code
 		do
 			l_code := code
 			check l_code_attached: attached l_code end
 
 			l_table := symbol_table
-			l_id := a_value.text.as_string_8
+			l_id := a_value.text
 			if l_table.has_id (l_id) then
 				l_code.append (l_table.item (l_id).value)
 			else
@@ -94,7 +94,7 @@ feature {CODE_TOKEN} -- Processing
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

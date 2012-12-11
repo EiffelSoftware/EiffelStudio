@@ -514,7 +514,7 @@ feature {NONE} -- Implementation
 			a_node2_valid: a_node2.tree = tree
 		local
 			l_formatter: TAG_FORMATTER
-			l_tag1, l_tag2, l_token1, l_token2: STRING
+			l_tag1, l_tag2, l_token1, l_token2: STRING_32
 			l_done: BOOLEAN
 		do
 			l_formatter := tree.formatter
@@ -749,7 +749,7 @@ invariant
 	internal_nodes_attached: internal_root_nodes /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

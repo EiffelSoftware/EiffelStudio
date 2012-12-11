@@ -17,7 +17,7 @@ inherit
 
 feature -- Query
 
-	is_valid_file_name (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
+	is_valid_file_name (a_file_name: PATH): BOOLEAN
 			-- Determines if a file name is valid.
 			--
 			-- `a_file_name': The file name to check for validity.
@@ -33,7 +33,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	render_template (a_template: READABLE_STRING_GENERAL; a_parameters: detachable DS_TABLE [ANY, STRING]): STRING_32
+	render_template (a_template: READABLE_STRING_GENERAL; a_parameters: detachable DS_TABLE [ANY, STRING_32]): STRING_32
 			-- Renders a text template.
 			--
 			-- `a_template': The tokenized text to render with the supplied parameters.
@@ -48,7 +48,7 @@ feature -- Basic operations
 			result_attached: Result /= Void
 		end
 
-	render_template_from_file (a_file_name: READABLE_STRING_GENERAL; a_parameters: detachable DS_TABLE [ANY, STRING]): detachable STRING_32
+	render_template_from_file (a_file_name: PATH; a_parameters: detachable DS_TABLE [ANY, STRING_32]): detachable STRING_32
 			-- Renders a text template from a file.
 			--
 			-- `a_file_name': The source file name to retrieve a tokenized template from.
@@ -61,7 +61,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	render_template_to_file (a_template: READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [ANY, STRING]; a_destination_file: READABLE_STRING_GENERAL)
+	render_template_to_file (a_template: READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [ANY, STRING_32]; a_destination_file: PATH)
 			-- Renders a text template to a destination file.
 			--
 			-- `a_template': The tokenized text to render with the supplied parameters.
@@ -76,7 +76,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	render_template_from_file_to_file (a_file_name: READABLE_STRING_GENERAL; a_parameters: detachable DS_TABLE [ANY, STRING]; a_destination_file: READABLE_STRING_GENERAL)
+	render_template_from_file_to_file (a_file_name: PATH; a_parameters: detachable DS_TABLE [ANY, STRING_32]; a_destination_file: PATH)
 			-- Renders a text template from a file to a destination file.
 			--
 			-- `a_file_name': The source file name to retrieve a tokenized template from.
@@ -86,7 +86,7 @@ feature -- Basic operations
 			is_interface_usable: is_interface_usable
 			a_file_name_attached: a_file_name /= Void
 			a_file_name_is_valid_file_name: is_valid_file_name (a_file_name)
-			a_file_name_exists: (create {RAW_FILE}.make_with_name (a_file_name)).exists
+			a_file_name_exists: (create {FILE_UTILITIES}).file_path_exists (a_file_name)
 			a_destination_file_attached: a_destination_file /= Void
 			a_destination_file_is_valid_file_name: is_valid_file_name (a_destination_file)
 		deferred

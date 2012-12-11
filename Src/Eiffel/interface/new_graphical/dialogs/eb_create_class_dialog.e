@@ -345,9 +345,9 @@ feature {NONE} -- Basic operations
 			-- `a_dest_file_name': The destination file to render the default class template file into.
 		local
 			l_wizard: SERVICE_CONSUMER [WIZARD_ENGINE_S]
-			l_source_file: attached FILE_NAME
-			l_user_file: detachable FILE_NAME
-			l_params: attached DS_HASH_TABLE [attached ANY, attached STRING]
+			l_source_file: PATH
+			l_user_file: detachable PATH
+			l_params: attached DS_HASH_TABLE [ANY, STRING_32]
 			l_buffer: attached STRING_32
 			l_parents: EV_LIST
 			l_creation_routine: detachable STRING_32
@@ -358,17 +358,15 @@ feature {NONE} -- Basic operations
 			if not retried then
 				create l_wizard
 				if l_wizard.is_service_available then
-					create l_source_file.make_from_string (eiffel_layout.templates_path_8)
-					l_source_file.extend ("defaults")
+					l_source_file := eiffel_layout.templates_path.extended ("defaults")
 					if not empty_check.is_selected then
-						l_source_file.set_file_name ("empty")
+						l_source_file := l_source_file.extended ("empty")
 					else
-						l_source_file.set_file_name ("full")
+						l_source_file := l_source_file.extended ("full")
 					end
-					l_source_file.add_extension ("e")
-					l_source_file.add_extension ("tpl")
+					l_source_file := l_source_file.appended (".e").appended (".tpl")
 						-- Check for user priority file.
-					l_user_file := eiffel_layout.user_priority_file_name_8 (l_source_file, True)
+					l_user_file := eiffel_layout.user_priority_file_name (l_source_file, True)
 					if l_user_file /= Void then
 							-- The user has their own template file, use it.
 						l_source_file := l_user_file
@@ -393,7 +391,7 @@ feature {NONE} -- Basic operations
 						-- Year
 					l_params.put_last ((create {DATE}.make_now).year, year_symbol)
 
-					if (create {RAW_FILE}.make (l_source_file)).exists then
+					if (create {RAW_FILE}.make_with_path (l_source_file)).exists then
 							-- Only render if the file exists.
 						create l_buffer.make (64)
 
@@ -481,10 +479,10 @@ feature {NONE} -- Basic operations
 						l_params.put_last (l_buffer.twin, init_clause_symbol)
 
 							-- Render the template using the defined parameters
-						l_wizard.service.render_template_from_file_to_file (l_source_file, l_params, a_dest_file_name.name)
+						l_wizard.service.render_template_from_file_to_file (l_source_file, l_params, a_dest_file_name)
 					else
-						prompts.show_error_prompt (Warning_messages.w_cannot_read_file (l_source_file), target.window, Void)
-						l_wizard.service.render_template_to_file (default_class_template, l_params, a_dest_file_name.name)
+						prompts.show_error_prompt (Warning_messages.w_cannot_read_file (l_source_file.name), target.window, Void)
+						l_wizard.service.render_template_to_file (default_class_template, l_params, a_dest_file_name)
 					end
 				end
 			else

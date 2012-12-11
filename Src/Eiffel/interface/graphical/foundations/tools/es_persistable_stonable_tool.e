@@ -234,14 +234,14 @@ feature -- Action handlers
 
 feature {SESSION_I} -- Event handlers
 
-	on_session_value_changed (a_session: SESSION_I; a_id: STRING_8)
+	on_session_value_changed (a_session: SESSION_I; a_id: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_stone: detachable STONE
 		do
 			Precursor {SESSION_EVENT_OBSERVER} (a_session, a_id)
 
-			if not is_processing_persistance and then a_id.is_equal (tool_session_id (stone_session_id)) then
+			if not is_processing_persistance and then a_id.same_string (tool_session_id (stone_session_id)) then
 					-- The session value changed
 				if attached {SESSION_I} a_session as l_session then
 						-- Resurrect stone and set.
@@ -283,7 +283,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

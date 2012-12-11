@@ -18,14 +18,12 @@ feature {NONE} -- Initialization
 	make
 			-- Initializes a new symbol table for a code template edit session
 		do
-			create content_table.make_default
-				-- We currently use `attemp' from {TYPE} to get around the fact the Gobo does not yet use attachment marks.
-			content_table.set_key_equality_tester (create {KL_CASE_INSENSITIVE_STRING_EQUALITY_TESTER})
+			create content_table.make_caseless (5)
 		end
 
 feature -- Access
 
-	item (a_id: READABLE_STRING_8): CODE_SYMBOL_VALUE
+	item (a_id: READABLE_STRING_32): CODE_SYMBOL_VALUE
 			-- Retrieve the current value for a given symbol identifier.
 			--
 			-- `a_id': A symbol identifier to retrieve a value for.
@@ -48,12 +46,12 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	content_table: DS_HASH_TABLE [CODE_SYMBOL_VALUE, READABLE_STRING_8]
+	content_table: STRING_TABLE [CODE_SYMBOL_VALUE]
 			-- Table of indentiers and mapped values
 
 feature -- Element change
 
-	put (a_value: CODE_SYMBOL_VALUE; a_id: READABLE_STRING_8)
+	put (a_value: CODE_SYMBOL_VALUE; a_id: READABLE_STRING_32)
 			-- Extends the symbol table with a new id/value pair.
 			--
 			-- `a_value': A value to associated with an indentifier in the symbol table.
@@ -75,7 +73,7 @@ feature -- Element change
 			a_value_symbol_table_set: a_value.symbol_table = Current
 		end
 
-	force (a_value: CODE_SYMBOL_VALUE; a_id: READABLE_STRING_8)
+	force (a_value: CODE_SYMBOL_VALUE; a_id: READABLE_STRING_32)
 			-- Forces extending of the symbol table with a new id/value pair.
 			--
 			-- `a_value': A value to associated with an indentifier in the symbol table.
@@ -98,7 +96,7 @@ feature -- Element change
 
 feature -- Query
 
-	has_id (a_id: READABLE_STRING_8): BOOLEAN
+	has_id (a_id: READABLE_STRING_32): BOOLEAN
 			-- Determines if the symbol table contains an identifier.
 			--
 			-- `a_id': The identifier to check for existence.
@@ -114,7 +112,7 @@ feature -- Query
 
 feature {CODE_SYMBOL_VALUE} -- Query
 
-	id_of_value (a_value: CODE_SYMBOL_VALUE): detachable STRING
+	id_of_value (a_value: CODE_SYMBOL_VALUE): detachable STRING_32
 			-- Retrieves the ID of a code symbol value.
 			--
 			-- `a_value': The value to retrieve an ID for
@@ -126,10 +124,13 @@ feature {CODE_SYMBOL_VALUE} -- Query
 		do
 			l_table := content_table
 			l_table.start
-			l_table.search_forth (a_value)
-			if not l_table.after then
-				if attached l_table.key_for_iteration as l_key then
-					create Result.make_from_string (l_key)
+			across
+				l_table as l_c
+			until
+				Result /= Void
+			loop
+				if l_c.item = a_value then
+					create Result.make_from_string_general (l_c.key)
 				end
 			end
 		ensure
@@ -139,7 +140,7 @@ feature {CODE_SYMBOL_VALUE} -- Query
 
 feature -- Events
 
-	value_changed_event: EVENT_TYPE_I [TUPLE [sender: CODE_SYMBOL_TABLE; id: READABLE_STRING_8]]
+	value_changed_event: EVENT_TYPE_I [TUPLE [sender: CODE_SYMBOL_TABLE; id: READABLE_STRING_32]]
 			-- Actions called when a value in the symbol table is changed
 			--
 			-- 'sender': Sender of the event.
@@ -161,7 +162,7 @@ feature -- Events
 
 feature {NONE} -- Internal implementation cache
 
-	internal_value_changed_event: detachable EVENT_TYPE [TUPLE [sender: CODE_SYMBOL_TABLE; id: READABLE_STRING_8]]
+	internal_value_changed_event: detachable EVENT_TYPE [TUPLE [sender: CODE_SYMBOL_TABLE; id: READABLE_STRING_32]]
 			-- Cached version of `value_changed_event'
 			-- Note: Do not use directly!
 
@@ -169,7 +170,7 @@ invariant
 	content_table_attached: content_table /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

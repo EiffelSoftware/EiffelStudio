@@ -124,20 +124,20 @@ feature {SESSION_MANAGER_S} -- Element change
 
 feature -- Query
 
-	value alias "[]" (a_id: STRING_8): detachable ANY assign set_value
+	value alias "[]" (a_id: READABLE_STRING_GENERAL): detachable ANY assign set_value
 			-- <Precursor>
 		do
-			if data.has (a_id) then
+			if data.has (a_id.as_string_32) then
 				Result := Precursor {SESSION} (a_id)
 			else
 				Result := inner_session.value (a_id)
 			end
 		end
 
-	value_or_default (a_id: STRING_8; a_default_value: ANY): ANY
+	value_or_default (a_id: READABLE_STRING_GENERAL; a_default_value: ANY): ANY
 			-- <Precursor>
 		do
-			if data.has (a_id) then
+			if data.has (a_id.as_string_32) then
 				Result := Precursor {SESSION} (a_id, a_default_value)
 			else
 				Result := inner_session.value_or_default (a_id, a_default_value)
@@ -146,7 +146,7 @@ feature -- Query
 
 feature -- Status report
 
-	has (a_id: STRING): BOOLEAN
+	has (a_id: READABLE_STRING_GENERAL): BOOLEAN
 			-- <Precursor>
 		do
 			Result := Precursor (a_id) or else inner_session.has (a_id)
@@ -167,7 +167,7 @@ feature -- Basic operations
 
 feature {NONE} -- Event handlers
 
-	on_inner_session_value_changed (a_session: SESSION; a_id: STRING_8)
+	on_inner_session_value_changed (a_session: SESSION; a_id: STRING_32)
 			-- <Precursor>
 		require
 			a_id_attached: a_id /= Void

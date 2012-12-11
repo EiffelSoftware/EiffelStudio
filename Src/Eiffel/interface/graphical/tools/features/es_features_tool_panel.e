@@ -218,16 +218,16 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Event handlers
 
-	on_session_value_changed (a_session: SESSION; a_id: STRING_8)
+	on_session_value_changed (a_session: SESSION; a_id: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_button: SD_TOOL_BAR_TOGGLE_BUTTON
 		do
-			if a_id.is_equal (show_alias_session_id) then
+			if a_id.same_string (show_alias_session_id) then
 				l_button := show_alias_button
-			elseif a_id.is_equal (show_assigners_session_id) then
+			elseif a_id.same_string (show_assigners_session_id) then
 				l_button := show_assigners_button
-			elseif a_id.is_equal (show_signatures_session_id) then
+			elseif a_id.same_string (show_signatures_session_id) then
 				l_button := show_signatures_button
 			end
 

@@ -15,7 +15,7 @@ inherit
 
 feature {SESSION_I} -- Event handlers
 
-	on_session_value_changed (a_session: SESSION_I; a_id: STRING_8)
+	on_session_value_changed (a_session: SESSION_I; a_id: READABLE_STRING_GENERAL)
 			-- Called when a event item is added to the event service.
 			--
 			-- `a_session': The session where the value changed.
@@ -29,7 +29,7 @@ feature {SESSION_I} -- Event handlers
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

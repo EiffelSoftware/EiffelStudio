@@ -188,12 +188,12 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Event handlers
 
-	on_session_value_changed (a_session: SESSION; a_id: STRING_8)
+	on_session_value_changed (a_session: SESSION; a_id: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_button: SD_TOOL_BAR_TOGGLE_BUTTON
 		do
-			if a_id.is_equal (auto_sweep_session_id) then
+			if a_id.same_string (auto_sweep_session_id) then
 				l_button := user_widget.auto_sweep_button
 				if l_button /= Void then
 					if attached {BOOLEAN_REF} a_session.value_or_default (a_id, False) as l_toggle then

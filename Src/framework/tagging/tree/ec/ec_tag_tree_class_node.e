@@ -31,11 +31,11 @@ feature {NONE} -- Implementation
 			if attached {EC_TAG_TREE_NODE [G, CONF_CLUSTER]} parent as l_parent then
 				l_group := l_parent.item (a_project)
 			end
-			Result := a_project.class_from_name (name, l_group)
+			Result := a_project.class_from_name (name.as_string_8, l_group)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

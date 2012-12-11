@@ -130,7 +130,7 @@ feature -- Element change
 
 feature -- Extension
 
-	put_message_with_severity (a_msg: STRING_GENERAL; a_cat: NATURAL_8; a_level: INTEGER_8)
+	put_message_with_severity (a_msg:  READABLE_STRING_GENERAL; a_cat: NATURAL_8; a_level: INTEGER_8)
 			-- <Precursor>
 		local
 			l_item: like create_event_list_log_item
@@ -148,7 +148,7 @@ feature -- Extension
 			message_logged_events.publish ([l_string, a_cat, a_level])
 		end
 
-	put_message_format_with_severity (a_msg: STRING_GENERAL; a_args: TUPLE; a_cat: NATURAL_8; a_level: INTEGER_8)
+	put_message_format_with_severity (a_msg:  READABLE_STRING_GENERAL; a_args: TUPLE; a_cat: NATURAL_8; a_level: INTEGER_8)
 			-- <Precursor>
 		do
 			put_message_with_severity ((create {STRING_FORMATTER}).format_unicode (a_msg, a_args), a_cat, a_level)
@@ -241,7 +241,7 @@ invariant
 	log_cache_count_small_enought: log_cache.count <= log_cache_length
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

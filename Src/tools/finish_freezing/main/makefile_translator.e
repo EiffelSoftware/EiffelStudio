@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 			create appl.make_empty
 			create missing_options.make (2)
 			missing_options.compare_objects
+			makefile_content := ""
 
 			force_32bit := a_force_32bit
 
@@ -1601,10 +1602,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Input/output
 
+	makefile_content: STRING
+			-- Content of a makefile.
+
 	put_character (c: CHARACTER)
 			-- Write `c' to `makefile'.
 		do
-			makefile.put_character (c)
+			makefile_content.append_character (c)
 			if c.natural_32_code > 127 then
 				is_ascii := False
 			end
@@ -1615,7 +1619,7 @@ feature {NONE} -- Input/output
 		local
 			i: like {STRING}.count
 		do
-			makefile.put_string (s)
+			makefile_content.append_string (s)
 			if is_ascii then
 				from
 					i := s.count
@@ -1636,7 +1640,7 @@ feature {NONE} -- Input/output
 	put_new_line
 			-- Write new line to `makefile'.
 		do
-			makefile.put_new_line
+			makefile_content.append_character ('%N')
 		end
 
 	read_next
@@ -1745,6 +1749,7 @@ feature {NONE} -- Input/output
 					create makefile.make_with_path (p.extended ("Makefile"))
 					makefile.open_write
 					is_ascii := True
+					makefile_content := ""
 				else
 					has_makefile_sh := False
 				end
@@ -1763,9 +1768,6 @@ feature {NONE} -- Input/output
 
 	close_files
 			-- Close the Makefile.SH and the Makefile.
-		local
-			p: PATH
-			f: PLAIN_TEXT_FILE
 		do
 			debug ("implementation")
 				io.put_string("%Tclose_files%N")
@@ -1776,20 +1778,18 @@ feature {NONE} -- Input/output
 			end
 
 			if makefile /= Void and then not Makefile.is_closed then
-				makefile.close
 				if not is_ascii and then options.get_boolean ("makefile_bom", False) then
 						-- Start makefile with a BOM.
-					p := makefile.path
-					makefile.rename_path (p.appended (".bak"))
-					makefile.open_read
-					create f.make_with_path (p)
-					f.open_write
-					f.put_string ({UTF_CONVERTER}.utf_8_bom_to_string_8)
-					makefile.copy_to (f)
-					f.close
-					makefile.close
-					makefile.delete
+					makefile.put_string ({UTF_CONVERTER}.utf_8_bom_to_string_8)
+						-- Add code to generate BOM for linker.
+					makefile_content.replace_substring_all ("$echo_link_bom", options.get_string_or_default ("echo_link_bom", ""))
+				else
+						-- Remove any BOM-specific code.
+					makefile_content.replace_substring_all ("$echo_link_bom", "")
 				end
+				makefile.put_string (makefile_content)
+				makefile.close
+				makefile_content := ""
 			end
 		end
 

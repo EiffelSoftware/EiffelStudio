@@ -389,10 +389,10 @@ feature {NONE} -- Basic operations
 				l_name := a_editor.name.as_string_32
 				if not l_combo.is_empty then
 						-- Place new item in respects to a position sorted case-insensitvely
-					l_match_name := string_general_as_lower (l_name)
+					l_match_name := l_name.as_lower
 					from l_combo.start until l_combo.after or l_already_added loop
 						l_item := l_combo.item_for_iteration
-						l_item_name := string_general_as_lower (l_item.text)
+						l_item_name := l_item.text.as_lower
 						if l_match_name > l_item_name then
 							l_already_added := True
 							if i > 0 then

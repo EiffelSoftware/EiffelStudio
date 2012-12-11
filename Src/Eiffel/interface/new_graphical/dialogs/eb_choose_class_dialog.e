@@ -149,7 +149,7 @@ feature {NONE} -- Vision2 events
 		local
 			loclist: LIST [CLASS_I]
 		do
-			selected_class_name := string_general_as_upper (class_name_entry.text).as_string_8
+			selected_class_name := class_name_entry.text.as_upper
 			selected := not selected_class_name.is_empty
 			if selected then -- User typed a class name.
 				if eiffel_universe.target /= Void then
@@ -199,7 +199,7 @@ feature {NONE} -- Vision2 events
 			l_button := dialog_window_buttons.item (default_button)
 			check not_void: l_button /= Void end
 			l_class_i ?= class_name_entry.data
-			l_text := string_general_as_upper (class_name_entry.text)
+			l_text := class_name_entry.text.as_upper
 
 			if l_class_i /= Void then
 				l_button.enable_sensitive
@@ -228,7 +228,7 @@ feature {NONE} -- Controls
 			-- Tree where the user can choose its class.
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

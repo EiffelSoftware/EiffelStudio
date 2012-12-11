@@ -1385,7 +1385,7 @@ feature {NONE} -- open new class
 						process_feature_class
 					end
 				else
-					cname := string_general_as_upper (cname)
+					cname := cname.as_upper
 					create matcher.make_empty
 					matcher.set_pattern (encoding_converter.utf32_to_utf8 (cname))
 					if not matcher.has_wild_cards then

@@ -81,6 +81,9 @@ make_utility: "nmake"
 make_flags: "-s -nologo"
 command_makefile: "%"for %%i in ($(EXTERNAL_MAKEFILES)) do $(MAKE) -e ISE_EIFFEL=%"$(ISE_EIFFEL)%" -f %%i%""
 makefile_bom: True
+echo_link_bom: "%
+%%T@chcp 65001 > nul%N%
+%%T@echo ﻿ > $@%N"
 
 dpflags: ""
 
@@ -98,8 +101,7 @@ appl_make: "$appl.exe: $appl.lnk $appl.res%N%
 %%N%
 %$appl.lnk: $(OBJECTS) e1\emain.obj $appl.res Makefile%N%
 %%Tif exist $@ $(RM) $@%N%
-%%T@chcp 65001 > nul%N%
-%%T@echo ﻿ > $@%N%
+%$echo_link_bom%
 %%T@echo $(LDFLAGS) $(CCLDFLAGS) -OUT:$appl.exe >> $@%N%
 %%T@echo e1\emain.obj >> $@%N%
 %%T@echo $(EIFLIB) $(EXTERNALS) >> $@%N%
@@ -129,8 +131,7 @@ precompile: "driver.exe: driver.lnk driver.rc precomp.lib%N%
 %%Tlib -nologo -OUT:precomp.lib $(C_OBJECTS) $(EXTERNALS)%N%
 %%N%
 %driver.lnk: e1\emain.obj $(OBJECTS) driver.res %N%
-%%T@chcp 65001 > nul%N%
-%%T@echo ﻿ > $@%N%
+%$echo_link_bom%
 %%T@echo $(LDFLAGS) $(CCLDFLAGS) -OUT:driver.exe >> $@%N%
 %%T@echo e1\emain.obj >> $@%N%
 %%T@echo $sharedlibs $(PRECOMP_OBJECTS) >> $@%N%

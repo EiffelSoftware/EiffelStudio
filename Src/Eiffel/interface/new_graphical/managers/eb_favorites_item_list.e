@@ -376,19 +376,13 @@ feature -- Element change
 		local
 			removed_item: EB_FAVORITES_ITEM
 			found: BOOLEAN
-			curr_name: STRING_32
-			item_name: STRING_32
 		do
-			item_name := string_general_as_lower (a_item_name)
-
 			from
 				start
 			until
 				after or found
 			loop
-				curr_name := string_general_as_lower (item.name)
-
-				found := curr_name.is_equal (item_name)
+				found := item.name.is_case_insensitive_equal (a_item_name)
 				removed_item := item
 
 					-- Prepare next iteration
@@ -446,19 +440,13 @@ feature -- Query
 
 	favorite_by_name (a_name: STRING_32): EB_FAVORITES_ITEM
 			-- Favorite item for name `a_name'.
-		local
-			item_name: STRING_32
-			curr_name: STRING_32
 		do
-			curr_name := string_general_as_lower (a_name)
-
 			from
 				start
 			until
 				after or Result /= Void
 			loop
-				item_name := string_general_as_lower (item.name)
-				if item_name.is_equal (curr_name) then
+				if item.name.is_case_insensitive_equal (a_name) then
 					Result := item
 				end
 				forth
@@ -521,12 +509,12 @@ feature {EB_FAVORITES_ITEM_LIST} -- Implementation
 				if is_folder then
 					create {EB_FAVORITES_FOLDER} added_item.make (a_name, Current)
 				elseif is_class then
-					added_name := string_general_as_upper (a_name)
+					added_name := a_name.as_upper
 					create {EB_FAVORITES_CLASS} added_item.make (added_name, Current)
 				elseif is_feature then
 					l_class_item ?= Current
 					if l_class_item.is_class then
-						added_name := string_general_as_lower (a_name)
+						added_name := a_name.as_lower
 						if l_class_item.associated_class_c.feature_named_32 (added_name) /= Void then
 							create {EB_FAVORITES_FEATURE} added_item.make_with_class_c (added_name, l_class_item.associated_class_c, l_class_item)
 						end
@@ -567,7 +555,7 @@ feature {EB_FAVORITES_ITEM_LIST, EB_FAVORITES_ITEM} -- Load/Save
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

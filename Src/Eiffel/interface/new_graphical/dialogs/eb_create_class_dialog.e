@@ -535,7 +535,7 @@ feature {NONE} -- Implementation
 	class_name: STRING
 			-- Name of the class entered by the user.
 		do
-			Result := string_general_as_upper (class_entry.text).as_string_8
+			Result := class_entry.text.as_upper
 		ensure
 			class_name_not_void: class_name /= Void
 		end

@@ -31,9 +31,9 @@ feature {NONE} -- Initialization
 			-- Initialize Current with `name' set to `a_name'.
 		do
 			if is_feature then
-				name := string_general_as_lower (a_name)
+				name := a_name.as_lower
 			else
-				name := string_general_as_upper (a_name)
+				name := a_name.as_upper
 			end
 			parent := a_parent
 		end
@@ -115,7 +115,7 @@ feature {EB_FAVORITES_ITEM_LIST, EB_FAVORITES_ITEM} -- Load/Save
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

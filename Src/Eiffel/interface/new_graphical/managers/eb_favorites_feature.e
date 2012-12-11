@@ -66,7 +66,7 @@ feature {NONE} -- Access
 			valid_class_c: a_class_c /= Void
 		do
 			class_name := a_class_c.name_in_upper
-			feature_name := string_general_as_lower (a_name)
+			feature_name := a_name.as_lower
 			associated_class_c := a_class_c
 			make (feature_name, a_parent)
 		end
@@ -191,7 +191,7 @@ feature {EB_FAVORITES_ITEM_LIST, EB_FAVORITES_ITEM} -- Load/Save
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

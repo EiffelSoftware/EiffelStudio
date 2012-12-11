@@ -643,7 +643,7 @@ feature {NONE} -- Implementation
 			create Result
 			if not retried then
 				fullp := pixmaps_path_cell.item.extended (pn + {STRING_32} "." + pixmaps_extension_cell.item)
-				Result.set_with_named_file (fullp.name)
+				Result.set_with_named_path (fullp)
 			end
 		rescue
 			retried := True

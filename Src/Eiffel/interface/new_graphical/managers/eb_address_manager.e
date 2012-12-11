@@ -1319,7 +1319,7 @@ feature {NONE} -- open new class
 				if fname = Void or else fname.is_empty then
 					process_cluster
 				else
-					fname := string_general_as_lower (fname)
+					fname := fname.as_lower
 					create matcher.make_empty
 						--|FIXME: Unicode handling. Not sure matcher accept UTF8
 					matcher.set_pattern (encoding_converter.utf32_to_utf8 (fname))
@@ -1493,7 +1493,7 @@ feature {NONE} -- open new class
 					process_feature_feature
 				end
 			else
-				fname := string_general_as_lower (fname)
+				fname := fname.as_lower
 				create matcher.make_empty
 					--|FIXME: Unicode handling, not sure matcher handles UTF-8.
 				matcher.set_pattern (encoding_converter.utf32_to_utf8 (fname))
@@ -2046,7 +2046,7 @@ feature {NONE} -- open new class
 				last_caret_position := feature_address.caret_position
 					-- Only perform `left_adjust' so that we can type `infix "X"' in the combo box.
 				string_general_left_adjust (str)
-				str := string_general_as_lower (str)
+				str := str.as_lower
 					-- Replace spaces and dashes with underscores.
 					-- For backwards compatibility: restrict to non-operator features
 				if not str.starts_with ("infix") and then not str.starts_with ("prefix") then

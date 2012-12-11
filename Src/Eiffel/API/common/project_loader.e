@@ -267,11 +267,11 @@ feature -- Loading
 			l_filename, l_target_name: STRING
 			l_config_file_name: like config_file_name
 			l_file: RAW_FILE
+			l_path: PATH
 			l_factory: CONF_FACTORY
 			l_system: CONF_SYSTEM
 			l_target: CONF_TARGET
 			l_load: CONF_LOAD
-			u: GOBO_FILE_UTILITIES
 		do
 				-- First split the class name into components. A possible classname is 'path/to/file/hello_world.e'
 				-- This will be split into:
@@ -284,8 +284,13 @@ feature -- Loading
 
 			create l_factory
 				-- Only create ecf if it does not exist yet
-			l_file := u.make_raw_file_in (l_target_name + {EIFFEL_CONSTANTS}.dotted_config_extension, u.file_directory_path (a_class_filename))
-			l_config_file_name := u.file_name (l_file).as_string_32
+			create l_path.make_from_string (a_class_filename)
+			if attached l_path.parent as l_parent then
+				create l_file.make_with_path (l_parent.extended (l_target_name + {EIFFEL_CONSTANTS}.dotted_config_extension))
+			else
+				create l_file.make_with_name (l_target_name + {EIFFEL_CONSTANTS}.dotted_config_extension)
+			end
+			l_config_file_name := l_file.path.name
 			if l_file.exists then
 					-- ecf exists, load it
 				create l_load.make (l_factory)

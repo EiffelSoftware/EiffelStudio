@@ -577,22 +577,17 @@ feature {NONE} -- Graphic interface
 	set_path (bd: EV_DIRECTORY_DIALOG)
 			-- Initialize the cluster path with the directory selected in `bd'.
 		local
-			sep_index: INTEGER
-			dir: STRING
+			dir: PATH
 		do
-			dir := bd.directory
-			folder_entry.set_text (dir)
-			preferences.development_window_data.last_browsed_cluster_directory_preference.set_value (dir)
+			dir := bd.path
+			folder_entry.set_text (dir.name)
+			preferences.development_window_data.last_browsed_cluster_directory_preference.set_value (dir.name)
 			if
-				(not dir.is_empty and is_default_cluster_name_set) and then
+				(attached dir.entry as l_dir_entry and is_default_cluster_name_set) and then
 				(cluster_name.is_equal (default_cluster_name) or cluster_name.is_empty)
 			then
-				sep_index := dir.last_index_of (operating_environment.directory_separator,
-					dir.count)
-				dir := dir.as_lower
-				dir.remove_head (sep_index)
 				cluster_entry.change_actions.block
-				cluster_entry.set_text (dir)
+				cluster_entry.set_text (l_dir_entry.name)
 				cluster_entry.change_actions.resume
 			end
 		end

@@ -175,10 +175,9 @@ feature -- Basic routines
 	last_error: BOOLEAN
 			-- Did an error happen?
 
-	copy_recursive (a_source_directory_name: STRING; a_target_directory_name: STRING)
+	copy_recursive (a_source_directory_name, a_target_directory_name: READABLE_STRING_GENERAL)
 			-- Copy `a_source_directory_name' to `a_target_directory_name' recursively.
 			-- Directories named "CVS" and ".svn" will not be copied.
-			-- TODO: Rewrite to use Gobo classes.
 		require
 			a_source_directory_name_not_void: a_source_directory_name /= Void
 			a_target_directory_name_not_void: a_target_directory_name /= Void
@@ -186,13 +185,13 @@ feature -- Basic routines
 			source_directory: DIRECTORY
 			sub_directory: DIRECTORY
 			file: RAW_FILE
-			entry_name: STRING
-			full_entry_name: STRING
-			target_full_entry_name: STRING
-			dirname: DIRECTORY_NAME
+			entry_name: STRING_32
+			full_entry_name, target_full_entry_name: PATH
+			dirname: PATH
+			u: FILE_UTILITIES
 		do
 			create dirname.make_from_string (a_target_directory_name)
-			create sub_directory.make (dirname)
+			create sub_directory.make_with_path (dirname)
 			if not sub_directory.exists then
 				sub_directory.create_dir
 				if not sub_directory.is_closed then
@@ -200,7 +199,7 @@ feature -- Basic routines
 				end
 			end
 			create dirname.make_from_string (a_source_directory_name)
-			create source_directory.make (dirname)
+			create source_directory.make_with_path (dirname)
 			if source_directory.exists then
 				source_directory.open_read
 				if not source_directory.is_closed then
@@ -208,37 +207,30 @@ feature -- Basic routines
 						source_directory.start
 						source_directory.readentry
 					until
-						source_directory.lastentry = Void
+						source_directory.last_entry_32 = Void
 					loop
-						entry_name := source_directory.lastentry
-						if
-							not equal (entry_name, ".") and
-								not equal (entry_name, "..")
-						then
-							full_entry_name := file_system.pathname (a_source_directory_name, entry_name)
-							target_full_entry_name := file_system.pathname (a_target_directory_name, entry_name)
-							create sub_directory.make (full_entry_name)
+						entry_name := source_directory.last_entry_32
+						if not entry_name.same_string_general (".") and not entry_name.same_string_general ("..") then
+							create full_entry_name.make_from_string (a_source_directory_name)
+							full_entry_name := full_entry_name.extended (entry_name)
+							create target_full_entry_name.make_from_string (a_target_directory_name)
+							target_full_entry_name := target_full_entry_name.extended (entry_name)
+							create sub_directory.make_with_path (full_entry_name)
 							if sub_directory.exists then
 								-- We have a directory entry
 								if not (equal (entry_name, "CVS") or equal (entry_name, ".svn")) then
-									create sub_directory.make (target_full_entry_name)
+									create sub_directory.make_with_path (target_full_entry_name)
 									if not sub_directory.exists then
 										sub_directory.create_dir
 									end
 									if not sub_directory.is_closed then
 										sub_directory.close
 									end
-									copy_recursive (create {DIRECTORY_NAME}.make_from_string (full_entry_name),
-														 create {DIRECTORY_NAME}.make_from_string (target_full_entry_name))
+									copy_recursive (full_entry_name.name, target_full_entry_name.name)
 								end
 							else
-								-- We have a file entry
-								create file.make_open_read (full_entry_name)
-								if not file.is_closed then
-									file.close
-									file_system.copy_file (full_entry_name,
-																  target_full_entry_name)
-								end
+									-- We have a file entry
+								u.copy_file_path (full_entry_name, target_full_entry_name)
 							end
 						end
 						source_directory.readentry
@@ -269,7 +261,7 @@ feature -- Basic routines
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -293,10 +285,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

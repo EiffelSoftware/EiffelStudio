@@ -239,12 +239,13 @@ feature {NONE} -- User interaction
 			-- execute `a_action' with chosen file_name, otherwise do nothing.
 		local
 			l_answered: BOOLEAN
-			u: FILE_UTILITIES
+			l_path: PATH
 		do
+			create l_path.make_from_string (a_dir_name)
 			if should_stop_on_prompt then
 				localized_print (ewb_names.batch_mode (a_file_name))
 				io.put_new_line
-				a_action.call ([u.file_name (u.make_raw_file_in (a_file_name, a_dir_name))])
+				a_action.call ([l_path.extended (a_file_name).name])
 			else
 				from
 				until
@@ -253,7 +254,7 @@ feature {NONE} -- User interaction
 					io.put_string (ewb_names.save_new_configuration_as (a_file_name).as_string_32 + ewb_names.yes_or_no)
 					io.read_line
 					if io.last_string.item (1).as_lower = 'y' then
-						a_action.call ([u.file_name (u.make_raw_file_in (a_file_name, a_dir_name))])
+						a_action.call ([l_path.extended (a_file_name).name])
 						l_answered := True
 					elseif io.last_string.item (1).as_lower = 'n' then
 						from
@@ -264,7 +265,7 @@ feature {NONE} -- User interaction
 							localized_print (ewb_names.enter_name_for_configuration_file)
 							io.read_line
 							if not io.last_string.is_empty then
-								a_action.call ([u.file_name (u.make_raw_file_in (io.last_string, a_dir_name))])
+								a_action.call ([l_path.extended (io.last_string).name])
 								l_answered := True
 							end
 						end

@@ -141,13 +141,13 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	registration_info: STRING
+	registration_info: STRING_32
 			-- Clause in the about dialog concerning the license.
 		do
 			create Result.make (50)
 			Result.append ("Installation information:%N")
 			Result.append ("Version = " + t_version_info + "%N")
-			Result.append (eiffel_layout.environment_info_8)
+			Result.append (eiffel_layout.environment_info)
 		end
 
 feature {NONE} -- Constant strings

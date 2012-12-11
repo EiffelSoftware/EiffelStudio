@@ -177,7 +177,7 @@ feature {NONE} -- Caching
 			not_a_path_is_empty: not a_path.is_empty
 		local
 			l_access: EXECUTION_ENVIRONMENT
-			l_name, l_path, l_new_path: STRING
+			l_name, l_path, l_new_path: STRING_32
 			l_wname, l_wpath: WEL_STRING
 			l_done: BOOLEAN
 		do
@@ -186,7 +186,7 @@ feature {NONE} -- Caching
 				l_name := "PATH"
 
 					-- Get path environment variable
-				l_path := l_access.get (l_name)
+				l_path := l_access.item (l_name)
 
 					-- Create new path variable
 				create l_new_path.make (256)

@@ -25,14 +25,14 @@ feature -- Loading
 				create l_buffer
 				create l_file.make_with_path (a_file)
 				if l_file.exists and then l_file.is_readable then
-					l_buffer.set_with_named_file (a_file.name)
+					l_buffer.set_with_named_path (a_file)
 					l_pixmap := l_buffer.sub_pixmap (create {EV_RECTANGLE}.make (0, 0, l_buffer.width, l_buffer.height))
 				end
 			end
 			if l_pixmap = Void then
 				l_pixmap := a_default_pixmap
 			end
-			-- `l_buffer' is not void after exceptions in exectuing `set_with_named_file'.
+			-- `l_buffer' is not void after exceptions in exectuing `set_with_named_path'.
 			-- We need to check `l_retried' here.
 			if l_buffer = Void or l_retried then
 				l_buffer := a_default_buffer

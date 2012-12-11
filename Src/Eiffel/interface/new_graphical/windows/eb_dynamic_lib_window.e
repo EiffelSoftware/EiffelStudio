@@ -1047,19 +1047,19 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 			-- If `load' then we assume we want to open a file. Otherwise we want to save it.
 		local
 			dd: EB_FILE_DIALOG
-			l_pref: STRING_PREFERENCE
+			l_pref: PATH_PREFERENCE
 		do
 			file_call_back := next_action
 			if load then
 				l_pref := preferences.dialog_data.last_opened_dynamic_lib_directory_preference
 				if l_pref.value = Void or else l_pref.value.is_empty then
-					l_pref.set_value (eiffel_layout.user_projects_path_8)
+					l_pref.set_value (eiffel_layout.user_projects_path)
 				end
 				create {EB_FILE_OPEN_DIALOG} dd.make_with_preference (l_pref)
 			else
 				l_pref := preferences.dialog_data.last_saved_dynamic_lib_directory_preference
 				if l_pref.value = Void or else l_pref.value.is_empty then
-					l_pref.set_value (eiffel_layout.user_projects_path_8)
+					l_pref.set_value (eiffel_layout.user_projects_path)
 				end
 				create {EB_FILE_SAVE_DIALOG} dd.make_with_preference (l_pref)
 			end

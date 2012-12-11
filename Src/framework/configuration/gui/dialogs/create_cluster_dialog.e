@@ -185,17 +185,13 @@ feature {NONE} -- Actions
 	fill_fields
 			-- Set location from `browser_dialog'.
 		local
-			l_name: STRING
+			l_dir: PATH
 			i: INTEGER
 		do
-			location.set_text (browser_dialog.directory)
-			if name.text.is_empty then
-				l_name := browser_dialog.directory.twin
-				i := l_name.last_index_of (operating_environment.directory_separator, l_name.count)
-				if i > 0 then
-					l_name := l_name.substring (i+1, l_name.count)
-					name.set_text (l_name)
-				end
+			l_dir := browser_dialog.path
+			location.set_text (l_dir.name)
+			if name.text.is_empty and attached l_dir.entry as l_entry then
+				name.set_text (l_entry.name)
 			end
 		end
 

@@ -18,7 +18,7 @@ inherit
 	AUT_SHARED_REGISTRY
 		export {NONE} all end
 
-	KL_SHARED_EXECUTION_ENVIRONMENT
+	SHARED_EXECUTION_ENVIRONMENT
 		export {NONE} all end
 
 	KL_SHARED_FILE_SYSTEM
@@ -42,59 +42,48 @@ feature {AUT_SHARED_PATHNAMES}
 
 feature -- Directory names
 
-	auto_test_dirname: STRING
+	auto_test_dirname: PATH
 			-- Directory where AutoTest has been installed.
-			-- First the registry (if available) will be queried for the dirname
-			-- then the ${AUTO_TEST} environment variable will be used.
-			-- If no other information is available, the current directly will be assumed.
-		once
-			Result := eiffel_layout.auto_test_path_8
---			if registry.is_available then
---				Result := registry.string_value (auto_test_key_name + "\AUTO_TEST")
---			end
---			if Result = Void then
---				Result := execution_environment.variable_value ("AUTO_TEST")
---			end
---			if Result = Void then
---				Result := ""
---			end
+		do
+			Result := eiffel_layout.auto_test_path
 		ensure
 			directory_not_void: Result /= Void
 		end
 
-	runtime_dirname: STRING
+	runtime_dirname: PATH
 			-- Directory where runtime files are stored
 		once
-			Result := execution_environment.variable_value ("ERL_G")
-			if Result /= Void then
-				Result := file_system.nested_pathname (Result, <<"library", "runtime">>)
+			if attached execution_environment.item ("ERL_G") as l_erlg then
+				create Result.make_from_string (l_erlg)
+				Result := Result.extended ("library")
 			else
-				Result := file_system.pathname (auto_test_dirname, "runtime")
+				Result := auto_test_dirname
 			end
+			Result := Result.extended ("runtime")
 		ensure
 			directory_not_void: Result /= Void
 		end
 
-	image_dirname: STRING
+	image_dirname: PATH
 			-- Directory where images are stored
 		do
-			Result := file_system.pathname (auto_test_dirname, "image")
+			Result := auto_test_dirname.extended ("image")
 		ensure
 			dirname_not_void: Result /= Void
 		end
 
-	misc_dirname: STRING
+	misc_dirname: PATH
 			-- Directory where miscelaneous files are stored
 		do
-			Result := file_system.pathname (auto_test_dirname, "misc")
+			Result := auto_test_dirname.extended ("misc")
 		ensure
 			dirname_not_void: Result /= Void
 		end
 
-	misc_html_dirname: STRING
+	misc_html_dirname: PATH
 			-- Directory where miscelaneous files are stored
 		do
-			Result := file_system.pathname (misc_dirname, "html")
+			Result := misc_dirname.extended ("html")
 		ensure
 			dirname_not_void: Result /= Void
 		end

@@ -30,7 +30,7 @@ feature -- Access
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				create l_file.make_with_name (temp_file_name)
+				create l_file.make_with_path (temp_file_name)
 				if l_file.change_date /= last_change_date then
 					l_file.open_read
 					l_file.read_stream (l_file.count)
@@ -52,7 +52,7 @@ feature -- Access
 			retry
 		end
 
-	temp_file_name: STRING_32
+	temp_file_name: PATH
 			-- File to store `content' temporarily
 			-- Buffer is always treated as a file stored on disk.
 
@@ -71,7 +71,7 @@ feature -- Setting
 		do
 			temp_file_name := a_name.twin
 		ensure
-			temp_file_name_set: temp_file_name /= Void and then temp_file_name.is_equal (a_name)
+			temp_file_name_set: temp_file_name /= Void and then temp_file_name.same_as (a_name)
 		end
 
 	initialize
@@ -79,7 +79,8 @@ feature -- Setting
 		local
 			l_file: PLAIN_TEXT_FILE
 		do
-			create l_file.make_create_read_write (temp_file_name)
+			create l_file.make_with_path (temp_file_name)
+			l_file.create_read_write
 			l_file.put_string (temp_content)
 			l_file.close
 			set_last_change_date (l_file.change_date)
@@ -94,7 +95,7 @@ feature -- Setting
 		local
 			l_file: RAW_FILE
 		do
-			create l_file.make_with_name (temp_file_name)
+			create l_file.make_with_path (temp_file_name)
 			if l_file.exists then
 				l_file.delete
 			end

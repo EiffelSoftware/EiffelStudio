@@ -123,9 +123,9 @@ feature {NONE} -- Agents
 			-- If dialog is closed with ok.
 		do
 			if attached text_field as tf then
-				tf.set_text (a_dial.directory)
+				tf.set_text (a_dial.path.name)
 			else
-				set_text (a_dial.directory)
+				set_text (a_dial.path.name)
 			end
 		end
 

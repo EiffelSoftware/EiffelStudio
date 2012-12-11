@@ -18,10 +18,8 @@ feature {NONE} -- Initialization
 			-- Create current stream for file `a_file'
 		require
 			a_file_attached: a_file /= Void
-		local
-			u: FILE_UTILITIES
 		do
-			set_name (u.file_name (a_file))
+			set_name (a_file.path.name)
 			create previous_chunk.make_empty
 			current_chunk := previous_chunk
 			chunk_size := default_chunk_size

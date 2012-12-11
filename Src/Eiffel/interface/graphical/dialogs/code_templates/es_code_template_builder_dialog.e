@@ -194,7 +194,7 @@ feature {NONE} -- Clean up
 	internal_recycle
 			-- <Precursor>
 		local
-			l_action: PROCEDURE [ANY, TUPLE [CODE_SYMBOL_TABLE, READABLE_STRING_8]]
+			l_action: PROCEDURE [ANY, TUPLE [CODE_SYMBOL_TABLE, READABLE_STRING_32]]
 		do
 			l_action := agent on_code_symbol_table_value_changed
 			if code_symbol_table.value_changed_event.is_subscribed (l_action) then
@@ -322,13 +322,13 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- User interface elements
 
-	declaration_text_fields: attached DS_HASH_TABLE [attached EV_TEXT_FIELD, attached STRING]
+	declaration_text_fields: DS_HASH_TABLE [EV_TEXT_FIELD, READABLE_STRING_32]
 			-- A table of text fields for a code template's declarations indexed by a declaration id.
 			--
 			-- Key: Declaration ID.
 			-- Value: A text field.
 
-	edited_declaration_text_fields: attached DS_HASH_SET [attached STRING]
+	edited_declaration_text_fields: DS_HASH_SET [READABLE_STRING_32]
 			-- The set of user edited declaration fields
 
 	code_result_view: attached EB_SMART_EDITOR
@@ -336,7 +336,7 @@ feature {NONE} -- User interface elements
 
 feature -- Events handlers
 
-	on_code_symbol_table_value_changed (a_sender: CODE_SYMBOL_TABLE; a_id: READABLE_STRING_8)
+	on_code_symbol_table_value_changed (a_sender: CODE_SYMBOL_TABLE; a_id: READABLE_STRING_32)
 			-- Called when a value in the symbol table changes
 		require
 			is_interface_usable: is_interface_usable
@@ -345,13 +345,11 @@ feature -- Events handlers
 			a_id_attached: a_id /= Void
 		local
 			l_field: EV_TEXT_FIELD
-			l_id: STRING_8
 		do
 			if not is_shown then
 				if a_sender = code_symbol_table then
-					l_id := a_id.as_string_8
-					if declaration_text_fields.has (l_id) then
-						l_field := declaration_text_fields.item (l_id)
+					if declaration_text_fields.has (a_id) then
+						l_field := declaration_text_fields.item (a_id)
 						if l_field /= Void and then code_symbol_table.has_id (a_id) then
 							l_field.set_text (code_symbol_table.item (a_id).value)
 						else
@@ -481,7 +479,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

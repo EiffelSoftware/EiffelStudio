@@ -45,7 +45,7 @@ feature -- Access
 
 feature {SESSION_MANAGER_S, SESSION_I} -- Access
 
-	extension_name: detachable IMMUTABLE_STRING_8 assign set_extension_name
+	extension_name: detachable IMMUTABLE_STRING_32 assign set_extension_name
 			-- Optional extension name for specialized categories
 		require
 			is_interface_usable: is_interface_usable
@@ -67,7 +67,7 @@ feature {SESSION_MANAGER_S} -- Access
 
 feature -- Element change
 
-	set_value (a_value: detachable ANY; a_id: STRING_8)
+	set_value (a_value: detachable ANY; a_id: READABLE_STRING_GENERAL)
 			-- Sets a piece of sessions data
 			--
 			-- `a_value': Data to set in sessions, or Void to remove it.
@@ -113,7 +113,7 @@ feature {SESSION_MANAGER_S, SESSION_I} -- Element change
 
 feature -- Query
 
-	value alias "[]" (a_id: STRING_8): detachable ANY assign set_value
+	value alias "[]" (a_id: READABLE_STRING_GENERAL): detachable ANY assign set_value
 			-- Retrieve a piece of sessions data, indexed by an ID.
 			--
 			-- `a_id': An id to retrieve session data for
@@ -126,7 +126,7 @@ feature -- Query
 			result_is_valid_session_value: is_valid_session_value (Result)
 		end
 
-	value_or_default (a_id: STRING_8; a_default_value: ANY): ANY
+	value_or_default (a_id: READABLE_STRING_GENERAL; a_default_value: ANY): ANY
 			-- Retrieve a piece of sessions data, indexed by an ID.
 			--
 			-- `a_id': An id to retrieve session data for
@@ -170,7 +170,7 @@ feature -- Status report
 		deferred
 		end
 
-	has (a_id: STRING): BOOLEAN
+	has (a_id: READABLE_STRING_GENERAL): BOOLEAN
 			-- Indicates if the session contains an entry for a given id.
 			--
 			-- `a_id': Session key id to test for.
@@ -219,7 +219,7 @@ feature {SESSION_DATA_I, SESSION_I} -- Basic operations
 
 feature -- Events
 
-	value_changed_event: EVENT_TYPE_I [TUPLE [session: SESSION_I; id: STRING_8]]
+	value_changed_event: EVENT_TYPE_I [TUPLE [session: SESSION_I; id: READABLE_STRING_GENERAL]]
 			-- Events fired when a value, indexed by an id, in the session object changes.
 			--
 			-- `session': The session where the change occured.

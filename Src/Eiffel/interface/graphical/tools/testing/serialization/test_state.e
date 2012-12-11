@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	test_name: IMMUTABLE_STRING_8
+	test_name: IMMUTABLE_STRING_32
 			-- Name of associated test
 
-	tag: IMMUTABLE_STRING_8
+	tag: IMMUTABLE_STRING_32
 			-- Test result tag
 		require
 			tested: is_tested
@@ -48,7 +48,7 @@ feature -- Access
 			Result := l_tag
 		end
 
-	details: IMMUTABLE_STRING_8
+	details: IMMUTABLE_STRING_32
 			-- Details to test result
 
 feature {NONE} -- Access
@@ -109,7 +109,7 @@ invariant
 	not_pass_and_fail: not (is_pass and is_fail)
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

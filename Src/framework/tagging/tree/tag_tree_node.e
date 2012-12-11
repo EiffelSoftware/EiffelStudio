@@ -110,7 +110,7 @@ feature -- Access
 			result_valid: not is_root implies (parent.tree = Result)
 		end
 
-	token: IMMUTABLE_STRING_8
+	token: IMMUTABLE_STRING_32
 			-- Token represented by `Current'.
 		require
 			active: is_active
@@ -207,7 +207,7 @@ feature -- Access
 			result_active: Result.is_active
 		end
 
-	tag: STRING_8
+	tag: STRING_32
 			-- Tag represented by `Current'.
 		require
 			active: is_active
@@ -252,7 +252,7 @@ feature {NONE} -- Access
 	internal_tree: detachable like tree
 			-- Internal storage of `tree'
 
-	internal_token: detachable IMMUTABLE_STRING_8
+	internal_token: detachable IMMUTABLE_STRING_32
 			-- Internal storage of `token'
 
 	internal_parent: detachable like parent
@@ -553,7 +553,7 @@ invariant
 	children_xor_items_attached: is_active implies (attached internal_child_table xor attached internal_item)
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

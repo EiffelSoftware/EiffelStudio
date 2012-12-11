@@ -82,7 +82,7 @@ feature -- Retrieval
 			result_is_interface_usable: attached Result implies Result.is_interface_usable
 		end
 
-	retrieve_extended (a_per_project: BOOLEAN; a_extension: detachable READABLE_STRING_8): detachable SESSION_I
+	retrieve_extended (a_per_project: BOOLEAN; a_extension: detachable READABLE_STRING_GENERAL): detachable SESSION_I
 			-- Retrieve's a session based on specified paramaters, using a extension name for non-global conflicting session objects.
 			--
 			-- `a_per_project': True to retireve a session for the active project, False otherwise
@@ -120,7 +120,7 @@ feature -- Retrieval
 			result_is_interface_usable: attached Result implies Result.is_interface_usable
 		end
 
-	retrieve_per_window_extended (a_window: SHELL_WINDOW_I; a_per_project: BOOLEAN; a_extension: detachable READABLE_STRING_8): detachable SESSION_I
+	retrieve_per_window_extended (a_window: SHELL_WINDOW_I; a_per_project: BOOLEAN; a_extension: detachable READABLE_STRING_GENERAL): detachable SESSION_I
 			-- Retrieve's a window session based on specified paramaters, using a extension name for non-global conflicting session objects.
 			--
 			-- `a_window': The window to retrieve a window-based session for.

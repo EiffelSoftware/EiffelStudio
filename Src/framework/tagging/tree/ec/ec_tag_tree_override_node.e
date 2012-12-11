@@ -28,21 +28,21 @@ feature {NONE} -- Implementation
 		do
 			if attached {EC_TAG_TREE_NODE [G, CONF_CLUSTER]} parent as l_parent then
 				if attached l_parent.item (a_project) as l_cluster then
-					Result := l_cluster.target.overrides.item (name)
+					Result := l_cluster.target.overrides.item (name.as_string_8)
 				end
 			elseif attached {EC_TAG_TREE_NODE [G, CONF_LIBRARY]} parent as l_parent then
 				if attached l_parent.item (a_project) as l_library then
-					Result := l_library.library_target.overrides.item (name)
+					Result := l_library.library_target.overrides.item (name.as_string_8)
 				end
 			end
 			if Result = Void then
-				if attached {CONF_OVERRIDE} a_project.project.universe.cluster_of_name (name) as l_override then
+				if attached {CONF_OVERRIDE} a_project.project.universe.cluster_of_name (name.as_string_8) as l_override then
 					Result := l_override
 				end
 			end
 		end
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

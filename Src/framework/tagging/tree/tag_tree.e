@@ -115,11 +115,11 @@ feature -- Query
 			--       an existing tag. This again allows us to have pure leafs only containing the item.
 		do
 			if Precursor (an_item, a_tag) then
-				Result := not a_tag.as_string_8.has_substring (formatter.item_prefix) and
+				Result := not a_tag.has_substring (formatter.item_prefix) and
 				          formatter.is_valid_token (an_item.name)
 			end
 		ensure then
-			result_implies_no_item_prefix: Result implies not a_tag.as_string_8.has_substring (formatter.item_prefix)
+			result_implies_no_item_prefix: Result implies not a_tag.has_substring (formatter.item_prefix)
 			result_implies_valid_token: Result implies formatter.is_valid_token (an_item.name)
 		end
 
@@ -131,7 +131,7 @@ feature -- Element change
 			l_found: like find_node
 			l_new: detachable TAG_TREE_NODE [G]
 			l_tree_tag: READABLE_STRING_GENERAL
-			l_token: STRING
+			l_token: STRING_32
 			l_formatter: like formatter
 		do
 			Precursor (an_item, a_tag)
@@ -156,7 +156,7 @@ feature -- Element change
 			l_tree_tag: READABLE_STRING_GENERAL
 			l_found: like find_node
 			l_node, l_remove: detachable TAG_TREE_NODE [G]
-			l_token: STRING
+			l_token: STRING_32
 			l_formatter: like formatter
 		do
 			lock
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

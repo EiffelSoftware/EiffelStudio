@@ -147,22 +147,22 @@ feature {NONE} -- Basic operations
 			a_file_name_createable: (create {RAW_FILE}.make (a_file_name)).is_creatable
 		local
 			l_retried: BOOLEAN
-			l_template, l_user_template: FILE_NAME
+			l_template: PATH
+			l_user_template: detachable PATH
 			l_wizard: SERVICE_CONSUMER [WIZARD_ENGINE_S]
 			l_name: STRING
+			l_u: FILE_UTILITIES
 		do
 			if not l_retried then
-				create l_template.make_from_string (eiffel_layout.templates_path_8)
-				l_template.extend ("defaults")
-				l_template.set_file_name ("test.e.tpl")
-				l_user_template := eiffel_layout.user_priority_file_name_8 (l_template, True)
+				l_template := eiffel_layout.templates_path.extended ("defaults").extended ("test.e.tpl")
+				l_user_template := eiffel_layout.user_priority_file_name (l_template, True)
 				if l_user_template /= Void then
 					l_template := l_user_template
 				end
-				if (create {RAW_FILE}.make (l_template)).exists then
+				if l_u.file_path_exists (l_template) then
 					create l_wizard
 					if l_wizard.is_service_available then
-						l_wizard.service.render_template_from_file_to_file (l_template, template_parameters (a_class_name), a_file_name)
+						l_wizard.service.render_template_from_file_to_file (l_template, template_parameters (a_class_name), create {PATH}.make_from_string (a_file_name))
 						create l_name.make (class_name.count + test_routine_name.count + 1)
 						l_name.append (class_name)
 						l_name.append_character ('.')
@@ -180,7 +180,7 @@ feature {NONE} -- Basic operations
 			retry
 		end
 
-	template_parameters (a_class_name: STRING): DS_HASH_TABLE [STRING, STRING]
+	template_parameters (a_class_name: STRING): DS_HASH_TABLE [STRING, STRING_32]
 			-- Template parameters for creating actual class text from template file.
 		local
 			l_redefine, l_body, l_indexing: STRING

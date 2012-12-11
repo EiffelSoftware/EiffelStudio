@@ -89,7 +89,7 @@ feature -- Factory
 
 feature {NONE} -- Implementations
 
-	token_text (a_node: TAG_TREE_NODE [G]; a_append_parents: BOOLEAN): STRING
+	token_text (a_node: TAG_TREE_NODE [G]; a_append_parents: BOOLEAN): STRING_32
 			-- Text representing given node. If `a_append_parents' is true, text will also contain tokens
 			-- of parents node, separated by "/".
 		require
@@ -121,7 +121,7 @@ invariant
 	column_count_positive: column_count > 0
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

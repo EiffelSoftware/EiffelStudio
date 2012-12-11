@@ -114,7 +114,7 @@ feature -- Access
 
 feature {SESSION_MANAGER_S, SESSION_I} -- Access
 
-	extension_name: detachable IMMUTABLE_STRING_8 assign set_extension_name
+	extension_name: detachable IMMUTABLE_STRING_32 assign set_extension_name
 			-- <Precursor>
 
 feature {SESSION_MANAGER_S} -- Access
@@ -127,19 +127,21 @@ feature {SESSION_MANAGER_S} -- Access
 
 feature {NONE} -- Access
 
-	data: HASH_TABLE [ANY, STRING_8]
+	data: STRING_TABLE [ANY]
 			-- Table containing session data
 			-- Key: Session data id
 			-- Value: Session data
 
 feature -- Element change
 
-	set_value (a_value: detachable ANY; a_id: STRING_8)
+	set_value (a_value: detachable ANY; a_id: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_old_value: ANY
+			l_id: STRING_32
 		do
-			l_old_value := value (a_id)
+			l_id := a_id.as_string_32
+			l_old_value := value (l_id)
 			if l_old_value /= a_value then
 				if attached {SESSION_DATA_I} l_old_value as l_old_data then
 						-- Remove current session as the owner of the data
@@ -147,7 +149,7 @@ feature -- Element change
 				end
 
 				if a_value /= Void then
-					data.force (box_value (a_value), a_id)
+					data.force (box_value (a_value), l_id)
 
 					if attached {SESSION_DATA_I} a_value as l_data and then l_data.session /= Current then
 							-- Set current session as owner of the data
@@ -155,12 +157,12 @@ feature -- Element change
 					end
 				else
 						-- The value is Void so it should be removed.
-					data.remove (a_id)
+					data.remove (l_id)
 				end
 					-- To avoid type difference between two versions of data.
 				if l_old_value /~ a_value then
 						-- The two values are considered the same so do not publish the changed event
-					value_changed_event.publish ([Current, a_id])
+					value_changed_event.publish ([Current, l_id])
 					is_dirty := True
 				end
 			end
@@ -186,7 +188,7 @@ feature {SESSION_MANAGER_S} -- Element change
 			l_old_data: like data
 			l_value: ANY
 			l_old_value: ANY
-			l_id: STRING_8
+			l_id: READABLE_STRING_GENERAL
 			l_change_events: like value_changed_event
 		do
 			l_old_data := data
@@ -204,7 +206,7 @@ feature {SESSION_MANAGER_S} -- Element change
 				if l_old_data.is_empty then
 						-- Notify subscribers of all new changes
 					from l_data.start until l_data.after loop
-						l_change_events.publish ([Current, l_data.key_for_iteration])
+						l_change_events.publish ([Current, l_data.key_for_iteration.as_string_32])
 						l_data.forth
 					end
 				else
@@ -216,14 +218,14 @@ feature {SESSION_MANAGER_S} -- Element change
 							l_old_value := unbox_value (l_old_data.item (l_id))
 							if not equal (l_value, l_old_value) then
 									-- The value changed
-								l_change_events.publish ([Current, l_id])
+								l_change_events.publish ([Current, l_id.as_string_32])
 							end
 
 								-- Remove old data so we can publish a events for removed data
 							l_old_data.remove (l_id)
 						else
 								-- The value changed because the old data did not have the current session item.
-							l_change_events.publish ([Current, l_id])
+							l_change_events.publish ([Current, l_id.as_string_32])
 						end
 						l_data.forth
 					end
@@ -234,7 +236,7 @@ feature {SESSION_MANAGER_S} -- Element change
 								-- Remove session as owner of the data
 							l_session_data.set_session (Void)
 						end
-						l_change_events.publish ([Current, l_old_data.key_for_iteration])
+						l_change_events.publish ([Current, l_old_data.key_for_iteration.as_string_32])
 						l_old_data.forth
 					end
 				end
@@ -243,30 +245,34 @@ feature {SESSION_MANAGER_S} -- Element change
 
 feature -- Query
 
-	value alias "[]" (a_id: STRING_8): detachable ANY assign set_value
+	value alias "[]" (a_id: READABLE_STRING_GENERAL): detachable ANY assign set_value
 			-- <Precursor>
 		local
 			l_data: like data
+			l_id: STRING_32
 		do
 			l_data := data
-			if l_data.has (a_id) then
-				Result := unbox_value (l_data [a_id])
+			l_id := a_id.as_string_32
+			if l_data.has (l_id) then
+				Result := unbox_value (l_data [l_id])
 			end
 		end
 
-	value_or_default (a_id: STRING_8; a_default_value: ANY): ANY
+	value_or_default (a_id: READABLE_STRING_GENERAL; a_default_value: ANY): ANY
 			-- <Precursor>
 		local
 			l_data: like data
+			l_id: STRING_32
 		do
 			l_data := data
-			if l_data.has (a_id) then
-				Result := unbox_value (l_data[a_id])
+			l_id := a_id.as_string_32
+			if l_data.has (l_id) then
+				Result := unbox_value (l_data [l_id])
 			else
 				Result := a_default_value
 			end
 		ensure then
-			default_value_set: not data.has (a_id) implies Result = a_default_value
+			default_value_set: not data.has (a_id.as_string_32) implies Result = a_default_value
 		end
 
 feature -- Status report
@@ -300,10 +306,10 @@ feature -- Status report
 			end
 		end
 
-	has (a_id: STRING): BOOLEAN
+	has (a_id: READABLE_STRING_GENERAL): BOOLEAN
 			-- <Precursor>
 		do
-			Result := data.has (a_id)
+			Result := data.has (a_id.as_string_32)
 		end
 
 feature {SESSION_MANAGER_S} -- Status setting
@@ -349,7 +355,7 @@ feature {SESSION_DATA_I, SESSION_I} -- Basic operations
 				from l_data.start until l_data.after or l_done loop
 					l_done := l_data.item_for_iteration = a_value
 					if l_done then
-						value_changed_event.publish ([Current, l_data.key_for_iteration])
+						value_changed_event.publish ([Current, l_data.key_for_iteration.as_string_32])
 					else
 						l_data.forth
 					end
@@ -359,7 +365,7 @@ feature {SESSION_DATA_I, SESSION_I} -- Basic operations
 
 feature -- Events
 
-	value_changed_event: EVENT_TYPE [TUPLE [session: SESSION_I; id: STRING_8]]
+	value_changed_event: EVENT_TYPE [TUPLE [session: SESSION_I; id: READABLE_STRING_GENERAL]]
 			-- <Precursor>
 
 feature {SESSION_MANAGER_S} -- Action Handlers

@@ -13,7 +13,7 @@ class
 	TAG_SEARCH_TABLE
 
 inherit
-	SEARCH_TABLE [IMMUTABLE_STRING_8]
+	SEARCH_TABLE [IMMUTABLE_STRING_32]
 		rename
 			has as has_immutable,
 			force as force_immutable,
@@ -45,7 +45,7 @@ feature -- Query
 			Result := has_immutable (immutable_string (key))
 		end
 
-	same_keys (a_search_key, a_key: IMMUTABLE_STRING_8): BOOLEAN
+	same_keys (a_search_key, a_key: IMMUTABLE_STRING_32): BOOLEAN
 			-- <Precursor>
 		do
 			Result := a_search_key.same_string (a_key)
@@ -65,7 +65,7 @@ feature -- Element change
 			insertion_done: item (key).same_string_general (key)
 		end
 
-	item (key: READABLE_STRING_GENERAL): detachable IMMUTABLE_STRING_8
+	item (key: READABLE_STRING_GENERAL): detachable IMMUTABLE_STRING_32
 			-- Item associated with `key', if present
 			-- otherwise default value of type `G'
 		require
@@ -87,7 +87,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

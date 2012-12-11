@@ -13,7 +13,7 @@ class
 	TAG_HASH_TABLE [G]
 
 inherit
-	HASH_TABLE [G, IMMUTABLE_STRING_8]
+	HASH_TABLE [G, IMMUTABLE_STRING_32]
 		rename
 			has as has_immutable,
 			force as force_immutable,
@@ -45,7 +45,7 @@ feature -- Query
 			default_case: (immutable_string (key) = computed_default_key) implies (Result = has_default)
 		end
 
-	same_keys (a_search_key, a_key: IMMUTABLE_STRING_8): BOOLEAN
+	same_keys (a_search_key, a_key: IMMUTABLE_STRING_32): BOOLEAN
 			-- <Precursor>
 		do
 			Result := a_search_key.same_string (a_key)
@@ -53,7 +53,7 @@ feature -- Query
 
 feature -- Element change
 
-	force (new: G; key: IMMUTABLE_STRING_8)
+	force (new: G; key: IMMUTABLE_STRING_32)
 			-- Update table so that `new' will be the item associated
 			-- with `key'.
 			-- If there was an item for that key, set `found'
@@ -109,7 +109,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

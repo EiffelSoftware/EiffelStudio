@@ -914,10 +914,10 @@ feature {NONE} -- Event handlers
 			is_initialized: is_appliable_event (a_event_item) implies is_initialized
 		end
 
-	on_session_value_changed (a_session: SESSION; a_id: STRING_8)
+	on_session_value_changed (a_session: SESSION; a_id: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
-			if a_id.is_equal (expand_errors_session_id) then
+			if a_id.same_string (expand_errors_session_id) then
 					-- Retrieve global session
 				if attached {BOOLEAN_REF} a_session.value_or_default (expand_errors_session_id, False) as l_expand then
 					if is_expanding_errors /= l_expand.item then

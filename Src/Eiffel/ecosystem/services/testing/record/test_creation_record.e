@@ -23,7 +23,7 @@ create {TEST_CREATION_I}
 
 feature {TEST_CREATION_I} -- Element change
 
-	add_test (a_name: IMMUTABLE_STRING_8)
+	add_test (a_name: READABLE_STRING_32)
 			-- Add name of newly created test and add it to end of `test_map'.
 			--
 			-- `a_name': Name of created test.
@@ -40,7 +40,7 @@ feature {TEST_CREATION_I} -- Element change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

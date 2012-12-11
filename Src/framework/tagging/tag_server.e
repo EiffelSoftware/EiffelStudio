@@ -218,7 +218,7 @@ feature -- Element change
 			a_tag_valid: is_valid_tag_for_item (an_item, a_tag)
 		local
 			l_set: like tags_of_item
-			l_new: IMMUTABLE_STRING_8
+			l_new: IMMUTABLE_STRING_32
 			l_count: NATURAL
 			l_tag_table: like tag_table
 		do
@@ -260,7 +260,7 @@ feature -- Element change
 			l_set: like tags_of_item
 			l_count: NATURAL
 			l_table: like tag_table
-			l_tag: IMMUTABLE_STRING_8
+			l_tag: IMMUTABLE_STRING_32
 		do
 			lock
 			l_set := item_to_tags_table.item (an_item)
@@ -359,7 +359,7 @@ invariant
 	tag_table_attached: tag_table /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

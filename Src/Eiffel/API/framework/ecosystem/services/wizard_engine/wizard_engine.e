@@ -15,6 +15,11 @@ inherit
 
 	DISPOSABLE_SAFE
 
+	SHARED_LOCALE
+		export
+			{NONE} all
+		end
+
 --inherit {NONE}
 	KL_SHARED_FILE_SYSTEM
 
@@ -32,7 +37,7 @@ feature {NONE} -- Clean up
 
 feature -- Basic operations
 
-	render_template (a_template: READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [ANY, STRING]): STRING_32
+	render_template (a_template: READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [ANY, STRING_32]): STRING_32
 			-- <Precursor>
 		local
 			l_templates: like build_code_template
@@ -58,21 +63,20 @@ feature -- Basic operations
 			end
 		end
 
-	render_template_from_file (a_file_name: READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [ANY, STRING]): detachable STRING_32
+	render_template_from_file (a_file_name: PATH; a_parameters: detachable DS_HASH_TABLE [ANY, STRING_32]): detachable STRING_32
 			-- <Precursor>
 		local
-			l_file: KI_TEXT_INPUT_FILE
-			l_contents: detachable STRING
+			l_file: RAW_FILE
+			l_contents: detachable STRING_32
 			l_count: INTEGER
 		do
-			l_file := file_system.new_input_file (a_file_name.as_string_8)
+			create l_file.make_with_path (a_file_name)
 			if attached l_file then
 					-- Read template contents
 				l_count := l_file.count
 				if l_count > 0 then
 					l_file.open_read
-					l_file.read_string (l_count)
-					l_contents := l_file.last_string
+					l_contents := read_string_32_from_file (l_file)
 					l_file.close
 					if attached l_contents then
 						Result := render_template (l_contents, a_parameters)
@@ -87,18 +91,18 @@ feature -- Basic operations
 			end
 		end
 
-	render_template_to_file (a_template: READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [ANY, STRING]; a_destination_file: READABLE_STRING_GENERAL)
+	render_template_to_file (a_template: READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [ANY, STRING_32]; a_destination_file: PATH)
 			-- <Precursor>
 		local
-			l_file: KI_TEXT_OUTPUT_FILE
+			l_file: RAW_FILE
 			l_rendered: detachable STRING_32
 		do
 			l_rendered := render_template (a_template, a_parameters)
 			if l_rendered /= Void then
-				l_file := file_system.new_output_file (a_destination_file.as_string_8)
+				create l_file.make_with_path (a_destination_file)
 				if attached l_file then
 					l_file.open_write
-					l_file.put_string (l_rendered)
+					save_string_32_in_file (l_file, l_rendered)
 					l_file.close
 				end
 			end
@@ -108,20 +112,19 @@ feature -- Basic operations
 			end
 		end
 
-	render_template_from_file_to_file (a_file_name: READABLE_STRING_GENERAL; a_parameters: detachable DS_HASH_TABLE [ANY, STRING]; a_destination_file: READABLE_STRING_GENERAL)
+	render_template_from_file_to_file (a_file_name: PATH; a_parameters: detachable DS_HASH_TABLE [ANY, STRING_32]; a_destination_file: PATH)
 			-- <Precursor>
 		local
-			l_file: KI_TEXT_OUTPUT_FILE
+			l_file: RAW_FILE
 			l_rendered: detachable STRING_32
 		do
 			l_rendered := render_template_from_file (a_file_name, a_parameters)
 			if l_rendered /= Void then
-				l_file := file_system.new_output_file (a_destination_file.as_string_8)
-				if l_file /= Void then
-					l_file.open_write
-					l_file.put_string (l_rendered)
-					l_file.close
-				end
+				create l_file.make_with_path (a_destination_file)
+
+				l_file.open_write
+				save_string_32_in_file (l_file, l_rendered)
+				l_file.close
 			end
 		rescue
 			if attached l_file and then not l_file.is_closed then
@@ -131,7 +134,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	build_code_template (a_template: STRING_32; a_parameters: detachable DS_HASH_TABLE [ANY, STRING]): TUPLE [template: CODE_TEMPLATE_DEFINITION; symbol_table: CODE_SYMBOL_TABLE]
+	build_code_template (a_template: STRING_32; a_parameters: detachable DS_HASH_TABLE [ANY, STRING_32]): TUPLE [template: CODE_TEMPLATE_DEFINITION; symbol_table: CODE_SYMBOL_TABLE]
 			-- Builds a code template definition file from a template text.
 			--
 			-- `a_template': The tokenized text to render with the supplied parameters.
@@ -142,8 +145,8 @@ feature {NONE} -- Basic operations
 			not_a_template_is_empty: not a_template.is_empty
 			a_parameters_attached: a_parameters /= Void
 		local
-			l_cursor: DS_HASH_TABLE_CURSOR [ANY, STRING]
-			l_key: STRING
+			l_cursor: DS_HASH_TABLE_CURSOR [ANY, STRING_32]
+			l_key: STRING_32
 			l_factory: CODE_FACTORY
 			l_definition: CODE_TEMPLATE_DEFINITION
 			l_declarations: CODE_DECLARATION_COLLECTION
@@ -191,7 +194,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

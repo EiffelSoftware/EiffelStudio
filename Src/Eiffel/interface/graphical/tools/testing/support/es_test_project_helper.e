@@ -122,7 +122,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_class (a_cluster: CONF_CLUSTER; a_path: STRING; a_file_name: STRING; a_class_name: STRING; a_perform_quickmelt: BOOLEAN)
+	add_class (a_cluster: CONF_CLUSTER; a_path: PATH; a_file_name: PATH; a_class_name: READABLE_STRING_32; a_perform_quickmelt: BOOLEAN)
 			-- <Precursor>
 		local
 			l_stone: CLASSI_STONE
@@ -146,7 +146,7 @@ feature -- Element change
 				end
 
 				if l_cluster /= Void then
-					manager.add_class_to_cluster (a_file_name, l_cluster, a_path, a_class_name, a_perform_quickmelt)
+					manager.add_class_to_cluster (a_file_name.name, l_cluster, a_path.name, a_class_name, a_perform_quickmelt)
 					if attached {like last_added_class} manager.last_added_class as l_class then
 						internal_added_class := l_class
 						create l_stone.make (internal_added_class)
@@ -162,7 +162,7 @@ feature -- Element change
 			retry
 		end
 
-	add_cluster (a_target: CONF_TARGET; a_path: STRING)
+	add_cluster (a_target: CONF_TARGET; a_path: PATH)
 			-- <Precursor>
 		do
 			internal_error := Void
@@ -208,7 +208,7 @@ feature -- Basic operations
 			end
 		end
 
-	run (a_working_directory: detachable PATH; a_arguments: detachable STRING; a_env: detachable HASH_TABLE [STRING_32, STRING_32])
+	run (a_working_directory: detachable PATH; a_arguments: detachable READABLE_STRING_GENERAL; a_env: detachable HASH_TABLE [STRING_32, STRING_32])
 			-- <Precursor>
 		local
 			l_params: DEBUGGER_EXECUTION_PROFILE

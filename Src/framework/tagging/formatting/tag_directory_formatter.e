@@ -26,10 +26,10 @@ feature -- Access
 			Result := Current
 		end
 
-	valid_token_chars: STRING = "_{}()[]:.-~"
+	valid_token_chars: STRING_32 = "_{}()[]:.-~"
 			-- Valid chars to be used in a token other than alpha numeric
 
-	split_char: CHARACTER = '/'
+	split_char: CHARACTER_32 = '/'
 			-- Char used to split tokens in tag
 
 feature -- Query
@@ -41,7 +41,7 @@ feature -- Query
 			-- `Result': True if `a_string' represents a valid token, False otherwise.
 		local
 			i: INTEGER
-			c: CHARACTER
+			c: CHARACTER_32
 		do
 			if not a_string.is_empty then
 				from
@@ -50,7 +50,7 @@ feature -- Query
 				until
 					i > a_string.count or not Result
 				loop
-					c := a_string.code (i).to_character_8
+					c := a_string.item (i)
 					Result := c.is_alpha_numeric or valid_token_chars.has (c)
 					i := i + 1
 				end
@@ -65,7 +65,7 @@ feature -- Query
 		local
 			i: INTEGER
 			b: BOOLEAN
-			c: CHARACTER
+			c: CHARACTER_32
 		do
 			from
 				Result := Precursor (a_string)
@@ -73,7 +73,7 @@ feature -- Query
 			until
 				i > a_string.count or not Result
 			loop
-				c := a_string.code (i).to_character_8
+				c := a_string.item (i)
 				if c.is_alpha_numeric or valid_token_chars.has (c) then
 					b := False
 				elseif c = split_char then
@@ -97,33 +97,33 @@ feature -- Query
 			elseif a_tag.count = a_prefix.count then
 				Result := a_tag.same_string (a_prefix)
 			elseif a_tag.count > a_prefix.count then
-				Result := a_tag.as_string_8.starts_with (a_prefix.as_string_8) and
-				          a_tag.code (a_prefix.count + 1) = split_char.code.as_natural_32
+				Result := a_tag.starts_with (a_prefix) and
+				          a_tag.item (a_prefix.count + 1) = split_char
 			end
 		end
 
 feature -- Basic operations
 
-	suffix (a_prefix, a_tag: READABLE_STRING_GENERAL): STRING_8
+	suffix (a_prefix, a_tag: READABLE_STRING_GENERAL): STRING_32
 			-- <Precursor>
 		do
 			if a_prefix.is_empty then
-				Result := string_copy (a_tag)
+				create Result.make_from_string_general (a_tag)
 			elseif a_prefix.count = a_tag.count then
 				create Result.make_empty
 			else
 					-- Strip `a_prefix' and `split_char' from `a_tag
-				Result := a_tag.as_string_8.substring (a_prefix.count + 2, a_tag.count)
+				Result := a_tag.substring (a_prefix.count + 2, a_tag.count).as_string_32
 			end
 		end
 
-	first_token (a_tag: READABLE_STRING_GENERAL): STRING_8
+	first_token (a_tag: READABLE_STRING_GENERAL): STRING_32
 			-- <Precursor>
 		local
 			i: INTEGER
 			l_tag: like first_token
 		do
-			l_tag := a_tag.as_string_8
+			l_tag := a_tag.as_string_32
 			i := l_tag.index_of (split_char, 1)
 			if i > 0 then
 				Result := l_tag.substring (1, i - 1)
@@ -135,12 +135,12 @@ feature -- Basic operations
 	append_tag (a_prefix: STRING_GENERAL; a_suffix: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
-			a_prefix.append_code (split_char.code.as_natural_32)
+			a_prefix.append_code (split_char.natural_32_code)
 			a_prefix.append (a_suffix)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

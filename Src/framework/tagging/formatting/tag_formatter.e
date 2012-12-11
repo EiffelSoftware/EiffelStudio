@@ -19,10 +19,10 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	item_prefix: STRING
+	item_prefix: IMMUTABLE_STRING_32
 			-- Prefix for item tokens
 		do
-			Result := "item:"
+			create Result.make_from_string_32 (once {STRING_32}"item:")
 		end
 
 feature -- Query
@@ -58,7 +58,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	suffix (a_prefix, a_tag: READABLE_STRING_GENERAL): STRING_8
+	suffix (a_prefix, a_tag: READABLE_STRING_GENERAL): STRING_32
 			-- Tag containing tokens of `a_tag' whithout leading tokens contained in `a_prefix'
 		require
 			a_prefix_valid: a_prefix.is_empty or else validator.is_valid_tag (a_prefix)
@@ -70,7 +70,7 @@ feature -- Basic operations
 			result_correct: a_tag.same_string (join_tags (a_prefix, Result))
 		end
 
-	first_token (a_tag: READABLE_STRING_GENERAL): STRING_8
+	first_token (a_tag: READABLE_STRING_GENERAL): STRING_32
 			-- First token of `a_tag'
 		require
 			a_tag_valid: validator.is_valid_tag (a_tag)
@@ -80,7 +80,7 @@ feature -- Basic operations
 			result_correct: is_prefix (Result, a_tag)
 		end
 
-	join_tags (a_prefix, a_suffix: READABLE_STRING_GENERAL): STRING_8
+	join_tags (a_prefix, a_suffix: READABLE_STRING_GENERAL): STRING_32
 			-- Join `a_prefix' and `a_suffix' to a tag using `split_char'.
 		require
 			prefix_is_valid_tag: a_prefix.is_empty or else validator.is_valid_tag (a_prefix)
@@ -88,13 +88,13 @@ feature -- Basic operations
 		do
 			if a_prefix.is_empty or a_suffix.is_empty then
 				if a_prefix.is_empty then
-					Result := string_copy (a_suffix)
+					create Result.make_from_string_general (a_suffix)
 				else
-					Result := string_copy (a_prefix)
+					create Result.make_from_string_general (a_prefix)
 				end
 			else
 				create Result.make (a_prefix.count + a_suffix.count + 1)
-				Result.append (a_prefix.as_string_8)
+				Result.append_string_general (a_prefix)
 				append_tag (Result, a_suffix)
 			end
 		ensure
@@ -115,24 +115,8 @@ feature -- Basic operations
 			a_prefix_ends_with_suffix: a_prefix.substring (a_prefix.count - a_suffix.count + 1, a_prefix.count).same_string (a_suffix)
 		end
 
-feature {NONE} -- Basic operations
-
-	string_copy (a_tag: READABLE_STRING_GENERAL): STRING_8
-		require
-			a_tag_attached: a_tag /= Void
-		do
-			Result := a_tag.as_string_8
-			if Result = a_tag then
-				create Result.make_from_string (Result)
-			end
-		ensure
-			result_attached: Result /= Void
-			result_same_string: a_tag.same_string (Result)
-			result_is_copy: Result /= a_tag
-		end
-
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -119,6 +119,38 @@ feature -- File saving
 			end
 		end
 
+	read_string_32_from_file (a_file: FILE): STRING_32
+			-- Read Unicode from `a_file'. If no encoding is detected
+			-- use encoding of current locale.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open: a_file.is_open_read
+			a_file_exist: a_file.exists
+		local
+			l_bom_encoding_detector: BOM_ENCODING_DETECTOR
+			l_source_encoding: ENCODING
+			l_string_read: STRING_8
+		do
+			a_file.read_stream (a_file.count)
+			l_string_read := a_file.last_string
+
+			create l_bom_encoding_detector
+			l_bom_encoding_detector.detect (l_string_read)
+			if attached l_bom_encoding_detector.detected_encoding as l_encoding then
+				l_source_encoding := l_encoding
+			else
+				l_source_encoding := system_encoding
+			end
+			l_source_encoding.convert_to (utf32, l_string_read)
+			if l_source_encoding.last_conversion_successful then
+				Result := l_source_encoding.last_converted_string_32
+			else
+				Result := l_string_read.as_string_32
+			end
+		ensure
+			Result_set: Result /= Void
+		end
+
 feature -- String
 
 	as_string_general (s: READABLE_STRING_GENERAL): STRING_GENERAL

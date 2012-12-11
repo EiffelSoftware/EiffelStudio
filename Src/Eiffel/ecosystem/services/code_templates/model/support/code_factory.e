@@ -26,7 +26,7 @@ feature -- Factory
 			create {CODE_BUILT_IN_LITERAL_DECLARATION} Result.make (a_id, a_parent)
 		ensure
 			result_attached: attached Result
-			result_id_matches_a_id: Result.id.is_case_insensitive_equal (a_id.as_string_8)
+			result_id_matches_a_id: Result.id.is_case_insensitive_equal_general (a_id)
 			result_is_built_in: Result.is_built_in
 		end
 
@@ -70,7 +70,7 @@ feature -- Factory
 			create Result.make (a_id, a_parent)
 		ensure
 			result_attached: attached Result
-			result_id_matches_a_id: Result.id.is_case_insensitive_equal (a_id.as_string_8)
+			result_id_matches_a_id: Result.id.is_case_insensitive_equal_general (a_id)
 			not_result_is_built_in_set: not Result.is_built_in
 		end
 
@@ -113,7 +113,7 @@ feature -- Factory
 			create Result.make (a_id, a_parent)
 		ensure
 			result_attached: attached Result
-			result_id_matches_a_id: Result.id.is_case_insensitive_equal (a_id.as_string_8)
+			result_id_matches_a_id: Result.id.is_case_insensitive_equal_general (a_id)
 			not_result_is_built_in_set: not Result.is_built_in
 		end
 
@@ -245,7 +245,7 @@ feature -- Token factory
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

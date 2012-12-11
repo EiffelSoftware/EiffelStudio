@@ -68,7 +68,7 @@ feature -- Element change
 			if (not attached internal_value) or else internal_value /~ a_value then
 				internal_value := a_value
 				if (attached symbol_table as l_table) and then (attached l_table.id_of_value (Current) as l_id) then
-					if attached {EVENT_TYPE_PUBLISHER_I [TUPLE [CODE_SYMBOL_TABLE, READABLE_STRING_8]]} l_table.value_changed_event as l_event then
+					if attached {EVENT_TYPE_PUBLISHER_I [TUPLE [CODE_SYMBOL_TABLE, READABLE_STRING_32]]} l_table.value_changed_event as l_event then
 						l_event.publish ([l_table, l_id])
 					end
 				end
@@ -104,7 +104,7 @@ invariant
 	default_value_attached: attached default_value
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

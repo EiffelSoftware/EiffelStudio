@@ -14,17 +14,17 @@ feature -- Access
 	delimiter_symbol: CHARACTER = ':'
 			-- Character used to separate code from actual token
 
-	class_prefix: STRING = "class:"
-	feature_prefix: STRING = "feature:"
-	target_prefix: STRING = "target:"
-	library_prefix: STRING = "library:"
-	cluster_prefix: STRING = "cluster:"
-	override_prefix: STRING = "override:"
-	directory_prefix: STRING = "directory:"
+	class_prefix: STRING_32 = "class:"
+	feature_prefix: STRING_32 = "feature:"
+	target_prefix: STRING_32 = "target:"
+	library_prefix: STRING_32 = "library:"
+	cluster_prefix: STRING_32 = "cluster:"
+	override_prefix: STRING_32 = "override:"
+	directory_prefix: STRING_32 = "directory:"
 			-- Prefix tokens in order to indicate what the token represents
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

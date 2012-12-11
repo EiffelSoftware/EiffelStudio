@@ -169,7 +169,7 @@ feature {NONE} -- Basic operations
 		local
 			l_class_map: like old_class_map
 			l_is_old, l_new: BOOLEAN
-			l_name: READABLE_STRING_8
+			l_name: READABLE_STRING_32
 			l_etest_class: detachable ETEST_CLASS
 		do
 			l_name := a_class.name
@@ -371,7 +371,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

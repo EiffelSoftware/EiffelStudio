@@ -108,14 +108,14 @@ feature {NONE} -- Query
 			l_formatter: STRING_FORMATTER
 			l_kinds: SESSION_KINDS
 			l_kind: UUID
-			l_fn: detachable STRING_8
+			l_fn: detachable STRING_32
 			l_conf_target: CONF_TARGET
 			l_ver: STRING_8
 			l_target: STRING_8
 			l_workbench: detachable WORKBENCH_I
 			l_window_id: NATURAL_32
-			l_extension: detachable STRING_8
-			l_name: detachable IMMUTABLE_STRING_8
+			l_extension: detachable STRING_32
+			l_name: detachable IMMUTABLE_STRING_32
 		do
 			create l_formatter
 			create l_kinds
@@ -173,7 +173,7 @@ feature {NONE} -- Query
 				end
 
 					-- Format path using collected parts
-				l_fn := l_formatter.format (l_fn, [l_ver, l_target, l_window_id, l_extension])
+				l_fn := l_formatter.format_unicode (l_fn, [l_ver, l_target, l_window_id, l_extension])
 
 					-- Create full path
 				Result := eiffel_layout.session_data_path.extended (l_fn)
@@ -297,7 +297,7 @@ feature -- Retrieval
 			result_is_interface_usable: attached Result implies Result.is_interface_usable
 		end
 
-	retrieve_extended (a_per_project: BOOLEAN; a_extension: detachable READABLE_STRING_8): detachable SESSION_I
+	retrieve_extended (a_per_project: BOOLEAN; a_extension: detachable READABLE_STRING_GENERAL): detachable SESSION_I
 			-- <Precursor>
 		local
 			l_sessions: like sessions
@@ -307,7 +307,7 @@ feature -- Retrieval
 			l_sessions := sessions
 			l_cursor := l_sessions.cursor
 			from l_sessions.start until l_sessions.after loop
-				if not attached Result then
+				if Result = Void then
 						-- We need to use a conditional check because of a memory leak with Gobo data structures.
 						-- The cursor has to be run out to avoid the leak.
 					l_session := l_sessions.item_for_iteration
@@ -333,7 +333,7 @@ feature -- Retrieval
 			end
 			l_sessions.go_to (l_cursor)
 
-			if not attached Result then
+			if Result = Void then
 					-- Create a new session
 				Result := new_session (Void, a_per_project, a_extension)
 				if attached Result then
@@ -356,7 +356,7 @@ feature -- Retrieval
 			result_is_interface_usable: attached Result implies Result.is_interface_usable
 		end
 
-	retrieve_per_window_extended (a_window: SHELL_WINDOW_I; a_per_project: BOOLEAN; a_extension: detachable READABLE_STRING_8): detachable SESSION_I
+	retrieve_per_window_extended (a_window: SHELL_WINDOW_I; a_per_project: BOOLEAN; a_extension: detachable READABLE_STRING_GENERAL): detachable SESSION_I
 			-- <Precursor>
 		local
 			l_sessions: like sessions
@@ -366,7 +366,7 @@ feature -- Retrieval
 			l_sessions := sessions
 			l_cursor := l_sessions.cursor
 			from l_sessions.start until l_sessions.after loop
-				if not attached Result then
+				if Result = Void then
 					l_session := l_sessions.item_for_iteration
 					if l_session.is_interface_usable then
 						if
@@ -383,7 +383,7 @@ feature -- Retrieval
 			end
 			l_sessions.go_to (l_cursor)
 
-			if not attached Result then
+			if Result = Void then
 					-- Create a new session
 				Result := new_session (a_window, a_per_project, a_extension)
 				if attached Result then
@@ -476,7 +476,7 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Factory
 
-	new_session (a_window: detachable SHELL_WINDOW_I; a_per_project: BOOLEAN; a_extension: detachable READABLE_STRING_8): detachable SESSION_I
+	new_session (a_window: detachable SHELL_WINDOW_I; a_per_project: BOOLEAN; a_extension: detachable READABLE_STRING_GENERAL): detachable SESSION_I
 			-- Creates a new session object
 			--
 			-- `a_window': The window to bind the session object to; False to make a session for the entire IDE.
@@ -572,8 +572,8 @@ feature {NONE} -- Factory
 				else
 					create {SESSION} Result.make_per_window (False, a_window, Current)
 				end
-				if attached a_extension then
-					Result.set_extension_name (a_extension)
+				if attached a_extension as l_ext then
+					Result.set_extension_name (create {IMMUTABLE_STRING_32}.make_from_string_general (l_ext))
 				end
 			end
 

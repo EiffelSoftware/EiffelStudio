@@ -112,7 +112,7 @@ feature {NONE} -- Status setting
 			l_cs: detachable EIFFEL_CALL_STACK
 			l_routines: detachable TAG_HASH_TABLE [NATURAL]
 			i: NATURAL
-			l_name: STRING
+			l_name: STRING_32
 		do
 			create l_source_writer.make
 			capturer.observers.force (l_source_writer)
@@ -158,8 +158,8 @@ feature {NONE} -- Status setting
 					l_routines.after
 				loop
 					create l_name.make (30)
-					l_name.append (a_class_name)
-					l_name.append (".test_")
+					l_name.append_string_general (a_class_name)
+					l_name.append_string_general (".test_")
 					l_name.append (l_routines.key_for_iteration)
 					from
 						i := 1

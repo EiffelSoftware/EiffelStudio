@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen tests: ARRAYED_LIST [READABLE_STRING_8]
+	frozen tests: ARRAYED_LIST [READABLE_STRING_32]
 			-- Name of tests which are part of `Current'
 			--
 			-- Note: names are sorted in the order they were originally added to `test_map'.
@@ -39,7 +39,7 @@ feature -- Access
 
 		end
 
-	item_for_name (a_name: READABLE_STRING_8): G
+	item_for_name (a_name: READABLE_STRING_32): G
 			-- Result for test with given name
 			--
 			-- `a_name': Unique name of test for which result should be returned.
@@ -63,7 +63,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	internal_tests: ARRAYED_LIST [READABLE_STRING_8]
+	internal_tests: ARRAYED_LIST [READABLE_STRING_32]
 			-- List containing all test names (keys of `test_map') in the order they are represented in by
 			-- `Current'
 
@@ -75,7 +75,7 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	has_item (a_name: READABLE_STRING_8): BOOLEAN
+	has_item (a_name: READABLE_STRING_32): BOOLEAN
 			-- Does `Current' have an item for given name?
 			--
 			-- `a_name': Unique test name.
@@ -102,7 +102,7 @@ feature -- Status report
 
 feature {NONE} -- Element change
 
-	add_item (an_item: G; a_name: IMMUTABLE_STRING_8)
+	add_item (an_item: G; a_name: READABLE_STRING_32)
 			-- Add given item to `test_map' associated with name which is appended to then end of `tests'.
 			--
 			-- `an_item': Item to be added to `test_map'.
@@ -124,13 +124,13 @@ invariant
 	test_map_attached: test_map /= Void
 	internal_tests_count_equals_test_map_count: internal_tests.count = test_map.count
 	internal_tests_contains_test_map_keys: internal_tests.for_all (
-		agent (a_name: READABLE_STRING_8): BOOLEAN
+		agent (a_name: READABLE_STRING_32): BOOLEAN
 			do
 				Result := test_map.has (a_name)
 			end)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

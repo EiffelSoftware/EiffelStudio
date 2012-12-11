@@ -36,7 +36,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	tag: READABLE_STRING_8
+	tag: READABLE_STRING_32
 			-- Short tag describing the status of `Current'
 		deferred
 		ensure
@@ -114,7 +114,7 @@ invariant
 	pass_or_fail_or_unresolved: is_pass or is_fail or is_unresolved
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

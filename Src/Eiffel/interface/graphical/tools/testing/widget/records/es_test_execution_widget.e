@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			record.tests.do_all (
-				agent (a_test_name: READABLE_STRING_8)
+				agent (a_test_name: READABLE_STRING_32)
 					do
 						add_result (Void, a_test_name, record.result_for_name (a_test_name))
 					end)
@@ -94,7 +94,7 @@ feature {NONE} -- Events: grid
 
 feature {NONE} -- Implementation
 
-	append_result (a_test: READABLE_STRING_8; a_result: detachable TEST_RESULT_I)
+	append_result (a_test: READABLE_STRING_32; a_result: detachable TEST_RESULT_I)
 		local
 			l_grid: like grid
 			l_pos: INTEGER
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_subrow (a_test: READABLE_STRING_8; a_result: TEST_RESULT_I; a_row: EV_GRID_ROW; a_test_suite: TEST_SUITE_S)
+	add_subrow (a_test: READABLE_STRING_32; a_result: TEST_RESULT_I; a_row: EV_GRID_ROW; a_test_suite: TEST_SUITE_S)
 		local
 			l_row: ES_TEST_RESULT_GRID_ROW
 			l_test: TEST_I
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	add_result (a_test: detachable TEST_I; a_test_name: detachable READABLE_STRING_8; a_result: TEST_RESULT_I)
+	add_result (a_test: detachable TEST_I; a_test_name: detachable READABLE_STRING_32; a_result: TEST_RESULT_I)
 			-- Add result subrow to `row'.
 			--
 			-- `a_test': Test.
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 			subrows.force_last (l_subrow, a_test.name)
 		end
 
-	remove_subrow (a_test_name: READABLE_STRING_8)
+	remove_subrow (a_test_name: READABLE_STRING_32)
 			-- Remove subrow for test with name `a_test_name'.
 		require
 			a_test_name_attached: a_test_name /= Void
@@ -283,7 +283,7 @@ invariant
 	indices_valid: (running_index > 0 and queued_index > 0) implies running_index < queued_index
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

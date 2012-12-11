@@ -14,7 +14,7 @@ inherit
 
 feature {TEST_CREATION_I} -- Events
 
-	on_test_created (a_session: TEST_CREATION_I; a_test: READABLE_STRING_8)
+	on_test_created (a_session: TEST_CREATION_I; a_test: READABLE_STRING_32)
 			-- Called when a test was created.
 			--
 			-- Note: only the name of the created test is passed here, since it's actual TEST_I
@@ -32,7 +32,7 @@ feature {TEST_CREATION_I} -- Events
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

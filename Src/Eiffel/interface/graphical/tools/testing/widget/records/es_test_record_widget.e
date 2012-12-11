@@ -65,7 +65,7 @@ feature {NONE} -- Access
 	grid: ES_TESTING_TOOL_GRID
 			-- Grid in which record details are displayed
 
-	subrows: DS_HASH_TABLE [ES_TEST_GRID_ROW, READABLE_STRING_8]
+	subrows: DS_HASH_TABLE [ES_TEST_GRID_ROW, READABLE_STRING_32]
 			-- Table containing test names and the corresponding grid row
 
 	session: G
@@ -85,7 +85,7 @@ feature {NONE} -- Access
 			valid_result: Result = record.session
 		end
 
-	test_from_name (a_name: READABLE_STRING_8): detachable TEST_I
+	test_from_name (a_name: READABLE_STRING_32): detachable TEST_I
 			-- Test instance given it's name if available
 			--
 			-- `a_name': Name of the test for which its instance should be returned.
@@ -95,7 +95,7 @@ feature {NONE} -- Access
 		local
 			l_function: FUNCTION [ANY, TUPLE [TEST_SUITE_S], detachable TEST_I]
 		do
-			l_function := agent (a_test_suite: TEST_SUITE_S; a_n: READABLE_STRING_8): detachable TEST_I
+			l_function := agent (a_test_suite: TEST_SUITE_S; a_n: READABLE_STRING_32): detachable TEST_I
 				do
 					if a_test_suite.has_test (a_n) then
 						Result := a_test_suite.test (a_n)
@@ -159,7 +159,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

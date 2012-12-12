@@ -570,7 +570,7 @@ feature {NONE} -- Implementation
 
 feature -- Environment related
 
-	environment_variable_unset_prefix: STRING = "&-"
+	environment_variable_unset_prefix: STRING_32 = "&-"
 			-- Prefix to mark an environment variable unset
 
 	environment_variables_updated_with (env: detachable HASH_TABLE [STRING_32, STRING_32];
@@ -601,7 +601,7 @@ feature -- Environment related
 								--| Environment variable removal if started by "&-" such as "&-FOOBAR"
 								--| this is an internal representation to precise "removal"
 							n := k.substring (3, k.count)
-							if n.same_string ("*") then
+							if n.same_string ({STRING_32} "*") then
 								Result.wipe_out
 							else
 								Result.remove (n)

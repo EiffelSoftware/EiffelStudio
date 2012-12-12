@@ -1048,6 +1048,8 @@ feature -- Access
 				create {QUICK_SORTER [STRING_32]} l_sorter.make (l_comp)
 				l_sorter.sort (Result)
 			end
+		ensure
+			(env /= Void and then not env.is_empty) implies Result /= Void
 		end
 
 feature -- Expression evaluation

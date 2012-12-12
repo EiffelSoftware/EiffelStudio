@@ -1365,7 +1365,7 @@ feature {NONE} -- Environment actions
 			m: EV_MENU
 			malpha: EV_MENU
 			mi: EV_MENU_ITEM
-			lst: LIST [STRING_32]
+			lst: detachable LIST [STRING_32]
 			ch: CHARACTER_32
 			k: STRING_32
 		do
@@ -1377,23 +1377,30 @@ feature {NONE} -- Environment actions
 				m.extend (create {EV_MENU_SEPARATOR})
 
 				lst := sorted_environment_variables
-				from
-					lst.start
-				until
-					lst.after
-				loop
-					k := lst.item_for_iteration
-					if ch /= k.item(1) then
-						ch := k.item (1)
-						create malpha.make_with_text (create {STRING_32}.make_filled (ch, 1))
-						m.extend (malpha)
+				if lst /= Void then
+					from
+						lst.start
+					until
+						lst.after
+					loop
+						k := lst.item_for_iteration
+						if ch /= k.item(1) then
+							ch := k.item (1)
+							create malpha.make_with_text (create {STRING_32}.make_filled (ch, 1))
+							m.extend (malpha)
+						end
+						check malpha /= Void end
+						create mi.make_with_text (k)
+						mi.select_actions.extend (agent add_env_to_row (a_row, k, Void, 2))
+						malpha.extend (mi)
+						lst.forth
 					end
-					check malpha /= Void end
-					create mi.make_with_text (k)
-					mi.select_actions.extend (agent add_env_to_row (a_row, k, Void, 2))
-					malpha.extend (mi)
-					lst.forth
+				else
+					create mi.make_with_text ("No environment variable!")
+					m.extend (mi)
+					mi.disable_sensitive
 				end
+
 				if ax + ay /= 0 then
 					m.show
 				else
@@ -1452,6 +1459,7 @@ feature {NONE} -- Environment actions
 							create cmi.make_with_text (interface_names.b_unset_command)
 							cmi.select_actions.extend (agent gei.set_text ({DEBUGGER_CONTROLLER}.environment_variable_unset_prefix + k))
 						end
+						cmi.select_actions.extend (agent change_environment_entry_from_row (gei.row, False))
 						mmi.extend (cmi)
 
 						create mi.make_with_text (interface_names.b_delete_command)

@@ -49,7 +49,7 @@ feature -- Basic operations
 	execute
 			-- Perform operation
 		local
-			png_file: FILE_NAME
+			l_path: PATH
 			png_format: EV_PNG_FORMAT
 			p: EV_PIXMAP
 			dial: EB_FILE_SAVE_DIALOG
@@ -67,22 +67,23 @@ feature -- Basic operations
 					set_dialog_filters_and_add_all (dial, <<Png_files_filter>>)
 
 					if tool.class_graph /= Void then
-						dial.set_file_name (tool.class_graph.center_class.name + ".png")
+						create l_path.make_from_string (tool.class_graph.center_class.name + ".png")
 					else
-						dial.set_file_name (tool.cluster_graph.center_cluster.name + ".png")
+						create l_path.make_from_string (tool.cluster_graph.center_cluster.name + ".png")
 					end
+					dial.set_full_file_path (l_path)
 					dial.show_modal_to_window (tool.develop_window.window)
-					if not dial.file_name.is_empty then
+					if not dial.full_file_path.is_empty then
 						error := 1
 						p := tool.projector.world_as_pixmap (5)
 						if p /= Void then
-							create png_file.make_from_string (dial.file_name)
-							create test_file.make_open_write (png_file)
+							create test_file.make_with_path (dial.full_file_path)
+							test_file.open_write
 							if test_file.is_writable then
 								test_file.close
 								create png_format
 								tool.develop_window.window.set_pointer_style (tool.Default_pixmaps.Wait_cursor)
-								p.save_to_named_file (png_format, png_file)
+								p.save_to_named_path (png_format, dial.full_file_path)
 								tool.develop_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
 								error := 0
 							else
@@ -92,7 +93,7 @@ feature -- Basic operations
 					end
 				else
 					if error = 1 then
-						prompts.show_error_prompt (Warning_messages.w_cannot_save_png_file (dial.file_name), tool.develop_window.window, Void)
+						prompts.show_error_prompt (Warning_messages.w_cannot_save_png_file (dial.full_file_path.name), tool.develop_window.window, Void)
 					elseif error = 2 then
 						prompts.show_error_prompt (Warning_messages.W_cannot_generate_png, tool.develop_window.window, Void)
 					end

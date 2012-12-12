@@ -5817,10 +5817,11 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 						l_look_left := True
 						l_item := item (l_column_index, l_row_index)
 					end
-					if l_item = Void or else not l_item.is_tab_navigatable then
+					if l_item = Void or else not l_item.is_tab_navigatable or else not l_item.is_displayed then
 						l_item := find_next_item (l_row_index, l_column_index, l_look_left, True)
 					end
-					if l_item /= Void then
+					if l_item /= Void and then l_item.is_displayed then
+							-- Make sure that a visible item is available before selecting.
 						l_item.enable_select
 						l_item.ensure_visible
 					end

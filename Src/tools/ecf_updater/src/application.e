@@ -7,9 +7,6 @@ note
 class
 	APPLICATION
 
-inherit
-	SHARED_FILE_SYSTEM
-
 create
 	make
 

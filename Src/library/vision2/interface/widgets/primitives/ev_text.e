@@ -166,7 +166,7 @@ feature -- Basic operation
 		require
 			i_positive: i > 0
 		do
-			scroll_to_line  ((first_visible_line - i).max (1).min (line_count))
+			scroll_to_line ((first_visible_line - i).max (1).min (line_count))
 		end
 
 	scroll_down (i: INTEGER)

@@ -42,15 +42,12 @@ feature -- Access
 		local
 			preference_access: PREFERENCES
 			shared_preferences: GB_SHARED_PREFERENCES
-			directory_name: DIRECTORY_NAME
 		do
 				-- Initialize `pixmap_location' constant.
-			create directory_name.make_from_string (eiffel_layout.bitmaps_path_8)
-			directory_name.extend ("png")
-			pixmap_location_cell.put (directory_name)
+			pixmap_location_cell.put (eiffel_layout.bitmaps_path.extended ("png"))
 				-- Initialization of preferences.
 			create shared_preferences
-			create preference_access.make_with_defaults_and_location (<<shared_preferences.default_xml_file>>, eiffel_layout.eiffel_preferences)
+			create preference_access.make_with_defaults_and_location (<<shared_preferences.default_xml_file.name>>, eiffel_layout.eiffel_preferences)
 			shared_preferences.initialize_preferences (preference_access)
 		end
 

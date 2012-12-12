@@ -23,14 +23,9 @@ feature -- Pngs
 
 	Help_about_pixmap: EV_PIXMAP
 			-- Full path name and file title of PNG used in the help about window.
-		local
-			file_name: FILE_NAME
 		once
-			create file_name.make_from_string (eiffel_layout.bitmaps_path_8)
-			file_name.extend ("png")
-			file_name.extend ("bm_about.png")
 			create Result
-			Result.set_with_named_file (file_name)
+			Result.set_with_named_path (bitmap_path.extended ("bm_about.png"))
 		end
 
 	Icon_object_symbol: EV_PIXMAP
@@ -263,12 +258,12 @@ feature -- Pngs
 			if pixmaps_by_name.has (a_name) then
 				Result := pixmaps_by_name @ (a_name)
 			else
-				create file.make (pixmap_file_name (a_name))
+				create file.make_with_path (pixmap_file_name (a_name))
 				--| FIXME This is a temporary hack to display
 				--| a not found pixmap if the pixmap does not exist.
 				--| Replace with a check when all pixmaps have been implemented.
 				if file.exists then
-					Result.set_with_named_file (pixmap_file_name (a_name))
+					Result.set_with_named_path (pixmap_file_name (a_name))
 					check
 						pixmap_not_contained: not pixmaps_by_name.has (a_name)
 					end
@@ -276,7 +271,7 @@ feature -- Pngs
 						-- For quick retrieval.
 					pixmaps_by_name.put (Result, a_name)
 				else
-					update_warning_dialog_text (pixmap_file_name (a_name))
+					update_warning_dialog_text (pixmap_file_name (a_name).name)
 					if not pixmap_warning_dialog.is_destroyed and then not pixmap_warning_dialog.is_show_requested then
 						pixmap_warning_dialog.show
 					end
@@ -287,7 +282,7 @@ feature -- Pngs
 			result_not_void: Result /= Void
 		end
 
-	png_location: STRING
+	png_location: PATH
 			-- `Result' is directory containing png files.
 		once
 			Result := Bitmap_path
@@ -299,19 +294,19 @@ feature {NONE} -- Update
 
 	pixmap_file_content (fn: STRING): EV_PIXMAP
 		local
-			file_name: FILE_NAME
+			file_name: PATH
 			file: RAW_FILE
 		do
 				-- Create the pixmap
 			create Result
 
 			file_name := pixmap_file_name (fn)
-			create file.make (file_name)
+			create file.make_with_path (file_name)
 			if file.exists then
 					-- load the file
-				Result.set_with_named_file (pixmap_file_name (fn))
+				Result.set_with_named_path (pixmap_file_name (fn))
 			else
-				update_warning_dialog_text (pixmap_file_name (fn))
+				update_warning_dialog_text (pixmap_file_name (fn).name)
 				Result.set_size (16, 16) -- Default pixmap size
 			end
 		end
@@ -323,14 +318,10 @@ feature {NONE} -- Update
 			create Result.make (50)
 		end
 
-	Pixmap_suffix: STRING = "png"
-			-- Suffix for pixmaps.
-
-	Bitmap_path: DIRECTORY_NAME
+	Bitmap_path: PATH
 			-- Path for Bmp/Xpm for Windows/Unix.
 		once
-			create Result.make_from_string (eiffel_layout.bitmaps_path_8)
-			Result.extend (Pixmap_suffix)
+			Result := eiffel_layout.bitmaps_path.extended ("png")
 		end
 
 	build_classic_pixmap (pixmap_name: STRING): ARRAY [EV_PIXMAP]
@@ -362,23 +353,21 @@ feature {NONE} -- Update
 			result_valid: Result /= Void and then Result.count = 2
 		end
 
-	pixmap_file_name (file: STRING): FILE_NAME
+	pixmap_file_name (file: READABLE_STRING_GENERAL): PATH
 			-- `Result' is full path to `file'.
 			-- Dependent on platform, and type of
 			-- execution (Wizard, normal.)
 		require
 			file_name_exists: file /= Void and not file.is_empty
 		do
-			create Result.make_from_string (Bitmap_path)
-			Result.set_file_name (file)
-			Result.add_extension (Pixmap_suffix)
+			Result := bitmap_path.extended (file).appended (".png")
 		ensure
 			Result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation
 
-	all_missing_files: HASH_TABLE [STRING, STRING]
+	all_missing_files: STRING_TABLE [READABLE_STRING_GENERAL]
 			-- All pixmaps that have been found to be missing so far.
 		once
 			create Result.make (10)
@@ -392,7 +381,7 @@ feature {NONE} -- Implementation
 			Result.show
 		end
 
-	update_warning_dialog_text (new_text: STRING)
+	update_warning_dialog_text (new_text: READABLE_STRING_GENERAL)
 			-- Add `new_text' to text of warning dialog, one
 			-- line before the end.
 		require

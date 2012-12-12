@@ -636,10 +636,9 @@ feature {NONE} -- Implementation
 			current_filename: STRING
 			filename_ext: STRING
 			pixmap: EV_PIXMAP
-			filename: FILE_NAME
+			filename: PATH
 			list_item: EV_LIST_ITEM
 			pixmap_constant: GB_PIXMAP_CONSTANT
-			directory_value: STRING
 			rescued: BOOLEAN
 			rescued_index: INTEGER
 		do
@@ -673,20 +672,15 @@ feature {NONE} -- Implementation
 					if supported_types.has (filename_ext.as_upper) then
 						create pixmap
 							-- Now must prune last directory separator if we are a drive.
-						directory_value := directory.name
-						if directory_value.item (directory_value.count).is_equal (Directory_seperator) then
-							directory_value := directory_value.substring (1, directory_value.count - 1)
-						end
-						create filename.make_from_string (directory_value)
-						filename.extend (current_filename)
-						pixmap.set_with_named_file (filename)
+						filename := directory.path.extended (current_filename)
+						pixmap.set_with_named_path (filename)
 						pixmap.set_minimum_size (pixmap.width, pixmap.height)
 						create list_item.make_with_text (current_filename)
 						list_item.set_pixmap (pixmap)
 						pixmap_list.extend (list_item)
-						create pixmap_constant.set_attributes (get_unique_pixmap_name (current_filename), filename, directory.name, current_filename, False, components)
+						create pixmap_constant.set_attributes (get_unique_pixmap_name (current_filename), filename.name.as_string_8, directory.name, current_filename, False, components)
 						list_item.set_data (pixmap_constant)
-						if not pixmap_paths.has (filename.string) then
+						if not pixmap_paths.has (filename.name) then
 							pixmap_list.check_item (list_item)
 						end
 						list_item.select_actions.extend (agent display_pixmap_info (list_item))
@@ -883,7 +877,7 @@ feature {NONE} -- Implementation
 		-- All names already in use in system. Initially generated when `Current' is displayed,
 		--and subsequently updated as a user modifies file names.
 
-	pixmap_paths: HASH_TABLE [STRING, STRING]
+	pixmap_paths: STRING_TABLE [READABLE_STRING_GENERAL]
 		-- Full paths of all pixmaps in system, when `Current' is created.
 
 	last_pixmap_name: STRING

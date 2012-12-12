@@ -68,67 +68,67 @@ feature -- Access
 
 feature -- Basic operations
 
-		execute
-				-- Execute `Current'.
-			local
-				settings: GB_PROJECT_SETTINGS
-				dialog: EV_DIRECTORY_DIALOG
-				raw_file: RAW_FILE
-				file_name: PATH
-				created_project: BOOLEAN
-				conf_dialog, directory_conf: EV_CONFIRMATION_DIALOG
-				create_project, cancelled: BOOLEAN
-				directory: DIRECTORY
-			do
-				from
-					create dialog
-				until
-					cancelled or created_project
-				loop
-					create_project := True
-					dialog.show_modal_to_window (components.tools.main_window)
-					if dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
-						cancelled := True
-					end
-						-- If a directory was chosen.
-					if not cancelled then
-						file_name := dialog.path.extended (Project_filename)
-						create raw_file.make_with_path (file_name)
-						if raw_file.exists then
-							create conf_dialog.make_with_text (Project_exists_warning)
-							conf_dialog.set_icon_pixmap (Icon_build_window @ 1)
-							conf_dialog.show_modal_to_window (components.tools.main_window)
-							if not conf_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
-								create_project := False
-							end
-						end
-						if create_project then
-							create directory.make_with_path (dialog.path)
-							if not directory.exists then
-								create directory_conf.make_with_text (Directory_exists_warning)
-								directory_conf.set_icon_pixmap (Icon_build_window @ 1)
-								directory_conf.show_modal_to_window (components.tools.main_window)
-								if directory_conf.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
-									directory.create_dir
-								end
-							end
-							if directory.exists then
-								created_project := True
-								create settings.make_with_default_values (components)
-								settings.set_project_location (dialog.directory)
-								components.system_status.set_current_project (settings)
-								components.commands.update
-							end
-						end
-					end
+	execute
+			-- Execute `Current'.
+		local
+			settings: GB_PROJECT_SETTINGS
+			dialog: EV_DIRECTORY_DIALOG
+			raw_file: RAW_FILE
+			file_name: PATH
+			created_project: BOOLEAN
+			conf_dialog, directory_conf: EV_CONFIRMATION_DIALOG
+			create_project, cancelled: BOOLEAN
+			directory: DIRECTORY
+		do
+			from
+				create dialog
+			until
+				cancelled or created_project
+			loop
+				create_project := True
+				dialog.show_modal_to_window (components.tools.main_window)
+				if dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
+					cancelled := True
 				end
-
-				if created_project then
-						-- We must now initailize the tools for a new empty project.
-					components.object_handler.add_initial_window
-					components.events.new_project_actions.call (Void)
+					-- If a directory was chosen.
+				if not cancelled then
+					file_name := dialog.path.extended (Project_filename)
+					create raw_file.make_with_path (file_name)
+					if raw_file.exists then
+						create conf_dialog.make_with_text (Project_exists_warning)
+						conf_dialog.set_icon_pixmap (Icon_build_window @ 1)
+						conf_dialog.show_modal_to_window (components.tools.main_window)
+						if not conf_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+							create_project := False
+						end
+					end
+					if create_project then
+						create directory.make_with_path (dialog.path)
+						if not directory.exists then
+							create directory_conf.make_with_text (Directory_exists_warning)
+							directory_conf.set_icon_pixmap (Icon_build_window @ 1)
+							directory_conf.show_modal_to_window (components.tools.main_window)
+							if directory_conf.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+								directory.create_dir
+							end
+						end
+						if directory.exists then
+							created_project := True
+							create settings.make_with_default_values (components)
+							settings.set_project_location (dialog.directory)
+							components.system_status.set_current_project (settings)
+							components.commands.update
+						end
+					end
 				end
 			end
+
+			if created_project then
+					-- We must now initailize the tools for a new empty project.
+				components.object_handler.add_initial_window
+				components.events.new_project_actions.call (Void)
+			end
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

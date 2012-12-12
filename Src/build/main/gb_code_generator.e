@@ -111,8 +111,8 @@ feature -- Basic operation
 			directory: DIRECTORY
 			root_element: XM_ELEMENT
 			warning_dialog: EV_WARNING_DIALOG
-			error_message: STRING
-			window_file_name: FILE_NAME
+			error_message: STRING_32
+			window_file_name: PATH
 			rescued: BOOLEAN
 		do
 			if not rescued then
@@ -120,7 +120,7 @@ feature -- Basic operation
 
 					-- Note that the generation of the XML file used internally,
 					-- is not performed until `build_main_window_implementation' is called.
-				create directory.make (generated_path)
+				create directory.make_with_path (generated_path)
 					-- If the directory for the generated code does not already exist then
 					-- we must create it.
 				if not directory.exists then
@@ -166,7 +166,7 @@ feature -- Basic operation
 					class_ids.off
 				loop
 					reset_generation_constants_for_class
-					create window_file_name.make_from_string (class_directories.item)
+					window_file_name := class_directories.item
 					build_main_window_implementation (document_info.generated_info_by_id.item (class_ids.item), window_file_name)
 					build_main_window (document_info.generated_info_by_id.item (class_ids.item), window_file_name)
 					class_ids.forth
@@ -175,13 +175,13 @@ feature -- Basic operation
 
 					-- Now display error dialog if one or more templates could not be found.
 				if missing_files /= Void then
-					error_message := "EiffelBuild was unable to locate the following files required for generation:%N%N"
+					error_message := {STRING_32} "EiffelBuild was unable to locate the following files required for generation:%N%N"
 					from
 						missing_files.start
 					until
 						missing_files.off
 					loop
-						error_message.append (missing_files.item)
+						error_message.append (missing_files.item.name)
 						error_message.append ("%N")
 						missing_files.forth
 					end
@@ -194,13 +194,13 @@ feature -- Basic operation
 
 					-- Now display an error dialog if one or more files could not be written.
 				if not read_only_files.is_empty then
-					error_message := "EiffelBuild was unable to open the following files:%N%N"
+					error_message := {STRING_32} "EiffelBuild was unable to open the following files:%N%N"
 					from
 						read_only_files.start
 					until
 						read_only_files.off
 					loop
-						error_message.append (read_only_files.item)
+						error_message.append (read_only_files.item.name)
 						error_message.append ("%N")
 						read_only_files.forth
 					end
@@ -235,7 +235,7 @@ feature -- Basic operation
 			current_name, current_type: STRING
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
-			directory_name: FILE_NAME
+			directory_name: PATH
 			directory: DIRECTORY
 		do
 			from
@@ -277,14 +277,14 @@ feature -- Basic operation
 							reset_generation_constants_for_class
 							prepass_xml (current_element, document_info, 1)
 							if window_to_generate = Void or else document_info.name.as_lower.is_equal (window_to_generate.as_lower) then
-								directory_name := generated_path.twin
+								directory_name := generated_path
 								from
 									parent_directories.start
 								until
 									parent_directories.off
 								loop
-									directory_name.extend (parent_directories.item)
-									create directory.make (directory_name)
+									directory_name := directory_name.extended (parent_directories.item)
+									create directory.make_with_path (directory_name)
 									if not directory.exists then
 										directory.create_dir
 									end
@@ -304,7 +304,7 @@ feature -- Basic operation
 	class_ids: ARRAYED_LIST [INTEGER]
 		-- Ids of all classes that must be generated as returned by `parse_directories'.
 
-	class_directories: ARRAYED_LIST [STRING]
+	class_directories: ARRAYED_LIST [PATH]
 		-- Directory paths for all classes that must be generated as returned by `parse_directories'.
 
 	create_directory_from_path (a_path: ARRAYED_LIST [STRING])
@@ -313,20 +313,20 @@ feature -- Basic operation
 		require
 			a_path_not_void: a_path /= Void
 		local
-			directory_name: FILE_NAME
+			directory_name: PATH
 			directory: DIRECTORY
 		do
-			directory_name := generated_path.twin
+			directory_name := generated_path
 			from
 				a_path.start
 			until
 				a_path.off
 			loop
-				directory_name.extend (a_path.item)
+				directory_name := directory_name.extended (a_path.item)
 				a_path.forth
 			end
 				-- Only create the directory if it is not empty.
-			create directory.make (directory_name)
+			create directory.make_with_path (directory_name)
 			if not directory.exists then
 				directory.create_dir
 			end
@@ -400,7 +400,7 @@ feature {NONE} -- Implementation
 			create non_exported_attributes.make (20)
 		end
 
-	generated_path: FILE_NAME
+	generated_path: PATH
 			-- `Result' is generated directory for current project.
 		do
 			create Result.make_from_string (components.system_status.current_project_settings.actual_generation_location)
@@ -414,16 +414,16 @@ feature {NONE} -- Implementation
 			-- Note that For Visual Studio, we need to
 			-- generate a debug and a release ace file.
 		do
-			generate_ace_file (ecf_file_name.twin, ecf_name)
-			generate_ace_file (void_safe_ecf_file_name.twin, void_safe_ecf_name)
+			generate_ace_file (ecf_file_name, ecf_name)
+			generate_ace_file (void_safe_ecf_file_name, void_safe_ecf_name)
 		end
 
-	generate_ace_file (template_file_name, file_name: STRING)
+	generate_ace_file (template_file_name: PATH; file_name: STRING)
 			-- Generate a new ace file from template `template_file_name', and save it
 			-- as `file_name'. `template_file_name' is full path, but `file_name' is
 			-- just name of ace file.
 		local
-			ace_file_name: FILE_NAME
+			ace_file_name: PATH
 			ace_template_file, ace_output_file: PLAIN_TEXT_FILE
 			l_uuid: UUID_GENERATOR
 		do
@@ -450,10 +450,9 @@ feature {NONE} -- Implementation
 					-- Now add the application class name.
 				ace_text.replace_substring_all (application_tag, project_settings.application_class_name.as_upper)
 
-				ace_file_name := generated_path.twin
-				ace_file_name.extend (file_name)
+				ace_file_name := generated_path.extended (file_name)
 						-- Store `ace_text'.
-				create ace_output_file.make (ace_file_name)
+				create ace_output_file.make_with_path (ace_file_name)
 				if not ace_output_file.exists or project_settings.rebuild_ace_file then
 					if ace_output_file.exists  and not ace_output_file.is_access_writable then
 						read_only_files.extend (ace_file_name)
@@ -470,7 +469,7 @@ feature {NONE} -- Implementation
 	build_constants_file
 			-- Build class file containing all generated constants.
 		local
-			constants_file_name: FILE_NAME
+			constants_file_name: PATH
 			constants_file: PLAIN_TEXT_FILE
 			constants_content: STRING
 			generated_constants_string: STRING
@@ -642,9 +641,8 @@ feature {NONE} -- Implementation
 				add_generated_string (constants_content, constant_resetting_string, constant_resetting_tag)
 
 					-- Now write the new constants file to disk.
-				constants_file_name := generated_path.twin
-				constants_file_name.extend (project_settings.constants_class_name.as_lower + Class_implementation_extension.as_lower + ".e")
-				create constants_file.make (constants_file_name)
+				constants_file_name := generated_path.extended (project_settings.constants_class_name.as_lower + Class_implementation_extension.as_lower + ".e")
+				create constants_file.make_with_path (constants_file_name)
 
 				if constants_file.exists and not constants_file.is_access_writable then
 					read_only_files.extend (constants_file_name)
@@ -670,9 +668,8 @@ feature {NONE} -- Implementation
 
 
 						-- Now write the new constants file to disk.
-					constants_file_name := generated_path.twin
-					constants_file_name.extend (project_settings.constants_class_name.as_lower + ".e")
-					create constants_file.make (constants_file_name)
+					constants_file_name := generated_path.extended (project_settings.constants_class_name.as_lower + ".e")
+					create constants_file.make_with_path (constants_file_name)
 					if not constants_file.exists then
 						constants_file.open_write
 						constants_file.start
@@ -687,7 +684,7 @@ feature {NONE} -- Implementation
 	build_constants_load_file
 			-- Build text file containing constants to be loaded.
 		local
-			constants_file_name: FILE_NAME
+			constants_file_name: PATH
 			constants_file: PLAIN_TEXT_FILE
 			generated_constants_string: STRING
 			all_constants: HASH_TABLE [GB_CONSTANT, STRING]
@@ -716,9 +713,9 @@ feature {NONE} -- Implementation
 				all_constants.forth
 			end
 				-- Now write the new constants file to disk.
-			constants_file_name := generated_path.twin
-			constants_file_name.extend ("constants.txt")
-			create constants_file.make_open_write (constants_file_name)
+			constants_file_name := generated_path.extended ("constants.txt")
+			create constants_file.make_with_path (constants_file_name)
+			constants_file.open_write
 			constants_file.start
 			constants_file.putstring (generated_constants_string)
 			constants_file.close
@@ -728,7 +725,7 @@ feature {NONE} -- Implementation
 			-- Generate an application class for the project.
 		local
 			application_template_file, application_output_file: PLAIN_TEXT_FILE
-			application_file_name, application_template: FILE_NAME
+			application_file_name, application_template: PATH
 			application_class_name: STRING
 			change_pos: INTEGER
 		do
@@ -751,9 +748,8 @@ feature {NONE} -- Implementation
 				change_pos := application_text.substring_index (application_tag, 1)
 				application_text.replace_substring (application_class_name, change_pos, change_pos + application_tag.count - 1)
 
-				application_file_name := generated_path.twin
-				application_file_name.extend (application_class_name.as_lower + eiffel_class_extension)
-				create application_output_file.make (application_file_name)
+				application_file_name := generated_path.extended (application_class_name.as_lower + eiffel_class_extension)
+				create application_output_file.make_with_path (application_file_name)
 				if application_output_file.exists and not application_output_file.is_access_writable then
 					read_only_files.extend (application_file_name)
 				else
@@ -765,7 +761,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_main_window_implementation (info: GB_GENERATED_INFO; directory_name: FILE_NAME)
+	build_main_window_implementation (info: GB_GENERATED_INFO; directory_name: PATH)
 			-- Generate a main window for the project.
 		require
 			info_not_void: info /= Void
@@ -773,15 +769,14 @@ feature {NONE} -- Implementation
 			directory_name_not_void: directory_name /= Void
 		local
 			window_template_file, window_output_file: PLAIN_TEXT_FILE
-			window_template, file_name: FILE_NAME
+			window_template, file_name: PATH
 			a_class_name, temp_string: STRING
 		do
 			window_counter := window_counter + 1
 			set_progress ((progress_switch + ((1 - progress_switch) * (window_counter / total_windows).truncated_to_real)).min (1))
 				-- Build the file name for generation
 			a_class_name := info.name.as_upper + Class_implementation_extension
-			file_name := directory_name.twin
-			file_name.extend (a_class_name.as_lower + ".e")
+			file_name := directory_name.extended (a_class_name.as_lower + ".e")
 
 				-- Retrieve the template for a class file to generate.
 			window_template := window_template_imp_file_name
@@ -955,7 +950,7 @@ feature {NONE} -- Implementation
 				document_info.reset_after_generation
 
 					-- Store `class_text'.				
-				create window_output_file.make (file_name)
+				create window_output_file.make_with_path (file_name)
 				if window_output_file.exists and not window_output_file.is_access_writable then
 					read_only_files.extend (file_name)
 				else
@@ -967,19 +962,18 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_main_window (info: GB_GENERATED_INFO; directory_name: FILE_NAME)
+	build_main_window (info: GB_GENERATED_INFO; directory_name: PATH)
 			-- Generate interface of our window.
 		require
 			info_not_void: info /= Void
 			info_named: info.name /= Void
 		local
 			window_template_file, window_output_file: PLAIN_TEXT_FILE
-			file_name, window_template: FILE_NAME
+			file_name, window_template: PATH
 			temp_string, a_class_name: STRING
 		do
-			file_name := directory_name.twin
 			a_class_name := info.name.as_upper
-			file_name.extend (a_class_name.as_lower + ".e")
+			file_name := directory_name.extended (a_class_name.as_lower + ".e")
 			window_template := window_template_file_name
 			window_template_file := open_text_file_for_read (window_template)
 
@@ -1024,7 +1018,7 @@ feature {NONE} -- Implementation
 				add_generated_string (class_text, event_implementation_string, event_declaration_tag)
 
 					-- Store `class_text'.				
-				create window_output_file.make (file_name)
+				create window_output_file.make_with_path (file_name)
 				if not window_output_file.exists then
 					window_output_file.open_write
 					window_output_file.start
@@ -1816,13 +1810,13 @@ feature {NONE} -- Implementation
 		-- As they are performed independently, we need the progress of each to
 		-- work as a whole
 
-	missing_files: ARRAYED_LIST [STRING]
+	missing_files: ARRAYED_LIST [PATH]
 		-- All files that could not be located during generation.
 
-	read_only_files: ARRAYED_LIST [STRING]
+	read_only_files: ARRAYED_LIST [PATH]
 			-- All files that could not be accessed during generation.
 
-	open_text_file_for_read (file_name: STRING): PLAIN_TEXT_FILE
+	open_text_file_for_read (file_name: PATH): PLAIN_TEXT_FILE
 			-- Open file plain text file named `file_name',
 			-- and return it if it exists, otherwise return Void.
 		require
@@ -1830,7 +1824,7 @@ feature {NONE} -- Implementation
 		local
 			file: PLAIN_TEXT_FILE
 		do
-			create file.make (file_name)
+			create file.make_with_path (file_name)
 			if file.exists then
 				file.open_read
 				Result := file

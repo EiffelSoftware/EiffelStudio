@@ -250,6 +250,18 @@
 		<geant target="build_delivery" />
 	</target>
 
+	<target name="quick_compiler_delivery" depend="init_deliv" >
+		<!-- copy executable from ISE_EIFFEL, remove ec and ecb, and make delivery -->
+		<geant target="copy_ise_eiffel_to_delivery" />
+		<geant target="safe_delete" arguments="${_BINARY_DIR},ecb${exe}" />
+		<geant target="safe_delete" arguments="${_BINARY_DIR},ec${exe}" />
+		<geant target="safe_delete" arguments="${_BINARY_DIR},emake${exe}" />
+		<geant target="safe_delete" arguments="${_BINARY_DIR},estudio${exe}" />
+		<geant target="safe_delete" arguments="${_BINARY_DIR},finish_freezing${exe}" />
+		<geant target="safe_delete" arguments="${_BINARY_DIR},quick_finalize${exe}" />
+		<geant target="build_delivery" />
+	</target>
+
 	<target name="quick_eweasel_delivery" depend="init_deliv" >
 		<!-- copy executable from ISE_EIFFEL, remove ec and ecb, and make delivery -->
 		<geant target="copy_ise_eiffel_to_delivery" />

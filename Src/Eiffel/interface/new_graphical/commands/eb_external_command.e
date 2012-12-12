@@ -365,9 +365,7 @@ feature{ES_CONSOLE_TOOL_PANEL} -- Status setting
 		do
 			working_directory := dir
 		ensure
-			working_directory_set:
-				((dir /= Void) implies working_directory.is_same_file_as (dir)) and
-				((dir = Void) implies working_directory = Void)
+			working_directory_set: working_directory = dir
 		end
 
 	set_accelerator (accel: EV_ACCELERATOR)

@@ -100,7 +100,7 @@ feature -- Basic operations
 			-- Load previously stored components in `component_document',
 			-- or create `component_document' if no component file exists.
 		local
-			file: KL_BINARY_INPUT_FILE
+			file: KL_BINARY_INPUT_FILE_32
 			an_element, component_element: XM_ELEMENT
 			parser: XM_EIFFEL_PARSER
 			l_found: BOOLEAN
@@ -110,9 +110,9 @@ feature -- Basic operations
 			end
 				-- Check to see if a user create component file is available, if not
 				-- load up the default one from the delivery.
-			create file.make (component_filename)
+			create file.make_with_path (component_filename)
 			if not file.exists then
-				create file.make (default_component_filename)
+				create file.make_with_path (default_component_filename)
 			end
 			if file.exists then
 					-- Load the existing file into `component document'
@@ -172,7 +172,7 @@ feature -- Basic operations
 			check
 				component_doc_not_void: component_document /= Void
 			end
-			create file.make (component_filename)
+			create file.make_with_path (component_filename)
 			if not file.exists then
 					-- If we have not yet saved a component file then we create one.
 				file.create_read_write
@@ -182,7 +182,7 @@ feature -- Basic operations
 			until
 				file.is_writable or cancelled
 			loop
-				create error_dialog.make_with_text ("Unable to write to file : " + component_filename + ".%NPlease check file permissions and try again.")
+				create error_dialog.make_with_text ({STRING_32} "Unable to write to file : " + component_filename.name + ".%NPlease check file permissions and try again.")
 				error_dialog.show_modal_to_window (components.tools.main_window)
 				if error_dialog.selected_button.is_equal (ev_abort) then
 					cancelled := True
@@ -196,11 +196,11 @@ feature -- Basic operations
 	actual_save_components
 			-- Actually perform saving of components.
 		local
-			file: KL_TEXT_OUTPUT_FILE
+			file: KL_TEXT_OUTPUT_FILE_32
 			formater: XM_FORMATTER
 			warning_dialog: EV_WARNING_DIALOG
 		do
-			create file.make (component_filename)
+			create file.make_with_path (component_filename)
 			file.open_write
 			if file.is_open_write then
 				file.put_string (xml_format)
@@ -209,7 +209,7 @@ feature -- Basic operations
 				formater.process_document (component_document)
 				file.close
 			else
-				create warning_dialog.make_with_text (unable_to_save_part1 + component_filename + unable_to_save_part2_components)
+				create warning_dialog.make_with_text (unable_to_save_part1 + component_filename.name + unable_to_save_part2_components)
 				warning_dialog.show_modal_to_window (components.tools.main_window)
 			end
 		end

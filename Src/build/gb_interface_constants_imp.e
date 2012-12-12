@@ -34,7 +34,7 @@ note
 
 deferred class
 	GB_INTERFACE_CONSTANTS_IMP
-	
+
 feature {NONE} -- Initialization
 
 	initialize_constants
@@ -275,16 +275,16 @@ feature -- Access
 			create Result.put ("Modify")
 		end
 
-	pixmap_location: STRING
+	pixmap_location: PATH
 			-- `Result' is DIRECTORY constant named `pixmap_location'.
 		do
 			Result := pixmap_location_cell.item
 		end
 
-	pixmap_location_cell: CELL [STRING]
+	pixmap_location_cell: CELL [PATH]
 			--`Result' is once access to a cell holding vale of `pixmap_location'.
 		once
-			create Result.put ("C:\apps\Eiffel57\build\bitmaps\png")
+			create Result.put (create {PATH}.make_empty)
 		end
 
 	large_spacing_width: INTEGER
@@ -343,13 +343,9 @@ feature -- Access
 
 	lightbulb_png_cell: CELL [EV_PIXMAP]
 			--`Result' is once access to a cell holding vale of `lightbulb_png'.
-		local
-			a_file_name: FILE_NAME
 		once
 			create Result.put (create {EV_PIXMAP})
-			create a_file_name.make_from_string (pixmap_location)
-			a_file_name.set_file_name ("lightbulb.png")
-			set_with_named_file (Result.item, a_file_name)
+			set_with_named_file (Result.item, pixmap_location.extended ("lightbulb.png"))
 		end
 
 	icon_component_viewer_color_png: EV_PIXMAP
@@ -360,13 +356,9 @@ feature -- Access
 
 	icon_component_viewer_color_png_cell: CELL [EV_PIXMAP]
 			--`Result' is once access to a cell holding vale of `icon_component_viewer_color_png'.
-		local
-			a_file_name: FILE_NAME
 		once
 			create Result.put (create {EV_PIXMAP})
-			create a_file_name.make_from_string (pixmap_location)
-			a_file_name.set_file_name ("icon_component_viewer_color.png")
-			set_with_named_file (Result.item, a_file_name)
+			set_with_named_file (Result.item, pixmap_location.extended ("icon_component_viewer_color.png"))
 		end
 
 	icon_component_display_view_color_png: EV_PIXMAP
@@ -377,13 +369,9 @@ feature -- Access
 
 	icon_component_display_view_color_png_cell: CELL [EV_PIXMAP]
 			--`Result' is once access to a cell holding vale of `icon_component_display_view_color_png'.
-		local
-			a_file_name: FILE_NAME
 		once
 			create Result.put (create {EV_PIXMAP})
-			create a_file_name.make_from_string (pixmap_location)
-			a_file_name.set_file_name ("icon_component_display_view_color.png")
-			set_with_named_file (Result.item, a_file_name)
+			set_with_named_file (Result.item, pixmap_location.extended ("icon_component_display_view_color.png"))
 		end
 
 	icon_build_window_color_png: EV_PIXMAP
@@ -394,13 +382,9 @@ feature -- Access
 
 	icon_build_window_color_png_cell: CELL [EV_PIXMAP]
 			--`Result' is once access to a cell holding vale of `icon_build_window_color_png'.
-		local
-			a_file_name: FILE_NAME
 		once
 			create Result.put (create {EV_PIXMAP})
-			create a_file_name.make_from_string (pixmap_location)
-			a_file_name.set_file_name ("icon_build_window_color.png")
-			set_with_named_file (Result.item, a_file_name)
+			set_with_named_file (Result.item, pixmap_location.extended ("icon_build_window_color.png"))
 		end
 
 	icon_component_build_view_color_png: EV_PIXMAP
@@ -411,13 +395,9 @@ feature -- Access
 
 	icon_component_build_view_color_png_cell: CELL [EV_PIXMAP]
 			--`Result' is once access to a cell holding vale of `icon_component_build_view_color_png'.
-		local
-			a_file_name: FILE_NAME
 		once
 			create Result.put (create {EV_PIXMAP})
-			create a_file_name.make_from_string (pixmap_location)
-			a_file_name.set_file_name ("icon_component_build_view_color.png")
-			set_with_named_file (Result.item, a_file_name)
+			set_with_named_file (Result.item, pixmap_location.extended ("icon_component_build_view_color.png"))
 		end
 
 feature -- Access
@@ -432,7 +412,7 @@ feature -- Access
 		end
 
 	string_constant_by_name (a_name: STRING): STRING
-			-- `Result' is STRING 
+			-- `Result' is STRING
 		require
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
@@ -444,9 +424,9 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	integer_constant_by_name (a_name: STRING): INTEGER
-			-- `Result' is STRING 
+			-- `Result' is STRING
 		require
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
@@ -459,7 +439,7 @@ feature -- Access
 				Result := l_string.to_integer
 			end
 		end
-		
+
 	has_constant (a_name: STRING): BOOLEAN
 			-- Does constant `a_name' exist?
 		require
@@ -477,34 +457,34 @@ feature {NONE} -- Implementation
 		once
 			create Result.put (False)
 		end
-		
+
 	all_constants: HASH_TABLE [STRING, STRING]
 			-- All constants loaded from constants file.
 		once
 			create Result.make (4)
 		end
-		
+
 	file_name: STRING
 			-- File name from which constants must be loaded.
 		do
 			Result := file_name_cell.item
 		end
-		
+
 	file_name_cell: CELL [STRING]
 		once
 			create Result.put ("constants.txt")
 		end
-		
+
 	set_file_name (a_file_name: STRING)
 			-- Assign `a_file_name' to `file_name'.
 		do
 			file_name_cell.put (a_file_name)
 		end
-		
+
 	String_constant: STRING = "STRING"
-	
+
 	Integer_constant: STRING = "INTEGER"
-		
+
 	parse_file_contents (content: STRING)
 			-- Parse contents of `content' into `all_constants'.
 		local
@@ -534,7 +514,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	first_line (content: STRING): STRING
 			-- `Result' is first line of `Content',
 			-- which will be stripped from `content'.
@@ -542,7 +522,7 @@ feature {NONE} -- Implementation
 			content_not_void: content /= Void
 			content_not_empty: not content.is_empty
 		local
-			new_line_index: INTEGER		
+			new_line_index: INTEGER
 		do
 			new_line_index := content.index_of ('%N', 1)
 			if new_line_index /= 0 then
@@ -557,7 +537,7 @@ feature {NONE} -- Implementation
 			no_characters_lost: old content.count = Result.count + content.count
 		end
 
-	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: STRING)
+	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: PATH)
 			-- Set image of `a_pixmap' from file, `a_file_name'.
 			-- If `a_file_name' does not exist, do nothing.
 		require
@@ -566,9 +546,9 @@ feature {NONE} -- Implementation
 		local
 			l_file: RAW_FILE
 		do
-			create l_file.make (a_file_name)
+			create l_file.make_with_path (a_file_name)
 			if l_file.exists then
-				a_pixmap.set_with_named_file (a_file_name)
+				a_pixmap.set_with_named_path (a_file_name)
 			end
 		end
 

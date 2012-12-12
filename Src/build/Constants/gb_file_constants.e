@@ -18,86 +18,73 @@ inherit
 
 feature -- Generation constants
 
-	Default_component_filename: FILE_NAME
+	Default_component_filename: PATH
 			-- Location of component file.
 		once
-			create Result.make_from_string (eiffel_layout.shared_application_path_8)
-			Result.extend ("components")
-			Result.set_file_name ("components")
-			Result.add_extension ("xml")
+			Result := eiffel_layout.shared_application_path.extended ("components").extended ("components.xml")
 		ensure
 			Result_ok: Result /= Void and then not Result.is_empty
 		end
 
-	Component_filename: FILE_NAME
+	Component_filename: PATH
 			-- Location of component file.
 		once
-			create Result.make_from_string (eiffel_layout.hidden_files_path_8)
-			Result.set_file_name ("esbuilder_components")
-			Result.add_extension ("xml")
+			Result := eiffel_layout.hidden_files_path.extended ("esbuilder_components.xml")
 		ensure
 			Result_ok: Result /= Void and then not Result.is_empty
 		end
 
-	template_file_location: FILE_NAME
+	template_file_location: PATH
 			-- Location of templates.
 		do
-			create Result.make_from_string (eiffel_layout.shared_application_path_8)
-			Result.extend ("templates")
+			Result := eiffel_layout.shared_application_path.extended ("templates")
 		end
 
-	window_template_file_name: FILE_NAME
+	window_template_file_name: PATH
 			-- `Result' is location of build template file,
 			-- including the name.
 		do
-			Result := template_file_location
-			Result.extend ("build_class_template.e")
+			Result := template_file_location.extended ("build_class_template.e")
 		end
 
-	window_template_imp_file_name: FILE_NAME
+	window_template_imp_file_name: PATH
 			-- `Result' is location of build template file,
 			-- including the name.
 		do
-			Result := template_file_location
-			Result.extend ("build_class_template_imp.e")
+			Result := template_file_location.extended ("build_class_template_imp.e")
 		end
 
-	constants_template_imp_file_name: FILE_NAME
+	constants_template_imp_file_name: PATH
 			-- `Result' is location of build constants implementation template file,
 			-- including name.
 		do
-			Result := template_file_location
-			Result.extend ("constants_imp.e")
+			Result := template_file_location.extended ("constants_imp.e")
 		end
 
-	constants_template_file_name: FILE_NAME
+	constants_template_file_name: PATH
 			-- `Result' is location of build constants template file,
 			-- including name.
 		do
-			Result := template_file_location
-			Result.extend ("constants.e")
+			Result := template_file_location.extended ("constants.e")
 		end
 
-	application_template_file_name: FILE_NAME
+	application_template_file_name: PATH
 			-- `Result' is location of build application template file,
 			-- including the name.
 		do
-			Result := template_file_location
-			Result.extend ("build_application_template.e")
+			Result := template_file_location.extended ("build_application_template.e")
 		end
 
-	ecf_file_name: FILE_NAME
+	ecf_file_name: PATH
 			-- `Result' is location of windows ace file template.
 		do
-			Result := template_file_location
-			Result.extend ("template.ecf")
+			Result := template_file_location.extended ("template.ecf")
 		end
 
-	void_safe_ecf_file_name: FILE_NAME
+	void_safe_ecf_file_name: PATH
 			-- `Result' is location of windows ace file template.
 		do
-			Result := template_file_location
-			Result.extend ("template-safe.ecf")
+			Result := template_file_location.extended ("template-safe.ecf")
 		end
 
 	eiffel_class_extension: STRING = ".e"
@@ -121,12 +108,10 @@ feature -- XML saving
 
 feature -- Preferences
 
-	default_xml_file: FILE_NAME
+	default_xml_file: PATH
 			-- General system level resource specification XML file.			
 		do
-			create Result.make_from_string (eiffel_layout.shared_application_path_8)
-			Result.extend ("config")
-			Result.extend ("default.xml")
+			Result := eiffel_layout.shared_application_path.extended ("config").extended ("default.xml")
 		ensure
 			result_not_empty: Result /= Void
 		end

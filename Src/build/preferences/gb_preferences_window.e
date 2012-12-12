@@ -59,26 +59,16 @@ feature {NONE} -- Implementation
 
 	icon_preference_root: EV_PIXMAP
 			-- Icon for preferences root node
-		local
-			l_filename: FILE_NAME
 		do
-			create l_filename.make_from_string (eiffel_layout.bitmaps_path_8)
-			l_filename.extend ("png")
-			l_filename.extend ("icon_preferences_root.png")
 			create Result
-			Result.set_with_named_file (l_filename.string)
+			Result.set_with_named_path (eiffel_layout.bitmaps_path.extended ("png").extended ("icon_preferences_root.png"))
 		end
 
 	icon_preference_folder: EV_PIXMAP
 			-- Icon for preferences folder node
-		local
-			l_filename: FILE_NAME
 		do
-			create l_filename.make_from_string (eiffel_layout.bitmaps_path_8)
-			l_filename.extend ("png")
-			l_filename.extend ("icon_preferences_folder.png")
 			create Result
-			Result.set_with_named_file (l_filename.string)
+			Result.set_with_named_path (eiffel_layout.bitmaps_path.extended ("png").extended ("icon_preferences_folder.png"))
 		end
 
 note

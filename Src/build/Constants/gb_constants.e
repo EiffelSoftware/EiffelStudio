@@ -683,7 +683,7 @@ feature -- Warning Dialogs
 
 	changing_client_warning: STRING = "You are attempting to change the client status of a class that%Nhas already been generated and exists on disk%N%NThis change may cause the generated implementation file and%Nyour current interface file to no longer compile without modification%N%NAre you sure you wish to perform this?"
 
-	unable_to_save_part1: STRING = "Unable to save the following file :%N%N"
+	unable_to_save_part1: STRING_32 = "Unable to save the following file :%N%N"
 	unable_to_save_part2: STRING = "%N%NPlease check file permissions and try again."
 	unable_to_save_part2_components: STRING = "%N%NModified components will not be saved."
 

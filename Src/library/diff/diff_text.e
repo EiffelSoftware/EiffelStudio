@@ -219,7 +219,7 @@ feature -- Element change
 			l_dst.rebase (0)
 			dst := l_dst
 			l_header.append ("+++ ")
-			l_header.append (utf.string_32_to_utf_8_string_8 (file_dst.path.name)so L)
+			l_header.append (utf.string_32_to_utf_8_string_8 (file_dst.path.name))
 			l_header.append_character (line_delimiter)
 			from
 				i := 0

@@ -316,10 +316,10 @@ feature -- Retrieval
 							a_per_project = l_session.is_per_project and then
 							not l_session.is_per_window
 						then
-							if attached a_extension as l_ext then
+							if a_extension /= Void then
 								if
 									attached l_session.extension_name as l_other_ext and then
-									l_ext.same_string (l_other_ext)
+									a_extension.same_string (l_other_ext)
 								then
 									Result := l_session
 								end
@@ -336,7 +336,7 @@ feature -- Retrieval
 			if Result = Void then
 					-- Create a new session
 				Result := new_session (Void, a_per_project, a_extension)
-				if attached Result then
+				if Result /= Void then
 					l_sessions.extend (Result)
 				end
 			end
@@ -373,7 +373,7 @@ feature -- Retrieval
 							a_per_project = l_session.is_per_project and then
 							l_session.is_per_window and then
 							l_session.window_id = a_window.window_id and then
-							((attached a_extension as l_ext and attached l_session.extension_name as l_other_ext) implies l_ext.same_string (l_other_ext))
+							((a_extension /= Void and attached l_session.extension_name as l_other_ext) implies a_extension.same_string (l_other_ext))
 						then
 							Result := l_session
 						end
@@ -386,7 +386,7 @@ feature -- Retrieval
 			if Result = Void then
 					-- Create a new session
 				Result := new_session (a_window, a_per_project, a_extension)
-				if attached Result then
+				if Result /= Void then
 					l_sessions.extend (Result)
 				end
 			end

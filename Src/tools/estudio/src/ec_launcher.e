@@ -126,7 +126,7 @@ feature -- Launching
 						io.output.put_new_line
 					end
 				end
-				start_process (eiffel_layout.ec_command_name_8, ec_arguments, Void)
+				start_process (eiffel_layout.ec_command_name, ec_arguments, Void)
 			else
 				do_exit_launcher
 			end
@@ -135,7 +135,7 @@ feature -- Launching
 			retry
 		end
 
-	start_process (cmd: READABLE_STRING_GENERAL; args: LIST [READABLE_STRING_GENERAL]; dir: READABLE_STRING_GENERAL)
+	start_process (cmd: PATH; args: LIST [READABLE_STRING_GENERAL]; dir: READABLE_STRING_GENERAL)
 			-- Start process using command `cmd' and arguments `args'
 			-- in the working directory `dir'
 		require
@@ -149,7 +149,7 @@ feature -- Launching
 				--| estudio must stay alive ...
 			keep_estudio_terminal := not is_windows or is_waiting
 
-			process := process_factory.process_launcher (cmd, args, dir)
+			process := process_factory.process_launcher (cmd.name, args, dir)
 			process.set_hidden (False)
 
 			if is_windows then

@@ -14,9 +14,9 @@ class
 	ECF_UPDATER
 
 inherit
-	SHARED_FILE_SYSTEM
-
 	LOCALIZED_PRINTER
+
+	SHARED_EXECUTION_ENVIRONMENT
 
 create
 	make
@@ -27,12 +27,14 @@ feature {NONE} -- Initialization
 		local
 			dv: ECF_DIRECTORY_ITERATOR
 			tb: like ecf_table
+			has_processed_node: BOOLEAN
 			confirmed: BOOLEAN
 		do
-			create tb.make_with_key_tester (50, create {STRING_EQUALITY_TESTER})
+			create tb.make (50)
 
 			create errors.make (0)
 			create warnings.make (0)
+			has_processed_node := False
 			ecf_table := tb
 			root_directory := args.root_directory	--"c:\_dev\EWF\EWF-dev"
 			root_base_name := args.base_name	--"$EIFFEL_LIBRARY"
@@ -119,19 +121,38 @@ feature {NONE} -- Initialization
 	--			update_ecf (root_directory + "\library\server\wsf\wsf.ecf")
 	--			update_ecf (root_directory + "\library\server\wsf\tests\tests-safe.ecf")
 
-				if attached args.files as l_files then
+				if attached args.files as l_files and then not l_files.is_empty then
+					has_processed_node := True
 					across
 						l_files as c
 					loop
 						update_ecf (c.item)
 					end
 				end
-				if attached args.directories as l_dirs then
+				if attached args.directories as l_dirs and then not l_dirs.is_empty then
+					has_processed_node := True
 					create dv.make (agent update_ecf)
 					across
 						l_dirs as c
 					loop
 						dv.process_directory (absolute_directory_path (c.item))
+					end
+				end
+				if not has_processed_node then
+					io.output.put_string ("No file or directory are asked to be updated.%N")
+					if not args.execution_forced then
+						io.output.put_string ("Do you want to update recursively current directory %N%T%"")
+						localized_print (execution_environment.current_working_path.name)
+						io.output.put_string ("%" %N Continue (y|N)?")
+						io.read_line
+						io.last_string.left_adjust
+						io.last_string.right_adjust
+						io.last_string.to_lower
+						if io.last_string.same_string ("y") then
+							has_processed_node := True
+							create dv.make (agent update_ecf)
+							dv.process_directory (absolute_directory_path (execution_environment.current_working_path))
+						end
 					end
 				end
 
@@ -170,7 +191,7 @@ feature -- Access
 	root_base_name: detachable STRING_32
 			-- Optional name/path to replace the `root_directory' in .ecf
 
-	ecf_table: HASH_TABLE_EX [attached like path_details, READABLE_STRING_GENERAL]
+	ecf_table: STRING_TABLE [attached like path_details]
 			-- Table of existing ecf inside `root_directory'
 
 	is_simulation: BOOLEAN
@@ -278,6 +299,7 @@ feature -- Basic operation
 			l_rn: STRING_32
 			l_ecf: STRING_32
 			l_old_content, l_new_content: STRING_32
+			u: FILE_UTILITIES
 		do
 			if attached path_details (fn.name) as l_info then
 				l_rn := root_directory.name
@@ -321,6 +343,10 @@ feature -- Basic operation
 									if attached ecf_location (l_ecf) as l_location then
 										l_new_path := relative_path (l_location, fn.name, l_rn, root_base_name)
 									else
+										if not u.file_exists (l_ecf) then
+											report_warning ({STRING_32} "Unable to find %"" + l_ecf.to_string_32 + {STRING_32} "%" from file %"" + fn.name + {STRING_32} "%"")
+										end
+
 										l_new_path := relative_path (l_ecf, fn.name, l_rn, root_base_name)
 									end
 									debug
@@ -379,6 +405,8 @@ feature -- Basic operation
 									end
 									report_progress ({STRING_32} "Updated %"" + f.path.name + {STRING_32} "%"")
 								end
+							else
+								report_progress ({STRING_32} "To-update %"" + f.path.name + {STRING_32} "%"")
 							end
 						else
 							report_error ({STRING_32} "could not update %"" + f.path.name + {STRING_32} "%" (not writable)")
@@ -399,7 +427,7 @@ feature -- Basic operation
 			end
 		end
 
-	diff (s1,s2: READABLE_STRING_8): detachable STRING_GENERAL
+	diff (s1,s2: READABLE_STRING_8): detachable STRING_8
 		local
 			d: DIFF_TEXT
 		do
@@ -495,11 +523,6 @@ feature {NONE} -- Implementation
 						end
 					end
 				else
-				end
-			end
-			if Result = Void then
-				if not file_system.file_exists (l_ecf) then
-					report_warning ({STRING_32} "Unable to find %"" + a_ecf.to_string_32 + {STRING_32} "%"")
 				end
 			end
 		end

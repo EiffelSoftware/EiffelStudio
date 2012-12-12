@@ -15,8 +15,6 @@ inherit
 
 	APPLICATION_ARGUMENTS
 
-	SHARED_FILE_SYSTEM
-
 create
 	make
 
@@ -42,13 +40,15 @@ feature -- Access
 			-- List of files to resave
 		local
 			l_options: like values
+			f: RAW_FILE
 		once
 			l_options := values.twin
 			from l_options.start until l_options.after loop
-				if not file_system.is_file_readable (l_options.item) then
-					l_options.remove
-				else
+				create f.make_with_name (l_options.item)
+				if f.exists and then f.is_readable and not f.is_directory then
 					l_options.forth
+				else
+					l_options.remove
 				end
 			end
 			create {ARRAYED_LIST [PATH]} Result.make (l_options.count)
@@ -62,13 +62,15 @@ feature -- Access
 			-- List of directories to locate ecfs in
 		local
 			l_options: like values
+			d: DIRECTORY
 		once
 			l_options := values.twin
 			from l_options.start until l_options.after loop
-				if not file_system.is_directory_readable (l_options.item) then
-					l_options.remove
-				else
+				create d.make (l_options.item)
+				if d.exists and then d.is_readable then
 					l_options.forth
+				else
+					l_options.remove
 				end
 			end
 			create {ARRAYED_LIST [PATH]} Result.make (l_options.count)

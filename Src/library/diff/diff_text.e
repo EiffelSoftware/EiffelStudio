@@ -9,7 +9,7 @@ class
 	DIFF_TEXT
 
 inherit
-	DIFF [STRING]
+	DIFF [READABLE_STRING_8]
 		export
 			{NONE} set
 		end
@@ -126,20 +126,20 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_src_text: STRING; a_dst_text: STRING)
+	set_text (a_src_text: READABLE_STRING_8; a_dst_text: READABLE_STRING_8)
 			-- Set the two texts to compare line by line.
 		require
 			a_src_text_not_void: a_src_text /= Void
 			a_dst_text_not_void: a_dst_text /= Void
 		local
-			tmp_lst: LIST [STRING]
+			tmp_lst: LIST [READABLE_STRING_8]
 			i: INTEGER
 			l_src: like src
 			l_dst: like dst
 		do
 				-- convert it into an array because it is faster to access
 			tmp_lst := a_src_text.split (line_delimiter)
-			create l_src.make(0, tmp_lst.count-1)
+			create l_src.make_filled ("", 0, tmp_lst.count - 1)
 			src := l_src
 			from
 				tmp_lst.start
@@ -153,7 +153,7 @@ feature -- Element change
 			end
 
 			tmp_lst := a_dst_text.split (line_delimiter)
-			create l_dst.make(0, tmp_lst.count-1)
+			create l_dst.make_filled ("", 0, tmp_lst.count - 1)
 			dst := l_dst
 			from
 				tmp_lst.start
@@ -172,7 +172,7 @@ feature -- Element change
 			unified_header_attached: unified_header /= Void
 		end
 
-	set_file (a_src_file: STRING; a_dst_file: STRING)
+	set_file (a_src_file: READABLE_STRING_GENERAL; a_dst_file: READABLE_STRING_GENERAL)
 			-- Set the two files to compare line by line.
 		require
 			a_src_file_not_void: a_src_file /= void
@@ -186,14 +186,17 @@ feature -- Element change
 			l_header: like unified_header
 			l_src: like src
 			l_dst: like dst
+			utf: UTF_CONVERTER
 		do
-			create file_src.make_open_read(a_src_file)
-			create l_src.make (0, 0)
+			create file_src.make_with_name (a_src_file)
+			file_src.open_read
+			create l_src.make_empty
+			l_src.rebase (0)
 			src := l_src
 			create l_header.make_empty
 			unified_header := l_header
 			l_header.append ("--- ")
-			l_header.append (a_src_file)
+			l_header.append (utf.string_32_to_utf_8_string_8 (file_src.path.name))
 
 			l_header.append_character (line_delimiter)
 			from
@@ -210,11 +213,13 @@ feature -- Element change
 			end
 			file_src.close
 
-			create file_dst.make_open_read(a_dst_file)
-			create l_dst.make (0, 0)
+			create file_dst.make_with_name (a_dst_file)
+			file_dst.open_read
+			create l_dst.make_empty
+			l_dst.rebase (0)
 			dst := l_dst
 			l_header.append ("+++ ")
-			l_header.append (a_dst_file)
+			l_header.append (utf.string_32_to_utf_8_string_8 (file_dst.path.name)so L)
 			l_header.append_character (line_delimiter)
 			from
 				i := 0
@@ -235,15 +240,15 @@ feature -- Element change
 
 feature -- Basic operations
 
-	patch (a_text:STRING; a_patch: STRING; reversed: BOOLEAN): STRING
+	patch (a_text: READABLE_STRING_8; a_patch: READABLE_STRING_8; reversed: BOOLEAN): STRING
 			-- Apply `a_patch' (in unified patch format) to `a_text'. If the patch was created from destination to source set `reversed'.
 		require
 			a_text_not_void: a_text /= void
 			a_patch_not_void: a_patch /= void
 		local
-			commands: LIST [STRING]
-			lines: LIST [STRING]
-			tmp: STRING
+			commands: LIST [READABLE_STRING_8]
+			lines: LIST [READABLE_STRING_8]
+			tmp: READABLE_STRING_8
 			add_char, del_char, match_char: CHARACTER
 		do
 			match_char := ' '

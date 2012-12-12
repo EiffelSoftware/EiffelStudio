@@ -32,6 +32,13 @@ inherit
 			default_create
 		end
 
+	DB_CONSTANT
+		export
+			{NONE} all
+		redefine
+			default_create
+		end
+
 feature {NONE} -- Initialization
 
 	default_create
@@ -41,6 +48,8 @@ feature {NONE} -- Initialization
 			create result_pointers.make_filled (default_pointer, 1, max_descriptor_number)
 			create row_pointers.make_filled (default_pointer, 1, max_descriptor_number)
 			create last_date_data.make (0)
+			create date_buffer.make (date_length)
+			create string_buffer.make (selection_string_size)
 			last_descriptor := 0
 		end
 
@@ -516,9 +525,10 @@ feature -- External features
 			i: INTEGER
 			l_area: MANAGED_POINTER
 		do
-			create l_area.make (max_len)
+			l_area := string_buffer
+			l_area.resize (max_len)
 			Result := eif_mysql_column_name (
-				result_pointers.item (no_descriptor), index, l_area.item)
+				result_pointers.item (no_descriptor), index, l_area.item, max_len)
 			check
 				Result <= max_len
 			end
@@ -543,10 +553,11 @@ feature -- External features
 			l_area: MANAGED_POINTER
 			l_length: INTEGER
 		do
-			create l_area.make (max_len)
+			l_area := string_buffer
+			l_area.resize (max_len)
 			l_length := get_data_len (no_descriptor, ind)
 			Result := eif_mysql_column_data (
-				row_pointers.item (no_descriptor), ind, l_area.item, l_length)
+				row_pointers.item (no_descriptor), ind, l_area.item, l_length.min (max_len))
 			check
 				Result <= max_len
 			end
@@ -574,10 +585,11 @@ feature -- External features
 			l_str: STRING
 			l_str32: STRING_32
 		do
-			create l_area.make (max_len)
+			l_area := string_buffer
+			l_area.resize (max_len)
 			l_length := get_data_len (no_descriptor, ind)
 			l_count := eif_mysql_column_data (
-				row_pointers.item (no_descriptor), ind, l_area.item, l_length)
+				row_pointers.item (no_descriptor), ind, l_area.item, l_length.min (max_len))
 			check
 				l_count <= max_len
 			end
@@ -684,7 +696,7 @@ feature -- External features
 			l_area: MANAGED_POINTER
 			l_int_8: INTEGER_8
 		do
-			create l_area.make (19)
+			l_area := date_buffer
 			Result := eif_mysql_date_data (row_pointers.item (no_descriptor), ind, l_area.item)
 			if Result = 1 then
 				from
@@ -1002,6 +1014,15 @@ feature {NONE} -- Attributes
 			-- Array of row pointers so that we can safely remember which
 			-- MYSQL_ROW belongs to which descriptor
 
+	date_buffer: MANAGED_POINTER
+			-- Buffer of date
+
+	string_buffer: MANAGED_POINTER
+			-- Buffer of string
+
+	date_length: INTEGER = 19
+			-- Date length defined by MYSQL
+
 feature {NONE} -- C Externals
 
 	eif_mysql_c_boolean_type: INTEGER
@@ -1085,7 +1106,7 @@ feature {NONE} -- C Externals
 			"C | %"eif_mysql.h%""
 		end
 
-	eif_mysql_column_name (result_ptr: POINTER; ind: INTEGER; ar: POINTER):
+	eif_mysql_column_name (result_ptr: POINTER; ind: INTEGER; ar: POINTER; a_max_len: INTEGER):
 			INTEGER
 		external
 			"C | %"eif_mysql.h%""

@@ -77,7 +77,7 @@ unsigned long eif_mysql_column_length(MYSQL_RES *result_ptr, int ind)
  *				char *ar:				The name of the column
  * Returns:		The length of the column name
  */
-int eif_mysql_column_name(MYSQL_RES *result_ptr, int ind, char *ar)
+int eif_mysql_column_name(MYSQL_RES *result_ptr, int ind, char *ar, int a_max_len)
 {
 	MYSQL_FIELD *field = (MYSQL_FIELD *) 0;
 	char *name = (char *) 0;
@@ -86,7 +86,7 @@ int eif_mysql_column_name(MYSQL_RES *result_ptr, int ind, char *ar)
 	field = mysql_fetch_field_direct(result_ptr, ind - 1);
 	name = field->name;
 	result = field->name_length;
-
+	result = result <= a_max_len ? result : a_max_len;
 	ar = memcpy(ar, name, result);
 
 	return result;

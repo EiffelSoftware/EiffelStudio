@@ -40,10 +40,10 @@ feature -- Access
 			Result := dialog.path
 		end
 
-	buttons: attached DS_SET [INTEGER]
+	buttons: DS_SET [INTEGER]
 			-- <Precursor>
 		once
-			Result := dialog_buttons.ok_cancel_buttons.as_attached
+			Result := dialog_buttons.ok_cancel_buttons
 		end
 
 feature {NONE} -- Element change
@@ -78,7 +78,7 @@ feature -- Status setting
 
 feature {NONE} -- Query
 
-	button_from_dialog_selected_button (a_dialog: attached EV_DIRECTORY_DIALOG): INTEGER
+	button_from_dialog_selected_button (a_dialog: EV_DIRECTORY_DIALOG): INTEGER
 			-- <Precursor>
 		do
 			if a_dialog.path.is_empty then
@@ -140,7 +140,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Factory
 
-	new_dialog: attached EV_DIRECTORY_DIALOG
+	new_dialog: EV_DIRECTORY_DIALOG
 			-- <Precursor>
 		do
 			create Result

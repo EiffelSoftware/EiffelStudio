@@ -191,19 +191,7 @@ feature -- Text transfert to daemon
 			c_string: C_STRING
 		do
 			create c_string.make (s)
-			c_send_str (c_string.item)
-		end
-
-	send_string_8_content_with_size (s: READABLE_STRING_8; a_size: INTEGER)
-			-- Used by the debugger to send the text `s' to the daemon  (ecdbgd)
-			-- with size `a_size'
-			--| Indeed it might contain '%U' character,
-			--| for instance when sending the environment string which has a specific structure	
-		local
-			c_string: C_STRING
-		do
-			create c_string.make (s)
-			c_send_sized_str (c_string.item, a_size)
+			c_send_sized_str (c_string.item, c_string.count)
 		end
 
 feature {APPLICATION_EXECUTION} -- IPC communication implementation
@@ -234,11 +222,6 @@ feature {APPLICATION_EXECUTION} -- IPC communication implementation
 		end;
 
 	c_send_sized_str (str: POINTER; size: INTEGER)
-		external
-			"C"
-		end;
-
-	c_send_str (str: POINTER)
 		external
 			"C"
 		end;

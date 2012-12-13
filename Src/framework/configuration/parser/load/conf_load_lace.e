@@ -102,7 +102,7 @@ feature -- Basic operation
 			l_desc: STRING_32
 		do
 			create l_parser.make
-			l_parser.parse_file (a_file, False)
+			l_parser.parse_file (create {PATH}.make_from_string (a_file), False)
 			if not attached {ACE_SD} l_parser.ast as l_ast then
 				create l_error
 				l_error.set_position (a_file, l_parser.line, l_parser.column)
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation of data retrieval
 							set_error (create {CONF_ERROR_FILE}.make (l_file_path.name))
 						else
 							create l_parser.make
-							l_parser.parse_file (l_file_path.name, True)
+							l_parser.parse_file (l_file_path, True)
 							if attached {CLUST_PROP_SD} l_parser.ast as l_use_prop then
 								process_cluster_properties (l_use_prop)
 							else

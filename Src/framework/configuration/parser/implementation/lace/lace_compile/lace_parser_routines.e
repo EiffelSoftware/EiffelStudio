@@ -18,14 +18,14 @@ feature -- Access
 
 feature -- Parsing
 
-	build_ast (file_name: STRING_32)
+	build_ast (file_name: PATH)
 			-- Parse file named `file_name' and make built ast node
 			-- (void if failure) available through `ast'.
 		local
-			file: KL_BINARY_INPUT_FILE
+			file: KL_BINARY_INPUT_FILE_32
 			gobo: GOBO_FILE_UTILITIES
 		do
-			file := gobo.make_binary_input_file (file_name)
+			create file.make_with_path (file_name)
 			file.open_read
 
 			if not file.is_open_read then
@@ -35,7 +35,7 @@ feature -- Parsing
 			end
 		end
 
-	parse_file (file_name: STRING_32; in_use_file: BOOLEAN)
+	parse_file (file_name: PATH; in_use_file: BOOLEAN)
 			-- Parse file named `file_name' and make built ast node
 			-- (void if failure) available through `ast'.
 		do

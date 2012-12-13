@@ -79,7 +79,7 @@ feature {ES_TESTING_RESULTS_TOOL} -- Basic operations
 			editor_widget.editor.handle_after_processing
 		end
 
-	compare_states (a_file_name: READABLE_STRING_8)
+	compare_states (a_file_name: PATH)
 			-- Compare current test suite state with results from file.
 			--
 			-- `a_file_name': File name in which exported results are stored.

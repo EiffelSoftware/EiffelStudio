@@ -22,7 +22,7 @@ inherit
 	PLATFORM_CONSTANTS
 
 create
-	make_with_name
+	make_with_name, make_with_path
 
 feature -- Element change
 
@@ -38,32 +38,13 @@ feature -- Output
 			-- Open file.
 		local
 			retried: BOOLEAN
-			i, nb: INTEGER
-			sub_name: STRING
 			d: DIRECTORY
-			c: CHARACTER
 		do
 			if not retried then
-					-- Create recursively the file name
-				from
-					c := operating_environment.directory_separator
-					if is_windows then
-							-- For Windows we can have either `c:\' and the existence
-							-- does work on `c:\' only, not on `c:'. So we have to search
-							-- until the next `Directory_separator'.
-						i := name.index_of (':', 1)
-					end
-					i := name.index_of (c, i + 2)
-					nb := name.count
-				until
-					i = 0
-				loop
-					sub_name := name.substring (1, i - 1)
-					create d.make (sub_name)
-					if not d.exists then
-						d.create_dir
-					end
-					i := name.index_of (c, i + 2)
+					-- Create recursively the directory in which current is located.
+				create d.make_with_path (path.parent)
+				if not d.exists then
+					d.recursive_create_dir
 				end
 				open_write
 			end;
@@ -73,7 +54,7 @@ feature -- Output
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

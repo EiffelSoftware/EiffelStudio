@@ -330,7 +330,7 @@ feature {NONE} -- Implementation
 
 			s := "ABCdef"
 			s := s.shared_substring (4, 6)
-			check_boolean ("is_case_insensitive_equal", s.is_case_insensitive_equal ("abc"))
+			check_boolean ("is_case_insensitive_equal", s.is_case_insensitive_equal ("def"))
 			check_boolean ("is_case_insensitive_equal", not s.is_case_insensitive_equal (""))
 		end
 

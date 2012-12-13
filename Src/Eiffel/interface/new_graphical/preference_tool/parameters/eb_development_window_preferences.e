@@ -145,7 +145,7 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA,
 			Result := class_completion_preference.value
 		end
 
-	last_browsed_cluster_directory: STRING_32
+	last_browsed_cluster_directory: PATH
 			--
 		do
 			Result := last_browsed_cluster_directory_preference.value
@@ -223,7 +223,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 	class_completion_preference: BOOLEAN_PREFERENCE
 
-	last_browsed_cluster_directory_preference: STRING_32_PREFERENCE
+	last_browsed_cluster_directory_preference: PATH_PREFERENCE
 
 	context_unified_stone_preference: BOOLEAN_PREFERENCE
 
@@ -357,7 +357,7 @@ feature {NONE} -- Implementation
 			ctrl_right_click_receiver_preference := l_manager.new_array_preference_value (l_manager, ctrl_right_click_receiver_string, <<"[new_tab_editor];new_window;current_editor;context;external">>)
 			ctrl_right_click_receiver_preference.set_is_choice (True)
 			class_completion_preference := l_manager.new_boolean_preference_value (l_manager, class_completion_string, True)
-			last_browsed_cluster_directory_preference := l_manager.new_string_32_preference_value (l_manager, last_browsed_cluster_directory_string, {STRING_32} "")
+			last_browsed_cluster_directory_preference := l_manager.new_path_preference_value (l_manager, last_browsed_cluster_directory_string, create {PATH}.make_empty)
 			context_unified_stone_preference := l_manager.new_boolean_preference_value (l_manager, context_unified_stone_string, False)
 			link_tools_preference := l_manager.new_boolean_preference_value (l_manager, link_tools_string, False)
 			graphical_output_disabled_preference := l_manager.new_boolean_preference_value (l_manager, graphical_output_disabled_string, False)

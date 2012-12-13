@@ -64,13 +64,13 @@ feature -- Execution
 			-- Execute the command. Prompt the user for the new filenane and save it.
 		do
 			if attached window_manager.last_focused_development_window as l_w then
-				execute_with_dialog (Void, l_w.file_name)
+				execute_with_dialog (Void, create {PATH}.make_from_string (l_w.file_name))
 			else
 				execute_with_dialog (Void, Void)
 			end
 		end
 
-	execute_with_filename (new_filename: READABLE_STRING_GENERAL)
+	execute_with_filename (new_filename: PATH)
 			-- Save a file with a chosen name.
 		require
 			valid_filename: new_filename /= Void and then not new_filename.is_empty
@@ -146,7 +146,7 @@ feature {EB_FILE_OPENER} -- Callbacks
 
 feature {EB_SAVE_FILE_COMMAND} -- Implementation
 
-	execute_with_dialog (argument: detachable EB_FILE_SAVE_DIALOG; a_file_name: detachable READABLE_STRING_GENERAL)
+	execute_with_dialog (argument: detachable EB_FILE_SAVE_DIALOG; a_file_name: detachable PATH)
 			-- Save a file with the chosen name.
 		local
 			fsd: EB_FILE_SAVE_DIALOG
@@ -158,13 +158,13 @@ feature {EB_SAVE_FILE_COMMAND} -- Implementation
 					l_pref.set_value (eiffel_layout.user_projects_path)
 				end
 				create fsd.make_with_preference (l_pref)
-				if attached a_file_name as a_f then
-					fsd.set_file_name (a_f.substring (a_f.last_index_of_code (Directory_separator.code.as_natural_32, a_f.count) + 1, a_f.count))
+				if a_file_name /= Void then
+					fsd.set_full_file_path (a_file_name)
 				end
 				fsd.save_actions.extend (agent execute_with_dialog (fsd, Void))
 				fsd.show_modal_to_window (window_manager.last_focused_development_window.window)
 			else
-				execute_with_filename (argument.file_name)
+				execute_with_filename (argument.full_file_path)
 			end
 		end
 
@@ -174,22 +174,6 @@ feature {NONE} -- Implementation
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := Interface_names.m_Export_to
-		end
-
-feature -- Obsolete
-
-	save_it (fn: STRING)
-			-- Save a file with a chosen name.
-		obsolete "use `save_as' instead"
-		do
-			save_as (fn)
-		end
-
-	save_as (new_filename: STRING)
-			-- Save a file with a chosen name.
-		obsolete "use `execute_with_filename' instead"
-		do
-			execute_with_filename (new_filename)
 		end
 
 note

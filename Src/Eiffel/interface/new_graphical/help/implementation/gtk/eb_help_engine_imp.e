@@ -45,7 +45,7 @@ feature -- Basic Operations
 			url: PATH
 			exists: BOOLEAN
 		do
-			cmd := preferences.misc_data.internet_browser_preference.string_value
+			cmd := preferences.misc_data.internet_browser_preference.value
 			if cmd.is_empty then
 				last_show_successful := False
 			elseif cmd.substring_index ("$url", 1) <= 0 then

@@ -153,7 +153,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	new_string (str: STRING_GENERAL)
+	new_string (str: READABLE_STRING_GENERAL)
 			-- NewString allocates a string object with the given contents.
 		local
 			l_ws: WEL_STRING

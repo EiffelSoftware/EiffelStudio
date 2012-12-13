@@ -108,89 +108,89 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_external_include (a_location: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_INCLUDE
+	new_external_include (a_location: READABLE_STRING_GENERAL; a_target: CONF_TARGET): CONF_EXTERNAL_INCLUDE
 			-- Create a `CONF_EXTERNAL_INCLUDE' object.
 		require
 			a_location_not_void: a_location /= Void
 			a_target_not_void: a_target /= Void
 		do
-			create Result.make (a_location, a_target)
+			create Result.make (a_location.as_string_32, a_target)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	new_external_cflag (a_value: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_CFLAG
+	new_external_cflag (a_value: READABLE_STRING_GENERAL; a_target: CONF_TARGET): CONF_EXTERNAL_CFLAG
 			-- Create a `CONF_EXTERNAL_CFLAG' object.
 		require
 			a_value_not_void: a_value /= Void
 			a_target_not_void: a_target /= Void
 		do
-			create Result.make (a_value, a_target)
+			create Result.make (a_value.as_string_32, a_target)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	new_external_object (a_location: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_OBJECT
+	new_external_object (a_location: READABLE_STRING_GENERAL; a_target: CONF_TARGET): CONF_EXTERNAL_OBJECT
 			-- Create a `CONF_EXTERNAL_OBJECT' object.
 		require
 			a_location_not_void: a_location /= Void
 			a_target_not_void: a_target /= Void
 		do
-			create Result.make (a_location, a_target)
+			create Result.make (a_location.as_string_32, a_target)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	new_external_library (a_location: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_LIBRARY
+	new_external_library (a_location: READABLE_STRING_GENERAL; a_target: CONF_TARGET): CONF_EXTERNAL_LIBRARY
 			-- Create a `CONF_EXTERNAL_LIBRARY' object.
 		require
 			a_location_not_void: a_location /= Void
 			a_target_not_void: a_target /= Void
 		do
-			create Result.make (a_location, a_target)
+			create Result.make (a_location.as_string_32, a_target)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	new_external_resource (a_location: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_RESOURCE
+	new_external_resource (a_location: READABLE_STRING_GENERAL; a_target: CONF_TARGET): CONF_EXTERNAL_RESOURCE
 			-- Create a `CONF_EXTERNAL_RESOURCE' object.
 		require
 			a_location_not_void: a_location /= Void
 			a_target_not_void: a_target /= Void
 		do
-			create Result.make (a_location, a_target)
+			create Result.make (a_location.as_string_32, a_target)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	new_external_linker_flag (a_value: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_LINKER_FLAG
+	new_external_linker_flag (a_value: READABLE_STRING_GENERAL; a_target: CONF_TARGET): CONF_EXTERNAL_LINKER_FLAG
 			-- Create a `CONF_EXTERNAL_LINKER_FLAG' object.
 		require
 			a_value_not_void: a_value /= Void
 			a_target_not_void: a_target /= Void
 		do
-			create Result.make (a_value, a_target)
+			create Result.make (a_value.as_string_32, a_target)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	new_external_make (a_location: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_MAKE
+	new_external_make (a_location: READABLE_STRING_GENERAL; a_target: CONF_TARGET): CONF_EXTERNAL_MAKE
 			-- Create a `CONF_EXTERNAL_MAKE' object.
 		require
 			a_location_not_void: a_location /= Void
 			a_target_not_void: a_target /= Void
 		do
-			create Result.make (a_location, a_target)
+			create Result.make (a_location.as_string_32, a_target)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	new_action (a_command: STRING; a_must_succeed: BOOLEAN; a_working_directory: CONF_DIRECTORY_LOCATION): CONF_ACTION
+	new_action (a_command: READABLE_STRING_GENERAL; a_must_succeed: BOOLEAN; a_working_directory: CONF_DIRECTORY_LOCATION): CONF_ACTION
 			-- Create a `CONF_ACTION' object.
 		require
 			a_command_ok: a_command /= Void and then not a_command.is_empty
 		do
-			create Result.make (a_command, a_must_succeed, a_working_directory)
+			create Result.make (a_command.as_string_32, a_must_succeed, a_working_directory)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -203,7 +203,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_assembly (a_name: STRING; a_file: STRING; a_target: CONF_TARGET): CONF_ASSEMBLY
+	new_assembly (a_name: STRING; a_file: READABLE_STRING_GENERAL; a_target: CONF_TARGET): CONF_ASSEMBLY
 			-- Create a `CONF_ASSEMBLY' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -212,7 +212,7 @@ feature
 		local
 			l_location: CONF_FILE_LOCATION
 		do
-			l_location := new_location_from_full_path (a_file, a_target)
+			l_location := new_location_from_full_path (a_file.as_string_32, a_target)
 			create Result.make (a_name, l_location, a_target)
 		ensure
 			Result_not_void: Result /= Void
@@ -233,26 +233,26 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_library (a_name: STRING; a_file: STRING; a_target: CONF_TARGET): CONF_LIBRARY
+	new_library (a_name: STRING; a_file: READABLE_STRING_GENERAL; a_target: CONF_TARGET): CONF_LIBRARY
 			-- Create a `CONF_LIBRARY' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 			a_file_not_void: a_file /= Void
 			a_target_not_void: a_target /= Void
 		do
-			create Result.make (a_name, new_location_from_full_path (a_file, a_target), a_target)
+			create Result.make (a_name, new_location_from_full_path (a_file.as_string_32, a_target), a_target)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	new_precompile (a_name: STRING; a_file: STRING; a_target: CONF_TARGET): CONF_PRECOMPILE
+	new_precompile (a_name: STRING; a_file: READABLE_STRING_GENERAL; a_target: CONF_TARGET): CONF_PRECOMPILE
 			-- Create a `CONF_PRECOMPILE' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 			a_file_not_void: a_file /= Void
 			a_target_not_void: a_target /= Void
 		do
-			create Result.make (a_name, new_location_from_full_path (a_file, a_target), a_target)
+			create Result.make (a_name, new_location_from_full_path (a_file.as_string_32, a_target), a_target)
 		ensure
 			Result_not_void: Result /= Void
 		end

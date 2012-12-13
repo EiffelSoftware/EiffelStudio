@@ -106,7 +106,7 @@ feature {EIFNET_EXPORTER} -- Evaluation primitives
 			end
 		end
 
-	new_string_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_string: STRING_GENERAL): ICOR_DEBUG_VALUE
+	new_string_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_string: READABLE_STRING_GENERAL): ICOR_DEBUG_VALUE
 			-- NewString evaluation with `a_string'
 		require
 			a_string /= Void
@@ -249,7 +249,7 @@ feature {EIFNET_EXPORTER} -- Basic value creation
 
 feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 
-	new_eiffel_string_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: STRING_GENERAL): ICOR_DEBUG_VALUE
+	new_eiffel_string_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: READABLE_STRING_GENERAL): ICOR_DEBUG_VALUE
 			-- New Object evaluation with String
 		local
 			l_icdv: ICOR_DEBUG_VALUE
@@ -1189,7 +1189,7 @@ feature {NONE} -- Helper Impl
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

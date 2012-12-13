@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			no_characters_lost: old content.count = Result.count + content.count
 		end
 
-	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: STRING)
+	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: PATH)
 			-- Set image of `a_pixmap' from file, `a_file_name'.
 			-- If `a_file_name' does not exist, do nothing.
 		require
@@ -192,9 +192,9 @@ feature {NONE} -- Implementation
 		local
 			l_file: RAW_FILE
 		do
-			create l_file.make (a_file_name)
+			create l_file.make_with_path (a_file_name)
 			if l_file.exists then
-				a_pixmap.set_with_named_file (a_file_name)
+				a_pixmap.set_with_named_path (a_file_name)
 			end
 		end
 
@@ -202,7 +202,7 @@ invariant
 	all_constants_not_void: all_constants /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

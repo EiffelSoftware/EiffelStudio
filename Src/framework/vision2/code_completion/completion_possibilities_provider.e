@@ -64,7 +64,7 @@ feature -- Status report
 	completion_possible: BOOLEAN
 			-- Is completion possible?
 		do
-			Result := completion_possibilities /= Void and then not completion_possibilities.is_empty
+			Result := attached completion_possibilities as l_c and then not l_c.is_empty
 		end
 
 feature -- Element change

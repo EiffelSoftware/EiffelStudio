@@ -326,6 +326,11 @@ feature {NONE} -- Implementation
 			check_boolean ("is_case_insensitive_equal", s.is_case_insensitive_equal ("abcDEF"))
 
 			check_boolean ("is_case_insensitive_equal", not s.is_case_insensitive_equal (""))
+
+			s := "ABCdef"
+			s := s.shared_substring (4, 6)
+			check_boolean ("is_case_insensitive_equal", s.is_case_insensitive_equal ("DEF"))
+			check_boolean ("is_case_insensitive_equal", not s.is_case_insensitive_equal (""))
 		end
 
 	test_is_double is

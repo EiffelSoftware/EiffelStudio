@@ -80,7 +80,7 @@ feature -- Basic operations
 			valid_result: last_error_code = no_error implies last_result /= Void
 		end
 
-	serialize_to_file (a_file_name: READABLE_STRING_GENERAL)
+	serialize_to_file (a_file_name: PATH)
 			-- Serialize results in test suite to file system and store result in `last_result'.
 			--
 			-- Note: even if `last_result' is not void it is still possible that serialization failed.
@@ -91,7 +91,7 @@ feature -- Basic operations
 		do
 			reset
 			last_error_code := test_suite_unavailable
-			create l_file.make_with_name (a_file_name)
+			create l_file.make_with_path (a_file_name)
 			l_file.open_write
 			if l_file.extendible then
 				l_file.put_string (header_string)
@@ -154,7 +154,7 @@ feature -- Basic operations
 				end
 		end
 
-	deserialize_from_file (a_file_name: READABLE_STRING_8)
+	deserialize_from_file (a_file_name: PATH)
 			-- Deserialize results from file system and store result in `last_result'.
 			--
 			-- `a_file_name': Name of file from which results should be retrieved.
@@ -165,7 +165,7 @@ feature -- Basic operations
 			l_parse: detachable like parse_test_state
 			l_details, l_line: STRING
 		do
-			create l_file.make_with_name (a_file_name)
+			create l_file.make_with_path (a_file_name)
 			if not l_retried then
 				reset
 				l_file.open_read

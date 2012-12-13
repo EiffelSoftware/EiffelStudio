@@ -212,14 +212,14 @@ feature {NONE} -- Events: button
 		do
 			create l_dialog
 			l_dialog.show_modal_to_window (window)
-			if not l_dialog.file_name.is_empty then
-				create l_file.make_with_name (l_dialog.file_name)
+			if not l_dialog.full_file_path.is_empty then
+				create l_file.make_with_path (l_dialog.full_file_path)
 				if l_file.exists then
 					create l_prompt.make_standard (locale.translation (d_file_exists))
-					l_prompt.set_button_action (l_prompt.default_confirm_button, agent export_state (l_dialog.file_name))
+					l_prompt.set_button_action (l_prompt.default_confirm_button, agent export_state (l_dialog.full_file_path))
 					l_prompt.show (window)
 				else
-					export_state (l_dialog.file_name)
+					export_state (l_dialog.full_file_path)
 				end
 			end
 		end
@@ -344,7 +344,7 @@ feature {NONE} -- Implementation
 			a_menu.force (l_ditem)
 		end
 
-	export_state (a_file_name: READABLE_STRING_8)
+	export_state (a_file_name: PATH)
 			-- Export test suite state to file.
 			--
 			-- `a_file_name': Name of file in which state is written.

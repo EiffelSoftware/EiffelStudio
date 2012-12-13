@@ -62,20 +62,9 @@ feature -- Basic operations
 		do
 			create l_dialog
 			l_dialog.show_modal_to_window (window.window)
-			if
-				attached window.session_data as l_session and then
-				attached {STRING_GENERAL} l_session.value (compare_file_id) as l_file_name
-			then
-				if l_dialog.valid_file_name (l_file_name) then
-				--	l_dialog.set_file_name (l_file_name.twin)
-				end
-			end
-			if not l_dialog.file_name.is_empty then
-				if attached window.session_data as l_session then
-					l_session.set_value (l_dialog.file_name.twin, compare_file_id)
-				end
+			if not l_dialog.full_file_path.is_empty then
 				show (True)
-				panel.compare_states (l_dialog.file_name)
+				panel.compare_states (l_dialog.full_file_path)
 			end
 		end
 
@@ -101,11 +90,6 @@ feature {NONE} -- Factory
 			create Result.make (window.shell_tools.tool ({ES_TESTING_TOOL}), once "icons")
 		end
 
-feature {NONE} -- Constants
-
-	compare_file_id: STRING = "com.eiffel.testing_tool.compare_file"
-			-- Auto retrieve ID for session manager
-
 feature -- Internationalization
 
 	t_tool_title: STRING = "AutoTest Results"
@@ -113,7 +97,7 @@ feature -- Internationalization
 	l_compare_states: STRING = "Compare current test suite state to one previously exported to a file"
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

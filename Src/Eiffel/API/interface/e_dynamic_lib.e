@@ -15,7 +15,7 @@ inherit
 
 feature -- Properties
 
-	file_name: STRING
+	file_name: PATH
 			-- Name of shared definition file.
 
 feature -- Access
@@ -29,7 +29,8 @@ feature -- Access
 			a_file: RAW_FILE
 		do
 			if valid_file_name (file_name) then
-				create a_file.make_open_read (file_name)
+				create a_file.make_with_path (file_name)
+				a_file.open_read
 				a_file.read_stream (a_file.count)
 				a_file.close
 					-- No need to twin `last_string' because it belongs to `a_file'
@@ -42,7 +43,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_file_name (f_name: STRING): BOOLEAN
+	valid_file_name (f_name: like file_name): BOOLEAN
 			-- Is `f_name' a valid file name (i.e
 			-- does it exist and is it readable)?
 		require
@@ -50,7 +51,7 @@ feature -- Status report
 		local
 			f: PLAIN_TEXT_FILE
 		do
-			create f.make (f_name)
+			create f.make_with_path (f_name)
 			Result := f.exists and then f.is_readable and then f.is_plain
 		end
 
@@ -78,7 +79,8 @@ feature -- Update
 			if System.dynamic_def_file /= Void then
 				if valid_file_name (System.dynamic_def_file) then
 					set_file_name (System.dynamic_def_file)
-					create l_file.make_open_read (file_name)
+					create l_file.make_with_path (file_name)
+					l_file.open_read
 					parse_exports_from_file (l_file)
 					l_file.close
 				end
@@ -87,14 +89,14 @@ feature -- Update
 
 feature -- Setting
 
-	set_file_name (f_name: STRING)
+	set_file_name (f_name: like file_name)
 			-- Set lace_file_name to `f_name'.
 		require
 			valid_f_name_if_not_void: f_name /= Void implies valid_file_name (f_name)
 		do
-			file_name := f_name.twin
+			file_name := f_name
 		ensure
-			file_name_set: equal (f_name, file_name)
+			file_name_set: file_name = f_name
 		end
 
 feature -- Data
@@ -552,7 +554,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

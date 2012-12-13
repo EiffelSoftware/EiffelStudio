@@ -386,9 +386,9 @@ feature -- Status setting
 			s := system.dynamic_def_file
 			if s = Void then
 				shared_library_definition_stamp := 0
-			elseif file_modified_date (s) /= shared_library_definition_stamp then
+			elseif file_path_modified_date (s) /= shared_library_definition_stamp then
 					-- Record new time stamp.
-				shared_library_definition_stamp := file_modified_date (s)
+				shared_library_definition_stamp := file_path_modified_date (s)
 					-- New definition file is taken into account only during freeze.
 				system.request_freeze
 			end

@@ -416,7 +416,7 @@ feature -- Remote access to RT_
 			end
 		end
 
-	remotely_store_object (oa: DBG_ADDRESS; fn: STRING): BOOLEAN
+	remotely_store_object (oa: DBG_ADDRESS; fn: PATH): BOOLEAN
 			-- Store in file `fn' on the application the object addressed by `oa'
 			-- Return True is succeed.
 		local
@@ -433,7 +433,7 @@ feature -- Remote access to RT_
 					icdv := rto.icd_referenced_value
 					if icdf /= Void then
 						i_ref := dv.icd_referenced_value
-						i_fn := eifnet_debugger.eifnet_dbg_evaluator.new_eiffel_string_evaluation (Void, fn)
+						i_fn := eifnet_debugger.eifnet_dbg_evaluator.new_eiffel_string_32_evaluation (Void, fn.name)
 						args := <<icdv, i_ref, i_fn>>
 						r := eifnet_debugger.eifnet_dbg_evaluator.function_evaluation (Void, icdf, args)
 						if r /= Void then
@@ -445,7 +445,7 @@ feature -- Remote access to RT_
 			end
 		end
 
-	remotely_loaded_object (oa: DBG_ADDRESS; fn: STRING): DUMP_VALUE
+	remotely_loaded_object (oa: DBG_ADDRESS; fn: PATH): DUMP_VALUE
 			-- Debug value related to remote loaded object from file `fn'.
 			-- and if `oa' is not Void, copy the value inside object addressed by `oa'.
 		local
@@ -467,7 +467,7 @@ feature -- Remote access to RT_
 							i_ref := dv.icd_referenced_value
 						end
 					end
-					i_fn := eifnet_debugger.eifnet_dbg_evaluator.new_eiffel_string_evaluation (Void, fn)
+					i_fn := eifnet_debugger.eifnet_dbg_evaluator.new_eiffel_string_32_evaluation (Void, fn.name)
 					args := <<icdv, i_ref, i_fn>>
 					r := eifnet_debugger.eifnet_dbg_evaluator.function_evaluation (Void, icdf, args)
 					if attached debug_value_from_icdv (r, Void) as adv then

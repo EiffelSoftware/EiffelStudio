@@ -124,12 +124,14 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			type /= Type_unknown
 		end
 
-	set_manifest_string_32_value (value: STRING; dtype: CLASS_C)
+	set_manifest_string_32_value (value: STRING_32; dtype: CLASS_C)
 			-- make a string item initialized to `value'
 		require
 			value_attached: value /= Void
+		local
+			utf: UTF_CONVERTER
 		do
-			value_string := value
+			value_string := utf.string_32_to_utf_8_string_8 (value)
 			type := type_manifest_string_32
 			dynamic_class := dtype
 		ensure
@@ -327,6 +329,7 @@ feature -- Status report
 			has_formatted_output: has_formatted_output
 		local
 			l_max: INTEGER
+			utf: UTF_CONVERTER
 		do
 			debug ("debugger_interface")
 				io.put_string ("Finding output value of dump_value%N")
@@ -335,7 +338,7 @@ feature -- Status report
 				debug ("debugger_interface")
 					io.put_string ("Finding output value of constant string")
 				end
-				Result := Character_routines.eiffel_string_32 (encoding_converter.utf8_to_utf32 (value_string))
+				Result := Character_routines.eiffel_string_32 (utf.utf_8_string_8_to_string_32 (value_string))
 --			elseif type = Type_string_dotnet and then value_string_dotnet = Void then
 					--| Handled by DUMP_VALUE_DOTNET
 			else
@@ -824,6 +827,7 @@ feature -- Action
 			value_string_c: ANY
 			s8: STRING_8
 			s32: STRING_32
+			utf: UTF_CONVERTER
 		do
 			last_classic_send_value_succeed := True
 			inspect (type)
@@ -832,7 +836,7 @@ feature -- Action
 				value_string_c := s8.to_c
 				send_string_value ($value_string_c, s8.count)
 			when type_manifest_string_32 then
-				s32 := encoding_converter.utf8_to_utf32 (value_string)
+				s32 := utf.utf_8_string_8_to_string_32 (value_string)
 				value_string_c := s32.to_c
 					-- Send UTF-32 directly.
 				send_string_32_value ($value_string_c, s32.count * {PLATFORM}.character_32_bytes)
@@ -913,6 +917,7 @@ feature -- Access
 			--|   Void
 		local
 			s: STRING_32
+			utf: UTF_CONVERTER
 		do
 			inspect type
 			when Type_manifest_string then
@@ -925,7 +930,7 @@ feature -- Access
 					Result := value_string.as_string_8.twin
 				end
 			when Type_manifest_string_32 then
-				s := encoding_converter.utf8_to_utf32 (value_string)
+				s := utf.utf_8_string_8_to_string_32 (value_string)
 				if format_result then
 					create Result.make (s.count + 2)
 					Result.append_character ('%"')
@@ -1181,7 +1186,7 @@ feature {NONE} -- Private Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

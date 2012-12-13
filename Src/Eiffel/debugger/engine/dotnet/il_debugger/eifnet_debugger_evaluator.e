@@ -106,7 +106,7 @@ feature {EIFNET_EXPORTER} -- Evaluation primitives
 			end
 		end
 
-	new_string_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_string: READABLE_STRING_GENERAL): ICOR_DEBUG_VALUE
+	new_cil_string_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_string: READABLE_STRING_GENERAL): ICOR_DEBUG_VALUE
 			-- NewString evaluation with `a_string'
 		require
 			a_string /= Void
@@ -249,13 +249,23 @@ feature {EIFNET_EXPORTER} -- Basic value creation
 
 feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 
-	new_eiffel_string_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: READABLE_STRING_GENERAL): ICOR_DEBUG_VALUE
-			-- New Object evaluation with String
+	new_eiffel_string_8_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: READABLE_STRING_GENERAL): ICOR_DEBUG_VALUE
+			-- New Object evaluation with STRING_8
 		local
 			l_icdv: ICOR_DEBUG_VALUE
 		do
-			l_icdv := new_string_evaluation (a_frame, a_val)
-			Result := icdv_string_from_icdv_system_string (a_frame, l_icdv)
+			l_icdv := new_cil_string_evaluation (a_frame, a_val)
+			Result := icdv_string_8_from_icdv_system_string (a_frame, l_icdv)
+			l_icdv.clean_on_dispose
+		end
+
+	new_eiffel_string_32_evaluation (a_frame: detachable ICOR_DEBUG_FRAME; a_val: READABLE_STRING_32): ICOR_DEBUG_VALUE
+			-- New Object evaluation with STRING_32
+		local
+			l_icdv: ICOR_DEBUG_VALUE
+		do
+			l_icdv := new_cil_string_evaluation (a_frame, a_val)
+			Result := icdv_string_32_from_icdv_system_string (a_frame, l_icdv)
 			l_icdv.clean_on_dispose
 		end
 
@@ -385,13 +395,22 @@ feature {EIFNET_EXPORTER} -- Eiffel Instances facilities
 
 feature {DBG_EVALUATOR_DOTNET} -- Class construction facilities
 
-	icdv_string_from_icdv_system_string (a_frame: detachable ICOR_DEBUG_FRAME; a_sys_string: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+	icdv_string_8_from_icdv_system_string (a_frame: detachable ICOR_DEBUG_FRAME; a_sys_string: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
 			-- ICorDebugValue for STRING object created from SystemString `a_sys_string'
 		do
 			prepare_evaluation (a_frame, True)
-			last_icor_debug_eval.new_object_no_constructor (eiffel_string_icd_class)
+			last_icor_debug_eval.new_object_no_constructor (eiffel_string_8_icd_class)
 			Result := complete_function_evaluation
-			method_evaluation (a_frame, eiffel_string_make_from_cil_constructor, <<Result, a_sys_string>>)
+			method_evaluation (a_frame, eiffel_string_8_make_from_cil_constructor, <<Result, a_sys_string>>)
+		end
+
+	icdv_string_32_from_icdv_system_string (a_frame: detachable ICOR_DEBUG_FRAME; a_sys_string: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
+			-- ICorDebugValue for STRING object created from SystemString `a_sys_string'
+		do
+			prepare_evaluation (a_frame, True)
+			last_icor_debug_eval.new_object_no_constructor (eiffel_string_32_icd_class)
+			Result := complete_function_evaluation
+			method_evaluation (a_frame, eiffel_string_32_make_from_cil_constructor, <<Result, a_sys_string>>)
 		end
 
 	icdv_reference_integer_8_from_icdv_integer_8 (a_frame: detachable ICOR_DEBUG_FRAME; a_icdv: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE
@@ -899,13 +918,25 @@ feature {NONE} -- Implementation : ICorDebugClass... once per session
 			Result /= Void
 		end
 
-	eiffel_string_icd_class: ICOR_DEBUG_CLASS
+	eiffel_string_8_icd_class: ICOR_DEBUG_CLASS
 			-- IcorDebugClass for STRING
 		do
-			Result := once_eiffel_string_icd_class
+			Result := once_eiffel_string_8_icd_class
 			if Result = Void then
 				Result := Eifnet_debugger.icor_debug_class (Eiffel_system.String_class.compiled_class.types.first)
-				once_eiffel_string_icd_class := Result
+				once_eiffel_string_8_icd_class := Result
+			end
+		ensure
+			Result /= Void
+		end
+
+	eiffel_string_32_icd_class: ICOR_DEBUG_CLASS
+			-- IcorDebugClass for STRING_32
+		do
+			Result := once_eiffel_string_32_icd_class
+			if Result = Void then
+				Result := Eifnet_debugger.icor_debug_class (Eiffel_system.system.string_32_class.compiled_class.types.first)
+				once_eiffel_string_32_icd_class := Result
 			end
 		ensure
 			Result /= Void
@@ -1080,7 +1111,7 @@ feature {NONE} -- Implementation : ICorDebugFunction... once per session
 			Result /= Void
 		end
 
-	eiffel_string_make_from_cil_constructor: ICOR_DEBUG_FUNCTION
+	eiffel_string_8_make_from_cil_constructor: ICOR_DEBUG_FUNCTION
 			-- ICorDebugFunction for STRING.make_from_cil (..)
 		local
 			l_class: CLASS_C
@@ -1091,6 +1122,22 @@ feature {NONE} -- Implementation : ICorDebugFunction... once per session
 				check l_class /= Void end
 				Result := Eifnet_debugger.eiffel_icd_function_by_name (l_class.types.first, "make_from_cil")
 				once_eiffel_string_make_from_cil_constructor := Result
+			end
+		ensure
+			Result /= Void
+		end
+
+	eiffel_string_32_make_from_cil_constructor: ICOR_DEBUG_FUNCTION
+			-- ICorDebugFunction for STRING_32.make_from_cil (..)
+		local
+			l_class: CLASS_C
+		do
+			Result := once_eiffel_string_32_make_from_cil_constructor
+			if Result = Void then
+				l_class := Eiffel_system.system.String_32_class.compiled_class
+				check l_class /= Void end
+				Result := Eifnet_debugger.eiffel_icd_function_by_name (l_class.types.first, "make_from_cil")
+				once_eiffel_string_32_make_from_cil_constructor := Result
 			end
 		ensure
 			Result /= Void
@@ -1123,7 +1170,8 @@ feature {EIFNET_DEBUGGER} -- Private Implementation : ICor... once per session
 			once_reference_boolean_icd_class             := Void
 			once_reference_character_8_icd_class         := Void
 			once_reference_character_32_icd_class        := Void
-			once_eiffel_string_icd_class                 := Void
+			once_eiffel_string_8_icd_class                 := Void
+			once_eiffel_string_32_icd_class              := Void
 			once_reference_pointer_icd_class 			 := Void
 
 				--| Clean kept ICorDebugFunction
@@ -1142,7 +1190,8 @@ feature {EIFNET_DEBUGGER} -- Private Implementation : ICor... once per session
 			once_reference_character_32_set_item_method  := Void
 			once_reference_pointer_set_item_method  	 := Void
 
-			once_eiffel_string_make_from_cil_constructor := Void
+			once_eiffel_string_make_from_cil_constructor    := Void
+			once_eiffel_string_32_make_from_cil_constructor := Void
 		end
 
 	once_reference_integer_8_icd_class           : ICOR_DEBUG_CLASS
@@ -1160,7 +1209,8 @@ feature {EIFNET_DEBUGGER} -- Private Implementation : ICor... once per session
 	once_reference_character_32_icd_class        : ICOR_DEBUG_CLASS
 	once_reference_pointer_icd_class 			 : ICOR_DEBUG_CLASS
 
-	once_eiffel_string_icd_class                 : ICOR_DEBUG_CLASS
+	once_eiffel_string_8_icd_class                 : ICOR_DEBUG_CLASS
+	once_eiffel_string_32_icd_class              : ICOR_DEBUG_CLASS
 
 	once_reference_integer_8_set_item_method     : ICOR_DEBUG_FUNCTION
 	once_reference_integer_16_set_item_method    : ICOR_DEBUG_FUNCTION
@@ -1177,7 +1227,8 @@ feature {EIFNET_DEBUGGER} -- Private Implementation : ICor... once per session
 	once_reference_character_32_set_item_method  : ICOR_DEBUG_FUNCTION
 	once_reference_pointer_set_item_method       : ICOR_DEBUG_FUNCTION
 
-	once_eiffel_string_make_from_cil_constructor : ICOR_DEBUG_FUNCTION
+	once_eiffel_string_make_from_cil_constructor   : ICOR_DEBUG_FUNCTION
+	once_eiffel_string_32_make_from_cil_constructor: ICOR_DEBUG_FUNCTION
 
 feature {NONE} -- Helper Impl
 

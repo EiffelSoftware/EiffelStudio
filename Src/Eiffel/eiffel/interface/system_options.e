@@ -25,7 +25,7 @@ feature -- Access
 	inlining_size: INTEGER
 			-- Size of the feature which will be inlined.
 
-	dynamic_def_file: STRING_32
+	dynamic_def_file: PATH
 			-- File where the `.def' file of the system is declared.
 
 	do_not_check_vape: BOOLEAN
@@ -524,12 +524,14 @@ feature -- Update
 			external_runtime_set: external_runtime = v
 		end
 
-	set_dynamic_def_file (f: like dynamic_def_file)
+	set_dynamic_def_file (f: detachable READABLE_STRING_GENERAL)
 			-- Set `dynamic_def_file' to `f'.
 		do
-			dynamic_def_file := f
-		ensure
-			dynamic_def_file_set: dynamic_def_file = f
+			if f /= Void then
+				create dynamic_def_file.make_from_string (f)
+			else
+				dynamic_def_file := Void
+			end
 		end
 
 	request_freeze

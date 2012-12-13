@@ -60,11 +60,9 @@ feature -- Access
 		require
 			dialog_exists: dialog /= Void
 		local
-			file_name: STRING_32
 			file_opener: EB_FILE_OPENER
 		do
-			file_name := dialog.file_name.twin
-			create file_opener.make_with_parent (Current, file_name, query_window)
+			create file_opener.make_with_parent (Current, dialog.full_file_path, query_window)
 		end
 
 feature {EB_FILE_OPENER} -- Callbacks

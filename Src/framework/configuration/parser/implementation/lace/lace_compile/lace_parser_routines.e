@@ -23,7 +23,6 @@ feature -- Parsing
 			-- (void if failure) available through `ast'.
 		local
 			file: KL_BINARY_INPUT_FILE_32
-			gobo: GOBO_FILE_UTILITIES
 		do
 			create file.make_with_path (file_name)
 			file.open_read

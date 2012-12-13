@@ -91,7 +91,7 @@ feature -- Query
 				end
 				if u.file_path_exists (l_file_name) then
 					create l_buffer
-					l_buffer.set_with_named_file (l_file_name.name)
+					l_buffer.set_with_named_path (l_file_name)
 
 						-- Ensure only successful loads are cached!
 					l_matrices.force_last (l_buffer, n)

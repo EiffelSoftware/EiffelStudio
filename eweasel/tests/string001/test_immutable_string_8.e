@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			test_mirrored
 			test_occurrences
 			test_out
-			test_plus_string_general
+			test_plus
 			test_prunable
 			test_resizable
 			test_same_string
@@ -871,7 +871,7 @@ feature {NONE} -- Implementation
 			check_string_equality ("out", ("12345").out, "12345")
 		end
 
-	test_plus_string_general is
+	test_plus is
 		local
 			is_32: IMMUTABLE_STRING_32
 			is_8: IMMUTABLE_STRING_8
@@ -882,27 +882,27 @@ feature {NONE} -- Implementation
 			s_32 := "12345"
 			is_8 := "67890"
 			s_8 := "67890"
-			check_string_equality ("plus_string_general", is_8.plus_string_general (is_32), "6789012345")
-			check_string_equality ("plus_string_general", is_8.plus_string_general (s_32), "6789012345")
-			check_string_equality ("plus_string_general", is_8.plus_string_general (is_8), "6789067890")
-			check_string_equality ("plus_string_general", is_8.plus_string_general (s_8), "6789067890")
-			check_string_equality ("plus_string_general", is_8.plus_string_general (""), "67890")
+			check_string_equality ("plus", is_8.plus (is_32), "6789012345")
+			check_string_equality ("plus", is_8.plus (s_32), "6789012345")
+			check_string_equality ("plus", is_8.plus (is_8), "6789067890")
+			check_string_equality ("plus", is_8.plus (s_8), "6789067890")
+			check_string_equality ("plus", is_8.plus (""), "67890")
 
 			is_8 := ""
-			check_string_equality ("plus_string_general", is_8.plus_string_general (is_32), "12345")
-			check_string_equality ("plus_string_general", is_8.plus_string_general (s_32), "12345")
-			check_string_equality ("plus_string_general", is_8.plus_string_general (is_8), "")
-			check_string_equality ("plus_string_general", is_8.plus_string_general (s_8), "67890")
-			check_string_equality ("plus_string_general", is_8.plus_string_general (""), "")
+			check_string_equality ("plus", is_8.plus (is_32), "12345")
+			check_string_equality ("plus", is_8.plus (s_32), "12345")
+			check_string_equality ("plus", is_8.plus (is_8), "")
+			check_string_equality ("plus", is_8.plus (s_8), "67890")
+			check_string_equality ("plus", is_8.plus (""), "")
 
 			is_32 := ""
 			s_32 := ""
 			s_8 := ""
-			check_string_equality ("plus_string_general", is_8.plus_string_general (is_32), "")
-			check_string_equality ("plus_string_general", is_8.plus_string_general (s_32), "")
-			check_string_equality ("plus_string_general", is_8.plus_string_general (is_8), "")
-			check_string_equality ("plus_string_general", is_8.plus_string_general (s_8), "")
-			check_string_equality ("plus_string_general", is_8.plus_string_general (""), "")
+			check_string_equality ("plus", is_8.plus (is_32), "")
+			check_string_equality ("plus", is_8.plus (s_32), "")
+			check_string_equality ("plus", is_8.plus (is_8), "")
+			check_string_equality ("plus", is_8.plus (s_8), "")
+			check_string_equality ("plus", is_8.plus (""), "")
 		end
 
 	test_prunable is

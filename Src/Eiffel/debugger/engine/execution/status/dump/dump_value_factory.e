@@ -261,15 +261,11 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	new_manifest_string_32_value  (value: STRING; dtype: CLASS_C): DUMP_VALUE
+	new_manifest_string_32_value  (value: READABLE_STRING_32; dtype: CLASS_C): DUMP_VALUE
 			-- make a string item initialized to `value'
-			-- FIXME: this should use STRING_32 !!!
 		require
 			value_attached: value /= Void
 		do
-			debug ("refactor_fixme")
-				fixme (generator + "new_manifest_string_32_value: should be using STRING_32")
-			end
 			create Result.make_empty (debugger_manager)
 			Result.set_manifest_string_32_value (value, dtype)
 			init_value (Result)

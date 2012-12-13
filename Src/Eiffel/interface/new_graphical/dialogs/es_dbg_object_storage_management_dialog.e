@@ -71,7 +71,7 @@ feature -- Actions
 			b: BOOLEAN
 		do
 			if debugger_manager.safe_application_is_stopped then
-				b := debugger_manager.application.remotely_store_object (object_stone.object_address, path_field.path)
+				b := debugger_manager.application.remotely_store_object (object_stone.object_address, path_field.file_path)
 				if b then
 					display_success_message
 				else
@@ -93,9 +93,9 @@ feature -- Actions
 			then
 				if debugger_manager.safe_application_is_stopped then
 					if object_stone /= Void then
-						object_value := debugger_manager.application.remotely_loaded_object (object_stone.object_address, path_field.file_path.name)
+						object_value := debugger_manager.application.remotely_loaded_object (object_stone.object_address, path_field.file_path)
 					else
-						object_value := debugger_manager.application.remotely_loaded_object (Void, path_field.file_path.name)
+						object_value := debugger_manager.application.remotely_loaded_object (Void, path_field.file_path)
 					end
 					if object_value /= Void then
 						display_success_message

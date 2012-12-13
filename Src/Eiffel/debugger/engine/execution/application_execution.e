@@ -586,7 +586,7 @@ feature -- Remote: execution recorder on RT_
 
 feature -- Remote: Store/Load object on RT_
 
-	remotely_store_object (oa: DBG_ADDRESS; fn: STRING): BOOLEAN
+	remotely_store_object (oa: DBG_ADDRESS; fn: PATH): BOOLEAN
 			-- Store in file `fn' on the application the object addressed by `oa'
 			-- Return True is succeed.
 		do
@@ -595,12 +595,12 @@ feature -- Remote: Store/Load object on RT_
 			end
 		end
 
-	remotely_loaded_object (oa: DBG_ADDRESS; fn: READABLE_STRING_GENERAL): detachable DUMP_VALUE
+	remotely_loaded_object (oa: DBG_ADDRESS; fn: PATH): detachable DUMP_VALUE
 			-- Debug value related to remote loaded object from file `fn'.
 			-- and if `oa' is not Void, copy the value inside object addressed by `oa'.
 		do
 			if attached remote_rt_object as rto then
-				Result := rto.loaded_object (oa, fn.as_string_8) -- FIXME: Unicode
+				Result := rto.loaded_object (oa, fn)
 			end
 		end
 

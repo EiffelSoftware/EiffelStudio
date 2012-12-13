@@ -116,7 +116,7 @@ feature -- Remote Invocation: Debuggee evaluation
 
 feature -- Remote Invocation: Object Storage
 
-	store_object (a_add: DBG_ADDRESS; fn: STRING): BOOLEAN
+	store_object (a_add: DBG_ADDRESS; fn: PATH): BOOLEAN
 			-- Store in file `fn' on the application the object addressed by `oa'
 			-- Return True is succeed.
 		local
@@ -126,12 +126,12 @@ feature -- Remote Invocation: Object Storage
 			dv_fact := dump_value_factory
 			create params.make (2)
 			params.extend (dv_fact.new_object_value (a_add, Void)) -- ref
-			params.extend (dv_fact.new_manifest_string_value (fn, compiler_data.string_8_class_c)) -- fn
+			params.extend (dv_fact.new_manifest_string_32_value (fn.name, compiler_data.string_32_class_c)) -- fn
 
 			Result := query_evaluation_on ("saved_object_to", params) /= Void
 		end
 
-	loaded_object (a_addr: detachable DBG_ADDRESS; fn: STRING): detachable DUMP_VALUE
+	loaded_object (a_addr: detachable DBG_ADDRESS; fn: PATH): detachable DUMP_VALUE
 		local
 			params: ARRAYED_LIST [DUMP_VALUE]
 			dv_fact: DUMP_VALUE_FACTORY
@@ -147,7 +147,7 @@ feature -- Remote Invocation: Object Storage
 			debug ("refactor_fixme")
 				fixme (generator + ".loaded_object: unicode, this should use new_manifest_string_32_value and STRING_32 class")
 			end
-			params.extend (dv_fact.new_manifest_string_value (fn, compiler_data.string_8_class_c))
+			params.extend (dv_fact.new_manifest_string_32_value (fn.name, compiler_data.string_32_class_c))
 
 			Result := query_evaluation_on ("object_loaded_from", params)
 		end

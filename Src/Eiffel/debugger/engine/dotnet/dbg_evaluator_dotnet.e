@@ -812,6 +812,7 @@ feature {NONE} -- Implementation
 			dmv_not_void: dmv /= Void
 		local
 			dmvb: DUMP_VALUE_BASIC
+			utf: UTF_CONVERTER
 		do
 			Result := dmv.value_dotnet
 			if Result = Void then
@@ -855,7 +856,9 @@ feature {NONE} -- Implementation
 					Result := eifnet_evaluator.new_ptr_evaluation (new_active_icd_frame, dmvb.value_pointer)
 
 				when {DUMP_VALUE_CONSTANTS}.Type_manifest_string then
-					Result := eifnet_evaluator.new_eiffel_string_evaluation (new_active_icd_frame, dmv.value_string )
+					Result := eifnet_evaluator.new_eiffel_string_8_evaluation (new_active_icd_frame, dmv.value_string )
+				when {DUMP_VALUE_CONSTANTS}.Type_manifest_string_32 then
+					Result := eifnet_evaluator.new_eiffel_string_32_evaluation (new_active_icd_frame, utf.utf_8_string_8_to_string_32 (dmv.value_string))
 				else
 				end
 
@@ -869,10 +872,11 @@ feature {NONE} -- Implementation
 			-- DUMP_VALUE converted into ICOR_DEBUG_VALUE for reference TYPE Objects
 		local
 			dmvb: DUMP_VALUE_BASIC
+			utf: UTF_CONVERTER
 		do
 			Result := dmv.value_dotnet
 
-			if dmv.is_basic or dmv.is_type_manifest_string_8 then
+			if dmv.is_basic or dmv.is_type_manifest_string_8 or dmv.is_type_manifest_string_32 then
 				if Result /= Void then
 						--| we have a basic type as dotnet value
 
@@ -910,7 +914,9 @@ feature {NONE} -- Implementation
 					when {DUMP_VALUE_CONSTANTS}.type_pointer then
 						Result := eifnet_evaluator.icdv_reference_pointer_from_icdv_pointer (new_active_icd_frame, Result)
 					when {DUMP_VALUE_CONSTANTS}.Type_manifest_string then
-						Result := eifnet_evaluator.icdv_string_from_icdv_system_string (new_active_icd_frame, Result)
+						Result := eifnet_evaluator.icdv_string_8_from_icdv_system_string (new_active_icd_frame, Result)
+					when {DUMP_VALUE_CONSTANTS}.Type_manifest_string_32 then
+						Result := eifnet_evaluator.icdv_string_32_from_icdv_system_string (new_active_icd_frame, Result)
 					else
 					end
 				else
@@ -949,7 +955,9 @@ feature {NONE} -- Implementation
 					when {DUMP_VALUE_CONSTANTS}.type_character_32 then
 						Result := eifnet_evaluator.new_reference_character_32_evaluation (new_active_icd_frame, dmvb.value_character_32 )
 					when {DUMP_VALUE_CONSTANTS}.Type_manifest_string then
-						Result := eifnet_evaluator.new_eiffel_string_evaluation (new_active_icd_frame, dmv.value_string )
+						Result := eifnet_evaluator.new_eiffel_string_8_evaluation (new_active_icd_frame, dmv.value_string )
+					when {DUMP_VALUE_CONSTANTS}.Type_manifest_string_32 then
+						Result := eifnet_evaluator.new_eiffel_string_32_evaluation (new_active_icd_frame, utf.utf_8_string_8_to_string_32 (dmv.value_string) )
 					else
 					end
 				end

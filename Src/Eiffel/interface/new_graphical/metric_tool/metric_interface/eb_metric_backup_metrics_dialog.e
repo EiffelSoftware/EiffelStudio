@@ -71,7 +71,7 @@ feature{NONE} -- Actions
 			-- Action to be performed to open a dialog to select file
 		do
 			if last_selected /= Void then
-				file_open_dialog.set_start_directory (last_selected)
+				file_open_dialog.set_start_path (last_selected)
 			end
 			file_open_dialog.save_actions.extend (agent on_file_selected)
 			file_open_dialog.show_modal_to_window (Current)
@@ -80,8 +80,8 @@ feature{NONE} -- Actions
 	on_file_selected
 			-- Action to be performed when a file name is selected in `file_open_dialog'
 		do
-			last_selected := file_open_dialog.file_name.twin
-			file_name_area.set_text (file_open_dialog.file_name)
+			last_selected := file_open_dialog.full_file_path
+			file_name_area.set_text (last_selected.name)
 		end
 
 	on_text_change
@@ -124,7 +124,7 @@ feature{NONE} -- Actions
 
 feature {NONE} -- Implementation
 
-	last_selected: STRING_32
+	last_selected: PATH
 			-- Last selected position to backup
 
 	file_open_dialog: EV_FILE_SAVE_DIALOG
@@ -134,35 +134,34 @@ invariant
 	file_open_dialog_attached: file_open_dialog /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-        license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-        licensing_options:	"http://www.eiffel.com/licensing"
-        copying: "[
-                        This file is part of Eiffel Software's Eiffel Development Environment.
-                        
-                        Eiffel Software's Eiffel Development Environment is free
-                        software; you can redistribute it and/or modify it under
-                        the terms of the GNU General Public License as published
-                        by the Free Software Foundation, version 2 of the License
-                        (available at the URL listed under "license" above).
-                        
-                        Eiffel Software's Eiffel Development Environment is
-                        distributed in the hope that it will be useful,	but
-                        WITHOUT ANY WARRANTY; without even the implied warranty
-                        of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-                        See the	GNU General Public License for more details.
-                        
-                        You should have received a copy of the GNU General Public
-                        License along with Eiffel Software's Eiffel Development
-                        Environment; if not, write to the Free Software Foundation,
-                        Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
-                ]"
-        source: "[
-                         Eiffel Software
-                         356 Storke Road, Goleta, CA 93117 USA
-                         Telephone 805-685-1006, Fax 805-685-6869
-                         Website http://www.eiffel.com
-                         Customer support http://support.eiffel.com
-                ]"
-
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

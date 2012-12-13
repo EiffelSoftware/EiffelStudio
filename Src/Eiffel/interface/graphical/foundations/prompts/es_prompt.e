@@ -30,7 +30,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_text: like text; a_buttons: like buttons; a_default: like default_button; a_default_confirm: like default_confirm_button; a_default_cancel: like default_cancel_button)
+	make (a_text: READABLE_STRING_GENERAL; a_buttons: like buttons; a_default: like default_button; a_default_confirm: like default_confirm_button; a_default_cancel: like default_cancel_button)
 			-- Initialize a prompt using required information
 			--
 			-- `a_text': The text to display on the prompt; empty or void to display none
@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 			buttons_set: buttons = a_buttons
 		end
 
-	make_standard (a_text: like text)
+	make_standard (a_text: READABLE_STRING_GENERAL)
 			-- Initialize a standard warning prompt using required information.
 			--
 			-- `a_text': The text to display on the prompt.
@@ -211,7 +211,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	text: STRING_32 assign set_text
+	text: STRING_32
 			-- The prompt's main text
 		do
 			Result := prompt_text.text
@@ -304,7 +304,7 @@ feature -- Element change
 			title_set: a_text.is_equal (title)
 		end
 
-	set_text (a_text: like text)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- Sets prompt's main text.
 			--
 			-- `a_text': Text to set on the prompt.

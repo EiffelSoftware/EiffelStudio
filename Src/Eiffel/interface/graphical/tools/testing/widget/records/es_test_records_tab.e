@@ -363,10 +363,10 @@ feature {NONE} -- Implementation
 			when {TEST_STATE_SERIALIZER}.test_suite_unavailable then
 				l_message := locale.translation (e_service_not_available)
 			when {TEST_STATE_SERIALIZER}.file_not_writable then
-				l_message := locale.formatted_string (d_file_not_writable, [a_file_name])
+				l_message := locale.formatted_string (d_file_not_writable, [a_file_name.name])
 			else
 				l_success := True
-				l_message := locale.formatted_string (d_state_exported, [a_file_name])
+				l_message := locale.formatted_string (d_state_exported, [a_file_name.name])
 			end
 			if l_success then
 				create {ES_INFORMATION_PROMPT} l_prompt.make_standard (l_message)

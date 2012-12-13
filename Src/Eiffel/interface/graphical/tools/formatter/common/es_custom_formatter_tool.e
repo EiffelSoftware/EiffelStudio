@@ -29,13 +29,13 @@ feature -- Access
 		local
 			l_path: like icon_file_path
 		do
-			if attached {like icon} internal_icon as l_icon then
+			if attached internal_icon as l_icon then
 				Result := l_icon
 			else
 				l_path := icon_file_path
-				if l_path /= Void and (create {RAW_FILE}.make_with_name (l_path)).exists then
+				if l_path /= Void and (create {RAW_FILE}.make_with_path (l_path)).exists then
 					create Result
-					Result.set_with_named_file (l_path)
+					Result.set_with_named_path (l_path)
 				else
 					Result := stock_pixmaps.tool_feature_icon_buffer
 				end
@@ -52,13 +52,13 @@ feature -- Access
 		local
 			l_path: like icon_file_path
 		do
-			if attached {like icon_pixmap} internal_icon_pixmap as l_icon then
+			if attached internal_icon_pixmap as l_icon then
 				Result := l_icon
 			else
 				l_path := icon_file_path
-				if l_path /= Void and (create {RAW_FILE}.make_with_name (l_path)).exists then
+				if l_path /= Void and (create {RAW_FILE}.make_with_path (l_path)).exists then
 					create Result
-					Result.set_with_named_file (icon_file_path)
+					Result.set_with_named_path (icon_file_path)
 				else
 					Result := stock_pixmaps.tool_feature_icon
 				end
@@ -82,7 +82,7 @@ feature {NONE} -- Access
 
 feature {EB_CUSTOMIZED_TOOL_MANAGER, EB_CUSTOMIZED_TOOL_DIALOG} -- Access
 
-	icon_file_path: STRING_32 assign set_icon_file_path
+	icon_file_path: PATH assign set_icon_file_path
 			-- Absolute file path of a custom pixmap
 
 	stone_handlers: DS_HASH_TABLE [ES_TOOL [EB_TOOL], STRING_32]

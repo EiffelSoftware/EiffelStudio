@@ -1122,26 +1122,24 @@ feature {NONE} -- Export call stack
 			valid_dialog: fd /= Void
 		local
 			f: RAW_FILE
-			fn: STRING_32
-			fp: PATH
+			fn: PATH
 			l_prompt: ES_QUESTION_PROMPT
 			retried: BOOLEAN
 		do
 			if not retried then
 				if debugger_manager.safe_application_is_stopped then
 						--| We create a file (or open it).
-					fn := fd.file_name
-					fp := fd.full_file_path.parent
-					create f.make_with_name (fn)
+					fn := fd.full_file_path
+					create f.make_with_path (fn)
 					if f.exists then
-						create l_prompt.make_standard (interface_names.l_file_exits (fn))
+						create l_prompt.make_standard (interface_names.l_file_exits (fn.name))
 						l_prompt.set_button_text (l_prompt.dialog_buttons.yes_button, interface_names.b_overwrite)
 						l_prompt.set_button_text (l_prompt.dialog_buttons.no_button, interface_names.b_append)
-						l_prompt.set_button_action (l_prompt.dialog_buttons.yes_button, agent save_call_stack_to_filename (fp, fn, False))
-						l_prompt.set_button_action (l_prompt.dialog_buttons.no_button, agent save_call_stack_to_filename (fp, fn, True))
+						l_prompt.set_button_action (l_prompt.dialog_buttons.yes_button, agent save_call_stack_to_filename (fn, False))
+						l_prompt.set_button_action (l_prompt.dialog_buttons.no_button, agent save_call_stack_to_filename (fn, True))
 						l_prompt.show (Eb_debugger_manager.debugging_window.window)
 					else
-						save_call_stack_to_filename	(fp, fn, False)
+						save_call_stack_to_filename	(fn, False)
 					end
 				else
 					prompts.show_error_prompt (interface_names.l_only_available_for_stopped_application, Eb_debugger_manager.debugging_window.window, Void)
@@ -1149,7 +1147,7 @@ feature {NONE} -- Export call stack
 			else
 					-- The file name was probably incorrect (not creatable).
 				if fd /= Void then
-					prompts.show_error_prompt (Warning_messages.w_Not_creatable (fd.file_name), Eb_debugger_manager.debugging_window.window, Void)
+					prompts.show_error_prompt (Warning_messages.w_Not_creatable (fd.full_file_path.name), Eb_debugger_manager.debugging_window.window, Void)
 				end
 			end
 		rescue
@@ -1157,7 +1155,7 @@ feature {NONE} -- Export call stack
 			retry
 		end
 
-	save_call_stack_to_filename (a_fp: PATH; a_fn: STRING_32; is_append: BOOLEAN)
+	save_call_stack_to_filename (a_fn: PATH; is_append: BOOLEAN)
 			-- Save call stack into file named `a_fn'.
 			-- if the file already exists and `is_append' is True
 			-- then append the stack in the same file
@@ -1168,7 +1166,7 @@ feature {NONE} -- Export call stack
 		do
 			if not retried then
 					--| We create a file (or open it).
-				create fn.make_with_name (a_fn)
+				create fn.make_with_path (a_fn)
 				if fn.exists and is_append then
 					fn.open_append
 				else
@@ -1184,11 +1182,11 @@ feature {NONE} -- Export call stack
 					-- Save the path to the preferences.
 					-- Encode it as UTF-8.
 				preferences.debug_tool_data.last_saved_stack_path_preference.set_value
-					(u.string_32_to_utf_8_string_8 (a_fp.name))
+					(u.string_32_to_utf_8_string_8 (a_fn.parent.name))
 				preferences.preferences.save_preference (preferences.debug_tool_data.last_saved_stack_path_preference)
 			else
 					-- The file name was probably incorrect (not creatable).
-				prompts.show_error_prompt (Warning_messages.w_Not_creatable (a_fn), Eb_debugger_manager.debugging_window.window, Void)
+				prompts.show_error_prompt (Warning_messages.w_Not_creatable (a_fn.name), Eb_debugger_manager.debugging_window.window, Void)
 			end
 		rescue
 			retried := True

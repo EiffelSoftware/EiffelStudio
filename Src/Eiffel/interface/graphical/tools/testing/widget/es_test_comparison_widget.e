@@ -424,7 +424,7 @@ feature {NONE} -- Query
 
 feature -- Basic operations
 
-	compare_states (a_file_name: READABLE_STRING_8)
+	compare_states (a_file_name: PATH)
 			-- Compare current test suite state with state stored in `a_file_name'.
 			--
 			-- `a_file_name': File name in which old state is stored
@@ -513,7 +513,7 @@ feature -- Basic operations
 
 					statistic_widget.enable_sensitive
 					grid.enable_sensitive
-					file_text.set_text (a_file_name.to_string_32)
+					file_text.set_text (a_file_name.name)
 				end
 			end
 

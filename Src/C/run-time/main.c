@@ -828,8 +828,8 @@ rt_private void eif_init_root (void)
 	 * If -eif_root was provided, check if requested root feature is available. Otherwise print
 	 * list of valid root features and terminate.
 	 */
-	int i, j, l_same;
-	size_t n;
+	int i, l_same;
+	size_t j, n;
 	if (rt_eif_root) {
 		if (egc_ridx >= 0) {
 			egc_ridx = -1;

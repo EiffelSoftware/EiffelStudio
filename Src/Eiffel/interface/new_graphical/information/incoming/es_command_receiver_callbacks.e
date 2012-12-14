@@ -204,11 +204,10 @@ feature {NONE} -- EIS implementation
 			l_target_name, l_target_uuid,
 			l_group_name, l_class_name, l_feature_name: STRING
 			l_loader: EB_GRAPHICAL_PROJECT_LOADER
-			l_project_path: STRING_32
+			l_project_path: PATH
 			l_chosen_target: STRING
 			l_window: EV_WINDOW
 			l_uuid: UUID
-			u: GOBO_FILE_UTILITIES
 		do
 			eis_component_found_table.search (system_id)
 			if eis_component_found_table.found and then attached eis_component_found_table.found_item as lt_string then
@@ -280,7 +279,7 @@ feature {NONE} -- EIS implementation
 									l_project_path := project_searcher.found_project_option.target.last_location
 									l_chosen_target := project_searcher.found_project_option.target_name
 								else
-									l_project_path := u.file_directory_path (lt_project).as_string_32
+									l_project_path := lt_project.parent
 								end
 								if l_chosen_target = Void then
 									l_chosen_target := l_target_name

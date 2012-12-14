@@ -23,8 +23,6 @@ feature {NONE}
 
 	Backup_info: STRING = "compilation_info.txt"
 
-	Studio_directory_list: STRING = "DIRECTORYLIST"
-
 	C_prefix: CHARACTER = 'C'
 			-- Prefix for C generated directories and object files
 
@@ -236,7 +234,7 @@ feature {AUXILIARY_FILES} -- Versioning
 			-- Tags used in project file header.
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

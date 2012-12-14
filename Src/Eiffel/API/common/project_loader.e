@@ -44,7 +44,7 @@ inherit
 			{NONE} all
 		end
 
-	KL_SHARED_FILE_SYSTEM
+	SHARED_EXECUTION_ENVIRONMENT
 		export
 			{NONE} all
 		end
@@ -73,16 +73,13 @@ inherit
 
 feature -- Loading
 
-	open_project_file (a_file_name: READABLE_STRING_32; a_target_name: STRING; a_project_path: STRING_32; from_scratch: BOOLEAN)
+	open_project_file (a_file_name: PATH; a_target_name: STRING; a_project_path: PATH; from_scratch: BOOLEAN)
 			-- Initialize current project using `a_file_name'.
 		local
-			l_ext: READABLE_STRING_32
-			l_pos: INTEGER
-			l_default_file_name: FILE_NAME
+			l_default_file_name: PATH
 			l_load_ace: CONF_LOAD_LACE
 			l_load_config: CONF_LOAD
 			l_factory: CONF_COMP_FACTORY
-			u: GOBO_FILE_UTILITIES
 		do
 			create l_factory
 			reset
@@ -91,15 +88,12 @@ feature -- Loading
 			if a_file_name = Void or else a_file_name.is_empty then
 					-- We are in the case where no file was specified, so we will try either to read
 					-- Ace or Ace.ecf from the current working directory.
-				create l_default_file_name.make_from_string (file_system.current_working_directory)
-				l_default_file_name.set_file_name ("Ace")
-				l_default_file_name.add_extension ({EIFFEL_CONSTANTS}.config_extension)
-				if is_file_readable (l_default_file_name.string) then
-					config_file_name := l_default_file_name.string
+				l_default_file_name := execution_environment.current_working_path.extended ("Ace.ecf")
+				if is_file_readable (l_default_file_name) then
+					config_file_name := l_default_file_name
 				else
 						-- Try to locate `Ace'.
-					create l_default_file_name.make_from_string (file_system.current_working_directory)
-					l_default_file_name.set_file_name ("Ace")
+					l_default_file_name := execution_environment.current_working_path.extended ("Ace")
 					if is_file_readable (l_default_file_name) then
 							-- Special case where `Ace' can mean either the old or new format.
 						create l_load_ace.make (l_factory, {EIFFEL_CONSTANTS}.config_extension)
@@ -109,52 +103,35 @@ feature -- Loading
 						l_load_ace.retrieve_configuration (l_default_file_name)
 						if l_load_ace.is_error then
 								-- Most likely it is not an Ace file, so it must be in the new format.
-							config_file_name := l_default_file_name.string
+							config_file_name := l_default_file_name
 						else
 								-- Convert Ace file into new format.
-							ask_for_config_name (u.file_directory_path (l_default_file_name),
+							ask_for_config_name (l_default_file_name.parent,
 								l_load_ace.last_system.name + {EIFFEL_CONSTANTS}.dotted_config_extension,
 								agent store_converted ((l_load_ace.last_system), ?))
 						end
 					else
 							-- Report error stating that we could not find `Ace.ecf'
 							-- in the current working directory.
-						create l_default_file_name.make_from_string (file_system.current_working_directory)
-						l_default_file_name.set_file_name ("Ace")
-						l_default_file_name.add_extension ({EIFFEL_CONSTANTS}.config_extension)
-						report_non_readable_configuration_file (l_default_file_name.string)
+						l_default_file_name := execution_environment.current_working_path.extended ("Ace.ecf")
+						report_non_readable_configuration_file (l_default_file_name)
 					end
 				end
 			elseif is_file_readable (a_file_name) then
 					-- Extract the extension of the file and depending
 					-- on its value try different loading approach.
-				l_pos := a_file_name.last_index_of ('.', a_file_name.count)
-				if l_pos > 0 and then l_pos < a_file_name.count then
-					l_ext := a_file_name.substring (l_pos + 1, a_file_name.count)
-					if l_ext.is_case_insensitive_equal_general (project_extension) then
-						convert_epr (a_file_name)
-					elseif l_ext.is_case_insensitive_equal_general ({EIFFEL_CONSTANTS}.ace_extension) then
-						convert_ace (a_file_name)
-					elseif l_ext.is_case_insensitive_equal_general ({EIFFEL_CONSTANTS}.config_extension) then
-							-- Case where it is a `ecf' extension. or another one.
-						config_file_name := a_file_name.twin
-					else
-							-- Unknown extension, let's try as an ecf and if not successful as ace.
-						config_file_name := a_file_name.twin
-						create l_load_config.make (l_factory)
-						l_load_config.retrieve_configuration (config_file_name)
-						if l_load_config.is_error and l_load_config.is_invalid_xml then
-								-- Could not load the file, but it was not XML. Try to convert it
-								-- from lace.
-							convert_ace (config_file_name)
-							l_load_config := Void
-						end
-					end
-				else
-						-- Case where it is no extension.
+				if a_file_name.has_extension (project_extension) then
+					convert_epr (a_file_name)
+				elseif a_file_name.has_extension ({EIFFEL_CONSTANTS}.ace_extension) then
+					convert_ace (a_file_name)
+				elseif a_file_name.has_extension ({EIFFEL_CONSTANTS}.config_extension) then
+						-- Case where it is a `ecf' extension. or another one.
 					config_file_name := a_file_name.twin
+				else
+						-- Unknown extension, let's try as an ecf and if not successful as ace.
+					config_file_name := a_file_name
 					create l_load_config.make (l_factory)
-					l_load_config.retrieve_configuration (config_file_name)
+					l_load_config.retrieve_configuration (config_file_name.name)
 					if l_load_config.is_error and l_load_config.is_invalid_xml then
 							-- Could not load the file, but it was not XML. Try to convert it
 							-- from lace.
@@ -175,7 +152,7 @@ feature -- Loading
 				if l_load_config = Void then
 						-- We try to load it as a normal config file.
 					create l_load_config.make (l_factory)
-					l_load_config.retrieve_configuration (config_file_name)
+					l_load_config.retrieve_configuration (config_file_name.name)
 				end
 				if l_load_config.is_error then
 					report_cannot_read_config_file (config_file_name, l_load_config.last_error)
@@ -188,7 +165,7 @@ feature -- Loading
 							lace.set_conf_system (l_load_config.last_system)
 							lace.set_target_name (target_name)
 							compiler_project_location.set_target (target_name)
-							lace.set_file_name (config_file_name)
+							lace.set_file_name (config_file_name.name)
 
 								-- Try to retrieve project if already compiled.
 							retrieve_or_create_project (a_project_path)
@@ -221,27 +198,17 @@ feature -- Loading
 			end
 		end
 
-	convert_project (a_file_name: STRING)
+	convert_project (a_file_name: PATH)
 			-- Try to convert `a_filename' from 5.6 format to current without compilation.
 			-- Converted file is stored in `converted_file_name'.
 		require
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
-		local
-			l_pos: INTEGER
-			l_ext: STRING
-			l_convertion_done: BOOLEAN
 		do
 			if is_file_readable (a_file_name) then
-				l_pos := a_file_name.last_index_of ('.', a_file_name.count)
-				if l_pos > 0 and then l_pos < a_file_name.count then
-					l_ext := a_file_name.substring (l_pos + 1, a_file_name.count)
-					if l_ext.is_equal (project_extension) then
-						convert_epr (a_file_name)
-						l_convertion_done := True
-					end
-				end
-				if not l_convertion_done then
+				if a_file_name.has_extension (project_extension) then
+					convert_epr (a_file_name)
+				else
 						-- Try to read an Ace file.
 					convert_ace (a_file_name)
 				end
@@ -249,11 +216,11 @@ feature -- Loading
 				report_cannot_convert_project (a_file_name)
 			end
 			if not has_error then
-				converted_file_name := config_file_name.twin
+				converted_file_name := config_file_name
 			end
 		end
 
-	open_single_file_compilation_project (a_class_filename: STRING; a_libraries: LIST [STRING]; a_project_path: STRING; from_scratch: BOOLEAN)
+	open_single_file_compilation_project (a_class_filename: PATH; a_libraries: ARRAYED_LIST [PATH]; a_project_path: PATH; from_scratch: BOOLEAN)
 			-- Open project for a single file compilation.
 			--
 			-- `a_class_filename': Filename of Eiffel class which acts as root
@@ -264,37 +231,31 @@ feature -- Loading
 			a_libraries_not_void: a_libraries /= Void
 			a_class_filename_not_void: a_class_filename /= Void
 		local
-			l_filename, l_target_name: STRING
+			l_target_name: STRING_32
 			l_config_file_name: like config_file_name
 			l_file: RAW_FILE
-			l_path: PATH
 			l_factory: CONF_FACTORY
 			l_system: CONF_SYSTEM
 			l_target: CONF_TARGET
 			l_load: CONF_LOAD
 		do
-				-- First split the class name into components. A possible classname is 'path/to/file/hello_world.e'
-				-- This will be split into:
-				--   l_directory: 'path/to/file'
-				--   l_filename: 'hello_world.e'
-				--   l_target_name: 'hello_world'
-			l_filename := file_system.basename (a_class_filename)
-			l_target_name := l_filename.twin
+				-- First split the class name into components. A possible classname is
+				-- 'path/to/file/hello_world.e' and we will extract just `hello_world' in `l_target_name'.
+			l_target_name := a_class_filename.entry.name.as_string_32
 			l_target_name.remove_tail (2)
 
 			create l_factory
 				-- Only create ecf if it does not exist yet
-			create l_path.make_from_string (a_class_filename)
-			if attached l_path.parent as l_parent then
+			if attached a_class_filename.parent as l_parent then
 				create l_file.make_with_path (l_parent.extended (l_target_name + {EIFFEL_CONSTANTS}.dotted_config_extension))
 			else
 				create l_file.make_with_name (l_target_name + {EIFFEL_CONSTANTS}.dotted_config_extension)
 			end
-			l_config_file_name := l_file.path.name
+			l_config_file_name := l_file.path
 			if l_file.exists then
 					-- ecf exists, load it
 				create l_load.make (l_factory)
-				l_load.retrieve_configuration (l_config_file_name)
+				l_load.retrieve_configuration (l_config_file_name.name)
 				if l_load.is_error then
 						-- ecf could not be loaded, an error will be triggered
 						-- later when the config file will be loaded again by
@@ -325,7 +286,7 @@ feature -- Loading
 
 					-- Configuration system
 				l_system := l_factory.new_system_generate_uuid (l_target_name)
-				l_system.set_file_name (l_config_file_name)
+				l_system.set_file_name (l_config_file_name.name)
 
 					-- Add the target for single file compilation
 				add_single_file_compilation_target (l_system, l_target_name, l_target_name.as_upper, "make", a_libraries)
@@ -365,7 +326,7 @@ feature -- Access
 	ignore_user_configuration_file: BOOLEAN
 			-- Will user configuration file be used for current compilation?
 
-	converted_file_name: STRING
+	converted_file_name: PATH
 			-- Name of new format config file chosen by user.
 
 	has_library_conversion: BOOLEAN
@@ -440,13 +401,13 @@ feature {NONE} -- Settings
 
 feature {NONE} -- Implementation: access
 
-	config_file_name: STRING_32
+	config_file_name: detachable PATH
 			-- Name of new format config file chosen by user.
 
 	target_name: STRING
 			-- Name of a target chose by user.
 
-	project_location: STRING_32
+	project_location: PATH
 			-- Location of project chosen by user.
 
 	should_override_project: BOOLEAN
@@ -458,29 +419,27 @@ feature {NONE} -- Implementation: access
 
 feature -- Status report
 
-	is_file_readable (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
+	is_file_readable (a_file_name: PATH): BOOLEAN
 			-- Does file of path `a_file_name' exist and is readable?
 		require
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
 		local
-			u: FILE_UTILITIES
 			l_file: RAW_FILE
 		do
-			l_file := u.make_raw_file (a_file_name)
+			create l_file.make_with_path (a_file_name)
 			Result := l_file.exists and then l_file.is_readable
 		end
 
-	is_file_writable (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
+	is_file_writable (a_file_name: PATH): BOOLEAN
 			-- Does file of path `a_file_name' exist and can be written/created?
 		require
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
 		local
-			u: FILE_UTILITIES
 			l_file: RAW_FILE
 		do
-			l_file := u.make_raw_file (a_file_name)
+			create l_file.make_with_path (a_file_name)
 			Result := (l_file.exists and then l_file.is_writable) or else l_file.is_creatable
 		end
 
@@ -516,7 +475,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Settings
 
-	convert_epr (a_file_name: STRING)
+	convert_epr (a_file_name: PATH)
 			-- Convert `a_file_name' which is supposely in the `epr' format to the
 			-- new configuration format.
 		require
@@ -524,7 +483,7 @@ feature {NONE} -- Settings
 			a_file_name_not_empty: not a_file_name.is_empty
 			a_file_name_readable: is_file_readable (a_file_name)
 		local
-			l_ace: STRING
+			l_ace: PATH
 		do
 			l_ace := retrieved_ace_from_epr (a_file_name)
 			if l_ace = Void or else l_ace.is_empty or else not is_file_readable (l_ace) then
@@ -536,7 +495,7 @@ feature {NONE} -- Settings
 			config_file_name_set: not has_error implies is_config_file_name_valid
 		end
 
-	convert_ace (a_file_name: STRING_32)
+	convert_ace (a_file_name: PATH)
 			-- Convert `a_file_name' which is supposely in the `ace' format to the
 			-- new configuration format.
 		require
@@ -546,7 +505,6 @@ feature {NONE} -- Settings
 		local
 			l_load: CONF_LOAD_LACE
 			l_factory: CONF_COMP_FACTORY
-			u: GOBO_FILE_UTILITIES
 		do
 				-- load config from ace
 			create l_factory
@@ -560,14 +518,14 @@ feature {NONE} -- Settings
 			else
 					-- Ask user for a new name for the converted config file.
 					-- If user does not specify one, then the processing will stop right there.
-				ask_for_config_name (u.file_directory_path (a_file_name),  l_load.last_system.name + {EIFFEL_CONSTANTS}.dotted_config_extension,
+				ask_for_config_name (a_file_name.parent, l_load.last_system.name + {EIFFEL_CONSTANTS}.dotted_config_extension,
 					agent store_converted ( l_load.last_system, ?))
 			end
 		ensure
 			config_file_name_set: not has_error implies is_config_file_name_valid
 		end
 
-	store_converted  (a_conf_system: CONF_SYSTEM; a_file_name: READABLE_STRING_GENERAL)
+	store_converted  (a_conf_system: CONF_SYSTEM; a_file_name: PATH)
 			-- Store updated configuration into `file_name'.
 		require
 			a_conf_system_not_void: a_conf_system /= Void
@@ -576,7 +534,6 @@ feature {NONE} -- Settings
 		local
 			l_print: CONF_PRINT_VISITOR
 			l_file: PLAIN_TEXT_FILE
-			u: FILE_UTILITIES
 		do
 			create l_print.make
 			a_conf_system.process (l_print)
@@ -584,10 +541,11 @@ feature {NONE} -- Settings
 				no_error: not l_print.is_error
 			end
 			if is_file_writable (a_file_name) then
-				l_file := u.open_write_text_file (a_file_name)
+				create l_file.make_with_path (a_file_name)
+				l_file.open_write
 				l_file.put_string (l_print.text)
 				l_file.close
-				config_file_name := a_file_name.as_string_32
+				config_file_name := a_file_name
 			else
 				report_cannot_save_converted_file (a_file_name)
 			end
@@ -596,7 +554,7 @@ feature {NONE} -- Settings
 			config_file_name_valid: not has_error implies is_config_file_name_valid
 		end
 
-	retrieve_or_create_project (a_project_path: READABLE_STRING_32)
+	retrieve_or_create_project (a_project_path: PATH)
 			-- Retrieve or create project.
 		local
 			msg: STRING_32
@@ -604,7 +562,7 @@ feature {NONE} -- Settings
 				--| Define temporary default directory structure for project
 			lace.process_user_file (a_project_path, not ignore_user_configuration_file)
 
-			compiler_project_location.set_location (create {PATH}.make_from_string (lace.project_path))
+			compiler_project_location.set_location (lace.project_path)
 
 				-- If `compiler_project_location.project_file' actually exists we will try to retrieve it.
 				-- Otherwise, it means that we are trying to compile a new project.
@@ -623,7 +581,7 @@ feature {NONE} -- Settings
 
 						if Eiffel_project.is_incompatible then
 							msg := warning_messages.w_project_incompatible_version (
-								config_file_name, version_number, Eiffel_project.incompatible_version_number)
+								config_file_name.name, version_number, Eiffel_project.incompatible_version_number)
 							report_incompatible_project (msg)
 						else
 							if Eiffel_project.is_corrupted then
@@ -707,7 +665,7 @@ feature {NONE} -- Settings
 			end
 		end
 
-	create_project (a_project_path: READABLE_STRING_32; a_should_prompt_for_project_location: BOOLEAN)
+	create_project (a_project_path: PATH; a_should_prompt_for_project_location: BOOLEAN)
 			-- Try to create a project and ask for project's location if `a_should_prompt_for_project_location'.
 		require
 			a_project_path_not_void: a_project_path /= Void
@@ -721,13 +679,13 @@ feature {NONE} -- Settings
 					ask_for_new_project_location (a_project_path)
 					if not has_error then
 						lace.process_user_file (project_location, not ignore_user_configuration_file)
-						compiler_project_location.set_location (create {PATH}.make_from_string (lace.project_path))
+						compiler_project_location.set_location (lace.project_path)
 					end
 				else
 					project_location := a_project_path
 				end
 				if not has_error then
-					create l_dir.make (project_location)
+					create l_dir.make_with_path (project_location)
 					eiffel_project.make_new (l_dir, compiler_project_location, True, deletion_agent, cancel_agent)
 					if is_deletion_cancelled then
 						set_has_error
@@ -890,7 +848,7 @@ feature {NONE} -- Settings
 
 feature {NONE} -- Error reporting
 
-	report_non_readable_configuration_file (a_file_name: STRING)
+	report_non_readable_configuration_file (a_file_name: PATH)
 			-- Report an error when `a_file_name' cannot be read.
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -900,7 +858,7 @@ feature {NONE} -- Error reporting
 			has_error_set: has_error
 		end
 
-	report_non_readable_ace_file_in_epr (a_epr_name, a_file_name: STRING)
+	report_non_readable_ace_file_in_epr (a_epr_name, a_file_name: PATH)
 			-- Report an error when ace file `a_file_name' cannot be accessed from epr file `a_epr_name'.
 			-- Note that `a_file_name' can be Void if `a_epr_name' does not mention it.
 		require
@@ -911,7 +869,7 @@ feature {NONE} -- Error reporting
 			has_error_set: has_error
 		end
 
-	report_cannot_read_ace_file (a_file_name: READABLE_STRING_32; a_conf_error: CONF_ERROR)
+	report_cannot_read_ace_file (a_file_name: PATH; a_conf_error: CONF_ERROR)
 			-- Report an error when ace  file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		require
@@ -923,7 +881,7 @@ feature {NONE} -- Error reporting
 			has_error_set: has_error
 		end
 
-	report_cannot_read_config_file (a_file_name: READABLE_STRING_32; a_conf_error: CONF_ERROR)
+	report_cannot_read_config_file (a_file_name: PATH; a_conf_error: CONF_ERROR)
 			-- Report an error when a config file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		require
@@ -935,7 +893,7 @@ feature {NONE} -- Error reporting
 			has_error_set: has_error
 		end
 
-	report_cannot_save_converted_file (a_file_name: READABLE_STRING_GENERAL)
+	report_cannot_save_converted_file (a_file_name: PATH)
 			-- Report an error when result of a conversion from ace to new format cannot be stored
 			-- in file `a_file_name'.
 		require
@@ -946,7 +904,7 @@ feature {NONE} -- Error reporting
 			has_error_set: has_error
 		end
 
-	report_cannot_convert_project (a_file_name: STRING)
+	report_cannot_convert_project (a_file_name: PATH)
 			-- Report an error when result of a conversion from ace `a_file_name' to new format failed.
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -956,7 +914,7 @@ feature {NONE} -- Error reporting
 			has_error_set: has_error
 		end
 
-	report_cannot_create_project (a_dir_name: READABLE_STRING_GENERAL)
+	report_cannot_create_project (a_dir_name: PATH)
 			-- Report an error when we cannot create project in `a_dir_name'.
 		require
 			a_dir_name_not_void: a_dir_name /= Void
@@ -966,7 +924,7 @@ feature {NONE} -- Error reporting
 			has_error_set: has_error
 		end
 
-	report_cannot_open_project (a_msg: STRING_GENERAL)
+	report_cannot_open_project (a_msg: READABLE_STRING_GENERAL)
 			-- Report an error when project cannot be read/write for some reasons
 			-- and possibly propose user to upgrade
 		require
@@ -974,7 +932,7 @@ feature {NONE} -- Error reporting
 		deferred
 		end
 
-	report_incompatible_project (a_msg: STRING_GENERAL)
+	report_incompatible_project (a_msg: READABLE_STRING_GENERAL)
 			-- Report an error when retrieving an incompatible project and possibly
 			-- propose user to upgrade.
 		require
@@ -982,7 +940,7 @@ feature {NONE} -- Error reporting
 		deferred
 		end
 
-	report_project_corrupted (a_msg: STRING_GENERAL)
+	report_project_corrupted (a_msg: READABLE_STRING_GENERAL)
 			-- Report an error when retrieving a project which is corrupted and possibly
 			-- propose user to recompile from scratch.
 		require
@@ -990,14 +948,14 @@ feature {NONE} -- Error reporting
 		deferred
 		end
 
-	report_project_retrieval_interrupted (a_msg: STRING_GENERAL)
+	report_project_retrieval_interrupted (a_msg: READABLE_STRING_GENERAL)
 			-- Report an error when project retrieval was stopped.
 		require
 			a_msg_not_void: a_msg /= Void
 		deferred
 		end
 
-	report_project_incomplete (a_msg: STRING_GENERAL)
+	report_project_incomplete (a_msg: READABLE_STRING_GENERAL)
 			-- Report an error when project is incomplete and possibly propose
 			-- user to recompile from scratch.
 		require
@@ -1021,7 +979,7 @@ feature {NONE} -- Error reporting
 
 feature {NONE} -- User interaction
 
-	ask_for_config_name (a_dir_name: READABLE_STRING_GENERAL; a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]])
+	ask_for_config_name (a_dir_name: PATH; a_file_name: READABLE_STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE [PATH]])
 			-- Given `a_dir_name' and a proposed `a_file_name' name for the new format, ask the
 			-- user if he wants to create `a_file_name' or a different name. If he said yes, then
 			-- execute `a_action' with chosen file_name, otherwise do nothing.
@@ -1044,7 +1002,7 @@ feature {NONE} -- User interaction
 			target_name_set: not has_error implies target_name /= Void
 		end
 
-	ask_for_new_project_location (a_project_path: STRING)
+	ask_for_new_project_location (a_project_path: PATH)
 			-- Given a proposed location `a_project_path', ask user if he wants
 			-- this location or another one.
 		require
@@ -1085,7 +1043,7 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Implementation
 
-	retrieved_ace_from_epr (a_file_name: STRING): STRING
+	retrieved_ace_from_epr (a_file_name: PATH): PATH
 			-- Parse the project header file to get the following information:
 			-- version_number_tag
 			-- precompilation_id
@@ -1100,13 +1058,13 @@ feature {NONE} -- Implementation
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
 		local
-			line, value: STRING
+			line: STRING
 			index, line_number: INTEGER
 			retried: BOOLEAN
 			l_storage: RAW_FILE
 		do
 			if not retried then
-				create l_storage.make_with_name (a_file_name)
+				create l_storage.make_with_path (a_file_name)
 				if l_storage.exists then
 					l_storage.open_read
 					from
@@ -1119,8 +1077,7 @@ feature {NONE} -- Implementation
 							-- Read the Ace file path if any specified.
 						index := line.index_of (':', 1)
 						if ace_file_path_tag.is_equal (line.substring (1, index - 1)) then
-							value := line.substring (index + 1, line.count)
-							Result := value.twin
+							create Result.make_from_string (line.substring (index + 1, line.count))
 						end
 
 						line_number := line_number + 1
@@ -1138,7 +1095,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	add_single_file_compilation_target (a_system: CONF_SYSTEM; a_target_name, a_root_class_name, a_root_feature_name: STRING; a_libraries: LIST [STRING])
+	add_single_file_compilation_target (a_system: CONF_SYSTEM; a_target_name, a_root_class_name, a_root_feature_name: STRING; a_libraries: LIST [PATH])
 			-- Add a target to `a_system' consisting of given parameters.
 			--
 			-- `a_system': The configuration system which the target will be added to
@@ -1201,7 +1158,7 @@ feature {NONE} -- Implementation
 			target_exists: a_system.targets.has (a_target_name)
 		end
 
-	add_library_to_target (a_library: STRING; a_target: CONF_TARGET)
+	add_library_to_target (a_library: PATH; a_target: CONF_TARGET)
 			-- Add library `a_library' to `a_target'.
 			--
 			-- `a_library': Either the name of a library or the location of an ecf file
@@ -1211,25 +1168,22 @@ feature {NONE} -- Implementation
 			a_target_not_void: a_target /= Void
 		local
 			l_factory: CONF_FACTORY
-			l_library_name, l_extension, l_ecf_path: STRING
+			l_library_name, l_ecf_path: STRING_32
 			l_library: CONF_LIBRARY
 		do
 			create l_factory
-				-- Get extension of library argument
-			l_extension := a_library.twin
-			l_extension.keep_tail (4)
 				-- Check if extension denotes a configuration file
-			if l_extension.is_case_insensitive_equal ({EIFFEL_CONSTANTS}.dotted_config_extension) then
+			if a_library.has_extension ({EIFFEL_CONSTANTS}.config_extension) then
 					-- The library is specified as full path to ecf file
-				l_ecf_path := a_library
+				create l_ecf_path.make_from_string_general (a_library.name)
 					-- Name of config file is taken as name of library
-				l_library_name := file_system.basename (a_library)
-				l_library_name.remove_tail (4)
+				l_library_name := a_library.entry.name
+				l_library_name.remove_tail ({EIFFEL_CONSTANTS}.config_extension.count + 1)
 			else
 					-- The library is specified as name only
-				l_library_name := a_library.twin
+				l_library_name := a_library.name
 					-- Guess location
-				l_ecf_path := "$ISE_LIBRARY/library/" + a_library + "/" + a_library + {EIFFEL_CONSTANTS}.dotted_config_extension
+				l_ecf_path := {STRING_32} "$ISE_LIBRARY/library/" + l_library_name + "/" + l_library_name + {EIFFEL_CONSTANTS}.dotted_config_extension
 					-- Todo: smarter guess, check if ECF exists in this location and try also $ISE_LIBRARY/framework/
 					-- Todo: check if location exist and raise an error if it does not
 					-- Todo: check if library can be used as precompile (e.g. Vision2)

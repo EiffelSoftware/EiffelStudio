@@ -57,12 +57,12 @@ feature {EB_RECENT_PROJECTS_MANAGER} -- Observer pattern
 	update
 			-- (Re)build the menu.
 		local
-			recent_projects: ARRAYED_LIST [TUPLE [file: READABLE_STRING_32; target: READABLE_STRING_GENERAL]]
-			project: TUPLE [file: READABLE_STRING_32; target: READABLE_STRING_GENERAL]
+			recent_projects: ARRAYED_LIST [TUPLE [file: PATH; target: READABLE_STRING_GENERAL]]
+			project: TUPLE [file: PATH; target: READABLE_STRING_GENERAL]
 			target: READABLE_STRING_GENERAL
 			open_cmd: EB_OPEN_PROJECT_COMMAND
 			menu_item: EV_MENU_ITEM
-			project_file_name: READABLE_STRING_32
+			project_file_name: PATH
 		do
 			wipe_out
 			recent_projects := recent_projects_manager.recent_projects
@@ -75,9 +75,9 @@ feature {EB_RECENT_PROJECTS_MANAGER} -- Observer pattern
 				project_file_name := project.file
 				target := project.target
 				if target = Void or else target.is_empty then
-					create menu_item.make_with_text (project_file_name.as_string_32)
+					create menu_item.make_with_text (project_file_name.name)
 				else
-					create menu_item.make_with_text (project_file_name.as_string_32 + "%T" + target.as_string_32)
+					create menu_item.make_with_text (project_file_name.name + "%T" + target)
 				end
 				create open_cmd.make
 				menu_item.select_actions.extend (agent open_cmd.execute_with_file_and_target (project_file_name, target, False))
@@ -109,7 +109,7 @@ feature -- Obsolete
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -122,22 +122,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_RECENT_PROJECT_MANAGER_MENU

@@ -53,10 +53,10 @@ feature -- Searcher
 			end
 		end
 
-	search_projects (a_projects: ARRAYED_LIST [TUPLE [READABLE_STRING_32, READABLE_STRING_32]]; a_system_name, a_system_uuid, a_target_name, a_target_uuid: detachable STRING)
+	search_projects (a_projects: ARRAYED_LIST [TUPLE [PATH, READABLE_STRING_32]]; a_system_name, a_system_uuid, a_target_name, a_target_uuid: detachable STRING)
 			-- Search in projects
 		local
-			p: TUPLE [file: READABLE_STRING_32; target: READABLE_STRING_32]
+			p: TUPLE [file: PATH; target: READABLE_STRING_32]
 		do
 			reset
 			if not a_projects.is_empty then
@@ -89,7 +89,7 @@ feature -- Access
 	found_project_option: detachable USER_OPTIONS
 			-- Found project option
 
-	found_project: detachable STRING_32
+	found_project: detachable PATH
 			-- Found project file name.
 
 feature {NONE} -- Access
@@ -112,7 +112,6 @@ feature {NONE} -- Implemetation
 			search_needed: search_needed
 		local
 			l_files: like {FILE_UTILITIES}.ends_with
-			l_file: STRING_32
 			u: FILE_UTILITIES
 		do
 			if u.directory_exists (a_path) then
@@ -122,14 +121,13 @@ feature {NONE} -- Implemetation
 				until
 					l_files.after or project_found
 				loop
-					l_file := l_files.item_for_iteration.name
-					check_file (l_file)
+					check_file (l_files.item_for_iteration)
 					l_files.forth
 				end
 			end
 		end
 
-	check_file (a_file: STRING_32)
+	check_file (a_file: PATH)
 			-- Check file and see if it is the system we need.
 		require
 			search_needed: search_needed
@@ -142,7 +140,7 @@ feature {NONE} -- Implemetation
 			l_error, l_found: BOOLEAN
 		do
 			create l_conf.make (create {CONF_COMP_FACTORY})
-			l_conf.retrieve_configuration (a_file)
+			l_conf.retrieve_configuration (a_file.name)
 			if not l_conf.is_error then
 				l_conf_system := l_conf.last_system
 				create l_uuid

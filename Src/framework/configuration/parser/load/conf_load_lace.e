@@ -92,7 +92,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	retrieve_configuration (a_file: STRING)
+	retrieve_configuration (a_file: PATH)
 			-- Retreive the configuration in `a_file' and make it available in `last_system'.
 		require
 			a_file_ok: a_file /= Void and then not a_file.is_empty
@@ -102,10 +102,10 @@ feature -- Basic operation
 			l_desc: STRING_32
 		do
 			create l_parser.make
-			l_parser.parse_file (create {PATH}.make_from_string (a_file), False)
+			l_parser.parse_file (a_file, False)
 			if not attached {ACE_SD} l_parser.ast as l_ast then
 				create l_error
-				l_error.set_position (a_file, l_parser.line, l_parser.column)
+				l_error.set_position (a_file.name, l_parser.line, l_parser.column)
 				l_error.set_ace_parse_mode
 				set_error (l_error)
 			else

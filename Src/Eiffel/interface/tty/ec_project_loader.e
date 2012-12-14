@@ -74,28 +74,24 @@ feature {NONE} -- Settings
 
 feature {NONE} -- Error reporting
 
-	report_non_readable_configuration_file (a_file_name: STRING)
+	report_non_readable_configuration_file (a_file_name: PATH)
 			-- Report an error when `a_file_name' cannot be read.
 		do
-			--|FIXME: `out' could cause information loss.
-			-- encoding of the argument should have been localized.
-			localized_print (warning_messages.w_cannot_read_file (a_file_name))
+			localized_print (warning_messages.w_cannot_read_file (a_file_name.out))
 			io.put_new_line
 			set_has_error
 		end
 
-	report_non_readable_ace_file_in_epr (a_epr_name, a_file_name: STRING)
+	report_non_readable_ace_file_in_epr (a_epr_name, a_file_name: PATH)
 			-- Report an error when ace file `a_file_name' cannot be accessed from epr file `a_epr_name'.
 			-- Note that `a_file_name' can be Void if `a_epr_name' does not mention it.
 		do
-			--|FIXME: `out' could cause information loss.
-			-- encoding of the argument should have been localized.
-			localized_print (warning_messages.w_cannot_read_ace_file_from_epr (a_epr_name, a_file_name))
+			localized_print (warning_messages.w_cannot_read_ace_file_from_epr (a_epr_name.name, a_file_name.name))
 			io.put_new_line
 			set_has_error
 		end
 
-	report_cannot_read_ace_file (a_file_name: READABLE_STRING_32; a_conf_error: CONF_ERROR)
+	report_cannot_read_ace_file (a_file_name: PATH; a_conf_error: CONF_ERROR)
 			-- Report an error when ace  file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		local
@@ -108,7 +104,7 @@ feature {NONE} -- Error reporting
 			error_handler.raise_error
 		end
 
-	report_cannot_read_config_file (a_file_name: READABLE_STRING_32; a_conf_error: CONF_ERROR)
+	report_cannot_read_config_file (a_file_name: PATH; a_conf_error: CONF_ERROR)
 			-- Report an error when a config file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		local
@@ -121,37 +117,33 @@ feature {NONE} -- Error reporting
 			error_handler.raise_error
 		end
 
-	report_cannot_save_converted_file (a_file_name: READABLE_STRING_GENERAL)
+	report_cannot_save_converted_file (a_file_name: PATH)
 			-- Report an error when result of a conversion from ace to new format cannot be stored
 			-- in file `a_file_name'.
 		do
-			--|FIXME: `out' could cause information loss.
-			-- encoding of the argument should have been localized.
-			localized_print (warning_messages.w_cannot_save_file (a_file_name))
+			localized_print (warning_messages.w_cannot_save_file (a_file_name.name))
 			io.put_new_line
 			set_has_error
 		end
 
-	report_cannot_convert_project (a_file_name: STRING)
+	report_cannot_convert_project (a_file_name: PATH)
 			-- Report an error when result of a conversion from ace to new format cannot be stored
 			-- in file `a_file_name'.
 		do
-			--|FIXME: `out' could cause information loss.
-			-- encoding of the argument should have been localized.
-			localized_print (warning_messages.w_cannot_convert_file (a_file_name))
+			localized_print (warning_messages.w_cannot_convert_file (a_file_name.name))
 			io.put_new_line
 			set_has_error
 		end
 
-	report_cannot_create_project (a_dir_name: READABLE_STRING_GENERAL)
+	report_cannot_create_project (a_dir_name: PATH)
 			-- Report an error when we cannot create project in `a_dir_name'.
 		do
-			localized_print (warning_messages.w_cannot_create_project_directory (a_dir_name))
+			localized_print (warning_messages.w_cannot_create_project_directory (a_dir_name.name))
 			io.put_new_line
 			set_has_error
 		end
 
-	report_cannot_open_project (a_msg: STRING_GENERAL)
+	report_cannot_open_project (a_msg: READABLE_STRING_GENERAL)
 			-- Report an error when project cannot be read/write for some reasons
 			-- and possibly propose user to upgrade
 		do
@@ -160,13 +152,13 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_incompatible_project (a_msg: STRING_GENERAL)
+	report_incompatible_project (a_msg: READABLE_STRING_GENERAL)
 			-- Report an error when retrieving an incompatible project and possibly
 			-- propose user to upgrade.
 		local
 			l_answered: BOOLEAN
 		do
-			localized_print (Warning_messages.w_project_incompatible_version (config_file_name, version_number,
+			localized_print (Warning_messages.w_project_incompatible_version (config_file_name.name, version_number,
 					Eiffel_project.incompatible_version_number))
 			io.put_new_line
 			if not should_stop_on_prompt then
@@ -190,7 +182,7 @@ feature {NONE} -- Error reporting
 			end
 		end
 
-	report_project_corrupted (a_msg: STRING_GENERAL)
+	report_project_corrupted (a_msg: READABLE_STRING_GENERAL)
 			-- Report an error when retrieving a project which is corrupted and possibly
 			-- propose user to recompile from scratch.
 		do
@@ -199,7 +191,7 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_project_retrieval_interrupted (a_msg: STRING_GENERAL)
+	report_project_retrieval_interrupted (a_msg: READABLE_STRING_GENERAL)
 			-- Report an error when project retrieval was stopped.
 		do
 			localized_print (a_msg)
@@ -207,7 +199,7 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_project_incomplete (a_msg: STRING_GENERAL)
+	report_project_incomplete (a_msg: READABLE_STRING_GENERAL)
 			-- Report an error when project is incomplete and possibly propose
 			-- user to recompile from scratch.
 		do
@@ -233,7 +225,7 @@ feature {NONE} -- Error reporting
 
 feature {NONE} -- User interaction
 
-	ask_for_config_name (a_dir_name: READABLE_STRING_GENERAL; a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]])
+	ask_for_config_name (a_dir_name: PATH; a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [PATH]])
 			-- Given `a_dir_name' and a proposed `a_file_name' name for the new format, ask the
 			-- user if he wants to create `a_file_name' or a different name. If he said yes, then
 			-- execute `a_action' with chosen file_name, otherwise do nothing.
@@ -241,11 +233,11 @@ feature {NONE} -- User interaction
 			l_answered: BOOLEAN
 			l_path: PATH
 		do
-			create l_path.make_from_string (a_dir_name)
+			l_path := a_dir_name
 			if should_stop_on_prompt then
 				localized_print (ewb_names.batch_mode (a_file_name))
 				io.put_new_line
-				a_action.call ([l_path.extended (a_file_name).name])
+				a_action.call ([l_path.extended (a_file_name)])
 			else
 				from
 				until
@@ -254,7 +246,7 @@ feature {NONE} -- User interaction
 					io.put_string (ewb_names.save_new_configuration_as (a_file_name).as_string_32 + ewb_names.yes_or_no)
 					io.read_line
 					if io.last_string.item (1).as_lower = 'y' then
-						a_action.call ([l_path.extended (a_file_name).name])
+						a_action.call ([l_path.extended (a_file_name)])
 						l_answered := True
 					elseif io.last_string.item (1).as_lower = 'n' then
 						from
@@ -265,7 +257,7 @@ feature {NONE} -- User interaction
 							localized_print (ewb_names.enter_name_for_configuration_file)
 							io.read_line
 							if not io.last_string.is_empty then
-								a_action.call ([l_path.extended (io.last_string).name])
+								a_action.call ([l_path.extended (io.last_string)])
 								l_answered := True
 							end
 						end
@@ -355,7 +347,7 @@ feature {NONE} -- User interaction
 			end
 		end
 
-	ask_for_new_project_location (a_project_path: STRING)
+	ask_for_new_project_location (a_project_path: PATH)
 			-- Given a proposed location `a_project_path', ask user if he wants
 			-- this location or another one.
 		local
@@ -369,7 +361,7 @@ feature {NONE} -- User interaction
 				until
 					l_answered
 				loop
-					localized_print (ewb_names.create_new_project_in (a_project_path).as_string_32 + ewb_names.yes_or_no)
+					localized_print (ewb_names.create_new_project_in (a_project_path.name) + ewb_names.yes_or_no)
 					io.read_line
 					if io.last_string.item (1).as_lower = 'y' then
 						project_location := a_project_path.twin
@@ -383,7 +375,7 @@ feature {NONE} -- User interaction
 							localized_print (ewb_names.enter_location_for_new_project)
 							io.read_line
 							if not io.last_string.is_empty then
-								project_location := io.last_string.twin
+								create project_location.make_from_string (io.last_string)
 								l_answered := True
 							end
 						end

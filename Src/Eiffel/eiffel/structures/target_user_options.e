@@ -28,7 +28,7 @@ feature -- Access
 	name: STRING
 			-- Name for current target.
 
-	last_location: STRING_32
+	last_location: PATH
 			-- EIFGENs location for `a_target'.
 		local
 			l_list: like locations

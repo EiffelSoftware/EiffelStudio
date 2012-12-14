@@ -1407,7 +1407,7 @@ feature -- Files (commands)
 			not_result_is_empty: not Result.is_empty
 		end
 
-	studio_command_line (a_ecf, a_target, a_project_path: detachable READABLE_STRING_GENERAL; a_is_gui, a_is_clean: BOOLEAN): STRING_32
+	studio_command_line (a_ecf: detachable PATH; a_target: detachable READABLE_STRING_GENERAL; a_project_path: detachable PATH; a_is_gui, a_is_clean: BOOLEAN): STRING_32
 			-- Build a proper command line to open/compile a project with EiffelStudio
 			-- on a specific target `a_target' if specified, in a location `a_project_path' if specified.
 			-- If `a_is_gui' is True, EiffelStudio is launched, otherwise the command line.
@@ -1428,24 +1428,24 @@ feature -- Files (commands)
 			l_profile := command_line_profile_option
 			if not l_profile.is_empty then
 				Result.append_character (' ')
-				Result.append (l_profile)
+				Result.append_string_general (l_profile)
 			end
 			if a_is_clean then
-				Result.append (" -clean")
+				Result.append_string_general (" -clean")
 			end
 			if a_ecf /= Void and then not a_ecf.is_empty then
-				Result.append (" -config %"")
-				Result.append_string_general (a_ecf)
+				Result.append_string_general (" -config %"")
+				Result.append (a_ecf.name)
 				Result.append_character ('%"')
 			end
 			if a_target /= Void and then not a_target.is_empty then
-				Result.append (" -target %"")
+				Result.append_string_general (" -target %"")
 				Result.append_string_general (a_target)
 				Result.append_character ('"')
 			end
 			if a_project_path /= Void and then not a_project_path.is_empty then
-				Result.append (" -project_path %"")
-				Result.append_string_general (a_project_path)
+				Result.append_string_general (" -project_path %"")
+				Result.append (a_project_path.name)
 				Result.append_character ('"')
 			end
 		end

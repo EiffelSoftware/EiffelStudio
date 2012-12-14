@@ -87,7 +87,7 @@ feature -- Access
 	target_name: STRING
 			-- Target to use. (optional, if only one target).
 
-	project_path: STRING_32
+	project_path: PATH
 			-- Project path to use. (optional).
 
 	date: INTEGER
@@ -302,7 +302,7 @@ feature -- Status setting
 	compile_all_classes: BOOLEAN
 			-- Are all classes root? i.e. all the classes must be compiled
 
-	process_user_file (a_project_path: READABLE_STRING_32; a_user_file_enabled: BOOLEAN)
+	process_user_file (a_project_path: PATH; a_user_file_enabled: BOOLEAN)
 			-- Handle the user file.
 			-- If `a_user_file_enabled' and then if we have a user file retrieve it, else create it
 			-- If we have a -project_directory argument, set the new path, else set the default path.
@@ -316,8 +316,6 @@ feature -- Status setting
 			l_changed: BOOLEAN
 			l_user_factory: USER_OPTIONS_FACTORY
 			l_target_options: TARGET_USER_OPTIONS
-			u: GOBO_FILE_UTILITIES
-			p: PATH
 		do
 			if a_user_file_enabled then
 				create l_user_factory
@@ -350,19 +348,14 @@ feature -- Status setting
 
 				 -- update project path
 			if a_project_path /= Void then
-				project_path := a_project_path
-
-					-- make it into an absolute path
-				create p.make_from_string (project_path)
-				project_path := p.canonical_path.name
-
-				l_changed := project_path /~ l_target_options.last_location
+					-- Make it into an absolute path
+				project_path := a_project_path.canonical_path
 				l_target_options.set_last_location (project_path)
 				l_changed := True
 			elseif l_target_options.last_location /= Void then
 				project_path := l_target_options.last_location
 			else
-				project_path := u.file_directory_path (file_name).as_string_32
+				project_path := (create {PATH}.make_from_string (file_name)).parent
 				l_target_options.set_last_location (project_path)
 				l_changed := True
 			end

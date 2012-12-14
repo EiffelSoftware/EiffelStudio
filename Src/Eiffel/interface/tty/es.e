@@ -81,7 +81,7 @@ feature -- Initialization
 
 				-- Set the default project path to the current working directory.
 				-- This may be overriden via user settings.
-			project_path :=(create {EXECUTION_ENVIRONMENT}).current_working_path.name
+			project_path :=(create {EXECUTION_ENVIRONMENT}).current_working_path
 
 				--| Initialization of the run-time, so that at the end of a store/retrieve
 				--| operation (like retrieving or storing the project, creating the CASEGEN
@@ -302,10 +302,10 @@ feature -- Properties
 	option: STRING
 			-- Current option being analyzed
 
-	single_file_compilation_filename: STRING
+	single_file_compilation_filename: PATH
 			-- File name of Eiffel class file in single file compilation mode
 
-	single_file_compilation_libraries: LIST [STRING]
+	single_file_compilation_libraries: ARRAYED_LIST [PATH]
 			-- List of specified libraries in single file compilation mode
 
 	is_finish_freezing_called: BOOLEAN
@@ -1087,7 +1087,7 @@ feature -- Update
 					current_option := current_option + 1
 					l_arg := argument (current_option)
 					if l_arg /= Void then
-						old_project_file := l_arg
+						create old_project_file.make_from_string (l_arg)
 					else
 						option_error := True
 					end
@@ -1118,7 +1118,7 @@ feature -- Update
 							loop
 								l_arg.remove_tail (1)
 							end
-							project_path := l_arg
+							create project_path.make_from_string (l_arg)
 							is_project_path_requested := True
 						else
 							project_path := Void
@@ -1140,7 +1140,7 @@ feature -- Update
 					current_option := current_option + 1
 					l_arg := argument (current_option)
 					if l_arg /= Void then
-						old_ace_file := l_arg
+						create old_ace_file.make_from_string (l_arg)
 					else
 						option_error := True
 					end
@@ -1155,7 +1155,7 @@ feature -- Update
 					current_option := current_option + 1
 					l_arg := argument (current_option)
 					if l_arg /= Void then
-						config_file_name := l_arg
+						create config_file_name.make_from_string (l_arg)
 					else
 						option_error := True
 					end
@@ -1276,13 +1276,13 @@ feature -- Update
 					-- This option is only valid if no other config options are set
 				if config_file_name = Void and target_name = Void and old_ace_file = Void and old_project_file = Void then
 					if single_file_compilation_libraries = Void then
-						create {LINKED_LIST [STRING]}single_file_compilation_libraries.make
+						create single_file_compilation_libraries.make (5)
 					end
 					if current_option < argument_count then
 						current_option := current_option + 1
 						l_arg := argument (current_option)
 						if l_arg /= Void then
-							single_file_compilation_libraries.extend (l_arg)
+							single_file_compilation_libraries.extend (create {PATH}.make_from_string (l_arg))
 						else
 							option_error := True
 						end
@@ -1326,16 +1326,16 @@ feature -- Update
 				create {EWB_AUTO_TEST} command.make_with_arguments (l_at_args)
 			elseif option.is_equal ("-tests") then
 				create {EWB_TEST_EXECUTION} command
-			elseif is_eiffel_class_file_name (option) then
+			elseif is_eiffel_class_file_name (create {PATH}.make_from_string (option)) then
 					-- This option is only valid if no other config options are set
 				if config_file_name = Void and target_name = Void and old_ace_file = Void and old_project_file = Void then
-					single_file_compilation_filename := argument (current_option)
+					create single_file_compilation_filename.make_from_string (argument (current_option))
 					is_single_file_compilation := True
 						-- Implies finish freezing
 					is_finish_freezing_called := True
 						-- If no libraries are set yet, initialize empty list
 					if single_file_compilation_libraries = Void then
-						create {LINKED_LIST [STRING]} single_file_compilation_libraries.make
+						create single_file_compilation_libraries.make (5)
 					end
 				else
 					option_error := True
@@ -1399,32 +1399,28 @@ feature {NONE} -- Onces
 
 feature {NONE} -- Implementation
 
-	old_ace_file: STRING_32
+	old_ace_file: PATH
 			-- Old ace file to convert.
 
-	old_project_file: STRING_32
+	old_project_file: PATH
 			-- Old project file to convert.
 
-	config_file_name: STRING_32
+	config_file_name: PATH
 			-- Name of the configuration file.
 
 	target_name: STRING
 			-- Name of the target.
 
-	project_path: STRING_32
+	project_path: PATH
 			-- Name of the path where project will be compiled.
 
-	is_eiffel_class_file_name (a_filename: STRING): BOOLEAN
+	is_eiffel_class_file_name (a_filename: PATH): BOOLEAN
 			-- Is `a_filename' an Eiffel class file?
 			-- This checks if the filename has an 'e' extension.
 		require
 			a_filename_not_void: a_filename /= Void
-		local
-			l_extension: STRING
 		do
-			l_extension := a_filename.twin
-			l_extension.keep_tail (2)
-			Result := l_extension.is_equal ("." + eiffel_extension)
+			Result := a_filename.has_extension (eiffel_extension)
 		end
 
 	print_memory_value (a_value: NATURAL_64)

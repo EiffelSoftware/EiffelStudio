@@ -168,7 +168,7 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			project_index: INTEGER
 			path_index: INTEGER
 			target_index: INTEGER
-			l_config, l_project_path: STRING_32
+			l_config, l_project_path: PATH
 			l_target: STRING
 			l_conf_constants: CONF_GUI_INTERFACE_CONSTANTS
 			first_window: EB_DEVELOPMENT_WINDOW
@@ -201,16 +201,10 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			project_index := index_of_word_option ("config")
 			if project_index /= 0 and argument_count >= project_index + 1 then
 					-- A project was specified.
-				l_config := argument (project_index + 1)
+				create l_config.make_from_string (argument (project_index + 1))
 				path_index := index_of_word_option ("project_path")
 				if path_index /= 0 and argument_count >= path_index + 1 then
-					l_project_path := argument (path_index + 1)
-					from
-					until
-						l_project_path.is_empty or else l_project_path.item (l_project_path.count) /= '\'
-					loop
-						l_project_path.remove_tail (1)
-					end
+					create l_project_path.make_from_string (argument (path_index + 1))
 				end
 
 				target_index := index_of_word_option ("target")

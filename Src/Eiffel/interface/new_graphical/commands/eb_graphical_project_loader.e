@@ -240,7 +240,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	retrieve_or_create_project (a_project_path: READABLE_STRING_32)
+	retrieve_or_create_project (a_project_path: PATH)
 			-- Retrieve or create project.
 		local
 			l_win: EB_DEVELOPMENT_WINDOW
@@ -266,67 +266,67 @@ feature {NONE} -- Actions
 
 feature {NONE} -- Error reporting
 
-	report_non_readable_configuration_file (a_file_name: STRING)
+	report_non_readable_configuration_file (a_file_name: PATH)
 			-- Report an error when `a_file_name' cannot be read.
 		do
-			report_loading_error (warning_messages.w_cannot_read_file (a_file_name))
+			report_loading_error (warning_messages.w_cannot_read_file (a_file_name.name))
 		end
 
-	report_non_readable_ace_file_in_epr (a_epr_name, a_file_name: STRING)
+	report_non_readable_ace_file_in_epr (a_epr_name, a_file_name: PATH)
 			-- Report an error when ace file `a_file_name' cannot be accessed from epr file `a_epr_name'.
 			-- Note that `a_file_name' can be Void if `a_epr_name' does not mention it.
 		do
-			report_loading_error (warning_messages.w_cannot_read_ace_file_from_epr (a_epr_name, a_file_name))
+			report_loading_error (warning_messages.w_cannot_read_ace_file_from_epr (a_epr_name.name, a_file_name.name))
 		end
 
-	report_cannot_read_ace_file (a_file_name: READABLE_STRING_32; a_conf_error: CONF_ERROR)
+	report_cannot_read_ace_file (a_file_name: PATH; a_conf_error: CONF_ERROR)
 			-- Report an error when ace  file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		do
-			report_loading_error (warning_messages.w_unable_to_load_ace_file (a_file_name, a_conf_error.text))
+			report_loading_error (warning_messages.w_unable_to_load_ace_file (a_file_name.name, a_conf_error.text))
 		end
 
-	report_cannot_read_config_file (a_file_name: READABLE_STRING_32; a_conf_error: CONF_ERROR)
+	report_cannot_read_config_file (a_file_name: PATH; a_conf_error: CONF_ERROR)
 			-- Report an error when a config file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		do
-			report_loading_error (warning_messages.w_unable_to_load_config_file (a_file_name, a_conf_error.text))
+			report_loading_error (warning_messages.w_unable_to_load_config_file (a_file_name.name, a_conf_error.text))
 		end
 
-	report_cannot_save_converted_file (a_file_name: READABLE_STRING_GENERAL)
+	report_cannot_save_converted_file (a_file_name: PATH)
 			-- Report an error when result of a conversion from ace to new format cannot be stored
 			-- in file `a_file_name'.
 		do
-			report_loading_error (warning_messages.w_cannot_save_file (a_file_name))
+			report_loading_error (warning_messages.w_cannot_save_file (a_file_name.name))
 		end
 
-	report_cannot_convert_project (a_file_name: STRING)
+	report_cannot_convert_project (a_file_name: PATH)
 			-- Report an error when result of a conversion from ace `a_file_name' to new format failed.
 		do
-			report_loading_error (warning_messages.w_cannot_convert_file (a_file_name))
+			report_loading_error (warning_messages.w_cannot_convert_file (a_file_name.name))
 		end
 
-	report_cannot_create_project (a_dir_name: READABLE_STRING_GENERAL)
+	report_cannot_create_project (a_dir_name: PATH)
 			-- Report an error when we cannot create project in `a_dir_name'.
 		do
-			report_loading_error (warning_messages.w_cannot_create_project_directory (a_dir_name))
+			report_loading_error (warning_messages.w_cannot_create_project_directory (a_dir_name.name))
 		end
 
 
-	report_cannot_open_project (a_msg: STRING_GENERAL)
+	report_cannot_open_project (a_msg: READABLE_STRING_GENERAL)
 			-- Report an error when project cannot be read/write for some reasons
 			-- and possibly propose user to upgrade
 		do
 			report_loading_error (a_msg)
 		end
 
-	report_incompatible_project (a_msg: STRING_GENERAL)
+	report_incompatible_project (a_msg: READABLE_STRING_GENERAL)
 			-- Report an error when retrieving an incompatible project and possibly
 			-- propose user to upgrade.
 		local
 			l_question: ES_DISCARDABLE_QUESTION_PROMPT
 		do
-			create l_question.make_standard (warning_messages.w_project_incompatible_version (config_file_name, version_number, eiffel_project.incompatible_version_number),
+			create l_question.make_standard (warning_messages.w_project_incompatible_version (config_file_name.name, version_number, eiffel_project.incompatible_version_number),
 				interface_names.l_discard_convert_project_dialog, create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_convert_project_preference, True))
 			l_question.set_button_action (l_question.dialog_buttons.yes_button, agent set_should_override_project (True))
 			l_question.set_button_action (l_question.dialog_buttons.no_button, agent set_has_error)
@@ -336,20 +336,20 @@ feature {NONE} -- Error reporting
 			end
 		end
 
-	report_project_corrupted (a_msg: STRING_GENERAL)
+	report_project_corrupted (a_msg: READABLE_STRING_GENERAL)
 			-- Report an error when retrieving a project which is corrupted and possibly
 			-- propose user to recompile from scratch.
 		do
 			report_loading_error (a_msg)
 		end
 
-	report_project_retrieval_interrupted (a_msg: STRING_GENERAL)
+	report_project_retrieval_interrupted (a_msg: READABLE_STRING_GENERAL)
 			-- Report an error when project retrieval was stopped.
 		do
 			report_loading_error (a_msg)
 		end
 
-	report_project_incomplete (a_msg: STRING_GENERAL)
+	report_project_incomplete (a_msg: READABLE_STRING_GENERAL)
 			-- Report an error when project is incomplete and possibly propose
 			-- user to recompile from scratch.
 		do
@@ -359,7 +359,7 @@ feature {NONE} -- Error reporting
 	report_project_loaded_successfully
 			-- Report that project was loaded successfully.
 		local
-			l_title: STRING_GENERAL
+			l_title: STRING_32
 			l_auto_scrolled: BOOLEAN
 		do
 			l_title := Interface_names.l_loaded_project.twin
@@ -402,7 +402,7 @@ feature {NONE} -- Error reporting
 			report_loading_error (warning_messages.w_project_build_precompile_error)
 		end
 
-	report_loading_error (a_msg: STRING_GENERAL)
+	report_loading_error (a_msg: READABLE_STRING_GENERAL)
 			-- Report an error when project is incomplete and possibly propose
 			-- user to recompile from scratch.
 		require
@@ -419,7 +419,7 @@ feature {NONE} -- Error reporting
 
 feature {NONE} -- User interaction
 
-	ask_for_config_name (a_dir_name: READABLE_STRING_GENERAL; a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]])
+	ask_for_config_name (a_dir_name: PATH; a_file_name: READABLE_STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE [PATH]])
 			-- Given `a_dir_name' and a proposed `a_file_name' name for the new format, ask the
 			-- user if he wants to create `a_file_name' or a different name. If he said yes, then
 			-- execute `a_action' with chosen file_name, otherwise do nothing.
@@ -429,8 +429,7 @@ feature {NONE} -- User interaction
 			l_ev: EV_MESSAGE_DIALOG
 			l_save_as_msg: STRING_32
 		do
-			create l_file_name.make_from_string (a_dir_name)
-			l_file_name := l_file_name.extended (a_file_name)
+			l_file_name := a_dir_name.extended (a_file_name)
 
 			create l_ev
 			l_save_as_msg := interface_names.b_Save_as
@@ -441,15 +440,15 @@ feature {NONE} -- User interaction
 			l_ev.set_text (warning_messages.w_configuration_files_needs_to_be_converted (a_file_name))
 
 			create l_save_as.make_with_title (interface_names.t_choose_name_for_new_configuration_file)
-			l_save_as.set_start_directory (a_dir_name)
-			l_save_as.set_file_name (a_file_name)
+			l_save_as.set_start_path (a_dir_name)
+			l_save_as.set_full_file_path (a_dir_name.extended (a_file_name))
 			l_save_as.filters.extend ([config_files_filter, config_files_description])
 			l_save_as.save_actions.extend (agent select_config_file (l_save_as, a_action))
 			l_save_as.cancel_actions.extend (agent set_has_error)
 
 			l_ev.button (l_save_as_msg).select_actions.extend (agent l_save_as.show_modal_to_window (parent_window))
 			l_ev.button (interface_names.b_cancel).select_actions.extend (agent on_cancelled (l_ev))
-			l_ev.button (interface_names.b_ok).select_actions.extend (agent a_action.call ([l_file_name.name]))
+			l_ev.button (interface_names.b_ok).select_actions.extend (agent a_action.call ([l_file_name]))
 			l_ev.show_modal_to_window (parent_window)
 		end
 
@@ -462,15 +461,15 @@ feature {NONE} -- User interaction
 			a_dlg_not_void: a_dlg /= Void
 			a_action_not_void: a_action /= Void
 		local
-			file_name: STRING_32
+			file_name: PATH
 			file: RAW_FILE
 		do
 				-- This is a callback from the name chooser when user click OK.
-			file_name := a_dlg.file_name
+			file_name := a_dlg.full_file_path
 			check file_name_not_empty: not file_name.is_empty end
-			create file.make_with_name (file_name)
+			create file.make_with_path (file_name)
 			if file.exists then
-				prompts.show_warning_prompt_with_cancel (Warning_messages.w_file_exists (file_name), parent_window, agent a_action.call ([file_name]), agent a_dlg.show_modal_to_window (parent_window))
+				prompts.show_warning_prompt_with_cancel (Warning_messages.w_file_exists (file_name.name), parent_window, agent a_action.call ([file_name]), agent a_dlg.show_modal_to_window (parent_window))
 			else
 				a_action.call ([file_name])
 			end
@@ -567,7 +566,7 @@ feature {NONE} -- User interaction
 			end
 		end
 
-	ask_for_new_project_location (a_project_path: STRING)
+	ask_for_new_project_location (a_project_path: PATH)
 			-- Given a proposed location `a_project_path', ask user if he wants
 			-- this location or another one.
 		local

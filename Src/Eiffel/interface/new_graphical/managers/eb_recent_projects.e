@@ -26,16 +26,16 @@ feature {EB_PREFERENCES} -- Initialization
 
 feature -- Value
 
-	last_opened_projects: ARRAY [TUPLE [READABLE_STRING_32, READABLE_STRING_32]]
+	last_opened_projects: ARRAY [TUPLE [PATH, READABLE_STRING_32]]
 			-- List of last opened projects
 		do
 			create Result.make (1, 0)
 			Result.compare_objects
 			last_opened_projects_preference.value.do_all (
-				agent (s: STRING; r: ARRAY [TUPLE [READABLE_STRING_32, READABLE_STRING_32]])
+				agent (s: STRING; r: ARRAY [TUPLE [PATH, READABLE_STRING_32]])
 					local
 						i: INTEGER
-						p: TUPLE [READABLE_STRING_32, READABLE_STRING_32]
+						p: TUPLE [PATH, READABLE_STRING_32]
 						f8: STRING_8
 						t8: STRING_8
 						f: READABLE_STRING_32
@@ -53,7 +53,7 @@ feature -- Value
 						f := u.utf_8_string_8_to_string_32 (f8)
 						t := u.utf_8_string_8_to_string_32 (t8)
 							-- Ensure the type of tuple by using locals.
-						p := [f, t]
+						p := [create {PATH}.make_from_string (f), t]
 						p.compare_objects
 						r.force (p, r.upper + 1)
 					end
@@ -63,7 +63,7 @@ feature -- Value
 
 feature -- Modification
 
-	set_last_opened_projects (l: ARRAY [TUPLE [READABLE_STRING_32, READABLE_STRING_32]])
+	set_last_opened_projects (l: ARRAY [TUPLE [PATH, READABLE_STRING_32]])
 			-- Set list of last opened projects
 		local
 			a: ARRAY [STRING_8]
@@ -71,14 +71,14 @@ feature -- Modification
 			create a.make (1, 0)
 			a.compare_objects
 			l.do_all (
-				agent (t: TUPLE [file: READABLE_STRING_32; target: READABLE_STRING_32]; r: ARRAY [STRING_8])
+				agent (t: TUPLE [file: PATH; target: READABLE_STRING_32]; r: ARRAY [STRING_8])
 					local
 						u: UTF_CONVERTER
 					do
 						if t.target = Void or else t.target.is_empty then
-							r.force (u.string_32_to_utf_8_string_8 (t.file), r.upper + 1)
+							r.force (u.string_32_to_utf_8_string_8 (t.file.name), r.upper + 1)
 						else
-							r.force (u.string_32_to_utf_8_string_8 (t.file + ">" + t.target), r.upper + 1)
+							r.force (u.string_32_to_utf_8_string_8 (t.file.name + ">" + t.target), r.upper + 1)
 						end
 					end
 				(?, a)
@@ -114,7 +114,7 @@ invariant
 	preferences_not_void: preferences /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -127,22 +127,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_RECENT_PROJECTS

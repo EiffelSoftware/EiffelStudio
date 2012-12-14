@@ -20,9 +20,9 @@ feature {NONE} -- Initialization
 	make
 			-- Create a project manager.
 		local
-			l_projects: ARRAY [TUPLE [READABLE_STRING_32, READABLE_STRING_32]]
+			l_projects: ARRAY [TUPLE [PATH, READABLE_STRING_32]]
 			i: INTEGER
-			l_project: TUPLE [READABLE_STRING_32, READABLE_STRING_32]
+			l_project: TUPLE [PATH, READABLE_STRING_32]
 		do
 				-- Get values from preferences.
 			if attached preferences.preferences.get_preference_value_direct ("LIST_" + preferences.recent_projects_data.last_opened_projects_string) as l_value then
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	recent_projects: ARRAYED_LIST [TUPLE [READABLE_STRING_32, READABLE_STRING_32]]
+	recent_projects: ARRAYED_LIST [TUPLE [PATH, READABLE_STRING_32]]
 			-- Save the list of recent opened projects during the execution
 			-- Purpose: make it easier to save the data at the end.
 
@@ -69,14 +69,14 @@ feature -- Menus handling
 
 feature -- Basic operations
 
-	add_recent_project (a_project: READABLE_STRING_32; a_target: READABLE_STRING_32)
+	add_recent_project (a_project: PATH; a_target: READABLE_STRING_32)
 			-- Add `a_project' to list of recent projects
 			-- and save the list of projects.
 		require
 			a_project_not_void: a_project /= Void
 			a_project_not_empty: not a_project.is_empty
 		local
-			p: TUPLE [READABLE_STRING_32, READABLE_STRING_32]
+			p: TUPLE [PATH, READABLE_STRING_32]
 			t: READABLE_STRING_32
 		do
 			t := a_target
@@ -97,7 +97,7 @@ feature -- Basic operations
 			a_projects_list_not_void: a_projects_list /= Void
 			a_projects_list_compare_objects: a_projects_list.object_comparison
 		local
-			a: ARRAY [TUPLE [READABLE_STRING_32, READABLE_STRING_32]]
+			a: ARRAY [TUPLE [PATH, READABLE_STRING_32]]
 		do
 			recent_projects := a_projects_list
 				-- Let observers know about the changes.

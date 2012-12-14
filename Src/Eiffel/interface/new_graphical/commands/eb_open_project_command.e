@@ -84,22 +84,21 @@ feature {NONE} -- Initialization
 
 feature -- Execution
 
-	execute_with_file_and_target (a_project_file_name: READABLE_STRING_32; target: READABLE_STRING_GENERAL; is_fresh_compilation: BOOLEAN)
+	execute_with_file_and_target (a_project_file_name: PATH; target: READABLE_STRING_GENERAL; is_fresh_compilation: BOOLEAN)
 			-- Open the specific project named `a_project_file_name' with the given `target' (if any)
 		require
 			a_project_file_name_valid: a_project_file_name /= Void
 		local
 			file: RAW_FILE
 			l_project_loader: EB_GRAPHICAL_PROJECT_LOADER
-			u: FILE_UTILITIES
 		do
 			if not Eiffel_project.initialized then
 				create l_project_loader.make (parent_window)
 				l_project_loader.open_project_file (a_project_file_name, target.as_string_8, Void, is_fresh_compilation)
 			else
-				file := u.make_raw_file (valid_file_name (a_project_file_name))
+				create file.make_with_path (a_project_file_name)
 				if not file.exists or else file.is_directory then
-					prompts.show_error_prompt (warning_messages.w_file_not_exist (a_project_file_name), parent_window, Void)
+					prompts.show_error_prompt (warning_messages.w_file_not_exist (a_project_file_name.name), parent_window, Void)
 				else
 					launch_ebench (eiffel_layout.studio_command_line (a_project_file_name, target, Void, True, is_fresh_compilation))
 				end
@@ -139,23 +138,10 @@ feature {NONE} -- Implementation
 	internal_parent_window: EV_WINDOW
 			-- Parent window if any, Void if none.
 
-	valid_file_name (file_name: STRING_32): STRING_32
-			-- Generate a valid file name from `file_name'
-			--| Useful when the file name is a directory with a
-			--| directory separator at the end.
-		require
-			file_name_not_void: file_name /= Void
-		do
-			if file_name.item (file_name.count) = Operating_environment.Directory_separator then
-				Result := file_name.twin
-				Result.remove (file_name.count)
-			else
-				Result := file_name
-			end
-		end
+invariant
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

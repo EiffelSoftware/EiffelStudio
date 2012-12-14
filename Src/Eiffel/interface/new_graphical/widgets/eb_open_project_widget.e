@@ -184,9 +184,9 @@ feature -- Actions
 			check l_item_not_void: l_item /= Void end
 
 				-- Open selected project.
-			l_loader.open_project_file (l_item.text,
+			l_loader.open_project_file (create {PATH}.make_from_string (l_item.text),
 				selected_target,
-				location_combo.text,
+				create {PATH}.make_from_string (location_combo.text),
 				clean_button.is_selected)
 
 			if not l_loader.has_error then
@@ -447,12 +447,12 @@ feature {NONE} -- Initialization
 		require
 			is_empty: is_empty
 		local
-			lop: ARRAYED_LIST [TUPLE [READABLE_STRING_32, READABLE_STRING_32]]
-			p: TUPLE [file: READABLE_STRING_32; target: READABLE_STRING_32]
+			lop: ARRAYED_LIST [TUPLE [PATH, READABLE_STRING_32]]
+			p: TUPLE [file: PATH; target: READABLE_STRING_32]
 			project_exist: BOOLEAN
 			i, n: INTEGER
 			l_header: EV_GRID_HEADER
-			f: ARRAYED_LIST [READABLE_STRING_32]
+			f: ARRAYED_LIST [PATH]
 		do
 				-- Now initialize grid behavior.
 			projects_list.enable_always_selected
@@ -524,7 +524,7 @@ feature {NONE} -- Initialization
 			projects_list_created: projects_list /= Void
 		end
 
-	insert_new_project (a_project_file: READABLE_STRING_GENERAL; a_row_index: INTEGER)
+	insert_new_project (a_project_file: PATH; a_row_index: INTEGER)
 			-- Create an empty new row for `a_project_file' in `projects_list'.
 		require
 			a_project_file_not_void: a_project_file /= Void
@@ -544,7 +544,7 @@ feature {NONE} -- Initialization
 			create lc
 			lc.pointer_button_press_actions.force_extend (agent on_choose_target (lc))
 			l_row.set_item (target_column_index, lc)
-			create li.make_with_text (a_project_file.as_string_32)
+			create li.make_with_text (a_project_file.name)
 			l_row.set_item (path_column_index, li)
 
 			l_row.select_actions.extend (agent on_project_selected (l_row))
@@ -583,7 +583,6 @@ feature {NONE} -- Implementation
 			l_last_target: STRING
 			l_targets: DS_ARRAYED_LIST [STRING]
 			l_force_clean: BOOLEAN
-			u: GOBO_FILE_UTILITIES
 		do
 			ln ?= a_row.item (name_column_index)
 			lt ?= a_row.item (target_column_index)
@@ -620,10 +619,11 @@ feature {NONE} -- Implementation
 				l_tooltip := last_state.last_error_message
 			else
 				if is_new_selection or is_initializing then
-					if l_options /= Void and then l_options.target.last_location /= Void then
-						create l_last_location.make_from_string (l_options.target.last_location)
+					if l_options /= Void and then attached l_options.target.last_location as l_options_last_location then
+						l_last_location := l_options_last_location
 					else
-						create l_last_location.make_from_string (u.file_directory_path (last_state.system.file_name))
+						create l_last_location.make_from_string (last_state.system.file_name)
+						l_last_location := l_last_location.parent
 					end
 					l_targets := available_targets (last_state.system)
 					if l_targets.is_empty then
@@ -835,7 +835,7 @@ feature {NONE} -- Implementation
 				until
 					l_eifgens.after
 				loop
-					create l_item.make_with_text (l_eifgens.item)
+					create l_item.make_with_text (l_eifgens.item.name)
 					l_item.select_actions.extend (agent on_location_selected)
 					location_combo.extend (l_item)
 					if location_combo.count = 1 then
@@ -875,9 +875,9 @@ feature {NONE} -- Implementation
 			l_item: EV_GRID_LABEL_ITEM
 			l_target: EV_GRID_CHOICE_ITEM
 			i, nb: INTEGER
-			l_projects: ARRAYED_LIST [TUPLE [READABLE_STRING_32, READABLE_STRING_32]]
-			p: TUPLE [READABLE_STRING_32, READABLE_STRING_32]
-			f: READABLE_STRING_32
+			l_projects: ARRAYED_LIST [TUPLE [PATH, READABLE_STRING_32]]
+			p: TUPLE [PATH, READABLE_STRING_32]
+			f: PATH
 			t: READABLE_STRING_32
 		do
 				-- Search first if it is a file which is already in the list.
@@ -898,7 +898,7 @@ feature {NONE} -- Implementation
 				if t = Void then
 					t := ""
 				end
-				f := l_item.text
+				create f.make_from_string (l_item.text)
 					-- Ensure the type of tuple by using locals.
 				p := [f, t]
 				p.compare_objects
@@ -919,17 +919,11 @@ feature {NONE} -- Actions
 		local
 			fod: EB_FILE_OPEN_DIALOG
 			environment_variable: EXECUTION_ENVIRONMENT
-			last_directory_opened: STRING_32
 		do
 				-- User just asked for an open file dialog,
 				-- and we set it on the last opened directory.
 			create environment_variable
 			create fod.make_with_preference (preferences.dialog_data.last_opened_project_directory_preference)
-			last_directory_opened := environment_variable.item (studio_directory_list)
-			if last_directory_opened /= Void then
-				fod.set_start_directory (last_directory_opened.substring (1,
-					last_directory_opened.index_of(';',1) -1 ))
-			end
 			fod.set_title (Interface_names.t_select_a_file)
 			set_dialog_filters_and_add_all (fod,
 				<<config_files_filter, ace_files_filter, eiffel_project_files_filter>>)
@@ -1016,7 +1010,7 @@ feature {NONE} -- Actions
 			a_dlg_not_void: a_dlg /= Void
 			a_dlg_not_destroyed: not a_dlg.is_destroyed
 		local
-			l_filename: STRING_32
+			l_filename: PATH
 			l_item: EV_GRID_LABEL_ITEM
 			l_has_file, l_is_ecf: BOOLEAN
 			i, nb: INTEGER
@@ -1026,16 +1020,15 @@ feature {NONE} -- Actions
 		do
 			projects_list.remove_selection
 
-			l_filename := a_dlg.file_name
+			l_filename := a_dlg.full_file_path
 				-- Check if we have a .ecf extension.
-			l_is_ecf := l_filename.count >= 4 and then
-				l_filename.substring_index ({EIFFEL_CONSTANTS}.dotted_config_extension, 1) = l_filename.count - 3
+			l_is_ecf := l_filename.has_extension ({EIFFEL_CONSTANTS}.config_extension)
 
 				-- Try to see if we can load the project.
 				-- If not, it is either an incorrect configuration file
 			create l_factory
 			create l_conf.make (l_factory)
-			l_conf.retrieve_configuration (l_filename)
+			l_conf.retrieve_configuration (l_filename.name)
 			if l_conf.is_error and (not l_is_ecf and l_conf.is_invalid_xml) then
 				create l_loader.make (parent_window)
 				l_loader.convert_project (l_filename)
@@ -1057,7 +1050,7 @@ feature {NONE} -- Actions
 				loop
 					l_item ?= projects_list.row (i).item (path_column_index)
 					check l_item_not_void: l_item /= Void end
-					l_has_file := l_item.text.is_equal (l_filename)
+					l_has_file := l_item.text.is_case_insensitive_equal (l_filename.name)
 					if l_has_file then
 						projects_list.row (i).ensure_visible
 						projects_list.row (i).enable_select
@@ -1244,16 +1237,15 @@ feature {NONE} -- Actions
 
 feature {NONE} -- Convenience
 
-	is_file_readable (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
+	is_file_readable (a_file_name: PATH): BOOLEAN
 			-- Does file of path `a_file_name' exist and is readable?
 		require
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_not_empty: not a_file_name.is_empty
 		local
 			l_file: RAW_FILE
-			u: FILE_UTILITIES
 		do
-			l_file := u.make_raw_file (a_file_name)
+			create l_file.make_with_path (a_file_name)
 			Result := l_file.exists and then l_file.is_readable
 		end
 

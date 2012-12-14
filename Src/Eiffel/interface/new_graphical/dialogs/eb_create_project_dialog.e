@@ -115,7 +115,7 @@ feature {NONE} -- Initialization
 			set_title (Interface_names.t_Choose_project_and_directory)
 		end
 
-	make_with_ace (a_parent_window: EV_WINDOW; ace_name: STRING_32; a_suggested_directory_name: STRING_32)
+	make_with_ace (a_parent_window: EV_WINDOW; ace_name: PATH; a_suggested_directory_name: PATH)
 			-- Create a new project using the ace file named `ace_name'.
 			-- and the suggested project directory `dir_name'.
 			--
@@ -127,7 +127,7 @@ feature {NONE} -- Initialization
 			valid_parent_window: a_parent_window /= Void
 		do
 			parent_window := a_parent_window
-			create ace_file_name.make_from_string (ace_name)
+			ace_file_name := ace_name
 			if not a_suggested_directory_name.is_empty then
 				suggested_directory_name := a_suggested_directory_name
 			else
@@ -148,12 +148,12 @@ feature -- Access
 	success: BOOLEAN
 			-- Was last operation sucessful?
 
-	project_location: STRING_32
+	project_location: PATH
 			-- Location for selected project
 		require
 			success: success
 		do
-			Result := directory_field.text
+			create Result.make_from_string (directory_field.text)
 		ensure
 			project_location_not_void: Result /= Void
 		end
@@ -240,7 +240,7 @@ feature -- Execution
 					if l_project_initialized then
 						l_project_loader.enable_project_creation_or_opening_not_requested
 					end
-					l_project_loader.open_project_file (ace_file_name.name, Void, directory_name.name, True)
+					l_project_loader.open_project_file (ace_file_name, Void, directory_name, True)
 					if not l_project_loader.has_error then
 						if compile_project then
 							l_project_loader.set_is_compilation_requested (True)
@@ -382,7 +382,7 @@ feature {NONE} -- Implementation
 
 			create directory_field
 			if suggested_directory_name /= Void then
-				directory_field.set_text (suggested_directory_name)
+				directory_field.set_text (suggested_directory_name.name)
 			end
 			create b.make_with_text_and_action (Interface_names.b_Browse, agent browse_directory)
 			create hb
@@ -462,14 +462,14 @@ feature {NONE} -- Implementation
 			-- Popup a "select directory" dialog.
 		local
 			dd: EV_DIRECTORY_DIALOG
-			start_directory: STRING_32
+			start_directory: PATH
 		do
 			create dd
 			dd.set_title (Interface_names.t_select_a_directory)
 			if directory_field /= Void then
-				start_directory := directory_field.text
-				if not start_directory.is_empty and then (create {DIRECTORY}.make (start_directory)).exists then
-					dd.set_start_directory (start_directory)
+				create start_directory.make_from_string (directory_field.text)
+				if not start_directory.is_empty and then (create {DIRECTORY}.make_with_path (start_directory)).exists then
+					dd.set_start_path (start_directory)
 				end
 			end
 			dd.ok_actions.extend (agent retrieve_directory (dd))
@@ -492,17 +492,10 @@ feature {NONE} -- Implementation
 			add_error_message (Warning_messages.w_Invalid_directory_or_cannot_be_created (a_directory_name.name))
 		end
 
-	create_default_directory_name (project_name: STRING_32): STRING_32
+	create_default_directory_name (project_name: READABLE_STRING_GENERAL): PATH
 			-- Return the proposed directory for project `project_name'
-		local
-			l_project_location: STRING_32
 		do
-			l_project_location := eiffel_layout.user_projects_path.name
-			if l_project_location @ l_project_location.count /= Operating_environment.Directory_separator then
-				l_project_location.append_character (Operating_environment.Directory_separator)
-			end
-			l_project_location.append (project_name)
-			Result := l_project_location
+			Result := eiffel_layout.user_projects_path.extended (project_name)
 		end
 
 	old_project_name: STRING_32
@@ -586,7 +579,7 @@ feature {NONE} -- Private attributes
 	system_name: STRING_32
 			-- Name of the system of the project to create.
 
-	suggested_directory_name: STRING_32
+	suggested_directory_name: detachable PATH
 			-- Initial directory (suggestion, can be Void)
 
 	ask_for_system_name: BOOLEAN

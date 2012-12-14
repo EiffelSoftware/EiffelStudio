@@ -250,7 +250,7 @@ feature -- Comparison
 		do
 			Result := a_path.is_equal (location) or a_path.is_equal (gac_path)
 			if not Result then
-				create l_file.make (a_path)
+				create l_file.make_with_name (a_path)
 				Result := l_file.same_file (location) or else l_file.same_file (gac_path)
 			end
 		end

@@ -45,18 +45,18 @@ feature -- Parsing
 						parse_name;
 						l_last_token := last_token
 						if l_last_token = Void then
-							syntax_error ("Resource name expected")
+							syntax_error ("Resource name expected", filename)
 						else
 							resource_name := l_last_token;
 							resource_name.to_lower;
 							parse_colon;
 							if last_token = Void then
-								syntax_error ("%":%" expected")
+								syntax_error ("%":%" expected",filename)
 							else
 								parse_value;
 								l_last_token := last_token
 								if l_last_token = Void then
-									syntax_error ("Resource value expected")
+									syntax_error ("Resource value expected", filename)
 								else
 									table.force (l_last_token, resource_name)
 								end
@@ -76,7 +76,7 @@ feature -- Parsing
 
 feature -- Errors
 
-	syntax_error (message: STRING)
+	syntax_error (message: STRING; a_file_name: PATH)
 			-- Display a warning message.
 			-- Move the pointer to the next line in the file.
 		require
@@ -88,7 +88,7 @@ feature -- Errors
 			l_resource_file := resource_file
 			check attached l_resource_file end -- implied by precondition `resource_file_attached'
 			io.error.put_string ("Warning: resource file %"");
-			io.error.put_string (l_resource_file.name);
+			io.error.put_string (a_file_name.name.as_string_8);
 			io.error.put_string ("%"%N%TSyntax error, line ");
 			io.error.put_integer (line_number);
 			io.error.put_string (": ");

@@ -83,7 +83,8 @@ RT_LNK EIF_REFERENCE makestr32_with_hash_as_old(register char *s, register size_
 RT_LNK EIF_REFERENCE makebit(char *bit, uint16 bit_count);		/* Build an Eiffel bit object */
 extern EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, EIF_REFERENCE *items, long int nbr);			/* Build an Eiffel ARRAY[ANY] object for strip*/
 
-RT_LNK EIF_REFERENCE argarr(int argc, char **argv);		/* ARRAY[STRING] creation from command line arguments */
+RT_LNK EIF_REFERENCE eif_arg_array(void);		/* ARRAY[STRING] creation from command line arguments */
+RT_LNK EIF_REFERENCE argarr(int argc, EIF_NATIVE_CHAR **argv);		/* ARRAY[STRING] creation from command line arguments */
 
 extern long *eif_lower_table;		/* ARRAY `lower' (array optimization) */
 extern long *eif_area_table;		/* ARRAY `area' (array optimization) */

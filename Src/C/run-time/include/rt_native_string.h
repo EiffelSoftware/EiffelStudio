@@ -41,9 +41,8 @@
 #endif
 
 #include "eif_portable.h"
-#ifdef EIF_WINDOWS
-#include <wchar.h> /* Unicode */
-#else
+#include <string.h>
+#ifndef EIF_WINDOWS
 #include <sys/types.h>
 #endif
 
@@ -62,6 +61,8 @@ extern "C" {
 #define rt_nstrstr wcsstr /* Return a pointer to the first occurrence of a search string in a string. */
 #define rt_nmakestr(quote) L##quote /* Manifest Native string declaration */
 #define rt_nstr_fopen	_wfopen /* Open file using native string name */
+#define rt_nstrcmp wcscmp /* Compare two strings. */
+#define rt_nstrdup _wcsdup /* Duplicate string. */
 
 #define rt_nstr_cat_ascii(dest, src) { 						\
 		int i;													\
@@ -85,6 +86,8 @@ extern "C" {
 #define rt_nstrstr strstr /* Return a pointer to the first occurrence of a search string in a string. */
 #define rt_nmakestr(quote) quote /* Manifest Native string declaration */
 #define rt_nstr_fopen	fopen /* Open file using native string name */
+#define rt_nstrcmp strcmp /* Compare two strings. */
+#define rt_nstrdup strdup /* Duplicate string. */
 
 #define rt_nstr_cat_ascii strcat
 

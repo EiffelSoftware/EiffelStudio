@@ -9,8 +9,7 @@ extern "C" {
 #include "eif_macros.h"
 #include "eif_sig.h"
 
-extern void emain(int, char **);
-extern int main(int, char **, char **);
+extern void emain(int, EIF_NATIVE_CHAR **);
 extern void egc_init_plug(void);
 extern void egc_rcdt_init (void); 
 

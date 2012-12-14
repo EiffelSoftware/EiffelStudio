@@ -9,18 +9,12 @@ extern "C" {
 #include "eif_macros.h"
 #include "eif_sig.h"
 
-extern void emain(int, char **);
-extern int main(int, char **, char **);
+extern void emain(int, EIF_NATIVE_CHAR **);
 extern void egc_init_plug(void);
 extern void egc_rcdt_init (void); 
-extern void eif_retrieve_root (int *argc, char **argv);
-extern void eif_init_root (void);
 
 int main (int argc, char ** argv, char ** envp)
 {
-
-	int eif_argc = argc;
-
 	eif_alloc_init();
 #ifdef EIF_THREADS
 	eif_thr_init_root();
@@ -38,11 +32,9 @@ int main (int argc, char ** argv, char ** envp)
 	if (setjmp(exenv))
 		failure();
 
-	eif_retrieve_root (&eif_argc, argv);
-	eif_rtinit(eif_argc, argv, (EIF_NATIVE_CHAR **) envp);
-	eif_init_root();
+	eif_rtinit(argc, (EIF_NATIVE_CHAR **) argv, (EIF_NATIVE_CHAR **) envp);
 	egc_rcdt_init (); 
-	emain(eif_argc, argv);
+	emain(argc, argv);
 	reclaim();
 	exit(0);
 }

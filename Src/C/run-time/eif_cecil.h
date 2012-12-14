@@ -339,7 +339,7 @@ RT_LNK int eiflocate(EIF_OBJECT object, char *name); /* Return the index of attr
  */
 
 RT_LNK void  failure(void);					/* The Eiffel exectution failed */
-RT_LNK void eif_rtinit(int argc, char **argv, EIF_NATIVE_CHAR **envp);				/* Eiffel run-time initialization */
+RT_LNK void eif_rtinit(int argc, EIF_NATIVE_CHAR **argv, EIF_NATIVE_CHAR **envp);				/* Eiffel run-time initialization */
 
 extern char *ct_value(struct ctable *ct, register char *key);				/* Hash table query */
 

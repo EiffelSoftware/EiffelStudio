@@ -46,6 +46,7 @@
 #include <windows.h>
 #include "eif_argcargv.h"
 #include "rt_lmalloc.h"
+#include "rt_native_string.h"
 #include "eif_except.h"		/* For `eraise' */
 
 #define EIF_CLEANUP_TABLE_SIZE 20		/* Clean up table size */
@@ -59,20 +60,20 @@ rt_public HINSTANCE eif_hPrevInstance;
 rt_public LPWSTR eif_lpCmdLine;
 rt_public int eif_nCmdShow;
 
-static char *temp = NULL;
-rt_private void shword(char *cmd, int *argc, char ***argvp);
+static EIF_NATIVE_CHAR *temp = NULL;
+rt_private void shword(EIF_NATIVE_CHAR *cmd, int *argc, EIF_NATIVE_CHAR ***argvp);
 
-rt_public void get_argcargv (int *argc, char ***argv)
+rt_public void get_argcargv (int *argc, EIF_NATIVE_CHAR ***argv)
 {
 	size_t tl, sz;
-	temp = strdup (GetCommandLine());
+	temp = rt_nstrdup (GetCommandLineW());
 
 		/* Only for Application that are launched from EiffelBench:
 		* Add a `\0' just before the string which contains the "pipes" that
 		* have been uuencoded, so that we are only giving the command line arguments
 		* that the program needs.
 		*/
-	tl = strlen (temp);
+	tl = rt_nstrlen (temp);
 
 		/* 2 because we retrieve 2 HANDLEs from the command line. */
 	sz = (2 * sizeof(HANDLE) * 4 + 2) / 3;
@@ -80,24 +81,24 @@ rt_public void get_argcargv (int *argc, char ***argv)
 		sz += 4 - (sz % 4);
 	}
 	if
-		((tl > sz + 4) && (temp[tl-1] == '"') && (temp[tl-2] == '?') &&
-		(temp[tl-(sz+3)] == '?') && (temp[tl-(sz+4)] == '"') && (temp[tl - (sz + 5)] == ' '))
+		((tl > sz + 4) && (temp[tl-1] == L'"') && (temp[tl-2] == L'?') &&
+		(temp[tl-(sz+3)] == L'?') && (temp[tl-(sz+4)] == L'"') && (temp[tl - (sz + 5)] == L' '))
 	{
-		temp[tl - (sz + 5)] = '\0';
+		temp[tl - (sz + 5)] = L'\0';
 	}
 
 	*argc = 0;
 	shword (temp, argc, argv);
 }
 
-rt_public void free_argv(char ***argv)
+rt_public void free_argv(EIF_NATIVE_CHAR ***argv)
 {
 	eif_free((*argv)[0]);
 	eif_free(*argv);
 	*argv = NULL;
 }
 
-rt_private void shword(char *cmd, int *argc, char ***argvp)
+rt_private void shword(EIF_NATIVE_CHAR *cmd, int *argc, EIF_NATIVE_CHAR ***argvp)
 {
 	/* Break the shell command held in 'cmd', putting each shell word
 	 * in a separate array entry, hence building an argument
@@ -107,47 +108,47 @@ rt_private void shword(char *cmd, int *argc, char ***argvp)
 	int quoted = 0;	/* parsing inside a quoted string? */
 	int nbs;		/* number of backspaces */
 	int i;
-	char *p = NULL, *pe = NULL;	/* pointers in `cmd' */
-	char *qb = NULL, *q = NULL;	/* pointers in arguments */
+	EIF_NATIVE_CHAR *p = NULL, *pe = NULL;	/* pointers in `cmd' */
+	EIF_NATIVE_CHAR *qb = NULL, *q = NULL;	/* pointers in arguments */
 
 	/* Remove leading and trailing white spaces */
-	for (p = cmd; *p == ' ' || *p == '\t'; p++)
+	for (p = cmd; *p == L' ' || *p == L'\t'; p++)
 		; /* empty */
-	for (pe = p + strlen(p) - 1; pe >= p && (*pe == ' ' || *pe == '\t'); pe--)
+	for (pe = p + (rt_nstrlen(p) - 1) ; pe >= p && (*pe == L' ' || *pe == L'\t'); pe--)
 		; /* empty */
 
 	if (p <= pe) {
 
 		*argc = *argc + 1;	/* at least one argument */
 
-		qb = q = eif_malloc(pe - p + 2);
+		qb = q = eif_malloc(((pe - p) + 2) * sizeof(EIF_NATIVE_CHAR));
 		if (!qb)
 			return;
 
 		do {
 			switch(*p) {
-				case ' ':
-				case '\t':
+				case L' ':
+				case L'\t':
 					if (quoted)
 						do {
 							*q++ = *p++; 
-						} while(*p == ' ' || *p == '\t');
+						} while(*p == L' ' || *p == L'\t');
 					else {
 						do {
 							p++;
-						} while(*p == ' ' || *p == '\t');
-						*q++ = '\0';
+						} while(*p == L' ' || *p == L'\t');
+						*q++ = L'\0';
 						*argc = *argc + 1;
 					}
 					break;
-				case '\"':
+				case L'\"':
 					quoted = ! quoted;
 					p++;
 					break;
-				case '\\':
-					for (nbs = 0; *p == '\\'; nbs++)
+				case L'\\':
+					for (nbs = 0; *p == L'\\'; nbs++)
 						*q++ = *p++;
-					if (*p == '\"') {
+					if (*p == L'\"') {
 						if (nbs % 2) {	/* odd number of backslashes */
 							q -= (nbs + 1) / 2;
 							*q++ = *p++;
@@ -163,7 +164,7 @@ rt_private void shword(char *cmd, int *argc, char ***argvp)
 					*q++ = *p++;
 			}
 		} while (p <= pe);
-		*q++ = '\0';
+		*q++ = L'\0';
 	}
 
 	if (!argvp) {
@@ -171,7 +172,7 @@ rt_private void shword(char *cmd, int *argc, char ***argvp)
 		return;
 	}
 
-	*argvp = (char **) eif_malloc ((*argc + 1) * sizeof(char *));
+	*argvp = (EIF_NATIVE_CHAR **) eif_malloc ((*argc + 1) * sizeof(EIF_NATIVE_CHAR *));
 	if (!(*argvp)) {
 		free(qb);
 		return;
@@ -179,9 +180,9 @@ rt_private void shword(char *cmd, int *argc, char ***argvp)
 
 	for (i = 0; i < *argc; i++) {
 		(*argvp)[i] = qb;
-		qb += strlen(qb) + 1;
+		qb += rt_nstrlen(qb) + 1;
 	}
-	(*argvp)[i] = (char *)0;
+	(*argvp)[i] = (EIF_NATIVE_CHAR *)0;
 
 }
 void eif_cleanup(void)

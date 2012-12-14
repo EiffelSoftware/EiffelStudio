@@ -37,6 +37,8 @@
 #ifndef _eif_umain_h_
 #define _eif_umain_h_
 
+#include "eif_portable.h"
+
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #pragma once
 #endif
@@ -45,7 +47,7 @@
 extern "C" {
 #endif
 
-extern void umain(int argc, char **argv, char **envp);			/* User's initialization routine */
+extern void umain(int argc, EIF_NATIVE_CHAR **argv, EIF_NATIVE_CHAR **envp);			/* User's initialization routine */
 
 #ifdef __cplusplus
 }

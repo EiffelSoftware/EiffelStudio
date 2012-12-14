@@ -21,7 +21,7 @@ extern "C" {
 #include "eif_macros.h"
 #include "eif_sig.h"
 
-extern void emain(int, char **);
+extern void emain(int, (EIF_NATIVE_CHAR **));
 extern int main(int, char **, char **);
 extern void egc_init_plug(void);
 extern void egc_rcdt_init (void); 
@@ -83,7 +83,7 @@ int main (int argc, char ** argvxx, char ** envpxx)
 	if (setjmp(exenv))
 		failure();
 
-	eif_rtinit(argc, argv, (EIF_NATIVE_CHAR **) envp);
+	eif_rtinit(argc, (EIF_NATIVE_CHAR **) argv, (EIF_NATIVE_CHAR **) envp);
 	egc_rcdt_init (); 
 	emain(argc, argv);
 	reclaim();

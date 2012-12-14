@@ -55,12 +55,13 @@ doc:<file name="plug.c" header="eif_plug.h" version="$Id$" summary="Set of routi
 #endif
 #include "rt_bits.h"
 #include "rt_struct.h"
-#include <string.h>
+#include "rt_native_string.h"
 #include "rt_assert.h"		/* For assertions checkings. */
 #include "rt_gen_conf.h"
 #include "rt_gen_types.h"
 #include "rt_garcol.h"
 #include "rt_globals.h"
+#include "eif_argv.h"
 #include "rt_macros.h"
 
 #ifndef EIF_THREADS
@@ -113,15 +114,19 @@ rt_private void recursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, int wh
  * class creation routine
  */
 
-rt_public EIF_REFERENCE argarr(int argc, char **argv)
+rt_public EIF_REFERENCE argarr(int argc, EIF_NATIVE_CHAR **argv)
 {
-	/* Create an Eiffel ARRAY [STRING] with the values contained in
-	 * `argv'
-	 */
+	return eif_arg_array();
+}
+
+rt_public EIF_REFERENCE eif_arg_array (void)
+{
+	/* Create an Eiffel ARRAY [STRING] with the values contained on the command line. */
 	EIF_GET_CONTEXT
 	EIF_REFERENCE array, sp;
 	EIF_TYPE_INDEX typres;
 	int i;
+	int argc = eif_arg_count();
 
 	/*
 	 * Create the array
@@ -159,7 +164,26 @@ rt_public EIF_REFERENCE argarr(int argc, char **argv)
 	 * Fill the array
 	 */
 	for (i=0; i<argc; i++) {
-		((EIF_REFERENCE *) sp)[i] = makestr(argv[i], strlen(argv[i]));
+		EIF_NATIVE_CHAR *l_src = eif_arg_item (i);
+#ifdef EIF_WINDOWS
+			/* Convert the EIF_NATIVE_CHAR into a C string. */
+		char *l_str;
+		int j;
+		size_t n = rt_nstrlen(l_src);
+
+		l_str = eif_malloc((n + 1) * sizeof(char));
+		if (l_str) {
+			for (j = 0; j <= n; j++) {
+				l_str[j] = (char) l_src [j];
+			}
+			((EIF_REFERENCE *) sp)[i] = makestr(l_str, n);
+			eif_free(l_str);
+		} else {
+			enomem();
+		}	
+#else
+		((EIF_REFERENCE *) sp)[i] = makestr(l_src, rt_nstrlen(l_src));
+#endif
 		RTAR(sp, ((EIF_REFERENCE *)sp)[i]);
 	}
 

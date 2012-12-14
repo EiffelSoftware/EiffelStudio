@@ -46,10 +46,8 @@
 extern "C" {
 #endif
 
-RT_LNK int eif_argc;			/* Initial argc value (argument count) */
-RT_LNK char **eif_argv;			/* Copy of initial argv (argument vector) */
-RT_LNK EIF_INTEGER arg_number(void);
-RT_LNK EIF_REFERENCE arg_option(EIF_INTEGER num);	/* Eiffel string of argv[num] */
+RT_LNK EIF_INTEGER eif_arg_count(void);
+RT_LNK EIF_POINTER eif_arg_item(EIF_INTEGER num);
 
 #ifdef __cplusplus
 }

@@ -29,7 +29,7 @@ BOOL WINAPI DllMain (HANDLE hInst, ULONG ul_reason_for_call, LPVOID lpvReserved)
 			eif_hPrevInstance = hInst;
 			{
 				int argc = 1; 
-				char *argv[] = {"",""}; 
+				EIF_NATIVE_CHAR *argv[] = {L"",L""}; 
 				
 				eif_alloc_init();
 #ifdef EIF_THREADS
@@ -40,7 +40,7 @@ BOOL WINAPI DllMain (HANDLE hInst, ULONG ul_reason_for_call, LPVOID lpvReserved)
 					egc_init_plug(); 
 					initsig(); 
 					initstk(); 
-					eif_rtinit(argc, argv, (char **)0);  
+					eif_rtinit(argc, argv, NULL);
 				}
 			}
 			EIF_EXIT_EIFFEL;

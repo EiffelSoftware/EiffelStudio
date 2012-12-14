@@ -1081,8 +1081,9 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 		do
 			fn := dd.full_file_path
 			if not fn.is_empty then
-				if not fn.name.tail (4).is_case_insensitive_equal_general (".def") then
-					fn := fn.appended (".def")
+				if not fn.has_extension ("def") then
+						-- No extension or not a "def" extension
+					fn := fn.appended_with_extension ("def")
 				end
 				file_name := fn
 				file_call_back.call (Void)

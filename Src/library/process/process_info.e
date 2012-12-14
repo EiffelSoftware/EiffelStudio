@@ -11,6 +11,9 @@ deferred class
 
 inherit
 	EXECUTION_ENVIRONMENT
+		rename
+			arguments as environment_arguments
+		end
 
 
 feature -- Access

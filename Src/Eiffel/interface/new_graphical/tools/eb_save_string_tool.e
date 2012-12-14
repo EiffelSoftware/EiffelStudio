@@ -106,35 +106,32 @@ feature -- Save
 		local
 			f: PLAIN_TEXT_FILE
 			retried: BOOLEAN
-			str: STRING_32
+			str: PATH
 			filter_str: STRING_32
-			l_count, l_count2: INTEGER
 			l_selected_filter_index: INTEGER
 		do
 			if not retried then
 				if save_file_dlg /= Void then
-					create str.make_from_string (save_file_dlg.file_name)
+					str := save_file_dlg.full_file_path
 					l_selected_filter_index := save_file_dlg.selected_filter_index
 					if l_selected_filter_index /= 0 and then not save_file_dlg.filters.i_th (l_selected_filter_index).filter.same_string (All_files_filter) then
 						filter_str := save_file_dlg.filters.i_th (save_file_dlg.selected_filter_index).filter.as_string_32
-						if filter_str.item (1) = '*' then
-							filter_str.remove (1)
+						if filter_str.count > 1 and then filter_str.item (1) = '*' then
+							filter_str.remove_head (1)
 						end
-						l_count := filter_str.count
-						l_count2 := str.count
-						if l_count2 > l_count then
-							if not str.substring (l_count2 - l_count + 1, str.count).is_case_insensitive_equal (filter_str) then
-								str.append (filter_str)
-							end
-						else
-							str.append (filter_str)
+						if filter_str.count > 1 and then filter_str.item (1) = '.' then
+							filter_str.remove_head (1)
+						end
+						if not str.has_extension (filter_str) then
+								-- There was either no extension or an extension that did not match `filter_str'
+							str := str.appended_with_extension (filter_str)
 						end
 					end
 					save_file_dlg.destroy
-					create f.make_with_name (str)
+					create f.make_with_path (str)
 					if f.exists then
 						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (
-							Warning_messages.w_File_exists (str), owner_window, agent on_overwrite_file (str), Void)
+							Warning_messages.w_file_exists (str.name), owner_window, agent on_overwrite_file (str), Void)
 					else
 						on_overwrite_file (str)
 					end
@@ -143,24 +140,25 @@ feature -- Save
 			end
 		rescue
 			retried := True
-			prompts.show_error_prompt (Warning_messages.w_cannot_save_file (str), owner_window, Void)
+			prompts.show_error_prompt (Warning_messages.w_cannot_save_file (str.name), owner_window, Void)
 			retry
 		end
 
-	on_overwrite_file (file_name: READABLE_STRING_GENERAL)
+	on_overwrite_file (file_name: PATH)
 			-- Agent called when save text from `console' to an existing file
 		local
 			f: PLAIN_TEXT_FILE
 			retried: BOOLEAN
 		do
 			if not retried then
-				create f.make_create_read_write (file_name)
+				create f.make_with_path (file_name)
+				f.create_read_write
 				f.put_string (text)
 				f.close
 			end
 		rescue
 			retried := True
-			prompts.show_error_prompt (Warning_messages.w_cannot_save_file (file_name), owner_window, Void)
+			prompts.show_error_prompt (Warning_messages.w_cannot_save_file (file_name.name), owner_window, Void)
 			retry
 		end
 

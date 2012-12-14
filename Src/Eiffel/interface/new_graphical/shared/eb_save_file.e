@@ -98,18 +98,20 @@ feature -- Basic operations
 			l_notifier: SERVICE_CONSUMER [FILE_NOTIFIER_S]
 			l_text: STRING_32
 			l_stream: STRING
+			l_new_file_name: READABLE_STRING_GENERAL
 		do
 			if not l_retry then
 					-- Always assume a saving is successful.
 				last_saving_success := True
-				create new_file.make_with_name (a_file_name)
+				l_new_file_name := a_file_name
+				create new_file.make_with_name (l_new_file_name)
 
 				aok := True
 				if not new_file.exists then
 					if not new_file.is_creatable then
 						aok := False
 						last_saving_success := False
-						prompts.show_error_prompt (warning_messages.w_not_creatable (new_file.name), Void, Void)
+						prompts.show_error_prompt (warning_messages.w_not_creatable (l_new_file_name), Void, Void)
 					else
 						new_created := True
 					end
@@ -117,11 +119,11 @@ feature -- Basic operations
 					if not new_file.is_plain then
 						aok := False
 						last_saving_success := False
-						prompts.show_error_prompt (warning_messages.w_not_a_plain_file (new_file.name), Void, Void)
+						prompts.show_error_prompt (warning_messages.w_not_a_plain_file (l_new_file_name), Void, Void)
 					elseif not new_file.is_writable then
 						aok := False
 						last_saving_success := False
-						prompts.show_error_prompt (warning_messages.w_not_writable (new_file.name), Void, Void)
+						prompts.show_error_prompt (warning_messages.w_not_writable (l_new_file_name), Void, Void)
 					end
 				end
 
@@ -155,7 +157,8 @@ feature -- Basic operations
 					if create_backup then
 						robust_rename (tmp_name, a_file_name)
 					elseif last_saving_success then
-						create new_file.make_with_name (tmp_name)
+						l_new_file_name := tmp_name
+						create new_file.make_with_name (l_new_file_name)
 						if new_file.exists then
 							last_saving_date := new_file.date
 							robust_delete (new_file)
@@ -180,7 +183,7 @@ feature -- Basic operations
 				if new_file /= Void and then not new_file.is_closed then
 					new_file.close
 				end
-				prompts.show_error_prompt (warning_messages.w_Not_creatable_choose_to_save (new_file.name), Void, Void)
+				prompts.show_error_prompt (warning_messages.w_Not_creatable_choose_to_save (l_new_file_name), Void, Void)
 				file_save_as (a_text, a_encoding, a_bom)
 				last_saving_success := False
 			end
@@ -273,7 +276,7 @@ feature {NONE} -- Implementation
 			l_save_file: EB_SAVE_FILE
 		do
 			create l_save_file
-			l_save_file.save (a_fsd.file_name, a_text, a_encoding, a_bom)
+			l_save_file.save (a_fsd.full_file_path.name, a_text, a_encoding, a_bom)
 		end
 
 note

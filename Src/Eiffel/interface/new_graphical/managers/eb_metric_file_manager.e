@@ -110,7 +110,7 @@ feature -- File creation
 				end
 				metric_file.wipe_out
 				metric_file.open_read_write
-				Xml_routines.save_xml_document (create {PATH}.make_from_string (metric_file.name_32), file_header)
+				Xml_routines.save_xml_document (metric_file.path, file_header)
 			end
 		rescue
 			retried := True

@@ -444,28 +444,24 @@ feature {NONE} -- Implementation
 			-- Enumerate the available wizards.
 		local
 			new_project_directory: DIRECTORY
-			entries: ARRAYED_LIST [STRING_32]
-			extension: STRING_32
+			entries: ARRAYED_LIST [PATH]
+			l_entry: PATH
 			wizard: EB_NEW_PROJECT_WIZARD
-			filename: PATH
 			retried: BOOLEAN
 		do
 			if not retried then
 				create available_wizards.make
 
 				create new_project_directory.make_with_path (eiffel_layout.new_project_wizards_path)
-				entries := new_project_directory.linear_representation_32
+				entries := new_project_directory.entries
 				from
 					entries.start
 				until
 					entries.after
 				loop
-					extension := entries.item.twin
-					extension.keep_tail(4)
-
-					if extension.same_string (".dsc") then
-						filename := eiffel_layout.new_project_wizards_path.extended (entries.item)
-						create wizard.make_with_file (filename)
+					l_entry := entries.item
+					if l_entry.has_extension ("dsc") then
+						create wizard.make_with_file (eiffel_layout.new_project_wizards_path.extended_path (l_entry))
 						if wizard.target_platform_supported then
 							available_wizards.extend (wizard)
 						end

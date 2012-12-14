@@ -200,7 +200,7 @@ feature {NONE} -- Actions
 	on_file_selected_by_open_file_dialog
 			-- Action to be performed to set file name selected in `open_file_dialog' to `file_name_combo'.
 		do
-			file_name_combo.set_text (file_open_dialog.file_name)
+			file_name_combo.set_text (file_open_dialog.full_file_path.name)
 		end
 
 	on_metric_definition_file_name_change

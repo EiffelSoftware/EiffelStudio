@@ -256,7 +256,7 @@ feature -- Actions
 	on_new_archive_file_name_selected
 			-- Action to be performed when user selected a file name for metric archive create/update
 		do
-			new_archive_file_name_text.set_text (open_file_dialog.file_name)
+			new_archive_file_name_text.set_text (open_file_dialog.full_file_path.name)
 		end
 
 	on_new_archive_file_name_changes (a_timer: EV_TIMEOUT; a_text_field: EV_TEXT_FIELD; a_agent: PROCEDURE [ANY, TUPLE [BOOLEAN, BOOLEAN, LIST [EB_METRIC_ARCHIVE_NODE]]])
@@ -362,7 +362,7 @@ feature -- Actions
 	on_comparison_archive_selected (a_text_field: EV_TEXT_FIELD)
 			-- Action to be performed when reference metric archive or current metric archive is selected
 		do
-			a_text_field.set_text (open_file_dialog.file_name)
+			a_text_field.set_text (open_file_dialog.full_file_path.name)
 		end
 
 	on_reference_archive_checked (a_file_exist: BOOLEAN; a_valid: BOOLEAN; a_archive: LIST [EB_METRIC_ARCHIVE_NODE])

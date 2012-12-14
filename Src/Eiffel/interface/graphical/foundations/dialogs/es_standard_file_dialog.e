@@ -30,55 +30,27 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	file_name: attached STRING_32
-			-- The file name, excluding the path, chosen by the user.
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-			is_confirmed: is_confirmed
-		local
-			l_filter: like selected_filter
-			l_extension: attached STRING_32
-			l_match: attached STRING_32
-			l_add_extension: BOOLEAN
-		do
-			create Result.make_from_string (dialog.file_title)
-			l_filter := selected_filter
-			if l_filter /= Void then
-				create l_extension.make (10)
-				l_extension.append_character ('.')
-				l_extension.append (l_filter.extension)
-				if Result.count >= l_extension.count then
-					l_match := Result.substring (Result.count - l_extension.count + 1, Result.count)
-					if {PLATFORM}.is_windows then
-						l_add_extension := not l_match.is_case_insensitive_equal (l_extension)
-					else
-						l_add_extension := l_match /~ l_extension
-					end
-				else
-						-- The extension can't have been added to the file name.
-					l_add_extension := True
-				end
-
-				if l_add_extension then
-						-- Add the missing extension
-					Result.append (l_extension)
-				end
-			end
-		ensure
-			not_result_is_empty: not Result.is_empty
-		end
-
 	file_path: PATH
 			-- Full path to the file.
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 			is_confirmed: is_confirmed
+		local
+			l_entry: detachable PATH
 		do
-			Result := path.extended (file_name)
-		ensure
-			not_result_is_empty: not Result.is_empty
+			l_entry := dialog.full_file_path.entry
+			if l_entry /= Void then
+				Result := path.extended_path (l_entry)
+				if attached selected_filter as l_filter then
+					if not l_entry.has_extension (l_filter.extension) then
+							-- There was either no extension or an extension that did not match `selected_filter'.
+						Result := Result.appended_with_extension (l_filter.extension)
+					end
+				end
+			else
+				Result := path
+			end
 		end
 
 	path: PATH

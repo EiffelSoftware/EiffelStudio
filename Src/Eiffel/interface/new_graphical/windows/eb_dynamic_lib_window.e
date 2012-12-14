@@ -491,7 +491,7 @@ feature {NONE} -- Status
 	exports: ARRAYED_LIST [DYNAMIC_LIB_EXPORT_FEATURE]
 			-- The abstract representation for all the exported features.
 
-	file_name: FILE_NAME
+	file_name: PATH
 			-- The name of the file we are currently working on.
 			-- May be Void if no file is loaded.
 
@@ -954,7 +954,8 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 			if not rescued then
 				if file_name /= Void then
 						-- It is really a save operation.
-					create f.make_create_read_write (file_name)
+					create f.make_with_path (file_name)
+					f.create_read_write
 					dynamic_library.save_to_file (f)
 					f.close
 					save_ok := True
@@ -963,8 +964,8 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 					ask_for_file_name (False, agent save_dynamic_lib)
 				end
 			else
-				if file_name /= Void then
-					prompts.show_error_prompt (Warning_messages.w_Cannot_save_library (file_name), window, Void)
+				if attached file_name as l_fn then
+					prompts.show_error_prompt (Warning_messages.w_Cannot_save_library (l_fn.name), window, Void)
 				end
 			end
 		rescue
@@ -987,7 +988,8 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 			if not rescued then
 				if file_name /= Void then
 					create dynamic_library
-					create f.make_open_read (file_name)
+					create f.make_with_path (file_name)
+					f.open_read
 					dynamic_library.parse_exports_from_file (f)
 					if not dynamic_library.is_content_valid then
 						prompts.show_error_prompt (Warning_messages.w_Error_parsing_the_library_file, window, Void)
@@ -1002,8 +1004,8 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 					ask_for_file_name (True, agent load_dynamic_lib)
 				end
 			else
-				if file_name /= Void then
-					prompts.show_error_prompt (Warning_messages.w_Cannot_load_library (file_name), window, Void)
+				if attached file_name as l_fn then
+					prompts.show_error_prompt (Warning_messages.w_Cannot_load_library (l_fn.name), window, Void)
 				end
 			end
 		rescue
@@ -1075,14 +1077,12 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 		require
 			valid_dialog: dd /= Void
 		local
-			fn: FILE_NAME
-			tmpfn: STRING
+			fn: like file_name
 		do
-			tmpfn := dd.file_name
-			if not tmpfn.is_empty then
-				create fn.make_from_string (tmpfn)
-				if not (tmpfn.substring (tmpfn.count - 3, tmpfn.count)).is_equal (".def") then
-					fn.add_extension ("def")
+			fn := dd.full_file_path
+			if not fn.is_empty then
+				if not fn.name.tail (4).is_case_insensitive_equal_general (".def") then
+					fn := fn.appended (".def")
 				end
 				file_name := fn
 				file_call_back.call (Void)

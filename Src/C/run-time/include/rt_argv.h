@@ -46,7 +46,7 @@
 extern "C" {
 #endif
 
-extern void arg_init(int eargc, char **eargv);			/* Command line arguments saving */
+extern void rt_arg_init(int eargc, EIF_NATIVE_CHAR **eargv);			/* Command line arguments saving */
 
 #ifdef __cplusplus
 }

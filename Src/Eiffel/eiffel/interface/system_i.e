@@ -5278,7 +5278,7 @@ feature -- Pattern table generation
 						l_root_caller := l_root_rout_cname.string
 						l_root_caller.append ("(root_obj")
 						if l_root_ft.has_arguments then
-							l_root_caller.append (", argarr(argc, argv)")
+							l_root_caller.append (", eif_arg_array()")
 						end
 						l_root_caller.append (");")
 						l_root_callers.force (l_root_caller)
@@ -5289,7 +5289,7 @@ feature -- Pattern table generation
 			end
 
 			buffer.generate_function_signature ("void", "emain", True, buffer,
-						<<"argc", "argv">>, <<"int", "char **">>)
+						<<"argc", "argv">>, <<"int", "EIF_NATIVE_CHAR **">>)
 
 			buffer.generate_block_open
 			buffer.put_gtcx
@@ -5351,7 +5351,7 @@ feature -- Pattern table generation
 		if (egc_rcarg[egc_ridx]) {
 			EIF_TYPED_VALUE u_args;
 			u_args.type = SK_REF;
-			u_args.it_r = argarr(argc, argv);
+			u_args.it_r = eif_arg_array();
 			(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_TYPED_VALUE)) RTWPF(egc_rcorigin[egc_ridx], egc_rcoffset[egc_ridx], Dtype(root_obj)))(root_obj, u_args);
 		} else {
 			(FUNCTION_CAST(void, (EIF_REFERENCE)) RTWPF(egc_rcorigin[egc_ridx], egc_rcoffset[egc_ridx], Dtype(root_obj)))(root_obj);

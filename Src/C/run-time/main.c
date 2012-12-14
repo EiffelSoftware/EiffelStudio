@@ -46,7 +46,6 @@ doc:<file name="main.c" header="eif_main.h" version="$Id$" summary="Initializati
 #include "rt_assert.h"
 
 #include "eif_project.h"
-#include <string.h>
 #include "rt_urgent.h"
 #include "rt_except.h"
 #include "rt_sig.h"
@@ -76,6 +75,7 @@ doc:<file name="main.c" header="eif_main.h" version="$Id$" summary="Initializati
 #include "rt_debug.h"
 #include "rt_main.h"
 #include "rt_macros.h"
+#include "rt_native_string.h"
 
 #ifdef BOEHM_GC
 #include "rt_boehm.h"
@@ -460,6 +460,16 @@ doc:	</attribute>
 rt_public char *starting_working_directory;
 
 /*
+doc:	<attribute name="rt_eif_root" return_type="EIF_NATIVE_CHAR *" export="private">
+doc:		<summary>Root name provided on command line (NULL if no name is provided.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized once in `eif_rtinit'.</synchronization>
+doc:	</attribute>
+*/
+rt_private EIF_NATIVE_CHAR *rt_eif_root = NULL;
+
+/*
 doc:	<attribute name="debug_mode" return_type="int" export="private">
 doc:		<summary>This variable records whether the workbench application was launched via the ised wrapper (i.e. in debug mode) or not.</summary>
 doc:		<access>Read/Write</access>
@@ -793,63 +803,74 @@ rt_private void notify_root_thread (void)
 #endif
 #endif
 
-rt_public void eif_retrieve_root (int *argc, char **argv)
+rt_private void eif_retrieve_root (int *argc, EIF_NATIVE_CHAR **argv)
 {
 	/*
 	 * If -eif_root is provided, record its value and decrease argument count so argument is not
 	 * visible to users application.
 	 */
 	egc_ridx = 0;
-	egc_eif_root = NULL;
+	rt_eif_root = NULL;
 	if ((*argc) > 1) {
-		if (0 == strcmp (argv[(*argc)-2], "-eif_root")) {
-			egc_eif_root = argv[(*argc)-1];
+		if (0 == rt_nstrcmp (argv[(*argc)-2], rt_nmakestr("-eif_root"))) {
+			rt_eif_root = argv[(*argc)-1];
 			(*argc) -= 2;
 		}
-		else if (0 == strcmp (argv[(*argc)-1], "-eif_root")) {
+		else if (0 == rt_nstrcmp (argv[(*argc)-1], rt_nmakestr("-eif_root"))) {
 			egc_ridx = -1;
 		}
 	}
 }
 
-rt_public void eif_init_root (void)
+rt_private void eif_init_root (void)
 {
 	/*
 	 * If -eif_root was provided, check if requested root feature is available. Otherwise print
 	 * list of valid root features and terminate.
 	 */
-	int i;
-	if (egc_ridx >= 0 && egc_eif_root != NULL) {
-		egc_ridx = -1;
-		for (i = 0; i < egc_rcount; i++) {
-			if (0 == strcmp (egc_eif_root, egc_rlist[i])) {
-				egc_ridx = i;
-				break;
+	int i, j, l_same;
+	size_t n;
+	if (rt_eif_root) {
+		if (egc_ridx >= 0) {
+			egc_ridx = -1;
+			n = rt_nstrlen(rt_eif_root);
+			for (i = 0; i < egc_rcount; i++) {
+					/* Let's compare `rt_eif_root' with ASCII string `egc_rlist[i]'. */
+				if (n == strlen(egc_rlist[i])) {
+					j = 0;
+					l_same = 1;
+					while (j < n) {
+						l_same = (rt_eif_root[j] == (EIF_NATIVE_CHAR) egc_rlist[i][j]);
+						j++;
+					}
+					if (l_same) {
+						egc_ridx = i;
+						break;
+					}
+				}
+			}
+			if (egc_ridx < 0) {
+				fprintf (stderr, "%s: unknown root procedure\n", rt_eif_root);
+				exit (1);
 			}
 		}
 		if (egc_ridx < 0) {
-			fprintf (stderr, "%s: unknown root procedure\n", egc_eif_root);
+			fprintf (stderr, "\nPlease specify a valid root procedure. Valid root procedures are:\n\n");
+			for (i = 0; i < egc_rcount; i++) {
+				fprintf (stderr, "\t- %s\n", egc_rlist[i]);
+			}
+			fprintf (stderr, "\n");
 			exit (1);
 		}
 	}
-	if (egc_ridx < 0) {
-		fprintf (stderr, "\nPlease specify a valid root procedure. Valid root procedures are:\n\n");
-		for (i = 0; i < egc_rcount; i++) {
-			fprintf (stderr, "\t- %s\n", egc_rlist[i]);
-		}
-		fprintf (stderr, "\n");
-		exit (1);
-	}
 }
 
-rt_public void eif_rtinit(int argc, char **argv, EIF_NATIVE_CHAR **envp)
+rt_public void eif_rtinit(int argc, EIF_NATIVE_CHAR **argv, EIF_NATIVE_CHAR **envp)
 {
 	char *eif_timeout;
 
-	/* Compute the program name, so that all the error messages can be tagged
-	 * with that name (with the notable exception of the stack trace, for
-	 * formatting purpose).
-	 */
+		/* Retrieve root argument if any and update `argc' accordingly. */
+	eif_retrieve_root(&argc, argv);
 
 #ifdef EIF_WINDOWS
 	set_windows_exception_filter();
@@ -933,7 +954,7 @@ rt_public void eif_rtinit(int argc, char **argv, EIF_NATIVE_CHAR **envp)
 		int i;
 
 		for (i=1;i<argc;i++) {
-			if (0 == strcmp (argv[i], "-ignore_updt")) {
+			if (0 == rt_nstrcmp (argv[i], rt_nmakestr("-ignore_updt"))) {
 				temp = (char) 1;	
 				break;
 			}
@@ -965,7 +986,7 @@ rt_public void eif_rtinit(int argc, char **argv, EIF_NATIVE_CHAR **envp)
 	umain(argc, argv, envp);			/* User's initializations */
 #endif
 #if !defined CUSTOM || defined NEED_ARGV_H
-	arg_init(argc, argv);				/* Save copy for class ARGUMENTS */
+	rt_arg_init(argc, argv);				/* Save copy for class ARGUMENTS */
 #endif
 	eif_environ = envp;				/* Save pointer to environment variable storage */
 	once_init();
@@ -975,6 +996,9 @@ rt_public void eif_rtinit(int argc, char **argv, EIF_NATIVE_CHAR **envp)
 	initprf();						/* Initialize profiler. */
 	init_emnger();					/* Initialize ISE_EXCEPTION_MANAGER */
 	init_scp_manager();				/* Initialize ISE_SCOOP_MANAGER */
+
+		/* Initialize our root class. */
+	eif_init_root();
 }
 
 rt_public void failure(void)

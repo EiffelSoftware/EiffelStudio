@@ -116,7 +116,7 @@ rt_private FILE *melted_file;
 		enomem(); \
 	}
 
-rt_public void update(char ignore_updt, char *argv0)
+rt_public void update(char ignore_updt, EIF_NATIVE_CHAR *argv0)
 {
 	/* Update internal structures before execution */
 	EIF_NATIVE_CHAR *app_path;	/*command line of this eiffel system, path included*/

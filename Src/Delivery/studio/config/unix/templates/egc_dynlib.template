@@ -14,7 +14,7 @@ void init_rt (void)
 	struct ex_vect *exvect; 
 	jmp_buf exenv; 
 	int argc = 1; 
-	char *argv[] = {"",""}; 
+	EIF_NATIVE_CHAR *argv[] = {"",""}; 
 	
 	if (is_rt_initialized == 0) {
 		is_rt_initialized = 1;
@@ -32,9 +32,10 @@ void init_rt (void)
 			if (setjmp(exenv)) 
 				failure(); 
 
-			eif_rtinit(argc, argv, (char **)0);  
-			if (root_obj == (char *)0) 
+			eif_rtinit(argc, argv, NULL);
+			if (!root_obj) {
 				root_obj = cmalloc(1);
+			}
 		}
 	}
 }

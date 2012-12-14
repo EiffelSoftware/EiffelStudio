@@ -72,8 +72,8 @@ RT_LNK void eif_alloc_init(void);
 RT_LNK void init_scp_manager(void);
 
 #ifdef EIF_WINDOWS
-RT_LNK void get_argcargv (int *argc, char ***argv);
-RT_LNK void free_argv (char ***argv);
+RT_LNK void get_argcargv (int *argc, EIF_NATIVE_CHAR ***argv);
+RT_LNK void free_argv (EIF_NATIVE_CHAR ***argv);
 RT_LNK HANDLE ghInstance;
 RT_LNK HINSTANCE eif_hInstance;
 RT_LNK HINSTANCE eif_hPrevInstance;

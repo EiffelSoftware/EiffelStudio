@@ -50,7 +50,7 @@ doc:<file name="umain.c" header="eif_umain.h" version="$Id$" summary="User's mai
 
 #include "eif_umain.h"
 
-void umain(int argc, char **argv, char **envp)
+void umain(int argc, EIF_NATIVE_CHAR **argv, EIF_NATIVE_CHAR **envp)
 {
 	/* Empty by default, but may be overwritten by user */
 }

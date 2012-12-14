@@ -70,8 +70,8 @@ extern "C" {
 #define eif_builtin_ANY_deep_twin(object)				edclone ((object))
 
 /* ARGUMENTS class */
-#define eif_builtin_ARGUMENTS_argument(some,i)			arg_option(i)
-#define eif_builtin_ARGUMENTS_argument_count(some)		(arg_number() - 1)
+#define eif_builtin_ARGUMENTS_32_i_th_argument_pointer(i)	(eif_arg_item(i))
+#define eif_builtin_ARGUMENTS_32_argument_count(some)		(eif_arg_count() - 1)
 
 /* EV_ANY_IMP class */
 #define eif_builtin_EV_ANY_IMP_eif_current_object_id(object)	eif_reference_id(object)

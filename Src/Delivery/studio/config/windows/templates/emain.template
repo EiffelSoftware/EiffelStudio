@@ -12,12 +12,10 @@ extern "C" {
 #include "eif_sig.h"
 #include "eif_main.h"
 
-extern void emain(int, char **);
+extern void emain(int, EIF_NATIVE_CHAR **);
 extern int main(void);
 extern void egc_init_plug (void); 
 extern void egc_rcdt_init (void); 
-extern void eif_retrieve_root (int *argc, char **argv);
-extern void eif_init_root (void);
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -27,14 +25,14 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 int main (void)
 {
 	int argc;
-	char **argv;
+	EIF_NATIVE_CHAR **argv;
 	EIF_NATIVE_CHAR **envp;
 
 		/* These variables are used by the WEL library */
 	ghInstance = GetModuleHandle(NULL);
 	eif_hInstance = GetModuleHandle(NULL);
 	eif_hPrevInstance = NULL;
-	eif_lpCmdLine = GetCommandLine();
+	eif_lpCmdLine = GetCommandLineW();
 	eif_nCmdShow = SW_SHOW;
 
 		/* Initialization of the command line which is going to be passed to eiffel */
@@ -59,9 +57,7 @@ int main (void)
 		if (setjmp(exenv))
 			failure();
 	
-		eif_retrieve_root (&argc, argv);
 		eif_rtinit(argc, argv, envp);
-		eif_init_root();
 		egc_rcdt_init();
 		emain(argc, argv);
 		free_argv (&argv);

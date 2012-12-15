@@ -14,7 +14,7 @@ inherit
 			{NONE} all
 		end
 
-	ANY
+	NATIVE_STRING_HANDLER
 
 create
 	make
@@ -41,15 +41,15 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	path: STRING
-			-- PATH environment variable
+	path: STRING_32
+			-- PATH environment variable.
 		do
 			Result := variable_for_name (path_var_name)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	include: STRING
+	include: STRING_32
 			-- INCLUDE environment variable
 		do
 			Result := variable_for_name (include_var_name)
@@ -57,7 +57,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	lib: STRING
+	lib: STRING_32
 			-- LIBS environment variable
 		do
 			Result := variable_for_name (lib_var_name)
@@ -73,7 +73,7 @@ feature {NONE} -- Access
 	batch_arguments: detachable STRING_32
 			-- Arguments for `batch_file_name' or Void if none.
 
-	batch_options: STRING
+	batch_options: READABLE_STRING_32
 			-- Option to the COMSPEC DOS prompt.
 
 	environment: EXECUTION_ENVIRONMENT
@@ -86,13 +86,13 @@ feature {NONE} -- Access
 
 feature {NONE} -- Basic operations
 
-	variable_for_name (a_name: STRING): STRING
+	variable_for_name (a_name: STRING_32): STRING_32
 			-- Retrieves varaible for name `a_name'
 		require
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 		local
-			l_result: detachable STRING
+			l_result: detachable STRING_32
 		do
 			l_result := variables_via_evaluation.item (a_name)
 			if l_result /= Void then
@@ -104,7 +104,7 @@ feature {NONE} -- Basic operations
 			result_attached: Result /= Void
 		end
 
-	variables_via_evaluation: HASH_TABLE [STRING, STRING]
+	variables_via_evaluation: HASH_TABLE [STRING_32, STRING_32]
 			-- Retrieves a list of name/value environment variable pairs from evaluating the current environment
 			-- Using a batch file provided by `vsvars_batch_file'
 		local
@@ -116,7 +116,6 @@ feature {NONE} -- Basic operations
 			l_launcher: WEL_PROCESS_LAUNCHER
 			l_pair: like parse_variable_name_value_pair
 			l_appliable: like applicable_variables
-			l_line: detachable STRING
 			retry_count: INTEGER
 		do
 			l_result := internal_variables_via_evaluation
@@ -131,7 +130,7 @@ feature {NONE} -- Basic operations
 
 					l_com_spec := Void
 					if retry_count = 0 then
-						l_com_spec := cmd_exe_file_name.name
+						create l_com_spec.make_from_string (cmd_exe_file_name.name)
 					elseif retry_count = 1 then
 							-- CMD did not work out, try ComSpec
 							-- Retrieve command executable file name
@@ -144,7 +143,7 @@ feature {NONE} -- Basic operations
 						l_cmd.append (l_com_spec)
 						l_cmd.append_character (' ')
 						l_cmd.append (batch_options)
-						l_cmd.append (" /c ")
+						l_cmd.append ({STRING_32} " /c ")
 						l_cmd.append (save_variables_command (l_eval_file_name))
 
 						create l_launcher
@@ -158,10 +157,13 @@ feature {NONE} -- Basic operations
 								if l_file.count > 0 then
 									l_appliable := applicable_variables
 									from l_file.start until l_file.end_of_file loop
+										debug
+											;(create {REFACTORING_HELPER}).fixme ("Support reading unicode strings from the generated file.")
+										end
 										l_file.read_line
-										l_line := l_file.last_string
 										if
-											l_line /= Void and then
+											attached l_file.last_string as l_line_8 and then
+											attached l_line_8.as_string_32 as l_line and then
 											is_valid_variable_name_value_pair_string (l_line)
 										then
 											l_pair := parse_variable_name_value_pair (l_line)
@@ -210,7 +212,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	parse_variable_name_value_pair (a_string: STRING): detachable TUPLE [name: STRING; value: STRING]
+	parse_variable_name_value_pair (a_string: STRING_32): detachable TUPLE [name: STRING_32; value: STRING_32]
 			-- Given 'a_string' parse and extract the environment variable from it.
 		require
 			a_string_not_void: a_string /= Void
@@ -225,7 +227,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	is_valid_variable_name_value_pair_string (a_line: STRING): BOOLEAN
+	is_valid_variable_name_value_pair_string (a_line: STRING_32): BOOLEAN
 			-- Is `a_string' a valid name value/pair string?
 		local
 			pos: INTEGER
@@ -245,21 +247,21 @@ feature {NONE} -- Basic operations
 			not_a_out_is_empty: not a_out.is_empty
 		do
 			create Result.make (256)
-			Result.append ("%"CALL %"")
+			Result.append ({STRING_32} "%"CALL %"")
 			Result.append (batch_file_name)
-			Result.append ("%" ")
+			Result.append ({STRING_32} "%" ")
 			if attached batch_arguments as l_args then
 				Result.append (l_args)
 			end
-			Result.append (" > ")
-			Result.append (a_out)
-			Result.append (" && SET > ")
-			Result.append (a_out)
-			Result.append_character ('"')
+			Result.append ({STRING_32} " > ")
+			Result.append (a_out.as_string_32)
+			Result.append ({STRING_32} " && SET > ")
+			Result.append (a_out.as_string_32)
+			Result.append_character ({CHARACTER_32} '"')
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
-			one_line_command: not Result.has ('%N')
+			one_line_command: not Result.has ({CHARACTER_32} '%N')
 		end
 
 	applicable_variables: ARRAYED_LIST [STRING]
@@ -307,12 +309,9 @@ feature {NONE} -- Basic operations
 
 	cmd_exe_file_name: PATH
 			-- File name of Command exe.
-		local
-			l_system: detachable STRING
 		once
-			l_system := system_folder
-			if l_system /= Void and then not l_system.is_empty then
-				create Result.make_from_string (l_system)
+			if attached system_folder as l_system and then not l_system.is_empty then
+				Result := l_system
 			else
 					-- Failed to retrieve folder, use fall back
 				if attached environment.item ("SystemRoot") as l_value then
@@ -336,7 +335,31 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Externals
 
-	system_folder: detachable STRING
+	system_folder: detachable PATH
+			-- Directory name corresponding to Windows system folder.
+		local
+			l_count, l_nbytes: INTEGER_32
+			l_managed: MANAGED_POINTER
+		once
+			l_count := 50
+			create l_managed.make (50)
+			l_nbytes := system_folder_ptr (l_managed.item, l_count)
+			if l_nbytes > l_count then
+				l_count := l_nbytes
+				l_managed.resize (l_count)
+				l_nbytes := system_folder_ptr (l_managed.item, l_count)
+			end
+			if l_nbytes > 0 and l_nbytes <= l_count then
+				create Result.make_from_pointer (l_managed.item)
+			end
+			if Result /= Void and then Result.is_empty then
+				Result := Void
+			end
+		end
+
+	system_folder_ptr (a_buffer: POINTER; a_count: INTEGER_32): INTEGER_32
+			-- Directory name corresponding to the user directory that will be stored in buffer `a_buffer'
+			-- of size `a_count' bytes. Returns the number of bytes necessary in `a_buffer' to get the full copy.
 			-- Retrieve Windows system folder.
 		external
 			"C inline use %"shlobj.h%""
@@ -347,23 +370,16 @@ feature {NONE} -- Externals
 				#define CSIDL_SYSTEM 0x0025
 				#endif
 				
-				CHAR path[MAX_PATH + 1];
-				BOOL bRes = FALSE;
-				HMODULE shModule = LoadLibraryA ("shell32.dll");
-				
-				if (shModule) {
-					FARPROC shProc = GetProcAddress (shModule, "SHGetSpecialFolderPathA");
-					if (shProc) {
-						bRes = (FUNCTION_CAST_TYPE (HRESULT, WINAPI, (HWND, LPSTR, int, BOOL)) shProc) (
-							NULL, path, CSIDL_SYSTEM, FALSE);
+				if ($a_buffer && ($a_count >= (MAX_PATH * sizeof(wchar_t)))) {
+						/* Buffer is large enough for the call to SHGetFolderPathW. */
+					if (SHGetSpecialFolderPathW (NULL, $a_buffer, CSIDL_SYSTEM, TRUE)) {
+						return (EIF_INTEGER) ((wcslen($a_buffer) + 1) * sizeof (wchar_t));
+					} else {
+						return 0;
 					}
-					FreeLibrary (shModule);
-				}
-
-				if (bRes) {
-					return RTMS (path);
 				} else {
-					return NULL;
+						/* Buffer is NULL or not large enough we ask for more. */
+					return MAX_PATH * sizeof(wchar_t);
 				}
 			]"
 		end

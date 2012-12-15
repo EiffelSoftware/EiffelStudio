@@ -60,7 +60,7 @@ feature -- Status report
 
 feature -- Implementation
 
-	synchronize_variable (a_name: READABLE_STRING_GENERAL; a_values: READABLE_STRING_GENERAL)
+	synchronize_variable (a_name: READABLE_STRING_32; a_values: READABLE_STRING_32)
 			-- Merges the process environment variable `a_name' values with `a_values', removing duplicates in the process.
 		require
 			a_name_attached: a_name /= Void

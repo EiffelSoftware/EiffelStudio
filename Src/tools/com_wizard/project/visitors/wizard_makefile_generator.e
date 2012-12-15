@@ -313,7 +313,7 @@ feature {NONE} -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
-	environment_set_string (a_compile: STRING): STRING
+	environment_set_string (a_compile: STRING): STRING_32
 			-- Environment setting header
 		require
 			layout_defined: is_eiffel_layout_defined
@@ -323,11 +323,11 @@ feature {NONE} -- Query
 			create Result.make (512)
 			Result.append ("@ECHO OFF%N")
 			Result.append ("IF %"%%ISE_EIFFEL%%.%" == %".%" SET ISE_EIFFEL=")
-			Result.append (eiffel_layout.install_path_8)
+			Result.append (eiffel_layout.install_path.name)
 			Result.append ("%NIF %"%%ISE_PLATFORM%%.%" == %".%" SET ISE_PLATFORM=")
 			Result.append (eiffel_layout.eiffel_platform)
 			Result.append ("%NIF %"%%ISE_LIBRARY%%.%" == %".%" SET ISE_LIBRARY=")
-			Result.append (eiffel_layout.eiffel_library_8)
+			Result.append (eiffel_layout.eiffel_library.name)
 			Result.append ("%NSET ISE_C_COMPILER=" + a_compile + "%N")
 		ensure
 			result_attached: Result /= Void

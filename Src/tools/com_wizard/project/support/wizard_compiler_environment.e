@@ -25,15 +25,15 @@ feature -- Access
 	Common_linker_options:STRING = " /DLL /RELEASE %"/INCREMENTAL:NO%""
 			-- Linker options.
 
-	Common_c_compiler_options: STRING
+	Common_c_compiler_options: STRING_32
 			-- C compiler options to compile Proxy/Stub.
 		once
 			Result := "/MT /W0 /Ox /D %"REGISTER_PROXY_DLL%" /D %"WIN32%" /D %"_WIN32_DCOM%" /D %"_WIN32_WINNT=0x0500%" /c /I..\include /I..\..\common\include /I%""
-			Result.append (eiffel_layout.install_path_8.string)
+			Result.append (eiffel_layout.install_path.name)
 			Result.append ("\studio\spec\")
 			Result.append (eiffel_layout.eiffel_platform)
 			Result.append ("\include%" /I%"")
-			Result.append (eiffel_layout.eiffel_library_8)
+			Result.append (eiffel_layout.eiffel_library.name)
 			Result.append ("\library\com\spec\windows\include%" ")
 		end
 

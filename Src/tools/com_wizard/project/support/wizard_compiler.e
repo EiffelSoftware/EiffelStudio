@@ -348,23 +348,18 @@ feature {NONE} -- Implementation
 			Result.append (Rpc_library)
 		end
 
-	precompile_command: STRING
+	precompile_command: STRING_32
 			-- Eiffel compiler command line to precompile
 		do
-			create Result.make (100)
-			Result.append (eiffel_layout.ec_command_name_8)
-			Result.append (" -precompile -c_compile -batch -config ")
-			Result.append (environment.ecf_file_name)
+			Result := eiffel_layout.studio_command_line (environment.ecf_file_name, Void, Void, False, True)
+			Result.append (" -batch -precompile -c_compile")
 		end
 
-	eiffel_compile_command: STRING
+	eiffel_compile_command: STRING_32
 			-- Eiffel compiler command line to freeze
 		do
-			create Result.make (100)
-			Result.append (eiffel_layout.ec_command_name_8)
-			Result.append (" -batch -clean -c_compile -config %"")
-			Result.append (environment.ecf_file_name)
-			Result.append ("%"")
+			Result := eiffel_layout.studio_command_line (environment.ecf_file_name, Void, Void, False, True)
+			Result.append (" -batch -c_compile")
 		end
 
 	user_def_file_name: STRING

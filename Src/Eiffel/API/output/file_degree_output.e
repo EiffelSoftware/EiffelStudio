@@ -42,7 +42,7 @@ feature {NONE} -- Access
 	output_file: detachable PLAIN_TEXT_FILE
 			-- Output file.
 
-	output_file_name: STRING
+	output_file_name: READABLE_STRING_GENERAL
 			-- Output file name
 
 feature {NONE} -- Query
@@ -157,7 +157,8 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if not retried then
-				create output_file.make_open_write (output_file_name)
+				create output_file.make_with_name (output_file_name)
+				output_file.open_write
 			end
 		rescue
 			retried := True

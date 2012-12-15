@@ -60,7 +60,7 @@ feature -- Status report
 
 feature -- Implementation
 
-	synchronize_variable (a_name: STRING; a_values: STRING)
+	synchronize_variable (a_name: READABLE_STRING_GENERAL; a_values: READABLE_STRING_GENERAL)
 			-- Merges the process environment variable `a_name' values with `a_values', removing duplicates in the process.
 		require
 			a_name_attached: a_name /= Void
@@ -124,7 +124,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

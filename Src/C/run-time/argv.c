@@ -47,24 +47,24 @@ doc:<file name="argv.c" header="eif_argv.h" version="$Id$" summary="Initializati
 #include "rt_assert.h"
 
 /*
-doc:	<attribute name="eif_argc" return_type="int" export="private">
+doc:	<attribute name="eif_argc" return_type="int" export="public">
 doc:		<summary>Initial `argc' value (argument count). Used from Eiffel code to get access to command line arguments.</summary>
 doc:		<access>Read/Write Once</access>
 doc:		<thread_safety>Initialized by `rt_arg_init' in `eif_rtinit' so no need for synchronization.</thread_safety>
 doc:		<eiffel_classes>ARGUMENTS, MEL_DISPLAY, EV_APPLICATION_IMP (gtk implementation)</eiffel_classes>
 doc:	</attribute>
 */
-rt_private int eif_argc;			/* Initial argc value (argument count) */
+rt_public int eif_argc;			/* Initial argc value (argument count) */
 
 /*
-doc:	<attribute name="eif_argv" return_type="EIF_NATIVE_CHAR **" export="private">
+doc:	<attribute name="eif_argv" return_type="EIF_NATIVE_CHAR **" export="public">
 doc:		<summary>Copy of initial `argv'. Used from Eiffel code to get access to command line arguments.</summary>
 doc:		<access>Read/Write Once</access>
 doc:		<thread_safety>Initialized by `rt_arg_init' in `eif_rtinit' so no need for synchronization.</thread_safety>
 doc:		<eiffel_classes>ARGUMENTS, MEL_DISPLAY, EV_APPLICATION_IMP (gtk implementation)</eiffel_classes>
 doc:	</attribute>
 */
-rt_private EIF_NATIVE_CHAR **eif_argv;			/* Copy of initial argv (argument vector) */
+rt_public EIF_NATIVE_CHAR **eif_argv;			/* Copy of initial argv (argument vector) */
 
 #define ERROR_MSG "can't set argument vector"
 

@@ -83,7 +83,6 @@ feature -- Status setting
 		local
 			l_count, i: INTEGER
 			l_error: STRING_32
-			l_item: detachable ANY
 		do
 			internal_c_configuration := Void
 

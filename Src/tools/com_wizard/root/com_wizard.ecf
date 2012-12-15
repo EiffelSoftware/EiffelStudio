@@ -21,6 +21,7 @@
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
 		<library name="date_time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
+		<library name="finish_freezing" location="${EIFFEL_SRC}\tools\finish_freezing\finish_freezing.ecf"/>
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
@@ -40,15 +41,6 @@
 			</file_rule>
 		</cluster>
 		<cluster name="root_cluster" location="$EIFFEL_SRC\tools\com_wizard\root\"/>
-		<cluster name="vs_setup" location="$EIFFEL_SRC\tools\finish_freezing\main\" recursive="true">
-			<file_rule>
-				<exclude>argument_parser.e</exclude>
-				<exclude>borland_setup.e</exclude>
-				<exclude>finish_freezing.e</exclude>
-				<exclude>makefile_translator.e</exclude>
-				<exclude>path_converter.e</exclude>
-			</file_rule>
-		</cluster>
 		<cluster name="wizard" location="$EIFFEL_SRC\tools\com_wizard\project\" recursive="true">
 			<file_rule>
 				<exclude>/new_gui$</exclude>

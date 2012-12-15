@@ -13,15 +13,15 @@ inherit
 
 feature {NONE} -- Implementation
 
-	arguments_program_name: STRING
+	arguments_program_name: IMMUTABLE_STRING_32
 			-- Associated program name
 		do
-			Result := "ec"
+			create Result.make_from_string_8 ("ec")
 		ensure
 			result_attached: Result /= Void
 		end
 
-	arguments_environment_name: STRING
+	arguments_environment_name: IMMUTABLE_STRING_32
 			-- Environment variable's name used to extend the command line
 		once
 			Result := "ISE_" + arguments_program_name.as_upper + "_FLAGS"

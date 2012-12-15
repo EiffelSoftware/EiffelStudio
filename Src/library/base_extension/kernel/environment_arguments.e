@@ -10,7 +10,7 @@ deferred class
 
 feature -- Access
 
-	argument (i: INTEGER): STRING
+	argument (i: INTEGER): IMMUTABLE_STRING_32
 			-- `i'-th argument of command that started system execution
 			-- (the command name if `i' = 0)
 		require
@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Status report
 
-	index_of_word_option (opt: STRING): INTEGER
+	index_of_word_option (opt: READABLE_STRING_GENERAL): INTEGER
 			-- Does command line specify word option `opt' and, if so,
 			-- at what position?
 			-- If one of the arguments in list of space-separated arguments
@@ -57,18 +57,18 @@ feature -- Status report
 			end
 		end
 
-	option_sign: CHARACTER_REF
+	option_sign: CELL [CHARACTER_32]
 			-- The character used to signal options on the command line.
 			-- This can be '%U' if no sign is necesary for the argument
 			-- to be an option
 			-- Default is '-'
-		once
+		do
 			Result := base_arguments.option_sign
 		end
 
 feature -- Status setting
 
-	set_option_sign (c: CHARACTER)
+	set_option_sign (c: CHARACTER_32)
 			-- Make `c' the option sign.
 			-- Use'%U' if no sign is necesary for the argument to
 			-- be an option
@@ -89,28 +89,27 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	arguments_environment_name: STRING
+	arguments_environment_name: IMMUTABLE_STRING_32
 			-- Environment variable's name used to extend the command line
 		deferred
 		ensure
 			attached_result: Result /= Void
 		end
 
-	option_word_equal (arg, w: STRING): BOOLEAN
-			-- Is `arg' equal to the word option `w'?
-			--| Check `ARGUMENTS.option_word_equal (..)'
+	option_word_equal (arg, w: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `arg' equal to the word option `w' in a case sensitive manner?
 		require
 			arg_not_void: arg /= Void
 			w_not_void: w /= Void
 		do
 			if option_sign.item = '%U' then
-				Result := arg ~ w
+				Result := arg.same_string (w)
 			elseif not arg.is_empty and then arg.item (1) = option_sign.item then
-				Result := arg.substring (2, arg.count) ~ w
+				Result := arg.substring (2, arg.count).same_string (w)
 			end
 		end
 
-	environment_argument_item (i: INTEGER): STRING_32
+	environment_argument_item (i: INTEGER): IMMUTABLE_STRING_32
 			-- `i'-th argument of environment option
 		require
 			index_large_enough: i > base_arguments.argument_count
@@ -121,7 +120,7 @@ feature {NONE} -- Implementation
 			argument_not_void: Result /= Void
 		end
 
-	environment_arguments: ARRAY [STRING_32]
+	environment_arguments: ARRAY [IMMUTABLE_STRING_32]
 			-- Arguments array extracted from environment
 		local
 			i,n,r: INTEGER
@@ -142,7 +141,7 @@ feature {NONE} -- Implementation
 					i := 1
 					n := l_flags.count
 					create s.make_empty
-					create Result.make_filled (s.string, r + 1, r + 6)
+					create Result.make_filled (create {IMMUTABLE_STRING_32}.make_empty, r + 1, r + 6)
 				until
 					i > n
 				loop
@@ -160,7 +159,7 @@ feature {NONE} -- Implementation
 						when ' ', '%T' then
 							if not s.is_empty then
 								r := r + 1
-								Result.force (s.string, r)
+								Result.force (s, r)
 								s.wipe_out
 							end
 						else
@@ -175,7 +174,7 @@ feature {NONE} -- Implementation
 					Result := Result.subarray (Result.lower, r)
 				elseif not s.is_empty then
 					r := r + 1
-					Result.force (s.string, r)
+					Result.force (s, r)
 					Result := Result.subarray (Result.lower, r)
 				end
 			else
@@ -183,7 +182,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	base_arguments: ARGUMENTS
+	base_arguments: ARGUMENTS_32
 			-- Standard command line arguments
 		once
 			create Result

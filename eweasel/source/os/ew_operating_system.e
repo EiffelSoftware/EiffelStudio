@@ -9,7 +9,10 @@ deferred class EW_OPERATING_SYSTEM
 inherit
 	OPERATING_ENVIRONMENT
 	EXECUTION_ENVIRONMENT
+		rename
+			arguments as environment_arguments
 		export
+			{ANY} return_code
 			{NONE} all
 		end
 

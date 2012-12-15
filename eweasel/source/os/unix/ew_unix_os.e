@@ -14,12 +14,6 @@ inherit
 			meaning as signal_meaning
 		end
 
-	EXECUTION_ENVIRONMENT
-		export
-			{ANY} return_code
-			{NONE} all
-		end
-
 	EW_UNIX_EXTERNALS
 
 feature -- Path names

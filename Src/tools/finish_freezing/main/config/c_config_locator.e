@@ -256,7 +256,7 @@ feature {NONE} -- Basic operations
 			l_stop: BOOLEAN
 		do
 			create l_var_path.make (1024)
-			l_var_path.append (a_config.path_var)
+			l_var_path.append_string_general (a_config.path_var)
 
 				-- Get PATH environment variable, incase the CL compiler is located there.
 			l_var := (create {ENVIRONMENT_ACCESS}).get ("PATH")
@@ -342,7 +342,7 @@ feature {NONE} -- Localization
 	e_compiler_deprecated_1: STRING = "The located Microsoft C/C++ compiler at '$1' has been deprecated and cannot be used. Please upgrade to one of the supported C/C++ compilers."
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -38,13 +38,13 @@ feature {NONE} -- Access
 				create l_result.make (256)
 				l_result.append (l_layout.config_eif_path.name)
 				if code.is_equal (wsdk_60) then
-					l_result.append ("\windows_sdk_v6.0.bat")
+					l_result.append ({STRING_32} "\windows_sdk_v6.0.bat")
 				elseif code.is_equal (wsdk_61) then
-					l_result.append ("\windows_sdk_v6.1.bat")
+					l_result.append ({STRING_32} "\windows_sdk_v6.1.bat")
 				elseif code.is_equal (wsdk_70) then
-					l_result.append ("\windows_sdk_v7.0.bat")
+					l_result.append ({STRING_32} "\windows_sdk_v7.0.bat")
 				elseif code.is_equal (wsdk_71) then
-					l_result.append ("\windows_sdk_v7.1.bat")
+					l_result.append ({STRING_32} "\windows_sdk_v7.1.bat")
 				else
 						-- We will use the default batch file.
 					l_result := Void
@@ -57,7 +57,7 @@ feature {NONE} -- Access
 					-- with no product install base
 				create l_result.make (256)
 				l_result.append (install_path)
-				l_result.append ("Bin\SetEnv.cmd")
+				l_result.append ({STRING_32} "Bin\SetEnv.cmd")
 			end
 			Result := l_result
 		end
@@ -77,24 +77,24 @@ feature {NONE} -- Access
 						-- Need to do the same check as in `batch_file_name' to ensure we do
 						-- not pass the install path as an argument when we are using the config library
 						-- in an environment that has no install-base (like an installation program)
-					Result.append_character ('"')
+					Result.append_character ({CHARACTER_32} '"')
 					Result.append_string (install_path)
-					Result.append_character ('"')
-					Result.append_character (' ')
+					Result.append_character ({CHARACTER_32} '"')
+					Result.append_character ({CHARACTER_32} ' ')
 				end
 			end
-			Result.append ("/Release ")
+			Result.append ({STRING_32} "/Release ")
 			if use_32bit then
-				Result.append ("/x86")
+				Result.append ({STRING_32} "/x86")
 			else
-				Result.append ("/x64")
+				Result.append ({STRING_32} "/x64")
 			end
 		end
 
-	batch_file_options: STRING
+	batch_file_options: READABLE_STRING_32
 			-- <Precursor>
 		do
-			Result := "/V:ON"
+			Result := {STRING_32} "/V:ON"
 		end
 
 	full_product_reg_path: STRING

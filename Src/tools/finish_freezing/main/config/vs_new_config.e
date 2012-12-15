@@ -21,16 +21,16 @@ feature {NONE} -- Access
 	batch_file_name: STRING_32
 			-- <Precursor>
 		do
-			Result := install_path + "vcvarsall.bat"
+			Result := install_path + {STRING_32} "vcvarsall.bat"
 		end
 
 	batch_file_arguments: detachable STRING_32
 			-- <Precursor>
 		do
 			if use_32bit then
-				Result := "x86"
+				Result := {STRING_32} "x86"
 			else
-				Result := "x86_amd64"
+				Result := {STRING_32} "x86_amd64"
 			end
 		end
 

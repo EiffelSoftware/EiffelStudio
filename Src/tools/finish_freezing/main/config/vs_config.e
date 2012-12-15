@@ -22,9 +22,9 @@ feature {NONE} -- Access
 			create Result.make (256)
 			Result.append (install_path)
 			if use_32bit then
-				Result.append ("bin\vcvars32.bat")
+				Result.append_string ({STRING_32} "bin\vcvars32.bat")
 			else
-				Result.append ("bin\amd64\vcvarsamd64.bat")
+				Result.append_string ({STRING_32} "bin\amd64\vcvarsamd64.bat")
 			end
 		end
 

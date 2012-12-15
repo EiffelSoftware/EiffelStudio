@@ -115,7 +115,7 @@ feature -- Access
 				end
 			end
 			if l_result = Void or else l_result.is_empty then
-				Result := ".\"
+				Result := {STRING_32} ".\"
 			else
 				Result := l_result
 			end
@@ -148,12 +148,12 @@ feature {NONE} -- Access
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
 
-	batch_file_options: STRING
+	batch_file_options: READABLE_STRING_32
 			-- Option to the COMSPEC DOS prompt.
 		require
 			exists: exists
 		do
-			create Result.make_empty
+			create {STRING_32} Result.make_empty
 		ensure
 			batch_file_options_not_void: Result /= Void
 		end

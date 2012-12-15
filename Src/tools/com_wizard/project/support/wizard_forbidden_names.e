@@ -992,14 +992,14 @@ feature -- Access
 		local
 			a_file: PLAIN_TEXT_FILE
 			a_directory: DIRECTORY
-			tmp_path, a_line: STRING
+			tmp_path, a_line: STRING_32
 		once
 			create Result.make (500)
 			Result.compare_objects
 
-			tmp_path := eiffel_layout.install_path_8.string + "\wizards\com\config\wizard_winapi_names.cfg"
+			tmp_path := eiffel_layout.install_path.name + "\wizards\com\config\wizard_winapi_names.cfg"
 
-			create a_directory.make (eiffel_layout.install_path_8.string + "\wizards\com\config")
+			create a_directory.make (eiffel_layout.install_path.name + "\wizards\com\config")
 			if a_directory.exists then
 				a_directory.open_read
 				if a_directory.has_entry ("wizard_winapi_names.cfg") then

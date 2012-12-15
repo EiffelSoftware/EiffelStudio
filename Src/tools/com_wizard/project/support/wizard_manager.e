@@ -152,11 +152,11 @@ feature {NONE} -- Implementation
 			-- Setup environment variables for compilation
 		local
 			l_vs_setup: VS_SETUP
-			l_path, l_platform: STRING
+			l_path, l_platform: STRING_32
 		do
-			l_path := env.get ("PATH")
+			l_path := env.item ("PATH")
 			l_path.append (";")
-			l_path.append (eiffel_layout.bin_path_8)
+			l_path.append (eiffel_layout.bin_path.name)
 			env.put (l_path, "PATH")
 			if smart_checking then
 				if attached eiffel_layout.eiffel_c_compiler_version as l_version and then not l_version.is_empty then

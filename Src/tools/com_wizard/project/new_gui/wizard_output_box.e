@@ -393,34 +393,17 @@ feature {NONE} -- Implementation
 			valid_folder: not a_folder.is_empty
 		local
 			l_directory: DIRECTORY
-			l_file_list: LIST [STRING]
+			l_file_list: ARRAYED_LIST [PATH]
 			l_found: BOOLEAN
 			l_file: STRING
+			u: FILE_UTILITIES
 		do
-			create Result.make (100)
-			Result.append (eiffel_layout.estudio_command_name_8 + " ")
 			create l_directory.make (a_folder)
 			if l_directory.exists then
-				from
-					l_file_list := l_directory.linear_representation
-					l_file_list.start
-				until
-					l_file_list.after or l_found
-				loop
-					l_file := l_file_list.item
-					l_found := l_file.substring (l_file.count - 3, l_file.count).is_equal (".ecf")
-					if l_found then
-						Result.append_character ('"')
-						Result.append (a_folder)
-						Result.append ("\")
-						Result.append (l_file)
-						Result.append_character ('"')
-					end
-					l_file_list.forth
+				l_file_list := u.ends_with (l_directory.path, ".ecf", 0)
+				if not l_file_list.is_empty then
+					Result := eiffel_layout.studio_command_line (l_file_list.first, Void, Void, True, False)
 				end
-			end
-			if not l_found then
-				Result := Void
 			end
 		end
 

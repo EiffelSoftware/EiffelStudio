@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 
 				-- store it
 			create l_fn.make_from_string (environment.destination_folder)
-			l_fn := l_fn.extended (l_name).extended (environment.ecf_file_name)
+			l_fn := l_fn.extended (l_name).extended_path (environment.ecf_file_name)
 			l_system.set_file_name (l_fn.name)
 			l_system.store
 		end

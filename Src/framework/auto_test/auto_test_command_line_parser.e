@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_arguments (a_arguments: DS_LIST [STRING]; error_handler: AUT_ERROR_HANDLER)
+	make_with_arguments (a_arguments: DS_LIST [STRING_32]; error_handler: AUT_ERROR_HANDLER)
 			-- Process `a_arguments'.
 		require
 			a_arguments_attached: a_arguments /= Void
@@ -50,6 +50,7 @@ feature {NONE} -- Initialization
 			l_log_to_replay: AP_STRING_OPTION
 			l_help_option: AP_FLAG
 			l_help_flag: AP_DISPLAY_HELP_FLAG
+			l_args: DS_LINKED_LIST [STRING]
 		do
 			create parser.make_empty
 			parser.set_application_description ("auto_test is a contract-based automated testing tool for Eiffel systems.")
@@ -135,7 +136,16 @@ feature {NONE} -- Initialization
 			l_help_option.set_description ("Display this help message.")
 			parser.options.force_last (l_help_option)
 
-			parser.parse_list (a_arguments)
+			create l_args.make
+			from
+				a_arguments.start
+			until
+				a_arguments.after
+			loop
+				l_args.put_last (create {UC_STRING}.make_from_string_general (a_arguments.item_for_iteration))
+				a_arguments.forth
+			end
+			parser.parse_list (l_args)
 
 --			if version_option.was_found then
 --				error_handler.enable_verbose

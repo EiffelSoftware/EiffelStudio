@@ -169,7 +169,7 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			path_index: INTEGER
 			target_index: INTEGER
 			l_config, l_project_path: PATH
-			l_target: STRING
+			l_target: STRING_32
 			l_conf_constants: CONF_GUI_INTERFACE_CONSTANTS
 			first_window: EB_DEVELOPMENT_WINDOW
 			l_loader: EB_GRAPHICAL_PROJECT_LOADER

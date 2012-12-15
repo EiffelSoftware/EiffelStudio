@@ -12,7 +12,7 @@ class
 
 inherit
 	ANY
-	
+
 	ENV_CONSTANTS
 		export
 			{NONE} all
@@ -186,7 +186,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	merge_variable (a_name: STRING; a_values: STRING; a_env: EIFFEL_ENV)
+	merge_variable (a_name: READABLE_STRING_GENERAL; a_values: READABLE_STRING_GENERAL; a_env: EIFFEL_ENV)
 			-- Merges `a_value' with the environment variable `a_name'
 		require
 			a_name_attached: a_name /= Void
@@ -199,7 +199,7 @@ feature {NONE} -- Basic operations
 			if a_values /= Void and then not a_values.is_empty then
 				l_var := a_env.get_environment_32 (a_name)
 				if l_var = Void or else l_var.is_empty then
-					l_new_var := a_values
+					l_new_var := a_values.as_string_32
 				else
 					create l_new_var.make (a_values.count + l_var.count)
 					l_new_var.append_string_general (a_values)

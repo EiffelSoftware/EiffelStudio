@@ -229,7 +229,7 @@ feature -- Query
 				Result and then a_culture /= Void and then attached {CULTURE_INFO} a_asm_name.culture_info as l_asm_culture and then
 				attached l_asm_culture.to_string as l_culture_string
 			then
-				Result := a_culture.is_case_insensitive_equal (l_culture_string)
+				Result := a_culture.is_case_insensitive_equal (create {STRING}.make_from_cil (l_culture_string))
 			end
 			if Result and then a_key /= Void then
 				l_key := a_asm_name.get_public_key_token

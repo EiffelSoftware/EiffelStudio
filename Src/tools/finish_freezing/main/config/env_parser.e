@@ -264,7 +264,7 @@ feature {NONE} -- Basic operations
 			one_line_command: not Result.has ({CHARACTER_32} '%N')
 		end
 
-	applicable_variables: ARRAYED_LIST [STRING]
+	applicable_variables: ARRAYED_LIST [STRING_32]
 			-- List of applicable variables.
 		once
 			create Result.make (3)

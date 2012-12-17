@@ -1393,7 +1393,7 @@ feature -- Files (commands)
 		require
 			is_valid_environment: is_valid_environment
 		local
-			l_args: ARGUMENTS
+			l_args: ARGUMENTS_32
 		once
 			if is_workbench and application_name.same_string ("ec") then
 					-- We have to launch ourself to perform a compilation that would make sense

@@ -764,12 +764,8 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 					-- Create agent for comparing menu item texts used for alphabetical sorting with PROXY_COMPARABLE.
 				l_comparator_agent :=
 					agent (first_item, second_item: EV_PND_TARGET_DATA): BOOLEAN
-						local
-							l_first_name, l_second_name: detachable STRING
 						do
-							l_first_name := first_item.name
-							l_second_name := second_item.name
-							if l_first_name /= Void and then l_second_name /= Void then
+							if attached first_item.name as l_first_name and then attached second_item.name as l_second_name then
 								Result := l_first_name < l_second_name
 							end
 						end

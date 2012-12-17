@@ -93,13 +93,13 @@ feature {NONE} -- Implementation
 			texts_found_internal.wipe_out
 			found_indexs_in_texts_internal.wipe_out
 
-			wild_matcher.set_pattern (a_str.as_string_8)
+			wild_matcher.set_pattern (a_str)
 			from
 				texts.start
 			until
 				texts.after
 			loop
-				wild_matcher.set_text (texts.item.as_string_8)
+				wild_matcher.set_text (texts.item)
 				if wild_matcher.search_for_pattern then
 					texts_found_internal.extend (texts.item)
 					found_indexs_in_texts_internal.extend (texts.index)

@@ -574,7 +574,7 @@ feature {NONE} -- Implementation command
 				end
 				if attached l_content.detail as l_detail then
 					-- We have to do it in idle actions, otherwise dialog minimum height will not correct
-					ev_application.do_once_on_idle (agent check_before_set_text (l_detail.as_string_8))
+					ev_application.do_once_on_idle (agent check_before_set_text (l_detail))
 				else
 					detail.set_text (internal_shared.interface_names.Zone_navigation_no_detail_available)
 				end
@@ -909,7 +909,7 @@ feature {NONE} -- Implementation command
 			not_void: Result /= Void
 		end
 
-	check_before_set_text (a_tip: STRING)
+	check_before_set_text (a_tip: READABLE_STRING_GENERAL)
 			-- call `set_text' if possible
 		do
 			if not is_destroyed then
@@ -938,26 +938,26 @@ feature {NONE} -- Implementation command
 
 feature {NONE} -- Copied from Eiffel Build project GB_TIP_OF_THE_DAY_DIALOG
 
-	set_text (tip: STRING)
+	set_text (tip: READABLE_STRING_GENERAL)
 			-- Display `tip' as a wrapped text within `detail'
 			-- Replace all '%N' characters as spaces
 		local
 			l_counter: INTEGER
 			l_font: EV_FONT
 			l_current_width: INTEGER
-			l_last_string: detachable STRING
-			l_temp_string: detachable STRING
-			l_modified_tip: STRING
-			l_lines: ARRAYED_LIST [STRING]
+			l_last_string: detachable STRING_32
+			l_temp_string: detachable STRING_32
+			l_modified_tip: STRING_32
+			l_lines: ARRAYED_LIST [STRING_32]
 			l_start_pos: INTEGER
-			l_output: STRING
+			l_output: STRING_32
 			l_maximum_string_width: INTEGER
 			l_all_space_indexes: ARRAYED_LIST [INTEGER]
 		do
 			create l_all_space_indexes.make (20)
 			create l_lines.make (4)
 			l_font := detail.font
-			l_modified_tip := tip.twin
+			create l_modified_tip.make_from_string_general (tip)
 			l_modified_tip.replace_substring_all ("%N", " ")
 			l_modified_tip.append_character (' ')
 			l_maximum_string_width := width - 25

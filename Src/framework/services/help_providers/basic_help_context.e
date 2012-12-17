@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	help_context_id: STRING
+	help_context_id: STRING_32
 			-- <Precursor>
 
 	help_context_section: detachable HELP_CONTEXT_SECTION_I
@@ -82,7 +82,7 @@ invariant
 		(attached help_context_description as l_description) implies not l_description.is_empty
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

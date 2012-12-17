@@ -110,10 +110,10 @@ feature {NONE} -- Clean up
 
 feature -- Access: Help
 
-	help_context_id: STRING
+	help_context_id: STRING_32
 			-- <Precursor>
 		once
-			Result := "26E2C799-B48A-C588-CDF1-DD47B1994B09"
+			Result := {STRING_32} "26E2C799-B48A-C588-CDF1-DD47B1994B09"
 		end
 
 feature {NONE} -- Status report

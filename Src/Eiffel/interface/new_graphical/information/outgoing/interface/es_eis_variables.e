@@ -135,7 +135,7 @@ feature -- Access
 			l_variables: detachable like environment_variables
 		do
 			if attached environment.service as l_service then
-				if attached l_service.variables_32 as l_vars then
+				if attached l_service.variables as l_vars then
 					create l_variables.make (10)
 					from
 						l_vars.start

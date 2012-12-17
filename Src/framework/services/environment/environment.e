@@ -64,40 +64,12 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	variables: LINEAR [READABLE_STRING_8]
-			-- <Precursor>
-		local
-			l_list: ARRAYED_LIST [READABLE_STRING_8]
-		do
-			if attached internal_variables_8 as l_result then
-				Result := l_result
-			else
-				create l_list.make (table.count)
-				across
-					table as l_c
-				loop
-					l_list.extend (l_c.key.to_string_8)
-				end
-
-				Result := l_list
-				internal_variables_8 := Result
-			end
-		end
-
-	variable (a_name: READABLE_STRING_GENERAL): detachable STRING assign set_variable_8
-			-- <Precursor>
-		do
-			if attached variable_32 (a_name) as v then
-				Result := v.to_string_8
-			end
-		end
-
-	variables_32: LINEAR [READABLE_STRING_32]
+	variables: LINEAR [READABLE_STRING_32]
 			-- <Precursor>
 		local
 			l_list: ARRAYED_LIST [READABLE_STRING_32]
 		do
-			if attached internal_variables_32 as l_result then
+			if attached internal_variables as l_result then
 				Result := l_result
 			else
 				create l_list.make (table.count)
@@ -108,11 +80,11 @@ feature -- Access
 				end
 
 				Result := l_list
-				internal_variables_32 := Result
+				internal_variables := Result
 			end
 		end
 
-	variable_32 (a_name: READABLE_STRING_GENERAL): detachable STRING_32 assign set_variable_32
+	variable (a_name: READABLE_STRING_GENERAL): detachable STRING_32
 			-- <Precursor>
 		local
 			l_name: STRING_32
@@ -135,29 +107,14 @@ feature {NONE} -- Access
 	table: HASH_TABLE [STRING_32, STRING_32]
 			-- Table of variables.
 
-	table_8: HASH_TABLE [STRING_8, STRING_8]
-		local
-			tb: like table
-		do
-			tb := table
-			create Result.make (tb.count)
-			across
-				tb as c
-			loop
-				Result.force (c.item.to_string_8, c.key.to_string_8)
-			end
-		end
-
 feature -- Element change
 
 	set_variable (a_value: detachable READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_changed: BOOLEAN
-			l_name: STRING_32
 		do
-			l_name := a_name.to_string_32
-			l_changed := set_variable_internal (a_value, l_name)
+			l_changed := set_variable_internal (a_value, a_name)
 
 				-- Publish events.
 			if l_changed and then (attached internal_value_changed_event as l_events) then
@@ -205,7 +162,7 @@ feature {NONE} -- Element change
 			l_value: detachable STRING_32
 		do
 			l_name := a_name.to_string_32
-			l_old_value := variable_32 (l_name)
+			l_old_value := variable (l_name)
 			if a_value /= Void then
 				l_value := a_value.to_string_32
 			end
@@ -228,8 +185,8 @@ feature {NONE} -- Element change
 			end
 		ensure
 			change_made: (
-							(a_value = Void and (old variable_32 (a_name) /= Void)) or
-							(a_value /= Void and then a_value.to_string_32 /~ old variable_32 (a_name))
+							(a_value = Void and (old variable (a_name) /= Void)) or
+							(a_value /= Void and then a_value.to_string_32 /~ old variable (a_name))
 						) implies Result
 		end
 
@@ -254,13 +211,7 @@ feature -- Status report
 
 feature -- Query
 
-	expand_string (a_string: READABLE_STRING_8; a_keep: BOOLEAN): STRING
-			-- <Precursor>
-		do
-			Result := expander.expand_string (a_string, table_8, True, a_keep)
-		end
-
-	expand_string_32 (a_string: READABLE_STRING_32; a_keep: BOOLEAN): STRING_32
+	expand_string (a_string: READABLE_STRING_32; a_keep: BOOLEAN): STRING_32
 			-- <Precursor>
 		do
 			Result := expander.expand_string_32 (a_string, table, True, a_keep)
@@ -317,11 +268,7 @@ feature -- Events: Connection point
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_variables_8: detachable like variables
-			-- Cached version of `variables'.
-			-- Note: Do not use directly!
-
-	internal_variables_32: detachable like variables_32
+	internal_variables: detachable like variables
 			-- Cached version of `variables_32'.
 			-- Note: Do not use directly!
 

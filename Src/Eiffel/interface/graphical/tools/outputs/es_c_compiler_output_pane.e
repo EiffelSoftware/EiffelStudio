@@ -53,10 +53,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	help_context_id: STRING
+	help_context_id: STRING_32
 			-- <Precursor>
 		once
-			Result := "26525412-e8e5-8b1c-1074-58e00aed4c76"
+			Result := {STRING_32} "26525412-e8e5-8b1c-1074-58e00aed4c76"
 		end
 
 feature {NONE} -- Access

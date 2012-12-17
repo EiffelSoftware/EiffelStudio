@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Access
 
-	help_context_id: attached STRING
+	help_context_id: STRING_32
 			-- A contextual identifer to link an associated help through, when no applicable widget is
 			-- selected.
 		require
@@ -29,7 +29,7 @@ feature {NONE} -- Access
 		deferred
 		end
 
-	help_context_ids: attached LIST [attached TUPLE [widget: EV_WIDGET; id: attached STRING; section: detachable HELP_CONTEXT_SECTION_I]]
+	help_context_ids: LIST [TUPLE [widget: EV_WIDGET; id: STRING_32; section: detachable HELP_CONTEXT_SECTION_I]]
 			-- Contextual identifers to link an associated help through, binding context id's to a specific
 			-- widget.
 		require
@@ -47,13 +47,13 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation: Internal
 
-	frozen internal_help_context_id: STRING
+	frozen internal_help_context_id: STRING_32
 			-- <Precursor>
 		local
 			l_ids: attached like help_context_ids
-			l_item: attached TUPLE [widget: EV_WIDGET; id: attached STRING; section: detachable HELP_CONTEXT_SECTION_I]
+			l_item: attached TUPLE [widget: EV_WIDGET; id: attached STRING_32; section: detachable HELP_CONTEXT_SECTION_I]
 			l_widget: detachable EV_WIDGET
-			l_result: detachable STRING
+			l_result: detachable STRING_32
 			l_stop: BOOLEAN
 		do
 			l_widget := (create {EV_SHARED_APPLICATION}).ev_application.focused_widget
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation: Internal
 			-- <Precursor>
 		local
 			l_ids: attached like help_context_ids
-			l_item: attached TUPLE [widget: EV_WIDGET; id: attached STRING_GENERAL; section: detachable HELP_CONTEXT_SECTION_I]
+			l_item: attached TUPLE [widget: EV_WIDGET; id: STRING_32; section: detachable HELP_CONTEXT_SECTION_I]
 			l_widget: detachable EV_WIDGET
 			l_result: detachable HELP_CONTEXT_SECTION_I
 			l_stop: BOOLEAN
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation: Internal
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

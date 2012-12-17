@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	document_protocol: STRING
+	document_protocol: STRING_32
 			-- Document protocol used by a URI to navigate to the help accessible from the provider.
 		require
 			is_interface_usable: is_interface_usable
@@ -100,9 +100,9 @@ feature -- Query
 		do
 			create Result.make (50)
 			Result.append (a_context_id.as_string_32)
-			if attached {STRING_GENERAL} a_section as l_section then
-				Result.append ((", ").as_string_32)
-				Result.append (l_section.as_string_32)
+			if attached a_section.section as l_section then
+				Result.append ({STRING_32} ", ")
+				Result.append_string_general (l_section)
 			end
 		ensure
 			result_attached: Result /= Void

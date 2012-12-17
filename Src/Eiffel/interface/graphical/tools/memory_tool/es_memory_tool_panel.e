@@ -198,10 +198,10 @@ feature {NONE} -- Access
 			Result := (create {HELP_PROVIDER_KINDS}).wiki
 		end
 
-	help_context_id: STRING
+	help_context_id: STRING_32
 			-- <Precursor>
 		once
-			Result := "User Interface Memory Managment"
+			Result := {STRING_32} "User Interface Memory Managment"
 		end
 
 	help_context_section: detachable HELP_CONTEXT_SECTION_I

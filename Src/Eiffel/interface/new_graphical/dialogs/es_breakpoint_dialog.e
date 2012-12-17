@@ -140,10 +140,10 @@ feature {NONE} -- User interface initialization
 
 feature -- Access: Help
 
-	help_context_id: STRING
+	help_context_id: STRING_32
 			-- <Precursor>
 		once
-			Result := "1AC830AB-7600-8E52-2351-C515BCC31D41"
+			Result := {STRING_32} "1AC830AB-7600-8E52-2351-C515BCC31D41"
 		end
 
 feature -- Widgets
@@ -1610,7 +1610,7 @@ feature -- Access
 			-- Indicates if the size and position information is remembered for the dialog	
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

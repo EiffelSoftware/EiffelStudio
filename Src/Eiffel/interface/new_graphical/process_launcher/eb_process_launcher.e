@@ -423,16 +423,16 @@ feature -- Unmanaged process launch
 			end
 		end
 
-	open_url_in_web_browser (a_url: STRING)
+	open_url_in_web_browser (a_url: STRING_32)
 			-- Open directory `a_url' in web browser.
 		require
 			not_void: a_url /= Void
 		local
-			l_cmd: STRING
+			l_cmd: STRING_32
 		do
 			l_cmd := preferences.misc_data.web_browser_command.twin
 			if l_cmd /= Void then
-				l_cmd.replace_substring_all ("$url", a_url)
+				l_cmd.replace_substring_all ({STRING_32} "$url", a_url)
 				execution_environment.launch (l_cmd)
 			end
 		end

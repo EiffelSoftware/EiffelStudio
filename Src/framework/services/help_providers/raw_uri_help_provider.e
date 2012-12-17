@@ -31,16 +31,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	document_protocol: STRING
+	document_protocol: STRING_32
 			-- <Precursor>
 		once
-			create Result.make_from_string ("URI")
+			Result := {STRING_32} "URI"
 		end
 
 	document_description: STRING_32
 			-- <Precursor>
 		once
-			create Result.make_from_string ("URI")
+			Result := {STRING_32} "URI"
 		end
 
 feature {NONE} -- Access
@@ -56,7 +56,7 @@ feature {NONE} -- Access
 			end
 		end
 
-	default_uri_browser: detachable STRING
+	default_uri_browser: detachable STRING_32
 			-- Default URI launcher/browser application
 		require
 			is_interface_usable: is_interface_usable
@@ -71,7 +71,7 @@ feature {NONE} -- Access
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
 
-	default_browser_delegate: detachable FUNCTION [ANY, TUPLE, STRING]
+	default_browser_delegate: detachable FUNCTION [ANY, TUPLE, STRING_32]
 			-- Delegate action to fetch a default URI browser, handy for systems with preferences.
 
 feature -- Status report
@@ -88,10 +88,10 @@ feature -- Query
 			-- <Precursor>
 		do
 			if a_section /= Void then
-				create Result.make_from_string (a_section.section.as_string_32)
+				create Result.make_from_string (a_section.section)
 			else
 					-- Not sure if INTERFACE_NAMES should be introduced in ecosystem
-				create Result.make_from_string ("Untitled")
+				Result := {STRING_32} "Untitled"
 			end
 		end
 
@@ -122,19 +122,16 @@ feature -- Basic operations
 	show_help (a_context_id: READABLE_STRING_GENERAL; a_section: detachable HELP_CONTEXT_SECTION_I)
 			-- <Precursor>
 		local
-			l_id: STRING
+			l_id: STRING_32
 		do
-			l_id := a_context_id.as_string_8
-			if l_id ~ a_context_id then
-				l_id := l_id.twin
-			end
+			create l_id.make_from_string_general (a_context_id)
 			format_uris (l_id)
 			launch_uri (l_id)
 		end
 
 feature {NONE} -- Basic operations
 
-	launch_uri (a_uri: READABLE_STRING_8)
+	launch_uri (a_uri: READABLE_STRING_32)
 			-- Launches uri in the default web browser.
 			--
 			-- `a_uri': The URI to launch in a web-browser.
@@ -159,7 +156,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Variable expansion
 
-	format_uris (a_uri: STRING)
+	format_uris (a_uri: STRING_32)
 			-- Formates URI and expands any variables
 			--
 			-- `a_uri': URI to format.
@@ -167,16 +164,16 @@ feature {NONE} -- Variable expansion
 			a_uri_attached: a_uri /= Void
 			a_uris_contains_valid_items: not a_uri.is_empty
 		local
-			l_uri: STRING
+			l_uri: STRING_32
 			l_expander: STRING_AGENT_EXPANDER
 		do
 			create l_expander
-			l_uri := l_expander.expand_string (a_uri, agent variable, True)
+			l_uri := l_expander.expand_string_32 (a_uri, agent variable, False, True)
 			a_uri.wipe_out
 			a_uri.append (l_uri)
 		end
 
-	variable (a_name: READABLE_STRING_8): detachable STRING
+	variable (a_name: READABLE_STRING_32): detachable STRING_32
 			-- Fetches a variable value associated with a supplied name.
 			--
 			-- `a_name': The name of the variable to retrieve a value for.

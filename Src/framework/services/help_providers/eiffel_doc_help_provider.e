@@ -19,10 +19,10 @@ inherit
 
 create
 	make
-	
+
 feature -- Access
 
-	document_protocol: STRING
+	document_protocol: STRING_32
 			-- <Precursor>
 		once
 			create Result.make_from_string ("eiffeldoc")
@@ -36,13 +36,13 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	base_url: STRING
+	base_url: STRING_32
 			-- <Precursor>
 		once
 			create Result.make_from_string ("http://docs.eiffel.com/isedoc/uuid/")
 		end
 
-	section_url_separator: CHARACTER
+	section_url_separator: CHARACTER_32
 			-- <Precursor>
 		once
 			Result := '/'
@@ -50,12 +50,12 @@ feature {NONE} -- Access
 
 feature {NONE} -- Formatting
 
-	format_context (a_context: READABLE_STRING_GENERAL): STRING
+	format_context (a_context: READABLE_STRING_GENERAL): STRING_32
 			-- <Precursor>
 		local
 			l_count, i: INTEGER
 		do
-			create Result.make_from_string (a_context.as_string_8)
+			create Result.make_from_string_general (a_context)
 			l_count := Result.count
 			from i := 1 until i > l_count loop
 				if Result.item (i).is_space then
@@ -66,7 +66,7 @@ feature {NONE} -- Formatting
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

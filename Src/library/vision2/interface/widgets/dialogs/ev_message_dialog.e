@@ -187,7 +187,7 @@ feature -- Access
 	background_color: EV_COLOR
 			-- Background color of `Current'.
 
-	default_identifier_name: STRING
+	default_identifier_name: STRING_32
 			-- Default identifier name if no specific name is set.
 		do
 			if title.is_empty then

@@ -29,7 +29,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Queries
 			Result := name.has ('"')
 		end
 
-	is_mangled_alias_name (alias_name: STRING): BOOLEAN
+	is_mangled_alias_name (alias_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does `alias_name' represent a valid mangled alias name?
 			--| I.e. either "[]", or "infix "op"", or "prefix "op"".
 		require
@@ -38,11 +38,11 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Queries
 			Result := not alias_name.is_empty and then
 				(syntax_checker.is_bracket_alias_name (alias_name) or
 				(alias_name.item (alias_name.count) = '"') and then
-				(is_mangled_infix (alias_name) and then syntax_checker.is_valid_binary_operator (extract_symbol_from_infix (alias_name))) or
-				(is_mangled_prefix (alias_name) and then syntax_checker.is_valid_unary_operator (extract_symbol_from_prefix (alias_name))))
+				(is_mangled_infix (alias_name) and then syntax_checker.is_valid_binary_operator (extract_symbol_from_infix_32 (alias_name))) or
+				(is_mangled_prefix (alias_name) and then syntax_checker.is_valid_unary_operator (extract_symbol_from_prefix_32 (alias_name))))
 		end
 
-	is_mangled_infix (name: STRING): BOOLEAN
+	is_mangled_infix (name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does `name' represent an internal name of an infix feature, i.e. "infix "op""?
 		require
 			name_not_void: name /= Void
@@ -50,7 +50,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Queries
 			Result := name.starts_with (Infix_str)
 		end
 
-	is_mangled_prefix (name: STRING): BOOLEAN
+	is_mangled_prefix (name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does `name' represent an internal name of a prefix feature, i.e. "prefix "op""?
 		require
 			name_not_void: name /= Void
@@ -60,27 +60,27 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Queries
 
 feature -- Basic operations
 
-	extract_symbol_from_infix_32 (op: STRING_32): STRING_32
+	extract_symbol_from_infix_32 (op: READABLE_STRING_GENERAL): STRING_32
 			-- Get the symbol part from infix qualified operator `op'.
 		require
 			op_not_void: op /= Void
 		do
-			Result := op.substring (Infix_str.count + 1, op.count - Quote_str.count)
+			Result := op.substring (Infix_str.count + 1, op.count - Quote_str.count).as_string_32
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	extract_symbol_from_prefix_32 (op: STRING_32): STRING_32
+	extract_symbol_from_prefix_32 (op: READABLE_STRING_GENERAL): STRING_32
 			-- Get the symbol part from prefix qualified operator `op'.
 		require
 			op_not_void: op /= Void
 		do
-			Result := op.substring (Prefix_str.count + 1, op.count - Quote_str.count)
+			Result := op.substring (Prefix_str.count + 1, op.count - Quote_str.count).as_string_32
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	prefix_feature_name_with_symbol_32 (symbol: STRING_32): STRING_32
+	prefix_feature_name_with_symbol_32 (symbol: READABLE_STRING_GENERAL): STRING_32
 			-- Internal name corresponding to prefix `symbol'.
 		require
 			symbol_not_void: symbol /= Void
@@ -90,13 +90,13 @@ feature -- Basic operations
 				-- 9 = count of 'Prefix_str' + 'Quote_str'
 			create Result.make (9 + symbol.count)
 			Result.append (Prefix_str)
-			Result.append (symbol)
+			Result.append_string_general (symbol)
 			Result.append (Quote_str)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	infix_feature_name_with_symbol_32 (symbol: STRING_32): STRING_32
+	infix_feature_name_with_symbol_32 (symbol: READABLE_STRING_GENERAL): STRING_32
 			-- Internal name corresponding to prefix `symbol'
 		require
 			symbol_not_void: symbol /= Void
@@ -106,7 +106,7 @@ feature -- Basic operations
 				-- 8 = count of 'Infix_str' + 'Quote_str'
 			create Result.make (8 + symbol.count)
 			Result.append (Infix_str)
-			Result.append (symbol)
+			Result.append_string_general (symbol)
 			Result.append (Quote_str)
 		ensure
 			Result_not_void: Result /= Void
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

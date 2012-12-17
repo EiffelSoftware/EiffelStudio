@@ -66,14 +66,14 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	add_melted_filename (fn: STRING)
+	add_melted_filename (fn: READABLE_STRING_GENERAL)
 		require
 			fn_attached: fn /= Void
 		local
-			fns: LINKED_LIST [STRING_32]
+			fns: LINKED_LIST [READABLE_STRING_GENERAL]
 			f: RAW_FILE
 		do
-			create f.make (fn)
+			create f.make_with_name (fn)
 			if f.exists and then f.is_readable then
 				create fns.make
 				fns.extend (fn)
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 			selection_grid.set_row_count_to (0)
 			selection_grid.enable_tree
 			selection_grid.enable_single_row_selection
-			selection_grid.file_drop_actions.extend (agent on_files_dropped)
+			selection_grid.file_drop_actions.extend (agent on_files_dropped ({LIST [STRING_32]} ?))
 			selection_grid.row_select_actions.extend (agent on_row_selected)
 			selection_grid.hide_header
 
@@ -221,10 +221,10 @@ feature {NONE} -- Implementation
 	log_text: EV_TEXT
 	bytecode_grid: EV_GRID
 
-	on_files_dropped (fns: LIST [STRING_32])
+	on_files_dropped (fns: LIST [READABLE_STRING_GENERAL])
 			--
 		local
-			s, fn: STRING_GENERAL
+			s, fn: READABLE_STRING_GENERAL
 			gl: EV_GRID_LABEL_ITEM
 		do
 			if fns /= Void and then fns.count > 0 then
@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_filename (s: STRING_GENERAL)
+	process_filename (s: READABLE_STRING_GENERAL)
 			--
 		local
 			fn: FILE_NAME
@@ -712,7 +712,7 @@ feature {NONE} -- Implementation / Constants
 			-- Initial height for this window.
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

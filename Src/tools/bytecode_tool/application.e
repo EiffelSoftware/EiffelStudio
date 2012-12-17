@@ -10,7 +10,7 @@ class
 inherit
 	EV_APPLICATION
 
-	ARGUMENTS
+	ARGUMENTS_32
 		undefine
 			default_create, copy
 		end
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			first_window.show
 			if
 				argument_count > 0 and then
-				attached {STRING} argument (1) as s
+				attached argument (1) as s
 			then
 				first_window.add_melted_filename (s)
 			end
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 			-- Main window.
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2012, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -90,7 +90,7 @@ feature -- Basic Operations
 		local
 			l_block_size: INTEGER
 			l_tuple: TUPLE [str: STRING]
-			l_last_string: detachable READABLE_STRING_GENERAL
+			l_last_string: detachable STRING_8
 			l_input_pipe: like input_pipe
 			l_output_pipe: like output_pipe
 			l_process_info: like process_info
@@ -113,7 +113,7 @@ feature -- Basic Operations
 				if a_output_handler /= Void then
 					l_last_string := l_output_pipe.last_string
 					check l_last_string /= Void end
-					l_tuple.str := l_last_string.as_string_8
+					l_tuple.str := l_last_string
 					a_output_handler.call (l_tuple)
 				end
 				l_output_pipe.read_stream (l_block_size)

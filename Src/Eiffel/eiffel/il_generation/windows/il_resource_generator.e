@@ -133,7 +133,6 @@ feature {NONE} -- Implementation
 			l_rc: PATH
 			l_cmd: STRING_32
 			l_launch: WEL_PROCESS_LAUNCHER
-			l_exec: EXECUTION_ENVIRONMENT
 			l_dir: detachable PATH
 			l_virc: VIRC
 		do
@@ -145,7 +144,6 @@ feature {NONE} -- Implementation
 					create l_virc.make_resource_file_not_found (a_resource.name)
 				else
 					create l_launch
-					create l_exec
 					l_cmd := l_rc.name + " %"" + a_resource.name + "%" %"" + a_target.name + "%""
 					if attached a_resource.parent as l_parent then
 						l_dir := l_parent

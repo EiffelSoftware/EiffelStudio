@@ -246,7 +246,7 @@ feature {COMPILER_EXPORTER} -- Setting
 
 feature -- Query
 
-	is_named (a_name: STRING_GENERAL): BOOLEAN
+	is_named (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Determines if the feature is named `a_name'
 			--
 			-- `a_name': Feature name to check current feature against
@@ -258,12 +258,10 @@ feature -- Query
 			l_fn: like feature_name
 			l_names: like feature_names
 			l_name: FEATURE_NAME
-			l_string_name: STRING_8
 			l_cursor: INTEGER
 		do
-			l_string_name := a_name.as_string_8
 			l_fn := feature_name
-			Result := l_fn /= Void and then l_fn.name.is_case_insensitive_equal (l_string_name)
+			Result := l_fn /= Void and then a_name.is_case_insensitive_equal (l_fn.name)
 			if not Result then
 					-- Check feature name list
 				l_names := feature_names
@@ -272,7 +270,7 @@ feature -- Query
 					from l_names.start until l_names.after loop
 						l_name := l_names.item
 						if l_name /= Void then
-							Result := l_name.visual_name.is_case_insensitive_equal (l_string_name)
+							Result := a_name.is_case_insensitive_equal (l_name.visual_name)
 						end
 						l_names.forth
 					end

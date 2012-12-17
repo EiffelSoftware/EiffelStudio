@@ -68,7 +68,7 @@ feature -- Conformance
 
 feature -- Creation
 
-	dynamic_type_from_string (class_type: STRING): INTEGER
+	dynamic_type_from_string (class_type: READABLE_STRING_GENERAL): INTEGER
 			-- Dynamic type corresponding to `class_type'.
 			-- If no dynamic type available, returns -1.
 		require
@@ -1516,7 +1516,7 @@ feature -- Marking
 
 feature {NONE} -- Cached data
 
-	internal_dynamic_type_string_table: HASH_TABLE [INTEGER, STRING]
+	internal_dynamic_type_string_table: STRING_TABLE [INTEGER]
 			-- Table of dynamic type indexed by type name
 		once
 			create Result.make (100)
@@ -1757,27 +1757,27 @@ feature {TYPE, INTERNAL} -- Implementation
 			Result := get_members (type_id).i_th (i).get_value (object)
 		end
 
-	eiffel_type_from_string (class_type: STRING): detachable RT_CLASS_TYPE
+	eiffel_type_from_string (class_type: READABLE_STRING_GENERAL): detachable RT_CLASS_TYPE
 			-- Eiffel .NET type corresponding to `class_type'.
 			-- If no dynamic type available, returns Void.
 		require
 			class_type_not_void: class_type /= Void
 		local
 			l_type: detachable RT_CLASS_TYPE
-			l_parameters: detachable ARRAYED_LIST [STRING]
-			l_type_name: STRING
+			l_parameters: like parameters_decomposition
+			l_type_name: STRING_32
 			l_start_pos, l_end_pos, i: INTEGER
 			l_types: NATIVE_ARRAY [detachable RT_TYPE]
 			l_found, l_is_attached: BOOLEAN
-			l_class_type_name: STRING
+			l_class_type_name: STRING_32
 			nb: INTEGER
-			l_mark: CHARACTER
+			l_mark: CHARACTER_32
 		do
 				-- Load data from all assemblies in case it is not yet done.
 			load_assemblies
 
 				-- Clean `class_type'.
-			l_class_type_name := class_type.twin
+			create l_class_type_name.make_from_string_general (class_type)
 			l_class_type_name.left_adjust
 			l_class_type_name.right_adjust
 
@@ -2013,6 +2013,7 @@ feature {TYPE, INTERNAL} -- Implementation
 			l_formal_type: RT_FORMAL_TYPE
 			l_list: ARRAYED_LIST [RT_CLASS_TYPE]
 			l_provider: ICUSTOM_ATTRIBUTE_PROVIDER
+			l_attribute_type_name: STRING_32
 		do
 			if not retried then
 				l_provider := a_type
@@ -2022,9 +2023,9 @@ feature {TYPE, INTERNAL} -- Implementation
 				end
 				if
 					l_cas /= Void and then l_cas.count > 0 and then
-					attached {EIFFEL_NAME_ATTRIBUTE} l_cas.item (0) as l_name
+					attached {EIFFEL_NAME_ATTRIBUTE} l_cas.item (0) as l_name_attr
 				then
-					if l_name.is_generic and attached l_name.generics as l_array then
+					if l_name_attr.is_generic and attached l_name_attr.generics as l_array then
 						l_count := l_array.count
 						create l_rt_array.make (l_count)
 						from
@@ -2057,7 +2058,7 @@ feature {TYPE, INTERNAL} -- Implementation
 						if l_count = 0 then
 								-- It should be a TUPLE type.
 							check
-								tuple_name: l_name.name ~ ("TUPLE").to_cil
+								tuple_name: l_name_attr.name ~ ("TUPLE").to_cil
 							end
 							create {RT_TUPLE_TYPE} l_gen_type.make
 						else
@@ -2077,7 +2078,8 @@ feature {TYPE, INTERNAL} -- Implementation
 					interface_to_implementation.add (l_interface_type, a_type)
 
 						-- Update `eiffel_meta_type_mapping' if we can get the name
-					if attached l_name.name as l_attribute_type_name then
+					if attached l_name_attr.name as l_attr_name then
+						create l_attribute_type_name.make_from_cil (l_attr_name)
 						eiffel_meta_type_mapping.search (mapped_type (l_attribute_type_name))
 						if eiffel_meta_type_mapping.found and then attached {ARRAYED_LIST [RT_CLASS_TYPE]} eiffel_meta_type_mapping.found_item as l_found_item then
 							l_found_item.extend (l_class_type)
@@ -2124,7 +2126,7 @@ feature {TYPE, INTERNAL} -- Implementation
 			eiffel_type_to_id_not_void: Result /= Void
 		end
 
-	eiffel_meta_type_mapping: HASH_TABLE [ARRAYED_LIST [RT_CLASS_TYPE], STRING]
+	eiffel_meta_type_mapping: STRING_TABLE [ARRAYED_LIST [RT_CLASS_TYPE]]
 			-- Mapping between Eiffel class names and .NET pseudo-types.
 			-- It only contains the pseudo derivation, that is to say for
 			-- a generic class A [G], where the following generic derivation

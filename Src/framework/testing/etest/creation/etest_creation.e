@@ -55,7 +55,7 @@ feature -- Access
 			Result := l_universe.cluster_of_name (l_name)
 		end
 
-	path: IMMUTABLE_STRING_8
+	path: PATH
 			-- Additional path in `cluster' where tests will be created.
 			--
 			-- Note: by default empty.
@@ -116,7 +116,7 @@ feature -- Status setting
 			cluster_name_set: attached cluster_name as l_name and then l_name.same_string (a_name)
 		end
 
-	set_path_name (a_name: READABLE_STRING_8)
+	set_path_name (a_name: READABLE_STRING_GENERAL)
 			-- Set `path_name' to given path.
 			--
 			-- `a_name': Name of new path.
@@ -125,8 +125,6 @@ feature -- Status setting
 			not_running: not has_next_step
 		do
 			create path.make_from_string (a_name)
-		ensure
-			path_name_set: path.same_string (a_name)
 		end
 
 	set_class_name (a_name: READABLE_STRING_8)
@@ -184,7 +182,7 @@ feature {NONE} -- Basic operations
 		do
 			l_cluster := cluster
 			if l_cluster /= Void then
-				create l_location.make_from_string (l_cluster.location.build_path (path.as_string_8, ""))
+				create l_location.make_from_string (l_cluster.location.build_path (path.name, ""))
 			else
 				l_location := etest_suite.project_access.project.project_directory.eifgens_cluster_path
 			end
@@ -238,7 +236,7 @@ feature {NONE} -- Basic operations
 							-- and when the previous compilation was successful.
 							etest_suite.project_helper.add_class (
 								l_cluster,
-								create {PATH}.make_from_string (path),
+								path,
 								create {PATH}.make_from_string (l_filename),
 								l_class_name,
 								attached {ETEST_MANUAL_CREATION} Current and then etest_suite.project_access.project.successful

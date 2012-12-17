@@ -89,6 +89,8 @@ feature -- Access
 			-- Representation of `Current' as STRING_8.
 			-- Conversion is done using `as_string_8', thus some data
 			-- might be lost.
+		obsolete
+			"Use `strings' instead."
 		require
 			not_destroyed: not is_destroyed
 		local

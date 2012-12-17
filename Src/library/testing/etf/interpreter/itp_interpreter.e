@@ -15,7 +15,7 @@ inherit
 	EXCEPTIONS
 		export {NONE} all end
 
-	ARGUMENTS
+	ARGUMENTS_32
 		export {NONE} all end
 
 	ITP_SHARED_CONSTANTS
@@ -45,14 +45,17 @@ feature {NONE} -- Initialization
 			-- <melt feature id> is the feature body ID whose byte-code is to be injected
 			-- <log file> is the file to store logs.
 		local
-			l_log_filename: STRING
-			l_server_url: STRING
+			l_log_filename: IMMUTABLE_STRING_32
+			l_server_url: IMMUTABLE_STRING_32
 			l_port: INTEGER
 		do
 			if argument_count /= 5 then
 				check Wrong_number_of_arguments: False end
 			end
 				-- Read command line argument
+				-- Note that `l_server_ulr' is still read even though not used
+				-- because we use the loopback of the current machine to communicate
+				-- and thus avoid firewall issues.
 			l_server_url := argument (1)
 			l_port := argument (2).to_integer
 			byte_code_feature_body_id := argument (3).to_integer
@@ -67,7 +70,8 @@ feature {NONE} -- Initialization
 			create store.make
 
 				-- Create log file.
-			create log_file.make_open_append (l_log_filename)
+			create log_file.make_with_name (l_log_filename)
+			log_file.open_append
 			if not log_file.is_open_write then
 				report_error ("could not open log file '" + l_log_filename + "'.")
 				die (1)
